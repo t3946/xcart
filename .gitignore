@@ -34,7 +34,6 @@ www.*_*.xml
 /ki/**
 /kolonok/**
 /lh/**
-/livehelp/**
 /links/**
 /make-up/**
 /menu/**
@@ -61,3 +60,5 @@ www.*_*.xml
 /files/**
 /product_files/**
 /shipping/*.txt
+/product_files/
+/files/
