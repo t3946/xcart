@@ -1,0 +1,67 @@
+{*
+$Id: order_status_notifications.tpl, v 1.0.0 2011/10/18 12:44:21 kate Exp $
+vim: set ts=2 sw=2 sts=2 et:
+*}
+{include file="page_title.tpl" title=$lng.lbl_order_status_notifications}
+
+<br /><br />
+
+<script type="text/javascript">
+<!--
+{literal}
+
+function show_settings() {
+  var status = $('select[name="status"] option:selected').val();
+  $.post('ajax_change_status.php', 'status=' + status, function (data) {
+    $('.VariableSettings').remove();
+    $('#osn_status').after(data);
+  }, 'text');
+}
+
+{/literal}
+-->
+</script>
+
+{include file="modules/HTML_Editor/editor.tpl"}
+
+{capture name=dialog}
+
+{if $statuses}
+
+<form name="osnotificform" action="order_status_notifications.php" method="post">
+<input type="hidden" name="mode" value="update" />
+
+<table cellpadding="1" cellspacing="5" width="100%">
+
+<tr id="osn_status">
+  <td>{$lng.lbl_when_order_status_changes_to}</td>
+  <td width="70%">
+    <select name="status" onchange="javascript: show_settings();">
+    {foreach from=$statuses item=group key=type}
+      {if $type ne 'BD'}
+        <optgroup label="{$status_types[$type]}">
+          {foreach from=$group item=order_status key="code"}
+{if $code ne "K" && $code ne "L" && $code ne "M" && $code ne "V"}
+            <option value="{$code}"{if $status eq $code} selected="selected"{/if}>{$order_status}</option>
+{/if}
+          {/foreach}
+        </optgroup>
+      {/if}
+    {/foreach}
+    </select>
+    {$lng.lbl_send_email_to_customer|cat:":"}
+  </td>
+</tr>
+
+{include file="main/osn_settings.tpl"}
+
+<tr>
+  <td>&nbsp;</td>
+  <td><input type="submit" value="{$lng.lbl_save|strip_tags:false|escape}" /></td>
+</tr>
+</table>
+
+{/if}
+
+{/capture}
+{include file="dialog.tpl" title=$lng.lbl_order_status_notifications content=$smarty.capture.dialog extra='width="100%"'}

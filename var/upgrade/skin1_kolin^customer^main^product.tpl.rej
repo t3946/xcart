@@ -1,0 +1,38 @@
+***************
+*** 107,114 ****
+ {if $active_modules.Subscriptions ne "" and $subscription}
+ {include file="modules/Subscriptions/subscription_info.tpl"}
+ {else}
+-<tr><td class="ProductPriceConverting" valign="top">{$lng.lbl_price}:</td>
+-<td valign="top">
+ {if $product.taxed_price ne 0 || $variant_price_no_empty}
+ <font class="ProductDetailsTitle"><span id="product_price" style="white-space: nowrap;">{include file="currency.tpl" value=$product.taxed_price plain_text_message=true}</span></font><font class="MarketPrice"> <span id="product_alt_price" style="white-space: nowrap;">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$product.taxed_price plain_text_message=true}</span></font>
+ {if $product.taxes}<br />{include file="customer/main/taxed_price.tpl" taxes=$product.taxes}{/if}
+--- 107,115 ----
+ {if $active_modules.Subscriptions ne "" and $subscription}
+ {include file="modules/Subscriptions/subscription_info.tpl"}
+ {else}
++<tr>
++<td width="30%" class="ProductPriceConverting" valign="top">{$lng.lbl_price}:</td>
++<td width="70%" valign="top">
+ {if $product.taxed_price ne 0 || $variant_price_no_empty}
+ <font class="ProductDetailsTitle"><span id="product_price" style="white-space: nowrap;">{include file="currency.tpl" value=$product.taxed_price plain_text_message=true}</span></font><font class="MarketPrice"> <span id="product_alt_price" style="white-space: nowrap;">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$product.taxed_price plain_text_message=true}</span></font>
+ {if $product.taxes}<br />{include file="customer/main/taxed_price.tpl" taxes=$product.taxes}{/if}
+***************
+*** 187,192 ****
+ <font class="ProductDetailsTitleWithoutBold">{if $product.mult_order_quantity eq "Y"}{$lng.txt_need_min_amount_mult|substitute:"items":$product.min_amount}{else}{$lng.txt_need_min_amount|substitute:"items":$product.min_amount}{/if}</font>
+ </td></tr>
+ {/if}
+ <tr><td colspan="2">
+ <input type="hidden" name="mode" value="add" />
+ {include file="customer/main/product_prices.tpl"}
+--- 187,195 ----
+ <font class="ProductDetailsTitleWithoutBold">{if $product.mult_order_quantity eq "Y"}{$lng.txt_need_min_amount_mult|substitute:"items":$product.min_amount}{else}{$lng.txt_need_min_amount|substitute:"items":$product.min_amount}{/if}</font>
+ </td></tr>
+ {/if}
++</table>
++
++<table width="100%" cellspacing="0" cellpadding="0">
+ <tr><td colspan="2">
+ <input type="hidden" name="mode" value="add" />
+ {include file="customer/main/product_prices.tpl"}

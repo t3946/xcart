@@ -1,0 +1,514 @@
+<?php /* MODIFIED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
+<?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
+<?php
+/*****************************************************************************\
++-----------------------------------------------------------------------------+
+| X-Cart                                                                      |
+| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+| All rights reserved.                                                        |
++-----------------------------------------------------------------------------+
+| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
+| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
+| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
+|                                                                             |
+| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
+| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
+| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
+| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
+| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
+| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
+| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
+| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
+| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
+| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
+| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
+| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
+| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
+| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
+|                                                                             |
+| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
+| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
+| Ruslan R. Fazliev. All Rights Reserved.                                     |
++-----------------------------------------------------------------------------+
+\*****************************************************************************/
+
+#
+# $Id: manufacturers.php,v 1.18.2.3 2006/10/11 06:11:31 max Exp $
+#
+
+if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
+
+x_load('backoffice','image');
+
+# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+require $xcart_dir."/include/countries.php";
+require $xcart_dir."/include/states.php";
+if ($config["General"]["use_counties"] == "Y")
+	include $xcart_dir."/include/counties.php";
+
+# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+$location[] = array(func_get_langvar_by_name("lbl_manufacturers"), "");
+
+#
+# NOTES.
+# 1. Only administrator can activate manufacturer and set up its position in
+# the manufacturers list.
+# 2. Provider can view the entire list of manufacturers but edit or delete only
+# manufacturers created by the same provider.
+# 3. If some manufacturer have assigned products of at least one provider that
+# is not owner of this manufacturer, owner will not be able to delete that
+# manufacturer.
+#
+$provider_condition = ($single_mode || $current_area == "A"?"":"AND provider='$login'");
+
+$manufacturerid = intval($manufacturerid);
+
+x_session_register('manufacturer_data_form');
+
+#
+# Get the number of products that assigned to the manufacturer
+# with different $provider (this need for checking permissions)
+#
+function func_manufacturer_is_used($manufacturerid, $provider) {
+	global $sql_tbl;
+	return func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[products] WHERE manufacturerid='$manufacturerid' AND provider!='$provider'");
+}
+
+if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
+
+
+	if ($mode == "details" && ($image_perms = func_check_image_storage_perms($file_upload_data, "M")) !== true) {
+		# Check permissions
+		$top_message = array(
+			"content" => $image_perms['content'],
+			"type" => "E"
+		);
+
+	} elseif ($mode == "details") {
+	#
+	# Modify manufacturer details
+	#
+		if ($current_area == 'P') {
+			$orderby = 10;
+		}
+
+		$orderby = intval($orderby);
+
+		if (!empty($manufacturerid)) {
+			if (empty($manufacturer)) {
+				$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_empty");
+				$top_message['type'] = 'E';
+				func_header_location("manufacturers.php?manufacturerid=".$manufacturerid);
+
+			} elseif (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[manufacturers] WHERE manufacturer = '$manufacturer' AND manufacturerid != '$manufacturerid'")) {
+				$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_exist");
+				$top_message['type'] = 'E';
+				func_header_location("manufacturers.php?manufacturerid=".$manufacturerid);
+  			} elseif (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[manufacturers] WHERE code = '$code' AND manufacturerid != '$manufacturerid'")) {
+				$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_code_exist");
+				$top_message['type'] = 'E';
+				func_header_location("manufacturers.php?manufacturerid=".$manufacturerid);
+  			}
+
+		#
+		# Update the manufacturer details
+		#
+			if (!empty($provider_condition))
+			#
+			# Check the permissions to update manufacturer details
+			#
+				$do_not_touch = (func_manufacturer_is_used($manufacturerid, $login) > 0);
+			else
+				$do_not_touch = false;
+
+			$query_data = array(
+#
+##
+###
+                        "reverse_sku" => $reverse_sku,
+                        "remove_dashes" => $remove_dashes,
+###
+##
+#
+				"url" => $url,
+				'cost_to_us_coef_x' => floatval($cost_to_us_coef_x),
+				'map_price_coef_x' => floatval($map_price_coef_x),
+				'new_map_price_coef_x' => floatval($new_map_price_coef_x),
+				'price_coef_x' => floatval($price_coef_x),
+				'price_coef_y' => floatval($price_coef_y),
+				'price_coef_z' => floatval($price_coef_z),
+				"catalog_sku" => trim($catalog_sku),
+				"catalog_price" => $catalog_price != '' ? price_format($catalog_price) : '',
+				"catalog_text" => $catalog_text,
+# START: random:20341 [2010 Jul 29 14:46] 
+				"code" => $code,
+# END: random:20341 [2010 Jul 29 14:46] 
+				"descr" => $descr
+			);
+			$query_data_lng = array(
+				"manufacturerid" => $manufacturerid,
+				"code" => $shop_language,
+				"descr" => $descr
+			);
+			if (!$do_not_touch) {
+				$query_data_lng['manufacturer'] = $manufacturer;
+				if (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[manufacturers] WHERE manufacturer = '$manufacturer'") == 0)
+					$query_data['manufacturer'] = $manufacturer;
+			}
+
+			if ($shop_language != $config['default_admin_language']) {
+				func_unset($query_data, "manufacturer", "descr");
+			}
+
+			if (empty($provider_condition)) {
+				$query_data['avail'] = $avail;
+				$query_data['orderby'] = $orderby;
+			}
+
+# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+			if (!empty($b_address) && !empty($b_city) && !empty($b_country) && !empty($b_state) && !empty($b_zipcode)) {
+				$query_data['m_address'] = $b_address;
+				$query_data['m_address_2'] = $b_address_2;
+				$query_data['m_city'] = $b_city;
+				$query_data['m_country'] = $b_country;
+				$query_data['m_state'] = $b_state;
+				$query_data['m_zipcode'] = $b_zipcode;
+			}	
+			
+			if ($login_type == 'P') {
+				$selected_manufacturers = func_query_first_cell("SELECT manufacturerids FROM $sql_tbl[customers] WHERE login='$login' AND usertype='$login_type'");
+				if (!empty($selected_manufacturers)) {
+					$selected_manufacturers = unserialize($selected_manufacturers);
+				}
+				$selected_manufacturers[] = $manufacturerid;
+				db_query("UPDATE $sql_tbl[customers] SET manufacturerids = '".addslashes(serialize($selected_manufacturers))."' WHERE  login='$login' AND usertype='$login_type'");
+			}
+
+			$query_data['email'] = $email;
+			$query_data['mess_body'] = $mess_body;
+			$query_data['submit_to_operator'] = ($submit_to_operator == 'Y') ? $submit_to_operator = 'Y' : $submit_to_operator = 'N';
+
+			$query_data['manufact_text_displayed'] = $manufact_text_displayed;
+			$query_data['cart_manufact_text_displayed'] = $cart_manufact_text_displayed;
+
+# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+			func_array2update("manufacturers", $query_data, "manufacturerid='$manufacturerid' ".$provider_condition);
+			func_array2insert("manufacturers_lng", $query_data_lng, true);
+
+			$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_upd");
+
+		}
+		else {
+		#
+		# Add new manufacturer
+		#
+			$fillerror = true;
+
+			if (empty($manufacturer)) {
+				$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_empty");
+				$top_message['type'] = 'E';
+
+			} elseif (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[manufacturers] WHERE manufacturer = '$manufacturer'")) {
+				$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_exist");
+				$top_message['type'] = 'E';
+
+			} elseif (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[manufacturers] WHERE code = '$code'")) {
+				$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_code_exist");
+				$top_message['type'] = 'E';
+			} else {
+				$fillerror = false;
+			}
+
+			if (!$fillerror) {
+
+				if ($orderby <= 0)
+					$orderby = func_query_first_cell("SELECT MAX(orderby) FROM $sql_tbl[manufacturers]") + 10;
+
+				if ($login_type == 'P') {
+					$avail = 'Y';
+				}
+
+				$query_data = array(
+					"manufacturer" => $manufacturer,
+					"avail" => $avail,
+					"orderby" => $orderby,
+					"provider" => $login,
+					"descr" => $descr,
+# START: random:20341 [2010 Jul 29 14:46] 
+					"code" => $code,
+# END: random:20341 [2010 Jul 29 14:46] 
+					"url" => $url
+				);
+# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+
+				if (!empty($b_address) && !empty($b_city) && !empty($b_country) && !empty($b_state) && !empty($b_zipcode)) {
+					$query_data['m_address'] = $b_address;
+					$query_data['m_address_2'] = $b_address_2;
+					$query_data['m_city'] = $b_city;
+					$query_data['m_country'] = $b_country;
+					$query_data['m_state'] = $b_state;
+					$query_data['m_zipcode'] = $b_zipcode;
+				}
+				$query_data['email'] = $email;
+				$query_data['mess_body'] = $mess_body;
+				$query_data['manufact_text_displayed'] = $manufact_text_displayed;
+				$query_data['cart_manufact_text_displayed'] = $cart_manufact_text_displayed;
+
+
+# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+				$manufacturerid = func_array2insert("manufacturers", $query_data);
+
+				if (!empty($operators)) {
+					$customers = func_query_hash("SELECT login, manufacturerids FROM $sql_tbl[customers] WHERE login IN ('" . implode("','", $operators) . "')", 'login', false, true);
+                    
+					foreach ($operators as $op) {
+						if (empty($customers[$op])) {
+							continue;
+						}
+                        
+						$customers[$op] = unserialize($customers[$op]);
+						$customers[$op][] = $manufacturerid;
+                        
+						db_query("UPDATE $sql_tbl[customers] SET manufacturerids='" . serialize($customers[$op]) . "' WHERE login='$op'");
+					}
+				}
+
+# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+				if ($login_type == 'P') {
+					$selected_manufacturers = func_query_first_cell("SELECT manufacturerids FROM $sql_tbl[customers] WHERE login='$login' AND usertype='$login_type'");
+					if (!empty($selected_manufacturers)) {
+						$selected_manufacturers = unserialize($selected_manufacturers);
+					}
+					$selected_manufacturers[] = $manufacturerid;
+					db_query("UPDATE $sql_tbl[customers] SET manufacturerids = '".addslashes(serialize($selected_manufacturers))."' WHERE  login='$login' AND usertype='$login_type'");
+				}
+
+
+# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+				$query_data = array(
+					"manufacturerid" => $manufacturerid,
+					"code" => $shop_language,
+					"manufacturer" => $manufacturer,
+					"descr" => $descr
+				);
+				func_array2insert("manufacturers_lng", $query_data);
+
+				$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_add");
+			} else {
+				$manufacturer_data_form = $_POST;
+				$data_names = array(
+					'b_address' => 'm_address',
+					'b_address_2' => 'm_address_2',
+					'b_city' => 'm_city',
+					'b_country' => 'm_country',
+					'b_state' => 'm_state',
+					'b_county' => 'm_county',
+					'b_zipcode' => 'm_zipcode'
+				);
+				$form_names = array_keys($data_names);
+				foreach ($manufacturer_data_form as $k => $v) {
+					if (in_array($k, $form_names)) {
+						unset($manufacturer_data_form[$k]);
+						$manufacturer_data_form[$data_names[$k]] = $v;
+					}
+					if (!is_array($v)) {
+						$manufacturer_data_form[$k] = stripslashes($v);
+			}
+		}
+				func_header_location('manufacturers.php?mode=add');
+			}
+			x_session_unregister('manufacturer_data_form');
+		}
+
+		if (func_check_image_posted($file_upload_data, "M") && $manufacturerid > 0) {
+			func_save_image($file_upload_data, "M", $manufacturerid);
+		}
+
+	}
+	elseif ($mode == "delete" and !empty($to_delete) && is_array($to_delete)) {
+	#
+	# Delete selected manufacturers
+	#
+		$ids = func_query_column("SELECT manufacturerid FROM $sql_tbl[manufacturers] WHERE manufacturerid IN ('".implode("','", array_keys($to_delete))."') ".$provider_condition);
+		if (!empty($ids)) {
+			db_query("DELETE FROM $sql_tbl[manufacturers] WHERE manufacturerid IN ('".implode("','", $ids)."')");
+			db_query("DELETE FROM $sql_tbl[manufacturers_lng] WHERE manufacturerid IN ('".implode("','", $ids)."')");
+			db_query("UPDATE $sql_tbl[products] SET manufacturerid = 0 WHERE manufacturerid IN ('".implode("','", $ids)."')");
+			func_delete_image($ids, "M");
+			$top_message["content"] = func_get_langvar_by_name("msg_adm_manufacturer_del");
+		}
+	}
+	elseif ($mode == "delete_image" && $manufacturerid) {
+	#
+	# Delete image of selected manufacturer
+	#
+		func_delete_image($manufacturerid, "M");
+	}
+	elseif ($mode == "update" and empty($provider_condition)) {
+	#
+	# Update manufacturers list
+	#
+		if (is_array($records)) {
+			foreach ($records as $k=>$v) {
+				$v["avail"] = (empty($v["avail"]) ? "N" : "Y");
+				$v["orderby"] = intval($v["orderby"]);
+				db_query("UPDATE $sql_tbl[manufacturers] SET avail='$v[avail]', orderby='$v[orderby]' WHERE manufacturerid='$k' $provider_condition");
+			}
+			$top_message["content"] = func_get_langvar_by_name("msg_adm_manufacturers_upd");
+		}
+	}
+
+
+	$page_str = (!empty($page) ? "&page=$page" : "");
+
+	func_header_location("manufacturers.php?manufacturerid=$manufacturerid" . $page_str . '&word=' . $word);
+}
+
+
+
+#
+# Process the GET request
+#
+
+if ($mode == "add" or !empty($manufacturerid)) {
+#
+# Get the manufacturer data and display manufacturer details page
+#
+	if ($mode == 'add') {
+		$active_operators = func_query("SELECT login, b_firstname, b_lastname FROM $sql_tbl[customers] WHERE usertype='P' AND status='Y' AND activity='Y' ORDER BY login");
+        
+		$smarty->assign('operators', $active_operators);
+	}
+
+	$location[count($location)-1][1] = "manufacturers.php?word=num";
+
+	if (!empty($manufacturerid)) {
+		$manufacturer_data = func_query_first("SELECT $sql_tbl[manufacturers].*, IF($sql_tbl[images_M].id IS NULL, '', 'Y') as is_image, IFNULL($sql_tbl[manufacturers_lng].manufacturer, $sql_tbl[manufacturers].manufacturer) as manufacturer, IFNULL($sql_tbl[manufacturers_lng].descr, $sql_tbl[manufacturers].descr) as descr FROM $sql_tbl[manufacturers] LEFT JOIN $sql_tbl[manufacturers_lng] ON $sql_tbl[manufacturers_lng].manufacturerid = $sql_tbl[manufacturers].manufacturerid AND $sql_tbl[manufacturers_lng].code = '$shop_language' LEFT JOIN $sql_tbl[images_M] ON $sql_tbl[images_M].id = $sql_tbl[manufacturers].manufacturerid WHERE $sql_tbl[manufacturers].manufacturerid = '$manufacturerid'");
+
+		if (empty($manufacturer_data)) {
+			$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_not_exists");
+			$top_message["type"] = "E";
+			func_header_location("manufacturers.php");
+		}
+		else {
+			$manufacturer_data["used_by_others"] = func_manufacturer_is_used($manufacturerid, $manufacturer_data["provider"]);
+			$location[] = array($manufacturer_data["manufacturer"], "");
+			$smarty->assign("manufacturer", $manufacturer_data);
+			$smarty->assign("image", func_image_properties("M", $manufacturerid));
+		}
+	} else {
+
+		if (!empty($manufacturer_data_form))
+			$smarty->assign('manufacturer', $manufacturer_data_form);
+
+		x_session_unregister('manufacturer_data_form');
+		$location[] = array(func_get_langvar_by_name("lbl_add_manufacturer"), "");
+	}
+
+	$smarty->assign("mode", "manufacturer_info");
+}
+else {
+#
+# Get and display the manufacturers list
+#
+	$where = '';
+	if (!empty($word)) {
+		if (in_array($word, range('a','z'))) {
+			$where = " WHERE m.manufacturer LIKE '$word%'";
+		} elseif ($word == 'num') {
+			$where = " WHERE m.manufacturer REGEXP '^[0-9]+.*'";
+		}
+        
+        $smarty->assign('word', $word);
+        
+		$word = 'word=' . $word;
+	}
+
+	if (!empty($active_modules['Multiple_Storefronts'])) {
+		$total_items = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[manufacturers] m $where");
+	} else {
+		$total_items = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[manufacturers] m $where");
+	}
+
+	if ($total_items > 0) {
+
+		#
+		# Prepare the page navigation
+		#
+		$objects_per_page = $config["Manufacturers"]["manufacturers_per_page"];
+
+		$total_nav_pages = ceil($total_items/$objects_per_page)+1;
+
+		include $xcart_dir."/include/navigation.php";
+
+		#
+		# Get the manufacturers list
+		#
+		if (!empty($active_modules['Multiple_Storefronts'])) {
+			$manufacturers = func_query('SELECT m.*, IFNULL(m_lng.manufacturer, m.manufacturer) as manufacturer,'
+                . ' CONCAT(c.lastname, ", ", c.firstname) as provider_name, IF(c.login IS NULL,"","Y") as is_provider'
+                . ' FROM ' . $sql_tbl['manufacturers'] . ' as m'
+                . ' LEFT JOIN ' . $sql_tbl['manufacturers_lng'] . ' as m_lng ON m_lng.manufacturerid = m.manufacturerid'
+                    . ' AND m_lng.code = "' . $shop_language . '"'
+                . ' LEFT JOIN ' . $sql_tbl['customers'] . ' as c ON m.provider=c.login'
+		. $where
+                . ' ORDER BY m.orderby, m.manufacturer LIMIT ' . $first_page . ', ' . $objects_per_page);
+		} else {
+    		$manufacturers = func_query('SELECT m.*, IFNULL(m_lng.manufacturer, m.manufacturer) as manufacturer,'
+                . ' CONCAT(c.lastname,", ",c.firstname) as provider_name, IF(c.login IS NULL,"","Y") as is_provider'
+                . ' FROM ' . $sql_tbl['manufacturers'] . ' as m'
+                . ' LEFT JOIN ' . $sql_tbl['manufacturers_lng'] . ' as m_lng ON m_lng.manufacturerid = m.manufacturerid'
+                    . ' AND m_lng.code = "' . $shop_language . '"'
+                . ' LEFT JOIN ' . $sql_tbl['customers'] . ' as c ON m.provider=c.login'
+		. $where
+                . ' ORDER BY m.orderby, m.manufacturer LIMIT ' . $first_page . ', ' . $objects_per_page);
+		}
+
+		if (is_array($manufacturers)) {
+# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+			if ($login_type == 'P' and !empty($login)) {
+				 $selected_manufacturers = func_query_first_cell("SELECT manufacturerids FROM $sql_tbl[customers] WHERE login='$login' AND usertype='$login_type'");
+				 if (!empty($selected_manufacturers)) {
+					 $selected_manufacturers = unserialize($selected_manufacturers);
+				 }
+			}
+# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+			$products_in_manufacturers = func_query_hash("SELECT COUNT(*), manufacturerid FROM $sql_tbl[products] GROUP BY manufacturerid", 'manufacturerid', false, true);
+
+			foreach ($manufacturers as $k=>$v) {
+				//$manufacturers[$k]["products_count"] = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[products] WHERE manufacturerid='$v[manufacturerid]'");
+				if (isset($products_in_manufacturers[$v['manufacturerid']])) {
+					$manufacturers[$k]["products_count"] = $products_in_manufacturers[$v['manufacturerid']];
+				}
+				$manufacturers[$k]["used_by_others"] = func_manufacturer_is_used($v["manufacturerid"], $v["provider"]);
+# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+				if (!@in_array($v['manufacturerid'], $selected_manufacturers) and $login_type == 'P') {
+					$total_items = $total_items - 1;
+					$total_nav_pages = ceil($total_items/$objects_per_page)+1;
+					unset($manufacturers[$k]);
+				}	
+
+# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+			}
+
+			$smarty->assign("navigation_script","manufacturers.php?");
+			$smarty->assign("manufacturers", $manufacturers);
+			$smarty->assign("first_item", $first_page+1);
+			$smarty->assign("last_item", min($first_page+$objects_per_page, $total_items));
+
+		}
+
+	}
+
+	$smarty->assign('navigation_script', 'manufacturers.php?' . $word);
+
+	$smarty->assign("total_items",$total_items);
+
+	$smarty->assign('words', range('a', 'z'));
+
+}
+
+if (!empty($page))
+	$smarty->assign("page", $page);
+
+?>

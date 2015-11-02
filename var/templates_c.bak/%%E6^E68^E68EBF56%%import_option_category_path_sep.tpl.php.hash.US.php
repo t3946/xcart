@@ -1,0 +1,1 @@
+a8019c5848b7d8d95d8d7079eb236908a:2:{s:21:"txt_category_path_sep";s:44:"Category path separator for "category" field";s:29:"txt_category_path_sep_explain";s:156:"This must be a single char or a sequence of chars that does not occur in the category names.<br />Examples: Books/Software, Books//Software, Books||Software";}

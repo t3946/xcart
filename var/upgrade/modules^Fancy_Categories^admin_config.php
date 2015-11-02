@@ -1,0 +1,209 @@
+<?php
+/*****************************************************************************\
++-----------------------------------------------------------------------------+
+| X-Cart                                                                      |
+| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+| All rights reserved.                                                        |
++-----------------------------------------------------------------------------+
+| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
+| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
+| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
+|                                                                             |
+| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
+| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
+| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
+| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
+| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
+| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
+| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
+| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
+| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
+| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
+| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
+| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
+| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
+| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
+|                                                                             |
+| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
+| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
+| Ruslan R. Fazliev. All Rights Reserved.                                     |
++-----------------------------------------------------------------------------+
+\*****************************************************************************/
+
+#
+# $Id: admin_config.php,v 1.12 2006/02/14 14:45:25 max Exp $
+#
+
+if (!defined('XCART_START')) { header("Location: ../../"); die("Access denied"); }
+
+if (!in_array($option, array("Fancy_Categories", "Appearance")))
+	return false;
+
+if ($option == "Appearance") {
+	if ($config['Appearance']['count_products'] != $HTTP_POST_VARS['count_products'] && !empty($HTTP_POST_VARS['count_products'])) {
+
+		# Update categories data cache
+		# (category box is display products and subcategories counts.
+		# $config.Appearance.count_products option is control this functionality)
+		func_fc_build_categories(true, 10);
+	}
+
+	return true;
+}
+
+#
+# Get categories cache data rebuilding flag
+#
+if ($REQUEST_METHOD == 'POST' && !empty($HTTP_POST_VARS)) {
+	$flag = false;
+	$cache_options = array("fancy_js", "fancy_download", "fancy_cache");
+
+	if ($config["Fancy_Categories"]["fancy_categories_skin"] != $HTTP_POST_VARS['fancy_categories_skin']) {
+
+		# Change subskin
+		$ini = parse_ini_file($smarty->template_dir.DIRECTORY_SEPARATOR.$fcat_module_path.DIRECTORY_SEPARATOR.$HTTP_POST_VARS['fancy_categories_skin'].DIRECTORY_SEPARATOR."config.ini", true);
+		if ($ini['download'] == 'Y' && !empty($HTTP_POST_VARS['fancy_cache']) && !empty($HTTP_POST_VARS['fancy_js']) && !empty($HTTP_POST_VARS['fancy_download']))
+			$flag = true;
+		unset($ini);
+
+	} else {
+
+		# Check common options
+		$ecount = 0;
+		$ccount = 0;
+		foreach ($cache_options as $oname) {
+			if (!empty($HTTP_POST_VARS[$oname]))
+				$ecount++;
+			if ($config["Fancy_Categories"][$oname] != (empty($HTTP_POST_VARS[$oname]) ? "" : "Y"))
+				$ccount++;
+		}
+		if ($ecount == count($cache_options) && $ccount > 0)
+			$flag = true;
+
+		# Check critical skin variables
+		if ($flag == false && $ecount == count($cache_options)) {
+			$ini = parse_ini_file($fancy_config_path, true);
+			foreach ($ini as $k => $v) {
+				if (!is_array($v) || $v['critical'] != 'Y')
+					continue;
+
+				$new_value = func_query_first_cell("SELECT value FROM $sql_tbl[config] WHERE name = '".$fancy_prefix.$k."'");
+				if ($config["Fancy_Categories"][$fancy_prefix.$k] != $new_value) {
+					$flag = true;
+					break;
+				}
+			}
+
+			unset($ini);
+		}
+	}
+
+	if ($flag) {
+		func_header_location("configuration.php?option=$option&fc_build_categories=Y");
+	}
+}
+elseif ($REQUEST_METHOD == 'GET' && !empty($configuration)) {
+
+	if ($fc_build_categories == "Y") {
+		func_fc_build_categories(false, 10);
+		func_header_location("configuration.php?option=".$option);
+	}
+
+	# Get skins names
+	$path = $smarty->template_dir.DIRECTORY_SEPARATOR.$fcat_module_path.DIRECTORY_SEPARATOR;
+	foreach ($fcat_skins as $k => $v) {
+		if (!file_exists($path.$k.DIRECTORY_SEPARATOR."config.ini")) {
+			unset($fcat_skins[$k]);
+			continue;
+		}
+
+		$name = func_get_langvar_by_name("opt_fc_skin_".$k, NULL, false, true);
+
+		# Add name if name is empty
+		if (empty($name)) {
+			$ini = parse_ini_file($path.$k.DIRECTORY_SEPARATOR."config.ini", true);
+			if (!empty($ini['name_'.$shop_language])) {
+				$fcat_skins[$k]['name'] = $ini['name_'.$shop_language];
+			}
+			elseif (!empty($ini['name'])) {
+				$fcat_skins[$k]['name'] = $ini['name'];
+			}
+
+			unset($ini);
+			$query_data = array(
+				"code" => $shop_language,
+				"name" => "opt_fc_skin_".$k,
+				"value" => $fcat_skins[$k]['name'],
+				"topic" => "Options"
+			);
+			$query_data = func_addslashes($query_data);
+			func_array2insert("languages", $query_data);
+		}
+		else {
+			$fcat_skins[$k]['name'] = $name;
+		}
+	}
+
+	# Unset configuration variables of another skins
+	if (isset($fcat_skins[$config["Fancy_Categories"]["fancy_categories_skin"]])) {
+		foreach ($configuration as $k => $v) {
+			if ($v['type'] != 'separator' && !in_array($v['name'], array("fancy_categories_skin","fancy_js","fancy_download","fancy_preload","fancy_cache")) && strpos($v['name'], $fancy_prefix) !== 0) {
+				unset($configuration[$k]);
+			}
+		}
+	}
+
+	# Check skin config variables
+	if (file_exists($fancy_config_path)) {
+		$ini = parse_ini_file($fancy_config_path, true);
+
+		if ($ini['layer'] == 'Y') {
+			$fancy_layer = true;
+			$smarty->assign("fancy_layer", $fancy_layer);
+		}
+
+		if ($ini['download'] == 'Y') {
+			$fancy_download = true;
+			$smarty->assign("fancy_download", $fancy_download);
+		}
+
+		# Check absented in xcart_config table config variables
+		foreach ($ini as $k => $v) {
+			if (!is_array($v))
+				continue;
+
+			$key = $fancy_prefix.$k;
+			$found = false;
+			foreach ($configuration as $cv) {
+				if ($cv['name'] == $key) {
+					$found = true;
+					break;
+				}
+			}
+
+			if (!$found) {
+				func_fc_add_cfg_var($config, $key, $v);
+				$configuration[] = func_query_first("SELECT * FROM $sql_tbl[config] WHERE name = '".addslashes($key)."'");
+			}
+		}
+	}
+
+	# Modify properties of configuration variable
+	foreach ($configuration as $k => $v) {
+		if ($v['name'] == 'fancy_categories_skin') {
+			$configuration[$k]['variants'] = "";
+			foreach($fcat_skins as $kv => $vv) {
+				$configuration[$k]['variants'] .= $kv.":".$vv['name']."\n";
+			}
+
+			$configuration[$k]['auto_submit'] = true;
+		}
+		elseif (empty($fancy_layer) && in_array($v['name'], array("fancy_download","fancy_preload","fancy_cache"))) {
+			unset($configuration[$k]);
+		}
+	}
+
+	$smarty->assign("fcat_skins", $fcat_skins);
+}
+
+?>

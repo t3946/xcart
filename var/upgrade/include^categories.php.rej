@@ -1,0 +1,74 @@
+***************
+*** 74,80 ****
+ }
+ 
+ function func_check_category_path($path) {
+-	global $sql_tbl;
+ 	$alt_path_ids = implode(', ', $path);
+ 	$alt_path_parent_ids = func_query_hash('SELECT categoryid, parentid FROM '.$sql_tbl['categories'].' WHERE categoryid IN ('.$alt_path_ids.')', 'categoryid', true, true);
+ 	$alt_path_add_parent_ids = func_query_hash('SELECT categoryid, parentid FROM '.$sql_tbl['categories_parents'].' WHERE categoryid IN ('.$alt_path_ids.')', 'categoryid', true, true);
+--- 74,80 ----
+ }
+ 
+ function func_check_category_path($path) {
++	global $sql_tbl, $current_storefront;
+ 	$alt_path_ids = implode(', ', $path);
+ 	$alt_path_parent_ids = func_query_hash('SELECT categoryid, parentid FROM '.$sql_tbl['categories'].' WHERE categoryid IN ('.$alt_path_ids.')', 'categoryid', true, true);
+ 	$alt_path_add_parent_ids = func_query_hash('SELECT categoryid, parentid FROM '.$sql_tbl['categories_parents'].' WHERE categoryid IN ('.$alt_path_ids.')', 'categoryid', true, true);
+***************
+*** 110,116 ****
+ # START: random:19885 [2010 Jan 11 11:55] 
+ function func_get_categories_list($cat=0, $short_list=true, $flag=NULL, $max_depth=0) {
+ # END: random:19885 [2010 Jan 11 11:55] 
+-	global $current_area, $sql_tbl, $shop_language, $active_modules, $config, $xcart_dir;
+ 
+ 	$cat = intval($cat);
+ 
+--- 110,116 ----
+ # START: random:19885 [2010 Jan 11 11:55] 
+ function func_get_categories_list($cat=0, $short_list=true, $flag=NULL, $max_depth=0) {
+ # END: random:19885 [2010 Jan 11 11:55] 
++	global $current_area, $sql_tbl, $shop_language, $active_modules, $config, $xcart_dir, $current_storefront;
+ 
+ 	$cat = intval($cat);
+ 
+***************
+*** 120,125 ****
+ 
+ 	$search_condition = array();
+ 
+ 	if ($flag == "root")
+ 		$search_condition[] = "$sql_tbl[categories].parentid='0'";
+ 	elseif ($flag == "level")
+--- 120,129 ----
+ 
+ 	$search_condition = array();
+ 
++	if (!empty($active_modules['Multiple_Storefronts'])) {
++		$search_condition[] = "$sql_tbl[categories].storefrontid = $current_storefront";
++	}
++
+ 	if ($flag == "root")
+ 		$search_condition[] = "$sql_tbl[categories].parentid='0'";
+ 	elseif ($flag == "level")
+***************
+*** 195,201 ****
+ 
+ 	if (defined('NEED_PRODUCT_CATEGORIES')) {
+ 		global $productid;
+ 		$_categories = func_query_hash("SELECT $to_search, $sql_tbl[products_categories].productid, $sql_tbl[products_categories].main FROM $sql_tbl[categories] $join_tbl LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[categories].categoryid=$sql_tbl[products_categories].categoryid AND $sql_tbl[products_categories].productid='$productid' AND $sql_tbl[products_categories].main != 'Y' GROUP BY $sql_tbl[categories].categoryid", "categoryid", false);
+ 	} else {
+ 		$_categories = func_query_hash("SELECT $to_search FROM $sql_tbl[categories] USE INDEX (am) $join_tbl ".(!empty($search_condition)?"WHERE ".implode(" AND ", $search_condition):"")." GROUP BY $sql_tbl[categories].categoryid ".$sort_condition, "categoryid", false);
+ 	}
+--- 195,205 ----
+ 
+ 	if (defined('NEED_PRODUCT_CATEGORIES')) {
+ 		global $productid;
++		if (!empty($active_modules['Multiple_Storefronts'])) {
++			$_categories = func_query_hash("SELECT $to_search, $sql_tbl[products_categories].productid, $sql_tbl[products_categories].main FROM $sql_tbl[categories] $join_tbl LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[categories].categoryid=$sql_tbl[products_categories].categoryid AND $sql_tbl[products_categories].productid='$productid' AND $sql_tbl[products_categories].main != 'Y' WHERE $sql_tbl[categories].storefrontid = $current_storefront GROUP BY $sql_tbl[categories].categoryid", "categoryid", false);
++		} else {
+ 		$_categories = func_query_hash("SELECT $to_search, $sql_tbl[products_categories].productid, $sql_tbl[products_categories].main FROM $sql_tbl[categories] $join_tbl LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[categories].categoryid=$sql_tbl[products_categories].categoryid AND $sql_tbl[products_categories].productid='$productid' AND $sql_tbl[products_categories].main != 'Y' GROUP BY $sql_tbl[categories].categoryid", "categoryid", false);
++		}
+ 	} else {
+ 		$_categories = func_query_hash("SELECT $to_search FROM $sql_tbl[categories] USE INDEX (am) $join_tbl ".(!empty($search_condition)?"WHERE ".implode(" AND ", $search_condition):"")." GROUP BY $sql_tbl[categories].categoryid ".$sort_condition, "categoryid", false);
+ 	}

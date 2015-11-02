@@ -1,0 +1,182 @@
+/*
++----------------------------------------------------------------------+
+| Best Search Filter Mod                                               |
++----------------------------------------------------------------------+
+| Copyright (c) 2009-2012 CIDEV, xcartmaster@gmail.com                 |
++----------------------------------------------------------------------+
+*/
+
+.cidev_ajax_loading {
+  background: #cccccc url(../images/loading.gif) no-repeat center center;
+  opacity: 0.50;
+}
+
+.cidev_checkbox {
+        background:url('../images/checkbox.png') 0 1px no-repeat;
+	height: 14px;
+}
+
+.cidev_checkbox_checked {
+        background:url('../images/checkbox.png') 0 -15px no-repeat;
+        height: 14px;
+}
+
+.cidev_checkbox a, 
+.cidev_checkbox_checked a {
+	padding: 0px 2px 0px 15px;
+	text-decoration: none;
+}
+
+.cidev_menu_scroll {
+  height: 195px;
+  overflow: auto; 
+}
+
+/**
+ * side bar container
+ */
+.cidev_menu-dialog {
+  border: 1px solid #5f94c0;
+  margin-bottom: 15px;
+}
+
+.cidev_menu-dialog .cidev_title-bar {
+  width: 100%;
+  background: #9ec6de url(../images/menu_bg.gif) repeat-x left top;
+  border: 0 none;
+  border-bottom: #215485 1px solid;
+  height: 27px;
+  overflow: hidden;
+}
+
+.cidev_menu-dialog .cidev_title-bar h2 {
+  font-size: 12px;
+  color: #fff;
+  font-weight: bold;
+  line-height: 27px;
+  height: 27px;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  display: inline;
+  white-space: nowrap;
+}
+
+.cidev_menu-dialog .cidev_content {
+  border: 0;
+  background-color: #fff;
+  padding: 8px 10px;
+  overflow: hidden;
+}
+
+.cidev_menu-dialog .cidev_content a {
+  color: #324c76;
+}
+
+.cidev_menu-dialog .cidev_content a:hover {
+  color: #2863c2;
+}
+
+.cidev_menu-dialog ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cidev_menu-dialog ul li {
+  padding: 0;
+  vertical-align: middle;
+}
+
+.cidev_menu-dialog ul li a {
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.cidev_menu-dialog ul li a:hover {
+  text-decoration: underline;
+}
+
+.cidev_menu-dialog h3 {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: -moz-use-text-color -moz-use-text-color #9D1500;
+    border-style: none none solid;
+    border-width: 0 0 1px;
+    color: #B51A00;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 0 10px;
+    padding: 0;
+}
+
+/**
+ * button-based
+ */
+button.cidev_button {
+  border: 0 none;
+  background-color: transparent;
+  cursor: pointer;
+  height: 23px;
+  margin: 0;
+  padding: 1px;
+  vertical-align: top;
+  overflow: visible;
+  outline-style: none;
+}
+
+button.cidev_button .cidev_button-right {
+  display: block;
+  background: transparent url(../images/but_right.png) no-repeat right top;
+  padding: 0 10px 0 0;
+  height: 21px;
+}
+
+button.cidev_button .cidev_button-left {
+  display: block;
+  margin: 0;
+  background: transparent url(../images/but_left.png) no-repeat left top;
+  padding: 0 5px 0 15px;
+  vertical-align: middle;
+  white-space: nowrap;
+  font-family: verdana, arial, helvetica, sans-serif;
+  color: #111d4d;
+  font-weight: bold;
+  font-size: 11px;
+  height: 22px;
+  line-height: 21px;
+}
+
+/**
+ * div-based
+ */
+div.cidev_button {
+  border: 0 none;
+  background: transparent none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0 10px 0 0;
+  white-space: nowrap;
+  background: transparent url(../images/but_right.png) no-repeat right top;
+  float: left;
+}
+
+div.cidev_button div,
+div.cidev_button a
+{
+  display: block;
+  background: transparent url(../images/but_left.png) no-repeat left top;
+  padding: 0 5px 0 15px;
+  line-height: 21px;
+  white-space: nowrap;
+  font-family: verdana, arial, helvetica, sans-serif;
+  color: #111d4d;
+  font-weight: bold;
+  font-size: 11px;
+  text-decoration: none;
+  outline-style: none;
+}
+

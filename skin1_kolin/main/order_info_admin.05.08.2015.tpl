@@ -1,0 +1,1082 @@
+{*
+$Id: order_info_admin.tpl, v 1.0.0 2010/03/23 15:16:14 random Exp $
+vim: set ts=2 sw=2 sts=2 et:
+*}
+<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+{include file="check_zipcode_js.tpl"}
+
+<a name="order_info"></a>
+
+{include file="main/subheader.tpl" title=$lng.lbl_order_info show_order_help_links="Y"}
+
+{$lng.txt_order_details_top_text}
+
+{include file="change_states_js.tpl"}
+
+<script type="text/javascript" language="JavaScript 1.2">
+<!--
+{literal}
+
+function func_check_dc_statuses(m_id){
+
+/*
+  var dc_status = $('#groups_dc_status_'+m_id).val();
+  var items_amount_id;
+
+{/literal}
+{foreach from=$order.shipping_groups item=v key=k_m_id}
+{literal}
+
+  if (m_id == '{/literal}{$k_m_id}{literal}'){
+    {/literal}
+    {foreach from=$v.products item=product key=prod_num}
+    {literal}
+
+      items_amount_id = "items_amount_"+m_id+"_{/literal}{$product.itemid}{literal}";
+
+      if (dc_status == "C" || dc_status == "L" || dc_status == "S"){
+        $('#'+items_amount_id).attr("readonly", "readonly");
+        $('#groups_shipping_cost_net_'+m_id).attr("readonly", "readonly");
+      } else {
+        $('#'+items_amount_id).removeAttr("readonly");
+        $('#groups_shipping_cost_net_'+m_id).removeAttr("readonly");
+      }
+
+    {/literal}
+    {/foreach}
+    {literal}
+  }
+
+{/literal}
+{/foreach}
+{literal}
+*/
+}
+
+function func_check_additional_shipping_status(m_id){
+
+  var additional_shipping_status = $("#additional_shipping_status_"+m_id).val(); 
+
+  if (additional_shipping_status == "P"){
+    $("#additional_vt_info_"+m_id).show();
+  }
+  else {
+    $("#additional_vt_info_"+m_id).hide();
+  }
+}
+
+function func_check_cb_status(m_id){
+
+  var cb_status = $("#groups_cb_status_"+m_id).val(); 
+
+  if (cb_status == "P" || cb_status == "3" || cb_status == "V" || cb_status == "H" || cb_status == "R"){
+    $("#groups_shipping_cost_net_"+m_id).prop("readonly",true);
+  } else {
+    $("#groups_shipping_cost_net_"+m_id).prop("readonly",false);
+  }
+
+}
+
+function func_check_cb_statuses(){
+
+  var all_cb_status_eq_P = true;
+  var cb_status_eq_P_found = false;
+
+  var all_cb_status_eq_3 = true;
+  var cb_status_eq_3_found = false;
+
+  var all_cb_status_eq_V = true;
+  var cb_status_eq_V_found = false;
+
+  var all_cb_status_eq_H = true;
+  var cb_status_eq_H_found = false;
+
+  var all_cb_status_eq_R = true;
+  var cb_status_eq_R_found = false;
+
+  var cb_status;
+
+{/literal}
+{foreach from=$order.shipping_groups item=v key=m_id}
+{literal}
+
+  cb_status = $('#groups_cb_status_{/literal}{$m_id}{literal}').val();
+
+  if (document.getElementById('refund_group_{/literal}{$m_id}{literal}')){
+    if (cb_status == "3" || cb_status == "V"){
+      $("#refund_group_{/literal}{$m_id}{literal}").show();
+    } else {
+      $("#refund_group_{/literal}{$m_id}{literal}").hide();
+    }
+  }
+
+  if (cb_status == "P"){
+    cb_status_eq_P_found = true;
+  } else {
+    all_cb_status_eq_P = false;
+  }
+
+  if (cb_status == "3"){
+    cb_status_eq_3_found = true;
+  } else {
+    all_cb_status_eq_3 = false;
+  }
+
+  if (cb_status == "V"){
+    cb_status_eq_V_found = true;
+  } else {
+    all_cb_status_eq_V = false;
+  }
+
+  if (cb_status == "H"){
+    cb_status_eq_H_found = true;
+  } else {
+    all_cb_status_eq_H = false;
+  }
+
+  if (cb_status == "R"){
+    cb_status_eq_R_found = true;
+  } else {
+    all_cb_status_eq_R = false;
+  }
+
+  if (cb_status == "O"){
+    $("#po_status_{/literal}{$m_id}{literal}_tr").show();
+  } else {
+    $("#po_status_{/literal}{$m_id}{literal}_tr").hide();
+  }
+
+{/literal}
+{/foreach}
+{literal}
+
+  if (cb_status_eq_P_found == true && all_cb_status_eq_P == true){
+    $("#vt_info").show();
+  } else {
+    $("#vt_info").hide();
+  }
+
+/*
+  if (
+      (cb_status_eq_P_found == true && all_cb_status_eq_P == true) || 
+      (cb_status_eq_3_found == true && all_cb_status_eq_3 == true) || 
+      (cb_status_eq_V_found == true && all_cb_status_eq_V == true) || 
+      (cb_status_eq_H_found == true && all_cb_status_eq_H == true) || 
+      (cb_status_eq_R_found == true && all_cb_status_eq_R == true)
+  ) {
+    for (var i = 0; i < 20; i++) { 
+      if (document.getElementById('sku_add_to_order_box_'+i)){
+        $("#sku_add_to_order_box_"+i).prop("disabled",true);
+      }
+    }
+  } else {
+    for (var i = 0; i < 20; i++) { 
+      if (document.getElementById('sku_add_to_order_box_'+i)){
+        $("#sku_add_to_order_box_"+i).prop("disabled",false);
+      }
+    }
+  }
+*/
+
+}
+
+function js_explode (delimiter, string, limit) {
+
+  if ( arguments.length < 2 || typeof delimiter === 'undefined' || typeof string === 'undefined' ) return null;
+  if ( delimiter === '' || delimiter === false || delimiter === null) return false;
+  if ( typeof delimiter === 'function' || typeof delimiter === 'object' || typeof string === 'function' || typeof string === 'object'){
+    return { 0: '' };
+  }
+  if ( delimiter === true ) delimiter = '1';
+
+  // Here we go...
+  delimiter += '';
+  string += '';
+
+  var s = string.split( delimiter );
+
+
+  if ( typeof limit === 'undefined' ) return s;
+
+  // Support for limit
+  if ( limit === 0 ) limit = 1;
+
+  // Positive limit
+  if ( limit > 0 ){
+    if ( limit >= s.length ) return s;
+    return s.slice( 0, limit - 1 ).concat( [ s.slice( limit - 1 ).join( delimiter ) ] );
+  }
+
+  // Negative limit
+  if ( -limit >= s.length ) return [];
+
+  s.splice( s.length + limit );
+  return s;
+}
+
+function check_r_field(form, prefix, key_of_arr) {
+
+  var reg = new RegExp("^"+prefix, "");
+
+  for (var i = 0; i < form.elements.length; i++) {
+
+    if (form.elements[i].type == "text" && (!prefix || form.elements[i].id.search(reg) == 0)){
+
+      var field_id = form.elements[i].id;
+      var field = $('#'+field_id).val();
+      var first_letter = field[0];
+
+      if (first_letter == "R" || first_letter == "r"){
+
+       var field_id_arr = js_explode("_", field_id);
+       var mid = field_id_arr[key_of_arr];
+
+       var cb_status = $('#groups_cb_status_'+mid).val();
+
+       if (cb_status != "P" && cb_status != "V" && cb_status != "H" && cb_status != "3"){
+          return "N";
+       }
+      }
+    }
+  }
+
+  return "Y";
+}
+
+
+function check_r_fields(){
+
+  var form = document.ordereditform1;
+
+  var check_amount = check_r_field(form, "items_amount_", 2);
+  var check_shipping_cost_net = check_r_field(form, "groups_shipping_cost_net_", 4);
+
+
+  if (check_amount == "Y" && check_shipping_cost_net == "Y"){
+    form.submit();
+    return true;
+  } else {
+
+    alert("{/literal}{$lng.lbl_refunds_apply_order}{literal}");
+    return false;
+  }
+
+}
+{/literal}
+-->
+</script>
+
+
+
+
+<form action="order.php" method="post" name="ordereditform1" onsubmit="javascript: check_r_fields(); return false;">
+
+<input type="hidden" name="mode" value="order_edit_apply" id="ordereditform_mode" />
+<input type="hidden" name="ref_notify_button_clicked" value="" id="ref_notify_button_clicked" />
+
+<input type="hidden" name="orderid" value="{$order.orderid}" />
+<input type="hidden" name="notify_mid" value="" id="ordereditform_mid" />
+<input type="hidden" name="send_email" id="send_email1" value="N" />
+
+<table cellpadding="3" cellspacing="1" width="100%">
+<tr class="TableHead">
+  <td width="35%">{$lng.lbl_product}</td>
+  <td width="17%">{$lng.lbl_sku}</td>
+  <td width="7%">{$lng.lbl_price}</td>
+  <td width="5%"><span onmouseout="javascript: $('#header_lbl_qty').hide();" onmouseover="javascript: cidev_showNote('header_lbl_qty', this);" style="text-decoration: none;"><font class="Star">R</font>{$lng.lbl_qty}</span>
+    <div id="header_lbl_qty" class="cidev_NoteBox" style="display: none; width: 600px; margin-left: -640px;">{$lng.lbl_order_edit_info_1}</div>
+  </td>
+  <td width="5%">BO/<br />DROPPED</td>
+  <td width="7%" nowrap="nowrap">ETA date<br />(mm/dd/yyyy)</td>
+  <td width="7%"><span onmouseout="javascript: $('#header_lbl_net').hide();" onmouseover="javascript: cidev_showNote('header_lbl_net', this);" style="text-decoration: none;"><font class="Star">R</font>{$lng.lbl_net}</span>
+    <div id="header_lbl_net" class="cidev_NoteBox" style="display: none; width: 600px; margin-left: -640px;">{$lng.lbl_order_edit_info_2}</div>
+  </td>
+  <td width="7%">{$lng.lbl_gst}</td>
+{*  <td width="7%">{$lng.lbl_pst}</td> *}
+  <td width="7%">{$lng.lbl_gross}</td>
+  {if !$static}<td width="5%">{$lng.lbl_remove}{else}<td>&nbsp;{/if}</td>
+</tr>
+
+
+<tr class="TableHead" style="BACKGROUND-COLOR: #FFD44C;">
+  <td width="35%"></td>
+  <td width="17%"></td>
+  <td width="7%" nowrap="nowrap"><font style="font-size: 9px;">Cost to us</font></td>
+  <td width="5%"></td>
+  <td width="5%"></td>
+  <td width="7%"></td>
+  <td width="7%" nowrap="nowrap"><font style="font-size: 9px;">Cost to us</font></td>
+  <td width="7%"></td>
+{*  <td width="7%"></td> *}
+  <td width="7%" nowrap="nowrap"><font style="font-size: 9px;">Cost to us</font></td>
+  {if !$static}<td width="5%">{else}<td>{/if}</td>
+</tr>
+
+{foreach from=$order.shipping_groups item=v key=m_id}
+{if $m_id gt 0}
+<tr class="distributor-totals-line">
+  <td>
+    <table cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td>
+          <a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name}</a>
+          {if $order_manufacturers[$m_id].d_shipping_methods_usps eq "Y"}
+            <span style="color: #000000; font-weight: normal;">ships by USPS</span>
+          {/if}
+      </td>
+      {if $v.all_distributor_info.d_specific_instructions ne ""}
+      <td align="right"><a target="_blank" onmouseout="javascript: $('#d_specific_instructions_note_{$m_id}').delay(3000).hide(3000);" onmouseover="javascript: cidev_showNote('d_specific_instructions_note_{$m_id}', this);" style="color: #FF0000;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=1">?</a></td>
+      {/if}
+    </tr>
+    </table>
+
+    <div id="d_specific_instructions_note_{$m_id}" class="cidev_NoteBox" style="display: none;">
+      <table><tr><td nowrap="nowrap">{$v.all_distributor_info.d_specific_instructions}</td></tr></table>
+    </div>
+
+  </td>
+  <td>{$v.code}</td>
+  <td colspan="4">
+    {if $order_manufacturers[$m_id].d_link_to_order_distributors_website ne ""}
+    <a style="color: #3A3AFF; font-weight: normal;" href='{$order_manufacturers[$m_id].d_link_to_order_distributors_website}' target="_blank">Order on distributor's website</a>
+    {/if}
+  </td>
+  <td align="right">{include file="currency2.tpl" value=$v.total.net}</td>
+  <td align="right">{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}</td>
+{*  <td align="right">{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}</td> *}
+  <td align="right">{include file="currency2.tpl" value=$v.total.gross}</td>
+  <td> 
+{if $v.empty_products_list eq "Y"}<input type="checkbox" value="Y" name="distributors_to_delete[{$m_id}][delete]" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
+  </td>
+</tr>
+{foreach from=$v.products item=product key=prod_num}
+<tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
+  <td>
+    <a href="{$product.links.customer}&cat={$cats[$product.productid]}" title="" target="_blank">{$product.product}</a>
+{* --------------------- *}
+    {if $product.orig_product_classes ne ""}
+
+      {assign var="refunded_option_found" value="N"}
+      {if $order.refund_groups[$m_id].products ne ""}
+        {foreach from=$order.refund_groups[$m_id].products item=product_ref key=prod_num_ref}
+
+          {if $product_ref.itemid eq $product.itemid}
+            {assign var="refunded_option_found" value="Y"}
+          {/if}
+
+        {/foreach}
+      {/if}
+
+
+      {foreach from=$product.orig_product_classes item=item key=key}
+        {if $item.options ne ""}
+          <br /> {$item.classtext}
+          <select name="items[{$product.itemid}][classid_optionid][{$item.classid}]" {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+          {foreach from=$item.options key=optionid item=option_values}
+          {assign var="tmp_optionid_key" value=`$option_values.classid`}
+          {assign var="tmp_optionid" value=`$product.product_options[$tmp_optionid_key].optionid`} 
+            <option value="{$optionid}"
+              {if $tmp_optionid eq $optionid} 
+                selected="selected"
+              {/if}
+            >{$option_values.option_name}</option>
+          {/foreach}
+          </select>
+        {elseif $item.is_modifier eq "T"}
+          <br /> {$item.classtext}
+          <input type="text" name="items[{$product.itemid}][classid_optionid][{$item.classid}]" {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} value="{$product.product_options[$item.classid].option_name}">
+        {elseif $product.product_options_txt ne ""}
+          <br />Options: {$product.product_options_txt}
+        {/if}
+      {/foreach}
+    {/if}
+{* --------------------- *}
+  </td>
+  <td>
+    {if $current_membership_flag ne 'FS'}<a href="{$product.links.admin}" title="" target="_blank">{$product.productcode}</a>{else}{$product.productcode}{/if}
+{assign var="mpn" value=`$product.mpn`}
+{if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}<br />
+  <a style="color: #3A3AFF;" href='{$order_manufacturers[$m_id].d_website_search_for_sku_url|replace:"---mpn---":"$mpn"}' target="_blank">{$mpn}</a>
+{/if}
+
+  </td>
+  <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.price|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.price|price_format}{/if}
+
+{* --- *}
+<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+{include file="currency2.tpl" value=$product.cost_to_us|price_format}
+</div>
+
+{if $product.item_cost_to_us ne ""}
+<div style="BACKGROUND-COLOR: #F2A3A8; color: #000000" align="right">
+{if $product.item_cost_to_us ne $product.cost_to_us}
+{include file="currency2.tpl" value=$product.item_cost_to_us|price_format}
+{else}
+Cost to us accurate
+{/if}
+</div>
+{/if}
+{* --- *}
+
+  </td>
+  <td align="right" {* valign="top" *}>{if !$static}<input type="text" size="5" id="items_amount_{$m_id}_{$product.itemid}" name="items[{$product.itemid}][amount]" value="{$product.amount}" {* {if $v.dc_status eq 'C' || $v.dc_status eq 'L' || $v.dc_status eq 'S'}readonly="readonly"{/if} *} {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$product.amount}{/if}</td>
+  <td align="right" {* valign="top" *}>
+{if !$static}
+  {if $v.dc_status eq 'K' || $v.dc_status eq 'E'}
+    {$product.back}
+    <input type="hidden" name="items[{$product.itemid}][back]" value="{$product.back}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+  {else}
+    <input type="text" size="5" name="items[{$product.itemid}][back]" value="{$product.back}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+  {/if}
+{else}
+  {$product.back}
+{/if}
+
+{if $product.dropped eq "Y"}
+  <br />Dropped
+{/if}
+  </td>
+
+{if !($order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y")}
+
+<script type="text/javascript" language="JavaScript 1.2">
+<!--
+{literal}
+  $(function() {
+    $("#eta_date_mm_dd_yyyy_{/literal}{$product.itemid}{literal}").datepicker();
+  });
+{/literal}
+-->
+</script>
+
+{/if}
+
+  <input type="hidden" name="items[{$product.itemid}][productid]" value="{$product.productid}" />
+  <td align="right" {* valign="top" *}>
+{if !$static}
+
+  {if $v.dc_status eq 'K' || $v.dc_status eq 'E'}
+  {$product.eta_date_mm_dd_yyyy}
+  <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="hidden" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{$product.eta_date_mm_dd_yyyy}" />
+  {else}
+  <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="text" size="9" style="width: 98%;" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{$product.eta_date_mm_dd_yyyy}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+  {/if}
+{else}
+  {$product.eta_date_mm_dd_yyyy}
+{/if}
+  </td>
+
+  <td align="right">{include file="currency2.tpl" value=$product.price*$product.amount}
+
+{* --- *}
+<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+{include file="currency2.tpl" value=$product.cost_to_us*$product.amount}
+</div>
+{* --- *}
+  </td>
+  <td align="right">
+{if $product.extra_data ne ""}
+ {include file="currency2.tpl" value=$product.extra_data.taxes.GST.tax_value+$product.extra_data.taxes.HST.tax_value hide_zero='Y'} 
+{/if}
+  </td>
+{*  <td align="right">{include file="currency2.tpl" value=$product.extra_data.taxes.PST.tax_value hide_zero='Y'}</td> *}
+  <td align="right">
+
+{include file="currency2.tpl" value=$product.display_subtotal}
+
+{* --- *}
+<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+{include file="currency2.tpl" value=$product.cost_to_us*$product.amount}
+</div>
+{* --- *}
+
+  </td>
+  <td align="center">{if !$static}<input type="checkbox" value="Y" name="items[{$product.itemid}][delete]" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}</td>
+</tr>
+{/foreach}
+<tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
+  <td>{if !$static}<input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}" style="width: 99%;" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}</td>
+  <td colspan="5">
+    {if $v.tracking}
+
+      {assign var="row_conter" value="0"}
+      {foreach from=$v.tracking item=t}
+
+        {if $t.tracknum ne ""}
+          {math equation="x+1" x=$row_conter assign="row_conter"}
+
+          <div id="tracknum_{$m_id}_{$row_conter}">
+          <a href="{$tracking_links[$t.linkid].link|substitute:"tracknum":$t.tracknum}" target="_blank">{$tracking_links[$t.linkid].shipping}: {$t.tracknum}</a>
+
+          <a href="javascript: void(0);" onclick="javascript: $('#tracknum_val_{$m_id}_{$row_conter}').val(''); $('#tracknum_link_{$m_id}_{$row_conter}').val(''); $('#tracknum_invoice_number_{$m_id}_{$row_conter}').val(''); $('#tracknum_{$m_id}_{$row_conter}').hide();"><img src="{$ImagesDir}/minus.gif" /></a>
+
+          <input type="hidden" name="tracknums[{$m_id}][{$row_conter}][tracknum]" value="{$t.tracknum}" id="tracknum_val_{$m_id}_{$row_conter}" />
+          <input type="hidden" name="tracknums[{$m_id}][{$row_conter}][linkid]" value="{$t.linkid}" id="tracknum_link_{$m_id}_{$row_conter}" />
+          <input type="hidden" name="tracknums[{$m_id}][{$row_conter}][invoice_number]" value="{$t.invoice_number|default:'1'}" id="tracknum_invoice_number_{$m_id}_{$row_conter}" />
+          <br />
+          </div>
+
+        {else}
+          {$tracking_links[$t.linkid].shipping}: {$tracking_links[$t.linkid].link}
+          <br />
+        {/if}
+
+      {/foreach}
+    {else}
+      &nbsp;
+    {/if}
+  </td>
+  <td align="right">
+    {if !$static}
+      <input type="hidden" name="groups[{$m_id}][shipping_cost_net_orig]" value="{$v.shipping_cost.net|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+      <input id="groups_shipping_cost_net_{$m_id}" type="text" size="8" name="groups[{$m_id}][shipping_cost_net]" value="{$v.shipping_cost.net|price_format}" {* {if $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'V' || $v.cb_status eq 'H' || $v.cb_status eq 'R'}readonly="readonly"{/if} *}  {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+    {else}
+      {$v.shipping_cost.net|price_format}
+    {/if}
+  </td>
+  <td align="right">{include file="currency2.tpl" value=$v.shipping_cost.gst hide_zero='Y'}</td>
+{*  <td align="right">{include file="currency2.tpl" value=$v.shipping_cost.pst hide_zero='Y'}</td> *}
+  <td align="right">{include file="currency2.tpl" value=$v.shipping_cost.gross}</td>
+  <td>&nbsp;</td>
+</tr>
+
+{* ----------------------- *}
+<tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"} style="BACKGROUND-COLOR: #FFD44C;">
+  <td colspan="6">
+
+{*
+  {math equation="x/y" x=$v.actual_shipping_cost.net y=$order_manufacturers.$m_id.required_shipping_charge assign="default_required_shipping_charge"}
+*}
+
+
+  {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}
+<input type="hidden" name="groups[{$m_id}][shipping_value_selectbox]" id="shipping_value_selectbox_{$m_id}" value="{$v.shipping_value_selectbox}" />
+  {/if}
+  <select name="groups[{$m_id}][shipping_value_selectbox]" id="shipping_value_selectbox_{$m_id}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} 
+  onchange="javascript: {literal}
+  if ($('#shipping_value_selectbox_{/literal}{$m_id}{literal}').val() == 'actual_shipping_cost'){ 
+/*
+    $('#actual_shipping_cost_net_{/literal}{$m_id}{literal}').val('{/literal}{$v.actual_shipping_cost.net|price_format}{literal}');
+
+    $('#cidev_actual_shipping_cost_gross_{/literal}{$m_id}{literal}').show();
+    $('#cidev_required_shipping_cost_gross_{/literal}{$m_id}{literal}').hide();
+
+    $('#cidev_actual_shipping_cost_gst_{/literal}{$m_id}{literal}').show();
+    $('#cidev_required_shipping_cost_gst_{/literal}{$m_id}{literal}').hide();
+
+    $('#cidev_actual_shipping_cost_pst_{/literal}{$m_id}{literal}').show();
+    $('#cidev_required_shipping_cost_pst_{/literal}{$m_id}{literal}').hide();
+*/
+
+  } else { 
+/*
+    $('#actual_shipping_cost_net_{/literal}{$m_id}{literal}').val('{/literal}{$default_required_shipping_charge|price_format}{literal}');
+
+    $('#cidev_actual_shipping_cost_gross_{/literal}{$m_id}{literal}').hide();
+    $('#cidev_required_shipping_cost_gross_{/literal}{$m_id}{literal}').show();
+
+    $('#cidev_actual_shipping_cost_gst_{/literal}{$m_id}{literal}').hide();
+    $('#cidev_required_shipping_cost_gst_{/literal}{$m_id}{literal}').show();
+
+    $('#cidev_actual_shipping_cost_pst_{/literal}{$m_id}{literal}').hide();
+    $('#cidev_required_shipping_cost_pst_{/literal}{$m_id}{literal}').show();
+*/
+
+  }
+  {/literal};">
+  <option value="actual_shipping_cost" {if $v.shipping_value_selectbox eq "actual_shipping_cost" || $v.shipping_value_selectbox eq ""} selected="selected"{/if}>Actual shipping cost (do NOT include drop-ship fee)</option>
+  <option value="required_shipping_charge" {if $v.shipping_value_selectbox eq "required_shipping_charge"} selected="selected"{/if}>Required shipping charge from our website shipping quote</option>
+  </select>
+
+{*
+{if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
+&nbsp;
+<span style="color: #FF0000; font-weight: bold;">Additional shipping required: ${$order_manufacturers[$m_id].additional_shipping_charge}</span>
+{/if}
+*}
+
+{if $order_manufacturers[$m_id].d_drop_ship_fee_select eq "applies_to_all_orders"}
+Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'} applies to all orders
+{elseif $order_manufacturers[$m_id].d_drop_ship_fee_select eq "applies_to_orders_below_minimum_order_amount_only"}
+Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'} applies to orders below {include file="currency.tpl" value=$order_manufacturers[$m_id].d_minimum_order_amount_in_us hide_zero='Y'}
+{/if}
+
+  </td>
+  <td align="right">
+      <input id="actual_shipping_cost_net_{$m_id}" type="text" size="8" name="groups[{$m_id}][actual_shipping_cost_net]" value="{$v.actual_shipping_cost.net|price_format}" {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if}  />
+  </td>
+
+  <td align="right">
+{*  {if $v.shipping_value_selectbox eq "actual_shipping_cost" || $v.shipping_value_selectbox eq ""} *}
+    <span id="cidev_actual_shipping_cost_gst_{$m_id}">{include file="currency2.tpl" value=$v.actual_shipping_cost.gst hide_zero='Y'}</span>
+{*  {else}
+    <span id="cidev_required_shipping_cost_gst_{$m_id}">{include file="currency2.tpl" value=$v.actual_shipping_cost.gst|default:$default_required_shipping_charge hide_zero='Y'}</span>
+  {/if}
+*}
+  </td>
+{*
+  <td align="right">
+    <span id="cidev_actual_shipping_cost_pst_{$m_id}">{include file="currency2.tpl" value=$v.actual_shipping_cost.pst hide_zero='Y'}</span>
+  </td>
+*}
+  <td align="right">
+{*  {if $v.shipping_value_selectbox eq "actual_shipping_cost" || $v.shipping_value_selectbox eq ""} *}
+    <span id="cidev_actual_shipping_cost_gross_{$m_id}">{include file="currency2.tpl" value=$v.actual_shipping_cost.gross}</span>
+{*  {else}
+    <span id="cidev_required_shipping_cost_gross_{$m_id}">{include file="currency2.tpl" value=$v.actual_shipping_cost.gross|default:$default_required_shipping_charge}</span>
+  {/if}
+*}
+  </td>
+  <td>&nbsp;</td>
+</tr>
+
+
+{* {if $order_manufacturers[$m_id].additional_shipping_status eq "W" && $v.actual_shipping_cost.net gt 0} *}
+{if $order_manufacturers[$m_id].additional_shipping_charge gt 0 || $v.actual_shipping_cost.net gt 0}
+<tr>
+<td colspan="5"><B>Estimated profit</B></td>
+<td></td>
+<td colspan="2">
+{*
+{if $v.actual_shipping_cost.net gt 0}
+<B>Estimated profit</B>
+{/if}
+*}
+</td>
+<td align="right"><B>{if $order_manufacturers[$m_id].estimated_profit_abs ne ""}<span style="color: #FF0000;">(${$order_manufacturers[$m_id].estimated_profit_abs})</span>{else}${$order_manufacturers[$m_id].estimated_profit}{/if}</B></td>
+<td align="right"><B>{if $order_manufacturers[$m_id].estimated_profit_margin_percent_abs ne ""}<span style="color: #FF0000;">({$order_manufacturers[$m_id].estimated_profit_margin_percent_abs}%)</span>{else}{$order_manufacturers[$m_id].estimated_profit_margin_percent}%{/if}</B></td>
+</tr>
+{/if}
+
+
+{if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
+<tr {cycle values=", class='TableSubHead'" name="cycle_`$m_id`"} style="BACKGROUND-COLOR: #FFD44C;">
+
+<td colspan="2">
+<span style="color: #FF0000; font-weight: bold;">Additional shipping required: ${$order_manufacturers[$m_id].additional_shipping_charge}</span>
+</td>
+
+<td colspan="3" align="right">
+<B>Additional payment status:</B>
+</td>
+
+<td>
+{if $additional_shipping_statuses ne ""}
+
+<script type="text/javascript" language="JavaScript 1.2">
+<!--
+{literal}
+  $(function() {
+    $("#additional_shipping_status_{/literal}{$m_id}{literal}").change(function(){
+      func_check_additional_shipping_status({/literal}{$m_id}{literal});
+    });
+  });
+{/literal}
+-->
+</script>
+
+
+{*
+{if $order_manufacturers[$m_id].additional_shipping_status eq "W"}
+<span style="color: red;">Waived</span>
+{else}
+  {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}
+<input type="hidden" name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' value="{$v.additional_shipping_status}" />
+  {/if}
+<select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+{foreach from=$additional_shipping_statuses item=v_s key=k_s}
+<option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{$k_s}">{if $order_manufacturers[$m_id].cb_status eq "O" && $k_s eq "P"}Agreed{else}{$v_s}{/if}</option>
+{/foreach}
+</select>
+{/if}
+*}
+
+  {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}
+<input type="hidden" name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' value="{$v.additional_shipping_status}" />
+  {/if}
+
+  {if $v.additional_shipping_status eq "W"}
+  <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+  {foreach from=$additional_shipping_statuses item=v_s key=k_s}
+  {if $k_s eq "U" || $k_s eq "W"}
+  <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{if $k_s eq "U"}G{else}{$k_s}{/if}">{if $k_s eq "W"}<span style="color: red;">Waived</span>{else}{$v_s}{/if}</option>
+  {/if}
+  {/foreach}
+  </select>
+  {else}
+  <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+  {foreach from=$additional_shipping_statuses item=v_s key=k_s}
+  {if $k_s ne "U"}
+  <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{$k_s}">{if $order_manufacturers[$m_id].cb_status eq "O" && $k_s eq "P"}Agreed{else}{$v_s}{/if}</option>
+  {/if}
+  {/foreach}
+  </select>
+{/if}
+
+
+{/if}
+</td>
+
+<td colspan="4">
+
+</td>
+</tr>
+
+ {if $all_vt_processors ne ""}
+ <tr style="background-color: #F4CCCC; display: none;" id="additional_vt_info_{$m_id}" >
+ <td colspan="10">
+   <table>
+     <tr>
+       <td>
+         <b>Payment method:</b><br />
+  {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}
+<input type="hidden" name="groups[{$m_id}][additional_vt_paymentid]" id="additional_vt_paymentid_{$m_id}" value="{$v.additional_vt_paymentid}" />
+  {/if}
+         <select name="groups[{$m_id}][additional_vt_paymentid]" id="additional_vt_paymentid_{$m_id}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+         <option value="0"></option>
+         {foreach from=$all_vt_processors item=item_vt key=key_vt}
+         <option {if $v.additional_vt_paymentid eq $item_vt.paymentid} selected="selected"{/if} value="{$item_vt.paymentid}">{$item_vt.payment_method}</option>
+         {/foreach}
+         </select>
+       </td>
+       <td width="20">&nbsp;</td>
+       <td>
+           <b>Virtual terminal transaction ID:</b><br />
+           <input type="text" name="groups[{$m_id}][additional_transaction_id_link]" id="additional_transaction_id_link_{$m_id}" value="{$v.additional_transaction_id_link}" size="40" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+       </td>
+       <td width="20">&nbsp;</td>
+       <td>
+           <b>AVS code:</b><br />
+           <input type="text" name="groups[{$m_id}][additional_avs_code]" id="additional_avs_code_{$m_id}" value="{$v.additional_avs_code}" size="1" maxlength="1" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+       </td>
+     </tr>
+   </table>
+ </td>
+ </tr>
+ {/if}
+
+
+{* {if $order_manufacturers[$m_id].additional_shipping_status eq "W" && $v.actual_shipping_cost.net gt 0} *}
+{if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
+<tr>
+<td colspan="5"><B>Estimated profit after additional payment</B></td>
+<td colspan="3"></td>
+<td align="right"><B>{if $order_manufacturers[$m_id].estimated_profit_after_additional_payment_abs ne ""}<span style="color: #FF0000;">(${$order_manufacturers[$m_id].estimated_profit_after_additional_payment_abs})</span>{else}${$order_manufacturers[$m_id].estimated_profit_after_additional_payment}{/if}</B></td>
+<td align="right"><B>{if $order_manufacturers[$m_id].estimated_profit_margin_after_additional_payment_percent_abs ne ""}<span style="color: #FF0000;">({$order_manufacturers[$m_id].estimated_profit_margin_after_additional_payment_percent_abs}%)</span>{else}{$order_manufacturers[$m_id].estimated_profit_margin_after_additional_payment_percent}%{/if}</B></td>
+</tr>
+{/if}
+
+{/if}
+
+{* ----------------------- *}
+
+<tr>
+<td colspan="6">
+<script type="text/javascript">
+<!--
+multirowInputSets['track_{$m_id}'] = [];
+multirowInputSets['track_{$m_id}'].noCloneContent = 1;
+-->
+</script>
+<table cellpadding="0" cellspacing="0" border="0">
+<tr>
+	<td style="padding-right: 10px;"><b>{$lng.lbl_shipper}:</b></td>
+	<td colspan="2"><b>Tracking number</b> (is put on the invoice)<b>:</b></td>
+</tr>
+
+<tr id="track_{$m_id}_tr">
+	<td id="track_{$m_id}_box_1" style="padding-right: 10px;">
+	<select name="groups[{$m_id}][tracking_shipper][0]" {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+	<option value=""></option>
+{foreach from=$tracking_links item=vvv key=linkid}
+	<option value="{$linkid}">{$vvv.shipping}</option>
+{/foreach}
+	</select>
+	</td>
+	<td id="track_{$m_id}_box_2" style="padding-right: 5px;">
+	<input type="text" name="groups[{$m_id}][tracking_number][0]" value="" size="40" {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly" {/if} />
+	</td>
+
+	<td width="50%">
+{if !($v.allow_dispatch_off_working_hours_functionality_enabled eq "Y")}
+{include file="buttons/multirow_add.tpl" mark="track_`$m_id`"}
+{/if}
+  </td>
+</tr>
+
+</table>
+
+</td>
+
+<td colspan="4" valign="top">
+</td>
+</tr>
+
+{if $active_modules.Google_Checkout eq '' or $order.extra.goid eq ''}
+<tr style="background-color: #d9ead3;">
+  <td colspan="10">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+      <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
+
+<script type="text/javascript" language="JavaScript 1.2">
+<!--
+{literal}
+  $(function() {
+    $("#groups_cb_status_{/literal}{$m_id}{literal}").change(function(){
+      func_check_cb_statuses();
+
+//      func_check_cb_status('{/literal}{$m_id}{literal}');
+    });
+  });
+{/literal}
+-->
+</script>
+
+        <b>{$lng.lbl_cust_bus_payment_status}:</b><br />
+
+        {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"} 
+          <input type="hidden" name="groups[{$m_id}][cb_status]" id="groups_cb_status_{$m_id}" value="{$v.cb_status}" />
+          {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][cb_status]" status_type="CB" extra=" id='groups_cb_status_`$m_id`' disabled='disabled'"}
+        {else}
+          {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][cb_status]" status_type="CB" extra=" id='groups_cb_status_`$m_id`'"}
+        {/if}
+      </td>
+      <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
+        <b>{$lng.lbl_distr_cust_shipping_status}:</b><br />
+
+{assign var="hide_dispatched_status" value=""}
+{if $order_manufacturers[$m_id].submit_to_operator eq "through_distributor_website"}
+{assign var="hide_dispatched_status" value="Y"}
+{/if}
+
+{assign var="hide_pending_availability_check_status" value="Y"}
+{if $order_manufacturers[$m_id].d_availability_must_be_checked eq "Y"}
+{assign var="hide_pending_availability_check_status" value=""}
+{/if}
+
+
+<script type="text/javascript" language="JavaScript 1.2">
+<!--
+{literal}
+  $(function() {
+    $("#groups_dc_status_{/literal}{$m_id}{literal}").change(function(){
+      func_check_dc_statuses('{/literal}{$m_id}{literal}');
+    });
+  });
+{/literal}
+-->
+</script>
+
+
+        {include file="main/order_status.tpl" status=$v.dc_status mode="select" name="groups[`$m_id`][dc_status]" status_type="DC" hide_pending_availability_check_status=$hide_pending_availability_check_status hide_dispatched_status=$hide_dispatched_status extra=" id='groups_dc_status_`$m_id`' "}
+
+<br />
+<B>Dispatch date:</B>&nbsp;{if $v.dc_dispatched_time eq "0"}<span style="color: red;">Not yet dispatched</span>{else}{$v.dc_dispatched_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+
+<br />
+<B>Received by distributor date:</B>&nbsp;{if $v.dc_received_by_distributor_time eq "0"}<span style="color: red;"> </span>{else}{$v.dc_received_by_distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+
+
+      </td>
+      <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
+        <b>{$lng.lbl_bus_distr_payment_status}:</b><br />
+
+        {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}
+          <input type="hidden" name="groups[{$m_id}][bd_status]" id="groups_bd_status_{$m_id}" value="{$v.bd_status}" />
+          {include file="main/order_status.tpl" status=$v.bd_status mode="select" name="groups[`$m_id`][bd_status]" status_type="BD" extra=" disabled='disabled'"}
+        {else}
+          {include file="main/order_status.tpl" status=$v.bd_status mode="select" name="groups[`$m_id`][bd_status]" status_type="BD"}
+        {/if}
+      </td>
+    </tr>
+    </table>
+  </td>
+</tr>
+
+{* --- *}
+<tr id="po_status_{$m_id}_tr" {if $v.cb_status ne "O"}style="display: none;"{else}style="background-color: #B6D7A8;"{/if}>
+<td colspan="10">
+        <b>Check transit status:</b><br />
+        {include file="main/order_status.tpl" status=$v.po_status mode="select" name="groups[`$m_id`][po_status]" status_type="PO" extra=" id='groups_po_status_`$m_id`' "}
+</td>
+</tr>
+{* --- *}
+
+{/if}
+
+
+<tr><td colspan="10"><hr /></td></tr>
+{include file="main/refund_group.tpl" mid=$m_id group=$order.shipping_groups[$m_id]}
+{/if}
+{/foreach}
+
+{if $all_vt_processors ne ""}
+<tr style="background-color: #F4CCCC; {* {if $all_cb_status_eq_P ne "Y"} *} display: none; {* {/if} *}" id="vt_info" >
+<td colspan="10">
+  <table>
+    <tr>
+      <td>
+        <b>Payment method:</b><br />
+        <select name="vt_paymentid" id="vt_paymentid" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if}>
+        <option value="0"></option>
+        {foreach from=$all_vt_processors item=item_vt key=key_vt}
+        <option {if $order.vt_paymentid eq $item_vt.paymentid} selected="selected"{/if} value="{$item_vt.paymentid}">{$item_vt.payment_method}</option>
+        {/foreach}
+        </select>
+      </td>
+      <td width="20">&nbsp;</td>
+      <td>
+          <b>Virtual terminal transaction ID:</b><br />
+          <input type="text" name="transaction_id_link" id="transaction_id_link" value="{$order.transaction_id_link}" size="40" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+      </td>
+      <td width="20">&nbsp;</td>
+      <td>
+          <b>AVS code:</b><br />
+          <input type="text" name="avs_code" id="avs_code" value="{$order.avs_code}" size="1" maxlength="1" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+      </td>
+    </tr>
+  </table>
+</td>
+</tr>
+{/if}
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Total Product Price
+
+<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="left">
+Total Product Cost to us
+</div>
+
+  </td>
+  <td colspan="5">&nbsp;</td>
+  <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.net}
+
+{* --- *}
+<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+{include file="currency2.tpl" value=$cost_to_us_total|price_format}
+</div>
+{* --- *}
+
+  </td>
+  <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.gst hide_zero='Y'}</td>
+{*   <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.pst hide_zero='Y'}</td> *}
+  <td align="right">{include file="currency2.tpl" value=$order.display_subtotal}
+
+{* --- *}
+<div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
+{include file="currency2.tpl" value=$cost_to_us_total|price_format}
+</div>
+{* --- *}
+
+  </td>
+  <td>&nbsp;</td>
+</tr>
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Total Shipping Charge</td>
+  <td colspan="5">&nbsp;</td>
+  <td align="right">{include file="currency2.tpl" value=$order.extra.shipping_total.net hide_zero='Y'}</td>
+  <td align="right">{include file="currency2.tpl" value=$order.extra.shipping_total.gst hide_zero='Y'}</td>
+{*  <td align="right">{include file="currency2.tpl" value=$order.extra.shipping_total.pst hide_zero='Y'}</td> *}
+  <td align="right">{include file="currency2.tpl" value=$order.shipping_cost hide_zero='Y'}</td>
+  <td>&nbsp;</td>
+</tr>
+
+{if $order.coupon and $order.coupon_type eq "free_ship"}
+{$smarty.capture.coup_saving}
+{/if}
+
+{if $order.additional_fee ne ""}
+{foreach from=$order.additional_fee item=v_f key=k_f}
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td><input type="text" name="edit_additional_fee_name[{$v_f.id}][additional_fee_name]" value="{$v_f.additional_fee_name}" size="16" style="width: 99%;" {if $order.amazonorderid ne ""}readonly="readonly"{/if} /></td>
+  <td colspan="5">&nbsp;</td>
+  <td align="right"><input type="text" name="edit_additional_fee_name[{$v_f.id}][additional_fee_value]" value="{$v_f.additional_fee_value}" size="8" {if $order.amazonorderid ne ""}readonly="readonly"{/if} /></td>
+  <td>&nbsp;</td>
+  <td align="right">{$v_f.additional_fee_value}</td>
+  <td><input type="checkbox" value="Y" name="delete_additional_fee[{$v_f.id}]" {if $order.amazonorderid ne ""}disabled="disabled"{/if} /></td>
+</tr>
+{/foreach}
+{/if}
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"} style="font-weight: bold;">
+  <td style="font-size: 12px;">{$lng.lbl_grand_total}</td>
+  <td colspan="5">&nbsp;</td>
+  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.net}</td>
+  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.gst hide_zero='Y'}</td>
+{*  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.pst hide_zero='Y'}</td> *}
+  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.total}</td>
+  <td>&nbsp;</td>
+</tr>
+
+<tr>
+<td colspan="10">
+<br />
+{include file="main/subheader.tpl" title=$lng.lbl_add_to_order}
+
+<script type="text/javascript">
+<!--
+multirowInputSets['add_to_order'] = [];
+multirowInputSets['add_to_order'].noCloneContent = 1;
+multirowInputSets['add_to_order'].noCloneHTMLId = 'add_to_order_box_0';
+
+multirowInputSets['add_additional_fee_to_order'] = [];
+multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
+-->
+</script>
+
+</td>
+</tr>
+
+<tr class="TableHead">
+  <td width="27%" style="background-color: #cfe2f3;">additional fee / sales tax name</td>
+  <td width="14%" style="background-color: #fff2cc;">product sku</td>
+  <td width="10%"></td>
+  <td width="7%" style="background-color: #fff2cc;">Qty</td>
+  <td width="7%"></td>
+  <td width="8%"></td>
+  <td width="7%" style="background-color: #cfe2f3;">amount</td>
+  <td width="7%"></td>
+  <td width="7%"></td>
+  <td width="5%"></td>
+</tr>
+
+<tr id="add_to_order_tr">
+  <td align="center" id="add_to_order_box_0"></td>
+  <td align="center" id="add_to_order_box_1"><input type="text" name="add_productcode[0]" value="" style="width: 96%;" id="sku_add_to_order_box_0" {* {if $all_cb_status_eq_P eq "Y" || $all_cb_status_eq_3 eq "Y" || $all_cb_status_eq_V eq "Y" || $all_cb_status_eq_H eq "Y" || $all_cb_status_eq_R eq "Y"}disabled="disabled" {/if} *} {if $order.amazonorderid ne ""}readonly="readonly"{/if} /></td>
+  <td align="center" id="add_to_order_box_2"></td>
+  <td align="center" id="add_to_order_box_3"><input type="text" name="add_amount[0]" value="" style="width: 96%;" {if $order.amazonorderid ne ""}readonly="readonly"{/if} /></td>
+  <td align="center" id="add_to_order_box_4"></td>
+  <td align="center" id="add_to_order_box_5"></td>
+  <td align="center" id="add_to_order_box_6"></td>
+  <td align="center" id="add_to_order_box_7"></td>
+  <td align="center" id="add_to_order_box_8"></td>
+  <td>{include file="buttons/multirow_add.tpl" mark="add_to_order"}</td>
+</tr>
+
+<tr id="add_additional_fee_to_order_tr" style="background-color: #EEEEEE;">
+  <td align="center" id="add_additional_fee_to_order_box_0"><input type="text" name="add_additional_fee_name[0]" value="" style="width: 96%;" {if $order.amazonorderid ne ""}readonly="readonly"{/if} /></td>
+  <td align="center" id="add_additional_fee_to_order_box_1"></td>
+  <td align="center" id="add_additional_fee_to_order_box_2"></td>
+  <td align="center" id="add_additional_fee_to_order_box_3"></td>
+  <td align="center" id="add_additional_fee_to_order_box_4"></td>
+  <td align="center" id="add_additional_fee_to_order_box_5"></td>
+  <td align="center" id="add_additional_fee_to_order_box_6"><input type="text" name="add_additional_fee_value[0]" value="" style="width: 96%;" {if $order.amazonorderid ne ""}readonly="readonly"{/if} /></td>
+  <td align="center" id="add_additional_fee_to_order_box_7"></td>
+  <td align="center" id="add_additional_fee_to_order_box_8"></td>
+  <td>{include file="buttons/multirow_add.tpl" mark="add_additional_fee_to_order"}</td>
+</tr>
+
+</table>
+<br />
+
+
+
+<input type="submit" value="{$lng.lbl_apply_changes|escape}" />
+{if $current_membership_flag ne 'FS'}
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <input type="button" value="{$lng.lbl_apply_changes_send_email|escape}" onclick="javascript: $('#send_email1').val('Y'); this.form.submit();" {if $order.amazonorderid ne ""}disabled="disabled" style="border: 1px solid #ff0000" {/if} />
+{/if}
+
+</form>

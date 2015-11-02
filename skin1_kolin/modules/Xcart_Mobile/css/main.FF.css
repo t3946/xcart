@@ -1,0 +1,40 @@
+
+div[data-role='page'] .ui-header .ui-title {
+    font-size: 1.5em;
+}
+ul[data-type='products-list'] .product-details .ui-li-desc .price {
+    font-size: 1.3em;
+}
+
+.ui-btn-inner,
+.welcome-page .ui-collapsible .ui-collapsible-heading .ui-btn .ui-btn-text {
+    font-size: 1.1em;
+}
+
+ul[data-type='products-list'] .product-details .ui-li-heading {
+    font-size: 1em;
+}
+.ui-footer .ui-title {
+    font-size: 80%;
+    margin: 15px 2em;
+}
+.top-nav.ui-navbar li .ui-btn-icon-top .ui-btn-inner {
+    font-size: 80%;
+}
+
+.ui-collapsible-heading,
+.ui-content {
+    font-size: 70%;
+}
+
+@media all and (orientation:landscape) {
+    .ui-btn[aria-disabled="false"] .ui-btn-text, .button .ui-btn-text {
+        font-size: 100% !important;
+    }
+}
+
+@media all and (orientation:portrait) {
+    .ui-btn[aria-disabled="false"] .ui-btn-text, .button .ui-btn-text {
+        font-size: 80% !important;
+    }
+}

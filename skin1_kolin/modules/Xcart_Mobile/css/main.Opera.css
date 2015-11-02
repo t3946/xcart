@@ -1,0 +1,20 @@
+/*
+$Id$ 
+vim: set ts=2 sw=2 sts=2 et:
+*/
+.ui-loader-default {
+  opacity: 1;
+}
+.ui-loader .ui-icon {
+  background-color: rgba(0,0,0,.18);
+}
+.ui-icon-loading {
+  background-image: url(../images/static_loader.png);
+}
+.ui-select .ui-btn {
+  position: static !important;
+  zoom: 1;
+}
+.ui-select .ui-btn select {
+  opacity: 0 !important;
+}

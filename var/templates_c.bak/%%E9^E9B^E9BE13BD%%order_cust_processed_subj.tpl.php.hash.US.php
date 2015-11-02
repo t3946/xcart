@@ -1,0 +1,1 @@
+25494ddb39bb430e2110aa2e1c9389e6a:2:{s:29:"eml_order_cust_processed_subj";s:43:"Your order # {{orderid}} has been processed";s:28:"eml_order_cust_refunded_subj";s:42:"Your order # {{orderid}} has been refunded";}

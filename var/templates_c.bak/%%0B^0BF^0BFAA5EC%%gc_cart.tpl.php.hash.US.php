@@ -1,0 +1,1 @@
+06e344b25474db6f03d420f89b7030c7a:7:{s:10:"lbl_amount";s:6:"Amount";s:9:"lbl_email";s:6:"E-Mail";s:20:"lbl_gift_certificate";s:16:"Gift certificate";s:16:"lbl_mail_address";s:12:"Mail address";s:9:"lbl_phone";s:5:"Phone";s:13:"lbl_purchased";s:9:"Purchased";s:13:"lbl_recipient";s:9:"Recipient";}

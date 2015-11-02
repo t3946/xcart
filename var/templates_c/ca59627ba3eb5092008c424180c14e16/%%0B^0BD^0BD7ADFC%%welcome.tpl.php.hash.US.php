@@ -1,0 +1,1 @@
+a5b95540be1639dfda4ec76f2c729242a:5:{s:15:"lbl_bestsellers";s:11:"Bestsellers";s:21:"lbl_featured_products";s:17:"Featured products";s:8:"lbl_help";s:4:"Help";s:32:"lbl_mobile_show_all_new_arrivals";s:21:"Show all New Arrivals";s:27:"lbl_mobile_show_all_on_sale";s:25:"Show all On Sale products";}

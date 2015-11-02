@@ -1,0 +1,1 @@
+a9fbd0d2b525f6d0d32e103b6e7eef80a:3:{s:14:"lbl_quick_menu";s:10:"Quick menu";s:17:"lbl_select_target";s:13:"Select target";s:19:"txt_quick_menu_text";s:188:"The quick menu below provides an alternative site navigation method. Select the target section from one of the drop down boxes below and you will be immediately redirected to that section.";}

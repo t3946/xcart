@@ -1,0 +1,40 @@
+***************
+*** 154,159 ****
+ {/if}
+ {include file="rectangle_bottom.tpl" }
+ {include file="ga_code.tpl" }
+ </body>
+ </html>
+ {/if}
+--- 154,184 ----
+ {/if}
+ {include file="rectangle_bottom.tpl" }
+ {include file="ga_code.tpl" }
++{if $config.Product_Page.map_bridge_text_background ne ''}
++{literal}
++<style>
++#tooltip, .tooltip_helper {
++	background-color: #{/literal}{$config.Product_Page.map_bridge_text_background};{literal}
++}
++</style>
++{/literal}
++{/if}
++<script type="text/javascript">
++//<![CDATA[
++var txt_tooltip_helper = '{$map_bridge_mouseover_text|escape:javascript}';
++{literal}
++$(document).ready(function() {
++	$('.map_price_help').tooltip({
++		delay: 0,
++		showURL: false,
++		track: false,
++		bodyHandler: function() {
++			return txt_tooltip_helper;
++	}});
++});
++{/literal}
++//]]>
++</script>
+ </body>
+ </html>
+ {/if}

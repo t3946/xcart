@@ -1,0 +1,1 @@
+41022cfa619da0a59db7801987bc3c60a:2:{s:14:"lbl_newsletter";s:10:"Newsletter";s:26:"lbl_newsletter_signup_text";s:99:"If you wish to receive our Newsletter, please select the News lists to which you want to subscribe:";}

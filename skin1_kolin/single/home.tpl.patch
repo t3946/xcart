@@ -1,0 +1,14 @@
+Index: skin1/single/home.tpl
+===================================================================
+diff -u skin1/single/home.tpl
+--- skin1/single/home.tpl
++++ skin1/single/home.tpl
+@@ -320,6 +320,9 @@
+ {elseif $main eq "news_management"}
+ {include file="modules/News_Management/news_common.tpl"}
+
++{elseif $main eq "mailchimp_news_management"}
++{include file="modules/Mailchimp_Subscription/news_common.tpl"}
++
+ {elseif $main eq "change_password"}
+ {include file="main/change_password.tpl"}

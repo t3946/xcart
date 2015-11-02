@@ -1,0 +1,50 @@
+***************
+*** 176,181 ****
+ 
+ 			$limit = 'LIMIT ' . $limit_from . ', ' . $limit_to;
+ 
+ 			$products = db_query("SELECT $sql_tbl[products].*, $sql_tbl[categories].categoryid_path, $sql_tbl[pricing].price, $sql_tbl[images_T].image_path $fields FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) LEFT JOIN $sql_tbl[images_T] ON $sql_tbl[products].productid = $sql_tbl[images_T].id $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[categories].avail = 'Y' $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C') ORDER BY $sql_tbl[products].product $limit");
+ 			func_flush(func_get_langvar_by_name('lbl_exporting_data_pass_', array('pass' => 1), false, true) . "<br />\n");
+ 			
+--- 176,192 ----
+ 
+ 			$limit = 'LIMIT ' . $limit_from . ', ' . $limit_to;
+ 
++			$froogle_export_step++;
++
++			if ($froogle_export_step > $number_of_steps) {
++				$user_account = $_user_account;
++				fclose($fp);
++				$top_message["type"] = "I";
++				$top_message["content"] = func_get_langvar_by_name("msg_adm_froogle_file_success");
++				func_header_location('froogle.php?mode=ffinish');
++			}
++
++
+ 			$products = db_query("SELECT $sql_tbl[products].*, $sql_tbl[categories].categoryid_path, $sql_tbl[pricing].price, $sql_tbl[images_T].image_path $fields FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) LEFT JOIN $sql_tbl[images_T] ON $sql_tbl[products].productid = $sql_tbl[images_T].id $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[categories].avail = 'Y' $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C') ORDER BY $sql_tbl[products].product $limit");
+ 			func_flush(func_get_langvar_by_name('lbl_exporting_data_pass_', array('pass' => 1), false, true) . "<br />\n");
+ 			
+***************
+*** 198,212 ****
+ 
+ 			$cnt = 0;
+ 
+-			$froogle_export_step++;
+-
+-			if ($froogle_export_step > $number_of_steps) {
+-				$user_account = $_user_account;
+-				fclose($fp);
+-				$top_message["type"] = "I";
+-				$top_message["content"] = func_get_langvar_by_name("msg_adm_froogle_file_success");
+-			}
+-
+ 			$msg = func_get_langvar_by_name('lbl_step_x_of_y', 
+ 				array(
+ 					'X' => $froogle_export_step,
+--- 198,203 ----
+ 
+ 			$cnt = 0;
+ 
+ 			$msg = func_get_langvar_by_name('lbl_step_x_of_y', 
+ 				array(
+ 					'X' => $froogle_export_step,

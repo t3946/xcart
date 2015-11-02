@@ -1,0 +1,59 @@
+<?php
+/*****************************************************************************\
++-----------------------------------------------------------------------------+
+| X-Cart                                                                      |
+| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+| All rights reserved.                                                        |
++-----------------------------------------------------------------------------+
+| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
+| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
+| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
+|                                                                             |
+| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
+| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
+| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
+| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
+| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
+| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
+| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
+| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
+| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
+| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
+| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
+| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
+| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
+| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
+|                                                                             |
+| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
+| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
+| Ruslan R. Fazliev. All Rights Reserved.                                     |
++-----------------------------------------------------------------------------+
+\*****************************************************************************/
+
+//$Id: shipping_cache.php,v 1.1.2.2 2006/12/19 13:54:52 svowl Exp $
+
+if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
+
+function func_is_shipping_result_in_cache($md5_str) {
+	global $sql_tbl, $XCARTSESSID;
+	
+	if (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[shipping_cache] WHERE md5_request='$md5_str' AND session_id='$XCARTSESSID'")) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function func_save_shipping_result_to_cache($index, $result) {
+	global $sql_tbl, $XCARTSESSID;
+	
+	$expiry = func_query_first_cell("SELECT expiry FROM $sql_tbl[sessions_data] WHERE sessid='$XCARTSESSID'");
+	db_query("REPLACE INTO $sql_tbl[shipping_cache] VALUES ('$index','$XCARTSESSID','".serialize($result)."', '$expiry')");
+}
+
+function func_get_shipping_result_from_cache($md5_str) {
+	global $sql_tbl, $XCARTSESSID;
+	
+	return unserialize(func_query_first_cell("SELECT response FROM $sql_tbl[shipping_cache] WHERE md5_request='$md5_str' AND session_id='$XCARTSESSID'"));
+}
+?>

@@ -1,0 +1,1 @@
+e0ae4fadb09d4c9ae9b5f9bcb946f0f4a:2:{s:12:"lbl_checkout";s:8:"Checkout";s:21:"lbl_continue_shopping";s:9:"Shop more";}

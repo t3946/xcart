@@ -1,0 +1,1 @@
+e8d3947c294c66c6f5c58f831dd786fba:2:{s:20:"txt_default_category";s:16:"Default category";s:28:"txt_default_category_explain";s:80:"This category will be used if the main category is not specified in the CSV file";}

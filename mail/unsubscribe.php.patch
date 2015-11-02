@@ -1,0 +1,24 @@
+Index: mail/unsubscribe.php
+===================================================================
+diff -u mail/unsubscribe.php
+--- mail/unsubscribe.php
++++ mail/unsubscribe.php
+@@ -42,8 +42,17 @@
+ include $xcart_dir."/include/get_language.php";
+
+ $redirect_to = $xcart_catalogs['customer'];
++if (!empty($active_modules["Mailchimp_Subscription"])) {
++    $mc_newslists = func_query("SELECT * FROM $sql_tbl[mailchimp_newslists] WHERE avail='Y' AND lngcode='$shop_language'");
++    if (count($mc_newslists) > 0) {
++       foreach ($mc_newslists as $list){
++          $mailchimp_response = func_mailchimp_unsubscribe($email, $list['mc_list_id']);
++       }
++    }
++    func_header_location($redirect_to."/home.php?mode=unsubscribed&email=".urlencode(stripslashes($email)));
++}
+
+-if (empty($active_modules["News_Management"]))
++elseif (empty($active_modules["News_Management"]))
+ 	func_header_location($redirect_to."/home.php");
+
+ $email = trim($email);

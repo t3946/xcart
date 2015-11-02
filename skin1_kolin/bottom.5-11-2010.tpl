@@ -1,0 +1,80 @@
+{if $usertype eq "C"}
+<TABLE border="0" width="100%" cellpadding="0" cellspacing="10" align="center">
+{*<tr>{*<td colspan="4" height=20">&nbsp;</td></tr>
+*}
+<tr>
+
+<td align="left" valign="top" width="27%" style="padding-left: 20px; padding-right: 20px; font-size: 15px;" bgcolor="#F0F1F3"><br>
+<b>Telephone Customer Service</b><br>
+Everyday: 9 a.m. to 8 p.m. EST<br>
+<span style="color: #CC3333;">Toll Free: 1-800-929-2431</span><br>
+<span style="color: #000000;">Tel: (613) 544-2402</span><br>
+<span style="color: #006600;">Fax: (813) 944-4516</span><br>
+<a href="mailto:CustServ@ArtistSupplySource.com" class="SPItems">CustServ@ArtistSupplySource.com</a><br>
+<br>
+<b>Live Chat Customer Service</b><br>
+<center><!-- BEGIN Comm100 Live Chat Button Code --><div><div id="comm100_LiveChatDiv"></div><a href="http://www.comm100.com/livechat/" onclick="comm100_Chat();return false;" target="_blank" title = "Live Chat Live Help"><img id="comm100_ButtonImage" src="http://chatserver.comm100.com/BBS.aspx?siteId=20980&planId=559" border="0px" alt="Live Chat Help" /></a><script src="http://chatserver.comm100.com/js/LiveChat.js?siteId=20980&planId=559" type="text/javascript"></script></div><!-- End Comm100 Live Chat Button Code --></center>
+<br />
+</td>
+
+<td align="left" valign="top" width="26%" style="padding-left: 20px; font-size: 15px;" bgcolor="#F0F1F3"><br>
+<b>USA Address</b><br>
+Artist Supply Source, Inc.<br>
+2885 Sanford Ave SW #12717<br>
+Grandville, MI  49418<br>
+USA<br>
+<br>
+<b>Canadian Address</b><br>
+Artist Supply Source, Inc.<br>
+29-312 Conacher Dr.<br>
+Kingston, Ontario  K7K 2X2<br>
+Canada<br>
+</td>
+
+<td align="left" valign="top" width="23%" style="padding-left: 20px; padding-right: 20px; font-size: 15px;" bgcolor="#F0F1F3"><br>
+<b>Payment Methods</b><br>
+We accept all major credit cards, PayPal, checks and money orders.<br>
+<center><img src="{$ImagesDir}/payments.gif" alt="We accept all major credit cards"></center>
+<br>
+<center><a href="http://www.artistsupplysource.com/pages.php?pageid=28" class="SPItems">Purchase orders</a></center>
+</td>
+
+<td align="left" valign="top" width="24%" style="padding-left: 20px; padding-right: 20px; font-size: 15px;" bgcolor="#F0F1F3"><br>
+<form action="news.php" name="subscribeform1" method="post">
+<input type="hidden" name="subscribe_lng" value="US" />
+<b>Newsletter</b><br>
+Receive special offers<br>
+on the finest art supplies:<br>
+Subscribe to our newsletter!<br>
+<font style="color: #008000; font-size: 15px;"><b>Email:</b></font>
+<input type="text" name="newsemail" size="16" />
+<br />
+<TABLE border="0" cellspacing="0" cellpadding="0" onclick="javascript: document.subscribeform1.submit();" style="cursor: pointer;" valign="middle">
+<TR>
+<TD class="Button2Off" valign="middle" onMouseOver="this.className='Button2On'" onMouseOut="this.className='Button2Off'">Subscribe</TD>
+</TR>
+</TABLE>
+</form>
+<br>
+<center>
+Follow us on
+<a href="http://www.facebook.com/pages/Artist-Supply-Source-Inc/314310045653"><img src="http://www.artistsupplysource.com/skin1_kolin/images/social/facebook.gif"></a>
+<a href="http://twitter.com/#!/ArtistSupply"><img src="http://www.artistsupplysource.com/skin1_kolin/images/social/twitter.gif"></a>
+<a href="http://www.youtube.com/user/artistsupplysource"><img src="http://www.artistsupplysource.com/skin1_kolin/images/social/youtube.gif"></a>
+<br>
+<br>
+<a href="help.php?section=business"><img src="skin1_kolin/privacy_seal.gif" alt="Privacy Seal"></a>
+</center>
+<br>
+<center><a href="http://www.artistsupplysource.com/sitemap.php" class="SPItems">Site Map</a></center>
+</td>
+
+</TR>
+</FORM></table></td></td>
+<TR>
+<TD class="Bottom" align="left" colspan="4" style="font-weight: bold; padding-left: 20px;" height="30">
+{/if}
+{include file="copyright.tpl"}{if $usertype eq "C"}</TD>
+</TR>
+</TABLE>
+{/if}

@@ -1,0 +1,54 @@
+Index: include/register.php
+===================================================================
+diff -u include/register.php
+--- include/register.php
++++ include/register.php
+@@ -419,6 +419,11 @@
+ 		$profile_values['subscribed'] = $subscribed;
+ 		$profile_values['newslist_only'] = '';
+ 		
++                // Add new member to Mailchimp newsletter list
++                if ($current_area == 'C' && !empty($active_modules['Mailchimp_Subscription'])) {
++	            func_mailchimp_resubscribe($profile_values);
++                }
++	
+ 		if ($current_area == "C") {
+ 			if ($config["Taxes"]["allow_user_modify_tax_number"] == "Y" || empty($existing_user) || func_query_first_cell("SELECT tax_exempt FROM $sql_tbl[customers] WHERE login='$login' LIMIT 1") != "Y") {
+ 				# Existing customer cannot edit 'tax_number' if
+@@ -953,6 +958,22 @@
+ 			}
+ 		}
+ 	}
++	   if ($REQUEST_METHOD == 'GET' && !empty($active_modules['Mailchimp_Subscription'])) {
++       if (empty($profile_modified_data[$user])) {
++           $tmp_lists = func_mailchimp_get_list_by_email($userinfo['email']);
++            if (is_array($tmp_lists)) {
++                $mailchimp_subscription = array();
++                foreach ($tmp_lists as $v) {
++                    $mailchimp_subscription[$v] = true;
++                }
++            }
++
++       } else {
++          $mailchimp_subscription = $saved_userinfo[$user]['mailchimp_subscription'];
++       }
++    }
++
++
+ 
+ } else {
+ 
+@@ -989,6 +1010,13 @@
+ $newslists = func_query("SELECT * FROM $sql_tbl[newslists] WHERE avail='Y' AND subscribe='Y' AND lngcode='$shop_language'");
+ $smarty->assign("newslists", $newslists);
+ 
++if (isset($mailchimp_subscription)) {
++    $smarty->assign('mailchimp_subscription', $mailchimp_subscription);
++}
++
++$mc_newslists = func_query("SELECT * FROM $sql_tbl[mailchimp_newslists] WHERE avail='Y' AND subscribe='Y' AND lngcode='$shop_language'");
++$smarty->assign('mc_newslists', $mc_newslists);
++
+ if (!empty($registered))
+ 	$smarty->assign("registered", $registered);
+ 

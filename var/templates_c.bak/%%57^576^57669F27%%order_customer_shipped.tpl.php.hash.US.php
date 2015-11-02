@@ -1,0 +1,1 @@
+e8d407fb12c8e9aa99bbed3a8662a8c8a:1:{s:8:"eml_dear";s:17:"Dear {{customer}}";}

@@ -1,0 +1,75 @@
+***************
+*** 1082,1087 ****
+ 	}
+ }
+ 
+ function func_get_product_descr($fulldescr) {
+ 	$descr = preg_replace('/<br\s*[\/]?>\s*<br\s*[\/]?>/i', '&nbsp;&nbsp;&nbsp;', $fulldescr);
+ 	$descr = preg_replace('/<br\s*[\/]?>\s*/i', '  ', $descr);
+--- 1082,1147 ----
+ 	}
+ }
+ 
++function func_save_product_thumb_image($productid, $type) {
++	global $file_upload_data, $geid, $fields, $sql_tbl, $skip_image, $top_message, $product_modified_data;
++
++	x_load('image');
++
++	if (!in_array($type, array('T', 'P'))) {
++		return false;
++	}
++	
++	$isnt_perms = func_check_image_storage_perms($file_upload_data, $type);
++
++	$fillerror = $isnt_perms !== true;
++	
++	if (!$fillerror) {
++		if (!empty($productid)) {
++			# If image was posted
++			if (func_check_image_posted($file_upload_data, $type)) {
++				func_save_image($file_upload_data, $type, $productid);
++			}
++	
++			if (($type == 'T' && $fields['thumbnail'] == 'Y' 
++				|| $type == 'P' && $fields['product_image'] == 'Y') 
++				&& $geid) {
++				
++				$img = func_addslashes(func_query_first('SELECT * FROM ' . $sql_tbl['images_' . $type] 
++					. ' WHERE id = "' . $productid . '"'));
++				
++				unset($img['imageid']);
++				
++				while ($pid = func_ge_each($geid, 1, $productid)) {
++					$img['id'] = $pid;
++					func_array2insert($sql_tbl['images_' . $type], $img, true);
++				}
++			}
++	
++		}
++			
++		func_build_quick_flags($productid);
++
++		if ($geid && !empty($fields)) {
++			while ($pid = func_ge_each($geid, 100, $productid)) {
++				func_build_quick_flags($pid);
++			}
++		}
++	} else {
++		if ($isnt_perms !== true) {
++			$top_message['content'] = $isnt_perms['content'];
++		}
++			
++		if ($file_upload_data[$type] && $file_upload_data[$type]['is_redirect'] && $skip_image[$type] != 'Y') {
++			$file_upload_data[$type]['is_redirect'] = false;
++			$product_modified_data['is_image_' . $type] = true;
++		}
++	
++	}
++
++	if (!empty($geid_field)) {
++		x_session_unregister('geid_field');
++	}
++}
+ function func_get_product_descr($fulldescr) {
+ 	$descr = preg_replace('/<br\s*[\/]?>\s*<br\s*[\/]?>/i', '&nbsp;&nbsp;&nbsp;', $fulldescr);
+ 	$descr = preg_replace('/<br\s*[\/]?>\s*/i', '  ', $descr);

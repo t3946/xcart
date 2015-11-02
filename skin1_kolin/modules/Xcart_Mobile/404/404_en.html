@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Your Company Name :: Page not found</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.6, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    
+    <link rel="shortcut icon" type="image/png" href="favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="touch-icon-iphone-retina.png" />
+    <link rel="apple-touch-icon" href="touch-icon-iphone.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="touch-icon-ipad.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="touch-icon-iphone-retina.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="touch-icon-ipad-retina.png" />
+    
+    <script type="text/javascript" src="skin/common_files/js/common.js"></script>
+    <script type="text/javascript" src="skin/common_files/modules/Xcart_Mobile/lib/jquery-min.js"></script>
+    <script type="text/javascript" src="skin/common_files/lib/jquery.bgiframe.min.js"></script>
+    
+    <script type="text/javascript" src="skin/common_files/lib/jquery.cookie.js"></script>
+    <link rel="stylesheet" type="text/css" href="skin/common_files/modules/Xcart_Mobile/lib/jquery.mobile.css" />
+    <link rel="stylesheet" type="text/css" href="skin/common_files/modules/Xcart_Mobile/lib/jquery.mobile.core.css" />
+    <link rel="stylesheet" type="text/css" href="skin/common_files/modules/Xcart_Mobile/lib/jquery.mobile.scheme_f.css" />
+    
+    <script type="text/javascript" src="skin/common_files/modules/Xcart_Mobile/lib/jquery.mobile.js"></script>
+    <script type="text/javascript" src="skin/common_files/modules/Xcart_Mobile/customer/core.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="skin/common_files/modules/Xcart_Mobile/css/main.css" />
+    
+  </head>
+  <body class="error-page">
+    <!-- page error -->
+    <div data-role="page"  class="page-holder" data-dom-cache="true" data-add-back-btn="true" id="error-page">
+      <div data-role="navbar" data-iconpos="top" class="top-nav">
+        <ul>
+          <li>
+            <a class="link-home " data-theme="a" data-icon="custom" href="home.php" data-prefetch><h3>Home</h3></a>
+          </li>
+          <li>
+            <a class="link-catalog " data-theme="a" data-icon="custom" href="home.php?mobile_mode=subcategories" data-prefetch><h3>Catalog</h3></a>
+          </li>
+          <li>
+            <a class="link-search " data-theme="a" data-icon="custom" href="home.php?mobile_mode=search" data-rel="dialog" data-transition="slidedown" data-prefetch><h3>Search</h3></a>
+          </li>
+          <li class="link-cart-wrapper">
+            <a class="link-cart ui-btn-active ui-state-persist" data-theme="a" data-icon="custom" href="cart.php" data-prefetch><h3>Cart</h3></a>
+            <span class="minicart-total-items">0</span>
+          </li>
+          <li>
+            <a class="link-more " data-theme="a" data-icon="custom" href="home.php?mobile_mode=more" data-prefetch><h3>More</h3></a>
+          </li>
+        </ul>
+      </div>              <div data-role="header" data-inline="true">
+        <a href="#" class="custom-arrow back-title-button" data-role="button" data-rel="back" data-icon="custom-arrow-l" data-iconpos="notext" data-theme="a" data-shadow="false" data-corners="false">Back</a>
+        <h1>Page not found</h1>
+      </div>
+      <div data-role="content">
+
+        <div class="subcontainer">
+          <div class="code-number">404</div>
+          <div class="description">
+            <p class="reason">The page you are trying to access does not exist on this server.</p>
+            Possible reasons:
+            <ul>
+              <li>The page may have been moved or deleted</li>
+              <li>You may have used an outdated or broken link</li>
+              <li>You may have typed the address (URL) incorrectly</li>
+            </ul>
+            <hr />
+            We suggest you go to our site's <a rel="external" href="home.php">Home page</a> or use one of the links below:
+            <ul class="links">
+              <li><a href="cart.php" rel="external">View cart</a></li>
+              <li><a href="help.php" rel="external">Help</a></li>
+            </ul>
+          </div>
+        </div>   
+
+      </div>
+      <div data-role="footer" data-inline="true">
+        <h4 class="footer">
+          Powered by X-Cart PHP shopping cart
+          <br />
+          Copyright &copy; 2005-2013 Your Company Name
+
+        </h4>
+      </div>
+      <a class="switch-mobile link-switch" data-theme="b" data-icon="switch" data-role="button" href="cart.php#switch-view" data-rel="popup"><h3>Switch to desktop version</h3></a>
+      <div data-role="popup" id="switch-view" data-overlay-theme="e" data-theme="e" style="max-width:400px;" class="ui-corner-all">
+        <a href="cart.php#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+        <h1>Switch the web-site view?</h1>
+        <h3 class="ui-title">Are you sure you want to switch from the mobile view to the original one?</h3><p>You can switch back later.</p>
+        <div class="ui-grid-a">
+          <div class="ui-block-a">
+            <a href="cart.php#" data-role="button" data-inline="false" onclick="javascript: $('#switch-view').popup('close');" data-theme="c">Cancel</a>
+          </div>
+          <div class="ui-block-b">
+            <a href="cart.php?switch_view=common" rel="external" data-role="button" data-inline="false" data-theme="b">Switch</a>
+          </div>
+        </div>
+      </div>      </div>
+    <!-- /page error -->
+
+  </body>
+</html>

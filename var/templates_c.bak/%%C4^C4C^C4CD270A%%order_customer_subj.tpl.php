@@ -1,0 +1,6 @@
+<?php /* Smarty version 2.6.12, created on 2011-10-11 07:08:17
+         compiled from mail/order_customer_subj.tpl */ ?>
+<?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
+smarty_core_load_plugins(array('plugins' => array(array('modifier', 'cat', 'mail/order_customer_subj.tpl', 1, false),array('modifier', 'substitute', 'mail/order_customer_subj.tpl', 2, false),array('function', 'config_load', 'mail/order_customer_subj.tpl', 2, false),)), $this); ?>
+<?php func_load_lang($this, "mail/order_customer_subj.tpl","eml_order_customer_subj"); ?><?php $this->assign('orderid', ((is_array($_tmp=$this->_tpl_vars['order']['order_prefix'])) ? $this->_run_mod_handler('cat', true, $_tmp, $this->_tpl_vars['order']['orderid']) : smarty_modifier_cat($_tmp, $this->_tpl_vars['order']['orderid'])));  echo smarty_function_config_load(array('file' => ($this->_tpl_vars['skin_config'])), $this); echo $this->_tpl_vars['config']['Company']['operating_company_name']; ?>
+: <?php echo ((is_array($_tmp=$this->_tpl_vars['lng']['eml_order_customer_subj'])) ? $this->_run_mod_handler('substitute', true, $_tmp, 'orderid', $this->_tpl_vars['orderid']) : smarty_modifier_substitute($_tmp, 'orderid', $this->_tpl_vars['orderid'])); ?>

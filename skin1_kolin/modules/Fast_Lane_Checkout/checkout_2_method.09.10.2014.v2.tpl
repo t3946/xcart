@@ -1,0 +1,263 @@
+{* $Id: checkout_2_method.tpl,v 1.9.2.2 2006/10/23 06:31:05 max Exp $ *}
+
+{*<h3>{$lng.lbl_shipping_and_payment}</h3>*}
+
+<script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+<!--
+{literal}
+function display_cod(flag) {
+	for (var i = 0; i < paymentsCOD.length; i++) {
+		if (!paymentsCOD[i] || !document.getElementById('cod_tr'+paymentsCOD[i]))
+			continue;
+
+		document.getElementById('cod_tr'+paymentsCOD[i]).style.display = flag ? "" : "none";
+	}
+
+	return true;
+}
+{/literal}
+-->
+</script>
+{* <br> *}
+{* {capture name=dialog} *}
+
+{if $smarty.get.err eq 'gc_not_enough_money'}
+<div style="text-align: center;">
+<font class="ErrorMessage">{$lng.txt_gc_not_enough_money}</font>
+</div>
+<br />
+{/if}
+<form action="cart.php" method="post" name="cartform">
+
+<input type="hidden" name="mode" value="checkout" />
+<input type="hidden" name="cart_operation" value="cart_operation" />
+<input type="hidden" name="action" value="update" />
+
+{if $config.Shipping.disable_shipping ne "Y"}
+{include file="modules/Fast_Lane_Checkout/shipping_methods.tpl"}
+{/if}
+
+
+{*
+<input type="hidden" name="confirmation_of_responsibility" id="confirmation_of_responsibility" value="{if $cart.confirmation_of_responsibility eq "Y"}Y{/if}" />
+*}
+
+{if $disable_continue ne "Y" && $userinfo.s_country ne "US"}
+
+<script type="text/javascript">
+//<![CDATA[
+{literal}
+
+  $(document).ready(function() {  
+
+        $("#confirmation_of_responsibility").click(function() {
+
+                if ($('#confirmation_of_responsibility').attr('checked')) {
+                        document.getElementById("continue_btn_disable").style.display = 'none';
+                        document.getElementById("continue_btn_able").style.display = '';
+                        $("#confirmation_of_responsibility").val("Y");
+                } else {
+                        document.getElementById("continue_btn_able").style.display = 'none';
+                        document.getElementById("continue_btn_disable").style.display = '';
+                        $("#confirmation_of_responsibility").val("");
+                }
+        });
+
+  });
+
+{/literal}
+//]]>
+</script>
+
+
+ <div align="center">
+
+<input type="checkbox" id="confirmation_of_responsibility" name="confirmation_of_responsibility"{if $cart.confirmation_of_responsibility eq "Y"} checked="checked"{/if} value="Y" /> {$lng.lbl_confirmation_of_responsibility}
+
+ </div>
+ <br />
+{/if}
+
+
+
+<table cellpadding="5" cellspacing="5" width="100%">
+
+<tr>
+<td valign="top" width="30%">
+{include file="customer/main/subheader.tpl" title=$lng.lbl_billing_address}
+{if $userinfo} 
+{$userinfo.b_address}<br /> 
+{if $userinfo.b_address_2}
+{$userinfo.b_address_2}<br />
+{/if}
+{$userinfo.b_city}<br /> 
+{$userinfo.b_statename}<br />
+{$userinfo.b_countryname}<br />
+{$userinfo.b_zipcode} 
+{else} 
+No data 
+{/if} 
+ 
+{if $login ne ""}
+<br /><br />
+{include file="buttons/modify.tpl" href="register.php?mode=update&amp;action=cart&amp;paymentid=`$cart.paymentid`" }
+{/if}
+
+</td>
+<td valign="top" width="70%">
+{include file="customer/main/subheader.tpl" title=$lng.lbl_payment_method}
+
+<script type="text/javascript" language="JavaScript 1.2">
+//<![CDATA[
+{literal}
+function cidev_save_payment(paymentid, checkout_step){
+
+	if (paymentid > "0"){
+                        cidev_xmlHttp=cidev_createHttpRequestObject();
+                        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
+
+                                var cidev_parameters = 'cidev_filter_mode=save_paymentid&paymentid=' + paymentid + '&checkout_step=' +checkout_step;
+
+                                cidev_xmlHttp.onreadystatechange=function(){
+                                        if(cidev_xmlHttp.readyState==4){
+                                                if(cidev_xmlHttp.status==200){
+							//alert('saved');
+							cidev_id$("cidev_tabs_menu").innerHTML=cidev_xmlHttp.responseText;
+                                                }else{
+                                                        cidev_Error('no_server', 'Y');
+                                                }
+                                        }
+                                };
+
+                                cidev_xmlHttp.open('POST','cidev_cart.php',true);
+                                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
+                                cidev_xmlHttp.setRequestHeader('Connection','close');
+                                cidev_xmlHttp.send(cidev_parameters);
+                        }
+                        else {
+                                setTimeout('cidev_save_payment(paymentid)', 1000);
+                        }
+	}
+}
+{/literal}
+//]]>
+</script>
+
+<table cellspacing="0" cellpadding="2" width="100%">
+{foreach from=$payment_methods item=payment}
+{if $show_only_phone_method ne "Y" || $payment.paymentid eq "4"}
+<tr{cycle values=' class="TableSubHead", '}{if $payment.is_cod eq "Y"} id="cod_tr{$payment.paymentid}"{/if}>
+{* <td width="1"><input type="radio" name="paymentid" id="pm{$payment.paymentid}" value="{$payment.paymentid}"{if $payment.is_default eq "1"} checked="checked"{/if} /></td> *}
+{if $show_only_phone_method eq "Y"}
+<input type="hidden" name="paymentid" value="{$payment.paymentid}" />
+{else}
+<td width="1"><input type="radio" name="paymentid" onclick="cidev_save_payment('{$payment.paymentid}', '{$checkout_step}');" id="pm{$payment.paymentid}" value="{$payment.paymentid}"{if $payment.paymentid eq $cart.paymentid} checked="checked"{/if} /></td>
+{/if}
+
+{if $payment.processor eq "ps_paypal_pro.php"}
+<td colspan="2">
+<table cellpadding="0" cellspacing="0"><tr>
+	<td>{include file="payments/ps_paypal_pro_express_checkout.tpl" paypal_express_link="logo"}</td>
+	<td>&nbsp;&nbsp;</td>
+	<td><label for="pm{$payment.paymentid}">{include file="payments/ps_paypal_pro_express_checkout.tpl" paypal_express_link="text"}</label></td>
+</tr>
+</table>
+</td>
+{else}
+<td width="20%" nowrap="nowrap" style="padding-right: 15px;"><label for="pm{$payment.paymentid}"><b>{$payment.payment_method}</b></label></td>
+<td width="80%">{$payment.payment_details}</td>
+{/if}
+</tr>
+{/if}
+{/foreach}
+</table>
+
+</td>
+</tr>
+</table>
+
+{if !$js_enabled}
+	<br />
+	<div align="center">
+		{include file="submit_wo_js.tpl" value=$lng.lbl_continue b=1}
+	</div>
+{/if}
+</form>
+
+<script type="text/javascript">
+<!--
+var paymentsCOD = [{strip}
+{foreach from=$payment_methods item=payment}
+{if $payment.is_cod eq "Y"}
+{$payment.paymentid},
+{/if}
+{/foreach}
+0
+{/strip}];
+display_cod({if $display_cod eq 'Y'}true{else}false{/if});
+-->
+</script>
+
+{*
+{/capture}
+{include file="dialog.tpl" title=$lng.lbl_shipping_and_payment_2 content=$smarty.capture.dialog extra='width="100%"'}
+*}
+
+{if $cart.coupon_discount eq 0 and $products ne ""}
+	{if $active_modules.Discount_Coupons ne "" && $show_discount_coupons eq 'Y'}
+		{include file="modules/Discount_Coupons/add_coupon.tpl}
+	{/if}
+{else}
+	{if $cart.coupon_type ne "free_ship"}
+		<table cellpadding="5" cellspacing="5" width="100%">
+		<tr>
+			<td valign="top" width="30%">
+				{include file="customer/main/subheader.tpl" title=$lng.lbl_redeem_discount_coupon}
+				{$lng.txt_add_coupon_header}
+			</td>
+			<td valign="top" width="70%">
+				{include file="customer/main/subheader.tpl" title=$lng.lbl_coupon_code}
+				<table cellpadding="1" cellspacing="1">
+				<tr>
+					<td nowrap="nowrap"><font class="FormButton">{$lng.lbl_discount_coupon} <a href="cart.php?mode=unset_coupons" alt="{$lng.lbl_unset_coupon|escape}"><img src="{$ImagesDir}/clear.gif" width="11" height="11" border="0" valign="top" alt="{$lng.lbl_unset_coupon|escape}" /></a> :</font></td>
+					<td><img src="{$ImagesDir}/null.gif" width="5" height="1" alt="" /><br /></td>
+					<td nowrap="nowrap" align="right"><font class="ProductPriceSmall">{include file="currency.tpl" value=$cart.coupon_discount}</font></td>
+					<td nowrap="nowrap" align="right">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$cart.coupon_discount}</td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+		</table>
+	{/if}
+{/if}
+
+{if $js_enabled}
+<br />
+
+	<div align="center" id="continue_btn_able">
+		{include file="buttons/continue.tpl" style="button" href="javascript: document.cartform.submit()" b=1 button_type="continue"}
+
+		<br />
+		<div align="center">
+			<font style="color: #000000"><I>{$lng.lbl_continue_checkout_2}</I></font>
+		</div>
+	</div>
+
+	<div align="center">
+	<div align="center" id="continue_btn_disable" class="btn_atcart_continue_disable" style="display: none;">
+	</div>
+	</div>
+
+
+<script type="text/javascript">
+//<![CDATA[
+{literal}
+        window.onload = start_btn();
+{/literal}
+//]]>
+</script>
+
+{/if}

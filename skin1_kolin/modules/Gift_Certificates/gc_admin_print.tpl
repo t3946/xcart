@@ -1,0 +1,21 @@
+{* $Id: gc_admin_print.tpl,v 1.5.2.1 2006/12/25 13:04:32 max Exp $ *}
+<html>
+{if $css_file ne ""}
+<head>
+<link rel="stylesheet" href="{$SkinDir}/modules/Gift_Certificates/{$css_file}" />
+</head>
+{/if}
+<body>
+{if $config.Gift_Certificates.print_giftcerts_separated eq "Y"}
+{assign var="separator" value="<div style='page-break-after: always;'><!--[if IE 7]><br style='height: 0px; line-height: 0px;'><![endif]--></div>"}
+{else}
+{assign var="separator" value="<br /><hr size='1' noshade="noshade" /><br />"}
+{/if}
+{foreach name=giftcerts from=$giftcerts key=key item=giftcert}
+{include file="modules/Gift_Certificates/`$giftcert.tpl_file`"}
+{if not $smarty.foreach.giftcerts.last}
+{$separator}
+{/if}
+{/foreach}
+</body>
+</html>

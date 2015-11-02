@@ -1,0 +1,1 @@
+{if $hide_zero ne 'Y' || $value ne 0}{if $display_sign}{if $value gte 0}+{else}-{/if}{/if}{if $show_minus_brackets && $value lt 0}({/if}{$value|abs_value|formatprice:",":"."}{if $show_minus_brackets && $value lt 0}){/if}{/if}

@@ -1,0 +1,1 @@
+f7d8501d20ad957cac07397b283b730ea:2:{s:7:"lbl_all";s:3:"All";s:17:"lbl_hold_ctrl_key";s:150:"To select more than one entry, hold 'Ctrl' key while clicking on them with your mouse. To unselect, hold 'Ctrl' and click on the selected items again.";}

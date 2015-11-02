@@ -1,0 +1,10 @@
+<?php /* Smarty version 2.6.12, created on 2015-11-02 03:05:02
+         compiled from product_thumbnail.tpl */ ?>
+<?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
+smarty_core_load_plugins(array('plugins' => array(array('function', 'xevent', 'product_thumbnail.tpl', 1, false),array('modifier', 'default', 'product_thumbnail.tpl', 2, false),array('modifier', 'escape', 'product_thumbnail.tpl', 2, false),)), $this); ?>
+<?php if ($this->_tpl_vars['x_core_started']):  echo x_tpl_fire_event(array('name' => 'before','tpl' => "product_thumbnail.tpl"), $this); endif;  if ($this->_tpl_vars['config']['Appearance']['show_thumbnails'] == 'Y'): ?><img<?php if ($this->_tpl_vars['id'] != ''): ?> id="<?php echo $this->_tpl_vars['id']; ?>
+"<?php endif; ?> src="<?php if ($this->_tpl_vars['tmbn_url']):  echo $this->_tpl_vars['tmbn_url'];  else:  if ($this->_tpl_vars['full_url']):  echo $this->_tpl_vars['http_location'];  else:  if ($this->_tpl_vars['config']['Appearance']['CDN_domain'] != "" && $this->_tpl_vars['config']['Appearance']['Enable_CDN'] == 'Y'):  if ($this->_tpl_vars['add_http_if_cdn'] == 'Y'): ?>http://<?php endif;  echo $this->_tpl_vars['config']['Appearance']['CDN_domain'];  else:  echo $this->_tpl_vars['xcart_web_dir'];  endif;  endif; ?>/image.php?type=<?php echo ((is_array($_tmp=@$this->_tpl_vars['type'])) ? $this->_run_mod_handler('default', true, $_tmp, 'T') : smarty_modifier_default($_tmp, 'T')); ?>
+&amp;id=<?php echo $this->_tpl_vars['productid'];  endif; ?>"<?php if ($this->_tpl_vars['image_x'] != 0): ?> width="<?php echo $this->_tpl_vars['image_x']; ?>
+"<?php endif;  if ($this->_tpl_vars['image_y'] != 0): ?> height="<?php echo $this->_tpl_vars['image_y']; ?>
+"<?php endif; ?> alt="<?php echo ((is_array($_tmp=$this->_tpl_vars['product'])) ? $this->_run_mod_handler('escape', true, $_tmp) : smarty_modifier_escape($_tmp)); ?>
+" /><?php endif;  if ($this->_tpl_vars['x_core_started']):  echo x_tpl_fire_event(array('name' => 'after','tpl' => "product_thumbnail.tpl"), $this); endif; ?>

@@ -1,0 +1,119 @@
+{* $Id: shipping_methods.tpl,v 1.7.2.4 2006/12/19 07:44:56 max Exp $ *}
+<table cellpadding="5" cellspacing="5" width="100%">
+
+<tr>
+<td valign="top" width="30%">
+{include file="customer/main/subheader.tpl" title=$lng.lbl_shipping_address}
+{if $userinfo}
+{$userinfo.s_address}<br />
+{if $userinfo.s_address_2}
+{$userinfo.s_address_2}<br />
+{/if}
+{$userinfo.s_city}<br />
+{$userinfo.s_statename}<br />
+{$userinfo.s_countryname}<br />
+{$userinfo.s_zipcode}
+{else}
+No data
+{/if}
+
+{if $login ne ""}
+<br /><br />
+{include file="buttons/modify.tpl" href="register.php?mode=update&action=cart"}
+{/if}
+
+</td>
+<td valign="top" width="70%">
+
+{*  ERROR: no shipping methods available [begin]  }
+{if $shipping_calc_error ne ""}
+{$shipping_calc_service} {$lng.lbl_err_shipping_calc}<br />
+<font class="ErrorMessage">{$shipping_calc_error}</font><br />
+{/if}
+{if $shipping eq "" and $need_shipping}
+<font class="ErrorMessage">{$lng.lbl_no_shipping_for_location}</font><br />
+<br />
+{/if}
+{  ERROR: no shipping methods available [end]  *}
+
+{*  Select the shipping carrier [begin]  }
+{if $login ne "" or $config.General.apply_default_country eq "Y" or $cart.shipping_cost gt 0}
+
+{if $active_modules.UPS_OnLine_Tools and $config.Shipping.realtime_shipping eq "Y" and $config.Shipping.use_intershipper ne "Y" and $show_carriers_selector eq "Y"}
+<font class="FormButton"><label for="">{$lng.lbl_shipping_carrier}:</label> </font>
+<select name="selected_carrier" id="selected_carrier" onchange="javascript: self.location='cart.php?mode=checkout&amp;action=update&amp;selected_carrier='+this.options[this.selectedIndex].value;">
+<option value="UPS">{$lng.lbl_ups_carrier}</option>
+<option value="" selected="selected">{$lng.lbl_other_carriers}</option>
+</select>
+<br /><br />
+{/if}
+
+{/if}
+{  Select the shipping carrier: [end]  *}
+
+{*  Select the shipping method: [begin]  *}
+{if $cart.shipping_groups ne ""}
+{* if $config.Shipping.realtime_shipping eq "Y" && $config.Shipping.use_intershipper ne "Y" && (!$active_modules.UPS_OnLine_Tools || $show_carriers_selector ne 'Y' || $current_carrier ne 'UPS')}
+{if $arb_account_used}
+{$lng.txt_arb_account_checkout_note}
+<br />
+{elseif $use_airborne_account}
+{$lng.lbl_arb_account}: <input type="text" name="arb_account" value="{$airborne_account}" /><br />
+<br />
+{/if}
+{/if *}
+{* $arb_account_used *}
+
+{if $login ne "" || $config.General.apply_default_country eq "Y" || $cart.shipping_cost gt 0}
+{foreach from=$cart.shipping_groups item=v key=k}
+{assign var="found_any_shipping" value="N"}
+{assign var="selected_any" value="N"}
+{cycle values=''}
+{assign var=delivery_text value=$lng.txt_for_fastlane_checkout_delivery|replace:"XX":"`$v.m_city`, `$v.m_state`, `$v.m_country`."|replace:"YY":"`$v.group_name`"}
+    {include file="customer/main/subheader.tpl" title="`$lng.lbl_delivery_methods` `$delivery_text`"}
+
+
+	{assign var='Maxshippings' value="0"}
+	{foreach from=$shippings[$k] item=s}
+		{math equation="$Maxshippings+1" assign="Maxshippings"}
+	{/foreach}
+
+
+	{foreach from=$shippings[$k] item=s}
+	{if $s.active eq "Y" && $s.allowed eq "1"}
+	{assign var="found_any_shipping" value="Y"}
+	<table cellpadding="1" cellspacing="0" width="100%" {cycle values=" class='TableSubHead', "}>
+	<tr>
+	  {if $Maxshippings eq "1"}
+		<input type="hidden" id="shippingid{$s.shippingid}" name="shippingids[{$k}]" value="{$s.shippingid}">
+	  {else}
+		<td width="5"><input type="radio" id="shippingid{$s.shippingid}" name="shippingids[{$k}]" value="{$s.shippingid}"{if $s.shippingid eq $cart.shippingids[$k] || ($cart.shippingids[$k] eq "" && $selected_any eq "N")}{assign var="selected_any" value="Y"} checked="checked"{/if}{if $allow_cod} onclick="javascript: display_cod({if $s.is_cod eq 'Y'}true{else}false{/if});"{/if} /></td>
+	  {/if}
+		<td><label for="shippingid{$s.shippingid}">{$s.shipping|trademark:$insert_trademark}{if $s.shipping_time ne ""} - {$s.shipping_time}{/if}{if $config.Appearance.display_shipping_cost eq "Y" and ($login ne "" or $config.General.apply_default_country eq "Y" or $cart.shipping_cost gt 0)}: {include file="currency.tpl" value=$s.rate}{/if}</label></td>
+	</tr>
+	{if $s.warning ne ""}
+	<tr>
+	<td>&nbsp;</td>
+	<td class="SmallText">{$s.warning}</td>
+	</tr>
+	{/if}
+	</table>
+	{/if}
+	{/foreach}
+
+{if $found_any_shipping ne "Y" and $need_shipping}
+<font class="ErrorMessage">{$lng.lbl_no_shipping_for_location}</font><br />
+<br />
+{/if}
+
+<br /><br />
+{/foreach}
+{/if}
+{else}
+<input type="hidden" name="shippingid" value="0" />
+{/if}
+{*  Select the shipping method: [end]  *}
+{include file="customer/main/dhl_ext_countries.tpl"}
+</td>
+</tr>
+</table>

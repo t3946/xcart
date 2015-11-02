@@ -1,0 +1,73 @@
+***************
+*** 4,10 ****
+ 
+ {foreach from=$order.shipping_groups item=v key=k name="shgrform"}
+ 
+-{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_by} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross}):
+ 
+ {section name=prod_num loop=$products}
+ {$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$products[prod_num].productcode}
+--- 4,10 ----
+ 
+ {foreach from=$order.shipping_groups item=v key=k name="shgrform"}
+ 
++{if $products}{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$v.manufacturer_data.m_city:"STATE":$v.manufacturer_data.m_state:"COUNTRY":$v.manufacturer_data.m_country} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:0}):{/if}
+ 
+ {section name=prod_num loop=$products}
+ {$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$products[prod_num].productcode}
+***************
+*** 34,41 ****
+ 
+ {/section}
+ 
+ {$lng.lbl_payment_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$v.cb_status mode="static" status_type="CB"}
+ {$lng.lbl_shipping_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$v.dc_status mode="static" status_type="DC"}
+ 
+ {if $show_shipping_groups neq 'N' && $v.tracking}
+ {foreach from=$v.tracking item=tr}
+--- 34,43 ----
+ 
+ {/section}
+ 
++{if $products}
+ {$lng.lbl_payment_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$v.cb_status mode="static" status_type="CB"}
+ {$lng.lbl_shipping_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$v.dc_status mode="static" status_type="DC"}
++{/if}
+ 
+ {if $show_shipping_groups neq 'N' && $v.tracking}
+ {foreach from=$v.tracking item=tr}
+***************
+*** 54,59 ****
+ {/if}
+ {/foreach}
+ {section name=giftcert loop=$giftcerts}
+ {$lng.lbl_gift_certificate|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$giftcerts[giftcert].gcid}
+ {$lng.lbl_amount|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$giftcerts[giftcert].amount}
+ 
+--- 54,61 ----
+ {/if}
+ {/foreach}
+ {section name=giftcert loop=$giftcerts}
++{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_by} {if $giftcerts[giftcert].send_via eq "E"}{$lng.lbl_email}{else}{$lng.lbl_gc_postal_mail}{/if}, {include file="currency.tpl" value=$v.shipping_cost.gross|default: 0}):
++
+ {$lng.lbl_gift_certificate|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$giftcerts[giftcert].gcid}
+ {$lng.lbl_amount|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$giftcerts[giftcert].amount}
+ 
+***************
+*** 70,75 ****
+ {$lng.lbl_recipient_email|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$giftcerts[giftcert].recipient_email}
+ {/if}
+ 
+ {/section}
+ 
+ {$lng.lbl_extended}:
+--- 70,78 ----
+ {$lng.lbl_recipient_email|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$giftcerts[giftcert].recipient_email}
+ {/if}
+ 
++{$lng.lbl_payment_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$order.cb_status mode="static" status_type="CB"}
++{$lng.lbl_shipping_status|cat:":"|string_format:$max_space}{include file="main/order_status.tpl" status=$order.dc_status mode="static" status_type="DC"}
++
+ {/section}
+ 
+ {$lng.lbl_extended}:

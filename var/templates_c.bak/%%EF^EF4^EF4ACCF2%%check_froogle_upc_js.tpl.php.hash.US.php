@@ -1,0 +1,1 @@
+d1e9f0c948a38bf95677408d92ed3c48a:1:{s:21:"err_froogle_wrong_upc";s:95:"Ensure that you have 10, 12 or 13 digits in the "UPC/EAN/ISBN" field. Only figures are allowed.";}

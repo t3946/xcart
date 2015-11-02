@@ -1,0 +1,49 @@
+
+function add_template(index) {
+
+	row_max_index = row_max_index + 1;
+	$('#tr_header_row').show();
+	$('#tr_submit_row').show();
+	
+	$('#template_row' + index).after(
+		'<tr id="template_row' + row_max_index + '">' +
+
+                        '<td valign="top" align="center" width="10">' +
+'<input type="checkbox" name="templates_for_communication[' + row_max_index + '][active]" value="Y" checked="checked" style="padding: 0px; margin: -2px 0 0 0;" />' +                
+                        '</td>' +
+
+                        '<td valign="top" align="center" width="4%">' +
+'<input type="text" size="2" name="templates_for_communication[' + row_max_index + '][pos]" value="" />' +
+                        '</td>' +
+
+			'<td valign="top" align="center" width="30%">' +
+			'<table width="100%">' +
+			 '<tr><td><b>Template name</b></td></tr>' +
+'<tr><td><input type="text" size="20" name="templates_for_communication[' + row_max_index + '][template_name]" value="" style="width: 96%;" /></td></tr>' +
+                        '<tr><td><b>\'Send to\' email</b></td></tr>' +
+'<tr><td><input type="text" size="25" name="templates_for_communication[' + row_max_index + '][send_to_email]" value="" style="width: 96%;" /></td></tr>' +
+                        '<tr><td><b>Subject line</b></td></tr>' +
+'<tr><td><input type="text" size="25" name="templates_for_communication[' + row_max_index + '][subject_line]" value="" style="width: 96%;" /></td></tr>' +
+                        '</table></td>' +
+
+                        '<td valign="top" align="left" width="*">' +
+'<textarea cols="45" rows="8" name="templates_for_communication[' + row_max_index + '][message_body]" style="width: 96%;" /></textarea>' +
+'<br />Add the following Attention tag' +
+                '<select name="templates_for_communication[' + row_max_index + '][status_id]">' +
+                '<option value="">Don\'t change</option>' + str_ca_statuses_options +
+                '</select>' +
+'<br /><input type="checkbox" name="templates_for_communication[' + row_max_index + '][attach_pdf_invoice]" value="Y" /> Attach order invoice in pdf format' +
+
+                        '</td>' +
+
+			'<td valign="top" align="center" width="20">' +
+'<a href="javascript: void(0);" onclick="javascript: remove_template(\'' + row_max_index + '\');"><img src="' + ImagesDir + '/minus.gif" alt="' + lbl_remove_row + '" /></a>' +
+			'</td>' +
+
+		'</tr>'
+	);
+}
+
+function remove_template(index) {
+	$('#template_row' + index).remove();
+}

@@ -1,0 +1,15 @@
+SetEnv PHPRC /disk2/www_data/artistsupplysource.com/php.ini
+
+# X-SEO: redirects
+<IfModule mod_rewrite.c>
+Options +FollowSymLinks -MultiViews -Indexes
+RewriteEngine On
+
+RewriteBase /
+
+## rules for robots.txt
+RewriteCond robots.%{HTTP_HOST}.txt -f
+RewriteRule ^robots.txt robots.%{HTTP_HOST}.txt [R,L]
+## END. rules for robots.txt
+</IfModule>
+# END. X-SEO: Core

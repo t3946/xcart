@@ -1,0 +1,1 @@
+43e195c1681ad0e11252252008a0bb75a:3:{s:36:"lbl_imported_order_details_encrypted";s:36:"Imported order details are encrypted";s:6:"lbl_no";s:2:"No";s:7:"lbl_yes";s:3:"Yes";}

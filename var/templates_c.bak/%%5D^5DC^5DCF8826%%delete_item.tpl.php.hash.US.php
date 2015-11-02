@@ -1,0 +1,1 @@
+973d280f1cf9e9754d3bd8acbfd66f14a:1:{s:15:"lbl_delete_item";s:11:"Delete item";}

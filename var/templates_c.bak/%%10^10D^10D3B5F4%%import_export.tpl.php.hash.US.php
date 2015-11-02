@@ -1,0 +1,1 @@
+271f2b66482dfda4c5fcf8f443f6a950a:3:{s:15:"lbl_export_data";s:11:"Export data";s:15:"lbl_import_data";s:11:"Import data";s:24:"txt_import_data_top_text";s:134:"This section allows you to import and export store data. Please make sure you have a correct CSV-file if you are going to import data.";}

@@ -1,0 +1,177 @@
+<form name="fraudform" action="configuration.php" method="POST">
+<input type="hidden" name="option" value="Attention_tags_invoices">
+<input type="hidden" name="mode" value="Update_Attention_tags_invoices">
+
+
+<table width="100%" cellspacing="1" cellpadding="3">
+
+<tr>
+	<td width="3%">&nbsp;</td>
+	<td width="57%">
+If <b>Unit cost</b> &gt; <b>Cost to us</b>, then set the following attention tag:
+	</td>
+	<td width="40%">
+<select name="tag_for_Unit_cost_GT_Cost_to_us">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_Unit_cost_GT_Cost_to_us}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+	</td>
+</tr>
+
+<tr>
+	<td width="3%">&nbsp;</td>
+	<td width="57%" class="TableSubHead">
+If <b>Unit cost</b> &lt; <b>Cost to us</b>, then set the following attention tag:
+	</td>
+	<td width="40%" class="TableSubHead">
+<select name="tag_for_Unit_cost_LT_Cost_to_us">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_Unit_cost_LT_Cost_to_us}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+	</td>
+</tr>
+
+<tr>
+	<td width="3%">&nbsp;</td>
+	<td width="57%">
+If <b>Qty invoiced</b> != <b>Qty dispatched</b>, then set the following attention tag:
+	</td>
+	<td width="40%">
+<select name="tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+	</td>
+</tr>
+
+<tr>
+        <td width="3%">&nbsp;</td>
+        <td width="57%" class="TableSubHead">
+If <b>extra items are present on the invoice</b>, then set the following attention tag:
+        </td>
+        <td width="40%" class="TableSubHead">
+<select name="tag_for_extra_items_on_invoice">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_extra_items_on_invoice}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+        </td>
+</tr>
+
+<tr>
+        <td width="3%">&nbsp;</td>
+        <td width="57%">
+If <b>Tax charged (except HST)</b> &gt; <b>0</b>, then set the following attention tag:
+        </td>
+        <td width="40%">
+<select name="tag_for_Tax_charged_except_HST_GT_0">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_Tax_charged_except_HST_GT_0}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+        </td>
+</tr>
+
+<tr>
+	<td width="3%">&nbsp;</td>
+	<td width="57%" class="TableSubHead">
+If <b>Shipping charged</b> &gt; <b>Shipping quoted by distributor != 0.00</b>, then set the following attention tag:
+	</td>
+	<td width="40%" class="TableSubHead">
+<select name="tag_for_Shipping_charged_GT_Shipping_quoted_by_distr">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_Shipping_charged_GT_Shipping_quoted_by_distr}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+	</td>
+</tr>
+
+<tr>
+        <td width="3%">&nbsp;</td>
+        <td width="57%">
+If <b>Shipping charged</b> = <b>0.00</b>, then set the following attention tag:
+        </td>
+        <td width="40%">
+<select name="tag_for_Shipping_charged_EQ_0">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_Shipping_charged_EQ_0}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+        </td>
+</tr>
+
+<tr>
+        <td width="3%">&nbsp;</td>
+        <td width="57%" class="TableSubHead">
+If <b>items are shipped to the wrong address</b>, then set the following attention tag:
+        </td>
+        <td width="40%" class="TableSubHead">
+<select name="tag_for_items_shipped_to_wrong_address">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_items_shipped_to_wrong_address}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+        </td>
+</tr>
+
+<tr>
+	<td width="3%">&nbsp;</td>
+	<td width="57%">
+If <b>Drop-ship fee charged</b> &gt; <b>Drop-ship fee in X-cart</b>, then set the following attention tag:
+	</td>
+	<td width="40%">
+<select name="tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+	</td>
+</tr>
+
+<tr>
+        <td width="3%">&nbsp;</td>
+        <td width="57%" class="TableSubHead">
+If <b>HST charged</b> &gt; <b>0</b>, then set the following attention tag:
+        </td>
+        <td width="40%" class="TableSubHead">
+<select name="tag_for_HST_charged_GT_0">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_HST_charged_GT_0}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+        </td>
+</tr>
+
+<tr>
+        <td width="3%">&nbsp;</td>
+        <td width="57%">
+If <b>PROFIT</b> &lt; <b>0.00</b>, then set the following attention tag:
+        </td>
+        <td width="40%">
+<select name="tag_for_PROFIT_LT_0">
+        <option value="">None</option>
+        {foreach from=$attention_tags_values item=v key=k}
+                <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_PROFIT_LT_0}selected="selected"{/if}>{$v.status}</option>
+        {/foreach}
+</select>
+        </td>
+</tr>
+
+</table>
+
+<br />
+<input type="submit" value=" Save ">
+</form>
