@@ -3,6 +3,7 @@ Before work on Branches
 setup these files:
 
 /robots.txt.php
+
 /modules/Multiple_Storefronts/init.php
 /modules/Multiple_Storefronts/config.php
 /init.php
