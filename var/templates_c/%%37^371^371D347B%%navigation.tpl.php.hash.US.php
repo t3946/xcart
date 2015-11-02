@@ -1,1 +1,0 @@
-184e8d5ee5f48aaf417d7bd286c5d3c9a:7:{s:16:"lbl_current_page";s:12:"Current page";s:20:"lbl_next_group_pages";s:19:"Next group of pages";s:13:"lbl_next_page";s:9:"Next page";s:8:"lbl_page";s:4:"Page";s:20:"lbl_prev_group_pages";s:23:"Previous group of pages";s:13:"lbl_prev_page";s:13:"Previous page";s:16:"lbl_result_pages";s:12:"Result pages";}

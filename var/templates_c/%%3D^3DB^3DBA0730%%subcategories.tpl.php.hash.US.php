@@ -1,3 +1,0 @@
-589b9e8452022ef8acdf137d82e70278a:9:{s:14:"lbl_categories";s:10:"Categories";s:18:"lbl_empty_category";s:14:"empty category";s:6:"lbl_in";s:2:"in";s:26:"lbl_nothing_found_cat_page";s:180:"<br><br><b>
-We try to search your query across specified category products, but nothing found.<br>
-Please specify your request or try to search all website...</b><br><br><br><br>";s:12:"lbl_products";s:8:"products";s:32:"lbl_SEO_related_categories_title";s:19:"Related categories:";s:22:"lbl_subcat_no_products";s:11:"no products";s:17:"lbl_this_category";s:13:"this category";s:22:"txt_no_products_in_cat";s:52:"There are no available products under this category.";}

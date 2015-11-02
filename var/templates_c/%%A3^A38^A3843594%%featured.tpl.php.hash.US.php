@@ -1,1 +1,0 @@
-70ae97ed6eed6946de86956142a1c8f5a:2:{s:21:"lbl_featured_products";s:17:"Featured products";s:15:"txt_no_featured";s:54:"There are no featured products available at this time.";}
