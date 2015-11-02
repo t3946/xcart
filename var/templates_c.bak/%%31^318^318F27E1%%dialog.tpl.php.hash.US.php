@@ -1,1 +1,0 @@
-5766864a13a3abb8dd0de87f60fd8b5da:1:{s:7:"lbl_sku";s:3:"SKU";}

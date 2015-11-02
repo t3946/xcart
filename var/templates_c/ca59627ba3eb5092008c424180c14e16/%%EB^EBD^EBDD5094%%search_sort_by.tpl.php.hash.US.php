@@ -1,1 +1,0 @@
-0ee6895f9036cc4bc47e033222b2de9ba:2:{s:11:"lbl_sort_by";s:7:"Sort by";s:18:"lbl_sort_direction";s:14:"Sort direction";}

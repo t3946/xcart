@@ -1,1 +1,0 @@
-29b2b732ff2faec47da8a27e9e0dda32a:2:{s:18:"lbl_category_title";s:8:"Shopping";s:15:"lbl_information";s:11:"Information";}

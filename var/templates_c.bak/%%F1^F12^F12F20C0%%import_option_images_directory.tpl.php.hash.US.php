@@ -1,1 +1,0 @@
-5b06408aa7d026f0f2d76a0e6a5a8bd1a:2:{s:38:"txt_directory_where_images_are_located";s:34:"Directory where images are located";s:43:"txt_directory_where_images_are_located_expl";s:162:"This directory will be used if an image file is specified without a file path; the path specified here must be absolute, e.g.: {{my_files_location}}/images_backup";}

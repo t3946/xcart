@@ -1,1 +1,0 @@
-52ae9927057531f4ce203f2254f1deb7a:1:{s:16:"txt_are_you_sure";s:13:"Are you sure?";}

@@ -1,1 +1,0 @@
-abd3bf2552f44d4bbbec0c58fa7dc03fa:5:{s:20:"lbl_change_mpassword";s:19:"Change merchant key";s:10:"lbl_delete";s:6:"Delete";s:10:"lbl_modify";s:6:"Modify";s:18:"lbl_orders_history";s:15:"Retrieve orders";s:16:"lbl_your_profile";s:12:"Your profile";}

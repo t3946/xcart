@@ -1,1 +1,0 @@
-4da2daa5b552c9fcaa4ca13c409fe0d1a:1:{s:21:"lbl_quickbooks_format";s:27:"IIF (QuickBooks 2002, 2003)";}

@@ -1,1 +1,0 @@
-5ff0418cabf7e504be60300075eb2ecaa:5:{s:14:"lbl_title_cart";s:4:"Cart";s:17:"lbl_title_catalog";s:7:"Catalog";s:14:"lbl_title_home";s:4:"Home";s:14:"lbl_title_more";s:4:"More";s:16:"lbl_title_search";s:6:"Search";}

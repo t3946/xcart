@@ -1,1 +1,0 @@
-76d38378c0b92818697f180984f61325a:6:{s:16:"lbl_change_image";s:12:"Change image";s:16:"lbl_delete_image";s:12:"Delete image";s:8:"lbl_plus";s:1:"+";s:9:"lbl_reset";s:5:"Reset";s:10:"lbl_submit";s:6:"Submit";s:14:"txt_image_note";s:60:"The image will be saved after you click on "~~button_name~~"";}

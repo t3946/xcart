@@ -1,1 +1,0 @@
-d2effaf26a4c064dc5dfdd39b9b7deada:3:{s:24:"lbl_get_a_different_code";s:20:"Get a different code";s:23:"lbl_type_the_characters";s:42:"Type the characters you see in the picture";s:21:"lbl_word_verification";s:18:"Image verification";}

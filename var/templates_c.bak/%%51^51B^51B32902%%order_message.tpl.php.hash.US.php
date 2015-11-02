@@ -1,2 +1,0 @@
-4d534ceb23bfc7ebb5757fefb5cda75da:6:{s:16:"lbl_confirmation";s:12:"Confirmation";s:21:"lbl_continue_shopping";s:17:"Continue shopping";s:11:"lbl_invoice";s:7:"Invoice";s:17:"lbl_print_invoice";s:13:"Print invoice";s:16:"txt_order_placed";s:57:"Congratulations! Your order has been successfully placed.";s:20:"txt_order_placed_msg";s:161:"Thank you for using our store. An order notification has been sent to your e-mail address.<br />
-Your order will be processed according to the delivery details.";}
