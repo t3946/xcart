@@ -1,0 +1,1 @@
+ecd977512436e5401a292cbfac90dcd6a:3:{s:23:"lb_LoadMore_button_text";s:12:"Load more...";s:26:"txt_displaying_X_Y_results";s:51:"Displaying: {{first_item}} - {{last_item}} results ";s:19:"txt_N_results_found";s:23:"{{items}} results found";}

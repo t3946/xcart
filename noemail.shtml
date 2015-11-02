@@ -1,0 +1,20 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <TITLE>No valid email address</TITLE>
+</HEAD>
+<BODY TEXT="#FFCC00" BGCOLOR="#000000" LINK="#FFFFCC" VLINK="#FFFF99" ALINK="#FF0000">
+<!--#include virtual="/menu/menu.html"-->
+<br>
+<FONT FACE="Arial,Helvetica"><FONT SIZE=-1></FONT></FONT>&nbsp;
+<CENTER><TABLE WIDTH="80%" >
+<TR>
+<TD><FONT FACE="Arial,Helvetica"><FONT SIZE=-1>In order to submit a question
+valid email address is required.</FONT></FONT>
+<BR><FONT FACE="Arial,Helvetica"><FONT SIZE=-1>Please, click <B><I>Back</I></B>
+button to go back.</FONT></FONT></TD>
+</TR>
+</TABLE></CENTER>
+<FONT FACE="Arial,Helvetica"><FONT SIZE=-1></FONT></FONT>&nbsp;
+</BODY>
+</HTML>

@@ -1,0 +1,15 @@
+[20-Apr-2011 06:55:42] PHP Warning:  mkdir(): Permission denied in /disk2/www_data/artistsupplysource.com/image_gdlib_opt.php on line 130
+[20-Apr-2011 06:55:42] PHP Warning:  imagejpeg(): Unable to open '/disk2/www_data/var/images.jpg/150-150/images/T/ALV-30381_th.jpg' for writing: No such file or directory in /disk2/www_data/artistsupplysource.com/image_gdlib_opt.php on line 131
+[20-Apr-2011 06:55:42] /disk2/www_data/var/images.jpg/150-150/images/T/ALV-30381_th.jpg
+[20-Apr-2011 06:56:02] PHP Warning:  mkdir(): Permission denied in /disk2/www_data/artistsupplysource.com/image_gdlib_opt.php on line 130
+[20-Apr-2011 06:56:02] PHP Warning:  imagejpeg(): Unable to open '/disk2/www_data/var/images.jpg/150-150/images/T/ALV-30381_th.jpg' for writing: No such file or directory in /disk2/www_data/artistsupplysource.com/image_gdlib_opt.php on line 131
+[20-Apr-2011 06:56:02] /disk2/www_data/var/images.jpg/150-150/images/T/ALV-30381_th.jpg
+[20-Apr-2011 06:56:04] PHP Warning:  mkdir(): Permission denied in /disk2/www_data/artistsupplysource.com/image_gdlib_opt.php on line 130
+[20-Apr-2011 06:56:04] PHP Warning:  imagejpeg(): Unable to open '/disk2/www_data/var/images.jpg/150-150/images/T/ALV-30381_th.jpg' for writing: No such file or directory in /disk2/www_data/artistsupplysource.com/image_gdlib_opt.php on line 131
+[20-Apr-2011 06:56:04] /disk2/www_data/var/images.jpg/150-150/images/T/ALV-30381_th.jpg
+[20-Apr-2011 14:56:48] PHP Warning:  mkdir(): Permission denied in /disk2/www_data/artistsupplysource.com/image_gdlib_opt.php on line 131
+[20-Apr-2011 14:56:48] PHP Warning:  imagejpeg(): Unable to open '/disk2/www_data/var/images.jpg/150-150/images/T/ALV-30381_th.jpg' for writing: No such file or directory in /disk2/www_data/artistsupplysource.com/image_gdlib_opt.php on line 132
+[20-Apr-2011 14:56:48] /disk2/www_data/var/images.jpg/150-150/images/T/ALV-30381_th.jpg
+[20-Apr-2011 14:58:18] PHP Warning:  mkdir(): Permission denied in /disk2/www_data/artistsupplysource.com/image_gdlib_opt.php on line 131
+[20-Apr-2011 14:58:18] PHP Warning:  imagejpeg(): Unable to open '/disk2/www_data/artistsupplysource.com/var/images.jpg/150-150/images/T/ALV-30381_th.jpg' for writing: No such file or directory in /disk2/www_data/artistsupplysource.com/image_gdlib_opt.php on line 132
+[20-Apr-2011 14:58:18] /disk2/www_data/artistsupplysource.com/var/images.jpg/150-150/images/T/ALV-30381_th.jpg

@@ -1,0 +1,1652 @@
+/* $Id: skin1_admin.css,v 1.37.2.14 2006/08/09 11:15:33 max Exp $ */
+/*
+	General styles
+*/
+BODY,DIV,TH,TD,P,INPUT,SELECT,TEXTAREA,TT {
+	FONT-FAMILY: Verdana, Arial, Helvetica, Sans-serif;
+	COLOR: #550000;
+	FONT-SIZE: 10px;
+}
+A:link {
+	COLOR: #330000;
+	TEXT-DECORATION: underline;
+}
+A:visited {
+	COLOR: #330000;
+	TEXT-DECORATION: underline;
+}
+A:hover {
+	COLOR: #550000;
+	TEXT-DECORATION: none;
+}
+A:active  {
+	COLOR: #330000;
+	TEXT-DECORATION: underline;
+}
+H1 {
+	FONT-SIZE: 15px;
+}
+H2 {
+	FONT-SIZE: 13px;
+}
+H3 {
+	FONT-SIZE: 12px;
+}
+HR {
+	COLOR: #DDDDDD;
+	HEIGHT: 1px;
+}
+HTML,BODY {
+	HEIGHT: 100%;
+	MARGIN: 0px;
+	PADDING: 0px;
+	BACKGROUND-COLOR: #FFFBD3;
+}
+FORM {
+	MARGIN: 0px;
+}
+TABLE,IMG {
+	BORDER: 0px;
+}
+
+/*
+	Content enviroment styles
+*/
+TABLE.Container {
+	HEIGHT: 100%;
+}
+TD.Container {
+	VERTICAL-ALIGN: top;
+	HEIGHT: 90%;
+}
+
+/*
+	Header styles
+*/
+.AuthText {
+	FONT-SIZE: 10px;
+	FONT-WEIGHT: bold;
+	PADDING-BOTTOM: 5px;
+}
+.HeadLogo {
+	PADDING-LEFT: 27px;
+	TEXT-ALIGN: left;
+}
+.HeadLogo_admin {
+	TEXT-ALIGN: left;
+}
+.HeadRightBox {
+	VERTICAL-ALIGN: top;
+	TEXT-ALIGN: right;
+}
+.HeadText {
+	FONT-SIZE: 12px;
+	FONT-WEIGHT: bold;
+}
+.HeadLine {
+	BACKGROUND-COLOR: #FFD44C;
+}
+.HeadThinLine {
+	BACKGROUND-COLOR: #8E4B00;
+	HEIGHT: 1px;
+}
+.PrintableRow {
+	WIDTH: 100%;
+	VERTICAL-ALIGN: middle;
+	PADDING-RIGHT: 176px;
+	HEIGHT: 18px;
+}
+.HeadTopPad {
+	HEIGHT: 18px;
+}
+.HeadTopPad IMG {
+	WIDTH: 1px;
+	HEIGHT: 18px;
+}
+
+/*
+	Footer styles
+*/
+.BottomRow {
+	TEXT-ALIGN: center;
+	VERTICAL-ALIGN: bottom;
+}
+.BottomBox {
+	BACKGROUND-COLOR: #FFD44C;
+	COLOR: #8E4B00;
+	HEIGHT: 22px;
+	VERTICAL-ALIGN: middle;
+	PADDING-LEFT: 12px;
+	PADDING-RIGHT: 12px;
+}
+.Bottom {
+	BACKGROUND-COLOR: #FFD44C;
+	COLOR: #8E4B00;
+}
+A.Bottom:link {
+	BACKGROUND-COLOR: #FFD44C;
+	COLOR: #8E4B00;
+	TEXT-DECORATION: underline;
+}
+A.Bottom:visited {
+	BACKGROUND-COLOR: #FFD44C;
+	COLOR: #8E4B00;
+	TEXT-DECORATION: underline;
+}
+A.Bottom:hover {
+	BACKGROUND-COLOR: #FFD44C;
+	COLOR: #8E4B00;
+	TEXT-DECORATION: none;
+}
+A.Bottom:active {
+	BACKGROUND-COLOR: #FFD44C;
+	COLOR: #8E4B00;
+	TEXT-DECORATION: underline;
+}
+.BottomPopup {
+	WIDTH: 100%;
+	TEXT-ALIGN: right;
+	PADDING-RIGHT: 10px;
+	PADDING-BOTTOM: 10px;
+}
+.BottomPopup A {
+	FONT-WEIGHT: bold;
+}
+.BottomDialogBox {
+	BACKGROUND-COLOR: #FFE591;
+	PADDING-LEFT: 13px;
+	PADDING-TOP: 10px;
+	PADDING-BOTTOM: 10px;
+}
+
+/*
+	Common styles
+*/
+.SubmitBox {
+	PADDING-TOP: 10px;
+}
+.SubmitBox INPUT {
+	MARGIN-RIGHT: 15px;
+}
+HR.Line {
+	WIDTH: 100%;
+	HEIGHT: 1px;
+	BORDER-BOTTOM-WIDTH: 0px;
+	BORDER-LEFT-WIDTH: 0px;
+	BORDER-RIGHT-WIDTH: 0px;
+}
+HR.GreyLine {
+	BACKGROUND-COLOR: transparent;
+	BORDER: 0px;
+	BORDER-TOP: 1px solid #DDDDDD;
+}
+.SectionBox {
+	BACKGROUND-COLOR: #FFFFFF;
+	TEXT-ALIGN: left;
+	FONT-WEIGHT: normal;
+}
+.Text {
+	COLOR: #000000;
+}
+.NumberOfArticles {
+	COLOR: #000000;
+	FONT-WEIGHT: bold;
+}
+.TopLabel {
+	COLOR: #000000;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+}
+.Message {
+	COLOR: #FF3300;
+}
+.Line {
+	BACKGROUND-COLOR: #FF6600;
+}
+TD.ButtonsRow {
+	PADDING-TOP: 2px;
+	PADDING-LEFT: 2px;
+	PADDING-RIGHT: 12px;
+	PADDING-BOTTOM: 2px;
+}
+.CustomerMessage {
+	COLOR: #FF3300;
+	FONT-WEIGHT: bold;
+}
+.ErrorMessage {
+	COLOR: #FF3300;
+	FONT-WEIGHT: bold;
+}
+.Star {
+	COLOR: #FF0000;
+}
+.TableHead {
+	BACKGROUND-COLOR: #CCCCCC;
+	FONT-WEIGHT: bold;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    TEXT-TRANSFORM: uppercase;
+}
+.TableSubHead {
+	BACKGROUND-COLOR: #EEEEEE;
+	FONT-WEIGHT: normal;
+}
+.Spc {
+	WIDTH: 1px;
+	HEIGHT: 1px;
+}
+table.customer-info-edit {
+	border: 0;
+	width: 100%;
+}
+table.customer-info-edit input {
+	width: 100%;
+}
+table.customer-info-edit td {
+	padding-right: 5px;
+}
+tr.distributor-totals-line td {
+	font-weight: bold; 
+	color: green;
+}
+tr.refund-distr-totals-line td {
+	font-weight: bold; 
+	color: #FF0000;
+}
+tr.refund-distr-values-line td {
+	color: #FF0000;
+}
+td.refund-prod-title {
+    color: #550000 !important;
+}
+.TableHeadAccounting {
+	background-color: #ffe9a5;
+	white-space: nowrap;
+}
+.TableHeadLight {
+	font-weight: normal;
+}
+.OrderSheetCell {
+	background-color: white;
+	font-weight: normal;
+	text-align: center;
+}
+.OrderSheetDark {
+	background-color: #ffffff;
+}
+.OrderSheetRed td {
+	color: red;
+}
+.OrderSheetGreen td, .OrderSheetGreenCell {
+	color: green;
+}
+.OrderSheetCommonCell {
+    color: #550000 !important;
+    font-weight: normal;
+}
+.OrderSheetCell a {
+	color: blue;
+}
+.OrderSheetFirst td {
+	border-top: 1px solid black;
+}
+
+.OrderSheetLast {
+	background-color: #d7f4f4
+}
+body.OrderReport {
+	background-color: white;
+}
+body.OrderReport td {
+	color: black;
+}
+table.OrderSheet {
+	background-color: black;
+	width: 100%;
+}
+TABLE.EmptyBox {
+	WIDTH: 100%;
+}
+TABLE.EmptyBox TR TD {
+	PADDING: 0px;
+}
+.AdminSmallMessage {
+	COLOR: #FF3300;
+}
+.AdminTitle {
+	COLOR: #FF3300;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+}
+.TableHeadLevel2 {
+    BACKGROUND-COLOR: #CCCCCC;
+    COLOR: #000000;
+	FONT-WEIGHT: bold;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center;
+}
+.TableLine {
+    BACKGROUND-COLOR: #F0F0F0;
+}
+.TableSeparator {
+    COLOR: #000000;
+	FONT-WEIGHT: bold;
+    FONT-SIZE: 11px;
+}
+.InputWidth {
+	WIDTH: 80%;
+}
+.StatisticsBar {
+	BACKGROUND-COLOR: #FFCE31;
+}
+.StatisticsBarHL {
+	BACKGROUND-COLOR: #FF8400;
+}
+.HightLightRow {
+    BACKGROUND-COLOR: #B0B0B0;
+    FONT-WEIGHT: bold;
+}
+TD.OptionLabel {
+	WHITE-SPACE: nowrap;
+	PADDING-RIGHT: 10px;
+}
+
+/*
+	Popup styles
+*/
+.PopupContainer {
+	HEIGHT: 100%;
+	WIDTH: 100%;
+	TEXT-ALIGN: center;
+}
+.PopupTitle {
+	BACKGROUND-COLOR: #FFD44C;
+	HEIGHT: 30px;
+	VERTICAL-ALIGN: middle;
+	TEXT-ALIGN: center;
+}
+.PopupBG {
+	BACKGROUND-COLOR: #FFD44C;
+}
+
+/*
+	BuyNow section
+*/
+.BuyNowQuantity {
+	HEIGHT: 25px;
+	WIDTH: 15%;
+	WHITE-SPACE: nowrap;
+	PADDING-RIGHT: 10px;
+}
+.BuyNowPrices {
+	WIDTH: 100%;
+	HEIGHT: 25px;
+	VERTICAL-ALIGN: middle;
+}
+
+/*
+	Vertical menu
+*/
+.VertMenuLeftColumn {
+	WIDTH: 150px;
+	VERTICAL-ALIGN: top;
+	PADDING-LEFT: 6px;
+	PADDING-RIGHT: 20px;
+}
+.VertMenuRightColumn {
+	WIDTH: 148px;
+	VERTICAL-ALIGN: top;
+	PADDING-LEFT: 20px;
+	PADDING-RIGHT: 6px;
+}
+.VertMenuBox {
+	BACKGROUND-COLOR: #FFD44C;
+	PADDING: 1px;
+}
+.VertMenuBorder {
+	BACKGROUND-COLOR: #8E4B00;
+}
+.VertMenuTitle {
+	BACKGROUND-COLOR: #FF8600;
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+	PADDING: 1px;
+}
+.VertMenuSubTitle {
+	BACKGROUND-COLOR: #FFA92F;
+}
+.VertMenuTitleIcon {
+	WIDTH: 21px;
+	HEIGHT: 20px;
+	MARGIN-LEFT: 8px;
+	MARGIN-RIGHT: 8px;
+	VERTICAL-ALIGN: middle;
+}
+.VertMenuItems {
+	COLOR: #330000;
+	TEXT-DECORATION: none;
+}
+A.VertMenuItems:link {
+	COLOR: #330000;
+	TEXT-DECORATION: none;
+}
+A.VertMenuItems:visited {
+	COLOR: #330000;
+	TEXT-DECORATION: none;
+}
+A.VertMenuItems:hover {
+	COLOR: #550000;
+	TEXT-DECORATION: underline;
+}
+A.VertMenuItems:active  {
+	COLOR: #330000;
+	TEXT-DECORATION: none;
+}
+.VertMenuItemsHL{
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: none;
+}
+A.VertMenuItemsHL:link {
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: none;
+}
+A.VertMenuItemsHL:visited {
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: none;
+}
+A.VertMenuItemsHL:hover {
+	COLOR: #550000;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: underline;
+}
+A.VertMenuItemsHL:active  {
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: none;
+}
+.VertMenuHr {
+	WIDTH: 100%;
+	HEIGHT: 1px;
+	BORDER-BOTTOM-WIDTH: 0px;
+	BORDER-LEFT-WIDTH: 0px;
+	BORDER-RIGHT-WIDTH: 0px;
+	COLOR: #999999;
+}
+.CategoriesList {
+	FONT-SIZE: 12px;
+}
+
+/*
+	Dialog box
+*/
+TABLE.DialogBox {
+	WIDTH: 100%;
+	HEIGHT: 100%;
+}
+TD.DialogBox {
+	BACKGROUND-COLOR: #FFFFFF;
+	TEXT-ALIGN: left;
+	PADDING: 10px;
+}
+.DialogBorder {
+	BACKGROUND-COLOR: #FF8600;
+	HEIGHT: 100%;
+	PADDING: 0px;
+}
+TD.DialogTitle {
+	COLOR: #FFFFFF;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 11px;
+	BACKGROUND-IMAGE: url(images/dialog_bg_n.gif);
+	VERTICAL-ALIGN: bottom;
+	HEIGHT: 15px;
+	PADDING-TOP: 0px;
+	PADDING-BOTTOM: 0px;
+	PADDING-LEFT: 10px;
+	PADDING-RIGHT: 0px;
+	TEXT-ALIGN: left;
+}
+FONT.DialogTitle {
+	COLOR: #FFFFFF;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 11px;
+	VERTICAL-ALIGN: bottom;
+	HEIGHT: 15px;
+	TEXT-ALIGN: left;
+	MARGIN-LEFT: 10px;
+}
+
+/*
+	Dialog info box
+*/
+TABLE.DialogInfo {
+	WIDTH: 85%;
+	TEXT-ALIGN: center;
+}
+.DialogInfoTitle {
+	COLOR: #FFFFFF;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 11px;
+	VERTICAL-ALIGN: bottom;
+	TEXT-ALIGN: left;
+	HEIGHT: 15px;
+	PADDING-TOP: 0px;
+	PADDING-BOTTOM: 0px;
+	PADDING-LEFT: 5px;
+	PADDING-RIGHT: 5px;
+}
+.DialogInfoTitleBorder {
+	BACKGROUND-COLOR: #FF8600;
+	PADDING: 0px;
+	VERTICAL-ALIGN: bottom;
+	HEIGHT: 15px;
+}
+.DialogInfoBorder {
+	BACKGROUND-COLOR: #FF8600;
+	PADDING: 0px;
+}
+.DialogInfoIcon {
+	WIDTH: 16px;
+	HEIGHT: 16px;
+}
+.DialogInfoClose {
+	WIDTH: 15px;
+	HEIGHT: 13px;
+}
+
+/*
+	Dialog tools section
+*/
+.NavDialogTitle {
+	WIDTH: 50%;
+    FONT-SIZE: 11px;
+    FONT-WEIGHT: bold;
+    COLOR: #330000;
+	PADDING-LEFT: 8px;
+}   
+.NavDialogBorder {
+	BACKGROUND-COLOR: #FFCC33;
+}
+.NavDialogBox {
+	BACKGROUND-COLOR: #FFFFCC;
+}
+.NavDialogSeparator {
+	WIDTH: 100%;
+	HEIGHT: 14px;
+	BACKGROUND-IMAGE: url(images/separator.gif);
+	PADDING-LEFT: 7px;
+}
+.NavDialogSeparator IMG {
+	WIDTH: 100%;
+	HEIGHT: 14px;
+}
+.NavDialogCell {
+	PADDING-RIGHT: 3px;
+}
+.NavDialogCell A IMG {
+	WIDTH: 9px;
+	HEIGHT: 9px;
+}
+
+/*
+	Product details page
+*/
+.ProductTitle {
+	COLOR: #000000;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+}
+.ProductTitleHidden {
+	COLOR: #666666;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 11px;
+}
+.ProductDetailsTitle {
+	COLOR: #FF3300;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+}
+.ProductDetails {
+	COLOR: #000000;
+}
+.ProductPriceTitle {
+	COLOR: #000000;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+}
+.ProductPriceConverting {
+	COLOR: #000000;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+}
+.ProductPrice {
+	COLOR: #FF3300;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+}
+.ProductPriceSmall {
+	COLOR: #FF3300;
+	FONT-WEIGHT: bold;
+}
+.SaveMoneyLabel {
+	WIDTH: 57px;
+	HEIGHT: 57px;
+	TEXT-ALIGN: center;
+	VERTICAL-ALIGN: middle;
+	COLOR: #FFFFFF;
+	FONT-WEIGHT: bold;
+	BACKGROUND-IMAGE: url(images/save_money.gif);
+}
+.MarketPrice {
+	FONT-SIZE: 14px;
+	FONT-FAMILY: Times New Roman;
+}
+
+/*
+	Products list
+*/
+.PListImgBox {
+	WIDTH: 90px;
+	TEXT-ALIGN: center;
+	VERTICAL-ALIGN: top;
+	WHITE-SPACE: nowrap;
+}
+HR.PListLine {
+	WIDTH: 100%;
+	HEIGHT: 1px;
+	BORDER-BOTTOM-WIDTH: 0px;
+	BORDER-LEFT-WIDTH: 0px;
+	BORDER-RIGHT-WIDTH: 0px;
+}
+.PListTaxBox {
+	PADDING-LEFT: 70px;
+	PADDING-RIGHT: 2px;
+	PADDING-TOP: 2px;
+	PADDING-BOTTOM: 2px;
+}
+.PListCell {
+	BACKGROUND-COLOR: #FFFFFF;
+	TEXT-ALIGN: center;
+	PADDING: 10px;
+	VERTICAL-ALIGN: top;
+}
+
+/*
+	Items style
+*/
+.ItemsList {
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+}
+.ItemsListDisabled {
+	COLOR: #909090;
+}
+A.ItemsList:link {
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: none;
+}
+A.ItemsList:visited {
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: none;
+}
+A.ItemsList:hover {
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: none;
+}
+A.ItemsList:active {
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: none;
+}
+
+/*
+	Location bar
+*/
+.NavigationPath {
+	COLOR: #CC6666;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: none;
+}
+.NavigationPath:link {
+	COLOR: #CC6666;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: underline;
+}
+.NavigationPath:visited {
+	COLOR: #CC6666;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: underline;
+}
+.NavigationPath:hover {
+	COLOR: #CC6666;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: none;
+}
+.NavigationPath:active  {
+	COLOR: #CC6666;
+	FONT-WEIGHT: bold;
+	TEXT-DECORATION: underline;
+}
+
+/*
+	Buttons
+*/
+.FormButton {
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+}
+
+.FormButtonNotBold {
+	COLOR: #330000;
+}
+
+TABLE.ButtonTable {
+	CURSOR: pointer;
+	VERTICAL-ALIGN: middle;
+	DIRECTION: ltr;
+}
+TABLE.ButtonTable TD {
+	PADDING: 0px;
+}
+TD.Button {								 
+	BACKGROUND: url(images/butbg.gif);
+	BACKGROUND-COLOR: #FF8600;
+	BACKGROUND-REPEAT: repeat-x;
+	PADDING-LEFT: 5px;
+	PADDING-RIGHT: 5px;
+	VERTICAL-ALIGN: middle;
+	WHITE-SPACE: nowrap;
+}
+FONT.Button {								 
+	FONT-FAMILY: Arial;
+	COLOR: #FFFFFF;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 11px;
+	TEXT-DECORATION: none;
+}
+IMG.ButtonSide {
+	WIDTH: 7px;
+	HEIGHT: 14px;
+}
+.SimpleButton TR TD {
+	PADDING: 0px;
+	WHITE-SPACE: nowrap;
+}
+A.Button:link, A.Button:visited, A.Button:hover, A.Button:active {
+	COLOR: #330000;
+	FONT-WEIGHT: bold;
+}
+.GoImage {
+	WIDTH: 21px;
+	HEIGHT: 18px;
+	VERTICAL-ALIGN: middle;
+	BORDER: 0px;
+}
+
+/*
+	Small text/link style
+*/
+.SmallNote:link {
+	COLOR: #7C4C00;
+	TEXT-DECORATION: none;
+	FONT-SIZE: 9px;
+	FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif;
+}
+.SmallNote:visited {
+	COLOR: #7C4C00;
+	TEXT-DECORATION: none;
+	FONT-SIZE: 9px;
+	FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif;
+}
+.SmallNote:hover {
+	COLOR: #7C4C00;
+	TEXT-DECORATION: underline;
+	FONT-SIZE: 9px;FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif;
+}
+.SmallNote:active {
+	COLOR: #7C4C00;
+	TEXT-DECORATION: none;
+	FONT-SIZE: 9px;FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif;
+}
+.SmallText {
+	COLOR: #7C4C00;
+	TEXT-DECORATION: none;
+	FONT-SIZE: 9px;
+	FONT-FAMILY: Arial, Verdana, Helvetica, Sans-serif;
+}
+
+/*
+	Category page
+*/
+.SubcatTitle {
+	TEXT-ALIGN: left;
+	WIDTH: 95%;
+	PADDING-LEFT: 5px;
+}
+.SubcatInfo {
+	TEXT-ALIGN: right;
+	WHITE-SPACE: nowrap;
+	COLOR: #000000;
+}
+
+/*
+	Search sort bar
+*/
+.SearchSortTitle {
+	FONT-WEIGHT: bold;
+	PADDING-RIGHT: 20px;
+}
+.SearchSortLink:link, .SearchSortLink:visited, .SearchSortLink:hover, .SearchSortLink:active {
+	TEXT-DECORATION: underline;
+}
+.SearchSortImg {
+	WIDTH: 9px;
+	HEIGHT: 9px;
+	MARGIN-RIGHT: 5px;
+}
+.SearchSortCell {
+	PADDING-RIGHT: 20px;
+}
+
+/*
+	Expandable section
+*/
+.ExpandSectionMark {
+	WIDTH: 11px;
+	CURSOR: pointer;
+	VERTICAL-ALIGN: middle;
+}
+
+/*
+	Tab mechanism
+*/
+.Tab {
+	BACKGROUND-COLOR: #FFD44C;
+	FONT-WEIGHT: bold;
+	TEXT-TRANSFORM: uppercase;
+	WIDTH: 85px;
+	HEIGHT: 30px;
+	TEXT-ALIGN: center;
+}
+.TabTop {
+	HEIGHT: 5px;
+	BACKGROUND-COLOR: #FFD44C;
+}
+TD.TabLeftSide {
+	WIDTH: 9px;
+	BACKGROUND-IMAGE: url(images/tab_l.gif);
+}
+TD.TabRightSide {
+	WIDTH: 9px;
+	BACKGROUND-IMAGE: url(images/tab_r.gif);
+}
+TD.TabLeftCorner {
+	WIDTH: 9px;
+	HEIGHT: 9px;
+	BACKGROUND-IMAGE: url(images/tab_c1.gif);
+}
+TD.TabRightCorner {
+	WIDTH: 9px;
+	HEIGHT: 9px;
+	BACKGROUND-IMAGE: url(images/tab_c2.gif);
+}
+TD.TabCenter {
+	HEIGHT: 9px;
+	BACKGROUND-IMAGE: url(images/tab_b.gif);
+}
+IMG.TabCorner {
+	WIDTH: 9px;
+	HEIGHT: 9px;
+}
+IMG.TabSide {
+	WIDTH: 9px;
+	HEIGHT: 1px;
+}
+
+/*
+	Pagination mechanism
+*/
+.NavigationArrow {
+	WIDTH: 9px;
+	HEIGHT: 9px;
+}
+.NavigationTitle {
+	WHITE-SPACE: nowrap;
+	HEIGHT: 14px;
+	PADDING-RIGHT: 10px;
+}
+.NavigationCell {
+	TEXT-ALIGN: center;
+	VERTICAL-ALIGN: bottom;
+	BACKGROUND-IMAGE: url(images/page.gif);
+	WIDTH: 17px;
+}
+.NavigationCell A:link, .NavigationCell A:visited, .NavigationCell A:hover, .NavigationCell A:active {
+	TEXT-DECORATION: none;
+}
+.NavigationCell IMG {
+	HEIGHT: 1px;
+	WIDTH: 17px;
+}
+.NavigationCellWide {
+	TEXT-ALIGN: center;
+	VERTICAL-ALIGN: bottom;
+	BACKGROUND-IMAGE: url(images/page_wide.gif);
+	WIDTH: 23px;
+}
+.NavigationCellWide A:link, .NavigationCellWide A:visited, .NavigationCellWide A:hover, .NavigationCellWide A:active {
+	TEXT-DECORATION: none;
+}
+.NavigationCellWide IMG {
+	HEIGHT: 1px;
+	WIDTH: 23px;
+}
+.NavigationCellSel {
+	VERTICAL-ALIGN: middle;
+	FONT-WEIGHT: bold;
+}
+
+/*
+	Subheader styles
+*/
+TABLE.SubHeaderGrey {
+	WIDTH: 100%;
+	MARGIN-BOTTOM: 10px;
+}
+.SubHeaderGrey {
+	COLOR: #666666;
+	FONT-SIZE: 11px;
+	FONT-WEIGHT: bold;
+	PADDING: 0px;
+}
+.SubHeaderGreyLine {
+	HEIGHT: 1px;
+	BACKGROUND-COLOR: #CCCCCC;
+	PADDING: 0px;
+}
+TABLE.SubHeaderBlack {
+	WIDTH: 100%;
+	MARGIN-BOTTOM: 10px;
+}
+.SubHeaderBlack {
+	COLOR: #000000;
+	FONT-SIZE: 12px;
+	FONT-WEIGHT: bold;
+	PADDING: 0px;
+}
+.SubHeaderBlackLine {
+	HEIGHT: 1px;
+	BACKGROUND-COLOR: #000000;
+	PADDING: 0px;
+}
+TABLE.SubHeaderRed {
+	WIDTH: 100%;
+	MARGIN-BOTTOM: 10px;
+}
+.SubHeaderRed {
+	FONT-WEIGHT: bold;
+	PADDING: 0px;
+}
+.SubHeaderRedLine {
+	HEIGHT: 1px;
+	BACKGROUND-COLOR: #550000;
+	PADDING: 0px;
+}
+TABLE.SubHeader {
+	WIDTH: 100%;
+	MARGIN-BOTTOM: 10px;
+}
+.SubHeader {
+	COLOR: #FF3300;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+	PADDING: 0px;
+}
+.SubHeaderLine {
+	HEIGHT: 1px;
+	BACKGROUND-COLOR: #FF6600;
+	PADDING: 0px;
+}
+
+/*
+	User profile page
+*/
+.RegSectionTitle {
+	COLOR: #550000;
+	FONT-SIZE: 10px;
+	FONT-WEIGHT: bold;
+}
+
+/*
+	Webmaster mode
+*/
+SPAN.Lbl {
+	COLOR: green;
+	FONT-WEIGHT: bold;
+}
+.Section {
+	MARGIN: 0px;
+	PADDING: 0px;
+}
+
+/*
+	Group editing of the products functionality
+*/
+.DataTable {
+	BORDER-RIGHT: solid 1px white;
+}
+
+/*
+	User action field stle
+*/
+.UsersActionDisable {
+	COLOR: #CC0000;
+}
+.UsersActionEnable {
+	COLOR: #00CC00;
+}
+
+/*
+	Data sheet container
+*/
+TABLE.DataSheet {
+	BACKGROUND-COLOR: black;
+	WIDTH: 100%;
+}
+TR.DataSheet {
+    BACKGROUND-COLOR: #CCCCCC;
+    COLOR: #000000;
+	FONT-WEIGHT: bold;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    TEXT-TRANSFORM: uppercase;
+	WHITE-SPACE: nowrap;
+}
+TABLE.DataSheet TR TD {
+    BACKGROUND-COLOR: white;
+	PADDING: 2px;
+}
+TABLE.DataSheet TR.TableHead {
+	BACKGROUND-COLOR: #CCCCCC;
+	FONT-WEIGHT: bold;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    TEXT-TRANSFORM: uppercase;
+	WHITE-SPACE: nowrap;
+}
+TABLE.DataSheet TR TH {
+	PADDING: 2px;
+}
+/*
+	Advanced editor
+*/
+.AELinkBox {
+	TEXT-ALIGN: right;
+	PADDING-BOTTOM: 3px;
+}
+
+/*
+	Images location page styles
+*/
+.DBOption {
+	COLOR: #0000CC;
+}
+.FSOption {
+	COLOR: #CC0000;
+}
+/*
+	Product options module
+*/
+.DataField {
+	PADDING-BOTTOM: 20px;
+}
+
+/*
+		-- ADDONS --
+*/
+
+/*
+	Special offers module
+*/
+.SpecialOffersThumb {
+	DISPLAY: inline;
+	MARGIN-LEFT: -51px;
+}
+.SpecialOffersThumb A IMG {
+	WIDTH: 47px;
+	HEIGHT: 44px;
+}
+
+/*
+	X-Affiliate module section
+*/
+.AffiliateCellBG {
+	WIDTH: 19px;
+	HEIGHT: 19px;
+	VERTICAL-ALIGN: middle;
+	BACKGROUND-IMAGE: url(images/tree_v.gif);
+}
+.AffiliateCell {
+	WIDTH: 19px;
+	HEIGHT: 19px;
+	VERTICAL-ALIGN: middle;
+}
+.AffiliateElmTitle {
+	TEXT-ALIGN: center;
+	FONT-WEIGHT: bold;
+	BACKGROUND-COLOR: #FFD44C;
+	PADDING: 1px;
+}
+.AffiliateElmIconBox {
+	WIDTH: 70px;
+	TEXT-ALIGN: center;
+	VERTICAL-ALIGN: middle;
+}
+.AffiliateElmsBox {
+	BACKGROUND-COLOR: #FFFFFF;
+	TEXT-ALIGN: center;
+	VERTICAL-ALIGN: top;
+	HEIGHT: 100%;
+}
+.MediaElementProperties {
+    COLOR: #666666;
+    FONT-SIZE: 10px;
+}
+
+/*
+	Survey module
+*/
+.SurveyStatLabel {
+	PADDING-LEFT: 10px;
+	WHITE-SPACE: nowrap;
+}
+TD.SurveyAnswerComment {
+	PADDING-LEFT: 20px;
+}
+DIV.SurveyAnswerComment {
+	WIDTH: 80%;
+	BACKGROUND-COLOR: #EEEEEE;
+	PADDING: 0px;
+	MARGIN: 5px;
+	BORDER: 1px solid #DDDDDD;
+}
+.SurveyQuestion {
+	FONT-SIZE: 12px;
+	FONT-WEIGHT: bold;
+	PADDING: 2px;
+}
+.SurveyQuestionMenu {
+	FONT-WEIGHT: bold;
+	PADDING: 0px;
+}
+.SurveyAnswerTextLine_1 {
+	BACKGROUND-COLOR: #EEEEEE;
+	PADDING: 5px;
+}
+.SurveyAnswerTextLine_2 {
+	BACKGROUND-COLOR: #DDDDDD;
+	PADDING: 5px;
+}
+A.SurveyAnswerTextLine:link {
+	COLOR: #330000;
+	TEXT-DECORATION: none;
+}
+A.SurveyAnswerTextLine:visited {
+	COLOR: #330000;
+	TEXT-DECORATION: none;
+}
+A.SurveyAnswerTextLine:hover {
+	COLOR: #330000;
+	TEXT-DECORATION: underline;
+}
+A.SurveyAnswerTextLine:active {
+	COLOR: #330000;
+	TEXT-DECORATION: none;
+}
+TD.SurveyTab {
+	PADDING-TOP: 0px;
+	PADDING-BOTTOM: 0px;
+	CURSOR: pointer;
+	PADDING-LEFT: 10px;
+	PADDING-RIGHT: 10px;
+	HEIGHT: 26px;
+	WHITE-SPACE: nowrap;
+	FONT-SIZE: 12px;
+	COLOR: #953e0e;
+	TEXT-DECORATION: underline;
+}
+TD.SurveyTabSelected {
+	PADDING-TOP: 0px;
+	PADDING-BOTTOM: 0px;
+	PADDING-LEFT: 10px;
+	PADDING-RIGHT: 10px;
+	HEIGHT: 26px;
+	BACKGROUND-COLOR: #dddddd;
+	WHITE-SPACE: nowrap;
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 12px;
+	COLOR: #953e0e;
+}
+TD.SurveyTabLine {
+	HEIGHT: 1px;
+	BACKGROUND-COLOR: #dddddd;
+}
+TD.SurveyTabLine IMG {
+	HEIGHT: 1px;
+	WIDTH: 100%;
+}
+
+.addrow {
+    background-image: url(images/plus.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+.droprow {
+    background-image: url(images/minus.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+/*
+ * Bulk managment
+ */
+
+div.b_scroll_div {
+	width: 729px; 
+	height: 313px; 
+	overflow: auto; 
+	border: 1px solid #000000;
+}
+
+table.b_scroll_table td {
+	vertical-align: top;
+}
+table.b_scroll_table td.b_has_border {
+	border: 1px solid #dedede;
+}
+
+table.b_scroll_table td.b_colnames, table.b_scroll_table td.b_subheader {
+	text-align: center;
+	vertical-align: middle;
+}
+
+table.b_scroll_table tr.dark {
+	background-color: #dedede;
+}
+
+table.b_colname_cell td {
+	vertical-align: middle;
+}
+
+td.b_old_value {
+	color: #C0C0C0
+}
+.just_red_line {
+	width: 100%;
+	padding: 0px;
+}
+/*
+ * "Features" link
+ */
+a.features:link, a.features:visited, a.features:hover, a.features:active {
+	color: #ff2f2f;
+	text-decoration: underline;
+}
+
+a.features:hover {
+	text-decoration: none;
+}
+
+
+
+a.cidev_features_new:link, a.cidev_features_new:visited, a.cidev_features_new:hover, a.cidev_features_new:active {
+        color: #0084FF;
+        text-decoration: underline;
+}
+a.cidev_features_new:hover {
+        text-decoration: none;
+}
+
+
+
+/*
+ * Multiple Storefront
+ */
+
+td.mf_explanation {
+	padding-top: 0px;
+	vertical-align: top;
+}
+
+td.mf_no_items {
+	text-align: center;
+	padding: 5px;
+}
+
+/*
+ * Search
+ */
+
+table.SearchTable {
+	width: 100%;
+	background-color: #ffd44c;
+}
+
+table.SearchTable td {
+	vertical-align: middle;
+	padding: 1px 0px;
+}
+
+table.SearchTable td.SearchTableLeftColumn {
+	width: 45%;
+	padding: 0px 20px 0px 0px;
+}
+
+div.SearchContainer {
+	margin: 0px 0px 0px 12px; 
+	width: 55%;
+}
+
+.capital_letters {
+	text-transform: capitalize;
+}
+ul.checkboxes_list {
+	list-style: none;
+	padding-left: 0px;
+	margin-top: 0px;
+}
+td.p_new_style {
+	color: #ff00ff;
+}
+td.p_discont_style {
+	color: #1e90ff;
+}
+td.b_empty_value {
+	color: #c0c0c0;
+}
+.FilledAccounting {
+    background-color: #e1c7e1;
+}
+.sf-active-licenses {
+    color: #4CA14C;
+}
+.sf-avail-licenses {
+    color: #FF35FF;
+    padding-bottom: 0px;
+}
+.scats-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+.scats-table td.scats-table-btns, .scats-table td.scats-table-btns table.SubHeader td {
+    text-align: left;
+}
+.scats-table td.scats-table-links {
+    text-align: left;
+}
+
+.bpm_plus, .bpm_minus {
+	width: 11px;
+	height: 11px;
+}
+.bpm_plus {
+	background-image:url('images/plus.gif');
+}
+.bpm_minus {
+	background-image:url('images/minus.gif');
+}
+.bpm_one_row {
+	height: 14px;
+	overflow: hidden;
+}
+.bpm_multi_row {
+	height: auto;
+	overflow: auto;
+}
+div.blue {
+	color: #1e90ff;
+}
+div.pink {
+	color: #ff00ff;
+}
+
+span.override_name {
+	color: #f00;
+}
+.alp_selected {
+	font-weight: bold;
+}
+.froogle_calc_size {
+	margin-left: -5px;
+}
+.link-center {
+	text-align: center;
+}
+.froogle_title_input {
+	width: 737px;
+}
+.froogle_main_title_input {
+	width: 797px;
+}
+
+.search_all_website_config_table input[type=text] {
+	width: 370px;
+}
+.search_all_website_config_table input.columns_number {
+	width: 120px;
+}
+
+ 
+.filter_disabled a {
+	color: #909090;
+}
+a.preset_back, a.preset_back:visited {
+	float: right;
+	font-size: 10px;
+	text-decoration: none;
+}
+.preset_bold {
+	font-weight: bold;
+}
+.preset_table td {
+	text-align: center;
+}
+.filter_preset_edit select {
+	overflow-y: auto;
+}
+.filter_preset_edit .text, .filter_preset_edit .select {
+	width: 300px;
+}
+.filter_preset_edit .time_range_to, .filter_preset_edit .time_range_from {
+	width: 50px;
+}
+.filter_preset_edit .time_range_to {
+	margin-left: 25px;
+}
+.filter_preset_edit .c2b {
+	height: 145px;
+}
+.filter_preset_edit .d2c {
+	height: 90px;
+}
+.filter_preset_edit .distributor {
+	height: 145px;
+}
+.filter_bold a {
+	font-weight: bold;
+}
+.filter_preset_edit .preset_title {
+	width: 600px;
+}
+.filter_preset_edit .time_from_mode {
+	position: absolute;
+}
+.filter_preset_edit .time_from_mode_1 {
+	width: 370px;
+}
+.filter_preset_edit .time_from_mode_2 {
+	width: 230px;
+}
+
+.detail-title, .detail-title a {
+	color: #3a3aff !important;
+}
+
+td input.margin-checkbox {
+	margin-left: 0px;
+}
+
+::-webkit-input-placeholder {
+    color: #C0C0C0;
+    font-style: italic;
+}
+:-moz-placeholder {
+    color: #C0C0C0;
+    font-style: italic;
+}
+:-ms-input-placeholder {
+    font-style: italic;
+    color: #C0C0C0;
+}
+.placeholder {
+    color: #C0C0C0;
+    font-style: italic;
+}
+
+DIV.cidev_NoteBox {
+        POSITION: absolute;
+        BORDER: 1px solid black;
+        BACKGROUND-COLOR: white;
+        MARGIN: 0px 0px 0px 20px;
+        PADDING: 3px;
+/*        WIDTH: 200px; */
+        WHITE-SPACE: normal;
+        FONT-WEIGHT: normal;
+}
+
+div.survey_form {
+        border: none;
+        margin: 0;
+        max-width: 530px;
+        padding: 0 40px 20px 20px;
+        width: auto;
+}
+
+p.survey_form_header {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 50px;
+}
+
+p.survey_form_title {
+        font-size: 16px;
+        font-weight: normal;
+        text-decoration: none;
+}
+
+div.survey_button {
+        text-align: center;
+        margin-top: 30px;
+}
+        /* table */
+
+table.survey {
+        border: 2px solid #242ec5;
+}
+
+table.survey th {
+        padding: 8px 8px 8px 8px;
+        text-align: left;
+        color: #242ec5;
+        font-weight: normal;
+}
+
+table.survey td {
+        padding: 0 8px 2px 8px;
+        text-align: left;
+        color: #000;
+        font-weight: normal;
+}
+
+table.survey tr:first-child td {
+        padding-top: 8px;
+}
+
+table.survey tr:last-child td {
+        padding-bottom: 8px;
+}
+
+        /* custom */
+
+.survey_form_right {
+        text-align: right !important;
+}
+
+.survey_form_center {
+        text-align: center !important;
+}
+
+.survey_form_blue {
+        color: #242ec5;
+}
+
+        /* buttons */
+
+button.all_in_stock {
+        background: url(images/button_all.png) no-repeat;
+        border: 0;
+        width: 100px;
+        height: 22px;
+        cursor: pointer;
+}
+
+button#submit {
+        background: url(images/button.png) no-repeat;
+        border: 0;
+        width: 100px;
+        height: 22px;
+        cursor: pointer;
+}
+
+div.confirmation-hedgehog {
+        text-align: center;
+        margin-top: 100px;
+}
+
+div.confirmation-hedgehog p {
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 15px;
+}
+
+.btn_send_info {
+        background: transparent url(images/send-information-100.png) no-repeat 0px 0px ;
+        display: inline-block;
+        height: 42px;
+        width: 285px;
+}
+.btn_send_info:hover {
+        background: transparent url(images/send-information-100.png) no-repeat 0px -43px ;
+        display: inline-block;
+        height: 42px;
+        width: 285px;
+}
+.btn_send_info:active {
+        background: transparent url(images/send-information-100.png) no-repeat 0px -86px ;
+        display: inline-block;
+        height: 42px;
+        width: 285px;
+}
+
+.TableSubHead_new {
+        BACKGROUND-COLOR: #d9d9d9;
+        FONT-WEIGHT: normal;
+}
+

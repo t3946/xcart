@@ -1,0 +1,4 @@
+66314a2b9b4746eb99d9a1a0438aecc8a:11:{s:43:"lbl_elasticsearch_correct_suggestions_label";s:30:"Try also search these queries:";s:20:"lbl_enter_your_price";s:18:"Enter your price !";s:16:"lbl_market_price";s:10:"List Price";s:27:"lbl_nothing_found_home_page";s:149:"<br><br><b>
+We try to search your query across all storefront products, but nothing found.<br>
+Please specify your request...</b><br><br><br><br>
+";s:13:"lbl_our_price";s:9:"Our Price";s:12:"lbl_quantity";s:8:"Quantity";s:14:"lbl_save_price";s:4:"save";s:15:"lbl_see_details";s:11:"See details";s:7:"lbl_sku";s:3:"SKU";s:21:"txt_no_products_found";s:26:"No matching products found";s:16:"txt_out_of_stock";s:12:"Out of stock";}

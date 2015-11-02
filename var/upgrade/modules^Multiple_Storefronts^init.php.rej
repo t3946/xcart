@@ -1,0 +1,28 @@
+***************
+*** 43,48 ****
+ 	$smarty->assign('storefronts', $storefronts);
+ }
+ 
+ $smarty->assign('main_storefront', MAIN_SF_DOMAIN);
+ 
+ if (in_array(AREA_TYPE, array('A', 'P')) && $REQUEST_METHOD == 'POST') {
+--- 43,61 ----
+ 	$smarty->assign('storefronts', $storefronts);
+ }
+ 
++if (
++    (empty($storefronts) 
++    || !in_array($_SERVER['HTTP_HOST'], $storefronts)) 
++    && $_SERVER['HTTP_HOST'] != MAIN_SF_DOMAIN
++    && (!empty($test_storefronts)                           // For testing purposes
++    && !in_array($_SERVER['HTTP_HOST'], $test_storefronts)) // Set the test storefronts in the config.local.php
++) {
++	if (!@func_readfile($xcart_dir . DIRECTORY_SEPARATOR . $shop_closed_file, true)) {
++		echo func_get_langvar_by_name('txt_shop_temporarily_unaccessible', false, false, true);
++    }
++	exit();
++}
++
+ $smarty->assign('main_storefront', MAIN_SF_DOMAIN);
+ 
+ if (in_array(AREA_TYPE, array('A', 'P')) && $REQUEST_METHOD == 'POST') {

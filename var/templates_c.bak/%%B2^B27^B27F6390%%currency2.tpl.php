@@ -1,0 +1,5 @@
+<?php /* Smarty version 2.6.12, created on 2011-10-11 05:37:52
+         compiled from currency2.tpl */ ?>
+<?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
+smarty_core_load_plugins(array('plugins' => array(array('modifier', 'abs_value', 'currency2.tpl', 1, false),array('modifier', 'formatprice', 'currency2.tpl', 1, false),)), $this); ?>
+<?php if ($this->_tpl_vars['hide_zero'] != 'Y' || $this->_tpl_vars['value'] != 0):  if ($this->_tpl_vars['display_sign']):  if ($this->_tpl_vars['value'] >= 0): ?>+<?php else: ?>-<?php endif;  endif;  if ($this->_tpl_vars['show_minus_brackets'] && $this->_tpl_vars['value'] < 0): ?>(<?php endif;  echo ((is_array($_tmp=((is_array($_tmp=$this->_tpl_vars['value'])) ? $this->_run_mod_handler('abs_value', true, $_tmp) : smarty_modifier_abs_value($_tmp)))) ? $this->_run_mod_handler('formatprice', true, $_tmp, ",", ".") : smarty_modifier_formatprice($_tmp, ",", "."));  if ($this->_tpl_vars['show_minus_brackets'] && $this->_tpl_vars['value'] < 0): ?>)<?php endif;  endif; ?>

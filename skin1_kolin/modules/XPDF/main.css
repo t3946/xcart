@@ -1,0 +1,16 @@
+/* vim: set ts=2 sw=2 sts=2 et: */
+/**
+ * XPDF styles
+ *
+ * @category   X-Cart
+ * @package    X-Cart
+ * @subpackage CSS
+ * @author     Ruslan R. Fazlyev <rrf@x-cart.com>
+ * @version    $Id: main.css,v 1.56.2.1 2010/08/16 07:16:11 igoryan Exp $
+ * @link       http://www.x-cart.com/
+ * @see        ____file_see____
+ */
+
+a.xpdf-link {
+	margin-right: 20px !important;
+}

@@ -1,0 +1,1 @@
+2e625f034eaefe67395e09a7e8f0c5b7a:2:{s:8:"eml_dear";s:17:"Dear {{customer}}";s:26:"txt_thank_you_for_purchase";s:28:"Thank you for your purchase!";}

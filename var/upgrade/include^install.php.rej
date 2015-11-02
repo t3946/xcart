@@ -1,0 +1,19 @@
+***************
+*** 49,55 ****
+ #
+ if (defined('AREA_TYPE')) return; # for internal use
+ 
+-set_magic_quotes_runtime(0);
+ error_reporting (E_ALL ^ E_NOTICE);
+ set_time_limit(300);
+ umask(0);
+--- 49,57 ----
+ #
+ if (defined('AREA_TYPE')) return; # for internal use
+ 
++if (get_magic_quotes_runtime()) {
++	set_magic_quotes_runtime(0);
++}
+ error_reporting (E_ALL ^ E_NOTICE);
+ set_time_limit(300);
+ umask(0);

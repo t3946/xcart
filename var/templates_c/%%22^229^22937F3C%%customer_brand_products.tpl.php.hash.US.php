@@ -1,0 +1,1 @@
+c84aafa22ab9747a6df6229b64e30130a:1:{s:24:"txt_no_products_in_brand";s:49:"There are no products available under this brand.";}

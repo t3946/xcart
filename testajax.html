@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>azure team kirov status page</title>
+<meta name="description" content="this is page about azure team from the Kirov region">
+<script type="text/javascript" src="http://cdn.artistsupplysource.com/skin1_kolin/jquery.min.1.7.1.js"></script>
+<script type="text/javascript">
+    $(document).ready( function() {
+	$("#query").click( function() {
+	    $.ajax({
+		type: "POST",
+		url: "/testajax.php?opt=2",
+		success: function(msg) {
+		    if (msg)
+		    {
+			var object = eval("(" + msg + ")");
+			$("#content3").text( object.data );
+		    }
+		}
+	    })
+	} );
+	$.ajax({
+	    type: "POST",
+	    url: "/testajax.php?opt=1",
+	    success: function(msg) {
+	        if (msg)
+	        {
+		    var object = eval("(" + msg + ")");
+		    document.title = "azure team (2015) kirov status page";
+		    $("#content2").text( object.data );
+		    $("meta[name=description]").attr("content","Azure team 2015 year from the Kirov region (this is dynamic description test)");
+		}
+	    }
+	})
+    });
+</script>
+</head>
+<body>
+<div id="content1">azure team use several soft packages to made websites faster</div>
+<div id="content2"></div>
+<div id="content3"></div>
+<input type="button" id="query" value="Query"/>
+</body>
+</html>
+

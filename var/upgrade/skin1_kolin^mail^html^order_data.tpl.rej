@@ -1,0 +1,97 @@
+***************
+*** 30,40 ****
+ <th width="60" bgcolor="#cccccc">{$lng.lbl_extended}<br /> {* <img height="1" src="{$ImagesDir}/spacer.gif" width="50" border="0" alt="" style="height: 2px;max-height: 2px;" /> *} </th>
+ </tr>
+ {foreach from=$order.shipping_groups item=v key=k name="shgrform"}
+ <tr>
+ <td colspan="{$colspan}">
+-<b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_by} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross}):</b>
+ </td>
+ </tr>
+ {foreach from=$v.products item=product}
+ <tr>
+ <td align="center">{$product.productcode}</td>
+--- 30,42 ----
+ <th width="60" bgcolor="#cccccc">{$lng.lbl_extended}<br /> {* <img height="1" src="{$ImagesDir}/spacer.gif" width="50" border="0" alt="" style="height: 2px;max-height: 2px;" /> *} </th>
+ </tr>
+ {foreach from=$order.shipping_groups item=v key=k name="shgrform"}
++{if $v.products}
+ <tr>
+ <td colspan="{$colspan}">
++<b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$v.manufacturer_data.m_city:"STATE":$v.manufacturer_data.m_state:"COUNTRY":$v.manufacturer_data.m_country} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:0}):</b>
+ </td>
+ </tr>
++{/if}
+ {foreach from=$v.products item=product}
+ <tr>
+ <td align="center">{$product.productcode}</td>
+***************
+*** 87,98 ****
+ <td align="right" nowrap="nowrap">{math assign="total" equation="amount*price" amount=$product.amount price=$product.display_price}{include file="currency.tpl" value=$total}&nbsp;&nbsp;</td>
+ </tr>
+ {/foreach}
+ <tr>
+     <td colspan="{$colspan}">
+         <b>{$lng.lbl_payment_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.cb_status mode="static" status_type="CB"}<br />
+         <b>{$lng.lbl_shipping_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.dc_status mode="static" status_type="DC"}
+     </td>
+ </tr>
+ {if $show_shipping_groups neq 'N'}
+     {if $v.tracking}
+         {foreach from=$v.tracking item=tr}
+--- 87,100 ----
+ <td align="right" nowrap="nowrap">{math assign="total" equation="amount*price" amount=$product.amount price=$product.display_price}{include file="currency.tpl" value=$total}&nbsp;&nbsp;</td>
+ </tr>
+ {/foreach}
++{if $v.products}
+ <tr>
+     <td colspan="{$colspan}">
+         <b>{$lng.lbl_payment_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.cb_status mode="static" status_type="CB"}<br />
+         <b>{$lng.lbl_shipping_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.dc_status mode="static" status_type="DC"}
+     </td>
+ </tr>
++{/if}
+ {if $show_shipping_groups neq 'N'}
+     {if $v.tracking}
+         {foreach from=$v.tracking item=tr}
+***************
+*** 123,128 ****
+ {if $giftcerts ne ''}
+ {foreach from=$giftcerts item=gc}
+ <tr>
+ 	<td>&nbsp;</td>
+ 	<td nowrap="nowrap">
+ {$lng.lbl_gift_certificate}: {$gc.gcid}<br />
+--- 123,133 ----
+ {if $giftcerts ne ''}
+ {foreach from=$giftcerts item=gc}
+ <tr>
++    <td colspan="6">
++        <b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_by} {if $gc.send_via eq "E"}{$lng.lbl_email}{else}{$lng.lbl_gc_postal_mail}{/if}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:0}):</b>
++    </td>
++</tr>
++<tr>
+ 	<td>&nbsp;</td>
+ 	<td nowrap="nowrap">
+ {$lng.lbl_gift_certificate}: {$gc.gcid}<br />
+***************
+*** 150,155 ****
+ 	<td align="center">1</td>
+ 	<td align="right" nowrap="nowrap">{include file="currency.tpl" value=$gc.amount}&nbsp;&nbsp;</td>
+ </tr>
+ {/foreach}
+ {/if}
+ 
+--- 150,161 ----
+ 	<td align="center">1</td>
+ 	<td align="right" nowrap="nowrap">{include file="currency.tpl" value=$gc.amount}&nbsp;&nbsp;</td>
+ </tr>
++<tr>
++    <td colspan="6">
++        <b>{$lng.lbl_payment_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$order.cb_status mode="static" status_type="CB"}<br />
++        <b>{$lng.lbl_shipping_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$order.dc_status mode="static" status_type="DC"}
++    </td>
++</tr>
+ {/foreach}
+ {/if}
+ 

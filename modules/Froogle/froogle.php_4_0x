@@ -1,0 +1,206 @@
+<?php
+/*****************************************************************************\
++-----------------------------------------------------------------------------+
+| X-Cart                                                                      |
+| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+| All rights reserved.                                                        |
++-----------------------------------------------------------------------------+
+| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
+| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
+| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
+|                                                                             |
+| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
+| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
+| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
+| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
+| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
+| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
+| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
+| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
+| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
+| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
+| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
+| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
+| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
+| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
+|                                                                             |
+| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
+| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
+| Ruslan R. Fazliev. All Rights Reserved.                                     |
++-----------------------------------------------------------------------------+
+\*****************************************************************************/
+
+#
+# $Id: froogle.php,v 1.5.2.25 2006/01/30 08:14:41 max Exp $
+#
+
+if ( !defined('XCART_SESSION_START') ) { header("Location: ../../"); die("Access denied"); }
+
+require_once($xcart_dir."/DSEFU.php");
+
+set_time_limit(0);
+
+$is_ftp_module = '';
+if(function_exists("ftp_connect"))
+	$is_ftp_module = 'Y';
+
+$froogle_host = 'hedwig.google.com';
+
+# Export data
+if(!empty($active_modules["Froogle"]) && $REQUEST_METHOD == "POST" && $mode == "fcreate") {
+
+	$froogle_filename = ($config['Modules']['froogle_username'] ? $config['Modules']['froogle_username'] : "froogle");
+	if(empty($froogle_file))
+		$froogle_file = func_get_files_location().DIRECTORY_SEPARATOR.$froogle_filename.".txt";
+	$fp = func_fopen($froogle_file, "w", true);
+
+	if($fp !== false) {
+
+		# Write file header
+		fputs($fp, "product_url\tname\tdescription\tprice\timage_url\tcategory\toffer_id\tinstock\tbrand\tmanufacturer_id\tcurrency\tlanguage\n");
+
+		$avail_where = "";
+		if ($config["General"]["disable_outofstock_products"] == "Y" && $config["General"]["unlimited_products"] != "Y")
+			$avail_where = "AND $sql_tbl[products].avail > 0";
+
+		$products = db_query("SELECT $sql_tbl[products].*, $sql_tbl[categories].categoryid_path, MIN($sql_tbl[pricing].price) as price, $sql_tbl[manufacturers].manufacturer, IF($sql_tbl[thumbnails].productid IS NULL, '', 'Y') as is_image FROM $sql_tbl[products], $sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing] LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[products].manufacturerid = $sql_tbl[manufacturers].manufacturerid LEFT JOIN $sql_tbl[thumbnails] ON $sql_tbl[products].productid = $sql_tbl[thumbnails].productid WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].main = 'Y' AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[products].productid = $sql_tbl[pricing].productid AND $sql_tbl[pricing].quantity = 1 AND $sql_tbl[pricing].membership='' AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[products].forsale = 'Y' $avail_where GROUP BY $sql_tbl[products].productid HAVING price > 0 ORDER BY $sql_tbl[products].product");
+		$cnt = 0;
+		while($product = db_fetch_array($products)) {
+
+			# Define product category path
+			$cats = array();
+			$catids = explode("/", $product['categoryid_path']);
+			$cats = "";
+			if(!empty($catids)) {
+				$cats = func_query("SELECT categoryid, category FROM $sql_tbl[categories] WHERE categoryid IN ('".implode("','", $catids)."')");
+				$catids = array_flip($catids);
+				if(!empty($cats)) {
+					foreach($cats as $k => $v) {
+						if(isset($catids[$v['categoryid']])) {
+							$catids[$v['categoryid']] = $v['category'];
+						}
+					}
+					$cats = str_replace("\t", " ", implode(" > ", $catids));
+				}
+			}
+
+			# Define full description
+			if(!empty($product['fulldescr']))
+				$product['descr'] = $product['fulldescr'];
+			if(!empty($product['descr'])) {
+				$product['descr'] = str_replace(array("\n","\r","\t"), array(" ",""," "), strip_tags($product['descr']));
+				if(strlen($product['descr']) > 65536) {
+					$product['descr'] = substr($product['descr'], 0, 65531);
+					$pos = strrpos($product['descr'], " ");
+					if($pos !== false) {
+						$product['descr'] = substr($product['descr'], 0, $pos);
+					}
+					$product['descr'] .= " ...";
+				}
+			}
+
+			# Define product image
+			$tmbn = "";
+			if ($product['is_image'] == 'Y') {
+				$tmbn = func_get_thumbnail_url($product['productid']);
+				if($tmbn === false || empty($tmbn)) {
+					$tmbn = $http_location."/image.php?productid=".$product['productid'];
+				} elseif(strpos($tmbn, $https_location) !== false) {
+					$tmbn = str_replace($https_location, $http_location, $tmbn);
+				}
+			}
+
+			$ci = array(
+				"city" => $config['General']['default_city'],
+				"state" => $config['General']['default_state'],
+				"country" => $config['General']['default_country'],
+				"zipcode" => $config['General']['default_zipcode']
+
+			);
+			$tmp = func_tax_price($product['price'], $product['productid'], false, NULL, $ci);
+			$product['price'] = $tmp['taxed_price'];
+//------------------------------------------------------------
+//----------  SAFETYNET SEO-FRIENDLY FROOGLE LINKS  ----------
+//------------------------------------------------------------
+			$product_link = froogle_seo_convert($product['product'],$product['productid']);
+			$post = $http_location.constant("DIR_CUSTOMER")."/".$product_link."\t".
+//------------------------------------------------------------
+//----------------------  END SAFETYNET  ---------------------
+//------------------------------------------------------------
+				str_replace(array("\t","\r","\n"), array(" ","",""), $product['product'])."\t".
+                $product['descr']."\t".
+   	            number_format(round($product['price'], 2),2,".","")."\t".
+       	        $tmbn."\t".
+				$cats."\t".
+				$product['productid']."\t".
+				($product['avail'] > 0 ? "Y" : "N")."\t".
+				$product['manufacturer']."\t".
+				$product['productcode']."\t".
+				"usd"."\t".
+				"en";
+
+			fputs($fp, $post."\n");
+			$cnt++;
+			if($cnt % 100 == 0) {
+				echo ".";
+				if($cnt % 5000 == 0) {
+					echo "<BR>\n";
+				}
+				func_flush();
+			}
+		}
+		$user_account = $_user_account;
+		fclose($fp);
+		$top_message["type"] = "I";
+		$top_message["content"] = func_get_langvar_by_name("msg_adm_froogle_file_success");
+	} else {
+		$top_message["type"] = "E";
+		$top_message["content"] = func_get_langvar_by_name("msg_adm_froogle_file_unsuccess");
+	}
+	func_header_location("export.php");
+
+# Download export file
+} elseif(!empty($active_modules["Froogle"]) && $REQUEST_METHOD == "POST" && $mode == "fdownload" && $froogle_file) {
+	if (!file_exists($froogle_file)) {
+		$top_message['content'] = func_get_langvar_by_name("lbl_file_not_found");
+		$top_message['type'] = "E";
+		func_header_location("export.php");
+	}
+	header("Content-type: application/force-download");
+	header("Content-Disposition: attachment; filename=".basename($froogle_file));
+	func_readfile($froogle_file);
+	exit;
+
+# Upload export file to Froogle server
+} elseif(!empty($active_modules["Froogle"]) && $REQUEST_METHOD == "POST" && $mode == "fupload" && $froogle_file && $is_ftp_module) {
+	$ftp = ftp_connect($froogle_host);
+	$res = ftp_login($ftp, $config['Modules']['froogle_username'], $config['Modules']['froogle_password']);
+	$top_message["type"] = "I";
+	if($ftp && $res) {
+		ftp_pasv($ftp, true);
+		$fp = func_fopen($froogle_file, "r", true);
+		if($fp) {
+			$is_success = @ftp_fput($ftp, basename($froogle_file), $fp, FTP_BINARY);
+			if($is_success) {
+				$top_message["content"] = func_get_langvar_by_name("msg_adm_froogle_success");
+			} else {
+				$top_message["content"] = func_get_langvar_by_name("msg_adm_err_froogle_FTP_failed");
+				$top_message["type"] = "E";
+			}
+			fclose($fp);
+		} else {
+			$top_message["content"] = func_get_langvar_by_name("msg_adm_err_froogle_file_not_found");
+			$top_message["type"] = "E";
+		}
+		ftp_quit($ftp);
+	} else {
+		$top_message["content"] = func_get_langvar_by_name("msg_adm_err_froogle_FTP_failed");
+		$top_message["type"] = "E";
+	}
+	func_header_location("export.php");
+}
+
+$smarty->assign("def_froogle_file", func_get_files_location().DIRECTORY_SEPARATOR.($config['Modules']['froogle_username'] ? $config['Modules']['froogle_username'] : "froogle").".txt");
+
+$smarty->assign("is_ftp_module", $is_ftp_module);
+?>

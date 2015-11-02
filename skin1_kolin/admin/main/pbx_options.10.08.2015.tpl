@@ -1,0 +1,52 @@
+<form name="osnotificform1" action="configuration.php" method="POST">
+    <input type="hidden" name="option" value="PBX_options">
+    <input type="hidden" name="mode" value="">
+
+<br />
+<B>PBX extensions</B>
+<hr />
+
+<table cellpadding="3" cellspacing="1" width="100%">
+
+<tr>
+<th>extension</th>
+<th>anveo account (login)</th>
+<th>anveo password</th>
+<th>delete</th>
+</tr>
+
+{if $pbx_options ne ""}
+{foreach from=$pbx_options item=v key=k}
+ <tr>
+<td><input type="text" name="pbx[{$v.id}][extension]" value="{$v.extension}" /></td>
+<td><input type="text" name="pbx[{$v.id}][anveo_account]" value="{$v.anveo_account}" /></td>
+<td><input type="text" name="pbx[{$v.id}][anveo_password]" value="{$v.anveo_password}" /></td>
+<td><input type="checkbox" name="pbx[{$v.id}][delete]" value="Y" /></td>
+  </td>
+ </tr>
+{/foreach}
+{/if}
+
+</table>
+
+<input type="button" value="add" onclick="javascript: submitForm(this, 'add');" />
+
+<br />
+<br />
+<br />
+<br />
+<B>SIP phone settings template</B>
+<hr />
+<br />
+{$lng.lbl_sip_phone_settings_template}
+<br />
+<textarea rows="5" cols="71" name="SIP_phone_settings_template">{$config.PBX_options.SIP_phone_settings_template}</textarea>
+
+<br />
+<br />
+
+<div align="center">
+<input type="button" value="Save" onclick="javascript: submitForm(this, 'update');" />
+</div>
+
+</form>

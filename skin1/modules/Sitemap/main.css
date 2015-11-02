@@ -1,0 +1,23 @@
+/*
+$Id$
+vim: set ts=2 sw=2 sts=2 et:
+*/
+.sitemap_categories_prod {
+	font-style: italic;
+	font-weight: normal;
+	list-style: none;
+}
+
+.sitemap_categories_sub {
+	font-weight: bold;
+	list-style: none;
+}
+
+.sitemap_section {
+	list-style: none;
+	margin-left: -5px;
+}
+
+.sitemap_item {
+	list-style: none;
+}

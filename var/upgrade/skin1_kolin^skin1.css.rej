@@ -1,0 +1,13 @@
+***************
+*** 1657,1659 ****
+ .g_sku_search img {
+ 	margin-left: 5px;
+ }
+--- 1657,1663 ----
+ .g_sku_search img {
+ 	margin-left: 5px;
+ }
++
++.bottom-block {
++	background-color: #EFEDDF;
++}

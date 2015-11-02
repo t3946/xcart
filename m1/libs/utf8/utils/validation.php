@@ -1,0 +1,76 @@
+<?php //008fe
+// MagneticOne
+// Copyright (c) 2007 MagneticOne.com <contact@magneticone.com>
+// All rights reserved
+// 
+// 
+// PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "license.txt"
+// FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE
+// AT THE FOLLOWING URL: http://www.magneticone.com/store/license.php
+// 
+// THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE
+// THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  MAGNETICONE
+// (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING
+// AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").
+// PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT
+// CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING,
+// COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY
+// (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS
+// LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS
+// AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND
+// OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS
+// AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE
+// THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.
+// THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.
+// 
+if(!extension_loaded('ionCube Loader')){$__oc=strtolower(substr(php_uname(),0,3));$__ln='/ioncube/ioncube_loader_'.$__oc.'_'.substr(phpversion(),0,3).(($__oc=='win')?'.dll':'.so');$__oid=$__id=realpath(ini_get('extension_dir'));$__here=dirname(__FILE__);if(strlen($__id)>1&&$__id[1]==':'){$__id=str_replace('\\','/',substr($__id,2));$__here=str_replace('\\','/',substr($__here,2));}$__rd=str_repeat('/..',substr_count($__id,'/')).$__here.'/';$__i=strlen($__rd);while($__i--){if($__rd[$__i]=='/'){$__lp=substr($__rd,0,$__i).$__ln;if(file_exists($__oid.$__lp)){$__ln=$__lp;break;}}}@dl($__ln);}else{die('The file '.__FILE__." is corrupted.\n");}if(function_exists('_il_exec')){return _il_exec();}echo('Site error: the file <b>'.__FILE__.'</b> requires the ionCube PHP Loader '.basename($__ln).' to be installed by the site administrator.');exit(199);
+?>
+4+oV5BqXbh39e6g7aEu3av/Dyre9Tizj7iOogj4xlIkBBCJH03zp/W30Gg4ObWf1ouf7dAWnPYll
+iI6VBFjFiMKJKoUlYjtVaod+rscGEqDpVxG/515EiJty9HdjPJJ+SfFBQiDTZL32oa7mrOF1lBVt
+OEeqGcUeOIc687fMNcMRMecL2Huh3/2t1NP0l1DWGBEdypjflxhOmr7sd2MsY46VeS4StMQIcwN5
+RZQoZ/GtPS5yjfJAiqdDwJHkFUHB8FYmhbIsvelZjx8YCU5eLQqORDRbHvTAJ4NNQ+jj7BOZp5BN
+s3oceMqVDlOz/reIR2uO4mYNqv1OQ0OPEATBwYI+rj6YW77SICt3Luld+cis2qmbBvSu2ng5i+AJ
+IyagqaRPZP8pgcjMHzvWAZ/LGqPhHYCWW9/DzoI4KwIT+GYLNWW0GHUYbE+uPIQwkVYVIHGTnjez
+91keUBUAEYFNHv8+lTkBbihv3dWv23vXIs7tBYm3zuDUe74tcyRRlFkX45Qr3pTolEpFb7RBTmb7
+AODsWsrF02EHcc0mPcnagg9OaoAGOrchi0nzBMpvY+3zARz8CCLlZ/Cr9neQ6tO8/IZaHG88uzk1
+6Ej2Y3SRAZZxgfsmCwzFXayrOQg0eu8mvyn/dxIArV6H7NuKi0N/C7YjzIYbkGq0V4RMH46RaftK
+5hGH4d6YXcMgtiMSYU6xdglHZdIyM1ITYlFclb/WbNav40PlBOKvtOZ2gZLPifilDX13ujsQsTIA
+EPvGhLE+ickucysT2LykJe+iXsHFW4FmhmUBXzQpO3anFJQBM7I7g0f5ImcF8IWDLS3LOodr/qQ/
+O3O7EL+Lt4qZkwd2XLIyqHcwEB/lCNGYEQYEfntI7ddGwC7DPcEE7zaLPIKlIzlfLeD3lY24+e1v
+IzhAgLAwkVYG9yBFrldZkADo2nXSY6R50pcYGAGKLvT4FOWr006fcxSGIjeUHG0qvDLOXlbctbG2
+hL1MYa4IRQzE7FzL19aVpJfFB5lKd/Sl0HkdBE/GtPFJrnMytXI3OVtH1adXiaRDjYhpA7FfWmKT
+PeBdWY3XS3gxWF87iINkTQLCHKmr5Brec6TobQTZP2ls2cxXZiF/LHdMcWDrRY0Cw2w/Ig6pO/Dv
+S/AxyrCjjTd1u6A7gZEPQF/VMKoon8EDbv/FrJ0io0l3DaB06Xhk9rr6ZWovH19ecEjLcEb/EpHP
+STYuw2DpeBRiHLZAE0ca7ITxKkyVNdN9XjDwdU0eh1IhNdV6WKmLn15LRn4DZ0psmT8f1H72YXFN
+cuyd6T4dnxPttBTckJY/6Y5SUfMIHZ1yAnp641f7N22DBNGBawXW/+wkFLN48ZrZoYfLk99qPag7
+bq3MWTBU6rGIH3SmzVVmlLh0Og4Oe+ddmbxk4RYNgaL1RyERJ9C7qCzYattkaO86DNqCEClDj7jG
+BBlxMFGEqKW1Wr9a/T6ofpgB8fCswWBT87909XHznRrGURHWsZLn/xxCLkisAJJ/JRDuiGDuA4zM
+TAjZYYFGP5TSrcXZmYx8kiEUOjN2LS+1lv9mCv1oXxqBab2oW/DLt4LpeSo9OlDDjuWwm4HFko2H
+BUUUbuicV+RHJqyOleDWVCGgqEX6OCbmRxd+OmbRTbiifkiWn7VSbJ9wcWibyz7jzDeIRTIiDP5y
+VdNwGB/POS1htd1Xe0p37rUDbo8pJVAweRaKpebDnhMrqCi99QsHObawjsxB+AQjoTZ3q79ofdFX
+7FFpooSd5d0ENqJh3KlN8xGpQbd/ALx409lAVoJi4URAc4HS919xy2kJsfmfYQ/afrEffP2dJ3F1
+fnX76eOHVrOHUaUoyzbu8emj1MSkccItYoPEK+eEqgCGykwKHuskhXtPSTxpTEf6C++Cc6KaLRZ0
+HjXp4FYyaTFmFTPPkSNske//smye57LOnJg9uhJqfAMzXJafH4QjG8rJwloAf+6PNCRMFTJ3QcRb
+wUmt7+8z2RsYb/Mo7t3j2NgnZjCs3/AZKr7qNEXPcMzzKxFYHpYWYYGQuXO5QIfWROip9Q1dKskD
+ChdIPLP9If2AIzhj0DVYZz9jpk4wuAgM0kZeKZuvrIdlWtFyckw3j+uqEP0sA/YbHc+hfg+OjCK7
+eHtWrHbU+cNZ4hAGKzVXZI8HHNnp+eesI7o+O8WWbpAsGHiEE0MuRT+PFKTy53xUUO5ct6lKHNWF
+OU4H6lthdageOPETubQsXF/yZNvPL5D2Bk2lbjSalqipy1Q2RPmFndx/YIQ8T1AJcPgKfyu4Dhb0
+8caTzlXOKwa6jLOcMgINwkZAtfAWVY3BMdv14aK0aXazU6YQtzIAKAKu8whhlu6ahvc2C1vnSxfe
+jj+Ti4kBtvjHYO/JIbHJsU5WsQeglKd59In/kXOwKn4CMfeXUcyLlVhTCTuiBTEihcd0CwkVtLY3
+WZqVCcqnFjWrlDmWaeK16r/1PRfIyJB/1wNklzlq0V+PK5e3MmtdIMYsC509gOA93DZyOIOKCQeZ
+cp3t4/6g/wgmN3W64QdanAkm9XpRVtIeWWvNm4rF2kZERtLSpsm22CyaFVN79VQSKDAn8gSwZ0At
+SMCdboMJARloTgTPQfNeM5g7HjqFjjIrcJEKzPQNbmGlpOixIejE2LKfCP/WKKHj8RIi1TxlBZju
+k7rNO1dYpuyUuc/csGBluwrhTJ6eBdrORkXOKDzgtLBfjxehSpYZ2Egh3QFcD8zVzgN5l2Qj/Nfg
+nHfXIHaJzPF0C888lKOJsGudfR03u2PhYIB88WYChrO5FfIX5bdR6sli0sEwomlnyXXPXSoyj+Zu
+h5mOuanDNFP6gcqQOuXJKnFXdu1iWM7D2nzE6jqPwAVXl6qcQTrQmyYqkfh84PhhUUNsvXq/wl73
+qMt6KK2XAvXAKPmsDBWzSaG65xKS8sKtoAFQSjTs3j/CsvR6u4QPJtz3kLF7eLum8hhmAPr5eZZt
+QRPOfxySDw0cAsvBYgiIHufT4GG/zrLgZPAx39EMSF6W2zPZnYvZgbdA49oGawCmGA3UZpFh4DQ3
+uVUpTKzkU+oYPOfPw57hk8B8C9baO1iAYQCc4Jh3aQ9h0Yy+PlyHQhh2rrCIMlkCtcoUmZXeMz/+
+MZMy97AJCivYsYS8I4Ihc75pKkRoY2iLQ5tNXECOjgRZFtGaC9Z6AJTd61unMWcy5DIv8IZMWIeQ
++daqxORc6/HphDFfh0vDPcj1e/aurRGua+fukwhkISf9BeCriHiXzdjPodLdkMzjlit6ta/E8BaY
+O81aU+C4JdzM5VaLxCihx+4Vk/ohfnzXZT0SSqXe7kLpQkvAjCEH5u4tRDYuRNM3N8f7ZEMegjN7
+PAOGXut9eGHqBDuw5UcLi6XaRDFZyGL0ctnHjXtxhR9T1xSVbuM6HB13o+jfNHWqyK3XUD2KvBz7
+fZPywyIxa6LSl3eKbv2zExQOR+Df2WHPyncxPcGYbYykuIQUy6LUxnrZ9WgAx47eeio91pSwFNx4
+bb68agAUyr0K+KqaxbtRkNF6sX8wszztUdXKsQrizBiQJ8M2dng17F2SLSXFPnWqTjGPlnje+3Pe
+REJYSMV++CeHByhoEF7PrPSAevA32xZ/Pf9n0wXzA3EweHUkTcM6Dc8vCChDeVl9o0Jt7vw+BKFt
+9fgICOJHHVRJhqXxKP2rWhuiRUoS0d+u8YSejkRU+3u=

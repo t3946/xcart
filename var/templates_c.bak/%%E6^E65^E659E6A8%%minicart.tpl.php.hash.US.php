@@ -1,0 +1,1 @@
+313dd24a45e98e866f76358262fda2b8a:3:{s:17:"lbl_cart_is_empty";s:13:"Cart is empty";s:14:"lbl_cart_items";s:5:"Items";s:9:"lbl_total";s:5:"Total";}

@@ -1,0 +1,182 @@
+<?php /* MODIFIED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
+<?php
+/*****************************************************************************\
++-----------------------------------------------------------------------------+
+| X-Cart                                                                      |
+| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+| All rights reserved.                                                        |
++-----------------------------------------------------------------------------+
+| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
+| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
+| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
+|                                                                             |
+| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
+| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
+| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
+| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
+| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
+| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
+| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
+| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
+| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
+| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
+| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
+| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
+| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
+| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
+|                                                                             |
+| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
+| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
+| Ruslan R. Fazliev. All Rights Reserved.                                     |
++-----------------------------------------------------------------------------+
+\*****************************************************************************/
+
+#
+# $Id: func.core.php,v 1.52.2.43 2007/01/15 08:18:26 twice Exp $
+#
+
+if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
+
+#
+# Use this function to load code of functions on demand (include/func/func.*.php)
+#
+function x_load() {
+	global $xcart_dir;
+
+	$names = func_get_args();
+	foreach ($names as $n) {
+		$n = str_replace("..", "", $n);
+		$f = $xcart_dir."/include/func/func.$n.php";
+
+		if (file_exists($f)) {
+			require_once $f;
+		}
+	}
+}
+
+/*
+#
+# This function replaced standard PHP function header("Location...")
+#
+function func_header_location($location, $keep_https = true) {
+	global $XCART_SESSION_NAME, $XCARTSESSID, $_COOKIE;
+	global $use_sessions_type, $is_location;
+	global $_SERVER;
+	global $config, $HTTPS, $REQUEST_METHOD;
+
+	$is_location = 'Y';
+	x_session_save();
+
+	if ($use_sessions_type < 3) {
+		session_write_close();
+	}
+
+	$added = array();
+
+	if (!empty($XCARTSESSID) && (!isset($_COOKIE[$XCART_SESSION_NAME]) || defined('SESSION_ID_CHANGED')) && !preg_match("/$XCART_SESSION_NAME=/i", $location) && !defined('IS_ROBOT')) {
+		$added[] = $XCART_SESSION_NAME."=".$XCARTSESSID;
+	}
+
+	if ($keep_https && $REQUEST_METHOD == "POST" && $HTTPS && strpos($location,'keep_https=yes') === false && $config["Security"]["dont_leave_https"] == "Y") {
+		$added[] = "keep_https=yes";
+		# this block is necessary (in addition to https.php) to prevent appearance of secure alert in IE
+	}
+
+	if (!empty($added)) {
+		$hash = "";
+		if (preg_match("/^(.+)#(.+)$/", $location, $match)) {
+			$location = $match[1];
+			$hash = $match[2];
+		}
+
+<?php /* MODIFIED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
+<?php
+/*****************************************************************************\
++-----------------------------------------------------------------------------+
+| X-Cart                                                                      |
+| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+| All rights reserved.                                                        |
++-----------------------------------------------------------------------------+
+| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
+| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
+| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
+|                                                                             |
+| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
+| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
+| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
+| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
+| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
+| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
+| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
+| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
+| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
+| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
+| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
+| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
+| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
+| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
+|                                                                             |
+| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
+| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
+| Ruslan R. Fazliev. All Rights Reserved.                                     |
++-----------------------------------------------------------------------------+
+\*****************************************************************************/
+
+#
+# $Id: func.core.php,v 1.52.2.43 2007/01/15 08:18:26 twice Exp $
+#
+
+if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
+
+#
+# Use this function to load code of functions on demand (include/func/func.*.php)
+#
+function x_load() {
+	global $xcart_dir;
+
+	$names = func_get_args();
+	foreach ($names as $n) {
+		$n = str_replace("..", "", $n);
+		$f = $xcart_dir."/include/func/func.$n.php";
+
+		if (file_exists($f)) {
+			require_once $f;
+		}
+	}
+}
+
+/*
+#
+# This function replaced standard PHP function header("Location...")
+#
+function func_header_location($location, $keep_https = true) {
+	global $XCART_SESSION_NAME, $XCARTSESSID, $_COOKIE;
+	global $use_sessions_type, $is_location;
+	global $_SERVER;
+	global $config, $HTTPS, $REQUEST_METHOD;
+
+	$is_location = 'Y';
+	x_session_save();
+
+	if ($use_sessions_type < 3) {
+		session_write_close();
+	}
+
+	$added = array();
+
+	if (!empty($XCARTSESSID) && (!isset($_COOKIE[$XCART_SESSION_NAME]) || defined('SESSION_ID_CHANGED')) && !preg_match("/$XCART_SESSION_NAME=/i", $location) && !defined('IS_ROBOT')) {
+		$added[] = $XCART_SESSION_NAME."=".$XCARTSESSID;
+	}
+
+	if ($keep_https && $REQUEST_METHOD == "POST" && $HTTPS && strpos($location,'keep_https=yes') === false && $config["Security"]["dont_leave_https"] == "Y") {
+		$added[] = "keep_https=yes";
+		# this block is necessary (in addition to https.php) to prevent appearance of secure alert in IE
+	}
+
+	if (!empty($added)) {
+		$hash = "";
+		if (preg_match("/^(.+)#(.+)$/", $location, $match)) {
+			$location = $match[1];
+			$hash = $match[2];
+		}
+

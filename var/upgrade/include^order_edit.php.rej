@@ -1,0 +1,141 @@
+***************
+*** 132,137 ****
+ 					continue;
+ 				}
+ 
+ 				$v["amount"] = intval($v["amount"]);
+ 				$v['back'] = intval($v['back']);
+                 
+--- 132,157 ----
+ 					continue;
+ 				}
+ 
++				$productid = $cart_tmp['products'][$k]['productid'];
++
++                $ref_values = func_get_refund_values($v['amount'], 'Q');
++                
++                if (!empty($ref_values) && $ref_values['is_refunded'] || !is_numeric($v['amount'])) {
++                    $v['amount'] = func_query_first_cell('SELECT amount FROM ' . $sql_tbl['order_details']
++                        . ' WHERE productid="' . $productid . '" AND orderid="' . $orderid . '"');
++                }
++                
++                if (!empty($ref_values) && $ref_values['is_refunded']) {
++                    if ($v['amount'] < $ref_values['amount']) {
++                        $ref_values['amount'] = $v['amount'];
++                    }
++                    $ref_values['price'] = func_adjust_refund_price($v['price'], $ref_values['fee']);
++                    if ($ref_values['price'] > $v['price']) {
++                        $ref_values['price'] = $v['price'];
++                    }
++                }
++                $cart_tmp['products'][$k]['refund'] = $ref_values;
++
+ 				$v["amount"] = intval($v["amount"]);
+ 				$v['back'] = intval($v['back']);
+                 
+***************
+*** 166,173 ****
+ 					continue;
+ 				}
+ 
+-				$productid = $cart_tmp["products"][$k]["productid"];
+-
+ 				# Check if product is out of stock
+ 				$count_product_in_stock = func_oe_get_quantity_in_stock($productid, $order_data['order']['cb_status'], $order_data['order']['dc_status'], $v['product_options'], @$order_data["products"][$k]);
+ 				if ($v["amount"] > 0) {
+--- 166,171 ----
+ 					continue;
+ 				}
+ 
+ 				# Check if product is out of stock
+ 				$count_product_in_stock = func_oe_get_quantity_in_stock($productid, $order_data['order']['cb_status'], $order_data['order']['dc_status'], $v['product_options'], @$order_data["products"][$k]);
+ 				if ($v["amount"] > 0) {
+***************
+*** 186,191 ****
+ 		if (!empty($groups)) {
+ 			$cart_tmp["shipping_cost_alt"] = 0;
+ 			foreach ($groups as $m_id => $v) {
+ 				$order["shipping_groups"][$m_id]["shipping_cost"] = func_tax_price_details($v["shipping_cost_net"], $order["shipping_groups"][$m_id]["taxes"]);
+ 				$cart_tmp["shipping_costs_alt"][$m_id] = $order["shipping_groups"][$m_id]["shipping_cost"]["gross"];
+ 				$cart_tmp["shipping_cost_alt"] += $cart_tmp["shipping_costs_alt"][$m_id];
+--- 186,199 ----
+ 		if (!empty($groups)) {
+ 			$cart_tmp["shipping_cost_alt"] = 0;
+ 			foreach ($groups as $m_id => $v) {
++                
++                $ref_values = func_get_refund_values($v['shipping_cost_net'], 'S');
++                if (!empty($ref_values) && $ref_values['is_refunded']) {
++                    $v['shipping_cost_net'] = $v['shipping_cost_net_orig'];
++                }
++                $order['shipping_groups'][$m_id]['refund'] = $ref_values;
++                $order['shipping_groups'][$m_id]['shipping_cost_net_orig'] = $v['shipping_cost_net_orig'];
++				
+ 				$order["shipping_groups"][$m_id]["shipping_cost"] = func_tax_price_details($v["shipping_cost_net"], $order["shipping_groups"][$m_id]["taxes"]);
+ 				$cart_tmp["shipping_costs_alt"][$m_id] = $order["shipping_groups"][$m_id]["shipping_cost"]["gross"];
+ 				$cart_tmp["shipping_cost_alt"] += $cart_tmp["shipping_costs_alt"][$m_id];
+***************
+*** 343,356 ****
+ 			foreach ($groups as $m_id => $v) {
+ 
+ 				$order['shipping_groups'][$m_id]['acc_paymentid'] = $v['paymentid'];
+ 
+ 				if (
+-                    in_array($order['shipping_groups'][$m_id]['cb_status'], array('P','R')) 
+                     || in_array($order['shipping_groups'][$m_id]['dc_status'], array('C','S')) 
+                 ) {
+ 					for ($ak=1; $ak<=4; $ak++) {
+ 						$order['shipping_groups'][$m_id]['accounting'][$ak] = array();
+ 						foreach ($price_details_names as $af) {
+ 							$order['shipping_groups'][$m_id]['accounting'][$ak][$af] = $v['acc'][$ak][$af];
+ 						}
+ 					}
+--- 343,374 ----
+ 			foreach ($groups as $m_id => $v) {
+ 
+ 				$order['shipping_groups'][$m_id]['acc_paymentid'] = $v['paymentid'];
++				$order['shipping_groups'][$m_id]['manufacturerid'] = $m_id;
+ 
+ 				if (
++                    in_array($order['shipping_groups'][$m_id]['cb_status'], array('P','R','H')) 
+                     || in_array($order['shipping_groups'][$m_id]['dc_status'], array('C','S')) 
+                 ) {
+ 					for ($ak=1; $ak<=4; $ak++) {
++                        if ($ak == ACC_REF_TO_CUST) {
++                            $refund_group = func_query_first('SELECT total_net, total_gst, total_pst, total_gross'
++                                . ' FROM ' . $sql_tbl['refund_groups']
++                                . ' WHERE orderid = "' . $order['shipping_groups'][$m_id]['orderid'] . '"'
++                                . ' AND manufacturerid = "' . $m_id .'"');
++                        }
++						
+ 						$order['shipping_groups'][$m_id]['accounting'][$ak] = array();
++                        
+ 						foreach ($price_details_names as $af) {
++                            
++                            if ($ak == ACC_REF_TO_CUST) {
++                                if (!empty($refund_group)) {
++                                    $v['acc'][$ak][$af] = $refund_group['total_' . $af];
++                                } else {
++                                    $v['acc'][$ak][$af] = 0;
++                                }
++                            }
++							
+ 							$order['shipping_groups'][$m_id]['accounting'][$ak][$af] = $v['acc'][$ak][$af];
+ 						}
+ 					}
+***************
+*** 378,384 ****
+ 					$applied_per_trans_payments[] = $v['paymentid'];
+ 				}
+ 
+-				func_recalculate_accounting($order['shipping_groups'][$m_id], $all_processors, $apply_per_trans);
+ 		
+ 				$update = array();
+ 				$update['accounting'] = addslashes(serialize($order['shipping_groups'][$m_id]['accounting']));
+--- 378,384 ----
+ 					$applied_per_trans_payments[] = $v['paymentid'];
+ 				}
+ 
++				func_recalculate_accounting($order['shipping_groups'][$m_id], $all_processors, $apply_per_trans, true);
+ 		
+ 				$update = array();
+ 				$update['accounting'] = addslashes(serialize($order['shipping_groups'][$m_id]['accounting']));

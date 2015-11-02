@@ -1,0 +1,18 @@
+***************
+*** 460,465 ****
+ {elseif $main eq "survey"}
+ {include file="modules/Survey/survey_modify.tpl"}
+ 
+ {else}
+ {include file="main/error_page_not_found.tpl"}
+ 
+--- 460,468 ----
+ {elseif $main eq "survey"}
+ {include file="modules/Survey/survey_modify.tpl"}
+ 
++{elseif $main eq "storefronts"}
++{include file="modules/Multiple_Storefronts/manage_storefronts.tpl"}
++
+ {else}
+ {include file="main/error_page_not_found.tpl"}
+ 

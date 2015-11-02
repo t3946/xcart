@@ -1,0 +1,15 @@
+***************
+*** 245,248 ****
+ # End ------- front page banner rotation ends
+ 
+ #require_once("DSEFU.php");
+ ?>
+--- 245,252 ----
+ # End ------- front page banner rotation ends
+ 
+ #require_once("DSEFU.php");
++
++$statuses = func_query_hash('SELECT code, name, type FROM ' . $sql_tbl['order_statuses']
++    . ' ORDER BY orderby', array('type', 'code'), false, true);
++$smarty->assign('statuses', $statuses);
+ ?>

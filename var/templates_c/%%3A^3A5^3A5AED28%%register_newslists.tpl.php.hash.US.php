@@ -1,0 +1,1 @@
+fa65a1f6da5058e8984d25c5815e6ff7a:2:{s:14:"lbl_newsletter";s:10:"Newsletter";s:26:"lbl_newsletter_signup_text";s:27:"Subscribe to our newsletter";}

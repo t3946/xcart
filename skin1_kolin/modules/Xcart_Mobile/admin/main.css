@@ -1,0 +1,65 @@
+/*$Id: main.css 63 2012-10-30 11:56:13Z skot $*/
+/*{literal}*/
+table.general-settings {
+  width: 100%;
+}
+tr td.TableSeparator,
+.general-settings tr td.TableSeparator {
+  padding: 0 !important;
+}
+tr td.TableSeparator hr,
+.general-settings tr td.TableSeparator hr {
+  display: none;
+}
+h2.mobile-skin-header,
+.general-settings h2.mobile-skin-header {
+  font-size: 20px;
+  font-weight: normal;
+  color: inherit;
+  margin: 0;
+  padding: 30px 0 0px;
+}
+h2.mobile-skin-header sup.categories-note,
+.general-settings h2.mobile-skin-header sup.categories-note {
+  margin-left: 5px;
+  font-size: 20px;
+}
+h3.mobile-skin-header,
+.general-settings h3.mobile-skin-header {
+  font-size: 16px;
+  font-weight: normal;
+  color: inherit;
+  margin: 0;
+  padding: 15px 0 5px;
+}
+div.div-note {
+  padding: 10px;
+}
+div.div-note.highlighted {
+  border: dotted 3px #c43939;
+  background-color: #f7f6f4;
+  padding: 7px;
+}
+.mobile-skin-texarea-title {
+  width: 300px;
+  margin-bottom: -14px;
+  position: relative;
+  line-height: 14px;
+}
+.mobile-skin-check-line {
+  margin-bottom: 10px;
+}
+.mobile-skin-styling-link {
+  font-weight: normal;
+  text-align: left;
+  margin: 4px 0px;
+}
+.general-settings tr td.small-separate,
+.general-settings tr td.small-separate img,
+td.small-separate,
+td.small-separate img {
+  height: 0;
+  padding: 2px;
+  margin: 0;
+}
+/*{/literal}*/

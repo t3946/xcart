@@ -1,0 +1,1 @@
+446ab60ceb2277de063380a1a200f2a1a:5:{s:19:"lbl_advanced_editor";s:14:"WYSIWYG editor";s:18:"lbl_apply_features";s:14:"Apply features";s:18:"lbl_default_editor";s:14:"Default editor";s:12:"lbl_features";s:8:"Features";s:19:"lbl_remove_features";s:15:"Remove features";}

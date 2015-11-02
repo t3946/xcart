@@ -1,0 +1,15 @@
+/* $Id: skin1_ie.css,v 1.0 2010/11/23 17:47:24 kate Exp $ */
+/*
+	BuyNow section
+*/
+.BuyNowQuantity {
+	HEIGHT: 25px;
+	width: 117px;
+	WHITE-SPACE: nowrap;
+	PADDING-RIGHT: 10px;
+}
+.BuyNowPrices {
+	height: 25px;
+	vertical-align: middle;
+	width: 100% absolute;
+}

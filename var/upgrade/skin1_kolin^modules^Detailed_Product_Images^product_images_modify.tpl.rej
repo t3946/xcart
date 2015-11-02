@@ -1,0 +1,95 @@
+***************
+*** 3,8 ****
+ <script type="text/javascript">
+ <!--
+ 	row_max_index = 1;
+ 	function add_upload_row(multi_id) {ldelim}
+ 		row_max_index = row_max_index + 1;
+ 		var tr = document.getElementById('upload_alt_row_'+multi_id);
+--- 3,15 ----
+ <script type="text/javascript">
+ <!--
+ 	row_max_index = 1;
++
++	{literal}
++	function copy_product_title(index) {
++		$('#alt_' + index).val($('#product_name').val());
++	}
++	{/literal}
++	
+ 	function add_upload_row(multi_id) {ldelim}
+ 		row_max_index = row_max_index + 1;
+ 		var tr = document.getElementById('upload_alt_row_'+multi_id);
+***************
+*** 26,33 ****
+ 		td = new_row.insertCell(-1);
+ 		td.innerHTML = '{$lng.lbl_alt_text_file_descr}';
+ 		td = new_row.insertCell(-1);
+-		td.innerHTML = '<input type="text" size="80" name="alt['+row_max_index+']" value="" />';
+ 		td = new_row.insertCell(-1);
+ 	{rdelim}
+ 
+ 	function remove_upload_row(multi_id) {ldelim}
+--- 26,34 ----
+ 		td = new_row.insertCell(-1);
+ 		td.innerHTML = '{$lng.lbl_alt_text_file_descr}';
+ 		td = new_row.insertCell(-1);
++		td.innerHTML = '<input type="text" size="80" name="alt['+row_max_index+']" value="" id="alt_' + row_max_index + '" />';
+ 		td = new_row.insertCell(-1);
++		td.innerHTML = '<input type="button" value="{$lng.lbl_copy_prod_name|strip_tags:false|escape}" onclick="javascript: copy_product_title(' + row_max_index + ')" />'
+ 	{rdelim}
+ 
+ 	function remove_upload_row(multi_id) {ldelim}
+***************
+*** 97,103 ****
+ 		{$product_files[file].filename}
+ 	</td>
+ 	<td class="DataTable">
+-		<input type="text" size="32" name="file[{$product_files[file].fileid}][file_descr]" value="{$product_files[file].description}" style="width:100%" />
+ 	</td>
+ 	<td class="DataTable">
+ 		{$product_files[file].filesize}
+--- 97,103 ----
+ 		{$product_files[file].filename}
+ 	</td>
+ 	<td class="DataTable">
++		<input type="text" size="32" name="file[{$product_files[file].fileid}][file_descr]" value="{$product_files[file].description|escape}" style="width:100%" />
+ 	</td>
+ 	<td class="DataTable">
+ 		{$product_files[file].filesize}
+***************
+*** 186,192 ****
+ 	<option value="N" {if $images[image].avail eq "N"}selected{/if}>{$lng.lbl_disabled}</option>
+ </select>
+ 	</td>
+-	<td class="DataTable"><input type="text" size="32" name="image[{$images[image].imageid}][alt]" value="{$images[image].alt}" style="width:100%" /></td>
+ <td width="30%" class="DataTable">
+ {$images[image].type},
+ {$images[image].image_x}x{$images[image].image_y},
+--- 186,192 ----
+ 	<option value="N" {if $images[image].avail eq "N"}selected{/if}>{$lng.lbl_disabled}</option>
+ </select>
+ 	</td>
++	<td class="DataTable"><input type="text" size="32" name="image[{$images[image].imageid}][alt]" value="{$images[image].alt|escape}" style="width:100%" /></td>
+ <td width="30%" class="DataTable">
+ {$images[image].type},
+ {$images[image].image_x}x{$images[image].image_y},
+***************
+*** 245,252 ****
+ 
+ <tr id="upload_alt_row_1">
+ <td>{$lng.lbl_alt_text_file_descr}</td>
+-<td><input type="text" size="80" name="alt[1]" value="" /></td>
+-<td>&nbsp;</td>
+ </tr>
+ 
+ </table>
+--- 245,252 ----
+ 
+ <tr id="upload_alt_row_1">
+ <td>{$lng.lbl_alt_text_file_descr}</td>
++<td><input type="text" size="80" name="alt[1]" value="" id="alt_1" /></td>
++<td><input type="button" value="{$lng.lbl_copy_prod_name|strip_tags:false|escape}" onclick="javascript: copy_product_title(1)" /></td>
+ </tr>
+ 
+ </table>

@@ -1,0 +1,23 @@
+***************
+*** 50,57 ****
+ #
+ #
+ 
+-set_magic_quotes_runtime(0);
+-ini_set("magic_quotes_sybase",0);
+ ini_set("session.bug_compat_42",1);
+ ini_set("session.bug_compat_warn",0);
+ 
+--- 50,61 ----
+ #
+ #
+ 
++if (get_magic_quotes_runtime()) {
++	set_magic_quotes_runtime(0);
++}
++if (ini_get('magic_quotes_sybase')) {
++	ini_set("magic_quotes_sybase",0);
++}
+ ini_set("session.bug_compat_42",1);
+ ini_set("session.bug_compat_warn",0);
+ 

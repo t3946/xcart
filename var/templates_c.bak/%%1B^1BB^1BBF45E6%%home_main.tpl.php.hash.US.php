@@ -1,0 +1,1 @@
+0850a879c6203e55ed1e94f2c5abc11ca:3:{s:12:"lbl_checkout";s:8:"Checkout";s:21:"lbl_continue_shopping";s:17:"Continue shopping";s:18:"lbl_shipping_quote";s:14:"Shipping quote";}

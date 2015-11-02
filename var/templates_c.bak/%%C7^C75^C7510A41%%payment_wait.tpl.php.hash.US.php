@@ -1,0 +1,1 @@
+bdcee85abe8c6d0b439d57963968dc50a:1:{s:25:"msg_order_is_being_placed";s:42:"Your order is being placed. Please wait...";}

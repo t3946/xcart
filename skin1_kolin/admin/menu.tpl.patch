@@ -1,0 +1,15 @@
+Index: skin1/admin/menu.tpl
+===================================================================
+diff -u skin1/admin/menu.tpl
+--- skin1/admin/menu.tpl
++++ skin1/admin/menu.tpl
+@@ -13,6 +13,9 @@
+ {if $active_modules.News_Management}
+ <a href="{$catalogs.admin}/news.php" class="VertMenuItems">{$lng.lbl_news_management}</a><br />
+ {/if}
++{if $active_modules.Mailchimp_Subscription}
++<a href="{$catalogs.admin}/mailchimp_news.php" class="VertMenuItems">Mailchimp management</a><br />
++{/if}
+ <a href="{$catalogs.admin}/statistics.php" class="VertMenuItems">{$lng.lbl_statistics}</a><br />
+ <a href="{$catalogs.admin}/shipping.php" class="VertMenuItems">{$lng.lbl_shipping_methods}</a><br />
+ <a href="{$catalogs.admin}/taxes.php" class="VertMenuItems">{$lng.lbl_taxing_system}</a><br />
