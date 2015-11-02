@@ -1,3 +1,0 @@
-1eed57ccac69c3648880fa76a6d817d9a:4:{s:20:"lbl_delivery_methods";s:16:"Delivery methods";s:28:"lbl_no_shipping_for_location";s:205:"UPS server failed to deliver accurate shipping quote to us.<br />
-When placing the order choose "Phone Order" payment method.<br />
-We will determine correct shipping charge and send you updated invoice.";s:20:"lbl_shipping_address";s:16:"Shipping Address";s:34:"txt_for_fastlane_checkout_delivery";s:45:"for the items shipped from YY warehouse in XX";}

@@ -1,1 +1,0 @@
-9d7e08a99795e2ec70285d56aa15b95aa:7:{s:14:"lbl_categories";s:10:"Categories";s:18:"lbl_empty_category";s:14:"empty category";s:6:"lbl_in";s:2:"in";s:12:"lbl_products";s:8:"products";s:22:"lbl_subcat_no_products";s:11:"no products";s:17:"lbl_this_category";s:13:"this category";s:22:"txt_no_products_in_cat";s:52:"There are no available products under this category.";}

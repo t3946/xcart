@@ -1,1 +1,0 @@
-eb43e32e7a826ce42793fce2788bbb95a:1:{s:18:"disable_ccinfo_msg";s:86:"Upon submitting the order you will be redirected to 2Checkout secure payments website.";}

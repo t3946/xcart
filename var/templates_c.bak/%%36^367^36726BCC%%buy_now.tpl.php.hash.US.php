@@ -1,1 +1,0 @@
-3d89537bb0489a61d28b201439466855a:7:{s:9:"lbl_added";s:5:"Added";s:11:"lbl_buy_now";s:11:"Add to Cart";s:9:"lbl_error";s:5:"Error";s:13:"lbl_more_info";s:9:"More info";s:12:"lbl_quantity";s:8:"Quantity";s:19:"txt_need_min_amount";s:45:"Note: you must order at least {{items}} items";s:16:"txt_out_of_stock";s:12:"Out of stock";}

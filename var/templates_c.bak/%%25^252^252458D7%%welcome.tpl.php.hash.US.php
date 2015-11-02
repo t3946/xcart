@@ -1,1 +1,0 @@
-e535abdee02923ba851f1cd4d969becfa:2:{s:25:"lbl_welcome_to_admin_area";s:30:"Welcome to administration area";s:30:"txt_welcome_to_admin_area_text";s:74:"After logging in you will be able to control every aspect of your e-store.";}

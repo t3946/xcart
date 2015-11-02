@@ -1,1 +1,0 @@
-f04de399436a09c27baec365849eb02fa:2:{s:19:"lbl_detailed_images";s:15:"Detailed images";s:17:"lbl_product_files";s:13:"Product files";}

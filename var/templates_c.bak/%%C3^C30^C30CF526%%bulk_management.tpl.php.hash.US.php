@@ -1,8 +1,0 @@
-40fd01505cc8ce5c53452d0e912f5bc9a:17:{s:27:"lbl_bulk_product_management";s:23:"Bulk product management";s:10:"lbl_cancel";s:6:"Cancel";s:35:"lbl_change_availability_to_disabled";s:47:"Change "Availability" field to "Disabled" value";s:21:"lbl_change_main_catid";s:28:"Change "Main category ID" to";s:36:"lbl_change_quantity_in_stock_to_zero";s:43:"Change "Quantity in Stock" field to 0 items";s:7:"lbl_csv";s:3:"CSV";s:8:"lbl_dbsr";s:4:"DBSR";s:15:"lbl_no_products";s:11:"No products";s:19:"lbl_review_updation";s:30:"Review Product Fields Updation";s:14:"lbl_select_all";s:10:"Select All";s:7:"lbl_sku";s:3:"SKU";s:28:"txt_bulk_manage_discontinued";s:182:"<font style="color: #1e90ff">
-- Check the operations you would like to apply to "Discontinued" products<br />
-- If no operations are selected, then nothing will be applied
-</font>";s:34:"txt_bulk_manage_discontinued_title";s:134:"<font style="color: #1e90ff">Disable <b>"Discontinued"</b> products (products present in <b>DBSR</b>, but absent in <b>CSV</b>)</font>";s:24:"txt_bulk_manage_existing";s:160:"- Check columns to update the corresponding product attributes from the CSV file<br />
-- If no columns are selected, then no product attributes will be updated";s:30:"txt_bulk_manage_existing_title";s:85:"Update <b>Existing</b> products (products present in both <b>DBSR</b> and <b>CSV</b>)";s:19:"txt_bulk_manage_new";s:191:"<font style="color: #ff00ff">
-- Check columns to add the corresponding product attributes to the [PRODUCTS] table<br />
-- If no columns are selected, then no products will be added
-</font>";s:25:"txt_bulk_manage_new_title";s:124:"<font style="color: #ff00ff">Upload <b>"New"</b> products (products absent in <b>DBSR</b>, but present in <b>CSV</b>)</font>";}

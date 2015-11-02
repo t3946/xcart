@@ -1,1 +1,0 @@
-2d9c737b43335c18260821efdb56e0fda:1:{s:23:"eml_order_customer_subj";s:27:"Order receipt # {{orderid}}";}

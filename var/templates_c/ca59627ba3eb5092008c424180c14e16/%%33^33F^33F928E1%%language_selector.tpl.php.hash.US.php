@@ -1,1 +1,0 @@
-079623e9864449e006d0b112e6f1c73ba:2:{s:9:"lbl_close";s:5:"Close";s:19:"lbl_select_language";s:15:"Select language";}

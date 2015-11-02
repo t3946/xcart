@@ -1,1 +1,0 @@
-58c0a43e57e8224c91d7304c64a8ecc5a:1:{s:15:"eml_mail_header";s:174:"You have received this notification from {{company}} because you are a registered user or you or some other registered user requested some information for you from our store.";}

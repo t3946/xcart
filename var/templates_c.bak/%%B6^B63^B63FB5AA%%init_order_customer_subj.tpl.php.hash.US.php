@@ -1,1 +1,0 @@
-f31b5ab7d13c68220e60a2636a59dfc4a:1:{s:28:"eml_init_order_customer_subj";s:44:"Initial notification for order # {{orderid}}";}

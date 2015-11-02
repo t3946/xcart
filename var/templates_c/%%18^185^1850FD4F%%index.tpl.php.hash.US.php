@@ -1,1 +1,0 @@
-4c76f13fc0baa9520ce851aad053ab1ea:5:{s:18:"lbl_list_of_stores";s:14:"List of stores";s:11:"lbl_loading";s:10:"Loading...";s:21:"lbl_privacy_statement";s:14:"Privacy Policy";s:22:"lbl_terms_n_conditions";s:12:"Terms of Use";s:13:"txt_copyright";s:90:"Copyright &copy; {{year_start}}-{{year_end}} S3 Stores Holdings, Inc. All Rights Reserved.";}

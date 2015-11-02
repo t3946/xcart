@@ -1,1 +1,0 @@
-1df133b7ae9a9915d932cdbaf68ab949a:1:{s:20:"lbl_enter_your_price";s:18:"Enter your price !";}

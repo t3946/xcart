@@ -1,1 +1,0 @@
-5435997cee5f2e6db71f77d476955599a:8:{s:9:"lbl_error";s:5:"Error";s:6:"lbl_no";s:2:"No";s:31:"lbl_no_items_have_been_selected";s:27:"No items have been selected";s:6:"lbl_ok";s:2:"OK";s:27:"lbl_required_field_is_empty";s:40:"The required field '~~field~~' is empty!";s:11:"lbl_warning";s:7:"Warning";s:7:"lbl_yes";s:3:"Yes";s:17:"txt_email_invalid";s:25:"Email address is invalid.";}

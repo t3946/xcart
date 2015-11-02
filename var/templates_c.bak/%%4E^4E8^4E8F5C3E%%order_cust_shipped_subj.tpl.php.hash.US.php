@@ -1,1 +1,0 @@
-2cdb1d2ddfb9b0dc83ed44970c39b3d8a:1:{s:27:"eml_order_cust_shipped_subj";s:41:"Your order # {{orderid}} has been shipped";}

@@ -1,1 +1,0 @@
-3121fdc550a93ebf17cf91ae5817f48ea:1:{s:24:"txt_no_products_in_brand";s:48:"There are no available products under this brand";}

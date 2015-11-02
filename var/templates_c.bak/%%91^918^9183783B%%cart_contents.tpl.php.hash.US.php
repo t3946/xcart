@@ -1,3 +1,0 @@
-1ec29f35f842152f8f7731a71afbd099a:10:{s:28:"lbl_no_shipping_for_location";s:205:"UPS server failed to deliver accurate shipping quote to us.<br />
-When placing the order choose "Phone Order" payment method.<br />
-We will determine correct shipping charge and send you updated invoice.";s:9:"lbl_price";s:5:"Price";s:11:"lbl_product";s:7:"Product";s:7:"lbl_qty";s:3:"Qty";s:12:"lbl_shipping";s:8:"Shipping";s:17:"lbl_shipping_cost";s:13:"Shipping cost";s:7:"lbl_sku";s:3:"SKU";s:12:"lbl_subtotal";s:8:"Subtotal";s:7:"lbl_tax";s:3:"Tax";s:9:"lbl_total";s:5:"Total";}

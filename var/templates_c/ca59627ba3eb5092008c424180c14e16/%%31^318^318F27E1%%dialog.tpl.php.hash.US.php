@@ -1,1 +1,0 @@
-aca70fcb4104bf54e240d0ce41a2882ca:2:{s:40:"lbl_minimum_order_amount_message_product";s:74:"The minimum order amount for this product line is {{minimum_order_amount}}";s:7:"lbl_sku";s:3:"SKU";}
