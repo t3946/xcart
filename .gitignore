@@ -26,7 +26,7 @@ www.*_*.xml
 /.pgp.def/**
 /upgrade/**
 /.pgp/**
-/ioncude/**
+/ioncube/**
 /livehelp/**
 /ads_switch/**
 /brushes/**
