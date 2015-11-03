@@ -1,7 +1,4 @@
 <?php
-
-echo "123";
-
 @set_time_limit(0);
 
 require "./auth.php";
