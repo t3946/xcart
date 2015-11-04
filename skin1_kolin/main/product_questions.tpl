@@ -117,14 +117,12 @@ tinymce.init({
 {/foreach}
 
 <tr>
-<td colspan="2" align="left">
+<td colspan="5">
+
         <input type="button" value="{$lng.lbl_update|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'update_PQ');" />
-</td>
-<td colspan="2" align="center">
-        <input type="button" value="Add new PQ" onclick="javascript: submitForm(this, 'add_PQ');" />
-</td>
-<td align="right">
         <input type="button" value="{$lng.lbl_delete_selected|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'delete_PQ');" />
+        <input type="button" value="Add new PQ" onclick="javascript: submitForm(this, 'add_PQ');" />
+
 </td>
 </tr>
 

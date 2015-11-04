@@ -11,8 +11,6 @@
 *.*.201*.php
 /logs.txt
 www.*_*.xml
-thumbs.db
-Thumbs.db
 ###################################
 ## scripts to exclude
 /robots.txt.php

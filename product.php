@@ -667,6 +667,11 @@ if ($config['product_queries']['product_queries_enable'] == 'Y' && url_exists($c
 }
 
 
+$count_product_tabs = count($product_tabs);
+$product_tabs[$count_product_tabs]["title"] = "Product discussions";
+$product_tabs[$count_product_tabs]["tpl"] = "_product_discussions_tpl_";
+$product_tabs[$count_product_tabs]["anchor"] = $count_product_tabs;
+
 if (!empty($product_tabs) && is_array($product_tabs)) {
 
 	$count_shipping_rates_for_canada = func_query_first_cell("SELECT manufacturerid FROM $sql_tbl[shipping_rates] WHERE manufacturerid='$product_info[manufacturerid]' AND (type='R' OR type='D') AND zoneid='12'");
@@ -1240,6 +1245,7 @@ func_print_r($a1, $data, $data_arr);
 ###
 ##
 #
+
 #
 ##
 ###
