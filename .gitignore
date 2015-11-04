@@ -13,6 +13,7 @@
 www.*_*.xml
 thumbs.db
 Thumbs.db
+*.cur
 ###################################
 ## scripts to exclude
 /robots.txt.php
