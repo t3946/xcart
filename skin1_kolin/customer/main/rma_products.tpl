@@ -53,7 +53,7 @@
   <td>SKU</td>
   <td>Product Name</td>
   <td>Return QTY</td>
-  <td>I would like to</td>
+  <td>{if $usertype eq "C"}I{else}You{/if} would like to</td>
 </tr>
 
 {foreach from=$v.products item=product key=prod_num}
@@ -121,7 +121,7 @@
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top">
-        <div style="padding-top: 7px;"><I>Please attach product images to speed up the RMA process:</I></div>
+        <div style="padding-top: 7px;"><I>Please attach product images to speed up the RMA process:</I>&nbsp;&nbsp;</div>
 </td>
 <td valign="top">
 
