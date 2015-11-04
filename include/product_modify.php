@@ -263,7 +263,7 @@ if ($REQUEST_METHOD == "POST") {
 
 	if ($mode == "add_PQ"){
 		db_query("INSERT INTO $sql_tbl[product_question] (productid, status, date, answered_date, answered_on_page, added_from_product_modify_page) VALUES ('$productid', '', '".time()."', '".time()."', 'Y', 'Y')");
-		func_refresh();
+		func_refresh("Product_questions", "#Product_questions");
 	}
 
 	if ($mode == "update_PQ" && !empty($posted_data) && is_array($posted_data)){
@@ -294,7 +294,7 @@ if ($REQUEST_METHOD == "POST") {
 			func_array2update("product_question", $v, "id = '$id'");
 		}
 
-		func_refresh();
+		func_refresh("Product_questions", "#Product_questions");
 	}
 
 	if ($mode == "delete_PQ" && !empty($posted_data) && is_array($posted_data)){
@@ -306,7 +306,7 @@ if ($REQUEST_METHOD == "POST") {
 			}
 		}
 
-		func_refresh();
+		func_refresh("Product_questions", "#Product_questions");
 	}
 
 
