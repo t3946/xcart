@@ -801,10 +801,19 @@ function generate_price(id) {ldelim}
 
 <tr> 
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[dimensions]" /></td>{/if}
-	<td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions}</td>
-	<td class="ProductDetails"><input type="text" name="dimensions" size="18" value="{$product.dim_x|default:0},{$product.dim_y|default:0},{$product.dim_z|default:0}" /></td>
+	<td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} x:</td>
+	<td class="ProductDetails"><input type="text" name="dimensionx" size="18" value="{$product.dim_x|default:0}" /></td>
 </tr>
-
+    <tr>
+        {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[dimensions]" /></td>{/if}
+        <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} y:</td>
+        <td class="ProductDetails"><input type="text" name="dimensiony" size="18" value="{$product.dim_y|default:0}" /></td>
+    </tr>
+    <tr>
+        {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[dimensions]" /></td>{/if}
+        <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} z:</td>
+        <td class="ProductDetails"><input type="text" name="dimensionz" size="18" value="{$product.dim_z|default:0}" /></td>
+    </tr>
 <tr {if $usertype eq "P"}style="display: none;"{/if}>
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[shipping_freight]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_freight} ({$config.General.currency_symbol})</td>
