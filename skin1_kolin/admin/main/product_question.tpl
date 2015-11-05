@@ -5,7 +5,7 @@
 <script type="text/javascript">
 //<![CDATA[
 {literal}
-
+ 
 tinymce.init({
     selector: "textarea",
     resize: "both",
