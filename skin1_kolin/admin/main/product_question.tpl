@@ -298,21 +298,21 @@ $(function() {ldelim}
 <td>
 {*
    <select name="to">
-	<option value="{$product_info.distributor_email}">Product distributor contact ({if $product_info.distributor_email ne ""}{$product_info.distributor_email}{else}not specified{/if})</option>
+	<option value="{$distributor_info.d_product_questions_send_to_email}">Product distributor contact ({if $distributor_info.d_product_questions_send_to_email ne ""}{$distributor_info.d_product_questions_send_to_email}{else}not specified{/if})</option>
 	<option value="{$product_info.brand_email}">Product brand contact ({if $product_info.brand_email}{$product_info.brand_email}{else}not specified{/if})</option>
    </select>
 *}
  <table cellpadding="0" cellspacing="0">
  <tr>
  <td>
-	{if $product_info.distributor_email ne ""}<input type="radio" name="to" value="1" checked="checked">{/if}
+	{if $distributor_info.d_product_questions_send_to_email ne ""}<input type="radio" name="to" value="1" checked="checked">{/if}
 
-<input type="hidden" name="email_to_arr[1]" value="{$product_info.distributor_email}" />
-<input type="hidden" name="name_to_arr[1]" value="{$product_info.distributor_send_to_name}" />
+<input type="hidden" name="email_to_arr[1]" value="{$distributor_info.d_product_questions_send_to_email}" />
+<input type="hidden" name="name_to_arr[1]" value="{$distributor_info.d_product_questions_send_to_name}" />
 
  </td>
  <td>
-	{if $product_info.distributor_email ne ""}{$product_info.distributor_email} {if $product_info.distributor_send_to_name ne ""}({$product_info.distributor_send_to_name}){/if} {else}<span style="color: red;">not specified</span>{/if}&nbsp;
+	{if $distributor_info.d_product_questions_send_to_email ne ""}{$distributor_info.d_product_questions_send_to_email} {if $distributor_info.d_product_questions_send_to_name ne ""}({$distributor_info.d_product_questions_send_to_name}){/if} {else}<span style="color: red;">not specified</span>{/if}&nbsp;
  </td>
  <td>
 	<a href="manufacturers.php?manufacturerid={$product_info.manufacturerid}&distributor_section=16" style="color: #3A3AFF;" target="_blank">Product distributor contact</a>
@@ -321,7 +321,7 @@ $(function() {ldelim}
 
  <tr>
  <td>
-	{if $product_info.brand_email ne ""}<input type="radio" name="to" value="2" {if $product_info.distributor_email eq ""}checked="checked"{/if}>{/if}
+	{if $product_info.brand_email ne ""}<input type="radio" name="to" value="2" {if $distributor_info.d_product_questions_send_to_email eq ""}checked="checked"{/if}>{/if}
 
 <input type="hidden" name="email_to_arr[2]" value="{$product_info.brand_email}" />
 <input type="hidden" name="name_to_arr[2]" value="{$product_info.brand_customer_service_name}" />
@@ -359,6 +359,11 @@ $(function() {ldelim}
 	{include file="main/subheader.tpl" title="Customer info / Generate order"}
 	
 	<br />
+
+<table width="100%">
+<tr>
+<td width="49%" valign="top">
+
         <table >
 
 	<tr>
@@ -447,6 +452,49 @@ $(function() {ldelim}
 	</td>
 	</tr>
 	</table>
+
+
+
+</td>
+<td>&nbsp;</td>
+<td width="49%" valign="top">
+
+        <table>
+
+          <tr>
+            <td width="219">
+                <B>{* Distributor *}{$distributor_info.manufacturer} time:</B> {$distributor_info.distributor_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+                <br />
+                <B>{* Distributor *}{$distributor_info.manufacturer} phone:</B> {$distributor_info.distributor_phone}
+            </td>
+          </tr>
+
+          <tr>
+            <td class="call_btn_distr_{if $distributor_info.good_time_to_send_email_to_distributor eq "Y"}a{else}d{/if}" width="219" height="44">
+                <a target="_blank" href="tel:{if $distributor_info.distributor_phone_phone_normalized ne ""}{$distributor_info.distributor_phone_phone_normalized}{else}{$distributor_info.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+            </td>
+          </tr>
+
+          <tr>
+            <td  width="219">
+                <B>Customer time:</B> {$product_question.customer_time|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+                <br />
+                <B>Customer phone:</B> {$product_question.phone}
+            </td>
+          </tr>
+
+          <tr>
+            <td class="call_btn_customer_{if $product_question.good_time_to_send_email_to_customer eq "Y"}a{else}d{/if}" width="219" height="44">
+                <a target="_blank" href="tel:{if $product_question.phone_normalized ne ""}{$product_question.phone_normalized}{else}{$product_question.phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
+            </td>
+          </tr>
+
+
+        </table>
+
+</td>
+</tr>
+</table>
 
   </div>
 
