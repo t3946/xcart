@@ -158,8 +158,9 @@ AB_Goal_Hit(array("1","2", "3", "4", "5", "6"), $orders[0]["order"]["orderid"]);
 		$GTS_order_confirmation_module_code3 = '</div>';
 	}
 
-	$tmp_subtotal = $orders[0]["order"]["total"] - $orders[0]["order"]["tax"] - $orders[0]["order"]["shipping_cost"];
-	$smarty->assign("order_subtotal",$tmp_subtotal);
+	// $tmp_subtotal = $orders[0]["order"]["total"] - $orders[0]["order"]["tax"] - $orders[0]["order"]["shipping_cost"];
+	$tmp_total = $orders[0]["order"]["total"];
+	$smarty->assign("order_subtotal",$tmp_total);
 
         $cidev_tracking_code_add = "";
 

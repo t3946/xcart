@@ -317,10 +317,9 @@ $use_current_storefront = func_query_first_cell("SELECT sfid FROM $sql_tbl[produ
 $product_info = func_select_product($product_question["productid"], 0, false, false, false, false, $use_current_storefront);
 
 
-$some_distributor_info = func_query_first("SELECT d_product_questions_send_to_email, d_product_questions_send_to_name FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
-
-$product_info["distributor_email"] = $some_distributor_info["d_product_questions_send_to_email"];
-$product_info["distributor_send_to_name"] = $some_distributor_info["d_product_questions_send_to_name"];
+//$some_distributor_info = func_query_first("SELECT d_product_questions_send_to_email, d_product_questions_send_to_name FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
+//$product_info["distributor_email"] = $some_distributor_info["d_product_questions_send_to_email"];
+//$product_info["distributor_send_to_name"] = $some_distributor_info["d_product_questions_send_to_name"];
 
 $some_brand_info = func_query_first("SELECT customer_service_name, customer_service_email, brand, customer_service_phone FROM $sql_tbl[brands] WHERE brandid='$product_info[brandid]'");
 
@@ -328,6 +327,88 @@ $product_info["brand_email"] = $some_brand_info["customer_service_email"];
 $product_info["brand_customer_service_name"] = $some_brand_info["customer_service_name"];
 $product_info["brand"] = $some_brand_info["brand"];
 $product_info["customer_service_phone"] = $some_brand_info["customer_service_phone"];
+
+
+#
+##
+$distributor_info = func_query_first("SELECT * FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
+
+$request_availability_options = func_query("SELECT * FROM $sql_tbl[request_availability_options]");
+
+$tmp_cur_time_sec = time();
+$d_server_min_distributor_time_sec = $distributor_info["d_server_min_distributor_time"] * 60 *60;
+$tmp_cur_time_sec -= $d_server_min_distributor_time_sec;
+$distributor_info["distributor_time"] = $tmp_cur_time_sec;
+$tmp_cur_time_date_format = date("G.i", $tmp_cur_time_sec);
+$tmp_date_mm_dd_yyyy = date("m/d/Y", $tmp_cur_time_sec);
+// $tmp_cur_time_sec += 2*24*60*60; // for checking
+$tmp_number_of_day_of_week = date("w", $tmp_cur_time_sec); // 0 (for Sunday) through 6 (for Saturday)
+// func_print_r($tmp_number_of_day_of_week, $tmp_cur_time_date_format); // for checking
+
+if ($tmp_cur_time_date_format >= "8.30" && $tmp_cur_time_date_format <= "16.30" && ($tmp_number_of_day_of_week != "0" && $tmp_number_of_day_of_week != "6")){
+
+	if (!empty($request_availability_options) && is_array($request_availability_options)){
+		foreach ($request_availability_options as $k_r => $v_r){
+			if ($v_r["date_mm_dd_yyyy"] == $tmp_date_mm_dd_yyyy && $v_r["active"] == "Y"){
+				$good_time_to_send_email_to_distributor = "N";
+			}
+		}
+	}
+
+	if ($good_time_to_send_email_to_distributor != "N"){
+		$good_time_to_send_email_to_distributor = "Y";
+	}
+
+        $distributor_info["good_time_to_send_email_to_distributor"] = $good_time_to_send_email_to_distributor;
+} else {
+	$distributor_info["good_time_to_send_email_to_distributor"] = "N";
+}
+
+$distributor_info["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$product_info[manufacturerid]' AND distributor_field_code='1'");
+
+$phone_normalized = preg_replace("/[^0-9]/S","", $distributor_info["distributor_phone"]);
+
+if (strlen($phone_normalized) == "10"){
+	$distributor_info["distributor_phone_phone_normalized"] = "+1".$phone_normalized;
+}
+
+
+
+$tmp_cur_time_sec = time();
+if (!empty($product_question["state"])){
+	$est_time_offset = func_query_first_cell("SELECT est_time_offset FROM $sql_tbl[states] WHERE code='$product_question[state]' AND country_code='$product_question[country]'");
+} else {
+	$est_time_offset = 0;
+}
+$est_time_offset = $est_time_offset * 60 *60;
+$tmp_cur_time_sec -= $est_time_offset;
+$product_question["customer_time"] = $tmp_cur_time_sec;
+$tmp_cur_time_date_format = date("G.i", $tmp_cur_time_sec);
+$tmp_date_mm_dd_yyyy = date("m/d/Y", $tmp_cur_time_sec);
+// $tmp_cur_time_sec += 2*24*60*60; // for checking
+$tmp_number_of_day_of_week = date("w", $tmp_cur_time_sec); // 0 (for Sunday) through 6 (for Saturday)
+// func_print_r($tmp_number_of_day_of_week, $tmp_cur_time_date_format); // for checking
+
+if ($tmp_cur_time_date_format >= "8.30" && $tmp_cur_time_date_format <= "16.30" && ($tmp_number_of_day_of_week != "0" && $tmp_number_of_day_of_week != "6")){
+                if (!empty($request_availability_options) && is_array($request_availability_options)){
+                        foreach ($request_availability_options as $k_r => $v_r){
+                                if ($v_r["date_mm_dd_yyyy"] == $tmp_date_mm_dd_yyyy && $v_r["active"] == "Y"){
+                                        $good_time_to_send_email_to_customer = "N";
+                                }
+                        }
+                }
+
+                if ($good_time_to_send_email_to_customer != "N"){
+                        $good_time_to_send_email_to_customer = "Y";
+                }
+
+                $product_question["good_time_to_send_email_to_customer"] = $good_time_to_send_email_to_customer;
+} else {
+                $product_question["good_time_to_send_email_to_customer"] = "N";
+}
+##
+#
+
 
 $customer_name = $product_question["firstname"];
 
@@ -434,6 +515,7 @@ if (!$curl_err){
 //func_print_r($product_info);
 
 $smarty->assign("product_info", $product_info);
+$smarty->assign("distributor_info", $distributor_info);
 $smarty->assign("product_question", $product_question);
 $smarty->assign("mode", $mode);
 $smarty->assign("main", "product_question");
