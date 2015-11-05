@@ -844,7 +844,26 @@ else
 {/literal}
 {********************************************}
 
+
 <script src="{$SkinDir}/ajax_home_page.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+//<![CDATA[
+{literal}
+
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 's3stores';
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+{/literal}
+//]]>
+</script>
 
 </body>
 </html>
