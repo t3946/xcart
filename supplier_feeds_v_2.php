@@ -769,6 +769,12 @@ die();
                     if ( !isset( $product['dim_z'] ) )
                         $product['dim_z'] = 0;
 
+                    $dimension1 = [$product['dim_x'],$product['dim_y'],$product['dim_z'] ];
+                    rsort($dimension1);
+
+                    $dimension2 = [$product_dimension['dim_x'],$product_dimension['dim_y'],$product_dimension['dim_z']];
+                    rsort($dimension2);
+
                     $dimension = [];
 
                     if ( !isset( $product['weight'] ) )
@@ -777,20 +783,20 @@ die();
                     if ( $product['weight'] == 0 && $product_dimension['weight'] != 0 )
                         $product['weight'] = $product_dimension['weight'];
 
-                    if ( $product['dim_x'] != 0 )
-                        $dimension[0] = $product['dim_x'];
+                    if ( $dimension1[0] != 0 )
+                        $dimension[0] = $dimension1[0];
                     else
-                        $dimension[0] = $product_dimension['dim_x'];
+                        $dimension[0] = $dimension2[0];
 
-                    if ( $product['dim_y'] != 0 )
-                        $dimension[1] = $product['dim_y'];
+                    if ( $dimension1[1] != 0 )
+                        $dimension[1] = $dimension1[1];
                     else
-                        $dimension[1] = $product_dimension['dim_y'];
+                        $dimension[1] = $dimension2[1];
 
-                    if ( $product['dim_z'] != 0 )
-                        $dimension[2] = $product['dim_z'];
+                    if ( $dimension1[2] != 0 )
+                        $dimension[2] = $dimension1[2];
                     else
-                        $dimension[2] = $product_dimension['dim_z'];
+                        $dimension[2] = $dimension2[2];
 
                     rsort( $dimension );
 
