@@ -1,5 +1,5 @@
 {include file="check_email_script.tpl"}
-
+ 
 {*
 {include file="check_zipcode_js.tpl"}
 <script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>

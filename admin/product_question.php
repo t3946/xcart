@@ -1,4 +1,4 @@
-<?php
+<?php 
 @set_time_limit(0);
 
 define('USE_TRUSTED_POST_VARIABLES',1);
