@@ -1,6 +1,6 @@
 <?php /* MODIFIED: random:20313 [2010 Mar 16 13:33][Custom development (Speed-up optimization)] */ ?>
 <?php /* MODIFIED: random:20460 [2010 Mar 18 13:43][Custom development (Free shipping modifications)] */ ?>
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (????? ??? ???????? ??????????? "??????????????" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
 /*****************************************************************************\
@@ -667,11 +667,6 @@ if ($config['product_queries']['product_queries_enable'] == 'Y' && url_exists($c
 }
 
 
-$count_product_tabs = count($product_tabs);
-$product_tabs[$count_product_tabs]["title"] = "Product discussions";
-$product_tabs[$count_product_tabs]["tpl"] = "_product_discussions_tpl_";
-$product_tabs[$count_product_tabs]["anchor"] = $count_product_tabs;
-
 if (!empty($product_tabs) && is_array($product_tabs)) {
 
 	$count_shipping_rates_for_canada = func_query_first_cell("SELECT manufacturerid FROM $sql_tbl[shipping_rates] WHERE manufacturerid='$product_info[manufacturerid]' AND (type='R' OR type='D') AND zoneid='12'");
@@ -1245,7 +1240,6 @@ func_print_r($a1, $data, $data_arr);
 ###
 ##
 #
-
 #
 ##
 ###
