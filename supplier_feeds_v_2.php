@@ -760,6 +760,44 @@ die();
 
 					$product_in_DB_info_arr = func_query_first("SELECT forsale, r_avail, eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
 
+                    $product_dimension = func_query_first("SELECT dim_x, dim_y, dim_z, weight FROM $sql_tbl[products] WHERE productid='$productid'");
+
+                    if ( !isset( $product['dim_x'] ) )
+                        $product['dim_x'] = 0;
+                    if ( !isset( $product['dim_y'] ) )
+                        $product['dim_y'] = 0;
+                    if ( !isset( $product['dim_z'] ) )
+                        $product['dim_z'] = 0;
+
+                    $dimension = [];
+
+                    if ( !isset( $product['weight'] ) )
+                        $product['weight'] = 0;
+
+                    if ( $product['weight'] == 0 && $product_dimension['weight'] != 0 )
+                        $product['weight'] = $product_dimension['weight'];
+
+                    if ( $product['dim_x'] != 0 )
+                        $dimension[0] = $product['dim_x'];
+                    else
+                        $dimension[0] = $product_dimension['dim_x'];
+
+                    if ( $product['dim_y'] != 0 )
+                        $dimension[1] = $product['dim_y'];
+                    else
+                        $dimension[1] = $product_dimension['dim_y'];
+
+                    if ( $product['dim_z'] != 0 )
+                        $dimension[2] = $product['dim_z'];
+                    else
+                        $dimension[2] = $product_dimension['dim_z'];
+
+                    rsort( $dimension );
+
+                    $product['dim_x'] = $dimension[0];
+                    $product['dim_y'] = $dimension[1];
+                    $product['dim_z'] = $dimension[2];
+
 					$product = func_addslashes($product);
 
 					$discontinued_date_condition_found = false;
@@ -783,8 +821,7 @@ die();
 						$updated_products_count++;
 					}
 
-//func_print_r($productid, $products, $product);
-//func_print_r("---upd--",$productid, "---upd--", $product);
+
 
 					func_array2update("products", $product, "productid = '$productid'");
 
