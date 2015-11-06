@@ -36,7 +36,7 @@ foreach ($storefronts as $storefrontid => $store_info){
 	WHERE $sql_tbl[products_sf].sfid='$storefrontid' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products].pc_classify_status='AC'");
 
 
-
+	func_print_r($pc_options[$storefrontid]);
 //func_print_r($count_AC_products);
 //die("123");
 
