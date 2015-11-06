@@ -1,6 +1,6 @@
 <?php /* MODIFIED: random:20460 [2010 Mar 18 13:43][Custom development (Free shipping modifications)] */ ?>
 <?php /* MODIFIED: random:19885 [2010 Jan 11 11:55][Custom development (Re-design Category selectors on Product Add/Modify)] */ ?>
-<?php /* MODIFIED:  random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -854,8 +854,8 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			$query_data['r_avail'] = $r_avail;
 		}
 		
-        if (!empty($dimensions)) {
-			$dimensions = explode(',', $dimensions);
+        if (isset($dimensionx) && isset($dimensiony) && isset($dimensionz)) {
+			$dimensions = [ $dimensionx, $dimensiony, $dimensionz ];
 			if (count($dimensions) >= 3) {
 				rsort($dimensions);
 				$query_data['dim_x'] = $dimensions[0];
