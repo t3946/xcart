@@ -43,11 +43,13 @@ header("Vary: User-Agent");
 if(!empty($HTTP_USER_AGENT) && !defined("IS_ROBOT") && empty($is_robot)) {
 	$ua = array(
 		"X-Cart info" => array("X-Cart info","curl/7.21.0","PycURL/7.19.5"),
-		"Other" => array ("NerdyBot","ShortLinkTranslate","YahooCacheSystem","ContextAd","WillyBot/1.1","WorldBrewBot/2.1","robots","WebIndex","Wget/","Twitterbot/1.0","YisouSpider","betaBot","psbot","Xenu","SEOstats","Wotbox/2.01","CCBot/2.0","Spider/Bot"),
+		"Other" => array ("NerdyBot","ShortLinkTranslate","YahooCacheSystem","ContextAd","WillyBot/1.1","WorldBrewBot/2.1","robots",
+		                  "WebIndex","Wget/","Twitterbot/1.0","YisouSpider","betaBot","psbot","Xenu","SEOstats","Wotbox/2.01","CCBot/2.0","Spider/Bot","PHP/5.4.32",
+						  "tbot","ltx71","TurnitinBot"),
 		"FaceBook" => array("facebookexternalhit/1.1"),
 		"Pinterest" => array ("Pinterest/0.2","Pinterest/0.1","Pinterest/4.1.1"),
-		"Ahrefs" => array("AhrefsBot/5.0"),
-                "Spotbot" => array("spotbot - spotbot@indix.com","DotBot/1.1","Mail.RU_Bot/2.0","rogerbot/1.1","spotbot"),
+		"Ahrefs" => array("AhrefsBot/5.0","adidxbot/1.1"),
+        "Spotbot" => array("spotbot - spotbot@indix.com","DotBot/1.1","Mail.RU_Bot/2.0","rogerbot/1.1","spotbot"),
 		"Google" => array("Googlebot","Mediapartners-Google","AdsBot-Google-Mobile","AdsBot-Google","TwengaBot-2.0","Googlebot-Image/1.0","GoogleBot/2.1","TwengaBot","AdsBot"),
 		"Bing" => array("bingbot"),
 		"TheFind" => array("FatBot","ShopWiki/1.0","com.thefind.Shopping/3.2.1"),
