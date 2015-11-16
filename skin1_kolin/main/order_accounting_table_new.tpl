@@ -462,32 +462,9 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 </tr>
 
 
-{* {if $v.ru_status ne "" || $v.ref_full_reconciliation_info ne ""} *}
 {if $v.ru_status ne ""}
 <tr class="OrderSheetCell{$cycle_class}">
 <td colspan="9" align="left">
-
-{*
-{if $order_manufacturers[$m_id].d_bulk_or_individual_order_payments eq "distributor_may_charge_for_several_orders_at_once"}
-  <table cellpadding="0" cellspacing="0">
-
-  <tr id="id_ref_to_us_part_of_transaction_{$m_id}" {if $show_ref_to_us_part_of_transaction ne "Y"}style="display: none;"{/if}>
-  <td>REF TO US is a part of the total transaction in the amount of&nbsp;</td>
-  <td>
-  <input type="text" name="ref_to_us_part_of_transaction[{$m_id}]" value="{$v.ref_to_us_part_of_transaction}" size="6" />
-  </td>
-  </tr>
-
-  </table>
-{/if}
-
-
-  {if $v.ref_full_reconciliation_info ne ""}
-<br />
-(REF) Invoice payment in the amount of ({$v.ref_full_reconciliation_info.amount_csv_abs|price_format}) taken on {$v.ref_full_reconciliation_info.date_csv|date_format:"%d-%b-%G"}:<br />
-{$v.ref_full_reconciliation_info.description_csv}
-  {/if}
-*}
 
 </td>
 
@@ -496,7 +473,6 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
   <table cellpadding="0" cellspacing="0" {* width="100%" *} style="background-color: #B4A7D6; margin-top: -3px; margin-left: -3px; padding-top: 3px;">  
   <tr>
   <td align="left">  
-{*    {include file="main/order_status.tpl" status=$v.ru_status mode="select" name="groups[`$m_id`][ru_status]" status_type="RU" extended="Y"} *}
     {include file="main/order_status.tpl" status=$v.ru_status mode="static" status_type="RU" extended="Y"}
   </td>
   </tr>
@@ -586,7 +562,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 </td>
 
 <td align="center">
-<input type="text" size="8" id="manufacturer_invoices_data_unit_cost_{$m_id}_{$invoice_number}_{$product.itemid}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][unit_cost][{$product.itemid}]" value="{$invoice.products[$product.itemid].unit_cost}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" />
+<input type="text" size="8" id="manufacturer_invoices_data_unit_cost_{$m_id}_{$invoice_number}_{$product.itemid}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][unit_cost][{$product.itemid}]" value="{$invoice.products[$product.itemid].unit_cost}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" {if $invoice.status eq "R"}readonly="readonly"{/if} />
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right">
@@ -617,7 +593,7 @@ Cost to us accurate
 </td>
 
 <td align="center">
-<input type="text" size="5" id="manufacturer_invoices_data_qty_inv_{$m_id}_{$invoice_number}_{$product.itemid}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][qty_inv][{$product.itemid}]" value="{$invoice.products[$product.itemid].qty_inv}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" />
+<input type="text" size="5" id="manufacturer_invoices_data_qty_inv_{$m_id}_{$invoice_number}_{$product.itemid}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][qty_inv][{$product.itemid}]" value="{$invoice.products[$product.itemid].qty_inv}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" {if $invoice.status eq "R"}readonly="readonly"{/if} />
 </td>
 
 <td align="right">
@@ -668,7 +644,7 @@ Tax charged (except HST)
 </td>
 <td colspan="4"></td>
 <td align="center">
-  <input id="manufacturer_invoices_data_tax_charged_except_HST_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][tax_charged_except_HST]" size="8" value="{$invoice.tax_charged_except_HST}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" />
+  <input id="manufacturer_invoices_data_tax_charged_except_HST_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][tax_charged_except_HST]" size="8" value="{$invoice.tax_charged_except_HST}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" {if $invoice.status eq "R"}readonly="readonly"{/if} />
 </td>
 </tr>
 
@@ -693,7 +669,7 @@ Shipping quoted by distributor
 <td colspan="4"></td>
 <td align="center">
 
-  <input id="manufacturer_invoices_data_shipping_charged_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][shipping_charged]" size="8" value="{$invoice.shipping_charged}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" />
+  <input id="manufacturer_invoices_data_shipping_charged_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][shipping_charged]" size="8" value="{$invoice.shipping_charged}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" {if $invoice.status eq "R"}readonly="readonly"{/if} />
 
 <div style="BACKGROUND-COLOR: #F2A3A8; color: #000000;" align="right">
 {include file="currency2.tpl" value=$v.actual_shipping_cost.net}
@@ -750,7 +726,7 @@ Drop-ship fee in X-cart
 </td>
 <td colspan="4"></td>
 <td align="center">
-  <input id="manufacturer_invoices_data_drop_ship_fee_charged_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][drop_ship_fee_charged]" size="8" value="{$invoice.drop_ship_fee_charged}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" />
+  <input id="manufacturer_invoices_data_drop_ship_fee_charged_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][drop_ship_fee_charged]" size="8" value="{$invoice.drop_ship_fee_charged}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" {if $invoice.status eq "R"}readonly="readonly"{/if} />
 
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right">
 {include file="currency2.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us}
@@ -775,7 +751,7 @@ HST charged
 </td>
 <td colspan="4"></td>
 <td align="center">
-  <input id="manufacturer_invoices_data_HST_charged_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][HST_charged]" size="8" value="{$invoice.HST_charged}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" />
+  <input id="manufacturer_invoices_data_HST_charged_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][HST_charged]" size="8" value="{$invoice.HST_charged}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" {if $invoice.status eq "R"}readonly="readonly"{/if} />
 </td>
 </tr>
 
@@ -973,6 +949,11 @@ func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}');
 
 {/if}
 
+<br />
+<div style="BACKGROUND-COLOR: {if $invoice.status eq "A"}#F2A3A8;{elseif $invoice.status eq "U"}#ffd44c;{elseif $invoice.status eq "R"}#d9ead3;{/if} color: #000000;">
+<B>Invoice status: {$invoice_memo_statuses[$invoice.status]}</B>
+</div>
+
 {if $invoice.invoice_total eq "0.00"}
 <br />
 <div align="left">
@@ -1039,7 +1020,7 @@ func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}');
 HST refunded
 </td>
 <td align="center">
-  <input id="manufacturer_memos_data_ref_to_us_HST_{$m_id}_{$memo_number}" name="manufacturer_memos_data[{$m_id}][{$memo_number}][ref_to_us_HST]" size="8" value="{$memo.ref_to_us_HST}" onkeyup="func_recalculate_manufacturer_memos_data('{$m_id}','{$memo_number}')" onchange="func_recalculate_manufacturer_memos_data('{$m_id}','{$memo_number}')" />
+  <input id="manufacturer_memos_data_ref_to_us_HST_{$m_id}_{$memo_number}" name="manufacturer_memos_data[{$m_id}][{$memo_number}][ref_to_us_HST]" size="8" value="{$memo.ref_to_us_HST}" onkeyup="func_recalculate_manufacturer_memos_data('{$m_id}','{$memo_number}')" onchange="func_recalculate_manufacturer_memos_data('{$m_id}','{$memo_number}')" {if $memo.status eq "R"}readonly="readonly"{/if} />
 </td>
 </tr>
 
@@ -1050,7 +1031,7 @@ HST refunded
 <span style="font-weight: bold; font-size: 14px;">Credit memo total</span>
 </td>
 <td align="center">
-  <input style="font-size: 14px; font-weight: bold;" id="manufacturer_memos_data_ref_to_us_total_{$m_id}_{$memo_number}" name="manufacturer_memos_data[{$m_id}][{$memo_number}][ref_to_us_total]" size="6" value="{$memo.ref_to_us_total}" onkeyup="func_recalculate_manufacturer_memos_data('{$m_id}','{$memo_number}')" onchange="func_recalculate_manufacturer_memos_data('{$m_id}','{$memo_number}')" />
+  <input style="font-size: 14px; font-weight: bold;" id="manufacturer_memos_data_ref_to_us_total_{$m_id}_{$memo_number}" name="manufacturer_memos_data[{$m_id}][{$memo_number}][ref_to_us_total]" size="6" value="{$memo.ref_to_us_total}" onkeyup="func_recalculate_manufacturer_memos_data('{$m_id}','{$memo_number}')" onchange="func_recalculate_manufacturer_memos_data('{$m_id}','{$memo_number}')" {if $memo.status eq "R"}readonly="readonly"{/if} />
 </td>
 </tr>
 
@@ -1109,14 +1090,19 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
   </table>
 {/if}
 
-  {if $v.ref_full_reconciliation_info ne ""}
+  {if $memo.full_reconciliation_info ne ""}
 <br />
-(REF) Invoice payment in the amount of ({$v.ref_full_reconciliation_info.amount_csv_abs|price_format}) taken on {$v.ref_full_reconciliation_info.date_csv|date_format:"%d-%b-%G"}:<br />
-{$v.ref_full_reconciliation_info.description_csv}
+(REF) Invoice payment in the amount of ({$memo.full_reconciliation_info.amount_csv_abs|price_format}) taken on {$memo.full_reconciliation_info.date_csv|date_format:"%d-%b-%G"}:<br />
+{$memo.full_reconciliation_info.description_csv}
   {/if}
 
 
 {/if}
+
+<br />
+<div style="BACKGROUND-COLOR: {if $memo.status eq "A"}#F2A3A8;{elseif $memo.status eq "U"}#ffd44c;{elseif $memo.status eq "R"}#d9ead3;{/if} color: #000000;">
+<B>Credit memo status: {$invoice_memo_statuses[$memo.status]}</B>
+</div>
 
 {/foreach} {* // foreach from=$v.memos item=memo key=memo_number *}
 

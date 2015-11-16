@@ -35,7 +35,7 @@
 </tr>
 <tr class="TableHead TableHeadAccounting TableHeadLight">
   <td width="5">&nbsp;</td>
-  <td><b>{$lng.lbl_b2d_payment|upper}</b></td>
+  <td><b>B2D INVOICE</b></td>
   <td><b>Country</b></td>
   <td><b>Total</b></td>
   <td><b>{$lng.lbl_time}</b></td>
@@ -112,7 +112,16 @@
 
 <tr {$cycle_class}>
   <td width="5" align="center"></td>
-  <td align="center" class="OrderSheetGreenCell"><b>{include file="main/order_status.tpl" status=$v.bd_status mode="static" status_type="BD"}</b>{*{$fraud_statuses[$order.fraud_status]} / {if $order.ca_status ne ""}{include file="main/order_status.tpl" status=$order.ca_status mode="static" status_type="CA"}{/if}*}</td>
+  <td align="center" class="OrderSheetGreenCell">
+{if $v.invoices ne ""}
+	{foreach from=$v.invoices item=invoice key=invoice_number}
+		<B>{$invoice_memo_statuses[$invoice.status]}</B><br />
+	{/foreach}
+{else}
+	<B>{$invoice_memo_statuses.N}</B>
+{/if}
+
+  </td>
   <td align="center">
 {$order.s_countryname}
   </td>
