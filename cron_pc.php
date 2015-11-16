@@ -23,6 +23,7 @@ $storefronts[0]["domain"] = "www.artistsupplysource.com";
 $start_time = time();
 echo "--";
 foreach ($storefronts as $storefrontid => $store_info){
+	func_print_r($store_info);
 
     if (empty($pc_options[$storefrontid])){
 	db_query("INSERT INTO $sql_tbl[pc_options] (storefrontid, maximum_number_of_autoclassify_product_per_turn, minimum_number_of_autoclassify_product_per_turn, stop_words, excluded_char_sequences) VALUES ('$storefrontid', '50', '3', '- with for not as by this when x you your the a on and feature will would can to in must do or nor if of me is', '+#13+ +#10+')");
@@ -35,7 +36,7 @@ foreach ($storefronts as $storefrontid => $store_info){
 	WHERE $sql_tbl[products_sf].sfid='$storefrontid' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products].pc_classify_status='AC'");
 
 
-
+	func_print_r($pc_options[$storefrontid]);
 //func_print_r($count_AC_products);
 //die("123");
 

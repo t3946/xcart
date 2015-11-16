@@ -48,8 +48,12 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts))
 
         $merchantId = $all_froogle_options[$storefrontid]["MerchantID"];
         $client_id = $all_froogle_options[$storefrontid]["ClientID"]; //Client ID
+        $service_account_name = 'account-2@careful-triumph-774.iam.gserviceaccount.com'; //Email Address
+        $key_file_location = '/var/www/stores/google-api-php-client/examples/key2.p12';
+		/*
         $service_account_name = '544879562678-602vuj5s9jo0hppg9tb3p07chk4g3mr3@developer.gserviceaccount.com'; //Email Address
         $key_file_location = '/var/www/stores/google-api-php-client/examples/key.p12';
+		*/
         //$key_file_location = '/vagrant/xcart/xcart/google-api-php-client/examples/key.p12';
 
         if(!empty($merchantId))
