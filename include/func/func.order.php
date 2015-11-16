@@ -151,41 +151,21 @@ function func_get_shipping_groups($orderid) {
 ##
 ###
 			$invoices = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices] WHERE orderid='$orderid' AND manufacturerid='$m_id'","invoice_number",false);
-
 			if (empty($invoices)){
 				$invoices = "";
 			} else {
 				foreach ($invoices as $k_i => $v_i){
 					$i_products = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices_products] WHERE orderid='$orderid' AND manufacturerid='$m_id' AND invoice_number='$k_i'","itemid", false);
 					$invoices[$k_i]["products"] = $i_products;
-
-					$reconciliations_invoices = func_query_first("SELECT * FROM $sql_tbl[reconciliations_invoices] WHERE orderid='$orderid' AND manufacturerid='$m_id' AND invoice_number='$k_i'");
-					if (!empty($reconciliations_invoices)){
-						$invoices[$k_i]["part_of_total_transaction_in_amount_of"] = $reconciliations_invoices["part_of_total_transaction_in_amount_of"];
-						$invoices[$k_i]["reconciliation_id"] = $reconciliations_invoices["reconciliation_id"];
-					}
 				}
 			}
-
 			$return[$m_id]["invoices"] = $invoices;
 
 
-
                         $memos = func_query_hash("SELECT * FROM $sql_tbl[order_group_memos] WHERE orderid='$orderid' AND manufacturerid='$m_id'","memo_number",false);
-
                         if (empty($memos)){
                                 $memos = "";
-                        } else {
-                                foreach ($memos as $k_i => $v_i){
-
-                                        $reconciliations_memos = func_query_first("SELECT * FROM $sql_tbl[reconciliations_memos] WHERE orderid='$orderid' AND manufacturerid='$m_id' AND memo_number='$k_i'");
-                                        if (!empty($reconciliations_memos)){
-                                                $memos[$k_i]["ref_to_us_part_of_transaction"] = $reconciliations_memos["ref_to_us_part_of_transaction"];
-                                                $memos[$k_i]["ref_reconciliation_id"] = $reconciliations_memos["ref_reconciliation_id"];
-                                        }
-                                }
                         }
-
                         $return[$m_id]["memos"] = $memos;
 ###
 ##
@@ -795,9 +775,9 @@ function func_order_data($orderid) {
 
 			if (!empty($v["memos"]) && is_array($v["memos"])){
 				foreach ($v["memos"] as $memo_number => $memo_info){
-		                        if (!empty($v["ref_reconciliation_id"])){
-        		                        $order['shipping_groups'][$m_id]["memos"][$memo_number]["ref_full_reconciliation_info"] = func_query_first("SELECT * FROM $sql_tbl[reconciliations] WHERE id='$memo_info[ref_reconciliation_id]'");
-                		                $order['shipping_groups'][$m_id]["memos"][$memo_number]["ref_full_reconciliation_info"]["amount_csv_abs"] = abs($order['shipping_groups'][$m_id]["memos"][$memo_number]["ref_full_reconciliation_info"]["amount_csv"]);
+		                        if (!empty($memo_info["reconciliation_id"])){
+        		                        $order['shipping_groups'][$m_id]["memos"][$memo_number]["full_reconciliation_info"] = func_query_first("SELECT * FROM $sql_tbl[reconciliations] WHERE id='$memo_info[reconciliation_id]'");
+                		                $order['shipping_groups'][$m_id]["memos"][$memo_number]["full_reconciliation_info"]["amount_csv_abs"] = abs($order['shipping_groups'][$m_id]["memos"][$memo_number]["full_reconciliation_info"]["amount_csv"]);
                         		}
 				}
 			}

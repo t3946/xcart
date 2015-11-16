@@ -983,6 +983,17 @@ if (!empty($orders) && is_array($orders)){
 
 			$all_codes = array();
 			foreach ($v["shipping_groups"] as $kk => $vv){
+###
+				$invoices = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices] WHERE orderid='$v[orderid]' AND manufacturerid='$kk'","invoice_number",false);
+				if (!empty($invoices)){
+					$orders[$k]["shipping_groups"][$kk]["invoices"] = $invoices;
+				}
+
+				$memos = func_query_hash("SELECT * FROM $sql_tbl[order_group_memos] WHERE orderid='$v[orderid]' AND manufacturerid='$kk'","memo_number",false);
+				if (!empty($memos)){
+					$orders[$k]["shipping_groups"][$kk]["memos"] = $memos;
+				}
+###
 				$all_codes[] = $vv["code"];
 				$last_manufacturer_id = $kk;
 			}

@@ -2059,7 +2059,15 @@ func_print_r($manufacturer_memos_data);
                                                         $update_memos_table_flag = true;
                                                 }
 
+###
+                                                if ($order["shipping_groups"][$certain_mid]["memos"][$memo_number]["status"] != "R"){
+	                                                $group_memos["status"] = "U";
+							$update_memos_table_flag = true;
+                                                }
+###
+
                                                 if ($update_memos_table_flag){
+
                                                         func_array2update("order_group_memos", $group_memos, "orderid='$orderid' AND manufacturerid='$certain_mid' AND memo_number='$memo_number'");
                                                 }
 
@@ -2354,6 +2362,12 @@ func_print_r($manufacturer_memos_data);
 
 						$invoice_total = price_format($products_total + $shipping_total + $HST_charged);
 						$group_invoices["invoice_total"] = $invoice_total;
+
+###
+                                                if ($order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["status"] != "R"){
+	                                                $group_invoices["status"] = "U";
+							$update_invoices_table_flag = true;
+                                                }
 
 						if ($update_invoices_table_flag){
 							func_array2update("order_group_invoices", $group_invoices, "orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='$invoice_number'");
