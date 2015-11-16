@@ -999,6 +999,28 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
         {else}
           {include file="main/order_status.tpl" status=$v.bd_status mode="select" name="groups[`$m_id`][bd_status]" status_type="BD"}
         {/if}
+
+{if $v.invoices ne ""}
+<br />
+<B>Business to distributor invoice status:</B><br />
+{foreach from=$v.invoices item=item_invoice key=key_invoice}
+
+{$invoice_memo_statuses[$item_invoice.status]}<br />
+
+{/foreach}
+{/if}
+
+{if $v.memos ne ""}
+<br />
+<B>Business to distributor credit memo status:</B><br />
+{foreach from=$v.memos item=item_memos key=key_memos}
+
+{$invoice_memo_statuses[$item_memos.status]}<br />
+
+{/foreach}
+{/if}
+
+
       </td>
     </tr>
     </table>
