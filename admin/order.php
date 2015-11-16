@@ -1211,18 +1211,13 @@ elseif ($mode == "accounting_apply") {
                         $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$manufacturerid'");
 
 			$new_part_of_total_transaction_in_amount_of = price_format($v);
-//                        $current_part_of_total_transaction_in_amount_of = func_query_first_cell("SELECT part_of_total_transaction_in_amount_of FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid'");
-                        $current_part_of_total_transaction_in_amount_of = func_query_first_cell("SELECT part_of_total_transaction_in_amount_of FROM $sql_tbl[reconciliations_invoices] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND invoice_number='$invoice_number'");
+                        $current_part_of_total_transaction_in_amount_of = func_query_first_cell("SELECT part_of_total_transaction_in_amount_of FROM $sql_tbl[order_group_invoices] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND invoice_number='$invoice_number'");
 			if ($current_part_of_total_transaction_in_amount_of != $new_part_of_total_transaction_in_amount_of){
 				if (empty($log)) $log = "This invoice is a part of the total transaction in the amount of: <br />";
 				$log .= "invoice_number_".$invoice_number. " <B>".$code.":</B> " . $current_part_of_total_transaction_in_amount_of . " -> " . $new_part_of_total_transaction_in_amount_of . "<br />";
 			}
 
-			if (!empty($current_part_of_total_transaction_in_amount_of)){
-				db_query("UPDATE $sql_tbl[reconciliations_invoices] SET part_of_total_transaction_in_amount_of='$v' WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND invoice_number='$invoice_number'");
-			} else {
-				db_query("INSERT INTO $sql_tbl[reconciliations_invoices] (orderid, manufacturerid, invoice_number, part_of_total_transaction_in_amount_of) VALUES ('$orderid', '$manufacturerid', '$invoice_number', '$v')");
-			}
+			db_query("UPDATE $sql_tbl[order_group_invoices] SET part_of_total_transaction_in_amount_of='$v' WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND invoice_number='$invoice_number'");
 		  }
 		 }
 		}
@@ -1232,27 +1227,6 @@ elseif ($mode == "accounting_apply") {
 		}
 	}
 
-/*
-        if (!empty($ref_to_us_part_of_transaction) && is_array($ref_to_us_part_of_transaction)){
-                $log = "";
-                foreach ($ref_to_us_part_of_transaction as $manufacturerid => $v){
-                        $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$manufacturerid'");
-
-                        $new_ref_to_us_part_of_transaction = price_format($v);
-                        $current_ref_to_us_part_of_transaction = func_query_first_cell("SELECT ref_to_us_part_of_transaction FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid'");
-                        if ($current_ref_to_us_part_of_transaction != $new_ref_to_us_part_of_transaction){
-                                if (empty($log)) $log = "REF TO US is a part of the total transaction in the amount of: <br />";
-                                $log .= "<B>".$code.":</B> " . $current_ref_to_us_part_of_transaction . " -> " . $new_ref_to_us_part_of_transaction . "<br />";
-                        }
-
-                        db_query("UPDATE $sql_tbl[order_groups] SET ref_to_us_part_of_transaction='$v' WHERE orderid='$orderid' AND manufacturerid='$manufacturerid'");
-                }
-
-                if (!empty($log)){
-                         func_log_order($orderid, 'X', $log, $login);
-                }
-        }
-*/
 
         if (!empty($ref_to_us_part_of_transaction) && is_array($ref_to_us_part_of_transaction)){
                 $log = "";
@@ -1270,11 +1244,7 @@ elseif ($mode == "accounting_apply") {
                                 $log .= "memo_number_".$memo_number. " <B>".$code.":</B> " . $current_ref_to_us_part_of_transaction . " -> " . $new_ref_to_us_part_of_transaction . "<br />";
                         }
 
-                        if (!empty($current_ref_to_us_part_of_transaction)){
-                                db_query("UPDATE $sql_tbl[reconciliations_memos] SET ref_to_us_part_of_transaction='$v' WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND memo_number='$memo_number'");
-                        } else {
-                                db_query("INSERT INTO $sql_tbl[reconciliations_memos] (orderid, manufacturerid, memo_number, ref_to_us_part_of_transaction) VALUES ('$orderid', '$manufacturerid', '$memo_number', '$v')");
-                        }
+                        db_query("UPDATE $sql_tbl[order_group_memos] SET ref_to_us_part_of_transaction='$v' WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND memo_number='$memo_number'");
                   }
                  }
                 }
@@ -3685,7 +3655,7 @@ if (!empty($rmas)){
 	$smarty->assign("crypt_orderid", $crypt_orderid);
 }
 
-//func_print_r($rmas);
+//func_print_r($order);
 
 # END: random:18298_18304_18324 [2009 Jun 08 09:50] 
 # Assign the current location line

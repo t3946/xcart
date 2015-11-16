@@ -253,4 +253,12 @@ $smarty->assign('product_question_statuses', $product_question_statuses);
 //func_print_r($all_storefronts);
 ###
 
+$invoice_memo_statuses = array(
+	"N" => "Not received",
+	"A" => "Added",
+	"U" => "Updated",
+	"R" => "Reconciled"
+);
+$smarty->assign('invoice_memo_statuses', $invoice_memo_statuses);
+
 ?>
