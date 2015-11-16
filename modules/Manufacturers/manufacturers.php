@@ -254,6 +254,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"d_dealer_discount_reduced_from" => addslashes($d_dealer_discount_reduced_from),
 				"d_dealer_discount_reduced_to" => addslashes($d_dealer_discount_reduced_to),
 			
+				"distributor_offers_free_shipping" => $distributor_offers_free_shipping,	
+				"free_shipping_on_orders_over_value" => $free_shipping_on_orders_over_value,	
+
 				"warehouse_pickups_are_allowed" => $warehouse_pickups_are_allowed,	
 				"d_our_dealer_account_n" => $d_our_dealer_account_n,	
 				"d_preferred_way_submit_orders" => addslashes($d_preferred_way_submit_orders),

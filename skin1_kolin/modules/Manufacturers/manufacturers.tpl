@@ -929,6 +929,28 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
 <tr><td colspan="3"><hr /><td></tr>
 
 <tr>
+        <td width="20%" class="FormButton">Distributor offers free shipping</td>
+        <td>&nbsp;</td>
+        <td width="80%">
+<div style="float: left;">
+<select name="distributor_offers_free_shipping" id="distributor_offers_free_shipping" onchange="javasript:{literal} if (this.value =='on_orders_over'){$('#free_shipping_on_orders_over_value').show();}else{$('#free_shipping_on_orders_over_value').hide();}{/literal}">
+<option value="never"{if $manufacturer.distributor_offers_free_shipping eq "never"} selected="selected"{/if}>never</option>
+<option value="on_orders_over"{if $manufacturer.distributor_offers_free_shipping eq "on_orders_over"} selected="selected"{/if}>on orders over</option>
+</select>
+</div>
+
+<div style="float: left; {if $manufacturer.distributor_offers_free_shipping ne "on_orders_over"}display: none;{/if}" id="free_shipping_on_orders_over_value">
+&nbsp; US $ <input type="text" name="free_shipping_on_orders_over_value" value="{$manufacturer.free_shipping_on_orders_over_value}" size="7" />
+</div>
+        </td>
+</tr>
+
+
+
+
+<tr><td colspan="3"><hr /><td></tr>
+
+<tr>
         <td width="20%" class="FormButton">Warehouse pickups are allowed?</td>
         <td>&nbsp;</td>
         <td width="80%">
