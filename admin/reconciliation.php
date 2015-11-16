@@ -15,16 +15,8 @@ $all_tabs = array("unreconciled", "reconciled", "dropped", "expense_report", "im
 function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_check) {
 	global $sql_tbl, $manufacturerid_info, $login;	
 
-	$found_orders_for_several_orders_at_once = array();
-
-	$found_orders_for_charges_each_order_separately = array();
-	$found_orders_for_charges_each_order_separately_ref_to_us = array();
-
-	$found_orders_for_each_order_separately_p = array();
-	$found_orders_for_each_order_separately_s = array();
-	$found_orders_for_each_order_separately_ref_to_us = array();
-
-
+	$found_invoices_and_memos = array();
+	
         foreach ($reconciliations_to_check as $k => $v){
 
 		func_flush(".");
@@ -33,92 +25,31 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
 		$r_id = $v["id"];
 
 /*
-if ($r_id != "12376"){
+//if (!($r_id == "15304" || $r_id == "15302" || $r_id == "15352")){
+if ($r_id != "15352"){
 	continue;  //  <--------------------------------
 }
 */
 
-
 		if ($manufacturerid_info[$v["manufacturerid"]]["d_bulk_or_individual_order_payments"] == "distributor_may_charge_for_several_orders_at_once"){
+
+//                        db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='0' WHERE reconciliation_id='$r_id' AND status='U'");
+//                        db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='0' WHERE reconciliation_id='$r_id' AND status='U'");
+
 
                         $amount_csv = price_format($v["amount_csv"]);
 			$amount_csv_abs = abs($amount_csv);
 			$amount_csv_abs = price_format($amount_csv_abs);
 
-//func_print_r($orders_to_check);
-
                         if (!empty($orders_to_check) && is_array($orders_to_check)){
 
-//				$found_orders_for_several_orders_at_once_total_amount = 0;
+//				$SUM_invoice_total_OF_found_invoices = func_query_first_cell("SELECT SUM(invoice_total) FROM $sql_tbl[order_group_invoices] WHERE reconciliation_id='$r_id' AND status='U'");
+//				if ($SUM_invoice_total_OF_found_invoices == ""){
+//					$SUM_invoice_total_OF_found_invoices = 0;
+//				}
 
-				$found_orders_for_several_orders_at_once_total_amount = func_query_first_cell("SELECT SUM($sql_tbl[order_group_invoices].invoice_total) FROM $sql_tbl[order_group_invoices] LEFT JOIN $sql_tbl[reconciliations_invoices] ON $sql_tbl[order_group_invoices].orderid=$sql_tbl[reconciliations_invoices].orderid AND $sql_tbl[order_group_invoices].manufacturerid=$sql_tbl[reconciliations_invoices].manufacturerid AND $sql_tbl[order_group_invoices].invoice_number=$sql_tbl[reconciliations_invoices].invoice_number WHERE $sql_tbl[reconciliations_invoices].reconciliation_id='$r_id'");
-				if ($found_orders_for_several_orders_at_once_total_amount == ""){
-					$found_orders_for_several_orders_at_once_total_amount = 0;
-				}
-
-###
-/*
-		                $current_orders = func_query($qqq="SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].date, $sql_tbl[order_groups].bd_status, $sql_tbl[order_groups].part_of_total_transaction_in_amount_of, $sql_tbl[order_groups].ref_to_us_part_of_transaction, $sql_tbl[order_groups].accounting, $sql_tbl[order_groups].manufacturerid, $sql_tbl[order_groups].total_gross FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $sql_tbl[order_groups].reconciliation_id='$r_id' OR $sql_tbl[order_groups].ref_reconciliation_id='$r_id'");
-
-  		                if (!empty($current_orders)){
-		
-                		        foreach ($current_orders as $ko => $vo){
-
-			                        if ($ko % 10 == 0) {
-                        			        func_flush(".");
-			                                if($ko % 500 == 0) {
-                        			                func_flush("<br />\n");
-			                                }
-
-                        			        func_flush();
-			                        }
-
-		                                $empty_accounting = true;
-
-						$accounting = func_make_accounting($vo["orderid"], $vo["manufacturerid"]);
-		                                $vo["accounting"] = $accounting;
-
-        		                        if (!empty($vo["accounting"])){
-
-//                		                        $accounting = unserialize($vo["accounting"]);
-                        		                $Cost_to_us = price_format($accounting[1]["gross"]);
-                                		        $Shipping = price_format($accounting[2]["gross"]);
-
-	                                	        if ( (!empty($Cost_to_us) && $Cost_to_us > 0) || (!empty($Shipping) && $Shipping > 0) ){
-        	                                	        $current_orders[$ko]["accounting"]= $accounting;
-                	                                	$empty_accounting = false;
-	                        	                }
-		                                }
-
-        	                	        if ($empty_accounting){
-                		                        unset($current_orders[$ko]);
-                        	        	}
-	        	                }
-
-        		                $current_orders = array_values($current_orders);
-	
-					if (!empty($current_orders)){
-						foreach($current_orders as $kk => $vv){
-							$found_orders_for_several_orders_at_once_total_amount += price_format($vv["accounting"][1]["gross"]) + price_format($vv["accounting"][2]["gross"]);
-						}
-					}
-                		}
-*/
-###
-
-//if ($r_id == "1946"){
-//func_print_r($found_orders_for_several_orders_at_once_total_amount, $current_orders);
-//die();
-//}
-
-
-
-//if ($v["manufacturerid"] != "12"){
-//continue;
-//}
-
-//func_print_r($orders_to_check, $amount_csv_abs, $v["manufacturerid"]);
-//die("123");
+				$SUM_invoice_total_OF_found_invoices = 0;
+				$SUM_ref_to_us_total_OF_found_memos = 0;
 
                                 foreach($orders_to_check as $kk => $vv){
 
@@ -127,187 +58,79 @@ if ($r_id != "12376"){
                                         if($kk % 500 == 0) {
          	                               func_flush("<br />\n");
                                         }
-
                                         func_flush();
                                     }
-
-
 
 				    if ($v["manufacturerid"] == $vv["manufacturerid"] && $vv["date"] < $v["date_csv"]){
 
 				     if (!empty($vv["order_group_invoices"]) && is_array($vv["order_group_invoices"])){
-				      foreach ($vv["order_group_invoices"] as $invoice_number => $invoice_info){
+				       foreach ($vv["order_group_invoices"] as $invoice_number => $invoice_info){
 
-//if ($vv["orderid"] == "38257"){
-//die("qwe");
-//}
+					 $price_to_search = $invoice_info["invoice_total"];
+                                         $sum_total = $SUM_invoice_total_OF_found_invoices + $price_to_search;
+                                         $sum_total = price_format($sum_total);
 
-                                        $time_to_db = time();
+					 $count_reconciled_invoices_for_current_manufacturerid_with_such_reconciliation_id = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_group_invoices] WHERE reconciliation_id='$r_id' AND orderid='$vv[orderid]' AND manufacturerid='$vv[manufacturerid]' AND invoice_number='$invoice_number'");
 
-//					$current_reconciliation_id = func_query_first_cell("SELECT reconciliation_id FROM $sql_tbl[order_groups] WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]'");
-					$current_reconciliation_id = $vv["part_of_total_transaction_in_amount_of"][$invoice_number]["reconciliation_id"];
-
-//func_print_r($current_reconciliation_id, $r_id, $vv["orderid"], $v["manufacturerid"]);
-
-//                                        $price_to_search = price_format($vv["accounting"][1]["gross"]) + price_format($vv["accounting"][2]["gross"]);
-//					$price_to_search = price_format($price_to_search);
-					$price_to_search = $invoice_info["invoice_total"];
-
-					$is_such_orderid_in_reconciliation_orderid_table = func_query_first_cell($qqq="SELECT COUNT(*) FROM $sql_tbl[reconciliation_orderid] WHERE reconciliation_id='$r_id' AND orderid='$vv[orderid]' AND invoice_number='$invoice_number'");
-###
-/*
-					if (
-						!empty($is_such_orderid_in_reconciliation_orderid_table) &&
-						$vv["part_of_total_transaction_in_amount_of"] != $vv["ref_to_us_part_of_transaction"] &&
-						$vv["ref_to_us_part_of_transaction"] == $amount_csv_abs
-					){
-						$is_such_orderid_in_reconciliation_orderid_table = 0;
-					}
-*/
-					if (!empty($is_such_orderid_in_reconciliation_orderid_table)){
-
-						$reset_is_such_orderid_in_reconciliation_orderid_table = false;
-
-						if (!empty($vv["ref_to_us_part_of_transaction"]) && is_array($vv["ref_to_us_part_of_transaction"])){
-							foreach ($vv["ref_to_us_part_of_transaction"] as $tmp_memo_number => $tmp_memo_info){
-								if ($vv["part_of_total_transaction_in_amount_of"][$invoice_number]["part_of_total_transaction_in_amount_of"] != $tmp_memo_info["ref_to_us_part_of_transaction"] && $tmp_memo_info["ref_to_us_part_of_transaction"] == $amount_csv_abs
-								){
-									$reset_is_such_orderid_in_reconciliation_orderid_table = true;
-								} else {
-									$reset_is_such_orderid_in_reconciliation_orderid_table = false;
-									break;
-								}
-							}
-						}
-
-						if ($reset_is_such_orderid_in_reconciliation_orderid_table){
-							$is_such_orderid_in_reconciliation_orderid_table = 0;
-						}
-					}
-###
-
-					$sum_total = $found_orders_for_several_orders_at_once_total_amount + $price_to_search;
-					$sum_total = price_format($sum_total);
-
-//func_print_r($price_to_search, $amount_csv_abs, $sum_total);
-
-                                        if (
+                                         if (
 					      (
-						$amount_csv < 0 && $amount_csv_abs == $vv["part_of_total_transaction_in_amount_of"][$invoice_number]["part_of_total_transaction_in_amount_of"]
+						$amount_csv < 0 && $amount_csv_abs == $invoice_info["part_of_total_transaction_in_amount_of"]
 						&& $price_to_search <= $amount_csv_abs 
 						&& $sum_total <= $amount_csv_abs
-						&& !in_array($vv["orderid"], $found_orders_for_several_orders_at_once)
-						&& empty($current_reconciliation_id)
-						&& empty($is_such_orderid_in_reconciliation_orderid_table)
+						&& !in_array($vv["orderid"], $found_invoices_and_memos)
+						&& empty($invoice_info["reconciliation_id"])
+						&& empty($count_reconciled_invoices_for_current_manufacturerid_with_such_reconciliation_id)
 					      )
 					      ||
 					      ( // https://basecamp.com/2070980/projects/1577907/messages/44550708
-                                                $amount_csv < 0 && $vv["part_of_total_transaction_in_amount_of"][$invoice_number]["part_of_total_transaction_in_amount_of"] == "0.00" 
+                                                $amount_csv < 0 && $invoice_info["part_of_total_transaction_in_amount_of"] == "0.00" 
                                                 && $price_to_search == $amount_csv_abs
                                                 && $sum_total == $amount_csv_abs
-                                                && !in_array($vv["orderid"], $found_orders_for_several_orders_at_once)
-                                                && empty($current_reconciliation_id)
-                                                && empty($is_such_orderid_in_reconciliation_orderid_table)
+                                                && !in_array($vv["orderid"], $found_invoices_and_memos)
+                                                && empty($invoice_info["reconciliation_id"])
+                                                && empty($count_reconciled_invoices_for_current_manufacturerid_with_such_reconciliation_id)
 					      )
-					){
-						$found_orders_for_several_orders_at_once_total_amount += $price_to_search;
-                                                $found_orders_for_several_orders_at_once[] = $vv["orderid"]."_".$invoice_number;
+					 ){
+						$SUM_invoice_total_OF_found_invoices += $price_to_search;
+                                                $found_invoices_and_memos[] = $vv["orderid"]."_I_".$invoice_number;
 
-                                                db_query("INSERT INTO $sql_tbl[reconciliation_orderid] (reconciliation_id, orderid, time_to_db, invoice_number, memo_number) VALUES ('$r_id', '$vv[orderid]', '$time_to_db', '$invoice_number', '0')");
-                                        }
-
-//func_print_r($sum_total, $amount_csv_abs, $vv["orderid"], $found_orders_for_several_orders_at_once, $current_reconciliation_id);
-//die("HA!");
-
-				      } //foreach ($vv["order_group_invoices"] as $invoice_number => $invoice_info)
+                                                db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='$r_id' WHERE orderid='$vv[orderid]' AND manufacturerid='$vv[manufacturerid]' AND invoice_number='$invoice_number'");
+                                         }
+				       } //foreach ($vv["order_group_invoices"] as $invoice_number => $invoice_info)
 				     } //if (!empty($vv["order_group_invoices"]) && is_array($vv["order_group_invoices"]))
+###
+###
+				     if (!empty($vv["order_group_memos"]) && is_array($vv["order_group_memos"])){
+				       foreach ($vv["order_group_memos"] as $memo_number => $memo_info){
 
-//func_print_r($vv["order_group_invoices"]);
+                                         $price_to_search = $memo_info["ref_to_us_total"];
+                                         $sum_total = $SUM_ref_to_us_total_OF_found_memos + $price_to_search;
+                                         $sum_total = price_format($sum_total);
 
+                                         $count_reconciled_memos_for_current_manufacturerid_with_such_reconciliation_id = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_group_memos] WHERE reconciliation_id='$r_id' AND orderid='$vv[orderid]' AND manufacturerid='$vv[manufacturerid]' AND memo_number='$memo_number'");
 
-
-#####
-
-				    if (!empty($vv["order_group_memos"]) && is_array($vv["order_group_memos"])){
-				     foreach ($vv["order_group_memos"] as $memo_number => $memo_info){
-
-//					$current_ref_reconciliation_id = func_query_first_cell("SELECT ref_reconciliation_id FROM $sql_tbl[order_groups] WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]'");
-					$current_ref_reconciliation_id = $vv["ref_to_us_part_of_transaction"][$memo_number]["ref_reconciliation_id"];
-
-/*
-if ($vv["ref_to_us_part_of_transaction"] == "233.84"){
-func_print_r($price_to_search, $amount_csv_abs, $current_ref_reconciliation_id, $is_such_orderid_in_reconciliation_orderid_table, $vv["orderid"]);
-die("SS");
-
-}
-*/
-
-
-                                        $is_such_orderid_in_reconciliation_orderid_table = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[reconciliation_orderid] WHERE ref_reconciliation_id='$r_id' AND orderid='$vv[orderid]' AND memo_number='$memo_number'");
-
-                                        if (
-                                                !empty($is_such_orderid_in_reconciliation_orderid_table) &&
-//                                                $vv["part_of_total_transaction_in_amount_of"] != $vv["ref_to_us_part_of_transaction"] &&
-                                                $vv["part_of_total_transaction_in_amount_of"][$memo_number]["part_of_total_transaction_in_amount_of"] == $amount_csv_abs
-                                        ){
-                                                $is_such_orderid_in_reconciliation_orderid_table = 0;
-                                        }
-
-                                        if (
-                                                $amount_csv < 0 && $amount_csv_abs == $vv["part_of_total_transaction_in_amount_of"][$memo_number]["ref_to_us_part_of_transaction"]
+                                         if (
+                                                $amount_csv < 0 && $amount_csv_abs == $memo_info["ref_to_us_part_of_transaction"]
                                                 && $price_to_search <= $amount_csv_abs
-//                                                && !in_array($vv["orderid"], $found_orders_for_several_orders_at_once)
-                                                && empty($current_ref_reconciliation_id)
-                                                && empty($is_such_orderid_in_reconciliation_orderid_table)
-                                        ){
-                                                db_query("INSERT INTO $sql_tbl[reconciliation_orderid] (ref_reconciliation_id, orderid, time_to_db, invoice_number, memo_number) VALUES ('$r_id', '$vv[orderid]', '$time_to_db', '0', '$memo_number')");
-                                        }
+                                                && !in_array($vv["orderid"], $found_invoices_and_memos)
+                                                && empty($memo_info["reconciliation_id"])
+                                                && empty($count_reconciled_memos_for_current_manufacturerid_with_such_reconciliation_id)
+                                         ){
+                                                $SUM_ref_to_us_total_OF_found_memos += $price_to_search;
+                                                $found_invoices_and_memos[] = $vv["orderid"]."_R_".$invoice_number;
 
-				      } // foreach ($vv["order_group_memos"] as $memo_number => $memo_info)
-				     } // if (!empty($vv["order_group_memos"]) && is_array($vv["order_group_memos"]))
-#####
-
-
-/*
-if ($r_id == "12376"){
-die("---");
-}
-*/
-
-				    } //if ($v["manufacturerid"] == $vv["manufacturerid"] && $vv["date"] < $v["date_csv"])
-
+						db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='$r_id' WHERE orderid='$vv[orderid]' AND manufacturerid='$vv[manufacturerid]' AND memo_number='$memo_number'");
+                                         }
+ 				       } // foreach ($vv["order_group_memos"] as $memo_number => $memo_info)
+ 				     } // if (!empty($vv["order_group_memos"]) && is_array($vv["order_group_memos"]))
+				   } //if ($v["manufacturerid"] == $vv["manufacturerid"] && $vv["date"] < $v["date_csv"])
                                 } //foreach($orders_to_check as $kk => $vv)
-
-//die("asd");
-
                         } //if (!empty($orders_to_check) && is_array($orders_to_check))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		} 
 		elseif ($manufacturerid_info[$v["manufacturerid"]]["d_bulk_or_individual_order_payments"] == "distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping"){
 
-
-			db_query("DELETE FROM $sql_tbl[reconciliation_orderid] WHERE reconciliation_id='$r_id'");
-//			db_query("UPDATE $sql_tbl[order_groups] SET reconciliation_id='0' WHERE reconciliation_id='$r_id'");
-			db_query("UPDATE $sql_tbl[reconciliations_invoices] SET reconciliation_id='0' WHERE reconciliation_id='$r_id'");
-
-//func_print_r($v);
-//die();
+//                        db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='0' WHERE reconciliation_id='$r_id' AND status='U'");
+//                        db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='0' WHERE reconciliation_id='$r_id' AND status='U'");
 
 
                         $amount_csv = price_format($v["amount_csv"]);
@@ -329,61 +152,50 @@ die("---");
 
 				    if ($v["manufacturerid"] == $vv["manufacturerid"] && $vv["date"] < $v["date_csv"]){
 
-                                        $time_to_db = time();
+					if (!empty($vv["order_group_invoices"]) && is_array($vv["order_group_invoices"])){
 
-					$accounting_fields = func_query_first("SELECT accounting_net_0, accounting_gst_0, accounting_pst_0, accounting_gross_0, accounting_net_1_cost_to_us, accounting_gst_1_cost_to_us, accounting_pst_1_cost_to_us, accounting_gross_1_cost_to_us, accounting_net_2_shipping, accounting_gst_2_shipping, accounting_pst_2_shipping, accounting_gross_2_shipping, accounting_net_3_ref_to_cust, accounting_gst_3_ref_to_cust, accounting_pst_3_ref_to_cust, accounting_gross_3_ref_to_cust, accounting_net_4_ref_to_us, accounting_gst_4_ref_to_us, accounting_pst_4_ref_to_us, accounting_gross_4_ref_to_us, accounting_net_5_profit, accounting_gst_5_profit, accounting_pst_5_profit, accounting_gross_5_profit FROM $sql_tbl[order_groups] WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]'");
+					  $SUM_invoice_total = 0;
+                                          foreach ($vv["order_group_invoices"] as $invoice_number => $invoice_info){
+						$SUM_invoice_total += $invoice_info["invoice_total"];
+					  }
 
-#
-##
-//                                        $price_to_search = $vv["accounting"][1]["gross"] + $vv["accounting"][2]["gross"];
-					$price_to_search = $accounting_fields["accounting_gross_1_cost_to_us"] + $accounting_fields["accounting_gross_2_shipping"];
-                                        $price_to_search = price_format($price_to_search);
-                                        if ($amount_csv < 0 && $price_to_search == $amount_csv_abs && !in_array($vv["orderid"], $found_orders_for_each_order_separately_p) && !in_array($vv["orderid"], $found_orders_for_each_order_separately_s)){
-                                                db_query("INSERT INTO $sql_tbl[reconciliation_orderid] (reconciliation_id, orderid, time_to_db, invoice_number, memo_number) VALUES ('$r_id', '$vv[orderid]', '$time_to_db', '1', '0')");
-						$found_orders_for_each_order_separately_p[] = $vv["orderid"];
-						$found_orders_for_each_order_separately_s[] = $vv["orderid"];
-                                        }
-##
-#
+					  if ($SUM_invoice_total > 0){
+					    $price_to_search = price_format($SUM_invoice_total);
+					    if ($amount_csv < 0 && $price_to_search == $amount_csv_abs && !in_array($vv["orderid"], $found_invoices_and_memos)){
+					      foreach ($vv["order_group_invoices"] as $invoice_number => $invoice_info){
+						$found_invoices_and_memos[] = $vv["orderid"]."_I_".$invoice_number;
+						db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='$r_id' WHERE orderid='$vv[orderid]' AND manufacturerid='$vv[manufacturerid]' AND invoice_number='$invoice_number'");
+					      }
+					    }
+					  }
+					} // if (!empty($vv["order_group_invoices"]) && is_array($vv["order_group_invoices"]))
 
-//                                        $price_to_search_p = price_format($vv["accounting"][1]["gross"]);
-					$price_to_search_p = $accounting_fields["accounting_gross_1_cost_to_us"];
 
-                                        if ($amount_csv < 0 && $price_to_search_p == $amount_csv_abs && !in_array($vv["orderid"], $found_orders_for_each_order_separately_p)){
-                                                db_query("INSERT INTO $sql_tbl[reconciliation_orderid] (reconciliation_id, orderid, time_to_db, invoice_number, memo_number) VALUES ('$r_id', '$vv[orderid]', '$time_to_db', '1', '0')");
-                                                $found_orders_for_each_order_separately_p[] = $vv["orderid"];
-                                        }
+                                        if (!empty($vv["order_group_memos"]) && is_array($vv["order_group_memos"])){
 
-//                                        $price_to_search_s = price_format($vv["accounting"][2]["gross"]);
-					$price_to_search_s = $accounting_fields["accounting_gross_2_shipping"];
-                                        if ($amount_csv < 0 && $price_to_search_s == $amount_csv_abs && !in_array($vv["orderid"], $found_orders_for_each_order_separately_s)){
-                                                db_query("INSERT INTO $sql_tbl[reconciliation_orderid] (reconciliation_id, orderid, time_to_db, invoice_number, memo_number) VALUES ('$r_id', '$vv[orderid]', '$time_to_db', '1', '0')");
-                                                $found_orders_for_each_order_separately_s[] = $vv["orderid"];
+					  $SUM_ref_to_us_total = 0;
+                                          foreach ($vv["order_group_memos"] as $memo_number => $memo_info){
+						$SUM_ref_to_us_total += $memo_info["ref_to_us_total"];
+					  }
 
-                                        }
-
-//                                        $price_to_search = price_format($vv["accounting"][4]["gross"]);
-					$price_to_search = $accounting_fields["accounting_gross_4_ref_to_us"];
-                                        if ($amount_csv > 0 && $price_to_search == $amount_csv && !in_array($vv["orderid"], $found_orders_for_each_order_separately_ref_to_us)){
-                                                db_query("INSERT INTO $sql_tbl[reconciliation_orderid] (reconciliation_id, orderid, time_to_db, ref_to_us, invoice_number, memo_number) VALUES ('$r_id', '$vv[orderid]', '$time_to_db', 'Y', '0', '1')");
-                                                $found_orders_for_each_order_separately_ref_to_us[] = $vv["orderid"];
-
-                                        }
+					  if ($SUM_ref_to_us_total > 0){
+					    $price_to_search = price_format($SUM_ref_to_us_total);
+					    if ($amount_csv > 0 && $price_to_search == $amount_csv && !in_array($vv["orderid"], $found_invoices_and_memos)){
+					      foreach ($vv["order_group_memos"] as $memo_number => $memo_info){
+						$found_invoices_and_memos[] = $vv["orderid"]."_R_".$memo_number;
+						db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='$r_id' WHERE orderid='$vv[orderid]' AND manufacturerid='$vv[manufacturerid]' AND memo_number='$memo_number'");
+					      }
+					    }
+					  }
+					} // (!empty($vv["order_group_memos"]) && is_array($vv["order_group_memos"]))
 				    }
                                 }
                         }
-
-
-
-
-
-
 		}
 		elseif ($manufacturerid_info[$v["manufacturerid"]]["d_bulk_or_individual_order_payments"] == "distributor_charges_for_each_order_separately"){
 
-			db_query("DELETE FROM $sql_tbl[reconciliation_orderid] WHERE reconciliation_id='$r_id'");
-//			db_query("UPDATE $sql_tbl[order_groups] SET reconciliation_id='0' WHERE reconciliation_id='$r_id'");
-			db_query("UPDATE $sql_tbl[reconciliations_invoices] SET reconciliation_id='0' WHERE reconciliation_id='$r_id'");
+//			db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='0' WHERE reconciliation_id='$r_id' AND status='U'");
+//			db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='0' WHERE reconciliation_id='$r_id' AND status='U'");
 
 			$amount_csv = price_format($v["amount_csv"]);
                         $amount_csv_abs = abs($amount_csv);
@@ -403,86 +215,62 @@ die("---");
                                     }
 
 
-//				    $is_reconciliation_id_in_order = func_query_first_cell("SELECT reconciliation_id FROM $sql_tbl[order_groups] WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]'");
+				    $is_reconciliation_id_in_invoices = func_query_first_cell("SELECT reconciliation_id FROM $sql_tbl[order_group_invoices] WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]' AND reconciliation_id>0");
+				    $is_reconciliation_id_in_memos = func_query_first_cell("SELECT reconciliation_id FROM $sql_tbl[order_group_memos] WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]' AND reconciliation_id>0");
 
-				    $is_reconciliation_id_in_order = func_query_first_cell("SELECT reconciliation_id FROM $sql_tbl[reconciliations_invoices] WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]'");
 
-				    if (!empty($is_reconciliation_id_in_order))
+				    if (!empty($is_reconciliation_id_in_invoices) || !empty($is_reconciliation_id_in_memos)){
 					continue;
+				    }
 
 				    if ($v["manufacturerid"] == $vv["manufacturerid"] && $vv["date"] < $v["date_csv"]){
 
-					$time_to_db = time();
+					if (!empty($vv["order_group_invoices"]) && is_array($vv["order_group_invoices"])){
+						foreach ($vv["order_group_invoices"] as $invoice_number => $invoice){
 
-					$accounting_fields = func_query_first("SELECT accounting_net_0, accounting_gst_0, accounting_pst_0, accounting_gross_0, accounting_net_1_cost_to_us, accounting_gst_1_cost_to_us, accounting_pst_1_cost_to_us, accounting_gross_1_cost_to_us, accounting_net_2_shipping, accounting_gst_2_shipping, accounting_pst_2_shipping, accounting_gross_2_shipping, accounting_net_3_ref_to_cust, accounting_gst_3_ref_to_cust, accounting_pst_3_ref_to_cust, accounting_gross_3_ref_to_cust, accounting_net_4_ref_to_us, accounting_gst_4_ref_to_us, accounting_pst_4_ref_to_us, accounting_gross_4_ref_to_us, accounting_net_5_profit, accounting_gst_5_profit, accounting_pst_5_profit, accounting_gross_5_profit FROM $sql_tbl[order_groups] WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]'");
+							$price_to_search = $invoice["invoice_total"];
+							$price_to_search = price_format($price_to_search);
 
-//					$price_to_search = $vv["accounting"][1]["gross"] + $vv["accounting"][2]["gross"];
-					$price_to_search = $accounting_fields["accounting_gross_1_cost_to_us"] + $accounting_fields["accounting_gross_2_shipping"];
-					$price_to_search = price_format($price_to_search);
-					if ($amount_csv < 0 && $price_to_search == $amount_csv_abs && !in_array($vv["orderid"], $found_orders_for_charges_each_order_separately)){
+							if ($amount_csv < 0 && $price_to_search == $amount_csv_abs && !in_array($vv["orderid"], $found_invoices_and_memos)){
+								$is_such_invoice_in_db = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_group_invoices] WHERE reconciliation_id='$r_id'");
 
-						$is_such_orderid_in_db = func_query_first_cell($qqq="SELECT orderid FROM $sql_tbl[reconciliation_orderid] WHERE reconciliation_id='$r_id' AND ref_to_us!='Y'");
-
-						if (empty($is_such_orderid_in_db)){
-							db_query("INSERT INTO $sql_tbl[reconciliation_orderid] (reconciliation_id, orderid, time_to_db, invoice_number, memo_number) VALUES ('$r_id', '$vv[orderid]', '$time_to_db', '1', '0')");
-							$found_orders_for_charges_each_order_separately[] = $vv["orderid"];
+								if (empty($is_such_invoice_in_db)){
+									db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='$r_id' WHERE orderid='$vv[orderid]' AND manufacturerid='$vv[manufacturerid]' AND invoice_number='$invoice_number'");
+									$found_invoices_and_memos[] = $vv["orderid"]."_I_".$invoice_number;
+								}
+							}
 						}
-
-/*
-						$action='';
-						if ($vv['bd_status'] == "X"){
-							$action='R';
-
-                                                        $current_bd_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='X'");
-                                                        $new_bd_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='Y'");
-                                                        $log = "(Reconciliation) <B>".$manufacturerid_info[$v["manufacturerid"]]["code"].":</B> ";
-
-                                                        $log .= "B2D status: ".$current_bd_status_name." -> ".$new_bd_status_name."<br />";
-                                                        func_log_order($vv["orderid"], 'X', $log, $login);
-
-							$vv['bd_status'] = "Y";
-						}
-
-
-						db_query("UPDATE $sql_tbl[reconciliations] SET action='$action' WHERE id='$r_id'");
-						db_query("UPDATE $sql_tbl[order_groups] SET reconciliation_id='$r_id', bd_status='$vv[bd_status]' WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]'");
-*/
 					}
 
-//					$price_to_search = price_format($vv["accounting"][4]["gross"]);
-					$price_to_search = $accounting_fields["accounting_gross_4_ref_to_us"];
-					if ($amount_csv > 0 && $price_to_search == $amount_csv && !in_array($vv["orderid"], $found_orders_for_charges_each_order_separately_ref_to_us)){
-//						db_query("UPDATE $sql_tbl[reconciliations] SET action='R' WHERE id='$r_id'");
-						db_query("INSERT INTO $sql_tbl[reconciliation_orderid] (reconciliation_id, orderid, time_to_db, ref_to_us, invoice_number, memo_number) VALUES ('$r_id', '$vv[orderid]', '$time_to_db', 'Y', '0', '1')");
-//						db_query("UPDATE $sql_tbl[order_groups] SET reconciliation_id='$r_id' WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]'");
-						$found_orders_for_charges_each_order_separately_ref_to_us[] = $vv["orderid"];
 
-###
+					if (!empty($vv["order_group_memos"]) && is_array($vv["order_group_memos"])){
+						foreach ($vv["order_group_memos"] as $memo_number => $memo){
 
-/*
-						$current_ru_status = func_query_first_cell("SELECT ru_status FROM $sql_tbl[order_groups] WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]'");
-						if ($current_ru_status != "RR"){
+							$price_to_search = $memo["ref_to_us_total"];
+							$price_to_search = price_format($price_to_search);
 
-		                                        $current_ru_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_ru_status'");
-                		                        $new_ru_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='RR'");
+							if ($amount_csv > 0 && $price_to_search == $amount_csv && !in_array($vv["orderid"], $found_invoices_and_memos)){
+								$is_such_memo_in_db = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_group_memos] WHERE reconciliation_id='$r_id'");
 
-							$log = "(Reconciliation) <B>".$manufacturerid_info[$v["manufacturerid"]]["code"].":</B> ";
-                                		        $log .= "REF TO US status: ".$current_ru_status_name." -> ".$new_ru_status_name."<br />";
-							func_log_order($vv["orderid"], 'X', $log, $login);
-
-							db_query("UPDATE $sql_tbl[order_groups] SET ru_status='RR' WHERE orderid='$vv[orderid]' AND manufacturerid='$v[manufacturerid]'");
+								if (empty($is_such_memo_in_db)){
+									db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='$r_id' WHERE orderid='$vv[orderid]' AND manufacturerid='$vv[manufacturerid]' AND memo_number='$memo_number'");
+									$found_invoices_and_memos[] = $vv["orderid"]."_R_".$memo_number;
+								}
+							}
 						}
-*/
-###
 					}
-				    }
-				}
-			}
+
+				    } // if ($v["manufacturerid"] == $vv["manufacturerid"] && $vv["date"] < $v["date_csv"])
+				} // foreach($orders_to_check as $kk => $vv)
+			} // if (!empty($orders_to_check) && is_array($orders_to_check))
+
 //func_print_r($reconciliations_to_check);
 //die("AAA");
 		}
         }
 } //function func_find_reconciliations_orders
+
+
 
 
 $manufacturerid_info = func_query_hash("SELECT code, manufacturerid, d_bulk_or_individual_order_payments, d_search_keyphrase_for_reconciliation, manufacturer FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
@@ -649,80 +437,7 @@ if ($REQUEST_METHOD == "POST") {
                 $search_data["reconciliation_tab_".$tab] = $posted_data;
 */
         }
-	elseif ($mode == "update" && !empty($action) && is_array($action)){
-
-		foreach ($action as $k => $v){
-			db_query("UPDATE $sql_tbl[reconciliations] SET action='$v' WHERE id='$k'");
-
-                        if ($v == "R"){
-                
-                                $manufacturerid = func_query_first_cell("SELECT manufacturerid FROM $sql_tbl[reconciliations] WHERE id='$k'");
-
-                                $orderids = func_query("SELECT orderid, invoice_number FROM $sql_tbl[reconciliation_orderid] WHERE reconciliation_id='$k'");
-
-                                if (!empty($orderids) && !empty($manufacturerid)){
-
-                                        foreach ($orderids as $kk => $vv){
-
-                                                $current_bd_status = func_query_first_cell("SELECT bd_status FROM $sql_tbl[order_groups] WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid'");
-                        
-                                                if ($current_bd_status != "Y"){
-                                                        $current_bd_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_bd_status'");
-                                                        $new_bd_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='Y'");
-                                                        $log = "(Reconciliation) <B>".$manufacturerid_info[$manufacturerid]["code"].":</B> ";
-
-                                                        $log .= "B2D status: ".$current_bd_status_name." -> ".$new_bd_status_name."<br />";
-                                                        func_log_order($vv["orderid"], 'X', $log, $login);
-                                
-                                                }
-
-                                                db_query("UPDATE $sql_tbl[order_groups] SET bd_status='Y' WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid'");
-                                                db_query("UPDATE $sql_tbl[reconciliations_invoices] SET reconciliation_id='$k' WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid' AND invoice_number='$vv[invoice_number]'");
-                                        }
-                                }
-
-#
-##
-                                $orderids = func_query("SELECT orderid, memo_number FROM $sql_tbl[reconciliation_orderid] WHERE ref_reconciliation_id='$k'");
-
-                                if (!empty($orderids) && !empty($manufacturerid)){
-
-                                        foreach ($orderids as $kk => $vv){
-
-//                                                $current_bd_status = func_query_first_cell("SELECT bd_status FROM $sql_tbl[order_groups] WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid'");
-
-//                                                if ($current_bd_status != "Y"){
-//                                                        $current_bd_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_bd_status'");
-//                                                        $new_bd_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='Y'");
-//                                                        $log = "(Reconciliation) <B>".$manufacturerid_info[$manufacturerid]["code"].":</B> ";
-
-//                                                        $log .= "B2D status: ".$current_bd_status_name." -> ".$new_bd_status_name."<br />";
-//                                                        func_log_order($vv["orderid"], 'X', $log, $login);
-
-                                                        db_query("UPDATE $sql_tbl[order_groups] SET bd_status='Y' WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid'");
-                                                        db_query("UPDATE $sql_tbl[reconciliations_memos] SET ref_reconciliation_id='$k' WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid' AND memo_number='$vv[memo_number]'");
-//                                                }
-                                        }
-                                }
-
-##
-#
-
-
-                        }
-
-
-		}
-
-		$top_message["content"] = "Done.";
-		$top_message["type"] = "I";
-	}
-//	elseif ($mode == "import"){
-//	elseif ($mode == "import" && $_FILES["userfile"]["type"] == "text/csv"){
 	elseif ($mode == "import" && $_FILES["userfile"]["error"]=="0"){
-
-//func_print_r($_FILES);
-//die("1");
 
 		$cur_time = time();
 
@@ -924,10 +639,6 @@ if ($REQUEST_METHOD == "POST") {
 ###
 		$check_reconciliations_for_mid = func_query("SELECT * FROM $sql_tbl[reconciliations] WHERE $reconciliation_search_condition AND manufacturerid='0'");
 
-
-//func_print_r($check_reconciliations_for_mid);
-//die("testings");
-
 		if (!empty($check_reconciliations_for_mid)){
 			foreach ($check_reconciliations_for_mid as $k_c => $v_c){
 
@@ -988,76 +699,26 @@ if ($REQUEST_METHOD == "POST") {
 
                 $order_search_condition = "$sql_tbl[orders].date>='".($search_data["reconciliation_tab_calculation"]["date"]["start_date"])."'";
                 $order_search_condition .= " AND $sql_tbl[orders].date<='".($search_data["reconciliation_tab_calculation"]["date"]["end_date"])."'";
-//		$order_search_condition .= " AND $sql_tbl[order_groups].reconciliation_id='0'";
 
 		func_flush(".");
-//		$orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].date, $sql_tbl[order_groups].bd_status, $sql_tbl[order_groups].part_of_total_transaction_in_amount_of, $sql_tbl[order_groups].ref_to_us_part_of_transaction, $sql_tbl[order_groups].accounting, $sql_tbl[order_groups].manufacturerid, $sql_tbl[order_groups].total_gross FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $order_search_condition");
 
-		$orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].date, $sql_tbl[order_groups].bd_status, $sql_tbl[order_groups].manufacturerid FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $order_search_condition");
+		$orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].date, $sql_tbl[order_groups].manufacturerid FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $order_search_condition");
 
-//func_print_r($orders);
-//die();
 
 		if (!empty($orders)){
 
-			$old_orders_which_should_be_invoice_received = array();
-
                         foreach ($orders as $ko => $vo){
 
-				$order_group_invoices = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices] WHERE orderid='$vo[orderid]' && manufacturerid='$vo[manufacturerid]'","invoice_number", false);
-				$order_group_memos = func_query_hash("SELECT * FROM $sql_tbl[order_group_memos] WHERE orderid='$vo[orderid]' && manufacturerid='$vo[manufacturerid]'","memo_number", false);
+				$order_group_invoices = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices] WHERE orderid='$vo[orderid]' && manufacturerid='$vo[manufacturerid]' AND status='U'","invoice_number", false);
+				$order_group_memos = func_query_hash("SELECT * FROM $sql_tbl[order_group_memos] WHERE orderid='$vo[orderid]' && manufacturerid='$vo[manufacturerid]' AND status='U'","memo_number", false);
 
-				if (empty($order_group_invoices) && empty($order_group_memos)){
-
-					$tmp_order_id = func_query_first("SELECT COUNT(*) FROM $sql_tbl[reconciliations_invoices] WHERE orderid='$vo[orderid]'");	
-					if (!empty($tmp_order_id) && !in_array($tmp_order_id, $old_orders_which_should_be_invoice_received)){
-						$old_orders_which_should_be_invoice_received[] = $vo["orderid"];
-					}
-
-					unset($orders[$ko]);
-					continue;
-				}
-				else {
-					if (!empty($order_group_invoices)){
-						$orders[$ko]["order_group_invoices"] = $order_group_invoices;
-
-						$part_of_total_transaction_in_amount_of = func_query_hash("SELECT * FROM $sql_tbl[reconciliations_invoices] WHERE orderid='$vo[orderid]' && manufacturerid='$vo[manufacturerid]'","invoice_number", false);
-						if (!empty($part_of_total_transaction_in_amount_of)){
-							$orders[$ko]["part_of_total_transaction_in_amount_of"] = $part_of_total_transaction_in_amount_of;
-						}
-					}
-
-					if (!empty($order_group_memos)){
-						$orders[$ko]["order_group_memos"] = $order_group_memos;
-
-						$ref_to_us_part_of_transaction = func_query_hash("SELECT * FROM $sql_tbl[reconciliations_memos] WHERE orderid='$vo[orderid]' && manufacturerid='$vo[manufacturerid]'","memo_number", false);
-						if (!empty($ref_to_us_part_of_transaction)){
-							$orders[$ko]["ref_to_us_part_of_transaction"] = $ref_to_us_part_of_transaction;
-						}
-					}
+				if (!empty($order_group_invoices)){
+					$orders[$ko]["order_group_invoices"] = $order_group_invoices;
 				}
 
-/*
-				$empty_accounting = true;
-
-				$accounting = func_make_accounting($vo["orderid"], $vo["manufacturerid"]);
-				$vo["accounting"] = $accounting;
-
-                                if (!empty($vo["accounting"])){
-//                                        $accounting = unserialize($vo["accounting"]);
-					$Cost_to_us = price_format($accounting[1]["gross"]);
-					$Shipping = price_format($accounting[2]["gross"]);
-
-                                        if ( (!empty($Cost_to_us) && $Cost_to_us > 0) || (!empty($Shipping) && $Shipping > 0) ){
-                                                $orders[$ko]["accounting"]= $accounting;
-						$empty_accounting = false;
-					}
-                                }
-
-				if ($empty_accounting){
-					unset($orders[$ko]);
+				if (!empty($order_group_memos)){
+					$orders[$ko]["order_group_memos"] = $order_group_memos;
 				}
-*/
                         }
 
 			$orders = array_values($orders);
@@ -1065,50 +726,38 @@ if ($REQUEST_METHOD == "POST") {
 
 		func_flush(".");
 
-		if (!empty($old_orders_which_should_be_invoice_received)){
-//			print("<B>You are searching in OLD orders. Make this order as 'invoice received' at first:</B>");
-//			func_print_r($old_orders_which_should_be_invoice_received);
-//			die();
-		}
-
-
-//func_print_r($orders);
-//die("123");
 
 		if (!empty($reconciliations) && !empty($orders)){
 			func_find_reconciliations_orders($reconciliations, $orders);
 		}
 
 	}
+        elseif ($mode == "update" && !empty($action) && is_array($action)){
+
+                foreach ($action as $k => $v){
+                        db_query("UPDATE $sql_tbl[reconciliations] SET action='$v' WHERE id='$k'");
+
+			$status = "U";
+
+			if ($v == "R"){
+				$status = "R";
+			}
+
+                        db_query("UPDATE $sql_tbl[order_group_invoices] SET status='$status' WHERE reconciliation_id='$k'");
+                        db_query("UPDATE $sql_tbl[order_group_memos] SET status='$status' WHERE reconciliation_id='$k'");
+                }
+
+                $top_message["content"] = "Done.";
+                $top_message["type"] = "I";
+        }
 	elseif ($mode == "unreconcile"){
 
                 foreach ($action as $k => $v){
 			if ($v == "UR"){
 	                        db_query("UPDATE $sql_tbl[reconciliations] SET action='' WHERE id='$k'");
 
-	                        $orderids = func_query("SELECT orderid FROM $sql_tbl[reconciliation_orderid] WHERE reconciliation_id='$k'");
-				$manufacturerid = func_query_first_cell("SELECT manufacturerid FROM $sql_tbl[reconciliations] WHERE id='$k'");
-
-	                        if (!empty($orderids) && !empty($manufacturerid)){
-
-        	                        foreach ($orderids as $kk => $vv){
-
-						$current_bd_status = func_query_first_cell("SELECT bd_status FROM $sql_tbl[order_groups] WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid'");
-
-						if ($current_bd_status != "X"){
-	                                                $current_bd_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_bd_status'");
-        	                                        $new_bd_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='X'");
-                	                                $log = "(Reconciliation) <B>".$manufacturerid_info[$manufacturerid]["code"].":</B> ";
-                        	                        $log .= "B2D status: ".$current_bd_status_name." -> ".$new_bd_status_name."<br />";
-                                	                func_log_order($vv["orderid"], 'X', $log, $login);
-
-//							db_query("UPDATE $sql_tbl[order_groups] SET reconciliation_id='0', ref_reconciliation_id='0', bd_status='X' WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid'");
-							db_query("UPDATE $sql_tbl[order_groups] SET bd_status='X' WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid'");
-							db_query("UPDATE $sql_tbl[reconciliations_invoices] SET reconciliation_id='0' WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid'");
-							db_query("UPDATE $sql_tbl[reconciliations_memos] SET ref_reconciliation_id='0' WHERE orderid='$vv[orderid]' AND manufacturerid='$manufacturerid'");
-						}
-                                        }
-                                }
+                                db_query("UPDATE $sql_tbl[order_group_invoices] SET status='U' WHERE reconciliation_id='$k'");
+                                db_query("UPDATE $sql_tbl[order_group_memos] SET status='U' WHERE reconciliation_id='$k'");
 			}
                 }
 
@@ -1120,23 +769,33 @@ if ($REQUEST_METHOD == "POST") {
                 foreach ($action as $k => $v){
                         if ($v == "UD"){
                                 db_query("UPDATE $sql_tbl[reconciliations] SET action='' WHERE id='$k'");
+
+                                db_query("UPDATE $sql_tbl[order_group_invoices] SET status='U' WHERE reconciliation_id='$k'");
+                                db_query("UPDATE $sql_tbl[order_group_memos] SET status='U' WHERE reconciliation_id='$k'");
                         }
                 }
 
                 $top_message["content"] = "Done.";
                 $top_message["type"] = "I";
         }
-	elseif ($mode == "clear_orders"){
+	elseif ($mode == "clear_invoices_memos"){
 
-		if (!empty($clear_orders) && is_array($clear_orders)){
-			foreach ($clear_orders as $k => $v){
-				if (!empty($v) && is_array($v)){
-//					db_query("UPDATE $sql_tbl[order_groups] SET reconciliation_id='0', ref_reconciliation_id='0' WHERE reconciliation_id='$k'");
-					db_query("UPDATE $sql_tbl[reconciliations_invoices] SET reconciliation_id='0' WHERE reconciliation_id='$k'");
-					db_query("UPDATE $sql_tbl[reconciliations_memos] SET ref_reconciliation_id='0' WHERE reconciliation_id='$k'");
+		if (!empty($clear_invoices_memos) && is_array($clear_invoices_memos)){
+			foreach ($clear_invoices_memos as $k => $v){
+				if ($v == "Y"){
 
-					foreach ($v as $kk => $vv){
-						db_query("DELETE FROM $sql_tbl[reconciliation_orderid] WHERE (reconciliation_id='$k' OR ref_reconciliation_id='$k') AND orderid='$kk'");
+					$invoice_memo_arr = explode("_", $k);
+
+					$invoice_OR_memo = $invoice_memo_arr[0];
+					$reconciliation_id = $invoice_memo_arr[1];
+					$number = $invoice_memo_arr[2];
+					$manufacturerid = $invoice_memo_arr[3];
+					$orderid = $invoice_memo_arr[4];
+
+					if ($invoice_OR_memo == "I"){
+						db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='0' WHERE reconciliation_id='$reconciliation_id' AND invoice_number='$number' AND manufacturerid='$manufacturerid' AND orderid='$orderid'");
+					} else {
+						db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='0' WHERE reconciliation_id='$reconciliation_id' AND memo_number='$number' AND manufacturerid='$manufacturerid' AND orderid='$orderid'");
 					}
 				}
 			}
@@ -1191,7 +850,6 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 		}
 
 
-//                $orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $order_search_fields $sql_tbl[orders].date, $sql_tbl[orders].order_prefix, $sql_tbl[order_groups].bd_status, $sql_tbl[order_groups].part_of_total_transaction_in_amount_of, $sql_tbl[order_groups].accounting, $sql_tbl[order_groups].manufacturerid, $sql_tbl[order_groups].total_gross FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $order_search_condition");
                 $orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $order_search_fields $sql_tbl[orders].date, $sql_tbl[orders].order_prefix, $sql_tbl[order_groups].bd_status, $sql_tbl[order_groups].accounting, $sql_tbl[order_groups].manufacturerid, $sql_tbl[order_groups].total_gross FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $order_search_condition");
 
 		if (!empty($orders) && $tab == "receivables"){
@@ -1204,8 +862,6 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
 			foreach ($orders as $k => $v){
 
-//				$part_of_total_transaction_in_amount_of = func_query_hash("SELECT * FROM $sql_tbl[reconciliations_invoices] WHERE orderid='$v[orderid]' && manufacturerid='$v[manufacturerid]'","invoice_number", false);
-//				$orders[$k]["part_of_total_transaction_in_amount_of"] = $v["part_of_total_transaction_in_amount_of"] = $part_of_total_transaction_in_amount_of;
 
 				$accounting = func_make_accounting($v["orderid"], $v["manufacturerid"]);
 
@@ -1402,87 +1058,83 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 
 			$reconciliations[$k]["distr_code"] = $manufacturerid_info[$manufacturerid]["code"];
 
-			$orderids = func_query("SELECT orderid, orders_variant, ref_to_us, invoice_number, memo_number FROM $sql_tbl[reconciliation_orderid] WHERE reconciliation_id='$v[id]' OR ref_reconciliation_id='$v[id]' ORDER BY orders_variant, orderid");
-			if (!empty($orderids)){
+//			$orderids = func_query("SELECT orderid, invoice_number, memo_number FROM $sql_tbl[reconciliation_orderid] WHERE reconciliation_id='$v[id]' OR reconciliation_id='$v[id]' ORDER BY orderid");
 
-				$found_orders = array();
-				foreach ($orderids as $kk => $vv){
-					$order_query_first = func_query_first("SELECT $sql_tbl[orders].orderid, $sql_tbl[orders].order_prefix, $sql_tbl[orders].date, $sql_tbl[order_groups].total_gross, $sql_tbl[order_groups].accounting, $sql_tbl[order_groups].bd_status, $sql_tbl[order_groups].ru_status FROM $sql_tbl[orders] LEFT JOIN $sql_tbl[order_groups] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $sql_tbl[order_groups].manufacturerid='$manufacturerid' AND $sql_tbl[orders].orderid='$vv[orderid]'");
+			$invoices = func_query("SELECT * FROM $sql_tbl[order_group_invoices] WHERE reconciliation_id='$v[id]'");
+			$memos = func_query("SELECT * FROM $sql_tbl[order_group_memos] WHERE reconciliation_id='$v[id]'");
 
-					if (!empty($order_query_first)){
+			$found_records = array();
+			$counter = 0;
+			$found_order_info_for_speed_search = array();
+			$total_invoices_and_memos_amounts = 0;
+			$total_invoices_amounts = 0;
+			$tota_memos_amounts = 0;
+			if (!empty($invoices)){
+				foreach ($invoices as $kk => $vv){
 
-						if (!empty($vv["invoice_number"])){
-							$order_query_first["invoice_number"] = $vv["invoice_number"];
-							$order_query_first["invoice_info"] = func_query_first("SELECT * FROM $sql_tbl[order_group_invoices] WHERE orderid=$vv[orderid] AND manufacturerid='$manufacturerid' AND invoice_number='$vv[invoice_number]'");
-						}
-
-                                                if (!empty($vv["memo_number"])){
-                                                        $order_query_first["memo_number"] = $vv["memo_number"];
-							$order_query_first["memo_info"] = func_query_first("SELECT * FROM $sql_tbl[order_group_memos] WHERE orderid=$vv[orderid] AND manufacturerid='$manufacturerid' AND memo_number='$vv[memo_number]'");
-                                                }
-
-
-						$order_query_first["orders_variant"] = $vv["orders_variant"];
-						$order_query_first["ref_to_us"] = $vv["ref_to_us"];
-
-
-						$diff_date = ($v["date_csv"] - $order_query_first["date"])/(60*60*24);
-
-						$order_query_first["diff_date"] = $diff_date;
-
-//func_print_r($v, $order_query_first, $diff_date);
-//die();
-
-						$accounting = func_make_accounting($vv["orderid"], $manufacturerid);
-						$order_query_first["accounting"] = $accounting;
-
-/*
-		                                if (!empty($order_query_first["accounting"])){
-//                       				        $accounting = unserialize($order_query_first["accounting"]);
-
-			                                if (!empty($accounting))
-                               				        $order_query_first["accounting"]= $accounting;
-						}
-*/
-
-						$found_orders[$kk] = $order_query_first;
+					if (empty($found_order_info_for_speed_search[$vv["orderid"]]["order_prefix"])){
+						$order_info_arr = func_query_first("SELECT order_prefix, date FROM $sql_tbl[orders] WHERE orderid='$vv[orderid]'");
+						$found_order_info_for_speed_search[$vv["orderid"]] = $order_info_arr;
 					}
+					else {
+						$order_info_arr = $found_order_info_for_speed_search[$vv["orderid"]];
+					}
+					$found_records[$counter] = $order_info_arr;
+					$found_records[$counter]["orderid"] = $vv["orderid"];
+					$found_records[$counter]["invoice_info"] = $vv;
+
+					$total_invoices_and_memos_amounts += $vv["invoice_total"];
+					$total_invoices_amounts += $vv["invoice_total"];
+
+					$counter++;
 				}
-	
-				$reconciliations[$k]["orders"] = $found_orders;
-
-				if (!empty($found_orders)){
-
-					$total_order_amounts = 0;
-
-					foreach ($found_orders as $ko => $vo){
-//						$total_order_amounts += $vo["accounting"]["1"]["gross"] + $vo["accounting"]["2"]["gross"];
-
-						if (!empty($vo["invoice_info"]["invoice_total"])){
-							$total_order_amounts += $vo["invoice_info"]["invoice_total"];
-						}
-
-					}
-
-					$reconciliations[$k]["total_order_amounts"] = $total_order_amounts;
-
-					if ($total_order_amounts > 0 && $reconciliations[$k]["amount_csv_abs"] > 0 && $total_order_amounts != $reconciliations[$k]["amount_csv_abs"]){
-						$total_order_amounts_amount_csv_abs_diff = $reconciliations[$k]["amount_csv_abs"] - $total_order_amounts;
-						$total_order_amounts_amount_csv_abs_diff_abs = abs($total_order_amounts_amount_csv_abs_diff);
-						$reconciliations[$k]["total_order_amounts_amount_csv_abs_diff_abs"] = price_format($total_order_amounts_amount_csv_abs_diff_abs);
-						$reconciliations[$k]["total_order_amounts_amount_csv_abs_diff"] = price_format($total_order_amounts_amount_csv_abs_diff);
-
-
-//func_print_r($total_order_amounts_amount_csv_abs_diff_abs, $total_order_amounts_amount_csv_abs_diff);
-
-					}
-
-				}
-
-				unset($found_orders);
 			}
-		    }
-		}
+			if (!empty($memos)){
+                                foreach ($memos as $kk => $vv){
+
+                                        if (empty($found_order_info_for_speed_search[$vv["orderid"]]["order_prefix"])){
+                                                $order_info_arr = func_query_first("SELECT order_prefix, date FROM $sql_tbl[orders] WHERE orderid='$vv[orderid]'");
+                                                $found_order_info_for_speed_search[$vv["orderid"]] = $order_info_arr;
+                                        }
+                                        else {
+						$order_info_arr = $found_order_info_for_speed_search[$vv["orderid"]];
+                                        }
+					$found_records[$counter] = $order_info_arr;
+					$found_records[$counter]["orderid"] = $vv["orderid"];
+					$found_records[$counter]["memo_info"] = $vv;
+
+					$total_invoices_and_memos_amounts += $vv["ref_to_us_total"];
+					$tota_memos_amounts += $vv["ref_to_us_total"];
+
+					$counter++;
+				}
+			}
+
+			if (!empty($found_records)){
+				foreach ($found_records as $kk => $vv){
+					$diff_date = ($v["date_csv"] - $vv["date"])/(60*60*24);
+					$found_records[$kk]["diff_date"] = $diff_date;
+				}
+
+				$reconciliations[$k]["invoices_and_memos"] = $found_records;
+
+				$reconciliations[$k]["total_invoices_amounts"] = $total_invoices_amounts;
+				$reconciliations[$k]["tota_memos_amounts"] = $tota_memos_amounts;
+				$reconciliations[$k]["total_invoices_amounts_MIN_memos_amounts"] = $total_invoices_amounts - $tota_memos_amounts;
+
+				$reconciliations[$k]["total_invoices_and_memos_amounts"] = $total_invoices_and_memos_amounts;
+
+                                if ($total_invoices_and_memos_amounts > 0 && $reconciliations[$k]["amount_csv_abs"] > 0 && $total_invoices_and_memos_amounts != $reconciliations[$k]["amount_csv_abs"]){
+                                	$total_invoices_and_memos_amounts__amount_csv_abs_diff = $reconciliations[$k]["amount_csv_abs"] - $total_invoices_and_memos_amounts;
+                                        $total_invoices_and_memos_amounts__amount_csv_abs_diff_abs = abs($total_invoices_and_memos_amounts__amount_csv_abs_diff);
+                                        $reconciliations[$k]["total_invoices_and_memos_amounts__amount_csv_abs_diff_abs"] = price_format($total_invoices_and_memos_amounts__amount_csv_abs_diff_abs);
+                                        $reconciliations[$k]["total_invoices_and_memos_amounts__amount_csv_abs_diff"] = price_format($total_invoices_and_memos_amounts__amount_csv_abs_diff);
+				}
+			}
+
+		    } // if (!empty($manufacturerid))
+		} // if ($tab == "unreconciled" || $tab == "reconciled")
+
 
 
                         if (!empty($config_reconciliation_search_keyphrases) && is_array($config_reconciliation_search_keyphrases)){
@@ -1526,16 +1178,16 @@ if (!empty($reconciliations) && is_array($reconciliations)){
                                     }
                                 }
                         }
-
+/*
 #
 ##
 ###
 		if ($reconciliations[$k]["d_bulk_or_individual_order_payments"] == "distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping"){
-			if (!empty($reconciliations[$k]["orders"][0]["orderid"])){
+			if (!empty($reconciliations[$k]["invoices_and_memos"][0]["orderid"])){
 
-				$charged_twice_orders[] = $reconciliations[$k]["orders"][0]["orderid"];
+				$charged_twice_orders[] = $reconciliations[$k]["invoices_and_memos"][0]["orderid"];
 
-				$two_reconciliations = func_query("SELECT $sql_tbl[reconciliation_orderid].*, $sql_tbl[reconciliations].date_csv,  $sql_tbl[reconciliations].file_upload_date, $sql_tbl[reconciliations].description_csv, $sql_tbl[reconciliations].amount_csv,  $sql_tbl[reconciliations].action, $sql_tbl[reconciliations].transaction_type, $sql_tbl[reconciliations].manufacturerid FROM $sql_tbl[reconciliation_orderid] LEFT JOIN $sql_tbl[reconciliations] ON $sql_tbl[reconciliations].id=$sql_tbl[reconciliation_orderid].reconciliation_id WHERE $sql_tbl[reconciliation_orderid].orderid='".$reconciliations[$k]["orders"][0]["orderid"]."' ORDER BY $sql_tbl[reconciliations].date_csv");
+				$two_reconciliations = func_query("SELECT $sql_tbl[reconciliation_orderid].*, $sql_tbl[reconciliations].date_csv,  $sql_tbl[reconciliations].file_upload_date, $sql_tbl[reconciliations].description_csv, $sql_tbl[reconciliations].amount_csv,  $sql_tbl[reconciliations].action, $sql_tbl[reconciliations].transaction_type, $sql_tbl[reconciliations].manufacturerid FROM $sql_tbl[reconciliation_orderid] LEFT JOIN $sql_tbl[reconciliations] ON $sql_tbl[reconciliations].id=$sql_tbl[reconciliation_orderid].reconciliation_id WHERE $sql_tbl[reconciliation_orderid].orderid='".$reconciliations[$k]["invoices_and_memos"][0]["orderid"]."' ORDER BY $sql_tbl[reconciliations].date_csv");
 
 				if (!empty($two_reconciliations)){
 
@@ -1575,6 +1227,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 ###
 ##
 #
+*/
 	} // foreach ($reconciliations as $k => $v)
 
 	$charged_twice_orders_count = array_count_values($charged_twice_orders);
@@ -1585,7 +1238,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 				$cnt=1;
 				foreach ($reconciliations as $k => $v){
 
-					if ($v["orders"][0]["orderid"] == $orderid){
+					if ($v["invoices_and_memos"][0]["orderid"] == $orderid){
 						$reconciliations[$k]["row"] = $cnt;
 						$cnt++;
 					}
@@ -1646,6 +1299,7 @@ $smarty->assign('manufacturers', $manufacturers);
 ##
 #
 //func_print_r($manufacturers);
+//func_print_r($reconciliations);
 
 $smarty->assign("search_keyphrase_list", $search_keyphrase_list);
 $smarty->assign("reconciliations", $reconciliations);
