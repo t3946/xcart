@@ -198,7 +198,7 @@ to
 <td style="background-color: #F4CCCC;" width="90">Amount</td>
 <td style="background-color: #F4CCCC;" width="40">Distr</td>
 <td style="background-color: #F4CCCC;" width="90">Order #</td>
-<td style="background-color: #F4CCCC;" width="100">B2D status</td>
+<td style="background-color: #F4CCCC;" width="100">Invoice #</td>
 <td style="background-color: #F4CCCC;" width="90">Date</td>
 {if $tab eq "unreconciled"}
         <td style="background-color: #D9EAD3;" width="20">Untie</td>
@@ -241,18 +241,17 @@ to
 
 <td width="90" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}" align="center">
 
-{* Removed from last condition || $v.amount_csv_abs|price_format eq $v.orders.0.accounting.2.gross|price_format *}
 
   {if ($tab eq "reconciled") || ($v.distr_code eq "" && $v.config_search_keyphrase_found eq "Y") ||
 
-  ($v.orders ne "" &&
+  ($v.invoices_and_memos ne "" &&
     (
 
-	($v.total_order_amounts|price_format eq $v.amount_csv_abs|price_format)
+	($v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format)
 	||
 	(
 	$v.d_bulk_or_individual_order_payments eq "distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping" && 
-		($v.amount_csv_abs|price_format eq $v.orders.0.accounting.1.gross|price_format)
+		($v.amount_csv_abs|price_format eq $v.invoices_and_memos.0.accounting.1.gross|price_format)
 	)
     )
   )
@@ -265,7 +264,7 @@ to
 		<option value="UR">Unreconcile</option>
 	{else}
 		{if $v.action ne "D" && $v.config_search_keyphrase_found ne "Y"}
-		<option value="R"{if ($v.action eq "R") || ($v.total_order_amounts|price_format eq $v.amount_csv_abs|price_format) || ($v.amount_csv_abs|price_format eq $v.orders.0.accounting.1.gross|price_format)} selected="selected"{/if}>Reconcile</option>
+		<option value="R"{if ($v.action eq "R") || ($v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format)} selected="selected"{/if}>Reconcile</option>
 		{/if}
 
 		{if $v.distr_code eq "" || $v.config_search_keyphrase_found eq "Y"}
@@ -280,24 +279,17 @@ to
 
 <td {if $tab eq "unreconciled"}colspan="6"{else}colspan="5"{/if} valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}">
 
- {if $v.orders ne ""}
+ {if $v.invoices_and_memos ne ""}
   <table width="100%" cellpadding="0" cellspacing="0">
 
-   {foreach from=$v.orders item=vo key=ko}
+   {foreach from=$v.invoices_and_memos item=vo key=ko}
    <tr>
 	<td width="90" align="center" nowrap="nowrap">
 
-	    {if $vo.ref_to_us eq "Y"}
-                REF TO US: <br />
-                {$v.amount_csv|price_format}
+	    {if $vo.memo_info ne ""}
+		{$vo.memo_info.ref_to_us_total}
             {else}
-		({$vo.accounting.1.gross|price_format}){if $vo.accounting.2.gross gt 0}<br />+({$vo.accounting.2.gross|price_format}){/if}
-
-		{assign var="ref_to_us" value=$vo.accounting.4.gross|price_format}
-		{if $ref_to_us ne "0.00"}
-		<br />
-		ref to us: {$ref_to_us}
-		{/if}
+		{$vo.invoice_info.invoice_total}
 	    {/if}
 	</td>
 	<td width="40" align="center"><a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$v.distr_code}</a></td>
@@ -305,11 +297,10 @@ to
 	<a href="order.php?orderid={$vo.orderid}" target="_blank">{$vo.order_prefix}{$vo.orderid}</a><br />
 	</td>
 	<td width="100" align="center">
-	{if $vo.ref_to_us eq "Y"}
-		REF status:<br />
-		{include file="main/order_status.tpl" status=$vo.ru_status mode="static" status_type="RU"}
+	{if $vo.memo_info ne ""}
+		{$vo.order_prefix}{$vo.orderid}_{$v.distr_code}-C-{$vo.memo_info.memo_number}
 	{else}
-		{include file="main/order_status.tpl" status=$vo.bd_status mode="static" status_type="BD"}
+		{$vo.order_prefix}{$vo.orderid}_{$v.distr_code}-I-{$vo.invoice_info.invoice_number}
 	{/if}
 	<br />
 	</td>
@@ -322,50 +313,22 @@ to
 	{if $tab eq "unreconciled"}
 	<td align="center" width="20">
 
-
-
-
-{*
-  {if 
-  ($v.orders ne "" &&
-    (   
-        
-        ($v.total_order_amounts|price_format eq $v.amount_csv_abs|price_format)
-        ||
-        (
-        $v.d_bulk_or_individual_order_payments eq "distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping" &&
-                ($v.amount_csv_abs|price_format eq $v.orders.0.accounting.1.gross|price_format)
-        )
-    )
-  )
-  }
-*}
-        <input type="checkbox" name="clear_orders[{$v.id}][{$vo.orderid}]" value="Y" />
-{*
-  {/if}
-*}
+		{if $vo.memo_info ne ""}
+		        <input type="checkbox" name="clear_invoices_memos[M_{$v.id}_{$vo.memo_info.memo_number}_{$vo.memo_info.manufacturerid}_{$vo.orderid}]" value="Y" />
+		{else}
+		        <input type="checkbox" name="clear_invoices_memos[I_{$v.id}_{$vo.invoice_info.invoice_number}_{$vo.invoice_info.manufacturerid}_{$vo.orderid}]" value="Y" />
+		{/if}
 	</td>
 	{/if}
 
    </tr>
    {/foreach}
 
-{*
-   {if $v.total_order_amounts gt 0 && $v.total_order_amounts ne $v.amount_csv_abs && $v.amount_csv_abs gt 0}
-	{math assign="diff_amount" equation="y-x" y=$v.amount_csv_abs x=$v.total_order_amounts}
-   <tr>
-	<td align="center">
-	<font style="color: red;">{if $diff_amount gt 0}({/if}{$diff_amount|price_format}{if $diff_amount gt 0}){/if}
-	</td>
-	<td {if $tab eq "unreconciled"}colspan="5"{else}colspan="4"{/if}></td>
-   </tr>
-   {/if}
-*}
 
-   {if $v.total_order_amounts_amount_csv_abs_diff_abs gt 0 && $v.two_reconciliations eq ""}
+   {if $v.total_invoices_and_memos_amounts__amount_csv_abs_diff_abs gt 0 && $v.two_reconciliations eq ""}
    <tr>
         <td align="center">
-        <font style="color: red;">{if $v.total_order_amounts_amount_csv_abs_diff gt 0}({/if}{$v.total_order_amounts_amount_csv_abs_diff_abs|price_format}{if $v.total_order_amounts_amount_csv_abs_diff gt 0}){/if}
+        <font style="color: red;">{if $v.total_invoices_and_memos_amounts__amount_csv_abs_diff gt 0}({/if}{$v.total_invoices_and_memos_amounts__amount_csv_abs_diff_abs|price_format}{if $v.total_invoices_and_memos_amounts__amount_csv_abs_diff gt 0}){/if}
         </td>
         <td {if $tab eq "unreconciled"}colspan="5"{else}colspan="4"{/if}></td>
    </tr>
@@ -403,7 +366,7 @@ to
 </td>
 <td width="33%" align="right">
 {if $tab eq "unreconciled"}
-<INPUT type="button" value="Untie selected transaction-order connections" onclick="document.r_form.mode.value='clear_orders'; document.r_form.submit();"></TD>
+<INPUT type="button" value="Untie selected transaction-order connections" onclick="document.r_form.mode.value='clear_invoices_memos'; document.r_form.submit();"></TD>
 {/if}
 </td>
 </tr>
