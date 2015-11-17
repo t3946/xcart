@@ -59,6 +59,13 @@ function func_check_tracking_number($linkid, $tracknum) {
 function func_recalculate_accounting(&$group, $all_processors = array(), $apply_per_trans=false, $refund = false) {
 	global $sql_tbl, $price_details_names;
 
+#
+##
+	if (!is_array($group['accounting'])){
+		$group['accounting'] = func_make_accounting('', '', $group);
+	}
+##
+#
 
 	$acc = $group['accounting'];
 
@@ -97,9 +104,6 @@ function func_recalculate_accounting(&$group, $all_processors = array(), $apply_
 			$acc[0]['gross'] -= $per_trans;
 		}
 	}
-
-//func_print_r($acc);
-//die("acc");
 
     if ($refund) {
         $ref_values = func_query_first('SELECT total_net, total_gst, total_pst, total_gross'
@@ -159,22 +163,15 @@ function func_recalculate_accounting(&$group, $all_processors = array(), $apply_
 
 	$group['accounting'] = $acc;
     if ($acc[0]['net'] != 0) {
-
 //    	$group['profit_margin'] = price_format(($acc[5]['net'] / $acc[0]['net'] * 100));
-
 	$group['profit_margin'] = price_format(($acc[5]["net"]/($acc[0]["net"] - $acc[3]["net"] + $acc[4]["net"]))*100);
-
     } else {
         $group['profit_margin'] = 0;
     }
 
-//func_print_r($group['profit_margin']);
-//die();
-
     $group['accounting'] = func_set_filled_option($group['accounting']);
 	
-	return true;
-
+    return true;
 }
 
 
