@@ -4,6 +4,8 @@
 <br />
 
 {if $rma_request_form_data ne "" && $rma_request_form_data.top_message_content ne ""}
+<div style="border: solid 1px red;">
+<br />
 <table width="86%" align="center">
 <tr>
 <td align="center">
@@ -32,6 +34,8 @@ Please select "Return QTY".
 </tr>
 </table>
 
+<br />
+</div>
 <br />
 <br />
 {/if}
