@@ -36,6 +36,8 @@ Please select "Return QTY".
 <br />
 </div>
 <br />
+</div>
+<br />
 <br />
 {/if}
 
