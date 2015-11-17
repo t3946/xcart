@@ -49,6 +49,10 @@ $smarty->assign("show_order_details", "Y");
 
 
 if ($REQUEST_METHOD == "POST") {
+
+//func_print_r($_POST);
+//die();
+
 	#
 	# Update the session $search_data variable from $posted_data
 	#
@@ -85,7 +89,7 @@ if ($REQUEST_METHOD == "POST") {
 
 if ($mode == "report") {
 
-	x_load('order');
+	x_load('order', 'order_edit');
 
 	if (is_array($search_data["order_reports"])) {
 		$data = $search_data["order_reports"];
@@ -163,18 +167,15 @@ if ($mode == "report") {
 		}
 
 		foreach ($orders as $k => $v) {
+
 			$orders[$k]["shipping_groups"] = func_get_shipping_groups($v["orderid"]);
 			foreach ($orders[$k]["shipping_groups"] as $mid => $group) {
 
-//func_print_r($group, $data);
-//die();
-
 				if (
-		                    (!empty($data['manufacturers']) && !in_array($mid, $data['manufacturers'])) 
+				    (empty($group["invoices"]) && empty($group["memos"])) // Nothing to calculate
+		                    || (!empty($data['manufacturers']) && !in_array($mid, $data['manufacturers'])) 
 		                    || ($data['profit_margin_range'] == "margin_less_100" && $group['profit_margin'] == 100) 
-//                                  || (empty($data['include_margin_100']) && $group['profit_margin'] == 100)
 				    || ($group["acc_paymentid"] == "0")
-//                		    || !in_array($group['cb_status'], array('P','R','O','H','A')) 
                 		    || (!in_array($group['cb_status'], array('P','O','H','A')) && $data["cb_status"] != "R")
                 		    || (!in_array($group['cb_status'], array('P','R','O','H','A')) && $data["cb_status"] == "R")
 				    || ($data['profit_margin_range'] == "margin_less_1" && ($group['profit_margin'] > $data['profit_margin_range_less_1'] || $group['profit_margin'] == 100))
@@ -184,9 +185,6 @@ if ($mode == "report") {
 				} else {
 
 
-#
-##
-###
                                          if ($data["accounting_method"] == "accrual" && $group["cb_status"] == "O"){
                                                   $group["accounting"][0]["net"] = $group["total"]["net"];
                                                   $group["accounting"][0]["gross"] = $group["total"]["gross"];
@@ -205,22 +203,8 @@ if ($mode == "report") {
 ##
 
 						$orders[$k]["shipping_groups"][$mid]["profit_margin"] = @price_format($group["accounting"][5]["net"]/$group["accounting"][0]["net"]*100);
-//
-
-//func_print_r($group);
-
-##
-###
-
 
                                          }
-###
-##
-#
-if ($group["orderid"] == "40149"){
-//func_print_r($group);
-//die();
-}
 
 
 					$manufacturers[$mid] = $group["code"];
