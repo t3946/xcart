@@ -67,9 +67,11 @@ function managedate(type, status) {
 {if $tab eq "unreconciled" || $tab eq "reconciled"}
 <table>
 <tr>
-        <td class="FormButton" nowrap="nowrap">Distributors<br /> <span style="font-weight: normal;">(select at least one distributor to work on reconciliation)</span>:</td>
+        <td class="FormButton" nowrap="nowrap" width="330" align="right">
+<input type="radio" name="posted_data[select_distributors]" value="from_the_list" {if $search_prefilled.select_distributors eq "from_the_list" || $search_prefilled.select_distributors eq ""}checked="checked"{/if} />Select distributors from the list
+	</td>
         <td width="10">&nbsp;</td>
-        <td>
+        <td width="320">
           <select name="posted_data[manufacturers][]" multiple="multiple" size="10">
           {foreach from=$manufacturers item=mnf key=mid}
                 <option value="{$mid}"
@@ -83,13 +85,28 @@ function managedate(type, status) {
           </select>
         </td>
 </tr>
+
+<tr>
+	<td class="FormButton" nowrap="nowrap" align="right">
+<input type="radio" name="posted_data[select_distributors]" value="ALL" {if $search_prefilled.select_distributors eq "ALL"}checked="checked"{/if} />Select ALL distributors
+	</td>
+	<td colspan="2"></td>
+</tr>
 </table>
+<br />
 {/if}
 
 <table {if $tab eq "accounts_payable" || $tab eq "receivables"}align="right"{/if}>
 <tr>
-<td>
+<td {if $tab eq "unreconciled" || $tab eq "reconciled"}class="FormButton" nowrap="nowrap" width="330" align="right"{/if}>
 <B>{if $tab eq "accounts_payable" || $tab eq "receivables"}Order dates{else}Transaction dates{/if}</B>
+
+{if $tab eq "unreconciled" || $tab eq "reconciled"}
+</td>
+<td width="10">&nbsp;</td>
+<td width="320">
+{/if}
+
 from
 
 
@@ -147,10 +164,41 @@ to
 <input id="id_date_csv_End" type="text" size="11" name="date_csv_End" value="{$search_prefilled.date_csv.end_date_str}" />
 {/if}
 
-<INPUT type="submit" value="{if $tab eq "expense_report"}Generate expense report{elseif $tab eq "accounts_payable" || $tab eq "receivables"}Show{elseif $tab eq "unreconciled"}Show transactions and orders{else}Show transactions{/if}">
-
+{if $tab ne "unreconciled" && $tab ne "reconciled"}
+<INPUT type="submit" value="{if $tab eq "expense_report"}Generate expense report{elseif $tab eq "accounts_payable" || $tab eq "receivables"}Show{else}Show transactions{/if}">
+{/if}
 </td>
 </tr>
+
+{if $tab eq "unreconciled"}
+<tr>
+  <td class="FormButton" align="right">Show unreconciled invoices and credit memos</td>
+  <td width="10">&nbsp;</td>
+  <td>
+<input type="checkbox" name="posted_data[show_unreconciled_invoices_and_memos]" value="Y" {if $search_prefilled.show_unreconciled_invoices_and_memos eq "Y" || $search_prefilled.show_unreconciled_invoices_and_memos eq ""}checked="checked"{/if} />
+
+	<div style="display: none;">
+                <select name="data_orders_selectbox">
+                        <option value="1" {if $search_prefilled.data_orders_selectbox eq "1"}selected="selected"{/if}>1</option>
+                        <option value="2" {if $search_prefilled.data_orders_selectbox eq "2"}selected="selected"{/if}>2</option>
+                        <option value="3" {if $search_prefilled.data_orders_selectbox eq "" || $search_prefilled.data_orders_selectbox eq "3"}selected="selected"{/if}>3</option>
+                        <option value="6" {if $search_prefilled.data_orders_selectbox eq "6"}selected="selected"{/if}>6</option>
+                        <option value="12" {if $search_prefilled.data_orders_selectbox eq "12"}selected="selected"{/if}>12</option>
+                        <option value="24" {if $search_prefilled.data_orders_selectbox eq "24"}selected="selected"{/if}>24</option>
+                </select>
+	</div>
+  </td>
+</tr>
+{/if}
+
+{if $tab eq "unreconciled" || $tab eq "reconciled"}
+<tr>
+<td colspan="3" align="center"><br />
+<INPUT type="submit" value="{if $tab eq "unreconciled"}Show transactions and orders{else}Show transactions{/if}">
+</td>
+</tr>
+{/if}
+
 </table>
 
 </form>
@@ -162,11 +210,13 @@ to
 
 {if $tab eq "unreconciled" || $tab eq "reconciled"}
 
-{if $reconciliations ne ""}
 <form name="r_form" method="post" action="reconciliation.php">
 
 
 <div style="display: none;">
+	  <input type="radio" name="posted_data[select_distributors]" value="from_the_list" {if $search_prefilled.select_distributors eq "from_the_list" || $search_prefilled.select_distributors eq ""}checked="checked"{/if} />
+	  <input type="radio" name="posted_data[select_distributors]" value="ALL" {if $search_prefilled.select_distributors eq "ALL"}checked="checked"{/if} />
+
           <select name="posted_data[manufacturers][]" multiple="multiple" size="10">
           {foreach from=$manufacturers item=mnf key=mid}
                 <option value="{$mid}"
@@ -178,6 +228,19 @@ to
                 >{$mnf.manufacturer}</option>
           {/foreach}
           </select>
+
+          {if $tab eq "unreconciled"}
+                <input type="checkbox" name="posted_data[show_unreconciled_invoices_and_memos]" value="Y" {if $search_prefilled.show_unreconciled_invoices_and_memos eq "Y" || $search_prefilled.show_unreconciled_invoices_and_memos eq ""}checked="checked"{/if} />
+
+                <select name="data_orders_selectbox">
+                        <option value="1" {if $search_prefilled.data_orders_selectbox eq "1"}selected="selected"{/if}>1</option>
+                        <option value="2" {if $search_prefilled.data_orders_selectbox eq "2"}selected="selected"{/if}>2</option>
+                        <option value="3" {if $search_prefilled.data_orders_selectbox eq "" || $search_prefilled.data_orders_selectbox eq "3"}selected="selected"{/if}>3</option>
+                        <option value="6" {if $search_prefilled.data_orders_selectbox eq "6"}selected="selected"{/if}>6</option>
+                        <option value="12" {if $search_prefilled.data_orders_selectbox eq "12"}selected="selected"{/if}>12</option>
+                        <option value="24" {if $search_prefilled.data_orders_selectbox eq "24"}selected="selected"{/if}>24</option>
+                </select>
+          {/if}
 </div>
 
 
@@ -190,6 +253,8 @@ to
 <input type="hidden" name="tab" value="{$tab}" >
 
 <table cellpadding="3" cellspacing="1" {* width="100%" *}>
+
+{if $reconciliations ne "" || ($tab eq "unreconciled" && $unreconciled_orders ne "")}
 <tr class="TableHead">
 <td style="background-color: #D9EAD3;" width="90">Date</td>
 <td style="background-color: #D9EAD3;" width="200">Description</td>
@@ -204,6 +269,9 @@ to
         <td style="background-color: #D9EAD3;" width="20">Untie</td>
 {/if}
 </tr>
+{/if}
+
+{if $reconciliations ne ""}
 {foreach from=$reconciliations item=v key=k}
 {if $v.row ne "2"}
 
@@ -289,7 +357,7 @@ to
 	    {if $vo.memo_info ne ""}
 		{$vo.memo_info.ref_to_us_total}
             {else}
-		{$vo.invoice_info.invoice_total}
+		({$vo.invoice_info.invoice_total})
 	    {/if}
 	</td>
 	<td width="40" align="center"><a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$v.distr_code}</a></td>
@@ -355,9 +423,85 @@ to
 </tr>
 {/if}
 {/foreach}
+{/if}
+
+{if $tab eq "unreconciled" && $unreconciled_orders ne ""}
+	{if $reconciliations ne ""}
+		<tr><td colspan="10"><hr /></td></tr>
+	{/if}
+
+ {foreach from=$unreconciled_orders item=v key=k}
+  <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
+	<td colspan="4"></td>
+
+
+	{if $v.order_group_invoices ne "" || $v.order_group_memos ne ""}
+<td colspan="5">
+  <table width="100%" cellpadding="0" cellspacing="0">
+
+ {if $v.order_group_invoices ne ""}
+   {foreach from=$v.order_group_invoices item=vo key=ko}
+   <tr>
+        <td width="90" align="center" nowrap="nowrap">
+                ({$vo.invoice_total})
+        </td>
+        <td width="40" align="center"><a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$manufacturers[$v.manufacturerid].code}</a></td>
+        <td width="90" align="center">
+        <a href="order.php?orderid={$v.orderid}" target="_blank">{$v.order_prefix}{$v.orderid}</a><br />
+        </td>
+        <td width="100" align="center">
+                {$v.order_prefix}{$v.orderid}_{$manufacturers[$v.manufacturerid].code}-I-{$ko}
+        <br />
+        </td>
+        <td width="90" align="center">
+        {$v.date|date_format:'%d-%b-%Y'}
+        </td>
+   </tr>
+   {/foreach}
+ {/if}
+
+ {if $v.order_group_memos ne ""}
+   {foreach from=$v.order_group_memos item=vo key=ko}
+   <tr>
+        <td width="90" align="center" nowrap="nowrap">
+                {$vo.ref_to_us_total}
+        </td>
+        <td width="40" align="center"><a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$manufacturers[$v.manufacturerid].code}</a></td>
+        <td width="90" align="center">
+        <a href="order.php?orderid={$v.orderid}" target="_blank">{$v.order_prefix}{$v.orderid}</a><br />
+        </td>
+        <td width="100" align="center">
+                {$v.order_prefix}{$v.orderid}_{$manufacturers[$v.manufacturerid].code}-C-{$ko}
+        <br />
+        </td>
+        <td width="90" align="center">
+        {$v.date|date_format:'%d-%b-%Y'}
+        </td>
+   </tr>
+   {/foreach}
+ {/if}
+
+  </table>
+</td>
+
+	{else}
+		<td align="center"><B>N/A</B></td>
+		<td align="center">{$manufacturers[$v.manufacturerid].code}</td>
+		<td align="center"><a href="order.php?orderid={$v.orderid}" target="_blank">{$v.order_prefix}{$v.orderid}</a><br /></td>
+		<td align="center"><B>Not received</B></td>
+		<td align="center">{$v.date|date_format:'%d-%b-%Y'}</td>
+	{/if}
+	
+	<td></td>
+
+  </tr>
+ {/foreach}
+{/if}
+
 </table>
 <br />
 
+{if $reconciliations ne ""}
 <table width="100%">
 <tr>
 <td width="33%">&nbsp;</td>
@@ -371,11 +515,9 @@ to
 </td>
 </tr>
 </table>
+{/if}
 
 </form>
-{else}
-Empty
-{/if}
 
 {elseif $tab eq "dropped"}
 
@@ -636,45 +778,6 @@ to
 <input id="id_date_csv_End1" type="text" size="11" name="date_csv_End" value="{$search_prefilled.date_csv.end_date_str}" />
 
         </td>
-
-{*
-        <td align="right">
-<table align="right">
-<tr>
-<td align="right"><B>Order dates</B>
-from
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#id_date_Start1").datepicker();
-  });
-{/literal}
--->
-</script>
-
-<input id="id_date_Start1" type="text" size="11" name="date_Start" value="{$search_prefilled.date.start_date_str}" />
-
-to
-<script type="text/javascript" language="JavaScript 1.2">
-<!--    
-{literal}
-  $(function() {
-    $("#id_date_End1").datepicker();
-  });
-{/literal}
--->
-</script>
-
-<input id="id_date_End1" type="text" size="11" name="date_End" value="{$search_prefilled.date.end_date_str}" />
-
-        </td>
-</tr>
-
-</table>
-        </td>
-*}
-
 	<td>
 
 	<B>Orders</B>

@@ -407,6 +407,17 @@ if ($REQUEST_METHOD == "POST") {
 	if ($tab == "unreconciled" || $tab == "reconciled"){
 		 $search_data["reconciliation_tab_unreconciled"]["manufacturers"] = $posted_data["manufacturers"];
 		 $search_data["reconciliation_tab_reconciled"]["manufacturers"] = $posted_data["manufacturers"];
+
+                 $search_data["reconciliation_tab_unreconciled"]["select_distributors"] = $posted_data["select_distributors"];
+                 $search_data["reconciliation_tab_reconciled"]["select_distributors"] = $posted_data["select_distributors"];
+	}
+
+        if ($tab == "unreconciled"){
+
+		if (!isset($posted_data["show_unreconciled_invoices_and_memos"]) || empty($posted_data["show_unreconciled_invoices_and_memos"])){
+			$posted_data["show_unreconciled_invoices_and_memos"] = "N";
+		}
+                $search_data["reconciliation_tab_unreconciled"]["show_unreconciled_invoices_and_memos"] = $posted_data["show_unreconciled_invoices_and_memos"];
 	}
 
 	x_session_save("search_data");
@@ -988,7 +999,10 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 	        }
 
 		if ($tab == "reconciled" || $tab == "unreconciled"){
-		
+
+		    $tmp_manufacturers_search_condition = "";
+
+		    if ($search_data["reconciliation_tab_".$tab]["select_distributors"] == "from_the_list"){
 			if (!empty($search_data["reconciliation_tab_".$tab]["manufacturers"])){
 				$tmp_manufacturers_str = implode("','",$search_data["reconciliation_tab_".$tab]["manufacturers"]);
 				$tmp_manufacturers_str = "'".$tmp_manufacturers_str."'";
@@ -996,8 +1010,43 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 				$tmp_manufacturers_str = "'0'";
 			}
 
-			$search_condition .= " AND manufacturerid IN ($tmp_manufacturers_str)";
-//func_print_r($tmp_manufacturers_str);
+			$tmp_manufacturers_search_condition = " AND manufacturerid IN ($tmp_manufacturers_str)";
+			$search_condition .= $tmp_manufacturers_search_condition;
+		    }
+		    else {
+			// select_distributors == "ALL"
+			// therefore 'manufacturerid' is not included to the query and all manufacturers will be selected
+		    }
+
+
+		    if ($tab == "unreconciled" && $search_data["reconciliation_tab_".$tab]["show_unreconciled_invoices_and_memos"] == "Y"){
+
+	                $unreconciled_order_search_condition = "$sql_tbl[orders].date>='".($search_data["reconciliation_tab_".$tab]["date"]["start_date"])."'";
+        	        $unreconciled_order_search_condition .= " AND $sql_tbl[orders].date<='".($search_data["reconciliation_tab_".$tab]["date"]["end_date"])."'";
+
+	                $unreconciled_orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].date, $sql_tbl[order_groups].manufacturerid, $sql_tbl[orders].order_prefix FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $unreconciled_order_search_condition $tmp_manufacturers_search_condition AND $sql_tbl[order_groups].cb_status IN ('O','P','3','H') ORDER BY $sql_tbl[order_groups].orderid desc");
+
+        	        if (!empty($unreconciled_orders)){
+
+                	        foreach ($unreconciled_orders as $ko => $vo){
+
+                        	        $order_group_invoices = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices] WHERE orderid='$vo[orderid]' && manufacturerid='$vo[manufacturerid]' AND (status='U' || status='A') AND reconciliation_id='0'","invoice_number", false);
+	                                $order_group_memos = func_query_hash("SELECT * FROM $sql_tbl[order_group_memos] WHERE orderid='$vo[orderid]' && manufacturerid='$vo[manufacturerid]' AND (status='U' || status='A') AND reconciliation_id='0'","memo_number", false);
+
+        	                        if (!empty($order_group_invoices)){
+                	                        $unreconciled_orders[$ko]["order_group_invoices"] = $order_group_invoices;
+                        	        }
+
+                                	if (!empty($order_group_memos)){
+                                        	$unreconciled_orders[$ko]["order_group_memos"] = $order_group_memos;
+	                                }
+        	                }
+	
+				$smarty->assign("unreconciled_orders", $unreconciled_orders);
+	                }
+
+		    } // if ($tab == "unreconciled")
+
 
 		}
 
@@ -1294,7 +1343,7 @@ $smarty->assign("search_prefilled", $search_data["reconciliation_tab_".$tab]);
 
 #
 ##
-$manufacturers = func_query_hash("SELECT manufacturerid, manufacturer FROM $sql_tbl[manufacturers] WHERE avail='Y' ORDER BY manufacturer, orderby","manufacturerid",false);
+$manufacturers = func_query_hash("SELECT manufacturerid, manufacturer, code FROM $sql_tbl[manufacturers] WHERE avail='Y' ORDER BY manufacturer, orderby","manufacturerid",false);
 $smarty->assign('manufacturers', $manufacturers);
 ##
 #
