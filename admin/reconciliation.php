@@ -404,12 +404,14 @@ if ($REQUEST_METHOD == "POST") {
                 }
         }
 
-	if ($tab == "unreconciled" || $tab == "reconciled"){
+	if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "calculation"){
 		 $search_data["reconciliation_tab_unreconciled"]["manufacturers"] = $posted_data["manufacturers"];
 		 $search_data["reconciliation_tab_reconciled"]["manufacturers"] = $posted_data["manufacturers"];
+		 $search_data["reconciliation_tab_calculation"]["manufacturers"] = $posted_data["manufacturers"];
 
                  $search_data["reconciliation_tab_unreconciled"]["select_distributors"] = $posted_data["select_distributors"];
                  $search_data["reconciliation_tab_reconciled"]["select_distributors"] = $posted_data["select_distributors"];
+                 $search_data["reconciliation_tab_calculation"]["select_distributors"] = $posted_data["select_distributors"];
 	}
 
         if ($tab == "unreconciled"){
@@ -610,34 +612,6 @@ if ($REQUEST_METHOD == "POST") {
 	}
 	elseif ($mode == "find_orders"){
 
-/*
-                if (!empty($date_csv_Start)){
-                        $posted_data["date_csv"]["start_date_str"] = $date_csv_Start;
-                        $start_date_arr = explode("/", $date_csv_Start);
-                        $posted_data["date_csv"]["start_date"] = mktime(0,0,0,$start_date_arr[0],$start_date_arr[1],$start_date_arr[2]);
-                }
-
-                if (!empty($date_csv_End)){
-                        $posted_data["date_csv"]["end_date_str"] = $date_csv_End;
-                        $end_date_arr = explode("/", $date_csv_End);
-                        $posted_data["date_csv"]["end_date"] = mktime(23,59,59,$end_date_arr[0],$end_date_arr[1],$end_date_arr[2]);
-                }
-
-                if (!empty($date_Start)){
-                        $posted_data["date"]["start_date_str"] = $date_Start;
-                        $start_date_arr = explode("/", $date_Start);
-                        $posted_data["date"]["start_date"] = mktime(0,0,0,$start_date_arr[0],$start_date_arr[1],$start_date_arr[2]);
-                }
-
-                if (!empty($date_End)){
-                        $posted_data["date"]["end_date_str"] = $date_End;
-                        $end_date_arr = explode("/", $date_End);
-                        $posted_data["date"]["end_date"] = mktime(23,59,59,$end_date_arr[0],$end_date_arr[1],$end_date_arr[2]);
-                }
-
-		$search_data["find_orders"] = $posted_data;
-*/
-
 		$reconciliation_search_condition = "$sql_tbl[reconciliations].date_csv>='".($search_data["reconciliation_tab_calculation"]["date_csv"]["start_date"])."'";
 		$reconciliation_search_condition .= " AND $sql_tbl[reconciliations].date_csv<='".($search_data["reconciliation_tab_calculation"]["date_csv"]["end_date"])."'";
 		$reconciliation_search_condition .= " AND $sql_tbl[reconciliations].action=''";
@@ -704,12 +678,41 @@ if ($REQUEST_METHOD == "POST") {
 ##
 #
 
-		$reconciliation_search_condition .= " AND $sql_tbl[reconciliations].manufacturerid!='0'";
+#
+##
+                $reconciliations_manufacturers_search_condition = "";
+                $orders_manufacturers_search_condition = "";
+
+                if ($search_data["reconciliation_tab_".$tab]["select_distributors"] == "from_the_list"){
+                        if (!empty($search_data["reconciliation_tab_".$tab]["manufacturers"])){
+                                $tmp_manufacturers_str = implode("','",$search_data["reconciliation_tab_".$tab]["manufacturers"]);
+                                $tmp_manufacturers_str = "'".$tmp_manufacturers_str."'";
+                        } else {
+                		$top_message["content"] = "Select distributor(s)";
+		                $top_message["type"] = "E";
+
+			        func_header_location("reconciliation.php?tab=".$tab);
+                        }
+
+                        $reconciliations_manufacturers_search_condition = " AND $sql_tbl[reconciliations].manufacturerid IN ($tmp_manufacturers_str)";
+                        $orders_manufacturers_search_condition = " AND $sql_tbl[order_groups].manufacturerid IN ($tmp_manufacturers_str)";
+		}
+		else {
+			// select_distributors == "ALL"
+			$reconciliations_manufacturers_search_condition = " AND $sql_tbl[reconciliations].manufacturerid!='0'";
+			$orders_manufacturers_search_condition = " AND $sql_tbl[order_groups].manufacturerid!='0'";
+		}
+##
+#
+
+
+		$reconciliation_search_condition .= $reconciliations_manufacturers_search_condition;
 
 		$reconciliations = func_query("SELECT * FROM $sql_tbl[reconciliations] WHERE $reconciliation_search_condition");
 
                 $order_search_condition = "$sql_tbl[orders].date>='".($search_data["reconciliation_tab_calculation"]["date"]["start_date"])."'";
                 $order_search_condition .= " AND $sql_tbl[orders].date<='".($search_data["reconciliation_tab_calculation"]["date"]["end_date"])."'";
+		$order_search_condition .= $orders_manufacturers_search_condition;
 
 		func_flush(".");
 
@@ -730,6 +733,10 @@ if ($REQUEST_METHOD == "POST") {
 				if (!empty($order_group_memos)){
 					$orders[$ko]["order_group_memos"] = $order_group_memos;
 				}
+
+				if (empty($order_group_invoices) && empty($order_group_memos)){
+					unset($orders[$ko]);
+				}
                         }
 
 			$orders = array_values($orders);
@@ -737,26 +744,94 @@ if ($REQUEST_METHOD == "POST") {
 
 		func_flush(".");
 
-
 		if (!empty($reconciliations) && !empty($orders)){
 			func_find_reconciliations_orders($reconciliations, $orders);
 		}
 
 	}
-        elseif ($mode == "update" && !empty($action) && is_array($action)){
+        elseif ($mode == "update"){
 
-                foreach ($action as $k => $v){
-                        db_query("UPDATE $sql_tbl[reconciliations] SET action='$v' WHERE id='$k'");
 
-			$status = "U";
+		if (!empty($action) && is_array($action)){
+	                foreach ($action as $k => $v){
+        	                db_query("UPDATE $sql_tbl[reconciliations] SET action='$v' WHERE id='$k'");
 
-			if ($v == "R"){
-				$status = "R";
+				$status = "U";
+
+				if ($v == "R"){
+					$status = "R";
+				}
+
+        	                db_query("UPDATE $sql_tbl[order_group_invoices] SET status='$status' WHERE reconciliation_id='$k'");
+                	        db_query("UPDATE $sql_tbl[order_group_memos] SET status='$status' WHERE reconciliation_id='$k'");
 			}
-
-                        db_query("UPDATE $sql_tbl[order_group_invoices] SET status='$status' WHERE reconciliation_id='$k'");
-                        db_query("UPDATE $sql_tbl[order_group_memos] SET status='$status' WHERE reconciliation_id='$k'");
                 }
+
+		// Untie selected transaction-order connections
+                if (!empty($clear_invoices_memos) && is_array($clear_invoices_memos)){
+                        foreach ($clear_invoices_memos as $k => $v){
+                                if ($v == "Y"){
+
+                                        $invoice_memo_arr = explode("_", $k);
+
+                                        $invoice_OR_memo = $invoice_memo_arr[0];
+                                        $reconciliation_id = $invoice_memo_arr[1];
+                                        $number = $invoice_memo_arr[2];
+                                        $manufacturerid = $invoice_memo_arr[3];
+                                        $orderid = $invoice_memo_arr[4];
+
+                                        if ($invoice_OR_memo == "I"){
+                                                db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='0' WHERE reconciliation_id='$reconciliation_id' AND invoice_number='$number' AND manufacturerid='$manufacturerid' AND orderid='$orderid'");
+                                        } else {
+                                                db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='0' WHERE reconciliation_id='$reconciliation_id' AND memo_number='$number' AND manufacturerid='$manufacturerid' AND orderid='$orderid'");
+                                        }
+                                }
+                        }
+                }
+
+		
+		if (!empty($add_order_manually) && is_array($add_order_manually)){
+			foreach ($add_order_manually as $r_id => $v_arr){
+			  if (!empty($v_arr) && is_array($v_arr)){
+
+			    $manufacturerid__amount_csv = func_query_first("SELECT manufacturerid, amount_csv FROM $sql_tbl[reconciliations] WHERE id='$r_id'");
+			    $manufacturerid = $manufacturerid__amount_csv["manufacturerid"];
+
+			    if (!empty($manufacturerid)){
+
+				$amount_csv_abs = abs($manufacturerid__amount_csv["amount_csv"]);
+				$amount_csv_abs = price_format($amount_csv_abs);
+
+				foreach ($v_arr as $v){
+
+					$orderid = trim($v["orderid"]);
+                                	if (strpos($orderid,"-") !== false){
+                                        	$orderid_arr = explode("-", $orderid);
+	                                        $orderid = $orderid_arr["1"];
+        	                        }
+                	                $orderid = trim($orderid);
+
+					$order_group_invoices = func_query($qqq="SELECT invoice_number FROM $sql_tbl[order_group_invoices] WHERE status='U' AND part_of_total_transaction_in_amount_of IN ('0.00','$amount_csv_abs') AND manufacturerid='$manufacturerid' AND orderid='$orderid'");
+					if (!empty($order_group_invoices)){
+						foreach ($order_group_invoices as $vv){
+							$invoice_number = $vv["invoice_number"];
+							db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='$r_id', status='R' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND invoice_number='$invoice_number' AND reconciliation_id='0'");
+						}
+					}
+
+                                        $order_group_memos = func_query("SELECT memo_number FROM $sql_tbl[order_group_memos] WHERE status='U' AND ref_to_us_part_of_transaction IN ('0.00','$amount_csv_abs') AND manufacturerid='$manufacturerid' AND orderid='$orderid' AND reconciliation_id='0'");
+                                        if (!empty($order_group_memos)){
+                                                foreach ($order_group_memos as $vv){
+                                                        $memo_number = $vv["memo_number"];
+                                                        db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='$r_id', status='R' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND memo_number='$memo_number'");
+                                                }
+                                        }
+				} // foreach ($v_arr as $v)
+			    } // if (!empty($manufacturerid))
+			  } // if (!empty($v_arr) && is_array($v_arr))
+			} // foreach ($add_order_manually as $r_id => $v_arr)
+		} // if (!empty($add_order_manually) && is_array($add_order_manually))
+
 
                 $top_message["content"] = "Done.";
                 $top_message["type"] = "I";
@@ -789,6 +864,7 @@ if ($REQUEST_METHOD == "POST") {
                 $top_message["content"] = "Done.";
                 $top_message["type"] = "I";
         }
+/*
 	elseif ($mode == "clear_invoices_memos"){
 
 		if (!empty($clear_invoices_memos) && is_array($clear_invoices_memos)){
@@ -815,6 +891,7 @@ if ($REQUEST_METHOD == "POST") {
                 $top_message["content"] = "Done.";
                 $top_message["type"] = "I";
 	}
+*/
 
 	func_header_location("reconciliation.php?tab=".$tab);
 }
