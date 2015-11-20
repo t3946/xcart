@@ -1238,7 +1238,7 @@ elseif ($mode == "accounting_apply") {
                         $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$manufacturerid'");
 
                         $new_ref_to_us_part_of_transaction = price_format($v);
-                        $current_ref_to_us_part_of_transaction = func_query_first_cell("SELECT ref_to_us_part_of_transaction FROM $sql_tbl[reconciliations_memos] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND memo_number='$memo_number'");
+                        $current_ref_to_us_part_of_transaction = func_query_first_cell("SELECT ref_to_us_part_of_transaction FROM $sql_tbl[order_group_memos] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND memo_number='$memo_number'");
                         if ($current_ref_to_us_part_of_transaction != $new_ref_to_us_part_of_transaction){
                                 if (empty($log)) $log = "This memo is a part of the total transaction in the amount of: <br />";
                                 $log .= "memo_number_".$memo_number. " <B>".$code.":</B> " . $current_ref_to_us_part_of_transaction . " -> " . $new_ref_to_us_part_of_transaction . "<br />";
