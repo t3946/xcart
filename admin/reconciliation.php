@@ -815,7 +815,7 @@ if ($REQUEST_METHOD == "POST") {
 					if (!empty($order_group_invoices)){
 						foreach ($order_group_invoices as $vv){
 							$invoice_number = $vv["invoice_number"];
-							db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='$r_id', status='R' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND invoice_number='$invoice_number' AND reconciliation_id='0'");
+							db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='$r_id' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND invoice_number='$invoice_number' AND reconciliation_id='0'");
 						}
 					}
 
@@ -823,7 +823,7 @@ if ($REQUEST_METHOD == "POST") {
                                         if (!empty($order_group_memos)){
                                                 foreach ($order_group_memos as $vv){
                                                         $memo_number = $vv["memo_number"];
-                                                        db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='$r_id', status='R' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND memo_number='$memo_number'");
+                                                        db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='$r_id' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND memo_number='$memo_number'");
                                                 }
                                         }
 				} // foreach ($v_arr as $v)
