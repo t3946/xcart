@@ -225,7 +225,8 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 
 	if (empty($clean_url_data['resource_type'])){
-		$redirect_substring = str_replace(" ", "-", $e_search_data["substring"]);
+		$redirect_substring = str_replace(array(' ','#'), '-', $e_search_data["substring"]);
+
 		func_header_location("/keyword/".$redirect_substring."/");
 	}
 
