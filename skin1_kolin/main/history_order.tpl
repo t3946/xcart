@@ -183,6 +183,16 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 </table>
 
 
+{if $order.lng_order_contains_FBA_items eq "Y"}
+  <table width="100%">
+  <tr>
+  <td align="center" style="border: solid 1px #000000; background: #F4CCCC;">
+        {$lng.lng_order_contains_FBA_items}
+  </td>
+  </tr>
+  </table>
+{/if}
+
 {if $you_cannot_modify_order eq "Y"}
 {* <br /> *}
 
