@@ -2518,8 +2518,10 @@ if (!empty($order["refund_groups"]) && is_array($order["refund_groups"])){
 }
 
 $convert_to_regular_order_show_button = false;
+$order["lng_order_contains_FBA_items"] = "N";
 
 if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
+
 	foreach ($order["shipping_groups"] as $k => $v){
 
 #
@@ -2551,6 +2553,11 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
 
 		if ($v["products"] && is_array($v["products"])){
 			foreach ($v["products"] as $kk => $vv){
+
+				if ($order["lng_order_contains_FBA_items"] == "N" && $vv["amazon_fba_avail"] > 0 && !in_array($order["amazon_fulfillment_channel"], array("AFN", "MFN"))){
+					$order["lng_order_contains_FBA_items"] = "Y";
+				}
+
 				if (!empty($vv["eta_date_mm_dd_yyyy"])){
                                         $current_eta_date_mm_dd_yyyy_arr = explode("/", $vv["eta_date_mm_dd_yyyy"]);
                                         $current_eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $current_eta_date_mm_dd_yyyy_arr[0], $current_eta_date_mm_dd_yyyy_arr[1], $current_eta_date_mm_dd_yyyy_arr[2]);
