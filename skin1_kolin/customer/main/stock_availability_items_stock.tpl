@@ -10,6 +10,7 @@
                     <th class="survey_form_right">Quantity required</th>
                     <th class="survey_form_center">Stock status</th>
                     <th class="survey_form_center">Quantity in stock</th>
+                    <th class="survey_form_center">FBA qty</th>
                     <th class="survey_form_center" nowrap="nowrap">ETA date<br />(mm/dd/yyyy)</th>
                     <th class="survey_form_center">Offer<br />backorder</th>
                 </tr>
@@ -83,6 +84,11 @@
                       </div>
 
                     </td>
+
+		    <td align="center">
+			{$item.amazon_fba_avail}
+		    </td>
+
                     <td>
 <script type="text/javascript" language="JavaScript 1.2">
 <!--
