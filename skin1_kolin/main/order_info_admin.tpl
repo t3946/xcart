@@ -417,6 +417,9 @@ function check_r_fields(){
 {if $v.empty_products_list eq "Y"}<input type="checkbox" value="Y" name="distributors_to_delete[{$m_id}][delete]" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
   </td>
 </tr>
+
+{assign var="GROUP_cost_to_us" value="0"}
+
 {foreach from=$v.products item=product key=prod_num}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
@@ -471,6 +474,8 @@ function check_r_fields(){
   <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.price|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.price|price_format}{/if}
 
 {* --- *}
+{math equation="x+y" x=$GROUP_cost_to_us y=$product.cost_to_us assign="GROUP_cost_to_us"}
+
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
 {include file="currency2.tpl" value=$product.cost_to_us|price_format}
 </div>
@@ -629,9 +634,7 @@ Cost to us accurate
 <div style="float: left;">
 
  
- {math equation="x+y" x=$v.actual_shipping_cost.gross y=$cost_to_us_total assign="actual_shipping_cost_gross_PLUS_cost_to_us_total"}
-
- {if $v.all_distributor_info.distributor_offers_free_shipping eq "on_orders_over" AND $actual_shipping_cost_gross_PLUS_cost_to_us_total gt $v.all_distributor_info.free_shipping_on_orders_over_value}
+ {if $v.all_distributor_info.distributor_offers_free_shipping eq "on_orders_over" AND $GROUP_cost_to_us gt $v.all_distributor_info.free_shipping_on_orders_over_value}
  <div>
 &nbsp;
 <span style="color: #FF0000; font-weight: bold;">THIS ORDER QUALIFIES FOR FREE SHIPPING!</span>
