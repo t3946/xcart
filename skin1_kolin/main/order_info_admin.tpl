@@ -417,6 +417,9 @@ function check_r_fields(){
 {if $v.empty_products_list eq "Y"}<input type="checkbox" value="Y" name="distributors_to_delete[{$m_id}][delete]" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
   </td>
 </tr>
+
+{assign var="GROUP_cost_to_us" value="0"}
+
 {foreach from=$v.products item=product key=prod_num}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
@@ -471,6 +474,8 @@ function check_r_fields(){
   <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.price|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.price|price_format}{/if}
 
 {* --- *}
+{math equation="x+y" x=$GROUP_cost_to_us y=$product.cost_to_us assign="GROUP_cost_to_us"}
+
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
 {include file="currency2.tpl" value=$product.cost_to_us|price_format}
 </div>
@@ -616,50 +621,28 @@ Cost to us accurate
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"} style="BACKGROUND-COLOR: #FFD44C;">
   <td colspan="7">
 
-{*
-  {math equation="x/y" x=$v.actual_shipping_cost.net y=$order_manufacturers.$m_id.required_shipping_charge assign="default_required_shipping_charge"}
-*}
-
-
+<div style="float: left;">
   {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}
-<input type="hidden" name="groups[{$m_id}][shipping_value_selectbox]" id="shipping_value_selectbox_{$m_id}" value="{$v.shipping_value_selectbox}" />
+    <input type="hidden" name="groups[{$m_id}][shipping_value_selectbox]" id="shipping_value_selectbox_{$m_id}" value="{$v.shipping_value_selectbox}" />
   {/if}
-  <select name="groups[{$m_id}][shipping_value_selectbox]" id="shipping_value_selectbox_{$m_id}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} 
-  onchange="javascript: {literal}
-  if ($('#shipping_value_selectbox_{/literal}{$m_id}{literal}').val() == 'actual_shipping_cost'){ 
-/*
-    $('#actual_shipping_cost_net_{/literal}{$m_id}{literal}').val('{/literal}{$v.actual_shipping_cost.net|price_format}{literal}');
-
-    $('#cidev_actual_shipping_cost_gross_{/literal}{$m_id}{literal}').show();
-    $('#cidev_required_shipping_cost_gross_{/literal}{$m_id}{literal}').hide();
-
-    $('#cidev_actual_shipping_cost_gst_{/literal}{$m_id}{literal}').show();
-    $('#cidev_required_shipping_cost_gst_{/literal}{$m_id}{literal}').hide();
-
-    $('#cidev_actual_shipping_cost_pst_{/literal}{$m_id}{literal}').show();
-    $('#cidev_required_shipping_cost_pst_{/literal}{$m_id}{literal}').hide();
-*/
-
-  } else { 
-/*
-    $('#actual_shipping_cost_net_{/literal}{$m_id}{literal}').val('{/literal}{$default_required_shipping_charge|price_format}{literal}');
-
-    $('#cidev_actual_shipping_cost_gross_{/literal}{$m_id}{literal}').hide();
-    $('#cidev_required_shipping_cost_gross_{/literal}{$m_id}{literal}').show();
-
-    $('#cidev_actual_shipping_cost_gst_{/literal}{$m_id}{literal}').hide();
-    $('#cidev_required_shipping_cost_gst_{/literal}{$m_id}{literal}').show();
-
-    $('#cidev_actual_shipping_cost_pst_{/literal}{$m_id}{literal}').hide();
-    $('#cidev_required_shipping_cost_pst_{/literal}{$m_id}{literal}').show();
-*/
-
-  }
-  {/literal};">
-  <option value="actual_shipping_cost" {if $v.shipping_value_selectbox eq "actual_shipping_cost" || $v.shipping_value_selectbox eq ""} selected="selected"{/if}>Actual shipping cost (do NOT include drop-ship fee)</option>
-  <option value="required_shipping_charge" {if $v.shipping_value_selectbox eq "required_shipping_charge"} selected="selected"{/if}>Required shipping charge from our website shipping quote</option>
+  <select name="groups[{$m_id}][shipping_value_selectbox]" id="shipping_value_selectbox_{$m_id}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} >
+    <option value="actual_shipping_cost" {if $v.shipping_value_selectbox eq "actual_shipping_cost" || $v.shipping_value_selectbox eq ""} selected="selected"{/if}>Actual shipping cost (do NOT include drop-ship fee)</option>
+    <option value="required_shipping_charge" {if $v.shipping_value_selectbox eq "required_shipping_charge"} selected="selected"{/if}>Required shipping charge from our website shipping quote</option>
   </select>
+</div>
 
+<div style="float: left;">
+
+ 
+ {if $v.all_distributor_info.distributor_offers_free_shipping eq "on_orders_over" AND $GROUP_cost_to_us gt $v.all_distributor_info.free_shipping_on_orders_over_value}
+ <div>
+&nbsp;
+<span style="color: #FF0000; font-weight: bold;">THIS ORDER QUALIFIES FOR FREE SHIPPING!</span>
+ <div>
+ {/if}
+
+ <div>
+&nbsp;
 {*
 {if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
 &nbsp;
@@ -672,32 +655,19 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 {elseif $order_manufacturers[$m_id].d_drop_ship_fee_select eq "applies_to_orders_below_minimum_order_amount_only"}
 Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'} applies to orders below {include file="currency.tpl" value=$order_manufacturers[$m_id].d_minimum_order_amount_in_us hide_zero='Y'}
 {/if}
+ </div>
+
+</div>
 
   </td>
   <td align="right">
       <input id="actual_shipping_cost_net_{$m_id}" type="text" size="8" name="groups[{$m_id}][actual_shipping_cost_net]" value="{$v.actual_shipping_cost.net|price_format}" {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if}  />
   </td>
-
   <td align="right">
-{*  {if $v.shipping_value_selectbox eq "actual_shipping_cost" || $v.shipping_value_selectbox eq ""} *}
     <span id="cidev_actual_shipping_cost_gst_{$m_id}">{include file="currency2.tpl" value=$v.actual_shipping_cost.gst hide_zero='Y'}</span>
-{*  {else}
-    <span id="cidev_required_shipping_cost_gst_{$m_id}">{include file="currency2.tpl" value=$v.actual_shipping_cost.gst|default:$default_required_shipping_charge hide_zero='Y'}</span>
-  {/if}
-*}
   </td>
-{*
   <td align="right">
-    <span id="cidev_actual_shipping_cost_pst_{$m_id}">{include file="currency2.tpl" value=$v.actual_shipping_cost.pst hide_zero='Y'}</span>
-  </td>
-*}
-  <td align="right">
-{*  {if $v.shipping_value_selectbox eq "actual_shipping_cost" || $v.shipping_value_selectbox eq ""} *}
     <span id="cidev_actual_shipping_cost_gross_{$m_id}">{include file="currency2.tpl" value=$v.actual_shipping_cost.gross}</span>
-{*  {else}
-    <span id="cidev_required_shipping_cost_gross_{$m_id}">{include file="currency2.tpl" value=$v.actual_shipping_cost.gross|default:$default_required_shipping_charge}</span>
-  {/if}
-*}
   </td>
   <td>&nbsp;</td>
 </tr>
