@@ -240,17 +240,17 @@ multirowInputSets['customer_checks_received'].noCloneContent = 1;
         <td colspan="5" {*class="SubmitBox" *}>
 	<table width="100%">
 	<tr>
-	<td width="33%" valign="top">
+	<td width="40%" valign="top">
 {*        <input type="button" value="Apply changes" onclick="javascript: submitForm(this, 'add_order');" /> *}
         <input type="button" value="Apply changes" onclick="javascript: submitForm(this, 'update_deposit');" />
 	</td>
-	<td align="center" width="*" valign="top">
+	<td align="left" width="*" valign="top" nowrap="nowrap">
 	<input type="button" value="Checks are now deposited with the bank" onclick="javascript: submitForm(this, 'checks_are_now_deposited_with_the_bank');" />
 <br />
-<I>Before clicking this button please make sure that the amount deposited with the bank is the same as the <B>Total deposit amount</B> shown above.</I>
+<I>Before clicking this button please make sure that<br />the amount deposited with the bank is the same as<br />the <B>Total deposit amount</B> shown above.</I>
 
 	</td>
-	<td align="right" width="33% valign="top"">
+	<td align="right" width="40%" valign="top">
 	</td>
 	</tr>
 	</table>
