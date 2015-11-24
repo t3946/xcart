@@ -815,7 +815,7 @@ if ($REQUEST_METHOD == "POST") {
 					if (!empty($order_group_invoices)){
 						foreach ($order_group_invoices as $vv){
 							$invoice_number = $vv["invoice_number"];
-							db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='$r_id' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND invoice_number='$invoice_number' AND reconciliation_id='0'");
+							db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='$r_id' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND invoice_number='$invoice_number'");
 						}
 					}
 
