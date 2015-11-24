@@ -311,15 +311,15 @@ to
 
 {if $reconciliations ne "" || ($tab eq "unreconciled" && $unreconciled_orders ne "")}
 <tr class="TableHead">
-<td style="background-color: #D9EAD3;" width="90">Date</td>
-<td style="background-color: #D9EAD3;" width="200">Description</td>
+<td style="background-color: #D9EAD3;" width="90">TR Date</td>
+<td style="background-color: #D9EAD3;" width="200">Transaction Description</td>
 <td style="background-color: #D9EAD3;" width="50">Amount</td>
 <td style="background-color: #FFD44C;" width="90">Action</td>
 <td style="background-color: #F4CCCC;" width="90">Amount</td>
 <td style="background-color: #F4CCCC;" width="40">Distr</td>
 <td style="background-color: #F4CCCC;" width="90">Order #</td>
 <td style="background-color: #F4CCCC;" width="100">Invoice #</td>
-<td style="background-color: #F4CCCC;" width="90">Date</td>
+<td style="background-color: #F4CCCC;" width="90">Order Date</td>
 {if $tab eq "unreconciled"}
         <td style="background-color: #D9EAD3;" width="20">Untie</td>
 {/if}
@@ -390,6 +390,12 @@ to
   {elseif $tab eq "unreconciled"}
 
 	<a href="javascript: void(0);" style="color: blue;" onclick="javascript: $('#add_orders_section_{$v.id}').toggle();">I've got a statement</a>
+
+	{if $v.total_invoices_and_memos_amounts__amount_csv_abs_diff_abs gt 0}
+		<br />
+		<br />
+		<input type="checkbox" name="action[{$v.id}]" value="R" /> Force reconcile
+	{/if}
 
   {/if}
 
