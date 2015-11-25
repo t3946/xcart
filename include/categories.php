@@ -639,6 +639,35 @@ if ($current_area == "C" && !empty($active_modules["Fancy_Categories"])) {
 
 $smarty->assign("allcategories", $all_categories);
 
+#
+##
+###
+if (!empty($categories)){
+
+        foreach($categories as $k => $v){
+                if ($k == $v["categoryid"]){
+
+                        $product_count_global = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products_categories] WHERE categoryid='$v[categoryid]'");
+                        $categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '$v[categoryid]/%'");
+                        if (!empty($categoryid_arr)){
+                                foreach ($categoryid_arr as $k_c => $v_catid){
+                                        $product_count_global += func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products_categories] WHERE categoryid='$v_catid[categoryid]'");
+                                }
+                        }
+                        $categories[$k]['product_count_global'] = $product_count_global;
+
+                        if ($current_area == "C"){
+                                $categories[$k]['product_count'] = $categories[$k]['product_count_global'];
+                        }
+                }
+
+        }
+}
+###
+##
+#
+
+
 $smarty->assign("categories", empty($categories)?"":$categories);
 
 if ($cat == 0 && empty($keyphrase)) {
@@ -658,7 +687,7 @@ if(!empty($subcategories) && ($current_area == 'A' || ($current_area == 'P'/* &&
 	$product_counts = func_query_hash("SELECT categoryid, COUNT(productid) FROM $sql_tbl[products_categories] WHERE categoryid IN ('".implode("','", array_keys($subcategories))."') GROUP BY categoryid", "categoryid", false, true);
 	foreach($subcategories as $k => $v) {
 		$subcategories[$k]['subcategory_count'] = func_query_first_cell("SELECT COUNT(subcat.categoryid) as subc FROM $sql_tbl[categories] USE INDEX (PRIMARY) LEFT JOIN $sql_tbl[categories] as subcat ON subcat.categoryid_path LIKE CONCAT($sql_tbl[categories].categoryid_path, '/%') WHERE $sql_tbl[categories].categoryid = '$k' $sf_condition GROUP BY $sql_tbl[categories].categoryid");
-		$subcategories[$k]['product_count_global'] = $subcategories[$k]['product_count'];
+//		$subcategories[$k]['product_count_global'] = $subcategories[$k]['product_count'];
 		$subcategories[$k]['product_count'] = isset($product_counts[$k]) ? intval($product_counts[$k]) : 0;
 	}
 }
