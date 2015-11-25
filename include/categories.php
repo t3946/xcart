@@ -647,7 +647,7 @@ if (!empty($categories)){
         foreach($categories as $k => $v){
                 if ($k == $v["categoryid"]){
 
-                        $product_count_global = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products_categories] WHERE categoryid='$v[categoryid]'");
+                        $categories[$k]['product_count'] = $product_count_global = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products_categories] WHERE categoryid='$v[categoryid]'");
                         $categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '$v[categoryid]/%'");
                         if (!empty($categoryid_arr)){
                                 foreach ($categoryid_arr as $k_c => $v_catid){
@@ -689,6 +689,14 @@ if(!empty($subcategories) && ($current_area == 'A' || ($current_area == 'P'/* &&
 		$subcategories[$k]['subcategory_count'] = func_query_first_cell("SELECT COUNT(subcat.categoryid) as subc FROM $sql_tbl[categories] USE INDEX (PRIMARY) LEFT JOIN $sql_tbl[categories] as subcat ON subcat.categoryid_path LIKE CONCAT($sql_tbl[categories].categoryid_path, '/%') WHERE $sql_tbl[categories].categoryid = '$k' $sf_condition GROUP BY $sql_tbl[categories].categoryid");
 //		$subcategories[$k]['product_count_global'] = $subcategories[$k]['product_count'];
 		$subcategories[$k]['product_count'] = isset($product_counts[$k]) ? intval($product_counts[$k]) : 0;
+
+                if (!empty($v["parentid"])){
+                        $k_key = $v["parentid"];
+                } else {
+                        $k_key = $k;
+                }
+
+                $subcategories[$k]['product_count_global'] = $categories[$k_key]["product_count_global"];
 	}
 }
 
