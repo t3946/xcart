@@ -118,7 +118,7 @@
 		<B>I: {$invoice_memo_statuses[$invoice.status]}</B><br />
 	{/foreach}
 {else}
-	<B>{$invoice_memo_statuses.N}</B>
+	<B>I: {$invoice_memo_statuses.N}<br /></B>
 {/if}
 
 {if $v.memos ne ""}
@@ -126,7 +126,7 @@
                 <B>C: {$invoice_memo_statuses[$memo.status]}</B><br />
         {/foreach}
 {else}
-        <B>{$invoice_memo_statuses.N}</B>
+        <B>C: {$invoice_memo_statuses.N}</B>
 {/if}
 
 
