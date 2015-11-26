@@ -556,12 +556,12 @@ var lbl_error = "{$lng.lbl_error}";
 {/if}
 
 {if $product.product_availability eq "in stock"}
-<meta itemprop="availability" itemtype="http://schema.org/ItemAvailability" href="http://schema.org/InStock" content="In Stock"/>
+<meta itemprop="availability" content="In Stock"/>
 {else}
-<meta itemprop="availability" itemtype="http://schema.org/ItemAvailability" href="http://schema.org/OutOfStock" content="Out of stock"/>
+<meta itemprop="availability" content="Out of stock"/>
 {/if}
 
-<meta itemprop="itemCondition" itemtype="http://schema.org/OfferItemCondition" content="http://schema.org/NewCondition"/>
+<meta itemprop="itemCondition" content="NewCondition"/>
 
 <meta itemprop="businessFunction" content="sell"/>
 <meta itemprop="deliveryLeadTime" content="6"/>
