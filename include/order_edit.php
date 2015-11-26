@@ -2004,12 +2004,14 @@ die();
 
 //func_print_r($groups[$certain_mid]);
 
-				if ($mode == "table_accounting_apply"){
+
+				if ($mode == "table_accounting_apply" || ($mode == "accounting_apply" && $user_account["flag"] != "FS")){
 					$update['acc_paymentid'] = $v['paymentid'];
-					$update['ru_status'] = $v['ru_status'];
+
+					if ($mode == "table_accounting_apply"){
+						$update['ru_status'] = $v['ru_status'];
+					}
 				}
-
-
 
                                 if ($mode == "accounting_apply" && $user_account["flag"] != "FS" && !empty($manufacturer_memos_data[$certain_mid]) && is_array($manufacturer_memos_data[$certain_mid])){
                                         $SUM_ref_to_us = 0;
