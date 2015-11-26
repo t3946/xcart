@@ -497,7 +497,11 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 			$product['price'] = func_decreased_price($product["cost_to_us"], $product["price"], $product["map_price"]);
 		}
 		else {
-			$product['price'] = price_format($product['price']);
+			if ($product["min_amount"] > 1){
+				$product['price'] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
+			} else {
+				$product['price'] = price_format($product['price']);
+			}
 		}
 	}
 
@@ -1342,7 +1346,8 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 
 #
 ##
-		if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
+//		if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
+		if ($product["min_amount"] > 1){
 			$product["price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$v[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
 		}
 ##
