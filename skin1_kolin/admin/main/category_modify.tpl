@@ -220,6 +220,18 @@ var requiredFields = [
 </tr>
 
 <tr>
+    <td height="10" class="FormButton" nowrap="nowrap">Prevent index products:</td>
+        <td width="10" height="10"><font class="CustomerMessage"></font></td>
+        <td height="10"><input type="checkbox" name="prevent_index_products" value="Y"{if $current_category.prevent_index_products eq 'Y'} checked="checked"{/if} /></td>
+</tr>
+
+<tr>
+    <td height="10" class="FormButton" nowrap="nowrap">Prevent index category page:</td>
+        <td width="10" height="10"><font class="CustomerMessage"></font></td>
+        <td height="10"><input type="checkbox" name="prevent_index_category_page" value="Y"{if $current_category.prevent_index_category_page eq 'Y'} checked="checked"{/if} /></td>
+</tr>
+
+<tr>
         <td height="10" class="FormButton" nowrap="nowrap">Title (&lt;title&gt;):</td>
         <td width="10" height="10">&nbsp;</td>
         <td height="10">

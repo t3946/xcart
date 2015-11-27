@@ -804,6 +804,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 #
 ##
 ###
+			"prevent_search_indexing_this_product_page" => $prevent_search_indexing_this_product_page,
 			"lock_forsale" => $lock_forsale,
 			"supplier_internal_id" => $supplier_internal_id,
 
@@ -855,7 +856,8 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 		}
 		
         if (isset($dimensionx) && isset($dimensiony) && isset($dimensionz)) {
-			$dimensions = [ $dimensionx, $dimensiony, $dimensionz ];
+//			$dimensions = [ $dimensionx, $dimensiony, $dimensionz ];
+			$dimensions = array( $dimensionx, $dimensiony, $dimensionz );
 			if (count($dimensions) >= 3) {
 				rsort($dimensions);
 				$query_data['dim_x'] = $dimensions[0];

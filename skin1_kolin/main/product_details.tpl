@@ -507,10 +507,17 @@ function generate_price(id) {ldelim}
 	<input type="hidden" name="title_tag" value="{$product.title_tag}" />
 	<input type="hidden" name="seo_product_name" value="{$product.seo_product_name}" />
 	<input type="hidden" name="seo_meta_descr" value="{$product.seo_meta_descr}" />
+	<input type="hidden" name="seo_meta_descr" value="{$product.prevent_search_indexing_this_product_page}" />
 {else}
 <tr>
         {if $geid ne ''}<td width="15" class="TableSubHead">&nbsp;</td>{/if}
         <td colspan="2"><br />{include file="main/subheader.tpl" title="SEO options"}</td>
+</tr>
+
+<tr>
+        {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[prevent_search_indexing_this_product_page]" /></td>{/if}
+        <td class="FormButton" nowrap="nowrap">Prevent search indexing this product page:</td>
+        <td class="ProductDetails"><input type="checkbox" name="prevent_search_indexing_this_product_page" id="prevent_search_indexing_this_product_page" value="Y" {if $product.prevent_search_indexing_this_product_page eq "Y"}checked="checked"{/if} /></td>
 </tr>
 
 <tr>
@@ -533,7 +540,7 @@ function generate_price(id) {ldelim}
 
 <tr>
         {if $geid ne ''}<td width="15" class="TableSubHead">&nbsp;</td>{/if}
-        <td class="FormButton" nowrap="nowrap">SEO meta 'Description'</td>
+        <td class="FormButton" nowrap="nowrap">SEO meta 'Description':</td>
         <td class="ProductDetails">
 		<textarea style="width: 80%" name="seo_meta_descr" cols="60" rows="4">{$product.seo_meta_descr}</textarea>
 	</td>

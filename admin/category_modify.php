@@ -210,7 +210,7 @@ if ($REQUEST_METHOD == "POST") {
 		#
 		# Update general data of category
 		#
-		db_query("UPDATE $sql_tbl[categories] SET category='$category_name', description='$description', meta_descr='$meta_descr', meta_keywords='$meta_keywords', avail='$avail', order_by='$order_by', is_bold='$is_bold', pc_ready_to_classify='$pc_ready_to_classify', title_tag='$title_tag', SEO_category_name='$SEO_category_name', SEO_h2='".trim($SEO_h2)."', google_product_category='$google_product_category' WHERE categoryid='$cat'");
+		db_query("UPDATE $sql_tbl[categories] SET category='$category_name', description='$description', meta_descr='$meta_descr', meta_keywords='$meta_keywords', avail='$avail', order_by='$order_by', is_bold='$is_bold', pc_ready_to_classify='$pc_ready_to_classify', title_tag='$title_tag', SEO_category_name='$SEO_category_name', SEO_h2='".trim($SEO_h2)."', google_product_category='$google_product_category', prevent_index_products='$prevent_index_products', prevent_index_category_page='$prevent_index_category_page' WHERE categoryid='$cat'");
 
         	    // Autogenerate clean URL.
 	        $clean_url = func_clean_url_autogenerate('C', $cat, array('category' => $category_name));
