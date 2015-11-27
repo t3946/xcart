@@ -1881,6 +1881,8 @@ if ( (!empty($active_modules['CIDEV_Best_Search_Filter']) && $current_area == 'C
 		if (is_array($products) && !empty($products)) {
 			foreach ($products as $k=>$v) {
 		                $products[$k]["cidev_filter_products"] = func_query("SELECT $sql_tbl[cidev_filter_products].fv_id, $sql_tbl[cidev_filter_values].fv_name, $sql_tbl[cidev_filter_values].f_id FROM $sql_tbl[cidev_filter_products] LEFT JOIN $sql_tbl[cidev_filter_values] ON $sql_tbl[cidev_filter_values].fv_id=$sql_tbl[cidev_filter_products].fv_id WHERE productid='$v[productid]' ORDER BY $sql_tbl[cidev_filter_values].fv_order_by, $sql_tbl[cidev_filter_values].fv_name");
+
+				$products[$k]["prevent_search_indexing"] = func_prevent_search_indexing($v);
 			}
 		}
 }

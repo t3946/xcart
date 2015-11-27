@@ -157,7 +157,7 @@ function func_get_categories_list($cat=0, $short_list=true, $flag=null, $max_dep
 	}
 
 	if ($short_list) {
-		$to_search = "$sql_tbl[categories].categoryid,$sql_tbl[categories].parentid,$sql_tbl[categories].categoryid_path,$sql_tbl[categories].category,$sql_tbl[categories].avail,$sql_tbl[categories].order_by,$sql_tbl[categories].pc_ready_to_classify, $sql_tbl[categories].google_product_category";
+		$to_search = "$sql_tbl[categories].categoryid,$sql_tbl[categories].parentid,$sql_tbl[categories].categoryid_path,$sql_tbl[categories].category,$sql_tbl[categories].avail,$sql_tbl[categories].order_by,$sql_tbl[categories].pc_ready_to_classify, $sql_tbl[categories].prevent_index_products, $sql_tbl[categories].prevent_index_category_page, $sql_tbl[categories].google_product_category";
 	} else {
 		$to_search = "$sql_tbl[categories].*";
 	}

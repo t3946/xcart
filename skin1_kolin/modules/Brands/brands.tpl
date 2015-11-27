@@ -81,6 +81,8 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 	<td width="20%" align="center">{$lng.lbl_products}</td>
 	<td width="30" align="center">{$lng.lbl_orderby}</td>
 	<td width="30" align="center">{$lng.lbl_active}</td>
+	<td align="center">Prevent index products</td>
+	<td align="center">Prevent index brand page</td>
 </tr>
 
 {if $brands ne ""}
@@ -94,6 +96,20 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 	<td align="center">{$v.products_count|default:$lng.txt_not_available}{if $v.used_by_others gt 0}*{assign var="show_note" value="Y"}{/if}</td>
 	<td align="center"><input type="text" name="records[{$v.brandid}][orderby]" size="5" value="{$v.orderby}"{if $administrate eq ""} disabled="disabled"{/if} /></td>
 	<td align="center"><input type="checkbox" name="records[{$v.brandid}][avail]" value="Y"{if $v.avail eq "Y"} checked="checked"{/if}{if $administrate eq ""} disabled="disabled"{/if} /></td>
+	<td align="center">
+{if $v.prevent_search_indexing_of_all_brand_products eq "Y"}
+	yes
+{else}
+	no
+{/if}
+	</td>
+        <td align="center">
+{if $v.prevent_search_indexing_brand_page eq "Y"}
+        yes
+{else}
+        no
+{/if}   
+        </td>
 </tr>
 
 {/foreach}
@@ -263,6 +279,18 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 
 <tr>
         <td colspan="3"><br /><br />{include file="main/subheader.tpl" title="SEO options"}</td>
+</tr>
+
+<tr>
+        <td class="FormButton">Prevent search indexing of all brand products:</td>
+        <td>&nbsp;</td>
+        <td><input type="checkbox" name="prevent_search_indexing_of_all_brand_products" value="Y"{if $brand.prevent_search_indexing_of_all_brand_products eq 'Y'} checked="checked"{/if} /></td>
+</tr>
+
+<tr>
+        <td class="FormButton">Prevent search indexing brand page:</td>
+        <td>&nbsp;</td>
+        <td><input type="checkbox" name="prevent_search_indexing_brand_page" value="Y"{if $brand.prevent_search_indexing_brand_page eq 'Y'} checked="checked"{/if} /></td>
 </tr>
 
 <tr>

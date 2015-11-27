@@ -1065,6 +1065,12 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 ###
 ##
 #
+
+	$product["prevent_search_indexing"] = func_prevent_search_indexing($product);
+	if (strpos($product['prevent_search_indexing'], 'Y') !== false){
+		$product["robots_noindex"] = "Y";
+	}
+
 	return $product;
 }
 
@@ -1517,5 +1523,76 @@ function func_generate_discounts($productids) {
         }
 }
 
+function func_prevent_search_indexing($product){
+	global $sql_tbl;
+
+	$brandid = $product["brandid"];
+
+	$p_brand = func_query_first_cell("SELECT prevent_search_indexing_of_all_brand_products FROM $sql_tbl[brands] WHERE brandid='$brandid'");
+	if (empty($p_brand)){
+		$p_brand = "N";
+	}
+
+
+	$p_cat = "N";
+
+	if (!empty($product["categoryid"])){
+		$categoryid = $product["categoryid"];
+	} else {
+		$categoryid = func_query_first_cell("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$product[productid]' AND main='Y'");
+	}
+
+	$categoryid_path = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='$categoryid'");
+	$categoryid_path_arr = explode("/", $categoryid_path);
+	$categories = array();
+	foreach ($categoryid_path_arr as $cat){
+		if (!empty($cat)){
+			$categories[] = $cat;
+		}
+	}
+
+	$main_cat = func_query_first("
+Select GROUP_CONCAT(C.prevent_index_products) as prevent_index_products, GROUP_CONCAT(C.avail) as avail
+From xcart_categories C
+Where C.categoryid IN ('".implode("','", $categories)."')
+	");
+
+	if (strpos($main_cat['avail'], 'N') !== true && strpos($main_cat['prevent_index_products'],'Y') !== false ){
+		$p_cat = 'Y';
+	}
+
+	$additional_cats = func_query("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$product[productid]' AND main='N'");
+	if (!empty($additional_cats)){
+		foreach ($additional_cats as $categoryid){
+			$categoryid_path = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='$categoryid'");
+		        $categoryid_path_arr = explode("/", $categoryid_path);
+		        $categories = array();
+		        foreach ($categoryid_path_arr as $cat){
+                		if (!empty($cat)){
+		                        $categories[] = $cat;
+                		}
+		        }
+
+		        $main_cat = func_query_first("
+Select GROUP_CONCAT(C.prevent_index_products) as prevent_index_products, GROUP_CONCAT(C.avail) as avail
+From xcart_categories C
+Where C.categoryid IN ('".implode("','", $categories)."')
+		        ");
+
+		        if (strpos($main_cat['avail'], 'N') !== true && strpos($main_cat['prevent_index_products'],'Y') !== false ){
+		                $p_cat = 'Y';
+		        }
+		}
+	}
+
+	$prevent_search_indexing_this_product_page = $product["prevent_search_indexing_this_product_page"];
+	if (empty($prevent_search_indexing_this_product_page)){
+		$prevent_search_indexing_this_product_page = "N";
+	}
+
+	$prevent_search_indexing = $p_brand."/".$p_cat."/".$prevent_search_indexing_this_product_page;
+
+	return $prevent_search_indexing;
+}
 
 ?>

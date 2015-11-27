@@ -41,6 +41,9 @@ Description
 {/if}
 
 <td width="10%">{$lng.lbl_main_add_categories}</td>
+
+<td align="center">Prevent search index</td>
+
 {if $main eq "category_products"}
  <td nowrap="nowrap">{if $search_prefilled.sort_field eq "orderby"}{include file="buttons/sort_pointer.tpl" dir=$search_prefilled.sort_direction}&nbsp;{/if}<a href="{$url_to|amp}&amp;sort=orderby&amp;sort_direction={if $search_prefilled.sort_field eq "orderby"}{if $search_prefilled.sort_direction eq 1}0{else}1{/if}{else}{$search_prefilled.sort_direction}{/if}">{$lng.lbl_pos}</a></td>
 {/if}
@@ -153,6 +156,11 @@ function checkAll_price(flag, form, prefix) {
 {/if}
 
 <td align="center" nowrap="nowrap"><input type="text" size="5" name="posted_data[{$products[prod].productid}][main_category]" value="{$products[prod].main_cat}" />&nbsp;<input type="text" size="10" name="posted_data[{$products[prod].productid}][add_cats]" value="{$products[prod].add_cats}" /></td>
+
+<td align="center">
+{$products[prod].prevent_search_indexing}
+</td>
+
 {if $main eq "category_products"}
  <td><input type="text" size="6" maxlength="10" name="posted_data[{$products[prod].productid}][orderby]" value="{$products[prod].orderby}" /></td>
 {/if}
