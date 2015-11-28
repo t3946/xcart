@@ -535,15 +535,14 @@ func_load_more_next_productids('','Y');
 {/if}
 
 {if $main eq "product" || $main eq "catalog" || $main eq "brands_list" || $main eq "brand_products"}
-<link itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PaymentMethodCreditCard" />
-<link itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#VISA" />
-<link itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#MasterCard" />
-<link itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PayPal" />
+<link id="pm_1" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PaymentMethodCreditCard" />
+<link id="pm_2" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#VISA" />
+<link id="pm_3" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#MasterCard" />
+<link id="pm_4" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PayPal" />
 {/if}
 
 {if $use_schema_org eq "Y" && $main eq "product"}
-{* <div itemscope itemtype="http://schema.org/Thing"> *}
-<div itemprop="name" itemscope itemtype="http://schema.org/Product">
+<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_offer"/>
 {/if}
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr><td colspan=3 height="10">&nbsp;</td></tr>
@@ -558,9 +557,6 @@ func_load_more_next_productids('','Y');
 </td>
 </tr>
 </table>
-{if $use_schema_org eq "Y" && $main eq "product"}
-</div>
-{/if}
 
 {*include file="customer/home_main.tpl"*}
 
