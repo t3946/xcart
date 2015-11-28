@@ -151,6 +151,8 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 			$query_data = array(
 				"url" => $url,
 				"link_to_us_url" => $link_to_us_url,
+                                "prevent_search_indexing_of_all_brand_products" => $prevent_search_indexing_of_all_brand_products,
+				"prevent_search_indexing_brand_page" => $prevent_search_indexing_brand_page,
 				"title" => trim($title),
 				"SEO_brand_name_h1" => trim($SEO_brand_name_h1),
 				"SEO_h2" => trim($SEO_h2),
@@ -210,6 +212,8 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 				$query_data = array(
 					"brand" => $brand,
 					"avail" => $avail,
+					"prevent_search_indexing_of_all_brand_products" => $prevent_search_indexing_of_all_brand_products,
+					"prevent_search_indexing_brand_page" => $prevent_search_indexing_brand_page,
 					"orderby" => $orderby,
 					"provider" => $login,
 					"descr" => $descr,

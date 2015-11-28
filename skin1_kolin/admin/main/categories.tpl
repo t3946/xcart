@@ -66,6 +66,8 @@
 	<td align="center">{$lng.lbl_products}*</td>
 	<td align="center">{$lng.lbl_parent_categories}</td>
 	<td align="center">Ready to classify</td>
+	<td align="center">Prevent index products</td>
+	<td align="center">Prevent index category page</td>
 	<td align="center">{$lng.lbl_is_bold}</td>
 	<td align="center">{$lng.lbl_enabled}</td>
 </tr>
@@ -96,6 +98,20 @@ Yes
 No
 {/if}
 	</td>
+        <td align="center">
+{if $c.prevent_index_products eq "Y"}
+Yes
+{else}
+No
+{/if}
+        </td>
+        <td align="center">
+{if $c.prevent_index_category_page eq "Y"}
+Yes
+{else}
+No
+{/if}
+        </td>
 	<td align="center">
 	        <input type="checkbox" {if ($c.parentid eq $cat && $c.is_bold eq "Y") || ($c.parentid neq $cat && $additional_parentid[$catid][$cat].is_bold eq "Y")}checked="checked"{/if} name="posted_data[{$catid}][is_bold]" />
 	</td>
