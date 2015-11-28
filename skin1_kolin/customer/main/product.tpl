@@ -2,15 +2,15 @@
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
 {if $product.clean_url ne ""}
-<meta itemprop="url" content="http://www.artistsupplysource.com/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/{$product.clean_url}/" />
 {else}
-<meta itemprop="url" content="http://www.artistsupplysource.com/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/product.php?productid={$product.productid}" />
 {/if}
 {else}
 {if $product.clean_url ne ""}
-<meta itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
 {else}
-<meta itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
 {/if}
 {/if}
 {/if}
@@ -148,7 +148,7 @@
 <tr><td colspan="2" height="20"></td></tr>
 
 {if $config.Appearance.show_in_stock eq "Y" and $config.General.unlimited_products ne "Y" and $product.distribution eq "" && $product.avail <= $config.Appearance.quantity_threshold && $product.avail gt 0}
-<tr>
+<tr id="so_o_stock" itemprop="availability" href="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}">
         <td width="10%" class="BlackT">{$lng.lbl_in_stock}:</td>
         <td nowrap="nowrap" id="product_avail_txt" class="BlackT">
 {if $product.avail gt 0}{$lng.txt_items_available|substitute:"items":$product.avail}{else}{$lng.lbl_no_items_available}{/if}
@@ -156,7 +156,7 @@
 </tr>
 {/if}
 
-<tr><td height="25" width="30%" class="BlackT_new">{$lng.lbl_quantity}:</td>
+<tr id="so_o_stock" itemprop="availability" href="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}"><td height="25" width="30%" class="BlackT_new">{$lng.lbl_quantity}:</td>
 <td style="text-align:left;width:70% !important; font-size: 16px;" width="70%">
 {if $config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount) and $variants eq ''}
 <script type="text/javascript" language="JavaScript 1.2">
@@ -502,7 +502,7 @@ var lbl_error = "{$lng.lbl_error}";
 <table width="100%" cellpadding="0" cellspacing="0">
 <tr>
         <td width="22%" class="BlackT">{$product.upc_ean_isbn.type}:</td>
-        <td nowrap="nowrap">{if $use_schema_org eq "Y"}<span itemprop="gtin13">{/if}{$product.upc_ean_isbn.value}{if $use_schema_org eq "Y"}</span>{/if}</td>
+        <td nowrap="nowrap">{if $use_schema_org eq "Y"}<span id="so_gtin" itemprop="gtin13">{/if}{$product.upc_ean_isbn.value}{if $use_schema_org eq "Y"}</span>{/if}</td>
 </tr>
 </table>
 {/if}

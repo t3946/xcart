@@ -113,36 +113,30 @@ function send_question_email_form(){
 </table>
 {/if}
 
-{if $use_schema_org eq "Y"}
-{if $current_storefront eq "0"}
-<meta itemprop="logo" content="http://www.artistsupplysource.com/image.php?type=P&id={$product.productid}"/>
-{else}
-<meta itemprop="logo" content="http://{$cidev_store_domain}/image.php?type=P&id={$product.productid}"/>
-{/if}
+<div id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Organization">
+	<meta itemprop="name" content="{$product.cidev_brand_name}"/>
+</div> 
+<div id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
+	<meta itemprop="name" content="{$product.manufacturer}"/>
+</div>
 
-<meta itemprop="brand" content="{$product.cidev_brand_name}"/>
-<meta itemprop="manufacturer" content="{$product.manufacturer}"/>
-<meta itemprop="sku" content="{$product.productcode}"/>
 {if $cidev_mpn ne ""}
-<meta itemprop="mpn" content="{$cidev_mpn}"/>
+<meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
 {/if}
 
-<div itemprop="offers" itemscope itemtype="http://schema.org/Offer"/>
+<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_leadtime so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1"/>
 
 {if $cat_name_for_itemprop ne ""}
-<meta itemprop="category" content="{$cat_name_for_itemprop}"/>
+<meta id="so_category" itemprop="category" content="{$cat_name_for_itemprop}"/>
 {/if}
 
-{if $product.product_availability eq "in stock"}
-<meta itemprop="availability" content="http://schema.org/InStock"/>
-{else}
-<meta itemprop="availability" content="http://schema.org/OutOfStock"/>
-{/if}
+<meta id="so_o_condition" itemprop="itemCondition" content="http://schema.org/NewCondition"/>
 
-<meta itemprop="itemCondition" content="http://schema.org/NewCondition"/>
-
-<meta itemprop="businessFunction" content="http://purl.org/goodrelations/v1#Sell"/>
-<meta itemprop="deliveryLeadTime" content="6"/>
+<meta id="so_o_function" itemprop="businessFunction" href="http://purl.org/goodrelations/v1#Sell"/>
+<div id="so_o_delivery" itemprop="deliveryLeadTime"  itemscope="" itemtype="http://schema.org/QuantitativeValue">
+	<meta itemprop="value" content="6">
+	<meta itemprop="unitText" content="days">
+</div>
 
 {if $product_wholesale.0.price ne "" && $product.new_notify_in_stock_price eq "" && $product.map_price lte $product.taxed_price}
 	{assign var="current_price" value=$product_wholesale.0.price}
@@ -156,8 +150,19 @@ function send_question_email_form(){
 
 <meta itemprop="price" content="{$itemprop_price|price_format}" {* id="itemprop_price" *} />
 <meta itemprop="priceCurrency" content="USD"/>
-<meta itemprop="seller" content="S3 Stores Inc."/>
+
+<div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
+	{if $use_schema_org eq "Y"}
+		{if $current_storefront eq "0"}
+			<meta itemprop="logo" content="http://www.artistsupplysource.com/image.php?type=P&id={$product.productid}"/>
+		{else}
+			<meta itemprop="logo" content="http://{$cidev_store_domain}/image.php?type=P&id={$product.productid}"/>
+		{/if}
+	<meta itemprop="url" content="http://www.s3stores.com/"/>
+	<meta itemprop="name" content="S3 Stores Inc."/>
 </div>
+
+
 
 {* </div> *} {* end http://schema.org/Product  *}
 {/if}
