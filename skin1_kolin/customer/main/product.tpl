@@ -87,7 +87,7 @@
 {if $current_price gt 0 and $product.list_price gt 0 and $product.list_price gt $current_price}
 <tr>
 <td nowrap="nowrap" class="BlackT" width="30%" valign="top">{$lng.lbl_list_price}:</td>
-<td><font style="{* FONT-FAMILY: strickeout; *} font-size: 12px; color: #848C84;"><strike>{include file="currency.tpl" value=$product.list_price plain_text_message=true price_type="list_price" product=$product}_1</strike></font></td>
+<td><font style="{* FONT-FAMILY: strickeout; *} font-size: 12px; color: #848C84;"><strike>{include file="currency.tpl" value=$product.list_price plain_text_message=true price_type="list_price"}</strike></font></td>
 </tr>
 {/if}
 
@@ -108,7 +108,7 @@
 	{/if}
 	{* --- *}
 
-<font class="ProductPriceConverting"><span id="product_price" style="white-space: nowrap;">{include file="currency.tpl" value=$current_price plain_text_message=true price_type="product_price" product=$product}_2</span></font>
+<font class="ProductPriceConverting"><span id="product_price" style="white-space: nowrap;">{include file="currency.tpl" value=$current_price plain_text_message=true price_type="product_price"}</span></font>
 <font class="MarketPrice"> <span id="product_alt_price" style="white-space: nowrap;">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price plain_text_message=true}</span></font>
 {if $product.map_price gt $product.taxed_price}
 <br />
@@ -381,7 +381,7 @@ var lbl_error = "{$lng.lbl_error}";
 {if $product_subtotal_value eq ""}
 {math equation="price*quantity" price=$current_price quantity=$product.min_amount format="%3.5f" assign=product_subtotal_value}
 {/if}
-<div style="font-size: 16px; color: #000000; font-weight: bold;" id="product_subtotal_value">Subtotal: {include file="currency.tpl" value=$product_subtotal_value plain_text_message=true price_type="product_subtotal_value" product=$product}_3</div>
+<div style="font-size: 16px; color: #000000; font-weight: bold;" id="product_subtotal_value">Subtotal: {include file="currency.tpl" value=$product_subtotal_value plain_text_message=true price_type="product_subtotal_value"}</div>
 {/if}
 
 
