@@ -22,7 +22,7 @@
 <tr>
 
 {if $use_h1 eq "Y"}
-<td {if $usertype eq "C"}style="background-color: #FEF6F3;"{/if} class="DialogTitle valign-top">{if $align eq 'center'}<center><h1{if $main eq "product"}{if $use_schema_org eq "Y"} itemprop="name"{/if}{/if}>{$title}</h1></center>{else}<h1{if $main eq "product"}{if $use_schema_org eq "Y"} itemprop="name"{/if}{/if}>{$title}</h1>{/if}</td>
+<td {if $usertype eq "C"}style="background-color: #FEF6F3;"{/if} class="DialogTitle valign-top">{if $align eq 'center'}<center><h1{if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$title}</h1></center>{else}<h1{if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$title}</h1>{/if}</td>
 {else}
  <td {if $usertype eq "C"}style="background-color: #FEF6F3;"{/if} class="DialogTitle valign-top">{if $align eq 'center'}<center><b>{$title}</b></center>{else}{if $use_h2 eq "Y"}<h2 class="h2_descr">{else}<b>{/if}{$title}{if $use_h2 eq "Y"}</h2>{else}</b>{/if}{/if} 
 
@@ -63,7 +63,7 @@
 <table cellspacing="0" {$extra}>
 <tr>
 <td class="DialogTitle valign-top">
-{if $product_sku ne ""}<font color="#006600" class="DialogTitleT">{$lng.lbl_sku}: {$product_sku}</font>{* <br /> *}{/if}
+{if $product_sku ne ""}<font color="#006600" class="DialogTitleT">{$lng.lbl_sku}: {if $main eq "product"}{if $use_schema_org eq "Y"}<span id="so_sku" itemprop="sku">{/if}{/if}{$product_sku}{if $main eq "product"}{if $use_schema_org eq "Y"}</span>{/if}{/if}</font>{* <br /> *}{/if}
 </td>
 
 {if $product_free_ship ne "" || ($lbl_minimum_order_amount_message_product eq "Y" && $d_minimum_order_amount_in_us ne "")}
