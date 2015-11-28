@@ -95,7 +95,7 @@ function send_question_email_form(){
 <br />
 {capture name=dialog}
 <div style="padding-left: 8px;">
-<span style="font-size: 13px; color: #000000;" class="SPItems-description">{if $use_schema_org eq "Y"}<span itemprop="description">{/if}{if $product.fulldescr ne ""}{$product.fulldescr}{else}{$product.descr}{/if}{if $use_schema_org eq "Y"}</span>{/if}</span>
+<span style="font-size: 13px; color: #000000;" class="SPItems-description">{if $use_schema_org eq "Y"}<span id="so_description" itemprop="description">{/if}{if $product.fulldescr ne ""}{$product.fulldescr}{else}{$product.descr}{/if}{if $use_schema_org eq "Y"}</span>{/if}</span>
 
 {if $product.weight ne "0.00" || $variants ne '' || $show_dimensions || $product.upc_ean_isbn}
 {* <br /> *}
@@ -124,8 +124,10 @@ function send_question_email_form(){
 <meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
 {/if}
 
-<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_leadtime so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1"/>
-
+<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
+<div id="so_weight" itemprop="weight" itemscope="" itemtype="http://schema.org/QuantitativeValue">
+	<meta itemprop="unitCode" content="lbs">
+</div>
 {if $cat_name_for_itemprop ne ""}
 <meta id="so_category" itemprop="category" content="{$cat_name_for_itemprop}"/>
 {/if}
@@ -354,11 +356,8 @@ function send_question_email_form(){
 {if $product.weight ne "0.00" || $variants ne ''}
 <tr id="product_weight_box">
         <td width="22%">Shipping weight:</td>
-        <td nowrap="nowrap"><span id="product_weight">{$product.weight|formatprice}</span> {$config.General.weight_symbol}</td>
+        <td nowrap="nowrap"><span id="so_weight" itemprop="value">{$product.weight|formatprice}</span> {$config.General.weight_symbol}</td>
 </tr>
-{if $use_schema_org eq "Y"}
-<meta itemprop="weight" content="{$product.weight|formatprice} {$config.General.weight_symbol}" />
-{/if}
 {/if}
 {if $show_dimensions}
 <tr>

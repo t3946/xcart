@@ -536,9 +536,9 @@ func_load_more_next_productids('','Y');
 
 {if $main eq "product" || $main eq "catalog" || $main eq "brands_list" || $main eq "brand_products"}
 <link id="pm_1" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PaymentMethodCreditCard" />
-<link id="pm_1" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#VISA" />
-<link id="pm_1" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#MasterCard" />
-<link id="pm_1" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PayPal" />
+<link id="pm_2" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#VISA" />
+<link id="pm_3" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#MasterCard" />
+<link id="pm_4" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PayPal" />
 {/if}
 
 {if $use_schema_org eq "Y" && $main eq "product"}
