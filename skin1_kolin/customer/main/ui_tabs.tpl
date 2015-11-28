@@ -102,10 +102,6 @@ function send_question_email_form(){
 <br />
 {/if}
 
-{if $use_schema_org eq "Y"}
-{* <div itemprop="name" itemscope itemtype="http://schema.org/Product"> *}
-{/if}
-
 <br />
 {if $active_modules.Extra_Fields ne ""}
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -124,8 +120,8 @@ function send_question_email_form(){
 <meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
 {/if}
 
-<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
-<div id="so_weight" itemprop="weight" itemscope="" itemtype="http://schema.org/QuantitativeValue">
+<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_stock so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
+<div id="so_weight" itemprop="weight" itemscope="" itemtype="http://schema.org/QuantitativeValue" itemref="so_weight_value">
 	<meta itemprop="unitCode" content="lbs">
 </div>
 {if $cat_name_for_itemprop ne ""}
@@ -356,7 +352,7 @@ function send_question_email_form(){
 {if $product.weight ne "0.00" || $variants ne ''}
 <tr id="product_weight_box">
         <td width="22%">Shipping weight:</td>
-        <td nowrap="nowrap"><span id="so_weight" itemprop="value">{$product.weight|formatprice}</span> {$config.General.weight_symbol}</td>
+        <td nowrap="nowrap"><span id="so_weight_value" itemprop="value">{$product.weight|formatprice}</span> {$config.General.weight_symbol}</td>
 </tr>
 {/if}
 {if $show_dimensions}
