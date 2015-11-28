@@ -41,14 +41,14 @@ vim: set ts=2 sw=2 sts=2 et:
 {/if}
 
 {if $product.product_availability eq "in stock"}
-<meta itemprop="availability" itemtype="http://schema.org/ItemAvailability" href="http://schema.org/InStock" content="In Stock"/>
+<meta itemprop="availability" content="http://schema.org/InStock"/>
 {else}
-<meta itemprop="availability" itemtype="http://schema.org/ItemAvailability" href="http://schema.org/OutOfStock" content="Out of stock"/>
+<meta itemprop="availability" content="http://schema.org/OutOfStock"/>
 {/if}
 
-<meta itemprop="itemCondition" itemtype="http://schema.org/OfferItemCondition" content="http://schema.org/NewCondition"/>
+<meta itemprop="itemCondition" content="http://schema.org/NewCondition"/>
 
-<meta itemprop="businessFunction" content="sell"/>
+<meta itemprop="businessFunction" content="http://purl.org/goodrelations/v1#Sell"/>
 <meta itemprop="deliveryLeadTime" content="6"/>
 
 {if $product.new_notify_in_stock_price ne ""}

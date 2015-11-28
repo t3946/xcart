@@ -36,6 +36,11 @@ var usertype = "{$usertype}";
 {* igor_async {include file="main/include_js.tpl" src="browser_identificator.js"} *}
 
 {/if}
+
+{if $usertype eq "C" && ($product.robots_noindex eq "Y" || $current_category.prevent_index_category_page eq "Y" || $brand.prevent_search_indexing_brand_page eq "Y")}
+<meta name="robots" content="noindex">
+{/if}
+
 {if $usertype eq "P" or $usertype eq "A"}
 <meta name="ROBOTS" content="NOINDEX,NOFOLLOW" />
 {else}

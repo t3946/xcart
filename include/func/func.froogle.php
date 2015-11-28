@@ -475,21 +475,38 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 		$product['price'] = number_format(round($product['price'], 2), 2, ".", "");
 	}
 */
+		$product_availability = func_product_availability(false,false,false,false,false,$product);
 
         $multipack = "";
         if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
 
 		$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
 
-                $multipack = $product["min_amount"];
+        $multipack = $product["min_amount"];
 		$product['multipack'] = $multipack;
-
+		
 		if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
 			$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
-			$product['price'] = price_format($price_min_amount * $multipack);
+			if ($product_availability == "out of stock")
+			{
+				$product['price'] = price_format($price_min_amount);
+			}
+			else
+			{
+				$product['price'] = price_format($price_min_amount * $multipack);
+			}
+			
 		}
 		else {
-			$product['price'] = price_format($price_min_amount * $multipack);
+			
+			if ($product_availability == "out of stock")
+			{
+				$product['price'] = price_format($price_min_amount);
+			}
+			else
+			{
+				$product['price'] = price_format($price_min_amount * $multipack);
+			}
 		}
         }
 	else {
@@ -497,13 +514,17 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 			$product['price'] = func_decreased_price($product["cost_to_us"], $product["price"], $product["map_price"]);
 		}
 		else {
-			$product['price'] = price_format($product['price']);
+			if ($product["min_amount"] > 1){
+				$product['price'] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
+			} else {
+				$product['price'] = price_format($product['price']);
+			}
 		}
 	}
 
+	
 //func_print_r($product);
 //die();
-	$product_availability = func_product_availability(false,false,false,false,false,$product);
 
 	$product['mpn'] = $mpn;
 	$product['gpc'] = $gpc;
@@ -1342,7 +1363,8 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 
 #
 ##
-		if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
+//		if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
+		if ($product["min_amount"] > 1){
 			$product["price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$v[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
 		}
 ##
@@ -1377,7 +1399,7 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 
 #
 ##
-		if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
+		if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y" && $product_availability == "in stock"){
                         $postBody["entries"][$k]["inventory"]["price"]["value"] = price_format($product["min_amount"]*$product["price"]);
                 }
 		else {

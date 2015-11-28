@@ -22,10 +22,49 @@ function managedate(type, status) {
 {assign var="tab" value="unreconciled"}
 {/if}
 
+{if $tab eq "unreconciled"}
+<script type="text/javascript">
+        <!--
+                var lbl_add = '{$lng.lbl_add|escape}';
+                var lbl_remove_row = '{$lng.lbl_remove_row|escape}';
+                var ImagesDir = '{$ImagesDir}';
+        -->
+
+{literal}
+function add_order_manually_row(index, r_id) {
+
+        var row_max_index = $('#row_max_index_' + r_id).val();
+        row_max_index++;
+        $('#row_max_index_' + r_id).val(row_max_index);
+
+        $('#order_manually_row_' + r_id + '_' + index).after(
+                '<tr id="order_manually_row_' + r_id + '_' + row_max_index + '">' +
+                        '<td align="right">Add order #</td><td align="center">' +
+                                '<input type="text" size="9" name="add_order_manually[' + r_id + '][' + row_max_index + '][orderid]" value="" /></td><td>' +
+                                '<a href="javascript: void(0);" onclick="javascript: add_order_manually_row(\'' + row_max_index + '\', \'' + r_id + '\');"><img src="' + ImagesDir + '/plus.gif" alt="' + lbl_add + '" /></a>' +
+                                '&nbsp;&nbsp;<a href="javascript: void(0);" onclick="javascript: remove_order_manually_row(\'' + row_max_index + '\', \'' + r_id + '\');"><img src="' + ImagesDir + '/minus.gif" alt="' + lbl_remove_row + '" /></a>' +
+
+
+                        '</td>' +
+                '</tr>'
+        );
+}
+
+function remove_order_manually_row(index, r_id) {
+        $('#order_manually_row_' + r_id +'_' + index).remove();
+}
+{/literal}
+</script>
+{/if}
+
+
 <table width="100%">
 <tr>
 <td width="50" nowrap="nowrap">
 {if $tab ne "unreconciled"}<a href="reconciliation.php?tab=unreconciled">{else}<B>{/if}Unreconciled{if $tab ne "unreconciled"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
+</td>
+<td width="50" nowrap="nowrap">
+{if $tab ne "calculation"}<a href="reconciliation.php?tab=calculation">{else}<B>{/if}Calculation{if $tab ne "calculation"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
 </td>
 <td width="50" nowrap="nowrap">
 {if $tab ne "reconciled"}<a href="reconciliation.php?tab=reconciled">{else}<B>{/if}Reconciled{if $tab ne "reconciled"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
@@ -36,14 +75,11 @@ function managedate(type, status) {
 <td width="50" nowrap="nowrap">
 {if $tab ne "expense_report"}<a href="reconciliation.php?tab=expense_report">{else}<B>{/if}Expense&nbsp;report{if $tab ne "expense_report"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
 </td>
-<td width="50" nowrap="nowrap">
-{if $tab ne "import"}<a href="reconciliation.php?tab=import">{else}<B>{/if}Import&nbsp;transactions{if $tab ne "import"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
-</td>
 <td width="30" nowrap="nowrap">
 {if $tab ne "rules"}<a href="reconciliation.php?tab=rules">{else}<B>{/if}Rules{if $tab ne "rules"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
 </td>
 <td width="50" nowrap="nowrap">
-{if $tab ne "calculation"}<a href="reconciliation.php?tab=calculation">{else}<B>{/if}Calculation{if $tab ne "calculation"}</a>{else}</B>{/if}
+{if $tab ne "import"}<a href="reconciliation.php?tab=import">{else}<B>{/if}Import&nbsp;transactions{if $tab ne "import"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
 </td>
 <td width="*">&nbsp;</td>
 <td width="50" nowrap="nowrap">
@@ -59,12 +95,12 @@ function managedate(type, status) {
 </br>
 </br>
 
-{if $tab eq "unreconciled" || $tab eq "reconciled" || $tab eq "dropped" || $tab eq "expense_report" || $tab eq "accounts_payable" || $tab eq "receivables"}
+{if $tab eq "unreconciled" || $tab eq "reconciled" || $tab eq "dropped" || $tab eq "expense_report" || $tab eq "accounts_payable" || $tab eq "receivables" || $tab eq "calculation"}
 <form name="searchform" method="post" action="reconciliation.php">
-<input type="hidden" name="mode" value="search" >
+<input type="hidden" name="mode" value="{if $tab eq "calculation"}find_orders{else}search{/if}" >
 <input type="hidden" name="tab" value="{$tab}" >
 
-{if $tab eq "unreconciled" || $tab eq "reconciled"}
+{if $tab eq "unreconciled" || $tab eq "reconciled" || $tab eq "calculation"}
 <table>
 <tr>
         <td class="FormButton" nowrap="nowrap" width="330" align="right">
@@ -98,10 +134,10 @@ function managedate(type, status) {
 
 <table {if $tab eq "accounts_payable" || $tab eq "receivables"}align="right"{/if}>
 <tr>
-<td {if $tab eq "unreconciled" || $tab eq "reconciled"}class="FormButton" nowrap="nowrap" width="330" align="right"{/if}>
+<td {if $tab eq "unreconciled" || $tab eq "reconciled" || $tab eq "calculation"}class="FormButton" nowrap="nowrap" width="330" align="right"{/if}>
 <B>{if $tab eq "accounts_payable" || $tab eq "receivables"}Order dates{else}Transaction dates{/if}</B>
 
-{if $tab eq "unreconciled" || $tab eq "reconciled"}
+{if $tab eq "unreconciled" || $tab eq "reconciled" || $tab eq "calculation"}
 </td>
 <td width="10">&nbsp;</td>
 <td width="320">
@@ -164,7 +200,7 @@ to
 <input id="id_date_csv_End" type="text" size="11" name="date_csv_End" value="{$search_prefilled.date_csv.end_date_str}" />
 {/if}
 
-{if $tab ne "unreconciled" && $tab ne "reconciled"}
+{if $tab ne "unreconciled" && $tab ne "reconciled" && $tab ne "calculation"}
 <INPUT type="submit" value="{if $tab eq "expense_report"}Generate expense report{elseif $tab eq "accounts_payable" || $tab eq "receivables"}Show{else}Show transactions{/if}">
 {/if}
 </td>
@@ -176,7 +212,7 @@ to
   <td width="10">&nbsp;</td>
   <td>
 <input type="checkbox" name="posted_data[show_unreconciled_invoices_and_memos]" value="Y" {if $search_prefilled.show_unreconciled_invoices_and_memos eq "Y" || $search_prefilled.show_unreconciled_invoices_and_memos eq ""}checked="checked"{/if} />
-
+{*
 	<div style="display: none;">
                 <select name="data_orders_selectbox">
                         <option value="1" {if $search_prefilled.data_orders_selectbox eq "1"}selected="selected"{/if}>1</option>
@@ -187,14 +223,33 @@ to
                         <option value="24" {if $search_prefilled.data_orders_selectbox eq "24"}selected="selected"{/if}>24</option>
                 </select>
 	</div>
+*}
   </td>
 </tr>
 {/if}
 
-{if $tab eq "unreconciled" || $tab eq "reconciled"}
+{if $tab eq "calculation" || $tab eq "unreconciled"}
+<tr {if $tab eq "unreconciled"}style="display: none;"{/if}>
+  <td class="FormButton" align="right"> Order dates</td>
+  <td width="10">&nbsp;</td>
+  <td>up to
+    <select name="data_orders_selectbox">
+        <option value="1" {if $search_prefilled.data_orders_selectbox eq "1"}selected="selected"{/if}>1</option>
+        <option value="2" {if $search_prefilled.data_orders_selectbox eq "2"}selected="selected"{/if}>2</option>
+        <option value="3" {if $search_prefilled.data_orders_selectbox eq "" || $search_prefilled.data_orders_selectbox eq "3"}selected="selected"{/if}>3</option>
+        <option value="6" {if $search_prefilled.data_orders_selectbox eq "6"}selected="selected"{/if}>6</option>
+        <option value="12" {if $search_prefilled.data_orders_selectbox eq "12"}selected="selected"{/if}>12</option>
+        <option value="24" {if $search_prefilled.data_orders_selectbox eq "24"}selected="selected"{/if}>24</option>
+    </select>
+        months back
+  </td>
+</tr>
+{/if}
+
+{if $tab eq "unreconciled" || $tab eq "reconciled" || $tab eq "calculation"}
 <tr>
 <td colspan="3" align="center"><br />
-<INPUT type="submit" value="{if $tab eq "unreconciled"}Show transactions and orders{else}Show transactions{/if}">
+<INPUT type="submit" value="{if $tab eq "unreconciled"}Show transactions and orders{elseif $tab eq "calculation"}Find orders{else}Show transactions{/if}">
 </td>
 </tr>
 {/if}
@@ -256,15 +311,15 @@ to
 
 {if $reconciliations ne "" || ($tab eq "unreconciled" && $unreconciled_orders ne "")}
 <tr class="TableHead">
-<td style="background-color: #D9EAD3;" width="90">Date</td>
-<td style="background-color: #D9EAD3;" width="200">Description</td>
+<td style="background-color: #D9EAD3;" width="90">TR Date</td>
+<td style="background-color: #D9EAD3;" width="200">Transaction Description</td>
 <td style="background-color: #D9EAD3;" width="50">Amount</td>
 <td style="background-color: #FFD44C;" width="90">Action</td>
 <td style="background-color: #F4CCCC;" width="90">Amount</td>
 <td style="background-color: #F4CCCC;" width="40">Distr</td>
 <td style="background-color: #F4CCCC;" width="90">Order #</td>
 <td style="background-color: #F4CCCC;" width="100">Invoice #</td>
-<td style="background-color: #F4CCCC;" width="90">Date</td>
+<td style="background-color: #F4CCCC;" width="90">Order Date</td>
 {if $tab eq "unreconciled"}
         <td style="background-color: #D9EAD3;" width="20">Untie</td>
 {/if}
@@ -310,19 +365,10 @@ to
 <td width="90" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}" align="center">
 
 
-  {if ($tab eq "reconciled") || ($v.distr_code eq "" && $v.config_search_keyphrase_found eq "Y") ||
-
-  ($v.invoices_and_memos ne "" &&
-    (
-
-	($v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format)
-	||
-	(
-	$v.d_bulk_or_individual_order_payments eq "distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping" && 
-		($v.amount_csv_abs|price_format eq $v.invoices_and_memos.0.accounting.1.gross|price_format)
-	)
-    )
-  )
+  {if 
+	($tab eq "reconciled") || 
+	($v.distr_code eq "" && $v.config_search_keyphrase_found eq "Y") ||
+  	($v.invoices_and_memos ne "" && $v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format)
   }
 
     <select name="action[{$v.id}]">
@@ -341,14 +387,25 @@ to
 	{/if}
     </select>
 
+  {elseif $tab eq "unreconciled"}
+
+	<a href="javascript: void(0);" style="color: blue;" onclick="javascript: $('#add_orders_section_{$v.id}').toggle();">I've got a statement</a>
+
+	{if $v.total_invoices_and_memos_amounts__amount_csv_abs_diff_abs gt 0}
+		<br />
+		<br />
+		<input type="checkbox" name="action[{$v.id}]" value="R" /> Force reconcile
+	{/if}
+
   {/if}
 
 </td>
 
 <td {if $tab eq "unreconciled"}colspan="6"{else}colspan="5"{/if} valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}">
 
+ <table width="100%" cellpadding="0" cellspacing="0">
+
  {if $v.invoices_and_memos ne ""}
-  <table width="100%" cellpadding="0" cellspacing="0">
 
    {foreach from=$v.invoices_and_memos item=vo key=ko}
    <tr>
@@ -402,22 +459,39 @@ to
    </tr>
    {/if}
 
-  </table>
-
  {elseif $v.distr_code ne ""}
-  <table width="100%">
 	<tr>
 	<td width="100"></td>
 	<td width="100" align="center"><a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$v.distr_code}</a></td>
 	<td width="100"></td>
 	<td width="100"></td>
 	<td width="100"></td>
-{if $tab eq "unreconciled"}
+	{if $tab eq "unreconciled"}
 	<td width="100"></td>
-{/if}
+	{/if}
 	</tr>
-  </table>
  {/if}
+
+ {if $tab eq "unreconciled"}
+  <tr id="add_orders_section_{$v.id}" style="display: none;">
+	<td colspan="6" align="left">
+	<hr />
+        <input type="hidden" id="row_max_index_{$v.id}" name="row_max_index_{$v.id}" value="1" />
+        <table cellpadding="0" cellspacing="0">
+                <tr id="order_manually_row_{$v.id}_1">
+			<td width="130" align="right">Add order #</td>
+                        <td width="90" align="center"><input type="text" size="9" name="add_order_manually[{$v.id}][1][orderid]" value="" /></td>
+			<td width="30"><a href="javascript: void(0);" onclick="javascript: add_order_manually_row(1, '{$v.id}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a>
+                        </td>
+                </tr>
+        </table>
+
+	</td>
+  </tr>
+ {/if}
+
+ </table>
+
 </td>
 
 </tr>
@@ -509,9 +583,11 @@ to
 <INPUT type="submit" value="Apply">
 </td>
 <td width="33%" align="right">
+{*
 {if $tab eq "unreconciled"}
 <INPUT type="button" value="Untie selected transaction-order connections" onclick="document.r_form.mode.value='clear_invoices_memos'; document.r_form.submit();"></TD>
 {/if}
+*}
 </td>
 </tr>
 </table>
@@ -736,7 +812,7 @@ function func_show_full_orders_info(id){
 
 {/if}
 
-
+{*
 {if $tab eq "calculation"}
 <br />
 {capture name=dialog}
@@ -801,7 +877,7 @@ to
 {/capture}
 {include file="dialog.tpl" title="Find orders for transactions" content=$smarty.capture.dialog extra="width=100%"}
 {/if}
-
+*}
 
 
 {if $tab eq "rules"}

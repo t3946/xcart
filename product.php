@@ -1,7 +1,7 @@
 <?php /* MODIFIED: random:20313 [2010 Mar 16 13:33][Custom development (Speed-up optimization)] */ ?>
 <?php /* MODIFIED: random:20460 [2010 Mar 18 13:43][Custom development (Free shipping modifications)] */ ?>
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
-<?php /* MODIFIED:  random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (????? ??? ???????? ??????????? "??????????????" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -314,23 +314,27 @@ if ($product_info["product_type"] != "C") {
 $product_feed_enabled = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
 $smarty->assign("product_feed_enabled", $product_feed_enabled);
 
+
+if ($product_info["min_amount"] > 1){
+	$product_info["price"] = $product_info["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product_info[productid]' AND quantity <= '$product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
+}
+
+
 if ($product_feed_enabled == "Y" && empty($product_info["is_variants"]) && $product_info["r_avail"] <= 0){
 
-//        $max1 = $product_info["cost_to_us"] + ($product_info["taxed_price"] - $product_info["cost_to_us"])/3;
-//        $new_notify_in_stock_price = max($product_info["map_price"], $max1);
-
+/*
 	if ($product_info["mult_order_quantity"] == "Y" && $product_info["min_amount"] > 1){
 		$product_info["price"] = $product_info["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product_info[productid]' AND quantity <= '$product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
 	}
+*/
 
 	$new_notify_in_stock_price = func_decreased_price($product_info["cost_to_us"], $product_info["taxed_price"], $product_info["map_price"]);
-
         $product_info["new_notify_in_stock_price"] = $new_notify_in_stock_price;
-//func_print_r($product_info, $max1, $new_price);
 }
 ###
 ##
 #
+
 
 ###
 	if ($product_info["new_map_price"] == "0"){

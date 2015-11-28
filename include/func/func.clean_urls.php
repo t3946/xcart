@@ -209,6 +209,8 @@ function func_clean_url_cleanup_string($string)
 {
     global $default_charset;
 
+    $default_charset = "utf-8";
+
     if (!is_string($string)) {
         return NULL;
     }

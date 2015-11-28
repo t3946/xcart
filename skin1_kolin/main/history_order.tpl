@@ -183,6 +183,16 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 </table>
 
 
+{if $order.lng_order_contains_FBA_items eq "Y"}
+  <table width="100%">
+  <tr>
+  <td align="center" style="border: solid 1px #000000; background: #F4CCCC;">
+        {$lng.lng_order_contains_FBA_items}
+  </td>
+  </tr>
+  </table>
+{/if}
+
 {if $you_cannot_modify_order eq "Y"}
 {* <br /> *}
 
@@ -391,24 +401,20 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 	{/if}
 
 	{if $checks_deposited_order ne ""}
-		<table cellspacing="0" cellpadding="0" border="0">
-		{foreach from=$checks_deposited_order item=vc key=kc}
-		<tr>
-			<td>{$vc.date|date_format:'%d-%b-%Y'}</td>
-			<td>&nbsp;&nbsp;&nbsp;</td>
-			<td>Check# {$vc.check_number}</td>
-			<td>&nbsp;&nbsp;&nbsp;</td>
-			<td>{$vc.currency}</td>
-			<td>&nbsp;</td>
-			<td>{$vc.amount}</td>
-		</tr>
-		{/foreach}
-		<tr>
-			<td colspan="4"><B>Total deposited amount:</B></td>
-			<td><B>{$vc.currency}</B></td>
-			<td>&nbsp;</td>
-			<td><a href="checks_deposited.php?checks_deposited_id={$vc.checks_deposited_id}"><B>{$vc.total_deposit_amount}</B></a></td>
-		</table>
+                <table cellspacing="0" cellpadding="0" border="0">
+                {foreach from=$checks_deposited_order item=vc key=kc}
+                <tr>
+                        <td>{$vc.date|date_format:'%d-%b-%Y'}</td>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <td>Check# {$vc.check_number}</td>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <td>{$vc.currency}&nbsp;{$vc.amount}</td>
+                </tr>
+                {/foreach}
+                <tr>
+                        <td colspan="4"><B>Total deposited amount:</B>&nbsp;</td>
+                        <td><a href="checks_deposited.php?checks_deposited_id={$vc.checks_deposited_id}"><B>{$vc.currency}&nbsp;{$vc.total_deposit_amount}</B></a></td>
+                </table>
 	{/if}
 
    </td>

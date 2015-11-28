@@ -115,11 +115,20 @@
   <td align="center" class="OrderSheetGreenCell">
 {if $v.invoices ne ""}
 	{foreach from=$v.invoices item=invoice key=invoice_number}
-		<B>{$invoice_memo_statuses[$invoice.status]}</B><br />
+		<B>I: {$invoice_memo_statuses[$invoice.status]}</B><br />
 	{/foreach}
 {else}
-	<B>{$invoice_memo_statuses.N}</B>
+	<B>I: {$invoice_memo_statuses.N}<br /></B>
 {/if}
+
+{if $v.memos ne ""}
+        {foreach from=$v.memos item=memo key=memo_number}
+                <B>C: {$invoice_memo_statuses[$memo.status]}</B><br />
+        {/foreach}
+{else}
+        <B>C: {$invoice_memo_statuses.N}</B>
+{/if}
+
 
   </td>
   <td align="center">

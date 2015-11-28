@@ -51,21 +51,17 @@ $(function() {ldelim}
 {if $item.log eq "checks_deposited_orders" && $checks_deposited_order ne ""}
                 <table cellspacing="0" cellpadding="0" border="0">
                 {foreach from=$checks_deposited_order item=vc key=kc}
-                <tr>
+                <tr>    
                         <td>{$vc.date|date_format:'%d-%b-%Y'}</td>
                         <td>&nbsp;&nbsp;&nbsp;</td>
                         <td>Check# {$vc.check_number}</td>
                         <td>&nbsp;&nbsp;&nbsp;</td>
-                        <td>{$vc.currency}</td>
-                        <td>&nbsp;</td>
-                        <td>{$vc.amount}</td>
+                        <td>{$vc.currency}&nbsp;{$vc.amount}</td>
                 </tr>
                 {/foreach}
                 <tr>
-                        <td colspan="4"><B>Total deposited amount:</B></td>
-                        <td><B>{$vc.currency}</B></td>
-                        <td>&nbsp;</td>
-			<td><a href="checks_deposited.php?checks_deposited_id={$vc.checks_deposited_id}"><B>{$vc.total_deposit_amount}</B></a></td>
+                        <td colspan="4"><B>Total deposited amount:</B>&nbsp;</td>
+                        <td><a href="checks_deposited.php?checks_deposited_id={$vc.checks_deposited_id}"><B>{$vc.currency}&nbsp;{$vc.total_deposit_amount}</B></a></td>
                 </table>
 {else}
 	{$item.log}
@@ -181,7 +177,27 @@ $(document).ready(function() {
         	                <td valign="top">{if !($previous_key gte "0" && $order_logs[$previous_key].type eq $item.type && $order_logs[$previous_key].date eq $item.date && $order_logs[$previous_key].login eq $item.login && ($item.type eq "C" || $item.type eq "S"))}{$type_names[$item.type]}{/if}</td>
 	                        <td valign="top">{if !($previous_key gte "0" && $order_logs[$previous_key].type eq $item.type && $order_logs[$previous_key].date eq $item.date && $order_logs[$previous_key].login eq $item.login && ($item.type eq "C" || $item.type eq "S"))}{$item.date|date_format:'%d-%b-%Y<br />%H:%M:%S'}{/if}</td>
                 	        <td valign="top">{if !($previous_key gte "0" && $order_logs[$previous_key].type eq $item.type && $order_logs[$previous_key].date eq $item.date && $order_logs[$previous_key].login eq $item.login && ($item.type eq "C" || $item.type eq "S"))}{if $item.firstname ne ""}{$item.firstname}<br />{/if}{if $item.login ne ""}({$item.login}){/if}{/if}</td>
-                        	<td valign="top">{$item.log}</td>
+                        	<td valign="top">
+
+{if $item.log eq "checks_deposited_orders" && $checks_deposited_order ne ""}
+                <table cellspacing="0" cellpadding="0" border="0">
+                {foreach from=$checks_deposited_order item=vc key=kc}
+                <tr>
+                        <td>{$vc.date|date_format:'%d-%b-%Y'}</td>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <td>Check# {$vc.check_number}</td>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <td>{$vc.currency}&nbsp;{$vc.amount}</td>
+                </tr>
+                {/foreach}
+                <tr>
+                        <td colspan="4"><B>Total deposited amount:</B>&nbsp;</td>
+                        <td><a href="checks_deposited.php?checks_deposited_id={$vc.checks_deposited_id}"><B>{$vc.currency}&nbsp;{$vc.total_deposit_amount}</B></a></td>
+                </table>
+{else}
+	{$item.log}
+{/if}
+				</td>
 	                </tr>
 		{/foreach}
 

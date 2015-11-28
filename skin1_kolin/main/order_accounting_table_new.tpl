@@ -825,7 +825,7 @@ Link to distributor invoice&nbsp;<input type="text" size="40" name="links_to_dis
 {/if}
 
 
-  {if $invoice.full_reconciliation_info ne ""}
+  {if $invoice.full_reconciliation_info ne "" && $invoice.status eq "R"}
 Invoice payment in the amount of ({$invoice.full_reconciliation_info.amount_csv_abs|price_format}) taken on {$invoice.full_reconciliation_info.date_csv|date_format:"%d-%b-%G"}:<br />
 {$invoice.full_reconciliation_info.description_csv}
   {/if}
@@ -1090,7 +1090,7 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
   </table>
 {/if}
 
-  {if $memo.full_reconciliation_info ne ""}
+  {if $memo.full_reconciliation_info ne "" && $memo.status eq "R"}
 <br />
 (REF) Invoice payment in the amount of ({$memo.full_reconciliation_info.amount_csv_abs|price_format}) taken on {$memo.full_reconciliation_info.date_csv|date_format:"%d-%b-%G"}:<br />
 {$memo.full_reconciliation_info.description_csv}

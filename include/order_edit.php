@@ -2004,12 +2004,14 @@ die();
 
 //func_print_r($groups[$certain_mid]);
 
-				if ($mode == "table_accounting_apply"){
+
+				if ($mode == "table_accounting_apply" || ($mode == "accounting_apply" && $user_account["flag"] != "FS")){
 					$update['acc_paymentid'] = $v['paymentid'];
-					$update['ru_status'] = $v['ru_status'];
+
+					if ($mode == "table_accounting_apply"){
+						$update['ru_status'] = $v['ru_status'];
+					}
 				}
-
-
 
                                 if ($mode == "accounting_apply" && $user_account["flag"] != "FS" && !empty($manufacturer_memos_data[$certain_mid]) && is_array($manufacturer_memos_data[$certain_mid])){
                                         $SUM_ref_to_us = 0;
@@ -2518,8 +2520,10 @@ if (!empty($order["refund_groups"]) && is_array($order["refund_groups"])){
 }
 
 $convert_to_regular_order_show_button = false;
+$order["lng_order_contains_FBA_items"] = "N";
 
 if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
+
 	foreach ($order["shipping_groups"] as $k => $v){
 
 #
@@ -2551,6 +2555,11 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
 
 		if ($v["products"] && is_array($v["products"])){
 			foreach ($v["products"] as $kk => $vv){
+
+				if ($order["lng_order_contains_FBA_items"] == "N" && $vv["amazon_fba_avail"] > 0 && !in_array($order["amazon_fulfillment_channel"], array("AFN", "MFN"))){
+					$order["lng_order_contains_FBA_items"] = "Y";
+				}
+
 				if (!empty($vv["eta_date_mm_dd_yyyy"])){
                                         $current_eta_date_mm_dd_yyyy_arr = explode("/", $vv["eta_date_mm_dd_yyyy"]);
                                         $current_eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $current_eta_date_mm_dd_yyyy_arr[0], $current_eta_date_mm_dd_yyyy_arr[1], $current_eta_date_mm_dd_yyyy_arr[2]);

@@ -122,6 +122,7 @@ multirowInputSets['customer_checks_received'].noCloneContent = 1;
 <input id="date" {if $checks_deposited.status eq "D"}disabled="disabled"{/if} type="text" size="9" name="date" value="{$checks_deposited.date|date_format:'%m/%d/%Y'}" />
 
 </td>
+<td>&nbsp;&nbsp;</td>
 <td valign="top"><B>Currency: </B><br />
 {if $checks_deposited.currency_locked eq "Y" || $checks_deposited.status eq "D"}
 <input type="hidden" name="currency" value="{$checks_deposited.currency}" />
@@ -131,6 +132,7 @@ multirowInputSets['customer_checks_received'].noCloneContent = 1;
 <option value="CAD" {if $checks_deposited.currency eq "CAD"}selected="selected"{/if}>CAD</option>
 </select>
 </td>
+<td>&nbsp;&nbsp;</td>
 <td valign="top" nowrap="nowrap">
 <B>Deposit status:</B><br />
 <div style="padding-top: 3px;">{if $checks_deposited.status eq "P"}<I>{/if}{$deposite_statuses[$checks_deposited.status]|default:'Not yet entered'}{if $checks_deposited.status eq "P"}</I>{/if}</div>
@@ -238,14 +240,17 @@ multirowInputSets['customer_checks_received'].noCloneContent = 1;
         <td colspan="5" {*class="SubmitBox" *}>
 	<table width="100%">
 	<tr>
-	<td width="33%">
+	<td width="40%" valign="top">
 {*        <input type="button" value="Apply changes" onclick="javascript: submitForm(this, 'add_order');" /> *}
         <input type="button" value="Apply changes" onclick="javascript: submitForm(this, 'update_deposit');" />
 	</td>
-	<td align="center" width="*">
+	<td align="left" width="*" valign="top" nowrap="nowrap">
 	<input type="button" value="Checks are now deposited with the bank" onclick="javascript: submitForm(this, 'checks_are_now_deposited_with_the_bank');" />
+<br />
+<I>Before clicking this button please make sure that<br />the amount deposited with the bank is the same as<br />the <B>Total deposit amount</B> shown above.</I>
+
 	</td>
-	<td align="right" width="33%">
+	<td align="right" width="40%" valign="top">
 	</td>
 	</tr>
 	</table>
