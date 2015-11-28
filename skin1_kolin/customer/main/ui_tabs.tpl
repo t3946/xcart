@@ -120,7 +120,7 @@ function send_question_email_form(){
 <meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
 {/if}
 
-<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_stock so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
+<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_stock so_o_condition so_o_currency product_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
 <div id="so_weight" itemprop="weight" itemscope="" itemtype="http://schema.org/QuantitativeValue" itemref="so_weight_value">
 	<meta itemprop="unitCode" content="lbs">
 </div>
@@ -129,6 +129,7 @@ function send_question_email_form(){
 {/if}
 
 <meta id="so_o_condition" itemprop="itemCondition" content="http://schema.org/NewCondition"/>
+<meta id="so_o_currency" itemprop="priceCurrency" content="USD">
 
 <meta id="so_o_function" itemprop="businessFunction" href="http://purl.org/goodrelations/v1#Sell"/>
 <div id="so_o_delivery" itemprop="deliveryLeadTime"  itemscope="" itemtype="http://schema.org/QuantitativeValue">
