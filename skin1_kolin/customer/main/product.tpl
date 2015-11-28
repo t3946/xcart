@@ -148,7 +148,7 @@
 <tr><td colspan="2" height="20"></td></tr>
 
 {if $config.Appearance.show_in_stock eq "Y" and $config.General.unlimited_products ne "Y" and $product.distribution eq "" && $product.avail <= $config.Appearance.quantity_threshold && $product.avail gt 0}
-<tr id="so_o_stock" itemprop="availability" href="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}">
+<tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}">
         <td width="10%" class="BlackT">{$lng.lbl_in_stock}:</td>
         <td nowrap="nowrap" id="product_avail_txt" class="BlackT">
 {if $product.avail gt 0}{$lng.txt_items_available|substitute:"items":$product.avail}{else}{$lng.lbl_no_items_available}{/if}
@@ -156,7 +156,7 @@
 </tr>
 {/if}
 
-<tr id="so_o_stock" itemprop="availability" href="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}"><td height="25" width="30%" class="BlackT_new">{$lng.lbl_quantity}:</td>
+<tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}"><td height="25" width="30%" class="BlackT_new">{$lng.lbl_quantity}:</td>
 <td style="text-align:left;width:70% !important; font-size: 16px;" width="70%">
 {if $config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount) and $variants eq ''}
 <script type="text/javascript" language="JavaScript 1.2">
