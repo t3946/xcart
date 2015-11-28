@@ -542,7 +542,7 @@ func_load_more_next_productids('','Y');
 {/if}
 
 {if $use_schema_org eq "Y" && $main eq "product"}
-<meta itemprop="name" itemscope itemtype="http://schema.org/Product itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_offer"/>
+<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_offer"/>
 {/if}
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr><td colspan=3 height="10">&nbsp;</td></tr>
