@@ -163,8 +163,9 @@ vim: set ts=2 sw=2 sts=2 et:
 {else}
             <input type="number" class="qty-input" id="product_avail" name="amount" maxlength="11" size="6"{* onchange="javascript:  return check_quantity_input_box(this); check_wholesale(this.value);  " *} onkeyup="check_wholesale(this.value);" value="{$smarty.get.quantity|default:$product.min_amount}"{* {if not $product.appearance.quantity_input_box_enabled} disabled="disabled" style="display: none;"{/if} *} style="width: 100px; height: 50px;" />
 
-
+{if $product.min_amount gt 1}
 <font style="font-size: 20px; color: #CC3333;">{if $product.mult_order_quantity eq "Y"}{$lng.txt_need_min_amount_mult|substitute:"items":$product.min_amount}{else}{$lng.txt_need_min_amount|substitute:"items":$product.min_amount}{/if}</font>
+{/if}
 
 {/if}
 </TD>
