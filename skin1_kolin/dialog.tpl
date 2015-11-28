@@ -63,7 +63,7 @@
 <table cellspacing="0" {$extra}>
 <tr>
 <td class="DialogTitle valign-top">
-{if $product_sku ne ""}<font {if $main eq "product"}{if $use_schema_org eq "Y"}id="so_sku" itemprop="sku"{/if}{/if} color="#006600" class="DialogTitleT">{$lng.lbl_sku}: {$product_sku}</font>{* <br /> *}{/if}
+{if $product_sku ne ""}<font color="#006600" class="DialogTitleT">{$lng.lbl_sku}: {if $main eq "product"}{if $use_schema_org eq "Y"}<span id="so_sku" itemprop="sku">{/if}{/if}{$product_sku}{if $main eq "product"}{if $use_schema_org eq "Y"}</span>{/if}{/if}</font>{* <br /> *}{/if}
 </td>
 
 {if $product_free_ship ne "" || ($lbl_minimum_order_amount_message_product eq "Y" && $d_minimum_order_amount_in_us ne "")}
