@@ -29,15 +29,15 @@ function GetGooglePrice($product){
 
 		$product_availability = func_product_availability(false,false,false,false,false,$product);
 		$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
-		if ($price_min_amount < $product["map_price"])
+		if ($price_min_amount < $product["new_map_price"])
 			{
-				$price_min_amount = $product["map_price"];
+				$price_min_amount = $product["new_map_price"];
 			}
 
         if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
 			/* price for bundle */
 			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
+				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["new_map_price"]);
 				}
 			if ($product_availability == "out of stock")
 				{
@@ -51,7 +51,7 @@ function GetGooglePrice($product){
 		else {
 			/* price for dozen item*/
 			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-				$product_price = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
+				$product_price = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["new_map_price"]);
 			}
 			else {
 				$product_price = $price_min_amount;
@@ -1145,7 +1145,7 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
                 $joins .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[variants].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].variantid = $sql_tbl[variants].variantid";
                 $where = " AND $sql_tbl[products_sf].productid = '$v[productid]' AND IFNULL($sql_tbl[variants].avail, $sql_tbl[products].avail) >= '0'";
 
-                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
+                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].new_map_price, $sql_tbl[products].r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
 				
 				$product_availability = func_product_availability(false,false,false,false,false,$product);
