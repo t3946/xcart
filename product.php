@@ -328,7 +328,7 @@ if ($product_feed_enabled == "Y" && empty($product_info["is_variants"]) && $prod
 	}
 */
 
-	$new_notify_in_stock_price = func_decreased_price($product_info["cost_to_us"], $product_info["taxed_price"], $product_info["map_price"]);
+	$new_notify_in_stock_price = func_decreased_price($product_info["cost_to_us"], $product_info["taxed_price"], $product_info["new_map_price"]);
         $product_info["new_notify_in_stock_price"] = $new_notify_in_stock_price;
 }
 ###
