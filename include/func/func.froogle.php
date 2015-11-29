@@ -45,7 +45,7 @@ function GetGooglePrice($product){
 				}
 			else
 				{
-					$product_price = $price_min_amount * $product['multipack'];
+					$product_price = $price_min_amount * $product["min_amount"];
 				}
         }
 		else {
@@ -506,8 +506,12 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	}
 
 		$product_availability = func_product_availability(false,false,false,false,false,$product);
-		$multipack = $product["min_amount"];
-		$product['multipack'] = $multipack;
+		$multipack = "";
+		if ($product["min_amount"]>1)
+		{
+			$multipack = $product["min_amount"];
+			$product['multipack'] = $multipack;
+		}
 		
 		$product['price'] = price_format(GetGooglePrice($product));
 		
@@ -1145,7 +1149,10 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 
 				
 				$product_availability = func_product_availability(false,false,false,false,false,$product);
-				$product['multipack'] = $product["min_amount"];
+				If ($product["min_amount"]>1)
+					{
+						$product['multipack'] = $product["min_amount"];
+					}
                 $product["d_enable_feed"] = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='".$product['manufacturerid']."'");
 		
 				$product['price'] = price_format(GetGooglePrice($product));
