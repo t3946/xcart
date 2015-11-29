@@ -24,6 +24,42 @@ function func_froogle_convert($str, $max_len = false) {
         return $str;
 }
 
+function GetGooglePrice($product){
+
+		$product_availability = func_product_availability(false,false,false,false,false,$product);
+		$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
+		if ($price_min_amount < $product["map_price"])
+			{
+				$price_min_amount = $product["map_price"];
+			}
+
+        if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
+			/* price for bundle */
+			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
+				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
+				}
+			if ($product_availability == "out of stock")
+				{
+					$product_price = $price_min_amount;
+				}
+			else
+				{
+					$product_price = $price_min_amount * $product['multipack'];
+				}
+        }
+		else {
+			/* price for dozen item*/
+			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
+				$product_price = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
+			}
+			else {
+				$product_price = $price_min_amount;
+			}
+		}
+	
+	return $product_price;
+}
+
 function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 
@@ -204,6 +240,11 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	# Define full description
 	if (!empty($product['fulldescr']))
 		$product['descr'] = $product['fulldescr'];
+	
+	if (strlen(trim($product['descr']))<20)
+	{
+		$product['descr'] += ' '.$product['product'];
+	}
 
 	$product['descr'] = func_froogle_convert($product['descr'], 10000);
 	$product['descr'] = func_cidev_check_froogle_field($product['descr']);
@@ -463,65 +504,46 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 		$product['weight'] = "0.1";
 	}
 
-/*
-	if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-
-// 	        $max1 = $product["cost_to_us"] + ($product["price"] - $product["cost_to_us"])/3;
-//		$product['price'] = max($product["map_price"], $max1);
-
-		$product['price'] = func_decreased_price($product["cost_to_us"], $product["price"], $product["map_price"]);
-	}
-	else {
-		$product['price'] = number_format(round($product['price'], 2), 2, ".", "");
-	}
-*/
 		$product_availability = func_product_availability(false,false,false,false,false,$product);
-
-        $multipack = "";
-        if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
-
-		$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
-
-        $multipack = $product["min_amount"];
+		$multipack = $product["min_amount"];
 		$product['multipack'] = $multipack;
 		
-		if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-			$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
-			if ($product_availability == "out of stock")
+		$product['price'] = price_format(GetGooglePrice($product));
+		
+/*		
+		$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
+		if ($price_min_amount < $product["map_price"])
 			{
-				$product['price'] = price_format($price_min_amount);
+				$price_min_amount = $product["map_price"];
 			}
-			else
-			{
-				$product['price'] = price_format($price_min_amount * $multipack);
-			}
-			
-		}
-		else {
-			
-			if ($product_availability == "out of stock")
-			{
-				$product['price'] = price_format($price_min_amount);
-			}
-			else
-			{
-				$product['price'] = price_format($price_min_amount * $multipack);
-			}
-		}
-        }
-	else {
-		if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-			$product['price'] = func_decreased_price($product["cost_to_us"], $product["price"], $product["map_price"]);
-		}
-		else {
-			if ($product["min_amount"] > 1){
-				$product['price'] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
-			} else {
-				$product['price'] = price_format($product['price']);
-			}
-		}
-	}
+        $multipack = "";
 
+        if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
+			$multipack = $product["min_amount"];
+			$product['multipack'] = $multipack;
+			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
+				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
+				}
+			if ($product_availability == "out of stock")
+				{
+					$product['price'] = $price_min_amount;
+				}
+			else
+				{
+					$product['price'] = $price_min_amount * $multipack;
+				}
+        }
+		else {
+			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
+				$product['price'] = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
+			}
+			else {
+				$product['price'] = $price_min_amount;
+			}
+		}
+		
+		$product['price'] = price_format($product['price']);
+*/
 	
 //func_print_r($product);
 //die();
@@ -1006,247 +1028,6 @@ function GetTheFindOneRow($productid){
 }
 
 
-function SubmitProductToGBFeed($productid, $MerchantID, $client_id, $key_file_location, $update_type, $service, $forsale){
-	global $started_at, $sql_tbl;
-
-# utype = 1 | 2 = productid; utype = 3 = manufacturerid
-
-	if ($forsale == "N"){
-		try {
-		$results3 = $service->products->delete($MerchantID, "online:en:US:".$productid);
-		}
-		catch (Google_ServiceException $e) {
-		    print "Error code :" . $e->getCode() . "\n";
-		    // Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
-		    print "Error message: " . $e->getMessage() . "\n";
-		} 
-		catch (Google_Exception $e) {
-		    // Other error.
-		    print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
-		    }
-		
-
-		db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$productid' AND time_stamp <= '$started_at'");
-		return false;
-	}
-
-
-#########################
-/*
-$productid = "326716";
-$product_info["product"]["productid"] = $productid;
-$product_info["product"]["product"] = "TTTT";
-$product_info["product"]["productcode"] = "CC-TTTT";
-$update_type = "1";
-*/
-#########################
-
-//func_print_r($productid, $update_type);
-
-	if ($update_type == "2"){
-
-		try {
-		print ("update type 2 try productid = ".$productid."\n");
-		$results = $service->products->get($MerchantID, "online:en:US:".$productid);
-
-
-//func_print_r($results);
-//die();
-		
-		print( "  proceed with quantity for ".$productid."\n");
-		$postBody = $results->toSimpleObject();
-		###$postBody->price["value"] = $product_info["product"]["price"];
-		$postBody = (array)$postBody;
-
-
-                $fields = ", IFNULL($sql_tbl[variants].avail, $sql_tbl[products].r_avail) as r_avail";
-                $joins = " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
-	        $joins .= " INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0'";
-                $joins .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[variants].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].variantid = $sql_tbl[variants].variantid";
-                $where = " AND $sql_tbl[products_sf].productid = $productid AND IFNULL($sql_tbl[variants].avail, $sql_tbl[products].avail) >= '0'";
-
-	        $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].product_type, $sql_tbl[products].cost_to_us, $sql_tbl[products].map_price, $sql_tbl[products].manufacturerid, $sql_tbl[products].eta_date_mm_dd_yyyy, $sql_tbl[pricing].price $fields FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
-
-###
-		$product["d_enable_feed"] = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='".$product['manufacturerid']."'");
-
-	        if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-        	        $product['price'] = func_decreased_price($product["cost_to_us"], $product["price"], $product["map_price"]);
-	        }
-###
-		$postBody["price"]["value"] = $product["price"];
-
-		$quantity_found = false;
-		$key_quantity = 0;
-		if (!empty($postBody["customAttributes"]) && is_array($postBody["customAttributes"])){
-			foreach ($postBody["customAttributes"] as $k => $v){
-				if ($v["name"] == "quantity"){
-					$postBody["customAttributes"][$k]["value"] = $product["r_avail"];
-					$quantity_found = true;
-					break;
-				}
-			}
-
-			if (!$quantity_found){
-/*			       print ("quantity not fnd\n");*/
-				$key_quantity = 6; 
-				/*count($postBody["customAttributes"]);*/
-			}
-		}
-
-		/*google fail with inventory updates with quantities
-		 [quantity] quantity should not be set for online inventory updates.*/
-/*		if (!$quantity_found){
-			$postBody["customAttributes"][$key_quantity]["name"] = "quantity";
-			$postBody["customAttributes"][$key_quantity]["type"] = "int";
-			$postBody["customAttributes"][$key_quantity]["value"] = $product["r_avail"];
-		}
-*/
-		$product_availability = func_product_availability(false,false,false,false,false,$product);
-		$postBody["availability"] = $product_availability;
-
-		$expirationDate = time()+60*60*24*30;
-		$expirationDate = date("Y-m-d", $expirationDate);
-		$postBody["expirationDate"] = $expirationDate;
-
-		### call instead insert ###  $results2 = $service- >products->insert($MerchantID, $results_new);###
-		$optParams = array();
-		$params = array('merchantId' => $MerchantID, 'postBody' => $postBody);
-		$params = array_merge($params, $optParams);
-
-		$results2 = $service->products->call('insert', array($params), "Google_Service_ShoppingContent_Product");
-
-//func_print_r($params);
-//die();
-
-		}
-		catch (Google_ServiceException $e) {
-		    print "Error code :" . $e->getCode() . "\n";
-		    // Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
-		    print "Error message: " . $e->getMessage() . "\n";
-		} 
-		catch (Google_Exception $e) {
-		    // Other error.
-		    print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
-		    if ($e->getCode() == '404') {
-			$update_type = "1";
-/*			print ("utype changed to ".$update_type."\n");*/
-		    }
-		}
-
-	}
-	if ($update_type == "1"){
-
-		print ("update type 1 try productid = ".$productid."\n");
-
-	        $product_info = GetGoogleBaseOneRow($productid);
-/*	        func_print_r($product_info);*/
-
-        	if (empty($product_info["product"]) || !is_array($product_info["product"])){
-/*			return false;*/
-			$update_type = 1;
-		}
-		else
-		{
-
-		$postBody["price"]["value"] = $product_info["product"]["price"];
-		$postBody["price"]["currency"] = "USD";
-
-#
-##
-		if (!empty($product_info["product"]["multipack"])){
-			$postBody["multipack"] = $product_info["product"]["multipack"];
-		}
-##
-#
-
-
-		$postBody["shipping"] = $product_info["product"]["shippings_google_arr"];
-
-		$postBody["shippingWeight"]["value"] = $product_info["product"]["weight"];
-		$postBody["shippingWeight"]["unit"] = "lb";
-
-		$postBody["destinations"][0]["destinationName"] = "ShoppingApi";
-		$postBody["destinations"][0]["intention"] = "required";
-                $postBody["destinations"][1]["destinationName"] = "AffiliateNetwork";
-                $postBody["destinations"][1]["intention"] = "required";
-                $postBody["destinations"][2]["destinationName"] = "Shopping";
-                $postBody["destinations"][2]["intention"] = "required";
-
-                $postBody["customAttributes"][0]["name"] = "payment accepted";
-                $postBody["customAttributes"][0]["type"] = "text";
-                $postBody["customAttributes"][0]["value"] = "check";
-                $postBody["customAttributes"][1]["name"] = "payment accepted";
-                $postBody["customAttributes"][1]["type"] = "text";
-                $postBody["customAttributes"][1]["value"] = "visa";
-                $postBody["customAttributes"][2]["name"] = "payment accepted";
-                $postBody["customAttributes"][2]["type"] = "text";
-                $postBody["customAttributes"][2]["value"] = "mastercard";
-                $postBody["customAttributes"][3]["name"] = "payment accepted";
-                $postBody["customAttributes"][3]["type"] = "text";
-                $postBody["customAttributes"][3]["value"] = "discover";
-                $postBody["customAttributes"][4]["name"] = "payment accepted";
-                $postBody["customAttributes"][4]["type"] = "text";
-                $postBody["customAttributes"][4]["value"] = "american express";
-                $postBody["customAttributes"][5]["name"] = "payment accepted";
-                $postBody["customAttributes"][5]["type"] = "text";
-                $postBody["customAttributes"][5]["value"] = "All purchase orders are subject to verification.";
-                $postBody["customAttributes"][6]["name"] = "quantity";
-                $postBody["customAttributes"][6]["type"] = "int";
-                $postBody["customAttributes"][6]["value"] = $product_info["product"]["r_avail"];
-                $postBody["customAttributes"][7]["name"] = "model number";
-                $postBody["customAttributes"][7]["type"] = "text";
-                $postBody["customAttributes"][7]["value"] = $product_info["product"]["mpn"];
-
-		if (!empty($product_info["product"]["additional_image_link"]) && is_array($product_info["product"]["additional_image_link"]))
-	                $postBody["additionalImageLinks"] = $product_info["product"]["additional_image_link"];
-
-                $postBody["adwordsGrouping"] = $product_info["product"]["adwords_grouping"];
-                $postBody["adwordsLabels"][0] = $product_info["product"]["adwords_labels"];
-                $postBody["adwordsRedirect"] = $product_info["product"]["adwords_redirect"];
-
-                $product_availability = func_product_availability(false,false,false,false,false,$product_info["product"]);
-                $postBody["availability"] = $product_availability;
-
-                $postBody["brand"] = $product_info["product"]["google_brand"];
-                $postBody["channel"] = "online";
-                $postBody["condition"] = "new";
-                $postBody["contentLanguage"] = "en";
-                $postBody["description"] = $product_info["product"]["google_descr"];
-                $postBody["id"] = "online:en:US:".$productid;
-                $postBody["imageLink"] = $product_info["product"]["image_link"];
-                $postBody["kind"] = "content#product";
-                $postBody["link"] = $product_info["product"]["link"];
-                $postBody["mpn"] = $product_info["product"]["mpn"];
-                $postBody["offerId"] = $productid;
-                $postBody["onlineOnly"] = $product_info["product"]["onlineOnly"];
-                $postBody["productType"] = $product_info["product"]["cats_path"];
-                $postBody["targetCountry"] = "US";
-                $postBody["title"] = $product_info["product"]["google_product"];
-
-                $expirationDate = time()+60*60*24*30;
-                $expirationDate = date("Y-m-d", $expirationDate);
-                $postBody["expirationDate"] = $expirationDate;
-
-                $optParams = array();
-                $params = array('merchantId' => $MerchantID, 'postBody' => $postBody);
-                $params = array_merge($params, $optParams);
-                $results2 = $service->products->call('insert', array($params), "Google_Service_ShoppingContent_Product");
-                }
-	}
-
-
-	if ($update_type == "1" || $update_type == "2"){
-		db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$productid' AND (type='1' OR type='2')");
-	}
-
-//func_print_r($postBody, $product_info, $results2);
-//func_print_r($results2);
-//die("!!!");
-
-}
-
-
 function Submit_expirationDate_ToGBFeed($productid, $MerchantID, $client_id, $key_file_location, $service){
 	global $sql_tbl;
 
@@ -1361,58 +1142,22 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 
                 $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
-#
-##
-//		if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
-		if ($product["min_amount"] > 1){
-			$product["price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$v[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
-		}
-##
-#
-
-###
+				
+				$product_availability = func_product_availability(false,false,false,false,false,$product);
+				$product['multipack'] = $product["min_amount"];
                 $product["d_enable_feed"] = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='".$product['manufacturerid']."'");
-
-                if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-                        $product['price'] = func_decreased_price($product["cost_to_us"], $product["price"], $product["map_price"]);
-                }
-
-		$product_availability = func_product_availability(false,false,false,false,false,$product);
 		
-//		if ($product["min_amount"]>1) {
-//		    $product_availability = 'out of stock';
-//		}
-###
+				$product['price'] = price_format(GetGooglePrice($product));
+				$postBody["entries"][$k]["inventory"]["price"]["value"] = $product["price"];
+				$postBody["entries"][$k]["inventory"]["price"]["currency"] = "USD";
+				$postBody["entries"][$k]["inventory"]["availability"]= $product_availability;
 
+				$postBody["entries"][$k]["batchId"] = $v["productid"];
+				$postBody["entries"][$k]["merchantId"] = $MerchantID;
+				$postBody["entries"][$k]["storeCode"] = "online";
+				$postBody["entries"][$k]["productId"] = "online:en:US:".$v["productid"];
+				$postBody["entries"][$k]["inventory"]["kind"] = "content#inventory";
 
-
-//		$postBody["entries"][$k]["batchId"] = $v["Batchid"];
-		$postBody["entries"][$k]["batchId"] = $v["productid"];
-		$postBody["entries"][$k]["merchantId"] = $MerchantID;
-		$postBody["entries"][$k]["storeCode"] = "online";
-		$postBody["entries"][$k]["productId"] = "online:en:US:".$v["productid"];
-		$postBody["entries"][$k]["inventory"]["kind"] = "content#inventory";
-
-//if ($v["productid"] == "140060")
-//$postBody["entries"][$k]["inventory"]["price"]["value"] = "";
-//else
-
-#
-##
-		if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y" && $product_availability == "in stock"){
-                        $postBody["entries"][$k]["inventory"]["price"]["value"] = price_format($product["min_amount"]*$product["price"]);
-                }
-		else {
-			$postBody["entries"][$k]["inventory"]["price"]["value"] = $product["price"];
-		}
-##
-#
-		$postBody["entries"][$k]["inventory"]["price"]["currency"] = "USD";
-
-		$postBody["entries"][$k]["inventory"]["availability"]= $product_availability;
-		/*[quantity] quantity should not be set for online inventory updates.*/
-/*		$postBody["entries"][$k]["inventory"]["quantity"]= $product["r_avail"];
-*/
 	}
 
 	$code = 200;
@@ -1505,28 +1250,6 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 			continue;
 		}
 
-
-
-		/*
-                        if (empty($product_info["product"]["shippings_google_arr"])){
-                                func_print_r($postBody);
-                                //die("test1");
-                        }
-
-                        if (!empty($product_info["product"]["shippings_google_arr"]) && is_array($product_info["product"]["shippings_google_arr"])){
-                                foreach ($product_info["product"]["shippings_google_arr"] as $kk => $vv){
-                                        $ttt= trim($vv["price"]["value"]);
-                                        if ($ttt == ""){
-                                                func_print_r($postBody);
-                                                //die("test2");
-                                        }
-                                }
-                        }
-        */
-
-//                $postBody["entries"][$k_counter]["batchId"] = $v["Batchid"];
-
-//		if ($pforsale == 'N' || (empty($product_info["product"]) || !is_array($product_info["product"])) || $product_info["product"]["min_amount"] > 1)
 		if ($pforsale == 'N' || (empty($product_info["product"]) || !is_array($product_info["product"])) ) {
 			$postBody["entries"][$k_counter]["batchId"] = $v["productid"];
 			$postBody["entries"][$k_counter]["merchantId"] = $MerchantID;
@@ -1542,25 +1265,15 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 			$postBody["entries"][$k_counter]["method"] = "insert";
 			$postBody["entries"][$k_counter]["productId"] = "online:en:US:".$v["productid"];
 			$postBody["entries"][$k_counter]["product"]["kind"] = "content#product";
-			//$postBody["entries"][$k_counter]["product"]["id"] = "online:en:US:".$v["productid"];
 			$postBody["entries"][$k_counter]["product"]["offerId"] = $v["productid"];
 			$postBody["entries"][$k_counter]["product"]["title"] = $product_info["product"]["google_product"];
 			$postBody["entries"][$k_counter]["product"]["description"] = $product_info["product"]["google_descr"];
 			$postBody["entries"][$k_counter]["product"]["link"] = $product_info["product"]["link"];
 			$postBody["entries"][$k_counter]["product"]["imageLink"] = $product_info["product"]["image_link"];
 
-			//echo $postBody["entries"][$k_counter]["productId"] . " :" . $product_info["product"]["image_link"] . "\n";
-			//var_dump($product_info)
 			$postBody["entries"][$k_counter]["product"]["contentLanguage"] = "en";
 			$postBody["entries"][$k_counter]["product"]["targetCountry"] = "US";
 			$postBody["entries"][$k_counter]["product"]["channel"] = "online";
-
-			/*
-                            $expirationDate = time()+60*60*24*30;
-                            $expirationDate = date("Y-m-d", $expirationDate);
-                            $postBody["entries"][$k_counter]["product"]["expirationDate"] = $expirationDate;
-            */
-
 ###
 			$product_availability = func_product_availability(false,false,false,false,false,$product_info["product"]);
 ###
@@ -1569,9 +1282,6 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 			$postBody["entries"][$k_counter]["product"]["condition"] = "new";
 			$postBody["entries"][$k_counter]["product"]["mpn"] = $product_info["product"]["mpn"];
 
-//if ($product_info["product"]["productid"] == "140060")
-//$postBody["entries"][$k_counter]["product"]["price"]["value"] = "";
-//else
 			$postBody["entries"][$k_counter]["product"]["price"]["value"] = $product_info["product"]["price"];
 			$postBody["entries"][$k_counter]["product"]["price"]["currency"] = "USD";
 			$postBody["entries"][$k_counter]["product"]["productType"] = $product_info["product"]["cats_path"];
@@ -1591,18 +1301,6 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 
 #
 ##
-			/*
-			if ($product_info["product"]["dim_z"] > 0 && $product_info["product"]["dim_x"] > 0 && $product_info["product"]["dim_y"] > 0){
-				$postBody["entries"][$k_counter]["product"]["shippingHeight"]["unit"] = "in";
-				$postBody["entries"][$k_counter]["product"]["shippingHeight"]["value"] = $product_info["product"]["dim_z"];
-
-				$postBody["entries"][$k_counter]["product"]["shippingLength"]["unit"] = "in";
-				$postBody["entries"][$k_counter]["product"]["shippingLength"]["value"] = max($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
-
-				$postBody["entries"][$k_counter]["product"]["shippingWidth"]["unit"] = "in";
-				$postBody["entries"][$k_counter]["product"]["shippingWidth"]["value"] = min($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
-			}
-			*/
 ##
 #
 
@@ -1648,20 +1346,13 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 		}
 	}
 
-//func_print_r($postBody, $product_info["product"]);
-//die("2");
 
 	try {
 
-//		$k_counter -= $count_skipped;
 		print("\nBing: tried to submit $k_counter items as inventory feed \n");
 
 		$log_text = "Bing: tried to submit $k_counter items as inventory feed";
 		func_backprocess_log("incremental feeds", $log_text);
-
-		//$optParams = array();
-		//$params = array('postBody' => $postBody);
-		//$params = array_merge($params, $optParams);
 
 		$json = json_encode( $postBody );
 
@@ -1725,9 +1416,6 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 		}
 ###
 
-//$ginventory_new = json_encode($postBody);
-//func_print_r($ginventory_new);
-//              $results = $service->inventory->custombatch($ginventory_new);
 	}
 	catch (Exception $e) {
 		print "Error code :" . $e->getCode() . "\n";
@@ -1739,17 +1427,6 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 	}
 
 
-
-
-//func_print_r($product_info["product"]);
-
-//func_print_r($postBody);
-//func_print_r($results_arr);
-
-
-//func_print_r($log_text);
-
-//die("test");
 }
 
 function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username, $password, $token)
@@ -1780,26 +1457,8 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 
 
 
-		/*
-                        if (empty($product_info["product"]["shippings_google_arr"])){
-                                func_print_r($postBody);
-                                //die("test1");
-                        }
 
-                        if (!empty($product_info["product"]["shippings_google_arr"]) && is_array($product_info["product"]["shippings_google_arr"])){
-                                foreach ($product_info["product"]["shippings_google_arr"] as $kk => $vv){
-                                        $ttt= trim($vv["price"]["value"]);
-                                        if ($ttt == ""){
-                                                func_print_r($postBody);
-                                                //die("test2");
-                                        }
-                                }
-                        }
-        */
 
-//                $postBody["entries"][$k_counter]["batchId"] = $v["Batchid"];
-
-//		if ($pforsale == 'N' || (empty($product_info["product"]) || !is_array($product_info["product"])) || $product_info["product"]["min_amount"] > 1)
 		if ($pforsale == 'N' || (empty($product_info["product"]) || !is_array($product_info["product"])) ) {
 			$postBody["entries"][$k_counter]["batchId"] = $v["productid"];
 			$postBody["entries"][$k_counter]["merchantId"] = $MerchantID;
@@ -1815,25 +1474,14 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 			$postBody["entries"][$k_counter]["method"] = "insert";
 			$postBody["entries"][$k_counter]["productId"] = "online:en:US:".$v["productid"];
 			$postBody["entries"][$k_counter]["product"]["kind"] = "content#product";
-			//$postBody["entries"][$k_counter]["product"]["id"] = "online:en:US:".$v["productid"];
 			$postBody["entries"][$k_counter]["product"]["offerId"] = $v["productid"];
 			$postBody["entries"][$k_counter]["product"]["title"] = $product_info["product"]["google_product"];
 			$postBody["entries"][$k_counter]["product"]["description"] = $product_info["product"]["google_descr"];
 			$postBody["entries"][$k_counter]["product"]["link"] = $product_info["product"]["link"];
 			$postBody["entries"][$k_counter]["product"]["imageLink"] = $product_info["product"]["image_link"];
-
-			//echo $postBody["entries"][$k_counter]["productId"] . " :" . $product_info["product"]["image_link"] . "\n";
-			//var_dump($product_info)
 			$postBody["entries"][$k_counter]["product"]["contentLanguage"] = "en";
 			$postBody["entries"][$k_counter]["product"]["targetCountry"] = "US";
 			$postBody["entries"][$k_counter]["product"]["channel"] = "online";
-
-			/*
-                            $expirationDate = time()+60*60*24*30;
-                            $expirationDate = date("Y-m-d", $expirationDate);
-                            $postBody["entries"][$k_counter]["product"]["expirationDate"] = $expirationDate;
-            */
-
 ###
 			$product_availability = func_product_availability(false,false,false,false,false,$product_info["product"]);
 ###
@@ -1841,10 +1489,6 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 			$postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
 			$postBody["entries"][$k_counter]["product"]["condition"] = "new";
 			$postBody["entries"][$k_counter]["product"]["mpn"] = $product_info["product"]["mpn"];
-
-//if ($product_info["product"]["productid"] == "140060")
-//$postBody["entries"][$k_counter]["product"]["price"]["value"] = "";
-//else
 			$postBody["entries"][$k_counter]["product"]["price"]["value"] = $product_info["product"]["price"];
 			$postBody["entries"][$k_counter]["product"]["price"]["currency"] = "USD";
 			$postBody["entries"][$k_counter]["product"]["productType"] = $product_info["product"]["cats_path"];
@@ -1864,20 +1508,6 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 
 #
 ##
-			/*
-			if ($product_info["product"]["dim_z"] > 0 && $product_info["product"]["dim_x"] > 0 && $product_info["product"]["dim_y"] > 0){
-				$postBody["entries"][$k_counter]["product"]["shippingHeight"]["unit"] = "in";
-				$postBody["entries"][$k_counter]["product"]["shippingHeight"]["value"] = $product_info["product"]["dim_z"];
-
-				$postBody["entries"][$k_counter]["product"]["shippingLength"]["unit"] = "in";
-				$postBody["entries"][$k_counter]["product"]["shippingLength"]["value"] = max($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
-
-				$postBody["entries"][$k_counter]["product"]["shippingWidth"]["unit"] = "in";
-				$postBody["entries"][$k_counter]["product"]["shippingWidth"]["value"] = min($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
-			}
-			*/
-##
-#
 
 			$postBody["entries"][$k_counter]["product"]["adwordsGrouping"] = $product_info["product"]["adwords_grouping"];
 			$postBody["entries"][$k_counter]["product"]["adwordsLabels"][0] = $product_info["product"]["adwords_labels"];
@@ -1921,20 +1551,13 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 		}
 	}
 
-//func_print_r($postBody, $product_info["product"]);
-//die("2");
 	$code = 200;
 	try {
 
-//		$k_counter -= $count_skipped;
 		print("\nBing: tried to submit $k_counter items as product feed \n");
 
 		$log_text = "Bing: tried to submit $k_counter items as product feed";
 		func_backprocess_log("incremental feeds", $log_text);
-
-		//$optParams = array();
-		//$params = array('postBody' => $postBody);
-		//$params = array_merge($params, $optParams);
 
 		$json = json_encode( $postBody );
 
@@ -1999,9 +1622,6 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 		}
 ###
 
-//$ginventory_new = json_encode($postBody);
-//func_print_r($ginventory_new);
-//              $results = $service->inventory->custombatch($ginventory_new);
 	}
 	catch (Exception $e) {
 		print "Error code :" . $e->getCode() . "\n";
@@ -2014,16 +1634,6 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 
 return $code;
 
-
-//func_print_r($product_info["product"]);
-
-//func_print_r($postBody);
-//func_print_r($results_arr);
-
-
-//func_print_r($log_text);
-
-//die("test");
 }
 
 
@@ -2070,42 +1680,21 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 		
 		$pforsale = func_query_first_cell("SELECT SQL_NO_CACHE $sql_tbl[products].forsale FROM $sql_tbl[products] WHERE $sql_tbl[products].productid = '$v[productid]'");
 
-                if ( $pforsale == 'Y' && empty($product_info["product"]["shippings_google_arr"])){
+        if ( $pforsale == 'Y' && empty($product_info["product"]["shippings_google_arr"])){
 			print("\nProduct skipped - $v[productid] \n");
 
-	                $log_text = "Product skipped shipping null for sale item- ".$v["productid"];
-        	        func_backprocess_log("incremental feeds", $log_text);
+	        $log_text = "Product skipped shipping null for sale item- ".$v["productid"];
+        	func_backprocess_log("incremental feeds", $log_text);
 
 			$count_skipped++;
 			continue;
 		}
 
 		
-
-/*
-                if (empty($product_info["product"]["shippings_google_arr"])){
-                        func_print_r($postBody);
-                        //die("test1");
-                }
-
-                if (!empty($product_info["product"]["shippings_google_arr"]) && is_array($product_info["product"]["shippings_google_arr"])){
-                        foreach ($product_info["product"]["shippings_google_arr"] as $kk => $vv){
-                                $ttt= trim($vv["price"]["value"]);
-                                if ($ttt == ""){
-                                        func_print_r($postBody);
-                                        //die("test2");
-                                }
-                        }
-                }
-*/
-
-//                $postBody["entries"][$k_counter]["batchId"] = $v["Batchid"];
-		
-//		if ($pforsale == 'N' || (empty($product_info["product"]) || !is_array($product_info["product"])) || $product_info["product"]["min_amount"] > 1) 
 		if ($pforsale == 'N' || (empty($product_info["product"]) || !is_array($product_info["product"])) ) {
-                    $postBody["entries"][$k_counter]["batchId"] = $v["productid"];
+                $postBody["entries"][$k_counter]["batchId"] = $v["productid"];
 	            $postBody["entries"][$k_counter]["merchantId"] = $MerchantID;
-    	            $postBody["entries"][$k_counter]["method"] = "delete";
+    	        $postBody["entries"][$k_counter]["method"] = "delete";
         	    $postBody["entries"][$k_counter]["productId"] = "online:en:US:".$v["productid"];
 		    $k_counter++;
 		    
@@ -2134,16 +1723,13 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 */
 
 ###
-		$product_availability = func_product_availability(false,false,false,false,false,$product_info["product"]);
+				$product_availability = func_product_availability(false,false,false,false,false,$product_info["product"]);
 ###
                 $postBody["entries"][$k_counter]["product"]["availability"] = $product_availability;
                 $postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
                 $postBody["entries"][$k_counter]["product"]["condition"] = "new";
                 $postBody["entries"][$k_counter]["product"]["mpn"] = $product_info["product"]["mpn"];
 
-//if ($product_info["product"]["productid"] == "140060")
-//$postBody["entries"][$k_counter]["product"]["price"]["value"] = "";
-//else
                 $postBody["entries"][$k_counter]["product"]["price"]["value"] = $product_info["product"]["price"];
                 $postBody["entries"][$k_counter]["product"]["price"]["currency"] = "USD";
                 $postBody["entries"][$k_counter]["product"]["productType"] = $product_info["product"]["cats_path"];
@@ -2163,7 +1749,7 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 
 #
 ##
-		if ($product_info["product"]["dim_z"] > 0 && $product_info["product"]["dim_x"] > 0 && $product_info["product"]["dim_y"] > 0){
+				if ($product_info["product"]["dim_z"] > 0 && $product_info["product"]["dim_x"] > 0 && $product_info["product"]["dim_y"] > 0){
 	                $postBody["entries"][$k_counter]["product"]["shippingHeight"]["unit"] = "in";
         	        $postBody["entries"][$k_counter]["product"]["shippingHeight"]["value"] = $product_info["product"]["dim_z"];
 
@@ -2172,7 +1758,7 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 
 	                $postBody["entries"][$k_counter]["product"]["shippingWidth"]["unit"] = "in";
         	        $postBody["entries"][$k_counter]["product"]["shippingWidth"]["value"] = min($product_info["product"]["dim_x"], $product_info["product"]["dim_y"]);
-		}
+			}
 ##
 #
 
@@ -2218,21 +1804,18 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 		}
 	}
 
-//func_print_r($postBody, $product_info["product"]);
-//die("2");
 $code = 200;
         try {
 
-//		$k_counter -= $count_skipped;
 		print("\nGB: tried to submit $k_counter items as product feed \n");
 
-                $log_text = "GB: tried to submit $k_counter items as product feed";
-                func_backprocess_log("incremental feeds", $log_text);
+        $log_text = "GB: tried to submit $k_counter items as product feed";
+        func_backprocess_log("incremental feeds", $log_text);
 
-                $optParams = array();
-                $params = array('postBody' => $postBody);
-                $params = array_merge($params, $optParams);
-                $results = $service->products->call('custombatch', array($params), "Google_Service_ShoppingContent_ProductsCustomBatchResponse");
+        $optParams = array();
+        $params = array('postBody' => $postBody);
+        $params = array_merge($params, $optParams);
+        $results = $service->products->call('custombatch', array($params), "Google_Service_ShoppingContent_ProductsCustomBatchResponse");
 
 ###
 		$results_arr = (array)$results;
@@ -2256,9 +1839,6 @@ $code = 200;
 		}
 ###
 
-//$ginventory_new = json_encode($postBody);
-//func_print_r($ginventory_new);
-//              $results = $service->inventory->custombatch($ginventory_new);
         }
         catch (Google_ServiceException $e) {
                 print "Error code :" . $e->getCode() . "\n";
@@ -2279,15 +1859,6 @@ $code = 200;
 
 
 return $code;
-//func_print_r($product_info["product"]);
-
-//func_print_r($postBody);
-//func_print_r($results_arr);
-
-
-//func_print_r($log_text);
-
-//die("test");
 
 }
 
@@ -2322,17 +1893,10 @@ EOD;
 
 
 ###
-                $product["d_enable_feed"] = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='".$product['manufacturerid']."'");
-
-                if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-                        $product['price'] = func_decreased_price($product["cost_to_us"], $product["price"], $product["map_price"]);
-                }
 
 		$product["productid"] = $v["productid"];
 		$productcode = $product["productcode"];
-		$price = $product["price"];
-		$avail = $product["r_avail"];
-                $product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+        $product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
 
 		$ainventory[$k] = $product;
 
@@ -2341,19 +1905,15 @@ EOD;
 
 		if ($a_result["aquantity"]==0){
 			$product["product_availability"] = "out of stock";
-	                $price = $a_result["aprice"];
+	        $price = $a_result["aprice"];
 			$product["price"] = $price;
-
-        	        $aleadtime = $a_result["aleadtime"];
-
+        	$aleadtime = $a_result["aleadtime"];
 			$avail = $a_result["aquantity"];
 			$product["avail"] = $avail;
 		} else {
-	                $price = $a_result["aprice"];
+	        $price = $a_result["aprice"];
 			$product["price"] = $price;
-
-        	        $aleadtime = $a_result["aleadtime"];
-
+        	$aleadtime = $a_result["aleadtime"];
 			$avail = $a_result["aquantity"];
 			$product["avail"] = $avail;
 		}
@@ -2466,27 +2026,27 @@ EOD;
                 $productcode = $product["productcode"];
                 $productid = $product["productid"];
                 
-		$a_query = "Select cidev_get_amazon_price('$productid') As 'aprice', M.amazon_leadtimetoship As 'aleadtime', cidev_get_amazon_quantity('$v[productid]') As 'aquantity'  from xcart_products P left join xcart_manufacturers M ON M.manufacturerid = P.manufacturerid where P.productid = '$productid'";
-		$a_result = func_query_first($a_query);
+				$a_query = "Select cidev_get_amazon_price('$productid') As 'aprice', M.amazon_leadtimetoship As 'aleadtime', cidev_get_amazon_quantity('$v[productid]') As 'aquantity'  from xcart_products P left join xcart_manufacturers M ON M.manufacturerid = P.manufacturerid where P.productid = '$productid'";
+				$a_result = func_query_first($a_query);
 
-		if ($a_result["aquantity"]==0){
-			$product["product_availability"] = "out of stock";
+				if ($a_result["aquantity"]==0){
+					$product["product_availability"] = "out of stock";
 	                $price = $a_result["aprice"];
-			$product["price"] = $price;
+					$product["price"] = $price;
 
         	        $aleadtime = $a_result["aleadtime"];
-		} else {
-			$product["product_availability"] = "in stock";
+				} else {
+					$product["product_availability"] = "in stock";
 	                $price = $a_result["aprice"];
-			$product["price"] = $price;
+					$product["price"] = $price;
 
         	        $aleadtime = $a_result["aleadtime"];
-		}
+				}
 
-                if ($product["product_availability"] == "in stock"||$product["product_availability"] == "out of stock"){
-                        $MessageID++;
+				if ($product["product_availability"] == "in stock"||$product["product_availability"] == "out of stock"){
+                    $MessageID++;
 
-                        $feed .= <<<EOD
+                    $feed .= <<<EOD
 <Message>
 <MessageID>$MessageID</MessageID>
 <Price>
