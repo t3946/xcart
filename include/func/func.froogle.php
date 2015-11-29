@@ -25,6 +25,7 @@ function func_froogle_convert($str, $max_len = false) {
 }
 
 function GetGooglePrice($product){
+		global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 
 		$product_availability = func_product_availability(false,false,false,false,false,$product);
 		$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
