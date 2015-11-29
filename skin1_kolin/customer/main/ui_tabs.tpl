@@ -147,9 +147,6 @@ function send_question_email_form(){
 	{assign var="itemprop_price" value=$current_price}
 {/if}
 
-<meta itemprop="price" content="{$itemprop_price|price_format}" {* id="itemprop_price" *} />
-<meta itemprop="priceCurrency" content="USD"/>
-
 <div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
 	{if $use_schema_org eq "Y"}
 		{if $current_storefront eq "0"}
