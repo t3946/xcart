@@ -171,7 +171,7 @@ vim: set ts=2 sw=2 sts=2 et:
 </TD>
 </TR>
 
-{if $product.min_amount gte 1}
+{if $product.min_amount gte 1 && $product.product_availability eq "in stock"}
 <tr>
 <td>
 {if $product_subtotal_value eq ""}
