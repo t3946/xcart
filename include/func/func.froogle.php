@@ -244,7 +244,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	
 	if (strlen(trim($product['descr']))<20)
 	{
-		$product['descr'] += ' '.$product['product'];
+		$product['descr'] = $product['descr'].' '.$product['product'];
 	}
 
 	$product['descr'] = func_froogle_convert($product['descr'], 10000);
