@@ -171,6 +171,21 @@ vim: set ts=2 sw=2 sts=2 et:
 </TD>
 </TR>
 
+{if $product.min_amount gte 1 && $product.product_availability eq "in stock"}
+<tr>
+<td>
+{if $product_subtotal_value eq ""}
+{math equation="price*quantity" price=$current_price quantity=$product.min_amount format="%3.5f" assign=product_subtotal_value}
+{/if}
+<font style="font-size: 20px; color: #000000; font-weight: bold;">Subtotal:</font>
+</td>
+<td>
+<div style="font-size: 20px; color: #000000; font-weight: bold;" id="product_subtotal_value">{include file="currency.tpl" value=$product_subtotal_value plain_text_message=true price_type="product_subtotal_value"}</div>
+</td>
+</tr>
+{/if}
+
+
 </TABLE>
             <div class="clearing"></div>
 {*
@@ -286,11 +301,13 @@ vim: set ts=2 sw=2 sts=2 et:
 *}
 
   <ul class="properties-list">
+{*
     {if $product.min_amount gt 1}
       <li>
         <span class="property-value product-min-amount">{$lng.txt_need_min_amount|substitute:"items":$product.min_amount}</span>
       </li>
     {/if}
+*}
   {/if}
 {*
   {if $config.Appearance.show_in_stock eq "Y" and $config.General.unlimited_products ne "Y" and $product.distribution eq ""}

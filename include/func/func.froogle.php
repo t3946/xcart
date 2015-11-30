@@ -36,7 +36,7 @@ function GetGooglePrice($product){
 
         if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
 			/* price for bundle */
-			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
+			if ($product["d_enable_feed"] == "Y" && $product_availability == "out of stock"){
 				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["new_map_price"]);
 				}
 			if ($product_availability == "out of stock")
@@ -50,7 +50,7 @@ function GetGooglePrice($product){
         }
 		else {
 			/* price for dozen item*/
-			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
+			if ($product["d_enable_feed"] == "Y" && $product_availability == "out of stock"){
 				$product_price = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["new_map_price"]);
 			}
 			else {
