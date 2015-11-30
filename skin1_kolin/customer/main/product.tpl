@@ -351,8 +351,9 @@ var product_avail = 1;
 <tr><td colspan="2">
 <font class="ProductDetailsTitleWithoutBold">{if $product.mult_order_quantity eq "Y"}{$lng.txt_need_min_amount_mult|substitute:"items":$product.min_amount}{else}{$lng.txt_need_min_amount|substitute:"items":$product.min_amount}{/if}</font>
 </td></tr>
+{/if}
 
-{if $product.min_amount gte 1}
+{if $product.min_amount gte 1 && $product.product_availability eq "in stock"}
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr>
 <td>
@@ -367,15 +368,11 @@ var product_avail = 1;
 </tr>
 {/if}
 
+{*
 </table>
-
-
-
-
-
- 
 <table width="100%" cellspacing="0" cellpadding="0">
-{/if}
+*}
+
 <tr><td colspan="2">
 <input type="hidden" name="mode" value="add" />
 
