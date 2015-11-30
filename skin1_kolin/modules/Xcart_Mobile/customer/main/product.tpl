@@ -21,13 +21,15 @@ vim: set ts=2 sw=2 sts=2 et:
 {/if}
 
 {if $use_schema_org eq "Y"}
+<link id="pm_1" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PaymentMethodCreditCard" />
+<link id="pm_2" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#VISA" />
+<link id="pm_3" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#MasterCard" />
+<link id="pm_4" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PayPal" />
+
+<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_offer"/>
 
 <div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
-		{if $current_storefront eq "0"}
-			<meta itemprop="logo" content="http://www.artistsupplysource.com/image.php?type=P&id={$product.productid}"/>
-		{else}
-			<meta itemprop="logo" content="http://{$cidev_store_domain}/image.php?type=P&id={$product.productid}"/>
-		{/if}
+	<meta itemprop="logo" content="http://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
 	<meta itemprop="url" content="http://www.s3stores.com/"/>
 	<meta itemprop="name" content="S3 Stores Inc."/>
 </div>
@@ -115,7 +117,7 @@ vim: set ts=2 sw=2 sts=2 et:
       <div class="ui-block-a">
         <div class="sku{if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0} save-mark-here{/if}" {if $main eq "product"}{if $use_schema_org eq "Y"}<span id="so_sku" itemprop="sku">{/if}{/if}>{$product.productcode|escape}</div>
         {if $product.distribution eq "" && !($product.product_type eq "C" and $active_modules.Product_Configurator)}
-          <div class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
+          <div id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}" class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
 
             {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
               {$lng.lbl_in_stock_top}
@@ -185,7 +187,7 @@ onclick="javascript: $('#orderform-{$product.productid}').submit();"
           <li data-icon="false">
             <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images">
             {/if}
-            <img src="{if $product.image_url}{$product.image_url|amp}{else}{$xcart_web_dir}/image.php?type={$type|default:"T"}&amp;id={$product.productid}{/if}" id="product_thumbnail" style="width: {$product.image_x}px; height: {$product.image_y}px;" alt="{$product.product}" />
+            <img {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{if $product.image_url}{$product.image_url|amp}{else}{$xcart_web_dir}/image.php?type={$type|default:"T"}&amp;id={$product.productid}{/if}" id="product_thumbnail" style="width: {$product.image_x}px; height: {$product.image_y}px;" alt="{$product.product}" />
             {if $active_modules.Detailed_Product_Images and $images ne ''}
             </a>
           </li>
@@ -294,7 +296,7 @@ function send_question_email_form(){
 
         {if $tab.tpl eq "_product_description_"}
 
-          {if $use_schema_org eq "Y"}<span itemprop="description">{/if}{$product.fulldescr|default:$product.descr}{if $use_schema_org eq "Y"}</span>{/if}
+          {if $use_schema_org eq "Y"}<span id="so_description" itemprop="description">{/if}{$product.fulldescr|default:$product.descr}{if $use_schema_org eq "Y"}</span>{/if}
 
         {elseif $tab.tpl eq "_Brand_"}
 
@@ -418,19 +420,15 @@ function send_question_email_form(){
 {if $product.upc_ean_isbn}
 <tr>
         <td width="22%" nowrap="nowrap">{$product.upc_ean_isbn.type}:</td>
-        <td nowrap="nowrap">{if $use_schema_org eq "Y"}<span itemprop="gtin13">{/if}{$product.upc_ean_isbn.value}{if $use_schema_org eq "Y"}</span>{/if}</td>
+        <td nowrap="nowrap">{if $use_schema_org eq "Y"}<span id="so_gtin" itemprop="gtin13">{/if}{$product.upc_ean_isbn.value}{if $use_schema_org eq "Y"}</span>{/if}</td>
 </tr>
 {/if}
 
 {if $product.weight ne "0.00" || $variants ne ''}
 
-{if $use_schema_org eq "Y"}
-<meta itemprop="weight" content="{$product.weight|formatprice} {$config.General.weight_symbol}" />
-{/if}
-
 <tr id="product_weight_box">
         <td width="22%">Shipping weight:</td>
-        <td nowrap="nowrap"><span id="product_weight">{$product.weight|formatprice}</span> {$config.General.weight_symbol}</td>
+        <td nowrap="nowrap"><span id="product_weight" id="so_weight_value" itemprop="value">{$product.weight|formatprice}</span> {$config.General.weight_symbol}</td>
 </tr>
 {/if}
 {if $show_dimensions}

@@ -149,11 +149,7 @@ function send_question_email_form(){
 
 <div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
 	{if $use_schema_org eq "Y"}
-		{if $current_storefront eq "0"}
-			<meta itemprop="logo" content="http://www.artistsupplysource.com/image.php?type=P&id={$product.productid}"/>
-		{else}
-			<meta itemprop="logo" content="http://{$cidev_store_domain}/image.php?type=P&id={$product.productid}"/>
-		{/if}
+			<meta itemprop="logo" content="http://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
 	<meta itemprop="url" content="http://www.s3stores.com/"/>
 	<meta itemprop="name" content="S3 Stores Inc."/>
 </div>

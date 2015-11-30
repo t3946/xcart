@@ -375,7 +375,7 @@ var lbl_error = "{$lng.lbl_error}";
 {if $product.min_amount gte 1}
 <br />
 {math equation="price*quantity" price=$current_price quantity=$product.min_amount format="%3.5f" assign=product_subtotal_value}
-<div style="font-size: 16px; color: #000000; font-weight: bold;" id="product_subtotal_value">Subtotal: {include file="currency.tpl" value=$product_subtotal_value plain_text_message=true}</div>
+<div style="font-size: 16px; color: #000000; font-weight: bold;" id="product_subtotal_value">Subtotal: {include file="currency.tpl" value=$product_subtotal_value plain_text_message=true  price_type="product_subtotal_value"}</div>
 {/if}
 
 
