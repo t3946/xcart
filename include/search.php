@@ -333,22 +333,29 @@ if ($mode == "search") {
 
 	if (!empty($active_modules['Multiple_Storefronts']) && !$search_all_website) {
 		if (($current_area == 'P' || $current_area == 'A') && $config['Search_products']['search_by_sku_from_all_sf'] == 'N') {
-		$inner_joins['products_sf'] = array(
-			'on'	=> "$sql_tbl[products].productid=$sql_tbl[products_sf].productid AND $sql_tbl[products_sf].sfid = $current_storefront"
-		);
+			$inner_joins['products_sf'] = array(
+			  'on'	=> "$sql_tbl[products].productid=$sql_tbl[products_sf].productid AND $sql_tbl[products_sf].sfid = $current_storefront"
+			);
 		} else if (($current_area == 'P' || $current_area == 'A') && $config['Search_products']['search_by_sku_from_all_sf'] == 'Y') {
-            $fields[] = "$sql_tbl[storefronts].domain";
-            $left_joins['products_sf'] = array(	
-                'on'	=> "$sql_tbl[products].productid=$sql_tbl[products_sf].productid"
+	            $fields[] = "$sql_tbl[storefronts].domain";
+        	    $left_joins['products_sf'] = array(	
+                	'on'	=> "$sql_tbl[products].productid=$sql_tbl[products_sf].productid"
+		    );
+	            $left_joins['storefronts'] = array(
+        	        'on'    => "$sql_tbl[storefronts].storefrontid=$sql_tbl[products_sf].sfid"
+	            );
+	        } else if ($current_area == 'C') {
+        		$inner_joins['products_sf'] = array(
+			  'on'	=> "$sql_tbl[products].productid=$sql_tbl[products_sf].productid AND $sql_tbl[products_sf].sfid = $current_storefront"
 			);
-            $left_joins['storefronts'] = array(
-                'on'    => "$sql_tbl[storefronts].storefrontid=$sql_tbl[products_sf].sfid"
-            );
-        } else if ($current_area == 'C') {
-        	$inner_joins['products_sf'] = array(
-				'on'	=> "$sql_tbl[products].productid=$sql_tbl[products_sf].productid AND $sql_tbl[products_sf].sfid = $current_storefront"
-			);
-        }
+
+                        $inner_joins['pc_options'] = array(
+                          'on'  => "$sql_tbl[pc_options].storefrontid=$sql_tbl[products_sf].sfid"
+                        );
+
+			$fields[] = "$sql_tbl[pc_options].disable_AC_products";
+			$where[] = "(($sql_tbl[pc_options].disable_AC_products='N') OR ($sql_tbl[pc_options].disable_AC_products='Y' AND $sql_tbl[products].pc_classify_status!='AC'))";
+        	}
 	}
 
 	if ($search_all_website) {
@@ -357,12 +364,12 @@ if ($mode == "search") {
 		$default_sf = implode('', $url_parts);
 
 		$fields[] = "IF($sql_tbl[storefronts].domain IS NULL, '$default_sf', $sql_tbl[storefronts].domain) AS domain";
-        $left_joins['products_sf'] = array(	
-            'on'	=> "$sql_tbl[products].productid=$sql_tbl[products_sf].productid"
+	        $left_joins['products_sf'] = array(	
+        	    'on'	=> "$sql_tbl[products].productid=$sql_tbl[products_sf].productid"
 		);
-        $left_joins['storefronts'] = array(
-            'on'    => "$sql_tbl[storefronts].storefrontid=$sql_tbl[products_sf].sfid"
-        );
+	        $left_joins['storefronts'] = array(
+        	    'on'    => "$sql_tbl[storefronts].storefrontid=$sql_tbl[products_sf].sfid"
+	        );
 	}
 
 	$sort_string = "";

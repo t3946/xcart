@@ -6,7 +6,11 @@ if ($REQUEST_METHOD == 'POST' && $mode == "update"){
 	if ($maximum_number_of_autoclassify_product_per_turn < 1) $maximum_number_of_autoclassify_product_per_turn = 1;
 	if ($minimum_number_of_autoclassify_product_per_turn < 1) $minimum_number_of_autoclassify_product_per_turn = 1;
 
-	db_query("UPDATE $sql_tbl[pc_options] SET maximum_number_of_autoclassify_product_per_turn='$maximum_number_of_autoclassify_product_per_turn', minimum_number_of_autoclassify_product_per_turn='$minimum_number_of_autoclassify_product_per_turn', stop_words='$stop_words', excluded_char_sequences='$excluded_char_sequences', recalc_if_approval_rate='$recalc_if_approval_rate', amount_of_products_for_autoclassify_queue='$amount_of_products_for_autoclassify_queue', allow_skip_products='$allow_skip_products', allow_blank_google_product_category='$allow_blank_google_product_category' WHERE storefrontid='".$current_storefront_info["storefrontid"]."'");
+	if (empty($disable_AC_products)){
+		$disable_AC_products = 'N';
+	}
+
+	db_query("UPDATE $sql_tbl[pc_options] SET maximum_number_of_autoclassify_product_per_turn='$maximum_number_of_autoclassify_product_per_turn', minimum_number_of_autoclassify_product_per_turn='$minimum_number_of_autoclassify_product_per_turn', stop_words='$stop_words', excluded_char_sequences='$excluded_char_sequences', recalc_if_approval_rate='$recalc_if_approval_rate', amount_of_products_for_autoclassify_queue='$amount_of_products_for_autoclassify_queue', allow_skip_products='$allow_skip_products', allow_blank_google_product_category='$allow_blank_google_product_category', disable_AC_products='$disable_AC_products' WHERE storefrontid='".$current_storefront_info["storefrontid"]."'");
 
         $top_message["content"] = 'Done.';
         $top_message["type"] = "I";
