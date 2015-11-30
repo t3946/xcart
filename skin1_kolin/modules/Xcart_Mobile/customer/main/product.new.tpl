@@ -2,15 +2,15 @@
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
 {if $product.clean_url ne ""}
-<meta itemprop="url" content="http://www.artistsupplysource.com/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/{$product.clean_url}/" />
 {else}
-<meta itemprop="url" content="http://www.artistsupplysource.com/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/product.php?productid={$product.productid}" />
 {/if}
 {else}
 {if $product.clean_url ne ""}
-<meta itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
 {else}
-<meta itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
 {/if}
 {/if}
 {/if}
@@ -502,9 +502,6 @@ var lbl_error = "{$lng.lbl_error}";
 <br />
 {/if}
 
-{if $use_schema_org eq "Y"}
-{* <div itemprop="name" itemscope itemtype="http://schema.org/Product"> *}
-{/if}
 
 <br />
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -536,6 +533,7 @@ var lbl_error = "{$lng.lbl_error}";
 </table>
 
 {if $use_schema_org eq "Y"}
+<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_offer"/>
 {if $current_storefront eq "0"}
 <meta itemprop="logo" content="http://www.artistsupplysource.com/image.php?type=P&id={$product.productid}"/>
 {else}
@@ -570,7 +568,7 @@ var lbl_error = "{$lng.lbl_error}";
 <meta itemprop="seller" content="S3 Stores Inc."/>
 </div>
 
-{* </div> *} {* end http://schema.org/Product  *}
+
 {/if}
 
 </div>

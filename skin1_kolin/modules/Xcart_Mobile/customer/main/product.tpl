@@ -21,35 +21,45 @@ vim: set ts=2 sw=2 sts=2 et:
 {/if}
 
 {if $use_schema_org eq "Y"}
-{if $current_storefront eq "0"}
-<meta itemprop="logo" content="http://www.artistsupplysource.com/image.php?type=P&id={$product.productid}"/>
-{else}
-<meta itemprop="logo" content="http://{$cidev_store_domain}/image.php?type=P&id={$product.productid}"/>
-{/if}
 
-<meta itemprop="brand" content="{$product.cidev_brand_name}"/>
-<meta itemprop="manufacturer" content="{$product.manufacturer}"/>
-<meta itemprop="sku" content="{$product.productcode}"/>
+<div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
+		{if $current_storefront eq "0"}
+			<meta itemprop="logo" content="http://www.artistsupplysource.com/image.php?type=P&id={$product.productid}"/>
+		{else}
+			<meta itemprop="logo" content="http://{$cidev_store_domain}/image.php?type=P&id={$product.productid}"/>
+		{/if}
+	<meta itemprop="url" content="http://www.s3stores.com/"/>
+	<meta itemprop="name" content="S3 Stores Inc."/>
+</div>
+
+<div id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Organization">
+	<meta itemprop="name" content="{$product.cidev_brand_name}"/>
+</div> 
+<div id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
+	<meta itemprop="name" content="{$product.manufacturer}"/>
+</div>
+
 {if $cidev_mpn ne ""}
-<meta itemprop="mpn" content="{$cidev_mpn}"/>
+<meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
 {/if}
 
-<div itemprop="offers" itemscope itemtype="http://schema.org/Offer"/>
-
+<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_stock so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
+<div id="so_weight" itemprop="weight" itemscope="" itemtype="http://schema.org/QuantitativeValue" itemref="so_weight_value">
+	<meta itemprop="unitCode" content="lbs">
+</div>
 {if $cat_name_for_itemprop ne ""}
-<meta itemprop="category" content="{$cat_name_for_itemprop}"/>
+<meta id="so_category" itemprop="category" content="{$cat_name_for_itemprop}"/>
 {/if}
 
-{if $product.product_availability eq "in stock"}
-<meta itemprop="availability" content="http://schema.org/InStock"/>
-{else}
-<meta itemprop="availability" content="http://schema.org/OutOfStock"/>
-{/if}
+<meta id="so_o_condition" itemprop="itemCondition" content="http://schema.org/NewCondition"/>
+<meta id="so_o_currency" itemprop="priceCurrency" content="USD">
 
-<meta itemprop="itemCondition" content="http://schema.org/NewCondition"/>
+<meta id="so_o_function" itemprop="businessFunction" href="http://purl.org/goodrelations/v1#Sell"/>
+<div id="so_o_delivery" itemprop="deliveryLeadTime"  itemscope="" itemtype="http://schema.org/QuantitativeValue">
+	<meta itemprop="value" content="6">
+	<meta itemprop="unitText" content="days">
+</div>
 
-<meta itemprop="businessFunction" content="http://purl.org/goodrelations/v1#Sell"/>
-<meta itemprop="deliveryLeadTime" content="6"/>
 
 {if $product.new_notify_in_stock_price ne ""}
         {assign var="current_price" value=$product.new_notify_in_stock_price}
@@ -87,7 +97,7 @@ vim: set ts=2 sw=2 sts=2 et:
   <div class="top-info ui-body ui-body-b ui-overlay-shadow">
     <div class="ui-grid-{if $active_modules.Special_Offers && $product.bonus_points gt 0}a{else}solo{/if}">
       <div class="ui-block-a">
-        <h1>{$product.producttitle|amp}</h1>
+        <h1 {if $main eq "product"}{if $use_schema_org eq "Y"} id="so_name" itemprop="name"{/if}{/if}>{$product.producttitle|amp}</h1>
       </div>
       {if $active_modules.Special_Offers && $product.bonus_points gt 0}
         <div class="ui-block-b">
@@ -103,7 +113,7 @@ vim: set ts=2 sw=2 sts=2 et:
     </div>
     <div class="ui-grid-a">
       <div class="ui-block-a">
-        <div class="sku{if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0} save-mark-here{/if}" id="product_code">{$product.productcode|escape}</div>
+        <div class="sku{if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0} save-mark-here{/if}" {if $main eq "product"}{if $use_schema_org eq "Y"}<span id="so_sku" itemprop="sku">{/if}{/if}>{$product.productcode|escape}</div>
         {if $product.distribution eq "" && !($product.product_type eq "C" and $active_modules.Product_Configurator)}
           <div class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
 
