@@ -406,7 +406,7 @@ function check_wholesale(qty) {
         if (product_wholesale.length == 0){
 	        if (document.getElementById('product_subtotal_value')){
         	        var product_subtotal_value =  wl_price*qty;
-                	document.getElementById('product_subtotal_value').innerHTML = "Subtotal: "+currency_symbol+price_format(product_subtotal_value);
+                	document.getElementById('product_subtotal_value').innerHTML = currency_symbol+price_format(product_subtotal_value);
 	        }
 
                 return true;
@@ -452,7 +452,7 @@ function check_wholesale(qty) {
 
 	        if (document.getElementById('product_subtotal_value')){
         	        var product_subtotal_value =  product_price_value*qty;
-                	document.getElementById('product_subtotal_value').innerHTML = "Subtotal: "+currency_symbol+price_format(product_subtotal_value);
+                	document.getElementById('product_subtotal_value').innerHTML = currency_symbol+price_format(product_subtotal_value);
 	        }
 
 /*
