@@ -1,4 +1,5 @@
 {* $Id: product.tpl,v 1.147.2.11 2006/11/29 06:21:14 max Exp $ *}
+
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
 {if $product.clean_url ne ""}
