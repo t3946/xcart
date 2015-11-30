@@ -111,8 +111,7 @@ var searchform_def = [
 	['posted_data[email]', '{$search_prefilled.email|escape:javascript}'],
 	['posted_data[status]', '{$search_prefilled.status}'],
 	['posted_data[cb_status]', '{$search_prefilled.cb_status}'],
-	['posted_data[dc_status]', '{$search_prefilled.dc_status}'],
-	['posted_data[bd_status]', '{$search_prefilled.bd_status}']
+	['posted_data[dc_status]', '{$search_prefilled.dc_status}']
 ];
 {literal}
 function managedate(type, status) {
@@ -394,6 +393,7 @@ function managedate(type, status) {
 	</td>
 </tr>
 
+{*
 <tr> 
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_b2d_status}:</td>
 	<td width="10">&nbsp;</td>
@@ -401,6 +401,7 @@ function managedate(type, status) {
 	{include file="main/order_status.tpl" status=$search_prefilled.bd_status mode="select" name="posted_data[bd_status]" extended="Y" extra="style='width:70%'" status_type="BD"}
 	</td>
 </tr>
+*}
 {/if}
 
 {*

@@ -991,6 +991,7 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
 
       </td>
       <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
+{*
         <b>{$lng.lbl_bus_distr_payment_status}:</b><br />
 
         {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}
@@ -999,9 +1000,9 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
         {else}
           {include file="main/order_status.tpl" status=$v.bd_status mode="select" name="groups[`$m_id`][bd_status]" status_type="BD"}
         {/if}
+*}
 
 {if $v.invoices ne ""}
-<br />
 <B>Business to distributor invoice status:</B><br />
 {foreach from=$v.invoices item=item_invoice key=key_invoice}
 
@@ -1011,7 +1012,9 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
 {/if}
 
 {if $v.memos ne ""}
-<br />
+  {if $v.invoices ne ""}
+    <br />
+  {/if}
 <B>Business to distributor credit memo status:</B><br />
 {foreach from=$v.memos item=item_memos key=key_memos}
 
