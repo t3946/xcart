@@ -10,6 +10,7 @@
 <tr class='TableSubHead' style="background: #CCCCCC;">
 <td width="5"><B>R</B></td>
 <td width="500"><B>Category path</B></td>
+<td><B>CategoryID</B></td>
 
 <td width="250"><B>Inherited taxonomy</B></td>
 <td nowrap="nowrap"><B>Google Product Category</B></td>
@@ -38,6 +39,7 @@ style="background: #FFFFFF;"
 {/if}
 </td>
 
+<td align="center">{$v.categoryid}</td>
 
 <td>
 {if $v.prev_google_product_category ne ""}

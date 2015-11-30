@@ -76,6 +76,26 @@
 
 </table>
 
+<br />
+<table cellspacing="0" class="SubHeaderBlack">
+<tr>
+	<td class="SubHeaderBlack">Visualization options (SF)</td>
+</tr>
+<tr>
+	<td class="SubHeaderBlackLine"><img alt="" class="Spc" src="/skin1_kolin/images/spacer.gif"><br></td>
+</tr>
+</table>
+
+<table cellpadding="3" cellspacing="1" width="100%">
+ <tr>
+  <td width="40%">Disable Automatically Classified (AC) products in category/brand view:</td>
+  <td>
+<input type="checkbox" name="disable_AC_products" value="Y"{if $pc_options.disable_AC_products eq "Y"} checked="checked"{/if} />
+  </td>
+</tr>
+</table>
+
+
 <input type="button" value="{$lng.lbl_update|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'update');" />
 
 </form>
