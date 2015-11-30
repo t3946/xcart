@@ -7,15 +7,15 @@ vim: set ts=2 sw=2 sts=2 et:
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
 {if $product.clean_url ne ""}
-<meta itemprop="url" content="http://www.artistsupplysource.com/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/{$product.clean_url}/" />
 {else}
-<meta itemprop="url" content="http://www.artistsupplysource.com/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/product.php?productid={$product.productid}" />
 {/if}
 {else}
 {if $product.clean_url ne ""}
-<meta itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
 {else}
-<meta itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
 {/if}
 {/if}
 {/if}
@@ -83,9 +83,6 @@ vim: set ts=2 sw=2 sts=2 et:
         {assign var="itemprop_price" value=$current_price}
 {/if}
 
-<meta itemprop="price" content="{$itemprop_price|price_format}"/>
-<meta itemprop="priceCurrency" content="USD"/>
-<meta itemprop="seller" content="S3 Stores Inc."/>
 </div>
 
 {* </div> *} {* end http://schema.org/Product  *}
@@ -115,7 +112,7 @@ vim: set ts=2 sw=2 sts=2 et:
     </div>
     <div class="ui-grid-a">
       <div class="ui-block-a">
-        <div class="sku{if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0} save-mark-here{/if}" {if $main eq "product"}{if $use_schema_org eq "Y"}<span id="so_sku" itemprop="sku">{/if}{/if}>{$product.productcode|escape}</div>
+        <div class="sku{if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0} save-mark-here{/if}" {if $main eq "product"}{if $use_schema_org eq "Y"}<span id="so_sku" itemprop="sku">{/if}{/if}>{$product.productcode|escape}{if $main eq "product"}{if $use_schema_org eq "Y"}</span>{/if}{/if}</div>
         {if $product.distribution eq "" && !($product.product_type eq "C" and $active_modules.Product_Configurator)}
           <div id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}" class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
 
@@ -428,7 +425,7 @@ function send_question_email_form(){
 
 <tr id="product_weight_box">
         <td width="22%">Shipping weight:</td>
-        <td nowrap="nowrap"><span id="product_weight" id="so_weight_value" itemprop="value">{$product.weight|formatprice}</span> {$config.General.weight_symbol}</td>
+        <td nowrap="nowrap"><span id="so_weight_value" itemprop="value">{$product.weight|formatprice}</span> {$config.General.weight_symbol}</td>
 </tr>
 {/if}
 {if $show_dimensions}
