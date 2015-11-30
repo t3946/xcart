@@ -351,6 +351,22 @@ var product_avail = 1;
 <tr><td colspan="2">
 <font class="ProductDetailsTitleWithoutBold">{if $product.mult_order_quantity eq "Y"}{$lng.txt_need_min_amount_mult|substitute:"items":$product.min_amount}{else}{$lng.txt_need_min_amount|substitute:"items":$product.min_amount}{/if}</font>
 </td></tr>
+
+{if $product.min_amount gte 1}
+<tr><td colspan="2">&nbsp;</td></tr>
+<tr>
+<td>
+{if $product_subtotal_value eq ""}
+{math equation="price*quantity" price=$current_price quantity=$product.min_amount format="%3.5f" assign=product_subtotal_value}
+{/if}
+<font style="font-size: 16px; color: #000000; font-weight: bold;">Subtotal:</font>
+</td>
+<td>
+<div style="font-size: 16px; color: #000000; font-weight: bold;" id="product_subtotal_value">{include file="currency.tpl" value=$product_subtotal_value plain_text_message=true price_type="product_subtotal_value"}</div>
+</td>
+</tr>
+{/if}
+
 </table>
 
 
@@ -374,15 +390,6 @@ var product_avail = 1;
 var lbl_added = "{$lng.lbl_added}";
 var lbl_error = "{$lng.lbl_error}";
 </script>
-
-
-{if $product.min_amount gte 1}
-<br />
-{if $product_subtotal_value eq ""}
-{math equation="price*quantity" price=$current_price quantity=$product.min_amount format="%3.5f" assign=product_subtotal_value}
-{/if}
-<div style="font-size: 16px; color: #000000; font-weight: bold;" id="product_subtotal_value">Subtotal: {include file="currency.tpl" value=$product_subtotal_value plain_text_message=true price_type="product_subtotal_value"}</div>
-{/if}
 
 
 <br />
