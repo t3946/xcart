@@ -1127,6 +1127,7 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
 
 
 {if !$static}
+<br />
 <div align="right">
 <input type="button" value="Additional credit memo received" onclick="javascript: $('#mode_accounting_page').val('additional_memo_received'); $('#certain_mid').val('{$m_id}'); this.form.submit();" />
 </div>
