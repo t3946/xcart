@@ -53,6 +53,8 @@
         <td valign="top" nowrap="nowrap"><b>threshold</b></td>
         <td valign="top" nowrap="nowrap"><b>add_new_only</b></td>
         <td valign="top" nowrap="nowrap"><b>last_md5</b></td>
+        <td valign="top" nowrap="nowrap"><b>Multiple feed<br />destinations</b></td>
+        <td valign="top" nowrap="nowrap"><b>Disable search of<br />discontinued items</b></td>
         <td valign="top" nowrap="nowrap"><b>enabled</b></td>
         <td valign="top" nowrap="nowrap"><b>delete</b></td>
 </tr>
@@ -120,6 +122,14 @@
 <td valign="top" align="center">
 {$item.last_md5}
 <input type="hidden"  name="Supplier_feeds[{$key}][last_md5]" value="{$item.last_md5}" />
+</td>
+
+<td valign="top" align="center" width="10">
+<input type="checkbox" name="Supplier_feeds[{$key}][multiple_feed_destinations]" value="Y" {if $item.multiple_feed_destinations eq "Y"}checked="checked"{/if}/>
+</td>
+
+<td valign="top" align="center" width="10">
+<input type="checkbox" name="Supplier_feeds[{$key}][disable_search_of_discontinued_items]" value="Y" {if $item.disable_search_of_discontinued_items eq "Y"}checked="checked"{/if}/>
 </td>
 
 <td valign="top" align="center" width="10">
