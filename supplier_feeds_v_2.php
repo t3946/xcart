@@ -62,6 +62,9 @@ foreach ($supplier_feeds as $k => $v){
 	$inserted_products_count = 0;
 	$all_feed_productcodes = array();
 
+//func_print_r($v);
+//die();
+
 	$md5_arr = explode(".",$v["feed_file_name"]);
 	array_pop($md5_arr);
 	$md5_file = implode(".",$md5_arr).".md5";
@@ -99,20 +102,35 @@ foreach ($supplier_feeds as $k => $v){
 
 
         } else {
+
+#
+# ### Disable for test N1
+#
+
         	$log_text = "manufacturerid: ".$v["manufacturerid"].". md5 file is not found. Skipped.";
 	        func_backprocess_log("supplier_feeds_v_2", $log_text);
                 func_backprocess_log("supplier feeds errors", $log_text);
                 continue;
+
         }
 
 
 	$ftp = ftp_connect($config["Supplier_feeds"]["Feeds_storage_path"]);
+#
+# ### Disable for test N2
+#
+
 	if ($ftp && @ftp_login($ftp, $config["Supplier_feeds"]["Feeds_storage_login"], $config["Supplier_feeds"]["Feeds_storage_password"])) {
+//	if (1==1) {
 		ftp_pasv($ftp, true);
 
                 $local_file = $xcart_dir . "/files/product_feeds_v2/" .str_replace("/","_",$v["feed_file_name"]);
                 $server_file = $v["feed_file_name"];
 
+
+#
+# ### Disable for test N3
+#
 
 		$file_is_found = false;
                 if (@ftp_get($ftp, $local_file, $server_file, FTP_BINARY)) {
@@ -121,18 +139,20 @@ foreach ($supplier_feeds as $k => $v){
 
 		ftp_quit($ftp);
 
-/*
 ###
-$file_is_found = true;
-$local_file = $xcart_dir . "/files/product_feeds_v2/feed219p.txt";
+//$file_is_found = true;
+//$local_file = $xcart_dir . "/files/product_feeds_v2/feed262i-1.txt";
 ###
-*/
+
+
+
 
 		if ($file_is_found){
 
 			$handle = fopen($local_file, "r");
 			$contents = fread($handle, filesize($local_file));
 			fclose($handle);
+
 
 /*
 			$md5 = md5($contents);
@@ -146,6 +166,7 @@ $local_file = $xcart_dir . "/files/product_feeds_v2/feed219p.txt";
 */
 
 			$products = json_decode($contents, true);
+
 
 			if (empty($products["products"]) || !is_array($products["products"])){
 	                        $log_text = "manufacturerid: ".$v["manufacturerid"].". No products found. (".$feed_types[$v["feed_type"]].")";
@@ -303,7 +324,7 @@ func_print_r($p, $productid);
 					}
 				}
 
-				$not_xcart_products_fields = $p;
+				$not_Xcart_products_fields = $p;
 
 				$just_created = false;
 
@@ -443,7 +464,7 @@ die();
 						$product["product"] = $new_product_name_arr[0];
 
 	                                        $time = time();
-        	                                db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid) VALUES ('$productcode', 'master', 'master','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]')");
+        	                                db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid) VALUES ('$productcode', '$v[feed_file_name]', '$v[feed_file_name]','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]')");
                 	                        $productid = db_insert_id();
 
 						db_query("INSERT INTO $sql_tbl[products_categories] (categoryid, productid, main) VALUES ('$v[base_category_id]', '$productid', 'Y')");
@@ -472,6 +493,15 @@ die();
 						if ($v["add_new_only"] == "Y"){
 							continue;
 						}
+
+
+#
+##
+###
+						db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
+###
+##
+#
 					}
 
 					if (!empty($image_data)){
@@ -769,13 +799,13 @@ die();
                     if ( !isset( $product['dim_z'] ) )
                         $product['dim_z'] = 0;
 
-                    $dimension1 = [$product['dim_x'],$product['dim_y'],$product['dim_z'] ];
+                    $dimension1 = array($product['dim_x'],$product['dim_y'],$product['dim_z']);
                     rsort($dimension1);
 
-                    $dimension2 = [$product_dimension['dim_x'],$product_dimension['dim_y'],$product_dimension['dim_z']];
+                    $dimension2 = array($product_dimension['dim_x'],$product_dimension['dim_y'],$product_dimension['dim_z']);
                     rsort($dimension2);
 
-                    $dimension = [];
+                    $dimension = array();
 
                     if ( !isset( $product['weight'] ) )
                         $product['weight'] = 0;
@@ -857,19 +887,54 @@ die();
 			}
 
 
-			if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes)){
+			if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes) && $v["disable_search_of_discontinued_items"] != 'Y'){
 			
 			    $mc = $manufacturerid_info[$v["manufacturerid"]]["code"];
 			    $mc2 = substr($mc,0,strpos($mc,'-'));
 			    print("Entering disontinue section for ".$mc." or ".$mc2." \r\n");
-			    print("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' or productcode like '".$mc2."-%') AND forsale='Y'");
+
+#
+##
+###
+			    if ($v["multiple_feed_destinations"] == 'Y'){
+                                $provider_search_cond1 = $v["feed_file_name"];
+
+                                if ($v["feed_type"] == "I"){
+                                        $current_letter_in_replacement = "i";
+                                        $set_new_letter_for_replacement = "p";
+                                }
+                                else {
+                                        // $feed_type == "P"
+                                        $current_letter_in_replacement = "p";
+                                        $set_new_letter_for_replacement = "i";
+                                }
+
+                                if (strpos($provider_search_cond1, "-") !== false){
+                                        $provider_search_cond2 = str_replace($current_letter_in_replacement."-", $set_new_letter_for_replacement."-", $provider_search_cond1);
+                                }
+                                else {
+                                        $provider_search_cond2 = str_replace($current_letter_in_replacement.".", $set_new_letter_for_replacement.".", $provider_search_cond1);
+                                }
+
+                                $provider_search_cond = " AND (provider='$provider_search_cond1' OR provider='$provider_search_cond2')";
+			    }
+			    else {
+				$provider_search_cond = "";
+			    }
+###
+##
+#
+
+			    print("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' or productcode like '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 			    print("\r\n");
-                            $count_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y'");
+               	            $count_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 
 			    print($count_products." for slae = Y\r\n");
+
+
                             if ($count_products > 0){
-                                
-                                $manufacturer_code_products = db_query("SELECT productid, productcode, forsale, update_search_index FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y'");
+
+                                $manufacturer_code_products = db_query("SELECT productid, productcode, forsale, update_search_index, provider FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 
                                 $line_number = 0;
                                 print "<br />Second iteration:<br />";
@@ -885,6 +950,7 @@ die();
                                                 func_flush();
                                         }
 
+
                                         $_productcode = strtoupper(trim($prod["productcode"]));
                                         if (!in_array($_productcode, $all_feed_productcodes) && $prod["forsale"] != "N") {
 //                                                $discontinued_products[] = $prod;
@@ -896,7 +962,6 @@ die();
                                                         $update_search_index = "D";
                                                 }
 
-//                                                db_query("UPDATE $sql_tbl[products] SET r_avail='0', forsale='N', update_search_index='$update_search_index' WHERE productid='".$prod["productid"]."'");
                                                 db_query("UPDATE $sql_tbl[products] SET r_avail='0', forsale='N'  WHERE productid='".$prod["productid"]."'");
                                         }
                                 }
