@@ -664,7 +664,7 @@ if (!empty($categories)){
                                 }
                         }
 						*/
-						$product_count_global = func_query_first_cell("SELECT SC.product_count FROM $sql_tbl[categories_subcount] SC WHERE SC.categoryid='$v[categoryid]");
+						$product_count_global = func_query_first_cell("SELECT SC.product_count FROM $sql_tbl[categories_subcount] SC WHERE SC.categoryid='$v[categoryid]'");
 	
                         $categories[$k]['product_count_global'] = $product_count_global;
 
