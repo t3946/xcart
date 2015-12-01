@@ -15,7 +15,7 @@ if ($REQUEST_METHOD == 'POST'){
 			if ($v["delete"] == "Y"){
 				db_query("DELETE FROM $sql_tbl[supplier_feeds] WHERE feed_id='$v[feed_id]'");
 			} else {
-				db_query("UPDATE $sql_tbl[supplier_feeds] SET feed_name='$v[feed_name]', feed_type='$v[feed_type]', manufacturerid='$v[manufacturerid]', storefront_id='$v[storefront_id]', base_category_id='$v[base_category_id]', feed_file_name='$v[feed_file_name]', average_update_period='$v[average_update_period]', last_update_items_count='$v[last_update_items_count]', threshold='$v[threshold]', add_new_only='$v[add_new_only]', last_md5='$v[last_md5]', enabled='$v[enabled]' WHERE feed_id='$v[feed_id]'");
+				db_query("UPDATE $sql_tbl[supplier_feeds] SET feed_name='$v[feed_name]', feed_type='$v[feed_type]', manufacturerid='$v[manufacturerid]', storefront_id='$v[storefront_id]', base_category_id='$v[base_category_id]', feed_file_name='$v[feed_file_name]', average_update_period='$v[average_update_period]', last_update_items_count='$v[last_update_items_count]', threshold='$v[threshold]', add_new_only='$v[add_new_only]', last_md5='$v[last_md5]', enabled='$v[enabled]', multiple_feed_destinations='$v[multiple_feed_destinations]', disable_search_of_discontinued_items='$v[disable_search_of_discontinued_items]' WHERE feed_id='$v[feed_id]'");
 			}
                 }
         }
