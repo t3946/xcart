@@ -113,6 +113,7 @@
 <tr {$cycle_class}>
   <td width="5" align="center"></td>
   <td align="center" class="OrderSheetGreenCell">
+
 {if $v.invoices ne ""}
 	{foreach from=$v.invoices item=invoice key=invoice_number}
 		<B>I: {$invoice_memo_statuses[$invoice.status]}</B><br />
@@ -128,7 +129,6 @@
 {else}
         <B>C: {$invoice_memo_statuses.N}</B>
 {/if}
-
 
   </td>
   <td align="center">

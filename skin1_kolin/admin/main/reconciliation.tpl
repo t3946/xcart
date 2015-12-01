@@ -394,7 +394,7 @@ to
 	{if $v.total_invoices_and_memos_amounts__amount_csv_abs_diff_abs gt 0}
 		<br />
 		<br />
-		<input type="checkbox" name="action[{$v.id}]" value="R" /> Force reconcile
+		<input type="checkbox" name="action[{$v.id}]" value="R" />Force reconcile
 	{/if}
 
   {/if}

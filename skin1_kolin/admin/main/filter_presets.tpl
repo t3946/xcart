@@ -74,6 +74,7 @@
             </select>
         </td>
     </tr>
+{*
     <tr>
         <td width="15%" class="preset_bold">{$lng.lbl_b2d_status}:</td>
         <td width="85%">
@@ -84,7 +85,7 @@
             </select>
         </td>
     </tr>
-
+*}
 {*
     <tr>
         <td width="15%" class="preset_bold">"Currently assigned to" status:</td>
