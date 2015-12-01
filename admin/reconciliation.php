@@ -751,22 +751,6 @@ if ($REQUEST_METHOD == "POST") {
 	}
         elseif ($mode == "update"){
 
-
-		if (!empty($action) && is_array($action)){
-	                foreach ($action as $k => $v){
-        	                db_query("UPDATE $sql_tbl[reconciliations] SET action='$v' WHERE id='$k'");
-
-				$status = "U";
-
-				if ($v == "R"){
-					$status = "R";
-				}
-
-        	                db_query("UPDATE $sql_tbl[order_group_invoices] SET status='$status' WHERE reconciliation_id='$k'");
-                	        db_query("UPDATE $sql_tbl[order_group_memos] SET status='$status' WHERE reconciliation_id='$k'");
-			}
-                }
-
 		// Untie selected transaction-order connections
                 if (!empty($clear_invoices_memos) && is_array($clear_invoices_memos)){
                         foreach ($clear_invoices_memos as $k => $v){
@@ -831,6 +815,22 @@ if ($REQUEST_METHOD == "POST") {
 			  } // if (!empty($v_arr) && is_array($v_arr))
 			} // foreach ($add_order_manually as $r_id => $v_arr)
 		} // if (!empty($add_order_manually) && is_array($add_order_manually))
+
+
+                if (!empty($action) && is_array($action)){
+                        foreach ($action as $k => $v){
+                                db_query("UPDATE $sql_tbl[reconciliations] SET action='$v' WHERE id='$k'");
+
+                                $status = "U";
+
+                                if ($v == "R"){
+                                        $status = "R";
+                                }
+
+                                db_query("UPDATE $sql_tbl[order_group_invoices] SET status='$status' WHERE reconciliation_id='$k'");
+                                db_query("UPDATE $sql_tbl[order_group_memos] SET status='$status' WHERE reconciliation_id='$k'");
+                        }
+                }
 
 
                 $top_message["content"] = "Done.";
@@ -1229,7 +1229,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 					$found_records[$counter]["orderid"] = $vv["orderid"];
 					$found_records[$counter]["memo_info"] = $vv;
 
-					$total_invoices_and_memos_amounts += $vv["ref_to_us_total"];
+					$total_invoices_and_memos_amounts -= $vv["ref_to_us_total"];
 					$tota_memos_amounts += $vv["ref_to_us_total"];
 
 					$counter++;
@@ -1246,7 +1246,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 
 				$reconciliations[$k]["total_invoices_amounts"] = $total_invoices_amounts;
 				$reconciliations[$k]["tota_memos_amounts"] = $tota_memos_amounts;
-				$reconciliations[$k]["total_invoices_amounts_MIN_memos_amounts"] = $total_invoices_amounts - $tota_memos_amounts;
+//				$reconciliations[$k]["total_invoices_amounts_MIN_memos_amounts"] = $total_invoices_amounts - $tota_memos_amounts;
 
 				$reconciliations[$k]["total_invoices_and_memos_amounts"] = $total_invoices_and_memos_amounts;
 
@@ -1260,7 +1260,6 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 
 		    } // if (!empty($manufacturerid))
 		} // if ($tab == "unreconciled" || $tab == "reconciled")
-
 
 
                         if (!empty($config_reconciliation_search_keyphrases) && is_array($config_reconciliation_search_keyphrases)){
