@@ -649,28 +649,31 @@ if (!empty($categories)){
 
 						
                         $categories[$k]['product_count'] = $product_count_global = func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v[categoryid]' AND $sql_tbl[products].forsale='Y'");
-
-                        $categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '%/$v[categoryid]/%' AND avail='Y'");
-                        if (!empty($categoryid_arr)){
-                                foreach ($categoryid_arr as $k_c => $v_catid){
-                                        $product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' AND $sql_tbl[products].forsale='Y'");
-										if ($product_count_global > 0) 
-											{
-												break 1;
-											}
-                                }
-                        } else {
-                                $categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '$v[categoryid]/%' AND avail='Y'");
-                                if (!empty($categoryid_arr)){
-                                        foreach ($categoryid_arr as $k_c => $v_catid){
-                                                $product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' AND $sql_tbl[products].forsale='Y'");
+						/*we will show category if we found at least one enabled product in it or in it's subcategories*/
+						if ($product_count_global <= 0) 
+							{
+								$categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '%/$v[categoryid]/%' AND avail='Y'");
+								if (!empty($categoryid_arr)){
+										foreach ($categoryid_arr as $k_c => $v_catid){
+												$product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' AND $sql_tbl[products].forsale='Y'");
 												if ($product_count_global > 0) 
-												{
-													break 1;
+													{
+														break 1;
+													}
 												}
-                                        }
-                                }
-                        }
+								} else {
+										$categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '$v[categoryid]/%' AND avail='Y'");
+										if (!empty($categoryid_arr)){
+												foreach ($categoryid_arr as $k_c => $v_catid){
+														$product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' AND $sql_tbl[products].forsale='Y'");
+														if ($product_count_global > 0) 
+															{
+																break 1;
+															}
+														}
+												}
+										}
+							}
 						
 /*						$product_count_global = func_query_first_cell("SELECT SC.product_count FROM $sql_tbl[categories_subcount] SC WHERE SC.categoryid='$v[categoryid]'");*/
 	
