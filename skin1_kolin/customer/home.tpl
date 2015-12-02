@@ -22,8 +22,8 @@
 {if $clean_url_data.resource_type eq "K" && $e_search_data.substring ne ""}
 {if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring|stripslashes|escape}{else}{$e_search_data.substring|stripslashes|escape}{/if} at&nbsp;
 {/if}
-{if $config.Appearance.config_title_meta_tag ne "" && (($main eq "catalog" && $current_category.category eq ""))}
-{$config.Appearance.config_title_meta_tag}
+{if $config.Company.config_title_meta_tag ne "" && (($main eq "catalog" && $current_category.category eq ""))}
+{$config.Company.config_title_meta_tag}
 {elseif $current_category.title_tag ne "" && $main eq "catalog"}
 {$current_category.title_tag} {*| {$location[0].0*}
 {else}
