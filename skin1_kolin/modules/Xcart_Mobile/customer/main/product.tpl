@@ -26,6 +26,7 @@ vim: set ts=2 sw=2 sts=2 et:
 <link id="pm_3" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#MasterCard" />
 <link id="pm_4" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PayPal" />
 
+
 <meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_offer"/>
 
 <div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
@@ -61,7 +62,7 @@ vim: set ts=2 sw=2 sts=2 et:
 	<meta itemprop="value" content="6">
 	<meta itemprop="unitText" content="days">
 </div>
-
+{/if}
 
 {if $product.new_notify_in_stock_price ne ""}
         {assign var="current_price" value=$product.new_notify_in_stock_price}
@@ -77,16 +78,18 @@ vim: set ts=2 sw=2 sts=2 et:
         {assign var="current_price" value=$product_wholesale.0.price}
 {/if}
 
+{*
 {if $product.min_amount gt 1 && $product.mult_order_quantity eq "Y"}
         {math assign="itemprop_price" equation="y*x" y=$product.min_amount x=$current_price}
 {else}
         {assign var="itemprop_price" value=$current_price}
 {/if}
+*}
 
-</div>
+{*</div>*}
 
 {* </div> *} {* end http://schema.org/Product  *}
-{/if}
+{*{/if}*}
 
 
 <div class="product-details">
