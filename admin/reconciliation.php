@@ -816,22 +816,28 @@ if ($REQUEST_METHOD == "POST") {
 			} // foreach ($add_order_manually as $r_id => $v_arr)
 		} // if (!empty($add_order_manually) && is_array($add_order_manually))
 
-
                 if (!empty($action) && is_array($action)){
                         foreach ($action as $k => $v){
                                 db_query("UPDATE $sql_tbl[reconciliations] SET action='$v' WHERE id='$k'");
 
                                 $status = "U";
 
+				$part_of_total_transaction_in_amount_of = "";
+				$ref_to_us_part_of_transaction = "";
+
                                 if ($v == "R"){
                                         $status = "R";
-                                }
 
-                                db_query("UPDATE $sql_tbl[order_group_invoices] SET status='$status' WHERE reconciliation_id='$k'");
-                                db_query("UPDATE $sql_tbl[order_group_memos] SET status='$status' WHERE reconciliation_id='$k'");
+					$amount_csv = func_query_first_cell("SELECT amount_csv FROM $sql_tbl[reconciliations] WHERE id='$k'");
+					$amount_csv_abs = abs($amount_csv);
+					$part_of_total_transaction_in_amount_of = ", part_of_total_transaction_in_amount_of='$amount_csv_abs'";
+					$ref_to_us_part_of_transaction = ", ref_to_us_part_of_transaction='$amount_csv_abs'";
+                                }
+	
+                                db_query("UPDATE $sql_tbl[order_group_invoices] SET status='$status' $part_of_total_transaction_in_amount_of WHERE reconciliation_id='$k'");
+                                db_query("UPDATE $sql_tbl[order_group_memos] SET status='$status' $ref_to_us_part_of_transaction WHERE reconciliation_id='$k'");
                         }
                 }
-
 
                 $top_message["content"] = "Done.";
                 $top_message["type"] = "I";
@@ -938,7 +944,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 		}
 
 
-                $orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $order_search_fields $sql_tbl[orders].date, $sql_tbl[orders].order_prefix, $sql_tbl[order_groups].bd_status, $sql_tbl[order_groups].accounting, $sql_tbl[order_groups].manufacturerid, $sql_tbl[order_groups].total_gross FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $order_search_condition");
+                $orders = func_query("SELECT $sql_tbl[order_groups].orderid, $sql_tbl[order_groups].manufacturerid, $order_search_fields $sql_tbl[orders].date, $sql_tbl[orders].order_prefix, $sql_tbl[order_groups].bd_status, $sql_tbl[order_groups].manufacturerid, $sql_tbl[order_groups].total_gross FROM $sql_tbl[order_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_groups].orderid WHERE $order_search_condition");
 
 		if (!empty($orders) && $tab == "receivables"){
 
@@ -1135,7 +1141,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
 if (!empty($reconciliations) && is_array($reconciliations)){
 
-	$charged_twice_orders = array();
+//	$charged_twice_orders = array();
 
 	foreach ($reconciliations as $k => $v){
 
@@ -1152,14 +1158,10 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 					$v_description_csv_UPPER = strtoupper($v["description_csv"]);	
 					$vv_s_r_UPPER = strtoupper($vv_s_r);
 
-
 		      	                if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false){
 
 	        	                        $manufacturerid = $kk;
-//						$reconciliations[$k]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>".$vv_s_r_UPPER."</B>", $reconciliations[$k]["description_csv"]);
 						$reconciliations[$k]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>".$vv_s_r_UPPER."</B>", $v_description_csv_UPPER);
-
-//						break;
 					}
 				}
 			}
@@ -1355,6 +1357,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 */
 	} // foreach ($reconciliations as $k => $v)
 
+/*
 	$charged_twice_orders_count = array_count_values($charged_twice_orders);
 
 	if (!empty($charged_twice_orders_count)){
@@ -1375,6 +1378,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 
 	$smarty->assign("charged_twice_orders_count", $charged_twice_orders_count);
 	$smarty->assign("charged_twice_orders", $charged_twice_orders);
+*/
 }
 
 
