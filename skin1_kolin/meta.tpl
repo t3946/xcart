@@ -106,8 +106,8 @@ var usertype = "{$usertype}";
 		<meta name="description" content="{$_meta_descr|truncate:"500":"...":false|escape|strip}" />
 {/if}
 
- {if $config.Appearance.config_keywords_meta_tag ne "" && (($main eq "catalog" && $current_category.category eq ""))}
-  {assign var="_meta_keywords" value=$config.Appearance.config_keywords_meta_tag}
+ {if $config.Company.config_keywords_meta_tag ne "" && (($main eq "catalog" && $current_category.category eq ""))}
+  {assign var="_meta_keywords" value=$config.Company.config_keywords_meta_tag}
   <meta name="keywords" content="{$_meta_keywords|truncate:"500":"":false|escape|strip}" />
  {else}
 
