@@ -326,9 +326,9 @@ if ($product_feed_enabled == "Y" && $product_info["product_availability"] == "ou
 }
 
 
-$product_info["price"] = $product_info["taxed_price"] = $product_price;
+$product_info["price"] = $product_info["taxed_price"] = $price_min_amount;
 if ($product_feed_enabled == "Y" && empty($product_info["is_variants"]) && $product_info["product_availability"] == "out of stock"){
-	$new_notify_in_stock_price = $product_price;
+	$new_notify_in_stock_price = $price_min_amount;
 	$product_info["new_notify_in_stock_price"] = $new_notify_in_stock_price;
 }	
 
