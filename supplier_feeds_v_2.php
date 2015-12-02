@@ -9,7 +9,7 @@ set_time_limit(0);
 ini_set('memory_limit', '512M');
 
 if ($config["supplier_feeds_v_2"] == "Y"){
-        die("Already launched"); // ################################
+//        die("Already launched"); // ################################
 }
 db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='supplier_feeds_v_2'");
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
@@ -112,6 +112,7 @@ foreach ($supplier_feeds as $k => $v){
                 func_backprocess_log("supplier feeds errors", $log_text);
                 continue;
 
+
         }
 
 
@@ -138,6 +139,7 @@ foreach ($supplier_feeds as $k => $v){
                 }
 
 		ftp_quit($ftp);
+
 
 ###
 //$file_is_found = true;
@@ -275,6 +277,14 @@ func_print_r($p, $productid);
                                         if (empty($productid)){
                                                 continue;
                                         }
+
+#
+##
+###
+                                        db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
+###
+##
+#
 
                                         $all_feed_productcodes[] = $productcode;
                                 }
