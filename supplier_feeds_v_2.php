@@ -106,12 +106,12 @@ foreach ($supplier_feeds as $k => $v){
 #
 # ### Disable for test N1
 #
-/*
+
         	$log_text = "manufacturerid: ".$v["manufacturerid"].". md5 file is not found. Skipped.";
 	        func_backprocess_log("supplier_feeds_v_2", $log_text);
                 func_backprocess_log("supplier feeds errors", $log_text);
                 continue;
-*/
+
 
         }
 
@@ -121,8 +121,8 @@ foreach ($supplier_feeds as $k => $v){
 # ### Disable for test N2
 #
 
-//	if ($ftp && @ftp_login($ftp, $config["Supplier_feeds"]["Feeds_storage_login"], $config["Supplier_feeds"]["Feeds_storage_password"])) {
-	if (1==1) {
+	if ($ftp && @ftp_login($ftp, $config["Supplier_feeds"]["Feeds_storage_login"], $config["Supplier_feeds"]["Feeds_storage_password"])) {
+//	if (1==1) {
 		ftp_pasv($ftp, true);
 
                 $local_file = $xcart_dir . "/files/product_feeds_v2/" .str_replace("/","_",$v["feed_file_name"]);
@@ -132,18 +132,18 @@ foreach ($supplier_feeds as $k => $v){
 #
 # ### Disable for test N3
 #
-/*
+
 		$file_is_found = false;
                 if (@ftp_get($ftp, $local_file, $server_file, FTP_BINARY)) {
                                 $file_is_found = true;
                 }
 
 		ftp_quit($ftp);
-*/
+
 
 ###
-$file_is_found = true;
-$local_file = $xcart_dir . "/files/product_feeds_v2/feed262i-1.txt";
+//$file_is_found = true;
+//$local_file = $xcart_dir . "/files/product_feeds_v2/feed262i-1.txt";
 ###
 
 
