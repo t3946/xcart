@@ -154,10 +154,6 @@ function send_question_email_form(){
 </div>
 
 
-
-{* </div> *} {* end http://schema.org/Product  *}
-{/if}
-
 </div>
 {/capture}
 
