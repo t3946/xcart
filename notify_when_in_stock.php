@@ -21,9 +21,10 @@ if (!empty($all_records) && is_array($all_records)){
 			if (empty($eta_date_mm_dd_yyyy)){
 				$send_notify_email = true;
 			} else {
-				$eta_date_mm_dd_yyyy_arr = explode("/", $eta_date_mm_dd_yyyy);
-				$eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_arr[0], $eta_date_mm_dd_yyyy_arr[1], $eta_date_mm_dd_yyyy_arr[2]);
-				if ($eta_date_mm_dd_yyyy_time < $current_time){
+//				$eta_date_mm_dd_yyyy_arr = explode("/", $eta_date_mm_dd_yyyy);
+//				$eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_arr[0], $eta_date_mm_dd_yyyy_arr[1], $eta_date_mm_dd_yyyy_arr[2]);
+//				if ($eta_date_mm_dd_yyyy_time < $current_time)
+				if ($eta_date_mm_dd_yyyy < $current_time){
 					$send_notify_email = true;
 				}
 			}

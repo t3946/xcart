@@ -1131,11 +1131,18 @@ if (!empty($orders) && is_array($orders)){
 			$max_eta = 0;
 
 			foreach ($all_eta_date_mm_dd_yyyy as $k_e => $v_e){
-				$tmp_eta_date_mm_dd_yyyy_arr = explode("/", $v_e["eta_date_mm_dd_yyyy"]);
-				$tmp_mktime = mktime(0, 0, 0, $tmp_eta_date_mm_dd_yyyy_arr[0], $tmp_eta_date_mm_dd_yyyy_arr[1], $tmp_eta_date_mm_dd_yyyy_arr[2]);
+				if ($v_e["eta_date_mm_dd_yyyy"]==""){
+					$v_e["eta_date_mm_dd_yyyy"] = 0;
+				}
+
+//				$tmp_eta_date_mm_dd_yyyy_arr = explode("/", $v_e["eta_date_mm_dd_yyyy"]);
+//				$tmp_mktime = mktime(0, 0, 0, $tmp_eta_date_mm_dd_yyyy_arr[0], $tmp_eta_date_mm_dd_yyyy_arr[1], $tmp_eta_date_mm_dd_yyyy_arr[2]);
+				$tmp_mktime = $v_e["eta_date_mm_dd_yyyy"];
+
 				if ($tmp_mktime > $max_eta){
 					$max_eta = $tmp_mktime;
-					$orders[$k]["max_eta"] = $v_e["eta_date_mm_dd_yyyy"];
+//					$orders[$k]["max_eta"] = $v_e["eta_date_mm_dd_yyyy"];
+					$orders[$k]["max_eta"] = func_convert_date_mm_dd_yyyy($v_e["eta_date_mm_dd_yyyy"], "m/d/Y");
 
 /*
 					$diff_time = $max_eta - time();

@@ -1034,11 +1034,12 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 ###
 	if (!empty($product["eta_date_mm_dd_yyyy"])){
 
-		$product["eta_date_mm_dd_yyyy_arr"] = explode("/", $product["eta_date_mm_dd_yyyy"]);
-		$product["eta_date_mktime"] = mktime(0, 0, 0, $product["eta_date_mm_dd_yyyy_arr"][0], $product["eta_date_mm_dd_yyyy_arr"][1], $product["eta_date_mm_dd_yyyy_arr"][2]);
-		$product["eta_date_dd_month_yyyy"] = date("j F Y", $product["eta_date_mktime"]);
+//		$product["eta_date_mm_dd_yyyy_arr"] = explode("/", $product["eta_date_mm_dd_yyyy"]);
+//		$product["eta_date_mktime"] = mktime(0, 0, 0, $product["eta_date_mm_dd_yyyy_arr"][0], $product["eta_date_mm_dd_yyyy_arr"][1], $product["eta_date_mm_dd_yyyy_arr"][2]);
+//		$product["eta_date_dd_month_yyyy"] = date("j F Y", $product["eta_date_mktime"]);
 
-		if ($product["eta_date_mktime"] > time()){
+//		if ($product["eta_date_mktime"] > time())
+		if ($product["eta_date_mm_dd_yyyy"] > time()){
 			$product["eta_date_in_future"] = "Y";
 
 			if ($current_area == 'C' && $product["allow_pre_orders"] != "Y"){

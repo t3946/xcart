@@ -127,7 +127,7 @@
 <br />
 <br />
 <font color="#000000" size=2>
-Expected availability: {$products[product].eta_date_dd_month_yyyy}
+Expected availability: {$products[product].eta_date_mm_dd_yyyy|date_format:'%d-%b-%Y'}
 {if $products[product].allow_pre_orders ne "Y"}
 <br />
 Sorry we don't take pre-orders.
