@@ -44,7 +44,7 @@
                         {/literal}">
                                 <option value="all_in_stock" 
 {if $item.stock_request_status eq "all_in_stock"}selected="selected"
-{elseif $item.stock_request_status eq "" && $admin_area_uses eq "Y" && $item.forsale eq "Y" && $item.back eq "0" && $item.eta_date_mm_dd_yyyy eq ""}selected="selected"{/if}>
+{elseif $item.stock_request_status eq "" && $admin_area_uses eq "Y" && $item.forsale eq "Y" && $item.back eq "0" && ($item.eta_date_mm_dd_yyyy eq "" || $item.eta_date_mm_dd_yyyy eq "0")}selected="selected"{/if}>
 					{if $item.amount eq "1"}In stock{else}All items are in stock{/if}
 				</option>
 				{if $item.amount gt 1}
@@ -110,7 +110,7 @@
 				style="display: none;"
 			{/if}
 		       >
-                        <input id="eta_date_mm_dd_yyyy_{$item.productid}" type="text" size="9" style="width: 98%;" name="eta_date_mm_dd_yyyy[{$item.productid}]" value="{if $admin_area_uses eq "Y"}{$item.eta_date_mm_dd_yyyy}{/if}" />
+                        <input id="eta_date_mm_dd_yyyy_{$item.productid}" type="text" size="9" style="width: 98%;" name="eta_date_mm_dd_yyyy[{$item.productid}]" value="{if $admin_area_uses eq "Y"}{$item.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}{/if}" />
                       </div>
 
 

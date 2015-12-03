@@ -3398,11 +3398,12 @@ function func_product_availability($r_avail=false, $price=false, $cost_to_us=fal
         }
 
         if ($availability == "in stock" && !empty($eta_date_mm_dd_yyyy)){
-                $eta_date_mm_dd_yyyy_arr = explode("/", $eta_date_mm_dd_yyyy);
-                $eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_arr[0], $eta_date_mm_dd_yyyy_arr[1], $eta_date_mm_dd_yyyy_arr[2]);
+//                $eta_date_mm_dd_yyyy_arr = explode("/", $eta_date_mm_dd_yyyy);
+//                $eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_arr[0], $eta_date_mm_dd_yyyy_arr[1], $eta_date_mm_dd_yyyy_arr[2]);
                 $current_time = time();
 
-                if ($current_time < $eta_date_mm_dd_yyyy_time){
+//                if ($current_time < $eta_date_mm_dd_yyyy_time){
+                if ($current_time < $eta_date_mm_dd_yyyy){
                         $availability = "out of stock";
                 }
         }
@@ -3691,6 +3692,41 @@ T - sTatic page
 		}
 
 		func_array2insert("cidev_surf_path", $cidev_surf_path_arr);
+	}
+}
+
+function func_convert_date_mm_dd_yyyy($date, $to_format){
+
+	#
+	# $to_format examples: "seconds", "m/d/Y", ...
+	#
+
+	if (empty($date) || empty($to_format)){
+		return false;
+	}
+
+	if ($to_format == "seconds"){
+
+		if (is_int($date)){
+			return $date;
+		}
+
+		if (strpos($date, "/") !== false){
+			$date_arr = explode("/", $date);
+			$time = mktime(0, 0, 0, $date_arr[0], $date_arr[1], $date_arr[2]);
+
+			return $time;
+		}
+	} 
+	else {
+		
+		if (!is_int($date)){
+                        return $date;
+                }
+
+		$date_str = date($to_format, $date);
+	
+		return $date_str;
 	}
 }
 
