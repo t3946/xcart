@@ -1091,8 +1091,9 @@ func_print_r($a1, $data, $data_arr);
 
                 if (empty($loadproduct["min_amount"]) || $loadproduct["instock"] == "N"){
                         $new_r_avail = 0;
-                        $new_eta_date_mm_dd_yyyy_time = time() + 60*60*24*10;
-                        $new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy_time);
+//                        $new_eta_date_mm_dd_yyyy_time = time() + 60*60*24*10;
+                        $new_eta_date_mm_dd_yyyy = time() + 60*60*24*10;
+//                        $new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy_time);
                 }
                 elseif ($loadproduct["instock"] == "Y" && $loadproduct["min_amount"]> 0) {
                         $new_r_avail = 10000;

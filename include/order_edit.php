@@ -288,14 +288,23 @@ if ($REQUEST_METHOD == "POST") {
 				$new_back = $v['back'];
 
 				$current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+				$current_eta_date_mm_dd_yyyy_time = $current_eta_date_mm_dd_yyyy;
+				$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
+
 				$new_eta_date_mm_dd_yyyy = $v['eta_date_mm_dd_yyyy'];
 
+/*
 				if (!empty($current_eta_date_mm_dd_yyyy)){
 	                                $current_eta_date_mm_dd_yyyy_arr = explode("/", $current_eta_date_mm_dd_yyyy);
         	                        $current_eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $current_eta_date_mm_dd_yyyy_arr[0], $current_eta_date_mm_dd_yyyy_arr[1], $current_eta_date_mm_dd_yyyy_arr[2]);
 				} else {
 					$current_eta_date_mm_dd_yyyy_time = 0;
 				}
+*/
+				if (empty($current_eta_date_mm_dd_yyyy_time)){
+					$current_eta_date_mm_dd_yyyy_time = 0;
+				}
+
 
                                 if (!empty($new_eta_date_mm_dd_yyyy)){
                                         $new_eta_date_mm_dd_yyyy_arr = explode("/", $new_eta_date_mm_dd_yyyy);
@@ -355,7 +364,7 @@ if ($REQUEST_METHOD == "POST") {
                                 }
                                 ### LOG: END
 
-                                db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='".$v["eta_date_mm_dd_yyyy"]."' WHERE productid='$v[productid]'");
+                                db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='".$new_eta_date_mm_dd_yyyy_time."' WHERE productid='$v[productid]'");
 
 ###
 ##
@@ -2560,11 +2569,12 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
 					$order["lng_order_contains_FBA_items"] = "Y";
 				}
 
-				if (!empty($vv["eta_date_mm_dd_yyyy"])){
-                                        $current_eta_date_mm_dd_yyyy_arr = explode("/", $vv["eta_date_mm_dd_yyyy"]);
-                                        $current_eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $current_eta_date_mm_dd_yyyy_arr[0], $current_eta_date_mm_dd_yyyy_arr[1], $current_eta_date_mm_dd_yyyy_arr[2]);
+				if (!empty($vv["eta_date_mm_dd_yyyy"]) || $vv["eta_date_mm_dd_yyyy"] > 0){
+//                                        $current_eta_date_mm_dd_yyyy_arr = explode("/", $vv["eta_date_mm_dd_yyyy"]);
+//                                        $current_eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $current_eta_date_mm_dd_yyyy_arr[0], $current_eta_date_mm_dd_yyyy_arr[1], $current_eta_date_mm_dd_yyyy_arr[2]);
 
-					if (time() > $current_eta_date_mm_dd_yyyy_time){
+//					if (time() > $current_eta_date_mm_dd_yyyy_time)
+					if (time() > $vv["eta_date_mm_dd_yyyy"]){
 						$order["shipping_groups"][$k]["products"][$kk]["eta_date_mm_dd_yyyy"] = "";
 					}
 				}

@@ -465,9 +465,10 @@ if (!$curl_err){
                                                 foreach ($order['shipping_groups'] as $k_group => $v_group){
                                                         foreach ($v_group["products"] as $kk_group => $vv_group){
                                                                 if (!empty($vv_group["eta_date_mm_dd_yyyy"])){
-                                                                     $current_eta_date_mm_dd_yyyy_arr = explode("/", $vv_group["eta_date_mm_dd_yyyy"]);
-                                                                     $current_eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $current_eta_date_mm_dd_yyyy_arr[0], $current_eta_date_mm_dd_yyyy_arr[1], $current_eta_date_mm_dd_yyyy_arr[2]);
-                                                                     if ($current_eta_date_mm_dd_yyyy_time > time()){
+//                                                                     $current_eta_date_mm_dd_yyyy_arr = explode("/", $vv_group["eta_date_mm_dd_yyyy"]);
+//                                                                     $current_eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $current_eta_date_mm_dd_yyyy_arr[0], $current_eta_date_mm_dd_yyyy_arr[1], $current_eta_date_mm_dd_yyyy_arr[2]);
+//                                                                     if ($current_eta_date_mm_dd_yyyy_time > time())
+                                                                     if ($vv_group["eta_date_mm_dd_yyyy"] > time()){
                                                                                 $allow_send_to_operator = false;
                                                                                 break;
                                                                      }

@@ -713,10 +713,11 @@ function func_order_data($orderid) {
 ##
 ###
                 if (!empty($v["eta_date_mm_dd_yyyy"]) && $config["backorder_decision_request"]["do_not_offer_backorder_if_eta_more_than_days"] != "" && $config["backorder_decision_request"]["do_not_offer_backorder_if_eta_more_than_days"] > 0 && empty($v["offer_backorder"])){
-                        $tmp_eta_date_mm_dd_yyyy_arr = explode("/", $v["eta_date_mm_dd_yyyy"]);
-                        $tmp_mktime = mktime(0, 0, 0, $tmp_eta_date_mm_dd_yyyy_arr[0], $tmp_eta_date_mm_dd_yyyy_arr[1], $tmp_eta_date_mm_dd_yyyy_arr[2]);
+//                        $tmp_eta_date_mm_dd_yyyy_arr = explode("/", $v["eta_date_mm_dd_yyyy"]);
+//                        $tmp_mktime = mktime(0, 0, 0, $tmp_eta_date_mm_dd_yyyy_arr[0], $tmp_eta_date_mm_dd_yyyy_arr[1], $tmp_eta_date_mm_dd_yyyy_arr[2]);
 
-                        $diff_time = $tmp_mktime - time();
+//                        $diff_time = $tmp_mktime - time();
+                        $diff_time = $v["eta_date_mm_dd_yyyy"] - time();
 
                         if ($diff_time > 0){
 
@@ -3974,9 +3975,10 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
 
 	                        $tmp_eta_date_mm_dd_yyyy = $v["eta_date_mm_dd_yyyy"];
         	                if (!empty($tmp_eta_date_mm_dd_yyyy)){
-                	                $tmp_eta_date_mm_dd_yyyy_arr = explode("/", $tmp_eta_date_mm_dd_yyyy);
-					$tmp_mktime = mktime(0, 0, 0, $tmp_eta_date_mm_dd_yyyy_arr[0], $tmp_eta_date_mm_dd_yyyy_arr[1], $tmp_eta_date_mm_dd_yyyy_arr[2]);
-                                	$tmp_eta_date_mm_dd_yyyy = date("j-M-Y", $tmp_mktime);
+//                	                $tmp_eta_date_mm_dd_yyyy_arr = explode("/", $tmp_eta_date_mm_dd_yyyy);
+//					$tmp_mktime = mktime(0, 0, 0, $tmp_eta_date_mm_dd_yyyy_arr[0], $tmp_eta_date_mm_dd_yyyy_arr[1], $tmp_eta_date_mm_dd_yyyy_arr[2]);
+//                                	$tmp_eta_date_mm_dd_yyyy = date("j-M-Y", $tmp_mktime);
+                                	$tmp_eta_date_mm_dd_yyyy = date("j-M-Y", $tmp_eta_date_mm_dd_yyyy);
 
 					if ($type_of_message == 'backorder_decision_request'){
 						$tmp_time_diff = $tmp_mktime - time();
