@@ -314,23 +314,25 @@ if ($product_info["product_type"] != "C") {
 $product_feed_enabled = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
 $smarty->assign("product_feed_enabled", $product_feed_enabled);
 
-
-if ($product_info["min_amount"] > 1){
-	$product_info["price"] = $product_info["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product_info[productid]' AND quantity <= '$product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
-}
-
-
-if ($product_feed_enabled == "Y" && empty($product_info["is_variants"]) && $product_info["r_avail"] <= 0){
-
-/*
-	if ($product_info["mult_order_quantity"] == "Y" && $product_info["min_amount"] > 1){
-		$product_info["price"] = $product_info["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product_info[productid]' AND quantity <= '$product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
+/* complete code to define product price */
+$product_info["product_availability"] = func_product_availability(false,false,false,false,false,$product_info);
+$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product_info[productid]' AND quantity <= '$product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
+if ($price_min_amount < $product_info["new_map_price"])
+	{
+		$price_min_amount = $product_info["new_map_price"];
 	}
-*/
-
-	$new_notify_in_stock_price = func_decreased_price($product_info["cost_to_us"], $product_info["taxed_price"], $product_info["new_map_price"]);
-        $product_info["new_notify_in_stock_price"] = $new_notify_in_stock_price;
+if ($product_feed_enabled == "Y" && $product_info["product_availability"] == "out of stock"){
+		$price_min_amount = func_decreased_price($product_info["cost_to_us"], $price_min_amount, $product_info["new_map_price"]);
 }
+
+
+$product_info["price"] = $product_info["taxed_price"] = $price_min_amount;
+if ($product_feed_enabled == "Y" && empty($product_info["is_variants"]) && $product_info["product_availability"] == "out of stock"){
+	$new_notify_in_stock_price = $price_min_amount;
+	$product_info["new_notify_in_stock_price"] = $new_notify_in_stock_price;
+}	
+
+
 ###
 ##
 #
@@ -733,7 +735,6 @@ if (empty($product_info["lead_time_message"])){
 
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
-$product_info["product_availability"] = func_product_availability(false,false,false,false,false,$product_info);
 
 ###
 if (!empty($cart["shipping_groups"][$product_info["manufacturerid"]])){
