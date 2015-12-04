@@ -508,7 +508,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 
 		$product_availability = func_product_availability(false,false,false,false,false,$product);
 		$multipack = "";
-		if ($product["min_amount"]>1)
+		if ($product["min_amount"]>1 && $product["mult_order_quantity"] == "Y")
 		{
 			$multipack = $product["min_amount"];
 			$product['multipack'] = $multipack;
