@@ -1735,7 +1735,16 @@ if ($REQUEST_METHOD == "POST") {
 		$is_such_record = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_group_invoices] WHERE orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='1'");
 
 		if (empty($is_such_record)){
-	                db_query("INSERT INTO $sql_tbl[order_group_invoices] (orderid, manufacturerid, invoice_number, invoice_received, cost_to_us_for_products_charged, tax_charged_except_HST, products_total, shipping_charged, drop_ship_fee_charged, shipping_total, HST_charged, invoice_total) VALUES ('$orderid', '$certain_mid', '1', 'Y', '$cost_to_us_for_products_charged', '$tax_charged_except_HST', '$products_total', '$shipping_charged', '$drop_ship_fee_charged', '$shipping_total', '$HST_charged', '$invoice_total')");
+
+
+			if ($order["amazon_fulfillment_channel"] == "AFN"){
+				$status = "R";
+			}
+			else {
+				$status = "A";
+			}
+
+	                db_query("INSERT INTO $sql_tbl[order_group_invoices] (orderid, manufacturerid, invoice_number, invoice_received, cost_to_us_for_products_charged, tax_charged_except_HST, products_total, shipping_charged, drop_ship_fee_charged, shipping_total, HST_charged, invoice_total, status) VALUES ('$orderid', '$certain_mid', '1', 'Y', '$cost_to_us_for_products_charged', '$tax_charged_except_HST', '$products_total', '$shipping_charged', '$drop_ship_fee_charged', '$shipping_total', '$HST_charged', '$invoice_total', '$status')");
 		}
 
         }
@@ -1754,7 +1763,14 @@ if ($REQUEST_METHOD == "POST") {
 			db_query("INSERT INTO $sql_tbl[order_group_invoices_products] (orderid, manufacturerid, invoice_number, itemid) VALUES ('$orderid', '$certain_mid', '$invoice_number', '$product[itemid]')");
 		}
 
-                db_query("INSERT INTO $sql_tbl[order_group_invoices] (orderid, manufacturerid, invoice_number, invoice_received) VALUES ('$orderid', '$certain_mid', $invoice_number, 'Y')");
+                if ($order["amazon_fulfillment_channel"] == "AFN"){
+  	              $status = "R";
+                }
+                else {
+         	       $status = "A";
+                }
+
+                db_query("INSERT INTO $sql_tbl[order_group_invoices] (orderid, manufacturerid, invoice_number, invoice_received, status) VALUES ('$orderid', '$certain_mid', $invoice_number, 'Y', '$status')");
 
         }
 
@@ -1777,7 +1793,14 @@ if ($REQUEST_METHOD == "POST") {
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 
-        db_query("INSERT INTO $sql_tbl[order_group_memos] (orderid, manufacturerid, memo_number, memo_received) VALUES ('$orderid', '$certain_mid', '1', 'Y')");
+        if ($order["amazon_fulfillment_channel"] == "AFN"){
+	       $status = "R";
+        }
+        else {
+               $status = "A";
+        }
+
+        db_query("INSERT INTO $sql_tbl[order_group_memos] (orderid, manufacturerid, memo_number, memo_received, status) VALUES ('$orderid', '$certain_mid', '1', 'Y', '$status')");
 
 	func_header_location("order.php?orderid=".$orderid."#main_order_tabs-accounting");
    }
@@ -1787,7 +1810,14 @@ if ($REQUEST_METHOD == "POST") {
 
         $memo_number = func_query_first_cell("SELECT MAX(memo_number) FROM $sql_tbl[order_group_memos] WHERE orderid='$orderid' AND manufacturerid='$certain_mid'") + 1;
 
-        db_query("INSERT INTO $sql_tbl[order_group_memos] (orderid, manufacturerid, memo_number, memo_received) VALUES ('$orderid', '$certain_mid', $memo_number, 'Y')");
+        if ($order["amazon_fulfillment_channel"] == "AFN"){
+               $status = "R";
+        }
+        else {
+               $status = "A";
+        }
+
+        db_query("INSERT INTO $sql_tbl[order_group_memos] (orderid, manufacturerid, memo_number, memo_received, status) VALUES ('$orderid', '$certain_mid', $memo_number, 'Y', '$status')");
 
         func_header_location("order.php?orderid=".$orderid."#main_order_tabs-accounting");
    }
