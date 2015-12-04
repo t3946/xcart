@@ -380,20 +380,25 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
   <td width="5">{if $static eq 'Y' || $static eq 'O'}<a href="order.php?orderid={$order.orderid}" target="_blank">{/if}{$v.code}{if $static}</a>{/if}</td>
   <td class="OrderSheetGreenCell" align="center">
 
-{if $v.invoices ne ""}
+{if $order.amazon_fulfillment_channel eq "AFN"}
+<B>I: Reconciled</B><br />
+<B>C: Reconciled</B>
+{else}
+    {if $v.invoices ne ""}
         {foreach from=$v.invoices item=invoice key=invoice_number}
-                <B>I: {$invoice_memo_statuses[$invoice.status]}</B><br />
+                <B>I-{$invoice_number}: {$invoice_memo_statuses[$invoice.status]}</B><br />
         {/foreach}
-{else}
+    {else}
         <B>I: {$invoice_memo_statuses.N}<br /></B>
-{/if}
+    {/if}
 
-{if $v.memos ne ""}
+    {if $v.memos ne ""}
         {foreach from=$v.memos item=memo key=memo_number}
-                <B>C: {$invoice_memo_statuses[$memo.status]}</B><br />
+                <B>C-{$memo_number}: {$invoice_memo_statuses[$memo.status]}</B><br />
         {/foreach}
-{else}
+    {else}
         <B>C: {$invoice_memo_statuses.N}</B>
+    {/if}
 {/if}
 
   </td>
@@ -530,9 +535,9 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 
 
 
-
-
-
+{if $v.all_distributor_info.d_bulk_or_individual_order_payments eq "distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping"}
+{$lng.lbl_distributor_charges_for_each_order_twice}
+{/if}
 
 
 

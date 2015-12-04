@@ -775,6 +775,9 @@ if ($REQUEST_METHOD == "POST") {
 
 		
 		if (!empty($add_order_manually) && is_array($add_order_manually)){
+
+			$order_not_added_arr = array();
+
 			foreach ($add_order_manually as $r_id => $v_arr){
 			  if (!empty($v_arr) && is_array($v_arr)){
 
@@ -795,11 +798,15 @@ if ($REQUEST_METHOD == "POST") {
         	                        }
                 	                $orderid = trim($orderid);
 
+					$order_added = false;
+
 					$order_group_invoices = func_query($qqq="SELECT invoice_number FROM $sql_tbl[order_group_invoices] WHERE status='U' AND part_of_total_transaction_in_amount_of IN ('0.00','$amount_csv_abs') AND manufacturerid='$manufacturerid' AND orderid='$orderid'");
 					if (!empty($order_group_invoices)){
 						foreach ($order_group_invoices as $vv){
 							$invoice_number = $vv["invoice_number"];
 							db_query("UPDATE $sql_tbl[order_group_invoices] SET reconciliation_id='$r_id' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND invoice_number='$invoice_number'");
+
+							$order_added = true;
 						}
 					}
 
@@ -808,8 +815,20 @@ if ($REQUEST_METHOD == "POST") {
                                                 foreach ($order_group_memos as $vv){
                                                         $memo_number = $vv["memo_number"];
                                                         db_query("UPDATE $sql_tbl[order_group_memos] SET reconciliation_id='$r_id' WHERE manufacturerid='$manufacturerid' AND orderid='$orderid' AND memo_number='$memo_number'");
+
+							$order_added = true;
                                                 }
                                         }
+
+					if (!empty($orderid)){
+
+						$order_prefix = func_query_first_cell("SELECT order_prefix FROM $sql_tbl[orders] WHERE orderid='$orderid'");
+
+						if (!$order_added && !empty($orderid)){
+							$order_not_added_arr[] = "Order # <a href='order.php?orderid=$orderid' target='_blank' style='color: blue;'>" . $order_prefix.$orderid . "</a> hasn't been added.";
+						}
+					}
+
 				} // foreach ($v_arr as $v)
 			    } // if (!empty($manufacturerid))
 			  } // if (!empty($v_arr) && is_array($v_arr))
@@ -839,7 +858,13 @@ if ($REQUEST_METHOD == "POST") {
                         }
                 }
 
-                $top_message["content"] = "Done.";
+		if (!empty($order_not_added_arr)){
+			$top_message["content"] = implode("<br />", $order_not_added_arr);
+		}
+		else {
+	                $top_message["content"] = "Done.";
+		}
+
                 $top_message["type"] = "I";
         }
 	elseif ($mode == "unreconcile"){
@@ -1251,6 +1276,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 //				$reconciliations[$k]["total_invoices_amounts_MIN_memos_amounts"] = $total_invoices_amounts - $tota_memos_amounts;
 
 				$reconciliations[$k]["total_invoices_and_memos_amounts"] = $total_invoices_and_memos_amounts;
+				$reconciliations[$k]["total_invoices_and_memos_amounts_abs"] = abs($total_invoices_and_memos_amounts);
 
                                 if ($total_invoices_and_memos_amounts > 0 && $reconciliations[$k]["amount_csv_abs"] > 0 && $total_invoices_and_memos_amounts != $reconciliations[$k]["amount_csv_abs"]){
                                 	$total_invoices_and_memos_amounts__amount_csv_abs_diff = $reconciliations[$k]["amount_csv_abs"] - $total_invoices_and_memos_amounts;

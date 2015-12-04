@@ -114,20 +114,25 @@
   <td width="5" align="center"></td>
   <td align="center" class="OrderSheetGreenCell">
 
-{if $v.invoices ne ""}
+{if $order.amazon_fulfillment_channel eq "AFN"}
+<B>I: Reconciled</B><br />
+<B>C: Reconciled</B>
+{else}
+    {if $v.invoices ne ""}
 	{foreach from=$v.invoices item=invoice key=invoice_number}
-		<B>I: {$invoice_memo_statuses[$invoice.status]}</B><br />
+		<B>I-{$invoice_number}: {$invoice_memo_statuses[$invoice.status]}</B><br />
 	{/foreach}
-{else}
+    {else}
 	<B>I: {$invoice_memo_statuses.N}<br /></B>
-{/if}
+    {/if}
 
-{if $v.memos ne ""}
+    {if $v.memos ne ""}
         {foreach from=$v.memos item=memo key=memo_number}
-                <B>C: {$invoice_memo_statuses[$memo.status]}</B><br />
+                <B>C-{$memo_number}: {$invoice_memo_statuses[$memo.status]}</B><br />
         {/foreach}
-{else}
+    {else}
         <B>C: {$invoice_memo_statuses.N}</B>
+    {/if}
 {/if}
 
   </td>
