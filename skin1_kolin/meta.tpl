@@ -151,3 +151,20 @@ var page_charset = "{$default_charset|default:"iso-8859-1"}";
 {/if}
 *}
 {* <script src="{$SkinDir}/jquery-1.4.3.min.js" type="text/javascript"></script> *}
+
+{*temporary (until solid update) insertion of Facebook tracking code*}
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+fbq('init', '855005561264819');
+fbq('track', "PageView");</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=855005561264819&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+
