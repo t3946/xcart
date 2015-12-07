@@ -143,14 +143,15 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	$product_categories = func_query_hash("SELECT $sql_tbl[products].productid, $sql_tbl[categories].categoryid_path FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[products]) WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[categories].avail = 'Y' AND $sql_tbl[products].productid='$productid'", 'productid', true, true);
 
 	if (!empty($product["eta_date_mm_dd_yyyy"])){
-		$eta_date_mm_dd_yyyy_time_arr = explode("/", $product["eta_date_mm_dd_yyyy"]);
-		if (!empty($eta_date_mm_dd_yyyy_time_arr) && is_array($eta_date_mm_dd_yyyy_time_arr)){
-			$eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_time_arr[0], $eta_date_mm_dd_yyyy_time_arr[1], $eta_date_mm_dd_yyyy_time_arr[2]);
-			if ($eta_date_mm_dd_yyyy_time > time()){
+//		$eta_date_mm_dd_yyyy_time_arr = explode("/", $product["eta_date_mm_dd_yyyy"]);
+//		if (!empty($eta_date_mm_dd_yyyy_time_arr) && is_array($eta_date_mm_dd_yyyy_time_arr)){
+//			$eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_time_arr[0], $eta_date_mm_dd_yyyy_time_arr[1], $eta_date_mm_dd_yyyy_time_arr[2]);
+//			if ($eta_date_mm_dd_yyyy_time > time())
+			if ($product["eta_date_mm_dd_yyyy"] > time()){
 //				print"ETA date in future.";
 //				return;
 			}
-		}
+//		}
 	}
 
 	if(isset($product['sfid']) && $product['sfid'] != 0) {
@@ -647,14 +648,15 @@ function GetTheFindOneRow($productid){
         $product_categories = func_query_hash("SELECT $sql_tbl[products].productid, $sql_tbl[categories].categoryid_path FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[products]) WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[categories].avail = 'Y' AND $sql_tbl[products].productid='$productid'", 'productid', true, true);
 
         if (!empty($product["eta_date_mm_dd_yyyy"])){
-                $eta_date_mm_dd_yyyy_time_arr = explode("/", $product["eta_date_mm_dd_yyyy"]);
-                if (!empty($eta_date_mm_dd_yyyy_time_arr) && is_array($eta_date_mm_dd_yyyy_time_arr)){
-                        $eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_time_arr[0], $eta_date_mm_dd_yyyy_time_arr[1], $eta_date_mm_dd_yyyy_time_arr[2]);
-                        if ($eta_date_mm_dd_yyyy_time > time()){
+//                $eta_date_mm_dd_yyyy_time_arr = explode("/", $product["eta_date_mm_dd_yyyy"]);
+//                if (!empty($eta_date_mm_dd_yyyy_time_arr) && is_array($eta_date_mm_dd_yyyy_time_arr)){
+//                        $eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_time_arr[0], $eta_date_mm_dd_yyyy_time_arr[1], $eta_date_mm_dd_yyyy_time_arr[2]);
+//                        if ($eta_date_mm_dd_yyyy_time > time())
+                        if ($product["eta_date_mm_dd_yyyy"] > time()){
 //                              print"ETA date in future.";
                                 return;
                         }
-                }
+//                }
         }
 
         if(isset($product['sfid']) && $product['sfid'] != 0) {
@@ -1380,7 +1382,8 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 		//curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		$headers = [];
+//		$headers = [];
+		$headers = array();
 		$headers[] = 'Username: ' . $username;
 		$headers[] = 'Password: ' . $password;
 		$headers[] = 'DeveloperToken: ' . $token;
@@ -1584,7 +1587,8 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 		//curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		$headers = [];
+//		$headers = [];
+		$headers = array();
 		$headers[] = 'Username: ' . $username;
 		$headers[] = 'Password: ' . $password;
 		$headers[] = 'DeveloperToken: ' . $token;

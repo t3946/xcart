@@ -535,7 +535,7 @@ Cost to us accurate
   {$product.eta_date_mm_dd_yyyy}
   <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="hidden" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{$product.eta_date_mm_dd_yyyy}" />
   {else}
-  <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="text" size="9" style="width: 98%;" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{$product.eta_date_mm_dd_yyyy}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+  <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="text" size="9" style="width: 98%;" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
   {/if}
 {else}
   {$product.eta_date_mm_dd_yyyy}

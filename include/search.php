@@ -1814,11 +1814,12 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 
 ###
                                if (!empty($v["eta_date_mm_dd_yyyy"])){
-                                       $products[$k]["eta_date_mm_dd_yyyy_arr"] = explode("/", $v["eta_date_mm_dd_yyyy"]);
-                                       $products[$k]["eta_date_mktime"] = mktime(0, 0, 0, $products[$k]["eta_date_mm_dd_yyyy_arr"][0], $products[$k]["eta_date_mm_dd_yyyy_arr"][1], $products[$k]["eta_date_mm_dd_yyyy_arr"][2]);
-                                       $products[$k]["eta_date_dd_month_yyyy"] = date("d F Y", $products[$k]["eta_date_mktime"]);
+//                                       $products[$k]["eta_date_mm_dd_yyyy_arr"] = explode("/", $v["eta_date_mm_dd_yyyy"]);
+//                                       $products[$k]["eta_date_mktime"] = mktime(0, 0, 0, $products[$k]["eta_date_mm_dd_yyyy_arr"][0], $products[$k]["eta_date_mm_dd_yyyy_arr"][1], $products[$k]["eta_date_mm_dd_yyyy_arr"][2]);
+//                                       $products[$k]["eta_date_dd_month_yyyy"] = date("d F Y", $products[$k]["eta_date_mktime"]);
  
-                                       if ($products[$k]["eta_date_mktime"] > time()){
+//                                       if ($products[$k]["eta_date_mktime"] > time())
+                                       if ($products[$k]["eta_date_mm_dd_yyyy"] > time()){
                                                $products[$k]["eta_date_in_future"] = "Y";
  
                                                if ($current_area == 'C' && $manufacturers_in_found_products[$v["manufacturerid"]]["allow_pre_orders"] != "Y"){

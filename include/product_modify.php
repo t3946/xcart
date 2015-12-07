@@ -786,6 +786,8 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
                 }
 */
 
+		$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, 'seconds');
+
 		#
 		# Update product data
 		#

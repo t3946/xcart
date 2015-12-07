@@ -2556,6 +2556,8 @@ elseif ($mode == 'mode_info_request_survey'){
                                 $eta_date = trim($eta_date_mm_dd_yyyy[$productid]);
 
 				$current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+				$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
+
 				$current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
 				$current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
 
@@ -2564,6 +2566,8 @@ elseif ($mode == 'mode_info_request_survey'){
                                         if ($current_eta_date_mm_dd_yyyy != $eta_date){
                                                 $log .= "<B>".$v["productcode"].":</B> ". $current_eta_date_mm_dd_yyyy . " -> ". $eta_date ."<br />";
                                         }
+
+					$eta_date = func_convert_date_mm_dd_yyyy($eta_date, 'seconds');
 
                                 	db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$eta_date' WHERE productid='$productid'");
 
@@ -2621,6 +2625,8 @@ elseif ($mode == 'mode_info_request_survey'){
                                         if (!empty($v["eta_date_mm_dd_yyyy"]) || $v["r_avail"] == "0"){
 
 		                                $current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+						$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
+
                 		                $current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
                                 		$current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
 
@@ -2633,7 +2639,7 @@ elseif ($mode == 'mode_info_request_survey'){
 	                                                        $log .= "<B>".$v["productcode"].":</B> eta_date_mm_dd_yyyy: ". $current_eta_date_mm_dd_yyyy . " -> ".$eta_date."<br />";
                                                         }
 
-                                                        db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$eta_date' WHERE productid='$productid'");
+                                                        db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$tmp_mktime' WHERE productid='$productid'");
                                                 }
 
                                                 if ($v["r_avail"] == "0"){
