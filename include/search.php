@@ -385,14 +385,20 @@ if ($mode == "search") {
 	$inner_joins['quick_prices'] = array(
 		"on" => "$sql_tbl[quick_prices].productid = $sql_tbl[products].productid /*AND $sql_tbl[quick_prices].membershipid $membershipid_string*/"
 	);
-	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
+//	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
+	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity<=$sql_tbl[products].min_amount";
 	$fields[] = "$sql_tbl[quick_prices].variantid";
+/*
 	if ($user_account['membershipid'] == 0) {
 		$fields[] = "$sql_tbl[pricing].price";
 	} else {
 //		$fields[] = "MIN($sql_tbl[pricing].price) as price";
 		$fields[] = "$sql_tbl[pricing].price";
 	}
+*/
+
+	$fields[] = "$sql_tbl[pricing].price";
+
 
 /* speed optimization
 	if ($current_area == 'C' && empty($active_modules['Product_Configurator'])) {
