@@ -1382,7 +1382,8 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 		//curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		$headers = [];
+//		$headers = [];
+		$headers = array();
 		$headers[] = 'Username: ' . $username;
 		$headers[] = 'Password: ' . $password;
 		$headers[] = 'DeveloperToken: ' . $token;
@@ -1586,7 +1587,8 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 		//curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		$headers = [];
+//		$headers = [];
+		$headers = array();
 		$headers[] = 'Username: ' . $username;
 		$headers[] = 'Password: ' . $password;
 		$headers[] = 'DeveloperToken: ' . $token;

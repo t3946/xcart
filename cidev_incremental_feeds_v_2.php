@@ -41,7 +41,7 @@ x_load('backoffice','files','taxes', 'froogle', 'product', 'crypt');
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_incremental_feeds_launched_v_2'");
 
 if ($config["cidev_incremental_feeds_launched_v_2"] == "Y"){
-        die("Already launched"); // ################################
+//        die("Already launched"); // ################################
 }
 
 db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cidev_incremental_feeds_launched_v_2'");
@@ -54,6 +54,45 @@ $started_at = time();
 
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log("incremental feeds", $log_text);
+
+
+#
+##
+###
+$current_hour = date("G", $started_at);
+if ($current_hour == "0"){
+
+	$cur_day_str = date("m-d-Y", $started_at);
+	
+	$products = db_query("SELECT eta_date_mm_dd_yyyy, productid FROM xcart_products WHERE eta_date_mm_dd_yyyy!='' AND forsale = 'Y'");
+
+	$counter = 0;
+	while ($product = db_fetch_array($products)) {
+
+                                $counter++;
+                                if ($counter % 10 == 0) {
+                                        func_flush(".");
+                                        if($counter % 500 == 0) {
+                                                func_flush("<br />\n");
+                                        }
+                                        func_flush();
+                                }
+
+        	$productid = $product["productid"];
+	        $eta_date_mm_dd_yyyy = $product["eta_date_mm_dd_yyyy"];
+
+		$eta_date_mm_dd_yyyy_str = date("m-d-Y", $eta_date_mm_dd_yyyy);
+
+		if ($eta_date_mm_dd_yyyy_str == $cur_day_str){
+			db_query($qqq="INSERT IGNORE INTO xcart_cidev_updated_products (resourceid, type, time_stamp, source) VALUES ('$productid', '2', '".time()."', 'eta_end')");
+	        }
+	}
+	db_free_result($product);
+}
+//die("==========TEST=======");
+###
+##
+#
 
 /*
 $subj = "Start googlebase2 process";
