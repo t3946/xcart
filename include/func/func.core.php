@@ -1316,16 +1316,23 @@ function func_build_quick_prices($id = false, $tick = 0) {
 
 	# Get common data
 	if (empty($active_modules['Product_Options'])) {
-		$res = db_query("SELECT $sql_tbl[products].productid, MIN(CONCAT($sql_tbl[pricing].price,'/',$sql_tbl[pricing].membershipid, '/', $sql_tbl[pricing].priceid)) as priceid, $sql_tbl[pricing].membershipid FROM $sql_tbl[products], $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid = $sql_tbl[products].productid AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[pricing].quantity = 1 $where GROUP BY $sql_tbl[products].productid, $sql_tbl[pricing].membershipid");
+
+//		$res = db_query("SELECT $sql_tbl[products].productid, MIN(CONCAT($sql_tbl[pricing].price,'/',$sql_tbl[pricing].membershipid, '/', $sql_tbl[pricing].priceid)) as priceid, $sql_tbl[pricing].membershipid FROM $sql_tbl[products], $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid = $sql_tbl[products].productid AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[pricing].quantity = 1 $where GROUP BY $sql_tbl[products].productid, $sql_tbl[pricing].membershipid");
+		$res = db_query("SELECT $sql_tbl[products].productid, MAX(CONCAT($sql_tbl[pricing].price,'/',$sql_tbl[pricing].membershipid, '/', $sql_tbl[pricing].priceid)) as priceid, $sql_tbl[pricing].membershipid FROM $sql_tbl[products], $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid = $sql_tbl[products].productid AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[pricing].quantity<=$sql_tbl[products].min_amount $where GROUP BY $sql_tbl[products].productid, $sql_tbl[pricing].membershipid");
+
 
 	} else {
-		$res = db_query("SELECT $sql_tbl[products].productid, MIN(CONCAT($sql_tbl[pricing].price,'/',$sql_tbl[pricing].membershipid, '/', $sql_tbl[pricing].priceid)) as priceid, $sql_tbl[pricing].membershipid FROM $sql_tbl[pricing], $sql_tbl[products] LEFT JOIN $sql_tbl[variants] ON $sql_tbl[products].productid = $sql_tbl[variants].productid WHERE $sql_tbl[pricing].productid = $sql_tbl[products].productid AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[pricing].quantity = 1 AND $sql_tbl[variants].productid IS NULL $where GROUP BY $sql_tbl[products].productid, $sql_tbl[pricing].membershipid");
+//		$res = db_query("SELECT $sql_tbl[products].productid, MIN(CONCAT($sql_tbl[pricing].price,'/',$sql_tbl[pricing].membershipid, '/', $sql_tbl[pricing].priceid)) as priceid, $sql_tbl[pricing].membershipid FROM $sql_tbl[pricing], $sql_tbl[products] LEFT JOIN $sql_tbl[variants] ON $sql_tbl[products].productid = $sql_tbl[variants].productid WHERE $sql_tbl[pricing].productid = $sql_tbl[products].productid AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[pricing].quantity = 1 AND $sql_tbl[variants].productid IS NULL $where GROUP BY $sql_tbl[products].productid, $sql_tbl[pricing].membershipid");
+		$res = db_query($qqq="SELECT $sql_tbl[products].productid, MAX(CONCAT($sql_tbl[pricing].price,'/',$sql_tbl[pricing].membershipid, '/', $sql_tbl[pricing].priceid)) as priceid, $sql_tbl[pricing].membershipid FROM $sql_tbl[pricing], $sql_tbl[products] LEFT JOIN $sql_tbl[variants] ON $sql_tbl[products].productid = $sql_tbl[variants].productid WHERE $sql_tbl[pricing].productid = $sql_tbl[products].productid AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[variants].productid IS NULL $where  AND $sql_tbl[pricing].quantity<=$sql_tbl[products].min_amount GROUP BY $sql_tbl[products].productid, $sql_tbl[pricing].membershipid DESC LIMIT 1");
 	}
+
 	if ($res) {
 		$i = 0;
 		while ($arr = db_fetch_array($res)) {
+
 			$i++;
 			list($tmp1, $arr['membershipid'], $arr['priceid']) = explode("/", $arr['priceid'], 3);
+
 			func_array2insert("quick_prices", func_addslashes($arr), true);
 			if ($tick > 0 && $i % $tick == 0) {
 				echo ". ";
