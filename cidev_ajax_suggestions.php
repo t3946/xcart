@@ -135,7 +135,7 @@ Order By SP.`position` desc";
 				                $product_info["price"] = $product_info["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product_info[productid]' AND quantity <= '$product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
 				        }
 
-				        $new_notify_in_stock_price = func_decreased_price($product_info["cost_to_us"], $product_info["taxed_price"], $product_info["map_price"]);
+				        $new_notify_in_stock_price = func_decreased_price($product_info["cost_to_us"], $product_info["taxed_price"], $product_info["new_map_price"]);
 				        $product_info["new_notify_in_stock_price"] = $new_notify_in_stock_price;
 
 #

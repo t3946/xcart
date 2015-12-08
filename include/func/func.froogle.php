@@ -528,7 +528,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 			$multipack = $product["min_amount"];
 			$product['multipack'] = $multipack;
 			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
+				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["new_map_price"]);
 				}
 			if ($product_availability == "out of stock")
 				{
@@ -541,7 +541,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
         }
 		else {
 			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-				$product['price'] = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
+				$product['price'] = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["new_map_price"]);
 			}
 			else {
 				$product['price'] = $price_min_amount;

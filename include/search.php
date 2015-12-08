@@ -1855,7 +1855,7 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 						$v["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$v[productid]' AND quantity <= '$v[min_amount]' ORDER BY quantity DESC LIMIT 1");
 					}
 
-					$new_notify_in_stock_price = func_decreased_price($v["cost_to_us"], $v["taxed_price"], $v["map_price"]);
+					$new_notify_in_stock_price = func_decreased_price($v["cost_to_us"], $v["taxed_price"], $v["new_map_price"]);
 
                	                        $products[$k]['taxed_price'] = $products[$k]['price'] = $products[$k]['new_notify_in_stock_price'] = $v["new_notify_in_stock_price"] = $new_notify_in_stock_price;
 				}

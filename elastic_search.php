@@ -121,7 +121,7 @@
                         	                        $e_product_info["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$e_product_info[productid]' AND quantity <= '$e_product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
                                 	        }
 
-                                        	$new_notify_in_stock_price = func_decreased_price($e_product_info["cost_to_us"], $e_product_info["taxed_price"], $e_product_info["map_price"]);
+                                        	$new_notify_in_stock_price = func_decreased_price($e_product_info["cost_to_us"], $e_product_info["taxed_price"], $e_product_info["new_map_price"]);
 
 	                                        $e_product_info['taxed_price'] = $e_product_info['price'] = $e_product_info['new_notify_in_stock_price'] = $new_notify_in_stock_price;
 					}
