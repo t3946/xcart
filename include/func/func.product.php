@@ -678,7 +678,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 		$membershipid_condition = ""; // " AND ($sql_tbl[category_memberships].membershipid = '$membershipid' OR $sql_tbl[category_memberships].membershipid IS NULL) ";
 		$p_membershipid_condition = ""; // " AND ($sql_tbl[product_memberships].membershipid = '$membershipid' OR $sql_tbl[product_memberships].membershipid IS NULL) ";
 //		$price_condition = " /*AND $sql_tbl[quick_prices].membershipid ".((empty($membershipid) || empty($active_modules['Wholesale_Trading'])) ? "= 0" : "IN ('$membershipid', 0)")."*/ AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
-		$price_condition = " AND $sql_tbl[pricing].quantity = 1";
+		$price_condition = " AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid";
 
 	} else {
 		$price_condition = " /*AND $sql_tbl[pricing].membershipid = 0*/ AND $sql_tbl[products].productid = $sql_tbl[pricing].productid AND $sql_tbl[pricing].quantity = 1 AND $sql_tbl[pricing].variantid = 0";
