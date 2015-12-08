@@ -385,14 +385,20 @@ if ($mode == "search") {
 	$inner_joins['quick_prices'] = array(
 		"on" => "$sql_tbl[quick_prices].productid = $sql_tbl[products].productid /*AND $sql_tbl[quick_prices].membershipid $membershipid_string*/"
 	);
-	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
+//	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
+	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity<=$sql_tbl[products].min_amount";
 	$fields[] = "$sql_tbl[quick_prices].variantid";
+/*
 	if ($user_account['membershipid'] == 0) {
 		$fields[] = "$sql_tbl[pricing].price";
 	} else {
 //		$fields[] = "MIN($sql_tbl[pricing].price) as price";
 		$fields[] = "$sql_tbl[pricing].price";
 	}
+*/
+
+	$fields[] = "$sql_tbl[pricing].price";
+
 
 /* speed optimization
 	if ($current_area == 'C' && empty($active_modules['Product_Configurator'])) {
@@ -1785,16 +1791,9 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 			$manufacturers_in_found_products = func_query_hash("SELECT manufacturerid, allow_pre_orders, reverse_sku, remove_dashes, lead_time_message, d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid IN ('".implode("','", $manufacturerids_in_found_products)."')", 'manufacturerid', false);
 			
 
-//func_print_r($manufacturerids_in_found_products, $manufacturers_in_found_products);
-//func_print_r($products);
-
                         foreach ($products as $k => $v) {
 
 				$products[$k]["allow_pre_orders"] = $manufacturers_in_found_products[$v["manufacturerid"]]["allow_pre_orders"];	
-
-
-//                                $reverse_sku = func_query_first_cell("SELECT reverse_sku FROM $sql_tbl[manufacturers] WHERE manufacturerid='$v[manufacturerid]'");
-//                                $remove_dashes = func_query_first_cell("SELECT remove_dashes FROM $sql_tbl[manufacturers] WHERE manufacturerid='$v[manufacturerid]'");
 
                                 if ($manufacturers_in_found_products[$v["manufacturerid"]]["remove_dashes"] == "Y"){
                                         $products[$k]["productcode"] = str_replace("-", ".", $products[$k]["productcode"]);
@@ -1814,46 +1813,39 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 
 ###
                                if (!empty($v["eta_date_mm_dd_yyyy"])){
-//                                       $products[$k]["eta_date_mm_dd_yyyy_arr"] = explode("/", $v["eta_date_mm_dd_yyyy"]);
-//                                       $products[$k]["eta_date_mktime"] = mktime(0, 0, 0, $products[$k]["eta_date_mm_dd_yyyy_arr"][0], $products[$k]["eta_date_mm_dd_yyyy_arr"][1], $products[$k]["eta_date_mm_dd_yyyy_arr"][2]);
-//                                       $products[$k]["eta_date_dd_month_yyyy"] = date("d F Y", $products[$k]["eta_date_mktime"]);
- 
-//                                       if ($products[$k]["eta_date_mktime"] > time())
                                        if ($products[$k]["eta_date_mm_dd_yyyy"] > time()){
                                                $products[$k]["eta_date_in_future"] = "Y";
  
                                                if ($current_area == 'C' && $manufacturers_in_found_products[$v["manufacturerid"]]["allow_pre_orders"] != "Y"){
                                                        $products[$k]["avail"] = "0";
                                                }
- 
                                        }
                                }
 ###
 
 				if (empty($v["lead_time_message"])){
-//					$products[$k]["lead_time_message"] = func_query_first_cell("SELECT lead_time_message FROM $sql_tbl[manufacturers] WHERE manufacturerid='$v[manufacturerid]'");
 					$products[$k]["lead_time_message"] = $manufacturers_in_found_products[$v["manufacturerid"]]["lead_time_message"];
 				}
 
 
 #
-##
+## Calculate correct price
 ###
-//                                $product_feed_enabled = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='$v[manufacturerid]'");
+				$products[$k]["product_availability"] = func_product_availability(false,false,false,false,false,$products[$k]);
+				$products[$k]["d_enable_feed"] = $manufacturers_in_found_products[$v["manufacturerid"]]["d_enable_feed"];
+				$products[$k]["price"] = $products[$k]["taxed_price"] = func_product_price($products[$k]);
 
-                                if ($manufacturers_in_found_products[$v["manufacturerid"]]["d_enable_feed"] == "Y" && empty($v["is_variants"]) && $products[$k]["r_avail"] <= 0){
-//                                        $max1 = $v["cost_to_us"] + ($v["taxed_price"] - $v["cost_to_us"])/3;
-//       	                                $new_notify_in_stock_price = max($v["map_price"], $max1);
-
-					if ($v["mult_order_quantity"] == "Y" && $v["min_amount"] > 0){
-						$v["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$v[productid]' AND quantity <= '$v[min_amount]' ORDER BY quantity DESC LIMIT 1");
-					}
-
-					$new_notify_in_stock_price = func_decreased_price($v["cost_to_us"], $v["taxed_price"], $v["map_price"]);
-
-               	                        $products[$k]['taxed_price'] = $products[$k]['price'] = $products[$k]['new_notify_in_stock_price'] = $v["new_notify_in_stock_price"] = $new_notify_in_stock_price;
+				if ($products[$k]["d_enable_feed"] == "Y" && empty($v["is_variants"]) && $products[$k]["product_availability"] == "out of stock"){
+					$new_notify_in_stock_price = $products[$k]["price"];
+					$products[$k]["new_notify_in_stock_price"] = $new_notify_in_stock_price;
 				}
+###
+##
+#
 
+#
+## Clean URLs
+###
 				if ($index_sku_search == "Y"){
 					$tmp_absolute_path = false;
 				} else {

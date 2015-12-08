@@ -59,14 +59,13 @@ if ($page > 1){
 
 	$f_new_prod_ids = func_query("
         SELECT 
-                $sql_tbl[featured_products].productid , $sql_tbl[manufacturers].d_enable_feed
+                $sql_tbl[featured_products].productid
         FROM $sql_tbl[featured_products] 
         
 
         LEFT JOIN $sql_tbl[products] 
         ON $sql_tbl[featured_products].productid = $sql_tbl[products].productid
 
-        LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[manufacturers].manufacturerid = $sql_tbl[products].manufacturerid
         
 /*        LEFT JOIN $sql_tbl[products_categories] 
         ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid 
@@ -159,7 +158,6 @@ func_print_r($f_new_prod_ids);
 	if (!empty($f_new_prod_ids_random) && is_array($f_new_prod_ids_random) && $count_f_new_prod_ids_random == "12"){
         	foreach ($f_new_prod_ids_random as $k => $v){
                 	$f_new_products[$k] = func_select_product($v["productid"], @$user_account['membershipid'], false);
-                	$f_new_products[$k]["d_enable_feed"] = $v["d_enable_feed"];
 
 //			$valid_f_productids[$k] = $v;
 	        }
@@ -215,17 +213,6 @@ func_print_r($random_productids);
 ##
 #
 
-
-
-//                $product_feed_enabled = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='$v[manufacturerid]'");
-
-//                if ($product_feed_enabled == "Y" && empty($v["is_variants"]) && $v["r_avail"] <= 0){
-                if ($v["d_enable_feed"] == "Y" && empty($v["is_variants"]) && $v["r_avail"] <= 0){
-//                        $max1 = $v["cost_to_us"] + ($v["taxed_price"] - $v["cost_to_us"])/3;
-//                        $new_notify_in_stock_price = max($v["map_price"], $max1);
-			$new_notify_in_stock_price = func_decreased_price($v["cost_to_us"], $v["taxed_price"], $v["map_price"]);
-                        $f_new_products[$k]["new_notify_in_stock_price"] = $f_new_products[$k]["price"] = $f_new_products[$k]["taxed_price"] = $new_notify_in_stock_price;
-                }
 
                 if (!$HTTPS && !empty($config["Appearance"]["CDN_domain"]) && $config["Appearance"]["Enable_CDN"] == "Y"){
                         if (!empty($v["image_path_P"]) && strpos($v["image_path_P"], "./")!== false){
