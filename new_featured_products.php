@@ -223,7 +223,7 @@ func_print_r($random_productids);
                 if ($v["d_enable_feed"] == "Y" && empty($v["is_variants"]) && $v["r_avail"] <= 0){
 //                        $max1 = $v["cost_to_us"] + ($v["taxed_price"] - $v["cost_to_us"])/3;
 //                        $new_notify_in_stock_price = max($v["map_price"], $max1);
-			$new_notify_in_stock_price = func_decreased_price($v["cost_to_us"], $v["taxed_price"], $v["map_price"]);
+			$new_notify_in_stock_price = func_decreased_price($v["cost_to_us"], $v["taxed_price"], $v["new_map_price"]);
                         $f_new_products[$k]["new_notify_in_stock_price"] = $f_new_products[$k]["price"] = $f_new_products[$k]["taxed_price"] = $new_notify_in_stock_price;
                 }
 

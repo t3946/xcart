@@ -3459,10 +3459,10 @@ function func_product_availability($r_avail=false, $price=false, $cost_to_us=fal
         return $availability;
 }
 
-function func_decreased_price($cost_to_us, $price, $map_price){
+function func_decreased_price($cost_to_us, $price, $new_map_price){
 
         $max1 = $cost_to_us + ($price - $cost_to_us)/3;
-        $new_price = max($map_price, $max1);
+        $new_price = max($new_map_price, $max1);
         $new_price = number_format(round($new_price, 2), 2, ".", "");
         return $new_price;
 }
