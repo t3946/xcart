@@ -25,20 +25,20 @@ function func_froogle_convert($str, $max_len = false) {
         return $str;
 }
 
-function GetGooglePrice($product){
+function GetGooglePrice($fproduct){
 		global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 
-		$price_min_amount = func_product_price($product);
+		$price_min_amount = func_product_price($fproduct);
 		
-        if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
+        if ($fproduct["min_amount"] > 1 && $fproduct["mult_order_quantity"] == "Y"){
 			/* price for bundle */
-			if ($product_availability == "out of stock")
+			if ($fproduct["product_availability"] == "out of stock")
 				{
 					$product_price = $price_min_amount;
 				}
 			else
 				{
-					$product_price = $price_min_amount * $product["min_amount"];
+					$product_price = $price_min_amount * $fproduct["min_amount"];
 				}
         }
 		else {
@@ -527,43 +527,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 		$product['price'] = price_format(GetGooglePrice($product));
 		$product['taxed_price'] = $product['price'];
 		
-/*		
-		$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
-		if ($price_min_amount < $product["map_price"])
-			{
-				$price_min_amount = $product["map_price"];
-			}
-        $multipack = "";
 
-        if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
-			$multipack = $product["min_amount"];
-			$product['multipack'] = $multipack;
-			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
-				}
-			if ($product_availability == "out of stock")
-				{
-					$product['price'] = $price_min_amount;
-				}
-			else
-				{
-					$product['price'] = $price_min_amount * $multipack;
-				}
-        }
-		else {
-			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-				$product['price'] = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
-			}
-			else {
-				$product['price'] = $price_min_amount;
-			}
-		}
-		
-		$product['price'] = price_format($product['price']);
-*/
-	
-//func_print_r($product);
-//die();
 
 	$product['mpn'] = $mpn;
 	$product['gpc'] = $gpc;
