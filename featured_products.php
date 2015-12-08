@@ -84,20 +84,6 @@ $smarty->assign("navigation_script", $cidev_navigation_script);
 ##
 #
 
-###
-	if (!empty($products) && is_array($products))
-        foreach ($products as $k => $v){
-                $product_feed_enabled = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='$v[manufacturerid]'");
-                
-                if ($product_feed_enabled == "Y" && empty($v["is_variants"]) && $v["r_avail"] <= 0){
-//                        $max1 = $v["cost_to_us"] + ($v["taxed_price"] - $v["cost_to_us"])/3;
-//                        $new_notify_in_stock_price = max($v["map_price"], $max1);
-			$new_notify_in_stock_price = func_decreased_price($v["cost_to_us"], $v["taxed_price"], $v["new_map_price"]);
-
-                        $products[$k]["new_notify_in_stock_price"] = $products[$k]["price"] = $products[$k]["taxed_price"] = $new_notify_in_stock_price;
-                }
-        }
-###
 
 $smarty->assign("f_products",$products);
 $search_data = '';

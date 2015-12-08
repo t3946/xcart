@@ -308,26 +308,6 @@ if ($product_info["product_type"] != "C") {
 		include $xcart_dir."/modules/Feature_Comparison/product.php";
 
 
-#
-##
-###
-$product_info["product_availability"] = func_product_availability(false,false,false,false,false,$product_info);
-$product_feed_enabled = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
-$product_info["d_enable_feed"] = $product_feed_enabled;
-$smarty->assign("product_feed_enabled", $product_feed_enabled);
-
-$product_info["price"] = $product_info["taxed_price"] = func_product_price($product_info);
-if ($product_feed_enabled == "Y" && empty($product_info["is_variants"]) && $product_info["product_availability"] == "out of stock"){
-	$new_notify_in_stock_price = $price_min_amount;
-	$product_info["new_notify_in_stock_price"] = $new_notify_in_stock_price;
-}	
-
-
-###
-##
-#
-
-
 ###
 	if ($product_info["new_map_price"] == "0"){
 
@@ -814,6 +794,8 @@ if ($current_storefront_info["storefrontid"] == "50"){
 }
 
 $smarty->assign("product",$product_info);
+
+$smarty->assign("product_feed_enabled", $product_info["d_enable_feed"]);
 
 if ($active_modules["Bestsellers"])
 	include $xcart_dir."/modules/Bestsellers/bestsellers.php";

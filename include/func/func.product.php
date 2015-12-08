@@ -760,7 +760,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	if (!empty($active_modules["Manufacturers"])) {
 		$join .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[manufacturers].manufacturerid = $sql_tbl[products].manufacturerid";
-		$add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders ";
+		$add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders, $sql_tbl[manufacturers].d_enable_feed ";
 	}
 
 	if ($current_area == "C") {  /*speed optimization*/
@@ -772,6 +772,9 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 			$join .= " IN ('$membershipid', 0)";
 		}*/
 		$join .= " LEFT JOIN $sql_tbl[quick_flags] ON $sql_tbl[products].productid = $sql_tbl[quick_flags].productid";
+	}
+	else {
+                $add_fields .= ", $sql_tbl[manufacturers].d_website_search_for_sku_url ";
 	}
 
 //	$join .= " LEFT JOIN $sql_tbl[product_memberships] ON $sql_tbl[product_memberships].productid = $sql_tbl[products].productid";
@@ -1058,12 +1061,6 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 ##
 ###
 	if (!empty($product["eta_date_mm_dd_yyyy"])){
-
-//		$product["eta_date_mm_dd_yyyy_arr"] = explode("/", $product["eta_date_mm_dd_yyyy"]);
-//		$product["eta_date_mktime"] = mktime(0, 0, 0, $product["eta_date_mm_dd_yyyy_arr"][0], $product["eta_date_mm_dd_yyyy_arr"][1], $product["eta_date_mm_dd_yyyy_arr"][2]);
-//		$product["eta_date_dd_month_yyyy"] = date("j F Y", $product["eta_date_mktime"]);
-
-//		if ($product["eta_date_mktime"] > time())
 		if ($product["eta_date_mm_dd_yyyy"] > time()){
 			$product["eta_date_in_future"] = "Y";
 
@@ -1081,12 +1078,8 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
         }
 	$product['mpn'] = $mpn;
 
-	if (!empty($product["manufacturerid"]) && !empty($mpn) && $current_area != 'C'){
-		$d_website_search_for_sku_url = func_query_first_cell("SELECT d_website_search_for_sku_url FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product[manufacturerid]'");
-
-		if (!empty($d_website_search_for_sku_url)){
-			$product["d_website_search_for_sku_url"] = str_replace("{{mpn}}", $mpn, $d_website_search_for_sku_url);
-		}
+	if (!empty($product["d_website_search_for_sku_url"]) && !empty($mpn) && $current_area != 'C'){
+		$product["d_website_search_for_sku_url"] = str_replace("{{mpn}}", $mpn, $product["d_website_search_for_sku_url"]);
 	}
 ###
 ##
@@ -1096,6 +1089,24 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 	if (strpos($product['prevent_search_indexing'], 'Y') !== false){
 		$product["robots_noindex"] = "Y";
 	}
+
+
+#
+## Calculate correct price for customer area
+###
+	$product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+
+	if ($current_area == 'C'){
+		$product["price"] = $product["taxed_price"] = func_product_price($product);
+
+		if ($product["d_enable_feed"] == "Y" && empty($product["is_variants"]) && $product["product_availability"] == "out of stock"){
+		        $product["new_notify_in_stock_price"] = $product["price"];
+		}
+	}
+###
+##
+#
+
 
 	return $product;
 }
