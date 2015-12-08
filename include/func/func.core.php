@@ -3402,7 +3402,7 @@ function func_backprocess_log($process_id="", $log_text="") {
 
 function func_product_availability($r_avail=false, $price=false, $cost_to_us=false, $eta_date_mm_dd_yyyy=false, $productid=false, $product=false){
 
-        if ($r_avail==false && $price==false && $cost_to_us=false && $eta_date_mm_dd_yyyy=false && $productid=false && $product=false){
+        if ($r_avail==false && $price==false && $cost_to_us==false && $eta_date_mm_dd_yyyy==false && $productid==false && $product==false){
                 $availability = "out of stock";
                 return $availability;
         }

@@ -124,27 +124,7 @@ Order By SP.`position` desc";
 
 			$product_info = func_select_product($productid, 0, false);
 
-//func_print_r($product_info, $productid);
 			if (!empty($product_info)){
-
-				$product_feed_enabled = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
-
-				if ($product_feed_enabled == "Y" && empty($product_info["is_variants"]) && $product_info["r_avail"] <= 0){
-
-				        if ($product_info["mult_order_quantity"] == "Y" && $product_info["min_amount"] > 1){
-				                $product_info["price"] = $product_info["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product_info[productid]' AND quantity <= '$product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
-				        }
-
-				        $new_notify_in_stock_price = func_decreased_price($product_info["cost_to_us"], $product_info["taxed_price"], $product_info["new_map_price"]);
-				        $product_info["new_notify_in_stock_price"] = $new_notify_in_stock_price;
-
-#
-##
-					$product_info["price"] = $product_info["new_notify_in_stock_price"];
-##
-#
-
-				}
 
 				$product_info["product"] = str_replace("'", "&#39;", $product_info["product"]);
 

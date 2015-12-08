@@ -308,36 +308,6 @@ if ($product_info["product_type"] != "C") {
 		include $xcart_dir."/modules/Feature_Comparison/product.php";
 
 
-#
-##
-###
-$product_feed_enabled = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
-$smarty->assign("product_feed_enabled", $product_feed_enabled);
-
-/* complete code to define product price */
-$product_info["product_availability"] = func_product_availability(false,false,false,false,false,$product_info);
-$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product_info[productid]' AND quantity <= '$product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
-if ($price_min_amount < $product_info["new_map_price"])
-	{
-		$price_min_amount = $product_info["new_map_price"];
-	}
-if ($product_feed_enabled == "Y" && $product_info["product_availability"] == "out of stock"){
-		$price_min_amount = func_decreased_price($product_info["cost_to_us"], $price_min_amount, $product_info["new_map_price"]);
-}
-
-
-$product_info["price"] = $product_info["taxed_price"] = $price_min_amount;
-if ($product_feed_enabled == "Y" && empty($product_info["is_variants"]) && $product_info["product_availability"] == "out of stock"){
-	$new_notify_in_stock_price = $price_min_amount;
-	$product_info["new_notify_in_stock_price"] = $new_notify_in_stock_price;
-}	
-
-
-###
-##
-#
-
-
 ###
 	if ($product_info["new_map_price"] == "0"){
 
@@ -824,6 +794,8 @@ if ($current_storefront_info["storefrontid"] == "50"){
 }
 
 $smarty->assign("product",$product_info);
+
+$smarty->assign("product_feed_enabled", $product_info["d_enable_feed"]);
 
 if ($active_modules["Bestsellers"])
 	include $xcart_dir."/modules/Bestsellers/bestsellers.php";
