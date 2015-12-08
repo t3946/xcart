@@ -37,6 +37,30 @@
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
+
+# core function to acquire price according it's MAP Price, Manufacturers Feed enabled and Stock status
+# array $product must contain fields:
+#       product_availability ('in stock'|'out of stock')   get value with func_product_availability function
+#       new_map_price   DECIMAL
+#       d_enable_feed  ('Y'|'N')
+#       cost_to_us      DECIMAL
+#       price   DECIMAL    price corrected with min_amount quantity
+function func_product_price($fproduct) {
+	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
+
+	/* complete code to define final product price */
+	$price_min_amount = $fproduct["price"];
+	if ($price_min_amount < $fproduct["new_map_price"])
+		{
+			$price_min_amount = $fproduct["new_map_price"];
+		}
+	if ($fproduct["d_enable_feed"] == "Y" && $fproduct["product_availability"] == "out of stock")
+		{
+			$price_min_amount = func_decreased_price($fproduct["cost_to_us"], $price_min_amount, $fproduct["new_map_price"]);
+		}
+	return $price_min_amount;
+}
+
 #
 # Delete product from products table + all associated information
 # $productid - product's id
