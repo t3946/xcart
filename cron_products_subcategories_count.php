@@ -108,6 +108,8 @@ Where PC.categoryid = '$record[resourceid]'");
 			 db_query("INSERT IGNORE INTO xcart_cidev_updated_products (resourceid, type, time_stamp, source) values ('$parentid', '5', '".time()."','nxt lvl')");
 		}
 	}
+	
+	db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$record[resourceid]' AND (type='4' OR type='5')");
 }
 db_free_result($records);
 
