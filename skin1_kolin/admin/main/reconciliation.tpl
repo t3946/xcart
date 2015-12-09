@@ -364,11 +364,17 @@ to
 
 <td width="90" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}" align="center">
 
+  {if
+        ($tab eq "reconciled") ||
+        ($v.distr_code eq "" && $v.config_search_keyphrase_found eq "Y") ||
 
-  {if 
-	($tab eq "reconciled") || 
-	($v.distr_code eq "" && $v.config_search_keyphrase_found eq "Y") ||
-  	($v.invoices_and_memos ne "" && $v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format)
+        (
+          $v.invoices_and_memos ne "" 
+                && (
+                        $v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format ||   
+                        $v.total_invoices_and_memos_amounts_abs|price_format eq $v.amount_csv|price_format   
+                )
+        )
   }
 
     <select name="action[{$v.id}]">
@@ -378,7 +384,15 @@ to
 		<option value="UR">Unreconcile</option>
 	{else}
 		{if $v.action ne "D" && $v.config_search_keyphrase_found ne "Y"}
-		<option value="R"{if ($v.action eq "R") || ($v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format)} selected="selected"{/if}>Reconcile</option>
+                <option value="R"
+{if 
+($v.action eq "R") || 
+($v.total_invoices_and_memos_amounts|price_format eq $v.amount_csv_abs|price_format) || 
+($v.total_invoices_and_memos_amounts_abs|price_format eq $v.amount_csv|price_format)
+} 
+        selected="selected"
+{/if}
+                >Reconcile</option>
 		{/if}
 
 		{if $v.distr_code eq "" || $v.config_search_keyphrase_found eq "Y"}
@@ -394,7 +408,7 @@ to
 	{if $v.total_invoices_and_memos_amounts__amount_csv_abs_diff_abs gt 0}
 		<br />
 		<br />
-		<input type="checkbox" name="action[{$v.id}]" value="R" /> Force reconcile
+		<input type="checkbox" name="action[{$v.id}]" value="R" />Force reconcile
 	{/if}
 
   {/if}

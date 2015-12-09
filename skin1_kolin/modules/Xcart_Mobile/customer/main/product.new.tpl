@@ -1,16 +1,17 @@
 {* $Id: product.tpl,v 1.147.2.11 2006/11/29 06:21:14 max Exp $ *}
+
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
 {if $product.clean_url ne ""}
-<meta itemprop="url" content="http://www.artistsupplysource.com/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/{$product.clean_url}/" />
 {else}
-<meta itemprop="url" content="http://www.artistsupplysource.com/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/product.php?productid={$product.productid}" />
 {/if}
 {else}
 {if $product.clean_url ne ""}
-<meta itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
 {else}
-<meta itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
 {/if}
 {/if}
 {/if}
@@ -375,7 +376,7 @@ var lbl_error = "{$lng.lbl_error}";
 {if $product.min_amount gte 1}
 <br />
 {math equation="price*quantity" price=$current_price quantity=$product.min_amount format="%3.5f" assign=product_subtotal_value}
-<div style="font-size: 16px; color: #000000; font-weight: bold;" id="product_subtotal_value">Subtotal: {include file="currency.tpl" value=$product_subtotal_value plain_text_message=true}</div>
+<div style="font-size: 16px; color: #000000; font-weight: bold;" id="product_subtotal_value">Subtotal: {include file="currency.tpl" value=$product_subtotal_value plain_text_message=true  price_type="product_subtotal_value"}</div>
 {/if}
 
 
@@ -502,9 +503,6 @@ var lbl_error = "{$lng.lbl_error}";
 <br />
 {/if}
 
-{if $use_schema_org eq "Y"}
-{* <div itemprop="name" itemscope itemtype="http://schema.org/Product"> *}
-{/if}
 
 <br />
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -536,6 +534,7 @@ var lbl_error = "{$lng.lbl_error}";
 </table>
 
 {if $use_schema_org eq "Y"}
+<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_offer"/>
 {if $current_storefront eq "0"}
 <meta itemprop="logo" content="http://www.artistsupplysource.com/image.php?type=P&id={$product.productid}"/>
 {else}
@@ -570,7 +569,7 @@ var lbl_error = "{$lng.lbl_error}";
 <meta itemprop="seller" content="S3 Stores Inc."/>
 </div>
 
-{* </div> *} {* end http://schema.org/Product  *}
+
 {/if}
 
 </div>

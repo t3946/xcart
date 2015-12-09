@@ -178,6 +178,7 @@ function func_GENERAL_ALV_FEED($manufacturerid){
 					$current_forsale = $product_info_arr["forsale"];
 					$current_avail = $product_info_arr["r_avail"];
 					$current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
 					$product_is_updated = false;
 					$marked_as_out_of_stock_products = false;
@@ -244,7 +245,8 @@ function func_GENERAL_ALV_FEED($manufacturerid){
                                                         }
                                                 }
 
-						db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy' WHERE productid='$productid'");
+//						db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy' WHERE productid='$productid'");
+						db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy_time' WHERE productid='$productid'");
 
 						if ($new_eta_date_mm_dd_yyyy != $current_eta_date_mm_dd_yyyy || $current_avail != $new_avail){
 							$product_is_updated = true;
@@ -603,6 +605,7 @@ function func_GENERAL_EDR_FEED($manufacturerid){
                                         $current_avail = $product_info_arr["r_avail"];
                                         $current_list_price = $product_info_arr["list_price"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $product_is_updated = false;
                                         $marked_as_out_of_stock_products = false;
@@ -627,11 +630,11 @@ function func_GENERAL_EDR_FEED($manufacturerid){
 
                                         if ($Available > 0){
 
-						$new_eta_date_mm_dd_yyyy = $current_time - 60*60*24*1;
+						$new_eta_date_mm_dd_yyyy = $new_eta_date_mm_dd_yyyy_time = $current_time - 60*60*24*1;
 						$new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy);
 
 						if ($current_list_price != $Base_Price || $current_avail != $Available || $current_eta_date_mm_dd_yyyy != $new_eta_date_mm_dd_yyyy){
-	                                                db_query("UPDATE $sql_tbl[products] SET list_price='$Base_Price', r_avail='$Available', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy' WHERE productcode='".addslashes($productcode)."'");
+	                                                db_query("UPDATE $sql_tbl[products] SET list_price='$Base_Price', r_avail='$Available', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy_time' WHERE productcode='".addslashes($productcode)."'");
                                                 	$product_is_updated = true;
 		
 							if ($current_avail == 0){
@@ -640,11 +643,11 @@ function func_GENERAL_EDR_FEED($manufacturerid){
 						}
                                         } elseif ($Available == 0 && $current_eta_date_mm_dd_yyyy_time < $current_time){
 
-                                                $new_eta_date_mm_dd_yyyy = $current_time + 60*60*24*35;
+                                                $new_eta_date_mm_dd_yyyy = $new_eta_date_mm_dd_yyyy_time = $current_time + 60*60*24*35;
                                                 $new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy);
 
 						if ($current_list_price != $Base_Price || $current_avail != $Available || $current_eta_date_mm_dd_yyyy != $new_eta_date_mm_dd_yyyy){
-							db_query("UPDATE $sql_tbl[products] SET list_price='$Base_Price', r_avail='$Available', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy' WHERE productcode='".addslashes($productcode)."'");
+							db_query("UPDATE $sql_tbl[products] SET list_price='$Base_Price', r_avail='$Available', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy_time' WHERE productcode='".addslashes($productcode)."'");
 
         	                                        $product_is_updated = true;
 
@@ -971,6 +974,7 @@ function func_GENERAL_MOT_FEED($manufacturerid){
                                         $current_avail = $product_info_arr["r_avail"];
                                         $current_list_price = $product_info_arr["list_price"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $product_is_updated = false;
                                         $marked_as_out_of_stock_products = false;
@@ -1048,10 +1052,10 @@ function func_GENERAL_MOT_FEED($manufacturerid){
 						}
 
 						if ($ETA_DAYS > 0){
-							$new_eta_date_mm_dd_yyyy = $current_time + 60*60*24*$ETA_DAYS;
+							$new_eta_date_mm_dd_yyyy = $new_eta_date_mm_dd_yyyy_time =  $current_time + 60*60*24*$ETA_DAYS;
 							$new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy);
 						} else {
-							$new_eta_date_mm_dd_yyyy = "";
+							$new_eta_date_mm_dd_yyyy = $new_eta_date_mm_dd_yyyy_time = "";
 						}
 
 						if ($current_eta_date_mm_dd_yyyy != $new_eta_date_mm_dd_yyyy){
@@ -1059,7 +1063,7 @@ function func_GENERAL_MOT_FEED($manufacturerid){
 						}
 
 //                                                db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', forsale='$new_forsale', update_search_index='Y', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy' WHERE productid='$productid'");
-                                                db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', forsale='$new_forsale', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy' WHERE productid='$productid'");
+                                                db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', forsale='$new_forsale', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy_time' WHERE productid='$productid'");
 					}
 
                                         if ($product_is_updated){
@@ -1274,6 +1278,7 @@ function func_GENERAL_HTTPS_LWF_FEED($manufacturerid){
                                         $current_new_map_price = $product_info_arr["new_map_price"];
                                         $current_list_price = $product_info_arr["list_price"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $product_is_updated = false;
                                         $marked_as_out_of_stock_products = false;
@@ -1332,6 +1337,7 @@ function func_GENERAL_HTTPS_LWF_FEED($manufacturerid){
 								}
 							}
 */
+							$new_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($new_eta_date_mm_dd_yyyy, "seconds");
                                         		db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', list_price='$new_list_price', cost_to_us='$new_cost_to_us', new_map_price='$new_new_map_price' WHERE productid='$productid'");
                                                         $product_is_updated = true;
                                         }
@@ -1584,6 +1590,7 @@ function func_GENERAL_PPF_FEED($manufacturerid){
                                         $current_weight = $product_info_arr["weight"];
                                         $current_cost_to_us = $product_info_arr["cost_to_us"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $new_forsale = $current_forsale;
                                         $new_avail = $current_avail;
@@ -1641,6 +1648,7 @@ function func_GENERAL_PPF_FEED($manufacturerid){
                                                         }
 */
 //                                                        db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', cost_to_us='$new_cost_to_us', weight='$new_weight', update_search_index='$update_search_index' WHERE productid='$productid'");
+							$new_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($new_eta_date_mm_dd_yyyy, "seconds");
                                                         db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', cost_to_us='$new_cost_to_us', weight='$new_weight' WHERE productid='$productid'");
                                                         $product_is_updated = true;
                                         }
@@ -1849,6 +1857,7 @@ function func_GENERAL_HTTPS_KKL_FEED($manufacturerid){
                                         $current_avail = $product_info_arr["r_avail"];
                                         $current_cost_to_us = $product_info_arr["cost_to_us"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $product_is_updated = false;
                                         $marked_as_out_of_stock_products = false;
@@ -1896,6 +1905,7 @@ function func_GENERAL_HTTPS_KKL_FEED($manufacturerid){
                                                         }
 */
 //                                                        db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', cost_to_us='$new_cost_to_us', update_search_index='$update_search_index' WHERE productid='$productid'");
+							$new_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($new_eta_date_mm_dd_yyyy, "seconds");
                                                         db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', cost_to_us='$new_cost_to_us'  WHERE productid='$productid'");
                                                         $product_is_updated = true;
                                         }
@@ -2153,6 +2163,7 @@ function func_GENERAL_ARL_FEED($manufacturerid){
                                         $current_avail = $product_info_arr["r_avail"];
                                         $current_lead_time_message = $product_info_arr["lead_time_message"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $new_forsale = "Y";
                                         $new_avail = $current_avail;
@@ -2203,6 +2214,7 @@ function func_GENERAL_ARL_FEED($manufacturerid){
                                                         }
 */
 //                                                        db_query("UPDATE $sql_tbl[products] SET forsale='$new_forsale', r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', lead_time_message='$new_lead_time_message', update_search_index='$update_search_index' WHERE productid='$productid'");
+							$new_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($new_eta_date_mm_dd_yyyy, "seconds");
                                                         db_query("UPDATE $sql_tbl[products] SET forsale='$new_forsale', r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', lead_time_message='$new_lead_time_message' WHERE productid='$productid'");
                                                         $product_is_updated = true;
                                         }
@@ -2542,6 +2554,7 @@ function func_GENERAL_WSP_FEED($manufacturerid){
                                         $current_cost_to_us = $product_info_arr["cost_to_us"];
                                         $current_list_price = $product_info_arr["list_price"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $product_is_updated = false;
                                         $marked_as_out_of_stock_products = false;
@@ -2596,6 +2609,7 @@ function func_GENERAL_WSP_FEED($manufacturerid){
                                                         }
 */
 //                                                        db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', cost_to_us='$new_cost_to_us', list_price='$new_list_price', update_search_index='$update_search_index' WHERE productid='$productid'");
+							$new_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($new_eta_date_mm_dd_yyyy, "seconds");
                                                         db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', cost_to_us='$new_cost_to_us', list_price='$new_list_price' WHERE productid='$productid'");
                                                         $product_is_updated = true;
                                         }
@@ -2871,6 +2885,7 @@ function func_GENERAL_OSP_FEED($manufacturerid){
                                         $current_forsale = $product_info_arr["forsale"];
                                         $current_avail = $product_info_arr["r_avail"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $new_forsale = $current_forsale;
                                         $new_avail = $current_avail;
@@ -2920,6 +2935,7 @@ function func_GENERAL_OSP_FEED($manufacturerid){
                                                         }
 */
 //                                                        db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', update_search_index='$update_search_index' WHERE productid='$productid'");
+							$new_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($new_eta_date_mm_dd_yyyy, "seconds");
                                                         db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale' WHERE productid='$productid'");
                                                         $product_is_updated = true;
                                         }
@@ -3274,6 +3290,7 @@ function func_GENERAL_DRE_FEED($manufacturerid){
                                         $current_forsale = $product_info_arr["forsale"];
                                         $current_avail = $product_info_arr["r_avail"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $new_forsale = $current_forsale;
                                         $new_avail = $current_avail;
@@ -3320,6 +3337,7 @@ function func_GENERAL_DRE_FEED($manufacturerid){
                                                         }
 */
 //                                                        db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', update_search_index='$update_search_index' WHERE productid='$productid'");
+							$new_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($new_eta_date_mm_dd_yyyy, "seconds");
                                                         db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale' WHERE productid='$productid'");
                                                         $product_is_updated = true;
                                         }
@@ -3684,6 +3702,7 @@ function func_HONEST_GREEN_GENERAL_PRODUCT_FEED($product_feed_info){
 						$productid = $product_info["productid"];
 						$forsale = $product_info["forsale"];
 						$eta_date_mm_dd_yyyy = $product_info["eta_date_mm_dd_yyyy"];
+						$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, "m/d/Y");
 						$manufacturerid = $product_info["manufacturerid"];
 						$low_avail_limit = $product_info["low_avail_limit"];
 						$free_tax = $product_info["free_tax"];
@@ -3883,6 +3902,9 @@ function func_HONEST_GREEN_GENERAL_PRODUCT_FEED($product_feed_info){
 						$update_search_index = "D";
 					}
 */
+
+					$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, "seconds");
+
 			                $query_data = array(
 			                        "forsale" => $forsale,
 			                        "product" => addslashes($PRODUCT_NAME),
@@ -4362,6 +4384,7 @@ function func_GENERAL_HGW_INVENTORY_FEED($manufacturerid){
                                         $current_forsale = $product_info_arr["forsale"];
                                         $current_avail = $product_info_arr["r_avail"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $new_forsale = $current_forsale;
                                         $new_avail = $current_avail;
@@ -4405,6 +4428,7 @@ function func_GENERAL_HGW_INVENTORY_FEED($manufacturerid){
                                                         }
 */
 //                                                        db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', update_search_index='$update_search_index' WHERE productid='$productid'");
+							$new_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($new_eta_date_mm_dd_yyyy, "seconds");
                                                         db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale' WHERE productid='$productid'");
                                                         $product_is_updated = true;
                                         }
@@ -4723,6 +4747,7 @@ function func_BUYSEASONS_GENERAL_PRODUCT_FEED($product_feed_info){
                                                 $productid = $product_info["productid"];
                                                 $forsale = $product_info["forsale"];
                                                 $eta_date_mm_dd_yyyy = $product_info["eta_date_mm_dd_yyyy"];
+						$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, "seconds");
                                                 $manufacturerid = $product_info["manufacturerid"];
                                                 $low_avail_limit = $product_info["low_avail_limit"];
                                                 $free_tax = $product_info["free_tax"];
@@ -4931,6 +4956,9 @@ function func_BUYSEASONS_GENERAL_PRODUCT_FEED($product_feed_info){
                                                 $update_search_index = "D";
                                         }
 */
+
+					$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, "seconds");
+
                                         $query_data = array(
                                                 "forsale" => $forsale,
                                                 "product" => addslashes($Variant_Name),
@@ -5693,6 +5721,7 @@ function func_GENERAL_BSE_INVENTORY_FEED($manufacturerid){
                                         $current_forsale = $product_info_arr["forsale"];
                                         $current_avail = $product_info_arr["r_avail"];
                                         $current_eta_date_mm_dd_yyyy = $product_info_arr["eta_date_mm_dd_yyyy"];
+					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                                         $new_forsale = $current_forsale;
                                         $new_avail = $current_avail;
@@ -5755,6 +5784,7 @@ function func_GENERAL_BSE_INVENTORY_FEED($manufacturerid){
                                                         }
 */
 //                                                        db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale', update_search_index='$update_search_index' WHERE productid='$productid'");
+							$new_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($new_eta_date_mm_dd_yyyy, "seconds");
                                                         db_query("UPDATE $sql_tbl[products] SET r_avail='$new_avail', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy', forsale='$new_forsale' WHERE productid='$productid'");
                                                         $product_is_updated = true;
                                         }

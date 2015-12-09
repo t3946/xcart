@@ -78,7 +78,7 @@ vim: set ts=2 sw=2 sts=2 et:
 {if $current_price gt 0 and $product.list_price gt 0 and $product.list_price gt $current_price}
 <tr>
 <td nowrap="nowrap" class="BlackT" width="30%" valign="top">{$lng.lbl_list_price}:</td>
-<td><font style="{* FONT-FAMILY: strickeout; *} font-size: 20px; color: #848C84;"><strike>{include file="currency.tpl" value=$product.list_price plain_text_message=true}</strike></font></td>
+<td><font style="{* FONT-FAMILY: strickeout; *} font-size: 20px; color: #848C84;"><strike>{include file="currency.tpl" value=$product.list_price plain_text_message=true price_type="list_price"}</strike></font></td>
 </tr>
 {/if}
 
@@ -93,7 +93,7 @@ vim: set ts=2 sw=2 sts=2 et:
         {/if}
         {* --- *}
 
-<font class="ProductPriceConverting"><span id="product_price" style="white-space: nowrap;">{include file="currency.tpl" value=$current_price plain_text_message=true}</span></font>
+<font class="ProductPriceConverting"><span id="product_price" style="white-space: nowrap;">{include file="currency.tpl" value=$current_price plain_text_message=true  price_type="product_price"}</span></font>
 <font class="MarketPrice"> <span id="product_alt_price" style="white-space: nowrap;">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price plain_text_message=true}</span></font>
 {if $product.map_price gt $product.taxed_price}
 <br />

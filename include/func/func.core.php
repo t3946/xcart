@@ -1316,16 +1316,53 @@ function func_build_quick_prices($id = false, $tick = 0) {
 
 	# Get common data
 	if (empty($active_modules['Product_Options'])) {
-		$res = db_query("SELECT $sql_tbl[products].productid, MIN(CONCAT($sql_tbl[pricing].price,'/',$sql_tbl[pricing].membershipid, '/', $sql_tbl[pricing].priceid)) as priceid, $sql_tbl[pricing].membershipid FROM $sql_tbl[products], $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid = $sql_tbl[products].productid AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[pricing].quantity = 1 $where GROUP BY $sql_tbl[products].productid, $sql_tbl[pricing].membershipid");
+
+//		$res = db_query("SELECT $sql_tbl[products].productid, MIN(CONCAT($sql_tbl[pricing].price,'/',$sql_tbl[pricing].membershipid, '/', $sql_tbl[pricing].priceid)) as priceid, $sql_tbl[pricing].membershipid FROM $sql_tbl[products], $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid = $sql_tbl[products].productid AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[pricing].quantity = 1 $where GROUP BY $sql_tbl[products].productid, $sql_tbl[pricing].membershipid");
+
+                $res = db_query("
+SELECT
+        xcart_products.productid, 
+        CONCAT(xcart_pricing.price,'/',0, '/', xcart_pricing.priceid) as priceid
+FROM xcart_pricing, xcart_products 
+        
+WHERE xcart_pricing.productid = xcart_products.productid 
+        AND xcart_pricing.variantid = 0 
+        $where
+        AND xcart_pricing.quantity<=xcart_products.min_amount 
+
+ORDER By xcart_pricing.quantity DESC
+LIMIT 1");
+
+
 
 	} else {
-		$res = db_query("SELECT $sql_tbl[products].productid, MIN(CONCAT($sql_tbl[pricing].price,'/',$sql_tbl[pricing].membershipid, '/', $sql_tbl[pricing].priceid)) as priceid, $sql_tbl[pricing].membershipid FROM $sql_tbl[pricing], $sql_tbl[products] LEFT JOIN $sql_tbl[variants] ON $sql_tbl[products].productid = $sql_tbl[variants].productid WHERE $sql_tbl[pricing].productid = $sql_tbl[products].productid AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[pricing].quantity = 1 AND $sql_tbl[variants].productid IS NULL $where GROUP BY $sql_tbl[products].productid, $sql_tbl[pricing].membershipid");
+//		$res = db_query("SELECT $sql_tbl[products].productid, MIN(CONCAT($sql_tbl[pricing].price,'/',$sql_tbl[pricing].membershipid, '/', $sql_tbl[pricing].priceid)) as priceid, $sql_tbl[pricing].membershipid FROM $sql_tbl[pricing], $sql_tbl[products] LEFT JOIN $sql_tbl[variants] ON $sql_tbl[products].productid = $sql_tbl[variants].productid WHERE $sql_tbl[pricing].productid = $sql_tbl[products].productid AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[pricing].quantity = 1 AND $sql_tbl[variants].productid IS NULL $where GROUP BY $sql_tbl[products].productid, $sql_tbl[pricing].membershipid");
+
+		$res = db_query("
+SELECT
+        xcart_products.productid, 
+        CONCAT(xcart_pricing.price,'/',0, '/', xcart_pricing.priceid) as priceid
+FROM xcart_pricing, xcart_products 
+        LEFT JOIN xcart_variants ON xcart_products.productid = xcart_variants.productid
+        
+WHERE xcart_pricing.productid = xcart_products.productid 
+        AND xcart_pricing.variantid = 0 
+        AND xcart_variants.productid IS NULL 
+	$where
+        AND xcart_pricing.quantity<=xcart_products.min_amount 
+
+ORDER By xcart_pricing.quantity DESC
+LIMIT 1");
+
 	}
+
 	if ($res) {
 		$i = 0;
 		while ($arr = db_fetch_array($res)) {
+
 			$i++;
 			list($tmp1, $arr['membershipid'], $arr['priceid']) = explode("/", $arr['priceid'], 3);
+
 			func_array2insert("quick_prices", func_addslashes($arr), true);
 			if ($tick > 0 && $i % $tick == 0) {
 				echo ". ";
@@ -1342,17 +1379,20 @@ function func_build_quick_prices($id = false, $tick = 0) {
 		return $i;
 
 	# Get variants' prices
-	$res = db_query("SELECT $sql_tbl[products].productid FROM $sql_tbl[products], $sql_tbl[variants] WHERE $sql_tbl[variants].productid = $sql_tbl[products].productid $where GROUP BY $sql_tbl[products].productid");
+	$res = db_query("SELECT $sql_tbl[products].productid, $sql_tbl[products].min_amount FROM $sql_tbl[products], $sql_tbl[variants] WHERE $sql_tbl[variants].productid = $sql_tbl[products].productid $where GROUP BY $sql_tbl[products].productid");
 	if (!$res)
 		return $i;
 
 	while ($arr = db_fetch_array($res)) {
+
 		$productid = $arr['productid'];
+		$min_amount = $arr['min_amount'];
 		$variantid = func_get_default_variantid($productid);
 		if (empty($variantid))
 			continue;
 
-		$prices = func_query_hash("SELECT membershipid, priceid FROM $sql_tbl[pricing] WHERE variantid = '$variantid' AND quantity = 1 ORDER BY price", "membershipid", false, true);
+//		$prices = func_query_hash("SELECT membershipid, priceid FROM $sql_tbl[pricing] WHERE variantid = '$variantid' AND quantity = 1 ORDER BY price", "membershipid", false, true);
+		$prices = func_query_hash("SELECT priceid FROM $sql_tbl[pricing] WHERE variantid = '$variantid' AND quantity = 1 ORDER BY price", "membershipid", false, true);
 		if (empty($prices))
 			continue;
 
@@ -1361,7 +1401,8 @@ function func_build_quick_prices($id = false, $tick = 0) {
 			$query_data = array(
 				"productid" => $productid,
 				"priceid" => $priceid,
-				"membershipid" => $mid,
+//				"membershipid" => $mid,
+				"membershipid" => 0,
 				"variantid" => $variantid
 			);
 			func_array2insert("quick_prices", $query_data, true);
@@ -1374,6 +1415,7 @@ function func_build_quick_prices($id = false, $tick = 0) {
 
 	db_free_result($res);
 
+//die("===");
 	return $i;
 }
 
@@ -3360,7 +3402,7 @@ function func_backprocess_log($process_id="", $log_text="") {
 
 function func_product_availability($r_avail=false, $price=false, $cost_to_us=false, $eta_date_mm_dd_yyyy=false, $productid=false, $product=false){
 
-        if ($r_avail==false && $price==false && $cost_to_us=false && $eta_date_mm_dd_yyyy=false && $productid=false && $product=false){
+        if ($r_avail==false && $price==false && $cost_to_us==false && $eta_date_mm_dd_yyyy==false && $productid==false && $product==false){
                 $availability = "out of stock";
                 return $availability;
         }
@@ -3398,11 +3440,12 @@ function func_product_availability($r_avail=false, $price=false, $cost_to_us=fal
         }
 
         if ($availability == "in stock" && !empty($eta_date_mm_dd_yyyy)){
-                $eta_date_mm_dd_yyyy_arr = explode("/", $eta_date_mm_dd_yyyy);
-                $eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_arr[0], $eta_date_mm_dd_yyyy_arr[1], $eta_date_mm_dd_yyyy_arr[2]);
+//                $eta_date_mm_dd_yyyy_arr = explode("/", $eta_date_mm_dd_yyyy);
+//                $eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_arr[0], $eta_date_mm_dd_yyyy_arr[1], $eta_date_mm_dd_yyyy_arr[2]);
                 $current_time = time();
 
-                if ($current_time < $eta_date_mm_dd_yyyy_time){
+//                if ($current_time < $eta_date_mm_dd_yyyy_time){
+                if ($current_time < $eta_date_mm_dd_yyyy){
                         $availability = "out of stock";
                 }
         }
@@ -3416,10 +3459,10 @@ function func_product_availability($r_avail=false, $price=false, $cost_to_us=fal
         return $availability;
 }
 
-function func_decreased_price($cost_to_us, $price, $map_price){
+function func_decreased_price($cost_to_us, $price, $new_map_price){
 
         $max1 = $cost_to_us + ($price - $cost_to_us)/3;
-        $new_price = max($map_price, $max1);
+        $new_price = max($new_map_price, $max1);
         $new_price = number_format(round($new_price, 2), 2, ".", "");
         return $new_price;
 }
@@ -3691,6 +3734,41 @@ T - sTatic page
 		}
 
 		func_array2insert("cidev_surf_path", $cidev_surf_path_arr);
+	}
+}
+
+function func_convert_date_mm_dd_yyyy($date, $to_format){
+
+	#
+	# $to_format examples: "seconds", "m/d/Y", ...
+	#
+
+	if (empty($date) || empty($to_format)){
+		return false;
+	}
+
+	if ($to_format == "seconds"){
+
+		if (is_int($date)){
+			return $date;
+		}
+
+		if (strpos($date, "/") !== false){
+			$date_arr = explode("/", $date);
+			$time = mktime(0, 0, 0, $date_arr[0], $date_arr[1], $date_arr[2]);
+
+			return $time;
+		}
+	} 
+	else {
+		
+		if (!is_int($date)){
+                        return $date;
+                }
+
+		$date_str = date($to_format, $date);
+	
+		return $date_str;
 	}
 }
 

@@ -318,7 +318,7 @@ var product_avail = 1;
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr>
 <td>Expected availability:</td>
-<td>{$product.eta_date_dd_month_yyyy}</td>
+<td>{$product.eta_date_mm_dd_yyyy|date_format:'%d-%b-%Y'}</td>
 </tr>
 {if $product.allow_pre_orders ne "Y"}
 <tr><td colspan="2">Sorry we don't take pre-orders.</td></tr>

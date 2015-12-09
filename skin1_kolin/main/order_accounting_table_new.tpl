@@ -177,7 +177,7 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
 </tr>
 <tr class="TableHead TableHeadAccounting TableHeadLight">
   <td width="5"><b>{$lng.lbl_distr}</b></td>
-  <td><b>{$lng.lbl_b2d_payment|upper}</b></td>
+  <td><b>B2D INVOICE</b></td>
   <td>&nbsp;</td>
   <td>{$lng.lbl_pst_in}</td>
   <td><b>{$lng.lbl_date}</b></td>
@@ -378,7 +378,30 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
 </tr>
 <tr class="OrderSheetCell{$cycle_class}">
   <td width="5">{if $static eq 'Y' || $static eq 'O'}<a href="order.php?orderid={$order.orderid}" target="_blank">{/if}{$v.code}{if $static}</a>{/if}</td>
-  <td class="OrderSheetGreenCell"><b>{include file="main/order_status.tpl" status=$v.bd_status mode="static" status_type="BD"}</b></td>
+  <td class="OrderSheetGreenCell" align="center">
+
+{if $order.amazon_fulfillment_channel eq "AFN"}
+<B>I: Reconciled</B><br />
+<B>C: Reconciled</B>
+{else}
+    {if $v.invoices ne ""}
+        {foreach from=$v.invoices item=invoice key=invoice_number}
+                <B>I-{$invoice_number}: {$invoice_memo_statuses[$invoice.status]}</B><br />
+        {/foreach}
+    {else}
+        <B>I: {$invoice_memo_statuses.N}<br /></B>
+    {/if}
+
+    {if $v.memos ne ""}
+        {foreach from=$v.memos item=memo key=memo_number}
+                <B>C-{$memo_number}: {$invoice_memo_statuses[$memo.status]}</B><br />
+        {/foreach}
+    {else}
+        <B>C: {$invoice_memo_statuses.N}</B>
+    {/if}
+{/if}
+
+  </td>
   <td>{$order.s_countryname}</td>
   <td>{if $v.total.pst eq "0.01"}0.0001{else}{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}{/if}</td>
   <td>{$order.date|date_format:"%d-%b-%G"}</td>
@@ -512,9 +535,9 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 
 
 
-
-
-
+{if $v.all_distributor_info.d_bulk_or_individual_order_payments eq "distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping"}
+{$lng.lbl_distributor_charges_for_each_order_twice}
+{/if}
 
 
 
@@ -1109,6 +1132,7 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
 
 
 {if !$static}
+<br />
 <div align="right">
 <input type="button" value="Additional credit memo received" onclick="javascript: $('#mode_accounting_page').val('additional_memo_received'); $('#certain_mid').val('{$m_id}'); this.form.submit();" />
 </div>

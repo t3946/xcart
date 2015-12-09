@@ -141,27 +141,20 @@ function send_question_email_form(){
 	{assign var="current_price" value=$product_wholesale.0.price}
 {/if}
 
+{*
 {if $product.min_amount gt 1 && $product.mult_order_quantity eq "Y"}
 	{math assign="itemprop_price" equation="y*x" y=$product.min_amount x=$current_price}
 {else}
 	{assign var="itemprop_price" value=$current_price}
 {/if}
+*}
 
 <div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
-	{if $use_schema_org eq "Y"}
-		{if $current_storefront eq "0"}
-			<meta itemprop="logo" content="http://www.artistsupplysource.com/image.php?type=P&id={$product.productid}"/>
-		{else}
-			<meta itemprop="logo" content="http://{$cidev_store_domain}/image.php?type=P&id={$product.productid}"/>
-		{/if}
+	<meta itemprop="logo" content="http://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
 	<meta itemprop="url" content="http://www.s3stores.com/"/>
 	<meta itemprop="name" content="S3 Stores Inc."/>
 </div>
 
-
-
-{* </div> *} {* end http://schema.org/Product  *}
-{/if}
 
 </div>
 {/capture}
