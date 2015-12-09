@@ -81,9 +81,11 @@ $cart_tmp["use_shipping_costs_alt"] = "Y";
 $cart_tmp["shipping_costs_alt"] = array();
 $cart_tmp["shipping_cost_alt"] = 0;
 
-foreach ($order["shipping_groups"] as $m_id => $v ) {
-	$cart_tmp["shipping_costs_alt"][$m_id] = $v["shipping_cost"]["gross"];
-	$cart_tmp["shipping_cost_alt"] += $v["shipping_cost"]["gross"];
+if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
+	foreach ($order["shipping_groups"] as $m_id => $v ) {
+		$cart_tmp["shipping_costs_alt"][$m_id] = $v["shipping_cost"]["gross"];
+		$cart_tmp["shipping_cost_alt"] += $v["shipping_cost"]["gross"];
+	}
 }
 
 if (is_array($cart_tmp["products"])) {
