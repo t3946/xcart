@@ -698,7 +698,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	$membershipid = intval($membershipid);
 	$p_membershipid_condition = $membershipid_condition = "";
-	if ($current_area == "C") {  /*speed optimization*/
+	if ($current_area == "C" || empty($current_area)) {  /*speed optimization*/
 		$membershipid_condition = ""; // " AND ($sql_tbl[category_memberships].membershipid = '$membershipid' OR $sql_tbl[category_memberships].membershipid IS NULL) ";
 		$p_membershipid_condition = ""; // " AND ($sql_tbl[product_memberships].membershipid = '$membershipid' OR $sql_tbl[product_memberships].membershipid IS NULL) ";
 //		$price_condition = " /*AND $sql_tbl[quick_prices].membershipid ".((empty($membershipid) || empty($active_modules['Wholesale_Trading'])) ? "= 0" : "IN ('$membershipid', 0)")."*/ AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
@@ -739,14 +739,17 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 	$add_fields = "";
 	$join = "";
 
-	if (!empty($active_modules['Product_Options']) && $current_area != "C" && $current_area != "B") {
+	if (!empty($active_modules['Product_Options']) && ($current_area == "P" || $current_area == "A")) {
 		$join .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[products].productid = $sql_tbl[variants].productid";
 		$add_fields .= ", IF($sql_tbl[variants].productid IS NULL, '', 'Y') as is_variants";
 	}
 
-	if (!empty($active_modules['Multiple_Storefronts']) 
-		&& !$add_from_order_edit 
-		&& !(($current_area == 'A' || $current_area == 'P') && $config['Search_products']['search_by_sku_from_all_sf'] == 'Y')) {
+	if (
+		!empty($active_modules['Multiple_Storefronts']) &&
+		!$add_from_order_edit &&
+		!( ($current_area == 'A' || $current_area == 'P') && $config['Search_products']['search_by_sku_from_all_sf'] == 'Y')
+	   ) 
+	{
 		$join .= " LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid";
 		$sf_condition = " AND $sql_tbl[products_sf].sfid=$current_storefront";
 	} else {
@@ -763,7 +766,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 		$add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders, $sql_tbl[manufacturers].d_enable_feed ";
 	}
 
-	if ($current_area == "C") {  /*speed optimization*/
+	if ($current_area == "C" || empty($current_area)) {  /*speed optimization*/
 		$add_fields .= ", /*IF($sql_tbl[products_lng].productid != '', $sql_tbl[products_lng].product,*/( $sql_tbl[products].product) as product, /*IF($sql_tbl[products_lng].productid != '', $sql_tbl[products_lng].descr,*/( $sql_tbl[products].descr) as descr, /*IF($sql_tbl[products_lng].productid != '', $sql_tbl[products_lng].fulldescr,*/( $sql_tbl[products].fulldescr) as fulldescr, $sql_tbl[quick_flags].*, $sql_tbl[quick_prices].variantid, $sql_tbl[quick_prices].priceid";
 		$join .= " /*LEFT JOIN $sql_tbl[products_lng] ON $sql_tbl[products_lng].code='$store_language' AND $sql_tbl[products_lng].productid = $sql_tbl[products].productid*/ LEFT JOIN $sql_tbl[quick_prices] ON $sql_tbl[products].productid = $sql_tbl[quick_prices].productid /*AND $sql_tbl[quick_prices].membershipid*/ ";
 /*		if (empty($membershipid) || empty($active_modules['Wholesale_Trading'])) {
@@ -831,14 +834,14 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	$product["productid"] = $id;
 	$product["categoryid"] = $categoryid;
-	if ($current_area != 'C') { /*speed optimization*/
-	$tmp = func_query_column("SELECT membershipid FROM $sql_tbl[product_memberships] WHERE productid = '$product[productid]'");
-	if (!empty($tmp) && is_array($tmp)) {
-		$product['membershipids'] = array();
-		foreach ($tmp as $v) {
-			$product['membershipids'][$v] = 'Y';
+	if ($current_area != 'C' && !empty($current_area)) { /*speed optimization*/
+		$tmp = func_query_column("SELECT membershipid FROM $sql_tbl[product_memberships] WHERE productid = '$product[productid]'");
+		if (!empty($tmp) && is_array($tmp)) {
+			$product['membershipids'] = array();
+			foreach ($tmp as $v) {
+				$product['membershipids'][$v] = 'Y';
+			}
 		}
-	}
 	}
 	
 	if (!empty($product['variantid']) && !empty($active_modules['Product_Options'])) {
@@ -859,7 +862,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 	}
 
 	$tmp = false;
-	if (!empty($product['variantid']) && !empty($active_modules['Product_Options']) && ($current_area == "C" || $current_area == "B"))
+	if (!empty($product['variantid']) && !empty($active_modules['Product_Options']) && ($current_area == "C" || $current_area == "B" || empty($current_area)))
 		$tmp = func_query_first("SELECT image_path as image_path_P, image_x as image_x_P, image_y as image_y_P FROM $sql_tbl[images_W] WHERE id = '$product[variantid]'");
 	if (empty($tmp))
 		$tmp = func_query_first("SELECT image_path as image_path_P, image_x as image_x_P, image_y as image_y_P FROM $sql_tbl[images_P] WHERE id = '$product[productid]'");
@@ -870,7 +873,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	unset($tmp);
 
-    if ($current_area != 'C') {
+    if ($current_area == 'A' || $current_area == 'P') {
         if (!empty($active_modules['Multiple_Storefronts'])) {
             $product['customer_url'] = func_get_product_link_sf($product['productid'], $current_storefront, 'customer');
         } else {
@@ -879,7 +882,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
         }
     }
 
-	if ($current_area == "C" || $current_area == "B") {
+	if ($current_area == "C" || $current_area == "B" || empty($current_area)) {
 		#
 		# Check if product is not available for sale
 		#
@@ -938,7 +941,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 		}
 		}
 
-		if ($current_area == "C" && !$clear_price) {
+		if (($current_area == "C" || empty($current_area)) && !$clear_price) {
 			#
 			# Calculate taxes and price including taxes
 			#
@@ -961,7 +964,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	$product["producttitle"] = $product['product'];
 
-	if ($current_area == "C" || $current_area == "B") {
+	if ($current_area == "C" || $current_area == "B" || empty($current_area)) {
 		$product["descr"] = func_eol2br($product["descr"]);
 		$product["fulldescr"] = func_eol2br($product["fulldescr"]);
 	}
@@ -1007,7 +1010,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 ##
 #
 
-    if ($current_area == 'C' && !empty($product['upc'])) {
+    if (($current_area == 'C' || empty($current_area)) && !empty($product['upc'])) {
         $upc_len = strlen($product['upc']);
         
         $product['upc_ean_isbn'] = array();
@@ -1042,7 +1045,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 #
 ##
 ###
-        if ($current_area == 'C' && $product["new_map_price"]>0){
+        if (($current_area == 'C' || empty($current_area)) && $product["new_map_price"]>0){
 
                 if ($product["new_map_price"] > $product["price"]){
                         $product["price"] = $product["new_map_price"];
@@ -1064,7 +1067,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 		if ($product["eta_date_mm_dd_yyyy"] > time()){
 			$product["eta_date_in_future"] = "Y";
 
-			if ($current_area == 'C' && $product["allow_pre_orders"] != "Y"){
+			if (($current_area == 'C' || empty($current_area)) && $product["allow_pre_orders"] != "Y"){
 				$product["avail"] = "0";
 			}
 		}
@@ -1078,7 +1081,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
         }
 	$product['mpn'] = $mpn;
 
-	if (!empty($product["d_website_search_for_sku_url"]) && !empty($mpn) && $current_area != 'C'){
+	if (!empty($product["d_website_search_for_sku_url"]) && !empty($mpn) && ($current_area != 'C' && !empty($current_area))){
 		$product["d_website_search_for_sku_url"] = str_replace("{{mpn}}", $mpn, $product["d_website_search_for_sku_url"]);
 	}
 ###
@@ -1096,7 +1099,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 ###
 	$product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
 
-	if ($current_area == 'C'){
+	if ($current_area == 'C' || empty($current_area)){
 		$product["price"] = $product["taxed_price"] = func_product_price($product);
 
 		if ($product["d_enable_feed"] == "Y" && empty($product["is_variants"]) && $product["product_availability"] == "out of stock"){
