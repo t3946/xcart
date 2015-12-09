@@ -314,14 +314,15 @@ if (
 ###
 
                                 if (!empty($product["eta_date_mm_dd_yyyy"])){
-                                        $eta_date_mm_dd_yyyy_time_arr = explode("/", $product["eta_date_mm_dd_yyyy"]);
-                                        if (!empty($eta_date_mm_dd_yyyy_time_arr) && is_array($eta_date_mm_dd_yyyy_time_arr)){
-                                                $eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_time_arr[0], $eta_date_mm_dd_yyyy_time_arr[1], $eta_date_mm_dd_yyyy_time_arr[2]);
-                                                if ($eta_date_mm_dd_yyyy_time > time()){
+//                                        $eta_date_mm_dd_yyyy_time_arr = explode("/", $product["eta_date_mm_dd_yyyy"]);
+//                                        if (!empty($eta_date_mm_dd_yyyy_time_arr) && is_array($eta_date_mm_dd_yyyy_time_arr)){
+//                                                $eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_time_arr[0], $eta_date_mm_dd_yyyy_time_arr[1], $eta_date_mm_dd_yyyy_time_arr[2]);
+//                                                if ($eta_date_mm_dd_yyyy_time > time())
+                                                if ($product["eta_date_mm_dd_yyyy"] > time()){
 //                                                        print"ETA date in future.";
                                                         continue;
                                                 }
-                                        }
+//                                        }
                                 }
 ###
 ##

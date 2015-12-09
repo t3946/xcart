@@ -148,7 +148,7 @@ for ($i = 1; $i <= $count_cycles; $i++) {
         $new_new_map_price = $current_new_map_price;
         $new_cost_to_us = $current_cost_to_us;
         $new_eta_date_mm_dd_yyyy = $current_eta_date_mm_dd_yyyy;
-        $new_eta_date_mm_dd_yyyy_time = "";
+//        $new_eta_date_mm_dd_yyyy_time = "";
         $new_discount_table = $current_discount_table;
 
 
@@ -162,8 +162,9 @@ for ($i = 1; $i <= $count_cycles; $i++) {
 	$opConfig = func_parse_opConfig($output);
 
 	if (empty($opConfig)){
-                $new_eta_date_mm_dd_yyyy_time = time() + 60*60*24*10;
-                $new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy_time);
+//                $new_eta_date_mm_dd_yyyy_time = time() + 60*60*24*10;
+                $new_eta_date_mm_dd_yyyy = time() + 60*60*24*10;
+//                $new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy_time);
 
 		db_query("UPDATE $sql_tbl[products] SET forsale='Y', r_avail='0', eta_date_mm_dd_yyyy='$new_eta_date_mm_dd_yyyy' WHERE productid='$productid' ");
 		continue;
@@ -209,14 +210,15 @@ for ($i = 1; $i <= $count_cycles; $i++) {
 
 		if (empty($min_amount) || $loadproduct["instock"] == "N"){
 			$new_r_avail = 0;
-	                $new_eta_date_mm_dd_yyyy_time = time() + 60*60*24*10;
-        	        $new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy_time);
+//	                $new_eta_date_mm_dd_yyyy_time = time() + 60*60*24*10;
+	                $new_eta_date_mm_dd_yyyy = time() + 60*60*24*10;
+//        	        $new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy_time);
 		}
 		elseif ($loadproduct["instock"] == "Y" && $min_amount > 0) {
 			$new_r_avail = 10000;
 			$new_min_amount = $min_amount;
 			$new_mult = $loadproduct["mult_order_quantity"];
-			$new_eta_date_mm_dd_yyyy = "";
+			$new_eta_date_mm_dd_yyyy = "0";
 
 			if (!empty($loadproduct["discount_table"])){
 				$new_discount_table = $loadproduct["discount_table"];

@@ -308,34 +308,6 @@ if ($product_info["product_type"] != "C") {
 		include $xcart_dir."/modules/Feature_Comparison/product.php";
 
 
-#
-##
-###
-$product_feed_enabled = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
-$smarty->assign("product_feed_enabled", $product_feed_enabled);
-
-
-if ($product_info["min_amount"] > 1){
-	$product_info["price"] = $product_info["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product_info[productid]' AND quantity <= '$product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
-}
-
-
-if ($product_feed_enabled == "Y" && empty($product_info["is_variants"]) && $product_info["r_avail"] <= 0){
-
-/*
-	if ($product_info["mult_order_quantity"] == "Y" && $product_info["min_amount"] > 1){
-		$product_info["price"] = $product_info["taxed_price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product_info[productid]' AND quantity <= '$product_info[min_amount]' ORDER BY quantity DESC LIMIT 1");
-	}
-*/
-
-	$new_notify_in_stock_price = func_decreased_price($product_info["cost_to_us"], $product_info["taxed_price"], $product_info["new_map_price"]);
-        $product_info["new_notify_in_stock_price"] = $new_notify_in_stock_price;
-}
-###
-##
-#
-
-
 ###
 	if ($product_info["new_map_price"] == "0"){
 
@@ -733,7 +705,6 @@ if (empty($product_info["lead_time_message"])){
 
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
-$product_info["product_availability"] = func_product_availability(false,false,false,false,false,$product_info);
 
 ###
 if (!empty($cart["shipping_groups"][$product_info["manufacturerid"]])){
@@ -823,6 +794,8 @@ if ($current_storefront_info["storefrontid"] == "50"){
 }
 
 $smarty->assign("product",$product_info);
+
+$smarty->assign("product_feed_enabled", $product_info["d_enable_feed"]);
 
 if ($active_modules["Bestsellers"])
 	include $xcart_dir."/modules/Bestsellers/bestsellers.php";
@@ -1090,8 +1063,9 @@ func_print_r($a1, $data, $data_arr);
 
                 if (empty($loadproduct["min_amount"]) || $loadproduct["instock"] == "N"){
                         $new_r_avail = 0;
-                        $new_eta_date_mm_dd_yyyy_time = time() + 60*60*24*10;
-                        $new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy_time);
+//                        $new_eta_date_mm_dd_yyyy_time = time() + 60*60*24*10;
+                        $new_eta_date_mm_dd_yyyy = time() + 60*60*24*10;
+//                        $new_eta_date_mm_dd_yyyy = date("m/d/Y", $new_eta_date_mm_dd_yyyy_time);
                 }
                 elseif ($loadproduct["instock"] == "Y" && $loadproduct["min_amount"]> 0) {
                         $new_r_avail = 10000;

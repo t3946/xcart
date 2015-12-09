@@ -5,9 +5,6 @@
 {section name=image loop=$images}
 {if $images[image].avail eq "Y"}
 {if $images[image].tmbn_url}
-{if $use_schema_org eq "Y"}
-<meta itemprop="image" content="{$images[image].tmbn_url}">
-{/if}
 <img {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{$images[image].tmbn_url}" alt="{$images[image].alt|escape}" style="padding-bottom: 10px;" />
 {else}
 <img {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{$xcart_web_dir}/image.php?id={$images[image].imageid}&amp;type=D" alt="{$images[image].alt|escape}" style="padding-bottom: 10px;" />

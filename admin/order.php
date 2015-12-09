@@ -1735,7 +1735,16 @@ if ($REQUEST_METHOD == "POST") {
 		$is_such_record = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_group_invoices] WHERE orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='1'");
 
 		if (empty($is_such_record)){
-	                db_query("INSERT INTO $sql_tbl[order_group_invoices] (orderid, manufacturerid, invoice_number, invoice_received, cost_to_us_for_products_charged, tax_charged_except_HST, products_total, shipping_charged, drop_ship_fee_charged, shipping_total, HST_charged, invoice_total) VALUES ('$orderid', '$certain_mid', '1', 'Y', '$cost_to_us_for_products_charged', '$tax_charged_except_HST', '$products_total', '$shipping_charged', '$drop_ship_fee_charged', '$shipping_total', '$HST_charged', '$invoice_total')");
+
+
+			if ($order["amazon_fulfillment_channel"] == "AFN"){
+				$status = "R";
+			}
+			else {
+				$status = "A";
+			}
+
+	                db_query("INSERT INTO $sql_tbl[order_group_invoices] (orderid, manufacturerid, invoice_number, invoice_received, cost_to_us_for_products_charged, tax_charged_except_HST, products_total, shipping_charged, drop_ship_fee_charged, shipping_total, HST_charged, invoice_total, status) VALUES ('$orderid', '$certain_mid', '1', 'Y', '$cost_to_us_for_products_charged', '$tax_charged_except_HST', '$products_total', '$shipping_charged', '$drop_ship_fee_charged', '$shipping_total', '$HST_charged', '$invoice_total', '$status')");
 		}
 
         }
@@ -1754,7 +1763,14 @@ if ($REQUEST_METHOD == "POST") {
 			db_query("INSERT INTO $sql_tbl[order_group_invoices_products] (orderid, manufacturerid, invoice_number, itemid) VALUES ('$orderid', '$certain_mid', '$invoice_number', '$product[itemid]')");
 		}
 
-                db_query("INSERT INTO $sql_tbl[order_group_invoices] (orderid, manufacturerid, invoice_number, invoice_received) VALUES ('$orderid', '$certain_mid', $invoice_number, 'Y')");
+                if ($order["amazon_fulfillment_channel"] == "AFN"){
+  	              $status = "R";
+                }
+                else {
+         	       $status = "A";
+                }
+
+                db_query("INSERT INTO $sql_tbl[order_group_invoices] (orderid, manufacturerid, invoice_number, invoice_received, status) VALUES ('$orderid', '$certain_mid', $invoice_number, 'Y', '$status')");
 
         }
 
@@ -1777,7 +1793,14 @@ if ($REQUEST_METHOD == "POST") {
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 
-        db_query("INSERT INTO $sql_tbl[order_group_memos] (orderid, manufacturerid, memo_number, memo_received) VALUES ('$orderid', '$certain_mid', '1', 'Y')");
+        if ($order["amazon_fulfillment_channel"] == "AFN"){
+	       $status = "R";
+        }
+        else {
+               $status = "A";
+        }
+
+        db_query("INSERT INTO $sql_tbl[order_group_memos] (orderid, manufacturerid, memo_number, memo_received, status) VALUES ('$orderid', '$certain_mid', '1', 'Y', '$status')");
 
 	func_header_location("order.php?orderid=".$orderid."#main_order_tabs-accounting");
    }
@@ -1787,7 +1810,14 @@ if ($REQUEST_METHOD == "POST") {
 
         $memo_number = func_query_first_cell("SELECT MAX(memo_number) FROM $sql_tbl[order_group_memos] WHERE orderid='$orderid' AND manufacturerid='$certain_mid'") + 1;
 
-        db_query("INSERT INTO $sql_tbl[order_group_memos] (orderid, manufacturerid, memo_number, memo_received) VALUES ('$orderid', '$certain_mid', $memo_number, 'Y')");
+        if ($order["amazon_fulfillment_channel"] == "AFN"){
+               $status = "R";
+        }
+        else {
+               $status = "A";
+        }
+
+        db_query("INSERT INTO $sql_tbl[order_group_memos] (orderid, manufacturerid, memo_number, memo_received, status) VALUES ('$orderid', '$certain_mid', $memo_number, 'Y', '$status')");
 
         func_header_location("order.php?orderid=".$orderid."#main_order_tabs-accounting");
    }
@@ -2526,6 +2556,8 @@ elseif ($mode == 'mode_info_request_survey'){
                                 $eta_date = trim($eta_date_mm_dd_yyyy[$productid]);
 
 				$current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+				$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
+
 				$current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
 				$current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
 
@@ -2534,6 +2566,8 @@ elseif ($mode == 'mode_info_request_survey'){
                                         if ($current_eta_date_mm_dd_yyyy != $eta_date){
                                                 $log .= "<B>".$v["productcode"].":</B> ". $current_eta_date_mm_dd_yyyy . " -> ". $eta_date ."<br />";
                                         }
+
+					$eta_date = func_convert_date_mm_dd_yyyy($eta_date, 'seconds');
 
                                 	db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$eta_date' WHERE productid='$productid'");
 
@@ -2591,6 +2625,8 @@ elseif ($mode == 'mode_info_request_survey'){
                                         if (!empty($v["eta_date_mm_dd_yyyy"]) || $v["r_avail"] == "0"){
 
 		                                $current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+						$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
+
                 		                $current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
                                 		$current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
 
@@ -2603,7 +2639,7 @@ elseif ($mode == 'mode_info_request_survey'){
 	                                                        $log .= "<B>".$v["productcode"].":</B> eta_date_mm_dd_yyyy: ". $current_eta_date_mm_dd_yyyy . " -> ".$eta_date."<br />";
                                                         }
 
-                                                        db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$eta_date' WHERE productid='$productid'");
+                                                        db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$tmp_mktime' WHERE productid='$productid'");
                                                 }
 
                                                 if ($v["r_avail"] == "0"){
