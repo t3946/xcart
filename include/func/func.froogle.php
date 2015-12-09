@@ -1,6 +1,7 @@
 <?php
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
+x_load('product','core');
 #
 # Translation string to frogle-compatibility-string
 #
@@ -24,10 +25,33 @@ function func_froogle_convert($str, $max_len = false) {
         return $str;
 }
 
-function GetGooglePrice($product){
+function GetGooglePrice($fproduct){
 		global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 
-		$product_availability = func_product_availability(false,false,false,false,false,$product);
+		$price_min_amount = func_product_price($fproduct);
+		
+        if ($fproduct["min_amount"] > 1 && $fproduct["mult_order_quantity"] == "Y"){
+			/* price for bundle */
+			if ($fproduct["product_availability"] == "out of stock")
+				{
+					$product_price = $price_min_amount;
+				}
+			else
+				{
+					$product_price = $price_min_amount * $fproduct["min_amount"];
+				}
+        }
+		else {
+			/* price for dozen item*/
+				$product_price = $price_min_amount;
+			}
+	
+
+/*
+
+
+		
+		
 		$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
 		if ($price_min_amount < $product["new_map_price"])
 			{
@@ -35,7 +59,6 @@ function GetGooglePrice($product){
 			}
 
         if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
-			/* price for bundle */
 			if ($product["d_enable_feed"] == "Y" && $product_availability == "out of stock"){
 				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["new_map_price"]);
 				}
@@ -49,7 +72,6 @@ function GetGooglePrice($product){
 				}
         }
 		else {
-			/* price for dozen item*/
 			if ($product["d_enable_feed"] == "Y" && $product_availability == "out of stock"){
 				$product_price = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["new_map_price"]);
 			}
@@ -57,7 +79,7 @@ function GetGooglePrice($product){
 				$product_price = $price_min_amount;
 			}
 		}
-	
+*/	
 	return $product_price;
 }
 
@@ -293,19 +315,6 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	$tmp = func_tax_price($product['price'], $product['productid'], false, NULL, $ci);
 	$product['price'] = $tmp['taxed_price'];
 
-	if ($product["new_map_price"] > $product["price"]){
-		$product["price"] = $product["new_map_price"];
-		$product['taxed_price'] = $product['price'];
-	}
-
-	/*if ($product["min_amount"] > 1){
-		$new_price =  func_query_first_cell("SELECT MIN(price) FROM $sql_tbl[pricing] WHERE $sql_tbl[pricing].quantity <= '$product[min_amount]' AND $sql_tbl[pricing].variantid = 0 AND $sql_tbl[pricing].productid = '$product[productid]'");
-		$new_price *= $product["min_amount"];
-		$new_price = func_tax_price($new_price, $product['productid'], false, NULL, $ci);
-
-		$product["price"] = $new_price['taxed_price'];
-		$product['taxed_price'] = $new_price['taxed_price'];
-	}*/
 
 	if (empty($cidev_number_clicks) || $cidev_number_clicks == 0){
 		$cidev_number_clicks = $config["Froogle"]["froogle_number_clicks_last_used"];
@@ -506,7 +515,8 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 		$product['weight'] = "0.1";
 	}
 
-		$product_availability = func_product_availability(false,false,false,false,false,$product);
+		$product_availability = $product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+
 		$multipack = "";
 		if ($product["min_amount"]>1 && $product["mult_order_quantity"] == "Y")
 		{
@@ -515,44 +525,9 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 		}
 		
 		$product['price'] = price_format(GetGooglePrice($product));
+		$product['taxed_price'] = $product['price'];
 		
-/*		
-		$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
-		if ($price_min_amount < $product["map_price"])
-			{
-				$price_min_amount = $product["map_price"];
-			}
-        $multipack = "";
 
-        if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
-			$multipack = $product["min_amount"];
-			$product['multipack'] = $multipack;
-			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
-				}
-			if ($product_availability == "out of stock")
-				{
-					$product['price'] = $price_min_amount;
-				}
-			else
-				{
-					$product['price'] = $price_min_amount * $multipack;
-				}
-        }
-		else {
-			if ($product["d_enable_feed"] == "Y" && $product["r_avail"] <= 0){
-				$product['price'] = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["map_price"]);
-			}
-			else {
-				$product['price'] = $price_min_amount;
-			}
-		}
-		
-		$product['price'] = price_format($product['price']);
-*/
-	
-//func_print_r($product);
-//die();
 
 	$product['mpn'] = $mpn;
 	$product['gpc'] = $gpc;
@@ -1140,7 +1115,7 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
         global $started_at, $sql_tbl;
 
 	foreach ($ginventory as $k => $v){
-
+				func_build_quick_prices($v["productid"]);
                 $fields = ", IFNULL($sql_tbl[variants].avail, $sql_tbl[products].r_avail) as r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].map_price, $sql_tbl[products].manufacturerid, $sql_tbl[products].eta_date_mm_dd_yyyy";
                 $joins = " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
                 $joins .= " INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0'";
@@ -1150,13 +1125,14 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
                 $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].new_map_price, $sql_tbl[products].r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
 				
-				$product_availability = func_product_availability(false,false,false,false,false,$product);
-				If ($product["min_amount"]>1)
+				$product_availability = $product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+				If ($product["min_amount"]>1 and $product["mult_order_quantity"] == "Y")
 					{
 						$product['multipack'] = $product["min_amount"];
 					}
                 $product["d_enable_feed"] = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='".$product['manufacturerid']."'");
 		
+				
 				$product['price'] = price_format(GetGooglePrice($product));
 				$postBody["entries"][$k]["inventory"]["price"]["value"] = $product["price"];
 				$postBody["entries"][$k]["inventory"]["price"]["currency"] = "USD";

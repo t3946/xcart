@@ -37,6 +37,30 @@
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
+
+# core function to acquire price according it's MAP Price, Manufacturers Feed enabled and Stock status
+# array $product must contain fields:
+#       product_availability ('in stock'|'out of stock')   get value with func_product_availability function
+#       new_map_price   DECIMAL
+#       d_enable_feed  ('Y'|'N')
+#       cost_to_us      DECIMAL
+#       price   DECIMAL    price corrected with min_amount quantity
+function func_product_price($fproduct) {
+	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
+
+	/* complete code to define final product price */
+	$price_min_amount = $fproduct["price"];
+	if ($price_min_amount < $fproduct["new_map_price"])
+		{
+			$price_min_amount = $fproduct["new_map_price"];
+		}
+	if ($fproduct["d_enable_feed"] == "Y" && $fproduct["product_availability"] == "out of stock")
+		{
+			$price_min_amount = func_decreased_price($fproduct["cost_to_us"], $price_min_amount, $fproduct["new_map_price"]);
+		}
+	return $price_min_amount;
+}
+
 #
 # Delete product from products table + all associated information
 # $productid - product's id
@@ -677,7 +701,8 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 	if ($current_area == "C") {  /*speed optimization*/
 		$membershipid_condition = ""; // " AND ($sql_tbl[category_memberships].membershipid = '$membershipid' OR $sql_tbl[category_memberships].membershipid IS NULL) ";
 		$p_membershipid_condition = ""; // " AND ($sql_tbl[product_memberships].membershipid = '$membershipid' OR $sql_tbl[product_memberships].membershipid IS NULL) ";
-		$price_condition = " /*AND $sql_tbl[quick_prices].membershipid ".((empty($membershipid) || empty($active_modules['Wholesale_Trading'])) ? "= 0" : "IN ('$membershipid', 0)")."*/ AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
+//		$price_condition = " /*AND $sql_tbl[quick_prices].membershipid ".((empty($membershipid) || empty($active_modules['Wholesale_Trading'])) ? "= 0" : "IN ('$membershipid', 0)")."*/ AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
+		$price_condition = " AND $sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid";
 
 	} else {
 		$price_condition = " /*AND $sql_tbl[pricing].membershipid = 0*/ AND $sql_tbl[products].productid = $sql_tbl[pricing].productid AND $sql_tbl[pricing].quantity = 1 AND $sql_tbl[pricing].variantid = 0";
@@ -735,7 +760,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	if (!empty($active_modules["Manufacturers"])) {
 		$join .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[manufacturers].manufacturerid = $sql_tbl[products].manufacturerid";
-		$add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders ";
+		$add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders, $sql_tbl[manufacturers].d_enable_feed ";
 	}
 
 	if ($current_area == "C") {  /*speed optimization*/
@@ -747,6 +772,9 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 			$join .= " IN ('$membershipid', 0)";
 		}*/
 		$join .= " LEFT JOIN $sql_tbl[quick_flags] ON $sql_tbl[products].productid = $sql_tbl[quick_flags].productid";
+	}
+	else {
+                $add_fields .= ", $sql_tbl[manufacturers].d_website_search_for_sku_url ";
 	}
 
 //	$join .= " LEFT JOIN $sql_tbl[product_memberships] ON $sql_tbl[product_memberships].productid = $sql_tbl[products].productid";
@@ -1033,12 +1061,6 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 ##
 ###
 	if (!empty($product["eta_date_mm_dd_yyyy"])){
-
-//		$product["eta_date_mm_dd_yyyy_arr"] = explode("/", $product["eta_date_mm_dd_yyyy"]);
-//		$product["eta_date_mktime"] = mktime(0, 0, 0, $product["eta_date_mm_dd_yyyy_arr"][0], $product["eta_date_mm_dd_yyyy_arr"][1], $product["eta_date_mm_dd_yyyy_arr"][2]);
-//		$product["eta_date_dd_month_yyyy"] = date("j F Y", $product["eta_date_mktime"]);
-
-//		if ($product["eta_date_mktime"] > time())
 		if ($product["eta_date_mm_dd_yyyy"] > time()){
 			$product["eta_date_in_future"] = "Y";
 
@@ -1056,12 +1078,8 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
         }
 	$product['mpn'] = $mpn;
 
-	if (!empty($product["manufacturerid"]) && !empty($mpn) && $current_area != 'C'){
-		$d_website_search_for_sku_url = func_query_first_cell("SELECT d_website_search_for_sku_url FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product[manufacturerid]'");
-
-		if (!empty($d_website_search_for_sku_url)){
-			$product["d_website_search_for_sku_url"] = str_replace("{{mpn}}", $mpn, $d_website_search_for_sku_url);
-		}
+	if (!empty($product["d_website_search_for_sku_url"]) && !empty($mpn) && $current_area != 'C'){
+		$product["d_website_search_for_sku_url"] = str_replace("{{mpn}}", $mpn, $product["d_website_search_for_sku_url"]);
 	}
 ###
 ##
@@ -1071,6 +1089,24 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 	if (strpos($product['prevent_search_indexing'], 'Y') !== false){
 		$product["robots_noindex"] = "Y";
 	}
+
+
+#
+## Calculate correct price for customer area
+###
+	$product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+
+	if ($current_area == 'C'){
+		$product["price"] = $product["taxed_price"] = func_product_price($product);
+
+		if ($product["d_enable_feed"] == "Y" && empty($product["is_variants"]) && $product["product_availability"] == "out of stock"){
+		        $product["new_notify_in_stock_price"] = $product["price"];
+		}
+	}
+###
+##
+#
+
 
 	return $product;
 }
