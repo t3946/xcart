@@ -303,16 +303,6 @@ function func_recalc_product_count($categoryid = false, $tick = 0) {
 # Recalculate child categories count in Categories counts table
 #
 function func_recalc_subcat_count($categoryid = false, $tick = 0) {
-
-#
-##  https://basecamp.com/2070980/projects/1577907/messages/51812349
-### CRON: products and subcategories count
-        return true;
-###
-##
-#
-
-
 	global $sql_tbl, $config;
 
 	$where = "";
