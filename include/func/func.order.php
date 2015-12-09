@@ -3929,6 +3929,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
 
 //func_print_r($products);
 
+	if (!empty($products) && is_array($products))
         foreach ($products as $k => $v){
 
                 $selected_product_options = "";
