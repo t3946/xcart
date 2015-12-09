@@ -1526,8 +1526,10 @@ if (!empty($products) && is_array($products)){
 
 
 $ids = array();
-foreach ($products as $p) {
-	$ids[] = $p['productid'];
+if (!empty($products) && is_array($$products)){
+	foreach ($products as $p) {
+		$ids[] = $p['productid'];
+	}
 }
 if (!empty($ids)) {
 	$cats = func_query_hash('SELECT categoryid, productid FROM ' . $sql_tbl['products_categories'] . ' WHERE productid IN (' . implode(', ', $ids) . ')', 'productid', false, true);
