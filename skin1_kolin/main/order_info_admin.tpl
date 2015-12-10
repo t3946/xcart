@@ -532,13 +532,13 @@ Cost to us accurate
 {if !$static}
 
   {if $v.dc_status eq 'K' || $v.dc_status eq 'E'}
-  {$product.eta_date_mm_dd_yyyy}
-  <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="hidden" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{$product.eta_date_mm_dd_yyyy}" />
+  {$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}
+  <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="hidden" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}" />
   {else}
   <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="text" size="9" style="width: 98%;" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
   {/if}
 {else}
-  {$product.eta_date_mm_dd_yyyy}
+  {$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}
 {/if}
   </td>
 
@@ -977,25 +977,27 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
         {/if}
 *}
 
-{if $v.invoices ne ""}
 <B>Business to distributor invoice status:</B><br />
+{if $v.invoices ne ""}
 {foreach from=$v.invoices item=item_invoice key=key_invoice}
 
 I-{$key_invoice}: {$invoice_memo_statuses[$item_invoice.status]}<br />
 
 {/foreach}
+{else}
+{$invoice_memo_statuses.N}<br />
 {/if}
 
-{if $v.memos ne ""}
-  {if $v.invoices ne ""}
-    <br />
-  {/if}
+<br />
 <B>Business to distributor credit memo status:</B><br />
+{if $v.memos ne ""}
 {foreach from=$v.memos item=item_memos key=key_memos}
 
 C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 
 {/foreach}
+{else}
+{$invoice_memo_statuses.N}
 {/if}
 
 

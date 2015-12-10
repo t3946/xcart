@@ -125,7 +125,7 @@
 
 	<table width="100%" cellpadding="2" cellspacing="2" style="background-color: #FFFFFF;">
 	{foreach from=$categories item=c}
-	{if $c.order_by ge 0 && $c.order_by le 500 && $c.product_count gt 0}
+	{if $c.order_by ge 0 && $c.order_by le 500 && ($c.product_count gt 0 || $c.global_product_count gt 0)}
 	<tr>
 	<td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;">
 	    {if $c.categoryid eq ''}
