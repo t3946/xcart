@@ -157,7 +157,7 @@ function func_get_categories_list($cat=0, $short_list=true, $flag=null, $max_dep
 	}
 
 	if ($short_list) {
-		$to_search = "$sql_tbl[categories].categoryid,$sql_tbl[categories].parentid,$sql_tbl[categories].categoryid_path,$sql_tbl[categories].category,$sql_tbl[categories].avail,$sql_tbl[categories].order_by,$sql_tbl[categories].pc_ready_to_classify, $sql_tbl[categories].prevent_index_products, $sql_tbl[categories].prevent_index_category_page, $sql_tbl[categories].google_product_category";
+		$to_search = "$sql_tbl[categories].categoryid,$sql_tbl[categories].parentid,$sql_tbl[categories].categoryid_path,$sql_tbl[categories].category,$sql_tbl[categories].avail,$sql_tbl[categories].order_by,$sql_tbl[categories].pc_ready_to_classify, $sql_tbl[categories].prevent_index_products, $sql_tbl[categories].prevent_index_category_page, $sql_tbl[categories].google_product_category, $sql_tbl[categories].is_bold, $sql_tbl[categories].is_bold, $sql_tbl[categories].product_count, $sql_tbl[categories].global_product_count, $sql_tbl[categories].subcategory_count ";
 	} else {
 		$to_search = "$sql_tbl[categories].*";
 	}
@@ -176,20 +176,20 @@ function func_get_categories_list($cat=0, $short_list=true, $flag=null, $max_dep
 	#
 	# Count the subcategories for "root" and "level" flag values
 	#
-	if ($flag == "level" || $flag == "root" || $flag == "current" || is_null($flag)) {
-		if ($current_area == "C" || $current_area == "B") {
-			$join_tbl .= " LEFT JOIN $sql_tbl[categories_subcount] USE INDEX (PRIMARY) ON $sql_tbl[categories_subcount].categoryid = $sql_tbl[categories].categoryid /*i AND $sql_tbl[categories_subcount].membershipid = '$user_account[membershipid]'*/ ";
-			$to_search .= ",$sql_tbl[categories_subcount].subcategory_count, $sql_tbl[categories_subcount].product_count";
-		} else {
-			$join_tbl .= " LEFT JOIN $sql_tbl[categories_subcount] USE INDEX (PRIMARY) ON $sql_tbl[categories_subcount].categoryid = $sql_tbl[categories].categoryid ";
-			$to_search .= ",MAX($sql_tbl[categories_subcount].subcategory_count) as subcategory_count, MAX($sql_tbl[categories_subcount].product_count) as product_count";
-		}
-
-	} elseif ($short_list) {
-		$to_search .= ",$sql_tbl[categories].product_count";
-	}
-
-	$to_search .= ",$sql_tbl[categories].is_bold ";
+#	if ($flag == "level" || $flag == "root" || $flag == "current" || is_null($flag)) {
+#		if ($current_area == "C" || $current_area == "B") {
+#			$join_tbl .= " LEFT JOIN $sql_tbl[categories_subcount] USE INDEX (PRIMARY) ON $sql_tbl[categories_subcount].categoryid = $sql_tbl[categories].categoryid /*i AND $sql_tbl[categories_subcount].membershipid = '$user_account[membershipid]'*/ ";
+#			$to_search .= ",$sql_tbl[categories_subcount].subcategory_count, $sql_tbl[categories_subcount].product_count";
+#		} else {
+#			$join_tbl .= " LEFT JOIN $sql_tbl[categories_subcount] USE INDEX (PRIMARY) ON $sql_tbl[categories_subcount].categoryid = $sql_tbl[categories].categoryid ";
+#			$to_search .= ",MAX($sql_tbl[categories_subcount].subcategory_count) as subcategory_count, MAX($sql_tbl[categories_subcount].product_count) as product_count";
+#		}
+#
+#	} elseif ($short_list) {
+#		$to_search .= ",$sql_tbl[categories].product_count";
+#	}
+#
+#	$to_search .= ",$sql_tbl[categories].is_bold ";
 
 	#
 	# Check category icons
@@ -364,14 +364,15 @@ function func_get_category_data($cat) {
 		$image_field .= ",IF($sql_tbl[images_C].image != '','Y','') as is_icon";
 	}
 
-	$join_tbl = " LEFT JOIN $sql_tbl[images_C] ON $sql_tbl[images_C].id = $sql_tbl[categories].categoryid LEFT JOIN $sql_tbl[categories_subcount] ON $sql_tbl[categories_subcount].categoryid = $sql_tbl[categories].categoryid"./*(($current_area == "C" || $current_area == "B")?"  AND $sql_tbl[categories_subcount].membershipid = '".@$user_account['membershipid']."'":"").*/" /* LEFT JOIN $sql_tbl[category_memberships] ON $sql_tbl[category_memberships].categoryid = $sql_tbl[categories].categoryid*/ ";
-	$to_search = ", $sql_tbl[categories].category, $sql_tbl[categories].categoryid_path, $sql_tbl[categories].order_by $image_field ";
+	$join_tbl = " LEFT JOIN $sql_tbl[images_C] ON $sql_tbl[images_C].id = $sql_tbl[categories].categoryid ";
+	$to_search = ", $sql_tbl[categories].category, $sql_tbl[categories].categoryid_path, $sql_tbl[categories].product_count, $sql_tbl[categories].global_product_count, $sql_tbl[categories].subcategory_count, $sql_tbl[categories].order_by $image_field ";
+/*
 	if ($current_area == "C" || $current_area == "B") {
 		$to_search .= ", $sql_tbl[categories_subcount].subcategory_count";
 	} else {
 		$to_search .= ", MAX($sql_tbl[categories_subcount].subcategory_count) as subcategory_count";
 	}
-
+*/
 	if ($current_area == "C" || $current_area == "B") {
 //i		$join_tbl .= " LEFT JOIN $sql_tbl[categories_lng] ON $sql_tbl[categories_lng].code='$shop_language' AND $sql_tbl[categories_lng].categoryid=$sql_tbl[categories].categoryid ";
 		$to_search .= ",/*IF(($sql_tbl[categories_lng].category IS NOT NULL AND $sql_tbl[categories_lng].category != ''), $sql_tbl[categories_lng].category,*/ ( $sql_tbl[categories].category) as category,/* IF(($sql_tbl[categories_lng].description IS NOT NULL AND $sql_tbl[categories_lng].description != ''), $sql_tbl[categories_lng].description,*/ ( $sql_tbl[categories].description) as description, $sql_tbl[categories].category as category_name_orig";
@@ -710,7 +711,7 @@ if (!empty($active_modules['Multiple_Storefronts'])) {
 
 
 
-func_print_r($subcategories);
+//func_print_r($subcategories);
 
 /*
 #
