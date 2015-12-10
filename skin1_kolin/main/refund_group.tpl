@@ -4,7 +4,7 @@ vim: set ts=2 sw=2 sts=2 et:
 *}
 
 {if $order.refund_groups[$mid]}
-<tr class="refund-distr-totals-line"><td style="font-size: 10px;" colspan="10">
+<tr class="refund-distr-totals-line"><td style="font-size: 10px;" colspan="11">
 Refund # {$order.order_prefix}{$order.orderid}-REF
 </td></tr>
 
@@ -12,6 +12,7 @@ Refund # {$order.order_prefix}{$order.orderid}-REF
   <td style="font-size: 12px;">
   {$lng.lbl_refund_for} {$group.group_name} {$lng.lbl_items}</td>
   <td style="font-size: 12px;">{$group.code}</td>
+  <td>&nbsp;</td>
   <td>&nbsp;</td>
   <td>&nbsp;</td>
   <td>&nbsp;</td>
@@ -95,6 +96,7 @@ Refund # {$order.order_prefix}{$order.orderid}-REF
   </td>
   <td align="right">&nbsp;</td>
   <td align="right">&nbsp;</td>
+  <td align="right">&nbsp;</td>
   <td align="right" nowrap="nowrap">
     {if $product.ref_qty ne 0 && $product.ref_price ne 0}({/if}{include file="currency2.tpl" value=$product.ref_price*$product.ref_qty}{if $product.ref_qty ne 0 && $product.ref_price ne 0}){/if}
   </td>
@@ -137,7 +139,7 @@ Refund # {$order.order_prefix}{$order.orderid}-REF
       {$shipping}
     {/if}
   </td>
-  <td colspan="5">
+  <td colspan="6">
     {*if $order.refund_groups[$mid].tracking}
       {foreach from=$order.refund_groups[$mid].tracking item=t}
         {if $t.tracknum ne ""}

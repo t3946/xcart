@@ -76,7 +76,7 @@ function func_delete_category($cat) {
 		db_exec("DELETE FROM $sql_tbl[categories_parents] WHERE categoryid IN (?)", array($subcats));
 # END: random:20766 [2010 May 11 13:18] 
 		db_exec("DELETE FROM $sql_tbl[products_categories] WHERE categoryid IN (?)", array($subcats));
-		db_exec("DELETE FROM $sql_tbl[categories_subcount] WHERE categoryid IN (?)", array($subcats));
+//		db_exec("DELETE FROM $sql_tbl[categories_subcount] WHERE categoryid IN (?)", array($subcats));
 		db_exec("DELETE FROM $sql_tbl[featured_products] WHERE categoryid IN (?)", array($subcats));
 		db_exec("DELETE FROM $sql_tbl[categories_lng] WHERE categoryid IN (?)", array($subcats));
 		db_exec("DELETE FROM $sql_tbl[category_memberships] WHERE categoryid IN (?)", array($subcats));
@@ -108,6 +108,16 @@ function func_delete_category($cat) {
 # Recalculate product count in Categories table and Categories counts table
 #
 function func_recalc_product_count($categoryid = false, $tick = 0) {
+
+
+#
+##  https://basecamp.com/2070980/projects/1577907/messages/51812349
+### CRON: products and subcategories count
+	return true;
+###
+##
+#
+
 	global $sql_tbl, $config, $single_mode;
 
 	$forsale_condition = "($sql_tbl[products].forsale='Y' OR $sql_tbl[products].forsale='')";
@@ -294,6 +304,14 @@ function func_recalc_product_count($categoryid = false, $tick = 0) {
 #
 function func_recalc_subcat_count($categoryid = false, $tick = 0) {
 	global $sql_tbl, $config;
+
+#
+##  https://basecamp.com/2070980/projects/1577907/messages/51812349
+### CRON: products and subcategories count
+        return true;
+###
+##
+#
 
 	$where = "";
 	if ($categoryid !== false) {

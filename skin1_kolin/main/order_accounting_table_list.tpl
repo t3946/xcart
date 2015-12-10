@@ -101,7 +101,7 @@
   <td colspan="2" align="left">{$order.last_activity_age_str}{* {$order.last_activity_age_arr.days} days, {$order.last_activity_age_arr.hours}:{$order.last_activity_age_arr.mins} hours *}</td>
   <td {if $order.max_eta_color eq "pink"}style="background-color: #F4CCCC; color: #000000;"{elseif $order.max_eta_color eq "blue"}style="background-color: #cfe2f3; color: #000000;"{/if}>
 {if $order.max_eta_color ne "do_not_show"}
-        {$order.max_eta}
+        {$order.max_eta|date_format:'%m/%d/%Y'}
 {/if}
   </td>
   <td></td>

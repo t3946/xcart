@@ -84,10 +84,10 @@
 	<td align="center"><a href="category_modify.php?cat={$catid}" title="{$lng.lbl_categories_more}">{$lng.lbl_categories_more}</a></td>
 	<td width="100"><input type="text" size="60" value="{ $c.category|escape }" name="posted_data[{$catid}][category]" class="{if $c.avail eq "N"}ItemsListDisabled{else}ItemsListBold{/if}" /></td>
 	<td align="center">
-{if $c.product_count eq 0 && $c.product_count_global eq 0}
+{if $c.product_count eq 0 && $c.global_product_count eq 0}
 {$lng.txt_not_available}
 {else}
-<a href="category_products.php?cat={$catid}">{$c.product_count|default:$lng.txt_not_available}</a> ({$c.product_count_global})
+<a href="category_products.php?cat={$catid}">{$c.product_count|default:$lng.txt_not_available}</a> ({$c.global_product_count})
 {/if}
 	</td>
 	<td align="center" nowrap="nowrap"><input type="text" size="5" name="posted_data[{$catid}][parentid]" value="{$c.parentid}" />&nbsp;<input type="text" size="20" name="posted_data[{$catid}][additional_parentid]" value="{$additional_parentid[$catid].add_parentids}" /></td>

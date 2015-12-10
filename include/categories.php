@@ -157,7 +157,7 @@ function func_get_categories_list($cat=0, $short_list=true, $flag=null, $max_dep
 	}
 
 	if ($short_list) {
-		$to_search = "$sql_tbl[categories].categoryid,$sql_tbl[categories].parentid,$sql_tbl[categories].categoryid_path,$sql_tbl[categories].category,$sql_tbl[categories].avail,$sql_tbl[categories].order_by,$sql_tbl[categories].pc_ready_to_classify, $sql_tbl[categories].prevent_index_products, $sql_tbl[categories].prevent_index_category_page, $sql_tbl[categories].google_product_category";
+		$to_search = "$sql_tbl[categories].categoryid,$sql_tbl[categories].parentid,$sql_tbl[categories].categoryid_path,$sql_tbl[categories].category,$sql_tbl[categories].avail,$sql_tbl[categories].order_by,$sql_tbl[categories].pc_ready_to_classify, $sql_tbl[categories].prevent_index_products, $sql_tbl[categories].prevent_index_category_page, $sql_tbl[categories].google_product_category, $sql_tbl[categories].is_bold, $sql_tbl[categories].is_bold, $sql_tbl[categories].product_count, $sql_tbl[categories].global_product_count, $sql_tbl[categories].subcategory_count ";
 	} else {
 		$to_search = "$sql_tbl[categories].*";
 	}
@@ -176,20 +176,20 @@ function func_get_categories_list($cat=0, $short_list=true, $flag=null, $max_dep
 	#
 	# Count the subcategories for "root" and "level" flag values
 	#
-	if ($flag == "level" || $flag == "root" || $flag == "current" || is_null($flag)) {
-		if ($current_area == "C" || $current_area == "B") {
-			$join_tbl .= " LEFT JOIN $sql_tbl[categories_subcount] USE INDEX (PRIMARY) ON $sql_tbl[categories_subcount].categoryid = $sql_tbl[categories].categoryid /*i AND $sql_tbl[categories_subcount].membershipid = '$user_account[membershipid]'*/ ";
-			$to_search .= ",$sql_tbl[categories_subcount].subcategory_count, $sql_tbl[categories_subcount].product_count";
-		} else {
-			$join_tbl .= " LEFT JOIN $sql_tbl[categories_subcount] USE INDEX (PRIMARY) ON $sql_tbl[categories_subcount].categoryid = $sql_tbl[categories].categoryid ";
-			$to_search .= ",MAX($sql_tbl[categories_subcount].subcategory_count) as subcategory_count, MAX($sql_tbl[categories_subcount].product_count) as product_count";
-		}
-
-	} elseif ($short_list) {
-		$to_search .= ",$sql_tbl[categories].product_count";
-	}
-
-	$to_search .= ",$sql_tbl[categories].is_bold ";
+#	if ($flag == "level" || $flag == "root" || $flag == "current" || is_null($flag)) {
+#		if ($current_area == "C" || $current_area == "B") {
+#			$join_tbl .= " LEFT JOIN $sql_tbl[categories_subcount] USE INDEX (PRIMARY) ON $sql_tbl[categories_subcount].categoryid = $sql_tbl[categories].categoryid /*i AND $sql_tbl[categories_subcount].membershipid = '$user_account[membershipid]'*/ ";
+#			$to_search .= ",$sql_tbl[categories_subcount].subcategory_count, $sql_tbl[categories_subcount].product_count";
+#		} else {
+#			$join_tbl .= " LEFT JOIN $sql_tbl[categories_subcount] USE INDEX (PRIMARY) ON $sql_tbl[categories_subcount].categoryid = $sql_tbl[categories].categoryid ";
+#			$to_search .= ",MAX($sql_tbl[categories_subcount].subcategory_count) as subcategory_count, MAX($sql_tbl[categories_subcount].product_count) as product_count";
+#		}
+#
+#	} elseif ($short_list) {
+#		$to_search .= ",$sql_tbl[categories].product_count";
+#	}
+#
+#	$to_search .= ",$sql_tbl[categories].is_bold ";
 
 	#
 	# Check category icons
@@ -364,14 +364,15 @@ function func_get_category_data($cat) {
 		$image_field .= ",IF($sql_tbl[images_C].image != '','Y','') as is_icon";
 	}
 
-	$join_tbl = " LEFT JOIN $sql_tbl[images_C] ON $sql_tbl[images_C].id = $sql_tbl[categories].categoryid LEFT JOIN $sql_tbl[categories_subcount] ON $sql_tbl[categories_subcount].categoryid = $sql_tbl[categories].categoryid"./*(($current_area == "C" || $current_area == "B")?"  AND $sql_tbl[categories_subcount].membershipid = '".@$user_account['membershipid']."'":"").*/" /* LEFT JOIN $sql_tbl[category_memberships] ON $sql_tbl[category_memberships].categoryid = $sql_tbl[categories].categoryid*/ ";
-	$to_search = ", $sql_tbl[categories].category, $sql_tbl[categories].categoryid_path, $sql_tbl[categories].order_by $image_field ";
+	$join_tbl = " LEFT JOIN $sql_tbl[images_C] ON $sql_tbl[images_C].id = $sql_tbl[categories].categoryid ";
+	$to_search = ", $sql_tbl[categories].category, $sql_tbl[categories].categoryid_path, $sql_tbl[categories].product_count, $sql_tbl[categories].global_product_count, $sql_tbl[categories].subcategory_count, $sql_tbl[categories].order_by $image_field ";
+/*
 	if ($current_area == "C" || $current_area == "B") {
 		$to_search .= ", $sql_tbl[categories_subcount].subcategory_count";
 	} else {
 		$to_search .= ", MAX($sql_tbl[categories_subcount].subcategory_count) as subcategory_count";
 	}
-
+*/
 	if ($current_area == "C" || $current_area == "B") {
 //i		$join_tbl .= " LEFT JOIN $sql_tbl[categories_lng] ON $sql_tbl[categories_lng].code='$shop_language' AND $sql_tbl[categories_lng].categoryid=$sql_tbl[categories].categoryid ";
 		$to_search .= ",/*IF(($sql_tbl[categories_lng].category IS NOT NULL AND $sql_tbl[categories_lng].category != ''), $sql_tbl[categories_lng].category,*/ ( $sql_tbl[categories].category) as category,/* IF(($sql_tbl[categories_lng].description IS NOT NULL AND $sql_tbl[categories_lng].description != ''), $sql_tbl[categories_lng].description,*/ ( $sql_tbl[categories].description) as description, $sql_tbl[categories].category as category_name_orig";
@@ -639,6 +640,7 @@ if ($current_area == "C" && !empty($active_modules["Fancy_Categories"])) {
 
 $smarty->assign("allcategories", $all_categories);
 
+/*
 #
 ##
 ###
@@ -648,14 +650,18 @@ if (!empty($categories)){
                 if ($k == $v["categoryid"]){
 
 						
-                        $categories[$k]['product_count'] = $product_count_global = func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v[categoryid]' AND $sql_tbl[products].forsale='Y'");
-						/*we will show category if we found at least one enabled product in it or in it's subcategories*/
+//                        $categories[$k]['product_count'] = $product_count_global = func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v[categoryid]' AND $sql_tbl[products].forsale='Y'");
+
+			$product_count_global = $categories[$k]['product_count'];
+
+
 						if ($product_count_global <= 0) 
 							{
 								$categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '%/$v[categoryid]/%' AND avail='Y'");
 								if (!empty($categoryid_arr)){
 										foreach ($categoryid_arr as $k_c => $v_catid){
-												$product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' AND $sql_tbl[products].forsale='Y'");
+//												$product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' AND $sql_tbl[products].forsale='Y'");
+												$product_count_global += func_query_first_cell("SELECT product_count FROM $sql_tbl[categories_subcount] WHERE categoryid='$v_catid[categoryid]'");
 												if ($product_count_global > 0) 
 													{
 														break 1;
@@ -665,7 +671,8 @@ if (!empty($categories)){
 										$categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '$v[categoryid]/%' AND avail='Y'");
 										if (!empty($categoryid_arr)){
 												foreach ($categoryid_arr as $k_c => $v_catid){
-														$product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' AND $sql_tbl[products].forsale='Y'");
+//														$product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' AND $sql_tbl[products].forsale='Y'");
+														$product_count_global += func_query_first_cell("SELECT product_count FROM $sql_tbl[categories_subcount] WHERE categoryid='$v_catid[categoryid]'");
 														if ($product_count_global > 0) 
 															{
 																break 1;
@@ -675,7 +682,6 @@ if (!empty($categories)){
 										}
 							}
 						
-/*						$product_count_global = func_query_first_cell("SELECT SC.product_count FROM $sql_tbl[categories_subcount] SC WHERE SC.categoryid='$v[categoryid]'");*/
 	
                         $categories[$k]['product_count_global'] = $product_count_global;
 
@@ -689,7 +695,7 @@ if (!empty($categories)){
 ###
 ##
 #
-
+*/
 
 $smarty->assign("categories", empty($categories)?"":$categories);
 
@@ -703,31 +709,39 @@ if (!empty($active_modules['Multiple_Storefronts'])) {
     $sf_condition = '';
 }
 
+
+
+//func_print_r($subcategories);
+
+/*
 #
 # Override subcategory_count for Admin area
 #
-if(!empty($subcategories) && ($current_area == 'A' || ($current_area == 'P'/* && $active_modules['Simple_Mode']*/))) {
+if(!empty($subcategories) && ($current_area == 'A' || ($current_area == 'P'))) {
 //	$product_counts = func_query_hash("SELECT categoryid, COUNT(productid) FROM $sql_tbl[products_categories] WHERE categoryid IN ('".implode("','", array_keys($subcategories))."') GROUP BY categoryid", "categoryid", false, true);
 	foreach($subcategories as $k => $v) {
-		$subcategories[$k]['subcategory_count'] = func_query_first_cell("SELECT COUNT(subcat.categoryid) as subc FROM $sql_tbl[categories] USE INDEX (PRIMARY) LEFT JOIN $sql_tbl[categories] as subcat ON subcat.categoryid_path LIKE CONCAT($sql_tbl[categories].categoryid_path, '/%') WHERE $sql_tbl[categories].categoryid = '$k' $sf_condition GROUP BY $sql_tbl[categories].categoryid");
+//		$subcategories[$k]['subcategory_count'] = func_query_first_cell("SELECT COUNT(subcat.categoryid) as subc FROM $sql_tbl[categories] USE INDEX (PRIMARY) LEFT JOIN $sql_tbl[categories] as subcat ON subcat.categoryid_path LIKE CONCAT($sql_tbl[categories].categoryid_path, '/%') WHERE $sql_tbl[categories].categoryid = '$k' $sf_condition GROUP BY $sql_tbl[categories].categoryid");
 //		$subcategories[$k]['product_count_global'] = $subcategories[$k]['product_count'];
 //		$subcategories[$k]['product_count'] = isset($product_counts[$k]) ? intval($product_counts[$k]) : 0;
+
 
 #
 ##
 ###
-                $product_count_global = $subcategories[$k]['product_count'] = func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$k' /* AND $sql_tbl[products_categories].main='Y' */ AND $sql_tbl[products].forsale='Y'");
+//                $product_count_global = $subcategories[$k]['product_count'] = func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$k' AND $sql_tbl[products].forsale='Y'");
+
+		$product_count_global = $subcategories[$k]['product_count'];
 
                 $categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '%/$v[categoryid]/%' AND avail='Y'");
                 if (!empty($categoryid_arr)){
                         foreach ($categoryid_arr as $k_c => $v_catid){
-                                $product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' /* AND $sql_tbl[products_categories].main='Y' */ AND $sql_tbl[products].forsale='Y'");
+                                $product_count_global += func_query_first_cell("SELECT product_count FROM $sql_tbl[categories_subcount] WHERE categoryid='$v_catid[categoryid]'");
                         }
                 } else {
                         $categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '$v[categoryid]/%' AND avail='Y'");
                         if (!empty($categoryid_arr)){
                                 foreach ($categoryid_arr as $k_c => $v_catid){
-                                        $product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' /* AND $sql_tbl[products_categories].main='Y' */ AND $sql_tbl[products].forsale='Y'");
+					$product_count_global += func_query_first_cell("SELECT product_count FROM $sql_tbl[categories_subcount] WHERE categoryid='$v_catid[categoryid]'");
                                 }
                         }
                 }
@@ -738,23 +752,25 @@ if(!empty($subcategories) && ($current_area == 'A' || ($current_area == 'P'/* &&
 
 	}
 }
+*/
+//func_print_r($subcategories, $categories);
 
 #
 # Override subcategory_count for Customer area
 #
-if (!empty($subcategories) && $current_area == 'C') {
-	if ($config['General']['disable_outofstock_products'] == 'Y') {
-		$outofstock = ' AND p.avail>0';
-	} else {
-		$outofstock = '';
-	}
-
-	foreach ($subcategories as $k => $v) {
-//i		$subcategories[$k]['subcategory_count'] = func_query_first_cell("SELECT COUNT(subcat.categoryid) as subc FROM $sql_tbl[categories] /*USE INDEX (PRIMARY)*/ LEFT JOIN $sql_tbl[categories] as subcat ON subcat.categoryid_path LIKE CONCAT($sql_tbl[categories].categoryid_path, '/%') WHERE $sql_tbl[categories].categoryid = '$k' AND subcat.avail = 'Y' $sf_condition GROUP BY $sql_tbl[categories].categoryid");
-		$subcategories[$k]['product_count_global'] = $subcategories[$k]['product_count'];
-//		$subcategories[$k]['product_count_global'] = func_query_first_cell("SELECT COUNT(pc.productid) FROM $sql_tbl[products_categories] as pc LEFT JOIN $sql_tbl[products] as p ON p.productid=pc.productid LEFT JOIN $sql_tbl[categories] as c ON c.categoryid=pc.categoryid WHERE c.avail='Y' AND (c.categoryid_path LIKE '%/$k/%' OR c.categoryid_path LIKE '$k/%' OR c.categoryid = '$k')$outofstock AND p.forsale = 'Y'");
-	}
-}
+#if (!empty($subcategories) && $current_area == 'C') {
+#	if ($config['General']['disable_outofstock_products'] == 'Y') {
+#		$outofstock = ' AND p.avail>0';
+#	} else {
+#		$outofstock = '';
+#	}
+#
+#	foreach ($subcategories as $k => $v) {
+#//i		$subcategories[$k]['subcategory_count'] = func_query_first_cell("SELECT COUNT(subcat.categoryid) as subc FROM $sql_tbl[categories] /*USE INDEX (PRIMARY)*/ LEFT JOIN $sql_tbl[categories] as subcat ON subcat.categoryid_path LIKE CONCAT($sql_tbl[categories].categoryid_path, '/%') WHERE $sql_tbl[categories].categoryid = '$k' AND subcat.avail = 'Y' $sf_condition GROUP BY $sql_tbl[categories].categoryid");
+#		$subcategories[$k]['product_count_global'] = $subcategories[$k]['product_count'];
+#//		$subcategories[$k]['product_count_global'] = func_query_first_cell("SELECT COUNT(pc.productid) FROM $sql_tbl[products_categories] as pc LEFT JOIN $sql_tbl[products] as p ON p.productid=pc.productid LEFT JOIN $sql_tbl[categories] as c ON c.categoryid=pc.categoryid WHERE c.avail='Y' AND (c.categoryid_path LIKE '%/$k/%' OR c.categoryid_path LIKE '$k/%' OR c.categoryid = '$k')$outofstock AND p.forsale = 'Y'");
+#	}
+#}
 
 if (!empty($subcategories)) {
 
