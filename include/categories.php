@@ -639,7 +639,7 @@ if ($current_area == "C" && !empty($active_modules["Fancy_Categories"])) {
 
 $smarty->assign("allcategories", $all_categories);
 
-
+/*
 #
 ##
 ###
@@ -694,7 +694,7 @@ if (!empty($categories)){
 ###
 ##
 #
-
+*/
 
 $smarty->assign("categories", empty($categories)?"":$categories);
 
@@ -710,20 +710,24 @@ if (!empty($active_modules['Multiple_Storefronts'])) {
 
 
 
+func_print_r($subcategories);
+
+/*
 #
 # Override subcategory_count for Admin area
 #
-if(!empty($subcategories) && ($current_area == 'A' || ($current_area == 'P'/* && $active_modules['Simple_Mode']*/))) {
+if(!empty($subcategories) && ($current_area == 'A' || ($current_area == 'P'))) {
 //	$product_counts = func_query_hash("SELECT categoryid, COUNT(productid) FROM $sql_tbl[products_categories] WHERE categoryid IN ('".implode("','", array_keys($subcategories))."') GROUP BY categoryid", "categoryid", false, true);
 	foreach($subcategories as $k => $v) {
-		$subcategories[$k]['subcategory_count'] = func_query_first_cell("SELECT COUNT(subcat.categoryid) as subc FROM $sql_tbl[categories] USE INDEX (PRIMARY) LEFT JOIN $sql_tbl[categories] as subcat ON subcat.categoryid_path LIKE CONCAT($sql_tbl[categories].categoryid_path, '/%') WHERE $sql_tbl[categories].categoryid = '$k' $sf_condition GROUP BY $sql_tbl[categories].categoryid");
+//		$subcategories[$k]['subcategory_count'] = func_query_first_cell("SELECT COUNT(subcat.categoryid) as subc FROM $sql_tbl[categories] USE INDEX (PRIMARY) LEFT JOIN $sql_tbl[categories] as subcat ON subcat.categoryid_path LIKE CONCAT($sql_tbl[categories].categoryid_path, '/%') WHERE $sql_tbl[categories].categoryid = '$k' $sf_condition GROUP BY $sql_tbl[categories].categoryid");
 //		$subcategories[$k]['product_count_global'] = $subcategories[$k]['product_count'];
 //		$subcategories[$k]['product_count'] = isset($product_counts[$k]) ? intval($product_counts[$k]) : 0;
+
 
 #
 ##
 ###
-//                $product_count_global = $subcategories[$k]['product_count'] = func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$k' /* AND $sql_tbl[products_categories].main='Y' */ AND $sql_tbl[products].forsale='Y'");
+//                $product_count_global = $subcategories[$k]['product_count'] = func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$k' AND $sql_tbl[products].forsale='Y'");
 
 		$product_count_global = $subcategories[$k]['product_count'];
 
@@ -747,25 +751,25 @@ if(!empty($subcategories) && ($current_area == 'A' || ($current_area == 'P'/* &&
 
 	}
 }
-
+*/
 //func_print_r($subcategories, $categories);
 
 #
 # Override subcategory_count for Customer area
 #
-if (!empty($subcategories) && $current_area == 'C') {
-	if ($config['General']['disable_outofstock_products'] == 'Y') {
-		$outofstock = ' AND p.avail>0';
-	} else {
-		$outofstock = '';
-	}
-
-	foreach ($subcategories as $k => $v) {
-//i		$subcategories[$k]['subcategory_count'] = func_query_first_cell("SELECT COUNT(subcat.categoryid) as subc FROM $sql_tbl[categories] /*USE INDEX (PRIMARY)*/ LEFT JOIN $sql_tbl[categories] as subcat ON subcat.categoryid_path LIKE CONCAT($sql_tbl[categories].categoryid_path, '/%') WHERE $sql_tbl[categories].categoryid = '$k' AND subcat.avail = 'Y' $sf_condition GROUP BY $sql_tbl[categories].categoryid");
-		$subcategories[$k]['product_count_global'] = $subcategories[$k]['product_count'];
-//		$subcategories[$k]['product_count_global'] = func_query_first_cell("SELECT COUNT(pc.productid) FROM $sql_tbl[products_categories] as pc LEFT JOIN $sql_tbl[products] as p ON p.productid=pc.productid LEFT JOIN $sql_tbl[categories] as c ON c.categoryid=pc.categoryid WHERE c.avail='Y' AND (c.categoryid_path LIKE '%/$k/%' OR c.categoryid_path LIKE '$k/%' OR c.categoryid = '$k')$outofstock AND p.forsale = 'Y'");
-	}
-}
+#if (!empty($subcategories) && $current_area == 'C') {
+#	if ($config['General']['disable_outofstock_products'] == 'Y') {
+#		$outofstock = ' AND p.avail>0';
+#	} else {
+#		$outofstock = '';
+#	}
+#
+#	foreach ($subcategories as $k => $v) {
+#//i		$subcategories[$k]['subcategory_count'] = func_query_first_cell("SELECT COUNT(subcat.categoryid) as subc FROM $sql_tbl[categories] /*USE INDEX (PRIMARY)*/ LEFT JOIN $sql_tbl[categories] as subcat ON subcat.categoryid_path LIKE CONCAT($sql_tbl[categories].categoryid_path, '/%') WHERE $sql_tbl[categories].categoryid = '$k' AND subcat.avail = 'Y' $sf_condition GROUP BY $sql_tbl[categories].categoryid");
+#		$subcategories[$k]['product_count_global'] = $subcategories[$k]['product_count'];
+#//		$subcategories[$k]['product_count_global'] = func_query_first_cell("SELECT COUNT(pc.productid) FROM $sql_tbl[products_categories] as pc LEFT JOIN $sql_tbl[products] as p ON p.productid=pc.productid LEFT JOIN $sql_tbl[categories] as c ON c.categoryid=pc.categoryid WHERE c.avail='Y' AND (c.categoryid_path LIKE '%/$k/%' OR c.categoryid_path LIKE '$k/%' OR c.categoryid = '$k')$outofstock AND p.forsale = 'Y'");
+#	}
+#}
 
 if (!empty($subcategories)) {
 
