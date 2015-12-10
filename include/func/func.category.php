@@ -305,6 +305,14 @@ function func_recalc_product_count($categoryid = false, $tick = 0) {
 function func_recalc_subcat_count($categoryid = false, $tick = 0) {
 	global $sql_tbl, $config;
 
+#
+##  https://basecamp.com/2070980/projects/1577907/messages/51812349
+### CRON: products and subcategories count
+        return true;
+###
+##
+#
+
 	$where = "";
 	if ($categoryid !== false) {
 		if (empty($categoryid)) {
