@@ -96,7 +96,7 @@ Order By C2.categoryid_path desc");
                                 $new_subcategory_count = $c_v["subcategory_count"] - $current_subcategory_count + $real_subcategory_count;
                                 $new_vals[$cat]["subcategory_count"] = $new_subcategory_count;
 
-				db_query("UPDATE $sql_tbl[categories_subcount] SET product_count='$new_product_count', subcategory_count='$new_subcategory_count' WHERE categoryid='$cat'");
+				db_query("UPDATE $sql_tbl[categories_subcount] SET global_product_count='$new_product_count', product_count='$real_product_count', subcategory_count='$new_subcategory_count' WHERE categoryid='$cat'");
 			}
 		}
 	}
@@ -137,7 +137,7 @@ From xcart_categories C
 where C.categoryid = '$record[resourceid]'
 Order By C2.categoryid_path desc");
 
-		db_query("UPDATE $sql_tbl[categories_subcount] SET product_count='$p_count_sum', subcategory_count='$c_count' WHERE categoryid='$record[resourceid]'");
+		db_query("UPDATE $sql_tbl[categories_subcount] SET global_product_count='$p_count_sum', product_count='$p_count_in_current_cat', subcategory_count='$c_count' WHERE categoryid='$record[resourceid]'");
 
 		$parentid = func_query_first_cell("SELECT parentid FROM $sql_tbl[categories] WHERE categoryid='$record[resourceid]'");
 
