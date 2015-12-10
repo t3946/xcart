@@ -76,7 +76,7 @@ function func_delete_category($cat) {
 		db_exec("DELETE FROM $sql_tbl[categories_parents] WHERE categoryid IN (?)", array($subcats));
 # END: random:20766 [2010 May 11 13:18] 
 		db_exec("DELETE FROM $sql_tbl[products_categories] WHERE categoryid IN (?)", array($subcats));
-		db_exec("DELETE FROM $sql_tbl[categories_subcount] WHERE categoryid IN (?)", array($subcats));
+//		db_exec("DELETE FROM $sql_tbl[categories_subcount] WHERE categoryid IN (?)", array($subcats));
 		db_exec("DELETE FROM $sql_tbl[featured_products] WHERE categoryid IN (?)", array($subcats));
 		db_exec("DELETE FROM $sql_tbl[categories_lng] WHERE categoryid IN (?)", array($subcats));
 		db_exec("DELETE FROM $sql_tbl[category_memberships] WHERE categoryid IN (?)", array($subcats));
