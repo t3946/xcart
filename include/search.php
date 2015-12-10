@@ -386,7 +386,7 @@ if ($mode == "search") {
 		"on" => "$sql_tbl[quick_prices].productid = $sql_tbl[products].productid /*AND $sql_tbl[quick_prices].membershipid $membershipid_string*/"
 	);
 //	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
-	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity<=$sql_tbl[products].min_amount";
+	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid /*and $sql_tbl[pricing].quantity<=$sql_tbl[products].min_amount*/";
 	$fields[] = "$sql_tbl[quick_prices].variantid";
 /*
 	if ($user_account['membershipid'] == 0) {
