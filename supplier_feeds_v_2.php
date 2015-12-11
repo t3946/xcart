@@ -944,7 +944,7 @@ die();
 
                             if ($count_products > 0){
 
-                                $manufacturer_code_products = db_query("SELECT productid, UCASE(productcode), forsale, update_search_index, provider FROM $sql_tbl[products] WHERE (UCASE(productcode) LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
+                                $manufacturer_code_products = db_query("SELECT productid, productcode, forsale, update_search_index, provider FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 
                                 $line_number = 0;
                                 print "<br />Second iteration:<br />";
