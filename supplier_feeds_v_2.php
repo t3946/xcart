@@ -9,7 +9,7 @@ set_time_limit(0);
 ini_set('memory_limit', '512M');
 
 if ($config["supplier_feeds_v_2"] == "Y"){
-//        die("Already launched"); // ################################
+        die("Already launched"); // ################################
 }
 db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='supplier_feeds_v_2'");
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
@@ -334,7 +334,7 @@ func_print_r($p, $productid);
 					}
 				}
 
-				$not_Xcart_products_fields = $p;
+				$not_xcart_products_fields = $p;
 
 				$just_created = false;
 
