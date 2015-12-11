@@ -255,7 +255,7 @@ foreach ($supplier_feeds as $k => $v){
                                         continue;
                                 }
 
-                                $productcode = $p["productcode"];
+                                $productcode = strtoupper(trim($p["productcode"]));
                                 $productid = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='$productcode'");
 
 
@@ -937,14 +937,14 @@ die();
 
 			    print("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' or productcode like '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 			    print("\r\n");
-               	            $count_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
+               	$count_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 
-			    print($count_products." for slae = Y\r\n");
+			    print($count_products." for sale = Y\r\n");
 
 
                             if ($count_products > 0){
 
-                                $manufacturer_code_products = db_query("SELECT productid, productcode, forsale, update_search_index, provider FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
+                                $manufacturer_code_products = db_query("SELECT productid, UCASE(productcode), forsale, update_search_index, provider FROM $sql_tbl[products] WHERE (UCASE(productcode) LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 
                                 $line_number = 0;
                                 print "<br />Second iteration:<br />";
@@ -963,9 +963,8 @@ die();
 
                                         $_productcode = strtoupper(trim($prod["productcode"]));
                                         if (!in_array($_productcode, $all_feed_productcodes) && $prod["forsale"] != "N") {
-//                                                $discontinued_products[] = $prod;
 
-						$discontinued_products_count++;
+												$discontinued_products_count++;
 
                                                 $update_search_index = $prod["update_search_index"];
                                                 if ($update_search_index == "N"){
