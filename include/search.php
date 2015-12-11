@@ -386,7 +386,7 @@ if ($mode == "search") {
 		"on" => "$sql_tbl[quick_prices].productid = $sql_tbl[products].productid /*AND $sql_tbl[quick_prices].membershipid $membershipid_string*/"
 	);
 //	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
-	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity<=$sql_tbl[products].min_amount";
+	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid /*and $sql_tbl[pricing].quantity<=$sql_tbl[products].min_amount*/";
 	$fields[] = "$sql_tbl[quick_prices].variantid";
 /*
 	if ($user_account['membershipid'] == 0) {
@@ -649,8 +649,8 @@ if ($current_storefront == ""){ // https://basecamp.com/2070980/projects/1577907
 
 		if (!empty($data["search_in_subcategories"])) {
 			# Search also in all subcategories
-			$categoryid_path = addslashes(func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='".$data["categoryid"]."' and $sql_tbl[categories].storefrontid = ".$current_storefront));
-			$categoryids = func_query_column("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid='".$data["categoryid"]."' OR categoryid_path LIKE '$categoryid_path/%' and $sql_tbl[categories].storefrontid = ".$current_storefront);
+			$categoryid_path = addslashes(func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE avail='Y' and categoryid='".$data["categoryid"]."' and $sql_tbl[categories].storefrontid = ".$current_storefront));
+			$categoryids = func_query_column("SELECT categoryid FROM $sql_tbl[categories] WHERE  avail='Y' and (categoryid='".$data["categoryid"]."' OR categoryid_path LIKE '$categoryid_path/%') and $sql_tbl[categories].storefrontid = ".$current_storefront);
 
 			if (is_array($categoryids) && !empty($categoryids)) {
 				$where[] = "$sql_tbl[products_categories].categoryid $category_sign IN (".implode(",", $categoryids).")";

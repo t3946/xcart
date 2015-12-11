@@ -59,7 +59,7 @@ Where PC.categoryid = '$record[resourceid]'");
 		$current_subcategory_count = $record["subcategory_count"];
                 $real_subcategory_count = func_query_first_cell("Select Count(C2.categoryid)
 From xcart_categories C
-        left join xcart_categories C2 ON C2.categoryid_path like CONCAT(C.categoryid_path,'/%') and C2.avail = 'Y'
+        left join xcart_categories C2 ON C2.categoryid_path like CONCAT(C.categoryid_path,'/%') /*and C2.avail = 'Y'*/
 where C.categoryid = '$record[resourceid]'
 Order By C2.categoryid_path desc");
 
@@ -102,7 +102,7 @@ Order By C2.categoryid_path desc");
 
 		$p_count_in_cats_below = func_query_first_cell("Select SUM(C.global_product_count) As p_count
 from xcart_categories C
-where C.parentid = '$record[resourceid]' and C.avail = 'Y'");
+where C.parentid = '$record[resourceid]' /*and C.avail = 'Y'*/");
 
 		$p_count_in_current_cat = func_query_first_cell("Select COUNT(distinct PC.productid) As cp_count
 From xcart_products_categories PC
@@ -115,7 +115,7 @@ Where PC.categoryid = '$record[resourceid]'");
 
 		$c_count = func_query_first_cell("Select Count(C2.categoryid)
 From xcart_categories C
-        left join xcart_categories C2 ON C2.categoryid_path like CONCAT(C.categoryid_path,'/%') and C2.avail = 'Y'
+        left join xcart_categories C2 ON C2.categoryid_path like CONCAT(C.categoryid_path,'/%') /*and C2.avail = 'Y'*/
 where C.categoryid = '$record[resourceid]'
 Order By C2.categoryid_path desc");
 
