@@ -11,6 +11,10 @@
 <a href="{$catalogs.admin}/categories.php" class="VertMenuItems">{$lng.lbl_categories}{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a><br />
 {/if}
 
+{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR")}
+<a href="{$catalogs.admin}/classification.php" class="VertMenuItems">Classification</a><br />
+{/if}
+
 {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
 <a href="{$catalogs.admin}/empty_categories.php" class="VertMenuItems">Empty categories{if $active_modules.Multiple_Storefronts} {$lng.lbl_sf}{/if}</a><br />
 {/if}
@@ -37,12 +41,6 @@
 <a href="{$catalogs.admin}/grandfathered_products.php" class="VertMenuItems">{$lng.lbl_grandfathered_products}</a><br />
 {/if}
 
-{if $allowed_elements.LeftLink_Reports eq "Y"}
-{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER")}
-<a href="{$catalogs.admin}/reports.php" class="VertMenuItems">Reports</a><br />
-{/if}
-{/if}
-
 {*
 {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
 <a href="{$catalogs.admin}/product_reports.php" class="VertMenuItems">{$lng.lbl_product_reports}</a><br />
@@ -56,9 +54,14 @@
 {/if}
 
 {if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}
-{*
 <a href="{$catalogs.admin}/order_reports.php" class="VertMenuItems">{$lng.lbl_order_reports}</a><br />
-*}
+{/if}
+
+{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR")}
+<a href="{$catalogs.admin}/order_status_notifications.php" class="VertMenuItems">{$lng.lbl_order_status_notifications}</a><br />
+{/if}
+
+{if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}
 
 <a href="{$catalogs.admin}/shipping_quotes_log.php?mode=search" class="VertMenuItems">Shipping quotes log</a><br />
 {/if}
@@ -72,7 +75,11 @@
 
 <a href="{$catalogs.admin}/reconciliation.php" class="VertMenuItems">Reconciliation</a><br />
 
-<a href="{$catalogs.admin}/classification.php" class="VertMenuItems">Classification</a><br />
+{if $allowed_elements.LeftLink_Reports eq "Y"}
+{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER")}
+<a href="{$catalogs.admin}/reports.php" class="VertMenuItems">Reports</a><br />
+{/if}
+{/if}
 
 <a href="{$catalogs.admin}/ab_testing.php" class="VertMenuItems">A/B testing</a><br />
 {*
@@ -80,7 +87,6 @@
 *}
 <a href="{$catalogs.admin}/backprocess_logs.php" class="VertMenuItems">Backprocess logs</a><br />
 
-<a href="{$catalogs.admin}/order_status_notifications.php" class="VertMenuItems">{$lng.lbl_order_status_notifications}</a><br />
 {/if}
 
 {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
@@ -105,10 +111,6 @@
 <a href="{$catalogs.admin}/track_links.php" class="VertMenuItems">{$lng.lbl_tracking_links}</a><br />
 {/if}
 
-{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-<a href="{$catalogs.admin}/taxes.php" class="VertMenuItems">{$lng.lbl_taxing_system}</a><br />
-{/if}
-
 {if $active_modules.Customer_Reviews ne ""}
 <a href="{$catalogs.admin}/ratings_edit.php" class="VertMenuItems">{$lng.lbl_edit_ratings}</a><br />
 {/if}
@@ -119,6 +121,10 @@
 
 {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
 <a href="{$catalogs.admin}/states.php" class="VertMenuItems">{$lng.lbl_states}</a><br />
+{/if}
+
+{if !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
+<a href="{$catalogs.admin}/taxes.php" class="VertMenuItems">{$lng.lbl_taxing_system}</a><br />
 {/if}
 
 {if $active_modules.Stop_List ne ""}
