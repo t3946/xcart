@@ -281,7 +281,8 @@ func_print_r($p, $productid);
 #
 ##
 ###
-                                        db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
+//                                        db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
+                                        db_query("UPDATE $sql_tbl[products] SET controlled_by_feed='$v[feed_file_name]' WHERE productid='$productid'");
 ###
 ##
 #
@@ -474,7 +475,7 @@ die();
 						$product["product"] = $new_product_name_arr[0];
 
 	                                        $time = time();
-        	                                db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid) VALUES ('$productcode', '$v[feed_file_name]', '$v[feed_file_name]','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]')");
+        	                                db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid, controlled_by_feed) VALUES ('$productcode', '$v[feed_file_name]', '$v[feed_file_name]','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]', '$v[feed_file_name]')");
                 	                        $productid = db_insert_id();
 
 						db_query("INSERT INTO $sql_tbl[products_categories] (categoryid, productid, main) VALUES ('$v[base_category_id]', '$productid', 'Y')");
@@ -508,7 +509,8 @@ die();
 #
 ##
 ###
-						db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
+//						db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
+						db_query("UPDATE $sql_tbl[products] SET controlled_by_feed='$v[feed_file_name]' WHERE productid='$productid'");
 ###
 ##
 #
@@ -926,7 +928,8 @@ die();
                                         $provider_search_cond2 = str_replace($current_letter_in_replacement.".", $set_new_letter_for_replacement.".", $provider_search_cond1);
                                 }
 
-                                $provider_search_cond = " AND (provider='$provider_search_cond1' OR provider='$provider_search_cond2')";
+//                                $provider_search_cond = " AND (provider='$provider_search_cond1' OR provider='$provider_search_cond2')";
+                                $provider_search_cond = " AND (controlled_by_feed='$provider_search_cond1' OR controlled_by_feed='$provider_search_cond2')";
 			    }
 			    else {
 				$provider_search_cond = "";
