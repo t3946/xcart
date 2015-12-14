@@ -49,8 +49,26 @@ $checks_deposited_id = intval($checks_deposited_id);
 
 if ($REQUEST_METHOD == "POST") {
 
-//	if ($mode == "add_order" || $mode == "update_deposit")
-	if ($mode == "update_deposit"){
+	if ($mode == "unfreeze_order"){
+
+		$orig_unfreeze_orderid = $unfreeze_orderid;
+
+		if (strpos($unfreeze_orderid,"-") !== false){
+                                $unfreeze_orderid_arr = explode("-", $unfreeze_orderid);
+                                $unfreeze_orderid = $unfreeze_orderid_arr["1"];
+		}
+		$unfreeze_orderid = trim($unfreeze_orderid);
+
+		if (!empty($unfreeze_orderid)){
+			db_query("UPDATE $sql_tbl[orders] SET unfreeze_cb_status='Y' WHERE orderid='$unfreeze_orderid'");
+
+	                $top_message["content"] = 'C2B payment status for order # '.$orig_unfreeze_orderid.' has been unfrozen.';
+               		$top_message["type"] = "I";
+
+		        func_header_location("checks_deposited.php");
+		}
+	}
+	elseif ($mode == "update_deposit"){
 
 		$checks_deposited["currency"] = $currency;
 
