@@ -3573,15 +3573,20 @@ if (!empty($checks_deposited_order)){
 	$smarty->assign("checks_deposited_order", $checks_deposited_order);
 }
 
-if (!empty($config["Checks_deposited_options"]["Checks_deposited_Attention_tag"])){
+if (!empty($config["Purchase_Order"]["Checks_deposited_Attention_tag"])){
+	if ($order["unfreeze_cb_status"] == "Y"){
+		$allowed_to_modify_cb_status_IO_O = true;
+	}
+	else {
 
-	$allowed_to_modify_cb_status_IO_O = false;
+		$allowed_to_modify_cb_status_IO_O = false;
 	
-	if (!empty($attention_tags_values[$config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]]["operators"]) && is_array($attention_tags_values[$config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]]["operators"])){
-		foreach ($attention_tags_values[$config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]]["operators"] as $k => $v){
-			if ($v["action"] == "unset" && ($v["login"] == $login || $v["login"] == "_ANY_")){
-				$allowed_to_modify_cb_status_IO_O = true;
-				break;
+		if (!empty($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"]) && is_array($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"])){
+			foreach ($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"] as $k => $v){
+				if ($v["action"] == "unset" && ($v["login"] == $login || $v["login"] == "_ANY_")){
+					$allowed_to_modify_cb_status_IO_O = true;
+					break;
+				}
 			}
 		}
 	}
