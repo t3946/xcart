@@ -475,7 +475,8 @@ die();
 						$product["product"] = $new_product_name_arr[0];
 
 	                                        $time = time();
-        	                                db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid, controlled_by_feed) VALUES ('$productcode', '$v[feed_file_name]', '$v[feed_file_name]','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]', '$v[feed_file_name]')");
+//        	                                db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid, controlled_by_feed) VALUES ('$productcode', '$v[feed_file_name]', '$v[feed_file_name]','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]', '$v[feed_file_name]')");
+        	                                db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid) VALUES ('$productcode', '$v[feed_file_name]', '$v[feed_file_name]','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]')");
                 	                        $productid = db_insert_id();
 
 						db_query("INSERT INTO $sql_tbl[products_categories] (categoryid, productid, main) VALUES ('$v[base_category_id]', '$productid', 'Y')");
@@ -510,7 +511,7 @@ die();
 ##
 ###
 //						db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
-						db_query("UPDATE $sql_tbl[products] SET controlled_by_feed='$v[feed_file_name]' WHERE productid='$productid'");
+//						db_query("UPDATE $sql_tbl[products] SET controlled_by_feed='$v[feed_file_name]' WHERE productid='$productid'");
 ###
 ##
 #

@@ -488,7 +488,7 @@ Select
 			P.productcode As 'SKU',
 			P.product As 'Product name',
 			M.manufacturer As 'Distributor',
-			M.d_enable_feed As 'Has inventory feed',
+			SF.enabled As 'Has inventory feed',
 			SUM(OD.amount) As 'Units sold',
 			COUNT(distinct O.orderid) As 'Orders received',
 			PR.price As 'X-Cart price',
@@ -505,7 +505,8 @@ From xcart_products P
 		inner join xcart_order_groups OG ON OG.orderid = O.orderid and OG.manufacturerid = P.manufacturerid and OG.cb_status = 'P'
 		left join xcart_manufacturers M ON M.manufacturerid = P.manufacturerid
 		left join xcart_pricing PR ON PR.productid = P.productid and PR.quantity = 1 
-where P.forsale = 'Y' and O.date > UNIX_TIMESTAMP(DATE_ADD(NOW(),INTERVAL -$Amazon_FBA_Report_depth_months MONTH)) and M.d_enable_feed = 'Y' AND P.amazon_enabled != 'Y'
+		LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = P.manufacturerid and SF.feed_type = 'I' and SF.feed_file_name = P.provider
+where P.forsale = 'Y' and O.date > UNIX_TIMESTAMP(DATE_ADD(NOW(),INTERVAL -$Amazon_FBA_Report_depth_months MONTH)) and SF.enabled = 'Y' AND P.amazon_enabled != 'Y'
 Group By P.productid
 Order By IF(PriceBounce.fba_get_bb_price(P.productid) = 0,COALESCE(1 / P.cost_to_us + PriceBounce.fba_Get_Xi(P.productid, $Amazon_FBA_Report_Tau),0),
 	    COALESCE(0.1*(PriceBounce.fba_get_bb_price(P.productid) - xcart_k.cidev_get_minimum_amazon_price(P.productid)) / P.cost_to_us + PriceBounce.fba_Get_Xi(P.productid, $Amazon_FBA_Report_Tau),0)) desc

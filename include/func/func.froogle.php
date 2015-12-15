@@ -47,39 +47,6 @@ function GetGooglePrice($fproduct){
 			}
 	
 
-/*
-
-
-		
-		
-		$price_min_amount = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$product[productid]' AND quantity <= '$product[min_amount]' ORDER BY quantity DESC LIMIT 1");
-		if ($price_min_amount < $product["new_map_price"])
-			{
-				$price_min_amount = $product["new_map_price"];
-			}
-
-        if ($product["min_amount"] > 1 && $product["mult_order_quantity"] == "Y"){
-			if ($product["d_enable_feed"] == "Y" && $product_availability == "out of stock"){
-				$price_min_amount = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["new_map_price"]);
-				}
-			if ($product_availability == "out of stock")
-				{
-					$product_price = $price_min_amount;
-				}
-			else
-				{
-					$product_price = $price_min_amount * $product["min_amount"];
-				}
-        }
-		else {
-			if ($product["d_enable_feed"] == "Y" && $product_availability == "out of stock"){
-				$product_price = func_decreased_price($product["cost_to_us"], $price_min_amount, $product["new_map_price"]);
-			}
-			else {
-				$product_price = $price_min_amount;
-			}
-		}
-*/	
 	return $product_price;
 }
 
@@ -131,9 +98,13 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	}
 
 	if (!empty($active_modules['Manufacturers'])) {
-		$fields .= ", IF ($sql_tbl[manufacturers_lng].manufacturer != '', $sql_tbl[manufacturers_lng].manufacturer, $sql_tbl[manufacturers].manufacturer) as manufacturer, $sql_tbl[manufacturers].d_enable_feed";
+		$fields .= ", IF ($sql_tbl[manufacturers_lng].manufacturer != '', $sql_tbl[manufacturers_lng].manufacturer, $sql_tbl[manufacturers].manufacturer) as manufacturer ";
 		$joins .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[products].manufacturerid = $sql_tbl[manufacturers].manufacturerid LEFT JOIN $sql_tbl[manufacturers_lng] ON $sql_tbl[products].manufacturerid = $sql_tbl[manufacturers_lng].manufacturerid AND $sql_tbl[manufacturers_lng].code = '$froogle_lng'";
 	}
+
+        $joins .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' and SF.feed_file_name = xcart_products.provider";
+        $fields .= ", SF.enabled as supplier_feeds_enabled ";
+
 
 	if (!empty($active_modules['Brands'])) {
 		$fields .= ", IF ($sql_tbl[brands_lng].brand != '', $sql_tbl[brands_lng].brand, $sql_tbl[brands].brand) as brand";
@@ -604,9 +575,12 @@ function GetTheFindOneRow($productid){
         }
 
         if (!empty($active_modules['Manufacturers'])) {
-                $fields .= ", IF ($sql_tbl[manufacturers_lng].manufacturer != '', $sql_tbl[manufacturers_lng].manufacturer, $sql_tbl[manufacturers].manufacturer) as manufacturer, $sql_tbl[manufacturers].d_enable_feed";
+                $fields .= ", IF ($sql_tbl[manufacturers_lng].manufacturer != '', $sql_tbl[manufacturers_lng].manufacturer, $sql_tbl[manufacturers].manufacturer) as manufacturer ";
                 $joins .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[products].manufacturerid = $sql_tbl[manufacturers].manufacturerid LEFT JOIN $sql_tbl[manufacturers_lng] ON $sql_tbl[products].manufacturerid = $sql_tbl[manufacturers_lng].manufacturerid AND $sql_tbl[manufacturers_lng].code = '$froogle_lng'";
         }
+
+        $joins .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' and SF.feed_file_name = xcart_products.provider";
+        $fields .= ", SF.enabled as supplier_feeds_enabled ";
 
         if (!empty($active_modules['Brands'])) {
                 $fields .= ", IF ($sql_tbl[brands_lng].brand != '', $sql_tbl[brands_lng].brand, $sql_tbl[brands].brand) as brand";
@@ -1122,7 +1096,7 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
                 $joins .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[variants].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].variantid = $sql_tbl[variants].variantid";
                 $where = " AND $sql_tbl[products_sf].productid = '$v[productid]' AND IFNULL($sql_tbl[variants].avail, $sql_tbl[products].avail) >= '0'";
 
-                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].new_map_price, $sql_tbl[products].r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
+                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].provider, $sql_tbl[products].new_map_price, $sql_tbl[products].r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
 				
 				$product_availability = $product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
@@ -1130,7 +1104,7 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 					{
 						$product['multipack'] = $product["min_amount"];
 					}
-                $product["d_enable_feed"] = func_query_first_cell("SELECT d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid='".$product['manufacturerid']."'");
+                $product["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$product[manufacturerid]' AND feed_file_name='$product[provider]' AND feed_type = 'I'");
 		
 				
 				$product['price'] = price_format(GetGooglePrice($product));
