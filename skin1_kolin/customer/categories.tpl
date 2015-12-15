@@ -26,7 +26,7 @@
 {/foreach}
 
 {if $show_see_more eq "Y"}
-<div id="div_id_brands_see_more" align="right"><a id="brands_see_more" href="brands.php">see more...</a></div>
+<div id="div_id_brands_see_more" align="right"><a id="brands_see_more" href="/brands.php">see more...</a></div>
 {/if}
 
 </td></tr>
@@ -62,7 +62,7 @@
 {/foreach}
 
 {if $show_see_more eq "Y"}
-<div id="div_id_brands_see_more" align="right"><a id="brands_see_more" href="brands.php">see more...</a></div>
+<div id="div_id_brands_see_more" align="right"><a id="brands_see_more" href="/brands.php">see more...</a></div>
 {/if}
 
 
