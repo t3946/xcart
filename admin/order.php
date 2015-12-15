@@ -1915,6 +1915,9 @@ if ($mode == 'ref_notify') {
 /*    if ($ref_notify_do_not_send_email == "Y"){ */
     if ($ref_notify_button_clicked == "Update_C2B_status"){
 	$log = "'Update C2B status' at 'Refund'";
+    }
+    elseif ($ref_notify_button_clicked == "Send_refund_notification"){
+	$log = "'Send refund notification' at 'Refund'";
     } else {
 	$log = "'Update C2B status and Send refund notification' at 'Refund'";
     }
@@ -1996,10 +1999,10 @@ if ($mode == 'ref_notify') {
 
 	    if ($ref_notify_button_clicked == "Update_C2B_status"){
 		    func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
-	    } elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification"){
+	    } elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" || $ref_notify_button_clicked == "Send_refund_notification"){
 
 /*	    if ($ref_notify_do_not_send_email != "Y"){ */
-	            func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid);
+	            func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid, false);
             // Copy to Orders Department
 	            func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
 
