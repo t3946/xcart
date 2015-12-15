@@ -173,15 +173,20 @@ Refund # {$order.order_prefix}{$order.orderid}-REF
   </td>
 </tr>
 
-<tr id="refund_group_{$mid}" {if $group.cb_status eq "3" || $group.cb_status eq "V"}style="background: #F4CCCC;"{else}style="display: none;"{/if}>
+<tr id="refund_group_{$mid}" {if $group.cb_status eq "3" || $group.cb_status eq "V"}style="background: #F4CCCC;"{elseif $group.cb_status eq "H" || $group.cb_status eq "R"}style="background: #fff2cc;"{else}style="display: none;"{/if}>
   <td colspan="{$colspan}">
 
+{*
     {if $group.cb_status ne "3" && $group.cb_status ne "V"}
     <input type="button" value="Update C2B status" onclick="javascript: $('#ref_notify_button_clicked').val('Update_C2B_status'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
     {/if}
+*}
 
-
+  {if $group.cb_status eq "3" || $group.cb_status eq "V"}
     <input type="button" value="Update C2B status and Send refund notification" onclick="javascript: $('#ref_notify_button_clicked').val('Update_C2B_status_and_Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
+  {elseif $group.cb_status eq "H" || $group.cb_status eq "R"}
+    <input type="button" value="Send refund notification" onclick="javascript: $('#ref_notify_button_clicked').val('Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
+  {/if}
 
     {$lng.lbl_ref_notify_status|cat:":"}
     {if $order.refund_groups[$mid].notify_status eq 'S'}
