@@ -130,7 +130,7 @@ func_print_r($f_new_prod_ids);
         	$f_new_prod_ids_arr = array();
 	        foreach ($f_new_prod_ids as $k => $v){
         	        if (!empty($v["productid"])){
-                	        $f_new_prod_ids_arr[] = $v; //["productid","d_enable_feed"];
+                	        $f_new_prod_ids_arr[] = $v; 
 	                }
         	}
 

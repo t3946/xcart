@@ -1788,7 +1788,7 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 			$manufacturerids_in_found_products = array_unique($manufacturerids_in_found_products);
 			$manufacturerids_in_found_products = array_values($manufacturerids_in_found_products);
 
-			$manufacturers_in_found_products = func_query_hash("SELECT manufacturerid, allow_pre_orders, reverse_sku, remove_dashes, lead_time_message, d_enable_feed FROM $sql_tbl[manufacturers] WHERE manufacturerid IN ('".implode("','", $manufacturerids_in_found_products)."')", 'manufacturerid', false);
+			$manufacturers_in_found_products = func_query_hash("SELECT manufacturerid, allow_pre_orders, reverse_sku, remove_dashes, lead_time_message FROM $sql_tbl[manufacturers] WHERE manufacturerid IN ('".implode("','", $manufacturerids_in_found_products)."')", 'manufacturerid', false);
 			
 
                         foreach ($products as $k => $v) {
@@ -1832,10 +1832,10 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 ## Calculate correct price
 ###
 				$products[$k]["product_availability"] = func_product_availability(false,false,false,false,false,$products[$k]);
-				$products[$k]["d_enable_feed"] = $manufacturers_in_found_products[$v["manufacturerid"]]["d_enable_feed"];
+				$products[$k]["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_file_name='$v[provider]' AND feed_type = 'I'");
 				$products[$k]["price"] = $products[$k]["taxed_price"] = func_product_price($products[$k]);
 
-				if ($products[$k]["d_enable_feed"] == "Y" && empty($v["is_variants"]) && $products[$k]["product_availability"] == "out of stock"){
+				if ($products[$k]["supplier_feeds_enabled"] == "Y" && empty($v["is_variants"]) && $products[$k]["product_availability"] == "out of stock"){
 					$new_notify_in_stock_price = $products[$k]["price"];
 					$products[$k]["new_notify_in_stock_price"] = $new_notify_in_stock_price;
 				}
