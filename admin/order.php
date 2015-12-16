@@ -3608,7 +3608,7 @@ if (!empty($config["Purchase_Order"]["Checks_deposited_Attention_tag"])){
 ###
 //func_print_r($order);
 
-$other_customer_orders = func_query("SELECT orderid, order_prefix, fraud_status FROM $sql_tbl[orders] WHERE email='$order[email]' AND orderid!='$orderid'");
+$other_customer_orders = func_query("SELECT orderid, order_prefix, fraud_status FROM $sql_tbl[orders] WHERE email='$order[email]' AND orderid!='$orderid' ORDER BY orderid DESC");
 
 if (!empty($other_customer_orders)){
 
