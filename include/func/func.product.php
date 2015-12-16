@@ -1555,12 +1555,16 @@ function func_generate_discounts($productids) {
                                 $v_arr = explode(":",$v);
 
                                 $quantity = trim($v_arr[0]);
+				$quantity = intval($quantity);
                                 $kef = trim($v_arr[1]);
 			        /*db_query("INSERT INTO xcart_k.xcart_backprocess_logs (`process_id`,`log_text`) VALUES ('zzz',CONCAT(".$productids[0].",".($p[0]["price"] * (1 - $kef))."))");*/
                                 
                                 $price = $p[0]["price"] * (1 - $kef);
                                 $price = price_format($price);
 
+				db_query("INSERT INTO $sql_tbl[pricing] (productid, quantity, price) VALUES ('$productid', '$quantity', '$price') ON DUPLICATE KEY UPDATE price='$price'");
+
+/*
                                 $query_data = array(
                                                     "productid" => $productid,
                                                     "quantity" => intval($quantity),
@@ -1568,6 +1572,7 @@ function func_generate_discounts($productids) {
                                                     "membershipid" => '0'
                                 );
                                 func_array2insert("pricing", $query_data, true);
+*/
                         }
                 }
             }
@@ -1587,6 +1592,13 @@ function func_generate_discounts($productids) {
                 foreach (explode(",",$p[0]["discount_table"]) as $v) {
                         if (intval($v)) {
 
+				$v = intval($v);
+				$price = (1 - $p[0]["discount_slope"] * log($v,2) / 100) * $p[0]["price"];
+				$price = price_format($price);
+
+				db_query("INSERT INTO $sql_tbl[pricing] (productid, quantity, price) VALUES ('$productid', '$v', '$price') ON DUPLICATE KEY UPDATE price='$price'");
+
+/*
                                 $query_data = array(
                                                     "productid" => $productid,
                                                     "quantity" => intval($v),
@@ -1594,6 +1606,7 @@ function func_generate_discounts($productids) {
                                                     "membershipid" => '0'
                                 );
                                 func_array2insert("pricing", $query_data, true);
+*/
                         }
                 }
             }
@@ -1602,7 +1615,7 @@ function func_generate_discounts($productids) {
 
 	    db_query("DELETE FROM xcart_quick_prices where productid = '$productid' and membershipid = 0 and variantid = 0 and priceid != '$price_id'");
 
-	    db_query("REPLACE INTO xcart_quick_prices (productid,priceid,variantid, membershipid) VALUES ('$productid','$price_id',0,0)");
+	    db_query("REPLACE INTO xcart_quick_prices (productid,priceid,variantid, membershipid) VALUES ('$productid','$price_id',0,0) ON DUPLICATE KEY UPDATE productid='$productid', priceid='$price_id', variantid='0'");
 
         }
 }
