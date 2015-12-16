@@ -101,16 +101,18 @@ if ($mode == 'search') {
 
 		if ($secure_check == $om && !empty($s) && !empty($o) && !empty($m)){
 			$current_dc_status = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$o' AND manufacturerid='$m'");
+			$distr_code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$m'");
+
 			if ($current_dc_status == "C"){
-
-				$distr_code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$m'");
 				$log = "<B>".$distr_code.":</B> Distributor confirmed that the order has been received";
-				func_log_order($o, 'X', $log, 'Distributor ('.$distr_code.')');
-
 				db_query("UPDATE $sql_tbl[order_groups] SET dc_status='L', dc_received_by_distributor_time='".time()."' WHERE orderid = '$o' AND manufacturerid='$m'");
 			} else {
-				func_header_location($xcart_web_dir . DIR_CUSTOMER . '/index.php');
+//				func_header_location($xcart_web_dir . DIR_CUSTOMER . '/index.php');
+                                $log = "<B>".$distr_code.":</B> Distributor confirmed that the order has been received. (But he did it before already.)";
 			}
+
+			func_log_order($o, 'X', $log, 'Distributor ('.$distr_code.')');
+
 		} else {
 			func_header_location($xcart_web_dir . DIR_CUSTOMER . '/index.php');
 		}
