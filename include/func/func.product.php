@@ -1505,32 +1505,33 @@ function my_array_sort($array, $on, $order=SORT_ASC)
 }
 */
 
-function func_generate_discounts($productids) {
+#
+# https://basecamp.com/2070980/projects/1577907/messages/52260744
+#
+function func_generate_discounts($productids, $tick = 0) {
         global $sql_tbl;
+
+        if ($tick > 0){
+                func_display_service_header("lbl_rebuild_quick_prices");
+		$i = 0;
+	}
 
         $prs = func_query_hash("SELECT p.productid, p.discount_slope, p.discount_table, pr.price, p.min_amount FROM $sql_tbl[products] as p LEFT JOIN $sql_tbl[pricing] as pr ON p.productid = pr.productid AND pr.membershipid = '0' AND pr.quantity = 1 AND pr.variantid = '0'WHERE p.productid IN ('".implode("','",$productids)."')", "productid");
 
-#        db_query("DELETE FROM $sql_tbl[pricing] WHERE productid IN ('".implode("','",$productids)."') AND membershipid = '0' AND quantity > 1 AND variantid = '0'");
-
-
        
-/*        db_query("INSERT INTO xcart_k.xcart_backprocess_logs (`process_id`,`log_text`) VALUES ('zzz',CONCAT(".$productids[0].",' nn  0'))");*/
         foreach ($prs as $productid => $p) {
+
+	    if ($tick > 0){
+		$i = 0;
+	    }
 
             if (strpos($p[0]["discount_table"], ":")){
 
-
-//		db_query("");
-
-
-/*	        db_query("INSERT INTO xcart_k.xcart_backprocess_logs (`process_id`,`log_text`) VALUES ('zzz',CONCAT(".$productids[0].",' nn  1'))");*/
                 $check1_count = substr_count($p[0]["discount_table"], ':');
                 $check2_count = substr_count($p[0]["discount_table"], ',')+1;
 
 
                 if ($check1_count == $check2_count){
-/*		        db_query("INSERT INTO xcart_k.xcart_backprocess_logs (`process_id`,`log_text`) VALUES ('zzz',CONCAT(".$productids[0].",' nn  2'))");*/
-
 
 			$quantity_arr = array();
                         foreach (explode(",",$p[0]["discount_table"]) as $v) {
@@ -1548,7 +1549,6 @@ function func_generate_discounts($productids) {
                                 $quantity = trim($v_arr[0]);
 				$quantity = intval($quantity);
                                 $kef = trim($v_arr[1]);
-			        /*db_query("INSERT INTO xcart_k.xcart_backprocess_logs (`process_id`,`log_text`) VALUES ('zzz',CONCAT(".$productids[0].",".($p[0]["price"] * (1 - $kef))."))");*/
                                 
                                 $price = $p[0]["price"] * (1 - $kef);
                                 $price = price_format($price);
@@ -1568,7 +1568,6 @@ function func_generate_discounts($productids) {
                 }
             }
             else {
-
 
 		$quantity_arr = array();
                 foreach (explode(",",$p[0]["discount_table"]) as $v) {
@@ -1602,13 +1601,35 @@ function func_generate_discounts($productids) {
                 }
             }
 
-	    $price_id = func_query_first_cell("SELECT PR.priceid FROM xcart_pricing PR WHERE PR.productid = '$productid' and PR.quantity <= '$v[min_amount]' and PR.variantid = 0 and PR.membershipid = 0 ORDER BY PR.quantity DESC LIMIT 1");
+
+	    $price_id = func_query_first_cell("SELECT PR.priceid FROM xcart_pricing PR WHERE PR.productid = '$productid' and PR.quantity <= '".$p[0]["min_amount"]."' and PR.variantid = 0 and PR.membershipid = 0 ORDER BY PR.quantity DESC LIMIT 1");
 
 	    db_query("DELETE FROM xcart_quick_prices where productid = '$productid' and membershipid = 0 and variantid = 0 and priceid != '$price_id'");
 
-	    db_query("REPLACE INTO xcart_quick_prices (productid,priceid,variantid, membershipid) VALUES ('$productid','$price_id',0,0) ON DUPLICATE KEY UPDATE productid='$productid', priceid='$price_id', variantid='0'");
+//	    db_query("REPLACE INTO xcart_quick_prices (productid,priceid,variantid, membershipid) VALUES ('$productid','$price_id',0,0) ON DUPLICATE KEY UPDATE productid='$productid', priceid='$price_id', variantid='0'");
+	    db_query("REPLACE INTO xcart_quick_prices (productid,priceid,variantid, membershipid) VALUES ('$productid','$price_id',0,0)");
 
+
+	    $variants = func_query("SELECT variantid FROM $sql_tbl[variants] WHERE avail>0 AND productid='$productid'");
+	    if (!empty($variants)){
+		$variantid = func_get_default_variantid($productid);
+		$price_id = func_query_first_cell("SELECT priceid FROM $sql_tbl[pricing] WHERE variantid='$variantid' AND quantity='1'");
+
+		db_query("DELETE FROM $sql_tbl[quick_prices] WHERE productid='$productid' AND priceid!='$price_id' AND variantid>0");
+		db_query("REPLACE INTO xcart_quick_prices (productid,priceid,variantid, membershipid) VALUES ('$productid','$price_id','$variantid',0)");
+	    }
+
+            if ($tick > 0 && $i % $tick == 0) {
+		echo ". ";
+                if (($i/$tick) % 100 == 0)
+                	echo "\n";
+                func_flush();
+	    }
         }
+
+	if ($tick > 0){
+		return $i;
+	}
 }
 
 function func_prevent_search_indexing($product){
