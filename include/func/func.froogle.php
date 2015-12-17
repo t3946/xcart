@@ -102,7 +102,8 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 		$joins .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[products].manufacturerid = $sql_tbl[manufacturers].manufacturerid LEFT JOIN $sql_tbl[manufacturers_lng] ON $sql_tbl[products].manufacturerid = $sql_tbl[manufacturers_lng].manufacturerid AND $sql_tbl[manufacturers_lng].code = '$froogle_lng'";
 	}
 
-        $joins .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' and SF.feed_file_name = xcart_products.provider";
+//        $joins .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' and SF.feed_file_name = xcart_products.provider";
+	$joins .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' AND SF.enabled='Y' AND (SF.multiple_feed_destinations!='Y' OR (SF.multiple_feed_destinations='Y' AND xcart_products.controlled_by_feed=SF.feed_file_name))";
         $fields .= ", SF.enabled as supplier_feeds_enabled ";
 
 
@@ -579,7 +580,8 @@ function GetTheFindOneRow($productid){
                 $joins .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[products].manufacturerid = $sql_tbl[manufacturers].manufacturerid LEFT JOIN $sql_tbl[manufacturers_lng] ON $sql_tbl[products].manufacturerid = $sql_tbl[manufacturers_lng].manufacturerid AND $sql_tbl[manufacturers_lng].code = '$froogle_lng'";
         }
 
-        $joins .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' and SF.feed_file_name = xcart_products.provider";
+//        $joins .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' and SF.feed_file_name = xcart_products.provider";
+        $joins .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' AND SF.enabled='Y' AND (SF.multiple_feed_destinations!='Y' OR (SF.multiple_feed_destinations='Y' AND xcart_products.controlled_by_feed=SF.feed_file_name))";
         $fields .= ", SF.enabled as supplier_feeds_enabled ";
 
         if (!empty($active_modules['Brands'])) {
@@ -1104,7 +1106,8 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 					{
 						$product['multipack'] = $product["min_amount"];
 					}
-                $product["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$product[manufacturerid]' AND feed_file_name='$product[provider]' AND feed_type = 'I'");
+//                $product["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$product[manufacturerid]' AND feed_file_name='$product[provider]' AND feed_type = 'I'");
+		$product["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$product[manufacturerid]' AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='".$product["controlled_by_feed"]."'))");
 		
 				
 				$product['price'] = price_format(GetGooglePrice($product));

@@ -850,21 +850,29 @@ else {
 					$manufacturers[$k]["provider_name"] = substr_replace($v["provider_name"], '', 0, 2);
 				}
 
-				$I_feed = func_query_first("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='I'");
+				$I_feed = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='I'");
 				if (!empty($I_feed)){
-					if ($I_feed["enabled"] == "Y"){
-						$manufacturers[$k]["I_supplier_feeds_enabled"] = "Y";
-					} else {
-						$manufacturers[$k]["I_supplier_feeds_enabled"] = "N";
+					$I_feed_Y = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='I' AND enabled='Y'");
+					if (!empty($I_feed_Y)){
+						$manufacturers[$k]["I_supplier_feeds_enabled"] = "Y(".$I_feed_Y.")";
+					}
+
+					$I_feed_N = $I_feed - $I_feed_Y;
+					if (!empty($I_feed_N)){
+ 						$manufacturers[$k]["I_supplier_feeds_disabled"] = "N(".$I_feed_N.")";
 					}
 				}
 
-                                $P_feed = func_query_first("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P'");
+                                $P_feed = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P'");
                                 if (!empty($P_feed)){
-                                        if ($P_feed["enabled"] == "Y"){
-                                                $manufacturers[$k]["P_supplier_feeds_enabled"] = "Y";
-                                        } else {
-                                                $manufacturers[$k]["P_supplier_feeds_enabled"] = "N";
+                                	$P_feed_Y = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P' AND enabled='Y'");
+                                        if (!empty($P_feed_Y)){
+                                                $manufacturers[$k]["P_supplier_feeds_enabled"] = "Y(".$P_feed_Y.")";
+					}
+
+					$P_feed_N = $P_feed - $P_feed_Y;
+					if (!empty($P_feed_N)){
+                                                $manufacturers[$k]["P_supplier_feeds_disabled"] = "N(".$P_feed_N.")";
                                         }
                                 }
 ###
@@ -999,12 +1007,12 @@ if (!empty($page))
     );
 
     if ($distributor_section == "17"){
-        $supplier_feeds_info_I = func_query_first("SELECT * FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$manufacturerid' AND feed_type='I' && enabled='Y'");
+        $supplier_feeds_info_I = func_query("SELECT * FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$manufacturerid' AND feed_type='I'");
 	if (!empty($supplier_feeds_info_I)){
-
+	    foreach ($supplier_feeds_info_I as $k_s => $v_s){
 		$cur_time = time();
 		$date1 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time));
-		$date2 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time+$supplier_feeds_info_I["average_update_period"]));
+		$date2 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time+$v_s["average_update_period"]));
 		$interval = $date1->diff($date2);
 		$years = $interval->format("%y");
 		$months = $interval->format("%m");
@@ -1012,17 +1020,17 @@ if (!empty($page))
 		$hours = $interval->format("%h");
 		$mins = $interval->format("%i");
 		$age_str = ($years != 0 ? $years." years, ":"").($months != 0 ? $months." months, ":"").($days != 0 ? $days." days, ":""). sprintf('%1$02d', $hours).":". sprintf('%1$02d', $mins). " hours";
-		$supplier_feeds_info_I["average_update_period_str"] = $age_str;
-
-	        $smarty->assign("supplier_feeds_info_I", $supplier_feeds_info_I);
+		$supplier_feeds_info_I[$k_s]["average_update_period_str"] = $age_str;
+	    }
 	}
+	$smarty->assign("supplier_feeds_info_I", $supplier_feeds_info_I);
 
-        $supplier_feeds_info_P = func_query_first("SELECT * FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$manufacturerid' AND feed_type='P' && enabled='Y'");
+        $supplier_feeds_info_P = func_query("SELECT * FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$manufacturerid' AND feed_type='P'");
         if (!empty($supplier_feeds_info_P)){
-
+	    foreach ($supplier_feeds_info_P as $k_s => $v_s){
                 $cur_time = time();
                 $date1 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time));
-                $date2 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time+$supplier_feeds_info_P["average_update_period"]));
+                $date2 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time+$v_s["average_update_period"]));
                 $interval = $date1->diff($date2);
                 $years = $interval->format("%y");
                 $months = $interval->format("%m");
@@ -1030,11 +1038,10 @@ if (!empty($page))
                 $hours = $interval->format("%h");
                 $mins = $interval->format("%i");
                 $age_str = ($years != 0 ? $years." years, ":"").($months != 0 ? $months." months, ":"").($days != 0 ? $days." days, ":""). sprintf('%1$02d', $hours).":". sprintf('%1$02d', $mins). " hours";
-                $supplier_feeds_info_P["average_update_period_str"] = $age_str;
-
-                $smarty->assign("supplier_feeds_info_P", $supplier_feeds_info_P);
+                $supplier_feeds_info_P[$k_s]["average_update_period_str"] = $age_str;
+	    }
         }
-
+        $smarty->assign("supplier_feeds_info_P", $supplier_feeds_info_P);
     }
 
 
