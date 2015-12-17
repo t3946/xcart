@@ -650,7 +650,11 @@ Completed: {$count_Completed}, In progress: {$count_Open}, Fraud: {$count_Fraud}
 <br />
 
 {if !$static}
-<input type="submit" value="{$lng.lbl_apply_changes|escape}" {if $order.amazonorderid ne "" || $order.allow_dispatch_off_working_hours_functionality_enabled_found eq "Y"}disabled="disabled" style="border: 1px solid #ff0000" {/if} />
+
+{*
+<input type="submit" value="{$lng.lbl_apply_changes|escape}" {if ($order.amazonorderid ne "" && $order.amazon_fulfillment_channel ne "AFN") || $order.allow_dispatch_off_working_hours_functionality_enabled_found eq "Y"}disabled="disabled" style="border: 1px solid #ff0000" {/if} />
+*}
+<input type="submit" value="{$lng.lbl_apply_changes|escape}" {if $order.allow_dispatch_off_working_hours_functionality_enabled_found eq "Y"}disabled="disabled" style="border: 1px solid #ff0000" {/if} />
 {if $current_membership_flag ne 'FS'}
   &nbsp;&nbsp;&nbsp;&nbsp;
   <input type="button" value="{$lng.lbl_apply_changes_send_email|escape}" onclick="javascript: $('#send_email2').val('Y'); this.form.submit();" {if $order.amazonorderid ne "" || $order.allow_dispatch_off_working_hours_functionality_enabled_found eq "Y"}disabled="disabled" style="border: 1px solid #ff0000" {/if} />
