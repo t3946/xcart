@@ -37,6 +37,15 @@
 </tr>
 
 </table>
+
+<br />
+<hr />
+<span style="font-size: 12px; font-weight: bold;">Unfreeze operation</span>
+<br />
+Unfreeze C2B payment status for order # <input type="text" name="unfreeze_orderid" value="" size="9" />
+<br />
+<input type="button" value="Do it" onclick="javascript: submitForm(this, 'unfreeze_order');" />
+
 </form>
 
 {/capture}

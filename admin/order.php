@@ -1915,6 +1915,9 @@ if ($mode == 'ref_notify') {
 /*    if ($ref_notify_do_not_send_email == "Y"){ */
     if ($ref_notify_button_clicked == "Update_C2B_status"){
 	$log = "'Update C2B status' at 'Refund'";
+    }
+    elseif ($ref_notify_button_clicked == "Send_refund_notification"){
+	$log = "'Send refund notification' at 'Refund'";
     } else {
 	$log = "'Update C2B status and Send refund notification' at 'Refund'";
     }
@@ -1996,10 +1999,10 @@ if ($mode == 'ref_notify') {
 
 	    if ($ref_notify_button_clicked == "Update_C2B_status"){
 		    func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
-	    } elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification"){
+	    } elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" || $ref_notify_button_clicked == "Send_refund_notification"){
 
 /*	    if ($ref_notify_do_not_send_email != "Y"){ */
-	            func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid);
+	            func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid, false);
             // Copy to Orders Department
 	            func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
 
@@ -3573,15 +3576,20 @@ if (!empty($checks_deposited_order)){
 	$smarty->assign("checks_deposited_order", $checks_deposited_order);
 }
 
-if (!empty($config["Checks_deposited_options"]["Checks_deposited_Attention_tag"])){
+if (!empty($config["Purchase_Order"]["Checks_deposited_Attention_tag"])){
+	if ($order["unfreeze_cb_status"] == "Y"){
+		$allowed_to_modify_cb_status_IO_O = true;
+	}
+	else {
 
-	$allowed_to_modify_cb_status_IO_O = false;
+		$allowed_to_modify_cb_status_IO_O = false;
 	
-	if (!empty($attention_tags_values[$config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]]["operators"]) && is_array($attention_tags_values[$config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]]["operators"])){
-		foreach ($attention_tags_values[$config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]]["operators"] as $k => $v){
-			if ($v["action"] == "unset" && ($v["login"] == $login || $v["login"] == "_ANY_")){
-				$allowed_to_modify_cb_status_IO_O = true;
-				break;
+		if (!empty($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"]) && is_array($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"])){
+			foreach ($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"] as $k => $v){
+				if ($v["action"] == "unset" && ($v["login"] == $login || $v["login"] == "_ANY_")){
+					$allowed_to_modify_cb_status_IO_O = true;
+					break;
+				}
 			}
 		}
 	}
@@ -3600,7 +3608,7 @@ if (!empty($config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]
 ###
 //func_print_r($order);
 
-$other_customer_orders = func_query("SELECT orderid, order_prefix, fraud_status FROM $sql_tbl[orders] WHERE email='$order[email]' AND orderid!='$orderid'");
+$other_customer_orders = func_query("SELECT orderid, order_prefix, fraud_status FROM $sql_tbl[orders] WHERE email='$order[email]' AND orderid!='$orderid' ORDER BY orderid DESC");
 
 if (!empty($other_customer_orders)){
 
