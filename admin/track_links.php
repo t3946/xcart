@@ -64,6 +64,7 @@ if ($mode == "add" && !empty($add['shipping'])) {
 		$tracking_links_carrier_arr["carrier"] = $v["carrier"];
 		$tracking_links_carrier_arr["link"] = $v["link"];
 		$tracking_links_carrier_arr["orderby"] = $v["carrier_orderby"];
+		$tracking_links_carrier_arr["phone"] = $v["phone"];
 		func_array2update("tracking_links_carrier", $tracking_links_carrier_arr, "carrier_id = '$carrier_id'");
 
 		if (!empty($v["orderby"]) && is_array($v["orderby"])){
