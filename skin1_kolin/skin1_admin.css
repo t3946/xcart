@@ -1661,29 +1661,37 @@ div.confirmation-hedgehog p {
 
 /* -- */
 .call_btn_customer_d {
-        background: transparent url(images/call_buttons.png) no-repeat 0 -44px ;
+        background: transparent url(images/3_call_buttons.png) no-repeat 0 -44px ;
         height: 44px;
         width: 219px;
 	CURSOR: pointer;
 }
 .call_btn_customer_a {
-        background: transparent url(images/call_buttons.png) no-repeat 0 0px ;
+        background: transparent url(images/3_call_buttons.png) no-repeat 0 0px ;
         height: 44px;
         width: 219px;
 	CURSOR: pointer;
 }
 
 .call_btn_distr_d {
-        background: transparent url(images/call_buttons.png) no-repeat -228px -44px ;
+        background: transparent url(images/3_call_buttons.png) no-repeat -228px -44px ;
         height: 44px;
         width: 219px;
 	CURSOR: pointer;
 }
 .call_btn_distr_a {
-        background: transparent url(images/call_buttons.png) no-repeat -228px 0px ;
+        background: transparent url(images/3_call_buttons.png) no-repeat -228px 0px ;
         height: 44px;
         width: 219px;
 	CURSOR: pointer;
 }
+
+.call_btn_shipper {
+        background: transparent url(images/3_call_buttons.png) no-repeat -456px 0px ;
+        height: 44px;
+        width: 219px;
+        CURSOR: pointer;
+}
+
 /* -- */
 
