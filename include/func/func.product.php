@@ -766,10 +766,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 		$add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders ";
 	}
 
-
-
-
-	$join .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' and SF.feed_file_name = xcart_products.provider";
+	$join .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' AND SF.enabled='Y' AND (SF.multiple_feed_destinations!='Y' OR (SF.multiple_feed_destinations='Y' AND xcart_products.controlled_by_feed=SF.feed_file_name))";
 	$add_fields .= ", SF.enabled as supplier_feeds_enabled ";
 
 	if ($current_area == "C" || empty($current_area)) {  /*speed optimization*/
@@ -809,6 +806,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	
 	$product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE $sql_tbl[products].productid='$id' ".$login_condition.$p_membershipid_condition.$price_condition.$sf_condition." GROUP BY $sql_tbl[products].productid");
+
 /*speed optimization*/
 //	print("l:".$membershipid_condition);
 	$categoryid = func_query_first_cell("SELECT $sql_tbl[products_categories].categoryid FROM $sql_tbl[products_categories]  /*, $sql_tbl[categories]*/ /*LEFT JOIN $sql_tbl[category_memberships] ON $sql_tbl[category_memberships].categoryid = $sql_tbl[categories].categoryid*/ WHERE /*$sql_tbl[products_categories].categoryid=$sql_tbl[categories].categoryid $membershipid_condition AND*/ $sql_tbl[products_categories].productid = '$id' and $sql_tbl[products_categories].main = 'Y' LIMIT 1");

@@ -796,6 +796,10 @@ func_print_r("Step 3: b) START");
 // );
 // $request = new MarketplaceWebService_Model_GetReportRequest($parameters);
 
+
+//$reportId="900317198016783";
+
+
 $request = new MarketplaceWebService_Model_GetReportRequest();
 $request->setMerchant(MERCHANT_ID);
 $request->setReport(@fopen('php://memory', 'rw+'));
@@ -840,6 +844,9 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
     foreach ($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"] as $k => $v){
 	if (!empty($v["AmazonOrderID"])){
 
+//if ($v["AmazonOrderID"] != "104-4999108-5002664") continue; ###################################
+
+
 		$fields = "orderid";
 		$order_info = func_query_first("SELECT $fields FROM $sql_tbl[orders] WHERE amazonorderid='$v[AmazonOrderID]'");
 
@@ -869,7 +876,61 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 //func_print_r($v);
 //die();
 
+
+
+
 			$mid_info = array();
+
+# https://basecamp.com/2070980/projects/1577907/messages/52362361
+## If products become in separate reports
+###
+			$AmazonOrderItemCode_arr = array();
+			foreach ($v["Fulfillment"] as $kk => $vv){
+				if (strpos($kk, $k_name)!==false){	
+					$AmazonOrderItemCode_arr[] = $vv["AmazonOrderItemCode"];
+				}
+			}
+
+//func_print_r($AmazonOrderItemCode_arr);
+
+			$cost_to_us_IN_DB = 0;
+			$RefundSum_IN_DB = 0;
+			$FBAPerOrderFulfillmentFee_IN_DB = 0;
+			$FBAPerUnitFulfillmentFee_IN_DB = 0;
+			$FBAWeightBasedFee_IN_DB = 0;
+			$AmazonCommission_IN_DB = 0;
+
+			if (!empty($AmazonOrderItemCode_arr)){
+
+				$RECORDS_order_details = func_query("SELECT amount, productid, amazon_item_refunded, FBAPerOrderFulfillmentFee, FBAPerUnitFulfillmentFee, FBAWeightBasedFee, AmazonCommission FROM $sql_tbl[order_details] WHERE AmazonOrderItemCode NOT IN ('".implode("','", $AmazonOrderItemCode_arr)."')");
+
+				if (!empty($RECORDS_order_details)){
+					foreach ($RECORDS_order_details as $k_RECORD => $v_RECORD){
+
+						$tmp_prod_info = func_query_first("SELECT cost_to_us, manufacturerid FROM $sql_tbl[products] WHERE productid='$v_RECORD[productid]'");
+						$manufacturerid = $tmp_prod_info["manufacturerid"];
+						$cost_to_us = $tmp_prod_info["cost_to_us"];
+						$cost_to_us_IN_DB += $cost_to_us*$v_RECORD["amount"];
+
+						if ($v_RECORD["amazon_item_refunded"] == "Y"){
+							$RefundSum_IN_DB += func_query_first_cell("SELECT accounting_net_3_ref_to_cust FROM $sql_tbl[order_groups] WHERE orderid='".$order_info["orderid"]."' AND manufacturerid='$manufacturerid'");
+						}
+
+						$FBAPerOrderFulfillmentFee_IN_DB += $v_RECORD["FBAPerOrderFulfillmentFee"];
+						$FBAPerUnitFulfillmentFee_IN_DB += $v_RECORD["FBAPerUnitFulfillmentFee"];
+						$FBAWeightBasedFee_IN_DB += $v_RECORD["FBAWeightBasedFee"];
+						$AmazonCommission_IN_DB += $v_RECORD["AmazonCommission"];
+					}
+				}
+
+
+				unset($AmazonOrderItemCode_arr);
+			}
+
+###
+##
+#
+
 
 			foreach ($v["Fulfillment"] as $kk => $vv){
 				if (strpos($kk, $k_name)!==false){
@@ -881,6 +942,10 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 #
 ##
 					$RefundSum = 0;
+
+					$RefundSum += $RefundSum_IN_DB;
+					$RefundSum_IN_DB = 0;
+
 					if ($k_name == "AdjustedItem"){
 
 #
@@ -938,6 +1003,14 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 
 
 					$cost_to_us *= $vv["Quantity"];
+
+#
+##
+					$cost_to_us += $cost_to_us_IN_DB; // If products become in separate reports
+					$cost_to_us_IN_DB = 0;
+##
+#
+
                                         if (!isset($mid_info[$manufacturerid]["cost_to_us"])){
                                                 $mid_info[$manufacturerid]["cost_to_us"] = 0;
                                         }
@@ -964,6 +1037,31 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 								}
 ##
 
+#
+##
+								if ($field_name == "FBAPerOrderFulfillmentFee"){
+									if ($FBAPerOrderFulfillmentFee_IN_DB > 0){
+										$vvv["Amount"] = 0;
+									}
+
+//									$vvv["Amount"] += $FBAPerOrderFulfillmentFee_IN_DB;
+//									$FBAPerOrderFulfillmentFee_IN_DB = 0;
+								}
+								elseif ($field_name == "FBAPerUnitFulfillmentFee"){
+									$vvv["Amount"] += $FBAPerUnitFulfillmentFee_IN_DB;
+									$FBAPerUnitFulfillmentFee_IN_DB = 0;
+								}
+								elseif ($field_name == "FBAWeightBasedFee"){
+                                                                        $vvv["Amount"] += $FBAWeightBasedFee_IN_DB;
+                                                                        $FBAWeightBasedFee_IN_DB = 0;
+								}
+								elseif ($field_name == "AmazonCommission"){
+                                                                        $vvv["Amount"] += $AmazonCommission_IN_DB;
+                                                                        $AmazonCommission_IN_DB = 0;
+                                                                }
+##
+#
+
 								$update_fields[] = $field_name."='".$vvv["Amount"]."'";
 
 								$ProcessorFee += $vvv["Amount"];
@@ -981,8 +1079,9 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 						$mid_info[$manufacturerid]["ProcessorFee"] = 0;
 					}
 					$mid_info[$manufacturerid]["ProcessorFee"] += $ProcessorFee;
-				}
-			}
+
+				} // if (strpos($kk, $k_name)!==false
+			} // foreach ($v["Fulfillment"] as $kk => $vv
 
 			if (!empty($mid_info)){
 				foreach ($mid_info as $manufacturerid => $m_val){
@@ -1049,7 +1148,7 @@ func_flush("\r\n");
 func_flush("\r\n");
 func_print_r("Step 3: b) END");
 # ## ### End Step 3 ### ## #
-
+//die("=====");
 
 
 # ## ### Start Step 4 ### ## #
