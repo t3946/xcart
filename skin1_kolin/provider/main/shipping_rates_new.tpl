@@ -8,6 +8,26 @@
 {$lng.txt_shipping_markups_note|substitute:"weight_symbol":$config.General.weight_symbol}
 {/if}
 
+<script type="text/javascript" language="JavaScript 1.2">
+//<![CDATA[
+{literal}
+function func_hide_show_real_drop_ship_fee(id_rate, id_real_drop_ship_fee){
+
+	var rate_val = $('#'+id_rate).val();
+	rate_val = parseFloat(rate_val);
+
+	if (rate_val > 0){
+		$('#'+id_real_drop_ship_fee).attr('readonly', false);
+	}
+	else {
+		$('#'+id_real_drop_ship_fee).attr('readonly', true);
+		$('#'+id_real_drop_ship_fee).val('0');
+	}
+}
+{/literal}
+//]]>
+</script>
+
 
 {* ------------------------- 
 {if $cidev_marckups_less_than_n ne ""}
@@ -197,7 +217,7 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 <tr>
 	<td>
 
-<table cellpadding="0" cellspacing="3" width="100%">
+<table cellpadding="0" cellspacing="3" width="100%" border="0">
 
 {section name=rate loop=$shipping_method.rates}
 {assign var="shipping_rate" value=$shipping_method.rates[rate]}
@@ -217,7 +237,7 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 <input type="text" name="posted_data[{$shipping_rate.rateid}][maxweight]" size="9" value="{$shipping_rate.maxweight|formatprice}" />
 	</td>
 	<td><b>{if $type eq "R"}{$lng.lbl_flat_charge}{else}Flat rate{/if} ({$config.General.currency_symbol}):</b></td>
-	<td nowrap="nowrap"><input type="text" name="posted_data[{$shipping_rate.rateid}][rate]" size="5" value="{$shipping_rate.rate|formatprice}" /></td>
+	<td nowrap="nowrap"><input type="text" id="rate_{$shipping_rate.rateid}" name="posted_data[{$shipping_rate.rateid}][rate]" size="5" value="{$shipping_rate.rate|formatprice}" onkeyup="javascript: func_hide_show_real_drop_ship_fee('rate_{$shipping_rate.rateid}', 'real_drop_ship_fee_{$shipping_rate.rateid}');" onchange="javascript: func_hide_show_real_drop_ship_fee('rate_{$shipping_rate.rateid}', 'real_drop_ship_fee_{$shipping_rate.rateid}');" /></td>
 	<td>{$lng.lbl_percent_charge}:</td>
 	<td><input type="text" name="posted_data[{$shipping_rate.rateid}][rate_p]" size="5" value="{$shipping_rate.rate_p|formatprice}" /></td>
 </tr>
@@ -229,18 +249,30 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 -
 <input type="text" name="posted_data[{$shipping_rate.rateid}][maxtotal]" size="9" value="{$shipping_rate.maxtotal|formatprice}" />
 	</td>
-	<td>{$lng.lbl_per_item_charge} ({$config.General.currency_symbol}):</td>
-	<td nowrap="nowrap"><input type="text" name="posted_data[{$shipping_rate.rateid}][item_rate]" size="5" value="{$shipping_rate.item_rate|formatprice}" /></td>
+
+
+	<td>Real drop-ship fee ({$config.General.currency_symbol}):</td>
+	<td nowrap="nowrap"><input {if $shipping_rate.rate eq "0" || $shipping_rate.rate eq "0.00"}readonly="readonly"{/if} type="text" id="real_drop_ship_fee_{$shipping_rate.rateid}" name="posted_data[{$shipping_rate.rateid}][real_drop_ship_fee]" size="5" value="{$shipping_rate.real_drop_ship_fee|formatprice}" /></td>
+
+
 	<td>{$lng.lbl_per_weight_charge|substitute:"weight":$config.General.weight_symbol} ({$config.General.currency_symbol}):</td>
 	<td nowrap="nowrap"><input type="text" name="posted_data[{$shipping_rate.rateid}][weight_rate]" size="5" value="{$shipping_rate.weight_rate|formatprice}" /></td>
 </tr>
-{if $type eq "R"}
+
+
 <tr>
-<td><b>{* {$lng.lbl_shipping_cost_markup} *}Server quote multiplier:</b></td>
-<td><input type="text" name="posted_data[{$shipping_rate.rateid}][cost_marcup]" size="9" value="{$shipping_rate.cost_marcup|default:0}" />
-</td>
-</tr>
+        <td>{if $type eq "R"}<b>Server quote multiplier:</b>{/if}</td>
+        <td nowrap="nowrap">
+{if $type eq "R"}
+<input type="text" name="posted_data[{$shipping_rate.rateid}][cost_marcup]" size="9" value="{$shipping_rate.cost_marcup|default:0}" />
 {/if}
+        </td>
+        <td>{$lng.lbl_per_item_charge} ({$config.General.currency_symbol}):</td>
+        <td nowrap="nowrap"><input type="text" name="posted_data[{$shipping_rate.rateid}][item_rate]" size="5" value="{$shipping_rate.item_rate|formatprice}" /></td>
+        <td></td>
+        <td nowrap="nowrap"></td>
+</tr>
+
 
 {if not %rate.last%}
 <tr>
@@ -349,7 +381,7 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 <input type="text" name="maxweight_new" size="9" value="{$maxvalue|formatprice}" />
 	</td>
 	<td><b>{$lng.lbl_flat_charge} ({$config.General.currency_symbol}):</b></td>
-	<td nowrap="nowrap"><input type="text" name="rate_new" size="5" value="{0|formatprice}" /></td>
+	<td nowrap="nowrap"><input type="text" id="rate_new" name="rate_new" size="5" value="{0|formatprice}" onkeyup="javascript: func_hide_show_real_drop_ship_fee('rate_new', 'real_drop_ship_fee_new');" onchange="javascript: func_hide_show_real_drop_ship_fee('rate_new', 'real_drop_ship_fee_new');" /></td>
 	<td>{$lng.lbl_percent_charge}:</td>
 	<td><input type="text" name="rate_p_new" size="5" value="{0|formatprice}" /></td>
 </tr>
@@ -361,21 +393,25 @@ checkboxes{$zones_list[zone].zone.zoneid}_{$shipid} = new Array({section name=ra
 -
 <input type="text" name="maxtotal_new" size="9" value="{$maxvalue|formatprice}" />
 	</td>
-	<td>{$lng.lbl_per_item_charge} ({$config.General.currency_symbol}):</td>
-	<td nowrap="nowrap"><input type="text" name="item_rate_new" size="5" value="{0|formatprice}" /></td>
+	<td>Real drop-ship fee ({$config.General.currency_symbol}):</td>
+	<td nowrap="nowrap"><input id="real_drop_ship_fee_new" type="text" name="real_drop_ship_fee_new" size="5" value="{0|formatprice}" /></td>
 	<td>{$lng.lbl_per_weight_charge|substitute:"weight":$config.General.weight_symbol} ({$config.General.currency_symbol}):</td>
 	<td nowrap="nowrap"><input type="text" name="weight_rate_new" size="5" value="{0|formatprice}" /></td>
 </tr>
 
-{if $type eq "R"}
 
 <tr>
-<td><b>{* {$lng.lbl_shipping_cost_markup}*}Server quote multiplier:</b></td>
-<td nowrap="nowrap">
+        <td>{if $type eq "R"}Server quote multiplier:</b>{/if}</td>
+        <td nowrap="nowrap">
+{if $type eq "R"}
 <input type="text" name="cost_marcup_new" size="5" value="1.00" />
-</td>
-</tr>
 {/if}
+        </td>
+        <td>{$lng.lbl_per_item_charge} ({$config.General.currency_symbol}):</td>
+        <td nowrap="nowrap"><input type="text" name="item_rate_new" size="5" value="{0|formatprice}" /></td>
+        <td></td>
+        <td nowrap="nowrap"></td>
+</tr>
 
 </table>
 
