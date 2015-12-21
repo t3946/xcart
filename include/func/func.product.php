@@ -42,7 +42,7 @@ if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); 
 # array $product must contain fields:
 #       product_availability ('in stock'|'out of stock')   get value with func_product_availability function
 #       new_map_price   DECIMAL
-#       d_enable_feed  ('Y'|'N')
+#       supplier_feeds_enabled  ('Y'|'N')
 #       cost_to_us      DECIMAL
 #       price   DECIMAL    price corrected with min_amount quantity
 function func_product_price($fproduct) {
@@ -54,7 +54,7 @@ function func_product_price($fproduct) {
 		{
 			$price_min_amount = $fproduct["new_map_price"];
 		}
-	if ($fproduct["d_enable_feed"] == "Y" && $fproduct["product_availability"] == "out of stock")
+	if ($fproduct["supplier_feeds_enabled"] == "Y" && $fproduct["product_availability"] == "out of stock")
 		{
 			$price_min_amount = func_decreased_price($fproduct["cost_to_us"], $price_min_amount, $fproduct["new_map_price"]);
 		}
@@ -760,8 +760,11 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	if (!empty($active_modules["Manufacturers"])) {
 		$join .= " LEFT JOIN $sql_tbl[manufacturers] ON $sql_tbl[manufacturers].manufacturerid = $sql_tbl[products].manufacturerid";
-		$add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders, $sql_tbl[manufacturers].d_enable_feed ";
+		$add_fields .= ", $sql_tbl[manufacturers].manufacturer, $sql_tbl[manufacturers].cost_to_us_coef_x, $sql_tbl[manufacturers].price_coef_x, $sql_tbl[manufacturers].price_coef_y, $sql_tbl[manufacturers].price_coef_z, $sql_tbl[manufacturers].map_price_coef_x, $sql_tbl[manufacturers].new_map_price_coef_x, $sql_tbl[manufacturers].allow_pre_orders ";
 	}
+
+	$join .= " LEFT JOIN xcart_supplier_feeds SF ON SF.manufacturerid = xcart_products.manufacturerid and SF.feed_type = 'I' AND SF.enabled='Y' AND (SF.multiple_feed_destinations!='Y' OR (SF.multiple_feed_destinations='Y' AND xcart_products.controlled_by_feed=SF.feed_file_name))";
+	$add_fields .= ", SF.enabled as supplier_feeds_enabled ";
 
 	if ($current_area == "C") {  /*speed optimization*/
 		$add_fields .= ", /*IF($sql_tbl[products_lng].productid != '', $sql_tbl[products_lng].product,*/( $sql_tbl[products].product) as product, /*IF($sql_tbl[products_lng].productid != '', $sql_tbl[products_lng].descr,*/( $sql_tbl[products].descr) as descr, /*IF($sql_tbl[products_lng].productid != '', $sql_tbl[products_lng].fulldescr,*/( $sql_tbl[products].fulldescr) as fulldescr, $sql_tbl[quick_flags].*, $sql_tbl[quick_prices].variantid, $sql_tbl[quick_prices].priceid";
@@ -800,6 +803,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	
 	$product = func_query_first("SELECT $sql_tbl[products].*, $sql_tbl[products].avail-$in_cart AS avail, $sql_tbl[pricing].price as price $add_fields FROM $sql_tbl[pricing], $sql_tbl[products] $join WHERE $sql_tbl[products].productid='$id' ".$login_condition.$p_membershipid_condition.$price_condition.$sf_condition." GROUP BY $sql_tbl[products].productid");
+
 /*speed optimization*/
 //	print("l:".$membershipid_condition);
 	$categoryid = func_query_first_cell("SELECT $sql_tbl[products_categories].categoryid FROM $sql_tbl[products_categories]  /*, $sql_tbl[categories]*/ /*LEFT JOIN $sql_tbl[category_memberships] ON $sql_tbl[category_memberships].categoryid = $sql_tbl[categories].categoryid*/ WHERE /*$sql_tbl[products_categories].categoryid=$sql_tbl[categories].categoryid $membershipid_condition AND*/ $sql_tbl[products_categories].productid = '$id' and $sql_tbl[products_categories].main = 'Y' LIMIT 1");
@@ -1099,7 +1103,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 	if ($current_area == 'C'){
 		$product["price"] = $product["taxed_price"] = func_product_price($product);
 
-		if ($product["d_enable_feed"] == "Y" && empty($product["is_variants"]) && $product["product_availability"] == "out of stock"){
+		if ($product["supplier_feeds_enabled"] == "Y" && empty($product["is_variants"]) && $product["product_availability"] == "out of stock"){
 		        $product["new_notify_in_stock_price"] = $product["price"];
 		}
 	}
