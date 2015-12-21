@@ -172,9 +172,10 @@ if ($mode == "report") {
 			foreach ($orders[$k]["shipping_groups"] as $mid => $group) {
 
 				if (
-				    (empty($group["invoices"]) && empty($group["memos"])) // Nothing to calculate
+				    (empty($group["invoices"]) && empty($group["memos"]) && $data['profit_margin_range'] == "margin_less_100") // Nothing to calculate
 		                    || (!empty($data['manufacturers']) && !in_array($mid, $data['manufacturers'])) 
 		                    || ($data['profit_margin_range'] == "margin_less_100" && $group['profit_margin'] == 100) 
+							|| (empty($data['include_margin_100']) && $group['profit_margin'] == 100)
 				    || ($group["acc_paymentid"] == "0")
                 		    || (!in_array($group['cb_status'], array('P','O','H','A')) && $data["cb_status"] != "R")
                 		    || (!in_array($group['cb_status'], array('P','R','O','H','A')) && $data["cb_status"] == "R")
