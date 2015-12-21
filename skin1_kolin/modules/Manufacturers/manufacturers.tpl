@@ -165,8 +165,8 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 	<td align="center">{$v.code}</td>
 	<td>{if $v.is_provider eq 'Y'}{$v.provider_name}{else}{$lng.lbl_manuf_owner_lost}{/if}{if $administrate} ({$v.provider}){/if}</td>
 	<td align="center">{$v.products_count|default:$lng.txt_not_available}{if $v.used_by_others gt 0}*{assign var="show_note" value="Y"}{/if}</td>
-	<td>{$v.I_supplier_feeds_enabled}</td>
-	<td>{$v.P_supplier_feeds_enabled}</td>
+	<td>{$v.I_supplier_feeds_enabled} {$v.I_supplier_feeds_disabled}</td>
+	<td>{$v.P_supplier_feeds_enabled} {$v.P_supplier_feeds_disabled}</td>
 	<td align="center"><input type="text" name="records[{$v.manufacturerid}][orderby]" size="5" value="{$v.orderby}"{if $administrate eq ""} disabled="disabled"{/if} /></td>
 	<td align="center"><input type="checkbox" name="records[{$v.manufacturerid}][avail]" value="Y"{if $v.avail eq "Y"} checked="checked"{/if}{if $administrate eq ""} disabled="disabled"{/if} /></td>
 </tr>
@@ -1565,36 +1565,43 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 <B>Inventory feeds info:</B>
 <br />
 {if $supplier_feeds_info_I ne ""}
+  {foreach from=$supplier_feeds_info_I item=v_s key=k_s}
+	<B>feed_name:</B> {$v_s.feed_name} ({if $v_s.enabled eq "Y"}Enabled{else}Disabled{/if})<br />
+	<B>storefront_id:</B> {$v_s.storefront_id} <br />
+	<B>last_update_time:</B> {$v_s.last_update_time|date_format:'%d-%b-%Y&nbsp; %H:%M'} <br />
+	<B>average_update_period:</B> {$v_s.average_update_period_str} <br />
+	<B>last_update_items_count:</B> {$v_s.last_update_items_count} <br />
 
-	<B>feed_name:</B> {$supplier_feeds_info_I.feed_name} <br />
-	<B>storefront_id:</B> {$supplier_feeds_info_I.storefront_id} <br />
-	<B>last_update_time:</B> {$supplier_feeds_info_I.last_update_time|date_format:'%d-%b-%Y&nbsp; %H:%M'} <br />
-	<B>average_update_period:</B> {$supplier_feeds_info_I.average_update_period_str} <br />
-	<B>last_update_items_count:</B> {$supplier_feeds_info_I.last_update_items_count} <br />
-
-	{*foreach from=$supplier_feeds_info_I item=vs key=ks}
+	{*foreach from=$v_s item=vs key=ks}
 		<B>{$ks}:</B> {$vs}<br />
 	{/foreach*}
+  <br/>
+  <br/>
+  {/foreach}
 {else}
 	<B>No inventory feed</B>
 {/if}
 
-<br />
+<hr />
 <br />
 
 <B>Product feeds info:</B>
 <br />
 {if $supplier_feeds_info_P ne ""}
-        <B>feed_name:</B> {$supplier_feeds_info_P.feed_name} <br />
-        <B>storefront_id:</B> {$supplier_feeds_info_P.storefront_id} <br />
-        <B>base_category_id:</B> {$supplier_feeds_info_P.base_category_id} <br />
-        <B>last_update_time:</B> {$supplier_feeds_info_P.last_update_time|date_format:'%d-%b-%Y&nbsp; %H:%M'} <br />
-        <B>average_update_period:</B> {$supplier_feeds_info_P.average_update_period_str} <br />
-        <B>last_update_items_count:</B> {$supplier_feeds_info_P.last_update_items_count} <br />
+  {foreach from=$supplier_feeds_info_P item=v_s key=k_s}
+        <B>feed_name:</B> {$v_s.feed_name} ({if $v_s.enabled eq "Y"}Enabled{else}Disabled{/if}) <br />
+        <B>storefront_id:</B> {$v_s.storefront_id} <br />
+        <B>base_category_id:</B> {$v_s.base_category_id} <br />
+        <B>last_update_time:</B> {$v_s.last_update_time|date_format:'%d-%b-%Y&nbsp; %H:%M'} <br />
+        <B>average_update_period:</B> {$v_s.average_update_period_str} <br />
+        <B>last_update_items_count:</B> {$v_s.last_update_items_count} <br />
 
-        {*foreach from=$supplier_feeds_info_P item=vs key=ks}
+        {*foreach from=$v_s item=vs key=ks}
                 <B>{$ks}:</B> {$vs}<br />
         {/foreach*}
+  <br/>
+  <br/>
+  {/foreach}
 {else}
         <B>No product feed</B>
 {/if}
