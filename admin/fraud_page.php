@@ -515,6 +515,7 @@ if (!$curl_err){
 //			                $mail_smarty->assign('order', $order);
 			                $mail_smarty->assign('order', $order_after_refund);
 
+					$mail_smarty->assign('email_is_sent_to_operator', 'Y');
 
 #
 ##
