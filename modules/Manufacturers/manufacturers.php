@@ -1021,6 +1021,8 @@ if (!empty($page))
 		$mins = $interval->format("%i");
 		$age_str = ($years != 0 ? $years." years, ":"").($months != 0 ? $months." months, ":"").($days != 0 ? $days." days, ":""). sprintf('%1$02d', $hours).":". sprintf('%1$02d', $mins). " hours";
 		$supplier_feeds_info_I[$k_s]["average_update_period_str"] = $age_str;
+
+		$supplier_feeds_info_I[$k_s]["last_feed_fields"] = unserialize(stripslashes($v_s["last_feed_fields"]));
 	    }
 	}
 	$smarty->assign("supplier_feeds_info_I", $supplier_feeds_info_I);
@@ -1039,10 +1041,14 @@ if (!empty($page))
                 $mins = $interval->format("%i");
                 $age_str = ($years != 0 ? $years." years, ":"").($months != 0 ? $months." months, ":"").($days != 0 ? $days." days, ":""). sprintf('%1$02d', $hours).":". sprintf('%1$02d', $mins). " hours";
                 $supplier_feeds_info_P[$k_s]["average_update_period_str"] = $age_str;
+
+		$supplier_feeds_info_P[$k_s]["last_feed_fields"] = unserialize(stripslashes($v_s["last_feed_fields"]));
 	    }
         }
         $smarty->assign("supplier_feeds_info_P", $supplier_feeds_info_P);
     }
+
+//func_print_r($supplier_feeds_info_I, $supplier_feeds_info_P);
 
 
 /*

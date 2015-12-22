@@ -203,6 +203,14 @@ function generate_price(id) {ldelim}
 	</td>
 </tr>
 
+{if $product.controlled_by_feed ne ""}
+<tr>
+        {if $geid ne ''}<td width="15" class="TableSubHead"></td>{/if}
+        <td class="FormButton" nowrap="nowrap">Product controlled by feed:</td>
+        <td class="ProductDetails">{$product.controlled_by_feed}</td>
+</tr>
+{/if}
+
 <tr> 
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[forsale]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_availability}:</td>
