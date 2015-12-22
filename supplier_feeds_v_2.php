@@ -156,7 +156,7 @@ foreach ($supplier_feeds as $k => $v){
 			fclose($handle);
 
 
-/*
+/* */
 			$md5 = md5($contents);
 
 			if ($md5 == $v["last_md5"]){
@@ -165,7 +165,7 @@ foreach ($supplier_feeds as $k => $v){
         	                func_backprocess_log("supplier feeds errors", $log_text);
                 	        continue;
 			}
-*/
+/* */
 
 			$products = json_decode($contents, true);
 
@@ -241,15 +241,37 @@ foreach ($supplier_feeds as $k => $v){
 //func_print_r($products);
 //die();
 
+#
+##
+			$last_feed_fields_arr = array();
+			$last_feed_fields_arr_vals = array();
+##
+#
 			foreach ($products["products"] as $kp => $p){
 
                                 foreach ($p as $k_s => $v_s){
+
+#
+##
+					if (!in_array($k_s, $last_feed_fields_arr)){
+						$last_feed_fields_arr[] = $k_s;
+						$last_feed_fields_arr_vals[$k_s] = $v_s;
+					}
+					if ($v_s != "" && $last_feed_fields_arr_vals[$k_s] == ""){
+						$last_feed_fields_arr_vals[$k_s] = $v_s;
+					}
+##
+#
+
+
                                         $idx = array_search($k_s, array_keys($product_cols_replace));
                                         if ($idx !== false) {
                                                 $p[$product_cols_replace[$k_s]] = $v_s;
                                                 unset($p[$k_s]);
                                         }
                                 }
+//func_print_r($last_feed_fields_arr_vals);
+//die();
 
                                 if (empty($p["productcode"])){
                                         continue;
@@ -1009,6 +1031,7 @@ die();
 		"last_update_time" => time(),
 		"average_update_period" => $average_update_period,
 		"last_update_period" => $last_update_period,
+		"last_feed_fields" => addslashes(serialize($last_feed_fields_arr_vals)),
 		"last_update_items_count" => $products["products_in_feed"]
 	); 
 	func_array2update("supplier_feeds", $supplier_feed, "feed_id = '$v[feed_id]'");

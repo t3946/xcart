@@ -1572,9 +1572,17 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 	<B>average_update_period:</B> {$v_s.average_update_period_str} <br />
 	<B>last_update_items_count:</B> {$v_s.last_update_items_count} <br />
 
-	{*foreach from=$v_s item=vs key=ks}
-		<B>{$ks}:</B> {$vs}<br />
-	{/foreach*}
+    {if $v_s.last_feed_fields ne ""}
+	<br >
+	<B>Feed fields last time processed:</B><br />
+	<table>
+	<tr><td><B>Feed fields</B></td><td><B>Sample value</B></td></tr>
+	{foreach from=$v_s.last_feed_fields item=vs key=ks}
+		<tr><td><B>{$ks}:</B></td><td>{$vs}</td></tr>
+	{/foreach}
+	</table>
+    {/if}
+
   <br/>
   <br/>
   {/foreach}
@@ -1596,9 +1604,17 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
         <B>average_update_period:</B> {$v_s.average_update_period_str} <br />
         <B>last_update_items_count:</B> {$v_s.last_update_items_count} <br />
 
-        {*foreach from=$v_s item=vs key=ks}
-                <B>{$ks}:</B> {$vs}<br />
-        {/foreach*}
+    {if $v_s.last_feed_fields ne ""}
+        <br >
+        <B>Feed fields last time processed:</B><br />
+        <table>
+        <tr><td><B>Feed fields</B></td><td><B>Sample value</B></td></tr>
+        {foreach from=$v_s.last_feed_fields item=vs key=ks}
+                <tr><td><B>{$ks}:</B></td><td>{$vs}</td></tr>
+        {/foreach}
+        </table>
+    {/if}
+
   <br/>
   <br/>
   {/foreach}
