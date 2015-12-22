@@ -69,8 +69,8 @@
 
 {/if}
 {section name=prod_num loop=$v.products}
-{$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$v.products[prod_num].productcode}
-{$lng.lbl_product|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$v.products[prod_num].product}
+{if $email_is_sent_to_operator eq "Y"}<a href="{$product.links.provider}" style="color: blue;">{/if}{$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$v.products[prod_num].productcode}{if $email_is_sent_to_operator eq "Y"}</a>{/if}
+{if $email_is_sent_to_operator eq "Y"}<a href="{$product.links.customer}" style="color: blue;">{/if}{$lng.lbl_product|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$v.products[prod_num].product}{if $email_is_sent_to_operator eq "Y"}</a>{/if}
 {$lng.lbl_quantity|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$v.products[prod_num].amount}
 {if $v.products[prod_num].product_options ne ""}
 {$lng.lbl_selected_options}:
