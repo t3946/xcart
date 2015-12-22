@@ -2286,6 +2286,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 		$message_body .= "<br />Password: $d_password \r\n";
 */
 
+		$mail_smarty->assign('email_is_sent_to_operator', 'Y');
+
 		$mail_smarty->assign('mnf_operator_notify', 'Y');
 		$mail_smarty->assign('message_body', $message_body);
 		$mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
