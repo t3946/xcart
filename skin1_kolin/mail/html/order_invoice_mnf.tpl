@@ -245,9 +245,26 @@
 </tr>
 {/if}
 {foreach from=$v.products item=product}
+
 <tr>
-<td align="center" style="font-size: 11px; width: 25%;">{$product.productcode}</td>
-<td><font style="font-size: 11px">{$product.product}</font>
+<td align="center" style="font-size: 11px; width: 25%;">
+{if $email_is_sent_to_operator eq "Y"}
+<a href="{$product.links.provider}" style="color: blue;">
+{/if}
+{$product.productcode}
+{if $email_is_sent_to_operator eq "Y"}
+</a>
+{/if}
+</td>
+<td><font style="font-size: 11px">
+{if $email_is_sent_to_operator eq "Y"}
+<a href="{$product.links.customer}" style="color: blue;">
+{/if}
+{$product.product}
+{if $email_is_sent_to_operator eq "Y"}
+</a>
+{/if}
+</font>
 {if $product.product_options ne '' && $active_modules.Product_Options}
 <table>
 
