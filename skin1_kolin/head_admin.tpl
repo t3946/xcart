@@ -1,7 +1,7 @@
 {* $Id: head_admin.tpl,v 1.10 2006/03/17 08:50:44 svowl Exp $ *}
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr> 
-	<td class="HeadLogo_admin">
+	<td class="HeadLogo_admin" width="*">
 <a href="{$http_location}/{if $usertype eq "P"}provider{else}admin{/if}/">
 {if $current_storefront_info.storefrontid gte 0}
 <img src="{$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" alt="" />
@@ -10,7 +10,12 @@
 {/if}
 </a></td>
 {if $login ne ""}
-	<td align="right">
+
+	<td align="left" width="34%">
+		<a style="padding-left: 35px;" href="{$catalogs.admin}/orders.php?page_name=dashboard"><img src="{$ImagesDir}/cc_dashbord.png" alt="" /></a>
+	</td>
+
+	<td align="right" width="33%">
 		{include file="authbox_top.tpl"}
 	{if $usertype eq "A"}
 <br />
