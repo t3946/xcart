@@ -808,8 +808,8 @@ function func_generate_image($id, $from_type = 'P', $to_type = 'T', $allow_not_r
 ## 
 ###
 	if ($to_type == "D"){
-		$new_x = 620;
-		$new_y = 800;
+		$new_x = $config['Appearance']['max_width_det_img'];
+		$new_y = $config['Appearance']['max_height_det_img'];
 	} elseif ($to_type == "P"){
         	$new_x = $config['Appearance']['max_width_prod_img'];
 	        $new_y = $config['Appearance']['max_height_prod_img'];
@@ -1110,7 +1110,7 @@ function func_get_proper_dimensions ($old_x, $old_y, $new_x, $new_y) {
 
 function func_set_correct_det_img($image_info, $update = false){
 
-	global $sql_tbl;
+	global $sql_tbl, $config;
 
 	if (!empty($image_info["image_path"])){
 		$file_name_path = $image_info["image_path"];
@@ -1122,7 +1122,7 @@ function func_set_correct_det_img($image_info, $update = false){
 	$width = $image_info["image_x"];
 	$height = $image_info["image_y"];
 
-	if ($width >= 620  || $height >= 800){
+	if ($width >= $config['Appearance']['max_width_det_img']  || $height >= $config['Appearance']['max_height_det_img']){
         	$im = new Imagick();
                 try {
 	               $im->pingImage($file_name_path);
@@ -1135,7 +1135,7 @@ function func_set_correct_det_img($image_info, $update = false){
                 * as they are loaded instead of consuming additional resources to pass back
                 * to PHP. */
 
-	                $R = MIN(620/$width,800/$height,1);
+	                $R = MIN($config['Appearance']['max_width_det_img']/$width,$config['Appearance']['max_height_det_img']/$height,1);
                         $new_width = round(abs($R*$width));
                         $new_height = round(abs($R*$height));
 
