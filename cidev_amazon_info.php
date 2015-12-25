@@ -1214,7 +1214,7 @@ $duration = ($years != 0 ? $years." years, ":"").($months != 0 ? $months." month
 db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_amazon_info'");
 
 $log_text = "Cron completed. Duration: ".$duration;
-func_backprocess_log("amazon_orders", $log_text);
+func_backprocess_log("amazon_info", $log_text);
 
 die("DONE!");
 ?>
