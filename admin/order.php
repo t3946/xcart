@@ -3679,7 +3679,21 @@ if (!empty($other_customer_orders)){
 		$order_groups_info = func_query("SELECT cb_status, dc_status FROM $sql_tbl[order_groups] WHERE orderid='$v[orderid]'");
 		if (!empty($order_groups_info)){
 			foreach ($order_groups_info as $kk => $vv){
-				
+
+				if (in_array($v["fraud_status"], array("C", "E")) && $vv["cb_status"] == "P" && $vv["dc_status"] == "S"){
+	                                $Completed = "Y";
+                                        $count_Completed++;
+				}
+				elseif (!in_array($v["fraud_status"], array("C", "E", "U", "T", "N"))){
+                                        $Fraud = "Y";
+                                        $count_Fraud++;
+				}
+				elseif (in_array($v["fraud_status"], array("C", "E")) && in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
+	                                $Open = "Y";
+        	                        $count_Open++;
+				}
+
+/*	
 				if (in_array($v["fraud_status"], array("C", "E", "N")) || empty($v["fraud_status"])){
 
 					if ($vv["cb_status"] == "P" && $vv["dc_status"] == "S"){
@@ -3696,6 +3710,7 @@ if (!empty($other_customer_orders)){
                                         $Fraud = "Y";
                                         $count_Fraud++;
 				}
+*/
 			}
 		}
 
