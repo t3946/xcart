@@ -3927,6 +3927,10 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
         $is_back = "";
 	$is_discontinued_items = false;
 
+	$outofstock_products_info = array();
+	$discontinued_products_info = array();
+	$counter_arr_info = 0;
+
 //func_print_r($products);
 
 	if (!empty($products) && is_array($products))
@@ -4022,12 +4026,20 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
 				$count_outofstock_products_with_offer_backorder_Y++;
 
 	                        $cidev_outofstock_items_eta_table .= '<tr><td width="150px" style="text-align: left;">'.$tmp_sku.'</td><td width="250px" style="text-align: left;"><a data-mce-href="'.$v["links"]["customer"].'" href="'.$v["links"]["customer"].'">'.$v["product"].'</a>'.$selected_product_options.'</td><td style="text-align: right;">'.$v["amount"].'</td><td style="text-align: right;" nowrap="nowrap">'.$tmp_eta_date_mm_dd_yyyy.'</td></tr>';
+
+				$outofstock_products_info[$counter_arr_info]["productid"] = $v["productid"];
+				$outofstock_products_info[$counter_arr_info]["product"] = $v["product"];
 			}
 			else {
 	                        $cidev_discontinued_items_table .= '<tr><td width="150px" style="text-align: left;">'.$tmp_sku.'</td><td width="250px" style="text-align: left;"><a data-mce-href="'.$v["links"]["customer"].'" href="'.$v["links"]["customer"].'">'.$v["product"].'</a>'.$selected_product_options.'</td><td style="text-align: right;">'.$v["back"].'</td><td style="text-align: right;" nowrap="nowrap">Unknown</td></tr>';
 				$is_discontinued_items = true;
 				$count_discontinued_products_with_empty_offer_backorder++;
+
+				$discontinued_products_info[$counter_arr_info]["productid"] = $v["productid"];
+				$discontinued_products_info[$counter_arr_info]["product"] = $v["product"];
 			}
+
+			$counter_arr_info++;
                 }
         }
 
@@ -4056,6 +4068,14 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
 	$instock_and_outofstock_items_table["outofstock"] = $cidev_outofstock_items_table;
 	$instock_and_outofstock_items_table["outofstock_eta"] = $cidev_outofstock_items_eta_table;
 	$instock_and_outofstock_items_table["discontinued"] = $cidev_discontinued_items_table;
+
+	if (!empty($outofstock_products_info)){
+		$instock_and_outofstock_items_table["outofstock_products_info"] = $outofstock_products_info;
+	}
+	
+	if (!empty($discontinued_products_info)){
+		$instock_and_outofstock_items_table["discontinued_products_info"] = $discontinued_products_info;
+	}
 
 	$instock_and_outofstock_items_table["additional_info"]["count_instock_items"] = $count_instock_items;
 	$instock_and_outofstock_items_table["additional_info"]["count_eta_unknown"] = $count_eta_unknown;

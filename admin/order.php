@@ -2868,6 +2868,58 @@ func_print_r($instock_and_outofstock_items_table["additional_info"]);
 	$backorder_decision_request_message = str_replace("{{discontinued}}", $cidev_discontinued_items_table, $backorder_decision_request_message);
 	$backorder_decision_request_message = str_replace("{{po_number}}", $order["po_number"], $backorder_decision_request_message);
 
+
+	$outofstock_disc_cat_urls = "";
+	$productids_for_outofstock_disc_cat_urls = array();
+	$products_for_outofstock_disc_cat_urls = array();
+
+	if (!empty($instock_and_outofstock_items_table["outofstock_products_info"]) && is_array($instock_and_outofstock_items_table["outofstock_products_info"])){
+		foreach ($instock_and_outofstock_items_table["outofstock_products_info"] as $prod_info){
+			if (!in_array($prod_info["productid"], $productids_for_outofstock_disc_cat_urls)){
+				$productids_for_outofstock_disc_cat_urls[] = $prod_info["productid"];
+				$products_for_outofstock_disc_cat_urls[] = $prod_info["product"];
+			}
+		}
+	}
+
+        if (!empty($instock_and_outofstock_items_table["discontinued_products_info"]) && is_array($instock_and_outofstock_items_table["discontinued_products_info"])){             
+                foreach ($instock_and_outofstock_items_table["discontinued_products_info"] as $prod_info){
+                        if (!in_array($prod_info["productid"], $productids_for_outofstock_disc_cat_urls)){
+                                $productids_for_outofstock_disc_cat_urls[] = $prod_info["productid"];
+                        }
+                }
+        }
+
+	if (!empty($productids_for_outofstock_disc_cat_urls)){
+		$cats_for_outofstock_disc_cat_urls = func_query("SELECT xcart_categories.categoryid, xcart_categories.category, xcart_clean_urls.clean_url, xcart_products_sf.sfid FROM xcart_categories LEFT JOIN xcart_products_categories ON xcart_categories.categoryid=xcart_products_categories.categoryid LEFT JOIN xcart_clean_urls ON xcart_clean_urls.resource_id=xcart_categories.categoryid AND xcart_clean_urls.resource_type='C' LEFT JOIN xcart_products_sf ON xcart_products_sf.productid=xcart_products_categories.productid WHERE xcart_products_categories.productid IN ('".implode("','",$productids_for_outofstock_disc_cat_urls)."') GROUP BY xcart_categories.categoryid");
+
+		if (!empty($cats_for_outofstock_disc_cat_urls) && !empty($products_for_outofstock_disc_cat_urls)){
+			$outofstock_disc_cat_urls = "Alternatively you can replace <B>".implode("</B> and <B>", $products_for_outofstock_disc_cat_urls)."</B> with one or several of the following products:\r\n";
+
+			$count_cats_for_outofstock_disc_cat_urls = count($cats_for_outofstock_disc_cat_urls);
+			foreach ($cats_for_outofstock_disc_cat_urls as $k_o => $v_o){
+				$tmp_cat_str = "http://";
+
+				if ($v_o["sfid"] > 0){
+					$tmp_cat_str .= func_query_first_cell("SELECT domain FROM $sql_tbl[storefronts] WHERE storefrontid='$v_o[sfid]'");
+				} else {
+					$tmp_cat_str .= "www.artistsupplysource.com";
+				}
+
+				$tmp_cat_str .= "/".$v_o["clean_url"]."/";
+				
+				$outofstock_disc_cat_urls .= "<a href='$tmp_cat_str' target='_blank'>$tmp_cat_str</a>";
+
+				if ($k_o != ($count_cats_for_outofstock_disc_cat_urls - 1)){
+					$outofstock_disc_cat_urls .= "\r\n";
+				}
+			}
+		}
+	}
+
+	$backorder_decision_request_message = str_replace("{{outofstock_disc_cat_urls}}", $outofstock_disc_cat_urls, $backorder_decision_request_message);
+
+
 ###
         $signature = func_get_signature(false, $products);
         $backorder_decision_request_message = str_replace("{{signature}}", $signature, $backorder_decision_request_message);
@@ -3627,7 +3679,21 @@ if (!empty($other_customer_orders)){
 		$order_groups_info = func_query("SELECT cb_status, dc_status FROM $sql_tbl[order_groups] WHERE orderid='$v[orderid]'");
 		if (!empty($order_groups_info)){
 			foreach ($order_groups_info as $kk => $vv){
-				
+
+				if (in_array($v["fraud_status"], array("C", "E")) && $vv["cb_status"] == "P" && $vv["dc_status"] == "S"){
+	                                $Completed = "Y";
+                                        $count_Completed++;
+				}
+				elseif (!in_array($v["fraud_status"], array("C", "E", "U", "T", "N"))){
+                                        $Fraud = "Y";
+                                        $count_Fraud++;
+				}
+				elseif (in_array($v["fraud_status"], array("C", "E")) && in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
+	                                $Open = "Y";
+        	                        $count_Open++;
+				}
+
+/*	
 				if (in_array($v["fraud_status"], array("C", "E", "N")) || empty($v["fraud_status"])){
 
 					if ($vv["cb_status"] == "P" && $vv["dc_status"] == "S"){
@@ -3644,6 +3710,7 @@ if (!empty($other_customer_orders)){
                                         $Fraud = "Y";
                                         $count_Fraud++;
 				}
+*/
 			}
 		}
 

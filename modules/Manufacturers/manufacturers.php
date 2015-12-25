@@ -176,6 +176,8 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 ###
 ##
 #
+			$manufacturer = trim($manufacturer);
+
 
 			if (empty($manufacturer)) {
 				$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_empty");
@@ -215,7 +217,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 ###
 ##
 #
-				"url" => $url,
+				"url" => trim($url),
 				'cost_to_us_coef_x' => floatval($cost_to_us_coef_x),
 				'map_price_coef_x' => floatval($map_price_coef_x),
 				'new_map_price_coef_x' => floatval($new_map_price_coef_x),
@@ -343,7 +345,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 #
 
 # START: random:20341 [2010 Jul 29 14:46] 
-				"code" => $code,
+				"code" => trim($code),
 # END: random:20341 [2010 Jul 29 14:46] 
 				"descr" => $descr
 			);
@@ -469,6 +471,8 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 		#
 			$fillerror = true;
 
+			$manufacturer = trim($manufacturer);
+
 			if (empty($manufacturer)) {
 				$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_empty");
 				$top_message['type'] = 'E';
@@ -500,9 +504,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 					"provider" => $login,
 					"descr" => $descr,
 # START: random:20341 [2010 Jul 29 14:46] 
-					"code" => $code,
+					"code" => trim($code),
 # END: random:20341 [2010 Jul 29 14:46] 
-					"url" => $url
+					"url" => trim($url)
 				);
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
