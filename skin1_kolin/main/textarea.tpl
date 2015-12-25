@@ -1,5 +1,5 @@
 {* $Id: textarea.tpl,v 1.5.2.3 2006/11/14 08:06:41 max Exp $ *}
-{if $active_modules.HTML_Editor && !$disabled}
+{if $active_modules.HTML_Editor && !$disabled && !$readonly}
 {include file="main/start_textarea.tpl" _include_once=1}
 {assign var="id" value=$name|regex_replace:"/[^\w\d_]/":""}
 <script type="text/javascript">
@@ -204,5 +204,5 @@ if (isOpen && isOpen == 'Y')
 </script>
 
 {else}
-<textarea id="{$id}" name="{$name}"{if $cols} cols="{$cols}"{/if}{if $rows} rows="{$rows}"{/if}{if $class} class="{$class}"{/if}{if $style} style="{$style}"{/if}{if $disabled} disabled="disabled"{/if}>{$data|escape:"html"}</textarea>
+<textarea id="{$id}" name="{$name}"{if $cols} cols="{$cols}"{/if}{if $rows} rows="{$rows}"{/if}{if $class} class="{$class}"{/if}{if $style} style="{$style}"{/if}{if $disabled} disabled="disabled"{/if} {if $readonly} readonly="readonly"{/if} >{$data|escape:"html"}</textarea>
 {/if}

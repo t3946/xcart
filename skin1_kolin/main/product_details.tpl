@@ -111,17 +111,22 @@ function generate_price(id) {ldelim}
 
 	$('#' + id).val(round(res, 2));
 {rdelim}
+-->
+</script>
 
 
+{if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "N"}
+<script type="text/javascript" language="JavaScript 1.2">
+<!--
 {literal}
   $(function() {
     $("#eta_date_mm_dd_yyyy").datepicker();
 //    $("#eta_date_mm_dd_yyyy").datepicker('option', 'dateFormat', 'MM d, yy');;
   });
 {/literal}
-
 -->
 </script>
+{/if}
 
 {include file="check_froogle_upc_js.tpl"}
 
@@ -252,7 +257,7 @@ function generate_price(id) {ldelim}
 <tr>
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[eta_date_mm_dd_yyyy]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">ETA date (mm/dd/yyyy):</td>
-        <td class="ProductDetails"><input type="text" name="eta_date_mm_dd_yyyy" id="eta_date_mm_dd_yyyy" size="18" value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}" /></td>
+        <td class="ProductDetails"><input type="text" name="eta_date_mm_dd_yyyy" id="eta_date_mm_dd_yyyy" size="18" value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}" {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
 {* ----------------------- *}
 
@@ -458,14 +463,14 @@ function generate_price(id) {ldelim}
 <tr> 
 	{if $geid ne ''}<td width="15" class="TableSubHead">&nbsp;</td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_froogle_upc}:</td>
-	<td class="ProductDetails"><input type="text" name="upc" size="20" value="{$product.upc}" class="InputWidth" /></td>
+	<td class="ProductDetails"><input type="text" name="upc" size="20" value="{$product.upc}" class="InputWidth" {if $manufacturer_feed_fields.upc.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
 
 <tr> 
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[product]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_product_name}:</td>
 	<td class="ProductDetails"> 
-	<input type="text" name="product" id="product_name" size="45" class="InputWidth" value="{$product.product|escape}" {* {if $config.SEO.clean_urls_enabled eq "Y"}onchange="javascript: if (this.form.clean_url.value == '') copy_clean_url(this, this.form.clean_url)"{/if} *} />
+	<input type="text" name="product" id="product_name" size="45" class="InputWidth" value="{$product.product|escape}" {* {if $config.SEO.clean_urls_enabled eq "Y"}onchange="javascript: if (this.form.clean_url.value == '') copy_clean_url(this, this.form.clean_url)"{/if} *} {if $manufacturer_feed_fields.product.disable eq "Y"}readonly="readonly"{/if} />
 	{if $top_message.fillerror ne "" and $product.product eq ""}<font class="Star">&lt;&lt;</font>{/if}
 	&nbsp;{include file="capitalize_js.tpl" id="product_name"}
 	</td>
@@ -481,7 +486,7 @@ function generate_price(id) {ldelim}
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[product]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_product_name_froogle}:</td>
 	<td class="ProductDetails"> 
-		<input type="text" name="product_froogle" id="froogle_title" size="45" maxlength="70" class="InputWidth" value="{$product.product_froogle|escape}" />
+		<input type="text" name="product_froogle" id="froogle_title" size="45" maxlength="70" class="InputWidth" value="{$product.product_froogle|escape}" {if $manufacturer_feed_fields.product_froogle.disable eq "Y"}readonly="readonly"{/if} />
 		&nbsp;<input type="button" value=" {$lng.lbl_copy|strip_tags:false|escape} " onclick="javascript: copy_product_title_to_froogle();" />
 	</td>
 </tr>
@@ -491,7 +496,7 @@ function generate_price(id) {ldelim}
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[google_search_term]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_google_prod_search_term}:</td>
 	<td class="ProductDetails">
-        <input type="text" name="google_search_term" class="InputWidth" value="{$product.google_search_term|escape:"html"}" />
+        <input type="text" name="google_search_term" class="InputWidth" value="{$product.google_search_term|escape:"html"}" {if $manufacturer_feed_fields.google_search_term.disable eq "Y"}readonly="readonly"{/if} />
         {if $config.Product_Page.google_prod_link_pattern && $product.google_search_term}
             &nbsp;<a href="{$config.Product_Page.google_prod_link_pattern|substitute:searchterm:$product.google_search_link}" target="_blank" title="">{$lng.lbl_google_prod_link}</a>
         {/if}
@@ -505,7 +510,12 @@ function generate_price(id) {ldelim}
 <tr>
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[amazon_enabled]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">Amazon enabled:</td>
-        <td class="ProductDetails"><input type="checkbox" name="amazon_enabled" value="Y"{if $product.amazon_enabled eq "Y"} checked="checked"{/if} /></td>
+        <td class="ProductDetails">
+<input type="checkbox" name="amazon_enabled" value="Y"{if $product.amazon_enabled eq "Y"} checked="checked"{/if} {if $manufacturer_feed_fields.amazon_enabled.disable eq "Y"}disabled="disabled"{/if} />
+{if $manufacturer_feed_fields.amazon_enabled.disable eq "Y"}
+<input type="hidden" name="amazon_enabled" value="{$product.amazon_enabled}" />
+{/if}
+	</td>
 </tr>
 
 <tr>
@@ -518,7 +528,11 @@ function generate_price(id) {ldelim}
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[fulldescr]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_det_description}* :</td>
 	<td class="ProductDetails">
+{if $manufacturer_feed_fields.fulldescr.disable eq "Y"}
+	{include file="main/textarea.tpl" name="fulldescr" cols=45 rows=12 class="InputWidth" data=$product.fulldescr width="80%" btn_rows=4 readonly="Y"}
+{else}
 	{include file="main/textarea.tpl" name="fulldescr" cols=45 rows=12 class="InputWidth" data=$product.fulldescr width="80%" btn_rows=4}
+{/if}
 	{if $top_message.fillerror ne "" and $product.fulldescr eq ""}<font class="Star">&lt;&lt;</font>{/if}
 	</td>
 </tr>
@@ -530,7 +544,11 @@ function generate_price(id) {ldelim}
 		<font style="font-weight: normal">{$lng.txt_short_descr}</font>
 	</td>
 	<td class="ProductDetails">
+{if $manufacturer_feed_fields.descr.disable eq "Y"}
+	{include file="main/textarea.tpl" name="descr" cols=45 rows=8 class="InputWidth" data=$product.descr width="80%" btn_rows=4 readonly="Y"}
+{else}
 	{include file="main/textarea.tpl" name="descr" cols=45 rows=8 class="InputWidth" data=$product.descr width="80%" btn_rows=4}
+{/if}
 	</td>
 </tr>
 
@@ -542,7 +560,7 @@ function generate_price(id) {ldelim}
 <tr>
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[lead_time_message]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">Lead time message:</td>
-        <td class="ProductDetails"><input type="text" class="InputWidth" name="lead_time_message" id="lead_time_message" size="20" value="{$product.lead_time_message}" /></td>
+        <td class="ProductDetails"><input type="text" class="InputWidth" name="lead_time_message" id="lead_time_message" size="20" value="{$product.lead_time_message}" {if $manufacturer_feed_fields.lead_time_message.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
 
 
@@ -550,7 +568,7 @@ function generate_price(id) {ldelim}
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[supplier_internal_id]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">Supplier internal id:</td>
         <td class="ProductDetails">
-	<input type="text" name="supplier_internal_id" id="supplier_internal_id" size="20" value="{$product.supplier_internal_id}" />
+	<input type="text" name="supplier_internal_id" id="supplier_internal_id" size="20" value="{$product.supplier_internal_id}" {if $manufacturer_feed_fields.supplier_internal_id.disable eq "Y"}readonly="readonly"{/if} />
 	{if $product.supplier_internal_id_last_parsed_update gt 0}
 		(last_parsed_update: {$product.supplier_internal_id_last_parsed_update|date_format:$config.Appearance.datetime_format})
 	{/if}
@@ -565,14 +583,14 @@ function generate_price(id) {ldelim}
 <tr>
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[list_price]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_list_price} <span class="Text">({$config.General.currency_symbol})</span></td>
-	<td class="ProductDetails"><input type="text" name="list_price" id="list_price" size="18" value="{$product.list_price|formatprice|default:$zero}" /></td>
+	<td class="ProductDetails"><input type="text" name="list_price" id="list_price" size="18" value="{$product.list_price|formatprice|default:$zero}" {if $manufacturer_feed_fields.list_price.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
 
 <tr>
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[cost_to_us]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_cost_to_us} ({$config.General.currency_symbol})</td>
 	<td class="ProductDetails">
-		<input type="text" name="cost_to_us" id="cost_to_us" size="18" value="{$product.cost_to_us|formatprice|default:$zero}" />&nbsp;
+		<input type="text" name="cost_to_us" id="cost_to_us" size="18" value="{$product.cost_to_us|formatprice|default:$zero}" {if $manufacturer_feed_fields.cost_to_us.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
 		{if $product.cost_to_us_coef_x ne 0}
 			<input type="button" value="{$lng.lbl_copy_to_us_button|replace:"X":"`$product.cost_to_us_coef_x`"}" onclick="javascript: generate_price('cost_to_us');" />&nbsp;
 		{/if}	
@@ -599,7 +617,7 @@ function generate_price(id) {ldelim}
 </div>
 
 <div id="cidev_box2" style="display: none;">
-        <input type="text" name="price" id="price" size="18" value="{ $product.price|formatprice|default:$zero}" />&nbsp;
+        <input type="text" name="price" id="price" size="18" value="{ $product.price|formatprice|default:$zero}" {if $manufacturer_feed_fields.price.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
 {else}
 <font style="color: #580404">&nbsp;{ $product.price|formatprice|default:$zero}</font>
         <input type="hidden" name="price" id="price" value="{ $product.price|formatprice|default:$zero}" />
@@ -635,7 +653,7 @@ function generate_price(id) {ldelim}
 </div>
 
 <div id="cidev_box4" style="display: none;">
-        <input type="text" name="product_price_multiplier" id="product_price_multiplier" size="18" value="{$product.product_price_multiplier|formatprice|default:$zero}" />&nbsp;
+        <input type="text" name="product_price_multiplier" id="product_price_multiplier" size="18" value="{$product.product_price_multiplier|formatprice|default:$zero}" {if $manufacturer_feed_fields.product_price_multiplier.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
 {else}
 <font style="color: #580404">&nbsp;{$product.product_price_multiplier|formatprice|default:$zero}</font>
         <input type="hidden" name="product_price_multiplier" id="product_price_multiplier" value="{$product.product_price_multiplier|formatprice|default:$zero}" />
@@ -653,7 +671,7 @@ function generate_price(id) {ldelim}
 <tr>
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[new_map_price]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">{$lng.lbl_new_map_price} <span class="Text">({$config.General.currency_symbol})</span></td>
-        <td class="ProductDetails"><input type="text" name="new_map_price" id="new_map_price" size="18" value="{$product.new_map_price|formatprice|default:$zero}" /></td>
+        <td class="ProductDetails"><input type="text" name="new_map_price" id="new_map_price" size="18" value="{$product.new_map_price|formatprice|default:$zero}" {if $manufacturer_feed_fields.new_map_price.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
 *}
 
@@ -661,7 +679,7 @@ function generate_price(id) {ldelim}
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[new_map_price]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">{$lng.lbl_new_map_price} <span class="Text">({$config.General.currency_symbol})</span></td>
         <td class="ProductDetails">
-                <input type="text" name="new_map_price" id="new_map_price" size="18" value="{$product.new_map_price|formatprice|default:$zero}" />&nbsp;
+                <input type="text" name="new_map_price" id="new_map_price" size="18" value="{$product.new_map_price|formatprice|default:$zero}" {if $manufacturer_feed_fields.new_map_price.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
                 {if $product.new_map_price_coef_x ne 0}
                         <input type="button" value="{$lng.lbl_copy_to_us_button|replace:"X":"`$product.new_map_price_coef_x`"}" onclick="javascript: generate_price('new_map_price');" />&nbsp;
                 {/if}
@@ -678,7 +696,7 @@ function generate_price(id) {ldelim}
  *}
 
         <td class="ProductDetails">
-                <input type="text" name="map_price" id="map_price" size="18" value="{$product.map_price|formatprice|default:$zero}" />&nbsp;
+                <input type="text" name="map_price" id="map_price" size="18" value="{$product.map_price|formatprice|default:$zero}" {if $manufacturer_feed_fields.map_price.disable eq "Y"}readonly="readonly"{/if} />&nbsp;
                 {if $product.map_price_coef_x ne 0}
                         <input type="button" value="{$lng.lbl_copy_to_us_button|replace:"X":"`$product.map_price_coef_x`"}" onclick="javascript: generate_price('map_price');" />&nbsp;
                 {/if}
@@ -700,7 +718,7 @@ function generate_price(id) {ldelim}
 {if $product.is_variants eq 'Y'}
 <b>{$lng.lbl_note}:</b> {$lng.txt_pvariant_edit_note|substitute:"href":$variant_href}
 {else}
-	<input type="text" name="r_avail" size="18" value="{if $product.productid eq ""}{$product.r_avail|default:1000000}{else}{$product.r_avail}{/if}" />
+	<input type="text" name="r_avail" size="18" value="{if $product.productid eq ""}{$product.r_avail|default:1000000}{else}{$product.r_avail}{/if}" {if $manufacturer_feed_fields.r_avail.disable eq "Y"}readonly="readonly"{/if} />
 
 	{if $product.productid eq ""}<input type="hidden" name="avail" value="1000000" />{/if}
 
@@ -713,7 +731,7 @@ function generate_price(id) {ldelim}
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[low_avail_limit]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_lowlimit_in_stock}</td>
 	<td class="ProductDetails"> 
-	<input type="text" name="low_avail_limit" size="18" value="{if $product.productid eq ""}1000{else}{ $product.low_avail_limit }{/if}" />
+	<input type="text" name="low_avail_limit" size="18" value="{if $product.productid eq ""}1000{else}{ $product.low_avail_limit }{/if}" {if $manufacturer_feed_fields.low_avail_limit.disable eq "Y"}readonly="readonly"{/if} />
 	{if $top_message.fillerror ne "" and $product.low_avail_limit le 0}<font class="Star">&lt;&lt;</font>{/if}
 	</td>
 </tr>
@@ -721,20 +739,28 @@ function generate_price(id) {ldelim}
 <tr>
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[min_amount]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_min_order_amount}</td>
-	<td class="ProductDetails"><input type="text" name="min_amount" size="18" value="{if $product.productid eq ""}1{else}{$product.min_amount}{/if}" id="min_amount" onBlur="javascript: cidev_change_discount_table();" onKeyUp="javascript: cidev_change_discount_table();" /></td>
+	<td class="ProductDetails"><input type="text" name="min_amount" size="18" value="{if $product.productid eq ""}1{else}{$product.min_amount}{/if}" id="min_amount" onBlur="javascript: cidev_change_discount_table();" onKeyUp="javascript: cidev_change_discount_table();" {if $manufacturer_feed_fields.min_amount.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
 
 <tr>
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[mult_order_quantity]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_mult_order_quantity}</td>
-	<td class="ProductDetails"><input type="checkbox" name="mult_order_quantity" value="Y"{if $product.mult_order_quantity eq "Y"} checked="checked"{/if} /></td>
+	<td class="ProductDetails">
+
+	<input type="checkbox" name="mult_order_quantity" value="Y"{if $product.mult_order_quantity eq "Y"} checked="checked"{/if} {if $manufacturer_feed_fields.mult_order_quantity.disable eq "Y"}disabled="disabled"{/if} />
+
+	{if $manufacturer_feed_fields.mult_order_quantity.disable eq "Y"}
+	<input type="hidden" name="mult_order_quantity" value="{$product.mult_order_quantity}" />
+	{/if}
+
+	</td>
 </tr>
 
 {if $active_modules.RMA ne ''}
 <tr> 
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[return_time]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_return_time}</td>
-	<td class="ProductDetails"><input type="text" name="return_time" size="18" value="{$product.return_time}" /></td>
+	<td class="ProductDetails"><input type="text" name="return_time" size="18" value="{$product.return_time}" {if $manufacturer_feed_fields.return_time.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
 {/if}
 
@@ -754,10 +780,13 @@ function generate_price(id) {ldelim}
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[free_tax]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_tax_exempt}</td>
 	<td class="ProductDetails">
-	<select name="free_tax"{if $taxes} onchange="javascript: ChangeTaxesBoxStatus();"{/if}>
+	<select name="free_tax"{if $taxes} onchange="javascript: ChangeTaxesBoxStatus();"{/if} {if $manufacturer_feed_fields.free_tax.disable eq "Y"}disabled="disabled"{/if}>
 		<option value='Y'{if $product.free_tax eq 'Y'} selected="selected"{/if}>{$lng.lbl_yes}</option>
 		<option value='N'{if $product.free_tax eq 'N'} selected="selected"{/if}>{$lng.lbl_no}</option>
 	</select> 
+	{if $manufacturer_feed_fields.free_tax.disable eq "Y"}
+		<input type="hidden" name="free_tax" value="{$product.free_tax}" />
+	{/if}
 	</td>
 </tr>
 
@@ -766,7 +795,7 @@ function generate_price(id) {ldelim}
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[taxes]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_apply_taxes}</td>
 	<td class="ProductDetails"> 
-	<select name="taxes[]" multiple="multiple"{if $product.free_tax eq "Y"} disabled="disabled"{/if}>
+	<select name="taxes[]" multiple="multiple"{if $product.free_tax eq "Y" || $manufacturer_feed_fields.taxes.disable eq "Y"} disabled="disabled"{/if}>
 	{section name=tax loop=$taxes}
 	<option value="{$taxes[tax].taxid}"{if $taxes[tax].selected gt 0} selected="selected"{/if}>{$taxes[tax].tax_name}</option>
 	{/section}
@@ -810,7 +839,7 @@ function generate_price(id) {ldelim}
 {if $product.is_variants eq 'Y'}
 <b>{$lng.lbl_note}:</b> {$lng.txt_pvariant_edit_note|substitute:"href":$variant_href}
 {else}
-	<input type="text" name="weight" size="18" value="{ $product.weight|formatprice|default:$zero }" />
+	<input type="text" name="weight" size="18" value="{ $product.weight|formatprice|default:$zero }" {if $manufacturer_feed_fields.weight.disable eq "Y"}readonly="readonly"{/if} />
 {/if}
 	</td>
 </tr>
@@ -818,23 +847,23 @@ function generate_price(id) {ldelim}
 <tr> 
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[dimensions]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} x:</td>
-	<td class="ProductDetails"><input type="text" name="dimensionx" size="18" value="{$product.dim_x|default:0}" /></td>
+	<td class="ProductDetails"><input type="text" name="dimensionx" size="18" value="{$product.dim_x|default:0}" {if $manufacturer_feed_fields.dimensionx.disable eq "Y" || $manufacturer_feed_fields.dim_x.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
     <tr>
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[dimensions]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} y:</td>
-        <td class="ProductDetails"><input type="text" name="dimensiony" size="18" value="{$product.dim_y|default:0}" /></td>
+        <td class="ProductDetails"><input type="text" name="dimensiony" size="18" value="{$product.dim_y|default:0}" {if $manufacturer_feed_fields.dimensiony.disable eq "Y" || $manufacturer_feed_fields.dim_y.disable eq "Y"}readonly="readonly"{/if} /></td>
     </tr>
     <tr>
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[dimensions]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} z:</td>
-        <td class="ProductDetails"><input type="text" name="dimensionz" size="18" value="{$product.dim_z|default:0}" /></td>
+        <td class="ProductDetails"><input type="text" name="dimensionz" size="18" value="{$product.dim_z|default:0}" {if $manufacturer_feed_fields.dimensionz.disable eq "Y" || $manufacturer_feed_fields.dim_z.disable eq "Y"}readonly="readonly"{/if} /></td>
     </tr>
 <tr {if $usertype eq "P"}style="display: none;"{/if}>
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[shipping_freight]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_freight} ({$config.General.currency_symbol})</td>
 	<td class="ProductDetails">
-	<input type="text" name="shipping_freight" size="18" value="{$product.shipping_freight|formatprice|default:0.01}" />
+	<input type="text" name="shipping_freight" size="18" value="{$product.shipping_freight|formatprice|default:0.01}" {if $manufacturer_feed_fields.shipping_freight.disable eq "Y"}readonly="readonly"{/if} />
 	</td>
 </tr>
 
@@ -842,20 +871,24 @@ function generate_price(id) {ldelim}
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[free_ship_zone]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_free_ship_destination}</td>
 	<td class="ProductDetails">
-	<select name="free_ship_zone">
+	<select name="free_ship_zone" {if $manufacturer_feed_fields.free_ship_zone.disable eq "Y"} disabled="disabled"{/if}>
 	<option value="-1"{if $product.free_ship_zone eq '-1'} selected="selected"{/if}>{$lng.lbl_no_free_ship}</option>
 	<option value="0"{if $product.free_ship_zone eq '0'} selected="selected"{/if}>{$lng.lbl_zone_default}</option>
 	{section name=zid loop=$shipping_zones}
 	<option value="{$shipping_zones[zid].zoneid}"{if $product.free_ship_zone eq $shipping_zones[zid].zoneid} selected="selected"{/if}>{$shipping_zones[zid].zone_name}</option>
 	{/section}
 	</select> 
+
+	{if $manufacturer_feed_fields.free_ship_zone.disable eq "Y"}
+                <input type="hidden" name="free_ship_zone" value="{$product.free_ship_zone}" />
+	{/if}
 	</td>
 </tr>
 
 <tr> 
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[free_ship_text]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_free_ship_text}</td>
-	<td class="ProductDetails"><input type="text" name="free_ship_text" size="45" class="InputWidth" value="{$product.free_ship_text}" /></td>
+	<td class="ProductDetails"><input type="text" name="free_ship_text" size="45" class="InputWidth" value="{$product.free_ship_text}" {if $manufacturer_feed_fields.free_ship_text.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
 
 <tr {if $usertype eq "P"}style="display: none;"{/if}>
@@ -870,7 +903,12 @@ function generate_price(id) {ldelim}
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[valid_for_gcheckout]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_gcheckout_product_valid}</td>
 	<td class="ProductDetails">
-	<input type="checkbox" name="valid_for_gcheckout" value="Y"{if $product.productid eq "" || $product.valid_for_gcheckout eq "Y"} checked="checked"{/if} />
+	<input type="checkbox" name="valid_for_gcheckout" value="Y"{if $product.productid eq "" || $product.valid_for_gcheckout eq "Y"} checked="checked"{/if} {if $manufacturer_feed_fields.valid_for_gcheckout.disable eq "Y"}disabled="disabled"{/if} />
+
+        {if $manufacturer_feed_fields.valid_for_gcheckout.disable eq "Y"}
+                <input type="hidden" name="valid_for_gcheckout" value="{$product.valid_for_gcheckout}" />
+        {/if}
+
 	</td>
 </tr>
 
@@ -883,20 +921,23 @@ function generate_price(id) {ldelim}
 <tr {if $usertype eq "P"}style="display: none;"{/if}>
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[discount_slope]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">{$lng.lbl_discount_slope}:</td>
-        <td class="ProductDetails"><input type="text" name="discount_slope" size="18" value="{$product.discount_slope|formatprice|default:'0.60'}" /></td>
+        <td class="ProductDetails"><input type="text" name="discount_slope" size="18" value="{$product.discount_slope|formatprice|default:'0.60'}" {if $manufacturer_feed_fields.discount_slope.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
 
 <tr {if $usertype eq "P"}style="display: none;"{/if}>
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[discount_table]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">{$lng.lbl_discount_table}:</td>
-        <td class="ProductDetails"><input type="text" name="discount_table" id="discount_table" size="45" class="InputWidth" value="{if $smarty.get.mode_add_product eq 'y'}{$product.discount_table|escape|default:'2,3,4,6,8,12'}{else}{$product.discount_table|escape}{/if}" /></td>
+        <td class="ProductDetails"><input type="text" name="discount_table" id="discount_table" size="45" class="InputWidth" value="{if $smarty.get.mode_add_product eq 'y'}{$product.discount_table|escape|default:'2,3,4,6,8,12'}{else}{$product.discount_table|escape}{/if}" {if $manufacturer_feed_fields.discount_table.disable eq "Y"}readonly="readonly"{/if} /></td>
 </tr>
 
 <tr style="display: none;">
 	{if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[discount_avail]" /></td>{/if}
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_apply_global_discounts}</td>
 	<td class="ProductDetails">
-	<input type="checkbox" name="discount_avail" value="Y"{if $product.productid eq "" || $product.discount_avail eq "Y"} checked="checked"{/if} />
+	<input type="checkbox" name="discount_avail" value="Y"{if $product.productid eq "" || $product.discount_avail eq "Y"} checked="checked"{/if} {if $manufacturer_feed_fields.discount_avail.disable eq "Y"}disabled="disabled"{/if} />
+        {if $manufacturer_feed_fields.discount_avail.disable eq "Y"}
+                <input type="hidden" name="discount_avail" value="{$product.discount_avail}" />
+        {/if}
 	</td>
 </tr>
 
@@ -904,7 +945,10 @@ function generate_price(id) {ldelim}
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[generate_similar_products]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">Generate similar products:</td>
         <td class="ProductDetails">
-        <input type="checkbox" name="generate_similar_products" value="Y"{if $product.productid eq "" || $product.generate_similar_products eq "Y"} checked="checked"{/if} />
+        <input type="checkbox" name="generate_similar_products" value="Y"{if $product.productid eq "" || $product.generate_similar_products eq "Y"} checked="checked"{/if} {if $manufacturer_feed_fields.generate_similar_products.disable eq "Y"}disabled="disabled"{/if} />
+        {if $manufacturer_feed_fields.generate_similar_products.disable eq "Y"}
+                <input type="hidden" name="generate_similar_products" value="{$product.generate_similar_products}" />
+        {/if}
         </td>
 </tr>
 

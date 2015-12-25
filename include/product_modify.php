@@ -1534,4 +1534,19 @@ $smarty->assign("product_questions_arr", $product_questions_arr);
 ##
 #
 
+$manufacturer_feed_fields = func_query_hash("SELECT $sql_tbl[manufacturer_feed_fields].* FROM $sql_tbl[manufacturer_feed_fields] WHERE $sql_tbl[manufacturer_feed_fields].manufacturerid='$product_info[manufacturerid]'", "field_name", false);
+
+if (!empty($manufacturer_feed_fields) && is_array($manufacturer_feed_fields)){
+	foreach ($manufacturer_feed_fields as $k => $v){
+		if (($v["locked"] == 'Y' && $v["admin_lock"] == 'Y') || ($v["locked"] == 'N' && $v["admin_lock"] == 'Y')){
+			$manufacturer_feed_fields[$k]["disable"] = "Y";
+		} else {
+			$manufacturer_feed_fields[$k]["disable"] = "N";
+		}
+	}
+
+//$manufacturer_feed_fields["eta_date_mm_dd_yyyy"]["disable"] = "Y";
+	$smarty->assign("manufacturer_feed_fields", $manufacturer_feed_fields);
+}
+
 ?>
