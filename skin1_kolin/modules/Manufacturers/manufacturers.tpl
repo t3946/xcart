@@ -697,13 +697,65 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 <tr>
 <td class="FormButton" width="20%">Login/username</td>
 <td>&nbsp;</td>
-<td width="80%"><input type="text"  name="d_login" value="{$manufacturer.d_login}" size="50" maxlength="128" style="width: 40%;" /></td>
+<td width="80%">
+
+<script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+{literal}
+function func_show_login_password_info(manufacturerid){
+
+                        cidev_xmlHttp=cidev_createHttpRequestObject();
+                        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
+
+                                var cidev_parameters = 'manufacturerid='+manufacturerid
+
+                                cidev_xmlHttp.onreadystatechange=function(){
+                                        if(cidev_xmlHttp.readyState==4){
+                                                if(cidev_xmlHttp.status==200){
+							$('#div_d_login').show();
+							$('#div_d_password').show();
+							$('#link_unhide').hide();
+                                                }else{
+//                                                        cidev_Error('no_server', 'Y');
+                                                }
+                                        }
+                                };
+
+                                var tmp_rand = Math.random();
+
+                                cidev_xmlHttp.open('POST','unhide_manufacturer_login.php?rand='+tmp_rand,true);
+                                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
+                                cidev_xmlHttp.setRequestHeader('Cache-Control','no-cache');
+                                cidev_xmlHttp.setRequestHeader('Cache-Control','no-store');
+                                cidev_xmlHttp.setRequestHeader('Connection','close');
+                                cidev_xmlHttp.send(cidev_parameters);
+                        }
+                        else {
+                                setTimeout('func_show_login_password_info()', 1000);
+                        }
+}
+{/literal}
+//]]>
+</script>
+
+<a id="link_unhide" style="color: blue; border-bottom: 1px dotted blue; text-decoration: none;" href="javascript: void(0);" onclick="javascript: func_show_login_password_info({$manufacturer.manufacturerid});">Unhide</a>
+
+  <div id="div_d_login" style="display: none;">
+	<input type="text" id="d_login" name="d_login" value="{$manufacturer.d_login}" size="50" maxlength="128" style="width: 40%;" />
+  </div>
+</td>
 </tr>
 
 <tr>
 <td class="FormButton" width="20%">Password</td>
 <td>&nbsp;</td>
-<td width="80%"><input type="text"  name="d_password" value="{$manufacturer.d_password}" size="50" maxlength="128" style="width: 40%;" /></td>
+<td width="80%">
+  <div id="div_d_password" style="display: none;">
+	<input type="text" id="d_password" name="d_password" value="{$manufacturer.d_password}" size="50" maxlength="128" style="width: 40%;" />
+  </div>
+</td>
 </tr>
 
 <tr>
