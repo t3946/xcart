@@ -1725,6 +1725,15 @@ if ($REQUEST_METHOD == "POST") {
 
 		###
 
+#
+##
+                if (!empty($order["shipping_groups"][$certain_mid]["shippingid"])){
+                        $real_drop_ship_fee = func_query_first_cell("SELECT real_drop_ship_fee FROM $sql_tbl[shipping_rates] WHERE shippingid='".$order["shipping_groups"][$certain_mid]["shippingid"]."' AND manufacturerid='$certain_mid' AND mintotal <= '".$products_total."' AND maxtotal >= '".$products_total."'");
+			$drop_ship_fee_charged = $real_drop_ship_fee;
+                }
+##
+#
+
 		$shipping_total = price_format($shipping_charged + $drop_ship_fee_charged);
 
 		$HST_charged = 0;
@@ -1915,6 +1924,9 @@ if ($mode == 'ref_notify') {
 /*    if ($ref_notify_do_not_send_email == "Y"){ */
     if ($ref_notify_button_clicked == "Update_C2B_status"){
 	$log = "'Update C2B status' at 'Refund'";
+    }
+    elseif ($ref_notify_button_clicked == "Send_refund_notification"){
+	$log = "'Send refund notification' at 'Refund'";
     } else {
 	$log = "'Update C2B status and Send refund notification' at 'Refund'";
     }
@@ -1996,10 +2008,10 @@ if ($mode == 'ref_notify') {
 
 	    if ($ref_notify_button_clicked == "Update_C2B_status"){
 		    func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
-	    } elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification"){
+	    } elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" || $ref_notify_button_clicked == "Send_refund_notification"){
 
 /*	    if ($ref_notify_do_not_send_email != "Y"){ */
-	            func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid);
+	            func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid, false);
             // Copy to Orders Department
 	            func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
 
@@ -2282,6 +2294,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 		$message_body .= "<br />Login/username: $d_login \r\n";
 		$message_body .= "<br />Password: $d_password \r\n";
 */
+
+		$mail_smarty->assign('email_is_sent_to_operator', 'Y');
 
 		$mail_smarty->assign('mnf_operator_notify', 'Y');
 		$mail_smarty->assign('message_body', $message_body);
@@ -2862,6 +2876,58 @@ func_print_r($instock_and_outofstock_items_table["additional_info"]);
 	$backorder_decision_request_message = str_replace("{{outofstock}}", $cidev_outofstock_items_table, $backorder_decision_request_message);
 	$backorder_decision_request_message = str_replace("{{discontinued}}", $cidev_discontinued_items_table, $backorder_decision_request_message);
 	$backorder_decision_request_message = str_replace("{{po_number}}", $order["po_number"], $backorder_decision_request_message);
+
+
+	$outofstock_disc_cat_urls = "";
+	$productids_for_outofstock_disc_cat_urls = array();
+	$products_for_outofstock_disc_cat_urls = array();
+
+	if (!empty($instock_and_outofstock_items_table["outofstock_products_info"]) && is_array($instock_and_outofstock_items_table["outofstock_products_info"])){
+		foreach ($instock_and_outofstock_items_table["outofstock_products_info"] as $prod_info){
+			if (!in_array($prod_info["productid"], $productids_for_outofstock_disc_cat_urls)){
+				$productids_for_outofstock_disc_cat_urls[] = $prod_info["productid"];
+				$products_for_outofstock_disc_cat_urls[] = $prod_info["product"];
+			}
+		}
+	}
+
+        if (!empty($instock_and_outofstock_items_table["discontinued_products_info"]) && is_array($instock_and_outofstock_items_table["discontinued_products_info"])){             
+                foreach ($instock_and_outofstock_items_table["discontinued_products_info"] as $prod_info){
+                        if (!in_array($prod_info["productid"], $productids_for_outofstock_disc_cat_urls)){
+                                $productids_for_outofstock_disc_cat_urls[] = $prod_info["productid"];
+                        }
+                }
+        }
+
+	if (!empty($productids_for_outofstock_disc_cat_urls)){
+		$cats_for_outofstock_disc_cat_urls = func_query("SELECT xcart_categories.categoryid, xcart_categories.category, xcart_clean_urls.clean_url, xcart_products_sf.sfid FROM xcart_categories LEFT JOIN xcart_products_categories ON xcart_categories.categoryid=xcart_products_categories.categoryid LEFT JOIN xcart_clean_urls ON xcart_clean_urls.resource_id=xcart_categories.categoryid AND xcart_clean_urls.resource_type='C' LEFT JOIN xcart_products_sf ON xcart_products_sf.productid=xcart_products_categories.productid WHERE xcart_products_categories.productid IN ('".implode("','",$productids_for_outofstock_disc_cat_urls)."') GROUP BY xcart_categories.categoryid");
+
+		if (!empty($cats_for_outofstock_disc_cat_urls) && !empty($products_for_outofstock_disc_cat_urls)){
+			$outofstock_disc_cat_urls = "Alternatively you can replace <B>".implode("</B> and <B>", $products_for_outofstock_disc_cat_urls)."</B> with one or several of the following products:\r\n";
+
+			$count_cats_for_outofstock_disc_cat_urls = count($cats_for_outofstock_disc_cat_urls);
+			foreach ($cats_for_outofstock_disc_cat_urls as $k_o => $v_o){
+				$tmp_cat_str = "http://";
+
+				if ($v_o["sfid"] > 0){
+					$tmp_cat_str .= func_query_first_cell("SELECT domain FROM $sql_tbl[storefronts] WHERE storefrontid='$v_o[sfid]'");
+				} else {
+					$tmp_cat_str .= "www.artistsupplysource.com";
+				}
+
+				$tmp_cat_str .= "/".$v_o["clean_url"]."/";
+				
+				$outofstock_disc_cat_urls .= "<a href='$tmp_cat_str' target='_blank'>$tmp_cat_str</a>";
+
+				if ($k_o != ($count_cats_for_outofstock_disc_cat_urls - 1)){
+					$outofstock_disc_cat_urls .= "\r\n";
+				}
+			}
+		}
+	}
+
+	$backorder_decision_request_message = str_replace("{{outofstock_disc_cat_urls}}", $outofstock_disc_cat_urls, $backorder_decision_request_message);
+
 
 ###
         $signature = func_get_signature(false, $products);
@@ -3573,15 +3639,20 @@ if (!empty($checks_deposited_order)){
 	$smarty->assign("checks_deposited_order", $checks_deposited_order);
 }
 
-if (!empty($config["Checks_deposited_options"]["Checks_deposited_Attention_tag"])){
+if (!empty($config["Purchase_Order"]["Checks_deposited_Attention_tag"])){
+	if ($order["unfreeze_cb_status"] == "Y"){
+		$allowed_to_modify_cb_status_IO_O = true;
+	}
+	else {
 
-	$allowed_to_modify_cb_status_IO_O = false;
+		$allowed_to_modify_cb_status_IO_O = false;
 	
-	if (!empty($attention_tags_values[$config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]]["operators"]) && is_array($attention_tags_values[$config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]]["operators"])){
-		foreach ($attention_tags_values[$config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]]["operators"] as $k => $v){
-			if ($v["action"] == "unset" && ($v["login"] == $login || $v["login"] == "_ANY_")){
-				$allowed_to_modify_cb_status_IO_O = true;
-				break;
+		if (!empty($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"]) && is_array($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"])){
+			foreach ($attention_tags_values[$config["Purchase_Order"]["Checks_deposited_Attention_tag"]]["operators"] as $k => $v){
+				if ($v["action"] == "unset" && ($v["login"] == $login || $v["login"] == "_ANY_")){
+					$allowed_to_modify_cb_status_IO_O = true;
+					break;
+				}
 			}
 		}
 	}
@@ -3600,7 +3671,7 @@ if (!empty($config["Checks_deposited_options"]["Checks_deposited_Attention_tag"]
 ###
 //func_print_r($order);
 
-$other_customer_orders = func_query("SELECT orderid, order_prefix, fraud_status FROM $sql_tbl[orders] WHERE email='$order[email]' AND orderid!='$orderid'");
+$other_customer_orders = func_query("SELECT orderid, order_prefix, fraud_status FROM $sql_tbl[orders] WHERE email='$order[email]' AND orderid!='$orderid' ORDER BY orderid DESC");
 
 if (!empty($other_customer_orders)){
 
@@ -3617,7 +3688,21 @@ if (!empty($other_customer_orders)){
 		$order_groups_info = func_query("SELECT cb_status, dc_status FROM $sql_tbl[order_groups] WHERE orderid='$v[orderid]'");
 		if (!empty($order_groups_info)){
 			foreach ($order_groups_info as $kk => $vv){
-				
+
+				if (in_array($v["fraud_status"], array("C", "E")) && $vv["cb_status"] == "P" && $vv["dc_status"] == "S"){
+	                                $Completed = "Y";
+                                        $count_Completed++;
+				}
+				elseif (!in_array($v["fraud_status"], array("C", "E", "U", "T", "N"))){
+                                        $Fraud = "Y";
+                                        $count_Fraud++;
+				}
+				elseif (in_array($v["fraud_status"], array("C", "E")) && in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
+	                                $Open = "Y";
+        	                        $count_Open++;
+				}
+
+/*	
 				if (in_array($v["fraud_status"], array("C", "E", "N")) || empty($v["fraud_status"])){
 
 					if ($vv["cb_status"] == "P" && $vv["dc_status"] == "S"){
@@ -3634,6 +3719,7 @@ if (!empty($other_customer_orders)){
                                         $Fraud = "Y";
                                         $count_Fraud++;
 				}
+*/
 			}
 		}
 

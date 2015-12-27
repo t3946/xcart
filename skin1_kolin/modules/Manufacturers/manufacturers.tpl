@@ -165,8 +165,8 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 	<td align="center">{$v.code}</td>
 	<td>{if $v.is_provider eq 'Y'}{$v.provider_name}{else}{$lng.lbl_manuf_owner_lost}{/if}{if $administrate} ({$v.provider}){/if}</td>
 	<td align="center">{$v.products_count|default:$lng.txt_not_available}{if $v.used_by_others gt 0}*{assign var="show_note" value="Y"}{/if}</td>
-	<td>{$v.I_supplier_feeds_enabled}</td>
-	<td>{$v.P_supplier_feeds_enabled}</td>
+	<td>{$v.I_supplier_feeds_enabled} {$v.I_supplier_feeds_disabled}</td>
+	<td>{$v.P_supplier_feeds_enabled} {$v.P_supplier_feeds_disabled}</td>
 	<td align="center"><input type="text" name="records[{$v.manufacturerid}][orderby]" size="5" value="{$v.orderby}"{if $administrate eq ""} disabled="disabled"{/if} /></td>
 	<td align="center"><input type="checkbox" name="records[{$v.manufacturerid}][avail]" value="Y"{if $v.avail eq "Y"} checked="checked"{/if}{if $administrate eq ""} disabled="disabled"{/if} /></td>
 </tr>
@@ -369,7 +369,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 {include file="main/language_selector.tpl" script="manufacturers.php?manufacturerid=`$manufacturer.manufacturerid`&"}
 {/if}
 
-{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21"}
+{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "22"}
 <form action="manufacturers.php" method="post" enctype="multipart/form-data" name="manufacturer">
 <input type="hidden" name="mode" value="details" id="mode" />
 <input type="hidden" name="manufacturerid" value="{$manufacturer.manufacturerid}" />
@@ -697,13 +697,65 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 <tr>
 <td class="FormButton" width="20%">Login/username</td>
 <td>&nbsp;</td>
-<td width="80%"><input type="text"  name="d_login" value="{$manufacturer.d_login}" size="50" maxlength="128" style="width: 40%;" /></td>
+<td width="80%">
+
+<script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+{literal}
+function func_show_login_password_info(manufacturerid){
+
+                        cidev_xmlHttp=cidev_createHttpRequestObject();
+                        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
+
+                                var cidev_parameters = 'manufacturerid='+manufacturerid
+
+                                cidev_xmlHttp.onreadystatechange=function(){
+                                        if(cidev_xmlHttp.readyState==4){
+                                                if(cidev_xmlHttp.status==200){
+							$('#div_d_login').show();
+							$('#div_d_password').show();
+							$('#link_unhide').hide();
+                                                }else{
+//                                                        cidev_Error('no_server', 'Y');
+                                                }
+                                        }
+                                };
+
+                                var tmp_rand = Math.random();
+
+                                cidev_xmlHttp.open('POST','unhide_manufacturer_login.php?rand='+tmp_rand,true);
+                                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
+                                cidev_xmlHttp.setRequestHeader('Cache-Control','no-cache');
+                                cidev_xmlHttp.setRequestHeader('Cache-Control','no-store');
+                                cidev_xmlHttp.setRequestHeader('Connection','close');
+                                cidev_xmlHttp.send(cidev_parameters);
+                        }
+                        else {
+                                setTimeout('func_show_login_password_info()', 1000);
+                        }
+}
+{/literal}
+//]]>
+</script>
+
+<a id="link_unhide" style="color: blue; border-bottom: 1px dotted blue; text-decoration: none;" href="javascript: void(0);" onclick="javascript: func_show_login_password_info({$manufacturer.manufacturerid});">Unhide</a>
+
+  <div id="div_d_login" style="display: none;">
+	<input type="text" id="d_login" name="d_login" value="{$manufacturer.d_login}" size="50" maxlength="128" style="width: 40%;" />
+  </div>
+</td>
 </tr>
 
 <tr>
 <td class="FormButton" width="20%">Password</td>
 <td>&nbsp;</td>
-<td width="80%"><input type="text"  name="d_password" value="{$manufacturer.d_password}" size="50" maxlength="128" style="width: 40%;" /></td>
+<td width="80%">
+  <div id="div_d_password" style="display: none;">
+	<input type="text" id="d_password" name="d_password" value="{$manufacturer.d_password}" size="50" maxlength="128" style="width: 40%;" />
+  </div>
+</td>
 </tr>
 
 <tr>
@@ -1565,36 +1617,59 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 <B>Inventory feeds info:</B>
 <br />
 {if $supplier_feeds_info_I ne ""}
+  {foreach from=$supplier_feeds_info_I item=v_s key=k_s}
+	<B>feed_name:</B> {$v_s.feed_name} ({if $v_s.enabled eq "Y"}Enabled{else}Disabled{/if})<br />
+	<B>storefront_id:</B> {$v_s.storefront_id} <br />
+	<B>last_update_time:</B> {$v_s.last_update_time|date_format:'%d-%b-%Y&nbsp; %H:%M'} <br />
+	<B>average_update_period:</B> {$v_s.average_update_period_str} <br />
+	<B>last_update_items_count:</B> {$v_s.last_update_items_count} <br />
 
-	<B>feed_name:</B> {$supplier_feeds_info_I.feed_name} <br />
-	<B>storefront_id:</B> {$supplier_feeds_info_I.storefront_id} <br />
-	<B>last_update_time:</B> {$supplier_feeds_info_I.last_update_time|date_format:'%d-%b-%Y&nbsp; %H:%M'} <br />
-	<B>average_update_period:</B> {$supplier_feeds_info_I.average_update_period_str} <br />
-	<B>last_update_items_count:</B> {$supplier_feeds_info_I.last_update_items_count} <br />
+    {if $v_s.last_feed_fields ne ""}
+	<br >
+	<B>Feed fields last time processed:</B><br />
+	<table>
+	<tr><td><B>Feed fields</B></td><td><B>Sample value</B></td></tr>
+	{foreach from=$v_s.last_feed_fields item=vs key=ks}
+		<tr><td><B>{$ks}:</B></td><td>{$vs}</td></tr>
+	{/foreach}
+	</table>
+    {/if}
 
-	{*foreach from=$supplier_feeds_info_I item=vs key=ks}
-		<B>{$ks}:</B> {$vs}<br />
-	{/foreach*}
+  <br/>
+  <br/>
+  {/foreach}
 {else}
 	<B>No inventory feed</B>
 {/if}
 
-<br />
+<hr />
 <br />
 
 <B>Product feeds info:</B>
 <br />
 {if $supplier_feeds_info_P ne ""}
-        <B>feed_name:</B> {$supplier_feeds_info_P.feed_name} <br />
-        <B>storefront_id:</B> {$supplier_feeds_info_P.storefront_id} <br />
-        <B>base_category_id:</B> {$supplier_feeds_info_P.base_category_id} <br />
-        <B>last_update_time:</B> {$supplier_feeds_info_P.last_update_time|date_format:'%d-%b-%Y&nbsp; %H:%M'} <br />
-        <B>average_update_period:</B> {$supplier_feeds_info_P.average_update_period_str} <br />
-        <B>last_update_items_count:</B> {$supplier_feeds_info_P.last_update_items_count} <br />
+  {foreach from=$supplier_feeds_info_P item=v_s key=k_s}
+        <B>feed_name:</B> {$v_s.feed_name} ({if $v_s.enabled eq "Y"}Enabled{else}Disabled{/if}) <br />
+        <B>storefront_id:</B> {$v_s.storefront_id} <br />
+        <B>base_category_id:</B> {$v_s.base_category_id} <br />
+        <B>last_update_time:</B> {$v_s.last_update_time|date_format:'%d-%b-%Y&nbsp; %H:%M'} <br />
+        <B>average_update_period:</B> {$v_s.average_update_period_str} <br />
+        <B>last_update_items_count:</B> {$v_s.last_update_items_count} <br />
 
-        {*foreach from=$supplier_feeds_info_P item=vs key=ks}
-                <B>{$ks}:</B> {$vs}<br />
-        {/foreach*}
+    {if $v_s.last_feed_fields ne ""}
+        <br >
+        <B>Feed fields last time processed:</B><br />
+        <table>
+        <tr><td><B>Feed fields</B></td><td><B>Sample value</B></td></tr>
+        {foreach from=$v_s.last_feed_fields item=vs key=ks}
+                <tr><td><B>{$ks}:</B></td><td>{$vs}</td></tr>
+        {/foreach}
+        </table>
+    {/if}
+
+  <br/>
+  <br/>
+  {/foreach}
 {else}
         <B>No product feed</B>
 {/if}
@@ -1823,6 +1898,8 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 
 </table>
 
+{elseif $d_section.distributor_section eq "22"}
+	{include file="admin/main/product_page_locked_fields.tpl"}
 {/if}
 
 {/foreach}
@@ -1837,7 +1914,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 		<input type="button" value=" Add distributor return address  " onclick="javascript: {literal}$('#mode').val('add_distributor_return_address'); document.manufacturer.submit();"{/literal} />
 	{/if}
 	</td>
-	{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "16"}
+	{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "16" && $smarty.get.distributor_section ne "22"}
 	<td width="*">
 
 		{if ($smarty.get.distributor_section eq "8" && !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
@@ -1851,7 +1928,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 </tr>
 </table>
 
-{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21"}
+{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "22"}
 </form>
 {/if}
 

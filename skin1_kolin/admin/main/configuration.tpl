@@ -224,7 +224,7 @@ Do NOT auto-submit to order entry operator if at least one of the following cond
 <table cellpadding="3" cellspacing="1" width="100%">
 <tr>
 <td>
-<textarea class="new_editor" style="width: 80%" name="reference_text" cols="60" rows="20">{$config.Reference_tab.reference_text|replace:"\n":"<br />"}</textarea>
+<textarea class="new_editor" style="width: 80%" name="reference_text" cols="60" rows="20">{$config.Reference_tab.reference_text}</textarea>
 </td>
 </tr>
 <tr>

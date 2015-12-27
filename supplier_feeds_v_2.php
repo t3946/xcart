@@ -9,7 +9,7 @@ set_time_limit(0);
 ini_set('memory_limit', '512M');
 
 if ($config["supplier_feeds_v_2"] == "Y"){
-//        die("Already launched"); // ################################
+        die("Already launched"); // ################################
 }
 db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='supplier_feeds_v_2'");
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
@@ -156,7 +156,7 @@ foreach ($supplier_feeds as $k => $v){
 			fclose($handle);
 
 
-/*
+/* Disable for test N4 */
 			$md5 = md5($contents);
 
 			if ($md5 == $v["last_md5"]){
@@ -165,7 +165,7 @@ foreach ($supplier_feeds as $k => $v){
         	                func_backprocess_log("supplier feeds errors", $log_text);
                 	        continue;
 			}
-*/
+/* */
 
 			$products = json_decode($contents, true);
 
@@ -241,21 +241,43 @@ foreach ($supplier_feeds as $k => $v){
 //func_print_r($products);
 //die();
 
+#
+##
+			$last_feed_fields_arr = array();
+			$last_feed_fields_arr_vals = array();
+##
+#
 			foreach ($products["products"] as $kp => $p){
 
                                 foreach ($p as $k_s => $v_s){
+
+#
+##
+					if (!in_array($k_s, $last_feed_fields_arr)){
+						$last_feed_fields_arr[] = $k_s;
+						$last_feed_fields_arr_vals[$k_s] = $v_s;
+					}
+					if ($v_s != "" && $last_feed_fields_arr_vals[$k_s] == ""){
+						$last_feed_fields_arr_vals[$k_s] = $v_s;
+					}
+##
+#
+
+
                                         $idx = array_search($k_s, array_keys($product_cols_replace));
                                         if ($idx !== false) {
                                                 $p[$product_cols_replace[$k_s]] = $v_s;
                                                 unset($p[$k_s]);
                                         }
                                 }
+//func_print_r($last_feed_fields_arr_vals);
+//die();
 
                                 if (empty($p["productcode"])){
                                         continue;
                                 }
 
-                                $productcode = $p["productcode"];
+                                $productcode = strtoupper(trim($p["productcode"]));
                                 $productid = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='$productcode'");
 
 
@@ -281,7 +303,8 @@ func_print_r($p, $productid);
 #
 ##
 ###
-                                        db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
+//                                        db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
+                                        db_query("UPDATE $sql_tbl[products] SET controlled_by_feed='$v[feed_file_name]' WHERE productid='$productid'");
 ###
 ##
 #
@@ -334,7 +357,7 @@ func_print_r($p, $productid);
 					}
 				}
 
-				$not_Xcart_products_fields = $p;
+				$not_xcart_products_fields = $p;
 
 				$just_created = false;
 
@@ -474,6 +497,7 @@ die();
 						$product["product"] = $new_product_name_arr[0];
 
 	                                        $time = time();
+//        	                                db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid, controlled_by_feed) VALUES ('$productcode', '$v[feed_file_name]', '$v[feed_file_name]','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]', '$v[feed_file_name]')");
         	                                db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid) VALUES ('$productcode', '$v[feed_file_name]', '$v[feed_file_name]','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]')");
                 	                        $productid = db_insert_id();
 
@@ -508,7 +532,8 @@ die();
 #
 ##
 ###
-						db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
+//						db_query("UPDATE $sql_tbl[products] SET provider='$v[feed_file_name]' WHERE productid='$productid'");
+//						db_query("UPDATE $sql_tbl[products] SET controlled_by_feed='$v[feed_file_name]' WHERE productid='$productid'");
 ###
 ##
 #
@@ -926,7 +951,8 @@ die();
                                         $provider_search_cond2 = str_replace($current_letter_in_replacement.".", $set_new_letter_for_replacement.".", $provider_search_cond1);
                                 }
 
-                                $provider_search_cond = " AND (provider='$provider_search_cond1' OR provider='$provider_search_cond2')";
+//                                $provider_search_cond = " AND (provider='$provider_search_cond1' OR provider='$provider_search_cond2')";
+                                $provider_search_cond = " AND (controlled_by_feed='$provider_search_cond1' OR controlled_by_feed='$provider_search_cond2')";
 			    }
 			    else {
 				$provider_search_cond = "";
@@ -937,9 +963,9 @@ die();
 
 			    print("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' or productcode like '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 			    print("\r\n");
-               	            $count_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
+               	$count_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 
-			    print($count_products." for slae = Y\r\n");
+			    print($count_products." for sale = Y\r\n");
 
 
                             if ($count_products > 0){
@@ -963,9 +989,8 @@ die();
 
                                         $_productcode = strtoupper(trim($prod["productcode"]));
                                         if (!in_array($_productcode, $all_feed_productcodes) && $prod["forsale"] != "N") {
-//                                                $discontinued_products[] = $prod;
 
-						$discontinued_products_count++;
+												$discontinued_products_count++;
 
                                                 $update_search_index = $prod["update_search_index"];
                                                 if ($update_search_index == "N"){
@@ -1006,10 +1031,33 @@ die();
 		"last_update_time" => time(),
 		"average_update_period" => $average_update_period,
 		"last_update_period" => $last_update_period,
+		"last_feed_fields" => addslashes(serialize($last_feed_fields_arr_vals)),
 		"last_update_items_count" => $products["products_in_feed"]
 	); 
 	func_array2update("supplier_feeds", $supplier_feed, "feed_id = '$v[feed_id]'");
 
+#
+##
+###
+	if (!empty($last_feed_fields_arr)){
+		db_query("UPDATE $sql_tbl[manufacturer_feed_fields] SET locked='N' WHERE manufacturerid='$v[manufacturerid]'");
+
+		$deprecated_manufacturer_feed_fields = array("productcode","supplier_categories", "attributes","images","alt_names",);
+
+		foreach ($last_feed_fields_arr as $k_field_name => $field_name){
+
+			if (!empty($product_cols_replace[$field_name])){
+				$field_name = $product_cols_replace[$field_name];
+			}
+
+			if (!in_array($field_name, $deprecated_manufacturer_feed_fields)){
+				db_query("REPLACE INTO $sql_tbl[manufacturer_feed_fields] SET field_name='$field_name', locked='Y', manufacturerid='$v[manufacturerid]', feed_id='$v[feed_id]'");
+			}
+		}
+	}
+###
+##
+#
 
 func_print_r($supplier_feed);
 

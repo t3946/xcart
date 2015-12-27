@@ -19,6 +19,9 @@ function func_calc_total_deposit_amount(){
                 if (document.checks_deposited_ordersform.elements[i].type == "text" && (!prefix || document.checks_deposited_ordersform.elements[i].name.search(reg) == 0)){
 			add_amount = document.checks_deposited_ordersform.elements[i].value;
 
+			add_amount = add_amount.replace(",","");
+
+
 			if (add_amount != ""){
 				add_amount = parseFloat(add_amount);
 				total_deposit_amount = total_deposit_amount + add_amount;
@@ -35,6 +38,8 @@ function func_calc_total_deposit_amount(){
         for (var i = 0; i < document.checks_deposited_ordersform.elements.length; i++) {
                 if (document.checks_deposited_ordersform.elements[i].type == "text" && (!prefix || document.checks_deposited_ordersform.elements[i].id.search(reg) == 0)){
                         add_amount = document.checks_deposited_ordersform.elements[i].value;
+
+			add_amount = add_amount.replace(",","");
 
                         if (add_amount != ""){
                                 add_amount = parseFloat(add_amount);
@@ -53,6 +58,8 @@ function func_calc_total_deposit_amount(){
                 if (document.checks_deposited_ordersform.elements[i].type == "checkbox" && (!prefix || document.checks_deposited_ordersform.elements[i].id.search(reg) == 0)){
 
                         add_amount = document.checks_deposited_ordersform.elements[i].value;
+
+			add_amount = add_amount.replace(",","");
 
                         if (add_amount != "" && document.checks_deposited_ordersform.elements[i].checked == true){
 

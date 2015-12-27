@@ -130,7 +130,7 @@ func_print_r($f_new_prod_ids);
         	$f_new_prod_ids_arr = array();
 	        foreach ($f_new_prod_ids as $k => $v){
         	        if (!empty($v["productid"])){
-                	        $f_new_prod_ids_arr[] = $v; //["productid","d_enable_feed"];
+                	        $f_new_prod_ids_arr[] = $v; 
 	                }
         	}
 
@@ -291,7 +291,13 @@ func_print_r($config["Appearance"]["CDN_domain"], $config["Appearance"]["Enable_
 
 $user_account['membershipid'] = !empty($user_account['membershipid'])?$user_account['membershipid']:0;
 
-$old_search_data = $search_data["products"];
+if (!empty($search_data["products"])){
+	$old_search_data = $search_data["products"];
+}
+else {
+	$old_search_data = "";
+}
+
 $old_mode = $mode;
 $old_page = $page;
 

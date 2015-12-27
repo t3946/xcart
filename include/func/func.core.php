@@ -1297,6 +1297,22 @@ function func_build_quick_flags($id = false, $tick = 0) {
 function func_build_quick_prices($id = false, $tick = 0) {
 	global $sql_tbl, $config, $active_modules;
 
+
+#
+## https://basecamp.com/2070980/projects/1577907/messages/52260744
+###
+if ($id !== false && !is_array($id)) {
+	$i = func_generate_discounts (array($id), $tick);
+}
+elseif (is_array($id) && !empty($id)) {
+	$i = func_generate_discounts ($id, $tick);
+}
+
+return $i; 
+###
+##
+#
+
 	# Define product condition
 	$where = "";
 	if ($id !== false && !is_array($id)) {
