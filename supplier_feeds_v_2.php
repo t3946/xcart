@@ -501,7 +501,7 @@ die();
         	                                db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid) VALUES ('$productcode', '$v[feed_file_name]', '$v[feed_file_name]','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]')");
                 	                        $productid = db_insert_id();
 
-						db_query("INSERT INTO $sql_tbl[products_categories] (categoryid, productid, main) VALUES ('$v[base_category_id]', '$productid', 'Y')");
+											db_query("INSERT INTO $sql_tbl[products_categories] (categoryid, productid, main) VALUES ('$v[base_category_id]', '$productid', 'Y')");
 	                                        db_query("INSERT INTO $sql_tbl[products_sf] (productid, sfid) VALUES ('$productid', '$v[storefront_id]')");
 
                                                 if (empty($not_xcart_products_fields["price"])){
@@ -606,7 +606,7 @@ die();
 							                $im->destroy();
 							        }
 */
-	                                                        $image_id = func_array2insert('images_D', $image_info);
+								$image_id = func_array2insert('images_D', $image_info);
 							}
 							else {
 								func_array2update("images_D", $image_info, "imageid = '$image_id'");
@@ -644,37 +644,37 @@ die();
 ###
 
 				$price_updated = false;
-                                if (!empty($not_xcart_products_fields) && is_array($not_xcart_products_fields)){
-                                ################# START: Update NOT xcart_product tables #################
-					$not_xcart_products_fields = func_addslashes($not_xcart_products_fields);
+                if (!empty($not_xcart_products_fields) && is_array($not_xcart_products_fields)){
+                ################# START: Update NOT xcart_product tables #################
+				$not_xcart_products_fields = func_addslashes($not_xcart_products_fields);
 
 //func_print_r($not_xcart_products_fields);
 
-                                        if (!empty($not_xcart_products_fields["similar_internal_id"]) && is_array($not_xcart_products_fields["similar_internal_id"])){
+                        if (!empty($not_xcart_products_fields["similar_internal_id"]) && is_array($not_xcart_products_fields["similar_internal_id"])){
 
-						$productid_arr_2 = array();
-                                                foreach ($not_xcart_products_fields["similar_internal_id"] as $supplier_internal_product_id){
-                                                        $productid2 = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE supplier_internal_product_id='$supplier_internal_product_id'");
-                                                        if (!empty($productid2)){
-								$productid_arr_2[] = $productid2;
-                                                        }
-                                                }
+									$productid_arr_2 = array();
+                                    foreach ($not_xcart_products_fields["similar_internal_id"] as $supplier_internal_product_id){
+                                             $productid2 = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE supplier_internal_product_id='$supplier_internal_product_id'");
+                                             if (!empty($productid2)){
+													$productid_arr_2[] = $productid2;
+                                             }
+                                    }
 
-						$productid_str_2 = implode(",", $productid_arr_2);
-						unset($productid_arr_2);
+									$productid_str_2 = implode(",", $productid_arr_2);
+									unset($productid_arr_2);
 
-						if (!empty($productid_str_2)){
-							$product["similar_productids"] = $productid_str_2;
-							$product["generate_similar_products"] = "N";
+									if (!empty($productid_str_2)){
+										$product["similar_productids"] = $productid_str_2;
+										$product["generate_similar_products"] = "N";
+									}
 						}
-                                        }
 
 
 
-                                        if (!empty($not_xcart_products_fields["related_internal_id"]) && is_array($not_xcart_products_fields["related_internal_id"])){
-                                                foreach ($not_xcart_products_fields["related_internal_id"] as $supplier_internal_product_id){
-                                                        $productid2 = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE supplier_internal_product_id='$supplier_internal_product_id'");
-                                                        if (!empty($productid2)){
+						if (!empty($not_xcart_products_fields["related_internal_id"]) && is_array($not_xcart_products_fields["related_internal_id"])){
+                             foreach ($not_xcart_products_fields["related_internal_id"] as $supplier_internal_product_id){
+                                      $productid2 = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE supplier_internal_product_id='$supplier_internal_product_id'");
+                                      if (!empty($productid2)){
                                                                 $count_productid2 = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[product_links] WHERE productid1='$productid' AND productid2='$productid2'");
                                                                 if (empty($count_productid2)){
                                                                         db_query("INSERT INTO $sql_tbl[product_links] (productid1, productid2) VALUES ('$productid', '$productid2')");
@@ -904,8 +904,8 @@ die();
 
                                 if ($just_created){
 	                                func_build_quick_flags($productid);
-					func_generate_discounts(array($productid));
-					func_recalc_product_count($v["base_category_id"]);
+									func_generate_discounts(array($productid));
+									/*func_recalc_product_count($v["base_category_id"]);*/
                                 }
 
                                 if ($just_created || $price_updated){
