@@ -22,7 +22,7 @@ x_load('backoffice','files','taxes', 'froogle', 'product', 'crypt');
 $started_at = time();
 
 $log_text = "Full update started";
-func_backprocess_log("incremental feeds", $log_text);
+func_backprocess_log("full feeds update", $log_text);
 
 $all_froogle_options = func_query_hash(" SELECT storefrontid, MerchantID, ClientID, enable_incremental_feed_updates FROM $sql_tbl[froogle_options]", 'storefrontid', false);
 
@@ -124,7 +124,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts))
 
             $log_text = $sf_info['domain'] . " - queued items to delete: {" . $items_for_delete . "} . All queued items count: " . $count;
             echo $log_text . "\n";
-	    func_backprocess_log("incremental feeds", $log_text);
+	    func_backprocess_log("full feeds update", $log_text);
         }
     }
 
@@ -140,5 +140,5 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts))
 
     $log_text = "Full update finished. Duration " . $str_time;
     echo $log_text . "\n";
-    func_backprocess_log("incremental feeds", $log_text);
+    func_backprocess_log("full feeds update", $log_text);
 }
