@@ -1537,27 +1537,27 @@ function func_generate_discounts($productids, $tick = 0) {
 
                 if ($check1_count == $check2_count){
 
-			$quantity_arr = array();
-                        foreach (explode(",",$p[0]["discount_table"]) as $v) {
-                                $v_arr = explode(":",$v);
-                                $quantity_arr[] = trim($v_arr[0]);
-			}
+				$quantity_arr = array();
+                foreach (explode(",",$p[0]["discount_table"]) as $v) {
+                        $v_arr = explode(":",$v);
+                        $quantity_arr[] = trim($v_arr[0]);
+				}
 
-			db_query("DELETE FROM $sql_tbl[pricing] WHERE productid='$productid' AND membershipid = '0' AND quantity > 1 AND variantid = '0' AND quantity NOT IN ('".implode("','",$quantity_arr)."')");
-			unset($quantity_arr);
+				db_query("DELETE FROM $sql_tbl[pricing] WHERE productid='$productid' AND membershipid = '0' AND quantity > 1 AND variantid = '0' AND quantity NOT IN ('".implode("','",$quantity_arr)."')");
+				unset($quantity_arr);
 
 
-                        foreach (explode(",",$p[0]["discount_table"]) as $v) {
-                                $v_arr = explode(":",$v);
+                foreach (explode(",",$p[0]["discount_table"]) as $v) {
+                        $v_arr = explode(":",$v);
 
-                                $quantity = trim($v_arr[0]);
-				$quantity = intval($quantity);
-                                $kef = trim($v_arr[1]);
+                        $quantity = trim($v_arr[0]);
+						$quantity = intval($quantity);
+                        $kef = trim($v_arr[1]);
                                 
-                                $price = $p[0]["price"] * (1 - $kef);
-                                $price = price_format($price);
+                        $price = $p[0]["price"] * (1 - $kef);
+                        $price = price_format($price);
 
-				db_query("INSERT INTO $sql_tbl[pricing] (productid, quantity, price) VALUES ('$productid', '$quantity', '$price') ON DUPLICATE KEY UPDATE price='$price'");
+						db_query("INSERT INTO $sql_tbl[pricing] (productid, quantity, price) VALUES ('$productid', '$quantity', '$price') ON DUPLICATE KEY UPDATE price='$price'");
 
 /*
                                 $query_data = array(
@@ -1573,11 +1573,11 @@ function func_generate_discounts($productids, $tick = 0) {
             }
             else {
 
-		$quantity_arr = array();
+				$quantity_arr = array();
                 foreach (explode(",",$p[0]["discount_table"]) as $v) {
-                	$v_arr = explode(":",$v);
-                        $quantity_arr[] = trim($v_arr[0]);
-		}
+                	/*$v_arr = explode(":",$v);*/
+                    $quantity_arr[] = trim($v[0]);
+				}
 
                 db_query("DELETE FROM $sql_tbl[pricing] WHERE productid='$productid' AND membershipid = '0' AND quantity > 1 AND variantid = '0' AND quantity NOT IN ('".implode("','",$quantity_arr)."')");
                 unset($quantity_arr);
@@ -1586,11 +1586,11 @@ function func_generate_discounts($productids, $tick = 0) {
                 foreach (explode(",",$p[0]["discount_table"]) as $v) {
                         if (intval($v)) {
 
-				$v = intval($v);
-				$price = (1 - $p[0]["discount_slope"] * log($v,2) / 100) * $p[0]["price"];
-				$price = price_format($price);
+								$v = intval($v);
+								$price = (1 - $p[0]["discount_slope"] * log($v,2) / 100) * $p[0]["price"];
+								$price = price_format($price);
 
-				db_query("INSERT INTO $sql_tbl[pricing] (productid, quantity, price) VALUES ('$productid', '$v', '$price') ON DUPLICATE KEY UPDATE price='$price'");
+								db_query("INSERT INTO $sql_tbl[pricing] (productid, quantity, price) VALUES ('$productid', '$v', '$price') ON DUPLICATE KEY UPDATE price='$price'");
 
 /*
                                 $query_data = array(
@@ -1616,20 +1616,20 @@ function func_generate_discounts($productids, $tick = 0) {
 
 	    $variants = func_query("SELECT variantid FROM $sql_tbl[variants] WHERE avail>0 AND productid='$productid'");
 	    if (!empty($variants)){
-		$variantid = func_get_default_variantid($productid);
-		$price_id = func_query_first_cell("SELECT priceid FROM $sql_tbl[pricing] WHERE variantid='$variantid' AND quantity='1'");
+				$variantid = func_get_default_variantid($productid);
+				$price_id = func_query_first_cell("SELECT priceid FROM $sql_tbl[pricing] WHERE variantid='$variantid' AND quantity='1'");
 
-		db_query("DELETE FROM $sql_tbl[quick_prices] WHERE productid='$productid' AND priceid!='$price_id' AND variantid>0");
-		db_query("REPLACE INTO xcart_quick_prices (productid,priceid,variantid, membershipid) VALUES ('$productid','$price_id','$variantid',0)");
+				db_query("DELETE FROM $sql_tbl[quick_prices] WHERE productid='$productid' AND priceid!='$price_id' AND variantid>0");
+				db_query("REPLACE INTO xcart_quick_prices (productid,priceid,variantid, membershipid) VALUES ('$productid','$price_id','$variantid',0)");
 	    }
 
             if ($tick > 0 && $i % $tick == 0) {
-		echo ". ";
+				echo ". ";
                 if (($i/$tick) % 100 == 0)
                 	echo "\n";
                 func_flush();
-	    }
-        }
+			}
+	}
 
 	if ($tick > 0){
 		return $i;
