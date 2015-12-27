@@ -1575,8 +1575,7 @@ function func_generate_discounts($productids, $tick = 0) {
 
 				$quantity_arr = array();
                 foreach (explode(",",$p[0]["discount_table"]) as $v) {
-                	/*$v_arr = explode(":",$v);*/
-                    $quantity_arr[] = trim($v[0]);
+                    $quantity_arr[] = trim($v);
 				}
 
                 db_query("DELETE FROM $sql_tbl[pricing] WHERE productid='$productid' AND membershipid = '0' AND quantity > 1 AND variantid = '0' AND quantity NOT IN ('".implode("','",$quantity_arr)."')");
