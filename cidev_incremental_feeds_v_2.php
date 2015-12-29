@@ -173,7 +173,7 @@ Select
 		$PARAMLIMIT = '';
 	} else {
                 $paramYN = 'N';
-                $PARAMLIMIT = 'LIMIT 100';
+                $PARAMLIMIT = 'LIMIT 1000';
                 $log_text = "//// processing DISCONTINUED ITEMS ";
                 func_backprocess_log("incremental feeds", $log_text);
 	}
