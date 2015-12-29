@@ -703,11 +703,11 @@ $(document).ready(function() {
 	{else}
 		{assign var="current_price" value=$product.taxed_price}
 	{/if}
-	{assign var="ecomm_totalvalue_replacement" value="ecomm_totalvalue: '`$current_price`'"}
+	{assign var="ecomm_totalvalue_replacement" value="ecomm_totalvalue: `$current_price`"}
 {elseif $main eq "order_message"}
         {assign var="ecomm_prodid_replacement" value="ecomm_prodid: `$productids_in_cart_imploded`"}
         {assign var="ecomm_pagetype_replacement" value="ecomm_pagetype: 'purchase'"}
-        {assign var="ecomm_totalvalue_replacement" value="ecomm_totalvalue: '`$order_data_subtotal`'"}
+        {assign var="ecomm_totalvalue_replacement" value="ecomm_totalvalue: `$order_data_subtotal`"}
 {/if}
 
 	{$config.Company.cidev_google_adwords|replace:"ecomm_prodid: ''":"`$ecomm_prodid_replacement`"|replace:"ecomm_pagetype: 'siteview'":"`$ecomm_pagetype_replacement`"|replace:"ecomm_totalvalue: ''":"`$ecomm_totalvalue_replacement`"}
