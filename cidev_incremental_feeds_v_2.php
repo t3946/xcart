@@ -174,6 +174,8 @@ Select
 	} else {
                 $paramYN = 'N';
                 $PARAMLIMIT = 'LIMIT 100';
+                $log_text = "//// processing DISCONTINUED ITEMS ";
+                func_backprocess_log("incremental feeds", $log_text);
 	}
 
 $amazon_inventory_batch_count = 0;
