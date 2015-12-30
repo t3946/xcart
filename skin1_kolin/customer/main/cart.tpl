@@ -238,7 +238,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 
 {if $products[product].hidden eq ""}
 <tr><td class="PListImgBox">
-<a href="product.php?productid={$products[product].productid}">
+<a href="{if $from_admin_area eq "Y"}../{/if}product.php?productid={$products[product].productid}">
 {if $products[product].is_pimage eq 'W' }
 	{assign var="imageid" value=$products[product].variantid}
 	{include file="product_thumbnail.tpl" productid=$imageid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].pimage_url type=$products[product].is_pimage}
@@ -252,7 +252,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 {/if}
 </td>
 <td valign="top">
-<a href="product.php?productid={$products[product].productid}"><font class="ProductTitle">{$products[product].product}</font></a>
+<a href="{if $from_admin_area eq "Y"}../{/if}product.php?productid={$products[product].productid}"><font class="ProductTitle">{$products[product].product}</font></a>
 <br>
 <font color="#006600" class="DialogTitleT">SKU: {$products[product].productcode}</font>
 <br>
@@ -290,7 +290,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 x {if $active_modules.Egoods and $products[product].distribution}1<input type="hidden"{else}
 
 
-<input type="text" {if $main eq "fast_lane_checkout"} autocomplete="off" style="background: #ffffff;" id="productindex_{$products[product].cartid}" onkeyup="cidev_update_product_amount('{$products[product].cartid}', '{$products[product].manufacturerid}')"{/if}  size="3"{/if} name="productindexes[{$products[product].cartid}]" value="{$products[product].amount}" /> = </font>
+<input {if $from_admin_area eq "Y"}disabled="disabled"{/if} type="text" {if $main eq "fast_lane_checkout"} autocomplete="off" style="background: #ffffff;" id="productindex_{$products[product].cartid}" onkeyup="cidev_update_product_amount('{$products[product].cartid}', '{$products[product].manufacturerid}')"{/if}  size="3"{/if} name="productindexes[{$products[product].cartid}]" value="{$products[product].amount}" /> = </font>
 
 <input type="hidden" id="hidden_productindex_{$products[product].cartid}" value="{$products[product].amount}" />
 
@@ -323,6 +323,7 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 {/if}
 <br />
 <table cellspacing="0" cellpadding="0">
+{if $from_admin_area ne "Y"}
 {if $shippings[$k] eq "" && $login ne "" && !($v.count_shipping_rates_for_canada eq "0" && ($userinfo.s_country eq "CA" || $userinfo.s_country eq ""))}
 <tr>
 	<td class="ButtonsRow" colspan="2">
@@ -330,11 +331,12 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 	</td>
 </tr>
 {/if}
+{/if}
 <tr>
 {*
 	<td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_update_qty type="input" href="javascript: document.cartform.submit()" js_to_href="Y"}</td>
 *}
-	<td class="ButtonsRow">{include file="buttons/delete_item.tpl" href="cart.php?mode=delete&amp;productindex=`$products[product].cartid`"}</td>
+	<td class="ButtonsRow">{if $from_admin_area ne "Y"}{include file="buttons/delete_item.tpl" href="cart.php?mode=delete&amp;productindex=`$products[product].cartid`"}{/if}</td>
 	<td class="ButtonsRow">
 
 {if $products[product].product_options ne ''}
@@ -417,7 +419,7 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 {if $active_modules.Gift_Certificates ne ""}
 {include file="modules/Gift_Certificates/gc_cart.tpl" giftcerts_data=$cart.giftcerts}
 {/if}
-{if $main eq "fast_lane_checkout"}
+{if $main eq "fast_lane_checkout" || $from_admin_area eq "Y"}
 <div id="cidev_cart_subtotal">
 {include file="modules/Fast_Lane_Checkout/cart_subtotal.tpl"}
 </div>
@@ -425,6 +427,9 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 {include file="customer/main/cart_totals.tpl"}
 {/if}
 {$lng.lbl_your_mer_subtotal}<br /><br />
+
+			{if $from_admin_area ne "Y"}
+
 {if $js_enabled}
 {if $active_modules.Fast_Lane_Checkout}
 <div align="left" width="100%">
@@ -515,6 +520,9 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 <input type="hidden" name="mode" value="checkout" />
 {include file="submit_wo_js.tpl" value=$lng.lbl_checkout}
 {/if}
+
+			{/if}
+
 </form>
 {if $catalog_checkboxes}
 <form name="catalogform" action="cart.php" method="post">
