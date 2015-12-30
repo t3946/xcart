@@ -550,8 +550,22 @@ function func_cart_count_items(&$cart) {
 function func_save_customer_cart($login, $cart) {
 	global $sql_tbl;
 
-	if (!empty($login))
-		db_query("UPDATE $sql_tbl[customers] SET cart='".addslashes(serialize($cart))."' WHERE login='$login'");
+	if (!empty($login)){
+
+#
+## https://basecamp.com/2070980/projects/1577907/messages/46647624
+### Start: Cart number feature
+
+		if (!empty($cart["cart_number"])){
+			$update_field = ", cart_number='".$cart["cart_number"]."' ";
+		} else {
+			$update_field = "";
+		}
+###
+## End: Cart number feature
+#
+		db_query("UPDATE $sql_tbl[customers] SET cart='".addslashes(serialize($cart))."' $update_field WHERE login='$login'");
+	}
 }
 
 ?>

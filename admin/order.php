@@ -3671,6 +3671,7 @@ if (!empty($config["Purchase_Order"]["Checks_deposited_Attention_tag"])){
 ###
 //func_print_r($order);
 
+/*
 $other_customer_orders = func_query("SELECT orderid, order_prefix, fraud_status FROM $sql_tbl[orders] WHERE email='$order[email]' AND orderid!='$orderid' ORDER BY orderid DESC");
 
 if (!empty($other_customer_orders)){
@@ -3701,25 +3702,6 @@ if (!empty($other_customer_orders)){
 	                                $Open = "Y";
         	                        $count_Open++;
 				}
-
-/*	
-				if (in_array($v["fraud_status"], array("C", "E", "N")) || empty($v["fraud_status"])){
-
-					if ($vv["cb_status"] == "P" && $vv["dc_status"] == "S"){
-						$Completed = "Y";
-						$count_Completed++;
-					}
-
-					if (in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
-						$Open = "Y";
-						$count_Open++;
-					}
-				}
-				else {
-                                        $Fraud = "Y";
-                                        $count_Fraud++;
-				}
-*/
 			}
 		}
 
@@ -3752,6 +3734,8 @@ if (!empty($other_customer_orders)){
 }
 
 //func_print_r($other_customer_orders);
+*/
+func_other_customer_orders($order[email]);
 ###
 ##
 #

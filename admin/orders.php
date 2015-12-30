@@ -49,6 +49,43 @@ x_session_register("no_orders_test_checkout_hide_time");
 ###
 if ($REQUEST_METHOD == 'POST'){
 
+#
+## https://basecamp.com/2070980/projects/1577907/messages/46647624
+### Start: Cart number feature
+/*
+	if ($mode == "search_cart"){
+
+		if (!empty($cart_number)){
+
+			$customers_cart = "";
+
+			$cart_number_info = func_query_first_cell("SELECT cart FROM $sql_tbl[customers] WHERE cart_number='$cart_number'");
+			$cart_number_info = unserialize(stripslashes($cart_number_info));
+			if (!empty($cart_number_info["products"])){
+				$customers_cart = $cart_number_info;
+			}
+
+			if (empty($customers_cart)){
+				$cart_number_info = func_query_first_cell("SELECT data FROM $sql_tbl[sessions_data] WHERE cart_number='$cart_number'");
+				$cart_number_info = unserialize(stripslashes($cart_number_info));
+
+				if (!empty($cart_number_info["cart"]["products"])){
+					$customers_cart = $cart_number_info["cart"];
+				}
+			}
+
+			if (!empty($customers_cart)){
+				func_header_location("customers_cart.php?cart_number=$cart_number");
+			}
+		}
+
+                func_header_location("orders.php?page_name=dashboard");
+        }
+*/
+###
+## End: Cart number feature
+#
+
 	if ($mode == "hide_no_orders_test_checkout_message"){
 		$no_orders_test_checkout_hide_time = time();
 		x_session_save("no_orders_test_checkout_hide_time");

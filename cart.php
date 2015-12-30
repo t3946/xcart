@@ -1552,6 +1552,32 @@ if ($mode == "checkout" || $mode == "auth") {
 	$smarty->assign("total_checkout_steps", $total_checkout_steps);
 }
 
+#
+## https://basecamp.com/2070980/projects/1577907/messages/46647624
+### Start: Cart number feature
+
+	if (!empty($cart["products"]) && empty($cart["cart_number"])){
+
+		$current_user_cart_number_in_xcart_sessions_data = func_query_first_cell("SELECT cart_number FROM $sql_tbl[sessions_data] WHERE sessid='$XCARTSESSID'");
+		if (!empty($current_user_cart_number_in_xcart_sessions_data)){
+			$cart["cart_number"] = $current_user_cart_number_in_xcart_sessions_data;
+		} else {
+
+                        $max_cart_number_in_xcart_customers = func_query_first_cell("SELECT MAX(cart_number) FROM $sql_tbl[customers]");
+                        $max_cart_number_in_xcart_sessions_data = func_query_first_cell("SELECT MAX(cart_number) FROM $sql_tbl[sessions_data]");
+			$max_cart_number_in_xcart_orders = func_query_first_cell("SELECT MAX(cart_number) FROM $sql_tbl[orders]");
+
+			$cart_number = max($max_cart_number_in_xcart_customers, $max_cart_number_in_xcart_sessions_data, $max_cart_number_in_xcart_orders) + 1;
+			$cart["cart_number"] = $cart_number;
+			
+			db_query("UPDATE $sql_tbl[sessions_data] SET cart_number='$cart_number' WHERE sessid='$XCARTSESSID'");
+		}
+	}
+###
+## End: Cart number feature
+#
+
+
 func_save_customer_cart($login, $cart);
 
 if (func_use_arb_account()) {
