@@ -257,6 +257,18 @@ function managedate(type, status) {
 {include file="dialog.tpl" title="Inquiries dashboard" content=$smarty.capture.dialog extra='width="100%"' extra_link='<a target="_blank" style="color: #140BFC;" href="create_new_inquiry.php">Create new inquiry</a>'}
 <br />
 
+{capture name=dialog}
+<form name="searchform" action="orders.php" method="post">
+<input type="hidden" name="mode" value="search_cart" />
+
+<B>Cart number:</B>
+<input type="text" name="cart_number" size="10" value="" id="cart_number" />
+
+<input type="button" value="Search cart" onclick="javascript: window.open('customers_cart.php?cart_number='+$('#cart_number').val());" />
+
+{/capture}
+{include file="dialog.tpl" title="Customer Care Dashboard" content=$smarty.capture.dialog extra='width="100%"'}
+
 {/if}
 
 

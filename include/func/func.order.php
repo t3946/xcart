@@ -1170,6 +1170,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 ###
 			'sessid' => addslashes($$XCART_SESSION_NAME),
 			'is_mobile_checkout' => $is_mobile_checkout,
+			'cart_number' => $cart["cart_number"],
 ###
 ##
 #
@@ -1306,6 +1307,16 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
 
 		$orderid = func_array2insert('orders', $insert_data);
+
+
+#
+## https://basecamp.com/2070980/projects/1577907/messages/46647624
+### Start: Cart number feature
+		db_query("UPDATE $sql_tbl[sessions_data] SET cart_number='0' WHERE sessid='".addslashes($$XCART_SESSION_NAME)."'");
+		db_query("UPDATE $sql_tbl[customers] SET cart_number='0' WHERE login='".addslashes($userinfo['login'])."'");
+###
+## End: Cart number feature
+#
 
 
 #
@@ -4299,6 +4310,88 @@ function func_get_rma_info($rma_id){
 	}
 
 	return $rma_info;
+}
+
+function func_other_customer_orders($email){
+    global $sql_tbl, $smarty;
+
+    $other_customer_orders = func_query("SELECT orderid, order_prefix, fraud_status FROM $sql_tbl[orders] WHERE email='$email' AND orderid!='$orderid' ORDER BY orderid DESC");
+
+    if (!empty($other_customer_orders)){
+
+        $count_Completed = 0;
+        $count_Fraud = 0;
+        $count_Open = 0;
+
+        foreach ($other_customer_orders as $k => $v) {
+
+                $Completed = "";
+                $Fraud = "";
+                $Open = "";
+
+                $order_groups_info = func_query("SELECT cb_status, dc_status FROM $sql_tbl[order_groups] WHERE orderid='$v[orderid]'");
+                if (!empty($order_groups_info)){
+                        foreach ($order_groups_info as $kk => $vv){
+
+                                if (in_array($v["fraud_status"], array("C", "E")) && $vv["cb_status"] == "P" && $vv["dc_status"] == "S"){
+                                        $Completed = "Y";
+                                        $count_Completed++;
+                                }
+                                elseif (!in_array($v["fraud_status"], array("C", "E", "U", "T", "N"))){
+                                        $Fraud = "Y";
+                                        $count_Fraud++;
+                                }
+                                elseif (in_array($v["fraud_status"], array("C", "E")) && in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
+                                        $Open = "Y";
+                                        $count_Open++;
+                                }
+
+/*      
+                                if (in_array($v["fraud_status"], array("C", "E", "N")) || empty($v["fraud_status"])){
+
+                                        if ($vv["cb_status"] == "P" && $vv["dc_status"] == "S"){
+                                                $Completed = "Y";
+                                                $count_Completed++;
+                                        }
+
+                                        if (in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
+                                                $Open = "Y";
+                                                $count_Open++;
+                                        }
+                                }
+                                else {
+                                        $Fraud = "Y";
+                                        $count_Fraud++;
+                                }
+*/
+                        }
+                }
+
+                $other_customer_orders[$k]["statuses"]["Completed"] = $Completed;
+                $other_customer_orders[$k]["statuses"]["Fraud"] = $Fraud;
+                $other_customer_orders[$k]["statuses"]["Open"] = $Open;
+
+        }
+
+        $smarty->assign("count_Completed", $count_Completed);
+        $smarty->assign("count_Fraud", $count_Fraud);
+        $smarty->assign("count_Open", $count_Open);
+
+        $smarty->assign("other_customer_orders", $other_customer_orders);
+
+        $count_other_customer_orders = count($other_customer_orders);
+        $smarty->assign("count_other_customer_orders", $count_other_customer_orders);
+
+        $show_count_before_see_more = 5;
+        $smarty->assign("show_count_before_see_more", $show_count_before_see_more);
+
+        if ($count_other_customer_orders > $show_count_before_see_more){
+                $show_see_more = "Y";
+        } else {
+                $show_see_more = "N";
+        }
+        $smarty->assign("show_see_more", $show_see_more);
+    }
 }
 
 ?>
