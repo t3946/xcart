@@ -193,9 +193,9 @@ func_backprocess_log("amazon_info", $log_text);
 
 
 $Fulfillment_Inventory_Pricing_arr = array(
-	"ffr_" => "Fulfillment", 
-	"ir_" => "Inventory", 
-	"pr_" => "Pricing"
+	"ffr_" => "Fulfillment"
+//	"ir_" => "Inventory", 
+//	"pr_" => "Pricing"
 );
 
 foreach ($Fulfillment_Inventory_Pricing_arr as $k_prefix => $Fulfillment_Inventory_Pricing){
@@ -1214,7 +1214,7 @@ $duration = ($years != 0 ? $years." years, ":"").($months != 0 ? $months." month
 db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_amazon_info'");
 
 $log_text = "Cron completed. Duration: ".$duration;
-func_backprocess_log("amazon_orders", $log_text);
+func_backprocess_log("amazon_info", $log_text);
 
 die("DONE!");
 ?>
