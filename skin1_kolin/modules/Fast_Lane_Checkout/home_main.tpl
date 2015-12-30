@@ -83,7 +83,7 @@ return true;
 	<td width="34%" align="center" valign="top">
 
 {if $cart.cart_number ne ""}
-	<B>Your cart number is: {$cart.cart_number}</B>
+	<B>{$lng.lbl_your_cart_number_is} {$cart.cart_number}</B>
 {/if}
 
 	</td>
