@@ -902,7 +902,8 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 
 			if (!empty($AmazonOrderItemCode_arr)){
 
-				$RECORDS_order_details = func_query("SELECT amount, productid, amazon_item_refunded, FBAPerOrderFulfillmentFee, FBAPerUnitFulfillmentFee, FBAWeightBasedFee, AmazonCommission FROM $sql_tbl[order_details] WHERE AmazonOrderItemCode NOT IN ('".implode("','", $AmazonOrderItemCode_arr)."')");
+//				$RECORDS_order_details = func_query("SELECT amount, productid, amazon_item_refunded, FBAPerOrderFulfillmentFee, FBAPerUnitFulfillmentFee, FBAWeightBasedFee, AmazonCommission FROM $sql_tbl[order_details] WHERE AmazonOrderItemCode NOT IN ('".implode("','", $AmazonOrderItemCode_arr)."')");
+				$RECORDS_order_details = func_query("SELECT $sql_tbl[order_details].amount, $sql_tbl[order_details].productid, $sql_tbl[order_details].amazon_item_refunded, $sql_tbl[order_details].FBAPerOrderFulfillmentFee, $sql_tbl[order_details].FBAPerUnitFulfillmentFee, $sql_tbl[order_details].FBAWeightBasedFee, $sql_tbl[order_details].AmazonCommission FROM $sql_tbl[order_details] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[order_details].orderid WHERE $sql_tbl[order_details].AmazonOrderItemCode NOT IN ('".implode("','", $AmazonOrderItemCode_arr)."') AND $sql_tbl[orders].amazonorderid='$v[AmazonOrderID]'");
 
 				if (!empty($RECORDS_order_details)){
 					foreach ($RECORDS_order_details as $k_RECORD => $v_RECORD){
