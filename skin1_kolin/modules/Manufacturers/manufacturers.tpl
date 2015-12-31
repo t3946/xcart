@@ -551,6 +551,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 <td style="font-weight: bold;">Email</td>
 <td style="font-weight: bold;">Phone<br /><span style="font-weight: normal;">(start with area code)</span></td>
 <td style="font-weight: bold;">Ext</td>
+<td style="font-weight: bold;">Call</td>
 <td style="font-weight: bold;">Fax</td>
 <td style="font-weight: bold;">Delete</td>
 </tr>
@@ -577,6 +578,13 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 
 </td>
 <td><input type="text" name="distributor_contacts[{$key}][ext]" value="{$item.ext}" size="7" /></td>
+
+<td>
+{if $item.phone ne ""}
+<a target="_blank" style="color: blue;" href="tel:{$item.phone}">Call</a>
+{/if}
+</td>
+
 <td><input type="text" name="distributor_contacts[{$key}][fax]" value="{$item.fax}" size="17" /></td>
 <td>
  <input type="button" value="Delete" onclick="javascript: {literal}$('#mode').val('delete_line'); $('#delete_line_number').val('{/literal}{$key}{literal}'); document.manufacturer.submit();"{/literal} />
