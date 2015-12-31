@@ -102,7 +102,7 @@ src="https://www.google.com/maps/embed/v1/directions?mode=flying&center=53.12540
 {assign var="key_carrier" value=$order.shipping_groups[$k].tracking.0.carrier_id}
 {if $key_carrier ne ""}
 <tr><td>&nbsp;</td></tr>
-<tr><td>&nbsp;</td></tr>
+<tr><td><B>Shipper phone:</B> {$tracking_links_carrier[$key_carrier].phone}</td></tr>
           <tr>
             <td class="call_btn_shipper" width="219" height="44">
                 <a target="_blank" href="tel:{$tracking_links_carrier[$key_carrier].phone}"><div style="width: 219px; height: 44px;"></div></a>
