@@ -149,11 +149,11 @@ while ($record = db_fetch_array($cidev_updated_products)) {
  удалить запись из очереди xcart_cidev_updated_products
 */
 
-	    if (empty($product)){
-		$deleted_ok_found = true;
-	    } else {
+//	    if (empty($product)){
+//		$deleted_ok_found = true;
+//	    } else {
 
-		$deleted_ok_found = false;
+//		$deleted_ok_found = false;
 		foreach ($cidev_storefronts as $k => $v){
 
 			$data_json = "";
@@ -173,16 +173,16 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 				$deleted_ok_found = true;
                         }
 		}
-	    }
+//	    }
 
-	    if ($deleted_ok_found){
+//	    if ($deleted_ok_found){
 			db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
 
 			$deleted_ok++;
-	    }
-	    else {
-			$deleted_fail++;
-	    }
+//	    }
+//	    else {
+//			$deleted_fail++;
+//	    }
 	}
 
 	$processed++;
@@ -293,7 +293,8 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 	if ($brand_info["avail"] != 'Y' || $count_products_with_brand == "0"){
 
 /*
-                $deleted_ok_found = false;
+
+//                $deleted_ok_found = false;
                 foreach ($cidev_storefronts as $k => $v){
 
                         $data_json = "";
@@ -309,19 +310,20 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         curl_close($ch);
 			$result = json_decode($result_json, true);
 
-                        if ($result["found"] == "1"){
-                                $deleted_ok_found = true;
-                        }
+//                        if ($result["found"] == "1"){
+//                                $deleted_ok_found = true;
+//                        }
                 }
 
-                if ($deleted_ok_found){
+//                if ($deleted_ok_found){
                         db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
 
                         $deleted_ok++;
-                }
-                else {
-                        $deleted_fail++;
-                }
+//                }
+//                else {
+//                        $deleted_fail++;
+//                }
+
 */
 
 	}
@@ -471,7 +473,8 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         if ($category_info["avail"] != 'Y' || $category_info["p_count"] <= "0"){
 
 /*
-                $deleted_ok_found = false;
+
+//                $deleted_ok_found = false;
                 foreach ($cidev_storefronts as $k => $v){
 
                         $data_json = "";
@@ -487,19 +490,20 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         curl_close($ch);
 			$result = json_decode($result_json, true);
 
-                        if ($result["found"] == "1"){
-                                $deleted_ok_found = true;
-                        }
+//                        if ($result["found"] == "1"){
+//                                $deleted_ok_found = true;
+//                        }
                 }
 
-                if ($deleted_ok_found){
+//                if ($deleted_ok_found){
                         db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
 
                         $deleted_ok++;
-                }
-                else {
-                        $deleted_fail++;
-                }
+//                }
+//                else {
+//                        $deleted_fail++;
+//                }
+
 */
 
         }
