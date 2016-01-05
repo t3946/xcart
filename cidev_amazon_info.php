@@ -528,12 +528,17 @@ $where = " or ((P.amazon_fba = 'Y' or P.amazon_enabled = 'Y') and P.forsale = 'Y
 
 
 
-
+/*
 $xcart_query = "Select P.productcode, P.productid
 From xcart_orders O
         left join xcart_order_details OD ON OD.orderid = O.orderid
         left join xcart_products P ON P.productid = OD.productid
 Where O.amazon_fulfillment_channel = 'AFN' $where GROUP BY P.productcode";
+*/
+
+$xcart_query = "Select P.productcode, P.productid
+From xcart_k.xcart_products P
+where P.forsale = 'Y' and (P.amazon_enabled = 'Y' or P.amazon_fba = 'Y')";
 
 $products = db_query($xcart_query);
 
