@@ -48,21 +48,38 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 func_flush();
         }
 
-//func_print_r($record);
+	$products = func_query("Select PS.sfid, P.*, $sql_tbl[storefronts].domain From xcart_products P left join xcart_products_sf PS ON PS.productid = P.productid LEFT JOIN $sql_tbl[storefronts] ON PS.sfid = $sql_tbl[storefronts].storefrontid where P.productid = '$record[resourceid]'");
 
-	$product = func_query_first("Select PS.sfid, P.*, $sql_tbl[storefronts].domain From xcart_products P left join xcart_products_sf PS ON PS.productid = P.productid LEFT JOIN $sql_tbl[storefronts] ON PS.sfid = $sql_tbl[storefronts].storefrontid where P.productid = '$record[resourceid]'");
+//func_print_r($record, $products);
+//die();
 
-        if (!empty($product) && empty($product["domain"])){
-                $product["domain"] = "www.artistsupplysource.com";
-        }
+	if (!empty($products)){
 
-	if (!empty($product) && $product["forsale"] == "Y"){
+	    $updated_ok_flag = false;
+	    $update_fail_flag = false;
+	    $deleted_ok_flag = false;
 
-		if ($record["type"] == "6"){
+	    $storefronts_for_product = array();
+
+            foreach ($products as $k => $product){
+
+                if (empty($product["domain"])){
+                        $products[$k]["domain"] = "www.artistsupplysource.com";
+                }
+
+		$storefronts_for_product[] = $products[$k]["domain"];
+	    }
+
+	    foreach ($products as $product){
+
+		if ($product["forsale"] == "Y"){
+
+		    if ($record["type"] == "6"){
 
 			$data_json = "";
 			$url = $config["ElasticSearch_options"]["es_url"].$product["domain"]."/product/".$product["productid"];
 
+/*
 	                // Delete at first
         	        $ch = curl_init($url);
 	                curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
@@ -71,7 +88,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	                $result_json = curl_exec($ch);
 	                curl_close($ch);
-
+*/
 
         	        $data_arr["productname"] = $product["product"];
 	                $data_arr["sku"] = $product["productcode"];
@@ -91,8 +108,8 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         	        curl_close($ch);
 	                $result = json_decode($result_json, true);
 
-		}
-		elseif ($record["type"] == "61"){
+		    }
+		    elseif ($record["type"] == "61"){
 /*
  пройти по списку магазинов отличных от полученных магазинов продукта и выполнить запрос на удаление данных продукта в индексах этих магазинов
 
@@ -100,6 +117,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
  получить код ответа сервера индекса на каждую отправку
 */
 			foreach ($cidev_storefronts as $k => $v){
+			    if (!in_array($v["domain"], $storefronts_for_product)){
 
 				$data_json = "";
 				$url = $config["ElasticSearch_options"]["es_url"].$v["domain"]."/product/".$product["productid"];
@@ -112,6 +130,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	                        $result_json = curl_exec($ch);
         	                curl_close($ch);
+			    }
 			}
 
                         $data_arr["productname"] = $product["product"];
@@ -132,30 +151,19 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         $result_json = curl_exec($ch);
                         curl_close($ch);
                         $result = json_decode($result_json, true);
-		}
 
-                if ($result["created"] == "1"){
-			db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
+		    } // elseif ($record["type"] == "61")
 
-			$updated_ok++;
-                } else {
-	                $update_fail++;
-                }
 
-	} else { //if (!empty($product) && $product["forsale"] == "Y")
-/*
- пройти по списку всех магазинов  и выполнить запрос на удаление данных продукта в индексах магазинов
- deleted = deleted + 1
- удалить запись из очереди xcart_cidev_updated_products
-*/
+                    if ($result["created"] == "1"){
+			$updated_ok_flag = true;
+                    } else {
+			$update_fail_flag = true;
+                    }
 
-//	    if (empty($product)){
-//		$deleted_ok_found = true;
-//	    } else {
+		} else { //if ($product["forsale"] == "Y")
 
-//		$deleted_ok_found = false;
-		foreach ($cidev_storefronts as $k => $v){
-
+		    foreach ($cidev_storefronts as $k => $v){
 			$data_json = "";
                         $url = $config["ElasticSearch_options"]["es_url"].$v["domain"]."/product/".$product["productid"];
 
@@ -168,21 +176,36 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         $result_json = curl_exec($ch);
                         curl_close($ch);
 			$result = json_decode($result_json, true);
-	
-			if ($result["found"] == "1"){
-				$deleted_ok_found = true;
-                        }
+		    }
+
+		    db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
+
+		    $deleted_ok_flag = true;
+		    $deleted_ok++;
+		    break;
+
+		} // else
+
+	    } // foreach ($products as $product)
+
+	    if (!$deleted_ok_flag){
+		if (
+			(!$updated_ok_flag && !$update_fail_flag) ||
+			($update_fail_flag)
+		){
+			$update_fail++;
 		}
-//	    }
+		else {
+			$updated_ok++;
 
-//	    if ($deleted_ok_found){
 			db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
+		}
+	    } // if (!$deleted_ok_flag)
 
-			$deleted_ok++;
-//	    }
-//	    else {
-//			$deleted_fail++;
-//	    }
+	} // if (!empty($products))
+	else {
+		db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
+		$deleted_ok++;
 	}
 
 	$processed++;
