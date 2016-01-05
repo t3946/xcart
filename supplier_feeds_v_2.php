@@ -47,7 +47,8 @@ $product_cols_replace = array(
 	"sku" => "productcode",
 	"quantity" => "r_avail",
 	"eta_date" => "eta_date_mm_dd_yyyy",
-	"title" => "product"
+	"title" => "product",
+	"listprice" => "list_price"
 );
 
 $manufacturerid_info = func_query_hash("SELECT code, manufacturerid, manufacturer FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
