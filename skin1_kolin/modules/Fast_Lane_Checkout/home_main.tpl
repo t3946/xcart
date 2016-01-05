@@ -65,7 +65,7 @@ return true;
 
 
 <div align="left" width="100%">
-<table cellpadding="0" cellspacing="0" width="100%">
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
 <tr>
 	<td>{include file="modules/Fast_Lane_Checkout/big_button.tpl" button_title=$lng.lbl_continue_shopping style="button" href="home.php`$last_categoryid`"}</td>
 	<td>
@@ -80,8 +80,14 @@ return true;
 {/if}
 	</td>
 
-	<td width="30%">&nbsp;</td>
-	<td align="right">
+	<td width="34%" align="center" valign="top">
+
+{if $cart.cart_number ne ""}
+	<B>{$lng.lbl_your_cart_number_is} {$cart.cart_number}</B>
+{/if}
+
+	</td>
+	<td align="right" width="33%">
 {if $cart.paymentid ne ""}
 	{if $warehouse_cart_url ne ""}
 {include file="modules/Fast_Lane_Checkout/big_button.tpl" button_title=$lng.lbl_checkout style="button" href=$warehouse_cart_url color="red" arrow="Y" js_onclick_to_href="func_set_warehouse_background('$lbl_minimum_order_amount_mes');"}

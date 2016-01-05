@@ -682,6 +682,9 @@ var runTests = function(editor) {
 {elseif $main eq "amazon_settlement_report_analyzer"}
 {include file="admin/main/amazon_settlement_report_analyzer.tpl"}
 
+{elseif $main eq "customers_cart"}
+{include file="admin/main/customers_cart.tpl"}
+
 {else}
 {include file="main/error_page_not_found.tpl"}
 

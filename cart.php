@@ -285,6 +285,30 @@ x_session_register('added_catalogs');
 x_session_register('autologout');
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
+#
+## https://basecamp.com/2070980/projects/1577907/messages/46647624
+### Start: Cart number feature
+if (!empty($cart["products"]) && empty($cart["cart_number"])){
+
+	$current_user_cart_number_in_xcart_sessions_data = func_query_first_cell("SELECT cart_number FROM $sql_tbl[sessions_data] WHERE sessid='$XCARTSESSID'");
+	if (!empty($current_user_cart_number_in_xcart_sessions_data)){
+		$cart["cart_number"] = $current_user_cart_number_in_xcart_sessions_data;
+	} else {
+
+		$max_cart_number_in_xcart_customers = func_query_first_cell("SELECT MAX(cart_number) FROM $sql_tbl[customers]");
+		$max_cart_number_in_xcart_sessions_data = func_query_first_cell("SELECT MAX(cart_number) FROM $sql_tbl[sessions_data]");
+		$max_cart_number_in_xcart_orders = func_query_first_cell("SELECT MAX(cart_number) FROM $sql_tbl[orders]");
+
+		$cart_number = max($max_cart_number_in_xcart_customers, $max_cart_number_in_xcart_sessions_data, $max_cart_number_in_xcart_orders) + 1;
+		$cart["cart_number"] = $cart_number;
+
+		db_query("UPDATE $sql_tbl[sessions_data] SET cart_number='$cart_number' WHERE sessid='$XCARTSESSID'");
+	}
+}
+###
+## End: Cart number feature
+#
+
 
 #
 ## Mobile
