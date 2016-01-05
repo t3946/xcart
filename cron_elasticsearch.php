@@ -52,11 +52,11 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 
 	$product = func_query_first("Select PS.sfid, P.*, $sql_tbl[storefronts].domain From xcart_products P left join xcart_products_sf PS ON PS.productid = P.productid LEFT JOIN $sql_tbl[storefronts] ON PS.sfid = $sql_tbl[storefronts].storefrontid where P.productid = '$record[resourceid]'");
 
-        if (empty($product["domain"])){
+        if (!empty($product) && empty($product["domain"])){
                 $product["domain"] = "www.artistsupplysource.com";
         }
 
-	if ($product["forsale"] == "Y"){
+	if (!empty($product) && $product["forsale"] == "Y"){
 
 		if ($record["type"] == "6"){
 
@@ -123,6 +123,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         $data_arr["description"] = strip_tags($product["fulldescr"]);
                         $data_json = json_encode($data_arr);
 
+			$url = $config["ElasticSearch_options"]["es_url"].$product["domain"]."/product/".$product["productid"];
                         $ch = curl_init($url);
                         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -141,12 +142,17 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 	                $update_fail++;
                 }
 
-	} else {
+	} else { //if (!empty($product) && $product["forsale"] == "Y")
 /*
  пройти по списку всех магазинов  и выполнить запрос на удаление данных продукта в индексах магазинов
  deleted = deleted + 1
  удалить запись из очереди xcart_cidev_updated_products
 */
+
+	    if (empty($product)){
+		$deleted_ok_found = true;
+	    } else {
+
 		$deleted_ok_found = false;
 		foreach ($cidev_storefronts as $k => $v){
 
@@ -161,20 +167,22 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         $result_json = curl_exec($ch);
                         curl_close($ch);
-
+			$result = json_decode($result_json, true);
+	
 			if ($result["found"] == "1"){
 				$deleted_ok_found = true;
                         }
 		}
+	    }
 
-		if ($deleted_ok_found){
+	    if ($deleted_ok_found){
 			db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
 
 			$deleted_ok++;
-		}
-		else {
+	    }
+	    else {
 			$deleted_fail++;
-		}
+	    }
 	}
 
 	$processed++;
@@ -299,6 +307,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         $result_json = curl_exec($ch);
                         curl_close($ch);
+			$result = json_decode($result_json, true);
 
                         if ($result["found"] == "1"){
                                 $deleted_ok_found = true;
@@ -476,6 +485,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         $result_json = curl_exec($ch);
                         curl_close($ch);
+			$result = json_decode($result_json, true);
 
                         if ($result["found"] == "1"){
                                 $deleted_ok_found = true;
