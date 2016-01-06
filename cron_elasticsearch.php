@@ -167,7 +167,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 		    } // elseif ($record["type"] == "61")
 
 
-            if ($info["http_code"] == "200"){
+            if ($info["http_code"] == "200" || $info["http_code"] == "201"){
                   $updated_ok_flag = true;
             } else {
                   $update_fail_flag = true;
@@ -358,8 +358,8 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 		}
 	}
     
-    func_print_r($storefronts_for_brand);
-    func_print_r($count_products_with_brand);
+//    func_print_r($storefronts_for_brand);
+//    func_print_r($count_products_with_brand);
 
 	if ($brand_info["avail"] != 'Y' || $count_products_with_brand == "0"){
 
@@ -396,7 +396,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
               if (!in_array($v["domain"], $storefronts_for_brand)) {
 	                    // Delete at SFs not for brand
                         $data_json = "";
-                        $url = $config["ElasticSearch_options"]["es_url"].$cidev_storefronts[$v["sfid"]]["domain"]."/brand/".$brandid;
+                        $url = $config["ElasticSearch_options"]["es_url"].$cidev_storefronts[$k]["domain"]."/brand/".$brandid;
         	            $ch = curl_init($url);
                 	    curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
 	                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
@@ -414,7 +414,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
               if (in_array($v["domain"], $storefronts_for_brand)) {
 
                     $data_json = "";
-                    $url = $config["ElasticSearch_options"]["es_url"].$cidev_storefronts[$v["sfid"]]["domain"]."/brand/".$brandid;
+                    $url = $config["ElasticSearch_options"]["es_url"].$cidev_storefronts[$k]["domain"]."/brand/".$brandid;
 
                     $data_arr["name"] = $brand_info["brand"];
            	        $brand_info["descr"] = str_replace("/r/n", " ", $brand_info["descr"]);
@@ -433,7 +433,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $result = json_decode($result_json, true);
                     $requests++;
 
-                    if ($info["http_code"] != "200"){
+                    if ($info["http_code"] != "200" && $info["http_code"] != "201"){
                         $update_fail_flag = true;
                     }
 
