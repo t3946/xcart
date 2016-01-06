@@ -519,7 +519,7 @@ function restore_queue( $products, $mode )
 	{
 		$count = func_query_first_cell("SELECT COUNT(*) as count FROM xcart_cidev_updated_products WHERE resourceid='" . $item['productid'] . "' AND type=" . $mode . ";");
 		if ( $count == 0 )
-			db_query("INSERT INTO xcart_cidev_updated_products (`resourceid`,`type`,`time_stamp`,`source`) VALUES( '" . $item['productid'] . "', ". $mode .", " . time() . ", 'queue' )");
+			db_query("INSERT INTO xcart_cidev_updated_products (`resourceid`,`type`,`time_stamp`,`source`) VALUES( '" . $item['productid'] . "', ". $mode .", " . time() . ", 're-queue' )");
 	}
 }
 ?>
