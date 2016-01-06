@@ -1,5 +1,9 @@
 <br />
 
+{if $product_questions eq "" && $search_data.PQ_OTRS_filter eq "true"}
+<input type="checkbox" value="true" id="id_PQ_OTRS_filter" name="PQ_OTRS_filter" {if $search_data.PQ_OTRS_filter eq "true"}checked="checked"{/if} onclick="javascript: self.location='product_question_search.php?mode=search&status=all&from_dashboard=Y&PQ_OTRS_filter='+$('#id_PQ_OTRS_filter').is(':checked')+'';" /> Don’t show product questions with PQ and order status = ‘Closed’ AND Publication status ≠ ‘Unpublished’ except for New OTRS message = 'Y'
+{/if}
+
 {if $product_questions ne ""}
 
 {if $mode eq "search"}
@@ -22,47 +26,43 @@
 <input type="hidden" name="mode" value="" id="mode" />
 *}
 
+<input type="checkbox" value="true" id="id_PQ_OTRS_filter" name="PQ_OTRS_filter" {if $search_data.PQ_OTRS_filter eq "true"}checked="checked"{/if} onclick="javascript: self.location='product_question_search.php?mode=search&status='+$('#id_status').val()+'&from_dashboard=Y&PQ_OTRS_filter='+$('#id_PQ_OTRS_filter').is(':checked')+'';" /> Don’t show product questions with PQ and order status = ‘Closed’ AND Publication status ≠ ‘Unpublished’ except for New OTRS message = 'Y'
+
 <table border="0" width="100%" cellpadding="3" cellspacing="1">
 <tr class='TableSubHead'>
-<td><B>Id</B></td>
-<td><B>Date</B></td>
-<td><B>Product SKU</B></td>
+<td align="center"><br /><B>PQ #</B></td>
+<td align="center"><br /><B>Date</B></td>
+<td align="center"><br /><B>Product SKU</B></td>
 {* <td><B>Product name</B></td> *}
 {* <td><B>Product question</B></td> *}
 {*
 <td><B>Email</B></td>
 <td><B>Phone</B></td>
 *}
-<td>
+<td align="center">
 
- <table border="0" cellpadding="0" cellspacing="0" align="left">
- <tr>
- <td>
- <B>Status</B>
- </td>
- <td>&nbsp;</td>
- <td>
-    <select name="status" onchange="javascript: self.location='product_question_search.php?mode=search&status='+this.value+'&from_dashboard=Y';">
+    <select id="id_status" name="status" onchange="javascript: self.location='product_question_search.php?mode=search&status='+this.value+'&from_dashboard=Y';">
         <option value="all">All</option>
 
     {foreach from=$product_question_statuses key="code" item="o_status"}
                 <option value="{$code}"{if $search_data.status eq $code} selected="selected"{/if}>{$o_status}</option>
     {/foreach}
     </select>
- </td>
- </tr>
- </table>
+
+    <br />
+    <B>PQ and order status</B>
 
 </td>
-<td><B>New email message</B></td>
-<td><B>Orderid</B></td>
+<td align="center"><br /><B>Publication status</B></td>
+<td align="center"><br /><B>New OTRS message</B></td>
+<td align="center"><br /><B>Orderid</B></td>
 </tr>
 
 {foreach from=$product_questions item=v key=k}
 
    <tr {cycle values=", class='TableSubHead'"}>
-	<td nowrap="nowrap"><a href="product_question.php?id={$v.id}" target="_blank"># {$v.id}</a></td>
-	<td nowrap="nowrap"><a href="product_question.php?id={$v.id}" target="_blank">{$v.date|date_format:'%d-%b-%Y'}</a></td>
+	<td nowrap="nowrap" align="center"><a href="product_question.php?id={$v.id}" target="_blank">{$v.id}</a></td>
+	<td nowrap="nowrap" align="center"><a href="product_question.php?id={$v.id}" target="_blank">{$v.date|date_format:'%d-%b-%Y'}</a></td>
 	<td nowrap="nowrap"><a href="product_question.php?id={$v.id}" target="_blank">{$v.productcode}</a></td>
 {*	<td>{$v.product}</td> *}
 {*	<td>{$v.question}</td> *}
@@ -73,8 +73,9 @@
 	<td nowrap="nowrap">
 		<a href="product_question.php?id={$v.id}" target="_blank">{include file="admin/main/product_question_status.tpl" status=$v.status mode="static"}</a>
 	</td nowrap="nowrap">
-	<td>{$v.new_otrs_email}</td>
-	<td>{if $v.orderid ne "0"}<a href="order.php?orderid={$v.orderid}">{$v.orderid}</a>{/if}</td>
+	<td align="center">{include file="admin/main/product_question_publication_statuses.tpl" status=$v.publication_status mode="static"}</td>
+	<td align="center">{$v.new_otrs_email}</td>
+	<td align="center">{if $v.orderid ne "0"}<a href="order.php?orderid={$v.orderid}">{$v.orderid}</a>{/if}</td>
    </tr>
 
 {/foreach}
