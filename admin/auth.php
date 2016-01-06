@@ -243,6 +243,13 @@ $product_question_statuses = array(
 );
 $smarty->assign('product_question_statuses', $product_question_statuses);
 
+$publication_statuses = array(
+        "U" => "Unpublished",
+        "N" => "Not suitable for publication",
+        "T" => "Transferred to product page"
+);
+
+$smarty->assign('publication_statuses', $publication_statuses);
 
 ###   
     $all_storefronts = $storefronts;
