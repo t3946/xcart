@@ -111,7 +111,7 @@ $(function() {ldelim}
 
 <table border="0" width="100%" cellpadding="3" cellspacing="1">
 <tr>
-<td colspan="2"><B>Product question status:</B>
+<td colspan="2"><B>PQ and order status:</B>
 	{include file="admin/main/product_question_status.tpl" status=$product_question.status mode="select" name="status" extra="" empty="N"}
 </td>
 
@@ -195,16 +195,29 @@ $(function() {ldelim}
 	</td>
         <td colspan="2" align="right">
 
-{if $product_question.answer ne ""}
+{if $product_question.publication_status ne "N" && $product_question.publication_status ne "T"}
+
+    {if $product_question.answer ne ""}
 	<input type="button" value="Transfer Q&A to product page" onclick="javascript: submitForm(this, 'transfer');" />
 
 	<input type="button" value="Transfer and publish Q&A to product page" onclick="javascript: submitForm(this, 'transfer_and_publish');" />
+    {/if}
+
+    <br />
+    <input type="button" value="Q&A is not suitable for publication" onclick="javascript: submitForm(this, 'QA_is_not_suitable_for_publication');" />
 {/if}
 
+
+{*
 {if $product_question.answered_on_page eq "Y" || $product_question.question_published_on_page eq "Y"}
 <br />
 <span style="color: green;">Q&A have already been transferred to product page.</span>
 {/if}
+*}
+
+	<br />
+	<br />
+	<B>Publication status:</B>  {include file="admin/main/product_question_publication_statuses.tpl" status=$product_question.publication_status mode="static" color="green"}
 
 	<input type="hidden" name="add_products" value="{$product_info.productcode}=1;" />
         </td>
