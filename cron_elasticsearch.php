@@ -36,6 +36,8 @@ $update_fail = 0;
 $deleted_ok = 0;
 $deleted_fail = 0;
 $processed = 0;
+$requests = 0;
+$body = "";
 
 while ($record = db_fetch_array($cidev_updated_products)) {
 
@@ -106,9 +108,10 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 	                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
         	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	                $result_json = curl_exec($ch);
-			$info = curl_getinfo($ch);
+                    $info = curl_getinfo($ch);
         	        curl_close($ch);
 	                $result = json_decode($result_json, true);
+                    $requests++;
 
 		    }
 		    elseif ($record["type"] == "61"){
@@ -123,93 +126,112 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 			  foreach ($cidev_storefronts as $k => $v){
 			    if (!in_array($v["domain"], $storefronts_for_product)){
 
-				$data_json = "";
-				$url = $config["ElasticSearch_options"]["es_url"].$v["domain"]."/product/".$product["productid"];
+                    $data_json = "";
+                    $url = $config["ElasticSearch_options"]["es_url"].$v["domain"]."/product/".$product["productid"];
 
-	                        // (Delete for current prouct at first too)
-	                        $ch = curl_init($url);
-        	                curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-	                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-        	                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	                        $result_json = curl_exec($ch);
-        	                curl_close($ch);
+	                // (Delete for current prouct at first too)
+	                $ch = curl_init($url);
+        	        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
+	                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        	        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+                	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	                $result_json = curl_exec($ch);
+        	        curl_close($ch);
+                    $requests++;
 			    }
-			}
+              }
+              $flag61 = true;
+            }
 
-                        $data_arr["productname"] = $product["product"];
-                        $data_arr["sku"] = $product["productcode"];
-                        $data_arr["upc"] = $product["upc"];
-                        $data_arr["brand"] = $product["brand"];
-                        $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
-                        $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
-                        $data_arr["description"] = strip_tags($product["fulldescr"]);
-                        $data_json = json_encode($data_arr);
+            $data_arr["productname"] = $product["product"];
+            $data_arr["sku"] = $product["productcode"];
+            $data_arr["upc"] = $product["upc"];
+            $data_arr["brand"] = $product["brand"];
+            $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
+            $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
+            $data_arr["description"] = strip_tags($product["fulldescr"]);
+            $data_json = json_encode($data_arr);
 
 			$url = $config["ElasticSearch_options"]["es_url"].$product["domain"]."/product/".$product["productid"];
-                        $ch = curl_init($url);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        $result_json = curl_exec($ch);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result_json = curl_exec($ch);
 			$info = curl_getinfo($ch);
-                        curl_close($ch);
-                        $result = json_decode($result_json, true);
+            curl_close($ch);
+            $result = json_decode($result_json, true);
+            $requests++;
 
 		    } // elseif ($record["type"] == "61")
 
 
-//                    if ($result["created"] == "1")
-                    if ($info["http_code"] == "200")
-			$updated_ok_flag = true;
-                    } else {
-			$update_fail_flag = true;
-                    }
+            if ($info["http_code"] == "200"){
+                  $updated_ok_flag = true;
+            } else {
+                  $update_fail_flag = true;
+            }
 
 		} else { //if ($product["forsale"] == "Y")
 
 		    foreach ($cidev_storefronts as $k => $v){
-			$data_json = "";
-                        $url = $config["ElasticSearch_options"]["es_url"].$v["domain"]."/product/".$product["productid"];
+                $data_json = "";
+                $url = $config["ElasticSearch_options"]["es_url"].$v["domain"]."/product/".$product["productid"];
 
-                        // Delete prouct
-                        $ch = curl_init($url);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        $result_json = curl_exec($ch);
-                        curl_close($ch);
-			$result = json_decode($result_json, true);
-		    }
+                // Delete prouct
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $result_json = curl_exec($ch);
+                curl_close($ch);
+                $result = json_decode($result_json, true);
+                $requests++;
+            }
 
-		    db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
+            db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
 
-		    $deleted_ok_flag = true;
-		    $deleted_ok++;
-		    break;
+            $deleted_ok_flag = true;
+            $deleted_ok++;
 
 		} // else
 
-	    } // foreach ($products as $product)
+    } // foreach ($products as $product)
 
-	    if (!$deleted_ok_flag){
+	if (!$deleted_ok_flag){
 		if (
 			(!$updated_ok_flag && !$update_fail_flag) ||
-			($update_fail_flag)
-		){
-			$update_fail++;
-		}
+			($update_fail_flag)){
+                    $update_fail++;
+                    db_query("UPDATE $sql_tbl[cidev_updated_products] SET source = 're-queued' WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
+        }
 		else {
-			$updated_ok++;
+                    $updated_ok++;
 
-			db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
+                    db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
 		}
-	    } // if (!$deleted_ok_flag)
+	} // if (!$deleted_ok_flag)
 
-	} // if (!empty($products))
+} // if (!empty($products))
 	else {
+            foreach ($cidev_storefronts as $k => $v){
+
+                    $data_json = "";
+                    $url = $config["ElasticSearch_options"]["es_url"].$v["domain"]."/product/".$record["resourceid"];
+
+	                // (Delete for current prouct at first too)
+	                $ch = curl_init($url);
+        	        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
+	                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        	        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+                	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	                $result_json = curl_exec($ch);
+        	        curl_close($ch);
+                    $requests++;
+			}
+              
 		db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
 		$deleted_ok++;
 	}
@@ -223,7 +245,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         if ($diff_time_in_mins > $config["ElasticSearch_options"]["es_maximum_work_time_per_start_in_minutes"]){
 
                 $rest_documents_to_index = $total_items - ($updated_ok + $deleted_ok);
-
+                
                 $subj = "ES-robot statistics (Products)";
                 $body = "
                 Total products to index: $total_items 
@@ -233,19 +255,20 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 Products deleted 'ok': $deleted_ok 
                 Products deleted 'fail': $deleted_fail 
                 Rest documents to index: $rest_documents_to_index 
+                Requests made to ES: $requests
                 Working time:  $diff_time_in_mins minutes";
 
-                func_backprocess_log("ElasticSearch updates", $body);
-//                func_send_simple_mail($config["ElasticSearch_options"]["es_report_email"], $subj, $body, "xcart@s3stores.com");
                 break;
         }
 
 }
 db_free_result($cidev_updated_products);
 
+$current_time = time();
+$diff_time_in_mins = ($current_time - $start_time)/60;
 if ($diff_time_in_mins <= $config["ElasticSearch_options"]["es_maximum_work_time_per_start_in_minutes"] && $total_items>0){
 
-                $rest_documents_to_index = $total_items - ($products_indexed_ok + $products_deleted_from_index_ok);
+                $rest_documents_to_index = $total_items - ($updated_ok + $deleted_ok);
 
                 $subj = "ES-robot statistics (Products)";
                 $body = "
@@ -256,12 +279,15 @@ if ($diff_time_in_mins <= $config["ElasticSearch_options"]["es_maximum_work_time
                 Products deleted 'ok': $deleted_ok 
                 Products deleted 'fail': $deleted_fail 
                 Rest documents to index: $rest_documents_to_index 
+                Requests made to ES: $requests
                 Working time:  $diff_time_in_mins minutes";
 
-                func_backprocess_log("ElasticSearch updates", $body);
 
-//                func_send_simple_mail($config["ElasticSearch_options"]["es_report_email"], $subj, $body, "xcart@s3stores.com");
 }
+if ($body != "") {
+    func_backprocess_log("ElasticSearch updates", $body);
+}
+
 
 ###
 ##
