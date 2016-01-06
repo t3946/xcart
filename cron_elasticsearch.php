@@ -37,6 +37,7 @@ $deleted_ok = 0;
 $deleted_fail = 0;
 $processed = 0;
 $requests = 0;
+$body = "";
 
 while ($record = db_fetch_array($cidev_updated_products)) {
 
@@ -283,7 +284,9 @@ if ($diff_time_in_mins <= $config["ElasticSearch_options"]["es_maximum_work_time
 
 
 }
-func_backprocess_log("ElasticSearch updates", $body);
+if ($body != "") {
+    func_backprocess_log("ElasticSearch updates", $body);
+}
 
 
 ###
