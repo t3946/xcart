@@ -26,7 +26,9 @@ if ($REQUEST_METHOD=="POST") {
     }
 }
 
-if ($mode == "search" && !empty($status) && $from_dashboard == "Y"){
+if ($mode == "search" && $from_dashboard == "Y"){
+
+    if (!empty($status)){
 
 	if ($status == "all"){
 	        if (!empty($search_data["product_question_search"]["status"])){
@@ -37,14 +39,34 @@ if ($mode == "search" && !empty($status) && $from_dashboard == "Y"){
 		$search_data["product_question_search"]["status"] = addslashes($status);
 	}
 
-	if (isset($search_data["product_question_search"]["question"])){
-		unset($search_data["product_question_search"]["question"]);
-	}
+    }
+
+    if (!empty($PQ_OTRS_filter)){
+
+        if ($PQ_OTRS_filter != "true"){
+                if (!empty($search_data["product_question_search"]["PQ_OTRS_filter"])){
+                        unset($search_data["product_question_search"]["PQ_OTRS_filter"]);
+                }
+        }       
+        else {  
+                $search_data["product_question_search"]["PQ_OTRS_filter"] = "true";
+        }       
+                        
+    }
+
+    if (!empty($status) || !empty($PQ_OTRS_filter)){
+
+        if (isset($search_data["product_question_search"]["question"])){
+                unset($search_data["product_question_search"]["question"]);
+        }
 
 	x_session_save("search_data");
+    }
 }
 
 if ($mode == "search"){
+
+//func_print_r($search_data);
 
         if (!empty($page) && $search_data["product_question_search"]["page"] != intval($page)) {
                 # Store the current page number in the session
@@ -74,6 +96,10 @@ if ($mode == "search"){
 	}
 	else {
 		$where_arr[] = "$sql_tbl[product_question].status!=''";
+	}
+
+	if (!empty($search_data["product_question_search"]["PQ_OTRS_filter"]) && $search_data["product_question_search"]["PQ_OTRS_filter"] == "true"){
+		$where_arr[] = " ( ($sql_tbl[product_question].status!='closed' AND $sql_tbl[product_question].publication_status!='U') OR $sql_tbl[product_question].new_otrs_email = 'Y' )";
 	}
 
 	$where = implode(" AND ", $where_arr);
