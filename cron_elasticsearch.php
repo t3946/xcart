@@ -204,6 +204,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 			(!$updated_ok_flag && !$update_fail_flag) ||
 			($update_fail_flag)){
                     $update_fail++;
+                    db_query("UPDATE $sql_tbl[cidev_updated_products] SET source = 're-queued' WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
         }
 		else {
                     $updated_ok++;
