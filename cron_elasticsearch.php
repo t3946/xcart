@@ -36,6 +36,7 @@ $update_fail = 0;
 $deleted_ok = 0;
 $deleted_fail = 0;
 $processed = 0;
+$requests = 0;
 
 while ($record = db_fetch_array($cidev_updated_products)) {
 
@@ -106,9 +107,10 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 	                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
         	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	                $result_json = curl_exec($ch);
-			$info = curl_getinfo($ch);
+                    $info = curl_getinfo($ch);
         	        curl_close($ch);
 	                $result = json_decode($result_json, true);
+                    $requests++;
 
 		    }
 		    elseif ($record["type"] == "61"){
@@ -134,6 +136,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	                $result_json = curl_exec($ch);
         	        curl_close($ch);
+                    $requests++;
 			    }
               }
               $flag61 = true;
@@ -158,6 +161,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 			$info = curl_getinfo($ch);
             curl_close($ch);
             $result = json_decode($result_json, true);
+            $requests++;
 
 		    } // elseif ($record["type"] == "61")
 
@@ -183,6 +187,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 $result_json = curl_exec($ch);
                 curl_close($ch);
                 $result = json_decode($result_json, true);
+                $requests++;
             }
 
             db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
@@ -222,6 +227,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	                $result_json = curl_exec($ch);
         	        curl_close($ch);
+                    $requests++;
 			}
               
 		db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
@@ -247,6 +253,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 Products deleted 'ok': $deleted_ok 
                 Products deleted 'fail': $deleted_fail 
                 Rest documents to index: $rest_documents_to_index 
+                Requests made to ES: $requests
                 Working time:  $diff_time_in_mins minutes";
 
                 break;
@@ -270,6 +277,7 @@ if ($diff_time_in_mins <= $config["ElasticSearch_options"]["es_maximum_work_time
                 Products deleted 'ok': $deleted_ok 
                 Products deleted 'fail': $deleted_fail 
                 Rest documents to index: $rest_documents_to_index 
+                Requests made to ES: $requests
                 Working time:  $diff_time_in_mins minutes";
 
 
