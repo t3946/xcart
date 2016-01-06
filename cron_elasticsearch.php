@@ -237,7 +237,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         if ($diff_time_in_mins > $config["ElasticSearch_options"]["es_maximum_work_time_per_start_in_minutes"]){
 
                 $rest_documents_to_index = $total_items - ($updated_ok + $deleted_ok);
-
+                
                 $subj = "ES-robot statistics (Products)";
                 $body = "
                 Total products to index: $total_items 
@@ -249,17 +249,17 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 Rest documents to index: $rest_documents_to_index 
                 Working time:  $diff_time_in_mins minutes";
 
-                func_backprocess_log("ElasticSearch updates", $body);
-//                func_send_simple_mail($config["ElasticSearch_options"]["es_report_email"], $subj, $body, "xcart@s3stores.com");
                 break;
         }
 
 }
 db_free_result($cidev_updated_products);
 
+$current_time = time();
+$diff_time_in_mins = ($current_time - $start_time)/60;
 if ($diff_time_in_mins <= $config["ElasticSearch_options"]["es_maximum_work_time_per_start_in_minutes"] && $total_items>0){
 
-                $rest_documents_to_index = $total_items - ($products_indexed_ok + $products_deleted_from_index_ok);
+                $rest_documents_to_index = $total_items - ($updated_ok + $deleted_ok);
 
                 $subj = "ES-robot statistics (Products)";
                 $body = "
@@ -272,10 +272,10 @@ if ($diff_time_in_mins <= $config["ElasticSearch_options"]["es_maximum_work_time
                 Rest documents to index: $rest_documents_to_index 
                 Working time:  $diff_time_in_mins minutes";
 
-                func_backprocess_log("ElasticSearch updates", $body);
 
-//                func_send_simple_mail($config["ElasticSearch_options"]["es_report_email"], $subj, $body, "xcart@s3stores.com");
 }
+func_backprocess_log("ElasticSearch updates", $body);
+
 
 ###
 ##
