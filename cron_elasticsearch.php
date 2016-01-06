@@ -58,6 +58,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 	    $updated_ok_flag = false;
 	    $update_fail_flag = false;
 	    $deleted_ok_flag = false;
+	    $flag61 = false;
 
 	    $storefronts_for_product = array();
 
@@ -105,6 +106,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 	                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
         	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	                $result_json = curl_exec($ch);
+			$info = curl_getinfo($ch);
         	        curl_close($ch);
 	                $result = json_decode($result_json, true);
 
@@ -116,7 +118,9 @@ while ($record = db_fetch_array($cidev_updated_products)) {
  отправить данные продукта в индексы его магазинов 
  получить код ответа сервера индекса на каждую отправку
 */
-			foreach ($cidev_storefronts as $k => $v){
+
+			if (!$flag61){
+			  foreach ($cidev_storefronts as $k => $v){
 			    if (!in_array($v["domain"], $storefronts_for_product)){
 
 				$data_json = "";
@@ -149,13 +153,15 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         $result_json = curl_exec($ch);
+			$info = curl_getinfo($ch);
                         curl_close($ch);
                         $result = json_decode($result_json, true);
 
 		    } // elseif ($record["type"] == "61")
 
 
-                    if ($result["created"] == "1"){
+//                    if ($result["created"] == "1")
+                    if ($info["http_code"] == "200")
 			$updated_ok_flag = true;
                     } else {
 			$update_fail_flag = true;
@@ -330,10 +336,12 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         $result_json = curl_exec($ch);
+			$info = curl_getinfo($ch);
                         curl_close($ch);
 			$result = json_decode($result_json, true);
 
-//                        if ($result["found"] == "1"){
+//                        #if ($result["found"] == "1")
+//                        if ($info["http_code"] == "200"){
 //                                $deleted_ok_found = true;
 //                        }
                 }
@@ -386,10 +394,12 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         	curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 	                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         	                $result_json = curl_exec($ch);
+				$info = curl_getinfo($ch);
                 	        curl_close($ch);
                         	$result = json_decode($result_json, true);
 
-				if ($result["created"] != "1"){
+//				if ($result["created"] != "1")
+				if ($info["http_code"] != "200"){
 					$update_fail_flag = true;
 				}
 
@@ -510,10 +520,12 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         $result_json = curl_exec($ch);
+			$info = curl_getinfo($ch);
                         curl_close($ch);
 			$result = json_decode($result_json, true);
 
-//                        if ($result["found"] == "1"){
+//                        #if ($result["found"] == "1")
+//                        if ($info["http_code"] == "200"){
 //                                $deleted_ok_found = true;
 //                        }
                 }
@@ -558,10 +570,12 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         $result_json = curl_exec($ch);
+			$info = curl_getinfo($ch);
                         curl_close($ch);
                         $result = json_decode($result_json, true);
 
-			if ($result["created"] != "1"){
+//			if ($result["created"] != "1")
+			if ($info["http_code"] != "200"){
                                 $update_fail++;
                         } else {
                                 db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
