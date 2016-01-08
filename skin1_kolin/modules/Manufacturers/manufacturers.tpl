@@ -940,7 +940,7 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
 </div>
 
 <div style="float: left; {if $manufacturer.distributor_offers_free_shipping ne "on_orders_over"}display: none;{/if}" id="free_shipping_on_orders_over_value">
-&nbsp; US $ <input type="text" name="free_shipping_on_orders_over_value" value="{$manufacturer.free_shipping_on_orders_over_value}" size="7" />
+&nbsp; US$ <input type="text" name="free_shipping_on_orders_over_value" value="{$manufacturer.free_shipping_on_orders_over_value}" size="7" />
 </div>
         </td>
 </tr>
