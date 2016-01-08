@@ -3788,4 +3788,31 @@ function func_convert_date_mm_dd_yyyy($date, $to_format){
 	}
 }
 
+function func_detect_working_hours(){
+	global $config, $working_days, $smarty;
+
+	$day = strtolower(date('l'));
+
+	$working_hours = $working_days[$day];
+
+	if ($working_hours["type"] == "non_working"){
+		$store_in_working_hours = "N";
+	}
+	elseif ($working_hours["type"] == "all_day"){
+		$store_in_working_hours = "Y";
+	}
+	elseif ($working_hours["type"] == "custom"){
+		$store_in_working_hours = "N";
+
+		$current_time = price_format(date("G.i"));
+		$working_hours["current_time"] = $current_time;
+		if (price_format($working_hours["from"]) <= $current_time && $current_time <= price_format($working_hours["to"])){
+			$store_in_working_hours = "Y";
+		}
+	}
+
+	$working_hours["store_in_working_hours"] = $store_in_working_hours;
+
+	$smarty->assign("working_hours", $working_hours);
+}
 ?>
