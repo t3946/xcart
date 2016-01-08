@@ -473,4 +473,6 @@ if (!empty($config["Appearance"]["Google_Trusted_Store_ID"])){
 
 //}
 
+func_detect_working_hours();
+
 ?>
