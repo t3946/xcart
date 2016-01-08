@@ -276,14 +276,14 @@ if ($REQUEST_METHOD == "POST") {
     } // elseif ($mode == "generate_queued_order")
     elseif ($mode == "transfer"){
                 $query_data["answered_on_page"] = "Y";
-                $query_data["question_published_on_page"] = "T";
+                $query_data["publication_status"] = "T";
 #                $query_data["answered_date"] = time();
                 func_array2update("product_question", $query_data, "id = '$id'");
     }
     elseif ($mode == "transfer_and_publish"){
                 $query_data["answered_on_page"] = "Y";
                 $query_data["question_published_on_page"] = "Y";
-                $query_data["question_published_on_page"] = "T";
+                $query_data["publication_status"] = "T";
 //                $query_data["login"] = $login;
 #                $query_data["answered_date"] = time();
 

@@ -190,11 +190,15 @@ $(function() {ldelim}
 </tr>
 
 <tr>
-        <td>
-<input type="button" value="{$lng.lbl_update|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'update');" />
-	</td>
-        <td colspan="2" align="right">
+        <td colspan="3">
 
+<table width="100%">
+<tr>
+<td>
+<input type="button" value="{$lng.lbl_update|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'update');" />
+</td>
+
+<td align="right">
 {if $product_question.publication_status ne "N" && $product_question.publication_status ne "T"}
 
     {if $product_question.answer ne ""}
@@ -203,11 +207,13 @@ $(function() {ldelim}
 	<input type="button" value="Transfer and publish Q&A to product page" onclick="javascript: submitForm(this, 'transfer_and_publish');" />
     {/if}
 
-    <br />
     <input type="button" value="Q&A is not suitable for publication" onclick="javascript: submitForm(this, 'QA_is_not_suitable_for_publication');" />
 {/if}
+</td>
+</tr>
 
-
+<tr>
+<td align="right" colspan="2">
 {*
 {if $product_question.answered_on_page eq "Y" || $product_question.question_published_on_page eq "Y"}
 <br />
@@ -216,8 +222,11 @@ $(function() {ldelim}
 *}
 
 	<br />
-	<br />
 	<B>Publication status:</B>  {include file="admin/main/product_question_publication_statuses.tpl" status=$product_question.publication_status mode="static" color="green"}
+
+</td>
+</tr>
+</table>
 
 	<input type="hidden" name="add_products" value="{$product_info.productcode}=1;" />
         </td>
