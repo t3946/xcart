@@ -99,7 +99,7 @@ if ($mode == "search"){
 	}
 
 	if (!empty($search_data["product_question_search"]["PQ_OTRS_filter"]) && $search_data["product_question_search"]["PQ_OTRS_filter"] == "true"){
-		$where_arr[] = " ( ($sql_tbl[product_question].status!='closed' AND $sql_tbl[product_question].publication_status!='U') OR $sql_tbl[product_question].new_otrs_email = 'Y' )";
+		$where_arr[] = " !( $sql_tbl[product_question].status='closed' AND $sql_tbl[product_question].publication_status!='U' AND $sql_tbl[product_question].new_otrs_email != 'Y' )";
 	}
 
 	$where = implode(" AND ", $where_arr);
@@ -123,15 +123,16 @@ if ($mode == "search"){
                 $sort_string .= " LIMIT $first_page, $objects_per_page";
         }
 
-	$product_questions = func_query("SELECT $sql_tbl[product_question].*, $sql_tbl[products].product, $sql_tbl[products].productcode, $sql_tbl[products_sf].sfid FROM $sql_tbl[product_question] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[product_question].productid LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[product_question].productid $where ORDER BY $sql_tbl[product_question].new_otrs_email DESC, $sql_tbl[product_question].date DESC $sort_string");
+	$product_questions = func_query($product_questions_query = "SELECT $sql_tbl[product_question].*, $sql_tbl[products].product, $sql_tbl[products].productcode, $sql_tbl[products_sf].sfid FROM $sql_tbl[product_question] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[product_question].productid LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[product_question].productid $where ORDER BY $sql_tbl[product_question].new_otrs_email DESC, $sql_tbl[product_question].date DESC $sort_string");
 
+/*
 	if (!empty($product_questions)){
 		foreach ($product_questions as $k => $v){
 
 		}
 	}
-
-//func_print_r($product_questions);
+*/
+//func_print_r($product_questions_query);
 
         # Assign the Smarty variables
         $smarty->assign("product_questions", $product_questions);
