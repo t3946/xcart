@@ -190,7 +190,11 @@ elseif ($option == "Search_products") {
 } elseif ($REQUEST_METHOD == "POST") {
         func_array2update("config", array("value" => "N"), "type IN ('checkbox','multiselector') AND category='".$option."'");
 
-        $var_properties = func_query_hash("SELECT name, type FROM $sql_tbl[config] WHERE category='$option'", "name", false, true);
+	if ($option == "Company"){
+	        $var_properties = func_query_hash("SELECT name, type FROM $sql_tbl[config] WHERE category='$option' OR name LIKE 'working_hours_%'", "name", false, true);
+	} else {
+	        $var_properties = func_query_hash("SELECT name, type FROM $sql_tbl[config] WHERE category='$option'", "name", false, true);
+	}
 
 	$section_data = array();
 	foreach ($_POST as $key => $val) {
@@ -215,7 +219,12 @@ elseif ($option == "Search_products") {
 				$val = "Y";
 			}
 
-			func_array2update("config", array("value" => $val), "name='".$key."' AND category='".$option."'");
+			if ($option == "Company"){
+				func_array2update("config", array("value" => $val), "name='".$key."' AND (category='".$option."' OR name LIKE 'working_hours_%')");
+			} else {
+				func_array2update("config", array("value" => $val), "name='".$key."' AND category='".$option."'");
+			}
+
 			$section_data[stripslashes($key)] = stripslashes($val);
 		}
 	}
