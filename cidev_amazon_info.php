@@ -633,7 +633,7 @@ if (!empty($products_arr)){
 	                        $dom_xml = invokeGetCompetitivePricingForSKU($service, $request);
 			}
 
-			if (!empty($dom_xml)){
+			if (!empty($dom_xml) && !is_array($dom_xml)){
 			##################################################################################
 
 				$dom_xml_arr = explode("\n",$dom_xml);
@@ -1056,7 +1056,7 @@ if (!empty($products_arr2)){
     }
 
 
-    if (!empty($dom_xml)){
+    if (!empty($dom_xml) && !is_array($dom_xml)){
 
         $pos = strpos($dom_xml, "<member>");
         if ($pos !== "false"){

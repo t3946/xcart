@@ -1525,6 +1525,10 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 
 		$json = json_encode( $postBody );
 
+		if ($json == "null"){
+		        func_print_r("json = json_encode(postBody); print_r(postBody):", $postBody);
+		}
+
 		$baseuri = "https://content.api.bingads.microsoft.com/shopping/v9.1";
 		$bmcuri = $baseuri . "/bmc/" . $MerchantID;
 		$batchuri = $bmcuri . "/products/batch";
