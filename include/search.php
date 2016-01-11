@@ -1568,6 +1568,16 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 #
 
 
+# https://basecamp.com/2070980/projects/1577907/messages/52794955
+## FIX: current php errors
+###
+			if (!isset($first_page) || $first_page == ""){
+				$first_page = 0;
+			}
+###
+##
+#
+
 			$search_query .= " LIMIT $first_page, $objects_per_page";
 			$products = func_query($search_query);
 		}
