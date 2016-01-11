@@ -20,6 +20,7 @@ if (empty($id)){
 
 x_load("product", "order");
 
+if (!empty($search_data["product_question_search"]["page"]))
 $location[] = array("Product question search", "product_question_search.php?mode=search&page=".$search_data["product_question_search"]["page"]);
 $location[] = array("Product question", "");
 
