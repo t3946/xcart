@@ -496,6 +496,8 @@ $(function() {ldelim}
                 <a target="_blank" href="tel:{if $distributor_info.distributor_phone_phone_normalized ne ""}{$distributor_info.distributor_phone_phone_normalized}{else}{$distributor_info.distributor_phone}{/if}"><div style="width: 219px; height: 44px;"></div></a>
             </td>
           </tr>
+	
+	  <tr><td>&nbsp;</td></tr>
 
           <tr>
             <td  width="219">
