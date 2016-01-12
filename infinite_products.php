@@ -31,6 +31,10 @@ else {
 if ($REQUEST_METHOD == 'POST')
  {
 
+
+//func_print_r($current_storefront, $site_domain, $config["Company"]["company_name"]);
+
+
 	if (!empty($load_next_productids)){
 		x_load("product");
 
