@@ -125,7 +125,7 @@ $(document).ready(function() {
 	<form action="{$smarty.server.REQUEST_URI|amp}" method="post" name="storefrontsform">
 	<input type="hidden" name="mode" value="change_storefront" />
 		<select name="cur_sf" onchange="javascript: document.storefrontsform.submit();">
-			<option value="0"{if $current_storefront eq '0'} selected="selected" disabled="disabled"{/if}>{*$main_storefront*}{$cidev_main_storefront_name}</option>
+			<option value="0"{if $current_storefront eq '0'} selected="selected" disabled="disabled"{/if}>{$main_storefront}</option>
 			{foreach from=$storefronts item=sf}
 {*
 				<option value="{$sf.storefrontid}"{if $current_storefront eq $sf.storefrontid} selected="selected"{/if}>{$sf.domain}</option>
