@@ -8,9 +8,9 @@
 {/if}
 {else}
 {if $product.clean_url ne ""}
-<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://{$site_domain}/{$product.clean_url}/" />
 {else}
-<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://{$site_domain}/product.php?productid={$product.productid}" />
 {/if}
 {/if}
 {/if}
@@ -65,7 +65,7 @@
 {include file="modules/Detailed_Product_Images/popup_image.tpl"}
 {else}
 {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
-<a style="font-size: 0px;" href="http://{if $cidev_store_domain ne ""}{$cidev_store_domain|lower}{else}www.artistsupplysource.com{/if}/{$canonical_url}#dp_images">{/if}{include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P"}{if $active_modules.Detailed_Product_Images ne "" && $images ne ''}</a>{/if}
+<a style="font-size: 0px;" href="http://{$site_domain|lower}/{$canonical_url}#dp_images">{/if}{include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P"}{if $active_modules.Detailed_Product_Images ne "" && $images ne ''}</a>{/if}
 {/if}
 {if $active_modules.Magnifier ne "" && $config.Magnifier.magnifier_image_popup eq 'Y' && $zoomer_images ne '' && $js_enabled eq 'Y'}
 {include file="modules/Magnifier/popup_magnifier.tpl"}
