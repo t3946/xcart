@@ -9,9 +9,9 @@
 {/if}
 {else}
 {if $product.clean_url ne ""}
-<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://{$site_domain}/{$product.clean_url}/" />
 {else}
-<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://{$site_domain}/product.php?productid={$product.productid}" />
 {/if}
 {/if}
 {/if}
@@ -66,7 +66,7 @@
 {include file="modules/Detailed_Product_Images/popup_image.tpl"}
 {else}
 {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
-<a style="font-size: 0px;" href="http://{if $cidev_store_domain ne ""}{$cidev_store_domain|lower}{else}www.artistsupplysource.com{/if}/{$canonical_url}#dp_images">{/if}{include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P"}{if $active_modules.Detailed_Product_Images ne "" && $images ne ''}</a>{/if}
+<a style="font-size: 0px;" href="http://{$site_domain|lower}/{$canonical_url}#dp_images">{/if}{include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P"}{if $active_modules.Detailed_Product_Images ne "" && $images ne ''}</a>{/if}
 {/if}
 {if $active_modules.Magnifier ne "" && $config.Magnifier.magnifier_image_popup eq 'Y' && $zoomer_images ne '' && $js_enabled eq 'Y'}
 {include file="modules/Magnifier/popup_magnifier.tpl"}
@@ -535,11 +535,7 @@ var lbl_error = "{$lng.lbl_error}";
 
 {if $use_schema_org eq "Y"}
 <meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_offer"/>
-{if $current_storefront eq "0"}
-<meta itemprop="logo" content="http://www.artistsupplysource.com/image.php?type=P&id={$product.productid}"/>
-{else}
-<meta itemprop="logo" content="http://{$cidev_store_domain}/image.php?type=P&id={$product.productid}"/>
-{/if}
+<meta itemprop="logo" content="http://{$site_domain}/image.php?type=P&id={$product.productid}"/>
 
 <meta itemprop="brand" content="{$product.cidev_brand_name}"/>
 <meta itemprop="manufacturer" content="{$product.manufacturer}"/>

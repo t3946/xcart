@@ -13,9 +13,9 @@ vim: set ts=2 sw=2 sts=2 et:
 {/if}
 {else}
 {if $product.clean_url ne ""}
-<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="http://{$site_domain}/{$product.clean_url}/" />
 {else}
-<meta id="so_url" itemprop="url" content="http://{$cidev_store_domain}/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="http://{$site_domain}/product.php?productid={$product.productid}" />
 {/if}
 {/if}
 {/if}

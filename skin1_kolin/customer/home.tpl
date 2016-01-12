@@ -87,10 +87,10 @@
 <![endif]-->
 
 {if $canonical_url}
-  <link rel="canonical" href="http://{if $cidev_store_domain ne ""}{$cidev_store_domain|lower}{else}www.artistsupplysource.com{/if}/{$canonical_url}" />
+  <link rel="canonical" href="http://{$site_domain|lower}/{$canonical_url}" />
 {/if}
 {if $main eq "catalog" && $current_category.category eq "" && $clean_url_data.resource_type ne "K"}
-  <link rel="canonical" href="http://{if $cidev_store_domain ne ""}{$cidev_store_domain}{else}www.artistsupplysource.com{/if}/"/>
+  <link rel="canonical" href="http://{$site_domain|lower}/"/>
 {/if}
 
 
