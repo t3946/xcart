@@ -30,11 +30,6 @@ else {
 
 if ($REQUEST_METHOD == 'POST')
  {
-
-
-//func_print_r($current_storefront, $site_domain, $config["Company"]["company_name"]);
-
-
 	if (!empty($load_next_productids)){
 		x_load("product");
 
@@ -42,11 +37,13 @@ if ($REQUEST_METHOD == 'POST')
 
 		if (!empty($productids_arr)){
 			$products = array();
+			$sfids = array();
 			foreach ($productids_arr as $k => $productid){
 				if (!empty($productid)){
 
-					if ($cidev_filter_mode == "load_more_products_SKU"){
-						$sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$productid'");
+					if ($cidev_filter_mode == "load_more_products_SKU"){ // This search for www.s3stores.com (!)
+						$sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$productid' AND sfid NOT IN ('".implode("','",$sfids)."')");
+						$sfids[] = $sfid;
 						$next_product = func_select_product($productid, 0, false, false, false, false, $sfid);
 						$next_product["domain"] = func_query_first_cell("SELECT domain FROM $sql_tbl[storefronts] WHERE storefrontid='$sfid'");
 						$next_product["storefrontid"] = $sfid;
@@ -86,7 +83,7 @@ if ($REQUEST_METHOD == 'POST')
 		$remember_search_data_products = $search_data["products"];
 
 		$mode = "search";
-		$ajax_load_more_products = "Y";
+//		$ajax_load_more_products = "Y";
 
 		if (empty($products) || $mode_load_next_productids == "Y"){
 			include $xcart_dir."/include/search.php";
@@ -139,7 +136,7 @@ if ($REQUEST_METHOD == 'POST')
                 $remember_search_data_products = $search_data["products"];
 
                 $mode = "search";
-                $ajax_load_more_products = "Y";
+//                $ajax_load_more_products = "Y";
 
 		if (empty($products) || $mode_load_next_productids == "Y"){
 	                include $xcart_dir."/include/search.php";
@@ -187,7 +184,7 @@ if ($REQUEST_METHOD == 'POST')
                 $remember_search_data_products = $search_data["products"];
 
                 $mode = "search";
-                $ajax_load_more_products = "Y";
+//                $ajax_load_more_products = "Y";
 
 		if (empty($products) || $mode_load_next_productids == "Y"){
 	                include $xcart_dir."/include/search.php";
