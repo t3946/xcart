@@ -236,14 +236,14 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 	<td class="NavDialogBorder" height="15"><B>Distributor sections:</B></td>
 	<td class="NavDialogBorder" height="15" align="right">
 <a href="
-{if $manufacturer.d_main_sf eq '0'}http://www.artistsupplysource.com{/if}
+{if $manufacturer.d_main_sf eq '0'}http://{$main_storefront}{/if}
 {foreach from=$storefronts item=sf}
 {if $sf.storefrontid ne "0"}
 {if $manufacturer.d_main_sf eq $sf.storefrontid}http://{$sf.domain}{/if}
 {/if}
 {/foreach}
 " target="_blank" style="color: #0101F7">
-{if $manufacturer.d_main_sf eq '0'}www.artistsupplysource.com{/if}
+{if $manufacturer.d_main_sf eq '0'}{$main_storefront}{/if}
 {foreach from=$storefronts item=sf}
 {if $sf.storefrontid ne "0"}
 {if $manufacturer.d_main_sf eq $sf.storefrontid}{$sf.domain}{/if}
