@@ -45,6 +45,10 @@ if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access de
 x_session_register('bulk_search_query');
 x_session_register('bulk_search_query_ids');
 
+if ($current_area == 'C' && $search_all_website && $mode_load_next_productids != "Y"){
+	x_session_register('sfids_of_products');
+}
+
 if ($REQUEST_METHOD == 'POST' && $mode == "search_gen_discounts" && $current_area != "C") {
 	$mode = "search";
 	$search_gen_discounts = true;
@@ -354,6 +358,10 @@ if ($mode == "search") {
                         );
 
 			$fields[] = "$sql_tbl[pc_options].disable_AC_products";
+
+			$fields[] = "$sql_tbl[products_sf].sfid";
+//			$fields[] = "IF($sql_tbl[storefronts].domain IS NULL, '".MAIN_SF_DOMAIN."', $sql_tbl[storefronts].domain) AS domain";
+
 			$where[] = "(($sql_tbl[pc_options].disable_AC_products='N') OR ($sql_tbl[pc_options].disable_AC_products='Y' AND $sql_tbl[products].pc_classify_status!='AC'))";
         	}
 	}
@@ -363,6 +371,7 @@ if ($mode == "search") {
 		unset($url_parts['scheme']);
 		$default_sf = implode('', $url_parts);
 
+		$fields[] = "$sql_tbl[products_sf].sfid";
 		$fields[] = "IF($sql_tbl[storefronts].domain IS NULL, '$default_sf', $sql_tbl[storefronts].domain) AS domain";
 	        $left_joins['products_sf'] = array(	
         	    'on'	=> "$sql_tbl[products].productid=$sql_tbl[products_sf].productid"
@@ -1884,8 +1893,18 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 ###
 ##
 #
+				if ($current_area == 'C' && $search_all_website && $mode_load_next_productids != "Y"){
+					if (!isset($sfids_of_products[$v["productid"]])){
+						$sfids_of_products[$v["productid"]] = array();
+					}
+					$sfids_of_products[$v["productid"]][] = $v["sfid"];
+				}
                         }
 
+		}
+
+		if ($current_area == 'C' && $search_all_website && $mode_load_next_productids != "Y"){
+			x_session_save("sfids_of_products");
 		}
 
 #
