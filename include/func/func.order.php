@@ -819,7 +819,7 @@ function func_order_data($orderid) {
         # /fix
 
     $order['has_backordered_status'] = func_has_backordered_status($order['shipping_groups']);
-    $order['refund_groups'] = func_get_refund_groups($order['orderid']);
+    $order['refund_groups'] = func_get_refund_groups($order['orderid'], $order["storefrontid"]);
 
 #
 ## 15.02.2014
@@ -852,7 +852,7 @@ function func_order_data($orderid) {
 			}
 
 			$productcode = trim($sku);
-			$alt_product = func_query_first("SELECT $sql_tbl[products].productid, $sql_tbl[products].product, $sql_tbl[products_sf].sfid, $sql_tbl[pricing].price FROM $sql_tbl[products] LEFT JOIN $sql_tbl[pricing] ON $sql_tbl[pricing].productid = $sql_tbl[products].productid LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid = $sql_tbl[products].productid INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0' WHERE $sql_tbl[products].productcode='$productcode' AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid GROUP BY $sql_tbl[products].productid");
+			$alt_product = func_query_first("SELECT $sql_tbl[products].productid, $sql_tbl[products].product, $sql_tbl[products_sf].sfid, $sql_tbl[pricing].price FROM $sql_tbl[products] LEFT JOIN $sql_tbl[pricing] ON $sql_tbl[pricing].productid = $sql_tbl[products].productid LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid = $sql_tbl[products].productid INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0' WHERE $sql_tbl[products].productcode='$productcode' AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid AND $sql_tbl[products_sf].sfid='$order[storefrontid]' GROUP BY $sql_tbl[products].productid");
 
 			if (!empty($alt_product)){
 				$alt_products[$k] = $alt_product;
@@ -3734,7 +3734,7 @@ function func_calculate_fee($order_price, $refund_price) {
     return $fee;
 }
 
-function func_get_refund_groups($orderid) {
+function func_get_refund_groups($orderid, $sfid) {
     global $sql_tbl;
 
     if (empty($orderid)) {
@@ -3752,13 +3752,15 @@ function func_get_refund_groups($orderid) {
             'r.orderid', 'r.manufacturerid', 'r.productid', 'r.ref_price', 'r.ref_qty', 'r.extra_data',
             'r.productid AS pid', 'r.manufacturerid AS mid', 'r.itemid'
         );
-        
+       
+/* 
         if (!empty($active_modules['Multiple_Storefronts'])) {
             $fields[] = 'c.storefrontid';
             $join = ' LEFT JOIN ' . $sql_tbl['products_categories'] . ' AS pc ON pc.productid='
                 . $sql_tbl['products'] . '.productid AND pc.main = "Y"'
                 . ' LEFT JOIN ' . $sql_tbl['categories'] . ' AS c ON c.categoryid = pc.categoryid';
         }
+*/
 
         $products = func_query_hash('SELECT ' . implode(', ', $fields) . ' FROM ' . $sql_tbl['refunded_products'] . ' AS r' 
             . $join
@@ -3771,16 +3773,8 @@ function func_get_refund_groups($orderid) {
             foreach ($products as $mid => $v) {
                 foreach ($v as $pid => $product) {
 
-#
-##
 ###
-			if ($product['storefrontid'] == ""){
-				$product['storefrontid'] = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$product[productid]'");
-			}
-###
-##
-#
-###
+		    $product['storefrontid'] = $sfid;
 		    $products[$mid][$pid]['itemid'] = $pid;
 ###
                     $products[$mid][$pid]['links'] = func_get_product_link_sf($product['productid'], $product['storefrontid']);
@@ -3792,9 +3786,6 @@ function func_get_refund_groups($orderid) {
                 }
             }
         }
-
-//func_print_r($products);
-//die("zxc5");
 
 
         foreach ($groups as $mid => $group) {
