@@ -45,6 +45,10 @@ if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access de
 x_session_register('bulk_search_query');
 x_session_register('bulk_search_query_ids');
 
+if ($current_area == 'C' && $search_all_website && $mode_load_next_productids != "Y"){
+	x_session_register('sfids_of_products');
+}
+
 if ($REQUEST_METHOD == 'POST' && $mode == "search_gen_discounts" && $current_area != "C") {
 	$mode = "search";
 	$search_gen_discounts = true;
@@ -202,7 +206,7 @@ if ($REQUEST_METHOD == "POST" && $mode == 'search' && empty($e_mode) && $cidev_f
 #
 ##
 ###
-if ( (!empty($active_modules['CIDEV_Best_Search_Filter']) && $current_area == 'C') || ($current_area != 'C') ) {
+if ( (!empty($active_modules['CIDEV_Best_Search_Filter']) && $current_area == 'C' && !$search_all_website) || ($current_area != 'C') ) {
 
 	if (!empty($search_data['products']['filter_name_id']) && is_array($search_data['products']['filter_name_id']) && !empty($search_data['products']['filter_value_id']) && is_array($search_data['products']['filter_value_id'])){
                         foreach ($search_data['products']['filter_name_id'] as $k => $v){
@@ -354,6 +358,10 @@ if ($mode == "search") {
                         );
 
 			$fields[] = "$sql_tbl[pc_options].disable_AC_products";
+
+			$fields[] = "$sql_tbl[products_sf].sfid";
+//			$fields[] = "IF($sql_tbl[storefronts].domain IS NULL, '".MAIN_SF_DOMAIN."', $sql_tbl[storefronts].domain) AS domain";
+
 			$where[] = "(($sql_tbl[pc_options].disable_AC_products='N') OR ($sql_tbl[pc_options].disable_AC_products='Y' AND $sql_tbl[products].pc_classify_status!='AC'))";
         	}
 	}
@@ -363,6 +371,7 @@ if ($mode == "search") {
 		unset($url_parts['scheme']);
 		$default_sf = implode('', $url_parts);
 
+		$fields[] = "$sql_tbl[products_sf].sfid";
 		$fields[] = "IF($sql_tbl[storefronts].domain IS NULL, '$default_sf', $sql_tbl[storefronts].domain) AS domain";
 	        $left_joins['products_sf'] = array(	
         	    'on'	=> "$sql_tbl[products].productid=$sql_tbl[products_sf].productid"
@@ -983,7 +992,12 @@ if ($current_storefront == ""){ // https://basecamp.com/2070980/projects/1577907
 		}
 	}
 
-	$groupbys[] = "$sql_tbl[products].productid";
+	if ($search_all_website && $current_area == 'C'){
+		$groupbys[] = "$sql_tbl[products_sf].productid";
+		$groupbys[] = "$sql_tbl[products_sf].sfid";
+	} else {
+		$groupbys[] = "$sql_tbl[products].productid";
+	}
 	$orderbys[] = $sort_string;
 	$orderbys[] = "$sql_tbl[products].product ASC";
 
@@ -991,7 +1005,7 @@ if ($current_storefront == ""){ // https://basecamp.com/2070980/projects/1577907
 ###################################################################################
 ### Search_Filter ###
 ###################################################################################
-if ( (!empty($active_modules['CIDEV_Best_Search_Filter']) && $current_area == 'C') || ($current_area != 'C') ) {
+if ( (!empty($active_modules['CIDEV_Best_Search_Filter']) && $current_area == 'C' && !$search_all_website) || ($current_area != 'C') ) {
 
         $left_joins['cidev_filter_products'] = array(
  	       'on' => "$sql_tbl[cidev_filter_products].productid = $sql_tbl[products].productid"
@@ -1068,7 +1082,7 @@ if ( (!empty($active_modules['CIDEV_Best_Search_Filter']) && $current_area == 'C
 #
 ## Search_Filter
 ###
-        if ($current_area == "C") {
+        if ($current_area == "C" && !$search_all_website) {
 		$fields_count[] = "$sql_tbl[products].productid";
 
         }
@@ -1277,7 +1291,7 @@ if ( (!empty($active_modules['CIDEV_Best_Search_Filter']) && $current_area == 'C
         $cat_ids_str = $matches[1];
 
         if (
-		$current_area == "C" && $total_items > 0 && !empty($active_modules['CIDEV_Best_Search_Filter']) && 
+		$current_area == "C" && $total_items > 0 && !empty($active_modules['CIDEV_Best_Search_Filter']) && !$search_all_website && 
 		(!empty($cat_ids_str) || (empty($cat_ids_str) && !empty($brandid)))
 	) {
 
@@ -1567,6 +1581,16 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 ##
 #
 
+
+# https://basecamp.com/2070980/projects/1577907/messages/52794955
+## FIX: current php errors
+###
+			if (!isset($first_page) || $first_page == ""){
+				$first_page = 0;
+			}
+###
+##
+#
 
 			$search_query .= " LIMIT $first_page, $objects_per_page";
 			$products = func_query($search_query);
@@ -1869,14 +1893,24 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 ###
 ##
 #
+				if ($current_area == 'C' && $search_all_website && $mode_load_next_productids != "Y"){
+					if (!isset($sfids_of_products[$v["productid"]])){
+						$sfids_of_products[$v["productid"]] = array();
+					}
+					$sfids_of_products[$v["productid"]][] = $v["sfid"];
+				}
                         }
 
+		}
+
+		if ($current_area == 'C' && $search_all_website && $mode_load_next_productids != "Y"){
+			x_session_save("sfids_of_products");
 		}
 
 #
 ##
 ###
-if ( (!empty($active_modules['CIDEV_Best_Search_Filter']) && $current_area == 'C') || ($current_area != 'C') ) {
+if ( (!empty($active_modules['CIDEV_Best_Search_Filter']) && $current_area == 'C' && !$search_all_website) || ($current_area != 'C') ) {
 
 		if (is_array($products) && !empty($products)) {
 			foreach ($products as $k=>$v) {

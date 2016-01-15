@@ -236,14 +236,14 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 	<td class="NavDialogBorder" height="15"><B>Distributor sections:</B></td>
 	<td class="NavDialogBorder" height="15" align="right">
 <a href="
-{if $manufacturer.d_main_sf eq '0'}http://www.artistsupplysource.com{/if}
+{if $manufacturer.d_main_sf eq '0'}http://{$main_storefront}{/if}
 {foreach from=$storefronts item=sf}
 {if $sf.storefrontid ne "0"}
 {if $manufacturer.d_main_sf eq $sf.storefrontid}http://{$sf.domain}{/if}
 {/if}
 {/foreach}
 " target="_blank" style="color: #0101F7">
-{if $manufacturer.d_main_sf eq '0'}www.artistsupplysource.com{/if}
+{if $manufacturer.d_main_sf eq '0'}{$main_storefront}{/if}
 {foreach from=$storefronts item=sf}
 {if $sf.storefrontid ne "0"}
 {if $manufacturer.d_main_sf eq $sf.storefrontid}{$sf.domain}{/if}
@@ -415,7 +415,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
         <td>
 		{assign var="main_sf_site" value="www.artistsupplysource.com"}
                 <select name="d_main_sf">
-                        <option value="0"{if $manufacturer.d_main_sf eq '0'} selected="selected"{/if}>{$cidev_main_storefront_name}</option>
+                        <option value="0"{if $manufacturer.d_main_sf eq '0'} selected="selected"{/if}>{$main_storefront}</option>
                         {foreach from=$storefronts item=sf}
                                 {if $sf.storefrontid ne "0"}
                                 <option value="{$sf.storefrontid}"{if $manufacturer.d_main_sf eq $sf.storefrontid} selected="selected" {assign var="main_sf_site" value=$sf.domain}{/if}>{if $sf.storefront_name ne ""}{$sf.storefront_name}{else}{$sf.domain}{/if}</option>
@@ -1000,7 +1000,7 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
 </div>
 
 <div style="float: left; {if $manufacturer.distributor_offers_free_shipping ne "on_orders_over"}display: none;{/if}" id="free_shipping_on_orders_over_value">
-&nbsp; US $ <input type="text" name="free_shipping_on_orders_over_value" value="{$manufacturer.free_shipping_on_orders_over_value}" size="7" />
+&nbsp; US$ <input type="text" name="free_shipping_on_orders_over_value" value="{$manufacturer.free_shipping_on_orders_over_value}" size="7" />
 </div>
         </td>
 </tr>

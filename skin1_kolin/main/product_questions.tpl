@@ -45,7 +45,7 @@ tinymce.init({
 <td>POS.</td>
 <td>Product Question</td>
 <td>Product Answer</td>
-<td>Publish</td>
+<td>Publish?</td>
 </tr>
 
 {foreach from=$product_questions_arr item=v key=k}
@@ -70,7 +70,7 @@ tinymce.init({
  <td>
 <select name="posted_data[{$v.id}][answered_on_page_OR_question_published_on_page]">
 <option value="answered_on_page"{if $v.answered_on_page eq "Y"} selected="selected"{/if}>Do NOT publish</option>
-<option value="question_published_on_page"{if $v.question_published_on_page eq "Y"} selected="selected"{/if}>Publish</option>
+<option value="question_published_on_page"{if $v.question_published_on_page eq "Y"} selected="selected"{/if}>Yes, publish!</option>
 </select>
 
 <br />
@@ -114,6 +114,9 @@ tinymce.init({
  </td>
 
 </tr>
+
+<tr><td colspan="5"><hr /></td></tr>
+
 {/foreach}
 
 <tr>

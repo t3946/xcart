@@ -686,6 +686,14 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
 </td></tr>
 {assign var="cycle_name" value=$configuration[cat_num].name}
 
+ {if $configuration[cat_num].name eq "working_hours_sep"}
+  <tr>
+        <td colspan="3">
+		{include file="admin/main/working_hours.tpl"}
+        </td>
+  </tr>
+ {/if}
+
 {else}
 
 

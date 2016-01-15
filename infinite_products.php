@@ -21,6 +21,9 @@ if ($_POST["cidev_filter_mode"] == "load_more_products_SKU"){
 
 	$index_sku_search = "Y";
 	$smarty->assign('search_all_website', 'Y');
+
+	x_session_register("sfids_of_products");
+
 }
 else {
 	define('x_session_DO_NOT_save_to_db_var', 'cart');
@@ -30,7 +33,6 @@ else {
 
 if ($REQUEST_METHOD == 'POST')
  {
-
 	if (!empty($load_next_productids)){
 		x_load("product");
 
@@ -38,14 +40,36 @@ if ($REQUEST_METHOD == 'POST')
 
 		if (!empty($productids_arr)){
 			$products = array();
+
+//func_print_r($sfids_of_products);
+
 			foreach ($productids_arr as $k => $productid){
 				if (!empty($productid)){
 
-					if ($cidev_filter_mode == "load_more_products_SKU"){
-						$sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$productid'");
-						$next_product = func_select_product($productid, 0, false, false, false, false, $sfid);
-						$next_product["domain"] = func_query_first_cell("SELECT domain FROM $sql_tbl[storefronts] WHERE storefrontid='$sfid'");
-						$next_product["storefrontid"] = $sfid;
+					if ($cidev_filter_mode == "load_more_products_SKU"){ // This search for www.s3stores.com (!)
+
+	                                        if (!isset($sfids_of_products[$productid])){
+							$sfids_of_products[$productid] = array();
+							$tmp_sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$productid'");
+                	                        }
+						else {
+							$tmp_sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$productid' AND sfid NOT IN ('".implode("','",$sfids_of_products[$productid])."')");
+						}
+
+						$sfids_of_products[$productid][] = $tmp_sfid;
+//func_print_r($sfids_of_products);
+						$next_product = func_select_product($productid, 0, false, false, false, false, $tmp_sfid);
+						
+						if (empty($next_product["domain"])){
+						    if (!empty($tmp_sfid)){
+							$next_product["domain"] = func_query_first_cell("SELECT domain FROM $sql_tbl[storefronts] WHERE storefrontid='$tmp_sfid'");
+						    } else {
+							$next_product["domain"] = MAIN_SF_DOMAIN;
+						    }
+						}
+
+						$next_product["storefrontid"] = $tmp_sfid;
+
 						if (!empty($next_product["clean_url"])){
 							$next_product["clean_url"] = "http://".$next_product["domain"]."/".$next_product["clean_url"]."/";
 						}
@@ -53,7 +77,8 @@ if ($REQUEST_METHOD == 'POST')
 							$next_product["tmbn_url"] = "http://".$next_product["tmbn_url"];
 						}
 
-					} else {
+					} //  if ($cidev_filter_mode == "load_more_products_SKU") // This search for www.s3stores.com (!)
+					else {
 						$next_product = func_select_product($productid, 0, false);
 					}
 
@@ -74,6 +99,8 @@ if ($REQUEST_METHOD == 'POST')
 
 	if ($cidev_filter_mode == "load_more_products"){
 
+		x_session_save("sfids_of_products");
+
 		x_session_register("search_data");
 
 		$ajax_navigation_page = $ajax_navigation_page_next;
@@ -82,7 +109,7 @@ if ($REQUEST_METHOD == 'POST')
 		$remember_search_data_products = $search_data["products"];
 
 		$mode = "search";
-		$ajax_load_more_products = "Y";
+//		$ajax_load_more_products = "Y";
 
 		if (empty($products) || $mode_load_next_productids == "Y"){
 			include $xcart_dir."/include/search.php";
@@ -135,7 +162,7 @@ if ($REQUEST_METHOD == 'POST')
                 $remember_search_data_products = $search_data["products"];
 
                 $mode = "search";
-                $ajax_load_more_products = "Y";
+//                $ajax_load_more_products = "Y";
 
 		if (empty($products) || $mode_load_next_productids == "Y"){
 	                include $xcart_dir."/include/search.php";
@@ -183,7 +210,7 @@ if ($REQUEST_METHOD == 'POST')
                 $remember_search_data_products = $search_data["products"];
 
                 $mode = "search";
-                $ajax_load_more_products = "Y";
+//                $ajax_load_more_products = "Y";
 
 		if (empty($products) || $mode_load_next_productids == "Y"){
 	                include $xcart_dir."/include/search.php";
