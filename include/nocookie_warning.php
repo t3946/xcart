@@ -90,6 +90,7 @@ if ((empty($_COOKIE) || isset($NO_COOKIE_WARNING))
 				extract($save_data);
 				$reject = func_init_reject(X_REJECT_OVERRIDE | X_REJECT_OVERRIDE_GLOBALS);
 				foreach(array("GET","POST","SERVER") as $__avar) {
+				    if (!empty(${"HTTP_".$__avar."_VARS"}) && is_array(${"HTTP_".$__avar."_VARS"})){
 					foreach (${"HTTP_".$__avar."_VARS"} as $__var => $__res) {
 						if (func_allowed_var($__var))
 							$$__var = $__res;
@@ -97,6 +98,7 @@ if ((empty($_COOKIE) || isset($NO_COOKIE_WARNING))
 							func_unset(${"HTTP_".$__avar."_VARS"}, $__var);
 					}
 					reset(${"HTTP_".$__avar."_VARS"});
+				    }
 				}
 				func_init_reject(X_REJECT_CLEAN);
 			}

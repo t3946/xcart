@@ -83,7 +83,7 @@ return true;
 	<td width="34%" align="center" valign="top">
 
 {if $cart.cart_number ne ""}
-	<B>{$lng.lbl_your_cart_number_is} {$cart.cart_number}</B>
+	<B>{if $working_hours.store_in_working_hours eq "N"}{$lng.lbl_your_cart_number_is_offhours}{else}{$lng.lbl_your_cart_number_is}{/if} {$cart.cart_number}</B>
 {/if}
 
 	</td>

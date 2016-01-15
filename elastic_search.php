@@ -5,12 +5,13 @@
 
         $e_search_data["products_per_page"] = intval($config["Appearance"]["products_per_page"]);
 
+/*
         if (!empty($current_storefront)){
-                $tmp_domain = func_query_first_cell("SELECT domain FROM $sql_tbl[storefronts] WHERE storefrontid='$current_storefront'");
+                $site_domain = func_query_first_cell("SELECT domain FROM $sql_tbl[storefronts] WHERE storefrontid='$current_storefront'");
         } else {
-                $tmp_domain = "www.artistsupplysource.com";
+                $site_domain = "www.artistsupplysource.com";
         }
-
+*/
 
         if ($page == "1"){
                 $from = 0;
@@ -19,9 +20,9 @@
         }
 
 	if ($load_all_e_products){
-	        $url = $config["ElasticSearch_options"]["es_url"].$tmp_domain."/product/_search?size=".$e_search_data["total"]."&from=0";
+	        $url = $config["ElasticSearch_options"]["es_url"].$site_domain."/product/_search?size=".$e_search_data["total"]."&from=0";
 	} else {
-	        $url = $config["ElasticSearch_options"]["es_url"].$tmp_domain."/product/_search?size=".$e_search_data["products_per_page"]."&from=".$from;
+	        $url = $config["ElasticSearch_options"]["es_url"].$site_domain."/product/_search?size=".$e_search_data["products_per_page"]."&from=".$from;
 	}
 
         if (!empty($cat) && !empty($search_query)){
@@ -168,7 +169,7 @@
         	        if (empty($is_such_search_phrase)){
 
 /*
-                	        $source_url = $tmp_domain;
+                	        $source_url = $site_domain;
 
                         	if (strpos($_SERVER["QUERY_STRING"], "request_uri=") !== false){
                                 	$tmp_QUERY_STRING_arr = explode("request_uri=", $_SERVER["QUERY_STRING"]);

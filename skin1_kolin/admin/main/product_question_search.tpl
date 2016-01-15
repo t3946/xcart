@@ -1,7 +1,7 @@
 <br />
 
 {if $product_questions eq "" && $search_data.PQ_OTRS_filter eq "true"}
-<input type="checkbox" value="true" id="id_PQ_OTRS_filter" name="PQ_OTRS_filter" {if $search_data.PQ_OTRS_filter eq "true"}checked="checked"{/if} onclick="javascript: self.location='product_question_search.php?mode=search&status=all&from_dashboard=Y&PQ_OTRS_filter='+$('#id_PQ_OTRS_filter').is(':checked')+'';" /> Don’t show product questions with PQ and order status = ‘Closed’ AND Publication status ≠ ‘Unpublished’ except for New OTRS message = 'Y'
+<input type="checkbox" value="true" id="id_PQ_OTRS_filter" name="PQ_OTRS_filter" {if $search_data.PQ_OTRS_filter eq "true"}checked="checked"{/if} onclick="javascript: self.location='product_question_search.php?mode=search&status=all&from_dashboard=Y&PQ_OTRS_filter='+$('#id_PQ_OTRS_filter').is(':checked')+'';" /> Don’t show product questions with <B>PQ and order status = ‘Closed’</B> AND <B>Publication status ≠ ‘Unpublished’</B> AND <B>New OTRS message</B> = 'N'
 {/if}
 
 {if $product_questions ne ""}
@@ -26,7 +26,7 @@
 <input type="hidden" name="mode" value="" id="mode" />
 *}
 
-<input type="checkbox" value="true" id="id_PQ_OTRS_filter" name="PQ_OTRS_filter" {if $search_data.PQ_OTRS_filter eq "true"}checked="checked"{/if} onclick="javascript: self.location='product_question_search.php?mode=search&status='+$('#id_status').val()+'&from_dashboard=Y&PQ_OTRS_filter='+$('#id_PQ_OTRS_filter').is(':checked')+'';" /> Don’t show product questions with PQ and order status = ‘Closed’ AND Publication status ≠ ‘Unpublished’ except for New OTRS message = 'Y'
+<input type="checkbox" value="true" id="id_PQ_OTRS_filter" name="PQ_OTRS_filter" {if $search_data.PQ_OTRS_filter eq "true"}checked="checked"{/if} onclick="javascript: self.location='product_question_search.php?mode=search&status='+$('#id_status').val()+'&from_dashboard=Y&PQ_OTRS_filter='+$('#id_PQ_OTRS_filter').is(':checked')+'';" /> Don’t show product questions with <B>PQ and order status = ‘Closed’</B> AND <B>Publication status ≠ ‘Unpublished’</B> AND <B>New OTRS message</B> = 'N'
 
 <table border="0" width="100%" cellpadding="3" cellspacing="1">
 <tr class='TableSubHead'>

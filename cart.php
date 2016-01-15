@@ -167,11 +167,7 @@ AB_Goal_Hit(array("1","2", "3", "4", "5", "6"), $orders[0]["order"]["orderid"]);
         $cidev_tracking_code_add .= "_gaq.push(['_addTrans', \r\n";
         $cidev_tracking_code_add .= "\t'". $orders[0]["order"]["order_prefix"] . $orders[0]["order"]["orderid"] ."',    // transaction ID \r\n";
 
-        $tmp_store_name = $cidev_store_name;
-        if (empty($tmp_store_name))
-                $tmp_store_name = $cidev_main_storefront_name;
-
-        $cidev_tracking_code_add .= "\t'" . $tmp_store_name . "',       // affiliation or store name \r\n";
+        $cidev_tracking_code_add .= "\t'" . $config["Company"]["company_name"] . "',       // affiliation or store name \r\n";
 
         $tmp_subtotal = $orders[0]["order"]["total"] - $orders[0]["order"]["tax"] - $orders[0]["order"]["shipping_cost"];
         $tmp_subtotal = price_format($tmp_subtotal);
@@ -1420,87 +1416,6 @@ elseif ($mode == "order_message") {
 
 	if (empty($orders))
 		func_header_location("error_message.php?access_denied&id=59");
-
-/*
-#
-##
-###
-
-$cidev_tracking_code_add = "";
-
-$cidev_tracking_code_add .= "_gaq.push(['_addTrans', \r\n";
-$cidev_tracking_code_add .= "\t'". $orders[0]["order"]["order_prefix"] . $orders[0]["order"]["orderid"] ."',    // transaction ID \r\n";
-
-$tmp_store_name = $cidev_store_name;
-if (empty($tmp_store_name))
-        $tmp_store_name = $cidev_main_storefront_name;
-
-$cidev_tracking_code_add .= "\t'" . $tmp_store_name . "',       // affiliation or store name \r\n";
-
-$tmp_subtotal = $orders[0]["order"]["total"] - $orders[0]["order"]["tax"] - $orders[0]["order"]["shipping_cost"];
-$tmp_subtotal = price_format($tmp_subtotal);
-
-$cidev_tracking_code_add .= "\t'" . $tmp_subtotal . "', // total - required. Does not include Tax and Shipping \r\n";
-$cidev_tracking_code_add .= "\t'" . $orders[0]["order"]["tax"] . "',    // tax \r\n";
-$cidev_tracking_code_add .= "\t'" . $orders[0]["order"]["shipping_cost"] . "',  // shipping \r\n";
-$cidev_tracking_code_add .= "\t'" . $orders[0]["order"]["s_city"] . "', // city \r\n";
-$cidev_tracking_code_add .= "\t'" . $orders[0]["order"]["s_state"] . "',        // state or province \r\n";
-$cidev_tracking_code_add .= "\t'" . $orders[0]["order"]["s_country"] . "'       // country \r\n";
-$cidev_tracking_code_add .= "]); \r\n";
-
-if (!empty($orders[0]["products"]) && is_array($orders[0]["products"])){
-        foreach ($orders[0]["products"] as $k => $v){
-                $cidev_tracking_code_add .= "_gaq.push(['_addItem',\r\n";
-                $cidev_tracking_code_add .= "\t'". $orders[0]["order"]["order_prefix"] . $orders[0]["order"]["orderid"] ."',    // transaction ID to associate item with transaction \r\n";
-                $cidev_tracking_code_add .= "\t'". $v["productcode"] ."',       // SKU - required \r\n";
-                $cidev_tracking_code_add .= "\t'". addslashes($v["product"]) ."',       // product name \r\n";
-                $cidev_tracking_code_add .= "\t'',      // category or variation \r\n";
-                $cidev_tracking_code_add .= "\t'". $v["price"] ."',     // unit price - required \r\n";
-                $cidev_tracking_code_add .= "\t'". $v["amount"] ."'     // quantity - required \r\n";
-                $cidev_tracking_code_add .= "]); \r\n";
-        }
-}
-
-$cidev_tracking_code_add .= "_gaq.push(['_trackTrans']);";
-
-$smarty->assign("cidev_tracking_code_add", $cidev_tracking_code_add);
-###
-##
-#
-
-
-#
-##
-###
-
-$cidev_tracking_code_add2 = "";
-$cidev_tracking_code_add2 .= "var yaParams = { \r\n";
-$cidev_tracking_code_add2 .= 'order_id: "'. $orders[0]["order"]["order_prefix"] . $orders[0]["order"]["orderid"] .'",'." \r\n";
-$cidev_tracking_code_add2 .= "order_price: ".$tmp_subtotal.", \r\n";
-$cidev_tracking_code_add2 .= 'currency: "USD",'." \r\n";
-$cidev_tracking_code_add2 .= "exchange_rate: 1, \r\n";
-$cidev_tracking_code_add2 .= "goods: \r\n";
-$cidev_tracking_code_add2 .= "[ \r\n";
-
-if (!empty($orders[0]["products"]) && is_array($orders[0]["products"])){
-        foreach ($orders[0]["products"] as $k => $v){
-                $cidev_tracking_code_add2 .= "\t{ \r\n";
-                $cidev_tracking_code_add2 .= "\t\t".'id:"'.$v["productcode"].'",'." \r\n";
-                $cidev_tracking_code_add2 .= "\t\t".'name:"'.addslashes($v["product"]).'",'." \r\n";
-                $cidev_tracking_code_add2 .= "\t\tprice: ".$v["price"].", \r\n";
-                $cidev_tracking_code_add2 .= "\t\tquantity: ".$v["amount"]." \r\n";
-                $cidev_tracking_code_add2 .= "\t} \r\n";
-        }
-}
-
-$cidev_tracking_code_add2 .= "] \r\n";
-$cidev_tracking_code_add2 .= "}; \r\n";
-
-$smarty->assign("cidev_tracking_code_add2", $cidev_tracking_code_add2);
-###
-##
-#
-*/
 
 	$smarty->assign("orders", $orders);
 

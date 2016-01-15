@@ -81,6 +81,9 @@ if ($mode == 'search') {
 
     $index_sku_search = "Y";
 
+    x_session_register('sfids_of_products');
+    $sfids_of_products = array();
+
     include $xcart_dir . '/include/search.php';
 
     $smarty->assign('mode', 'search');
