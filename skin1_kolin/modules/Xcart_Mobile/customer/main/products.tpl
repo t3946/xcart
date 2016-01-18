@@ -15,6 +15,9 @@ vim: set ts=2 sw=2 sts=2 et:
       {/if}
       {foreach from=$products item=product}
 
+ {if $N_key eq ""}{assign var="N_key" value="0"}{/if}
+ {math assign="N_key" equation="x+1" x=$N_key}
+
 {if $product.new_notify_in_stock_price ne ""}
         {assign var="current_price" value=$product.new_notify_in_stock_price}
 {else}
@@ -26,7 +29,7 @@ vim: set ts=2 sw=2 sts=2 et:
 {/if}
 
         <li>
-          <a href="{$current_location}/product.php?productid={$product.productid}">
+          <a {include file="on_product_click.tpl"} href="{$current_location}/product.php?productid={$product.productid}">
             <span class="product-thumbnail">
               {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url}
               <img src="{$ImagesDir}/spacer.gif" class="leveler" alt="" />

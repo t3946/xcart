@@ -458,6 +458,25 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 #
 
 #
+##
+###
+	if ( !(empty($cat) && empty($keyphrase)) && $cat_with_one_brand_filter != "Y"){
+		$ga_page_name = "category_list";
+	}
+	elseif ($clean_url_data["resource_type"] == "K"){
+		$ga_page_name = "search";
+	}
+	elseif ($cat_with_one_brand_filter == "Y"){
+		$ga_page_name = "category_brand_list";
+	}
+
+	$smarty->assign("ga_page_name", $ga_page_name);
+###
+##
+#
+
+
+#
 # Assign Smarty variables and show template
 #
 $smarty->assign("main","catalog");

@@ -14,6 +14,88 @@
 {/literal}
 </script>
 
+
+
+{* -------------------------------- *}
+
+{if $config.Storefront_common_details.google_analitics_tracking_script ne "" && $config.Company.cidev_ga_code_number ne ""}
+
+	{assign var=ga_ec_data value=""}
+
+	{if $usertype eq "A" || $usertype eq "P"}
+		{assign var=ga_send value=""}
+	{else}
+		{assign var=ga_send value="ga('send', 'pageview');"}
+	{/if}
+
+	{if $ga_page_name ne ""}
+		{assign var=ga_ec_data value="ga('require', 'ec');"}
+	{/if}
+
+	{$config.Storefront_common_details.google_analitics_tracking_script|substitute:"ga_account_nr":$config.Company.cidev_ga_code_number|substitute:"ga_ec_data":$ga_ec_data|substitute:"ga_send":$ga_send}
+
+<script>
+//<![CDATA[
+// Called when a link to a product is clicked.
+{literal}
+
+function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice) {
+
+//alert(pname+' '+pposition);
+
+  ga('ec:addProduct', {
+    'id': "'"+pid+"'",
+    'name': "'"+pname+"'",
+    'category': "'"+pcategory+"'",
+    'brand': "'"+pbrand+"'",
+    'price': "'"+pprice+"'",
+    'position': "'"+pposition+"'"
+  });
+  ga('ec:setAction', 'click', {list: "'"+plist+"'"});
+
+  // Send click with an event, then send user to product page.
+  ga('send', 'event', 'UX', 'click', 'Results', {
+      hitCallback: function() {
+        document.location = '/product.php?productid='+pid;
+      }
+  });
+}
+
+{/literal}
+//]]>
+</script>
+
+	{if $ga_page_name ne "" && $products ne ""}
+
+<script>
+//<![CDATA[
+		{foreach from=$products item=v key=k}
+
+
+		{if $N_key eq ""}{assign var="N_key" value="0"}{/if}
+		{math assign="N_key" equation="x+1" x=$N_key}
+
+
+ga('ec:addImpression', {ldelim}
+  'id': '{$v.productid}',                   // Product details are provided in an impressionFieldObject.
+  'name': '{$v.product|escape}',
+  'category': '{$v.category|escape}',
+  'brand': '{$v.brand|escape}',
+  'list': '{$ga_page_name}',
+  'price': '{$v.price}',
+  'position': {$N_key}                     // 'position' indicates the product position in the list.
+{rdelim});
+		{/foreach}
+//]]>
+</script>
+
+	{/if}
+
+
+
+{/if}
+
+{*
 {if $config.Company.cidev_ga_code_number ne ""}
 <script type="text/javascript">
 <!--
@@ -33,6 +115,10 @@
 -->
 </script>
 {/if}
+*}
+{* -------------------------------- *}
+
+
 
 {if $config.Company.cidev_yandex_code_number ne ""}
 {if $cidev_tracking_code_add2 ne ""}

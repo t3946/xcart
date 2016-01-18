@@ -201,7 +201,7 @@
 		{assign var="button_href" value="product.php?productid=`$products[product].productid`"}
         {/if}
 
-	<td style="padding-left: 20px;">{include file="buttons/button.tpl" style="button" href="$button_href" button_title=$lng.lbl_more_info}</td>
+	<td style="padding-left: 20px;"><span {include file="on_product_click.tpl"}>{include file="buttons/button.tpl" style="button" href="$button_href" button_title=$lng.lbl_more_info}</span></td>
     {/if}
 
 </tr>
