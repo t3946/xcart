@@ -9,6 +9,12 @@
 <input type="hidden" name="productid" value="{$product.productid}" />
 <input type="hidden" name="cat" value="{$smarty.get.cat|escape:"html"}" />
 <input type="hidden" name="page" value="{$smarty.get.page|escape:"html"}" />
+
+<input type="hidden" name="pbrand" id="pbrand_{$product.productid}" value="{$product.brand|escape:quotes}" />
+<input type="hidden" name="pname" id="pname_{$product.productid}" value="{$product.product|escape:quotes}" />
+<input type="hidden" name="pcategory" id="pcategory_{$product.productid}" value="{$product.category|escape:quotes}" />
+<input type="hidden" name="pprice" id="pprice_{$product.productid}" value="{$product.price}">
+
 {/if}
 
 <table width="100%" cellpadding="0" cellspacing="0">

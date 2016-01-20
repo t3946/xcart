@@ -4,6 +4,8 @@ vim: set ts=2 sw=2 sts=2 et:
 *}
 {include file="form_validation_js.tpl"}
 
+{include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
+
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
 {if $product.clean_url ne ""}
@@ -156,9 +158,9 @@ vim: set ts=2 sw=2 sts=2 et:
                   <a href="{$catalogs.customer}/cart.php" 
 
 {if $product.lead_time_message ne ""}
-onclick="javascript: if (confirm('{$product.lead_time_message}')) $('#orderform-{$product.productid}').submit();"
+onclick="javascript: if (confirm('{$product.lead_time_message}')) {ldelim}  ajax_add_to_cart('{$product.productid}', '{$product.add_date}', 'product'); $('#orderform-{$product.productid}').submit(); {rdelim}"
 {else}
-onclick="javascript: $('#orderform-{$product.productid}').submit();"
+onclick="javascript: ajax_add_to_cart('{$product.productid}', '{$product.add_date}', 'product'); $('#orderform-{$product.productid}').submit();"
 {/if}
 
                   >
@@ -386,6 +388,7 @@ function send_question_email_form(){
         {elseif $tab.tpl eq "_product_discussions_tpl_"}
 {* --------------------------------------------------*}
 
+{*
 
 <div id="disqus_thread"></div>
 <script type="text/javascript">
@@ -405,6 +408,7 @@ function send_question_email_form(){
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
+*}
 
 {* --------------------------------------------------*}
 

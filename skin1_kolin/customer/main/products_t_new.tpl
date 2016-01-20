@@ -19,7 +19,13 @@
 {section name=product loop=$products}
 
 
- {if $N_key eq ""}{assign var="N_key" value="0"}{/if}
+ {if $N_key eq ""}
+        {if $first_item ne "" && $first_item gt 0}
+                 {math assign="N_key" equation="x-1" x=$first_item}
+        {else}
+                {assign var="N_key" value="0"}
+        {/if}
+ {/if}
  {math assign="N_key" equation="x+1" x=$N_key}
 
 

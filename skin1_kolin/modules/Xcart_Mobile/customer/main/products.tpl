@@ -15,8 +15,16 @@ vim: set ts=2 sw=2 sts=2 et:
       {/if}
       {foreach from=$products item=product}
 
- {if $N_key eq ""}{assign var="N_key" value="0"}{/if}
+
+ {if $N_key eq ""}
+        {if $first_item ne "" && $first_item gt 0}
+                 {math assign="N_key" equation="x-1" x=$first_item}
+        {else}
+                {assign var="N_key" value="0"}
+        {/if}
+ {/if}
  {math assign="N_key" equation="x+1" x=$N_key}
+
 
 {if $product.new_notify_in_stock_price ne ""}
         {assign var="current_price" value=$product.new_notify_in_stock_price}

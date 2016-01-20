@@ -580,6 +580,14 @@ function func_order_data($orderid) {
 //	x_load('product');
 
 	foreach ($products as $k=>$v) {
+
+
+		$products[$k]["brand"] = $v["brand"] = func_query_first_cell("SELECT brand FROM $sql_tbl[brands] WHERE brandid='$v[brandid]'");
+		$category_info = func_query_first("SELECT $sql_tbl[products_categories].categoryid, $sql_tbl[categories].category FROM $sql_tbl[products_categories]  LEFT JOIN $sql_tbl[categories] ON $sql_tbl[products_categories].categoryid=$sql_tbl[categories].categoryid WHERE $sql_tbl[products_categories].productid = '$v[productid]' and $sql_tbl[products_categories].main = 'Y' LIMIT 1");
+		$products[$k]["categoryid"] = $v["categoryid"] = $category_info["categoryid"];
+		$products[$k]["category"] = $v["category"] = $category_info["category"];
+
+
 		if (!empty($active_modules['Extra_Fields']) && $v['is_deleted'] != 'Y') {
 			$v['extra_fields'] = func_query("SELECT $sql_tbl[extra_fields].*, $sql_tbl[extra_field_values].*, IF($sql_tbl[extra_fields_lng].field != '', $sql_tbl[extra_fields_lng].field, $sql_tbl[extra_fields].field) as field FROM $sql_tbl[extra_field_values], $sql_tbl[extra_fields] LEFT JOIN $sql_tbl[extra_fields_lng] ON $sql_tbl[extra_fields].fieldid = $sql_tbl[extra_fields_lng].fieldid AND $sql_tbl[extra_fields_lng].code = '$shop_language' WHERE $sql_tbl[extra_fields].fieldid = $sql_tbl[extra_field_values].fieldid AND $sql_tbl[extra_field_values].productid = '$v[productid]' AND $sql_tbl[extra_fields].active = 'Y' ORDER BY $sql_tbl[extra_fields].orderby");
 		}

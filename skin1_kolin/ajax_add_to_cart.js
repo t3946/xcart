@@ -41,8 +41,23 @@ function ajax_add_to_cart(id, add_date, source) {
 	$('#add2cart_' + id).html(waiting_html);
 	if (source == 'product') {
 		var formname = 'orderform';
+
+		var pprice = $('#product_price').html();
+		pprice = pprice.replace(/[^0-9\.]/g, '');
+		pprice = parseFloat(pprice);
+
+		var pbrand = $('#pbrand').val();
+		var pname = $('#pname').val();
+		var pcategory = $('#pcategory').val();
+		
 	} else {
 		var formname = 'orderform_' + id + '_' + add_date;
+
+		var pprice = $('#pprice_'+id).val();
+
+		var pbrand = $('#pbrand_'+id).val();
+		var pname = $('#pname_'+id).val();
+		var pcategory = $('#pcategory_'+id).val();
 	}
 
 	var info = $('form[name="' + formname + '"]').serialize();
@@ -65,6 +80,34 @@ function ajax_add_to_cart(id, add_date, source) {
 				if (data.display) {
 					$('#ajax_minicart').html(data.display);
 				}
+
+/* --- */
+  var pquantity = info.split("amount=");
+  if (pquantity[0] == ""){
+	pquantity = pquantity[1];
+  } else {
+	pquantity = pquantity[1];
+  }
+  pquantity = pquantity.split("&");
+  pquantity = pquantity[0];
+
+  if (pquantity != ""){
+
+   ga('ec:addProduct', {
+    'id': "'"+id+"'",
+    'name': "'"+pname+"'",
+    'category': "'"+pcategory+"'",
+    'brand': "'"+pbrand+"'",
+    'price': pprice,
+    'quantity': pquantity
+   });
+   ga('ec:setAction', 'add');
+   ga('send', 'event', 'UX', 'click', 'add to cart');     // Send data using an event.
+
+  }
+/* --- */
+
+
 
 				$('#add2cart_' + id).html(added_html);
 
