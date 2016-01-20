@@ -1220,7 +1220,7 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 		if ($shipping_rt && $shipping_cost > 0){
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
-			if ($shipping_rt[0]['cost_marcup'] > 0){
+			if ($shipping_rt[0]['cost_marcup'] >= 0){
 				$shipping_cost *= $shipping_rt[0]['cost_marcup'];
 			}
 
