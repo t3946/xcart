@@ -577,6 +577,7 @@ if (!empty($subcategories) && is_array($subcategories)){
 	$smarty->assign("brand", $brand);
 
 	$smarty->assign("main","brand_products");
+	$smarty->assign("ga_page_name", "brand_list");
 
 	$location[count($location)-1][1] = "brands.php";
 

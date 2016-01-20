@@ -321,6 +321,7 @@ window.attachEvent("onload", anchor_fix);
 				var e_products_found = '{/literal}{if $e_products_found eq "Y"}Y{/if}{literal}';
 				var cidev_filter_mode = 'load_more_products';
 				var additional_params = '';
+				var ga_page_name = '{/literal}{if $ga_page_name ne ""}{$ga_page_name}{/if}{literal}';
 	
 				if (e_products_found == "Y"){
 					cidev_filter_mode = 'load_more_e_products';
@@ -334,7 +335,7 @@ window.attachEvent("onload", anchor_fix);
 				
 				var cat = {/literal}{if $cat ne ""}{$cat}{else}{literal}''{/literal}{/if}{literal};
 
-                                var cidev_parameters = 'cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+additional_params;
+                                var cidev_parameters = 'cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+'&ga_page_name='+ga_page_name+additional_params;
 
 //-Start-//
                                 var LN_total_items = $('#LN_total_items').attr('data-value');

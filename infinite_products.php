@@ -143,6 +143,10 @@ if ($REQUEST_METHOD == 'POST')
 
 		$smarty->assign("products",$products);
 
+                if (!empty($ga_page_name)){
+                        $smarty->assign("ga_page_name",$ga_page_name);
+                }
+
 		func_display('customer/main/infinite_products.tpl', $smarty);
 	}
 	elseif ($cidev_filter_mode == "load_more_products_SKU"){
@@ -194,6 +198,10 @@ if ($REQUEST_METHOD == 'POST')
                 $smarty->assign('ajax_search_data', $search_data["products"]);
                 $smarty->assign('show_next_products', 'Y');
                 $smarty->assign("products",$products);
+
+		if (!empty($ga_page_name)){
+			$smarty->assign("ga_page_name",$ga_page_name);
+		}
 
                 func_display('customer/main/infinite_products.tpl', $smarty);
 	}
@@ -247,6 +255,10 @@ if ($REQUEST_METHOD == 'POST')
 		$smarty->assign('products_template', $products_template);
 		$smarty->assign('ajax_navigation_page', $ajax_navigation_page);
 		$smarty->assign('show_next_products', 'Y');
+
+                if (!empty($ga_page_name)){
+                        $smarty->assign("ga_page_name",$ga_page_name);
+                }
 
 		func_display('customer/main/infinite_products.tpl', $smarty);
 	}

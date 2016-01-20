@@ -70,6 +70,17 @@
 
 {section name=product loop=$products}
 
+
+ {if $N_key eq ""}
+        {if $first_item ne "" && $first_item gt 0}
+                 {math assign="N_key" equation="x-1" x=$first_item}
+        {else}
+                {assign var="N_key" value="0"}
+        {/if}
+ {/if}
+ {math assign="N_key" equation="x+1" x=$N_key}
+
+
   {if $tmp_count_cell_in_row eq "0"}
 	<tr>
   {/if}
@@ -101,7 +112,7 @@
 <tr>
 <td {* class="PListImgBox" *} align="center">
 <div {* class="PListImgBox" *} align="center">
-	<a href="{if $search_all_website eq 'Y'}http://{$products[product].domain}{/if}/product.php?productid={$products[product].productid}"  {if $search_all_website eq 'Y'}target="_blank"{/if}>{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url}</a>
+	<a {include file="on_product_click.tpl"} href="{if $search_all_website eq 'Y'}http://{$products[product].domain}{/if}/product.php?productid={$products[product].productid}"  {if $search_all_website eq 'Y'}target="_blank"{/if}>{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url}</a>
 
 	{if $active_modules.Special_Offers ne "" and $products[product].have_offers}
 	{include file="modules/Special_Offers/customer/product_offer_thumb.tpl" product=$products[product]}
@@ -126,7 +137,7 @@
 
 <tr>
 <td valign="top" align="center" height="30">
-<a href="{if $search_all_website eq 'Y'}http://{$products[product].domain}{/if}/product.php?productid={$products[product].productid}" {if $search_all_website eq 'Y'}target="_blank"{/if}><font class="ProductTitle">{$products[product].product}</font></a>
+<a {include file="on_product_click.tpl"} href="{if $search_all_website eq 'Y'}http://{$products[product].domain}{/if}/product.php?productid={$products[product].productid}" {if $search_all_website eq 'Y'}target="_blank"{/if}><font class="ProductTitle">{$products[product].product}</font></a>
 </td>
 </tr>
 

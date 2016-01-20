@@ -9,6 +9,12 @@
 <input type="hidden" name="productid" value="{$product.productid}" />
 <input type="hidden" name="cat" value="{$smarty.get.cat|escape:"html"}" />
 <input type="hidden" name="page" value="{$smarty.get.page|escape:"html"}" />
+
+<input type="hidden" name="pbrand" id="pbrand_{$product.productid}" value="{$product.brand|escape:quotes}" />
+<input type="hidden" name="pname" id="pname_{$product.productid}" value="{$product.product|escape:quotes}" />
+<input type="hidden" name="pcategory" id="pcategory_{$product.productid}" value="{$product.category|escape:quotes}" />
+<input type="hidden" name="pprice" id="pprice_{$product.productid}" value="{$product.price}">
+
 {/if}
 
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -201,7 +207,7 @@
 		{assign var="button_href" value="product.php?productid=`$products[product].productid`"}
         {/if}
 
-	<td style="padding-left: 20px;">{include file="buttons/button.tpl" style="button" href="$button_href" button_title=$lng.lbl_more_info}</td>
+	<td style="padding-left: 20px;"><span {include file="on_product_click.tpl"}>{include file="buttons/button.tpl" style="button" href="$button_href" button_title=$lng.lbl_more_info}</span></td>
     {/if}
 
 </tr>
