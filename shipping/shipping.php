@@ -524,7 +524,8 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
         	        		        if (!empty($products))
 	        	                        foreach ($products as $k_p => $v_p){
 
-							if ($v_p["free_ship_zone"] == "14"){
+//							if ($v_p["free_ship_zone"] == "14")
+							if ($v_p["free_ship_zone"] != "-1"){
 								$count_products_with_free_ship_zone++;
 								continue;
 							}

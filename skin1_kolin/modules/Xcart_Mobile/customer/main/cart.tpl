@@ -357,7 +357,15 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 {*
 	<td class="ButtonsRow">{include file="buttons/button.tpl" button_title=$lng.lbl_update_qty type="input" href="javascript: document.cartform.submit()" js_to_href="Y"}</td>
 *}
-	<td class="ButtonsRow">{include file="customer/buttons/button.tpl" href="cart.php?mode=delete&amp;productindex=`$products[product].cartid`" button_title="Delete item"}</td>
+	<td class="ButtonsRow">
+
+{assign var="pname" value=$products[product].product|escape:quotes|replace:'"':'\&#34;'}
+{assign var="pcategory" value=$products[product].category|escape:quotes|replace:'"':'\&#34;'}
+{assign var="pbrand" value=$products[product].brand|escape:quotes|replace:'"':'\&#34;'}
+
+<span onclick="javascript: ga_func_delete_from_cart('{$products[product].productid}', '{$pname}', '{$pcategory}', '{$pbrand}', '{$products[product].price}', '{$products[product].amount}');">{include file="customer/buttons/button.tpl" href="cart.php?mode=delete&amp;productindex=`$products[product].cartid`" button_title="Delete item"}</span>
+
+	</td>
 	<td class="ButtonsRow">
 
 {if $products[product].product_options ne ''}

@@ -809,7 +809,11 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 /*speed optimization*/
 //	print("l:".$membershipid_condition);
-	$categoryid = func_query_first_cell("SELECT $sql_tbl[products_categories].categoryid FROM $sql_tbl[products_categories]  /*, $sql_tbl[categories]*/ /*LEFT JOIN $sql_tbl[category_memberships] ON $sql_tbl[category_memberships].categoryid = $sql_tbl[categories].categoryid*/ WHERE /*$sql_tbl[products_categories].categoryid=$sql_tbl[categories].categoryid $membershipid_condition AND*/ $sql_tbl[products_categories].productid = '$id' and $sql_tbl[products_categories].main = 'Y' LIMIT 1");
+//	$categoryid = func_query_first_cell("SELECT $sql_tbl[products_categories].categoryid FROM $sql_tbl[products_categories]  /*, $sql_tbl[categories]*/ /*LEFT JOIN $sql_tbl[category_memberships] ON $sql_tbl[category_memberships].categoryid = $sql_tbl[categories].categoryid*/ WHERE /*$sql_tbl[products_categories].categoryid=$sql_tbl[categories].categoryid $membershipid_condition AND*/ $sql_tbl[products_categories].productid = '$id' and $sql_tbl[products_categories].main = 'Y' LIMIT 1");
+	$category_info = func_query_first("SELECT $sql_tbl[products_categories].categoryid, $sql_tbl[categories].category FROM $sql_tbl[products_categories]  LEFT JOIN $sql_tbl[categories] ON $sql_tbl[products_categories].categoryid=$sql_tbl[categories].categoryid WHERE $sql_tbl[products_categories].productid = '$id' and $sql_tbl[products_categories].main = 'Y' LIMIT 1");
+
+	$categoryid = $category_info["categoryid"];
+
 
 /*
 	# Check product's provider activity // Custom development (Activity of providers should not affect products)
@@ -838,13 +842,14 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	$product["productid"] = $id;
 	$product["categoryid"] = $categoryid;
+	$product["category"] = $category_info["category"];
 	if ($current_area != 'C' && !empty($current_area)) { /*speed optimization*/
-		$tmp = func_query_column("SELECT membershipid FROM $sql_tbl[product_memberships] WHERE productid = '$product[productid]'");
-		if (!empty($tmp) && is_array($tmp)) {
-			$product['membershipids'] = array();
-			foreach ($tmp as $v) {
-				$product['membershipids'][$v] = 'Y';
-			}
+	$tmp = func_query_column("SELECT membershipid FROM $sql_tbl[product_memberships] WHERE productid = '$product[productid]'");
+	if (!empty($tmp) && is_array($tmp)) {
+		$product['membershipids'] = array();
+		foreach ($tmp as $v) {
+			$product['membershipids'][$v] = 'Y';
+		}
 		}
 	}
 	
@@ -1114,6 +1119,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 ##
 #
 
+	$product["brand"] = func_query_first_cell("SELECT brand FROM $sql_tbl[brands] WHERE brandid='$product[brandid]'");
 
 	return $product;
 }
