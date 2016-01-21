@@ -2392,7 +2392,7 @@ function func_get_order_manufacturers($orderid){
 					}
 //				}
 
-				$mnfs[$m_id]["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$m_id' AND distributor_field_code='1'");
+				$mnfs[$m_id]["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$m_id' AND phone!='' ORDER BY distributor_field_code asc LIMIT 1");
 
 			        $phone_normalized = preg_replace("/[^0-9]/S","", $mnfs[$m_id]["distributor_phone"]);
 

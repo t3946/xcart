@@ -366,7 +366,7 @@ if ($tmp_cur_time_date_format >= "8.30" && $tmp_cur_time_date_format <= "16.30" 
 	$distributor_info["good_time_to_send_email_to_distributor"] = "N";
 }
 
-$distributor_info["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$product_info[manufacturerid]' AND distributor_field_code='1'");
+$distributor_info["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$product_info[manufacturerid]' AND phone!='' ORDER BY distributor_field_code asc LIMIT 1");
 
 $phone_normalized = preg_replace("/[^0-9]/S","", $distributor_info["distributor_phone"]);
 
