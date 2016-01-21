@@ -739,7 +739,7 @@ if ($mode == "add" or !empty($manufacturerid)) {
                                 $manufacturer_data["good_time_to_send_email_to_distributor"] = "N";
                          }
 
-                         $manufacturer_data["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$manufacturerid' AND distributor_field_code='1'");
+                         $manufacturer_data["distributor_phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[distributor_contacts] WHERE manufacturerid='$manufacturerid' AND phone!='' ORDER BY distributor_field_code asc LIMIT 1");
 
                          $phone_normalized = preg_replace("/[^0-9]/S","", $manufacturer_data["distributor_phone"]);
                          if (strlen($phone_normalized) == "10"){
