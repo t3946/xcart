@@ -44,12 +44,17 @@ x_load('files','user','taxes');
 
 # START: random:20460 [2010 Mar 18 13:43] 
 function func_is_customer_free_ship_zone($zoneid, $userinfo, $provider) {
+
+//func_print_r($zoneid);
 	
 	if ($zoneid < 0) {
 		return false;
 	}
 
-	$ship_zones = func_get_customer_zones_avail($userinfo, $provider, "S");
+	$ship_zones = func_get_customer_zones_avail($userinfo, $provider, "S", $zoneid);
+
+//func_print_r($zoneid, $ship_zones);
+
 	if (!is_array($ship_zones)) {
 		# default zone
 		$ship_zones = array('0' => 0);
@@ -116,8 +121,11 @@ function func_get_customer_zone_ship ($username, $provider, $type) {
 #
 # Get the customer's zones
 #
-function func_get_customer_zones_avail ($username, $provider, $address_type="S") {
+function func_get_customer_zones_avail ($username, $provider, $address_type="S", $zoneid = "-1") {
 	global $sql_tbl, $config, $single_mode;
+
+//$zoneid  = "-1" - for Free shipping for destination  https://basecamp.com/2070980/projects/1577907/messages/53254308
+
 	static $z_flags = array (
 		"C" => 0x01,
 		"S" => 0x02,
@@ -188,10 +196,11 @@ function func_get_customer_zones_avail ($username, $provider, $address_type="S")
 		$provider_condition = ($single_mode ? "" : "AND provider='$provider'");
 
 
-		if ($customer_info[$address_prefix."country"] != "US"){
+		if ($customer_info[$address_prefix."country"] != "US" || $zoneid > 0){
 
 			# Possible zones for customer's country...
 			$possible_zones = func_query("SELECT $sql_tbl[zone_element].zoneid FROM $sql_tbl[zone_element], $sql_tbl[zones] WHERE $sql_tbl[zone_element].zoneid=$sql_tbl[zones].zoneid AND $sql_tbl[zone_element].field='".$customer_info[$address_prefix."country"]."'  AND $sql_tbl[zone_element].field_type='C' $provider_condition GROUP BY $sql_tbl[zone_element].zoneid");
+
 
 		}
 		else {
