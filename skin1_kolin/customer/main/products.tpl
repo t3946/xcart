@@ -37,7 +37,19 @@
 
 {else}
 {if $products}
+
 {section name=product loop=$products}
+
+
+ {if $N_key eq ""}
+	{if $first_item ne "" && $first_item gt 0}
+		 {math assign="N_key" equation="x-1" x=$first_item}
+	{else}
+		{assign var="N_key" value="0"}
+	{/if}
+ {/if}
+ {math assign="N_key" equation="x+1" x=$N_key}
+
 
 {if $products[product].new_notify_in_stock_price ne ""}
 	{assign var="current_price" value=$products[product].new_notify_in_stock_price}
@@ -54,12 +66,12 @@
 <tr>
 <td class="PListImgBox">
 <div class="PListImgBox">
-<a href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}http://{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}"  {if $search_all_website eq 'Y'}target="_blank"{/if}>{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url}</a>
+<a {include file="on_product_click.tpl"} href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}http://{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}"  {if $search_all_website eq 'Y'}target="_blank"{/if}>{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url}</a>
 {if $active_modules.Special_Offers ne "" and $products[product].have_offers}
 {include file="modules/Special_Offers/customer/product_offer_thumb.tpl" product=$products[product]}
 {/if}
 </div>
-<a href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}http://{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}" class="SeeDetails" {if $search_all_website eq 'Y'}target="_blank"{/if}>{$lng.lbl_see_details}</a>
+<a {include file="on_product_click.tpl"} href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}http://{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}" class="SeeDetails" {if $search_all_website eq 'Y'}target="_blank"{/if}>{$lng.lbl_see_details}</a>
 {if $active_modules.Feature_Comparison ne '' && $products[product].fclassid > 0 && $printable ne 'Y'}
 <br />
 <br />
@@ -69,7 +81,7 @@
 {/if}
 </td>
 <td valign="top">
-<a href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}http://{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}" {if $search_all_website eq 'Y'}target="_blank"{/if}><font class="ProductTitle">{$products[product].product}</font></a>
+<a {include file="on_product_click.tpl"} href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}http://{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}" {if $search_all_website eq 'Y'}target="_blank"{/if}><font class="ProductTitle">{$products[product].product}</font></a>
 {if $config.Appearance.display_productcode_in_list eq "Y" and $products[product].productcode ne ""}
 <br />
 <font color="#006600" size=2>{$lng.lbl_sku}: {$products[product].productcode}</font>

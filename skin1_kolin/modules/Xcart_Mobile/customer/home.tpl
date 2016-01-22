@@ -29,6 +29,7 @@ vim: set ts=2 sw=2 sts=2 et:
 
                                 var e_products_found = '{/literal}{if $e_products_found eq "Y"}Y{/if}{literal}';
                                 var cidev_filter_mode = 'load_more_products';
+                                var ga_page_name = '{/literal}{if $ga_page_name ne ""}{$ga_page_name}{/if}{literal}';
         
                                 if (e_products_found == "Y"){
                                         cidev_filter_mode = 'load_more_e_products';
@@ -36,7 +37,7 @@ vim: set ts=2 sw=2 sts=2 et:
                                 
                                 var cat = {/literal}{if $cat ne ""}{$cat}{else}{literal}''{/literal}{/if}{literal};
 
-                                var cidev_parameters = 'cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat;
+                                var cidev_parameters = 'cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+'&ga_page_name='+ga_page_name;
 
 //-Start-//
                                 var LN_total_items = $('#LN_total_items').attr('data-value');
@@ -153,6 +154,7 @@ func_load_more_next_productids('','Y');
     {load_defer_code type="js"}
     {load_defer_code type="css"}
 
+{*
 <script type="text/javascript">
 //<![CDATA[
 {literal}
@@ -170,7 +172,7 @@ func_load_more_next_productids('','Y');
 {/literal}
 //]]>
 </script>
-
+*}
   </body>
 </html>
 {/if}

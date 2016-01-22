@@ -2249,6 +2249,17 @@ function func_products_from_scratch($scratch_products, $membershipid, $persisten
 			if ($products_array["fulldescr"] == strip_tags($products_array["fulldescr"]))
 				$products_array["fulldescr"] = str_replace("\n", "<br />", $products_array["fulldescr"]);
 
+#
+##
+###
+			$products_array["brand"] = func_query_first_cell("SELECT brand FROM $sql_tbl[brands] WHERE brandid='$products_array[brandid]'");
+		        $category_info = func_query_first("SELECT $sql_tbl[products_categories].categoryid, $sql_tbl[categories].category FROM $sql_tbl[products_categories]  LEFT JOIN $sql_tbl[categories] ON $sql_tbl[products_categories].categoryid=$sql_tbl[categories].categoryid WHERE $sql_tbl[products_categories].productid = '$products_array[productid]' and $sql_tbl[products_categories].main = 'Y' LIMIT 1");
+			$products_array["categoryid"] = $category_info["categoryid"];
+			$products_array["category"] = $category_info["category"];
+###
+##
+#
+
 			$products[] = $products_array;
 
 			$hash[$hash_key] += $amount;

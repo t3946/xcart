@@ -9,6 +9,17 @@
 
 {section name=product loop=$products}
 
+
+ {if $N_key eq ""}
+        {if $first_item ne "" && $first_item gt 0}
+                 {math assign="N_key" equation="x-1" x=$first_item}
+        {else}
+                {assign var="N_key" value="0"}
+        {/if}
+ {/if}
+ {math assign="N_key" equation="x+1" x=$N_key}
+
+
 {if $products[product].new_notify_in_stock_price ne ""}
         {assign var="current_price" value=$products[product].new_notify_in_stock_price}
 {else}
@@ -30,21 +41,21 @@
 
 	<td width="{$width}%" class="PListCell">
 
-<a href="/product.php?productid={$products[product].productid}" class="ProductTitle{if $flag eq "related"}Related{/if}"><font color=#0033CC>{$products[product].product}</font></a><br />
+<a {include file="on_product_click.tpl"} href="/product.php?productid={$products[product].productid}" class="ProductTitle{if $flag eq "related"}Related{/if}"><font color=#0033CC>{$products[product].product}</font></a><br />
 {if $config.Appearance.display_productcode_in_list eq "Y" and $products[product].productcode ne ""}
 <font color=#{if $flag eq "related"}006600{else}000000{/if} size=2>{$lng.lbl_sku}: {$products[product].productcode}</font><br />
 {/if}
 <table cellpadding="3" cellspacing="0" width="100%">
 <tr>
 	<td height="100" nowrap="nowrap">
-<a href="/product.php?productid={$products[product].productid}">{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$products[product].tmbn_x|default:$config.Appearance.thumbnail_width image_y=$products[product].tmbn_y product=$products[product].product tmbn_url=$products[product].tmbn_url}</a>
+<a {include file="on_product_click.tpl"} href="/product.php?productid={$products[product].productid}">{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$products[product].tmbn_x|default:$config.Appearance.thumbnail_width image_y=$products[product].tmbn_y product=$products[product].product tmbn_url=$products[product].tmbn_url}</a>
 {if $active_modules.Special_Offers ne "" and $products[product].have_offers}
 {include file="modules/Special_Offers/customer/product_offer_thumb.tpl" product=$products[product]}
 {/if}
 	</td>
 </tr>
 </table>
-<a href="/product.php?productid={$products[product].productid}" class="VertMenuItems">{$lng.lbl_see_details}</a>
+<a {include file="on_product_click.tpl"} href="/product.php?productid={$products[product].productid}" class="VertMenuItems">{$lng.lbl_see_details}</a>
 {if $products[product].product_type ne "C"}
 {if $flag neq "related"}<br />{/if}
 <br />

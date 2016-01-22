@@ -41,6 +41,12 @@ vim: set ts=2 sw=2 sts=2 et:
   <input type="hidden" name="productid" value="{$product.productid}" />
   <input type="hidden" name="cat" value="{$smarty.get.cat|escape:"html"}" />
   <input type="hidden" name="page" value="{$smarty.get.page|escape:"html"}" />
+
+  <input type="hidden" name="pbrand" id="pbrand" value="{$product.brand|escape:quotes}" />
+  <input type="hidden" name="pname" id="pname" value="{$product.product|escape:quotes}" />
+  <input type="hidden" name="pcategory" id="pcategory" value="{$product.category|escape:quotes}" />
+
+
   {if $active_modules.Gift_Registry and $wishlistid}
     <input type="hidden" name="fwlitem" value="{$wishlistid}" />
     <input type="hidden" name="eventid" value="{$eventid}" />

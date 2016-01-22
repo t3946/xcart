@@ -5,6 +5,41 @@
 
 	<br />
 	{if $total_items gt "1"}
+
+
+	  {if $ga_page_name ne "" && $products ne ""}
+<script>
+//<![CDATA[
+                {foreach from=$products item=v key=k}
+
+
+                 {if $N_key eq ""}
+                        {if $first_item ne "" && $first_item gt 0}
+                         {math assign="N_key" equation="x-1" x=$first_item}
+                        {else}
+                                {assign var="N_key" value="0"}
+                        {/if}
+                 {/if}
+                 {math assign="N_key" equation="x+1" x=$N_key}
+
+
+ga('ec:addImpression', {ldelim}
+  'id': '{$v.productid}',                   // Product details are provided in an impressionFieldObject.
+  'name': '{$v.product|escape:quotes}',
+  'category': '{$v.category|escape:quotes}',
+  'brand': '{$v.brand|escape:quotes}',
+  'list': '{$ga_page_name}',
+  'price': {$v.price},
+  'position': {$N_key}                     // 'position' indicates the product position in the list.
+{rdelim});
+                {/foreach}
+//]]>
+</script>
+          {/if}
+
+
+
+
 		{*
 		{$lng.txt_N_results_found|substitute:"items":$total_items}<br />
 		*}

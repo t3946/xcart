@@ -631,6 +631,10 @@ if ($current_storefront == ""){ // https://basecamp.com/2070980/projects/1577907
 	$inner_joins['categories'] = array(
 		"on" => "$sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid and $sql_tbl[categories].storefrontid = $current_storefront"
 	);
+
+	$fields[] = "$sql_tbl[categories].categoryid";
+	$fields[] = "$sql_tbl[categories].category";
+
 }
 	if ($current_area != 'C') {
 		$left_joins['category_memberships'] = array(
@@ -1625,17 +1629,6 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 			}
 			unset($ids);
 
-			if (!empty($active_modules['Extra_Fields'])) {
-
-				# Get Extra fields cache
-				$ids = array();
-				foreach ($products as $k => $v) {
-					$ids[] = intval($v['productid']);
-				}
-
-				$products_ef = func_query_hash("SELECT $sql_tbl[extra_fields].*, $sql_tbl[extra_field_values].*, IF($sql_tbl[extra_fields_lng].field != '', $sql_tbl[extra_fields_lng].field, $sql_tbl[extra_fields].field) as field FROM $sql_tbl[extra_field_values], $sql_tbl[extra_fields] LEFT JOIN $sql_tbl[extra_fields_lng] ON $sql_tbl[extra_fields].fieldid = $sql_tbl[extra_fields_lng].fieldid AND $sql_tbl[extra_fields_lng].code = '$shop_language' WHERE $sql_tbl[extra_fields].fieldid = $sql_tbl[extra_field_values].fieldid AND $sql_tbl[extra_field_values].productid IN (".implode(",", $ids).") AND $sql_tbl[extra_fields].active = 'Y' ORDER BY $sql_tbl[extra_fields].orderby", "productid");
-				unset($ids);
-			}
 
 			if (!empty($active_modules['Product_Options'])) {
 
@@ -1652,14 +1645,37 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 				unset($ids);
 			}
 
-			# Get thumbnails dimensions
+
 			$ids = array();
-			foreach ($products as $k => $v)
+			$brandids_in_found_products = array();
+			$manufacturerids_in_found_products = array();
+
+			foreach ($products as $k => $v){
 				$ids[] = $v['productid'];
+
+                                if (!in_array($v["brandid"], $brandids_in_found_products)){
+	                                $brandids_in_found_products[] = $v["brandid"];
+                                }
+
+                                if (!in_array($v["manufacturerid"], $manufacturerids_in_found_products)){
+                                        $manufacturerids_in_found_products[] = $v["manufacturerid"];
+                                }
+			}
+
+			# Get thumbnails dimensions
 			$thumb_dims = func_query_hash("SELECT id, image_x, image_y FROM $sql_tbl[images_T] WHERE id IN ('".implode("','", $ids)."')", "id", false);
+
+			$brands_in_found_products = func_query_hash("SELECT $sql_tbl[brands].brand, $sql_tbl[brands].brandid FROM $sql_tbl[brands] WHERE $sql_tbl[brands].brandid IN (".implode(",", $brandids_in_found_products).")", "brandid", false);
+
+			$manufacturers_in_found_products = func_query_hash("SELECT manufacturerid, allow_pre_orders, reverse_sku, remove_dashes, lead_time_message FROM $sql_tbl[manufacturers] WHERE manufacturerid IN ('".implode("','", $manufacturerids_in_found_products)."')", 'manufacturerid', false);
+
+			# Get Extra fields cache
+			if (!empty($active_modules['Extra_Fields'])) {
+				$products_ef = func_query_hash("SELECT $sql_tbl[extra_fields].*, $sql_tbl[extra_field_values].*, IF($sql_tbl[extra_fields_lng].field != '', $sql_tbl[extra_fields_lng].field, $sql_tbl[extra_fields].field) as field FROM $sql_tbl[extra_field_values], $sql_tbl[extra_fields] LEFT JOIN $sql_tbl[extra_fields_lng] ON $sql_tbl[extra_fields].fieldid = $sql_tbl[extra_fields_lng].fieldid AND $sql_tbl[extra_fields_lng].code = '$shop_language' WHERE $sql_tbl[extra_fields].fieldid = $sql_tbl[extra_field_values].fieldid AND $sql_tbl[extra_field_values].productid IN (".implode(",", $ids).") AND $sql_tbl[extra_fields].active = 'Y' ORDER BY $sql_tbl[extra_fields].orderby", "productid");
+			}
+
 			unset($ids);
 
-			$manufacturerids_in_found_products = array();
 
 			foreach ($products as $k => $v) {
 				if (empty($v['descr'])) {
@@ -1730,7 +1746,7 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 					}
 
 				} 
-//				else {
+
 				if (empty($products[$k]["tmbn_url"])) {
 					$products[$k]["tmbn_url"] = func_get_default_image("T");
 				}
@@ -1796,27 +1812,10 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 ###
 ##
 #
-				$manufacturerids_in_found_products[] = $v["manufacturerid"];
-
-			}
-
-			if (!empty($active_modules["Special_Offers"]) && empty($search_data["products"]["show_special_prices"])) {
-				func_offers_check_products($login, $current_area, $products);
-			}
-
 
 #
 ##
 ###
-
-			$manufacturerids_in_found_products = array_unique($manufacturerids_in_found_products);
-			$manufacturerids_in_found_products = array_values($manufacturerids_in_found_products);
-
-			$manufacturers_in_found_products = func_query_hash("SELECT manufacturerid, allow_pre_orders, reverse_sku, remove_dashes, lead_time_message FROM $sql_tbl[manufacturers] WHERE manufacturerid IN ('".implode("','", $manufacturerids_in_found_products)."')", 'manufacturerid', false);
-			
-
-                        foreach ($products as $k => $v) {
-
 				$products[$k]["allow_pre_orders"] = $manufacturers_in_found_products[$v["manufacturerid"]]["allow_pre_orders"];	
 
                                 if ($manufacturers_in_found_products[$v["manufacturerid"]]["remove_dashes"] == "Y"){
@@ -1881,8 +1880,8 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 				if ($index_sku_search == "Y"){
 					$clean_url = "http://".$v["domain"]."/".$clean_url;
 
-                                        if (strpos($v["tmbn_url"], "cdn") !== false && strpos($v["tmbn_url"], "http") === false){
-	                                        $products[$k]["tmbn_url"] = "http://".$v["tmbn_url"];
+                                        if (strpos($products[$k]["tmbn_url"], "cdn") !== false && strpos($products[$k]["tmbn_url"], "http") === false){
+	                                        $products[$k]["tmbn_url"] = "http://".$products[$k]["tmbn_url"];
                                         }
 				}
 
@@ -1893,15 +1892,28 @@ if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == 
 ###
 ##
 #
+
+# For search on s3store.com. (one product could be on several stores)
+##
 				if ($current_area == 'C' && $search_all_website && $mode_load_next_productids != "Y"){
 					if (!isset($sfids_of_products[$v["productid"]])){
 						$sfids_of_products[$v["productid"]] = array();
 					}
 					$sfids_of_products[$v["productid"]][] = $v["sfid"];
 				}
-                        }
+##
+#
 
+				$products[$k]["brand"] = $brands_in_found_products[$v["brandid"]]["brand"];
+
+                        } //foreach ($products as $k => $v)
+
+
+                        if (!empty($active_modules["Special_Offers"]) && empty($search_data["products"]["show_special_prices"])) {
+                                func_offers_check_products($login, $current_area, $products);
+                        }
 		}
+
 
 		if ($current_area == 'C' && $search_all_website && $mode_load_next_productids != "Y"){
 			x_session_save("sfids_of_products");
