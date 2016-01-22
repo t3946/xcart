@@ -325,6 +325,8 @@ function func_show_full_info(code){
 <br />
 {capture name=dialog}
 
+{$lng.lbl_fraud_check_expert_section}
+
 <table width="100%">
 <tr>
 <td><B>Change fraud check status to:</B> {include file="main/fraud_status.tpl" fraud_status=$order.fraud_status}</td>
