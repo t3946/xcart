@@ -3669,73 +3669,7 @@ if (!empty($config["Purchase_Order"]["Checks_deposited_Attention_tag"])){
 #
 ##
 ###
-//func_print_r($order);
-
-/*
-$other_customer_orders = func_query("SELECT orderid, order_prefix, fraud_status FROM $sql_tbl[orders] WHERE email='$order[email]' AND orderid!='$orderid' ORDER BY orderid DESC");
-
-if (!empty($other_customer_orders)){
-
-	$count_Completed = 0;
-	$count_Fraud = 0;
-	$count_Open = 0;
-
-	foreach ($other_customer_orders as $k => $v) {
-
-		$Completed = "";
-		$Fraud = "";
-		$Open = "";
-
-		$order_groups_info = func_query("SELECT cb_status, dc_status FROM $sql_tbl[order_groups] WHERE orderid='$v[orderid]'");
-		if (!empty($order_groups_info)){
-			foreach ($order_groups_info as $kk => $vv){
-
-				if (in_array($v["fraud_status"], array("C", "E")) && $vv["cb_status"] == "P" && $vv["dc_status"] == "S"){
-	                                $Completed = "Y";
-                                        $count_Completed++;
-				}
-				elseif (!in_array($v["fraud_status"], array("C", "E", "U", "T", "N"))){
-                                        $Fraud = "Y";
-                                        $count_Fraud++;
-				}
-				elseif (in_array($v["fraud_status"], array("C", "E")) && in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
-	                                $Open = "Y";
-        	                        $count_Open++;
-				}
-			}
-		}
-
-		$other_customer_orders[$k]["statuses"]["Completed"] = $Completed;
-		$other_customer_orders[$k]["statuses"]["Fraud"] = $Fraud;
-		$other_customer_orders[$k]["statuses"]["Open"] = $Open;
-
-	}
-
-	$smarty->assign("count_Completed", $count_Completed);
-	$smarty->assign("count_Fraud", $count_Fraud);
-	$smarty->assign("count_Open", $count_Open);
-
-	$smarty->assign("other_customer_orders", $other_customer_orders);
-
-	$count_other_customer_orders = count($other_customer_orders);
-	$smarty->assign("count_other_customer_orders", $count_other_customer_orders);
-
-	$show_count_before_see_more = 5;
-	$smarty->assign("show_count_before_see_more", $show_count_before_see_more);
-
-	if ($count_other_customer_orders > $show_count_before_see_more){
-		$show_see_more = "Y";
-	} else {
-		$show_see_more = "N";
-	}
-	$smarty->assign("show_see_more", $show_see_more);
-
-
-}
-
-//func_print_r($other_customer_orders);
-*/
-func_other_customer_orders($order[email]);
+func_other_customer_orders($order["email"], $orderid);
 ###
 ##
 #
