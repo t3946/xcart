@@ -46,6 +46,7 @@
 //<![CDATA[ 
                 	{foreach from=$orders.0.products item=v key=k}
 
+ga('send', 'pageview');
 
 ga('ec:addProduct', {ldelim}
   'id': '{$v.productid}', 
@@ -56,6 +57,9 @@ ga('ec:addProduct', {ldelim}
   'quantity': {$v.amount}
 {rdelim});
                 	{/foreach}
+
+
+ga('send', 'pageview');
 
 // Transaction level information is provided via an actionFieldObject.
 ga('ec:setAction', 'purchase', {ldelim}
@@ -79,6 +83,9 @@ ga('ec:setAction', 'purchase', {ldelim}
 <script>
 //<![CDATA[
 // Called when a product is added to a shopping cart.
+
+ga('send', 'pageview');
+
 ga('ec:setAction','checkout', {ldelim}
     'step': {$ga_checkout_step},            // A value of 1 indicates this action is first checkout step.
     'option': '{$ga_checkout_step_names[$ga_checkout_step]}'      // Used to specify additional info about a checkout stage, e.g. payment method.
@@ -95,7 +102,7 @@ ga('ec:setAction','checkout', {ldelim}
 {literal}
 function ga_func_delete_from_cart(pid, pname, pcategory, pbrand, pprice, pquantity)  {
 
-//alert(pid + '_' + pname + '=' + pcategory + '>>>' + pbrand + '_' + pprice + '<<' + pquantity);
+  ga('send', 'pageview');
 
   ga('ec:addProduct', {
     'id': "'"+pid+"'",
@@ -105,6 +112,9 @@ function ga_func_delete_from_cart(pid, pname, pcategory, pbrand, pprice, pquanti
     'price': pprice,
     'quantity': pquantity
   });
+
+
+  ga('send', 'pageview');
 
   ga('ec:setAction', 'remove');
   ga('send', 'event', 'UX', 'click', 'add to cart');     // Send data using an event.
@@ -118,6 +128,9 @@ function ga_func_delete_from_cart(pid, pname, pcategory, pbrand, pprice, pquanti
         {if $main eq "product"}
 <script>
 //<![CDATA[
+
+ga('send', 'pageview');
+
 ga('ec:addProduct', {ldelim}
   'id': '{$product.productid}',
   'name': '{$product.product|escape:quotes}',
@@ -125,6 +138,9 @@ ga('ec:addProduct', {ldelim}
   'brand': '{$product.brand|escape:quotes}',
   'price': {$product.price}
 {rdelim});
+
+
+ga('send', 'pageview');
 
 ga('ec:setAction', 'detail');
 //]]>
@@ -139,6 +155,8 @@ ga('ec:setAction', 'detail');
 {literal}
 function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice) {
 
+  ga('send', 'pageview');
+
   ga('ec:addProduct', {
     'id': "'"+pid+"'",
     'name': "'"+pname+"'",
@@ -147,6 +165,9 @@ function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice)
     'price': pprice,
     'position': "'"+pposition+"'"
   });
+
+  ga('send', 'pageview');
+
   ga('ec:setAction', 'click', {list: "'"+plist+"'"});
 
   // Send click with an event, then send user to product page.
@@ -175,6 +196,7 @@ function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice)
 		 {/if}
 		 {math assign="N_key" equation="x+1" x=$N_key}
 
+ga('send', 'pageview');
 
 ga('ec:addImpression', {ldelim}
   'id': '{$v.productid}',                   // Product details are provided in an impressionFieldObject.
