@@ -167,7 +167,7 @@ No
 
 {/foreach}
 
-{if $subcategories}
+{if $subcategories && $cat_selected eq "1"}
 <tr>
 	<td colspan="{if $supplemental_category_section ne "Y"}12{else}10{/if}">
 <b>*{$lng.lbl_note}:</b> {$lng.txt_categoryies_management_note}
