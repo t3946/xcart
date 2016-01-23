@@ -275,6 +275,13 @@ var runTests = function(editor) {
 {elseif $main eq "categories"}
 {include file="admin/main/categories.tpl"}
 
+{include file="admin/main/categories.tpl" supplemental_category_section="Y"}
+
+{if ($smarty.get.mode ne "info")}
+<br /><br />
+{include file="admin/main/featured_products.tpl"}
+{/if}
+
 {elseif $main eq "cats_no_class_prods"}
 {include file="admin/main/cats_no_class_prods.tpl"}
 
