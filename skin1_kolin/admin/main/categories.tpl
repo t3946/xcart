@@ -81,7 +81,9 @@
 <tr class="TableHead">
 	<td>&nbsp;</td>
 	<td>{$lng.lbl_pos}</td>
+{if $supplemental_category_section ne "Y"}
 	<td align="center">{$lng.lbl_subcat}</td>
+{/if}
 	<td align="center">{$lng.lbl_categories_more}</td>
 	<td align="center">{$lng.lbl_category_name}</td>
 	<td align="center">{$lng.lbl_products}*</td>
@@ -98,12 +100,18 @@
 {assign var="cat_selected" value=0}
 {foreach from=$subcategories item=c key=catid}
 
-{if ($smarty.get.mode eq "info" && $c.order_by gt 500) || ($smarty.get.mode ne "info" && $c.order_by le 500) || ($smarty.get.cat gt 0)}
+{if 
+(($supplemental_category_section eq "Y" && $c.supplemental_category eq "Y") || $supplemental_category_section ne "Y")
+&&
+(($smarty.get.mode eq "info" && $c.order_by gt 500) || ($smarty.get.mode ne "info" && $c.order_by le 500) || ($smarty.get.cat gt 0))
+}
 
 <tr{cycle values=', class="TableSubHead"'}>
 	<td><input type="checkbox" name="ch_cat[]" id="rcat_{$catid}" value="{$catid}" /></td>
 	<td width="1%"><input type="text" size="4" name="posted_data[{$catid}][order_by]" maxlength="4" value="{if $c.parentid neq $cat && $c.add_order_by}{$c.add_order_by}{else}{$c.order_by}{/if}" /></td>
+{if $supplemental_category_section ne "Y"}
 	<td align="center"><a href="categories.php?cat={$catid}{if $smarty.get.mode eq "info"}&mode=info{/if}">{$c.subcategory_count|default:$lng.txt_not_available}</a></td>
+{/if}
 	<td align="center"><a href="category_modify.php?cat={$catid}" title="{$lng.lbl_categories_more}">{$lng.lbl_categories_more}</a></td>
 	<td width="100"><input type="text" size="60" value="{ $c.category|escape }" name="posted_data[{$catid}][category]" class="{if $c.avail eq "N"}ItemsListDisabled{else}ItemsListBold{/if}" /></td>
 	<td align="center">
@@ -154,19 +162,19 @@ No
 {foreachelse}
 
 <tr>
-	<td colspan="{if $supplemental_category_section ne "Y"}12{else}11{/if}" align="center">{$lng.txt_no_categories}</td>
+	<td colspan="{if $supplemental_category_section ne "Y"}12{else}10{/if}" align="center">{$lng.txt_no_categories}</td>
 </tr>
 
 {/foreach}
 
 {if $subcategories}
 <tr>
-	<td colspan="{if $supplemental_category_section ne "Y"}12{else}11{/if}">
+	<td colspan="{if $supplemental_category_section ne "Y"}12{else}10{/if}">
 <b>*{$lng.lbl_note}:</b> {$lng.txt_categoryies_management_note}
 	</td>
 </tr>
 <tr>
-	<td colspan="{if $supplemental_category_section ne "Y"}12{else}11{/if}" class="SubmitBox">
+	<td colspan="{if $supplemental_category_section ne "Y"}12{else}10{/if}" class="SubmitBox">
 <input type="button" value="{$lng.lbl_update_all|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'apply');" />
 <br /><br />
 <input type="button" value="{$lng.lbl_modify_first_selected|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'update');" />
@@ -176,7 +184,7 @@ No
 {/if}
 
 <tr>
-	<td colspan="{if $supplemental_category_section ne "Y"}12{else}11{/if}" class="SubmitBox"><input type="button" value="{$lng.lbl_add_new_|strip_tags:false|escape}" onclick="self.location='category_modify.php?mode=add&amp;cat={$cat}&amp;supplemental_category_section={$supplemental_category_section|default:N}'" /></td>
+	<td colspan="{if $supplemental_category_section ne "Y"}12{else}10{/if}" class="SubmitBox"><input type="button" value="{$lng.lbl_add_new_|strip_tags:false|escape}" onclick="self.location='category_modify.php?mode=add&amp;cat={$cat}&amp;supplemental_category_section={$supplemental_category_section|default:N}'" /></td>
 </tr>
 
 </table>
