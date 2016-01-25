@@ -90,7 +90,7 @@
 <br />
 <br />
 <div style="max-height: 44px; overflow: hidden; line-height: 14px">
-	<span class="SPItems-description">{$products[product].descr|truncate:225:"...":true}</span>
+	<span class="SPItems-description">{$products[product].descr|default:$products[product].fulldescr|truncate:225:"...":true}</span>
 </div>
 </font>
 {*<hr class="PListLine" size="1" />*}
