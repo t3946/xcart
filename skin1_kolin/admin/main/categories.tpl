@@ -101,7 +101,7 @@
 {foreach from=$subcategories item=c key=catid}
 
 {if 
-(($supplemental_category_section eq "Y" && $c.supplemental_category eq "Y") || $supplemental_category_section ne "Y")
+(($supplemental_category_section eq "Y" && $c.supplemental_category eq "Y") || ($supplemental_category_section ne "Y" && $c.supplemental_category ne "Y"))
 &&
 (($smarty.get.mode eq "info" && $c.order_by gt 500) || ($smarty.get.mode ne "info" && $c.order_by le 500) || ($smarty.get.cat gt 0))
 }

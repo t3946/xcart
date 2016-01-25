@@ -86,6 +86,8 @@
 
 {capture name=menu}
 
+{assign var="supplemental_category_found" value="N"}
+
 {if $config.General.root_categories eq "Y"}
 
   {assign var="show_category_filter" value="N"}
@@ -101,10 +103,14 @@
 {*
 	  {if ($subcat.product_count_global || $subcat.subcategory_count) && $v.categoryid eq $subcat.categoryid && $v.count_products gt 0}
 *}
-	  {if $v.categoryid eq $subcat.categoryid && $v.count_products gt 0}
+	  {if $v.categoryid eq $subcat.categoryid && $v.count_products gt 0} 
+		{if $v.supplemental_category ne "Y"}
 	<tr>
 	<td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><font class="CategoriesList"><a class="VertMenuItems" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</font></a> ({$v.count_products})</td>
 	</tr>
+		{else}
+			{assign var="supplemental_category_found" value="Y"}
+		{/if}
 	  {/if}
 	 {/foreach}
 	{/foreach}
@@ -115,9 +121,13 @@
 
         <table width="100%" cellpadding="2" cellspacing="2" style="background-color: #FFFFFF;">
         {foreach from=$keyword_subcategories item=subcat}
+	{if $subcat.supplemental_category ne "Y"}
         <tr>
         <td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><font class="CategoriesList"><a class="VertMenuItems" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</font></a> ({$subcat.count})</td>
         </tr>
+	{else}
+		{assign var="supplemental_category_found" value="Y"}
+	{/if}
         {/foreach}
         </table>
 
@@ -134,7 +144,11 @@
 	        </font>
         	<br />
 	    {else}
+		{if $c.supplemental_category ne "Y"}
         	<font class="CategoriesList">{if $c.categoryid ne $smarty.get.cat}<a href="/home.php?cat={$c.categoryid}" class="VertMenuItems">{/if}{if $c.is_bold eq "Y"}<b>{$c.category}</b>{else}{$c.category}{/if}{if $c.categoryid ne $smarty.get.cat}</a>{/if}</font><br />
+		{else}
+			{assign var="supplemental_category_found" value="Y"}
+		{/if}
 	    {/if}
 	</td>
 	</tr>
@@ -145,6 +159,7 @@
 
 {else} {foreach from=$subcategories item=c key=catid}
 {if $c.order_by ge 0 && $c.order_by le 500}
+  {if $c.supplemental_category ne "Y"}
     {if $c.categoryid eq ''}
         <font class="CategoriesList">
             <a href="/home.php?scatid={$c.scatid}&amp;keyphrase={$c.keyphrase}" class="VertMenuItems">{if $c.is_bold eq "Y"}<b>{$c.category}</b>{else}{$c.category}{/if}</a>
@@ -153,6 +168,9 @@
     {else}
         <font class="CategoriesList"><a href="/home.php?cat={$catid}" class="VertMenuItems">{if $c.is_bold eq "Y"}<b>{$c.category}</b>{else}{$c.category}{/if}</a></font><br />
     {/if}
+  {else}
+	{assign var="supplemental_category_found" value="Y"}
+  {/if}
 {/if}
 {/foreach}
 {/if}
@@ -161,8 +179,14 @@
 {/capture}
 { include file="menu.tpl" menu_title="Departments" menu_content=$smarty.capture.menu cellpadding=$fc_cellpadding}
 
-
 {/if}
+
+
+{if $supplemental_category_found eq "Y" && $cat_with_one_brand_filter ne "Y"}
+<br />
+{include file="customer/categories_supplemental.tpl" }
+{/if}
+
 
 
 {* ------------------------------- Filters ------------------------------- *}
