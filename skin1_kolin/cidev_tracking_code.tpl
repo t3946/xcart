@@ -21,16 +21,19 @@
 {if $config.Storefront_common_details.google_analitics_tracking_script ne "" && $config.Company.cidev_ga_code_number ne ""}
 
 	{assign var=ga_ec_data value=""}
-
-	{if $usertype eq "A" || $usertype eq "P"}
-		{assign var=ga_send value=""}
-	{else}
-		{assign var=ga_send value="ga('send', 'pageview');"}
-	{/if}
-
 	{if $ga_page_name ne "" || $main eq "product" || $main eq "fast_lane_checkout"}
 		{assign var=ga_ec_data value="ga('require', 'ec');"}
 	{/if}
+
+{*
+        {if $usertype eq "A" || $usertype eq "P"}
+*}
+                {assign var=ga_send value=""}
+{*
+        {else}
+                {assign var=ga_send value="ga('send', 'pageview');"}
+        {/if}
+*}
 
 {$config.Storefront_common_details.google_analitics_tracking_script|substitute:"ga_account_nr":$config.Company.cidev_ga_code_number|substitute:"ga_ec_data":$ga_ec_data|substitute:"ga_send":$ga_send}
 
@@ -95,8 +98,6 @@ ga('ec:setAction','checkout', {ldelim}
 {literal}
 function ga_func_delete_from_cart(pid, pname, pcategory, pbrand, pprice, pquantity)  {
 
-  ga('send', 'pageview');
-
   ga('ec:addProduct', {
     'id': "'"+pid+"'",
     'name': "'"+pname+"'",
@@ -105,7 +106,6 @@ function ga_func_delete_from_cart(pid, pname, pcategory, pbrand, pprice, pquanti
     'price': pprice,
     'quantity': pquantity
   });
-
 
   ga('ec:setAction', 'remove');
   ga('send', 'event', 'UX', 'click', 'add to cart');     // Send data using an event.
@@ -142,8 +142,6 @@ ga('ec:setAction', 'detail');
 {literal}
 function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice) {
 
-  ga('send', 'pageview');
-
   ga('ec:addProduct', {
     'id': "'"+pid+"'",
     'name': "'"+pname+"'",
@@ -153,7 +151,6 @@ function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice)
     'position': "'"+pposition+"'"
   });
 
-
   ga('ec:setAction', 'click', {list: "'"+plist+"'"});
 
   // Send click with an event, then send user to product page.
@@ -162,6 +159,7 @@ function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice)
         document.location = '/product.php?productid='+pid;
       }
   });
+
 }
 
 {/literal}
@@ -196,6 +194,14 @@ ga('ec:addImpression', {ldelim}
 </script>
 	{/if}
 
+
+        {if !($usertype eq "A" || $usertype eq "P")}
+<script>
+//<![CDATA[
+ga('send', 'pageview');
+//]]>
+</script>
+        {/if}
 
 
 {/if}
