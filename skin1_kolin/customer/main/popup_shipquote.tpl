@@ -555,7 +555,6 @@ function cidev_sqCALCULATE() {
  if (cidev_yandex_code_number != ""){
 	 yaCounter{/literal}{$config.Company.cidev_yandex_code_number}{literal}.reachGoal('sqCALCULATE', yaGoalParams);
 
-	 _gaq.push(['_trackEvent', 'sqCALCULATE']);
  }
 
  document.shipquoteform.submit();
