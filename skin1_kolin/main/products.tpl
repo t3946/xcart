@@ -130,7 +130,7 @@ function checkAll_price(flag, form, prefix) {
 
 <tr{cycle values=', class="TableSubHead"'}>
  <td width="5"><input type="checkbox" name="productids[{$products[prod].productid}]" /></td>
- <td><a href="http://{if $products[prod].domain ne ""}{$products[prod].domain}{else}artistsupplysource.com{/if}/{if $usertype eq "A"}admin{else}provider{/if}/product_modify.php?productid={$products[prod].productid}{if $navpage}&page={$navpage}{/if}">
+ <td><a href="{*http://{if $products[prod].domain ne ""}{$products[prod].domain}{else}artistsupplysource.com{/if}/{if $usertype eq "A"}admin{else}provider{/if}/*}product_modify.php?productid={$products[prod].productid}{if $navpage}&page={$navpage}{/if}">
 
 {if $search_prefilled.show_product_descriptions_and_thumbnails_in_search_results eq "Y"}
 

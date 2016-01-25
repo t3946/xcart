@@ -618,6 +618,7 @@ if (!empty($subcategories) && is_array($subcategories)){
 		db_free_result($subcategories_count_products);
 
 		$cidev_subcategories_products_count[$k]["categoryid"] = $v["categoryid"];
+		$cidev_subcategories_products_count[$k]["supplemental_category"] = $v["supplemental_category"];
 		$cidev_subcategories_products_count[$k]["count_products"] = $COUNT_products_in_subcat;
 	}
 

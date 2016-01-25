@@ -192,12 +192,18 @@ var requiredFields = [
 </tr>
 
 <tr>
+    <td height="10" class="FormButton" nowrap="nowrap">Supplemental category:</td>
+        <td width="10" height="10"><font class="CustomerMessage"></font></td>
+        <td height="10"><input type="checkbox" name="supplemental_category" value="Y"{if $current_category.supplemental_category eq 'Y' || $supplemental_category_section eq "Y"} checked="checked"{/if} /></td>
+</tr>
+
+<tr {if $current_category.supplemental_category eq 'Y' || $supplemental_category_section eq "Y"}style="display: none;"{/if}>
     <td height="10" class="FormButton" nowrap="nowrap">Ready to classify:</td>
         <td width="10" height="10"><font class="CustomerMessage"></font></td>
         <td height="10"><input type="checkbox" name="pc_ready_to_classify" value="Y"{if $current_category.pc_ready_to_classify eq 'Y'} checked="checked"{/if} /></td>
 </tr>
 
-<tr>
+<tr {if $current_category.supplemental_category eq 'Y' || $supplemental_category_section eq "Y"}style="display: none;"{/if}>
         <td height="10" class="FormButton" nowrap="nowrap">Category classify weight:</td>
         <td width="10" height="10">&nbsp;</td>
         <td height="10">
@@ -205,7 +211,7 @@ var requiredFields = [
 </td>
 </tr>
 
-<tr>
+<tr {if $current_category.supplemental_category eq 'Y' || $supplemental_category_section eq "Y"}style="display: none;"{/if}>
         <td height="10" class="FormButton" nowrap="nowrap">Category Z parameter:</td>
         <td width="10" height="10">&nbsp;</td>
         <td height="10">
@@ -319,7 +325,7 @@ var requiredFields = [
 	<td height="10"><input type="text" name="cat_location" id="main_parent_input" value="{$current_category.parentid}" /></td>
 </tr>
 
-<tr>
+<tr {if $current_category.supplemental_category eq 'Y' || $supplemental_category_section eq "Y"}style="display: none;"{/if}>
 	<td height="10" class="FormButtonNotBold" nowrap="nowrap">{$lng.lbl_additional_parent_categories}:</td>
 	<td width="10" height="10"><font class="FormButtonOrange"></font></td>
 	<td height="10">
@@ -333,7 +339,7 @@ var requiredFields = [
 	</td>
 </tr>
 
-<tr>
+<tr {if $current_category.supplemental_category eq 'Y' || $supplemental_category_section eq "Y"}style="display: none;"{/if}>
 	<td height="10" class="FormButton" nowrap="nowrap">{$lng.lbl_additional_parent_categories_ids}:</td>
 	<td width="10" height="10"><font class="FormButtonOrange"></font></td>
 	<td height="10"><input type="text" name="additional_cat_location" id="additional_parent_input" style="width: 80%;" value="{strip}
