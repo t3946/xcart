@@ -45,9 +45,6 @@
 <script>
 //<![CDATA[ 
                 	{foreach from=$orders.0.products item=v key=k}
-
-ga('send', 'pageview');
-
 ga('ec:addProduct', {ldelim}
   'id': '{$v.productid}', 
   'name': '{$v.product|escape:quotes}',
@@ -58,8 +55,6 @@ ga('ec:addProduct', {ldelim}
 {rdelim});
                 	{/foreach}
 
-
-ga('send', 'pageview');
 
 // Transaction level information is provided via an actionFieldObject.
 ga('ec:setAction', 'purchase', {ldelim}
@@ -83,8 +78,6 @@ ga('ec:setAction', 'purchase', {ldelim}
 <script>
 //<![CDATA[
 // Called when a product is added to a shopping cart.
-
-ga('send', 'pageview');
 
 ga('ec:setAction','checkout', {ldelim}
     'step': {$ga_checkout_step},            // A value of 1 indicates this action is first checkout step.
@@ -114,8 +107,6 @@ function ga_func_delete_from_cart(pid, pname, pcategory, pbrand, pprice, pquanti
   });
 
 
-  ga('send', 'pageview');
-
   ga('ec:setAction', 'remove');
   ga('send', 'event', 'UX', 'click', 'add to cart');     // Send data using an event.
 }
@@ -129,8 +120,6 @@ function ga_func_delete_from_cart(pid, pname, pcategory, pbrand, pprice, pquanti
 <script>
 //<![CDATA[
 
-ga('send', 'pageview');
-
 ga('ec:addProduct', {ldelim}
   'id': '{$product.productid}',
   'name': '{$product.product|escape:quotes}',
@@ -139,8 +128,6 @@ ga('ec:addProduct', {ldelim}
   'price': {$product.price}
 {rdelim});
 
-
-ga('send', 'pageview');
 
 ga('ec:setAction', 'detail');
 //]]>
@@ -166,7 +153,6 @@ function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice)
     'position': "'"+pposition+"'"
   });
 
-  ga('send', 'pageview');
 
   ga('ec:setAction', 'click', {list: "'"+plist+"'"});
 
@@ -195,8 +181,6 @@ function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice)
         		{/if}
 		 {/if}
 		 {math assign="N_key" equation="x+1" x=$N_key}
-
-ga('send', 'pageview');
 
 ga('ec:addImpression', {ldelim}
   'id': '{$v.productid}',                   // Product details are provided in an impressionFieldObject.
