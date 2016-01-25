@@ -70,17 +70,18 @@ function func_delete_product($productid, $update_categories=true, $delete_all=fa
 
 	x_load('backoffice','category', 'image');
 
+
+#
+##
+###
+        die("Forbidden. Access denied. You cannot delete products!");
+        return false;
+###
+##
+#
+
+
 	if ($delete_all === true) {
-
-#
-##
-###
-                die("Forbidden. Access denied. You cannot delete products!");
-                return false;
-###
-##
-#
-
 		db_query("DELETE FROM $sql_tbl[pricing]");
 		db_query("DELETE FROM $sql_tbl[product_links]");
 		db_query("DELETE FROM $sql_tbl[featured_products]");

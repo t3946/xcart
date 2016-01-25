@@ -484,6 +484,7 @@ func_load_more_next_productids('','Y');
 <br>
 {if $categories ne "" and ($active_modules.Fancy_Categories ne "" or $config.General.root_categories eq "Y" or $subcategories ne "")}
 {include file="customer/categories.tpl" }
+
 {* <br /> *}
 {/if}
 {if $active_modules.Bestsellers ne "" and $config.Bestsellers.bestsellers_menu eq "Y"}
