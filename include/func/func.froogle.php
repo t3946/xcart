@@ -1129,7 +1129,7 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
                 $k++;
                 print("\nGB: tried to submit $k items as inventory feed \n");
 
-		$log_text = "GB: tried to submit $k items as inventory feed";
+		$log_text = "GB: tried to submit $k items as inventory feed ($MerchantID)";
 		func_backprocess_log("incremental feeds", $log_text);
 
 
@@ -1312,7 +1312,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 
 	try {
 
-		print("\nBing: tried to submit $k_counter items as inventory feed \n");
+		print("\nBing: tried to submit $k_counter items as inventory feed ($MerchantID) \n");
 
 		$log_text = "Bing: tried to submit $k_counter items as inventory feed";
 		func_backprocess_log("incremental feeds", $log_text);
@@ -1518,9 +1518,9 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 	$code = 200;
 	try {
 
-		print("\nBing: tried to submit $k_counter items as product feed \n");
+		print("\nBing: tried to submit $k_counter items as product feed ($MerchantID) \n");
 
-		$log_text = "Bing: tried to submit $k_counter items as product feed";
+		$log_text = "Bing: tried to submit $k_counter items as product feed ($MerchantID)";
 		func_backprocess_log("incremental feeds", $log_text);
 
 		$json = json_encode( $postBody );
@@ -1776,9 +1776,9 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 $code = 200;
         try {
 
-		print("\nGB: tried to submit $k_counter items as product feed \n");
+		print("\nGB: tried to submit $k_counter items as product feed ($MerchantID)\n");
 
-        $log_text = "GB: tried to submit $k_counter items as product feed";
+        $log_text = "GB: tried to submit $k_counter items as product feed ($MerchantID)";
         func_backprocess_log("incremental feeds", $log_text);
 
         $optParams = array();
