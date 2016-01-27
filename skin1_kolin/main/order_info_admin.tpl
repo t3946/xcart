@@ -535,7 +535,7 @@ Cost to us accurate
   {$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}
   <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="hidden" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}" />
   {else}
-  <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="text" size="9" style="width: 98%;" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+  <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="text" size="9" style="width: 98%;" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]" value="{if $product.eta_date_mm_dd_yyyy ne "0"}{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}{/if}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
   {/if}
 {else}
   {$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}
@@ -926,6 +926,11 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
         {else}
           {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][cb_status]" status_type="CB" extra=" id='groups_cb_status_`$m_id`'"}
         {/if}
+
+
+<br />
+<B>Dispatch date:</B>&nbsp;{if $v.paid_date eq "0"}<span style="color: red;">Not yet paid</span>{else}{$v.paid_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+
       </td>
       <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
         <b>{$lng.lbl_distr_cust_shipping_status}:</b><br />
