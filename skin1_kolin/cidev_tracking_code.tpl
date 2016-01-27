@@ -21,7 +21,7 @@
 {if $config.Storefront_common_details.google_analitics_tracking_script ne "" && $config.Company.cidev_ga_code_number ne ""}
 
 	{assign var=ga_ec_data value=""}
-	{if $ga_page_name ne "" || $main eq "product" || $main eq "fast_lane_checkout"}
+	{if $ga_page_name ne "" || $main eq "product" || $main eq "fast_lane_checkout" || $main eq "order_message"}
 		{assign var=ga_ec_data value="ga('require', 'ec');"}
 	{/if}
 
@@ -77,7 +77,9 @@ ga('ec:setAction', 'purchase', {ldelim}
 		    {else}
 			{assign var="ga_checkout_step" value=$checkout_step}
 		    {/if}
-		
+
+
+		    {if $main ne "order_message"}
 <script>
 //<![CDATA[
 // Called when a product is added to a shopping cart.
@@ -88,6 +90,8 @@ ga('ec:setAction','checkout', {ldelim}
 {rdelim});
 //]]>
 </script>
+		    {/if}
+
 		{/if} {* $checkout_step ne "-1" *}
 
 
