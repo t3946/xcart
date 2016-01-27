@@ -250,7 +250,8 @@ foreach ($supplier_feeds as $k => $v){
 #
 			foreach ($products["products"] as $kp => $p){
 
-                                foreach ($p as $k_s => $v_s){
+                print($kp.' --> '.$p["sku"]."\n");
+                foreach ($p as $k_s => $v_s){
 
 #
 ##
@@ -372,8 +373,9 @@ die();
 */
 
 
-                                        $image_data = array();
+                    $image_data = array();
 					if (!empty($not_xcart_products_fields["images"]) && is_array($not_xcart_products_fields["images"])){
+                        print("Images section\n");
 						$alt_idx = 0;
  		                              foreach ($not_xcart_products_fields["images"] as $k_img => $IMAGE_URL){
                             				$alt_context = addslashes($product["product"]);
@@ -488,11 +490,12 @@ die();
 							empty($product["product"]) ||
 							empty($image_data)
 						){
+                            print("Skip section\n");
 							continue; //Skip such product
 						}
 
 						################# START: Insert product #################
-
+                        print("Insert product section\n");
 						$new_product_name = wordwrap($product["product"], 70, "---===---");
 						$new_product_name_arr = explode("---===---", $product["product"]);
 						$product["product"] = $new_product_name_arr[0];
@@ -526,6 +529,7 @@ die();
 						################# END: Insert product #################
 					} else {
 						if ($v["add_new_only"] == "Y"){
+                            print("Add only skip\n");
 							continue;
 						}
 
@@ -541,6 +545,7 @@ die();
 					}
 
 					if (!empty($image_data)){
+                            print("Images section2\n");
                                                 foreach ($image_data as $k_img => $image_info){
                                                         $image_info['id'] = $productid;
 
@@ -610,6 +615,7 @@ die();
 								$image_id = func_array2insert('images_D', $image_info);
 							}
 							else {
+                                print("Images DB insert\n");
 								func_array2update("images_D", $image_info, "imageid = '$image_id'");
 							}
 
@@ -623,6 +629,7 @@ die();
 
 ###
 				if (!empty($product["fulldescr"])){
+                    print("fulldescr section\n");
 					$tmp_fulldescr = $product["fulldescr"];
 
 					$br_arr = array("<br>","<BR>", "<br/>","<Br>", "<bR>", "<Br/>", "<Br />", "<BR/>", "<bR/>", "<bR />", "\n");
@@ -652,7 +659,7 @@ die();
 //func_print_r($not_xcart_products_fields);
 
                         if (!empty($not_xcart_products_fields["similar_internal_id"]) && is_array($not_xcart_products_fields["similar_internal_id"])){
-
+                                    print("Similar section\n");
 									$productid_arr_2 = array();
                                     foreach ($not_xcart_products_fields["similar_internal_id"] as $supplier_internal_product_id){
                                              $productid2 = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE supplier_internal_product_id='$supplier_internal_product_id'");
@@ -673,7 +680,8 @@ die();
 
 
 						if (!empty($not_xcart_products_fields["related_internal_id"]) && is_array($not_xcart_products_fields["related_internal_id"])){
-                             foreach ($not_xcart_products_fields["related_internal_id"] as $supplier_internal_product_id){
+                            print("Relatedid section\n");
+                            foreach ($not_xcart_products_fields["related_internal_id"] as $supplier_internal_product_id){
                                       $productid2 = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE supplier_internal_product_id='$supplier_internal_product_id'");
                                       if (!empty($productid2)){
                                                                 $count_productid2 = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[product_links] WHERE productid1='$productid' AND productid2='$productid2'");
@@ -686,6 +694,7 @@ die();
 
 
 					if (!empty($not_xcart_products_fields["related_sku"]) && is_array($not_xcart_products_fields["related_sku"])){
+                        print("RelatedSKU section\n");
 						foreach ($not_xcart_products_fields["related_sku"] as $related_sku){
 							$productid2 = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='$related_sku'");
 							if (!empty($productid2)){
@@ -698,6 +707,7 @@ die();
 					}
 
 					if (!empty($not_xcart_products_fields["attributes"]) && is_array($not_xcart_products_fields["attributes"])){
+                        print("Attributes section\n");
 
 						$attributes_str = "";
 
@@ -743,6 +753,7 @@ die();
 
 
 					if (!empty($not_xcart_products_fields["brand_name"])){
+                        print("Brand section\n");
 
 						$BRAND = $not_xcart_products_fields["brand_name"];
         	                                $brandid = func_query_first_cell("SELECT brandid FROM $sql_tbl[brands] WHERE brand='$BRAND'");
@@ -766,12 +777,14 @@ die();
 					}
 
 					if (isset($not_xcart_products_fields["price"])){
+                        print("Price section\n");
 						db_query("UPDATE $sql_tbl[pricing] SET price='".$not_xcart_products_fields["price"]."' WHERE productid='$productid' AND quantity='1'");
 						$price_updated = true;
 					}
 
 ### assign product to category
                                         if (!empty($not_xcart_products_fields["supplier_categories"][0])){
+                                                print("Categories section\n");
 
                                                 $cats_arr = explode("/", $not_xcart_products_fields["supplier_categories"][0]);
 
@@ -823,6 +836,7 @@ die();
 
 				if (!empty($product) && is_array($product) && !empty($productid)){
 				################# START: xcart_product update #################
+                    print("START: xcart_product update section\n");
 
 					$product_in_DB_info_arr = func_query_first("SELECT forsale, r_avail, eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
 
@@ -875,6 +889,7 @@ die();
 					$discontinued_date_condition_found = false;
 
 					if (!empty($not_xcart_products_fields["discontinued_date"])){
+                        print("Discontinued section\n");
 						$discontinued_date_arr = explode("/", $not_xcart_products_fields["discontinued_date"]);
 						$discontinued_date_time = mktime(0, 0, 0, $discontinued_date_arr[0], $discontinued_date_arr[1], $discontinued_date_arr[2]);
 						$discontinued_date_time_diff = $discontinued_date_time - time();
@@ -894,7 +909,7 @@ die();
 					}
 
 
-
+                    print("DB update products section\n");
 					func_array2update("products", $product, "productid = '$productid'");
 
 
@@ -904,16 +919,19 @@ die();
 				}
 
                                 if ($just_created){
+                                    print("Just created section\n");
 	                                func_build_quick_flags($productid);
 									func_generate_discounts(array($productid));
 									/*func_recalc_product_count($v["base_category_id"]);*/
                                 }
 
                                 if ($just_created || $price_updated){
+                                    print("Just created section\n");
 	                                func_build_quick_prices($productid);
-				}
+                                }
 
                                 if ($kp % 10 == 0) {
+                                        print("Flush counter section\n");
                                        func_flush(".");
                                        if($kp % 500 == 0) {
                                                func_flush("<br />\n");
@@ -924,6 +942,7 @@ die();
 
 
 			if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes) && $v["disable_search_of_discontinued_items"] != 'Y'){
+                print("Search of discontinued section\n");
 			
 			    $mc = $manufacturerid_info[$v["manufacturerid"]]["code"];
 			    $mc2 = substr($mc,0,strpos($mc,'-'));
