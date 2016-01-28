@@ -369,7 +369,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 {include file="main/language_selector.tpl" script="manufacturers.php?manufacturerid=`$manufacturer.manufacturerid`&"}
 {/if}
 
-{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21"}
+{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "22"}
 <form action="manufacturers.php" method="post" enctype="multipart/form-data" name="manufacturer">
 <input type="hidden" name="mode" value="details" id="mode" />
 <input type="hidden" name="manufacturerid" value="{$manufacturer.manufacturerid}" />
@@ -1906,6 +1906,8 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 
 </table>
 
+{elseif $d_section.distributor_section eq "22"}
+	{include file="admin/main/product_page_locked_fields.tpl"}
 {/if}
 
 {/foreach}
@@ -1920,7 +1922,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 		<input type="button" value=" Add distributor return address  " onclick="javascript: {literal}$('#mode').val('add_distributor_return_address'); document.manufacturer.submit();"{/literal} />
 	{/if}
 	</td>
-	{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "16"}
+	{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "16" && $smarty.get.distributor_section ne "22"}
 	<td width="*">
 
 		{if ($smarty.get.distributor_section eq "8" && !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
@@ -1934,7 +1936,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 </tr>
 </table>
 
-{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21"}
+{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "22"}
 </form>
 {/if}
 

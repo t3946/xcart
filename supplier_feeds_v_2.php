@@ -47,7 +47,8 @@ $product_cols_replace = array(
 	"sku" => "productcode",
 	"quantity" => "r_avail",
 	"eta_date" => "eta_date_mm_dd_yyyy",
-	"title" => "product"
+	"title" => "product",
+	"listprice" => "list_price"
 );
 
 $manufacturerid_info = func_query_hash("SELECT code, manufacturerid, manufacturer FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
@@ -156,7 +157,7 @@ foreach ($supplier_feeds as $k => $v){
 			fclose($handle);
 
 
-/* */
+/* Disable for test N4 */
 			$md5 = md5($contents);
 
 			if ($md5 == $v["last_md5"]){
@@ -1055,6 +1056,28 @@ die();
 	); 
 	func_array2update("supplier_feeds", $supplier_feed, "feed_id = '$v[feed_id]'");
 
+#
+##
+###
+	if (!empty($last_feed_fields_arr)){
+		db_query("UPDATE $sql_tbl[manufacturer_feed_fields] SET locked='N' WHERE manufacturerid='$v[manufacturerid]'");
+
+		$deprecated_manufacturer_feed_fields = array("productcode","supplier_categories", "attributes","images","alt_names",);
+
+		foreach ($last_feed_fields_arr as $k_field_name => $field_name){
+
+			if (!empty($product_cols_replace[$field_name])){
+				$field_name = $product_cols_replace[$field_name];
+			}
+
+			if (!in_array($field_name, $deprecated_manufacturer_feed_fields)){
+				db_query("REPLACE INTO $sql_tbl[manufacturer_feed_fields] SET field_name='$field_name', locked='Y', manufacturerid='$v[manufacturerid]', feed_id='$v[feed_id]'");
+			}
+		}
+	}
+###
+##
+#
 
 func_print_r($supplier_feed);
 

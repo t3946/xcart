@@ -71,6 +71,9 @@ x_session_register('manufacturer_data_form');
 if (($distributor_section == "19" || $distributor_section == "21") && !empty($manufacturerid)){
         include $xcart_dir."/provider/shipping_rates_new.php";
 }
+elseif ($distributor_section == "22"){
+	include $xcart_dir."/admin/product_page_locked_fields.php";
+}
 ###
 ##
 #
@@ -987,6 +990,11 @@ if (!empty($page))
         'title'  => 'Return policy',
 	'order_by' => '100',
         'distributor_section' => '10'
+    );
+    $distributor_sections[] = array(
+        'title'  => 'Product page locked fields',
+        'order_by' => '105',
+        'distributor_section' => '22'
     );
     $distributor_sections[] = array(
         'title'  => 'Distributor invoices',
