@@ -87,6 +87,11 @@ var runTests = function(editor) {
 <body{$reading_direction_tag}>
 { include file="rectangle_top.tpl" }
 { include file="head_admin.tpl" }
+
+{if $login ne ""}
+	{include file="cidev_tracking_code.tpl" }
+{/if}
+
 <!-- main area -->
 <table width="100%" cellpadding="0" cellspacing="0" align="center">
 <tr>

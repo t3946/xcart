@@ -183,7 +183,7 @@ Refund # {$order.order_prefix}{$order.orderid}-REF
 *}
 
   {if $group.cb_status eq "3" || $group.cb_status eq "V"}
-    <input type="button" value="Update C2B status and Send refund notification" onclick="javascript: $('#ref_notify_button_clicked').val('Update_C2B_status_and_Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
+    <input type="button" value="Update C2B status and Send refund notification" onclick="javascript: ga_onRefundClick('{$mid}'); $('#ref_notify_button_clicked').val('Update_C2B_status_and_Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
   {elseif $group.cb_status eq "H" || $group.cb_status eq "R"}
     <input type="button" value="Send refund notification" onclick="javascript: $('#ref_notify_button_clicked').val('Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
   {/if}
