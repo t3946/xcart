@@ -342,6 +342,17 @@ if ($mode == "search") {
 		if (substr_count($data['orderid'],'-')==2){
 			$search_condition .= " AND $sql_tbl[orders].amazonorderid='".addslashes($data['orderid'])."' ";
 		} else {
+
+# https://basecamp.com/2070980/projects/1577907/messages/53725423
+## Dropping XPY- when doing Order # search 
+###
+			if (strpos($data['orderid'], "XPY-") !== false){
+				$data['orderid'] = str_replace("XPY-","",$data['orderid']);
+			}
+###
+##
+#
+
 			$search_condition .= ' AND (CONCAT(' . $sql_tbl['orders'] . '.order_prefix, '
 											. $sql_tbl['orders'] . '.orderid) = "'
 											. $data['orderid'] . '" OR '
