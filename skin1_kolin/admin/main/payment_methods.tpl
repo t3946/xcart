@@ -38,10 +38,10 @@
 {if $payment_methods[method].disable_checkbox eq "Y"}<input type="hidden" name="posted_data[{$payment_methods[method].paymentid}][active]" value="Y" />{/if}
 
 <tr{$trcolor}>
-	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="2"{/if}>
+	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="3"{/if}>
 	<input type="checkbox" name="posted_data[{$payment_methods[method].paymentid}][active]" value="Y"{if $payment_methods[method].active eq "Y"} checked="checked"{/if}{if $payment_methods[method].disable_checkbox eq "Y"} disabled="disabled"{/if} />
 	</td>
-	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="2"{/if}>
+	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="3"{/if}>
 	<input type="text" size="3" maxlength="5" name="posted_data[{$payment_methods[method].paymentid}][orderby]" value="{$payment_methods[method].orderby}" />
 	</td>
 	<td valign="top">
@@ -85,16 +85,16 @@
 
 	</td>
 {if $active_modules.Anti_Fraud}
-	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="2"{/if}>
+	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="3"{/if}>
 	<input type="checkbox" name="posted_data[{$payment_methods[method].paymentid}][af_check]" value="Y"{if $payment_methods[method].af_check eq 'Y'} checked="checked"{/if} />
 	</td>
 {/if}
-	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="2"{/if}>
+	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="3"{/if}>
 	<input type="checkbox" name="posted_data[{$payment_methods[method].paymentid}][acc_proc]" value="Y"{if $payment_methods[method].acc_proc eq "Y"} checked="checked"{/if} />
 	</td>
 
 
-	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="2"{/if} nowrap="nowrap" align="right">%
+	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="3"{/if} nowrap="nowrap" align="right">%
 	<input type="text" size="4" name="posted_data[{$payment_methods[method].paymentid}][acc_percent]" value="{$payment_methods[method].acc_percent}" />
 	<br />per sale
 	<input type="text" size="4" name="posted_data[{$payment_methods[method].paymentid}][acc_per_trans]" value="{$payment_methods[method].acc_per_trans}" />
@@ -105,12 +105,31 @@
 	<br />
 	</td>
 
-	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="2"{/if}>
+	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="3"{/if}>
 		<input type="checkbox" name="posted_data[{$payment_methods[method].paymentid}][vt]" value="Y"{if $payment_methods[method].vt eq "Y"} checked="checked"{/if} />
 	</td>
-	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="2"{/if}>
+	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="3"{/if}>
 		<input type="text" size="30" name="posted_data[{$payment_methods[method].paymentid}][transaction_id_link]" value="{$payment_methods[method].transaction_id_link|escape:"html"}" />
 	</td>
+</tr>
+
+<tr{$trcolor}>
+{if $payment_methods[method].module_name eq ""} <td colspan="2"></td>{/if}
+<td colspan="{if $active_modules.Anti_Fraud}8{else}7{/if}">
+Honor period (guaranteed availability of authorized funds): <input type="text" size="2" name="posted_data[{$payment_methods[method].paymentid}][honor_period]" value="{$payment_methods[method].honor_period}" /> calendar days
+<br />Authorization period (Сapture can be done but no guarantee of funds availability): <input type="text" size="3" name="posted_data[{$payment_methods[method].paymentid}][authorization_period]" value="{$payment_methods[method].authorization_period}" /> calendar days
+<br />
+<br />Maximum re-authorization multiplier: <input type="text" size="4" name="posted_data[{$payment_methods[method].paymentid}][maximum_re_authorization_multiplier]" value="{$payment_methods[method].maximum_re_authorization_multiplier}" />
+<br />Maximum re-authorization increase: US $ <input type="text" size="6" name="posted_data[{$payment_methods[method].paymentid}][maximum_re_authorization_increase]" value="{$payment_methods[method].maximum_re_authorization_increase}" />
+<br />
+<br />How to process payment at the checkout: 
+        <select name="posted_data[{$payment_methods[method].paymentid}][how_process_payment_at_checkout]">
+                <option value=""{if $payment_methods[method].how_process_payment_at_checkout eq ""} selected="selected"{/if}></option>
+                <option value="A"{if $payment_methods[method].how_process_payment_at_checkout eq "A"} selected="selected"{/if}>Authorize only</option>
+                <option value="AC"{if $payment_methods[method].how_process_payment_at_checkout eq "AC"} selected="selected"{/if}>Authorize+Capture</option>
+        </select>
+
+</td>
 </tr>
 
 {if $payment_methods[method].module_name ne ""}
