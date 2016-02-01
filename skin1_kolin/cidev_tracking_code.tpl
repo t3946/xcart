@@ -1,3 +1,4 @@
+{if !($usertype eq "A" || $usertype eq "P")}
 <script>
 {literal}
     (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:"5024901"};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");
@@ -13,7 +14,7 @@
 		window.uetq.push({'gv':revenue});
 {/literal}
 </script>
-
+{/if}
 
 
 {* -------------------------------- *}
@@ -21,7 +22,7 @@
 {if $config.Storefront_common_details.google_analitics_tracking_script ne "" && $config.Company.cidev_ga_code_number ne ""}
 
 	{assign var=ga_ec_data value=""}
-	{if $ga_page_name ne "" || $main eq "product" || $main eq "fast_lane_checkout"}
+	{if $ga_page_name ne "" || $main eq "product" || $main eq "fast_lane_checkout" || $main eq "order_message"}
 		{assign var=ga_ec_data value="ga('require', 'ec');"}
 	{/if}
 
@@ -37,6 +38,59 @@
 
 {$config.Storefront_common_details.google_analitics_tracking_script|substitute:"ga_account_nr":$config.Company.cidev_ga_code_number|substitute:"ga_ec_data":$ga_ec_data|substitute:"ga_send":$ga_send}
 
+	{if ($usertype eq "A" || $usertype eq "P") && $order ne ""}
+
+<script>
+//<![CDATA[
+{literal}
+function ga_onRefundClick(mid)  {
+
+var cb_status_current = $('#groups_cb_status_'+mid).val();
+
+if (cb_status_current == "3" || cb_status_current == "H"){
+
+{/literal}
+{if $order.refund_groups ne ""}
+{foreach from=$order.refund_groups item=v key=k}
+{literal}
+
+ if (mid == {/literal}{$k}{literal}){
+
+  {/literal}
+  {if $v.products ne ""}
+  {foreach from=$v.products item=vv key=kk}
+  {literal}
+
+    ga('ec:addProduct', {
+      'id': '{/literal}{$vv.productid}{literal}',       // Product ID is required for partial refund.
+      'quantity': {/literal}{$vv.ref_qty}{literal}         // Quantity is required for partial refund.
+    });
+
+  {/literal}
+  {/foreach}
+  {/if}
+  {literal}
+
+ }
+
+{/literal}
+{/foreach}
+{/if}
+{literal}
+
+}
+
+ga('ec:setAction', 'refund', {
+  'id': '{/literal}{$order.order_prefix}{$order.orderid}{literal}'    // Transaction ID is only required field for full/partial refund.
+});
+ga('send', 'event', 'Ecommerce', 'Refund', {'nonInteraction': 1});
+
+}
+{/literal}
+//]]>
+</script>
+
+	{/if} {* ($usertype eq "A" || $usertype eq "P") && $order ne "" *}
 
         {if $main eq "fast_lane_checkout" || $main eq "order_message"}
 
@@ -77,7 +131,9 @@ ga('ec:setAction', 'purchase', {ldelim}
 		    {else}
 			{assign var="ga_checkout_step" value=$checkout_step}
 		    {/if}
-		
+
+
+		    {if $main ne "order_message"}
 <script>
 //<![CDATA[
 // Called when a product is added to a shopping cart.
@@ -88,6 +144,8 @@ ga('ec:setAction','checkout', {ldelim}
 {rdelim});
 //]]>
 </script>
+		    {/if}
+
 		{/if} {* $checkout_step ne "-1" *}
 
 
@@ -231,7 +289,7 @@ ga('send', 'pageview');
 
 
 
-{if $config.Company.cidev_yandex_code_number ne ""}
+{if $config.Company.cidev_yandex_code_number ne "" && !($usertype eq "A" || $usertype eq "P")}
 {if $cidev_tracking_code_add2 ne ""}
 <!-- Yandex.Metrika counter -->
 {$cidev_tracking_code_add2}
