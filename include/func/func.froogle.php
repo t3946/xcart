@@ -176,11 +176,13 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 		$utm_campaign = preg_replace('/[_]/', '', $utm_campaign);
 
 		/*Google formatted links*/
-		$product['link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'froogle_Google-Shopping&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
-		$product['adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'froogle_Product-Ads&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
+		//$product['link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'froogle_Google-Shopping&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
+//		$product['adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'froogle_Product-Ads&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
+        $product['adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?origin=google_product_ads';
 		/*Bing formatted links*/
-		$product['link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'Bing-Shopping&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
-		$product['adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'Bing_Product-Ads&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
+		//$product['bing_link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'Bing-Shopping&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
+//		$product['bing_adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'Bing_Product-Ads&utm_medium='.$utm_medium.'&utm_campaign='.$utm_campaign;
+		$product['bing_adwords_redirect'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/' . $clean_url_link . '?origin=bing_product_ads';
 		
 		$product["adwords_grouping"] = $product['manufacturerid'];
 		$product['page_url'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/'. $clean_url_link . '?utm_source=' . $sf_info['prefix'] . 'thefind&utm_medium=feed&utm_campaign='.$utm_campaign;
@@ -1269,7 +1271,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 
 			$postBody["entries"][$k_counter]["product"]["adwordsGrouping"] = $product_info["product"]["adwords_grouping"];
 			$postBody["entries"][$k_counter]["product"]["adwordsLabels"][0] = $product_info["product"]["adwords_labels"];
-			$postBody["entries"][$k_counter]["product"]["adwordsRedirect"] = $product_info["product"]["adwords_redirect"];
+			$postBody["entries"][$k_counter]["product"]["adwordsRedirect"] = $product_info["product"]["bing_adwords_redirect"];
 
 			$postBody["entries"][$k_counter]["product"]["destinations"][0]["destinationName"] = "ShoppingApi";
 			$postBody["entries"][$k_counter]["product"]["destinations"][0]["intention"] = "required";
@@ -1475,7 +1477,7 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 
 			$postBody["entries"][$k_counter]["product"]["adwordsGrouping"] = $product_info["product"]["adwords_grouping"];
 			$postBody["entries"][$k_counter]["product"]["adwordsLabels"][0] = $product_info["product"]["adwords_labels"];
-			$postBody["entries"][$k_counter]["product"]["adwordsRedirect"] = $product_info["product"]["adwords_redirect"];
+			$postBody["entries"][$k_counter]["product"]["adwordsRedirect"] = $product_info["product"]["bing_adwords_redirect"];
 
 			$postBody["entries"][$k_counter]["product"]["destinations"][0]["destinationName"] = "ShoppingApi";
 			$postBody["entries"][$k_counter]["product"]["destinations"][0]["intention"] = "required";
