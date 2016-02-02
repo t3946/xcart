@@ -389,8 +389,26 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 ###
 	$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
 	$shipping = $shipping_arr["shippings_str"];
-
+	$custom_label_0 = '';
+	$custom_label_1 = '';
+	$base_rel = 12/17;
 	$product["shippings_google_arr"] = $shipping_arr["shippings_google_arr"];
+	foreach($shipping_arr["shippings_google_arr"] as $cl_k => $cl_sh) {
+		if ($cl_sh['region'] == "CA"){
+//		print("CA price: ".$cl_sh['price']['value']."\r\n");
+//		print("Product price: ".$product['price']."\r\n");
+//		print("Product id: ".$product['productid']."\r\n");
+//		print("Product id: ".$cl_sh['price']['value']/$product['price']."\r\n");
+		if ($cl_sh['price']['value']/$product['price'] > $base_rel) {
+		    $product["custom_label_0"] = "junk";
+		}else{
+		    $product["custom_label_0"] = "normal";
+		}
+//		print("Label0: ".$product['custom_label_0']."\r\n");
+		break;
+		}
+	}
+//	func_print_r($shipping_arr["shippings_google_arr"]);
 ###
 ##
 #
@@ -1736,6 +1754,9 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
                 $postBody["entries"][$k_counter]["product"]["adwordsGrouping"] = $product_info["product"]["adwords_grouping"];
                 $postBody["entries"][$k_counter]["product"]["adwordsLabels"][0] = $product_info["product"]["adwords_labels"];
                 $postBody["entries"][$k_counter]["product"]["adwordsRedirect"] = $product_info["product"]["adwords_redirect"];
+
+		/*Custom Labels*/
+                $postBody["entries"][$k_counter]["product"]["customLabel0"] = $product_info["product"]["custom_label_0"];
 
                 $postBody["entries"][$k_counter]["product"]["destinations"][0]["destinationName"] = "ShoppingApi";
                 $postBody["entries"][$k_counter]["product"]["destinations"][0]["intention"] = "required";
