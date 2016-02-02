@@ -97,11 +97,32 @@ ga('send', 'event', 'Ecommerce', 'Refund', {'nonInteraction': 1});
 		{if $checkout_step ne "-1"}
 
 		    {if $main eq "order_message"}
-			{assign var="ga_checkout_step" value="5"}
+			{assign var="ga_checkout_step" value="4"}
+		    {elseif $checkout_step eq "0"}
+			{assign var="ga_checkout_step" value="1"}
+		    {else}
+			{assign var="ga_checkout_step" value=$checkout_step}
+		    {/if}
 
+
+		    {* {if $main ne "order_message"} *}
+<script>
+//<![CDATA[
+// Called when a product is added to a shopping cart.
+
+ga('ec:setAction','checkout', {ldelim}
+    'step': {$ga_checkout_step},            // A value of 1 indicates this action is first checkout step.
+    'option': '{$ga_checkout_step_names[$ga_checkout_step]}'      // Used to specify additional info about a checkout stage, e.g. payment method.
+{rdelim});
+//]]>
+</script>
+		    {* {/if} *}
+
+
+		    {if $main eq "order_message"}
 <script>
 //<![CDATA[ 
-                	{foreach from=$orders.0.products item=v key=k}
+                        {foreach from=$orders.0.products item=v key=k}
 ga('ec:addProduct', {ldelim}
   'id': '{$v.productid}', 
   'name': '{$v.product|escape:quotes}',
@@ -110,7 +131,7 @@ ga('ec:addProduct', {ldelim}
   'price': {$v.price},
   'quantity': {$v.amount}
 {rdelim});
-                	{/foreach}
+                        {/foreach}
 
 
 // Transaction level information is provided via an actionFieldObject.
@@ -124,27 +145,8 @@ ga('ec:setAction', 'purchase', {ldelim}
 {rdelim});
 //]]>
 </script>
+		  {/if}
 
-
-		    {elseif $checkout_step eq "0"}
-			{assign var="ga_checkout_step" value="1"}
-		    {else}
-			{assign var="ga_checkout_step" value=$checkout_step}
-		    {/if}
-
-
-		    {if $main ne "order_message"}
-<script>
-//<![CDATA[
-// Called when a product is added to a shopping cart.
-
-ga('ec:setAction','checkout', {ldelim}
-    'step': {$ga_checkout_step},            // A value of 1 indicates this action is first checkout step.
-    'option': '{$ga_checkout_step_names[$ga_checkout_step]}'      // Used to specify additional info about a checkout stage, e.g. payment method.
-{rdelim});
-//]]>
-</script>
-		    {/if}
 
 		{/if} {* $checkout_step ne "-1" *}
 
@@ -157,10 +159,10 @@ ga('ec:setAction','checkout', {ldelim}
 function ga_func_delete_from_cart(pid, pname, pcategory, pbrand, pprice, pquantity)  {
 
   ga('ec:addProduct', {
-    'id': "'"+pid+"'",
-    'name': "'"+pname+"'",
-    'category': "'"+pcategory+"'",
-    'brand': "'"+pbrand+"'",
+    'id': pid,
+    'name': pname,
+    'category': pcategory,
+    'brand': pbrand,
     'price': pprice,
     'quantity': pquantity
   });
@@ -201,13 +203,15 @@ ga('ec:setAction', 'detail');
 function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice) {
 
   ga('ec:addProduct', {
-    'id': "'"+pid+"'",
-    'name': "'"+pname+"'",
-    'category': "'"+pcategory+"'",
-    'brand': "'"+pbrand+"'",
+    'id': pid,
+    'name': pname,
+    'category': pcategory,
+    'brand': pbrand,
     'price': pprice,
-    'position': "'"+pposition+"'"
+    'position': pposition
   });
+
+alert(pid);
 
   ga('ec:setAction', 'click', {list: "'"+plist+"'"});
 
