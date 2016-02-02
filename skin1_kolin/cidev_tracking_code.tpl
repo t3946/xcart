@@ -172,7 +172,7 @@ ga('send', 'event', 'Ecommerce', 'Refund', {'nonInteraction': 1});
                 //]]>
                 </script>
 		{/if} {* $main eq "fast_lane_checkout" *}
-{*       {/if} {* $main eq "fast_lane_checkout" || $main eq "order_message" *}  *}
+{*       {/if}*}{* $main eq "fast_lane_checkout" || $main eq "order_message" *}  
 
         {if $main eq "product"}
 <script>
