@@ -210,8 +210,6 @@ function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice)
     'position': pposition
   });
 
-alert(pid);
-
   ga('ec:setAction', 'click', {list: "'"+plist+"'"});
 
   // Send click with an event, then send user to product page.
