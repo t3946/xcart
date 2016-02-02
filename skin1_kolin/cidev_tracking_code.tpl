@@ -92,7 +92,7 @@ ga('send', 'event', 'Ecommerce', 'Refund', {'nonInteraction': 1});
 
 	{/if} {* ($usertype eq "A" || $usertype eq "P") && $order ne "" *}
 
-{if $main eq "fast_lane_checkout" }
+{if $main eq "fast_lane_checkout" || $main eq "order_message"}
 
 		{if $checkout_step ne "-1"}
 
@@ -103,8 +103,10 @@ ga('send', 'event', 'Ecommerce', 'Refund', {'nonInteraction': 1});
 		    {else}
                 {assign var="ga_checkout_step" value=$checkout_step}
 		    {/if}
+        {/if}
+{/if}
 
-
+{if $main eq "fast_lane_checkout"}
             <script>
             //<![CDATA[
             // Called when a product is added to a shopping cart.
@@ -115,7 +117,6 @@ ga('send', 'event', 'Ecommerce', 'Refund', {'nonInteraction': 1});
             {rdelim});
             //]]>
             </script>
-        {/if}
 {/if} 
 
 {if $main eq "order_message"}
