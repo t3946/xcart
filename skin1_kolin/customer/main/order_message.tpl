@@ -46,23 +46,27 @@
 </tr>
 </table>
 
-<!-- Google Code for Order Conversion Page -->
+<!-- Google Code for Conv1 Conversion Page -->
 <script type="text/javascript">
 /* <![CDATA[ */
 var google_conversion_id = 1072406910;
 var google_conversion_language = "en";
-var google_conversion_format = "1";
+var google_conversion_format = "3";
 var google_conversion_color = "ffffff";
-var google_conversion_label = "deNACOfH5gQQ_sKu_wM";
+var google_conversion_label = "-aK7CL7LwWMQ_sKu_wM";
 var google_conversion_value = {$orders[0].order.total};
+var google_conversion_currency = "USD";
+var google_remarketing_only = false;
 /* ]]> */
 </script>
-<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
 <noscript>
 <div style="display:inline;">
-<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/1072406910/?value={$orders[0].order.total}&amp;label=deNACOfH5gQQ_sKu_wM&amp;guid=ON&amp;script=0"/>
+<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/1072406910/?value={$orders[0].order.total}&amp;currency_code=USD&amp;label=-aK7CL7LwWMQ_sKu_wM&amp;guid=ON&amp;script=0"/>
 </div>
 </noscript>
+
 
 {/if}
 {/capture}
