@@ -3437,7 +3437,8 @@ $type_names = array (
 	"C" => "Customer",
 	"S" => "Customer service",
 	"X" => "System",
-	"P" => "Payment"
+	"P" => "Payment",
+	"PP" => "PayPal Payment"
 );
 $smarty->assign('type_names', $type_names);
 

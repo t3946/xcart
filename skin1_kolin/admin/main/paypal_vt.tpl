@@ -104,3 +104,73 @@
 {/capture}
 {include file="dialog.tpl" title="Authorization" content=$smarty.capture.authorize extra='width="100%"'}
 
+
+{if $transaction_logs ne ""}
+<br />
+{capture name=virtual_terminal}
+
+<form action="order.php" method="post" name="vt_form1">
+<input type="hidden" name="mode" id="mode" value="" />
+<input type="hidden" name="orderid" value="{$orderid}" />
+<input type="hidden" name="transaction_logs_id" id="transaction_logs_id" value="" />
+
+ <table width="100%">
+  <tr>
+   <td width="12%"><B>Select</B></td>
+   <td width="12%"><B>Type</B></td>
+   <td width="10%"><B>Date</B></td>
+   <td width="15%"><B>Name</B></td>
+   <td width="*%"><B>Log</B></td>
+  </tr>
+
+ {foreach from=$transaction_logs item=v key=k}
+  <tr>
+   <td>
+	<input type="radio" id="transaction_id" name="transaction_id" value="{$v.transaction_id}"
+	{if $transaction_id_selected eq "" && $v.transaction_id ne ""} 
+		checked="checked"
+		{assign var="transaction_id_selected" value="Y"}
+	{/if} 
+	/>
+   </td>
+   <td>{$v.payment_method}</td>
+   <td>{$v.date|date_format:'%d-%b-%Y'}</td>
+   <td>{$v.firstname} ({$v.login})</td>
+   <td>
+	Transaction: 
+	{if $v.transaction_id ne ""}
+		<a target="_blank" href="{$v.transaction_id_link|substitute:"trans-id":$v.transaction_id}">{$v.transaction_id}</a>
+	{else}
+		NONE
+	{/if}
+	<br />
+	transaction_status: <B>{$v.transaction_status}</B><br />
+	transaction_currency: {$v.transaction_currency}<br />
+	transaction_total: {$v.transaction_total}
+   </td>
+  </tr>
+  <tr><td colspan="5"><hr /></td></tr>
+ {/foreach}
+
+ {if $transaction_id_selected eq "Y"}
+  <tr>
+   <td colspan="5">
+<input type="button" value="Void selected authorized transaction" onclick="javascript: submitForm(this, 'void_transaction');" />
+<input type="button" value="Capture selected authorized transaction" onclick="javascript: $('#transaction_logs_id').val('{$v.id}'); submitForm(this, 'capture_transaction');" />
+   </td>
+  </tr>
+  <tr>
+   <td colspan="5">
+<input type="text" name="re_authorize_amount" id="re_authorize_amount" size="6" value="" />
+<input type="button" value="RE-authorize selected transaction" onclick="javascript: submitForm(this, 're_authorize_transaction');" />
+   </td>
+  </tr>
+ {/if}
+
+ </table>
+</form>
+
+{/capture}
+{include file="dialog.tpl" title="Virtual Terminal" content=$smarty.capture.virtual_terminal extra='width="100%"'}
+{/if}
+
