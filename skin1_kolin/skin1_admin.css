@@ -1695,3 +1695,10 @@ div.confirmation-hedgehog p {
 
 /* -- */
 
+.cidev_field_descr {
+        margin-top: 0px;
+        color: #8F8F8F;
+        font-size: 9px;
+        font-style: italic;
+}
+
