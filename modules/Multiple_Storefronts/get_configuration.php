@@ -71,6 +71,10 @@ if (!empty($configuration)) {
 	  'cidev_tracking_code'  => 100,
           'cidev_main_page_code'  => 36,
           'cidev_footer_code'  => 37,
+
+          'pop_up_code'             => '37',
+          'pop_up_in'             => '37',
+
           'cidev_yandex_code_number'  => 38,
           'skip_generating_googlebase_feed'          => '47',
           'common_header_code'            => '48',
