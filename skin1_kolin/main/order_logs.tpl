@@ -33,7 +33,7 @@ $(function() {ldelim}
                 </tr>
 
                 {foreach from=$order_logs item=item key=key}
-		    {if $item.type eq "C" || $item.type eq "S"}
+		    {if $item.type eq "C" || $item.type eq "S" || $item.type eq "P" || $item.type eq "PP"}
                         {if $key gt "0"}
                         {math assign="previous_key" equation="x-1" x=$key}
                         {/if}
