@@ -475,4 +475,13 @@ if (!empty($config["Appearance"]["Google_Trusted_Store_ID"])){
 
 func_detect_working_hours();
 
+# https://basecamp.com/2070980/projects/1577907/messages/53989896
+##  Auto pop up in 30 seconds
+###
+x_session_register("viralmarketingbomb_shown");
+$smarty->assign('viralmarketingbomb_shown', $viralmarketingbomb_shown);
+###
+##
+#
+
 ?>
