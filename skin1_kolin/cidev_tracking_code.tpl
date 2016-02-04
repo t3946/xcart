@@ -100,8 +100,10 @@ ga('send', 'event', 'Ecommerce', 'Refund', {'nonInteraction': 1});
 			{assign var="ga_checkout_step" value="4"}
 		    {elseif $checkout_step eq "0"}
 			{assign var="ga_checkout_step" value="1"}
-		    {else}
+		    {elseif $checkout_step ne ""}
 			{assign var="ga_checkout_step" value=$checkout_step}
+		    {else}
+			{assign var="ga_checkout_step" value="1"}
 		    {/if}
 
 
@@ -148,7 +150,7 @@ ga('ec:setAction', 'purchase', {ldelim}
 		  {/if}
 
 
-		{/if} {* $checkout_step ne "-1" *}
+	      {/if} {* $checkout_step ne "-1" *}
 
 
 		{if $main eq "fast_lane_checkout"}
@@ -211,7 +213,7 @@ function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice)
     'position': pposition
   });
 
-alert(pid);
+//alert(pid);
 
   ga('ec:setAction', 'click', {list: "'"+plist+"'"});
 
