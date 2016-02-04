@@ -1149,7 +1149,7 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
                 $k++;
                 print("\nGB: tried to submit $k items as inventory feed \n");
 
-		$log_text = "GB: tried to submit $k items as inventory feed ($MerchantID)";
+		$log_text = "GB: tried to submit $k items as inventory feed ($MerchantID: $product['sfid'])";
 		func_backprocess_log("incremental feeds", $log_text);
 
 
