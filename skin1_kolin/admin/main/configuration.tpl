@@ -763,7 +763,7 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
 {if $configuration[cat_num].type eq "checkbox"}
 <label for="{$opt_label_id}">
 {/if}
-{if $lng.$opt_comment}{$lng.$opt_comment}{else}{$configuration[cat_num].comment}{/if}:
+{if $lng.$opt_comment}{$lng.$opt_comment}{else}{$configuration[cat_num].comment}{/if}{if $configuration[cat_num].name ne "pop_up_in"}:{/if}
 {if $configuration[cat_num].type eq "checkbox"}
 </label>
 {/if}
@@ -883,7 +883,9 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
 {/foreach}
 </select>
 {elseif $configuration[cat_num].type eq "numeric"}
-<input type="text" size="10" name="{$configuration[cat_num].name}" value="{$configuration[cat_num].value|formatnumeric}" />
+<input type="text" size="{if $configuration[cat_num].name eq "pop_up_in"}3{else}10{/if}" name="{$configuration[cat_num].name}" value="{$configuration[cat_num].value|formatnumeric}" />
+
+{if $configuration[cat_num].name eq "pop_up_in"}seconds{/if}
 
 {elseif $configuration[cat_num].type eq "text"}
 <input type="text" style="width: 370px;" name="{$configuration[cat_num].name}" value="{$configuration[cat_num].value|escape:html}" />
