@@ -844,6 +844,32 @@ else
 
 <script src="{$SkinDir}/ajax_home_page.js" type="text/javascript"></script>
 
+{* --- viralmarketingbomb --- *}
+{if $viralmarketingbomb_shown ne "Y" && $config.Company.pop_up_in ne "" && $config.Company.pop_up_code ne ""}
+<script src="{$SkinDir}/jquery.bpopup.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+{literal}
+var t_openPopUp_seconds = {/literal}{$config.Company.pop_up_in}{literal};
+t_openPopUp_seconds = parseInt(t_openPopUp_seconds);
+t_openPopUp_seconds = t_openPopUp_seconds*1000;
+var t_openPopUp=setTimeout(openPopUp,t_openPopUp_seconds);
+function openPopUp()
+{
+ $('#element_to_pop_up').bPopup({
+            contentContainer:'.content_pop_up',
+            loadUrl: 'pop_up_viralmarketingbomb.php' //Uses jQuery.load()
+ });
+}
+{/literal}
+</script>
+<div id="element_to_pop_up" style="display:none;">
+<span class="button_pop_up b-close"><span>X</span></span>
+{$config.Company.pop_up_code}
+<span class="content_pop_up"></span>
+</div>
+{/if}
+{* --- viralmarketingbomb --- *}
+
 </body>
 </html>
 {/if}

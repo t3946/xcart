@@ -1867,61 +1867,22 @@ if (!empty($attention_tags_values) && is_array($attention_tags_values)){
 }
 
 
-
 # START: random:20341 [2010 Jul 29 14:46] 
 require $xcart_dir."/include/order_edit.php";
 
-/*
-# END: random:20341 [2010 Jul 29 14:46] 
-if ($mode == "status_change") {
-	#
-	# Update order
-	#
 
-	$query_data = array (
-		"notes" => $notes
-	);
+#
+##
+###
+require $xcart_dir."/include/paypal_vt.php";
+###
+##
+#
 
-        $current_notes = func_query_first_cell("SELECT notes FROM $sql_tbl[orders] WHERE orderid = '$orderid'");
-        if ($current_notes != $notes){
-        	$log = "<B>Customer Service notes:</B><br />Before:<br />".$current_notes. "<br />Now:<br />". $notes;
-                        func_log_order($orderid, 'S', $log, $login);
-                }
-
-                $query_data["customer_notes"] = $customer_notes;
-
-	if (isset($_POST['details'])) {
-		$query_data['details'] = func_crypt_order_details($details);
-	}
-# START: random:20341 [2010 Jul 29 14:46] 
-	if ($user_account["flag"] != "FS") {
-
-		$current_customer_notes = func_query_first_cell("SELECT customer_notes FROM $sql_tbl[orders] WHERE orderid = '$orderid'");
-		if ($current_customer_notes != $customer_notes){
-			$log = "<B>customer_notes:</B><br />Before:<br />".$current_customer_notes. "<br />Now:<br />". $customer_notes;
-			func_log_order($orderid, 'C', $log, $login);
-		}
-
-		$query_data["customer_notes"] = $customer_notes;
-	}
-# END: random:20341 [2010 Jul 29 14:46] 
-
-	func_array2update("orders", $query_data, "orderid = '$orderid'");
-
-	$top_message = array(
-		"content" => func_get_langvar_by_name("txt_order_has_been_changed")
-	);
-
-	include $xcart_dir . '/include/send_order_email.php';
-
-	func_header_location("order.php?orderid=".$orderid);
-}
-
-*/
 
 if ($mode == 'ref_notify') {
 
-/*    if ($ref_notify_do_not_send_email == "Y"){ */
+/*    if ($ref_notify_do_not_send_email == "Y") */
     if ($ref_notify_button_clicked == "Update_C2B_status"){
 	$log = "'Update C2B status' at 'Refund'";
     }
@@ -2010,7 +1971,7 @@ if ($mode == 'ref_notify') {
 		    func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
 	    } elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" || $ref_notify_button_clicked == "Send_refund_notification"){
 
-/*	    if ($ref_notify_do_not_send_email != "Y"){ */
+/*	    if ($ref_notify_do_not_send_email != "Y") */
 	            func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid, false);
             // Copy to Orders Department
 	            func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
@@ -3423,12 +3384,10 @@ $main_order_tabs[$tabs_key]["section"] = "customer_info";
 $main_order_tabs[$tabs_key]["anchor"] = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
 
-/*
-$main_order_tabs[$tabs_key]["title"] = "Compose email";
-$main_order_tabs[$tabs_key]["section"] = "compose_email";
+$main_order_tabs[$tabs_key]["title"] = "VT";
+$main_order_tabs[$tabs_key]["section"] = "VT";
 $main_order_tabs[$tabs_key]["anchor"] = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
-*/
 
 if ($allowed_elements["email_tab_1"] != "N"){
 	$main_order_tabs[$tabs_key]["title"] = "Email comm";
@@ -3486,7 +3445,9 @@ $smarty->assign('order_tabs', $order_tabs);
 $type_names = array (
 	"C" => "Customer",
 	"S" => "Customer service",
-	"X" => "System"
+	"X" => "System",
+	"P" => "Payment",
+	"PP" => "PayPal Payment"
 );
 $smarty->assign('type_names', $type_names);
 

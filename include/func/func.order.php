@@ -4374,4 +4374,151 @@ function func_other_customer_orders($email, $orderid = 0){
     }
 }
 
+#
+## PayPal functions
+###
+
+function func_paypal_get_access_token(){
+
+	$USERPWD_username_ClientId = "AVh--5P-zV8NIvZUKSfuckOWVjj9u6K_zRXPRfhns5KK2zJZuTGo1-0c7Q00dlvJr7IHvBlJQq7M7401"; 
+	$USERPWD_password_Secret = "EKJXWfXaHLJID0rUkPRP4BT7nSkUuGLB0QZE_yVJlX7AmM7crVQJvyMFakW2PHtTcOWB8X5kLkx_2_1o";
+
+	$url = "https://api.paypal.com/v1/oauth2/token";
+
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json","Accept-Language: en_US"));
+	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); //  CURLAUTH_BASIC|CURLAUTH_DIGEST
+	curl_setopt($ch, CURLOPT_USERPWD, "$USERPWD_username_ClientId:$USERPWD_password_Secret");
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+
+	### ### ###
+	/*
+	 $data_arr["grant_type"] = "client_credentials";
+	 $data_json = json_encode($data_arr);
+	 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+	*/
+	curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=client_credentials");
+	### ### ###
+
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	//curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //IMP if the url has https and you don't want to verify source certificate
+
+	$result_json = curl_exec($ch);
+	$info = curl_getinfo($ch);
+	curl_close($ch);
+	$result = json_decode($result_json, true);
+
+	if (!empty($result["access_token"])){
+		return $result["access_token"];
+	} else {
+		return false;
+	}
+}
+
+/*
+Capture an authorization. (Authorization_Id - it is TransID)
+
+Use this resource to capture and process a previously created authorization. To use this resource, the original payment call must have the intent set to authorize.
+*/
+function func_paypal_capture($Access_Token, $Authorization_Id, $data_arr){
+
+	$data_json = json_encode($data_arr);
+	$url = "https://api.paypal.com/v1/payments/authorization/$Authorization_Id/capture";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
+        //curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); //  CURLAUTH_BASIC|CURLAUTH_DIGEST
+        //curl_setopt($ch, CURLOPT_USERPWD, "username:password");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	//curl_setopt($ch, CURLOPT_REFERER, 'http://dev01.test.artistsupplysource.com/123_paypal.php');
+	//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); //IMP if the url has https and you don't want to verify source certificate
+	//curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+	//curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)');
+	//curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+	//curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+        $result_json = curl_exec($ch);
+        $result = json_decode($result_json, true);
+        $result["curl_getinfo"] = curl_getinfo($ch);
+        curl_close($ch);
+
+	return $result;
+}
+
+/*
+Void an authorization. (Authorization_Id - it is TransID)
+
+Use this call to void a previously authorized payment.
+*/
+function func_paypal_void($Access_Token, $Authorization_Id){
+
+	$url = "https://api.paypal.com/v1/payments/authorization/$Authorization_Id/void";
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result_json = curl_exec($ch);
+        $result = json_decode($result_json, true);
+        $result["curl_getinfo"] = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $result;
+}
+
+/*
+Reauthorize a payment. (Authorization_Id - it is TransID)
+
+Use this call to reauthorize a PayPal account payment. We recommend that you reauthorize a payment after the initial 3-day honor period to ensure that funds are still available.
+
+You can reauthorize a payment only once 4 to 29 days after 3-day honor period for the original authorization expires. If 30 days have passed from the original authorization, you must create a new authorization instead. A reauthorized payment itself has a new 3-day honor period. You can reauthorize a transaction once for up to 115% of the originally authorized amount, not to exceed an increase of $75 USD
+*/
+function func_paypal_reauthorize($Access_Token, $Authorization_Id, $data_arr){
+
+        $data_json = json_encode($data_arr);
+        $url = "https://api.paypal.com/v1/payments/authorization/$Authorization_Id/reauthorize";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result_json = curl_exec($ch);
+        $result = json_decode($result_json, true);
+        $result["curl_getinfo"] = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $result;
+}
+
+/*
+Create a payment
+Depending on the payment_method and the funding_instrument, you can use the payment resource for direct credit card payments, stored credit card payments, or PayPal account payments.
+*/
+function func_paypal_create_payment($Access_Token, $data_json){
+
+        $url = "https://api.paypal.com/v1/payments/payment";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result_json = curl_exec($ch);
+        $result = json_decode($result_json, true);
+        $result["curl_getinfo"] = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $result;
+}
+###
+## // PayPal functions
+#
+
+
 ?>

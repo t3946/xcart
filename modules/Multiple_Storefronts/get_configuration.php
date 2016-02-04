@@ -65,12 +65,16 @@ if (!empty($configuration)) {
 	$display_order = array(
 	  'company_name'     => 10,
 	  'company_website'  => 20,
-	  'cidev_top_header_code' => 33,
-	  'cidev_header_code' => 34,
+	  'cidev_top_header_code' => 32,
+	  'cidev_header_code' => 33,
 	  'search_products_unique_id_checkbox' => 46,
 	  'cidev_tracking_code'  => 100,
-          'cidev_main_page_code'  => 36,
-          'cidev_footer_code'  => 37,
+          'cidev_main_page_code'  => 34,
+          'cidev_footer_code'  => 35,
+
+          'pop_up_code'             => '36',
+          'pop_up_in'             => '37',
+
           'cidev_yandex_code_number'  => 38,
           'skip_generating_googlebase_feed'          => '47',
           'common_header_code'            => '48',
