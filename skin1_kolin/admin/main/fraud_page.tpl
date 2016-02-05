@@ -286,7 +286,21 @@ function func_show_full_info(code){
 <tr>
 
 <td>
+
+{*
 {if $cidev_order_details_TransID ne ""}<a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_view-a-trans&id={$cidev_order_details_TransID}" style="color: #1411FF;">Link to PayPal transaction</a>{/if}
+*}
+
+{if $transaction_logs.0.usertype eq "C"}
+{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}
+{if $transaction_logs.0.transaction_link_anchor ne ""}
+{$transaction_logs.0.transaction_link_anchor}
+{else}
+{$transaction_logs.0.transaction_id}
+{/if}
+{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if}
+{/if}
+
 </td>
 
 <td align="center">

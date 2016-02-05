@@ -1866,6 +1866,7 @@ require $xcart_dir."/include/order_edit.php";
 ##
 ###
 require $xcart_dir."/include/paypal_vt.php";
+require $xcart_dir."/include/transaction_logs.php";
 ###
 ##
 #
@@ -3216,20 +3217,6 @@ if (!empty($userinfo)){
 	}
 }
 
-$cidev_order_details = $order["details"];
-
-$cidev_order_details_err = explode("TransID #", $cidev_order_details);
-if (!empty($cidev_order_details_err[1])){
-
-	if (strpos($cidev_order_details_err[1], ')') !== false){
-			$cidev_order_details_TransID_arr = explode(")", $cidev_order_details_err[1]);
-			$cidev_order_details_TransID = $cidev_order_details_TransID_arr[0];
-	} else {
-		$cidev_order_details_TransID = substr($cidev_order_details_err[1], 0, -1);
-	}
-
-	$smarty->assign("cidev_order_details_TransID", $cidev_order_details_TransID);
-}
 
 #
 ##
