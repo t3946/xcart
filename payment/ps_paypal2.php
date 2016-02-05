@@ -58,6 +58,18 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
 
 	x_load('http');
 
+#
+##
+###
+	if ($payment_status == "Voided" || $payment_status == "authorized"){
+		# Because from Admin area -> order page -> VT, PayPal sends himselves responce here also
+		exit; # do nothing, ignore
+	}
+###
+##
+#
+
+
 	if (!strcasecmp($payment_status,"Refunded")) {
 		exit; # do nothing, ignore
 	}
@@ -214,6 +226,14 @@ else {
 		"notify_url" => $_location."/payment/ps_paypal2.php",
 		"bn" => "x-cart"
 	);
+
+#
+##
+###
+//	$fields["paymentaction"] = "authorization";
+###
+##
+#
 
 #
 ##
