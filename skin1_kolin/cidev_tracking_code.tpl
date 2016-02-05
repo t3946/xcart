@@ -170,7 +170,7 @@ function ga_func_delete_from_cart(pid, pname, pcategory, pbrand, pprice, pquanti
   });
 
   ga('ec:setAction', 'remove');
-  ga('send', 'event', 'UX', 'click', 'add to cart');     // Send data using an event.
+  ga('send', 'event', 'UX', 'click', 'Add to cart');     // Send data using an event.
 }
 {/literal}
 //]]>
@@ -215,10 +215,10 @@ function onProductClick(pid, pname, pcategory, pbrand, pposition, plist, pprice)
 
 //alert(pid);
 
-  ga('ec:setAction', 'click', {list: "'"+plist+"'"});
+  ga('ec:setAction', 'click', {list: plist});
 
   // Send click with an event, then send user to product page.
-  ga('send', 'event', 'UX', 'click', 'Results', {
+  ga('send', 'event', 'UX', 'click', 'Surf', {
       hitCallback: function() {
         document.location = '/product.php?productid='+pid;
       }
