@@ -209,7 +209,7 @@ Place order online or call {$geo_litecity_location.phone}
 </TABLE>*}
 {include file="customer/top_menu.tpl"}
 
-{if $variant_id_for_point3 eq "1"}
+{if $variant_id_for_point3 eq "1" && $main ne "product"}
 {$config.Storefront_common_details.common_header_code}
 {/if}
 
