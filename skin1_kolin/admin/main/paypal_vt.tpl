@@ -139,7 +139,17 @@
    <td>
 	Transaction: 
 	{if $v.transaction_id ne ""}
-		<a target="_blank" href="{$v.transaction_id_link|substitute:"trans-id":$v.transaction_id}">{$v.transaction_id}</a>
+
+{if $v.transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$v.transaction_id_link|substitute:"trans-id":$v.transaction_id}">{/if}
+{if $v.transaction_link_anchor ne ""}
+{$v.transaction_link_anchor}
+{else}
+{$v.transaction_id}
+{/if}
+{if $v.transaction_id_link ne ""}</a>{/if}
+
+{if $v.transaction_link_anchor ne ""}({$v.transaction_id}){/if}
+
 	{else}
 		NONE
 	{/if}
@@ -147,6 +157,14 @@
 	transaction_status: <B>{$v.transaction_status}</B><br />
 	transaction_currency: {$v.transaction_currency}<br />
 	transaction_total: {$v.transaction_total}
+
+{if $v.transaction_log ne ""}
+<br />
+<div id="transaction_log_div_{$v.transaction_id}" style="display: none;"><B>Full log:</B><br />{$v.transaction_log}</div>
+<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: $('#transaction_log_div_{$v.transaction_id}').toggle();">Full log</a>
+
+{/if}
+
    </td>
   </tr>
   <tr><td colspan="5"><hr /></td></tr>

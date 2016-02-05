@@ -762,9 +762,20 @@ $orders_full_names = $userinfo["s_firstname"]."<br />".$userinfo["b_firstname"].
 
 $orders_company_names = $userinfo["additional_fields"][1]["value"]."<br />".$userinfo["additional_fields"][0]["value"];
 
-$cidev_order_details = $order["details"];
 
-if (strpos($cidev_order_details, 'TransID #') !== false){
+#
+##
+###
+require $xcart_dir."/include/transaction_logs.php";
+###
+##
+#
+
+
+#
+## For {{link_to_paypal_transaction}}
+###
+if (strpos($order["details"], 'TransID #') !== false){
 	$cidev_order_details_err = explode("TransID #", $cidev_order_details);
 	if (!empty($cidev_order_details_err[1])){
 	        if (strpos($cidev_order_details_err[1], ')') !== false){
@@ -777,7 +788,11 @@ if (strpos($cidev_order_details, 'TransID #') !== false){
 } else {
 	$cidev_order_details_TransID = $order["transaction_id_link"];
 }
-//func_print_r($cidev_order_details_TransID, $cidev_order_details, $order);
+$smarty->assign("cidev_order_details_TransID", $cidev_order_details_TransID);
+###
+##
+#
+
 
 $payment_method = $order["payment_method"];
 
@@ -968,21 +983,6 @@ if ($update_overall_fraud_score) {
 
 /*
 $cidev_order_details = $order["details"];
-$cidev_order_details_err = explode("TransID #", $cidev_order_details);
-if (!empty($cidev_order_details_err[1])){
-
-        if (strpos($cidev_order_details_err[1], ')') !== false){
-                        $cidev_order_details_TransID_arr = explode(")", $cidev_order_details_err[1]);
-                        $cidev_order_details_TransID = $cidev_order_details_TransID_arr[0];
-        } else {
-                $cidev_order_details_TransID = substr($cidev_order_details_err[1], 0, -1);
-        }
-
-        $smarty->assign("cidev_order_details_TransID", $cidev_order_details_TransID);
-}
-*/
-
-$cidev_order_details = $order["details"];
 if (strpos($cidev_order_details, 'TransID #') !== false){
         $cidev_order_details_err = explode("TransID #", $cidev_order_details);
         if (!empty($cidev_order_details_err[1])){
@@ -997,6 +997,7 @@ if (strpos($cidev_order_details, 'TransID #') !== false){
         $cidev_order_details_TransID = $order["transaction_id_link"];
 }
 $smarty->assign("cidev_order_details_TransID", $cidev_order_details_TransID);
+*/
 
 //func_print_r($fraud_checks);
 

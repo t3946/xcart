@@ -379,18 +379,27 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
    <td width="*" valign="top">
 
-        {if $cidev_order_details_TransID ne "" && $order.amazonorderid eq ""}
-
+	{if ($transaction_logs.0.usertype eq "C" || $link_to_virtual_terminal_transaction ne "") && $order.amazonorderid eq ""}
 		<B>Customer to business payments:</B><br />
-                <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_view-a-trans&id={$cidev_order_details_TransID}" style="color: #1411FF;">Link to PayPal transaction</a><br />
+	{/if}
+
+
+{* --- First transaction from customer --- *}
+        {if $transaction_logs.0.usertype eq "C" && $order.amazonorderid eq ""}
+
+{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}
+{if $transaction_logs.0.transaction_link_anchor ne ""}
+{$transaction_logs.0.transaction_link_anchor}
+{else}
+{$transaction_logs.0.transaction_id}
+{/if}
+{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if}
+		<br />
         {/if}
+{* --- End --- *}
+
 
 	{if $link_to_virtual_terminal_transaction ne "" && $order.amazonorderid eq ""}
-
-		{if $cidev_order_details_TransID eq ""}
-		<B>Customer to business payments:</B><br />
-		{/if}
-
 		{foreach from=$link_to_virtual_terminal_transaction item=vl key=kl}
 			{$vl}<br />
 		{/foreach}
@@ -589,11 +598,24 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
 <td>
 <textarea id="details_view" cols="70" style="color: #666666; background-color:#EEEEEE; width: 520px;" readonly="readonly" rows="12"{if $order.details_encrypted} disabled="disabled"{/if}>{$order.details|func_order_details_translate|escape:quotes}</textarea>
 </td>
-{if $cidev_order_details_TransID ne ""}
+
+
+{if $transaction_logs.0.usertype eq "C"}
 <td>
-&nbsp; <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_view-a-trans&id={$cidev_order_details_TransID}" style="color: #1411FF;">Link to PayPal transaction</a>
+&nbsp; 
+
+{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}
+{if $transaction_logs.0.transaction_link_anchor ne ""}
+{$transaction_logs.0.transaction_link_anchor}
+{else}
+{$transaction_logs.0.transaction_id}
+{/if}
+{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if}
+
 </td>
 {/if}
+
+
 </tr>
 </table>
 {if $order.details_encrypted eq ''}

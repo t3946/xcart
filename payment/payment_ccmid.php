@@ -242,6 +242,13 @@ if (!$fatal) {
 		$advinfo[] = "3-D Secure Transaction:";
 		if (isset($cmpi_result['Enrolled'])) {
 			$advinfo[] = "  TransactionId: ".$cmpi_result['TransactionId'];
+#
+##
+###
+			$transaction_id = $cmpi_result['TransactionId'];
+###
+##
+#
 			$advinfo[] = "  Enrolled: ".$cmpi_result['Enrolled'];
 		} else {
 			$advinfo[] = "  PAResStatus: ".$cmpi_result['PAResStatus'];
@@ -268,6 +275,46 @@ if (!$fatal) {
 ###
 ##
 #
+
+#
+## 
+### 
+	$order_info = func_query_first("SELECT paymentid, total, login FROM $sql_tbl[orders] WHERE orderid='$check_orderid'");
+	$order_paymentid = $order_info["paymentid"];
+	$transaction_total = $order_info["total"];
+
+//func_print_r($_POST);
+//func_print_r($login, $cur, $payment_status, $txn_id, $transaction_id, $order_info);
+
+	if (!empty($login)){
+		$transaction_login = $login;
+	} else {
+		$transaction_login = $order_info["login"];
+	}
+
+	if (!empty($cur)){
+		$transaction_currency = $cur;
+	} else {
+		$transaction_currency = "USD";
+	}
+
+	if (!empty($payment_status)){
+		$transaction_status = $payment_status;
+	} else {
+		$transaction_status = $order_status;
+	}
+
+        if (!empty($txn_id)){ # PayPal uses txn_id
+		$transaction_id = $txn_id;
+	}
+
+	if (!empty($transaction_id)){
+		db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$check_orderid', '$order_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$transaction_login')");
+        }
+###
+##
+#
+
 
 	$_orderids = func_get_urlencoded_orderids ($orderids);
 }

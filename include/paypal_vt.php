@@ -106,7 +106,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 				$transaction_currency = $result["transactions"][0]["related_resources"][0]["authorization"]["amount"]["currency"];
 				$transaction_total = $result["transactions"][0]["related_resources"][0]["authorization"]["amount"]["total"];
 				
-				db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
+//				db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
 
 			}
 			else {
@@ -128,7 +128,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		$transaction_currency = $result["amount"]["currency"];
 		$transaction_total = $result["amount"]["total"];
 
-		db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
+//		db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
 	}
     }
     elseif ($mode == "capture_transaction" && !empty($transaction_id) && !empty($transaction_logs_id)){
@@ -155,7 +155,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
         	        $transaction_currency = $result["amount"]["currency"];
                 	$transaction_total = $result["amount"]["total"];
 
-	                db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
+//	                db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
 		}
         }
     }
@@ -174,13 +174,17 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                         $transaction_currency = $result["amount"]["currency"];
                         $transaction_total = $result["amount"]["total"];
 
-                        db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
+//                        db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
 		}
 	}
     }
 
-    func_log_order($orderid, 'PP', $log, $login);
+    $result["xcart_log"] = $log;
+    $serialize_result = serialize($result);
 
+    db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
+
+    func_log_order($orderid, 'PP', $log, $login);
 
 
 //func_print_r($_POST, $result);
@@ -188,11 +192,4 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 
     func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-VT");
 }
-
-
-$transaction_logs = func_query("SELECT $sql_tbl[transaction_logs].*, $sql_tbl[payment_methods].payment_method, $sql_tbl[payment_methods].transaction_id_link, $sql_tbl[customers].firstname FROM $sql_tbl[transaction_logs] LEFT JOIN $sql_tbl[payment_methods] ON $sql_tbl[payment_methods].paymentid=$sql_tbl[transaction_logs].paymentid LEFT JOIN $sql_tbl[customers] ON $sql_tbl[customers].login=$sql_tbl[transaction_logs].login WHERE $sql_tbl[transaction_logs].orderid='$orderid' ORDER BY $sql_tbl[transaction_logs].date");
-
-//func_print_r($transaction_logs);
-$smarty->assign("transaction_logs", $transaction_logs);
-
 ?>
