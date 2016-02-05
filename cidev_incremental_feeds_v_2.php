@@ -296,8 +296,8 @@ $bing_products_batch_count = 0;
 $binventory = array();
 $bproducts = array();
 
-$max_google_batch = 299;
-$max_amazon_batch = 3000;
+$max_google_batch = 100;
+$max_amazon_batch = 2000;
 $max_bing_batch = 299;
 
 $cnt = 0;
