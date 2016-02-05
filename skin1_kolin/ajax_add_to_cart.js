@@ -102,7 +102,7 @@ function ajax_add_to_cart(id, add_date, source) {
     'quantity': pquantity
    });
    ga('ec:setAction', 'add');
-   ga('send', 'event', 'UX', 'click', 'add to cart');     // Send data using an event.
+   ga('send', 'event', 'UX', 'click', 'Add to cart');     // Send data using an event.
 
   }
 /* --- */
