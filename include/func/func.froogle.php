@@ -1808,7 +1808,7 @@ $code = 200;
 
         $optParams = array();
         if (!empty($froogle_tracing_token)) {
-            $optParams = array('trace' => 'token:'.$froogle_tracing_token));
+            $optParams = array('trace' => 'token:'.$froogle_tracing_token);
             func_print_r($params);
         }
         $params = array('postBody' => $postBody);
