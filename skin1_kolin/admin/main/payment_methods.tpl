@@ -110,6 +110,11 @@
 	</td>
 	<td valign="top"{if $payment_methods[method].module_name ne ""} rowspan="3"{/if}>
 		<input type="text" size="30" name="posted_data[{$payment_methods[method].paymentid}][transaction_id_link]" value="{$payment_methods[method].transaction_id_link|escape:"html"}" />
+
+		<br />
+		Transaction link anchor:
+		<br />
+		<input type="text" size="30" name="posted_data[{$payment_methods[method].paymentid}][transaction_link_anchor]" value="{$payment_methods[method].transaction_link_anchor|escape:"html"}" />
 	</td>
 </tr>
 
