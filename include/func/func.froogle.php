@@ -2,8 +2,7 @@
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
 x_load('product','core');
-/*if tracing token defined - then it is should be included in all GoogleContentAPI requests*/
-$froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
+
 #
 # Translation string to frogle-compatibility-string
 #
@@ -1155,7 +1154,14 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 		func_backprocess_log("incremental feeds", $log_text);
 
 
-                $optParams = array();
+        $optParams = array();
+        /*if tracing token defined - then it is should be included in all GoogleContentAPI requests*/
+        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
+        if (!empty($froogle_tracing_token)) {
+            $optParams = array('trace' => 'token:'.$froogle_tracing_token);
+        }
+        $params = array('postBody' => $postBody);
+        $params = array_merge($params, $optParams);
 		$params = array('postBody' => $postBody);
 		$params = array_merge($params, $optParams);
                 $results = $service->inventory->call('custombatch', array($params), "Google_Service_ShoppingContent_InventoryCustomBatchResponse");
@@ -1807,9 +1813,10 @@ $code = 200;
         func_backprocess_log("incremental feeds", $log_text);
 
         $optParams = array();
+        /*if tracing token defined - then it is should be included in all GoogleContentAPI requests*/
+        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
         if (!empty($froogle_tracing_token)) {
             $optParams = array('trace' => 'token:'.$froogle_tracing_token);
-            func_print_r($params);
         }
         $params = array('postBody' => $postBody);
         $params = array_merge($params, $optParams);
