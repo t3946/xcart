@@ -49,6 +49,7 @@ function ajax_add_to_cart(id, add_date, source) {
 		var pbrand = $('#pbrand').val();
 		var pname = $('#pname').val();
 		var pcategory = $('#pcategory').val();
+		var plist = $('#ga_page_name').val();
 		
 	} else {
 		var formname = 'orderform_' + id + '_' + add_date;
@@ -58,6 +59,7 @@ function ajax_add_to_cart(id, add_date, source) {
 		var pbrand = $('#pbrand_'+id).val();
 		var pname = $('#pname_'+id).val();
 		var pcategory = $('#pcategory_'+id).val();
+		var plist = $('#ga_page_name_'+id).val();
 	}
 
 	var info = $('form[name="' + formname + '"]').serialize();
@@ -94,14 +96,14 @@ function ajax_add_to_cart(id, add_date, source) {
   if (pquantity != ""){
 
    ga('ec:addProduct', {
-    'id': "'"+id+"'",
-    'name': "'"+pname+"'",
-    'category': "'"+pcategory+"'",
-    'brand': "'"+pbrand+"'",
+    'id': id,
+    'name': pname,
+    'category': pcategory,
+    'brand': pbrand,
     'price': pprice,
     'quantity': pquantity
    });
-   ga('ec:setAction', 'add');
+   ga('ec:setAction', 'add', {list: plist});
    ga('send', 'event', 'UX', 'click', 'Add to cart');     // Send data using an event.
 
   }
