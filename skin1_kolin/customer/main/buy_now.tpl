@@ -14,6 +14,7 @@
 <input type="hidden" name="pname" id="pname_{$product.productid}" value="{$product.product|escape:quotes}" />
 <input type="hidden" name="pcategory" id="pcategory_{$product.productid}" value="{$product.category|escape:quotes}" />
 <input type="hidden" name="pprice" id="pprice_{$product.productid}" value="{$product.price}">
+<input type="hidden" name="ga_page_name" id="ga_page_name_{$product.productid}" value="{$ga_page_name}" />
 
 {/if}
 

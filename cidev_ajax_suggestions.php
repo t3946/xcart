@@ -147,6 +147,15 @@ Order By SP.`position` desc";
 				$products_str .= '"clean_url": "'.$v["clean_url"].'",';
 				$products_str .= '"src": "'.$v["tmbn_url"].'",';
 				$products_str .= '"price": "'.$v["price"].'",';
+
+				$products_str .= '"category": "'.func_add_slashes($v["category"]).'",';
+				$products_str .= '"brand": "'.func_add_slashes($v["brand"]).'",';
+
+				$products_str .= '"product": "'.func_add_slashes($v["product"]).'",';
+
+				$N_key = $k + 1;
+				$products_str .= '"N_key": "'.$N_key.'",';
+
 				$products_str .= '"title": "'.addslashes($v["product"]).'"';
 			$products_str .= '}';
 
