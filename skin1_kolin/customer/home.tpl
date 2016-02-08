@@ -144,7 +144,6 @@ window.attachEvent("onload", anchor_fix);
 //<![CDATA[
 {literal}
 
-
 	function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter){
 
                 var load_ajax_sections_arr = load_ajax_sections.split(',');
@@ -246,6 +245,8 @@ window.attachEvent("onload", anchor_fix);
 	var html = '<ul>';
 	var a_href = '';
 
+	var ga_page_name = '{/literal}{$ga_page_name}{literal}';
+
 	if (obj){
 	$.each(obj.items, function() {
 
@@ -254,11 +255,11 @@ window.attachEvent("onload", anchor_fix);
 		} else {
 			a_href = 'product.php?productid='+ this.productid;
 		}
-		
+
                 html += '<li>'+
 			  '<div style="text-align: center;">'+
-			  '<a href="'+ a_href +'"><img src="' + this.src + '" alt="' + this.title + '"></a>'+
-			  '<br />'+ '<a href="'+ a_href +'">' +  this.title + '</a>'+
+			  '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>'+
+			  '<br />'+ '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;">' + this.title + '</a>'+
 			  '<br /> <font class="ProductPrice">Our Price: US$ '+ this.price + '</font>'+
 			  '</div>'+
 			'</li>';

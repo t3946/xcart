@@ -1228,6 +1228,13 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 ##
 #
 
+#
+##
+###
+$smarty->assign("ga_page_name", "detail_page");
+###
+##
+#
 
 # Assign the current location line
 $smarty->assign("location", $location);
