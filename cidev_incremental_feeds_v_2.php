@@ -480,7 +480,8 @@ Select
 
 			if ($bing_inventory_batch_count >= 1 && !empty($binventory) && is_array($binventory))
 			{
-				$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+                $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+				//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
 				if ( $error == 500 )
 					restore_queue( $binventory, 2 );
 			}
