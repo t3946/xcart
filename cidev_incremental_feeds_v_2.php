@@ -338,7 +338,8 @@ from xcart_cidev_updated_products UP
                 inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
                 left join xcart_products P ON P.productid = UP.resourceid
 where UP.`type` = 2 and P.forsale = 'Y'
-group by UP.resourceid)
+group by UP.resourceid
+HAVING utype = '2')
 As T
  where T.productid not in (320764,320761,320762,320764,320765,320766)
  $PARAMLIMIT";
