@@ -3815,4 +3815,22 @@ function func_detect_working_hours(){
 
 	$smarty->assign("working_hours", $working_hours);
 }
+
+function func_add_slashes($str){
+
+	# This function for jQuery carousel
+	## Do not modify lines below.
+	###
+	$str = str_replace("&#39;","\&#39;",$str);
+	$str = str_replace("'","\&#39;",$str);
+	$str = str_replace('&#34;','\&#34;',$str);
+	$str = str_replace('"','\&#34;',$str);
+	###
+	##
+	#
+
+	$str = addslashes($str);
+	
+	return $str;
+}
 ?>

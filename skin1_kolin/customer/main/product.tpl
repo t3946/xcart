@@ -379,6 +379,8 @@ var product_avail = 1;
 <input type="hidden" name="pbrand" id="pbrand" value="{$product.brand|escape:quotes}" />
 <input type="hidden" name="pname" id="pname" value="{$product.product|escape:quotes}" />
 <input type="hidden" name="pcategory" id="pcategory" value="{$product.category|escape:quotes}" />
+<input type="hidden" name="pcategory" id="pcategory" value="{$product.category|escape:quotes}" />
+<input type="hidden" name="ga_page_name" id="ga_page_name" value="{$ga_page_name}" />
 
 
 {if $config.General.unlimited_products eq "Y" or ($product.avail gt 0 and $product.avail ge $product.min_amount)}

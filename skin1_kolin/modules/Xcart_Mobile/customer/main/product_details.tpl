@@ -45,6 +45,7 @@ vim: set ts=2 sw=2 sts=2 et:
   <input type="hidden" name="pbrand" id="pbrand" value="{$product.brand|escape:quotes}" />
   <input type="hidden" name="pname" id="pname" value="{$product.product|escape:quotes}" />
   <input type="hidden" name="pcategory" id="pcategory" value="{$product.category|escape:quotes}" />
+  <input type="hidden" name="ga_page_name" id="ga_page_name" value="{$ga_page_name}" />
 
 
   {if $active_modules.Gift_Registry and $wishlistid}
