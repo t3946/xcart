@@ -315,10 +315,10 @@ From
                 P.amazon_enabled As amazon_enabled,
                 GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
 from xcart_cidev_updated_products UP
-                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` = 2
+                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                 inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
                 left join xcart_products P ON P.productid = UP.resourceid
-where UP.`type` = 2 and P.forsale = 'Y'
+where UP.`type` <= 2  and P.forsale = '$paramYN'
 group by UP.resourceid
 HAVING utype = '2')
 As T
@@ -335,10 +335,10 @@ From
                 P.amazon_enabled As amazon_enabled,
                 GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
 from xcart_cidev_updated_products UP
-                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` = 2
+                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                 inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
                 left join xcart_products P ON P.productid = UP.resourceid
-where UP.`type` = 2 and P.forsale = 'Y'
+where UP.`type` <= 2  and P.forsale = '$paramYN'
 group by UP.resourceid
 HAVING utype = '2')
 As T
