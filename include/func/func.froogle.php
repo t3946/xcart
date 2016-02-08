@@ -1442,6 +1442,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 */
 
 	try {
+        $k++;
 
 		print("\nBing: tried to submit $k items as inventory feed ($MerchantID) \n");
 
