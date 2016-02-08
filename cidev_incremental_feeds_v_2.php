@@ -397,8 +397,6 @@ Select
 				if ($enable_incremental_feed_updates == "Y" && !empty($MerchantID) && !empty($client_id))
 				{
 
-//					SubmitProductToGBFeed($product["productid"], $MerchantID, $client_id, $key_file_location, $product["utype"], $service, $product["forsale"]);
-
 					$AddProductToGoogleBaseBatch_arr = AddProductToGoogleBaseBatch($product["productid"], $MerchantID, $product["utype"], $service, $product["forsale"], $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory);
 
 					if (!empty($AddProductToGoogleBaseBatch_arr) && is_array($AddProductToGoogleBaseBatch_arr)){
@@ -424,7 +422,8 @@ Select
 
 				if ($bing_inventory_batch_count == $max_bing_batch)
 				{
-					$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+                    $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+					//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
 					if ( $error == 500 )
 						restore_queue( $binventory, 2 );
 

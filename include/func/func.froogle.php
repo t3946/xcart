@@ -1246,6 +1246,80 @@ return $code;
 }
 function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $username, $password, $token)
 {
+        global $xcart_dir, $active_modules, $config, $https_location, $http_location;
+        global $started_at, $sql_tbl;
+        global $storefrontid, $current_storefront;
+
+        if ($storefrontid !=""){
+                $use_storefrontid = $storefrontid;
+        } else {
+                if (isset($current_storefront)){
+	                $use_storefrontid = $current_storefront; // froogle.php
+                    }
+                }
+
+	foreach ($binventory as $k => $v){
+				/*func_build_quick_prices($v["productid"]);*/
+                $fields = ", IFNULL($sql_tbl[variants].avail, $sql_tbl[products].r_avail) as r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].map_price, $sql_tbl[products].manufacturerid, $sql_tbl[products].eta_date_mm_dd_yyyy, $sql_tbl[products].product, $sql_tbl[products_sf].sfid";
+                $joins = " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
+                $joins .= " INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0'";
+                $joins .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[variants].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].variantid = $sql_tbl[variants].variantid";
+                $where = " AND $sql_tbl[products_sf].productid = '$v[productid]' AND IFNULL($sql_tbl[variants].avail, $sql_tbl[products].avail) >= '0' and $sql_tbl[products_sf].sfid = $use_storefrontid";
+
+                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].provider, $sql_tbl[products].new_map_price, $sql_tbl[products].r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
+
+				
+				$product_availability = $product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+				If ($product["min_amount"]>1 and $product["mult_order_quantity"] == "Y")
+					{
+						$product['multipack'] = $product["min_amount"];
+					}
+                    
+                $product["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$product[manufacturerid]' AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='".$product["controlled_by_feed"]."'))");
+
+				$product['price'] = price_format(GetGooglePrice($product));
+                
+   				$postBody["entries"][$k]["batchId"] = $v["productid"];
+				$postBody["entries"][$k]["merchantId"] = $MerchantID;
+				$postBody["entries"][$k]["storeCode"] = "online";
+				$postBody["entries"][$k]["productId"] = "online:en:US:".$v["productid"];
+                $postBody["entries"][$k]["method"] = "insert";
+                
+				$postBody["entries"][$k]["product"]["price"]["value"] = $product["price"];
+				$postBody["entries"][$k]["product"]["price"]["currency"] = "USD";
+				$postBody["entries"][$k]["product"]["availability"]= $product_availability;
+                $postBody["entries"][$k]["product"]["offerId"] = $v["productid"];
+				$postBody["entries"][$k]["product"]["kind"] = "content#product";
+                $postBody["entries"][$k]["product"]["contentLanguage"] = "en";
+                $postBody["entries"][$k]["product"]["targetCountry"] = "US";
+                $postBody["entries"][$k]["product"]["channel"] = "online";
+                $postBody["entries"][$k]["product"]["condition"] = "new";
+                $postBody["entries"][$k]["product"]["title"] = $v["product"];
+
+                $froogle_location = $config['Froogle']['froogle_used_https_links'] == 'Y' ? $https_location : $http_location;
+                $froogle_scheme = $config['Froogle']['froogle_used_https_links'] == 'Y' ? 'https://' : 'http://';
+
+                if(isset($product['sfid']) && $product['sfid'] != 0) {
+                    $product['froogle_location'] = $froogle_scheme . func_get_http_location_sf($product['sfid']);
+                } else {
+                    $product['froogle_location'] = $froogle_location;
+                }
+
+                $clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$product[productid]'");
+                $clean_url_link .="/";
+
+                $product['link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/'. $clean_url_link;
+                
+                $postBody["entries"][$k]["product"]["link"] = $product["link"];
+	}
+
+    func_print_r($postBody);
+                
+
+
+
+/*Old code*/        
+/*    
 	global $sql_tbl;
 
 	$count_skipped = 0;
@@ -1365,13 +1439,13 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 			$k_counter++;
 		}
 	}
-
+*/
 
 	try {
 
-		print("\nBing: tried to submit $k_counter items as inventory feed ($MerchantID) \n");
+		print("\nBing: tried to submit $k items as inventory feed ($MerchantID) \n");
 
-		$log_text = "Bing: tried to submit $k_counter items as inventory feed";
+		$log_text = "Bing: tried to submit $k items as inventory feed";
 		func_backprocess_log("incremental feeds", $log_text);
 
 		$json = json_encode( $postBody );
