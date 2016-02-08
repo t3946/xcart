@@ -1283,7 +1283,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 				$postBody["entries"][$k]["merchantId"] = $MerchantID;
 				$postBody["entries"][$k]["storeCode"] = "online";
 				$postBody["entries"][$k]["productId"] = "online:en:US:".$v["productid"];
-                $postBody["entries"][$k]["method"] = "insert";
+                $postBody["entries"][$k]["method"] = "update";
                 
 				$postBody["entries"][$k]["product"]["price"]["value"] = $product["price"];
 				$postBody["entries"][$k]["product"]["price"]["currency"] = "USD";
