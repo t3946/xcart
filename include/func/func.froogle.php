@@ -1377,7 +1377,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 
 	}
 
-    func_print_r($postBody);
+    //func_print_r($postBody);
                 
 
 
