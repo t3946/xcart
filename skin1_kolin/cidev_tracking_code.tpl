@@ -197,7 +197,8 @@ ga('ec:setAction', 'detail');
         {/if}
 
 
-	{if $ga_page_name ne "" && $products ne ""}
+	{*if $ga_page_name ne "" && $products ne ""*}
+	{if $ga_page_name ne ""}
 <script>
 //<![CDATA[
 // Called when a link to a product is clicked.
