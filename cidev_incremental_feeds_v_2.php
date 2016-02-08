@@ -305,8 +305,47 @@ $cnt = 0;
 $enable_incremental_feed_updates = func_query_first_cell("SELECT enable_incremental_feed_updates FROM $sql_tbl[froogle_options] WHERE storefrontid='$storefrontid'");
 
 
+$query_products_count = func_query_first_cell("
+Select COUNT(*)
+From
+(Select 
+                UP.resourceid As productid,
+                UP.time_stamp As ts,
+                P.forsale As forsale,
+                P.amazon_enabled As amazon_enabled,
+                GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+from xcart_cidev_updated_products UP
+                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` = 2
+                inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                left join xcart_products P ON P.productid = UP.resourceid
+where UP.`type` = 2 and P.forsale = 'Y'
+group by UP.resourceid)
+As T
+ where T.productid not in (320764,320761,320762,320764,320765,320766)");
 
-$query_products = "
+if (!empty($query_products_count)){
+	$query_products = "
+Select *
+From
+(Select 
+                UP.resourceid As productid,
+                UP.time_stamp As ts,
+                P.forsale As forsale,
+                P.amazon_enabled As amazon_enabled,
+                GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+from xcart_cidev_updated_products UP
+                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` = 2
+                inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                left join xcart_products P ON P.productid = UP.resourceid
+where UP.`type` = 2 and P.forsale = 'Y'
+group by UP.resourceid)
+As T
+ where T.productid not in (320764,320761,320762,320764,320765,320766)
+ $PARAMLIMIT";
+}
+else {
+
+	$query_products = "
 Select *
 From
 (Select 
@@ -334,7 +373,7 @@ Select
  where UPM.`type` = 3 and P2.forsale='$paramYN') As T
  where T.productid not in (320764,320761,320762,320764,320765,320766)
  $PARAMLIMIT";
-
+}
 			$products = db_query($query_products);
 
 			while ($product = db_fetch_array($products))
