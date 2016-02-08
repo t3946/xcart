@@ -1481,10 +1481,11 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 		$output = curl_exec($ch);
 
 		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		//if ( $code == 200 )
-		//	echo "The operation succeeded.\n";
-		//else
-		//	echo "The operation failed with code = $code.\n";
+		if ( $code != 200 )
+		{
+			$log_text = "Bing: the operation failed with code = $code.\n";
+			func_backprocess_log("incremental feeds", $log_text);
+		}
 
 		curl_close($ch);
 
