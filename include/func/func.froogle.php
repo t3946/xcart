@@ -1296,6 +1296,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
                 $postBody["entries"][$k]["product"]["condition"] = "new";
                 $postBody["entries"][$k]["product"]["title"] = $product["product"];
 
+                /* get product link */
                 $froogle_location = $config['Froogle']['froogle_used_https_links'] == 'Y' ? $https_location : $http_location;
                 $froogle_scheme = $config['Froogle']['froogle_used_https_links'] == 'Y' ? 'https://' : 'http://';
 
@@ -1311,6 +1312,69 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
                 $product['link'] = $product['froogle_location'] . constant('DIR_CUSTOMER') . '/'. $clean_url_link;
                 
                 $postBody["entries"][$k]["product"]["link"] = $product["link"];
+                
+                /* get detailed image link */
+                $tmp_all = func_query("SELECT id, imageid, image_path FROM $sql_tbl[images_D] WHERE $sql_tbl[images_D].id = '$v[productid]' AND $sql_tbl[images_D].avail='Y' ORDER BY orderby");
+
+                if (!empty($tmp_all) && is_array($tmp_all)){
+                    foreach($tmp_all as $k_tmp => $tmp){
+
+                        if (!empty($tmp['imageid'])) {
+
+                            $tmbn_d = "";
+                            $image_path = "";
+                            $image_type = "";
+
+                            $image_path = $tmp['image_path'];
+                            $image_type = "D";
+
+                            if (!empty($image_path))
+                                $tmbn_d = func_get_image_url($tmp['imageid'], $image_type, $image_path);
+
+                            if ($tmbn_d === false || empty($tmbn_d)) {
+                                $tmbn_d = $product['froogle_location'] . '/image.php?id=' . $tmp['imageid'] . '&type=' . $image_type;
+                            } elseif (strpos($tmbn_d, $https_location) !== false) {
+                                $tmbn_d = str_replace($https_location, $product['froogle_location'], $tmbn_d);
+                            }
+
+                            if (strpos($tmbn_d, "default_image") !== false) {
+                                $tmp_all[$k_tmp]["tmbn_no_img"] = "Y";
+                            }
+
+                            $tmp_all[$k_tmp]["tmbn_d"] = $tmbn_d;
+                        }
+                    }
+
+                    foreach($tmp_all as $k_tmp => $tmp){
+                        if ($tmp["tmbn_no_img"] != "Y"){
+                                $tmbn = $tmp["tmbn_d"];
+                                unset($tmp_all[$k_tmp]);
+                                break;
+                        }
+                    }
+                }
+
+
+                $tmbn_no_img = "";
+                if ((strpos($tmbn, "default_image") !== false) || empty($tmbn)) {
+                    $tmbn_no_img = "Y";
+                }
+
+                if ($sf_info["config"]["Appearance"]["Enable_CDN"]=="Y" && !empty($sf_info["config"]["Appearance"]["CDN_domain"])){
+                    $tmbn = str_replace($sf_info["domain"], $sf_info["config"]["Appearance"]["CDN_domain"], $tmbn);
+                    $tmbn = str_replace("www.artistsupplysource.com", $sf_info["config"]["Appearance"]["CDN_domain"], $tmbn);
+
+                }
+
+
+                $tmp_image_link = $tmbn;
+                if (empty($tmp_image_link)){
+                    $tmp_image_link = $product['froogle_location'] . "/default_image.gif";
+                }
+
+                $product['image_link'] = $tmp_image_link;
+                $postBody["entries"][$k]["product"]["imagelink"] = $product["image_link"];
+
 	}
 
     func_print_r($postBody);
