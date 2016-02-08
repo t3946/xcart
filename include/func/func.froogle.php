@@ -1294,7 +1294,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
                 $postBody["entries"][$k]["product"]["targetCountry"] = "US";
                 $postBody["entries"][$k]["product"]["channel"] = "online";
                 $postBody["entries"][$k]["product"]["condition"] = "new";
-                $postBody["entries"][$k]["product"]["title"] = $v["product"];
+                $postBody["entries"][$k]["product"]["title"] = $product["product"];
 
                 $froogle_location = $config['Froogle']['froogle_used_https_links'] == 'Y' ? $https_location : $http_location;
                 $froogle_scheme = $config['Froogle']['froogle_used_https_links'] == 'Y' ? 'https://' : 'http://';
