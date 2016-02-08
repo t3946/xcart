@@ -54,6 +54,24 @@ function GetGooglePrice($fproduct){
 function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 
+
+#
+##
+###
+        global $storefrontid, $current_storefront;
+
+        if ($storefrontid !=""){
+                $use_storefrontid = $storefrontid;
+        } else {
+		if (isset($current_storefront)){
+	                $use_storefrontid = $current_storefront; // froogle.php
+		}
+        }
+###
+##
+#
+
+
 	if (empty($productid)){
 //		$row = "title\tdescription\tlink\tadwords_redirect\tadwords_grouping\tadwords_labels\timage link\tadditional image link\tid\tprice\tpayment accepted\tpayment notes\tquantity\tweight\texpiration date\tbrand\tcondition\tproduct type\tmpn\tmodel number\tgtin\tcompatible with\tonline only\tshipping\tavailability\tmultipack\tgoogle product category\n";
 		$row = "title\tdescription\tlink\tadwords_redirect\timage link\tadditional image link\tid\tprice\tshipping weight\texpiration date\tbrand\tcondition\tproduct type\tmpn\tgtin\tshipping\tavailability\tmultipack\tgoogle product category\n";
@@ -67,11 +85,22 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	$fields = "";
 	$joins = "";
 
-	if (!empty($active_modules['Multiple_Storefronts'])) {
+//	if (!empty($active_modules['Multiple_Storefronts'])) {
 		$fields .= ", $sql_tbl[products_sf].sfid";
 		$joins .= " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
 		$where .= " AND $sql_tbl[products_sf].productid = $productid";
-	}
+//	}
+
+#
+##
+###
+        if (isset($use_storefrontid)){
+                $where .= " AND $sql_tbl[products_sf].sfid = '$use_storefrontid'";
+        }
+###
+##
+#
+
 
 //	if ($config["General"]["disable_outofstock_products"] == "Y") {
 
@@ -113,7 +142,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 		$joins .= " LEFT JOIN $sql_tbl[brands] ON $sql_tbl[products].brandid = $sql_tbl[brands].brandid LEFT JOIN $sql_tbl[brands_lng] ON $sql_tbl[products].brandid = $sql_tbl[brands_lng].brandid AND $sql_tbl[brands_lng].code = '$froogle_lng'";
 	}
 
-	$product = func_query_first($qqq="SELECT SQL_NO_CACHE $sql_tbl[products].*, $sql_tbl[categories].categoryid_path, $sql_tbl[pricing].price, $sql_tbl[images_T].image_path $fields FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) LEFT JOIN $sql_tbl[images_T] ON $sql_tbl[products].productid = $sql_tbl[images_T].id $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[categories].avail = 'Y' $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
+	$product = func_query_first($qqq="SELECT SQL_NO_CACHE $sql_tbl[products].*, $sql_tbl[categories].categoryid_path, $sql_tbl[pricing].price, $sql_tbl[images_T].image_path $fields FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) LEFT JOIN $sql_tbl[images_T] ON $sql_tbl[products].productid = $sql_tbl[images_T].id $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[products_categories].main='Y' AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[categories].avail = 'Y' $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
 
 //func_print_r($product, $qqq);
