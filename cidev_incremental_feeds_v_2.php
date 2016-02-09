@@ -296,9 +296,9 @@ $bing_products_batch_count = 0;
 $binventory = array();
 $bproducts = array();
 
-$max_google_batch = 100;
+$max_google_batch = 40;
 $max_amazon_batch = 2000;
-$max_bing_batch = 299;
+$max_bing_batch = 40;
 
 $cnt = 0;
 
@@ -315,11 +315,12 @@ From
                 P.amazon_enabled As amazon_enabled,
                 GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
 from xcart_cidev_updated_products UP
-                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` = 2
+                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                 inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
                 left join xcart_products P ON P.productid = UP.resourceid
-where UP.`type` = 2 and P.forsale = 'Y'
-group by UP.resourceid)
+where UP.`type` <= 2  and P.forsale = '$paramYN'
+group by UP.resourceid
+HAVING utype = '2')
 As T
  where T.productid not in (320764,320761,320762,320764,320765,320766)");
 
@@ -334,11 +335,12 @@ From
                 P.amazon_enabled As amazon_enabled,
                 GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
 from xcart_cidev_updated_products UP
-                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` = 2
+                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                 inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
                 left join xcart_products P ON P.productid = UP.resourceid
-where UP.`type` = 2 and P.forsale = 'Y'
-group by UP.resourceid)
+where UP.`type` <= 2  and P.forsale = '$paramYN'
+group by UP.resourceid
+HAVING utype = '2')
 As T
  where T.productid not in (320764,320761,320762,320764,320765,320766)
  $PARAMLIMIT";
@@ -395,8 +397,6 @@ Select
 				if ($enable_incremental_feed_updates == "Y" && !empty($MerchantID) && !empty($client_id))
 				{
 
-//					SubmitProductToGBFeed($product["productid"], $MerchantID, $client_id, $key_file_location, $product["utype"], $service, $product["forsale"]);
-
 					$AddProductToGoogleBaseBatch_arr = AddProductToGoogleBaseBatch($product["productid"], $MerchantID, $product["utype"], $service, $product["forsale"], $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory);
 
 					if (!empty($AddProductToGoogleBaseBatch_arr) && is_array($AddProductToGoogleBaseBatch_arr)){
@@ -422,7 +422,8 @@ Select
 
 				if ($bing_inventory_batch_count == $max_bing_batch)
 				{
-					$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+                    $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+					//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
 					if ( $error == 500 )
 						restore_queue( $binventory, 2 );
 
@@ -479,7 +480,8 @@ Select
 
 			if ($bing_inventory_batch_count >= 1 && !empty($binventory) && is_array($binventory))
 			{
-				$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+                $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+				//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
 				if ( $error == 500 )
 					restore_queue( $binventory, 2 );
 			}
