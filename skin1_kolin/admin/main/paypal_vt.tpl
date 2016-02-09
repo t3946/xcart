@@ -159,9 +159,25 @@
 	transaction_total: {$v.transaction_total}
 
 {if $v.transaction_log ne ""}
+<script>
+//<![CDATA[
+{literal}
+$(document).ready(function(){
+    $('#show_hide_link_{/literal}{$v.transaction_id}{literal}').click(
+       function() {
+          $(this).text(function(i,text) { return (text == 'Show details') ? 'Hide details' : 'Show details'; });
+          $('#transaction_log_div_{/literal}{$v.transaction_id}{literal}').toggle('slow');
+          return false;
+       }
+    );
+});
+{/literal}
+//]]>
+</script>
+
 <br />
 <div id="transaction_log_div_{$v.transaction_id}" style="display: none;"><B>Full log:</B><br />{$v.transaction_log}</div>
-<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: $('#transaction_log_div_{$v.transaction_id}').toggle();">Full log</a>
+<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: func_show_hide_log('{$v.transaction_id}');" id="show_hide_link_{$v.transaction_id}">Show details</a>
 
 {/if}
 
