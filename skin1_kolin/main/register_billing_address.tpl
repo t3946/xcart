@@ -623,7 +623,7 @@ function ship2diffOpen() {
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="b_countryname" name="b_countryname" size="32" maxlength="64" value="{if $geo_litecity_location.country ne ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{if $countries[country_idx].country ne ""}{$countries[country_idx].country|amp}{assign var="cidev_is_country_b" value="Y"}{/if}{/if}{/section}{else}{if $userinfo.b_countryname ne ""}{$userinfo.b_countryname}{assign var="cidev_is_country_b" value="Y"}{/if}{/if}" 
+<input type="text" id="b_countryname" name="b_countryname" size="32" maxlength="64" value="{if $geo_litecity_location.country ne "" && $userinfo.b_countryname eq ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{if $countries[country_idx].country ne ""}{$countries[country_idx].country|amp}{assign var="cidev_is_country_b" value="Y"}{/if}{/if}{/section}{else}{if $userinfo.b_countryname ne ""}{$userinfo.b_countryname}{assign var="cidev_is_country_b" value="Y"}{/if}{/if}" 
 onkeyup="cidev_check_country_usa('b_countryname'); cidev_check_field_country('b_countryname'); cidev_check_zip_b();"  onchange="cidev_check_field_country('b_countryname'); cidev_check_zip_b();"
 autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{$countries[country_idx].country|amp}{/if}{/section}{/if}" />
 </td>
@@ -724,7 +724,7 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
 <td valign="top" nowrap="nowrap">
 <input type="text" id="b_statename" name="b_statename" size="32" maxlength="64" 
 value="
-{if $geo_litecity_location.region ne ""}
+{if $geo_litecity_location.region ne "" && $userinfo.b_statename eq ""}
 {section name=state_idx loop=$states}
 {if $geo_litecity_location.country eq $states[state_idx].country_code && $geo_litecity_location.region eq $states[state_idx].state_code}
 {if $states[state_idx].state ne ""}{$states[state_idx].state|amp}{assign var="cidev_is_state_b" value="Y"}{/if}
@@ -804,7 +804,7 @@ placeholder="
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="b_city" name="b_city" size="32" maxlength="64" value="{if $geo_litecity_location.country ne ""}{$geo_litecity_location.city}{else}{$userinfo.b_city}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('b_city'); cidev_check_zip_b();" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
+<input type="text" id="b_city" name="b_city" size="32" maxlength="64" value="{if $geo_litecity_location.country ne "" && $userinfo.b_city eq ""}{$geo_litecity_location.city}{else}{$userinfo.b_city}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('b_city'); cidev_check_zip_b();" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
 </td>
 {if $usertype eq "C"}
 <td id="b_city_verified" valign="top" nowrap="nowrap" {if $geo_litecity_location.city eq "" && $userinfo.b_city eq ""}style="display: none;"{/if}>
