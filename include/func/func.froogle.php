@@ -1649,7 +1649,9 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 			$postBody["entries"][$k_counter]["product"]["availability"] = $product_availability;
 			$postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
 			$postBody["entries"][$k_counter]["product"]["condition"] = "new";
-            $postBody["entries"][$k_counter]["product"]["gtin"] = $product_info["product"]["upc"];
+            if (!empty($product_info["product"]["upc"])) {
+                $postBody["entries"][$k_counter]["product"]["gtin"] = $product_info["product"]["upc"];
+            }
 			$postBody["entries"][$k_counter]["product"]["mpn"] = $product_info["product"]["mpn"];
 			$postBody["entries"][$k_counter]["product"]["price"]["value"] = $product_info["product"]["price"];
 			$postBody["entries"][$k_counter]["product"]["price"]["currency"] = "USD";
@@ -1895,7 +1897,9 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
                 $postBody["entries"][$k_counter]["product"]["availability"] = $product_availability;
                 $postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
                 $postBody["entries"][$k_counter]["product"]["condition"] = "new";
-                $postBody["entries"][$k_counter]["product"]["gtin"] = $product_info["product"]["upc"];
+                if (!empty($product_info["product"]["upc"])) {
+                    $postBody["entries"][$k_counter]["product"]["gtin"] = $product_info["product"]["upc"];
+                }
                 $postBody["entries"][$k_counter]["product"]["mpn"] = $product_info["product"]["mpn"];
 
                 $postBody["entries"][$k_counter]["product"]["price"]["value"] = $product_info["product"]["price"];
