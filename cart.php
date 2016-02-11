@@ -1118,9 +1118,8 @@ if ($mode == "checkout"){
 #
 ##
 ###
-	$customer_zone = func_get_customer_zone_ship($userinfo, "master","R");
-//	$zones = func_get_customer_zones_avail($username, $provider, "S");
-	$zones = func_get_customer_zones_avail($login, $provider, "S");
+//	$customer_zone = func_get_customer_zone_ship($userinfo, "master","R");
+//	$zones = func_get_customer_zones_avail($login, $provider, "S");
 
 	$allow_to_checkout = "Y";
 
