@@ -186,7 +186,7 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 				$tmp_shipping = array();
 				foreach ($shipping as $k=>$v) {
 					if (($config["Shipping"]["realtime_shipping"]=="Y" && $v["code"]=="") || $config["Shipping"]["realtime_shipping"]!="Y") {
-						$v['allowed'] = $is_method_allowed = func_is_shipping_method_allowable($v["shippingid"], $userinfo, $products, $total_weight_shipping_valid, $cart_subtotal);
+						$v['allowed'] = $is_method_allowed = func_is_shipping_method_allowable($v["shippingid"], $userinfo, $products, $total_weight_shipping_valid, $cart_subtotal, $for_manufacturerid);
 
 						if (!$return_all_available && !$is_method_allowed)
 							continue;
@@ -264,7 +264,13 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 			$ups_condition .= " AND $sql_tbl[shipping].code='UPS' AND $sql_tbl[shipping].service_code!=''";
 		}
 
-		$weight_condition .= $ups_condition;
+#
+## !!!!!!!!!!!!!!!!!!!! WHAT ??????????????????????????
+###
+//		$weight_condition .= $ups_condition;
+###
+##
+#
 	}
 
 	if (!empty($active_modules["UPS_OnLine_Tools"]) && $config["Shipping"]["realtime_shipping"] == "Y" && $config["Shipping"]["use_intershipper"] != "Y") {
@@ -279,8 +285,22 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 		}
 	}
 
+#
+##
+###
+        if (!empty($for_manufacturerid) && $for_manufacturerid > 0) {
+		$config["Company"]["location_country"] = func_query_first_cell("SELECT m_country FROM $sql_tbl[manufacturers] WHERE manufacturerid='$for_manufacturerid'");
+        }
+###
+##
+#
+
 	if (($enable_shipping || $config["Shipping"]["enable_all_shippings"] != "Y") && !$return_all_available) {
 		$destination_condition = " AND destination=".(!empty($userinfo) && $userinfo["s_country"] == $config["Company"]["location_country"] ? "'L'" : "'I'");
+
+
+//func_print_r($destination_condition, $userinfo["s_country"], $config["Company"]["location_country"]);
+
 	}
 
 	if (!$enable_shipping || $config["Shipping"]["realtime_shipping"] != "Y") {
@@ -288,7 +308,7 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 		#
 		# Get ALL shipping methods according to the conditions (W/O real time)
 		#
-		$shipping = func_query("SELECT * FROM $sql_tbl[shipping] WHERE active='Y' $destination_condition $weight_condition ORDER BY orderby");
+		$shipping = func_query("SELECT * FROM $sql_tbl[shipping] WHERE active='Y' $destination_condition $weight_condition $ups_condition ORDER BY orderby");
 
 //func_print_r($shipping);
 #
@@ -325,6 +345,11 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 		#
 		$shipping = func_query ($qqq="SELECT * FROM $sql_tbl[shipping] WHERE code='' AND active='Y' $destination_condition $weight_condition ORDER BY orderby");
 
+		if (empty($shipping)){
+			$shipping = func_query ($qqq="SELECT * FROM $sql_tbl[shipping] WHERE active='Y' $destination_condition $weight_condition $ups_condition ORDER BY orderby");
+		}
+
+//func_print_r($shipping, $qqq, $destination_condition, $weight_condition);
 
 		if ($intershipper_rates) {
 			#
@@ -425,7 +450,7 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 				if ($v["new_hardcoded_shipping_method"] == "Y"){
 					$is_method_allowed = 1;
 				} else {
-					$v['allowed'] = $is_method_allowed = func_is_shipping_method_allowable($v["shippingid"], $userinfo, $products, $total_weight_shipping_valid, $cart_subtotal);
+					$v['allowed'] = $is_method_allowed = func_is_shipping_method_allowable($v["shippingid"], $userinfo, $products, $total_weight_shipping_valid, $cart_subtotal, $for_manufacturerid);
 				}
 	
 				if (!$return_all_available && !$is_method_allowed)
@@ -461,6 +486,8 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 		}
 
 	}
+
+//func_print_r($shipping);
 
 	if ($arb_account_used && is_array($shipping)) {
 		foreach ($shipping as $v) {
@@ -740,7 +767,7 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 #
 # This function checks if shipping method have defined shipping rates
 #
-function func_is_shipping_method_allowable($shippingid, $customer_info, $products, $weight=0, $subtotal=0) {
+function func_is_shipping_method_allowable($shippingid, $customer_info, $products, $weight=0, $subtotal=0, $for_manufacturerid=0) {
 	global $sql_tbl, $config, $single_mode;
 	global $login;
 
@@ -779,7 +806,7 @@ function func_is_shipping_method_allowable($shippingid, $customer_info, $product
 		#
 		# Get the customer's shipping zone
 		#
-		$customer_zone = func_get_customer_zone_ship($customer_info, $provider, "D");
+		$customer_zone = func_get_customer_zone_ship($customer_info, $provider, "D", $for_manufacturerid);
 
 //func_print_r($customer_zone, $provider);
 
@@ -788,7 +815,7 @@ function func_is_shipping_method_allowable($shippingid, $customer_info, $product
 		#
 		$shipping = func_query_first_cell($qqq="SELECT COUNT(*) FROM $sql_tbl[shipping_rates] WHERE shippingid='$shippingid' AND minweight<='$weight' AND maxweight>='$weight' AND mintotal<='$subtotal' AND maxtotal>='$subtotal' $provider_condition AND zoneid='$customer_zone' AND type='D' AND manufacturerid='$product[manufacturerid]'");
 
-//func_print_r($qqq);
+//func_print_r($qqq, $shipping);
 
 		if ($shipping)
 			return true;
