@@ -2631,6 +2631,7 @@ function func_define_approximate_shippings($productid, $product_info=''){
 
 	if (empty($product_info)){
 		$product_info = func_query_first("SELECT * FROM $sql_tbl[products] WHERE productid='$productid'");
+		$product_info["price"] = func_query_first_cell("SELECT price FROM $sql_tbl[pricing] WHERE productid='$productid' AND quantity <= '$product_info[min_amount]' AND variantid = '0' AND membershipid = '0' ORDER BY quantity DESC LIMIT 1");
 	}
 
 	if (!empty($all_approximation_shipping_rates[$product_info["manufacturerid"]])){
@@ -2646,7 +2647,23 @@ function func_define_approximate_shippings($productid, $product_info=''){
 		$manufacturer_info = func_query_first("SELECT manufacturer, m_city, m_country, m_state, m_zipcode FROM $sql_tbl[manufacturers] WHERE manufacturerid='$product_info[manufacturerid]'");
 	}
 
-	$count_approximation_shipping_rates = count($approximation_shipping_rates);
+//	$count_approximation_shipping_rates = count($approximation_shipping_rates);
+
+#
+##
+###
+//$approximation_shipping_rates=""; // <-----------DELETE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! It is just for tests !!!
+	$ORIGINAL_approximation_shipping_rates_empty_flag = false;
+	if (empty($approximation_shipping_rates)){
+		$states = func_query("SELECT * FROM $sql_tbl[states] WHERE country_code='US' AND base_state_zipcode!=''");
+
+		$ORIGINAL_approximation_shipping_rates_empty_flag = true;
+		$approximation_shipping_rates = $states;
+	}
+###
+##
+#
+
 
 	$shippings_str = "";
 
@@ -2671,11 +2688,13 @@ function func_define_approximate_shippings($productid, $product_info=''){
 
 		    if ($product_info["free_ship_zone"] != "14"){
 
-			$diff_date = $current_time - $v["last_updated_date"];
+			if (!$ORIGINAL_approximation_shipping_rates_empty_flag){
+			    $diff_date = $current_time - $v["last_updated_date"];
 
-			if ($diff_date > $max_time){
+			    if ($diff_date > $max_time){
 				$time_diff_ok = false;
 				break;
+			    }
 			}
 
 
@@ -2717,23 +2736,30 @@ function func_define_approximate_shippings($productid, $product_info=''){
                         }
 
 
-                        if ($product_info["weight"] > 0 && $product_info["weight"] <= 1){
+			if (!$ORIGINAL_approximation_shipping_rates_empty_flag){
+
+                            if ($product_info["weight"] > 0 && $product_info["weight"] <= 1){
                                 $Shipping_charge = $v["bw_1"];
-                        }
-                        elseif ($product_info["weight"] > 1 && $product_info["weight"] <= 75){
+                            }
+                            elseif ($product_info["weight"] > 1 && $product_info["weight"] <= 75){
                                 $Shipping_charge = $v["bw_1"] + ($v["bw_75"] - $v["bw_1"])/(75 - 1) * ($product_info["weight"] - 1);
-                        }
-                        elseif ($product_info["weight"] > 75){
+                            }
+                            elseif ($product_info["weight"] > 75){
                                 $Shipping_charge = $v["bw_75"] + ($v["bw_150"] - $v["bw_75"])/(150 - 75) * ($product_info["weight"] - 75);
-                        }
+                            }
 
-                        $Shipping_charge = price_format($Shipping_charge);
+                            $Shipping_charge = price_format($Shipping_charge);
 
 
-			$intershipper_rates[0]["methodid"] = $shipping_id;
-			$intershipper_rates[0]["rate"] = $Shipping_charge;
+			    $intershipper_rates[0]["methodid"] = $shipping_id;
+			    $intershipper_rates[0]["rate"] = $Shipping_charge;
 
-			$approximation_intershipper_rates = $intershipper_rates;
+			    $approximation_intershipper_rates = $intershipper_rates;
+			}
+			else {
+			    $approximation_intershipper_rates = "";
+			    $v["state"] = $v["code"];
+			}
 
 			$customer_info["b_state"] = $customer_info["s_state"] = $v["state"];
 			$customer_info["b_country"] = $customer_info["s_country"] = "US";
@@ -2747,15 +2773,42 @@ function func_define_approximate_shippings($productid, $product_info=''){
 //print"---->";
 //func_print_r($approximation_intershipper_rates);
 
-			$Add_Shipping_rate = func_calculate_shippings($products, $shipping_id, $customer_info, "master", $approximation_intershipper_rates);
-	
-			unset($approximation_intershipper_rates);
+#
+##
+			$customer_zone_ship_for_flat_rate = func_get_customer_zone_ship($customer_info, "master", "D", $product_info["manufacturerid"]);
+
+			$flat_rate_shipping_cost = "";
+			$flat_rate_shippings = func_query($query = "SELECT * FROM $sql_tbl[shipping_rates] WHERE zoneid='$customer_zone_ship_for_flat_rate' AND provider='master' AND mintotal<='$product_info[price]' AND maxtotal>='$product_info[price]' AND minweight<='$product_info[weight]' AND maxweight>='$product_info[weight]' AND type='D' AND manufacturerid='$product_info[manufacturerid]' ORDER BY maxtotal, maxweight");
+			if (!empty($flat_rate_shippings)){
+				foreach ($flat_rate_shippings as $k_fr => $v_fr){
+					$flat_rate_shippings[$k_fr]["shipping_cost"] = $v_fr["cost_marcup"] + $v_fr['rate'] + $v_fr['weight_rate']*$product_info["weight"] + $v_fr["item_rate"]*$product_info["min_amount"] + $product_info["price"]*$v_fr['rate_p'] / 100 + $product_info["shipping_freight"];
+				}
+
+				$flat_rate_shippings = my_array_sort($flat_rate_shippings, "shipping_cost");
+				$flat_rate_shipping_cost = price_format($flat_rate_shippings[0]["shipping_cost"]);
+			}
+##
+#
+
+			if (!$ORIGINAL_approximation_shipping_rates_empty_flag){
+				$Add_Shipping_rate = func_calculate_shippings($products, $shipping_id, $customer_info, "master", $approximation_intershipper_rates);
+				unset($approximation_intershipper_rates);
 
 //func_print_r($Add_Shipping_rate);
 //die();
-			if (!empty($Add_Shipping_rate["shipping_cost"]) && $Add_Shipping_rate["shipping_cost"] > 0){
-				$Shipping_charge = $Add_Shipping_rate["shipping_cost"];
-				$Shipping_charge = price_format($Shipping_charge);
+
+				if (!empty($Add_Shipping_rate["shipping_cost"]) && $Add_Shipping_rate["shipping_cost"] > 0){
+					$Shipping_charge = $Add_Shipping_rate["shipping_cost"];
+					$Shipping_charge = price_format($Shipping_charge);
+				}
+
+
+				if ($flat_rate_shipping_cost != ""){
+					$Shipping_charge = min($Shipping_charge, $flat_rate_shipping_cost);
+				}
+			} 
+			else {
+				$Shipping_charge = $flat_rate_shipping_cost;
 			}
 ###
 ##

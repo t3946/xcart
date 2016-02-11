@@ -659,7 +659,8 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 
 			}
 
-			$shipping = my_array_sort($shipping, "new_orderby");
+			$shipping = my_array_sort($shipping, "orderby");
+//			$shipping = my_array_sort($shipping, "new_orderby");
 
 //func_print_r($intershipper_rates, $shipping);
 
