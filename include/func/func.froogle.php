@@ -1661,7 +1661,10 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 			$postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
 			$postBody["entries"][$k_counter]["product"]["condition"] = "new";
             if (!empty($product_info["product"]["upc"])) {
-                $postBody["entries"][$k_counter]["product"]["gtin"] = $product_info["product"]["upc"];
+                $postBody["entries"][$k_counter]["product"]["gtin"] = "$product_info[product][upc]";
+                if ($debug_requests == 'Y') {
+                    print("gtin debug ".$postBody["entries"][$k_counter]["product"]["gtin"]."\r\n");
+                }
             }
 			$postBody["entries"][$k_counter]["product"]["mpn"] = $product_info["product"]["mpn"];
 			$postBody["entries"][$k_counter]["product"]["price"]["value"] = $product_info["product"]["price"];
@@ -1909,7 +1912,7 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
                 $postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
                 $postBody["entries"][$k_counter]["product"]["condition"] = "new";
                 if (!empty($product_info["product"]["upc"])) {
-                    $postBody["entries"][$k_counter]["product"]["gtin"] = $product_info["product"]["upc"];
+                    $postBody["entries"][$k_counter]["product"]["gtin"] = "$product_info[product][upc]";
                 }
                 $postBody["entries"][$k_counter]["product"]["mpn"] = $product_info["product"]["mpn"];
 
