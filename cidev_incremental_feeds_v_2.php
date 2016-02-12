@@ -177,7 +177,7 @@ Select
 
 	if ($UpdateProductsOverview > 0){
 		$paramYN = 'Y';
-		$PARAMLIMIT = '';
+		$PARAMLIMIT = 'LIMIT 3000';
 	} else {
                 $paramYN = 'N';
                 $PARAMLIMIT = 'LIMIT 1000';
@@ -349,8 +349,7 @@ where UP.`type` <= 2  and P.forsale = '$paramYN'
 group by UP.resourceid
 HAVING utype = '2')
 As T
- where T.productid not in (320764,320761,320762,320764,320765,320766)
- $PARAMLIMIT";
+ where T.productid not in (320764,320761,320762,320764,320765,320766)";
 }
 else {
 
