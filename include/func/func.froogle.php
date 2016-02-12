@@ -1202,9 +1202,9 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
                 $results = $service->inventory->call('custombatch', array($params), "Google_Service_ShoppingContent_InventoryCustomBatchResponse");
 
 
-	        if ($debug_requests == "Y"){
-        	        func_print_r($results);
-	        }
+//	        if ($debug_requests == "Y"){
+//        	        func_print_r($results);
+//	        }
 
 
 ###
