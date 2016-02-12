@@ -506,11 +506,10 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 			$count_products = count($products);
 
 
-			$new_orderby = 0;
 			foreach ($shipping as $k => $v){
 
 				if ($v["new_hardcoded_shipping_method"] == "Y"){
-                                        $shipping[$k]["new_orderby"] = $v["orderby"];
+                                        $shipping[$k]["new_orderby"] = 1000 + $v["orderby"];
 
 					if ($v["shipping"] == "_SHIP_BY_FASTEST_METHOD_"){
 						$shipping[$k]["rate"] = "0.00";
@@ -523,10 +522,6 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
                                         if ($v["shipping"] == "_USE_MY_TRUCKING_ACCOUNT_"){
                                                 $shipping[$k]["rate"] = "5.00";
                                         }
-
-				} else {
-					$shipping[$k]["new_orderby"] = $new_orderby;
-					$new_orderby++;
 				}
 
 #
@@ -657,9 +652,27 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 ##
 #
 
+				$shipping[$k]["rate"] = price_format($shipping[$k]["rate"]);
+
+			}
+
+#
+## Sort
+###
+			$shipping = my_array_sort($shipping, "rate");
+
+                        $new_orderby = 0;
+                        foreach ($shipping as $k => $v){
+                                if ($v["new_hardcoded_shipping_method"] != "Y"){
+                                        $shipping[$k]["new_orderby"] = $new_orderby;
+                                        $new_orderby++;
+                                }
 			}
 
 			$shipping = my_array_sort($shipping, "new_orderby");
+###
+##
+#
 
 //func_print_r($intershipper_rates, $shipping);
 

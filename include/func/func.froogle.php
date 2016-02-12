@@ -1138,7 +1138,7 @@ function AddProductToGoogleBaseBatch($productid, $MerchantID, $update_type, $ser
 }
 
 function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
-        global $started_at, $sql_tbl;
+        global $started_at, $sql_tbl, $froogle_tracing_token, $debug_requests;
 
 	foreach ($ginventory as $k => $v){
 				/*func_build_quick_prices($v["productid"]);*/
@@ -1183,17 +1183,28 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 		func_backprocess_log("incremental feeds", $log_text);
 
 
-        $optParams = array();
+	$params = array();
+	$params["postBody"] = $postBody;
+
+
+//        $optParams = array();
         /*if tracing token defined - then it is should be included in all GoogleContentAPI requests*/
-        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
+//        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
         if (!empty($froogle_tracing_token)) {
-            $optParams = array('trace' => 'token:'.$froogle_tracing_token);
+            $params['trace'] = 'token:'.$froogle_tracing_token;
         }
-        $params = array('postBody' => $postBody);
-        $params = array_merge($params, $optParams);
-		$params = array('postBody' => $postBody);
-		$params = array_merge($params, $optParams);
+//        $params = array('postBody' => $postBody);
+//        $params = array_merge($params, $optParams);
+//		$params = array('postBody' => $postBody);
+//		$params = array_merge($params, $optParams);
+
+
                 $results = $service->inventory->call('custombatch', array($params), "Google_Service_ShoppingContent_InventoryCustomBatchResponse");
+
+
+	        if ($debug_requests == "Y"){
+        	        func_print_r($results);
+	        }
 
 
 ###
@@ -1835,7 +1846,7 @@ function AddProductToBingBaseBatch($productid,$update_type,$forsale,$bing_produc
 }
 
 function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
-	global $sql_tbl;
+	global $sql_tbl, $froogle_tracing_token, $debug_requests;
 
 //	func_print_r($gproducts);
 
@@ -1987,16 +1998,32 @@ $code = 200;
         $log_text = "GB: tried to submit $k_counter items as product feed ($MerchantID)";
         func_backprocess_log("incremental feeds", $log_text);
 
+/*
         $optParams = array();
-        /*if tracing token defined - then it is should be included in all GoogleContentAPI requests*/
-        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
+        #if tracing token defined - then it is should be included in all GoogleContentAPI requests
+//        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
         if (!empty($froogle_tracing_token)) {
             $optParams = array('trace' => 'token:'.$froogle_tracing_token);
         }
         $params = array('postBody' => $postBody);
         $params = array_merge($params, $optParams);
+*/
+
+
+        $params = array();
+        $params["postBody"] = $postBody;
+        if (!empty($froogle_tracing_token)) {
+            $params['trace'] = 'token:'.$froogle_tracing_token;
+        }
+
+
+
         $results = $service->products->call('custombatch', array($params), "Google_Service_ShoppingContent_ProductsCustomBatchResponse");
         
+	if ($debug_requests == "Y"){
+		func_print_r($results);
+	}
+
 
 ###
 		$results_arr = (array)$results;
