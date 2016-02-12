@@ -25,7 +25,14 @@ $marketplaceIdArray = array("Id" => array('ATVPDKIKX0DER'));
 ### ###
 
 
-
+#
+##
+###
+$debug_requests = 'N';
+$froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
+###
+##
+#
 
 define("FROOGLE_TAIL", '...');
 define("FROOGLE_TAIL_LEN", strlen(constant("FROOGLE_TAIL")));
@@ -417,8 +424,10 @@ Select
 					}
 				}
 
-				db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
-				db_query("UPDATE $sql_tbl[products] SET last_incremental_update='".time()."' WHERE productid='".$product["productid"]."'");
+###
+//				db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
+//				db_query("UPDATE $sql_tbl[products] SET last_incremental_update='".time()."' WHERE productid='".$product["productid"]."'");
+###
 
 				if ($bing_inventory_batch_count == $max_bing_batch)
 				{
@@ -525,8 +534,9 @@ Select
 			}
 	}
 //        print ("Why we dont delete utype 3 ?");
-	db_query("DELETE FROM xcart_cidev_updated_products WHERE type='3' AND time_stamp <= '$started_at'");
-	
+###
+//	db_query("DELETE FROM xcart_cidev_updated_products WHERE type='3' AND time_stamp <= '$started_at'");
+###	
 
 
 }
