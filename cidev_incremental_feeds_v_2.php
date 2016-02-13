@@ -29,7 +29,7 @@ $marketplaceIdArray = array("Id" => array('ATVPDKIKX0DER'));
 ##
 ###
 $debug_requests = 'N';
-$froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
+$froogle_tracing_token = 'ANY78kLeWOxH4je4ZmHHsdNUGUhaxDLr2qkUcqeZ3MPGH1qjH2RdLqjUjqYTc95GthRPCu8dconorTv7DtGlvI5RDlQlVyq4xzMqr9hiS5aaTT9NlPQrsJc';
 ###
 ##
 #
@@ -177,7 +177,7 @@ Select
 
 	if ($UpdateProductsOverview > 0){
 		$paramYN = 'Y';
-		$PARAMLIMIT = '';
+		$PARAMLIMIT = 'LIMIT 3000';
 	} else {
                 $paramYN = 'N';
                 $PARAMLIMIT = 'LIMIT 1000';
@@ -349,8 +349,7 @@ where UP.`type` <= 2  and P.forsale = '$paramYN'
 group by UP.resourceid
 HAVING utype = '2')
 As T
- where T.productid not in (320764,320761,320762,320764,320765,320766)
- $PARAMLIMIT";
+ where T.productid not in (320764,320761,320762,320764,320765,320766)";
 }
 else {
 
@@ -425,8 +424,8 @@ Select
 				}
 
 ###
-//				db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
-//				db_query("UPDATE $sql_tbl[products] SET last_incremental_update='".time()."' WHERE productid='".$product["productid"]."'");
+				db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
+				db_query("UPDATE $sql_tbl[products] SET last_incremental_update='".time()."' WHERE productid='".$product["productid"]."'");
 ###
 
 				if ($bing_inventory_batch_count == $max_bing_batch)
@@ -535,7 +534,7 @@ Select
 	}
 //        print ("Why we dont delete utype 3 ?");
 ###
-//	db_query("DELETE FROM xcart_cidev_updated_products WHERE type='3' AND time_stamp <= '$started_at'");
+	db_query("DELETE FROM xcart_cidev_updated_products WHERE type='3' AND time_stamp <= '$started_at'");
 ###	
 
 
