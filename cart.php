@@ -883,7 +883,7 @@ if (!$func_is_cart_empty) {
 
 			foreach ($products as $v2) {	
 # START: random:20341 [2010 Jul 29 14:46] 
-//				if ($k == func_manufacturerid_for_group($v2['shipping_freight'], $v2['manufacturerid'])) {
+//				if ($k == func_manufacturerid_for_group($v2['shipping_freight'], $v2['manufacturerid'])) 
 				if ($k == $v2['manufacturerid']) {
 # END: random:20341 [2010 Jul 29 14:46] 
 					$_products[] = $v2;

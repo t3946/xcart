@@ -43,24 +43,29 @@ if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); 
 x_load('files','user','taxes');
 
 # START: random:20460 [2010 Mar 18 13:43] 
-function func_is_customer_free_ship_zone($zoneid, $userinfo, $provider, $for_manufacturerid=0) {
+//function func_is_customer_free_ship_zone($zoneid, $userinfo, $provider, $for_manufacturerid=0, $type="") 
+function func_is_customer_free_ship_zone($zoneid, $userinfo, $provider) {
 
-//func_print_r($zoneid);
-	
 	if ($zoneid < 0) {
-		return false;
+		$return["is_customer_free_ship_zone"] = false;
+//		return false;
+		return $return;
 	}
 
-	$ship_zones = func_get_customer_zones_avail($userinfo, $provider, "S", $zoneid, $for_manufacturerid);
-
-//func_print_r($zoneid, $ship_zones);
+//	$ship_zones = func_get_customer_zones_avail($userinfo, $provider, "S", $zoneid, $for_manufacturerid, $type); // del zoneid
+	$ship_zones = func_get_customer_zones_avail($userinfo, $provider, "S","0","");
 
 	if (!is_array($ship_zones)) {
 		# default zone
 		$ship_zones = array('0' => 0);
 	}
 
-	return (array_key_exists($zoneid, $ship_zones));
+	$return_value = array_key_exists($zoneid, $ship_zones);
+
+	$return["is_customer_free_ship_zone"] = $return_value;
+	$return["ship_zones"] = $ship_zones;
+
+	return $return;
 
 }
 
@@ -92,10 +97,7 @@ function func_get_customer_zone_ship ($username, $provider, $type, $for_manufact
 ##
 #
 
-
-	$zones = func_get_customer_zones_avail($username, $provider, "S", "-1", $type, $for_manufacturerid);
-
-//func_print_r($zones, $for_manufacturerid);
+	$zones = func_get_customer_zones_avail($username, $provider, "S", $for_manufacturerid, $type);
 
 	$zone = 0; # default zone
 	if (is_array($zones)) {
@@ -126,7 +128,7 @@ function func_get_customer_zone_ship ($username, $provider, $type, $for_manufact
 #
 # Get the customer's zones
 #
-function func_get_customer_zones_avail ($username, $provider, $address_type="S", $zoneid = "-1", $type = "", $for_manufacturerid=0) {
+function func_get_customer_zones_avail ($username, $provider, $address_type="S", $for_manufacturerid=0, $type = "") {
 	global $sql_tbl, $config, $single_mode;
 
 //$zoneid  = "-1" - for Free shipping for destination  https://basecamp.com/2070980/projects/1577907/messages/53254308
@@ -184,6 +186,8 @@ function func_get_customer_zones_avail ($username, $provider, $address_type="S",
 
 # END: random:17710_17631 [2009 Mar 26 09:25] 
 	$customer_login = "";
+
+
 	if (!empty($customer_info)) {
 		$customer_login = $customer_info["login"];
 
@@ -192,34 +196,71 @@ function func_get_customer_zones_avail ($username, $provider, $address_type="S",
 		#
 		$data_key = md5($customer_login . $provider . $customer_info[$address_prefix."country"] . $customer_info[$address_prefix."state"] . $customer_info[$address_prefix."county"] . $customer_info[$address_prefix."zipcode"] . $customer_info[$address_prefix."city"]);
 
-		if (isset($results_cache[$data_key]))
-			return $results_cache[$data_key];
+		if (isset($results_cache[$data_key])){
+//			return $results_cache[$data_key]; // Do not uncomment out it
+		}
 
 		#
 		# Generate the zones list
 		#
 		$provider_condition = ($single_mode ? "" : "AND provider='$provider'");
 
-		if ($customer_info[$address_prefix."country"] != "US" || $zoneid > 0 || empty($type)){
+#
+##
+###
+/*
+if (isset($_GET["mode"]) && $_GET["mode"] == "checkout" && isset($_GET["paymentid"]) && $_GET["paymentid"] > 0){
+        global $cart;
 
-			// 1)
-			// $zoneid > 0 is for define $product["free_shipping"] = "Y"
-			// for getting all avalable zones and then compares whether $product["free_ship_zone"] in Zones
-			// in func_weight_shipping_products
+        if (isset($cart["shippingids"][$for_manufacturerid]) && $cart["shippingids"][$for_manufacturerid] > 0 && isset($cart["all_shippings"][$for_manufacturerid]) && is_array($cart["all_shippings"][$for_manufacturerid])){
+                foreach ($cart["all_shippings"][$for_manufacturerid] as $ks => $vs){
+                        if ($vs["shippingid"] == $cart["shippingids"][$for_manufacturerid]){
+                                if (!empty($vs["code"])){
+                                        $type = "R";
+                                }
+                                else {
+                                        $type = "D";
+                                }
+                                break;
+                        }
+                }
+        }
+}
+###
+##
+#
+*/
 
-			// 2)
-			// empty($type) is for getting all avalable zones for taxes
-			// in func_get_product_tax_rates
+//		if ($customer_info[$address_prefix."country"] != "US" || $zoneid > 0 || empty($type) || empty($for_manufacturerid))
+		if ($customer_info[$address_prefix."country"] != "US" || empty($type) || empty($for_manufacturerid)){
 
+			// empty for_manufacturerid for free_shipping = Y AND for getting all avalable zones for taxes
 
 			# Possible zones for customer's country...
 			$possible_zones = func_query("SELECT $sql_tbl[zone_element].zoneid FROM $sql_tbl[zone_element], $sql_tbl[zones] WHERE $sql_tbl[zone_element].zoneid=$sql_tbl[zones].zoneid AND $sql_tbl[zone_element].field='".$customer_info[$address_prefix."country"]."'  AND $sql_tbl[zone_element].field_type='C' $provider_condition GROUP BY $sql_tbl[zone_element].zoneid");
 
+//func_print_r($customer_info[$address_prefix."country"] , $zoneid, $type, $for_manufacturerid, $possible_zones);
+//die("123");
 
 		}
 		else {
 ###########
 ### Igor###
+
+/*
+$possible_zones = func_query("
+SELECT ZE.zoneid 
+FROM xcart_zone_element As ZE
+        left join xcart_zones Z ON 1=1
+        inner join xcart_shipping_rates SR ON SR.zoneid = ZE.zoneid
+WHERE ZE.zoneid=Z.zoneid 
+      AND ZE.field='US' 
+            AND ZE.field_type='C' 
+            AND Z.provider='master' 
+GROUP BY ZE.zoneid
+");
+*/
+
 $possible_zones = func_query($possible_zones_query = "
 SELECT ZE.zoneid
 FROM xcart_zone_element As ZE
@@ -232,18 +273,14 @@ WHERE
             AND ZE.field_type='C' 
             AND Z.provider='master' 
 	    AND SR.type='$type'
-	    AND SR.manufacturerid='$for_manufacturerid'
+	    AND SR.manufacturerid='$for_manufacturerid' 
 GROUP BY ZE.zoneid
 Order By COUNT(distinct ZES.field)
 ");
 //Order By COUNT(SR.rateid)
 ###########
 
-//func_print_r($for_manufacturerid);
-
 		}
-
-//func_print_r( $possible_zones, $possible_zones_query);
 
 
 		if (is_array($possible_zones)) {
@@ -316,7 +353,7 @@ Order By COUNT(distinct ZES.field)
 	if (!empty($customer_login)) {
 		$results_cache[$data_key] = $zones;
 
-}
+	}
 
 	return $zones;
 }
@@ -1176,7 +1213,14 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 			}
 			else {
 # START: random:20460 [2010 Mar 18 13:43] 
-				$free_shipping = func_is_customer_free_ship_zone($product["free_ship_zone"], $customer_info, $product["provider"], $product['manufacturerid']);
+
+				$free_shipping_arr = func_is_customer_free_ship_zone($product["free_ship_zone"], $customer_info, $product["provider"]);
+				$free_shipping = $free_shipping_arr["is_customer_free_ship_zone"];
+
+//if ($product["productid"] == "39768"){
+//func_print_r($product["productid"], $free_shipping_arr);
+//}
+
 
 # END: random:20460 [2010 Mar 18 13:43] 
 				if (!($config["Shipping"]["replace_shipping_with_freight"] == "Y" && $product["shipping_freight"] > 0)) {
@@ -1201,10 +1245,13 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 			}
 # END: random:20460 [2010 Mar 18 13:43] 
 # START: random:17710_17631 [2009 Mar 26 09:25] 
-			if (!isset($for_manufacturerid))
+			if (!isset($for_manufacturerid)){
 # END: random:17710_17631 [2009 Mar 26 09:25] 
 # START: random:20341 [2010 Jul 29 14:46] 
-			$for_manufacturerid = func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid']);
+				$for_manufacturerid = func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid']);
+
+
+			}
 # END: random:20341 [2010 Jul 29 14:46] 
 		}
 	}
