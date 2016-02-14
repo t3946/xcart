@@ -910,8 +910,11 @@ function func_weight_shipping_products ($products, $ignore_freight=true, $userin
 ##
 #
 
-		if ($userinfo_for_zones && func_is_customer_free_ship_zone($product["free_ship_zone"], $userinfo_for_zones, $product["provider"])){
-			$product["free_shipping"] = "Y" ;
+
+		$free_shipping_arr = func_is_customer_free_ship_zone($product["free_ship_zone"], $userinfo_for_zones, $product["provider"]);
+
+		if ($userinfo_for_zones && $free_shipping_arr["is_customer_free_ship_zone"]){
+				$product["free_shipping"] = "Y";
 		}
 
 # END: random:20460 [2010 Mar 18 13:43] 
