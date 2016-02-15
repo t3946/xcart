@@ -417,7 +417,7 @@ else {
                 $tparamYN = $paramYN;
                 $tPARAMLIMIT = $PARAMLIMIT;
                 $paramYN = 'N';
-                $PARAMLIMIT = 'LIMIT 30';
+                $PARAMLIMIT = 'LIMIT 130';
                 $log_text = "//// processing SF DISCONTINUED ITEMS ";
                 func_backprocess_log("incremental feeds", $log_text);
                 
