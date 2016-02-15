@@ -2539,6 +2539,18 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
 
 #
 ##
+		$order["shipping_groups"][$k]["product_total"]["net"] = price_format($v["total"]["net"] - $v["shipping_cost"]["net"]);
+
+		if (!empty($v["shippingid"])){
+			$real_drop_ship_fee = func_query_first_cell("SELECT real_drop_ship_fee FROM $sql_tbl[shipping_rates] WHERE shippingid='$v[shippingid]' AND manufacturerid='$k' AND mintotal <= '".$order["shipping_groups"][$k]["product_total"]["net"]."' AND maxtotal >= '".$order["shipping_groups"][$k]["product_total"]["net"]."'");
+			$order["shipping_groups"][$k]["real_drop_ship_fee"] = $real_drop_ship_fee;
+		}
+##
+#
+
+
+#
+##
 		if ($v["cb_status"] == "IO" || $v["cb_status"] == "O"){
 			$convert_to_regular_order_show_button = true;
 		}

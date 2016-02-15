@@ -1725,6 +1725,15 @@ if ($REQUEST_METHOD == "POST") {
 
 		###
 
+#
+##
+                if (!empty($order["shipping_groups"][$certain_mid]["shippingid"])){
+                        $real_drop_ship_fee = func_query_first_cell("SELECT real_drop_ship_fee FROM $sql_tbl[shipping_rates] WHERE shippingid='".$order["shipping_groups"][$certain_mid]["shippingid"]."' AND manufacturerid='$certain_mid' AND mintotal <= '".$products_total."' AND maxtotal >= '".$products_total."'");
+			$drop_ship_fee_charged = $real_drop_ship_fee;
+                }
+##
+#
+
 		$shipping_total = price_format($shipping_charged + $drop_ship_fee_charged);
 
 		$HST_charged = 0;

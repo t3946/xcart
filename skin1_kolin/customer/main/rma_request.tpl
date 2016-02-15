@@ -33,7 +33,8 @@ Please select "Return QTY".
 </td>
 </tr>
 </table>
-
+<br />
+</div>
 <br />
 </div>
 <br />
