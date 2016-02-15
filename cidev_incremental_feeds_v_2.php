@@ -177,7 +177,7 @@ Select
 
 	if ($UpdateProductsOverview > 0){
 		$paramYN = 'Y';
-		$PARAMLIMIT = '';
+		$PARAMLIMIT = 'LIMIT 3000';
 	} else {
                 $paramYN = 'N';
                 $PARAMLIMIT = 'LIMIT 1000';
@@ -368,6 +368,7 @@ from xcart_cidev_updated_products UP
                 left join xcart_products P ON P.productid = UP.resourceid
 where UP.`type` <= 2 and P.forsale = '$paramYN'
 group by UP.resourceid
+$PARAMLIMIT
 UNION
 Select 
                 P2.productid As productid,
@@ -379,8 +380,7 @@ Select
                 left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
                 inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
  where UPM.`type` = 3 and P2.forsale='$paramYN') As T
- where T.productid not in (320764,320761,320762,320764,320765,320766)
- $PARAMLIMIT";
+ where T.productid not in (320764,320761,320762,320764,320765,320766)";
 }
 			$products = db_query($query_products);
 
