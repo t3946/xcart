@@ -454,7 +454,7 @@ else {
             }
     }
  
-}
+
 			$products = db_query($query_products);
 
 			while ($product = db_fetch_array($products))
