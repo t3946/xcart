@@ -353,7 +353,7 @@ if (!empty($query_products_count)){
     }
 else {
 
-        $query_products_count = "
+        $query_products_count = func_query_first_cell("
             Select COUNT(*)
             From
             (Select 
@@ -380,7 +380,7 @@ else {
                             left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
                             inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
              where UPM.`type` = 3 and P2.forsale='$paramYN') As T
-             where T.productid not in (320764,320761,320762,320764,320765,320766)";
+             where T.productid not in (320764,320761,320762,320764,320765,320766)");
      
     if (!empty($query_products_count)){
                 $query_products = "
