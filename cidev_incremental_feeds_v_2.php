@@ -177,7 +177,7 @@ Select
 
 	if ($UpdateProductsOverview > 0){
 		$paramYN = 'Y';
-		$PARAMLIMIT = 'LIMIT 3000';
+		$PARAMLIMIT = '';
 	} else {
                 $paramYN = 'N';
                 $PARAMLIMIT = 'LIMIT 1000';
@@ -303,9 +303,9 @@ $bing_products_batch_count = 0;
 $binventory = array();
 $bproducts = array();
 
-$max_google_batch = 40;
+$max_google_batch = 140;
 $max_amazon_batch = 2000;
-$max_bing_batch = 40;
+$max_bing_batch = 140;
 
 $cnt = 0;
 
