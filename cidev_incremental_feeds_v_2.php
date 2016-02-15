@@ -313,74 +313,147 @@ $enable_incremental_feed_updates = func_query_first_cell("SELECT enable_incremen
 
 
 $query_products_count = func_query_first_cell("
-Select COUNT(*)
-From
-(Select 
-                UP.resourceid As productid,
-                UP.time_stamp As ts,
-                P.forsale As forsale,
-                P.amazon_enabled As amazon_enabled,
-                GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
-from xcart_cidev_updated_products UP
-                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
-                inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
-                left join xcart_products P ON P.productid = UP.resourceid
-where UP.`type` <= 2  and P.forsale = '$paramYN'
-group by UP.resourceid
-HAVING utype = '2')
-As T
- where T.productid not in (320764,320761,320762,320764,320765,320766)");
+        Select COUNT(*)
+        From
+        (Select 
+                        UP.resourceid As productid,
+                        UP.time_stamp As ts,
+                        P.forsale As forsale,
+                        P.amazon_enabled As amazon_enabled,
+                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+        from xcart_cidev_updated_products UP
+                        left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
+                        inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                        left join xcart_products P ON P.productid = UP.resourceid
+        where UP.`type` <= 2  and P.forsale = '$paramYN'
+        group by UP.resourceid
+        HAVING utype = '2')
+        As T
+         where T.productid not in (320764,320761,320762,320764,320765,320766)");
 
 if (!empty($query_products_count)){
-	$query_products = "
-Select *
-From
-(Select 
-                UP.resourceid As productid,
-                UP.time_stamp As ts,
-                P.forsale As forsale,
-                P.amazon_enabled As amazon_enabled,
-                GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
-from xcart_cidev_updated_products UP
-                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
-                inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
-                left join xcart_products P ON P.productid = UP.resourceid
-where UP.`type` <= 2  and P.forsale = '$paramYN'
-group by UP.resourceid
-HAVING utype = '2')
-As T
- where T.productid not in (320764,320761,320762,320764,320765,320766)";
-}
+        $query_products = "
+                Select *
+                From
+                (Select 
+                                UP.resourceid As productid,
+                                UP.time_stamp As ts,
+                                P.forsale As forsale,
+                                P.amazon_enabled As amazon_enabled,
+                                GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                from xcart_cidev_updated_products UP
+                                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
+                                inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                                left join xcart_products P ON P.productid = UP.resourceid
+                where UP.`type` <= 2  and P.forsale = '$paramYN'
+                group by UP.resourceid
+                HAVING utype = '2')
+                As T
+                 where T.productid not in (320764,320761,320762,320764,320765,320766)";
+    }
 else {
 
-	$query_products = "
-Select *
-From
-(Select 
-                UP.resourceid As productid,
-                UP.time_stamp As ts,
-                P.forsale As forsale,
-                P.amazon_enabled As amazon_enabled,
-                GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
-from xcart_cidev_updated_products UP
-                left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
-                inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
-                left join xcart_products P ON P.productid = UP.resourceid
-where UP.`type` <= 2 and P.forsale = '$paramYN'
-group by UP.resourceid
-$PARAMLIMIT
-UNION
-Select 
-                P2.productid As productid,
-                UPM.time_stamp As ts,
-                P2.forsale As forsale,
-                P2.amazon_enabled As amazon_enabled,
-                1 As utype
- From xcart_cidev_updated_products UPM
-                left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
-                inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
- where UPM.`type` = 3 and P2.forsale='$paramYN') As T
- where T.productid not in (320764,320761,320762,320764,320765,320766)";
+        $query_products_count = "
+            Select COUNT(*)
+            From
+            (Select 
+                            UP.resourceid As productid,
+                            UP.time_stamp As ts,
+                            P.forsale As forsale,
+                            P.amazon_enabled As amazon_enabled,
+                            GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+            from xcart_cidev_updated_products UP
+                            left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
+                            inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                            left join xcart_products P ON P.productid = UP.resourceid
+            where UP.`type` <= 2 and P.forsale = '$paramYN'
+            group by UP.resourceid
+            $PARAMLIMIT
+            UNION
+            Select 
+                            P2.productid As productid,
+                            UPM.time_stamp As ts,
+                            P2.forsale As forsale,
+                            P2.amazon_enabled As amazon_enabled,
+                            1 As utype
+             From xcart_cidev_updated_products UPM
+                            left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
+                            inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
+             where UPM.`type` = 3 and P2.forsale='$paramYN') As T
+             where T.productid not in (320764,320761,320762,320764,320765,320766)";
+     
+    if (!empty($query_products_count)){
+                $query_products = "
+                        Select *
+                        From
+                        (Select 
+                                        UP.resourceid As productid,
+                                        UP.time_stamp As ts,
+                                        P.forsale As forsale,
+                                        P.amazon_enabled As amazon_enabled,
+                                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                        from xcart_cidev_updated_products UP
+                                        left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
+                                        inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                                        left join xcart_products P ON P.productid = UP.resourceid
+                        where UP.`type` <= 2 and P.forsale = '$paramYN'
+                        group by UP.resourceid
+                        $PARAMLIMIT
+                        UNION
+                        Select 
+                                        P2.productid As productid,
+                                        UPM.time_stamp As ts,
+                                        P2.forsale As forsale,
+                                        P2.amazon_enabled As amazon_enabled,
+                                        1 As utype
+                         From xcart_cidev_updated_products UPM
+                                        left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
+                                        inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
+                         where UPM.`type` = 3 and P2.forsale='$paramYN') As T
+                         where T.productid not in (320764,320761,320762,320764,320765,320766)";
+            }    
+    else
+            {
+                $tparamYN = $paramYN;
+                $tPARAMLIMIT = $PARAMLIMIT;
+                $paramYN = 'N';
+                $PARAMLIMIT = 'LIMIT 100';
+                $log_text = "//// processing SF DISCONTINUED ITEMS ";
+                func_backprocess_log("incremental feeds", $log_text);
+                
+                $query_products = "
+                        Select *
+                        From
+                        (Select 
+                                        UP.resourceid As productid,
+                                        UP.time_stamp As ts,
+                                        P.forsale As forsale,
+                                        P.amazon_enabled As amazon_enabled,
+                                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                        from xcart_cidev_updated_products UP
+                                        left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
+                                        inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                                        left join xcart_products P ON P.productid = UP.resourceid
+                        where UP.`type` <= 2 and P.forsale = '$paramYN'
+                        group by UP.resourceid
+                        UNION
+                        Select 
+                                        P2.productid As productid,
+                                        UPM.time_stamp As ts,
+                                        P2.forsale As forsale,
+                                        P2.amazon_enabled As amazon_enabled,
+                                        1 As utype
+                         From xcart_cidev_updated_products UPM
+                                        left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
+                                        inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
+                         where UPM.`type` = 3 and P2.forsale='$paramYN') As T
+                         where T.productid not in (320764,320761,320762,320764,320765,320766)
+                         $PARAMLIMIT";
+                $paramYN = $tparamYN;
+                $PARAMLIMIT = $tPARAMLIMIT;
+            }
+    }
+ 
 }
 			$products = db_query($query_products);
 
