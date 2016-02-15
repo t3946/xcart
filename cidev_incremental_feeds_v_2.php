@@ -460,7 +460,7 @@ else {
 			while ($product = db_fetch_array($products))
 			{
 
-				if ( $BingMerchantID != '' && $BingCatalogID != '' )
+				if ( $enable_incremental_feed_updates == "Y" && $BingMerchantID != '' && $BingCatalogID != '' )
 				{
 					$AddProductToBingBaseBatch_arr = AddProductToBingBaseBatch($product["productid"],$product["utype"],$product["forsale"],$bing_products_batch_count,$bproducts,$bing_inventory_batch_count,$binventory);
 
