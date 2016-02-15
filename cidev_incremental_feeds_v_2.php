@@ -429,7 +429,7 @@ else {
                                         UP.time_stamp As ts,
                                         P.forsale As forsale,
                                         P.amazon_enabled As amazon_enabled,
-                                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                                        1 As utype
                         from xcart_cidev_updated_products UP
                                         left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                                         inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
