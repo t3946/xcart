@@ -46,6 +46,18 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		$last_name = implode(" ", $cardholderl_name_arr);
 		$last_name = trim($last_name);
 
+		$shipping_address_type = 'residential';
+		if (!empty($order["extra"]["additional_fields"]) && is_array($order["extra"]["additional_fields"])){
+			foreach ($order["extra"]["additional_fields"] as $k_ea => $v_ea){
+				if (!empty($v_ea["value"]) && $v_ea["title"] == "Company" && $v_ea["section"] == "S"){
+					$shipping_address_type = 'business';
+				}
+			}
+		}
+
+//func_print_r($order);
+//die();
+
 		$data_json = '{
 		        "intent":"authorize",
 		        "payer":{
@@ -72,7 +84,18 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		                        }
                 		],
 		                "payer_info":{
-                		        "email":"'.$order["email"].'"
+                		        "email":"'.$order["email"].'",
+		                        "first_name":"'.addslashes($first_name).'",
+                		        "last_name":"'.addslashes($last_name).'",
+		                        "shipping_address":{
+                		                "recipient_name":"'.addslashes($order["s_firstname"]).'",
+		                                "type":"'.$shipping_address_type.'",
+                		                "line1":"'.addslashes($order["s_address"]).(!empty($order["s_address_2"])?" ".addslashes($order["s_address_2"]):"").'",
+                		                "city":"'.addslashes($order["s_city"]).'",
+		                                "state":"'.addslashes($order["s_state"]).'",
+		                                "postal_code":"'.addslashes($order["s_zipcode"]).'",
+                		                "country_code":"'.addslashes($order["s_country"]).'"
+                		        }
 		                }
 		        },
 		        "transactions":[
@@ -92,6 +115,8 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		        ]
 		}';
 
+//func_print_r($data_json);
+//die();
 
 		$result = func_paypal_create_payment($Access_Token, $data_json);
 
