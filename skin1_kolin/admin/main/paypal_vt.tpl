@@ -126,12 +126,15 @@
  {foreach from=$transaction_logs item=v key=k}
   <tr>
    <td>
+	{if $v.transaction_id ne ""} 
 	<input type="radio" id="transaction_id" name="transaction_id" value="{$v.transaction_id}"
+{*
 	{if $transaction_id_selected eq "" && $v.transaction_id ne ""} 
+*}
 		checked="checked"
 		{assign var="transaction_id_selected" value="Y"}
-	{/if} 
 	/>
+	{/if} 
    </td>
    <td>{$v.payment_method}</td>
    <td>{$v.date|date_format:'%d-%b-%Y'}</td>
@@ -141,12 +144,7 @@
 	{if $v.transaction_id ne ""}
 
 {if $v.transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$v.transaction_id_link|substitute:"trans-id":$v.transaction_id}">{/if}
-{if $v.transaction_link_anchor ne ""}
-{$v.transaction_link_anchor}
-{else}
-{$v.transaction_id}
-{/if}
-{if $v.transaction_id_link ne ""}</a>{/if}
+{if $v.transaction_link_anchor ne ""}{$v.transaction_link_anchor}{else}{$v.transaction_id}{/if}{if $v.transaction_id_link ne ""}</a>{/if}
 
 {if $v.transaction_link_anchor ne ""}({$v.transaction_id}){/if}
 
@@ -163,10 +161,10 @@
 //<![CDATA[
 {literal}
 $(document).ready(function(){
-    $('#show_hide_link_{/literal}{$v.transaction_id}{literal}').click(
+    $('#show_hide_link_{/literal}{$k}{literal}').click(
        function() {
           $(this).text(function(i,text) { return (text == 'Show details') ? 'Hide details' : 'Show details'; });
-          $('#transaction_log_div_{/literal}{$v.transaction_id}{literal}').toggle('slow');
+          $('#transaction_log_div_{/literal}{$k}{literal}').toggle('slow');
           return false;
        }
     );
@@ -176,8 +174,8 @@ $(document).ready(function(){
 </script>
 
 <br />
-<div id="transaction_log_div_{$v.transaction_id}" style="display: none;"><B>Full log:</B><br />{$v.transaction_log}</div>
-<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: func_show_hide_log('{$v.transaction_id}');" id="show_hide_link_{$v.transaction_id}">Show details</a>
+<div id="transaction_log_div_{$k}" style="display: none;"><B>Full log:</B><br />{$v.transaction_log}</div>
+<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: func_show_hide_log('{$k}');" id="show_hide_link_{$k}">Show details</a>
 
 {/if}
 

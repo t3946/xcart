@@ -78,6 +78,9 @@ class Google_Service_Resource
    */
   public function call($name, $arguments, $expected_class = null)
   {
+
+global $debug_requests;
+
     if (! isset($this->methods[$name])) {
       $this->client->getLogger()->error(
           'Service method unknown',
@@ -218,6 +221,20 @@ class Google_Service_Resource
           $parameters['data']['value']
       );
     }
+
+
+if ($debug_requests == "Y"){
+
+print("<br /><br />  url: ");
+print_r($url);
+print("  <br /><br />");
+
+
+print("<br /><br />  httpRequest: ");
+print_r($httpRequest);
+print("  <br /><br />");
+}
+
 
     if ($this->client->shouldDefer()) {
       // If we are in batch or upload mode, return the raw request.
