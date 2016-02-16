@@ -609,43 +609,12 @@ function AddProductToAmazonBatch($productid, $update_type, $amazon_inventory_bat
 
 function AddProductToGoogleBaseBatch($productid, $MerchantID, $update_type, $service, $forsale, $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory){
 
-	if ($update_type == "1" || $update_type == "1,2"){
-
-	        if (1 == 2 /*$forsale == "N"*/){
-        	        try {
-				print("GB: tried to delete item with productid = $productid \r\n\r\n");
-
-	                        $log_text = "GB: tried to delete item with productid = $productid";
-        	                func_backprocess_log("incremental feeds", $log_text);
-
-	                	$results3 = $service->products->delete($MerchantID, "online:en:US:".$productid);
-	                }
-        	        catch (Google_ServiceException $e) {
-                	    print "Error code :" . $e->getCode() . "\n";
-	                    // Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
-        	            print "Error message: " . $e->getMessage() . "\n";
-
-                            $log_text = "Error code :" . $e->getCode() . "\n"."Error message: " . $e->getMessage();
-                            func_backprocess_log("incremental feeds", $log_text);
-
-                	}
-	                catch (Google_Exception $e) {
-        	            // Other error.
-                	    print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
-
-                            $log_text = "An error occurred: (" . $e->getCode() . ") " . $e->getMessage();
-                            func_backprocess_log("incremental feeds", $log_text);
-	                }
-
-			return false;
-	        }
-		else {
+	if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $forsale == "N"))){
 			$Batchid = $google_products_batch_count;
 			$count_gproducts = count($gproducts);
 			$gproducts[$count_gproducts]["productid"] = $productid;
 			$gproducts[$count_gproducts]["Batchid"] = $Batchid;
 			$google_products_batch_count++;
-		}
 	}
 	elseif ($update_type == "2" && $forsale == "Y"){
 		$Batchid = $google_inventory_batch_count;
@@ -1223,7 +1192,7 @@ return $code;
 function AddProductToBingBaseBatch($productid,$update_type,$forsale,$bing_products_batch_count,$bproducts,$bing_inventory_batch_count,$binventory)
 {
 
-	if ($update_type == "1" || $update_type == "1,2"){
+	if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $forsale == "N"))){
 		$batchid = $bing_products_batch_count;
 		$count_bproducts = count($bproducts);
 		$bproducts[$count_bproducts]["productid"] = $productid;
