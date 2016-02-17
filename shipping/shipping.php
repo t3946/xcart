@@ -39,7 +39,7 @@
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
-x_load('cart');
+x_load('cart','amazon_shipping');
 
 #
 # This function creates the shipping methods/rates list
@@ -126,6 +126,9 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 		else {
 			include_once $xcart_dir."/shipping/myshipper.php";
 		}
+
+
+//func_print_r($intershipper_rates);
 
 		func_https_ctl('IGNORE');
 
@@ -383,9 +386,11 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 
 				if ($result) {
 # START: random:17710_17631 [2009 Mar 26 09:25] 
-					if (empty($for_manufacturerid) || func_query_first_cell("SELECT rateid FROM $sql_tbl[shipping_rates] WHERE shippingid='$result[shippingid]' AND manufacturerid='$for_manufacturerid' LIMIT 1 "))
+					if (empty($for_manufacturerid) || func_query_first_cell("SELECT rateid FROM $sql_tbl[shipping_rates] WHERE shippingid='$result[shippingid]' AND manufacturerid='$for_manufacturerid' LIMIT 1 ")){
 # END: random:17710_17631 [2009 Mar 26 09:25] 
-					$shipping[] = $result;
+						$shipping[] = $result;
+//func_print_r($result);
+					}
 				}
 			}
 		}
