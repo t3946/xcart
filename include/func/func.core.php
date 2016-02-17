@@ -3719,18 +3719,26 @@ T - sTatic page
 
 	if (empty($surf_meta)){
 
-                if (!empty($_SERVER["HTTP_REFERER"])){
+		$referal_url = "";
+
+                if (strpos($_SERVER["REQUEST_URI"], "origin") !== false){
+                        $referal_url = str_replace("/dispatcher.php?request_uri=","",$_SERVER["REQUEST_URI"]);
+                        $referal_url = $_SERVER["HTTP_HOST"].$referal_url;
+
+			global $login;
+			db_query("UPDATE $sql_tbl[customers] SET referer='".addslashes($referal_url)."' WHERE login='$login'");
+                }
+
+                if (!empty($_SERVER["HTTP_REFERER"]) && empty($referal_url)){
                         $referal_url_arr1 = explode("//", $_SERVER["HTTP_REFERER"]);
                         $referal_url_arr2 = explode("/", $referal_url_arr1[1]);
                         $referal_url = $referal_url_arr1[0]."//".$referal_url_arr2[0];
-                } else {
-                        $referal_url = "";
                 }
 
                 $cidev_surf_meta_arr = array(
                         "sessid" => $XCARTSESSID,
                         "date" => time(),
-                        "referal_url" => $referal_url,
+                        "referal_url" => addslashes($referal_url),
                         "is_mobile" => ($detect_isMobile_was_created ? "Y":"N"),
                         "goal_order" => 'N',
                         "goal_checkout" => 'N',
