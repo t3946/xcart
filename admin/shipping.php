@@ -48,6 +48,7 @@ if (!empty($carriers)) {
 		"CPC" => "Canada Post",
 		"USPS" => "U.S.P.S.",
 		"APOST" => "Australia Post",
+                "Amazon" => "Amazon",
 	);
 
 	foreach ($carriers as $k=>$v) {
