@@ -697,6 +697,9 @@ var runTests = function(editor) {
 {elseif $main eq "customers_cart"}
 {include file="admin/main/customers_cart.tpl"}
 
+{elseif $main eq "distributors_logins_view_log"}
+{include file="admin/main/distributors_logins_view_log.tpl"}
+
 {else}
 {include file="main/error_page_not_found.tpl"}
 
