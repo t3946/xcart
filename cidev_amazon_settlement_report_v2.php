@@ -982,23 +982,23 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 							}
 						}
 
-                                                if (!empty($vv["ItemFeeAdjustments"]) && is_array($vv["ItemFeeAdjustments"])){
-                                                        foreach ($vv["ItemFeeAdjustments"] as $kkk => $vvv){
-                                                                $field_name = $vvv["Type"];
-                                                                if (($field_name == "Commission" || $field_name == "RefundCommission") && !empty($vvv["Amount"])){
-                                                                        $RefundSum += $vvv["Amount"];
-                                                                }
-                                                        }
-                                                }
+                        if (!empty($vv["ItemFeeAdjustments"]) && is_array($vv["ItemFeeAdjustments"])){
+                                foreach ($vv["ItemFeeAdjustments"] as $kkk => $vvv){
+                                        $field_name = $vvv["Type"];
+                                        if (($field_name == "Commission" || $field_name == "RefundCommission") && !empty($vvv["Amount"])){
+                                                $RefundSum += $vvv["Amount"];
+                                        }
+                                }
+                        }
 
 
 					}
 
-                                        $RefundSum = abs($RefundSum);
-                                        if (!isset($mid_info[$manufacturerid]["RefundSum"])){
-                                                $mid_info[$manufacturerid]["RefundSum"] = 0; 
-                                        }
-                                        $mid_info[$manufacturerid]["RefundSum"] += $RefundSum;
+                    $RefundSum = abs($RefundSum);
+                    if (!isset($mid_info[$manufacturerid]["RefundSum"])){
+                            $mid_info[$manufacturerid]["RefundSum"] = 0; 
+                    }
+                    $mid_info[$manufacturerid]["RefundSum"] += $RefundSum;
 ##
 #
 
@@ -1012,10 +1012,10 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 ##
 #
 
-                                        if (!isset($mid_info[$manufacturerid]["cost_to_us"])){
-                                                $mid_info[$manufacturerid]["cost_to_us"] = 0;
-                                        }
-                                        $mid_info[$manufacturerid]["cost_to_us"] += $cost_to_us;
+                    if (!isset($mid_info[$manufacturerid]["cost_to_us"])){
+                            $mid_info[$manufacturerid]["cost_to_us"] = 0;
+                    }
+                    $mid_info[$manufacturerid]["cost_to_us"] += $cost_to_us;
 
 
 					$ProcessorFee = 0;
@@ -1047,19 +1047,19 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 
 //									$vvv["Amount"] += $FBAPerOrderFulfillmentFee_IN_DB;
 //									$FBAPerOrderFulfillmentFee_IN_DB = 0;
-								}
-								elseif ($field_name == "FBAPerUnitFulfillmentFee"){
-									$vvv["Amount"] += $FBAPerUnitFulfillmentFee_IN_DB;
-									$FBAPerUnitFulfillmentFee_IN_DB = 0;
-								}
+                                    }
+                                    elseif ($field_name == "FBAPerUnitFulfillmentFee"){
+                                        $vvv["Amount"] += $FBAPerUnitFulfillmentFee_IN_DB;
+                                        $FBAPerUnitFulfillmentFee_IN_DB = 0;
+                                    }
 								elseif ($field_name == "FBAWeightBasedFee"){
-                                                                        $vvv["Amount"] += $FBAWeightBasedFee_IN_DB;
-                                                                        $FBAWeightBasedFee_IN_DB = 0;
+                                        $vvv["Amount"] += $FBAWeightBasedFee_IN_DB;
+                                        $FBAWeightBasedFee_IN_DB = 0;
 								}
 								elseif ($field_name == "AmazonCommission"){
-                                                                        $vvv["Amount"] += $AmazonCommission_IN_DB;
-                                                                        $AmazonCommission_IN_DB = 0;
-                                                                }
+                                        $vvv["Amount"] += $AmazonCommission_IN_DB;
+                                        $AmazonCommission_IN_DB = 0;
+                                }
 ##
 #
 
@@ -1108,14 +1108,13 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 						$accounting_net_3_ref_to_cust = $accounting_gross_3_ref_to_cust = $m_val["RefundSum"];
 					} 
 					else {
-
 						$ProcessorFee = $m_val["ProcessorFee"];
-        	                                $accounting_net_0 = $order_group_info["total_net"] - $ProcessorFee;
-                	                        $accounting_gross_0 = $order_group_info["total_gross"] - $ProcessorFee;
+                        $accounting_net_0 = $order_group_info["total_net"] - $ProcessorFee;
+                        $accounting_gross_0 = $order_group_info["total_gross"] - $ProcessorFee;
 
-                        	                if ($v["Fulfillment"]["MerchantFulfillmentID"] == "AFN"){
-                                	                $accounting_net_1_cost_to_us = $accounting_gross_1_cost_to_us = $m_val["cost_to_us"];
-                                        	} else {
+                        if ($v["Fulfillment"]["MerchantFulfillmentID"] == "AFN" || $v["Fulfillment"]["MerchantFulfillmentID"] == "MFN"){
+                                $accounting_net_1_cost_to_us = $accounting_gross_1_cost_to_us = $m_val["cost_to_us"];
+                        } else {
 							$accounting_net_1_cost_to_us = $accounting_gross_1_cost_to_us = 0;
 						}
 
@@ -1126,9 +1125,14 @@ if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_
 						$accounting_gross_5_profit = $accounting_gross_0 - $accounting_gross_1_cost_to_us - $accounting_gross_2_shipping - $accounting_gross_3_ref_to_cust + $accounting_gross_4_ref_to_us;
 					}
 
-					$profit_margin = price_format(($accounting_net_5_profit/($accounting_net_0 - $accounting_net_3_ref_to_cust + $accounting_net_4_ref_to_us))*100);
+                    if (($accounting_net_0 - $accounting_net_3_ref_to_cust + $accounting_net_4_ref_to_us)>0) {
+                        $profit_margin = price_format(($accounting_net_5_profit/($accounting_net_0 - $accounting_net_3_ref_to_cust + $accounting_net_4_ref_to_us))*100);
+                    }
+                    else {
+                        $profit_margin = 0;
+                    }
 
-                                        db_query("UPDATE $sql_tbl[order_groups] SET accounting_net_0='$accounting_net_0', accounting_gross_0='$accounting_gross_0', accounting_gross_1_cost_to_us='$accounting_gross_1_cost_to_us', accounting_net_1_cost_to_us='$accounting_net_1_cost_to_us', accounting_net_3_ref_to_cust='$accounting_net_3_ref_to_cust', accounting_gross_3_ref_to_cust='$accounting_gross_3_ref_to_cust', accounting_net_4_ref_to_us='$accounting_net_4_ref_to_us', accounting_gross_4_ref_to_us='$accounting_gross_4_ref_to_us', accounting_net_5_profit='$accounting_net_5_profit', accounting_gross_5_profit='$accounting_gross_5_profit', profit_margin='$profit_margin' WHERE orderid='".$order_info["orderid"]."' AND manufacturerid='$manufacturerid'");
+                    db_query("UPDATE $sql_tbl[order_groups] SET accounting_net_0='$accounting_net_0', accounting_gross_0='$accounting_gross_0', accounting_gross_1_cost_to_us='$accounting_gross_1_cost_to_us', accounting_net_1_cost_to_us='$accounting_net_1_cost_to_us', accounting_net_3_ref_to_cust='$accounting_net_3_ref_to_cust', accounting_gross_3_ref_to_cust='$accounting_gross_3_ref_to_cust', accounting_net_4_ref_to_us='$accounting_net_4_ref_to_us', accounting_gross_4_ref_to_us='$accounting_gross_4_ref_to_us', accounting_net_5_profit='$accounting_net_5_profit', accounting_gross_5_profit='$accounting_gross_5_profit', profit_margin='$profit_margin' WHERE orderid='".$order_info["orderid"]."' AND manufacturerid='$manufacturerid'");
 				}
 			}
 			unset($mid_info);
