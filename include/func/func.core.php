@@ -2682,10 +2682,10 @@ function func_define_approximate_shippings($productid, $product_info=''){
 //if ($v["state"] != "AK")
 //continue;
 
-            $shipping_name = "Ground";
+            $shipping_name = "";
             $Shipping_charge = "0.00";
             $shipping_currency = "";
-			$shipping_currency = "USD";
+			/*$shipping_currency = "USD";*/
 
 		    if ($product_info["free_ship_zone"] != "14" && $product_info["free_ship_zone"] != "15" ){
 
