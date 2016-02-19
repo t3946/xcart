@@ -401,6 +401,13 @@ if ($REQUEST_METHOD == "POST") {
                                         if ($v["price"] != $cart_tmp["products"][$k]["price"]){
                                                 $v["price"] = $cart_tmp["products"][$k]["price"];
 
+                                                if (!isset($top_message["content"])){
+	                                                $top_message["content"] = "";
+                                                }
+                                                else {
+           	                                     $top_message["content"] = "<br />";
+                                                }
+
                                                 $top_message["content"] = func_get_langvar_by_name("txt_shipping_cost_net_not_saved");
                                                 $top_message["type"] = "I";
                                                 $section_name_top_message = $top_message;
@@ -408,6 +415,13 @@ if ($REQUEST_METHOD == "POST") {
                                         }
 
                                         if (strpos($v["amount"], "r") === false && (strpos($v["amount"], "R")) === false && $v["amount"] != $cart_tmp["products"][$k]["amount"]){
+                                                if (!isset($top_message["content"])){
+                                                        $top_message["content"] = "";
+                                                }
+                                                else {
+                                                     $top_message["content"] = "<br />";
+                                                }
+
                                                 $v["amount"] = $cart_tmp["products"][$k]["amount"];
 
                                                 $top_message["content"] = func_get_langvar_by_name("txt_shipping_cost_net_not_saved");
@@ -437,10 +451,12 @@ if ($REQUEST_METHOD == "POST") {
 				$v["price"] = preg_replace("/[^0-9\.]/S","", $v["price"]);
 				$v["price"] = func_oe_validate_price($v["price"]);
 
+				$v["price"] = price_format($v["price"]);
+
 				$cart_tmp["products"][$k]["price"] = $v["price"];
 				$cart_tmp["products"][$k]["free_price"] = $v["price"];
 				$cart_tmp["products"][$k]["stock_update"] = "N";
-			}
+			} // foreach ($items as $itemid => $v
 		}
 
 
@@ -450,7 +466,14 @@ if ($REQUEST_METHOD == "POST") {
 		if (!empty($groups)) {
 			$cart_tmp["shipping_cost_alt"] = 0;
 
+
+			$payment_method_info = func_query_first("SELECT vt, how_process_payment_at_checkout FROM $sql_tbl[payment_methods] WHERE paymentid='".$order["paymentid"]."'");
+
+//func_print_r($order);
+//die();
+
 			foreach ($groups as $m_id => $v) {
+
 
 #
 ##
@@ -597,6 +620,13 @@ if ($REQUEST_METHOD == "POST") {
 						&& empty($v["additional_shipping_status"])
 					){
 						$v["shipping_cost_net"] = $order["shipping_groups"][$m_id]["shipping_cost"]["net"];
+
+                                                if (!isset($top_message["content"])){
+                                                        $top_message["content"] = "";
+                                                }
+                                                else {
+                                                     $top_message["content"] = "<br />";
+                                                }
 
 	        	                        $top_message["content"] = func_get_langvar_by_name("txt_shipping_cost_net_not_saved");
         	        	                $top_message["type"] = "I";
@@ -746,6 +776,108 @@ if ($REQUEST_METHOD == "POST") {
 				$log = "";
 
 ###
+
+
+
+#########################
+
+#
+##
+###
+
+//func_print_r($v, $cart_tmp["shipping_groups"][$m_id], $data_arr, $order["shipping_groups"][$m_id]);
+//die("--");
+
+
+                                if (
+                                        $v["dc_status"] == "L" && $cart_tmp['shipping_groups'][$m_id]["dc_status"] != "L" &&
+                                        $v["cb_status"] == "AP" &&
+                                        $payment_method_info["how_process_payment_at_checkout"] == "A"
+                                ){
+
+					if (empty($first_transaction_id) && !isset($first_transaction_id)){
+	                                        $first_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid'");
+					}
+
+                                        if (!empty($first_transaction_id)){
+
+						$transaction_log = "";
+
+                                                if (empty($Access_Token) || !isset($Access_Token)){
+                                                        $Access_Token = func_paypal_get_access_token();
+
+							if (empty($Access_Token)){
+								$transaction_log .= "'Access_Token' - failed <br />";
+							}
+                                                }
+
+                                                if (!empty($Access_Token) && !empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items)){
+							$total_prod_price = 0;
+							foreach ($cart_tmp["shipping_groups"][$m_id]["products"] as $k_prod => $v_prod){
+//								$total_prod_price += $items[$k_prod]["price"] * $items[$k_prod]["amount"];
+								$total_prod_price += $items[$k_prod]["price"] * $v_prod["amount"];
+							}
+
+							$total_amount = $total_prod_price + $v["shipping_cost_net"];
+							$total_amount = price_format($total_amount);
+
+                                                        $data_arr["amount"]["currency"] = $order["currency"];
+//                                                      $data_arr["amount"]["total"] = "0.01";
+                                                        $data_arr["amount"]["total"] = $total_amount;
+                                                        $data_arr["is_final_capture"] = false;
+
+                                                        $result = func_paypal_capture($Access_Token, $first_transaction_id, $data_arr);
+
+							if (!empty($result["id"])){
+								$transaction_log .= "<br />Transaction: ".$first_transaction_id." -> ".$result["id"];
+							}
+
+				                        $transaction_id = $result["id"];
+
+				                        $transaction_status = $result["state"];
+				                        $transaction_currency = $result["amount"]["currency"];
+				                        $transaction_total = $result["amount"]["total"];
+
+                                                        $result["xcart_log"] = $transaction_log;
+                                                        $serialize_result = serialize($result);
+
+							db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
+
+							if (!empty($transaction_log)){
+								func_log_order($orderid, 'PP', $transaction_log, $login);
+							}
+
+							if (empty($transaction_id)){
+								$v['dc_status'] = $order["shipping_groups"][$m_id]['dc_status'] = $cart_tmp['shipping_groups'][$m_id]["dc_status"];
+	
+								if (!isset($top_message["content"])){
+									$top_message["content"] = "";
+								}
+								else {
+									$top_message["content"] = "<br />";
+								}
+		                	                        $top_message["content"] .= func_get_langvar_by_name("txt_capture_failed");
+        			                                $top_message["type"] = "E";
+        	        		                        $section_name_top_message = $top_message;
+		                        	                x_session_save("section_name_top_message");
+	
+							} else {
+								$v['cb_status'] = $order["shipping_groups"][$m_id]['cb_status'] = "P";
+							}
+
+                                                }
+                                        }
+//func_print_r($v, $cart_tmp["shipping_groups"][$m_id], $data_arr, $result, $order);
+//die();
+
+                                }
+
+###
+##
+#
+
+#########################
+
                                 if ($v['dc_status'] == "C" || $v['dc_status'] == "L"){
 					$current_dc_status = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
 					if ($current_dc_status != $v['dc_status']){
@@ -806,7 +938,15 @@ if ($REQUEST_METHOD == "POST") {
 ##
 #
 
-		}
+		} // foreach ($groups as $m_id => $v)
+
+
+
+
+
+
+
+
 
 
 //func_print_r($_POST, $groups, $order);
