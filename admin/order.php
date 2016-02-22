@@ -2037,8 +2037,79 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
         if ($mode == "mnf_notify" && $set_status_K != "Y") {
 
+		$log = "";
+
+#
+##
+###
+		$current_cb_status = func_query_first_cell("SELECT cb_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+
+		if ($current_cb_status == "AP"){
+
+			$first_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid'");
+
+			if (!empty($first_transaction_id) && !empty($order["shipping_groups"][$mnf_id])){
+
+				$Access_Token = func_paypal_get_access_token();
+
+                                if (empty($Access_Token)){
+	                                $transaction_log = "'Access_Token' - failed <br />";
+                                } else {
+
+                                        $data_arr["amount"]["currency"] = $order["currency"];
+                                        $data_arr["amount"]["total"] = "0.01";
+                                        $data_arr["amount"]["total"] = $order["shipping_groups"][$mnf_id]["total"]["gross"];
+                                        $data_arr["is_final_capture"] = false;
+
+                                        $result = func_paypal_capture($Access_Token, $first_transaction_id, $data_arr);
+
+                                        if (!empty($result["id"])){
+	                                        $transaction_log = "<br />Transaction: ".$first_transaction_id." -> ".$result["id"];
+                                        }
+
+                                        $transaction_id = $result["id"];
+                                        $transaction_status = $result["state"];
+                                        $transaction_currency = $result["amount"]["currency"];
+                                        $transaction_total = $result["amount"]["total"];
+
+                                        $result["xcart_log"] = $transaction_log;
+                                        $serialize_result = serialize($result);
+
+                                        db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
+
+				}
+
+                                if (!empty($transaction_log)){
+					$log .= $transaction_log;
+
+	                                func_log_order($orderid, 'PP', $transaction_log, $login);
+                                }
+
+
+				if (empty($transaction_id)){
+
+	                                $top_message["content"] = func_get_langvar_by_name("txt_capture_failed");
+                                        $top_message["type"] = "E";
+                                        $section_name_top_message = $top_message;
+                                        x_session_save("section_name_top_message");
+				}
+				else {
+					$current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
+
+        	                        $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
+	                                $log .= "<B>".$code.":</B> dc_status: ". $current_cb_status_value . " -> ". $new_value;
+
+                                	db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+				}
+			}
+		}
+
+###
+##
+#
+
 		if ($bad_time_do_not_send_email == "Y"){
-			$log = "'Send (Off-hours dispatch to distributor)' at '".$manufacturer_name.": Dispatch to distributor'";
+			$log .= "'Send (Off-hours dispatch to distributor)' at '".$manufacturer_name.": Dispatch to distributor'";
                         $current_dc_status = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
                         $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
 
@@ -2068,14 +2139,22 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 #
 
                         func_log_order($orderid, 'X', $log, $login);
-			$top_message = array("content" => func_get_langvar_by_name("lbl_offhours_dispatch_message"));
+
+                        if (!isset($top_message["content"])){
+	                        $top_message["content"] = "";
+                        }
+                        else {
+        	                $top_message["content"] = "<br />";
+                        }
+
+			$top_message["content"] = func_get_langvar_by_name("lbl_offhours_dispatch_message");
                         $section_name_top_message = $top_message;
                         x_session_save("section_name_top_message");
 
 			func_header_location("order.php?orderid=".$orderid);
 		}
 		else {
-	                $log = "'Send (Dispatch to distributor)' at '".$manufacturer_name.": Dispatch to distributor'";
+	                $log .= "'Send (Dispatch to distributor)' at '".$manufacturer_name.": Dispatch to distributor'";
 	                func_log_order($orderid, 'X', $log, $login);
 		}
         }

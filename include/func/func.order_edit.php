@@ -251,7 +251,13 @@ function func_tax_price_details($price, $taxes, $de_tax=false) {
 function func_oe_get_quantity_in_stock($productid, $cb_status, $dc_status, $options = array(), $order_product = array()) {
 	global $sql_tbl, $active_modules;
 
-	$quantity_in_stock = (strpos('PQI', $cb_status) !== false || $dc_status == 'C') ? ((!empty($active_modules['Egoods']) 
+	$allowed_statuses = array("P", "Q", "I", "AP");
+
+	$quantity_in_stock = (
+		in_array($cb_status, $allowed_statuses)
+//		strpos('PQI', $cb_status) !== false 
+		|| $dc_status == 'C'
+	) ? ((!empty($active_modules['Egoods']) 
         && !empty($order_product['distribution'])) ? 0 : $order_product['amount']) : 0;
 	if (!empty($active_modules['Product_Options']) && !empty($options)) {
 		$is_equal = false;
@@ -421,7 +427,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 	#
 	# Update stock level
 	#
-	if (in_array($cart["status"], array("Q","I","P","C")) && $config["General"]["unlimited_products"] != "Y") {
+	if (in_array($cart["status"], array("AP", "Q","I","P","C")) && $config["General"]["unlimited_products"] != "Y") {
 
 		$_products = $_old_products = array();		
 
@@ -815,6 +821,11 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 		                $status = (empty($cart['status'])) ? 'Q' : $cart['status'];
                 		$status_type = func_get_order_status_type($status);
 				$query_data[strtolower($status_type) . '_status'] = $status;
+
+				if (!empty($query_data["cb_status"]) && $query_data["cb_status"] == "P"){
+					$query_data["paid_date"] = time();
+				}
+
                 
 		                // Get manufacturer data
                 		$manufact_data = func_query_first('SELECT m_city, m_state, m_country FROM ' . $sql_tbl['manufacturers']
@@ -853,6 +864,10 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 				}
 				
 				$query_data['tracking'] = addslashes(serialize($v['tracking']));
+
+                                if (!empty($query_data["cb_status"]) && $query_data["cb_status"] == "P" && $old_statuses["cb_status"] != "P"){
+                                        $query_data["paid_date"] = time();
+                                }
 
 				func_log_order_groups($query_data, $cart["orderid"], $mid, 'X', $login);
 

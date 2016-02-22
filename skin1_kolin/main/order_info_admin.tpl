@@ -929,7 +929,7 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
 
 
 <br />
-<B>Dispatch date:</B>&nbsp;{if $v.paid_date eq "0"}<span style="color: red;">Not yet paid</span>{else}{$v.paid_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
+<B>Payment date:</B>&nbsp;{if $v.paid_date eq "0"}<span style="color: red;">Not yet paid</span>{else}{$v.paid_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}{/if}
 
       </td>
       <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
