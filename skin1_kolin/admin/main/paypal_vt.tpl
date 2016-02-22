@@ -137,7 +137,7 @@
 	{/if} 
    </td>
    <td>{$v.payment_method}</td>
-   <td>{$v.date|date_format:'%d-%b-%Y'}</td>
+   <td>{$v.date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
    <td>{$v.firstname} ({$v.login})</td>
    <td>
 	Transaction: 
@@ -187,14 +187,15 @@ $(document).ready(function(){
  {if $transaction_id_selected eq "Y"}
   <tr>
    <td colspan="5">
-<input type="button" value="Void selected authorized transaction" onclick="javascript: submitForm(this, 'void_transaction');" />
-<input type="button" value="Capture selected authorized transaction" onclick="javascript: $('#transaction_logs_id').val('{$v.id}'); submitForm(this, 'capture_transaction');" />
+<input type="button" value="Void selected authorized transaction" onclick="javascript: submitForm(this, 'void_transaction');" /> {$lng.lbl_void_transaction_txt}
+<br />
+<input type="button" value="Capture selected authorized transaction" onclick="javascript: $('#transaction_logs_id').val('{$v.id}'); submitForm(this, 'capture_transaction');" /> {$lng.lbl_capture_transaction_txt}
    </td>
   </tr>
   <tr>
    <td colspan="5">
 <input type="text" name="re_authorize_amount" id="re_authorize_amount" size="6" value="" />
-<input type="button" value="RE-authorize selected transaction" onclick="javascript: submitForm(this, 're_authorize_transaction');" />
+<input type="button" value="RE-authorize selected transaction" onclick="javascript: submitForm(this, 're_authorize_transaction');" /> {$lng.lbl_re_authorize_transaction_txt}
    </td>
   </tr>
  {/if}

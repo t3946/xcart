@@ -2089,7 +2089,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 				if (empty($transaction_id)){
 
 	                                $top_message["content"] = func_get_langvar_by_name("txt_capture_failed");
-                                        $top_message["type"] = "E";
+                                        $top_message["type"] = "I";
                                         $section_name_top_message = $top_message;
                                         x_session_save("section_name_top_message");
 				}
@@ -2144,10 +2144,10 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 	                        $top_message["content"] = "";
                         }
                         else {
-        	                $top_message["content"] = "<br />";
+        	                $top_message["content"] .= "<br />";
                         }
 
-			$top_message["content"] = func_get_langvar_by_name("lbl_offhours_dispatch_message");
+			$top_message["content"] .= func_get_langvar_by_name("lbl_offhours_dispatch_message");
                         $section_name_top_message = $top_message;
                         x_session_save("section_name_top_message");
 
