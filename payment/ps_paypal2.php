@@ -59,11 +59,18 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
 	x_load('http');
 
 #
-##
+## # Because from Admin area -> order page -> VT (or "Order status"), PayPal sends himselves responce here also
 ###
 	if ($payment_status == "Voided" || $payment_status == "authorized"){
-		# Because from Admin area -> order page -> VT, PayPal sends himselves responce here also
 		exit; # do nothing, ignore
+	}
+
+	if (!empty($txn_id) && $payment_status == "Completed"){
+		$transaction_log_count = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[transaction_logs] WHERE transaction_id='$txn_id' AND BINARY transaction_status='".strtolower($payment_status)."'");
+
+		if ($transaction_log_count == "1"){
+			exit; # do nothing, ignore
+		}
 	}
 ###
 ##
@@ -189,7 +196,7 @@ else {
 	db_query("REPLACE INTO $sql_tbl[cc_pp3_data] (ref,sessionid,trstat) VALUES ('".addslashes($order_secureid)."','".$XCARTSESSID."','GO|".implode('|',$secure_oid)."')");
 
 	# Filling $_location variable depending protocol value
-	$res = func_query_first("SELECT protocol FROM $sql_tbl[payment_methods] WHERE paymentid='".$paymentid."'");
+	$res = func_query_first("SELECT protocol, how_process_payment_at_checkout FROM $sql_tbl[payment_methods] WHERE paymentid='".$paymentid."'");
 	$_location = ($res["protocol"] == "https") ? $https_location : $http_location;
 
 	if ($userinfo["b_country"] == "US") $_customer_state = $userinfo["b_state"];
@@ -230,7 +237,9 @@ else {
 #
 ##
 ###
-//	$fields["paymentaction"] = "authorization";
+	if ($res["how_process_payment_at_checkout"] == "A"){
+		$fields["paymentaction"] = "authorization";
+	}
 ###
 ##
 #

@@ -168,7 +168,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 
 		$result = func_paypal_capture($Access_Token, $transaction_id, $data_arr);
 
-		if ($result["name"] == "AUTHORIZATION_ALREADY_COMPLETED"){
+		if ($result["name"] == "AUTHORIZATION_ALREADY_COMPLETED" || $result["name"] == "CAPTURE_AMOUNT_LIMIT_EXCEEDED"){
 			$log .= "<br />".$result["name"];
 		}
 		else {
