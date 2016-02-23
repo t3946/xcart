@@ -1,4 +1,5 @@
 {* $Id: history_order.tpl,v 1.83.2.17 2006/12/25 11:53:29 svowl Exp $ *}
+
 {if $current_membership_flag eq 'FS'}
 {assign var="membership_static" value="F"}
 {else}
@@ -1211,3 +1212,10 @@ $(function() {ldelim}
 </div>
 {/if}
 
+{if $show_cancel_message eq "Y"}
+<script type="text/javascript">
+<!--
+alert('You are trying to fully decrease order amount. Instead of using RQTY, RNET - please change all CB statuses to "Cancelled"');
+-->
+</script>
+{/if}
