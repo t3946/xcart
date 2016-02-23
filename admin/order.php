@@ -2057,8 +2057,17 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
                                 } else {
 
                                         $data_arr["amount"]["currency"] = $order["currency"];
-                                        $data_arr["amount"]["total"] = "0.01";
-                                        $data_arr["amount"]["total"] = $order["shipping_groups"][$mnf_id]["total"]["gross"];
+//                                        $data_arr["amount"]["total"] = "0.01";
+
+					$total_amount = $order["shipping_groups"][$mnf_id]["total"]["gross"];
+
+					if (isset($order["refund_groups"][$mnf_id]["total_gross"])){
+						$total_amount -= $order["refund_groups"][$mnf_id]["total_gross"];
+					}
+
+					$total_amount = price_format($total_amount);
+
+                                        $data_arr["amount"]["total"] = $total_amount;
                                         $data_arr["is_final_capture"] = false;
 
                                         $result = func_paypal_capture($Access_Token, $first_transaction_id, $data_arr);
@@ -3723,6 +3732,28 @@ if (!empty($rmas)){
 	$crypt_orderid = text_crypt($orderid);
 	$smarty->assign("crypt_orderid", $crypt_orderid);
 }
+
+
+if (!empty($order["refund_groups"])){
+	$TOTAL_refund_groups_total_gross = 0;
+	$show_cancel_message = true;
+	foreach ($order["shipping_groups"] as $k => $v){
+		if (isset($order["refund_groups"][$k]["total_gross"])){
+			$TOTAL_refund_groups_total_gross += $order["refund_groups"][$k]["total_gross"];
+
+			if ($v["cb_status"] != "AP"){
+				$show_cancel_message = false;
+			}
+		} else {
+			$show_cancel_message = false;
+		}
+	}
+
+	if ($show_cancel_message && $TOTAL_refund_groups_total_gross == $order["total"]){
+		$smarty->assign("show_cancel_message", "Y");
+	}
+}
+
 
 //func_print_r($order);
 

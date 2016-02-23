@@ -293,7 +293,7 @@ function check_r_field(form, prefix, key_of_arr) {
 
        var cb_status = $('#groups_cb_status_'+mid).val();
 
-       if (cb_status != "P" && cb_status != "V" && cb_status != "H" && cb_status != "3"){
+       if (cb_status != "P" && cb_status != "V" && cb_status != "H" && cb_status != "3" && cb_status != "AP"){
           return "N";
        }
       }
