@@ -824,7 +824,7 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
                 {assign var=show_request_availability value="Y"}
 	{/if}
 
-	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
+	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
         	{assign var=show_to_order_entry_operator value="Y"}
 	{/if}
 
@@ -840,7 +840,7 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
 
  {elseif $v.d_availability_must_be_checked ne "Y" && $v.submit_to_operator eq "through_distributor_website"}
 
-        {if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
+        {if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
                 {assign var=show_to_order_entry_operator value="Y"}
         {/if}
 
