@@ -2588,9 +2588,9 @@ function func_change_order_status($orderids, $status, $advinfo="", $manufacturer
 # END: random:18591_18598 [2009 Jul 29 10:36] 
 
 		} elseif (
-        	    ($status == 'Q' && $order['order_status'][$status_type] == 'I' 
-	            && $current_area != 'A' && $current_area != 'P') 
-        	    || $status == 'E' && $order['order_status'][$status_type] != 'E'
+        	    ($status == 'Q' && $order['order_status'][$status_type] == 'I' && $current_area != 'A' && $current_area != 'P') 
+        	    || ($status == 'E' && $order['order_status'][$status_type] != 'E')
+		    || ($status == 'AP' && $order['order_status'][$status_type] != 'AP')
 	        ) {
 			$send_notification = true;
 		}
@@ -2607,6 +2607,10 @@ function func_change_order_status($orderids, $status, $advinfo="", $manufacturer
 # END: random:18591_18598 [2009 Jul 29 10:36] 
 			func_update_quantity($order_data['products'],false);
 		}
+
+//func_print_r($send_notification, $status);
+//die("---");
+
 
 	        if ($send_notification && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
         	    func_send_order_status_notification($orderid, $status);
