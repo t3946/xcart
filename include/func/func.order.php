@@ -1893,7 +1893,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by=''){
 
 	$mail_smarty->assign('cidev_hide_invoice', "Y");
 
-	$allowed_cb_statuses = array("P","Q", "O");
+	$allowed_cb_statuses = array("P","Q", "O", "AP");
 	$allowed_dc_statuses = array("T");
 
 	if (!empty($mnfs) && is_array($mnfs)) {
@@ -4340,7 +4340,7 @@ function func_other_customer_orders($email, $orderid = 0){
                                         $Fraud = "Y";
                                         $count_Fraud++;
                                 }
-                                elseif (in_array($v["fraud_status"], array("C", "E")) && in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
+                                elseif (in_array($v["fraud_status"], array("C", "E")) && in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I','AP')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
                                         $Open = "Y";
                                         $count_Open++;
                                 }

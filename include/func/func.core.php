@@ -2682,11 +2682,12 @@ function func_define_approximate_shippings($productid, $product_info=''){
 //if ($v["state"] != "AK")
 //continue;
 
-                    $shipping_name = "";
-                    $Shipping_charge = "0.00";
-                    $shipping_currency = "";
+            $shipping_name = "";
+            $Shipping_charge = "0.00";
+            $shipping_currency = "";
+			/*$shipping_currency = "USD";*/
 
-		    if ($product_info["free_ship_zone"] != "14"){
+		    if ($product_info["free_ship_zone"] != "14" && $product_info["free_ship_zone"] != "15" ){
 
 			if (!$ORIGINAL_approximation_shipping_rates_empty_flag){
 			    $diff_date = $current_time - $v["last_updated_date"];
@@ -2705,7 +2706,6 @@ function func_define_approximate_shippings($productid, $product_info=''){
                                 $product_info["weight"] = "0.1";
                         }
 
-			$shipping_currency = " USD";
 
 			if ($manufacturer_info['m_country'] == "US"){
 				$shipping_id = 1;

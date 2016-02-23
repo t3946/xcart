@@ -488,7 +488,7 @@ if (!$curl_err){
                                   foreach ($mnfs as $mnf_id => $v){
 
 //if (1==1){
-				    if ( ($v["cb_status"] == "P" || $v["cb_status"] == "O" || $v["cb_status"] == "3" || $v["cb_status"] == "H") && ($v["dc_status"] == "T" || $v["dc_status"] == "K" || $v["dc_status"] == "M") ){
+				    if ( ($v["cb_status"] == "P" || $v["cb_status"] == "O" || $v["cb_status"] == "3" || $v["cb_status"] == "H" || $v["cb_status"] == "AP") && ($v["dc_status"] == "T" || $v["dc_status"] == "K" || $v["dc_status"] == "M") ){
 				        $manufacturer_name = $v["manufacturer"];
 				        $d_instructions_to_order_entry_operator = $v["d_instructions_to_order_entry_operator"];
 				        $d_order_entry_operator_subject_line_8 = $v["d_order_entry_operator_subject_line_8"];
@@ -548,7 +548,7 @@ if (!$curl_err){
 #
 
 
-				    } //  if ( ($v["cb_status"] == "P" || $v["cb_status"] == "O" || $v["cb_status"] == "3" || $v["cb_status"] == "H") && ($v["dc_status"] == "T" || $v["dc_status"] == "K" || $v["dc_status"] == "M") )
+				    } //  if ( ($v["cb_status"] == "P" || $v["cb_status"] == "O" || $v["cb_status"] == "3" || $v["cb_status"] == "H" || $v["cb_status"] == "AP") && ($v["dc_status"] == "T" || $v["dc_status"] == "K" || $v["dc_status"] == "M") )
 
                                   } // foreach ($mnfs as $mnf_id => $v
 				} // if ($allow_send_to_operator)
