@@ -233,7 +233,9 @@ if (!$fatal) {
 	$how_process_payment_at_checkout = $payment_method_info["how_process_payment_at_checkout"];
 
 
-	$order_status = ($bill_error) ? "F" : (($bill_output["code"] == 3) ? (($how_process_payment_at_checkout == "A") ? "AP" : "Q") : "P");
+//func_print_r($bill_output, $how_process_payment_at_checkout, $order_paymentid);
+
+	$order_status = ($bill_error) ? "F" : (($bill_output["code"] == 3) ? (($how_process_payment_at_checkout == "A") ? "AP" : "Q") : (($how_process_payment_at_checkout == "A" && $bill_output["code"] == 1) ? "AP" : "P"));
 	if ($bill_output["code"] == 1 || $bill_output["code"] == 3) {
 		if (empty($skey) || !in_array(func_query_first_cell("SELECT is_callback FROM $sql_tbl[cc_pp3_data] WHERE ref = '$skey'"), array("R", "N"))) {
 			$cart = "";
