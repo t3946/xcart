@@ -2067,8 +2067,35 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
 					$total_amount = price_format($total_amount);
 
+#
+##
+                                        $already_captured = func_query_first_cell("SELECT SUM(transaction_total) FROM $sql_tbl[transaction_logs] WHERE orderid='$orderid' AND transaction_status='completed'");
+                                        if (empty($already_captured)){
+                                        	$already_captured = 0;
+                                        }
+
+                                        $TOTAL_refund_groups_sum = 0;
+                                        if (isset($order["refund_groups"]) && is_array($order["refund_groups"])){
+                                        	foreach ($order["refund_groups"] as $k_ref_group => $v_ref_group){
+	                                                $TOTAL_refund_groups_sum += $v_ref_group["total_gross"];
+						}
+					}
+
+                                        $already_captured_PLUS_total_amount = $total_amount + $already_captured;
+                                        $already_captured_PLUS_total_amount = price_format($already_captured_PLUS_total_amount);
+
+
+                                        $total_MIN_TOTAL_refund_groups_sum = $order["total"] - $TOTAL_refund_groups_sum;
+                                        $total_MIN_TOTAL_refund_groups_sum = price_format($total_MIN_TOTAL_refund_groups_sum);
+
+##                                                      
+#
+
                                         $data_arr["amount"]["total"] = $total_amount;
-                                        $data_arr["is_final_capture"] = false;
+					$data_arr["is_final_capture"] = (($already_captured_PLUS_total_amount == $total_MIN_TOTAL_refund_groups_sum) ? true : false);
+
+//func_print_r($data_arr, $already_captured, $order["refund_groups"], $TOTAL_refund_groups_sum);
+//die();
 
                                         $result = func_paypal_capture($Access_Token, $first_transaction_id, $data_arr);
 

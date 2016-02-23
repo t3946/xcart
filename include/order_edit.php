@@ -831,14 +831,49 @@ if ($REQUEST_METHOD == "POST") {
 							}
 
 							$total_amount = price_format($total_amount);
+#
+##
+							$already_captured = func_query_first_cell("SELECT SUM(transaction_total) FROM $sql_tbl[transaction_logs] WHERE orderid='$orderid' AND transaction_status='completed'");
+							if (empty($already_captured)){
+								$already_captured = 0;
+							}
 
+							$TOTAL_refund_groups_sum = 0;
+							if (isset($ref_groups) && is_array($ref_groups)){
+								foreach ($ref_groups as $k_ref_group => $v_ref_group){
+									$TOTAL_refund_groups_sum += $v_ref_group["ref_ship"];
+								}
+							}
+							if (isset($ref_products)){
+								foreach ($ref_products as $k_ref_product => $v_ref_product){
+									if (!empty($v_ref_product) && is_array($v_ref_product)){
+										foreach ($v_ref_product as $kk_ref_product => $vv_ref_product){
+											$TOTAL_refund_groups_sum += $vv_ref_product["ref_price"] * $vv_ref_product["ref_qty"];
+										}
+									}
+								}
+							}
+
+							$already_captured_PLUS_total_amount = $total_amount + $already_captured;
+							$already_captured_PLUS_total_amount = price_format($already_captured_PLUS_total_amount);
+
+
+							$total_MIN_TOTAL_refund_groups_sum = $order["total"] - $TOTAL_refund_groups_sum;
+							$total_MIN_TOTAL_refund_groups_sum = price_format($total_MIN_TOTAL_refund_groups_sum);
+
+##							
+#
+			
+//func_print_r($total_amount, $already_captured, $TOTAL_refund_groups_sum);
 //func_print_r($v, $ref_products[$m_id], $ref_groups[$m_id], $total_amount);
 //die();
 
                                                         $data_arr["amount"]["currency"] = $order["currency"];
-//                                                      $data_arr["amount"]["total"] = "0.01";
                                                         $data_arr["amount"]["total"] = $total_amount;
-                                                        $data_arr["is_final_capture"] = false;
+                                                        $data_arr["is_final_capture"] = (($already_captured_PLUS_total_amount == $total_MIN_TOTAL_refund_groups_sum) ? true : false);
+
+//func_print_r($data_arr);
+//die();
 
                                                         $result = func_paypal_capture($Access_Token, $first_transaction_id, $data_arr);
 
