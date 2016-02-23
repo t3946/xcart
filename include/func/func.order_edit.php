@@ -1575,17 +1575,21 @@ function func_delete_refund_group($mid, $orderid, $full = false) {
         . ' WHERE orderid = "' . $orderid . '" AND manufacturerid = "' . $mid . '"');
 
         $current_cb_status = func_query_first_cell("SELECT cb_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mid'");
-        $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
-        $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mid'");
 
-        if ($current_cb_status != "P"){
-                $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
-                $log = "<B>".$code.":</B> cb_status: ". $current_cb_status_value . " -> ". $new_value;
-		global $login;
-                func_log_order($orderid, 'X', $log, $login);
-        }
+	if ($current_cb_status != "AP"){
 
-        db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid='$orderid' AND manufacturerid='$mid'");
+	        $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
+	        $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mid'");
+
+	        if ($current_cb_status != "P"){
+        	        $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
+                	$log = "<B>".$code.":</B> cb_status: ". $current_cb_status_value . " -> ". $new_value;
+			global $login;
+	                func_log_order($orderid, 'X', $log, $login);
+        	}
+
+	        db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid='$orderid' AND manufacturerid='$mid'");
+	}
     } else {
         $data = func_query_first("SELECT shipping, ref_ship FROM $sql_tbl[refund_groups] WHERE orderid='$orderid' AND manufacturerid='$mid'");
         $groups = array($mid => $data);
@@ -1626,7 +1630,8 @@ function func_define_refund_status(&$group) {
 
     $refund_status = '';
     
-    if (isset($group['manufacturerid'])) {
+//    if (isset($group['manufacturerid'])) { 
+    if (isset($group['manufacturerid']) && $group["cb_status"] != "AP") {
         if (!empty($group['total']['gross'])) {
             $order_group_gross = func_query_first_cell('SELECT total_gross FROM ' . $sql_tbl['order_groups'] 
                 . ' WHERE orderid = "' . $group['orderid'] . '" AND manufacturerid = "' . $group['manufacturerid'] . '"');

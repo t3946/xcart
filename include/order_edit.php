@@ -819,7 +819,21 @@ if ($REQUEST_METHOD == "POST") {
 							}
 
 							$total_amount = $total_prod_price + $v["shipping_cost_net"];
+
+							if (isset($ref_products[$m_id])){
+								foreach ($ref_products[$m_id] as $kk_r => $vv_r){
+									$total_amount -= $vv_r["ref_price"] * $vv_r["ref_qty"];
+								}
+							}
+
+							if (isset($ref_groups[$m_id]["ref_ship"])){
+								$total_amount -= $ref_groups[$m_id]["ref_ship"];
+							}
+
 							$total_amount = price_format($total_amount);
+
+//func_print_r($v, $ref_products[$m_id], $ref_groups[$m_id], $total_amount);
+//die();
 
                                                         $data_arr["amount"]["currency"] = $order["currency"];
 //                                                      $data_arr["amount"]["total"] = "0.01";
