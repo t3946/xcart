@@ -388,13 +388,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 {* --- First transaction from customer --- *}
         {if $transaction_logs.0.usertype eq "C" && $order.amazonorderid eq ""}
 
-{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}
-{if $transaction_logs.0.transaction_link_anchor ne ""}
-{$transaction_logs.0.transaction_link_anchor}
-{else}
-{$transaction_logs.0.transaction_id}
-{/if}
-{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if} {if $transaction_logs.0.transaction_link_anchor ne ""}({$transaction_logs.0.transaction_id}){/if}
+{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_logs.0.transaction_link_anchor ne ""}{$transaction_logs.0.transaction_link_anchor}{else}{$transaction_logs.0.transaction_id}{/if}{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if} {if $transaction_logs.0.transaction_link_anchor ne ""}({$transaction_logs.0.transaction_id}){/if}
 		<br />
         {/if}
 {* --- End --- *}

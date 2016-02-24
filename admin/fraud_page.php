@@ -787,11 +787,12 @@ if (strpos($order["details"], 'TransID #') !== false){
 	}
 } else {
 	$cidev_order_details_TransID = $order["transaction_id_link"];
-
-	if (empty($cidev_order_details_TransID)){
-		$cidev_order_details_TransID = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE transaction_id!='' AND orderid='$orderid'");
-	}
 }
+
+if (empty($cidev_order_details_TransID)){
+	$cidev_order_details_TransID = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE transaction_id!='' AND orderid='$orderid'");
+}
+
 $smarty->assign("cidev_order_details_TransID", $cidev_order_details_TransID);
 ###
 ##

@@ -84,13 +84,7 @@ $(function() {ldelim}
                 {if $transaction_logs.0.usertype eq "C"} 
 		<tr><td colspan="3"></td><td>
 
-{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}
-{if $transaction_logs.0.transaction_link_anchor ne ""}
-{$transaction_logs.0.transaction_link_anchor}
-{else}
-{$transaction_logs.0.transaction_id}
-{/if}
-{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if} {if $transaction_logs.0.transaction_link_anchor ne ""}{$transaction_logs.0.transaction_id}{/if}
+{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_logs.0.transaction_link_anchor ne ""}{$transaction_logs.0.transaction_link_anchor}{else}{$transaction_logs.0.transaction_id}{/if}{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if} {if $transaction_logs.0.transaction_link_anchor ne ""}({$transaction_logs.0.transaction_id}){/if}
 
 		</td></tr>
                 {/if}
