@@ -394,7 +394,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 {else}
 {$transaction_logs.0.transaction_id}
 {/if}
-{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if}
+{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if} {if $transaction_logs.0.transaction_link_anchor ne ""}({$transaction_logs.0.transaction_id}){/if}
 		<br />
         {/if}
 {* --- End --- *}
