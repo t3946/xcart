@@ -912,15 +912,16 @@ if ($REQUEST_METHOD == "POST") {
 	
 							} else {
 								$v['cb_status'] = $groups[$m_id]['cb_status'] = $order["shipping_groups"][$m_id]['cb_status'] = "P";
+//								$v['order_entry_flag'] = $groups[$m_id]['order_entry_flag'] = $order["shipping_groups"][$m_id]['order_entry_flag'] = "Y";
+								db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='Y' WHERE manufacturerid='$m_id' AND orderid='$orderid'");
+								func_log_order($orderid, 'X', $code .": order_entry_flag='Y'", $login);
 							}
-
                                                 }
                                         }
 //func_print_r($v, $cart_tmp["shipping_groups"][$m_id], $data_arr, $result, $order);
 //die();
 
                                 }
-
 ###
 ##
 #

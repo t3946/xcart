@@ -1880,6 +1880,26 @@ require $xcart_dir."/include/transaction_logs.php";
 ##
 #
 
+if ($mode == 'pending_order_message2_done_clicked' && !empty($notify_mid)){
+
+	$log = "'Done' clicked. <br /><B>".$order["shipping_groups"][$notify_mid]["all_distributor_info"]["code"]."</B>: order_entry_flag: ". $order["shipping_groups"][$notify_mid]["order_entry_flag"] . " -> D";
+
+	db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='D' WHERE orderid='$orderid' AND manufacturerid='$notify_mid'");
+
+	$section_name = "main_order_tabs-order_details";
+	x_session_save("section_name");
+	func_log_order($orderid, 'X', $log, $login);
+
+	$top_message = array(
+		'type' => 'I',
+                'content' => 'Done.'
+	);
+
+        $section_name_top_message = $top_message;
+        x_session_save("section_name_top_message");
+
+	func_header_location("order.php?orderid=".$orderid);
+}
 
 if ($mode == 'ref_notify') {
 
@@ -1998,6 +2018,10 @@ if ($mode == 'ref_notify') {
             'type'      => 'E'
         );
     }
+
+    $section_name_top_message = $top_message;
+    x_session_save("section_name_top_message");
+
     func_header_location("order.php?orderid=".$orderid);
 }
 # START: random:18298_18304_18324 [2009 Jun 08 09:50] 
@@ -2133,7 +2157,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 					$current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
 
         	                        $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
-	                                $log .= "<B>".$code.":</B> dc_status: ". $current_cb_status_value . " -> ". $new_value;
+	                                $log .= "<B>".$code.":</B> cb_status: ". $current_cb_status_value . " -> ". $new_value;
 
                                 	db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 				}

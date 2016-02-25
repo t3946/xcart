@@ -16,6 +16,31 @@ vim: set ts=2 sw=2 sts=2 et:
 <script type="text/javascript" language="JavaScript 1.2">
 <!--
 
+{literal}
+function func_check_for_pending_order_message1(m_id){
+ var cb_status = $('#groups_cb_status_'+m_id).val();
+ var dc_status = $('#groups_dc_status_'+m_id).val();
+
+ if ((cb_status == "AP" || cb_status == "P") && dc_status == "E"){
+  $('#pending_order_message1_'+m_id).show();
+ } else {
+  $('#pending_order_message1_'+m_id).hide();
+ }
+}
+
+function func_check_for_pending_order_message2(m_id){
+ var cb_status = $('#groups_cb_status_'+m_id).val();
+ var dc_status = $('#groups_dc_status_'+m_id).val();
+
+ if (cb_status == "P" && dc_status == "L"){
+  $('#pending_order_message2_'+m_id).show();
+ } else {
+  $('#pending_order_message2_'+m_id).hide();
+ }
+}
+
+{/literal}
+
 function func_set_tracking_shipping(obj, m_id, invoice_number){ldelim}
 
   var tracking_carrier_id = obj.id;
@@ -66,6 +91,20 @@ var dc_status;
 
 {/literal}
 {foreach from=$order.shipping_groups item=v key=m_id}
+
+{if $v.all_distributor_info.submit_to_operator eq "through_distributor_website"}
+  {literal}
+  func_check_for_pending_order_message1('{/literal}{$m_id}{literal}');
+  {/literal}
+
+  {if $v.order_entry_flag eq "Y"}
+    {literal}
+    func_check_for_pending_order_message2('{/literal}{$m_id}{literal}');
+    {/literal}
+  {/if}
+
+{/if}
+
 {literal}
 
   dc_status = $('#groups_dc_status_{/literal}{$m_id}{literal}').val();
@@ -158,6 +197,20 @@ function func_check_cb_statuses(){
 
 {/literal}
 {foreach from=$order.shipping_groups item=v key=m_id}
+
+{if $v.all_distributor_info.submit_to_operator eq "through_distributor_website"}
+  {literal}
+  func_check_for_pending_order_message1('{/literal}{$m_id}{literal}');
+  {/literal}
+
+  {if $v.order_entry_flag eq "Y"}
+    {literal}
+    func_check_for_pending_order_message2('{/literal}{$m_id}{literal}');
+    {/literal}
+  {/if}
+
+{/if}
+
 {literal}
 
   cb_status = $('#groups_cb_status_{/literal}{$m_id}{literal}').val();
@@ -1022,6 +1075,20 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 {* --- *}
 
 {/if}
+
+
+<tr id="pending_order_message1_{$m_id}" style='background-color: #F4CCCC; {if ($v.cb_status eq "AP" || $v.cb_status eq "P") && $v.dc_status eq "E" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website"} {else} display: none; {/if}'>
+<td colspan="11">{$lng.lbl_pending_order_message1}</td>
+</tr>
+
+<tr id="pending_order_message2_{$m_id}" style='background-color: #F4CCCC; {if $v.cb_status eq "P" && $v.dc_status eq "L" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website" && $v.order_entry_flag eq "Y"} {else} display: none; {/if}'>
+<td colspan="11">
+{$lng.lbl_pending_order_message2}
+
+<input type="button" value="Done" onclick="javascript: $('#ordereditform_mode').val('pending_order_message2_done_clicked'); $('#ordereditform_mid').val('{$m_id}'); this.form.submit();" />
+
+</td>
+</tr>
 
 
 <tr><td colspan="11"><hr /></td></tr>
