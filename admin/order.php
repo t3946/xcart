@@ -1880,6 +1880,26 @@ require $xcart_dir."/include/transaction_logs.php";
 ##
 #
 
+if ($mode == 'pending_order_message2_done_clicked' && !empty($notify_mid)){
+
+	$log = "'Done' clicked. <br /><B>".$order["shipping_groups"][$notify_mid]["all_distributor_info"]["code"]."</B>: order_entry_flag: ". $order["shipping_groups"][$notify_mid]["order_entry_flag"] . " -> D";
+
+	db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='D' WHERE orderid='$orderid' AND manufacturerid='$notify_mid'");
+
+	$section_name = "main_order_tabs-order_details";
+	x_session_save("section_name");
+	func_log_order($orderid, 'X', $log, $login);
+
+	$top_message = array(
+		'type' => 'I',
+                'content' => 'Done.'
+	);
+
+        $section_name_top_message = $top_message;
+        x_session_save("section_name_top_message");
+
+	func_header_location("order.php?orderid=".$orderid);
+}
 
 if ($mode == 'ref_notify') {
 
@@ -1998,6 +2018,10 @@ if ($mode == 'ref_notify') {
             'type'      => 'E'
         );
     }
+
+    $section_name_top_message = $top_message;
+    x_session_save("section_name_top_message");
+
     func_header_location("order.php?orderid=".$orderid);
 }
 # START: random:18298_18304_18324 [2009 Jun 08 09:50] 
@@ -2057,9 +2081,45 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
                                 } else {
 
                                         $data_arr["amount"]["currency"] = $order["currency"];
-                                        $data_arr["amount"]["total"] = "0.01";
-                                        $data_arr["amount"]["total"] = $order["shipping_groups"][$mnf_id]["total"]["gross"];
-                                        $data_arr["is_final_capture"] = false;
+//                                        $data_arr["amount"]["total"] = "0.01";
+
+					$total_amount = $order["shipping_groups"][$mnf_id]["total"]["gross"];
+
+					if (isset($order["refund_groups"][$mnf_id]["total_gross"])){
+						$total_amount -= $order["refund_groups"][$mnf_id]["total_gross"];
+					}
+
+					$total_amount = price_format($total_amount);
+
+#
+##
+                                        $already_captured = func_query_first_cell("SELECT SUM(transaction_total) FROM $sql_tbl[transaction_logs] WHERE orderid='$orderid' AND transaction_status='completed'");
+                                        if (empty($already_captured)){
+                                        	$already_captured = 0;
+                                        }
+
+                                        $TOTAL_refund_groups_sum = 0;
+                                        if (isset($order["refund_groups"]) && is_array($order["refund_groups"])){
+                                        	foreach ($order["refund_groups"] as $k_ref_group => $v_ref_group){
+	                                                $TOTAL_refund_groups_sum += $v_ref_group["total_gross"];
+						}
+					}
+
+                                        $already_captured_PLUS_total_amount = $total_amount + $already_captured;
+                                        $already_captured_PLUS_total_amount = price_format($already_captured_PLUS_total_amount);
+
+
+                                        $total_MIN_TOTAL_refund_groups_sum = $order["total"] - $TOTAL_refund_groups_sum;
+                                        $total_MIN_TOTAL_refund_groups_sum = price_format($total_MIN_TOTAL_refund_groups_sum);
+
+##                                                      
+#
+
+                                        $data_arr["amount"]["total"] = $total_amount;
+					$data_arr["is_final_capture"] = (($already_captured_PLUS_total_amount == $total_MIN_TOTAL_refund_groups_sum) ? true : false);
+
+//func_print_r($data_arr, $already_captured, $order["refund_groups"], $TOTAL_refund_groups_sum);
+//die();
 
                                         $result = func_paypal_capture($Access_Token, $first_transaction_id, $data_arr);
 
@@ -2097,7 +2157,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 					$current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
 
         	                        $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
-	                                $log .= "<B>".$code.":</B> dc_status: ". $current_cb_status_value . " -> ". $new_value;
+	                                $log .= "<B>".$code.":</B> cb_status: ". $current_cb_status_value . " -> ". $new_value;
 
                                 	db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 				}
@@ -3723,6 +3783,28 @@ if (!empty($rmas)){
 	$crypt_orderid = text_crypt($orderid);
 	$smarty->assign("crypt_orderid", $crypt_orderid);
 }
+
+
+if (!empty($order["refund_groups"])){
+	$TOTAL_refund_groups_total_gross = 0;
+	$show_cancel_message = true;
+	foreach ($order["shipping_groups"] as $k => $v){
+		if (isset($order["refund_groups"][$k]["total_gross"])){
+			$TOTAL_refund_groups_total_gross += $order["refund_groups"][$k]["total_gross"];
+
+			if ($v["cb_status"] != "AP"){
+				$show_cancel_message = false;
+			}
+		} else {
+			$show_cancel_message = false;
+		}
+	}
+
+	if ($show_cancel_message && $TOTAL_refund_groups_total_gross == $order["total"]){
+		$smarty->assign("show_cancel_message", "Y");
+	}
+}
+
 
 //func_print_r($order);
 

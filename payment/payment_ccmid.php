@@ -233,7 +233,35 @@ if (!$fatal) {
 	$how_process_payment_at_checkout = $payment_method_info["how_process_payment_at_checkout"];
 
 
-	$order_status = ($bill_error) ? "F" : (($bill_output["code"] == 3) ? (($how_process_payment_at_checkout == "A") ? "AP" : "Q") : "P");
+
+//	$order_status = ($bill_error) ? "F" : (($bill_output["code"] == 3) ? (($how_process_payment_at_checkout == "A") ? "AP" : "Q") : (($how_process_payment_at_checkout == "A" && $bill_output["code"] == 1) ? "AP" : "P"));
+
+	if ($bill_error){
+		$order_status = "F";
+	}
+	elseif ($bill_output["code"] == 3){
+		if ($how_process_payment_at_checkout == "A"){
+			$order_status = "AP";
+		}
+		else {
+			$order_status = "Q";
+		}
+	}
+	elseif ($bill_output["code"] == 1){
+		if ($how_process_payment_at_checkout == "A"){
+			$order_status = "AP";
+		}
+		else {
+			$order_status = "P";
+		}
+	}
+	else {
+		$order_status = "P";
+	}
+
+//func_print_r($bill_output, $how_process_payment_at_checkout, $order_paymentid, $bill_error, $order_status);
+
+
 	if ($bill_output["code"] == 1 || $bill_output["code"] == 3) {
 		if (empty($skey) || !in_array(func_query_first_cell("SELECT is_callback FROM $sql_tbl[cc_pp3_data] WHERE ref = '$skey'"), array("R", "N"))) {
 			$cart = "";

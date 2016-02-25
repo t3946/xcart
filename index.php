@@ -108,7 +108,10 @@ if ($mode == 'search') {
 
 			if ($current_dc_status == "C"){
 				$log = "<B>".$distr_code.":</B> Distributor confirmed that the order has been received";
-				db_query("UPDATE $sql_tbl[order_groups] SET dc_status='L', dc_received_by_distributor_time='".time()."' WHERE orderid = '$o' AND manufacturerid='$m'");
+
+				$order_entry_flag = 'D';
+
+				db_query("UPDATE $sql_tbl[order_groups] SET dc_status='L', dc_received_by_distributor_time='".time()."', order_entry_flag='$order_entry_flag' WHERE orderid = '$o' AND manufacturerid='$m'");
 			} else {
 //				func_header_location($xcart_web_dir . DIR_CUSTOMER . '/index.php');
                                 $log = "<B>".$distr_code.":</B> Distributor confirmed that the order has been received. (But he did it before already.)";

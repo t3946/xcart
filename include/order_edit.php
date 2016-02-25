@@ -742,7 +742,7 @@ if ($REQUEST_METHOD == "POST") {
 
 				$add_tracking_log = false;
 				$log = "<B>Tracking numbers:</B><br /><B>Added:</B><br />";
-//				foreach ($v["tracking_shipper"] as $_k => $sh) {
+//				foreach ($v["tracking_shipper"] as $_k => $sh) 
 				foreach ($v["tracking_carrier"] as $_k => $sh) {
 					if (!empty($v["tracking_carrier"][$_k])) {
 
@@ -819,12 +819,61 @@ if ($REQUEST_METHOD == "POST") {
 							}
 
 							$total_amount = $total_prod_price + $v["shipping_cost_net"];
+
+							if (isset($ref_products[$m_id])){
+								foreach ($ref_products[$m_id] as $kk_r => $vv_r){
+									$total_amount -= $vv_r["ref_price"] * $vv_r["ref_qty"];
+								}
+							}
+
+							if (isset($ref_groups[$m_id]["ref_ship"])){
+								$total_amount -= $ref_groups[$m_id]["ref_ship"];
+							}
+
 							$total_amount = price_format($total_amount);
+#
+##
+							$already_captured = func_query_first_cell("SELECT SUM(transaction_total) FROM $sql_tbl[transaction_logs] WHERE orderid='$orderid' AND transaction_status='completed'");
+							if (empty($already_captured)){
+								$already_captured = 0;
+							}
+
+							$TOTAL_refund_groups_sum = 0;
+							if (isset($ref_groups) && is_array($ref_groups)){
+								foreach ($ref_groups as $k_ref_group => $v_ref_group){
+									$TOTAL_refund_groups_sum += $v_ref_group["ref_ship"];
+								}
+							}
+							if (isset($ref_products)){
+								foreach ($ref_products as $k_ref_product => $v_ref_product){
+									if (!empty($v_ref_product) && is_array($v_ref_product)){
+										foreach ($v_ref_product as $kk_ref_product => $vv_ref_product){
+											$TOTAL_refund_groups_sum += $vv_ref_product["ref_price"] * $vv_ref_product["ref_qty"];
+										}
+									}
+								}
+							}
+
+							$already_captured_PLUS_total_amount = $total_amount + $already_captured;
+							$already_captured_PLUS_total_amount = price_format($already_captured_PLUS_total_amount);
+
+
+							$total_MIN_TOTAL_refund_groups_sum = $order["total"] - $TOTAL_refund_groups_sum;
+							$total_MIN_TOTAL_refund_groups_sum = price_format($total_MIN_TOTAL_refund_groups_sum);
+
+##							
+#
+			
+//func_print_r($total_amount, $already_captured, $TOTAL_refund_groups_sum);
+//func_print_r($v, $ref_products[$m_id], $ref_groups[$m_id], $total_amount);
+//die();
 
                                                         $data_arr["amount"]["currency"] = $order["currency"];
-//                                                      $data_arr["amount"]["total"] = "0.01";
                                                         $data_arr["amount"]["total"] = $total_amount;
-                                                        $data_arr["is_final_capture"] = false;
+                                                        $data_arr["is_final_capture"] = (($already_captured_PLUS_total_amount == $total_MIN_TOTAL_refund_groups_sum) ? true : false);
+
+//func_print_r($data_arr);
+//die();
 
                                                         $result = func_paypal_capture($Access_Token, $first_transaction_id, $data_arr);
 
@@ -848,7 +897,7 @@ if ($REQUEST_METHOD == "POST") {
 							}
 
 							if (empty($transaction_id)){
-								$v['dc_status'] = $order["shipping_groups"][$m_id]['dc_status'] = $cart_tmp['shipping_groups'][$m_id]["dc_status"];
+								$v['dc_status'] = $groups[$m_id]['dc_status'] = $order["shipping_groups"][$m_id]['dc_status'] = $cart_tmp['shipping_groups'][$m_id]["dc_status"];
 	
 								if (!isset($top_message["content"])){
 									$top_message["content"] = "";
@@ -862,16 +911,17 @@ if ($REQUEST_METHOD == "POST") {
 		                        	                x_session_save("section_name_top_message");
 	
 							} else {
-								$v['cb_status'] = $order["shipping_groups"][$m_id]['cb_status'] = "P";
+								$v['cb_status'] = $groups[$m_id]['cb_status'] = $order["shipping_groups"][$m_id]['cb_status'] = "P";
+//								$v['order_entry_flag'] = $groups[$m_id]['order_entry_flag'] = $order["shipping_groups"][$m_id]['order_entry_flag'] = "Y";
+								db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='Y' WHERE manufacturerid='$m_id' AND orderid='$orderid'");
+								func_log_order($orderid, 'X', $code .": order_entry_flag='Y'", $login);
 							}
-
                                                 }
                                         }
 //func_print_r($v, $cart_tmp["shipping_groups"][$m_id], $data_arr, $result, $order);
 //die();
 
                                 }
-
 ###
 ##
 #
@@ -909,6 +959,85 @@ if ($REQUEST_METHOD == "POST") {
                                 }
 ###
 			}
+
+#
+##
+###
+			$make_paypal_void = false;
+			foreach ($cart_tmp["shipping_groups"] as $k_cart_tmp => $v_cart_tmp){
+				if (
+				    isset($v_cart_tmp["cb_status"]) && isset($groups[$k_cart_tmp]["cb_status"]) &&
+				    ($groups[$k_cart_tmp]["cb_status"] == "D" || $groups[$k_cart_tmp]["cb_status"] == "A") &&
+				    $v_cart_tmp["cb_status"] == "AP"
+				){
+					$make_paypal_void = true;
+				}
+				else {
+					$make_paypal_void = false;
+					break;
+				}
+			}
+
+			if ($make_paypal_void){
+				$first_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid'");
+
+                                        if (!empty($first_transaction_id)){
+
+                                                $transaction_log = "";
+
+                                                if (empty($Access_Token) || !isset($Access_Token)){
+                                                        $Access_Token = func_paypal_get_access_token();
+
+                                                        if (empty($Access_Token)){
+                                                                $transaction_log .= "'Access_Token' - failed <br />";
+                                                        }
+                                                }
+
+                                                if (!empty($Access_Token)){
+
+                                                        $result = func_paypal_void($Access_Token, $first_transaction_id);
+
+                                                        if (!empty($result["id"])){
+                                                                $transaction_log .= "<br />Transaction: ".$first_transaction_id." -> ".$result["id"];
+                                                        }
+
+                                                        $transaction_id = $result["id"];
+
+                                                        $transaction_status = $result["state"];
+                                                        $transaction_currency = $result["amount"]["currency"];
+                                                        $transaction_total = $result["amount"]["total"];
+
+                                                        $result["xcart_log"] = $transaction_log;
+                                                        $serialize_result = serialize($result);
+
+                                                        db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
+
+                                                        if (!empty($transaction_log)){
+                                                                func_log_order($orderid, 'PP', $transaction_log, $login);
+                                                        }
+
+                                                        if (empty($transaction_id)){
+
+                                                                if (!isset($top_message["content"])){
+                                                                        $top_message["content"] = "";
+                                                                }
+                                                                else {
+                                                                        $top_message["content"] .= "<br />";
+                                                                }
+                                                                $top_message["content"] .= func_get_langvar_by_name("txt_void_failed");
+                                                                $top_message["type"] = "I";
+                                                                $section_name_top_message = $top_message;
+                                                                x_session_save("section_name_top_message");
+
+                                                        }
+						}
+				}
+			}
+###
+##
+#
+
+
 
 #
 ## 11.04.2014

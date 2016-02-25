@@ -5,12 +5,12 @@ vim: set ts=2 sw=2 sts=2 et:
 
 {if $order.refund_groups[$mid]}
 <tr class="refund-distr-totals-line"><td style="font-size: 10px;" colspan="11">
-Refund # {$order.order_prefix}{$order.orderid}-REF
+{if $group.cb_status eq "AP"}Adjust{else}Refund{/if} # {$order.order_prefix}{$order.orderid}-REF
 </td></tr>
 
 <tr class="refund-distr-totals-line">
   <td style="font-size: 12px;">
-  {$lng.lbl_refund_for} {$group.group_name} {$lng.lbl_items}</td>
+  {if $group.cb_status eq "AP"}Adjust for{else}{$lng.lbl_refund_for}{/if} {$group.group_name} {$lng.lbl_items}</td>
   <td style="font-size: 12px;">{$group.code}</td>
   <td>&nbsp;</td>
   <td>&nbsp;</td>
