@@ -2685,80 +2685,78 @@ function func_define_approximate_shippings($productid, $product_info=''){
             $shipping_name = "";
             $Shipping_charge = "0.00";
             $shipping_currency = "";
-			/*$shipping_currency = "USD";*/
+			$shipping_currency = "USD";
 
 		    if ($product_info["free_ship_zone"] != "14" && $product_info["free_ship_zone"] != "15" ){
 
-			if (!$ORIGINAL_approximation_shipping_rates_empty_flag){
-			    $diff_date = $current_time - $v["last_updated_date"];
+                if (!$ORIGINAL_approximation_shipping_rates_empty_flag){
+                    $diff_date = $current_time - $v["last_updated_date"];
 
-			    if ($diff_date > $max_time){
-				$time_diff_ok = false;
-				break;
-			    }
-			}
+                    if ($diff_date > $max_time){
+                    $time_diff_ok = false;
+                    break;
+                    }
+                }
 
 
 #
 ##
 ###
-                        if (empty($product_info["weight"]) || $product_info["weight"] == "0.00"){
-                                $product_info["weight"] = "0.1";
-                        }
+                if (empty($product_info["weight"]) || $product_info["weight"] == "0.00"){
+                        $product_info["weight"] = "0.1";
+                }
 
 
-			if ($manufacturer_info['m_country'] == "US"){
-				$shipping_id = 1;
-				$shipping_name = "Ground";
+                if ($manufacturer_info['m_country'] == "US"){
+                    $shipping_id = 1;
+                    $shipping_name = "Ground";
 
 ###
-                                $real_weight = $product_info["weight"];
-                                $Volume = $product_info["dim_x"]*$product_info["dim_y"]*$product_info["dim_z"];
+                    $real_weight = $product_info["weight"];
+                    $Volume = $product_info["dim_x"]*$product_info["dim_y"]*$product_info["dim_z"];
 
-                                if ($Volume > $two_shippings[$shipping_id]["vol_threshold"] && !empty($two_shippings[$shipping_id]["dim_factor"])){
-	                                $bw = $Volume/$two_shippings[$shipping_id]["dim_factor"];
-					$weight = max($real_weight, $bw);
-                                } else {
-					$weight = $real_weight;
-				}
+                    if ($Volume > $two_shippings[$shipping_id]["vol_threshold"] && !empty($two_shippings[$shipping_id]["dim_factor"])){
+                        $bw = $Volume/$two_shippings[$shipping_id]["dim_factor"];
+                        $weight = max($real_weight, $bw);
+                    } else {
+                        $weight = $real_weight;
+                    }
 
-//                                $weight = max($real_weight, $bw);
+                    $weight = ceil($weight);
 
-                                $weight = ceil($weight);
-
-				$product_info["weight"] = $weight;
+                    $product_info["weight"] = $weight;
 ###
 
-			} 
-			elseif ($manufacturer_info['m_country'] == "CA"){
-                                $shipping_id = 65;
-                                $shipping_name = "Standard";
-                        }
+                } 
+                elseif ($manufacturer_info['m_country'] == "CA"){
+                        $shipping_id = 65;
+                        $shipping_name = "Standard";
+                }
 
 
-			if (!$ORIGINAL_approximation_shipping_rates_empty_flag){
+                if (!$ORIGINAL_approximation_shipping_rates_empty_flag){
 
-                            if ($product_info["weight"] > 0 && $product_info["weight"] <= 1){
-                                $Shipping_charge = $v["bw_1"];
-                            }
-                            elseif ($product_info["weight"] > 1 && $product_info["weight"] <= 75){
-                                $Shipping_charge = $v["bw_1"] + ($v["bw_75"] - $v["bw_1"])/(75 - 1) * ($product_info["weight"] - 1);
-                            }
-                            elseif ($product_info["weight"] > 75){
-                                $Shipping_charge = $v["bw_75"] + ($v["bw_150"] - $v["bw_75"])/(150 - 75) * ($product_info["weight"] - 75);
-                            }
+                    if ($product_info["weight"] > 0 && $product_info["weight"] <= 1){
+                        $Shipping_charge = $v["bw_1"];
+                    }
+                    elseif ($product_info["weight"] > 1 && $product_info["weight"] <= 75){
+                        $Shipping_charge = $v["bw_1"] + ($v["bw_75"] - $v["bw_1"])/(75 - 1) * ($product_info["weight"] - 1);
+                    }
+                    elseif ($product_info["weight"] > 75){
+                        $Shipping_charge = $v["bw_75"] + ($v["bw_150"] - $v["bw_75"])/(150 - 75) * ($product_info["weight"] - 75);
+                    }
 
-                            $Shipping_charge = price_format($Shipping_charge);
+                    $Shipping_charge = price_format($Shipping_charge);
 
 
-			    $intershipper_rates[0]["methodid"] = $shipping_id;
-			    $intershipper_rates[0]["rate"] = $Shipping_charge;
+                    $intershipper_rates[0]["methodid"] = $shipping_id;
+                    $intershipper_rates[0]["rate"] = $Shipping_charge;
 
-			    $approximation_intershipper_rates = $intershipper_rates;
+                    $approximation_intershipper_rates = $intershipper_rates;
 			}
 			else {
-			    $approximation_intershipper_rates = "";
-			    $v["state"] = $v["code"];
+                    $approximation_intershipper_rates = "";
+                    $v["state"] = $v["code"];
 			}
 
 			$customer_info["b_state"] = $customer_info["s_state"] = $v["state"];
