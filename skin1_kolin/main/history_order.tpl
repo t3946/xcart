@@ -47,6 +47,11 @@ multirowInputSets['track'].noCloneContent = 1;
 //<![CDATA[
 {literal}
 
+function func_refund_reason_message(){
+	var refund_reason_not_entered_message = {/literal}'{$lng.lbl_refund_reason_not_entered_message|replace:"\r\n":" "}'{literal}; 
+	alert(refund_reason_not_entered_message);
+}
+
 function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
         if (!form)

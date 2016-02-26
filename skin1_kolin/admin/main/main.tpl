@@ -142,10 +142,24 @@
 {/foreach}
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
-<td align="right"><b>{$lng.lbl_gross_total}:</b></td>
+<td align="right"><b>Total for all orders:</b></td>
 {section name=period loop=$gross_total}
 <td align="center">{include file="currency.tpl" value=$gross_total[period]}</td>
 {/section} 
+</tr>
+
+<tr class="{cycle values='SectionBox,TableSubHead'}">
+<td align="right"><b>Total Authorized:</b></td>
+{section name=period loop=$authorized_total}
+<td align="center">{include file="currency.tpl" value=$authorized_total[period]}</td>
+{/section}
+</tr>
+
+<tr class="{cycle values='SectionBox,TableSubHead'}">
+<td align="right"><b>Refund rate:</b></td>
+{section name=period loop=$refund_rate}
+<td align="center">{include file="currency.tpl" value=$refund_rate[period]}</td>
+{/section}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
