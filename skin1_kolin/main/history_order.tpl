@@ -390,14 +390,27 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 	{/if}
 
 
-{* --- First transaction from customer --- *}
+{* --- First transaction from customer --- 
         {if $transaction_logs.0.usertype eq "C" && $order.amazonorderid eq ""}
 
 {if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_logs.0.transaction_link_anchor ne ""}{$transaction_logs.0.transaction_link_anchor}{else}{$transaction_logs.0.transaction_id}{/if}{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if} {if $transaction_logs.0.transaction_link_anchor ne ""}({$transaction_logs.0.transaction_id}){/if}
 		<br />
         {/if}
-{* --- End --- *}
+ --- End --- *}
 
+{* --- First transaction --- *}
+	{if $transaction_logs ne "" && $order.amazonorderid eq ""}
+		{assign var="first_transaction_found" value=""}
+
+		{foreach from=$transaction_logs item=transaction_log key=k_transaction_logs}
+			{if $transaction_log.transaction_status ne "voided" && $transaction_log.transaction_id ne "" && $first_transaction_found eq ""}
+				{if $transaction_log.transaction_id_link ne ""}<a target="_blank" href="{$transaction_log.transaction_id_link|substitute:'trans-id':$transaction_log.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_log.transaction_link_anchor ne ""}{$transaction_log.transaction_link_anchor}{else}{$transaction_log.transaction_id}{/if}{if $transaction_log.transaction_id_link ne ""}</a>{/if} {if $transaction_log.transaction_link_anchor ne ""}({$transaction_log.transaction_id}){/if}
+				{assign var="first_transaction_found" value="Y"}
+				<br />
+			{/if}
+		{/foreach}
+	{/if}
+{* --- End --- *}
 
 	{if $link_to_virtual_terminal_transaction ne "" && $order.amazonorderid eq ""}
 		{foreach from=$link_to_virtual_terminal_transaction item=vl key=kl}

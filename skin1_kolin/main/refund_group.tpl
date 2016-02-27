@@ -189,8 +189,8 @@ vim: set ts=2 sw=2 sts=2 et:
   {/if}
 
   {if $group.cb_status eq "3" || $group.cb_status eq "V"}
-
-    <textarea id="refund_reason_{$mid}"  name="ref_groups[{$mid}][refund_reason]" cols="60" rows="2" style="width: 98%;">{{$order.refund_groups[$mid].refund_reason|escape:"html"}</textarea>
+    <B>Refund reason:</B><br />
+    <textarea id="refund_reason_{$mid}"  name="ref_groups[{$mid}][refund_reason]" cols="60" rows="2" style="width: 98%;">{$order.refund_groups[$mid].refund_reason|escape:"html"}</textarea>
 
     <input type="button" value="Update C2B status and Send refund notification" onclick="javascript: if ($('#refund_reason_{$mid}').val() != ''){ldelim} ga_onRefundClick('{$mid}'); $('#ref_notify_button_clicked').val('Update_C2B_status_and_Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit(); {rdelim} else {ldelim} func_refund_reason_message(); {rdelim}" />&nbsp;&nbsp;
   {elseif $group.cb_status eq "H" || $group.cb_status eq "R"}
