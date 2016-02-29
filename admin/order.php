@@ -1903,6 +1903,10 @@ if ($mode == 'pending_order_message2_done_clicked' && !empty($notify_mid)){
 
 if ($mode == 'ref_notify') {
 
+//func_print_r($_POST);
+//die("123");
+
+
 /*    if ($ref_notify_do_not_send_email == "Y") */
     if ($ref_notify_button_clicked == "Update_C2B_status"){
 	$log = "'Update C2B status' at 'Refund'";
@@ -1998,7 +2002,7 @@ if ($mode == 'ref_notify') {
 	            func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
 
 
-	            db_query('UPDATE ' . $sql_tbl['refund_groups'] . ' SET notify_status = "S"'
+	            db_query('UPDATE ' . $sql_tbl['refund_groups'] . ' SET notify_status = "S", refund_reason="'.addslashes($ref_groups[$notify_mid]["refund_reason"]).'"'
         	        . ' WHERE orderid = "' . $orderid . '" AND manufacturerid = "' . $notify_mid . '"');
 
 	
@@ -2070,9 +2074,13 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
 		if ($current_cb_status == "AP"){
 
-			$first_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid'");
+			$capture_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
-			if (!empty($first_transaction_id) && !empty($order["shipping_groups"][$mnf_id])){
+                        if (empty($capture_transaction_id)){
+	                        $capture_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
+                        }
+
+			if (!empty($capture_transaction_id) && !empty($order["shipping_groups"][$mnf_id])){
 
 				$Access_Token = func_paypal_get_access_token();
 
@@ -2121,10 +2129,10 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 //func_print_r($data_arr, $already_captured, $order["refund_groups"], $TOTAL_refund_groups_sum);
 //die();
 
-                                        $result = func_paypal_capture($Access_Token, $first_transaction_id, $data_arr);
+                                        $result = func_paypal_capture($Access_Token, $capture_transaction_id, $data_arr);
 
                                         if (!empty($result["id"])){
-	                                        $transaction_log = "<br />Transaction: ".$first_transaction_id." -> ".$result["id"];
+	                                        $transaction_log = "<br />Transaction: ".$capture_transaction_id." -> ".$result["id"];
                                         }
 
                                         $transaction_id = $result["id"];

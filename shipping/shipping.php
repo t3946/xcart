@@ -504,6 +504,46 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 	}
 
 
+#
+##
+###
+	$Amazon_code_found = false;
+	$flat_rate_shipping_found = false;
+	if (!empty($shipping) && is_array($shipping)){
+		foreach ($shipping as $k => $v){
+			if ($v["code"] == "Amazon"){
+				$Amazon_code_found = true;
+			}
+
+			if (empty($v["code"]) && empty($v["new_hardcoded_shipping_method"])){
+				$flat_rate_shipping_found = true;
+			}
+		}
+
+		$shipping_deleted_flag = false;
+		foreach ($shipping as $k => $v){
+			if ($Amazon_code_found || $flat_rate_shipping_found){
+
+				if (
+				    ($Amazon_code_found && $v["code"] != "Amazon") ||
+				    (!$Amazon_code_found && $flat_rate_shipping_found && !empty($v["code"]))
+				){
+					unset($shipping[$k]);
+					$shipping_deleted_flag = true;
+				}
+			}
+		}
+
+		if ($shipping_deleted_flag){
+			$shipping = array_values($shipping);
+		}
+	}
+###
+##
+#
+//func_print_r($shipping);
+
+
 	if ($shipping){
 
 		if (is_array($shipping)){
