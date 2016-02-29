@@ -5,12 +5,12 @@ vim: set ts=2 sw=2 sts=2 et:
 
 {if $order.refund_groups[$mid]}
 <tr class="refund-distr-totals-line"><td style="font-size: 10px;" colspan="11">
-Refund # {$order.order_prefix}{$order.orderid}-REF
+{if $group.cb_status eq "AP"}Adjust{else}Refund{/if} # {$order.order_prefix}{$order.orderid}-REF
 </td></tr>
 
 <tr class="refund-distr-totals-line">
   <td style="font-size: 12px;">
-  {$lng.lbl_refund_for} {$group.group_name} {$lng.lbl_items}</td>
+  {if $group.cb_status eq "AP"}Adjust for{else}{$lng.lbl_refund_for}{/if} {$group.group_name} {$lng.lbl_items}</td>
   <td style="font-size: 12px;">{$group.code}</td>
   <td>&nbsp;</td>
   <td>&nbsp;</td>
@@ -168,13 +168,13 @@ Refund # {$order.order_prefix}{$order.orderid}-REF
   <td align="right" nowrap="nowrap">
     {if $order.refund_groups[$mid].shipping_gross ne 0}({/if}{include file="currency2.tpl" value=$order.refund_groups[$mid].shipping_gross}{if $order.refund_groups[$mid].shipping_gross ne 0}){/if}
   </td>
-  <td>
+  <td align="center">
 <input type="checkbox" value="Y" name="ref_groups[{$mid}][delete]" />
   </td>
 </tr>
 
 <tr id="refund_group_{$mid}" {if $group.cb_status eq "3" || $group.cb_status eq "V"}style="background: #F4CCCC;"{elseif $group.cb_status eq "H" || $group.cb_status eq "R"}style="background: #fff2cc;"{else}style="display: none;"{/if}>
-  <td colspan="{$colspan}">
+  <td colspan="11">
 
 {*
     {if $group.cb_status ne "3" && $group.cb_status ne "V"}
@@ -182,8 +182,17 @@ Refund # {$order.order_prefix}{$order.orderid}-REF
     {/if}
 *}
 
+  {if $order.refund_groups[$mid].refund_reason ne ""}
+    <B>Refund reason:</B> {$order.refund_groups[$mid].refund_reason}
+    <br />
+    <br />
+  {/if}
+
   {if $group.cb_status eq "3" || $group.cb_status eq "V"}
-    <input type="button" value="Update C2B status and Send refund notification" onclick="javascript: ga_onRefundClick('{$mid}'); $('#ref_notify_button_clicked').val('Update_C2B_status_and_Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
+    <B>Refund reason:</B><br />
+    <textarea id="refund_reason_{$mid}"  name="ref_groups[{$mid}][refund_reason]" cols="60" rows="2" style="width: 98%;">{$order.refund_groups[$mid].refund_reason|escape:"html"}</textarea>
+
+    <input type="button" value="Update C2B status and Send refund notification" onclick="javascript: if ($('#refund_reason_{$mid}').val() != ''){ldelim} ga_onRefundClick('{$mid}'); $('#ref_notify_button_clicked').val('Update_C2B_status_and_Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit(); {rdelim} else {ldelim} func_refund_reason_message(); {rdelim}" />&nbsp;&nbsp;
   {elseif $group.cb_status eq "H" || $group.cb_status eq "R"}
     <input type="button" value="Send refund notification" onclick="javascript: $('#ref_notify_button_clicked').val('Send_refund_notification'); $('#ordereditform_mode').val('ref_notify'); $('#ordereditform_mid').val('{$mid}'); this.form.submit();" />&nbsp;&nbsp;
   {/if}
@@ -197,5 +206,5 @@ Refund # {$order.order_prefix}{$order.orderid}-REF
   </td>
 </tr>
 
-<tr><td colspan="{$colspan}"><hr /></td></tr>
+<tr><td colspan="11"><hr /></td></tr>
 {/if}

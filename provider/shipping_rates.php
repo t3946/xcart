@@ -38,6 +38,9 @@
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
+die("MOVED TO Distributors. Example: www.artistsupplysource.com/admin/manufacturers.php?zoneid=&shippingid=&type=R&manufacturerid=12&distributor_section=19");
+
+
 if ($config["Shipping"]["disable_shipping"] == "Y") {
 	func_header_location("error_message.php?shipping_disabled");
 }

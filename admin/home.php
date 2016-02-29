@@ -106,6 +106,13 @@ if (!empty($login) && $user_account["flag"] != "FS") {
         $today_totals['ARTS'] = func_query_first_cell("$query='$artss_manufacturerid'");
         $today_totals['other'] = func_query_first_cell("$query!='$artss_manufacturerid'");
 
+        $query = "SELECT SUM(g.total_net) FROM $sql_tbl[order_groups] AS g"
+        . " INNER JOIN $sql_tbl[orders] AS o ON o.orderid=g.orderid"
+        . " LEFT JOIN $sql_tbl[manufacturers] AS m ON m.manufacturerid=g.manufacturerid"
+        . " WHERE o.date>='$start_date' AND o.date<='$end_date'"
+        . " AND g.cb_status = 'AP' AND m.manufacturerid";
+        $today_totals['ARTS_Authorized'] = func_query_first_cell("$query='$artss_manufacturerid'");
+        $today_totals['other_Authorized'] = func_query_first_cell("$query!='$artss_manufacturerid'");
 
 	$count_days = date("j", time());
 	$end_date = time() + $config["Appearance"]["timezone_offset"];

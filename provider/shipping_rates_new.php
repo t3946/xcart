@@ -81,7 +81,8 @@ if ($REQUEST_METHOD=="POST") {
 						"rate_p" => func_convert_number($v['rate_p']),
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 						"weight_rate" => func_convert_number($v['weight_rate']),
-						"cost_marcup" => func_convert_number($v['cost_marcup'])
+						"cost_marcup" => func_convert_number($v['cost_marcup']),
+						"real_drop_ship_fee" => func_convert_number($v['real_drop_ship_fee'])
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 					),
 					"rateid='$rateid' $provider_condition $type_condition"
@@ -112,6 +113,7 @@ if ($REQUEST_METHOD=="POST") {
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 					"cost_marcup" => func_convert_number($cost_marcup_new),
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+					"real_drop_ship_fee" => func_convert_number($real_drop_ship_fee_new),
 					"provider" => "master",
 					"zoneid" => $zoneid_new,
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 

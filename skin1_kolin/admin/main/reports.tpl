@@ -17,6 +17,8 @@
 <a href="{$catalogs.admin}/fba_roi_report.php" class="VertMenuItems">FBA ROI report (year based)</a><br />
 
 <a href="{$catalogs.admin}/amazon_settlement_report_analyzer.php" class="VertMenuItems">Amazon Settlement Reports Analyzer</a><br />
+
+<a href="{$catalogs.admin}/distributors_logins_view_log.php?mode=search" class="VertMenuItems">Distributors logins view log</a><br />
 {/if}
 
 {/capture}

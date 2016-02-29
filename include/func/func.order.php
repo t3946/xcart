@@ -1893,7 +1893,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by=''){
 
 	$mail_smarty->assign('cidev_hide_invoice', "Y");
 
-	$allowed_cb_statuses = array("P","Q", "O");
+	$allowed_cb_statuses = array("P","Q", "O", "AP");
 	$allowed_dc_statuses = array("T");
 
 	if (!empty($mnfs) && is_array($mnfs)) {
@@ -2588,9 +2588,9 @@ function func_change_order_status($orderids, $status, $advinfo="", $manufacturer
 # END: random:18591_18598 [2009 Jul 29 10:36] 
 
 		} elseif (
-        	    ($status == 'Q' && $order['order_status'][$status_type] == 'I' 
-	            && $current_area != 'A' && $current_area != 'P') 
-        	    || $status == 'E' && $order['order_status'][$status_type] != 'E'
+        	    ($status == 'Q' && $order['order_status'][$status_type] == 'I' && $current_area != 'A' && $current_area != 'P') 
+        	    || ($status == 'E' && $order['order_status'][$status_type] != 'E')
+		    || ($status == 'AP' && $order['order_status'][$status_type] != 'AP')
 	        ) {
 			$send_notification = true;
 		}
@@ -2607,6 +2607,10 @@ function func_change_order_status($orderids, $status, $advinfo="", $manufacturer
 # END: random:18591_18598 [2009 Jul 29 10:36] 
 			func_update_quantity($order_data['products'],false);
 		}
+
+//func_print_r($send_notification, $status);
+//die("---");
+
 
 	        if ($send_notification && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
         	    func_send_order_status_notification($orderid, $status);
@@ -4340,7 +4344,7 @@ function func_other_customer_orders($email, $orderid = 0){
                                         $Fraud = "Y";
                                         $count_Fraud++;
                                 }
-                                elseif (in_array($v["fraud_status"], array("C", "E")) && in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
+                                elseif (in_array($v["fraud_status"], array("C", "E")) && in_array($vv["cb_status"], array('N','O','P','Q','IO','F','I','AP')) && in_array($vv["dc_status"], array('M','T','K','B','DP','L','C','E'))){
                                         $Open = "Y";
                                         $count_Open++;
                                 }

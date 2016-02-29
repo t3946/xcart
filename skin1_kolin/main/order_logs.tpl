@@ -80,21 +80,32 @@ $(function() {ldelim}
 *}
 
 
-{* --- First transaction from customer --- *}
+{* --- First transaction from customer --- 
                 {if $transaction_logs.0.usertype eq "C"} 
 		<tr><td colspan="3"></td><td>
 
-{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}
-{if $transaction_logs.0.transaction_link_anchor ne ""}
-{$transaction_logs.0.transaction_link_anchor}
-{else}
-{$transaction_logs.0.transaction_id}
-{/if}
-{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if}
+{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_logs.0.transaction_link_anchor ne ""}{$transaction_logs.0.transaction_link_anchor}{else}{$transaction_logs.0.transaction_id}{/if}{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if} {if $transaction_logs.0.transaction_link_anchor ne ""}({$transaction_logs.0.transaction_id}){/if}
 
 		</td></tr>
                 {/if}
+ --- End --- *}
+
+{* --- First transaction --- *}
+	        {if $transaction_logs ne ""}
+		<tr><td colspan="3"></td><td>
+                {assign var="first_transaction_found" value=""}
+
+                {foreach from=$transaction_logs item=transaction_log key=k_transaction_logs}
+                        {if $transaction_log.transaction_status ne "voided" && $transaction_log.transaction_id ne "" && $first_transaction_found eq ""}
+                                {if $transaction_log.transaction_id_link ne ""}<a target="_blank" href="{$transaction_log.transaction_id_link|substitute:'trans-id':$transaction_log.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_log.transaction_link_anchor ne ""}{$transaction_log.transaction_link_anchor}{else}{$transaction_log.transaction_id}{/if}{if $transaction_log.transaction_id_link ne ""}</a>{/if} {if $transaction_log.transaction_link_anchor ne ""}({$transaction_log.transaction_id}){/if}
+                                {assign var="first_transaction_found" value="Y"}
+                                <br />
+                        {/if}
+                {/foreach}
+		</td></tr>
+	        {/if}   
 {* --- End --- *}
+
 
 		<tr><td colspan="4"><br /><hr /><br /></td></tr>
 

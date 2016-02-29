@@ -66,12 +66,22 @@
 <table cellspacing="1" class="DataSheet" style="width: auto;">
 <tr>
 <td>{$cur_time|date_format:"%d-%b-%Y"}</td>
-<td>{$lng.lbl_inventory_sales}</td>
+<td>Inventory Authorized</td>
+<td align="right">{include file="currency.tpl" value=$today_totals.ARTS_Authorized|default:0}</td>
+</tr>
+<tr>
+<td>{$cur_time|date_format:"%d-%b-%Y"}</td>
+<td>Inventory Paid</td>
 <td align="right">{include file="currency.tpl" value=$today_totals.ARTS|default:0}</td>
 </tr>
 <tr>
 <td>{$cur_time|date_format:"%d-%b-%Y"}</td>
-<td>{$lng.lbl_direct_ship_sales}</td>
+<td>Direct Ship Authorized</td>
+<td align="right">{include file="currency.tpl" value=$today_totals.other_Authorized|default:0}</td>
+</tr>
+<tr>
+<td>{$cur_time|date_format:"%d-%b-%Y"}</td>
+<td>Direct Ship Paid</td>
 <td align="right">{include file="currency.tpl" value=$today_totals.other|default:0}</td>
 </tr>
 </table>
@@ -142,16 +152,30 @@
 {/foreach}
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
-<td align="right"><b>{$lng.lbl_gross_total}:</b></td>
+<td align="right"><b>Total for all orders:</b></td>
 {section name=period loop=$gross_total}
 <td align="center">{include file="currency.tpl" value=$gross_total[period]}</td>
 {/section} 
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
+<td align="right"><b>Total Authorized:</b></td>
+{section name=period loop=$authorized_total}
+<td align="center">{include file="currency.tpl" value=$authorized_total[period]}</td>
+{/section}
+</tr>
+
+<tr class="{cycle values='SectionBox,TableSubHead'}">
 <td align="right"><b>{$lng.lbl_total_paid}:</b></td>
 {section name=period loop=$total_paid}
 <td align="center">{include file="currency.tpl" value=$total_paid[period]}</td>
+{/section}
+</tr>
+
+<tr class="{cycle values='SectionBox,TableSubHead'}">
+<td align="right"><b>Refund rate:</b></td>
+{section name=period loop=$refund_rate}
+<td align="center">{$refund_rate[period]} %</td>
 {/section}
 </tr>
 

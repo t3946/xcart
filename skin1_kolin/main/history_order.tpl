@@ -1,4 +1,5 @@
 {* $Id: history_order.tpl,v 1.83.2.17 2006/12/25 11:53:29 svowl Exp $ *}
+
 {if $current_membership_flag eq 'FS'}
 {assign var="membership_static" value="F"}
 {else}
@@ -45,6 +46,11 @@ multirowInputSets['track'].noCloneContent = 1;
 <script type="text/javascript" language="JavaScript 1.2">
 //<![CDATA[
 {literal}
+
+function func_refund_reason_message(){
+	var refund_reason_not_entered_message = {/literal}'{$lng.lbl_refund_reason_not_entered_message|replace:"\r\n":" "}'{literal}; 
+	alert(refund_reason_not_entered_message);
+}
 
 function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
@@ -384,20 +390,27 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 	{/if}
 
 
-{* --- First transaction from customer --- *}
+{* --- First transaction from customer --- 
         {if $transaction_logs.0.usertype eq "C" && $order.amazonorderid eq ""}
 
-{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}
-{if $transaction_logs.0.transaction_link_anchor ne ""}
-{$transaction_logs.0.transaction_link_anchor}
-{else}
-{$transaction_logs.0.transaction_id}
-{/if}
-{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if}
+{if $transaction_logs.0.transaction_id_link ne ""}<a target="_blank" href="{$transaction_logs.0.transaction_id_link|substitute:'trans-id':$transaction_logs.0.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_logs.0.transaction_link_anchor ne ""}{$transaction_logs.0.transaction_link_anchor}{else}{$transaction_logs.0.transaction_id}{/if}{if $transaction_logs.0.transaction_id_link ne ""}</a>{/if} {if $transaction_logs.0.transaction_link_anchor ne ""}({$transaction_logs.0.transaction_id}){/if}
 		<br />
         {/if}
-{* --- End --- *}
+ --- End --- *}
 
+{* --- First transaction --- *}
+	{if $transaction_logs ne "" && $order.amazonorderid eq ""}
+		{assign var="first_transaction_found" value=""}
+
+		{foreach from=$transaction_logs item=transaction_log key=k_transaction_logs}
+			{if $transaction_log.transaction_status ne "voided" && $transaction_log.transaction_id ne "" && $first_transaction_found eq ""}
+				{if $transaction_log.transaction_id_link ne ""}<a target="_blank" href="{$transaction_log.transaction_id_link|substitute:'trans-id':$transaction_log.transaction_id}" style="color: #1411FF;">{/if}{if $transaction_log.transaction_link_anchor ne ""}{$transaction_log.transaction_link_anchor}{else}{$transaction_log.transaction_id}{/if}{if $transaction_log.transaction_id_link ne ""}</a>{/if} {if $transaction_log.transaction_link_anchor ne ""}({$transaction_log.transaction_id}){/if}
+				{assign var="first_transaction_found" value="Y"}
+				<br />
+			{/if}
+		{/foreach}
+	{/if}
+{* --- End --- *}
 
 	{if $link_to_virtual_terminal_transaction ne "" && $order.amazonorderid eq ""}
 		{foreach from=$link_to_virtual_terminal_transaction item=vl key=kl}
@@ -824,7 +837,7 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
                 {assign var=show_request_availability value="Y"}
 	{/if}
 
-	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
+	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
         	{assign var=show_to_order_entry_operator value="Y"}
 	{/if}
 
@@ -834,19 +847,19 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
                 {assign var=show_request_availability value="Y"}
         {/if}
 
-	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
+	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
 	        {assign var=show_dispatch_to_distributor value="Y"}
 	{/if}
 
  {elseif $v.d_availability_must_be_checked ne "Y" && $v.submit_to_operator eq "through_distributor_website"}
 
-        {if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
+        {if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
                 {assign var=show_to_order_entry_operator value="Y"}
         {/if}
 
  {elseif $v.d_availability_must_be_checked ne "Y" && $v.submit_to_operator ne "through_distributor_website"}
 
-	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
+	{if ($v.cb_status eq 'O' || $v.cb_status eq 'P' || $v.cb_status eq '3' || $v.cb_status eq 'H' || $v.cb_status eq 'AP') && ($v.dc_status eq 'T' || $v.dc_status eq 'K' || $v.dc_status eq 'M')}
 	        {assign var=show_dispatch_to_distributor value="Y"}
 	{/if}
 
@@ -1211,3 +1224,10 @@ $(function() {ldelim}
 </div>
 {/if}
 
+{if $show_cancel_message eq "Y"}
+<script type="text/javascript">
+<!--
+alert('You are trying to fully decrease order amount. Instead of using RQTY, RNET - please change all CB statuses to "Cancelled"');
+-->
+</script>
+{/if}
