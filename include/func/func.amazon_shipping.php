@@ -64,12 +64,16 @@ function func_need_amazon_shipping_flag($cart){
 
 	$need_amazon_shipping = false;
 
-	$all_FBA_products_flag = func_amazon_all_FBA_products_flag($cart);
+	$count_shipping_groups = count($cart["shipping_groups"]);
 
-	if ($all_FBA_products_flag){
-		$need_amazon_shipping = true;
+	if ($count_shipping_groups == "1"){
+
+		$all_FBA_products_flag = func_amazon_all_FBA_products_flag($cart);
+
+		if ($all_FBA_products_flag){
+			$need_amazon_shipping = true;
+		}
 	}
-
 
 
 #########################################################
