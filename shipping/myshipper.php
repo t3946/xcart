@@ -82,6 +82,14 @@ function func_shipper ($weight, $userinfo, $debug="N", $cart=false) {
 
 	x_load('tests');
 
+#
+##
+###
+	$need_amazon_shipping_flag = func_need_amazon_shipping_flag($cart);
+###
+##
+#
+
 	#
 	# Shipping modules depend on XML parser (EXPAT extension)
 	#
@@ -93,11 +101,21 @@ function func_shipper ($weight, $userinfo, $debug="N", $cart=false) {
 			$alt_ship_mods[] = "CPC";
 			$alt_ship_mods[] = "ARB";
 			$alt_ship_mods[] = "DHL";
+			
+			if ($need_amazon_shipping_flag){
+				$ship_mods[] = "Amazon";
+				#$alt_ship_mods[] = "Amazon";
+			}
+
 		} else {
 			$ship_mods[] = "USPS";
 			$ship_mods[] = "CPC";
 			$ship_mods[] = "ARB";
 			$ship_mods[] = "DHL";
+
+			if ($need_amazon_shipping_flag){
+				$ship_mods[] = "Amazon";
+			}
 		}
 	}
 
