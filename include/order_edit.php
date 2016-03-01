@@ -784,22 +784,25 @@ if ($REQUEST_METHOD == "POST") {
 #
 ##
 ###
-
 //func_print_r($v, $cart_tmp["shipping_groups"][$m_id], $data_arr, $order["shipping_groups"][$m_id]);
 //die("--");
 
-
+				$capture_transaction_id = "";
                                 if (
                                         $v["dc_status"] == "L" && $cart_tmp['shipping_groups'][$m_id]["dc_status"] != "L" &&
-                                        $v["cb_status"] == "AP" &&
-                                        $payment_method_info["how_process_payment_at_checkout"] == "A"
-                                ){
-
-					if (empty($first_transaction_id) && !isset($first_transaction_id)){
-	                                        $first_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid'");
+                                        $v["cb_status"] == "AP"
+				){
+					if ($payment_method_info["how_process_payment_at_checkout"] == "A"){
+						$capture_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 					}
+                               
+					if (empty($capture_transaction_id)){
+						$capture_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
+					}
+				}
 
-                                        if (!empty($first_transaction_id)){
+
+				if (!empty($capture_transaction_id)){
 
 						$transaction_log = "";
 
@@ -875,10 +878,10 @@ if ($REQUEST_METHOD == "POST") {
 //func_print_r($data_arr);
 //die();
 
-                                                        $result = func_paypal_capture($Access_Token, $first_transaction_id, $data_arr);
+                                                        $result = func_paypal_capture($Access_Token, $capture_transaction_id, $data_arr);
 
 							if (!empty($result["id"])){
-								$transaction_log .= "<br />Transaction: ".$first_transaction_id." -> ".$result["id"];
+								$transaction_log .= "<br />Transaction: ".$capture_transaction_id." -> ".$result["id"];
 							}
 
 				                        $transaction_id = $result["id"];
@@ -912,14 +915,14 @@ if ($REQUEST_METHOD == "POST") {
 	
 							} else {
 								$v['cb_status'] = $groups[$m_id]['cb_status'] = $order["shipping_groups"][$m_id]['cb_status'] = "P";
+//								$v['order_entry_flag'] = $groups[$m_id]['order_entry_flag'] = $order["shipping_groups"][$m_id]['order_entry_flag'] = "Y";
+								db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='Y' WHERE manufacturerid='$m_id' AND orderid='$orderid'");
+								func_log_order($orderid, 'X', $code .": order_entry_flag='Y'", $login);
 							}
-
                                                 }
-                                        }
+				} // if (!empty($capture_transaction_id))
 //func_print_r($v, $cart_tmp["shipping_groups"][$m_id], $data_arr, $result, $order);
 //die();
-
-                                }
 
 ###
 ##
@@ -978,9 +981,9 @@ if ($REQUEST_METHOD == "POST") {
 			}
 
 			if ($make_paypal_void){
-				$first_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid'");
+				$capture_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid'");
 
-                                        if (!empty($first_transaction_id)){
+                                        if (!empty($capture_transaction_id)){
 
                                                 $transaction_log = "";
 
@@ -994,10 +997,10 @@ if ($REQUEST_METHOD == "POST") {
 
                                                 if (!empty($Access_Token)){
 
-                                                        $result = func_paypal_void($Access_Token, $first_transaction_id);
+                                                        $result = func_paypal_void($Access_Token, $capture_transaction_id);
 
                                                         if (!empty($result["id"])){
-                                                                $transaction_log .= "<br />Transaction: ".$first_transaction_id." -> ".$result["id"];
+                                                                $transaction_log .= "<br />Transaction: ".$capture_transaction_id." -> ".$result["id"];
                                                         }
 
                                                         $transaction_id = $result["id"];

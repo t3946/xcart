@@ -1880,8 +1880,32 @@ require $xcart_dir."/include/transaction_logs.php";
 ##
 #
 
+if ($mode == 'pending_order_message2_done_clicked' && !empty($notify_mid)){
+
+	$log = "'Done' clicked. <br /><B>".$order["shipping_groups"][$notify_mid]["all_distributor_info"]["code"]."</B>: order_entry_flag: ". $order["shipping_groups"][$notify_mid]["order_entry_flag"] . " -> D";
+
+	db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='D' WHERE orderid='$orderid' AND manufacturerid='$notify_mid'");
+
+	$section_name = "main_order_tabs-order_details";
+	x_session_save("section_name");
+	func_log_order($orderid, 'X', $log, $login);
+
+	$top_message = array(
+		'type' => 'I',
+                'content' => 'Done.'
+	);
+
+        $section_name_top_message = $top_message;
+        x_session_save("section_name_top_message");
+
+	func_header_location("order.php?orderid=".$orderid);
+}
 
 if ($mode == 'ref_notify') {
+
+//func_print_r($_POST);
+//die("123");
+
 
 /*    if ($ref_notify_do_not_send_email == "Y") */
     if ($ref_notify_button_clicked == "Update_C2B_status"){
@@ -1978,7 +2002,7 @@ if ($mode == 'ref_notify') {
 	            func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
 
 
-	            db_query('UPDATE ' . $sql_tbl['refund_groups'] . ' SET notify_status = "S"'
+	            db_query('UPDATE ' . $sql_tbl['refund_groups'] . ' SET notify_status = "S", refund_reason="'.addslashes($ref_groups[$notify_mid]["refund_reason"]).'"'
         	        . ' WHERE orderid = "' . $orderid . '" AND manufacturerid = "' . $notify_mid . '"');
 
 	
@@ -1998,6 +2022,10 @@ if ($mode == 'ref_notify') {
             'type'      => 'E'
         );
     }
+
+    $section_name_top_message = $top_message;
+    x_session_save("section_name_top_message");
+
     func_header_location("order.php?orderid=".$orderid);
 }
 # START: random:18298_18304_18324 [2009 Jun 08 09:50] 
@@ -2046,9 +2074,13 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
 		if ($current_cb_status == "AP"){
 
-			$first_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid'");
+			$capture_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
-			if (!empty($first_transaction_id) && !empty($order["shipping_groups"][$mnf_id])){
+                        if (empty($capture_transaction_id)){
+	                        $capture_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
+                        }
+
+			if (!empty($capture_transaction_id) && !empty($order["shipping_groups"][$mnf_id])){
 
 				$Access_Token = func_paypal_get_access_token();
 
@@ -2097,10 +2129,10 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 //func_print_r($data_arr, $already_captured, $order["refund_groups"], $TOTAL_refund_groups_sum);
 //die();
 
-                                        $result = func_paypal_capture($Access_Token, $first_transaction_id, $data_arr);
+                                        $result = func_paypal_capture($Access_Token, $capture_transaction_id, $data_arr);
 
                                         if (!empty($result["id"])){
-	                                        $transaction_log = "<br />Transaction: ".$first_transaction_id." -> ".$result["id"];
+	                                        $transaction_log = "<br />Transaction: ".$capture_transaction_id." -> ".$result["id"];
                                         }
 
                                         $transaction_id = $result["id"];
@@ -2133,7 +2165,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 					$current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
 
         	                        $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
-	                                $log .= "<B>".$code.":</B> dc_status: ". $current_cb_status_value . " -> ". $new_value;
+	                                $log .= "<B>".$code.":</B> cb_status: ". $current_cb_status_value . " -> ". $new_value;
 
                                 	db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 				}

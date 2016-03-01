@@ -306,6 +306,11 @@ No data
 
 
 	{foreach from=$shippings[$k] item=s}
+
+
+{if !$need_amazon_shipping || ($need_amazon_shipping && $s.code eq "Amazon")}
+
+
 	{if $s.active eq "Y" && $s.allowed eq "1"}
 	{assign var="found_any_shipping" value="Y"}
 	<table cellpadding="1" cellspacing="0" width="100%" {cycle values=" class='TableSubHead', "}>
@@ -454,6 +459,9 @@ Use my trucking account #
 	{/if}
 	</table>
 	{/if}
+
+{/if} {* --- END: if !$need_amazon_shipping || ($need_amazon_shipping && $s.code eq "Amazon") ---  *}
+
 	{/foreach}
 
 {if $found_any_shipping ne "Y" and $need_shipping}

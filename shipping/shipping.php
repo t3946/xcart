@@ -39,7 +39,7 @@
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
-x_load('cart');
+x_load('cart','amazon_shipping');
 
 #
 # This function creates the shipping methods/rates list
@@ -126,6 +126,9 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 		else {
 			include_once $xcart_dir."/shipping/myshipper.php";
 		}
+
+
+//func_print_r($intershipper_rates);
 
 		func_https_ctl('IGNORE');
 
@@ -383,9 +386,11 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 
 				if ($result) {
 # START: random:17710_17631 [2009 Mar 26 09:25] 
-					if (empty($for_manufacturerid) || func_query_first_cell("SELECT rateid FROM $sql_tbl[shipping_rates] WHERE shippingid='$result[shippingid]' AND manufacturerid='$for_manufacturerid' LIMIT 1 "))
+					if (empty($for_manufacturerid) || func_query_first_cell("SELECT rateid FROM $sql_tbl[shipping_rates] WHERE shippingid='$result[shippingid]' AND manufacturerid='$for_manufacturerid' LIMIT 1 ")){
 # END: random:17710_17631 [2009 Mar 26 09:25] 
-					$shipping[] = $result;
+						$shipping[] = $result;
+//func_print_r($result);
+					}
 				}
 			}
 		}
@@ -497,6 +502,46 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 			}
 		}
 	}
+
+
+#
+##
+###
+	$Amazon_code_found = false;
+	$flat_rate_shipping_found = false;
+	if (!empty($shipping) && is_array($shipping)){
+		foreach ($shipping as $k => $v){
+			if ($v["code"] == "Amazon"){
+				$Amazon_code_found = true;
+			}
+
+			if (empty($v["code"]) && empty($v["new_hardcoded_shipping_method"])){
+				$flat_rate_shipping_found = true;
+			}
+		}
+
+		$shipping_deleted_flag = false;
+		foreach ($shipping as $k => $v){
+			if ($Amazon_code_found || $flat_rate_shipping_found){
+
+				if (
+				    ($Amazon_code_found && $v["code"] != "Amazon") ||
+				    (!$Amazon_code_found && $flat_rate_shipping_found && !empty($v["code"]))
+				){
+					unset($shipping[$k]);
+					$shipping_deleted_flag = true;
+				}
+			}
+		}
+
+		if ($shipping_deleted_flag){
+			$shipping = array_values($shipping);
+		}
+	}
+###
+##
+#
+//func_print_r($shipping);
 
 
 	if ($shipping){
