@@ -94,6 +94,9 @@ if ($REQUEST_METHOD == 'POST')
                         $smarty->assign('first_item', $first_item);
                         $smarty->assign("last_item", $last_item);
                         $smarty->assign("total_items", $total_items);
+
+//                        $smarty->assign("cat", $cat);
+//                        $smarty->assign("ga_page_name", $ga_page_name);
 		}
 	}
 
@@ -111,6 +114,12 @@ if ($REQUEST_METHOD == 'POST')
 		$mode = "search";
 //		$ajax_load_more_products = "Y";
 
+
+////
+//$smarty->assign('POST_VARS', $_POST);
+////
+
+
 		if (empty($products) || $mode_load_next_productids == "Y"){
 			include $xcart_dir."/include/search.php";
 
@@ -125,6 +134,9 @@ if ($REQUEST_METHOD == 'POST')
                                         $next_productids = implode("_", $next_productids_arr);
                                 }
                                 $smarty->assign('next_productids', $next_productids);
+
+
+//func_print_r($next_productids);
 
                 		$search_data["products"] = $remember_search_data_products;
 		                x_session_save("search_data");
