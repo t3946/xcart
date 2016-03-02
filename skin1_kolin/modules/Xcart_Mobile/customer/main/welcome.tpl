@@ -19,7 +19,7 @@ vim: set ts=2 sw=2 sts=2 et:
         {if $current_storefront eq "41"}
                 {include file="customer/main/products_new_style.tpl" products=$products}
         {else}
-                {include file="customer/main/products.tpl" products=$products}
+                {include file="customer/main/products.tpl" products=$products do_not_use_load_more_function="Y"}
         {/if}
 
         { include file="customer/main/navigation.tpl" }
@@ -30,27 +30,27 @@ vim: set ts=2 sw=2 sts=2 et:
   {if $active_modules.New_Arrivals and $config.New_Arrivals.new_arrivals_home eq "Y" and $xcart_mobile_config.new_arrivals eq 'Y'}
     <div data-role="collapsible" data-theme="c" data-content-theme="c" data-inset="false">
       <h3>{$lng.lbl_new_arrivals}</h3>
-      {include file="customer/main/products.tpl" products=$new_arrivals new_arrivals_show_date="Y" is_new_arrivals_products="Y"}
+      {include file="customer/main/products.tpl" products=$new_arrivals new_arrivals_show_date="Y" is_new_arrivals_products="Y" do_not_use_load_more_function="Y"}
       {include file="customer/buttons/button.tpl" button_title=$lng.lbl_mobile_show_all_new_arrivals href="new_arrivals.php" data_theme="a" style="link"}
     </div>
   {/if}
   {if $active_modules.On_Sale and $config.On_Sale.on_sale_home eq "Y" and $xcart_mobile_config.on_sale eq 'Y'}
     <div data-role="collapsible" data-theme="c" data-content-theme="c" data-inset="false">
       <h3>{$lng.lbl_on_sale}</h3>
-      {include file="customer/main/products.tpl" products=$on_sale_products}
+      {include file="customer/main/products.tpl" products=$on_sale_products do_not_use_load_more_function="Y"}
       {include file="customer/buttons/button.tpl" button_title=$lng.lbl_mobile_show_all_on_sale href="on_sale.php" data_theme="a" style="link"}
     </div>
   {/if}
   {if $active_modules.Bestsellers and $xcart_mobile_config.bestsellers eq 'Y' and $bestsellers}
     <div data-role="collapsible" data-theme="c" data-content-theme="c" data-inset="false">
       <h3>{$lng.lbl_bestsellers}</h3>
-      {include file="customer/main/products.tpl" products=$bestsellers}
+      {include file="customer/main/products.tpl" products=$bestsellers do_not_use_load_more_function="Y"}
     </div>
   {/if}
   {if $f_products and $xcart_mobile_config.featured eq 'Y'}
     <div data-role="collapsible" data-theme="c" data-content-theme="c" data-inset="false">
       <h3 class="ui-collapsible-heading">{$lng.lbl_featured_products}</h3>
-      {include file="customer/main/products.tpl" products=$f_products featured="Y"}
+      {include file="customer/main/products.tpl" products=$f_products featured="Y" do_not_use_load_more_function="Y"}
     </div>
   {/if}
 
