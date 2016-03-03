@@ -17,10 +17,6 @@ vim: set ts=2 sw=2 sts=2 et:
 
 {if ($main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search") && $do_not_use_load_more_function ne 'Y'}
 
-
-<script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
-
-
 <script type="text/javascript">
 //<![CDATA[
 {literal}
