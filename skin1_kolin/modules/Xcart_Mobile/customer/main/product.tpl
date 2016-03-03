@@ -6,6 +6,10 @@ vim: set ts=2 sw=2 sts=2 et:
 
 {include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 
+
+<script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
+
+
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
 {if $product.clean_url ne ""}
