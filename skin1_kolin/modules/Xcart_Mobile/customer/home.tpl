@@ -9,6 +9,9 @@ vim: set ts=2 sw=2 sts=2 et:
   <head>
     {func_mobile_clear_modules}
     {include file="customer/service_head_mobile.tpl"}
+
+    <script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
+
   </head>
   <body>
 {/if}
