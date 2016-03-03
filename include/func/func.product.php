@@ -1122,6 +1122,19 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	$product["brand"] = func_query_first_cell("SELECT brand FROM $sql_tbl[brands] WHERE brandid='$product[brandid]'");
 
+#
+##
+###
+
+	if (empty($product["descr"])){
+		$product["descr"] = $product["fulldescr"];
+	}
+
+	$product["descr"] = func_get_product_descr($product["descr"]);
+###
+##
+#
+
 	return $product;
 }
 
