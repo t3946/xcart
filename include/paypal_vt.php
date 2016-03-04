@@ -136,6 +136,9 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 				$count_valid_transactions = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[transaction_logs] WHERE transaction_status!='' AND transaction_id!='' AND orderid='$orderid'");
 
 				if (empty($count_valid_transactions) && !empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
+
+					$new_cb_status_flag = false;
+
 					$new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='AP'");
 					foreach ($order["shipping_groups"] as $ko => $vo){
 						if (in_array($vo["cb_status"], array('Q','N'))){
@@ -143,7 +146,12 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 							db_query("UPDATE $sql_tbl[order_groups] SET cb_status='AP' WHERE orderid='$orderid' AND manufacturerid='$ko'");
 							$current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='".$vo["cb_status"]."'");
 							$log .= "<br /><B>".$vo["all_distributor_info"]["code"].":</B> cb_status: ". $current_cb_status_value . " -> ". $new_cb_status_value;
+							$new_cb_status_flag = true;
 						}
+					}
+
+					if ($new_cb_status_flag){
+						func_send_order_status_notification($orderid, "AP");
 					}
 				}
 
@@ -194,6 +202,8 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 	                $transaction_status = $result["state"];
         	        $transaction_currency = $result["amount"]["currency"];
                 	$transaction_total = $result["amount"]["total"];
+
+			func_send_order_status_notification($orderid, "P");
 		}
         }
     }
