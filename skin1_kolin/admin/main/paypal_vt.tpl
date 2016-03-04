@@ -112,7 +112,6 @@
 <form action="order.php" method="post" name="vt_form1">
 <input type="hidden" name="mode" id="mode" value="" />
 <input type="hidden" name="orderid" value="{$orderid}" />
-<input type="hidden" name="transaction_logs_id" id="transaction_logs_id" value="" />
 
  <table width="100%">
   <tr>
@@ -127,10 +126,7 @@
   <tr>
    <td>
 	{if $v.transaction_id ne ""} 
-	<input type="radio" id="transaction_id" name="transaction_id" value="{$v.transaction_id}"
-{*
-	{if $transaction_id_selected eq "" && $v.transaction_id ne ""} 
-*}
+	<input type="radio" id="transaction_logs_id" name="transaction_logs_id" value="{$v.id}"
 		checked="checked"
 		{assign var="transaction_id_selected" value="Y"}
 	/>
@@ -189,7 +185,7 @@ $(document).ready(function(){
    <td colspan="5">
 <input type="button" value="Void selected authorized transaction" onclick="javascript: submitForm(this, 'void_transaction');" /> {$lng.lbl_void_transaction_txt}
 <br />
-<input type="button" value="Capture selected authorized transaction" onclick="javascript: $('#transaction_logs_id').val('{$v.id}'); submitForm(this, 'capture_transaction');" /> {$lng.lbl_capture_transaction_txt}
+<input type="button" value="Capture selected authorized transaction" onclick="javascript: submitForm(this, 'capture_transaction');" /> {$lng.lbl_capture_transaction_txt}
    </td>
   </tr>
   <tr>

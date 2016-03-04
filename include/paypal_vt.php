@@ -157,21 +157,21 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		}
 	} // if (!empty($Access_Token))
     } // if ($mode == "authorize")
-    elseif ($mode == "void_transaction" && !empty($transaction_id)){
+    elseif ($mode == "void_transaction" && !empty($transaction_info["transaction_id"])){
 
 	$log .= "'Void selected authorized transaction' at 'Virtual Terminal'";
 
 	if (!empty($Access_Token)){
-		$result = func_paypal_void($Access_Token, $transaction_id);
+		$result = func_paypal_void($Access_Token, $transaction_info["transaction_id"]);
+
+		$transaction_id = $result["id"];
 
 		$transaction_status = $result["state"];
 		$transaction_currency = $result["amount"]["currency"];
 		$transaction_total = $result["amount"]["total"];
-
-//		db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
 	}
     }
-    elseif ($mode == "capture_transaction" && !empty($transaction_id) && !empty($transaction_logs_id)){
+    elseif ($mode == "capture_transaction" && !empty($transaction_info["transaction_id"])){
 
         $log .= "'Capture selected authorized transaction' at 'Virtual Terminal'";
 
@@ -181,25 +181,23 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
         	$data_arr["amount"]["total"] = $transaction_info["transaction_total"];
 	        $data_arr["is_final_capture"] = false; // true
 
-		$result = func_paypal_capture($Access_Token, $transaction_id, $data_arr);
+		$result = func_paypal_capture($Access_Token, $transaction_info["transaction_id"], $data_arr);
 
 		if ($result["name"] == "AUTHORIZATION_ALREADY_COMPLETED" || $result["name"] == "CAPTURE_AMOUNT_LIMIT_EXCEEDED"){
 			$log .= "<br />".$result["name"];
 		}
 		else {
-			$log .= "<br />Transaction: ".$transaction_id." -> ".$result["id"];
+			$log .= "<br />Transaction: ".$transaction_info["transaction_id"]." -> ".$result["id"];
 
 			$transaction_id = $result["id"];
 
 	                $transaction_status = $result["state"];
         	        $transaction_currency = $result["amount"]["currency"];
                 	$transaction_total = $result["amount"]["total"];
-
-//	                db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
 		}
         }
     }
-    elseif ($mode == "re_authorize_transaction" && !empty($transaction_id) && !empty($transaction_logs_id) && !empty($re_authorize_amount)){
+    elseif ($mode == "re_authorize_transaction" && !empty($transaction_info["transaction_id"]) && !empty($re_authorize_amount)){
 	
 	$log .= "'RE-authorize selected transaction' at 'Virtual Terminal'";
 
@@ -207,14 +205,15 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 	        $data_arr["amount"]["total"] = $re_authorize_amount;
         	$data_arr["amount"]["currency"] = $transaction_info["transaction_currency"];
 
-		$result = func_paypal_reauthorize($Access_Token, $Authorization_Id, $data_arr);
+		$result = func_paypal_reauthorize($Access_Token, $transaction_info["transaction_id"], $data_arr);
 
 		if ($result["state"] == "authorized"){
+
+			$transaction_id = $result["id"];
+
                         $transaction_status = $result["state"];
                         $transaction_currency = $result["amount"]["currency"];
                         $transaction_total = $result["amount"]["total"];
-
-//                        db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
 		}
 	}
     }
@@ -227,8 +226,6 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     func_log_order($orderid, 'PP', $log, $login);
 
 
-//func_print_r($_POST, $result);
-//die("123");
 
     func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-VT");
 }
