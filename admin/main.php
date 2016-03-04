@@ -75,7 +75,7 @@ SELECT SUM($sql_tbl[transaction_logs].transaction_total) FROM $sql_tbl[transacti
 
     $refund_rate[] = price_format(func_query_first_cell("
 Select 
-        SUM(RG.total_net)/SUM(OG.total_net)
+        (SUM(RG.total_net)/SUM(OG.total_net))*100
         
 From xcart_order_groups OG
         inner join xcart_orders O ON O.orderid = OG.orderid and O.date>='$start_date' AND O.date<='$curtime'
