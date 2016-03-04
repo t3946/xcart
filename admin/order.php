@@ -447,10 +447,19 @@ if ($REQUEST_METHOD == "GET") {
 
 
 
-//func_print_r($order_fraud_checks_manual);
-
-//die("asd");
-
+#
+##
+###
+                $date_sent = date("j-M-Y_H-i-s");
+	        $order_prefix = $order_table['order_prefix'];
+        	$subj = $order_prefix.$new_orderid.": This order has been cloned from ".$order_prefix.$orderid . " (posted on ".$date_sent.")";
+	        $body = $subj;
+        	$from = $order_table['firstname']."<".$order_table['email'].">";
+	        $to = "orders@s3stores.com";
+		func_send_simple_mail($to, $subj, $body, $from);
+###
+##
+#
 
 		func_header_location("order.php?orderid=".(!empty($new_orderid) ? $new_orderid : $orderid));
 	}
