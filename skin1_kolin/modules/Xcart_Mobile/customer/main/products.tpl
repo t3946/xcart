@@ -28,9 +28,11 @@ vim: set ts=2 sw=2 sts=2 et:
                                 var e_products_found = '{/literal}{if $e_products_found eq "Y"}Y{/if}{literal}';
                                 var cidev_filter_mode = 'load_more_products';
                                 var ga_page_name = '{/literal}{if $ga_page_name ne ""}{$ga_page_name}{/if}{literal}';
+                                var additional_params = '';
         
                                 if (e_products_found == "Y"){
                                         cidev_filter_mode = 'load_more_e_products';
+                                        additional_params = additional_params + '&e_search_data_substring=' + $("#textbox_e_search_data_substring").attr('data-value');
                                 }
                                 
                                 var cat = {/literal}{if $cat ne ""}{$cat}{else}{literal}''{/literal}{/if}{literal};
@@ -45,7 +47,7 @@ vim: set ts=2 sw=2 sts=2 et:
                                 }
  --- --- */
 
-                                var cidev_parameters = 'cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+'&ga_page_name='+ga_page_name;
+                                var cidev_parameters = 'cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+'&ga_page_name='+ga_page_name+additional_params;
 
 //-Start-//
                                 var LN_total_items = $('#LN_total_items').attr('data-value');
@@ -65,7 +67,7 @@ vim: set ts=2 sw=2 sts=2 et:
 //-Start-//
                                                         $('#load_next_productids').attr('data-value','');
                                                         ajax_navigation_page_next++;
-                                                        var cidev_parameters_load_next = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat;
+                                                        var cidev_parameters_load_next = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+additional_params;
                                                         func_load_more_next_productids(cidev_parameters_load_next, 'N');
 //-End-//
 
@@ -98,9 +100,13 @@ vim: set ts=2 sw=2 sts=2 et:
                                 var current_storefront = '{/literal}{$current_storefront}{literal}';
                                 var e_products_found = '{/literal}{if $e_products_found eq "Y"}Y{/if}{literal}';
                                 var cidev_filter_mode = 'load_more_products';
+                                var additional_params = '';
+
         
                                 if (e_products_found == "Y"){
                                         cidev_filter_mode = 'load_more_e_products';
+
+                                        additional_params = additional_params + '&e_search_data_substring=' + $("#textbox_e_search_data_substring").attr('data-value');
                                 }
                                 
                                 var cat = {/literal}{if $cat ne ""}{$cat}{else}{literal}''{/literal}{/if}{literal};
@@ -114,7 +120,7 @@ vim: set ts=2 sw=2 sts=2 et:
                                 }
  --- --- */
 
-                                cidev_parameters = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next=2&cat='+cat;
+                                  cidev_parameters = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next=2&cat='+cat+additional_params;
 
 
                         }
@@ -158,6 +164,7 @@ vim: set ts=2 sw=2 sts=2 et:
 
 <div style="display: none;" id="load_next_productids" data-value="{include file="customer/main/infinite_products_load_next_productids.tpl"}"></div>
 <div style="display: none;" id="LN_total_items" data-value="{$total_items}"></div>
+<div style="display: none;" id="textbox_e_search_data_substring" data-value="{$e_search_data.substring}"></div>
 
 {*
 <div style="display: none;" id="hidden_cat" data-value="{$cat}"></div>
