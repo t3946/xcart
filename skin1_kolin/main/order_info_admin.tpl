@@ -181,6 +181,9 @@ function func_check_cb_statuses(){
   var all_cb_status_eq_P = true;
   var cb_status_eq_P_found = false;
 
+  var all_cb_status_eq_AP = true;
+  var cb_status_eq_AP_found = false;
+
   var all_cb_status_eq_3 = true;
   var cb_status_eq_3_found = false;
 
@@ -229,6 +232,12 @@ function func_check_cb_statuses(){
     all_cb_status_eq_P = false;
   }
 
+  if (cb_status == "AP"){
+    cb_status_eq_AP_found = true;
+  } else {
+    all_cb_status_eq_AP = false;
+  }
+
   if (cb_status == "3"){
     cb_status_eq_3_found = true;
   } else {
@@ -263,7 +272,7 @@ function func_check_cb_statuses(){
 {/foreach}
 {literal}
 
-  if (cb_status_eq_P_found == true && all_cb_status_eq_P == true){
+  if ((cb_status_eq_P_found == true && all_cb_status_eq_P == true) || (cb_status_eq_AP_found == true && all_cb_status_eq_AP == true)){
     $("#vt_info").show();
   } else {
     $("#vt_info").hide();

@@ -857,6 +857,30 @@ if ($mode == "order_edit_apply") {
 			if (!empty($payment_transaction_id_link)){
 				$payment_transaction_id_link = str_replace("{{trans-id}}", $transaction_id_link, $payment_transaction_id_link);
 				$log .= "<br /><a href='".$payment_transaction_id_link."' target='_blank' style='color: #1411FF;'>Link to ".$vt_paymentid_name." virtual terminal transaction</a>";
+
+#
+##
+				if (!empty($vt_paymentid) && in_array($vt_paymentid, array('100','5'))){
+					# 5 - PayPal VT
+					# 100 - Pay with PayPal
+
+					$transaction_status = "AP";
+					if (!empty($groups) && is_array($groups)){
+						foreach ($groups as $kg => $vg){
+							$transaction_status = $vg["cb_status"];
+							break;
+						}
+					}
+					$transaction_status = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$transaction_status'");
+					$transaction_currency = 'USD';
+					$serialize_result = serialize("Manual authorization<br />".$log."<br />AVS code: $avs_code");
+					$transaction_total = func_query_first_cell("SELECT total FROM $sql_tbl[orders] WHERE orderid='$orderid'");
+
+					db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id_link', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
+				}
+##
+#
+
 			}
 
 
