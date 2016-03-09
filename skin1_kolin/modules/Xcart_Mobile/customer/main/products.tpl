@@ -67,7 +67,7 @@ vim: set ts=2 sw=2 sts=2 et:
 //-Start-//
                                                         $('#load_next_productids').attr('data-value','');
                                                         ajax_navigation_page_next++;
-                                                        var cidev_parameters_load_next = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat;
+                                                        var cidev_parameters_load_next = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+additional_params;
                                                         func_load_more_next_productids(cidev_parameters_load_next, 'N');
 //-End-//
 
