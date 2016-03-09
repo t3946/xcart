@@ -75,7 +75,10 @@ if (!empty($orderids) && $_GET["mode"] == "order_message") {
 	}
 
 ###
-AB_Goal_Hit(array("1","2", "3", "4", "5", "6"), $orders[0]["order"]["orderid"]);
+	if ($order_data["order"]["paymentid"] != "4"){
+		# 4 - Phone Ordering
+		AB_Goal_Hit(array("1","2", "3", "4", "5", "6"), $orders[0]["order"]["orderid"]);
+	}
 ###
 
 	$tmp_current_storefront_info = func_get_storefront_info($current_storefront, 'ID', true);
