@@ -3065,6 +3065,7 @@ $cb_status=="A" || $cb_status=="D"
 				}
 
 				func_log_order($orderid, 'X', $log, 'OTRS');
+                print("OK");
 
 //			} // if (!empty($productid))
 		}
