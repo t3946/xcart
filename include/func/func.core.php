@@ -3041,7 +3041,7 @@ function func_new_mail_notification($v_arr){
 
 						if (
 (
-($cb_status=="P" || $cb_status=="O" || $cb_status=="H" || $cb_status=="R") && ($dc_status=="C" || $dc_status=="L" || $dc_status=="B" || $dc_status=="G" || $dc_status=="S" || $dc_status=="T" || $dc_status=="E")
+($cb_status=="P" || $cb_status=="O" || $cb_status=="H" || $cb_status=="R" || $cb_status=="N") && ($dc_status=="C" || $dc_status=="L" || $dc_status=="B" || $dc_status=="G" || $dc_status=="S" || $dc_status=="T" || $dc_status=="E")
 )
 ||
 (
