@@ -478,7 +478,7 @@ if ($mode == "search") {
 	                      $search_condition .= " AND $sql_tbl[orders].amazon_fulfillment_channel='MFN'";
 	               }
 	               elseif ($data['orders_source'] == "amazon_orders_FBA"){
-	                      $search_condition .= " AND $sql_tbl[orders].amazon_fulfillment_channel='FBA'";
+	                      $search_condition .= " AND $sql_tbl[orders].amazon_fulfillment_channel='AFN'";
 	               }
 	        }
 ##
