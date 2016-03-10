@@ -465,6 +465,25 @@ if ($mode == "search") {
                         }
                 }
 
+#
+##
+	        if (!empty($data['orders_source'])) {
+        	       if ($data['orders_source'] == "xcart_orders_only"){
+                	       $search_condition .= " AND $sql_tbl[orders].amazonorderid=''";
+	               }
+	               elseif ($data['orders_source'] == "amazon_orders_only"){
+	                      $search_condition .= " AND $sql_tbl[orders].amazonorderid!=''";
+	               }
+	               elseif ($data['orders_source'] == "amazon_orders_MFN"){
+	                      $search_condition .= " AND $sql_tbl[orders].amazon_fulfillment_channel='MFN'";
+	               }
+	               elseif ($data['orders_source'] == "amazon_orders_FBA"){
+	                      $search_condition .= " AND $sql_tbl[orders].amazon_fulfillment_channel='FBA'";
+	               }
+	        }
+##
+#
+
 ###
 		$search_in_product_question = false;
                 if (!empty($data['product_question_statuses'])) {
