@@ -340,7 +340,23 @@ if (!$fatal) {
 	}
 
 	if (!empty($transaction_id)){
-		db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$check_orderid', '$order_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$transaction_login')");
+
+		$transaction_log = "";
+		$Access_Token = func_paypal_get_access_token();
+		if (!empty($Access_Token)){
+
+			$transaction_type = "authorization";
+			if (in_array($transaction_status, array('Completed','P'))){
+				$transaction_type = "capture";
+			}
+			
+			$result = func_paypal_look_up_payment($Access_Token, $transaction_id, $transaction_type);
+			$transaction_log = serialize($result);
+		}
+
+		db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$check_orderid', '$order_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$transaction_login', '".addslashes($transaction_log)."')");
+
+		func_log_order($check_orderid, 'PP', $transaction_log, $login);
         }
 ###
 ##
