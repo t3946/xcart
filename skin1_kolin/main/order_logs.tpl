@@ -65,6 +65,35 @@ $(function() {ldelim}
                 </table>
 {else}
 	{$item.log}
+
+        {* --- *}
+        {if $item.unserialized_transaction_log ne ""}
+                Transaction:
+                {if $item.unserialized_transaction_log.FIELD_transaction_id ne ""}
+
+                        {if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$item.unserialized_transaction_log.FIELD_transaction_id_link|substitute:"trans-id":$item.unserialized_transaction_log.FIELD_transaction_id}">{/if}
+                        {if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}{$item.unserialized_transaction_log.FIELD_transaction_link_anchor}{else}{$item.unserialized_transaction_log.FIELD_transaction_id}{/if}{if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}</a>{/if}
+                        {if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}({$item.unserialized_transaction_log.FIELD_transaction_id}){/if}
+
+                {else}
+                        NONE
+                {/if}
+
+                <br />
+                transaction_status: <B>{$item.unserialized_transaction_log.FIELD_transaction_status}</B><br />
+                transaction_currency: {$item.unserialized_transaction_log.FIELD_transaction_currency}<br />
+                transaction_total: {$item.unserialized_transaction_log.FIELD_transaction_total}
+                                
+                {if $item.issue ne ""}
+                        <br />
+                        <B>issue:</B> {$item.issue}
+		{elseif $item.unserialized_transaction_log.message ne ""}
+			<br />
+			<B>message:</B> {$item.unserialized_transaction_log.message}
+                {/if}
+        {/if}
+        {* --- *}
+
 {/if}
 				</td>
                         </tr>
@@ -220,6 +249,36 @@ $(document).ready(function() {
                 </table>
 {else}
 	{$item.log}
+
+	{* --- *}
+	{if $item.unserialized_transaction_log ne ""}
+	        Transaction:
+	        {if $item.unserialized_transaction_log.FIELD_transaction_id ne ""}
+
+			{if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$item.unserialized_transaction_log.FIELD_transaction_id_link|substitute:"trans-id":$item.unserialized_transaction_log.FIELD_transaction_id}">{/if}
+			{if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}{$item.unserialized_transaction_log.FIELD_transaction_link_anchor}{else}{$item.unserialized_transaction_log.FIELD_transaction_id}{/if}{if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}</a>{/if}
+			{if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}({$item.unserialized_transaction_log.FIELD_transaction_id}){/if}
+
+	        {else}
+        	        NONE
+	        {/if}
+
+		<br />
+	        transaction_status: <B>{$item.unserialized_transaction_log.FIELD_transaction_status}</B><br />
+        	transaction_currency: {$item.unserialized_transaction_log.FIELD_transaction_currency}<br />
+	        transaction_total: {$item.unserialized_transaction_log.FIELD_transaction_total}
+
+                {if $item.issue ne ""}
+                        <br />
+                        <B>issue:</B> {$item.issue}
+                {elseif $item.unserialized_transaction_log.message ne ""}
+                        <br />
+                        <B>message:</B> {$item.unserialized_transaction_log.message}
+                {/if}
+
+	{/if}
+	{* --- *}
+
 {/if}
 				</td>
 	                </tr>

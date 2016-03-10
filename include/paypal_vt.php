@@ -229,11 +229,17 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     }
 
     $result["xcart_log"] = $log;
+    $result["FIELD_transaction_id"] = $transaction_id;
+    $result["FIELD_transaction_status"] = $transaction_status;
+    $result["FIELD_transaction_currency"] = $transaction_currency;
+    $result["FIELD_transaction_total"] = $transaction_total;
+
     $serialize_result = serialize($result);
 
     db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
 
-    func_log_order($orderid, 'PP', $log, $login);
+//    func_log_order($orderid, 'PP', $log, $login);
+    func_log_order($orderid, 'PP', $serialize_result, $login);
 
 
 
