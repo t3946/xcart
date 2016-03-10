@@ -873,10 +873,19 @@ if ($mode == "order_edit_apply") {
 					}
 					$transaction_status = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$transaction_status'");
 					$transaction_currency = 'USD';
-					$serialize_result = serialize("Manual authorization<br />".$log."<br />AVS code: $avs_code");
 					$transaction_total = func_query_first_cell("SELECT total FROM $sql_tbl[orders] WHERE orderid='$orderid'");
 
+					$result["xcart_log"] = "Manual authorization<br />".$log."<br />AVS code: $avs_code";
+					$result["FIELD_transaction_id"] = $transaction_id_link;
+					$result["FIELD_transaction_status"] = $transaction_status;
+					$result["FIELD_transaction_currency"] = $transaction_currency;
+					$result["FIELD_transaction_total"] = $transaction_total;
+
+					$serialize_result = serialize($result);
+
 					db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id_link', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
+
+					func_log_order($orderid, 'PP', $serialize_result, $login);
 				}
 ##
 #
@@ -2119,6 +2128,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
                                 if (empty($Access_Token)){
 	                                $transaction_log = "'Access_Token' - failed <br />";
+					$result["xcart_log"] = $transaction_log;
+					$serialize_result = serialize($result);
                                 } else {
 
                                         $data_arr["amount"]["currency"] = $order["currency"];
@@ -2174,6 +2185,11 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
                                         $transaction_total = $result["amount"]["total"];
 
                                         $result["xcart_log"] = $transaction_log;
+					$result["FIELD_transaction_id"] = $transaction_id;
+					$result["FIELD_transaction_status"] = $transaction_status;
+					$result["FIELD_transaction_currency"] = $transaction_currency;
+					$result["FIELD_transaction_total"] = $transaction_total;
+
                                         $serialize_result = serialize($result);
 
                                         db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
@@ -2181,9 +2197,9 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 				}
 
                                 if (!empty($transaction_log)){
-					$log .= $transaction_log;
-
-	                                func_log_order($orderid, 'PP', $transaction_log, $login);
+//					$log .= $transaction_log;
+//	                                func_log_order($orderid, 'PP', $transaction_log, $login);
+	                                func_log_order($orderid, 'PP', $serialize_result, $login);
                                 }
 
 
@@ -3620,6 +3636,9 @@ $smarty->assign('type_names', $type_names);
 
 $order_logs = func_query("SELECT * FROM $sql_tbl[order_logs] WHERE orderid='$orderid' ORDER BY id DESC");
 
+
+//func_print_r($order_logs, $transaction_logs);
+
 if (!empty($order_logs) && is_array($order_logs)){
 
 	$link_to_virtual_terminal_transaction = array();
@@ -3627,6 +3646,20 @@ if (!empty($order_logs) && is_array($order_logs)){
 	foreach ($order_logs as $k => $v){
 
 		$log = stripslashes($v["log"]);
+
+		if ($v["type"] == 'PP') {
+			$unserialized_transaction_log = unserialize($log);
+	                if (is_array($unserialized_transaction_log)){
+        	            $order_logs[$k]["unserialized_transaction_log"] = $unserialized_transaction_log;
+
+                	    if (!empty($unserialized_transaction_log["details"][0]["issue"])){
+                        	$order_logs[$k]["issue"] = $unserialized_transaction_log["details"][0]["issue"];
+	                    }
+
+			    $log = $unserialized_transaction_log["xcart_log"];
+        	        }
+
+		}
 
 
 #

@@ -129,6 +129,8 @@ function managedate(status) {
                 <option value="any">Any channel</option>
                 <option value="xcart_orders_only" {if $search_prefilled.orders_source eq "xcart_orders_only"}selected="selected"{/if}>S3 Stores websites</option>
                 <option value="amazon_orders_only" {if $search_prefilled.orders_source eq "amazon_orders_only"}selected="selected"{/if}>Amazon website</option>
+                <option value="amazon_orders_MFN" {if $search_prefilled.orders_source eq "amazon_orders_MFN"}selected="selected"{/if}> - MFN</option>
+                <option value="amazon_orders_FBA" {if $search_prefilled.orders_source eq "amazon_orders_FBA"}selected="selected"{/if}> - FBA</option>
             </select>
         </td>
 </tr>

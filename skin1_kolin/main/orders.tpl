@@ -380,6 +380,25 @@ function managedate(type, status) {
 	</td>
 </tr>
 
+{if $usertype eq 'A' || $usertype eq 'P'}
+
+<tr>
+        <td class="FormButton" nowrap="nowrap">Sales channel:</td>
+        <td width="10">&nbsp;</td>
+        <td>
+            <select name="posted_data[orders_source]" class="select">
+                <option value="any">Any channel</option>
+                <option value="xcart_orders_only" {if $search_prefilled.orders_source eq "xcart_orders_only"}selected="selected"{/if}>S3 Stores websites</option>
+                <option value="amazon_orders_only" {if $search_prefilled.orders_source eq "amazon_orders_only"}selected="selected"{/if}>Amazon website</option>
+                <option value="amazon_orders_MFN" {if $search_prefilled.orders_source eq "amazon_orders_MFN"}selected="selected"{/if}> - MFN</option>
+                <option value="amazon_orders_FBA" {if $search_prefilled.orders_source eq "amazon_orders_FBA"}selected="selected"{/if}> - FBA</option>
+            </select>
+        </td>
+</tr>
+
+{/if}
+
+
 {if $usertype eq 'A' && $current_membership_flag eq 'FS'}
 <tr> 
 	<td class="FormButton" nowrap="nowrap">{$lng.lbl_d2c_status}:</td>
