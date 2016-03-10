@@ -152,6 +152,15 @@
 	transaction_currency: {$v.transaction_currency}<br />
 	transaction_total: {$v.transaction_total}
 
+{if $v.issue ne ""}
+	<br />
+	<B>issue:</B> {$v.issue}
+{elseif $v.unserialized_transaction_log.message ne ""}
+                        <br />
+                        <B>message:</B> {$v.unserialized_transaction_log.message}
+{/if}
+
+
 {if $v.transaction_log ne ""}
 <script>
 //<![CDATA[
