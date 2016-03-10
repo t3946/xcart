@@ -69,9 +69,21 @@ foreach($start_dates as $start_date) {
     $orders['Q'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE cb_status='Q' $date_condition");
     $gross_total[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders] WHERE 1 $date_condition"));
 
+/*
     $authorized_total[] = price_format(func_query_first_cell("
 SELECT SUM($sql_tbl[transaction_logs].transaction_total) FROM $sql_tbl[transaction_logs] WHERE $sql_tbl[transaction_logs].date>='$start_date' AND $sql_tbl[transaction_logs].date<='$curtime' AND transaction_status IN ('AP', 'authorized', 'Pending')
     "));
+*/
+
+    $ref_total_gross = func_query_first_cell("SELECT SUM($sql_tbl[refund_groups].total_gross) FROM $sql_tbl[refund_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[refund_groups].orderid WHERE 1=1 $date_condition");
+
+    if ($ref_total_gross == ""){
+	$ref_total_gross = 0;
+    }
+
+    $authorized_total[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
+        . " WHERE cb_status='AP' $date_condition") - $ref_total_gross);
+
 
     $refund_rate[] = price_format(func_query_first_cell("
 Select 
@@ -84,7 +96,7 @@ where OG.cb_status IN ('H','V','3','R','P','AP')
     "));
 
     $total_paid[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
-        . " WHERE (cb_status='P' OR dc_status='C') $date_condition"));
+        . " WHERE (cb_status='P' OR dc_status='C') $date_condition") - $ref_total_gross);
 
 	# Get top N products
 	if (!empty($active_modules['Multiple_Storefronts'])) {
