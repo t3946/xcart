@@ -346,15 +346,23 @@ if (!$fatal) {
 		if (!empty($Access_Token)){
 
 			$transaction_type = "authorization";
-			if (in_array($transaction_status, array('Completed','P'))){
+			if (in_array(strtolower($transaction_status), array('completed','p'))){
 				$transaction_type = "capture";
 			}
 			
 			$result = func_paypal_look_up_payment($Access_Token, $transaction_id, $transaction_type);
+
+                        $result["FIELD_transaction_id"] = $transaction_id;
+                        $result["FIELD_transaction_status"] = $transaction_status;
+                        $result["FIELD_transaction_currency"] = $transaction_currency;
+                        $result["FIELD_transaction_total"] = $transaction_total;
+
 			$transaction_log = serialize($result);
 		}
 
 		db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$check_orderid', '$order_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$transaction_login', '".addslashes($transaction_log)."')");
+
+		db_query("INSERT INTO $sql_tbl[order_transactions] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_amount, date, login, transaction_response) VALUE ('$check_orderid', '$order_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$transaction_login', '".addslashes($transaction_log)."')");
 
 		func_log_order($check_orderid, 'PP', $transaction_log, $login);
         }

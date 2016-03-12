@@ -91,6 +91,30 @@ $(function() {ldelim}
 			<br />
 			<B>message:</B> {$item.unserialized_transaction_log.message}
                 {/if}
+
+{if $item.transaction_log ne ""}
+<script>
+//<![CDATA[
+{literal}
+$(document).ready(function(){
+    $('#log_show_hide_a_link_{/literal}{$key}{literal}').click(
+       function() {
+          $(this).text(function(i,text) { return (text == 'Show details') ? 'Hide details' : 'Show details'; });
+          $('#div_a_transaction_log_{/literal}{$key}{literal}').toggle('slow');
+          return false;
+       }
+    );
+});
+{/literal}
+//]]>
+</script>
+
+<br />
+<div id="div_a_transaction_log_{$key}" style="display: none;"><B>Full log:</B><br />{$item.transaction_log}</div>
+<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: func_show_hide_log('{$key}');" id="log_show_hide_a_link_{$key}">Show details</a>
+
+{/if}
+
         {/if}
         {* --- *}
 
@@ -275,6 +299,30 @@ $(document).ready(function() {
                         <br />
                         <B>message:</B> {$item.unserialized_transaction_log.message}
                 {/if}
+
+{if $item.transaction_log ne ""}
+<script>
+//<![CDATA[
+{literal}
+$(document).ready(function(){
+    $('#log_show_hide_link_{/literal}{$key}{literal}').click(
+       function() {
+          $(this).text(function(i,text) { return (text == 'Show details') ? 'Hide details' : 'Show details'; });
+          $('#div_transaction_log_{/literal}{$key}{literal}').toggle('slow');
+          return false;
+       }
+    );
+});
+{/literal}
+//]]>
+</script>
+
+<br />
+<div id="div_transaction_log_{$key}" style="display: none;"><B>Full log:</B><br />{$item.transaction_log}</div>
+<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: func_show_hide_log('{$key}');" id="log_show_hide_link_{$key}">Show details</a>
+
+{/if}
+
 
 	{/if}
 	{* --- *}

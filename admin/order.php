@@ -864,28 +864,47 @@ if ($mode == "order_edit_apply") {
 					# 5 - PayPal VT
 					# 100 - Pay with PayPal
 
-					$transaction_status = "AP";
+					$transaction_id = $transaction_id_link;
+
+					$cb_status_code = "AP";
 					if (!empty($groups) && is_array($groups)){
 						foreach ($groups as $kg => $vg){
-							$transaction_status = $vg["cb_status"];
+							$cb_status_code = $vg["cb_status"];
 							break;
 						}
 					}
-					$transaction_status = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$transaction_status'");
+					$transaction_status = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$cb_status_code'");
 					$transaction_currency = 'USD';
 					$transaction_total = func_query_first_cell("SELECT total FROM $sql_tbl[orders] WHERE orderid='$orderid'");
 
 					$result["xcart_log"] = "Manual authorization<br />".$log."<br />AVS code: $avs_code";
-					$result["FIELD_transaction_id"] = $transaction_id_link;
+					$result["FIELD_transaction_id"] = $transaction_id;
 					$result["FIELD_transaction_status"] = $transaction_status;
 					$result["FIELD_transaction_currency"] = $transaction_currency;
 					$result["FIELD_transaction_total"] = $transaction_total;
 
 					$serialize_result = serialize($result);
 
-					db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id_link', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
+					db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '$vt_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
 
 					func_log_order($orderid, 'PP', $serialize_result, $login);
+
+
+			                $transaction_log = "";
+			                $Access_Token = func_paypal_get_access_token();
+			                if (!empty($Access_Token)){
+
+			                        $transaction_type = "authorization";
+                        			if (in_array($cb_status_code, array('P'))){
+			                                $transaction_type = "capture";
+			                        }
+
+			                        $result = func_paypal_look_up_payment($Access_Token, $transaction_id, $transaction_type);
+			                        $transaction_log = serialize($result);
+			                }
+
+					db_query("INSERT INTO $sql_tbl[order_transactions] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_amount, date, login, transaction_response) VALUE ('$orderid', '$vt_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($transaction_log)."')");
+
 				}
 ##
 #
@@ -1918,6 +1937,7 @@ require $xcart_dir."/include/order_edit.php";
 ###
 require $xcart_dir."/include/paypal_vt.php";
 require $xcart_dir."/include/transaction_logs.php";
+require $xcart_dir."/include/order_transactions.php";
 ###
 ##
 #
@@ -2116,13 +2136,10 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
 		if ($current_cb_status == "AP"){
 
-			$capture_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE login='".$order["login"]."' AND orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
+			$authorized_transactions_info = func_query("SELECT transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
+			$authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
-                        if (empty($capture_transaction_id)){
-	                        $capture_transaction_id = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
-                        }
-
-			if (!empty($capture_transaction_id) && !empty($order["shipping_groups"][$mnf_id])){
+			if (!empty($authorized_transactions_info) && !empty($order["shipping_groups"][$mnf_id])){
 
 				$Access_Token = func_paypal_get_access_token();
 
@@ -2135,17 +2152,18 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
                                         $data_arr["amount"]["currency"] = $order["currency"];
 //                                        $data_arr["amount"]["total"] = "0.01";
 
-					$total_amount = $order["shipping_groups"][$mnf_id]["total"]["gross"];
+					$CaptureAmount = $order["shipping_groups"][$mnf_id]["total"]["gross"];
 
 					if (isset($order["refund_groups"][$mnf_id]["total_gross"])){
-						$total_amount -= $order["refund_groups"][$mnf_id]["total_gross"];
+						$CaptureAmount -= $order["refund_groups"][$mnf_id]["total_gross"];
 					}
 
-					$total_amount = price_format($total_amount);
+					$CaptureAmount = price_format($CaptureAmount);
 
+/*
 #
 ##
-                                        $already_captured = func_query_first_cell("SELECT SUM(transaction_total) FROM $sql_tbl[transaction_logs] WHERE orderid='$orderid' AND transaction_status='completed'");
+                                        $already_captured = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('completed','P','Paid')");
                                         if (empty($already_captured)){
                                         	$already_captured = 0;
                                         }
@@ -2157,8 +2175,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 						}
 					}
 
-                                        $already_captured_PLUS_total_amount = $total_amount + $already_captured;
-                                        $already_captured_PLUS_total_amount = price_format($already_captured_PLUS_total_amount);
+                                        $already_captured_PLUS_CaptureAmount = $CaptureAmount + $already_captured;
+                                        $already_captured_PLUS_CaptureAmount = price_format($already_captured_PLUS_CaptureAmount);
 
 
                                         $total_MIN_TOTAL_refund_groups_sum = $order["total"] - $TOTAL_refund_groups_sum;
@@ -2166,61 +2184,102 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
 ##                                                      
 #
+*/
 
-                                        $data_arr["amount"]["total"] = $total_amount;
-					$data_arr["is_final_capture"] = (($already_captured_PLUS_total_amount == $total_MIN_TOTAL_refund_groups_sum) ? true : false);
+					if ($CaptureAmount == $authorized_transaction_amount){
+
+						$transaction_log = "";
+						$capture_failed_flag = false;
+
+						foreach ($authorized_transactions_info as $authorized_transaction){
+							$authorized_transaction_id = $authorized_transaction["transaction_id"];
+		
+		                                        $data_arr["amount"]["total"] = $authorized_transaction["transaction_amount"];
+//							$data_arr["is_final_capture"] = (($already_captured_PLUS_CaptureAmount == $total_MIN_TOTAL_refund_groups_sum) ? true : false);
+							$data_arr["is_final_capture"] = true;
 
 //func_print_r($data_arr, $already_captured, $order["refund_groups"], $TOTAL_refund_groups_sum);
 //die();
 
-                                        $result = func_paypal_capture($Access_Token, $capture_transaction_id, $data_arr);
+		                                        $result = func_paypal_capture($Access_Token, $authorized_transaction_id, $data_arr);
 
-                                        if (!empty($result["id"])){
-	                                        $transaction_log = "<br />Transaction: ".$capture_transaction_id." -> ".$result["id"];
-                                        }
+		                                        if (!empty($result["id"])){
+			                                        $transaction_log = "<br />Transaction: ".$authorized_transaction_id." -> ".$result["id"];
 
-                                        $transaction_id = $result["id"];
-                                        $transaction_status = $result["state"];
-                                        $transaction_currency = $result["amount"]["currency"];
-                                        $transaction_total = $result["amount"]["total"];
+		                                                $result_serialized = serialize($result);
+								db_query("UPDATE $sql_tbl[order_transactions] SET transaction_id='$result[id]', transaction_amount='".$authorized_transaction["transaction_amount"]."', date='".time()."', login='$login', transaction_status='$result[state]', transaction_response='".addslashes($result_serialized)."' WHERE orderid='$orderid' AND transaction_id='$authorized_transaction_id'");
 
-                                        $result["xcart_log"] = $transaction_log;
-					$result["FIELD_transaction_id"] = $transaction_id;
-					$result["FIELD_transaction_status"] = $transaction_status;
-					$result["FIELD_transaction_currency"] = $transaction_currency;
-					$result["FIELD_transaction_total"] = $transaction_total;
+		                                        }
+							else {
+								$capture_failed_flag = true;
+							}
 
-                                        $serialize_result = serialize($result);
+		                                        $transaction_id = $result["id"];
+                		                        $transaction_status = $result["state"];
+		                                        $transaction_currency = $result["amount"]["currency"];
+                		                        $transaction_total = $result["amount"]["total"];
 
-                                        db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
+		                                        $result["xcart_log"] = $transaction_log;
+							$result["FIELD_transaction_id"] = $transaction_id;
+							$result["FIELD_transaction_status"] = $transaction_status;
+							$result["FIELD_transaction_currency"] = $transaction_currency;
+							$result["FIELD_transaction_total"] = $transaction_total;
+	
+        		                                $serialize_result = serialize($result);
 
-				}
-
-                                if (!empty($transaction_log)){
-//					$log .= $transaction_log;
-//	                                func_log_order($orderid, 'PP', $transaction_log, $login);
-	                                func_log_order($orderid, 'PP', $serialize_result, $login);
-                                }
+                        		                db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
 
 
-				if (empty($transaction_id)){
+		                                	if (!empty($transaction_log)){
+//								$log .= $transaction_log;
+//	                                			func_log_order($orderid, 'PP', $transaction_log, $login);
+	        		                        	func_log_order($orderid, 'PP', $serialize_result, $login);
+                                			}
+						} // foreach ($authorized_transactions_info as $authorized_transaction_id)
 
-	                                $top_message["content"] = func_get_langvar_by_name("txt_capture_failed");
-                                        $top_message["type"] = "I";
-                                        $section_name_top_message = $top_message;
-                                        x_session_save("section_name_top_message");
-				}
-				else {
-					$current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
+						if ($capture_failed_flag){
 
-        	                        $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
-	                                $log .= "<B>".$code.":</B> cb_status: ". $current_cb_status_value . " -> ". $new_value;
+		                                	$top_message["content"] = func_get_langvar_by_name("txt_capture_failed");
+	                	                        $top_message["type"] = "I";
+        	                	                $section_name_top_message = $top_message;
+        	                        	        x_session_save("section_name_top_message");
+	
 
-                                	db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
-				}
-			}
-		}
+#
+## attention_tag id = 37
+							$set_new_additional_tag = '37';
+				                        $is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
+				                        if (empty($is_such_tag_in_db)){
+				                                db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('$set_new_additional_tag','$orderid')");
 
+				                                $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$set_new_additional_tag'");
+				                                $log_tag = "<br />'".$tag_name."' attention tag added";
+				                                func_log_order($orderid, 'X', $log_tag, $login);
+				                        }
+##
+#
+
+
+						}
+						else {
+							$current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
+
+        	        	        	        $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
+		                        	        $log .= "<B>".$code.":</B> cb_status: ". $current_cb_status_value . " -> ". $new_value;
+
+        	                        		db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+						}
+					} // if ($CaptureAmount == $authorized_transaction_amount)
+					else {
+	                                        $top_message["content"] = func_get_langvar_by_name("lb_captureamount_not_equal_order_amount");
+                                                $top_message["type"] = "R";
+                                                $section_name_top_message = $top_message;
+                                                x_session_save("section_name_top_message");
+					}
+				} //else if (empty($Access_Token))
+			} // if (!empty($authorized_transactions_info) && !empty($order["shipping_groups"][$mnf_id]))
+
+		} // if ($current_cb_status == "AP")
 ###
 ##
 #
@@ -3650,6 +3709,9 @@ if (!empty($order_logs) && is_array($order_logs)){
 		if ($v["type"] == 'PP') {
 			$unserialized_transaction_log = unserialize($log);
 	                if (is_array($unserialized_transaction_log)){
+
+			    $order_logs[$k]["transaction_log"] = $log;
+
         	            $order_logs[$k]["unserialized_transaction_log"] = $unserialized_transaction_log;
 
                 	    if (!empty($unserialized_transaction_log["details"][0]["issue"])){
