@@ -2,7 +2,7 @@
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
-if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("authorize","void_transaction","capture_transaction","re_authorize_transaction"))){
+if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("authorize","void_transaction","capture_transaction","re_authorize_transaction", "refund_transaction", "self_transaction", "look_up_payment"))){
 
     $log = "";
 
@@ -11,10 +11,11 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     if (empty($Access_Token)){
 	$log .= "'Access_Token' - failed <br />";
     } else {
-	if (!empty($transaction_logs_id)){
-		$transaction_info = func_query_first("SELECT * FROM $sql_tbl[transaction_logs] WHERE id='$transaction_logs_id'");
+	if (!empty($order_transaction_id)){
+		$transaction_info = func_query_first("SELECT * FROM $sql_tbl[order_transactions] WHERE id='$order_transaction_id'");
 	}
     }
+
 
     if ($mode == "authorize"){
 
@@ -125,6 +126,17 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 			$transaction_id = $result["transactions"][0]["related_resources"][0]["authorization"]["id"];
 
 			if (!empty($transaction_id)){
+
+#
+##
+		                $result2 = func_paypal_look_up_payment($Access_Token, $transaction_id, "authorization");
+				if (!empty($result2["links"]) && is_array($result2["links"])){
+					$result["links"] = $result2["links"];
+				}
+##
+#
+
+
 				$log .= "<br />Transaction:".$transaction_id;
 
 				$transaction_status = $result["transactions"][0]["related_resources"][0]["authorization"]["state"];
@@ -167,7 +179,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     } // if ($mode == "authorize")
     elseif ($mode == "void_transaction" && !empty($transaction_info["transaction_id"])){
 
-	$log .= "'Void selected authorized transaction' at 'Virtual Terminal'";
+	$log .= "'Void authorized transaction' at 'Virtual Terminal'";
 
 	if (!empty($Access_Token)){
 		$result = func_paypal_void($Access_Token, $transaction_info["transaction_id"]);
@@ -179,14 +191,15 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		$transaction_total = $result["amount"]["total"];
 	}
     }
-    elseif ($mode == "capture_transaction" && !empty($transaction_info["transaction_id"])){
+    elseif ($mode == "capture_transaction" && !empty($transaction_info["transaction_id"]) && !empty($transaction_amount[$order_transaction_id])){
 
-        $log .= "'Capture selected authorized transaction' at 'Virtual Terminal'";
+        $log .= "'Capture authorized transaction' at 'Virtual Terminal'";
 
         if (!empty($Access_Token)){
 
 	        $data_arr["amount"]["currency"] = $transaction_info["transaction_currency"];
-        	$data_arr["amount"]["total"] = $transaction_info["transaction_total"];
+//        	$data_arr["amount"]["total"] = $transaction_info["transaction_total"];
+        	$data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
 	        $data_arr["is_final_capture"] = false; // true
 
 		$result = func_paypal_capture($Access_Token, $transaction_info["transaction_id"], $data_arr);
@@ -207,12 +220,12 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		}
         }
     }
-    elseif ($mode == "re_authorize_transaction" && !empty($transaction_info["transaction_id"]) && !empty($re_authorize_amount)){
+    elseif ($mode == "re_authorize_transaction" && !empty($transaction_info["transaction_id"]) && !empty($transaction_amount[$order_transaction_id])){
 	
-	$log .= "'RE-authorize selected transaction' at 'Virtual Terminal'";
+	$log .= "'RE-authorize transaction' at 'Virtual Terminal'";
 
 	if (!empty($Access_Token)){
-	        $data_arr["amount"]["total"] = $re_authorize_amount;
+	        $data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
         	$data_arr["amount"]["currency"] = $transaction_info["transaction_currency"];
 
 		$result = func_paypal_reauthorize($Access_Token, $transaction_info["transaction_id"], $data_arr);
@@ -227,6 +240,75 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		}
 	}
     }
+    elseif ($mode == "refund_transaction" && !empty($transaction_info["transaction_id"]) && !empty($transaction_amount[$order_transaction_id])){
+
+        $log .= "'Refund transaction' at 'Virtual Terminal'";
+
+        if (!empty($Access_Token)){
+                $data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
+                $data_arr["amount"]["currency"] = $transaction_info["transaction_currency"];
+
+                $result = func_paypal_refund($Access_Token, $transaction_info["transaction_id"], $data_arr);
+
+//func_print_r($result);
+//die();
+
+                if (!empty($result["id"])){
+
+                        $transaction_id = $result["id"];
+
+                        if ($result["state"] == "completed"){
+	                        $transaction_status = "refunded";
+			} else {
+				$transaction_status = $result["state"];
+			}
+
+                        $transaction_currency = $result["amount"]["currency"];
+                        $transaction_total = $result["amount"]["total"];
+                }
+        }
+
+    }
+    elseif ($mode == "self_transaction" && !empty($transaction_info["transaction_id"])){
+
+        $log .= "'Self transaction' at 'Virtual Terminal'";
+
+	$transaction_status = $transaction_info["transaction_status"];
+
+        if (!empty($Access_Token)){
+
+# ???????????????????????????????????????????????????????????????????????????????????????
+
+		if (!empty($result["id"])){
+			$transaction_id = $result["id"];
+		}
+	}
+    }
+    elseif ($mode == "look_up_payment" && !empty($transaction_info["transaction_id"])){
+
+        $log .= "'Look up payment (Get links)' at 'Virtual Terminal'";
+
+	$transaction_status = $transaction_info["transaction_status"];
+
+        if (!empty($Access_Token)){
+
+		$transaction_type = "authorization";
+		if (in_array(strtolower($transaction_status), array('completed','p'))){
+			$transaction_type = "capture";
+		}
+		elseif (in_array(strtolower($transaction_status), array('refunded','refund'))){
+			$transaction_type = "refund";
+		}
+
+                $result = func_paypal_look_up_payment($Access_Token, $transaction_info["transaction_id"], $transaction_type);
+
+                if (!empty($result["id"])){
+
+                        $transaction_id = $result["id"];
+                }
+        }
+    }
+
 
     $result["xcart_log"] = $log;
     $result["FIELD_transaction_id"] = $transaction_id;
@@ -241,7 +323,40 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 //    func_log_order($orderid, 'PP', $log, $login);
     func_log_order($orderid, 'PP', $serialize_result, $login);
 
+#
+##
+    if (!empty($transaction_id)){
 
+	$order_transactions_data = array (
+		"transaction_id" => $transaction_id,
+		"transaction_response" => addslashes($serialize_result),
+		"transaction_status" => $transaction_status,
+		"login" => $login,
+		"date" => time()
+	);
+
+
+	if ($mode == "authorize"){
+
+		$order_transactions_data["orderid"] = $orderid;
+		$order_transactions_data["paymentid"] = "5";
+		$order_transactions_data["transaction_currency"] = $transaction_currency;
+		$order_transactions_data["transaction_amount"] = $transaction_total;
+
+		func_array2insert("order_transactions", $order_transactions_data);
+	}
+	else {
+
+		if (in_array($mode, array("re_authorize_transaction", "capture_transaction", "refund_transaction"))){
+			$order_transactions_data["transaction_amount"] = $transaction_amount[$order_transaction_id];
+		}
+
+		func_array2update("order_transactions", $order_transactions_data, "id='$order_transaction_id'");
+	}
+
+    }
+##
+#
 
     func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-VT");
 }
