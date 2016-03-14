@@ -455,6 +455,9 @@ if (!$curl_err){
 ##
 #
 
+			$allow_send_to_operator = false;
+			if (empty($order["amazon_fulfillment_channel"])){
+
                                 $allow_send_to_operator = true;
 
                                 if ($config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages"] == "Y" && $ticket_resolver_messages != $config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages_is_NOT_equal_to_value"]){
@@ -481,7 +484,7 @@ if (!$curl_err){
                                 if ($config["Autosubmit_orderentry_operator"]["Customer_notes_field_is_NOT_empty"] == "Y" && !empty($order["customer_notes"])){
                                                 $allow_send_to_operator = false;
                                 }
-
+			}
 
 
 				if ($allow_send_to_operator) {
