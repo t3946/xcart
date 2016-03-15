@@ -2035,12 +2035,40 @@ if ($mode == 'ref_notify') {
 
 
 	    if ($ref_notify_button_clicked == "Update_C2B_status"){
+
+#
+##
+###
+	        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+	        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
 		    func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
 	    } elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" || $ref_notify_button_clicked == "Send_refund_notification"){
 
 /*	    if ($ref_notify_do_not_send_email != "Y") */
+#
+##
+###
+ 	        $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+	        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
 	            func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid, false);
             // Copy to Orders Department
+
+#
+##
+###
+	        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+	        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
 	            func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
 
 

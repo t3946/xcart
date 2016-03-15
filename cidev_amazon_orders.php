@@ -577,6 +577,16 @@ while (!empty($NextToken)){
                         	        $to = $config['Company']['orders_department'];
                 	                $from = $userinfo["firstname"]."<".$config['Company']['orders_department'].">";
         	                        $reply_to = $userinfo["firstname"]."<".$userinfo['email'].">";
+
+#
+##
+###
+				        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+				        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
 	
         	                        func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);  // <-----------------
 	                        }

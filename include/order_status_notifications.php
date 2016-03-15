@@ -76,6 +76,8 @@ if ($REQUEST_METHOD == 'POST') {
                 'copy_subject'      => mysql_real_escape_string($update['copy_subject']),
                 'email_body'        => $update['email_body'],
                 'enabled'           => (isset($update['enabled']) && $update['enabled'] == 'Y') ? 'Y' : 'N',
+                'customer_attach_pdf_invoice'           => (isset($update['customer_attach_pdf_invoice']) && $update['customer_attach_pdf_invoice'] == 'Y') ? 'Y' : 'N',
+                'admin_attach_pdf_invoice'           => (isset($update['admin_attach_pdf_invoice']) && $update['admin_attach_pdf_invoice'] == 'Y') ? 'Y' : 'N',
                 'code'              => $selected_status,
             );
 
@@ -85,7 +87,7 @@ if ($REQUEST_METHOD == 'POST') {
     func_header_location('order_status_notifications.php');
 }
 
-$osn_settings = func_query_first('SELECT code, customer_subject, copy_subject, email_body, enabled'
+$osn_settings = func_query_first('SELECT code, customer_subject, copy_subject, email_body, enabled, customer_attach_pdf_invoice, admin_attach_pdf_invoice'
     . ' FROM ' . $sql_tbl['order_status_notifications']
     . ' WHERE code = "' . $selected_status . '"');
 
