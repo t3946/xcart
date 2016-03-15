@@ -2129,6 +2129,10 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
 		$log = "";
 
+                if ($bad_time_do_not_send_email == "Y"){
+                        $log .= "'Send (Off-hours dispatch to distributor)' at '".$manufacturer_name.": Dispatch to distributor'";
+		}
+
 #
 ##
 ###
@@ -2141,9 +2145,14 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
 			if (!empty($authorized_transactions_info) && !empty($order["shipping_groups"][$mnf_id])){
 
-				$Access_Token = func_paypal_get_access_token();
+				$count_shipping_groups = count($order["shipping_groups"]);
 
-                                if (empty($Access_Token)){
+
+				if ($count_shipping_groups == "1"){
+					$Access_Token = func_paypal_get_access_token();
+				}
+
+                                if (empty($Access_Token) && $count_shipping_groups == "1"){
 	                                $transaction_log = "'Access_Token' - failed <br />";
 					$result["xcart_log"] = $transaction_log;
 					$serialize_result = serialize($result);
@@ -2187,6 +2196,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 */
 
 					if ($CaptureAmount == $authorized_transaction_amount){
+					    if ($count_shipping_groups == "1"){
 
 						$transaction_log = "";
 						$capture_failed_flag = false;
@@ -2269,12 +2279,20 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
         	                        		db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 						}
+					    } // if ($count_shipping_groups == "1")
 					} // if ($CaptureAmount == $authorized_transaction_amount)
 					else {
 	                                        $top_message["content"] = func_get_langvar_by_name("lb_captureamount_not_equal_order_amount");
                                                 $top_message["type"] = "R";
                                                 $section_name_top_message = $top_message;
                                                 x_session_save("section_name_top_message");
+
+						$log .= "<br />".$top_message["content"];
+						
+						if ($count_shipping_groups > 1){
+							func_log_order($orderid, 'X', $log, $login);
+							func_header_location("order.php?orderid=".$orderid);
+						}
 					}
 				} //else if (empty($Access_Token))
 			} // if (!empty($authorized_transactions_info) && !empty($order["shipping_groups"][$mnf_id]))
@@ -2285,7 +2303,10 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 #
 
 		if ($bad_time_do_not_send_email == "Y"){
+
+/* Moved above
 			$log .= "'Send (Off-hours dispatch to distributor)' at '".$manufacturer_name.": Dispatch to distributor'";
+*/
                         $current_dc_status = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
                         $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
 
