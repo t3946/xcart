@@ -438,6 +438,7 @@ function check_r_fields(){
 
 {foreach from=$order.shipping_groups item=v key=m_id}
 {if $m_id gt 0}
+
 <tr class="distributor-totals-line">
   <td>
           <a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name}</a>
@@ -1208,7 +1209,7 @@ Total Product Cost to us
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Transacеions amount (authorized/pending +captured ) </td>
   <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px; background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if};">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
+  <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
   <td>&nbsp;</td>
 </tr>
 
@@ -1229,7 +1230,7 @@ Total Product Cost to us
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Captured total</td>
   <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
+  <td align="right" style="font-size: 10px; {if $count_shipping_groups gt 1}background-color: {if $order.total eq $order_transactions_totals.captured_total}green{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
   <td>&nbsp;</td>
 </tr>
 {/if}

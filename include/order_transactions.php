@@ -71,6 +71,9 @@ if (!empty($order_transactions)){
 	$smarty->assign("order_transactions_totals", $order_transactions_totals);
 }
 
+$count_shipping_groups = count($order["shipping_groups"]);
+$smarty->assign("count_shipping_groups", $count_shipping_groups);
+
 //func_print_r($order_transactions, $order_transactions_totals);
 
 $smarty->assign("order_transactions", $order_transactions);
