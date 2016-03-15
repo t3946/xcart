@@ -962,7 +962,7 @@ if ($REQUEST_METHOD == "POST") {
 								$log = "";
 
 								if ($count_shipping_groups > 1){
-									$v["dc_status"] = $groups[$m_id]['dc_status'] = $cart_tmp['shipping_groups'][$m_id]["dc_status"];
+									$v["dc_status"] = $groups[$m_id]['dc_status'] = $order["shipping_groups"][$m_id]['dc_status'] =  $cart_tmp['shipping_groups'][$m_id]["dc_status"];
 								}
 							}
                                                 } // if (!empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items))
