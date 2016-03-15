@@ -240,6 +240,32 @@ $(document).ready(function(){
  </table>
 </form>
 
+<table align="right" cellspacing="1" cellpadding="1">
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Transacеions amount (authorized/pending +captured ) </td>
+  <td>&nbsp;</td>
+  <td align="right" style="font-size: 10px; background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if};">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
+</tr>
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Void total</td>
+  <td>&nbsp;</td>
+  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.void_total}</td>
+</tr>
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Authorized total</td>
+  <td>&nbsp;</td>
+  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.authorized_total}</td>
+</tr>
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Captured total</td>
+  <td>&nbsp;</td>
+  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
+</tr>
+</table>
+
 {/capture}
 {include file="dialog.tpl" title="Transactions" content=$smarty.capture.virtual_terminal_transactions extra='width="100%"'}
 {/if}

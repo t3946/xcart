@@ -1204,6 +1204,37 @@ Total Product Cost to us
   <td>&nbsp;</td>
 </tr>
 
+{if $order_transactions_totals ne ""}
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Transacеions amount (authorized/pending +captured ) </td>
+  <td colspan="8">&nbsp;</td>
+  <td align="right" style="font-size: 10px; background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if};">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
+  <td>&nbsp;</td>
+</tr>
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Void total</td>
+  <td colspan="8">&nbsp;</td>
+  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.void_total}</td>
+  <td>&nbsp;</td>
+</tr>
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Authorized total</td>
+  <td colspan="8">&nbsp;</td>
+  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.authorized_total}</td>
+  <td>&nbsp;</td>
+</tr>
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Captured total</td>
+  <td colspan="8">&nbsp;</td>
+  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
+  <td>&nbsp;</td>
+</tr>
+{/if}
+
+
 <tr>
 <td colspan="11">
 <br />

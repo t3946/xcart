@@ -801,9 +801,12 @@ if ($REQUEST_METHOD == "POST") {
 
 				if (!empty($authorized_transactions_info)){
 
+						$count_shipping_groups = count($order["shipping_groups"]);
+
 						$transaction_log = "";
 
-                                                if (empty($Access_Token) || !isset($Access_Token)){
+                                                if ((empty($Access_Token) || !isset($Access_Token)) && $count_shipping_groups == "1"){
+
                                                         $Access_Token = func_paypal_get_access_token();
 
 							if (empty($Access_Token)){
@@ -811,7 +814,9 @@ if ($REQUEST_METHOD == "POST") {
 							}
                                                 }
 
-                                                if (!empty($Access_Token) && !empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items)){
+//                                                if (!empty($Access_Token) && !empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items))
+                                                if (!empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items)){
+
 							$total_prod_price = 0;
 							foreach ($cart_tmp["shipping_groups"][$m_id]["products"] as $k_prod => $v_prod){
 //								$total_prod_price += $items[$k_prod]["price"] * $items[$k_prod]["amount"];
@@ -866,6 +871,8 @@ if ($REQUEST_METHOD == "POST") {
 #
 */			
 							if ($CaptureAmount == $authorized_transaction_amount){
+
+							    if (!empty($Access_Token) && $count_shipping_groups == "1"){
 
 								$capture_failed_flag = false;
 								foreach ($authorized_transactions_info as $authorized_transaction){
@@ -942,14 +949,23 @@ if ($REQUEST_METHOD == "POST") {
 									}
 
 								} // foreach ($authorized_transactions_info as $authorized_transaction)
+							    } // if (!empty($Access_Token) && $count_shipping_groups == "1")
 							} // if ($CaptureAmount == $authorized_transaction_amount)
 							else {
         		                                        $top_message["content"] = func_get_langvar_by_name("lb_captureamount_not_equal_order_amount");
                         		                        $top_message["type"] = "R";
                                         		        $section_name_top_message = $top_message;
 		                                                x_session_save("section_name_top_message");
+
+								$log = "<br />".$top_message["content"];
+								func_log_order($orderid, 'X', $log, $login);
+								$log = "";
+
+								if ($count_shipping_groups > 1){
+									$v["dc_status"] = $groups[$m_id]['dc_status'] = $cart_tmp['shipping_groups'][$m_id]["dc_status"];
+								}
 							}
-                                                } // if (!empty($Access_Token) && !empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items))
+                                                } // if (!empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items))
 				} // if (!empty($authorized_transactions_info))
 //func_print_r($v, $cart_tmp["shipping_groups"][$m_id], $data_arr, $result, $order);
 //die();
