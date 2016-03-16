@@ -39,7 +39,7 @@
   </tr>
   <tr>
     <td align="right"><b>Card number:</b> </td>
-    <td><input type="text" name="paypal_vt[card_number]" value="" autocomplete="off" /></td>
+    <td><input type="text" name="paypal_vt[card_number]" value="" autocomplete="off" id="paypal_vt_card_number" onkeyup="cidev_check_field_phone_ext('paypal_vt_card_number')" /></td>
   </tr>
   <tr>
     <td align="right"><b>Expiration date:</b> </td>
