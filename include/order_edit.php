@@ -792,14 +792,10 @@ if ($REQUEST_METHOD == "POST") {
                                         $v["dc_status"] == "L" && $cart_tmp['shipping_groups'][$m_id]["dc_status"] != "L" &&
                                         $v["cb_status"] == "AP"
 				){
-
                                
 					$authorized_transactions_info = func_query("SELECT transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 					$authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
-				}
-
-				if (!empty($authorized_transactions_info)){
 
 						$count_shipping_groups = count($order["shipping_groups"]);
 
@@ -872,7 +868,7 @@ if ($REQUEST_METHOD == "POST") {
 */			
 							if ($CaptureAmount == $authorized_transaction_amount){
 
-							    if (!empty($Access_Token) && $count_shipping_groups == "1"){
+							    if (!empty($Access_Token) && $count_shipping_groups == "1" && !empty($authorized_transactions_info)){
 
 								$capture_failed_flag = false;
 								foreach ($authorized_transactions_info as $authorized_transaction){
@@ -949,7 +945,7 @@ if ($REQUEST_METHOD == "POST") {
 									}
 
 								} // foreach ($authorized_transactions_info as $authorized_transaction)
-							    } // if (!empty($Access_Token) && $count_shipping_groups == "1")
+							    } // if (!empty($Access_Token) && $count_shipping_groups == "1" && !empty($authorized_transactions_info))
 							} // if ($CaptureAmount == $authorized_transaction_amount)
 							else {
         		                                        $top_message["content"] = func_get_langvar_by_name("lb_captureamount_not_equal_order_amount");
@@ -966,10 +962,7 @@ if ($REQUEST_METHOD == "POST") {
 								}
 							}
                                                 } // if (!empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items))
-				} // if (!empty($authorized_transactions_info))
-//func_print_r($v, $cart_tmp["shipping_groups"][$m_id], $data_arr, $result, $order);
-//die();
-
+				}
 ###
 ##
 #

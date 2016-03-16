@@ -2171,7 +2171,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 			$authorized_transactions_info = func_query("SELECT transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 			$authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
-			if (!empty($authorized_transactions_info) && !empty($order["shipping_groups"][$mnf_id])){
+//			if (!empty($authorized_transactions_info) && !empty($order["shipping_groups"][$mnf_id]))
+			if (!empty($order["shipping_groups"][$mnf_id])){
 
 				$count_shipping_groups = count($order["shipping_groups"]);
 
@@ -2224,7 +2225,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 */
 
 					if ($CaptureAmount == $authorized_transaction_amount){
-					    if ($count_shipping_groups == "1"){
+					    if ($count_shipping_groups == "1" && !empty($authorized_transactions_info)){
 
 						$transaction_log = "";
 						$capture_failed_flag = false;
@@ -2307,7 +2308,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
         	                        		db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 						}
-					    } // if ($count_shipping_groups == "1")
+					    } // if ($count_shipping_groups == "1" && !empty($authorized_transactions_info))
 					} // if ($CaptureAmount == $authorized_transaction_amount)
 					else {
 	                                        $top_message["content"] = func_get_langvar_by_name("lb_captureamount_not_equal_order_amount");
@@ -2323,7 +2324,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 						}
 					}
 				} //else if (empty($Access_Token))
-			} // if (!empty($authorized_transactions_info) && !empty($order["shipping_groups"][$mnf_id]))
+			} // if (!empty($order["shipping_groups"][$mnf_id]))
 
 		} // if ($current_cb_status == "AP")
 ###
