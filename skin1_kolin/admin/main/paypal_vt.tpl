@@ -3,10 +3,87 @@
 
 
 {capture name=authorize}
+
+<script type="text/javascript">
+//<![CDATA[
+{literal}
+
+function func_AJAX_authorize_PayPal() {
+
+	var f_name;
+	var f_value;
+	var cidev_parameters = 'AJAX_SUBMIT=Y';
+
+	$("form[name='vt_form1']").find("input,select,textarea").not('[type="button"]').each(function() {
+
+		f_name = $(this).attr('name');
+		f_value = $(this).attr('value');
+	
+		if (f_name == "mode"){
+			cidev_parameters = cidev_parameters + '&mode=authorize';
+		}
+		else if (f_name != "" && f_value != "") {
+			cidev_parameters = cidev_parameters + '&'+f_name+'='+f_value;
+		}
+	});
+
+//	alert(cidev_parameters);
+
+	cidev_xmlHttp=cidev_createHttpRequestObject();
+	if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
+
+		cidev_xmlHttp.onreadystatechange=function(){
+			if(cidev_xmlHttp.readyState==4){
+				if(cidev_xmlHttp.status==200){
+					var paypal_response = cidev_xmlHttp.responseText;
+
+					alert(paypal_response);
+
+					if (paypal_response == "Authorized" || paypal_response == "Faild"){
+						$("#AJAX_Please_wait").show();
+						$("#AJAX_Authorize_button").hide();
+						$("#AJAX_Authorize_button_text").hide();
+					}
+
+					if (paypal_response == "Authorized"){
+						document.ordereditform1.submit();
+					}
+					else if (paypal_response == "Faild"){
+						window.location.reload();
+					}
+
+				}else{
+					cidev_Error('no_server', 'Y');
+				}
+			}
+		};
+
+		var tmp_rand = Math.random();
+
+		cidev_xmlHttp.open('POST','ajax_paypal_vt.php?rand='+tmp_rand,true);
+		cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
+		cidev_xmlHttp.setRequestHeader('Cache-Control','no-cache');
+		cidev_xmlHttp.setRequestHeader('Cache-Control','no-store');
+		cidev_xmlHttp.setRequestHeader('Connection','close');
+		cidev_xmlHttp.send(cidev_parameters);
+	}
+	else {
+		setTimeout('func_AJAX_authorize_PayPal()', 1000);
+	}
+}
+{/literal}
+//]]>
+</script>
+
+<div id="AJAX_Authorize_button_text" style="display: none; background-color: #f4cccc;">
+{$lng.lb_additional_payment_authorize_message}
+</div>
+
+
 <form action="order.php" method="post" name="vt_form1">
 <input type="hidden" name="mode" id="mode" value="" />
 <input type="hidden" name="orderid" value="{$orderid}" />
-
 
 <table cellspacing="0" cellpadding="0" align="center">
 
@@ -25,7 +102,7 @@
   </tr>
   <tr>
     <td align="right"><b>Grand total:</b> </td>
-    <td><input type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" /></td>
+    <td><input type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" id="paypal_vt_grand_total" /></td>
   </tr>
 
 
@@ -96,10 +173,28 @@
     <td></td>
     <td>	
 	<br />
-	<input type="button" value="Authorize" onclick="javascript: submitForm(this, 'authorize');" />
+
+	<div id="default_Authorize_button">
+		<input type="button" value="Authorize" onclick="javascript: submitForm(this, 'authorize');" />
+	</div>
+
+	
+        <div id="AJAX_Authorize_button" style="display: none;">
+{*
+<input type="hidden" name="VT_OPENED_FROM_func_check_for_paypal_vt_function" id="VT_OPENED_FROM_func_check_for_paypal_vt_function" value="" />
+*}
+
+	        <input type="button" id="btn_Authorize" value="Authorize" onclick="javascript: func_AJAX_authorize_PayPal();" />
+        </div>
+
+	<div id="AJAX_Please_wait" style="display: none;">
+		<h1>Please wait. <br >Page will be reloaded now ...</h1>
+	</div>
+
     </td>
   </tr>
 </table>
+
 </form>
 {/capture}
 {include file="dialog.tpl" title="Authorization" content=$smarty.capture.authorize extra='width="100%"'}

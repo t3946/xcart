@@ -358,6 +358,10 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 ##
 #
 
-    func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-VT");
+//func_print_r($_POST);
+
+    if (!($mode == "authorize" && $AJAX_SUBMIT == "Y")){
+	func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-VT");
+    }
 }
 ?>

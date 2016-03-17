@@ -210,6 +210,7 @@ $smarty->assign('attention_tags_values', $attention_tags_values);
 $additional_shipping_statuses = array (
 	"G" => "Pending",
 	"D" => "Declined",
+	"A" => "Authorized",
 	"P" => "Paid",
 	"W" => "Waive",
 	"U" => "Unwaive"

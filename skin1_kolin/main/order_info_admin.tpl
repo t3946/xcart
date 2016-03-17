@@ -17,6 +17,65 @@ vim: set ts=2 sw=2 sts=2 et:
 <!--
 
 {literal}
+
+function func_check_for_paypal_vt(m_id){
+
+  var cb_status = $('#groups_cb_status_'+m_id).val();
+  var additional_shipping_status = $('#additional_shipping_status_'+m_id).val();
+
+  if (cb_status == "AP" && additional_shipping_status == "A"){
+
+    var additional_shipping_charge = 0;
+
+    {/literal}
+    {foreach from=$order_manufacturers item=v key=k}
+     {literal}
+      if (m_id == '{/literal}{$k}{literal}'){
+        additional_shipping_charge = {/literal}{$v.additional_shipping_charge}{literal};
+      }
+     {/literal}
+    {/foreach}
+    {literal}
+
+    additional_shipping_charge = parseFloat(additional_shipping_charge);
+
+    if (additional_shipping_charge > 0){
+
+        $('#main_order_tabs-container').tabs(
+                    {/literal}
+                        {if $found_show_stock_availability_form eq "Y"}
+                                {literal}
+                                        {selected: 3}
+                                {/literal}
+                        {else}
+                                {literal}
+                                        {selected: 2}
+                                {/literal}
+                        {/if}
+                    {literal}
+        );
+
+        $("#paypal_vt_grand_total").val(additional_shipping_charge);
+
+
+//        $("#VT_OPENED_FROM_func_check_for_paypal_vt_function").val("Y");
+        $("#default_Authorize_button").hide();
+        $("#AJAX_Authorize_button").show();
+        $("#AJAX_Authorize_button_text").show();
+//        $("#btn_Authorize").focus();
+        $("#paypal_vt_card_number").focus();
+
+    } // if (additional_shipping_charge > 0)
+  } // if (cb_status == "AP" && additional_shipping_status == "A")
+  else {
+//    $("#VT_OPENED_FROM_func_check_for_paypal_vt_function").val("");
+        $("#default_Authorize_button").show();
+        $("#AJAX_Authorize_button").hide();
+        $("#AJAX_Authorize_button_text").hide();
+  }
+} // function
+
+
 function func_check_for_pending_order_message1(m_id){
  var cb_status = $('#groups_cb_status_'+m_id).val();
  var dc_status = $('#groups_dc_status_'+m_id).val();
@@ -152,6 +211,7 @@ var dc_status;
 */
 }
 
+/*
 function func_check_additional_shipping_status(m_id){
 
   var additional_shipping_status = $("#additional_shipping_status_"+m_id).val(); 
@@ -163,6 +223,7 @@ function func_check_additional_shipping_status(m_id){
     $("#additional_vt_info_"+m_id).hide();
   }
 }
+*/
 
 function func_check_cb_status(m_id){
 
@@ -768,6 +829,7 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 <td>
 {if $additional_shipping_statuses ne ""}
 
+{*
 <script type="text/javascript" language="JavaScript 1.2">
 <!--
 {literal}
@@ -779,7 +841,7 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 {/literal}
 -->
 </script>
-
+*}
 
 {*
 {if $order_manufacturers[$m_id].additional_shipping_status eq "W"}
@@ -809,10 +871,10 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
   {/foreach}
   </select>
   {else}
-  <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+  <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} onchange="javascript: func_check_for_paypal_vt('{$m_id}');">
   {foreach from=$additional_shipping_statuses item=v_s key=k_s}
   {if $k_s ne "U"}
-  <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{$k_s}">{if $order_manufacturers[$m_id].cb_status eq "O" && $k_s eq "P"}Agreed{else}{$v_s}{/if}</option>
+  <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{$k_s}">{if $order_manufacturers[$m_id].cb_status eq "O" && ($k_s eq "P" || $k_s eq "A")}Agreed{else}{$v_s}{/if}</option>
   {/if}
   {/foreach}
   </select>
@@ -827,6 +889,7 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 </td>
 </tr>
 
+{*
  {if $all_vt_processors ne ""}
  <tr style="background-color: #F4CCCC; display: none;" id="additional_vt_info_{$m_id}" >
  <td colspan="11">
@@ -859,7 +922,7 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
  </td>
  </tr>
  {/if}
-
+*}
 
 {* {if $order_manufacturers[$m_id].additional_shipping_status eq "W" && $v.actual_shipping_cost.net gt 0} *}
 {if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
