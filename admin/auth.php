@@ -211,7 +211,7 @@ $additional_shipping_statuses = array (
 	"G" => "Pending",
 	"D" => "Declined",
 	"A" => "Authorized",
-	"P" => "Paid",
+//	"P" => "Paid",
 	"W" => "Waive",
 	"U" => "Unwaive"
 );

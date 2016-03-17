@@ -45,11 +45,15 @@ function func_AJAX_authorize_PayPal() {
 						$("#AJAX_Authorize_button_text").hide();
 					}
 
+					var m_id = $("#m_id_for_additional_shipping_status").val();
+
 					if (paypal_response == "Authorized"){
+						$("#additional_shipping_status_"+m_id).val("A"); // Authorized
 						document.ordereditform1.submit();
 					}
 					else if (paypal_response == "Faild"){
-						window.location.reload();
+						$("#additional_shipping_status_"+m_id).val("A");
+//						window.location.reload();
 					}
 
 				}else{
@@ -84,6 +88,8 @@ function func_AJAX_authorize_PayPal() {
 <form action="order.php" method="post" name="vt_form1">
 <input type="hidden" name="mode" id="mode" value="" />
 <input type="hidden" name="orderid" value="{$orderid}" />
+
+<input type="hidden" name="m_id_for_additional_shipping_status" id="m_id_for_additional_shipping_status" value="" />
 
 <table cellspacing="0" cellpadding="0" align="center">
 

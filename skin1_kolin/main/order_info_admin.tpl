@@ -22,6 +22,8 @@ function func_check_for_paypal_vt(m_id){
 
   var cb_status = $('#groups_cb_status_'+m_id).val();
   var additional_shipping_status = $('#additional_shipping_status_'+m_id).val();
+  var orig_additional_shipping_status = additional_shipping_status;
+
 
   if (cb_status == "AP" && additional_shipping_status == "A"){
 
@@ -32,6 +34,7 @@ function func_check_for_paypal_vt(m_id){
      {literal}
       if (m_id == '{/literal}{$k}{literal}'){
         additional_shipping_charge = {/literal}{$v.additional_shipping_charge}{literal};
+        orig_additional_shipping_status = {/literal}{if $v.additional_shipping_status ne ""}{$v.additional_shipping_status}{else}''{/if}{literal};
       }
      {/literal}
     {/foreach}
@@ -54,6 +57,9 @@ function func_check_for_paypal_vt(m_id){
                         {/if}
                     {literal}
         );
+
+        $("#additional_shipping_status_"+m_id).val(orig_additional_shipping_status);
+        $("#m_id_for_additional_shipping_status").val(m_id);
 
         $("#paypal_vt_grand_total").val(additional_shipping_charge);
 
@@ -863,22 +869,24 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
   {/if}
 
   {if $v.additional_shipping_status eq "W"}
-  <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
-  {foreach from=$additional_shipping_statuses item=v_s key=k_s}
-  {if $k_s eq "U" || $k_s eq "W"}
-  <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{if $k_s eq "U"}G{else}{$k_s}{/if}">{if $k_s eq "W"}<span style="color: red;">Waived</span>{else}{$v_s}{/if}</option>
-  {/if}
-  {/foreach}
-  </select>
+   <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+    {foreach from=$additional_shipping_statuses item=v_s key=k_s}
+     {if $k_s eq "U" || $k_s eq "W"}
+      <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{if $k_s eq "U"}G{else}{$k_s}{/if}">{if $k_s eq "W"}<span style="color: red;">Waived</span>{else}{$v_s}{/if}</option>
+     {/if}
+    {/foreach}
+   </select>
   {else}
-  <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} onchange="javascript: func_check_for_paypal_vt('{$m_id}');">
-  {foreach from=$additional_shipping_statuses item=v_s key=k_s}
-  {if $k_s ne "U"}
-  <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{$k_s}">{if $order_manufacturers[$m_id].cb_status eq "O" && ($k_s eq "P" || $k_s eq "A")}Agreed{else}{$v_s}{/if}</option>
-  {/if}
-  {/foreach}
-  </select>
-{/if}
+
+   <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} onchange="javascript: func_check_for_paypal_vt('{$m_id}');">
+    {foreach from=$additional_shipping_statuses item=v_s key=k_s}
+     {if $k_s ne "U"}
+      <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{$k_s}">{if $order_manufacturers[$m_id].cb_status eq "O" && ($k_s eq "P" || $k_s eq "A")}Agreed{else}{$v_s}{/if}</option>
+     {/if}
+    {/foreach}
+   </select>
+
+ {/if}
 
 
 {/if}
