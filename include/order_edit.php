@@ -501,8 +501,18 @@ if ($REQUEST_METHOD == "POST") {
 					$current_additional_shipping_status = $order['shipping_groups'][$m_id]['additional_shipping_status'];
 					$new_additional_shipping_status = $v["additional_shipping_status"];
 
-	                                if ((!empty($v["additional_vt_paymentid"]) || $v["cb_status"] == "O") && $new_additional_shipping_status == "P"){
+	                                if (
+//						((!empty($v["additional_vt_paymentid"]) || $v["cb_status"] == "O") && $new_additional_shipping_status == "P")
+					     (
+						($v["cb_status"] == "O" && $new_additional_shipping_status == "P")
+						||
+						($v["cb_status"] == "AP" && $new_additional_shipping_status == "A")
+					     )
+						&& $current_additional_shipping_status != $new_additional_shipping_status
+					    )
+					{
 
+/*
 						$save_additional_vt = true;
 
 						if (empty($v["additional_transaction_id_link"])){
@@ -512,8 +522,9 @@ if ($REQUEST_METHOD == "POST") {
 								$save_additional_vt = false;
                         	        	        }
 						}
+*/
 
-						if ($save_additional_vt || $v["cb_status"] == "O"){
+//						if ($save_additional_vt || $v["cb_status"] == "O" || ($new_additional_shipping_status == "P" && $v["cb_status"] == "AP")){
 
 
 #
@@ -547,20 +558,13 @@ if ($REQUEST_METHOD == "POST") {
 
 
 
-//							if ($v["shipping_value_selectbox"] == "actual_shipping_cost"){
 
 								$v["shipping_cost_net"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
 								$groups[$m_id]["shipping_cost_net"] = $v["shipping_cost_net"];
 								$order["shipping_groups"][$m_id]["shipping_cost_net"] = $v["shipping_cost_net"];
+
+
 /*
-								$v["actual_shipping_cost_net"] = 0;
-								$groups[$m_id]["actual_shipping_cost_net"] = $v["actual_shipping_cost_net"];
-								$order["shipping_groups"][$m_id]["actual_shipping_cost_net"] = $v["actual_shipping_cost_net"];
-*/
-
-//							}
-
-
 
                                                         if ($v["additional_transaction_id_link"] != $order['shipping_groups'][$m_id]['additional_transaction_id_link']){
                                                                 $payment_transaction_id_link = func_query_first_cell("SELECT transaction_id_link FROM $sql_tbl[payment_methods] WHERE paymentid='".$v["additional_vt_paymentid"]."'");
@@ -597,7 +601,11 @@ if ($REQUEST_METHOD == "POST") {
                                                         }
 
 							db_query("UPDATE $sql_tbl[order_groups] SET additional_vt_paymentid='$v[additional_vt_paymentid]', additional_transaction_id_link='$v[additional_transaction_id_link]', additional_avs_code='$v[additional_avs_code]' WHERE orderid='$orderid' AND manufacturerid='$m_id'");
-						}
+*/
+
+//						}
+
+
 	                                }
 
 
