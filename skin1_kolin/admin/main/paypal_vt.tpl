@@ -239,6 +239,10 @@ function func_AJAX_authorize_PayPal() {
 
 {if $v.transaction_link_anchor ne ""}({$v.transaction_id}){/if}
 
+{if $v.manual_transaction eq "Y"}
+ (Manually added)
+{/if}
+
         {else}
                 NONE
         {/if}
@@ -415,6 +419,10 @@ $(document).ready(function(){
 {if $v.transaction_link_anchor ne ""}{$v.transaction_link_anchor}{else}{$v.transaction_id}{/if}{if $v.transaction_id_link ne ""}</a>{/if}
 
 {if $v.transaction_link_anchor ne ""}({$v.transaction_id}){/if}
+
+{if $v.unserialized_transaction_log.FIELD_manual_transaction eq "Y"}
+ (Manually added)
+{/if}
 
 	{else}
 		NONE

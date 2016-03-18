@@ -68,12 +68,17 @@ $(function() {ldelim}
 
         {* --- *}
         {if $item.unserialized_transaction_log ne ""}
+		<br />
                 Transaction:
                 {if $item.unserialized_transaction_log.FIELD_transaction_id ne ""}
 
                         {if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$item.unserialized_transaction_log.FIELD_transaction_id_link|substitute:"trans-id":$item.unserialized_transaction_log.FIELD_transaction_id}">{/if}
                         {if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}{$item.unserialized_transaction_log.FIELD_transaction_link_anchor}{else}{$item.unserialized_transaction_log.FIELD_transaction_id}{/if}{if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}</a>{/if}
                         {if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}({$item.unserialized_transaction_log.FIELD_transaction_id}){/if}
+
+{if $item.unserialized_transaction_log.FIELD_manual_transaction eq "Y"}
+ (Manually added)
+{/if}
 
                 {else}
                         NONE
@@ -276,12 +281,17 @@ $(document).ready(function() {
 
 	{* --- *}
 	{if $item.unserialized_transaction_log ne ""}
+		<br />
 	        Transaction:
 	        {if $item.unserialized_transaction_log.FIELD_transaction_id ne ""}
 
 			{if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$item.unserialized_transaction_log.FIELD_transaction_id_link|substitute:"trans-id":$item.unserialized_transaction_log.FIELD_transaction_id}">{/if}
 			{if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}{$item.unserialized_transaction_log.FIELD_transaction_link_anchor}{else}{$item.unserialized_transaction_log.FIELD_transaction_id}{/if}{if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}</a>{/if}
 			{if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}({$item.unserialized_transaction_log.FIELD_transaction_id}){/if}
+
+{if $item.unserialized_transaction_log.FIELD_manual_transaction eq "Y"}
+ (Manually added)
+{/if}
 
 	        {else}
         	        NONE
