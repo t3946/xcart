@@ -37,7 +37,7 @@
 require './auth.php';
 require '../include/security.php';
 
-$osn_settings = func_query_first('SELECT code, customer_subject, copy_subject, email_body, enabled'
+$osn_settings = func_query_first('SELECT code, customer_subject, copy_subject, email_body, enabled, customer_attach_pdf_invoice, admin_attach_pdf_invoice'
     . ' FROM ' . $sql_tbl['order_status_notifications']
     . ' WHERE code = "' . $status . '"');
 
