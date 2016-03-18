@@ -486,3 +486,65 @@ $(document).ready(function(){
 {include file="dialog.tpl" title="Transaction log" content=$smarty.capture.virtual_terminal extra='width="100%"'}
 {/if}
 
+
+<br />
+{capture name=add_manual_transaction}
+
+<form action="order.php" method="post" name="vt_form03">
+<input type="hidden" name="mode" id="mode" value="" />
+<input type="hidden" name="orderid" value="{$orderid}" />
+
+<table>
+     <tr>
+       <td>
+         <b>Transaction status:</b><br />
+            <select name="transaction_status">
+            <option value="authorized">Authorized</option>
+            <option value="completed">Authorized & Captured</option>
+            </select>
+       </td>
+       <td width="20">&nbsp;</td>
+       <td>
+           <b>Currency<b>
+	    <select name="transaction_currency">
+	    <option value="USD">U.S. Dollars</option>
+	    <option value="CAN"> CAN. Dollars</option>
+	    </select>
+	</td>
+	<td width="20" colspan="4">&nbsp;</td>
+     </tr>	
+     <tr>
+       <td>
+         <b>Payment method:</b><br />
+         <select name="paymentid" >
+         <option value="0"></option>
+         {foreach from=$all_vt_processors item=item_vt key=key_vt}
+         <option {if $v.additional_vt_paymentid eq $item_vt.paymentid} selected="selected"{/if} value="{$item_vt.paymentid}">{$item_vt.payment_method}</option>
+         {/foreach}
+         </select>
+       </td>
+       <td width="20">&nbsp;</td>
+       <td>
+           <b>Virtual terminal transaction ID:</b><br />
+           <input type="text" name="transaction_id" value="" size="40" />
+       </td>
+       <td width="20">&nbsp;</td>
+       <td>
+           <b>AVS code:</b><br />
+           <input type="text" name="avs_code" value="" size="1" maxlength="1" />
+       </td>
+       <td width="20">&nbsp;</td>
+       <td>
+           <b>Transaction amount:</b><br />
+           <input type="text" name="transaction_amount" value="0" size="8" />
+       </td>
+     </tr>
+</table>
+
+<input type="button" value="Add transaction" onclick="javascript: submitForm(this, 'add_manual_transaction');" />
+
+</form>
+
+{/capture}
+{include file="dialog.tpl" title="Add manual transaction" content=$smarty.capture.add_manual_transaction extra='width="100%"'}
+
