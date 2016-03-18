@@ -310,6 +310,9 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     }
     elseif ($mode == "add_manual_transaction"){
 
+	$transaction_id = trim($transaction_id);
+	$transaction_amount = trim($transaction_amount);
+
 	if (empty($transaction_amount) || $transaction_amount <= 0 || empty($paymentid) || empty($transaction_id)){
 
 	        $top_message = array(
