@@ -333,10 +333,11 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 	$result = func_paypal_look_up_payment($Access_Token, $transaction_id, $transaction_type);
 
 	$transaction_total = $transaction_amount;
+	$result["FIELD_manual_transaction"] = "Y";
 	$result["FIELD_avs_code"] = $avs_code;
+	$log .= "'Add transaction' at 'Add manual transaction' section";
     }
 
-    $log .= "'Add transaction' at 'Add manual transaction' section";
 
     $result["xcart_log"] = $log;
     $result["FIELD_transaction_id"] = $transaction_id;
@@ -369,6 +370,10 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 
 
 	if ($mode == "authorize" || $mode == "add_manual_transaction"){
+
+		if ($mode == "add_manual_transaction"){
+			$order_transactions_data["manual_transaction"] = "Y";
+		}
 
 		$order_transactions_data["orderid"] = $orderid;
 		$order_transactions_data["paymentid"] = $paymentid;
