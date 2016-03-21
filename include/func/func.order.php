@@ -4529,6 +4529,36 @@ function func_paypal_capture($Access_Token, $Authorization_Id, $data_arr){
 	return $result;
 }
 
+// Refund transaction
+function func_paypal_refund($Access_Token, $Authorization_Id, $data_arr){
+
+        $data_json = json_encode($data_arr);
+        $url = "https://api.paypal.com/v1/payments/sale/$Authorization_Id/refund";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
+        //curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); //  CURLAUTH_BASIC|CURLAUTH_DIGEST
+        //curl_setopt($ch, CURLOPT_USERPWD, "username:password");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        //curl_setopt($ch, CURLOPT_REFERER, 'http://dev01.test.artistsupplysource.com/123_paypal.php');
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); //IMP if the url has https and you don't want to verify source certificate
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)');
+        //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+        $result_json = curl_exec($ch);
+        $result = json_decode($result_json, true);
+        $result["curl_getinfo"] = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $result;
+}
+
+
 /*
 Void an authorization. (Authorization_Id - it is TransID)
 
@@ -4597,6 +4627,34 @@ function func_paypal_create_payment($Access_Token, $data_json){
 
         return $result;
 }
+
+
+// Look up a payment
+function func_paypal_look_up_payment($Access_Token, $Authorization_Id, $transaction_type){
+/*
+transaction_types:
+ payment - Use this call to get details about payments that have not completed, such as payments that are created and approved, or if a payment has failed.
+ sale - Use this call to get details about a sale transaction. (This call returns only the sales that were created via the REST API.)
+ refund - Use this call to get details about a specific refund.
+ authorization - Use this call to get details about authorizations.
+ capture - Use this call to get details about a captured payment.
+*/
+
+        $url = "https://api.paypal.com/v1/payments/$transaction_type/$Authorization_Id";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result_json = curl_exec($ch);
+        $result = json_decode($result_json, true);
+        $result["curl_getinfo"] = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $result;
+}
+
 ###
 ## // PayPal functions
 #
