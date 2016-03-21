@@ -119,7 +119,32 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 //func_print_r($data_json);
 //die();
 
-		$result = func_paypal_create_payment($Access_Token, $data_json);
+		$count_transactions = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_transactions] WHERE transaction_status!='' AND transaction_id!='' AND orderid='$orderid'");
+
+		$allowed_statuses_flag = func_check_for_the_allowed_statuses_for_create_payment($order);
+
+//		check_for_the_allowed_statuses could be true/false
+
+
+		if (($allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) || $count_transactions > 1){
+			$result = func_paypal_create_payment($Access_Token, $data_json);
+		}
+		else {
+			$result = false;
+
+			if (!$allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")){
+
+		                $top_message = array(
+                		        'type' => 'E',
+		                        'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
+		                );
+
+		                $section_name_top_message = $top_message;
+		                x_session_save("section_name_top_message");
+
+                		func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-VT");
+			}
+		}
 
 		if (in_array($result["curl_getinfo"]["http_code"], array("200","201"))){
 
@@ -145,15 +170,14 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 				
 //				db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login')");
 
-				$count_valid_transactions = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[transaction_logs] WHERE transaction_status!='' AND transaction_id!='' AND orderid='$orderid'");
 
-				if (empty($count_valid_transactions) && !empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
+				if (empty($count_transactions) && !empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
 
 					$new_cb_status_flag = false;
 
 					$new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='AP'");
 					foreach ($order["shipping_groups"] as $ko => $vo){
-						if (in_array($vo["cb_status"], array('Q','N'))){
+						if (in_array($vo["cb_status"], array('Q','N','I'))){
 
 							db_query("UPDATE $sql_tbl[order_groups] SET cb_status='AP' WHERE orderid='$orderid' AND manufacturerid='$ko'");
 							$current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='".$vo["cb_status"]."'");
@@ -328,9 +352,52 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 
 	if ($transaction_status == "authorized"){
 		$transaction_type = "authorization";
+
+		$set_cb_status_for_first_transaction = "AP";
 	}
 	else {
 		$transaction_type = "capture";
+
+		$set_cb_status_for_first_transaction = "P";
+	}
+
+        $count_transactions = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_transactions] WHERE transaction_status!='' AND transaction_id!='' AND orderid='$orderid'");
+
+        $allowed_statuses_flag = func_check_for_the_allowed_statuses_for_create_payment($order);
+
+//      check_for_the_allowed_statuses could be true/false
+
+        if (!$allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")){
+
+		$top_message = array(
+			'type' => 'E',
+			'content' => func_get_langvar_by_name("lbl_first_transaction_in_order_exception")
+		);
+
+		$section_name_top_message = $top_message;
+		x_session_save("section_name_top_message");
+
+		func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-VT");
+        }
+
+	if ($allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")){
+
+		$new_cb_status_flag = false;
+
+		$new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$set_cb_status_for_first_transaction'");
+		foreach ($order["shipping_groups"] as $ko => $vo){
+			if (in_array($vo["cb_status"], array('Q','N','I'))){
+
+				db_query("UPDATE $sql_tbl[order_groups] SET cb_status='$set_cb_status_for_first_transaction' WHERE orderid='$orderid' AND manufacturerid='$ko'");
+				$current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='".$vo["cb_status"]."'");
+				$log .= "<br /><B>".$vo["all_distributor_info"]["code"].":</B> cb_status: ". $current_cb_status_value . " -> ". $new_cb_status_value . "<br />";
+				$new_cb_status_flag = true;
+			}
+		}
+
+		if ($new_cb_status_flag){
+			func_send_order_status_notification($orderid, $set_cb_status_for_first_transaction);
+		}
 	}
 
 	$result = func_paypal_look_up_payment($Access_Token, $transaction_id, $transaction_type);

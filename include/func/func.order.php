@@ -4660,4 +4660,21 @@ transaction_types:
 #
 
 
+function func_check_for_the_allowed_statuses_for_create_payment($order){
+
+	$allowed_statuses_flag = true;
+
+	if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
+		foreach ($order["shipping_groups"] as $ko => $vo){
+			if (!in_array($vo["cb_status"], array('Q','N','I'))){
+				$allowed_statuses_flag = false;
+				break;
+			}
+		}
+	}
+
+	return $allowed_statuses_flag;
+}
+
+
 ?>
