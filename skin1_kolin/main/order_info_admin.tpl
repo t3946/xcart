@@ -245,6 +245,7 @@ function func_check_cb_status(m_id){
 
 function func_check_cb_statuses(){
 
+/*
   var all_cb_status_eq_P = true;
   var cb_status_eq_P_found = false;
 
@@ -262,6 +263,7 @@ function func_check_cb_statuses(){
 
   var all_cb_status_eq_R = true;
   var cb_status_eq_R_found = false;
+*/
 
   var cb_status;
 
@@ -293,6 +295,7 @@ function func_check_cb_statuses(){
     }
   }
 
+/*
   if (cb_status == "P"){
     cb_status_eq_P_found = true;
   } else {
@@ -328,6 +331,7 @@ function func_check_cb_statuses(){
   } else {
     all_cb_status_eq_R = false;
   }
+*/
 
   if (cb_status == "O"){
     $("#po_status_{/literal}{$m_id}{literal}_tr").show();
@@ -339,11 +343,13 @@ function func_check_cb_statuses(){
 {/foreach}
 {literal}
 
+/*
   if ((cb_status_eq_P_found == true && all_cb_status_eq_P == true) || (cb_status_eq_AP_found == true && all_cb_status_eq_AP == true)){
     $("#vt_info").show();
   } else {
     $("#vt_info").hide();
   }
+*/
 
 /*
   if (
@@ -1177,8 +1183,9 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 {/if}
 {/foreach}
 
+{*
 {if $all_vt_processors ne ""}
-<tr style="background-color: #F4CCCC; {* {if $all_cb_status_eq_P ne "Y"} *} display: none; {* {/if} *}" id="vt_info" >
+<tr style="background-color: #F4CCCC; display: none; " id="vt_info" >
 <td colspan="10">
   <table>
     <tr>
@@ -1206,6 +1213,7 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 </td>
 </tr>
 {/if}
+*}
 
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Total Product Price

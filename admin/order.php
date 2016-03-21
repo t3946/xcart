@@ -837,6 +837,7 @@ if ($mode == "order_edit_apply") {
 #
 ##
 ###
+/*
         if (!empty($orderid)){
 
 		$log = "";
@@ -931,6 +932,7 @@ if ($mode == "order_edit_apply") {
 			func_log_order($orderid, 'S', $log, $login);
 		}
 	}
+*/
 ###
 ##
 #
