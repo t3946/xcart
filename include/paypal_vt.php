@@ -187,6 +187,9 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 					}
 
 					if ($new_cb_status_flag){
+
+						db_query("UPDATE $sql_tbl[orders] SET cb_status='AP' WHERE orderid='$orderid'");
+
 						func_send_order_status_notification($orderid, "AP");
 					}
 				}
@@ -396,6 +399,9 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		}
 
 		if ($new_cb_status_flag){
+
+			db_query("UPDATE $sql_tbl[orders] SET cb_status='$set_cb_status_for_first_transaction' WHERE orderid='$orderid'");
+
 			func_send_order_status_notification($orderid, $set_cb_status_for_first_transaction);
 		}
 	}
