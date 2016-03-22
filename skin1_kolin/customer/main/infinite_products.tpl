@@ -10,6 +10,8 @@
 
 {if $show_next_products eq "Y" }
 
+	<span style="display: none;">{$ajax_load_time}</span>
+
 	Page: {$ajax_navigation_page}
 
 	<br />

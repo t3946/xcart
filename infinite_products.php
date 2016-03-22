@@ -31,6 +31,7 @@ else {
 	require './auth.php';
 }
 
+
 if ($REQUEST_METHOD == 'POST')
  {
 	if (!empty($load_next_productids)){
@@ -149,6 +150,11 @@ if ($REQUEST_METHOD == 'POST')
 		$search_data["products"] = $remember_search_data_products;
 		x_session_save("search_data");
 
+
+		$ajax_load_time = $bench1 - func_microtime();
+		$smarty->assign('ajax_load_time', abs($ajax_load_time));
+
+
 		$smarty->assign('ajax_navigation_page', $ajax_navigation_page);
 		$smarty->assign('ajax_search_data', $search_data["products"]);
 		$smarty->assign('show_next_products', 'Y');
@@ -205,6 +211,11 @@ if ($REQUEST_METHOD == 'POST')
 
                 $search_data["products"] = $remember_search_data_products;
                 x_session_save("search_data");
+
+
+		$ajax_load_time = $bench1 - func_microtime();
+                $smarty->assign('ajax_load_time', abs($ajax_load_time));
+
 
                 $smarty->assign('ajax_navigation_page', $ajax_navigation_page);
                 $smarty->assign('ajax_search_data', $search_data["products"]);
@@ -263,6 +274,11 @@ if ($REQUEST_METHOD == 'POST')
 
 			$smarty->assign("products", $products);
 		}
+
+
+		$ajax_load_time = $bench1 - func_microtime();
+                $smarty->assign('ajax_load_time', abs($ajax_load_time));
+
 
 		$smarty->assign('products_template', $products_template);
 		$smarty->assign('ajax_navigation_page', $ajax_navigation_page);
