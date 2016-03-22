@@ -37,6 +37,19 @@ if ($REQUEST_METHOD == 'POST')
 	if (!empty($load_next_productids)){
 		x_load("product");
 
+
+#
+##
+###
+		if (strpos($load_next_productids, ":") !== false){
+			$tmp_load_next_productids_arr = explode(":", $load_next_productids);
+			$load_next_productids = $tmp_load_next_productids_arr[0];
+		}
+###
+##
+#
+
+
 		$productids_arr = explode("_", $load_next_productids);
 
 		if (!empty($productids_arr)){
@@ -134,6 +147,16 @@ if ($REQUEST_METHOD == 'POST')
                                         }
                                         $next_productids = implode("_", $next_productids_arr);
                                 }
+
+#
+##
+###
+				$ajax_load_time = $bench1 - func_microtime();
+				$next_productids .= ":".abs($ajax_load_time);
+###
+##
+#
+
                                 $smarty->assign('next_productids', $next_productids);
 
 
@@ -199,6 +222,16 @@ if ($REQUEST_METHOD == 'POST')
                                         }
                                         $next_productids = implode("_", $next_productids_arr);
                                 }
+
+#
+##
+###
+                                $ajax_load_time = $bench1 - func_microtime();
+                                $next_productids .= ":".abs($ajax_load_time);
+###
+##
+#
+
                                 $smarty->assign('next_productids', $next_productids);
 
 		                $search_data["products"] = $remember_search_data_products;
@@ -262,6 +295,16 @@ if ($REQUEST_METHOD == 'POST')
 					}
 					$next_productids = implode("_", $next_productids_arr);
 				}
+
+#
+##
+###
+                                $ajax_load_time = $bench1 - func_microtime();
+                                $next_productids .= ":".abs($ajax_load_time);
+###
+##
+#
+
 				$smarty->assign('next_productids', $next_productids);
 
 				func_display('customer/main/infinite_products_load_next_productids.tpl', $smarty);
