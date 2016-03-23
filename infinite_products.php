@@ -135,7 +135,7 @@ if ($REQUEST_METHOD == 'POST')
 
 
 		if (empty($products) || $mode_load_next_productids == "Y"){
-			// include $xcart_dir."/include/search.php"; // Do not enable it
+			include $xcart_dir."/include/search.php"; 
 
                         if ($mode_load_next_productids == "Y"){
 
@@ -277,7 +277,7 @@ if ($REQUEST_METHOD == 'POST')
 //                $ajax_load_more_products = "Y";
 
 		if (empty($products) || $mode_load_next_productids == "Y"){
-	                include $xcart_dir."/include/search.php";
+	                // include $xcart_dir."/include/search.php"; // Do not enable it
 		
 	                $search_data["products"] = $remember_search_data_products;
         	        x_session_save("search_data");
