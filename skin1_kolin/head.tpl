@@ -25,6 +25,45 @@ $(function(){
 </script>
 {/if}
 
+<table border="0" cellpadding="0" cellspacing="0" width="984" align="center" class="header_line1">
+ <tr>
+  <td width="60%" style="padding-left: 20px;">
+{if $top_pages_menu ne "" && !(($smarty.get.mode eq "checkout") || ($smarty.get.mode eq "update" && $smarty.get.action eq "cart")) }
+  {section name=top_page loop=$top_pages_menu}
+    {if $top_pages_menu[top_page].image.filename ne ""}
+      {if $smarty.get.pageid ne $top_pages_menu[top_page].pageid}
+	<a href="/pages.php?pageid={$top_pages_menu[top_page].pageid}">{/if}<img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$top_pages_menu[top_page].image.id}&amp;type=A" alt="" {if $top_pages_menu[top_page].image.image_x gt "16"}width="16"{/if} />{if $smarty.get.pageid ne $top_pages_menu[top_page].pageid}</a>
+      {/if}
+    {/if}
+
+    {if $smarty.get.pageid ne $top_pages_menu[top_page].pageid}<a class="top_links" href="/pages.php?pageid={$top_pages_menu[top_page].pageid}">{else}<font style="color: #cccccc;">{/if}{$top_pages_menu[top_page].title}{if $smarty.get.pageid ne $top_pages_menu[top_page].pageid}</a>{else}</font>{/if}
+
+    {* if !%top_page.last% *}
+      <font class="top_links">|</font>
+    {* /if *}
+
+    {if $main ne "help" && $smarty.get.section ne "contactus"}<a class="top_links" href="/help.php?section=contactus&mode=update">{else}<font style="color: #cccccc;">{/if}Contact Us{if $main ne "help" && $smarty.get.section ne "contactus"}</a>{else}</font>{/if}
+
+  {/section}
+{/if}
+  </td>
+  <td width="*" align="right" style="padding-right: 20px;">
+<font class="top_text_1">
+{if $geo_litecity_location.phone ne ""}
+1
+
+Place order online or call {$geo_litecity_location.phone}
+{else}
+2
+
+{$config.Company.cidev_top_header_code}
+{/if}
+</font>
+  </td>
+ </tr>
+</table>
+
+
 <CENTER>
 <TABLE border="0" cellpadding="0" cellspacing="0" {* height="170" *} width="960">
 

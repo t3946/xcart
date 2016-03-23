@@ -2014,20 +2014,24 @@ a.cart_checkout:hover {
 /* --- */
 
 A.top_links:link {
-        TEXT-DECORATION: underline;
-        COLOR: #ffffff;
+        TEXT-DECORATION: none;
+        COLOR: #2b2b2b;
+	font-size: 11px;
 }
 A.top_links:visited {
         TEXT-DECORATION: none;
-        COLOR: #ffffff;
+        COLOR: #2b2b2b;
+	font-size: 11px;
 }
 A.top_links:hover {
         TEXT-DECORATION: none;
-        COLOR: #ffffff;
+        COLOR: #2b2b2b;
+	font-size: 11px;
 }
 A.top_links:active  {
         TEXT-DECORATION: none;
-        COLOR: #ffffff;
+        COLOR: #2b2b2b;
+	font-size: 11px;
 }
 
 
@@ -3970,3 +3974,9 @@ a.jcarousel-control-next:hover {
     background-color: #1e1e1e;
 }
 /* --- */
+
+.header_line1 {
+	height: 41px;
+	width: 984px;
+	BACKGROUND-IMAGE: url(images/new/home/substrate.png);
+}
