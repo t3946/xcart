@@ -126,7 +126,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 //		check_for_the_allowed_statuses could be true/false
 
 
-		if (($allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) || $count_transactions > 1){
+		if (($allowed_statuses_flag && empty($count_transactions) && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT != "Y")) || $count_transactions >= 1){
 			$result = func_paypal_create_payment($Access_Token, $data_json);
 		}
 		else {
