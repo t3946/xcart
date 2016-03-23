@@ -135,7 +135,7 @@ if ($REQUEST_METHOD == 'POST')
 
 
 		if (empty($products) || $mode_load_next_productids == "Y"){
-			include $xcart_dir."/include/search.php";
+			// include $xcart_dir."/include/search.php"; // Do not enable it
 
                         if ($mode_load_next_productids == "Y"){
 
