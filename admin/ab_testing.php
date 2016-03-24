@@ -83,7 +83,7 @@ if (!empty($ab_testing_points)){
 
 $ab_point_variants = func_query("SELECT * FROM $sql_tbl[ab_point_variants]");
 
-$all_processors = func_query_hash("SELECT paymentid, payment_method FROM $sql_tbl[payment_methods] ORDER BY active, orderby","paymentid", false);
+$all_processors = func_query_hash("SELECT paymentid, payment_method FROM $sql_tbl[payment_methods] ORDER BY active desc, orderby asc","paymentid", false);
 $smarty->assign("all_processors", $all_processors);
 
 //func_print_r($all_processors, $ab_testing_points);
