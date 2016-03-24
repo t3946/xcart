@@ -357,6 +357,8 @@ if (!$fatal) {
                         $result["FIELD_transaction_currency"] = $transaction_currency;
                         $result["FIELD_transaction_total"] = $transaction_total;
 
+			$result["script_info"] = "Script: payment/payment_ccmid.php . Function: func_paypal_look_up_payment"; 
+
 			$transaction_log = serialize($result);
 		}
 
