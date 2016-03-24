@@ -2313,7 +2313,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 					    } // if ($count_shipping_groups == "1" && !empty($authorized_transactions_info))
 					} // if ($CaptureAmount == $authorized_transaction_amount)
 					else {
-	                                        $top_message["content"] = func_get_langvar_by_name("lb_captureamount_not_equal_order_amount");
+	                                        $top_message["content"] = func_get_langvar_by_name("lbl_captureamount_not_equal_order_amount");
                                                 $top_message["type"] = "R";
                                                 $section_name_top_message = $top_message;
                                                 x_session_save("section_name_top_message");
