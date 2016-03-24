@@ -2247,6 +2247,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 		                                        if (!empty($result["id"])){
 			                                        $transaction_log = "<br />Transaction: ".$authorized_transaction_id." -> ".$result["id"];
 
+								$result["script_info"] = "Script: admin/order.php . " . $log;
+
 		                                                $result_serialized = serialize($result);
 								db_query("UPDATE $sql_tbl[order_transactions] SET transaction_id='$result[id]', transaction_amount='".$authorized_transaction["transaction_amount"]."', date='".time()."', login='$login', transaction_status='$result[state]', transaction_response='".addslashes($result_serialized)."' WHERE orderid='$orderid' AND transaction_id='$authorized_transaction_id'");
 
