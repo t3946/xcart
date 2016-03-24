@@ -27,7 +27,9 @@ vim: set ts=2 sw=2 sts=2 et:
 {*
         <input placeholder="{$lng.lbl_enter_keyword|escape}" type="search" name="posted_data[substring]" class="text{if not $search_prefilled.substring} default-value{/if}" value="{$search_prefilled.substring|escape}" />
 *}
-        <input type="search" name="e_posted_data[substring]" class="text{if not $search_prefilled.substring} default-value{/if}" value="{$e_search_data.substring|stripslashes|escape}" title="Search For" id="twotabsearchtextbox" placeholder="{$config.Company.cidev_header_code}" autocomplete="off" />
+
+        <input type="search" name="e_posted_data[substring]" class="text{if not $search_prefilled.substring} default-value{/if}" value="{if $e_search_data.substring ne ""}{$e_search_data.substring|stripslashes|escape}{else}{$e_search_data_orig_substring}{/if}" title="Search For" id="twotabsearchtextbox" placeholder="{$config.Company.cidev_header_code}" {* autocomplete="off" *} />
+
 
       {/strip}
       <div class="ui-grid-a">
