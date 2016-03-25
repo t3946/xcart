@@ -3342,16 +3342,44 @@ function AB_Goal_Hit($point_id_arr, $orderid=""){
 		return false;
 	}
 
+#
+## if !empty $orderid then it is order invoice page
+###    
 	if (!empty($orderid)){
-		$paymentid = func_query_first_cell("SELECT paymentid FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-		if ($paymentid == "4"){
-			return false;
-		}
+		$order_info = func_query_first("SELECT paymentid, is_mobile_checkout FROM $sql_tbl[orders] WHERE orderid='$orderid'");
+		$paymentid = $order_info["paymentid"];
+		$is_mobile_checkout = $order_info["is_mobile_checkout"];
+
+#		if ($paymentid == "4"){
+#			return false;
+#		}
 	}
+###
+##
+#
 
 	foreach ($point_id_arr as $point_id){
 		foreach ($pointid_ab_testing_arr as $k_point_id => $v){
 			if ($point_id == $k_point_id){
+
+#
+## if !empty $orderid then it is order invoice page
+###
+                                if (!empty($orderid)){
+
+					$ab_testing_point_info = func_query_first("SELECT exclude_payment_methods, exclude_mobile FROM $sql_tbl[ab_testing_points] WHERE point_id='$point_id'");
+
+					$exclude_payment_methods = explode(",", $ab_testing_point_info["exclude_payment_methods"]);
+					if (
+						in_array($paymentid, $exclude_payment_methods) ||
+						($ab_testing_point_info["exclude_mobile"] == "Y" && $is_mobile_checkout == "Y")
+					){
+						break;
+					}
+                                }
+###
+##
+#
 
 				if ($v["reach_goal_count_was_incremented"] != "Y"){
 					db_query("UPDATE $sql_tbl[ab_point_variants] SET reach_goal_count=reach_goal_count+1 WHERE point_id='$point_id' AND variant_id='$v[variant_id]'");

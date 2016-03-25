@@ -68,12 +68,17 @@ $(function() {ldelim}
 
         {* --- *}
         {if $item.unserialized_transaction_log ne ""}
+		<br />
                 Transaction:
                 {if $item.unserialized_transaction_log.FIELD_transaction_id ne ""}
 
                         {if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$item.unserialized_transaction_log.FIELD_transaction_id_link|substitute:"trans-id":$item.unserialized_transaction_log.FIELD_transaction_id}">{/if}
                         {if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}{$item.unserialized_transaction_log.FIELD_transaction_link_anchor}{else}{$item.unserialized_transaction_log.FIELD_transaction_id}{/if}{if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}</a>{/if}
                         {if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}({$item.unserialized_transaction_log.FIELD_transaction_id}){/if}
+
+{if $item.unserialized_transaction_log.FIELD_manual_transaction eq "Y"}
+ (Manually added)
+{/if}
 
                 {else}
                         NONE
@@ -91,6 +96,30 @@ $(function() {ldelim}
 			<br />
 			<B>message:</B> {$item.unserialized_transaction_log.message}
                 {/if}
+
+{if $item.transaction_log ne ""}
+<script>
+//<![CDATA[
+{literal}
+$(document).ready(function(){
+    $('#log_show_hide_a_link_{/literal}{$key}{literal}').click(
+       function() {
+          $(this).text(function(i,text) { return (text == 'Show details') ? 'Hide details' : 'Show details'; });
+          $('#div_a_transaction_log_{/literal}{$key}{literal}').toggle('slow');
+          return false;
+       }
+    );
+});
+{/literal}
+//]]>
+</script>
+
+<br />
+<div id="div_a_transaction_log_{$key}" style="display: none;"><B>Full log:</B><br />{$item.transaction_log}</div>
+<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: func_show_hide_log('{$key}');" id="log_show_hide_a_link_{$key}">Show details</a>
+
+{/if}
+
         {/if}
         {* --- *}
 
@@ -252,12 +281,17 @@ $(document).ready(function() {
 
 	{* --- *}
 	{if $item.unserialized_transaction_log ne ""}
+		<br />
 	        Transaction:
 	        {if $item.unserialized_transaction_log.FIELD_transaction_id ne ""}
 
 			{if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$item.unserialized_transaction_log.FIELD_transaction_id_link|substitute:"trans-id":$item.unserialized_transaction_log.FIELD_transaction_id}">{/if}
 			{if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}{$item.unserialized_transaction_log.FIELD_transaction_link_anchor}{else}{$item.unserialized_transaction_log.FIELD_transaction_id}{/if}{if $item.unserialized_transaction_log.FIELD_transaction_id_link ne ""}</a>{/if}
 			{if $item.unserialized_transaction_log.FIELD_transaction_link_anchor ne ""}({$item.unserialized_transaction_log.FIELD_transaction_id}){/if}
+
+{if $item.unserialized_transaction_log.FIELD_manual_transaction eq "Y"}
+ (Manually added)
+{/if}
 
 	        {else}
         	        NONE
@@ -275,6 +309,30 @@ $(document).ready(function() {
                         <br />
                         <B>message:</B> {$item.unserialized_transaction_log.message}
                 {/if}
+
+{if $item.transaction_log ne ""}
+<script>
+//<![CDATA[
+{literal}
+$(document).ready(function(){
+    $('#log_show_hide_link_{/literal}{$key}{literal}').click(
+       function() {
+          $(this).text(function(i,text) { return (text == 'Show details') ? 'Hide details' : 'Show details'; });
+          $('#div_transaction_log_{/literal}{$key}{literal}').toggle('slow');
+          return false;
+       }
+    );
+});
+{/literal}
+//]]>
+</script>
+
+<br />
+<div id="div_transaction_log_{$key}" style="display: none;"><B>Full log:</B><br />{$item.transaction_log}</div>
+<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: func_show_hide_log('{$key}');" id="log_show_hide_link_{$key}">Show details</a>
+
+{/if}
+
 
 	{/if}
 	{* --- *}

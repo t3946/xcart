@@ -77,6 +77,30 @@
     </tr>
 
     <tr>
+        <td colspan="10">
+
+		<input type="checkbox" name="posted_data[ab_testing_points][{$v.point_id}][exclude_mobile]" value="Y"{if $v.exclude_mobile eq "Y"} checked="checked"{/if} /> <B>Exclude mobile session</B>
+
+<br />
+<br />
+		<B>Exclude payment methods</B>
+<br />
+		<select name="posted_data[ab_testing_points][{$v.point_id}][exclude_payment_methods][]" multiple="multiple" class="select" size="5">
+		{foreach from=$all_processors item=ps key=pid}
+			<option value="{$pid}"
+			{foreach from=$v.exclude_payment_methods item=v_epm key=k_epm}
+			{if $pid eq $v_epm} selected="selected"{/if}
+			{/foreach}
+			>{$ps.payment_method}</option>
+		{/foreach}
+		</select>
+	
+
+
+	</td>
+    </tr>
+
+    <tr>
 	<td colspan="10">
 	 <table cellpadding="3" cellspacing="1" align="center">
 	  <tr class="TableHead">

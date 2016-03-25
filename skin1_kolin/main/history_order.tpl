@@ -34,6 +34,7 @@ tinymce.init({
 //]]>
 </script>
 
+<script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 <!--

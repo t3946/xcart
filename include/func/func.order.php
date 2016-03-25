@@ -2722,6 +2722,15 @@ function func_process_order($orderids) {
 						$to_customer = func_query_first_cell ("SELECT language FROM $sql_tbl[customers] WHERE login='$provider[provider]'");
 						if(empty($to_customer))
 							$to_customer = $config['default_admin_language'];
+#
+##
+###
+					        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+					        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
 
 						func_send_mail($email_pro, "mail/order_notification_subj.tpl", "mail/order_notification.tpl", $config["Company"]["orders_department"], false);
 					}
@@ -2744,7 +2753,25 @@ function func_process_order($orderids) {
 			$userinfo['s_title'] = func_get_title($userinfo['s_titleid'], $to_customer);
 			$mail_smarty->assign("customer",$userinfo);
 
+#
+##
+###
+ 		        $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+		        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
         	        func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+
+
+#
+##
+###
+ 		        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+		        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
 	                $mail_smarty->assign('type', 'A');
         	        $to_customer = $config['default_admin_language'];
 //	                func_send_mail($config['Company']['orders_department'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $userinfo['email'], true, true);
@@ -2846,6 +2873,16 @@ function func_complete_order($orderid) {
         	$mail_smarty->assign('type', "C");
         	$mail_smarty->assign('d_email_subject_14', "");
 ###
+
+#
+##
+###
+	        $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+	        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
 		func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
 	}
 
@@ -2889,6 +2926,16 @@ function func_not_paid_order($orderid) {
 	$mail_smarty->assign('products', func_translate_products($products, $to_customer));
         $mail_smarty->assign('statuses', $statuses);
         $mail_smarty->assign('order_notification', $order_notification);
+
+#
+##
+###
+        $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
         func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
     }
 }
@@ -2928,7 +2975,7 @@ function func_decline_order($orderids, $status = "D") {
 			$mail_smarty->assign("giftcerts",$giftcerts);
 			$mail_smarty->assign("order",$order);
 
-            $order_notification = func_get_order_notification($status, $order_data);
+	                $order_notification = func_get_order_notification($status, $order_data);
 
 			if ($order_notification['enabled'] == 'Y' && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
 				$to_customer = func_query_first_cell ("SELECT language FROM $sql_tbl[customers] WHERE login='$userinfo[login]'");
@@ -2940,8 +2987,19 @@ function func_decline_order($orderids, $status = "D") {
 				$userinfo['b_title'] = func_get_title($userinfo['b_titleid'], $to_customer);
 				$userinfo['s_title'] = func_get_title($userinfo['s_titleid'], $to_customer);
 				$mail_smarty->assign("customer",$userinfo);
-                $mail_smarty->assign('statuses', $statuses);
-                $mail_smarty->assign('order_notification', $order_notification);
+		                $mail_smarty->assign('statuses', $statuses);
+		                $mail_smarty->assign('order_notification', $order_notification);
+
+#
+##
+###
+			        $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+			        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
+
 				func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl','mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
 			}
 		}
@@ -3565,11 +3623,30 @@ function func_send_order_status_notification($orderid, $status) {
                 . ' ORDER BY orderby', array('type', 'code'), false, true);
         }
         $mail_smarty->assign('statuses', $statuses);
+
+#
+##
+###
+	$attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+	$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
         
         $mail_smarty->assign('type', 'C');
         func_send_mail($order_data['userinfo']['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
         $mail_smarty->assign('type', 'A');
 //        func_send_mail($config['Company']['orders_department'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $order_data['userinfo']['email'], false);
+
+
+#
+##
+###
+        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
 
 	$to = $config['Company']['orders_department'];
 	$from = $order_data['userinfo']['firstname']."<".$config['Company']['orders_department'].">";
@@ -4452,6 +4529,36 @@ function func_paypal_capture($Access_Token, $Authorization_Id, $data_arr){
 	return $result;
 }
 
+// Refund transaction
+function func_paypal_refund($Access_Token, $Authorization_Id, $data_arr){
+
+        $data_json = json_encode($data_arr);
+        $url = "https://api.paypal.com/v1/payments/sale/$Authorization_Id/refund";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
+        //curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); //  CURLAUTH_BASIC|CURLAUTH_DIGEST
+        //curl_setopt($ch, CURLOPT_USERPWD, "username:password");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        //curl_setopt($ch, CURLOPT_REFERER, 'http://dev01.test.artistsupplysource.com/123_paypal.php');
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); //IMP if the url has https and you don't want to verify source certificate
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        //curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)');
+        //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+        $result_json = curl_exec($ch);
+        $result = json_decode($result_json, true);
+        $result["curl_getinfo"] = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $result;
+}
+
+
 /*
 Void an authorization. (Authorization_Id - it is TransID)
 
@@ -4520,9 +4627,54 @@ function func_paypal_create_payment($Access_Token, $data_json){
 
         return $result;
 }
+
+
+// Look up a payment
+function func_paypal_look_up_payment($Access_Token, $Authorization_Id, $transaction_type){
+/*
+transaction_types:
+ payment - Use this call to get details about payments that have not completed, such as payments that are created and approved, or if a payment has failed.
+ sale - Use this call to get details about a sale transaction. (This call returns only the sales that were created via the REST API.)
+ refund - Use this call to get details about a specific refund.
+ authorization - Use this call to get details about authorizations.
+ capture - Use this call to get details about a captured payment.
+*/
+
+        $url = "https://api.paypal.com/v1/payments/$transaction_type/$Authorization_Id";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result_json = curl_exec($ch);
+        $result = json_decode($result_json, true);
+        $result["curl_getinfo"] = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $result;
+}
+
 ###
 ## // PayPal functions
 #
+
+
+function func_check_for_the_allowed_statuses_for_create_payment($order){
+
+	$allowed_statuses_flag = true;
+
+	if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
+		foreach ($order["shipping_groups"] as $ko => $vo){
+			if (!in_array($vo["cb_status"], array('Q','N','I'))){
+				$allowed_statuses_flag = false;
+				break;
+			}
+		}
+	}
+
+	return $allowed_statuses_flag;
+}
 
 
 ?>
