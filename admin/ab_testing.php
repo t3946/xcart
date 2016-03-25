@@ -36,8 +36,14 @@ if ($REQUEST_METHOD == "POST") {
                                         $point_end_date = mktime(0, 0, 0, $point_end_date_arr[0], $point_end_date_arr[1], $point_end_date_arr[2]);
                                 }
 
+				if (!empty($v["exclude_payment_methods"]) && is_array($v["exclude_payment_methods"])){
+					$exclude_payment_methods = implode(",",$v["exclude_payment_methods"]);
+				} else {
+					$exclude_payment_methods = "";
+				}
+
 //				db_query("UPDATE $sql_tbl[ab_testing_points] SET point_name='$v[point_name]', point_descr='$v[point_descr]', storefronts_enabled='$v[storefronts_enabled]', point_start_date='$point_start_date', point_end_date='$point_end_date', point_goal_url='$v[point_goal_url]', mod_param='$v[mod_param]', total_hits='$v[total_hits]', enabled='$v[enabled]' WHERE point_id='$point_id'");
-				db_query("UPDATE $sql_tbl[ab_testing_points] SET point_name='$v[point_name]', point_descr='$v[point_descr]', storefronts_enabled='$v[storefronts_enabled]', point_start_date='$point_start_date', point_end_date='$point_end_date', point_goal_url='$v[point_goal_url]', mod_param='$v[mod_param]', enabled='$v[enabled]' WHERE point_id='$point_id'");
+				db_query("UPDATE $sql_tbl[ab_testing_points] SET point_name='$v[point_name]', point_descr='$v[point_descr]', storefronts_enabled='$v[storefronts_enabled]', point_start_date='$point_start_date', point_end_date='$point_end_date', point_goal_url='$v[point_goal_url]', mod_param='$v[mod_param]', enabled='$v[enabled]', exclude_payment_methods='$exclude_payment_methods', exclude_mobile='$v[exclude_mobile]' WHERE point_id='$point_id'");
 			}
 		}
 
@@ -58,6 +64,8 @@ $ab_testing_points = func_query("SELECT * FROM $sql_tbl[ab_testing_points]");
 if (!empty($ab_testing_points)){
 	foreach ($ab_testing_points as $k => $v){
 
+		$ab_testing_points[$k]["exclude_payment_methods"] = explode(",", $v["exclude_payment_methods"]);
+
 		$point_start_date = $v["point_start_date"];
 		if (!empty($point_start_date)){
 			$point_start_date = date("m/d/Y", $point_start_date);
@@ -74,6 +82,11 @@ if (!empty($ab_testing_points)){
 }
 
 $ab_point_variants = func_query("SELECT * FROM $sql_tbl[ab_point_variants]");
+
+$all_processors = func_query_hash("SELECT paymentid, payment_method FROM $sql_tbl[payment_methods] ORDER BY active desc, orderby asc","paymentid", false);
+$smarty->assign("all_processors", $all_processors);
+
+//func_print_r($all_processors, $ab_testing_points);
 
 $smarty->assign("ab_testing_points", $ab_testing_points);
 $smarty->assign("ab_point_variants", $ab_point_variants);

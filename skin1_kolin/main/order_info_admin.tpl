@@ -17,6 +17,71 @@ vim: set ts=2 sw=2 sts=2 et:
 <!--
 
 {literal}
+
+function func_check_for_paypal_vt(m_id){
+
+  var cb_status = $('#groups_cb_status_'+m_id).val();
+  var additional_shipping_status = $('#additional_shipping_status_'+m_id).val();
+  var orig_additional_shipping_status = additional_shipping_status;
+
+
+  if (cb_status == "AP" && additional_shipping_status == "A"){
+
+    var additional_shipping_charge = 0;
+
+    {/literal}
+    {foreach from=$order_manufacturers item=v key=k}
+     {literal}
+      if (m_id == '{/literal}{$k}{literal}'){
+        additional_shipping_charge = {/literal}{$v.additional_shipping_charge}{literal};
+        orig_additional_shipping_status = {/literal}{if $v.additional_shipping_status ne ""}{$v.additional_shipping_status}{else}''{/if}{literal};
+      }
+     {/literal}
+    {/foreach}
+    {literal}
+
+    additional_shipping_charge = parseFloat(additional_shipping_charge);
+
+    if (additional_shipping_charge > 0){
+
+        $('#main_order_tabs-container').tabs(
+                    {/literal}
+                        {if $found_show_stock_availability_form eq "Y"}
+                                {literal}
+                                        {selected: 3}
+                                {/literal}
+                        {else}
+                                {literal}
+                                        {selected: 2}
+                                {/literal}
+                        {/if}
+                    {literal}
+        );
+
+        $("#additional_shipping_status_"+m_id).val(orig_additional_shipping_status);
+        $("#m_id_for_additional_shipping_status").val(m_id);
+
+        $("#paypal_vt_grand_total").val(additional_shipping_charge);
+
+
+//        $("#VT_OPENED_FROM_func_check_for_paypal_vt_function").val("Y");
+        $("#default_Authorize_button").hide();
+        $("#AJAX_Authorize_button").show();
+        $("#AJAX_Authorize_button_text").show();
+//        $("#btn_Authorize").focus();
+        $("#paypal_vt_card_number").focus();
+
+    } // if (additional_shipping_charge > 0)
+  } // if (cb_status == "AP" && additional_shipping_status == "A")
+  else {
+//    $("#VT_OPENED_FROM_func_check_for_paypal_vt_function").val("");
+        $("#default_Authorize_button").show();
+        $("#AJAX_Authorize_button").hide();
+        $("#AJAX_Authorize_button_text").hide();
+  }
+} // function
+
+
 function func_check_for_pending_order_message1(m_id){
  var cb_status = $('#groups_cb_status_'+m_id).val();
  var dc_status = $('#groups_dc_status_'+m_id).val();
@@ -152,6 +217,7 @@ var dc_status;
 */
 }
 
+/*
 function func_check_additional_shipping_status(m_id){
 
   var additional_shipping_status = $("#additional_shipping_status_"+m_id).val(); 
@@ -163,6 +229,7 @@ function func_check_additional_shipping_status(m_id){
     $("#additional_vt_info_"+m_id).hide();
   }
 }
+*/
 
 function func_check_cb_status(m_id){
 
@@ -178,6 +245,7 @@ function func_check_cb_status(m_id){
 
 function func_check_cb_statuses(){
 
+/*
   var all_cb_status_eq_P = true;
   var cb_status_eq_P_found = false;
 
@@ -195,6 +263,7 @@ function func_check_cb_statuses(){
 
   var all_cb_status_eq_R = true;
   var cb_status_eq_R_found = false;
+*/
 
   var cb_status;
 
@@ -226,6 +295,7 @@ function func_check_cb_statuses(){
     }
   }
 
+/*
   if (cb_status == "P"){
     cb_status_eq_P_found = true;
   } else {
@@ -261,6 +331,7 @@ function func_check_cb_statuses(){
   } else {
     all_cb_status_eq_R = false;
   }
+*/
 
   if (cb_status == "O"){
     $("#po_status_{/literal}{$m_id}{literal}_tr").show();
@@ -272,11 +343,13 @@ function func_check_cb_statuses(){
 {/foreach}
 {literal}
 
+/*
   if ((cb_status_eq_P_found == true && all_cb_status_eq_P == true) || (cb_status_eq_AP_found == true && all_cb_status_eq_AP == true)){
     $("#vt_info").show();
   } else {
     $("#vt_info").hide();
   }
+*/
 
 /*
   if (
@@ -438,6 +511,7 @@ function check_r_fields(){
 
 {foreach from=$order.shipping_groups item=v key=m_id}
 {if $m_id gt 0}
+
 <tr class="distributor-totals-line">
   <td>
           <a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name}</a>
@@ -767,6 +841,7 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 <td>
 {if $additional_shipping_statuses ne ""}
 
+{*
 <script type="text/javascript" language="JavaScript 1.2">
 <!--
 {literal}
@@ -778,7 +853,7 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 {/literal}
 -->
 </script>
-
+*}
 
 {*
 {if $order_manufacturers[$m_id].additional_shipping_status eq "W"}
@@ -800,22 +875,24 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
   {/if}
 
   {if $v.additional_shipping_status eq "W"}
-  <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
-  {foreach from=$additional_shipping_statuses item=v_s key=k_s}
-  {if $k_s eq "U" || $k_s eq "W"}
-  <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{if $k_s eq "U"}G{else}{$k_s}{/if}">{if $k_s eq "W"}<span style="color: red;">Waived</span>{else}{$v_s}{/if}</option>
-  {/if}
-  {/foreach}
-  </select>
+   <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
+    {foreach from=$additional_shipping_statuses item=v_s key=k_s}
+     {if $k_s eq "U" || $k_s eq "W"}
+      <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{if $k_s eq "U"}G{else}{$k_s}{/if}">{if $k_s eq "W"}<span style="color: red;">Waived</span>{else}{$v_s}{/if}</option>
+     {/if}
+    {/foreach}
+   </select>
   {else}
-  <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
-  {foreach from=$additional_shipping_statuses item=v_s key=k_s}
-  {if $k_s ne "U"}
-  <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{$k_s}">{if $order_manufacturers[$m_id].cb_status eq "O" && $k_s eq "P"}Agreed{else}{$v_s}{/if}</option>
-  {/if}
-  {/foreach}
-  </select>
-{/if}
+
+   <select name="groups[{$m_id}][additional_shipping_status]" id='additional_shipping_status_{$m_id}' {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} onchange="javascript: func_check_for_paypal_vt('{$m_id}');">
+    {foreach from=$additional_shipping_statuses item=v_s key=k_s}
+     {if $k_s ne "U"}
+      <option {if $v.additional_shipping_status eq $k_s}selected="selected"{/if} value="{$k_s}">{if $order_manufacturers[$m_id].cb_status eq "O" && ($k_s eq "P" || $k_s eq "A")}Agreed{else}{$v_s}{/if}</option>
+     {/if}
+    {/foreach}
+   </select>
+
+ {/if}
 
 
 {/if}
@@ -826,6 +903,7 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
 </td>
 </tr>
 
+{*
  {if $all_vt_processors ne ""}
  <tr style="background-color: #F4CCCC; display: none;" id="additional_vt_info_{$m_id}" >
  <td colspan="11">
@@ -858,7 +936,7 @@ Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_
  </td>
  </tr>
  {/if}
-
+*}
 
 {* {if $order_manufacturers[$m_id].additional_shipping_status eq "W" && $v.actual_shipping_cost.net gt 0} *}
 {if $order_manufacturers[$m_id].additional_shipping_charge gt 0}
@@ -1105,8 +1183,9 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 {/if}
 {/foreach}
 
+{*
 {if $all_vt_processors ne ""}
-<tr style="background-color: #F4CCCC; {* {if $all_cb_status_eq_P ne "Y"} *} display: none; {* {/if} *}" id="vt_info" >
+<tr style="background-color: #F4CCCC; display: none; " id="vt_info" >
 <td colspan="10">
   <table>
     <tr>
@@ -1134,6 +1213,7 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 </td>
 </tr>
 {/if}
+*}
 
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Total Product Price
@@ -1203,6 +1283,37 @@ Total Product Cost to us
   <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.total}</td>
   <td>&nbsp;</td>
 </tr>
+
+{if $order_transactions_totals ne ""}
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Transacеions amount (authorized/pending +captured ) </td>
+  <td colspan="8">&nbsp;</td>
+  <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
+  <td>&nbsp;</td>
+</tr>
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Void total</td>
+  <td colspan="8">&nbsp;</td>
+  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.void_total}</td>
+  <td>&nbsp;</td>
+</tr>
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Authorized total</td>
+  <td colspan="8">&nbsp;</td>
+  <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.authorized_total}</td>
+  <td>&nbsp;</td>
+</tr>
+
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>Captured total</td>
+  <td colspan="8">&nbsp;</td>
+  <td align="right" style="font-size: 10px; {if $count_shipping_groups gt 1}background-color: {if $order.total eq $order_transactions_totals.captured_total}green{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
+  <td>&nbsp;</td>
+</tr>
+{/if}
+
 
 <tr>
 <td colspan="11">

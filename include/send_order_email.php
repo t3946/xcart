@@ -52,7 +52,28 @@ if ($user_account['flag'] != 'FS') {
 	$mail_smarty->assign('tracking_links_carrier',$tracking_links_carrier);
 	$mail_smarty->assign('statuses', $statuses);
 	$mail_smarty->assign('show_order_details', 'Y');
+#
+##
+###
+        $attach_pdf_invoice = $customer_attach_pdf_invoice;
+        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
 	func_send_mail($order_info['userinfo']['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification_admin.tpl', $config['Company']['orders_department'], false);
+
+
+#
+##
+###
+        $attach_pdf_invoice = $admin_attach_pdf_invoice;
+        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
+
 	$mail_smarty->assign('show_order_details', '');
 
 //	func_send_mail($config['Company']['orders_department'], 'mail/order_notification_subj.tpl', 'mail/order_notification_admin.tpl', $order_info['userinfo']['email'], true, true);

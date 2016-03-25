@@ -55,6 +55,7 @@
         <td valign="top" nowrap="nowrap"><b>last_md5</b></td>
         <td valign="top" nowrap="nowrap"><b>Multiple feed<br />destinations</b></td>
         <td valign="top" nowrap="nowrap"><b>Disable search of<br />discontinued items</b></td>
+        <td valign="top" nowrap="nowrap"><b>Native<br />FullDescription</b></td>
         <td valign="top" nowrap="nowrap"><b>enabled</b></td>
         <td valign="top" nowrap="nowrap"><b>delete</b></td>
 </tr>
@@ -130,6 +131,10 @@
 
 <td valign="top" align="center" width="10">
 <input type="checkbox" name="Supplier_feeds[{$key}][disable_search_of_discontinued_items]" value="Y" {if $item.disable_search_of_discontinued_items eq "Y"}checked="checked"{/if}/>
+</td>
+
+<td valign="top" align="center" width="10">
+<input type="checkbox" name="Supplier_feeds[{$key}][native_full_description]" value="Y" {if $item.native_full_description eq "Y"}checked="checked"{/if}/>
 </td>
 
 <td valign="top" align="center" width="10">

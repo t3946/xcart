@@ -213,6 +213,11 @@ Do NOT auto-submit to order entry operator if at least one of the following cond
 </td>
 </tr>
 <tr>
+<td align="left"><br />
+Attention: this conditions only applied to XCart native orders (not applied to Amazon MFN orders)
+</td>
+</tr>
+<tr>
 <td align="center"><br />
 <input type="submit" value="{$lng.lbl_save|strip_tags:false|escape}" />
 </td>

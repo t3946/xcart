@@ -1334,6 +1334,127 @@ and lasts <input type="text" name="d_warranty_last_day" value="{$manufacturer.d_
         </td>
 </tr>
 
+
+
+<tr><td colspan="3"><br />{include file="main/subheader.tpl" title="Distributor checking account details"}</td></tr>
+
+<tr>
+<td class="FormButton" width="20%">Bank name:</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap" width="80%">
+<input type="text" id="dcad_bank_name" name="dcad_bank_name" size="32" maxlength="64" value="{$manufacturer.dcad_bank_name}" />
+</td>
+</tr>
+
+<tr>
+<td class="FormButton" width="20%">{$lng.lbl_address}</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap" width="80%">&nbsp;</td>
+</tr>
+
+
+{*
+<script type="text/javascript" language="JavaScript 1.2">
+//<![CDATA[
+{literal}
+        var geo_litecity_location_city = "";
+        var geo_litecity_location_region = "";
+        var geo_litecity_location_country = "";
+        var geo_litecity_location_region_name = "";
+{/literal}
+//]]>
+</script>
+
+{include file="modules/Manufacturers/check_zipcode.tpl"}
+{include file="generate_required_fields_js.tpl"}
+{include file="check_required_fields_js.tpl"}
+{include file="change_states_js.tpl"}
+*}
+
+<tr>
+<td class="FormButton" width="20%">{$lng.lbl_address}</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap" width="80%">
+<input type="text" id="dcad_address" name="dcad_address" size="32" maxlength="64" value="{$manufacturer.dcad_address}" />
+</td>
+</tr>
+
+<tr>
+<td class="FormButton">{$lng.lbl_address_2}</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap">
+<input type="text" id="dcad_address_2" name="dcad_address_2" size="32" maxlength="64" value="{$manufacturer.dcad_address_2}" />
+</td>
+</tr>
+
+<tr>
+<td class="FormButton">{$lng.lbl_city}</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap">
+<input type="text" id="dcad_city" name="dcad_city" size="32" maxlength="64" value="{$manufacturer.dcad_city}" />
+</td>
+</tr>
+
+<tr>
+<td class="FormButton">{$lng.lbl_country}</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap">
+<select name="dcad_country" id="dcad_country" onchange="check_zip_code()">
+{section name=country_idx loop=$countries}
+<option value="{$countries[country_idx].country_code}"{if $manufacturer.dcad_country eq $countries[country_idx].country_code} selected="selected"{elseif $countries[country_idx].country_code eq $config.General.default_country and $manufacturer.dcad_country eq ""} selected="selected"{/if}>{$countries[country_idx].country|amp}</option>
+{/section}
+</select>
+</td>
+</tr>
+
+<tr>
+<td class="FormButton">{$lng.lbl_state}</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap">
+{include file="main/states.tpl" states=$states name="dcad_state" default=$manufacturer.dcad_state default_country=$manufacturer.dcad_country country_name="dcad_country"}
+</td>
+</tr>
+
+<tr style="display: none;">
+<td>
+{include file="main/register_states.tpl" state_name="dcad_state" country_name="dcad_country" county_name="dcad_county" state_value=$manufacturer.dcad_state county_value=$manufacturer.dcad_county}
+</td>
+</tr>
+
+<tr>
+<td class="FormButton">{$lng.lbl_zip_code}</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap">
+<input type="text" id="dcad_zipcode" name="dcad_zipcode" size="32" maxlength="32" value="{$manufacturer.dcad_zipcode}" onchange="check_zip_code()"  />
+</td>
+</tr>
+
+<tr>
+<td class="FormButton" width="20%">Company name:</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap" width="80%">
+<input type="text" id="dcad_company_name" name="dcad_company_name" size="32" maxlength="64" value="{$manufacturer.dcad_company_name}" />
+</td>
+</tr>
+
+<tr>
+<td class="FormButton" width="20%">Routing number:</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap" width="80%">
+<input type="text" id="dcad_routing_number" name="dcad_routing_number" size="32" maxlength="64" value="{$manufacturer.dcad_routing_number}" />
+</td>
+</tr>
+
+<tr>
+<td class="FormButton" width="20%">Account number:</td>
+<td>&nbsp;</td>
+<td nowrap="nowrap" width="80%">
+<input type="text" id="dcad_account_number" name="dcad_account_number" size="32" maxlength="64" value="{$manufacturer.dcad_account_number}" />
+</td>
+</tr>
+
+
+
 <tr>
         <td width="20%" class="FormButton">NET payment terms in days (put 0 if N/A)</td>
         <td>&nbsp;</td>
@@ -1907,7 +2028,15 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 </table>
 
 {elseif $d_section.distributor_section eq "22"}
+	<table cellpadding="3" cellspacing="1" id="distributor_section_id_22" {if $distributor_section ne "22"}style="display: none;" {/if}>
+	<tr>
+	<td>
+
 	{include file="admin/main/product_page_locked_fields.tpl"}
+
+	</td>
+	</tr>
+	</table>
 {/if}
 
 {/foreach}

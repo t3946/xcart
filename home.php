@@ -47,6 +47,7 @@ x_load("category");
 ##
 ###
 x_session_register("e_search_data");
+x_session_register("e_search_data_orig_substring");
 ###
 ##
 #
@@ -159,6 +160,10 @@ if ($cidev_dispatched_request_arr[0] == "keyword" && !empty($cidev_dispatched_re
 }
 
 if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
+
+        $e_search_data_orig_substring = $e_posted_data["substring"];
+        x_session_save("e_search_data_orig_substring");
+
 	$e_search_data["orig_substring"] = $e_posted_data["substring"];
         $e_search_data["substring"] = htmlspecialchars_decode($e_posted_data["substring"]);
 	$e_search_data["substring"] = stripslashes($e_search_data["substring"]);
@@ -482,6 +487,7 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 ##
 #
 
+$smarty->assign("e_search_data_orig_substring", $e_search_data_orig_substring);
 
 #
 # Assign Smarty variables and show template
