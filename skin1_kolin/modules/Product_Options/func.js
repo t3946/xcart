@@ -174,7 +174,7 @@ function check_options() {
 	/* Update Save % */
 	if (document.getElementById('save_percent') && document.getElementById('save_percent_box') && list_price > 0 && dynamic_save_money_enabled) {
 		var save_percent = Math.round(100-(price/list_price)*100);
-		var cidev_save_percent = "$"+price_format(save_percent == 0 ? 0 : list_price-price )+" ("+save_percent+"%)";
+		var cidev_save_percent = "US$ "+price_format(save_percent == 0 ? 0 : list_price-price );
 
 		if (save_percent > 0) {
 			document.getElementById('save_percent_box').style.display = '';
@@ -184,6 +184,21 @@ function check_options() {
 			document.getElementById('save_percent').innerHTML = '0';
 		}
 	}
+
+        /* Update Save % */
+        if (document.getElementById('save_percent2') && document.getElementById('save_percent_box2') && list_price > 0 && dynamic_save_money_enabled) {
+                var save_percent2 = Math.round(100-(price/list_price)*100);
+                var cidev_save_percent2 = save_percent2;
+
+                if (save_percent2 > 0) {
+                        document.getElementById('save_percent_box2').style.display = '';
+                        document.getElementById('save_percent2').innerHTML = cidev_save_percent2;
+                } else {
+                        document.getElementById('save_percent_box2').style.display = 'none';
+                        document.getElementById('save_percent2').innerHTML = '0';
+                }
+        }
+
 
 	/* Update product quantity */
 	if (document.getElementById('product_avail_txt')) {
@@ -475,7 +490,7 @@ function check_wholesale(qty) {
 	if (document.getElementById('save_percent') && document.getElementById('save_percent_box') && list_price > 0 && dynamic_save_money_enabled) {
 		var save_percent = Math.round(100-((wl_price < 0 ? 0 : wl_price)/list_price)*100);
 	
-		var cidev_save_percent = "$"+price_format(save_percent == 0 ? 0 : list_price-wl_price )+" ("+save_percent+"%)";
+		var cidev_save_percent = "US$ "+price_format(save_percent == 0 ? 0 : list_price-wl_price );
 
 		if (save_percent > 0) {
 			document.getElementById('save_percent_box').style.display = '';
@@ -485,6 +500,21 @@ function check_wholesale(qty) {
 			document.getElementById('save_percent').innerHTML = '0';
 		}
 	}
+
+        /* Update Save % */
+        if (document.getElementById('save_percent2') && document.getElementById('save_percent_box2') && list_price > 0 && dynamic_save_money_enabled) {
+                var save_percent2 = Math.round(100-((wl_price < 0 ? 0 : wl_price)/list_price)*100);
+
+                var cidev_save_percent2 = save_percent2;
+
+                if (save_percent2 > 0) {
+                        document.getElementById('save_percent_box2').style.display = '';
+                        document.getElementById('save_percent2').innerHTML = cidev_save_percent2;
+                } else {
+                        document.getElementById('save_percent_box2').style.display = 'none';
+                        document.getElementById('save_percent2').innerHTML = '0';
+                }
+        }
 
 
 	for (var x in taxes) {
