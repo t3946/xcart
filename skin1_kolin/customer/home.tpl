@@ -449,8 +449,10 @@ window.attachEvent("onload", anchor_fix);
 }
 </style>
 {/literal}
-{include file="rectangle_top.tpl" }
+
 {include file="head.tpl" }
+{include file="rectangle_top.tpl" }
+
 {if $active_modules.SnS_connector}
 {include file="modules/SnS_connector/header.tpl"}
 {/if}
