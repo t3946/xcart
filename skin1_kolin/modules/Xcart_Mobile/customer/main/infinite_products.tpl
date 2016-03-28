@@ -1,4 +1,17 @@
+
+{* ---- 
+<br />
+{if $POST_VARS ne ""}
+{foreach from=$POST_VARS item=v key=k}
+{$k} ---- {$v}<br />
+{/foreach}
+{/if}
+ ---- *}
+
+
 {if $show_next_products eq "Y" }
+
+	<span style="display: none;">{$ajax_load_time}</span>
 
 	Page: {$ajax_navigation_page}
 

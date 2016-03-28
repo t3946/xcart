@@ -13,6 +13,177 @@ vim: set ts=2 sw=2 sts=2 et:
           <h2>{$title}</h2>
         </li>
       {/if}
+
+
+{if ($main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search") && $do_not_use_load_more_function ne 'Y'}
+
+<script type="text/javascript">
+//<![CDATA[
+{literal}
+        function func_load_more_products(ajax_navigation_page_next){
+
+                        cidev_xmlHttp=cidev_createHttpRequestObject();
+                        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
+
+                                var e_products_found = '{/literal}{if $e_products_found eq "Y"}Y{/if}{literal}';
+                                var cidev_filter_mode = 'load_more_products';
+                                var ga_page_name = '{/literal}{if $ga_page_name ne ""}{$ga_page_name}{/if}{literal}';
+                                var additional_params = '';
+        
+                                if (e_products_found == "Y"){
+                                        cidev_filter_mode = 'load_more_e_products';
+                                        additional_params = additional_params + '&e_search_data_substring=' + $("#textbox_e_search_data_substring").attr('data-value');
+                                }
+                                
+                                var cat = {/literal}{if $cat ne ""}{$cat}{else}{literal}''{/literal}{/if}{literal};
+
+/* --- if cached --- 
+                                if (cat == ''){
+                                  cat = $('#hidden_cat').val();
+                                }
+
+                                if (ga_page_name == ''){
+                                  ga_page_name = $('#hidden_ga_page_name').val();
+                                }
+ --- --- */
+
+                                var cidev_parameters = 'cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+'&ga_page_name='+ga_page_name+additional_params;
+
+//-Start-//
+                                var LN_total_items = $('#LN_total_items').attr('data-value');
+                                var load_next_productids = $('#load_next_productids').attr('data-value');
+                                load_next_productids = load_next_productids.trim();
+
+                                if (load_next_productids != ""){
+                                        cidev_parameters = cidev_parameters + '&load_next_productids='+load_next_productids+'&total_items='+LN_total_items;
+                                }
+//-End-//
+
+                                cidev_xmlHttp.onreadystatechange=function(){
+                                        if(cidev_xmlHttp.readyState==4){
+                                                if(cidev_xmlHttp.status==200){
+                                                        cidev_id$("show_next_products_block_"+ajax_navigation_page_next).innerHTML=cidev_xmlHttp.responseText;
+
+//-Start-//
+                                                        $('#load_next_productids').attr('data-value','');
+                                                        ajax_navigation_page_next++;
+                                                        var cidev_parameters_load_next = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+additional_params;
+                                                        func_load_more_next_productids(cidev_parameters_load_next, 'N');
+//-End-//
+
+                                                }else{
+                                                        cidev_Error('no_server', 'Y');
+                                                }
+                                        }
+                                };
+
+                                var tmp_rand = Math.random();
+
+//alert(tmp_rand);
+
+                                cidev_xmlHttp.open('POST','infinite_products.php?rand='+tmp_rand,true);
+                                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
+                                cidev_xmlHttp.setRequestHeader('Cache-Control','no-cache');
+                                cidev_xmlHttp.setRequestHeader('Cache-Control','no-store');
+                                cidev_xmlHttp.setRequestHeader('Connection','close');
+                                cidev_xmlHttp.send(cidev_parameters);
+                        }
+                        else {
+                                setTimeout('func_load_more_products()', 1000);
+                        }
+        }
+//-Start-//
+        function func_load_more_next_productids(cidev_parameters, first_on_load){
+
+                        if (first_on_load == "Y"){
+                                var current_storefront = '{/literal}{$current_storefront}{literal}';
+                                var e_products_found = '{/literal}{if $e_products_found eq "Y"}Y{/if}{literal}';
+                                var cidev_filter_mode = 'load_more_products';
+                                var additional_params = '';
+
+        
+                                if (e_products_found == "Y"){
+                                        cidev_filter_mode = 'load_more_e_products';
+
+                                        additional_params = additional_params + '&e_search_data_substring=' + $("#textbox_e_search_data_substring").attr('data-value');
+                                }
+                                
+                                var cat = {/literal}{if $cat ne ""}{$cat}{else}{literal}''{/literal}{/if}{literal};
+
+
+//alert(cat);
+
+/* --- if cached --- 
+                                if (cat == ''){
+                                  cat = $('#hidden_cat').val();
+                                }
+ --- --- */
+
+                                  cidev_parameters = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next=2&cat='+cat+additional_params;
+
+
+                        }
+
+                        cidev_xmlHttp=cidev_createHttpRequestObject();
+                        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
+
+                                cidev_xmlHttp.onreadystatechange=function(){
+                                        if(cidev_xmlHttp.readyState==4){
+                                                if(cidev_xmlHttp.status==200){
+
+//alert(cidev_xmlHttp.responseText);
+
+                                                        $('#load_next_productids').attr('data-value',cidev_xmlHttp.responseText);
+                                                }else{
+                                                        cidev_Error('no_server', 'Y');
+                                                }
+                                        }
+                                };
+
+                                var tmp_rand = Math.random();
+
+                                cidev_xmlHttp.open('POST','infinite_products.php?rand='+tmp_rand,true);
+                                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
+                                cidev_xmlHttp.setRequestHeader('Cache-Control','no-cache');
+                                cidev_xmlHttp.setRequestHeader('Cache-Control','no-store');
+                                cidev_xmlHttp.setRequestHeader('Connection','close');
+                                cidev_xmlHttp.send(cidev_parameters);
+                        }
+                        else {
+                                setTimeout('func_load_more_next_productids()', 1000);
+                        }
+        }
+//-End-//
+
+{/literal}
+//]]>
+</script>
+
+
+<div style="display: none;" id="load_next_productids" data-value="{include file="customer/main/infinite_products_load_next_productids.tpl"}"></div>
+<div style="display: none;" id="LN_total_items" data-value="{$total_items}"></div>
+<div style="display: none;" id="textbox_e_search_data_substring" data-value="{$e_search_data.substring}"></div>
+
+{*
+<div style="display: none;" id="hidden_cat" data-value="{$cat}"></div>
+<div style="display: none;" id="hidden_ga_page_name" data-value="{$ga_page_name}"></div>
+*}
+
+
+<script type="text/javascript">
+//<![CDATA[
+func_load_more_next_productids('','Y');
+//]]>
+</script>
+
+{/if}
+
+
+
+
+
       {foreach from=$products item=product}
 
 

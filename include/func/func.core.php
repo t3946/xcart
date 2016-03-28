@@ -3024,8 +3024,13 @@ function func_new_mail_notification($v_arr){
 //				$sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$productid'");
 //				$status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[otrs_options] WHERE storefrontid='$sfid'");
 				$status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[otrs_options]");
+				$tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$status_id'");
 
 				$statuses = func_query("SELECT cb_status, dc_status, bd_status FROM $sql_tbl[order_groups] WHERE orderid='$orderid'");
+
+				$log = "New OTRS message notification.<br />";
+
+				$tag_added_flag = false;
 
 				if (!empty($statuses)){
 					foreach ($statuses as $k => $v){
@@ -3036,7 +3041,7 @@ function func_new_mail_notification($v_arr){
 
 						if (
 (
-($cb_status=="P" || $cb_status=="O" || $cb_status=="H" || $cb_status=="R") && ($dc_status=="C" || $dc_status=="L" || $dc_status=="B" || $dc_status=="G" || $dc_status=="S" || $dc_status=="T")
+($cb_status=="P" || $cb_status=="O" || $cb_status=="H" || $cb_status=="R" || $cb_status=="N") && ($dc_status=="C" || $dc_status=="L" || $dc_status=="B" || $dc_status=="G" || $dc_status=="S" || $dc_status=="T" || $dc_status=="E")
 )
 ||
 (
@@ -3045,12 +3050,23 @@ $cb_status=="A" || $cb_status=="D"
 						) {
 							db_query("DELETE FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$status_id'");
 							db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '$status_id')");
+							$log .= "'".$tag_name."' attention tag set";
+							$tag_added_flag = true;
+
 							print("OK");
 							break;
 						}
 	
 					}
 				} // if (!empty($statuses))
+
+				if (!$tag_added_flag){
+					$log .= "'".$tag_name."' attention tag NOT SET based on business rules";
+				}
+
+				func_log_order($orderid, 'X', $log, 'OTRS');
+                print("OK");
+
 //			} // if (!empty($productid))
 		}
 	}
@@ -3326,16 +3342,44 @@ function AB_Goal_Hit($point_id_arr, $orderid=""){
 		return false;
 	}
 
+#
+## if !empty $orderid then it is order invoice page
+###    
 	if (!empty($orderid)){
-		$paymentid = func_query_first_cell("SELECT paymentid FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-		if ($paymentid == "4"){
-			return false;
-		}
+		$order_info = func_query_first("SELECT paymentid, is_mobile_checkout FROM $sql_tbl[orders] WHERE orderid='$orderid'");
+		$paymentid = $order_info["paymentid"];
+		$is_mobile_checkout = $order_info["is_mobile_checkout"];
+
+#		if ($paymentid == "4"){
+#			return false;
+#		}
 	}
+###
+##
+#
 
 	foreach ($point_id_arr as $point_id){
 		foreach ($pointid_ab_testing_arr as $k_point_id => $v){
 			if ($point_id == $k_point_id){
+
+#
+## if !empty $orderid then it is order invoice page
+###
+                                if (!empty($orderid)){
+
+					$ab_testing_point_info = func_query_first("SELECT exclude_payment_methods, exclude_mobile FROM $sql_tbl[ab_testing_points] WHERE point_id='$point_id'");
+
+					$exclude_payment_methods = explode(",", $ab_testing_point_info["exclude_payment_methods"]);
+					if (
+						in_array($paymentid, $exclude_payment_methods) ||
+						($ab_testing_point_info["exclude_mobile"] == "Y" && $is_mobile_checkout == "Y")
+					){
+						break;
+					}
+                                }
+###
+##
+#
 
 				if ($v["reach_goal_count_was_incremented"] != "Y"){
 					db_query("UPDATE $sql_tbl[ab_point_variants] SET reach_goal_count=reach_goal_count+1 WHERE point_id='$point_id' AND variant_id='$v[variant_id]'");

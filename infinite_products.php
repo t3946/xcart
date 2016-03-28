@@ -31,10 +31,24 @@ else {
 	require './auth.php';
 }
 
+
 if ($REQUEST_METHOD == 'POST')
  {
 	if (!empty($load_next_productids)){
 		x_load("product");
+
+
+#
+##
+###
+		if (strpos($load_next_productids, ":") !== false){
+			$tmp_load_next_productids_arr = explode(":", $load_next_productids);
+			$load_next_productids = $tmp_load_next_productids_arr[0];
+		}
+###
+##
+#
+
 
 		$productids_arr = explode("_", $load_next_productids);
 
@@ -94,6 +108,9 @@ if ($REQUEST_METHOD == 'POST')
                         $smarty->assign('first_item', $first_item);
                         $smarty->assign("last_item", $last_item);
                         $smarty->assign("total_items", $total_items);
+
+//                        $smarty->assign("cat", $cat);
+//                        $smarty->assign("ga_page_name", $ga_page_name);
 		}
 	}
 
@@ -111,8 +128,14 @@ if ($REQUEST_METHOD == 'POST')
 		$mode = "search";
 //		$ajax_load_more_products = "Y";
 
+
+////
+//$smarty->assign('POST_VARS', $_POST);
+////
+
+
 		if (empty($products) || $mode_load_next_productids == "Y"){
-			include $xcart_dir."/include/search.php";
+			include $xcart_dir."/include/search.php"; 
 
                         if ($mode_load_next_productids == "Y"){
 
@@ -124,7 +147,20 @@ if ($REQUEST_METHOD == 'POST')
                                         }
                                         $next_productids = implode("_", $next_productids_arr);
                                 }
+
+#
+##
+###
+				$ajax_load_time = $bench1 - func_microtime();
+				$next_productids .= ":".abs($ajax_load_time);
+###
+##
+#
+
                                 $smarty->assign('next_productids', $next_productids);
+
+
+//func_print_r($next_productids);
 
                 		$search_data["products"] = $remember_search_data_products;
 		                x_session_save("search_data");
@@ -136,6 +172,11 @@ if ($REQUEST_METHOD == 'POST')
 	
 		$search_data["products"] = $remember_search_data_products;
 		x_session_save("search_data");
+
+
+		$ajax_load_time = $bench1 - func_microtime();
+		$smarty->assign('ajax_load_time', abs($ajax_load_time));
+
 
 		$smarty->assign('ajax_navigation_page', $ajax_navigation_page);
 		$smarty->assign('ajax_search_data', $search_data["products"]);
@@ -181,6 +222,16 @@ if ($REQUEST_METHOD == 'POST')
                                         }
                                         $next_productids = implode("_", $next_productids_arr);
                                 }
+
+#
+##
+###
+                                $ajax_load_time = $bench1 - func_microtime();
+                                $next_productids .= ":".abs($ajax_load_time);
+###
+##
+#
+
                                 $smarty->assign('next_productids', $next_productids);
 
 		                $search_data["products"] = $remember_search_data_products;
@@ -193,6 +244,11 @@ if ($REQUEST_METHOD == 'POST')
 
                 $search_data["products"] = $remember_search_data_products;
                 x_session_save("search_data");
+
+
+		$ajax_load_time = $bench1 - func_microtime();
+                $smarty->assign('ajax_load_time', abs($ajax_load_time));
+
 
                 $smarty->assign('ajax_navigation_page', $ajax_navigation_page);
                 $smarty->assign('ajax_search_data', $search_data["products"]);
@@ -221,7 +277,7 @@ if ($REQUEST_METHOD == 'POST')
 //                $ajax_load_more_products = "Y";
 
 		if (empty($products) || $mode_load_next_productids == "Y"){
-	                include $xcart_dir."/include/search.php";
+	                // include $xcart_dir."/include/search.php"; // Do not enable it
 		
 	                $search_data["products"] = $remember_search_data_products;
         	        x_session_save("search_data");
@@ -239,6 +295,16 @@ if ($REQUEST_METHOD == 'POST')
 					}
 					$next_productids = implode("_", $next_productids_arr);
 				}
+
+#
+##
+###
+                                $ajax_load_time = $bench1 - func_microtime();
+                                $next_productids .= ":".abs($ajax_load_time);
+###
+##
+#
+
 				$smarty->assign('next_productids', $next_productids);
 
 				func_display('customer/main/infinite_products_load_next_productids.tpl', $smarty);
@@ -251,6 +317,11 @@ if ($REQUEST_METHOD == 'POST')
 
 			$smarty->assign("products", $products);
 		}
+
+
+		$ajax_load_time = $bench1 - func_microtime();
+                $smarty->assign('ajax_load_time', abs($ajax_load_time));
+
 
 		$smarty->assign('products_template', $products_template);
 		$smarty->assign('ajax_navigation_page', $ajax_navigation_page);

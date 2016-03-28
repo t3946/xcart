@@ -22,7 +22,16 @@ $Access_Token = func_paypal_get_access_token();
 
 if (!empty($Access_Token)){
 
-	$Authorization_Id = "3YD50788J0958592Y"; //TransID  # <-------------------- change it (!)
+	$Authorization_Id = "2T498658BE109284C"; //TransID  # <-------------------- change it (!)
+
+# Look up a payment
+#############################################################################################
+
+$transaction_type = "capture";
+
+$result = func_paypal_look_up_payment($Access_Token, $Authorization_Id, $transaction_type);
+#############################################################################################
+
 
 # Capture an authorization
 #############################################################################################
@@ -65,7 +74,7 @@ if (!empty($Access_Token)){
 */
 #############################################################################################
 
-
+/*
 # Create a payment
 #############################################################################################
 $data_json = '{
@@ -129,7 +138,7 @@ $data_json = '{
 
 	$result = func_paypal_create_payment($Access_Token, $data_json);
 #############################################################################################
-
+*/
 
 	func_print_r($result);
 

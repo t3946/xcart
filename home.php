@@ -47,6 +47,7 @@ x_load("category");
 ##
 ###
 x_session_register("e_search_data");
+x_session_register("e_search_data_orig_substring");
 ###
 ##
 #
@@ -159,6 +160,10 @@ if ($cidev_dispatched_request_arr[0] == "keyword" && !empty($cidev_dispatched_re
 }
 
 if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
+
+        $e_search_data_orig_substring = $e_posted_data["substring"];
+        x_session_save("e_search_data_orig_substring");
+
 	$e_search_data["orig_substring"] = $e_posted_data["substring"];
         $e_search_data["substring"] = htmlspecialchars_decode($e_posted_data["substring"]);
 	$e_search_data["substring"] = stripslashes($e_search_data["substring"]);
@@ -171,12 +176,17 @@ if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
 
 	x_session_save("e_search_data");
 
+        $redirect_substring = str_replace(array(' ','#'), '-', $e_search_data["substring"]);
+        func_header_location("/keyword/".$redirect_substring."/?mode_search=Y");
+
+/*
 	if (!empty($e_current_url) && !empty($cat)){
 		func_header_location($e_current_url);
 	} else {
 //		func_header_location("home.php");
 		func_header_location("/");
 	}
+*/
 }
 
 
@@ -213,7 +223,9 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 //                $e_search_data_previous_substring = $e_search_data["substring"];
 //                $smarty->assign("e_search_data_previous_substring", $e_search_data_previous_substring);
 
-		$e_search_data = "";
+		if (empty($mode_search)) {
+			$e_search_data = "";
+		}
         }
 
 //        $e_search_data["current_categoryid"] = $cat;
@@ -475,6 +487,7 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 ##
 #
 
+$smarty->assign("e_search_data_orig_substring", $e_search_data_orig_substring);
 
 #
 # Assign Smarty variables and show template

@@ -343,6 +343,17 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 //				"shipping_rates_last_update_date" => trim($shipping_rates_last_update_date),
 				"USE_MY_UPS_FEDEX_ACCOUNT_functionality" => trim($USE_MY_UPS_FEDEX_ACCOUNT_functionality),
 				"USE_MY_TRUCKING_ACCOUNT_functionality" => trim($USE_MY_TRUCKING_ACCOUNT_functionality),
+
+				"dcad_bank_name" => trim($dcad_bank_name),
+				"dcad_address" => trim($dcad_address),
+				"dcad_address_2" => trim($dcad_address_2),
+				"dcad_city" => trim($dcad_city),
+				"dcad_country" => trim($dcad_country),
+				"dcad_state" => trim($dcad_state),
+				"dcad_zipcode" => trim($dcad_zipcode),
+				"dcad_company_name" => trim($dcad_company_name),
+				"dcad_routing_number" => trim($dcad_routing_number),
+				"dcad_account_number" => trim($dcad_account_number),
 ###
 ##
 #

@@ -35,7 +35,7 @@ function show_settings() {
 <table cellpadding="1" cellspacing="5" width="100%">
 
 <tr id="osn_status">
-  <td>{$lng.lbl_when_order_status_changes_to}</td>
+  <td><B>{$lng.lbl_when_order_status_changes_to}</B></td>
   <td width="70%">
     <select name="status" onchange="javascript: show_settings();">
     {foreach from=$statuses item=group key=type}

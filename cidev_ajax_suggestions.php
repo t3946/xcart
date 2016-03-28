@@ -11,6 +11,8 @@ define('x_session_save_to_db__do_not_use', 'Y');
 
 require "./top.inc.php";
 require "./init.php"; #uses xid.X
+
+$current_area="C";
 ###
 ##
 #

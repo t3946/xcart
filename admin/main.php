@@ -69,22 +69,66 @@ foreach($start_dates as $start_date) {
     $orders['Q'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE cb_status='Q' $date_condition");
     $gross_total[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders] WHERE 1 $date_condition"));
 
+/*
     $authorized_total[] = price_format(func_query_first_cell("
 SELECT SUM($sql_tbl[transaction_logs].transaction_total) FROM $sql_tbl[transaction_logs] WHERE $sql_tbl[transaction_logs].date>='$start_date' AND $sql_tbl[transaction_logs].date<='$curtime' AND transaction_status IN ('AP', 'authorized', 'Pending')
     "));
+*/
 
+    $ref_total_gross = func_query_first_cell("SELECT SUM($sql_tbl[refund_groups].total_gross) FROM $sql_tbl[refund_groups] LEFT JOIN $sql_tbl[orders] ON $sql_tbl[orders].orderid=$sql_tbl[refund_groups].orderid WHERE 1=1 $date_condition");
+
+    if ($ref_total_gross == ""){
+	$ref_total_gross = 0;
+    }
+
+/*
+    $authorized_total[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
+        . " WHERE cb_status='AP' $date_condition") - $ref_total_gross);
+*/
+    $authorized_total_value = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
+        . " WHERE cb_status='AP' $date_condition") - $ref_total_gross);
+
+    $authorized_total[] = $authorized_total_value;
+
+
+/*
     $refund_rate[] = price_format(func_query_first_cell("
 Select 
-        SUM(RG.total_net)/SUM(OG.total_net)
+        (SUM(RG.total_net)/SUM(OG.total_net))*100
         
 From xcart_order_groups OG
         inner join xcart_orders O ON O.orderid = OG.orderid and O.date>='$start_date' AND O.date<='$curtime'
         left join xcart_refund_groups RG ON RG.orderid = O.orderid
 where OG.cb_status IN ('H','V','3','R','P','AP')
     "));
+*/
 
+    $refund_rate_and_total_net = func_query_first("
+Select 
+        SUM(RG.total_net) as RG_total, (SUM(RG.total_net)/SUM(OG.total_net))*100 as refund_rate
+        
+From xcart_order_groups OG
+        inner join xcart_orders O ON O.orderid = OG.orderid and O.date>='$start_date' AND O.date<='$curtime'
+        left join xcart_refund_groups RG ON RG.orderid = O.orderid
+where OG.cb_status IN ('H','V','3','R','P','AP')
+    ");
+
+    $refund_rate[] = price_format($refund_rate_and_total_net["refund_rate"]);
+
+    $total_refunded[] = price_format($refund_rate_and_total_net["RG_total"]);
+
+//func_print_r($refund_rate_and_total_net);
+
+/*
     $total_paid[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
-        . " WHERE (cb_status='P' OR dc_status='C') $date_condition"));
+        . " WHERE (cb_status='P' OR dc_status='C') $date_condition") - $ref_total_gross);
+*/
+    $total_paid_value = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
+        . " WHERE (cb_status='P' OR dc_status='C') $date_condition") - $ref_total_gross);
+
+    $total_paid[] = $total_paid_value;
+
+    $total_authorized_and_paid[] = $authorized_total_value + $total_paid_value;
 
 	# Get top N products
 	if (!empty($active_modules['Multiple_Storefronts'])) {
@@ -181,6 +225,8 @@ $smarty->assign("orders", $orders);
 $smarty->assign("gross_total", $gross_total);
 $smarty->assign("authorized_total", $authorized_total);
 $smarty->assign("refund_rate", $refund_rate);
+$smarty->assign("total_refunded", $total_refunded);
+$smarty->assign("total_authorized_and_paid", $total_authorized_and_paid);
 $smarty->assign("total_paid", $total_paid);
 
 $smarty->assign("max_top_sellers", $max_top_sellers);

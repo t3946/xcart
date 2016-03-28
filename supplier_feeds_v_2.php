@@ -628,7 +628,8 @@ die();
 
 
 ###
-				if (!empty($product["fulldescr"])){
+//				if (!empty($product["fulldescr"]))
+				if (!empty($product["fulldescr"]) && $v["native_full_description"] != "Y"){
                     print("fulldescr section\n");
 					$tmp_fulldescr = $product["fulldescr"];
 
