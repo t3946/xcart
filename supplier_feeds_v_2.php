@@ -8,38 +8,55 @@ require "./init.php";
 set_time_limit(0);
 ini_set('memory_limit', '512M');
 
-if ($config["supplier_feeds_v_2"] == "Y"){
+
+$feed_types = array("I"=>"inventory", "P"=>"product");
+$log_category = "supplier_feeds_v_2";
+
+if (isset($argv) && is_array($argv)) {
+	$feed_types = array();
+	switch ($argv[1]) {
+		case "I": $feed_types = array("I"=>"inventory");
+				  $log_category = "supplier_feeds_inventory";
+			break;
+		case "P": $feed_types = array("P"=>"product");
+				  $log_category = "supplier_feeds_product";
+			break;
+		default: $feed_types = array("I"=>"inventory", "P"=>"product");
+	}
+}
+
+if ($config[$log_category] == "Y"){
         die("Already launched"); // ################################
 }
-db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='supplier_feeds_v_2'");
+db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='$log_category'");
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
 
 $started_at = time();
 $log_text = " * * *  Cron started  * * * ";
-func_backprocess_log("supplier_feeds_v_2", $log_text);
+func_backprocess_log($log_category, $log_text);
 
 x_load('cart','mail','order','product','taxes', 'files', 'backoffice', "image", "gd", "xml", "category");
 ######################################################################################
 
 if (empty($config["Supplier_feeds"]["Feeds_storage_path"]) || empty($config["Supplier_feeds"]["Feeds_storage_login"]) || empty($config["Supplier_feeds"]["Feeds_storage_password"])){
         $log_text = "--- login credentials incorrect. Script stopped.";
-        func_backprocess_log("supplier_feeds_v_2", $log_text);
+        func_backprocess_log($log_category, $log_text);
         func_backprocess_log("supplier feeds errors", $log_text);
-	db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
+	db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
 	die($log_text);
 }
 
-$supplier_feeds = func_query("SELECT * FROM $sql_tbl[supplier_feeds] WHERE enabled='Y'");
+$feed_type_imploded = implode("', '", array_keys($feed_types));
+
+$supplier_feeds = func_query("SELECT * FROM $sql_tbl[supplier_feeds] WHERE enabled='Y' AND feed_type IN ('$feed_type_imploded')");
 
 if (empty($supplier_feeds) || !is_array($supplier_feeds)){
         $log_text = "--- xcart_supplier_feeds does not have 'enabled' rows. Script stopped.";
-        func_backprocess_log("supplier_feeds_v_2", $log_text);
+        func_backprocess_log($log_category, $log_text);
         func_backprocess_log("supplier feeds errors", $log_text);
-        db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
+        db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
 	die($log_text);
 }
-
-$feed_types = array("I"=>"inventory", "P"=>"product");
 
 $product_cols = func_query_column("SHOW COLUMNS FROM ".$sql_tbl['products']);
 
@@ -54,7 +71,9 @@ $product_cols_replace = array(
 $manufacturerid_info = func_query_hash("SELECT code, manufacturerid, manufacturer FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
 
 foreach ($supplier_feeds as $k => $v){
-
+	
+	func_backprocess_log($log_category, $v["feed_id"]." - ".$v["feed_type"]." - ".$v["feed_name"]);
+	
 	$start_supplier_time = time();
 
 //	$last_update_time = time();
@@ -109,7 +128,7 @@ foreach ($supplier_feeds as $k => $v){
 #
 
         	$log_text = "manufacturerid: ".$v["manufacturerid"].". md5 file is not found. Skipped.";
-	        func_backprocess_log("supplier_feeds_v_2", $log_text);
+	        func_backprocess_log($log_category, $log_text);
                 func_backprocess_log("supplier feeds errors", $log_text);
                 continue;
 
@@ -173,7 +192,7 @@ foreach ($supplier_feeds as $k => $v){
 
 			if (empty($products["products"]) || !is_array($products["products"])){
 	                        $log_text = "manufacturerid: ".$v["manufacturerid"].". No products found. (".$feed_types[$v["feed_type"]].")";
-        	                func_backprocess_log("supplier_feeds_v_2", $log_text);
+        	                func_backprocess_log($log_category, $log_text);
         	                func_backprocess_log("supplier feeds errors", $log_text);
 				continue;
 			}
@@ -181,16 +200,16 @@ foreach ($supplier_feeds as $k => $v){
 			$count_products_in_json = count($products["products"]);
 			if ($count_products_in_json != $products["products_in_feed"]){
 	                        $log_text = "manufacturerid: ".$v["manufacturerid"].". Corrupted feed file (by products in feed count). (".$feed_types[$v["feed_type"]].")".$count_products_in_json." vs ".$products["products_in_feed"];
-			        func_backprocess_log("supplier_feeds_v_2", $log_text);
+			        func_backprocess_log($log_category, $log_text);
 			        func_backprocess_log("supplier feeds errors", $log_text);
-			        db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
+			        db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
 			        continue;
 //			        die($log_text);
 			}
 
                         if ($products["supplier_id"] != $v["manufacturerid"]){
                                 $log_text = "manufacturerid: ".$v["manufacturerid"].". Wrong supplier_id. (".$feed_types[$v["feed_type"]].") . Feed skipped.";
-                                func_backprocess_log("supplier_feeds_v_2", $log_text);
+                                func_backprocess_log($log_category, $log_text);
                                 func_backprocess_log("supplier feeds errors", $log_text);
                                 continue;
                         }
@@ -198,7 +217,7 @@ foreach ($supplier_feeds as $k => $v){
 			if ($v["last_update_items_count"] > 0){
 				if (($products["products_in_feed"] / $v["last_update_items_count"]) < $v["threshold"]){
         	                        $log_text = "manufacturerid: ".$v["manufacturerid"].". Too few products in feed in comparison with last update $v[products_in_feed] against $v[last_update_items_count]. (".$feed_types[$v["feed_type"]].")";
-                	                func_backprocess_log("supplier_feeds_v_2", $log_text);
+                	                func_backprocess_log($log_category, $log_text);
                 	                continue;
 				}
 			}
@@ -214,7 +233,7 @@ foreach ($supplier_feeds as $k => $v){
 			}
 
                         $log_text = "manufacturerid: ".$v["manufacturerid"].". Started. (".$feed_types[$v["feed_type"]].")";
-                        func_backprocess_log("supplier_feeds_v_2", $log_text);
+                        func_backprocess_log($log_category, $log_text);
 
 
                         if (!empty($products["dont_update_fields"]) && is_array($products["dont_update_fields"])){
@@ -1029,15 +1048,15 @@ die();
 /* --------------------------------------------------------------------------------------------------- */
 		} else {
 	                $log_text = "manufacturerid: ".$v["manufacturerid"].". File is not found. Skipped.";
-        	        func_backprocess_log("supplier_feeds_v_2", $log_text);
+        	        func_backprocess_log($log_category, $log_text);
         	        func_backprocess_log("supplier feeds errors", $log_text);
 			continue;
 		}
 	} else {
 		$log_text = "manufacturerid: ".$v["manufacturerid"].". Could not open host. Script stopped.";
-		func_backprocess_log("supplier_feeds_v_2", $log_text);
+		func_backprocess_log($log_category, $log_text);
 		func_backprocess_log("supplier feeds errors", $log_text);
-		db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
+		db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
 		die($log_text);
 	}
 
@@ -1103,7 +1122,7 @@ func_print_r($supplier_feed);
 	}
 	$log_text .= "discontinued: ".$discontinued_products_count."\n";
 	$log_text .= "Duration: ".$age_str."\n";
-        func_backprocess_log("supplier_feeds_v_2", $log_text);
+        func_backprocess_log($log_category, $log_text);
 }
 
 ######################################################################################
@@ -1120,9 +1139,9 @@ $mins = $interval->format("%i");
 $age_str = ($years != 0 ? $years." years, ":"").($months != 0 ? $months." months, ":"").($days != 0 ? $days." days, ":""). sprintf('%1$02d', $hours).":". sprintf('%1$02d', $mins). " hours";
 ###
 
-db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
+db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
 $log_text = "Cron completed. Duration: ".$age_str;
-func_backprocess_log("supplier_feeds_v_2", $log_text);
+func_backprocess_log($log_category, $log_text);
 
 die("DONE!");
 ?>
