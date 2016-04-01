@@ -586,15 +586,6 @@ else {
 					restore_queue( $gproducts, 1 );
 			}
 
-			if ($amazon_inventory_batch_count >= 1)
-			{
-				SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray);
-			}
-			if ($amazon_products_batch_count >= 1)
-			{
-				SubmitAmazonProductsBatch();
-			}
-
 			print ("processed: ".$cnt." items !!>\n");
 
 			if ($cnt > 0) 
@@ -605,6 +596,15 @@ else {
 				func_backprocess_log("incremental feeds", $log_text);
 			}
 	}
+
+	if ($amazon_inventory_batch_count >= 1)
+			{
+				SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray);
+			}
+	if ($amazon_products_batch_count >= 1)
+			{
+				SubmitAmazonProductsBatch();
+			}
 //        print ("Why we dont delete utype 3 ?");
 ###
 	db_query("DELETE FROM xcart_cidev_updated_products WHERE type='3' AND time_stamp <= '$started_at'");
