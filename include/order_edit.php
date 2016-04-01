@@ -2936,11 +2936,6 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
 		if (!empty($v["shippingid"])){
 			$real_drop_ship_fee = func_query_first_cell("SELECT real_drop_ship_fee FROM $sql_tbl[shipping_rates] WHERE shippingid='$v[shippingid]' AND manufacturerid='$k' AND mintotal <= '".$order["shipping_groups"][$k]["product_total"]["net"]."' AND maxtotal >= '".$order["shipping_groups"][$k]["product_total"]["net"]."'");
 			$order["shipping_groups"][$k]["real_drop_ship_fee"] = $real_drop_ship_fee;
-
-
-			$shipping_code = func_query_first_cell("SELECT code FROM $sql_tbl[shipping] WHERE shippingid='$v[shippingid]'");
-			$order["shipping_groups"][$k]["shipping_code"] = $shipping_code;
-
 		}
 ##
 #

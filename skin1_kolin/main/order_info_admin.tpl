@@ -707,7 +707,7 @@ Cost to us accurate
 </tr>
 {/foreach}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
-  <td nowrap="nowrap">{if $v.shipping_code ne ""}{$v.shipping_code}{else}Flat rate{/if}: {if !$static}<input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}" {* style="width: 80%;" *} {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}</td>
+  <td>{if !$static}<input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}" style="width: 99%;" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}</td>
   <td colspan="6">
     {if $v.tracking}
 
