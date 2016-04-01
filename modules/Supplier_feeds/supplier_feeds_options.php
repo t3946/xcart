@@ -30,7 +30,7 @@ if ($REQUEST_METHOD == 'POST'){
     func_header_location("configuration.php?option=Supplier_feeds");
 }
 
-$Supplier_feeds = func_query("SELECT * FROM $sql_tbl[supplier_feeds]");
+$Supplier_feeds = func_query("SELECT * FROM $sql_tbl[supplier_feeds] ORDER BY feed_id ASC");
 
 if (!empty($Supplier_feeds)){
 	foreach ($Supplier_feeds as $k => $v){
