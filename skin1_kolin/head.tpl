@@ -27,7 +27,7 @@ $(function(){
 
 <table border="0" cellpadding="0" cellspacing="0" width="984" align="center" class="header_line1">
  <tr>
-  <td width="60%" style="padding-left: 20px;">
+  <td width="58%" style="padding-left: 20px;">
 {if $top_pages_menu ne "" && !(($smarty.get.mode eq "checkout") || ($smarty.get.mode eq "update" && $smarty.get.action eq "cart")) }
   {section name=top_page loop=$top_pages_menu}
     {if $top_pages_menu[top_page].image.filename ne ""}
@@ -63,8 +63,9 @@ $(function(){
  </tr>
 </table>
 
-<CENTER>
-<TABLE border="0" cellpadding="0" cellspacing="0" {if $main eq "fast_lane_checkout"}class="header_line_flc2"{else}class="header_line2"{/if}>
+
+
+<TABLE border="0" cellpadding="0" cellspacing="0" {if $main eq "fast_lane_checkout"}class="header_line_flc2"{else}class="header_line2"{/if} align="center">
 
 <TR>
 <TD {* height="130" *} valign="bottom">
@@ -72,7 +73,7 @@ $(function(){
         <tr>
 
         <td width="250" {* style="background: url({$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S) no-repeat;" *} valign="middle">
-        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne ""}<a href="/">{/if}<img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="Home page" >{if !($main eq "catalog" && $current_category.category eq "")}</a>{/if}
+        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $smarty.get.mode_search eq "Y"}<a href="/">{/if}<img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="Home page" >{if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $smarty.get.mode_search eq "Y"}</a>{/if}
         </td>
 
 {if $main eq "fast_lane_checkout" || $main eq "order_message"}
@@ -116,20 +117,21 @@ $(function(){
 {/if}
 
 </TABLE>
-</CENTER>
 
 
 <table border="0" cellpadding="0" cellspacing="0" align="center" class="header_line3">
  <tr>
-  <td>
+  <td align="center">
 {if $main ne "fast_lane_checkout"}
-   <table border="0" cellpadding="0" cellspacing="0" align="center">
+<table border="0" cellpadding="0" cellspacing="0" align="center"><tr><td>
+   <table border="0" cellpadding="0" cellspacing="0" align="center" class="header_line31">
     <tr>
 	<td><span class="product_search">Product search</span></td>
 	<td><img src="{$ImagesDir}/new/home/arrow.png" alt="" /></td>
 	<td width="620">{include file="customer/search.tpl"}</td>
     </tr>
    </table>
+</td></tr></table>
 {/if}
   </td>
  </tr>
