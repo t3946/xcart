@@ -85,7 +85,7 @@ function func_shipper ($weight, $userinfo, $debug="N", $cart=false) {
 #
 ##
 ###
-	$need_amazon_shipping_flag = func_need_amazon_shipping_flag($cart);
+	$need_amazon_shipping_flag = func_need_amazon_shipping_flag($cart, $userinfo);
 ###
 ##
 #
