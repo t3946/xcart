@@ -73,7 +73,7 @@ $(function(){
         <tr>
 
         <td width="250" {* style="background: url({$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S) no-repeat;" *} valign="middle">
-        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne ""}<a href="/">{/if}<img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="Home page" >{if !($main eq "catalog" && $current_category.category eq "")}</a>{/if}
+        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $smarty.get.mode_search eq "Y"}<a href="/">{/if}<img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="Home page" >{if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $smarty.get.mode_search eq "Y"}</a>{/if}
         </td>
 
 {if $main eq "fast_lane_checkout" || $main eq "order_message"}
@@ -124,7 +124,7 @@ $(function(){
   <td align="center">
 {if $main ne "fast_lane_checkout"}
 <table border="0" cellpadding="0" cellspacing="0" align="center"><tr><td>
-   <table border="0" cellpadding="0" cellspacing="0" align="center" class="header_line311">
+   <table border="0" cellpadding="0" cellspacing="0" align="center" class="header_line31">
     <tr>
 	<td><span class="product_search">Product search</span></td>
 	<td><img src="{$ImagesDir}/new/home/arrow.png" alt="" /></td>
