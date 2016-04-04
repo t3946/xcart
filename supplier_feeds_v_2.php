@@ -72,8 +72,6 @@ $manufacturerid_info = func_query_hash("SELECT code, manufacturerid, manufacture
 
 foreach ($supplier_feeds as $k => $v){
 	
-	func_backprocess_log($log_category, $v["feed_id"]." - ".$v["feed_type"]." - ".$v["feed_name"]);
-	
 	$start_supplier_time = time();
 
 //	$last_update_time = time();
