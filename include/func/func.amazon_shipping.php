@@ -60,9 +60,9 @@ Group By P.productid";
 	return $all_FBA_products_flag;
 }
 
-function func_need_amazon_shipping_flag($cart){
+function func_need_amazon_shipping_flag($cart, $userinfo){
 
-	global $smarty;
+	global $smarty, $sql_tbl;
 
 	$need_amazon_shipping = false;
 
@@ -70,10 +70,21 @@ function func_need_amazon_shipping_flag($cart){
 
 	if ($count_shipping_groups == "1"){
 
-		$all_FBA_products_flag = func_amazon_all_FBA_products_flag($cart);
+		$manufacturerid = $cart["products"][0]["manufacturerid"];
 
-		if ($all_FBA_products_flag){
-			$need_amazon_shipping = true;
+		$customer_zone = func_get_customer_zone_ship($userinfo, "master", "R", $manufacturerid);
+
+		$count_rates = func_query_first_cell("SELECT COUNT($sql_tbl[shipping_rates].rateid) FROM $sql_tbl[shipping_rates] LEFT JOIN $sql_tbl[shipping] ON $sql_tbl[shipping].shippingid = $sql_tbl[shipping_rates].shippingid WHERE $sql_tbl[shipping].code='Amazon' AND $sql_tbl[shipping].active='Y' AND $sql_tbl[shipping_rates].manufacturerid='$manufacturerid' AND zoneid='$customer_zone'");
+
+//func_print_r("count_rates:  ".$count_rates);
+//die();
+
+		if ($count_rates >= 1){
+			$all_FBA_products_flag = func_amazon_all_FBA_products_flag($cart);
+
+			if ($all_FBA_products_flag){
+				$need_amazon_shipping = true;
+			}
 		}
 	}
 
