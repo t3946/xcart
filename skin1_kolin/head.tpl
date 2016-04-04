@@ -27,7 +27,7 @@ $(function(){
 
 <table border="0" cellpadding="0" cellspacing="0" width="984" align="center" class="header_line1">
  <tr>
-  <td width="60%" style="padding-left: 20px;">
+  <td width="58%" style="padding-left: 20px;">
 {if $top_pages_menu ne "" && !(($smarty.get.mode eq "checkout") || ($smarty.get.mode eq "update" && $smarty.get.action eq "cart")) }
   {section name=top_page loop=$top_pages_menu}
     {if $top_pages_menu[top_page].image.filename ne ""}
@@ -63,8 +63,9 @@ $(function(){
  </tr>
 </table>
 
-<CENTER>
-<TABLE border="0" cellpadding="0" cellspacing="0" {if $main eq "fast_lane_checkout"}class="header_line_flc2"{else}class="header_line2"{/if}>
+
+
+<TABLE border="0" cellpadding="0" cellspacing="0" {if $main eq "fast_lane_checkout"}class="header_line_flc2"{else}class="header_line2"{/if} align="center">
 
 <TR>
 <TD {* height="130" *} valign="bottom">
@@ -116,20 +117,21 @@ $(function(){
 {/if}
 
 </TABLE>
-</CENTER>
 
 
 <table border="0" cellpadding="0" cellspacing="0" align="center" class="header_line3">
  <tr>
-  <td>
+  <td align="center">
 {if $main ne "fast_lane_checkout"}
-   <table border="0" cellpadding="0" cellspacing="0" align="center">
+<table border="0" cellpadding="0" cellspacing="0" align="center"><tr><td>
+   <table border="0" cellpadding="0" cellspacing="0" align="center" class="header_line311">
     <tr>
 	<td><span class="product_search">Product search</span></td>
 	<td><img src="{$ImagesDir}/new/home/arrow.png" alt="" /></td>
 	<td width="620">{include file="customer/search.tpl"}</td>
     </tr>
    </table>
+</td></tr></table>
 {/if}
   </td>
  </tr>

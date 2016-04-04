@@ -4035,6 +4035,10 @@ a.jcarousel-control-next:hover {
         font-weight: bold;
 }
 .header_line2 {
+	position: relative;
+	top: -4px;
+	z-index: -1;
+
         height: 93px;
         width: 960px;
         BACKGROUND: url(images/new/home/banner.png) no-repeat right;
@@ -4042,12 +4046,22 @@ a.jcarousel-control-next:hover {
 .header_line_flc2 {
         height: 93px;
         width: 960px;
+
+        position: relative;
+        top: -4px;
+        z-index: -1;
 }
 .header_line3 {
+        position: relative;
+        top: -4px;
+
         height: 40px;
 /*        width: 1241px; */
 	width: 100%;
         BACKGROUND: url(images/new/home/rectangle.png);
+}
+.header_line31 {
+	margin-left: 63px;
 }
 .product_search {
 	font-family: Verdana;
@@ -4095,16 +4109,17 @@ a.jcarousel-control-next:hover {
         color: #0045d1;
 	text-align: right;
 	width: 58px;
+	padding-top: 4px;
 }
 .discount_class2 {
-        BORDER: #0045d1 1px solid;
+        BORDER: #86d7ff 1px solid;
 }
 
 .discount_class3 {
 	BACKGROUND: url(images/new/product/tag.png) no-repeat;
 
 	position: relative;
-	top: -14px;
+	top: -2px;
 	right: -25px;
 
 	width: 196px;
