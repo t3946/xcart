@@ -124,7 +124,7 @@ $(function(){
   <td align="center">
 {if $main ne "fast_lane_checkout"}
 <table border="0" cellpadding="0" cellspacing="0" align="center"><tr><td>
-   <table border="0" cellpadding="0" cellspacing="0" align="center" class="header_line311">
+   <table border="0" cellpadding="0" cellspacing="0" align="center" class="header_line31">
     <tr>
 	<td><span class="product_search">Product search</span></td>
 	<td><img src="{$ImagesDir}/new/home/arrow.png" alt="" /></td>
