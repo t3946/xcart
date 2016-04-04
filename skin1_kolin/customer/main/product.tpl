@@ -89,6 +89,7 @@
 <td nowrap="nowrap" class="BlackT" valign="top">{$lng.lbl_list_price}:</td>
 <td><font style="font-size: 12px; color: #7b7b7b;"><strike>{include file="currency.tpl" value=$product.list_price plain_text_message=true price_type="list_price"}</strike></font></td>
 </tr>
+<tr><td colspan="2" height="5"></td></tr>
 {/if}
 
 {if $active_modules.Feature_Comparison ne ""}
@@ -98,7 +99,7 @@
 {include file="modules/Subscriptions/subscription_info.tpl"}
 {else}
 <tr>
-<td width="93" class="ProductPriceConverting" valign="middle">{$lng.lbl_price}:</td>
+<td width="93" class="BlackT" valign="middle">{$lng.lbl_price}:</td>
 <td width="*" valign="middle">
 {if $current_price ne 0 || $variant_price_no_empty}
 
@@ -163,7 +164,7 @@
 </tr>
 {/if}
 
-<tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}"><td height="25" class="BlackT_new">{$lng.lbl_quantity}:</td>
+<tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}"><td height="25" class="BlackT">{$lng.lbl_quantity}:</td>
 <td style="text-align:left;font-size: 16px;" width="*">
 {if $config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount) and $variants eq ''}
 <script type="text/javascript" language="JavaScript 1.2">
