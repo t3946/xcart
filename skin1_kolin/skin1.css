@@ -2,6 +2,12 @@
 /*
 	General styles
 */
+
+   @font-face {
+    font-family: Verdana; 
+    src: url(verdana.ttf);
+   }
+
 BODY,DIV,TH,TD,P,INPUT,SELECT,TEXTAREA,TT {
 	FONT-FAMILY: Verdana, Arial, Helvetica, Sans-serif;
 	COLOR: #000000;
@@ -4112,7 +4118,7 @@ a.jcarousel-control-next:hover {
 /* 	width: 100px; */
 }
 .discount_class1 {
-        font-family: Verdana Regular;
+        font-family: Verdana;
         font-size: 12px;
         color: #0045d1;
 	text-align: right;
@@ -4144,7 +4150,7 @@ a.jcarousel-control-next:hover {
         height: 20px;
 }
 .discount_class5 {
-        font-family: Verdana Regular;
+        font-family: Verdana;
         font-size: 21px;
         color: #ffffff;
         text-align: right;
