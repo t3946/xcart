@@ -127,7 +127,7 @@ $request =<<<EOT
 	<Request>
 		<TransactionReference>
 			<CustomerContext>Address validation request</CustomerContext>
-			<XpciVersion>1.0001</XpciVersion>
+			<XpciVersion>1.0</XpciVersion>
 		</TransactionReference>
 		<RequestAction>AV</RequestAction>
 	</Request>
