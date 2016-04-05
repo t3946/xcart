@@ -317,7 +317,7 @@ EOT;
 	<Request>
 		<TransactionReference>
 			<CustomerContext>Rating and Service</CustomerContext>
-			<XpciVersion>1.0001</XpciVersion>
+			<XpciVersion>1.0</XpciVersion>
 		</TransactionReference>
 		<RequestAction>Rate</RequestAction>
 		<RequestOption>shop</RequestOption>
