@@ -1526,7 +1526,8 @@ TD.SurveyAnswerMarkMenu {
 	PADDING: 0px;
 }
 .Green2 {color: #006600; font-weight: bold; font-size: 12px;}
-.BlackT {color: #000000; font-size: 12px; font-family: Verdana Regular; }
+/* .BlackT {color: #000000; font-size: 12px; font-family: Verdana Regular; } */
+.BlackT {color: #000000; font-size: 12px; font-family: Verdana; }
 .BlackT_new {color: #000000; font-size: 16px;}
 
 .Button2On {                                                                                                                                                            
@@ -4034,22 +4035,29 @@ a.jcarousel-control-next:hover {
         font-size: 20px;
         font-weight: bold;
 }
+.header_line2_table {
+	BACKGROUND: url(images/new/home/banner.png) no-repeat bottom right;
+}
 .header_line2 {
+/*
 	position: relative;
 	top: -4px;
 	z-index: -1;
+        BACKGROUND: url(images/new/home/banner.png) no-repeat right; 
+*/
 
-        height: 93px;
+        height: 89px;
         width: 960px;
-        BACKGROUND: url(images/new/home/banner.png) no-repeat right;
 }
 .header_line_flc2 {
-        height: 93px;
+        height: 89px;
         width: 960px;
 
+/*
         position: relative;
         top: -4px;
         z-index: -1;
+*/
 }
 .header_line3 {
         position: relative;
@@ -4119,7 +4127,7 @@ a.jcarousel-control-next:hover {
 	BACKGROUND: url(images/new/product/tag.png) no-repeat;
 
 	position: relative;
-	top: -2px;
+	top: -4px;
 	right: -25px;
 
 	width: 196px;
@@ -4140,6 +4148,7 @@ a.jcarousel-control-next:hover {
         font-size: 21px;
         color: #ffffff;
         text-align: right;
+	padding-top: 2px;
 }
 .discount_class6 {
         font-family: Verdana;
