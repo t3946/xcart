@@ -65,3 +65,4 @@ Thumbs.db
 /shipping/*.txt
 /product_files/
 /files/
+/.idea/**

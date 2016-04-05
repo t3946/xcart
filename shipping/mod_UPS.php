@@ -1,4 +1,4 @@
-<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (Изменения для модуля UPS + Изменения в способ ввода Tracking numbers для заказов)] */ ?>
+<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ UPS + О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ Tracking numbers О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫)] */ ?>
 <?php /* MODIFIED: random:17710_17631 [2009 Mar 26 09:25][Custom development ("Shipping quote" functionality and other modifications) + Other] */ ?>
 <?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
@@ -394,7 +394,7 @@ EOT;
 			x_log_add('ups_stats', 'Bad');
 		}
 
-		list ($a,$result) = func_https_request("POST","https://153.2.228.50:443/ups.app/xml/Rate",$post,"","","text/xml");
+		list ($a,$result) = func_https_request("POST","https://153.2.224.76:443/ups.app/xml/Rate",$post,"","","text/xml");
 
 	} else {
 		if (function_exists('x_log_add')) {

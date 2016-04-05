@@ -153,7 +153,7 @@ if ($REQUEST_METHOD == "POST") {
 	<Request>
 		<TransactionReference>
 			<CustomerContext>License Test</CustomerContext>
-			<XpciVersion>1.0001</XpciVersion>
+			<XpciVersion>1.0</XpciVersion>
 		</TransactionReference>
 		<RequestAction>AccessLicense</RequestAction>
 		<RequestOption></RequestOption>
@@ -234,7 +234,7 @@ EOT;
 	<Request>
 		<TransactionReference>
 			<CustomerContext>License Test</CustomerContext>
-			<XpciVersion>1.0001</XpciVersion>
+			<XpciVersion>1.0</XpciVersion>
 		</TransactionReference>
 		<RequestAction>AccessLicense</RequestAction>
 		<RequestOption>AllTools</RequestOption>
@@ -311,7 +311,7 @@ EOT;
 	<Request>
 		<TransactionReference>
 			<CustomerContext>x893</CustomerContext>
-			<XpciVersion>1.0001</XpciVersion>
+			<XpciVersion>1.0</XpciVersion>
 		</TransactionReference>
 		<RequestAction>Register</RequestAction>
 		<RequestOption>$suggest</RequestOption>
