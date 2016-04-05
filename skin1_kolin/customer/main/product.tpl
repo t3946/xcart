@@ -380,7 +380,7 @@ var product_avail = 1;
                 <td class="discount_class5">SAVE</td>
                 <td width="10">&nbsp;</td>
                 <td class="discount_class6" id="save_percent2"></td>
-                <td width="5">&nbsp;</td>
+{*                <td width="5">&nbsp;</td> *}
                 <td class="discount_class7" valign="bottom">%</td>
                 </tr>
                 </table>

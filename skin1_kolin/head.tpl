@@ -25,6 +25,13 @@ $(function(){
 </script>
 {/if}
 
+
+<table border="0" cellpadding="0" cellspacing="0" align="center" {if $main ne "fast_lane_checkout" && $main ne "order_message"}class="header_line2_table"{/if}>
+<tr>
+<td>
+
+
+
 <table border="0" cellpadding="0" cellspacing="0" width="984" align="center" class="header_line1">
  <tr>
   <td width="58%" style="padding-left: 20px;">
@@ -66,13 +73,12 @@ $(function(){
 
 
 <TABLE border="0" cellpadding="0" cellspacing="0" {if $main eq "fast_lane_checkout"}class="header_line_flc2"{else}class="header_line2"{/if} align="center">
-
 <TR>
 <TD {* height="130" *} valign="bottom">
         <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
         <tr>
 
-        <td width="250" {* style="background: url({$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S) no-repeat;" *} valign="middle">
+        <td width="250" valign="middle">
         {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $smarty.get.mode_search eq "Y"}<a href="/">{/if}<img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="Home page" >{if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $smarty.get.mode_search eq "Y"}</a>{/if}
         </td>
 
@@ -110,13 +116,11 @@ $(function(){
         </table>
 </TD>
 </TR>
-
-{if $main eq "order_message"}
-<tr><td>&nbsp;</td></tr>
-<tr><td class="cidev_checkout_bar6"></td></tr>
-{/if}
-
 </TABLE>
+
+</td>
+</tr>
+</table>
 
 
 <table border="0" cellpadding="0" cellspacing="0" align="center" class="header_line3">
@@ -137,6 +141,12 @@ $(function(){
  </tr>
 </table>
 
+{if $main eq "order_message"}
+<br />
+<table border="0" cellpadding="0" cellspacing="0" align="center">
+<tr><td class="cidev_checkout_bar6"></td></tr>
+</table>
+{/if}
 
 
 {include file="customer/top_menu.tpl"}
