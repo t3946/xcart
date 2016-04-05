@@ -554,7 +554,6 @@ function cidev_sqCALCULATE() {
 
  if (cidev_yandex_code_number != ""){
 	 yaCounter{/literal}{$config.Company.cidev_yandex_code_number}{literal}.reachGoal('sqCALCULATE', yaGoalParams);
-
  }
 
  document.shipquoteform.submit();
@@ -870,8 +869,6 @@ quantity: {/literal}{$item.amount}{literal}
 
  if (cidev_yandex_code_number != ""){
          yaCounter{/literal}{$config.Company.cidev_yandex_code_number}{literal}.reachGoal('sqGRAND_TOTAL', yaGoalParams);
-
-         _gaq.push(['_trackEvent', 'sqGRAND_TOTAL']);
  }
 
  document.shipquoteform.submit();
@@ -991,8 +988,6 @@ quantity: {/literal}{$item.amount}{literal}
 
  if (cidev_yandex_code_number != ""){
 	 yaCounter{/literal}{$config.Company.cidev_yandex_code_number}{literal}.reachGoal(tmp_param, yaGoalParams);
-
-	 _gaq.push(['_trackEvent', tmp_param]);
  }
 
 }
