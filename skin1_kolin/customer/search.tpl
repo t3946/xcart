@@ -133,39 +133,9 @@ $(document).ready(function() {
 
 {else }
 
-{*
-				<table cellpadding="0" cellspacing="0">
-				<tr>
-					<td>
-						<input type="text" id="searchstring" name="e_posted_data[substring]" size="40%" value="{$e_search_data.substring}" placeholder="{$config.Company.cidev_header_code}" style="background-color: #FFFFFF; margin-right: 0px; padding-right: 0px" />
-
-{if $e_search_data.total ne ""}
-<br />
-
-Total: {$e_search_data.total}
-
-{/if}
-
-					</td>
-					<td nowrap="nowrap">
-						<a href="javascript: void(0);" onclick="javascript: document.productsearchform.submit();" class="VertMenuItems" title="{$lng.lbl_go}"><b>{$lng.lbl_go}</b></a>
-						{if $e_search_data.substring ne ""}
-						&nbsp; <a href="javascript: void(0);" onclick="javascript: $('#searchstring').val(''); document.productsearchform.submit();" class="VertMenuItems"><b>Clear search</b></a>
-						{/if}
-					</td>
-				</tr>
-				</table>
-*}
-
-
-
-
 {* ------------------------------ *}
         <div class="nav-sprite">
 
-{*
-          <form class="nav-searchbar-inner" id="nav-searchbar" method="post" action="{if $cat gt 0}{$action_notify_url}{else}home.php{/if}" name="productsearchform">
-*}
           <form class="nav-searchbar-inner" id="nav-searchbar" method="post" action="home.php" name="productsearchform">
             <input type="hidden" name="e_mode" value="e_search" />
 
@@ -173,11 +143,12 @@ Total: {$e_search_data.total}
             <input type="hidden" name="e_current_url" value="{if $main eq "product"}/home.php?cat={$cat}{else}{$action_notify_url}{/if}" />
 	    {/if}
 
+
             <div class="nav-submit-button nav-sprite">
-              <input type="submit" title="Go" class="nav-submit-input" value="Go">
+              <input type="submit" title="Go" class="nav-submit-input" value="">
             </div>
 
-{*	    {if $e_search_data.substring ne "" || $e_search_data_previous_substring ne ""} *}
+{*
 	    {if $e_search_data.substring ne ""}
             <div class="nav-submit-button-x" id="nav-submit-button-x">
 			<span id="nav-submit-button-x-span" class="nav-submit-button-x-span">
@@ -185,24 +156,9 @@ Total: {$e_search_data.total}
 			</span>
 	    </div>
 	    {/if}
-
+*}
 		<input type="hidden" name="cat" value="0" />
 
-{*
-            <span class="nav-sprite nav-facade-active" id="nav-search-in" style="width: auto;">
-
-              <span id="nav-search-in-content" style="width: auto; overflow: visible;">{if $current_category.categoryid gt 0}{$current_category.category}{else}Search all website{/if}</span>
-
-              <span class="nav-down-arrow"></span>
-
-              <select title="Search in" name="cat" id="searchDropdownBox" class="searchSelect" style="top: 3px;">
-                <option value="0">Search all website</option>
-		{if $current_category.categoryid gt 0}
-	                <option value="{$current_category.categoryid}" selected="selected">{$current_category.category}</option>
-		{/if}
-              </select>
-            </span>
-*}
             <div class="nav-searchfield-width">
               <div id="nav-iss-attach">
                 <input type="text" autocomplete="off" name="e_posted_data[substring]" 
@@ -212,19 +168,6 @@ value="{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring}{e
             </div>
 
           </form>
-
-<div style="height: 20px; paddign-top: 2px; text-align: left;">
-{if $e_search_data.substring ne ""}
-{*
-{if $cat gt 0}{$lng.lbl_total_found_cat_page}{else}{$lng.lbl_total_found_home_page}{/if}: {$e_search_data.total}
-*}
-
-{*
-{$e_search_data.total} {if $e_search_data.total eq "1"}product{else}products{/if} found for "{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring}{else}{$e_search_data.substring}{/if}"
-*}
-
-{/if}
-</div>
         </div>
 
 <script type="text/javascript">
@@ -236,16 +179,6 @@ $(document).ready(function() {
   $("#nav-search-in").click(function(event){
         $("#nav-search-in").attr("class", "nav-sprite nav-facade-active nav-focus");
   });
-
-/*
-  $("#searchDropdownBox").change(function() {
-        var nav_search_in_content_value = $("#searchDropdownBox option:selected").text();
-        $("#nav-search-in-content").html(nav_search_in_content_value);
-        $("#twotabsearchtextbox").focus();
-        $("#nav-search-in").attr("class", "nav-sprite nav-facade-active");
-	$("#nav-submit-button-x").attr("class", "nav-submit-button-x-active");
-  });
-*/
 
   $("#twotabsearchtextbox").focusout(function(event){
         $("#nav-searchbar").attr("class", "nav-searchbar-inner");

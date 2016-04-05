@@ -58,9 +58,9 @@
 {/if}
 
 <form name="orderform" method="post" action="cart.php?mode=add" onsubmit="javascript: return FormValidation();">
-<table width="100%" border="0">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
-	<td {* class="PImgBox" *} {* rowspan="2" *} height="300" width="300" style="border: 1px dashed #cccccc; text-align: center; vertical-align: middle;">
+	<td {* class="PImgBox" *} rowspan="3" height="300" width="300" style="border: 1px dashed #cccccc; text-align: center; vertical-align: middle;">
 {if $active_modules.Detailed_Product_Images ne "" && $config.Detailed_Product_Images.det_image_popup eq 'Y' && $images ne '' && $js_enabled eq 'Y'}
 {include file="modules/Detailed_Product_Images/popup_image.tpl"}
 {else}
@@ -71,7 +71,7 @@
 {include file="modules/Magnifier/popup_magnifier.tpl"}
 {/if}
 	</td>
-	<td valign="top" width="140" style="padding-left: 20px;">
+	<td valign="top" width="140" style="padding-left: 20px;" rowspan="3">
 
 
 {if $product.map_price lt $product.taxed_price}
@@ -82,13 +82,14 @@
 	</td>
 	<td valign="top" width="*" style="padding-left: 16px;">
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
 
 {if $current_price gt 0 and $product.list_price gt 0 and $product.list_price gt $current_price}
 <tr>
-<td nowrap="nowrap" class="BlackT" width="30%" valign="top">{$lng.lbl_list_price}:</td>
-<td><font style="{* FONT-FAMILY: strickeout; *} font-size: 12px; color: #848C84;"><strike>{include file="currency.tpl" value=$product.list_price plain_text_message=true price_type="list_price"}</strike></font></td>
+<td nowrap="nowrap" class="BlackT" valign="top">{$lng.lbl_list_price}:</td>
+<td><font style="font-size: 12px; color: #7b7b7b;"><strike>{include file="currency.tpl" value=$product.list_price plain_text_message=true price_type="list_price"}</strike></font></td>
 </tr>
+<tr><td colspan="2" height="5"></td></tr>
 {/if}
 
 {if $active_modules.Feature_Comparison ne ""}
@@ -98,8 +99,8 @@
 {include file="modules/Subscriptions/subscription_info.tpl"}
 {else}
 <tr>
-<td width="30%" class="ProductPriceConverting" valign="top">{$lng.lbl_price}:</td>
-<td width="70%" valign="top">
+<td width="93" class="BlackT" valign="middle">{$lng.lbl_price}:</td>
+<td width="*" valign="middle">
 {if $current_price ne 0 || $variant_price_no_empty}
 
 	{* --- *}
@@ -108,7 +109,7 @@
 	{/if}
 	{* --- *}
 
-<font class="ProductPriceConverting"><span id="product_price" style="white-space: nowrap;">{include file="currency.tpl" value=$current_price plain_text_message=true price_type="product_price"}</span></font>
+<font class="ProductPriceConverting2"><span id="product_price" style="white-space: nowrap;">{include file="currency.tpl" value=$current_price plain_text_message=true price_type="product_price"}</span></font>
 <font class="MarketPrice"> <span id="product_alt_price" style="white-space: nowrap;">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price plain_text_message=true}</span></font>
 {if $product.map_price gt $product.taxed_price}
 <br />
@@ -133,11 +134,18 @@
 {math equation="100-(price/lprice)*100" price=$current_price lprice=$product.list_price format="%3.5f" assign=discount}
 {if $discount gte 1}
 <TR id="save_percent_box"{if $product.taxed_price >= $product.list_price} style="display: none;"{/if}>
-<TD nowrap="nowrap">
-<font style="font-size: 12px; color: #CC3333;">You save:</font>
-</TD>
-<TD nowrap="nowrap" style="font-size: 12px; font-weight: normal; color: #CC3333;">
-<SPAN id="save_percent">{$discount|string_format:"%3.0f"}</SPAN>
+<TD nowrap="nowrap" colspan="2">
+
+	<br />
+	<table cellpadding="1" cellspacing="1" class="discount_class2">
+	<tr>
+	<td><img src="{$ImagesDir}/new/product/dollar.png" alt="" /></td>
+	<td class="discount_class1">Discount:</td>
+	<td class="discount_class">
+	<SPAN id="save_percent">{$discount|string_format:"%3.0f"}</SPAN>&nbsp;
+	</td>
+	</tr>
+	</table>
 </TD>
 </TR>
 {/if}
@@ -156,8 +164,8 @@
 </tr>
 {/if}
 
-<tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}"><td height="25" width="30%" class="BlackT_new">{$lng.lbl_quantity}:</td>
-<td style="text-align:left;width:70% !important; font-size: 16px;" width="70%">
+<tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}"><td height="25" class="BlackT">{$lng.lbl_quantity}:</td>
+<td style="text-align:left;font-size: 16px;" width="*">
 {if $config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount) and $variants eq ''}
 <script type="text/javascript" language="JavaScript 1.2">
 <!--
@@ -351,19 +359,59 @@ var product_avail = 1;
 <tr><td colspan="2">
 <font class="ProductDetailsTitleWithoutBold">{if $product.mult_order_quantity eq "Y"}{$lng.txt_need_min_amount_mult|substitute:"items":$product.min_amount}{else}{$lng.txt_need_min_amount|substitute:"items":$product.min_amount}{/if}</font>
 </td></tr>
+<tr><td colspan="2">&nbsp;</td></tr>
 {/if}
+
+<tr><td colspan="2">&nbsp;</td></tr>
+</table>
+</td>
+
+<td>
+        {if $current_price gt 0 and $product.list_price gt 0 and $product.list_price gt $current_price}
+        {math equation="100-(price/lprice)*100" price=$current_price lprice=$product.list_price format="%3.5f" assign=discount}
+        {if $discount gte 1}
+        <div id="save_percent_box2"{if $product.taxed_price gte $product.list_price} style="display: none;"{/if} class="discount_class3">
+                <div class="discount_class4">
+                </div>
+
+                <div class="discount_class8">
+                <table cellspacing="0" cellpadding="0" border="0" width="140">
+                <tr>
+                <td class="discount_class5">SAVE</td>
+                <td width="10">&nbsp;</td>
+                <td class="discount_class6" id="save_percent2"></td>
+{*                <td width="5">&nbsp;</td> *}
+                <td class="discount_class7" valign="bottom">%</td>
+                </tr>
+                </table>
+                </div>
+
+        </div>
+        {/if}
+        {/if}
+</td>
+<td rowspan="3" class="save_td">&nbsp;</td>
+</tr>
+
+<tr>
+<td colspan="2" style="padding-left: 16px;"><div class="line_subtotal"></div></td>
+</tr>
+
+<tr>
+ <td valign="top" style="padding-left: 16px;">
+  <table cellspacing="0" cellpadding="0" border="0">
 
 {if $product.min_amount gte 1 && $product.product_availability eq "in stock"}
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr>
-<td>
+<td width="93" class="subtotal_class1">
 {if $product_subtotal_value eq ""}
 {math equation="price*quantity" price=$current_price quantity=$product.min_amount format="%3.5f" assign=product_subtotal_value}
 {/if}
-<font style="font-size: 16px; color: #000000; font-weight: bold;">Subtotal:</font>
+Subtotal:
 </td>
 <td>
-<div style="font-size: 16px; color: #000000; font-weight: bold;" id="product_subtotal_value">{include file="currency.tpl" value=$product_subtotal_value plain_text_message=true price_type="product_subtotal_value"}</div>
+<div class="subtotal_class2" id="product_subtotal_value">{include file="currency.tpl" value=$product_subtotal_value plain_text_message=true price_type="product_subtotal_value"}</div>
 </td>
 </tr>
 {/if}
@@ -470,16 +518,19 @@ var lbl_error = "{$lng.lbl_error}";
 {/if}
 
 </td>
-</tr></table>
+</tr>
+</table>
 </td>
 
-<td>
+<td width="196">
+{*
 {if $variant_id_for_point3 eq "1"}
 {$config.Appearance.product_advantages_code}
 {/if}
+*}
 </td>
-
 </tr>
+
 </table>
 <input type="hidden" name="productid" value="{$product.productid}" />
 <input type="hidden" name="cat" value="{$smarty.get.cat|escape:"html"}" />

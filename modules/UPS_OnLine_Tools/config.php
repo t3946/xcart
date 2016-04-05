@@ -58,9 +58,10 @@ include $xcart_dir."/modules/UPS_OnLine_Tools/ups_func.php";
 $show_XML = false;
 
 # Production URL
-$UPS_url = "https://www.ups.com:443/ups.app/xml/";
+//$UPS_url = "https://www.ups.com:443/ups.app/xml/";
+$UPS_url = "https://onlinetools.ups.com/ups.app/xml/";
 
-$devlicense="EBA2F47A37670E96";
+$devlicense="EBA2F47A37670E96"; //5D08B89FAA618516
 
 if ($config["Shipping"]["realtime_shipping"] == "Y" and $config["Shipping"]["use_intershipper"] != "Y") {
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
