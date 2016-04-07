@@ -1,7 +1,7 @@
 <?php
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
-x_load('product','core');
+x_load('product','core', 'amazon_shipping', 'xml');
 
 #
 # Translation string to frogle-compatibility-string
@@ -53,6 +53,14 @@ function GetGooglePrice($fproduct){
 
 function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
+
+
+
+/////////////////////////////////////////////////////////////////////
+//$productid = 281820;
+//func_print_r("func.froogle.php: productid: " , $productid);
+/////////////////////////////////////////////////////////////////////
+
 
 
 #
@@ -417,7 +425,26 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 #
 ##
 ###
-	$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
+
+
+	$shipping_arr = "";
+
+# Check/Get Amazon shippings
+##
+	$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
+
+	if (!empty($amazon_shippings_arr)){
+		$shipping_arr = $amazon_shippings_arr;
+	}
+##
+#
+
+
+
+	if (empty($shipping_arr)){
+		$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
+	}
+
 	$shipping = $shipping_arr["shippings_str"];
 	$custom_label_0 = '';
 	$custom_label_1 = '';

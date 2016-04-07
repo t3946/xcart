@@ -63,7 +63,7 @@ if (
  $shippingArray->setmember(array("Standard", "Expedited", "Priority"));
  $request->setShippingSpeedCategories($shippingArray);
 
- $dom_xml = invokeGetFulfillmentPreview($service, $request);
+ $dom_xml = invokeGetFulfillmentPreview($b_service, $request);
 
  print($dom_xml["saveXML"]);
 // print_r($dom_xml);
