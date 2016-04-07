@@ -83,9 +83,13 @@ if (
 $dispatched_request = preg_replace('/^' . preg_quote($xcart_web_dir . DIR_CUSTOMER . '/', '/') . '/', '', $request_uri_info['path']);
 
 
-if (strpos($dispatched_request, "keyword/") !== false && strpos($dispatched_request, "&") !== false){
-    $dispatched_request_arr = explode("&", $dispatched_request);
-    $dispatched_request = $dispatched_request_arr[0];
+if (strpos($dispatched_request, "keyword/") !== false) {
+    $smarty->assign('search_keyword', true);
+
+    if (strpos($dispatched_request, "&") !== false) {
+        $dispatched_request_arr = explode("&", $dispatched_request);
+        $dispatched_request = $dispatched_request_arr[0];
+    }
 }
 
 //if ($config['SEO']['canonical'] == 'Y') {
