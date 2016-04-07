@@ -1734,6 +1734,10 @@ die();
 #
 
 
+/*
+https://basecamp.com/2070980/projects/1577907/messages/55846489
+FIX: Order notifications (email duplicates and attachments)
+
                 if ($send_email == 'Y') {
 
                         $customer_attach_pdf_invoice = "";
@@ -1774,42 +1778,42 @@ die();
                         }
 
 			if ($send_email_flag){
-/*
+
 #
 ##
 ###
-				$customer_attach_pdf_invoice = "";
-				$admin_attach_pdf_invoice = "";
-				foreach ($current_cb_dc_statuses as $kc => $vc){
-
-					if (empty($customer_attach_pdf_invoice) || empty($admin_attach_pdf_invoice)){
-						$order_notification_info = func_query_first("SELECT customer_attach_pdf_invoice, admin_attach_pdf_invoice FROM $sql_tbl[order_status_notifications] WHERE code='$vc[cb_status]'");
-
-						if ($order_notification_info["customer_attach_pdf_invoice"] == "Y" && empty($customer_attach_pdf_invoice)){
-							$customer_attach_pdf_invoice = "Y";
-						}
-
-                        	                if ($order_notification_info["admin_attach_pdf_invoice"] == "Y" && empty($admin_attach_pdf_invoice)){
-                                	                $admin_attach_pdf_invoice = "Y";
-                                        	}
-					}
-
-                                        if (empty($customer_attach_pdf_invoice) || empty($admin_attach_pdf_invoice)){
-                                                $order_notification_info = func_query_first("SELECT customer_attach_pdf_invoice, admin_attach_pdf_invoice FROM $sql_tbl[order_status_notifications] WHERE code='$vc[dc_status]'");
-
-                                                if ($order_notification_info["customer_attach_pdf_invoice"] == "Y" && empty($customer_attach_pdf_invoice)){
-                                                        $customer_attach_pdf_invoice = "Y";
-                                                }
-
-                                                if ($order_notification_info["admin_attach_pdf_invoice"] == "Y" && empty($admin_attach_pdf_invoice)){
-                                                        $admin_attach_pdf_invoice = "Y";
-                                                }
-                                        }
-				}
+#				$customer_attach_pdf_invoice = "";
+#				$admin_attach_pdf_invoice = "";
+#				foreach ($current_cb_dc_statuses as $kc => $vc){
+#
+#					if (empty($customer_attach_pdf_invoice) || empty($admin_attach_pdf_invoice)){
+#						$order_notification_info = func_query_first("SELECT customer_attach_pdf_invoice, admin_attach_pdf_invoice FROM $sql_tbl[order_status_notifications] WHERE code='$vc[cb_status]'");
+#
+#						if ($order_notification_info["customer_attach_pdf_invoice"] == "Y" && empty($customer_attach_pdf_invoice)){
+#							$customer_attach_pdf_invoice = "Y";
+#						}
+#
+#                        	                if ($order_notification_info["admin_attach_pdf_invoice"] == "Y" && empty($admin_attach_pdf_invoice)){
+#                                	                $admin_attach_pdf_invoice = "Y";
+#                                        	}
+#					}
+#
+#                                        if (empty($customer_attach_pdf_invoice) || empty($admin_attach_pdf_invoice)){
+#                                                $order_notification_info = func_query_first("SELECT customer_attach_pdf_invoice, admin_attach_pdf_invoice FROM $sql_tbl[order_status_notifications] WHERE code='$vc[dc_status]'");
+#
+#                                                if ($order_notification_info["customer_attach_pdf_invoice"] == "Y" && empty($customer_attach_pdf_invoice)){
+#                                                        $customer_attach_pdf_invoice = "Y";
+#                                                }
+#
+#                                                if ($order_notification_info["admin_attach_pdf_invoice"] == "Y" && empty($admin_attach_pdf_invoice)){
+#                                                        $admin_attach_pdf_invoice = "Y";
+#                                                }
+#                                        }
+#				}
 ###
 ##
 #
-*/
+
 
 	                        include $xcart_dir . '/include/send_order_email.php';
 
@@ -1823,6 +1827,7 @@ die();
 #
 			}
                 }
+*/
 
 
 #
