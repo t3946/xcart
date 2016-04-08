@@ -930,6 +930,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 	if (empty($is_mobile_checkout)){
 		$is_mobile_checkout = "N";
 	}
+
+	global $attach_pdf_invoice;
 ###
 ##
 #
@@ -1735,6 +1737,16 @@ die("123");
 			#
 			# Notify customer by email
 			#
+
+#
+##
+###
+                                $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+                                $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
 				$to_customer = ($userinfo['language']?$userinfo['language']:$config['default_customer_language']);
 				$mail_smarty->assign("products", func_translate_products($order_data["products"], $to_customer));
 	                	$mail_smarty->assign('type', 'C');
@@ -1762,6 +1774,16 @@ die("123");
 				$to = $config['Company']['orders_department'];				
 				$from = $userinfo["firstname"]."<".$config['Company']['orders_department'].">";
 				$reply_to = $userinfo["firstname"]."<".$userinfo['email'].">";
+
+#
+##
+###
+                                $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+                                $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
 			
 		                func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
 
