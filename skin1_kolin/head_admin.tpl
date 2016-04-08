@@ -2,7 +2,7 @@
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr> 
 	<td class="HeadLogo_admin" width="*">
-<a href="{$http_location}/{if $usertype eq "P"}provider{else}admin{/if}/">
+<a href="/{if $usertype eq "P"}provider{else}admin{/if}/">
 {if $current_storefront_info.storefrontid gte 0}
 <img src="{$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" alt="" />
 {else}
