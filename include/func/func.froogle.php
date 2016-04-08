@@ -427,23 +427,34 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 ###
 
 
-	$shipping_arr = "";
-
 # Check/Get Amazon shippings
 ##
 	$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
 
-	if (!empty($amazon_shippings_arr)){
-		$shipping_arr = $amazon_shippings_arr;
-	}
 ##
 #
 
+	$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
 
 
-	if (empty($shipping_arr)){
-		$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
+	if (!empty($amazon_shippings_arr)){
+
+	    $shipping_ground_arr = $shipping_arr;
+	    $shipping_arr = $amazon_shippings_arr;
+
+	    if(is_array($shipping_arr["not_found_rates_for_state"]) && !empty($shipping_ground_arr["shippings_google_arr"])){
+
+		foreach ($shipping_arr["not_found_rates_for_state"] as $k_n => $v_n){
+			foreach ($shipping_ground_arr["shippings_google_arr"] as $k_g => $v_g){
+				if ($v_g["region"] == $v_n){
+					$shipping_arr["shippings_google_arr"][] = $v_g;
+					$shipping_arr["shippings_str"] .=",US:".$v_n.":Ground:".$v_g["price"]["value"]."USD";
+				}
+			}
+		}
+	    }
 	}
+
 
 	$shipping = $shipping_arr["shippings_str"];
 	$custom_label_0 = '';
