@@ -26,7 +26,7 @@ vim: set ts=2 sw=2 sts=2 et:
 {assign var="mc_list_id" value=$mc_newslists[idx].mc_list_id}
 <tr>
 <td width="40px;">            
-<input type="checkbox" name="mailchimp_subscription[{$mc_list_id}]" {if $mailchimp_subscription[$mc_list_id] ne ""}checked{/if} />
+<input type="checkbox" name="mailchimp_subscription[{$mc_list_id}]" {if $mailchimp_subscription[$mc_list_id] eq ""}checked{/if} />
 </td>
 <td>{$mc_newslists[idx].name}</td>
 </tr>
