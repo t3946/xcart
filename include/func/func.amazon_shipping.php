@@ -85,6 +85,12 @@ function func_need_amazon_shipping_flag($cart, $userinfo){
 			if ($all_FBA_products_flag){
 				$need_amazon_shipping = true;
 			}
+
+#########################################################
+# $need_amazon_shipping = true; //for test ONLY!!!!!!!
+# func_print_r("TEST need_amazon_shipping: ".$need_amazon_shipping);
+#########################################################
+
 		}
 	}
 
@@ -266,9 +272,11 @@ function func_get_amazon_shippings_for_all_states($product){
 
 
 ############################## FOR TEST PURPOSE ##############################
-//func_print_r("---- all_FBA_products_flag = true ---");
-//$all_FBA_products_flag = true;
+# func_print_r("---- all_FBA_products_flag = true ---");
+# $all_FBA_products_flag = true;
 ############################## FOR TEST PURPOSE ##############################
+
+
 
 	if (!$all_FBA_products_flag){
 		return $amazon_shippings_arr;
@@ -279,11 +287,19 @@ function func_get_amazon_shippings_for_all_states($product){
 	if ($all_FBA_products_flag){
 
 		$avail_amazon_rates = array();
+		$not_found_rates_for_state = array();
 
 		$userinfo["s_firstname"] = "test";
 		$userinfo["s_address"] = "test";
 
 		foreach ($xcart_states_US as $k => $v){
+
+########### for test purpose ###########
+# if (!in_array($v["code"], array("AK", "HI", "HW", "NY")))
+# continue;
+########### for test purpose ###########
+
+
 
 	                $userinfo["s_country"] = $v["country_code"];
         	        $userinfo["s_state"] = $v["code"];
@@ -299,8 +315,11 @@ function func_get_amazon_shippings_for_all_states($product){
 				$count_rates = count($shippingid_in_rates);
 			} else {
 				$count_rates = 0;
+
+				$not_found_rates_for_state[] = $v["code"];
 			}
 
+//func_print_r($v["code"], $count_rates);
 //func_print_r($shippingid_in_rates);
 //die("---");
 
@@ -462,22 +481,26 @@ function func_get_amazon_shippings_for_all_states($product){
 		$shippings_str_arr = array();
 		$shippings_google_arr = array();
 
-		foreach ($avail_amazon_rates as $k => $v){
-		  if (!empty($v) && is_array($v)){
-		    foreach ($v as $kk => $vv){
-		      if (strpos(strtolower($vv["shipping"]),"standard")!==false){
-			$shippings_str_arr[$k] = "US:".$vv["s_state"].":".$vv["shipping"].":".$vv["shipping_cost"]."USD";
+                $key_counter = 0;
 
-                        $shippings_google_arr[$k]["price"]["value"] = $vv["shipping"];
-                        $shippings_google_arr[$k]["price"]["currency"] = "USD";
-                        $shippings_google_arr[$k]["country"] = "US";
-                        $shippings_google_arr[$k]["region"] = $vv["s_state"];
-                        $shippings_google_arr[$k]["service"] = $vv["shipping"];
+                foreach ($avail_amazon_rates as $k => $v){
+                  if (!empty($v) && is_array($v)){
+                    foreach ($v as $kk => $vv){
+                      if (strpos(strtolower($vv["shipping"]),"standard")!==false){
+                        $shippings_str_arr[$key_counter] = "US:".$vv["s_state"].":".$vv["shipping"].":".$vv["shipping_cost"]."USD";
 
-		      }
-		    }
-		  }
-		}
+                        $shippings_google_arr[$key_counter]["price"]["value"] = $vv["shipping_cost"];
+                        $shippings_google_arr[$key_counter]["price"]["currency"] = "USD";
+                        $shippings_google_arr[$key_counter]["country"] = "US";
+                        $shippings_google_arr[$key_counter]["region"] = $vv["s_state"];
+                        $shippings_google_arr[$key_counter]["service"] = $vv["shipping"];
+
+                        $key_counter++;
+
+                      }
+                    }
+                  }
+                }
 
 		if (!empty($shippings_str_arr) && !empty($shippings_google_arr)){
 
@@ -485,10 +508,16 @@ function func_get_amazon_shippings_for_all_states($product){
 
 			$amazon_shippings_arr["shippings_str"] = $shippings_str;
 			$amazon_shippings_arr["shippings_google_arr"] = $shippings_google_arr;
+
+			if (!empty($not_found_rates_for_state)){
+				$amazon_shippings_arr["not_found_rates_for_state"] = $not_found_rates_for_state;
+			}
 		}
 	}
 
 //func_print_r($avail_amazon_rates, $shippings_str_arr, $shippings_google_arr);
+
+//func_print_r($amazon_shippings_arr);
 
 	return $amazon_shippings_arr;
 }
