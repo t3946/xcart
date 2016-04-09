@@ -26,6 +26,14 @@ $marketplaceIdArray = array("Id" => array('ATVPDKIKX0DER'));
 
 
 #
+#
+include $xcart_dir ."/include/func/func.amazon_shipping_connecter.php";
+#
+#
+
+
+
+#
 ##
 ###
 $debug_requests = 'N';
@@ -44,6 +52,23 @@ ini_set('memory_limit', '512M');
 set_time_limit(0);
 
 x_load('backoffice','files','taxes', 'froogle', 'product', 'crypt');
+
+
+$xcart_states_US = func_query("SELECT state, code, country_code, base_state_zipcode FROM $sql_tbl[states] WHERE base_state_zipcode!='' AND country_code='US'");
+foreach ($xcart_states_US as $k => $v){
+	$xcart_states_US[$k]["city"] = func_query_first_cell("SELECT city FROM $sql_tbl[geo_litecity_location] WHERE country='US' AND postalCode='$v[base_state_zipcode]'");
+}
+
+
+########################## for test purpose ##########################
+# $GetGoogleBaseOneRow = GetGoogleBaseOneRow('281820');
+# func_print_r($GetGoogleBaseOneRow);
+# die("++++++++++++++++++++++++++++++++++++++++++++++++++++");
+########################## ##########################
+
+
+
+
 
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_incremental_feeds_launched_v_2'");
 

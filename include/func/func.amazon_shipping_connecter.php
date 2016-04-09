@@ -74,10 +74,10 @@ require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/Weight.php";
 
 
 
-  function invokeGetFulfillmentPreview(FBAOutboundServiceMWS_Interface $service, $request)
+  function invokeGetFulfillmentPreview(FBAOutboundServiceMWS_Interface $b_service, $request)
   {
       try {
-        $response = $service->GetFulfillmentPreview($request);
+        $response = $b_service->GetFulfillmentPreview($request);
 
 //        echo ("Service Response\n");
 //        echo ("=============================================================================\n");
@@ -109,7 +109,7 @@ require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/Weight.php";
 
 
 
- $a_config = array (
+ $b_config = array (
    'ServiceURL' => "https://mws.amazonservices.com/FulfillmentOutboundShipment/2010-10-01",
    'ProxyHost' => null,
    'ProxyPort' => -1,
@@ -118,10 +118,10 @@ require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/Weight.php";
    'MaxErrorRetry' => 3,
  );
 
- $service = new FBAOutboundServiceMWS_Client(
+ $b_service = new FBAOutboundServiceMWS_Client(
         AWS_ACCESS_KEY_ID,
         AWS_SECRET_ACCESS_KEY,
-        $a_config,
+        $b_config,
         APPLICATION_NAME,
         APPLICATION_VERSION);
 
