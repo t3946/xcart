@@ -134,7 +134,7 @@ if (!check_url_exists($chech_domain)){
 $TicketConnector_link = "http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector";
 
 $resolver = new OrderToTicketResolver(
-        "xcart", "vyZqB8EVuTM1",
+        "xcart", "@Pp6Lcg^VNMC",
        	$TicketConnector_link,
         "otrs-soap",
        	"%s",
