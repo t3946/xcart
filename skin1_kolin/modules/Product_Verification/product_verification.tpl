@@ -1,0 +1,198 @@
+{* $Id: categories.tpl,v 1.43.2.4 2007/01/10 07:27:08 max Exp $ *}
+
+{if $supplemental_category_section ne "Y"}
+
+{if ($smarty.get.mode ne "info")}
+{include file="page_title.tpl" title=$lng.lbl_categories_management}
+{else}
+{include file="page_title.tpl" title=$lng.lbl_info_pages}
+{/if}
+
+{if ($smarty.get.mode ne "info")}
+{$lng.txt_categories_management_top_text}
+{assign var="capture_dialog_name" value=$lng.lbl_categories}
+<br /><br />
+{else}
+{assign var="capture_dialog_name" value=$lng.lbl_info_pages}
+{/if}
+
+{else}
+<br /><br />
+{assign var="capture_dialog_name" value="Supplemental categories"}
+{/if}
+
+
+
+{capture name=dialog}
+
+{if $supplemental_category_section ne "Y"}
+
+{include file="admin/main/location.tpl"}
+
+{if $cat}
+
+<table width="100%">
+
+<tr>
+<td align="center" class="TopLabel">
+	{if $current_category.avail neq "N"}
+	<span class="detail-title">
+		<a href="{$current_category.customer_url}" title="" target="_blank">{$lng.lbl_current_category}: "{$current_category.category|default:$lng.lbl_root_level}"</a>
+	</span>
+	{else}
+    {$lng.lbl_current_category}: "{$current_category.category|default:$lng.lbl_root_level}"
+	<div class="ErrorMessage">{$lng.txt_category_disabled}</div>
+	{/if}
+</td>
+</tr>
+
+<tr>
+<td align="right" class="SubmitBox">
+<input type="button" value="{if ($smarty.get.mode ne "info")}{$lng.lbl_modify_category|strip_tags:false|escape}{else}{$lng.lbl_modify|strip_tags:false|escape}{/if}" onclick="javascript: self.location='category_modify.php?cat={$cat}'" />
+{if ($smarty.get.mode ne "info")}
+<input type="button" value="{$lng.lbl_category_products|strip_tags:false|escape}" onclick="javascript: self.location='category_products.php?cat={$cat}'" />
+{/if}
+<input type="button" value="{if ($smarty.get.mode ne "info")}{$lng.lbl_delete_category|strip_tags:false|escape}{else}{$lng.lbl_delete|strip_tags:false|escape}{/if}" onclick="javascript: self.location='process_category.php?cat={$cat}&amp;mode=delete'" />
+</td>
+</tr>
+
+</table>
+
+<br />
+
+{include file="main/subheader.tpl" title=$lng.txt_list_of_subcategories}
+
+{/if}
+
+{/if} {* $supplemental_category_section ne "Y" *}
+
+
+<br />
+
+<form action="process_category.php" method="post" name="processcategoryform">
+<input type="hidden" name="cat_org" value="{$smarty.get.cat|escape:"html"}" />
+
+{if $supplemental_category_section eq "Y"}
+<input type="hidden" name="supplemental_category_section" value="Y" />
+{/if}
+
+<table cellpadding="2" cellspacing="1" width="100%">
+
+<tr class="TableHead">
+	<td>&nbsp;</td>
+	<td>{$lng.lbl_pos}</td>
+{if $supplemental_category_section ne "Y"}
+	<td align="center">{$lng.lbl_subcat}</td>
+{/if}
+	<td align="center">{$lng.lbl_categories_more}</td>
+	<td align="center">{$lng.lbl_category_name}</td>
+	<td align="center">{$lng.lbl_products}*</td>
+	<td align="center">{$lng.lbl_parent_categories}</td>
+{if $supplemental_category_section ne "Y"}
+	<td align="center">Ready to classify</td>
+{/if}
+	<td align="center">Prevent index products</td>
+	<td align="center">Prevent index category page</td>
+	<td align="center">{$lng.lbl_is_bold}</td>
+	<td align="center">{$lng.lbl_enabled}</td>
+</tr>
+
+{assign var="cat_selected" value=0}
+{foreach from=$subcategories item=c key=catid}
+
+{if 
+(($supplemental_category_section eq "Y" && $c.supplemental_category eq "Y") || ($supplemental_category_section ne "Y" && $c.supplemental_category ne "Y"))
+&&
+(($smarty.get.mode eq "info" && $c.order_by gt 500) || ($smarty.get.mode ne "info" && $c.order_by le 500) || ($smarty.get.cat gt 0))
+}
+
+<tr{cycle values=', class="TableSubHead"'}>
+	<td><input type="checkbox" name="ch_cat[]" id="rcat_{$catid}" value="{$catid}" /></td>
+	<td width="1%"><input type="text" size="4" name="posted_data[{$catid}][order_by]" maxlength="4" value="{if $c.parentid neq $cat && $c.add_order_by}{$c.add_order_by}{else}{$c.order_by}{/if}" /></td>
+{if $supplemental_category_section ne "Y"}
+	<td align="center"><a href="categories.php?cat={$catid}{if $smarty.get.mode eq "info"}&mode=info{/if}">{$c.subcategory_count|default:$lng.txt_not_available}</a></td>
+{/if}
+	<td align="center"><a href="category_modify.php?cat={$catid}" title="{$lng.lbl_categories_more}">{$lng.lbl_categories_more}</a></td>
+	<td width="100"><input type="text" size="60" value="{ $c.category|escape }" name="posted_data[{$catid}][category]" class="{if $c.avail eq "N"}ItemsListDisabled{else}ItemsListBold{/if}" /></td>
+	<td align="center">
+{if $c.product_count eq 0 && $c.global_product_count eq 0}
+{$lng.txt_not_available}
+{else}
+<a href="category_products.php?cat={$catid}">{$c.product_count|default:$lng.txt_not_available}</a> ({$c.global_product_count})
+{/if}
+	</td>
+	<td align="center" nowrap="nowrap"><input type="text" size="5" name="posted_data[{$catid}][parentid]" value="{$c.parentid}" />{if $supplemental_category_section ne "Y"}&nbsp;<input type="text" size="20" name="posted_data[{$catid}][additional_parentid]" value="{$additional_parentid[$catid].add_parentids}" />{/if}</td>
+
+{if $supplemental_category_section ne "Y"}
+	<td align="center">
+{if $c.pc_ready_to_classify eq "Y"}
+Yes
+{else}
+No
+{/if}
+	</td>
+{/if}
+        <td align="center">
+{if $c.prevent_index_products eq "Y"}
+Yes
+{else}
+No
+{/if}
+        </td>
+        <td align="center">
+{if $c.prevent_index_category_page eq "Y"}
+Yes
+{else}
+No
+{/if}
+        </td>
+	<td align="center">
+	        <input type="checkbox" {if ($c.parentid eq $cat && $c.is_bold eq "Y") || ($c.parentid neq $cat && $additional_parentid[$catid][$cat].is_bold eq "Y")}checked="checked"{/if} name="posted_data[{$catid}][is_bold]" />
+	</td>
+	<td align="center">
+	<select name="posted_data[{$catid}][avail]">
+		<option value="Y"{if $c.avail eq "Y"} selected="selected"{/if}>{$lng.lbl_yes}</option>
+		<option value="N"{if $c.avail eq "N"} selected="selected"{/if}>{$lng.lbl_no}</option>
+	</select>
+	</td>
+</tr>
+
+{assign var="cat_selected" value=1}
+{/if}
+{foreachelse}
+
+<tr>
+	<td colspan="{if $supplemental_category_section ne "Y"}12{else}10{/if}" align="center">{$lng.txt_no_categories}</td>
+</tr>
+
+{/foreach}
+
+{if $subcategories && $cat_selected eq "1"}
+<tr>
+	<td colspan="{if $supplemental_category_section ne "Y"}12{else}10{/if}">
+<b>*{$lng.lbl_note}:</b> {$lng.txt_categoryies_management_note}
+	</td>
+</tr>
+<tr>
+	<td colspan="{if $supplemental_category_section ne "Y"}12{else}10{/if}" class="SubmitBox">
+<input type="button" value="{$lng.lbl_update_all|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'apply');" />
+<br /><br />
+<input type="button" value="{$lng.lbl_modify_first_selected|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'update');" />
+<input type="button" value="{if $config.Appearance.delete_only_first_cat eq 'Y'}{$lng.lbl_delete_rirst_selected|strip_tags:false|escape}{else}{$lng.lbl_delete_selected|strip_tags:false|escape}{/if}" onclick="javascript: submitForm(this, 'delete');" />
+	</td>
+</tr>
+{/if}
+
+<tr>
+	<td colspan="{if $supplemental_category_section ne "Y"}12{else}10{/if}" class="SubmitBox"><input type="button" value="{$lng.lbl_add_new_|strip_tags:false|escape}" onclick="self.location='category_modify.php?mode=add&amp;cat={$cat}&amp;supplemental_category_section={$supplemental_category_section|default:N}'" /></td>
+</tr>
+
+</table>
+
+<input type="hidden" name="mode" value="apply" />
+</form>
+
+<br />
+
+{/capture}
+{include file="dialog.tpl" title=$capture_dialog_name content=$smarty.capture.dialog extra='width="100%"'}
