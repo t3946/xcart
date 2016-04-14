@@ -158,7 +158,7 @@
 {/section} 
 </tr>
 
-<tr class="{cycle values='SectionBox,TableSubHead'}">
+<tr class="{cycle values='SectionBox,TableSubHead'} BoldRowText">
 <td align="right"><b>TOTAL AUTHORIZED AND PAID:</b></td>
 {section name=period loop=$total_authorized_and_paid}
 <td align="center">{include file="currency.tpl" value=$total_authorized_and_paid[period]}</td>
