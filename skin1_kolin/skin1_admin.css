@@ -231,6 +231,9 @@ TD.ButtonsRow {
 	BACKGROUND-COLOR: #EEEEEE;
 	FONT-WEIGHT: normal;
 }
+.BoldRowText > td > span {
+	FONT-WEIGHT: bold;
+}
 .Spc {
 	WIDTH: 1px;
 	HEIGHT: 1px;
