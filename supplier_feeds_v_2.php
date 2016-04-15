@@ -28,7 +28,7 @@ if (isset($argv) && is_array($argv)) {
 if ($config[$log_category] == "Y"){
         die("Already launched"); // ################################
 }
-db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='$log_category'");
+db_query("REPLACE $sql_tbl[config] SET value='Y' WHERE name='$log_category'");
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
 
 $started_at = time();
