@@ -520,7 +520,7 @@ function check_wholesale(qty) {
 	var minimum_order_amount_wrap = document.getElementById('minimum_order_amount_wrap');
 	if (minimum_order_amount_wrap) {
 		var min_amount_value =  minimum_order_amount_wrap.getAttribute('data-minimum-amount');
-		console.log(min_amount_value, product_subtotal_value);
+
 		if (product_subtotal_value >= min_amount_value) {
 
 			document.getElementById('minimum_order_amount_label').style.opacity = 0;
