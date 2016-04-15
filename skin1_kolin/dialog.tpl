@@ -67,13 +67,13 @@
 </td>
 
 {if $product_free_ship ne "" || ($lbl_minimum_order_amount_message_product eq "Y" && $d_minimum_order_amount_in_us ne "")}
-<td {if $product_free_ship ne ""}align="right"{else}align="center"{/if} valign="center" nowrap="nowrap" style="padding-right: 10px;">
-<table id="minimum_order_amount_label" style="left: 50%; position: absolute; top: 256px; transition: opacity 0.5s ease-in-out;" border="0" cellpadding="0" cellspacing="0">
+<td {if $product_free_ship ne ""}align="right"{else}align="center"{/if} valign="center" nowrap="nowrap" style="padding-right: 88px; height: 10px;float:right; position: relative; top: 5px; width:392px; ">
+<table id="minimum_order_amount_label" style="transition: opacity 0.5s ease-in-out;" border="0" cellpadding="0" cellspacing="0">
 
 {if $lbl_minimum_order_amount_message_product eq "Y" && $d_minimum_order_amount_in_us ne ""}
 <tr style="background: #def4ff;">
-<td style="padding: 3px;"><img src="{$ImagesDir}/new/product/min_ord.png" /></td>
-<td height="20" style="color:#0072bb; font-size: 12px; font-weight: bold; padding: 3px;" align="center">
+<td style="padding: 4px 0 4px 4px"><img src="{$ImagesDir}/new/product/min_ord.png" /></td>
+<td nowrap="nowrap" height="20" style="color:#0072bb; font-size: 12px; font-family: VerdanaBold; padding: 3px 9px;" align="center">
 {assign var="d_minimum_order_amount_in_us" value=$`$d_minimum_order_amount_in_us`}
 {$lng.lbl_minimum_order_amount_message_product|substitute:'minimum_order_amount':$d_minimum_order_amount_in_us}
 </td>

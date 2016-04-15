@@ -84,7 +84,7 @@
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 {if $product.lbl_minimum_order_amount_message_product eq "Y" && $product.d_minimum_order_amount_in_us ne ""}
-<tr id="minimum_order_amount_wrap" data-minimum-amount="{$product.d_minimum_order_amount_in_us}"><td>&nbsp</td></tr>
+<tr height="20" id="minimum_order_amount_wrap" data-minimum-amount="{$product.d_minimum_order_amount_in_us}"><td>&nbsp</td></tr>
 {/if}
 {if $current_price gt 0 and $product.list_price gt 0 and $product.list_price gt $current_price}
 <tr>

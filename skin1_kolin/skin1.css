@@ -8,6 +8,11 @@
     src: url(verdana.ttf);
    }
 
+@font-face {
+	font-family: VerdanaBold;
+	src: url(verdanab.ttf);
+}
+
 BODY,DIV,TH,TD,P,INPUT,SELECT,TEXTAREA,TT {
 	FONT-FAMILY: Verdana, Arial, Helvetica, Sans-serif;
 	COLOR: #000000;
