@@ -1,4 +1,4 @@
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -164,11 +164,12 @@ if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
         $e_search_data_orig_substring = $e_posted_data["substring"];
         x_session_save("e_search_data_orig_substring");
 
-	$e_search_data["orig_substring"] = $e_posted_data["substring"];
-        $e_search_data["substring"] = htmlspecialchars_decode($e_posted_data["substring"]);
+//	$e_search_data["orig_substring"] = $e_posted_data["substring"];
+	$e_search_data["substring"] = htmlspecialchars_decode($e_posted_data["substring"]);
 	$e_search_data["substring"] = stripslashes($e_search_data["substring"]);
 	$e_search_data["substring"] = trim($e_search_data["substring"]);
 	$e_search_data["substring"] = str_replace("&#039;", "'", $e_search_data["substring"]);
+	$e_search_data["orig_substring"] = $e_search_data["substring"];
 
 //func_print_r($_POST);
 //func_print_r($e_search_data["substring"]);
@@ -176,7 +177,7 @@ if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
 
 	x_session_save("e_search_data");
 
-        $redirect_substring = str_replace(array(' ','#'), '-', $e_search_data["substring"]);
+        $redirect_substring = str_replace(array(' ','#',':'), '-', $e_search_data["substring"]);
         func_header_location("/keyword/".$redirect_substring."/?mode_search=Y");
 
 /*
@@ -233,11 +234,10 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 ##
 #
 
-
 if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 
 	if (empty($clean_url_data['resource_type'])){
-		$redirect_substring = str_replace(array(' ','#'), '-', $e_search_data["substring"]);
+		$redirect_substring = str_replace(array(' ','#',':'), '-', $e_search_data["substring"]);
 
 		func_header_location("/keyword/".$redirect_substring."/");
 	}

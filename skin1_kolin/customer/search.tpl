@@ -162,7 +162,7 @@ $(document).ready(function() {
             <div class="nav-searchfield-width">
               <div id="nav-iss-attach">
                 <input type="text" autocomplete="off" name="e_posted_data[substring]" 
-value="{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring}{elseif $e_search_data.substring ne ""}{$e_search_data.substring|stripslashes|escape}{else}{* {$e_search_data_previous_substring} *}{/if}" 
+value="{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring|stripslashes|escape}{elseif $e_search_data.substring ne ""}{$e_search_data.substring|stripslashes|escape}{else}{* {$e_search_data_previous_substring} *}{/if}"
 		title="Search For" id="twotabsearchtextbox" placeholder="{$config.Company.cidev_header_code}" />
               </div>
             </div>
