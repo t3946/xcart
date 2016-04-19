@@ -9,7 +9,8 @@
 
         $url = $config["ElasticSearch_options"]["es_url"].$tmp_domain."/product/_search?size=5&from=0";
 
-        $e_search_data_substring = preg_replace("/[^0-9a-zA-Z\.\'\-]/S", " ", $twotabsearchtextbox);
+        //$e_search_data_substring = preg_replace("/[^0-9a-zA-Z\.\'\-]/S", " ", $twotabsearchtextbox);
+        $e_search_data_substring = $twotabsearchtextbox;
        	$e_search_data_substring = trim($e_search_data_substring);
 
 	$query = '
