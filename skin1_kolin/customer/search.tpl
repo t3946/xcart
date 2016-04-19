@@ -26,6 +26,7 @@ $(document).ready(function() {
         },
         parse: function (data) {
             var a = [];
+            if ($(data).length > 0)
             for(var i = 0;i < data.length; i++)
                 a.push({ data: data[i],
                          value: data[i].twotabsearchtextbox,
@@ -42,17 +43,12 @@ $(document).ready(function() {
     });
 
     $("#twotabsearchtextbox").result(function (event, item) {
-//        $("#twotabsearchtextbox").val(item.twotabsearchtextbox);
-	var suggest;
-	suggest = item.twotabsearchtextbox;
-
-	suggest = suggest.split("<em>").join("");
-	suggest = suggest.split("</em>").join("");
-
+        var suggest = item.twotabsearchtextbox;
+        suggest = suggest.split("<em>").join("");
+        suggest = suggest.split("</em>").join("");
         suggest = suggest.split("<strong>").join("");
         suggest = suggest.split("</strong>").join("");
-
-        $("#twotabsearchtextbox").val(suggest);
+        $(this).val($('<span>').append(suggest).text());
     });
 
 });
@@ -162,7 +158,7 @@ $(document).ready(function() {
             <div class="nav-searchfield-width">
               <div id="nav-iss-attach">
                 <input type="text" autocomplete="off" name="e_posted_data[substring]" 
-value="{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring}{elseif $e_search_data.substring ne ""}{$e_search_data.substring|stripslashes|escape}{else}{* {$e_search_data_previous_substring} *}{/if}" 
+value="{if $e_search_data.orig_substring ne ""}{$e_search_data.orig_substring|stripslashes|escape}{elseif $e_search_data.substring ne ""}{$e_search_data.substring|stripslashes|escape}{else}{* {$e_search_data_previous_substring} *}{/if}"
 		title="Search For" id="twotabsearchtextbox" placeholder="{$config.Company.cidev_header_code}" />
               </div>
             </div>

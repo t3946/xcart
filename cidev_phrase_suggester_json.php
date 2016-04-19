@@ -53,18 +53,20 @@ if (empty($suggests)){
 
 if (!empty($suggests)){
 	foreach ($suggests as $k => $suggest){
-
-		$suggest = str_replace("<em>","<em><strong>",$suggest);
-		$suggest = str_replace("</em>","</strong></em>",$suggest);
-
-		$suggests_arr[$k]["twotabsearchtextbox"] = $suggest;
-
 		$clean_suggest = strip_tags($suggest);
 		$clean_suggest = trim($clean_suggest);
-		$suggests_arr[$k]["clean_suggest"] = $clean_suggest;
+		if (trim($twotabsearchtextbox) != $clean_suggest) {
+			$suggest = str_replace("<em>","<em><strong>",$suggest);
+			$suggest = str_replace("</em>","</strong></em>",$suggest);
 
-		if (trim($twotabsearchtextbox) == $clean_suggest){
-			unset($suggests_arr[$k]);
+			$suggests_arr[$k]["twotabsearchtextbox"] = $suggest;
+
+			$clean_suggest = str_replace(array(' ','#',':','"'), '-',$clean_suggest);
+			$suggests_arr[$k]["clean_suggest"] = $clean_suggest;
+
+			if (trim($twotabsearchtextbox) == $clean_suggest){
+				unset($suggests_arr[$k]);
+			}
 		}
 	}
 

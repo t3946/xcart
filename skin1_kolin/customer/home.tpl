@@ -460,10 +460,8 @@ window.attachEvent("onload", anchor_fix);
 {*
 {include file="customer/search.tpl"}
 *}
-
-
 {* Start *}
-{if $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
+{if ($main eq "catalog" && $current_category.category ne "") || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 <script type="text/javascript">
 //<![CDATA[
 func_load_more_next_productids('','Y');
