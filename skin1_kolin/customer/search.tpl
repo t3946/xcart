@@ -26,6 +26,7 @@ $(document).ready(function() {
         },
         parse: function (data) {
             var a = [];
+            if ($(data).length > 0)
             for(var i = 0;i < data.length; i++)
                 a.push({ data: data[i],
                          value: data[i].twotabsearchtextbox,
@@ -42,17 +43,12 @@ $(document).ready(function() {
     });
 
     $("#twotabsearchtextbox").result(function (event, item) {
-//        $("#twotabsearchtextbox").val(item.twotabsearchtextbox);
-	var suggest;
-	suggest = item.twotabsearchtextbox;
-
-	suggest = suggest.split("<em>").join("");
-	suggest = suggest.split("</em>").join("");
-
+        var suggest = item.twotabsearchtextbox;
+        suggest = suggest.split("<em>").join("");
+        suggest = suggest.split("</em>").join("");
         suggest = suggest.split("<strong>").join("");
         suggest = suggest.split("</strong>").join("");
-
-        $("#twotabsearchtextbox").val(suggest);
+        $(this).val($('<span>').append(suggest).text());
     });
 
 });

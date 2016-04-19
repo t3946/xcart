@@ -215,6 +215,7 @@ if ($cidev_dispatched_request_arr[0] == "keyword"){
 
     $new_keyword = urldecode($cidev_dispatched_request_arr[1]);
     $new_keyword = preg_replace("/[^0-9a-zA-Z\-]/S", "-", $new_keyword);
+    $new_keyword = preg_replace('#(?<!:)-{2,}#', '-', $new_keyword); //remove repeatable '-'
     $new_keyword = trim($new_keyword);
     $new_keyword = strtolower($new_keyword);
 
