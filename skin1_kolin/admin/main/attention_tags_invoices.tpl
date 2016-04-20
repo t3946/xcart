@@ -1,10 +1,20 @@
+<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui-timepicker-addon.min.js"></script>
+<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />
+<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery-ui-timepicker-addon.min.css" />
 <form name="fraudform" action="configuration.php" method="POST">
 <input type="hidden" name="option" value="Attention_tags_invoices">
 <input type="hidden" name="mode" value="Update_Attention_tags_invoices">
 
 
 <table width="100%" cellspacing="1" cellpadding="3">
-
+<tr>
+   <td class="TableSeparator" colspan="3">
+       Attention tags triggered by invoices
+       <br>
+       <br>
+   </td>
+</tr>
 <tr>
 	<td width="3%">&nbsp;</td>
 	<td width="57%">
@@ -169,6 +179,64 @@ If <b>PROFIT</b> &lt; <b>0.00</b>, then set the following attention tag:
 </select>
         </td>
 </tr>
+
+        <tr>
+                <td class="TableSeparator" colspan="3">
+                        <br>
+                        <br>
+                        Attention tags triggered by events
+                        <br>
+                        <br>
+                </td>
+        </tr>
+        <tr>
+                <td width="3%">&nbsp;</td>
+                <td width="57%">
+                        <b>PayPal processing failed</b>:
+                </td>
+                <td width="40%">
+                        <select name="tag_for_events_paypal_processing_failed">
+                                <option value="">None</option>
+                                {foreach from=$attention_tags_values item=v key=k}
+                                        <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_for_events_paypal_processing_failed}selected="selected"{/if}>{$v.status}</option>
+                                {/foreach}
+                        </select>
+                </td>
+        </tr>
+
+        <tr>
+                <td class="TableSeparator" colspan="3">
+                        <br>
+                        <br>
+                        Auto-removable tags
+                        <br>
+                        <br>
+                </td>
+        </tr>
+        <tr>
+                <td width="3%">&nbsp;</td>
+                <td width="57%">
+                        <b>One day tag Unset time</b>:
+                </td>
+                <td width="40%">
+                        <input style="height: 12px;" size="3" type="text" id="one_day_unset_time_box" name="one_day_unset_time" value="{$config.Attention_tags_invoices.one_day_unset_time}"/>
+                        <select  style="max-width: 194px;" name="tag_one_day_unset">
+                                <option value="">None</option>
+                                {foreach from=$attention_tags_values item=v key=k}
+                                        <option value="{$v.status_id}" {if $v.status_id eq $config.Attention_tags_invoices.tag_one_day_unset}selected="selected"{/if}>{$v.status}</option>
+                                {/foreach}
+                        </select>
+                        {literal}
+
+                                <script type="text/javascript" language="JavaScript 1.2">
+                                        <!--
+                                        $('#one_day_unset_time_box').timepicker()();
+                                        -->
+                                </script>
+
+                        {/literal}
+                </td>
+        </tr>
 
 </table>
 

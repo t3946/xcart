@@ -12,6 +12,7 @@
 *}
 {* {load_defer file="lib/jqueryui/jquery-ui.custom.min.js" type="js"} *}
 <script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 
 {if $usertype eq 'C'}
 {*  {load_defer file="lib/jqueryui/jquery.ui.theme.css" type="css"} *}
