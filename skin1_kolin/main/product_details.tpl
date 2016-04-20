@@ -115,16 +115,23 @@ function generate_price(id) {ldelim}
 </script>
 
 
-{if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "N" || 1==1}
+{if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "N"}
 <script type="text/javascript" language="JavaScript 1.2">
 <!--
 {literal}
   $(function() {
-    $("#eta_date_mm_dd_yyyy").datepicker({
-            maxDate: "+2w",
-            minDate: "-1d"
-    });
-//    $("#eta_date_mm_dd_yyyy").datepicker('option', 'dateFormat', 'MM d, yy');;
+    $("#eta_date_mm_dd_yyyy").datepicker();
+  });
+{/literal}
+-->
+</script>
+{/if}
+ {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}
+<script type="text/javascript" language="JavaScript 1.2">
+<!--
+{literal}
+  $(function() {
+    $("#eta_date_mm_dd_yyyy").datepicker({maxDate: "+2w",minDate: "-1d"});
   });
 {/literal}
 -->
