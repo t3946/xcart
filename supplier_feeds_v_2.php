@@ -173,7 +173,7 @@ foreach ($supplier_feeds as $k => $v){
 
 
 /* Disable for test N4 */
-			$md5 = md5($contents);
+/*			$md5 = md5($contents);
 
 			if ($md5 == $v["last_md5"]){
 	                        $log_text = "manufacturerid: ".$v["manufacturerid"].". md5 = last_md5. Feed skipped.";
