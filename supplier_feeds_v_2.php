@@ -377,6 +377,7 @@ func_print_r($p, $productid);
 				$not_xcart_products_fields = $p;
 
 				$just_created = false;
+				$product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
 
 				if ($v["feed_type"] == "P"){ // product
 
@@ -926,9 +927,10 @@ die();
 
 					$todayDate = strtotime(date("Y-m-d"));
 
-					//if ($productid == 219509) {func_print_r($product); var_dump($productid); die();}
+					if ($productid == 18920) {func_print_r($product); var_dump($productid);}
 
-					if ($product_in_DB_info_arr['eta_date_lock'] == "Y" && $product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $todayDate && ($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $product['eta_date_mm_dd_yyyy'] || empty($product['eta_date_mm_dd_yyyy'])) ) {
+
+					if (($product_in_DB_info_arr['eta_date_lock'] == "Y") && ($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $todayDate) && (($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $product['eta_date_mm_dd_yyyy']) || empty($product['eta_date_mm_dd_yyyy'])) ) {
 						unset($product['eta_date_mm_dd_yyyy']);
 					} else {
 						$product['eta_date_lock'] = "N";
