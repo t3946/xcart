@@ -927,7 +927,7 @@ die();
 
 					//if ($productid == 219509) {func_print_r($product); var_dump($productid); die();}
 
-					if ($product_in_DB_info_arr['eta_date_lock'] == "Y" && $product['eta_date_mm_dd_yyyy'] > $todayDate) {
+					if ($product_in_DB_info_arr['eta_date_lock'] == "Y" && $product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $todayDate && ($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $product['eta_date_mm_dd_yyyy'] || empty($product['eta_date_mm_dd_yyyy'])) ) {
 						unset($product['eta_date_mm_dd_yyyy']);
 					} else {
 						$product['eta_date_lock'] = "N";
