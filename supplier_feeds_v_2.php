@@ -111,7 +111,8 @@ foreach ($supplier_feeds as $k => $v){
                 fclose($handle);
 
                 if ($md5 == $v["last_md5"]){
-	                $log_text = "manufacturerid: ".$v["manufacturerid"].". md5 = last_md5. Feed skipped.";
+	                $log_text = "manufacturerid: ".$v["manufacturerid"].". md5 = last_md5. Feed skipped. ";
+					$log_text .= "md5file: ".$md5." - md5db: ".$v["last_md5"];
                         func_backprocess_log("supplier feeds errors", $log_text);
                         continue;
                 }
