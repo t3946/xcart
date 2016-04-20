@@ -110,14 +110,12 @@ foreach ($supplier_feeds as $k => $v){
                 $md5 = fread($handle, filesize($local_file));
                 fclose($handle);
 
-
                 if ($md5 == $v["last_md5"]){
-	                $log_text = "manufacturerid: ".$v["manufacturerid"].". md5 = last_md5. Feed skipped.";
-//                      func_backprocess_log("supplier_feeds_v_2", $log_text);
+	                $log_text = "manufacturerid: ".$v["manufacturerid"].". md5 = last_md5. Feed skipped. ";
+					$log_text .= "md5file: ".$md5." - md5db: ".$v["last_md5"];
                         func_backprocess_log("supplier feeds errors", $log_text);
                         continue;
                 }
-
 
         } else {
 
@@ -175,7 +173,7 @@ foreach ($supplier_feeds as $k => $v){
 
 
 /* Disable for test N4 */
-			$md5 = md5($contents);
+/*			$md5 = md5($contents);
 
 			if ($md5 == $v["last_md5"]){
 	                        $log_text = "manufacturerid: ".$v["manufacturerid"].". md5 = last_md5. Feed skipped.";
@@ -379,6 +377,7 @@ func_print_r($p, $productid);
 				$not_xcart_products_fields = $p;
 
 				$just_created = false;
+				$product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
 
 				if ($v["feed_type"] == "P"){ // product
 
@@ -856,7 +855,7 @@ die();
 				################# START: xcart_product update #################
                     print("START: xcart_product update section\n");
 
-					$product_in_DB_info_arr = func_query_first("SELECT forsale, r_avail, eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+					$product_in_DB_info_arr = func_query_first("SELECT forsale, r_avail, eta_date_mm_dd_yyyy, eta_date_lock FROM $sql_tbl[products] WHERE productid='$productid'");
 
                     $product_dimension = func_query_first("SELECT dim_x, dim_y, dim_z, weight FROM $sql_tbl[products] WHERE productid='$productid'");
 
@@ -924,6 +923,17 @@ die();
 
 					if (!$just_created && !$discontinued_date_condition_found){
 						$updated_products_count++;
+					}
+
+					$todayDate = strtotime(date("Y-m-d"));
+
+					//if ($productid == 18920) {func_print_r($product); var_dump($productid);}
+
+
+					if (($product_in_DB_info_arr['eta_date_lock'] == "Y") && ($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $todayDate) && (($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $product['eta_date_mm_dd_yyyy']) || empty($product['eta_date_mm_dd_yyyy'])) ) {
+						unset($product['eta_date_mm_dd_yyyy']);
+					} else {
+						$product['eta_date_lock'] = "N";
 					}
 
 

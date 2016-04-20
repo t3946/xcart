@@ -788,6 +788,15 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 
 		$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, 'seconds');
 
+		$todaysDate = strtotime(date("Y-m-d"));
+		$maxETADate = strtotime('+2 weeks', $todaysDate);
+
+		if ($eta_date_mm_dd_yyyy > $maxETADate){
+			$eta_date_mm_dd_yyyy = $maxETADate;
+			$status = "eta_date_invalid";
+		}
+
+
 		#
 		# Update product data
 		#
@@ -803,6 +812,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			"productcode" => $productcode,
 			"forsale" => $forsale,
 			"distribution" => $distribution,
+			"eta_date_lock" => (($eta_date_locked_checkbox)?"Y":"N"),
 #
 ##
 ###
@@ -1045,6 +1055,10 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 		elseif ($status == "modified") {
 			$top_message["content"] = func_get_langvar_by_name("msg_adm_product_upd");
 			$top_message["type"] = "I";
+		}
+		elseif ($status == "eta_date_invalid") {
+			$top_message["content"] = func_get_langvar_by_name("lb_eta_date_lock_range_exceeded");
+			$top_message["type"] = "E";
 		}
 
 		if ($active_modules["Extra_Fields"]) {
