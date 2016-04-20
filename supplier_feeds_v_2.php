@@ -927,7 +927,7 @@ die();
 
 					$todayDate = strtotime(date("Y-m-d"));
 
-					if ($productid == 18920) {func_print_r($product); var_dump($productid);}
+					//if ($productid == 18920) {func_print_r($product); var_dump($productid);}
 
 
 					if (($product_in_DB_info_arr['eta_date_lock'] == "Y") && ($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $todayDate) && (($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $product['eta_date_mm_dd_yyyy']) || empty($product['eta_date_mm_dd_yyyy'])) ) {
