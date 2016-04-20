@@ -229,6 +229,21 @@ else {
 	$location[] = array(func_get_langvar_by_name("lbl_add_product"), "");
 }
 
+$manufacturer_feed_fields = func_query_hash("SELECT $sql_tbl[manufacturer_feed_fields].* FROM $sql_tbl[manufacturer_feed_fields] WHERE $sql_tbl[manufacturer_feed_fields].manufacturerid='$product_info[manufacturerid]'", "field_name", false);
+
+if (!empty($manufacturer_feed_fields) && is_array($manufacturer_feed_fields)){
+	foreach ($manufacturer_feed_fields as $k => $v){
+		if (($v["locked"] == 'Y' && $v["admin_lock"] == 'Y') || ($v["locked"] == 'N' && $v["admin_lock"] == 'Y')){
+			$manufacturer_feed_fields[$k]["disable"] = "Y";
+		} else {
+			$manufacturer_feed_fields[$k]["disable"] = "N";
+		}
+	}
+
+//$manufacturer_feed_fields["eta_date_mm_dd_yyyy"]["disable"] = "Y";
+	$smarty->assign("manufacturer_feed_fields", $manufacturer_feed_fields);
+}
+
 //$providers = func_query("SELECT login, title, firstname, lastname FROM $sql_tbl[customers] WHERE usertype='P' ORDER BY login, lastname, firstname");
 $providers = func_query("SELECT login, title, firstname, lastname FROM $sql_tbl[customers] WHERE usertype='P' || usertype='A' ORDER BY login, lastname, firstname");
 $smarty->assign("providers", $providers);
@@ -786,20 +801,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
                 }
 */
 
-		$manufacturer_feed_fields = func_query_hash("SELECT $sql_tbl[manufacturer_feed_fields].* FROM $sql_tbl[manufacturer_feed_fields] WHERE $sql_tbl[manufacturer_feed_fields].manufacturerid='$product_info[manufacturerid]'", "field_name", false);
 
-		if (!empty($manufacturer_feed_fields) && is_array($manufacturer_feed_fields)){
-			foreach ($manufacturer_feed_fields as $k => $v){
-				if (($v["locked"] == 'Y' && $v["admin_lock"] == 'Y') || ($v["locked"] == 'N' && $v["admin_lock"] == 'Y')){
-					$manufacturer_feed_fields[$k]["disable"] = "Y";
-				} else {
-					$manufacturer_feed_fields[$k]["disable"] = "N";
-				}
-			}
-
-//$manufacturer_feed_fields["eta_date_mm_dd_yyyy"]["disable"] = "Y";
-			$smarty->assign("manufacturer_feed_fields", $manufacturer_feed_fields);
-		}
 
 		if ($manufacturer_feed_fields["eta_date_mm_dd_yyyy"]["disable"] == "Y") {
 			$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, 'seconds');
