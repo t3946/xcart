@@ -258,7 +258,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 <br>
 <br>
 <table cellpadding="0" cellspacing="0" width="100%"><tr><td>
-{$products[product].descr}
+{$products[product].descr|default:$products[product].fulldescr|truncate:225:"...":true}
 </td></tr></table>
 <br />
 {if $products[product].product_options ne ""}

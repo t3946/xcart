@@ -614,7 +614,7 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 
 							$real_weight = $v_p["weight"] * $v_p["amount"];
 	
-        		                                $Volume = $v_p["dim_x"]*$v_p["dim_y"]*$v_p["dim_z"] * $v_p["amount"];
+        		            $Volume = $v_p["dim_x"]*$v_p["dim_y"]*$v_p["dim_z"] * $v_p["amount"];
 
 							if ($Volume > $v["vol_threshold"] && !empty($v["dim_factor"])){
 								$bw = $Volume/$v["dim_factor"];
