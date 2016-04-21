@@ -8,6 +8,11 @@
     src: url(verdana.ttf);
    }
 
+@font-face {
+	font-family: VerdanaBold;
+	src: url(verdanab.ttf);
+}
+
 BODY,DIV,TH,TD,P,INPUT,SELECT,TEXTAREA,TT {
 	FONT-FAMILY: Verdana, Arial, Helvetica, Sans-serif;
 	COLOR: #000000;
@@ -3362,8 +3367,7 @@ ol.catalog, ul.catalog {
 /*-- container --*/
 #m_container{
         width:100%;
-        padding:10px 0;
-        margin: 2% auto;
+        margin: 10px auto 0;
 }
 
 /*--horizontal bar--*/

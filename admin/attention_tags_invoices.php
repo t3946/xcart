@@ -15,6 +15,10 @@ if ($REQUEST_METHOD == 'POST' && $mode == 'Update_Attention_tags_invoices'){
 	db_query("UPDATE $sql_tbl[config] SET value='$tag_for_extra_items_on_invoice' WHERE name='tag_for_extra_items_on_invoice'");
 	db_query("UPDATE $sql_tbl[config] SET value='$tag_for_items_shipped_to_wrong_address' WHERE name='tag_for_items_shipped_to_wrong_address'");
 
+	db_query("UPDATE $sql_tbl[config] SET value='$tag_for_events_paypal_processing_failed' WHERE name='tag_for_events_paypal_processing_failed'");
+	db_query("UPDATE $sql_tbl[config] SET value='$tag_one_day_unset' WHERE name='tag_one_day_unset'");
+	db_query("UPDATE $sql_tbl[config] SET value='$one_day_unset_time' WHERE name='one_day_unset_time'");
+
         $top_message["content"] = 'Done.';
         $top_message["type"] = "I";
 	func_header_location("configuration.php?option=Attention_tags_invoices");

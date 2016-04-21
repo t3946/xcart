@@ -11,7 +11,7 @@
                 <span style="font-size: 14px; font-weight: bold;">{$lng.lbl_elasticsearch_correct_suggestions_label}</span>
 
                 {foreach from=$suggests_arr item=v_s key=k_s}
-                        <br /><a href="/keyword/{$v_s.clean_suggest}/">{$v_s.twotabsearchtextbox}</a>
+					    <br /><a href="/keyword/{$v_s.clean_suggest}/">{$v_s.twotabsearchtextbox}</a>
                 {/foreach}
 
 		<br />

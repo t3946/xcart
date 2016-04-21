@@ -115,13 +115,23 @@ function generate_price(id) {ldelim}
 </script>
 
 
-{if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "N"}
+
+{if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}
 <script type="text/javascript" language="JavaScript 1.2">
 <!--
 {literal}
   $(function() {
+    $("#eta_date_mm_dd_yyyy").datepicker({maxDate: "+2w",minDate: "-1d"});
+  });
+{/literal}
+-->
+</script>
+{else}
+<script type="text/javascript" language="JavaScript 1.2">
+ <!--
+{literal}
+  $(function() {
     $("#eta_date_mm_dd_yyyy").datepicker();
-//    $("#eta_date_mm_dd_yyyy").datepicker('option', 'dateFormat', 'MM d, yy');;
   });
 {/literal}
 -->
@@ -257,7 +267,12 @@ function generate_price(id) {ldelim}
 <tr>
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[eta_date_mm_dd_yyyy]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">ETA date (mm/dd/yyyy):</td>
-        <td class="ProductDetails"><input type="text" name="eta_date_mm_dd_yyyy" id="eta_date_mm_dd_yyyy" size="18" value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}" {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}readonly="readonly"{/if} /></td>
+        <td class="ProductDetails">
+                <input type="text" name="eta_date_mm_dd_yyyy" id="eta_date_mm_dd_yyyy" size="18" value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}" {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}readonly="readonly"{/if} />
+                {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}
+                        <label style="margin-left:30px;"><input style="vertical-align: bottom;" type="checkbox" name="eta_date_locked_checkbox" {if $product.eta_date_lock=="Y"}checked="checked"{/if}/> <b>Lock</b></label>
+                {/if}
+        </td>
 </tr>
 {* ----------------------- *}
 

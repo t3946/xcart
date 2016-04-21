@@ -405,6 +405,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 			$query_data['email'] = $email;
 			$query_data['mess_body'] = $mess_body;
 			$query_data['submit_to_operator'] = ($submit_to_operator == 'through_distributor_website') ? $submit_to_operator = 'through_distributor_website' : $submit_to_operator = 'by_email_or_and_fax';
+			if ($query_data['submit_to_operator'] == 'through_distributor_website') {
+				$query_data['allow_dispatch_off_working_hours'] = 'N';
+			}
 
 			$query_data['manufact_text_displayed'] = $manufact_text_displayed;
 			$query_data['cart_manufact_text_displayed'] = $cart_manufact_text_displayed;
