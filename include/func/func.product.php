@@ -1125,12 +1125,14 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 #
 ##
 ###
-
-	if (empty($product["descr"])){
+	
+	/*if (empty($product["descr"])){
 		$product["descr"] = $product["fulldescr"];
 	}
 
 	$product["descr"] = func_get_product_descr($product["descr"]);
+	
+	*/
 ###
 ##
 #
