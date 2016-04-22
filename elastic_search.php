@@ -63,6 +63,9 @@
 
 		if ($classElastic->hitsTotal < $config["ElasticSearch_options"]["results_count_if_less_than"] && !$load_all_e_products) {
 			$classElastic->setMinScore("0");
+			$aQueryArray = array();
+			$classElastic->setQueryParams($e_search_data_substring);
+
 			$result = $classElastic->query("product", $search_query);
 			$result["hits"]["total"] = $config["Appearance"]["products_per_page"];
 		}

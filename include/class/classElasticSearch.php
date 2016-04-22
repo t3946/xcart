@@ -36,7 +36,7 @@ class classElasticSearch
         return $result;
     }
 
-    function setQueryParams($sQuery){
+    function setQueryParamsDefault($sQuery){
         $query = array();
         $query["query_string"]["query"] = $sQuery;
         $query["query_string"]["fields"] = array("productname.productname_original^1.5","sku","upc","brand.brand_original^0.5","description.description_original");
@@ -50,6 +50,16 @@ class classElasticSearch
         $query = array();
         $query["match_phrase_prefix"]["sku_original"] = $sQuery;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
+    }
+
+    function setQueryParams($sQuery, $aDismax = array()){
+        if (empty($aDismax)) {
+            $this->setQueryParamsDefault($sQuery);
+        } else {
+            foreach ($aDismax as $oDismax) {
+                $this->queryParams["query"]["dis_max"]["queries"][] = $oDismax;
+            }
+        }
     }
 
     function setMinScore($sMinScore){
