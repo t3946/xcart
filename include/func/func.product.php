@@ -1130,7 +1130,9 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 		$product["descr"] = $product["fulldescr"];
 	}
 
-	$product["descr"] = func_get_product_descr($product["descr"]);*/
+	$product["descr"] = func_get_product_descr($product["descr"]);
+	
+	*/
 ###
 ##
 #
