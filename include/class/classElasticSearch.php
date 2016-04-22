@@ -7,6 +7,7 @@ class classElasticSearch
     private $data_json;
 
     public $hitsCount;
+    public $hitsTotal;
 
     function __construct($elasticConfig = array(),$index){
         $this->server = $elasticConfig["es_url"];
@@ -31,6 +32,7 @@ class classElasticSearch
         curl_close($ch);
         $result = json_decode($result_json, true);
         $this->hitsCount = count($result["hits"]["hits"]);
+        $this->hitsTotal = $result["hits"]["total"];
         return $result;
     }
 
