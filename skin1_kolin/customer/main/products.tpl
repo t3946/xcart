@@ -151,7 +151,7 @@ Sorry we don't take pre-orders.
 
 	{assign var="tmp_productid" value=$products[product].productid}
 
-	{if $products[product].new_notify_in_stock_price ne "" && $notify_when_in_stock[$tmp_productid] ne "Y"}
+	{if ($products[product].new_notify_in_stock_price ne "" && $notify_when_in_stock[$tmp_productid] ne "Y") || 1==1}
 <br />
 <span class="BuyNowQuantity">{$lng.lbl_quantity}:</span> <b>{$lng.txt_out_of_stock}</b><br />
 
@@ -165,7 +165,7 @@ action='{if $main eq "catalog"}{if $action_notify_url ne ""}{$action_notify_url}
 >
 <input type="hidden" name="productid" value="{$products[product].productid}" />
 <input type="hidden" name="mode" value="notify" />
-<B>Your email address:</B> <input type="text" name="notify_email" value="" />
+<B>Your email address:</B> <input type="text" name="notify_email" value="{if $notify_email ne ""}{$notify_email}{/if}" />
 
 {if $main eq "catalog"}
 	<input type="hidden" name="cat" value="{$cat}" />
@@ -181,7 +181,7 @@ action='{if $main eq "catalog"}{if $action_notify_url ne ""}{$action_notify_url}
 		<input type="hidden" name="page" value="{$smarty.get.page}" />
 	{/if}
 
-{include file="buttons/button.tpl" button_title="Notify me" style="button" href="javascript:if (checkEmailAddress(document.notifyform_`$products[product].productid`.notify_email, 'Y')) `$ldelim`document.notifyform_`$products[product].productid`.submit()`$rdelim`"}
+{include file="buttons/button.tpl" button_title="Notify me" style="button" href="javascript:if (checkEmailAddress(document.notifyform_`$products[product].productid`.notify_email, 'Y')) `$ldelim` \$('input[name=notify_email]').val(\$(this).siblings('input[name=notify_email]').val()); document.notifyform_`$products[product].productid`.submit()`$rdelim`"}
 </form>
 
 </div>
