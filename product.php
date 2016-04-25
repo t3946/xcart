@@ -50,12 +50,12 @@ x_load("category");
 
 if ($mode == "notify" && !empty($productid) && !empty($notify_email)){
 	$is_in_table = func_query_first_cell("SELECT productid FROM $sql_tbl[notify_when_in_stock] WHERE email='$notify_email' AND sent='N' AND productid='$productid' AND storefrontid='$current_storefront'");
-
+	x_session_save('notify_email');
 	if (empty($is_in_table)){
 
 		$notify_when_in_stock[$productid] = "Y";
 		x_session_save('notify_when_in_stock');
-		x_session_save('notify_email');
+
 
 		db_query("INSERT INTO $sql_tbl[notify_when_in_stock] (productid, email, date, storefrontid) VALUES ('$productid', '$notify_email', '".time()."', '$current_storefront')");
 		$top_message["content"] = 'Thank you! You will be notified when the product is in stock.';
@@ -1228,7 +1228,8 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 ###
 ##
 #
-
+x_session_register("notify_email");
+$smarty->assign("notify_email", $notify_email);
 #
 ##
 ###
