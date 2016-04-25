@@ -55,6 +55,7 @@ if ($mode == "notify" && !empty($productid) && !empty($notify_email)){
 
 		$notify_when_in_stock[$productid] = "Y";
 		x_session_save('notify_when_in_stock');
+		x_session_save('notify_email');
 
 		db_query("INSERT INTO $sql_tbl[notify_when_in_stock] (productid, email, date, storefrontid) VALUES ('$productid', '$notify_email', '".time()."', '$current_storefront')");
 		$top_message["content"] = 'Thank you! You will be notified when the product is in stock.';
