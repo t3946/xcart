@@ -53,7 +53,7 @@
 <form name="notifyform" method="post" action="product.php">
 <input type="hidden" name="productid" value="{$product.productid}" />
 <input type="hidden" id="notify_mode" name="mode" value="" />
-<input type="hidden" id="notify_email" name="notify_email" value="" />
+<input type="hidden" id="notify_email" name="notify_email" value="{if $notify_email ne ""}{$notify_email}{/if}" />
 </form>
 {/if}
 
