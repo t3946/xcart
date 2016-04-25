@@ -34,11 +34,13 @@ else {
 
 if ($REQUEST_METHOD == 'POST')
  {
-	if (!empty($load_next_productids)){
+	 x_session_register("notify_email");
+	 $smarty->assign("notify_email", $notify_email);
+	 
+	 if (!empty($load_next_productids)){
 		x_load("product");
 
-		x_session_register("notify_email");
-		$smarty->assign("notify_email", $notify_email);
+
 
 #
 ##
