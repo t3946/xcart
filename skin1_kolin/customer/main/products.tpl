@@ -151,7 +151,7 @@ Sorry we don't take pre-orders.
 
 	{assign var="tmp_productid" value=$products[product].productid}
 
-	{if ($products[product].new_notify_in_stock_price ne "" && $notify_when_in_stock[$tmp_productid] ne "Y") || 1==1}
+	{if ($products[product].new_notify_in_stock_price ne "" && $notify_when_in_stock[$tmp_productid] ne "Y")}
 <br />
 <span class="BuyNowQuantity">{$lng.lbl_quantity}:</span> <b>{$lng.txt_out_of_stock}</b><br />
 
