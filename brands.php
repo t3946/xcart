@@ -1,4 +1,4 @@
-<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -41,16 +41,18 @@ $brandid = abs(intval($brandid));
 
 //print"<a href='123.php'>123</a>";
 
+
 #
 ##
 ###
 if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($brandid)){
         $is_in_table = func_query_first_cell("SELECT COUNT(sent) FROM $sql_tbl[notify_when_in_stock] WHERE email='$notify_email' AND sent='N' AND productid='$productid' AND storefrontid='$current_storefront'");
-
+        x_session_save('notify_email');
         if (empty($is_in_table)){
 
                 $notify_when_in_stock[$productid] = "Y";
                 x_session_save('notify_when_in_stock');
+
 
                 db_query("INSERT INTO $sql_tbl[notify_when_in_stock] (productid, email, date, storefrontid) VALUES ('$productid', '$notify_email', '".time()."', '$current_storefront')");
 		$top_message["content"] = 'Thank you! You will be notified when the product is in stock.';
@@ -72,6 +74,8 @@ if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($
 ##
 #
 
+x_session_register("notify_email");
+$smarty->assign("notify_email", $notify_email);
 
 if (
     isset($brandid)

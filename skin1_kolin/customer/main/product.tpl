@@ -53,7 +53,7 @@
 <form name="notifyform" method="post" action="product.php">
 <input type="hidden" name="productid" value="{$product.productid}" />
 <input type="hidden" id="notify_mode" name="mode" value="" />
-<input type="hidden" id="notify_email" name="notify_email" value="" />
+<input type="hidden" id="notify_email" name="notify_email" value="{if $notify_email ne ""}{$notify_email}{/if}" />
 </form>
 {/if}
 
@@ -351,7 +351,7 @@ var product_avail = 1;
 <tr id="notify_tr2" style="display: none;">
 <td>Your email address:</td>
 <td>
-<input type="text" name="notify_email" value="" />
+<input type="text" name="notify_email" value="{if $notify_email ne ""}{$notify_email}{/if}" />
 {include file="buttons/button.tpl" button_title="Notify me" style="button" href="javascript:if (checkEmailAddress(document.orderform.notify_email, 'Y')) `$ldelim`document.notifyform.mode.value='notify';document.notifyform.notify_email.value=document.orderform.notify_email.value;document.notifyform.submit()`$rdelim`"}
 <tr>
 <tr><td colspan="2">&nbsp;</td></tr>
