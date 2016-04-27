@@ -4,7 +4,6 @@ class classManufacturer
 {
     protected $sql_tbl = array();
     private $arrCheckFields = array();
-    private $arrTablesManufacturers = array();
     private $sPrimaryKeyFiled;
     private $sPrimaryTable;
     private $primaryKeyValue;
@@ -17,11 +16,6 @@ class classManufacturer
         $this->sPrimaryTable = 'manufacturers';
         $this->sPrimaryKeyFiled = "manufacturerid";
 
-        /*$this->arrTablesManufacturers = array($this->sql_tbl['manufacturers'],
-            $this->sql_tbl['shipping_rates'],
-            $this->sql_tbl['manufacturers_lng'],
-            $this->sql_tbl['distributor_contacts'],
-            $this->sql_tbl['distributor_return_address']);*/
         $this->arrCheckFields['manufacturers'] = array('manufacturerid',
             'manufacturer',
             'url',
@@ -254,9 +248,6 @@ class classManufacturer
     public function checkDBChanges () {
         $bResult = true;
         $currentDBSchema = array();
-        $diffArray = array();
-
-        //func_print_r($this->arrTablesManufacturers, array_keys($this->arrCheckFields)); exit;
 
         foreach (array_keys($this->arrCheckFields) as $sTable){
             if (isset($this->sql_tbl[$sTable]) && !empty($this->sql_tbl[$sTable])) {
@@ -265,8 +256,6 @@ class classManufacturer
         }
 
         $diffArray = func_array_compare($this->arrCheckFields,$currentDBSchema);
-
-        //$diffArray = $this->array_diff_assoc_recursive($this->arrCheckFields, $currentDBSchema);
 
         if (count($diffArray) > 0) $bResult = false;
 
@@ -278,7 +267,7 @@ class classManufacturer
     }
 
     private function getCloneManufacturerPrefix ($oldPrefix, $storePrefix) {
-        return $oldPrefix.$storePrefix;
+        return $oldPrefix."-".$storePrefix;
     }
 
     private function getCloneManufacturerName ($oldName, $Prefix) {
@@ -286,8 +275,6 @@ class classManufacturer
     }
 
     private function checkManufacturerCodeExists ($sManufacturerCode) {
-        //func_print_r($this->getManufacturerByCode($sManufacturerCode)); exit;
-
         return (count($this->getManufacturerByCode($sManufacturerCode))) > 0;
     }
 
@@ -299,7 +286,7 @@ class classManufacturer
         return $aResult;
     }
 
-    private function recursive_escape(&$item, $key) {
+    private function recursive_escape(&$item) {
         $item = mysql_real_escape_string($item);
     }
 
@@ -331,10 +318,8 @@ class classManufacturer
                         $aRow[$aExcludeFields[$sTable]['primarykey']] = $this->primaryKeyValue;
                     }
 
-
                     array_walk_recursive($aRow, array('classManufacturer','recursive_escape'));
 
-//                    func_print_r($sTable, $aRow);
                     func_array2insert($sTable, $aRow);
 
                 }
@@ -371,8 +356,6 @@ class classManufacturer
             return false;
         }
 
-
-
         $aExcludeFields = array();
         $aExcludeFields['manufacturers']['exclude'] = array($this->sPrimaryKeyFiled, "manufacturer", "provider", "code", "d_main_sf", "update_approximation_shipping_rates");
         $aExcludeFields['manufacturers']['primarykey'] = $this->sPrimaryKeyFiled;
@@ -385,10 +368,7 @@ class classManufacturer
         $aExcludeFields['images_M']['exclude'] = array("imageid");
         $aExcludeFields['images_M']['primarykey'] = "id";
 
-
         $res = $this->getClonedManufacturer($aExcludeFields, $aCloneParams, false);
-
-
 
         if (empty($aCloneParams["root_categoryid_for_cloned_products"])) $aCloneParams["root_categoryid_for_cloned_products"] = 0;
 
@@ -416,13 +396,14 @@ class classManufacturer
     }
 
     public function getMainufacturersInfo($aManufacturersId = array()) {
-
+        $aRes = false;
         if (isset($aManufacturersId) && !empty($aManufacturersId))
-        return func_query("SELECT m.".$this->sPrimaryKeyFiled.", m.code, ml.manufacturer, d_main_sf, sf.domain,  root_categoryid_for_cloned_products
+            $aRes = func_query("SELECT m.".$this->sPrimaryKeyFiled.", m.code, ml.manufacturer, d_main_sf, sf.domain,  root_categoryid_for_cloned_products
                       FROM ".$this->sql_tbl[$this->sPrimaryTable]." m
                       LEFT JOIN ".$this->sql_tbl['storefronts']." sf ON (sf.storefrontid = m.d_main_sf)
                       LEFT JOIN ".$this->sql_tbl['manufacturers_lng']." ml ON (m.".$this->sPrimaryKeyFiled." = ml.".$this->sPrimaryKeyFiled.")
                       WHERE m.".$this->sPrimaryKeyFiled." IN(".implode(',',$aManufacturersId).") AND ml.code = '".$GLOBALS['shop_language']."'");  //TODO remove GLOBALS
+        return $aRes;
     }
 
     public function getParentManufacturers ($iManufacturerId){
@@ -436,6 +417,7 @@ class classManufacturer
             }
             return $this->getMainufacturersInfo($aParents);
         }
+        return false;
     }
 
     public function getChildManufacturers ($iManufacturerId){
@@ -448,5 +430,6 @@ class classManufacturer
             }
             return $this->getMainufacturersInfo($aParents);
         }
+        return false;
     }
 }

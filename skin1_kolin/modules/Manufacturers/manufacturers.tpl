@@ -2053,7 +2053,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
     <table width="100%" cellpadding="3" cellspacing="1" id="distributor_section_id_30" {if $distributor_section ne "30"}style="display: none;" {/if}>
 
         <tr>
-            <td colspan="2" class="FormButton">This distributor is parent to:</td>
+            <td style="vertical-align: top; padding-top: 5px;" colspan="2" class="FormButton">This distributor is parent to:</td>
             <td >
                 {if ($aParentManufacturer)}
                 <table width="100%" style="text-align:center;">
@@ -2062,7 +2062,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
                         <th>Distributor name</th>
                         <th>Main SF id</th>
                         <th>Main SF name</th>
-                        <th>Destination category</th>
+                        <th>Destination category id</th>
                     </tr>
                     {foreach from=$aParentManufacturer item=parentmf}
                     <tr>
@@ -2078,7 +2078,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="FormButton">
+            <td style="vertical-align: top; padding-top: 5px;" colspan="2" class="FormButton">
                 This distributor is child to:
             </td>
             <td>
