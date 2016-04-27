@@ -1,0 +1,452 @@
+<?php
+
+class classManufacturer
+{
+    protected $sql_tbl = array();
+    private $arrCheckFields = array();
+    private $arrTablesManufacturers = array();
+    private $sPrimaryKeyFiled;
+    private $sPrimaryTable;
+    private $primaryKeyValue;
+    public $message = array();
+
+    function __construct()
+    {
+        global $sql_tbl;
+        $this->sql_tbl = $sql_tbl;
+        $this->sPrimaryTable = 'manufacturers';
+        $this->sPrimaryKeyFiled = "manufacturerid";
+
+        /*$this->arrTablesManufacturers = array($this->sql_tbl['manufacturers'],
+            $this->sql_tbl['shipping_rates'],
+            $this->sql_tbl['manufacturers_lng'],
+            $this->sql_tbl['distributor_contacts'],
+            $this->sql_tbl['distributor_return_address']);*/
+        $this->arrCheckFields['manufacturers'] = array('manufacturerid',
+            'manufacturer',
+            'url',
+            'descr',
+            'orderby',
+            'provider',
+            'avail',
+            'manufact_text_displayed',
+            'mess_body',
+            'email',
+            'submit_to_operator',
+            'm_address',
+            'm_address_2',
+            'm_city',
+            'm_country',
+            'm_state',
+            'm_zipcode',
+            'cart_manufact_text_displayed',
+            'code',
+            'catalog_sku',
+            'catalog_price',
+            'catalog_text',
+            'cost_to_us_coef_x',
+            'price_coef_x',
+            'price_coef_y',
+            'price_coef_z',
+            'map_price_coef_x',
+            'reverse_sku',
+            'remove_dashes',
+            'new_map_price_coef_x',
+            'd_product_catalog',
+            'd_price_list',
+            'd_map_policy',
+            'd_map_prices',
+            'd_shipping_weights_dimensions',
+            'd_website_search_for_sku_url',
+            'd_ships_to_within',
+            'd_shipping_methods_usps',
+            'd_shipping_methods_ups',
+            'd_shipping_methods_fedex',
+            'd_shipping_methods_trucking_company',
+            'd_shipping_methods_other',
+            'd_drop_ship_fee_select',
+            'd_drop_ship_fee_in_us',
+            'd_minimum_order_amount',
+            'd_minimum_order_amount_in_us',
+            'd_for_orders_below_min_order_amount',
+            'd_dealer_discount_reduced_from',
+            'd_dealer_discount_reduced_to',
+            'd_preferred_way_submit_orders',
+            'd_url_to_login_to_distributor_website',
+            'd_login',
+            'd_password',
+            'd_submit_to_order_entry_operator',
+            'd_order_entry_operator_email',
+            'd_instructions_to_order_entry_operator',
+            'd_tax_policy_in_states',
+            'd_warranty_starts_when_order_is',
+            'd_warranty_last_day',
+            'd_re_stocking_fee_for_authorized_returns',
+            'd_re_stocking_fee_for_unauthorized_returns',
+            'd_we_pay_to_distributor_by',
+            'd_net_payment_terms_in_days',
+            'd_bulk_or_individual_order_payments',
+            'd_our_dealer_account_n',
+            'd_available_on_distributor_site_checkbox',
+            'd_sent_by_email_to',
+            'd_put_on_the_invoices',
+            'd_invoices_sent_by_email_to',
+            'd_invoices_sent_by_fax_to',
+            'd_invoices_mailed_to_our_checkbox',
+            'd_available_on_distributor_site_url',
+            'd_sent_by_email_to_email_address',
+            'd_invoices_sent_to',
+            'd_invoices_by_fax_sent_to',
+            'd_invoices_mailed_to_our',
+            'd_availability_must_be_checked',
+            'd_send_to_email_14',
+            'd_message_body_14',
+            'd_email_subject_14',
+            'd_link_to_order_distributors_website',
+            'd_sec14_show_header',
+            'd_sec14_show_items_stock',
+            'd_sec14_show_shipto',
+            'd_sec14_show_items_cost',
+            'd_sec14_show_footer',
+            'lead_time_message',
+            'd_send_to_email_for_templates',
+            'd_server_min_distributor_time',
+            'd_contact_name_for_templates',
+            'd_product_questions_send_to_email',
+            'd_shipping_options',
+            'd_specific_instructions',
+            'd_subject_line_8',
+            'd_order_entry_operator_subject_line_8',
+            'd_main_sf',
+            'd_enable_feed',
+            'd_feed_updation_frequency',
+            'd_ftp_host',
+            'd_ftp_login',
+            'd_ftp_password',
+            'd_ftp_folder',
+            'd_feed_procedure_id',
+            'd_product_management_team_email',
+            'd_most_recent_feed_updation_date',
+            'd_distributor_return_policy',
+            'product_feeds_comments',
+            'd_last_feed_rows_processed',
+            'd_validation_threshold',
+            'supplier_products_price_multiplier',
+            'd_search_keyphrase_for_reconciliation',
+            'd_pay_to_distributor_by',
+            'd_we_can_save',
+            'd_pay_to_distributor_save_text',
+            'update_approximation_shipping_rates',
+            'shipping_rates_last_update_date',
+            'USE_MY_UPS_FEDEX_ACCOUNT_functionality',
+            'products_quantity_behavior',
+            'display_quantity_of',
+            'USE_MY_TRUCKING_ACCOUNT_functionality',
+            'allow_pre_orders',
+            'amazon_leadtimetoship',
+            'd_dispatch_instructions',
+            'add_ca_status_id',
+            'warehouse_pickups_are_allowed',
+            'd_product_questions_send_to_name',
+            'd_product_questions_send_to_phone',
+            'allow_dispatch_off_working_hours',
+            'add_cost_to_us_column_to_dispatch_message',
+            'distributor_offers_free_shipping',
+            'free_shipping_on_orders_over_value',
+            'dcad_bank_name',
+            'dcad_address',
+            'dcad_address_2',
+            'dcad_city',
+            'dcad_country',
+            'dcad_state',
+            'dcad_zipcode',
+            'dcad_company_name',
+            'dcad_routing_number',
+            'dcad_account_number',
+            'parent_manufacturer_id',
+            'root_categoryid_for_cloned_products');
+
+        $this->arrCheckFields['shipping_rates']  = array('rateid',
+            'shippingid',
+            'zoneid',
+            'maxamount',
+            'minweight',
+            'maxweight',
+            'mintotal',
+            'maxtotal',
+            'rate',
+            'item_rate',
+            'weight_rate',
+            'rate_p',
+            'provider',
+            'type',
+            'manufacturerid',
+            'cost_marcup',
+            'real_drop_ship_fee');
+
+        $this->arrCheckFields['manufacturers_lng'] = array('manufacturerid',
+            'code',
+            'manufacturer',
+            'descr');
+
+        $this->arrCheckFields['distributor_contacts'] = array('id',
+            'manufacturerid',
+            'distributor_field_code',
+            'distributor_field_name',
+            'contact_name',
+            'email',
+            'phone',
+            'ext',
+            'fax',
+            'pq');
+
+        $this->arrCheckFields['distributor_return_address'] = array('id',
+            'manufacturerid',
+            'warehouse_name',
+            'full_name',
+            'company',
+            'address',
+            'address_2',
+            'city',
+            'country',
+            'state',
+            'zipcode',
+            'email',
+            'phone',
+            'ext',
+            'fax');
+
+        $this->arrCheckFields['images_M'] = array('imageid',
+            'id',
+            'image',
+            'image_path',
+            'image_type',
+            'image_x',
+            'image_y',
+            'image_size',
+            'filename',
+            'date',
+            'alt',
+            'avail',
+            'orderby',
+            'md5');
+
+    }
+
+    protected function array_diff_assoc_recursive($array1, $array2) {
+        $difference=array();
+        foreach($array1 as $key => $value) {
+            if( is_array($value) ) {
+                if( !isset($array2[$key]) || !is_array($array2[$key]) ) {
+                    $difference[$key] = $value;
+                } else {
+                    $new_diff =  $this->array_diff_assoc_recursive($value, $array2[$key]);
+                    if( !empty($new_diff) )
+                        $difference[$key] = $new_diff;
+                }
+            } else if( !array_key_exists($key,$array2) || $array2[$key] !== $value ) {
+                $difference[$key] = $value;
+            }
+        }
+        return $difference;
+    }
+
+    public function checkDBChanges () {
+        $bResult = true;
+        $currentDBSchema = array();
+        $diffArray = array();
+
+        //func_print_r($this->arrTablesManufacturers, array_keys($this->arrCheckFields)); exit;
+
+        foreach (array_keys($this->arrCheckFields) as $sTable){
+            if (isset($this->sql_tbl[$sTable]) && !empty($this->sql_tbl[$sTable])) {
+                $currentDBSchema[$sTable] = array_keys(func_query_first("SELECT * FROM " . $this->sql_tbl[$sTable] . " LIMIT 1"));
+            }
+        }
+
+        $diffArray = func_array_compare($this->arrCheckFields,$currentDBSchema);
+
+        //$diffArray = $this->array_diff_assoc_recursive($this->arrCheckFields, $currentDBSchema);
+
+        if (count($diffArray) > 0) $bResult = false;
+
+        return $bResult;
+    }
+
+    public function getManufacturerByCode($sManufacturerCode) {
+        return func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE code = '$sManufacturerCode'");
+    }
+
+    private function getCloneManufacturerPrefix ($oldPrefix, $storePrefix) {
+        return $oldPrefix.$storePrefix;
+    }
+
+    private function getCloneManufacturerName ($oldName, $Prefix) {
+        return $oldName." (".$Prefix.")";
+    }
+
+    private function checkManufacturerCodeExists ($sManufacturerCode) {
+        //func_print_r($this->getManufacturerByCode($sManufacturerCode)); exit;
+
+        return (count($this->getManufacturerByCode($sManufacturerCode))) > 0;
+    }
+
+    private function getDiffTableStructure($aExcludeFields) {
+        $aResult = array();
+        foreach ($this->arrCheckFields as $key => $value) {
+            $aResult[$key] = array_diff($this->arrCheckFields[$key], empty($aExcludeFields[$key]['exclude'])?array():$aExcludeFields[$key]['exclude']);
+        }
+        return $aResult;
+    }
+
+    private function recursive_escape(&$item, $key) {
+        $item = mysql_real_escape_string($item);
+    }
+
+    private function DublicatePrimaryTable ($aCloneData, $aCloneParam){
+        $insertRow = reset($aCloneData[$this->sPrimaryTable]);
+        foreach ($aCloneParam as $key => $value) {
+            if (in_array($key, $this->arrCheckFields[$this->sPrimaryTable]) && $key != $this->sPrimaryKeyFiled) {
+                $insertRow[$key] = $value;
+            }
+        }
+        array_walk_recursive($insertRow, array('classManufacturer','recursive_escape'));
+
+        return func_array2insert($this->sPrimaryTable, $insertRow);
+    }
+
+    private function DublicateNonPrimaryTable ($aCloneData, $aCloneParam, $aExcludeFields){
+        unset ($aCloneData[$this->sPrimaryTable]);
+        if (isset($aCloneData) && is_array($aCloneData) && count($aCloneData)>0) {
+            foreach ($aCloneData as $sTable => $aRowsToClone) {
+                if (isset($aRowsToClone) && is_array($aRowsToClone) && count($aRowsToClone) > 0)
+                foreach ($aRowsToClone as $aRow) {
+                    foreach ($aCloneParam as $keyParam => $valueParam) {
+                        if (in_array($keyParam, $this->arrCheckFields[$sTable])) {
+                            $aRow[$keyParam] = $valueParam;
+                        }
+                    }
+
+                    if ($aExcludeFields[$sTable]['primarykey']) {
+                        $aRow[$aExcludeFields[$sTable]['primarykey']] = $this->primaryKeyValue;
+                    }
+
+
+                    array_walk_recursive($aRow, array('classManufacturer','recursive_escape'));
+
+//                    func_print_r($sTable, $aRow);
+                    func_array2insert($sTable, $aRow);
+
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function getClonedManufacturer($aExcludeFields, $aParams, $bExclude = true)  {
+        $aSelectResult = array();
+        if ($bExclude)
+            $aDiffStructure = $this->getDiffTableStructure($aExcludeFields);
+        else
+            $aDiffStructure = $this->getDiffTableStructure(array());
+
+        foreach ($aDiffStructure as $sTable => $aFields) {
+            $sSelectFields = implode(", ", $aFields);
+            $aSelectResult[$sTable] = func_query("SELECT $sSelectFields FROM ".$this->sql_tbl[$sTable]." WHERE ".$aExcludeFields[$sTable]['primarykey']." = ".$aParams[$this->sPrimaryKeyFiled]);
+        }
+
+        return $aSelectResult;
+    }
+
+    public function cloneManufacturer($aCloneParams = array()) {
+
+        if (!$this->checkDBChanges()) {
+            $this->message[] = "lb_copy_manufacturer_fieldsets_changed";
+            return false;
+        }
+
+        if (empty($aCloneParams["d_main_sf"])) {
+            $this->message[] = "lb_copy_manufacturer_same_sf";
+            return false;
+        }
+
+
+
+        $aExcludeFields = array();
+        $aExcludeFields['manufacturers']['exclude'] = array($this->sPrimaryKeyFiled, "manufacturer", "provider", "code", "d_main_sf", "update_approximation_shipping_rates");
+        $aExcludeFields['manufacturers']['primarykey'] = $this->sPrimaryKeyFiled;
+        $aExcludeFields['shipping_rates']['exclude'] = array("rateid");
+        $aExcludeFields['shipping_rates']['primarykey'] = $this->sPrimaryKeyFiled;
+        $aExcludeFields['distributor_contacts']['exclude'] = array("id");
+        $aExcludeFields['distributor_contacts']['primarykey'] = $this->sPrimaryKeyFiled;
+        $aExcludeFields['manufacturers_lng']['primarykey'] = $this->sPrimaryKeyFiled;
+        $aExcludeFields['distributor_return_address']['primarykey'] = $this->sPrimaryKeyFiled;
+        $aExcludeFields['images_M']['exclude'] = array("imageid");
+        $aExcludeFields['images_M']['primarykey'] = "id";
+
+
+        $res = $this->getClonedManufacturer($aExcludeFields, $aCloneParams, false);
+
+
+
+        if (empty($aCloneParams["root_categoryid_for_cloned_products"])) $aCloneParams["root_categoryid_for_cloned_products"] = 0;
+
+        $aCloneParams['code'] = $this->getCloneManufacturerPrefix(reset($res['manufacturers'])["code"],$aCloneParams["sf_prefix"]);
+
+        if ($this->checkManufacturerCodeExists($aCloneParams['code'])) {
+            $this->message[] = "lb_copy_manufacturer_already_exist";
+            return false;
+        }
+
+        $aCloneParams['manufacturer'] = $this->getCloneManufacturerName(reset($res["manufacturers"])["manufacturer"],$aCloneParams["sf_prefix"]);
+
+        $aClonedStructure = $this->getClonedManufacturer($aExcludeFields, $aCloneParams);
+
+        //func_print_r($aClonedStructure);
+
+        $this->primaryKeyValue = $this->DublicatePrimaryTable($aClonedStructure, $aCloneParams);
+
+        if ($this->primaryKeyValue) {
+            $aParams = array("manufacturerid" => $this->primaryKeyValue, "manufacturer" => $aCloneParams['manufacturer']);
+            $this->DublicateNonPrimaryTable($aClonedStructure, $aParams, $aExcludeFields);
+            return $this->primaryKeyValue;
+        }
+        return true;
+    }
+
+    public function getMainufacturersInfo($aManufacturersId = array()) {
+
+        if (isset($aManufacturersId) && !empty($aManufacturersId))
+        return func_query("SELECT m.".$this->sPrimaryKeyFiled.", m.code, ml.manufacturer, d_main_sf, sf.domain,  root_categoryid_for_cloned_products
+                      FROM ".$this->sql_tbl[$this->sPrimaryTable]." m
+                      LEFT JOIN ".$this->sql_tbl['storefronts']." sf ON (sf.storefrontid = m.d_main_sf)
+                      LEFT JOIN ".$this->sql_tbl['manufacturers_lng']." ml ON (m.".$this->sPrimaryKeyFiled." = ml.".$this->sPrimaryKeyFiled.")
+                      WHERE m.".$this->sPrimaryKeyFiled." IN(".implode(',',$aManufacturersId).") AND ml.code = '".$GLOBALS['shop_language']."'");  //TODO remove GLOBALS
+    }
+
+    public function getParentManufacturers ($iManufacturerId){
+        $aManufacturer = func_query("SELECT ".$this->sPrimaryKeyFiled." FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE parent_manufacturer_id = ".$iManufacturerId);
+
+        if (isset($aManufacturer) && is_array($aManufacturer) && !empty($aManufacturer)) {
+            $aParents = array();
+
+            foreach ($aManufacturer as $oManufacturer) {
+                $aParents[] = $oManufacturer[$this->sPrimaryKeyFiled];
+            }
+            return $this->getMainufacturersInfo($aParents);
+        }
+    }
+
+    public function getChildManufacturers ($iManufacturerId){
+        $aManufacturer = func_query("SELECT parent_manufacturer_id FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = ".$iManufacturerId);
+        if (isset($aManufacturer) && is_array($aManufacturer) && !empty($aManufacturer)) {
+            $aParents = array();
+
+            foreach ($aManufacturer as $oManufacturer) {
+                $aParents[] = $oManufacturer['parent_manufacturer_id'];
+            }
+            return $this->getMainufacturersInfo($aParents);
+        }
+    }
+}
