@@ -476,6 +476,61 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 		break;
 		}
 	}
+    
+    // group prices in GMC by 50/100/150/200/250/300/400/500/600/700/800/900/1000/1200/1400
+    $price_group_label = '0';
+    $cmp_price = $product['price'];
+    if ($cmp_price<10) {
+        $price_group_label = '10';
+    } elseif ($cmp_price<50) {
+        $price_group_label = '50';
+    } elseif ($cmp_price<100) {
+        $price_group_label = '100';
+    } elseif ($cmp_price<150) {
+        $price_group_label = '150';
+    } elseif ($cmp_price<200) {
+        $price_group_label = '200';
+    } elseif ($cmp_price<250) {
+        $price_group_label = '250';
+    } elseif ($cmp_price<300) {
+        $price_group_label = '300';
+    } elseif ($cmp_price<400) {
+        $price_group_label = '400';
+    } elseif ($cmp_price<500) {
+        $price_group_label = '500';
+    } elseif ($cmp_price<600) {
+        $price_group_label = '600';
+    } elseif ($cmp_price<700) {
+        $price_group_label = '700';
+    } elseif ($cmp_price<800) {
+        $price_group_label = '800';
+    } elseif ($cmp_price<900) {
+        $price_group_label = '900';
+    } elseif ($cmp_price<1000) {
+        $price_group_label = '1000';
+    } elseif ($cmp_price<1200) {
+        $price_group_label = '1200';
+    } elseif ($cmp_price<1400) {
+        $price_group_label = '1400';
+    } elseif ($cmp_price<1600) {
+        $price_group_label = '1600';
+    } elseif ($cmp_price<1800) {
+        $price_group_label = '1800';
+    } elseif ($cmp_price<2000) {
+        $price_group_label = '2000';
+    } elseif ($cmp_price<3000) {
+        $price_group_label = '3000';
+    } elseif ($cmp_price<4000) {
+        $price_group_label = '4000';
+    } elseif ($cmp_price<5000) {
+        $price_group_label = '5000';
+    } elseif ($cmp_price<10000) {
+        $price_group_label = '10000';
+    } else {
+        $price_group_label = '100000';
+    }
+    $product["custom_label_1"] = $price_group_label;
+    
 //	func_print_r($shipping_arr["shippings_google_arr"]);
 ###
 ##
