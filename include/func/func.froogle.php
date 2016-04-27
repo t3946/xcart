@@ -1147,6 +1147,9 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 
 #
 ##
+		/*Custom Labels*/
+            $postBody["entries"][$k_counter]["product"]["customLabel0"] = $product_info["product"]["custom_label_0"];
+            $postBody["entries"][$k_counter]["product"]["customLabel1"] = $product_info["product"]["custom_label_1"];
 
 			$postBody["entries"][$k_counter]["product"]["adwordsGrouping"] = $product_info["product"]["adwords_grouping"];
 			$postBody["entries"][$k_counter]["product"]["adwordsLabels"][0] = $product_info["product"]["adwords_labels"];
@@ -1415,6 +1418,7 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 
 		/*Custom Labels*/
                 $postBody["entries"][$k_counter]["product"]["customLabel0"] = $product_info["product"]["custom_label_0"];
+                $postBody["entries"][$k_counter]["product"]["customLabel1"] = $product_info["product"]["custom_label_1"];
 
                 $postBody["entries"][$k_counter]["product"]["destinations"][0]["destinationName"] = "ShoppingApi";
                 $postBody["entries"][$k_counter]["product"]["destinations"][0]["intention"] = "required";
