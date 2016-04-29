@@ -801,10 +801,9 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
                 }
 */
 
-
+		$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, 'seconds');
 
 		if ($manufacturer_feed_fields["eta_date_mm_dd_yyyy"]["disable"] == "Y") {
-			$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, 'seconds');
 
 			$todaysDate = strtotime(date("Y-m-d"));
 			$maxETADate = strtotime('+2 weeks', $todaysDate);
