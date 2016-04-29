@@ -1734,10 +1734,6 @@ die();
 #
 
 
-/*
-https://basecamp.com/2070980/projects/1577907/messages/55846489
-FIX: Order notifications (email duplicates and attachments)
-
                 if ($send_email == 'Y') {
 
                         $customer_attach_pdf_invoice = "";
