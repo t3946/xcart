@@ -1122,10 +1122,10 @@ if (!empty($page))
 	if ($distributor_section == "30") {
 		require_once $xcart_dir."/include/class/classManufacturers.php";
 		$classManufacturer = new classManufacturer();
-		$aParentManufacturer = $classManufacturer->getParentManufacturers($manufacturerid);
+		$aParentManufacturer = $classManufacturer->getChildrenManufacturers($manufacturerid);
 //		func_print_r($aParentManufacturer);
 		$smarty->assign("aParentManufacturer", $aParentManufacturer);
-		$aChildManufacturers = $classManufacturer->getChildManufacturers($manufacturerid);
+		$aChildManufacturers = $classManufacturer->getParentManufacturers($manufacturerid);
 		$smarty->assign("aChildManufacturers", $aChildManufacturers);
 	}
 
