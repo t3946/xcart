@@ -1,7 +1,7 @@
 <?php /* MODIFIED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
-<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (Изменения для модуля UPS + Изменения в способ ввода Tracking numbers для заказов)] */ ?>
+<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ UPS + О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ Tracking numbers О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫)] */ ?>
 <?php /* MODIFIED: random:19017 [2009 Sep 14 14:13][Custom development (Add new option to "Order status" selector and "Empty tracking number detection")] */ ?>
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -2833,69 +2833,86 @@ elseif ($mode == 'mode_info_request_survey'){
                         }
                 }
 
-                if (!empty($eta_date_mm_dd_yyyy) && is_array($eta_date_mm_dd_yyyy) && !empty($products) && is_array($products)){
+			  if (!empty($eta_date_mm_dd_yyyy) && is_array($eta_date_mm_dd_yyyy) && !empty($products) && is_array($products)) {
 
-                        foreach ($products as $k => $v){
+				  foreach ($products as $k => $v) {
 
-			    if ($v["productid"] == $ks){
+					  if ($v["productid"] == $ks) {
 
-                                $productid = $v["productid"];
-                                $eta_date = trim($eta_date_mm_dd_yyyy[$productid]);
+						  $productid = $v["productid"];
+						  $eta_date = trim($eta_date_mm_dd_yyyy[$productid]);
 
-				$current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
-				$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
+						  $current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+						  $current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
-				$current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
-				$current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
+						  $current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
+						  $current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
 
-                                if ($vs == "some_in_stock" || $vs == "out_of_stock"){
+						  if ($vs == "some_in_stock" || $vs == "out_of_stock") {
 
-                                        if ($current_eta_date_mm_dd_yyyy != $eta_date){
-                                                $log .= "<B>".$v["productcode"].":</B> ". $current_eta_date_mm_dd_yyyy . " -> ". $eta_date ."<br />";
-                                        }
+							  if ($current_eta_date_mm_dd_yyyy != $eta_date) {
+								  $log .= "<B>" . $v["productcode"] . ":</B> " . $current_eta_date_mm_dd_yyyy . " -> " . $eta_date . "<br />";
+							  }
 
-					$eta_date = func_convert_date_mm_dd_yyyy($eta_date, 'seconds');
+							  $eta_date = func_convert_date_mm_dd_yyyy($eta_date, 'seconds');
 
-                                	db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$eta_date' WHERE productid='$productid'");
+							  $eta_date_lock = $v[$eta_date_lock];
 
-					$p_offer_backorder = $offer_backorder[$productid];
-					if (empty($p_offer_backorder)){
-						$p_offer_backorder = "N";
-					}
+							  if ($v["manufacturer_feed_fields"]["eta_date_mm_dd_yyyy"]["disable"] == "Y") {
 
-					db_query("UPDATE $sql_tbl[order_details] SET offer_backorder='$p_offer_backorder' WHERE productid='$productid' AND orderid='$orderid'");
+								  /*$todaysDate = strtotime(date("Y-m-d"));
+								  $maxETADate = strtotime('+2 weeks', $todaysDate);
 
-                                        if ($current_forsale == 'N'){
-                                                $log .= "<B>".$v["productcode"].":</B> forsale: ". $current_forsale . " -> Y <br />";
-						db_query("UPDATE $sql_tbl[products] SET forsale='Y', r_avail='0' WHERE productid='$productid'");
-                                        }
+								  if ($eta_date > $maxETADate){
+									  $eta_date = $maxETADate;
+									  $status = "eta_date_invalid";
+								  }*/
+								  if ($eta_date) {
+									  $eta_date_lock = "Y";
+								  } else  $eta_date_lock = "N";
+
+							  }
+
+							  db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$eta_date', eta_date_lock = '$eta_date_lock' WHERE productid='$productid'");
+
+							  $p_offer_backorder = $offer_backorder[$productid];
+							  if (empty($p_offer_backorder)) {
+								  $p_offer_backorder = "N";
+							  }
+
+							  db_query("UPDATE $sql_tbl[order_details] SET offer_backorder='$p_offer_backorder' WHERE productid='$productid' AND orderid='$orderid'");
+
+							  if ($current_forsale == 'N') {
+								  $log .= "<B>" . $v["productcode"] . ":</B> forsale: " . $current_forsale . " -> Y <br />";
+								  db_query("UPDATE $sql_tbl[products] SET forsale='Y', r_avail='0' WHERE productid='$productid'");
+							  }
 
 
-                                } elseif ($vs == "discontinued"){
+						  } elseif ($vs == "discontinued") {
 
-                                        if ($current_eta_date_mm_dd_yyyy != ''){
-                                                $log .= "<B>".$v["productcode"].":</B> eta_date_mm_dd_yyyy: ". $current_eta_date_mm_dd_yyyy . " -> <br />";
-                                        }
+							  if ($current_eta_date_mm_dd_yyyy != '') {
+								  $log .= "<B>" . $v["productcode"] . ":</B> eta_date_mm_dd_yyyy: " . $current_eta_date_mm_dd_yyyy . " -> <br />";
+							  }
 
-                                        if ($current_forsale != 'N'){
-                                                $log .= "<B>".$v["productcode"].":</B> forsale: ". $current_forsale . " -> N <br />";
-                                        }
+							  if ($current_forsale != 'N') {
+								  $log .= "<B>" . $v["productcode"] . ":</B> forsale: " . $current_forsale . " -> N <br />";
+							  }
 
-                                        if ($current_r_avail != '0'){
-                                                $log .= "<B>".$v["productcode"].":</B> r_avail: ". $current_r_avail . " -> 0 <br />";
-                                        }
+							  if ($current_r_avail != '0') {
+								  $log .= "<B>" . $v["productcode"] . ":</B> r_avail: " . $current_r_avail . " -> 0 <br />";
+							  }
 
-					db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='', forsale='N', r_avail='0' WHERE productid='$productid'");
-/*
-					$current_update_search_index = func_query_first_cell("SELECT update_search_index FROM $sql_tbl[products] WHERE productid='$productid'");
-					if ($current_update_search_index == "N"){
-						db_query("UPDATE $sql_tbl[products] SET update_search_index='D' WHERE productid='$productid'");
-					}
-*/
-				} 
-			    }
-                        }
-                }
+							  db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='', forsale='N', r_avail='0' WHERE productid='$productid'");
+							  /*
+                                                  $current_update_search_index = func_query_first_cell("SELECT update_search_index FROM $sql_tbl[products] WHERE productid='$productid'");
+                                                  if ($current_update_search_index == "N"){
+                                                      db_query("UPDATE $sql_tbl[products] SET update_search_index='D' WHERE productid='$productid'");
+                                                  }
+                              */
+						  }
+					  }
+				  }
+			  }
 
 #
 ##
@@ -3994,7 +4011,6 @@ if (!empty($order["refund_groups"])){
 		$smarty->assign("show_cancel_message", "Y");
 	}
 }
-
 
 //func_print_r($order);
 
