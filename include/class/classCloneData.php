@@ -16,7 +16,7 @@ class classCloneData
     }
 
     protected function recursive_escape(&$item) {
-        $item = mysql_real_escape_string($item);
+        $item = addslashes($item);
     }
 
     protected function search_array_key_value ($array, $key, $value)

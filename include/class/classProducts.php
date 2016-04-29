@@ -10,6 +10,7 @@ class classProducts extends classCloneData
     public $addCounter;
     public $updateCounter;
     private $sQueueTable;
+    private $aClonedData;
     public function __construct()
     {
         parent::__construct();
@@ -18,6 +19,14 @@ class classProducts extends classCloneData
         $this->sQueueTable = "clone_products_queue";
         $this->addCounter = 0;
         $this->updateCounter = 0;
+
+        $this->arrCloneTableStructure[] = array("table" => $this->sPrimaryTable,"key_field" => $this->sPrimaryKeyFiled, "primary_key" => $this->sPrimaryKeyFiled);
+        $this->arrCloneTableStructure[] = array("table" => "images_D","key_field" => "id", "primary_key" =>"imageid");
+        $this->arrCloneTableStructure[] = array("table" => "images_P","key_field" => "id", "primary_key" =>"imageid");
+        $this->arrCloneTableStructure[] = array("table" => "images_T","key_field" => "id", "primary_key" =>"imageid");
+        $this->arrCloneTableStructure[] = array("table" => "product_files","key_field" => "productid", "primary_key" =>"fileid");
+        $this->arrCloneTableStructure[] = array("table" => "products_amz_fields","key_field" => "productid", "primary_key" =>"productid");
+        $this->arrCloneTableStructure[] = array("table" => "clean_urls","key_field" => "resource_id", "primary_key" =>"resource_id");
     }
 
     /**
@@ -178,6 +187,7 @@ class classProducts extends classCloneData
                         "manufacturercode" => $aChildManufacturer["code"],
                         "root_category_id" => $aChildManufacturer["root_categoryid_for_cloned_products"],
                         "d_main_sf" =>  $aChildManufacturer["d_main_sf"],
+                        "productid" =>  $aProduct['productid'],
 
                     );
                     $this->insertClonedProduct($aProduct, $aParamToClone);
@@ -229,12 +239,108 @@ class classProducts extends classCloneData
             }
         }
 
+        $iNewProductCategory = $clonedCategoryId;
+
+        /*данные копируем из следующих таблиц:
+            xcart_products
+
+            xcart_images_D
+            xcart_images_P
+            xcart_images_T
+            xcart_product_files
+            xcart_products_amz_fields
+            xcart_product_taxes
+            xcart_variants
+            xcart_variant_items
+            xcart_clean_urls*/
+
+
+        $iNewProductId = $this->DublicatePrimaryTable($aParamToClone);
+        $aParamToClone["productid"] = $iNewProductId;
+
+        $this->DublicateNonPrimaryTable($aParamToClone);
+
+        /*добавляем данные в следующие таблицы:
+        xcart_categories
+        xcart_products_categories
+
+        xcart_cidev_filters
+        xcart_cidev_filter_products
+        xcart_cidev_filter_values
+
+        xcart_products_sf*/
+
+        $this->addMainProductCategory($iNewProductId, $iNewProductCategory);
+        $this->addMainProductCategory($iNewProductId, $iNewProductCategory);
+
 
 
 
 
         return true;
     }
+
+    protected function getClonedData($aParams)  {
+        $aSelectResult = array();
+
+        foreach ($this->arrCloneTableStructure as $sTable) {
+            $aSelectResult[$sTable['table']]['result'] = func_query("SELECT * FROM ".$this->sql_tbl[$sTable['table']]." WHERE ".$sTable['key_field']." = ".$aParams[$this->sPrimaryKeyFiled]);
+            if (isset($aSelectResult[$sTable['table']]['result']) && is_array($aSelectResult[$sTable['table']]['result']))
+            foreach ($aSelectResult[$sTable['table']]['result']  as &$aRows) {
+                if ($sTable['primary_key'] != $sTable['key_field']) {
+                    unset($aRows[$sTable['primary_key']]);
+                }
+            }
+            $aSelectResult[$sTable['table']]['key_field'] =  $sTable['key_field'];
+        }
+
+        return $aSelectResult;
+    }
+
+    protected function DublicatePrimaryTable ($aCloneParam){
+
+        $this->aClonedData = $this->getClonedData($aCloneParam);
+
+        $insertRow = reset($this->aClonedData[$this->sPrimaryTable]['result']);
+        foreach ($aCloneParam as $key => $value) {
+            if (in_array($key, array_keys($insertRow)) && $key != $this->sPrimaryKeyFiled) {
+                $insertRow[$key] = $value;
+            }
+        }
+        unset($insertRow[$this->sPrimaryKeyFiled]);
+        array_walk_recursive($insertRow, array(__CLASS__,'recursive_escape'));
+//        func_print_r($insertRow);
+        return func_array2insert($this->sPrimaryTable, $insertRow);
+    }
+
+    private function DublicateNonPrimaryTable ($aCloneParam){
+
+        unset ($this->aClonedData[$this->sPrimaryTable]);
+
+        if (isset($this->aClonedData) && is_array($this->aClonedData) && count($this->aClonedData)>0) {
+            foreach ($this->aClonedData as $sTable => $aRowsToClone) {
+                if (isset($aRowsToClone['result']) && is_array($aRowsToClone['result']) && count($aRowsToClone['result']) > 0)
+                    foreach ($aRowsToClone['result'] as $aRow) {
+                        foreach ($aCloneParam as $keyParam => $valueParam) {
+                            if (in_array($keyParam, array_keys($aRow))) {
+                                $aRow[$keyParam] = $valueParam;
+                            }
+                        }
+
+                        $aRow[$aRowsToClone['key_field']] = $aCloneParam[$this->sPrimaryKeyFiled];
+
+
+                        array_walk_recursive($aRow, array(__CLASS__,'recursive_escape'));
+//func_print_r($aRow);
+                        func_array2insert($sTable, $aRow);
+
+                    }
+            }
+        }
+
+        return true;
+    }
+
 
     protected function queueNewProductForUpdate ($aProduct) {
         func_query ("INSERT INTO $this->sql_tbl['clone_products_queue'] (productid, clone, insert_datetime, manufacturerid)
