@@ -1,5 +1,5 @@
 <?php /* MODIFIED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
-<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (Изменения для модуля UPS + Изменения в способ ввода Tracking numbers для заказов)] */ ?>
+<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ UPS + О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ Tracking numbers О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫)] */ ?>
 <?php /* MODIFIED: random:19771 [2009 Nov 25 15:10][Custom development (Purchase Order information to appear on INVOICES)] */ ?>
 <?php /* MODIFIED: random:17710_17631 [2009 Mar 26 09:25][Custom development ("Shipping quote" functionality and other modifications) + Other] */ ?>
 <?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
@@ -758,6 +758,21 @@ function func_order_data($orderid) {
 			$order['shipping_groups'][$m_id]['taxes'] = $v['extra_data']['taxes'];
 		}
 # END: random:20341 [2010 Jul 29 14:46] 
+
+
+				$manufacturer_feed_fields = func_query_hash("SELECT $sql_tbl[manufacturer_feed_fields].* FROM $sql_tbl[manufacturer_feed_fields] WHERE $sql_tbl[manufacturer_feed_fields].manufacturerid='$v[manufacturerid]'", "field_name", false);
+
+				if (!empty($manufacturer_feed_fields) && is_array($manufacturer_feed_fields)) {
+					foreach ($manufacturer_feed_fields as $km => $vm) {
+						if (($vm["locked"] == 'Y' && $vm["admin_lock"] == 'Y') || ($vm["locked"] == 'N' && $vm["admin_lock"] == 'Y')) {
+							$manufacturer_feed_fields[$km]["disable"] = "Y";
+						} else {
+							$manufacturer_feed_fields[$km]["disable"] = "N";
+						}
+					}
+					$products[$k]["manufacturer_feed_fields"] = $manufacturer_feed_fields;
+				}
+
 
 	}
 
