@@ -50,7 +50,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 func_flush();
         }
 
-	$products = func_query("Select PS.sfid, P.*, $sql_tbl[storefronts].domain From xcart_products P left join xcart_products_sf PS ON PS.productid = P.productid LEFT JOIN $sql_tbl[storefronts] ON PS.sfid = $sql_tbl[storefronts].storefrontid where P.productid = '$record[resourceid]'");
+	$products = func_query("Select PS.sfid, P.*, $sql_tbl[storefronts].domain, $sql_tbl[brands].brand As brand From xcart_products P left join xcart_products_sf PS ON PS.productid = P.productid LEFT JOIN $sql_tbl[storefronts] ON PS.sfid = $sql_tbl[storefronts].storefrontid LEFT JOIN $sql_tbl[brands] ON $sql_tbl[brands].brandid = P.brandid where P.productid = '$record[resourceid]'");
 
 //func_print_r($record, $products);
 //die();
