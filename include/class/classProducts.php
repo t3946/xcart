@@ -187,7 +187,17 @@ class classProducts extends classCloneData
                         "manufacturercode" => $aChildManufacturer["code"],
                         "root_category_id" => $aChildManufacturer["root_categoryid_for_cloned_products"],
                         "d_main_sf" =>  $aChildManufacturer["d_main_sf"],
+                        "source_sfid" =>  $aChildManufacturer["d_main_sf"],
                         "productid" =>  $aProduct['productid'],
+                        "similar_productids" => "",
+                        "forsale" => "N",
+                        "pc_classify_status" => "NC",
+                        "pc_mc_operator" => "",
+                        "pc_acc_operator" => "",
+                        "amazon_enabled" => "N",
+                        "pc_most_relevant_categories" => "",
+                        "pc_delta" => "0",
+
 
                     );
                     $this->insertClonedProduct($aProduct, $aParamToClone);
@@ -271,7 +281,9 @@ class classProducts extends classCloneData
         xcart_products_sf*/
 
         $this->addMainProductCategory($iNewProductId, $iNewProductCategory);
-        $this->addMainProductCategory($iNewProductId, $iNewProductCategory);
+
+        $this->addProductToStoreFront($iNewProductId, $aParamToClone["d_main_sf"]);
+
 
 
 
