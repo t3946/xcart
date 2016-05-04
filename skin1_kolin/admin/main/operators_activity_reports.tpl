@@ -2,11 +2,11 @@
 $Id: order_reports.tpl, v 1.0.0 2010/04/12 18:25:21 random Exp $
 vim: set ts=2 sw=2 sts=2 et:
 *}
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
-
-{include file="page_title.tpl" title=$lng.lbl_order_reports}
-
+{include file="page_title.tpl" title="Operators activity report"}
 <br /><br />
+{if ($mode ne "report") }
+
+<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 
 {include file="main/include_js.tpl" src="reset.js"}
 <script type="text/javascript">
@@ -33,7 +33,7 @@ function managedate(status) {
 
 {capture name=dialog}
 
-<form name="searchform" action="order_reports.php" method="post">
+<form name="searchform" action="operators_activity_reports.php" method="post">
 <input type="hidden" name="mode" value="" />
 
 <table cellpadding="1" cellspacing="5" width="100%">
@@ -68,7 +68,7 @@ function managedate(status) {
 </tr>
 
 <tr> 
-	<td class="FormButton" nowrap="nowrap">{$lng.lbl_order_date_from}:</td>
+	<td class="FormButton" nowrap="nowrap">Report date from:</td>
 	<td width="10">&nbsp;</td>
 	<td> 
 
@@ -95,7 +95,7 @@ function managedate(status) {
 </tr>
 
 <tr> 
-	<td class="FormButton" nowrap="nowrap">{$lng.lbl_order_date_through}:</td>
+	<td class="FormButton" nowrap="nowrap">Report date to:</td>
 	<td width="10">&nbsp;</td>
 	<td> 
 
@@ -121,117 +121,149 @@ function managedate(status) {
 	</td>
 </tr>
 
-<tr>
-        <td class="FormButton" nowrap="nowrap">Sales channel:</td>
-        <td width="10">&nbsp;</td>
-        <td>
-            <select name="posted_data[orders_source]" class="select">
-                <option value="any">Any channel</option>
-                <option value="xcart_orders_only" {if $search_prefilled.orders_source eq "xcart_orders_only"}selected="selected"{/if}>S3 Stores websites</option>
-                <option value="amazon_orders_only" {if $search_prefilled.orders_source eq "amazon_orders_only"}selected="selected"{/if}>Amazon website</option>
-                <option value="amazon_orders_MFN" {if $search_prefilled.orders_source eq "amazon_orders_MFN"}selected="selected"{/if}> - MFN</option>
-                <option value="amazon_orders_FBA" {if $search_prefilled.orders_source eq "amazon_orders_FBA"}selected="selected"{/if}> - FBA</option>
-            </select>
-        </td>
-</tr>
-
-    <tr>
-  <td class="FormButton" nowrap="nowrap">StoreFronts:</td>
-  <td width="10">&nbsp;</td>
-        <td>
-            <select name="posted_data[storefront_ids][]" multiple="multiple" class="select" size="10">
-            {foreach from=$all_storefronts item=v key=k}
-                <option value="{$v.storefrontid}"{if $v.selected eq "Y"} selected="selected"{/if}>{$v.domain}</option>
-            {/foreach}
-            </select>
-        </td>
-    </tr>
 
 <tr> 
-	<td class="FormButton" nowrap="nowrap">{$lng.lbl_manufacturers}:</td>
+	<td class="FormButton" nowrap="nowrap">Operators:</td>
 	<td width="10">&nbsp;</td>
 	<td>
-  <select name="posted_data[manufacturers][]" multiple="multiple" size="10">
-  {foreach from=$manufacturers item=mnf key=mid}
-    <option value="{$mid}"{if $mnf.selected} selected="selected"{/if}>{$mnf.manufacturer}</option>
+  <select name="posted_data[operators][]" multiple="multiple" size="10">
+  {foreach from=$operators item=mnf key=mid}
+    <option value="{$mid}">{$mnf[0].firstname}</option>
   {/foreach}
   </select>
+		{if $search_prefilled.date_period ne "C"}
+			<script type="text/javascript" language="JavaScript 1.2">
+				<!--
+                managedate(true);
+                -->
+			</script>
+		{/if}
 	</td>
 </tr>
-
-{*
-<tr> 
-	<td class="FormButton">{$lng.lbl_include_orders_profit_margin}:</td>
-	<td width="10">&nbsp;</td>
-	<td>
-  <input type="checkbox" name="posted_data[include_margin_100]" value="Y"{if $search_prefilled.include_margin_100 eq 'Y' || !$search_prefilled} checked="checked"{/if} />
+<tr><td style="text-align:center;" colspan="3">
+	<input type="submit" value="Submit" onclick="javascript: document.searchform.mode.value=''; document.searchform.target='_blank'; document.searchform.submit();" />
 	</td>
 </tr>
-*}
-
-{* --- *}
-
-<tr>
-  <td class="FormButton">Accounting method:</td>
-  <td width="10">&nbsp;</td>
-  <td>
-
-    <table>
-    <tr><td><input type="radio" name="posted_data[accounting_method]" value="accrual"{if $search_prefilled.accounting_method eq "accrual" || $search_prefilled.accounting_method eq ""} checked="checked"{/if} /></td><td>Accrual</td></tr>
-
-    <tr><td><input type="radio" name="posted_data[accounting_method]" value="cash"{if $search_prefilled.accounting_method eq "cash"} checked="checked"{/if} /></td><td>Cash</td></tr>
-
-    </table>
-
-  </td>
-</tr>
-
-
-<tr>
-  <td class="FormButton">Profit margin range:</td>
-  <td width="10">&nbsp;</td>
-  <td>
-
-    <table>
-    <tr><td><input type="radio" name="posted_data[profit_margin_range]" value="margin_100"{if $search_prefilled.profit_margin_range eq "margin_100" || $search_prefilled.profit_margin_range eq ""} checked="checked"{/if} /></td><td>Show all orders (look at sales volume)</td></tr>
-
-    <tr><td><input type="radio" name="posted_data[profit_margin_range]" value="margin_less_100"{if $search_prefilled.profit_margin_range eq "margin_less_100"} checked="checked"{/if} /></td><td>Show orders with profit margin &lt; 100 % (look at profit margin)</td></tr>
-
-    <tr><td><input type="radio" name="posted_data[profit_margin_range]" value="margin_less_1"{if $search_prefilled.profit_margin_range eq "margin_less_1"} checked="checked"{/if} /></td><td>Show orders with profit margin ≤  <input type="text" name="posted_data[profit_margin_range_less_1]" value="{$search_prefilled.profit_margin_range_less_1|default:15}" size="3" />%</td></tr>
-
-    <tr><td><input type="radio" name="posted_data[profit_margin_range]" value="margin_1_2"{if $search_prefilled.profit_margin_range eq "margin_1_2"} checked="checked"{/if} /></td><td>Show orders with <input type="text" name="posted_data[profit_margin_range_1]" value="30" size="3" />% ≤ profit margin &lt; <input type="text" name="posted_data[profit_margin_range_2]" value="100" size="3" />%</td></tr>
-    </table>
-
-  </td>
-</tr>
-
-<tr>
-  <td class="FormButton">Include Fully refunded orders:</td>
-  <td width="10">&nbsp;</td>
-  <td><input type="checkbox" name="posted_data[cb_status]" value="R" checked="checked" /></td>
-</tr>
-{* --- *}
-
-<tr>
-	<td colspan="2">&nbsp;</td>
-	<td colspan="3" class="SubmitBox">
-	<input type="submit" value="{$lng.lbl_generate_html_report|strip_tags:false|escape}" onclick="javascript: document.searchform.mode.value=''; document.searchform.target='_blank'; document.searchform.submit();" />
-	<input type="button" value="{$lng.lbl_generate_csv_report|strip_tags:false|escape}" onclick="javascript: document.searchform.mode.value='csv'; document.searchform.target=''; document.searchform.submit();" />
-
-	<input type="button" value="Generate 'Time to dispatch' distribution" onclick="javascript: document.searchform.mode.value='generate_time_to_dispatch'; document.searchform.target='_blank'; document.searchform.submit();" />
-
-
-{if $search_prefilled.date_period ne "C"}
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-managedate(true);
--->
-</script>
-{/if}
-	</td>
-</tr>
-
 </table>
 
 {/capture}
-{include file="dialog.tpl" title=$lng.lbl_order_reports content=$smarty.capture.dialog extra='width="100%"'}
+{include file="dialog.tpl" title="Operators activity report" content=$smarty.capture.dialog extra='width="100%"'}
+
+{elseif $mode eq "report"}
+
+	<h2 style="text-align: center;">
+	{if $data.date_period ne ''}
+		{$lng.lbl_from} {$data.start_date|date_format:"%d-%b-%Y"} {$lng.lbl_to} {$data.end_date|date_format:"%d-%b-%Y"}
+	{else}
+		{$lng.lbl_all_dates}
+	{/if}
+	</h2>
+	{literal}
+		<style>
+			.reporttable {
+				border-collapse: collapse;
+				border-spacing: 0;
+				margin-bottom: 10px;
+				width: 100%;
+				cursor: pointer;
+				background-color: white;
+				text-align: center;
+			}
+			.reporttable th {
+				border: 1px solid #8cacbb;
+				padding: 0.3em 0.7em;
+				background: #eee none repeat scroll 0 0;
+			}
+		.reporttable tr {
+			height: 25px;
+		}
+
+		.reporttable td {
+			border: 1px solid #8cacbb;
+			padding: 0.3em 0.7em;
+		}
+		.crosscell {
+				text-align: center;
+			font-weight: bold;
+			}
+		.hidden{
+			display: none;
+		}
+		.firstcell{
+				width: 15px;
+			}
+
+
+		</style>
+	{/literal}
+	<table id="reporttbl" class="reporttable">
+		<tr>
+			<th class="firstcell"></th>
+			<th>Operator</th>
+			<th>Orders</th>
+			<th>Actions</th>
+		</tr>
+	{if $firstlevelGroup}
+	{foreach from=$firstlevelGroup item=row}
+		<tr>
+			<td class="crosscell">[+]</td>
+			<td>{$row.login}</td>
+			<td>{$row.orderscount}</td>
+			<td>{$row.actioncount}</td>
+		</tr>
+		<tr class="hidden"><td colspan="4">
+				<table class="reporttable">
+					<th class="firstcell"></th>
+					<th style="width:50px;">Order number</th>
+					<th style="width:100px;">Order date</th>
+					<th>Order statuses</th>
+					<th>Actions</th>
+
+					{foreach from=$secondlevelGroup[$row.login] item=row2}
+					<tr>
+						<td class="crosscell">[+]</td>
+						<td>{$row2.ordernumber}</td>
+						<td>{$row2.orderdate|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
+						<td>{$row2.orderstatus}</td>
+						<td>{$row2.actioncount}</td>
+					</tr>
+						<tr class="hidden"><td style="width:200px; max-width:500px; overflow: hidden;" colspan="5">
+								<table class="reporttable">
+									<th>Action date</th>
+									<th>Action type</th>
+									<th>Action</th>
+									{foreach from=$LevelGroup3[$row.login][$row2.ordernumber] item=row3}
+										<tr>
+											<td>{$row3.action_date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
+											<td>{$type_names[$row3.action_type]}</td>
+											<td style="text-align: left;">{$row3.log}</td>
+										</tr>
+									{/foreach}
+
+								</table>
+							</td></tr>
+					{/foreach}
+				</table>
+			</td></tr>
+	{/foreach}
+	{else}
+		<tr><td colspan="4">No data found</td></tr>
+	{/if}
+	</table>
+	{literal}
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			$("#reporttbl .crosscell").click(
+					function() {
+						if ($(this).hasClass("opened")) {
+							$(this).removeClass("opened").html("[+]");
+							$(this).parents("tr").next(".hidden", 1).hide();
+						} else {
+							$(this).addClass("opened").html("[-]");
+							$(this).parents("tr").next(".hidden").show();
+						}
+					});
+		});
+	</script>
+	{/literal}
+{/if}
