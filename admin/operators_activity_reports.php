@@ -67,7 +67,7 @@ if ($REQUEST_METHOD == "POST") {
        INNER JOIN xcart_customers xc ON OL.login = xc.login
       where OL.id is not NULL  $search_condition AND usertype='A' AND status = 'Y'
       group by o.orderid, OL.id
-      order by o.date, ol.date ASC
+      order by o.date, OL.date ASC
       ");
 
     $firstlevelGroup = array();
