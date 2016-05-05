@@ -6,13 +6,18 @@ class classCloneData
     protected $sPrimaryKeyFiled;
     protected $sPrimaryTable;
     protected $primaryKeyValue;
+    protected $arrCloneTableStructure = array();
+    private $aClonedData;
     public $message = array();
 
     public function __construct()
     {
+        $this->init();
+    }
+
+    public function init() {
         global $sql_tbl;
         $this->sql_tbl = $sql_tbl;
-
     }
 
     protected function recursive_escape(&$item) {
@@ -34,6 +39,10 @@ class classCloneData
         }
 
     return $results;
+    }
+
+    protected function deleteFromTableByKeyValue($sTable, $sKeyField, $iKeyValue) {
+        db_query("DELETE FROM ".$this->sql_tbl[$sTable]. " WHERE $sKeyField = '$iKeyValue'");
     }
 
 
@@ -62,31 +71,69 @@ public function checkDBChanges () {
         return $aResult;
     }
 
-    protected function getClonedData($aExcludeFields, $aParams, $bExclude = true)  {
+    protected function getClonedData($aParams)  {
         $aSelectResult = array();
-        if ($bExclude)
-            $aDiffStructure = $this->getDiffTableStructure($aExcludeFields);
-        else
-            $aDiffStructure = $this->getDiffTableStructure(array());
 
-        foreach ($aDiffStructure as $sTable => $aFields) {
-            $sSelectFields = implode(", ", $aFields);
-            $aSelectResult[$sTable] = func_query("SELECT $sSelectFields FROM ".$this->sql_tbl[$sTable]." WHERE ".$aExcludeFields[$sTable]['primarykey']." = ".$aParams[$this->sPrimaryKeyFiled]);
+        foreach ($this->arrCloneTableStructure as $sTable) {
+            $aSelectResult[$sTable['table']]['result'] = func_query("SELECT * FROM ".$this->sql_tbl[$sTable['table']]." WHERE ".$sTable['key_field']." = ".$aParams[$this->sPrimaryKeyFiled]);
+            if (isset($aSelectResult[$sTable['table']]['result']) && is_array($aSelectResult[$sTable['table']]['result']))
+                foreach ($aSelectResult[$sTable['table']]['result']  as &$aRows) {
+                    if ($sTable['primary_key'] != $sTable['key_field']) {
+                        unset($aRows[$sTable['primary_key']]);
+                    }
+                }
+            $aSelectResult[$sTable['table']]['key_field'] =  $sTable['key_field'];
         }
 
         return $aSelectResult;
     }
 
-    protected function DublicatePrimaryTable ($aCloneData, $aCloneParam){
-        $insertRow = reset($aCloneData[$this->sPrimaryTable]);
+    protected function DublicatePrimaryTable ($aCloneParam){
+
+        $this->aClonedData = $this->getClonedData($aCloneParam);
+
+        $insertRow = reset($this->aClonedData[$this->sPrimaryTable]['result']);
         foreach ($aCloneParam as $key => $value) {
-            if (in_array($key, $this->arrCheckFields[$this->sPrimaryTable]) && $key != $this->sPrimaryKeyFiled) {
+            if (in_array($key, array_keys($insertRow)) && $key != $this->sPrimaryKeyFiled) {
                 $insertRow[$key] = $value;
             }
         }
-        array_walk_recursive($insertRow, array('classClonedata','recursive_escape'));
-
+        unset($insertRow[$this->sPrimaryKeyFiled]);
+        array_walk_recursive($insertRow, array(__CLASS__,'recursive_escape'));
+//        func_print_r($insertRow);
         return func_array2insert($this->sPrimaryTable, $insertRow);
+    }
+
+    protected function DublicateNonPrimaryTable ($aCloneParam, $deleteBeforeInsert = false){
+
+        unset ($this->aClonedData[$this->sPrimaryTable]);
+
+        if (isset($this->aClonedData) && is_array($this->aClonedData) && count($this->aClonedData)>0) {
+            foreach ($this->aClonedData as $sTable => $aRowsToClone) {
+                if (isset($aRowsToClone['result']) && is_array($aRowsToClone['result']) && count($aRowsToClone['result']) > 0)
+                    foreach ($aRowsToClone['result'] as $aRow) {
+                        foreach ($aCloneParam as $keyParam => $valueParam) {
+                            if (in_array($keyParam, array_keys($aRow))) {
+                                $aRow[$keyParam] = $valueParam;
+                            }
+                        }
+
+                        $aRow[$aRowsToClone['key_field']] = $aCloneParam[$this->sPrimaryKeyFiled];
+
+
+                        array_walk_recursive($aRow, array(__CLASS__,'recursive_escape'));
+//func_print_r($aRow);
+                        if ($deleteBeforeInsert) {
+                            $this->deleteFromTableByKeyValue($sTable, $aRowsToClone['key_field'], $aCloneParam[$this->sPrimaryKeyFiled]);
+                        }
+
+                        func_array2insert($sTable, $aRow);
+
+                    }
+            }
+        }
+
+        return true;
     }
 
 }

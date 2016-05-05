@@ -15,12 +15,16 @@ class classCategories extends classCloneData
         return func_query_first_cell("SELECT categoryid FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE parentid=$iParentCategory");
     }
 
-    public function getCategoryPath($iCategoryId) {
+    public function getCategoryPathasArray($iCategoryId) {
         return explode("/", func_query_first_cell("SELECT categoryid_path FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId"));
     }
 
+    public function getCategoryPath($iCategoryId) {
+        return func_query_first_cell("SELECT categoryid_path FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId");
+    }
+
     public function getCategoryInfo($iCategoryId) {
-        return func_query_first_cell("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId");
+        return func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId");
     }
 
     public function getCategoryByNameAndStoreFront($sCategoryName, $iStoreFronId) {
@@ -41,12 +45,14 @@ class classCategories extends classCloneData
     public function cloneCategory ($iCategoryId, $aParams) {
         $aCategory = $this->getCategoryInfo($iCategoryId);
         $iCategoryid = $this->getCategoryByNameAndStoreFront($aCategory['category'], $aParams['d_main_sf']);
+
         if (empty($iCategoryid)) {
             unset($aCategory[$this->sPrimaryKeyFiled]);
             $aCategory['storefrontid'] = $aParams['d_main_sf'];
             $aCategory['is_bold'] = "N";
             $aCategory['order_by'] = "10";
-            $aCategory['categoryid_path'] = $this->getCategoryPath($aCategory['parent_id']);
+            $aCategory['categoryid_path'] = $this->getCategoryPath($aParams['parentid']).$iCategoryid;
+
             return $this->createNewCategory($aCategory);
         } else { //category exists
             return $iCategoryid;

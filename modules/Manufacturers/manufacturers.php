@@ -140,7 +140,10 @@ if ($REQUEST_METHOD == "POST" && $mode == "copy_distributor" && $manufacturerid)
 				"sf_prefix" => rtrim($storefont_info["prefix"], "-"),
 	);
 
-	$res = $classManufacturer->cloneManufacturer($aCloneParams);
+	$aOriginalManufacturer = $classManufacturer->getMainufacturersInfo(array($manufacturerid));
+	$aOriginalManufacturer = reset($aOriginalManufacturer);
+
+	$res = $classManufacturer->cloneManufacturer($aOriginalManufacturer, $aCloneParams);
 	if (!$res) {
 			$sErrorMessage = "";
 			foreach ($classManufacturer->message as $eMessage) {
@@ -1123,7 +1126,7 @@ if (!empty($page))
 		require_once $xcart_dir."/include/class/classManufacturers.php";
 		$classManufacturer = new classManufacturer();
 		$aParentManufacturer = $classManufacturer->getChildrenManufacturers($manufacturerid);
-//		func_print_r($aParentManufacturer);
+
 		$smarty->assign("aParentManufacturer", $aParentManufacturer);
 		$aChildManufacturers = $classManufacturer->getParentManufacturers($manufacturerid);
 		$smarty->assign("aChildManufacturers", $aChildManufacturers);
