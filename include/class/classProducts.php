@@ -10,9 +10,11 @@ class classProducts extends classCloneData
     public $addCounter;
     public $updateCounter;
     private $sQueueTable;
+    public $changeProvider = 'croned';
 
     public function __construct()
     {   parent::__construct();
+
         $this->init();
     }
     public function init()
@@ -30,8 +32,10 @@ class classProducts extends classCloneData
         $this->arrCloneTableStructure[] = array("table" => "images_T","key_field" => "id", "primary_key" =>"imageid");
         $this->arrCloneTableStructure[] = array("table" => "product_files","key_field" => "productid", "primary_key" =>"fileid");
         $this->arrCloneTableStructure[] = array("table" => "product_taxes","key_field" => "productid", "primary_key" =>"productid");
-        $this->arrCloneTableStructure[] = array("table" => "products_amz_fields","key_field" => "productid", "primary_key" =>"productid");
-        $this->arrCloneTableStructure[] = array("table" => "clean_urls","key_field" => "resource_id", "primary_key" =>"resource_id");
+        $this->arrCloneTableStructure[] = array("table" => "products_amz_fields","key_field" => "productid", "primary_key" =>"id");
+        //$this->arrCloneTableStructure[] = array("table" => "clean_urls","key_field" => "resource_id", "primary_key" =>"resource_id");
+        $this->arrCloneTableStructure[] = array("table" => "pricing","key_field" => "productid", "primary_key" =>"priceid");
+        $this->arrCloneTableStructure[] = array("table" => "quick_flags","key_field" => "productid", "primary_key" =>"productid");
     }
 
     /**
@@ -89,7 +93,7 @@ class classProducts extends classCloneData
     }
 
     protected function deleteFromQueue($iManufacturerId) {
-        return func_query("DELETE FROM $this->sql_tbl[$this->sQueueTable] WHERE $this->sPrimaryKeyFiled = $this->aProductToQueue[productid] AND manufacturerid = $iManufacturerId");
+        return db_query("DELETE FROM $this->sql_tbl[$this->sQueueTable] WHERE $this->sPrimaryKeyFiled = $this->aProductToQueue[productid] AND manufacturerid = $iManufacturerId");
     }
 
     protected function getProductMPN($sSKU, $sPrefixManufacturer) {
@@ -112,8 +116,8 @@ class classProducts extends classCloneData
         $this->updateCounter++;
     }
 
-    public function getFilterInfo($iFilterId) {
-        return func_query_first("SELECT * FROM ".$this->sql_tbl['cidev_filters']." WHERE f_id=$iFilterId");
+    public function getFilterInfoByFilterValueId($iFilterValueId) {
+        return func_query_first("SELECT xc1.* FROM xcart_cidev_filter_values fv INNER JOIN xcart_cidev_filters xc1 ON xc1.f_id = fv.f_id AND fv.fv_id =$iFilterValueId");
     }
 
     public function getFilterByNameAndStoreFront ($sFilterName, $iStoreFrontId) {
@@ -129,33 +133,64 @@ class classProducts extends classCloneData
         return func_query("SELECT * FROM ".$this->sql_tbl['cidev_filter_products']." WHERE productid = $iProductId");
     }
 
-    public function cloneFilter($oFilter,$aParamToClone) {
-        $aFilter = $this->getFilterInfo($oFilter['fp_id']);
-        $iFilterId = $this->getFilterByNameAndStoreFront($aFilter['f_name'], $aParamToClone['d_main_sf']);
-        if (empty($iFilterId)) {
-            unset($aFilter['f_id']);
-            $aFilter['storefrontid'] = $aParamToClone['d_main_sf'];
-            return $this->createNewFilter($aFilter);
-
-        } else return $iFilterId;
+    public function getFilterValuesByNameAndFilterType($sFilterName, $iFilterTypeId){
+        return func_query_first("SELECT * FROM ".$this->sql_tbl['cidev_filter_values']." WHERE fv_name='$sFilterName' AND f_id=$iFilterTypeId");
     }
 
-    public function getFilterValues ($iFilterId) {
-        return func_query("SELECT * FROM ".$this->sql_tbl['cidev_filter_values']." WHERE f_id=$iFilterId");
+    public function getFilterValues ($iFilterValueId) {
+        return func_query("SELECT * FROM ".$this->sql_tbl['cidev_filter_values']." WHERE fv_id=$iFilterValueId");
     }
 
     public function cloneFilterValues ($oFilter, $iNewFilterId) {
         $aNewFilterValuesId = array();
+
         $aFilterValues = $this->getFilterValues($oFilter['fv_id']);
+
         if (isset($aFilterValues) && is_array($aFilterValues) && !empty($aFilterValues)) {
             foreach($aFilterValues as $oFilter) {
                 $oFilter['f_id'] = $iNewFilterId;
                 unset($oFilter['fv_id']);
+                $aNewFilterValue = $this->getFilterValuesByNameAndFilterType($oFilter['fv_name'], $iNewFilterId);
+                if (isset($aNewFilterValue) && is_array($aNewFilterValue) && !empty($aNewFilterValue)) {
+                    $aNewFilterValuesId[] = $aNewFilterValue['fv_id'];
+                } else
                 $aNewFilterValuesId[] = func_array2insert('cidev_filter_values', $oFilter);
             }
         }
         return($aNewFilterValuesId);
     }
+
+    public function cloneFilter($oFilter,$aParamToClone) {
+        $aFilter = $this->getFilterInfoByFilterValueId($oFilter['fv_id']);
+        $iFilterId = $this->getFilterByNameAndStoreFront($aFilter['f_name'], $aParamToClone['d_main_sf']);
+
+        if (empty($iFilterId)) {
+            unset($aFilter['f_id']);
+            $aFilter['storefrontid'] = $aParamToClone['d_main_sf'];
+
+            return $this->createNewFilter($aFilter);
+
+        } else return $iFilterId;
+    }
+
+    private function cloneProductFilters($iProductId, $aParamToClone) {
+        $aProductFilters = $this->getProductFilters($iProductId);
+
+        if (isset($aProductFilters) && is_array($aProductFilters) && !empty($aProductFilters)) {
+            foreach ($aProductFilters as $oFilter) {
+                $iFilterId = $this->cloneFilter($oFilter,$aParamToClone);
+
+                $aNewFilterValues = $this->cloneFilterValues($oFilter,$iFilterId);
+
+                if (isset($aNewFilterValues) && is_array($aNewFilterValues) && !empty($aNewFilterValues)) {
+                    foreach($aNewFilterValues as $iFilterValue) {
+                        $this->addFilterValueToProduct($iFilterValue, $aParamToClone[$this->sPrimaryKeyFiled]);
+                    }
+                }
+            }
+        }
+    }
+
 
     public function addProductToStoreFront ($iProductId, $iStoreFrontId) {
         $aProductStoreFront = array('productid' => $iProductId, 'sfid' => $iStoreFrontId);
@@ -171,9 +206,9 @@ class classProducts extends classCloneData
         func_array2update($this->sPrimaryTable, array('forsale' => $sStatus), 'productid = '.$iProductId);
     }
 
-    private function addFilterValueToProduct($iFilterId, $iFilterValue, $iNewProductId){
-        $aFilterProduct = array('fp_id' => $iFilterId, 'fv_id' => $iFilterValue, 'productid' => $iNewProductId);
-        func_array2insert ('cidev_filter_products', $aFilterProduct);
+    private function addFilterValueToProduct($iFilterId, $iNewProductId){
+        $aFilterProduct = array('fv_id' => $iFilterId, 'productid' => $iNewProductId);
+        func_array2insert ('cidev_filter_products', $aFilterProduct, true);
     }
 
     private function BackprocessLogs($sLogMessage) {
@@ -181,16 +216,59 @@ class classProducts extends classCloneData
         func_backprocess_log("clone_product", $sLogMessage. "; Productid = $this->aProductToQueue[$this->sPrimaryKeyFiled]");
     }
 
+    public function updateProductCleanUrl($iProductId) {
+        $aProduct = $this->getProductInfo($iProductId);
+        $clean_url = func_clean_url_autogenerate('P', $iProductId, array('product' => $aProduct["product"], 'productcode' => $aProduct['productcode']));
+        db_query("DELETE FROM ". $this->sql_tbl['clean_urls'] . " WHERE resource_type='P' AND resource_id=$iProductId");
+        func_clean_url_add($clean_url, 'P', $iProductId);
+    }
+
+    public function insertQuickPrices($iProductId) {
+        x_load('product');
+        func_build_quick_prices($iProductId);
+    }
+
+    private function getClonedRelatedProductsByIdAndStoreFrontId($iProductId, $iStoreFrontId) {
+        return func_query("SELECT xp1.productid
+                                                FROM ".$this->sql_tbl['product_links']." xp
+                                           INNER JOIN xcart_products xp1
+                                              ON xp.productid2 = xp1.clone_parent_productid
+                                           INNER JOIN xcart_products_sf xp2
+                                              ON xp1.productid = xp2.productid AND xp2.sfid = $iStoreFrontId
+                                     WHERE xp.productid1 = $iProductId");
+    }
+
+    private function deleteFromRelatedProducts($iProductId) {
+        db_query("DELETE FROM ".$this->sql_tbl['product_links']." WHERE productid1 = $iProductId");
+    }
+
+    private function insertClonedRelatedProducts ($iProductId, $iStoreFrontId) {
+        $this->deleteFromRelatedProducts($iProductId);
+        $aRelateProducts = $this->getClonedRelatedProductsByIdAndStoreFrontId($iProductId, $iStoreFrontId);
+
+        if (isset($aRelateProducts) && is_array($aRelateProducts) && !empty($aRelateProducts)) {
+            foreach($aRelateProducts as $oRelatedProduct) {
+                func_array2insert('product_links',array('productid1' => $iProductId, 'productid2' => $oRelatedProduct['productid'], 'orderby' => 10));
+            }
+        }
+    }
+
+
+
 
 
     protected function cloneProduct($aProduct, $aParamToClone = array()) {
 
+        $classManufacturer = new classManufacturer();
+
+        $aQueuedManufacturer = $classManufacturer->getMainufacturersInfo(array($this->aProductToQueue["manufacturerid"]));
+        $aQueuedManufacturer = reset($aQueuedManufacturer);
 
 
         /*ЕСЛИ [PRODUCT] не существует ИЛИ [PRODUCT].forsale !="Y" ИЛИ trim([PRODUCT].clone_parent_productid) >0 или дистрибьютор от [xcart_clone_products_queue].manufacturerid не имеет родителя, ТО
 			залоггировать в BackprocessLogs текст 'trying clone cloned, disabled or non-existing product, or target manufacturer is not a clone. skip...'*/
 
-        if (empty($aProduct) || $aProduct["forsale"] != "Y" || $aProduct["clone_parent_product_id"] > 0 || $this->aProductToQueue["parent_manufacturer_id"] == -1) {
+        if (empty($aProduct) || $aProduct["forsale"] != "Y" || $aProduct["clone_parent_product_id"] > 0 || $aQueuedManufacturer["parent_manufacturer_id"] == -1) {
             $this->BackprocessLogs("trying clone cloned, disabled or non-existing product, or target manufacturer is not a clone. skip...");
             return false;
         }
@@ -209,7 +287,7 @@ class classProducts extends classCloneData
 		получить все подчиненные дистрибьюторы дистрибьютора продукта [PRODUCT] --> [Distributors] (получить code дистрибьютора , отобрать всех дистрибьюторов у которых parent_manufacturer_id = manufacturerid)
 		*/
 
-        $classManufacturer = new classManufacturer();
+
 
         $aManufacturer = $classManufacturer->getMainufacturersInfo(array($aProduct["manufacturerid"]));
         $aManufacturer = reset($aManufacturer);
@@ -238,23 +316,29 @@ class classProducts extends classCloneData
             return false;
         }
 
+
         foreach ($aChildManufacturers as $aChildManufacturer) {
             //сформировать clonedSKU предполагаемого клона по очередному дистрибьютору: [Distributors].code-[PRODUCT].mpn
             $sClonedSKU = $this->getClonedSKU($aChildManufacturer["code"], $this->getProductMPN($aProduct["productcode"],$aManufacturer["code"]));
             if (!empty($sClonedSKU)) {
                 /*если clonedSKU существует в БД, то
                   залоггировать в BackprocessLogs текст '[clonedSKU] already exist. Added to update queue...'
-                  вставить [clonedSKU].productid в очередь с параметром clone = 'N'*/
+                  вставить [PRODUCT].productid в очередь с параметром clone = 'N'*/
                 $aProductBySKU = $this->getProductBySKU($sClonedSKU);
-                if (!empty($sProductBySKU)) {
+
+                if (isset($aProductBySKU) && is_array($aProductBySKU) && !empty($aProductBySKU)) {
                     $this->BackprocessLogs("SKU $sClonedSKU already exist. Added to update queue...");
-                    $this->queueNewProductForUpdate($aProductBySKU);
+                    $this->queueNewProductForUpdate($aProduct['productid'], $this->aProductToQueue["manufacturerid"]);
+                    return false;
+
                 } else {
+
                     /* иначе
                         вызвать блок вставки нового продукта для очередного подчиненного дистрибьютора;
                     */
                     $aParamToClone = array(
                         "productcode" => $sClonedSKU,
+                        "manufacturerid" => $aChildManufacturer["manufacturerid"],
                         "manufacturercode" => $aChildManufacturer["code"],
                         "root_category_id" => $aChildManufacturer["root_categoryid_for_cloned_products"],
                         "d_main_sf" =>  $aChildManufacturer["d_main_sf"],
@@ -274,6 +358,8 @@ class classProducts extends classCloneData
                         "controlled_by_feed" => '',
                         "add_date" => time(),
                         "mod_date" => time(),
+                        "provider" => $this->changeProvider,
+                        "clone_parent_productid" => $aProduct['productid'],
                     );
 
                     $this->primaryKeyValue = $this->insertClonedProduct($aProduct, $aParamToClone);
@@ -326,6 +412,7 @@ class classProducts extends classCloneData
 
         foreach($aProductCategories as $aProductCategory) {
             $aProductCategoryPath = $classCategory->getCategoryPathasArray($aProductCategory["categoryid"]);
+
             $aParamToClone["parentid"] = $aParamToClone["root_category_id"];
             if (!empty($aProductCategoryPath) && is_array($aProductCategoryPath)){
                 foreach ($aProductCategoryPath as $iCategoryPathId){
@@ -352,6 +439,12 @@ class classProducts extends classCloneData
             xcart_clean_urls*/
 
 
+
+
+
+        //func_clean_url_add();
+
+
         $this->primaryKeyValue = $this->DublicatePrimaryTable($aParamToClone);
         $aParamToClone[$this->sPrimaryKeyFiled] = $this->primaryKeyValue;
 
@@ -361,6 +454,12 @@ class classProducts extends classCloneData
         $this->addMainProductCategory($this->primaryKeyValue, $iNewProductCategory);
 
         $this->addProductToStoreFront($this->primaryKeyValue, $aParamToClone["d_main_sf"]);
+
+        $this->updateProductCleanUrl($this->primaryKeyValue);
+
+        $this->insertQuickPrices($this->primaryKeyValue);
+
+        $this->insertClonedRelatedProducts($aProduct["productid"], $aParamToClone["d_main_sf"]);
 
         /*добавляем данные в следующие таблицы:
         xcart_categories
@@ -373,24 +472,24 @@ class classProducts extends classCloneData
         xcart_products_sf*/
 
 
-        $aProductFilters = $this->getProductFilters($aProduct["productid"]);
-        if (isset($aProductFilters) && is_array($aProductFilters) && !empty($aProductFilters)) {
-            foreach ($aProductFilters as $oFilter) {
-                $iFilterId = $this->cloneFilter($oFilter,$aParamToClone);
-                $aNewFilterValues = $this->cloneFilterValues($oFilter,$iFilterId);
-                if (isset($aNewFilterValues) && is_array($aNewFilterValues) && !empty($aNewFilterValues)) {
-                    foreach($aNewFilterValues as $iFilterValue) {
-                        $this->addFilterValueToProduct($iFilterId, $iFilterValue, $this->primaryKeyValue);
-                    }
-                }
-            }
-        }
+        $this->cloneProductFilters($aProduct["productid"], $aParamToClone);
+
+
+
+        /*xcart_pricing
+         xcart_quick_flags
+         xcart_quick_prices
+
+        ???
+        xcart_product_links
+        xcart_product_options_lng
+        */
 
 
         return $this->primaryKeyValue;
     }
 
-    protected function updateClonedProduct ($aProduct) {
+    protected function updateClonedProduct ($aProduct, $aClonedProduct, $aParamToClone) {
         /*при обновлении перезаписываем полностью (удаляем и вставляем из оригинала)
             xcart_images_D
             xcart_images_P
@@ -399,7 +498,22 @@ class classProducts extends classCloneData
             xcart_products_amz_fields
             xcart_product_taxes*/
 
-        $this->DublicateNonPrimaryTable(array(), true);
+
+        $aParamToClone[$this->sPrimaryKeyFiled] = $aProduct[$this->sPrimaryKeyFiled];
+
+        $this->DublicatePrimaryTable($aParamToClone ,true);
+
+        $aParamToClone[$this->sPrimaryKeyFiled] = $aClonedProduct[$this->sPrimaryKeyFiled];
+
+        $this->DublicateNonPrimaryTable($aParamToClone, true);
+
+        $this->updateProductCleanUrl($aClonedProduct[$this->sPrimaryKeyFiled]);
+
+        $this->insertClonedRelatedProducts($aProduct[$this->sPrimaryKeyFiled], $aParamToClone["d_main_sf"]);
+
+        $this->cloneProductFilters($aProduct[$this->sPrimaryKeyFiled], $aParamToClone);
+
+
 
         /*xcart_products
         обновляем только поля:
@@ -426,31 +540,33 @@ class classProducts extends classCloneData
         `lead_time_message` VARCHAR(255) NOT NULL DEFAULT '',
         `r_avail` MEDIUMINT(9) NOT NULL DEFAULT '0',*/
 
-        $aUpdateProduct = array();
-        $aUpdateProduct['product'] = $aProduct['product'];
-        $aUpdateProduct['distribution'] = $aProduct['distribution'];
-        $aUpdateProduct['weight'] = $aProduct['weight'];
-        $aUpdateProduct['list_price'] = $aProduct['list_price'];
-        $aUpdateProduct['avail'] = $aProduct['avail'];
-        $aUpdateProduct['forsale'] = $aProduct['forsale'];
-        $aUpdateProduct['mod_date'] = $aProduct['mod_date'];
-        $aUpdateProduct['shipping_freight'] = $aProduct['shipping_freight'];
-        $aUpdateProduct['min_amount'] = $aProduct['min_amount'];
-        $aUpdateProduct['dim_x'] = $aProduct['dim_x'];
-        $aUpdateProduct['dim_y'] = $aProduct['dim_y'];
-        $aUpdateProduct['dim_z'] = $aProduct['dim_z'];
-        $aUpdateProduct['free_tax'] = $aProduct['free_tax'];
-        $aUpdateProduct['return_time'] = $aProduct['return_time'];
-        $aUpdateProduct['upc'] = $aProduct['upc'];
-        $aUpdateProduct['cost_to_us'] = $aProduct['cost_to_us'];
-        $aUpdateProduct['map_price'] = $aProduct['map_price'];
-        $aUpdateProduct['mult_order_quantity'] = $aProduct['mult_order_quantity'];
-        $aUpdateProduct['new_map_price'] = $aProduct['new_map_price'];
-        $aUpdateProduct['eta_date_mm_dd_yyyy'] = $aProduct['eta_date_mm_dd_yyyy'];
-        $aUpdateProduct['lead_time_message'] = $aProduct['lead_time_message'];
-        $aUpdateProduct['r_avail'] = $aProduct['r_avail'];
+        $aUpdateProduct = array(
+            'product' => $aProduct['product'],
+            'distribution' => $aProduct['distribution'],
+            'weight' => $aProduct['weight'],
+            'list_price' => $aProduct['list_price'],
+            'avail' => $aProduct['avail'],
+            'forsale' => $aProduct['forsale'],
+            'mod_date' => $aProduct['mod_date'],
+            'shipping_freight' => $aProduct['shipping_freight'],
+            'min_amount' => $aProduct['min_amount'],
+            'dim_x' => $aProduct['dim_x'],
+            'dim_y' => $aProduct['dim_y'],
+            'dim_z' => $aProduct['dim_z'],
+            'free_tax' => $aProduct['free_tax'],
+            'return_time' => $aProduct['return_time'],
+            'upc' => $aProduct['upc'],
+            'cost_to_us' => $aProduct['cost_to_us'],
+            'map_price' => $aProduct['map_price'],
+            'mult_order_quantity' => $aProduct['mult_order_quantity'],
+            'new_map_price' => $aProduct['new_map_price'],
+            'eta_date_mm_dd_yyyy' => $aProduct['eta_date_mm_dd_yyyy'],
+            'lead_time_message' => $aProduct['lead_time_message'],
+            'r_avail' => $aProduct['r_avail'],
+            'provider' => $this->changeProvider
+        );
 
-        func_array2update($this->sPrimaryTable, $aUpdateProduct, $this->sPrimaryKeyFiled." = ".$aProduct[$this->sPrimaryKeyFiled]);
+        func_array2update($this->sPrimaryTable, $aUpdateProduct, $this->sPrimaryKeyFiled." = ".$aClonedProduct[$this->sPrimaryKeyFiled]);
 
         return true;
 
@@ -522,9 +638,15 @@ class classProducts extends classCloneData
     }*/
 
 
-    protected function queueNewProductForUpdate ($aProduct) {
-        func_query ("INSERT INTO $this->sql_tbl['clone_products_queue'] (productid, clone, insert_datetime, manufacturerid)
-                     VALUES (".$aProduct['productid'].", 'N',".time().",".$aProduct['productid'].")");
+    protected function queueNewProductForUpdate ($iProductId, $iManufacturerId) {
+        $aParams = array(
+            'productid' => $iProductId,
+            'clone' => 'N',
+            'insert_datetime' => time(),
+            'manufacturerid' => $iManufacturerId
+        );
+        func_array2insert('clone_products_queue', $aParams, true);
+
     }
 
     protected function getProductBySKU($sSKU) {
@@ -539,6 +661,11 @@ class classProducts extends classCloneData
             $this->BackprocessLogs('trying update cloned or non-existing product . skip...');
             return false;
         }
+
+        foreach ($this->arrCloneTableStructure as $sKey => $aSdel)
+            if (in_array($aSdel['table'], array('pricing','quick_flags'))) unset($this->arrCloneTableStructure[$sKey]);
+
+
         /*
          ИНАЧЕ получить все подчиненные дистрибьюторы дистрибьютора продукта [PRODUCT] --> [Distributors] (получить code дистрибьютора , отобрать всех дистрибьюторов у которых parent_manufacturer_id = manufacturer_id)
 	    */
@@ -561,14 +688,24 @@ class classProducts extends classCloneData
 
         foreach ($aChildManufacturers as $aChildManufacturer) {
             //сформировать clonedSKU предполагаемого клона по очередному дистрибьютору: [Distributors].code-[PRODUCT].mpn
-            $sClonedSKU = $this->getClonedSKU($aChildManufacturer["code"], $this->getProductMPN($aChildManufacturer["code"], $aProduct["productcode"]));
-            if ($sClonedSKU) {
+            $sClonedSKU = $this->getClonedSKU($aChildManufacturer["code"], $this->getProductMPN($aProduct["productcode"],$aManufacturer["code"]));
+
+            $aProductSKU = $this->getProductBySKU($sClonedSKU);
+            if (isset($aProductSKU) && is_array($aProductSKU) && !empty($aProductSKU)) {
                 //если clonedSKU существует в БД, то
+
                 //вызвать блок обновления продукта для очередного подчиненного дистрибьютора;
-                if ($this->updateClonedProduct($aProduct)) {
+                $aParamToClone = array();
+                $aParamToClone[$this->sPrimaryKeyFiled] = $aProduct[$this->sPrimaryKeyFiled];
+                $aParamToClone["d_main_sf"] = $aChildManufacturer["d_main_sf"];
+
+                if ($this->updateClonedProduct($aProduct, $aProductSKU, $aParamToClone)) {
                 //посчитать успешное обновление
                     $this->IncSuccessUpdate();
                 }
+            } else {
+                $this->message[] = "SKU $sClonedSKU not found, continue";
+
             }
         }
 

@@ -18,7 +18,6 @@ class classManufacturer extends classCloneData
 
     public function init()
     {
-        parent::init();
         $this->sPrimaryTable = "manufacturers";
         $this->sPrimaryKeyFiled = "manufacturerid";
 

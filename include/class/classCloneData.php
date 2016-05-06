@@ -12,13 +12,10 @@ class classCloneData
 
     public function __construct()
     {
-        $this->init();
-    }
-
-    public function init() {
         global $sql_tbl;
         $this->sql_tbl = $sql_tbl;
     }
+
 
     protected function recursive_escape(&$item) {
         $item = addslashes($item);
@@ -88,9 +85,10 @@ public function checkDBChanges () {
         return $aSelectResult;
     }
 
-    protected function DublicatePrimaryTable ($aCloneParam){
+    protected function DublicatePrimaryTable ($aCloneParam, $onlyFeelClonedData = false){
 
         $this->aClonedData = $this->getClonedData($aCloneParam);
+        if ($onlyFeelClonedData) return;
 
         $insertRow = reset($this->aClonedData[$this->sPrimaryTable]['result']);
         foreach ($aCloneParam as $key => $value) {
@@ -105,11 +103,15 @@ public function checkDBChanges () {
     }
 
     protected function DublicateNonPrimaryTable ($aCloneParam, $deleteBeforeInsert = false){
+        //$this->aClonedData = $this->getClonedData($aCloneParam); //added after tests
 
         unset ($this->aClonedData[$this->sPrimaryTable]);
 
         if (isset($this->aClonedData) && is_array($this->aClonedData) && count($this->aClonedData)>0) {
             foreach ($this->aClonedData as $sTable => $aRowsToClone) {
+                if ($deleteBeforeInsert) {
+                    $this->deleteFromTableByKeyValue($sTable, $aRowsToClone['key_field'], $aCloneParam[$this->sPrimaryKeyFiled]);
+                }
                 if (isset($aRowsToClone['result']) && is_array($aRowsToClone['result']) && count($aRowsToClone['result']) > 0)
                     foreach ($aRowsToClone['result'] as $aRow) {
                         foreach ($aCloneParam as $keyParam => $valueParam) {
@@ -123,9 +125,7 @@ public function checkDBChanges () {
 
                         array_walk_recursive($aRow, array(__CLASS__,'recursive_escape'));
 //func_print_r($aRow);
-                        if ($deleteBeforeInsert) {
-                            $this->deleteFromTableByKeyValue($sTable, $aRowsToClone['key_field'], $aCloneParam[$this->sPrimaryKeyFiled]);
-                        }
+
 
                         func_array2insert($sTable, $aRow);
 
