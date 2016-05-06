@@ -1,6 +1,6 @@
 <?php /* MODIFIED: random:19530 [2009 Nov 12 13:25][Custom development (Add an option to search for duplicated SKUs)] */ ?>
-<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (Изменения для модуля UPS + Изменения в способ ввода Tracking numbers для заказов)] */ ?>
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ UPS + О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ Tracking numbers О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
 /*****************************************************************************\
