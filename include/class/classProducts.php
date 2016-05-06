@@ -65,10 +65,10 @@ class classProducts extends classCloneData
                 break;
         }
 
-        /*if (!$this->deleteFromQueue()) {
+        if (!$this->deleteFromQueue()) {
             $this->message[] = "Error delete from Queue table";
             $bResult = false;
-        }*/
+        }
 
         return $bResult;
 
@@ -92,8 +92,8 @@ class classProducts extends classCloneData
         $this->aProductToQueue = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sQueueTable]." LIMIT 1");
     }
 
-    protected function deleteFromQueue($iManufacturerId) {
-        return db_query("DELETE FROM $this->sql_tbl[$this->sQueueTable] WHERE $this->sPrimaryKeyFiled = $this->aProductToQueue[productid] AND manufacturerid = $iManufacturerId");
+    protected function deleteFromQueue() {
+        return db_query("DELETE FROM ".$this->sql_tbl[$this->sQueueTable]." WHERE $this->sPrimaryKeyFiled = ".$this->aProductToQueue[productid]." AND manufacturerid = ".$this->aProductToQueue[manufacturerid]);
     }
 
     protected function getProductMPN($sSKU, $sPrefixManufacturer) {
@@ -141,6 +141,10 @@ class classProducts extends classCloneData
         return func_query("SELECT * FROM ".$this->sql_tbl['cidev_filter_values']." WHERE fv_id=$iFilterValueId");
     }
 
+    public function deleteFilterValues($iProductId) {
+        return db_query("DELETE FROM ".$this->sql_tbl['cidev_filter_products']." WHERE productid = $iProductId");
+    }
+
     public function cloneFilterValues ($oFilter, $iNewFilterId) {
         $aNewFilterValuesId = array();
 
@@ -174,6 +178,7 @@ class classProducts extends classCloneData
     }
 
     private function cloneProductFilters($iProductId, $aParamToClone) {
+        $this->deleteFilterValues($aParamToClone[$this->sPrimaryKeyFiled]);
         $aProductFilters = $this->getProductFilters($iProductId);
 
         if (isset($aProductFilters) && is_array($aProductFilters) && !empty($aProductFilters)) {
@@ -229,26 +234,23 @@ class classProducts extends classCloneData
     }
 
     private function getClonedRelatedProductsByIdAndStoreFrontId($iProductId, $iStoreFrontId) {
-        return func_query("SELECT xp1.productid
-                                                FROM ".$this->sql_tbl['product_links']." xp
-                                           INNER JOIN xcart_products xp1
-                                              ON xp.productid2 = xp1.clone_parent_productid
-                                           INNER JOIN xcart_products_sf xp2
-                                              ON xp1.productid = xp2.productid AND xp2.sfid = $iStoreFrontId
-                                     WHERE xp.productid1 = $iProductId");
+        return func_query("SELECT xp1.productid FROM ".$this->sql_tbl['product_links']." xp
+                                               INNER JOIN xcart_products xp1 ON xp.productid2 = xp1.clone_parent_productid
+                                               INNER JOIN xcart_products_sf xp2 ON xp1.productid = xp2.productid AND xp2.sfid = $iStoreFrontId
+                                               WHERE xp.productid1 = $iProductId");
     }
 
     private function deleteFromRelatedProducts($iProductId) {
         db_query("DELETE FROM ".$this->sql_tbl['product_links']." WHERE productid1 = $iProductId");
     }
 
-    private function insertClonedRelatedProducts ($iProductId, $iStoreFrontId) {
-        $this->deleteFromRelatedProducts($iProductId);
+    private function insertClonedRelatedProducts ($iProductId, $iProductIdCloned, $iStoreFrontId) {
+        $this->deleteFromRelatedProducts($iProductIdCloned);
         $aRelateProducts = $this->getClonedRelatedProductsByIdAndStoreFrontId($iProductId, $iStoreFrontId);
 
         if (isset($aRelateProducts) && is_array($aRelateProducts) && !empty($aRelateProducts)) {
             foreach($aRelateProducts as $oRelatedProduct) {
-                func_array2insert('product_links',array('productid1' => $iProductId, 'productid2' => $oRelatedProduct['productid'], 'orderby' => 10));
+                func_array2insert('product_links',array('productid1' => $iProductIdCloned, 'productid2' => $oRelatedProduct['productid'], 'orderby' => 10));
             }
         }
     }
@@ -459,7 +461,7 @@ class classProducts extends classCloneData
 
         $this->insertQuickPrices($this->primaryKeyValue);
 
-        $this->insertClonedRelatedProducts($aProduct["productid"], $aParamToClone["d_main_sf"]);
+        $this->insertClonedRelatedProducts($aProduct["productid"], $this->primaryKeyValue, $aParamToClone["d_main_sf"]);
 
         /*добавляем данные в следующие таблицы:
         xcart_categories
@@ -509,7 +511,7 @@ class classProducts extends classCloneData
 
         $this->updateProductCleanUrl($aClonedProduct[$this->sPrimaryKeyFiled]);
 
-        $this->insertClonedRelatedProducts($aProduct[$this->sPrimaryKeyFiled], $aParamToClone["d_main_sf"]);
+        $this->insertClonedRelatedProducts($aProduct[$this->sPrimaryKeyFiled], $aParamToClone[$this->sPrimaryKeyFiled], $aParamToClone["d_main_sf"]);
 
         $this->cloneProductFilters($aProduct[$this->sPrimaryKeyFiled], $aParamToClone);
 
