@@ -7,9 +7,9 @@ require "./init.php";
 ini_set('memory_limit', '512M');
 set_time_limit(0);
 
-$log_category = 'cron_clone_manufacturers_products';
+$log_category = 'clone_products_cron';
 
-if ($config["cron_clone_manufacturers_products"] == "Y"){
+if ($config[$log_category] == "Y"){
     die("Already launched"); // ################################
 }
 
