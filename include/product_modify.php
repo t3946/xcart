@@ -271,6 +271,11 @@ else
 
 if (!empty($product_owner)) {
 	$provider_info = func_query_first("SELECT login, title, firstname, lastname FROM $sql_tbl[customers] WHERE login='$product_owner' AND usertype IN ('P','A')");
+
+	if (empty($provider_info)) {
+		$provider_info['login'] = $product_owner;
+	}
+
 	$smarty->assign("provider_info", $provider_info);
 }
 

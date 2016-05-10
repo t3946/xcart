@@ -151,6 +151,8 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 	<td width="20%" align="center">{$lng.lbl_products}</td>
 	<td width="30" align="center">Inventory feed</td>
 	<td width="30" align="center">Product feed</td>
+	<td width="30" align="center">Child manufacturers</td>
+	<td width="30" align="center">Parent manufacturer</td>
 	<td width="30" align="center">{$lng.lbl_orderby}</td>
 	<td width="30" align="center">{$lng.lbl_active}</td>
 </tr>
@@ -161,12 +163,14 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 
 <tr{cycle values=", class='TableSubHead'"}>
 	<td align="center"><input type="checkbox" name="to_delete[{$v.manufacturerid}]"{if $administrate eq "" and ($v.provider ne $login or $v.used_by_others gt 0)} disabled="disabled"{/if} /></td>
-	<td><b><a href="manufacturers.php?manufacturerid={$v.manufacturerid}{if $page}&amp;page={$page}{/if}">{$v.manufacturer}</a></b></td>
+	<td style="white-space: nowrap;"><b><a href="manufacturers.php?manufacturerid={$v.manufacturerid}{if $page}&amp;page={$page}{/if}">{$v.manufacturer}</a></b></td>
 	<td align="center">{$v.code}</td>
 	<td>{if $v.is_provider eq 'Y'}{$v.provider_name}{else}{$lng.lbl_manuf_owner_lost}{/if}{if $administrate} ({$v.provider}){/if}</td>
 	<td align="center">{$v.products_count|default:$lng.txt_not_available}{if $v.used_by_others gt 0}*{assign var="show_note" value="Y"}{/if}</td>
 	<td>{$v.I_supplier_feeds_enabled} {$v.I_supplier_feeds_disabled}</td>
 	<td>{$v.P_supplier_feeds_enabled} {$v.P_supplier_feeds_disabled}</td>
+	<td align="center">{foreach from=$v.aChildrenManufacturers item=aChildM name=childmanufacturers} <a target="_blank" href="manufacturers.php?manufacturerid={$aChildM.manufacturerid}">{$aChildM.code}</a> {$aChildM.storefronPrefix} {if !$smarty.foreach.childmanufacturers.last} <br/> {/if} {/foreach}</td>
+	<td align="center">{foreach from=$v.aParentManufacturer item=aParentM name=parentmanufacturers} <a target="_blank" href="manufacturers.php?manufacturerid={$aParentM.manufacturerid}">{$aParentM.code}</a> {$aParentM.storefronPrefix} {if !$smarty.foreach.parentmanufacturers.last} <br/> {/if} {/foreach}</td>
 	<td align="center"><input type="text" name="records[{$v.manufacturerid}][orderby]" size="5" value="{$v.orderby}"{if $administrate eq ""} disabled="disabled"{/if} /></td>
 	<td align="center"><input type="checkbox" name="records[{$v.manufacturerid}][avail]" value="Y"{if $v.avail eq "Y"} checked="checked"{/if}{if $administrate eq ""} disabled="disabled"{/if} /></td>
 </tr>
