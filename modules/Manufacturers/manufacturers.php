@@ -121,7 +121,71 @@ if ($REQUEST_METHOD == "POST" && $mode == "delete_distributor_return_address" &&
         func_header_location("manufacturers.php?manufacturerid=".$manufacturerid .($distributor_section ? "&distributor_section=".$distributor_section : ""));
 }
 
-if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
+if ($REQUEST_METHOD == "POST" && $mode == "copy_distributor" && $manufacturerid) {
+
+
+	require_once $xcart_dir."/include/class/classManufacturers.php";
+	$classManufacturer = new classManufacturer();
+
+	$storefont_info = func_get_storefront_info($storefront_to_copy_manufacturer, "ID");
+
+
+	$aCloneParams = array(
+				"manufacturerid" => $manufacturerid,
+				"d_main_sf" => $storefront_to_copy_manufacturer,
+				"update_approximation_shipping_rates" => "Y",
+				"root_categoryid_for_cloned_products" => $root_categoryid_for_cloned_products,
+				"parent_manufacturer_id" => $manufacturerid,
+				"provider" => $login,
+				"sf_prefix" => rtrim($storefont_info["prefix"], "-"),
+	);
+
+	$aOriginalManufacturer = $classManufacturer->getMainufacturersInfo(array($manufacturerid));
+	$aOriginalManufacturer = reset($aOriginalManufacturer);
+
+	$res = $classManufacturer->cloneManufacturer($aOriginalManufacturer, $aCloneParams);
+	if (!$res) {
+			$sErrorMessage = "";
+			foreach ($classManufacturer->message as $eMessage) {
+				$sErrorMessage .= func_get_langvar_by_name($eMessage);
+			}
+			$top_message["type"] = "E";
+			$top_message["content"] = $sErrorMessage;
+
+	} else {
+			$top_message["type"] = "I";
+			$top_message["content"] = func_get_langvar_by_name("lb_copy_manufacturer_done");
+	}
+}
+
+if ($REQUEST_METHOD == "POST" && $mode == "copy_products" && $manufacturerid) {
+
+
+	require_once $xcart_dir."/include/class/classManufacturers.php";
+	$classManufacturer = new classManufacturer();
+
+	if (!empty($product_to_copy_manufacturer)) {
+		$countAddedProducts = $classManufacturer->addProductsToQueue($manufacturerid, $product_to_copy_manufacturer);
+		$top_message["type"] = "I";
+		$top_message["content"] = sprintf('%d products added to clone queue... Processing takes some time ...', $countAddedProducts);
+	} else {
+		$top_message["type"] = "E";
+		$top_message["content"] = "Target distributor not selected";
+	}
+
+
+}
+
+if ($REQUEST_METHOD == "POST" && $mode == "update_root_category" && $manufacturerid) {
+
+	$aUpdateParam = array (
+		"root_categoryid_for_cloned_products" => $root_categoryid_for_cloned_products
+	);
+	if (func_array2update("manufacturers", $aUpdateParam, "manufacturerid=".$manufacturerid))
+		$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_upd");
+}
+
+if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {  //TODO check this shit
 
 
 	if ($mode == "details" && ($image_perms = func_check_image_storage_perms($file_upload_data, "M")) !== true) {
@@ -668,7 +732,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 	func_header_location("manufacturers.php?manufacturerid=$manufacturerid" . $page_str . '&word=' . $word .($distributor_section ? "&distributor_section=".$distributor_section : ""));
 }
 
-if (is_file($xcart_dir."/files/distributor_contacts.txt")){
+
+
+	if (is_file($xcart_dir."/files/distributor_contacts.txt")){
 	$distributor_contacts_file_name = "distributor_contacts.txt";
 	$smarty->assign('distributor_contacts_file_name', $distributor_contacts_file_name);
 	$smarty->assign('distributor_contacts_file', $xcart_dir."/files/".$distributor_contacts_file_name);
@@ -1074,6 +1140,16 @@ if (!empty($page))
         $smarty->assign("supplier_feeds_info_P", $supplier_feeds_info_P);
     }
 
+	if ($distributor_section == "30") {
+		require_once $xcart_dir."/include/class/classManufacturers.php";
+		$classManufacturer = new classManufacturer();
+		$aParentManufacturer = $classManufacturer->getChildrenManufacturers($manufacturerid);
+
+		$smarty->assign("aParentManufacturer", $aParentManufacturer);
+		$aChildManufacturers = $classManufacturer->getParentManufacturers($manufacturerid);
+		$smarty->assign("aChildManufacturers", $aChildManufacturers);
+	}
+
 //func_print_r($supplier_feeds_info_I, $supplier_feeds_info_P);
 
 
@@ -1095,6 +1171,12 @@ if ($distributor_section == "18"){
         'order_by' => '160',
         'distributor_section' => '20'
     );
+
+	$distributor_sections[] = array(
+		'title'  => 'Clone distributor to another storefront',
+		'order_by' => '170',
+		'distributor_section' => '30'
+	);
 
 
 //func_print_r($distributor_sections);
