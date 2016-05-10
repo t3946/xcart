@@ -412,4 +412,21 @@ class classManufacturer extends classCloneData
         }
         return false;
     }
+
+    public function getProductsByManufacturer($iManufacturerid) {
+        return func_query("SELECT * FROM ".$this->sql_tbl['products']." WHERE forsale = 'Y' AND manufacturerid = $iManufacturerid");
+    }
+
+    public function addProductsToQueue ($iManufacturerid, $product_to_copy_manufacturer) {
+        $countProducts = 0;
+        $aProducts = $this->getProductsByManufacturer($iManufacturerid);
+        foreach($aProducts as $oProduct) {
+            $aParams = array('productid' => $oProduct['productid'], 'clone'=> 'Y', 'insert_datetime'=> time(), 'manufacturerid' => $product_to_copy_manufacturer);
+            func_array2insert('clone_products_queue', $aParams, true);
+            $countProducts++;
+        }
+
+        return $countProducts;
+
+    }
 }
