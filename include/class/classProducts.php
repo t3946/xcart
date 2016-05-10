@@ -45,6 +45,7 @@ class classProducts extends classCloneData
     /**
      * https://s3stores.teamwork.com/tasks/6416520
      *
+     * @param $sleepTime
      * @return bool
      */
     public function cloneProductFunction($sleepTime) {
@@ -603,6 +604,8 @@ class classProducts extends classCloneData
             'r_avail' => $aProduct['r_avail'],
             'provider' => $this->changeProvider
         );
+
+        array_walk_recursive($aUpdateProduct, array(__CLASS__,'recursive_escape'));
 
         func_array2update($this->sPrimaryTable, $aUpdateProduct, $this->sPrimaryKeyFiled." = ".$aClonedProduct[$this->sPrimaryKeyFiled]);
 
