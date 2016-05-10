@@ -53,15 +53,13 @@ class classProducts extends classCloneData
 
         $aProductsQueue = $this->getProductsFromQueue();
 
+        if (empty($aProductsQueue)) {
+            $this->message[] = "No products in queue";
+            return $bResult;
+        }
+
         foreach ($aProductsQueue as $oProductQueue) {
             $this->aProductToQueue = $oProductQueue;
-
-
-            if (empty($this->aProductToQueue)) {
-                $this->message[] = "No products in queue";
-                $bResult = true;
-                break;
-            }
 
             $aProduct = $this->getProductInfo($this->aProductToQueue[$this->sPrimaryKeyFiled]);
 
@@ -250,7 +248,7 @@ class classProducts extends classCloneData
 
     private function BackprocessLogs($sLogMessage) {
         $this->message[] = $sLogMessage;
-        func_backprocess_log("clone_product", $sLogMessage. "; Productid = ".$this->aProductToQueue[$this->sPrimaryKeyFiled]);
+        func_backprocess_log("clone_products_cron", $sLogMessage. "; Productid = ".$this->aProductToQueue[$this->sPrimaryKeyFiled]);
     }
 
     public function updateProductCleanUrl($iProductId) {
