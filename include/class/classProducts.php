@@ -600,6 +600,7 @@ class classProducts extends classCloneData
             'mult_order_quantity' => $aProduct['mult_order_quantity'],
             'new_map_price' => $aProduct['new_map_price'],
             'eta_date_mm_dd_yyyy' => $aProduct['eta_date_mm_dd_yyyy'],
+            'eta_date_lock' => $aProduct['eta_date_lock'],
             'lead_time_message' => $aProduct['lead_time_message'],
             'r_avail' => $aProduct['r_avail'],
             'provider' => $this->changeProvider

@@ -19,32 +19,39 @@ $classProducts = new classProducts();
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='$log_category'");
 
 $start_time = time();
-$log_text = sprintf(" Cron started. Trying to process %d records...", $classProducts->getProductQueueCount());
 
-func_backprocess_log($log_category, $log_text);
+$iProductsCount = $classProducts->getProductQueueCount();
 
-$classProducts->cloneProductFunction(200000); //0.2 sec
+if ($iProductsCount) {
 
-$current_time = time();
+    $log_text = sprintf(" Cron started. Trying to process %d records...", $iProductsCount);
 
-$pid_diff = $current_time - $start_time;
+    func_backprocess_log($log_category, $log_text);
 
-$hour = intval($pid_diff / (60 * 60));
-$minutes = intval(($pid_diff - $hour * 60 * 60) / 60);
-$seconds = ($pid_diff - $hour * 60 * 60 - $minutes * 60 );
+    $classProducts->cloneProductFunction(200000); //0.2 sec
 
-$str_time = sprintf( "%02d:%02d:%02d", $hour, $minutes, $seconds );
+    $current_time = time();
 
-$sDoneMessage = "Cron finished. \n";
-$sDoneMessage .= "To update: [".($classProducts->updateCounter+$classProducts->updateFailCounter)."]\n";
-$sDoneMessage .= "ok: [".$classProducts->updateCounter."]\n";
-$sDoneMessage .= "failed: [".$classProducts->updateFailCounter."]\n";
-$sDoneMessage .= "To clone: [".($classProducts->addCounter+$classProducts->addFailCounter)."]\n";
-$sDoneMessage .= "ok: [".$classProducts->addCounter."]\n";
-$sDoneMessage .= "failed: [".$classProducts->addFailCounter."]\n";
-$sDoneMessage .= "processing time: $str_time";
+    $pid_diff = $current_time - $start_time;
 
-func_backprocess_log($log_category, $sDoneMessage);
+    $hour = intval($pid_diff / (60 * 60));
+    $minutes = intval(($pid_diff - $hour * 60 * 60) / 60);
+    $seconds = ($pid_diff - $hour * 60 * 60 - $minutes * 60 );
+
+    $str_time = sprintf( "%02d:%02d:%02d", $hour, $minutes, $seconds );
+
+    $sDoneMessage = "Cron finished. \n";
+    $sDoneMessage .= "To update: [".($classProducts->updateCounter+$classProducts->updateFailCounter)."]\n";
+    $sDoneMessage .= "ok: [".$classProducts->updateCounter."]\n";
+    $sDoneMessage .= "failed: [".$classProducts->updateFailCounter."]\n";
+    $sDoneMessage .= "To clone: [".($classProducts->addCounter+$classProducts->addFailCounter)."]\n";
+    $sDoneMessage .= "ok: [".$classProducts->addCounter."]\n";
+    $sDoneMessage .= "failed: [".$classProducts->addFailCounter."]\n";
+    $sDoneMessage .= "processing time: $str_time";
+
+    func_backprocess_log($log_category, $sDoneMessage);
+
+}
 
 db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
 
