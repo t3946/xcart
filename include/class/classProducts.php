@@ -8,7 +8,9 @@ class classProducts extends classCloneData
 {
     private $aProductToQueue;
     public $addCounter;
+    public $addFailCounter;
     public $updateCounter;
+    public $updateFailCounter;
     private $sQueueTable;
     public $changeProvider = 'cron';
 
@@ -24,7 +26,9 @@ class classProducts extends classCloneData
         $this->sPrimaryKeyFiled = "productid";
         $this->sQueueTable = "clone_products_queue";
         $this->addCounter = 0;
+        $this->addFailCounter = 0;
         $this->updateCounter = 0;
+        $this->updateFailCounter = 0;
 
         $this->arrCloneTableStructure[] = array("table" => $this->sPrimaryTable,"key_field" => $this->sPrimaryKeyFiled, "primary_key" => $this->sPrimaryKeyFiled);
         $this->arrCloneTableStructure[] = array("table" => "images_D","key_field" => "id", "primary_key" =>"imageid");
@@ -43,35 +47,47 @@ class classProducts extends classCloneData
      *
      * @return bool
      */
-    public function cloneProductFunction() {
+    public function cloneProductFunction($sleepTime) {
 
-        $bResult = false;
-        $this->getNextProductFromQueue();
+        $bResult = true;
+
+        $aProductsQueue = $this->getProductsFromQueue();
+
+        foreach ($aProductsQueue as $oProductQueue) {
+            $this->aProductToQueue = $oProductQueue;
 
 
-        if (empty($this->aProductToQueue)) {
-            $this->message[] = "No products in queue";
-            return $bResult;
-        }
-
-        $aProduct = $this->getProductInfo($this->aProductToQueue[$this->sPrimaryKeyFiled]);
-
-        switch ($this->aProductToQueue["clone"]) {
-            case "Y":
-                $bResult = $this->cloneProduct($aProduct); //(клонирование продукта)
+            if (empty($this->aProductToQueue)) {
+                $this->message[] = "No products in queue";
+                $bResult = true;
                 break;
-            case "N":
-                $bResult = $this->updateProduct($aProduct); //ИНАЧЕ (обновление продукта)
-                break;
-        }
+            }
 
-        if (!$this->deleteFromQueue()) {
-            $this->message[] = "Error delete from Queue table";
-            $bResult = false;
+            $aProduct = $this->getProductInfo($this->aProductToQueue[$this->sPrimaryKeyFiled]);
+
+            switch ($this->aProductToQueue["clone"]) {
+                case "Y":
+                    $bResult = $this->cloneProduct($aProduct); //(клонирование продукта)
+                    break;
+                case "N":
+                    $bResult = $this->updateProduct($aProduct); //ИНАЧЕ (обновление продукта)
+                    break;
+            }
+
+            if (!$this->deleteFromQueue()) {
+                $this->message[] = "Error delete from Queue table";
+                $bResult = false;
+            }
+
+            usleep($sleepTime);
         }
 
         return $bResult;
 
+    }
+
+    public function getProductQueueCount () {
+        return func_query_first_cell("SELECT count(1) as count FROM ".$this->sql_tbl[$this->sQueueTable]);
     }
 
     public function getProductInfo($iProductId) {
@@ -88,8 +104,12 @@ class classProducts extends classCloneData
     }
 
     protected function getNextProductFromQueue () {
-
         $this->aProductToQueue = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sQueueTable]." ORDER BY insert_datetime ASC LIMIT 1");
+        return !empty($this->aProductToQueue);
+    }
+
+    protected function getProductsFromQueue () {
+        return func_query("SELECT * FROM ".$this->sql_tbl[$this->sQueueTable]." ORDER BY insert_datetime");
     }
 
 
@@ -118,6 +138,14 @@ class classProducts extends classCloneData
 
     protected function IncSuccessUpdate() {
         $this->updateCounter++;
+    }
+
+    protected function IncFailAdd() {
+        $this->addFailCounter++;
+    }
+
+    protected function IncFailUpdate() {
+        $this->updateFailCounter++;
     }
 
     public function getFilterInfoByFilterValueId($iFilterValueId) {
@@ -222,7 +250,7 @@ class classProducts extends classCloneData
 
     private function BackprocessLogs($sLogMessage) {
         $this->message[] = $sLogMessage;
-        func_backprocess_log("clone_product", $sLogMessage. "; Productid = $this->aProductToQueue[$this->sPrimaryKeyFiled]");
+        func_backprocess_log("clone_product", $sLogMessage. "; Productid = ".$this->aProductToQueue[$this->sPrimaryKeyFiled]);
     }
 
     public function updateProductCleanUrl($iProductId) {
@@ -276,6 +304,7 @@ class classProducts extends classCloneData
 
         if (empty($aProduct) || $aProduct["forsale"] != "Y" || $aProduct["clone_parent_product_id"] > 0 || $aQueuedManufacturer["parent_manufacturer_id"] == -1) {
             $this->BackprocessLogs("trying clone cloned, disabled or non-existing product, or target manufacturer is not a clone. skip...");
+            $this->IncFailAdd();
             return false;
         }
 
@@ -285,6 +314,7 @@ class classProducts extends classCloneData
         $aVariants = $this->getProductVariants($aProduct['productid']);
         if (!empty($aVariants)) {
             $this->BackprocessLogs("trying clone product with variants. skip...");
+            $this->IncFailAdd();
             return false;
         }
 
@@ -318,6 +348,7 @@ class classProducts extends classCloneData
             КОНЕЦ ЦИКЛ по [Distributors]
         */
         if (empty($aChildManufacturers)) {
+            $this->IncFailAdd();
             $this->message[] = "No Manufacturers found to Clone";
             return false;
         }
@@ -372,6 +403,7 @@ class classProducts extends classCloneData
                     $this->primaryKeyValue = $this->insertClonedProduct($aProduct, $aParamToClone);
 
                     if (!$this->primaryKeyValue) {
+                        $this->IncFailAdd();
                         $this->message[] = "Error Clone Product"; return false;
                     }
 
@@ -386,7 +418,7 @@ class classProducts extends classCloneData
                     $this->IncSuccessAdd();
                 }
             }
-            else { $this->message[] = "Error calculate ClonedSKU"; return false;}
+            else { $this->IncFailAdd(); $this->message[] = "Error calculate ClonedSKU"; return false;}
         }
         return true;
     }
@@ -666,6 +698,7 @@ class classProducts extends classCloneData
         //ЕСЛИ [PRODUCT] не существует ИЛИ trim([PRODUCT].clone_parent_product_sku) != '', ТО
         if (empty($aProduct) || $aProduct["clone_parent_product_id"] > 0) {
             $this->BackprocessLogs('trying update cloned or non-existing product . skip...');
+            $this->IncFailUpdate();
             return false;
         }
 
