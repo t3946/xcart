@@ -366,6 +366,7 @@ class classProducts extends classCloneData
                 if (isset($aProductBySKU) && is_array($aProductBySKU) && !empty($aProductBySKU)) {
                     $this->BackprocessLogs("SKU $sClonedSKU already exist. Added to update queue...");
                     $this->queueNewProductForUpdate($aProduct['productid'], $this->aProductToQueue["manufacturerid"]);
+                    $this->IncFailAdd();
                     return false;
 
                 } else {
