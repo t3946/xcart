@@ -967,20 +967,24 @@ else {
 				}
 
 				$aChManufacturers = $classManufacturer->getChildrenManufacturers($v['manufacturerid']);
-				foreach ($aChManufacturers as $keyChildManufacturer => &$oChManufacturer) {
-					$aSFInfo = $classManufacturer->getStoreFronInfo($oChManufacturer['d_main_sf']);
-					$oChManufacturer['storefronPrefix'] = rtrim($aSFInfo['sfprefix'],'-');
+				if (!empty($aChManufacturers)) {
+					foreach ($aChManufacturers as $keyChildManufacturer => &$oChManufacturer) {
+						$aSFInfo = $classManufacturer->getStoreFronInfo($oChManufacturer['d_main_sf']);
+						$oChManufacturer['storefronPrefix'] = rtrim($aSFInfo['sfprefix'], '-');
+					}
+					$manufacturers[$k]["aChildrenManufacturers"] = $aChManufacturers;
 				}
 
-				$manufacturers[$k]["aChildrenManufacturers"] = $aChManufacturers;
+
 
 				$aParentManufacturers = $classManufacturer->getParentManufacturers($v['manufacturerid']);
-				foreach ($aParentManufacturers as $keyParentManufacturer => &$oParentManufacturer) {
-					$aSFInfo = $classManufacturer->getStoreFronInfo($oParentManufacturer['d_main_sf']);
-					$oParentManufacturer['storefronPrefix'] = rtrim($aSFInfo['sfprefix'],'-');
-				}
-
+				if (!empty($aParentManufacturers)) {
+					foreach ($aParentManufacturers as $keyParentManufacturer => &$oParentManufacturer) {
+						$aSFInfo = $classManufacturer->getStoreFronInfo($oParentManufacturer['d_main_sf']);
+						$oParentManufacturer['storefronPrefix'] = rtrim($aSFInfo['sfprefix'], '-');
+					}
 				$manufacturers[$k]["aParentManufacturer"] = $aParentManufacturers;
+				}
 ###
 ##
 #
