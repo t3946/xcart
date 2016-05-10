@@ -10,7 +10,7 @@ class classProducts extends classCloneData
     public $addCounter;
     public $updateCounter;
     private $sQueueTable;
-    public $changeProvider = 'croned';
+    public $changeProvider = 'cron';
 
     public function __construct()
     {   parent::__construct();
@@ -89,11 +89,15 @@ class classProducts extends classCloneData
 
     protected function getNextProductFromQueue () {
 
-        $this->aProductToQueue = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sQueueTable]." LIMIT 1");
+        $this->aProductToQueue = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sQueueTable]." ORDER BY insert_datetime ASC LIMIT 1");
     }
 
+
+
     protected function deleteFromQueue() {
-        return db_query("DELETE FROM ".$this->sql_tbl[$this->sQueueTable]." WHERE $this->sPrimaryKeyFiled = ".$this->aProductToQueue[productid]." AND manufacturerid = ".$this->aProductToQueue[manufacturerid]);
+        return db_query("DELETE FROM ".$this->sql_tbl[$this->sQueueTable]." WHERE $this->sPrimaryKeyFiled = ".$this->aProductToQueue['productid']."
+        AND clone = '".$this->aProductToQueue['clone']."'
+        AND manufacturerid = ".$this->aProductToQueue['manufacturerid']);
     }
 
     protected function getProductMPN($sSKU, $sPrefixManufacturer) {
@@ -361,6 +365,7 @@ class classProducts extends classCloneData
                         "add_date" => time(),
                         "mod_date" => time(),
                         "provider" => $this->changeProvider,
+                        "original_provider" => $this->changeProvider,
                         "clone_parent_productid" => $aProduct['productid'],
                     );
 

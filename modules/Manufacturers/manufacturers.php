@@ -158,6 +158,24 @@ if ($REQUEST_METHOD == "POST" && $mode == "copy_distributor" && $manufacturerid)
 	}
 }
 
+if ($REQUEST_METHOD == "POST" && $mode == "copy_products" && $manufacturerid) {
+
+
+	require_once $xcart_dir."/include/class/classManufacturers.php";
+	$classManufacturer = new classManufacturer();
+
+	if (!empty($product_to_copy_manufacturer)) {
+		$countAddedProducts = $classManufacturer->addProductsToQueue($manufacturerid, $product_to_copy_manufacturer);
+		$top_message["type"] = "I";
+		$top_message["content"] = sprintf('%d products added to clone queue... Processing takes some time ...', $countAddedProducts);
+	} else {
+		$top_message["type"] = "E";
+		$top_message["content"] = "Target distributor not selected";
+	}
+
+
+}
+
 if ($REQUEST_METHOD == "POST" && $mode == "update_root_category" && $manufacturerid) {
 
 	$aUpdateParam = array (

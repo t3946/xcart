@@ -2156,6 +2156,50 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
                 </td>
         </tr>
     </table>
+{if ($aParentManufacturer)}
+    <table class="SubHeader" width="100%" cellspacing="0" {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tbody>
+        <tr>
+            <td class="Green2">
+                Clone distributor products to child distributor
+            </td>
+        </tr>
+        <tr>
+            <td class="SubHeaderLine">
+                <img class="Spc" alt="" src="/skin1_kolin/images/spacer.gif">
+                <br>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p></p>
+    <table cellpadding="3" cellspacing="1" id="distributor_section_id_30" {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tr><td colspan="2">
+                {$lng.lb_clone_products_note_before_cloning}
+            </td></tr>
+        <tr>
+            <td colspan="2" class="FormButton">Choose distributor:</td>
+            <td>
+                <select name="product_to_copy_manufacturer">
+                    <option value="0">Please select</option>
+                    {foreach from=$aParentManufacturer item=pm}
+                            <option value="{$pm.manufacturerid}">{$pm.manufacturer}</option>
+                    {/foreach}
+                </select>
+            </td>
+        </tr>
+
+    </table>
+    <table align="center" cellpadding="3" cellspacing="1" width="100%"  {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tr>
+            <td width="48%">
+            </td>
+            <td width="*">
+                <input type="submit" onclick="javascript: {literal}$('#mode').val('copy_products');{/literal}" value="Copy now" />
+            </td>
+        </tr>
+    </table>
+{/if}
     {else}
     <table cellpadding="3" cellspacing="1" id="distributor_section_id_30" {if $distributor_section ne "30"}style="display: none;" {/if}>
         <tr>
