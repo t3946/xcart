@@ -4,12 +4,6 @@ require_once $xcart_dir."/include/class/classCloneData.php";
 
 class classManufacturer extends classCloneData
 {
-   /* protected $sql_tbl = array();
-    private $arrCheckFields = array();
-    private $sPrimaryKeyFiled;
-    private $sPrimaryTable;
-    private $primaryKeyValue;
-    public $message = array();*/
 
     public function __construct()
     {   parent::__construct();
@@ -28,7 +22,7 @@ class classManufacturer extends classCloneData
         $this->arrCloneTableStructure[] = array("table" => "distributor_return_address","key_field" => $this->sPrimaryKeyFiled, "primary_key" =>"id");
         $this->arrCloneTableStructure[] = array("table" => "images_M","key_field" => "id", "primary_key" =>"imageid");
 
-        $this->arrCheckFields['manufacturers'] = array('manufacturerid',
+        $this->arrCheckFields[$this->sPrimaryTable] = array('manufacturerid',
             'manufacturer',
             'url',
             'descr',
@@ -239,26 +233,6 @@ class classManufacturer extends classCloneData
 
     }
 
-/*    protected function array_diff_assoc_recursive($array1, $array2) {
-        $difference=array();
-        foreach($array1 as $key => $value) {
-            if( is_array($value) ) {
-                if( !isset($array2[$key]) || !is_array($array2[$key]) ) {
-                    $difference[$key] = $value;
-                } else {
-                    $new_diff =  $this->array_diff_assoc_recursive($value, $array2[$key]);
-                    if( !empty($new_diff) )
-                        $difference[$key] = $new_diff;
-                }
-            } else if( !array_key_exists($key,$array2) || $array2[$key] !== $value ) {
-                $difference[$key] = $value;
-            }
-        }
-        return $difference;
-    }*/
-
-
-
     public function getManufacturerByCode($sManufacturerCode) {
         return func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE code = '$sManufacturerCode'");
     }
@@ -275,33 +249,6 @@ class classManufacturer extends classCloneData
         return (count($this->getManufacturerByCode($sManufacturerCode))) > 0;
     }
 
-    /*private function DublicateNonPrimaryTable ($aCloneData, $aCloneParam, $aExcludeFields){
-        unset ($aCloneData[$this->sPrimaryTable]);
-        if (isset($aCloneData) && is_array($aCloneData) && count($aCloneData)>0) {
-            foreach ($aCloneData as $sTable => $aRowsToClone) {
-                if (isset($aRowsToClone) && is_array($aRowsToClone) && count($aRowsToClone) > 0)
-                foreach ($aRowsToClone as $aRow) {
-                    foreach ($aCloneParam as $keyParam => $valueParam) {
-                        if (in_array($keyParam, $this->arrCheckFields[$sTable])) {
-                            $aRow[$keyParam] = $valueParam;
-                        }
-                    }
-
-                    if ($aExcludeFields[$sTable]['primarykey']) {
-                        $aRow[$aExcludeFields[$sTable]['primarykey']] = $this->primaryKeyValue;
-                    }
-
-                    array_walk_recursive($aRow, array('classManufacturer','recursive_escape'));
-
-                    func_array2insert($sTable, $aRow);
-
-                }
-            }
-        }
-
-        return true;
-    }*/
-
     public function cloneManufacturer($aOriginalManufacturer, $aCloneParams = array()) {
 
         if (!$this->checkDBChanges()) {
@@ -313,35 +260,6 @@ class classManufacturer extends classCloneData
             $this->message[] = "lb_copy_manufacturer_same_sf";
             return false;
         }
-
-
-
-        /*$aExcludeFields = array();
-        $aExcludeFields['manufacturers']['exclude'] = array($this->sPrimaryKeyFiled, "manufacturer", "provider", "code", "d_main_sf", "update_approximation_shipping_rates");
-        $aExcludeFields['manufacturers']['primarykey'] = $this->sPrimaryKeyFiled;
-        $aExcludeFields['shipping_rates']['exclude'] = array("rateid");
-        $aExcludeFields['shipping_rates']['primarykey'] = $this->sPrimaryKeyFiled;
-        $aExcludeFields['distributor_contacts']['exclude'] = array("id");
-        $aExcludeFields['distributor_contacts']['primarykey'] = $this->sPrimaryKeyFiled;
-        $aExcludeFields['manufacturers_lng']['primarykey'] = $this->sPrimaryKeyFiled;
-        $aExcludeFields['distributor_return_address']['primarykey'] = $this->sPrimaryKeyFiled;
-        $aExcludeFields['images_M']['exclude'] = array("imageid");
-        $aExcludeFields['images_M']['primarykey'] = "id";
-
-        $res = $this->getClonedData($aExcludeFields, $aCloneParams, false);
-
-        if (empty($aCloneParams["root_categoryid_for_cloned_products"])) $aCloneParams["root_categoryid_for_cloned_products"] = 0;
-
-        $aCloneParams['code'] = $this->getCloneManufacturerPrefix(reset($res['manufacturers'])["code"],$aCloneParams["sf_prefix"]);
-
-        if ($this->checkManufacturerCodeExists($aCloneParams['code'])) {
-            $this->message[] = "lb_copy_manufacturer_already_exist";
-            return false;
-        }
-
-        $aCloneParams['manufacturer'] = $this->getCloneManufacturerName(reset($res["manufacturers"])["manufacturer"],$aCloneParams["sf_prefix"]);
-
-        $aClonedStructure = $this->getClonedData($aExcludeFields, $aCloneParams);*/
 
         if (empty($aCloneParams["root_categoryid_for_cloned_products"])) $aCloneParams["root_categoryid_for_cloned_products"] = 0;
         $aCloneParams['code'] = $this->getCloneManufacturerPrefix($aOriginalManufacturer["code"],$aCloneParams["sf_prefix"]);
@@ -357,20 +275,11 @@ class classManufacturer extends classCloneData
 
         if ($this->primaryKeyValue) {
             $aCloneParams[$this->sPrimaryKeyFiled] = $this->primaryKeyValue;
-            unset($aCloneParams['code']); // TODO проверять одинаковыфе названия полей в разных таблицах. используется также в xcart_manufacturers_lng
+            unset($aCloneParams['code']); // TODO проверять одинаковые названия полей в разных таблицах. используется также в xcart_manufacturers_lng
+            $aCloneParams['provider'] = 'master'; //TODO для таблицы shipping_rates
             $this->DublicateNonPrimaryTable($aCloneParams);
             return $this->primaryKeyValue;
         }
-
-        /*$this->primaryKeyValue = $this->DublicatePrimaryTable($aClonedStructure, $aCloneParams);
-
-        if ($this->primaryKeyValue) {
-            $aParams = array("manufacturerid" => $this->primaryKeyValue, "manufacturer" => $aCloneParams['manufacturer']);
-            $this->DublicateNonPrimaryTable($aClonedStructure, $aParams, $aExcludeFields);
-            return $this->primaryKeyValue;
-        }*/
-
-
         return true;
     }
 
