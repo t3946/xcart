@@ -726,7 +726,7 @@ class classProducts extends classCloneData
         }
 
         foreach ($this->arrCloneTableStructure as $sKey => $aSdel)
-            if (in_array($aSdel['table'], array('pricing','quick_flags'))) unset($this->arrCloneTableStructure[$sKey]);
+            if (in_array($aSdel['table'], array('pricing'))) unset($this->arrCloneTableStructure[$sKey]);
 
 
         /*
