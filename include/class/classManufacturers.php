@@ -429,4 +429,11 @@ class classManufacturer extends classCloneData
         return $countProducts;
 
     }
+
+    public function getStoreFronInfo ($iStoreFrontId) {
+        return func_query_first("SELECT xs.*, xs1.value AS sfprefix
+              FROM ".$this->sql_tbl['storefronts']." xs
+                   LEFT JOIN ".$this->sql_tbl['storefronts_config']." xs1 USING (storefrontid)
+             WHERE xs.storefrontid = $iStoreFrontId AND xs1.name = 'opt_order_prefix'");
+    }
 }

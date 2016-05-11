@@ -882,6 +882,9 @@ else {
 
 		include $xcart_dir."/include/navigation.php";
 
+		require_once $xcart_dir."/include/class/classManufacturers.php";
+		$classManufacturer = new classManufacturer();
+
 		#
 		# Get the manufacturers list
 		#
@@ -916,7 +919,7 @@ else {
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 			$products_in_manufacturers = func_query_hash("SELECT COUNT(*), manufacturerid FROM $sql_tbl[products] GROUP BY manufacturerid", 'manufacturerid', false, true);
 
-			foreach ($manufacturers as $k=>$v) {
+			foreach ($manufacturers as $k => $v) {
 				//$manufacturers[$k]["products_count"] = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[products] WHERE manufacturerid='$v[manufacturerid]'");
 				if (isset($products_in_manufacturers[$v['manufacturerid']])) {
 					$manufacturers[$k]["products_count"] = $products_in_manufacturers[$v['manufacturerid']];
@@ -925,43 +928,63 @@ else {
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 				if (!@in_array($v['manufacturerid'], $selected_manufacturers) and $login_type == 'P') {
 					$total_items = $total_items - 1;
-					$total_nav_pages = ceil($total_items/$objects_per_page)+1;
+					$total_nav_pages = ceil($total_items / $objects_per_page) + 1;
 					unset($manufacturers[$k]);
-				}	
+				}
 
 
 #
 ##
 ###
-				if (substr($v["provider_name"], 0, 2) == ", "){
+				if (substr($v["provider_name"], 0, 2) == ", ") {
 					$manufacturers[$k]["provider_name"] = substr_replace($v["provider_name"], '', 0, 2);
 				}
 
 				$I_feed = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='I'");
-				if (!empty($I_feed)){
+				if (!empty($I_feed)) {
 					$I_feed_Y = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='I' AND enabled='Y'");
-					if (!empty($I_feed_Y)){
-						$manufacturers[$k]["I_supplier_feeds_enabled"] = "Y(".$I_feed_Y.")";
+					if (!empty($I_feed_Y)) {
+						$manufacturers[$k]["I_supplier_feeds_enabled"] = "Y(" . $I_feed_Y . ")";
 					}
 
 					$I_feed_N = $I_feed - $I_feed_Y;
-					if (!empty($I_feed_N)){
- 						$manufacturers[$k]["I_supplier_feeds_disabled"] = "N(".$I_feed_N.")";
+					if (!empty($I_feed_N)) {
+						$manufacturers[$k]["I_supplier_feeds_disabled"] = "N(" . $I_feed_N . ")";
 					}
 				}
 
-                                $P_feed = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P'");
-                                if (!empty($P_feed)){
-                                	$P_feed_Y = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P' AND enabled='Y'");
-                                        if (!empty($P_feed_Y)){
-                                                $manufacturers[$k]["P_supplier_feeds_enabled"] = "Y(".$P_feed_Y.")";
+				$P_feed = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P'");
+				if (!empty($P_feed)) {
+					$P_feed_Y = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P' AND enabled='Y'");
+					if (!empty($P_feed_Y)) {
+						$manufacturers[$k]["P_supplier_feeds_enabled"] = "Y(" . $P_feed_Y . ")";
 					}
 
 					$P_feed_N = $P_feed - $P_feed_Y;
-					if (!empty($P_feed_N)){
-                                                $manufacturers[$k]["P_supplier_feeds_disabled"] = "N(".$P_feed_N.")";
-                                        }
-                                }
+					if (!empty($P_feed_N)) {
+						$manufacturers[$k]["P_supplier_feeds_disabled"] = "N(" . $P_feed_N . ")";
+					}
+				}
+
+				$aChManufacturers = $classManufacturer->getChildrenManufacturers($v['manufacturerid']);
+				if (!empty($aChManufacturers)) {
+					foreach ($aChManufacturers as $keyChildManufacturer => &$oChManufacturer) {
+						$aSFInfo = $classManufacturer->getStoreFronInfo($oChManufacturer['d_main_sf']);
+						$oChManufacturer['storefronPrefix'] = rtrim($aSFInfo['sfprefix'], '-');
+					}
+					$manufacturers[$k]["aChildrenManufacturers"] = $aChManufacturers;
+				}
+
+
+
+				$aParentManufacturers = $classManufacturer->getParentManufacturers($v['manufacturerid']);
+				if (!empty($aParentManufacturers)) {
+					foreach ($aParentManufacturers as $keyParentManufacturer => &$oParentManufacturer) {
+						$aSFInfo = $classManufacturer->getStoreFronInfo($oParentManufacturer['d_main_sf']);
+						$oParentManufacturer['storefronPrefix'] = rtrim($aSFInfo['sfprefix'], '-');
+					}
+				$manufacturers[$k]["aParentManufacturer"] = $aParentManufacturers;
+				}
 ###
 ##
 #

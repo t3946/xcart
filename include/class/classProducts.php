@@ -45,6 +45,7 @@ class classProducts extends classCloneData
     /**
      * https://s3stores.teamwork.com/tasks/6416520
      *
+     * @param $sleepTime
      * @return bool
      */
     public function cloneProductFunction($sleepTime) {
@@ -77,7 +78,7 @@ class classProducts extends classCloneData
                 $bResult = false;
             }
 
-            usleep($sleepTime);
+            if ($bResult) usleep($sleepTime);
         }
 
         return $bResult;
@@ -599,82 +600,19 @@ class classProducts extends classCloneData
             'mult_order_quantity' => $aProduct['mult_order_quantity'],
             'new_map_price' => $aProduct['new_map_price'],
             'eta_date_mm_dd_yyyy' => $aProduct['eta_date_mm_dd_yyyy'],
+            'eta_date_lock' => $aProduct['eta_date_lock'],
             'lead_time_message' => $aProduct['lead_time_message'],
             'r_avail' => $aProduct['r_avail'],
             'provider' => $this->changeProvider
         );
+
+        array_walk_recursive($aUpdateProduct, array(__CLASS__,'recursive_escape'));
 
         func_array2update($this->sPrimaryTable, $aUpdateProduct, $this->sPrimaryKeyFiled." = ".$aClonedProduct[$this->sPrimaryKeyFiled]);
 
         return true;
 
     }
-
-    /*protected function getClonedData($aParams)  {
-        $aSelectResult = array();
-
-        foreach ($this->arrCloneTableStructure as $sTable) {
-            $aSelectResult[$sTable['table']]['result'] = func_query("SELECT * FROM ".$this->sql_tbl[$sTable['table']]." WHERE ".$sTable['key_field']." = ".$aParams[$this->sPrimaryKeyFiled]);
-            if (isset($aSelectResult[$sTable['table']]['result']) && is_array($aSelectResult[$sTable['table']]['result']))
-            foreach ($aSelectResult[$sTable['table']]['result']  as &$aRows) {
-                if ($sTable['primary_key'] != $sTable['key_field']) {
-                    unset($aRows[$sTable['primary_key']]);
-                }
-            }
-            $aSelectResult[$sTable['table']]['key_field'] =  $sTable['key_field'];
-        }
-
-        return $aSelectResult;
-    }
-
-    protected function DublicatePrimaryTable ($aCloneParam){
-
-        $this->aClonedData = $this->getClonedData($aCloneParam);
-
-        $insertRow = reset($this->aClonedData[$this->sPrimaryTable]['result']);
-        foreach ($aCloneParam as $key => $value) {
-            if (in_array($key, array_keys($insertRow)) && $key != $this->sPrimaryKeyFiled) {
-                $insertRow[$key] = $value;
-            }
-        }
-        unset($insertRow[$this->sPrimaryKeyFiled]);
-        array_walk_recursive($insertRow, array(__CLASS__,'recursive_escape'));
-//        func_print_r($insertRow);
-        return func_array2insert($this->sPrimaryTable, $insertRow);
-    }
-
-    private function DublicateNonPrimaryTable ($aCloneParam, $deleteBeforeInsert = false){
-
-        unset ($this->aClonedData[$this->sPrimaryTable]);
-
-        if (isset($this->aClonedData) && is_array($this->aClonedData) && count($this->aClonedData)>0) {
-            foreach ($this->aClonedData as $sTable => $aRowsToClone) {
-                if (isset($aRowsToClone['result']) && is_array($aRowsToClone['result']) && count($aRowsToClone['result']) > 0)
-                    foreach ($aRowsToClone['result'] as $aRow) {
-                        foreach ($aCloneParam as $keyParam => $valueParam) {
-                            if (in_array($keyParam, array_keys($aRow))) {
-                                $aRow[$keyParam] = $valueParam;
-                            }
-                        }
-
-                        $aRow[$aRowsToClone['key_field']] = $aCloneParam[$this->sPrimaryKeyFiled];
-
-
-                        array_walk_recursive($aRow, array(__CLASS__,'recursive_escape'));
-//func_print_r($aRow);
-                        if ($deleteBeforeInsert) {
-                            $this->deleteFromTableByKeyValue($sTable, $aRowsToClone['key_field'], $aCloneParam[$this->sPrimaryKeyFiled]);
-                        }
-
-                        func_array2insert($sTable, $aRow);
-
-                    }
-            }
-        }
-
-        return true;
-    }*/
-
 
     protected function queueNewProductForUpdate ($iProductId, $iManufacturerId) {
         $aParams = array(
