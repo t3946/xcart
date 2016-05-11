@@ -1545,10 +1545,15 @@ function func_generate_discounts($productids, $tick = 0) {
 		$i = 0;
 	}
 
-        $prs = func_query_hash("SELECT p.productid, p.discount_slope, p.discount_table, pr.price, p.min_amount FROM $sql_tbl[products] as p LEFT JOIN $sql_tbl[pricing] as pr ON p.productid = pr.productid AND pr.membershipid = '0' AND pr.quantity = 1 AND pr.variantid = '0'WHERE p.productid IN ('".implode("','",$productids)."')", "productid");
+        $prs = func_query_hash("SELECT p.productid, p.discount_slope, p.discount_table, pr.price, cidev_get_base_xcart_price(p.cost_to_us) as base_price, p.min_amount FROM $sql_tbl[products] as p LEFT JOIN $sql_tbl[pricing] as pr ON p.productid = pr.productid AND pr.membershipid = '0' AND pr.quantity = 1 AND pr.variantid = '0'WHERE p.productid IN ('".implode("','",$productids)."')", "productid");
 
        
         foreach ($prs as $productid => $p) {
+
+			if (empty($p[0]["price"])) {
+				db_query("REPLACE $sql_tbl[pricing] SET price = ".$p[0]["base_price"].", productid = $productid, quantity = 1, variantid = 0, membershipid = 0");
+				$p[0]["price"] = $p[0]["base_price"];
+			}
 
 	    if ($tick > 0){
 		$i = 0;
