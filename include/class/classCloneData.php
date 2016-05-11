@@ -129,7 +129,7 @@ public function checkDBChanges () {
                             func_backprocess_log("clone_products_cron", "Clone pricing table. productid = ".$aCloneParam[$this->sPrimaryKeyFiled]."; aCloneRow - ".serialize($aRow));
                         }
 
-                        if (!(func_array2insert($sTable, $aRow))) {
+                        if ((func_array2insert($sTable, $aRow)) === false) {
                             func_backprocess_log("clone_products_cron_errors", "Error clone table - ".$sTable." - ".serialize($aRow));
                             return false;
                         }
