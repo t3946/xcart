@@ -40,6 +40,85 @@ class classProducts extends classCloneData
         //$this->arrCloneTableStructure[] = array("table" => "clean_urls","key_field" => "resource_id", "primary_key" =>"resource_id");
         $this->arrCloneTableStructure[] = array("table" => "pricing","key_field" => "productid", "primary_key" =>"priceid");
         $this->arrCloneTableStructure[] = array("table" => "quick_flags","key_field" => "productid", "primary_key" =>"productid");
+
+        $this->arrCheckFields[$this->sPrimaryTable] = array('productid',
+            'productcode',
+            'product',
+            'product_froogle',
+            'provider',
+            'original_provider',
+            'distribution',
+            'weight',
+            'list_price',
+            'descr',
+            'fulldescr',
+            'avail',
+            'rating',
+            'forsale',
+            'add_date',
+            'mod_date',
+            'views_stats',
+            'sales_stats',
+            'del_stats',
+            'shipping_freight',
+            'free_shipping',
+            'discount_avail',
+            'min_amount',
+            'dim_x',
+            'dim_y',
+            'dim_z',
+            'low_avail_limit',
+            'free_tax',
+            'product_type',
+            'manufacturerid',
+            'brandid',
+            'return_time',
+            'keywords',
+            'google_search_term',
+            'discount_slope',
+            'discount_table',
+            'free_ship_zone',
+            'free_ship_text',
+            'upc',
+            'cost_to_us',
+            'source_sfid',
+            'map_price',
+            'mult_order_quantity',
+            'new_map_price',
+            'warning_code',
+            'eta_date_mm_dd_yyyy',
+            'lead_time_message',
+            'similar_cron_generated_flag',
+            'similar_productids',
+            'similar_time',
+            'product_price_multiplier',
+            'supplier_internal_product_id',
+            'generate_similar_products',
+            'tmp_generated_file',
+            'update_search_index',
+            'pc_classify_status',
+            'pc_mc_operator',
+            'pc_acc_operator',
+            'r_avail',
+            'supplier_internal_id',
+            'supplier_internal_id_last_parsed',
+            'supplier_internal_id_last_parsed_update',
+            'last_incremental_update',
+            'amazon_enabled',
+            'pc_most_relevant_categories',
+            'pc_delta',
+            'supplier_internal_option',
+            'amazon_fba',
+            'amazon_fba_avail',
+            'title_tag',
+            'seo_product_name',
+            'seo_meta_descr',
+            'lock_forsale',
+            'seo_h2',
+            'prevent_search_indexing_this_product_page',
+            'controlled_by_feed',
+            'eta_date_lock',
+            'clone_parent_productid');
     }
 
     /**
@@ -51,6 +130,11 @@ class classProducts extends classCloneData
     public function cloneProductFunction($sleepTime) {
 
         $bResult = true;
+
+        if (!$this->checkDBChanges()) {
+            $this->BackprocessLogs("DB schema changed, product cloning disabled...","clone_products_cron_errors");
+            return false;
+        }
 
         $aProductsQueue = $this->getProductsFromQueue();
 
@@ -247,9 +331,11 @@ class classProducts extends classCloneData
         func_array2insert ('cidev_filter_products', $aFilterProduct, true);
     }
 
-    private function BackprocessLogs($sLogMessage) {
+    private function BackprocessLogs($sLogMessage, $sProcessId = "clone_products_cron") {
         $this->message[] = $sLogMessage;
-        func_backprocess_log("clone_products_cron", $sLogMessage. "; Productid = ".$this->aProductToQueue[$this->sPrimaryKeyFiled]);
+        if (isset($this->aProductToQueue[$this->sPrimaryKeyFiled]) && $this->aProductToQueue[$this->sPrimaryKeyFiled])
+            $sLogMessage .= "; Productid = ".$this->aProductToQueue[$this->sPrimaryKeyFiled];
+        func_backprocess_log($sProcessId, $sLogMessage);
     }
 
     public function updateProductCleanUrl($iProductId) {
