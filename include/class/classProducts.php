@@ -78,7 +78,7 @@ class classProducts extends classCloneData
                 $bResult = false;
             }
 
-            usleep($sleepTime);
+            if ($bResult) usleep($sleepTime);
         }
 
         return $bResult;
