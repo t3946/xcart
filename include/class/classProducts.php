@@ -232,7 +232,7 @@ class classProducts extends classCloneData
     }
 
     public function getFilterInfoByFilterValueId($iFilterValueId) {
-        return func_query_first("SELECT xc1.* FROM ".$this->sql_tbl['cidev_filter_values']." fv INNER JOIN xcart_cidev_filters xc1 ON xc1.f_id = fv.f_id AND fv.fv_id =$iFilterValueId");
+        return func_query_first("SELECT xc1.* FROM ".$this->sql_tbl['cidev_filter_values']." fv INNER JOIN ".$this->sql_tbl['cidev_filters']." xc1 ON xc1.f_id = fv.f_id AND fv.fv_id =$iFilterValueId");
     }
 
     public function getFilterByNameAndStoreFront ($sFilterName, $iStoreFrontId) {
