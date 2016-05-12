@@ -290,6 +290,17 @@ include $xcart_dir."/include/search.php";
 ###
 
 if (!empty($active_modules['CIDEV_Best_Search_Filter'])) {
+	/*
+	 *https://s3stores.teamwork.com/tasks/6258406
+	 */
+	if (isset($current_category) && is_array($current_category) && !empty($current_category) && isset($current_category['parentid'])
+			&& $current_category['parentid'] == 0 && isset($current_category['subcategory_count']) && $current_category['subcategory_count'] > 0) {
+		if (!empty($cidev_filters_tree) && is_array($cidev_filters_tree)){
+				unset($cidev_filters_tree);
+		}
+	}
+
+
 $search_query_count_NEW = str_replace("  ", " ", $search_query_count_NEW);
 //func_print_r($cidev_filters_tree);
 if (!empty($cidev_filters_tree) && is_array($cidev_filters_tree)){
@@ -632,7 +643,7 @@ if (!empty($subcategories) && is_array($subcategories)){
 #
 
 //func_print_r($cidev_subcategories_products_count);
-	
+
 if (is_array($current_category)) {
 	if (is_array($products)) {
 		$fp_num = (count($products) >= META_DATA_PARAM) ? META_DATA_PARAM : count($products);
