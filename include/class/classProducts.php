@@ -236,6 +236,7 @@ class classProducts extends classCloneData
     }
 
     public function getFilterByNameAndStoreFront ($sFilterName, $iStoreFrontId) {
+        $sFilterName = addslashes($sFilterName);
         return func_query_first_cell("SELECT f_id FROM ".$this->sql_tbl['cidev_filters']." WHERE f_name='$sFilterName' AND storefrontid=$iStoreFrontId");
     }
 
