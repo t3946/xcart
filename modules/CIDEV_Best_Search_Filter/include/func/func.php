@@ -27,7 +27,7 @@ function func_cidev_filters_tree($active_only = false)
 				. " WHERE f_id = $v[f_id]"
 				. ($active_only ? " AND fv_active = 'Y'" : "")
 				. " ORDER BY fv_order_by, fv_name";
-var_dump($query_filter_values);
+
 			$cidev_filters[$k]["filter_values"] = func_query($query_filter_values);
 		}
 	}
