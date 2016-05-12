@@ -240,6 +240,7 @@ class classProducts extends classCloneData
     }
 
     public function createNewFilter($aFilter) {
+        array_walk_recursive($aFilter, array(__CLASS__,'recursive_escape'));
         $iFilterId = func_array2insert('cidev_filters', $aFilter);
         return $iFilterId;
     }
@@ -267,6 +268,7 @@ class classProducts extends classCloneData
 
         if (isset($aFilterValues) && is_array($aFilterValues) && !empty($aFilterValues)) {
             foreach($aFilterValues as $oFilter) {
+                array_walk_recursive($oFilter, array(__CLASS__,'recursive_escape'));
                 $oFilter['f_id'] = $iNewFilterId;
                 unset($oFilter['fv_id']);
                 $aNewFilterValue = $this->getFilterValuesByNameAndFilterType($oFilter['fv_name'], $iNewFilterId);
