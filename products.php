@@ -295,13 +295,15 @@ if (!empty($active_modules['CIDEV_Best_Search_Filter'])) {
     /*
      *https://s3stores.teamwork.com/tasks/6258406
      */
-    /*if (isset($current_category) && is_array($current_category) && !empty($current_category) && isset($current_category['parentid'])
-            && $current_category['parentid'] == 0 && isset($current_category['subcategory_count']) && $current_category['subcategory_count'] > 0) {
-        if (!empty($cidev_filters_tree) && is_array($cidev_filters_tree)){
-                unset($cidev_filters_tree);
+    $bOptimisedSelectBrands = true;
+    if ($bOptimisedSelectBrands) {
+        if (isset($current_category) && is_array($current_category) && !empty($current_category) && isset($current_category['parentid'])
+                && $current_category['parentid'] == 0 && isset($current_category['subcategory_count']) && $current_category['subcategory_count'] > 0) {
+            if (!empty($cidev_filters_tree) && is_array($cidev_filters_tree)){
+                    unset($cidev_filters_tree);
+            }
         }
-    }*/
-
+    }
 
     $search_query_count_NEW = str_replace("  ", " ", $search_query_count_NEW);
 //func_print_r($cidev_filters_tree);
@@ -456,20 +458,48 @@ if (!empty($active_modules['CIDEV_Best_Search_Filter'])) {
         $seach_query_brands_count_arr = explode("GROUP BY", $seach_query_brands_count);
 
         $count_selected_brands = 0;
-        foreach ($filter_selected_and_found_brands as $k => $v) {
-            $filter_brand_sub_query = "$sql_tbl[products].brandid='" . $v["brandid"] . "'";
-            $seach_query_brands_count = $seach_query_brands_count_arr[0] . " AND " . $filter_brand_sub_query . " GROUP BY " . $seach_query_brands_count_arr[1];
-            $seach_query_brands_count_products = db_query($seach_query_brands_count);
-            $filter_count_brands = db_num_rows($seach_query_brands_count_products);
-            db_free_result($seach_query_brands_count_products);
-            $filter_selected_and_found_brands[$k]["count_products"] = $filter_count_brands;
 
-            if ($v["selected"] == "Y") {
-                $count_selected_brands++;
+        /*
+         * https://s3stores.teamwork.com/tasks/6258406
+        */
+
+
+        if ($bOptimisedSelectBrands) {
+            $seach_query_brands_count_arr[1] = "$sql_tbl[products].brandid";
+
+            //$seach_query_brands_count_arr[0] = str_replace("SELECT COUNT(*), $sql_tbl[products].productid","SELECT COUNT(DISTINCT $sql_tbl[products].productid) as brand_count, $seach_query_brands_count_arr[1] ",$seach_query_brands_count_arr[0]);
+            $seach_query_brands_count_arr[0] = preg_replace('/SELECT(.*?)FROM/is', "SELECT COUNT(DISTINCT $sql_tbl[products].productid) as brand_count, $seach_query_brands_count_arr[1] FROM", $seach_query_brands_count_arr[0]);
+
+            $seach_query_brands_count = $seach_query_brands_count_arr[0] . " GROUP BY " . $seach_query_brands_count_arr[1];
+
+            $seach_query_brands_count_products = func_query_hash($seach_query_brands_count, "brandid", false);
+
+            foreach ($filter_selected_and_found_brands as $k => $v) {
+                    $filter_selected_and_found_brands[$k]["count_products"] = $seach_query_brands_count_products[$filter_selected_and_found_brands[$k]['brandid']]['brand_count'];
+                if ($v["selected"] == "Y") {
+                    $count_selected_brands++;
+                }
+            }
+
+            db_free_result($seach_query_brands_count_products);
+
+        } else {
+
+            foreach ($filter_selected_and_found_brands as $k => $v) {
+                $filter_brand_sub_query = "$sql_tbl[products].brandid='" . $v["brandid"] . "'";
+                $seach_query_brands_count = $seach_query_brands_count_arr[0] . " AND " . $filter_brand_sub_query . " GROUP BY " . $seach_query_brands_count_arr[1];
+                $seach_query_brands_count_products = db_query($seach_query_brands_count);
+                $filter_count_brands = db_num_rows($seach_query_brands_count_products);
+                db_free_result($seach_query_brands_count_products);
+                $filter_selected_and_found_brands[$k]["count_products"] = $filter_count_brands;
+
+                if ($v["selected"] == "Y") {
+                    $count_selected_brands++;
+                }
             }
         }
 
-//func_print_r($filter_selected_and_found_brands);
+//func_print_r($filter_selected_and_found_brands); exit;
 
         $filter_selected_and_found_brands = my_array_sort($filter_selected_and_found_brands, 'brand');
 
@@ -610,34 +640,31 @@ if (!empty($active_modules['CIDEV_Best_Search_Filter'])) {
 //func_print_r($filter_prices, $filter_min_price_selected, $filter_max_price_selected);
 
     }
+        if (!empty($subcategories) && is_array($subcategories)) {
 
+            $search_query_count_NEW_SUB_CAT = $search_query_count_NEW;
+            $search_query_count_NEW_SUB_CAT = preg_replace('/SELECT(.*?)FROM/is', "SELECT COUNT(xcart_products.productid) FROM", $search_query_count_NEW_SUB_CAT);
+            $search_query_count_NEW_SUB_CAT = preg_replace('/xcart_products_categories.categoryid IN(.*?)\)/is', "xcart_products_categories.categoryid IN (____XXXX____)", $search_query_count_NEW_SUB_CAT);
 
-    if (!empty($subcategories) && is_array($subcategories)) {
+            $cidev_subcategories_products_count = array();
+            foreach ($subcategories as $k => $v) {
 
-        $search_query_count_NEW_SUB_CAT = $search_query_count_NEW;
-        $search_query_count_NEW_SUB_CAT = preg_replace('/SELECT(.*?)FROM/is', "SELECT COUNT(xcart_products.productid) FROM", $search_query_count_NEW_SUB_CAT);
-        $search_query_count_NEW_SUB_CAT = preg_replace('/xcart_products_categories.categoryid IN(.*?)\)/is', "xcart_products_categories.categoryid IN (____XXXX____)", $search_query_count_NEW_SUB_CAT);
+                $tmp_categoryid_path = addslashes(func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='" . $v["categoryid"] . "'"));
+                $tmp_categoryids = func_query_column("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid='" . $v["categoryid"] . "' OR categoryid_path LIKE '$tmp_categoryid_path/%'");
+                $tmp_categoryids_imploded = implode(",", $tmp_categoryids);
+                $search_query_count_NEW_SUB_CAT_query = str_replace("____XXXX____", $tmp_categoryids_imploded, $search_query_count_NEW_SUB_CAT);
 
-        $cidev_subcategories_products_count = array();
-        foreach ($subcategories as $k => $v) {
+                $subcategories_count_products = db_query($search_query_count_NEW_SUB_CAT_query);
+                $COUNT_products_in_subcat = db_num_rows($subcategories_count_products);
+                db_free_result($subcategories_count_products);
 
-            $tmp_categoryid_path = addslashes(func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='" . $v["categoryid"] . "'"));
-            $tmp_categoryids = func_query_column("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid='" . $v["categoryid"] . "' OR categoryid_path LIKE '$tmp_categoryid_path/%'");
-            $tmp_categoryids_imploded = implode(",", $tmp_categoryids);
-            $search_query_count_NEW_SUB_CAT_query = str_replace("____XXXX____", $tmp_categoryids_imploded, $search_query_count_NEW_SUB_CAT);
-            $subcategories_count_products = db_query($search_query_count_NEW_SUB_CAT_query);
-            $COUNT_products_in_subcat = db_num_rows($subcategories_count_products);
-            db_free_result($subcategories_count_products);
+                $cidev_subcategories_products_count[$k]["categoryid"] = $v["categoryid"];
+                $cidev_subcategories_products_count[$k]["supplemental_category"] = $v["supplemental_category"];
+                $cidev_subcategories_products_count[$k]["count_products"] = $COUNT_products_in_subcat;
+            }
 
-            $cidev_subcategories_products_count[$k]["categoryid"] = $v["categoryid"];
-            $cidev_subcategories_products_count[$k]["supplemental_category"] = $v["supplemental_category"];
-            $cidev_subcategories_products_count[$k]["count_products"] = $COUNT_products_in_subcat;
+            $smarty->assign("cidev_subcategories_products_count", $cidev_subcategories_products_count);
         }
-
-        $smarty->assign("cidev_subcategories_products_count", $cidev_subcategories_products_count);
-    }
-
-
 }
 ###
 ##
