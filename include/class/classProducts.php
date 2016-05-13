@@ -567,10 +567,6 @@ class classProducts extends classCloneData
             xcart_variant_items
             xcart_clean_urls*/
 
-
-
-
-
         //func_clean_url_add();
 
 
