@@ -23,7 +23,7 @@ function func_cidev_filters_tree($active_only = false)
 
 		foreach ($cidev_filters as $k => $v){
 
-			$query_filter_values = "SELECT * FROM $sql_tbl[cidev_filter_values] USE INDEX (fv_aon)"
+			$query_filter_values = "SELECT * FROM $sql_tbl[cidev_filter_values] "
 				. " WHERE f_id = $v[f_id]"
 				. ($active_only ? " AND fv_active = 'Y'" : "")
 				. " ORDER BY fv_order_by, fv_name";

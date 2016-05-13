@@ -67,35 +67,36 @@ if ($REQUEST_METHOD == "POST") {
        INNER JOIN xcart_customers xc ON OL.login = xc.login
       where OL.id is not NULL  $search_condition AND usertype='A' AND status = 'Y'
       group by o.orderid, OL.id
-      order by o.date, ol.date ASC
+      order by o.date, OL.date ASC
       ");
 
     $firstlevelGroup = array();
     $secondLevelGroup = array();
     $LevelGroup3 = array();
-    foreach ($all_actions as $actionrow) {
-        $firstlevelGroup[$actionrow["firstname"]]['actioncnt']++;
-        if (isset($firstlevelGroup[$actionrow["firstname"]]['orders']) && is_array($firstlevelGroup[$actionrow["firstname"]]['orders'])) {
-            if (!in_array($actionrow["orderid"], $firstlevelGroup[$actionrow["firstname"]]['orders'])) $firstlevelGroup[$actionrow["firstname"]]['orders'][] = $actionrow["orderid"];
-        } else $firstlevelGroup[$actionrow["firstname"]]['orders'][] = $actionrow["orderid"];
+    if (isset($all_actions) && is_array($all_actions) && count($all_actions) != 0) {
+        foreach ($all_actions as $actionrow) {
+            $firstlevelGroup[$actionrow["firstname"]]['actioncnt']++;
+            if (isset($firstlevelGroup[$actionrow["firstname"]]['orders']) && is_array($firstlevelGroup[$actionrow["firstname"]]['orders'])) {
+                if (!in_array($actionrow["orderid"], $firstlevelGroup[$actionrow["firstname"]]['orders'])) $firstlevelGroup[$actionrow["firstname"]]['orders'][] = $actionrow["orderid"];
+            } else $firstlevelGroup[$actionrow["firstname"]]['orders'][] = $actionrow["orderid"];
 
-        $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["actioncount"]++;
-        $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["orderdate"] = $actionrow["orderdate"];
-        $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["orderstatus"] = $actionrow["orderstatus"];
-        $LevelGroup3[$actionrow["firstname"]][$actionrow["orderid"]][] = array ("action_date" => $actionrow["actiondate"], "action_type" => $actionrow["type"], "log" => $actionrow["log"]);
-    }
+            $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["actioncount"]++;
+            $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["orderdate"] = $actionrow["orderdate"];
+            $secondLevelGroup[$actionrow["firstname"]]["orders"][$actionrow["orderid"]]["orderstatus"] = $actionrow["orderstatus"];
+            $LevelGroup3[$actionrow["firstname"]][$actionrow["orderid"]][] = array("action_date" => $actionrow["actiondate"], "action_type" => $actionrow["type"], "log" => $actionrow["log"]);
+        }
 
 
+        $firstlevelGroupData = array();
+        foreach ($firstlevelGroup as $login => $dataFirstLevel) {
+            $firstlevelGroupData[] = array("login" => $login, "orderscount" => count($dataFirstLevel["orders"]), "actioncount" => $dataFirstLevel["actioncnt"]);
+        }
 
-    $firstlevelGroupData = array();
-    foreach ($firstlevelGroup as $login => $dataFirstLevel) {
-        $firstlevelGroupData[] = array("login" => $login, "orderscount" => count($dataFirstLevel["orders"]), "actioncount" => $dataFirstLevel["actioncnt"]);
-    }
-
-    $secondlevelGroupData = array();
-    foreach ($secondLevelGroup as $login => $dataS) {
-        foreach ($dataS["orders"] as $orderid => $dataSecond)
-            $secondlevelGroupData[$login][] = array("ordernumber" => $orderid, "orderdate" => $dataSecond["orderdate"], "orderstatus" => $dataSecond["orderstatus"], "actioncount" => $dataSecond["actioncount"]);
+        $secondlevelGroupData = array();
+        foreach ($secondLevelGroup as $login => $dataS) {
+            foreach ($dataS["orders"] as $orderid => $dataSecond)
+                $secondlevelGroupData[$login][] = array("ordernumber" => $orderid, "orderdate" => $dataSecond["orderdate"], "orderstatus" => $dataSecond["orderstatus"], "actioncount" => $dataSecond["actioncount"]);
+        }
     }
 
     $type_names = array (

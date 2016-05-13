@@ -34,12 +34,12 @@ class classProducts extends classCloneData
         $this->arrCloneTableStructure[] = array("table" => "images_D","key_field" => "id", "primary_key" =>"imageid");
         $this->arrCloneTableStructure[] = array("table" => "images_P","key_field" => "id", "primary_key" =>"imageid");
         $this->arrCloneTableStructure[] = array("table" => "images_T","key_field" => "id", "primary_key" =>"imageid");
+        $this->arrCloneTableStructure[] = array("table" => "quick_flags","key_field" => "productid", "primary_key" =>"productid");
         $this->arrCloneTableStructure[] = array("table" => "product_files","key_field" => "productid", "primary_key" =>"fileid");
         $this->arrCloneTableStructure[] = array("table" => "product_taxes","key_field" => "productid", "primary_key" =>"productid");
         $this->arrCloneTableStructure[] = array("table" => "products_amz_fields","key_field" => "productid", "primary_key" =>"id");
         //$this->arrCloneTableStructure[] = array("table" => "clean_urls","key_field" => "resource_id", "primary_key" =>"resource_id");
         $this->arrCloneTableStructure[] = array("table" => "pricing","key_field" => "productid", "primary_key" =>"priceid");
-        $this->arrCloneTableStructure[] = array("table" => "quick_flags","key_field" => "productid", "primary_key" =>"productid");
 
         $this->arrCheckFields[$this->sPrimaryTable] = array('productid',
             'productcode',
@@ -563,10 +563,6 @@ class classProducts extends classCloneData
             xcart_variant_items
             xcart_clean_urls*/
 
-
-
-
-
         //func_clean_url_add();
 
 
@@ -726,7 +722,7 @@ class classProducts extends classCloneData
         }
 
         foreach ($this->arrCloneTableStructure as $sKey => $aSdel)
-            if (in_array($aSdel['table'], array('pricing','quick_flags'))) unset($this->arrCloneTableStructure[$sKey]);
+            if (in_array($aSdel['table'], array('pricing'))) unset($this->arrCloneTableStructure[$sKey]);
 
 
         /*
