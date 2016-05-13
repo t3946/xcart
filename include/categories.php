@@ -211,7 +211,7 @@ function func_get_categories_list($cat=0, $short_list=true, $flag=null, $max_dep
 		}
 	} else {
 		
-		$_categories = db_query("SELECT $to_search FROM $sql_tbl[categories] USE INDEX (am) $join_tbl " . (!empty($search_condition) ? 'WHERE ' . implode(' AND ', $search_condition) : '') . " GROUP BY $sql_tbl[categories].categoryid " . $sort_condition);
+		$_categories = db_query("SELECT $to_search FROM $sql_tbl[categories] FORCE INDEX (am) $join_tbl " . (!empty($search_condition) ? 'WHERE ' . implode(' AND ', $search_condition) : '') . " GROUP BY $sql_tbl[categories].categoryid " . $sort_condition);
 	}
 
 	if (empty($_categories)) {
