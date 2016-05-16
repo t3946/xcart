@@ -232,14 +232,16 @@ class classProducts extends classCloneData
     }
 
     public function getFilterInfoByFilterValueId($iFilterValueId) {
-        return func_query_first("SELECT xc1.* FROM xcart_cidev_filter_values fv INNER JOIN xcart_cidev_filters xc1 ON xc1.f_id = fv.f_id AND fv.fv_id =$iFilterValueId");
+        return func_query_first("SELECT xc1.* FROM ".$this->sql_tbl['cidev_filter_values']." fv INNER JOIN ".$this->sql_tbl['cidev_filters']." xc1 ON xc1.f_id = fv.f_id AND fv.fv_id =$iFilterValueId");
     }
 
     public function getFilterByNameAndStoreFront ($sFilterName, $iStoreFrontId) {
+        $sFilterName = addslashes($sFilterName);
         return func_query_first_cell("SELECT f_id FROM ".$this->sql_tbl['cidev_filters']." WHERE f_name='$sFilterName' AND storefrontid=$iStoreFrontId");
     }
 
     public function createNewFilter($aFilter) {
+        array_walk_recursive($aFilter, array(__CLASS__,'recursive_escape'));
         $iFilterId = func_array2insert('cidev_filters', $aFilter);
         return $iFilterId;
     }
@@ -249,6 +251,7 @@ class classProducts extends classCloneData
     }
 
     public function getFilterValuesByNameAndFilterType($sFilterName, $iFilterTypeId){
+        $sFilterName = addslashes($sFilterName);
         return func_query_first("SELECT * FROM ".$this->sql_tbl['cidev_filter_values']." WHERE fv_name='$sFilterName' AND f_id=$iFilterTypeId");
     }
 
@@ -267,6 +270,7 @@ class classProducts extends classCloneData
 
         if (isset($aFilterValues) && is_array($aFilterValues) && !empty($aFilterValues)) {
             foreach($aFilterValues as $oFilter) {
+                array_walk_recursive($oFilter, array(__CLASS__,'recursive_escape'));
                 $oFilter['f_id'] = $iNewFilterId;
                 unset($oFilter['fv_id']);
                 $aNewFilterValue = $this->getFilterValuesByNameAndFilterType($oFilter['fv_name'], $iNewFilterId);
