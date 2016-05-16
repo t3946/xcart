@@ -122,40 +122,56 @@ if ($REQUEST_METHOD == "POST" && $mode == "delete_distributor_return_address" &&
 }
 
 if ($REQUEST_METHOD == "POST" && $mode == "copy_distributor" && $manufacturerid) {
-
+	$bErrorClone = false;
 
 	require_once $xcart_dir."/include/class/classManufacturers.php";
+	require_once $xcart_dir."/include/class/classCategories.php";
 	$classManufacturer = new classManufacturer();
+	$classCategories = new classCategories();
 
 	$storefont_info = func_get_storefront_info($storefront_to_copy_manufacturer, "ID");
 
-
-	$aCloneParams = array(
-				"manufacturerid" => $manufacturerid,
-				"d_main_sf" => $storefront_to_copy_manufacturer,
-				"update_approximation_shipping_rates" => "Y",
-				"root_categoryid_for_cloned_products" => $root_categoryid_for_cloned_products,
-				"parent_manufacturer_id" => $manufacturerid,
-				"provider" => $login,
-				"sf_prefix" => rtrim($storefont_info["prefix"], "-"),
-	);
-
-	$aOriginalManufacturer = $classManufacturer->getMainufacturersInfo(array($manufacturerid));
-	$aOriginalManufacturer = reset($aOriginalManufacturer);
-
-	$res = $classManufacturer->cloneManufacturer($aOriginalManufacturer, $aCloneParams);
-	if (!$res) {
-			$sErrorMessage = "";
-			foreach ($classManufacturer->message as $eMessage) {
-				$sErrorMessage .= func_get_langvar_by_name($eMessage);
-			}
+	if (!empty($root_categoryid_for_cloned_products) && is_numeric($root_categoryid_for_cloned_products)) {
+		$aCloneCategory = $classCategories->getCategoryByIdAndStoreFront($root_categoryid_for_cloned_products, $storefront_to_copy_manufacturer);
+		if (empty($aCloneCategory)) {
 			$top_message["type"] = "E";
-			$top_message["content"] = $sErrorMessage;
-
-	} else {
-			$top_message["type"] = "I";
-			$top_message["content"] = func_get_langvar_by_name("lb_copy_manufacturer_done");
+			$top_message["content"] = func_get_langvar_by_name("lb_root_categoryid_for_cloned_products_not_exists");
+			$bErrorClone = true;
+		}
 	}
+
+	if (!$bErrorClone) {
+		$aCloneParams = array(
+					"manufacturerid" => $manufacturerid,
+					"d_main_sf" => $storefront_to_copy_manufacturer,
+					"update_approximation_shipping_rates" => "Y",
+					"d_search_keyphrase_for_reconciliation" => "",
+					"root_categoryid_for_cloned_products" => $root_categoryid_for_cloned_products,
+					"parent_manufacturer_id" => $manufacturerid,
+					"provider" => $login,
+					"sf_prefix" => rtrim($storefont_info["prefix"], "-"),
+		);
+
+		$aOriginalManufacturer = $classManufacturer->getMainufacturersInfo(array($manufacturerid));
+		$aOriginalManufacturer = reset($aOriginalManufacturer);
+
+		$res = $classManufacturer->cloneManufacturer($aOriginalManufacturer, $aCloneParams);
+		if (!$res) {
+				$sErrorMessage = "";
+				foreach ($classManufacturer->message as $eMessage) {
+					$sErrorMessage .= func_get_langvar_by_name($eMessage);
+				}
+				$top_message["type"] = "E";
+				$top_message["content"] = $sErrorMessage;
+				$bErrorClone = true;
+
+		} else {
+				$top_message["type"] = "I";
+				$top_message["content"] = func_get_langvar_by_name("lb_copy_manufacturer_done");
+		}
+	}
+	unset($classCategories);
+	unset($classManufacturer);
 }
 
 if ($REQUEST_METHOD == "POST" && $mode == "copy_products" && $manufacturerid) {
@@ -172,7 +188,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "copy_products" && $manufacturerid) {
 		$top_message["type"] = "E";
 		$top_message["content"] = "Target distributor not selected";
 	}
-
+	unset($classManufacturer);
 
 }
 
