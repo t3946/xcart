@@ -27,6 +27,10 @@ class classCategories extends classCloneData
         return func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId");
     }
 
+    public function getCategoryByIdAndStoreFront($iCategoryId, $iStoreFronId) {
+        return func_query_first_cell("SELECT categoryid FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE category=$iCategoryId AND storefrontid = $iStoreFronId");
+    }
+
     public function getCategoryByNameAndStoreFront($sCategoryName, $iStoreFronId) {
         return func_query_first_cell("SELECT categoryid FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE category='".addslashes($sCategoryName)."' AND storefrontid = $iStoreFronId");
     }

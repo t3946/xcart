@@ -5,6 +5,8 @@ session_start();
 require "./top.inc.php";
 require "./init.php";
 
+global $config, $xcart_dir;
+
 set_time_limit(0);
 ini_set('memory_limit', '512M');
 
@@ -1011,14 +1013,17 @@ die();
 
 			    print("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' or productcode like '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 			    print("\r\n");
-               	$count_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
+               	$count_products = func_query_first_cell("SELECT COUNT(1) FROM $sql_tbl[products] xp1 INNER JOIN $sql_tbl[products_sf] xp2 ON xp1.productid = xp2.productid AND xp2.sfid = $v[storefront_id] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 
 			    print($count_products." for sale = Y\r\n");
 
 
                             if ($count_products > 0){
 
-                                $manufacturer_code_products = db_query("SELECT productid, productcode, forsale, update_search_index, provider FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
+                                $manufacturer_code_products = db_query("SELECT xp1.productid, xp1.productcode, xp1.forsale, xp1.update_search_index, xp1.provider
+																	FROM $sql_tbl[products] xp1
+																	INNER JOIN $sql_tbl[products_sf] xp2 ON xp1.productid = xp2.productid AND xp2.sfid = $v[storefront_id]
+																	WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 
                                 $line_number = 0;
                                 print "<br />Second iteration:<br />";
