@@ -367,10 +367,10 @@ class classProducts extends classCloneData
 
     private function insertClonedRelatedProducts ($iProductId, $iProductIdCloned, $iStoreFrontId) {
         $this->deleteFromRelatedProducts($iProductIdCloned);
-        $aRelateProducts = $this->getClonedRelatedProductsByIdAndStoreFrontId($iProductId, $iStoreFrontId);
+        $aRelatedProducts = $this->getClonedRelatedProductsByIdAndStoreFrontId($iProductId, $iStoreFrontId);
 
-        if (isset($aRelateProducts) && is_array($aRelateProducts) && !empty($aRelateProducts)) {
-            foreach($aRelateProducts as $oRelatedProduct) {
+        if (isset($aRelatedProducts) && is_array($aRelatedProducts) && !empty($aRelatedProducts)) {
+            foreach($aRelatedProducts as $oRelatedProduct) {
                 func_array2insert('product_links',array('productid1' => $iProductIdCloned, 'productid2' => $oRelatedProduct['productid'], 'orderby' => 10));
             }
         }
@@ -539,7 +539,14 @@ class classProducts extends classCloneData
 
         $clonedCategoryId = "";
 
+        $aRootCategory = $classCategory->getCategoryByIdAndStoreFront($aParamToClone["root_category_id"], $aParamToClone["d_main_sf"]);
+        if (empty($aRootCategory)) {
+            $aParamToClone["root_category_id"] = 0;
+            $this->BackprocessLogs("Cloning of product has issues with root category id...");
+        }
+
         foreach($aProductCategories as $aProductCategory) {
+
             $aProductCategoryPath = $classCategory->getCategoryPathasArray($aProductCategory["categoryid"]);
 
             $aParamToClone["parentid"] = $aParamToClone["root_category_id"];
