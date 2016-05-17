@@ -268,7 +268,7 @@ function generate_price(id) {ldelim}
         {if $geid ne ''}<td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[eta_date_mm_dd_yyyy]" /></td>{/if}
         <td class="FormButton" nowrap="nowrap">ETA date (mm/dd/yyyy):</td>
         <td class="ProductDetails">
-                <input type="text" name="eta_date_mm_dd_yyyy" id="eta_date_mm_dd_yyyy" size="18" value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}" {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}readonly="readonly"{/if} />
+                <input type="text" name="eta_date_mm_dd_yyyy" id="eta_date_mm_dd_yyyy" size="18" value="{if $product.eta_date_mm_dd_yyyy} {$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'} {/if}" {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}readonly="readonly"{/if} />
                 {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}
                         <label style="margin-left:30px;"><input style="vertical-align: bottom;" type="checkbox" name="eta_date_locked_checkbox" {if $product.eta_date_lock=="Y"}checked="checked"{/if}/> <b>Lock</b></label>
                 {/if}
@@ -966,6 +966,21 @@ function generate_price(id) {ldelim}
         {/if}
         </td>
 </tr>
+        {if  $product.clone_parent_productid > 0}
+        <tr>
+                <td colspan="2"><p style="border: 1px solid threedlightshadow; background-color: #f4cccc; padding:4px;">This product is cloned from {$product.parent_product.productcode}</p></td>
+        </tr>
+        {/if}
+        {if $product.child_products}
+           <tr>
+              <td colspan="2"><p style="border: 1px solid threedlightshadow; background-color: #f4cccc; padding:4px;">This product is parent for
+                      {foreach from=$product.child_products item=child name=childproducts}
+                        {$child.productcode}{if !$smarty.foreach.childproducts.last},&nbsp;{/if}
+                      {/foreach}
+                  </p>
+              </td>
+           </tr>
+        {/if}
 
 <tr>
 	<td{if $geid ne ''} colspan="2"{/if}>&nbsp;</td>

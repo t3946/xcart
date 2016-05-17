@@ -73,7 +73,7 @@ function func_is_customer_free_ship_zone($zoneid, $userinfo, $provider) {
 #
 # Get the customer's zone
 #
-function func_get_customer_zone_ship ($username, $provider, $type, $for_manufacturerid=0) {
+function func_get_customer_zone_ship ($username, $provider, $type, $for_manufacturerid=0, $iShippingMethod = null) {
 	global $sql_tbl;
 	global $single_mode;
 
@@ -99,9 +99,25 @@ function func_get_customer_zone_ship ($username, $provider, $type, $for_manufact
 
 	$zones = func_get_customer_zones_avail($username, $provider, "S", $for_manufacturerid, $type);
 
+	$provider_condition = ($single_mode) ? "" : " AND provider='".addslashes($provider)."'";
+
+	if (isset($iShippingMethod) && $iShippingMethod >= 0 && $for_manufacturerid) {
+		$manufMethodZones = array();
+		$manufMethodZones = func_query_column("SELECT zoneid
+												FROM $sql_tbl[shipping_rates]
+												WHERE  type='$type' $provider_condition  AND manufacturerid = $for_manufacturerid AND shippingid = $iShippingMethod
+												GROUP BY zoneid");
+		foreach ($zones as $iZoneId => $iCount) {
+			if (!in_array($iZoneId, array_values($manufMethodZones))) unset($zones[$iZoneId]);
+		}
+	}
+
+
+
+
 	$zone = 0; # default zone
 	if (is_array($zones)) {
-		$provider_condition = ($single_mode) ? "" : " AND provider='".addslashes($provider)."'";
+		//$provider_condition = ($single_mode) ? "" : " AND provider='".addslashes($provider)."'";
 		$tmp = func_query_column("SELECT zoneid FROM $sql_tbl[shipping_rates] WHERE zoneid IN ('".implode("','", array_keys($zones))."') $provider_condition AND type='$type' GROUP BY zoneid");
 		if (is_array($tmp) && !empty($tmp)) {
 			$unused = $zones;
@@ -1262,7 +1278,7 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 	if ($total_ship_items == 0 && $shipping_freight == 0)
 		return $return;
 
-	$customer_zone = func_get_customer_zone_ship($customer_info, $provider,"D", $for_manufacturerid);
+	$customer_zone = func_get_customer_zone_ship($customer_info, $provider,"D", $for_manufacturerid, $shipping_id);
 	$shipping = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='D' AND manufacturerid='$for_manufacturerid' ORDER BY maxtotal, maxweight");
 
 	if ($shipping && $total_ship_items > 0) {
@@ -1293,7 +1309,7 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 
 		$shipping_cost = $tmp['rate'];
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-		$customer_zone = func_get_customer_zone_ship($customer_info, $provider,"R", $for_manufacturerid);
+		$customer_zone = func_get_customer_zone_ship($customer_info, $provider,"R", $for_manufacturerid, $shipping_id);
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		$shipping_rt = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND manufacturerid='$for_manufacturerid' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 

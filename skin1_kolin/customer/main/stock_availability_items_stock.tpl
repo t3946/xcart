@@ -94,7 +94,11 @@
 <!--
 {literal}
   $(function() {
-    $("#eta_date_mm_dd_yyyy_{/literal}{$item.productid}{literal}").datepicker();
+    $("#eta_date_mm_dd_yyyy_{/literal}{$item.productid}{literal}").datepicker(
+    {/literal}
+    {if $item.manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}{literal}{maxDate: "+2w",minDate: "-1d"}{/literal}{/if}
+    {literal}
+    );
   });
 {/literal}
 -->
@@ -110,7 +114,7 @@
 				style="display: none;"
 			{/if}
 		       >
-                        <input id="eta_date_mm_dd_yyyy_{$item.productid}" type="text" size="9" style="width: 98%;" name="eta_date_mm_dd_yyyy[{$item.productid}]" value="{if $admin_area_uses eq "Y"}{$item.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}{/if}" />
+                        <input id="eta_date_mm_dd_yyyy_{$item.productid}" type="text" size="9" style="width: 98%;" name="eta_date_mm_dd_yyyy[{$item.productid}]" value="{if $admin_area_uses eq "Y" && $item.eta_date_mm_dd_yyyy}{$item.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}{/if}" />
                       </div>
 
 
