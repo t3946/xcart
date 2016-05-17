@@ -1439,6 +1439,20 @@ $product_info["count_shipping_rates_for_canada"] = func_query_first_cell($qqq="S
 ##
 #
 
+include_once $xcart_dir."/include/class/classProducts.php";
+$classProduct = new classProducts();
+if ($product_info['clone_parent_productid'] > 0) {
+	$aParentProduct = $classProduct->getProductInfo($product_info['clone_parent_productid']);
+	$product_info["parent_product"] = $aParentProduct;
+} else {
+	$aChildProducts = $classProduct->getChildProducts($product_info['productid']);
+	if (isset($aChildProducts) && !empty($aChildProducts)) {
+		$product_info["child_products"] = $aChildProducts;
+	}
+}
+
+unset($classProduct);
+unset($aParentProduct);
 
 $smarty->assign("product", $product_info);
 $smarty->assign("productid", $product_info["productid"]);

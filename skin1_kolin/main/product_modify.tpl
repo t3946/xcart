@@ -37,17 +37,18 @@ window.name="prodmodwin";
 </tr>
 
 {foreach from=$products item=v}
-
-<tr{cycle name="ge" values=', class="TableSubHead"'}>
-	<td>{if $productid eq $v.productid}<b>{else}<a href="product_modify.php?productid={$v.productid}{if $section ne 'main'}&amp;section={$section}{/if}&amp;geid={$geid}">{/if}
-{$v.productcode|escape}
-{if $productid eq $v.productid}</b>{else}</a>{/if}
-</td>
-	<td>{if $productid eq $v.productid}<b>{else}<a href="product_modify.php?productid={$v.productid}{if $section ne 'main'}&amp;section={$section}{/if}&amp;geid={$geid}">{/if}
-{$v.product|escape}
-{if $productid eq $v.productid}</b>{else}</a>{/if}
-</td>
-</tr>
+	<tr{cycle name="ge" values=', class="TableSubHead"'}>
+		<td>{if $productid eq $v.productid}<b>{else}<a
+						href="product_modify.php?productid={$v.productid}{if $section ne 'main'}&amp;section={$section}{/if}&amp;geid={$geid}">{/if}
+					{$v.productcode|escape}
+				{if $productid eq $v.productid}</b>{else}</a>{/if}
+		</td>
+		<td>{if $productid eq $v.productid}<b>{else}<a
+						href="product_modify.php?productid={$v.productid}{if $section ne 'main'}&amp;section={$section}{/if}&amp;geid={$geid}">{/if}
+					{$v.product|escape}
+				{if $productid eq $v.productid}</b>{else}</a>{/if}
+		</td>
+	</tr>
 
 {/foreach}
 
