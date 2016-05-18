@@ -293,26 +293,31 @@ $service_account_name = '544879562678-602vuj5s9jo0hppg9tb3p07chk4g3mr3@developer
 $key_file_location = '/var/www/stores/google-api-php-client/examples/key.p12'; //key.p12
 */
 //$key_file_location = '/vagrant/xcart/xcart/google-api-php-client/examples/key.p12'; //key.p12
+try {
+	$client = new Google_Client();
+	$client->setApplicationName("Client_Library_Examples");
+	$service = new Google_Service_ShoppingContent($client);
 
-$client = new Google_Client();
-$client->setApplicationName("Client_Library_Examples");
-$service = new Google_Service_ShoppingContent($client);
+	if (isset($_SESSION['service_token'])) {
+		$client->setAccessToken($_SESSION['service_token']);
+	}
 
-if (isset($_SESSION['service_token'])) {
-	$client->setAccessToken($_SESSION['service_token']);
+	$key = file_get_contents($key_file_location);
+	$cred = new Google_Auth_AssertionCredentials(
+			$service_account_name,
+			array('https://www.googleapis.com/auth/content'),
+			$key
+	);
+	$client->setAssertionCredentials($cred);
+	if ($client->getAuth()->isAccessTokenExpired()) {
+		$client->getAuth()->refreshTokenWithAssertion($cred);
+	}
+	$_SESSION['service_token'] = $client->getAccessToken();
 }
+catch (Exception $e) {
+		echo "";
+	}
 
-$key = file_get_contents($key_file_location);
-$cred = new Google_Auth_AssertionCredentials(
-	$service_account_name,
-	array('https://www.googleapis.com/auth/content'),
-	$key
-);
-$client->setAssertionCredentials($cred);
-if ($client->getAuth()->isAccessTokenExpired()) {
-	$client->getAuth()->refreshTokenWithAssertion($cred);
-}
-$_SESSION['service_token'] = $client->getAccessToken();
 #####################################################################################################################
 #####################################################################################################################
 #####################################################################################################################

@@ -64,7 +64,7 @@ function send_question_email_form(){
 <script type="text/javascript" language="JavaScript 1.2">
 //<![CDATA[
 {literal}
-  $(document).ready(function() {  
+  $(document).ready(function() {
         $('#email').focusout(function() {
 
                 if ($('#email').val() != ""){
@@ -82,7 +82,7 @@ function send_question_email_form(){
   <ul>
   {foreach from=$tabs item=tab key=ind}
 {*    {inc value=$ind assign="ti"} *}
-    <li><a {if $count_product_tabs gte "7"}style="padding: 0.5em 10px;"{/if} href="{if $tab.url}{$tab.url|amp}{else}#{$prefix}{$tab.anchor|default:$ti}{/if}">{$tab.title}</a></li> 
+    <li><a {if $count_product_tabs gte "7"}style="padding: 0.5em 10px;"{/if} href="{if $tab.url}{$tab.url|amp}{else}#{$prefix}{$tab.anchor|default:$ti}{/if}">{$tab.title}</a></li>
   {/foreach}
   </ul>
 
@@ -111,7 +111,7 @@ function send_question_email_form(){
 
 <div id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Organization">
 	<meta itemprop="name" content="{$product.cidev_brand_name}"/>
-</div> 
+</div>
 <div id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
 	<meta itemprop="name" content="{$product.manufacturer}"/>
 </div>
@@ -292,7 +292,7 @@ function send_question_email_form(){
 	<span style="color: #cc0000; font-weight: bold; font-size: 12px;">QUESTION</span><br />
 	{$v_q.question}<br />
 	<span style="color: #aaaaaa;"><I>asked {if $v_q.firstname ne ""}by {$v_q.firstname} {/if}on {$v_q.date|date_format:'%b %d, %Y'}</I></a>
-	
+
 	{if $v_q.answer ne ""}
 		<div style="padding-left: 50px; padding-top: 10px;">
 		<span style="color: #006500; font-weight: bold; font-size: 12px;">BEST ANSWER</span><br />
@@ -318,14 +318,14 @@ function send_question_email_form(){
 <table width="100%" cellpadding="0" cellspacing="0">
 
 {if $product.weight ne "0.00" || $variants ne ''}
-<tr id="product_weight_box">
-        <td width="22%">Shipping weight:</td>
-        <td nowrap="nowrap"><span id="so_weight_value" itemprop="value">{$product.weight|formatprice}</span> {$config.General.weight_symbol}</td>
-</tr>
+    <tr id="product_weight_box">
+            <td width="22%">{$lng.lbl_product_weight}:</td>
+            <td nowrap="nowrap"><span id="so_weight_value" itemprop="value">{$product.weight|formatprice}</span> {$config.General.weight_symbol}</td>
+    </tr>
 {/if}
 {if $show_dimensions}
 <tr>
-        <td width="22%" nowrap="nowrap">{$lng.lbl_shipping_dimensions}:</td>
+        <td width="22%" nowrap="nowrap">{$lng.lbl_product_dimensions}:</td>
         <td nowrap="nowrap">
 		<span id="product_weight">
 
@@ -338,6 +338,28 @@ function send_question_email_form(){
 	</td>
 </tr>
 {/if}
+<tr><td colspan="2">&nbsp;</td></tr>
+    {if $product.shipping_weight ne "0.00" || $variants ne ''}
+        <tr id="product_weight_box">
+            <td width="22%">{$lng.lbl_shipping_weight}:</td>
+            <td nowrap="nowrap"><span id="so_weight_value" itemprop="value">{$product.shipping_weight|formatprice}</span> {$config.General.weight_symbol}</td>
+        </tr>
+    {/if}
+    {if $show_shipping_dimensions}
+        <tr>
+            <td width="22%" nowrap="nowrap">{$lng.lbl_shipping_dimensions}:</td>
+            <td nowrap="nowrap">
+		<span id="product_weight">
+
+{if $show_shipping_dimensions_orderby ne ""}
+    {$show_shipping_dimensions_orderby}
+{else}
+    {$product.shipping_dim_x}" x {$product.shipping_dim_y}" x {$product.shipping_dim_z}"
+{/if}
+		</span>
+            </td>
+        </tr>
+    {/if}
 </table>
 
 	{if $product.weight ne "0.00" || $variants ne '' || $show_dimensions}

@@ -392,6 +392,36 @@ if ($show_dimensions){
 
 $smarty->assign('show_dimensions', $show_dimensions);
 
+$show_shipping_dimensions = false;
+foreach (array('shipping_dim_x','shipping_dim_y','shipping_dim_z') as $k) {
+	$show_shipping_dimensions = !empty($product_info[$k]);
+	if ($show_shipping_dimensions) {
+		break;
+	}
+}
+
+if ($show_shipping_dimensions){
+	$show_shipping_dimensions_orderby = array();
+	foreach (array('shipping_dim_x','shipping_dim_y','shipping_dim_z') as $k) {
+		if (!empty($product_info[$k])){
+			$show_shipping_dimensions_orderby[] = $product_info[$k];
+		}
+	}
+
+	if (!empty($show_shipping_dimensions_orderby)){
+		arsort($show_shipping_dimensions_orderby);
+		foreach ($show_shipping_dimensions_orderby as $k => $v){
+			$show_shipping_dimensions_orderby[$k] = $v.'"';
+		}
+
+		$show_shipping_dimensions_orderby = implode(" x ", $show_shipping_dimensions_orderby);
+		$smarty->assign('show_shipping_dimensions_orderby', $show_shipping_dimensions_orderby);
+	}
+}
+
+$smarty->assign('show_shipping_dimensions', $show_shipping_dimensions);
+
+
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 if (!empty($product_info['manufacturerid'])) {
 	$product_info['manufact_text_displayed'] = func_query_first_cell("SELECT manufact_text_displayed FROM $sql_tbl[manufacturers] WHERE manufacturerid ='".$product_info['manufacturerid']."'");
