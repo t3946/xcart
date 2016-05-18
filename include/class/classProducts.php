@@ -173,6 +173,10 @@ class classProducts extends classCloneData
         return func_query_first_cell("SELECT count(1) as count FROM ".$this->sql_tbl[$this->sQueueTable]);
     }
 
+    public function getChildProducts ($iProductId) {
+        return func_query("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE clone_parent_productid = $iProductId");
+    }
+
     public function getProductInfo($iProductId) {
         return func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE productid = $iProductId");
     }

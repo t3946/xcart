@@ -239,6 +239,21 @@ $(document).ready(function() {
     </td>
 
   </tr>
+     {if  $product.clone_parent_productid > 0}
+         <tr>
+             <td colspan="3"><p style="border: 1px solid threedlightshadow; background-color: #f4cccc; padding:4px;">This product is cloned from {$product.parent_product.productcode}</p></td>
+         </tr>
+     {/if}
+     {if $product.child_products}
+         <tr>
+             <td colspan="3"><p style="border: 1px solid threedlightshadow; background-color: #f4cccc; padding:4px;">This product is parent for
+                     {foreach from=$product.child_products item=child name=childproducts}
+                         {$child.productcode}{if !$smarty.foreach.childproducts.last},&nbsp;{/if}
+                     {/foreach}
+                 </p>
+             </td>
+         </tr>
+     {/if}
  </table>
 
  <table>
