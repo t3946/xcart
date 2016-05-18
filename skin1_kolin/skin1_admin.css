@@ -1705,3 +1705,53 @@ div.confirmation-hedgehog p {
         font-style: italic;
 }
 
+.tablebordernone {
+	display: inline;
+	float: left;
+	height: 18px;
+	margin-left: 36px;
+	width: 10px;
+}
+
+.tableborderright {
+	border-right: 1px solid;
+	display: inline;
+	float: left;
+	height: 18px;
+	margin-left: 36px;
+	width: 10px;
+}
+.tableborderbottom {
+	border-bottom: 1px solid;
+	display: inline;
+	float: left;
+	height: 28px;
+	margin-left: 36px;
+	width: 10px;
+	margin-top: -10px;
+}
+.tablebordertop {
+	border-top: 1px solid;
+	display: inline;
+	float: left;
+	height: 28px;
+	margin-left: 36px;
+	width: 10px;
+	margin-bottom: -10px;
+
+}
+.lock_dimension_product_label, .lock_shipping_dimension_label, .lock_product_weight_label, .lock_shipping_weight_label {
+	margin-left:10px;
+	cursor: pointer;
+}
+input[name=dimensionx],
+input[name=dimensiony],
+input[name=dimensionz],
+input[name=dimensionshipx],
+input[name=dimensionshipy],
+input[name=dimensionshipz],
+input[name=shippingweight],
+input[name=weight]
+{
+	float: left;
+}

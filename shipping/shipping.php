@@ -588,48 +588,38 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 			                        $total_weight = 0;
 						$count_products_with_free_ship_zone = 0;
 
-        	        		        if (!empty($products))
-	        	                        foreach ($products as $k_p => $v_p){
+						if (!empty($products))
+							foreach ($products as $k_p => $v_p) {
 
-							if ($v_p["free_ship_zone"] == "14"){
-//							if ($v_p["free_ship_zone"] != "-1")
-								$count_products_with_free_ship_zone++;
-								continue;
+								if ($v_p["free_ship_zone"] == "14") {
+									$count_products_with_free_ship_zone++;
+									continue;
+								}
+
+								/*if (empty($v_p["weight"]) || $v_p["weight"] == "0.00") {
+									$v_p["weight"] = "0.1";
+								}
+
+								$real_weight = $v_p["weight"] * $v_p["amount"];
+
+								if (!empty($v_p["shipping_weight"]))
+									$real_weight = $v_p["shipping_weight"] * $v_p["amount"];
+
+								$Volume = $v_p["dim_x"] * $v_p["dim_y"] * $v_p["dim_z"] * $v_p["amount"];
+
+								if ($Volume > $v["vol_threshold"] && !empty($v["dim_factor"])) {
+									$bw = $Volume / $v["dim_factor"];
+									$weight = max($real_weight, $bw);
+								} else {
+									$weight = $real_weight;
+								}*/
+								include_once $xcart_dir."/include/class/classShipping.php";
+								$classShipping = new classShipping();
+								$weight = $classShipping->getShippingWeight($v_p['productid'], $v['shippingid'], $v_p["amount"], $v_p, $v);
+								unset ($classShipping);
+
+								$total_weight += $weight;
 							}
-
-							if (empty($v_p["weight"]) || $v_p["weight"] == "0.00"){
-								$v_p["weight"] = "0.1";
-							}
-							/*should be discussed if some dim is zero: */
-/*							if (empty($v_p["dim_x"]) || $v_p["dim_x"] == "0"){
-								$v_p["dim_x"] = "1";
-							}
-							if (empty($v_p["dim_y"]) || $v_p["dim_y"] == "0"){
-								$v_p["dim_y"] = "1";
-							}
-							if (empty($v_p["dim_z"]) || $v_p["dim_z"] == "0"){
-								$v_p["dim_z"] = "1";
-							}
-*/
-
-							$real_weight = $v_p["weight"] * $v_p["amount"];
-	
-        		            $Volume = $v_p["dim_x"]*$v_p["dim_y"]*$v_p["dim_z"] * $v_p["amount"];
-
-							if ($Volume > $v["vol_threshold"] && !empty($v["dim_factor"])){
-								$bw = $Volume/$v["dim_factor"];
-								$weight = max($real_weight, $bw);
-							} else {
-								$weight = $real_weight;
-							}
-
-//							$weight = ceil($weight);
-
-//							$products[$k_p]["weight"] = $weight;
-
-//							$total_weight += $weight*$v_p["amount"];
-							$total_weight += $weight;
-						}
 ###
 
 						$weight = ceil($total_weight);
