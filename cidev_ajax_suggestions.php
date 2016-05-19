@@ -120,9 +120,8 @@ Order By SP.`position` desc";
 				}
 			break;
 			case 1:
-				$aQueryArray = $classElastic->getQuerySimilarProductsBrands();
-				$classElastic->setSearchQuery($aQueryArray);
-				$res = $classElastic->query("", array());
+				$classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
+				$res = $classElastic->query();
 				foreach ($res["hits"]["hits"] as $key => $sValue){
 					if ($sValue["_id"] != $productid) {
 						$pids[]["needed_resource_id"] = $sValue["_id"];
@@ -132,9 +131,8 @@ Order By SP.`position` desc";
 			case 2:
 				$classBrands = new classBrands();
 				$aBrand = $classBrands->getBrandByProductId($productid);
-				$aQueryArray = $classElastic->getQuerySimilarProductsBrands($aBrand['brand']);
-				$classElastic->setSearchQuery($aQueryArray);
-				$res = $classElastic->query("", array());
+				$classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands($aBrand['brand']));
+				$res = $classElastic->query();
 				foreach ($res["hits"]["hits"] as $key => $sValue){
 					if ($sValue["_id"] != $productid) {
 						$pids[]["needed_resource_id"] = $sValue["_id"];

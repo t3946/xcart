@@ -152,7 +152,7 @@ class classElasticSearch
         return $this->call($type . '/' . $id, array('method' => 'PUT', 'content' => $data));
     }
     //curl -X GET http://localhost:9200/{INDEX}/{TYPE}/_search?q= ...
-    function query($type, $q){
-        return $this->call($type . '/_search?' . http_build_query($q));
+    function query($q = array()){
+        return $this->call($this->type . '/_search?' . http_build_query($q));
     }
 }
