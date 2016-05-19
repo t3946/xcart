@@ -3265,18 +3265,18 @@ function func_parse_filters($page_content) {
 
 function Get_AB_Variant($point_id){
 	global $sql_tbl, $pointid_ab_testing_arr, $is_robot, $current_storefront;
-        global $XCART_SESSION_NAME;
-        global $$XCART_SESSION_NAME;
+	global $XCART_SESSION_NAME;
+	global $$XCART_SESSION_NAME;
 	global $XCARTSESSID;
 
 //	$ab_testing_point = func_query_first("SELECT * FROM $sql_tbl[ab_testing_points] WHERE point_id='$point_id'");	
-        $ab_testing_point = func_query_first("SELECT * FROM $sql_tbl[ab_testing_points] WHERE point_id='$point_id' AND enabled='Y'");
+	$ab_testing_point = func_query_first("SELECT * FROM $sql_tbl[ab_testing_points] WHERE point_id='$point_id' AND enabled='Y'");
 
-	if (empty($ab_testing_point)){
+	if (empty($ab_testing_point)) {
 		return false;
 	}
 
-	if (isset($pointid_ab_testing_arr[$point_id])){
+	if (isset($pointid_ab_testing_arr[$point_id])) {
 		$variant_id = $pointid_ab_testing_arr[$point_id]["variant_id"];
 		return $variant_id;
 	}
@@ -3285,53 +3285,55 @@ function Get_AB_Variant($point_id){
 
 	$cur_storefront_info = func_get_storefront_info($current_storefront);
 
-	$storefront_prefix = str_replace("-","", $cur_storefront_info["prefix"]);
+	$storefront_prefix = str_replace("-", "", $cur_storefront_info["prefix"]);
 
-        if ($storefront_prefix == "MAIN_SF_PREFIX"){
-                $storefront_prefix = "AR";
-        }
+	if ($storefront_prefix == "MAIN_SF_PREFIX") {
+		$storefront_prefix = "AR";
+	}
 
 	if (
-		($ab_testing_point["enabled"] == "N") || 
-		!($ab_testing_point["point_start_date"] <= $current_time && $current_time <= $ab_testing_point["point_end_date"]) || 
-		(strpos($ab_testing_point["storefronts_enabled"], $storefront_prefix)===false) ||
-		$is_robot == "Y" ||
-		defined("IS_ROBOT") ||
-		(empty($$XCART_SESSION_NAME) && empty($XCARTSESSID))
-	){
+			($ab_testing_point["enabled"] == "N") ||
+			!($ab_testing_point["point_start_date"] <= $current_time && $current_time <= $ab_testing_point["point_end_date"]) ||
+			(strpos($ab_testing_point["storefronts_enabled"], $storefront_prefix) === false) ||
+			$is_robot == "Y" ||
+			defined("IS_ROBOT") ||
+			(empty($$XCART_SESSION_NAME) && empty($XCARTSESSID))
+	) {
 		$variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND is_default='Y'");
-	}
-	else {
-		$variant_id = ($ab_testing_point["total_hits"]+1) % $ab_testing_point["mod_param"];
+	} else {
+		$variant_id = ($ab_testing_point["total_hits"] + 1) % $ab_testing_point["mod_param"];
 
-                if ($variant_id == ""){
-                        $variant_id = 0;
-                }
+		if ($variant_id == "") {
+			$variant_id = 0;
+		}
+
+		$variant_id_balanced = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id = $point_id ORDER BY total_hits_count ASC, variant_id = $variant_id DESC");
+		if (empty($variant_id_balanced)) $variant_id_balanced = 0;
 
 #
 ##
 ###
-		if ($variant_id > 1){
+		/*if ($variant_id > 1) {
 			$variant_id = 1;
 		}
 
 		$total_hits_count_v0 = func_query_first_cell("SELECT total_hits_count FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND variant_id='0'");
 		$total_hits_count_v1 = func_query_first_cell("SELECT total_hits_count FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND variant_id='1'");
 
-		if ($total_hits_count_v1 > $total_hits_count_v0 && $variant_id == 1){
+		if ($total_hits_count_v1 > $total_hits_count_v0 && $variant_id == 1) {
 			$variant_id = 0;
 		}
 
-                if ($total_hits_count_v0 > $total_hits_count_v1 && $variant_id == 0){
-                        $variant_id = 1;
-                }
+		if ($total_hits_count_v0 > $total_hits_count_v1 && $variant_id == 0) {
+			$variant_id = 1;
+		}*/
 ###
 ##
 #
 		db_query("UPDATE $sql_tbl[ab_testing_points] SET total_hits=total_hits+1 WHERE point_id='$point_id'");
-		db_query("UPDATE $sql_tbl[ab_point_variants] SET total_hits_count=total_hits_count+1 WHERE point_id='$point_id' AND variant_id='$variant_id'");
+		db_query("UPDATE $sql_tbl[ab_point_variants] SET total_hits_count=total_hits_count+1 WHERE point_id='$point_id' AND variant_id='$variant_id_balanced'");
 
-		$pointid_ab_testing_arr[$point_id]["variant_id"] = $variant_id;
+		$pointid_ab_testing_arr[$point_id]["variant_id"] = $variant_id_balanced;
 
 		x_session_save('pointid_ab_testing_arr');
 	}
