@@ -392,6 +392,12 @@ $variant_id_for_point6 = Get_AB_Variant(6);
 x_session_save("variant_id_for_point6");
 $smarty->assign("variant_id_for_point6", $variant_id_for_point6);
 
+x_session_register('variant_id_for_point9');
+$variant_id_for_point9 = Get_AB_Variant(9);
+x_session_save("variant_id_for_point9");
+$smarty->assign("variant_id_for_point9", $variant_id_for_point9);
+
+
 //$smarty->assign("pointid_ab_testing_arr", $pointid_ab_testing_arr); // try to move to func_display
 ###
 ##

@@ -52,6 +52,8 @@
 
 
         $classElastic = new classElasticSearch($config["ElasticSearch_options"],$site_domain);
+	    $classElastic->setSource("*._id");
+		$classElastic->setMinScore($config["ElasticSearch_options"]["search_results_minimum_score_value"]);
 		$classElastic->setQueryParams($e_search_data_substring);
 		//$classElastic->setMinScore("0.1");
 		if (!empty($all_productids_arr) && is_array($all_productids_arr)){
