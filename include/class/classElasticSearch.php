@@ -8,6 +8,7 @@ class classElasticSearch
 
     public $hitsCount;
     public $hitsTotal;
+    public $curl_info;
 
     function __construct($elasticConfig = array(),$index){
         $this->server = $elasticConfig["es_url"];
@@ -22,13 +23,18 @@ class classElasticSearch
     function call($path, $data_json = array()){
         if (!$this->index) throw new Exception('$this->index needs a value');
         $url = $this->server . '/' . $this->index . '/' . $path;
-        $this->data_json = json_encode($this->queryParams);
+
+        $method = $data_json['method'];
+        $content = $data_json['content'];
+
+        $this->data_json = json_encode($content);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result_json = curl_exec($ch);
+        $this->curl_info = curl_getinfo($ch);
         curl_close($ch);
         $result = json_decode($result_json, true);
         $this->hitsCount = count($result["hits"]["hits"]);
@@ -96,6 +102,6 @@ class classElasticSearch
     }
     //curl -X GET http://localhost:9200/{INDEX}/{TYPE}/_search?q= ...
     function query($type, $q){
-        return $this->call($type . '/_search?' . http_build_query($q));
+        return $this->call($type . '/_search?' . http_build_query($q), array('method' => 'POST', 'content' => $this->queryParams));
     }
 }
