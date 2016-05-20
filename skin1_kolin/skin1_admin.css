@@ -1705,6 +1705,20 @@ div.confirmation-hedgehog p {
         font-style: italic;
 }
 
+#send_note_form_js{
+	z-index: 100;
+	padding: 30px;
+	background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+	border: 1px solid;
+	position: absolute;
+	top: 36px;
+	right: 0;
+	opacity: 0.9;
+	width: 430px;
+	text-align: left;
+	display: none;
+
+}
 .tablebordernone {
 	display: inline;
 	float: left;

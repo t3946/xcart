@@ -347,7 +347,7 @@ $(document).ready(function(){
 
 <table align="right" cellspacing="1" cellpadding="1">
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Transacеions amount (authorized/pending +captured ) </td>
+  <td>Transactions amount (authorized/pending +captured ) </td>
   <td>&nbsp;</td>
   <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if}; {/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
 </tr>

@@ -143,7 +143,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 </td>
 *}
 
-<td align="right" width="25%">
+<td align="right" width="25%" style="position:relative;">
 <div style="margin-top: -35px;">
                  <table cellspacing="0" cellpadding="0" border="0">
                  <tr>
@@ -184,6 +184,27 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                  </tr>
                  </table>
 </div>
+    <div style="position: relative; top: 10px;">
+        <a href="#" onclick="$(this).parent().siblings('#send_note_form_js').toggle(); return false;">
+            <img src="/skin1_kolin/images/noteicon.png"/>
+        </a>
+    </div>
+    <div id="send_note_form_js">
+        <form action="order.php" method="post" name="ordernotesformnewjs">
+            <input type="hidden" name="mode" value="submit_message"/>
+            <input type="hidden" name="send_email" value="N"/>
+            <input type="hidden" name="orderid" value="{$order.orderid}"/>
+            {$cidev_firstname} ({$login}) notes:<br/>
+            <textarea id="notes" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br/>
+
+            {* <input type="submit" value="Post message" id="post_message" /> *}
+
+            <div style="margin-top:10px">
+                <input type="button" value="Post message" id="post_message1"
+                       onclick="javascript: document.ordernotesformnewjs.submit();"/>
+            </div>
+        </form>
+    </div>
 </td>
 
 </tr>
@@ -1162,21 +1183,26 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
 <script type="text/javascript">
 //<![CDATA[
 $(function() {ldelim}
-  $('#main_order_tabs-container').tabs(
-
-	{if $smarty.get.tab ne "y"}
-                        {if $found_show_stock_availability_form eq "Y"}
-                                {literal}
-                                        {selected: 1}
-                                {/literal}
-                        {else}
-				{literal}
-					{selected: 0}
-				{/literal}
-			{/if}
-	{/if}
-
+        var curTitle = document.title;
+        {if $smarty.get.tab ne "y" && $smarty.get.tab ne ""}
+            var indexTab = $('li a[href="#{$smarty.get.tab}"]').parent().index();
+        {else}
+            {if $found_show_stock_availability_form eq "Y"}
+                var indexTab = 1;
+            {else}
+                var indexTab = 0;
+            {/if}
+        {/if}
+  var $tabs = $('#main_order_tabs-container').tabs(
+          {ldelim}
+              select: function(event, ui) {ldelim}
+                  document.title = "{$order.order_prefix}{$order.orderid}: ("+ui.tab.text +") " + curTitle;
+              {rdelim}
+          {rdelim}
   );
+    {if $smarty.get.tab ne "y"}
+        $tabs.tabs("select", indexTab);
+    {/if}
 {rdelim});
 //]]>
 </script>

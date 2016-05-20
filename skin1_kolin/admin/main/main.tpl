@@ -391,3 +391,9 @@
 {/capture}
 {include file="dialog.tpl" title=$lng.lbl_top_sellers content=$smarty.capture.dialog extra='width="100%"'}
 
+ <script type="text/javascript">
+  $( document ).ready(function() {ldelim}
+   var curTitle = document.title;
+   document.title = "Financials: " + curTitle;
+   {rdelim});
+ </script>
