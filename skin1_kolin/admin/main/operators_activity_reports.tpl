@@ -169,6 +169,9 @@ function managedate(status) {
 				background-color: white;
 				text-align: center;
 			}
+			.reporttable a {
+				color: #140bfc;
+			}
 
 			.reporttable th {
 				border: 1px solid #8cacbb;
@@ -226,7 +229,7 @@ function managedate(status) {
 	{if $firstlevelGroup}
 	{foreach from=$firstlevelGroup item=row}
 		<tr>
-			<td class="crosscell">[+]</td>
+			<td class="crosscell"><img src="/skin1_kolin/images/plus.gif" /></td>
 			<td>{$row.login}</td>
 			<td>{$row.orderscount}</td>
 			<td>{$row.actioncount}</td>
@@ -242,10 +245,10 @@ function managedate(status) {
 					</tr>
 					{foreach from=$secondlevelGroup[$row.login] item=row2}
 					<tr>
-						<td class="crosscell">[+]</td>
+						<td class="crosscell"><img src="/skin1_kolin/images/plus.gif" /></td>
 						<td><a target="_blank" href="/admin/order.php?orderid={$row2.ordernumber}&tab=main_order_tabs-logs&tab2=order_tabs-1">{$row2.ordernumberwithprefix}</a></td>
 						<td>{$row2.orderdate|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
-						<td>{$row2.orderstatus}</td>
+						<td><a target="_blank" href="{$row2.otrsticket}">{$row2.orderstatus}</a></td>
 						<td>{$row2.actioncount}</td>
 					</tr>
 						<tr class="hidden"><td style="width:200px; max-width:500px; overflow: hidden;" colspan="5">
@@ -281,10 +284,10 @@ function managedate(status) {
 			$("#reporttbl .crosscell").click(
 					function() {
 						if ($(this).hasClass("opened")) {
-							$(this).removeClass("opened").html("[+]");
+							$(this).removeClass("opened").html('<img src="/skin1_kolin/images/plus.gif" />');
 							$(this).parents("tr").next(".hidden", 1).hide();
 						} else {
-							$(this).addClass("opened").html("[-]");
+							$(this).addClass("opened").html('<img src="/skin1_kolin/images/minus.gif" />');
 							$(this).parents("tr").next(".hidden").show();
 						}
 					});
