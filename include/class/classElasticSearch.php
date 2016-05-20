@@ -14,7 +14,7 @@ class classElasticSearch
 
 
 
-    function __construct($elasticConfig = array(),$index){
+    function __construct($elasticConfig = array(),$index = ''){
         $this->server = $elasticConfig["es_url"];
         $this->index = $index;
         //$this->queryParams["_source"] = "*._id";
@@ -34,7 +34,6 @@ class classElasticSearch
 
         $method = $data_json['method'];
         $content = $data_json['content'];
-
         $this->data_json = json_encode($content);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
@@ -115,6 +114,10 @@ class classElasticSearch
         $this->queryParams['query'] = $aQuery;
     }
 
+    public function setQueryParam ($aQuery = array()) {
+        $this->queryParams = $aQuery;
+    }
+
     public function setMinScore($sMinScore){
         $this->queryParams["min_score"] = $sMinScore;
     }
@@ -137,24 +140,24 @@ class classElasticSearch
         $this->call(NULL, array('method' => 'PUT'));
     }
     //curl -X DELETE http://localhost:9200/{INDEX}/
-    function drop(){
-        $this->call(NULL, array('method' => 'DELETE'));
+    function delete($id=""){
+        return $this->call($this->type. '/'.$id, array('method' => 'DELETE'));
     }
     //curl -X GET http://localhost:9200/{INDEX}/_status
     function status(){
         return $this->call('_status');
     }
     //curl -X GET http://localhost:9200/{INDEX}/{TYPE}/_count -d {matchAll:{}}
-    function count($type){
-        return $this->call($type . '/_count', array('method' => 'GET', 'content' => '{ matchAll:{} }'));
+    function count(){
+        return $this->call($this->type . '/_count', array('method' => 'GET', 'content' => '{ matchAll:{} }'));
     }
     //curl -X PUT http://localhost:9200/{INDEX}/{TYPE}/_mapping -d ...
-    function map($type, $data){
-        return $this->call($type . '/_mapping', array('method' => 'PUT', 'content' => $data));
+    function map($data){
+        return $this->call($this->type . '/_mapping', array('method' => 'PUT', 'content' => $data));
     }
     //curl -X PUT http://localhost:9200/{INDEX}/{TYPE}/{ID} -d ...
-    function add($type, $id, $data){
-        return $this->call($type . '/' . $id, array('method' => 'PUT', 'content' => $data));
+    function add($id){
+        return $this->call($this->type . '/' . $id, array('method' => 'POST', 'content' => $this->queryParams));
     }
     //curl -X GET http://localhost:9200/{INDEX}/{TYPE}/_search?q= ...
     function query($q = array()){
