@@ -200,3 +200,10 @@ window.name="prodmodwin";
 {include file="dialog.tpl" content=$smarty.capture.dialog title=$lng.lbl_warning extra="width='100%'"}
 
 {/if}
+	<script type="text/javascript">
+		$( document ).ready(function() {ldelim}
+			var curTitle = document.title;
+			document.title = "{$product.productcode}: (Product page) " + curTitle;
+		{rdelim});
+	</script>
+

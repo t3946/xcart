@@ -193,6 +193,12 @@ function managedate(status) {
 				border: 1px solid #8cacbb;
 				padding: 0.3em 0.7em;
 			}
+			.reporttable.level3 td {
+				border-top: 0;
+				border-right: 0;
+				border-left: 0;
+				border-bottom: 1px solid #8cacbb;
+			}
 
 			.crosscell {
 				text-align: center;
@@ -237,13 +243,13 @@ function managedate(status) {
 					{foreach from=$secondlevelGroup[$row.login] item=row2}
 					<tr>
 						<td class="crosscell">[+]</td>
-						<td>{$row2.ordernumber}</td>
+						<td><a target="_blank" href="/admin/order.php?orderid={$row2.ordernumber}&tab=main_order_tabs-logs&tab2=order_tabs-1">{$row2.ordernumberwithprefix}</a></td>
 						<td>{$row2.orderdate|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
 						<td>{$row2.orderstatus}</td>
 						<td>{$row2.actioncount}</td>
 					</tr>
 						<tr class="hidden"><td style="width:200px; max-width:500px; overflow: hidden;" colspan="5">
-								<table class="reporttable">
+								<table class="reporttable level3">
 									<tr class="level3">
 										<th>Type</th>
 										<th>Date</th>
