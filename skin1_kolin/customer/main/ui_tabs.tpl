@@ -339,7 +339,7 @@ function send_question_email_form(){
 </tr>
 {/if}
 <tr><td colspan="2">&nbsp;</td></tr>
-    {if $product.shipping_weight ne "0.00" || $variants ne ''}
+    {if ($product.shipping_weight ne "0.00" && $product.shipping_weight !="")  || $variants ne ''}
         <tr id="product_weight_box">
             <td width="22%">{$lng.lbl_shipping_weight}:</td>
             <td nowrap="nowrap"><span id="so_weight_value" itemprop="value">{$product.shipping_weight|formatprice}</span> {$config.General.weight_symbol}</td>

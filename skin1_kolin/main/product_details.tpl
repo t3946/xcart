@@ -1131,7 +1131,7 @@
 
                 </td>
             </tr>
-            {if $product.shipping_weight}
+
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead">{if $product.is_variants eq 'Y'}&nbsp;{else}
@@ -1156,7 +1156,7 @@
 
                 </td>
             </tr>
-            {/if}
+
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[dimensions]"/>
@@ -1207,7 +1207,6 @@
                 </td>
 
             </tr>
-            {if $product.shipping_dim_x || $product.shipping_dim_y || $product.shipping_dim_z}
             <tr>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[dimensions]"/>
@@ -1258,7 +1257,6 @@
                 </td>
 
             </tr>
-            {/if}
             <tr {if $usertype eq "P"}style="display: none;"{/if}>
                 {if $geid ne ''}
                     <td width="15" class="TableSubHead"><input type="checkbox" value="Y"
