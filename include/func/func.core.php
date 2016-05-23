@@ -2712,7 +2712,7 @@ function func_define_approximate_shippings($productid, $product_info=''){
                     $shipping_name = "Ground";
 
 ###
-                    $real_weight = $product_info["weight"];
+                    /*$real_weight = $product_info["weight"];
                     $Volume = $product_info["dim_x"]*$product_info["dim_y"]*$product_info["dim_z"];
 
                     if ($Volume > $two_shippings[$shipping_id]["vol_threshold"] && !empty($two_shippings[$shipping_id]["dim_factor"])){
@@ -2720,7 +2720,12 @@ function func_define_approximate_shippings($productid, $product_info=''){
                         $weight = max($real_weight, $bw);
                     } else {
                         $weight = $real_weight;
-                    }
+                    }*/
+					global $xcart_dir;
+					include_once $xcart_dir."/include/class/classShipping.php";
+					$classShipping = new classShipping();
+					$weight = $classShipping->getShippingWeight($product_info['productid'], $shipping_id, 1, $product_info, $two_shippings[$shipping_id]);
+					unset ($classShipping);
 
                     $weight = ceil($weight);
 
