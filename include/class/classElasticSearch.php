@@ -96,7 +96,7 @@ class classElasticSearch
                     'should' => [],
                     'must_not' => [
                         'regexp' => [
-                            'productname.productname_original' => '.*'.$sExcludeBrand.'.*'
+                            'brand.brand_original' => '.*'.$sExcludeBrand.'.*'
                         ]
                     ]
                 ]

@@ -196,6 +196,7 @@ Order By SP.`position` desc";
 
 				$N_key = $k + 1;
 				$products_str .= '"N_key": "'.$N_key.'",';
+				if (!is_null($variant_id_for_point9)) $products_str .= '"variant_id": "'.$variant_id_for_point9.'",';
 
 				$products_str .= '"title": "'.addslashes($v["product"]).'"';
 			$products_str .= '}';
