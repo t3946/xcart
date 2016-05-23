@@ -6,7 +6,7 @@ define("CIDEV_CRON_START", "CRON");
 require "./top.inc.php";
 require "./init.php";
 
-require_once "/include/class/classElasticSearch.php";
+require_once $xcart_dir."/include/class/classElasticSearch.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -522,6 +522,7 @@ $update_fail = 0;
 $deleted_ok = 0;
 $deleted_fail = 0;
 $processed = 0;
+$data_arr = array();
 
 while ($record = db_fetch_array($cidev_updated_products)) {
 
