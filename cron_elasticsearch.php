@@ -44,7 +44,6 @@ $requests = 0;
 $body = "";
 
 while ($record = db_fetch_array($cidev_updated_products)) {
-break;
         $counter++;
         if ($counter % 100 == 0) {
                 func_flush(".");
@@ -318,7 +317,6 @@ $requests = 0;
 $body = "";
 
 while ($record = db_fetch_array($cidev_updated_products)) {
-break;
         $counter++;
         if ($counter % 100 == 0) {
                 func_flush(".");
