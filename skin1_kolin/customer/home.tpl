@@ -165,7 +165,7 @@ window.attachEvent("onload", anchor_fix);
                     products_also_bought_with_this_product_style_display = $("#products_also_bought_with_this_product").css("display");
 
                     if (products_also_bought_with_this_product_style_display == "block") {
-                        load_ajax_carousel_flag = false;
+                        load_ajax_carousel_flag = true;
                     }
                 }
 
@@ -178,7 +178,7 @@ window.attachEvent("onload", anchor_fix);
 //$("#test_text").val(ajax_counter);
 
         ajax_counter++;
-        setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 2100);
+        setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1100);
 	}
 
         function func_load_ajax_carousel_products(section_name){
