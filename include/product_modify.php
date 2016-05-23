@@ -885,42 +885,21 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			$query_data['product_froogle'] = $product_froogle;
 		}
 		if (!$is_variant) {
-			if (empty($lock_product_weight))
-				$query_data['weight'] = $weight;
-			if (empty($lock_shipping_weight))
-				$query_data['shipping_weight'] = $shippingweight;
+			$query_data['weight'] = $weight;
 //			$query_data['avail'] = 0;/*$r_avail;*/
 			$query_data['r_avail'] = $r_avail;
 		}
-		if (empty($dim_lock)) {
-			if (isset($dimensionx) && isset($dimensiony) && isset($dimensionz)) {
-	//			$dimensions = [ $dimensionx, $dimensiony, $dimensionz ];
-				$dimensions = array( $dimensionx, $dimensiony, $dimensionz );
-				if (count($dimensions) >= 3) {
-					rsort($dimensions);
-					$query_data['dim_x'] = $dimensions[0];
-					$query_data['dim_y'] = $dimensions[1];
-					$query_data['dim_z'] = $dimensions[2];
-				}
+		
+        if (isset($dimensionx) && isset($dimensiony) && isset($dimensionz)) {
+//			$dimensions = [ $dimensionx, $dimensiony, $dimensionz ];
+			$dimensions = array( $dimensionx, $dimensiony, $dimensionz );
+			if (count($dimensions) >= 3) {
+				rsort($dimensions);
+				$query_data['dim_x'] = $dimensions[0];
+				$query_data['dim_y'] = $dimensions[1];
+				$query_data['dim_z'] = $dimensions[2];
 			}
 		}
-		if (empty($shipping_dim_lock)) {
-			if (isset($dimensionshipx) && isset($dimensionshipy) && isset($dimensionshipx)) {
-				$dimensionsshipping = array($dimensionshipx, $dimensionshipy, $dimensionshipz);
-				if (count($dimensionsshipping) >= 3) {
-					rsort($dimensionsshipping);
-					$query_data['shipping_dim_x'] = $dimensionsshipping[0];
-					$query_data['shipping_dim_y'] = $dimensionsshipping[1];
-					$query_data['shipping_dim_z'] = $dimensionsshipping[2];
-				}
-			}
-		}
-
-		$query_data['weight_lock'] = (!empty($lock_product_weight))?"Y":"N";
-		$query_data['shipping_weight_lock'] = (!empty($lock_shipping_weight))?"Y":"N";
-		$query_data['dim_lock'] = (!empty($lock_product_dimension))?"Y":"N";
-		$query_data['shipping_dim_lock'] = (!empty($lock_shipping_dimension))?"Y":"N";
-
 		func_array2update("products", $query_data, "productid = '$productid'");
 
 #

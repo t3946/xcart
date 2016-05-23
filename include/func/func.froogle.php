@@ -651,16 +651,6 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	$product['google_brand'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert($product['brand'], 256));
 	$product['google_product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert($product['product'], 80));
 
-
-	if ($product['shipping_weight']) {
-		$product['weight'] = $product['shipping_weight'];
-	}
-	if ($product['shipping_dim_x']||$product['shipping_dim_y']||$product['shipping_dim_z']) {
-		$product['dim_x'] = $product['shipping_dim_x'];
-		$product['dim_y'] = $product['shipping_dim_y'];
-		$product['dim_z'] = $product['shipping_dim_z'];
-	}
-
 	$row = $product['google_product']."\t".
 	$product['google_descr']."\t".
 	$product['link'] . "\t".
