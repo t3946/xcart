@@ -2278,3 +2278,9 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 
 {/if}
 
+<script type="text/javascript">
+    $( document ).ready(function() {ldelim}
+        var curTitle = document.title;
+        document.title = "{$manufacturer.manufacturer}: (Distributor) " + curTitle;
+        {rdelim});
+</script>

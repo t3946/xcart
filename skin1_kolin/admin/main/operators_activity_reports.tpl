@@ -169,27 +169,50 @@ function managedate(status) {
 				background-color: white;
 				text-align: center;
 			}
+			.reporttable a {
+				color: #140bfc;
+			}
+
 			.reporttable th {
 				border: 1px solid #8cacbb;
 				padding: 0.3em 0.7em;
 				background: #eee none repeat scroll 0 0;
+				text-transform: uppercase;
 			}
-		.reporttable tr {
-			height: 25px;
-		}
 
-		.reporttable td {
-			border: 1px solid #8cacbb;
-			padding: 0.3em 0.7em;
-		}
-		.crosscell {
-				text-align: center;
-			font-weight: bold;
+			.reporttable tr {
+				height: 25px;
 			}
-		.hidden{
-			display: none;
-		}
-		.firstcell{
+
+			tr.secondlevel th {
+				background-color: #f4cccc;
+			}
+
+			tr.level3 th {
+				background-color: #d9ead3;
+			}
+
+			.reporttable td {
+				border: 1px solid #8cacbb;
+				padding: 0.3em 0.7em;
+			}
+			.reporttable.level3 td {
+				border-top: 0;
+				border-right: 0;
+				border-left: 0;
+				border-bottom: 1px solid #8cacbb;
+			}
+
+			.crosscell {
+				text-align: center;
+				font-weight: bold;
+			}
+
+			.hidden {
+				display: none;
+			}
+
+			.firstcell {
 				width: 15px;
 			}
 
@@ -206,36 +229,41 @@ function managedate(status) {
 	{if $firstlevelGroup}
 	{foreach from=$firstlevelGroup item=row}
 		<tr>
-			<td class="crosscell">[+]</td>
+			<td class="crosscell"><img src="/skin1_kolin/images/plus.gif" /></td>
 			<td>{$row.login}</td>
 			<td>{$row.orderscount}</td>
 			<td>{$row.actioncount}</td>
 		</tr>
 		<tr class="hidden"><td colspan="4">
 				<table class="reporttable">
-					<th class="firstcell"></th>
-					<th style="width:50px;">Order number</th>
-					<th style="width:100px;">Order date</th>
-					<th>Order statuses</th>
-					<th>Actions</th>
-
+					<tr class="secondlevel">
+						<th class="firstcell"></th>
+						<th style="width:50px;">Order number</th>
+						<th style="width:100px;">Order date</th>
+						<th>Order statuses</th>
+						<th>Actions</th>
+					</tr>
 					{foreach from=$secondlevelGroup[$row.login] item=row2}
 					<tr>
-						<td class="crosscell">[+]</td>
-						<td>{$row2.ordernumber}</td>
+						<td class="crosscell"><img src="/skin1_kolin/images/plus.gif" /></td>
+						<td><a target="_blank" href="/admin/order.php?orderid={$row2.ordernumber}&tab=main_order_tabs-logs&tab2=order_tabs-1">{$row2.ordernumberwithprefix}</a></td>
 						<td>{$row2.orderdate|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
-						<td>{$row2.orderstatus}</td>
+						<td><a target="_blank" href="{$row2.otrsticket}">{$row2.orderstatus}</a></td>
 						<td>{$row2.actioncount}</td>
 					</tr>
 						<tr class="hidden"><td style="width:200px; max-width:500px; overflow: hidden;" colspan="5">
-								<table class="reporttable">
-									<th>Action date</th>
-									<th>Action type</th>
-									<th>Action</th>
+								<table class="reporttable level3">
+									<tr class="level3">
+										<th>Type</th>
+										<th>Date</th>
+										<th>Name</th>
+										<th>Action / Log</th>
+									</tr>
 									{foreach from=$LevelGroup3[$row.login][$row2.ordernumber] item=row3}
 										<tr>
-											<td>{$row3.action_date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
 											<td>{$type_names[$row3.action_type]}</td>
+											<td>{$row3.action_date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
+											<td>{$row.login}</td>
 											<td style="text-align: left;">{$row3.log}</td>
 										</tr>
 									{/foreach}
@@ -256,10 +284,10 @@ function managedate(status) {
 			$("#reporttbl .crosscell").click(
 					function() {
 						if ($(this).hasClass("opened")) {
-							$(this).removeClass("opened").html("[+]");
+							$(this).removeClass("opened").html('<img src="/skin1_kolin/images/plus.gif" />');
 							$(this).parents("tr").next(".hidden", 1).hide();
 						} else {
-							$(this).addClass("opened").html("[-]");
+							$(this).addClass("opened").html('<img src="/skin1_kolin/images/minus.gif" />');
 							$(this).parents("tr").next(".hidden").show();
 						}
 					});
