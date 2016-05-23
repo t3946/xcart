@@ -118,7 +118,16 @@ class classProducts extends classCloneData
             'prevent_search_indexing_this_product_page',
             'controlled_by_feed',
             'eta_date_lock',
-            'clone_parent_productid');
+            'clone_parent_productid',
+            'dim_lock',
+            'shipping_dim_x',
+            'shipping_dim_y',
+            'shipping_dim_z',
+            'shipping_dim_lock',
+            'shipping_weight',
+            'shipping_weight_lock',
+            'weight_lock'
+        );
     }
 
     /**
