@@ -885,9 +885,9 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			$query_data['product_froogle'] = $product_froogle;
 		}
 		if (!$is_variant) {
-			if (empty($lock_product_weight))
+			//if (empty($lock_product_weight))
 				$query_data['weight'] = $weight;
-			if (empty($lock_shipping_weight))
+			//if (empty($lock_shipping_weight))
 				$query_data['shipping_weight'] = $shippingweight;
 //			$query_data['avail'] = 0;/*$r_avail;*/
 			$query_data['r_avail'] = $r_avail;
