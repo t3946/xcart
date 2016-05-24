@@ -2234,10 +2234,18 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 								$transaction_log = "";
 								$capture_failed_flag = false;
 
+								$tCaptureAmount = $CaptureAmount;
+
 								foreach ($authorized_transactions_info as $authorized_transaction) {
 									$authorized_transaction_id = $authorized_transaction["transaction_id"];
 
-									$data_arr["amount"]["total"] = $authorized_transaction["transaction_amount"];
+
+									if ($authorized_transaction["transaction_amount"] < $tCaptureAmount) {
+										$data_arr["amount"]["total"] = $authorized_transaction["transaction_amount"];
+									} else {
+										$data_arr["amount"]["total"] = $tCaptureAmount;
+									}
+
 //							$data_arr["is_final_capture"] = (($already_captured_PLUS_CaptureAmount == $total_MIN_TOTAL_refund_groups_sum) ? true : false);
 									$data_arr["is_final_capture"] = true;
 
@@ -2279,6 +2287,10 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 //	                                			func_log_order($orderid, 'PP', $transaction_log, $login);
 										func_log_order($orderid, 'PP', $serialize_result, $login);
 									}
+
+									$tCaptureAmount = $tCaptureAmount - $authorized_transaction["transaction_amount"];
+									if ($tCaptureAmount <= 0) break;
+
 								} // foreach ($authorized_transactions_info as $authorized_transaction_id)
 
 								if ($capture_failed_flag) {
