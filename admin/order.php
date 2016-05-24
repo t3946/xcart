@@ -3703,15 +3703,15 @@ $main_order_tabs[$tabs_key]["anchor"] = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
 
 
-if (!empty($transaction_logs) && is_array($transaction_logs)) {
+/*if (!empty($transaction_logs) && is_array($transaction_logs)) {
 	$aFirstTransaction = reset($transaction_logs);
 	$sTransactionLink = str_replace('{{trans-id}}',$aFirstTransaction['transaction_id'], $aFirstTransaction['transaction_id_link']);
 	$smarty->assign("sTransactionLink", $sTransactionLink);
 	$main_order_tabs[$tabs_key]["title"] = "Latest Transactions";
-	$main_order_tabs[$tabs_key]["section"] = "LT";
+	$main_order_tabs[$tabs_key]["section"] = "LaTa";
 	$main_order_tabs[$tabs_key]["anchor"] = $main_order_tabs[$tabs_key]["section"];
 	$tabs_key++;
-}
+}*/
 
 
 

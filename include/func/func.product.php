@@ -1476,7 +1476,7 @@ function func_get_product_link_sf($productid, $sfid = 0, $type = 'all') {
         } else {
             $link = 'http://' . $sf_domain;
         }
-        $link_adm = 'http://' . MAIN_SF_DOMAIN;
+        $link_adm = 'https://' . MAIN_SF_DOMAIN;
     }
 
     $result = array();

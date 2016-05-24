@@ -1707,13 +1707,12 @@ div.confirmation-hedgehog p {
 
 #send_note_form_js{
 	z-index: 100;
-	padding: 30px;
-	background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+	padding: 14px 20px;
+	background: #D9EAD3 none repeat scroll 0% 0%;
 	border: 1px solid;
 	position: absolute;
 	top: 36px;
 	right: 0;
-	opacity: 0.9;
 	width: 430px;
 	text-align: left;
 	display: none;
