@@ -1118,8 +1118,8 @@
                         {$lng.txt_pvariant_edit_note|substitute:"href":$variant_href}
                     {else}
                         <input type="text" name="weight" size="18" value="{ $product.weight|formatprice|default:$zero }"
-                               {if $manufacturer_feed_fields.weight.disable eq "Y"}readonly="readonly"{/if}
-                                {if $product.weight_lock == "Y"} disabled = "disabled" {/if}/>
+                               {if $manufacturer_feed_fields.weight.disable eq "Y" || $product.weight_lock == "Y"}readonly="readonly"{/if}
+                                {if $product.weight_lock == "Y"} class="ch_disabled" {/if}/>
                     {/if}
 
                     <div class="tablebordernone"></div>
@@ -1144,7 +1144,7 @@
                         {$lng.txt_pvariant_edit_note|substitute:"href":$variant_href}
                     {else}
                         <input type="text" name="shippingweight" size="18" value="{ $product.shipping_weight|formatprice|default:$zero }"
-                                {if $product.shipping_weight_lock == "Y"}disabled="disabled"{/if}/>
+                                {if $product.shipping_weight_lock == "Y"}readonly="readonly" class="ch_disabled" {/if}/>
                     {/if}
 
                     <div class="tablebordernone"></div>
@@ -1165,8 +1165,8 @@
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_product_dimensions} x:</td>
                 <td class="ProductDetails"><input  type="text" name="dimensionx" size="18"
                                                   value="{$product.dim_x|default:0}"
-                                                  {if $manufacturer_feed_fields.dimensionx.disable eq "Y" || $manufacturer_feed_fields.dim_x.disable eq "Y"}readonly="readonly"{/if}
-                            {if $product.dim_lock == "Y"}disabled="disabled"{/if}
+                                                  {if $manufacturer_feed_fields.dimensionx.disable eq "Y" || $manufacturer_feed_fields.dim_x.disable eq "Y" || $product.dim_lock == "Y"}readonly="readonly"{/if}
+                            {if $product.dim_lock == "Y"} class="ch_disabled" {/if}
                     />
                     <div class="tablebordertop tableborderright"></div>
                 </td>
@@ -1181,8 +1181,8 @@
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_product_dimensions} y:</td>
                 <td class="ProductDetails"><input type="text" name="dimensiony" size="18"
                                                   value="{$product.dim_y|default:0}"
-                                                  {if $manufacturer_feed_fields.dimensiony.disable eq "Y" || $manufacturer_feed_fields.dim_y.disable eq "Y"}readonly="readonly"{/if}
-                            {if $product.dim_lock == "Y"}disabled="disabled"{/if}/>
+                                                  {if $manufacturer_feed_fields.dimensiony.disable eq "Y" || $manufacturer_feed_fields.dim_y.disable eq "Y" || $product.dim_lock == "Y"}readonly="readonly"{/if}
+                            {if $product.dim_lock == "Y"} class="ch_disabled" {/if}/>
                     <div class="tableborderright"></div>
                     <div>
                         <label class="lock_dimension_product_label" for="lock_product_dimension">
@@ -1201,8 +1201,8 @@
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_product_dimensions} z:</td>
                 <td class="ProductDetails"><input type="text" name="dimensionz" size="18"
                                                   value="{$product.dim_z|default:0}"
-                                                  {if $manufacturer_feed_fields.dimensionz.disable eq "Y" || $manufacturer_feed_fields.dim_z.disable eq "Y"}readonly="readonly"{/if}
-                            {if $product.dim_lock == "Y"}disabled="disabled"{/if} />
+                                                  {if $manufacturer_feed_fields.dimensionz.disable eq "Y" || $manufacturer_feed_fields.dim_z.disable eq "Y" || $product.dim_lock == "Y"}readonly="readonly"{/if}
+                            {if $product.dim_lock == "Y"} class="ch_disabled"{/if} />
                     <div class="tableborderright tableborderbottom"></div>
                 </td>
 
@@ -1215,7 +1215,7 @@
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} x:</td>
                 <td class="ProductDetails"><input type="text" name="dimensionshipx" size="18"
                                                   value="{$product.shipping_dim_x|default:0}"
-                                                  {if $product.shipping_dim_lock == "Y"}disabled="disabled"{/if}
+                                                  {if $product.shipping_dim_lock == "Y"}readonly="readonly" class="ch_disabled"{/if}
                     />
                     <div class="tablebordertop tableborderright"></div>
                 </td>
@@ -1229,7 +1229,7 @@
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} y:</td>
                 <td class="ProductDetails"><input type="text" name="dimensionshipy" size="18"
                                                   value="{$product.shipping_dim_y|default:0}"
-                                                  {if $product.shipping_dim_lock == "Y"}disabled="disabled"{/if}
+                                                  {if $product.shipping_dim_lock == "Y"}readonly="readonly" class="ch_disabled"{/if}
                     />
                     <div class="tableborderright"></div>
                     <div>
@@ -1248,7 +1248,7 @@
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} z:</td>
                 <td class="ProductDetails"><input type="text" name="dimensionshipz" size="18"
                                                   value="{$product.shipping_dim_z|default:0}"
-                            {if $product.shipping_dim_lock == "Y"}disabled="disabled"{/if}
+                            {if $product.shipping_dim_lock == "Y"}readonly="readonly" class="ch_disabled"{/if}
                     />
                     <div class="tableborderright tableborderbottom"></div>
                 </td>
@@ -1436,44 +1436,52 @@
         $("#lock_product_dimension").change(function () {
             if ($(this).is(":checked")) {
                 inputProductDim.each (function(i, n){
-                    $(this).attr("disabled", "disabled");
+                    $(this).attr("readonly", "readonly");
+                    $(this).addClass("ch_disabled");
                 })
             } else {
                 inputProductDim.each (function(i, n){
-                    $(this).removeAttr("disabled");
+                    $(this).removeAttr("readonly");
+                    $(this).removeClass("ch_disabled");
                 })
             }
         });
         $("#lock_shipping_dimension").change(function () {
             if ($(this).is(":checked")) {
                 inputShipingDim.each (function(i, n){
-                    $(this).attr("disabled", "disabled");
+                    $(this).attr("readonly", "readonly");
+                    $(this).addClass("ch_disabled");
                 })
             } else {
                 inputShipingDim.each (function(i, n){
-                    $(this).removeAttr("disabled");
+                    $(this).removeAttr("readonly");
+                    $(this).removeClass("ch_disabled");
                 })
             }
         });
         $("#lock_shipping_weight").change(function () {
             if ($(this).is(":checked")) {
                 inputShipingWeigth.each (function(i, n){
-                    $(this).attr("disabled", "disabled");
+                    $(this).attr("readonly", "readonly");
+                    $(this).addClass("ch_disabled");
                 })
             } else {
                 inputShipingWeigth.each (function(i, n){
-                    $(this).removeAttr("disabled");
+                    $(this).removeAttr("readonly");
+                    $(this).removeClass("ch_disabled");
                 })
             }
         });
         $("#lock_product_weight").change(function () {
             if ($(this).is(":checked")) {
                 inputProductWeigth.each (function(i, n){
-                    $(this).attr("disabled", "disabled");
+                    $(this).attr("readonly", "readonly");
+                    $(this).addClass("ch_disabled");
                 })
             } else {
                 inputProductWeigth.each (function(i, n){
-                    $(this).removeAttr("disabled");
+                    $(this).removeAttr("readonly");
+                    $(this).removeClass("ch_disabled");
                 })
             }
         })

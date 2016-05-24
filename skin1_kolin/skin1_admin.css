@@ -1755,3 +1755,7 @@ input[name=weight]
 {
 	float: left;
 }
+input.ch_disabled {
+	background-color: threedlightshadow;
+	border: 2px solid threedlightshadow;
+}
