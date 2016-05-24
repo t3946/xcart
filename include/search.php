@@ -1123,7 +1123,7 @@ if ($mode == "search") {
             $search_subsearch = "(
                     SELECT productid
                     FROM $sql_tbl[products]
-                    WHERE productcode like '%$data[substring]%'
+                    WHERE productcode like '$data[substring]%'
                     AND forsale = 'Y'
                     ) as product_filter, ";
 
