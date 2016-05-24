@@ -25,13 +25,13 @@ class classShipping extends classCloneData
             $aShipping = $this->getShippingInfo($iShippingId);
         }
 
-        if (empty($aProduct["weight"]) || $aProduct["weight"] == "0.00") {
+        if (empty($aProduct["weight"]) || floatval($aProduct["weight"]) == 0) {
             $aProduct["weight"] = "0.1";
         }
 
         $real_weight = $aProduct["weight"] * $iAmount;
 
-        if (!empty($aProduct["shipping_weight"]) && $bUseShippingParametrs)
+        if (!empty($aProduct["shipping_weight"]) && floatval($aProduct["shipping_weight"]) > 0 && $bUseShippingParametrs)
             $real_weight = $aProduct["shipping_weight"] * $iAmount;
 
         if (($aProduct["shipping_dim_x"]||$aProduct["shipping_dim_y"]||$aProduct["shipping_dim_z"]) && $bUseShippingParametrs)

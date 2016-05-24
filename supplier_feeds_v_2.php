@@ -871,6 +871,8 @@ die();
 						if ( $product['weight'] == 0 && $product_dimension['weight'] != 0 )
 							$product['weight'] = $product_dimension['weight'];
 
+					} else {
+						unset($product['weight']);
 					}
 
 					if ( $product_dimension['shipping_weight_lock'] != 'Y') {
@@ -881,6 +883,8 @@ die();
 						if ( $product['shipping_weight'] == 0 && $product_dimension['shipping_weight'] != 0 )
 							$product['shipping_weight'] = $product_dimension['shipping_weight'];
 
+					} else {
+						unset($product['shipping_weight']);
 					}
 
 					if ( $product_dimension['dim_lock'] != 'Y') {
@@ -921,7 +925,12 @@ die();
 						$product['dim_x'] = $dimension[0];
 						$product['dim_y'] = $dimension[1];
 						$product['dim_z'] = $dimension[2];
+					} else {
+						unset($product['dim_x']);
+						unset($product['dim_y']);
+						unset($product['dim_z']);
 					}
+
 
 					if ( $product_dimension['shipping_dim_lock'] != 'Y') {
 
@@ -961,6 +970,10 @@ die();
 						$product['shipping_dim_x'] = $dimension[0];
 						$product['shipping_dim_y'] = $dimension[1];
 						$product['shipping_dim_z'] = $dimension[2];
+					} else {
+						unset($product['shipping_dim_x']);
+						unset($product['shipping_dim_y']);
+						unset($product['shipping_dim_z']);
 					}
 
 					$product = func_addslashes($product);
