@@ -628,12 +628,14 @@ if ($mode == "search") {
             "on" => "$sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid"
         );
     } else {
-        $inner_joins['categories'] = array(
-            "on" => "$sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid and $sql_tbl[categories].storefrontid = $current_storefront"
-        );
+        if (!$search_all_website) {
+            $inner_joins['categories'] = array(
+                "on" => "$sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid and $sql_tbl[categories].storefrontid = $current_storefront"
+            );
 
-        $fields[] = "$sql_tbl[categories].categoryid";
-        $fields[] = "$sql_tbl[categories].category";
+            $fields[] = "$sql_tbl[categories].categoryid";
+            $fields[] = "$sql_tbl[categories].category";
+        }
 
     }
     if ($current_area != 'C') {
