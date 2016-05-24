@@ -559,7 +559,7 @@ function check_r_fields(){
 {foreach from=$v.products item=product key=prod_num}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
-    <a href="{$product.links.customer}&cat={$cats[$product.productid]}" title="" target="_blank">{$product.product}</a>
+    <a href="{$product.links.customer}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.product}</a>
 {* --------------------- *}
     {if $product.orig_product_classes ne ""}
 
