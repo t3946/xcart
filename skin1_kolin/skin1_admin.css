@@ -1766,3 +1766,9 @@ input[name=weight]
 	width: 430px;
 	text-align: left;
 	display: none;
+}
+
+input.ch_disabled {
+	background-color: threedlightshadow;
+	border: 2px solid threedlightshadow;
+}
