@@ -19,6 +19,7 @@
         {/if}
         {* --- *}
 
+{include file="main/include_js.tpl" src="ajax_notify_by_email.js"}
 
 {include file="check_email_script.tpl"}
 
@@ -160,9 +161,9 @@ Sorry we don't take pre-orders.
 </div>
 <div id="notify_tr2_{$products[product].productid}" style="display: none;">
 
-<form name="notifyform_{$products[product].productid}" method="post" 
-action='{if $main eq "catalog"}{if $action_notify_url ne ""}{$action_notify_url}{else}home.php{/if}{elseif $main eq "brand_products"}brands.php{/if}'
->
+<form name="notifyform_{$products[product].productid}" method="post"
+	  action='{if $main eq "catalog"}{if $action_notify_url ne ""}{$action_notify_url}{else}home.php{/if}
+	  			{elseif $main eq "brand_products"}brands.php{/if}'>
 <input type="hidden" name="productid" value="{$products[product].productid}" />
 <input type="hidden" name="mode" value="notify" />
 <B>Your email address:</B> <input type="text" name="notify_email" value="{if $notify_email ne ""}{$notify_email}{/if}" />
