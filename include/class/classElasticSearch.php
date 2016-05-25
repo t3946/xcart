@@ -29,7 +29,7 @@ class classElasticSearch
     }
 
     function call($path, $data_json = array()){
-        if (!$this->index) throw new Exception('$this->index needs a value');
+        //if (!$this->index) throw new Exception('$this->index needs a value');
         $url = $this->server . '/' . $this->index . '/' . $path;
 
         $method = $data_json['method'];

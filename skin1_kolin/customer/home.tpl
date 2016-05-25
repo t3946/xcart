@@ -832,6 +832,15 @@ var element13 = document.createElement("script");
 element13.src = "//www.googleadservices.com/pagead/conversion.js";
 document.body.appendChild(element13);
 
+{/literal}
+{if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search" || 1==1}
+{literal}
+    var element14 = document.createElement("script");
+    element14.src = "{/literal}{$SkinDir}{literal}/ajax_notify_by_email.js";
+    document.body.appendChild(element14);
+{/literal}
+{/if}
+{literal}
 }
 if (window.addEventListener)
     window.addEventListener("load", downloadJSAtOnload, false);

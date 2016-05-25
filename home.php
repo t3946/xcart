@@ -81,7 +81,7 @@ if ($top_btn == "Y"){
 #
 ##
 ###
-if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($cat)){
+/*if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($cat)){
         $is_in_table = func_query_first_cell("SELECT COUNT(sent) FROM $sql_tbl[notify_when_in_stock] WHERE email='$notify_email' AND sent='N' AND productid='$productid' AND storefrontid='$current_storefront'");
 		x_session_save('notify_email');
         if (empty($is_in_table)){
@@ -109,7 +109,7 @@ if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($
 	}
 
         func_header_location($clean_url_link);
-}
+}*/
 ###
 ##
 #
