@@ -22,7 +22,8 @@ Thumbs.db
 /init.php
 /config.php
 /config.local.php
-
+/robots.txt
+/test.php
 ######################
 ## folders to exclude
 /images/**

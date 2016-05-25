@@ -1215,7 +1215,6 @@
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} x:</td>
                 <td class="ProductDetails"><input type="text" name="dimensionshipx" size="18"
                                                   value="{$product.shipping_dim_x|default:0}"
-                                                  {if $manufacturer_feed_fields.dimensionx.disable eq "Y" || $manufacturer_feed_fields.dim_x.disable eq "Y"}readonly="readonly"{/if}
                                                   {if $product.shipping_dim_lock == "Y"}disabled="disabled"{/if}
                     />
                     <div class="tablebordertop tableborderright"></div>
@@ -1230,7 +1229,6 @@
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} y:</td>
                 <td class="ProductDetails"><input type="text" name="dimensionshipy" size="18"
                                                   value="{$product.shipping_dim_y|default:0}"
-                                                  {if $manufacturer_feed_fields.dimensiony.disable eq "Y" || $manufacturer_feed_fields.dim_y.disable eq "Y"}readonly="readonly"{/if}
                                                   {if $product.shipping_dim_lock == "Y"}disabled="disabled"{/if}
                     />
                     <div class="tableborderright"></div>
@@ -1250,7 +1248,6 @@
                 <td class="FormButton" nowrap="nowrap">{$lng.lbl_shipping_dimensions} z:</td>
                 <td class="ProductDetails"><input type="text" name="dimensionshipz" size="18"
                                                   value="{$product.shipping_dim_z|default:0}"
-                                                  {if $manufacturer_feed_fields.dimensionz.disable eq "Y" || $manufacturer_feed_fields.dim_z.disable eq "Y"}readonly="readonly"{/if}
                             {if $product.shipping_dim_lock == "Y"}disabled="disabled"{/if}
                     />
                     <div class="tableborderright tableborderbottom"></div>
