@@ -525,14 +525,14 @@ EOT;
 					global $xcart_dir;
 					include_once $xcart_dir."/include/class/classShipping.php";
 					$classShipping = new classShipping();
-					$wn = $classShipping->getShippingWeight($product['productid'], $v['shipping_id'], $product['amount'], $product, $v);
+					$wn = $classShipping->getShippingWeight($product['productid'], $v['methodid'], $product['amount'], $product, $v);
 					unset ($classShipping);
 					$B += $wn;
 
 
                 }
                 $B = intval(ceil($B));
-                if ($B > $weight) {
+                if ($B != $weight) {
                     $recalc_weight = $B;
                 }
             }
