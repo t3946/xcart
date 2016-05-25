@@ -81,6 +81,18 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 	#
 	# Get the total products weight
 	#
+
+	if ($current_carrier == "UPS") {
+		global $xcart_dir;
+		$iShippingId = 1;
+		include_once $xcart_dir . "/include/class/classShipping.php";
+		$classShipping = new classShipping();
+		$total_weight_shipping = $classShipping->getProductsShippingWeight($iShippingId, $products);
+		$total_weight_shipping_valid = $total_weight_shipping;
+		$total_weight_shipping_with_free = $total_weight_shipping;
+		unset ($classShipping);
+	} else {
+
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 	$total_weight_shipping = func_weight_shipping_products($products, true);
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
@@ -94,7 +106,7 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 
 # START: random:20460 [2010 Mar 18 13:43] 
 	$total_weight_shipping_with_free = func_weight_shipping_products($products, true, $userinfo);
-
+	}
 # END: random:20460 [2010 Mar 18 13:43] 
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 	$cart_subtotal = "0";
