@@ -47,4 +47,14 @@ class classShipping extends classCloneData
         return $weight;
     }
 
+    public function getProductsShippingWeight($iShippingId, $aProducts = array(), $aShipping = array()) {
+        $weight = 0;
+        if (!empty($aProducts)) {
+            foreach ($aProducts as $aProduct) {
+                $weight += $this->getShippingWeight($aProduct['productid'], $iShippingId, $aProduct['amount'], $aProduct, $aShipping);
+            }
+        }
+        return $weight;
+    }
+
 }
