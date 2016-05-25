@@ -709,7 +709,15 @@ class classProducts extends classCloneData
             'eta_date_lock' => $aProduct['eta_date_lock'],
             'lead_time_message' => $aProduct['lead_time_message'],
             'r_avail' => $aProduct['r_avail'],
-            'provider' => $this->changeProvider
+            'provider' => $this->changeProvider,
+            'dim_lock' => $aProduct['dim_lock'],
+            'shipping_dim_x' => $aProduct['shipping_dim_x'],
+            'shipping_dim_y' => $aProduct['shipping_dim_y'],
+            'shipping_dim_z' => $aProduct['shipping_dim_z'],
+            'shipping_dim_lock' => $aProduct['shipping_dim_lock'],
+            'shipping_weight' => $aProduct['shipping_weight'],
+            'shipping_weight_lock' => $aProduct['shipping_weight_lock'],
+            'weight_lock' => $aProduct['weight_lock']
         );
 
         array_walk_recursive($aUpdateProduct, array(__CLASS__,'recursive_escape'));
