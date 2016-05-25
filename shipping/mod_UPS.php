@@ -532,7 +532,7 @@ EOT;
 
                 }
                 $B = intval(ceil($B));
-                if ($B != $weight) {
+                if ($B > $weight) {
                     $recalc_weight = $B;
                 }
             }

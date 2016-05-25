@@ -957,9 +957,9 @@ function func_weight_shipping_products ($products, $ignore_freight=true, $userin
 			continue;
 		}
 
-		/*if (floatval($product["shipping_weight"]) > 0)
+		if (floatval($product["shipping_weight"]) > 0)
 			$total_weight += $product["shipping_weight"] * $product["amount"];
-		else*/
+		else
 			$total_weight += $product["weight"] * $product["amount"];
 	}
 
