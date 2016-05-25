@@ -48,7 +48,7 @@ x_load("category");
 ##
 ###
 
-if ($mode == "notify" && !empty($productid) && !empty($notify_email)){
+/*if ($mode == "notify" && !empty($productid) && !empty($notify_email)){
 	$is_in_table = func_query_first_cell("SELECT productid FROM $sql_tbl[notify_when_in_stock] WHERE email='$notify_email' AND sent='N' AND productid='$productid' AND storefrontid='$current_storefront'");
 	x_session_save('notify_email');
 	if (empty($is_in_table)){
@@ -67,7 +67,7 @@ if ($mode == "notify" && !empty($productid) && !empty($notify_email)){
 
 	$clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$productid'");
 	func_header_location($clean_url_link);
-}
+}*/
 ###
 ##
 #
