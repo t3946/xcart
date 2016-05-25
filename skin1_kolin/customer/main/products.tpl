@@ -19,8 +19,6 @@
         {/if}
         {* --- *}
 
-{include file="main/include_js.tpl" src="ajax_notify_by_email.js"}
-
 {include file="check_email_script.tpl"}
 
 
@@ -165,6 +163,7 @@ Sorry we don't take pre-orders.
 	  action='{if $main eq "catalog"}{if $action_notify_url ne ""}{$action_notify_url}{else}home.php{/if}
 	  			{elseif $main eq "brand_products"}brands.php{/if}'>
 <input type="hidden" name="productid" value="{$products[product].productid}" />
+<input type="hidden" name="storefrontid" value="{$current_storefront}" />
 <input type="hidden" name="mode" value="notify" />
 <B>Your email address:</B> <input type="text" name="notify_email" value="{if $notify_email ne ""}{$notify_email}{/if}" />
 
@@ -182,7 +181,7 @@ Sorry we don't take pre-orders.
 		<input type="hidden" name="page" value="{$smarty.get.page}" />
 	{/if}
 
-{include file="buttons/button.tpl" button_title="Notify me" style="button" href="javascript:if (checkEmailAddress(document.notifyform_`$products[product].productid`.notify_email, 'Y')) `$ldelim` \$('input[name=notify_email]').val(\$(this).siblings('input[name=notify_email]').val()); document.notifyform_`$products[product].productid`.submit()`$rdelim`"}
+{include file="buttons/button.tpl" button_title="Notify me" style="button" href="javascript:if (checkEmailAddress(document.notifyform_`$products[product].productid`.notify_email, 'Y')) `$ldelim` \$('input[name=notify_email]').val(\$(this).siblings('input[name=notify_email]').val()); submit_notify_form(this);`$rdelim`"}
 </form>
 
 </div>
