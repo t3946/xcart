@@ -1345,6 +1345,9 @@ elseif ($mode == "checkout" && !empty($paymentid) && !$func_is_cart_empty) {
 	$smarty->assign("userinfo",$userinfo);
 	$smarty->assign("main","checkout");
 
+	x_session_register("customer_notes");
+	$smarty->assign("customer_notes",$customer_notes);
+
 	$location[] = array(func_get_langvar_by_name("lbl_payment_details"), "");
 }
 elseif ($mode == "checkout" && !$func_is_cart_empty) {
