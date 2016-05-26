@@ -44,6 +44,9 @@
 #
 # Successful return from PayPal
 #
+$op_message = serialize($_REQUEST);
+x_log_flag('log_payment_paypal_processing', 'PAYPAL', $op_message, true);
+
 if ($_GET['mode'] == 'success' || $_POST['mode'] == 'success') {
 	require "./auth.php";
 
