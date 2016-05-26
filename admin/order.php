@@ -2202,32 +2202,6 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
 						$CaptureAmount = price_format($CaptureAmount);
 
-						/*
-                        #
-                        ##
-                                                                $already_captured = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('completed','P','Paid')");
-                                                                if (empty($already_captured)){
-                                                                    $already_captured = 0;
-                                                                }
-
-                                                                $TOTAL_refund_groups_sum = 0;
-                                                                if (isset($order["refund_groups"]) && is_array($order["refund_groups"])){
-                                                                    foreach ($order["refund_groups"] as $k_ref_group => $v_ref_group){
-                                                                            $TOTAL_refund_groups_sum += $v_ref_group["total_gross"];
-                                                }
-                                            }
-
-                                                                $already_captured_PLUS_CaptureAmount = $CaptureAmount + $already_captured;
-                                                                $already_captured_PLUS_CaptureAmount = price_format($already_captured_PLUS_CaptureAmount);
-
-
-                                                                $total_MIN_TOTAL_refund_groups_sum = $order["total"] - $TOTAL_refund_groups_sum;
-                                                                $total_MIN_TOTAL_refund_groups_sum = price_format($total_MIN_TOTAL_refund_groups_sum);
-
-                        ##
-                        #
-                        */
-
 						if (($CaptureAmount == $authorized_transaction_amount) || ($OriginalAmount == $authorized_transaction_amount && $bRefundPresent && $CaptureAmount <= $authorized_transaction_amount)) {
 							if ($count_shipping_groups == "1" && !empty($authorized_transactions_info)) {
 
