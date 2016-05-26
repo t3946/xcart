@@ -3974,7 +3974,7 @@ function func_get_geoip_locations ($CLIENT_IP, $geo_litecity_location_debug = "N
 		}
 
 		if (!empty($CLIENT_IP_INTEGER)) {
-			$geo_litecity_location = func_query_first("SELECT l.*, xs.phone
+			$geo_litecity_location = func_query_first("SELECT l.*, xs.phone, endIpNum
 											  FROM  $sql_tbl[geo_litecity_location] l
 											  INNER JOIN $sql_tbl[geo_litecity_blocks] b ON (l.locId=b.locId)
 											  LEFT JOIN  $sql_tbl[states] xs ON xs.country_code = l.country AND xs.code = l.region
@@ -3982,6 +3982,7 @@ function func_get_geoip_locations ($CLIENT_IP, $geo_litecity_location_debug = "N
 											  ORDER BY b.startIpNum DESC LIMIT 1;");
 
 			if (!empty($geo_litecity_location)) {
+				if ($geo_litecity_location['endIpNum'] < $CLIENT_IP_INTEGER) $geo_litecity_location = false;
 
 				if ($geo_litecity_location_debug == "Y") {
 					x_load("debug");
