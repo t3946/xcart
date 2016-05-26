@@ -796,180 +796,153 @@ if ($REQUEST_METHOD == "POST") {
 //die("--");
 
 				$authorized_transactions_info = "";
-                                if (
-                                        $v["dc_status"] == "L" && $cart_tmp['shipping_groups'][$m_id]["dc_status"] != "L" &&
-                                        $v["cb_status"] == "AP"
-				){
-                               
+				if (
+						$v["dc_status"] == "L" && $cart_tmp['shipping_groups'][$m_id]["dc_status"] != "L" &&
+						$v["cb_status"] == "AP"
+				) {
+					$bRefundPresent = false;
 					$authorized_transactions_info = func_query("SELECT transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 					$authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
 
-						$count_shipping_groups = count($order["shipping_groups"]);
+					$count_shipping_groups = count($order["shipping_groups"]);
 
-						$transaction_log = "";
+					$transaction_log = "";
 
-                                                if ((empty($Access_Token) || !isset($Access_Token)) && $count_shipping_groups == "1"){
+					if ((empty($Access_Token) || !isset($Access_Token)) && $count_shipping_groups == "1") {
 
-                                                        $Access_Token = func_paypal_get_access_token();
+						$Access_Token = func_paypal_get_access_token();
 
-							if (empty($Access_Token)){
-								$transaction_log .= "'Access_Token' - failed <br />";
-							}
-                                                }
+						if (empty($Access_Token)) {
+							$transaction_log .= "'Access_Token' - failed <br />";
+						}
+					}
 
-//                                                if (!empty($Access_Token) && !empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items))
-                                                if (!empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items)){
+//                  if (!empty($Access_Token) && !empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items))
+					if (!empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items)) {
 
-							$total_prod_price = 0;
-							foreach ($cart_tmp["shipping_groups"][$m_id]["products"] as $k_prod => $v_prod){
+						$total_prod_price = 0;
+						foreach ($cart_tmp["shipping_groups"][$m_id]["products"] as $k_prod => $v_prod) {
 //								$total_prod_price += $items[$k_prod]["price"] * $items[$k_prod]["amount"];
-								$total_prod_price += $items[$k_prod]["price"] * $v_prod["amount"];
+							$total_prod_price += $items[$k_prod]["price"] * $v_prod["amount"];
+						}
+
+						$CaptureAmount = $total_prod_price + $v["shipping_cost_net"];
+						$OriginalAmount = $CaptureAmount;
+
+						if (isset($ref_products[$m_id])) {
+							foreach ($ref_products[$m_id] as $kk_r => $vv_r) {
+								$CaptureAmount -= $vv_r["ref_price"] * $vv_r["ref_qty"];
 							}
+							$bRefundPresent = true;
+						}
 
-							$CaptureAmount = $total_prod_price + $v["shipping_cost_net"];
+						if (isset($ref_groups[$m_id]["ref_ship"])) {
+							$CaptureAmount -= $ref_groups[$m_id]["ref_ship"];
+							$bRefundPresent = true;
+						}
 
-							if (isset($ref_products[$m_id])){
-								foreach ($ref_products[$m_id] as $kk_r => $vv_r){
-									$CaptureAmount -= $vv_r["ref_price"] * $vv_r["ref_qty"];
-								}
-							}
+						$CaptureAmount = price_format($CaptureAmount);
 
-							if (isset($ref_groups[$m_id]["ref_ship"])){
-								$CaptureAmount -= $ref_groups[$m_id]["ref_ship"];
-							}
+						if (($CaptureAmount == $authorized_transaction_amount) || ($OriginalAmount == $authorized_transaction_amount && $bRefundPresent && $CaptureAmount <= $authorized_transaction_amount)) {
 
-							$CaptureAmount = price_format($CaptureAmount);
-/*
-#
-##
-							$already_captured = func_query_first_cell("SELECT SUM(transaction_total) FROM $sql_tbl[transaction_logs] WHERE orderid='$orderid' AND transaction_status='completed'");
-							if (empty($already_captured)){
-								$already_captured = 0;
-							}
-
-							$TOTAL_refund_groups_sum = 0;
-							if (isset($ref_groups) && is_array($ref_groups)){
-								foreach ($ref_groups as $k_ref_group => $v_ref_group){
-									$TOTAL_refund_groups_sum += $v_ref_group["ref_ship"];
-								}
-							}
-							if (isset($ref_products)){
-								foreach ($ref_products as $k_ref_product => $v_ref_product){
-									if (!empty($v_ref_product) && is_array($v_ref_product)){
-										foreach ($v_ref_product as $kk_ref_product => $vv_ref_product){
-											$TOTAL_refund_groups_sum += $vv_ref_product["ref_price"] * $vv_ref_product["ref_qty"];
-										}
-									}
-								}
-							}
-
-							$already_captured_PLUS_CaptureAmount = $CaptureAmount + $already_captured;
-							$already_captured_PLUS_CaptureAmount = price_format($already_captured_PLUS_CaptureAmount);
-
-
-							$total_MIN_TOTAL_refund_groups_sum = $order["total"] - $TOTAL_refund_groups_sum;
-							$total_MIN_TOTAL_refund_groups_sum = price_format($total_MIN_TOTAL_refund_groups_sum);
-
-##							
-#
-*/			
-							if ($CaptureAmount == $authorized_transaction_amount){
-
-							    if (!empty($Access_Token) && $count_shipping_groups == "1" && !empty($authorized_transactions_info)){
+							if (!empty($Access_Token) && $count_shipping_groups == "1" && !empty($authorized_transactions_info)) {
 
 								$capture_failed_flag = false;
-								foreach ($authorized_transactions_info as $authorized_transaction){
+								$tCaptureAmount = $CaptureAmount;
+								foreach ($authorized_transactions_info as $authorized_transaction) {
 
 									$authorized_transaction_id = $authorized_transaction["transaction_id"];
 
-		                                                        $data_arr["amount"]["currency"] = $order["currency"];
-                		                                        $data_arr["amount"]["total"] = $authorized_transaction["transaction_amount"];
-//                                		                        $data_arr["is_final_capture"] = (($already_captured_PLUS_CaptureAmount == $total_MIN_TOTAL_refund_groups_sum) ? true : false);
+									$data_arr["amount"]["currency"] = $order["currency"];
+									if ($authorized_transaction["transaction_amount"] < $tCaptureAmount) {
+										$data_arr["amount"]["total"] = $authorized_transaction["transaction_amount"];
+									} else {
+										$data_arr["amount"]["total"] = $tCaptureAmount;
+									}
 									$data_arr["is_final_capture"] = true;
 
-//func_print_r($data_arr);
-//die();
+									$result = func_paypal_capture($Access_Token, $authorized_transaction_id, $data_arr);
 
-		                                                        $result = func_paypal_capture($Access_Token, $authorized_transaction_id, $data_arr);
-		
-									if (!empty($result["id"])){
-										$transaction_log .= "<br />Transaction: ".$authorized_transaction_id." -> ".$result["id"];
-		                                                                $result_serialized = serialize($result);
-                		                                                db_query("UPDATE $sql_tbl[order_transactions] SET transaction_id='$result[id]', transaction_amount='".$authorized_transaction["transaction_amount"]."', date='".time()."', login='$login', transaction_status='$result[state]', transaction_response='".addslashes($result_serialized)."' WHERE orderid='$orderid' AND transaction_id='$authorized_transaction_id'");
+									if (!empty($result["id"])) {
+										$transaction_log .= "<br />Transaction: " . $authorized_transaction_id . " -> " . $result["id"];
+										$result_serialized = serialize($result);
+										db_query("UPDATE $sql_tbl[order_transactions] SET transaction_id='$result[id]', transaction_amount='" . $result["amount"]["total"] . "', date='" . time() . "', login='$login', transaction_status='$result[state]', transaction_response='" . addslashes($result_serialized) . "' WHERE orderid='$orderid' AND transaction_id='$authorized_transaction_id'");
 
 									} else {
 										$capture_failed_flag = true;
 									}
 
-						                        $transaction_id = $result["id"];
+									$transaction_id = $result["id"];
 
-						                        $transaction_status = $result["state"];
-						                        $transaction_currency = $result["amount"]["currency"];
-				                		        $transaction_total = $result["amount"]["total"];
+									$transaction_status = $result["state"];
+									$transaction_currency = $result["amount"]["currency"];
+									$transaction_total = $result["amount"]["total"];
 
-		                                                        $result["xcart_log"] = $transaction_log;
-                		                                        $serialize_result = serialize($result);
+									$result["xcart_log"] = $transaction_log;
+									$serialize_result = serialize($result);
 
-									db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
+									db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '" . time() . "', '$login', '" . addslashes($serialize_result) . "')");
 
-									if (!empty($transaction_log)){
+									if (!empty($transaction_log)) {
 										func_log_order($orderid, 'PP', $transaction_log, $login);
 									}
 
-									if (empty($transaction_id)){ // $capture_failed_flag
+									if (empty($transaction_id)) { // $capture_failed_flag
 										$v['dc_status'] = $groups[$m_id]['dc_status'] = $order["shipping_groups"][$m_id]['dc_status'] = $cart_tmp['shipping_groups'][$m_id]["dc_status"];
-	
-										if (!isset($top_message["content"])){
+
+										if (!isset($top_message["content"])) {
 											$top_message["content"] = "";
-										}
-										else {
+										} else {
 											$top_message["content"] .= "<br />";
 										}
-		                	                        		$top_message["content"] .= func_get_langvar_by_name("txt_capture_failed");
-        			                		                $top_message["type"] = "I";
-        	        				                        $section_name_top_message = $top_message;
-				                        	                x_session_save("section_name_top_message");
+										$top_message["content"] .= func_get_langvar_by_name("txt_capture_failed");
+										$top_message["type"] = "I";
+										$section_name_top_message = $top_message;
+										x_session_save("section_name_top_message");
 
 #
 ## attention_tag id = 37
-							                        $set_new_additional_tag = '37';
-							                        $is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
-							                        if (empty($is_such_tag_in_db)){
-							                                db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('$set_new_additional_tag','$orderid')");
+										$set_new_additional_tag = '37';
+										$is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
+										if (empty($is_such_tag_in_db)) {
+											db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('$set_new_additional_tag','$orderid')");
 
-							                                $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$set_new_additional_tag'");
-							                                $log_tag = "<br />'".$tag_name."' attention tag added";
-							                                func_log_order($orderid, 'X', $log_tag, $login);
-							                        }
+											$tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$set_new_additional_tag'");
+											$log_tag = "<br />'" . $tag_name . "' attention tag added";
+											func_log_order($orderid, 'X', $log_tag, $login);
+										}
 ##
 #
-	
+
 									} else {
 										$v['cb_status'] = $groups[$m_id]['cb_status'] = $order["shipping_groups"][$m_id]['cb_status'] = "P";
 //										$v['order_entry_flag'] = $groups[$m_id]['order_entry_flag'] = $order["shipping_groups"][$m_id]['order_entry_flag'] = "Y";
 										db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='Y' WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-										func_log_order($orderid, 'X', $code .": order_entry_flag='Y'", $login);
+										func_log_order($orderid, 'X', $code . ": order_entry_flag='Y'", $login);
 									}
 
+									$tCaptureAmount = $tCaptureAmount - $authorized_transaction["transaction_amount"];
+									if ($tCaptureAmount <= 0) break;
+
 								} // foreach ($authorized_transactions_info as $authorized_transaction)
-							    } // if (!empty($Access_Token) && $count_shipping_groups == "1" && !empty($authorized_transactions_info))
-							} // if ($CaptureAmount == $authorized_transaction_amount)
-							else {
-        		                                        $top_message["content"] = func_get_langvar_by_name("lbl_captureamount_not_equal_order_amount");
-                        		                        $top_message["type"] = "R";
-                                        		        $section_name_top_message = $top_message;
-		                                                x_session_save("section_name_top_message");
+							} // if (!empty($Access_Token) && $count_shipping_groups == "1" && !empty($authorized_transactions_info))
+						} // if ($CaptureAmount == $authorized_transaction_amount)
+						else {
+							$top_message["content"] = func_get_langvar_by_name("lbl_captureamount_not_equal_order_amount");
+							$top_message["type"] = "R";
+							$section_name_top_message = $top_message;
+							x_session_save("section_name_top_message");
 
-								$log = "<br />".$top_message["content"];
-								func_log_order($orderid, 'X', $log, $login);
-								$log = "";
+							$log = "<br />" . $top_message["content"];
+							func_log_order($orderid, 'X', $log, $login);
+							$log = "";
 
-								if ($count_shipping_groups > 1){
-									$v["dc_status"] = $groups[$m_id]['dc_status'] = $order["shipping_groups"][$m_id]['dc_status'] =  $cart_tmp['shipping_groups'][$m_id]["dc_status"];
-								}
+							if ($count_shipping_groups > 1) {
+								$v["dc_status"] = $groups[$m_id]['dc_status'] = $order["shipping_groups"][$m_id]['dc_status'] = $cart_tmp['shipping_groups'][$m_id]["dc_status"];
 							}
-                                                } // if (!empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items))
+						}
+					} // if (!empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items))
 				}
 ###
 ##
