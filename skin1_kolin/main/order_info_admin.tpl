@@ -549,7 +549,7 @@ function check_r_fields(){
   <td align="right">{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}</td>
 {*  <td align="right">{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}</td> *}
   <td align="right">{include file="currency2.tpl" value=$v.total.gross}</td>
-  <td> 
+  <td>
 {if $v.empty_products_list eq "Y"}<input type="checkbox" value="Y" name="distributors_to_delete[{$m_id}][delete]" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
   </td>
 </tr>
@@ -581,9 +581,9 @@ function check_r_fields(){
           <select name="items[{$product.itemid}][classid_optionid][{$item.classid}]" {if $refunded_option_found eq "Y" || $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if}>
           {foreach from=$item.options key=optionid item=option_values}
           {assign var="tmp_optionid_key" value=`$option_values.classid`}
-          {assign var="tmp_optionid" value=`$product.product_options[$tmp_optionid_key].optionid`} 
+          {assign var="tmp_optionid" value=`$product.product_options[$tmp_optionid_key].optionid`}
             <option value="{$optionid}"
-              {if $tmp_optionid eq $optionid} 
+              {if $tmp_optionid eq $optionid}
                 selected="selected"
               {/if}
             >{$option_values.option_name}</option>
@@ -688,7 +688,7 @@ Cost to us accurate
   </td>
   <td align="right">
 {if $product.extra_data ne ""}
- {include file="currency2.tpl" value=$product.extra_data.taxes.GST.tax_value+$product.extra_data.taxes.HST.tax_value hide_zero='Y'} 
+ {include file="currency2.tpl" value=$product.extra_data.taxes.GST.tax_value+$product.extra_data.taxes.HST.tax_value hide_zero='Y'}
 {/if}
   </td>
 {*  <td align="right">{include file="currency2.tpl" value=$product.extra_data.taxes.PST.tax_value hide_zero='Y'}</td> *}
@@ -769,7 +769,7 @@ Cost to us accurate
 
 <div style="float: left;">
 
- 
+
  {if $v.all_distributor_info.distributor_offers_free_shipping eq "on_orders_over" AND $GROUP_cost_to_us gt $v.all_distributor_info.free_shipping_on_orders_over_value}
  <div>
 &nbsp;
@@ -1060,7 +1060,7 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
 
         <b>{$lng.lbl_cust_bus_payment_status}:</b><br />
 
-        {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y" || ( ($v.cb_status eq "IO" || $v.cb_status eq "O") && $allowed_to_modify_cb_status_IO_O ne "Y")} 
+        {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y" || ( ($v.cb_status eq "IO" || $v.cb_status eq "O") && $allowed_to_modify_cb_status_IO_O ne "Y")}
           <input type="hidden" name="groups[{$m_id}][cb_status]" id="groups_cb_status_{$m_id}" value="{$v.cb_status}" />
           {include file="main/order_status.tpl" status=$v.cb_status mode="select" name="groups[`$m_id`][cb_status]" status_type="CB" extra=" id='groups_cb_status_`$m_id`' disabled='disabled'"}
         {else}
@@ -1163,6 +1163,15 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 
 {/if}
 
+  {if ($v.cb_status eq "AP" || $v.cb_status eq "P") && $v.dc_status eq "E" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website"}
+    {if ($order.customer_notes ne "")}
+      <tr>
+        <td colspan="11">
+          {include file="dialog.tpl" title="Customer notes" content=$order.customer_notes extra='width="100%"'}
+        </td>
+      </tr>
+    {/if}
+  {/if}
 
 <tr id="pending_order_message1_{$m_id}" style='background-color: #F4CCCC; {if ($v.cb_status eq "AP" || $v.cb_status eq "P") && $v.dc_status eq "E" && $v.all_distributor_info.submit_to_operator eq "through_distributor_website"} {else} display: none; {/if}'>
 <td colspan="11">{$lng.lbl_pending_order_message1}</td>
