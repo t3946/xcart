@@ -44,11 +44,13 @@
 #
 # Successful return from PayPal
 #
-$op_message = serialize($_REQUEST);
-x_log_flag('log_payment_paypal_processing', 'PAYPAL', $op_message, true);
+
 
 if ($_GET['mode'] == 'success' || $_POST['mode'] == 'success') {
 	require "./auth.php";
+
+	$op_message = serialize($_GET);
+	x_log_flag('log_payment_paypal_processing', 'PAYPAL', $op_message, true);
 
 	$skey = $_GET['secureid'];
 	require($xcart_dir."/payment/payment_ccview.php");
@@ -58,6 +60,9 @@ if ($_GET['mode'] == 'success' || $_POST['mode'] == 'success') {
 #
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) {
 	require "./auth.php";
+
+	$op_message = serialize($_POST);
+	x_log_flag('log_payment_paypal_processing', 'PAYPAL', $op_message, true);
 
 	x_load('http');
 
