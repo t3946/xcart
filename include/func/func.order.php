@@ -2069,7 +2069,13 @@ function func_get_order_manufacturers($orderid){
 								}
 							}
 
-                                                        $tmp_sku = substr($v["productcode"], 4);
+                                                        //$tmp_sku = substr($v["productcode"], 4);
+														global $xcart_dir;
+														include_once $xcart_dir."/include/class/classProducts.php";
+														$classProduct = new classProducts();
+														$tmp_sku = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
+														unset($classProduct);
+
                                                         $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">'.$tmp_sku.'</td><td width="250px" style="text-align: left;"><a href="'.$v["links"]["customer"].'">'.$v["product"].'</a>'.$selected_product_options.'</td><td style="text-align: right;">'.$v["amount"].'</td></tr>';
 
 							$instock_items = $v["amount"] - $v["back"];
@@ -4058,7 +4064,12 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
                 }
 
 
-                $tmp_sku = substr($v["productcode"], 4);
+                //$tmp_sku = substr($v["productcode"], 4);
+				global $xcart_dir;
+				include_once $xcart_dir."/include/class/classProducts.php";
+				$classProduct = new classProducts();
+				$tmp_sku = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
+				unset($classProduct);
 
                 $instock_items = $v["amount"] - $v["back"];
 
