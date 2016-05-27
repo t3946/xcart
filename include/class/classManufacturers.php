@@ -295,6 +295,10 @@ class classManufacturer extends classCloneData
         return $aRes;
     }
 
+    public function getManufacturerCodeById($iManufacturerId) {
+        return func_query_first_cell("SELECT code FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = $iManufacturerId");
+    }
+
     public function getChildrenManufacturers ($iManufacturerId){
         $aManufacturer = func_query("SELECT ".$this->sPrimaryKeyFiled." FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE parent_manufacturer_id = ".$iManufacturerId);
 
