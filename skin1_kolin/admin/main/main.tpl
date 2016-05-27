@@ -136,47 +136,44 @@
 
 <tr class="TableHead">
 <td>{$lng.lbl_status}</td>
-<td nowrap="nowrap" align="center">{$lng.lbl_since_last_log_in}</td>
-<td align="center">{$lng.lbl_today}</td>
-<td nowrap="nowrap" align="center">{$lng.lbl_this_week}</td>
-<td nowrap="nowrap" align="center">{$lng.lbl_this_month}</td>
+<td colspan="2" nowrap="nowrap" align="center">{$lng.lbl_since_last_log_in}</td>
+<td colspan="2" align="center">{$lng.lbl_today}</td>
+<td colspan="2" nowrap="nowrap" align="center">{$lng.lbl_this_week}</td>
+<td colspan="2" nowrap="nowrap" align="center">{$lng.lbl_this_month}</td>
 </tr>
 
-{foreach key=key item=item from=$orders}
-<tr class="{cycle values='SectionBox,TableSubHead'}">
-<td nowrap="nowrap" align="left">{if $key eq "P"}{$lng.lbl_processed}{elseif $key eq "Q"}{$lng.lbl_queued}{elseif $key eq "F" or $key eq "D"}{$lng.lbl_failed}/{$lng.lbl_declined}{elseif $key eq "I"}{$lng.lbl_not_finished}{/if}:</td>
-{section name=period loop=$item}
-<td align="center">{$item[period]}</td>
-{/section}
-</tr>
-{/foreach}
+
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
 <td align="right"><b>ALL ORDERS INCLUDING JUNK:</b></td>
-{section name=period loop=$gross_total}
-<td align="center">{include file="currency.tpl" value=$gross_total[period]}</td>
-{/section} 
+{foreach key=key item=item from=$gross_total name=period}
+<td align="center">{include file="currency.tpl" value=$item.value}</td>
+<td align="center">{$item.count}</td>
+{/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'} BoldRowText">
 <td align="right"><b>TOTAL AUTHORIZED AND PAID:</b></td>
-{section name=period loop=$total_authorized_and_paid}
-<td align="center">{include file="currency.tpl" value=$total_authorized_and_paid[period]}</td>
-{/section}
+{foreach name=period key=key item=item from=$total_authorized_and_paid}
+<td align="center">{include file="currency.tpl" value=$item.value}</td>
+<td align="center">{$item.count}</td>
+{/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
 <td align="right"><b>Total Authorized:</b></td>
-{section name=period loop=$authorized_total}
-<td align="center">{include file="currency.tpl" value=$authorized_total[period]}</td>
-{/section}
+{foreach name=period key=key item=item from=$authorized_total}
+<td align="center">{include file="currency.tpl" value=$item.value}</td>
+ <td align="center">{$item.count}</td>
+{/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
 <td align="right"><b>TOTAL PAID:</b></td>
-{section name=period loop=$total_paid}
-<td align="center">{include file="currency.tpl" value=$total_paid[period]}</td>
-{/section}
+{foreach name=period key=key item=item from=$total_paid}
+ <td align="center">{include file="currency.tpl" value=$item.value}</td>
+ <td align="center">{$item.count}</td>
+{/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
