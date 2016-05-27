@@ -537,27 +537,27 @@ if (
 
 	
 				# Define "mpn"
+				global $xcart_dir;
+				include_once $xcart_dir."/include/class/classProducts.php";
+				$classProduct = new classProducts();
+				$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
+				unset($classProduct);
 	
-				$pos = strpos($product['productcode'], '-');
+/*				$pos = strpos($product['productcode'], '-');
 				$mpn = '';
 	
 				if ($pos && is_numeric($pos) && $pos + 1 != strlen($product['productcode'])) {
 					$mpn = substr($product['productcode'], $pos + 1);
 				}
-#
-##
-###
+
                                 else {
                                         $mpn = $product['productcode'];
                                 }
 
                                 if (strlen($mpn) < 3){
                                                 $mpn .= "-GBFIX";
-                                }
-###
-##
-#
-	
+                                }*/
+
 				# Define "compatible with"
 	
 				$upselling_products = func_query("SELECT p.product_froogle, p.productcode, p.upc, b.brand FROM $sql_tbl[product_links] as pl, $sql_tbl[products] as p LEFT JOIN $sql_tbl[brands] b ON b.brandid=p.brandid WHERE pl.productid1=$product[productid] AND p.productid=pl.productid2");

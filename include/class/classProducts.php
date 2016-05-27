@@ -216,7 +216,14 @@ class classProducts extends classCloneData
         AND manufacturerid = ".$this->aProductToQueue['manufacturerid']);
     }
 
-    protected function getProductMPN($sSKU, $sPrefixManufacturer) {
+    public function getProductMPN($sSKU, $sPrefixManufacturer = "", $iProductId = null) {
+        if (empty($sPrefixManufacturer) && isset($iProductId)) {
+            $aProduct = $this->getProductInfo($iProductId);
+            if (!empty($aProduct)) {
+                $classManufacturer = new classManufacturer();
+                $sPrefixManufacturer = $classManufacturer->getManufacturerCodeById($aProduct['manufacturerid']);
+            }
+        }
         if (strpos($sSKU, $sPrefixManufacturer) == 0)
             return preg_replace("/^($sPrefixManufacturer-)/i","", $sSKU);
         else return false;
@@ -740,9 +747,15 @@ class classProducts extends classCloneData
     }
 
     protected function getProductBySKU($sSKU) {
-        $aProduct = func_query_first("SELECT * FROM xcart_products xp WHERE xp.productcode = '$sSKU'");
+        $sSKU = addslashes($sSKU);
+        $aProduct = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE productcode = '$sSKU'");
         if (empty($aProduct)) return false;
         return $aProduct;
+    }
+
+    protected function getProductIdBySKU($sSKU) {
+        $sSKU = addslashes($sSKU);
+        return func_query_first_cell("SELECT ".$this->sPrimaryKeyFiled." FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE productcode = '$sSKU'");
     }
 
     protected function  updateProduct($aProduct) {
