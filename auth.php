@@ -349,7 +349,7 @@ $smarty->assign('statuses', $statuses);
 ##
 #
 
-if (!empty($active_modules['CIDEV_Best_Search_Filter']) && (basename($PHP_SELF) != 'home.php')) {
+if (!empty($active_modules['CIDEV_Best_Search_Filter']) && isset($clean_url_data) && in_array($clean_url_data['resource_type'], array('C','M'))) {
 	$cidev_filters_tree = func_cidev_filters_tree(true);
 	$smarty->assign("cidev_filters_tree", $cidev_filters_tree);
 
