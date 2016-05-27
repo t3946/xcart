@@ -692,7 +692,15 @@ function func_order_data($orderid) {
 			}
 		}
 
-#
+
+		global $xcart_dir;
+		include_once $xcart_dir."/include/class/classProducts.php";
+		$classProduct = new classProducts();
+		$mpn = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
+		unset($classProduct);
+		$v["mpn"] = $mpn;
+
+/*#
 ##
 ###
                 $pos = strpos($v['productcode'], '-');
@@ -705,7 +713,7 @@ function func_order_data($orderid) {
 
 ###
 ##
-#
+#*/
 
 #
 ##

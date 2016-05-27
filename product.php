@@ -997,13 +997,20 @@ if (!empty($cat)){
 #
 */
 
-$pos = strpos($product_info['productcode'], '-');
+global $xcart_dir;
+include_once $xcart_dir."/include/class/classProducts.php";
+$classProduct = new classProducts();
+$mpn = $classProduct->getProductMPN($product_info['productcode'], "", $product_info['productid']);
+unset($classProduct);
+$smarty->assign("cidev_mpn", $mpn);
+
+/*$pos = strpos($product_info['productcode'], '-');
 $mpn = '';
 
 if ($pos && is_numeric($pos) && $pos + 1 != strlen($product_info['productcode'])) {
 	$mpn = substr($product_info['productcode'], $pos + 1);
 	$smarty->assign("cidev_mpn", $mpn);
-}
+}*/
 
 if (!empty($location) && is_array($location)){
 	$tmp_count_location = count($location);

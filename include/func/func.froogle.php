@@ -353,7 +353,14 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	}
 
 	# Define "mpn"
-	$pos = strpos($product['productcode'], '-');
+/*	https://s3stores.teamwork.com/tasks/6654526 */
+
+	global $xcart_dir;
+	include_once $xcart_dir."/include/class/classProducts.php";
+	$classProduct = new classProducts();
+	$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
+
+	/*$pos = strpos($product['productcode'], '-');
 	$mpn = '';
 
 	if ($pos && is_numeric($pos) && $pos + 1 != strlen($product['productcode'])) {
@@ -365,7 +372,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 
 	if (strlen($mpn) < 3){
 		$mpn .= "-GBFIX";
-	}
+	}*/
 
 	# Define "compatible with"
 	$upselling_products = func_query("SELECT p.product_froogle, p.productcode, p.upc, b.brand FROM $sql_tbl[product_links] as pl, $sql_tbl[products] as p LEFT JOIN $sql_tbl[brands] b ON b.brandid=p.brandid WHERE pl.productid1=$product[productid] AND p.productid=pl.productid2");
@@ -381,11 +388,12 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 				$up['upc'] = "";
 			}
 
-			$up_pos = strpos($up['productcode'], '-');
+			/*$up_pos = strpos($up['productcode'], '-');
 			$up_mpn = '';
 			if ($up_pos && is_numeric($up_pos) && $up_pos + 1 != strlen($up['productcode'])) {
 				$up_mpn = substr($up['productcode'], $up_pos + 1);
-			}
+			}*/
+			$up_mpn = $classProduct->getProductMPN($up['productcode'], "", $up['productid']);
 			if ($compatible_with != '') {
 				$compatible_with .= ', ';
 			}
