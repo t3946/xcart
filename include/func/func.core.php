@@ -2712,7 +2712,7 @@ function func_define_approximate_shippings($productid, $product_info=''){
                     $shipping_name = "Ground";
 
 ###
-                    $real_weight = $product_info["weight"];
+                    /*$real_weight = $product_info["weight"];
                     $Volume = $product_info["dim_x"]*$product_info["dim_y"]*$product_info["dim_z"];
 
                     if ($Volume > $two_shippings[$shipping_id]["vol_threshold"] && !empty($two_shippings[$shipping_id]["dim_factor"])){
@@ -2720,7 +2720,12 @@ function func_define_approximate_shippings($productid, $product_info=''){
                         $weight = max($real_weight, $bw);
                     } else {
                         $weight = $real_weight;
-                    }
+                    }*/
+					global $xcart_dir;
+					include_once $xcart_dir."/include/class/classShipping.php";
+					$classShipping = new classShipping();
+					$weight = $classShipping->getShippingWeight($product_info['productid'], $shipping_id, 1, $product_info, $two_shippings[$shipping_id]);
+					unset ($classShipping);
 
                     $weight = ceil($weight);
 
@@ -3260,18 +3265,18 @@ function func_parse_filters($page_content) {
 
 function Get_AB_Variant($point_id){
 	global $sql_tbl, $pointid_ab_testing_arr, $is_robot, $current_storefront;
-        global $XCART_SESSION_NAME;
-        global $$XCART_SESSION_NAME;
+	global $XCART_SESSION_NAME;
+	global $$XCART_SESSION_NAME;
 	global $XCARTSESSID;
 
 //	$ab_testing_point = func_query_first("SELECT * FROM $sql_tbl[ab_testing_points] WHERE point_id='$point_id'");	
-        $ab_testing_point = func_query_first("SELECT * FROM $sql_tbl[ab_testing_points] WHERE point_id='$point_id' AND enabled='Y'");
+	$ab_testing_point = func_query_first("SELECT * FROM $sql_tbl[ab_testing_points] WHERE point_id='$point_id' AND enabled='Y'");
 
-	if (empty($ab_testing_point)){
+	if (empty($ab_testing_point)) {
 		return false;
 	}
 
-	if (isset($pointid_ab_testing_arr[$point_id])){
+	if (isset($pointid_ab_testing_arr[$point_id])) {
 		$variant_id = $pointid_ab_testing_arr[$point_id]["variant_id"];
 		return $variant_id;
 	}
@@ -3280,53 +3285,55 @@ function Get_AB_Variant($point_id){
 
 	$cur_storefront_info = func_get_storefront_info($current_storefront);
 
-	$storefront_prefix = str_replace("-","", $cur_storefront_info["prefix"]);
+	$storefront_prefix = str_replace("-", "", $cur_storefront_info["prefix"]);
 
-        if ($storefront_prefix == "MAIN_SF_PREFIX"){
-                $storefront_prefix = "AR";
-        }
+	if ($storefront_prefix == "MAIN_SF_PREFIX") {
+		$storefront_prefix = "AR";
+	}
 
 	if (
-		($ab_testing_point["enabled"] == "N") || 
-		!($ab_testing_point["point_start_date"] <= $current_time && $current_time <= $ab_testing_point["point_end_date"]) || 
-		(strpos($ab_testing_point["storefronts_enabled"], $storefront_prefix)===false) ||
-		$is_robot == "Y" ||
-		defined("IS_ROBOT") ||
-		(empty($$XCART_SESSION_NAME) && empty($XCARTSESSID))
-	){
+			($ab_testing_point["enabled"] == "N") ||
+			!($ab_testing_point["point_start_date"] <= $current_time && $current_time <= $ab_testing_point["point_end_date"]) ||
+			(strpos($ab_testing_point["storefronts_enabled"], $storefront_prefix) === false) ||
+			$is_robot == "Y" ||
+			defined("IS_ROBOT") ||
+			(empty($$XCART_SESSION_NAME) && empty($XCARTSESSID))
+	) {
 		$variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND is_default='Y'");
-	}
-	else {
-		$variant_id = ($ab_testing_point["total_hits"]+1) % $ab_testing_point["mod_param"];
+	} else {
+		$variant_id = ($ab_testing_point["total_hits"] + 1) % $ab_testing_point["mod_param"];
 
-                if ($variant_id == ""){
-                        $variant_id = 0;
-                }
+		if ($variant_id == "") {
+			$variant_id = 0;
+		}
+
+		$variant_id_balanced = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id = $point_id ORDER BY total_hits_count ASC, variant_id = $variant_id DESC");
+		if (empty($variant_id_balanced)) $variant_id_balanced = 0;
 
 #
 ##
 ###
-		if ($variant_id > 1){
+		/*if ($variant_id > 1) {
 			$variant_id = 1;
 		}
 
 		$total_hits_count_v0 = func_query_first_cell("SELECT total_hits_count FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND variant_id='0'");
 		$total_hits_count_v1 = func_query_first_cell("SELECT total_hits_count FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND variant_id='1'");
 
-		if ($total_hits_count_v1 > $total_hits_count_v0 && $variant_id == 1){
+		if ($total_hits_count_v1 > $total_hits_count_v0 && $variant_id == 1) {
 			$variant_id = 0;
 		}
 
-                if ($total_hits_count_v0 > $total_hits_count_v1 && $variant_id == 0){
-                        $variant_id = 1;
-                }
+		if ($total_hits_count_v0 > $total_hits_count_v1 && $variant_id == 0) {
+			$variant_id = 1;
+		}*/
 ###
 ##
 #
 		db_query("UPDATE $sql_tbl[ab_testing_points] SET total_hits=total_hits+1 WHERE point_id='$point_id'");
-		db_query("UPDATE $sql_tbl[ab_point_variants] SET total_hits_count=total_hits_count+1 WHERE point_id='$point_id' AND variant_id='$variant_id'");
+		db_query("UPDATE $sql_tbl[ab_point_variants] SET total_hits_count=total_hits_count+1 WHERE point_id='$point_id' AND variant_id='$variant_id_balanced'");
 
-		$pointid_ab_testing_arr[$point_id]["variant_id"] = $variant_id;
+		$pointid_ab_testing_arr[$point_id]["variant_id"] = $variant_id_balanced;
 
 		x_session_save('pointid_ab_testing_arr');
 	}
@@ -3955,5 +3962,35 @@ function func_add_slashes($str){
 	$str = addslashes($str);
 	
 	return $str;
+}
+
+function func_get_geoip_locations ($CLIENT_IP, $geo_litecity_location_debug = "N") {
+	global $sql_tbl;
+	$geo_litecity_location = false;
+	if (!empty($CLIENT_IP)){
+		$CLIENT_IP_arr = explode(".", $CLIENT_IP);
+		if (!empty($CLIENT_IP_arr) && is_array($CLIENT_IP_arr)) {
+			$CLIENT_IP_INTEGER = $CLIENT_IP_arr[0] * 16777216 + $CLIENT_IP_arr[1] * 65536 + $CLIENT_IP_arr[2] * 256 + $CLIENT_IP_arr[3];
+		}
+
+		if (!empty($CLIENT_IP_INTEGER)) {
+			$geo_litecity_location = func_query_first("SELECT l.*, xs.phone, endIpNum
+											  FROM  $sql_tbl[geo_litecity_location] l
+											  INNER JOIN $sql_tbl[geo_litecity_blocks] b ON (l.locId=b.locId)
+											  LEFT JOIN  $sql_tbl[states] xs ON xs.country_code = l.country AND xs.code = l.region
+											  WHERE $CLIENT_IP_INTEGER >= b.startIpNum
+											  ORDER BY b.startIpNum DESC LIMIT 1;");
+
+			if (!empty($geo_litecity_location)) {
+				if ($geo_litecity_location['endIpNum'] < $CLIENT_IP_INTEGER) $geo_litecity_location = false;
+
+				if ($geo_litecity_location_debug == "Y") {
+					x_load("debug");
+					func_print_r($geo_litecity_location);
+				}
+			}
+		}
+	}
+	return $geo_litecity_location;
 }
 ?>

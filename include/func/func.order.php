@@ -692,7 +692,15 @@ function func_order_data($orderid) {
 			}
 		}
 
-#
+
+		global $xcart_dir;
+		include_once $xcart_dir."/include/class/classProducts.php";
+		$classProduct = new classProducts();
+		$mpn = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
+		unset($classProduct);
+		$v["mpn"] = $mpn;
+
+/*#
 ##
 ###
                 $pos = strpos($v['productcode'], '-');
@@ -705,7 +713,7 @@ function func_order_data($orderid) {
 
 ###
 ##
-#
+#*/
 
 #
 ##
@@ -990,22 +998,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 ##
 ###
 	$ip_info = $CLIENT_IP;
-	$CLIENT_IP_arr = explode(".", $CLIENT_IP);
-	if (!empty($CLIENT_IP_arr) && is_array($CLIENT_IP_arr)){
-                                $CLIENT_IP_INTEGER = $CLIENT_IP_arr[0]*16777216 + $CLIENT_IP_arr[1]*65536 + $CLIENT_IP_arr[2]*256 + $CLIENT_IP_arr[3];
-	}
 
-	if (!empty($CLIENT_IP_INTEGER)){
-                                $locId = func_query_first_cell("SELECT locId FROM $sql_tbl[geo_litecity_blocks] WHERE $CLIENT_IP_INTEGER BETWEEN startIpNum AND endIpNum LIMIT 1");
-
-                                if (!empty($locId)){
-                                        $geo_litecity_location = func_query_first("SELECT * FROM $sql_tbl[geo_litecity_location] WHERE locId='".addslashes($locId)."'");
-
-                                        if (!empty($geo_litecity_location)){
-
-                                                $ip_info .= " (".$geo_litecity_location["country"].", ".$geo_litecity_location["region"].", ".$geo_litecity_location["city"].", ".$geo_litecity_location["postalCode"].")";
-                                        }
-                                }
+	$geo_litecity_location = func_get_geoip_locations($CLIENT_IP);
+	if (!empty($geo_litecity_location)) {
+		$ip_info .= " (".$geo_litecity_location["country"].", ".$geo_litecity_location["region"].", ".$geo_litecity_location["city"].", ".$geo_litecity_location["postalCode"].")";
 	}
 
 	$extras['ip_info'] = $ip_info;
@@ -2061,7 +2057,13 @@ function func_get_order_manufacturers($orderid){
 								}
 							}
 
-                                                        $tmp_sku = substr($v["productcode"], 4);
+                                                        //$tmp_sku = substr($v["productcode"], 4);
+														global $xcart_dir;
+														include_once $xcart_dir."/include/class/classProducts.php";
+														$classProduct = new classProducts();
+														$tmp_sku = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
+														unset($classProduct);
+
                                                         $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">'.$tmp_sku.'</td><td width="250px" style="text-align: left;"><a href="'.$v["links"]["customer"].'">'.$v["product"].'</a>'.$selected_product_options.'</td><td style="text-align: right;">'.$v["amount"].'</td></tr>';
 
 							$instock_items = $v["amount"] - $v["back"];
@@ -4050,7 +4052,12 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
                 }
 
 
-                $tmp_sku = substr($v["productcode"], 4);
+                //$tmp_sku = substr($v["productcode"], 4);
+				global $xcart_dir;
+				include_once $xcart_dir."/include/class/classProducts.php";
+				$classProduct = new classProducts();
+				$tmp_sku = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
+				unset($classProduct);
 
                 $instock_items = $v["amount"] - $v["back"];
 

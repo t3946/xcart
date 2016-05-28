@@ -3,32 +3,45 @@ class classElasticSearch
 {
     private $server;
     private $index;
+    private $type;
+    private $_id;
     private $queryParams = array();
     private $data_json;
 
     public $hitsCount;
     public $hitsTotal;
+    public $curl_info;
 
-    function __construct($elasticConfig = array(),$index){
+
+
+    function __construct($elasticConfig = array(),$index = ''){
         $this->server = $elasticConfig["es_url"];
         $this->index = $index;
-        $this->queryParams["_source"] = "*._id";
-        $this->queryParams["min_score"] = $elasticConfig["search_results_minimum_score_value"];
+        //$this->queryParams["_source"] = "*._id";
+        //$this->queryParams["min_score"] = $elasticConfig["search_results_minimum_score_value"];
         $this->queryParams["query"] = array();
         $this->queryParams["query"]["dis_max"] = array();
         $this->queryParams["query"]["dis_max"]["queries"] = array();
     }
 
+    public function setSource($sSource) {
+        $this->queryParams["_source"] = "*._id";
+    }
+
     function call($path, $data_json = array()){
-        if (!$this->index) throw new Exception('$this->index needs a value');
+        //if (!$this->index) throw new Exception('$this->index needs a value');
         $url = $this->server . '/' . $this->index . '/' . $path;
-        $this->data_json = json_encode($this->queryParams);
+
+        $method = $data_json['method'];
+        $content = $data_json['content'];
+        $this->data_json = json_encode($content);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result_json = curl_exec($ch);
+        $this->curl_info = curl_getinfo($ch);
         curl_close($ch);
         $result = json_decode($result_json, true);
         $this->hitsCount = count($result["hits"]["hits"]);
@@ -36,7 +49,7 @@ class classElasticSearch
         return $result;
     }
 
-    function setQueryParamsDefault($sQuery){
+    public function setQueryParamsDefault($sQuery){
         $query = array();
         $query["query_string"]["query"] = $sQuery;
         $query["query_string"]["fields"] = array("productname.productname_original^1.5","sku","upc","brand.brand_original^0.5","description.description_original");
@@ -52,7 +65,7 @@ class classElasticSearch
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
     }
 
-    function setQueryParams($sQuery, $aDismax = array()){
+    public function setQueryParams($sQuery, $aDismax = array()){
         if (empty($aDismax)) {
             $this->setQueryParamsDefault($sQuery);
         } else {
@@ -62,11 +75,63 @@ class classElasticSearch
         }
     }
 
-    function setMinScore($sMinScore){
+    public function getQuerySimilarProductsBrands ($sExcludeBrand = '') {
+        $Similar_products_other_brands =
+                [
+                    'filtered' => [
+                        'query' => [
+                            'more_like_this' => [
+                                'docs' => [[
+                                    '_index' => $this->index,
+                                    '_type' => $this->type,
+                                    '_id' => $this->_id
+                                ]],
+                                'min_term_freq' => 1,
+                                'max_query_terms' => 12
+                            ]
+                        ],
+
+                    ]
+                ];
+        if (!empty($sExcludeBrand))
+            $Similar_products_other_brands['filtered']['filter'] = [
+                'bool' => [
+                    'must' => [],
+                    'should' => [],
+                    'must_not' => [
+                        'regexp' => [
+                            'brand.brand_original' => '.*'.$sExcludeBrand.'.*'
+                        ]
+                    ]
+                ]
+            ];
+
+
+        return $Similar_products_other_brands;
+}
+
+    public function setSearchQuery ($aQuery = array()) {
+        $this->queryParams['query'] = $aQuery;
+    }
+
+    public function setQueryParam ($aQuery = array()) {
+        $this->queryParams = $aQuery;
+    }
+
+    public function setMinScore($sMinScore){
         $this->queryParams["min_score"] = $sMinScore;
     }
 
-    function setFilterTerms($aFilterTerm){
+    public function setType($sType){
+        $this->type = $sType;
+    }
+
+    public function setProductId($iProductid){
+        $this->_id = $iProductid;
+    }
+
+
+    public function setFilterTerms($aFilterTerm){
         $this->queryParams["filter"]["terms"]["_id"] = $aFilterTerm;
     }
 
@@ -75,27 +140,27 @@ class classElasticSearch
         $this->call(NULL, array('method' => 'PUT'));
     }
     //curl -X DELETE http://localhost:9200/{INDEX}/
-    function drop(){
-        $this->call(NULL, array('method' => 'DELETE'));
+    function delete($id=""){
+        return $this->call($this->type. '/'.$id, array('method' => 'DELETE'));
     }
     //curl -X GET http://localhost:9200/{INDEX}/_status
     function status(){
         return $this->call('_status');
     }
     //curl -X GET http://localhost:9200/{INDEX}/{TYPE}/_count -d {matchAll:{}}
-    function count($type){
-        return $this->call($type . '/_count', array('method' => 'GET', 'content' => '{ matchAll:{} }'));
+    function count(){
+        return $this->call($this->type . '/_count', array('method' => 'GET', 'content' => '{ matchAll:{} }'));
     }
     //curl -X PUT http://localhost:9200/{INDEX}/{TYPE}/_mapping -d ...
-    function map($type, $data){
-        return $this->call($type . '/_mapping', array('method' => 'PUT', 'content' => $data));
+    function map($data){
+        return $this->call($this->type . '/_mapping', array('method' => 'PUT', 'content' => $data));
     }
     //curl -X PUT http://localhost:9200/{INDEX}/{TYPE}/{ID} -d ...
-    function add($type, $id, $data){
-        return $this->call($type . '/' . $id, array('method' => 'PUT', 'content' => $data));
+    function add($id){
+        return $this->call($this->type . '/' . $id, array('method' => 'POST', 'content' => $this->queryParams));
     }
     //curl -X GET http://localhost:9200/{INDEX}/{TYPE}/_search?q= ...
-    function query($type, $q){
-        return $this->call($type . '/_search?' . http_build_query($q));
+    function query($q = array()){
+        return $this->call($this->type . '/_search?' . http_build_query($q), array('method' => 'POST', 'content' => $this->queryParams));
     }
 }

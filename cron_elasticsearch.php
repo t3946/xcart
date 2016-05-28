@@ -1,8 +1,12 @@
 <?php
 define("CIDEV_CRON_START", "CRON");
 
+
+
 require "./top.inc.php";
 require "./init.php";
+
+require_once $xcart_dir."/include/class/classElasticSearch.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -40,7 +44,6 @@ $requests = 0;
 $body = "";
 
 while ($record = db_fetch_array($cidev_updated_products)) {
-
         $counter++;
         if ($counter % 100 == 0) {
                 func_flush(".");
@@ -314,7 +317,6 @@ $requests = 0;
 $body = "";
 
 while ($record = db_fetch_array($cidev_updated_products)) {
-
         $counter++;
         if ($counter % 100 == 0) {
                 func_flush(".");
@@ -520,6 +522,7 @@ $update_fail = 0;
 $deleted_ok = 0;
 $deleted_fail = 0;
 $processed = 0;
+$data_arr = array();
 
 while ($record = db_fetch_array($cidev_updated_products)) {
 
@@ -543,24 +546,30 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 
         if ($category_info["avail"] != 'Y' || $category_info["p_count"] <= "0"){
 
-/*
+
 
 //                $deleted_ok_found = false;
                 foreach ($cidev_storefronts as $k => $v){
 
-                        $data_json = "";
-                        $url = $config["ElasticSearch_options"]["es_url"].$v["domain"]."/category/".$categoryid;
+                    $classElasticSearch = new classElasticSearch($config["ElasticSearch_options"], $v["domain"]);
 
-                        // Delete category
-                        $ch = curl_init($url);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        $result_json = curl_exec($ch);
-			$info = curl_getinfo($ch);
-                        curl_close($ch);
-			$result = json_decode($result_json, true);
+                    $classElasticSearch->setType('category');
+
+                    $result = $classElasticSearch->delete($categoryid);
+
+                    /*$data_json = "";
+                    $url = $config["ElasticSearch_options"]["es_url"] . $v["domain"] . "/category/" . $categoryid;
+
+                    // Delete category
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept: application/json"));
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    //$result_json = curl_exec($ch);
+                    $info = curl_getinfo($ch);
+                    curl_close($ch);
+                    $result = json_decode($result_json, true);*/
 
 //                        #if ($result["found"] == "1")
 //                        if ($info["http_code"] == "200"){
@@ -577,40 +586,68 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 //                        $deleted_fail++;
 //                }
 
-*/
+
 
         }
         else {
 
-/*
-			$data_json = "";
-                        $url = $config["ElasticSearch_options"]["es_url"].$cidev_storefronts[$category_info["storefrontid"]]["domain"]."/category/".$categoryid;
 
-                        // Delete at first
-                        $ch = curl_init($url);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        $result_json = curl_exec($ch);
-                        curl_close($ch);
+            $classElasticSearch = new classElasticSearch($config["ElasticSearch_options"], $cidev_storefronts[$category_info["storefrontid"]]["domain"]);
+
+            $classElasticSearch->setType('category');
+
+            $result = $classElasticSearch->delete($categoryid);
+
+            $info = $classElasticSearch->curl_info;
+
+            $data_arr["category"] = $category_info["category"];
+            $category_info["description"] = str_replace("/r/n", " ", $category_info["description"]);
+            $category_info["description"] = str_replace("\r\n", " ", $category_info["description"]);
+            $data_arr["description"] = strip_tags($category_info["description"]);
+
+            $classElasticSearch->setQueryParam($data_arr);
+
+            $result = $classElasticSearch->add($categoryid);
+
+            $info = $classElasticSearch->curl_info;
+
+            if (!in_array($info["http_code"], array("200", "201"))){
+                $update_fail++;
+            } else {
+                db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
+
+                $updated_ok++;
+            }
 
 
-                        $data_arr["category"] = $category_info["category"];
-                        $category_info["description"] = str_replace("/r/n", " ", $category_info["description"]);
-                        $category_info["description"] = str_replace("\r\n", " ", $category_info["description"]);
-                        $data_arr["description"] = strip_tags($category_info["description"]);
-                        $data_json = json_encode($data_arr);
+           /* $data_json = "";
+            $url = $config["ElasticSearch_options"]["es_url"] . $cidev_storefronts[$category_info["storefrontid"]]["domain"] . "/category/" . $categoryid;
 
-                        $ch = curl_init($url);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        $result_json = curl_exec($ch);
-			$info = curl_getinfo($ch);
-                        curl_close($ch);
-                        $result = json_decode($result_json, true);
+            // Delete at first
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept: application/json"));
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            //$result_json = curl_exec($ch);
+            curl_close($ch);
+
+
+            $data_arr["category"] = $category_info["category"];
+            $category_info["description"] = str_replace("/r/n", " ", $category_info["description"]);
+            $category_info["description"] = str_replace("\r\n", " ", $category_info["description"]);
+            $data_arr["description"] = strip_tags($category_info["description"]);
+            $data_json = json_encode($data_arr);
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept: application/json"));
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // $result_json = curl_exec($ch);
+            $info = curl_getinfo($ch);
+            curl_close($ch);
+            $result = json_decode($result_json, true);
 
 //			if ($result["created"] != "1")
 			if ($info["http_code"] != "200"){
@@ -619,8 +656,8 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                                 db_query("DELETE FROM $sql_tbl[cidev_updated_products] WHERE resourceid='$record[resourceid]' AND type='$record[type]' AND time_stamp='$record[time_stamp]' AND source='$record[source]'");
 
                                 $updated_ok++;
-                        }
-*/
+                        }*/
+
         }
 
         $processed++;

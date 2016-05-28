@@ -106,8 +106,8 @@ if (empty($url)) {
 ###
 ##
 #
-
-		func_change_order_status($oids, $change_order_status);
+		if ($change_order_status == "P")
+			func_change_order_status($oids, $change_order_status);
 	}
 }
 

@@ -81,7 +81,7 @@ if ($top_btn == "Y"){
 #
 ##
 ###
-if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($cat)){
+/*if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($cat)){
         $is_in_table = func_query_first_cell("SELECT COUNT(sent) FROM $sql_tbl[notify_when_in_stock] WHERE email='$notify_email' AND sent='N' AND productid='$productid' AND storefrontid='$current_storefront'");
 		x_session_save('notify_email');
         if (empty($is_in_table)){
@@ -109,7 +109,7 @@ if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($
 	}
 
         func_header_location($clean_url_link);
-}
+}*/
 ###
 ##
 #
@@ -423,7 +423,7 @@ Group By B.brandid
 HAVING COUNT(distinct P.productid)>0
 Order By 3 desc;";
 */
-	$menu_brands_query = "Select 
+	$menu_brands_query = "Select
         B.brandid, B.brand, COUNT(distinct P.productid) as count
 from xcart_brands B
         inner join xcart_products P ON P.brandid = B.brandid and P.forsale = 'Y'
@@ -431,6 +431,13 @@ from xcart_brands B
 Group By B.brandid
 /*HAVING COUNT(distinct P.productid)>0*/
 Order By 3 desc;";
+
+	$menu_brands_query = "SELECT xb.brandid, brand
+							FROM $sql_tbl[brands_sf] xb
+							INNER JOIN $sql_tbl[brands] b ON xb.brandid = b.brandid
+							 WHERE xb.sfid = $current_storefront
+							ORDER BY xb.products_count DESC
+							LIMIT ".($config["Brands"]["brands_listed_count"]+1);
 
 	$menu_brands = func_query($menu_brands_query);
 

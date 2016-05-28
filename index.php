@@ -62,7 +62,7 @@ if ($config['Search_All']['search_all_website_close'] == 'Y') {
 }
 
 if (strcasecmp($cur_host, $search_all_website_url) != 0) {
-    func_header_location($xcart_web_dir . DIR_CUSTOMER . '/home.php'); 
+    func_header_location($xcart_web_dir . DIR_CUSTOMER . '/home.php');
 }
 
 $location = array(array($config['Search_All']['search_all_website_name'], ''));
@@ -163,7 +163,8 @@ if ($mode == 'search') {
             array_unshift($sfid_links, array('storefrontid' => 0, 'name' => $config['Company']['company_name'], 'domain' => $company_website));
         }
         usort($sfid_links, func_msf_sort_front_array_by_name);
-        l($sfid_links, '$sfid_links'); 
+        if (function_exists("l"))
+            l($sfid_links, '$sfid_links');
 
 /*
 if ($qqq == "qqq" ){

@@ -213,7 +213,7 @@
 
      {assign var="row_conter" value="0"}
 
-     {foreach from=$v.filter_values item=tree_filter_values}
+     {foreach from=$v.filter_values item=tree_filter_values name=filterloop}
 
       {if $tree_filter_values.found eq 'Y' || $tree_filter_values.selected eq "Y"}
 
@@ -259,53 +259,43 @@
  {/if}
 
 
- {if $filter_selected_and_found_brands ne ""}
-  {if $filter_name ne ""}
-  <tr><td colspan="2">&nbsp;</td><tr>
-  {/if}
-  <tr><td colspan="2"><B>Brand:</B></td><tr>
+         {if $filter_selected_and_found_brands ne ""}
+         {if $filter_name ne ""}
+     <tr>
+         <td colspan="2">&nbsp;</td>
+     <tr>
+     {/if}
+     <tr>
+         <td colspan="2"><B>Brand:</B></td>
+     </tr>
+     {assign var="row_conter" value="0"}
+     {foreach from=$filter_selected_and_found_brands item=v key=k name=brandloop}
+         {if $smarty.foreach.brandloop.index < $show_N_brands}
+             <tr>
+                 <td width="5"><input name="b_ids[{$v.brandid}]" id="b_id_{$v.brandid}" value="Y"
+                                      type="checkbox" {if $v.selected eq 'Y'} checked="checked" {assign var="show_clear_all_button" value="Y"} {/if}>
+                 </td>
+                 <td {if $v.selected eq 'Y' && $v.selected_and_found ne "Y"}style="color: #cccccc;"{/if}>{$v.brand}
+                     ({$v.count_products})
+                 </td>
+             </tr>
+         {/if}
+     {/foreach}
+     {if count($filter_selected_and_found_brands) gt $show_N_brands}
+     <tr>
+         <td colspan="2" align="right">
+             <a class="simple-button" target="_blank" title="Show more"
+                onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&filter=brand', 'Brand'); return false;"
+                href="/cidev_show_more_filters.php?target=show_more&filter=brand"><span>Show more</span></a>
+         </td>
+     <tr>
+         {/if}
+         {/if}
 
-  {assign var="row_conter" value="0"}
-
-  {foreach from=$filter_selected_and_found_brands item=v key=k}
-
-   {if $row_conter lt $show_N_brands}
-   <tr>
-    <td width="5">
-	<input name="b_ids[{$v.brandid}]" id="b_id_{$v.brandid}" value="Y" type="checkbox"
-                {if $v.selected eq 'Y'}
-                        checked="checked"
-			{assign var="show_clear_all_button" value="Y"}
-                {/if}
-	>
-    </td>
-    <td {if $v.selected eq 'Y' && $v.selected_and_found ne "Y"}style="color: #cccccc;"{/if}>{$v.brand} ({$v.count_products})</td>
-   </tr>
-   {/if}
-
-   {math equation="x+1" x=$row_conter assign="row_conter"}
-
-  {/foreach}
-
-  {if $row_conter gt $show_N_brands}
-	<tr>
-	<td colspan="2" align="right">
-
-<a class="simple-button" target="_blank" title="Show more" onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&filter=brand', 'Brand'); return false;" href="/cidev_show_more_filters.php?target=show_more&filter=brand"><span>Show more</span></a>
-
-	</td>
-	<tr>
-  {/if}
-
- {/if}
-
-
- {if $filter_prices ne ""}
+{if $filter_prices ne ""}
   <tr><td colspan="2">&nbsp;</td><tr>
   <tr><td colspan="2"><B>Price:</B></td><tr>
-
   {if $filter_max_price_selected gt "0"}
-
 
 <script language="JavaScript" type="text/javascript">
 <!--

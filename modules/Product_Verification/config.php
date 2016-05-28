@@ -1,9 +1,8 @@
-<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (����� ��� �������� ����������� "��������������" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
 | X-Cart                                                                      |
-| Copyright (c) 2001-2009 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
 | All rights reserved.                                                        |
 +-----------------------------------------------------------------------------+
 | PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
@@ -26,50 +25,18 @@
 | THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
 |                                                                             |
 | The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2009           |
+| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
 | Ruslan R. Fazliev. All Rights Reserved.                                     |
 +-----------------------------------------------------------------------------+
 \*****************************************************************************/
 
 #
-# brands.php, random
+# $Id: config.php,v 1.9 2006/03/16 09:48:48 mclap Exp $
 #
 
-require "./auth.php";
-
-$brandid = abs(intval($brandid));
-
-x_session_register("notify_email");
-$smarty->assign("notify_email", $notify_email);
-
-if (
-    isset($brandid)
-    && !empty($brandid)
-    && $config['SEO']['clean_urls_enabled'] == 'Y'
-    && !defined("DISPATCHED_REQUEST")
-) {
-    func_clean_url_permanent_redirect('M', $brandid);
-}
-
-
-
-if($active_modules["Brands"])
-    include $xcart_dir."/modules/Brands/customer_brands_list.php";
-else
-	func_header_location("home.php");
-
+if ( !defined('XCART_START') ) { header("Location: ../../"); die("Access denied"); }
 #
-##
-###
-if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("B");
-}
-###
-##
+# Global definitions for Product Verification module
 #
 
-# Assign the current location line
-$smarty->assign("location", $location);
-
-func_display("customer/home.tpl",$smarty);
 ?>

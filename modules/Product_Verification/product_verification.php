@@ -1,9 +1,10 @@
-<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (����� ��� �������� ����������� "��������������" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
+<?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
 | X-Cart                                                                      |
-| Copyright (c) 2001-2009 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
 | All rights reserved.                                                        |
 +-----------------------------------------------------------------------------+
 | PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
@@ -26,50 +27,26 @@
 | THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
 |                                                                             |
 | The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2009           |
+| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
 | Ruslan R. Fazliev. All Rights Reserved.                                     |
 +-----------------------------------------------------------------------------+
 \*****************************************************************************/
 
 #
-# brands.php, random
+# $Id: manufacturers.php,v 1.18.2.3 2006/10/11 06:11:31 max Exp $
 #
 
-require "./auth.php";
+if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
-$brandid = abs(intval($brandid));
-
-x_session_register("notify_email");
-$smarty->assign("notify_email", $notify_email);
-
-if (
-    isset($brandid)
-    && !empty($brandid)
-    && $config['SEO']['clean_urls_enabled'] == 'Y'
-    && !defined("DISPATCHED_REQUEST")
-) {
-    func_clean_url_permanent_redirect('M', $brandid);
+if (!empty($active_modules['Multiple_Storefronts'])) {
+	$products = func_query ("SELECT $sql_tbl[featured_products].productid, $sql_tbl[products].product, $sql_tbl[featured_products].product_order, $sql_tbl[featured_products].avail from $sql_tbl[featured_products], $sql_tbl[products] where $sql_tbl[featured_products].storefrontid=$current_storefront AND $sql_tbl[featured_products].productid=$sql_tbl[products].productid AND $sql_tbl[featured_products].categoryid='$f_cat' order by $sql_tbl[featured_products].product_order");
+} else {
+	$products = func_query ("SELECT $sql_tbl[featured_products].productid, $sql_tbl[products].product, $sql_tbl[featured_products].product_order, $sql_tbl[featured_products].avail from $sql_tbl[featured_products], $sql_tbl[products] where $sql_tbl[featured_products].productid=$sql_tbl[products].productid AND $sql_tbl[featured_products].categoryid='$f_cat' order by $sql_tbl[featured_products].product_order");
 }
 
+$smarty->assign ("subcategories", $products);
+$smarty->assign ("f_cat", $f_cat);
 
+$smarty->assign("main","product_verification");
 
-if($active_modules["Brands"])
-    include $xcart_dir."/modules/Brands/customer_brands_list.php";
-else
-	func_header_location("home.php");
-
-#
-##
-###
-if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("B");
-}
-###
-##
-#
-
-# Assign the current location line
-$smarty->assign("location", $location);
-
-func_display("customer/home.tpl",$smarty);
 ?>

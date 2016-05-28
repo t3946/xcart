@@ -1,5 +1,5 @@
 <?php /* MODIFIED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php /* MODIFIED: random:17710_17631 [2009 Mar 26 09:25][Custom development ("Shipping quote" functionality and other modifications) + Other] */ ?>
 <?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
@@ -77,7 +77,7 @@ if (!empty($orderids) && $_GET["mode"] == "order_message") {
 ###
 //	if ($order_data["order"]["paymentid"] != "4"){
 		# 4 - Phone Ordering
-		AB_Goal_Hit(array("1","2", "3", "4", "5", "6"), $orders[0]["order"]["orderid"]);
+		AB_Goal_Hit(array("1","2", "3", "4", "5", "6", "9"), $orders[0]["order"]["orderid"]);
 //	}
 ###
 
@@ -1344,6 +1344,9 @@ elseif ($mode == "checkout" && !empty($paymentid) && !$func_is_cart_empty) {
 	$smarty->assign("payment_data",$payment_data);
 	$smarty->assign("userinfo",$userinfo);
 	$smarty->assign("main","checkout");
+
+	x_session_register("customer_notes");
+	$smarty->assign("customer_notes",$customer_notes);
 
 	$location[] = array(func_get_langvar_by_name("lbl_payment_details"), "");
 }

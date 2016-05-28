@@ -271,6 +271,11 @@ else
 
 if (!empty($product_owner)) {
 	$provider_info = func_query_first("SELECT login, title, firstname, lastname FROM $sql_tbl[customers] WHERE login='$product_owner' AND usertype IN ('P','A')");
+
+	if (empty($provider_info)) {
+		$provider_info['login'] = $product_owner;
+	}
+
 	$smarty->assign("provider_info", $provider_info);
 }
 
@@ -880,21 +885,42 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			$query_data['product_froogle'] = $product_froogle;
 		}
 		if (!$is_variant) {
-			$query_data['weight'] = $weight;
+			//if (empty($lock_product_weight))
+				$query_data['weight'] = $weight;
+			//if (empty($lock_shipping_weight))
+				$query_data['shipping_weight'] = $shippingweight;
 //			$query_data['avail'] = 0;/*$r_avail;*/
 			$query_data['r_avail'] = $r_avail;
 		}
-		
-        if (isset($dimensionx) && isset($dimensiony) && isset($dimensionz)) {
-//			$dimensions = [ $dimensionx, $dimensiony, $dimensionz ];
-			$dimensions = array( $dimensionx, $dimensiony, $dimensionz );
-			if (count($dimensions) >= 3) {
-				rsort($dimensions);
-				$query_data['dim_x'] = $dimensions[0];
-				$query_data['dim_y'] = $dimensions[1];
-				$query_data['dim_z'] = $dimensions[2];
+		if (empty($dim_lock)) {
+			if (isset($dimensionx) && isset($dimensiony) && isset($dimensionz)) {
+	//			$dimensions = [ $dimensionx, $dimensiony, $dimensionz ];
+				$dimensions = array( $dimensionx, $dimensiony, $dimensionz );
+				if (count($dimensions) >= 3) {
+					rsort($dimensions);
+					$query_data['dim_x'] = $dimensions[0];
+					$query_data['dim_y'] = $dimensions[1];
+					$query_data['dim_z'] = $dimensions[2];
+				}
 			}
 		}
+		if (empty($shipping_dim_lock)) {
+			if (isset($dimensionshipx) && isset($dimensionshipy) && isset($dimensionshipx)) {
+				$dimensionsshipping = array($dimensionshipx, $dimensionshipy, $dimensionshipz);
+				if (count($dimensionsshipping) >= 3) {
+					rsort($dimensionsshipping);
+					$query_data['shipping_dim_x'] = $dimensionsshipping[0];
+					$query_data['shipping_dim_y'] = $dimensionsshipping[1];
+					$query_data['shipping_dim_z'] = $dimensionsshipping[2];
+				}
+			}
+		}
+
+		$query_data['weight_lock'] = (!empty($lock_product_weight))?"Y":"N";
+		$query_data['shipping_weight_lock'] = (!empty($lock_shipping_weight))?"Y":"N";
+		$query_data['dim_lock'] = (!empty($lock_product_dimension))?"Y":"N";
+		$query_data['shipping_dim_lock'] = (!empty($lock_shipping_dimension))?"Y":"N";
+
 		func_array2update("products", $query_data, "productid = '$productid'");
 
 #
@@ -1434,6 +1460,20 @@ $product_info["count_shipping_rates_for_canada"] = func_query_first_cell($qqq="S
 ##
 #
 
+include_once $xcart_dir."/include/class/classProducts.php";
+$classProduct = new classProducts();
+if ($product_info['clone_parent_productid'] > 0) {
+	$aParentProduct = $classProduct->getProductInfo($product_info['clone_parent_productid']);
+	$product_info["parent_product"] = $aParentProduct;
+} else {
+	$aChildProducts = $classProduct->getChildProducts($product_info['productid']);
+	if (isset($aChildProducts) && !empty($aChildProducts)) {
+		$product_info["child_products"] = $aChildProducts;
+	}
+}
+
+unset($classProduct);
+unset($aParentProduct);
 
 $smarty->assign("product", $product_info);
 $smarty->assign("productid", $product_info["productid"]);

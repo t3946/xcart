@@ -196,7 +196,21 @@
 </td>
 <td><a href="javascript: void(0);" onclick="javascript: p_f_add_upload_row(1000);"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a></td>
 </tr>
-
+	{if  $product.clone_parent_productid > 0}
+		<tr>
+			<td colspan="3"><p style="border: 1px solid threedlightshadow; background-color: #f4cccc; padding:4px;">This product is cloned from {$product.parent_product.productcode}</p></td>
+		</tr>
+	{/if}
+	{if $product.child_products}
+		<tr>
+			<td colspan="3"><p style="border: 1px solid threedlightshadow; background-color: #f4cccc; padding:4px;">This product is parent for
+					{foreach from=$product.child_products item=child name=childproducts}
+						{$child.productcode}{if !$smarty.foreach.childproducts.last},&nbsp;{/if}
+					{/foreach}
+				</p>
+			</td>
+		</tr>
+	{/if}
 <tr id="p_f_upload_alt_row_1000">
 <td>{$lng.lbl_alt_text_file_descr}</td>
 <td><input type="text" size="80" name="alt[1000]" value="" id="alt_1000" /></td>
@@ -311,7 +325,21 @@
 	</td>
 </tr>
 {/section}
-
+	{if  $product.clone_parent_productid > 0}
+		<tr>
+			<td colspan="8"><p style="border: 1px solid threedlightshadow; background-color: #f4cccc; padding:4px;">This product is cloned from {$product.parent_product.productcode}</p></td>
+		</tr>
+	{/if}
+	{if $product.child_products}
+		<tr>
+			<td colspan="8"><p style="border: 1px solid threedlightshadow; background-color: #f4cccc; padding:4px;">This product parent for
+					{foreach from=$product.child_products item=child name=childproducts}
+						{$child.productcode}{if !$smarty.foreach.childproducts.last},&nbsp;{/if}
+					{/foreach}
+				</p>
+			</td>
+		</tr>
+	{/if}
 <tr>
 	{if $geid ne ''}<td width="15" class="TableSubHead">&nbsp;</td>{/if}
 	<td colspan="6">

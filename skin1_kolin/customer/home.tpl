@@ -146,39 +146,39 @@ window.attachEvent("onload", anchor_fix);
 
 	function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter){
 
-                var load_ajax_sections_arr = load_ajax_sections.split(',');
-                var count_ajax_sections = load_ajax_sections_arr.length;
-		var load_ajax_carousel_flag;
+        var load_ajax_sections_arr = load_ajax_sections.split(',');
+        var count_ajax_sections = load_ajax_sections_arr.length;
+        var load_ajax_carousel_flag;
 
-                load_ajax_sections_arr.forEach(function(section_name, i, load_ajax_sections_arr) {
+        load_ajax_sections_arr.forEach(function (section_name, i, load_ajax_sections_arr) {
 
-                        section_name.trim();
+            section_name.trim();
 
-                        if ((ajax_counter - 1) == i){
+            if ((ajax_counter - 1) == i) {
 //                                alert(section_name);
 
-				load_ajax_carousel_flag = true;
+                load_ajax_carousel_flag = true;
 
-				if (section_name == "similar_products"){
+                if (section_name == "similar_products") {
 
-					var products_also_bought_with_this_product_style_display;
-					products_also_bought_with_this_product_style_display = $("#products_also_bought_with_this_product").css("display");
+                    var products_also_bought_with_this_product_style_display;
+                    products_also_bought_with_this_product_style_display = $("#products_also_bought_with_this_product").css("display");
 
-					if (products_also_bought_with_this_product_style_display == "block"){
-						load_ajax_carousel_flag = false;
-					}
-				}
+                    if (products_also_bought_with_this_product_style_display == "block") {
+                        load_ajax_carousel_flag = true;
+                    }
+                }
 
-				if (load_ajax_carousel_flag){
-	                                func_load_ajax_carousel_products(section_name);
-				}
-                        }
-                });
+                if (load_ajax_carousel_flag) {
+                    func_load_ajax_carousel_products(section_name);
+                }
+            }
+        });
 
 //$("#test_text").val(ajax_counter);
 
-		ajax_counter++;
-                setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1100);
+        ajax_counter++;
+        setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1100);
 	}
 
         function func_load_ajax_carousel_products(section_name){
@@ -832,6 +832,15 @@ var element13 = document.createElement("script");
 element13.src = "//www.googleadservices.com/pagead/conversion.js";
 document.body.appendChild(element13);
 
+{/literal}
+{if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search" || 1==1}
+{literal}
+    var element14 = document.createElement("script");
+    element14.src = "{/literal}{$SkinDir}{literal}/ajax_notify_by_email.js";
+    document.body.appendChild(element14);
+{/literal}
+{/if}
+{literal}
 }
 if (window.addEventListener)
     window.addEventListener("load", downloadJSAtOnload, false);

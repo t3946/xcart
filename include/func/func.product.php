@@ -1083,13 +1083,19 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 		}
 	}
 
+		global $xcart_dir;
+		include_once $xcart_dir."/include/class/classProducts.php";
+		$classProduct = new classProducts();
+		$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
+		unset($classProduct);
 
-        $pos = strpos($product['productcode'], '-');
+        /*$pos = strpos($product['productcode'], '-');
         $mpn = '';
         if ($pos && is_numeric($pos) && $pos + 1 != strlen($product['productcode'])) {
   	      $mpn = substr($product['productcode'], $pos + 1);
-        }
-	$product['mpn'] = $mpn;
+        }*/
+
+	    $product['mpn'] = $mpn;
 
 	if (!empty($product["d_website_search_for_sku_url"]) && !empty($mpn) && ($current_area != 'C' && !empty($current_area))){
 		$product["d_website_search_for_sku_url"] = str_replace("{{mpn}}", $mpn, $product["d_website_search_for_sku_url"]);
@@ -1476,7 +1482,7 @@ function func_get_product_link_sf($productid, $sfid = 0, $type = 'all') {
         } else {
             $link = 'http://' . $sf_domain;
         }
-        $link_adm = 'http://' . MAIN_SF_DOMAIN;
+        $link_adm = 'https://' . MAIN_SF_DOMAIN;
     }
 
     $result = array();
@@ -1545,10 +1551,15 @@ function func_generate_discounts($productids, $tick = 0) {
 		$i = 0;
 	}
 
-        $prs = func_query_hash("SELECT p.productid, p.discount_slope, p.discount_table, pr.price, p.min_amount FROM $sql_tbl[products] as p LEFT JOIN $sql_tbl[pricing] as pr ON p.productid = pr.productid AND pr.membershipid = '0' AND pr.quantity = 1 AND pr.variantid = '0'WHERE p.productid IN ('".implode("','",$productids)."')", "productid");
+        $prs = func_query_hash("SELECT p.productid, p.discount_slope, p.discount_table, pr.price, cidev_get_base_xcart_price(p.cost_to_us) as base_price, p.min_amount FROM $sql_tbl[products] as p LEFT JOIN $sql_tbl[pricing] as pr ON p.productid = pr.productid AND pr.membershipid = '0' AND pr.quantity = 1 AND pr.variantid = '0'WHERE p.productid IN ('".implode("','",$productids)."')", "productid");
 
        
         foreach ($prs as $productid => $p) {
+
+			if (empty($p[0]["price"])) {
+				db_query("REPLACE $sql_tbl[pricing] SET price = ".$p[0]["base_price"].", productid = $productid, quantity = 1, variantid = 0, membershipid = 0");
+				$p[0]["price"] = $p[0]["base_price"];
+			}
 
 	    if ($tick > 0){
 		$i = 0;

@@ -613,25 +613,13 @@ if (!$curl_err){
 $geoip_address = "";
 $customer_ip = $order["extra"]["ip"];
 $geoip_state = "";
-if (!empty($customer_ip)){
-        $customer_ip_arr = explode(".", $customer_ip);
-        if (!empty($customer_ip_arr) && is_array($customer_ip_arr)){
-                $customer_ip_INTEGER = $customer_ip_arr[0]*16777216 + $customer_ip_arr[1]*65536 + $customer_ip_arr[2]*256 + $customer_ip_arr[3];
-        }
 
-        if (!empty($customer_ip_INTEGER)){
-                $locId = func_query_first_cell("SELECT locId FROM $sql_tbl[geo_litecity_blocks] WHERE $customer_ip_INTEGER BETWEEN startIpNum AND endIpNum LIMIT 1");
 
-                if (!empty($locId)){
-                        $geo_litecity_location = func_query_first("SELECT * FROM $sql_tbl[geo_litecity_location] WHERE locId='".addslashes($locId)."'");
+$geo_litecity_location = func_get_geoip_locations($customer_ip);
+if (!empty($geo_litecity_location)) {
+    $geoip_state = $geo_litecity_location["region"];
 
-                        if (!empty($geo_litecity_location)){
-				$geoip_state = $geo_litecity_location["region"];
-
-				$geoip_address = $geo_litecity_location["country"].", ".$geo_litecity_location["region"].", ".$geo_litecity_location["city"].", ".$geo_litecity_location["postalCode"];
-                        }
-                }
-        }
+    $geoip_address = $geo_litecity_location["country"].", ".$geo_litecity_location["region"].", ".$geo_litecity_location["city"].", ".$geo_litecity_location["postalCode"];
 }
 
 $links_to_ordered_products = '';

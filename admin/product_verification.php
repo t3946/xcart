@@ -1,9 +1,8 @@
-<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (����� ��� �������� ����������� "��������������" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
 | X-Cart                                                                      |
-| Copyright (c) 2001-2009 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
 | All rights reserved.                                                        |
 +-----------------------------------------------------------------------------+
 | PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
@@ -26,50 +25,34 @@
 | THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
 |                                                                             |
 | The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2009           |
+| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
 | Ruslan R. Fazliev. All Rights Reserved.                                     |
 +-----------------------------------------------------------------------------+
 \*****************************************************************************/
 
 #
-# brands.php, random
+# $Id: product_verification.php,v 1.0 2016/01/12 10:59:57 mclap Exp $
 #
+
+define("IS_MULTILANGUAGE", true);
+//define('USE_TRUSTED_POST_VARIABLES',1);
+//$trusted_post_variables = array("descr","cart_manufact_text_displayed", "d_specific_instructions", "d_distributor_return_policy", "d_message_body_14", "d_instructions_to_order_entry_operator", "mess_body", "d_search_keyphrase_for_reconciliation", "d_dispatch_instructions");
 
 require "./auth.php";
+require $xcart_dir."/include/security.php";
 
-$brandid = abs(intval($brandid));
-
-x_session_register("notify_email");
-$smarty->assign("notify_email", $notify_email);
-
-if (
-    isset($brandid)
-    && !empty($brandid)
-    && $config['SEO']['clean_urls_enabled'] == 'Y'
-    && !defined("DISPATCHED_REQUEST")
-) {
-    func_clean_url_permanent_redirect('M', $brandid);
-}
-
-
-
-if($active_modules["Brands"])
-    include $xcart_dir."/modules/Brands/customer_brands_list.php";
+if(empty($active_modules['Product_Verification']))
+	func_header_location ("error_message.php?access_denied&id=25");
 else
-	func_header_location("home.php");
+	include $xcart_dir."/modules/Product_Verification/product_verification.php";
 
-#
-##
-###
-if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("B");
-}
-###
-##
-#
+$smarty->assign("single_mode", $single_mode);
+
 
 # Assign the current location line
 $smarty->assign("location", $location);
 
-func_display("customer/home.tpl",$smarty);
+@include $xcart_dir."/modules/gold_display.php";
+func_display("admin/home.tpl",$smarty);
+
 ?>

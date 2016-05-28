@@ -349,7 +349,7 @@ $smarty->assign('statuses', $statuses);
 ##
 #
 
-if (!empty($active_modules['CIDEV_Best_Search_Filter'])) {
+if (!empty($active_modules['CIDEV_Best_Search_Filter']) && isset($clean_url_data) && in_array($clean_url_data['resource_type'], array('C','M'))) {
 	$cidev_filters_tree = func_cidev_filters_tree(true);
 	$smarty->assign("cidev_filters_tree", $cidev_filters_tree);
 
@@ -392,6 +392,12 @@ $variant_id_for_point6 = Get_AB_Variant(6);
 x_session_save("variant_id_for_point6");
 $smarty->assign("variant_id_for_point6", $variant_id_for_point6);
 
+x_session_register('variant_id_for_point9');
+$variant_id_for_point9 = Get_AB_Variant(9);
+x_session_save("variant_id_for_point9");
+$smarty->assign("variant_id_for_point9", $variant_id_for_point9);
+
+
 //$smarty->assign("pointid_ab_testing_arr", $pointid_ab_testing_arr); // try to move to func_display
 ###
 ##
@@ -432,46 +438,10 @@ if (!empty($config["Appearance"]["Google_Trusted_Store_ID"])){
 ##
 #
 
-
-//if (empty($login) && $mode=="checkout" && empty($userinfo["s_country"])){
-  if (!empty($CLIENT_IP)){
-        $CLIENT_IP_arr = explode(".", $CLIENT_IP);
-        if (!empty($CLIENT_IP_arr) && is_array($CLIENT_IP_arr)){
-                $CLIENT_IP_INTEGER = $CLIENT_IP_arr[0]*16777216 + $CLIENT_IP_arr[1]*65536 + $CLIENT_IP_arr[2]*256 + $CLIENT_IP_arr[3];
-        }
-
-        if (!empty($CLIENT_IP_INTEGER)){
-                $locId = func_query_first_cell("SELECT locId FROM $sql_tbl[geo_litecity_blocks] WHERE $CLIENT_IP_INTEGER BETWEEN startIpNum AND endIpNum LIMIT 1");
-
-                if ($geo_litecity_location_test == "Y"){
-
-                        if (!empty($geo_litecity_location_test_locId)){
-                                $locId = addslashes($geo_litecity_location_test_locId);
-//                              $locId = "1087";  // New York
-                        }
-                }
-
-                if (!empty($locId)){
-                        $geo_litecity_location = func_query_first("SELECT * FROM $sql_tbl[geo_litecity_location] WHERE locId='".addslashes($locId)."'");
-
-                        if (!empty($geo_litecity_location)){
-
-				if (!empty($geo_litecity_location["country"]) && !empty($geo_litecity_location["region"])){
-					$geo_litecity_location["phone"] = func_query_first_cell("SELECT phone FROM $sql_tbl[states] WHERE country_code='$geo_litecity_location[country]' AND code='$geo_litecity_location[region]'");
-				}
-
-                                $smarty->assign('geo_litecity_location', $geo_litecity_location);
-
-                                if ($geo_litecity_location_debug == "Y"){
-                                        x_load("debug");
-                                        func_print_r($geo_litecity_location);
-                                }
-                        }
-                }
-        }
-  }
-
-//}
+$geo_litecity_location = func_get_geoip_locations($CLIENT_IP, $geo_litecity_location_debug);
+if (!empty($geo_litecity_location)) {
+	$smarty->assign('geo_litecity_location', $geo_litecity_location);
+}
 
 func_detect_working_hours();
 
