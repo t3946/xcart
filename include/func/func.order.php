@@ -998,22 +998,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 ##
 ###
 	$ip_info = $CLIENT_IP;
-	$CLIENT_IP_arr = explode(".", $CLIENT_IP);
-	if (!empty($CLIENT_IP_arr) && is_array($CLIENT_IP_arr)){
-                                $CLIENT_IP_INTEGER = $CLIENT_IP_arr[0]*16777216 + $CLIENT_IP_arr[1]*65536 + $CLIENT_IP_arr[2]*256 + $CLIENT_IP_arr[3];
-	}
-
-	if (!empty($CLIENT_IP_INTEGER)){
-                                $locId = func_query_first_cell("SELECT locId FROM $sql_tbl[geo_litecity_blocks] WHERE $CLIENT_IP_INTEGER BETWEEN startIpNum AND endIpNum LIMIT 1");
-
-                                if (!empty($locId)){
-                                        $geo_litecity_location = func_query_first("SELECT * FROM $sql_tbl[geo_litecity_location] WHERE locId='".addslashes($locId)."'");
-
-                                        if (!empty($geo_litecity_location)){
-
-                                                $ip_info .= " (".$geo_litecity_location["country"].", ".$geo_litecity_location["region"].", ".$geo_litecity_location["city"].", ".$geo_litecity_location["postalCode"].")";
-                                        }
-                                }
+	$geo_litecity_location = func_get_geoip_locations($CLIENT_IP);
+	if (!empty($geo_litecity_location)) {
+		$ip_info .= " (".$geo_litecity_location["country"].", ".$geo_litecity_location["region"].", ".$geo_litecity_location["city"].", ".$geo_litecity_location["postalCode"].")";
 	}
 
 	$extras['ip_info'] = $ip_info;
