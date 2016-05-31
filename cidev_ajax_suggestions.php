@@ -49,6 +49,7 @@ if ($REQUEST_METHOD == 'POST') {
 		}
 	}
 
+	$sGoogleAnaliticsParam = "";
 
 	if (
 		$section_name == "products_also_bought_with_this_product"  || 
@@ -91,13 +92,22 @@ Order By SP.`position` desc";
 
 		$pids = func_query($p_query);
 
+		switch ($section_name) {
+			case 'products_also_bought_with_this_product': $sGoogleAnaliticsParam = 'customer_also_bought_carousel';
+				break;
+			case 'related_products': $sGoogleAnaliticsParam = 'related_products_carousel';
+				break;
+			case 'recently_viewed_products': $sGoogleAnaliticsParam = 'recently_viewed_carousel';
+				break;
+		}
+
 	}
 	elseif ($section_name == "similar_products"){
 
-		$iModeSearch = 2;
 		$classElastic = new classElasticSearch($config["ElasticSearch_options"],$site_domain);
 		$classElastic->setSource("*._id");
 		$classElastic->setType("product");
+		$classElastic->setSize(30);
 		$classElastic->setProductId($productid);
 		x_session_register("variant_id_for_point9");
 		switch ($variant_id_for_point9) {
@@ -118,6 +128,7 @@ Order By SP.`position` desc";
 						}
 					}
 				}
+				$sGoogleAnaliticsParam = 'similar_products_carousel';
 			break;
 			case 1:
 				$classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
@@ -127,6 +138,7 @@ Order By SP.`position` desc";
 						$pids[]["needed_resource_id"] = $sValue["_id"];
 					}
 				}
+				$sGoogleAnaliticsParam = 'similar_products_all_carousel';
 				break;
 			case 2:
 				$classBrands = new classBrands();
@@ -139,6 +151,7 @@ Order By SP.`position` desc";
 					}
 				}
 				unset($aBrand);
+				$sGoogleAnaliticsParam = 'similar_products_other_brands_carousel';
 				break;
 
 		}
@@ -147,6 +160,8 @@ Order By SP.`position` desc";
 
 
 	}
+
+
 
 ########################
 //if ($section_name == "products_also_bought_with_this_product"){
@@ -196,7 +211,7 @@ Order By SP.`position` desc";
 
 				$N_key = $k + 1;
 				$products_str .= '"N_key": "'.$N_key.'",';
-				if (!is_null($variant_id_for_point9)) $products_str .= '"variant_id": "'.$variant_id_for_point9.'",';
+				if (!empty($sGoogleAnaliticsParam)) $products_str .= '"ga_param": "'.$sGoogleAnaliticsParam.'",';
 
 				$products_str .= '"title": "'.addslashes($v["product"]).'"';
 			$products_str .= '}';

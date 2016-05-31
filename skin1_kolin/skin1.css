@@ -3970,8 +3970,8 @@ html.overflow-hidden #scrollTop {
     display: block;
 }
 
-.jcarousel-control-prev.inactive,
-.jcarousel-control-next.inactive {
+.jcarousel-control-prev.inactive, .jcarousel-control-prev.disabled,
+.jcarousel-control-next.inactive, .jcarousel-control-next.disabled {
     opacity: .5;
     cursor: default;
 }
@@ -4196,4 +4196,29 @@ a.jcarousel-control-next:hover {
         font-size: 20px;
         font-weight: bold;
         color: #000000;
+}
+
+.pages {
+	list-style: outside none none;
+	margin: 20px 0;
+	padding: 0;
+	text-align: center;
+}
+.pages li {
+	background: #ffffff none repeat scroll 0 0;
+	border-radius: 10px;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2) inset;
+	cursor: pointer;
+	display: inline-block;
+	height: 14px;
+	margin: 0 4px;
+	overflow: hidden;
+	text-indent: -999px;
+	width: 14px;
+}
+.pages li:hover {
+	background: #aaaaaa none repeat scroll 0 0;
+}
+.pages li.active {
+	background: #666666 none repeat scroll 0 0;
 }
