@@ -917,6 +917,89 @@ function openPopUp()
 {/if}
 {* --- viralmarketingbomb --- *}
 
+{if (($main eq "product") && $config.Appearance.Enable_desktop_notifications_on_product_page eq "Y")}
+    <script type="text/javascript">
+        {literal}
+        var counter = 0;
+        var notifyTimeOut = {/literal}{$config.Appearance.Desktop_notification_timeout}{literal} * 1000;
+        var sOriginalTitle = document.title;
+        var fireTitleChange = function(param){
+            switch (counter) {
+                case 0: document.title = "Look at the suggested similar products";
+                    break;
+                case 1: document.title = sOriginalTitle;
+                    break;
+            }
+            counter++;
+            if (counter > 1) counter = 0;
+        };
+        var interval_id;
+        var timer_id;
+        var notificationEnable = true;
+
+
+        $(window).on("blur focus", function(e) {
+            var prevType = $(this).data("prevType");
+
+            if (prevType != e.type) {   //  reduce double fire issues
+                switch (e.type) {
+                    case "blur":
+                        if (!interval_id) {
+                            timer_id = setTimeout(function () {
+                                interval_id = setInterval(fireTitleChange, 3000);
+                                var el = $("#products_also_bought_with_this_product, #related_products, #similar_products, #recently_viewed_products").filter(':visible:first');
+                                console.log(el);
+                                var elOffset = el.offset().top;
+                                var elHeight = el.height();
+                                var windowHeight = $(window).height();
+                                var offset;
+                                if (elHeight < windowHeight) {
+                                    offset = elOffset - ((windowHeight / 2) - (elHeight / 2));
+                                }
+                                else {
+                                    offset = elOffset;
+                                }
+
+                                $('html,body').animate({
+                                            scrollTop: offset},
+                                        'fast');
+
+
+                                Notification.requestPermission( newMessage );
+
+                                function DisableNotification () {notificationEnable = false; }
+                                function newMessage(permission) {
+
+                                    if( permission != "granted" || notificationEnable == false) return false;
+                                    var notify = new Notification("{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}", {
+                                        tag: "attention-notify",
+                                        body: "Look at the suggested similar products",
+                                        icon: "{/literal}{$product.tmbn_url}{literal}"
+                                    });
+                                    notify.onclick = function(event) { DisableNotification(); };
+                                    notify.onclose = function(event) { DisableNotification(); };
+                                }
+
+                            },notifyTimeOut);
+                        }
+                        break;
+                    case "focus":
+                        clearInterval(interval_id);
+                        clearTimeout(timer_id);
+                        interval_id = 0;
+                        timer_id = 0;
+                        document.title = sOriginalTitle;
+                        break;
+                }
+            }
+
+            $(this).data("prevType", e.type);
+        })
+        {/literal}
+
+    </script>
+{/if}
+
 </body>
 </html>
 {/if}
