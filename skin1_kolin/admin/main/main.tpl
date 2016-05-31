@@ -178,15 +178,17 @@
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
 <td align="right"><b>TOTAL REFUNDED:</b></td>
-{section name=period loop=$total_refunded}
-<td align="center">{include file="currency.tpl" value=$total_refunded[period]}</td>
-{/section}
+{foreach name=period key=key item=item from=$total_refunded}
+<td align="center">{include file="currency.tpl" value=$item.value}</td>
+<td align="center">{$item.count}</td>
+{/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
 <td align="right"><b>Refund rate:</b></td>
 {section name=period loop=$refund_rate}
 <td align="center">{$refund_rate[period]} %</td>
+<td>&nbsp;</td>
 {/section}
 </tr>
 

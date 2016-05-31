@@ -108,18 +108,21 @@ where OG.cb_status IN ('H','V','3','R','P','AP')
 */
 
     $refund_rate_and_total_net = func_query_first("
-Select 
-        SUM(RG.total_net) as RG_total, (SUM(RG.total_net)/SUM(OG.total_net))*100 as refund_rate
-        
-From xcart_order_groups OG
-        inner join xcart_orders O ON O.orderid = OG.orderid and O.date>='$start_date' AND O.date<='$curtime'
-        left join xcart_refund_groups RG ON RG.orderid = O.orderid
-where OG.cb_status IN ('H','V','3','R','P','AP')
-    ");
+					SELECT SUM(RG.total_net) AS RG_total,
+						   (SUM(RG.total_net) / SUM(OG.total_net)) * 100 AS refund_rate, count(distinct O.orderid) as order_count
+					  FROM $sql_tbl[order_groups] OG
+						   INNER JOIN $sql_tbl[orders] O
+							  ON O.orderid = OG.orderid AND
+								 O.date >= '$start_date' AND
+								 O.date <= '$curtime'
+						   LEFT JOIN xcart_refund_groups RG ON RG.orderid = O.orderid
+					 WHERE OG.cb_status IN ('H','V','3','R','P','AP')");
 
     $refund_rate[] = price_format($refund_rate_and_total_net["refund_rate"]);
 
-    $total_refunded[] = price_format($refund_rate_and_total_net["RG_total"]);
+	$refund_order_count[] = $refund_rate_and_total_net["order_count"];
+
+    $total_refunded[] = array('value' => price_format($refund_rate_and_total_net["RG_total"]), 'count' => $refund_rate_and_total_net["order_count"]);
 
 //func_print_r($refund_rate_and_total_net);
 
