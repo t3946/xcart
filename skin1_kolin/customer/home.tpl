@@ -57,6 +57,7 @@
 {if ($main eq "product")}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
+<script src="{$SkinDir}/js/sly.min.js" type="text/javascript"></script>
 {/if}
 
 {if ($main eq "product")}
@@ -211,10 +212,11 @@ window.attachEvent("onload", anchor_fix);
 		$("#"+section_name).show();
 	}
 
-//	var jcarousel = $('.jcarousel').jcarousel();
+
+
+/*
 	var jcarousel = $('#jcarousel_'+section_name).jcarousel();
 
-//	$('.jcarousel-control-prev')
 	$('#jcarousel-control-prev_'+section_name)
             .on('jcarouselcontrol:active', function() {
                 $(this).removeClass('inactive');
@@ -226,7 +228,6 @@ window.attachEvent("onload", anchor_fix);
                 target: '-=1'
             });
 
-//	$('.jcarousel-control-next')
 	$('#jcarousel-control-next_'+section_name)
             .on('jcarouselcontrol:active', function() {
                 $(this).removeClass('inactive');
@@ -237,6 +238,7 @@ window.attachEvent("onload", anchor_fix);
             .jcarouselControl({
                 target: '+=1'
             });
+*/
 
 
 
@@ -255,8 +257,8 @@ window.attachEvent("onload", anchor_fix);
 		} else {
 			a_href = 'product.php?productid='+ this.productid;
 		}
-
-                html += '<li>'+
+        ga_page_name = this.ga_param;
+                html += '<li class="active">'+
 			  '<div style="text-align: center;">'+
 			  '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>'+
 			  '<br />'+ '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;">' + this.title + '</a>'+
@@ -272,12 +274,56 @@ window.attachEvent("onload", anchor_fix);
 //	jcarousel
 //	  .html(html);
 
-	$('#jcarousel_'+section_name).html(html);
+	$('#jcarousel_'+section_name).html(html).parent().after('<ul class="pages"></ul>');
+
+
 
 	// Reload carousel
 //	jcarousel
 //	  .jcarousel('reload');
-	$('#jcarousel_'+section_name).jcarousel('reload');
+	//$('#jcarousel_'+section_name).jcarousel('reload');
+                                                    jQuery(function ($) {
+                                                        'use strict';
+
+                                                        // -------------------------------------------------------------
+                                                        //   Basic Navigation
+                                                        // -------------------------------------------------------------
+                                                        (function () {
+                                                            var $frame = $('#jcarousel_'+section_name);
+                                                            var $slidee = $frame.children('ul').eq(0);
+                                                            var $wrap = $frame.parent().parent();
+
+                                                            // Call Sly on frame
+                                                            $frame.sly({
+                                                                horizontal: 1,
+                                                                itemNav: 'basic',
+                                                                smart: 1,
+                                                                activateOn: 'click',
+                                                                mouseDragging: 1,
+                                                                touchDragging: 1,
+                                                                releaseSwing: 1,
+                                                                startAt: 0,
+                                                                scrollBar: $wrap.find('.scrollbar'),
+                                                                scrollBy: 0,
+                                                                pagesBar: $wrap.find('.pages'),
+                                                                activatePageOn: 'click',
+                                                                speed: 300,
+                                                                elasticBounds: 1,
+                                                                easing: 'easeOutExpo',
+                                                                dragHandle: 1,
+                                                                dynamicHandle: 1,
+                                                                clickBar: 1,
+
+                                                                // Buttons
+                                                                prevPage: $wrap.find('.jcarousel-control-prev'),
+                                                                nextPage: $wrap.find('.jcarousel-control-next')
+                                                            });
+
+                                                        }());
+
+                                                    });
+
+
 
 /* ------------------------------------------------------------------------------------- */
 
