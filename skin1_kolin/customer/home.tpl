@@ -57,9 +57,9 @@
 {if ($main eq "product")}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
-<script src="{$SkinDir}/js/sly.min.js" type="text/javascript"></script>
-{/if}
 
+{/if}
+<script src="{$SkinDir}/js/sly.min.js" type="text/javascript"></script>
 {if ($main eq "product")}
 {* igor_async *}
 <script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
@@ -337,10 +337,10 @@ window.attachEvent("onload", anchor_fix);
 
                                 cidev_xmlHttp.open('POST','cidev_ajax_suggestions.php?rand='+tmp_rand,true);
                                 cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
+                                //cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
                                 cidev_xmlHttp.setRequestHeader('Cache-Control','no-cache');
                                 cidev_xmlHttp.setRequestHeader('Cache-Control','no-store');
-                                cidev_xmlHttp.setRequestHeader('Connection','close');
+                                //cidev_xmlHttp.setRequestHeader('Connection','close');
                                 cidev_xmlHttp.send(cidev_parameters);
                         }
                         else {
@@ -934,7 +934,7 @@ function openPopUp()
         var sOriginalTitle = document.title;
         var fireTitleChange = function(param){
             switch (counter) {
-                case 0: document.title = "Look at the suggested similar products";
+                case 0: document.title = "{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}";
                     break;
                 case 1: document.title = sOriginalTitle;
                     break;
@@ -944,8 +944,24 @@ function openPopUp()
         };
         var interval_id;
         var timer_id;
+        var notifytimer;
         var notificationEnable = true;
+        var fireDeskTopNotify = function () {
+            Notification.requestPermission( newMessage );
 
+            function DisableNotification () {notificationEnable = false; }
+            function newMessage(permission) {
+
+                if( permission != "granted" || notificationEnable == false) return false;
+                var notify = new Notification("{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}", {
+                    tag: "attention-notify",
+                    body: "Look at the suggested similar products",
+                    icon: "{/literal}{$product.tmbn_url}{literal}"
+                });
+                notify.onclick = function(event) { DisableNotification(); window.focus(); this.close(); };
+                notify.onclose = function(event) { DisableNotification(); };
+            }
+        };
 
         $(window).on("blur focus", function(e) {
             var prevType = $(this).data("prevType");
@@ -973,21 +989,8 @@ function openPopUp()
                                             scrollTop: offset},
                                         'fast');
 
+                                notifytimer = setTimeout(fireDeskTopNotify, 1000);
 
-                                Notification.requestPermission( newMessage );
-
-                                function DisableNotification () {notificationEnable = false; }
-                                function newMessage(permission) {
-
-                                    if( permission != "granted" || notificationEnable == false) return false;
-                                    var notify = new Notification("{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}", {
-                                        tag: "attention-notify",
-                                        body: "Look at the suggested similar products",
-                                        icon: "{/literal}{$product.tmbn_url}{literal}"
-                                    });
-                                    notify.onclick = function(event) { DisableNotification(); };
-                                    notify.onclose = function(event) { DisableNotification(); };
-                                }
 
                             },notifyTimeOut);
                         }
@@ -995,6 +998,7 @@ function openPopUp()
                     case "focus":
                         clearInterval(interval_id);
                         clearTimeout(timer_id);
+                        clearTimeout(notifytimer);
                         interval_id = 0;
                         timer_id = 0;
                         document.title = sOriginalTitle;
