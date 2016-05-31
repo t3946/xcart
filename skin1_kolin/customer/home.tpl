@@ -57,9 +57,9 @@
 {if ($main eq "product")}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
-<script src="{$SkinDir}/js/sly.min.js" type="text/javascript"></script>
-{/if}
 
+{/if}
+<script src="{$SkinDir}/js/sly.min.js" type="text/javascript"></script>
 {if ($main eq "product")}
 {* igor_async *}
 <script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
