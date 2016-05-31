@@ -71,37 +71,43 @@ class classElasticSearch
         }
     }
 
+    private function escapeReservedCharacters ($sString) {
+        return addcslashes($sString,'#@&<>~.?+*|{}[]()\\"');
+    }
+
     public function getQuerySimilarProductsBrands ($sExcludeBrand = '') {
         $Similar_products_other_brands =
                 [
                     'filtered' => [
                         'query' => [
                             'more_like_this' => [
+                                'fields' => ['productname'],
+                                'analyzer' => 'snowball',
                                 'docs' => [[
                                     '_index' => $this->index,
                                     '_type' => $this->type,
                                     '_id' => $this->_id
                                 ]],
                                 'min_term_freq' => 1,
-                                'max_query_terms' => 12
+                                'max_query_terms' => 240
                             ]
                         ],
 
                     ]
                 ];
-        if (!empty($sExcludeBrand))
+        if (!empty($sExcludeBrand)) {
             $Similar_products_other_brands['filtered']['filter'] = [
                 'bool' => [
                     'must' => [],
                     'should' => [],
                     'must_not' => [
                         'regexp' => [
-                            'brand.brand_original' => '.*'.$sExcludeBrand.'.*'
+                            'brand.brand_original' => '.*'.$this->escapeReservedCharacters($sExcludeBrand).'.*'
                         ]
                     ]
                 ]
             ];
-
+        }
 
         return $Similar_products_other_brands;
 }
@@ -122,6 +128,13 @@ class classElasticSearch
         $this->_id = $iProductid;
     }
 
+    public function setSize($iSize = 10) {
+        $this->queryParams['size'] = $iSize;
+    }
+
+    public function setFrom($iFrom = 0) {
+        $this->queryParams['from'] = $iFrom;
+    }
 
     public function setFilterTerms($aFilterTerm){
         $this->queryParams["filter"]["terms"]["_id"] = $aFilterTerm;
