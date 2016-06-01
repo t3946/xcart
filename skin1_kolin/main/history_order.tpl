@@ -851,7 +851,7 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
     <script type="text/javascript" language="JavaScript 1.2">
 {literal}
         var delay=1800, setTimeoutConst;
-        function onTagMouseEnter (obj) {
+        function onTagMouseEnter (obj, right = 190) {
             var posiotion = $(obj).position();
             var notes = $('#block_tag_notes_desctiption');
             var tagdescr = $(obj).data('description');
@@ -859,6 +859,7 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
                 if (tagdescr != 'undefined' && tagdescr != '') {
                     notes.html(tagdescr);
                     notes.css('top', posiotion.top);
+                    notes.css('right', right);
                     notes.fadeIn( 400 );
                 } else {
                     notes.empty();
@@ -870,7 +871,7 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
             onTagMouseEnter(this);
         });
         $('#attention_tags_selected .attention_tag_selected_item').on('mouseenter', '', function(e) {
-            onTagMouseEnter(this);
+            onTagMouseEnter(this, 176);
         });
 
         $('select[name=additional_tag_status]').on('mouseleave', 'option', function(e) {
