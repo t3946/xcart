@@ -1772,3 +1772,14 @@ input.ch_disabled {
 	background-color: threedlightshadow;
 	border: 2px solid threedlightshadow;
 }
+td.borderr-black {
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
+	border-right: 1px solid #000000;
+}
+td.borderb-gray {
+	border-bottom: 1px solid #cccccc;
+}
+.TableHead .borderr-black:last-child {
+	border-right: 1px solid #cccccc;
+}

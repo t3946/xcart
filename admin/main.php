@@ -61,13 +61,15 @@ foreach($start_dates as $start_date) {
 	#
 	# Get the orders info
 	#
-    $orders['P'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders]"
+    /*$orders['P'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders]"
         . " WHERE cb_status='P' $date_condition");
     $orders['F'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders]"
         . " WHERE (cb_status='F' OR cb_status='D') $date_condition");
     $orders['I'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE cb_status='I' $date_condition");
-    $orders['Q'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE cb_status='Q' $date_condition");
-    $gross_total[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders] WHERE 1 $date_condition"));
+    $orders['Q'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE cb_status='Q' $date_condition");*/
+    $aOrderStat = func_query_first("SELECT SUM(total) as summa, count(1) as order_count FROM $sql_tbl[orders] WHERE 1 $date_condition");
+
+	$gross_total[] = array ('value' => price_format($aOrderStat['summa']), 'count' => $aOrderStat['order_count']);
 
 /*
     $authorized_total[] = price_format(func_query_first_cell("
@@ -85,10 +87,12 @@ SELECT SUM($sql_tbl[transaction_logs].transaction_total) FROM $sql_tbl[transacti
     $authorized_total[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
         . " WHERE cb_status='AP' $date_condition") - $ref_total_gross);
 */
-    $authorized_total_value = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
-        . " WHERE cb_status='AP' $date_condition") - $ref_total_gross);
+    $authorized_total_value_arr = func_query_first("SELECT SUM(total) as summa, count(1) as order_count FROM $sql_tbl[orders]"
+        . " WHERE cb_status='AP' $date_condition") ;
 
-    $authorized_total[] = $authorized_total_value;
+	$authorized_total_value = price_format($authorized_total_value_arr['summa']- $ref_total_gross);
+
+    $authorized_total[] = array ('value' => $authorized_total_value, 'count' => $authorized_total_value_arr['order_count']);
 
 
 /*
@@ -104,18 +108,20 @@ where OG.cb_status IN ('H','V','3','R','P','AP')
 */
 
     $refund_rate_and_total_net = func_query_first("
-Select 
-        SUM(RG.total_net) as RG_total, (SUM(RG.total_net)/SUM(OG.total_net))*100 as refund_rate
-        
-From xcart_order_groups OG
-        inner join xcart_orders O ON O.orderid = OG.orderid and O.date>='$start_date' AND O.date<='$curtime'
-        left join xcart_refund_groups RG ON RG.orderid = O.orderid
-where OG.cb_status IN ('H','V','3','R','P','AP')
-    ");
-
+					SELECT SUM(RG.total_net) AS RG_total,
+						   (SUM(RG.total_net) / SUM(OG.total_net)) * 100 AS refund_rate, count(distinct RG.orderid) as order_count
+					  FROM $sql_tbl[order_groups] OG
+						   INNER JOIN $sql_tbl[orders] O
+							  ON O.orderid = OG.orderid AND
+								 O.date >= '$start_date' AND
+								 O.date <= '$curtime'
+						   LEFT JOIN xcart_refund_groups RG ON RG.orderid = O.orderid
+					 WHERE OG.cb_status IN ('H','V','3','R','P','AP')");
     $refund_rate[] = price_format($refund_rate_and_total_net["refund_rate"]);
 
-    $total_refunded[] = price_format($refund_rate_and_total_net["RG_total"]);
+	$refund_order_count[] = $refund_rate_and_total_net["order_count"];
+
+    $total_refunded[] = array('value' => price_format($refund_rate_and_total_net["RG_total"]), 'count' => $refund_rate_and_total_net["order_count"]);
 
 //func_print_r($refund_rate_and_total_net);
 
@@ -123,12 +129,13 @@ where OG.cb_status IN ('H','V','3','R','P','AP')
     $total_paid[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
         . " WHERE (cb_status='P' OR dc_status='C') $date_condition") - $ref_total_gross);
 */
-    $total_paid_value = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
-        . " WHERE (cb_status='P' OR dc_status='C') $date_condition") - $ref_total_gross);
+    $total_paid_value_arr = func_query_first("SELECT SUM(total) as summa, count(1) as order_count FROM $sql_tbl[orders]"
+        . " WHERE (cb_status='P' OR dc_status='C') $date_condition");
 
-    $total_paid[] = $total_paid_value;
+	$total_paid_value = price_format($total_paid_value_arr['summa']);
+	$total_paid[] = array ('value' => $total_paid_value, 'count' => $total_paid_value_arr['order_count']);
 
-    $total_authorized_and_paid[] = $authorized_total_value + $total_paid_value;
+    $total_authorized_and_paid[] = array('value' => $authorized_total_value + $total_paid_value, 'count' => $authorized_total_value_arr['order_count']+ $total_paid_value_arr['order_count']);
 
 	# Get top N products
 	if (!empty($active_modules['Multiple_Storefronts'])) {
@@ -217,7 +224,6 @@ if (!x_session_is_registered("hide_security_warning")) {
 	x_session_register("hide_security_warning");
 	x_session_save("hide_security_warning");
 }
-
 #
 # Set up the smarty templates variables
 #

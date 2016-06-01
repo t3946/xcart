@@ -44,7 +44,8 @@ $(document).ready(function(){
     onCleanup: false,
     onClosed: false
   };
-  $("").colorbox(msgOpts);
+    if ($.isFunction($("").colorbox))
+        $("").colorbox(msgOpts);
 });
 {/literal}
 //]]>
