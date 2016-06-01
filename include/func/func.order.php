@@ -226,7 +226,7 @@ function func_select_order($orderid) {
 #
 ##
 ###
-	$order['attention_tags'] = func_query("SELECT $sql_tbl[orders_additional_tags].status_id, $sql_tbl[attention_tags_values].status FROM $sql_tbl[orders_additional_tags] LEFT JOIN $sql_tbl[attention_tags_values] ON $sql_tbl[attention_tags_values].status_id=$sql_tbl[orders_additional_tags].status_id WHERE $sql_tbl[orders_additional_tags].orderid='$orderid'");
+	$order['attention_tags'] = func_query("SELECT $sql_tbl[orders_additional_tags].status_id, $sql_tbl[attention_tags_values].status, $sql_tbl[attention_tags_values].description FROM $sql_tbl[orders_additional_tags] LEFT JOIN $sql_tbl[attention_tags_values] ON $sql_tbl[attention_tags_values].status_id=$sql_tbl[orders_additional_tags].status_id WHERE $sql_tbl[orders_additional_tags].orderid='$orderid'");
 
 	$product_question_status_code = func_query_first_cell("SELECT status FROM $sql_tbl[product_question] WHERE id='$order[product_question_status_id]'");
 	$order['product_question_status_code'] = $product_question_status_code;
@@ -998,6 +998,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 ##
 ###
 	$ip_info = $CLIENT_IP;
+
 	$geo_litecity_location = func_get_geoip_locations($CLIENT_IP);
 	if (!empty($geo_litecity_location)) {
 		$ip_info .= " (".$geo_litecity_location["country"].", ".$geo_litecity_location["region"].", ".$geo_litecity_location["city"].", ".$geo_litecity_location["postalCode"].")";
