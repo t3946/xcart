@@ -888,12 +888,10 @@ document.body.appendChild(element13);
 {/if}
 {literal}
 }
-if (window.addEventListener)
-    window.addEventListener("load", downloadJSAtOnload, false);
-else if (window.attachEvent)
-    window.attachEvent("onload", downloadJSAtOnload);
-else 
-    window.onload = downloadJSAtOnload;
+
+$(document).ready(function(){
+    downloadJSAtOnload();
+});
 </script>
 {/literal}
 {********************************************}
