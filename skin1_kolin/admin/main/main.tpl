@@ -132,7 +132,7 @@
 <table cellpadding="0" cellspacing="0" width="90%">
 <tr>
 <td class="TableHead">
-<table cellpadding="3" cellspacing="1" width="100%">
+<table cellpadding="3" cellspacing="0" width="100%">
 
 <tr class="TableHead">
 <td>{$lng.lbl_status}</td>
@@ -145,50 +145,50 @@
 
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
-<td align="right"><b>ALL ORDERS INCLUDING JUNK:</b></td>
+<td class="borderr-black" align="right"><b>ALL ORDERS INCLUDING JUNK:</b></td>
 {foreach key=key item=item from=$gross_total name=period}
-<td align="center">{include file="currency.tpl" value=$item.value}</td>
-<td align="center">{$item.count}</td>
+<td class="borderb-gray"align="center">{include file="currency.tpl" value=$item.value}</td>
+<td class="borderr-black" align="center">{$item.count}</td>
 {/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'} BoldRowText">
-<td align="right"><b>TOTAL AUTHORIZED AND PAID:</b></td>
+<td class="borderr-black" align="right"><b>TOTAL AUTHORIZED AND PAID:</b></td>
 {foreach name=period key=key item=item from=$total_authorized_and_paid}
-<td align="center">{include file="currency.tpl" value=$item.value}</td>
-<td align="center">{$item.count}</td>
+<td class="borderb-gray" align="center">{include file="currency.tpl" value=$item.value}</td>
+<td class="borderr-black" align="center">{$item.count}</td>
 {/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
-<td align="right"><b>Total Authorized:</b></td>
+<td class="borderr-black" align="right"><b>Total Authorized:</b></td>
 {foreach name=period key=key item=item from=$authorized_total}
-<td align="center">{include file="currency.tpl" value=$item.value}</td>
- <td align="center">{$item.count}</td>
+<td class="borderb-gray" align="center">{include file="currency.tpl" value=$item.value}</td>
+<td class="borderr-black" align="center">{$item.count}</td>
 {/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
-<td align="right"><b>TOTAL PAID:</b></td>
+<td class="borderr-black" align="right"><b>TOTAL PAID:</b></td>
 {foreach name=period key=key item=item from=$total_paid}
- <td align="center">{include file="currency.tpl" value=$item.value}</td>
- <td align="center">{$item.count}</td>
+ <td class="borderb-gray" align="center">{include file="currency.tpl" value=$item.value}</td>
+ <td class="borderr-black" align="center">{$item.count}</td>
 {/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
-<td align="right"><b>TOTAL REFUNDED:</b></td>
+<td class="borderr-black" align="right"><b>TOTAL REFUNDED:</b></td>
 {foreach name=period key=key item=item from=$total_refunded}
-<td align="center">{include file="currency.tpl" value=$item.value}</td>
-<td align="center">{$item.count}</td>
+<td class="borderb-gray" align="center">{include file="currency.tpl" value=$item.value}</td>
+<td class="borderr-black" class="borderr-black" align="center">{$item.count}</td>
 {/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
-<td align="right"><b>Refund rate:</b></td>
+<td class="borderr-black" align="right"><b>Refund rate:</b></td>
 {section name=period loop=$refund_rate}
-<td align="center">{$refund_rate[period]} %</td>
-<td>&nbsp;</td>
+<td class="borderb-gray" align="center">{$refund_rate[period]} %</td>
+<td class="borderr-black">&nbsp;</td>
 {/section}
 </tr>
 

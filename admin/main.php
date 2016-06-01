@@ -225,7 +225,6 @@ if (!x_session_is_registered("hide_security_warning")) {
 	x_session_register("hide_security_warning");
 	x_session_save("hide_security_warning");
 }
-var_dump($authorized_total);
 #
 # Set up the smarty templates variables
 #
