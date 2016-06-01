@@ -3908,7 +3908,7 @@ function func_convert_date_mm_dd_yyyy($date, $to_format){
 	} 
 	else {
 		
-		if (!is_int($date)){
+		if (!is_numeric($date)){
                         return $date;
                 }
 

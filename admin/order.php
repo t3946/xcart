@@ -2837,7 +2837,7 @@ elseif ($mode == 'mode_info_request_survey'){
 						  if ($vs == "some_in_stock" || $vs == "out_of_stock") {
 
 							  if ($current_eta_date_mm_dd_yyyy != $eta_date) {
-								  $log .= "<B>" . $v["productcode"] . ":</B> " . $current_eta_date_mm_dd_yyyy . " -> " . $eta_date . "<br />";
+								  $log .= "<B>" . $v["productcode"] . ":</B> eta_date_mm_dd_yyyy: " . $current_eta_date_mm_dd_yyyy . " -> " . $eta_date . "<br />";
 							  }
 
 							  $eta_date = func_convert_date_mm_dd_yyyy($eta_date, 'seconds');

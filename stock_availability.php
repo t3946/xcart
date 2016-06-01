@@ -94,43 +94,43 @@ if ($secure_check == $om && !empty($s) && !empty($o) && !empty($m)){
 
                         	foreach ($products as $k => $v){
 
-				    if ($v["productid"] == $ks){
+								if ($v["productid"] == $ks) {
 
-                                	$productid = $v["productid"];
-	                                $eta_date = trim($eta_date_mm_dd_yyyy[$productid]);
+									$productid = $v["productid"];
+									$eta_date = trim($eta_date_mm_dd_yyyy[$productid]);
 
-	                                $current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
-					$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
+									$current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+									$current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
-        	                        $current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
-                	                $current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
+									$current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
+									$current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
 
-        	                        if ($vs == "some_in_stock" || $vs == "out_of_stock"){
+									if ($vs == "some_in_stock" || $vs == "out_of_stock") {
 
-	                                        if ($current_eta_date_mm_dd_yyyy != $eta_date){
-        	                                        $log .= "<B>".$v["productcode"].":</B> ". $current_eta_date_mm_dd_yyyy . " -> ". $eta_date ."<br />";
-                	                        }
+										if ($current_eta_date_mm_dd_yyyy != $eta_date) {
+											$log .= "<B>" . $v["productcode"] . ":</B> eta_date_mm_dd_yyyy:" . $current_eta_date_mm_dd_yyyy . " -> " . $eta_date . "<br />";
+										}
 
-						$eta_date = func_convert_date_mm_dd_yyyy($eta_date, "seconds");
-                	                        db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$eta_date' WHERE productid='$productid'");
-                        	        } elseif ($vs == "discontinued"){
+										$eta_date = func_convert_date_mm_dd_yyyy($eta_date, "seconds");
+										db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$eta_date' WHERE productid='$productid'");
+									} elseif ($vs == "discontinued") {
 
-                                                if ($current_eta_date_mm_dd_yyyy != ''){
-                                                        $log .= "<B>".$v["productcode"].":</B> eta_date_mm_dd_yyyy: ". $current_eta_date_mm_dd_yyyy . " -> <br />";
-                                                }
+										if ($current_eta_date_mm_dd_yyyy != '') {
+											$log .= "<B>" . $v["productcode"] . ":</B> eta_date_mm_dd_yyyy: " . $current_eta_date_mm_dd_yyyy . " -> <br />";
+										}
 
-	                                        if ($current_forsale != 'N'){
-        	                                        $log .= "<B>".$v["productcode"].":</B> forsale: ". $current_forsale . " -> N <br />";
-                	                        }
+										if ($current_forsale != 'N') {
+											$log .= "<B>" . $v["productcode"] . ":</B> forsale: " . $current_forsale . " -> N <br />";
+										}
 
-	                                        if ($current_r_avail != '0'){
-        	                                        $log .= "<B>".$v["productcode"].":</B> r_avail: ". $current_r_avail . " -> 0 <br />";
-                	                        }
+										if ($current_r_avail != '0') {
+											$log .= "<B>" . $v["productcode"] . ":</B> r_avail: " . $current_r_avail . " -> 0 <br />";
+										}
 
 //                                	        db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='', forsale='N', r_avail='0', update_search_index='D' WHERE productid='$productid'");
-                                	        db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='0', forsale='N', r_avail='0' WHERE productid='$productid'");
-	                                }
-				    }
+										db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='0', forsale='N', r_avail='0' WHERE productid='$productid'");
+									}
+								}
         	                }
                 	}
 
