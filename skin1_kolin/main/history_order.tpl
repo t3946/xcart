@@ -144,7 +144,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 *}
 
 <td align="right" width="25%" style="position:relative;">
-<div style="margin-top: -35px;">
+<div>
                  <table cellspacing="0" cellpadding="0" border="0">
                  <tr>
                  <td nowrap="nowrap" valign="top"><B>Add attention tag:</B>&nbsp;</td>
@@ -158,18 +158,20 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                   <option value="">
                         {foreach from=$attention_tags_values item=item key=key}
                           {if $item.active eq "Y"}
-                            <option value="{$item.status_id}">{$item.status}</option>
+                            <option value="{$item.status_id}" data-description="{$item.description}">{$item.status}</option>
                           {/if}
                         {/foreach}
                   </select>
+                      <div id="block_tag_notes_desctiption" style="margin-left: 0px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -192px; right: 190px; z-index:106;" class="cidev_NoteBox">
+                      </div>
 
                   {if $order.attention_tags ne ""}
                         <br />
-                        <table align="right">
+                        <table align="right" id="attention_tags_selected">
                         {foreach from=$order.attention_tags item=item key=key}
                             {if $item.status_id gt 0}
                                 <tr>
-                                <td nowrap="nowrap" style="background-color: #F4CCCC; color: #000000;">{$item.status}</td>
+                                <td class="attention_tag_selected_item" data-description="{$item.description}" nowrap="nowrap" style="cursor:pointer; background-color: #F4CCCC; color: #000000;">{$item.status}</td>
                                 <td><a href="javascript: void();" onclick="javascript: $('#mode_additional_tag').val('del_additional_tag'); $('#del_status_id').val('{$item.status_id}'); document.order_add_additional_tag.submit();" style="color: red; font-weight: bold; text-decoration: none;">X</a></td>
                                 </tr>
                             {/if}
@@ -184,7 +186,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                  </tr>
                  </table>
 </div>
-    <div style="position: relative; top: 10px;">
+    <div style="position: relative; margin-top: 10px;">
         <a href="#" onclick="$(this).parent().siblings('#send_note_form_js').toggle(); return false;">
             <img src="/skin1_kolin/images/noteicon.png"/>
         </a>
@@ -806,13 +808,13 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
                 // Animation complete.
                 });
         });
-
-
   });
 
 {/literal}
 //]]>
 </script>
+
+
 
   <div align="center">
 	<a href="#" id="backorder_decision_request_link" class="ProductTitle" style="text-decoration: none;">Backorder decision request [&#177;]</a>
@@ -846,6 +848,45 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
 
 {/if}
 
+    <script type="text/javascript" language="JavaScript 1.2">
+{literal}
+        var delay=1800, setTimeoutConst;
+        function onTagMouseEnter (obj, right = 190) {
+            var posiotion = $(obj).position();
+            var notes = $('#block_tag_notes_desctiption');
+            var tagdescr = $(obj).data('description');
+            setTimeoutConst = setTimeout(function(){
+                if (tagdescr != 'undefined' && tagdescr != '') {
+                    notes.html(tagdescr);
+                    notes.css('top', posiotion.top);
+                    notes.css('right', right);
+                    notes.fadeIn( 400 );
+                } else {
+                    notes.empty();
+                }
+            }, delay);
+        }
+
+        $('select[name=additional_tag_status]').on('mouseenter', 'option', function(e) {
+            onTagMouseEnter(this);
+        });
+        $('#attention_tags_selected .attention_tag_selected_item').on('mouseenter', '', function(e) {
+            onTagMouseEnter(this, 176);
+        });
+
+        $('select[name=additional_tag_status]').on('mouseleave', 'option', function(e) {
+            clearTimeout(setTimeoutConst );
+            $('#block_tag_notes_desctiption').clearQueue().hide();
+        });
+
+        $('#attention_tags_selected .attention_tag_selected_item').on('mouseleave', '', function(e) {
+            clearTimeout(setTimeoutConst );
+            $('#block_tag_notes_desctiption').clearQueue().hide();
+        });
+
+
+{/literal}
+    </script>
 
 {foreach from=$order_manufacturers item=v key=mnf_id}
 
