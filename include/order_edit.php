@@ -358,15 +358,16 @@ if ($REQUEST_METHOD == "POST") {
 
                                 ### LOG: START
 //                                $current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
-                                if ($current_eta_date_mm_dd_yyyy != $v["eta_date_mm_dd_yyyy"]){
+                                if (($current_eta_date_mm_dd_yyyy !== false) && !empty($v["eta_date_mm_dd_yyyy"]) && $current_eta_date_mm_dd_yyyy != $v["eta_date_mm_dd_yyyy"]){
                                         $product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$productid'");
 
                                         $log = "<B>".$product_code."</B> ETA date: " . $current_eta_date_mm_dd_yyyy . " -> " . $v["eta_date_mm_dd_yyyy"];
                                         func_log_order($orderid, 'X', $log, $login);
+									db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='".$new_eta_date_mm_dd_yyyy_time."' WHERE productid='$v[productid]'");
                                 }
                                 ### LOG: END
 
-                                db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='".$new_eta_date_mm_dd_yyyy_time."' WHERE productid='$v[productid]'");
+
 
 ###
 ##
