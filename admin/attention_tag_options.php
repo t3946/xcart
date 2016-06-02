@@ -13,7 +13,7 @@ if ($REQUEST_METHOD == 'POST'){
 
 		if (!empty($posted_data) && is_array($posted_data)){
 			foreach ($posted_data as $k => $v){
-				$sTagDescription = addslashes($v['description']);
+				$sTagDescription = $v['description'];
 				db_query("UPDATE $sql_tbl[attention_tags_values] SET orderby='".$v["orderby"]."', status='".$v["status"]."', active='$v[active]', description = '$sTagDescription' WHERE status_id='$v[status_id]'");
 
 				if (!empty($v["select_login"]) && !empty($v["select_action"])){
