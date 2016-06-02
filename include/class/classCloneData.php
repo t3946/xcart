@@ -22,7 +22,8 @@ class classCloneData
 
     private function fillPrimaryTableInfo($iId) {
         $this->aPrimaryTableValue = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = $iId");
-        $this->primaryKeyValue = $this->aPrimaryTableValue[$this->sPrimaryKeyFiled];
+        if (!empty($this->aPrimaryTableValue) && is_array($this->aPrimaryTableValue))
+            $this->primaryKeyValue = $this->aPrimaryTableValue[$this->sPrimaryKeyFiled];
     }
 
     protected function recursive_escape(&$item) {
