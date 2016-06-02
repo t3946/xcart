@@ -147,7 +147,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 <div>
                  <table cellspacing="0" cellpadding="0" border="0">
                  <tr>
-                 <td nowrap="nowrap" valign="top"><B>Add attention tag:</B>&nbsp;</td>
+                 <td nowrap="nowrap" valign="top"><a href="javascript: void(0);" style="font-weight:bold; color: blue; border-bottom:1px dotted; text-decoration: none;" onclick="javascript: $('#block_tag_notes_desctiption_all').toggle();">Add attention tag:</a>&nbsp;</td>
                  <td valign="top">
                   <div style="margin-top: -3px;">
                   <form action="order.php" method="post" name="order_add_additional_tag">
@@ -158,11 +158,20 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                   <option value="">
                         {foreach from=$attention_tags_values item=item key=key}
                           {if $item.active eq "Y"}
-                            <option value="{$item.status_id}" data-description="{$item.description}">{$item.status}</option>
+                            <option value="{$item.status_id}">{$item.status}</option>
                           {/if}
                         {/foreach}
                   </select>
                       <div id="block_tag_notes_desctiption" style="margin-left: 0px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -192px; right: 190px; z-index:106;" class="cidev_NoteBox">
+                      </div>
+                      <div id="block_tag_notes_desctiption_all" style="margin-left: 0px;margin-top: 2px; color: rgb(85, 0, 0); text-align: left; border: 1px solid rgb(255, 102, 0); display: none;  left: -50%; z-index:107;" class="cidev_NoteBox">
+                          {foreach from=$attention_tags_values item=item key=key}
+                              {if $item.active eq "Y" && $item.description ne ""}
+                                  <p>
+                                    <span style="text-transform: uppercase; font-weight: bold;">{$item.status}</span>: {$item.description}
+                                  </p>
+                              {/if}
+                          {/foreach}
                       </div>
 
                   {if $order.attention_tags ne ""}
@@ -848,42 +857,36 @@ details_fields_labels["{$dfield|escape:javascript}"] = "{$dlabel|escape:javascri
 
 {/if}
 
-    <script type="text/javascript" language="JavaScript 1.2">
+    <script type="text/javascript">
 {literal}
-        var delay=1800, setTimeoutConst;
-        function onTagMouseEnter (obj, right = 190) {
-            var posiotion = $(obj).position();
-            var notes = $('#block_tag_notes_desctiption');
-            var tagdescr = $(obj).data('description');
-            setTimeoutConst = setTimeout(function(){
-                if (tagdescr != 'undefined' && tagdescr != '') {
-                    notes.html(tagdescr);
-                    notes.css('top', posiotion.top);
-                    notes.css('right', right);
-                    notes.fadeIn( 400 );
-                } else {
-                    notes.empty();
-                }
-            }, delay);
-        }
 
-        $('select[name=additional_tag_status]').on('mouseenter', 'option', function(e) {
-            onTagMouseEnter(this);
-        });
-        $('#attention_tags_selected .attention_tag_selected_item').on('mouseenter', '', function(e) {
-            onTagMouseEnter(this, 176);
-        });
+$( document ).ready(function() {
+            var delay=1800, setTimeoutConst;
+            function onTagMouseEnter (obj, right = 190) {
+                var posiotion = $(obj).position();
+                var notes = $('#block_tag_notes_desctiption');
+                var tagdescr = $(obj).data('description');
+                setTimeoutConst = setTimeout(function(){
+                    if (tagdescr != 'undefined' && tagdescr != '') {
+                        notes.html(tagdescr);
+                        notes.css('top', posiotion.top);
+                        notes.css('right', right);
+                        notes.fadeIn( 400 );
+                    } else {
+                        notes.empty();
+                    }
+                }, delay);
+            }
 
-        $('select[name=additional_tag_status]').on('mouseleave', 'option', function(e) {
-            clearTimeout(setTimeoutConst );
-            $('#block_tag_notes_desctiption').clearQueue().hide();
-        });
+            $('#attention_tags_selected .attention_tag_selected_item').on('mouseenter', '', function(e) {
+                onTagMouseEnter(this, 176);
+            });
 
-        $('#attention_tags_selected .attention_tag_selected_item').on('mouseleave', '', function(e) {
-            clearTimeout(setTimeoutConst );
-            $('#block_tag_notes_desctiption').clearQueue().hide();
-        });
-
+            $('#attention_tags_selected .attention_tag_selected_item').on('mouseleave', '', function(e) {
+                clearTimeout(setTimeoutConst );
+                $('#block_tag_notes_desctiption').clearQueue().hide();
+            });
+});
 
 {/literal}
     </script>
