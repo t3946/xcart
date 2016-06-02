@@ -21,7 +21,7 @@
 <td align="center"><input type="text" name="posted_data[{$attention_tags_values[pg].status_id}][orderby]" value="{$attention_tags_values[pg].orderby}" size="5" style="width: 90%;" /></td>
 <td align="center">
     <input type="text" name="posted_data[{$attention_tags_values[pg].status_id}][status]" value="{$attention_tags_values[pg].status|escape}" size="15" style="width: 96%;" />
-    <textarea name="posted_data[{$attention_tags_values[pg].status_id}][description]" style="height: 44px;width: 96%;">{$attention_tags_values[pg].description}</textarea>
+    <textarea name="posted_data[{$attention_tags_values[pg].status_id}][description]" style="height: 44px;width: 96%;">{$attention_tags_values[pg].description|escape}</textarea>
 </td>
 <td align="center"><select name="posted_data[{$attention_tags_values[pg].status_id}][active]">
 <option value="Y"{if $attention_tags_values[pg].active eq "Y"} selected="selected"{/if}>{$lng.lbl_enabled}</option>
