@@ -147,7 +147,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 <div>
                  <table cellspacing="0" cellpadding="0" border="0">
                  <tr>
-                 <td nowrap="nowrap" valign="top"><a href="javascript: void(0);" style="font-weight:bold; color: blue; border-bottom:1px dotted; text-decoration: none;" onclick="javascript: $('#block_tag_notes_desctiption_all').toggle();">Add attention tag:</a>&nbsp;</td>
+                 <td nowrap="nowrap" valign="top">Add <a href="javascript: void(0);" style="font-weight:bold; color: blue; border-bottom:1px dotted; text-decoration: none;" onclick="javascript: $('#block_tag_notes_desctiption_all').toggle();">attention tag</a>:&nbsp;</td>
                  <td valign="top">
                   <div style="margin-top: -3px;">
                   <form action="order.php" method="post" name="order_add_additional_tag">
@@ -168,7 +168,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                           {foreach from=$attention_tags_values item=item key=key}
                               {if $item.active eq "Y" && $item.description ne ""}
                                   <p>
-                                    <span style="text-transform: uppercase; font-weight: bold;">{$item.status}</span>: {$item.description}
+                                    <span style="text-transform: uppercase; font-weight: bold;">{$item.status}</span><br>{$item.description}
                                   </p>
                               {/if}
                           {/foreach}
