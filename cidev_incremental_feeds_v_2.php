@@ -47,7 +47,7 @@ define("FROOGLE_TAIL_LEN", strlen(constant("FROOGLE_TAIL")));
 define('FROOGLE_MAX_DESCRIPTION_LENGTH', 10 * 1024); //The content in an attribute in an item exceeds 10 KB.
 
 define('EXCLUDE_CATEGORYID_BRANCH', 5099);
-define('DEBUG_MODE', 'N');
+define('DEBUG_MODE', 'Y');
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -136,7 +136,7 @@ func_send_simple_mail($to, $subj, $body, $from);
 */
 
 
-$all_manufacturer_info = func_query_hash("SELECT manufacturerid, manufacturer, m_city, m_country, m_state, m_zipcode FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
+/*$all_manufacturer_info = func_query_hash("SELECT manufacturerid, manufacturer, m_city, m_country, m_state, m_zipcode FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
 
 
 $all_approximation_shipping_rates_tmp = func_query("SELECT * FROM $sql_tbl[approximation_shipping_rates]");
@@ -153,7 +153,7 @@ if (!empty($all_manufacturer_info) && !empty($all_approximation_shipping_rates_t
 			}
 		}
 	}
-}
+}*/
 
 $two_shippings = func_query_hash("SELECT shippingid, shipping, vol_threshold, dim_factor FROM $sql_tbl[shipping] WHERE shippingid='1' OR shippingid='65'", "shippingid", false);
 

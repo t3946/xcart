@@ -5,15 +5,19 @@ require_once $xcart_dir."/include/class/classCloneData.php";
 class classManufacturer extends classCloneData
 {
 
-    public function __construct()
-    {   parent::__construct();
+    public function __construct($iId = null)
+    {
+        $this->sPrimaryTable = "manufacturers";
+        $this->sPrimaryKeyFiled = "manufacturerid";
+
+        parent::__construct($iId);
+
         $this->init();
     }
 
     public function init()
     {
-        $this->sPrimaryTable = "manufacturers";
-        $this->sPrimaryKeyFiled = "manufacturerid";
+
 
         $this->arrCloneTableStructure[] = array("table" => $this->sPrimaryTable,"key_field" => $this->sPrimaryKeyFiled, "primary_key" => $this->sPrimaryKeyFiled);
         $this->arrCloneTableStructure[] = array("table" => "shipping_rates","key_field" => $this->sPrimaryKeyFiled, "primary_key" =>"rateid");
@@ -348,5 +352,9 @@ class classManufacturer extends classCloneData
               FROM ".$this->sql_tbl['storefronts']." xs
                    LEFT JOIN ".$this->sql_tbl['storefronts_config']." xs1 USING (storefrontid)
              WHERE xs.storefrontid = $iStoreFrontId AND xs1.name = 'opt_order_prefix'");
+    }
+
+    public function getMunufacturerName() {
+        return $this->aPrimaryTableValue['manufacturer'];
     }
 }

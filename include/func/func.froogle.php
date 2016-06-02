@@ -359,6 +359,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	include_once $xcart_dir."/include/class/classProducts.php";
 	$classProduct = new classProducts();
 	$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
+	$product['custom_label_3'] = $classProduct->getManfacturerClass($product['manufacturerid'])->getMunufacturerName();
 
 	/*$pos = strpos($product['productcode'], '-');
 	$mpn = '';
@@ -444,23 +445,25 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 
 	$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
 
+	$product['custom_label_2'] = 'UPS rates';
 
 	if (!empty($amazon_shippings_arr)){
 
-	    $shipping_ground_arr = $shipping_arr;
-	    $shipping_arr = $amazon_shippings_arr;
+		$shipping_ground_arr = $shipping_arr;
+		$shipping_arr = $amazon_shippings_arr;
 
-	    if(is_array($shipping_arr["not_found_rates_for_state"]) && !empty($shipping_ground_arr["shippings_google_arr"])){
+		if (is_array($shipping_arr["not_found_rates_for_state"]) && !empty($shipping_ground_arr["shippings_google_arr"])) {
 
-		foreach ($shipping_arr["not_found_rates_for_state"] as $k_n => $v_n){
-			foreach ($shipping_ground_arr["shippings_google_arr"] as $k_g => $v_g){
-				if ($v_g["region"] == $v_n){
-					$shipping_arr["shippings_google_arr"][] = $v_g;
-					$shipping_arr["shippings_str"] .=",US:".$v_n.":Ground:".$v_g["price"]["value"]."USD";
+			foreach ($shipping_arr["not_found_rates_for_state"] as $k_n => $v_n) {
+				foreach ($shipping_ground_arr["shippings_google_arr"] as $k_g => $v_g) {
+					if ($v_g["region"] == $v_n) {
+						$shipping_arr["shippings_google_arr"][] = $v_g;
+						$shipping_arr["shippings_str"] .= ",US:" . $v_n . ":Ground:" . $v_g["price"]["value"] . "USD";
+						$product['custom_label_2'] = 'FBA rates';
+					}
 				}
 			}
 		}
-	    }
 	}
 
 
@@ -1167,6 +1170,8 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 		/*Custom Labels*/
             $postBody["entries"][$k_counter]["product"]["customLabel0"] = $product_info["product"]["custom_label_0"];
             $postBody["entries"][$k_counter]["product"]["customLabel1"] = $product_info["product"]["custom_label_1"];
+            $postBody["entries"][$k_counter]["product"]["customLabel2"] = $product_info["product"]["custom_label_2"];
+            $postBody["entries"][$k_counter]["product"]["customLabel3"] = $product_info["product"]["custom_label_3"];
 
 			$postBody["entries"][$k_counter]["product"]["adwordsGrouping"] = $product_info["product"]["adwords_grouping"];
 			$postBody["entries"][$k_counter]["product"]["adwordsLabels"][0] = $product_info["product"]["adwords_labels"];
@@ -1436,6 +1441,8 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
 		/*Custom Labels*/
                 $postBody["entries"][$k_counter]["product"]["customLabel0"] = $product_info["product"]["custom_label_0"];
                 $postBody["entries"][$k_counter]["product"]["customLabel1"] = $product_info["product"]["custom_label_1"];
+                $postBody["entries"][$k_counter]["product"]["customLabel2"] = $product_info["product"]["custom_label_2"];
+                $postBody["entries"][$k_counter]["product"]["customLabel3"] = $product_info["product"]["custom_label_3"];
 
                 $postBody["entries"][$k_counter]["product"]["destinations"][0]["destinationName"] = "ShoppingApi";
                 $postBody["entries"][$k_counter]["product"]["destinations"][0]["intention"] = "required";
