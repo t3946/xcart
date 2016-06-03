@@ -150,4 +150,20 @@ public function checkDBChanges () {
         return true;
     }
 
+    public function getField($sFieldName) {
+        return $this->aPrimaryTableValue[$sFieldName];
+    }
+
+    public function getFields($aFields = array()) {
+        if (is_array($aFields)) {
+            if (empty($aFields)) return $this->aPrimaryTableValue;
+            return array_intersect($this->aPrimaryTableValue, $aFields);
+        }
+        return false;
+    }
+
+    public function setField($sFieldName, $sNewValue) {
+        $this->aPrimaryTableValue[$sFieldName] = $sNewValue;
+    }
+
 }

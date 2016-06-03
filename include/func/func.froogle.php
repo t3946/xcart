@@ -55,6 +55,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 
 
+$start_time = round(microtime(true) * 1000);
 
 /////////////////////////////////////////////////////////////////////
 //$productid = 281820;
@@ -359,7 +360,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	include_once $xcart_dir."/include/class/classProducts.php";
 	$classProduct = new classProducts();
 	$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
-	$product['custom_label_3'] = $classProduct->getManfacturerClass($product['manufacturerid'])->getMunufacturerName();
+	$product['custom_label_3'] = $classProduct->getManfacturerClass($product['manufacturerid'])->getField("manufacturer");
 
 	/*$pos = strpos($product['productcode'], '-');
 	$mpn = '';
@@ -700,6 +701,11 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 
 	$row_arr["row"] = $row;
 	$row_arr["product"] = $product;
+
+	$current_time = round(microtime(true) * 1000);
+	$diff_time = ($current_time - $start_time);
+
+	func_backprocess_log("incremental feeds", sprintf("Row generated for pid=%d in %d msec.",$product['productid'],$diff_time));
 
 	return $row_arr;
 }
@@ -1093,7 +1099,8 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 
 	foreach ($bproducts as $k => $v){
 
-		$product_info = GetGoogleBaseOneRow($v["productid"], "main_google");
+		//$product_info = GetGoogleBaseOneRow($v["productid"], "main_google");
+		$product_info = $v["product_info"];
 
 		$pforsale = func_query_first_cell("SELECT SQL_NO_CACHE $sql_tbl[products].forsale FROM $sql_tbl[products] WHERE $sql_tbl[products].productid = '$v[productid]'");
 
@@ -1344,7 +1351,8 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
 
 	foreach ($gproducts as $k => $v){
 
-		$product_info = GetGoogleBaseOneRow($v["productid"], "main_google");
+		//$product_info = GetGoogleBaseOneRow($v["productid"], "main_google");
+		$product_info = $v['product_info'];
 		
 		$pforsale = func_query_first_cell("SELECT SQL_NO_CACHE $sql_tbl[products].forsale FROM $sql_tbl[products] WHERE $sql_tbl[products].productid = '$v[productid]'");
 

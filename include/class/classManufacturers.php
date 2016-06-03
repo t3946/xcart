@@ -353,8 +353,4 @@ class classManufacturer extends classCloneData
                    LEFT JOIN ".$this->sql_tbl['storefronts_config']." xs1 USING (storefrontid)
              WHERE xs.storefrontid = $iStoreFrontId AND xs1.name = 'opt_order_prefix'");
     }
-
-    public function getMunufacturerName() {
-        return $this->aPrimaryTableValue['manufacturer'];
-    }
 }

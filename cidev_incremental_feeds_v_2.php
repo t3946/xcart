@@ -529,6 +529,13 @@ else {
 				db_query("UPDATE $sql_tbl[products] SET last_incremental_update='".time()."' WHERE productid='".$product["productid"]."'");
 ###
 
+					//Bing Batch Array = Google Batch Array
+					foreach ($gproducts as &$pv) {
+						$pv['product_info'] = GetGoogleBaseOneRow($pv['productid'], "main_google");
+					}
+
+					$bproducts = $gproducts;
+
 					if ($bing_inventory_batch_count == $max_bing_batch)
 					{
 						$error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, DEBUG_MODE);
