@@ -439,12 +439,16 @@ $start_time = round(microtime(true) * 1000);
 
 # Check/Get Amazon shippings
 ##
+	$start_time_amazon_shipping = round(microtime(true) * 1000);
 	$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
+	$diff_end_time_amazon_shipping = (round(microtime(true) * 1000) - $start_time_amazon_shipping);
 
 ##
 #
-
+	$start_time_approximate_shipping = round(microtime(true) * 1000);
 	$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
+	$diff_end_time_approximate_shipping = (round(microtime(true) * 1000) - $start_time_approximate_shipping);
+
 
 	$product['custom_label_2'] = 'UPS rates';
 
@@ -705,7 +709,7 @@ $start_time = round(microtime(true) * 1000);
 	$current_time = round(microtime(true) * 1000);
 	$diff_time = ($current_time - $start_time);
 
-	func_backprocess_log("incremental feeds", sprintf("Row generated for pid=%d in %d msec.",$product['productid'],$diff_time));
+	func_backprocess_log("incremental feeds", sprintf("Row generated for pid=%d in %d msec. Amazon(%d msec), Approx(%d msec)",$product['productid'],$diff_time, $diff_end_time_amazon_shipping, $diff_end_time_approximate_shipping));
 
 	return $row_arr;
 }
