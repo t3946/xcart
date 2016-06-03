@@ -47,7 +47,7 @@ define("FROOGLE_TAIL_LEN", strlen(constant("FROOGLE_TAIL")));
 define('FROOGLE_MAX_DESCRIPTION_LENGTH', 10 * 1024); //The content in an attribute in an item exceeds 10 KB.
 
 define('EXCLUDE_CATEGORYID_BRANCH', 5099);
-define('DEBUG_MODE', 'N');
+define('DEBUG_MODE', 'Y');
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -85,7 +85,7 @@ db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cidev_incremental_fe
 
 $started_at = time();
 
-$log_text = " * * *  Cron started  * * * ";
+$log_text = " * * *  Cron started  * * * DEBUG_MODE = '".DEBUG_MODE."'";
 func_backprocess_log("incremental feeds", $log_text);
 
 
@@ -167,6 +167,7 @@ if (!empty($all_froogle_options) && is_array($all_froogle_options)){
 }
 
 $cidev_storefronts = $storefronts;
+ksort($cidev_storefronts);
 
 if (!empty($cidev_storefronts) && is_array($cidev_storefronts)){
 
@@ -348,10 +349,12 @@ $query_products_count = func_query_first_cell("
                         UP.time_stamp As ts,
                         P.forsale As forsale,
                         P.amazon_enabled As amazon_enabled,
-                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype,
+                        max(PS2.sfid) as maxsf
         from xcart_cidev_updated_products UP
                         left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                         inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                        left join xcart_products_sf PS2 ON PS2.productid = UP.resourceid
                         left join xcart_products P ON P.productid = UP.resourceid
         where UP.`type` <= 2  and P.forsale = '$paramYN'
         group by UP.resourceid
@@ -368,10 +371,12 @@ if (!empty($query_products_count)){
                                 UP.time_stamp As ts,
                                 P.forsale As forsale,
                                 P.amazon_enabled As amazon_enabled,
-                                GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                                GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype,
+                                max(PS2.sfid) as maxsf
                 from xcart_cidev_updated_products UP
                                 left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                                 inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                                left join xcart_products_sf PS2 ON PS2.productid = UP.resourceid
                                 left join xcart_products P ON P.productid = UP.resourceid
                 where UP.`type` <= 2  and P.forsale = '$paramYN'
                 group by UP.resourceid
@@ -389,10 +394,12 @@ else {
                             UP.time_stamp As ts,
                             P.forsale As forsale,
                             P.amazon_enabled As amazon_enabled,
-                            GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                            GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype,
+                            max(PS2.sfid) as maxsf
             from xcart_cidev_updated_products UP
                             left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                             inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                            left join xcart_products_sf PS2 ON PS2.productid = UP.resourceid
                             left join xcart_products P ON P.productid = UP.resourceid
             where UP.`type` <= 2 and P.forsale = '$paramYN'
             group by UP.resourceid
@@ -403,10 +410,12 @@ else {
                             UPM.time_stamp As ts,
                             P2.forsale As forsale,
                             P2.amazon_enabled As amazon_enabled,
-                            1 As utype
+                            1 As utype,
+                            max(PS2.sfid) as maxsf
              From xcart_cidev_updated_products UPM
-                            left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
+                            left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid
                             inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
+                            left join xcart_products_sf PS2 ON PS.productid = PS2.productid
              where UPM.`type` = 3 and P2.forsale='$paramYN') As T
              where T.productid not in (320764,320761,320762,320764,320765,320766)");
      
@@ -419,10 +428,12 @@ else {
                                         UP.time_stamp As ts,
                                         P.forsale As forsale,
                                         P.amazon_enabled As amazon_enabled,
-                                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype,
+                                        max(PS2.sfid) as maxsf
                         from xcart_cidev_updated_products UP
                                         left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                                         inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                                        left join xcart_products_sf PS2 ON PS2.productid = UP.resourceid
                                         left join xcart_products P ON P.productid = UP.resourceid
                         where UP.`type` <= 2 and P.forsale = '$paramYN'
                         group by UP.resourceid
@@ -433,10 +444,12 @@ else {
                                         UPM.time_stamp As ts,
                                         P2.forsale As forsale,
                                         P2.amazon_enabled As amazon_enabled,
-                                        1 As utype
+                                        1 As utype,
+                                        max(PS2.sfid) as maxsf
                          From xcart_cidev_updated_products UPM
                                         left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
                                         inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
+                                        left join xcart_products_sf PS2 ON PS.productid = PS2.productid
                          where UPM.`type` = 3 and P2.forsale='$paramYN') As T
                          where T.productid not in (320764,320761,320762,320764,320765,320766)";
             }    
@@ -446,8 +459,8 @@ else {
                 $tPARAMLIMIT = $PARAMLIMIT;
                 $paramYN = 'N';
                 $PARAMLIMIT = 'LIMIT 130';
-                $log_text = "//// processing SF DISCONTINUED ITEMS ";
-                func_backprocess_log("incremental feeds", $log_text);
+                //$log_text = "//// processing SF DISCONTINUED ITEMS ";
+                //func_backprocess_log("incremental feeds", $log_text);
                 
                 $query_products = "
                         Select *
@@ -457,10 +470,12 @@ else {
                                         UP.time_stamp As ts,
                                         P.forsale As forsale,
                                         P.amazon_enabled As amazon_enabled,
-                                        1 As utype
+                                        1 As utype,
+                                        max(PS2.sfid) as maxsf
                         from xcart_cidev_updated_products UP
                                         left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                                         inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                                        left join xcart_products_sf PS2 ON PS2.productid = PS.productid
                                         left join xcart_products P ON P.productid = UP.resourceid
                         where UP.`type` <= 2 and P.forsale = '$paramYN'
                         group by UP.resourceid
@@ -470,10 +485,12 @@ else {
                                         UPM.time_stamp As ts,
                                         P2.forsale As forsale,
                                         P2.amazon_enabled As amazon_enabled,
-                                        1 As utype
+                                        1 As utype,
+                                        max(PS2.sfid) as maxsf
                          From xcart_cidev_updated_products UPM
                                         left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
                                         inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
+                                        left join xcart_products_sf PS2 ON PS2.productid = PS.productid
                          where UPM.`type` = 3 and P2.forsale='$paramYN') As T
                          where T.productid not in (320764,320761,320762,320764,320765,320766)
                          $PARAMLIMIT";
@@ -525,7 +542,9 @@ else {
 				}
 
 ###
-				db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
+				if ($storefrontid == $product["maxsf"])
+					db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
+
 				db_query("UPDATE $sql_tbl[products] SET last_incremental_update='".time()."' WHERE productid='".$product["productid"]."'");
 ###
 

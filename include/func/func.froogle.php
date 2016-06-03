@@ -758,6 +758,7 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, $debug_m
 
 	foreach ($ginventory as $k => $v){
 				/*func_build_quick_prices($v["productid"]);*/
+				func_backprocess_log("incremental feeds", sprintf("Inventory updated for pid=%d",$v["productid"]));
                 $fields = ", IFNULL($sql_tbl[variants].avail, $sql_tbl[products].r_avail) as r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].map_price, $sql_tbl[products].manufacturerid, $sql_tbl[products].eta_date_mm_dd_yyyy";
                 $joins = " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
                 $joins .= " INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0'";
