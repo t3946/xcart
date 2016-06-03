@@ -734,6 +734,7 @@ function AddProductToGoogleBaseBatch($productid, $MerchantID, $update_type, $ser
 			$count_gproducts = count($gproducts);
 			$gproducts[$count_gproducts]["productid"] = $productid;
 			$gproducts[$count_gproducts]["Batchid"] = $Batchid;
+			$gproducts[$count_gproducts]["product_info"] = GetGoogleBaseOneRow($productid, "main_google");
 			$google_products_batch_count++;
 	}
 	elseif ($update_type == "2" && $forsale == "Y"){
