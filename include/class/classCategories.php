@@ -4,11 +4,13 @@ require_once $xcart_dir."/include/class/classCloneData.php";
 
 class classCategories extends classCloneData
 {
-    public function __construct()
+    public function __construct($iId = null)
     {
-        parent::__construct();
         $this->sPrimaryTable = "categories";
         $this->sPrimaryKeyFiled = "categoryid";
+
+        parent::__construct($iId);
+
     }
 
     public function getParentCategory ($iParentCategory) {
