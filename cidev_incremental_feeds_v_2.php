@@ -47,6 +47,7 @@ define("FROOGLE_TAIL_LEN", strlen(constant("FROOGLE_TAIL")));
 define('FROOGLE_MAX_DESCRIPTION_LENGTH', 10 * 1024); //The content in an attribute in an item exceeds 10 KB.
 
 define('EXCLUDE_CATEGORYID_BRANCH', 5099);
+define('DEBUG_MODE', 'N');
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -135,7 +136,7 @@ func_send_simple_mail($to, $subj, $body, $from);
 */
 
 
-$all_manufacturer_info = func_query_hash("SELECT manufacturerid, manufacturer, m_city, m_country, m_state, m_zipcode FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
+/*$all_manufacturer_info = func_query_hash("SELECT manufacturerid, manufacturer, m_city, m_country, m_state, m_zipcode FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
 
 
 $all_approximation_shipping_rates_tmp = func_query("SELECT * FROM $sql_tbl[approximation_shipping_rates]");
@@ -152,7 +153,7 @@ if (!empty($all_manufacturer_info) && !empty($all_approximation_shipping_rates_t
 			}
 		}
 	}
-}
+}*/
 
 $two_shippings = func_query_hash("SELECT shippingid, shipping, vol_threshold, dim_factor FROM $sql_tbl[shipping] WHERE shippingid='1' OR shippingid='65'", "shippingid", false);
 
@@ -309,8 +310,10 @@ $cred = new Google_Auth_AssertionCredentials(
 	$key
 );
 $client->setAssertionCredentials($cred);
-if ($client->getAuth()->isAccessTokenExpired()) {
-	$client->getAuth()->refreshTokenWithAssertion($cred);
+if (DEBUG_MODE!="Y") {
+	if ($client->getAuth()->isAccessTokenExpired()) {
+		$client->getAuth()->refreshTokenWithAssertion($cred);
+	}
 }
 $_SESSION['service_token'] = $client->getAccessToken();
 #####################################################################################################################
@@ -526,58 +529,66 @@ else {
 				db_query("UPDATE $sql_tbl[products] SET last_incremental_update='".time()."' WHERE productid='".$product["productid"]."'");
 ###
 
-				if ($bing_inventory_batch_count == $max_bing_batch)
-				{
-                    $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
-					//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
-					if ( $error == 500 )
-						restore_queue( $binventory, 2 );
+					//Bing Batch Array = Google Batch Array
+					foreach ($gproducts as &$pv) {
+						$pv['product_info'] = GetGoogleBaseOneRow($pv['productid'], "main_google");
+					}
 
-					$bing_inventory_batch_count = 0;
-					$binventory = array();
-				}
+					$bproducts = $gproducts;
 
-				if ($bing_products_batch_count == $max_bing_batch)
-				{
-					$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
-					if ( $error == 500 )
-						restore_queue( $bproducts, 1 );
-					
-					$bing_products_batch_count = 0;
-					$bproducts = array();
-				}
+					if ($bing_inventory_batch_count == $max_bing_batch)
+					{
+						$error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, DEBUG_MODE);
+						//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+						if ( $error == 500 )
+							restore_queue( $binventory, 2 );
 
-				if ($google_inventory_batch_count == $max_google_batch){
-					$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID);
-					if ( $error == 500 )
-						restore_queue( $ginventory, 2 );
+						$bing_inventory_batch_count = 0;
+						$binventory = array();
+					}
 
-					$google_inventory_batch_count = 0;
-					$ginventory = array();
-				}
+					if ($bing_products_batch_count == $max_bing_batch)
+					{
+						$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, DEBUG_MODE);
+						if ( $error == 500 )
+							restore_queue( $bproducts, 1 );
 
-				if ($google_products_batch_count == $max_google_batch){
-					$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID);
-					if ( $error == 500 )
-						restore_queue( $gproducts, 1 );
+						$bing_products_batch_count = 0;
+						$bproducts = array();
+					}
 
-					$google_products_batch_count = 0;
-					$gproducts = array();
-				}
+					if ($google_inventory_batch_count == $max_google_batch){
+						$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, DEBUG_MODE);
+						if ( $error == 500 )
+							restore_queue( $ginventory, 2 );
 
-				if ($amazon_inventory_batch_count == $max_amazon_batch){
-					SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray);
+						$google_inventory_batch_count = 0;
+						$ginventory = array();
+					}
 
-					$amazon_inventory_batch_count = 0;
-					$ainventory = array();
-				}
+					if ($google_products_batch_count == $max_google_batch){
+						$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, DEBUG_MODE);
+						if ( $error == 500 )
+							restore_queue( $gproducts, 1 );
 
-				if ($amazon_products_batch_count == $max_amazon_batch){
-					SubmitAmazonProductsBatch();
+						$google_products_batch_count = 0;
+						$gproducts = array();
+					}
 
-					$amazon_products_batch_count = 0;
-					$aproducts = array();
-				}
+					if ($amazon_inventory_batch_count == $max_amazon_batch){
+						SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray);
+
+						$amazon_inventory_batch_count = 0;
+						$ainventory = array();
+					}
+
+					if ($amazon_products_batch_count == $max_amazon_batch){
+						SubmitAmazonProductsBatch();
+
+						$amazon_products_batch_count = 0;
+						$aproducts = array();
+					}
+
 
 				$cnt++;
 			}
@@ -586,27 +597,27 @@ else {
 
 			if ($bing_inventory_batch_count >= 1 && !empty($binventory) && is_array($binventory))
 			{
-                $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+                $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, DEBUG_MODE);
 				//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
 				if ( $error == 500 )
 					restore_queue( $binventory, 2 );
 			}
 			if ($bing_products_batch_count >= 1 && !empty($bproducts) && is_array($bproducts))
 			{
-				$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+				$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, DEBUG_MODE);
 				if ( $error == 500 )
 					restore_queue( $bproducts, 1 );
 			}
 
 			if ($google_inventory_batch_count >= 1 && !empty($ginventory) && is_array($ginventory))
 			{
-				$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID);
+				$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, DEBUG_MODE);
 				if ( $error == 500 )
 					restore_queue( $ginventory, 2 );
 			}
 			if ($google_products_batch_count >= 1 && !empty($gproducts) && is_array($gproducts))
 			{
-				$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID);
+				$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, DEBUG_MODE);
 				if ( $error == 500 )
 					restore_queue( $gproducts, 1 );
 			}

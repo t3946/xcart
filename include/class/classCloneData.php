@@ -6,16 +6,25 @@ class classCloneData
     protected $sPrimaryKeyFiled;
     protected $sPrimaryTable;
     protected $primaryKeyValue;
+    protected $aPrimaryTableValue = array();
     protected $arrCloneTableStructure = array();
     private $aClonedData;
     public $message = array();
 
-    public function __construct()
+    public function __construct($iId = null)
     {
         global $sql_tbl;
         $this->sql_tbl = $sql_tbl;
+        if (!is_null($iId) && is_numeric($iId)) {
+            $this->fillPrimaryTableInfo($iId);
+        }
     }
 
+    private function fillPrimaryTableInfo($iId) {
+        $this->aPrimaryTableValue = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = $iId");
+        if (!empty($this->aPrimaryTableValue) && is_array($this->aPrimaryTableValue))
+            $this->primaryKeyValue = $this->aPrimaryTableValue[$this->sPrimaryKeyFiled];
+    }
 
     protected function recursive_escape(&$item) {
         $item = addslashes($item);
@@ -139,6 +148,22 @@ public function checkDBChanges () {
         }
 
         return true;
+    }
+
+    public function getField($sFieldName) {
+        return $this->aPrimaryTableValue[$sFieldName];
+    }
+
+    public function getFields($aFields = array()) {
+        if (is_array($aFields)) {
+            if (empty($aFields)) return $this->aPrimaryTableValue;
+            return array_intersect($this->aPrimaryTableValue, $aFields);
+        }
+        return false;
+    }
+
+    public function setField($sFieldName, $sNewValue) {
+        $this->aPrimaryTableValue[$sFieldName] = $sNewValue;
     }
 
 }

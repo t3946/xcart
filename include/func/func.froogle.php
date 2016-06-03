@@ -55,6 +55,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 
 
+$start_time = round(microtime(true) * 1000);
 
 /////////////////////////////////////////////////////////////////////
 //$productid = 281820;
@@ -239,11 +240,11 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 			}
 
 			if (!empty($catids)) {
-				$cats[$kpc] = func_query("SELECT categoryid, category, google_product_category FROM $sql_tbl[categories] WHERE categoryid IN ('".implode("','", $catids)."') AND avail = 'Y'$sf_cat_condition");
+				$cats[$kpc] = func_query("SELECT categoryid, category, google_product_category FROM $sql_tbl[categories] WHERE categoryid IN ('".implode("','", $catids)."') $sf_cat_condition");
 				$catids = array_flip($catids);
 				if (!empty($cats[$kpc])) {
-					if (count($cats[$kpc]) != count($catids))
-                                                    continue;
+					/*if (count($cats[$kpc]) != count($catids))
+                                                    continue;*/
 
 					foreach ($cats[$kpc] as $k => $v) {
                                                     if (isset($catids[$v['categoryid']])) {
@@ -261,7 +262,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 
 	if (!empty($cats[0])){
 		$cats_path = $cats[0];
-        }
+	}
 
 	$cats_path_for_thefind = !empty($cats) ? implode(',', $cats) : '';
 
@@ -359,6 +360,7 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	include_once $xcart_dir."/include/class/classProducts.php";
 	$classProduct = new classProducts();
 	$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
+	$product['custom_label_3'] = $classProduct->getManfacturerClass($product['manufacturerid'])->getField("manufacturer");
 
 	/*$pos = strpos($product['productcode'], '-');
 	$mpn = '';
@@ -444,23 +446,25 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 
 	$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
 
+	$product['custom_label_2'] = 'UPS rates';
 
 	if (!empty($amazon_shippings_arr)){
 
-	    $shipping_ground_arr = $shipping_arr;
-	    $shipping_arr = $amazon_shippings_arr;
+		$shipping_ground_arr = $shipping_arr;
+		$shipping_arr = $amazon_shippings_arr;
 
-	    if(is_array($shipping_arr["not_found_rates_for_state"]) && !empty($shipping_ground_arr["shippings_google_arr"])){
+		if (is_array($shipping_arr["not_found_rates_for_state"]) && !empty($shipping_ground_arr["shippings_google_arr"])) {
 
-		foreach ($shipping_arr["not_found_rates_for_state"] as $k_n => $v_n){
-			foreach ($shipping_ground_arr["shippings_google_arr"] as $k_g => $v_g){
-				if ($v_g["region"] == $v_n){
-					$shipping_arr["shippings_google_arr"][] = $v_g;
-					$shipping_arr["shippings_str"] .=",US:".$v_n.":Ground:".$v_g["price"]["value"]."USD";
+			foreach ($shipping_arr["not_found_rates_for_state"] as $k_n => $v_n) {
+				foreach ($shipping_ground_arr["shippings_google_arr"] as $k_g => $v_g) {
+					if ($v_g["region"] == $v_n) {
+						$shipping_arr["shippings_google_arr"][] = $v_g;
+						$shipping_arr["shippings_str"] .= ",US:" . $v_n . ":Ground:" . $v_g["price"]["value"] . "USD";
+						$product['custom_label_2'] = 'FBA rates';
+					}
 				}
 			}
 		}
-	    }
 	}
 
 
@@ -698,6 +702,11 @@ function GetGoogleBaseOneRow($productid, $scrip_name=""){
 	$row_arr["row"] = $row;
 	$row_arr["product"] = $product;
 
+	$current_time = round(microtime(true) * 1000);
+	$diff_time = ($current_time - $start_time);
+
+	func_backprocess_log("incremental feeds", sprintf("Row generated for pid=%d in %d msec.",$product['productid'],$diff_time));
+
 	return $row_arr;
 }
 
@@ -743,7 +752,7 @@ function AddProductToGoogleBaseBatch($productid, $MerchantID, $update_type, $ser
 	return $AddProductToGoogleBaseBatch_arr;
 }
 
-function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
+function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, $debug_mode = 'N'){
         global $started_at, $sql_tbl, $froogle_tracing_token, $debug_requests;
 
 	foreach ($ginventory as $k => $v){
@@ -778,34 +787,35 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 				$postBody["entries"][$k]["inventory"]["kind"] = "content#inventory";
 
 	}
-
 	$code = 200;
+if ($debug_mode != 'Y') {
+
 	try {
 
-                $k++;
-                print("\nGB: tried to submit $k items as inventory feed \n");
+		$k++;
+		print("\nGB: tried to submit $k items as inventory feed \n");
 
-		$log_text = "GB: tried to submit $k items as inventory feed ($MerchantID: ".$product["sfid"]." )";
+		$log_text = "GB: tried to submit $k items as inventory feed ($MerchantID: " . $product["sfid"] . " )";
 		func_backprocess_log("incremental feeds", $log_text);
 
 
-	$params = array();
-	$params["postBody"] = $postBody;
+		$params = array();
+		$params["postBody"] = $postBody;
 
 
 //        $optParams = array();
-        /*if tracing token defined - then it is should be included in all GoogleContentAPI requests*/
+		/*if tracing token defined - then it is should be included in all GoogleContentAPI requests*/
 //        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
-        if (!empty($froogle_tracing_token)) {
-            $params['trace'] = 'token:'.$froogle_tracing_token;
-        }
+		if (!empty($froogle_tracing_token)) {
+			$params['trace'] = 'token:' . $froogle_tracing_token;
+		}
 //        $params = array('postBody' => $postBody);
 //        $params = array_merge($params, $optParams);
 //		$params = array('postBody' => $postBody);
 //		$params = array_merge($params, $optParams);
 
 
-                $results = $service->inventory->call('custombatch', array($params), "Google_Service_ShoppingContent_InventoryCustomBatchResponse");
+		$results = $service->inventory->call('custombatch', array($params), "Google_Service_ShoppingContent_InventoryCustomBatchResponse");
 
 
 //	        if ($debug_requests == "Y"){
@@ -814,25 +824,25 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 
 
 ###
-                $results_arr = (array)$results;
-                $log_text = "";
-                foreach ($results_arr as $k => $v){
-                 if (!empty($v) && is_array($v)){
-                  foreach ($v as $kk => $vv){
-                   if ($kk == "entries" && !empty($vv) && is_array($vv)){
-                    foreach ($vv as $kkk => $vvv){
-                     if (!empty($vvv["errors"])){
-                      $log_text .= "batchId: ".$vvv["batchId"]." code: " . $vvv["errors"]["code"]. " message: ".$vvv["errors"]["message"] . "\n";
-						 $code = $vvv["errors"]["code"];
-                     }
-                    }
-                   }
-                  }
-                 }
-                }
-                if (!empty($log_text)){
-                        func_backprocess_log("incremental feeds", $log_text);
-                }
+		$results_arr = (array)$results;
+		$log_text = "";
+		foreach ($results_arr as $k => $v) {
+			if (!empty($v) && is_array($v)) {
+				foreach ($v as $kk => $vv) {
+					if ($kk == "entries" && !empty($vv) && is_array($vv)) {
+						foreach ($vv as $kkk => $vvv) {
+							if (!empty($vvv["errors"])) {
+								$log_text .= "batchId: " . $vvv["batchId"] . " code: " . $vvv["errors"]["code"] . " message: " . $vvv["errors"]["message"] . "\n";
+								$code = $vvv["errors"]["code"];
+							}
+						}
+					}
+				}
+			}
+		}
+		if (!empty($log_text)) {
+			func_backprocess_log("incremental feeds", $log_text);
+		}
 
 //func_print_r($log_text);
 ###
@@ -841,27 +851,26 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID){
 //$ginventory_new = json_encode($postBody);
 //func_print_r($ginventory_new);
 //		$results = $service->inventory->custombatch($ginventory_new);
-	}
-	catch (Google_ServiceException $e) {
+	} catch (Google_ServiceException $e) {
 		print "Error code :" . $e->getCode() . "\n";
 		// Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
 		print "Error message: " . $e->getMessage() . "\n";
 
-                $log_text = "Error code :" . $e->getCode() . "\n"."Error message: " . $e->getMessage();
-                func_backprocess_log("incremental feeds", $log_text);
+		$log_text = "Error code :" . $e->getCode() . "\n" . "Error message: " . $e->getMessage();
+		func_backprocess_log("incremental feeds", $log_text);
 
-	}
-	catch (Google_Exception $e) {
+	} catch (Google_Exception $e) {
 		// Other error.
 		print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
 
-                $log_text = "An error occurred: (" . $e->getCode() . ") " . $e->getMessage();
-                func_backprocess_log("incremental feeds", $log_text);
+		$log_text = "An error occurred: (" . $e->getCode() . ") " . $e->getMessage();
+		func_backprocess_log("incremental feeds", $log_text);
 	}
+}
 return $code;
 //func_print_r($results);
 }
-function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $username, $password, $token)
+function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $username, $password, $token, $debug_mode = 'N')
 {
         global $xcart_dir, $active_modules, $config, $https_location, $http_location;
         global $started_at, $sql_tbl;
@@ -995,95 +1004,93 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 	}
 
     //func_print_r($postBody);
-                
 
+	$code = 200;
+	if ($debug_mode != 'Y') {
+		try {
+			$k++;
 
-	try {
-        $k++;
+			print("\nBing: tried to submit $k items as inventory feed ($MerchantID) \n");
 
-		print("\nBing: tried to submit $k items as inventory feed ($MerchantID) \n");
+			$log_text = "Bing: tried to submit $k items as inventory feed";
+			func_backprocess_log("incremental feeds", $log_text);
 
-		$log_text = "Bing: tried to submit $k items as inventory feed";
-		func_backprocess_log("incremental feeds", $log_text);
+			$json = json_encode($postBody);
 
-		$json = json_encode( $postBody );
+			$baseuri = "https://content.api.bingads.microsoft.com/shopping/v9.1";
+			$bmcuri = $baseuri . "/bmc/" . $MerchantID;
+			$batchuri = $bmcuri . "/products/batch";
 
-		$baseuri = "https://content.api.bingads.microsoft.com/shopping/v9.1";
-		$bmcuri = $baseuri . "/bmc/" . $MerchantID;
-		$batchuri = $bmcuri . "/products/batch";
+			$query = "?alt=json";
 
-		$query = "?alt=json";
+			$url = $batchuri . $query;
 
-		$url = $batchuri . $query;
+			$ch = curl_init();
 
-		$ch = curl_init();
-
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 //		$headers = [];
-		$headers = array();
-		$headers[] = 'Username: ' . $username;
-		$headers[] = 'Password: ' . $password;
-		$headers[] = 'DeveloperToken: ' . $token;
-		$headers[] = 'Content-Type: application/json';
-		$headers[] = 'Content-Length: ' . strlen($json);
+			$headers = array();
+			$headers[] = 'Username: ' . $username;
+			$headers[] = 'Password: ' . $password;
+			$headers[] = 'DeveloperToken: ' . $token;
+			$headers[] = 'Content-Type: application/json';
+			$headers[] = 'Content-Length: ' . strlen($json);
 
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $json );
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
 
-		$output = curl_exec($ch);
+			$output = curl_exec($ch);
 
-		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		if ( $code != 200 )
-		{
-			$log_text = "Bing: the operation failed with code = $code.\n";
-			func_backprocess_log("incremental feeds", $log_text);
-		}
+			$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			if ($code != 200) {
+				$log_text = "Bing: the operation failed with code = $code.\n";
+				func_backprocess_log("incremental feeds", $log_text);
+			}
 
-		curl_close($ch);
+			curl_close($ch);
 
-		//echo $output . "\n";
+			//echo $output . "\n";
 
-		$results = json_decode($output);
+			$results = json_decode($output);
 ###
-		$results_arr = (array)$results;
-		$log_text = "";
-		foreach ($results_arr as $k => $v){
-			if (!empty($v) && is_array($v)){
-				foreach ($v as $kk => $vv){
-					if ($kk == "entries" && !empty($vv) && is_array($vv)){
-						foreach ($vv as $kkk => $vvv){
-							if (!empty($vvv["errors"])){
-								$log_text .= "batchId: ".$vvv["batchId"]." code: " . $vvv["errors"]["code"]. " message: ".$vvv["errors"]["message"] . "\n";
+			$results_arr = (array)$results;
+			$log_text = "";
+			foreach ($results_arr as $k => $v) {
+				if (!empty($v) && is_array($v)) {
+					foreach ($v as $kk => $vv) {
+						if ($kk == "entries" && !empty($vv) && is_array($vv)) {
+							foreach ($vv as $kkk => $vvv) {
+								if (!empty($vvv["errors"])) {
+									$log_text .= "batchId: " . $vvv["batchId"] . " code: " . $vvv["errors"]["code"] . " message: " . $vvv["errors"]["message"] . "\n";
+								}
 							}
 						}
 					}
 				}
 			}
-		}
-		if (!empty($log_text)){
-			func_backprocess_log("incremental feeds", $log_text);
-		}
+			if (!empty($log_text)) {
+				func_backprocess_log("incremental feeds", $log_text);
+			}
 ###
 
+		} catch (Exception $e) {
+			print "Error code :" . $e->getCode() . "\n";
+			// Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
+			print "Error message: " . $e->getMessage() . "\n";
+
+			$log_text = "Error code :" . $e->getCode() . "\n" . "Error message: " . $e->getMessage();
+			func_backprocess_log("incremental feeds", $log_text);
+		}
 	}
-	catch (Exception $e) {
-		print "Error code :" . $e->getCode() . "\n";
-		// Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
-		print "Error message: " . $e->getMessage() . "\n";
-
-		$log_text = "Error code :" . $e->getCode() . "\n"."Error message: " . $e->getMessage();
-		func_backprocess_log("incremental feeds", $log_text);
-	}
-
-
+	return $code;
 }
 
-function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username, $password, $token)
+function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username, $password, $token, $debug_mode = 'N')
 {
 	global $sql_tbl;
 
@@ -1092,7 +1099,8 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 
 	foreach ($bproducts as $k => $v){
 
-		$product_info = GetGoogleBaseOneRow($v["productid"], "main_google");
+		//$product_info = GetGoogleBaseOneRow($v["productid"], "main_google");
+		$product_info = $v["product_info"];
 
 		$pforsale = func_query_first_cell("SELECT SQL_NO_CACHE $sql_tbl[products].forsale FROM $sql_tbl[products] WHERE $sql_tbl[products].productid = '$v[productid]'");
 
@@ -1148,7 +1156,8 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 			$postBody["entries"][$k_counter]["product"]["mpn"] = $product_info["product"]["mpn"];
 			$postBody["entries"][$k_counter]["product"]["price"]["value"] = $product_info["product"]["price"];
 			$postBody["entries"][$k_counter]["product"]["price"]["currency"] = "USD";
-			$postBody["entries"][$k_counter]["product"]["productType"] = $product_info["product"]["cats_path"];
+			if (!empty($product_info["product"]["cats_path"]))
+				$postBody["entries"][$k_counter]["product"]["productType"] = $product_info["product"]["cats_path"];
 			if (trim($product_info["product"]["gpc"]) != '') $postBody["entries"][$k_counter]["product"]["googleProductCategory"] = $product_info["product"]["gpc"];
 
 #
@@ -1168,6 +1177,8 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 		/*Custom Labels*/
             $postBody["entries"][$k_counter]["product"]["customLabel0"] = $product_info["product"]["custom_label_0"];
             $postBody["entries"][$k_counter]["product"]["customLabel1"] = $product_info["product"]["custom_label_1"];
+            $postBody["entries"][$k_counter]["product"]["customLabel2"] = $product_info["product"]["custom_label_2"];
+            $postBody["entries"][$k_counter]["product"]["customLabel3"] = $product_info["product"]["custom_label_3"];
 
 			$postBody["entries"][$k_counter]["product"]["adwordsGrouping"] = $product_info["product"]["adwords_grouping"];
 			$postBody["entries"][$k_counter]["product"]["adwordsLabels"][0] = $product_info["product"]["adwords_labels"];
@@ -1210,8 +1221,9 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 			$k_counter++;
 		}
 	}
-
 	$code = 200;
+if ($debug_mode != 'Y') {
+
 	try {
 
 		print("\nBing: tried to submit $k_counter items as product feed ($MerchantID) \n");
@@ -1219,10 +1231,10 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 		$log_text = "Bing: tried to submit $k_counter items as product feed ($MerchantID)";
 		func_backprocess_log("incremental feeds", $log_text);
 
-		$json = json_encode( $postBody );
+		$json = json_encode($postBody);
 
-		if ($json == "null"){
-		        func_print_r("json = json_encode(postBody); print_r(postBody):", $postBody);
+		if ($json == "null") {
+			func_print_r("json = json_encode(postBody); print_r(postBody):", $postBody);
 		}
 
 		$baseuri = "https://content.api.bingads.microsoft.com/shopping/v9.1";
@@ -1249,13 +1261,12 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 		$headers[] = 'Content-Length: ' . strlen($json);
 
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $json );
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
 
 		$output = curl_exec($ch);
 
 		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		if ( $code != 200 )
-		{
+		if ($code != 200) {
 			$log_text = "Bing: the operation failed with code = $code.\n";
 			func_backprocess_log("incremental feeds", $log_text);
 		}
@@ -1269,34 +1280,33 @@ function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username,
 ###
 		$results_arr = (array)$results;
 		$log_text = "";
-		foreach ($results_arr as $k => $v){
-			if (!empty($v) && is_array($v)){
-				foreach ($v as $kk => $vv){
-					if ($kk == "entries" && !empty($vv) && is_array($vv)){
-						foreach ($vv as $kkk => $vvv){
-							if (!empty($vvv["errors"])){
-								$log_text .= "batchId: ".$vvv["batchId"]." code: " . $vvv["errors"]["code"]. " message: ".$vvv["errors"]["message"] . "\n";
+		foreach ($results_arr as $k => $v) {
+			if (!empty($v) && is_array($v)) {
+				foreach ($v as $kk => $vv) {
+					if ($kk == "entries" && !empty($vv) && is_array($vv)) {
+						foreach ($vv as $kkk => $vvv) {
+							if (!empty($vvv["errors"])) {
+								$log_text .= "batchId: " . $vvv["batchId"] . " code: " . $vvv["errors"]["code"] . " message: " . $vvv["errors"]["message"] . "\n";
 							}
 						}
 					}
 				}
 			}
 		}
-		if (!empty($log_text)){
+		if (!empty($log_text)) {
 			func_backprocess_log("incremental feeds", $log_text);
 		}
 ###
 
-	}
-	catch (Exception $e) {
+	} catch (Exception $e) {
 		print "Error code :" . $e->getCode() . "\n";
 		// Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
 		print "Error message: " . $e->getMessage() . "\n";
 
-		$log_text = "Error code :" . $e->getCode() . "\n"."Error message: " . $e->getMessage();
+		$log_text = "Error code :" . $e->getCode() . "\n" . "Error message: " . $e->getMessage();
 		func_backprocess_log("incremental feeds", $log_text);
 	}
-
+}
 return $code;
 
 }
@@ -1330,7 +1340,7 @@ function AddProductToBingBaseBatch($productid,$update_type,$forsale,$bing_produc
 
 }
 
-function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
+function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mode = 'N'){
 	global $sql_tbl, $froogle_tracing_token, $debug_requests;
 
 //	func_print_r($gproducts);
@@ -1341,7 +1351,8 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 
 	foreach ($gproducts as $k => $v){
 
-		$product_info = GetGoogleBaseOneRow($v["productid"], "main_google");
+		//$product_info = GetGoogleBaseOneRow($v["productid"], "main_google");
+		$product_info = $v['product_info'];
 		
 		$pforsale = func_query_first_cell("SELECT SQL_NO_CACHE $sql_tbl[products].forsale FROM $sql_tbl[products] WHERE $sql_tbl[products].productid = '$v[productid]'");
 
@@ -1400,7 +1411,8 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 
                 $postBody["entries"][$k_counter]["product"]["price"]["value"] = $product_info["product"]["price"];
                 $postBody["entries"][$k_counter]["product"]["price"]["currency"] = "USD";
-                $postBody["entries"][$k_counter]["product"]["productType"] = $product_info["product"]["cats_path"];
+				if (!empty($product_info["product"]["cats_path"]))
+                	$postBody["entries"][$k_counter]["product"]["productType"] = $product_info["product"]["cats_path"];
                 if (trim($product_info["product"]["gpc"]) != '') $postBody["entries"][$k_counter]["product"]["googleProductCategory"] = $product_info["product"]["gpc"];
 
 #
@@ -1437,6 +1449,8 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 		/*Custom Labels*/
                 $postBody["entries"][$k_counter]["product"]["customLabel0"] = $product_info["product"]["custom_label_0"];
                 $postBody["entries"][$k_counter]["product"]["customLabel1"] = $product_info["product"]["custom_label_1"];
+                $postBody["entries"][$k_counter]["product"]["customLabel2"] = $product_info["product"]["custom_label_2"];
+                $postBody["entries"][$k_counter]["product"]["customLabel3"] = $product_info["product"]["custom_label_3"];
 
                 $postBody["entries"][$k_counter]["product"]["destinations"][0]["destinationName"] = "ShoppingApi";
                 $postBody["entries"][$k_counter]["product"]["destinations"][0]["intention"] = "required";
@@ -1475,81 +1489,79 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID){
 		$k_counter++;
 		}
 	}
+	$code = 200;
+if ($debug_mode != 'Y') {
 
-$code = 200;
-        try {
+	try {
 
 		print("\nGB: tried to submit $k_counter items as product feed ($MerchantID)\n");
 
-        $log_text = "GB: tried to submit $k_counter items as product feed ($MerchantID)";
-        func_backprocess_log("incremental feeds", $log_text);
+		$log_text = "GB: tried to submit $k_counter items as product feed ($MerchantID)";
+		func_backprocess_log("incremental feeds", $log_text);
 
-/*
-        $optParams = array();
-        #if tracing token defined - then it is should be included in all GoogleContentAPI requests
-//        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
-        if (!empty($froogle_tracing_token)) {
-            $optParams = array('trace' => 'token:'.$froogle_tracing_token);
-        }
-        $params = array('postBody' => $postBody);
-        $params = array_merge($params, $optParams);
-*/
-
-
-        $params = array();
-        $params["postBody"] = $postBody;
-        if (!empty($froogle_tracing_token)) {
-            $params['trace'] = 'token:'.$froogle_tracing_token;
-        }
+		/*
+                $optParams = array();
+                #if tracing token defined - then it is should be included in all GoogleContentAPI requests
+        //        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
+                if (!empty($froogle_tracing_token)) {
+                    $optParams = array('trace' => 'token:'.$froogle_tracing_token);
+                }
+                $params = array('postBody' => $postBody);
+                $params = array_merge($params, $optParams);
+        */
 
 
+		$params = array();
+		$params["postBody"] = $postBody;
+		if (!empty($froogle_tracing_token)) {
+			$params['trace'] = 'token:' . $froogle_tracing_token;
+		}
 
-        $results = $service->products->call('custombatch', array($params), "Google_Service_ShoppingContent_ProductsCustomBatchResponse");
-        
-	if ($debug_requests == "Y"){
-		func_print_r($results);
-	}
+
+		$results = $service->products->call('custombatch', array($params), "Google_Service_ShoppingContent_ProductsCustomBatchResponse");
+
+		if ($debug_requests == "Y") {
+			func_print_r($results);
+		}
 
 
 ###
 		$results_arr = (array)$results;
 		$log_text = "";
-		foreach ($results_arr as $k => $v){
-		 if (!empty($v) && is_array($v)){
-		  foreach ($v as $kk => $vv){
-		   if ($kk == "entries" && !empty($vv) && is_array($vv)){
-		    foreach ($vv as $kkk => $vvv){
-		     if (!empty($vvv["errors"])){
-		      $log_text .= "batchId: ".$vvv["batchId"]." code: " . $vvv["errors"]["code"]. " message: ".$vvv["errors"]["message"] . "\n";
-				 $code = $vvv["errors"]["code"];
-		     }
-		    }
-		   }
-		  }
-		 }      
+		foreach ($results_arr as $k => $v) {
+			if (!empty($v) && is_array($v)) {
+				foreach ($v as $kk => $vv) {
+					if ($kk == "entries" && !empty($vv) && is_array($vv)) {
+						foreach ($vv as $kkk => $vvv) {
+							if (!empty($vvv["errors"])) {
+								$log_text .= "batchId: " . $vvv["batchId"] . " code: " . $vvv["errors"]["code"] . " message: " . $vvv["errors"]["message"] . "\n";
+								$code = $vvv["errors"]["code"];
+							}
+						}
+					}
+				}
+			}
 		}
-		if (!empty($log_text)){
+		if (!empty($log_text)) {
 			func_backprocess_log("incremental feeds", $log_text);
 		}
 ###
 
-        }
-        catch (Google_ServiceException $e) {
-                print "Error code :" . $e->getCode() . "\n";
-                // Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
-                print "Error message: " . $e->getMessage() . "\n";
+	} catch (Google_ServiceException $e) {
+		print "Error code :" . $e->getCode() . "\n";
+		// Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
+		print "Error message: " . $e->getMessage() . "\n";
 
-                $log_text = "Error code :" . $e->getCode() . "\n"."Error message: " . $e->getMessage();
-                func_backprocess_log("incremental feeds", $log_text);
-        }
-        catch (Google_Exception $e) {
-                // Other error.
-                print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
+		$log_text = "Error code :" . $e->getCode() . "\n" . "Error message: " . $e->getMessage();
+		func_backprocess_log("incremental feeds", $log_text);
+	} catch (Google_Exception $e) {
+		// Other error.
+		print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
 
-                $log_text = "An error occurred: (" . $e->getCode() . ") " . $e->getMessage();
-                func_backprocess_log("incremental feeds", $log_text);
-        }
-
+		$log_text = "An error occurred: (" . $e->getCode() . ") " . $e->getMessage();
+		func_backprocess_log("incremental feeds", $log_text);
+	}
+}
 
 
 return $code;

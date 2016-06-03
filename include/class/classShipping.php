@@ -6,9 +6,11 @@ require_once $xcart_dir."/include/class/classProducts.php";
 class classShipping extends classCloneData
 {
 
-    public function __construct()
+    public function __construct($iId = null)
     {
-        parent::__construct();
+        $this->sPrimaryTable = "shipping";
+        $this->sPrimaryKeyFiled = "shippingid";
+        parent::__construct($iId);
     }
 
     public function getShippingInfo($iShippingId) {
