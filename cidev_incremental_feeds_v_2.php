@@ -530,10 +530,6 @@ else {
 ###
 
 					//Bing Batch Array = Google Batch Array
-					foreach ($gproducts as &$pv) {
-						$pv['product_info'] = GetGoogleBaseOneRow($pv['productid'], "main_google");
-					}
-
 					$bproducts = $gproducts;
 
 					if ($bing_inventory_batch_count == $max_bing_batch)
