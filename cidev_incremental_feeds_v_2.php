@@ -47,7 +47,8 @@ define("FROOGLE_TAIL_LEN", strlen(constant("FROOGLE_TAIL")));
 define('FROOGLE_MAX_DESCRIPTION_LENGTH', 10 * 1024); //The content in an attribute in an item exceeds 10 KB.
 
 define('EXCLUDE_CATEGORYID_BRANCH', 5099);
-define('DEBUG_MODE', 'N');
+define('SUBMIT_DISABLE', 'N');
+define('EXTRA_LOG', 'N');
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -86,7 +87,7 @@ db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cidev_incremental_fe
 $started_at = time();
 
 func_backprocess_log("incremental feeds", " ");
-$log_text = " * * *  Cron started  * * * DEBUG_MODE = '".DEBUG_MODE."'";
+$log_text = " * * *  Cron started  * * * SUBMIT_DISABLE = '".SUBMIT_DISABLE."', EXTRA_LOG = '".EXTRA_LOG."'";
 func_backprocess_log("incremental feeds", $log_text);
 
 
@@ -312,7 +313,7 @@ $cred = new Google_Auth_AssertionCredentials(
 	$key
 );
 $client->setAssertionCredentials($cred);
-if (DEBUG_MODE!="Y") {
+if (SUBMIT_DISABLE!="Y") {
 	if ($client->getAuth()->isAccessTokenExpired()) {
 		$client->getAuth()->refreshTokenWithAssertion($cred);
 	}
@@ -522,7 +523,7 @@ else {
 				if ($enable_incremental_feed_updates == "Y" && !empty($MerchantID) && !empty($client_id))
 				{
 
-					$AddProductToGoogleBaseBatch_arr = AddProductToGoogleBaseBatch($product["productid"], $MerchantID, $product["utype"], $service, $product["forsale"], $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory);
+					$AddProductToGoogleBaseBatch_arr = AddProductToGoogleBaseBatch($product["productid"], $MerchantID, $product["utype"], $service, $product["forsale"], $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, EXTRA_LOG);
 
 					if (!empty($AddProductToGoogleBaseBatch_arr) && is_array($AddProductToGoogleBaseBatch_arr)){
 						$google_products_batch_count = $AddProductToGoogleBaseBatch_arr["google_products_batch_count"];
@@ -554,7 +555,7 @@ else {
 
 					if ($bing_inventory_batch_count == $max_bing_batch)
 					{
-						$error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, DEBUG_MODE);
+						$error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
 						//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
 						if ( $error == 500 )
 							restore_queue( $binventory, 2 );
@@ -565,7 +566,7 @@ else {
 
 					if ($bing_products_batch_count == $max_bing_batch)
 					{
-						$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, DEBUG_MODE);
+						$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
 						if ( $error == 500 )
 							restore_queue( $bproducts, 1 );
 
@@ -574,7 +575,7 @@ else {
 					}
 
 					if ($google_inventory_batch_count == $max_google_batch){
-						$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, DEBUG_MODE);
+						$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, SUBMIT_DISABLE, EXTRA_LOG);
 						if ( $error == 500 )
 							restore_queue( $ginventory, 2 );
 
@@ -583,7 +584,7 @@ else {
 					}
 
 					if ($google_products_batch_count == $max_google_batch){
-						$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, DEBUG_MODE);
+						$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, SUBMIT_DISABLE);
 						if ( $error == 500 )
 							restore_queue( $gproducts, 1 );
 
@@ -613,27 +614,27 @@ else {
 
 			if ($bing_inventory_batch_count >= 1 && !empty($binventory) && is_array($binventory))
 			{
-                $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, DEBUG_MODE);
+                $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
 				//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
 				if ( $error == 500 )
 					restore_queue( $binventory, 2 );
 			}
 			if ($bing_products_batch_count >= 1 && !empty($bproducts) && is_array($bproducts))
 			{
-				$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, DEBUG_MODE);
+				$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
 				if ( $error == 500 )
 					restore_queue( $bproducts, 1 );
 			}
 
 			if ($google_inventory_batch_count >= 1 && !empty($ginventory) && is_array($ginventory))
 			{
-				$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, DEBUG_MODE);
+				$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, SUBMIT_DISABLE, EXTRA_LOG);
 				if ( $error == 500 )
 					restore_queue( $ginventory, 2 );
 			}
 			if ($google_products_batch_count >= 1 && !empty($gproducts) && is_array($gproducts))
 			{
-				$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, DEBUG_MODE);
+				$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, SUBMIT_DISABLE);
 				if ( $error == 500 )
 					restore_queue( $gproducts, 1 );
 			}

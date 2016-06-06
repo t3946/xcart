@@ -114,7 +114,7 @@ if ($mode == 'search') {
 				db_query("UPDATE $sql_tbl[order_groups] SET dc_status='L', dc_received_by_distributor_time='".time()."', order_entry_flag='$order_entry_flag' WHERE orderid = '$o' AND manufacturerid='$m'");
 			} else {
 //				func_header_location($xcart_web_dir . DIR_CUSTOMER . '/index.php');
-                                $log = "<B>".$distr_code.":</B> Distributor confirmed that the order has been received. (But he did it before already.)";
+                                $log = "<B>".$distr_code.":</B> Distributor confirmed AGAIN that the order has been received";
 			}
 
 			func_log_order($o, 'X', $log, 'Distributor ('.$distr_code.')');
