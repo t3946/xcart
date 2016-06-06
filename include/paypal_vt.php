@@ -40,6 +40,13 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 				$credit_card_typy = "";
 		}
 
+		foreach ($paypal_vt as $key => $val){
+			$val = func_stripslashes(func_html_entity_decode($val));
+			$val = htmlspecialchars_decode($val, ENT_QUOTES);
+			$paypal_vt[$key]=$val;
+		}
+		var_dump($paypal_vt);
+
 		$cardholderl_name = trim($paypal_vt["cardholderl_name"]);
 		$cardholderl_name_arr = explode(" ", $cardholderl_name);
 		$first_name = trim($cardholderl_name_arr[0]);
@@ -69,33 +76,33 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		                                        "number":"'.$paypal_vt["card_number"].'",
                 		                        "type":"'.$credit_card_typy.'",
                                 		        "expire_month":"'.$paypal_vt["expiration_month"].'",
-		                                        "expire_year":"'.$paypal_vt["expiration_year"].'",
+		                                        "expire_year":"'.substr(date("Y"), 0, 2).$paypal_vt["expiration_year"].'",
                 		                        "cvv2":"'.$paypal_vt["csc"].'",
-		                                        "first_name":"'.addslashes($first_name).'",
-                		                        "last_name":"'.addslashes($last_name).'",
+		                                        "first_name":"'.($first_name).'",
+                		                        "last_name":"'.($last_name).'",
                                 		        "billing_address":{
-                                                		"line1":"'.addslashes($paypal_vt["b_address"]).'",
-		                                                "line2":"'.addslashes($paypal_vt["b_address_2"]).'",
-                		                                "city":"'.addslashes($paypal_vt["b_city"]).'",
-                                		                "state":"'.addslashes($paypal_vt["b_state"]).'",
-                                                		"postal_code":"'.addslashes($paypal_vt["b_zipcode"]).'",
-		                                                "country_code":"'.addslashes($paypal_vt["b_country"]).'"
+                                                		"line1":"'.($paypal_vt["b_address"]).'",
+		                                                "line2":"'.($paypal_vt["b_address_2"]).'",
+                		                                "city":"'.($paypal_vt["b_city"]).'",
+                                		                "state":"'.($paypal_vt["b_state"]).'",
+                                                		"postal_code":"'.($paypal_vt["b_zipcode"]).'",
+		                                                "country_code":"'.($paypal_vt["b_country"]).'"
                 		                        }
                                 		}
 		                        }
                 		],
 		                "payer_info":{
                 		        "email":"'.$order["email"].'",
-		                        "first_name":"'.addslashes($first_name).'",
-                		        "last_name":"'.addslashes($last_name).'",
+		                        "first_name":"'.($first_name).'",
+                		        "last_name":"'.($last_name).'",
 		                        "shipping_address":{
-                		                "recipient_name":"'.addslashes($order["s_firstname"]).'",
+                		                "recipient_name":"'.($order["s_firstname"]).'",
 		                                "type":"'.$shipping_address_type.'",
-                		                "line1":"'.addslashes($order["s_address"]).(!empty($order["s_address_2"])?" ".addslashes($order["s_address_2"]):"").'",
-                		                "city":"'.addslashes($order["s_city"]).'",
-		                                "state":"'.addslashes($order["s_state"]).'",
-		                                "postal_code":"'.addslashes($order["s_zipcode"]).'",
-                		                "country_code":"'.addslashes($order["s_country"]).'"
+                		                "line1":"'.($order["s_address"]).(!empty($order["s_address_2"])?" ".($order["s_address_2"]):"").'",
+                		                "city":"'.($order["s_city"]).'",
+		                                "state":"'.($order["s_state"]).'",
+		                                "postal_code":"'.($order["s_zipcode"]).'",
+                		                "country_code":"'.($order["s_country"]).'"
                 		        }
 		                }
 		        },
