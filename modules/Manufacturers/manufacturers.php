@@ -121,7 +121,87 @@ if ($REQUEST_METHOD == "POST" && $mode == "delete_distributor_return_address" &&
         func_header_location("manufacturers.php?manufacturerid=".$manufacturerid .($distributor_section ? "&distributor_section=".$distributor_section : ""));
 }
 
-if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
+if ($REQUEST_METHOD == "POST" && $mode == "copy_distributor" && $manufacturerid) {
+	$bErrorClone = false;
+
+	require_once $xcart_dir."/include/class/classManufacturers.php";
+	require_once $xcart_dir."/include/class/classCategories.php";
+	$classManufacturer = new classManufacturer();
+	$classCategories = new classCategories();
+
+	$storefont_info = func_get_storefront_info($storefront_to_copy_manufacturer, "ID");
+
+	if (!empty($root_categoryid_for_cloned_products) && is_numeric($root_categoryid_for_cloned_products)) {
+		$aCloneCategory = $classCategories->getCategoryByIdAndStoreFront($root_categoryid_for_cloned_products, $storefront_to_copy_manufacturer);
+		if (empty($aCloneCategory)) {
+			$top_message["type"] = "E";
+			$top_message["content"] = func_get_langvar_by_name("lb_root_categoryid_for_cloned_products_not_exists");
+			$bErrorClone = true;
+		}
+	}
+
+	if (!$bErrorClone) {
+		$aCloneParams = array(
+					"manufacturerid" => $manufacturerid,
+					"d_main_sf" => $storefront_to_copy_manufacturer,
+					"update_approximation_shipping_rates" => "Y",
+					"d_search_keyphrase_for_reconciliation" => "",
+					"root_categoryid_for_cloned_products" => $root_categoryid_for_cloned_products,
+					"parent_manufacturer_id" => $manufacturerid,
+					"provider" => $login,
+					"sf_prefix" => rtrim($storefont_info["prefix"], "-"),
+		);
+
+		$aOriginalManufacturer = $classManufacturer->getMainufacturersInfo(array($manufacturerid));
+		$aOriginalManufacturer = reset($aOriginalManufacturer);
+
+		$res = $classManufacturer->cloneManufacturer($aOriginalManufacturer, $aCloneParams);
+		if (!$res) {
+				$sErrorMessage = "";
+				foreach ($classManufacturer->message as $eMessage) {
+					$sErrorMessage .= func_get_langvar_by_name($eMessage);
+				}
+				$top_message["type"] = "E";
+				$top_message["content"] = $sErrorMessage;
+				$bErrorClone = true;
+
+		} else {
+				$top_message["type"] = "I";
+				$top_message["content"] = func_get_langvar_by_name("lb_copy_manufacturer_done");
+		}
+	}
+	unset($classCategories);
+	unset($classManufacturer);
+}
+
+if ($REQUEST_METHOD == "POST" && $mode == "copy_products" && $manufacturerid) {
+
+
+	require_once $xcart_dir."/include/class/classManufacturers.php";
+	$classManufacturer = new classManufacturer();
+
+	if (!empty($product_to_copy_manufacturer)) {
+		$countAddedProducts = $classManufacturer->addProductsToQueue($manufacturerid, $product_to_copy_manufacturer);
+		$top_message["type"] = "I";
+		$top_message["content"] = sprintf('%d products added to clone queue... Processing takes some time ...', $countAddedProducts);
+	} else {
+		$top_message["type"] = "E";
+		$top_message["content"] = "Target distributor not selected";
+	}
+	unset($classManufacturer);
+
+}
+
+if ($REQUEST_METHOD == "POST" && $mode == "update_root_category" && $manufacturerid) {
+
+	$aUpdateParam = array (
+		"root_categoryid_for_cloned_products" => $root_categoryid_for_cloned_products
+	);
+	if (func_array2update("manufacturers", $aUpdateParam, "manufacturerid=".$manufacturerid))
+		$top_message["content"] = func_get_langvar_by_name("msg_adm_err_manufacturer_upd");
+}
+
+if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {  //TODO check this shit
 
 
 	if ($mode == "details" && ($image_perms = func_check_image_storage_perms($file_upload_data, "M")) !== true) {
@@ -405,6 +485,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 			$query_data['email'] = $email;
 			$query_data['mess_body'] = $mess_body;
 			$query_data['submit_to_operator'] = ($submit_to_operator == 'through_distributor_website') ? $submit_to_operator = 'through_distributor_website' : $submit_to_operator = 'by_email_or_and_fax';
+			if ($query_data['submit_to_operator'] == 'through_distributor_website') {
+				$query_data['allow_dispatch_off_working_hours'] = 'N';
+			}
 
 			$query_data['manufact_text_displayed'] = $manufact_text_displayed;
 			$query_data['cart_manufact_text_displayed'] = $cart_manufact_text_displayed;
@@ -665,7 +748,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 	func_header_location("manufacturers.php?manufacturerid=$manufacturerid" . $page_str . '&word=' . $word .($distributor_section ? "&distributor_section=".$distributor_section : ""));
 }
 
-if (is_file($xcart_dir."/files/distributor_contacts.txt")){
+
+
+	if (is_file($xcart_dir."/files/distributor_contacts.txt")){
 	$distributor_contacts_file_name = "distributor_contacts.txt";
 	$smarty->assign('distributor_contacts_file_name', $distributor_contacts_file_name);
 	$smarty->assign('distributor_contacts_file', $xcart_dir."/files/".$distributor_contacts_file_name);
@@ -813,6 +898,9 @@ else {
 
 		include $xcart_dir."/include/navigation.php";
 
+		require_once $xcart_dir."/include/class/classManufacturers.php";
+		$classManufacturer = new classManufacturer();
+
 		#
 		# Get the manufacturers list
 		#
@@ -847,7 +935,7 @@ else {
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 			$products_in_manufacturers = func_query_hash("SELECT COUNT(*), manufacturerid FROM $sql_tbl[products] GROUP BY manufacturerid", 'manufacturerid', false, true);
 
-			foreach ($manufacturers as $k=>$v) {
+			foreach ($manufacturers as $k => $v) {
 				//$manufacturers[$k]["products_count"] = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[products] WHERE manufacturerid='$v[manufacturerid]'");
 				if (isset($products_in_manufacturers[$v['manufacturerid']])) {
 					$manufacturers[$k]["products_count"] = $products_in_manufacturers[$v['manufacturerid']];
@@ -856,43 +944,63 @@ else {
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 				if (!@in_array($v['manufacturerid'], $selected_manufacturers) and $login_type == 'P') {
 					$total_items = $total_items - 1;
-					$total_nav_pages = ceil($total_items/$objects_per_page)+1;
+					$total_nav_pages = ceil($total_items / $objects_per_page) + 1;
 					unset($manufacturers[$k]);
-				}	
+				}
 
 
 #
 ##
 ###
-				if (substr($v["provider_name"], 0, 2) == ", "){
+				if (substr($v["provider_name"], 0, 2) == ", ") {
 					$manufacturers[$k]["provider_name"] = substr_replace($v["provider_name"], '', 0, 2);
 				}
 
 				$I_feed = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='I'");
-				if (!empty($I_feed)){
+				if (!empty($I_feed)) {
 					$I_feed_Y = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='I' AND enabled='Y'");
-					if (!empty($I_feed_Y)){
-						$manufacturers[$k]["I_supplier_feeds_enabled"] = "Y(".$I_feed_Y.")";
+					if (!empty($I_feed_Y)) {
+						$manufacturers[$k]["I_supplier_feeds_enabled"] = "Y(" . $I_feed_Y . ")";
 					}
 
 					$I_feed_N = $I_feed - $I_feed_Y;
-					if (!empty($I_feed_N)){
- 						$manufacturers[$k]["I_supplier_feeds_disabled"] = "N(".$I_feed_N.")";
+					if (!empty($I_feed_N)) {
+						$manufacturers[$k]["I_supplier_feeds_disabled"] = "N(" . $I_feed_N . ")";
 					}
 				}
 
-                                $P_feed = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P'");
-                                if (!empty($P_feed)){
-                                	$P_feed_Y = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P' AND enabled='Y'");
-                                        if (!empty($P_feed_Y)){
-                                                $manufacturers[$k]["P_supplier_feeds_enabled"] = "Y(".$P_feed_Y.")";
+				$P_feed = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P'");
+				if (!empty($P_feed)) {
+					$P_feed_Y = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type='P' AND enabled='Y'");
+					if (!empty($P_feed_Y)) {
+						$manufacturers[$k]["P_supplier_feeds_enabled"] = "Y(" . $P_feed_Y . ")";
 					}
 
 					$P_feed_N = $P_feed - $P_feed_Y;
-					if (!empty($P_feed_N)){
-                                                $manufacturers[$k]["P_supplier_feeds_disabled"] = "N(".$P_feed_N.")";
-                                        }
-                                }
+					if (!empty($P_feed_N)) {
+						$manufacturers[$k]["P_supplier_feeds_disabled"] = "N(" . $P_feed_N . ")";
+					}
+				}
+
+				$aChManufacturers = $classManufacturer->getChildrenManufacturers($v['manufacturerid']);
+				if (!empty($aChManufacturers)) {
+					foreach ($aChManufacturers as $keyChildManufacturer => &$oChManufacturer) {
+						$aSFInfo = $classManufacturer->getStoreFronInfo($oChManufacturer['d_main_sf']);
+						$oChManufacturer['storefronPrefix'] = rtrim($aSFInfo['sfprefix'], '-');
+					}
+					$manufacturers[$k]["aChildrenManufacturers"] = $aChManufacturers;
+				}
+
+
+
+				$aParentManufacturers = $classManufacturer->getParentManufacturers($v['manufacturerid']);
+				if (!empty($aParentManufacturers)) {
+					foreach ($aParentManufacturers as $keyParentManufacturer => &$oParentManufacturer) {
+						$aSFInfo = $classManufacturer->getStoreFronInfo($oParentManufacturer['d_main_sf']);
+						$oParentManufacturer['storefronPrefix'] = rtrim($aSFInfo['sfprefix'], '-');
+					}
+				$manufacturers[$k]["aParentManufacturer"] = $aParentManufacturers;
+				}
 ###
 ##
 #
@@ -1071,6 +1179,16 @@ if (!empty($page))
         $smarty->assign("supplier_feeds_info_P", $supplier_feeds_info_P);
     }
 
+	if ($distributor_section == "30") {
+		require_once $xcart_dir."/include/class/classManufacturers.php";
+		$classManufacturer = new classManufacturer();
+		$aParentManufacturer = $classManufacturer->getChildrenManufacturers($manufacturerid);
+
+		$smarty->assign("aParentManufacturer", $aParentManufacturer);
+		$aChildManufacturers = $classManufacturer->getParentManufacturers($manufacturerid);
+		$smarty->assign("aChildManufacturers", $aChildManufacturers);
+	}
+
 //func_print_r($supplier_feeds_info_I, $supplier_feeds_info_P);
 
 
@@ -1092,6 +1210,12 @@ if ($distributor_section == "18"){
         'order_by' => '160',
         'distributor_section' => '20'
     );
+
+	$distributor_sections[] = array(
+		'title'  => 'Clone distributor to another storefront',
+		'order_by' => '170',
+		'distributor_section' => '30'
+	);
 
 
 //func_print_r($distributor_sections);

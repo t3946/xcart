@@ -229,6 +229,21 @@ else {
 	$location[] = array(func_get_langvar_by_name("lbl_add_product"), "");
 }
 
+$manufacturer_feed_fields = func_query_hash("SELECT $sql_tbl[manufacturer_feed_fields].* FROM $sql_tbl[manufacturer_feed_fields] WHERE $sql_tbl[manufacturer_feed_fields].manufacturerid='$product_info[manufacturerid]'", "field_name", false);
+
+if (!empty($manufacturer_feed_fields) && is_array($manufacturer_feed_fields)){
+	foreach ($manufacturer_feed_fields as $k => $v){
+		if (($v["locked"] == 'Y' && $v["admin_lock"] == 'Y') || ($v["locked"] == 'N' && $v["admin_lock"] == 'Y')){
+			$manufacturer_feed_fields[$k]["disable"] = "Y";
+		} else {
+			$manufacturer_feed_fields[$k]["disable"] = "N";
+		}
+	}
+
+//$manufacturer_feed_fields["eta_date_mm_dd_yyyy"]["disable"] = "Y";
+	$smarty->assign("manufacturer_feed_fields", $manufacturer_feed_fields);
+}
+
 //$providers = func_query("SELECT login, title, firstname, lastname FROM $sql_tbl[customers] WHERE usertype='P' ORDER BY login, lastname, firstname");
 $providers = func_query("SELECT login, title, firstname, lastname FROM $sql_tbl[customers] WHERE usertype='P' || usertype='A' ORDER BY login, lastname, firstname");
 $smarty->assign("providers", $providers);
@@ -256,6 +271,11 @@ else
 
 if (!empty($product_owner)) {
 	$provider_info = func_query_first("SELECT login, title, firstname, lastname FROM $sql_tbl[customers] WHERE login='$product_owner' AND usertype IN ('P','A')");
+
+	if (empty($provider_info)) {
+		$provider_info['login'] = $product_owner;
+	}
+
 	$smarty->assign("provider_info", $provider_info);
 }
 
@@ -788,6 +808,18 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 
 		$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, 'seconds');
 
+		if ($manufacturer_feed_fields["eta_date_mm_dd_yyyy"]["disable"] == "Y") {
+
+			$todaysDate = strtotime(date("Y-m-d"));
+			$maxETADate = strtotime('+2 weeks', $todaysDate);
+
+			if ($eta_date_mm_dd_yyyy > $maxETADate){
+				$eta_date_mm_dd_yyyy = $maxETADate;
+				$status = "eta_date_invalid";
+			}
+		}
+
+
 		#
 		# Update product data
 		#
@@ -803,6 +835,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			"productcode" => $productcode,
 			"forsale" => $forsale,
 			"distribution" => $distribution,
+			"eta_date_lock" => (($eta_date_locked_checkbox)?"Y":"N"),
 #
 ##
 ###
@@ -852,21 +885,42 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			$query_data['product_froogle'] = $product_froogle;
 		}
 		if (!$is_variant) {
-			$query_data['weight'] = $weight;
+			//if (empty($lock_product_weight))
+				$query_data['weight'] = $weight;
+			//if (empty($lock_shipping_weight))
+				$query_data['shipping_weight'] = $shippingweight;
 //			$query_data['avail'] = 0;/*$r_avail;*/
 			$query_data['r_avail'] = $r_avail;
 		}
-		
-        if (isset($dimensionx) && isset($dimensiony) && isset($dimensionz)) {
-//			$dimensions = [ $dimensionx, $dimensiony, $dimensionz ];
-			$dimensions = array( $dimensionx, $dimensiony, $dimensionz );
-			if (count($dimensions) >= 3) {
-				rsort($dimensions);
-				$query_data['dim_x'] = $dimensions[0];
-				$query_data['dim_y'] = $dimensions[1];
-				$query_data['dim_z'] = $dimensions[2];
+		if (empty($dim_lock)) {
+			if (isset($dimensionx) && isset($dimensiony) && isset($dimensionz)) {
+	//			$dimensions = [ $dimensionx, $dimensiony, $dimensionz ];
+				$dimensions = array( $dimensionx, $dimensiony, $dimensionz );
+				if (count($dimensions) >= 3) {
+					rsort($dimensions);
+					$query_data['dim_x'] = $dimensions[0];
+					$query_data['dim_y'] = $dimensions[1];
+					$query_data['dim_z'] = $dimensions[2];
+				}
 			}
 		}
+		if (empty($shipping_dim_lock)) {
+			if (isset($dimensionshipx) && isset($dimensionshipy) && isset($dimensionshipx)) {
+				$dimensionsshipping = array($dimensionshipx, $dimensionshipy, $dimensionshipz);
+				if (count($dimensionsshipping) >= 3) {
+					rsort($dimensionsshipping);
+					$query_data['shipping_dim_x'] = $dimensionsshipping[0];
+					$query_data['shipping_dim_y'] = $dimensionsshipping[1];
+					$query_data['shipping_dim_z'] = $dimensionsshipping[2];
+				}
+			}
+		}
+
+		$query_data['weight_lock'] = (!empty($lock_product_weight))?"Y":"N";
+		$query_data['shipping_weight_lock'] = (!empty($lock_shipping_weight))?"Y":"N";
+		$query_data['dim_lock'] = (!empty($lock_product_dimension))?"Y":"N";
+		$query_data['shipping_dim_lock'] = (!empty($lock_shipping_dimension))?"Y":"N";
+
 		func_array2update("products", $query_data, "productid = '$productid'");
 
 #
@@ -1045,6 +1099,10 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 		elseif ($status == "modified") {
 			$top_message["content"] = func_get_langvar_by_name("msg_adm_product_upd");
 			$top_message["type"] = "I";
+		}
+		elseif ($status == "eta_date_invalid") {
+			$top_message["content"] = func_get_langvar_by_name("lb_eta_date_lock_range_exceeded");
+			$top_message["type"] = "E";
 		}
 
 		if ($active_modules["Extra_Fields"]) {
@@ -1402,6 +1460,20 @@ $product_info["count_shipping_rates_for_canada"] = func_query_first_cell($qqq="S
 ##
 #
 
+include_once $xcart_dir."/include/class/classProducts.php";
+$classProduct = new classProducts();
+if ($product_info['clone_parent_productid'] > 0) {
+	$aParentProduct = $classProduct->getProductInfo($product_info['clone_parent_productid']);
+	$product_info["parent_product"] = $aParentProduct;
+} else {
+	$aChildProducts = $classProduct->getChildProducts($product_info['productid']);
+	if (isset($aChildProducts) && !empty($aChildProducts)) {
+		$product_info["child_products"] = $aChildProducts;
+	}
+}
+
+unset($classProduct);
+unset($aParentProduct);
 
 $smarty->assign("product", $product_info);
 $smarty->assign("productid", $product_info["productid"]);
@@ -1534,19 +1606,6 @@ $smarty->assign("product_questions_arr", $product_questions_arr);
 ##
 #
 
-$manufacturer_feed_fields = func_query_hash("SELECT $sql_tbl[manufacturer_feed_fields].* FROM $sql_tbl[manufacturer_feed_fields] WHERE $sql_tbl[manufacturer_feed_fields].manufacturerid='$product_info[manufacturerid]'", "field_name", false);
 
-if (!empty($manufacturer_feed_fields) && is_array($manufacturer_feed_fields)){
-	foreach ($manufacturer_feed_fields as $k => $v){
-		if (($v["locked"] == 'Y' && $v["admin_lock"] == 'Y') || ($v["locked"] == 'N' && $v["admin_lock"] == 'Y')){
-			$manufacturer_feed_fields[$k]["disable"] = "Y";
-		} else {
-			$manufacturer_feed_fields[$k]["disable"] = "N";
-		}
-	}
-
-//$manufacturer_feed_fields["eta_date_mm_dd_yyyy"]["disable"] = "Y";
-	$smarty->assign("manufacturer_feed_fields", $manufacturer_feed_fields);
-}
 
 ?>

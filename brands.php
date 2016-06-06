@@ -1,4 +1,4 @@
-<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -39,39 +39,8 @@ require "./auth.php";
 
 $brandid = abs(intval($brandid));
 
-//print"<a href='123.php'>123</a>";
-
-#
-##
-###
-if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($brandid)){
-        $is_in_table = func_query_first_cell("SELECT COUNT(sent) FROM $sql_tbl[notify_when_in_stock] WHERE email='$notify_email' AND sent='N' AND productid='$productid' AND storefrontid='$current_storefront'");
-
-        if (empty($is_in_table)){
-
-                $notify_when_in_stock[$productid] = "Y";
-                x_session_save('notify_when_in_stock');
-
-                db_query("INSERT INTO $sql_tbl[notify_when_in_stock] (productid, email, date, storefrontid) VALUES ('$productid', '$notify_email', '".time()."', '$current_storefront')");
-		$top_message["content"] = 'Thank you! You will be notified when the product is in stock.';
-                $top_message["type"] = "I";
-        } else {
-                $top_message["content"] = 'You already signed up for this notification.';
-                $top_message["type"] = "E";
-        }
-
-        $clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='M' AND resource_id='$brandid'");
-
-        if (!empty($page)){
-                $clean_url_link .= "&page=".$page;
-        }
-
-        func_header_location($clean_url_link);
-}
-###
-##
-#
-
+x_session_register("notify_email");
+$smarty->assign("notify_email", $notify_email);
 
 if (
     isset($brandid)

@@ -11,14 +11,13 @@
                 <span style="font-size: 14px; font-weight: bold;">{$lng.lbl_elasticsearch_correct_suggestions_label}</span>
 
                 {foreach from=$suggests_arr item=v_s key=k_s}
-                        <br /><a href="/keyword/{$v_s.clean_suggest}/">{$v_s.twotabsearchtextbox}</a>
+					    <br /><a href="/keyword/{$v_s.clean_suggest}/">{$v_s.twotabsearchtextbox}</a>
                 {/foreach}
 
 		<br />
 		<br />
         {/if}
         {* --- *}
-
 
 {include file="check_email_script.tpl"}
 
@@ -90,7 +89,7 @@
 <br />
 <br />
 <div style="max-height: 44px; overflow: hidden; line-height: 14px">
-	<span class="SPItems-description">{$products[product].descr|default:$products[product].fulldescr|truncate:225:"...":true}</span>
+	<span class="SPItems-description">{$products[product].descr|default:$products[product].fulldescr|strip_tags|truncate:225:"...":true}</span>
 </div>
 </font>
 {*<hr class="PListLine" size="1" />*}
@@ -151,7 +150,7 @@ Sorry we don't take pre-orders.
 
 	{assign var="tmp_productid" value=$products[product].productid}
 
-	{if $products[product].new_notify_in_stock_price ne "" && $notify_when_in_stock[$tmp_productid] ne "Y"}
+	{if ($products[product].new_notify_in_stock_price ne "" && $notify_when_in_stock[$tmp_productid] ne "Y")}
 <br />
 <span class="BuyNowQuantity">{$lng.lbl_quantity}:</span> <b>{$lng.txt_out_of_stock}</b><br />
 
@@ -160,12 +159,13 @@ Sorry we don't take pre-orders.
 </div>
 <div id="notify_tr2_{$products[product].productid}" style="display: none;">
 
-<form name="notifyform_{$products[product].productid}" method="post" 
-action='{if $main eq "catalog"}{if $action_notify_url ne ""}{$action_notify_url}{else}home.php{/if}{elseif $main eq "brand_products"}brands.php{/if}'
->
+<form name="notifyform_{$products[product].productid}" method="post"
+	  action='{if $main eq "catalog"}{if $action_notify_url ne ""}{$action_notify_url}{else}home.php{/if}
+	  			{elseif $main eq "brand_products"}brands.php{/if}'>
 <input type="hidden" name="productid" value="{$products[product].productid}" />
+<input type="hidden" name="storefrontid" value="{$current_storefront}" />
 <input type="hidden" name="mode" value="notify" />
-<B>Your email address:</B> <input type="text" name="notify_email" value="" />
+<B>Your email address:</B> <input type="text" name="notify_email" value="{if $notify_email ne ""}{$notify_email}{/if}" />
 
 {if $main eq "catalog"}
 	<input type="hidden" name="cat" value="{$cat}" />
@@ -181,7 +181,7 @@ action='{if $main eq "catalog"}{if $action_notify_url ne ""}{$action_notify_url}
 		<input type="hidden" name="page" value="{$smarty.get.page}" />
 	{/if}
 
-{include file="buttons/button.tpl" button_title="Notify me" style="button" href="javascript:if (checkEmailAddress(document.notifyform_`$products[product].productid`.notify_email, 'Y')) `$ldelim`document.notifyform_`$products[product].productid`.submit()`$rdelim`"}
+{include file="buttons/button.tpl" button_title="Notify me" style="button" href="javascript:if (checkEmailAddress(document.notifyform_`$products[product].productid`.notify_email, 'Y')) `$ldelim` \$('input[name=notify_email]').val(\$(this).siblings('input[name=notify_email]').val()); submit_notify_form(this);`$rdelim`"}
 </form>
 
 </div>

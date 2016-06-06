@@ -1,5 +1,5 @@
 <?php
-
+	include_once("include/class/classElasticSearch.php");
         $page = isset($page) ? abs(intval($page)) : 1;
         if (empty($page)) $page = 1;
 
@@ -18,11 +18,13 @@
         } else {
                 $from = $e_search_data["products_per_page"] * ($page - 1);
         }
-
+	$search_query = array();
 	if ($load_all_e_products){
 	        $url = $config["ElasticSearch_options"]["es_url"].$site_domain."/product/_search?size=".$e_search_data["total"]."&from=0";
+			$search_query = array("size"=>$e_search_data["total"], "from"=>0);
 	} else {
 	        $url = $config["ElasticSearch_options"]["es_url"].$site_domain."/product/_search?size=".$e_search_data["products_per_page"]."&from=".$from;
+			$search_query = array("size"=>$e_search_data["products_per_page"], "from"=>$from);
 	}
 
         if (!empty($cat) && !empty($search_query)){
@@ -46,54 +48,31 @@
         	$e_search_data_substring = trim($e_search_data_substring);
 	}
 
-        $data_arr["_source"] = "*._id";
-//        $data_arr["min_score"] = "0.3";
-        $data_arr["min_score"] = $config["ElasticSearch_options"]["search_results_minimum_score_value"];
-        /*
-        $data_arr["query"]["dis_max"]["queries"][0]["match_phrase"]["product.productname"]["query"] = $e_search_data_substring;
-        $data_arr["query"]["dis_max"]["queries"][0]["match_phrase"]["product.productname"]["slop"] = 2;
-        $data_arr["query"]["dis_max"]["queries"][0]["match_phrase"]["product.productname"]["boost"] = 1.5;
 
 
-        $data_arr["query"]["dis_max"]["queries"][1]["match_phrase_prefix"]["sku"]["query"] = $e_search_data_substring;
-        
-        $data_arr["query"]["dis_max"]["queries"][2]["match_phrase_prefix"]["upc"]["query"] = $e_search_data_substring;
 
-        $data_arr["query"]["dis_max"]["queries"][3]["match_phrase"]["brand.brand"]["query"] = $e_search_data_substring;
+        $classElastic = new classElasticSearch($config["ElasticSearch_options"],$site_domain);
+	    $classElastic->setSource("*._id");
+		$classElastic->setMinScore($config["ElasticSearch_options"]["search_results_minimum_score_value"]);
+		$classElastic->setType('product');
+		$classElastic->setQueryParams($e_search_data_substring);
+		//$classElastic->setMinScore("0.1");
+		if (!empty($all_productids_arr) && is_array($all_productids_arr)){
+			//$data_arr["filter"]["terms"]["_id"] = $all_productids_arr;
+			$classElastic->setFilterTerms($all_productids_arr);
+		}
 
-        $data_arr["query"]["dis_max"]["queries"][4]["match_phrase"]["description.description"]["query"] = $e_search_data_substring;
-        $data_arr["query"]["dis_max"]["queries"][4]["match_phrase"]["description.description"]["slop"] = 2;
-        $data_arr["query"]["dis_max"]["queries"][4]["match_phrase"]["description.description"]["boost"] = 0.5;
+		$result = $classElastic->query($search_query);
 
-        $data_arr["query"]["dis_max"]["queries"][5]["match"]["product.productname"]["query"] = $e_search_data_substring;
-        $data_arr["query"]["dis_max"]["queries"][5]["match"]["product.productname"]["fuzziness"] = "AUTO";
-        $data_arr["query"]["dis_max"]["queries"][5]["match"]["product.productname"]["operator"] = "and";
-        $data_arr["query"]["dis_max"]["queries"][5]["match"]["product.productname"]["boost"] = 0.5;
-        */
-        $data_arr["query"]["dis_max"]["queries"][0]["query_string"]["query"] = $e_search_data_substring;
-        $data_arr["query"]["dis_max"]["queries"][0]["query_string"]["fields"] = array("productname.productname_original^1.5","sku","upc","brand.brand_original^0.5","description.description_original");
-        $data_arr["query"]["dis_max"]["queries"][1]["query_string"]["query"] = $e_search_data_substring;
-        $data_arr["query"]["dis_max"]["queries"][1]["query_string"]["analyzer"] = "snowball";
-        $data_arr["query"]["dis_max"]["queries"][1]["query_string"]["fields"] = array("productname.productname","sku","upc","brand.brand","description.description");
-        $data_arr["query"]["dis_max"]["queries"][1]["query_string"]["fields"] = array("productname.productname^1.5","sku","upc","brand.brand^0.5","description.description");
-        $data_arr["query"]["dis_max"]["queries"][2]["match_phrase_prefix"]["sku_original"] = $e_search_data_substring;
+		if ($classElastic->hitsTotal < $config["ElasticSearch_options"]["results_count_if_less_than"] && !$load_all_e_products) {
+			$classElastic->setMinScore("0");
+			$classElastic->setType('product');
+			$aQueryArray = array();
+			$classElastic->setQueryParams($e_search_data_substring);
 
-/*        func_print_r($data_arr);*/
-
-        if (!empty($all_productids_arr) && is_array($all_productids_arr)){
-                $data_arr["filter"]["terms"]["_id"] = $all_productids_arr;
-        }
-
-        $data_json = json_encode($data_arr);
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json"));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result_json = curl_exec($ch);
-        curl_close($ch);
-        $result = json_decode($result_json, true);
+			$result = $classElastic->query($search_query);
+			$result["hits"]["total"] = $config["Appearance"]["products_per_page"];
+		}
 
         $e_products = array();
 
@@ -105,25 +84,26 @@
 
                 foreach ($result["hits"]["hits"] as $k => $v){
 
-			if (!$load_all_e_products){
+					if (!$load_all_e_products){
 
-	                        $e_product_info = func_select_product($v["_id"], @$user_account['membershipid'], false);
+									$e_product_info = func_select_product($v["_id"], @$user_account['membershipid'], false);
 
-        	                if (!empty($e_product_info)){
+									if (!empty($e_product_info)){
 
-                	                $e_products[$k] = $e_product_info;
-                        	        if (!empty($e_products[$k]["clean_url"])){
-                                	        if (substr($e_products[$k]["clean_url"], -1) != "/"){
-                                        	        $e_products[$k]["clean_url"] .= "/";
-	                                        }
-        	                        }
-                	        }
-			} else {
-				$e_products[$k]["categoryid"] = func_query_first_cell("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$v[_id]' AND main='Y'");
-			}
-		}
+											$e_products[$k] = $e_product_info;
+											if (!empty($e_products[$k]["clean_url"])){
+													if (substr($e_products[$k]["clean_url"], -1) != "/"){
+															$e_products[$k]["clean_url"] .= "/";
+													}
+											}
+									}
+					} else {
+						$e_products[$k]["categoryid"] = func_query_first_cell("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$v[_id]' AND main='Y'");
+					}
+				}
 
                 $e_products = array_values($e_products);
+
         }
 
 

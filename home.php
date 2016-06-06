@@ -1,4 +1,4 @@
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -81,13 +81,14 @@ if ($top_btn == "Y"){
 #
 ##
 ###
-if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($cat)){
+/*if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($cat)){
         $is_in_table = func_query_first_cell("SELECT COUNT(sent) FROM $sql_tbl[notify_when_in_stock] WHERE email='$notify_email' AND sent='N' AND productid='$productid' AND storefrontid='$current_storefront'");
-
+		x_session_save('notify_email');
         if (empty($is_in_table)){
 
                 $notify_when_in_stock[$productid] = "Y";
                 x_session_save('notify_when_in_stock');
+
 
                 db_query("INSERT INTO $sql_tbl[notify_when_in_stock] (productid, email, date, storefrontid) VALUES ('$productid', '$notify_email', '".time()."','$current_storefront')");
 		$top_message["content"] = 'Thank you! You will be notified when the product is in stock.';
@@ -108,7 +109,7 @@ if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($
 	}
 
         func_header_location($clean_url_link);
-}
+}*/
 ###
 ##
 #
@@ -164,11 +165,12 @@ if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
         $e_search_data_orig_substring = $e_posted_data["substring"];
         x_session_save("e_search_data_orig_substring");
 
-	$e_search_data["orig_substring"] = $e_posted_data["substring"];
-        $e_search_data["substring"] = htmlspecialchars_decode($e_posted_data["substring"]);
+//	$e_search_data["orig_substring"] = $e_posted_data["substring"];
+	$e_search_data["substring"] = htmlspecialchars_decode($e_posted_data["substring"]);
 	$e_search_data["substring"] = stripslashes($e_search_data["substring"]);
 	$e_search_data["substring"] = trim($e_search_data["substring"]);
 	$e_search_data["substring"] = str_replace("&#039;", "'", $e_search_data["substring"]);
+	$e_search_data["orig_substring"] = $e_search_data["substring"];
 
 //func_print_r($_POST);
 //func_print_r($e_search_data["substring"]);
@@ -176,17 +178,20 @@ if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
 
 	x_session_save("e_search_data");
 
-        $redirect_substring = str_replace(array(' ','#'), '-', $e_search_data["substring"]);
+        $redirect_substring = str_replace(array(' ','#',':'), '-', $e_search_data["substring"]);
+
+
         func_header_location("/keyword/".$redirect_substring."/?mode_search=Y");
 
-/*
-	if (!empty($e_current_url) && !empty($cat)){
-		func_header_location($e_current_url);
-	} else {
-//		func_header_location("home.php");
-		func_header_location("/");
-	}
-*/
+
+	/*
+        if (!empty($e_current_url) && !empty($cat)){
+            func_header_location($e_current_url);
+        } else {
+    //		func_header_location("home.php");
+            func_header_location("/");
+        }
+    */
 }
 
 
@@ -233,11 +238,10 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 ##
 #
 
-
 if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 
 	if (empty($clean_url_data['resource_type'])){
-		$redirect_substring = str_replace(array(' ','#'), '-', $e_search_data["substring"]);
+		$redirect_substring = str_replace(array(' ','#',':'), '-', $e_search_data["substring"]);
 
 		func_header_location("/keyword/".$redirect_substring."/");
 	}
@@ -419,7 +423,7 @@ Group By B.brandid
 HAVING COUNT(distinct P.productid)>0
 Order By 3 desc;";
 */
-	$menu_brands_query = "Select 
+	$menu_brands_query = "Select
         B.brandid, B.brand, COUNT(distinct P.productid) as count
 from xcart_brands B
         inner join xcart_products P ON P.brandid = B.brandid and P.forsale = 'Y'
@@ -427,6 +431,13 @@ from xcart_brands B
 Group By B.brandid
 /*HAVING COUNT(distinct P.productid)>0*/
 Order By 3 desc;";
+
+	$menu_brands_query = "SELECT xb.brandid, brand
+							FROM $sql_tbl[brands_sf] xb
+							INNER JOIN $sql_tbl[brands] b ON xb.brandid = b.brandid
+							 WHERE xb.sfid = $current_storefront
+							ORDER BY xb.products_count DESC
+							LIMIT ".($config["Brands"]["brands_listed_count"]+1);
 
 	$menu_brands = func_query($menu_brands_query);
 
@@ -481,6 +492,9 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 	elseif ($cat_with_one_brand_filter == "Y"){
 		$ga_page_name = "category_brand_list";
 	}
+
+	x_session_register("notify_email");
+	$smarty->assign("notify_email", $notify_email);
 
 	$smarty->assign("ga_page_name", $ga_page_name);
 ###

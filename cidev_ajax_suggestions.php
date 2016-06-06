@@ -12,6 +12,9 @@ define('x_session_save_to_db__do_not_use', 'Y');
 require "./top.inc.php";
 require "./init.php"; #uses xid.X
 
+include_once $xcart_dir."/include/class/classBrands.php";
+include_once $xcart_dir."/include/class/classElasticSearch.php";
+
 $current_area="C";
 ###
 ##
@@ -46,6 +49,7 @@ if ($REQUEST_METHOD == 'POST') {
 		}
 	}
 
+	$sGoogleAnaliticsParam = "";
 
 	if (
 		$section_name == "products_also_bought_with_this_product"  || 
@@ -88,26 +92,76 @@ Order By SP.`position` desc";
 
 		$pids = func_query($p_query);
 
+		switch ($section_name) {
+			case 'products_also_bought_with_this_product': $sGoogleAnaliticsParam = 'customer_also_bought_carousel';
+				break;
+			case 'related_products': $sGoogleAnaliticsParam = 'related_products_carousel';
+				break;
+			case 'recently_viewed_products': $sGoogleAnaliticsParam = 'recently_viewed_carousel';
+				break;
+		}
+
 	}
 	elseif ($section_name == "similar_products"){
 
-		$similar_productids = func_query_first_cell("SELECT similar_productids FROM $sql_tbl[products] WHERE productid='$productid'");
+		$classElastic = new classElasticSearch($config["ElasticSearch_options"],$site_domain);
+		$classElastic->setSource("*._id");
+		$classElastic->setType("product");
+		$classElastic->setSize(30);
+		$classElastic->setProductId($productid);
+		x_session_register("variant_id_for_point9");
+		switch ($variant_id_for_point9) {
+			case 0:
+				$similar_productids = func_query_first_cell("SELECT similar_productids FROM $sql_tbl[products] WHERE productid='$productid'");
 
-		if (!empty($similar_productids)){
+				if (!empty($similar_productids)){
 
-			$similar_productids_arr = explode(",", $similar_productids);
+					$similar_productids_arr = explode(",", $similar_productids);
 
-			if (!empty($similar_productids_arr) && is_array($similar_productids_arr)){
-				foreach ($similar_productids_arr as $k => $v){
+					if (!empty($similar_productids_arr) && is_array($similar_productids_arr)){
+						foreach ($similar_productids_arr as $k => $v){
 
-					$needed_resource_id = trim($v);
-					if (!in_array($needed_resource_id, $productids)){
-			                        $pids[$k]["needed_resource_id"] = $needed_resource_id;
+							$needed_resource_id = trim($v);
+							if (!in_array($needed_resource_id, $productids)){
+								$pids[$k]["needed_resource_id"] = $needed_resource_id;
+							}
+						}
 					}
 				}
-			}
+				$sGoogleAnaliticsParam = 'similar_products_carousel';
+			break;
+			case 1:
+				$classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
+				$res = $classElastic->query();
+				foreach ($res["hits"]["hits"] as $key => $sValue){
+					if ($sValue["_id"] != $productid) {
+						$pids[]["needed_resource_id"] = $sValue["_id"];
+					}
+				}
+				$sGoogleAnaliticsParam = 'similar_products_all_carousel';
+				break;
+			case 2:
+				$classBrands = new classBrands();
+				$aBrand = $classBrands->getBrandByProductId($productid);
+				$classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands($aBrand['brand']));
+				$res = $classElastic->query();
+				foreach ($res["hits"]["hits"] as $key => $sValue){
+					if ($sValue["_id"] != $productid) {
+						$pids[]["needed_resource_id"] = $sValue["_id"];
+					}
+				}
+				unset($aBrand);
+				$sGoogleAnaliticsParam = 'similar_products_other_brands_carousel';
+				break;
+
 		}
+
+		unset($classElastic);
+
+
 	}
+
+
 
 ########################
 //if ($section_name == "products_also_bought_with_this_product"){
@@ -157,6 +211,7 @@ Order By SP.`position` desc";
 
 				$N_key = $k + 1;
 				$products_str .= '"N_key": "'.$N_key.'",';
+				if (!empty($sGoogleAnaliticsParam)) $products_str .= '"ga_param": "'.$sGoogleAnaliticsParam.'",';
 
 				$products_str .= '"title": "'.addslashes($v["product"]).'"';
 			$products_str .= '}';

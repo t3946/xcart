@@ -57,8 +57,9 @@
 {if ($main eq "product")}
 {* igor_async *}
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
-{/if}
 
+{/if}
+<script src="{$SkinDir}/js/sly.min.js" type="text/javascript"></script>
 {if ($main eq "product")}
 {* igor_async *}
 <script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
@@ -146,39 +147,39 @@ window.attachEvent("onload", anchor_fix);
 
 	function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter){
 
-                var load_ajax_sections_arr = load_ajax_sections.split(',');
-                var count_ajax_sections = load_ajax_sections_arr.length;
-		var load_ajax_carousel_flag;
+        var load_ajax_sections_arr = load_ajax_sections.split(',');
+        var count_ajax_sections = load_ajax_sections_arr.length;
+        var load_ajax_carousel_flag;
 
-                load_ajax_sections_arr.forEach(function(section_name, i, load_ajax_sections_arr) {
+        load_ajax_sections_arr.forEach(function (section_name, i, load_ajax_sections_arr) {
 
-                        section_name.trim();
+            section_name.trim();
 
-                        if ((ajax_counter - 1) == i){
+            if ((ajax_counter - 1) == i) {
 //                                alert(section_name);
 
-				load_ajax_carousel_flag = true;
+                load_ajax_carousel_flag = true;
 
-				if (section_name == "similar_products"){
+                if (section_name == "similar_products") {
 
-					var products_also_bought_with_this_product_style_display;
-					products_also_bought_with_this_product_style_display = $("#products_also_bought_with_this_product").css("display");
+                    var products_also_bought_with_this_product_style_display;
+                    products_also_bought_with_this_product_style_display = $("#products_also_bought_with_this_product").css("display");
 
-					if (products_also_bought_with_this_product_style_display == "block"){
-						load_ajax_carousel_flag = false;
-					}
-				}
+                    if (products_also_bought_with_this_product_style_display == "block") {
+                        load_ajax_carousel_flag = true;
+                    }
+                }
 
-				if (load_ajax_carousel_flag){
-	                                func_load_ajax_carousel_products(section_name);
-				}
-                        }
-                });
+                if (load_ajax_carousel_flag) {
+                    func_load_ajax_carousel_products(section_name);
+                }
+            }
+        });
 
 //$("#test_text").val(ajax_counter);
 
-		ajax_counter++;
-                setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1100);
+        ajax_counter++;
+        setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1100);
 	}
 
         function func_load_ajax_carousel_products(section_name){
@@ -211,10 +212,11 @@ window.attachEvent("onload", anchor_fix);
 		$("#"+section_name).show();
 	}
 
-//	var jcarousel = $('.jcarousel').jcarousel();
+
+
+/*
 	var jcarousel = $('#jcarousel_'+section_name).jcarousel();
 
-//	$('.jcarousel-control-prev')
 	$('#jcarousel-control-prev_'+section_name)
             .on('jcarouselcontrol:active', function() {
                 $(this).removeClass('inactive');
@@ -226,7 +228,6 @@ window.attachEvent("onload", anchor_fix);
                 target: '-=1'
             });
 
-//	$('.jcarousel-control-next')
 	$('#jcarousel-control-next_'+section_name)
             .on('jcarouselcontrol:active', function() {
                 $(this).removeClass('inactive');
@@ -237,6 +238,7 @@ window.attachEvent("onload", anchor_fix);
             .jcarouselControl({
                 target: '+=1'
             });
+*/
 
 
 
@@ -255,8 +257,8 @@ window.attachEvent("onload", anchor_fix);
 		} else {
 			a_href = 'product.php?productid='+ this.productid;
 		}
-
-                html += '<li>'+
+        ga_page_name = this.ga_param;
+                html += '<li class="active">'+
 			  '<div style="text-align: center;">'+
 			  '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>'+
 			  '<br />'+ '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;">' + this.title + '</a>'+
@@ -272,12 +274,56 @@ window.attachEvent("onload", anchor_fix);
 //	jcarousel
 //	  .html(html);
 
-	$('#jcarousel_'+section_name).html(html);
+	$('#jcarousel_'+section_name).html(html).parent().after('<ul class="pages"></ul>');
+
+
 
 	// Reload carousel
 //	jcarousel
 //	  .jcarousel('reload');
-	$('#jcarousel_'+section_name).jcarousel('reload');
+	//$('#jcarousel_'+section_name).jcarousel('reload');
+                                                    jQuery(function ($) {
+                                                        'use strict';
+
+                                                        // -------------------------------------------------------------
+                                                        //   Basic Navigation
+                                                        // -------------------------------------------------------------
+                                                        (function () {
+                                                            var $frame = $('#jcarousel_'+section_name);
+                                                            var $slidee = $frame.children('ul').eq(0);
+                                                            var $wrap = $frame.parent().parent();
+
+                                                            // Call Sly on frame
+                                                            $frame.sly({
+                                                                horizontal: 1,
+                                                                itemNav: 'basic',
+                                                                smart: 1,
+                                                                activateOn: 'click',
+                                                                mouseDragging: 1,
+                                                                touchDragging: 1,
+                                                                releaseSwing: 1,
+                                                                startAt: 0,
+                                                                scrollBar: $wrap.find('.scrollbar'),
+                                                                scrollBy: 0,
+                                                                pagesBar: $wrap.find('.pages'),
+                                                                activatePageOn: 'click',
+                                                                speed: 300,
+                                                                elasticBounds: 1,
+                                                                easing: 'easeOutExpo',
+                                                                dragHandle: 1,
+                                                                dynamicHandle: 1,
+                                                                clickBar: 1,
+
+                                                                // Buttons
+                                                                prevPage: $wrap.find('.jcarousel-control-prev'),
+                                                                nextPage: $wrap.find('.jcarousel-control-next')
+                                                            });
+
+                                                        }());
+
+                                                    });
+
+
 
 /* ------------------------------------------------------------------------------------- */
 
@@ -291,10 +337,10 @@ window.attachEvent("onload", anchor_fix);
 
                                 cidev_xmlHttp.open('POST','cidev_ajax_suggestions.php?rand='+tmp_rand,true);
                                 cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
+                                //cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
                                 cidev_xmlHttp.setRequestHeader('Cache-Control','no-cache');
                                 cidev_xmlHttp.setRequestHeader('Cache-Control','no-store');
-                                cidev_xmlHttp.setRequestHeader('Connection','close');
+                                //cidev_xmlHttp.setRequestHeader('Connection','close');
                                 cidev_xmlHttp.send(cidev_parameters);
                         }
                         else {
@@ -460,10 +506,8 @@ window.attachEvent("onload", anchor_fix);
 {*
 {include file="customer/search.tpl"}
 *}
-
-
 {* Start *}
-{if $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
+{if ($main eq "catalog" && $current_category.category ne "") || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 <script type="text/javascript">
 //<![CDATA[
 func_load_more_next_productids('','Y');
@@ -834,13 +878,20 @@ var element13 = document.createElement("script");
 element13.src = "//www.googleadservices.com/pagead/conversion.js";
 document.body.appendChild(element13);
 
+{/literal}
+{if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search" || 1==1}
+{literal}
+    var element14 = document.createElement("script");
+    element14.src = "{/literal}{$SkinDir}{literal}/ajax_notify_by_email.js";
+    document.body.appendChild(element14);
+{/literal}
+{/if}
+{literal}
 }
-if (window.addEventListener)
-    window.addEventListener("load", downloadJSAtOnload, false);
-else if (window.attachEvent)
-    window.attachEvent("onload", downloadJSAtOnload);
-else 
-    window.onload = downloadJSAtOnload;
+
+$(document).ready(function(){
+    downloadJSAtOnload();
+});
 </script>
 {/literal}
 {********************************************}
@@ -872,6 +923,93 @@ function openPopUp()
 </div>
 {/if}
 {* --- viralmarketingbomb --- *}
+
+{if (($main eq "product") && $config.Appearance.Enable_desktop_notifications_on_product_page eq "Y")}
+    <script type="text/javascript">
+        {literal}
+        var counter = 0;
+        var notifyTimeOut = {/literal}{$config.Appearance.Desktop_notification_timeout}{literal} * 1000;
+        var sOriginalTitle = document.title;
+        var fireTitleChange = function(param){
+            switch (counter) {
+                case 0: document.title = "{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}";
+                    break;
+                case 1: document.title = sOriginalTitle;
+                    break;
+            }
+            counter++;
+            if (counter > 1) counter = 0;
+        };
+        var interval_id;
+        var timer_id;
+        var notifytimer;
+        var notificationEnable = true;
+        var fireDeskTopNotify = function () {
+            Notification.requestPermission( newMessage );
+
+            function DisableNotification () {notificationEnable = false; }
+            function newMessage(permission) {
+
+                if( permission != "granted" || notificationEnable == false) return false;
+                var notify = new Notification("{/literal}{$lng.lb_suggest_notification_for_product_page}{literal}", {
+                    tag: "attention-notify",
+                    body: "Look at the suggested similar products",
+                    icon: "{/literal}{$product.tmbn_url}{literal}"
+                });
+                notify.onclick = function(event) { DisableNotification(); window.focus(); this.close(); };
+                notify.onclose = function(event) { DisableNotification(); };
+            }
+        };
+
+        $(window).on("blur focus", function(e) {
+            var prevType = $(this).data("prevType");
+
+            if (prevType != e.type) {   //  reduce double fire issues
+                switch (e.type) {
+                    case "blur":
+                        if (!interval_id) {
+                            timer_id = setTimeout(function () {
+                                interval_id = setInterval(fireTitleChange, 3000);
+                                var el = $("#products_also_bought_with_this_product, #related_products, #similar_products, #recently_viewed_products").filter(':visible:first');
+                                console.log(el);
+                                var elOffset = el.offset().top;
+                                var elHeight = el.height();
+                                var windowHeight = $(window).height();
+                                var offset;
+                                if (elHeight < windowHeight) {
+                                    offset = elOffset - ((windowHeight / 2) - (elHeight / 2));
+                                }
+                                else {
+                                    offset = elOffset;
+                                }
+
+                                $('html,body').animate({
+                                            scrollTop: offset},
+                                        'fast');
+
+                                notifytimer = setTimeout(fireDeskTopNotify, 1000);
+
+
+                            },notifyTimeOut);
+                        }
+                        break;
+                    case "focus":
+                        clearInterval(interval_id);
+                        clearTimeout(timer_id);
+                        clearTimeout(notifytimer);
+                        interval_id = 0;
+                        timer_id = 0;
+                        document.title = sOriginalTitle;
+                        break;
+                }
+            }
+
+            $(this).data("prevType", e.type);
+        })
+        {/literal}
+
+    </script>
+{/if}
 
 </body>
 </html>

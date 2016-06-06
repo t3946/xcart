@@ -4,7 +4,12 @@
 <script type="text/javascript">
 //<![CDATA[
 $(function() {ldelim}
-  $('#order_tabs-container').tabs();
+    {if $smarty.get.tab2 ne ""}
+        var indexTab2 = $('li a[href="#{$smarty.get.tab2}"]').parent().index();
+    {else}
+        var indexTab2 = 0;
+    {/if}
+  $('#order_tabs-container').tabs({ldelim} selected:indexTab2 {rdelim});
 {rdelim});
 //]]>
 </script>
@@ -210,25 +215,28 @@ $(document).ready(function() {
 -->
 </script>
 
+<div id="send_note_form">
+    <form action="order.php" method="post" name="ordernotesformnew">
+        <input type="hidden" name="mode" value="submit_message"/>
+        <input type="hidden" name="send_email" value="N"/>
+        <input type="hidden" name="orderid" value="{$order.orderid}"/>
+        {$cidev_firstname} ({$login}) notes:<br/>
+        <textarea id="notes" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br/>
 
-<form action="order.php" method="post" name="ordernotesformnew">
-<input type="hidden" name="mode" value="submit_message" />
-<input type="hidden" name="send_email" value="N" />
-<input type="hidden" name="orderid" value="{$order.orderid}" />
-{$cidev_firstname} ({$login}) notes:<br />
-<textarea id="notes" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br />
+        {* <input type="submit" value="Post message" id="post_message" /> *}
 
-{* <input type="submit" value="Post message" id="post_message" /> *}
+        <div style="float: left;">
+            <input type="button" value="Post message" id="post_message1"
+                   onclick="javascript: document.ordernotesformnew.submit();"/>
+        </div>
 
-<div style="float: left;">
-<input type="button" value="Post message" id="post_message1" onclick="javascript: document.ordernotesformnew.submit();" />
+        <div id="div_post_message2" style="display: none;">
+            &nbsp; <input type="button" value="Post to OTRS only" id="post_message2"
+                          onclick="javascript: document.ordernotesformnew.submit();"/>
+        </div>
+
+    </form>
 </div>
-
-<div id="div_post_message2" style="display: none;">
-&nbsp; <input type="button" value="Post to OTRS only" id="post_message2" onclick="javascript: document.ordernotesformnew.submit();" />
-</div>
-
-</form>
 			</td>
 		</tr>
                 </table>
@@ -258,7 +266,7 @@ $(document).ready(function() {
 	                <tr>
         	                <td valign="top">{if !($previous_key gte "0" && $order_logs[$previous_key].type eq $item.type && $order_logs[$previous_key].date eq $item.date && $order_logs[$previous_key].login eq $item.login && ($item.type eq "C" || $item.type eq "S"))}{$type_names[$item.type]}{/if}</td>
 	                        <td valign="top">{if !($previous_key gte "0" && $order_logs[$previous_key].type eq $item.type && $order_logs[$previous_key].date eq $item.date && $order_logs[$previous_key].login eq $item.login && ($item.type eq "C" || $item.type eq "S"))}{$item.date|date_format:'%d-%b-%Y<br />%H:%M:%S'}{/if}</td>
-                	        <td valign="top">{if !($previous_key gte "0" && $order_logs[$previous_key].type eq $item.type && $order_logs[$previous_key].date eq $item.date && $order_logs[$previous_key].login eq $item.login && ($item.type eq "C" || $item.type eq "S"))}{if $item.firstname ne ""}{$item.firstname}<br />{/if}{if $item.login ne ""}({$item.login}){/if}{/if}</td>
+                	        <td valign="top">{if !($previous_key gte "0" && $order_logs[$previous_key].type eq $item.type && $order_logs[$previous_key].date eq $item.date && $order_logs[$previous_key].login eq $item.login && ($item.type eq "C" || $item.type eq "S"))}{if $item.firstname ne ""}{$item.firstname}<br />{/if}{if $item.login ne ""}{if $item.firstname ne ""}({/if}{$item.login}{if $item.firstname ne ""}){/if}{/if}{/if}</td>
                         	<td valign="top">
 
 {if $item.log eq "checks_deposited_orders" && $checks_deposited_order ne ""}

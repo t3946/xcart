@@ -185,23 +185,10 @@ function func_CHECK_STATES($order_data){
 
 	$geoip_state = "";
 	$phone_area_code_state = "";
-	if (!empty($customer_ip)){
-        	$customer_ip_arr = explode(".", $customer_ip);
-	        if (!empty($customer_ip_arr) && is_array($customer_ip_arr)){
-        	        $customer_ip_INTEGER = $customer_ip_arr[0]*16777216 + $customer_ip_arr[1]*65536 + $customer_ip_arr[2]*256 + $customer_ip_arr[3];
-	        }
 
-	        if (!empty($customer_ip_INTEGER)){
-        	        $locId = func_query_first_cell("SELECT locId FROM $sql_tbl[geo_litecity_blocks] WHERE $customer_ip_INTEGER BETWEEN startIpNum AND endIpNum LIMIT 1");
-
-	                if (!empty($locId)){
-        	                $geo_litecity_location = func_query_first("SELECT * FROM $sql_tbl[geo_litecity_location] WHERE locId='".addslashes($locId)."'");
-
-	                        if (!empty($geo_litecity_location)){
-        	                        $geoip_state = func_correct_field($geo_litecity_location["region"]);
-	                        }
-        	        }
-	        }
+	$geo_litecity_location = func_get_geoip_locations($customer_ip);
+	if (!empty($geo_litecity_location)) {
+		$geoip_state = func_correct_field($geo_litecity_location["region"]);
 	}
 
         $userinfo_phone = $order_data["userinfo"]["phone"];
@@ -253,24 +240,11 @@ function func_GEOIP_CITY_VS_B_S($order_data){
         $customer_ip = $order_data["order"]["extra"]["ip"];
 
         $geoip_city = "";
-        if (!empty($customer_ip)){
-                $customer_ip_arr = explode(".", $customer_ip);
-                if (!empty($customer_ip_arr) && is_array($customer_ip_arr)){
-                        $customer_ip_INTEGER = $customer_ip_arr[0]*16777216 + $customer_ip_arr[1]*65536 + $customer_ip_arr[2]*256 + $customer_ip_arr[3];
-                }
 
-                if (!empty($customer_ip_INTEGER)){
-                        $locId = func_query_first_cell("SELECT locId FROM $sql_tbl[geo_litecity_blocks] WHERE $customer_ip_INTEGER BETWEEN startIpNum AND endIpNum LIMIT 1");
-
-                        if (!empty($locId)){
-                                $geo_litecity_location = func_query_first("SELECT * FROM $sql_tbl[geo_litecity_location] WHERE locId='".addslashes($locId)."'");
-
-                                if (!empty($geo_litecity_location)){
-                                        $geoip_city = func_correct_field($geo_litecity_location["city"]);
-                                }
-                        }
-                }
-        }
+		$geo_litecity_location = func_get_geoip_locations($customer_ip);
+		if (!empty($geo_litecity_location)) {
+			$geoip_city = func_correct_field($geo_litecity_location["city"]);
+		}
 
 	$names = array();
 

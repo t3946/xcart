@@ -367,13 +367,19 @@ if (
 				$product['price'] = $tmp['taxed_price'];
 	
 				# Define "mpn"
+
+				global $xcart_dir;
+				include_once $xcart_dir."/include/class/classProducts.php";
+				$classProduct = new classProducts();
+				$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
+				unset($classProduct);
 	
-				$pos = strpos($product['productcode'], '-');
+				/*$pos = strpos($product['productcode'], '-');
 				$mpn = '';
 	
 				if ($pos && is_numeric($pos) && $pos + 1 != strlen($product['productcode'])) {
 					$mpn = substr($product['productcode'], $pos + 1);
-				}
+				}*/
 	
 				# Define "compatible with"
 	

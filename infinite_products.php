@@ -34,8 +34,12 @@ else {
 
 if ($REQUEST_METHOD == 'POST')
  {
-	if (!empty($load_next_productids)){
+	 x_session_register("notify_email");
+	 $smarty->assign("notify_email", $notify_email);
+	 
+	 if (!empty($load_next_productids)){
 		x_load("product");
+
 
 
 #
@@ -326,6 +330,8 @@ if ($REQUEST_METHOD == 'POST')
 		$smarty->assign('products_template', $products_template);
 		$smarty->assign('ajax_navigation_page', $ajax_navigation_page);
 		$smarty->assign('show_next_products', 'Y');
+
+
 
                 if (!empty($ga_page_name)){
                         $smarty->assign("ga_page_name",$ga_page_name);

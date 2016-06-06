@@ -91,7 +91,7 @@ function func_AJAX_authorize_PayPal() {
 
 <input type="hidden" name="m_id_for_additional_shipping_status" id="m_id_for_additional_shipping_status" value="" />
 
-<table cellspacing="0" cellpadding="0" align="center">
+<table cellspacing="5" cellpadding="0" align="center">
 
   <tr>
     <td align="right"><h3 style="color: #000000;">Amount and currency</h3></td>
@@ -101,14 +101,14 @@ function func_AJAX_authorize_PayPal() {
     <td align="right"><b>Currency:</b> </td>
     <td>
 <select name="paypal_vt[currency]" id="paypal_vt_currency">
-<option value="USD">U.S. Dollars</option>
-<option value="CAN"> CAN. Dollars</option>
+<option value="USD">US Dollars</option>
+<option value="CAN">CA Dollars</option>
 </select>
     </td>
   </tr>
   <tr>
-    <td align="right"><b>Grand total:</b> </td>
-    <td><input type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" id="paypal_vt_grand_total" /></td>
+    <td align="right" style="font-size: 12px;"><b>Grand total:</b> </td>
+    <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" id="paypal_vt_grand_total" /></td>
   </tr>
 
 
@@ -126,7 +126,7 @@ function func_AJAX_authorize_PayPal() {
   </tr>
   <tr>
     <td align="right"><b>Expiration date:</b> </td>
-    <td><input type="text" name="paypal_vt[expiration_month]" value="" placeholder="MM" size="2" maxlength="2" />/<input type="text" name="paypal_vt[expiration_year]" value="" placeholder="YYYY" size="4" maxlength="4" /></td>
+    <td><input type="text" name="paypal_vt[expiration_month]" value="" placeholder="MM" size="2" maxlength="2" /> / <b>20</b><input type="text" name="paypal_vt[expiration_year]" value="" placeholder="YY" size="2" maxlength="2" /></td>
   </tr>
 
   <tr>
@@ -347,7 +347,7 @@ $(document).ready(function(){
 
 <table align="right" cellspacing="1" cellpadding="1">
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Transacеions amount (authorized/pending +captured ) </td>
+  <td>Transactions amount (authorized/pending +captured ) </td>
   <td>&nbsp;</td>
   <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if}; {/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
 </tr>

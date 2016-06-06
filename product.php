@@ -48,13 +48,14 @@ x_load("category");
 ##
 ###
 
-if ($mode == "notify" && !empty($productid) && !empty($notify_email)){
+/*if ($mode == "notify" && !empty($productid) && !empty($notify_email)){
 	$is_in_table = func_query_first_cell("SELECT productid FROM $sql_tbl[notify_when_in_stock] WHERE email='$notify_email' AND sent='N' AND productid='$productid' AND storefrontid='$current_storefront'");
-
+	x_session_save('notify_email');
 	if (empty($is_in_table)){
 
 		$notify_when_in_stock[$productid] = "Y";
 		x_session_save('notify_when_in_stock');
+
 
 		db_query("INSERT INTO $sql_tbl[notify_when_in_stock] (productid, email, date, storefrontid) VALUES ('$productid', '$notify_email', '".time()."', '$current_storefront')");
 		$top_message["content"] = 'Thank you! You will be notified when the product is in stock.';
@@ -66,7 +67,7 @@ if ($mode == "notify" && !empty($productid) && !empty($notify_email)){
 
 	$clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$productid'");
 	func_header_location($clean_url_link);
-}
+}*/
 ###
 ##
 #
@@ -390,6 +391,36 @@ if ($show_dimensions){
 }
 
 $smarty->assign('show_dimensions', $show_dimensions);
+
+$show_shipping_dimensions = false;
+foreach (array('shipping_dim_x','shipping_dim_y','shipping_dim_z') as $k) {
+	$show_shipping_dimensions = !empty($product_info[$k]);
+	if ($show_shipping_dimensions) {
+		break;
+	}
+}
+
+if ($show_shipping_dimensions){
+	$show_shipping_dimensions_orderby = array();
+	foreach (array('shipping_dim_x','shipping_dim_y','shipping_dim_z') as $k) {
+		if (!empty($product_info[$k])){
+			$show_shipping_dimensions_orderby[] = $product_info[$k];
+		}
+	}
+
+	if (!empty($show_shipping_dimensions_orderby)){
+		arsort($show_shipping_dimensions_orderby);
+		foreach ($show_shipping_dimensions_orderby as $k => $v){
+			$show_shipping_dimensions_orderby[$k] = $v.'"';
+		}
+
+		$show_shipping_dimensions_orderby = implode(" x ", $show_shipping_dimensions_orderby);
+		$smarty->assign('show_shipping_dimensions_orderby', $show_shipping_dimensions_orderby);
+	}
+}
+
+$smarty->assign('show_shipping_dimensions', $show_shipping_dimensions);
+
 
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 if (!empty($product_info['manufacturerid'])) {
@@ -966,13 +997,20 @@ if (!empty($cat)){
 #
 */
 
-$pos = strpos($product_info['productcode'], '-');
+global $xcart_dir;
+include_once $xcart_dir."/include/class/classProducts.php";
+$classProduct = new classProducts();
+$mpn = $classProduct->getProductMPN($product_info['productcode'], "", $product_info['productid']);
+unset($classProduct);
+$smarty->assign("cidev_mpn", $mpn);
+
+/*$pos = strpos($product_info['productcode'], '-');
 $mpn = '';
 
 if ($pos && is_numeric($pos) && $pos + 1 != strlen($product_info['productcode'])) {
 	$mpn = substr($product_info['productcode'], $pos + 1);
 	$smarty->assign("cidev_mpn", $mpn);
-}
+}*/
 
 if (!empty($location) && is_array($location)){
 	$tmp_count_location = count($location);
@@ -1227,7 +1265,8 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 ###
 ##
 #
-
+x_session_register("notify_email");
+$smarty->assign("notify_email", $notify_email);
 #
 ##
 ###

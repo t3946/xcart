@@ -53,7 +53,8 @@
 <form name="notifyform" method="post" action="product.php">
 <input type="hidden" name="productid" value="{$product.productid}" />
 <input type="hidden" id="notify_mode" name="mode" value="" />
-<input type="hidden" id="notify_email" name="notify_email" value="" />
+<input type="hidden" id="notify_email" name="notify_email" value="{if $notify_email ne ""}{$notify_email}{/if}" />
+<input type="hidden" name="storefrontid" value="{$current_storefront}" />
 </form>
 {/if}
 
@@ -83,7 +84,9 @@
 	<td valign="top" width="*" style="padding-left: 16px;">
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
-
+{if $product.lbl_minimum_order_amount_message_product eq "Y" && $product.d_minimum_order_amount_in_us ne ""}
+<tr height="20" id="minimum_order_amount_wrap" data-minimum-amount="{$product.d_minimum_order_amount_in_us}"><td>&nbsp</td></tr>
+{/if}
 {if $current_price gt 0 and $product.list_price gt 0 and $product.list_price gt $current_price}
 <tr>
 <td nowrap="nowrap" class="BlackT" valign="top">{$lng.lbl_list_price}:</td>
@@ -349,8 +352,8 @@ var product_avail = 1;
 <tr id="notify_tr2" style="display: none;">
 <td>Your email address:</td>
 <td>
-<input type="text" name="notify_email" value="" />
-{include file="buttons/button.tpl" button_title="Notify me" style="button" href="javascript:if (checkEmailAddress(document.orderform.notify_email, 'Y')) `$ldelim`document.notifyform.mode.value='notify';document.notifyform.notify_email.value=document.orderform.notify_email.value;document.notifyform.submit()`$rdelim`"}
+<input type="text" name="notify_email" value="{if $notify_email ne ""}{$notify_email}{/if}" />
+{include file="buttons/button.tpl" button_title="Notify me" style="button" href="javascript:if (checkEmailAddress(document.orderform.notify_email, 'Y')) `$ldelim`document.notifyform.mode.value='notify';document.notifyform.notify_email.value=document.orderform.notify_email.value;submit_product_notify_form(this);`$rdelim`"}
 <tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 {/if}

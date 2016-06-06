@@ -151,6 +151,8 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 	<td width="20%" align="center">{$lng.lbl_products}</td>
 	<td width="30" align="center">Inventory feed</td>
 	<td width="30" align="center">Product feed</td>
+	<td width="30" align="center">Child manufacturers</td>
+	<td width="30" align="center">Parent manufacturer</td>
 	<td width="30" align="center">{$lng.lbl_orderby}</td>
 	<td width="30" align="center">{$lng.lbl_active}</td>
 </tr>
@@ -161,12 +163,14 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 
 <tr{cycle values=", class='TableSubHead'"}>
 	<td align="center"><input type="checkbox" name="to_delete[{$v.manufacturerid}]"{if $administrate eq "" and ($v.provider ne $login or $v.used_by_others gt 0)} disabled="disabled"{/if} /></td>
-	<td><b><a href="manufacturers.php?manufacturerid={$v.manufacturerid}{if $page}&amp;page={$page}{/if}">{$v.manufacturer}</a></b></td>
+	<td style="white-space: nowrap;"><b><a href="manufacturers.php?manufacturerid={$v.manufacturerid}{if $page}&amp;page={$page}{/if}">{$v.manufacturer}</a></b></td>
 	<td align="center">{$v.code}</td>
-	<td>{if $v.is_provider eq 'Y'}{$v.provider_name}{else}{$lng.lbl_manuf_owner_lost}{/if}{if $administrate} ({$v.provider}){/if}</td>
+	<td style="white-space: nowrap;">{if $v.is_provider eq 'Y'}{$v.provider_name}{else}{$lng.lbl_manuf_owner_lost}{/if}{if $administrate} ({$v.provider}){/if}</td>
 	<td align="center">{$v.products_count|default:$lng.txt_not_available}{if $v.used_by_others gt 0}*{assign var="show_note" value="Y"}{/if}</td>
 	<td>{$v.I_supplier_feeds_enabled} {$v.I_supplier_feeds_disabled}</td>
 	<td>{$v.P_supplier_feeds_enabled} {$v.P_supplier_feeds_disabled}</td>
+	<td align="center">{foreach from=$v.aChildrenManufacturers item=aChildM name=childmanufacturers} <a target="_blank" href="manufacturers.php?manufacturerid={$aChildM.manufacturerid}">{$aChildM.code}</a> {$aChildM.storefronPrefix} {if !$smarty.foreach.childmanufacturers.last} <br/> {/if} {/foreach}</td>
+	<td align="center">{foreach from=$v.aParentManufacturer item=aParentM name=parentmanufacturers} <a target="_blank" href="manufacturers.php?manufacturerid={$aParentM.manufacturerid}">{$aParentM.code}</a> {$aParentM.storefronPrefix} {if !$smarty.foreach.parentmanufacturers.last} <br/> {/if} {/foreach}</td>
 	<td align="center"><input type="text" name="records[{$v.manufacturerid}][orderby]" size="5" value="{$v.orderby}"{if $administrate eq ""} disabled="disabled"{/if} /></td>
 	<td align="center"><input type="checkbox" name="records[{$v.manufacturerid}][avail]" value="Y"{if $v.avail eq "Y"} checked="checked"{/if}{if $administrate eq ""} disabled="disabled"{/if} /></td>
 </tr>
@@ -370,7 +374,7 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 {/if}
 
 {if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "22"}
-<form action="manufacturers.php" method="post" enctype="multipart/form-data" name="manufacturer">
+<form action="manufacturers.php" method="post" enctype="multipart/form-data" name="manufacturer" {if $smarty.get.distributor_section eq "30" && $manufacturer.parent_manufacturer_id eq -1}target="_blank"{/if}>
 <input type="hidden" name="mode" value="details" id="mode" />
 <input type="hidden" name="manufacturerid" value="{$manufacturer.manufacturerid}" />
 <input type="hidden" name="page" value="{$page}" />
@@ -2008,24 +2012,217 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 	{include file="provider/main/shipping_rates_new.tpl"}
 
 {elseif $d_section.distributor_section eq "20"}
-<table cellpadding="3" cellspacing="1" id="distributor_section_id_20" {if $distributor_section ne "20"}style="display: none;" {/if}>
+    <table cellpadding="3" cellspacing="1" id="distributor_section_id_20"
+           {if $distributor_section ne "20"}style="display: none;" {/if}>
 
-<tr>
-        <td colspan="2" class="FormButton">Quantity in stock behavior on the SF product page:</td>
-	<td>
-<input type="radio" name="products_quantity_behavior" value="R"{if $manufacturer.products_quantity_behavior eq "R"} checked="checked"{/if} /> display real quantity
-<br />
-<input type="radio" name="products_quantity_behavior" value="D"{if $manufacturer.products_quantity_behavior eq "D"} checked="checked"{/if} /> display quantity of
-<input type="text" size="5" name="display_quantity_of" value="{$manufacturer.display_quantity_of}" /> if product is in stock
-	</td>
-</tr>
-<tr>
-	<td colspan="3" class="FormButton">
-	Allow pre-orders <input type="checkbox" name="allow_pre_orders" value="Y"{if $manufacturer.allow_pre_orders eq 'Y'} checked="checked"{/if} />
-	</td>
-</tr>
+        <tr>
+            <td colspan="2" class="FormButton">Quantity in stock behavior on the SF product page:</td>
+            <td>
+                <input type="radio" name="products_quantity_behavior"
+                       value="R"{if $manufacturer.products_quantity_behavior eq "R"} checked="checked"{/if} /> display
+                real quantity
+                <br/>
+                <input type="radio" name="products_quantity_behavior"
+                       value="D"{if $manufacturer.products_quantity_behavior eq "D"} checked="checked"{/if} /> display
+                quantity of
+                <input type="text" size="5" name="display_quantity_of" value="{$manufacturer.display_quantity_of}"/> if
+                product is in stock
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" class="FormButton">
+                Allow pre-orders <input type="checkbox" name="allow_pre_orders"
+                                        value="Y"{if $manufacturer.allow_pre_orders eq 'Y'} checked="checked"{/if} />
+            </td>
+        </tr>
 
-</table>
+    </table>
+{elseif $d_section.distributor_section eq "30"}
+    <table class="SubHeader" width="100%" cellspacing="0" {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tbody>
+        <tr>
+            <td class="Green2">
+                Relationships
+            </td>
+        </tr>
+        <tr>
+            <td class="SubHeaderLine">
+                <img class="Spc" alt="" src="/skin1_kolin/images/spacer.gif">
+                <br>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p></p>
+    <table width="100%" cellpadding="3" cellspacing="1" id="distributor_section_id_30" {if $distributor_section ne "30"}style="display: none;" {/if}>
+
+        <tr>
+            <td style="vertical-align: top; padding-top: 5px;" colspan="2" class="FormButton">This distributor is parent to:</td>
+            <td >
+                {if ($aParentManufacturer)}
+                <table width="100%" style="text-align:center;">
+                    <tr>
+                        <th>Prefix</th>
+                        <th>Distributor name</th>
+                        <th>Main SF id</th>
+                        <th>Main SF name</th>
+                        <th>Destination category id</th>
+                    </tr>
+                    {foreach from=$aParentManufacturer item=parentmf}
+                    <tr>
+                        <td>{$parentmf.code}</td>
+                        <td><b><a href="manufacturers.php?manufacturerid={$parentmf.manufacturerid}">{$parentmf.manufacturer}</a></b></td>
+                        <td>{$parentmf.d_main_sf}</td>
+                        <td>{$parentmf.domain}</td>
+                        <td>{$parentmf.root_categoryid_for_cloned_products}</td>
+                    </tr>
+                    {/foreach}
+                </table>
+                {/if}
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top; padding-top: 5px;" colspan="2" class="FormButton">
+                This distributor is child to:
+            </td>
+            <td>
+                {if ($aChildManufacturers)}
+                    <table width="100%" style="text-align:center;">
+                        <tr>
+                            <th>Prefix</th>
+                            <th>Distributor name</th>
+                            <th>Main SF id</th>
+                            <th>Main SF name</th>
+                        </tr>
+                        {foreach from=$aChildManufacturers item=childmf}
+                            <tr>
+                                <td>{$childmf.code}</td>
+                                <td><b><a href="manufacturers.php?manufacturerid={$childmf.manufacturerid}">{$childmf.manufacturer}</a></b></td>
+                                <td>{$childmf.d_main_sf}</td>
+                                <td>{$childmf.domain}</td>
+                            </tr>
+                        {/foreach}
+                    </table>
+                {/if}
+            </td>
+        </tr>
+
+    </table>
+    <p></p>
+    <p></p>
+    {if $manufacturer.parent_manufacturer_id eq -1}
+    <table class="SubHeader" width="100%" cellspacing="0" {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tbody>
+        <tr>
+            <td class="Green2">
+                Create copy of this distributor on another storefront
+            </td>
+        </tr>
+        <tr>
+            <td class="SubHeaderLine">
+                <img class="Spc" alt="" src="/skin1_kolin/images/spacer.gif">
+                <br>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p></p>
+    <table cellpadding="3" cellspacing="1" id="distributor_section_id_30" {if $distributor_section ne "30"}style="display: none;" {/if}>
+
+        <tr>
+            <td colspan="2" class="FormButton">Choose target storefront:</td>
+            <td>
+                <select name="storefront_to_copy_manufacturer">
+                    <option value="0"{if $manufacturer.d_main_sf eq '0'} selected="selected"{/if}>{$main_storefront}</option>
+                    {foreach from=$storefronts item=sf}
+                        {if $sf.storefrontid ne "0" && $manufacturer.d_main_sf ne $sf.storefrontid}}
+                            <option value="{$sf.storefrontid}"{if $manufacturer.d_main_sf eq $sf.storefrontid} selected="selected" {assign var="main_sf_site" value=$sf.domain}{/if}>{if $sf.storefront_name ne ""}{$sf.storefront_name}{else}{$sf.domain}{/if}</option>
+                        {/if}
+                    {/foreach}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="FormButton">Enter root categoryid for new products on target SF:</td>
+            <td>
+                <input name="root_categoryid_for_cloned_products" type="text" value="{$manufacturer.root_categoryid_for_cloned_products}" />
+            </td>
+        </tr>
+
+    </table>
+
+    <table align="center" cellpadding="3" cellspacing="1" width="100%"  {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tr>
+            <td width="48%">
+            </td>
+                <td width="*">
+                    <input type="submit" onclick="javascript: {literal}$('#mode').val('copy_distributor');{/literal}" value="Copy now" />
+                </td>
+        </tr>
+    </table>
+{if ($aParentManufacturer)}
+    <table class="SubHeader" width="100%" cellspacing="0" {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tbody>
+        <tr>
+            <td class="Green2">
+                Clone distributor products to child distributor
+            </td>
+        </tr>
+        <tr>
+            <td class="SubHeaderLine">
+                <img class="Spc" alt="" src="/skin1_kolin/images/spacer.gif">
+                <br>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p></p>
+    <table cellpadding="3" cellspacing="1" id="distributor_section_id_30" {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tr><td colspan="2">
+                {$lng.lb_clone_products_note_before_cloning}
+            </td></tr>
+        <tr>
+            <td colspan="2" class="FormButton">Choose distributor:</td>
+            <td>
+                <select name="product_to_copy_manufacturer">
+                    <option value="0">Please select</option>
+                    {foreach from=$aParentManufacturer item=pm}
+                            <option value="{$pm.manufacturerid}">{$pm.manufacturer}</option>
+                    {/foreach}
+                </select>
+            </td>
+        </tr>
+
+    </table>
+    <table align="center" cellpadding="3" cellspacing="1" width="100%"  {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tr>
+            <td width="48%">
+            </td>
+            <td width="*">
+                <input type="submit" onclick="javascript: {literal}$('#mode').val('copy_products');{/literal}" value="Copy now" />
+            </td>
+        </tr>
+    </table>
+{/if}
+    {else}
+    <table cellpadding="3" cellspacing="1" id="distributor_section_id_30" {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tr>
+            <td colspan="2" class="FormButton">Root category for new cloned products:</td>
+            <td>
+                <input name="root_categoryid_for_cloned_products" type="text" value="{$manufacturer.root_categoryid_for_cloned_products}" />
+            </td>
+        </tr>
+    </table>
+    <table align="center" cellpadding="3" cellspacing="1" width="100%"  {if $distributor_section ne "30"}style="display: none;" {/if}>
+        <tr>
+            <td width="48%">
+            </td>
+            <td width="*">
+                <input type="submit" onclick="javascript: {literal}$('#mode').val('update_root_category');{/literal}" value="Update" />
+            </td>
+        </tr>
+    </table>
+    {/if}
 
 {elseif $d_section.distributor_section eq "22"}
 	<table cellpadding="3" cellspacing="1" id="distributor_section_id_22" {if $distributor_section ne "22"}style="display: none;" {/if}>
@@ -2051,7 +2248,7 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 		<input type="button" value=" Add distributor return address  " onclick="javascript: {literal}$('#mode').val('add_distributor_return_address'); document.manufacturer.submit();"{/literal} />
 	{/if}
 	</td>
-	{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "16" && $smarty.get.distributor_section ne "22"}
+	{if $smarty.get.distributor_section ne "19" && $smarty.get.distributor_section ne "21" && $smarty.get.distributor_section ne "16" && $smarty.get.distributor_section ne "22" && $smarty.get.distributor_section ne "30"}
 	<td width="*">
 
 		{if ($smarty.get.distributor_section eq "8" && !($membership_code eq "ADMIN_CUSTOMER_SERVICE" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER" || $membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR"))
@@ -2081,3 +2278,9 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 
 {/if}
 
+<script type="text/javascript">
+    $( document ).ready(function() {ldelim}
+        var curTitle = document.title;
+        document.title = "{$manufacturer.manufacturer}: (Distributor) " + curTitle;
+        {rdelim});
+</script>

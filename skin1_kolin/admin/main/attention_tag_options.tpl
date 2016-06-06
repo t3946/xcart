@@ -5,9 +5,9 @@
 <table cellpadding="3" cellspacing="1" width="100%">
 
 <tr class="TableHead">
-        <td width="10">Status ID</td>
+        <td width="10">Tag ID</td>
         <td width="5%">{$lng.lbl_pos}</td>
-        <td width="*">Status</td>
+        <td width="*">Tag name / Description</td>
         <td width="10%">Active</td>
         <td width="40%">Login / action</td>
 </tr>
@@ -19,7 +19,10 @@
 	<input type="hidden" name="posted_data[{$attention_tags_values[pg].status_id}][status_id]" value="{$attention_tags_values[pg].status_id}" />
 </td>
 <td align="center"><input type="text" name="posted_data[{$attention_tags_values[pg].status_id}][orderby]" value="{$attention_tags_values[pg].orderby}" size="5" style="width: 90%;" /></td>
-<td align="center"><input type="text" name="posted_data[{$attention_tags_values[pg].status_id}][status]" value="{$attention_tags_values[pg].status|escape}" size="15" style="width: 96%;" /></td>
+<td align="center">
+    <input type="text" name="posted_data[{$attention_tags_values[pg].status_id}][status]" value="{$attention_tags_values[pg].status|escape}" size="15" style="width: 96%;" />
+    <textarea name="posted_data[{$attention_tags_values[pg].status_id}][description]" style="height: 44px;width: 96%;">{$attention_tags_values[pg].description|escape}</textarea>
+</td>
 <td align="center"><select name="posted_data[{$attention_tags_values[pg].status_id}][active]">
 <option value="Y"{if $attention_tags_values[pg].active eq "Y"} selected="selected"{/if}>{$lng.lbl_enabled}</option>
 <option value="N"{if $attention_tags_values[pg].active eq "N"} selected="selected"{/if}>{$lng.lbl_disabled}</option>

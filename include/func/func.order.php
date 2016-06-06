@@ -1,5 +1,5 @@
 <?php /* MODIFIED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
-<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (Изменения для модуля UPS + Изменения в способ ввода Tracking numbers для заказов)] */ ?>
+<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ UPS + О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ Tracking numbers О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫)] */ ?>
 <?php /* MODIFIED: random:19771 [2009 Nov 25 15:10][Custom development (Purchase Order information to appear on INVOICES)] */ ?>
 <?php /* MODIFIED: random:17710_17631 [2009 Mar 26 09:25][Custom development ("Shipping quote" functionality and other modifications) + Other] */ ?>
 <?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
@@ -226,7 +226,7 @@ function func_select_order($orderid) {
 #
 ##
 ###
-	$order['attention_tags'] = func_query("SELECT $sql_tbl[orders_additional_tags].status_id, $sql_tbl[attention_tags_values].status FROM $sql_tbl[orders_additional_tags] LEFT JOIN $sql_tbl[attention_tags_values] ON $sql_tbl[attention_tags_values].status_id=$sql_tbl[orders_additional_tags].status_id WHERE $sql_tbl[orders_additional_tags].orderid='$orderid'");
+	$order['attention_tags'] = func_query("SELECT $sql_tbl[orders_additional_tags].status_id, $sql_tbl[attention_tags_values].status, $sql_tbl[attention_tags_values].description FROM $sql_tbl[orders_additional_tags] LEFT JOIN $sql_tbl[attention_tags_values] ON $sql_tbl[attention_tags_values].status_id=$sql_tbl[orders_additional_tags].status_id WHERE $sql_tbl[orders_additional_tags].orderid='$orderid'");
 
 	$product_question_status_code = func_query_first_cell("SELECT status FROM $sql_tbl[product_question] WHERE id='$order[product_question_status_id]'");
 	$order['product_question_status_code'] = $product_question_status_code;
@@ -692,7 +692,15 @@ function func_order_data($orderid) {
 			}
 		}
 
-#
+
+		global $xcart_dir;
+		include_once $xcart_dir."/include/class/classProducts.php";
+		$classProduct = new classProducts();
+		$mpn = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
+		unset($classProduct);
+		$v["mpn"] = $mpn;
+
+/*#
 ##
 ###
                 $pos = strpos($v['productcode'], '-');
@@ -705,7 +713,7 @@ function func_order_data($orderid) {
 
 ###
 ##
-#
+#*/
 
 #
 ##
@@ -757,7 +765,22 @@ function func_order_data($orderid) {
 		if (!empty($v['extra_data']['taxes'])) {
 			$order['shipping_groups'][$m_id]['taxes'] = $v['extra_data']['taxes'];
 		}
-# END: random:20341 [2010 Jul 29 14:46] 
+# END: random:20341 [2010 Jul 29 14:46]
+
+
+				$manufacturer_feed_fields = func_query_hash("SELECT $sql_tbl[manufacturer_feed_fields].* FROM $sql_tbl[manufacturer_feed_fields] WHERE $sql_tbl[manufacturer_feed_fields].manufacturerid='$v[manufacturerid]'", "field_name", false);
+
+				if (!empty($manufacturer_feed_fields) && is_array($manufacturer_feed_fields)) {
+					foreach ($manufacturer_feed_fields as $km => $vm) {
+						if (($vm["locked"] == 'Y' && $vm["admin_lock"] == 'Y') || ($vm["locked"] == 'N' && $vm["admin_lock"] == 'Y')) {
+							$manufacturer_feed_fields[$km]["disable"] = "Y";
+						} else {
+							$manufacturer_feed_fields[$km]["disable"] = "N";
+						}
+					}
+					$products[$k]["manufacturer_feed_fields"] = $manufacturer_feed_fields;
+				}
+
 
 	}
 
@@ -975,22 +998,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 ##
 ###
 	$ip_info = $CLIENT_IP;
-	$CLIENT_IP_arr = explode(".", $CLIENT_IP);
-	if (!empty($CLIENT_IP_arr) && is_array($CLIENT_IP_arr)){
-                                $CLIENT_IP_INTEGER = $CLIENT_IP_arr[0]*16777216 + $CLIENT_IP_arr[1]*65536 + $CLIENT_IP_arr[2]*256 + $CLIENT_IP_arr[3];
-	}
 
-	if (!empty($CLIENT_IP_INTEGER)){
-                                $locId = func_query_first_cell("SELECT locId FROM $sql_tbl[geo_litecity_blocks] WHERE $CLIENT_IP_INTEGER BETWEEN startIpNum AND endIpNum LIMIT 1");
-
-                                if (!empty($locId)){
-                                        $geo_litecity_location = func_query_first("SELECT * FROM $sql_tbl[geo_litecity_location] WHERE locId='".addslashes($locId)."'");
-
-                                        if (!empty($geo_litecity_location)){
-
-                                                $ip_info .= " (".$geo_litecity_location["country"].", ".$geo_litecity_location["region"].", ".$geo_litecity_location["city"].", ".$geo_litecity_location["postalCode"].")";
-                                        }
-                                }
+	$geo_litecity_location = func_get_geoip_locations($CLIENT_IP);
+	if (!empty($geo_litecity_location)) {
+		$ip_info .= " (".$geo_litecity_location["country"].", ".$geo_litecity_location["region"].", ".$geo_litecity_location["city"].", ".$geo_litecity_location["postalCode"].")";
 	}
 
 	$extras['ip_info'] = $ip_info;
@@ -2046,7 +2057,13 @@ function func_get_order_manufacturers($orderid){
 								}
 							}
 
-                                                        $tmp_sku = substr($v["productcode"], 4);
+                                                        //$tmp_sku = substr($v["productcode"], 4);
+														global $xcart_dir;
+														include_once $xcart_dir."/include/class/classProducts.php";
+														$classProduct = new classProducts();
+														$tmp_sku = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
+														unset($classProduct);
+
                                                         $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">'.$tmp_sku.'</td><td width="250px" style="text-align: left;"><a href="'.$v["links"]["customer"].'">'.$v["product"].'</a>'.$selected_product_options.'</td><td style="text-align: right;">'.$v["amount"].'</td></tr>';
 
 							$instock_items = $v["amount"] - $v["back"];
@@ -4035,7 +4052,12 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
                 }
 
 
-                $tmp_sku = substr($v["productcode"], 4);
+                //$tmp_sku = substr($v["productcode"], 4);
+				global $xcart_dir;
+				include_once $xcart_dir."/include/class/classProducts.php";
+				$classProduct = new classProducts();
+				$tmp_sku = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
+				unset($classProduct);
 
                 $instock_items = $v["amount"] - $v["back"];
 

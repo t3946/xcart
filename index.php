@@ -62,7 +62,7 @@ if ($config['Search_All']['search_all_website_close'] == 'Y') {
 }
 
 if (strcasecmp($cur_host, $search_all_website_url) != 0) {
-    func_header_location($xcart_web_dir . DIR_CUSTOMER . '/home.php'); 
+    func_header_location($xcart_web_dir . DIR_CUSTOMER . '/home.php');
 }
 
 $location = array(array($config['Search_All']['search_all_website_name'], ''));
@@ -114,7 +114,7 @@ if ($mode == 'search') {
 				db_query("UPDATE $sql_tbl[order_groups] SET dc_status='L', dc_received_by_distributor_time='".time()."', order_entry_flag='$order_entry_flag' WHERE orderid = '$o' AND manufacturerid='$m'");
 			} else {
 //				func_header_location($xcart_web_dir . DIR_CUSTOMER . '/index.php');
-                                $log = "<B>".$distr_code.":</B> Distributor confirmed that the order has been received. (But he did it before already.)";
+                                $log = "<B>".$distr_code.":</B> Distributor confirmed AGAIN that the order has been received";
 			}
 
 			func_log_order($o, 'X', $log, 'Distributor ('.$distr_code.')');
@@ -163,7 +163,8 @@ if ($mode == 'search') {
             array_unshift($sfid_links, array('storefrontid' => 0, 'name' => $config['Company']['company_name'], 'domain' => $company_website));
         }
         usort($sfid_links, func_msf_sort_front_array_by_name);
-        l($sfid_links, '$sfid_links'); 
+        if (function_exists("l"))
+            l($sfid_links, '$sfid_links');
 
 /*
 if ($qqq == "qqq" ){

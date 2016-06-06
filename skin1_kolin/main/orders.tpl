@@ -22,6 +22,7 @@
 	{if $smarty.get.fast_search eq "Y"}
 		{assign var="order_page_title" value="Order search results (`$total_items`)"}
 	{else}
+	    {assign var="order_html_title" value="`$order_page_title`"}
 		{assign var="order_page_title" value="`$order_page_title` (`$total_items`)"}
 	{/if}
 {else}
@@ -898,4 +899,18 @@ visibleBox('1');
 {/if}
 
 {/if}
+{/if}
+
+
+{if $page_name eq "dashboard" || $mode eq "search"}
+<script type="text/javascript">
+    $( document ).ready(function() {ldelim}
+        var curTitle = document.title;
+        {if $order_html_title ne ""}
+            document.title = "({$order_html_title}) " + curTitle;
+        {else}
+            document.title = "CC Dashboard: " + curTitle;
+        {/if}
+        {rdelim});
+</script>
 {/if}

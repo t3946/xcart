@@ -231,6 +231,9 @@ TD.ButtonsRow {
 	BACKGROUND-COLOR: #EEEEEE;
 	FONT-WEIGHT: normal;
 }
+.BoldRowText > td > span {
+	FONT-WEIGHT: bold;
+}
 .Spc {
 	WIDTH: 1px;
 	HEIGHT: 1px;
@@ -1702,3 +1705,81 @@ div.confirmation-hedgehog p {
         font-style: italic;
 }
 
+.tablebordernone {
+	display: inline;
+	float: left;
+	height: 18px;
+	margin-left: 36px;
+	width: 10px;
+}
+
+.tableborderright {
+	border-right: 1px solid;
+	display: inline;
+	float: left;
+	height: 18px;
+	margin-left: 36px;
+	width: 10px;
+}
+.tableborderbottom {
+	border-bottom: 1px solid;
+	display: inline;
+	float: left;
+	height: 28px;
+	margin-left: 36px;
+	width: 10px;
+	margin-top: -10px;
+}
+.tablebordertop {
+	border-top: 1px solid;
+	display: inline;
+	float: left;
+	height: 28px;
+	margin-left: 36px;
+	width: 10px;
+	margin-bottom: -10px;
+
+}
+.lock_dimension_product_label, .lock_shipping_dimension_label, .lock_product_weight_label, .lock_shipping_weight_label {
+	margin-left:10px;
+	cursor: pointer;
+}
+input[name=dimensionx],
+input[name=dimensiony],
+input[name=dimensionz],
+input[name=dimensionshipx],
+input[name=dimensionshipy],
+input[name=dimensionshipz],
+input[name=shippingweight],
+input[name=weight]
+{
+	float: left;
+}
+#send_note_form_js{
+	z-index: 100;
+	padding: 14px 20px;
+	background: #D9EAD3 none repeat scroll 0% 0%;
+	border: 1px solid;
+	position: absolute;
+	
+	right: 0;
+	width: 430px;
+	text-align: left;
+	display: none;
+
+}
+input.ch_disabled {
+	background-color: threedlightshadow;
+	border: 2px solid threedlightshadow;
+}
+td.borderr-black {
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
+	border-right: 1px solid #000000;
+}
+td.borderb-gray {
+	border-bottom: 1px solid #cccccc;
+}
+.TableHead .borderr-black:last-child {
+	border-right: 1px solid #cccccc;
+}

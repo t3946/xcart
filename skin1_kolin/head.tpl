@@ -151,7 +151,7 @@ $(function(){
 
 {include file="customer/top_menu.tpl"}
 
-{if $variant_id_for_point3 eq "1" && $main ne "product"}
+{if $variant_id_for_point3 eq "1" && ($main ne "product" && $main ne "fast_lane_checkout")}
 {$config.Storefront_common_details.common_header_code}
 {/if}
 

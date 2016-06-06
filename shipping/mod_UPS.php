@@ -513,7 +513,7 @@ EOT;
                         $L_G_flag = true;
                     }
                     
-                    if ($Vi < $v['vol_threshold']) {
+                    /*if ($Vi < $v['vol_threshold']) {
                         $B += $product['weight'] * $product['amount'];
                     } else {
                         $bi = $Vi / $v['dim_factor'];
@@ -521,14 +521,21 @@ EOT;
                             $bi = $product['weight'];
                         }
                         $B += $bi * $product['amount'];
-                    }
+                    }*/
+					global $xcart_dir;
+					include_once $xcart_dir."/include/class/classShipping.php";
+					$classShipping = new classShipping();
+					$wn = $classShipping->getShippingWeight($product['productid'], $v['methodid'], $product['amount'], $product, $v);
+					unset ($classShipping);
+					$B += $wn;
+
+
                 }
                 $B = intval(ceil($B));
                 if ($B > $weight) {
                     $recalc_weight = $B;
                 }
             }
-                
             if ($L_G_flag) {
                 if ($config['Oversize_Package']['oversize_min_weight'] > $recalc_weight) {
                     $recalc_weight = $config['Oversize_Package']['oversize_min_weight'];

@@ -5,6 +5,8 @@ session_start();
 require "./top.inc.php";
 require "./init.php";
 
+global $config, $xcart_dir;
+
 set_time_limit(0);
 ini_set('memory_limit', '512M');
 
@@ -28,7 +30,7 @@ if (isset($argv) && is_array($argv)) {
 if ($config[$log_category] == "Y"){
         die("Already launched"); // ################################
 }
-db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='$log_category'");
+db_query("REPLACE $sql_tbl[config] SET value='Y', name='$log_category'");
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
 
 $started_at = time();
@@ -110,14 +112,12 @@ foreach ($supplier_feeds as $k => $v){
                 $md5 = fread($handle, filesize($local_file));
                 fclose($handle);
 
-
                 if ($md5 == $v["last_md5"]){
-	                $log_text = "manufacturerid: ".$v["manufacturerid"].". md5 = last_md5. Feed skipped.";
-//                      func_backprocess_log("supplier_feeds_v_2", $log_text);
+	                $log_text = "manufacturerid: ".$v["manufacturerid"].". md5 = last_md5. Feed skipped. ";
+					$log_text .= "md5file: ".$md5." - md5db: ".$v["last_md5"];
                         func_backprocess_log("supplier feeds errors", $log_text);
                         continue;
                 }
-
 
         } else {
 
@@ -175,7 +175,7 @@ foreach ($supplier_feeds as $k => $v){
 
 
 /* Disable for test N4 */
-			$md5 = md5($contents);
+/*			$md5 = md5($contents);
 
 			if ($md5 == $v["last_md5"]){
 	                        $log_text = "manufacturerid: ".$v["manufacturerid"].". md5 = last_md5. Feed skipped.";
@@ -379,6 +379,7 @@ func_print_r($p, $productid);
 				$not_xcart_products_fields = $p;
 
 				$just_created = false;
+				$product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
 
 				if ($v["feed_type"] == "P"){ // product
 
@@ -856,51 +857,124 @@ die();
 				################# START: xcart_product update #################
                     print("START: xcart_product update section\n");
 
-					$product_in_DB_info_arr = func_query_first("SELECT forsale, r_avail, eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+					$product_in_DB_info_arr = func_query_first("SELECT forsale, r_avail, eta_date_mm_dd_yyyy, eta_date_lock FROM $sql_tbl[products] WHERE productid='$productid'");
 
-                    $product_dimension = func_query_first("SELECT dim_x, dim_y, dim_z, weight FROM $sql_tbl[products] WHERE productid='$productid'");
+                    $product_dimension = func_query_first("SELECT dim_x, dim_y, dim_z, weight, dim_lock, shipping_dim_x, shipping_dim_y,
+																  shipping_dim_z, shipping_dim_lock, shipping_weight, shipping_weight_lock, weight_lock
+															 FROM $sql_tbl[products] WHERE productid='$productid'");
 
-                    if ( !isset( $product['dim_x'] ) )
-                        $product['dim_x'] = 0;
-                    if ( !isset( $product['dim_y'] ) )
-                        $product['dim_y'] = 0;
-                    if ( !isset( $product['dim_z'] ) )
-                        $product['dim_z'] = 0;
+                    if ( $product_dimension['weight_lock'] != 'Y') {
 
-                    $dimension1 = array($product['dim_x'],$product['dim_y'],$product['dim_z']);
-                    rsort($dimension1);
+						if ( !isset( $product['weight'] ) )
+							$product['weight'] = 0;
 
-                    $dimension2 = array($product_dimension['dim_x'],$product_dimension['dim_y'],$product_dimension['dim_z']);
-                    rsort($dimension2);
+						if ( $product['weight'] == 0 && $product_dimension['weight'] != 0 )
+							$product['weight'] = $product_dimension['weight'];
 
-                    $dimension = array();
+					} else {
+						unset($product['weight']);
+					}
 
-                    if ( !isset( $product['weight'] ) )
-                        $product['weight'] = 0;
+					if ( $product_dimension['shipping_weight_lock'] != 'Y') {
 
-                    if ( $product['weight'] == 0 && $product_dimension['weight'] != 0 )
-                        $product['weight'] = $product_dimension['weight'];
+						if ( !isset( $product['shipping_weight'] ) )
+							$product['shipping_weight'] = 0;
 
-                    if ( $dimension1[0] != 0 )
-                        $dimension[0] = $dimension1[0];
-                    else
-                        $dimension[0] = $dimension2[0];
+						if ( $product['shipping_weight'] == 0 && $product_dimension['shipping_weight'] != 0 )
+							$product['shipping_weight'] = $product_dimension['shipping_weight'];
 
-                    if ( $dimension1[1] != 0 )
-                        $dimension[1] = $dimension1[1];
-                    else
-                        $dimension[1] = $dimension2[1];
+					} else {
+						unset($product['shipping_weight']);
+					}
 
-                    if ( $dimension1[2] != 0 )
-                        $dimension[2] = $dimension1[2];
-                    else
-                        $dimension[2] = $dimension2[2];
+					if ( $product_dimension['dim_lock'] != 'Y') {
 
-                    rsort( $dimension );
+						if ( !isset( $product['dim_x'] ) )
+							$product['dim_x'] = 0;
+						if ( !isset( $product['dim_y'] ) )
+							$product['dim_y'] = 0;
+						if ( !isset( $product['dim_z'] ) )
+							$product['dim_z'] = 0;
 
-                    $product['dim_x'] = $dimension[0];
-                    $product['dim_y'] = $dimension[1];
-                    $product['dim_z'] = $dimension[2];
+						$dimension1 = array($product['dim_x'],$product['dim_y'],$product['dim_z']);
+						rsort($dimension1);
+
+						$dimension2 = array($product_dimension['dim_x'],$product_dimension['dim_y'],$product_dimension['dim_z']);
+						rsort($dimension2);
+
+						$dimension = array();
+
+
+						if ($dimension1[0] != 0)
+							$dimension[0] = $dimension1[0];
+						else
+							$dimension[0] = $dimension2[0];
+
+						if ($dimension1[1] != 0)
+							$dimension[1] = $dimension1[1];
+						else
+							$dimension[1] = $dimension2[1];
+
+						if ($dimension1[2] != 0)
+							$dimension[2] = $dimension1[2];
+						else
+							$dimension[2] = $dimension2[2];
+
+						rsort($dimension);
+
+						$product['dim_x'] = $dimension[0];
+						$product['dim_y'] = $dimension[1];
+						$product['dim_z'] = $dimension[2];
+					} else {
+						unset($product['dim_x']);
+						unset($product['dim_y']);
+						unset($product['dim_z']);
+					}
+
+
+					if ( $product_dimension['shipping_dim_lock'] != 'Y') {
+
+						if ( !isset( $product['shipping_dim_x'] ) )
+							$product['shipping_dim_x'] = 0;
+						if ( !isset( $product['shipping_dim_y'] ) )
+							$product['shipping_dim_y'] = 0;
+						if ( !isset( $product['shipping_dim_z'] ) )
+							$product['shipping_dim_z'] = 0;
+
+						$dimension1 = array($product['shipping_dim_x'],$product['shipping_dim_y'],$product['shipping_dim_z']);
+						rsort($dimension1);
+
+						$dimension2 = array($product_dimension['shipping_dim_x'],$product_dimension['shipping_dim_y'],$product_dimension['shipping_dim_z']);
+						rsort($dimension2);
+
+						$dimension = array();
+
+
+						if ($dimension1[0] != 0)
+							$dimension[0] = $dimension1[0];
+						else
+							$dimension[0] = $dimension2[0];
+
+						if ($dimension1[1] != 0)
+							$dimension[1] = $dimension1[1];
+						else
+							$dimension[1] = $dimension2[1];
+
+						if ($dimension1[2] != 0)
+							$dimension[2] = $dimension1[2];
+						else
+							$dimension[2] = $dimension2[2];
+
+						rsort($dimension);
+
+						$product['shipping_dim_x'] = $dimension[0];
+						$product['shipping_dim_y'] = $dimension[1];
+						$product['shipping_dim_z'] = $dimension[2];
+					} else {
+						unset($product['shipping_dim_x']);
+						unset($product['shipping_dim_y']);
+						unset($product['shipping_dim_z']);
+					}
 
 					$product = func_addslashes($product);
 
@@ -924,6 +998,17 @@ die();
 
 					if (!$just_created && !$discontinued_date_condition_found){
 						$updated_products_count++;
+					}
+
+					$todayDate = strtotime(date("Y-m-d"));
+
+					//if ($productid == 18920) {func_print_r($product); var_dump($productid);}
+
+
+					if (($product_in_DB_info_arr['eta_date_lock'] == "Y") && ($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $todayDate) && (($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $product['eta_date_mm_dd_yyyy']) || empty($product['eta_date_mm_dd_yyyy'])) ) {
+						unset($product['eta_date_mm_dd_yyyy']);
+					} else {
+						$product['eta_date_lock'] = "N";
 					}
 
 
@@ -1001,14 +1086,17 @@ die();
 
 			    print("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' or productcode like '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 			    print("\r\n");
-               	$count_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
+               	$count_products = func_query_first_cell("SELECT COUNT(1) FROM $sql_tbl[products] xp1 INNER JOIN $sql_tbl[products_sf] xp2 ON xp1.productid = xp2.productid AND xp2.sfid = $v[storefront_id] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 
 			    print($count_products." for sale = Y\r\n");
 
 
                             if ($count_products > 0){
 
-                                $manufacturer_code_products = db_query("SELECT productid, productcode, forsale, update_search_index, provider FROM $sql_tbl[products] WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
+                                $manufacturer_code_products = db_query("SELECT xp1.productid, xp1.productcode, xp1.forsale, xp1.update_search_index, xp1.provider
+																	FROM $sql_tbl[products] xp1
+																	INNER JOIN $sql_tbl[products_sf] xp2 ON xp1.productid = xp2.productid AND xp2.sfid = $v[storefront_id]
+																	WHERE (productcode LIKE '".$mc."-%' OR productcode LIKE '".$mc2."-%') AND forsale='Y' $provider_search_cond");
 
                                 $line_number = 0;
                                 print "<br />Second iteration:<br />";

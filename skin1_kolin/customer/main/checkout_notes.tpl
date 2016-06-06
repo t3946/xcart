@@ -6,6 +6,6 @@
 	<td><b>{$lng.lbl_customer_notes}:</b></td>
 	<td>&nbsp;</td>
 *}
-	<td nowrap="nowrap"><textarea cols="70" rows="10" name="Customer_Notes"></textarea></td>
-</tr>
+	<td nowrap="nowrap"><textarea cols="70" rows="10" name="Customer_Notes">{if ($customer_notes)}{$customer_notes}{/if}</textarea></td>
+	</tr>
 </table>

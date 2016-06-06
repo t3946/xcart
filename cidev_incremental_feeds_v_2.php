@@ -47,6 +47,8 @@ define("FROOGLE_TAIL_LEN", strlen(constant("FROOGLE_TAIL")));
 define('FROOGLE_MAX_DESCRIPTION_LENGTH', 10 * 1024); //The content in an attribute in an item exceeds 10 KB.
 
 define('EXCLUDE_CATEGORYID_BRANCH', 5099);
+define('SUBMIT_DISABLE', 'N');
+define('EXTRA_LOG', 'N');
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -84,7 +86,8 @@ db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cidev_incremental_fe
 
 $started_at = time();
 
-$log_text = " * * *  Cron started  * * * ";
+func_backprocess_log("incremental feeds", " ");
+$log_text = " * * *  Cron started  * * * SUBMIT_DISABLE = '".SUBMIT_DISABLE."', EXTRA_LOG = '".EXTRA_LOG."'";
 func_backprocess_log("incremental feeds", $log_text);
 
 
@@ -135,7 +138,7 @@ func_send_simple_mail($to, $subj, $body, $from);
 */
 
 
-$all_manufacturer_info = func_query_hash("SELECT manufacturerid, manufacturer, m_city, m_country, m_state, m_zipcode FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
+/*$all_manufacturer_info = func_query_hash("SELECT manufacturerid, manufacturer, m_city, m_country, m_state, m_zipcode FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
 
 
 $all_approximation_shipping_rates_tmp = func_query("SELECT * FROM $sql_tbl[approximation_shipping_rates]");
@@ -152,7 +155,7 @@ if (!empty($all_manufacturer_info) && !empty($all_approximation_shipping_rates_t
 			}
 		}
 	}
-}
+}*/
 
 $two_shippings = func_query_hash("SELECT shippingid, shipping, vol_threshold, dim_factor FROM $sql_tbl[shipping] WHERE shippingid='1' OR shippingid='65'", "shippingid", false);
 
@@ -166,6 +169,7 @@ if (!empty($all_froogle_options) && is_array($all_froogle_options)){
 }
 
 $cidev_storefronts = $storefronts;
+ksort($cidev_storefronts);
 
 if (!empty($cidev_storefronts) && is_array($cidev_storefronts)){
 
@@ -309,8 +313,10 @@ $cred = new Google_Auth_AssertionCredentials(
 	$key
 );
 $client->setAssertionCredentials($cred);
-if ($client->getAuth()->isAccessTokenExpired()) {
-	$client->getAuth()->refreshTokenWithAssertion($cred);
+if (SUBMIT_DISABLE!="Y") {
+	if ($client->getAuth()->isAccessTokenExpired()) {
+		$client->getAuth()->refreshTokenWithAssertion($cred);
+	}
 }
 $_SESSION['service_token'] = $client->getAccessToken();
 #####################################################################################################################
@@ -345,10 +351,12 @@ $query_products_count = func_query_first_cell("
                         UP.time_stamp As ts,
                         P.forsale As forsale,
                         P.amazon_enabled As amazon_enabled,
-                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype,
+                        max(PS2.sfid) as maxsf
         from xcart_cidev_updated_products UP
                         left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                         inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                        left join xcart_products_sf PS2 ON PS2.productid = UP.resourceid
                         left join xcart_products P ON P.productid = UP.resourceid
         where UP.`type` <= 2  and P.forsale = '$paramYN'
         group by UP.resourceid
@@ -365,10 +373,12 @@ if (!empty($query_products_count)){
                                 UP.time_stamp As ts,
                                 P.forsale As forsale,
                                 P.amazon_enabled As amazon_enabled,
-                                GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                                GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype,
+                                max(PS2.sfid) as maxsf
                 from xcart_cidev_updated_products UP
                                 left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                                 inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                                left join xcart_products_sf PS2 ON PS2.productid = UP.resourceid
                                 left join xcart_products P ON P.productid = UP.resourceid
                 where UP.`type` <= 2  and P.forsale = '$paramYN'
                 group by UP.resourceid
@@ -386,10 +396,12 @@ else {
                             UP.time_stamp As ts,
                             P.forsale As forsale,
                             P.amazon_enabled As amazon_enabled,
-                            GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                            GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype,
+                            max(PS2.sfid) as maxsf
             from xcart_cidev_updated_products UP
                             left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                             inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                            left join xcart_products_sf PS2 ON PS2.productid = UP.resourceid
                             left join xcart_products P ON P.productid = UP.resourceid
             where UP.`type` <= 2 and P.forsale = '$paramYN'
             group by UP.resourceid
@@ -400,10 +412,12 @@ else {
                             UPM.time_stamp As ts,
                             P2.forsale As forsale,
                             P2.amazon_enabled As amazon_enabled,
-                            1 As utype
+                            1 As utype,
+                            max(PS2.sfid) as maxsf
              From xcart_cidev_updated_products UPM
-                            left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
+                            left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid
                             inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
+                            left join xcart_products_sf PS2 ON PS.productid = PS2.productid
              where UPM.`type` = 3 and P2.forsale='$paramYN') As T
              where T.productid not in (320764,320761,320762,320764,320765,320766)");
      
@@ -416,10 +430,12 @@ else {
                                         UP.time_stamp As ts,
                                         P.forsale As forsale,
                                         P.amazon_enabled As amazon_enabled,
-                                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype
+                                        GROUP_CONCAT(Distinct UP2.`type` ORDER BY UP2.`type`) As utype,
+                                        max(PS2.sfid) as maxsf
                         from xcart_cidev_updated_products UP
                                         left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                                         inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                                        left join xcart_products_sf PS2 ON PS2.productid = UP.resourceid
                                         left join xcart_products P ON P.productid = UP.resourceid
                         where UP.`type` <= 2 and P.forsale = '$paramYN'
                         group by UP.resourceid
@@ -430,10 +446,12 @@ else {
                                         UPM.time_stamp As ts,
                                         P2.forsale As forsale,
                                         P2.amazon_enabled As amazon_enabled,
-                                        1 As utype
+                                        1 As utype,
+                                        max(PS2.sfid) as maxsf
                          From xcart_cidev_updated_products UPM
                                         left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
                                         inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
+                                        left join xcart_products_sf PS2 ON PS.productid = PS2.productid
                          where UPM.`type` = 3 and P2.forsale='$paramYN') As T
                          where T.productid not in (320764,320761,320762,320764,320765,320766)";
             }    
@@ -443,8 +461,8 @@ else {
                 $tPARAMLIMIT = $PARAMLIMIT;
                 $paramYN = 'N';
                 $PARAMLIMIT = 'LIMIT 130';
-                $log_text = "//// processing SF DISCONTINUED ITEMS ";
-                func_backprocess_log("incremental feeds", $log_text);
+                //$log_text = "//// processing SF DISCONTINUED ITEMS ";
+                //func_backprocess_log("incremental feeds", $log_text);
                 
                 $query_products = "
                         Select *
@@ -454,10 +472,12 @@ else {
                                         UP.time_stamp As ts,
                                         P.forsale As forsale,
                                         P.amazon_enabled As amazon_enabled,
-                                        1 As utype
+                                        1 As utype,
+                                        max(PS2.sfid) as maxsf
                         from xcart_cidev_updated_products UP
                                         left join xcart_cidev_updated_products UP2 ON UP2.resourceid = UP.resourceid and UP2.`type` <= 2
                                         inner join xcart_products_sf PS ON PS.productid = UP.resourceid and PS.sfid = '$storefrontid'
+                                        left join xcart_products_sf PS2 ON PS2.productid = PS.productid
                                         left join xcart_products P ON P.productid = UP.resourceid
                         where UP.`type` <= 2 and P.forsale = '$paramYN'
                         group by UP.resourceid
@@ -467,10 +487,12 @@ else {
                                         UPM.time_stamp As ts,
                                         P2.forsale As forsale,
                                         P2.amazon_enabled As amazon_enabled,
-                                        1 As utype
+                                        1 As utype,
+                                        max(PS2.sfid) as maxsf
                          From xcart_cidev_updated_products UPM
                                         left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
                                         inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
+                                        left join xcart_products_sf PS2 ON PS2.productid = PS.productid
                          where UPM.`type` = 3 and P2.forsale='$paramYN') As T
                          where T.productid not in (320764,320761,320762,320764,320765,320766)
                          $PARAMLIMIT";
@@ -501,7 +523,7 @@ else {
 				if ($enable_incremental_feed_updates == "Y" && !empty($MerchantID) && !empty($client_id))
 				{
 
-					$AddProductToGoogleBaseBatch_arr = AddProductToGoogleBaseBatch($product["productid"], $MerchantID, $product["utype"], $service, $product["forsale"], $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory);
+					$AddProductToGoogleBaseBatch_arr = AddProductToGoogleBaseBatch($product["productid"], $MerchantID, $product["utype"], $service, $product["forsale"], $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, EXTRA_LOG);
 
 					if (!empty($AddProductToGoogleBaseBatch_arr) && is_array($AddProductToGoogleBaseBatch_arr)){
 						$google_products_batch_count = $AddProductToGoogleBaseBatch_arr["google_products_batch_count"];
@@ -522,62 +544,68 @@ else {
 				}
 
 ###
-				db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
+				if ($storefrontid == $product["maxsf"])
+					db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
+
 				db_query("UPDATE $sql_tbl[products] SET last_incremental_update='".time()."' WHERE productid='".$product["productid"]."'");
 ###
 
-				if ($bing_inventory_batch_count == $max_bing_batch)
-				{
-                    $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
-					//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
-					if ( $error == 500 )
-						restore_queue( $binventory, 2 );
+					//Bing Batch Array = Google Batch Array
+					$bproducts = $gproducts;
 
-					$bing_inventory_batch_count = 0;
-					$binventory = array();
-				}
+					if ($bing_inventory_batch_count == $max_bing_batch)
+					{
+						$error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
+						//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+						if ( $error == 500 )
+							restore_queue( $binventory, 2 );
 
-				if ($bing_products_batch_count == $max_bing_batch)
-				{
-					$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
-					if ( $error == 500 )
-						restore_queue( $bproducts, 1 );
-					
-					$bing_products_batch_count = 0;
-					$bproducts = array();
-				}
+						$bing_inventory_batch_count = 0;
+						$binventory = array();
+					}
 
-				if ($google_inventory_batch_count == $max_google_batch){
-					$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID);
-					if ( $error == 500 )
-						restore_queue( $ginventory, 2 );
+					if ($bing_products_batch_count == $max_bing_batch)
+					{
+						$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
+						if ( $error == 500 )
+							restore_queue( $bproducts, 1 );
 
-					$google_inventory_batch_count = 0;
-					$ginventory = array();
-				}
+						$bing_products_batch_count = 0;
+						$bproducts = array();
+					}
 
-				if ($google_products_batch_count == $max_google_batch){
-					$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID);
-					if ( $error == 500 )
-						restore_queue( $gproducts, 1 );
+					if ($google_inventory_batch_count == $max_google_batch){
+						$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, SUBMIT_DISABLE, EXTRA_LOG);
+						if ( $error == 500 )
+							restore_queue( $ginventory, 2 );
 
-					$google_products_batch_count = 0;
-					$gproducts = array();
-				}
+						$google_inventory_batch_count = 0;
+						$ginventory = array();
+					}
 
-				if ($amazon_inventory_batch_count == $max_amazon_batch){
-					SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray);
+					if ($google_products_batch_count == $max_google_batch){
+						$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, SUBMIT_DISABLE);
+						if ( $error == 500 )
+							restore_queue( $gproducts, 1 );
 
-					$amazon_inventory_batch_count = 0;
-					$ainventory = array();
-				}
+						$google_products_batch_count = 0;
+						$gproducts = array();
+					}
 
-				if ($amazon_products_batch_count == $max_amazon_batch){
-					SubmitAmazonProductsBatch();
+					if ($amazon_inventory_batch_count == $max_amazon_batch){
+						SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray);
 
-					$amazon_products_batch_count = 0;
-					$aproducts = array();
-				}
+						$amazon_inventory_batch_count = 0;
+						$ainventory = array();
+					}
+
+					if ($amazon_products_batch_count == $max_amazon_batch){
+						SubmitAmazonProductsBatch();
+
+						$amazon_products_batch_count = 0;
+						$aproducts = array();
+					}
+
 
 				$cnt++;
 			}
@@ -586,27 +614,27 @@ else {
 
 			if ($bing_inventory_batch_count >= 1 && !empty($binventory) && is_array($binventory))
 			{
-                $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+                $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
 				//$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
 				if ( $error == 500 )
 					restore_queue( $binventory, 2 );
 			}
 			if ($bing_products_batch_count >= 1 && !empty($bproducts) && is_array($bproducts))
 			{
-				$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
+				$error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
 				if ( $error == 500 )
 					restore_queue( $bproducts, 1 );
 			}
 
 			if ($google_inventory_batch_count >= 1 && !empty($ginventory) && is_array($ginventory))
 			{
-				$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID);
+				$error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, SUBMIT_DISABLE, EXTRA_LOG);
 				if ( $error == 500 )
 					restore_queue( $ginventory, 2 );
 			}
 			if ($google_products_batch_count >= 1 && !empty($gproducts) && is_array($gproducts))
 			{
-				$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID);
+				$error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, SUBMIT_DISABLE);
 				if ( $error == 500 )
 					restore_queue( $gproducts, 1 );
 			}
