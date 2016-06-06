@@ -107,8 +107,8 @@ function func_AJAX_authorize_PayPal() {
     </td>
   </tr>
   <tr>
-    <td align="right"><b>Grand total:</b> </td>
-    <td><input type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" id="paypal_vt_grand_total" /></td>
+    <td align="right" style="font-size: 12px;"><b>Grand total:</b> </td>
+    <td><input style="font-size: 12px;" type="text" name="paypal_vt[grand_total]" value="{$order.total}" size="8" id="paypal_vt_grand_total" /></td>
   </tr>
 
 
