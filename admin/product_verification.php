@@ -41,7 +41,7 @@ define("IS_MULTILANGUAGE", true);
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
-if(empty($active_modules['Product_Verification']))
+if(!$active_modules['Product_Verification'])
 	func_header_location ("error_message.php?access_denied&id=25");
 else
 	include $xcart_dir."/modules/Product_Verification/product_verification.php";
