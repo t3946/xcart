@@ -51,7 +51,7 @@ function GetGooglePrice($fproduct){
 	return $product_price;
 }
 
-function GetGoogleBaseOneRow($productid, $scrip_name=""){
+function GetGoogleBaseOneRow($productid, $scrip_name="", $sExtraLog = "N"){
 	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 
 
@@ -709,7 +709,8 @@ $start_time = round(microtime(true) * 1000);
 	$current_time = round(microtime(true) * 1000);
 	$diff_time = ($current_time - $start_time);
 
-	func_backprocess_log("incremental feeds", sprintf("Row generated for pid=%d in %d msec. Amazon(%d msec), Approx(%d msec)",$product['productid'],$diff_time, $diff_end_time_amazon_shipping, $diff_end_time_approximate_shipping));
+	if ($sExtraLog == "Y")
+		func_backprocess_log("incremental feeds", sprintf("Row generated for pid=%d in %d msec. Amazon(%d msec), Approx(%d msec)",$product['productid'],$diff_time, $diff_end_time_amazon_shipping, $diff_end_time_approximate_shipping));
 
 	return $row_arr;
 }
@@ -731,14 +732,14 @@ function AddProductToAmazonBatch($productid, $update_type, $amazon_inventory_bat
         return $AddProductToAmazonBatch_arr;
 }
 
-function AddProductToGoogleBaseBatch($productid, $MerchantID, $update_type, $service, $forsale, $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory){
+function AddProductToGoogleBaseBatch($productid, $MerchantID, $update_type, $service, $forsale, $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, $sExtraLog = "N"){
 
 	if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $forsale == "N"))){
 			$Batchid = $google_products_batch_count;
 			$count_gproducts = count($gproducts);
 			$gproducts[$count_gproducts]["productid"] = $productid;
 			$gproducts[$count_gproducts]["Batchid"] = $Batchid;
-			$gproducts[$count_gproducts]["product_info"] = GetGoogleBaseOneRow($productid, "main_google");
+			$gproducts[$count_gproducts]["product_info"] = GetGoogleBaseOneRow($productid, "main_google", $sExtraLog);
 			$google_products_batch_count++;
 	}
 	elseif ($update_type == "2" && $forsale == "Y"){
@@ -757,12 +758,13 @@ function AddProductToGoogleBaseBatch($productid, $MerchantID, $update_type, $ser
 	return $AddProductToGoogleBaseBatch_arr;
 }
 
-function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, $debug_mode = 'N'){
+function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, $debug_mode = 'N', $sExtraLog = 'N'){
         global $started_at, $sql_tbl, $froogle_tracing_token, $debug_requests;
 
 	foreach ($ginventory as $k => $v){
 				/*func_build_quick_prices($v["productid"]);*/
-				func_backprocess_log("incremental feeds", sprintf("Inventory updated for pid=%d",$v["productid"]));
+				if ($sExtraLog == 'Y')
+					func_backprocess_log("incremental feeds", sprintf("Inventory updated for pid=%d",$v["productid"]));
                 $fields = ", IFNULL($sql_tbl[variants].avail, $sql_tbl[products].r_avail) as r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].map_price, $sql_tbl[products].manufacturerid, $sql_tbl[products].eta_date_mm_dd_yyyy";
                 $joins = " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
                 $joins .= " INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0'";
