@@ -335,7 +335,7 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
                 <table>
                     <th>Storefront prefix</th>
                     {foreach from=$brand.customer_url key=key item=branda}
-                    <tr>
+                    <tr style="text-align: center;">
                         <td class="FormButton">{$branda.prefix}</td>
                     </tr>
                     {/foreach}
