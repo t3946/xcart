@@ -396,7 +396,7 @@ if ($mode == "add" or !empty($brandid)) {
 								$brand_data['customer_url'][$sfinfo['domain']] =
 										['url' => $httppre . func_get_http_location_sf($vsfid['sfid']) . '/brands.php?brandid=' . $brandid,
 										 'products_count' => $vsfid['products_count'],
-											'prefix' => rtrim($sfinfo['prefix'],'-')
+										 'prefix' => rtrim($sfinfo['prefix'],'-')
 										];
 							}
 						}
