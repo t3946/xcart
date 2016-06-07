@@ -1,4 +1,4 @@
-<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's brands) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* ADDED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's brands) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -375,27 +375,37 @@ if ($mode == "add" or !empty($brandid)) {
 		}
 		else {
 			$brand_data["used_by_others"] = func_brand_is_used($brandid, $brand_data["provider"]);
-			$brand_data['customer_url'] = ($HTTPS) ? 'https://' : 'http://';
+			$httppre = ($HTTPS) ? 'https://' : 'http://';
 			if (!empty($active_modules['Multiple_Storefronts'])) {
 				if ($current_area == 'C') {
 					$brand_data['customer_url'] .= func_get_http_location_sf($current_storefront) . '/brands.php?brandid=' . $brandid;
 				} else {
 					$sfid = false;
-					$sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[brands_sf] WHERE brandid = '$brandid' AND brandid != '0'");
+					$sfid = func_query("SELECT * FROM $sql_tbl[brands_sf] WHERE brandid = '$brandid' ORDER BY products_count DESC");
 					if (empty($sfid)) {
-						$is_exist_default = func_query_first_cell("SELECT COUNT(sfid) FROM $sql_tbl[brands_sf] WHERE brandid = '$brandid' AND brandid = '0'");
+						$sfid = ['sfid'=>0, 'products_count' => 0];
+						/*$is_exist_default = func_query_first_cell("SELECT COUNT(sfid) FROM $sql_tbl[brands_sf] WHERE brandid = '$brandid' AND sfid = '0'");
 						if ($is_exist_default > 0) {
 							$sfid = 0;
-						}
+						}*/
 					}
 					if ($sfid !== false) {
-						$brand_data['customer_url'] .= func_get_http_location_sf($sfid) . '/brands.php?brandid=' . $brandid;
+						if (is_array($sfid)) {
+							foreach ($sfid as $vsfid) {
+								$sfinfo = func_get_storefront_info($vsfid['sfid']);
+								$brand_data['customer_url'][$sfinfo['domain']] =
+										['url' => $httppre . func_get_http_location_sf($vsfid['sfid']) . '/brands.php?brandid=' . $brandid,
+										 'products_count' => $vsfid['products_count'],
+										 'prefix' => rtrim($sfinfo['prefix'],'-')
+										];
+							}
+						}
 					} else {
-						$brand_data['customer_url'] = '';
+						$brand_data['customer_url'] = [];
 					}
 				}
 			} else {
-				$brand_data['customer_url'] .= $xcart_catalogs['customer'] . '/brands.php?brandid=' . $brandid;
+				$brand_data['customer_url'][] = $httppre.$xcart_catalogs['customer'] . '/brands.php?brandid=' . $brandid;
 			}
 
 		        $brand_data['clean_urls_history'] = func_query_hash("SELECT id, clean_url FROM $sql_tbl[clean_urls_history] WHERE resource_type = 'M' AND resource_id = '$brandid' ORDER BY mtime DESC", "id", false, true);
