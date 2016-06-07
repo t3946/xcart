@@ -381,17 +381,25 @@ if ($mode == "add" or !empty($brandid)) {
 					$brand_data['customer_url'] .= func_get_http_location_sf($current_storefront) . '/brands.php?brandid=' . $brandid;
 				} else {
 					$sfid = false;
-					$sfid = func_query("SELECT sfid FROM $sql_tbl[brands_sf] WHERE brandid = '$brandid' ORDER BY products_count DESC");
+					$sfid = func_query("SELECT * FROM $sql_tbl[brands_sf] WHERE brandid = '$brandid' ORDER BY products_count DESC");
 					if (empty($sfid)) {
-						$sfid = 0;
+						$sfid = ['sfid'=>0, 'products_count' => 0];
 						/*$is_exist_default = func_query_first_cell("SELECT COUNT(sfid) FROM $sql_tbl[brands_sf] WHERE brandid = '$brandid' AND sfid = '0'");
 						if ($is_exist_default > 0) {
 							$sfid = 0;
 						}*/
 					}
 					if ($sfid !== false) {
-						foreach ($sfid as $vsfid)
-						$brand_data['customer_url'][$vsfid] = $httppre.func_get_http_location_sf($vsfid) . '/brands.php?brandid=' . $brandid;
+						if (is_array($sfid)) {
+							foreach ($sfid as $vsfid) {
+								$sfinfo = func_get_storefront_info($vsfid['sfid']);
+								$brand_data['customer_url'][$sfinfo['domain']] =
+										['url' => $httppre . func_get_http_location_sf($vsfid['sfid']) . '/brands.php?brandid=' . $brandid,
+										 'products_count' => $vsfid['products_count'],
+											'prefix' => rtrim($sfinfo['prefix'],'-')
+										];
+							}
+						}
 					} else {
 						$brand_data['customer_url'] = [];
 					}
