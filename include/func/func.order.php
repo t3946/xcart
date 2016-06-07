@@ -209,7 +209,7 @@ function func_get_group_totals($group_products, $group_shipping) {
 # This function creates array with order data
 #
 function func_select_order($orderid) {
-	global $sql_tbl, $config, $current_area, $active_modules, $shop_language;
+	global $sql_tbl, $config, $current_area, $active_modules, $shop_language, $price_details_names;
 
 	$o_date = "date+'".$config["Appearance"]["timezone_offset"]."' as date";
 	$order = func_query_first("select *, $o_date from $sql_tbl[orders] where $sql_tbl[orders].orderid='$orderid'");
@@ -332,7 +332,35 @@ function func_select_order($orderid) {
 	}
 
 	$order["notes"] = stripslashes($order["notes"]);
+
 	$order["extra"] = @unserialize($order["extra"]);
+
+	if (!empty($order["b_company"]) || !empty($order["s_company"])) {
+		$order["extra"] = ["additional_fields" => []];
+		$order["extra"]["additional_fields"][] = ['fieldid' => 1, 'section' => 'B', 'value' => $order['b_company'], 'title' => 'Company'];
+		$order["extra"]["additional_fields"][] = ['fieldid' => 2, 'section' => 'S', 'value' => $order['s_company'], 'title' => 'Company'];
+	}
+	if (!empty($order['tax_info_display_taxed_order_totals']))
+		$order["extra"]['tax_info']['display_taxed_order_totals'] = $order['tax_info_display_taxed_order_totals'];
+	if (!empty($order['tax_info_display_cart_products_tax_rates']) && empty($order["extra"]['tax_info']['display_cart_products_tax_rates']))
+		$order["extra"]['tax_info']['display_cart_products_tax_rates'] = $order['tax_info_display_cart_products_tax_rates'];
+
+	if (!empty($order['tax_info_taxed_subtotal']) && empty($order["extra"]['tax_info']['taxed_subtotal']))
+		$order["extra"]['tax_info']['taxed_subtotal'] = $order['tax_info_taxed_subtotal'];
+	if (!empty($order['tax_info_taxed_discounted_subtotal']) && empty($order["extra"]['tax_info']['taxed_discounted_subtotal']))
+		$order["extra"]['tax_info']['taxed_discounted_subtotal'] = $order['tax_info_taxed_discounted_subtotal'];
+	if (!empty($order['tax_info_taxed_shipping']) && empty($order["extra"]['tax_info']['taxed_shipping']))
+		$order["extra"]['tax_info']['taxed_shipping'] = $order['tax_info_taxed_shipping'];
+
+	foreach ($price_details_names as $pn) {
+		if (!empty($order['shipping_total_'.$pn]) && empty($order["extra"]['shipping_total'][$pn]))
+			$order["extra"]['shipping_total'][$pn] = $order['shipping_total_'.$pn];
+		if (!empty($order['product_total_'.$pn]) && empty($order["extra"]['product_total'][$pn]))
+			$order["extra"]['product_total'][$pn] = $order['product_total_'.$pn];
+		if (!empty($order['total_'.$pn]) && empty($order["extra"]['total'][$pn]))
+			$order["extra"]['total'][$pn] = $order['total_'.$pn];
+	}
+
 	$extras = func_query("SELECT khash, value FROM $sql_tbl[order_extras] WHERE orderid = '$orderid'");
 	if (!empty($extras)) {
 		foreach($extras as $v)
@@ -1110,6 +1138,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 			//$current_order["display_shipping_cost"]);
 
+
+
 		if (!empty($active_modules["Special_Offers"]))
 			include $xcart_dir."/modules/Special_Offers/place_order_extra.php";
 
@@ -1220,6 +1250,11 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			'clickid' => $partner_clickid,
 			'language' => $userinfo['language'],
 			'order_prefix' => isset($order_prefix) ? $order_prefix : $config['General']['opt_order_prefix'],
+			'tax_info_display_taxed_order_totals' => $_extra["tax_info"]['display_taxed_order_totals'],
+			'tax_info_display_cart_products_tax_rates' => $_extra["tax_info"]['display_cart_products_tax_rates'],
+			'tax_info_taxed_subtotal' => $_extra["tax_info"]['taxed_subtotal'],
+			'tax_info_taxed_discounted_subtotal' => $_extra["tax_info"]['taxed_discounted_subtotal'],
+			'tax_info_taxed_shipping' => $_extra["tax_info"]['taxed_shipping'],
 			'extra' => addslashes(serialize($_extra)));
 
 		if (!empty($active_modules['Multiple_Storefronts'])) {
@@ -1228,6 +1263,16 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             } else {
 			$insert_data['storefrontid'] = $current_storefront;
 		}
+		}
+
+		if (!empty($extra['additional_fields'])) {
+			foreach ($extra['additional_fields'] as $aAddFiled) {
+				if ($aAddFiled['title'] == 'Company') {
+					$sFiledCompany = strtolower($aAddFiled['section']).'_company';
+					if (!empty($sFiledCompany))
+						$insert_data[$sFiledCompany] = $aAddFiled['value'];
+				}
+			}
 		}
 
 #
@@ -1609,8 +1654,17 @@ die("123");
 			
 				func_array2insert('order_groups', $insert_data);
 			}
-			# Update order detailed totals
+
 			$insert_data = array('extra' => addslashes(serialize($_extra)));
+
+			foreach ($price_details_names as $dn) {
+				$insert_data["shipping_total_$dn"] = $_extra['shipping_total'][$dn];
+				$insert_data["product_total_$dn"] = $_extra['product_total'][$dn];
+				$insert_data["total_$dn"] = $_extra['total'][$dn];
+			}
+
+			# Update order detailed totals
+
 			func_array2update("orders", $insert_data, "orderid='$orderid'");
 			unset($group_shipping);
 			unset($group_total);
