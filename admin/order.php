@@ -3022,7 +3022,7 @@ elseif (!empty($active_modules["Anti_Fraud"]) && $mode == "anti_fraud") {
 		$extras['ip'] = $extra['ip'];
 		$extras['proxy_ip'] = $extra['proxy_ip'];
 		include $xcart_dir."/modules/Anti_Fraud/anti_fraud.php";
-		//db_query("UPDATE $sql_tbl[orders] SET extra = '".addslashes(serialize($extra))."' WHERE orderid = '$orderid'"); TODO: check this
+		db_query("UPDATE $sql_tbl[orders] SET extra = '".addslashes(serialize($extra))."' WHERE orderid = '$orderid'");
 	}
 
 	func_header_location("order.php?orderid=".$orderid);
