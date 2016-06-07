@@ -1255,7 +1255,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			'tax_info_taxed_subtotal' => $_extra["tax_info"]['taxed_subtotal'],
 			'tax_info_taxed_discounted_subtotal' => $_extra["tax_info"]['taxed_discounted_subtotal'],
 			'tax_info_taxed_shipping' => $_extra["tax_info"]['taxed_shipping'],
-			'extra' => addslashes(serialize($_extra)));
+			//'extra' => addslashes(serialize($_extra))
+		);
 
 		if (!empty($active_modules['Multiple_Storefronts'])) {
             if (isset($cart['source_sf']) && !empty($cart['source_sf'])) {
@@ -1655,7 +1656,8 @@ die("123");
 				func_array2insert('order_groups', $insert_data);
 			}
 
-			$insert_data = array('extra' => addslashes(serialize($_extra)));
+			//$insert_data = array('extra' => addslashes(serialize($_extra)));
+			$insert_data = array();
 
 			foreach ($price_details_names as $dn) {
 				$insert_data["shipping_total_$dn"] = $_extra['shipping_total'][$dn];
