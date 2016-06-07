@@ -192,7 +192,7 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
     <td align="center" class="TopLabel" colspan="3">
         {if count($brand.customer_url) > 0}
         <span class="detail-title">
-            <a href="{$brand.customer_url[0]['url']]}" title="" target="_blank">{$lng.lbl_current_brand}: "{$brand.brand}"</a>
+            <a href="{$brand.customer_url[0].url}" title="" target="_blank">{$lng.lbl_current_brand}: "{$brand.brand}"</a>
         </span>
         {else}{$lng.lbl_current_brand}: "{$brand.brand}"
         {/if}
@@ -349,7 +349,7 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
                     </tr>
         {foreach from=$brand.customer_url key=key item=branda}
                     <tr>
-                        <td>{$brand.brand} at <a target="_blank" href="{$branda.url}">{$key}</a></td>
+                        <td>{$brand.brand} at <a target="_blank" href="{$branda.url}">{$branda.domain}</a></td>
                         <td style="text-align: center;">{$branda.products_count}</td>
                     </tr>
         {/foreach}

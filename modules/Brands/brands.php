@@ -393,10 +393,11 @@ if ($mode == "add" or !empty($brandid)) {
 						if (is_array($sfid)) {
 							foreach ($sfid as $vsfid) {
 								$sfinfo = func_get_storefront_info($vsfid['sfid']);
-								$brand_data['customer_url'][$sfinfo['domain']] =
+								$brand_data['customer_url'][] =
 										['url' => $httppre . func_get_http_location_sf($vsfid['sfid']) . '/brands.php?brandid=' . $brandid,
 										 'products_count' => $vsfid['products_count'],
-										 'prefix' => rtrim($sfinfo['prefix'],'-')
+										 'prefix' => rtrim($sfinfo['prefix'],'-'),
+										 'domain' => $sfinfo['domain']
 										];
 							}
 						}
