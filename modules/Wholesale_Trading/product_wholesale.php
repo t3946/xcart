@@ -132,6 +132,7 @@ if ($mode == "wholesales_modify" && !empty($product_info)) {
             func_array2insert("pricing", $query_data);
         }
     }
+	$pids[] = $productid;
     $top_message["content"] = func_get_langvar_by_name("msg_adm_discounts_gen");
     $top_message["type"] = "I";
 }
