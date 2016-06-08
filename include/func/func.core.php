@@ -1324,7 +1324,7 @@ return $i;
 		db_query("DELETE FROM $sql_tbl[quick_prices] WHERE productid IN ('".implode("','", $id)."')");
 	}
 	else {
-		db_query("DELETE FROM $sql_tbl[quick_prices]");
+		//db_query("DELETE FROM $sql_tbl[quick_prices]");
 	}
 
 	if ($tick > 0)
