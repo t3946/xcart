@@ -17,6 +17,8 @@ class classCloneData
         $this->sql_tbl = $sql_tbl;
         if (!is_null($iId) && is_numeric($iId)) {
             $this->fillPrimaryTableInfo($iId);
+        } else if (!empty($iId) && is_array($iId)) {
+            $this->setPrimaryTableInfo($iId);
         }
     }
 
@@ -24,6 +26,10 @@ class classCloneData
         $this->aPrimaryTableValue = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = $iId");
         if (!empty($this->aPrimaryTableValue) && is_array($this->aPrimaryTableValue))
             $this->primaryKeyValue = $this->aPrimaryTableValue[$this->sPrimaryKeyFiled];
+    }
+
+    private function setPrimaryTableInfo ($aValue) {
+        $this->aPrimaryTableValue = $aValue;
     }
 
     protected function recursive_escape(&$item) {

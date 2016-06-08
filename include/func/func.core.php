@@ -512,6 +512,7 @@ function func_flush($s = NULL) {
 #
 function func_html_location($url, $time=3) {
 	x_session_save();
+	global $use_sessions_type;
 
 	if ($use_sessions_type < 3) {
 		session_write_close();

@@ -1,10 +1,10 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir."/include/class/classCloneData.php";
+require_once $xcart_dir."/include/class/classProduct.php";
 require_once $xcart_dir."/include/class/classManufacturers.php";
 require_once $xcart_dir."/include/class/classCategories.php";
 
-class classProducts extends classCloneData
+class classProducts extends classProduct
 {
     private $aProductToQueue;
     public $addCounter;
@@ -819,10 +819,5 @@ class classProducts extends classCloneData
 
     }
 
-    public function getManfacturerClass($iManufacurerId = null) {
-        if (!is_null($iManufacurerId))
-            return new classManufacturer($iManufacurerId);
-        else return  new classManufacturer($this->aPrimaryTableValue['manufacturerid']);
-    }
 
 }
