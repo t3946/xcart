@@ -14,7 +14,7 @@ class classShipping extends classCloneData
     }
 
     public function getShippingInfo($iShippingId) {
-        return func_query("SELECT * FROM ".$this->sql_tbl['shipping']." WHERE shippingid = $iShippingId");
+        return func_query("SELECT * FROM ".self::$sql_tbl['shipping']." WHERE shippingid = $iShippingId");
     }
 
     public function getShippingWeight($iProductId, $iShippingId, $iAmount = 1, $aProduct = array(), $aShipping = array(), $bUseShippingParametrs = true) {

@@ -1,7 +1,7 @@
 <?php
 class classCloneData
 {
-    protected $sql_tbl = array();
+    protected static $sql_tbl = array();
     protected $arrCheckFields = array();
     protected $sPrimaryKeyFiled;
     protected $sPrimaryTable;
@@ -14,7 +14,7 @@ class classCloneData
     public function __construct($iId = null)
     {
         global $sql_tbl;
-        $this->sql_tbl = $sql_tbl;
+        self::$sql_tbl = $sql_tbl;
         if (!is_null($iId) && is_numeric($iId)) {
             $this->fillPrimaryTableInfo($iId);
         } else if (!empty($iId) && is_array($iId)) {
@@ -23,13 +23,14 @@ class classCloneData
     }
 
     private function fillPrimaryTableInfo($iId) {
-        $this->aPrimaryTableValue = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = $iId");
+        $this->aPrimaryTableValue = func_query_first("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = $iId");
         if (!empty($this->aPrimaryTableValue) && is_array($this->aPrimaryTableValue))
             $this->primaryKeyValue = $this->aPrimaryTableValue[$this->sPrimaryKeyFiled];
     }
 
-    private function setPrimaryTableInfo ($aValue) {
+    protected function setPrimaryTableInfo ($aValue) {
         $this->aPrimaryTableValue = $aValue;
+        $this->primaryKeyValue = $this->aPrimaryTableValue[$this->sPrimaryKeyFiled];
     }
 
     protected function recursive_escape(&$item) {
@@ -54,7 +55,7 @@ class classCloneData
     }
 
     protected function deleteFromTableByKeyValue($sTable, $sKeyField, $iKeyValue) {
-        db_query("DELETE FROM ".$this->sql_tbl[$sTable]. " WHERE $sKeyField = '$iKeyValue'");
+        db_query("DELETE FROM ".self::$sql_tbl[$sTable]. " WHERE $sKeyField = '$iKeyValue'");
     }
 
 
@@ -63,8 +64,8 @@ public function checkDBChanges () {
         $currentDBSchema = array();
 
         foreach (array_keys($this->arrCheckFields) as $sTable){
-            if (isset($this->sql_tbl[$sTable]) && !empty($this->sql_tbl[$sTable])) {
-                $currentDBSchema[$sTable] = array_keys(func_query_first("SELECT * FROM " . $this->sql_tbl[$sTable] . " LIMIT 1"));
+            if (isset(self::$sql_tbl[$sTable]) && !empty(self::$sql_tbl[$sTable])) {
+                $currentDBSchema[$sTable] = array_keys(func_query_first("SELECT * FROM " . self::$sql_tbl[$sTable] . " LIMIT 1"));
             }
         }
 
@@ -87,7 +88,7 @@ public function checkDBChanges () {
         $aSelectResult = array();
 
         foreach ($this->arrCloneTableStructure as $sTable) {
-            $aSelectResult[$sTable['table']]['result'] = func_query("SELECT * FROM ".$this->sql_tbl[$sTable['table']]." WHERE ".$sTable['key_field']." = ".$aParams[$this->sPrimaryKeyFiled]);
+            $aSelectResult[$sTable['table']]['result'] = func_query("SELECT * FROM ".self::$sql_tbl[$sTable['table']]." WHERE ".$sTable['key_field']." = ".$aParams[$this->sPrimaryKeyFiled]);
             if (isset($aSelectResult[$sTable['table']]['result']) && is_array($aSelectResult[$sTable['table']]['result']))
                 foreach ($aSelectResult[$sTable['table']]['result']  as &$aRows) {
                     if ($sTable['primary_key'] != $sTable['key_field']) {
@@ -156,16 +157,20 @@ public function checkDBChanges () {
         return true;
     }
 
-    public function getField($sFieldName) {
-        return $this->aPrimaryTableValue[$sFieldName];
+    public function getField($sFieldName = null) {
+        if (empty($sFieldName))
+            $res = $this->getFields();
+        else $res = $this->aPrimaryTableValue[$sFieldName];
+        return $res;
     }
 
     public function getFields($aFields = array()) {
         if (is_array($aFields)) {
             if (empty($aFields)) return $this->aPrimaryTableValue;
             return array_intersect($this->aPrimaryTableValue, $aFields);
+        } else {
+            return $this->aPrimaryTableValue;
         }
-        return false;
     }
 
     public function setField($sFieldName, $sNewValue) {

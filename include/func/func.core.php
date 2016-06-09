@@ -3994,4 +3994,16 @@ function func_get_geoip_locations ($CLIENT_IP, $geo_litecity_location_debug = "N
 	}
 	return $geo_litecity_location;
 }
+
+if(!function_exists("array_column"))
+{
+
+	function array_column($array,$column_name)
+	{
+
+		return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
+
+	}
+
+}
 ?>

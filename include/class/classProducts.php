@@ -181,39 +181,43 @@ class classProducts extends classProduct
     }
 
     public function getProductQueueCount () {
-        return func_query_first_cell("SELECT count(1) as count FROM ".$this->sql_tbl[$this->sQueueTable]);
+        return func_query_first_cell("SELECT count(1) as count FROM ".self::$sql_tbl[$this->sQueueTable]);
     }
 
     public function getChildProducts ($iProductId) {
-        return func_query("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE clone_parent_productid = $iProductId");
+        return func_query("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE clone_parent_productid = $iProductId");
     }
 
     public function getProductInfo($iProductId) {
-        return func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE productid = $iProductId");
+        return func_query_first("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE productid = $iProductId");
+    }
+
+    public function getProductsInfo($aProductsId) {
+        return func_query("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE productid IN (".implode(',',$aProductsId).")");
     }
 
     public function getMainProductCategoriesInfo($iProductId) {
-        return func_query("SELECT c.* FROM ".$this->sql_tbl['products_categories']." pc
-                                             INNER JOIN ".$this->sql_tbl['categories']." c ON pc.categoryid = c.categoryid WHERE pc.main='Y' AND pc.productid = $iProductId");
+        return func_query("SELECT c.* FROM ".self::$sql_tbl['products_categories']." pc
+                                             INNER JOIN ".self::$sql_tbl['categories']." c ON pc.categoryid = c.categoryid WHERE pc.main='Y' AND pc.productid = $iProductId");
     }
 
     public function getProductVariants($iProductId) {
-        return func_query("SELECT * FROM ".$this->sql_tbl['variants']." WHERE productid = $iProductId");
+        return func_query("SELECT * FROM ".self::$sql_tbl['variants']." WHERE productid = $iProductId");
     }
 
     protected function getNextProductFromQueue () {
-        $this->aProductToQueue = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sQueueTable]." ORDER BY insert_datetime ASC LIMIT 1");
+        $this->aProductToQueue = func_query_first("SELECT * FROM ".self::$sql_tbl[$this->sQueueTable]." ORDER BY insert_datetime ASC LIMIT 1");
         return !empty($this->aProductToQueue);
     }
 
     protected function getProductsFromQueue () {
-        return func_query("SELECT * FROM ".$this->sql_tbl[$this->sQueueTable]." ORDER BY insert_datetime");
+        return func_query("SELECT * FROM ".self::$sql_tbl[$this->sQueueTable]." ORDER BY insert_datetime");
     }
 
 
 
     protected function deleteFromQueue() {
-        return db_query("DELETE FROM ".$this->sql_tbl[$this->sQueueTable]." WHERE $this->sPrimaryKeyFiled = ".$this->aProductToQueue['productid']."
+        return db_query("DELETE FROM ".self::$sql_tbl[$this->sQueueTable]." WHERE $this->sPrimaryKeyFiled = ".$this->aProductToQueue['productid']."
         AND clone = '".$this->aProductToQueue['clone']."'
         AND manufacturerid = ".$this->aProductToQueue['manufacturerid']);
     }
@@ -222,7 +226,7 @@ class classProducts extends classProduct
         if (empty($sPrefixManufacturer) && isset($iProductId)) {
             $aProduct = $this->getProductInfo($iProductId);
             if (!empty($aProduct)) {
-                $classManufacturer = new classManufacturer();
+                $classManufacturer = new classManufacturers();
                 $sPrefixManufacturer = $classManufacturer->getManufacturerCodeById($aProduct['manufacturerid']);
             }
         }
@@ -254,12 +258,12 @@ class classProducts extends classProduct
     }
 
     public function getFilterInfoByFilterValueId($iFilterValueId) {
-        return func_query_first("SELECT xc1.* FROM ".$this->sql_tbl['cidev_filter_values']." fv INNER JOIN ".$this->sql_tbl['cidev_filters']." xc1 ON xc1.f_id = fv.f_id AND fv.fv_id =$iFilterValueId");
+        return func_query_first("SELECT xc1.* FROM ".self::$sql_tbl['cidev_filter_values']." fv INNER JOIN ".self::$sql_tbl['cidev_filters']." xc1 ON xc1.f_id = fv.f_id AND fv.fv_id =$iFilterValueId");
     }
 
     public function getFilterByNameAndStoreFront ($sFilterName, $iStoreFrontId) {
         $sFilterName = addslashes($sFilterName);
-        return func_query_first_cell("SELECT f_id FROM ".$this->sql_tbl['cidev_filters']." WHERE f_name='$sFilterName' AND storefrontid=$iStoreFrontId");
+        return func_query_first_cell("SELECT f_id FROM ".self::$sql_tbl['cidev_filters']." WHERE f_name='$sFilterName' AND storefrontid=$iStoreFrontId");
     }
 
     public function createNewFilter($aFilter) {
@@ -269,20 +273,20 @@ class classProducts extends classProduct
     }
 
     public function getProductFilters ($iProductId){
-        return func_query("SELECT * FROM ".$this->sql_tbl['cidev_filter_products']." WHERE productid = $iProductId");
+        return func_query("SELECT * FROM ".self::$sql_tbl['cidev_filter_products']." WHERE productid = $iProductId");
     }
 
     public function getFilterValuesByNameAndFilterType($sFilterName, $iFilterTypeId){
         $sFilterName = addslashes($sFilterName);
-        return func_query_first("SELECT * FROM ".$this->sql_tbl['cidev_filter_values']." WHERE fv_name='$sFilterName' AND f_id=$iFilterTypeId");
+        return func_query_first("SELECT * FROM ".self::$sql_tbl['cidev_filter_values']." WHERE fv_name='$sFilterName' AND f_id=$iFilterTypeId");
     }
 
     public function getFilterValues ($iFilterValueId) {
-        return func_query("SELECT * FROM ".$this->sql_tbl['cidev_filter_values']." WHERE fv_id=$iFilterValueId");
+        return func_query("SELECT * FROM ".self::$sql_tbl['cidev_filter_values']." WHERE fv_id=$iFilterValueId");
     }
 
     public function deleteFilterValues($iProductId) {
-        return db_query("DELETE FROM ".$this->sql_tbl['cidev_filter_products']." WHERE productid = $iProductId");
+        return db_query("DELETE FROM ".self::$sql_tbl['cidev_filter_products']." WHERE productid = $iProductId");
     }
 
     public function cloneFilterValues ($oFilter, $iNewFilterId) {
@@ -367,7 +371,7 @@ class classProducts extends classProduct
     public function updateProductCleanUrl($iProductId) {
         $aProduct = $this->getProductInfo($iProductId);
         $clean_url = func_clean_url_autogenerate('P', $iProductId, array('product' => $aProduct["product"], 'productcode' => $aProduct['productcode']));
-        db_query("DELETE FROM ". $this->sql_tbl['clean_urls'] . " WHERE resource_type='P' AND resource_id=$iProductId");
+        db_query("DELETE FROM ". self::$sql_tbl['clean_urls'] . " WHERE resource_type='P' AND resource_id=$iProductId");
         func_clean_url_add($clean_url, 'P', $iProductId);
     }
 
@@ -377,14 +381,14 @@ class classProducts extends classProduct
     }
 
     private function getClonedRelatedProductsByIdAndStoreFrontId($iProductId, $iStoreFrontId) {
-        return func_query("SELECT xp1.productid FROM ".$this->sql_tbl['product_links']." xp
+        return func_query("SELECT xp1.productid FROM ".self::$sql_tbl['product_links']." xp
                                                INNER JOIN xcart_products xp1 ON xp.productid2 = xp1.clone_parent_productid
                                                INNER JOIN xcart_products_sf xp2 ON xp1.productid = xp2.productid AND xp2.sfid = $iStoreFrontId
                                                WHERE xp.productid1 = $iProductId");
     }
 
     private function deleteFromRelatedProducts($iProductId) {
-        db_query("DELETE FROM ".$this->sql_tbl['product_links']." WHERE productid1 = $iProductId");
+        db_query("DELETE FROM ".self::$sql_tbl['product_links']." WHERE productid1 = $iProductId");
     }
 
     private function insertClonedRelatedProducts ($iProductId, $iProductIdCloned, $iStoreFrontId) {
@@ -404,7 +408,7 @@ class classProducts extends classProduct
 
     protected function cloneProduct($aProduct, $aParamToClone = array()) {
 
-        $classManufacturer = new classManufacturer();
+        $classManufacturer = new classManufacturers();
 
         $aQueuedManufacturer = $classManufacturer->getMainufacturersInfo(array($this->aProductToQueue["manufacturerid"]));
         $aQueuedManufacturer = reset($aQueuedManufacturer);
@@ -750,14 +754,14 @@ class classProducts extends classProduct
 
     protected function getProductBySKU($sSKU) {
         $sSKU = addslashes($sSKU);
-        $aProduct = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE productcode = '$sSKU'");
+        $aProduct = func_query_first("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE productcode = '$sSKU'");
         if (empty($aProduct)) return false;
         return $aProduct;
     }
 
     protected function getProductIdBySKU($sSKU) {
         $sSKU = addslashes($sSKU);
-        return func_query_first_cell("SELECT ".$this->sPrimaryKeyFiled." FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE productcode = '$sSKU'");
+        return func_query_first_cell("SELECT ".$this->sPrimaryKeyFiled." FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE productcode = '$sSKU'");
     }
 
     protected function  updateProduct($aProduct) {
@@ -775,7 +779,7 @@ class classProducts extends classProduct
         /*
          ИНАЧЕ получить все подчиненные дистрибьюторы дистрибьютора продукта [PRODUCT] --> [Distributors] (получить code дистрибьютора , отобрать всех дистрибьюторов у которых parent_manufacturer_id = manufacturer_id)
 	    */
-        $classManufacturer = new classManufacturer();
+        $classManufacturer = new classManufacturers();
 
         $aManufacturer = $classManufacturer->getMainufacturersInfo(array($aProduct["manufacturerid"]));
         $aManufacturer = reset($aManufacturer);
