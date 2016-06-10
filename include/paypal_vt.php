@@ -229,23 +229,34 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
         	$data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
 	        $data_arr["is_final_capture"] = false; // true
 
+
+
 		$result = func_paypal_capture($Access_Token, $transaction_info["transaction_id"], $data_arr);
 
-		if ($result["name"] == "AUTHORIZATION_ALREADY_COMPLETED" || $result["name"] == "CAPTURE_AMOUNT_LIMIT_EXCEEDED"){
-			$log .= "<br />".$result["name"];
-		}
-		else {
-			$log .= "<br />Transaction: ".$transaction_info["transaction_id"]." -> ".$result["id"];
+		$aResultStates = array('pending', 'completed', 'refunded', 'partially_refunded');
 
-			$transaction_id = $result["id"];
+			if (!empty($result['state'])) {
+				switch ($result['state']) {
 
-	                $transaction_status = $result["state"];
-        	        $transaction_currency = $result["amount"]["currency"];
-                	$transaction_total = $result["amount"]["total"];
+					case  'completed' :
+						$log .= "<br />Transaction: " . $transaction_info["transaction_id"] . " -> " . $result["id"];
 
-			func_send_order_status_notification($orderid, "P");
-		}
-        }
+						$transaction_id = $result["id"];
+
+						$transaction_status = $result["state"];
+						$transaction_currency = $result["amount"]["currency"];
+						$transaction_total = $result["amount"]["total"];
+
+						func_send_order_status_notification($orderid, "P");
+						break;
+					default :
+						$log .= "<br />Transaction: " . $transaction_info["transaction_id"] . " -> " . $result["id"];
+						$log .= "<br />state: " . $result["state"];
+				}
+			} else {
+				$log .= "<br />" . $result["name"];
+				$log .= "<br />" . $result["message"];
+			}
     }
     elseif ($mode == "re_authorize_transaction" && !empty($transaction_info["transaction_id"]) && !empty($transaction_amount[$order_transaction_id])){
 	
