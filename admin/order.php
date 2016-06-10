@@ -2202,7 +2202,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
 						$CaptureAmount = price_format($CaptureAmount);
 
-						if (($CaptureAmount == $authorized_transaction_amount) || ($OriginalAmount == $authorized_transaction_amount && $bRefundPresent && $CaptureAmount <= $authorized_transaction_amount)) {
+						if ($CaptureAmount <= $authorized_transaction_amount) {
 							if ($count_shipping_groups == "1" && !empty($authorized_transactions_info)) {
 
 								$transaction_log = "";

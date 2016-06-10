@@ -844,7 +844,7 @@ if ($REQUEST_METHOD == "POST") {
 
 						$CaptureAmount = price_format($CaptureAmount);
 
-						if (($CaptureAmount == $authorized_transaction_amount) || ($OriginalAmount == $authorized_transaction_amount && $bRefundPresent && $CaptureAmount <= $authorized_transaction_amount)) {
+						if ($CaptureAmount <= $authorized_transaction_amount) {
 
 							if (!empty($Access_Token) && $count_shipping_groups == "1" && !empty($authorized_transactions_info)) {
 
