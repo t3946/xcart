@@ -220,20 +220,19 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     }
     elseif ($mode == "capture_transaction" && !empty($transaction_info["transaction_id"]) && !empty($transaction_amount[$order_transaction_id])){
 
-        $log .= "'Capture authorized transaction' at 'Virtual Terminal'";
+		$log .= "'Capture authorized transaction' at 'Virtual Terminal'";
 
-        if (!empty($Access_Token)){
+		if (!empty($Access_Token)) {
 
-	        $data_arr["amount"]["currency"] = $transaction_info["transaction_currency"];
+			$data_arr["amount"]["currency"] = $transaction_info["transaction_currency"];
 //        	$data_arr["amount"]["total"] = $transaction_info["transaction_total"];
-        	$data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
-	        $data_arr["is_final_capture"] = false; // true
+			$data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
+			$data_arr["is_final_capture"] = false; // true
 
 
+			$result = func_paypal_capture($Access_Token, $transaction_info["transaction_id"], $data_arr);
 
-		$result = func_paypal_capture($Access_Token, $transaction_info["transaction_id"], $data_arr);
-
-		$aResultStates = array('pending', 'completed', 'refunded', 'partially_refunded');
+			$aResultStates = array('pending', 'completed', 'refunded', 'partially_refunded');
 
 			if (!empty($result['state'])) {
 				switch ($result['state']) {
@@ -257,6 +256,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 				$log .= "<br />" . $result["name"];
 				$log .= "<br />" . $result["message"];
 			}
+		}
     }
     elseif ($mode == "re_authorize_transaction" && !empty($transaction_info["transaction_id"]) && !empty($transaction_amount[$order_transaction_id])){
 	
