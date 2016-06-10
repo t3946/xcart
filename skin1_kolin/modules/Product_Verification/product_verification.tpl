@@ -29,9 +29,11 @@
 <form action="verify_category.php" method="post" name="processcategoryform">
 
     <div id="send_note_for_product" class="ajax_note_field" style="display: none;">
-        <textarea rows="3" style="width: 100%;" cols="70" name="notes" id="notes"></textarea><br>
+        <input id="verified_product_id" type="hidden" value="" />
+        <input id="verified_product_status_id" type="hidden" value="" />
+        <textarea rows="3" style="width: 100%;" cols="70" name="payment_note" id="notes"></textarea><br>
         <div style="margin-top:10px">
-            <input type="button" onclick="javascript: document.ordernotesformnewjs.submit();" id="post_message" value="Send">
+            <input type="button" id="post_message" value="Send">
             <input type="button" id="cancel_message_button" value="Cancel">
         </div>
 
@@ -109,6 +111,8 @@
 
     $( document ).ready(function() {
         $('.change_product_verify_status').on('change','', function () {
+            $('#verified_product_id').val($(this).data('product-verification-id'));
+            $('#verified_product_status_id').val($(this).val());
             var position = $(this).position();
             var note_form = $('#send_note_for_product');
             note_form.css('left',position.left-142).css('top',position.top);
@@ -117,8 +121,33 @@
 
         });
         $('#cancel_message_button').on('click','', function() {
-            $(this).parents('textarea').val('');
-            $(this).parents('#send_note_for_product').hide();
+            var divform = $(this).parents('#send_note_for_product');
+            divform.find('textarea').val('');
+            divform.hide();
+        })
+
+        $('#post_message').on('click','', function() {
+            var divform = $(this).parents('#send_note_for_product');
+            var product = $('#verified_product_id',divform);
+            var status = $('#verified_product_status_id',divform);
+            console.log(product.val());
+            console.log(status.val());
+
+            $.post('ajax_admin.php',{
+                        product_id : product.val(),
+                        verify_status_id: status.val(),
+                        note_text: $('textarea',divform).val('')
+                    },
+                    function (data) {
+                        if (data) {
+                            $('textarea',divform).val('');
+                            product.val('');
+                            status.val('');
+                            divform.hide();
+                        }
+                    }, 'json');
+
+
         })
     });
 </script>
