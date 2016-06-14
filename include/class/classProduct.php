@@ -11,6 +11,7 @@ class classProduct extends classCloneData
 
     private $oManufacturer;
     private $oStoreFront;
+    private $aProductVerificationHistoryLast = [];
 
     public function __construct($iId = null)
     {
@@ -75,7 +76,7 @@ class classProduct extends classCloneData
 
     public function getProductLastVerifyDate()
     {
-        $iDate = $this->getField('last_verify_date');
+        $iDate = (int) $this->getField('last_verify_date');
         if (!empty($iDate)) {
             $oDatetime = new DateTime();
             $oDatetime->setTimestamp($iDate);
@@ -84,8 +85,40 @@ class classProduct extends classCloneData
         return false;
     }
 
-    public static function getProductVerificationStatuses() {
-        return func_query("SELECT * FROM ".self::$sql_tbl['product_verification_statuses']." ORDER BY orderby ASC");
+    public static function getProductVerificationStatuses()
+    {
+        return func_query("SELECT * FROM " . self::$sql_tbl['product_verification_statuses'] . " ORDER BY orderby ASC");
+    }
+
+    public function getProductVerificationHistoryLastNote()
+    {
+        $this->aProductVerificationHistoryLast = func_query_first("SELECT * FROM " . self::$sql_tbl['product_verification_history'] . " WHERE productid = ".$this->primaryKeyValue." ORDER BY timestamp DESC");
+        if (!empty($this->aProductVerificationHistoryLast)) {
+            return stripslashes($this->aProductVerificationHistoryLast['verification_note']);
+        }
+    }
+
+    public function changeVerificationStatus($iStatusId, $sNote)
+    {
+        $bResult['result'] = false;
+        if ($this->getField('verification_statusid') != $iStatusId) {
+            $oDatetime = new DateTime();
+            $res = func_array2update($this->sPrimaryTable, ['last_verify_date' => $oDatetime->getTimestamp(), 'verification_statusid' => $iStatusId], 'productid = ' . $this->primaryKeyValue);
+            if ($res) {
+                $aInsertArray = ['productid' => $this->primaryKeyValue,
+                    'verification_note' => addslashes($sNote),
+                    'timestamp' => $oDatetime->getTimestamp(),
+                    'username' => '',
+                    'oldstatusid' => $this->getField('verification_statusid'),
+                    'newstatusid' => $iStatusId];
+                func_array2insert('product_verification_history', $aInsertArray);
+                $bResult['result'] = true;
+            } else $bResult['error'] = 'Status not updated';
+        } else {
+            $bResult['error'] = 'Status not changed. New status = Old status';
+        }
+        return $bResult;
+
     }
 
 }

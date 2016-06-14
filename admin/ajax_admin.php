@@ -12,10 +12,13 @@ switch ($_POST['ajax_action']) {
 }
 
 function change_verify_product_status($aPostParam = array()) {
+    $bResult = [];
     $iProductId = (int) $aPostParam['product_id'];
     $iStatusId = (int) $aPostParam['verify_status_id'];
     $sNote = $aPostParam['note_text'];
     if (!empty($iProductId)) {
         $oProduct = new classProduct($iProductId);
+        $bResult = $oProduct->changeVerificationStatus($iStatusId, $sNote);
     }
+    print(json_encode($bResult));
 }

@@ -23,10 +23,9 @@
 
 
 {capture name=dialog}
-	<div style="font-weight: bold;">
+	<div style="font-weight: bold; margin-bottom: 20px;">
 		For each product compare FRONT END and DISTR WEBSITE columns to make sure that product descriptions and images are identical. If any descrepencies, choose VERIFIED = 'No' and explain what's the difference.
 	</div>
-<form action="verify_category.php" method="post" name="processcategoryform">
 
     <div id="send_note_for_product" class="ajax_note_field" style="display: none;">
         <input id="verified_product_id" type="hidden" value="" />
@@ -55,25 +54,28 @@
 	{assign var='showManufacturer' value=true}
 	{foreach from=$aManufacturer name=manufacturerSecond item=oOrderManufacturer}
 		{foreach from=$oOrderManufacturer->getOrderProducts() item=oProduct name=manufacturerThird}
-			{if ($oProduct->getField('manufacturerid') == $iManufacturerId)}
+			{if ($oProduct->getField('manufacturerid') == $iManufacturerId && $oProduct->getField('verification_statusid') < 3)}
 				{assign var='oManufacturer' value = $oProduct->getManfacturerClass()}
 				{assign var='oVerifyDate' value = $oProduct->getProductLastVerifyDate()}
-				<tr{cycle values=', class="TableSubHead"'}>
+				<tr{cycle values=', class="TableSubHead"'} {if $showManufacturer}data-manufacturer-id="{$oManufacturer->getField('manufacturerid')}"{/if}>
 					<td nowrap="nowrap" width="1%">
 						{if $showManufacturer}
 							<a style="font-weight: bold;" href="{$oManufacturer->getManufacturerModifyURL()}" target="_blank"> {$oManufacturer->getField('manufacturer')}</a>
 							{assign var='showManufacturer' value=false}
+                        {else}
+                            <a style="font-weight: bold; display:none;" href="{$oManufacturer->getManufacturerModifyURL()}" target="_blank"> {$oManufacturer->getField('manufacturer')}</a>
 						{/if}
 					</td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getOrderModifyURL()}">{$oOrderManufacturer->getDisplayOrderNumber()}</a></td>
-					<td><a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getField('productcode')}</a></td>
+					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getField('productcode')}</a></td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getField('product')}</a></td>
 					<td nowrap="nowrap"><a href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
-					<td nowrap="nowrap">{if ($oVerifyDate)}$oVerifyDate->format('d.M.Y'){/if}</td>
+					<td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
 					<td align="center">
-					<select data-product-verification-id="{$oProduct->getField('productid')}" class="change_product_verify_status" name="product_verify_status">
+					<select title="{$oProduct->getProductVerificationHistoryLastNote()}" data-product-verification-id="{$oProduct->getField('productid')}"
+                            class="change_product_verify_status" name="product_verify_status" data-prev-val="{$oProduct->getField('verification_statusid')}">
 						{foreach from=$aVerifyStatuses item=aVerifyStatus}
-							<option value="{$aVerifyStatus.statusid}">
+							<option value="{$aVerifyStatus.statusid}"  {if $oProduct->getField('verification_statusid') == $aVerifyStatus.statusid} selected="selected"{/if}>
 								{$aVerifyStatus.name}
 							</option>
 						{/foreach}
@@ -90,14 +92,35 @@
 {foreachelse}
 
 <tr>
-	<td colspan="{if $supplemental_category_section ne "Y"}12{else}10{/if}" align="center">No products</td>
+	<td colspan="10" align="center">No products</td>
 </tr>
 
 {/foreach}
 
-</form>
+</table>
 
-<br />
+    <br/>
+    <br/>
+    <a id="click_to_back_changes" href="#" style="display:none; font-weight: bold;" onclick="$('#backdoor-table').fadeToggle('slow'); return false;">View already verified products</a>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+
+<table id="backdoor-table" style="display:none;" cellpadding="3" cellspacing="1" width="100%">
+
+<tr class="TableHead">
+	<td>DISTRIBUTOR</td>
+	<td nowrap="nowrap" align="center">ORDER #</td>
+	<td align="center">BACK END</td>
+	<td align="center">FRONT END</td>
+	<td nowrap="nowrap" align="center">DISTR WEBSITE</td>
+	<td nowrap="nowrap" align="center">LAST VERIF DATE</td>
+	<td align="center">VERIFIED?</td>
+</tr>
+
+</table>
 
 {/capture}
 {include file="dialog.tpl" title=$capture_dialog_name content=$smarty.capture.dialog extra='width="100%"'}
@@ -105,49 +128,87 @@
 {literal}
 <script>
 
-    function closeNoteForm($obj) {
+    function submitChanges(obj){
+        var product = $('#verified_product_id',obj);
+        var status = $('#verified_product_status_id',obj);
+        $.post('ajax_admin.php',{
+                    product_id : product.val(),
+                    verify_status_id: status.val(),
+                    note_text: $('textarea',obj).val(),
+                    ajax_action: 'change_verify_product_status'
+                },
+                function (data) {
+                    if (data) {
+                        if (data.result) {
+                            var selectchanged = $('select[data-product-verification-id='+product.val()+']');
+                            selectchanged.attr("data-prev-val",status.val());
+                            selectchanged.attr("title",$('textarea',obj).val());
+                            if (status.val() == 3) {
+                                var rowtohide = selectchanged.parent().parent();
 
+                                rowtohide.fadeOut('slow', function () {
+                                    if (rowtohide.data('manufacturer-id')){
+                                        var nextrow = rowtohide.next('tr');
+                                        if (nextrow.data('manufacturer-id') > 0) {
+
+                                        } else {
+                                            nextrow.attr('data-manufacturer-id',rowtohide.data('manufacturer-id'));
+                                            $('td:first-child > a',nextrow).show();
+                                        }
+                                    }
+                                    rowtohide.show();
+                                    $('#backdoor-table').find('tr:first-child').after(rowtohide);
+                                    $('td:first-child > a',rowtohide).show();
+                                    $('#click_to_back_changes').show();
+                                });
+
+                            }
+                            $('textarea',obj).val('');
+                            product.val('');
+                            status.val('');
+                            obj.hide();
+
+                        } else {
+                            alert(data.error);
+                        }
+                    }
+                }, 'json');
     }
 
     $( document ).ready(function() {
         $('.change_product_verify_status').on('change','', function () {
+            var statusid = $(this).val();
             $('#verified_product_id').val($(this).data('product-verification-id'));
-            $('#verified_product_status_id').val($(this).val());
-            var position = $(this).position();
-            var note_form = $('#send_note_for_product');
-            note_form.css('left',position.left-142).css('top',position.top);
-            note_form.show();
-            note_form.find('textarea').focus();
+            $('#verified_product_status_id').val(statusid);
+            if (statusid > 0 && statusid < 3) {
+                var position = $(this).position(),
+                note_form = $('#send_note_for_product'),
+                textarea = note_form.find('textarea');
+                note_form.css('left', position.left - 142).css('top', position.top);
+
+                if (statusid == 1)
+                    textarea.attr('placeholder',"Please describe the problem and explain why you didn't fix it.");
+                if (statusid == 2)
+                    textarea.attr('placeholder',"Please describe what was the problem and how did you fix it.");
+                note_form.show();
+                textarea.focus();
+            } else {
+                submitChanges($('#send_note_for_product'));
+            }
 
         });
         $('#cancel_message_button').on('click','', function() {
-            var divform = $(this).parents('#send_note_for_product');
+            var divform = $(this).parents('#send_note_for_product'),
+            productid = $('#verified_product_id',divform).val(),
+            curselect = $('select[data-product-verification-id='+productid+']'),
+            prevval = curselect.data('prev-val');
+            curselect.val(prevval);
             divform.find('textarea').val('');
             divform.hide();
-        })
+        });
 
         $('#post_message').on('click','', function() {
-            var divform = $(this).parents('#send_note_for_product');
-            var product = $('#verified_product_id',divform);
-            var status = $('#verified_product_status_id',divform);
-            console.log(product.val());
-            console.log(status.val());
-
-            $.post('ajax_admin.php',{
-                        product_id : product.val(),
-                        verify_status_id: status.val(),
-                        note_text: $('textarea',divform).val('')
-                    },
-                    function (data) {
-                        if (data) {
-                            $('textarea',divform).val('');
-                            product.val('');
-                            status.val('');
-                            divform.hide();
-                        }
-                    }, 'json');
-
-
+            submitChanges($(this).parents('#send_note_for_product'))
         })
     });
 </script>

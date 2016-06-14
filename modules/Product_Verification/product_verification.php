@@ -16,6 +16,22 @@ if (!empty($aOrders)) {
         }
     }
 
+    foreach ($aManufacturers as $iManufacturerId => $aManufacturer) {
+        $aProducts = [];
+        foreach ($aManufacturer as $oOrderManufacturer) {
+            $aOrderProducts = $oOrderManufacturer->getOrderProducts();
+            foreach ($aOrderProducts as $oProduct) {
+                if ($oProduct->getField('manufacturerid') == $iManufacturerId) {
+                    if (!in_array($oProduct->getField('productid'), $aProducts)) {
+                        $aProducts[] = $oProduct->getField('productid');
+                    } else {
+                        $oOrderManufacturer->unsetOrderProduct($oProduct->getField('productid'));
+                    }
+                }
+            }
+        }
+    }
+
     $aVerifyStatuses = classProduct::getProductVerificationStatuses();
 
     $smarty->assign('aVerifyStatuses',$aVerifyStatuses);

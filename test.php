@@ -21,7 +21,22 @@ if (!empty($aOrders)) {
         }
     }
 
-    $aVerifyStatuses = classProduct::getProductVerificationStatuses();
+
+    foreach ($aManufacturers as $iManufacturerId => $aManufacturer) {
+        $aProducts = [];
+        foreach ($aManufacturer as $oOrderManufacturer) {
+            $aOrderProducts = $oOrderManufacturer->getOrderProducts();
+            foreach ($aOrderProducts as $oProduct) {
+                if ($oProduct->getField('manufacturerid') == $iManufacturerId) {
+                    if (!in_array($oProduct->getField('productid'), $aProducts)) {
+                        $aProducts[] = $oProduct->getField('productid');
+                    } else {
+                        $oOrderManufacturer->unsetOrderProduct($oProduct->getField('productid'));
+                    }
+                }
+            }
+        }
+    }
 
     foreach ($aManufacturers as $iManufacturerId => $aManufacturer) {
 
@@ -31,8 +46,8 @@ if (!empty($aOrders)) {
                 if ($oProduct->getField('manufacturerid') == $iManufacturerId) {
                     echo $oProduct->getManfacturerClass()->getField('manufacturer');
                     echo '<a href="' . $oOrderManufacturer->getOrderModifyURL() . '">' . $oOrderManufacturer->getDisplayOrderNumber() . '</a>';
-                    echo '<a href="'.$oProduct->getProductModifyURL(). '" > '.$oProduct->getField('productcode'). '</a> <a href="'.$oProduct->getProductFrontURL().'">'.$oProduct->getField('product'). '</a>';
-                    echo '<a href="'.$oProduct->getProductURLOnDistributorWebSite().'">'.$oProduct->getMPN().'</a>';
+                    echo '<a href="' . $oProduct->getProductModifyURL() . '" > ' . $oProduct->getField('productcode') . '</a> <a href="' . $oProduct->getProductFrontURL() . '">' . $oProduct->getField('product') . '</a>';
+                    echo '<a href="' . $oProduct->getProductURLOnDistributorWebSite() . '">' . $oProduct->getMPN() . '</a>';
                     $oVerifyDate = $oProduct->getProductLastVerifyDate();
                     if ($oVerifyDate instanceof DateTime)
                         echo $oVerifyDate->format('d.M.Y');

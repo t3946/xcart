@@ -19,7 +19,7 @@ class classOrder extends classCloneData
     /**
      * @var classProduct[]
      */
-    private $aOrderProducts = [];
+    private $aOrderProducts = null;
     private $aOrderProductsManufactueres = [];
 
     public function __construct($aOrderData = null)
@@ -64,7 +64,7 @@ class classOrder extends classCloneData
     }
 
     private function fetchOrderProducts() {
-       if (empty($this->aOrderProducts)) {
+       if (is_null($this->aOrderProducts)) {
            $aProductIds = [];
            $aOrderDetails = $this->getOrderDetails();
            if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
@@ -94,6 +94,18 @@ class classOrder extends classCloneData
     public function getOrderProducts () {
         $this->fetchOrderProducts();
         return $this->aOrderProducts;
+    }
+
+    public function unsetOrderProduct($iProductId){
+        if (!empty($this->aOrderProducts)) {
+            foreach($this->aOrderProducts as $key => $oProduct) {
+
+               if ($oProduct->getField('productid') == $iProductId) {
+                  // echo $oProduct->getField('productid')."\n".$iProductId."\n";
+                   unset($this->aOrderProducts[$key]);
+               }
+            }
+        }
     }
 
     public function getDisplayOrderNumber() {

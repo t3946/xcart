@@ -408,6 +408,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
         <tr><td><B>Order date:</B></td><td>{$order.date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
         <tr><td><B>Current date:</B>&nbsp;</td><td>{$current_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
         <tr><td nowrap="nowrap"><B>Fraud check:</B></td><td>{if $order.amazonorderid eq ""}<a href="fraud_page.php?orderid={$order.orderid}" target="_blank" style="color: #140BFC">{include file="main/fraud_status.tpl" fraud_status=$order.fraud_status fraud_static="Y"} ({$order.overall_fraud_score})</a>{else}Cleared by Amazon{/if}</td></tr>
+        <tr><td nowrap="nowrap"><b>Product verification:</b></td><td><a href="#" onclick="return false;">{$sProductVerifacationStatus}</a></td></tr>
 
 {if $order.product_question_status_code ne ""}
 	<tr><td nowrap="nowrap"><B>Product question status:</B>&nbsp;</td><td><a href="product_question.php?id={$order.product_question_status_id}" target="_blank" style="color: #140BFC">{$product_question_statuses[$order.product_question_status_code]}</a></td></tr>
