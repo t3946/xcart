@@ -221,6 +221,7 @@ function func_select_order($orderid) {
 	        'CB'    => $order['cb_status'],
         	'DC'    => $order['dc_status'],
 	        'BD'    => $order['bd_status'],
+			'VP'	=> $order['vn_status'],
         );
 
 #
@@ -852,6 +853,11 @@ function func_order_data($orderid) {
     $order['has_backordered_status'] = func_has_backordered_status($order['shipping_groups']);
     $order['refund_groups'] = func_get_refund_groups($order['orderid'], $order["storefrontid"]);
 
+	$aOrderStatuses= func_query_first("SELECT * FROM $sql_tbl[order_statuses] WHERE code='".$order['order_status']['VP']."'");
+	$order['product_verification_status'] = $aOrderStatuses['name'];
+	$order['product_verification_status_code'] = $aOrderStatuses['code'];
+	$order['product_verification_statuses'] = func_query("SELECT * FROM $sql_tbl[order_statuses] WHERE type='PV'");
+
 #
 ## 15.02.2014
 ###
@@ -1319,9 +1325,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                                 $insert_data["s_zipcode"] = $currect_s_zipcode;
                         }
                 }
-###
-##
-#
 
 
 
@@ -1527,7 +1530,25 @@ die("123");
 			}
 # START: random:20341 [2010 Jul 29 14:46] 
 			$current_order['shipping_groups'][func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid'])]['products'][] = $product;
-# END: random:20341 [2010 Jul 29 14:46] 
+# END: random:20341 [2010 Jul 29 14:46]
+
+			global $xcart_dir;
+			include_once $xcart_dir."/include/class/classProducts.php";
+			$oProduct = new classProduct((int)$product['productid']);
+			$aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
+			if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
+				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY);
+			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0) {
+				$iLastProductVerifyDate = $oProduct->getField('last_verify_date');
+				$currentDate = new DateTime("now");
+				$iDaysInterval = $currentDate->diff($iLastProductVerifyDate)->days;
+				if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
+					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY);
+				}
+			} else {
+				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_NOT_VERIFY);
+			}
+
 		}
 
 		$mes .= "STEP H ".date("H:i:s")."\n";
@@ -1616,6 +1637,10 @@ die("123");
 			unset($group_total);
 			unset($insert_data);
 		}
+		global $xcart_dir;
+		include_once $xcart_dir."/include/class/classOrder.php";
+		$oOrder = new classOrder($orderid);
+		$oOrder->updateVerificationStatus();
 
 
 # END: random:20341 [2010 Jul 29 14:46] 

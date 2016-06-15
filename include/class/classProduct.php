@@ -3,10 +3,16 @@ global $xcart_dir;
 require_once $xcart_dir . "/include/class/classCloneData.php";
 require_once $xcart_dir . "/include/class/classManufacturer.php";
 require_once $xcart_dir . "/include/class/classStoreFront.php";
+require_once $xcart_dir . "/include/class/classOrders.php";
 
 class classProduct extends classCloneData
 {
     const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
+
+    const PRODUCT_STATUS_NOT_VERIFY = 0;
+    const PRODUCT_STATUS_PROBLEM_NOT_FIXED = 1;
+    const PRODUCT_STATUS_PROBLEM_FIXED = 2;
+    const PRODUCT_STATUS_VERIFY = 3;
 
 
     private $oManufacturer;
@@ -76,7 +82,7 @@ class classProduct extends classCloneData
 
     public function getProductLastVerifyDate()
     {
-        $iDate = (int) $this->getField('last_verify_date');
+        $iDate = (int)$this->getField('last_verify_date');
         if (!empty($iDate)) {
             $oDatetime = new DateTime();
             $oDatetime->setTimestamp($iDate);
@@ -92,27 +98,48 @@ class classProduct extends classCloneData
 
     public function getProductVerificationHistoryLastNote()
     {
-        $this->aProductVerificationHistoryLast = func_query_first("SELECT * FROM " . self::$sql_tbl['product_verification_history'] . " WHERE productid = ".$this->primaryKeyValue." ORDER BY timestamp DESC");
+        $sResult = '';
+        $this->aProductVerificationHistoryLast = func_query_first("SELECT * FROM " . self::$sql_tbl['product_verification_history'] . " WHERE productid = " . $this->primaryKeyValue . " ORDER BY timestamp DESC");
         if (!empty($this->aProductVerificationHistoryLast)) {
-            return stripslashes($this->aProductVerificationHistoryLast['verification_note']);
+            $sResult = stripslashes($this->aProductVerificationHistoryLast['verification_note']);
         }
+        return $sResult;
     }
 
-    public function changeVerificationStatus($iStatusId, $sNote)
+    public function changeVerificationStatus($iStatusId, $sNote='', $add2History = true)
     {
+        global $login;
         $bResult['result'] = false;
         if ($this->getField('verification_statusid') != $iStatusId) {
+            $aUpdateParams = ['verification_statusid' => $iStatusId];
             $oDatetime = new DateTime();
-            $res = func_array2update($this->sPrimaryTable, ['last_verify_date' => $oDatetime->getTimestamp(), 'verification_statusid' => $iStatusId], 'productid = ' . $this->primaryKeyValue);
+            if ($iStatusId == self::PRODUCT_STATUS_VERIFY) {
+                $aUpdateParams['last_verify_date'] =  $oDatetime->getTimestamp();
+            }
+            $res = func_array2update($this->sPrimaryTable, $aUpdateParams, 'productid = ' . $this->primaryKeyValue);
+
             if ($res) {
-                $aInsertArray = ['productid' => $this->primaryKeyValue,
+                if ($add2History) {
+                    $aInsertArray = ['productid' => $this->primaryKeyValue,
                     'verification_note' => addslashes($sNote),
                     'timestamp' => $oDatetime->getTimestamp(),
-                    'username' => '',
+                    'username' => $login,
                     'oldstatusid' => $this->getField('verification_statusid'),
                     'newstatusid' => $iStatusId];
-                func_array2insert('product_verification_history', $aInsertArray);
+                    func_array2insert('product_verification_history', $aInsertArray);
+                }
                 $bResult['result'] = true;
+
+                $this->setField('last_verify_date', $aUpdateParams['last_verify_date']);
+                $this->setField('verification_statusid', $aUpdateParams['verification_statusid']);
+
+                /*$aOrders = classOrders::getInstance()->getOrdersByProductId($this->primaryKeyValue);
+                if (!empty($aOrders)) {
+                    foreach ($aOrders as $oOrder) {
+                        $oOrder->updateVerificationStatus();
+                    }
+                }*/
+
             } else $bResult['error'] = 'Status not updated';
         } else {
             $bResult['error'] = 'Status not changed. New status = Old status';

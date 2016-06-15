@@ -25,7 +25,7 @@ if (!empty($aOrders)) {
                     if (!in_array($oProduct->getField('productid'), $aProducts)) {
                         $aProducts[] = $oProduct->getField('productid');
                     } else {
-                        $oOrderManufacturer->unsetOrderProduct($oProduct->getField('productid'));
+                        //$oOrderManufacturer->unsetOrderProduct($oProduct->getField('productid'));
                     }
                 }
             }

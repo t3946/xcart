@@ -606,7 +606,7 @@ function check_r_fields(){
   <a style="color: #3A3AFF;" href='{$order_manufacturers[$m_id].d_website_search_for_sku_url|replace:"---mpn---":"$mpn"}' target="_blank">{$mpn}</a>
 {/if}
     {if $product.verification_statusid == 3}
-        <img title="The product is verified" style="float: right;" src="{$SkinDir}/images/green-verify.png" />
+        <img title="This product is verified" style="float: right;" src="{$SkinDir}/images/green-verify.png" />
     {/if}
 
   </td>

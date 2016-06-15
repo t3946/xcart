@@ -83,6 +83,35 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 //]]>
 </script>
 
+<script>
+    {literal}
+    $( document ).ready(function() {
+        function initVerificationClick() {
+            $('#product_verification_status_link').on('click', '', function () {
+                $(this).replaceWith($('#product_verification_status_change').show());
+                return false;
+            });
+        }
+
+        $('#product_verification_status_change').on('change','',function () {
+            var text = $(this).find('option:selected').text();
+            $(this).before($('<a id="product_verification_status_link" href="#">'+text+'</a>')).hide();
+            initVerificationClick();
+            $.post('ajax_admin.php',{
+                        order_id : $(this).data('order-id'),
+                        order_verify_status: $(this).val(),
+                        ajax_action: 'change_verify_order_status'
+                    },
+                    function (data) {
+                        if (data.result==false)
+                            alert('Error verification order status change!');
+                    });
+        });
+        initVerificationClick();
+    });
+    {/literal}
+</script>
+
 {assign var="order_details_name" value="Order # `$order.order_prefix``$order.orderid`"}
 
 <table width="100%">
@@ -408,7 +437,13 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
         <tr><td><B>Order date:</B></td><td>{$order.date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
         <tr><td><B>Current date:</B>&nbsp;</td><td>{$current_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
         <tr><td nowrap="nowrap"><B>Fraud check:</B></td><td>{if $order.amazonorderid eq ""}<a href="fraud_page.php?orderid={$order.orderid}" target="_blank" style="color: #140BFC">{include file="main/fraud_status.tpl" fraud_status=$order.fraud_status fraud_static="Y"} ({$order.overall_fraud_score})</a>{else}Cleared by Amazon{/if}</td></tr>
-        <tr><td nowrap="nowrap"><b>Product verification:</b></td><td><a href="#" onclick="return false;">{$sProductVerifacationStatus}</a></td></tr>
+        <tr><td nowrap="nowrap" style="padding-right: 5px;"><b>Product verification:</b></td><td><a id="product_verification_status_link" href="#">{$order.product_verification_status}</a>
+                <select data-order-id="{$order.orderid}" id="product_verification_status_change" style="display:none;">
+                    {foreach from=$order.product_verification_statuses item=product_verification_sts}
+                        <option {if $order.product_verification_status == $product_verification_sts.name} selected="selected" {/if} value="{$product_verification_sts.code}">{$product_verification_sts.name}</option>
+                    {/foreach}
+                </select>
+            </td></tr>
 
 {if $order.product_question_status_code ne ""}
 	<tr><td nowrap="nowrap"><B>Product question status:</B>&nbsp;</td><td><a href="product_question.php?id={$order.product_question_status_id}" target="_blank" style="color: #140BFC">{$product_question_statuses[$order.product_question_status_code]}</a></td></tr>
@@ -1079,7 +1114,6 @@ $( document ).ready(function() {
 {* {assign var=show_dispatch_to_distributor value="Y"} *}
 {*-------------*}
 
-
  {if $show_dispatch_to_distributor eq "Y" && $order.fraud_status eq "C" && $order.shipping_groups.$mnf_id.acc_paymentid ne "" && $order.shipping_groups.$mnf_id.acc_paymentid gt 0}
 
   <a name="dispatch_to_distributor_{$mnf_id}"></a>
@@ -1301,5 +1335,6 @@ $(function() {ldelim}
 <!--
 alert('You are trying to fully decrease order amount. Instead of using RQTY, RNET - please change all CB statuses to "Cancelled"');
 -->
+
 </script>
 {/if}

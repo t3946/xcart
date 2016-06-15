@@ -29,6 +29,7 @@
 
     <div id="send_note_for_product" class="ajax_note_field" style="display: none;">
         <input id="verified_product_id" type="hidden" value="" />
+        <input id="verified_order_id" type="hidden" value="" />
         <input id="verified_product_status_id" type="hidden" value="" />
         <textarea rows="3" style="width: 100%;" cols="70" name="payment_note" id="notes"></textarea><br>
         <div style="margin-top:10px">
@@ -72,7 +73,7 @@
 					<td nowrap="nowrap"><a href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
 					<td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
 					<td align="center">
-					<select title="{$oProduct->getProductVerificationHistoryLastNote()}" data-product-verification-id="{$oProduct->getField('productid')}"
+					<select title="{$oProduct->getProductVerificationHistoryLastNote()}" data-order-id="{$oOrderManufacturer->getField('orderid')}" data-product-verification-id="{$oProduct->getField('productid')}"
                             class="change_product_verify_status" name="product_verify_status" data-prev-val="{$oProduct->getField('verification_statusid')}">
 						{foreach from=$aVerifyStatuses item=aVerifyStatus}
 							<option value="{$aVerifyStatus.statusid}"  {if $oProduct->getField('verification_statusid') == $aVerifyStatus.statusid} selected="selected"{/if}>
@@ -129,10 +130,17 @@
 <script>
 
     function submitChanges(obj){
-        var product = $('#verified_product_id',obj);
-        var status = $('#verified_product_status_id',obj);
+        var product = $('#verified_product_id',obj),
+            order = $('#verified_order_id',obj),
+            status = $('#verified_product_status_id',obj),
+            selectchanged = $('select[data-product-verification-id='+product.val()+']'),
+            rowtohide = selectchanged.parent().parent();
+            rowtohide.css('opacity',0.5);
+            obj.hide();
+
         $.post('ajax_admin.php',{
                     product_id : product.val(),
+                    order_id : order.val(),
                     verify_status_id: status.val(),
                     note_text: $('textarea',obj).val(),
                     ajax_action: 'change_verify_product_status'
@@ -140,15 +148,15 @@
                 function (data) {
                     if (data) {
                         if (data.result) {
-                            var selectchanged = $('select[data-product-verification-id='+product.val()+']');
+                            rowtohide.css('opacity',1);
                             selectchanged.attr("data-prev-val",status.val());
                             selectchanged.attr("title",$('textarea',obj).val());
                             if (status.val() == 3) {
-                                var rowtohide = selectchanged.parent().parent();
+
 
                                 rowtohide.fadeOut('slow', function () {
                                     if (rowtohide.data('manufacturer-id')){
-                                        var nextrow = rowtohide.next('tr');
+                                        var nextrow = rowtohide.next('tr:visible');
                                         if (nextrow.data('manufacturer-id') > 0) {
 
                                         } else {
@@ -157,6 +165,7 @@
                                         }
                                     }
                                     rowtohide.show();
+
                                     $('#backdoor-table').find('tr:first-child').after(rowtohide);
                                     $('td:first-child > a',rowtohide).show();
                                     $('#click_to_back_changes').show();
@@ -166,7 +175,7 @@
                             $('textarea',obj).val('');
                             product.val('');
                             status.val('');
-                            obj.hide();
+
 
                         } else {
                             alert(data.error);
@@ -176,9 +185,27 @@
     }
 
     $( document ).ready(function() {
+
+        var supervise = {};
+        $('select.change_product_verify_status').each(function() {
+            var id = $(this).data('product-verification-id');
+            if (supervise[id]) {
+                $(this).parent().parent().remove();
+            }
+            else {
+                supervise[id] = [];
+            }
+            supervise[id].push($(this).data('order-id'));
+
+        });
+        $.each( supervise, function( key, value ) {
+            $('select[data-product-verification-id='+key+']:visible').attr('data-order-id',value);
+        });
+
         $('.change_product_verify_status').on('change','', function () {
             var statusid = $(this).val();
             $('#verified_product_id').val($(this).data('product-verification-id'));
+            $('#verified_order_id').val($(this).attr('data-order-id'));
             $('#verified_product_status_id').val(statusid);
             if (statusid > 0 && statusid < 3) {
                 var position = $(this).position(),
