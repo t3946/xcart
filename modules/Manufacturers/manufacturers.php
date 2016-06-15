@@ -126,7 +126,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "copy_distributor" && $manufacturerid)
 
 	require_once $xcart_dir."/include/class/classManufacturers.php";
 	require_once $xcart_dir."/include/class/classCategories.php";
-	$classManufacturer = new classManufacturer();
+	$classManufacturer = new classManufacturers();
 	$classCategories = new classCategories();
 
 	$storefont_info = func_get_storefront_info($storefront_to_copy_manufacturer, "ID");
@@ -178,7 +178,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "copy_products" && $manufacturerid) {
 
 
 	require_once $xcart_dir."/include/class/classManufacturers.php";
-	$classManufacturer = new classManufacturer();
+	$classManufacturer = new classManufacturers();
 
 	if (!empty($product_to_copy_manufacturer)) {
 		$countAddedProducts = $classManufacturer->addProductsToQueue($manufacturerid, $product_to_copy_manufacturer);
@@ -434,6 +434,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"dcad_company_name" => trim($dcad_company_name),
 				"dcad_routing_number" => trim($dcad_routing_number),
 				"dcad_account_number" => trim($dcad_account_number),
+
+				"products_always_verify" => trim($products_always_verify),
+				"days_before_verify" => trim($products_days_before_verify),
 ###
 ##
 #
@@ -899,7 +902,7 @@ else {
 		include $xcart_dir."/include/navigation.php";
 
 		require_once $xcart_dir."/include/class/classManufacturers.php";
-		$classManufacturer = new classManufacturer();
+		$classManufacturer = new classManufacturers();
 
 		#
 		# Get the manufacturers list
@@ -1181,7 +1184,7 @@ if (!empty($page))
 
 	if ($distributor_section == "30") {
 		require_once $xcart_dir."/include/class/classManufacturers.php";
-		$classManufacturer = new classManufacturer();
+		$classManufacturer = new classManufacturers();
 		$aParentManufacturer = $classManufacturer->getChildrenManufacturers($manufacturerid);
 
 		$smarty->assign("aParentManufacturer", $aParentManufacturer);
@@ -1215,6 +1218,12 @@ if ($distributor_section == "18"){
 		'title'  => 'Clone distributor to another storefront',
 		'order_by' => '170',
 		'distributor_section' => '30'
+	);
+
+	$distributor_sections[] = array(
+		'title'  => 'Product verification settings',
+		'order_by' => '180',
+		'distributor_section' => '31'
 	);
 
 

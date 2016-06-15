@@ -14,27 +14,27 @@ class classCategories extends classCloneData
     }
 
     public function getParentCategory ($iParentCategory) {
-        return func_query_first_cell("SELECT categoryid FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE parentid=$iParentCategory");
+        return func_query_first_cell("SELECT categoryid FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE parentid=$iParentCategory");
     }
 
     public function getCategoryPathasArray($iCategoryId) {
-        return explode("/", func_query_first_cell("SELECT categoryid_path FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId"));
+        return explode("/", func_query_first_cell("SELECT categoryid_path FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId"));
     }
 
     public function getCategoryPath($iCategoryId) {
-        return func_query_first_cell("SELECT categoryid_path FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId");
+        return func_query_first_cell("SELECT categoryid_path FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId");
     }
 
     public function getCategoryInfo($iCategoryId) {
-        return func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId");
+        return func_query_first("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE categoryid=$iCategoryId");
     }
 
     public function getCategoryByIdAndStoreFront($iCategoryId, $iStoreFronId) {
-        return func_query_first_cell("SELECT ".$this->sPrimaryKeyFiled." FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled."=$iCategoryId AND storefrontid = $iStoreFronId");
+        return func_query_first_cell("SELECT ".$this->sPrimaryKeyFiled." FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled."=$iCategoryId AND storefrontid = $iStoreFronId");
     }
 
     public function getCategoryByNameAndStoreFront($sCategoryName, $iStoreFronId) {
-        return func_query_first_cell("SELECT categoryid FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE category='".addslashes($sCategoryName)."' AND storefrontid = $iStoreFronId");
+        return func_query_first_cell("SELECT categoryid FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE category='".addslashes($sCategoryName)."' AND storefrontid = $iStoreFronId");
     }
 
     public function setCategoryPath($iCategoryId, $sCategoryPath) {
@@ -45,7 +45,7 @@ class classCategories extends classCloneData
     public function updateCategoryCleanUrl($iCategoryId) {
         $aCategory = $this->getCategoryInfo($iCategoryId);
         $clean_url = func_clean_url_autogenerate('C', $iCategoryId, array('category' => $aCategory['category']));
-        db_query("DELETE FROM ". $this->sql_tbl['clean_urls']. " WHERE resource_type='C' AND resource_id=$iCategoryId");
+        db_query("DELETE FROM ". self::$sql_tbl['clean_urls']. " WHERE resource_type='C' AND resource_id=$iCategoryId");
         func_clean_url_add($clean_url, 'C', $iCategoryId);
     }
 
