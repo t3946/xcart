@@ -70,7 +70,7 @@
 					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getOrderModifyURL()}">{$oOrderManufacturer->getDisplayOrderNumber()}</a></td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getField('productcode')}</a></td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getField('product')}</a></td>
-					<td nowrap="nowrap"><a href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
+					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
 					<td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
 					<td align="center">
 					<select title="{$oProduct->getProductVerificationHistoryLastNote()}" data-order-id="{$oOrderManufacturer->getField('orderid')}" data-product-verification-id="{$oProduct->getField('productid')}"
