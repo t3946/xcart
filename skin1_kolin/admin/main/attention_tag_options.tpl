@@ -56,10 +56,10 @@
 
 <tr>
         <td colspan="3" class="SubmitBox">
-        <input type="button" value="Add new status" onclick="javascript: submitForm(this, 'add');" />
+            <input type="button" value="{$lng.lbl_update|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'update');" />
 	</td>
         <td colspan="2" class="SubmitBox" align="right">
-        <input type="button" value="{$lng.lbl_update|strip_tags:false|escape}" onclick="javascript: submitForm(this, 'update');" />
+            <input type="button" value="Add new attention tag" onclick="javascript: submitForm(this, 'add');" />
         </td>
 </tr>
 
