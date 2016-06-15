@@ -171,21 +171,17 @@
 
 {if $userinfo.status ne "A"}{* only for non-anonymous users *}
 <tr valign="middle">
-<td align="right">{$lng.lbl_account_status}:</td>
+<td align="right">User status:</td>
 <td>&nbsp;</td>
 <td nowrap="nowrap">
-<select name="status">
-<option value="N"{if $userinfo.status eq "N"} selected="selected"{/if}>{$lng.lbl_account_status_suspended}</option>
-<option value="Y"{if $userinfo.status eq "Y"} selected="selected"{/if}>{$lng.lbl_account_status_enabled}</option>
-{if $active_modules.XAffiliate ne "" and ($userinfo.usertype eq "B" or $smarty.get.usertype eq "B")}
-<option value="Q"{if $userinfo.status eq "Q"} selected="selected"{/if}>{$lng.lbl_account_status_not_approved}</option>
-<option value="D"{if $userinfo.status eq "D"} selected="selected"{/if}>{$lng.lbl_account_status_declined}</option>
-{/if}
-</select>
+	<select name="status">
+		<option value="N"{if $userinfo.status eq "N" && $userinfo.activity eq "N"} selected="selected"{/if}>{$lng.lbl_account_activity_disabled}</option>
+		<option value="Y"{if $userinfo.status eq "Y" && $userinfo.activity eq "Y"} selected="selected"{/if}>{$lng.lbl_account_activity_enabled}</option>
+	</select>
 </td>
 </tr>
 
-{if $display_activity_box eq "Y"}
+{if $display_activity_box eq "Y" && 1!=1}
 <tr valign="middle">
 <td align="right">{$lng.lbl_account_activity}:</td>
 <td>&nbsp;</td>
