@@ -1303,9 +1303,9 @@ Total Product Cost to us
 
 {if $order_transactions_totals ne ""}
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Transactions amount (authorized/pending +captured ) </td>
+  <td>Total transaction amount <br> (authorized + captured )</td>
   <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
+  <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
   <td>&nbsp;</td>
 </tr>
 
