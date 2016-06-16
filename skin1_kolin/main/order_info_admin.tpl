@@ -1252,7 +1252,7 @@ Total Product Cost to us
   </td>
   <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.gst hide_zero='Y'}</td>
 {*   <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.pst hide_zero='Y'}</td> *}
-  <td align="right">{include file="currency2.tpl" value=$order.display_subtotal}
+  <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.gross}
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
@@ -1297,7 +1297,7 @@ Total Product Cost to us
   <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.net}</td>
   <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.gst hide_zero='Y'}</td>
 {*  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.pst hide_zero='Y'}</td> *}
-  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.total}</td>
+  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.gross}</td>
   <td>&nbsp;</td>
 </tr>
 
