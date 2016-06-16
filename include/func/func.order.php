@@ -343,22 +343,22 @@ function func_select_order($orderid) {
 	}
 	if (!empty($order['tax_info_display_taxed_order_totals']))
 		$order["extra"]['tax_info']['display_taxed_order_totals'] = $order['tax_info_display_taxed_order_totals'];
-	if (!empty($order['tax_info_display_cart_products_tax_rates']) && empty($order["extra"]['tax_info']['display_cart_products_tax_rates']))
+	if (!empty($order['tax_info_display_cart_products_tax_rates']))
 		$order["extra"]['tax_info']['display_cart_products_tax_rates'] = $order['tax_info_display_cart_products_tax_rates'];
 
-	if (!empty($order['tax_info_taxed_subtotal']) && empty($order["extra"]['tax_info']['taxed_subtotal']))
+	if (!empty($order['tax_info_taxed_subtotal']))
 		$order["extra"]['tax_info']['taxed_subtotal'] = $order['tax_info_taxed_subtotal'];
-	if (!empty($order['tax_info_taxed_discounted_subtotal']) && empty($order["extra"]['tax_info']['taxed_discounted_subtotal']))
+	if (!empty($order['tax_info_taxed_discounted_subtotal']))
 		$order["extra"]['tax_info']['taxed_discounted_subtotal'] = $order['tax_info_taxed_discounted_subtotal'];
-	if (!empty($order['tax_info_taxed_shipping']) && empty($order["extra"]['tax_info']['taxed_shipping']))
+	if (!empty($order['tax_info_taxed_shipping']))
 		$order["extra"]['tax_info']['taxed_shipping'] = $order['tax_info_taxed_shipping'];
 
 	foreach ($price_details_names as $pn) {
-		if (!empty($order['shipping_total_'.$pn]) && empty($order["extra"]['shipping_total'][$pn]))
+		if (!empty($order['shipping_total_'.$pn]))
 			$order["extra"]['shipping_total'][$pn] = $order['shipping_total_'.$pn];
-		if (!empty($order['product_total_'.$pn]) && empty($order["extra"]['product_total'][$pn]))
+		if (!empty($order['product_total_'.$pn]))
 			$order["extra"]['product_total'][$pn] = $order['product_total_'.$pn];
-		if (!empty($order['total_'.$pn]) && empty($order["extra"]['total'][$pn]))
+		if (!empty($order['total_'.$pn]))
 			$order["extra"]['total'][$pn] = $order['total_'.$pn];
 	}
 
