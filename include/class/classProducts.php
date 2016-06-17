@@ -748,14 +748,14 @@ class classProducts extends classCloneData
 
     }
 
-    protected function getProductBySKU($sSKU) {
+    public function getProductBySKU($sSKU) {
         $sSKU = addslashes($sSKU);
         $aProduct = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE productcode = '$sSKU'");
         if (empty($aProduct)) return false;
         return $aProduct;
     }
 
-    protected function getProductIdBySKU($sSKU) {
+    public function getProductIdBySKU($sSKU) {
         $sSKU = addslashes($sSKU);
         return func_query_first_cell("SELECT ".$this->sPrimaryKeyFiled." FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE productcode = '$sSKU'");
     }
