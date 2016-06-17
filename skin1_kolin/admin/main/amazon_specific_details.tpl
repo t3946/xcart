@@ -139,10 +139,6 @@
                 <td width="*">{$amazon_specific_details.estimated_pick_pack_fee_per_unit}</td>
             </tr>
             <tr>
-                <td width="25%">estimated_pick_pack_fee_per_unit</td>
-                <td width="*">{$amazon_specific_details.estimated_pick_pack_fee_per_unit}</td>
-            </tr>
-            <tr>
                 <td width="25%">estimated_weight_handling_fee_per_unit</td>
                 <td width="*">{$amazon_specific_details.estimated_weight_handling_fee_per_unit}</td>
             </tr>
