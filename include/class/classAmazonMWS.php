@@ -85,7 +85,9 @@ class classAmazonMWS
     private $aWaitLoopExitCondition = [];
     private $aReportValue = [];
     private $aReportIds;
+    private $sleepTimeOut = 60;
     public $error = [];
+
 
     public function __construct()
     {
@@ -509,13 +511,25 @@ class classAmazonMWS
         }
     }
 
+    public function setTimeOut($iTimeOut){
+        $this->sleepTimeOut = $iTimeOut;
+        return $this;
+    }
+
     public function doRequestReport()
     {
+        if (!empty($this->error)) return $this;
+
         $this->aWaitLoopExitCondition = [];
         $request = new MarketplaceWebService_Model_RequestReportRequest();
         $request->setMarketplaceIdList($this->marketplaceIdArray);
         $request->setMerchant(MERCHANT_ID);
         $request->setReportType('_GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA_');
+
+        $s_date = new DateTime('-14 days', new DateTimeZone('UTC'));
+        $start_date = $s_date->format("Y-m-d\T00:00:00P");
+
+        $request->setStartDate(new DateTime($start_date, new DateTimeZone('UTC')));
 
         $this->dom_xml_arr = $this->invokeRequestReport($request);
         $log_text = 'RequestReport -> ReportRequestId:' . $this->dom_xml_arr['ReportRequestId'];
@@ -525,6 +539,8 @@ class classAmazonMWS
 
     public function doGetReportRequestList()
     {
+        if (!empty($this->error)) return $this;
+
         $this->aWaitLoopExitCondition = [['ReportProcessingStatus' => '_DONE_'], ['ReportProcessingStatus' => '_DONE_NO_DATA_'], ['ReportProcessingStatus' => '_CANCELLED_']];
         $reportRequestIdList = new MarketplaceWebService_Model_IdList();
         $reportRequestIdList->setId($this->dom_xml_arr['ReportRequestId']);
@@ -624,7 +640,7 @@ class classAmazonMWS
         $res = false;
         if (!empty($this->aWaitLoopExitCondition)) {
             foreach ($this->aWaitLoopExitCondition as $key => $value) {
-                if ($this->dom_xml_arr[$key] == $value) $res = true;
+                if ($this->dom_xml_arr[key($value)] == $value[key($value)]) $res = true;
             }
         } else $res = true;
         return $res;
@@ -696,7 +712,6 @@ class classAmazonMWS
 
     public function processReportFeeData()
     {
-        if (!empty($this->error)) return $this;
         $this->fillReportFeeDataFromFile();
 
         $aFieldsToUpdate = ['productid', 'longest_side', 'median_side', 'shortest_side', 'length_and_girth', 'unit_of_dimension',
@@ -714,15 +729,14 @@ class classAmazonMWS
 
     public function _Request($_request)
     {
-        if (!empty($this->error)) return $this;
+
         $methodName = 'do' . $_request;
         $this->$methodName();
-        if (!empty($this->error)) return $this;
 
         while ((!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") || !$this->checkLoopExitConditionStatus()) {
             func_flush("sleeping...");
             func_flush();
-            sleep('10');
+            sleep($this->sleepTimeOut);
             func_flush("Unsleeped");
             func_flush();
             $this->$methodName();

@@ -18,8 +18,7 @@ $classAmazonMWS -> _Request('RequestReport')
     -> _Request('GetReport')
     -> _Request('UpdateReportAcknowledgements')
     -> processReportFeeData();
-var_dump($classAmazonMWS->error);
-//func_build_quick_prices(222218);
+
 
 
 
