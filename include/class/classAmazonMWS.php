@@ -561,8 +561,11 @@ class classAmazonMWS
         $request->setAcknowledged(false);
 
         $this->dom_xml_arr = $this->invokeGetReportList($request);
-
-        $log_text = 'GetReportList -> ReportId:' . implode(',', $this->dom_xml_arr["ReportId"]);
+        if (!empty($this->dom_xml_arr["ReportId"])) {
+            $log_text = 'GetReportList -> ReportId:' . implode(',', $this->dom_xml_arr["ReportId"]);
+        } else {
+            $log_text = 'GetReportList -> No reports found';
+        }
         func_backprocess_log("AmazonMWS", $log_text);
 
         $this->setReportId($this->dom_xml_arr["ReportId"]);
@@ -601,7 +604,7 @@ class classAmazonMWS
             $request->setReportIdList($idList->withId($iReportId));
             $request->setAcknowledged(true); //true
 
-            $this->dom_xml_arr = $this->invokeUpdateReportAcknowledgements($request);
+            $this->invokeUpdateReportAcknowledgements($request);
 
             $log_text = 'UpdateReportAcknowledgements -> ReportId:' . $iReportId;
             func_backprocess_log("AmazonMWS", $log_text);
@@ -650,7 +653,7 @@ class classAmazonMWS
         $ReportContent = $this->getReportContent();
         if (!empty($ReportContent)) {
 
-            $log_text = "Processing ".count($ReportContent)." reports";
+            $log_text = "Processing " . count($ReportContent) . " reports";
             func_backprocess_log("AmazonMWS", $log_text);
 
             foreach ($ReportContent as $report_data) {
@@ -668,7 +671,7 @@ class classAmazonMWS
                     $cntLine++;
                 }
                 $aReportData = [];
-                $log_text = "Processing ".count($aReportValue)." products";
+                $log_text = "Processing " . count($aReportValue) . " products";
                 func_backprocess_log("AmazonMWS", $log_text);
                 for ($y = 0; $y < count($aReportValue); $y++) {
                     foreach ($aReportValue[$y] as $iKey => $sItem) {

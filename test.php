@@ -12,11 +12,11 @@ x_load('product');
 
 $classAmazonMWS = new classAmazonMWS();
 
-$classAmazonMWS //-> _Request('RequestReport')
-    //-> _Request('GetReportRequestList')
+$classAmazonMWS -> _Request('RequestReport')
+    -> _Request('GetReportRequestList')
     -> _Request('GetReportList')
     -> _Request('GetReport')
-    //-> _Request('UpdateReportAcknowledgements')
+    -> _Request('UpdateReportAcknowledgements')
     -> processReportFeeData();
 var_dump($classAmazonMWS->error);
 //func_build_quick_prices(222218);
