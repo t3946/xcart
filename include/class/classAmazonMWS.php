@@ -541,6 +541,8 @@ class classAmazonMWS
     {
         if (!empty($this->error)) return $this;
 
+        $this->setTimeOut(45);
+
         $this->aWaitLoopExitCondition = [['ReportProcessingStatus' => '_DONE_'], ['ReportProcessingStatus' => '_DONE_NO_DATA_'], ['ReportProcessingStatus' => '_CANCELLED_']];
         $reportRequestIdList = new MarketplaceWebService_Model_IdList();
         $reportRequestIdList->setId($this->dom_xml_arr['ReportRequestId']);
@@ -566,6 +568,9 @@ class classAmazonMWS
     public function doGetReportList()
     {
         $this->aWaitLoopExitCondition = [];
+
+        $this->setTimeOut(60);
+
         $req = new MarketplaceWebService_Model_TypeList();
         $req->withType('_GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA_');
 
@@ -592,6 +597,8 @@ class classAmazonMWS
     {
         $this->aWaitLoopExitCondition = [];
 
+        $this->setTimeOut(60);
+
         if (!empty($this->aReportIds)) {
             if (is_array($this->aReportIds)) {
                 $this->dom_xml_arr = [];
@@ -611,6 +618,8 @@ class classAmazonMWS
 
     public function doUpdateReportAcknowledgements()
     {
+        $this->setTimeOut(45);
+
         $request = new MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest();
         $request->setMerchant(MERCHANT_ID);
 
@@ -640,7 +649,7 @@ class classAmazonMWS
         $res = false;
         if (!empty($this->aWaitLoopExitCondition)) {
             foreach ($this->aWaitLoopExitCondition as $key => $value) {
-                if ($this->dom_xml_arr[key($value)] == $value[key($value)]) $res = true;
+                if ($this->dom_xml_arr[key($value)] == $value[key($value)]) {$res = true; break;}
             }
         } else $res = true;
         return $res;
