@@ -432,7 +432,7 @@ class classAmazonMWS
 
             echo("            ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
 
-            return $response_arr;
+
 
         } catch (MarketplaceWebService_Exception $ex) {
             echo("Caught Exception: " . $ex->getMessage() . "\n");
@@ -443,6 +443,7 @@ class classAmazonMWS
             echo("XML: " . $ex->getXML() . "\n");
             echo("ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n");
         }
+        return $response_arr;
     }
 
     private function invokeUpdateReportAcknowledgements($request)
@@ -526,7 +527,7 @@ class classAmazonMWS
         $request->setMerchant(MERCHANT_ID);
         $request->setReportType('_GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA_');
 
-        $s_date = new DateTime('-14 days', new DateTimeZone('UTC'));
+        $s_date = new DateTime('-3 days', new DateTimeZone('UTC'));
         $start_date = $s_date->format("Y-m-d\T00:00:00P");
 
         $request->setStartDate(new DateTime($start_date, new DateTimeZone('UTC')));
