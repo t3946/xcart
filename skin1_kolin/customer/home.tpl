@@ -398,6 +398,9 @@ window.attachEvent("onload", anchor_fix);
                                         if(cidev_xmlHttp.readyState==4){
                                                 if(cidev_xmlHttp.status==200){
                                                         cidev_id$("show_next_products_block_"+ajax_navigation_page_next).innerHTML=cidev_xmlHttp.responseText;
+                                                    var t = document.getElementById('show_next_products_block_'+ajax_navigation_page_next);
+                                                    scripts = t.getElementsByTagName('script');
+                                                    $.globalEval($(scripts[0]).text());
 
 //-Start-//
 							$('#load_next_productids').attr('data-value','');
