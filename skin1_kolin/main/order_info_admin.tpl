@@ -707,7 +707,15 @@ Cost to us accurate
 </tr>
 {/foreach}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
-  <td nowrap="nowrap">{if $v.shipping_code ne ""}{$v.shipping_code}{else}Flat rate{/if}: {if !$static}<input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}" {* style="width: 80%;" *} {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}</td>
+  <td nowrap="nowrap">Carrier:
+    {if $v.shipping_code ne ""}
+      {$v.shipping_code}
+    {else}Flat rate
+    {/if}<br><br>
+    Method:
+    {if !$static}
+      <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}" {* style="width: 80%;" *}
+      {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}</td>
   <td colspan="6">
     {if $v.tracking}
 
@@ -1244,7 +1252,7 @@ Total Product Cost to us
   </td>
   <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.gst hide_zero='Y'}</td>
 {*   <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.pst hide_zero='Y'}</td> *}
-  <td align="right">{include file="currency2.tpl" value=$order.display_subtotal}
+  <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.gross}
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
@@ -1289,15 +1297,15 @@ Total Product Cost to us
   <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.net}</td>
   <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.gst hide_zero='Y'}</td>
 {*  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.pst hide_zero='Y'}</td> *}
-  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.total}</td>
+  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.gross}</td>
   <td>&nbsp;</td>
 </tr>
 
 {if $order_transactions_totals ne ""}
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Transactions amount (authorized/pending +captured ) </td>
+  <td>Total transaction amount <br> (authorized + captured )</td>
   <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
+  <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
   <td>&nbsp;</td>
 </tr>
 

@@ -2202,7 +2202,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
 						$CaptureAmount = price_format($CaptureAmount);
 
-						if (($CaptureAmount == $authorized_transaction_amount) || ($OriginalAmount == $authorized_transaction_amount && $bRefundPresent && $CaptureAmount <= $authorized_transaction_amount)) {
+						if ($CaptureAmount <= $authorized_transaction_amount) {
 							if ($count_shipping_groups == "1" && !empty($authorized_transactions_info)) {
 
 								$transaction_log = "";
@@ -2837,7 +2837,7 @@ elseif ($mode == 'mode_info_request_survey'){
 						  if ($vs == "some_in_stock" || $vs == "out_of_stock") {
 
 							  if ($current_eta_date_mm_dd_yyyy != $eta_date) {
-								  $log .= "<B>" . $v["productcode"] . ":</B> " . $current_eta_date_mm_dd_yyyy . " -> " . $eta_date . "<br />";
+								  $log .= "<B>" . $v["productcode"] . ":</B> eta_date_mm_dd_yyyy: " . $current_eta_date_mm_dd_yyyy . " -> " . $eta_date . "<br />";
 							  }
 
 							  $eta_date = func_convert_date_mm_dd_yyyy($eta_date, 'seconds');

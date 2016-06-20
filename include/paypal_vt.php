@@ -40,6 +40,13 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 				$credit_card_typy = "";
 		}
 
+		foreach ($paypal_vt as $key => $val){
+			$val = func_stripslashes(func_html_entity_decode($val));
+			$val = htmlspecialchars_decode($val, ENT_QUOTES);
+			$paypal_vt[$key]=$val;
+		}
+
+
 		$cardholderl_name = trim($paypal_vt["cardholderl_name"]);
 		$cardholderl_name_arr = explode(" ", $cardholderl_name);
 		$first_name = trim($cardholderl_name_arr[0]);
@@ -56,10 +63,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 			}
 		}
 
-//func_print_r($order);
-//die();
-
-		$data_json = '{
+		/*$data_json = '{
 		        "intent":"authorize",
 		        "payer":{
                 		"payment_method":"credit_card",
@@ -69,7 +73,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		                                        "number":"'.$paypal_vt["card_number"].'",
                 		                        "type":"'.$credit_card_typy.'",
                                 		        "expire_month":"'.$paypal_vt["expiration_month"].'",
-		                                        "expire_year":"'.$paypal_vt["expiration_year"].'",
+		                                        "expire_year":"'.substr(date("Y"), 0, 2).$paypal_vt["expiration_year"].'",
                 		                        "cvv2":"'.$paypal_vt["csc"].'",
 		                                        "first_name":"'.addslashes($first_name).'",
                 		                        "last_name":"'.addslashes($last_name).'",
@@ -96,6 +100,63 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		                                "state":"'.addslashes($order["s_state"]).'",
 		                                "postal_code":"'.addslashes($order["s_zipcode"]).'",
                 		                "country_code":"'.addslashes($order["s_country"]).'"
+                		        }
+		                }
+		        },
+		        "transactions":[
+                		{
+		                        "amount":{
+                		                "total":"'.$paypal_vt["grand_total"].'",
+		                                "currency":"'.$paypal_vt["currency"].'",
+                		                "details":{
+		                                        "subtotal":"'.$paypal_vt["grand_total"].'",
+                		                        "tax":"0.00",
+                                		        "shipping":"0.00"
+		                                }
+                		        },
+					"invoice_number":"'.$order["order_prefix"].$order["orderid"].'",
+		                        "description":""
+		                }
+		        ]
+		}';*/
+
+		$data_json = '{
+		        "intent":"authorize",
+		        "payer":{
+                		"payment_method":"credit_card",
+		                "funding_instruments":[
+                		        {
+                                		"credit_card":{
+		                                        "number":"'.$paypal_vt["card_number"].'",
+                		                        "type":"'.$credit_card_typy.'",
+                                		        "expire_month":"'.$paypal_vt["expiration_month"].'",
+		                                        "expire_year":"'.substr(date("Y"), 0, 2).$paypal_vt["expiration_year"].'",
+                		                        "cvv2":"'.$paypal_vt["csc"].'",
+		                                        "first_name":"'.($first_name).'",
+                		                        "last_name":"'.($last_name).'",
+                                		        "billing_address":{
+                                                		"line1":"'.($paypal_vt["b_address"]).'",
+		                                                "line2":"'.($paypal_vt["b_address_2"]).'",
+                		                                "city":"'.($paypal_vt["b_city"]).'",
+                                		                "state":"'.($paypal_vt["b_state"]).'",
+                                                		"postal_code":"'.($paypal_vt["b_zipcode"]).'",
+		                                                "country_code":"'.($paypal_vt["b_country"]).'"
+                		                        }
+                                		}
+		                        }
+                		],
+		                "payer_info":{
+                		        "email":"'.$order["email"].'",
+		                        "first_name":"'.($first_name).'",
+                		        "last_name":"'.($last_name).'",
+		                        "shipping_address":{
+                		                "recipient_name":"'.($order["s_firstname"]).'",
+		                                "type":"'.$shipping_address_type.'",
+                		                "line1":"'.($order["s_address"]).(!empty($order["s_address_2"])?" ".($order["s_address_2"]):"").'",
+                		                "city":"'.($order["s_city"]).'",
+		                                "state":"'.($order["s_state"]).'",
+		                                "postal_code":"'.($order["s_zipcode"]).'",
+                		                "country_code":"'.($order["s_country"]).'"
                 		        }
 		                }
 		        },
@@ -220,32 +281,43 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     }
     elseif ($mode == "capture_transaction" && !empty($transaction_info["transaction_id"]) && !empty($transaction_amount[$order_transaction_id])){
 
-        $log .= "'Capture authorized transaction' at 'Virtual Terminal'";
+		$log .= "'Capture authorized transaction' at 'Virtual Terminal'";
 
-        if (!empty($Access_Token)){
+		if (!empty($Access_Token)) {
 
-	        $data_arr["amount"]["currency"] = $transaction_info["transaction_currency"];
+			$data_arr["amount"]["currency"] = $transaction_info["transaction_currency"];
 //        	$data_arr["amount"]["total"] = $transaction_info["transaction_total"];
-        	$data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
-	        $data_arr["is_final_capture"] = false; // true
+			$data_arr["amount"]["total"] = $transaction_amount[$order_transaction_id];
+			$data_arr["is_final_capture"] = false; // true
 
-		$result = func_paypal_capture($Access_Token, $transaction_info["transaction_id"], $data_arr);
 
-		if ($result["name"] == "AUTHORIZATION_ALREADY_COMPLETED" || $result["name"] == "CAPTURE_AMOUNT_LIMIT_EXCEEDED"){
-			$log .= "<br />".$result["name"];
+			$result = func_paypal_capture($Access_Token, $transaction_info["transaction_id"], $data_arr);
+
+			$aResultStates = array('pending', 'completed', 'refunded', 'partially_refunded');
+
+			if (!empty($result['state'])) {
+				switch ($result['state']) {
+
+					case  'completed' :
+						$log .= "<br />Transaction: " . $transaction_info["transaction_id"] . " -> " . $result["id"];
+
+						$transaction_id = $result["id"];
+
+						$transaction_status = $result["state"];
+						$transaction_currency = $result["amount"]["currency"];
+						$transaction_total = $result["amount"]["total"];
+
+						func_send_order_status_notification($orderid, "P");
+						break;
+					default :
+						$log .= "<br />Transaction: " . $transaction_info["transaction_id"] . " -> " . $result["id"];
+						$log .= "<br />state: " . $result["state"];
+				}
+			} else {
+				$log .= "<br />" . $result["name"];
+				$log .= "<br />" . $result["message"];
+			}
 		}
-		else {
-			$log .= "<br />Transaction: ".$transaction_info["transaction_id"]." -> ".$result["id"];
-
-			$transaction_id = $result["id"];
-
-	                $transaction_status = $result["state"];
-        	        $transaction_currency = $result["amount"]["currency"];
-                	$transaction_total = $result["amount"]["total"];
-
-			func_send_order_status_notification($orderid, "P");
-		}
-        }
     }
     elseif ($mode == "re_authorize_transaction" && !empty($transaction_info["transaction_id"]) && !empty($transaction_amount[$order_transaction_id])){
 	

@@ -190,9 +190,9 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 
 <tr>
     <td align="center" class="TopLabel" colspan="3">
-        {if $brand.customer_url ne ""}
+        {if count($brand.customer_url) > 0}
         <span class="detail-title">
-            <a href="{$brand.customer_url}" title="" target="_blank">{$lng.lbl_current_brand}: "{$brand.brand}"</a>
+            <a href="{$brand.customer_url[0].url}" title="" target="_blank">{$lng.lbl_current_brand}: "{$brand.brand}"</a>
         </span>
         {else}{$lng.lbl_current_brand}: "{$brand.brand}"
         {/if}
@@ -316,6 +316,50 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
         <td>&nbsp;</td>
         <td><textarea cols="65" rows="4" name="meta_descr">{$brand.meta_descr}</textarea></td>
 </tr>
+    {if (count($brand.customer_url) > 1)}
+        <tr>
+            <td colspan="3"><br><br>			<table cellspacing="0" class="SubHeader">
+                    <tbody><tr>
+                        <td class="Green2">Brands links on all storefronts</td>
+                    </tr>
+                    <tr>
+                        <td class="SubHeaderLine"><img alt="" class="Spc" src="/skin1_kolin/images/spacer.gif"><br></td>
+                    </tr>
+                    </tbody></table>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td class="FormButton">
+                <table>
+                    <th>Storefront prefix</th>
+                    {foreach from=$brand.customer_url key=key item=branda}
+                    <tr style="text-align: center;">
+                        <td class="FormButton">{$branda.prefix}</td>
+                    </tr>
+                    {/foreach}
+                </table>
+                    </td>
+            <td colspan="2">
+                <table>
+                    <tr style="text-align: center;">
+                        <th>Link</th>
+                        <th>Products count</th>
+                    </tr>
+        {foreach from=$brand.customer_url key=key item=branda}
+                    <tr>
+                        <td>{$brand.brand} at <a target="_blank" href="{$branda.url}">{$branda.domain}</a></td>
+                        <td style="text-align: center;">{$branda.products_count}</td>
+                    </tr>
+        {/foreach}
+                </table>
+
+            </td>
+        </tr>
+
+
+    {/if}
  
 <tr>
 	<td colspan="2">&nbsp;</td>

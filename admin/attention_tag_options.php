@@ -13,8 +13,8 @@ if ($REQUEST_METHOD == 'POST'){
 
 		if (!empty($posted_data) && is_array($posted_data)){
 			foreach ($posted_data as $k => $v){
-
-				db_query("UPDATE $sql_tbl[attention_tags_values] SET orderby='".$v["orderby"]."', status='".$v["status"]."', active='$v[active]' WHERE status_id='$v[status_id]'");
+				$sTagDescription = $v['description'];
+				db_query("UPDATE $sql_tbl[attention_tags_values] SET orderby='".$v["orderby"]."', status='".$v["status"]."', active='$v[active]', description = '$sTagDescription' WHERE status_id='$v[status_id]'");
 
 				if (!empty($v["select_login"]) && !empty($v["select_action"])){
 					$is_such_str = func_query_first_cell("SELECT id FROM $sql_tbl[attention_tags_values_logins] WHERE login='$v[select_login]' AND action='$v[select_action]' AND status_id='$v[status_id]'");
@@ -40,7 +40,7 @@ if ($REQUEST_METHOD == 'POST'){
 	func_header_location("configuration.php?option=Attention_tag_options");
 }
 
-$allowed_operators = func_query("SELECT login, firstname, membershipid, usertype FROM xcart_customers WHERE usertype!='C' ORDER BY firstname");
+$allowed_operators = func_query("SELECT login, firstname, membershipid, usertype FROM xcart_customers WHERE usertype!='C' AND activity ='Y' AND status = 'Y' ORDER BY firstname");
 
 $attention_tags_values = func_query("SELECT * FROM $sql_tbl[attention_tags_values] ORDER BY orderby, status");
 

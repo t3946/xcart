@@ -4,11 +4,13 @@ require_once $xcart_dir."/include/class/classCloneData.php";
 
 class classCategories extends classCloneData
 {
-    public function __construct()
+    public function __construct($iId = null)
     {
-        parent::__construct();
         $this->sPrimaryTable = "categories";
         $this->sPrimaryKeyFiled = "categoryid";
+
+        parent::__construct($iId);
+
     }
 
     public function getParentCategory ($iParentCategory) {
@@ -28,7 +30,7 @@ class classCategories extends classCloneData
     }
 
     public function getCategoryByIdAndStoreFront($iCategoryId, $iStoreFronId) {
-        return func_query_first_cell("SELECT categoryid FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE category=$iCategoryId AND storefrontid = $iStoreFronId");
+        return func_query_first_cell("SELECT ".$this->sPrimaryKeyFiled." FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled."=$iCategoryId AND storefrontid = $iStoreFronId");
     }
 
     public function getCategoryByNameAndStoreFront($sCategoryName, $iStoreFronId) {

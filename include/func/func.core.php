@@ -1324,7 +1324,7 @@ return $i;
 		db_query("DELETE FROM $sql_tbl[quick_prices] WHERE productid IN ('".implode("','", $id)."')");
 	}
 	else {
-		db_query("DELETE FROM $sql_tbl[quick_prices]");
+		//db_query("DELETE FROM $sql_tbl[quick_prices]");
 	}
 
 	if ($tick > 0)
@@ -3055,7 +3055,7 @@ $cb_status=="A" || $cb_status=="D"
 						) {
 							db_query("DELETE FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$status_id'");
 							db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '$status_id')");
-							$log .= "'".$tag_name."' attention tag set";
+							$log .= "'".$tag_name."' attention tag SET based on rules";
 							$tag_added_flag = true;
 
 							print("OK");
@@ -3066,7 +3066,7 @@ $cb_status=="A" || $cb_status=="D"
 				} // if (!empty($statuses))
 
 				if (!$tag_added_flag){
-					$log .= "'".$tag_name."' attention tag NOT SET based on business rules";
+					$log .= "'".$tag_name."' attention tag NOT SET based on rules";
 				}
 
 				func_log_order($orderid, 'X', $log, 'OTRS');
@@ -3268,6 +3268,7 @@ function Get_AB_Variant($point_id){
 	global $XCART_SESSION_NAME;
 	global $$XCART_SESSION_NAME;
 	global $XCARTSESSID;
+	global $detect_isMobile_was_created;
 
 //	$ab_testing_point = func_query_first("SELECT * FROM $sql_tbl[ab_testing_points] WHERE point_id='$point_id'");	
 	$ab_testing_point = func_query_first("SELECT * FROM $sql_tbl[ab_testing_points] WHERE point_id='$point_id' AND enabled='Y'");
@@ -3297,7 +3298,8 @@ function Get_AB_Variant($point_id){
 			(strpos($ab_testing_point["storefronts_enabled"], $storefront_prefix) === false) ||
 			$is_robot == "Y" ||
 			defined("IS_ROBOT") ||
-			(empty($$XCART_SESSION_NAME) && empty($XCARTSESSID))
+			(empty($$XCART_SESSION_NAME) && empty($XCARTSESSID))||
+			($ab_testing_point["exclude_mobile"] == "Y" && $detect_isMobile_was_created)
 	) {
 		$variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND is_default='Y'");
 	} else {
@@ -3908,7 +3910,7 @@ function func_convert_date_mm_dd_yyyy($date, $to_format){
 	} 
 	else {
 		
-		if (!is_int($date)){
+		if (!is_numeric($date)){
                         return $date;
                 }
 

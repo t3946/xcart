@@ -14,16 +14,18 @@ class classProducts extends classCloneData
     private $sQueueTable;
     public $changeProvider = 'cron';
 
-    public function __construct()
-    {   parent::__construct();
+    public function __construct($iId = null)
+    {
+        $this->sPrimaryTable = "products";
+        $this->sPrimaryKeyFiled = "productid";
+
+        parent::__construct($iId);
 
         $this->init();
     }
     public function init()
     {
 
-        $this->sPrimaryTable = "products";
-        $this->sPrimaryKeyFiled = "productid";
         $this->sQueueTable = "clone_products_queue";
         $this->addCounter = 0;
         $this->addFailCounter = 0;
@@ -746,14 +748,14 @@ class classProducts extends classCloneData
 
     }
 
-    protected function getProductBySKU($sSKU) {
+    public function getProductBySKU($sSKU) {
         $sSKU = addslashes($sSKU);
         $aProduct = func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE productcode = '$sSKU'");
         if (empty($aProduct)) return false;
         return $aProduct;
     }
 
-    protected function getProductIdBySKU($sSKU) {
+    public function getProductIdBySKU($sSKU) {
         $sSKU = addslashes($sSKU);
         return func_query_first_cell("SELECT ".$this->sPrimaryKeyFiled." FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE productcode = '$sSKU'");
     }
@@ -817,6 +819,10 @@ class classProducts extends classCloneData
 
     }
 
-
+    public function getManfacturerClass($iManufacurerId = null) {
+        if (!is_null($iManufacurerId))
+            return new classManufacturer($iManufacurerId);
+        else return  new classManufacturer($this->aPrimaryTableValue['manufacturerid']);
+    }
 
 }

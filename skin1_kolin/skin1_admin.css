@@ -1761,7 +1761,7 @@ input[name=weight]
 	background: #D9EAD3 none repeat scroll 0% 0%;
 	border: 1px solid;
 	position: absolute;
-	top: 36px;
+	
 	right: 0;
 	width: 430px;
 	text-align: left;
@@ -1771,4 +1771,15 @@ input[name=weight]
 input.ch_disabled {
 	background-color: threedlightshadow;
 	border: 2px solid threedlightshadow;
+}
+td.borderr-black {
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
+	border-right: 1px solid #000000;
+}
+td.borderb-gray {
+	border-bottom: 1px solid #cccccc;
+}
+.TableHead .borderr-black:last-child {
+	border-right: 1px solid #cccccc;
 }
