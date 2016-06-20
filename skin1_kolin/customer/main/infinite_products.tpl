@@ -44,7 +44,7 @@ ga('ec:addImpression', {ldelim}
   'position': {$N_key}                     // 'position' indicates the product position in the list.
 {rdelim});
                 {/foreach}
-ga('send', 'pageview');
+ga('send', 'pageview',document.location+{$ajax_navigation_page});
 //]]>
 </script>
           {/if}
