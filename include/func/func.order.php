@@ -345,19 +345,19 @@ function func_select_order($orderid) {
 	if (!empty($order['tax_info_display_cart_products_tax_rates']))
 		$order["extra"]['tax_info']['display_cart_products_tax_rates'] = $order['tax_info_display_cart_products_tax_rates'];
 
-	if (!empty($order['tax_info_taxed_subtotal']))
+	if (floatval($order['tax_info_taxed_subtotal']) > 0)
 		$order["extra"]['tax_info']['taxed_subtotal'] = $order['tax_info_taxed_subtotal'];
-	if (!empty($order['tax_info_taxed_discounted_subtotal']))
+	if (floatval($order['tax_info_taxed_discounted_subtotal']) > 0)
 		$order["extra"]['tax_info']['taxed_discounted_subtotal'] = $order['tax_info_taxed_discounted_subtotal'];
-	if (!empty($order['tax_info_taxed_shipping']))
+	if (floatval($order['tax_info_taxed_shipping']) > 0)
 		$order["extra"]['tax_info']['taxed_shipping'] = $order['tax_info_taxed_shipping'];
 
 	foreach ($price_details_names as $pn) {
-		if (!empty($order['shipping_total_'.$pn]))
+		if (floatval($order['shipping_total_'.$pn]) > 0)
 			$order["extra"]['shipping_total'][$pn] = $order['shipping_total_'.$pn];
-		if (!empty($order['product_total_'.$pn]))
+		if (floatval($order['product_total_'.$pn]) > 0)
 			$order["extra"]['product_total'][$pn] = $order['product_total_'.$pn];
-		if (!empty($order['total_'.$pn]))
+		if (floatval($order['total_'.$pn]) > 0)
 			$order["extra"]['total'][$pn] = $order['total_'.$pn];
 	}
 
