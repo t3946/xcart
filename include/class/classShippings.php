@@ -3,7 +3,7 @@ global $xcart_dir;
 require_once $xcart_dir."/include/class/classCloneData.php";
 require_once $xcart_dir."/include/class/classProducts.php";
 
-class classShipping extends classCloneData
+class classShippings extends classCloneData
 {
 
     public function __construct($iId = null)
