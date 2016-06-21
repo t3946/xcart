@@ -2,6 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir."/include/class/classCloneData.php";
 require_once $xcart_dir."/include/class/classProducts.php";
+require_once $xcart_dir."/include/class/classShipping.php";
 
 class classShippings extends classCloneData
 {
