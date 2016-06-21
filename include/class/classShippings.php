@@ -4,7 +4,7 @@ require_once $xcart_dir."/include/class/classCloneData.php";
 require_once $xcart_dir."/include/class/classProducts.php";
 require_once $xcart_dir."/include/class/classShipping.php";
 
-class classShippings extends classCloneData
+class classShippings extends classShipping
 {
 
     public function __construct($iId = null)
@@ -15,7 +15,7 @@ class classShippings extends classCloneData
     }
 
     public function getShippingInfo($iShippingId) {
-        return func_query("SELECT * FROM ".$this->sql_tbl['shipping']." WHERE shippingid = $iShippingId");
+        return func_query("SELECT * FROM ".self::$sql_tbl['shipping']." WHERE shippingid = $iShippingId");
     }
 
     public function getShippingWeight($iProductId, $iShippingId, $iAmount = 1, $aProduct = array(), $aShipping = array(), $bUseShippingParametrs = true) {
