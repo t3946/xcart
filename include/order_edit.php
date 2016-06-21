@@ -1155,7 +1155,13 @@ if ($REQUEST_METHOD == "POST") {
 				$prd = func_select_product($newproductid, $customer_membershipid, false, false, true);
 
 ###
-				if (!empty($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"]) && ($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "P" || $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "3" || $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "V" || $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "H" || $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "R" || $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "AP")){
+				if (!empty($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"]) &&
+						($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "P" ||
+								$order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "3"
+								|| $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "V"
+								|| $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "H"
+								|| $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "R"
+								|| $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "AP")){
 
                                         if (!isset($top_message["content"])){
  		                                $top_message["content"] = "";

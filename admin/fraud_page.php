@@ -464,7 +464,7 @@ if (!$curl_err){
                                                 $allow_send_to_operator = false;
                                 }
 
-                                if ($config["Autosubmit_orderentry_operator"]["ETA_date_is_present_for_at_least_one_of_the_items"] == "Y"){
+                                if ($config["Autosubmit_orderentry_operator"]["ETA_date_is_present_for_at_least_one_of_the_items"] == "Y" || $config["Autosubmit_orderentry_operator"]["Order_shipping_method_carrier"] == "Y"){
                                                 foreach ($order['shipping_groups'] as $k_group => $v_group){
                                                         foreach ($v_group["products"] as $kk_group => $vv_group){
                                                                 if (!empty($vv_group["eta_date_mm_dd_yyyy"])){
@@ -478,6 +478,10 @@ if (!$curl_err){
 
                                                                 }
                                                         }
+                                                    if (in_array($v_group['shippingid'], [20001, 20003, 20005])) { //TODO remove hardcode.
+                                                        $allow_send_to_operator = false;
+                                                        break;
+                                                    }
                                                 }
                                 }
 
