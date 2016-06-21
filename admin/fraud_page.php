@@ -478,7 +478,7 @@ if (!$curl_err){
 
                                                                 }
                                                         }
-                                                    if ($v_group['11'] == 1) {
+                                                    if (in_array($v_group['shippingid'], [20001, 20003, 20005])) { //TODO remove hardcode.
                                                         $allow_send_to_operator = false;
                                                         break;
                                                     }
