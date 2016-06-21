@@ -1155,19 +1155,18 @@ if ($REQUEST_METHOD == "POST") {
 				$prd = func_select_product($newproductid, $customer_membershipid, false, false, true);
 
 ###
-				if (!empty($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"]) && ($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "P" || $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "3" || $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "V" || $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "H" || $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "R" || $order["shipping_groups"][$prd["manufacturerid"]]["cb_status"] == "AP")){
+				if (!empty($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"]) && in_array($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"], ["P", "3", "V", "H", "R"])) {
 
-                                        if (!isset($top_message["content"])){
- 		                                $top_message["content"] = "";
-                                        }
-                                        else {
-	                                        $top_message["content"] .= "<br />";
-                                        }
+					if (!isset($top_message["content"])) {
+						$top_message["content"] = "";
+					} else {
+						$top_message["content"] .= "<br />";
+					}
 
-                                        $top_message["content"] .= func_get_langvar_by_name("txt_product_was_not_added");
-                                        $top_message["type"] = "I";
-                                        $section_name_top_message = $top_message;
-                                        x_session_save("section_name_top_message");
+					$top_message["content"] .= func_get_langvar_by_name("txt_product_was_not_added");
+					$top_message["type"] = "I";
+					$section_name_top_message = $top_message;
+					x_session_save("section_name_top_message");
 
 					continue;
 				}
@@ -1298,7 +1297,7 @@ if ($REQUEST_METHOD == "POST") {
 			foreach ($order["shipping_groups"] as $k_manufacturerid => $v_m_info){
 
 				if (!empty($v_m_info["cb_status"])){
-					if (!($v_m_info["cb_status"] == "P" || $v_m_info["cb_status"] == "3" || $v_m_info["cb_status"] == "V" || $v_m_info["cb_status"] == "H" || $v_m_info["cb_status"] == "R")){
+					if (!in_array($v_m_info["cb_status"], ["P","3","V","H","R"])){
 						$allow_to_add_fee = true;
 						break;
 					}
