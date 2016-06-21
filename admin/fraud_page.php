@@ -478,12 +478,6 @@ if (!$curl_err){
 
                                                                 }
                                                         }
-                                                    include_once $xcart_dir . "/include/class/classShippings.php";
-                                                    $classShipping = new classShipping($v_group['shippingid']);
-                                                    if ($classShipping->getField('code') == 'Amazon') {
-                                                        $allow_send_to_operator = false;
-                                                        break;
-                                                    }
                                                 }
                                 }
                                 if ($config["Autosubmit_orderentry_operator"]["Order_shipping_method_carrier"] == "Y") {
