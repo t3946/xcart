@@ -478,7 +478,9 @@ if (!$curl_err){
 
                                                                 }
                                                         }
-                                                    if (in_array($v_group['shippingid'], [20001, 20003, 20005])) { //TODO remove hardcode.
+                                                    include_once $xcart_dir . "/include/class/classShippings.php";
+                                                    $classShipping = new classShipping($v_group['shippingid']);
+                                                    if ($classShipping->getField('code') == 'Amazon') {
                                                         $allow_send_to_operator = false;
                                                         break;
                                                     }
