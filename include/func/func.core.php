@@ -2722,8 +2722,8 @@ function func_define_approximate_shippings($productid, $product_info=''){
                         $weight = $real_weight;
                     }*/
 					global $xcart_dir;
-					include_once $xcart_dir."/include/class/classShipping.php";
-					$classShipping = new classShipping();
+					include_once $xcart_dir."/include/class/classShippings.php";
+					$classShipping = new classShippings();
 					$weight = $classShipping->getShippingWeight($product_info['productid'], $shipping_id, 1, $product_info, $two_shippings[$shipping_id]);
 					unset ($classShipping);
 
