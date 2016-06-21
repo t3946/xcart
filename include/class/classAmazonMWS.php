@@ -79,6 +79,7 @@ require_once $xcart_dir . "/include/class/classProducts.php";
 
 class classAmazonMWS
 {
+    const BACK_PROCESS_LOG_NAME = 'AmazonFeeReport';
     private $oMWSService;
     private $marketplaceIdArray;
     private $dom_xml_arr;
@@ -534,7 +535,7 @@ class classAmazonMWS
 
         $this->dom_xml_arr = $this->invokeRequestReport($request);
         $log_text = 'RequestReport -> ReportRequestId:' . $this->dom_xml_arr['ReportRequestId'];
-        func_backprocess_log("AmazonMWS", $log_text);
+        func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
         return $this;
     }
 
@@ -555,7 +556,7 @@ class classAmazonMWS
         $this->dom_xml_arr = $this->invokeGetReportRequestList($request);
 
         $log_text = 'GetReportRequestList -> ReportProcessingStatus:' . $this->dom_xml_arr['ReportProcessingStatus'];
-        func_backprocess_log("AmazonMWS", $log_text);
+        func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
 
         if ($this->dom_xml_arr['ReportProcessingStatus'] == '_CANCELLED_') {
             $this->error[] = 'RequestReport ' . $this->dom_xml_arr['ReportRequestId'] . ' is CANCELED by Amazon MWS';
@@ -588,7 +589,7 @@ class classAmazonMWS
         } else {
             $log_text = 'GetReportList -> No reports found';
         }
-        func_backprocess_log("AmazonMWS", $log_text);
+        func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
 
         $this->setReportId($this->dom_xml_arr["ReportId"]);
         return $this;
@@ -610,7 +611,7 @@ class classAmazonMWS
                     $request->setReportId($reportId);
                     $this->dom_xml_arr[] = $this->invokeGetReport($request);
                     $log_text = 'GetReport -> ReportId:' . $reportId;
-                    func_backprocess_log("AmazonMWS", $log_text);
+                    func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
                 }
             }
         }
@@ -633,7 +634,7 @@ class classAmazonMWS
             $this->invokeUpdateReportAcknowledgements($request);
 
             $log_text = 'UpdateReportAcknowledgements -> ReportId:' . $iReportId;
-            func_backprocess_log("AmazonMWS", $log_text);
+            func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
         }
 
         return $this;
@@ -680,7 +681,7 @@ class classAmazonMWS
         if (!empty($ReportContent)) {
 
             $log_text = "Processing " . count($ReportContent) . " reports";
-            func_backprocess_log("AmazonMWS", $log_text);
+            func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
 
             foreach ($ReportContent as $report_data) {
                 $cntLine = 0;
@@ -698,7 +699,7 @@ class classAmazonMWS
                 }
                 $aReportData = [];
                 $log_text = "Processing " . count($aReportValue) . " products";
-                func_backprocess_log("AmazonMWS", $log_text);
+                func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
                 for ($y = 0; $y < count($aReportValue); $y++) {
                     foreach ($aReportValue[$y] as $iKey => $sItem) {
                         if ($y == 0) {
@@ -724,7 +725,7 @@ class classAmazonMWS
     {
         $this->fillReportFeeDataFromFile();
 
-        $aFieldsToUpdate = ['productid', 'longest_side', 'median_side', 'shortest_side', 'length_and_girth', 'unit_of_dimension',
+        $aFieldsToUpdate = ['productid', 'fnsku', 'asin', 'longest_side', 'median_side', 'shortest_side', 'length_and_girth', 'unit_of_dimension',
             'item_package_weight', 'unit_of_weight', 'product_size_tier', 'estimated_fee_total', 'estimated_referral_fee_per_unit', 'estimated_variable_closing_fee',
             'estimated_order_handling_fee_per_order', 'estimated_pick_pack_fee_per_unit', 'estimated_weight_handling_fee_per_unit', 'amazon_fee_preview_last_update_date'];
         $aFieldsToUpdate = array_flip($aFieldsToUpdate);
@@ -732,7 +733,8 @@ class classAmazonMWS
             foreach ($aReport as $aItem) {
                 $aArrInsert = array_intersect_key($aItem, $aFieldsToUpdate);
                 $aArrInsert['amazon_fee_preview_last_update_date'] = time();
-                func_array2insert('products_amz_fields', $aArrInsert, true);
+                if (!empty($aArrInsert['productid']))
+                    func_array2insert('products_amz_fields', $aArrInsert, true);
             }
         return $this;
     }

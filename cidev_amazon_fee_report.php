@@ -21,9 +21,9 @@ db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
-func_backprocess_log("AmazonMWS", $log_text);
 
 $classAmazonMWS = new classAmazonMWS();
+func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME, $log_text);
 
 $classAmazonMWS->_Request('RequestReport')
     ->_Request('GetReportRequestList')
@@ -46,6 +46,6 @@ $str_time = sprintf("%02d:%02d:%02d", $hour, $minutes, $seconds);
 
 $log_text = "Cron completed. ";
 $log_text .= "Processing time: $str_time";
-func_backprocess_log("AmazonMWS", $log_text);
+func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME, $log_text);
 
 die("DONE!");
