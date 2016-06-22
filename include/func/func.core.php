@@ -3033,11 +3033,48 @@ function func_new_mail_notification($v_arr){
 
 				$statuses = func_query("SELECT cb_status, dc_status, bd_status FROM $sql_tbl[order_groups] WHERE orderid='$orderid'");
 
+				foreach ($statuses as $k => $v) {
+					$aRule = func_query_first("SELECT xo.* , xoc.name as cb_name, xod.name as dc_name, xob.name as bd_name
+											  FROM $sql_tbl[cidev_otrs_new_message_rules] xo
+											  INNER JOIN $sql_tbl[order_statuses] xoc ON '$v[cb_status]' = xoc.code
+											  INNER JOIN $sql_tbl[order_statuses] xod ON '$v[dc_status]' = xod.code
+											  INNER JOIN $sql_tbl[order_statuses] xob ON '$v[bd_status]' = xob.code
+											 WHERE (cb_status = '$v[cb_status]' OR cb_status = '*') AND
+												   (dc_status = '$v[dc_status]' OR dc_status = '*') AND
+												   (bd_status = '$v[bd_status]' OR bd_status = '*')
+											ORDER BY cb_status DESC, dc_status DESC, bd_status DESC");
+					if (!empty($aRule) && is_array($aRule))
+						$aRules[] = $aRule;
+				}
+
 				$log = "New OTRS message notification.<br />";
 
 				$tag_added_flag = false;
 
-				if (!empty($statuses)){
+				if (!empty($aRules) && is_array($aRules)) {
+					foreach ($aRules as $aRule) {
+						switch ($aRule['action']) {
+							case 'Include':
+								db_query("DELETE FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$status_id'");
+								db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '$status_id')");
+								$log .= "RuleID:$aRule[rule_id]; CB:$aRule[cb_name], DC:$aRule[dc_name], BD:$aRule[bd_name]<br />";
+								$log .= "'".$tag_name."' attention tag SET based on rules";
+								$tag_added_flag = true;
+								break;
+							case 'Exclude':
+								$log .= "RuleID:$aRule[rule_id]; CB:$aRule[cb_name], DC:$aRule[dc_name], BD:$aRule[bd_name]<br />";
+								break;
+						}
+						if ($tag_added_flag) break;
+					}
+				}
+
+				if (!$tag_added_flag)
+					$log .= "'".$tag_name."' attention tag NOT SET based on rules";
+
+
+
+/*				if (!empty($statuses)){
 					foreach ($statuses as $k => $v){
 
 						$cb_status = $v["cb_status"];
@@ -3045,13 +3082,14 @@ function func_new_mail_notification($v_arr){
 						$bd_status = $v["bd_status"];
 
 						if (
-(
-($cb_status=="AP" || $cb_status=="P" || $cb_status=="O" || $cb_status=="H" || $cb_status=="R" || $cb_status=="N") && ($dc_status=="C" || $dc_status=="L" || $dc_status=="B" || $dc_status=="G" || $dc_status=="S" || $dc_status=="T" || $dc_status=="E")
-)
-||
-(
-$cb_status=="A" || $cb_status=="D"
-)
+								(
+										($cb_status == "AP" || $cb_status == "P" || $cb_status == "O" || $cb_status == "H" || $cb_status == "R" || $cb_status == "N") &&
+										($dc_status == "C" || $dc_status == "L" || $dc_status == "B" || $dc_status == "G" || $dc_status == "S" || $dc_status == "T" || $dc_status == "E")
+								)
+								||
+								(
+										$cb_status == "A" || $cb_status == "D"
+								)
 						) {
 							db_query("DELETE FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$status_id'");
 							db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '$status_id')");
@@ -3063,11 +3101,11 @@ $cb_status=="A" || $cb_status=="D"
 						}
 	
 					}
-				} // if (!empty($statuses))
+				}
 
 				if (!$tag_added_flag){
 					$log .= "'".$tag_name."' attention tag NOT SET based on rules";
-				}
+				}*/
 
 				func_log_order($orderid, 'X', $log, 'OTRS');
                 print("OK");
