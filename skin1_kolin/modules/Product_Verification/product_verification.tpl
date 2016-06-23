@@ -202,6 +202,9 @@
             $('select[data-product-verification-id='+key+']:visible').attr('data-order-id',value);
         });
 
+        $('#send_note_for_product').next('table').find('tr:even').removeClass('TableSubHead');
+        $('#send_note_for_product').next('table').find('tr:odd').addClass('TableSubHead');
+
         $('.change_product_verify_status').on('change','', function () {
             var statusid = $(this).val();
             $('#verified_product_id').val($(this).data('product-verification-id'));
