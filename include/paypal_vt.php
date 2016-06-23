@@ -481,6 +481,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     $result["FIELD_transaction_status"] = $transaction_status;
     $result["FIELD_transaction_currency"] = $transaction_currency;
     $result["FIELD_transaction_total"] = $transaction_total;
+    $result["POST_params"] = $data_arr;
 
     $serialize_result = serialize($result);
 
