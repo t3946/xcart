@@ -250,22 +250,32 @@ window.attachEvent("onload", anchor_fix);
 	var ga_page_name = '{/literal}{$ga_page_name}{literal}';
 
 	if (obj){
-	$.each(obj.items, function() {
+        $.each(obj.items, function () {
+            if (this.clean_url != '') {
+                a_href = this.clean_url + '/';
+            } else {
+                a_href = 'product.php?productid=' + this.productid;
+            }
+            ga_page_name = this.ga_param;
+            html += '<li class="active">' +
+                    '<div style="text-align: center;">' +
+                    '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>' +
+                    '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">' + this.title + '</a>' +
+                    '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price + '</font>' +
+                    '</div>' +
+                    '</li>';
 
-		if (this.clean_url != ''){
-			a_href = this.clean_url+'/';
-		} else {
-			a_href = 'product.php?productid='+ this.productid;
-		}
-        ga_page_name = this.ga_param;
-                html += '<li class="active">'+
-			  '<div style="text-align: center;">'+
-			  '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>'+
-			  '<br />'+ '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;">' + this.title + '</a>'+
-			  '<br /> <font class="ProductPrice">Our Price: US$ '+ this.price + '</font>'+
-			  '</div>'+
-			'</li>';
-	});
+            ga('ec:addImpression', {
+                'id': this.productid,                   // Product details are provided in an impressionFieldObject.
+                'name': this.product,
+                'category': this.category,
+                'brand': this.brand,
+                'list': ga_page_name,
+                'price': this.price,
+                'position': this.N_key
+            });
+        });
+        ga('send', 'pageview');
 	}
 
 	html += '</ul>';
