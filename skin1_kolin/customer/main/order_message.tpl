@@ -45,29 +45,6 @@
 <td width="*" align="right">{include file="buttons/button.tpl" button_title=$lng.lbl_continue_shopping style="button" href="home.php"}</td>
 </tr>
 </table>
-
-<!-- Google Code for Conv1 Conversion Page -->
-<script type="text/javascript">
-/* <![CDATA[ */
-var google_conversion_id = 1072406910;
-var google_conversion_language = "en";
-var google_conversion_format = "3";
-var google_conversion_color = "ffffff";
-var google_conversion_label = "-aK7CL7LwWMQ_sKu_wM";
-var google_conversion_value = {$orders[0].order.total};
-var google_conversion_currency = "USD";
-var google_remarketing_only = false;
-/* ]]> */
-</script>
-<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
-</script>
-<noscript>
-<div style="display:inline;">
-<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/1072406910/?value={$orders[0].order.total}&amp;currency_code=USD&amp;label=-aK7CL7LwWMQ_sKu_wM&amp;guid=ON&amp;script=0"/>
-</div>
-</noscript>
-
-
 {/if}
 {/capture}
 {include file="dialog.tpl" title=$lng.lbl_invoice content=$smarty.capture.dialog extra='width="100%"'}
