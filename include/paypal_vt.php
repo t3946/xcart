@@ -163,10 +163,10 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 		        "transactions":[
                 		{
 		                        "amount":{
-                		                "total":"'.$paypal_vt["grand_total"].'",
+                		                "total":"'.number_format($paypal_vt["grand_total"],2).'",
 		                                "currency":"'.$paypal_vt["currency"].'",
                 		                "details":{
-		                                        "subtotal":"'.$paypal_vt["grand_total"].'",
+		                                        "subtotal":"'.number_format($paypal_vt["grand_total"],2).'",
                 		                        "tax":"0.00",
                                 		        "shipping":"0.00"
 		                                }
