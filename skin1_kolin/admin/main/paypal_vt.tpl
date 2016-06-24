@@ -37,7 +37,7 @@ function func_AJAX_authorize_PayPal() {
 				if(cidev_xmlHttp.status==200){
 					var paypal_response = cidev_xmlHttp.responseText;
 
-					alert(paypal_response);
+					//alert(paypal_response);
 
 					if (paypal_response == "Authorized" || paypal_response == "Faild"){
 						$("#AJAX_Please_wait").show();

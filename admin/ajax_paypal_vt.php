@@ -22,7 +22,7 @@ if ($mode == "authorize" && $AJAX_SUBMIT == "Y"){
 	if (!empty($transaction_id)){
 		print("Authorized");
 	} else {
-		print("Faild");
+		print("Failed");
 	}
 }
 
