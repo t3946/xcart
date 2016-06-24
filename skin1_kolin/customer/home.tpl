@@ -884,14 +884,7 @@ document.body.appendChild(element12);
 
 {/literal}
 {/if}
-{literal}
-*/
 
-var element13 = document.createElement("script");
-element13.src = "//www.googleadservices.com/pagead/conversion.js";
-document.body.appendChild(element13);
-
-{/literal}
 {if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search" || 1==1}
 {literal}
     var element14 = document.createElement("script");
