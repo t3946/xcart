@@ -1466,9 +1466,11 @@ if ($product_info['clone_parent_productid'] > 0) {
 	$aParentProduct = $classProduct->getProductInfo($product_info['clone_parent_productid']);
 	$product_info["parent_product"] = $aParentProduct;
 } else {
-	$aChildProducts = $classProduct->getChildProducts($product_info['productid']);
-	if (isset($aChildProducts) && !empty($aChildProducts)) {
-		$product_info["child_products"] = $aChildProducts;
+	if (!empty($product_info['productid'])) {
+		$aChildProducts = $classProduct->getChildProducts($product_info['productid']);
+		if (isset($aChildProducts) && !empty($aChildProducts)) {
+			$product_info["child_products"] = $aChildProducts;
+		}
 	}
 }
 
