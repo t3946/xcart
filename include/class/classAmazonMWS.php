@@ -80,14 +80,16 @@ require_once $xcart_dir . "/include/class/classProducts.php";
 class classAmazonMWS
 {
     const BACK_PROCESS_LOG_NAME = 'AmazonFeeReport';
+    const BACK_PROCESS_LOG_NAME_SETTLEMENT = 'Amazon_Reports_Cron';
     private $oMWSService;
     private $marketplaceIdArray;
     private $dom_xml_arr;
     private $aWaitLoopExitCondition = [];
     private $aReportValue = [];
-    private $aReportIds;
+    private $aReportIds = [];
     private $sleepTimeOut = 60;
     public $error = [];
+    private $amazonReportType;
 
 
     public function __construct()
@@ -107,6 +109,7 @@ class classAmazonMWS
             APPLICATION_VERSION);
 
         $this->marketplaceIdArray = array("Id" => array('ATVPDKIKX0DER'));
+        $this->amazonReportType = '_GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA_';
     }
 
     private function invokeGetReport($request)
@@ -574,7 +577,8 @@ class classAmazonMWS
         $this->setTimeOut(60);
 
         $req = new MarketplaceWebService_Model_TypeList();
-        $req->withType('_GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA_');
+
+        $req->withType($this->amazonReportType);
 
         $request = new MarketplaceWebService_Model_GetReportListRequest();
         $request->setMerchant(MERCHANT_ID);
@@ -642,7 +646,12 @@ class classAmazonMWS
 
     public function setReportId($aReportId)
     {
-        $this->aReportIds = $aReportId;
+        $this->aReportIds[] = $aReportId;
+        return $this;
+    }
+
+    public function setReportType($sReportType) {
+        $this->amazonReportType = $sReportType;
         return $this;
     }
 
@@ -737,6 +746,60 @@ class classAmazonMWS
                     func_array2insert('products_amz_fields', $aArrInsert, true);
             }
         return $this;
+    }
+
+    public function processReportSettlementData()
+    {
+        x_load('xml');
+        $ReportContent = $this->getReportContent();
+        if (!empty($ReportContent)) {
+
+            $log_text = "Processing " . count($ReportContent) . " reports";
+            func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
+
+            $err = '';
+            foreach ($ReportContent as $report_data) {
+
+                $findme_arr = array("Order", "Refund", "Fee", "Component", "Item", "AdjustedItem");
+
+                foreach ($findme_arr as $findme){
+                    $pos = strpos($report_data, "<$findme>");
+                    if ($pos !== "false"){
+                        $dom_xml_arr = explode("<$findme>",$report_data);
+                        $count_dom_xml_arr = count($dom_xml_arr);
+                        $report_data = "";
+                        foreach ($dom_xml_arr as $k => $v){
+                            $k_n = $k-1;
+                            $v = str_replace("</$findme>","</$findme$k_n>",$v);
+                            $report_data .= $v.($k != ($count_dom_xml_arr-1)?"<$findme$k>":"");
+                        }
+                    }
+                }
+                $aXmlReportConent = func_xml2hash($report_data, "UTF-8");
+
+                if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_array($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"])) {
+
+                    $order_not_found = false;
+
+                    foreach ($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"] as $k => $v) {
+                        if (!empty($v["AmazonOrderID"]) && !empty($v["ShipmentID"])){
+                            $log_text = "order processed: <AmazonOrderID>".$v["AmazonOrderID"]."</AmazonOrderID><ShipmentID>".$v["ShipmentID"]."</ShipmentID>";
+                            func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
+                            switch ($v["Fulfillment"]["MerchantFulfillmentID"]) {
+                                case 'MFN':
+
+                                    break;
+                                case 'AFN':
+                                    break;
+                            }
+                        }
+
+                    }
+                }
+
+
+            }
+        }
     }
 
     public function _Request($_request)
