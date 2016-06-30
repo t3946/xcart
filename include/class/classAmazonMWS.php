@@ -90,10 +90,12 @@ class classAmazonMWS
     private $sleepTimeOut = 60;
     public $error = [];
     private $amazonReportType;
+    private $sql_tbl;
 
 
     public function __construct()
     {
+        global $sql_tbl;
         $a_config = array(
             'ServiceURL' => "https://mws.amazonservices.com",
             'ProxyHost' => null,
@@ -110,6 +112,8 @@ class classAmazonMWS
 
         $this->marketplaceIdArray = array("Id" => array('ATVPDKIKX0DER'));
         $this->amazonReportType = '_GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA_';
+
+        $this->sql_tbl = $sql_tbl;
     }
 
     private function invokeGetReport($request)
@@ -437,7 +441,6 @@ class classAmazonMWS
             echo("            ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
 
 
-
         } catch (MarketplaceWebService_Exception $ex) {
             echo("Caught Exception: " . $ex->getMessage() . "\n");
             echo("Response Status Code: " . $ex->getStatusCode() . "\n");
@@ -516,7 +519,8 @@ class classAmazonMWS
         }
     }
 
-    public function setTimeOut($iTimeOut){
+    public function setTimeOut($iTimeOut)
+    {
         $this->sleepTimeOut = $iTimeOut;
         return $this;
     }
@@ -650,7 +654,8 @@ class classAmazonMWS
         return $this;
     }
 
-    public function setReportType($sReportType) {
+    public function setReportType($sReportType)
+    {
         $this->amazonReportType = $sReportType;
         return $this;
     }
@@ -660,7 +665,10 @@ class classAmazonMWS
         $res = false;
         if (!empty($this->aWaitLoopExitCondition)) {
             foreach ($this->aWaitLoopExitCondition as $key => $value) {
-                if ($this->dom_xml_arr[key($value)] == $value[key($value)]) {$res = true; break;}
+                if ($this->dom_xml_arr[key($value)] == $value[key($value)]) {
+                    $res = true;
+                    break;
+                }
             }
         } else $res = true;
         return $res;
@@ -758,51 +766,113 @@ class classAmazonMWS
             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
             $err = '';
+            $aOrderDetails = [];
             foreach ($ReportContent as $report_data) {
 
                 $findme_arr = array("Order", "Refund", "Fee", "Component", "Item", "AdjustedItem");
 
-                foreach ($findme_arr as $findme){
+                foreach ($findme_arr as $findme) {
                     $pos = strpos($report_data, "<$findme>");
-                    if ($pos !== "false"){
-                        $dom_xml_arr = explode("<$findme>",$report_data);
+                    if ($pos !== "false") {
+                        $dom_xml_arr = explode("<$findme>", $report_data);
                         $count_dom_xml_arr = count($dom_xml_arr);
                         $report_data = "";
-                        foreach ($dom_xml_arr as $k => $v){
-                            $k_n = $k-1;
-                            $v = str_replace("</$findme>","</$findme$k_n>",$v);
-                            $report_data .= $v.($k != ($count_dom_xml_arr-1)?"<$findme$k>":"");
+                        foreach ($dom_xml_arr as $k => $v) {
+                            $k_n = $k - 1;
+                            $v = str_replace("</$findme>", "</$findme$k_n>", $v);
+                            $report_data .= $v . ($k != ($count_dom_xml_arr - 1) ? "<$findme$k>" : "");
                         }
                     }
                 }
                 $aXmlReportConent = func_xml2hash($report_data, "UTF-8");
 
-                if (!empty($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_array($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"])) {
+                if (!empty($aXmlReportConent["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_array($aXmlReportConent["AmazonEnvelope"]["Message"]["SettlementReport"])) {
 
-                    $order_not_found = false;
+                    foreach ($aXmlReportConent["AmazonEnvelope"]["Message"]["SettlementReport"] as $k => $v) {
+                        if (!empty($v["AmazonOrderID"]) && !empty($v["ShipmentID"])) {
 
-                    foreach ($dom_xml_arr["AmazonEnvelope"]["Message"]["SettlementReport"] as $k => $v) {
-                        if (!empty($v["AmazonOrderID"]) && !empty($v["ShipmentID"])){
-                            $log_text = "order processed: <AmazonOrderID>".$v["AmazonOrderID"]."</AmazonOrderID><ShipmentID>".$v["ShipmentID"]."</ShipmentID>";
-                            func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
-                            switch ($v["Fulfillment"]["MerchantFulfillmentID"]) {
-                                case 'MFN':
+                            $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl[orders] . " WHERE amazonorderid='$v[AmazonOrderID]'");
+                            $order_info = true;
+                            if (!empty($order_info)) {
 
-                                    break;
-                                case 'AFN':
-                                    break;
+                                $log_text = "order processed: <AmazonOrderID>" . $v["AmazonOrderID"] . "</AmazonOrderID><ShipmentID>" . $v["ShipmentID"] . "</ShipmentID>";
+
+                                func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
+                                $aUpdateFields = [];
+                                switch ($v["Fulfillment"]["MerchantFulfillmentID"]) {
+                                    case 'MFN':
+                                        $aUpdateFields['acc_paymentid'] = 1;
+                                        break;
+                                    case 'AFN':
+                                        $aUpdateFields['acc_paymentid'] = 101;
+                                        break;
+                                }
+                                //func_array2update('order_groups', $aUpdateFields, 'orderid = ' . $order_info['orderid']);
+
+
+                                if (strpos($k, "Order") !== false) {
+                                    $k_name = "Item";
+                                } elseif (strpos($k, "Refund") !== false) {
+                                    $k_name = "AdjustedItem";
+                                }
+
+                                foreach ($v["Fulfillment"] as $kk => $vv) {
+                                    if ($k_name == "Item") {
+                                        if (!empty($vv["ItemFees"])) {
+                                            $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Quantity'] += $vv['Quantity'];
+                                            $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['SKU'] = $vv['SKU'];
+                                            $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['orderid'] = $order_info['orderid'];
+
+                                            foreach ($vv["ItemFees"] as $kkk => $vvv) {
+                                                if (in_array($vvv["Type"], array("FBAPerOrderFulfillmentFee", "FBAPerUnitFulfillmentFee", "FBAWeightBasedFee", "Commission"))) {
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] += floatVal($vvv["Amount"]);
+                                                }
+                                            }
+
+                                        }
+
+                                    }
+                                }
+
                             }
                         }
-
                     }
                 }
 
+                foreach ($aOrderDetails as $sAmazonOrderId => $aShippings)
+                    foreach ($aShippings as $sShippingId => $aFees) {
+                        $aOrderDetailData = [];
+                        $aOrderDetailData['FBAPerOrderFulfillmentFee'] = floatval($aFees['FBAPerOrderFulfillmentFee']);
+                        $aOrderDetailData['FBAPerUnitFulfillmentFee'] = floatval($aFees['FBAPerUnitFulfillmentFee']);
+                        $aOrderDetailData['FBAWeightBasedFee'] = floatval($aFees['FBAWeightBasedFee']);
+                        $aOrderDetailData['AmazonCommission'] = floatval($aFees['Commission']);
+                        $aOrderDetailData['orderid'] = intval($aFees['orderid']);
+                        $aOrderDetailData['amount'] = intval($aFees['Quantity']);
+                        $aOrderDetailData['back'] = 0;
+                        $aOrderDetailData['product_options'] = '';
+                        $aOrderDetailData['extra_data'] = '';
 
+                        $oClassProducts = new classProducts();
+                        $aProduct = $oClassProducts->getProductBySKU($aFees['SKU']);
+                        if (!empty($aProduct['productid'])) {
+                            $aOrderDetailData['productid'] = (int) $aProduct['productid'];
+                            $aOrderDetailData['price'] = floatval($aProduct['price']);
+                        }
+
+                        if (!empty($aOrderDetailData)) {
+                            //db_query("DELETE FROM " . $this->sql_tbl['order_details'] . " WHERE orderid=$iOrderid");
+                            //func_array2insert('order_details', $aOrderDetailData);
+                        }
+                    }
+
+
+                var_dump($aOrderDetails);
             }
         }
     }
 
-    public function _Request($_request)
+    public
+    function _Request($_request)
     {
 
         $methodName = 'do' . $_request;
