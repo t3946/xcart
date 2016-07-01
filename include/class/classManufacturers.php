@@ -2,7 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir."/include/class/classCloneData.php";
 
-class classManufacturer extends classCloneData
+class classManufacturers extends classCloneData
 {
 
     public function __construct($iId = null)
@@ -238,7 +238,7 @@ class classManufacturer extends classCloneData
     }
 
     public function getManufacturerByCode($sManufacturerCode) {
-        return func_query_first("SELECT * FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE code = '$sManufacturerCode'");
+        return func_query_first("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE code = '$sManufacturerCode'");
     }
 
     private function getCloneManufacturerPrefix ($oldPrefix, $storePrefix) {
@@ -291,20 +291,20 @@ class classManufacturer extends classCloneData
         $aRes = false;
         $globalLanguage = empty($GLOBALS['shop_language'])?"US":$GLOBALS['shop_language'];
         if (isset($aManufacturersId) && !empty($aManufacturersId))
-            $aRes = func_query("SELECT m.".$this->sPrimaryKeyFiled.", m.code, ml.manufacturer, d_main_sf, sf.domain,  root_categoryid_for_cloned_products, parent_manufacturer_id
-                      FROM ".$this->sql_tbl[$this->sPrimaryTable]." m
-                      LEFT JOIN ".$this->sql_tbl['storefronts']." sf ON (sf.storefrontid = m.d_main_sf)
-                      LEFT JOIN ".$this->sql_tbl['manufacturers_lng']." ml ON (m.".$this->sPrimaryKeyFiled." = ml.".$this->sPrimaryKeyFiled.")
+            $aRes = func_query("SELECT m.*, sf.domain
+                      FROM ".self::$sql_tbl[$this->sPrimaryTable]." m
+                      LEFT JOIN ".self::$sql_tbl['storefronts']." sf ON (sf.storefrontid = m.d_main_sf)
+                      LEFT JOIN ".self::$sql_tbl['manufacturers_lng']." ml ON (m.".$this->sPrimaryKeyFiled." = ml.".$this->sPrimaryKeyFiled.")
                       WHERE m.".$this->sPrimaryKeyFiled." IN(".implode(',',$aManufacturersId).") AND ml.code = '".$globalLanguage."'");  //TODO remove GLOBALS
         return $aRes;
     }
 
     public function getManufacturerCodeById($iManufacturerId) {
-        return func_query_first_cell("SELECT code FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = $iManufacturerId");
+        return func_query_first_cell("SELECT code FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = $iManufacturerId");
     }
 
     public function getChildrenManufacturers ($iManufacturerId){
-        $aManufacturer = func_query("SELECT ".$this->sPrimaryKeyFiled." FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE parent_manufacturer_id = ".$iManufacturerId);
+        $aManufacturer = func_query("SELECT ".$this->sPrimaryKeyFiled." FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE parent_manufacturer_id = ".$iManufacturerId);
 
         if (isset($aManufacturer) && is_array($aManufacturer) && !empty($aManufacturer)) {
             $aParents = array();
@@ -318,7 +318,7 @@ class classManufacturer extends classCloneData
     }
 
     public function getParentManufacturers ($iManufacturerId){
-        $aManufacturer = func_query("SELECT parent_manufacturer_id FROM ".$this->sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = ".$iManufacturerId);
+        $aManufacturer = func_query("SELECT parent_manufacturer_id FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE ".$this->sPrimaryKeyFiled." = ".$iManufacturerId);
         if (isset($aManufacturer) && is_array($aManufacturer) && !empty($aManufacturer)) {
             $aParents = array();
 
@@ -331,7 +331,7 @@ class classManufacturer extends classCloneData
     }
 
     public function getProductsByManufacturer($iManufacturerid) {
-        return func_query("SELECT * FROM ".$this->sql_tbl['products']." WHERE forsale = 'Y' AND manufacturerid = $iManufacturerid");
+        return func_query("SELECT * FROM ".self::$sql_tbl['products']." WHERE forsale = 'Y' AND manufacturerid = $iManufacturerid");
     }
 
     public function addProductsToQueue ($iManufacturerid, $product_to_copy_manufacturer) {
@@ -349,8 +349,8 @@ class classManufacturer extends classCloneData
 
     public function getStoreFronInfo ($iStoreFrontId) {
         return func_query_first("SELECT xs.*, xs1.value AS sfprefix
-              FROM ".$this->sql_tbl['storefronts']." xs
-                   LEFT JOIN ".$this->sql_tbl['storefronts_config']." xs1 USING (storefrontid)
+              FROM ".self::$sql_tbl['storefronts']." xs
+                   LEFT JOIN ".self::$sql_tbl['storefronts_config']." xs1 USING (storefrontid)
              WHERE xs.storefrontid = $iStoreFrontId AND xs1.name = 'opt_order_prefix'");
     }
 }

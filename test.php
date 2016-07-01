@@ -9,7 +9,25 @@ global $xcart_dir, $config;
 require_once $xcart_dir . "/include/class/classAmazonMWS.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
 
-$classOrderGroup = new classOrderGroup(['orderid'=>33, 'manufacturerid'=>3]);
+$classOrderGroup = new classOrderGroup(['orderid'=>62713, 'manufacturerid'=>12]);
+
+$classOrderGroup->printAccounting();
+
+$classOrderGroup
+    ->addAccountingNet(-1)
+    ->addAccountingGross(-1)
+    ->addAccountingNetCostToUs(3)
+    ->addAccountingGrossCostToUs(3)
+    ->addAccountingNetShipping(6)
+    ->addAccountingGrossShipping(6)
+    ->addAccountingNetRefundToCustomer(8)
+    ->addAccountingGrossRefundToCustomer(8)
+    ->addAccountingNetRefundToUs(10)
+    ->addAccountingGrossRefundToUs(10)
+    ->recalculateAccounting()
+;
+
+$classOrderGroup->printAccounting();
 
 exit;
 
