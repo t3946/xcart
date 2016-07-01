@@ -7,6 +7,11 @@ require "./init.php";
 
 global $xcart_dir, $config;
 require_once $xcart_dir . "/include/class/classAmazonMWS.php";
+require_once $xcart_dir . "/include/class/classOrderGroup.php";
+
+$classOrderGroup = new classOrderGroup(['orderid'=>33, 'manufacturerid'=>3]);
+
+exit;
 
 $classAmazonMWS = new classAmazonMWS();
 func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
