@@ -789,10 +789,20 @@ class classAmazonMWS
                 if (!empty($aXmlReportConent["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_array($aXmlReportConent["AmazonEnvelope"]["Message"]["SettlementReport"])) {
 
                     foreach ($aXmlReportConent["AmazonEnvelope"]["Message"]["SettlementReport"] as $k => $v) {
+                        $RefundSum = 0;
+
+                        $k_name = '';
+
+                        if (strpos($k, "Order") !== false) {
+                            $k_name = "Item";
+                        } elseif (strpos($k, "Refund") !== false) {
+                            $k_name = "AdjustedItem";
+                        }
+                        if ($k_name == 'AdjustedItem' && !empty($v["AdjustmentID"])) $v["ShipmentID"] = $v["AdjustmentID"];
                         if (!empty($v["AmazonOrderID"]) && !empty($v["ShipmentID"])) {
 
-                            $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl[orders] . " WHERE amazonorderid='$v[AmazonOrderID]'");
-                            $order_info = true;
+                            $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl['orders'] . " WHERE amazonorderid='$v[AmazonOrderID]'");
+                            $order_info = true; //убрать
                             if (!empty($order_info)) {
 
                                 $log_text = "order processed: <AmazonOrderID>" . $v["AmazonOrderID"] . "</AmazonOrderID><ShipmentID>" . $v["ShipmentID"] . "</ShipmentID>";
@@ -810,27 +820,76 @@ class classAmazonMWS
                                 //func_array2update('order_groups', $aUpdateFields, 'orderid = ' . $order_info['orderid']);
 
 
-                                if (strpos($k, "Order") !== false) {
-                                    $k_name = "Item";
-                                } elseif (strpos($k, "Refund") !== false) {
-                                    $k_name = "AdjustedItem";
-                                }
+
+                                $mid_info = [];
+                                $cost_to_us = 0;
 
                                 foreach ($v["Fulfillment"] as $kk => $vv) {
+
+                                    /*$oProducts = new classProducts();
+                                    $aProduct = $oProducts->getProductBySKU($vv['SKU']);
+
+                                    $cost_to_us = $aProduct['cost_to_us'];*/
+
+
                                     if ($k_name == "Item") {
                                         if (!empty($vv["ItemFees"])) {
                                             $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Quantity'] += $vv['Quantity'];
-                                            $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['SKU'] = $vv['SKU'];
+                                            $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['SKU'] = addslashes($vv['SKU']);
                                             $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['orderid'] = $order_info['orderid'];
+                                            $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['type'] = 'Fee';
 
                                             foreach ($vv["ItemFees"] as $kkk => $vvv) {
                                                 if (in_array($vvv["Type"], array("FBAPerOrderFulfillmentFee", "FBAPerUnitFulfillmentFee", "FBAWeightBasedFee", "Commission"))) {
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] += floatVal($vvv["Amount"]);
+
                                                 }
                                             }
 
                                         }
 
+                                        if (!empty($vv["ItemPrice"])) {
+                                            foreach ($vv["ItemPrice"] as $kkk => $vvv) {
+                                                if (in_array($vvv["Type"], array("Principal", "Shipping"))) {
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] = floatVal($vvv["Amount"]);
+                                                }
+                                            }
+                                        }
+
+                                    } elseif ($k_name == "AdjustedItem") {
+
+                                        if (!empty($vv["ItemPriceAdjustments"]) && is_array($vv["ItemPriceAdjustments"])) {
+                                            foreach ($vv["ItemPriceAdjustments"] as $kkk => $vvv) {
+                                                $field_name = $vvv["Type"];
+                                                if (($field_name == "Principal" || $field_name == "Shipping") && !empty($vvv["Amount"])) {
+                                                    $RefundSum += $vvv["Amount"];
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += floatVal($vvv["Amount"]);
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['SKU'] = addslashes($vv['SKU']);
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['type'] = 'Refund';
+                                                }
+                                                switch ($field_name) {
+                                                    case "Principal":
+                                                        $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Principal'] = abs(floatVal($vvv["Amount"]));
+                                                        break;
+                                                    case "Shipping":
+                                                        $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Shipping'] = abs(floatVal($vvv["Amount"]));
+                                                        break;
+                                                }
+                                            }
+
+                                        }
+
+                                        if (!empty($vv["ItemFeeAdjustments"]) && is_array($vv["ItemFeeAdjustments"])) {
+                                            foreach ($vv["ItemFeeAdjustments"] as $kkk => $vvv) {
+                                                $field_name = $vvv["Type"];
+                                                if (($field_name == "Commission" || $field_name == "RefundCommission" || $field_name == "VariableClosingFee") && !empty($vvv["Amount"])) {
+                                                    $RefundSum += $vvv["Amount"];
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += floatVal($vvv["Amount"]);
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['SKU'] = addslashes($vv['SKU']);
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['type'] = 'Refund';
+                                                }
+                                            }
+                                        }
                                     }
                                 }
 
@@ -839,40 +898,55 @@ class classAmazonMWS
                     }
                 }
 
-                foreach ($aOrderDetails as $sAmazonOrderId => $aShippings)
-                    foreach ($aShippings as $sShippingId => $aFees) {
-                        $aOrderDetailData = [];
-                        $aOrderDetailData['FBAPerOrderFulfillmentFee'] = floatval($aFees['FBAPerOrderFulfillmentFee']);
-                        $aOrderDetailData['FBAPerUnitFulfillmentFee'] = floatval($aFees['FBAPerUnitFulfillmentFee']);
-                        $aOrderDetailData['FBAWeightBasedFee'] = floatval($aFees['FBAWeightBasedFee']);
-                        $aOrderDetailData['AmazonCommission'] = floatval($aFees['Commission']);
-                        $aOrderDetailData['orderid'] = intval($aFees['orderid']);
-                        $aOrderDetailData['amount'] = intval($aFees['Quantity']);
-                        $aOrderDetailData['back'] = 0;
-                        $aOrderDetailData['product_options'] = '';
-                        $aOrderDetailData['extra_data'] = '';
 
-                        $oClassProducts = new classProducts();
-                        $aProduct = $oClassProducts->getProductBySKU($aFees['SKU']);
-                        if (!empty($aProduct['productid'])) {
-                            $aOrderDetailData['productid'] = (int) $aProduct['productid'];
-                            $aOrderDetailData['price'] = floatval($aProduct['price']);
-                        }
+                if (!empty($aOrderDetails)) {
+                    foreach ($aOrderDetails as $sAmazonOrderId => $aShippings) {
+                        foreach ($aShippings as $sShippingId => $aAmazonCodes)
+                            foreach ($aAmazonCodes as $sAmazonCode => $aFees) {
+                                $aOrderDetailData = [];
+                                $aOrderDetailData['FBAPerOrderFulfillmentFee'] = floatval($aFees['FBAPerOrderFulfillmentFee']);
+                                $aOrderDetailData['FBAPerUnitFulfillmentFee'] = floatval($aFees['FBAPerUnitFulfillmentFee']);
+                                $aOrderDetailData['FBAWeightBasedFee'] = floatval($aFees['FBAWeightBasedFee']);
+                                $aOrderDetailData['AmazonCommission'] = floatval($aFees['Commission']);
+                                $aOrderDetailData['Principal'] = floatval($aFees['Principal']);
+                                $aOrderDetailData['Shipping'] = floatval($aFees['Shipping']);
+                                $aOrderDetailData['Quantity'] = intval($aFees['Quantity']);
+                                $aOrderDetailData['type'] = $aFees['type'];
+                                $aOrderDetailData['SKU'] = $aFees['SKU'];
+                                $aOrderDetailData['AmazonShipmentID'] = $sShippingId;
+                                $aOrderDetailData['AmazonOrderItemCode'] = $sAmazonCode;
+                                $aOrderDetailData['Refund'] = floatval(abs($aFees['Refund']));
+                                $iOrderId = $aOrderDetailData['orderid'] = intval($aFees['orderid']);
 
-                        if (!empty($aOrderDetailData)) {
-                            //db_query("DELETE FROM " . $this->sql_tbl['order_details'] . " WHERE orderid=$iOrderid");
-                            //func_array2insert('order_details', $aOrderDetailData);
-                        }
+
+                                //if ($aOrderDetailData['Quantity'] == 0) $aOrderDetailData['Quantity'] = 1;
+
+                                if (!empty($aOrderDetailData)) {
+                                    func_array2insert('order_amazon_details', $aOrderDetailData, true);
+                                    $aUpdateValues = func_query_first("SELECT SUM(FBAPerOrderFulfillmentFee) AS FBAPerOrderFulfillmentFee,
+                                                     SUM(FBAPerUnitFulfillmentFee) AS FBAPerUnitFulfillmentFee,
+                                                     SUM(FBAWeightBasedFee) AS FBAWeightBasedFee,
+                                                     SUM(AmazonCommission) AS AmazonCommission,
+                                                     SUM(Refund) AS Refund,
+                                                     count(1) as Rows
+                                                     FROM " . $this->sql_tbl['order_amazon_details'] . " WHERE orderid = $iOrderId AND SKU = '$aFees[SKU]'");
+                                    if ($aUpdateValues['Rows'] > 0) {
+                                        unset($aUpdateValues['Rows']);
+                                        if ($aUpdateValues['Refund'] > 0 ) {
+                                            $aUpdateValues['amazon_item_refunded'] = 'Y';
+                                        }
+                                        unset ($aUpdateValues['Refund']);
+                                        func_array2update('order_details', $aUpdateValues, "orderid = $iOrderId AND productcode='$aFees[SKU]'");
+                                    }
+                                }
+                            }
                     }
-
-
-                var_dump($aOrderDetails);
+                }
             }
         }
     }
 
-    public
-    function _Request($_request)
+    public function _Request($_request)
     {
 
         $methodName = 'do' . $_request;
