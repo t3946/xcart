@@ -16,6 +16,7 @@ class classOrder extends classCloneData
     const ADMIN_ORDER_MODIFY_URL = '/admin/order.php?orderid=%d';
 
     private $aOrderDetails = [];
+    private $aOrderGroups = [];
     /**
      * @var classProduct[]
      */
@@ -47,6 +48,21 @@ class classOrder extends classCloneData
         return $this;
     }
 
+    private function fetchOrderGroups()
+    {
+        if (empty($this->aOrderGroups)) {
+            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_gropus'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
+            if (!empty($aOrderGroups) && is_array($aOrderGroups)) {
+                foreach ($aOrderGroups as $aOrderGroup) {
+                    $oOrderGroup = new classOrderGroup();
+                    $oOrderGroup->fillPrimaryTableValues($oOrderGroup);
+                    $this->aOrderGroups[] = $oOrderGroup;
+                }
+            }
+        }
+        return $this;
+    }
+
     /**
      * @return classOrderDetail[]
      */
@@ -54,6 +70,15 @@ class classOrder extends classCloneData
     {
         $this->fetchOrderDetails();
         return $this->aOrderDetails;
+    }
+
+    /**
+     * @return classOrderGroup[]
+     */
+    public function getOrderGroups()
+    {
+        $this->fetchOrderGroups();
+        return $this->aOrderGroups;
     }
 
     private function fetchOrderProductsManufacturers()
@@ -186,7 +211,7 @@ class classOrder extends classCloneData
     }
 
     public function getAmazonChanell() {
-        return $this->getField('and amazon_channel');
+        return $this->getField('amazon_fulfillment_channel');
     }
 
 }

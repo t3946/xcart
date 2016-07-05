@@ -24,6 +24,12 @@ class classData
             $this->aPrimaryTableValue = func_query_first("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
     }
 
+    public function fillPrimaryTableValues($aValues)
+    {
+        if (!empty($aValues))
+            $this->aPrimaryTableValue = $aValues;
+    }
+
     /**
      * @param string $sFieldName
      * @return mixed|array

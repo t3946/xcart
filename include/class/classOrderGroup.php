@@ -26,6 +26,21 @@ class classOrderGroup extends classData
         $this->oPaymentMethod = $oPay->getPaymentMethodInstance(['paymentid' => $this->getField('acc_paymentid')]);
     }
 
+    private function getTotalCostToUs() {
+        $aCostToUs = func_query_first("SELECT sum(xo.item_cost_to_us) as cost_to_us_od, sum(xp.cost_to_us) as cost_to_us_pr
+                                      FROM xcart_order_groups og
+                                           INNER JOIN xcart_order_details xo USING (orderid)
+                                           INNER JOIN xcart_products xp
+                                              ON xp.productid = xo.productid AND
+                                                 xp.manufacturerid = og.manufacturerid
+                                     WHERE og.orderid = ".$this->getField('orderid'));
+        $fCostToUs = $aCostToUs['cost_to_us_od'];
+        if (is_null($fCostToUs)) {
+            $fCostToUs = $aCostToUs['cost_to_us_pr'];
+        }
+        return $fCostToUs;
+    }
+
     public function getOrderInstance()
     {
         if (empty($this->oOrder)) {
@@ -42,6 +57,55 @@ class classOrderGroup extends classData
         return $this->oPaymentMethod;
     }
 
+    public function initAccounting() {
+        $this->initAccountingNet()->initAccountingHST()->initAccountingPST()->initAccountingGross();
+        return $this;
+    }
+
+    public function initAccountingNet()
+    {
+        $this->setField('accounting_net_0', floatval($this->getField('total_net')));
+        return $this;
+    }
+
+    public function initAccountingHST()
+    {
+        $this->setField('accounting_gst_0', floatval($this->getField('total_gst')));
+        return $this;
+    }
+
+    public function initAccountingPST()
+    {
+        $this->setField('accounting_pst_0', floatval($this->getField('total_pst')));
+        return $this;
+    }
+
+    public function initAccountingGross()
+    {
+        $this->setField('accounting_gross_0', floatval($this->getField('total_gross')));
+        return $this;
+    }
+
+    public function initAccountingGrossCostToUs(){
+        $this->setField('accounting_gross_1_cost_to_us',floatval($this->getTotalCostToUs()));
+        $this->recalculateAccountingCostToUs();
+        return $this;
+    }
+
+    public function addAccountingPST($fSumma)
+    {
+        $this->setField('accounting_pst_0', floatval($this->getField('accounting_pst_0')) + floatval($fSumma));
+        $this->recalculateAccountingNet();
+        return $this;
+    }
+
+    public function addAccountingHST($fSumma)
+    {
+        $this->setField('accounting_gst_0', floatval($this->getField('accounting_gst_0')) + floatval($fSumma));
+        $this->recalculateAccountingNet();
+        return $this;
+    }
+
     public function addAccountingNet($fSumma)
     {
         $this->setField('accounting_net_0', floatval($this->getField('total_net')) + floatval($fSumma));
@@ -51,6 +115,7 @@ class classOrderGroup extends classData
     public function addAccountingGross($fSumma)
     {
         $this->setField('accounting_gross_0', floatval($this->getField('total_gross')) + floatval($fSumma));
+        $this->recalculateAccountingNet();
         return $this;
     }
 
@@ -63,6 +128,26 @@ class classOrderGroup extends classData
     public function addAccountingGrossCostToUs($fSumma)
     {
         $this->setField('accounting_gross_1_cost_to_us', floatval($this->getField('accounting_gross_1_cost_to_us')) + floatval($fSumma));
+        $this->recalculateAccountingCostToUs();
+        return $this;
+    }
+
+    public function getAccountingGrossCostToUs()
+    {
+        return $this->getField('accounting_gross_1_cost_to_us');
+    }
+
+    public function addAccountingPSTCostToUs($fSumma)
+    {
+        $this->setField('accounting_pst_1_cost_to_us', floatval($this->getField('accounting_pst_1_cost_to_us')) + floatval($fSumma));
+        $this->recalculateAccountingCostToUs();
+        return $this;
+    }
+
+    public function addAccountingHSTCostToUs($fSumma)
+    {
+        $this->setField('accounting_gst_1_cost_to_us', floatval($this->getField('accounting_gst_1_cost_to_us')) + floatval($fSumma));
+        $this->recalculateAccountingCostToUs();
         return $this;
     }
 
@@ -75,18 +160,68 @@ class classOrderGroup extends classData
     public function addAccountingGrossShipping($fSumma)
     {
         $this->setField('accounting_gross_2_shipping', floatval($this->getField('accounting_gross_2_shipping')) + floatval($fSumma));
+        $this->recalculateAccountingShipping();
+        return $this;
+    }
+
+    public function setAccountingGrossShipping($fSumma)
+    {
+        $this->setField('accounting_gross_2_shipping', floatval($fSumma));
+        $this->recalculateAccountingShipping();
+        return $this;
+    }
+
+    public function addAccountingPSTShipping($fSumma)
+    {
+        $this->setField('accounting_pst_2_shipping', floatval($this->getField('accounting_pst_2_shipping')) + floatval($fSumma));
+        $this->recalculateAccountingShipping();
+        return $this;
+    }
+
+    public function addAccountingHSTShipping($fSumma)
+    {
+        $this->setField('accounting_gst_2_shipping', floatval($this->getField('accounting_gst_2_shipping')) + floatval($fSumma));
+        $this->recalculateAccountingShipping();
         return $this;
     }
 
     public function addAccountingNetRefundToCustomer($fRefundSumma)
     {
-        $this->setField('accounting_net_3_ref_to_cust', $this->getField('accounting_gross_3_ref_to_cust') + abs(floatval($fRefundSumma)));
+        $this->setField('accounting_net_3_ref_to_cust', $this->getField('accounting_net_3_ref_to_cust') + abs(floatval($fRefundSumma)));
         return $this;
     }
 
     public function addAccountingGrossRefundToCustomer($fRefundSumma)
     {
         $this->setField('accounting_gross_3_ref_to_cust', $this->getField('accounting_gross_3_ref_to_cust') + abs(floatval($fRefundSumma)));
+        $this->recalculateAccountingRefundToCustomer();
+        return $this;
+    }
+
+    public function setAccountingGrossRefundToCustomer($fRefundSumma)
+    {
+        $this->setField('accounting_gross_3_ref_to_cust', abs(floatval($fRefundSumma)));
+        $this->recalculateAccountingRefundToCustomer();
+        return $this;
+    }
+    public function setAccountingGrossRefundToUs($fRefundSumma)
+    {
+        $this->setField('accounting_gross_4_ref_to_us', abs(floatval($fRefundSumma)));
+        $this->recalculateAccountingRefundToUs();
+        return $this;
+    }
+
+    public function addAccountingPSTRefundToCustomer($fRefundSumma)
+    {
+        $this->setField('accounting_pst_3_ref_to_cust', $this->getField('accounting_pst_3_ref_to_cust') + abs(floatval($fRefundSumma)));
+        $this->recalculateAccountingRefundToCustomer();
+        return $this;
+    }
+
+    public function addAccountingHSTRefundToCustomer($fRefundSumma)
+    {
+        $this->setField('accounting_gst_3_ref_to_cust', $this->getField('accounting_gst_3_ref_to_cust') + abs(floatval($fRefundSumma)));
+        $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
 
@@ -99,6 +234,21 @@ class classOrderGroup extends classData
     public function addAccountingGrossRefundToUs($fSumma)
     {
         $this->setField('accounting_gross_4_ref_to_us', floatval($this->getField('accounting_gross_4_ref_to_us')) + floatval($fSumma));
+        $this->recalculateAccountingRefundToUs();
+        return $this;
+    }
+
+    public function addAccountingPSTRefundToUs($fSumma)
+    {
+        $this->setField('accounting_pst_4_ref_to_us', floatval($this->getField('accounting_pst_4_ref_to_us')) + floatval($fSumma));
+        $this->recalculateAccountingRefundToUs();
+        return $this;
+    }
+
+    public function addAccountingHSTRefundToUs($fSumma)
+    {
+        $this->setField('accounting_gst_4_ref_to_us', floatval($this->getField('accounting_gst_4_ref_to_us')) + floatval($fSumma));
+        $this->recalculateAccountingRefundToUs();
         return $this;
     }
 
@@ -110,6 +260,26 @@ class classOrderGroup extends classData
             $this->getField('accounting_net_2_shipping') -
             $this->getField('accounting_net_3_ref_to_cust') +
             $this->getField('accounting_net_4_ref_to_us')));
+        return $this;
+    }
+    public function calculateAccountingPSTProfit()
+    {
+        $this->setField('accounting_pst_5_profit', (
+            $this->getField('accounting_pst_0') -
+            $this->getField('accounting_pst_1_cost_to_us') -
+            $this->getField('accounting_pst_2_shipping') -
+            $this->getField('accounting_pst_3_ref_to_cust') +
+            $this->getField('accounting_pst_4_ref_to_us')));
+        return $this;
+    }
+    public function calculateAccountingHSTProfit()
+    {
+        $this->setField('accounting_gst_5_profit', (
+            $this->getField('accounting_gst_0') -
+            $this->getField('accounting_gst_1_cost_to_us') -
+            $this->getField('accounting_gst_2_shipping') -
+            $this->getField('accounting_gst_3_ref_to_cust') +
+            $this->getField('accounting_gst_4_ref_to_us')));
         return $this;
     }
 
@@ -133,10 +303,52 @@ class classOrderGroup extends classData
         return $this;
     }
 
-    public function recalculateAccounting() {
+    public function recalculateAccountingNet() {
+        $this->setField('accounting_net_0',
+        floatval($this->getField('accounting_gross_0')) -
+        floatval($this->getField('accounting_gst_0')) -
+        floatval($this->getField('accounting_pst_0')));
+    }
+
+    public function recalculateAccountingCostToUs() {
+        $this->setField('accounting_net_1_cost_to_us',
+            floatval($this->getField('accounting_gross_1_cost_to_us')) -
+            floatval($this->getField('accounting_gst_1_cost_to_us')) -
+            floatval($this->getField('accounting_pst_1_cost_to_us')));
+    }
+
+    public function recalculateAccountingShipping() {
+        $this->setField('accounting_net_2_shipping',
+            floatval($this->getField('accounting_gross_2_shipping')) -
+            floatval($this->getField('accounting_gst_2_shipping')) -
+            floatval($this->getField('accounting_pst_2_shipping')));
+    }
+
+    public function recalculateAccountingRefundToCustomer() {
+        $this->setField('accounting_net_3_ref_to_cust',
+            floatval($this->getField('accounting_gross_3_ref_to_cust')) -
+            floatval($this->getField('accounting_pst_3_ref_to_cust')) -
+            floatval($this->getField('accounting_gst_3_ref_to_cust')));
+    }
+
+    public function recalculateAccountingRefundToUs() {
+        $this->setField('accounting_net_4_ref_to_us',
+            floatval($this->getField('accounting_gross_4_ref_to_us')) -
+            floatval($this->getField('accounting_pst_4_ref_to_us')) -
+            floatval($this->getField('accounting_gst_4_ref_to_us')));
+    }
+
+    public function recalculateAccountingProfit() {
         $this->calculateAccountingNetProfit()
-             ->calculateAccountingGrossProfit()
-             ->calculateProfitMargin();
+            ->calculateAccountingPSTProfit()
+            ->calculateAccountingHSTProfit()
+            ->calculateAccountingGrossProfit()
+            ->calculateProfitMargin();
+        return $this;
+    }
+
+    public function updateAccounting() {
+        func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, 'orderid = '.$this->getField('orderid').' and manufacturerid = '.$this->getField('manufacturerid'));
     }
 
     public function printAccounting() {
@@ -162,6 +374,28 @@ class classOrderGroup extends classData
         $s .= '<td>'.$this->getField('accounting_net_4_ref_to_us').'</td>';
         $s .= '<td>'.$this->getField('accounting_net_5_profit').'</td>';
         $s .= '<td>'.$this->getField('profit_margin').'%</td>';
+
+        $s.='<tr>';
+        $s .= '<td>HST</td>';
+        $s .= '<td>'.$this->getField('total_gst').'</td>';
+        $s .= '<td>'.$this->getField('accounting_gst_0').'</td>';
+        $s .= '<td>'.$this->getField('accounting_gst_1_cost_to_us').'</td>';
+        $s .= '<td>'.$this->getField('accounting_gst_2_shipping').'</td>';
+        $s .= '<td>'.$this->getField('accounting_gst_3_ref_to_cust').'</td>';
+        $s .= '<td>'.$this->getField('accounting_gst_4_ref_to_us').'</td>';
+        $s .= '<td>'.$this->getField('accounting_gst_5_profit').'</td>';
+        $s .= '<td></td>';
+
+        $s.='<tr>';
+        $s .= '<td>PST</td>';
+        $s .= '<td>'.$this->getField('total_pst').'</td>';
+        $s .= '<td>'.$this->getField('accounting_pst_0').'</td>';
+        $s .= '<td>'.$this->getField('accounting_pst_1_cost_to_us').'</td>';
+        $s .= '<td>'.$this->getField('accounting_pst_2_shipping').'</td>';
+        $s .= '<td>'.$this->getField('accounting_pst_3_ref_to_cust').'</td>';
+        $s .= '<td>'.$this->getField('accounting_pst_4_ref_to_us').'</td>';
+        $s .= '<td>'.$this->getField('accounting_pst_5_profit').'</td>';
+        $s .= '<td></td>';
 
         $s.='</tr>';
         $s.='<tr>';
