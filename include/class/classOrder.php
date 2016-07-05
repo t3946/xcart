@@ -2,6 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classCloneData.php";
 require_once $xcart_dir . "/include/class/classOrderDetail.php";
+require_once $xcart_dir . "/include/class/classOrderGroup.php";
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
 require_once $xcart_dir . "/include/class/classManufacturers.php";
@@ -51,11 +52,11 @@ class classOrder extends classCloneData
     private function fetchOrderGroups()
     {
         if (empty($this->aOrderGroups)) {
-            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_gropus'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
+            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_groups'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
             if (!empty($aOrderGroups) && is_array($aOrderGroups)) {
                 foreach ($aOrderGroups as $aOrderGroup) {
                     $oOrderGroup = new classOrderGroup();
-                    $oOrderGroup->fillPrimaryTableValues($oOrderGroup);
+                    $oOrderGroup->fillPrimaryTableValues($aOrderGroup);
                     $this->aOrderGroups[] = $oOrderGroup;
                 }
             }
@@ -212,6 +213,15 @@ class classOrder extends classCloneData
 
     public function getAmazonChanell() {
         return $this->getField('amazon_fulfillment_channel');
+    }
+
+    public function recalculateAccounting() {
+        $aOrderGroups = $this->getOrderGroups();
+        if (!empty($aOrderGroups)) {
+            foreach ($aOrderGroups as $oOrderGroup) {
+                $oOrderGroup->recalculateAccounting();
+            }
+        }
     }
 
 }
