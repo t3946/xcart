@@ -10,6 +10,8 @@ global $xcart_dir;
 require_once $xcart_dir . "/include/class/classProducts.php";
 
 $oProduct = new classProduct(275567);
+$oProduct->getHTMLShot();
+exit;
 $aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
 var_dump($oProduct->getManfacturerClass()->getField('products_always_verify'));
 var_dump($aManufacturerProductVerifySettings);
