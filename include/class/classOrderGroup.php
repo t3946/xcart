@@ -6,6 +6,7 @@ require_once $xcart_dir . "/include/class/classPaymentMethod.php";
 require_once $xcart_dir . "/include/class/classOrderGroupInvoices.php";
 require_once $xcart_dir . "/include/class/classOrderGroupMemos.php";
 require_once $xcart_dir . "/include/class/classOrderRefundGroups.php";
+require_once $xcart_dir . "/include/class/classOrderAmazonDetails.php";
 
 class classOrderGroup extends classData
 {
@@ -13,6 +14,7 @@ class classOrderGroup extends classData
     private $oOrderInvoices = [];
     private $oOrderMemos = [];
     private $oOrderRefunds = [];
+    private $oOrderAmazonDetails = [];
 
     public function __construct($aParams = [])
     {
@@ -77,29 +79,13 @@ class classOrderGroup extends classData
         return $this->oOrderRefunds;
     }
 
-    public function getOrderGroupInvoicesProductTotal()
+    public function getOrderAmazonDetails()
     {
-        return $this->oOrderInvoices->getOrderGroupInvoicesProductTotal();
-    }
-
-    public function getOrderGroupInvoicesShippingTotal()
-    {
-        return $this->oOrderInvoices->getOrderGroupInvoicesShippingTotal();
-    }
-
-    public function getOrderGroupInvoicesHST()
-    {
-        return $this->oOrderInvoices->getOrderGroupInvoicesHST();
-    }
-
-    public function getOrderGroupMemoRefToUsTotal()
-    {
-        return $this->oOrderMemos->getOrderGroupMemoRefToUsTotal();
-    }
-
-    public function getOrderGroupMemoRefToUsHST()
-    {
-        return $this->oOrderMemos->getOrderGroupMemoRefToUsHST();
+        if (empty($this->oOrderAmazonDetails)) {
+            $this->oOrderAmazonDetails = new classOrderAmazonDetails();
+            $this->oOrderAmazonDetails = $this->oOrderAmazonDetails->getOrderAmazonDetails(['orderid' => $this->getField('orderid'), 'manufacturerid' => $this->getField('manufacturerid')]);
+        }
+        return $this->oOrderAmazonDetails;
     }
 
     public function getOrderInstance()
@@ -463,37 +449,87 @@ class classOrderGroup extends classData
 
     public function recalculateAccounting()
     {
-        //$aaa = $this->getPaymentMethodInstance();
-//        var_dump($this->getPaymentMethodInstance()->isPaymentMethodSet()); exit;
         if ($this->getPaymentMethodInstance()->isPaymentMethodSet()) {
-            $this
-                ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getField('total_gross')))
-                ->initAccountingHST()
-                ->initAccountingPST();
-
-            if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
-                $this->setAccountingGrossCostToUs($this->getOrderGroupInvoicesProductTotal());
-                $this->setAccountingGrossShipping($this->getOrderGroupInvoicesShippingTotal());
-                $this->setAccountingHSTCostToUs($this->getOrderGroupInvoicesHST());
-            }
-
-            if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
-                $this->setAccountingHSTRefundToUs($this->getOrderGroupMemoRefToUsHST());
-                $this->setAccountingGrossRefundToUs($this->getOrderGroupMemoRefToUsTotal());
-            }
-
-            if ($this->getOrderRefundGroups()->countOrderRefundGroups() > 0) {
+            if ($this->getOrderInstance()->isOrderAmazon()) $this->recalculateAccountingAmazon(); else {
                 $this
-                    ->setAccountingPSTRefundToCustomer($this->getOrderRefundGroups()->getOrderRefundPST())
-                    ->setAccountingHSTRefundToCustomer($this->getOrderRefundGroups()->getOrderRefundHST());
+                    ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getField('total_gross')))
+                    ->initAccountingHST()
+                    ->initAccountingPST();
 
-                $totalRefund = $this->getPaymentMethodInstance()->getSumAfterProcessorFeeRefund($this->getOrderRefundGroups()->getOrderRefundTotal());
-                $this->setAccountingGrossRefundToCustomer($totalRefund);
+                if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
+                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal());
+                    $this->setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal());
+                    $this->setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
+                }
+
+                if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
+                    $this->setAccountingHSTRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsHST());
+                    $this->setAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
+                }
+
+                if ($this->getOrderRefundGroups()->countOrderRefundGroups() > 0) {
+                    $this
+                        ->setAccountingPSTRefundToCustomer($this->getOrderRefundGroups()->getOrderRefundPST())
+                        ->setAccountingHSTRefundToCustomer($this->getOrderRefundGroups()->getOrderRefundHST());
+
+                    $totalRefund = $this->getPaymentMethodInstance()->getSumAfterProcessorFeeRefund($this->getOrderRefundGroups()->getOrderRefundTotal());
+                    $this->setAccountingGrossRefundToCustomer($totalRefund);
+                }
+
+                $this->recalculateAccountingProfit()->updateAccounting();
             }
-
-            $this->recalculateAccountingProfit()->updateAccounting();
         }
         return $this;
+    }
+
+    public function recalculateAccountingAmazon()
+    {
+        $fRefund = $fPrincipalRefund = $fShippingRefund = $fShipping = $FBAPerOrderFulfillmentFee = $FBAPerUnitFulfillmentFee = $FBAWeightBasedFee = $AmazonCommission =0;
+        if ($this->getOrderAmazonDetails()->countOrderAmazonDetails() > 0) {
+            $fRefund = $this->getOrderAmazonDetails()->getOrderAmazonRefund();
+            $fPrincipalRefund = $this->getOrderAmazonDetails()->getOrderAmazonPrincipalRefund();
+            $fShippingRefund = $this->getOrderAmazonDetails()->getOrderAmazonShippingRefund();
+            $fShipping = $this->getOrderAmazonDetails()->getOrderAmazonShipping();
+            $FBAPerOrderFulfillmentFee = $this->getOrderAmazonDetails()->getOrderAmazonFBAPerOrderFulfillmentFee();
+            $FBAPerUnitFulfillmentFee = $this->getOrderAmazonDetails()->getOrderAmazonFBAPerUnitFulfillmentFee();
+            $FBAWeightBasedFee = $this->getOrderAmazonDetails()->getOrderAmazonFBAWeightBasedFee();
+            $AmazonCommission = $this->getOrderAmazonDetails()->getOrderAmazonCommission();
+        }
+        $sAmazonChanell = $this->getOrderInstance()->getAmazonChanell();
+        switch ($sAmazonChanell) {
+            case 'MFN' :
+                $this
+                    ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getField('total_gross')))
+                    ->initAccountingHST()
+                    ->initAccountingPST()
+                    ->initAccountingGrossCostToUs();
+                if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
+                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal());
+                    $this->setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal());
+                    $this->setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
+                }
+                $this->setAccountingGrossRefundToUs(abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
+                    $this->addAccountingHSTRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsHST());
+                    $this->addAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
+                }
+                break;
+            case 'AFN' :
+                $this
+                    ->addAccountingGross(
+                        $FBAPerOrderFulfillmentFee +
+                        $FBAPerUnitFulfillmentFee +
+                        $FBAWeightBasedFee +
+                        $AmazonCommission)->initAccountingGrossCostToUs()
+                    ->setAccountingGrossShipping($fShipping)
+                    ->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                break;
+        }
+
+        $this
+            ->setAccountingGrossRefundToCustomer(abs($fPrincipalRefund + $fShippingRefund))
+            ->recalculateAccountingProfit()
+            ->updateAccounting();
     }
 
     public function updateAccounting()

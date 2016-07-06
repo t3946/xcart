@@ -920,6 +920,10 @@ class classAmazonMWS
                                 $aOrderDetailData['AmazonOrderItemCode'] = $sAmazonCode;
                                 $aOrderDetailData['Refund'] = floatval(abs($aFees['Refund']));
                                 $iOrderId = $aOrderDetailData['orderid'] = intval($aFees['orderid']);
+                                $oProducts = new classProducts();
+                                $aProduct = $oProducts->getProductBySKU($aOrderDetailData['SKU']);
+                                if (!empty($aProduct))
+                                    $aOrderDetailData['manufacturerid'] = $aProduct['manufacturerid'];
 
 
                                 //if ($aOrderDetailData['Quantity'] == 0) $aOrderDetailData['Quantity'] = 1;
@@ -961,47 +965,10 @@ class classAmazonMWS
                                         unset($aUpdateValues['ShippingRefund']);
                                         func_array2update('order_details', $aUpdateValues, "orderid = $iOrderId AND productcode='$aFees[SKU]'");
 
-                                        $oProducts = new classProducts();
-                                        $aProduct = $oProducts->getProductBySKU($aOrderDetailData['SKU']);
+
                                         if (!empty($aProduct)) {
                                             $oOrderGroup = new classOrderGroup(['orderid' => $iOrderId, 'manufacturerid' => $aProduct['manufacturerid']]);
-                                            if ($oOrderGroup->getOrderInstance()->isOrderAmazon()) {
-                                                $sAmazonChanell = $oOrderGroup->getOrderInstance()->getAmazonChanell();
-                                                switch ($sAmazonChanell) {
-                                                    case 'MFN' :
-                                                        $oOrderGroup
-                                                            ->setAccountingGross($oOrderGroup->getPaymentMethodInstance()->getSumAfterProcessorFee($oOrderGroup->getField('total_gross')))
-                                                            ->initAccountingHST()
-                                                            ->initAccountingPST()
-                                                            ->initAccountingGrossCostToUs();
-                                                        if ($oOrderGroup->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
-                                                            $oOrderGroup->setAccountingGrossCostToUs($oOrderGroup->getOrderGroupInvoicesProductTotal());
-                                                            $oOrderGroup->setAccountingGrossShipping($oOrderGroup->getOrderGroupInvoicesShippingTotal());
-                                                            $oOrderGroup->setAccountingHSTCostToUs($oOrderGroup->getOrderGroupInvoicesHST());
-                                                        }
-                                                        $oOrderGroup->setAccountingGrossRefundToUs(abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
-                                                        if ($oOrderGroup->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
-                                                            $oOrderGroup->addAccountingHSTRefundToUs($oOrderGroup->getOrderGroupMemoRefToUsHST());
-                                                            $oOrderGroup->addAccountingGrossRefundToUs($oOrderGroup->getOrderGroupMemoRefToUsTotal());
-                                                        }
-                                                        break;
-                                                    case 'AFN' :
-                                                        $oOrderGroup
-                                                            ->addAccountingGross(
-                                                                $aUpdateValues['FBAPerOrderFulfillmentFee'] +
-                                                                $aUpdateValues['FBAPerUnitFulfillmentFee'] +
-                                                                $aUpdateValues['FBAWeightBasedFee'] +
-                                                                $aUpdateValues['AmazonCommission'])->initAccountingGrossCostToUs()
-                                                            ->setAccountingGrossShipping($fShipping)
-                                                            ->setAccountingGrossRefundToUs($oOrderGroup->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
-                                                        break;
-                                                }
-
-                                                $oOrderGroup
-                                                    ->setAccountingGrossRefundToCustomer(abs($fPrincipalRefund + $fShippingRefund))
-                                                    ->recalculateAccountingProfit()
-                                                    ->updateAccounting();
-                                            }
+                                            $oOrderGroup->recalculateAccounting();
                                         }
                                     }
                                 }
