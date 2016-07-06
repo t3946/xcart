@@ -363,7 +363,7 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
       {include file="currency2.tpl" value=$v.accounting[$smarty.section.acc.index].gst hide_zero='Y'}
       <input type="hidden"name="groups{if $static eq 'O'}[{$order.orderid}]{/if}[{$m_id}][acc][{$smarty.section.acc.index}][gst]" size="8" value="{$v.accounting[$smarty.section.acc.index].gst|price_format}" />
     {else}
-  <input name="groups{if $static eq 'O'}[{$order.orderid}]{/if}[{$m_id}][acc][{$smarty.section.acc.index}][gst]" size="8" value="{$v.accounting[$smarty.section.acc.index].gst|price_format}" {if ($smarty.section.acc.index eq "1" || $smarty.section.acc.index eq "2" || $smarty.section.acc.index eq "4")}readonly="readonly" style="background: #cccccc;"{/if} />
+        {include file="currency2.tpl" value=$v.accounting[$smarty.section.acc.index].gst hide_zero='Y'}
     {/if}
   {else}
   {include file="currency2.tpl" value=$v.accounting[$smarty.section.acc.index].gst hide_zero='Y'}
@@ -414,7 +414,7 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
       {include file="currency2.tpl" value=$v.accounting[$smarty.section.acc.index].pst hide_zero='Y'}
       <input type="hidden" name="groups{if $static eq 'O'}[{$order.orderid}]{/if}[{$m_id}][acc][{$smarty.section.acc.index}][pst]" size="8" value="{$v.accounting[$smarty.section.acc.index].pst|price_format}" />
     {else}
-  <input name="groups{if $static eq 'O'}[{$order.orderid}]{/if}[{$m_id}][acc][{$smarty.section.acc.index}][pst]" size="8" value="{$v.accounting[$smarty.section.acc.index].pst|price_format}" {if ($smarty.section.acc.index eq "1" || $smarty.section.acc.index eq "2" || $smarty.section.acc.index eq "4")}readonly="readonly" style="background: #cccccc;"{/if} />
+        {include file="currency2.tpl" value=$v.accounting[$smarty.section.acc.index].pst hide_zero='Y'}
     {/if}
   {else}
   {include file="currency2.tpl" value=$v.accounting[$smarty.section.acc.index].pst hide_zero='Y'}
@@ -463,7 +463,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
       {include file="currency2.tpl" value=$v.accounting[$smarty.section.acc.index].gross hide_zero='Y'}
       <input type="hidden" name="groups{if $static eq 'O'}[{$order.orderid}]{/if}[{$m_id}][acc][{$smarty.section.acc.index}][gross]" size="8" value="{$v.accounting[$smarty.section.acc.index].gross|price_format}" />
     {else}
-  <input name="groups{if $static eq 'O'}[{$order.orderid}]{/if}[{$m_id}][acc][{$smarty.section.acc.index}][gross]" size="8" value="{$v.accounting[$smarty.section.acc.index].gross|price_format}" id="id_groups_acc_gross_{$smarty.section.acc.index}_{$m_id}" {if $smarty.section.acc.index eq "4"} onkeyup="javascript: func_check_ref_to_us_part_of_transaction('{$m_id}', '{$smarty.section.acc.index}');" onchange="javascript: func_check_ref_to_us_part_of_transaction('{$m_id}');" {/if} {if ($smarty.section.acc.index eq "1" || $smarty.section.acc.index eq "2" || $smarty.section.acc.index eq "4")}readonly="readonly" style="background: #cccccc;"{/if}  />
+        {include file="currency2.tpl" value=$v.accounting[$smarty.section.acc.index].gross hide_zero='Y'}
 
 {if $smarty.section.acc.index eq "4"}  
   {if $v.accounting[$smarty.section.acc.index].gross|price_format ne "0.00"}
