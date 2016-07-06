@@ -57,6 +57,13 @@ function func_check_tracking_number($linkid, $tracknum) {
 }
 
 function func_recalculate_accounting(&$group, $all_processors = array(), $apply_per_trans=false, $refund = false) {
+
+	global $xcart_dir;
+	require_once $xcart_dir . "/include/class/classOrders.php";
+	$oOrderGroup = new classOrderGroup(['orderid'=>$group['orderid'], 'manufacturerid'=>$group['manufacturerid']]);
+	$oOrderGroup->recalculateAccounting();
+	return true;
+
 	global $sql_tbl, $price_details_names;
 
 #
