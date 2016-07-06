@@ -2,6 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classCloneData.php";
 require_once $xcart_dir . "/include/class/classOrderDetail.php";
+require_once $xcart_dir . "/include/class/classOrderGroup.php";
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
 require_once $xcart_dir . "/include/class/classManufacturers.php";
@@ -16,6 +17,7 @@ class classOrder extends classCloneData
     const ADMIN_ORDER_MODIFY_URL = '/admin/order.php?orderid=%d';
 
     private $aOrderDetails = [];
+    private $aOrderGroups = [];
     /**
      * @var classProduct[]
      */
@@ -47,6 +49,21 @@ class classOrder extends classCloneData
         return $this;
     }
 
+    private function fetchOrderGroups()
+    {
+        if (empty($this->aOrderGroups)) {
+            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_groups'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
+            if (!empty($aOrderGroups) && is_array($aOrderGroups)) {
+                foreach ($aOrderGroups as $aOrderGroup) {
+                    $oOrderGroup = new classOrderGroup();
+                    $oOrderGroup->fillPrimaryTableValues($aOrderGroup);
+                    $this->aOrderGroups[] = $oOrderGroup;
+                }
+            }
+        }
+        return $this;
+    }
+
     /**
      * @return classOrderDetail[]
      */
@@ -54,6 +71,15 @@ class classOrder extends classCloneData
     {
         $this->fetchOrderDetails();
         return $this->aOrderDetails;
+    }
+
+    /**
+     * @return classOrderGroup[]
+     */
+    public function getOrderGroups()
+    {
+        $this->fetchOrderGroups();
+        return $this->aOrderGroups;
     }
 
     private function fetchOrderProductsManufacturers()
@@ -177,6 +203,24 @@ class classOrder extends classCloneData
                 $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND);
             }
 
+        }
+    }
+
+    public function isOrderAmazon() {
+        $sAmazonOrderId = $this->getField('amazonorderid');
+        return !empty($sAmazonOrderId);
+    }
+
+    public function getAmazonChanell() {
+        return $this->getField('amazon_fulfillment_channel');
+    }
+
+    public function recalculateAccounting() {
+        $aOrderGroups = $this->getOrderGroups();
+        if (!empty($aOrderGroups)) {
+            foreach ($aOrderGroups as $oOrderGroup) {
+                $oOrderGroup->recalculateAccounting();
+            }
         }
     }
 

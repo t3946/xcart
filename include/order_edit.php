@@ -251,7 +251,7 @@ if ($REQUEST_METHOD == "POST") {
 ##
 #
 
-            
+
 		                if (!empty($ref_values) && $ref_values['is_refunded'] || !is_numeric($v['amount'])) {
 
 	                                $v['amount'] = func_query_first_cell('SELECT amount FROM ' . $sql_tbl['order_details']
@@ -262,7 +262,7 @@ if ($REQUEST_METHOD == "POST") {
 			                        . ' WHERE productid="' . $productid . '" AND orderid="' . $orderid . '"');
 */
 		                }
-                
+
 		                if (!empty($ref_values) && $ref_values['is_refunded']) {
                 		    if ($v['amount'] < $ref_values['amount']) {
 		                        $ref_values['amount'] = $v['amount'];
@@ -276,7 +276,7 @@ if ($REQUEST_METHOD == "POST") {
 
 				$v["amount"] = intval($v["amount"]);
 				$v['back'] = intval($v['back']);
-                
+
 		                // back can't be more than amount
                 		if ($v['back'] > $v['amount']) {
 		                    $v['back'] = $v['amount'];
@@ -317,7 +317,7 @@ if ($REQUEST_METHOD == "POST") {
 
 				$tmp_manufacturerid = $cart_tmp['products'][$k]["manufacturerid"];
 
-				if ( 
+				if (
 					( $current_back == "0" || ($current_eta_date_mm_dd_yyyy_time < time() || empty($current_eta_date_mm_dd_yyyy)) )
 					&&
 					( $new_back > 0 && $new_eta_date_mm_dd_yyyy_time > time() )
@@ -623,8 +623,8 @@ if ($REQUEST_METHOD == "POST") {
 
 				if ($v["cb_status"] == "P" || $v["cb_status"] == "3" || $v["cb_status"] == "V" || $v["cb_status"] == "H" || $v["cb_status"] == "R"){
 					if (
-						($order["shipping_groups"][$m_id]["shipping_cost"]["net"] != $v["shipping_cost_net"]) 
-						&& ((strpos($v["shipping_cost_net"], "r")) === false 
+						($order["shipping_groups"][$m_id]["shipping_cost"]["net"] != $v["shipping_cost_net"])
+						&& ((strpos($v["shipping_cost_net"], "r")) === false
 						&& (strpos($v["shipping_cost_net"], "R")) === false)
 						&& empty($v["additional_shipping_status"])
 					){
@@ -652,7 +652,7 @@ if ($REQUEST_METHOD == "POST") {
                                         }
 
 					if (!empty($log)) {
-						$log .= "<br />"; 
+						$log .= "<br />";
 					} else {
 						$log = "";
 					}
@@ -726,7 +726,7 @@ if ($REQUEST_METHOD == "POST") {
 				$v["shipping_cost_net_orig"] = preg_replace("/[^0-9\.]/S","", $v["shipping_cost_net_orig"]);
 
 		                $order['shipping_groups'][$m_id]['shipping_cost_net_orig'] = $v['shipping_cost_net_orig'];
-					
+
 		                $order["shipping_groups"][$m_id]["shipping_cost"] = func_tax_price_details($v["shipping_cost_net"], $order["shipping_groups"][$m_id]["taxes"]);
 				$cart_tmp["shipping_costs_alt"][$m_id] = $order["shipping_groups"][$m_id]["shipping_cost"]["gross"];
 				$cart_tmp["shipping_cost_alt"] += $cart_tmp["shipping_costs_alt"][$m_id];
@@ -764,7 +764,7 @@ if ($REQUEST_METHOD == "POST") {
 						$tracking[] = array('linkid' => $linkid, 'tracknum' => trim($v["tracking_number"][$_k]), 'ship_date' => trim($v["tracking_ship_date"][$_k]), 'carrier_id' => $sh);
 						$order['shipping_groups'][$m_id]['dc_status'] = 'S';
 						define('TRACKING_ADDED', 1);
-				
+
 						if (!empty($linkid)){
 							$shipping_link = func_query_first_cell("SELECT shipping FROM $sql_tbl[tracking_links] WHERE linkid='$linkid'");
 						} else {
@@ -958,7 +958,7 @@ if ($REQUEST_METHOD == "POST") {
 						if ($v['dc_status'] == "C"){
 
 							$addition_column = "";
-						
+
 							$current_dc_dispatched_time = func_query_first_cell("SELECT dc_dispatched_time FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
 							if (empty($current_dc_dispatched_time)){
 								 $addition_column = ", dc_dispatched_time='".time()."'";
@@ -1186,7 +1186,7 @@ if ($REQUEST_METHOD == "POST") {
 
 					$prd["provider"] = (!empty($config['General']['default_provider_name'])) ? $config['General']['default_provider_name'] : $prd['provider'];
 
-/* provider check removed - random, 2011-01-27 - see msgid: 538231346 
+/* provider check removed - random, 2011-01-27 - see msgid: 538231346
 					if (!$single_mode && is_array($cart_tmp["products"])) {
 						$_providers = array();
 						foreach ($cart_tmp["products"] as $_product) {
@@ -1378,7 +1378,7 @@ if ($REQUEST_METHOD == "POST") {
 						$cart_tmp["userinfo"]["additional_fields"][$_uk]["value"] = stripslashes($av);
 						break;
 					}
-				
+
 				}
 			}
 		}
@@ -1386,7 +1386,7 @@ if ($REQUEST_METHOD == "POST") {
 		if ($order["paymentid"] == PAYMENT_PURCHASE_ID) {
 			# Get PO data from order details text
 			$data = explode("\n",$order["details"]);
-	
+
 			$data_current = $data;
 
 			if ($data) {
@@ -1434,7 +1434,7 @@ if ($REQUEST_METHOD == "POST") {
 					}
 					foreach ($po_fields as $k => $po_text) {
 						if (($a = strpos($line, $k.":")) !== false) {
-							$data[$i] = "$k: $po_text"; 
+							$data[$i] = "$k: $po_text";
 							break;
 						}
 					}
@@ -1601,8 +1601,8 @@ if ($REQUEST_METHOD == "POST") {
 
 /*
                                 if (
-                                    in_array($order['shipping_groups'][$m_id]['cb_status'], array('P','R','H')) 
-                                    || in_array($order['shipping_groups'][$m_id]['dc_status'], array('C','S')) 
+                                    in_array($order['shipping_groups'][$m_id]['cb_status'], array('P','R','H'))
+                                    || in_array($order['shipping_groups'][$m_id]['dc_status'], array('C','S'))
                                 ) {
 */
                                         for ($ak=1; $ak<=4; $ak++) {
@@ -1902,7 +1902,7 @@ die();
 		if (!empty($invoice_field) && is_array($invoice_field)){
 			foreach ($invoice_field as $itemid => $v){
 
-		
+
 				foreach ($order["shipping_groups"] as $m_id => $g_v)	{
 					if (!empty($g_v["products"]) && is_array($g_v["products"])){
 						foreach ($g_v["products"] as $k_p => $v_p) {
@@ -1967,7 +1967,7 @@ die();
 
 					$tmp_tracknums = array();
 					$tmp_tracknums_counter = 0;
-					
+
 					foreach ($tracknums[$m_id] as $invoice_number => $v_tracknums){
 						if (!empty($v_tracknums) && is_array($v_tracknums)){
 							foreach ($v_tracknums as $row_conter => $vv_tracknums){
@@ -2167,7 +2167,7 @@ die();
                                 $v["acc"][4]["gst"] = preg_replace("/[^0-9\.]/S","", $v["acc"][4]["gst"]);
                                 $v["acc"][4]["pst"] = preg_replace("/[^0-9\.]/S","", $v["acc"][4]["pst"]);
                                 $v["acc"][4]["gross"] = preg_replace("/[^0-9\.]/S","", $v["acc"][4]["gross"]);
-		
+
 
 #
 ##
@@ -2214,11 +2214,11 @@ die();
 				if ($current_Shipping_gross != $new_Shipping_gross){
 				        $log .= "Shipping_gross: ".$current_Shipping_gross." -> ".$new_Shipping_gross."<br />";
 				}
-	
+
 				$current_Ref_to_cust_gst = price_format($order['shipping_groups'][$m_id]['accounting'][3]["gst"]);
 				$current_Ref_to_cust_pst = price_format($order['shipping_groups'][$m_id]['accounting'][3]["pst"]);
 				$current_Ref_to_cust_gross = price_format($order['shipping_groups'][$m_id]['accounting'][3]["gross"]);
-				
+
 				$new_Ref_to_cust_gst = $v["acc"][3]["gst"];
 				$new_Ref_to_cust_pst = $v["acc"][3]["pst"];
 				$new_Ref_to_cust_gross = $v["acc"][3]["gross"];
@@ -2249,12 +2249,12 @@ die();
 				}
 				if ($current_Ref_to_us_gross != $new_Ref_to_us_gross){
 				        $log .= "Ref_to_us_gross: ".$current_Ref_to_us_gross." -> ".$new_Ref_to_us_gross."<br />";
-				}				
+				}
 */
 ###
 				if ($order['shipping_groups'][$m_id]['ru_status'] == "RR"){
 					$v["ru_status"] = "RR";
-				} 
+				}
 				else {
 //					if ($new_Ref_to_us_gross > 0)
 					if ($v["acc"][4]["gross"] > 0){
@@ -2263,7 +2263,7 @@ die();
 						$v["ru_status"] = "";
 					}
 				}
-/*				
+/*
                                 if ($v["ru_status"] != $order['shipping_groups'][$m_id]['ru_status']){
                                         $current_ru_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='".$order['shipping_groups'][$m_id]['ru_status']."'");
                                         $new_ru_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$v[ru_status]'");
@@ -2307,15 +2307,15 @@ die();
 		                    foreach ($order['shipping_groups'][$m_id]['accounting'] as $col => $sga) {
                 		        foreach ($sga as $pdn => $pdv) {
 		                            if (
-                		                in_array($col, array_keys($acc_zero_data)) 
+                		                in_array($col, array_keys($acc_zero_data))
 		                                && !in_array($pdn, array('filled', 'net'))
                 		            ) {
                                 		$pdv = intval($pdv);
-                                
+
 		                                if (!empty($pdv)) {
                 		                    $acc_zero_data[$col] = false;
                                 		}
-                                
+
 		                                if (isset($v['acc'][$col][$pdn])) {
                 		                    $_pdv = intval($v['acc'][$col][$pdn]);
                                 		    if (!empty($_pdv)) {
@@ -2329,8 +2329,8 @@ die();
 
 /*
 				if (
-		                    in_array($order['shipping_groups'][$m_id]['cb_status'], array('P','R','H')) 
-                		    || in_array($order['shipping_groups'][$m_id]['dc_status'], array('C','S')) 
+		                    in_array($order['shipping_groups'][$m_id]['cb_status'], array('P','R','H'))
+                		    || in_array($order['shipping_groups'][$m_id]['dc_status'], array('C','S'))
 		                ) {
 */
 					for ($ak=1; $ak<=4; $ak++) {
@@ -2340,9 +2340,9 @@ die();
                         			        . ' WHERE orderid = "' . $order['shipping_groups'][$m_id]['orderid'] . '"'
 		                                	. ' AND manufacturerid = "' . $m_id .'"');
 	        		                }
-					
+
 						$order['shipping_groups'][$m_id]['accounting'][$ak] = array();
-								
+
 		        	                foreach ($price_details_names as $af) {
                 			            if ($ak == ACC_REF_TO_CUST) {
                         			        if (!empty($refund_group)) {
@@ -2351,7 +2351,7 @@ die();
         	                		            $v['acc'][$ak][$af] = 0;
 		                	                }
                 		        	    }
-							
+
 						    $order['shipping_groups'][$m_id]['accounting'][$ak][$af] = $v['acc'][$ak][$af];
 						}
 					}
@@ -2365,7 +2365,7 @@ die();
 				}
 
 // moved below				func_recalculate_accounting($order['shipping_groups'][$m_id], $all_processors, $apply_per_trans, true);
-		
+
 
 
 				$update = array();
@@ -2391,10 +2391,10 @@ die();
 
                                 if ($mode == "accounting_apply" && $user_account["flag"] != "FS" && !empty($manufacturer_memos_data[$certain_mid]) && is_array($manufacturer_memos_data[$certain_mid])){
                                         $SUM_ref_to_us = 0;
-                                        $SUM_ref_to_us_HST = 0; 
+                                        $SUM_ref_to_us_HST = 0;
                                         $SUM_ref_to_us_total = 0;
 
-                                        
+
                                         $log = "<B>".$order["shipping_groups"][$certain_mid]["code"]."</B>:";
 
 /*
@@ -2402,24 +2402,24 @@ if ($certain_mid == "12"){
 func_print_r($manufacturer_memos_data);
 }
 */
-                                        
+
                                         foreach ($manufacturer_memos_data[$certain_mid] as $memo_number => $memo_data){
-                                                
+
                                                 $update_memos_table_flag = false;
                                                 $group_memos = array();
-                                                
+
                                                 $ref_to_us_HST = $memo_data["ref_to_us_HST"];
                                                 $SUM_ref_to_us_HST += $ref_to_us_HST;
-                                                
+
                                                 if ($ref_to_us_HST != $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["ref_to_us_HST"]){
                                                         $group_memos["ref_to_us_HST"] = $ref_to_us_HST;
                                                         $log .= "<br />memo_number-".$memo_number.": ref_to_us_HST: ".$order["shipping_groups"][$certain_mid]["memos"][$memo_number]["ref_to_us_HST"]." -> ".$ref_to_us_HST;
                                                         $update_memos_table_flag = true;
                                                 }
-                                                
+
                                                 $ref_to_us_total = $memo_data["ref_to_us_total"];
                                                 $SUM_ref_to_us_total += $ref_to_us_total;
-                                                
+
                                                 if ($ref_to_us_total != $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["ref_to_us_total"]){
                                                         $group_memos["ref_to_us_total"] = $ref_to_us_total;
                                                         $log .= "<br />memo_number-".$memo_number.": ref_to_us_total: ".$order["shipping_groups"][$certain_mid]["memos"][$memo_number]["ref_to_us_total"]." -> ".$ref_to_us_total;
@@ -2544,7 +2544,7 @@ func_print_r($manufacturer_memos_data);
                                                                 if ($qty_inv != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["products"][$itemid]["qty_inv"]){
                                                                         $invoices_products["qty_inv"] = $qty_inv;
 
-                                                                        $update_invoices_table_flag = true;                                                                     
+                                                                        $update_invoices_table_flag = true;
                                                                         $log .= "<br />invoice_number-".$invoice_number.": qty_inv: ".$order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["products"][$itemid]["qty_inv"]." -> ".$qty_inv;
 #
 ##
@@ -2553,7 +2553,7 @@ func_print_r($manufacturer_memos_data);
 										if (!empty($order["refund_groups"][$m_id]["products"][$itemid]["ref_qty"])){
 											$ref_qty = $order["refund_groups"][$m_id]["products"][$itemid]["ref_qty"];
 										}
-	
+
 										$qty_disp = $order["shipping_groups"][$m_id]["products"][$itemid]["amount"] - $ref_qty;
 
 										$sum_qty_inv_for_certain_product = 0;
@@ -2565,7 +2565,7 @@ func_print_r($manufacturer_memos_data);
 	                                                                                $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='".$config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"]."'");
         	                                                                        if (empty($status_id)){
                 	                                                                        db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '".$config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"]."')");
-	
+
         	                                                                                $log .= "<br />Attention tag added: ".$attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"]]["status"];
         	                                                                        }
 										}
@@ -2634,12 +2634,12 @@ func_print_r($manufacturer_memos_data);
                                                          }
 						}
 
-                                                if ($invoice_data["items_shipped_to_wrong_address"] != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["items_shipped_to_wrong_address"]){                                       
+                                                if ($invoice_data["items_shipped_to_wrong_address"] != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["items_shipped_to_wrong_address"]){
                                                         $group_invoices["items_shipped_to_wrong_address"] = $invoice_data["items_shipped_to_wrong_address"];
 
                                                         $log .= "<br />invoice_number-".$invoice_number.": items_shipped_to_wrong_address: ".$order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["items_shipped_to_wrong_address"]." -> ".$invoice_data["items_shipped_to_wrong_address"];
                                                         $update_invoices_table_flag = true;
-                                                                                
+
                                                         if ($invoice_data["items_shipped_to_wrong_address"] == "Y" && !empty($config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"])){
                                                                                 $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='".$config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"]."'");
                                                                                 if (empty($status_id)){
@@ -2821,7 +2821,7 @@ func_print_r($manufacturer_memos_data);
 
 			    if ($mode == "table_accounting_apply"){
 		                // Change the order group status
-				
+
 		                if (
                 		    $acc_zero_data[ACC_REF_TO_US]
 		                    && $acc_new_data[ACC_REF_TO_US]
@@ -2832,7 +2832,7 @@ func_print_r($manufacturer_memos_data);
 		                ) {
                 		    func_change_order_group_status($orderid, $m_id, 'X');
 		                }
-                
+
 		                if (
                 		    $acc_zero_data[ACC_REF_TO_CUST]
 		                    && $acc_new_data[ACC_REF_TO_CUST]
@@ -2865,7 +2865,12 @@ func_print_r($manufacturer_memos_data);
 #
 
 
-		}	
+		}
+		if ($mode == "table_accounting_apply" || $mode == "accounting_apply") {
+			require_once $xcart_dir . "/include/class/classOrders.php";
+			$oOrder = new classOrder($orderid);
+			$oOrder->recalculateAccounting();
+		}
 		func_header_location("order.php?orderid=$orderid");
 	}
 
@@ -2926,7 +2931,7 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])){
 		}
 ##
 #
-		
+
 
 ###
 /*

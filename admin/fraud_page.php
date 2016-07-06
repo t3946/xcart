@@ -271,6 +271,10 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                                 ) {
                                     func_change_order_group_status($orderid, $m_id, 'R');
                                 }
+
+                                require_once $xcart_dir . "/include/class/classOrders.php";
+                                $oOrder = new classOrder($orderid);
+                                $oOrder->recalculateAccounting();
                         }
 
 

@@ -2354,7 +2354,10 @@ function func_log_order_groups($query_data, $orderid, $manufacturerid, $type, $l
 	global $sql_tbl;
 
         $log = "";
-        $log_name = array("shipping_net", "shippingid", "shipping", "bd_status", "cb_status", "dc_status", "acc_paymentid", "po_status", "ru_status", "accounting_net_0", "accounting_gst_0", "accounting_pst_0", "accounting_gross_0", "accounting_net_1_cost_to_us", "accounting_gst_1_cost_to_us", "accounting_pst_1_cost_to_us", "accounting_gross_1_cost_to_us", "accounting_net_2_shipping", "accounting_gst_2_shipping", "accounting_pst_2_shipping", "accounting_gross_2_shipping", "accounting_net_3_ref_to_cust", "accounting_gst_3_ref_to_cust", "accounting_pst_3_ref_to_cust", "accounting_gross_3_ref_to_cust", "accounting_net_4_ref_to_us", "accounting_gst_4_ref_to_us", "accounting_pst_4_ref_to_us", "accounting_gross_4_ref_to_us", "accounting_net_5_profit", "accounting_gst_5_profit", "accounting_pst_5_profit", "accounting_gross_5_profit");
+        $log_name = array("shipping_net", "shippingid", "shipping", "bd_status", "cb_status", "dc_status", "acc_paymentid", "po_status", "ru_status",
+				"accounting_net_0", "accounting_gst_0", "accounting_pst_0", "accounting_gross_0",
+				// "accounting_net_1_cost_to_us", "accounting_gst_1_cost_to_us", "accounting_pst_1_cost_to_us", "accounting_gross_1_cost_to_us", "accounting_net_2_shipping", "accounting_gst_2_shipping", "accounting_pst_2_shipping", "accounting_gross_2_shipping", "accounting_net_3_ref_to_cust", "accounting_gst_3_ref_to_cust", "accounting_pst_3_ref_to_cust", "accounting_gross_3_ref_to_cust", "accounting_net_4_ref_to_us", "accounting_gst_4_ref_to_us", "accounting_pst_4_ref_to_us", "accounting_gross_4_ref_to_us", "accounting_net_5_profit", "accounting_gst_5_profit", "accounting_pst_5_profit", "accounting_gross_5_profit"
+		);
         $order_statuses_arr = array("bd_status", "cb_status", "dc_status", "po_status", "ru_status");
 	$code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$manufacturerid'");
 
