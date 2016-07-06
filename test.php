@@ -25,10 +25,10 @@ $classOrderGroup->printAccounting();
 exit;*/
 
 $classAmazonMWS = new classAmazonMWS();
-func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
+//func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
-$classAmazonMWS->setReportType('_GET_V2_SETTLEMENT_REPORT_DATA_XML_')
-    ->setReportId('1979271148016951')
+$classAmazonMWS->setReportType('_GET_V2_SETTLEMENT_REPORT_DATA_XML_')->setBackProcessName($classAmazonMWS::BACK_PROCESS_LOG_NAME_SETTLEMENT)
+    ->setReportId(['1979271148016951'])
     ->_Request('GetReport')
     ->processReportSettlementData();
 
