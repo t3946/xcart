@@ -179,7 +179,7 @@ window.attachEvent("onload", anchor_fix);
 //$("#test_text").val(ajax_counter);
 
         ajax_counter++;
-        setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 2000);
+        setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1100);
 	}
 
         function func_load_ajax_carousel_products(section_name){
