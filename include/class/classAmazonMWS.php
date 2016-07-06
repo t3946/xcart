@@ -92,6 +92,7 @@ class classAmazonMWS
     public $error = [];
     private $amazonReportType;
     private $sql_tbl;
+    private $sBackProcessLogName = null;
 
 
     public function __construct()
@@ -113,8 +114,15 @@ class classAmazonMWS
 
         $this->marketplaceIdArray = array("Id" => array('ATVPDKIKX0DER'));
         $this->amazonReportType = '_GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA_';
+        $this->sBackProcessLogName = self::BACK_PROCESS_LOG_NAME;
 
         $this->sql_tbl = $sql_tbl;
+    }
+
+    public function setBackProcessName($sName)
+    {
+        $this->sBackProcessLogName = $sName;
+        return $this;
     }
 
     private function invokeGetReport($request)
@@ -543,7 +551,7 @@ class classAmazonMWS
 
         $this->dom_xml_arr = $this->invokeRequestReport($request);
         $log_text = 'RequestReport -> ReportRequestId:' . $this->dom_xml_arr['ReportRequestId'];
-        func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
+        func_backprocess_log($this->sBackProcessLogName, $log_text);
         return $this;
     }
 
@@ -564,7 +572,7 @@ class classAmazonMWS
         $this->dom_xml_arr = $this->invokeGetReportRequestList($request);
 
         $log_text = 'GetReportRequestList -> ReportProcessingStatus:' . $this->dom_xml_arr['ReportProcessingStatus'];
-        func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
+        func_backprocess_log($this->sBackProcessLogName, $log_text);
 
         if ($this->dom_xml_arr['ReportProcessingStatus'] == '_CANCELLED_') {
             $this->error[] = 'RequestReport ' . $this->dom_xml_arr['ReportRequestId'] . ' is CANCELED by Amazon MWS';
@@ -598,7 +606,7 @@ class classAmazonMWS
         } else {
             $log_text = 'GetReportList -> No reports found';
         }
-        func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
+        func_backprocess_log($this->sBackProcessLogName, $log_text);
 
         $this->setReportId($this->dom_xml_arr["ReportId"]);
         return $this;
@@ -620,7 +628,7 @@ class classAmazonMWS
                     $request->setReportId($reportId);
                     $this->dom_xml_arr[] = $this->invokeGetReport($request);
                     $log_text = 'GetReport -> ReportId:' . $reportId;
-                    func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
+                    func_backprocess_log($this->sBackProcessLogName, $log_text);
                 }
             }
         }
@@ -643,7 +651,7 @@ class classAmazonMWS
             $this->invokeUpdateReportAcknowledgements($request);
 
             $log_text = 'UpdateReportAcknowledgements -> ReportId:' . $iReportId;
-            func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
+            func_backprocess_log($this->sBackProcessLogName, $log_text);
         }
 
         return $this;
@@ -651,7 +659,7 @@ class classAmazonMWS
 
     public function setReportId($aReportId)
     {
-        $this->aReportIds[] = $aReportId;
+        $this->aReportIds = $aReportId;
         return $this;
     }
 
@@ -699,7 +707,7 @@ class classAmazonMWS
         if (!empty($ReportContent)) {
 
             $log_text = "Processing " . count($ReportContent) . " reports";
-            func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
+            func_backprocess_log($this->sBackProcessLogName, $log_text);
 
             foreach ($ReportContent as $report_data) {
                 $cntLine = 0;
@@ -717,7 +725,7 @@ class classAmazonMWS
                 }
                 $aReportData = [];
                 $log_text = "Processing " . count($aReportValue) . " products";
-                func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
+                func_backprocess_log($this->sBackProcessLogName, $log_text);
                 for ($y = 0; $y < count($aReportValue); $y++) {
                     foreach ($aReportValue[$y] as $iKey => $sItem) {
                         if ($y == 0) {
