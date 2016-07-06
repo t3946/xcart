@@ -126,7 +126,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "copy_distributor" && $manufacturerid)
 
 	require_once $xcart_dir."/include/class/classManufacturers.php";
 	require_once $xcart_dir."/include/class/classCategories.php";
-	$classManufacturer = new classManufacturer();
+	$classManufacturer = new classManufacturers();
 	$classCategories = new classCategories();
 
 	$storefont_info = func_get_storefront_info($storefront_to_copy_manufacturer, "ID");
@@ -178,7 +178,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "copy_products" && $manufacturerid) {
 
 
 	require_once $xcart_dir."/include/class/classManufacturers.php";
-	$classManufacturer = new classManufacturer();
+	$classManufacturer = new classManufacturers();
 
 	if (!empty($product_to_copy_manufacturer)) {
 		$countAddedProducts = $classManufacturer->addProductsToQueue($manufacturerid, $product_to_copy_manufacturer);
@@ -899,7 +899,7 @@ else {
 		include $xcart_dir."/include/navigation.php";
 
 		require_once $xcart_dir."/include/class/classManufacturers.php";
-		$classManufacturer = new classManufacturer();
+		$classManufacturer = new classManufacturers();
 
 		#
 		# Get the manufacturers list
@@ -1181,7 +1181,7 @@ if (!empty($page))
 
 	if ($distributor_section == "30") {
 		require_once $xcart_dir."/include/class/classManufacturers.php";
-		$classManufacturer = new classManufacturer();
+		$classManufacturer = new classManufacturers();
 		$aParentManufacturer = $classManufacturer->getChildrenManufacturers($manufacturerid);
 
 		$smarty->assign("aParentManufacturer", $aParentManufacturer);
