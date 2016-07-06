@@ -12,6 +12,6 @@ class classBrands extends classCloneData
     }
 
     public function getBrandByProductId ($iProductid) {
-        return func_query_first("SELECT *  FROM ".$this->sql_tbl[$this->sPrimaryTable]  ." INNER JOIN xcart_products xp USING (".$this->sPrimaryKeyFiled.") WHERE productid = $iProductid");
+        return func_query_first("SELECT *  FROM ".self::$sql_tbl[$this->sPrimaryTable]  ." INNER JOIN xcart_products xp USING (".$this->sPrimaryKeyFiled.") WHERE productid = $iProductid");
     }
 }
