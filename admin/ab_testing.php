@@ -50,7 +50,7 @@ if ($REQUEST_METHOD == "POST") {
 		if (!empty($posted_data["ab_point_variants"]) && is_array($posted_data["ab_point_variants"])){
 			foreach ($posted_data["ab_point_variants"] as $id => $v){
 //				db_query("UPDATE $sql_tbl[ab_point_variants] SET variant_id='$v[variant_id]', variant_name='$v[variant_name]', is_default='$v[is_default]', total_hits_count='$v[total_hits_count]', reach_goal_count='$v[reach_goal_count]', average_success_measure='$v[average_success_measure]', outcome='$v[outcome]', dollar_amount_of_goal_conversions='$v[dollar_amount_of_goal_conversions]', success_measure_range='$v[success_measure_range]' WHERE id='$id'");
-				db_query("UPDATE $sql_tbl[ab_point_variants] SET variant_id='$v[variant_id]', variant_name='$v[variant_name]', is_default='$v[is_default]' WHERE id='$id'");
+				db_query("UPDATE $sql_tbl[ab_point_variants] SET variant_id='$v[variant_id]', variant_name='$v[variant_name]', is_default='$v[is_default]', for_webbot='$v[for_webbot]' WHERE id='$id'");
 			}
 		}
 	}
