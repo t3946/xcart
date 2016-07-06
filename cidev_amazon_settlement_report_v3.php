@@ -24,7 +24,7 @@ $log_text = " * * *  Cron started  * * * ";
 $classAmazonMWS = new classAmazonMWS();
 func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
-$classAmazonMWS->setReportType('_GET_V2_SETTLEMENT_REPORT_DATA_XML_')
+$classAmazonMWS->setReportType('_GET_V2_SETTLEMENT_REPORT_DATA_XML_')->setBackProcessName($classAmazonMWS::BACK_PROCESS_LOG_NAME_SETTLEMENT)
     ->_Request('GetReportList')
     ->_Request('GetReport')
     ->_Request('UpdateReportAcknowledgements')
