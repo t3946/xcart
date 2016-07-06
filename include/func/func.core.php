@@ -3340,7 +3340,7 @@ function Get_AB_Variant($point_id){
 			($ab_testing_point["exclude_mobile"] == "Y" && $detect_isMobile_was_created)
 	) {
 		if ($is_robot == "Y" ||	defined("IS_ROBOT"))
-			$variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND for_webbot='Y'");
+			$variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND (for_webbot ='Y' OR is_default = 'Y') ORDER BY for_webbot DESC, is_default DESC");
 			else $variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND is_default='Y'");
 
 	} else {
