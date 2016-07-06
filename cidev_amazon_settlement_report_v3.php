@@ -14,7 +14,7 @@ set_time_limit(0);
 const LOG_CATEGORY = 'cidev_amazon_settlement_report';
 
 if ($config[LOG_CATEGORY] == "Y") {
-    //die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
