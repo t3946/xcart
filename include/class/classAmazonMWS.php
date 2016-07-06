@@ -775,8 +775,10 @@ class classAmazonMWS
             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
             $err = '';
-            $aOrderDetails = [];
+
             foreach ($ReportContent as $report_id => $report_data) {
+
+                $aOrderDetails = [];
 
                 $findme_arr = array("Order", "Refund", "Fee", "Component", "Item", "AdjustedItem");
 

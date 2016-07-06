@@ -521,8 +521,10 @@ class classOrderGroup extends classData
                         $FBAPerUnitFulfillmentFee +
                         $FBAWeightBasedFee +
                         $AmazonCommission)->initAccountingGrossCostToUs()
-                    ->setAccountingGrossShipping($fShipping)
-                    ->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                    ->setAccountingGrossShipping($fShipping);
+                    if ($fRefund != 0)
+                        $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+
                 break;
         }
 
