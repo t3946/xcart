@@ -871,9 +871,10 @@ document.body.appendChild(element10);
 {literal}
 
 {/literal}
-/*
+
 {if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 {literal}
+/*
 var element11 = document.createElement("script");
 element11.src = "{/literal}{$SkinDir}{literal}/check_zipcode.js";
 document.body.appendChild(element11);
@@ -881,7 +882,7 @@ document.body.appendChild(element11);
 var element12 = document.createElement("script");
 element12.src = "{/literal}{$SkinDir}{literal}/cidev_ajax.js";
 document.body.appendChild(element12);
-
+*/
 {/literal}
 {/if}
 

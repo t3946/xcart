@@ -110,7 +110,11 @@ Order By SP.`position` desc";
 		$classElastic->setSize(30);
 		$classElastic->setProductId($productid);
 		x_session_register("variant_id_for_point9");
-		switch ($variant_id_for_point9) {
+		$variant_id = $variant_id_for_point9;
+		if ($is_robot == 'Y' || defined("IS_ROBOT")) {
+			$variant_id = Get_AB_Variant(9);
+		}
+		switch ($variant_id) {
 			case 0:
 				$similar_productids = func_query_first_cell("SELECT similar_productids FROM $sql_tbl[products] WHERE productid='$productid'");
 
