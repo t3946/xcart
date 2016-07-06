@@ -626,7 +626,7 @@ class classAmazonMWS
                     $request->setMerchant(MERCHANT_ID);
                     $request->setReport(@fopen('php://memory', 'rw+'));
                     $request->setReportId($reportId);
-                    $this->dom_xml_arr[] = $this->invokeGetReport($request);
+                    $this->dom_xml_arr[$reportId] = $this->invokeGetReport($request);
                     $log_text = 'GetReport -> ReportId:' . $reportId;
                     func_backprocess_log($this->sBackProcessLogName, $log_text);
                 }
@@ -688,9 +688,9 @@ class classAmazonMWS
         $aResultArray = [];
         if (!empty($this->dom_xml_arr)) {
             if (is_array($this->dom_xml_arr)) {
-                foreach ($this->dom_xml_arr as $arr) {
+                foreach ($this->dom_xml_arr as $reportId => $arr) {
                     if (!empty($arr['Report_Contents']))
-                        $aResultArray[] = $arr['Report_Contents'];
+                        $aResultArray[$reportId] = $arr['Report_Contents'];
                 }
             } else {
                 if (!empty($this->dom_xml_arr['Report_Contents']))
@@ -776,7 +776,7 @@ class classAmazonMWS
 
             $err = '';
             $aOrderDetails = [];
-            foreach ($ReportContent as $report_data) {
+            foreach ($ReportContent as $report_id => $report_data) {
 
                 $findme_arr = array("Order", "Refund", "Fee", "Component", "Item", "AdjustedItem");
 
@@ -813,7 +813,7 @@ class classAmazonMWS
                             $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl['orders'] . " WHERE amazonorderid='$v[AmazonOrderID]'");
                             if (!empty($order_info)) {
 
-                                $log_text = "order processed: <AmazonOrderID>" . $v["AmazonOrderID"] . "</AmazonOrderID><ShipmentID>" . $v["ShipmentID"] . "</ShipmentID>";
+                                $log_text = "order processed: " . $v["AmazonOrderID"];
 
                                 func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
                                 $aUpdateFields = [];
@@ -927,6 +927,7 @@ class classAmazonMWS
                                 $aOrderDetailData['AmazonShipmentID'] = $sShippingId;
                                 $aOrderDetailData['AmazonOrderItemCode'] = $sAmazonCode;
                                 $aOrderDetailData['Refund'] = floatval(abs($aFees['Refund']));
+                                $aOrderDetailData['reportId'] = $report_id;
                                 $iOrderId = $aOrderDetailData['orderid'] = intval($aFees['orderid']);
                                 $oProducts = new classProducts();
                                 $aProduct = $oProducts->getProductBySKU($aOrderDetailData['SKU']);
