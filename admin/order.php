@@ -1369,6 +1369,8 @@ elseif ($mode == "accounting_apply") {
 */
 }
 elseif ($mode == "table_accounting_apply") {
+		$log = "'Update' at 'Accounting' pressed";
+		func_log_order($orderid, 'X', $log, $login);
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 }

@@ -512,7 +512,6 @@ function func_flush($s = NULL) {
 #
 function func_html_location($url, $time=3) {
 	x_session_save();
-	global $use_sessions_type;
 
 	if ($use_sessions_type < 3) {
 		session_write_close();
@@ -2341,12 +2340,11 @@ function my_array_sort($array, $on, $order=SORT_ASC)
     return $new_array;
 }
 
-function func_log_order($orderid, $type, $log, $ulogin="") {
+function func_log_order($orderid, $type, $log, $login="") {
 	global $sql_tbl;
-	global $login;
-	if (empty($ulogin)) $ulogin = $login;
 
-	db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($ulogin)."', '".addslashes($log)."')");
+	if (!empty($log))
+		db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($login)."', '".addslashes($log)."')");
 //	db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($login)."', '".$log."')");
 }
 
