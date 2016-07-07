@@ -782,7 +782,8 @@ if ($REQUEST_METHOD == "POST") {
 			  if (!empty($v_arr) && is_array($v_arr)){
 
 			    $manufacturerid__amount_csv = func_query_first("SELECT manufacturerid, amount_csv FROM $sql_tbl[reconciliations] WHERE id='$r_id'");
-			    $manufacturerid = $manufacturerid__amount_csv["manufacturerid"];
+			    // $manufacturerid = $manufacturerid__amount_csv["manufacturerid"];
+			    $manufacturerid = $manufacturer_selected[$r_id];
 
 			    if (!empty($manufacturerid)){
 
@@ -1171,6 +1172,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 	foreach ($reconciliations as $k => $v){
 
                 $manufacturerid = 0;
+				$aManufacturersForReconciliation = [];
                 foreach ($manufacturerid_info as $kk => $vv){
 	                if (!empty($v["description_csv"]) && !empty($vv["d_search_keyphrase_for_reconciliation"])){
 
@@ -1183,11 +1185,12 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 					$v_description_csv_UPPER = strtoupper($v["description_csv"]);	
 					$vv_s_r_UPPER = strtoupper($vv_s_r);
 
-		      	                if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false){
-
-	        	                        $manufacturerid = $kk;
-						$reconciliations[$k]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>".$vv_s_r_UPPER."</B>", $v_description_csv_UPPER);
-					}
+								if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false) {
+									$manufacturerid = $kk;
+									require_once $xcart_dir . "/include/class/classManufacturer.php";
+									$aManufacturersForReconciliation[$kk] = new classManufacturer($kk);
+									$reconciliations[$k]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>" . $vv_s_r_UPPER . "</B>", $v_description_csv_UPPER);
+								}
 				}
 			}
 		}
@@ -1205,6 +1208,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
                 if (!empty($v["amount_csv"]) && $v["amount_csv"] < 0){
                         $reconciliations[$k]["amount_csv_abs"] = abs($v["amount_csv"]);
                 }
+		$reconciliations[$k]['aManufacturersEntities'] = $aManufacturersForReconciliation;
 
 		if ($tab == "unreconciled" || $tab == "reconciled"){
 		    if (!empty($manufacturerid)){

@@ -9,7 +9,7 @@ global $xcart_dir, $config;
 require_once $xcart_dir . "/include/class/classAmazonMWS.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
 
-$classOrderGroup = new classOrderGroup(['orderid'=>62099, 'manufacturerid'=>12]);
+$classOrderGroup = new classOrderGroup(['orderid'=>62099, 'manufacturerid'=>11]);
 var_dump($classOrderGroup->getOrderAmazonDetails()->isRefundExists());
 
 exit;
