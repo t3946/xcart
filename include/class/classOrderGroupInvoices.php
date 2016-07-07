@@ -5,6 +5,9 @@ require_once $xcart_dir . "/include/class/classOrderGroupInvoice.php";
 
 class classOrderGroupInvoices extends classData
 {
+    /**
+     * @var classOrderGroupInvoice[]
+     */
     private $aGroupInvoices = [];
 
     public function __construct($aParams = [])
@@ -14,7 +17,8 @@ class classOrderGroupInvoices extends classData
         parent::__construct($aParams);
     }
 
-    public function countOrderGroupInvoices() {
+    public function countOrderGroupInvoices()
+    {
         $count = 0;
         if (!empty($this->aGroupInvoices))
             $count = count($this->aGroupInvoices);
@@ -23,12 +27,14 @@ class classOrderGroupInvoices extends classData
 
     public function getOrderGroupInvoices($aParams = [])
     {
-        $aRes = func_query("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE orderid = " . $aParams['orderid'] . " AND manufacturerid = " . $aParams['manufacturerid']);
-        if (!empty($aRes)) {
-            foreach ($aRes as $aGroupInvoice) {
-                $oGroupInvoice = new classOrderGroupInvoice();
-                $oGroupInvoice->fillPrimaryTableValues($aGroupInvoice);
-                $this->aGroupInvoices[] = $oGroupInvoice;
+        if (empty($this->aGroupInvoices)) {
+            $aRes = func_query("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE orderid = " . $aParams['orderid'] . " AND manufacturerid = " . $aParams['manufacturerid'] . " ORDER BY invoice_number");
+            if (!empty($aRes)) {
+                foreach ($aRes as $aGroupInvoice) {
+                    $oGroupInvoice = new classOrderGroupInvoice();
+                    $oGroupInvoice->fillPrimaryTableValues($aGroupInvoice);
+                    $this->aGroupInvoices[] = $oGroupInvoice;
+                }
             }
         }
         return $this;
@@ -39,7 +45,7 @@ class classOrderGroupInvoices extends classData
         $fRes = 0;
         if (!empty($this->aGroupInvoices)) {
             foreach ($this->aGroupInvoices as $oGroupInvoice) {
-                $fRes+=floatval($oGroupInvoice->getField('products_total'));
+                $fRes += $oGroupInvoice->getOrderGroupInvoiceProductsTotal();
             }
         }
         return $fRes;
@@ -50,7 +56,7 @@ class classOrderGroupInvoices extends classData
         $fRes = 0;
         if (!empty($this->aGroupInvoices)) {
             foreach ($this->aGroupInvoices as $oGroupInvoice) {
-                $fRes+=floatval($oGroupInvoice->getField('shipping_total'));
+                $fRes += $oGroupInvoice->getOrderGroupInvoicesShippingTotal();
             }
         }
         return $fRes;
@@ -61,9 +67,29 @@ class classOrderGroupInvoices extends classData
         $fRes = 0;
         if (!empty($this->aGroupInvoices)) {
             foreach ($this->aGroupInvoices as $oGroupInvoice) {
-                $fRes+=floatval($oGroupInvoice->getField('HST_charged'));
+                $fRes += $oGroupInvoice->getOrderGroupInvoicesHST();
             }
         }
         return $fRes;
+    }
+
+    public function getLastInvoice()
+    {
+        $oLastInvoice = null;
+        if (!empty($this->aGroupInvoices)) {
+            $oLastInvoice = end($this->aGroupInvoices);
+        }
+        return $oLastInvoice;
+    }
+    /**
+     * @param classOrderGroupInvoice $oLastInvoice
+     * @return classOrderGroupInvoices
+     */
+    public function createCloneInvoice($oInvoice)
+    {
+        $oCloneInvoice = $oInvoice->_clone();
+        $oCloneInvoice->setInvoiceNumber($oInvoice->getInvoiceNumber() + 1);
+        $this->aGroupInvoices[] = $oCloneInvoice;
+        return $this;
     }
 }

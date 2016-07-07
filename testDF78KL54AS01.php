@@ -9,8 +9,19 @@ global $xcart_dir, $config;
 require_once $xcart_dir . "/include/class/classAmazonMWS.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
 
-$classOrderGroup = new classOrderGroup(['orderid'=>62099, 'manufacturerid'=>11]);
-var_dump($classOrderGroup->getOrderAmazonDetails()->isRefundExists());
+require_once $xcart_dir . "/include/class/classOrderGroupInvoices.php";
+$oGroupInvoices = new classOrderGroupInvoices();
+$oInvoices = $oGroupInvoices->getOrderGroupInvoices(['orderid' => 62760, 'manufacturerid' => 12]);
+if ($oInvoices->countOrderGroupInvoices() == 1) {
+    $oLastInvoice = $oInvoices->getLastInvoice();
+    if ($oLastInvoice->getOrderGroupInvoiceProductsTotal() != 0 && $oLastInvoice->setOrderGroupInvoicesShippingTotal() != 0) {
+        $oInvoices->createCloneInvoice($oLastInvoice)->getLastInvoice()->setCostToUsForProductsCharged(0)->
+        setTaxChargedExceptHST(0)->setOrderGroupInvoiceProductsTotal(0)->calculateOrderGroupInvoiceTotal()->_insert(true);
+        $oLastInvoice->setOrderGroupInvoicesShippingCharged(0)->setOrderGroupInvoicesDropShipFeeCharged(0)->
+        setOrderGroupInvoicesShippingTotal(0)->calculateOrderGroupInvoiceTotal()->_insert(true);
+    }
+}
+
 
 exit;
 

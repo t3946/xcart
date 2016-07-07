@@ -364,6 +364,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"d_we_pay_to_distributor_by" => addslashes($d_we_pay_to_distributor_by),
 				"d_net_payment_terms_in_days" => addslashes($d_net_payment_terms_in_days),
 				"d_bulk_or_individual_order_payments" => addslashes($d_bulk_or_individual_order_payments),
+				"distributor_charges_for_each_order_twice_and_split_invoices" => (empty($distributor_charges_for_each_order_twice_and_split_invoices))?'N':$distributor_charges_for_each_order_twice_and_split_invoices,
 
 				"d_available_on_distributor_site_checkbox" => addslashes($d_available_on_distributor_site_checkbox),
 				"d_sent_by_email_to" => addslashes($d_sent_by_email_to),
