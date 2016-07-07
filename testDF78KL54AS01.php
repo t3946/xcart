@@ -9,22 +9,12 @@ global $xcart_dir, $config;
 require_once $xcart_dir . "/include/class/classAmazonMWS.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
 
-/*$classOrderGroup = new classOrderGroup(['orderid'=>62336, 'manufacturerid'=>12]);
+$classOrderGroup = new classOrderGroup(['orderid'=>62099, 'manufacturerid'=>12]);
+var_dump($classOrderGroup->getOrderAmazonDetails()->isRefundExists());
 
-$classOrderGroup
-    ->initAccounting();
+exit;
 
-$classOrderGroup->printAccounting();
-
-$classOrderGroup
-    ->initAccounting()
-    ->recalculateAccountingProfit();
-
-$classOrderGroup->printAccounting();
-
-exit;*/
-
-$classAmazonMWS = new classAmazonMWS();
+/*$classAmazonMWS = new classAmazonMWS();
 //func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
 $classAmazonMWS->setReportType('_GET_V2_SETTLEMENT_REPORT_DATA_XML_')->setBackProcessName($classAmazonMWS::BACK_PROCESS_LOG_NAME_SETTLEMENT)
@@ -32,7 +22,7 @@ $classAmazonMWS->setReportType('_GET_V2_SETTLEMENT_REPORT_DATA_XML_')->setBackPr
     ->_Request('GetReport')
     ->processReportSettlementData();
 
-
+*/
 
 
 
