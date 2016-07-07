@@ -6,6 +6,11 @@ require_once $xcart_dir . "/include/class/classOrderAmazonDetail.php";
 
 class classOrderAmazonDetails extends classData
 {
+    const TYPE_REFUND = 'Refund';
+    const TYPE_FEE = 'Fee';
+    /**
+     * @var classOrderAmazonDetail[]
+     */
     private $aAmazonDetails = [];
 
     public function __construct($aParams = [])
@@ -20,6 +25,18 @@ class classOrderAmazonDetails extends classData
         if (!empty($this->aAmazonDetails))
             $count = count($this->aAmazonDetails);
         return $count;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRefundExists() {
+        if (!empty($this->aAmazonDetails)) {
+            foreach ($this->aAmazonDetails as $oAmazonDetail) {
+                if ($oAmazonDetail->getField('type') == self::TYPE_REFUND) return true;
+            }
+        }
+        return false;
     }
 
     public function getOrderAmazonDetails($aParams = [])

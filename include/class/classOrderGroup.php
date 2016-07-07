@@ -10,11 +10,28 @@ require_once $xcart_dir . "/include/class/classOrderAmazonDetails.php";
 
 class classOrderGroup extends classData
 {
+    /**
+     * @var classOrder
+     */
     private $oOrder;
+    /**
+     * @var classOrderGroupInvoice[]
+     */
     private $oOrderInvoices = [];
+    /**
+     * @var classOrderGroupMemo[]
+     */
     private $oOrderMemos = [];
+    /**
+     * @var classOrderRefundGroup[]
+     */
     private $oOrderRefunds = [];
+    /**
+     * @var classOrderAmazonDetail[]
+     */
     private $oOrderAmazonDetails = [];
+
+    private $oPaymentMethod = null;
 
     public function __construct($aParams = [])
     {
@@ -51,7 +68,9 @@ class classOrderGroup extends classData
         return $fCostToUs;
     }
 
-
+    /**
+     * @return classOrderGroupInvoices
+     */
     public function getOrderGroupInvoices()
     {
         if (empty($this->oOrderInvoices)) {
@@ -61,6 +80,9 @@ class classOrderGroup extends classData
         return $this->oOrderInvoices;
     }
 
+    /**
+     * @return classOrderGroupMemos
+     */
     public function getOrderGroupMemos()
     {
         if (empty($this->oOrderMemos)) {
@@ -70,6 +92,9 @@ class classOrderGroup extends classData
         return $this->oOrderMemos;
     }
 
+    /**
+     * @return classOrderRefundGroups
+     */
     public function getOrderRefundGroups()
     {
         if (empty($this->oOrderRefunds)) {
@@ -79,6 +104,9 @@ class classOrderGroup extends classData
         return $this->oOrderRefunds;
     }
 
+    /**
+     * @return classOrderAmazonDetails
+     */
     public function getOrderAmazonDetails()
     {
         if (empty($this->oOrderAmazonDetails)) {
@@ -88,6 +116,9 @@ class classOrderGroup extends classData
         return $this->oOrderAmazonDetails;
     }
 
+    /**
+     * @return classOrder
+     */
     public function getOrderInstance()
     {
         if (empty($this->oOrder)) {
@@ -96,6 +127,9 @@ class classOrderGroup extends classData
         return $this->oOrder;
     }
 
+    /**
+     * @return classPaymentMethod
+     */
     public function getPaymentMethodInstance()
     {
         if (empty($this->oPaymentMethod)) {
@@ -118,24 +152,36 @@ class classOrderGroup extends classData
         return $this;
     }
 
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingHST()
     {
         $this->setField('accounting_gst_0', floatval($this->getField('total_gst')));
         return $this;
     }
 
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingPST()
     {
         $this->setField('accounting_pst_0', floatval($this->getField('total_pst')));
         return $this;
     }
 
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingGross()
     {
         $this->setField('accounting_gross_0', floatval($this->getField('total_gross')));
         return $this;
     }
 
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingGrossCostToUs()
     {
         $this->setField('accounting_gross_1_cost_to_us', floatval($this->getTotalCostToUs()));
@@ -235,31 +281,43 @@ class classOrderGroup extends classData
         $this->recalculateAccountingShipping();
         return $this;
     }
-
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingNetShipping()
     {
         $this->setField('accounting_net_2_shipping', 0);
         return $this;
     }
-
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingGrossShipping()
     {
         $this->setField('accounting_gross_2_shipping', 0);
         return $this;
     }
-
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingPSTShipping()
     {
         $this->setField('accounting_pst_2_shipping', 0);
         return $this;
     }
-
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingHSTShipping()
     {
         $this->setField('accounting_gst_2_shipping', 0);
         return $this;
     }
 
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function setAccountingGrossShipping($fSumma)
     {
         $this->setField('accounting_gross_2_shipping', floatval($fSumma));
@@ -308,63 +366,88 @@ class classOrderGroup extends classData
         return $this;
     }
 
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingNetRefundToCustomer()
     {
         $this->setField('accounting_net_3_ref_to_cust', 0);
         return $this;
     }
 
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingGrossRefundToCustomer()
     {
         $this->setField('accounting_gross_3_ref_to_cust', 0);
         return $this;
     }
 
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingPSTRefundToCustomer()
     {
         $this->setField('accounting_pst_3_ref_to_cust', 0);
         return $this;
     }
-
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingHSTRefundToCustomer()
     {
         $this->setField('accounting_gst_3_ref_to_cust', 0);
         return $this;
     }
-
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingNetRefundToUs()
     {
         $this->setField('accounting_net_4_ref_to_us', 0);
         return $this;
     }
-
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingGrossRefundToUs()
     {
         $this->setField('accounting_gross_4_ref_to_us', 0);
         return $this;
     }
-
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingPSTRefundToUs()
     {
         $this->setField('accounting_pst_4_ref_to_us', 0);
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
-
+    /**
+     * @return classOrderGroup
+     */
     public function initAccountingHSTRefundToUs()
     {
         $this->setField('accounting_gst_4_ref_to_us', 0);
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
-
+    /**
+     * @param float $fRefundSumma
+     * @return classOrderGroup
+     */
     public function addAccountingPSTRefundToCustomer($fRefundSumma)
     {
         $this->setField('accounting_pst_3_ref_to_cust', $this->getField('accounting_pst_3_ref_to_cust') + abs(floatval($fRefundSumma)));
         $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
-
+    /**
+     * @param float $fRefundSumma
+     * @return classOrderGroup
+     */
     public function setAccountingPSTRefundToCustomer($fRefundSumma)
     {
         $this->setField('accounting_pst_3_ref_to_cust', abs(floatval($fRefundSumma)));
@@ -378,48 +461,68 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
-
+    /**
+     * @param float $fRefundSumma
+     * @return classOrderGroup
+     */
     public function setAccountingHSTRefundToCustomer($fRefundSumma)
     {
         $this->setField('accounting_gst_3_ref_to_cust', abs(floatval($fRefundSumma)));
         $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingNetRefundToUs($fSumma)
     {
         $this->setField('accounting_net_4_ref_to_us', floatval($this->getField('accounting_net_4_ref_to_us')) + floatval($fSumma));
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingGrossRefundToUs($fSumma)
     {
         $this->setField('accounting_gross_4_ref_to_us', floatval($this->getField('accounting_gross_4_ref_to_us')) + floatval($fSumma));
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingPSTRefundToUs($fSumma)
     {
         $this->setField('accounting_pst_4_ref_to_us', floatval($this->getField('accounting_pst_4_ref_to_us')) + floatval($fSumma));
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingHSTRefundToUs($fSumma)
     {
         $this->setField('accounting_gst_4_ref_to_us', floatval($this->getField('accounting_gst_4_ref_to_us')) + floatval($fSumma));
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function setAccountingHSTRefundToUs($fSumma)
     {
         $this->setField('accounting_gst_4_ref_to_us', floatval($fSumma));
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
-
+    /**
+     * @return classOrderGroup
+     */
     public function calculateAccountingNetProfit()
     {
         $this->setField('accounting_net_5_profit', (
@@ -442,6 +545,9 @@ class classOrderGroup extends classData
         return $this;
     }
 
+    /**
+     * @return classOrderGroup
+     */
     public function calculateAccountingHSTProfit()
     {
         $this->setField('accounting_gst_5_profit', (
@@ -453,6 +559,9 @@ class classOrderGroup extends classData
         return $this;
     }
 
+    /**
+     * @return classOrderGroup
+     */
     public function calculateAccountingGrossProfit()
     {
         $this->setField('accounting_gross_5_profit', (
@@ -513,6 +622,9 @@ class classOrderGroup extends classData
             floatval($this->getField('accounting_gst_4_ref_to_us')));
     }
 
+    /**
+     * @return classOrderGroup
+     */
     public function recalculateAccountingProfit()
     {
         $this->calculateAccountingNetProfit()
@@ -599,7 +711,7 @@ class classOrderGroup extends classData
                         $FBAWeightBasedFee +
                         $AmazonCommission)->initAccountingGrossCostToUs()
                     ->setAccountingGrossShipping($fShipping);
-                    if ($fRefund != 0)
+                    if ($this->getOrderAmazonDetails()->isRefundExists())
                         $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
 
                 break;
