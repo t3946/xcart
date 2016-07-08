@@ -10,6 +10,10 @@ require_once $xcart_dir . "/include/class/classOrderAmazonDetails.php";
 
 class classOrderGroup extends classData
 {
+    const RECONCILED_NONE = 0;
+    const RECONCILED_FULLY = 1;
+    const RECONCILED_PARTIAL = 2;
+
     /**
      * @var classOrder
      */
@@ -281,6 +285,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingShipping();
         return $this;
     }
+
     /**
      * @return classOrderGroup
      */
@@ -289,6 +294,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_net_2_shipping', 0);
         return $this;
     }
+
     /**
      * @return classOrderGroup
      */
@@ -297,6 +303,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_gross_2_shipping', 0);
         return $this;
     }
+
     /**
      * @return classOrderGroup
      */
@@ -305,6 +312,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_pst_2_shipping', 0);
         return $this;
     }
+
     /**
      * @return classOrderGroup
      */
@@ -392,6 +400,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_pst_3_ref_to_cust', 0);
         return $this;
     }
+
     /**
      * @return classOrderGroup
      */
@@ -400,6 +409,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_gst_3_ref_to_cust', 0);
         return $this;
     }
+
     /**
      * @return classOrderGroup
      */
@@ -408,6 +418,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_net_4_ref_to_us', 0);
         return $this;
     }
+
     /**
      * @return classOrderGroup
      */
@@ -416,6 +427,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_gross_4_ref_to_us', 0);
         return $this;
     }
+
     /**
      * @return classOrderGroup
      */
@@ -425,6 +437,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
+
     /**
      * @return classOrderGroup
      */
@@ -434,6 +447,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
+
     /**
      * @param float $fRefundSumma
      * @return classOrderGroup
@@ -444,6 +458,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
+
     /**
      * @param float $fRefundSumma
      * @return classOrderGroup
@@ -461,6 +476,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
+
     /**
      * @param float $fRefundSumma
      * @return classOrderGroup
@@ -471,6 +487,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -480,6 +497,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_net_4_ref_to_us', floatval($this->getField('accounting_net_4_ref_to_us')) + floatval($fSumma));
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -490,6 +508,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -500,6 +519,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -510,6 +530,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -520,6 +541,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToUs();
         return $this;
     }
+
     /**
      * @return classOrderGroup
      */
@@ -673,7 +695,7 @@ class classOrderGroup extends classData
 
     public function recalculateAccountingAmazon()
     {
-        $fRefund = $fPrincipalRefund = $fShippingRefund = $fShipping = $FBAPerOrderFulfillmentFee = $FBAPerUnitFulfillmentFee = $FBAWeightBasedFee = $AmazonCommission =0;
+        $fRefund = $fPrincipalRefund = $fShippingRefund = $fShipping = $FBAPerOrderFulfillmentFee = $FBAPerUnitFulfillmentFee = $FBAWeightBasedFee = $AmazonCommission = 0;
         if ($this->getOrderAmazonDetails()->countOrderAmazonDetails() > 0) {
             $fRefund = $this->getOrderAmazonDetails()->getOrderAmazonRefund();
             $fPrincipalRefund = $this->getOrderAmazonDetails()->getOrderAmazonPrincipalRefund();
@@ -711,8 +733,8 @@ class classOrderGroup extends classData
                         $FBAWeightBasedFee +
                         $AmazonCommission)->initAccountingGrossCostToUs()
                     ->setAccountingGrossShipping($fShipping);
-                    if ($this->getOrderAmazonDetails()->isRefundExists())
-                        $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                if ($this->getOrderAmazonDetails()->isRefundExists())
+                    $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
 
                 break;
         }
@@ -726,6 +748,18 @@ class classOrderGroup extends classData
     public function updateAccounting()
     {
         func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, 'orderid = ' . $this->getField('orderid') . ' and manufacturerid = ' . $this->getField('manufacturerid'));
+    }
+
+    public function getReconciledStatus()
+    {
+        $resStatus = self::RECONCILED_NONE;
+        $iCountInvoices = $this->getOrderGroupInvoices()->countOrderGroupInvoices();
+        $iCountReconciledInvoices = $this->getOrderGroupInvoices()->countOrderGroupInvoicesReconciled();
+        if ($iCountInvoices > 0 && $iCountReconciledInvoices > 0) {
+            if ($iCountInvoices == $iCountReconciledInvoices) $resStatus = self::RECONCILED_FULLY; else
+                $resStatus = self::RECONCILED_PARTIAL;
+        }
+        return $resStatus;
     }
 
     public function printAccounting()

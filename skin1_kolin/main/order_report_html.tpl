@@ -17,6 +17,7 @@ vim: set ts=2 sw=2 sts=2 et:
   <td class="OrderSheetCell" colspan="10" style="text-align: left; font-weight: bold;">
   {foreach from=$manufacturers item=mnf name=mnf_loop}{if !$smarty.foreach.mnf_loop.first}, {/if}{$mnf}{/foreach}
   </td>
+  {if $data.show_reconciled !=''}<td class="OrderSheetCell"></td>{/if}
 </tr>
 <tr>
   <td class="OrderSheetCell" colspan="2" style="text-align: right;">{$lng.lbl_report_period}:</td>
@@ -27,9 +28,11 @@ vim: set ts=2 sw=2 sts=2 et:
   {$lng.lbl_all_dates}
   {/if}
   </td>
+  {if $data.show_reconciled !=''}<td class="OrderSheetCell"></td>{/if}
 </tr>
 <tr>
-  <td class="OrderSheetCell" colspan="12">&nbsp; </td>
+  <td class="OrderSheetCell" colspan="{if $data.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
+
 </tr>
 {assign var="cycle_state" value="first"}
 {foreach from=$orders item=order}

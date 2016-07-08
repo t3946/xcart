@@ -177,6 +177,9 @@ if ($mode == "report") {
 			$orders[$k]["shipping_groups"] = func_get_shipping_groups($v["orderid"]);
 			foreach ($orders[$k]["shipping_groups"] as $mid => $group) {
 
+				require_once $xcart_dir . "/include/class/classOrderGroup.php";
+				$oOrderGroup = new classOrderGroup(['orderid'=>$v["orderid"], 'manufacturerid'=>$mid]);
+				$orders[$k]["shipping_groups"][$mid]['reconcile_status'] = $oOrderGroup->getReconciledStatus();
 				if (
 				    (empty($group["invoices"]) && empty($group["memos"]) && $data['profit_margin_range'] == "margin_less_100") // Nothing to calculate
 		                    || (!empty($data['manufacturers']) && !in_array($mid, $data['manufacturers'])) 
@@ -192,12 +195,12 @@ if ($mode == "report") {
 				} else {
 
 
-                                         if ($data["accounting_method"] == "accrual" && $group["cb_status"] == "O"){
-                                                  $group["accounting"][0]["net"] = $group["total"]["net"];
-                                                  $group["accounting"][0]["gross"] = $group["total"]["gross"];
+					if ($data["accounting_method"] == "accrual" && $group["cb_status"] == "O") {
+						$group["accounting"][0]["net"] = $group["total"]["net"];
+						$group["accounting"][0]["gross"] = $group["total"]["gross"];
 
-                                                  $orders[$k]["shipping_groups"][$mid]["accounting"][0]["net"] = $group["total"]["net"];
-                                                  $orders[$k]["shipping_groups"][$mid]["accounting"][0]["gross"] = $group["total"]["gross"];
+						$orders[$k]["shipping_groups"][$mid]["accounting"][0]["net"] = $group["total"]["net"];
+						$orders[$k]["shipping_groups"][$mid]["accounting"][0]["gross"] = $group["total"]["gross"];
 
 
 ###
@@ -209,9 +212,9 @@ if ($mode == "report") {
 
 ##
 
-						$orders[$k]["shipping_groups"][$mid]["profit_margin"] = @price_format($group["accounting"][5]["net"]/$group["accounting"][0]["net"]*100);
+						$orders[$k]["shipping_groups"][$mid]["profit_margin"] = @price_format($group["accounting"][5]["net"] / $group["accounting"][0]["net"] * 100);
 
-                                         }
+					}
 
 
 					$manufacturers[$mid] = $group["code"];

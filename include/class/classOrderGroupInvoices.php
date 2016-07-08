@@ -25,6 +25,17 @@ class classOrderGroupInvoices extends classData
         return $count;
     }
 
+    public function countOrderGroupInvoicesReconciled()
+    {
+        $count = 0;
+        if (!empty($this->aGroupInvoices))
+            foreach ($this->aGroupInvoices as $oGroupInvoice) {
+                if ($oGroupInvoice->getReconcileStatus() == 'R')
+                    $count ++;
+            }
+        return $count;
+    }
+
     public function getOrderGroupInvoices($aParams = [])
     {
         if (empty($this->aGroupInvoices)) {

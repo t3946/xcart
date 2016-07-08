@@ -7,6 +7,9 @@ class classData
     protected $aPrimaryTableValue;
     protected $sPrimaryTable;
 
+    /**
+     * @param array $aParams
+     */
     public function __construct($aParams = [])
     {
         global $sql_tbl;

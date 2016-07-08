@@ -1,9 +1,15 @@
 <?php
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
+require_once $xcart_dir . "/include/class/classReconciliation.php";
 
 class classOrderGroupInvoice extends classData
 {
+    /**
+     * @var classReconciliation
+     */
+    private $oReconciliation = null;
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['orderid', 'manufacturerid', 'invoice_number'];
@@ -86,5 +92,21 @@ class classOrderGroupInvoice extends classData
     public function calculateOrderGroupInvoiceTotal() {
         $this->setField('invoice_total', $this->getOrderGroupInvoicesShippingTotal()+$this->getOrderGroupInvoiceProductsTotal());
         return $this;
+    }
+
+    protected function getReconciliationEntity() {
+        if (intval($this->getField('reconciliation_id')) > 0 && empty($this->oReconciliation)) {
+            $this->oReconciliation = new classReconciliation(['id'=>$this->getField('reconciliation_id')]);
+        }
+        return $this->oReconciliation;
+    }
+
+    public function getReconcileStatus() {
+        $sReconcileStatus = null;
+        $oReconciliation =  $this->getReconciliationEntity();
+        if (!empty($oReconciliation)) {
+            $sReconcileStatus = $oReconciliation->getAction();
+        }
+        return $sReconcileStatus;
     }
 }
