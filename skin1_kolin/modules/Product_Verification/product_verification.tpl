@@ -41,13 +41,13 @@
 <table cellpadding="3" cellspacing="1" width="100%">
 
 <tr class="TableHead">
-	<td>DISTRIBUTOR</td>
-	<td nowrap="nowrap" align="center">ORDER #</td>
-	<td align="center">BACK END</td>
+	<td width="100">DISTRIBUTOR</td>
+	<td width="60" nowrap="nowrap" align="center">ORDER #</td>
+	<td width="100" align="center">BACK END</td>
 	<td align="center">FRONT END</td>
-	<td nowrap="nowrap" align="center">DISTR WEBSITE</td>
-	<td nowrap="nowrap" align="center">LAST VERIF DATE</td>
-	<td align="center">VERIFIED?</td>
+	<td width="100" nowrap="nowrap" align="center">DISTR WEBSITE</td>
+	<td width="100" nowrap="nowrap" align="center">LAST VERIF DATE</td>
+	<td width="100" align="center">VERIFIED?</td>
 </tr>
 
 
@@ -98,30 +98,17 @@
 
 {/foreach}
 
-</table>
-
-    <br/>
-    <br/>
-    <a id="click_to_back_changes" href="#" style="display:none; font-weight: bold;" onclick="$('#backdoor-table').fadeToggle('slow'); return false;">View already verified products</a>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
 
 
-<table id="backdoor-table" style="display:none;" cellpadding="3" cellspacing="1" width="100%">
+    <tr id="click_to_back_changes" style="display:none;">
+        <td colspan="7" style="padding: 10px 3px; background-color:#FFF;"><a href="#" style="font-weight: bold;" onclick="$('#click_to_back_changes').next('tr').fadeToggle('slow'); return false;">View already verified products</a></td>
+    </tr>
 
-<tr class="TableHead">
-	<td>DISTRIBUTOR</td>
-	<td nowrap="nowrap" align="center">ORDER #</td>
-	<td align="center">BACK END</td>
-	<td align="center">FRONT END</td>
-	<td nowrap="nowrap" align="center">DISTR WEBSITE</td>
-	<td nowrap="nowrap" align="center">LAST VERIF DATE</td>
-	<td align="center">VERIFIED?</td>
-</tr>
+
 
 </table>
+
+
 
 {/capture}
 {include file="dialog.tpl" title=$capture_dialog_name content=$smarty.capture.dialog extra='width="100%"'}
@@ -164,9 +151,9 @@
                                             $('td:first-child > a',nextrow).show();
                                         }
                                     }
-                                    rowtohide.show();
+                                    //rowtohide.show();
 
-                                    $('#backdoor-table').find('tr:first-child').after(rowtohide);
+                                    $('#click_to_back_changes').after(rowtohide);
                                     $('td:first-child > a',rowtohide).show();
                                     $('#click_to_back_changes').show();
                                 });
@@ -214,7 +201,7 @@
                 var position = $(this).position(),
                 note_form = $('#send_note_for_product'),
                 textarea = note_form.find('textarea');
-                note_form.css('left', position.left - 142).css('top', position.top);
+                note_form.css('left', position.left - 342).css('top', position.top);
 
                 if (statusid == 1)
                     textarea.attr('placeholder',"Please describe the problem and explain why you didn't fix it.");
