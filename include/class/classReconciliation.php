@@ -15,4 +15,12 @@ class classReconciliation extends classData
     public function getAction() {
         return $this->getField('action');
     }
+
+    public function getDescription() {
+        return $this->getField('description_csv');
+    }
+
+    public function findReconciliationOrder() {
+        
+    }
 }

@@ -39,7 +39,7 @@ class classOrderGroupInvoices extends classData
     public function getOrderGroupInvoices($aParams = [])
     {
         if (empty($this->aGroupInvoices)) {
-            $aRes = func_query("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE orderid = " . $aParams['orderid'] . " AND manufacturerid = " . $aParams['manufacturerid'] . " ORDER BY invoice_number");
+            $aRes = func_query("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE ".str_replace('&',' AND ',http_build_query($aParams)). " ORDER BY invoice_number");
             if (!empty($aRes)) {
                 foreach ($aRes as $aGroupInvoice) {
                     $oGroupInvoice = new classOrderGroupInvoice();
