@@ -1171,26 +1171,55 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 
 	foreach ($reconciliations as $k => $v){
 
-                $manufacturerid = 0;
-				$aManufacturersForReconciliation = [];
-                foreach ($manufacturerid_info as $kk => $vv){
-	                if (!empty($v["description_csv"]) && !empty($vv["d_search_keyphrase_for_reconciliation"])){
+		$manufacturerid = 0;
+		$aManufacturersForReconciliation = [];
+		foreach ($manufacturerid_info as $kk => $vv) {
+			if (!empty($v["description_csv"]) && !empty($vv["d_search_keyphrase_for_reconciliation"])) {
 
-                                $d_search_keyphrase_for_reconciliation_arr = explode("<OR>", $vv["d_search_keyphrase_for_reconciliation"]);
+				$d_search_keyphrase_for_reconciliation_arr = explode("<OR>", $vv["d_search_keyphrase_for_reconciliation"]);
 
-	                        foreach ($d_search_keyphrase_for_reconciliation_arr as $kk_s_r => $vv_s_r){
+				foreach ($d_search_keyphrase_for_reconciliation_arr as $kk_s_r => $vv_s_r) {
 
 					$vv_s_r = trim($vv_s_r);
-					
-					$v_description_csv_UPPER = strtoupper($v["description_csv"]);	
+
+					$v_description_csv_UPPER = strtoupper($v["description_csv"]);
 					$vv_s_r_UPPER = strtoupper($vv_s_r);
 
-								if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false) {
-									$manufacturerid = $kk;
-									require_once $xcart_dir . "/include/class/classManufacturer.php";
-									$aManufacturersForReconciliation[$kk] = new classManufacturer($kk);
-									$reconciliations[$k]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>" . $vv_s_r_UPPER . "</B>", $v_description_csv_UPPER);
-								}
+					if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false) {
+						$manufacturerid = $kk;
+						require_once $xcart_dir . "/include/class/classManufacturer.php";
+						$aManufacturersForReconciliation[$kk] = new classManufacturer($kk);
+						$reconciliations[$k]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>" . $vv_s_r_UPPER . "</B>", $v_description_csv_UPPER);
+
+						//preg_match('',$v_description_csv_UPPER, $aMatches);
+						$sRegex = '/PURCHASE AUTHORIZED ON (\d{2})\/(\d{2})/';
+						preg_match($sRegex,$v_description_csv_UPPER, $aMatches);
+						if (!empty($aMatches)) {
+							$sMonth = $aMatches[1];
+							$sDay = $aMatches[2];
+							$dCurDate = new DateTime();
+							$sCurYear = $dCurDate->format('Y');
+
+							$dTransactionDate = new DateTime();
+							$dTransactionDate->setDate($sCurYear, intval($sMonth), intval($sDay));
+
+							$useDate = $dTransactionDate;
+
+							if ($dCurDate < $dTransactionDate) {
+								$dTransactionDateLastYear = new DateTime();
+								$dTransactionDateLastYear->setDate(intval($sCurYear)-1, intval($sMonth), intval($sDay));
+								$useDate = $dTransactionDateLastYear;
+							}
+
+							$subDate = clone $useDate;
+							$addDate = clone $useDate;
+							$subDate->sub(new DateInterval('P6D'));
+							$addDate->add(new DateInterval('P1D'));
+
+							$sSearchString = "after: %s before: %s ";
+							$reconciliations[$k]['gmail_search_link'] = urlencode(sprintf($sSearchString,$subDate->format('Y/m/d'), $addDate->format('Y/m/d')));
+						}
+					}
 				}
 			}
 		}

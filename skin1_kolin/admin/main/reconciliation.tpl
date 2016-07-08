@@ -350,6 +350,9 @@ to
   {else}
 	{$v.description_csv}{if $v.transaction_type eq "P"} (PayPal){/if}
   {/if}
+  {if $v.gmail_search_link != ''}
+      (<a style="color: blue;" href="https://mail.google.com/mail/u/0/#search/{$v.gmail_search_link}" target="_blank">lookup Gmail</a>)
+  {/if}
 </td>
 
 <td width="50" valign="{if $v.two_reconciliations ne ""}middle{else}top{/if}" align="center">
