@@ -32,6 +32,26 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
             continue;  //  <--------------------------------
         }
         */
+		global $xcart_dir;
+		require_once $xcart_dir . "/include/class/classManufacturers.php";
+		$aManufacturersToCheck = [];
+		$oClassManufacurer = new classManufacturers($v["manufacturerid"]);
+		if ($oClassManufacurer->getField('parent_manufacturer_id') == -1) {
+			$aManufacturers = $oClassManufacurer->getChildrenManufacturers($v["manufacturerid"]);
+			if (!empty($aManufacturers)) {
+				foreach($aManufacturers as $aManufacturer) {
+					$aManufacturersToCheck[] = $aManufacturer['manufacturerid'];
+				}
+			}
+		} else {
+			$aManufacturersToCheck[] = $v["manufacturerid"];
+			$aManufacturers = $oClassManufacurer->getParentManufacturers($v["manufacturerid"]);
+			if (!empty($aManufacturers)) {
+				foreach($aManufacturers as $aManufacturer) {
+					$aManufacturersToCheck[] = $aManufacturer['manufacturerid'];
+				}
+			}
+		}
 
 		if ($manufacturerid_info[$v["manufacturerid"]]["d_bulk_or_individual_order_payments"] == "distributor_may_charge_for_several_orders_at_once") {
 
@@ -63,7 +83,7 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
 						func_flush();
 					}
 
-					if ($v["manufacturerid"] == $vv["manufacturerid"] && $vv["date"] < $v["date_csv"]) {
+					if (in_array($vv["manufacturerid"] , $aManufacturersToCheck) && $vv["date"] < $v["date_csv"]) {
 
 						if (!empty($vv["order_group_invoices"]) && is_array($vv["order_group_invoices"])) {
 							foreach ($vv["order_group_invoices"] as $invoice_number => $invoice_info) {
@@ -151,7 +171,7 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
 						func_flush();
 					}
 
-					if ($v["manufacturerid"] == $vv["manufacturerid"] && $vv["date"] < $v["date_csv"]) {
+					if (in_array($vv["manufacturerid"] , $aManufacturersToCheck) && $vv["date"] < $v["date_csv"]) {
 
 						if (!empty($vv["order_group_invoices"]) && is_array($vv["order_group_invoices"])) {
 
@@ -223,7 +243,7 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
 						continue;
 					}
 
-					if ($v["manufacturerid"] == $vv["manufacturerid"] && $vv["date"] < $v["date_csv"]) {
+					if (in_array($vv["manufacturerid"] , $aManufacturersToCheck) && $vv["date"] < $v["date_csv"]) {
 
 						if (!empty($vv["order_group_invoices"]) && is_array($vv["order_group_invoices"])) {
 							foreach ($vv["order_group_invoices"] as $invoice_number => $invoice) {
