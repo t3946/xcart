@@ -1207,7 +1207,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 
 					if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false) {
 						$manufacturerid = $kk;
-
+						require_once $xcart_dir . "/include/class/classManufacturer.php";
 						$aManufacturersForReconciliation[$kk] = new classManufacturer($kk);
 						$reconciliations[$k]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>" . $vv_s_r_UPPER . "</B>", $v_description_csv_UPPER);
 
