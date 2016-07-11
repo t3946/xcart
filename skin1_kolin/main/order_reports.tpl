@@ -209,6 +209,29 @@ function managedate(status) {
   <td class="FormButton">Include Fully refunded orders:</td>
   <td width="10">&nbsp;</td>
   <td><input type="checkbox" name="posted_data[cb_status]" value="R" checked="checked" /></td>
+
+</tr>
+    <tr><td> &nbsp;</td></tr>
+<tr>
+    <td colspan="3">
+    {include file="main/visiblebox_link.tpl" mark="1" title='Advanced options'}
+    </td>
+</tr>
+<tr>
+    <td colspan="3">
+        <table cellpadding="1" cellspacing="5" width="100%"{if $js_enabled eq 'Y'} style="display: none;"{/if} id="box1">
+            <tr>
+                <td colspan="3"><br />{include file="main/subheader.tpl" title='Advanced options'}</td>
+            </tr>
+            <tr>
+                <td width="182" class="FormButton" nowrap="nowrap">Show Reconciled:</td>
+                <td width="10"><font class="CustomerMessage"></font></td>
+                <td>
+                    <input type="checkbox" id="show_reconciled" name="posted_data[show_reconciled]"{if $search_prefilled.show_reconciled=='Y'} checked="checked"{/if} />
+                </td>
+            </tr>
+        </table>
+    </td>
 </tr>
 {* --- *}
 

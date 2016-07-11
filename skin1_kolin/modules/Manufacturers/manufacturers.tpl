@@ -1476,6 +1476,16 @@ and lasts <input type="text" name="d_warranty_last_day" value="{$manufacturer.d_
 </select>
         </td>
 </tr>
+{if $manufacturer.d_bulk_or_individual_order_payments eq "distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping"}
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="FormButton" width="80%">
+            <label style="position: relative; bottom: 3px;" for="distributor_charges_for_each_order_twice_and_split_invoices" >Split invoices (by Cost + Tax and Shipping)</label>
+            <input id="distributor_charges_for_each_order_twice_and_split_invoices" type="checkbox" name="distributor_charges_for_each_order_twice_and_split_invoices" {if $manufacturer.distributor_charges_for_each_order_twice_and_split_invoices == 'Y'}checked="checked"{/if} value="Y"/>
+        </td>
+    </tr>
+{/if}
 
 <tr>
         <td width="20%" class="FormButton">Search keyphrase for reconciliation</td>

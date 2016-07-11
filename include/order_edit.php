@@ -2749,6 +2749,22 @@ func_print_r($manufacturer_memos_data);
 
 						if ($update_invoices_table_flag){
 							func_array2update("order_group_invoices", $group_invoices, "orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='$invoice_number'");
+							require_once $xcart_dir . "/include/class/classManufacturer.php";
+							$oManufacturer = new classManufacturer($certain_mid);
+							if ($oManufacturer->getField('distributor_charges_for_each_order_twice_and_split_invoices') == 'Y') {
+								require_once $xcart_dir . "/include/class/classOrderGroupInvoices.php";
+								$oGroupInvoices = new classOrderGroupInvoices();
+								$oInvoices = $oGroupInvoices->getOrderGroupInvoices(['orderid' => $orderid, 'manufacturerid' => $certain_mid]);
+								if ($oInvoices->countOrderGroupInvoices() == 1) {
+									$oLastInvoice = $oInvoices->getLastInvoice();
+									if ($oLastInvoice->getOrderGroupInvoiceProductsTotal() != 0 && $oLastInvoice->getOrderGroupInvoicesShippingTotal() != 0) {
+										$oInvoices->createCloneInvoice($oLastInvoice)->getLastInvoice()->setCostToUsForProductsCharged(0)->
+										setTaxChargedExceptHST(0)->setOrderGroupInvoiceProductsTotal(0)->setOrderGroupInvoicesHST(0)->calculateOrderGroupInvoiceTotal()->_insert(true);
+										$oLastInvoice->setOrderGroupInvoicesShippingCharged(0)->setOrderGroupInvoicesDropShipFeeCharged(0)->
+										setOrderGroupInvoicesShippingTotal(0)->calculateOrderGroupInvoiceTotal()->_insert(true);
+									}
+								}
+							}
 						}
 
 					} // foreach ($manufacturer_invoices_data[$certain_mid] as $invoice_number => $invoice_data)
