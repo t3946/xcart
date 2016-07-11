@@ -7,6 +7,9 @@ class classData
     protected $aPrimaryTableValue;
     protected $sPrimaryTable;
 
+    /**
+     * @param array $aParams
+     */
     public function __construct($aParams = [])
     {
         global $sql_tbl;
@@ -16,6 +19,14 @@ class classData
             $this->aPrimaryKeysValues = array_intersect_key($aParams, array_flip($this->aPrimaryKeys));
             $this->fillPrimaryTableInfo();
         }
+    }
+
+    protected function _clone() {
+        return clone $this;
+    }
+
+    public function _insert($is_replace = false) {
+        func_array2insert($this->sPrimaryTable, $this->aPrimaryTableValue, $is_replace);
     }
 
     protected function fillPrimaryTableInfo()

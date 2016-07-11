@@ -38,7 +38,7 @@ function add_order_manually_row(index, r_id) {
         $('#row_max_index_' + r_id).val(row_max_index);
 
         $('#order_manually_row_' + r_id + '_' + index).after(
-                '<tr id="order_manually_row_' + r_id + '_' + row_max_index + '">' +
+                '<tr id="order_manually_row_' + r_id + '_' + row_max_index + '"><td>&nbsp;</td>' +
                         '<td align="right">Add order #</td><td align="center">' +
                                 '<input type="text" size="9" name="add_order_manually[' + r_id + '][' + row_max_index + '][orderid]" value="" /></td><td>' +
                                 '<a href="javascript: void(0);" onclick="javascript: add_order_manually_row(\'' + row_max_index + '\', \'' + r_id + '\');"><img src="' + ImagesDir + '/plus.gif" alt="' + lbl_add + '" /></a>' +
@@ -312,11 +312,11 @@ to
 {if $reconciliations ne "" || ($tab eq "unreconciled" && $unreconciled_orders ne "")}
 <tr class="TableHead">
 <td style="background-color: #D9EAD3;" width="90">TR Date</td>
-<td style="background-color: #D9EAD3;" width="200">Transaction Description</td>
+<td nowrap="nowrap" style="background-color: #D9EAD3;" width="200">Transaction Description</td>
 <td style="background-color: #D9EAD3;" width="50">Amount</td>
 <td style="background-color: #FFD44C;" width="90">Action</td>
 <td style="background-color: #F4CCCC;" width="90">Amount</td>
-<td style="background-color: #F4CCCC;" width="40">Distr</td>
+<td style="background-color: #F4CCCC;" width="90">Distr</td>
 <td style="background-color: #F4CCCC;" width="90">Order #</td>
 <td style="background-color: #F4CCCC;" width="100">Invoice #</td>
 <td style="background-color: #F4CCCC;" width="90">Order Date</td>
@@ -349,6 +349,9 @@ to
 	{/foreach}
   {else}
 	{$v.description_csv}{if $v.transaction_type eq "P"} (PayPal){/if}
+  {/if}
+  {if $v.gmail_search_link != ''}
+      (<a style="color: blue;" href="https://mail.google.com/mail/u/0/#search/{$v.gmail_search_link}" target="_blank">lookup Gmail</a>)
   {/if}
 </td>
 
@@ -431,11 +434,11 @@ to
 		({$vo.invoice_info.invoice_total})
 	    {/if}
 	</td>
-	<td width="40" align="center"><a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$v.distr_code}</a></td>
+	<td width="90" align="center"><a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$v.distr_code}</a></td>
 	<td width="90" align="center">
 	<a href="order.php?orderid={$vo.orderid}" target="_blank">{$vo.order_prefix}{$vo.orderid}</a><br />
 	</td>
-	<td width="100" align="center">
+	<td nowrap="nowrap" width="100" align="center">
 	{if $vo.memo_info ne ""}
 		{$vo.order_prefix}{$vo.orderid}_{$v.distr_code}-C-{$vo.memo_info.memo_number}
 	{else}
@@ -475,13 +478,19 @@ to
 
  {elseif $v.distr_code ne ""}
 	<tr>
+	<td width="90"></td>
+	<td width="90" align="center">
+	    {if !empty($v.aManufacturersEntities)}
+	    {foreach from=$v.aManufacturersEntities item=oManufacturer name=radioManufacturer}
+	        <a href="{$oManufacturer->getManufacturerModifyURL()}&distributor_section=11" target="_blank">{$oManufacturer->getField('code')}</a> <br/>
+	    {/foreach}
+	    {/if}
+	</td>
+	<td width="90"></td>
 	<td width="100"></td>
-	<td width="100" align="center"><a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$v.distr_code}</a></td>
-	<td width="100"></td>
-	<td width="100"></td>
-	<td width="100"></td>
+	<td width="90"></td>
 	{if $tab eq "unreconciled"}
-	<td width="100"></td>
+	<td width="20"></td>
 	{/if}
 	</tr>
  {/if}
@@ -492,12 +501,19 @@ to
 	<hr />
         <input type="hidden" id="row_max_index_{$v.id}" name="row_max_index_{$v.id}" value="1" />
         <table cellpadding="0" cellspacing="0">
-                <tr id="order_manually_row_{$v.id}_1">
-			<td width="130" align="right">Add order #</td>
-                        <td width="90" align="center"><input type="text" size="9" name="add_order_manually[{$v.id}][1][orderid]" value="" /></td>
+            <tr id="order_manually_row_{$v.id}_1">
+            <td width="90">{if !empty($v.aManufacturersEntities)}
+                    {foreach from=$v.aManufacturersEntities item=oManufacturer name=radioManufacturer2}
+                        <input {if $smarty.foreach.radioManufacturer2.first}checked = "checked"{/if} style="margin:0; cursor:pointer;" type="radio" name="manufacturer_selected[{$v.id}]" value="{$oManufacturer->getField('manufacturerid')}">
+                        <a style="position: relative; bottom: 3px;" href="{$oManufacturer->getManufacturerModifyURL()}&distributor_section=11" target="_blank">{$oManufacturer->getField('code')}</a> <br/>
+                    {/foreach}
+	            {/if}
+	        </td>
+			<td width="70" align="right">Add order #</td>
+            <td width="90" align="center"><input type="text" size="9" name="add_order_manually[{$v.id}][1][orderid]" value="" /></td>
 			<td width="30"><a href="javascript: void(0);" onclick="javascript: add_order_manually_row(1, '{$v.id}');"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a>
-                        </td>
-                </tr>
+            </td>
+            </tr>
         </table>
 
 	</td>
@@ -533,7 +549,7 @@ to
         <td width="90" align="center" nowrap="nowrap">
                 ({$vo.invoice_total})
         </td>
-        <td width="40" align="center"><a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$manufacturers[$v.manufacturerid].code}</a></td>
+        <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;" href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$manufacturers[$v.manufacturerid].code}</a></td>
         <td width="90" align="center">
         <a href="order.php?orderid={$v.orderid}" target="_blank">{$v.order_prefix}{$v.orderid}</a><br />
         </td>
@@ -554,7 +570,7 @@ to
         <td width="90" align="center" nowrap="nowrap">
                 {$vo.ref_to_us_total}
         </td>
-        <td width="40" align="center"><a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$manufacturers[$v.manufacturerid].code}</a></td>
+        <td width="90" align="center"><a style="position: relative; bottom: 3px; left:22px;" href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$manufacturers[$v.manufacturerid].code}</a></td>
         <td width="90" align="center">
         <a href="order.php?orderid={$v.orderid}" target="_blank">{$v.order_prefix}{$v.orderid}</a><br />
         </td>

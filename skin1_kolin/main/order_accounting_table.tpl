@@ -41,6 +41,7 @@ vim: set ts=2 sw=2 sts=2 et:
   <td>{$lng.lbl_ref_to_cust}</td>
   <td>{$lng.lbl_ref_to_us}</td>
   <td>{$lng.lbl_profit}</td>
+  {if $data.show_reconciled !=''}<td>Order reconciled</td>{/if}
   <td>{$lng.lbl_profit}</td>
 </tr>
 <tr class="TableHead TableHeadAccounting TableHeadLight">
@@ -55,6 +56,7 @@ vim: set ts=2 sw=2 sts=2 et:
   <td>{$lng.lbl_gst_out}</td>
   <td>{$lng.lbl_gst_in}</td>
   <td>{$lng.lbl_gst_in}</td>
+  {if $data.show_reconciled !=''}<td></td>{/if}
   <td><strong>{$lng.lbl_margin}</strong></td>
 </tr>
 <tr class="TableHead TableHeadAccounting TableHeadLight">
@@ -69,6 +71,7 @@ vim: set ts=2 sw=2 sts=2 et:
   <td>{$lng.lbl_pst_out}</td>
   <td>{$lng.lbl_pst_in}</td>
   <td>{$lng.lbl_pst_in}</td>
+  {if $data.show_reconciled !=''}<td></td>{/if}
   <td>REAL NET</td>
 </tr>
 <tr class="TableHead TableHeadAccounting TableHeadLight">
@@ -83,11 +86,13 @@ vim: set ts=2 sw=2 sts=2 et:
   <td>{$lng.lbl_ref_to_cust}</td>
   <td>{$lng.lbl_ref_to_us}</td>
   <td>{$lng.lbl_profit}</td>
+  {if $data.show_reconciled !=''}<td></td>{/if}
   <td>REAL PM</td>
 </tr>
 {if $static eq 'R'}
 <tr class="OrderSheetCell OrderSheetFirst">
-<td colspan="12">&nbsp;</td>
+<td colspan="{if $data.show_reconciled !=''}13{else}12{/if}">&nbsp;</td>
+
 </tr>
 <tr class="OrderSheetCell OrderSheetFirst" style="font-weight: bold;">
   <td>&nbsp;</td>
@@ -99,6 +104,7 @@ vim: set ts=2 sw=2 sts=2 et:
   <td {if $data.profit_margin_range eq "margin_100" && ($smarty.section.acc.index eq "1" || $smarty.section.acc.index eq "2")} {else}style="background-color: #D9EAD3;"{/if}> {if $smarty.section.acc.index eq "0"}{if $data.total_accounting[$smarty.section.acc.index].net eq "0.01"}0.0001{else}{include file="currency2.tpl" value=$data.total_accounting[$smarty.section.acc.index].net}{/if}{else}{include file="currency2.tpl" value=$data.total_accounting[$smarty.section.acc.index].net}{/if}</td>
   {/section}
   <td>{include file="currency2.tpl" value=$data.total_accounting[5].net show_minus_brackets='Y'}</td>
+  {if $data.show_reconciled !=''}<td></td>{/if}
   <td>{if $data.total_margin lt 0}({/if}{$data.total_margin|price_format|replace:"-":""}%{if $data.total_margin lt 0}){/if}</td>
 </tr>
 <tr class="OrderSheetCell">
@@ -111,6 +117,7 @@ vim: set ts=2 sw=2 sts=2 et:
   <td>{if $smarty.section.acc.index eq "0"}{if $data.total_accounting[$smarty.section.acc.index].gst eq "0.01"}0.0001{else}{include file="currency2.tpl" value=$data.total_accounting[$smarty.section.acc.index].gst hide_zero='Y'}{/if}{else}{include file="currency2.tpl" value=$data.total_accounting[$smarty.section.acc.index].gst hide_zero='Y'}{/if}</td>
   {/section}
   <td>{include file="currency2.tpl" value=$data.total_accounting[5].gst show_minus_brackets='Y'}</td>
+  {if $data.show_reconciled !=''}<td></td>{/if}
   <td></td>
 </tr>
 <tr class="OrderSheetCell">
@@ -123,6 +130,7 @@ vim: set ts=2 sw=2 sts=2 et:
   <td>{if $smarty.section.acc.index eq "0"}{if $data.total_accounting[$smarty.section.acc.index].pst eq "0.01"}0.0001{else}{include file="currency2.tpl" value=$data.total_accounting[$smarty.section.acc.index].pst hide_zero='Y'}{/if}{else}{include file="currency2.tpl" value=$data.total_accounting[$smarty.section.acc.index].pst hide_zero='Y'}{/if}</td>
   {/section}
   <td>{include file="currency2.tpl" value=$data.total_accounting[5].pst show_minus_brackets='Y'}</td>
+  {if $data.show_reconciled !=''}<td></td>{/if}
   <td {if $data.profit_margin_range eq "margin_100"}style="background-color: #D9EAD3;"{/if}>{include file="currency2.tpl" value=$data.real_net}</td>
 </tr>
 <tr class="OrderSheetCell">
@@ -135,10 +143,12 @@ vim: set ts=2 sw=2 sts=2 et:
   <td>{if $smarty.section.acc.index eq "0"}{if $data.total_accounting[$smarty.section.acc.index].gross eq "0.01"}0.0001{else}{include file="currency2.tpl" value=$data.total_accounting[$smarty.section.acc.index].gross}{/if}{else}{include file="currency2.tpl" value=$data.total_accounting[$smarty.section.acc.index].gross}{/if}</td>
   {/section}
   <td>{include file="currency2.tpl" value=$data.total_accounting[5].gross show_minus_brackets='Y'}</td>
+  {if $data.show_reconciled !=''}<td></td>{/if}
   <td {if $data.profit_margin_range ne "margin_100"}style="background-color: #D9EAD3;"{/if}>{include file="currency2.tpl" value=$data.real_pm}%</td>
 </tr>
 <tr class="OrderSheetCell OrderSheetFirst">
-<td colspan="12">&nbsp;</td>
+<td colspan="{if $data.show_reconciled !=''}13{else}12{/if}">&nbsp;</td>
+
 </tr>
 {/if}
 {/if}
@@ -192,6 +202,15 @@ vim: set ts=2 sw=2 sts=2 et:
   {math assign="index_num" equation="x+1" x=$index_num}
   {/section}
   <td>{include file="currency2.tpl" value=$v.accounting[5].net show_minus_brackets='Y'}</td>
+  {if $data.show_reconciled !=''}
+    <td {if $v.reconcile_status == 1}style="background-color:#D9EAD3;"{/if} {if $v.reconcile_status == 2}style="background-color:#DDF177;"{/if} >
+        {if $v.reconcile_status == 1}
+           Reconciled
+        {elseif $v.reconcile_status == 2}
+          Partial Reconciled
+        {/if}
+    </td>
+  {/if}
   <td>
 {*
     {if $v.profit_margin lt 0}({/if}{$v.profit_margin|price_format|replace:"-":""}%{if $v.profit_margin lt 0}){/if}
@@ -221,6 +240,7 @@ vim: set ts=2 sw=2 sts=2 et:
   </td>
   {else}
   {section loop=7 name="empty_cells"}<td></td>{/section}
+  {if $data.show_reconciled !=''}<td></td>{/if}
   {/if}
 </tr>
 <tr class="OrderSheetCell{$cycle_class}">
@@ -246,9 +266,11 @@ vim: set ts=2 sw=2 sts=2 et:
   </td>
   {/section}
   <td>{include file="currency2.tpl" value=$v.accounting[5].gst hide_zero='Y' show_minus_brackets='Y'}</td>
+    {if $data.show_reconciled !=''}<td></td>{/if}
   <td></td>
   {else}
   {section loop=7 name="empty_cells"}<td></td>{/section}
+  {if $data.show_reconciled !=''}<td></td>{/if}
   {/if}
 </tr>
 <tr class="OrderSheetCell{$cycle_class}">
@@ -273,6 +295,7 @@ vim: set ts=2 sw=2 sts=2 et:
   {/if}
   </td>
   {/section}
+    {if $data.show_reconciled !=''}<td></td>{/if}
   <td>{include file="currency2.tpl" value=$v.accounting[5].pst hide_zero='Y' show_minus_brackets='Y'}</td>
   <td></td>
   {else}
@@ -330,6 +353,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
   </td>
   {/section}
   <td>{include file="currency2.tpl" value=$v.accounting[5].gross show_minus_brackets='Y'}</td>
+  {if $data.show_reconciled !=''}<td></td>{/if}
   <td></td>
   {else}
   {section loop=7 name="empty_cells"}<td></td>{/section}
@@ -339,7 +363,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 
 
 <tr class="OrderSheetCell{$cycle_class}">
-<td colspan="9" align="left">
+<td colspan="{if $data.show_reconciled !=''}10{else}9{/if}" align="left">
 
         <input type="hidden" id="row_max_index_{$m_id}" name="row_max_index_{$m_id}" value="{if $all_distributor_links.$m_id.count_links_to_distributor_invoices}{$all_distributor_links.$m_id.count_links_to_distributor_invoices}{else}1{/if}" />
 
@@ -405,7 +429,6 @@ Invoice payment in the amount of ({$v.full_reconciliation_info.amount_csv_abs|pr
   {/if}
 
 </td>
-
 <td colspan="3" valign="top" align="left">
   {if $v.ru_status ne ""}
   <table cellpadding="0" cellspacing="0" {* width="100%" *} style="background-color: #B4A7D6; margin-top: -3px; margin-left: -3px; padding-top: 3px;">  
