@@ -481,7 +481,7 @@ while (!empty($NextToken)){
 
 //func_print_r($v_item, $insert_data);
 
-				    $prod_info = func_query_first("SELECT productid, manufacturerid, product FROM $sql_tbl[products] WHERE productcode='".addslashes($v_item['SellerSKU'])."'");
+				    $prod_info = func_query_first("SELECT productid, manufacturerid, product, cost_to_us FROM $sql_tbl[products] WHERE productcode='".addslashes($v_item['SellerSKU'])."'");
 
 				    if (!in_array($prod_info["manufacturerid"], $manufacturerid_arr)){
 	                                    $insert_data2 = array (
@@ -511,6 +511,7 @@ while (!empty($NextToken)){
                                     $insert_data3 = array (
                                         'orderid' => $new_orderid,
                                         'productid' => $prod_info["productid"],
+                                        'item_cost_to_us' => $prod_info["cost_to_us"],
                                         'price' => $v_item['ItemPrice']['Amount'] / $v_item['QuantityOrdered'],
                                         'amount' => $v_item['QuantityOrdered'],
                                         'productcode' => addslashes($v_item['SellerSKU']),
@@ -736,7 +737,7 @@ while (!empty($NextToken)){
 
 //func_print_r($v_item, $insert_data);
 
-                                    $prod_info = func_query_first("SELECT productid, manufacturerid, product FROM $sql_tbl[products] WHERE productcode='".addslashes($v_item['SellerSKU'])."'");
+                                    $prod_info = func_query_first("SELECT productid, manufacturerid, product, cost_to_us FROM $sql_tbl[products] WHERE productcode='".addslashes($v_item['SellerSKU'])."'");
 
                                     if (!in_array($prod_info["manufacturerid"], $manufacturerid_arr)){
                                             $insert_data2 = array (
@@ -766,6 +767,7 @@ while (!empty($NextToken)){
                                     $insert_data3 = array (
                                         'orderid' => $new_orderid,
                                         'productid' => $prod_info["productid"],
+                                        'item_cost_to_us' => $prod_info["cost_to_us"],
                                         'price' => $v_item['ItemPrice']['Amount'] / $v_item['QuantityOrdered'],
                                         'amount' => $v_item['QuantityOrdered'],
                                         'productcode' => addslashes($v_item['SellerSKU']),
