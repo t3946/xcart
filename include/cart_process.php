@@ -307,6 +307,7 @@ function func_add_to_cart(&$cart, $product_data) {
 			$cart["products"][] = array(
 				"cartid" => $cartid,
 				"productid" => $productid,
+				"cost_to_us" => $added_product["cost_to_us"],
 				"amount" => $amount,
 				"options" => $product_options,
 				"free_price" => @price_format(@$free_price),

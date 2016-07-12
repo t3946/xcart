@@ -1535,6 +1535,7 @@ die("123");
 				$insert_data = array (
 					'orderid' => $orderid,
 					'productid' => $product['productid'],
+					'item_cost_to_us' => $product["cost_to_us"],
 					'product' => addslashes($product['product_orig']),
 					'product_options' => addslashes($product['product_options']),
 					'amount' => $product['amount'],
