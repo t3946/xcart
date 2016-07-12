@@ -1,6 +1,7 @@
 {*
 $Id: order_info_admin.tpl, v 1.0.0 2010/03/23 15:16:14 random Exp $
 vim: set ts=2 sw=2 sts=2 et:
+Use $product.oProduct classProduct
 *}
 <script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 {include file="check_zipcode_js.tpl"}
@@ -601,10 +602,9 @@ function check_r_fields(){
   </td>
   <td>
     {if $current_membership_flag ne 'FS'}<a href="{$product.links.admin}" title="" target="_blank">{$product.productcode}</a>{else}{$product.productcode}{/if}
-{assign var="mpn" value=`$product.mpn`}
-{if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}<br />
-  <a style="color: #3A3AFF;" href='{$order_manufacturers[$m_id].d_website_search_for_sku_url|replace:"---mpn---":"$mpn"}' target="_blank">{$mpn}</a>
-{/if}
+  {if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}<br />
+    <a style="color: #3A3AFF;" href='{$product.oProduct->getProductURLOnDistributorWebSite()}' target="_blank">{$product.oProduct->getMPN()}</a>
+  {/if}
     {if $product.verification_statusid == 3}
         <img title="This product is verified" style="float: right;" src="{$SkinDir}/images/green-verify.png" />
     {/if}

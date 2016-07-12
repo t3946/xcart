@@ -724,10 +724,10 @@ function func_order_data($orderid) {
 
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classProducts.php";
-		$classProduct = new classProducts();
-		$mpn = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
-		unset($classProduct);
+		$classProduct = new classProduct($v['productid']);
+		$mpn = $classProduct->getMPN();
 		$v["mpn"] = $mpn;
+		$v["oProduct"] = $classProduct;
 
 /*#
 ##
