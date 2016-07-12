@@ -77,7 +77,7 @@ class classProduct extends classCloneData
         $sWebsiteProduct = $this->getManfacturerClass()->getField('d_website_search_for_sku_url');
         if (empty($sWebsiteProduct))
             $sWebsiteProduct = $this->getManfacturerClass()->getField('url');
-        return str_replace('{{mpn}}', $this->getMPN(), $sWebsiteProduct);
+        return str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$this->getMPN(),$this->getField('supplier_internal_id')], $sWebsiteProduct);
     }
 
     public function getProductLastVerifyDate()
