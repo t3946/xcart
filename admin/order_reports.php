@@ -88,7 +88,6 @@ if ($REQUEST_METHOD == "POST") {
 }
 
 if ($mode == "report") {
-
 	x_load('order', 'order_edit');
 
 	if (is_array($search_data["order_reports"])) {
@@ -125,6 +124,36 @@ if ($mode == "report") {
 		$search_condition .= " AND o.date>='".($start_date)."'";
 		$search_condition .= " AND o.date<='".($end_date)."'";
 	}
+
+    if ($data["report_mode"] == "graph") {
+
+        global $xcart_dir;
+        require_once $xcart_dir."/include/class/classOrderReports.php";
+        $oReport = new classOrderReports();
+        $oReport->setStartDate($start_date)->setEndDate($end_date)->setOrderSource($data['orders_source'])->
+        setStoreFronts($data['storefront_ids'])->setManufacturers($data['manufacturers'])->setAccountingMethod($data['accounting_method'])->
+        setOrderStatus($data['cb_status']);
+
+        switch($data['profit_margin_range']) {
+            case 'margin_1_2':
+                $oReport->setProfitMarginRange($data['profit_margin_range'],$data['profit_margin_range_1'], $data['profit_margin_range_2']);
+                break;
+            case 'margin_less_1':
+                $oReport->setProfitMarginRange($data['profit_margin_range'],null, $data['profit_margin_range_less_1']);
+                break;
+            default:
+                $oReport->setProfitMarginRange($data['profit_margin_range']);
+        }
+
+
+        $aReportsData = $oReport->setGraphPeriod($data['graph_report_period'])->getReportsData();
+        $smarty->assign("report_data", $aReportsData);
+
+        func_display("main/order_report_graph.tpl",$smarty);
+
+        exit;
+
+    }
 
 #
 ##
