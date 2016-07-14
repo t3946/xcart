@@ -237,7 +237,7 @@ class classOrderReports
     }
 
     private function getRealNet($aReportData){
-        return floatval($aReportData["accounting_net_0"] + $aReportData["accounting_net_4_ref_to_us"] - $aReportData["accounting_net_3_ref_to_cust"]);
+        return floatval(round($aReportData["accounting_net_0"] + $aReportData["accounting_net_4_ref_to_us"] - $aReportData["accounting_net_3_ref_to_cust"],2));
     }
     private function getRealPM($aReportData, $realNet){
         $realPm = 0;
