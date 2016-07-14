@@ -76,6 +76,11 @@ class classSQLBuilder
         return $this;
     }
 
+    public function getQuery()
+    {
+        return $this->sqlQuery;
+    }
+
     public function getQueryResult()
     {
         return $this->aSqlQueryResult;

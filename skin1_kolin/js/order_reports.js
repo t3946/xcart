@@ -1,10 +1,20 @@
-function showGraph(id, title, yAxisTitle,  data) {
+function showGraph(id, title, yAxisTitle, yAxisTitle2, dateFormat, data, data2) {
+
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+
     $('#' + id).highcharts({
 
         chart: {
             zoomType: 'x',
-            type: 'line'
+            type: 'areaspline'
+
         },
+
+
         title: {
             text: title
         },
@@ -12,16 +22,33 @@ function showGraph(id, title, yAxisTitle,  data) {
             text: document.ontouchstart === undefined ?
                 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
         },
-        xAxis: {
-            type: 'datetime'
+        credits: {
+            enabled: false
         },
-        yAxis: {
+
+
+        xAxis: {
+            type: 'datetime',
+            labels: {
+                formatter: function () {
+                    return Highcharts.dateFormat(dateFormat, this.value);
+                }
+            }
+        },
+        yAxis: [{
             title: {
                 text: yAxisTitle
             }
-        },
+        }, {
+            title: {
+                text: yAxisTitle2
+            },
+            opposite:true
+        }
+        ],
+
         legend: {
-            enabled: false
+
         },
         plotOptions: {
             line: {
@@ -33,9 +60,17 @@ function showGraph(id, title, yAxisTitle,  data) {
         },
 
         series: [{
-            type: 'area',
-            name: 'USD to EUR',
+            type: 'areaspline',
+            name: yAxisTitle,
             data: data
-        }]
+
+        },
+        {
+            type: 'column',
+            data: data2,
+            name: yAxisTitle2,
+            yAxis: 1
+        }
+        ]
     });
 }

@@ -68,11 +68,12 @@ if ($REQUEST_METHOD == "POST") {
 ##
 ###
 		if (!empty($posted_data["start_date"]) && !empty($posted_data["end_date"])){
-			$start_date_arr = explode("/", $posted_data["start_date"]);
-			$posted_data["start_date"] = mktime(0,0,0,$start_date_arr[0],$start_date_arr[1],$start_date_arr[2]);
 
-                        $end_date_arr = explode("/", $posted_data["end_date"]);
-                        $posted_data["end_date"] = mktime(23,59,59,$end_date_arr[0],$end_date_arr[1],$end_date_arr[2]);
+            $start_date_arr = explode("/", $posted_data["start_date"]);
+            $posted_data["start_date"] = mktime(0, 0, 0, $start_date_arr[0], $start_date_arr[1], $start_date_arr[2]);
+
+            $end_date_arr = explode("/", $posted_data["end_date"]);
+            $posted_data["end_date"] = mktime(23, 59, 59, $end_date_arr[0], $end_date_arr[1], $end_date_arr[2]);
 		}
 ###
 ##
@@ -127,12 +128,14 @@ if ($mode == "report") {
 
     if ($data["report_mode"] == "graph") {
 
+
         global $xcart_dir;
         require_once $xcart_dir."/include/class/classOrderReports.php";
         $oReport = new classOrderReports();
         $oReport->setStartDate($start_date)->setEndDate($end_date)->setOrderSource($data['orders_source'])->
         setStoreFronts($data['storefront_ids'])->setManufacturers($data['manufacturers'])->setAccountingMethod($data['accounting_method'])->
         setOrderStatus($data['cb_status']);
+
 
         switch($data['profit_margin_range']) {
             case 'margin_1_2':

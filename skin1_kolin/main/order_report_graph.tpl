@@ -20,7 +20,7 @@
         <div id="container_{$manufacturerid}" class="report_by_manufacturer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         {literal}
         <script>
-            showGraph('container_{/literal}{$manufacturerid}{literal}','{/literal}{$report.manufacturer}{literal}','Real Net',{/literal}{$report.report_string}{literal});
+            showGraph('container_{/literal}{$manufacturerid}{literal}','{/literal}{$report.manufacturer}{literal}','{/literal}{$report.yAxis1}{literal}','Orders','{/literal}{$report.report_date_format}{literal}',{/literal}{$report.report_string_1}{literal},{/literal}{$report.report_string_2}{literal});
         </script>
         {/literal}
     {/foreach}
