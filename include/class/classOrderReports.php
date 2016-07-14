@@ -79,7 +79,8 @@ class classOrderReports
         $this->sOrderStatus = $sStatus;
     }
 
-    public function getReportSQL() {
+    public function getReportSQL()
+    {
         return $this->oSQL->getQuery();
     }
 
@@ -100,8 +101,8 @@ class classOrderReports
         addInnerJoin('order_groups', 'og', 'og.orderid = o.orderid')->
         addInnerJoin('manufacturers', 'm', 'og.manufacturerid = m.manufacturerid');
 
-        $this->oSQL->addCondition('o.date>='.$this->iStartDate);
-        $this->oSQL->addCondition('o.date<='.$this->iEndDate);
+        $this->oSQL->addCondition('o.date>=' . $this->iStartDate);
+        $this->oSQL->addCondition('o.date<=' . $this->iEndDate);
 
         switch ($this->sOrderSource) {
             case "xcart_orders_only" :
@@ -125,12 +126,12 @@ class classOrderReports
             $this->oSQL->addCondition("og.manufacturerid IN (" . implode(',', $this->aManufacturers) . ")");
         }
 
-        $sYxis1='Real Net';
+        $sYxis1 = 'Real Net';
 
         switch ($this->sProfitMarginRange) {
             case "margin_less_100" :
                 $this->oSQL->addCondition("og.profit_margin < 100");
-                $sYxis1='Real PM';
+                $sYxis1 = 'Real PM';
                 break;
             case "margin_less_1" :
                 $this->oSQL->addCondition(sprintf("og.profit_margin <= %d", $this->iProfitMarginRangeEnd));
@@ -155,19 +156,19 @@ class classOrderReports
         switch ($this->sGraphPeriod) {
             case 'D':
                 $this->oSQL->addGroupBy('YEAR(FROM_UNIXTIME(o.date))')->addGroupBy('MONTH(FROM_UNIXTIME(o.date))')->addGroupBy('DAY(FROM_UNIXTIME(o.date))')->
-                addSelect("UNIX_TIMESTAMP(DATE_FORMAT(FROM_UNIXTIME(o.date), '%Y-%m-%d 00:00:00'))","report_date");
+                addSelect("UNIX_TIMESTAMP(DATE_FORMAT(FROM_UNIXTIME(o.date), '%Y-%m-%d 00:00:00'))", "report_date");
                 $sGraphDateFormat = '%d %b %Y';
                 $this->oSQL->addOrderBy("YEAR(FROM_UNIXTIME(o.date)),MONTH(FROM_UNIXTIME(o.date)),DAY(FROM_UNIXTIME(o.date)) ASC");
                 break;
             case 'W':
                 $this->oSQL->addGroupBy('YEARWEEK(FROM_UNIXTIME(o.date),1)')->
-                addSelect("UNIX_TIMESTAMP(STR_TO_DATE(DATE_FORMAT(FROM_UNIXTIME(o.date) - INTERVAL (WEEKDAY(FROM_UNIXTIME(o.date))) DAY,'%d.%m.%Y'), '%d.%m.%Y'))","report_date");
+                addSelect("UNIX_TIMESTAMP(STR_TO_DATE(DATE_FORMAT(FROM_UNIXTIME(o.date) - INTERVAL (WEEKDAY(FROM_UNIXTIME(o.date))) DAY,'%d.%m.%Y'), '%d.%m.%Y'))", "report_date");
                 $sGraphDateFormat = '%b %Y';
                 $this->oSQL->addOrderBy('report_date ASC');
                 break;
             case 'M':
                 $this->oSQL->addGroupBy('YEAR(FROM_UNIXTIME(o.date))')->addGroupBy('MONTH(FROM_UNIXTIME(o.date))')->
-                addSelect("UNIX_TIMESTAMP(STR_TO_DATE(DATE_FORMAT(FROM_UNIXTIME(o.date), '01.%m.%Y'), '%d.%m.%Y'))","report_date");
+                addSelect("UNIX_TIMESTAMP(STR_TO_DATE(DATE_FORMAT(FROM_UNIXTIME(o.date), '01.%m.%Y'), '%d.%m.%Y'))", "report_date");
                 $sGraphDateFormat = '%b %Y';
                 $this->oSQL->addOrderBy('report_date ASC');
                 break;
@@ -182,7 +183,7 @@ class classOrderReports
         if (!empty($aSqlResult)) {
             $aManArrayReal = [];
             foreach ($aSqlResult as $manufacturerid => $aReport) {
-                foreach($aReport as $aReportData) {
+                foreach ($aReport as $aReportData) {
                     $realNet = $this->getRealNet($aReportData);
                     $realPM = $this->getRealPM($aReportData, $realNet);
 
@@ -191,7 +192,7 @@ class classOrderReports
                             $aManArrayReal[$manufacturerid] += $realPM;
                             break;
                         default:
-                            $aManArrayReal[$manufacturerid]+=$realNet;
+                            $aManArrayReal[$manufacturerid] += $realNet;
                     }
                 }
             }
@@ -201,7 +202,7 @@ class classOrderReports
         $aSqlResultOrdered = [];
 
         foreach (array_keys($aManArrayReal) as $key) {
-            $aSqlResultOrdered[$key] = $aSqlResult[$key] ;
+            $aSqlResultOrdered[$key] = $aSqlResult[$key];
         }
 
         foreach ($aSqlResultOrdered as $iManufacturerId => $aValues) {
@@ -209,18 +210,18 @@ class classOrderReports
             $sReportData2 = [];
             foreach ($aValues as $iNumber => $aPeriods) {
                 $aSqlResultOrdered[$iManufacturerId]['manufacturer'] = $aPeriods['manufacturer'];
-                $aSqlResultOrdered[$iManufacturerId][$iNumber]['report_date'] = (int) $aPeriods['report_date'];
-                $aSqlResultOrdered[$iManufacturerId][$iNumber]['order_count'] = (int) $aPeriods['order_count'];
+                $aSqlResultOrdered[$iManufacturerId][$iNumber]['report_date'] = (int)$aPeriods['report_date'];
+                $aSqlResultOrdered[$iManufacturerId][$iNumber]['order_count'] = (int)$aPeriods['order_count'];
 
                 switch ($this->sProfitMarginRange) {
                     case "margin_less_100" :
-                        $sReportData[] = [$aSqlResultOrdered[$iManufacturerId][$iNumber]['report_date']*1000,$this->getRealPM($aPeriods, $this->getRealNet($aPeriods))];
+                        $sReportData[] = [$aSqlResultOrdered[$iManufacturerId][$iNumber]['report_date'] * 1000, $this->getRealPM($aPeriods, $this->getRealNet($aPeriods))];
                         break;
                     default:
-                        $sReportData[] = [$aSqlResultOrdered[$iManufacturerId][$iNumber]['report_date']*1000,$this->getRealNet($aPeriods)];
+                        $sReportData[] = [$aSqlResultOrdered[$iManufacturerId][$iNumber]['report_date'] * 1000, $this->getRealNet($aPeriods)];
                 }
 
-                $sReportData2[] = [$aSqlResultOrdered[$iManufacturerId][$iNumber]['report_date']*1000,$aSqlResultOrdered[$iManufacturerId][$iNumber]['order_count']];
+                $sReportData2[] = [$aSqlResultOrdered[$iManufacturerId][$iNumber]['report_date'] * 1000, $aSqlResultOrdered[$iManufacturerId][$iNumber]['order_count']];
             }
 
             $aSqlResultOrdered[$iManufacturerId]['report_string_1'] = json_encode($sReportData);
@@ -232,17 +233,19 @@ class classOrderReports
         $this->aGraphData = $aSqlResultOrdered;
 
 
-
         return $this;
     }
 
-    private function getRealNet($aReportData){
-        return floatval(round($aReportData["accounting_net_0"] + $aReportData["accounting_net_4_ref_to_us"] - $aReportData["accounting_net_3_ref_to_cust"],2));
+    private function getRealNet($aReportData)
+    {
+        return floatval(round($aReportData["accounting_net_0"] + $aReportData["accounting_net_4_ref_to_us"] - $aReportData["accounting_net_3_ref_to_cust"], 2));
     }
-    private function getRealPM($aReportData, $realNet){
+
+    private function getRealPM($aReportData, $realNet)
+    {
         $realPm = 0;
         if ($realNet != 0)
-            $realPm = floatval(round(($aReportData["accounting_net_5_profit"]/$realNet)*100,2));
+            $realPm = floatval(round(($aReportData["accounting_net_5_profit"] / $realNet) * 100, 2));
         return $realPm;
     }
 
