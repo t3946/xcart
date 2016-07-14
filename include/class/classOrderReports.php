@@ -156,19 +156,19 @@ class classOrderReports
         switch ($this->sGraphPeriod) {
             case 'D':
                 $this->oSQL->addGroupBy('YEAR(FROM_UNIXTIME(o.date))')->addGroupBy('MONTH(FROM_UNIXTIME(o.date))')->addGroupBy('DAY(FROM_UNIXTIME(o.date))')->
-                addSelect("UNIX_TIMESTAMP(DATE_FORMAT(FROM_UNIXTIME(o.date), '%Y-%m-%d 00:00:00'))", "report_date");
+                addSelect("UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(FROM_UNIXTIME(o.date), '%Y-%m-%d 00:00:00'), '+00:00', @@session.time_zone))", "report_date");
                 $sGraphDateFormat = '%d %b %Y';
                 $this->oSQL->addOrderBy("YEAR(FROM_UNIXTIME(o.date)),MONTH(FROM_UNIXTIME(o.date)),DAY(FROM_UNIXTIME(o.date)) ASC");
                 break;
             case 'W':
                 $this->oSQL->addGroupBy('YEARWEEK(FROM_UNIXTIME(o.date),1)')->
-                addSelect("UNIX_TIMESTAMP(STR_TO_DATE(DATE_FORMAT(FROM_UNIXTIME(o.date) - INTERVAL (WEEKDAY(FROM_UNIXTIME(o.date))) DAY,'%d.%m.%Y'), '%d.%m.%Y'))", "report_date");
+                addSelect("UNIX_TIMESTAMP(CONVERT_TZ(STR_TO_DATE(DATE_FORMAT(FROM_UNIXTIME(o.date) - INTERVAL (WEEKDAY(FROM_UNIXTIME(o.date))) DAY,'%d.%m.%Y'), '%d.%m.%Y'), '+00:00', @@session.time_zone))", "report_date");
                 $sGraphDateFormat = '%b %Y';
                 $this->oSQL->addOrderBy('report_date ASC');
                 break;
             case 'M':
                 $this->oSQL->addGroupBy('YEAR(FROM_UNIXTIME(o.date))')->addGroupBy('MONTH(FROM_UNIXTIME(o.date))')->
-                addSelect("UNIX_TIMESTAMP(STR_TO_DATE(DATE_FORMAT(FROM_UNIXTIME(o.date), '01.%m.%Y'), '%d.%m.%Y'))", "report_date");
+                addSelect("UNIX_TIMESTAMP(CONVERT_TZ(STR_TO_DATE(DATE_FORMAT(FROM_UNIXTIME(o.date), '01.%m.%Y'), '%d.%m.%Y'), '+00:00', @@session.time_zone))", "report_date");
                 $sGraphDateFormat = '%b %Y';
                 $this->oSQL->addOrderBy('report_date ASC');
                 break;
@@ -189,6 +189,12 @@ class classOrderReports
 
                     switch ($this->sProfitMarginRange) {
                         case "margin_less_100" :
+                            $aManArrayReal[$manufacturerid] += $realPM;
+                            break;
+                        case "margin_less_1" :
+                            $aManArrayReal[$manufacturerid] += $realPM;
+                            break;
+                        case "margin_1_2" :
                             $aManArrayReal[$manufacturerid] += $realPM;
                             break;
                         default:

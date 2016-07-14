@@ -2,7 +2,7 @@ function showGraph(id, title, yAxisTitle, yAxisTitle2, dateFormat, data, data2) 
 
     Highcharts.setOptions({
         global: {
-            useUTC: false
+            useUTC: true
         }
     });
 
