@@ -253,6 +253,17 @@ managedate(true);
 {/if}
 	</td>
 </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+        <td colspan="3" class="SubmitBox">
+           <select style="width:146px;margin-right: 15px;" name="posted_data[graph_report_period]">
+               <option value="D">Daily</option>
+               <option value="W">Weekly</option>
+               <option value="M">Monthly</option>
+           </select>
+            <input type="submit" value="Plot report" onclick="javascript: document.searchform.mode.value='graph'; document.searchform.target='_blank'; document.searchform.submit();" />
+        </td>
+    </tr>
 
 </table>
 
