@@ -1,5 +1,5 @@
 <form name="osnotificform1" action="configuration.php" method="POST">
-    <input type="hidden" name="option" value="PBX_options">
+    <input type="hidden" name="option" value="External_marketplaces">
     <input type="hidden" name="mode" value="">
 
     <br />
@@ -8,28 +8,21 @@
 
     <table cellpadding="3" cellspacing="1" width="100%">
 
-        <tr>
-            <th>extension</th>
-            <th>anveo account (login)</th>
-            <th>anveo password</th>
-            <th>Linked xcart account</th>
-            <th>delete</th>
+        <tr class="TableHead">
+            <th>Marketplace name</th>
+            <th>Processor class</th>
+            <th>Active</th>
         </tr>
 
-        {if $pbx_options ne ""}
-            {foreach from=$pbx_options item=v key=k}
+        {if !empty($external_marketplaces)}
+            {foreach from=$external_marketplaces item=oMarketPlace key=k}
                 <tr>
-                    <td><input type="text" name="pbx[{$v.id}][extension]" value="{$v.extension}" /></td>
-                    <td><input type="text" name="pbx[{$v.id}][anveo_account]" value="{$v.anveo_account}" /></td>
-                    <td><input type="text" name="pbx[{$v.id}][anveo_password]" value="{$v.anveo_password|escape}" /></td>
-                    <td>
-                        {if $v.linked_xcart_accounts ne ""}
-                            {foreach from=$v.linked_xcart_accounts item=item key=key}
-                                <a href="user_modify.php?user={$item.login}&usertype={$item.usertype}" target="_blank">{$item.login} ({$item.activity})</a><br />
-                            {/foreach}
-                        {/if}
-                    </td>
-                    <td><input type="checkbox" name="pbx[{$v.id}][delete]" value="Y" /></td>
+                    <td align="center"><input style="width:98%;" type="text" name="external_marketplace[{$oMarketPlace->getMarketPlaceId()}][marketplace_name]" value="{$oMarketPlace->getMarketPlaceName()}" /></td>
+                    <td align="center"><input style="width:98%;" type="text" name="external_marketplace[{$oMarketPlace->getMarketPlaceId()}][processor_class]" value="{$oMarketPlace->getMarketPlaceProcessorClassName()}" /></td>
+                    <td align="center">
+                        <select style="width:98%;" name="external_marketplace[{$oMarketPlace->getMarketPlaceId()}][active]">
+                            {html_options values=$oMarketPlace->getMarketPlaceStatusesValues() output=$oMarketPlace->getMarketPlaceStatusesValues() selected=$oMarketPlace->getMarketPlaceStatus()}
+                        </select>
                     </td>
                 </tr>
             {/foreach}

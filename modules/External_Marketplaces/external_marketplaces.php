@@ -15,7 +15,7 @@ if ($REQUEST_METHOD == 'POST'){
             }
         }
 
-        db_query("UPDATE $sql_tbl[config] SET value='$SIP_phone_settings_template' WHERE name='SIP_phone_settings_template'");
+//        db_query("UPDATE $sql_tbl[config] SET value='$SIP_phone_settings_template' WHERE name='SIP_phone_settings_template'");
     }
     elseif ($mode == "add"){
         db_query("INSERT INTO $sql_tbl[pbx_options] (extension) VALUES ('')");
@@ -23,10 +23,11 @@ if ($REQUEST_METHOD == 'POST'){
 
     $top_message["content"] = 'Done.';
     $top_message["type"] = "I";
-    func_header_location("configuration.php?option=PBX_options");
+    func_header_location("configuration.php?option=External_marketplaces");
 }
 
-$aExternalMarketplaces = func_query("SELECT * FROM $sql_tbl[products_external_marketplaces] ORDER BY marketplace_name");
+global $xcart_dir;
+require_once $xcart_dir."/modules/External_Marketplaces/include/classExternalMarketPlace.php";
+$aExternalMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
 
-
-$smarty->assign("pbx_options", $pbx_options);
+$smarty->assign("external_marketplaces", $aExternalMarketplaces);
