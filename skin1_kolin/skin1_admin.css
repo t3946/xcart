@@ -1783,12 +1783,3 @@ td.borderb-gray {
 .TableHead .borderr-black:last-child {
 	border-right: 1px solid #cccccc;
 }
-.ajax_note_field {
-	z-index: 100;
-	padding: 14px 20px;
-	border: 1px solid;
-	position: absolute;
-	width: 430px;
-	text-align: left;
-	background-color: #D9EAD3;
-}

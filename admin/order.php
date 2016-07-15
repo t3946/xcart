@@ -2128,18 +2128,6 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 	# Send manufacturer notification and update order's manufacturer notified status
 	#
 
-	if ($order['product_verification_status_code'] != 'PV') {
-		$top_message = array(
-				'content' => func_get_langvar_by_name('lbl_dispatch_deny_before_product_verification'),
-				'type' => 'I'
-		);
-
-		$section_name_top_message = $top_message;
-		x_session_save("section_name_top_message");
-
-		func_header_location('order.php?orderid=' . $orderid);
-	}
-
         $section_name = "main_order_tabs-email_communications";
         x_session_save("section_name");
 
@@ -2467,23 +2455,23 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 
         		$mail_smarty->assign('mnf_operator_notify', 'N');
 		} else {
-			if (empty($order_after_refund['shipping_groups'][$mnf_id]['products'])) {
-				$top_message = array(
-						'content' => func_get_langvar_by_name('msg_full_refunded_nothing_email', array('distributor' => $order_after_refund['shipping_groups'][$mnf_id]['group_name'])),
-						'type' => 'I'
-				);
+        		if (empty($order_after_refund['shipping_groups'][$mnf_id]['products'])) {
+			        $top_message = array(
+                		'content' => func_get_langvar_by_name('msg_full_refunded_nothing_email', array('distributor' => $order_after_refund['shipping_groups'][$mnf_id]['group_name'])),
+		                'type'    => 'I'
+        			);
 
 				$section_name_top_message = $top_message;
 				x_session_save("section_name_top_message");
 
-				func_header_location('order.php?orderid=' . $orderid);
-			} else {
+		        	func_header_location('order.php?orderid=' . $orderid);
+		        } else {
 
-				$mail_smarty->assign('order', $order_after_refund);
+        			$mail_smarty->assign('order', $order_after_refund);
 
 				func_send_mail($mnf_to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
-				$log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
-				func_log_order($orderid, 'X', $log, $login);
+	                        $log = "<B>From: </B>".$config['Company']['orders_department']."<br /><B>To: </B>".$mnf_to."<br /><B>Subject: </B>".$d_email_subject_14;
+        	                func_log_order($orderid, 'X', $log, $login);
 
 			}
 		}
@@ -2502,34 +2490,35 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 		$current_dc_status = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 		$current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
 
-		if ($set_status_K == "Y") {
+                if ($set_status_K == "Y"){
 
-			if ($current_dc_status != "K") {
-				$new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='K'");
-				$log = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
+			if ($current_dc_status != "K"){
+                                $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='K'");
+				$log = "<B>".$code.":</B> dc_status: ". $current_dc_status_value . " -> ". $new_value;
 				func_log_order($orderid, 'X', $log, $login);
 			}
 
-			db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='K'"
-					. " WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
-		} else {
+	                db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='K'"
+        	        . " WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+		}
+		else  {
 
-			if ($current_dc_status != "C") {
-				$new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='C'");
-				$log = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
-				func_log_order($orderid, 'X', $log, $login);
+                        if ($current_dc_status != "C"){
+                                $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='C'");
+                                $log = "<B>".$code.":</B> dc_status: ". $current_dc_status_value . " -> ". $new_value;
+                                func_log_order($orderid, 'X', $log, $login);
 
 				$current_dc_dispatched_time = func_query_first_cell("SELECT dc_dispatched_time FROM $sql_tbl[order_groups] WHERE manufacturerid='$mnf_id' AND orderid='$orderid'");
 
-				if (empty($current_dc_dispatched_time)) {
-					db_query("UPDATE $sql_tbl[order_groups] SET dc_dispatched_time='" . time() . "' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+				if (empty($current_dc_dispatched_time)){
+					db_query("UPDATE $sql_tbl[order_groups] SET dc_dispatched_time='".time()."' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 				}
 
-			}
+                        }
 
 # START: random:20341 [2010 Jul 29 14:46] 
 			db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='C'"
-					. " WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+		        . " WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 # END: random:20341 [2010 Jul 29 14:46] 
 		}
 

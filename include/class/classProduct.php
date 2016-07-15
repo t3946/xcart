@@ -72,11 +72,6 @@ class classProduct extends classCloneData
         return func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled));
     }
 
-    public function getHTMLShot() {
-        $sProductPage = file_get_contents($this->getProductFrontURL());
-        return $sProductPage;
-    }
-
     public function getProductURLOnDistributorWebSite()
     {
         $sWebsiteProduct = $this->getManfacturerClass()->getField('d_website_search_for_sku_url');

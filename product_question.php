@@ -77,7 +77,7 @@ $signature = func_get_signature($product_sfid);
 
 //func_print_r($brand_email, $product_question_departments_email, $product_question_subject_line, $product_question_message_body_to_brand, $product_question_message_body_to_customer, $question);
 
-$product_question_subject_line = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$product_info["mpn"],$product_info["supplier_internal_id"]], $product_question_subject_line);
+$product_question_subject_line = str_replace("{{mpn}}", $product_info["mpn"], $product_question_subject_line);
 $product_question_subject_line = str_replace("{{productname}}", $product_info["product"], $product_question_subject_line);
 $product_question_subject_line = str_replace("{{brand_email}}", $brand_email, $product_question_subject_line);
 $product_question_subject_line = str_replace("{{brand_phone}}", $customer_service_phone, $product_question_subject_line);
@@ -90,7 +90,7 @@ $product_question_subject_line = str_replace("{{signature}}", $signature, $produ
 $product_question_subject_line = str_replace("{{customer_name}}", $name, $product_question_subject_line);
 
 // $product_question_message_body_to_brand = Message body to us
-$product_question_message_body_to_brand = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$product_info["mpn"],$product_info["supplier_internal_id"]], $product_question_message_body_to_brand);
+$product_question_message_body_to_brand = str_replace("{{mpn}}", $product_info["mpn"], $product_question_message_body_to_brand);
 $product_question_message_body_to_brand = str_replace("{{productname}}", $product_info["product"], $product_question_message_body_to_brand);
 $product_question_message_body_to_brand = str_replace("{{brand_email}}", $brand_email, $product_question_message_body_to_brand);
 $product_question_message_body_to_brand = str_replace("{{brand_phone}}", $customer_service_phone, $product_question_message_body_to_brand);
@@ -102,7 +102,7 @@ $product_question_message_body_to_brand = str_replace("{{prqnid}}", $prefix_prod
 $product_question_message_body_to_brand = str_replace("{{signature}}", $signature, $product_question_message_body_to_brand);
 $product_question_message_body_to_brand = str_replace("{{customer_name}}", $name, $product_question_message_body_to_brand);
 
-$product_question_message_body_to_customer = str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$product_info["mpn"],$product_info["supplier_internal_id"]], $product_question_message_body_to_customer);
+$product_question_message_body_to_customer = str_replace("[{{mpn}}','{{supplier_internal_id}}]", [$product_info["mpn"],$product_info["supplier_internal_id"]], $product_question_message_body_to_customer);
 $product_question_message_body_to_customer = str_replace("{{productname}}", $product_info["product"], $product_question_message_body_to_customer);
 $product_question_message_body_to_customer = str_replace("{{brand_email}}", $brand_email, $product_question_message_body_to_customer);
 $product_question_message_body_to_customer = str_replace("{{brand_phone}}", $customer_service_phone, $product_question_message_body_to_customer);

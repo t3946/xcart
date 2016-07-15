@@ -101,10 +101,8 @@ class classOrderReports
         addInnerJoin('order_groups', 'og', 'og.orderid = o.orderid')->
         addInnerJoin('manufacturers', 'm', 'og.manufacturerid = m.manufacturerid');
 
-        if (!empty($this->iStartDate))
-            $this->oSQL->addCondition('o.date>=' . $this->iStartDate);
-        if (!empty($this->iEndDate))
-            $this->oSQL->addCondition('o.date<=' . $this->iEndDate);
+        $this->oSQL->addCondition('o.date>=' . $this->iStartDate);
+        $this->oSQL->addCondition('o.date<=' . $this->iEndDate);
 
         switch ($this->sOrderSource) {
             case "xcart_orders_only" :
