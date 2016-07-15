@@ -135,10 +135,12 @@ class classOrderReports
                 break;
             case "margin_less_1" :
                 $this->oSQL->addCondition(sprintf("og.profit_margin <= %d", $this->iProfitMarginRangeEnd));
+                $sYxis1 = 'Real PM';
                 break;
             case "margin_1_2" :
                 $this->oSQL->addCondition(sprintf("og.profit_margin < %d", $this->iProfitMarginRangeEnd));
                 $this->oSQL->addCondition(sprintf("og.profit_margin >= %d", $this->iProfitMarginRangeBegin));
+                $sYxis1 = 'Real PM';
                 break;
 
         }
