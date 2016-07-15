@@ -160,14 +160,11 @@ class classOrder extends classCloneData
 
     public function changeVerificationStatus($sNewStatus)
     {
-        $bResult['result'] = true;
+        $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->primaryKeyValue);
         $aNewStatus = self::getOrderStatusByCode($sNewStatus);
         $aOldStatus = self::getOrderStatusByCode($this->getField('vn_status'));
-        if ($aNewStatus['code'] != $aOldStatus['code']) {
-            $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->primaryKeyValue);
-            $log = "vn_status: ". $aOldStatus['name'] . " -> ". $aNewStatus['name'];
-            func_log_order($this->primaryKeyValue, 'X', $log);
-        }
+        $log = "vn_status: ". $aOldStatus['name'] . " -> ". $aNewStatus['name'];
+        func_log_order($this->primaryKeyValue, 'X', $log);
         $this->setField('vn_status',$sNewStatus);
         return $bResult;
     }
