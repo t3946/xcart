@@ -175,6 +175,9 @@ elseif ($option == "OTRS_options") {
 elseif ($option == "PBX_options") {
     include "./pbx_options.php";
 }
+elseif ($option == "External_marketplaces") {
+	include $xcart_dir . '/modules/External_Marketplaces/external_marketplaces.php';
+}
 elseif ($option == "Reconciliation") {
     include "./reconciliation_options.php";
 }
