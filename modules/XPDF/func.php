@@ -243,6 +243,7 @@ function xpdf_is_need_invoice($tpl)
     if (
         $config['XPDF']['xpdf_email'] == "Y" && (
             preg_match('/order_customer\.tpl/Ss', $tpl) ||
+            preg_match('/compose_message\.tpl/Ss', $tpl) ||
             (preg_match('/order_notification\.tpl/Ss', $tpl) && !preg_match('/order_notification_mnf\.tpl/Ss', $tpl))
         )
     ){

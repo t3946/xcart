@@ -1,11 +1,11 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir."/include/class/classCloneData.php";
+require_once $xcart_dir."/include/class/classProduct.php";
 require_once $xcart_dir."/include/class/classManufacturers.php";
 require_once $xcart_dir."/include/class/classCategories.php";
 require_once $xcart_dir."/include/class/classProduct.php";
 
-class classProducts extends classCloneData
+class classProducts extends classProduct
 {
     private $aProductToQueue;
     public $addCounter;
@@ -191,6 +191,10 @@ class classProducts extends classCloneData
 
     public function getProductInfo($iProductId) {
         return func_query_first("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE productid = $iProductId");
+    }
+
+    public function getProductsInfo($aProductsId) {
+        return func_query("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE productid IN (".implode(',',$aProductsId).")");
     }
 
     public function getMainProductCategoriesInfo($iProductId) {
@@ -820,10 +824,5 @@ class classProducts extends classCloneData
 
     }
 
-    public function getManfacturerClass($iManufacurerId = null) {
-        if (!is_null($iManufacurerId))
-            return new classManufacturers($iManufacurerId);
-        else return  new classManufacturer($this->aPrimaryTableValue['manufacturerid']);
-    }
 
 }
