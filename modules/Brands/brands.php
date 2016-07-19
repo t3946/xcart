@@ -303,6 +303,18 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 	#
 		func_delete_image($brandid, "B");
 	}
+	elseif ($mode == "excluded_marketplace" && !empty($excluded_marketplaces) && $brandid) {
+		global $xcart_dir;
+		require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
+		classDisabledMarketPlace::deleteAllDisabledMarketPlace($brandid, 'B');
+		foreach($excluded_marketplaces as $iExcludedMarketplace) {
+			$oMarketPlace = new classDisabledMarketPlace();
+			$oMarketPlace->fillPrimaryTableValues(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $brandid, 'resource_type'=>'B']);
+			$oMarketPlace->addDisabledMarketPlace();
+		}
+
+
+	}
 	elseif ($mode == "update" and empty($provider_condition)) {
 	#
 	# Update brands list
@@ -420,6 +432,20 @@ if ($mode == "add" or !empty($brandid)) {
 		$location[] = array(func_get_langvar_by_name("lbl_add_brand"), "");
 
 	$smarty->assign("mode", "brand_info");
+	global $xcart_dir;
+	require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
+	require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
+	$aMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
+	$aExternalMarketplaces = [];
+	if (!empty($aMarketplaces)) {
+		foreach ($aMarketplaces as $oMarketPlace) {
+			$aExternalMarketplaces['values'][] = $oMarketPlace->getMarketPlaceId();
+			$aExternalMarketplaces['names'][] = $oMarketPlace->getMarketPlaceName();
+		}
+	}
+	$aDisabledMarketPlaces = classDisabledMarketPlace::getDisabledMarketPlaces($brandid, 'B');
+	$smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
+	$smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
 }
 else {
 #

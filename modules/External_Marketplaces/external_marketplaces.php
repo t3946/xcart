@@ -1,24 +1,43 @@
 <?php
-if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
+if (!defined('XCART_SESSION_START')) {
+    header("Location: ../");
+    die("Access denied");
+}
+global $xcart_dir;
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
+require_once $xcart_dir . "/include/class/classStoreFronts.php";
+global $sql_tbl;
 
-if ($REQUEST_METHOD == 'POST'){
+if ($REQUEST_METHOD == 'POST') {
 
-    if ($mode == "update"){
+    if ($mode == 'update') {
 
-        if (!empty($pbx) && is_array($pbx)){
-            foreach ($pbx as $id => $v){
-                if ($v["delete"] == "Y"){
-                    db_query("DELETE FROM  $sql_tbl[pbx_options] WHERE id='$id'");
-                } else {
-                    db_query("UPDATE $sql_tbl[pbx_options] SET extension='$v[extension]', anveo_account='$v[anveo_account]', anveo_password='$v[anveo_password]' WHERE id='$id'");
+
+        if (!empty($external_marketplace)) {
+            foreach ($external_marketplace as $key => $aMarketplace) {
+                $aMarketplace['id'] = $key;
+                if (!(func_array2insert('products_external_marketplaces', $aMarketplace, true, true)))
+                    func_array2update('products_external_marketplaces', $aMarketplace, 'id = ' . $aMarketplace['id']);
+            }
+        }
+        if (!empty($external_storefront_marketplace)) {
+            foreach ($external_storefront_marketplace as $iMarketPlaceId => $aMarketplace) {
+                foreach ($aMarketplace as $iStoreFrontId => $aStoreFront) {
+                    if ($iStoreFrontId) {
+                        $aStoreFront['marketplace_id'] = $iMarketPlaceId;
+
+                        if (!(func_array2insert('storefronts_external_marketplaces', $aStoreFront, true, true)))
+                            func_array2update('storefronts_external_marketplaces', $aStoreFront, 'marketplace_id = ' . $aStoreFront['marketplace_id'] . ' AND storefront_id = ' . $aStoreFront['storefront_id']);
+                    }
                 }
             }
         }
 
-//        db_query("UPDATE $sql_tbl[config] SET value='$SIP_phone_settings_template' WHERE name='SIP_phone_settings_template'");
-    }
-    elseif ($mode == "add"){
-        db_query("INSERT INTO $sql_tbl[pbx_options] (extension) VALUES ('')");
+        if (!empty($external_storefront_marketplace_to_delete)) {
+            foreach ($external_storefront_marketplace_to_delete as $iMarketPlaceId => $aMarketplace) {
+                db_exec("DELETE FROM " . $sql_tbl['storefronts_external_marketplaces'] . " WHERE marketplace_id = $iMarketPlaceId AND storefront_id IN (" . implode(',', array_flip($aMarketplace)) . ")");
+            }
+        }
     }
 
     $top_message["content"] = 'Done.';
@@ -26,8 +45,8 @@ if ($REQUEST_METHOD == 'POST'){
     func_header_location("configuration.php?option=External_marketplaces");
 }
 
-global $xcart_dir;
-require_once $xcart_dir."/modules/External_Marketplaces/include/classExternalMarketPlace.php";
 $aExternalMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
 
 $smarty->assign("external_marketplaces", $aExternalMarketplaces);
+$oStoreFronts = new classStoreFronts();
+$smarty->assign("storefronts", $oStoreFronts);

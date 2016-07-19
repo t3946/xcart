@@ -371,6 +371,12 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 
 {/capture}
 {include file="dialog.tpl" title=$lng.lbl_brand_details content=$smarty.capture.dialog extra='width="100%"'}
+<br/>
+<br/>
+{capture name=excluded_marketplaces}
+    {include file="modules/External_Marketplaces/excluded_marketplaces_admin.tpl"}
+{/capture}
+{include file="dialog.tpl" title='Excluded marketplaces' content=$smarty.capture.excluded_marketplaces extra='width="100%"'}
 
 {*
 {if $mode eq "brand_info" and $brand.brandid ne ''}

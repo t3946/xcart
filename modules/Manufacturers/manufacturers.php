@@ -1218,6 +1218,12 @@ if ($distributor_section == "18"){
 		'distributor_section' => '30'
 	);
 
+	$distributor_sections[] = array(
+		'title'  => 'External marketplaces',
+		'order_by' => '180',
+		'distributor_section' => '40'
+	);
+
 
 //func_print_r($distributor_sections);
 

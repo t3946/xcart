@@ -287,6 +287,10 @@ elseif ($option == "Search_products") {
 	func_header_location("configuration.php?option=$option");
 }
 
+if ($option == "External_Marketplaces") {
+	include_once $xcart_dir."/modules/External_Marketplaces/external_marketplaces.php";
+}
+
 #
 # Select default options tab
 #
