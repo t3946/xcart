@@ -329,7 +329,16 @@ if ($REQUEST_METHOD == "POST") {
 		func_refresh("Product_questions", "#Product_questions");
 	}
 
-
+	if ($mode == "excluded_marketplace" && $productid) {
+		global $xcart_dir;
+		require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
+		classDisabledMarketPlace::deleteAllDisabledMarketPlace($productid, 'P');
+		foreach($excluded_marketplaces as $iExcludedMarketplace) {
+			$oMarketPlace = new classDisabledMarketPlace();
+			$oMarketPlace->fillPrimaryTableValues(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $productid, 'resource_type'=>'P']);
+			$oMarketPlace->addDisabledMarketPlace();
+		}
+	}
 	#
 	# Delete product thumbnail
 	#
@@ -1476,6 +1485,21 @@ if ($product_info['clone_parent_productid'] > 0) {
 
 unset($classProduct);
 unset($aParentProduct);
+
+global $xcart_dir;
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
+$aMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
+$aExternalMarketplaces = [];
+if (!empty($aMarketplaces)) {
+	foreach ($aMarketplaces as $oMarketPlace) {
+		$aExternalMarketplaces['values'][] = $oMarketPlace->getMarketPlaceId();
+		$aExternalMarketplaces['names'][] = $oMarketPlace->getMarketPlaceName();
+	}
+}
+$aDisabledMarketPlaces = classDisabledMarketPlace::getDisabledMarketPlaces($product_info['productid'], 'P');
+$smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
+$smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
 
 $smarty->assign("product", $product_info);
 $smarty->assign("productid", $product_info["productid"]);

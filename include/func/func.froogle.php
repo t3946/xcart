@@ -733,7 +733,7 @@ function AddProductToAmazonBatch($productid, $update_type, $amazon_inventory_bat
         return $AddProductToAmazonBatch_arr;
 }
 
-function AddProductToGoogleBaseBatch($productid, $MerchantID, $update_type, $service, $forsale, $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, $sExtraLog = "N"){
+function AddProductToGoogleBaseBatch($productid, $update_type, $forsale, $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, $sExtraLog = "N"){
 
 	if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $forsale == "N"))){
 			$Batchid = $google_products_batch_count;

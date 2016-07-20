@@ -303,7 +303,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 	#
 		func_delete_image($brandid, "B");
 	}
-	elseif ($mode == "excluded_marketplace" && !empty($excluded_marketplaces) && $brandid) {
+	elseif ($mode == "excluded_marketplace" && $brandid) {
 		global $xcart_dir;
 		require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
 		classDisabledMarketPlace::deleteAllDisabledMarketPlace($brandid, 'B');
@@ -312,8 +312,6 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 			$oMarketPlace->fillPrimaryTableValues(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $brandid, 'resource_type'=>'B']);
 			$oMarketPlace->addDisabledMarketPlace();
 		}
-
-
 	}
 	elseif ($mode == "update" and empty($provider_condition)) {
 	#

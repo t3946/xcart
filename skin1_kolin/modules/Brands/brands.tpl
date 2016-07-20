@@ -374,7 +374,9 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 <br/>
 <br/>
 {capture name=excluded_marketplaces}
-    {include file="modules/External_Marketplaces/excluded_marketplaces_admin.tpl"}
+    <form  method="post" enctype="multipart/form-data" name="excluded_marketplace">
+    {include file="modules/External_Marketplaces/excluded_marketplaces_admin.tpl" show_button=true}
+    </form>
 {/capture}
 {include file="dialog.tpl" title='Excluded marketplaces' content=$smarty.capture.excluded_marketplaces extra='width="100%"'}
 

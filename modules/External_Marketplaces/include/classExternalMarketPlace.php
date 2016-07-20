@@ -25,17 +25,34 @@ class classExternalMarketPlace extends classData
 
         if (!empty($aMarketPlaces)) {
             foreach ($aMarketPlaces as $aMarketPlace) {
-                $sProcessorClass = $aMarketPlace['processor_class'];
-                $sProcessorPath = $xcart_dir . "/modules/External_Marketplaces/include/marketplaces/" . $sProcessorClass . ".php";
-                if (file_exists($sProcessorPath))
-                    require_once $sProcessorPath;
-                else $sProcessorClass = __CLASS__;
+                $sProcessorClass = __CLASS__;
                 $oProcessor = new $sProcessorClass();
                 $oProcessor->fillPrimaryTableValues($aMarketPlace);
                 $aMP[] = $oProcessor;
             }
         }
         return $aMP;
+    }
+
+    /**
+     * @param int $iMarketPlaceId
+     * @param int $iStoreFrontId
+     * @return classStoreFrontMarketPlace
+     */
+    public static function getExternalMarketPlace($iMarketPlaceId, $iStoreFrontId)
+    {
+        global $xcart_dir, $sql_tbl;
+        self::$sql_tbl = $sql_tbl;
+        $aMarketPlace = func_query_first("SELECT * FROM " . self::$sql_tbl['products_external_marketplaces'] . " WHERE id = $iMarketPlaceId");
+        if (!empty($aMarketPlace)) {
+            $sProcessorClass = $aMarketPlace['processor_class'];
+            $sProcessorPath = $xcart_dir . "/modules/External_Marketplaces/include/marketplaces/" . $sProcessorClass . ".php";
+            if (file_exists($sProcessorPath))
+                require_once $sProcessorPath;
+            else $sProcessorClass = 'classStoreFrontMarketPlace';
+            $oProcessor = new $sProcessorClass(['marketplace_id'=>$iMarketPlaceId, 'storefront_id'=>$iStoreFrontId]);
+            return $oProcessor;
+        }
     }
 
     public function getMarketPlaceName()
