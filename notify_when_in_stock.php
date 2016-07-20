@@ -1,7 +1,13 @@
 <?php
-require "./auth.php";
+define("CIDEV_CRON_START", "CRON");
+require "./top.inc.php";
+require "./init.php";
 
 x_load("email", "product");
+
+$log_category = 'notify_when_in_stock';
+
+db_query("REPLACE $sql_tbl[config] SET value='Y', name='$log_category'");
 
 $from = "S3 Stores stock notification service <helpdesk@s3stores.com>";
 $current_time = time();
@@ -43,6 +49,8 @@ if (!empty($all_records) && is_array($all_records)){
 		}
 	}
 }
+db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
 
-print"<br />Done!";
+die("DONE!");
+
 ?>
