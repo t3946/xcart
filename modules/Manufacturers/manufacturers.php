@@ -945,7 +945,6 @@ else {
 			$products_in_manufacturers = func_query_hash("SELECT COUNT(*), manufacturerid FROM $sql_tbl[products] GROUP BY manufacturerid", 'manufacturerid', false, true);
 
 			foreach ($manufacturers as $k => $v) {
-				$manufacturers[$k]["products_count"] = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[products] WHERE manufacturerid='$v[manufacturerid]'");
 				if (isset($products_in_manufacturers[$v['manufacturerid']])) {
 					$manufacturers[$k]["products_count"] = $products_in_manufacturers[$v['manufacturerid']];
 				}
