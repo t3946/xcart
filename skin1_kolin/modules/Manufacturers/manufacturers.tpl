@@ -94,6 +94,18 @@ tinymce.init({
 <br /><br />
 
 {if $mode ne "manufacturer_info"}
+{capture name=dialogsearch}
+<form action="manufacturers.php" method="get" name="search_manufacturer">
+<table cellpadding="3" cellspacing="1" width="100%">
+    <tr>
+        <td width="100">
+            <input name="search" type="text" />
+        </td>
+        <td> <input type="submit" value="Search"/></td>
+    </tr>
+</table>
+</form>
+{/capture}
 
 {capture name=dialog}
 
@@ -226,7 +238,11 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 {include file="customer/main/navigation.tpl"}
 
 {/capture}
-{include file="dialog.tpl" title=$lng.lbl_manufacturers_list content=$smarty.capture.dialog extra='width="100%"'}
+
+    {include file="dialog.tpl" title="Search distributor" content=$smarty.capture.dialogsearch extra='width="100%"'}
+    <br/>
+    <br/>
+    {include file="dialog.tpl" title=$lng.lbl_manufacturers_list content=$smarty.capture.dialog extra='width="100%"'}
 
 {else}
 
