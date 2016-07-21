@@ -38,7 +38,8 @@ class classGMC extends classStoreFrontMarketPlace
     private function getService($debug_mode = 'N')
     {
         if (empty($this->oService)) {
-            $service_account_name = 'account-2@careful-triumph-774.iam.gserviceaccount.com'; //Email Address
+            //$service_account_name = 'account-2@careful-triumph-774.iam.gserviceaccount.com'; //Email Address
+            $service_account_name = $this->getFTPLogin();
             $key_file_location = '/var/www/stores/google-api-php-client/examples/key2.p12'; //key.p12
 
             $client = new Google_Client();

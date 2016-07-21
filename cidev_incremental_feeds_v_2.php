@@ -274,7 +274,7 @@ Select
 #####################################################################################################################
 #####################################################################################################################
 
-        if (!isset($all_froogle_options[$storefrontid])) {
+        /*if (!isset($all_froogle_options[$storefrontid])) {
             $BingMerchantID = '';
             $BingCatalogID = '';
         } else {
@@ -312,13 +312,13 @@ Select
                 $client->getAuth()->refreshTokenWithAssertion($cred);
             }
         }
-        $_SESSION['service_token'] = $client->getAccessToken();
+        $_SESSION['service_token'] = $client->getAccessToken();*/
 #####################################################################################################################
 #####################################################################################################################
 #####################################################################################################################
 
 
-        $google_inventory_batch_count = 0;
+       /* $google_inventory_batch_count = 0;
         $google_products_batch_count = 0;
         $ginventory = array(); // или new Google_Service_ShoppingContent_InventoryCustomBatchRequest()
         $gproducts = array(); // или new Google_Service_ShoppingContent_ProductsCustomBatchRequest()
@@ -330,7 +330,7 @@ Select
 
         $max_google_batch = 140;
         $max_amazon_batch = 2000;
-        $max_bing_batch = 140;
+        $max_bing_batch = 140;*/
 
         $cnt = 0;
 
