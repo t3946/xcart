@@ -27,7 +27,7 @@ abstract class classStoreFrontMarketPlace extends classData
     private function fetchExternalMarketPlace()
     {
         if (empty($this->oExternalMarketPlace)) {
-            $this->oExternalMarketPlace = new classExternalMarketPlace($this->getField('marketplace_id'));
+            $this->oExternalMarketPlace = new classExternalMarketPlace([$this->getField('marketplace_id')]);
         }
         return $this;
     }

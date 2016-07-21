@@ -52,7 +52,8 @@ class classGMC extends classStoreFrontMarketPlace
             $key = file_get_contents($key_file_location);
             $cred = new Google_Auth_AssertionCredentials(
                 $service_account_name,
-                array('https://www.googleapis.com/auth/content'),
+                //array('https://www.googleapis.com/auth/content'),
+                [$this->getP0()],
                 $key
             );
             $client->setAssertionCredentials($cred);

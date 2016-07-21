@@ -28,7 +28,7 @@ class classBing extends classStoreFrontMarketPlace
     }
 
     public function submitInventoryBatch($debug_mode = 'N', $extra_log='N') {
-        $error = SubmitBingInventoryBatch($this->getInventory(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
+        $error = SubmitBingInventoryBatch($this->getInventory(),$this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
         if ($error == 500)
             $this->RestoreQueue($this->getInventory(), 2);
 
@@ -36,7 +36,7 @@ class classBing extends classStoreFrontMarketPlace
     }
 
     public function submitProductsBatch($debug_mode = 'N', $extra_log='N') {
-        $error = SubmitBingProductsBatch($this->getProducts(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
+        $error = SubmitBingProductsBatch($this->getProducts(),$this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
         if ($error == 500)
             $this->RestoreQueue($this->getProducts(), 1);
 

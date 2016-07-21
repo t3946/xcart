@@ -20,7 +20,7 @@ class classStoreFronts extends classData
     public function fetchStoreFronts()
     {
         if (empty($this->aStoreFronts)) {
-            $aStoreFronts = func_query("SELECT * FROM " . self::$sql_tbl['storefronts']);
+            $aStoreFronts = func_query("SELECT * FROM " . self::$sql_tbl['storefronts'] . " ORDER BY domain" );
             if (!empty($aStoreFronts)) {
                 foreach ($aStoreFronts as $aStoreFront) {
                     $oStorefront = new classStoreFront();

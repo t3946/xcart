@@ -18,7 +18,7 @@ class classExternalMarketPlace extends classData
 
     public static function getExternalMarketPlaces()
     {
-        global $xcart_dir, $sql_tbl;
+        global $sql_tbl;
         self::$sql_tbl = $sql_tbl;
         $aMP = [];
         $aMarketPlaces = func_query("SELECT * FROM " . self::$sql_tbl['products_external_marketplaces'] . " ORDER BY marketplace_name");
@@ -26,6 +26,7 @@ class classExternalMarketPlace extends classData
         if (!empty($aMarketPlaces)) {
             foreach ($aMarketPlaces as $aMarketPlace) {
                 $sProcessorClass = __CLASS__;
+                /** @var classStoreFrontMarketPlace $oProcessor */
                 $oProcessor = new $sProcessorClass();
                 $oProcessor->fillPrimaryTableValues($aMarketPlace);
                 $aMP[] = $oProcessor;
@@ -53,6 +54,7 @@ class classExternalMarketPlace extends classData
             $oProcessor = new $sProcessorClass(['marketplace_id'=>$iMarketPlaceId, 'storefront_id'=>$iStoreFrontId]);
             return $oProcessor;
         }
+        return null;
     }
 
     public function getMarketPlaceName()
@@ -86,7 +88,7 @@ class classExternalMarketPlace extends classData
             $aMarketPlaces = func_query("SELECT * FROM " . self::$sql_tbl['storefronts_external_marketplaces'] . " WHERE marketplace_id = " . $this->getMarketPlaceId());
             if (!empty($aMarketPlaces)) {
                 foreach ($aMarketPlaces as $aMarketPlace) {
-                    $oStoreMarketPlace = new classStoreFrontMarketPlace();
+                    $oStoreMarketPlace = $this->getExternalMarketPlace($this->getMarketPlaceId(),$aMarketPlace['storefront_id']);
                     $oStoreMarketPlace->fillPrimaryTableValues($aMarketPlace);
                     $this->aStoreMarketPlaces[] = $oStoreMarketPlace;
                 }

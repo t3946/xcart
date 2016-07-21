@@ -52,8 +52,8 @@ define("FROOGLE_TAIL_LEN", strlen(constant("FROOGLE_TAIL")));
 define('FROOGLE_MAX_DESCRIPTION_LENGTH', 10 * 1024); //The content in an attribute in an item exceeds 10 KB.
 
 define('EXCLUDE_CATEGORYID_BRANCH', 5099);
-define('SUBMIT_DISABLE', 'N');
-define('EXTRA_LOG', 'N');
+define('SUBMIT_DISABLE', 'Y');
+define('EXTRA_LOG', 'Y');
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
