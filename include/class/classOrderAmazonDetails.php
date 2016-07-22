@@ -20,7 +20,8 @@ class classOrderAmazonDetails extends classData
         parent::__construct($aParams);
     }
 
-    public function countOrderAmazonDetails() {
+    public function countOrderAmazonDetails()
+    {
         $count = 0;
         if (!empty($this->aAmazonDetails))
             $count = count($this->aAmazonDetails);
@@ -30,7 +31,8 @@ class classOrderAmazonDetails extends classData
     /**
      * @return bool
      */
-    public function isRefundExists() {
+    public function isRefundExists()
+    {
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
                 if ($oAmazonDetail->getField('type') == self::TYPE_REFUND) return true;
@@ -57,7 +59,7 @@ class classOrderAmazonDetails extends classData
         $fRes = 0;
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
-                $fRes+=floatval($oAmazonDetail->getField('Refund'));
+                $fRes += floatval($oAmazonDetail->getField('Refund'));
             }
         }
         return $fRes;
@@ -68,7 +70,7 @@ class classOrderAmazonDetails extends classData
         $fRes = 0;
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
-                $fRes+=floatval($oAmazonDetail->getField('Shipping'));
+                $fRes += floatval($oAmazonDetail->getField('Shipping'));
             }
         }
         return $fRes;
@@ -79,7 +81,7 @@ class classOrderAmazonDetails extends classData
         $fRes = 0;
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
-                $fRes+=floatval($oAmazonDetail->getField('PrincipalRefund'));
+                $fRes += floatval($oAmazonDetail->getField('PrincipalRefund'));
             }
         }
         return $fRes;
@@ -90,7 +92,7 @@ class classOrderAmazonDetails extends classData
         $fRes = 0;
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
-                $fRes+=floatval($oAmazonDetail->getField('ShippingRefund'));
+                $fRes += floatval($oAmazonDetail->getField('ShippingRefund'));
             }
         }
         return $fRes;
@@ -101,7 +103,7 @@ class classOrderAmazonDetails extends classData
         $fRes = 0;
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
-                $fRes+=floatval($oAmazonDetail->getField('Principal'));
+                $fRes += floatval($oAmazonDetail->getField('Principal'));
             }
         }
         return $fRes;
@@ -112,7 +114,7 @@ class classOrderAmazonDetails extends classData
         $fRes = 0;
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
-                $fRes+=floatval($oAmazonDetail->getField('AmazonCommission'));
+                $fRes += floatval($oAmazonDetail->getField('AmazonCommission'));
             }
         }
         return $fRes;
@@ -123,7 +125,7 @@ class classOrderAmazonDetails extends classData
         $fRes = 0;
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
-                $fRes+=floatval($oAmazonDetail->getField('FBAPerOrderFulfillmentFee'));
+                $fRes += floatval($oAmazonDetail->getField('FBAPerOrderFulfillmentFee'));
             }
         }
         return $fRes;
@@ -134,7 +136,18 @@ class classOrderAmazonDetails extends classData
         $fRes = 0;
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
-                $fRes+=floatval($oAmazonDetail->getField('FBAPerUnitFulfillmentFee'));
+                $fRes += floatval($oAmazonDetail->getField('FBAPerUnitFulfillmentFee'));
+            }
+        }
+        return $fRes;
+    }
+
+    public function getOrderAmazonFBATransportationFee()
+    {
+        $fRes = 0;
+        if (!empty($this->aAmazonDetails)) {
+            foreach ($this->aAmazonDetails as $oAmazonDetail) {
+                $fRes += floatval($oAmazonDetail->getField('FBATransportationFee'));
             }
         }
         return $fRes;
@@ -145,7 +158,7 @@ class classOrderAmazonDetails extends classData
         $fRes = 0;
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
-                $fRes+=floatval($oAmazonDetail->getField('FBAWeightBasedFee'));
+                $fRes += floatval($oAmazonDetail->getField('FBAWeightBasedFee'));
             }
         }
         return $fRes;

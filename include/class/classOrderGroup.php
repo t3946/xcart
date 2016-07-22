@@ -192,54 +192,78 @@ class classOrderGroup extends classData
         $this->recalculateAccountingCostToUs();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingPST($fSumma)
     {
         $this->setField('accounting_pst_0', floatval($this->getField('accounting_pst_0')) + floatval($fSumma));
         $this->recalculateAccountingNet();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingHST($fSumma)
     {
         $this->setField('accounting_gst_0', floatval($this->getField('accounting_gst_0')) + floatval($fSumma));
         $this->recalculateAccountingNet();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingNet($fSumma)
     {
         $this->setField('accounting_net_0', floatval($this->getField('total_net')) + floatval($fSumma));
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingGross($fSumma)
     {
         $this->setField('accounting_gross_0', floatval($this->getField('total_gross')) + floatval($fSumma));
         $this->recalculateAccountingNet();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function setAccountingGross($fSumma)
     {
         $this->setField('accounting_gross_0', floatval($fSumma));
         $this->recalculateAccountingNet();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingNetCostToUs($fSumma)
     {
         $this->setField('accounting_net_1_cost_to_us', floatval($this->getField('accounting_net_1_cost_to_us')) + floatval($fSumma));
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingGrossCostToUs($fSumma)
     {
         $this->setField('accounting_gross_1_cost_to_us', floatval($this->getField('accounting_gross_1_cost_to_us')) + floatval($fSumma));
         $this->recalculateAccountingCostToUs();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function setAccountingGrossCostToUs($fSumma)
     {
         $this->setField('accounting_gross_1_cost_to_us', floatval($fSumma));
@@ -251,34 +275,49 @@ class classOrderGroup extends classData
     {
         return $this->getField('accounting_gross_1_cost_to_us');
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingPSTCostToUs($fSumma)
     {
         $this->setField('accounting_pst_1_cost_to_us', floatval($this->getField('accounting_pst_1_cost_to_us')) + floatval($fSumma));
         $this->recalculateAccountingCostToUs();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingHSTCostToUs($fSumma)
     {
         $this->setField('accounting_gst_1_cost_to_us', floatval($this->getField('accounting_gst_1_cost_to_us')) + floatval($fSumma));
         $this->recalculateAccountingCostToUs();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function setAccountingHSTCostToUs($fSumma)
     {
         $this->setField('accounting_gst_1_cost_to_us', floatval($fSumma));
         $this->recalculateAccountingCostToUs();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingNetShipping($fSumma)
     {
         $this->setField('accounting_net_2_shipping', floatval($this->getField('accounting_net_2_shipping')) + floatval($fSumma));
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingGrossShipping($fSumma)
     {
         $this->setField('accounting_gross_2_shipping', floatval($this->getField('accounting_gross_2_shipping')) + floatval($fSumma));
@@ -332,41 +371,59 @@ class classOrderGroup extends classData
         $this->recalculateAccountingShipping();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingPSTShipping($fSumma)
     {
         $this->setField('accounting_pst_2_shipping', floatval($this->getField('accounting_pst_2_shipping')) + floatval($fSumma));
         $this->recalculateAccountingShipping();
         return $this;
     }
-
+    /**
+     * @param float $fSumma
+     * @return classOrderGroup
+     */
     public function addAccountingHSTShipping($fSumma)
     {
         $this->setField('accounting_gst_2_shipping', floatval($this->getField('accounting_gst_2_shipping')) + floatval($fSumma));
         $this->recalculateAccountingShipping();
         return $this;
     }
-
+    /**
+     * @param float $fRefundSumma
+     * @return classOrderGroup
+     */
     public function addAccountingNetRefundToCustomer($fRefundSumma)
     {
         $this->setField('accounting_net_3_ref_to_cust', $this->getField('accounting_net_3_ref_to_cust') + abs(floatval($fRefundSumma)));
         return $this;
     }
-
+    /**
+     * @param float $fRefundSumma
+     * @return classOrderGroup
+     */
     public function addAccountingGrossRefundToCustomer($fRefundSumma)
     {
         $this->setField('accounting_gross_3_ref_to_cust', $this->getField('accounting_gross_3_ref_to_cust') + abs(floatval($fRefundSumma)));
         $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
-
+    /**
+     * @param float $fRefundSumma
+     * @return classOrderGroup
+     */
     public function setAccountingGrossRefundToCustomer($fRefundSumma)
     {
         $this->setField('accounting_gross_3_ref_to_cust', abs(floatval($fRefundSumma)));
         $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
-
+    /**
+     * @param float $fRefundSumma
+     * @return classOrderGroup
+     */
     public function setAccountingGrossRefundToUs($fRefundSumma)
     {
         $this->setField('accounting_gross_4_ref_to_us', abs(floatval($fRefundSumma)));
@@ -668,9 +725,9 @@ class classOrderGroup extends classData
                     ->initAccountingPST();
 
                 if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
-                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal());
-                    $this->setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal());
-                    $this->setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
+                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal())->
+                           setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
+                           setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
 
                 if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
@@ -695,7 +752,7 @@ class classOrderGroup extends classData
 
     public function recalculateAccountingAmazon()
     {
-        $fRefund = $fPrincipalRefund = $fShippingRefund = $fShipping = $FBAPerOrderFulfillmentFee = $FBAPerUnitFulfillmentFee = $FBAWeightBasedFee = $AmazonCommission = 0;
+        $fRefund = $fPrincipalRefund = $fShippingRefund = $fShipping = $FBAPerOrderFulfillmentFee = $FBAPerUnitFulfillmentFee = $FBATransportationFee = $FBAWeightBasedFee = $AmazonCommission = 0;
         if ($this->getOrderAmazonDetails()->countOrderAmazonDetails() > 0) {
             $fRefund = $this->getOrderAmazonDetails()->getOrderAmazonRefund();
             $fPrincipalRefund = $this->getOrderAmazonDetails()->getOrderAmazonPrincipalRefund();
@@ -703,6 +760,7 @@ class classOrderGroup extends classData
             $fShipping = $this->getOrderAmazonDetails()->getOrderAmazonShipping();
             $FBAPerOrderFulfillmentFee = $this->getOrderAmazonDetails()->getOrderAmazonFBAPerOrderFulfillmentFee();
             $FBAPerUnitFulfillmentFee = $this->getOrderAmazonDetails()->getOrderAmazonFBAPerUnitFulfillmentFee();
+            $FBATransportationFee = $this->getOrderAmazonDetails()->getOrderAmazonFBATransportationFee();
             $FBAWeightBasedFee = $this->getOrderAmazonDetails()->getOrderAmazonFBAWeightBasedFee();
             $AmazonCommission = $this->getOrderAmazonDetails()->getOrderAmazonCommission();
         }
@@ -715,14 +773,14 @@ class classOrderGroup extends classData
                     ->initAccountingPST()
                     ->initAccountingGrossCostToUs();
                 if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
-                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal());
-                    $this->setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal());
-                    $this->setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
+                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal())->
+                           setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
+                           setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
                 $this->setAccountingGrossRefundToUs(abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
                 if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
-                    $this->addAccountingHSTRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsHST());
-                    $this->addAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
+                    $this->addAccountingHSTRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsHST())->
+                           addAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
                 }
                 break;
             case 'AFN' :
@@ -732,7 +790,7 @@ class classOrderGroup extends classData
                         $FBAPerUnitFulfillmentFee +
                         $FBAWeightBasedFee +
                         $AmazonCommission)->initAccountingGrossCostToUs()
-                    ->setAccountingGrossShipping($fShipping);
+                    ->setAccountingGrossShipping($fShipping+$FBATransportationFee);
                 if ($this->getOrderAmazonDetails()->isRefundExists())
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
 

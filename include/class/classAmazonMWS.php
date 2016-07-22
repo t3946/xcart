@@ -478,34 +478,6 @@ class classAmazonMWS
                     echo("                Count\n");
                     echo("                    " . $updateReportAcknowledgementsResult->getCount() . "\n");
                 }
-                /*$reportInfoList = $updateReportAcknowledgementsResult->getReportInfo();
-                foreach ($reportInfoList as $reportInfo) {
-                    echo("                ReportInfo\n");
-                    if ($reportInfo->isSetReportId()) {
-                        echo("                    ReportId\n");
-                        echo("                        " . $reportInfo->getReportId() . "\n");
-                    }
-                    if ($reportInfo->isSetReportType()) {
-                        echo("                    ReportType\n");
-                        echo("                        " . $reportInfo->getReportType() . "\n");
-                    }
-                    if ($reportInfo->isSetReportRequestId()) {
-                        echo("                    ReportRequestId\n");
-                        echo("                        " . $reportInfo->getReportRequestId() . "\n");
-                    }
-                    if ($reportInfo->isSetAvailableDate()) {
-                        echo("                    AvailableDate\n");
-                        echo("                        " . $reportInfo->getAvailableDate()->format(DATE_FORMAT) . "\n");
-                    }
-                    if ($reportInfo->isSetAcknowledged()) {
-                        echo("                    Acknowledged\n");
-                        echo("                        " . $reportInfo->getAcknowledged() . "\n");
-                    }
-                    if ($reportInfo->isSetAcknowledgedDate()) {
-                        echo("                    AcknowledgedDate\n");
-                        echo("                        " . $reportInfo->getAcknowledgedDate()->format(DATE_FORMAT) . "\n");
-                    }
-                }*/
             }
             if ($response->isSetResponseMetadata()) {
                 echo("            ResponseMetadata\n");
@@ -774,8 +746,6 @@ class classAmazonMWS
             $log_text = "Processing " . count($ReportContent) . " reports";
             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
-            $err = '';
-
             foreach ($ReportContent as $report_id => $report_data) {
 
                 $aOrderDetails = [];
@@ -827,19 +797,8 @@ class classAmazonMWS
                                         $aUpdateFields['acc_paymentid'] = 101;
                                         break;
                                 }
-                                //func_array2update('order_groups', $aUpdateFields, 'orderid = ' . $order_info['orderid']);
-
-
-                                $mid_info = [];
-                                $cost_to_us = 0;
 
                                 foreach ($v["Fulfillment"] as $kk => $vv) {
-
-                                    /*$oProducts = new classProducts();
-                                    $aProduct = $oProducts->getProductBySKU($vv['SKU']);
-
-                                    $cost_to_us = $aProduct['cost_to_us'];*/
-
 
                                     if ($k_name == "Item") {
                                         if (!empty($vv["ItemFees"])) {
@@ -855,6 +814,14 @@ class classAmazonMWS
                                                 }
                                             }
 
+                                        }
+
+                                        if (!empty($vv["ShipmentFees"])) {
+                                            foreach ($vv["ShipmentFees"] as $kkk => $vvv) {
+                                                if (in_array($vvv["Type"], array("FBATransportationFee"))) {
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] += floatVal($vvv["Amount"]);
+                                                }
+                                            }
                                         }
 
                                         if (!empty($vv["ItemPrice"])) {
@@ -917,6 +884,7 @@ class classAmazonMWS
                                 $aOrderDetailData = [];
                                 $aOrderDetailData['FBAPerOrderFulfillmentFee'] = floatval($aFees['FBAPerOrderFulfillmentFee']);
                                 $aOrderDetailData['FBAPerUnitFulfillmentFee'] = floatval($aFees['FBAPerUnitFulfillmentFee']);
+                                $aOrderDetailData['FBATransportationFee'] = floatval($aFees['FBATransportationFee']);
                                 $aOrderDetailData['FBAWeightBasedFee'] = floatval($aFees['FBAWeightBasedFee']);
                                 $aOrderDetailData['AmazonCommission'] = floatval($aFees['Commission']);
                                 $aOrderDetailData['Principal'] = floatval($aFees['Principal']);
@@ -943,6 +911,7 @@ class classAmazonMWS
                                     func_array2insert('order_amazon_details', $aOrderDetailData, true);
                                     $aUpdateValues = func_query_first("SELECT SUM(FBAPerOrderFulfillmentFee) AS FBAPerOrderFulfillmentFee,
                                                      SUM(FBAPerUnitFulfillmentFee) AS FBAPerUnitFulfillmentFee,
+                                                     SUM(FBATransportationFee) AS FBATransportationFee,
                                                      SUM(FBAWeightBasedFee) AS FBAWeightBasedFee,
                                                      SUM(AmazonCommission) AS AmazonCommission,
                                                      SUM(Refund) AS Refund,
@@ -952,23 +921,9 @@ class classAmazonMWS
                                                      count(1) as Rows
                                                      FROM " . $this->sql_tbl['order_amazon_details'] . " WHERE orderid = $iOrderId AND SKU = '$aFees[SKU]'");
                                     if ($aUpdateValues['Rows'] > 0) {
-                                        $fRefund = $fPrincipalRefund = $fShipping = $fShippingRefund = 0;
-
                                         if ($aUpdateValues['Refund'] != 0) {
-                                            $fRefund = $aUpdateValues['Refund'];
                                             $aUpdateValues['amazon_item_refunded'] = 'Y';
                                         }
-                                        if ($aUpdateValues['PrincipalRefund'] != 0) {
-                                            $fPrincipalRefund = $aUpdateValues['PrincipalRefund'];
-                                        }
-
-                                        if ($aUpdateValues['Shipping'] != 0) {
-                                            $fShipping = $aUpdateValues['Shipping'];
-                                        }
-                                        if ($aUpdateValues['ShippingRefund'] != 0) {
-                                            $fShippingRefund = $aUpdateValues['ShippingRefund'];
-                                        }
-
                                         unset ($aUpdateValues['Refund']);
                                         unset($aUpdateValues['Rows']);
                                         unset($aUpdateValues['PrincipalRefund']);
