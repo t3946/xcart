@@ -245,7 +245,7 @@ function x_session_start($sessid = '') {
 	}
 
 	$XCARTSESSID = $sessid;
-	setcookie($XCART_SESSION_NAME, $XCARTSESSID, 0, "/", "", 0);
+	setcookie($XCART_SESSION_NAME, $XCARTSESSID, $expiry_time , "/", "", 0);
 }
 
 #
