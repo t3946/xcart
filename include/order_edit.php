@@ -475,6 +475,20 @@ if ($REQUEST_METHOD == "POST") {
 
 			foreach ($groups as $m_id => $v) {
 
+				if (func_check_comma_in_field($orderid, $v['shipping_cost_net'], 'shipping_cost_net')) {
+					$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+					$top_message["type"] = "I";
+					$section_name_top_message = $top_message;
+					x_session_save("section_name_top_message");
+					break;
+				}
+				if (func_check_comma_in_field($orderid, $v['actual_shipping_cost_net'], 'actual_shipping_cost_net')) {
+					$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+					$top_message["type"] = "I";
+					$section_name_top_message = $top_message;
+					x_session_save("section_name_top_message");
+					break;
+				}
 
 #
 ##
@@ -1132,6 +1146,13 @@ if ($REQUEST_METHOD == "POST") {
 			$login_type = "C";
 			$current_area = "C";
 			foreach ($add_productcode as $kkk => $sku) {
+				if (func_check_comma_in_field($orderid, $add_amount[$kkk], 'add_amount')) {
+					$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+					$top_message["type"] = "I";
+					$section_name_top_message = $top_message;
+					x_session_save("section_name_top_message");
+					break;
+				}
 				$amount = intval($add_amount[$kkk]);
 				if (empty($amount)) {
 					continue;
@@ -1308,14 +1329,21 @@ if ($REQUEST_METHOD == "POST") {
 			 foreach ($add_additional_fee_name as $k => $v){
 			    $v = trim($v);
 			    if (!empty($v)){
-				$add_price = price_format($add_additional_fee_value[$k]);
-				$additional_fee_row["additional_fee_name"] = $v;
-				$additional_fee_row["additional_fee_value"] = $add_price;
-				$additional_fee[] = $additional_fee_row;
-				$log .= $v . " $".$add_price. " - Added <br />";
+					if (func_check_comma_in_field($orderid, $add_additional_fee_value[$k], 'add_additional_fee_value')) {
+						$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+						$top_message["type"] = "I";
+						$section_name_top_message = $top_message;
+						x_session_save("section_name_top_message");
+						break;
+					}
+					$add_price = price_format($add_additional_fee_value[$k]);
+					$additional_fee_row["additional_fee_name"] = $v;
+					$additional_fee_row["additional_fee_value"] = $add_price;
+					$additional_fee[] = $additional_fee_row;
+					$log .= $v . " $".$add_price. " - Added <br />";
 
-//				db_query("INSERT INTO $sql_tbl[order_additional_fee] (orderid, additional_fee_name, additional_fee_value) VALUES ('$orderid', '".addslashes($v)."', '$add_price')");
-				db_query("INSERT INTO $sql_tbl[order_additional_fee] (orderid, additional_fee_name, additional_fee_value) VALUES ('$orderid', '".$v."', '$add_price')");
+	//				db_query("INSERT INTO $sql_tbl[order_additional_fee] (orderid, additional_fee_name, additional_fee_value) VALUES ('$orderid', '".addslashes($v)."', '$add_price')");
+					db_query("INSERT INTO $sql_tbl[order_additional_fee] (orderid, additional_fee_name, additional_fee_value) VALUES ('$orderid', '".$v."', '$add_price')");
 			    }
 			 }
 			} else {
@@ -1335,6 +1363,13 @@ if ($REQUEST_METHOD == "POST") {
 
 		if (!empty($edit_additional_fee_name) && is_array($edit_additional_fee_name)){
 			foreach ($edit_additional_fee_name as $k => $v){
+				if (func_check_comma_in_field($orderid, $add_additional_fee_value[$k], 'additional_fee_value')) {
+					$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+					$top_message["type"] = "I";
+					$section_name_top_message = $top_message;
+					x_session_save("section_name_top_message");
+					break;
+				}
 
 				$add_price = price_format($v["additional_fee_value"]);
 				$additional_fee_row["additional_fee_name"] = $v["additional_fee_name"];
@@ -2409,6 +2444,13 @@ func_print_r($manufacturer_memos_data);
                                                 $group_memos = array();
 
                                                 $ref_to_us_HST = $memo_data["ref_to_us_HST"];
+												if (func_check_comma_in_field($orderid, $ref_to_us_HST, 'ref_to_us_HST')) {
+													$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+													$top_message["type"] = "I";
+													$section_name_top_message = $top_message;
+													x_session_save("section_name_top_message");
+													break;
+												}
                                                 $SUM_ref_to_us_HST += $ref_to_us_HST;
 
                                                 if ($ref_to_us_HST != $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["ref_to_us_HST"]){
@@ -2418,6 +2460,14 @@ func_print_r($manufacturer_memos_data);
                                                 }
 
                                                 $ref_to_us_total = $memo_data["ref_to_us_total"];
+
+											if (func_check_comma_in_field($orderid, $ref_to_us_total, 'ref_to_us_total')) {
+												$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+												$top_message["type"] = "I";
+												$section_name_top_message = $top_message;
+												x_session_save("section_name_top_message");
+												break;
+											}
                                                 $SUM_ref_to_us_total += $ref_to_us_total;
 
                                                 if ($ref_to_us_total != $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["ref_to_us_total"]){
@@ -2501,9 +2551,26 @@ func_print_r($manufacturer_memos_data);
 						if (!empty($invoice_data["unit_cost"]) && is_array($invoice_data["unit_cost"])){
 							foreach ($invoice_data["unit_cost"] as $itemid => $unit_cost){
 
+								if (func_check_comma_in_field($orderid, $unit_cost, 'invoice_unit_cost')) {
+									$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+									$top_message["type"] = "I";
+									$section_name_top_message = $top_message;
+									x_session_save("section_name_top_message");
+									break;
+								}
+
 								$invoices_products = array();
 
 								$qty_inv = $invoice_data["qty_inv"][$itemid];
+
+								if (func_check_comma_in_field($orderid, $qty_inv, 'invoice_qty_inv')) {
+									$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+									$top_message["type"] = "I";
+									$section_name_top_message = $top_message;
+									x_session_save("section_name_top_message");
+									break;
+								}
+
 								$unit_cost_total = price_format($qty_inv*$unit_cost);
 
 								if ($unit_cost != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["products"][$itemid]["unit_cost"]){
@@ -2593,6 +2660,15 @@ func_print_r($manufacturer_memos_data);
 						$group_invoices["cost_to_us_for_products_charged"] = $cost_to_us_for_products_charged;
 
 						$tax_charged_except_HST = $invoice_data["tax_charged_except_HST"];
+
+						if (func_check_comma_in_field($orderid, $tax_charged_except_HST, 'tax_charged_except_HST')) {
+							$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+							$top_message["type"] = "I";
+							$section_name_top_message = $top_message;
+							x_session_save("section_name_top_message");
+							break;
+						}
+
 						$SUM_tax_charged_except_HST += $tax_charged_except_HST;
 
 						if ($tax_charged_except_HST != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["tax_charged_except_HST"]){
@@ -2657,6 +2733,15 @@ func_print_r($manufacturer_memos_data);
 						$group_invoices["products_total"] = $products_total;
 
 						$shipping_charged = $invoice_data["shipping_charged"];
+
+						if (func_check_comma_in_field($orderid, $shipping_charged, 'shipping_charged')) {
+							$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+							$top_message["type"] = "I";
+							$section_name_top_message = $top_message;
+							x_session_save("section_name_top_message");
+							break;
+						}
+
 						$SUM_shipping_charged += $shipping_charged;
 
                                                 if ($shipping_charged != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["shipping_charged"]){
@@ -2690,6 +2775,14 @@ func_print_r($manufacturer_memos_data);
                                                 }
 
 						$drop_ship_fee_charged = $invoice_data["drop_ship_fee_charged"];
+
+						if (func_check_comma_in_field($orderid, $drop_ship_fee_charged, 'drop_ship_fee_charged')) {
+							$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+							$top_message["type"] = "I";
+							$section_name_top_message = $top_message;
+							x_session_save("section_name_top_message");
+							break;
+						}
 						$SUM_drop_ship_fee_charged += $drop_ship_fee_charged;
 
                                                 if ($drop_ship_fee_charged != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["drop_ship_fee_charged"]){
@@ -2715,6 +2808,14 @@ func_print_r($manufacturer_memos_data);
 						$group_invoices["shipping_total"] = $shipping_total;
 
 						$HST_charged = $invoice_data["HST_charged"];
+						if (func_check_comma_in_field($orderid, $HST_charged, 'HST_charged')) {
+							$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+							$top_message["type"] = "I";
+							$section_name_top_message = $top_message;
+							x_session_save("section_name_top_message");
+							break;
+						}
+
 						$SUM_HST_charged += $HST_charged;
 
                                                 if ($HST_charged != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["HST_charged"]){

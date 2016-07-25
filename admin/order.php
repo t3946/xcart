@@ -2735,7 +2735,15 @@ elseif ($mode == 'mode_info_request_survey'){
 	    $log = "";
 
 	    if (isset($actual_shipping_net)){
+			if (func_check_comma_in_field($orderid, $actual_shipping_net, 'stock_request_shipping_cost')) {
+				$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+				$top_message["type"] = "I";
+				$section_name_top_message = $top_message;
+				x_session_save("section_name_top_message");
+				unset($actual_shipping_net);
+			} else {
 		    db_query("UPDATE $sql_tbl[order_groups] SET stock_request_shipping_cost='$actual_shipping_net' WHERE orderid='$orderid' AND manufacturerid='$mnf_id'");
+			}
 	    }
 
             if (!empty($actual_shipping_net)){
@@ -2972,25 +2980,31 @@ elseif ($mode == 'mode_info_request_survey'){
 
 	     }
 	   }
+	if (!empty($cost_to_us) && is_array($cost_to_us)) {
+		foreach ($cost_to_us as $k => $v) {
+			if (func_check_comma_in_field($orderid, $v, 'item_cost_to_us')) {
+				$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+				$top_message["type"] = "I";
+				$section_name_top_message = $top_message;
+				x_session_save("section_name_top_message");
+				break;
+			}
+			$v = trim($v);
+			if ($v != "") {
+				$v = str_replace(",", ".", $v);
+				$v = str_replace(" ", "", $v);
 
-           if (!empty($cost_to_us) && is_array($cost_to_us)){
-                        foreach ($cost_to_us as $k => $v){
-                                $v = trim($v);
-                                if ($v != ""){
-                                        $v = str_replace(",", ".", $v);
-                                        $v = str_replace(" ", "", $v);
+				$current_item_cost_to_us = func_query_first_cell("SELECT item_cost_to_us FROM $sql_tbl[order_details] WHERE orderid='$orderid' AND productid='$k'");
 
-					$current_item_cost_to_us = func_query_first_cell("SELECT item_cost_to_us FROM $sql_tbl[order_details] WHERE orderid='$orderid' AND productid='$k'");
+				if ($current_item_cost_to_us != $v) {
+					$product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$k'");
+					$log .= "<B>" . $product_code . ":</B> item_cost_to_us: " . $current_item_cost_to_us . " -> " . $v . "<br />";
+				}
 
-					if ($current_item_cost_to_us != $v){
-						$product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$k'");
-						$log .= "<B>".$product_code.":</B> item_cost_to_us: ". $current_item_cost_to_us. " -> ".$v."<br />";
-					}
-
-                                        db_query("UPDATE $sql_tbl[order_details] SET item_cost_to_us='$v' WHERE orderid='$orderid' AND productid='$k'");
-                                }
-                        }
-           }
+				db_query("UPDATE $sql_tbl[order_details] SET item_cost_to_us='$v' WHERE orderid='$orderid' AND productid='$k'");
+			}
+		}
+	}
 //	}
 
 	if ($current_dc_status != "M"){
