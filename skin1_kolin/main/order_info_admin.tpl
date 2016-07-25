@@ -707,15 +707,30 @@ Cost to us accurate
 </tr>
 {/foreach}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
-  <td nowrap="nowrap">Carrier:
+  <td nowrap="nowrap">
+    <div style="margin-bottom: 5px;">Carrier:
     {if $v.shipping_code ne ""}
       {$v.shipping_code}
     {else}Flat rate
-    {/if}<br><br>
-    Method:
+    {/if}</div>
+    <div>Method:
     {if !$static}
       <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}" {* style="width: 80%;" *}
-      {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}</td>
+      {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}
+    </div>
+  </td>
+  {assign var="oOrderGroup" value=$v.oOrderGroup}
+  {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
+  {if (!empty($oOrderGroup) && $oOrder->isOrderAmazon() == true && $oOrder->getField('fraud_status') == 'C' && ($oOrderGroup->getField('cb_status') == 'P' || $oOrderGroup->getField('cb_status') =='O') && $oOrderGroup->checkFBAProductsAvailToShipping())}
+    <td colspan="2" align="center">
+      <input name="submit_amazon_shipment" type="button"  value="Ship now by Amazon" />
+
+    <td colspan="4" style="vertical-align: top;">
+      <input style="margin-bottom: 5px;" id="submit_amazon_shipment_with_notes" name="submit_amazon_shipment_with_notes" type="checkbox" />
+      <label style="position:relative; top:-2px;" for="submit_amazon_shipment_with_notes">with customer notes</label> <br/>
+      <input style="margin-left: 4px;width: 97%;" name="submit_amazon_shipment_notes" type="text" value="{$oOrder->getOrderCustomerNotes()}"/>
+    </td>
+  {else}
   <td colspan="6">
     {if $v.tracking}
 
@@ -743,10 +758,9 @@ Cost to us accurate
         </div>
 
       {/foreach}
-    {else}
-      &nbsp;
     {/if}
   </td>
+  {/if}
   <td align="right">
     {if !$static}
       <input type="hidden" name="groups[{$m_id}][shipping_cost_net_orig]" value="{$v.shipping_cost.net|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />

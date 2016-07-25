@@ -18,6 +18,19 @@ class classSQLBuilder
         self::$sql_tbl = $sql_tbl;
     }
 
+    public function init()
+    {
+        $this->aSelect = [];
+        $this->aTables = [];
+        $this->aInnerJoinTables = [];
+        $this->aConditions = [];
+        $this->aOrders = [];
+        $this->aGroups = [];
+        $this->sqlQuery = null;
+        $this->aSqlQueryResult = [];
+        return $this;
+    }
+
     public function addCondition($sCondition)
     {
         $this->aConditions[] = $sCondition;
@@ -56,14 +69,25 @@ class classSQLBuilder
 
     private function generateSQL()
     {
-        $this->sqlQuery = "SELECT " . implode(',', $this->aSelect);
-        $this->sqlQuery .= " FROM " . implode(',', $this->aTables);
-        if (!empty($this->aInnerJoinTables))
+        if (!empty($this->aSelect)) {
+            $this->sqlQuery = "SELECT " . implode(',', $this->aSelect);
+        }
+        if (!empty($this->aTables)) {
+            $this->sqlQuery .= " FROM " . implode(',', $this->aTables);
+        }
+        if (!empty($this->aInnerJoinTables)) {
             $this->sqlQuery .= ' INNER JOIN ';
-        $this->sqlQuery .=  implode(' INNER JOIN ', $this->aInnerJoinTables);
-        $this->sqlQuery .= " WHERE " . implode(' AND ', $this->aConditions);
-        $this->sqlQuery .= " GROUP BY " . implode(',', $this->aGroups);
-        $this->sqlQuery .= " ORDER BY " . implode(',', $this->aOrders);
+            $this->sqlQuery .= implode(' INNER JOIN ', $this->aInnerJoinTables);
+        }
+        if (!empty($this->aConditions)) {
+            $this->sqlQuery .= " WHERE " . implode(' AND ', $this->aConditions);
+        }
+        if (!empty($this->aGroups)) {
+            $this->sqlQuery .= " GROUP BY " . implode(',', $this->aGroups);
+        }
+        if (!empty($this->aOrders)) {
+            $this->sqlQuery .= " ORDER BY " . implode(',', $this->aOrders);
+        }
     }
 
     public function Execute($hashColumn = null)

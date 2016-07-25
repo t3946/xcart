@@ -2,6 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classOrders.php";
+require_once $xcart_dir . "/include/class/classProduct.php";
 require_once $xcart_dir . "/include/class/classPaymentMethod.php";
 require_once $xcart_dir . "/include/class/classOrderGroupInvoices.php";
 require_once $xcart_dir . "/include/class/classOrderGroupMemos.php";
@@ -36,6 +37,10 @@ class classOrderGroup extends classData
     private $oOrderAmazonDetails = [];
 
     private $oPaymentMethod = null;
+    /**
+     * @var classProduct[]
+     */
+    private $oOrderGroupProducts = [];
 
     public function __construct($aParams = [])
     {
@@ -192,6 +197,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingCostToUs();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -202,6 +208,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingNet();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -212,6 +219,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingNet();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -221,6 +229,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_net_0', floatval($this->getField('total_net')) + floatval($fSumma));
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -231,6 +240,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingNet();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -241,6 +251,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingNet();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -250,6 +261,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_net_1_cost_to_us', floatval($this->getField('accounting_net_1_cost_to_us')) + floatval($fSumma));
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -260,6 +272,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingCostToUs();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -275,6 +288,7 @@ class classOrderGroup extends classData
     {
         return $this->getField('accounting_gross_1_cost_to_us');
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -285,6 +299,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingCostToUs();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -295,6 +310,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingCostToUs();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -305,6 +321,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingCostToUs();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -314,6 +331,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_net_2_shipping', floatval($this->getField('accounting_net_2_shipping')) + floatval($fSumma));
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -371,6 +389,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingShipping();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -381,6 +400,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingShipping();
         return $this;
     }
+
     /**
      * @param float $fSumma
      * @return classOrderGroup
@@ -391,6 +411,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingShipping();
         return $this;
     }
+
     /**
      * @param float $fRefundSumma
      * @return classOrderGroup
@@ -400,6 +421,7 @@ class classOrderGroup extends classData
         $this->setField('accounting_net_3_ref_to_cust', $this->getField('accounting_net_3_ref_to_cust') + abs(floatval($fRefundSumma)));
         return $this;
     }
+
     /**
      * @param float $fRefundSumma
      * @return classOrderGroup
@@ -410,6 +432,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
+
     /**
      * @param float $fRefundSumma
      * @return classOrderGroup
@@ -420,6 +443,7 @@ class classOrderGroup extends classData
         $this->recalculateAccountingRefundToCustomer();
         return $this;
     }
+
     /**
      * @param float $fRefundSumma
      * @return classOrderGroup
@@ -726,8 +750,8 @@ class classOrderGroup extends classData
 
                 if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
                     $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal())->
-                           setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
-                           setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
+                    setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
+                    setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
 
                 if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
@@ -774,13 +798,13 @@ class classOrderGroup extends classData
                     ->initAccountingGrossCostToUs();
                 if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
                     $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal())->
-                           setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
-                           setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
+                    setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
+                    setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
                 $this->setAccountingGrossRefundToUs(abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
                 if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
                     $this->addAccountingHSTRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsHST())->
-                           addAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
+                    addAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
                 }
                 break;
             case 'AFN' :
@@ -790,7 +814,7 @@ class classOrderGroup extends classData
                         $FBAPerUnitFulfillmentFee +
                         $FBAWeightBasedFee +
                         $AmazonCommission)->initAccountingGrossCostToUs()
-                    ->setAccountingGrossShipping($fShipping+$FBATransportationFee);
+                    ->setAccountingGrossShipping($fShipping + $FBATransportationFee);
                 if ($this->getOrderAmazonDetails()->isRefundExists())
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
 
@@ -820,69 +844,46 @@ class classOrderGroup extends classData
         return $resStatus;
     }
 
-    public function printAccounting()
+    private function getOrderGroupProducts()
     {
-        $s = '<table> <tr> ';
+        if (empty($this->oOrderGroupProducts)) {
+            $aProducts = $this->oSQL->init()->
+            addSelect('*')->
+            addFromTable('products', 'p')->
+            addInnerJoin('order_details', 'od', 'od.productid=p.productid AND orderid = ' . $this->getField('orderid'))->
+            addCondition('p.manufacturerid = ' . $this->getField('manufacturerid'))->Execute()->getQueryResult();
+            if (!empty($aProducts)) {
+                foreach ($aProducts as $aProduct) {
+                    $oProduct = new classProduct($aProduct);
+                    $this->oOrderGroupProducts[] = $oProduct;
+                }
+            }
+        }
 
-        $s .= '<td></td>';
-        $s .= '<td>NETOrder</td>';
-        $s .= '<td>NET</td>';
-        $s .= '<td>Cost to us</td>';
-        $s .= '<td>Shipping</td>';
-        $s .= '<td>Ref to cust</td>';
-        $s .= '<td>Ref to us</td>';
-        $s .= '<td>Profit</td>';
-        $s .= '<td>Profit margin</td>';
+        return $this->oOrderGroupProducts;
+    }
 
-        $s .= '<tr>';
-        $s .= '<td>Net</td>';
-        $s .= '<td>' . $this->getField('total_net') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_net_0') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_net_1_cost_to_us') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_net_2_shipping') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_net_3_ref_to_cust') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_net_4_ref_to_us') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_net_5_profit') . '</td>';
-        $s .= '<td>' . $this->getField('profit_margin') . '%</td>';
+    public function checkFBAProductsAvailToShipping()
+    {
+        $bResult = false;
+        $this->getOrderGroupProducts();
+        if (!empty($this->oOrderGroupProducts)) {
+            foreach($this->oOrderGroupProducts as $oProduct) {
+                $iAmount = 0;
+                $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($this->getField('orderid'), $oProduct->getField('productid'));
 
-        $s .= '<tr>';
-        $s .= '<td>HST</td>';
-        $s .= '<td>' . $this->getField('total_gst') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gst_0') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gst_1_cost_to_us') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gst_2_shipping') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gst_3_ref_to_cust') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gst_4_ref_to_us') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gst_5_profit') . '</td>';
-        $s .= '<td></td>';
-
-        $s .= '<tr>';
-        $s .= '<td>PST</td>';
-        $s .= '<td>' . $this->getField('total_pst') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_pst_0') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_pst_1_cost_to_us') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_pst_2_shipping') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_pst_3_ref_to_cust') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_pst_4_ref_to_us') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_pst_5_profit') . '</td>';
-        $s .= '<td></td>';
-
-        $s .= '</tr>';
-        $s .= '<tr>';
-        $s .= '<td>Gross</td>';
-        $s .= '<td>' . $this->getField('total_gross') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gross_0') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gross_1_cost_to_us') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gross_2_shipping') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gross_3_ref_to_cust') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gross_4_ref_to_us') . '</td>';
-        $s .= '<td>' . $this->getField('accounting_gross_5_profit') . '</td>';
-        $s .= '<td></td>';
-
-        $s .= '</tr>';
-
-        $s .= '</tr> </table>';
-        echo $s;
+                foreach ($aOrderDetails as $oOrderDetail) {
+                    $iAmount += $oOrderDetail->getField('amount');
+                }
+                if ($oProduct->getField('amazon_fba_avail')>= $iAmount) {
+                    $bResult = true;
+                } else {
+                    $bResult = false;
+                    break;
+                }
+            }
+        }
+        return $bResult;
     }
 
 }

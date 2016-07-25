@@ -6,11 +6,11 @@ require "./top.inc.php";
 require "./init.php";
 
 global $xcart_dir, $config;
-require_once $xcart_dir . "/include/class/classProduct.php";
+require_once $xcart_dir . "/include/class/classOrderGroup.php";
 
-$oProduct = new classProduct(124317);
-echo $oProduct->getProductURLOnDistributorWebSite();
+$oOrderGroup = new classOrderGroup(['orderid'=>'62712','manufacturerid'=>'12']);
 
+var_dump($oOrderGroup->checkFBAProductsAvailToShipping());
 
 
 

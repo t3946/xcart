@@ -1,4 +1,7 @@
 <?php
+global $xcart_dir;
+require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+
 class classData
 {
     protected static $sql_tbl = [];
@@ -6,6 +9,7 @@ class classData
     protected $aPrimaryKeysValues = [];
     protected $aPrimaryTableValue;
     protected $sPrimaryTable;
+    protected $oSQL = null;
 
     /**
      * @param array $aParams
@@ -19,6 +23,7 @@ class classData
             $this->aPrimaryKeysValues = array_intersect_key($aParams, array_flip($this->aPrimaryKeys));
             $this->fillPrimaryTableInfo();
         }
+        $this->oSQL = new classSQLBuilder();
     }
 
     protected function _clone() {
