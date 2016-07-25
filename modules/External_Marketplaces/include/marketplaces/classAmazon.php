@@ -24,7 +24,7 @@ class classAmazon extends classStoreFrontMarketPlace
             'ProxyPort' => -1,
             'MaxErrorRetry' => 3,
         ];
-        $marketplaceIdArray = ["Id" => [$this->getP1()]]; //'ATVPDKIKX0DER'
+        $marketplaceIdArray = ["Id" => [$this->getP2()], "MerchantIdentifier"=>$this->getP1()]; //'ATVPDKIKX0DER'
         SubmitAmazonInventoryBatch($this->getInventory(), $a_config, $marketplaceIdArray);
 
         $this->setInventoryBatchCount(0)->setInventory([]);
