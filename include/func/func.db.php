@@ -425,7 +425,7 @@ function func_query_column($query, $column = 0) {
 #
 # Insert array data to table
 #
-function func_array2insert ($tbl, $arr, $is_replace = false) {
+function func_array2insert ($tbl, $arr, $is_replace = false, $is_ignore = false) {
 	global $sql_tbl;
 
 	if (empty($tbl) || empty($arr) || !is_array($arr))
@@ -438,6 +438,9 @@ function func_array2insert ($tbl, $arr, $is_replace = false) {
 		$query = "REPLACE";
 	else
 		$query = "INSERT";
+
+	if ($is_ignore)
+		$query = "INSERT IGNORE";
 
 	func_check_tbl_fields($tbl, array_keys($arr));
 

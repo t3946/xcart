@@ -2074,6 +2074,8 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
             <td><input type="text" value="{$manufacturer.days_before_verify}" name="products_days_before_verify"></td>
         </tr>
     </table>
+{elseif $d_section.distributor_section eq "40"}
+    {include file="modules/External_Marketplaces/excluded_marketplaces_admin.tpl"}
 {elseif $d_section.distributor_section eq "30"}
     <table class="SubHeader" width="100%" cellspacing="0" {if $distributor_section ne "30"}style="display: none;" {/if}>
         <tbody>

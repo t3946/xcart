@@ -16,6 +16,8 @@ class classData
         self::$sql_tbl = $sql_tbl;
 
         if (!empty($aParams)) {
+            if (!is_array($aParams))
+                throw new Exception('Parameter must be an array');
             $this->aPrimaryKeysValues = array_intersect_key($aParams, array_flip($this->aPrimaryKeys));
             $this->fillPrimaryTableInfo();
         }

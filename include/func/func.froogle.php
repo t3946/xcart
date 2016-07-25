@@ -733,7 +733,7 @@ function AddProductToAmazonBatch($productid, $update_type, $amazon_inventory_bat
         return $AddProductToAmazonBatch_arr;
 }
 
-function AddProductToGoogleBaseBatch($productid, $MerchantID, $update_type, $service, $forsale, $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, $sExtraLog = "N"){
+function AddProductToGoogleBaseBatch($productid, $update_type, $forsale, $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, $sExtraLog = "N"){
 
 	if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $forsale == "N"))){
 			$Batchid = $google_products_batch_count;
@@ -879,7 +879,7 @@ if ($debug_mode != 'Y') {
 return $code;
 //func_print_r($results);
 }
-function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $username, $password, $token, $debug_mode = 'N')
+function SubmitBingInventoryBatch($binventory, $sEndpoint, $MerchantID, $CatalogID, $username, $password, $token, $debug_mode = 'N')
 {
         global $xcart_dir, $active_modules, $config, $https_location, $http_location;
         global $started_at, $sql_tbl;
@@ -1026,7 +1026,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 
 			$json = json_encode($postBody);
 
-			$baseuri = "https://content.api.bingads.microsoft.com/shopping/v9.1";
+			$baseuri = $sEndpoint;//"https://content.api.bingads.microsoft.com/shopping/v9.1";
 			$bmcuri = $baseuri . "/bmc/" . $MerchantID;
 			$batchuri = $bmcuri . "/products/batch";
 
@@ -1099,7 +1099,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 	return $code;
 }
 
-function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username, $password, $token, $debug_mode = 'N')
+function SubmitBingProductsBatch($bproducts, $sEndpoint, $MerchantID, $CatalogID, $username, $password, $token, $debug_mode = 'N')
 {
 	global $sql_tbl;
 
@@ -1246,7 +1246,7 @@ if ($debug_mode != 'Y') {
 			func_print_r("json = json_encode(postBody); print_r(postBody):", $postBody);
 		}
 
-		$baseuri = "https://content.api.bingads.microsoft.com/shopping/v9.1";
+		$baseuri = $sEndpoint;//"https://content.api.bingads.microsoft.com/shopping/v9.1";
 		$bmcuri = $baseuri . "/bmc/" . $MerchantID;
 		$batchuri = $bmcuri . "/products/batch";
 		$query = "?bmc-catalog-id=" . $CatalogID . "&alt=json";

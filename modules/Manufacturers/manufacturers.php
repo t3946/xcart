@@ -100,6 +100,17 @@ if ($REQUEST_METHOD == "POST" && $mode == "add_new_line" && $manufacturerid){
 	func_header_location("manufacturers.php?manufacturerid=".$manufacturerid .($distributor_section ? "&distributor_section=".$distributor_section : ""));
 }
 
+if ($REQUEST_METHOD == "POST" && $mode == "excluded_marketplace" && $manufacturerid){
+	global $xcart_dir;
+	require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
+	classDisabledMarketPlace::deleteAllDisabledMarketPlace($manufacturerid, 'D');
+	foreach($excluded_marketplaces as $iExcludedMarketplace) {
+		$oMarketPlace = new classDisabledMarketPlace();
+		$oMarketPlace->fillPrimaryTableValues(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $manufacturerid, 'resource_type' => 'D']);
+		$oMarketPlace->addDisabledMarketPlace();
+	}
+}
+
 if ($REQUEST_METHOD == "POST" && $mode == "add_distributor_return_address" && $manufacturerid){
 	db_query("INSERT INTO $sql_tbl[distributor_return_address] (manufacturerid) VALUES ('$manufacturerid')");
         $top_message["content"] = 'Added';
@@ -1200,6 +1211,23 @@ if (!empty($page))
 		$smarty->assign("aChildManufacturers", $aChildManufacturers);
 	}
 
+	if ($distributor_section == "40") {
+		global $xcart_dir;
+		require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
+		require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
+		$aMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
+		$aExternalMarketplaces = [];
+		if (!empty($aMarketplaces)) {
+			foreach ($aMarketplaces as $oMarketPlace) {
+				$aExternalMarketplaces['values'][] = $oMarketPlace->getMarketPlaceId();
+				$aExternalMarketplaces['names'][] = $oMarketPlace->getMarketPlaceName();
+			}
+		}
+		$aDisabledMarketPlaces = classDisabledMarketPlace::getDisabledMarketPlaces($manufacturerid, 'D');
+		$smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
+		$smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
+	}
+
 //func_print_r($supplier_feeds_info_I, $supplier_feeds_info_P);
 
 
@@ -1232,6 +1260,12 @@ if ($distributor_section == "18"){
 		'title'  => 'Product verification settings',
 		'order_by' => '180',
 		'distributor_section' => '31'
+	);
+	
+	$distributor_sections[] = array(
+		'title'  => 'External marketplaces',
+		'order_by' => '180',
+		'distributor_section' => '40'
 	);
 
 
