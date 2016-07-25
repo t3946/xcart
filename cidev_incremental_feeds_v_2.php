@@ -537,7 +537,7 @@ Select
                     }
                 }*/
 
-            }
+
 
 
 ###
@@ -608,6 +608,7 @@ Select
 
 
             $cnt++;
+            }
         }
         db_free_result($products);
 
