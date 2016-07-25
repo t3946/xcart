@@ -328,10 +328,18 @@ return true; ///////////////////////////////////
                 if (country_code == "CA"){
                         stateFilePath = "skin1_kolin/US_City_List/ca_states.js";
                 }
-                
+
                 $('#s_statename').unautocomplete();
 
-                if (country_code == "US" || country_code == "CA"){
+                $.post('zip_json.php',{type: 'state', country_code: country_code}, function(data){
+                    var state_names = data;
+                    $('#s_statename').autocomplete(state_names, {
+                        autoFill: false,
+                        cacheLength: 1
+                    });
+                }, 'json')
+
+                /*if (country_code == "US" || country_code == "CA"){
                         $.getScript(stateFilePath, function() {
 
                                 $('#s_statename').autocomplete(state_names, {
@@ -339,7 +347,7 @@ return true; ///////////////////////////////////
                                         cacheLength: 1
                                 });
                         });
-                }
+                }*/
         }
 
 
@@ -411,10 +419,9 @@ return true; ///////////////////////////////////
 
                 var countrySelected = cidev_get_country_code("s_countryname");
 
-                if (countrySelected == "US" || countrySelected == "CA"){
-			cidev_load_states();
-                        onSelectChange();
-                } 
+            cidev_load_states();
+            onSelectChange();
+
 
 		if (countrySelected != "US") {
 			$('#s_city').unautocomplete();
