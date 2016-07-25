@@ -885,6 +885,14 @@ else {
 		$word = 'word=' . $word;
 	}
 
+	if (!empty($search)) {
+		$searchValue = addslashes($search);
+		if (empty($where))
+			$sqlPrefix = 'WHERE'; else $sqlPrefix = 'AND';
+		$where.= " $sqlPrefix (m.manufacturer LIKE '%$searchValue%' OR m.code LIKE '%$searchValue%')";
+		$word = 'search=' . $search;
+	}
+
 	if (!empty($active_modules['Multiple_Storefronts'])) {
 		$total_items = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[manufacturers] m $where");
 	} else {
@@ -940,7 +948,6 @@ else {
 			$products_in_manufacturers = func_query_hash("SELECT COUNT(*), manufacturerid FROM $sql_tbl[products] GROUP BY manufacturerid", 'manufacturerid', false, true);
 
 			foreach ($manufacturers as $k => $v) {
-				//$manufacturers[$k]["products_count"] = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[products] WHERE manufacturerid='$v[manufacturerid]'");
 				if (isset($products_in_manufacturers[$v['manufacturerid']])) {
 					$manufacturers[$k]["products_count"] = $products_in_manufacturers[$v['manufacturerid']];
 				}
