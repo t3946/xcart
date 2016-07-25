@@ -49,4 +49,4 @@ $aExternalMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
 
 $smarty->assign("external_marketplaces", $aExternalMarketplaces);
 $oStoreFronts = new classStoreFronts();
-$smarty->assign("storefronts", $oStoreFronts);
+$smarty->assign("external_storefronts", $oStoreFronts);
