@@ -7,7 +7,7 @@ class classAmazon extends classStoreFrontMarketPlace
 {
     public function addProductToBatch($oProduct, $update_type, $sExtraLog = "N")
     {
-        if ($this->checkProductExcludedMarketPlace($oProduct->getField('productid'))) {
+        if ($this->checkProductExcludedMarketPlace($oProduct->getField('productid')) && $oProduct->getField("amazon_enabled") == "Y") {
             if ($update_type == "2" || $update_type == "1,2" || $update_type == "1") {
                 $count_ainventory = count($this->aInventory);
                 $this->aInventory[$count_ainventory]["productid"] = $oProduct->getField('productid');

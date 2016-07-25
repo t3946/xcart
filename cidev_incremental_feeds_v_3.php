@@ -458,7 +458,7 @@ Select
             $oProduct = new classProduct($product['productid']);
 
                 foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
-                    if ($enable_incremental_feed_updates == 'Y' && $oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
+                    if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
                         $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], EXTRA_LOG);
                     }
 
