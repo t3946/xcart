@@ -6,10 +6,10 @@ require "./top.inc.php";
 require "./init.php";
 
 global $xcart_dir, $config;
-require_once $xcart_dir . "/include/class/classProduct.php";
-
-$oProduct = new classProduct(124317);
-echo $oProduct->getProductURLOnDistributorWebSite();
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
+$storefrontid = 3;
+$aExternalMarketPlaces = classExternalMarketPlace::getExternalMarketPlaces($storefrontid);
+var_dump($aExternalMarketPlaces);
 
 
 
