@@ -23,11 +23,12 @@ abstract class classStoreFrontMarketPlace extends classData
     }
 
     abstract public function addProductToBatch($oProduct, $update_type, $sExtraLog = "N");
+    abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N');
 
     private function fetchExternalMarketPlace()
     {
         if (empty($this->oExternalMarketPlace)) {
-            $this->oExternalMarketPlace = new classExternalMarketPlace([$this->getField('marketplace_id')]);
+            $this->oExternalMarketPlace = new classExternalMarketPlace(['id'=>$this->getField('marketplace_id')]);
         }
         return $this;
     }
