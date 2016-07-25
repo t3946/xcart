@@ -42,19 +42,19 @@ class classExternalMarketPlace extends classData
      */
     public static function getExternalMarketPlace($iMarketPlaceId, $iStoreFrontId)
     {
+        $oProcessor = null;
         global $xcart_dir, $sql_tbl;
         self::$sql_tbl = $sql_tbl;
         $aMarketPlace = func_query_first("SELECT * FROM " . self::$sql_tbl['products_external_marketplaces'] . " WHERE id = $iMarketPlaceId");
         if (!empty($aMarketPlace)) {
             $sProcessorClass = $aMarketPlace['processor_class'];
             $sProcessorPath = $xcart_dir . "/modules/External_Marketplaces/include/marketplaces/" . $sProcessorClass . ".php";
-            if (file_exists($sProcessorPath))
+            if (file_exists($sProcessorPath)) {
                 require_once $sProcessorPath;
-            else $sProcessorClass = 'classStoreFrontMarketPlace';
-            $oProcessor = new $sProcessorClass(['marketplace_id'=>$iMarketPlaceId, 'storefront_id'=>$iStoreFrontId]);
-            return $oProcessor;
+                $oProcessor = new $sProcessorClass(['marketplace_id'=>$iMarketPlaceId, 'storefront_id'=>$iStoreFrontId]);
+            }
         }
-        return null;
+        return $oProcessor;
     }
 
     public function getMarketPlaceName()
