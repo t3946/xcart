@@ -139,7 +139,7 @@ abstract class classStoreFrontMarketPlace extends classData
                           xp1.brandid = xp.resource_id AND xp.resource_type = 'B' OR
                           xp1.manufacturerid = xp.resource_id AND xp.resource_type = 'D') AND
                          xp1.productid = $iProductId");
-        if (!empty($aFound)) $bResult = false;
+        if (!empty($aFound) && in_array($this->getField('marketplace_id'),$aFound)) $bResult = false;
         return $bResult;
     }
 

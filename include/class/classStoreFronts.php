@@ -34,6 +34,7 @@ class classStoreFronts extends classData
 
     public function getStoreFrontsDomains() {
         $aResult = [];
+        $aResult[] = 'www.artistsupplysource.com';
         foreach ($this->aStoreFronts as $oStoreFront){
             $aResult[] = $oStoreFront->getDomain();
         }
@@ -42,6 +43,7 @@ class classStoreFronts extends classData
 
     public function getStoreFrontsIds() {
         $aResult = [];
+        $aResult[] = 0;
         foreach ($this->aStoreFronts as $oStoreFront){
             $aResult[] = $oStoreFront->getStoreFrontId();
         }
