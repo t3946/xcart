@@ -4040,4 +4040,16 @@ function func_get_geoip_locations ($CLIENT_IP, $geo_litecity_location_debug = "N
 	}
 	return $geo_litecity_location;
 }
+
+function func_check_comma_in_field($orderid, $value, $sFieldName)
+{
+	global $login, $top_message;
+	if (strpos($value, ',') !== false) {
+		$sLog = "Comma in field <b>$sFieldName</b>: ".$value;
+		func_log_order($orderid, 'X', $sLog, $login);
+
+		return true;
+	}
+	return false;
+}
 ?>

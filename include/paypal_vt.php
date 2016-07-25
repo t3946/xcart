@@ -6,6 +6,21 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 
     $log = "";
 
+	if (func_check_comma_in_field($orderid, $transaction_amount[$order_transaction_id], 'paypal_vt_transaction_amount')) {
+		$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+		$top_message["type"] = "I";
+		$section_name_top_message = $top_message;
+		x_session_save("section_name_top_message");
+		func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-VT");
+	}
+	if (func_check_comma_in_field($orderid, $paypal_vt["grand_total"], 'paypal_vt_grand_total')) {
+		$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+		$top_message["type"] = "I";
+		$section_name_top_message = $top_message;
+		x_session_save("section_name_top_message");
+		func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-VT");
+	}
+
     $Access_Token = func_paypal_get_access_token();
 
     if (empty($Access_Token)){
@@ -411,6 +426,13 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
 
 	$transaction_id = trim($transaction_id);
 	$transaction_amount = trim($transaction_amount);
+	if (func_check_comma_in_field($orderid, $transaction_amount, 'manual_transaction_amount')) {
+		$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+		$top_message["type"] = "I";
+		$section_name_top_message = $top_message;
+		x_session_save("section_name_top_message");
+		func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-VT");
+	}
 
 	if (empty($transaction_amount) || $transaction_amount <= 0 || empty($paymentid) || empty($transaction_id)){
 
