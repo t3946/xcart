@@ -24,6 +24,7 @@ abstract class classStoreFrontMarketPlace extends classData
 
     abstract public function addProductToBatch($oProduct, $update_type, $sExtraLog = "N");
     abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N');
+    abstract public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N');
 
     private function fetchExternalMarketPlace()
     {
