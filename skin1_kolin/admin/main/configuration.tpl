@@ -174,7 +174,7 @@ tinymce.init({
 
 {elseif $option eq "External_marketplaces"}
 
-{include file="modules/External_marketplaces/external_marketplaces.tpl"}
+{include file="modules/External_Marketplaces/external_marketplaces.tpl"}
 
 {elseif $option eq "currently_assigned_to_statuses"}
 
