@@ -544,15 +544,13 @@ Select
             if ($storefrontid == $product["maxsf"])
                 db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
 
-            db_query("UPDATE $sql_tbl[products] SET last_incremental_update='" . time() . "' WHERE productid='" . $product["productid"] . "'");
+                db_query("UPDATE $sql_tbl[products] SET last_incremental_update='" . time() . "' WHERE productid='" . $product["productid"] . "'");
 ###
-            foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
-                if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
-                    $this->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
-                }
-                if ($oExternalMarketPlace->getCurrentProductsBatchCount() == $oExternalMarketPlace->getProductsBatchCount()) {
-                    $this->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG);
-                }
+            if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
+                $this->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
+            }
+            if ($oExternalMarketPlace->getCurrentProductsBatchCount() == $oExternalMarketPlace->getProductsBatchCount()) {
+                $this->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG);
             }
             //Bing Batch Array = Google Batch Array
             /*$bproducts = $gproducts;
