@@ -886,4 +886,20 @@ class classOrderGroup extends classData
         return $bResult;
     }
 
+    public function setAmazonShipmentNotes($sAmazonShipmentNotes)
+    {
+        $this->setField('amz_customer_notes',$sAmazonShipmentNotes);
+    }
+
+    public function shipOrderGroupByAmazon()
+    {
+        $oAmazon = new classAmazonMWS();
+        $oAmazon->shipOrderGroupByAmazon($this);
+    }
+
+    public function getAmazonShippingOrderId()
+    {
+        return $this->getField('orderid').'-'.$this->getField('manufacturerid');
+    }
+
 }

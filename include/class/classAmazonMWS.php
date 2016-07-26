@@ -962,4 +962,44 @@ class classAmazonMWS
         }
         return $this;
     }
+
+    /**
+     * @param classOrderGroup $oOrderGroup
+     */
+    public function shipOrderGroupByAmazon($oOrderGroup) {
+        $oOrder = $oOrderGroup->getOrderInstance();
+        $address = new FBAOutboundServiceMWS_Model_Address();
+
+        $address-> setName($oOrder->getShippingName());
+        $address-> setLine1($oOrder->getField('s_address'));
+        $address-> setCity($oOrder->getField('s_city'));
+        $address-> setStateOrProvinceCode($oOrder->getField('s_state'));
+        $address-> setCountryCode($oOrder->getField('s_country'));
+        $address-> setPostalCode($oOrder->getField('s_zipcode'));
+        $sPhone = $oOrder->getField('phone');
+        if (!empty($sPhone))
+            $address-> setPhoneNumber($sPhone);
+
+        //$oOrderGroup->get
+        $item1 = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
+
+//Set item parameters
+        $item1-> setSellerSKU("1115-K100");
+        $item1-> setSellerFulfillmentOrderItemId("1115-K100");
+        $item1-> setQuantity($oOrderGroup->getQuantity());
+
+        $req = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest();
+        $req->setSellerId(MERCHANT_ID);
+        $req->setSellerFulfillmentOrderId($oOrderGroup->getAmazonShippingOrderId());
+        $req->setDisplayableOrderId($oOrderGroup->getAmazonShippingOrderId());
+        $req->setDisplayableOrderDateTime('2014-05-06T17:22:00Z');
+        $req->setDisplayableOrderComment('Thank you for your order!');
+        $req->setShippingSpeedCategory('Standard');
+        $req->setDestinationAddress($address);
+
+        $list = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
+        $list->withmember($item1);
+
+        $req->setItems($list);
+    }
 }

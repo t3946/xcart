@@ -234,4 +234,9 @@ class classOrder extends classCloneData
         return $this->getField('customer_notes');
     }
 
+    public function getShippingName()
+    {
+        return $this->getField('s_title').' '.$this->getField('s_firstname');
+    }
+
 }
