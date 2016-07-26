@@ -456,16 +456,17 @@ Select
 
         while ($product = db_fetch_array($products)) {
             $oProduct = new classProduct($product['productid']);
+            if ($storefrontid == $product["maxsf"])
+                db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
+
+                db_query("UPDATE $sql_tbl[products] SET last_incremental_update='" . time() . "' WHERE productid='" . $product["productid"] . "'");
 
                 foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
                     if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
                         $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], EXTRA_LOG);
                     }
 
-                    if ($storefrontid == $product["maxsf"])
-                        db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
 
-                    db_query("UPDATE $sql_tbl[products] SET last_incremental_update='" . time() . "' WHERE productid='" . $product["productid"] . "'");
 
                     if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
                         $oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
