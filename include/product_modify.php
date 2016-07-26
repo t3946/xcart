@@ -1497,9 +1497,11 @@ if (!empty($aMarketplaces)) {
 		$aExternalMarketplaces['names'][] = $oMarketPlace->getMarketPlaceName();
 	}
 }
-$aDisabledMarketPlaces = classDisabledMarketPlace::getDisabledMarketPlaces($product_info['productid'], 'P');
 $smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
+if (!empty($product_info['productid'])) {
+$aDisabledMarketPlaces = classDisabledMarketPlace::getDisabledMarketPlaces($product_info['productid'], 'P');
 $smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
+}
 
 $smarty->assign("product", $product_info);
 $smarty->assign("productid", $product_info["productid"]);

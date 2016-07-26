@@ -23,11 +23,13 @@ abstract class classStoreFrontMarketPlace extends classData
     }
 
     abstract public function addProductToBatch($oProduct, $update_type, $sExtraLog = "N");
+    abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N');
+    abstract public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N');
 
     private function fetchExternalMarketPlace()
     {
         if (empty($this->oExternalMarketPlace)) {
-            $this->oExternalMarketPlace = new classExternalMarketPlace([$this->getField('marketplace_id')]);
+            $this->oExternalMarketPlace = new classExternalMarketPlace(['id'=>$this->getField('marketplace_id')]);
         }
         return $this;
     }
@@ -137,7 +139,7 @@ abstract class classStoreFrontMarketPlace extends classData
                           xp1.brandid = xp.resource_id AND xp.resource_type = 'B' OR
                           xp1.manufacturerid = xp.resource_id AND xp.resource_type = 'D') AND
                          xp1.productid = $iProductId");
-        if (!empty($aFound)) $bResult = false;
+        if (!empty($aFound) && in_array($this->getField('marketplace_id'),$aFound)) $bResult = false;
         return $bResult;
     }
 

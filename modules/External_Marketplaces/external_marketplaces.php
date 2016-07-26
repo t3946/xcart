@@ -23,7 +23,7 @@ if ($REQUEST_METHOD == 'POST') {
         if (!empty($external_storefront_marketplace)) {
             foreach ($external_storefront_marketplace as $iMarketPlaceId => $aMarketplace) {
                 foreach ($aMarketplace as $iStoreFrontId => $aStoreFront) {
-                    if ($iStoreFrontId) {
+                    if ($iStoreFrontId >= 0) {
                         $aStoreFront['marketplace_id'] = $iMarketPlaceId;
 
                         if (!(func_array2insert('storefronts_external_marketplaces', $aStoreFront, true, true)))
@@ -49,4 +49,4 @@ $aExternalMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
 
 $smarty->assign("external_marketplaces", $aExternalMarketplaces);
 $oStoreFronts = new classStoreFronts();
-$smarty->assign("storefronts", $oStoreFronts);
+$smarty->assign("external_storefronts", $oStoreFronts);

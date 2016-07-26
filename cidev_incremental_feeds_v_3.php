@@ -66,21 +66,11 @@ foreach ($xcart_states_US as $k => $v) {
     $xcart_states_US[$k]["city"] = func_query_first_cell("SELECT city FROM $sql_tbl[geo_litecity_location] WHERE country='US' AND postalCode='$v[base_state_zipcode]'");
 }
 
-
-########################## for test purpose ##########################
-# $GetGoogleBaseOneRow = GetGoogleBaseOneRow('281820');
-# func_print_r($GetGoogleBaseOneRow);
-# die("++++++++++++++++++++++++++++++++++++++++++++++++++++");
-########################## ##########################
-
-
-//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_incremental_feeds_launched_v_2'");
-
-if ($config["cidev_incremental_feeds_launched_v_2"] == "Y") {
+if ($config["cidev_incremental_feeds_launched_v_3"] == "Y") {
         die("Already launched"); // ################################
 }
 
-db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cidev_incremental_feeds_launched_v_2'");
+db_query("REPLACE $sql_tbl[config] SET value='Y', name='cidev_incremental_feeds_launched_v_3'");
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_incremental_feeds_launched_v_2'");
 
 
@@ -124,38 +114,6 @@ if ($current_hour == "0") {
     }
     db_free_result($product);
 }
-//die("==========TEST=======");
-###
-##
-#
-
-/*
-$subj = "Start googlebase2 process";
-$body = "Started at: ".date("Y-m-d H:i:s", $started_at)."\n";
-$to = $config["Froogle"]["froogle_cron_email"];
-$from = "orders@s3stores.com";
-func_send_simple_mail($to, $subj, $body, $from);
-*/
-
-
-/*$all_manufacturer_info = func_query_hash("SELECT manufacturerid, manufacturer, m_city, m_country, m_state, m_zipcode FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
-
-
-$all_approximation_shipping_rates_tmp = func_query("SELECT * FROM $sql_tbl[approximation_shipping_rates]");
-
-
-
-if (!empty($all_manufacturer_info) && !empty($all_approximation_shipping_rates_tmp)){
-	foreach ($all_manufacturer_info as $manufacturerid => $v){
-		$counter = 0;
-		foreach ($all_approximation_shipping_rates_tmp as $kk => $vv){
-			if ($manufacturerid == $vv["manufacturerid"]){
-				$all_approximation_shipping_rates[$manufacturerid][$counter] = $vv;
-				$counter++;
-			}
-		}
-	}
-}*/
 
 $two_shippings = func_query_hash("SELECT shippingid, shipping, vol_threshold, dim_factor FROM $sql_tbl[shipping] WHERE shippingid='1' OR shippingid='65'", "shippingid", false);
 
@@ -497,155 +455,40 @@ Select
 
 
         while ($product = db_fetch_array($products)) {
-            $oProduct = new classProduct($products['productid']);
+            $oProduct = new classProduct($product['productid']);
 
-            foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
-                if ($enable_incremental_feed_updates == 'Y' && $oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
-                    $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], EXTRA_LOG);
-                }
-
-                /*if ($enable_incremental_feed_updates == "Y" && $BingMerchantID != '' && $BingCatalogID != '' ) {
-                    $AddProductToBingBaseBatch_arr =  $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], $product["forsale"], $bing_products_batch_count, $bproducts, $bing_inventory_batch_count, $binventory, EXTRA_LOG);
-
-                    if (!empty($AddProductToBingBaseBatch_arr) && is_array($AddProductToBingBaseBatch_arr)) {
-                        $bing_products_batch_count = $AddProductToBingBaseBatch_arr["bing_products_batch_count"];
-                        $bproducts = $AddProductToBingBaseBatch_arr["bproducts"];
-                        $bing_inventory_batch_count = $AddProductToBingBaseBatch_arr["bing_inventory_batch_count"];
-                        $binventory = $AddProductToBingBaseBatch_arr["binventory"];
+                foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
+                    if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
+                        $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], EXTRA_LOG);
                     }
-                }
 
-                if ($enable_incremental_feed_updates == "Y" && !empty($MerchantID) && !empty($client_id)) {
+                    if ($storefrontid == $product["maxsf"])
+                        db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
 
-                    $AddProductToGoogleBaseBatch_arr = $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], $product["forsale"], $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, EXTRA_LOG);
+                    db_query("UPDATE $sql_tbl[products] SET last_incremental_update='" . time() . "' WHERE productid='" . $product["productid"] . "'");
 
-                    if (!empty($AddProductToGoogleBaseBatch_arr) && is_array($AddProductToGoogleBaseBatch_arr)) {
-                        $google_products_batch_count = $AddProductToGoogleBaseBatch_arr["google_products_batch_count"];
-                        $gproducts = $AddProductToGoogleBaseBatch_arr["gproducts"];
-                        $google_inventory_batch_count = $AddProductToGoogleBaseBatch_arr["google_inventory_batch_count"];
-                        $ginventory = $AddProductToGoogleBaseBatch_arr["ginventory"];
+                    if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
+                        $oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
                     }
-                }
-
-                if ($product["amazon_enabled"] == "Y") {
-                    $AddProductToAmazonBatch_arr = $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], $amazon_inventory_batch_count, $ainventory);
-
-                    if (!empty($AddProductToAmazonBatch_arr) && is_array($AddProductToAmazonBatch_arr)) {
-                        $ainventory = $AddProductToAmazonBatch_arr["ainventory"];
-                        $amazon_inventory_batch_count = $AddProductToAmazonBatch_arr["amazon_inventory_batch_count"];
-
+                    if ($oExternalMarketPlace->getCurrentProductsBatchCount() == $oExternalMarketPlace->getProductsBatchCount()) {
+                        $oExternalMarketPlace->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG);
                     }
-                }*/
 
-
-
-
-###
-            if ($storefrontid == $product["maxsf"])
-                db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
-
-                db_query("UPDATE $sql_tbl[products] SET last_incremental_update='" . time() . "' WHERE productid='" . $product["productid"] . "'");
-###
-            if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
-                $this->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
-            }
-            if ($oExternalMarketPlace->getCurrentProductsBatchCount() == $oExternalMarketPlace->getProductsBatchCount()) {
-                $this->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG);
-            }
-            //Bing Batch Array = Google Batch Array
-            /*$bproducts = $gproducts;
-
-            if ($bing_inventory_batch_count == $max_bing_batch) {
-                $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
-                //$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
-                if ($error == 500)
-                    restore_queue($binventory, 2);
-
-                $bing_inventory_batch_count = 0;
-                $binventory = array();
-            }
-
-            if ($bing_products_batch_count == $max_bing_batch) {
-                $error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
-                if ($error == 500)
-                    restore_queue($bproducts, 1);
-
-                $bing_products_batch_count = 0;
-                $bproducts = array();
-            }
-
-            if ($google_inventory_batch_count == $max_google_batch) {
-                $error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, SUBMIT_DISABLE, EXTRA_LOG);
-                if ($error == 500)
-                    restore_queue($ginventory, 2);
-
-                $google_inventory_batch_count = 0;
-                $ginventory = array();
-            }
-
-            if ($google_products_batch_count == $max_google_batch) {
-                $error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, SUBMIT_DISABLE);
-                if ($error == 500)
-                    restore_queue($gproducts, 1);
-
-                $google_products_batch_count = 0;
-                $gproducts = array();
-            }
-
-            if ($amazon_inventory_batch_count == $max_amazon_batch) {
-                SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray);
-
-                $amazon_inventory_batch_count = 0;
-                $ainventory = array();
-            }
-
-            if ($amazon_products_batch_count == $max_amazon_batch) {
-                SubmitAmazonProductsBatch();
-
-                $amazon_products_batch_count = 0;
-                $aproducts = array();
-            }*/
-
-
+                }
             $cnt++;
-            }
         }
         db_free_result($products);
 
         foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
             $aInventory = $oExternalMarketPlace->getInventory();
             if ($oExternalMarketPlace->getCurrentInventoryBatchCount() > 0 && !empty($aInventory) && is_array($aInventory)) {
-                $this->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
+                $oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
             }
             $aProducts = $oExternalMarketPlace->getProducts();
             if ($oExternalMarketPlace->getCurrentProductsBatchCount() > 0 && !empty($aProducts) && is_array($aProducts)) {
-                $this->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG);
+                $oExternalMarketPlace->submitProductsBatch(SUBMIT_DISABLE, EXTRA_LOG);
             }
         }
-
-
-        /*if ($bing_inventory_batch_count >= 1 && !empty($binventory) && is_array($binventory)) {
-            $error = SubmitBingInventoryBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
-            //$error = SubmitBingProductsBatch($binventory, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token);
-            if ($error == 500)
-                restore_queue($binventory, 2);
-        }
-        if ($bing_products_batch_count >= 1 && !empty($bproducts) && is_array($bproducts)) {
-            $error = SubmitBingProductsBatch($bproducts, $BingMerchantID, $BingCatalogID, $bing_username, $bing_password, $bing_token, SUBMIT_DISABLE);
-            if ($error == 500)
-                restore_queue($bproducts, 1);
-        }
-
-        if ($google_inventory_batch_count >= 1 && !empty($ginventory) && is_array($ginventory)) {
-            $error = SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, SUBMIT_DISABLE, EXTRA_LOG);
-            if ($error == 500)
-                restore_queue($ginventory, 2);
-        }
-        if ($google_products_batch_count >= 1 && !empty($gproducts) && is_array($gproducts)) {
-            $error = SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, SUBMIT_DISABLE);
-            if ($error == 500)
-                restore_queue($gproducts, 1);
-        }*/
 
         print ("processed: " . $cnt . " items !!>\n");
 
@@ -657,18 +500,7 @@ Select
         }
     }
 
-/*    if ($amazon_inventory_batch_count >= 1) {
-        SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray);
-    }
-    if ($amazon_products_batch_count >= 1) {
-        SubmitAmazonProductsBatch();
-    }*/
-//        print ("Why we dont delete utype 3 ?");
-###
     db_query("DELETE FROM xcart_cidev_updated_products WHERE type='3' AND time_stamp <= '$started_at'");
-###	
-
-
 }
 
 
@@ -686,21 +518,10 @@ $body .= "Duration: ".$duration." Hours\n";
 func_send_simple_mail($to, $subj, $body, $from);
 */
 //        print ("Why we dont update params ?");
-db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_incremental_feeds_launched_v_2'");
+db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_incremental_feeds_launched_v_3'");
 //        print ("We done correctly ?");
 
 $log_text = "Cron completed. Duration: " . $duration . " hours";
 func_backprocess_log("incremental feeds", $log_text);
 
 die("DONE!");
-
-/*function restore_queue($products, $mode)
-{
-    foreach ($products as $item) {
-        $count = func_query_first_cell("SELECT COUNT(*) as count FROM xcart_cidev_updated_products WHERE resourceid='" . $item['productid'] . "' AND type=" . $mode . ";");
-        if ($count == 0)
-            db_query("INSERT INTO xcart_cidev_updated_products (`resourceid`,`type`,`time_stamp`,`source`) VALUES( '" . $item['productid'] . "', " . $mode . ", " . time() . ", 're-queue' )");
-    }
-}*/
-
-?>
