@@ -980,7 +980,11 @@ class classAmazonMWS
         if (!empty($sPhone))
             $address-> setPhoneNumber($sPhone);
 
-        //$oOrderGroup->get
+        $aProducts = $oOrderGroup->getOrderGroupProducts();
+        if (!empty($aProducts)){
+
+        }
+
         $item1 = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
 
 //Set item parameters

@@ -844,7 +844,7 @@ class classOrderGroup extends classData
         return $resStatus;
     }
 
-    private function getOrderGroupProducts()
+    public function getOrderGroupProducts()
     {
         if (empty($this->oOrderGroupProducts)) {
             $aProducts = $this->oSQL->init()->
