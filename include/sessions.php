@@ -112,8 +112,8 @@ if ($is_robot != "Y"){
 #
 
 register_shutdown_function("x_session_save");
-setcookie($XCART_SESSION_NAME, $XCARTSESSID, 0, "/", $xcart_https_host, 0);
-setcookie($XCART_SESSION_NAME, $XCARTSESSID, 0, "/", $xcart_http_host, 0);
+setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_https_host, 0);
+setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_http_host, 0);
 
 $smarty->assign("XCARTSESSNAME", $XCART_SESSION_NAME);
 $smarty->assign("XCARTSESSID", $XCARTSESSID);
@@ -245,7 +245,7 @@ function x_session_start($sessid = '') {
 	}
 
 	$XCARTSESSID = $sessid;
-	setcookie($XCART_SESSION_NAME, $XCARTSESSID, 0, "/", "", 0);
+	setcookie($XCART_SESSION_NAME, $XCARTSESSID, $expiry_time , "/", "", 0);
 }
 
 #
