@@ -3,11 +3,13 @@ global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classOrders.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
+require_once $xcart_dir . "/include/class/classShipping.php";
 require_once $xcart_dir . "/include/class/classPaymentMethod.php";
 require_once $xcart_dir . "/include/class/classOrderGroupInvoices.php";
 require_once $xcart_dir . "/include/class/classOrderGroupMemos.php";
 require_once $xcart_dir . "/include/class/classOrderRefundGroups.php";
 require_once $xcart_dir . "/include/class/classOrderAmazonDetails.php";
+require_once $xcart_dir . "/include/class/classAmazonMWS.php";
 
 class classOrderGroup extends classData
 {
@@ -41,6 +43,11 @@ class classOrderGroup extends classData
      * @var classProduct[]
      */
     private $oOrderGroupProducts = [];
+
+    /**
+     * @var classShipping
+     */
+    private $oShippingMethod = null;
 
     public function __construct($aParams = [])
     {
@@ -868,14 +875,14 @@ class classOrderGroup extends classData
         $bResult = false;
         $this->getOrderGroupProducts();
         if (!empty($this->oOrderGroupProducts)) {
-            foreach($this->oOrderGroupProducts as $oProduct) {
+            foreach ($this->oOrderGroupProducts as $oProduct) {
                 $iAmount = 0;
                 $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($this->getField('orderid'), $oProduct->getField('productid'));
 
                 foreach ($aOrderDetails as $oOrderDetail) {
                     $iAmount += $oOrderDetail->getField('amount');
                 }
-                if ($oProduct->getField('amazon_fba_avail')>= $iAmount) {
+                if ($oProduct->getField('amazon_fba_avail') >= $iAmount) {
                     $bResult = true;
                 } else {
                     $bResult = false;
@@ -888,18 +895,50 @@ class classOrderGroup extends classData
 
     public function setAmazonShipmentNotes($sAmazonShipmentNotes)
     {
-        $this->setField('amz_customer_notes',$sAmazonShipmentNotes);
+        $this->setField('amz_customer_notes', $sAmazonShipmentNotes);
+    }
+
+    public function getAmazonShipmentNotes()
+    {
+        $this->setField('amz_customer_notes');
     }
 
     public function shipOrderGroupByAmazon()
     {
-        $oAmazon = new classAmazonMWS();
+        $oAmazon = new classAmazonMWS('FBAOutboundServiceMWS_Client');
         $oAmazon->shipOrderGroupByAmazon($this);
     }
 
     public function getAmazonShippingOrderId()
     {
-        return $this->getField('orderid').'-'.$this->getField('manufacturerid');
+        return $this->getField('orderid') . '-' . $this->getField('manufacturerid');
+    }
+
+    public function getShippingInstance()
+    {
+        if (empty($this->oShippingMethod)) {
+            $this->oShippingMethod = new classShipping($this->getField('shippingid'));
+        }
+        return $this->oShippingMethod;
+    }
+
+    public function getShippingMethodName()
+    {
+        $this->getShippingInstance();
+        $iShippingId = $this->oShippingMethod->getField('shippingid');
+        if (empty($iShippingId))
+            return $this->getShipping();
+        else
+            return $this->oShippingMethod->getName();
+    }
+
+    public function getShipping()
+    {
+        return $this->getField('shipping');
+    }
+
+    public function getOrderId() {
+        return $this->getField('orderid');
     }
 
 }

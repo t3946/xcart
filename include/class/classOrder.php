@@ -234,9 +234,22 @@ class classOrder extends classCloneData
         return $this->getField('customer_notes');
     }
 
-    public function getShippingName()
+    public function getClientShippingName()
     {
-        return $this->getField('s_title').' '.$this->getField('s_firstname');
+        $sClientName = '';
+        $sTitle = $this->getField('s_title');
+        if (!empty($sTitle))
+            $sClientName.= $sTitle.' ';
+        return $sClientName.$this->getField('s_firstname');
+    }
+
+    public function getOrderDate($sFormat = null) {
+        $date = new DateTime();
+        $date->setTimestamp((int)$this->getField('date'));
+        if (!empty($sFormat)) {
+            return $date->format($sFormat);
+        }
+        return $date->getTimestamp();
     }
 
 }

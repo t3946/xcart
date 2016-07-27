@@ -72,4 +72,11 @@ class classData
     {
         $this->aPrimaryTableValue[$sFieldName] = $sNewValue;
     }
+
+    public function updateField($sFieldName, $sNewValue)
+    {
+        $this->setField($sFieldName, $sNewValue);
+        $aToUpdate[$sFieldName] = $sNewValue;
+        func_array2update($this->sPrimaryTable, $aToUpdate, str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
+    }
 }

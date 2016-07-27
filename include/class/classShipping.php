@@ -11,4 +11,9 @@ class classShipping extends classCloneData
         parent::__construct($iId);
     }
 
+    public function getName() {
+
+        return $this->getField('shipping');
+    }
+
 }

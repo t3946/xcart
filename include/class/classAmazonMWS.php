@@ -74,6 +74,13 @@ require_once $xcart_dir . "/MarketplaceWebService/Model/UpdateReportAcknowledgem
 require_once $xcart_dir . "/MarketplaceWebService/Model/GetReportCountResponse.php";
 require_once $xcart_dir . "/MarketplaceWebService/Model/GetReportScheduleListByNextTokenResponse.php";
 require_once $xcart_dir . "/MarketplaceWebService/Model/UpdateReportAcknowledgementsResult.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/Address.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderItemList.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderItem.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderRequest.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetServiceStatusResponse.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Client.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Exception.php";
 
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
@@ -82,6 +89,7 @@ class classAmazonMWS
 {
     const BACK_PROCESS_LOG_NAME = 'AmazonFeeReport';
     const BACK_PROCESS_LOG_NAME_SETTLEMENT = 'Amazon_Reports_Cron';
+    const DEFAULT_ORDER_MESSAGE = 'Thank you for your order!';
     private $oMWSService;
     private $marketplaceIdArray;
     private $dom_xml_arr;
@@ -95,7 +103,7 @@ class classAmazonMWS
     private $sBackProcessLogName = null;
 
 
-    public function __construct()
+    public function __construct($oServiceClass = 'MarketplaceWebService_Client')
     {
         global $sql_tbl;
         $a_config = array(
@@ -105,7 +113,7 @@ class classAmazonMWS
             'MaxErrorRetry' => 3,
         );
 
-        $this->oMWSService = new MarketplaceWebService_Client(
+        $this->oMWSService = new $oServiceClass(
             AWS_ACCESS_KEY_ID,
             AWS_SECRET_ACCESS_KEY,
             $a_config,
@@ -966,44 +974,86 @@ class classAmazonMWS
     /**
      * @param classOrderGroup $oOrderGroup
      */
-    public function shipOrderGroupByAmazon($oOrderGroup) {
+    public function shipOrderGroupByAmazon($oOrderGroup)
+    {
         $oOrder = $oOrderGroup->getOrderInstance();
         $address = new FBAOutboundServiceMWS_Model_Address();
 
-        $address-> setName($oOrder->getShippingName());
-        $address-> setLine1($oOrder->getField('s_address'));
-        $address-> setCity($oOrder->getField('s_city'));
-        $address-> setStateOrProvinceCode($oOrder->getField('s_state'));
-        $address-> setCountryCode($oOrder->getField('s_country'));
-        $address-> setPostalCode($oOrder->getField('s_zipcode'));
+        $address->setName($oOrder->getClientShippingName());
+        $address->setLine1($oOrder->getField('s_address'));
+        $address->setCity($oOrder->getField('s_city'));
+        $address->setStateOrProvinceCode($oOrder->getField('s_state'));
+        $address->setCountryCode($oOrder->getField('s_country'));
+        $address->setPostalCode($oOrder->getField('s_zipcode'));
         $sPhone = $oOrder->getField('phone');
         if (!empty($sPhone))
-            $address-> setPhoneNumber($sPhone);
+            $address->setPhoneNumber($sPhone);
 
         $aProducts = $oOrderGroup->getOrderGroupProducts();
-        if (!empty($aProducts)){
+        if (!empty($aProducts)) {
+            $list = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
 
+            foreach ($aProducts as $oProduct) {
+                $item = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
+                $item->setSellerSKU($oProduct->getSKU());
+                $item->setSellerFulfillmentOrderItemId($oProduct->getSKU());
+                $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($oOrderGroup->getOrderId(), $oProduct->getProductId());
+                $iAmount = 0;
+                foreach ($aOrderDetails as $oOrderDetail) {
+                    $iAmount+=$oOrderDetail->getAmount();
+                }
+                $item->setQuantity($iAmount);
+                $list->withmember($item);
+            }
+
+            $req = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest();
+            $req->setSellerId(MERCHANT_ID);
+            $req->setSellerFulfillmentOrderId($oOrderGroup->getAmazonShippingOrderId());
+            $req->setDisplayableOrderId($oOrderGroup->getAmazonShippingOrderId());
+            $req->setFulfillmentAction('Hold');
+            $req->setFulfillmentPolicy('FillOrKill');
+
+            $req->setDisplayableOrderDateTime($oOrder->getOrderDate(DateTime::ISO8601));
+            $sDisplayAmazonOrderComment = self::DEFAULT_ORDER_MESSAGE;
+            $sAmazonShippingNotes = $oOrderGroup->getAmazonShipmentNotes();
+            if (!empty($sAmazonShippingNotes))
+                $sDisplayAmazonOrderComment = $sAmazonShippingNotes;
+
+            $req->setDisplayableOrderComment($sDisplayAmazonOrderComment);
+            $req->setShippingSpeedCategory($oOrderGroup->getShippingMethodName());
+            $req->setDestinationAddress($address);
+
+            $req->setItems($list);
+
+            try {
+                $response = $this->oMWSService->CreateFulfillmentOrder($req);
+
+                $log = "Ship by Amazon. AmazonShippingOrderId:".$oOrderGroup->getAmazonShippingOrderId()."\n";
+                $log .= "DisplayableOrderComment:".$sDisplayAmazonOrderComment."\n";
+                $log .= "ShippingSpeedCategory:".$oOrderGroup->getShippingMethodName()."\n";
+                $log .= "Amazon MWS Service Response\n";
+                $log .="=============================================================================\n";
+
+                $dom = new DOMDocument();
+                $dom->loadXML($response->toXML());
+                $dom->preserveWhiteSpace = false;
+                $dom->formatOutput = true;
+                $log .= $dom->saveXML();
+                $log .="ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n";
+
+                //$oOrderGroup->updateField('amz_fullfilment_order_placed','Y');
+
+            } catch (FBAOutboundServiceMWS_Exception $ex) {
+                $log .= "Caught Exception: " . $ex->getMessage() . "\n";
+                $log .="Response Status Code: " . $ex->getStatusCode() . "\n";
+                $log .="Error Code: " . $ex->getErrorCode() . "\n";
+                $log .="Error Type: " . $ex->getErrorType() . "\n";
+                $log .="Request ID: " . $ex->getRequestId() . "\n";
+                $log .="XML: " . $ex->getXML() . "\n";
+                $log .="ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n";
+            }
+            global $login;
+            func_log_order($oOrderGroup->getOrderId(),'X',$login);
         }
-
-        $item1 = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
-
-//Set item parameters
-        $item1-> setSellerSKU("1115-K100");
-        $item1-> setSellerFulfillmentOrderItemId("1115-K100");
-        $item1-> setQuantity($oOrderGroup->getQuantity());
-
-        $req = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest();
-        $req->setSellerId(MERCHANT_ID);
-        $req->setSellerFulfillmentOrderId($oOrderGroup->getAmazonShippingOrderId());
-        $req->setDisplayableOrderId($oOrderGroup->getAmazonShippingOrderId());
-        $req->setDisplayableOrderDateTime('2014-05-06T17:22:00Z');
-        $req->setDisplayableOrderComment('Thank you for your order!');
-        $req->setShippingSpeedCategory('Standard');
-        $req->setDestinationAddress($address);
-
-        $list = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
-        $list->withmember($item1);
-
-        $req->setItems($list);
     }
 }
