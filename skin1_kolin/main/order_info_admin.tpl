@@ -721,14 +721,14 @@ Cost to us accurate
   </td>
   {assign var="oOrderGroup" value=$v.oOrderGroup}
   {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
-  {if (!empty($oOrderGroup) && $oOrder->isOrderAmazon() == true && $oOrder->getField('fraud_status') == 'C' && ($oOrderGroup->getField('cb_status') == 'P' || $oOrderGroup->getField('cb_status') =='O') && $oOrderGroup->checkFBAProductsAvailToShipping())}
+  {if (!empty($oOrderGroup) && $oOrder->isOrderAmazon() == false && $oOrder->getField('fraud_status') == 'C' && ($oOrderGroup->getField('cb_status') == 'P' || $oOrderGroup->getField('cb_status') =='O') && $oOrderGroup->checkFBAProductsAvailToShipping())}
     <td colspan="2" align="center">
-      <input name="submit_amazon_shipment" type="button"  value="Ship now by Amazon" />
+      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="Ship now by Amazon" />
 
     <td colspan="4" style="vertical-align: top;">
       <input style="margin-bottom: 5px;" id="submit_amazon_shipment_with_notes" name="submit_amazon_shipment_with_notes" type="checkbox" />
       <label style="position:relative; top:-2px;" for="submit_amazon_shipment_with_notes">with customer notes</label> <br/>
-      <input style="margin-left: 4px;width: 97%;" name="submit_amazon_shipment_notes" type="text" value="{$oOrder->getOrderCustomerNotes()}"/>
+      <input id="submit_amazon_shipment_notes" style="margin-left: 4px;width: 97%;" name="submit_amazon_shipment_notes" type="text" value="{$oOrder->getOrderCustomerNotes()}"/>
     </td>
   {else}
   <td colspan="6">
@@ -1419,3 +1419,24 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
 {/if}
 
 </form>
+
+{literal}
+<script type="text/javascript">
+  $( document ).ready(function() {
+    $('#submit_amazon_shipment').on('click',function () {
+      var orderid = $(this).data('orderid'),
+      manufacturerid = $(this).data('manufacturerid'),
+      submit_amazon_shipment_with_notes = $('#submit_amazon_shipment_with_notes').is(':checked'),
+      submit_amazon_shipment_notes = $('#submit_amazon_shipment_notes').val();
+      $.post(
+        "ajax_admin.php",{
+                orderid: orderid,
+                manufacturerid: manufacturerid,
+                submit_amazon_shipment_with_notes: submit_amazon_shipment_with_notes,
+                submit_amazon_shipment_notes: submit_amazon_shipment_with_notes
+        }
+      );
+    })
+  }
+</script>
+{/literal}

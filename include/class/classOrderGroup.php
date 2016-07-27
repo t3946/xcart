@@ -893,25 +893,30 @@ class classOrderGroup extends classData
         return $bResult;
     }
 
-    public function setAmazonShipmentNotes($sAmazonShipmentNotes)
+    public function updateAmazonShipmentNotes($sAmazonShipmentNotes)
     {
-        $this->setField('amz_customer_notes', $sAmazonShipmentNotes);
+        $this->updateField('amz_customer_notes', $sAmazonShipmentNotes);
+    }
+
+    public function updateAmazonShipmentWithNotes($sAmazonShipmentNotes)
+    {
+        $this->updateField('amz_send_with_notes', $sAmazonShipmentNotes);
     }
 
     public function getAmazonShipmentNotes()
     {
-        $this->setField('amz_customer_notes');
+        return $this->getField('amz_customer_notes');
     }
 
     public function shipOrderGroupByAmazon()
     {
-        $oAmazon = new classAmazonMWS('FBAOutboundServiceMWS_Client');
+        $oAmazon = new classAmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01/');
         $oAmazon->shipOrderGroupByAmazon($this);
     }
 
     public function getAmazonShippingOrderId()
     {
-        return $this->getField('orderid') . '-' . $this->getField('manufacturerid');
+        return $this->getOrderInstance()->getOrderPrefix().$this->getField('orderid') . '-' . $this->getField('manufacturerid');
     }
 
     public function getShippingInstance()
@@ -939,6 +944,10 @@ class classOrderGroup extends classData
 
     public function getOrderId() {
         return $this->getField('orderid');
+    }
+
+    public function getManufacturerId() {
+        return $this->getField('manufacturerid');
     }
 
 }

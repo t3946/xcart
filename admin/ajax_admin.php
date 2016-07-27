@@ -56,7 +56,8 @@ function shipOrderByAmazon($aPostParam = [])
     $sAmazonShipmentNotesSend = $aPostParam['submit_amazon_shipment_with_notes'];
     if ($sAmazonShipmentNotesSend) {
         $sAmazonShipmentNotes = $aPostParam['submit_amazon_shipment_notes'];
-        $oOrderGroup->setAmazonShipmentNotes($sAmazonShipmentNotes);
+        $oOrderGroup->updateAmazonShipmentWithNotes('Y');
+        $oOrderGroup->updateAmazonShipmentNotes($sAmazonShipmentNotes);
     }
-    $oOrderGroup->shipOrderGroupByAmazon();
+    //$oOrderGroup->shipOrderGroupByAmazon();
 }

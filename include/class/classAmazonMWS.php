@@ -103,11 +103,11 @@ class classAmazonMWS
     private $sBackProcessLogName = null;
 
 
-    public function __construct($oServiceClass = 'MarketplaceWebService_Client')
+    public function __construct($oServiceClass = 'MarketplaceWebService_Client', $uri = '')
     {
         global $sql_tbl;
         $a_config = array(
-            'ServiceURL' => "https://mws.amazonservices.com",
+            'ServiceURL' => "https://mws.amazonservices.com".$uri,
             'ProxyHost' => null,
             'ProxyPort' => -1,
             'MaxErrorRetry' => 3,
@@ -1010,7 +1010,7 @@ class classAmazonMWS
             $req->setSellerId(MERCHANT_ID);
             $req->setSellerFulfillmentOrderId($oOrderGroup->getAmazonShippingOrderId());
             $req->setDisplayableOrderId($oOrderGroup->getAmazonShippingOrderId());
-            $req->setFulfillmentAction('Hold');
+            $req->setFulfillmentAction('Ship');
             $req->setFulfillmentPolicy('FillOrKill');
 
             $req->setDisplayableOrderDateTime($oOrder->getOrderDate(DateTime::ISO8601));
@@ -1025,23 +1025,23 @@ class classAmazonMWS
 
             $req->setItems($list);
 
+
             try {
                 $response = $this->oMWSService->CreateFulfillmentOrder($req);
 
-                $log = "Ship by Amazon. AmazonShippingOrderId:".$oOrderGroup->getAmazonShippingOrderId()."\n";
-                $log .= "DisplayableOrderComment:".$sDisplayAmazonOrderComment."\n";
-                $log .= "ShippingSpeedCategory:".$oOrderGroup->getShippingMethodName()."\n";
+                $log = "Ship by Amazon. AmazonShippingOrderId: ".$oOrderGroup->getAmazonShippingOrderId()."\n";
+                $log .= "DisplayableOrderComment: ".$sDisplayAmazonOrderComment."\n";
+                $log .= "ShippingSpeedCategory: ".$oOrderGroup->getShippingMethodName()."\n";
                 $log .= "Amazon MWS Service Response\n";
                 $log .="=============================================================================\n";
-
                 $dom = new DOMDocument();
                 $dom->loadXML($response->toXML());
                 $dom->preserveWhiteSpace = false;
                 $dom->formatOutput = true;
-                $log .= $dom->saveXML();
+                //$log .= $dom->saveXML();
                 $log .="ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n";
 
-                //$oOrderGroup->updateField('amz_fullfilment_order_placed','Y');
+                $oOrderGroup->updateField('amz_fullfilment_order_placed','Y');
 
             } catch (FBAOutboundServiceMWS_Exception $ex) {
                 $log .= "Caught Exception: " . $ex->getMessage() . "\n";
@@ -1053,7 +1053,7 @@ class classAmazonMWS
                 $log .="ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n";
             }
             global $login;
-            func_log_order($oOrderGroup->getOrderId(),'X',$login);
+            func_log_order($oOrderGroup->getOrderId(),'X',nl2br($log), $login);
         }
     }
 }

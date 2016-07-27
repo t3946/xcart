@@ -252,4 +252,11 @@ class classOrder extends classCloneData
         return $date->getTimestamp();
     }
 
+    /**
+     * @return string
+     */
+    public function getOrderPrefix() {
+        return $this->getField('order_prefix');
+    }
+
 }
