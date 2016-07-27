@@ -46,6 +46,11 @@ class classProduct extends classCloneData
         return "";
     }
 
+    public function getSKU()
+    {
+        return $this->getField('productcode');
+    }
+
     public function getStoreFront()
     {
         if (is_null($this->oStoreFront)) {
@@ -151,6 +156,11 @@ class classProduct extends classCloneData
         }
         return $bResult;
 
+    }
+
+    public function getProductId()
+    {
+        return $this->getField('productid');
     }
 
 }

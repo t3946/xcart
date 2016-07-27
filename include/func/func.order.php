@@ -93,6 +93,10 @@ function func_get_shipping_groups($orderid) {
 		foreach ($return as $m_id => $group) {
 			$return[$m_id]["tracking"] = unserialize($group["tracking"]);
 
+			global $xcart_dir;
+			require_once $xcart_dir ."/include/class/classOrderGroup.php";
+			$return[$m_id]['oOrderGroup'] = new classOrderGroup(['manufacturerid'=>$m_id, 'orderid'=>$orderid]);
+
 
 #
 ## Fix for old tracking
@@ -1371,6 +1375,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                                 $insert_data["s_zipcode"] = $currect_s_zipcode;
                         }
                 }
+###
+##
+#
 
 
 
@@ -1577,7 +1584,7 @@ die("123");
 			}
 # START: random:20341 [2010 Jul 29 14:46] 
 			$current_order['shipping_groups'][func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid'])]['products'][] = $product;
-# END: random:20341 [2010 Jul 29 14:46]
+# END: random:20341 [2010 Jul 29 14:46] 
 
 			global $xcart_dir;
 			include_once $xcart_dir."/include/class/classProducts.php";
@@ -2451,7 +2458,7 @@ function func_get_order_manufacturers($orderid){
 				$mnfs[$m_id]["backorder_decision_request_message"] = $backorder_decision_request_message;
 */
 				
-				$mnfs[$m_id]["d_website_search_for_sku_url"] =  str_replace("{{mpn}}", "---mpn---", $mnfs[$m_id]["d_website_search_for_sku_url"]); 
+				$mnfs[$m_id]["d_website_search_for_sku_url"] =  str_replace("{{mpn}}", "---mpn---", $mnfs[$m_id]["d_website_search_for_sku_url"]);
 				$mnfs[$m_id]["d_link_to_order_distributors_website"] =  str_replace("{{orderid}}", $order["order_prefix"].$orderid, $mnfs[$m_id]["d_link_to_order_distributors_website"]); 
 ###
 
