@@ -16,4 +16,11 @@ class classShipping extends classCloneData
         return $this->getField('shipping');
     }
 
+    public function isAmazonShipping() {
+        $bResult = false;
+        if ($this->getField('code')=='Amazon')
+            $bResult = true;
+        return $bResult;
+    }
+
 }

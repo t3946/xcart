@@ -60,4 +60,16 @@ class classShippings extends classShipping
         return $weight;
     }
 
+    public static function getShippingMethodsByCode($sCode)
+    {
+        $aOShippings = [];
+        $aShippings = func_query("SELECT * FROM ".self::$sql_tbl['shipping']." WHERE code = '$sCode'");
+        if (!empty($aShippings))
+            foreach ($aShippings as $aShipping) {
+                $oShipping = new classShipping($aShipping);
+                $aOShippings[] = $oShipping;
+            }
+        return $aOShippings;
+    }
+
 }

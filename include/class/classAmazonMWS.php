@@ -974,7 +974,7 @@ class classAmazonMWS
     /**
      * @param classOrderGroup $oOrderGroup
      */
-    public function shipOrderGroupByAmazon($oOrderGroup)
+    public function shipOrderGroupByAmazon($oOrderGroup, $sAmazonShippingMethodSelect)
     {
         $oOrder = $oOrderGroup->getOrderInstance();
         $address = new FBAOutboundServiceMWS_Model_Address();
@@ -1018,22 +1018,22 @@ class classAmazonMWS
             $sAmazonShippingNotes = $oOrderGroup->getAmazonShipmentNotes();
             if (!empty($sAmazonShippingNotes))
                 $sDisplayAmazonOrderComment = $sAmazonShippingNotes;
+            $sDisplayAmazonOrderComment = stripslashes($sDisplayAmazonOrderComment);
 
             $req->setDisplayableOrderComment($sDisplayAmazonOrderComment);
-            $req->setShippingSpeedCategory($oOrderGroup->getShippingMethodName());
+            $req->setShippingSpeedCategory($sAmazonShippingMethodSelect);
             $req->setDestinationAddress($address);
 
-            $req->setItems($list);
-
+            $req->setItems($list); var_dump($req);
 
             try {
                 $response = $this->oMWSService->CreateFulfillmentOrder($req);
 
                 $log = "Ship by Amazon. AmazonShippingOrderId: ".$oOrderGroup->getAmazonShippingOrderId()."\n";
                 $log .= "DisplayableOrderComment: ".$sDisplayAmazonOrderComment."\n";
-                $log .= "ShippingSpeedCategory: ".$oOrderGroup->getShippingMethodName()."\n";
+                $log .= "ShippingSpeedCategory: ".$sAmazonShippingMethodSelect."\n";
                 $log .= "Amazon MWS Service Response\n";
-                $log .="=============================================================================\n";
+                $log .="==========================================  ===================================\n";
                 $dom = new DOMDocument();
                 $dom->loadXML($response->toXML());
                 $dom->preserveWhiteSpace = false;
@@ -1044,7 +1044,7 @@ class classAmazonMWS
                 $oOrderGroup->updateField('amz_fullfilment_order_placed','Y');
 
             } catch (FBAOutboundServiceMWS_Exception $ex) {
-                $log .= "Caught Exception: " . $ex->getMessage() . "\n";
+                $log = "Caught Exception: " . $ex->getMessage() . "\n";
                 $log .="Response Status Code: " . $ex->getStatusCode() . "\n";
                 $log .="Error Code: " . $ex->getErrorCode() . "\n";
                 $log .="Error Type: " . $ex->getErrorType() . "\n";

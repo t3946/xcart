@@ -54,10 +54,12 @@ function shipOrderByAmazon($aPostParam = [])
     $iManufacturerid = (int) $aPostParam['manufacturerid'];
     $oOrderGroup = new classOrderGroup(['orderid'=>$iOrderId,'manufacturerid'=>$iManufacturerid]);
     $sAmazonShipmentNotesSend = $aPostParam['submit_amazon_shipment_with_notes'];
+    $sAmazonShippingMethodSelect= $aPostParam['amazon_shipping_method_select'];
     if ($sAmazonShipmentNotesSend) {
         $sAmazonShipmentNotes = $aPostParam['submit_amazon_shipment_notes'];
         $oOrderGroup->updateAmazonShipmentWithNotes('Y');
         $oOrderGroup->updateAmazonShipmentNotes($sAmazonShipmentNotes);
     }
-    //$oOrderGroup->shipOrderGroupByAmazon();
+    if (!empty($sAmazonShippingMethodSelect))
+        $oOrderGroup->shipOrderGroupByAmazon($sAmazonShippingMethodSelect);
 }

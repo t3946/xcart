@@ -908,10 +908,10 @@ class classOrderGroup extends classData
         return $this->getField('amz_customer_notes');
     }
 
-    public function shipOrderGroupByAmazon()
+    public function shipOrderGroupByAmazon($sAmazonShippingMethodSelect)
     {
         $oAmazon = new classAmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01/');
-        $oAmazon->shipOrderGroupByAmazon($this);
+        $oAmazon->shipOrderGroupByAmazon($this, $sAmazonShippingMethodSelect);
     }
 
     public function getAmazonShippingOrderId()
@@ -940,6 +940,11 @@ class classOrderGroup extends classData
     public function getShipping()
     {
         return $this->getField('shipping');
+    }
+
+    public function getShippingId()
+    {
+        return $this->getField('shippingid');
     }
 
     public function getOrderId() {
