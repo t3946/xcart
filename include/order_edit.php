@@ -2262,5 +2262,3 @@ if (!empty($aAmazonShippingMethods)) {
     }
     $smarty->assign("aAmazonShippingMethods", $aAmazonShippings);
 }
-
-$smarty->assign("order", $order);
