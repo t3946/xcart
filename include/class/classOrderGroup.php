@@ -965,7 +965,7 @@ class classOrderGroup extends classData
     }
 
     public function changeOrderGroupStatusBD($sNewStatus) {
-        $this->updateField('bd', $sNewStatus);
+        $this->updateField('bd_status', $sNewStatus);
         return $this;
     }
 
