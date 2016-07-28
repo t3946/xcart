@@ -723,8 +723,10 @@ Cost to us accurate
   {assign var="oOrderShipping" value= $oOrderGroup->getShippingInstance()}
   {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
   {if (!empty($oOrderGroup) && $oOrder->isOrderAmazon() == false && $oOrder->getField('fraud_status') == 'C' &&
-      ($oOrderGroup->getField('cb_status') == 'P' || $oOrderGroup->getField('cb_status') =='O' || $oOrderGroup->getField('cb_status') =='AP') &&
-      $oOrderGroup->checkFBAProductsAvailToShipping() && $oOrderGroup->getField('amz_fullfilment_order_placed') !='Y')}
+      ($oOrderGroup->getField('cb_status') == 'P' ||
+       $oOrderGroup->getField('cb_status') =='O' ||
+       ($oOrderGroup->getField('cb_status') =='AP' && $oOrder->getOrderGroupsCount()==1 && $order_transactions_totals.authorized_PLUS_captured_totals == $order.extra.total.gross)) &&
+       $oOrderGroup->checkFBAProductsAvailToShipping() && $oOrderGroup->getField('amz_fullfilment_order_placed') !='Y')}
     <td colspan="2" align="center">
       <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="Ship now by Amazon" />
       <select {if $oOrderShipping->isAmazonShipping()} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">

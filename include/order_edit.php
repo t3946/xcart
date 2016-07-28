@@ -2252,7 +2252,8 @@ $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_orde
 $smarty->assign("order", $order);
 
 
-$aAmazonShippingMethods = classShippings::getShippingMethodsByCode('Amazon');
+$oShippings = new classShippings();
+$aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');
 $aAmazonShippings = [];
 
 if (!empty($aAmazonShippingMethods)) {

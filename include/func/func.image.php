@@ -966,7 +966,7 @@ function func_generate_image($id, $from_type = 'P', $to_type = 'T', $allow_not_r
 function func_resize_image($image_filename, $new_x, $new_y, $image_type = 'jpeg', $proportional = true, $quality = 97, $color = 0xFFFFFF, $pthumb = false) {
 	global $auto_thumb_error, $xcart_dir;
 
-	ini_set('memory_limit', '32M');
+	ini_set('memory_limit', '128M');
 
 	if (!is_file($image_filename)) {
 		$auto_thumb_error = 'lbl_auto_resize_no_file';

@@ -83,6 +83,12 @@ class classOrder extends classCloneData
         return $this->aOrderGroups;
     }
 
+    public function getOrderGroupsCount()
+    {
+        $this->fetchOrderGroups();
+        return count($this->aOrderGroups);
+    }
+
     private function fetchOrderProductsManufacturers()
     {
         if (!empty($this->aOrderProductsManufactueres) && is_array($this->aOrderProductsManufactueres)) {
