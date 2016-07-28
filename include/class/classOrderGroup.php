@@ -16,7 +16,6 @@ class classOrderGroup extends classData
     const RECONCILED_NONE = 0;
     const RECONCILED_FULLY = 1;
     const RECONCILED_PARTIAL = 2;
-
     /**
      * @var classOrder
      */
@@ -953,6 +952,21 @@ class classOrderGroup extends classData
 
     public function getManufacturerId() {
         return $this->getField('manufacturerid');
+    }
+
+    public function changeOrderGroupStatusDC($sNewStatus) {
+        $this->updateField('dc_status', $sNewStatus);
+        return $this;
+    }
+
+    public function changeOrderGroupStatusCB($sNewStatus) {
+        $this->updateField('cb_status', $sNewStatus);
+        return $this;
+    }
+
+    public function changeOrderGroupStatusBD($sNewStatus) {
+        $this->updateField('bd', $sNewStatus);
+        return $this;
     }
 
 }
