@@ -792,27 +792,28 @@ class classProducts extends classCloneData
 			конец если
 		КОНЕЦ ЦИКЛ по [Distributors]
          * */
+        if (!empty($aChildManufacturers)) {
+            foreach ($aChildManufacturers as $aChildManufacturer) {
+                //сформировать clonedSKU предполагаемого клона по очередному дистрибьютору: [Distributors].code-[PRODUCT].mpn
+                $sClonedSKU = $this->getClonedSKU($aChildManufacturer["code"], $this->getProductMPN($aProduct["productcode"], $aManufacturer["code"]));
 
-        foreach ($aChildManufacturers as $aChildManufacturer) {
-            //сформировать clonedSKU предполагаемого клона по очередному дистрибьютору: [Distributors].code-[PRODUCT].mpn
-            $sClonedSKU = $this->getClonedSKU($aChildManufacturer["code"], $this->getProductMPN($aProduct["productcode"],$aManufacturer["code"]));
+                $aProductSKU = $this->getProductBySKU($sClonedSKU);
+                if (isset($aProductSKU) && is_array($aProductSKU) && !empty($aProductSKU)) {
+                    //если clonedSKU существует в БД, то
 
-            $aProductSKU = $this->getProductBySKU($sClonedSKU);
-            if (isset($aProductSKU) && is_array($aProductSKU) && !empty($aProductSKU)) {
-                //если clonedSKU существует в БД, то
+                    //вызвать блок обновления продукта для очередного подчиненного дистрибьютора;
+                    $aParamToClone = array();
+                    $aParamToClone[$this->sPrimaryKeyFiled] = $aProduct[$this->sPrimaryKeyFiled];
+                    $aParamToClone["d_main_sf"] = $aChildManufacturer["d_main_sf"];
 
-                //вызвать блок обновления продукта для очередного подчиненного дистрибьютора;
-                $aParamToClone = array();
-                $aParamToClone[$this->sPrimaryKeyFiled] = $aProduct[$this->sPrimaryKeyFiled];
-                $aParamToClone["d_main_sf"] = $aChildManufacturer["d_main_sf"];
+                    if ($this->updateClonedProduct($aProduct, $aProductSKU, $aParamToClone)) {
+                        //посчитать успешное обновление
+                        $this->IncSuccessUpdate();
+                    }
+                } else {
+                    $this->message[] = "SKU $sClonedSKU not found, continue";
 
-                if ($this->updateClonedProduct($aProduct, $aProductSKU, $aParamToClone)) {
-                //посчитать успешное обновление
-                    $this->IncSuccessUpdate();
                 }
-            } else {
-                $this->message[] = "SKU $sClonedSKU not found, continue";
-
             }
         }
 
