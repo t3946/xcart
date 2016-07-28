@@ -32,7 +32,8 @@ class classOrder extends classCloneData
         parent::__construct($aOrderData);
     }
 
-    public static function getInstance($iId = null){
+    public static function getInstance($iId = null)
+    {
         return new self($iId);
     }
 
@@ -154,8 +155,9 @@ class classOrder extends classCloneData
         return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled));
     }
 
-    public static function getOrderStatusByCode($sCode) {
-        return func_query_first("SELECT * FROM ".self::$sql_tbl['order_statuses']." WHERE code='$sCode'");
+    public static function getOrderStatusByCode($sCode)
+    {
+        return func_query_first("SELECT * FROM " . self::$sql_tbl['order_statuses'] . " WHERE code='$sCode'");
     }
 
     public function changeVerificationStatus($sNewStatus)
@@ -163,9 +165,9 @@ class classOrder extends classCloneData
         $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->primaryKeyValue);
         $aNewStatus = self::getOrderStatusByCode($sNewStatus);
         $aOldStatus = self::getOrderStatusByCode($this->getField('vn_status'));
-        $log = "vn_status: ". $aOldStatus['name'] . " -> ". $aNewStatus['name'];
+        $log = "vn_status: " . $aOldStatus['name'] . " -> " . $aNewStatus['name'];
         func_log_order($this->primaryKeyValue, 'X', $log);
-        $this->setField('vn_status',$sNewStatus);
+        $this->setField('vn_status', $sNewStatus);
         return $bResult;
     }
 
@@ -206,22 +208,55 @@ class classOrder extends classCloneData
         }
     }
 
-    public function isOrderAmazon() {
+    public function isOrderAmazon()
+    {
         $sAmazonOrderId = $this->getField('amazonorderid');
         return !empty($sAmazonOrderId);
     }
 
-    public function getAmazonChanell() {
+    public function getAmazonChanell()
+    {
         return $this->getField('amazon_fulfillment_channel');
     }
 
-    public function recalculateAccounting() {
+    public function recalculateAccounting()
+    {
         $aOrderGroups = $this->getOrderGroups();
         if (!empty($aOrderGroups)) {
             foreach ($aOrderGroups as $oOrderGroup) {
                 $oOrderGroup->recalculateAccounting();
             }
         }
+    }
+
+    public function getOrderCustomerNotes()
+    {
+        return $this->getField('customer_notes');
+    }
+
+    public function getClientShippingName()
+    {
+        $sClientName = '';
+        $sTitle = $this->getField('s_title');
+        if (!empty($sTitle))
+            $sClientName.= $sTitle.' ';
+        return $sClientName.$this->getField('s_firstname');
+    }
+
+    public function getOrderDate($sFormat = null) {
+        $date = new DateTime();
+        $date->setTimestamp((int)$this->getField('date'));
+        if (!empty($sFormat)) {
+            return $date->format($sFormat);
+        }
+        return $date->getTimestamp();
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderPrefix() {
+        return $this->getField('order_prefix');
     }
 
 }

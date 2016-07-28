@@ -1,4 +1,7 @@
 <?php
+global $xcart_dir;
+require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+
 class classData
 {
     protected static $sql_tbl = [];
@@ -6,6 +9,7 @@ class classData
     protected $aPrimaryKeysValues = [];
     protected $aPrimaryTableValue;
     protected $sPrimaryTable;
+    protected $oSQL = null;
 
     /**
      * @param array $aParams
@@ -21,6 +25,7 @@ class classData
             $this->aPrimaryKeysValues = array_intersect_key($aParams, array_flip($this->aPrimaryKeys));
             $this->fillPrimaryTableInfo();
         }
+        $this->oSQL = new classSQLBuilder();
     }
 
     protected function _clone() {
@@ -68,5 +73,12 @@ class classData
     public function setField($sFieldName, $sNewValue)
     {
         $this->aPrimaryTableValue[$sFieldName] = $sNewValue;
+    }
+
+    public function updateField($sFieldName, $sNewValue)
+    {
+        $this->setField($sFieldName, $sNewValue);
+        $aToUpdate[$sFieldName] = $sNewValue;
+        func_array2update($this->sPrimaryTable, $aToUpdate, str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
     }
 }

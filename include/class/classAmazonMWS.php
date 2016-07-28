@@ -74,6 +74,13 @@ require_once $xcart_dir . "/MarketplaceWebService/Model/UpdateReportAcknowledgem
 require_once $xcart_dir . "/MarketplaceWebService/Model/GetReportCountResponse.php";
 require_once $xcart_dir . "/MarketplaceWebService/Model/GetReportScheduleListByNextTokenResponse.php";
 require_once $xcart_dir . "/MarketplaceWebService/Model/UpdateReportAcknowledgementsResult.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/Address.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderItemList.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderItem.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderRequest.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetServiceStatusResponse.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Client.php";
+require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Exception.php";
 
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
@@ -82,6 +89,7 @@ class classAmazonMWS
 {
     const BACK_PROCESS_LOG_NAME = 'AmazonFeeReport';
     const BACK_PROCESS_LOG_NAME_SETTLEMENT = 'Amazon_Reports_Cron';
+    const DEFAULT_ORDER_MESSAGE = 'Thank you for your order!';
     private $oMWSService;
     private $marketplaceIdArray;
     private $dom_xml_arr;
@@ -95,17 +103,17 @@ class classAmazonMWS
     private $sBackProcessLogName = null;
 
 
-    public function __construct()
+    public function __construct($oServiceClass = 'MarketplaceWebService_Client', $uri = '')
     {
         global $sql_tbl;
         $a_config = array(
-            'ServiceURL' => "https://mws.amazonservices.com",
+            'ServiceURL' => "https://mws.amazonservices.com".$uri,
             'ProxyHost' => null,
             'ProxyPort' => -1,
             'MaxErrorRetry' => 3,
         );
 
-        $this->oMWSService = new MarketplaceWebService_Client(
+        $this->oMWSService = new $oServiceClass(
             AWS_ACCESS_KEY_ID,
             AWS_SECRET_ACCESS_KEY,
             $a_config,
@@ -478,34 +486,6 @@ class classAmazonMWS
                     echo("                Count\n");
                     echo("                    " . $updateReportAcknowledgementsResult->getCount() . "\n");
                 }
-                /*$reportInfoList = $updateReportAcknowledgementsResult->getReportInfo();
-                foreach ($reportInfoList as $reportInfo) {
-                    echo("                ReportInfo\n");
-                    if ($reportInfo->isSetReportId()) {
-                        echo("                    ReportId\n");
-                        echo("                        " . $reportInfo->getReportId() . "\n");
-                    }
-                    if ($reportInfo->isSetReportType()) {
-                        echo("                    ReportType\n");
-                        echo("                        " . $reportInfo->getReportType() . "\n");
-                    }
-                    if ($reportInfo->isSetReportRequestId()) {
-                        echo("                    ReportRequestId\n");
-                        echo("                        " . $reportInfo->getReportRequestId() . "\n");
-                    }
-                    if ($reportInfo->isSetAvailableDate()) {
-                        echo("                    AvailableDate\n");
-                        echo("                        " . $reportInfo->getAvailableDate()->format(DATE_FORMAT) . "\n");
-                    }
-                    if ($reportInfo->isSetAcknowledged()) {
-                        echo("                    Acknowledged\n");
-                        echo("                        " . $reportInfo->getAcknowledged() . "\n");
-                    }
-                    if ($reportInfo->isSetAcknowledgedDate()) {
-                        echo("                    AcknowledgedDate\n");
-                        echo("                        " . $reportInfo->getAcknowledgedDate()->format(DATE_FORMAT) . "\n");
-                    }
-                }*/
             }
             if ($response->isSetResponseMetadata()) {
                 echo("            ResponseMetadata\n");
@@ -774,8 +754,6 @@ class classAmazonMWS
             $log_text = "Processing " . count($ReportContent) . " reports";
             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
-            $err = '';
-
             foreach ($ReportContent as $report_id => $report_data) {
 
                 $aOrderDetails = [];
@@ -827,19 +805,8 @@ class classAmazonMWS
                                         $aUpdateFields['acc_paymentid'] = 101;
                                         break;
                                 }
-                                //func_array2update('order_groups', $aUpdateFields, 'orderid = ' . $order_info['orderid']);
-
-
-                                $mid_info = [];
-                                $cost_to_us = 0;
 
                                 foreach ($v["Fulfillment"] as $kk => $vv) {
-
-                                    /*$oProducts = new classProducts();
-                                    $aProduct = $oProducts->getProductBySKU($vv['SKU']);
-
-                                    $cost_to_us = $aProduct['cost_to_us'];*/
-
 
                                     if ($k_name == "Item") {
                                         if (!empty($vv["ItemFees"])) {
@@ -855,6 +822,14 @@ class classAmazonMWS
                                                 }
                                             }
 
+                                        }
+
+                                        if (!empty($vv["ShipmentFees"])) {
+                                            foreach ($vv["ShipmentFees"] as $kkk => $vvv) {
+                                                if (in_array($vvv["Type"], array("FBATransportationFee"))) {
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] += floatVal($vvv["Amount"]);
+                                                }
+                                            }
                                         }
 
                                         if (!empty($vv["ItemPrice"])) {
@@ -917,6 +892,7 @@ class classAmazonMWS
                                 $aOrderDetailData = [];
                                 $aOrderDetailData['FBAPerOrderFulfillmentFee'] = floatval($aFees['FBAPerOrderFulfillmentFee']);
                                 $aOrderDetailData['FBAPerUnitFulfillmentFee'] = floatval($aFees['FBAPerUnitFulfillmentFee']);
+                                $aOrderDetailData['FBATransportationFee'] = floatval($aFees['FBATransportationFee']);
                                 $aOrderDetailData['FBAWeightBasedFee'] = floatval($aFees['FBAWeightBasedFee']);
                                 $aOrderDetailData['AmazonCommission'] = floatval($aFees['Commission']);
                                 $aOrderDetailData['Principal'] = floatval($aFees['Principal']);
@@ -943,6 +919,7 @@ class classAmazonMWS
                                     func_array2insert('order_amazon_details', $aOrderDetailData, true);
                                     $aUpdateValues = func_query_first("SELECT SUM(FBAPerOrderFulfillmentFee) AS FBAPerOrderFulfillmentFee,
                                                      SUM(FBAPerUnitFulfillmentFee) AS FBAPerUnitFulfillmentFee,
+                                                     SUM(FBATransportationFee) AS FBATransportationFee,
                                                      SUM(FBAWeightBasedFee) AS FBAWeightBasedFee,
                                                      SUM(AmazonCommission) AS AmazonCommission,
                                                      SUM(Refund) AS Refund,
@@ -952,23 +929,9 @@ class classAmazonMWS
                                                      count(1) as Rows
                                                      FROM " . $this->sql_tbl['order_amazon_details'] . " WHERE orderid = $iOrderId AND SKU = '$aFees[SKU]'");
                                     if ($aUpdateValues['Rows'] > 0) {
-                                        $fRefund = $fPrincipalRefund = $fShipping = $fShippingRefund = 0;
-
                                         if ($aUpdateValues['Refund'] != 0) {
-                                            $fRefund = $aUpdateValues['Refund'];
                                             $aUpdateValues['amazon_item_refunded'] = 'Y';
                                         }
-                                        if ($aUpdateValues['PrincipalRefund'] != 0) {
-                                            $fPrincipalRefund = $aUpdateValues['PrincipalRefund'];
-                                        }
-
-                                        if ($aUpdateValues['Shipping'] != 0) {
-                                            $fShipping = $aUpdateValues['Shipping'];
-                                        }
-                                        if ($aUpdateValues['ShippingRefund'] != 0) {
-                                            $fShippingRefund = $aUpdateValues['ShippingRefund'];
-                                        }
-
                                         unset ($aUpdateValues['Refund']);
                                         unset($aUpdateValues['Rows']);
                                         unset($aUpdateValues['PrincipalRefund']);
@@ -1006,5 +969,91 @@ class classAmazonMWS
             if (!empty($this->error)) return $this;
         }
         return $this;
+    }
+
+    /**
+     * @param classOrderGroup $oOrderGroup
+     */
+    public function shipOrderGroupByAmazon($oOrderGroup, $sAmazonShippingMethodSelect)
+    {
+        $oOrder = $oOrderGroup->getOrderInstance();
+        $address = new FBAOutboundServiceMWS_Model_Address();
+
+        $address->setName($oOrder->getClientShippingName());
+        $address->setLine1($oOrder->getField('s_address'));
+        $address->setCity($oOrder->getField('s_city'));
+        $address->setStateOrProvinceCode($oOrder->getField('s_state'));
+        $address->setCountryCode($oOrder->getField('s_country'));
+        $address->setPostalCode($oOrder->getField('s_zipcode'));
+        $sPhone = $oOrder->getField('phone');
+        if (!empty($sPhone))
+            $address->setPhoneNumber($sPhone);
+
+        $aProducts = $oOrderGroup->getOrderGroupProducts();
+        if (!empty($aProducts)) {
+            $list = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
+
+            foreach ($aProducts as $oProduct) {
+                $item = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
+                $item->setSellerSKU($oProduct->getSKU());
+                $item->setSellerFulfillmentOrderItemId($oProduct->getSKU());
+                $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($oOrderGroup->getOrderId(), $oProduct->getProductId());
+                $iAmount = 0;
+                foreach ($aOrderDetails as $oOrderDetail) {
+                    $iAmount+=$oOrderDetail->getAmount();
+                }
+                $item->setQuantity($iAmount);
+                $list->withmember($item);
+            }
+
+            $req = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest();
+            $req->setSellerId(MERCHANT_ID);
+            $req->setSellerFulfillmentOrderId($oOrderGroup->getAmazonShippingOrderId());
+            $req->setDisplayableOrderId($oOrderGroup->getAmazonShippingOrderId());
+            $req->setFulfillmentAction('Ship');
+            $req->setFulfillmentPolicy('FillOrKill');
+
+            $req->setDisplayableOrderDateTime($oOrder->getOrderDate(DateTime::ISO8601));
+            $sDisplayAmazonOrderComment = self::DEFAULT_ORDER_MESSAGE;
+            $sAmazonShippingNotes = $oOrderGroup->getAmazonShipmentNotes();
+            if (!empty($sAmazonShippingNotes))
+                $sDisplayAmazonOrderComment = $sAmazonShippingNotes;
+            $sDisplayAmazonOrderComment = stripslashes($sDisplayAmazonOrderComment);
+
+            $req->setDisplayableOrderComment($sDisplayAmazonOrderComment);
+            $req->setShippingSpeedCategory($sAmazonShippingMethodSelect);
+            $req->setDestinationAddress($address);
+
+            $req->setItems($list); var_dump($req);
+
+            try {
+                $response = $this->oMWSService->CreateFulfillmentOrder($req);
+
+                $log = "Ship by Amazon. AmazonShippingOrderId: ".$oOrderGroup->getAmazonShippingOrderId()."\n";
+                $log .= "DisplayableOrderComment: ".$sDisplayAmazonOrderComment."\n";
+                $log .= "ShippingSpeedCategory: ".$sAmazonShippingMethodSelect."\n";
+                $log .= "Amazon MWS Service Response\n";
+                $log .="==========================================  ===================================\n";
+                $dom = new DOMDocument();
+                $dom->loadXML($response->toXML());
+                $dom->preserveWhiteSpace = false;
+                $dom->formatOutput = true;
+                //$log .= $dom->saveXML();
+                $log .="ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n";
+
+                $oOrderGroup->updateField('amz_fullfilment_order_placed','Y');
+
+            } catch (FBAOutboundServiceMWS_Exception $ex) {
+                $log = "Caught Exception: " . $ex->getMessage() . "\n";
+                $log .="Response Status Code: " . $ex->getStatusCode() . "\n";
+                $log .="Error Code: " . $ex->getErrorCode() . "\n";
+                $log .="Error Type: " . $ex->getErrorType() . "\n";
+                $log .="Request ID: " . $ex->getRequestId() . "\n";
+                $log .="XML: " . $ex->getXML() . "\n";
+                $log .="ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n";
+            }
+            global $login;
+            func_log_order($oOrderGroup->getOrderId(),'X',nl2br($log), $login);
+        }
     }
 }

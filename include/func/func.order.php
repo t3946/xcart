@@ -93,6 +93,10 @@ function func_get_shipping_groups($orderid) {
 		foreach ($return as $m_id => $group) {
 			$return[$m_id]["tracking"] = unserialize($group["tracking"]);
 
+			global $xcart_dir;
+			require_once $xcart_dir ."/include/class/classOrderGroup.php";
+			$return[$m_id]['oOrderGroup'] = new classOrderGroup(['manufacturerid'=>$m_id, 'orderid'=>$orderid]);
+
 
 #
 ## Fix for old tracking
