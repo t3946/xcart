@@ -1042,6 +1042,7 @@ class classAmazonMWS
                 $log .="ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n";
 
                 $oOrderGroup->updateField('amz_fullfilment_order_placed','Y');
+                $oOrderGroup->changeOrderGroupStatusDC('L');
 
             } catch (FBAOutboundServiceMWS_Exception $ex) {
                 $log = "Caught Exception: " . $ex->getMessage() . "\n";
