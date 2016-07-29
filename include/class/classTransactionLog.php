@@ -27,7 +27,17 @@ class classTransactionLog extends classData
         return nl2br($result);
     }
 
-    public function insertTransactionLog(classOrderTransaction $oTransaction) {
+    public function getLogLines()
+    {
+        return $this->aLogLines;
+    }
+
+    public function insertTransactionLog(classOrderTransaction $oTransaction ) {
+        global $login;
+        $aResponse = $oTransaction->getTransactionResult();
+        if (!empty($aResponse))
+            $aResponse['xcart_log'] = $this->getLogText();
+        else $aResponse = $this->getLogLines();
         $this->fillPrimaryTableValues([
             'orderid'=>$oTransaction->getField('orderid'),
             'paymentid'=>$oTransaction->getField('paymentid'),
@@ -36,8 +46,8 @@ class classTransactionLog extends classData
             'transaction_currency'=>$oTransaction->getField('transaction_currency'),
             'transaction_total'=>$oTransaction->getField('transaction_amount'),
             'date'=>time(),
-            'login'=>$oTransaction->getField('login'),
-            'transaction_log'=>$oTransaction->getField('transaction_response')
+            'login'=>$login,
+            'transaction_log'=> addslashes(serialize($aResponse))
         ]);
         $this->_insert();
     }

@@ -11,9 +11,10 @@ class classPaypal
 
     private function fetchPayPalToken()
     {
+        x_load('order');
         $this->sAccessToken = func_paypal_get_access_token();
         if (empty($this->sAccessToken))
-            throw new Exception('Access_Token - failed');
+            throw new Exception('Paypal Access Token - failed');
     }
 
     public function captureTransaction($authorized_transaction_id, $data_arr)

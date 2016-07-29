@@ -2,7 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classPaypal.php";
-require_once $xcart_dir . "/include/class/classOrder.php";
+require_once $xcart_dir . "/include/class/classOrders.php";
 require_once $xcart_dir . "/include/class/classTransactionLog.php";
 
 class classOrderTransaction extends classData
@@ -14,11 +14,12 @@ class classOrderTransaction extends classData
         $this->sPrimaryTable = 'order_transactions';
         parent::__construct($aParams);
         $this->oTransactionLog = new classTransactionLog();
-
     }
 
     /**
-     * @param float $fSumma
+     * @param $fCaptureSumma
+     * @return classOrderTransaction
+     * @throws Exception
      */
     public function captureTransaction($fCaptureSumma)
     {
@@ -29,7 +30,8 @@ class classOrderTransaction extends classData
                 $oPaypal = new classPaypal();
             } catch (Exception $ex) {
                 $this->oTransactionLog->addNewLine($ex->getMessage());
-                return false;
+                $this->oTransactionLog->insertTransactionLog($this, false);
+                throw new Exception('Capture transaction ID:'.$this->getField('transaction_id').' - failed');
             }
             $oOrder = new classOrder($this->getField('orderid'));
 
@@ -38,7 +40,6 @@ class classOrderTransaction extends classData
             $data_arr["is_final_capture"] = true;
 
             $this->aTransactionResult = $oPaypal->captureTransaction($this->getField('transaction_id'), $aData);
-            $sTransactionLog = $this->oTransactionLog->getLogText();
 
             if (!empty($this->aTransactionResult["id"])) {
                 $this->oTransactionLog->addNewLine("Transaction: " . $this->getField('transaction_id') . " -> " . $this->aTransactionResult["id"]);
@@ -47,16 +48,20 @@ class classOrderTransaction extends classData
                     'date'=>time(),
                     'login'=>$login,
                     'transaction_status'=>$this->aTransactionResult['state'],
-                    'transaction_response'=> addslashes(serialize($this->aTransactionResult))
+                    'transaction_response'=> $this->getTransactionResult()
                 ]);
-            } else {
-                $capture_failed_flag = true;
             }
-            $this->aTransactionResult['xcart_log'] = $sTransactionLog;
             $this->oTransactionLog->insertTransactionLog($this);
             $this->oTransactionLog->insertOrderLog($this->getField('orderid'));
 
+            if (empty($this->aTransactionResult["id"])) throw new Exception('Capture transaction ID:'.$this->getField('transaction_id').' - failed');
         }
+        return $this;
+    }
+
+    public function getTransactionResult()
+    {
+        return $this->aTransactionResult;
     }
 
     public function getTransactionAmount()
