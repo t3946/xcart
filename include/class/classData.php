@@ -26,18 +26,20 @@ class classData
         $this->oSQL = new classSQLBuilder();
     }
 
-    protected function _clone() {
+    protected function _clone()
+    {
         return clone $this;
     }
 
-    public function _insert($is_replace = false) {
+    public function _insert($is_replace = false)
+    {
         func_array2insert($this->sPrimaryTable, $this->aPrimaryTableValue, $is_replace);
     }
 
     protected function fillPrimaryTableInfo()
     {
         if (!empty($this->aPrimaryKeysValues))
-            $this->aPrimaryTableValue = func_query_first("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
+            $this->aPrimaryTableValue = func_query_first("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . str_replace('&', ' AND ', http_build_query($this->aPrimaryKeysValues)));
     }
 
     public function fillPrimaryTableValues($aValues)
@@ -80,6 +82,7 @@ class classData
     {
         foreach ($aFieldNamesValues as $key => $value)
             $this->aPrimaryTableValue[$key] = $value;
+        return $this;
     }
 
     public function updateField($sFieldName, $sNewValue)
@@ -88,14 +91,18 @@ class classData
         $aToUpdate[$sFieldName] = $sNewValue;
         if (empty($this->aPrimaryKeysValues))
             throw new Exception('Empty primary keys values for update field');
-        func_array2update($this->sPrimaryTable, $aToUpdate, str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
+        func_array2update($this->sPrimaryTable, $aToUpdate, str_replace('&', ' AND ', http_build_query($this->aPrimaryKeysValues)));
+        return $this;
     }
 
-    public function updateFields($aFieldNamesValues)
+    public function updateFields($aFieldNamesValues = [])
     {
-        $this->setFields($aFieldNamesValues);
-        if (empty($this->aPrimaryKeysValues))
-            throw new Exception('Empty primary keys values for update fields');
-        func_array2update($this->sPrimaryTable, $aFieldNamesValues, str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
+        if (!empty($aFieldNamesValues)) {
+            $this->setFields($aFieldNamesValues);
+            if (empty($this->aPrimaryKeysValues))
+                throw new Exception('Empty primary keys values for update fields');
+            func_array2update($this->sPrimaryTable, $aFieldNamesValues, str_replace('&', ' AND ', http_build_query($this->aPrimaryKeysValues)));
+        }
+        return $this;
     }
 }
