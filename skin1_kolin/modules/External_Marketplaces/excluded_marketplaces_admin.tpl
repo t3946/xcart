@@ -1,4 +1,6 @@
+{if $show_button}
 <input type="hidden" name="mode" value="excluded_marketplace" />
+{/if}
 <table cellpadding="3" cellspacing="1" width="100%">
     <tr>
         <td style="vertical-align: top;" width="20%" class="FormButton">Excluded marketplaces:</td>
