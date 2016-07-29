@@ -329,7 +329,16 @@ if ($REQUEST_METHOD == "POST") {
 		func_refresh("Product_questions", "#Product_questions");
 	}
 
-
+	if ($mode == "excluded_marketplace" && $productid) {
+		global $xcart_dir;
+		require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
+		classDisabledMarketPlace::deleteAllDisabledMarketPlace($productid, 'P');
+		foreach($excluded_marketplaces as $iExcludedMarketplace) {
+			$oMarketPlace = new classDisabledMarketPlace();
+			$oMarketPlace->fillPrimaryTableValues(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $productid, 'resource_type'=>'P']);
+			$oMarketPlace->addDisabledMarketPlace();
+		}
+	}
 	#
 	# Delete product thumbnail
 	#
@@ -1466,14 +1475,33 @@ if ($product_info['clone_parent_productid'] > 0) {
 	$aParentProduct = $classProduct->getProductInfo($product_info['clone_parent_productid']);
 	$product_info["parent_product"] = $aParentProduct;
 } else {
-	$aChildProducts = $classProduct->getChildProducts($product_info['productid']);
-	if (isset($aChildProducts) && !empty($aChildProducts)) {
-		$product_info["child_products"] = $aChildProducts;
+	if (!empty($product_info['productid'])) {
+		$aChildProducts = $classProduct->getChildProducts($product_info['productid']);
+		if (isset($aChildProducts) && !empty($aChildProducts)) {
+			$product_info["child_products"] = $aChildProducts;
+		}
 	}
 }
 
 unset($classProduct);
 unset($aParentProduct);
+
+global $xcart_dir;
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
+$aMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
+$aExternalMarketplaces = [];
+if (!empty($aMarketplaces)) {
+	foreach ($aMarketplaces as $oMarketPlace) {
+		$aExternalMarketplaces['values'][] = $oMarketPlace->getMarketPlaceId();
+		$aExternalMarketplaces['names'][] = $oMarketPlace->getMarketPlaceName();
+	}
+}
+$smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
+if (!empty($product_info['productid'])) {
+$aDisabledMarketPlaces = classDisabledMarketPlace::getDisabledMarketPlaces($product_info['productid'], 'P');
+$smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
+}
 
 $smarty->assign("product", $product_info);
 $smarty->assign("productid", $product_info["productid"]);

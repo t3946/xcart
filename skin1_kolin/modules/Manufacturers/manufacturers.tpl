@@ -94,6 +94,18 @@ tinymce.init({
 <br /><br />
 
 {if $mode ne "manufacturer_info"}
+{capture name=dialogsearch}
+<form action="manufacturers.php" method="get" name="search_manufacturer">
+<table cellpadding="3" cellspacing="1" width="100%">
+    <tr>
+        <td width="100">
+            <input name="search" type="text" />
+        </td>
+        <td> <input type="submit" value="Search"/></td>
+    </tr>
+</table>
+</form>
+{/capture}
 
 {capture name=dialog}
 
@@ -226,7 +238,11 @@ checkboxes = new Array({foreach from=$manufacturers item=v key=k}{if $k > 0},{/i
 {include file="customer/main/navigation.tpl"}
 
 {/capture}
-{include file="dialog.tpl" title=$lng.lbl_manufacturers_list content=$smarty.capture.dialog extra='width="100%"'}
+
+    {include file="dialog.tpl" title="Search distributor" content=$smarty.capture.dialogsearch extra='width="100%"'}
+    <br/>
+    <br/>
+    {include file="dialog.tpl" title=$lng.lbl_manufacturers_list content=$smarty.capture.dialog extra='width="100%"'}
 
 {else}
 
@@ -1476,6 +1492,16 @@ and lasts <input type="text" name="d_warranty_last_day" value="{$manufacturer.d_
 </select>
         </td>
 </tr>
+{if $manufacturer.d_bulk_or_individual_order_payments eq "distributor_charges_for_each_order_twice_one_charge_for_products_and_one_charge_for_shipping"}
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="FormButton" width="80%">
+            <label style="position: relative; bottom: 3px;" for="distributor_charges_for_each_order_twice_and_split_invoices" >Split invoices (by Cost + Tax and Shipping)</label>
+            <input id="distributor_charges_for_each_order_twice_and_split_invoices" type="checkbox" name="distributor_charges_for_each_order_twice_and_split_invoices" {if $manufacturer.distributor_charges_for_each_order_twice_and_split_invoices == 'Y'}checked="checked"{/if} value="Y"/>
+        </td>
+    </tr>
+{/if}
 
 <tr>
         <td width="20%" class="FormButton">Search keyphrase for reconciliation</td>
@@ -2040,14 +2066,21 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
 {elseif $d_section.distributor_section eq "31"}
     <table width="100%" cellpadding="3" cellspacing="1" id="distributor_section_id_31" {if $distributor_section ne "31"}style="display: none;" {/if}>
         <tr>
-            <td colspan="2" class="FormButton">Products are always verified:</td>
+            <td colspan="2" class="FormButton">Tick the checkbox if product verification is NOT required:</td>
             <td><input style="margin:0;" type="checkbox" {if ($manufacturer.products_always_verify=='Y')}checked="checked"{/if} value="Y" name="products_always_verify"></td>
         </tr>
         <tr>
-            <td colspan="2" class="FormButton">Days before products verification:</td>
+            <td colspan="2" class="FormButton">How long (in days) product verification remains valid?</td>
             <td><input type="text" value="{$manufacturer.days_before_verify}" name="products_days_before_verify"></td>
         </tr>
     </table>
+{elseif $d_section.distributor_section eq "40"}
+    <div {if $distributor_section ne "40"}style="display: none;" {/if}>
+        {if $distributor_section eq "40"}
+            <input type="hidden" name="mode" value="excluded_marketplace" />
+        {/if}
+    {include file="modules/External_Marketplaces/excluded_marketplaces_admin.tpl"}
+    </div>
 {elseif $d_section.distributor_section eq "30"}
     <table class="SubHeader" width="100%" cellspacing="0" {if $distributor_section ne "30"}style="display: none;" {/if}>
         <tbody>

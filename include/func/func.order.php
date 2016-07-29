@@ -93,6 +93,10 @@ function func_get_shipping_groups($orderid) {
 		foreach ($return as $m_id => $group) {
 			$return[$m_id]["tracking"] = unserialize($group["tracking"]);
 
+			global $xcart_dir;
+			require_once $xcart_dir ."/include/class/classOrderGroup.php";
+			$return[$m_id]['oOrderGroup'] = new classOrderGroup(['manufacturerid'=>$m_id, 'orderid'=>$orderid]);
+
 
 #
 ## Fix for old tracking
@@ -724,10 +728,10 @@ function func_order_data($orderid) {
 
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classProducts.php";
-		$classProduct = new classProducts();
-		$mpn = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
-		unset($classProduct);
+		$classProduct = new classProduct($v['productid']);
+		$mpn = $classProduct->getMPN();
 		$v["mpn"] = $mpn;
+		$v["oProduct"] = $classProduct;
 
 /*#
 ##
@@ -1371,6 +1375,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                                 $insert_data["s_zipcode"] = $currect_s_zipcode;
                         }
                 }
+###
+##
+#
 
 
 
@@ -1535,6 +1542,7 @@ die("123");
 				$insert_data = array (
 					'orderid' => $orderid,
 					'productid' => $product['productid'],
+					'item_cost_to_us' => $product["cost_to_us"],
 					'product' => addslashes($product['product_orig']),
 					'product_options' => addslashes($product['product_options']),
 					'amount' => $product['amount'],
@@ -1576,7 +1584,7 @@ die("123");
 			}
 # START: random:20341 [2010 Jul 29 14:46] 
 			$current_order['shipping_groups'][func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid'])]['products'][] = $product;
-# END: random:20341 [2010 Jul 29 14:46]
+# END: random:20341 [2010 Jul 29 14:46] 
 
 			global $xcart_dir;
 			include_once $xcart_dir."/include/class/classProducts.php";
@@ -2450,7 +2458,7 @@ function func_get_order_manufacturers($orderid){
 				$mnfs[$m_id]["backorder_decision_request_message"] = $backorder_decision_request_message;
 */
 				
-				$mnfs[$m_id]["d_website_search_for_sku_url"] =  str_replace("{{mpn}}", "---mpn---", $mnfs[$m_id]["d_website_search_for_sku_url"]); 
+				$mnfs[$m_id]["d_website_search_for_sku_url"] =  str_replace("{{mpn}}", "---mpn---", $mnfs[$m_id]["d_website_search_for_sku_url"]);
 				$mnfs[$m_id]["d_link_to_order_distributors_website"] =  str_replace("{{orderid}}", $order["order_prefix"].$orderid, $mnfs[$m_id]["d_link_to_order_distributors_website"]); 
 ###
 
@@ -4563,11 +4571,19 @@ function func_other_customer_orders($email, $orderid = 0){
 ###
 
 function func_paypal_get_access_token(){
+	global $config;
 
-	$USERPWD_username_ClientId = "AVh--5P-zV8NIvZUKSfuckOWVjj9u6K_zRXPRfhns5KK2zJZuTGo1-0c7Q00dlvJr7IHvBlJQq7M7401"; 
-	$USERPWD_password_Secret = "EKJXWfXaHLJID0rUkPRP4BT7nSkUuGLB0QZE_yVJlX7AmM7crVQJvyMFakW2PHtTcOWB8X5kLkx_2_1o";
+	$USERPWD_username_ClientId = $config['Paypal_API']['live_client_id'];
+	$USERPWD_password_Secret = $config['Paypal_API']['live_secret_key'];
+	$paypalUrl = "https://api.paypal.com";
 
-	$url = "https://api.paypal.com/v1/oauth2/token";
+	if ($config['Paypal_API']['debug_mode'] == "Y") {
+		$USERPWD_username_ClientId = $config['Paypal_API']['sandbox_client_id'];
+		$USERPWD_password_Secret = $config['Paypal_API']['sandbox_secret_key'];
+		$paypalUrl = "https://api.sandbox.paypal.com";
+	}
+
+	$url = $paypalUrl."/v1/oauth2/token";
 
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json","Accept-Language: en_US"));
@@ -4607,7 +4623,15 @@ Use this resource to capture and process a previously created authorization. To 
 function func_paypal_capture($Access_Token, $Authorization_Id, $data_arr){
 
 	$data_json = json_encode($data_arr);
-	$url = "https://api.paypal.com/v1/payments/authorization/$Authorization_Id/capture";
+
+	global $config;
+
+	$paypalUrl = "https://api.paypal.com";
+	if ($config['Paypal_API']['debug_mode'] == "Y") {
+		$paypalUrl = "https://api.sandbox.paypal.com";
+	}
+
+	$url = $paypalUrl."/v1/payments/authorization/$Authorization_Id/capture";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
@@ -4636,7 +4660,13 @@ function func_paypal_capture($Access_Token, $Authorization_Id, $data_arr){
 function func_paypal_refund($Access_Token, $Authorization_Id, $data_arr){
 
         $data_json = json_encode($data_arr);
-        $url = "https://api.paypal.com/v1/payments/sale/$Authorization_Id/refund";
+
+		global $config;
+		$paypalUrl = "https://api.paypal.com";
+		if ($config['Paypal_API']['debug_mode'] == "Y") {
+			$paypalUrl = "https://api.sandbox.paypal.com";
+		}
+        $url = $paypalUrl."/v1/payments/sale/$Authorization_Id/refund";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
@@ -4669,7 +4699,12 @@ Use this call to void a previously authorized payment.
 */
 function func_paypal_void($Access_Token, $Authorization_Id){
 
-	$url = "https://api.paypal.com/v1/payments/authorization/$Authorization_Id/void";
+		global $config;
+		$paypalUrl = "https://api.paypal.com";
+		if ($config['Paypal_API']['debug_mode'] == "Y") {
+			$paypalUrl = "https://api.sandbox.paypal.com";
+		}
+		$url = $paypalUrl."/v1/payments/authorization/$Authorization_Id/void";
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -4693,7 +4728,12 @@ You can reauthorize a payment only once 4 to 29 days after 3-day honor period fo
 function func_paypal_reauthorize($Access_Token, $Authorization_Id, $data_arr){
 
         $data_json = json_encode($data_arr);
-        $url = "https://api.paypal.com/v1/payments/authorization/$Authorization_Id/reauthorize";
+		global $config;
+		$paypalUrl = "https://api.paypal.com";
+		if ($config['Paypal_API']['debug_mode'] == "Y") {
+			$paypalUrl = "https://api.sandbox.paypal.com";
+		}
+		$url = $paypalUrl."/v1/payments/authorization/$Authorization_Id/reauthorize";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
@@ -4715,7 +4755,12 @@ Depending on the payment_method and the funding_instrument, you can use the paym
 */
 function func_paypal_create_payment($Access_Token, $data_json){
 
-        $url = "https://api.paypal.com/v1/payments/payment";
+		global $config;
+		$paypalUrl = "https://api.paypal.com";
+		if ($config['Paypal_API']['debug_mode'] == "Y") {
+			$paypalUrl = "https://api.sandbox.paypal.com";
+		}
+		$url = $paypalUrl."/v1/payments/payment";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
@@ -4743,7 +4788,13 @@ transaction_types:
  capture - Use this call to get details about a captured payment.
 */
 
-        $url = "https://api.paypal.com/v1/payments/$transaction_type/$Authorization_Id";
+		global $config;
+		$paypalUrl = "https://api.paypal.com";
+		if ($config['Paypal_API']['debug_mode'] == "Y") {
+			$paypalUrl = "https://api.sandbox.paypal.com";
+		}
+
+		$url = $paypalUrl."/v1/payments/$transaction_type/$Authorization_Id";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));

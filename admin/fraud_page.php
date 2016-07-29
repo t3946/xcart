@@ -271,6 +271,10 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                                 ) {
                                     func_change_order_group_status($orderid, $m_id, 'R');
                                 }
+
+                                require_once $xcart_dir . "/include/class/classOrders.php";
+                                $oOrder = new classOrder($orderid);
+                                $oOrder->recalculateAccounting();
                         }
 
 
@@ -479,6 +483,16 @@ if (!$curl_err){
                                                                 }
                                                         }
                                                 }
+                                }
+                                if ($config["Autosubmit_orderentry_operator"]["Order_shipping_method_carrier"] == "Y") {
+                                    include_once $xcart_dir . "/include/class/classShippings.php";
+                                    foreach ($order['shipping_groups'] as $k_group => $v_group){
+                                        $classShipping = new classShipping($v_group['shippingid']);
+                                        if ($classShipping->getField('code') == 'Amazon') {
+                                            $allow_send_to_operator = false;
+                                            break;
+                                        }
+                                    }
                                 }
 
                                 if ($config["Autosubmit_orderentry_operator"]["Customer_notes_field_is_NOT_empty"] == "Y" && !empty($order["customer_notes"])){

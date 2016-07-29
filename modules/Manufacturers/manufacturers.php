@@ -100,6 +100,18 @@ if ($REQUEST_METHOD == "POST" && $mode == "add_new_line" && $manufacturerid){
 	func_header_location("manufacturers.php?manufacturerid=".$manufacturerid .($distributor_section ? "&distributor_section=".$distributor_section : ""));
 }
 
+if ($REQUEST_METHOD == "POST" && $mode == "excluded_marketplace" && $manufacturerid){
+	global $xcart_dir;
+	require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
+	classDisabledMarketPlace::deleteAllDisabledMarketPlace($manufacturerid, 'D');
+	if (!empty($excluded_marketplaces))
+	foreach($excluded_marketplaces as $iExcludedMarketplace) {
+		$oMarketPlace = new classDisabledMarketPlace();
+		$oMarketPlace->fillPrimaryTableValues(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $manufacturerid, 'resource_type' => 'D']);
+		$oMarketPlace->addDisabledMarketPlace();
+	}
+}
+
 if ($REQUEST_METHOD == "POST" && $mode == "add_distributor_return_address" && $manufacturerid){
 	db_query("INSERT INTO $sql_tbl[distributor_return_address] (manufacturerid) VALUES ('$manufacturerid')");
         $top_message["content"] = 'Added';
@@ -364,6 +376,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"d_we_pay_to_distributor_by" => addslashes($d_we_pay_to_distributor_by),
 				"d_net_payment_terms_in_days" => addslashes($d_net_payment_terms_in_days),
 				"d_bulk_or_individual_order_payments" => addslashes($d_bulk_or_individual_order_payments),
+				"distributor_charges_for_each_order_twice_and_split_invoices" => (empty($distributor_charges_for_each_order_twice_and_split_invoices))?'N':$distributor_charges_for_each_order_twice_and_split_invoices,
 
 				"d_available_on_distributor_site_checkbox" => addslashes($d_available_on_distributor_site_checkbox),
 				"d_sent_by_email_to" => addslashes($d_sent_by_email_to),
@@ -884,6 +897,14 @@ else {
 		$word = 'word=' . $word;
 	}
 
+	if (!empty($search)) {
+		$searchValue = addslashes($search);
+		if (empty($where))
+			$sqlPrefix = 'WHERE'; else $sqlPrefix = 'AND';
+		$where.= " $sqlPrefix (m.manufacturer LIKE '%$searchValue%' OR m.code LIKE '%$searchValue%')";
+		$word = 'search=' . $search;
+	}
+
 	if (!empty($active_modules['Multiple_Storefronts'])) {
 		$total_items = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[manufacturers] m $where");
 	} else {
@@ -939,7 +960,6 @@ else {
 			$products_in_manufacturers = func_query_hash("SELECT COUNT(*), manufacturerid FROM $sql_tbl[products] GROUP BY manufacturerid", 'manufacturerid', false, true);
 
 			foreach ($manufacturers as $k => $v) {
-				//$manufacturers[$k]["products_count"] = func_query_first_cell ("SELECT COUNT(*) FROM $sql_tbl[products] WHERE manufacturerid='$v[manufacturerid]'");
 				if (isset($products_in_manufacturers[$v['manufacturerid']])) {
 					$manufacturers[$k]["products_count"] = $products_in_manufacturers[$v['manufacturerid']];
 				}
@@ -1192,6 +1212,23 @@ if (!empty($page))
 		$smarty->assign("aChildManufacturers", $aChildManufacturers);
 	}
 
+	if ($distributor_section == "40") {
+		global $xcart_dir;
+		require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
+		require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
+		$aMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
+		$aExternalMarketplaces = [];
+		if (!empty($aMarketplaces)) {
+			foreach ($aMarketplaces as $oMarketPlace) {
+				$aExternalMarketplaces['values'][] = $oMarketPlace->getMarketPlaceId();
+				$aExternalMarketplaces['names'][] = $oMarketPlace->getMarketPlaceName();
+			}
+		}
+		$aDisabledMarketPlaces = classDisabledMarketPlace::getDisabledMarketPlaces($manufacturerid, 'D');
+		$smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
+		$smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
+	}
+
 //func_print_r($supplier_feeds_info_I, $supplier_feeds_info_P);
 
 
@@ -1224,6 +1261,12 @@ if ($distributor_section == "18"){
 		'title'  => 'Product verification settings',
 		'order_by' => '180',
 		'distributor_section' => '31'
+	);
+	
+	$distributor_sections[] = array(
+		'title'  => 'External marketplaces',
+		'order_by' => '180',
+		'distributor_section' => '40'
 	);
 
 

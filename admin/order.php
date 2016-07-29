@@ -281,27 +281,10 @@ if ($REQUEST_METHOD == "GET") {
 
 		$new_orderid = func_array2insert('orders', $insert_data);
 
-                $order_groups_table = func_query("SELECT * FROM $sql_tbl[order_groups] WHERE orderid='$orderid'");
+        $order_groups_table = func_query("SELECT * FROM $sql_tbl[order_groups] WHERE orderid='$orderid'");
 
 		if (!empty($order_groups_table) && is_array($order_groups_table)){
 			foreach($order_groups_table as $k => $v){
-
-/*
-				$accounting = unserialize($v['accounting']);
-				if (!empty($accounting[1]) && is_array($accounting[1])){
-					$accounting[1]["net"] = 0;
-					$accounting[1]["gst"] = 0;
-					$accounting[1]["pst"] = 0;
-					$accounting[1]["gross"] = 0;
-					$accounting[1]["filled"] = "Y";
-
-					$v['accounting'] = serialize($accounting);
-
-//					unset($v['accounting']);
-				}
-*/
-//func_print_r($v['accounting'], $accounting);
-//die();
 
 	                	$insert_data2 = array (
         	                	'orderid' => $new_orderid,
@@ -408,49 +391,13 @@ if ($REQUEST_METHOD == "GET") {
                         }
                 }
 
-/*
-//		$order_fraud_checks_manual = func_query("SELECT * FROM $sql_tbl[order_fraud_checks] WHERE orderid='$orderid' AND manual_action!=''");
-		$order_fraud_checks = func_query("SELECT * FROM $sql_tbl[order_fraud_checks] WHERE orderid='$orderid'");
-
-		if (!empty($order_fraud_checks)){
-			foreach ($order_fraud_checks as $k => $v) {
-				if (!empty($v) && is_array($v)){
-
-					$fields_arr = array();
-					$values_arr = array();
-
-					foreach ($v as $field => $val){
-						if ($field != "id" && $field != 'orderid'){
-							$fields_arr[] = $field;
-							$values_arr[] = "'".addslashes($val)."'";
-						}
-					}
-
-					if (!empty($fields_arr)){
-						$fields_arr[] = "orderid";
-						$values_arr[] = "'".$new_orderid."'";
-
-						$query = "INSERT INTO xcart_order_fraud_checks (".implode(",",$fields_arr).") VALUES (".implode(",",$values_arr).")";
-						db_query($query);
-					}
-
-					unset($fields_arr);
-					unset($values_arr);
-				}
-			}
-		}
-*/
-
-
                 $log = 'This order has been cloned from <a style="color: #1411FF;" href="order.php?orderid='.$orderid.'" target="_blank">'.$order_table['order_prefix'].$orderid.'</a>';
                 func_log_order($new_orderid, 'S', $log, $login);
-
-
 
 #
 ##
 ###
-                $date_sent = date("j-M-Y_H-i-s");
+            $date_sent = date("j-M-Y_H-i-s");
 	        $order_prefix = $order_table['order_prefix'];
         	$subj = $order_prefix.$new_orderid.": This order has been cloned from ".$order_prefix.$orderid . " (posted on ".$date_sent.")";
 	        $body = $subj;
@@ -497,8 +444,6 @@ if ($REQUEST_METHOD == "POST") {
 ##
 ###
 if ($REQUEST_METHOD == "POST" && ($mode == "rma_send_email_to_customer" || $mode == "rma_update_request") && !empty($rma_id) && !empty($orderid)){
-
-//                db_query("UPDATE $sql_tbl[rmas] SET explanation='$post_rma[explanation]', order_email='$post_rma[order_email]' WHERE rma_id='$rma_id'");
 
 		$rma_query_data = array(
 			"explanation" => $post_rma["explanation"],
@@ -590,17 +535,8 @@ if ($REQUEST_METHOD == "POST" && ($mode == "rma_send_email_to_customer" || $mode
                                 }
                         }
                 }
-###
-##
-#
-
 
 		if ($mode == "rma_send_email_to_customer" && !empty($post_rma["order_email"])){
-
-	//              $mail_smarty->assign("products", $order['products']);
-	//              $mail_smarty->assign("order", $order['order']);
-	//              $mail_smarty->assign("userinfo", $order['userinfo']);
-
 
 			$signature = func_get_signature($order_data["order"]["storefrontid"]);
 			$cur_storefront_info = func_get_storefront_info($order_data["order"]["storefrontid"]);
@@ -620,8 +556,8 @@ if ($REQUEST_METHOD == "POST" && ($mode == "rma_send_email_to_customer" || $mode
 			$subj = str_replace("{{orderid}}", $order_data["order"]["order_prefix"].$orderid, $subj);
 			$mail_smarty->assign("subj", $subj);
 
-	                func_send_mail($post_rma["order_email"], "mail/simple_email_subj.tpl", "mail/simple_email_body.tpl", $config["RMA_options"]["RMA_from"], false, false, false, false, "", "RMA_id_".$rma_id, false);
-        	        func_send_mail($config["RMA_options"]["RMA_cc"], "mail/simple_email_subj.tpl", "mail/simple_email_body.tpl", $config["RMA_options"]["RMA_from"], false, false, false, false, "", "RMA_id_".$rma_id, false);
+	        func_send_mail($post_rma["order_email"], "mail/simple_email_subj.tpl", "mail/simple_email_body.tpl", $config["RMA_options"]["RMA_from"], false, false, false, false, "", "RMA_id_".$rma_id, false);
+        	func_send_mail($config["RMA_options"]["RMA_cc"], "mail/simple_email_subj.tpl", "mail/simple_email_body.tpl", $config["RMA_options"]["RMA_from"], false, false, false, false, "", "RMA_id_".$rma_id, false);
 		}
 
 	        func_header_location("order.php?orderid=".$orderid."&target_rma=".$rma_id."&tab=y#main_order_tabs-RMA");
@@ -633,22 +569,21 @@ if ($REQUEST_METHOD == "POST" && $mode == "create_rma_request" && !empty($orderi
 	$rma_number = func_query_first_cell("SELECT MAX(rma_number) FROM $sql_tbl[rmas] WHERE orderid='$orderid'") + 1;
 
 	db_query("INSERT INTO $sql_tbl[rmas] (orderid, zipcode, email, date, status, rma_number) VALUES ('$orderid', '".$order_data["order"]["s_zipcode"]."', '".$order_data["order"]["email"]."', '".time()."', '2', '$rma_number')");
-	$rma_id = db_insert_id(); 
+	$rma_id = db_insert_id();
 
 
-        if (!empty($config["RMA_options"]["RMA_Attention_tag"])){
+	if (!empty($config["RMA_options"]["RMA_Attention_tag"])) {
 
-                        $is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='".$config["RMA_options"]["RMA_Attention_tag"]."'");
-                        if (empty($is_such_tag_in_db)){
-                                db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('".$config["RMA_options"]["RMA_Attention_tag"]."','$orderid')");
+		$is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["RMA_options"]["RMA_Attention_tag"] . "'");
+		if (empty($is_such_tag_in_db)) {
+			db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('" . $config["RMA_options"]["RMA_Attention_tag"] . "','$orderid')");
 
-                                $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='".$config["RMA_options"]["RMA_Attention_tag"]."'");
-                                $log = "<br />'".$tag_name."' attention tag added";
-                                func_log_order($orderid, 'X', $log, $login);
-                        }
+			$tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='" . $config["RMA_options"]["RMA_Attention_tag"] . "'");
+			$log = "<br />'" . $tag_name . "' attention tag added";
+			func_log_order($orderid, 'X', $log, $login);
+		}
 
-        }
-
+	}
 
 	func_header_location("order.php?orderid=".$orderid."&target_rma=".$rma_id."&tab=y#main_order_tabs-RMA");
 }
@@ -761,10 +696,6 @@ if (empty($ticket_resolver_link)){
 
 if ($REQUEST_METHOD == "POST") {
 
-//func_print_r($_POST);
-//die();
-
-
 if ($mode == "submit_message" && !empty($notes) && !empty($orderid)) {
 
         $section_name = "main_order_tabs-logs";
@@ -834,112 +765,6 @@ if ($mode == "order_edit_apply") {
         x_session_save("section_name");
         func_log_order($orderid, 'X', $log, $login);
 
-#
-##
-###
-/*
-        if (!empty($orderid)){
-
-		$log = "";
-        	$current_vt_paymentid = func_query_first_cell("SELECT vt_paymentid FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-		if ($current_vt_paymentid != $vt_paymentid && !empty($vt_paymentid)){
-
-			$current_vt_paymentid_name = func_query_first_cell("SELECT payment_method FROM $sql_tbl[payment_methods] WHERE paymentid='$current_vt_paymentid'");
-			$vt_paymentid_name = func_query_first_cell("SELECT payment_method FROM $sql_tbl[payment_methods] WHERE paymentid='$vt_paymentid'");
-
-	                $log .= "Payment method: " . $current_vt_paymentid_name . " -> " . $vt_paymentid_name;
-		}
-
-		$current_transaction_id_link = func_query_first_cell("SELECT transaction_id_link FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-                if ($current_transaction_id_link != $transaction_id_link){
-                        $log .= "<br />Transaction ID: " . $current_transaction_id_link . " -> " . $transaction_id_link;
-
-			$payment_transaction_id_link = func_query_first_cell("SELECT transaction_id_link FROM $sql_tbl[payment_methods] WHERE paymentid='$vt_paymentid'");
-			if (!empty($payment_transaction_id_link)){
-				$payment_transaction_id_link = str_replace("{{trans-id}}", $transaction_id_link, $payment_transaction_id_link);
-				$log .= "<br /><a href='".$payment_transaction_id_link."' target='_blank' style='color: #1411FF;'>Link to ".$vt_paymentid_name." virtual terminal transaction</a>";
-
-#
-##
-				if (!empty($vt_paymentid) && in_array($vt_paymentid, array('100','5'))){
-					# 5 - PayPal VT
-					# 100 - Pay with PayPal
-
-					$transaction_id = $transaction_id_link;
-
-					$cb_status_code = "AP";
-					if (!empty($groups) && is_array($groups)){
-						foreach ($groups as $kg => $vg){
-							$cb_status_code = $vg["cb_status"];
-							break;
-						}
-					}
-					$transaction_status = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$cb_status_code'");
-					$transaction_currency = 'USD';
-					$transaction_total = func_query_first_cell("SELECT total FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-
-					$result["xcart_log"] = "Manual authorization<br />".$log."<br />AVS code: $avs_code";
-					$result["FIELD_transaction_id"] = $transaction_id;
-					$result["FIELD_transaction_status"] = $transaction_status;
-					$result["FIELD_transaction_currency"] = $transaction_currency;
-					$result["FIELD_transaction_total"] = $transaction_total;
-
-					$serialize_result = serialize($result);
-
-					db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '$vt_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($serialize_result)."')");
-
-					func_log_order($orderid, 'PP', $serialize_result, $login);
-
-
-			                $transaction_log = "";
-			                $Access_Token = func_paypal_get_access_token();
-			                if (!empty($Access_Token)){
-
-			                        $transaction_type = "authorization";
-                        			if (in_array($cb_status_code, array('P'))){
-			                                $transaction_type = "capture";
-			                        }
-
-			                        $result = func_paypal_look_up_payment($Access_Token, $transaction_id, $transaction_type);
-			                        $transaction_log = serialize($result);
-			                }
-
-					db_query("INSERT INTO $sql_tbl[order_transactions] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_amount, date, login, transaction_response) VALUE ('$orderid', '$vt_paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '".time()."', '$login', '".addslashes($transaction_log)."')");
-
-				}
-##
-#
-
-			}
-
-
-                }
-
-		$current_avs_code = func_query_first_cell("SELECT avs_code FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-                if ($current_avs_code != $avs_code){
-
-			$additional_avs_code_description = func_query_first_cell("SELECT description FROM $sql_tbl[avs_codes] WHERE code='".addslashes($avs_code)."'");
-			if (!empty($additional_avs_code_description)){
-				$additional_avs_code_description_txt = "(".$additional_avs_code_description.")";
-			} else $additional_avs_code_description_txt = "";
-
-                        $log .= "<br />AVS code: " . $current_avs_code . " -> " . $avs_code. " " . $additional_avs_code_description_txt;
-                }
-
-		if ($log != ""){
-//			db_query("UPDATE $sql_tbl[orders] SET vt_paymentid='$vt_paymentid', transaction_id_link='".addslashes($transaction_id_link)."', avs_code='".addslashes($avs_code)."' WHERE orderid='$orderid'");
-			db_query("UPDATE $sql_tbl[orders] SET vt_paymentid='$vt_paymentid', transaction_id_link='".$transaction_id_link."', avs_code='".$avs_code."' WHERE orderid='$orderid'");
-			func_log_order($orderid, 'S', $log, $login);
-		}
-	}
-*/
-###
-##
-#
-
-#
-##
-###
 	if (!empty($orderid) && !empty($groups) && is_array($groups)){
 
 		foreach ($groups as $k => $v){
@@ -1021,30 +846,6 @@ if ($mode == "order_edit_apply") {
 			db_query("UPDATE $sql_tbl[order_groups] SET tracking='$tracknums_to_db' WHERE manufacturerid='$k' AND orderid='$orderid'");
 			unset($tracknums_to_db);
 
-/*
-#
-##
-			if ($v["cb_status"] == "O" && !empty($v["actual_shipping_cost_net"]) && $v["actual_shipping_cost_net"] > 0){
-				$groups[$k]["shipping_cost_net_orig"] = $v["actual_shipping_cost_net"];
-				$groups[$k]["shipping_cost_net"] = $v["actual_shipping_cost_net"];
-
-			        ### LOG: START
-			        $current_shipping_cost_net = func_query_first_cell("SELECT shipping_net FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$k'");
-			        if ($current_shipping_cost_net != $v["actual_shipping_cost_net"]){
-					$tmp_actual_shipping_cost_net = $v["actual_shipping_cost_net"];
-					if (empty($tmp_actual_shipping_cost_net)){
-						$tmp_actual_shipping_cost_net = 0;
-					}
-		                        $log = "Shipping cost net: " . $current_shipping_cost_net . " -> " . $tmp_actual_shipping_cost_net;
-			                func_log_order($orderid, 'X', $log, $login);
-			        }
-			        ### LOG: END
-
-				db_query("UPDATE $sql_tbl[order_groups] SET shipping_net='$v[actual_shipping_cost_net]', shipping_gst='$v[actual_shipping_cost_net]', shipping_pst='$v[actual_shipping_cost_net]', shipping_gross='$v[actual_shipping_cost_net]' WHERE manufacturerid='$k' AND orderid='$orderid'");
-			}
-##
-#
-*/
 		}
 	}
 ###
@@ -1057,20 +858,6 @@ if ($mode == "order_edit_apply") {
 			if (!empty($v["productid"])){
 
 				$product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$v[productid]'");
-
-/*
-                                ### LOG: START
-                                $current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$v[productid]'");
-                                if ($current_eta_date_mm_dd_yyyy != $v["eta_date_mm_dd_yyyy"]){
-					$product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$v[productid]'");
-
-                                        $log = "<B>".$product_code."</B> ETA date: " . $current_eta_date_mm_dd_yyyy . " -> " . $v["eta_date_mm_dd_yyyy"];
-                                        func_log_order($orderid, 'X', $log, $login);
-                                }
-                                ### LOG: END
-
-				db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='".$v["eta_date_mm_dd_yyyy"]."' WHERE productid='$v[productid]'");
-*/
 
 				if (!empty($v["classid_optionid"]) && is_array($v["classid_optionid"])){
 
@@ -1112,7 +899,6 @@ if ($mode == "order_edit_apply") {
 
 					$extra_data = addslashes(serialize($extra_data));
 
-//					db_query("UPDATE $sql_tbl[order_details] SET product_options='$order_details_product_options', extra_data='$extra_data' WHERE orderid='$orderid' AND productid='$v[productid]'");
 					db_query("UPDATE $sql_tbl[order_details] SET product_options='$order_details_product_options', extra_data='$extra_data' WHERE orderid='$orderid' AND productid='$v[productid]' AND itemid='$k'");
 				}
 			}
@@ -1369,33 +1155,11 @@ elseif ($mode == "accounting_apply") {
 */
 }
 elseif ($mode == "table_accounting_apply") {
+		$log = "'Update' at 'Accounting' pressed";
+		func_log_order($orderid, 'X', $log, $login);
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 }
-
-
-/*
-elseif ($mode == "change_ca_status" && isset($ca_status)) {
-
-	$current_ca_status = func_query_first_cell("SELECT ca_status FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-
-	if ($current_ca_status != $ca_status){
-
-		db_query("UPDATE $sql_tbl[orders] SET ca_status='$ca_status' WHERE orderid='$orderid'");
-		
-		### LOG: START
-		$current_ca_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_ca_status'");
-		$ca_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$ca_status'");
-		$log = "CA: ".$current_ca_status_name . " -> ".$ca_status_name;
-		func_log_order($orderid, 'X', $log, $login);
-		### LOG: END
-
-	        $top_message["content"] = "Done.";
-        	$top_message["type"] = "I";
-		func_header_location("order.php?orderid=$orderid");
-	}
-}
-*/
 elseif ($mode == "add_additional_tag" && isset($additional_tag_status)) {
 
 	$status_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$additional_tag_status'");
@@ -1600,11 +1364,6 @@ if (!empty($ids)) {
 }
 
 $smarty->assign("orderid", $orderid);
-
-
-
-
-
 
 if ($REQUEST_METHOD == "POST") {
 
@@ -1897,10 +1656,6 @@ if ($REQUEST_METHOD == "POST") {
    }
 }
 
-
-
-
-//$attention_tags_values = func_query("SELECT * FROM $sql_tbl[attention_tags_values] WHERE active='Y' ORDER BY orderby, status");
 $attention_tags_values = func_query_hash("SELECT * FROM $sql_tbl[attention_tags_values] WHERE active='Y' ORDER BY orderby, status", "status_id", false);
 
 if (!empty($attention_tags_values) && is_array($attention_tags_values)){
@@ -2733,7 +2488,15 @@ elseif ($mode == 'mode_info_request_survey'){
 	    $log = "";
 
 	    if (isset($actual_shipping_net)){
+			if (func_check_comma_in_field($orderid, $actual_shipping_net, 'stock_request_shipping_cost')) {
+				$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+				$top_message["type"] = "I";
+				$section_name_top_message = $top_message;
+				x_session_save("section_name_top_message");
+				unset($actual_shipping_net);
+			} else {
 		    db_query("UPDATE $sql_tbl[order_groups] SET stock_request_shipping_cost='$actual_shipping_net' WHERE orderid='$orderid' AND manufacturerid='$mnf_id'");
+			}
 	    }
 
             if (!empty($actual_shipping_net)){
@@ -2970,25 +2733,31 @@ elseif ($mode == 'mode_info_request_survey'){
 
 	     }
 	   }
+	if (!empty($cost_to_us) && is_array($cost_to_us)) {
+		foreach ($cost_to_us as $k => $v) {
+			if (func_check_comma_in_field($orderid, $v, 'item_cost_to_us')) {
+				$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+				$top_message["type"] = "I";
+				$section_name_top_message = $top_message;
+				x_session_save("section_name_top_message");
+				break;
+			}
+			$v = trim($v);
+			if ($v != "") {
+				$v = str_replace(",", ".", $v);
+				$v = str_replace(" ", "", $v);
 
-           if (!empty($cost_to_us) && is_array($cost_to_us)){
-                        foreach ($cost_to_us as $k => $v){
-                                $v = trim($v);
-                                if ($v != ""){
-                                        $v = str_replace(",", ".", $v);
-                                        $v = str_replace(" ", "", $v);
+				$current_item_cost_to_us = func_query_first_cell("SELECT item_cost_to_us FROM $sql_tbl[order_details] WHERE orderid='$orderid' AND productid='$k'");
 
-					$current_item_cost_to_us = func_query_first_cell("SELECT item_cost_to_us FROM $sql_tbl[order_details] WHERE orderid='$orderid' AND productid='$k'");
+				if ($current_item_cost_to_us != $v) {
+					$product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$k'");
+					$log .= "<B>" . $product_code . ":</B> item_cost_to_us: " . $current_item_cost_to_us . " -> " . $v . "<br />";
+				}
 
-					if ($current_item_cost_to_us != $v){
-						$product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$k'");
-						$log .= "<B>".$product_code.":</B> item_cost_to_us: ". $current_item_cost_to_us. " -> ".$v."<br />";
-					}
-
-                                        db_query("UPDATE $sql_tbl[order_details] SET item_cost_to_us='$v' WHERE orderid='$orderid' AND productid='$k'");
-                                }
-                        }
-           }
+				db_query("UPDATE $sql_tbl[order_details] SET item_cost_to_us='$v' WHERE orderid='$orderid' AND productid='$k'");
+			}
+		}
+	}
 //	}
 
 	if ($current_dc_status != "M"){

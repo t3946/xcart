@@ -46,6 +46,11 @@ class classProduct extends classCloneData
         return "";
     }
 
+    public function getSKU()
+    {
+        return $this->getField('productcode');
+    }
+
     public function getStoreFront()
     {
         if (is_null($this->oStoreFront)) {
@@ -72,12 +77,17 @@ class classProduct extends classCloneData
         return func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled));
     }
 
+    public function getHTMLShot() {
+        $sProductPage = file_get_contents($this->getProductFrontURL());
+        return $sProductPage;
+    }
+
     public function getProductURLOnDistributorWebSite()
     {
         $sWebsiteProduct = $this->getManfacturerClass()->getField('d_website_search_for_sku_url');
         if (empty($sWebsiteProduct))
             $sWebsiteProduct = $this->getManfacturerClass()->getField('url');
-        return str_replace('{{mpn}}', $this->getMPN(), $sWebsiteProduct);
+        return str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$this->getMPN(),$this->getField('supplier_internal_id')], $sWebsiteProduct);
     }
 
     public function getProductLastVerifyDate()
@@ -146,6 +156,11 @@ class classProduct extends classCloneData
         }
         return $bResult;
 
+    }
+
+    public function getProductId()
+    {
+        return $this->getField('productid');
     }
 
 }

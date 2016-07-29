@@ -1,5 +1,5 @@
 <?php /* MODIFIED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
-<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (Изменения для модуля UPS + Изменения в способ ввода Tracking numbers для заказов)] */ ?>
+<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ UPS + О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ Tracking numbers О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫)] */ ?>
 <?php /* MODIFIED: random:19017 [2009 Sep 14 14:13][Custom development (Add new option to "Order status" selector and "Empty tracking number detection")] */ ?>
 <?php
 /*****************************************************************************\
@@ -405,38 +405,38 @@ if ($mode == "search") {
 	if ($current_area == 'A') {
 		if (!empty($data['cb_status'])) {
 			if (!is_array($data['cb_status'])) {
-			$search_condition .= " AND $sql_tbl[order_groups].cb_status='$data[cb_status]'";
+				$search_condition .= " AND $sql_tbl[order_groups].cb_status='$data[cb_status]'";
 			} else {
 				$search_condition .= " AND $sql_tbl[order_groups].cb_status IN ('" . implode('\',\'', array_keys($data['cb_status'])) . "')";
 			}
-			}
-        
+		}
+
 		if (!empty($data['dc_status'])) {
 			if (!is_array($data['dc_status'])) {
-			$search_condition .= " AND $sql_tbl[order_groups].dc_status='$data[dc_status]'";
+				$search_condition .= " AND $sql_tbl[order_groups].dc_status='$data[dc_status]'";
 			} else {
 				$search_condition .= " AND $sql_tbl[order_groups].dc_status IN ('" . implode('\',\'', array_keys($data['dc_status'])) . "')";
 			}
-			}
-			
+		}
+
 		if (!empty($data['bd_status'])) {
 			if (!is_array($data['bd_status'])) {
-			$search_condition .= " AND $sql_tbl[order_groups].bd_status='$data[bd_status]'";
+				$search_condition .= " AND $sql_tbl[order_groups].bd_status='$data[bd_status]'";
 			} else {
 				$search_condition .= " AND $sql_tbl[order_groups].bd_status IN ('" . implode('\',\'', array_keys($data['bd_status'])) . "')";
 			}
-			}
+		}
 
 #
 ##
 ###
-                if (!empty($data['po_status'])) {
-                        if (!is_array($data['po_status'])) {
-                        $search_condition .= " AND $sql_tbl[order_groups].po_status='$data[po_status]'";
-                        } else {
-                                $search_condition .= " AND $sql_tbl[order_groups].po_status IN ('" . implode('\',\'', array_keys($data['po_status'])) . "')";
-                        }
-                }
+		if (!empty($data['po_status'])) {
+			if (!is_array($data['po_status'])) {
+				$search_condition .= " AND $sql_tbl[order_groups].po_status='$data[po_status]'";
+			} else {
+				$search_condition .= " AND $sql_tbl[order_groups].po_status IN ('" . implode('\',\'', array_keys($data['po_status'])) . "')";
+			}
+		}
 
 /*
                 if (!empty($data['ca_status'])) {

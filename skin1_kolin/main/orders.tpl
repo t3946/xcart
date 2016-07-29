@@ -424,6 +424,13 @@ function managedate(type, status) {
 	{include file="main/order_status.tpl" status=$search_prefilled.dc_status mode="select" name="posted_data[dc_status]" extended="Y" extra="style='width:70%'" status_type="DC"}
 	</td>
 </tr>
+<tr>
+	<td class="FormButton" nowrap="nowrap">Check transit status:</td>
+	<td width="10">&nbsp;</td>
+	<td>
+	{include file="main/order_status.tpl" status=$search_prefilled.po_status mode="select" name="posted_data[po_status]" extended="Y" extra="style='width:70%'" status_type="PO"}
+	</td>
+</tr>
 
 {*
 <tr> 

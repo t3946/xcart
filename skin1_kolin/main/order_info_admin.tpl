@@ -1,6 +1,7 @@
 {*
 $Id: order_info_admin.tpl, v 1.0.0 2010/03/23 15:16:14 random Exp $
 vim: set ts=2 sw=2 sts=2 et:
+Use $product.oProduct classProduct
 *}
 <script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 {include file="check_zipcode_js.tpl"}
@@ -601,10 +602,9 @@ function check_r_fields(){
   </td>
   <td>
     {if $current_membership_flag ne 'FS'}<a href="{$product.links.admin}" title="" target="_blank">{$product.productcode}</a>{else}{$product.productcode}{/if}
-{assign var="mpn" value=`$product.mpn`}
-{if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}<br />
-  <a style="color: #3A3AFF;" href='{$order_manufacturers[$m_id].d_website_search_for_sku_url|replace:"---mpn---":"$mpn"}' target="_blank">{$mpn}</a>
-{/if}
+  {if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}<br />
+    <a style="color: #3A3AFF;" href='{$product.oProduct->getProductURLOnDistributorWebSite()}' target="_blank">{$product.oProduct->getMPN()}</a>
+  {/if}
     {if $product.verification_statusid == 3}
         <img title="This product is verified" style="float: right;" src="{$SkinDir}/images/green-verify.png" />
     {/if}
@@ -710,18 +710,37 @@ Cost to us accurate
 </tr>
 {/foreach}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
-  <td nowrap="nowrap">Carrier:
+  <td nowrap="nowrap">
+    <div style="margin-bottom: 5px;">Carrier:
     {if $v.shipping_code ne ""}
       {$v.shipping_code}
     {else}Flat rate
-    {/if}<br><br>
-    Method:
+    {/if}</div>
+    <div>Method:
     {if !$static}
       <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}" {* style="width: 80%;" *}
-      {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}</td>
+      {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}
+    </div>
+  </td>
+  {assign var="oOrderGroup" value=$v.oOrderGroup}
+  {assign var="oOrderShipping" value= $oOrderGroup->getShippingInstance()}
+  {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
+  {if (!empty($oOrderGroup) && $oOrder->isOrderAmazon() == false && $oOrder->getField('fraud_status') == 'C' && ($oOrderGroup->getField('cb_status') == 'P' || $oOrderGroup->getField('cb_status') =='O') && $oOrderGroup->checkFBAProductsAvailToShipping() && $oOrderGroup->getField('amz_fullfilment_order_placed') !='Y')}
+    <td colspan="2" align="center">
+      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="Ship now by Amazon" />
+      <select {if $oOrderShipping->isAmazonShipping()} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
+        <option value=""></option>
+        {html_options options=$aAmazonShippingMethods selected=$oOrderGroup->getShippingMethodName()}
+      </select>
+
+    <td colspan="4" style="vertical-align: top;">
+      <input style="margin-bottom: 5px;" id="submit_amazon_shipment_with_notes" name="submit_amazon_shipment_with_notes" type="checkbox" />
+      <label style="position:relative; top:-2px;" for="submit_amazon_shipment_with_notes">with customer notes</label> <br/>
+      <textarea id="submit_amazon_shipment_notes" style="margin-left: 4px;width: 97%; height:26px;" name="submit_amazon_shipment_notes" type="text">{$oOrder->getOrderCustomerNotes()}</textarea>
+    </td>
+  {else}
   <td colspan="6">
     {if $v.tracking}
-
       {assign var="row_conter" value="0"}
       {foreach from=$v.tracking item=t}
 
@@ -746,10 +765,9 @@ Cost to us accurate
         </div>
 
       {/foreach}
-    {else}
-      &nbsp;
     {/if}
   </td>
+  {/if}
   <td align="right">
     {if !$static}
       <input type="hidden" name="groups[{$m_id}][shipping_cost_net_orig]" value="{$v.shipping_cost.net|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
@@ -1408,3 +1426,38 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
 {/if}
 
 </form>
+
+{literal}
+<script type="text/javascript">
+  $( document ).ready(function() {
+    $('#submit_amazon_shipment').on('click', function () {
+      var submit_amazon_shipping_method = $('#amazon_shipping_method_select').val();
+      if (submit_amazon_shipping_method == '') {
+        alert('Please, select Amazon shipping method!');
+      } else {
+
+        if (confirm('Are You Shure?')) {
+          $(this).prop('disabled', true);
+          var orderid = $(this).data('orderid'),
+                  manufacturerid = $(this).data('manufacturerid'),
+                  submit_amazon_shipment_with_notes = $('#submit_amazon_shipment_with_notes').is(':checked'),
+                  submit_amazon_shipment_notes = $('#submit_amazon_shipment_notes').val();
+          $.post(
+                  "ajax_admin.php", {
+                    orderid: orderid,
+                    manufacturerid: manufacturerid,
+                    submit_amazon_shipment_with_notes: submit_amazon_shipment_with_notes,
+                    submit_amazon_shipment_notes: submit_amazon_shipment_notes,
+                    ajax_action: 'ship_order_by_amazon',
+                    amazon_shipping_method_select:  submit_amazon_shipping_method
+                  }
+          ).done(function (data) {
+            //$('#submit_amazon_shipment').prop('disabled', false);
+             window.location.reload();
+          })
+        }
+      }
+    });
+  });
+</script>
+{/literal}

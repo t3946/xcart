@@ -492,6 +492,7 @@ $start_time = round(microtime(true) * 1000);
 		break;
 		}
 	}
+	$product["custom_label_0"] = func_froogle_convert($product['brand']);
     
     // group prices in GMC by 50/100/150/200/250/300/400/500/600/700/800/900/1000/1200/1400
     $price_group_label = '0';
@@ -732,7 +733,7 @@ function AddProductToAmazonBatch($productid, $update_type, $amazon_inventory_bat
         return $AddProductToAmazonBatch_arr;
 }
 
-function AddProductToGoogleBaseBatch($productid, $MerchantID, $update_type, $service, $forsale, $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, $sExtraLog = "N"){
+function AddProductToGoogleBaseBatch($productid, $update_type, $forsale, $google_products_batch_count, $gproducts, $google_inventory_batch_count, $ginventory, $sExtraLog = "N"){
 
 	if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $forsale == "N"))){
 			$Batchid = $google_products_batch_count;
@@ -878,7 +879,7 @@ if ($debug_mode != 'Y') {
 return $code;
 //func_print_r($results);
 }
-function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $username, $password, $token, $debug_mode = 'N')
+function SubmitBingInventoryBatch($binventory, $sEndpoint, $MerchantID, $CatalogID, $username, $password, $token, $debug_mode = 'N')
 {
         global $xcart_dir, $active_modules, $config, $https_location, $http_location;
         global $started_at, $sql_tbl;
@@ -1025,7 +1026,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 
 			$json = json_encode($postBody);
 
-			$baseuri = "https://content.api.bingads.microsoft.com/shopping/v9.1";
+			$baseuri = $sEndpoint;//"https://content.api.bingads.microsoft.com/shopping/v9.1";
 			$bmcuri = $baseuri . "/bmc/" . $MerchantID;
 			$batchuri = $bmcuri . "/products/batch";
 
@@ -1098,7 +1099,7 @@ function SubmitBingInventoryBatch($binventory, $MerchantID, $CatalogID, $usernam
 	return $code;
 }
 
-function SubmitBingProductsBatch($bproducts, $MerchantID, $CatalogID, $username, $password, $token, $debug_mode = 'N')
+function SubmitBingProductsBatch($bproducts, $sEndpoint, $MerchantID, $CatalogID, $username, $password, $token, $debug_mode = 'N')
 {
 	global $sql_tbl;
 
@@ -1245,7 +1246,7 @@ if ($debug_mode != 'Y') {
 			func_print_r("json = json_encode(postBody); print_r(postBody):", $postBody);
 		}
 
-		$baseuri = "https://content.api.bingads.microsoft.com/shopping/v9.1";
+		$baseuri = $sEndpoint;//"https://content.api.bingads.microsoft.com/shopping/v9.1";
 		$bmcuri = $baseuri . "/bmc/" . $MerchantID;
 		$batchuri = $bmcuri . "/products/batch";
 		$query = "?bmc-catalog-id=" . $CatalogID . "&alt=json";
@@ -1583,13 +1584,14 @@ function SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray)
 	        print('Amazon inventory empty\r');
 		return false;
 	}
+	$sMerchantId = $ainventory[''];
 ######################### Avail start #########################
 	$feed = <<<EOD
 <?xml version="1.0" encoding="utf-8" ?>
 <AmazonEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="amzn-envelope.xsd">
 <Header>
    <DocumentVersion>1.01</DocumentVersion>
-   <MerchantIdentifier>M_SELLER_354577</MerchantIdentifier>
+   <MerchantIdentifier>$sMerchantId</MerchantIdentifier>
    </Header>
    <MessageType>Inventory</MessageType>
 EOD;
@@ -1729,7 +1731,7 @@ EOD;
 <AmazonEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="amzn-envelope.xsd">
 <Header>
    <DocumentVersion>1.01</DocumentVersion>
-   <MerchantIdentifier>M_SELLER_354577</MerchantIdentifier>
+   <MerchantIdentifier>$sMerchantId</MerchantIdentifier>
    </Header>
    <MessageType>Price</MessageType>
 EOD;

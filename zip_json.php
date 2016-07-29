@@ -2,6 +2,16 @@
 
 require './auth.php';
 
+if (!empty($type)) {
+	switch ($type) {
+		case 'state':
+			$aStates = func_query_column("SELECT state FROM ". $sql_tbl['states']." WHERE country_code = '$country_code'");
+			print json_encode($aStates);
+			exit;
+			break;
+	}
+}
+
 $states = func_query("SELECT $sql_tbl[states].stateid, $sql_tbl[states].state, $sql_tbl[states].code AS state_code, $sql_tbl[states].country_code FROM $sql_tbl[states], $sql_tbl[countries] WHERE $sql_tbl[states].country_code=$sql_tbl[countries].code AND $sql_tbl[countries].active='Y' AND $sql_tbl[states].country_code='US'");
 
 if (isset($zip) && $zip != ""){

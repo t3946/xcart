@@ -63,6 +63,7 @@
 {if ($main eq "product")}
 {* igor_async *}
 <script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+<script type="text/javascript" src="{$SkinDir}/js/jquery.visible.min.js"></script>
 {/if}
 
 {* {include file="jquery_ui.tpl"} *}
@@ -145,6 +146,56 @@ window.attachEvent("onload", anchor_fix);
 //<![CDATA[
 {literal}
 
+    sendItems = [];
+    sendItemsValues = [];
+    sentItems = [];
+    function checkCarouselsVisibility() {
+        $('#similar_products .jcarousel, #related_products .jcarousel, #products_also_bought_with_this_product .jcarousel, #recently_viewed_products .jcarousel').each(function () {
+            $('li::visible', $(this)).each (function () {
+                var t = $(this).visible(false, false),
+                        wraper_width = $(this).parent().parent().width(),
+                        ul_left = Math.abs($(this).parent().position().left),
+                        el_left = $(this).position().left;
+                if (t && ((el_left >= ul_left) && ((ul_left + wraper_width) > el_left))) {
+                    var productid = $(this).data('productid');
+                    if (sendItems.indexOf(productid) === -1 && sentItems.indexOf(productid) === -1) {
+                        sendItems.push(productid);
+                        sendItemsValues.push({
+                            productid: productid,
+                            name: $(this).data('name'),
+                            category: $(this).data('category'),
+                            brand: $(this).data('brand'),
+                            list: $(this).data('list'),
+                            price: $(this).data('price'),
+                            position: $(this).data('position')
+                        });
+                    }
+                }
+            });
+        });
+        var counter = 0;
+        while (sendItems.length > 0) {
+            counter++;
+            var productid = sendItems.pop();
+            var valtosend = sendItemsValues.pop();
+            ga('ec:addImpression', {
+                'id': valtosend.productid,
+                'name': valtosend.product,
+                'category': valtosend.category,
+                'brand': valtosend.brand,
+                'list': valtosend.ga_page_name,
+                'price': valtosend.price,
+                'position': valtosend.N_key
+            });
+
+            sentItems.push(productid);
+        }
+
+        if (counter > 0) {
+            ga('send', 'pageview');
+        }
+
+    }
 	function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter){
 
         var load_ajax_sections_arr = load_ajax_sections.split(',');
@@ -182,171 +233,135 @@ window.attachEvent("onload", anchor_fix);
         setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1100);
 	}
 
-        function func_load_ajax_carousel_products(section_name){
+function func_load_ajax_carousel_products(section_name) {
 
-                        cidev_xmlHttp=cidev_createHttpRequestObject();
-                        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
+    cidev_xmlHttp = cidev_createHttpRequestObject();
+    if (cidev_xmlHttp.readyState == 4 || cidev_xmlHttp.readyState == 0) {
 
-				var cidev_parameters = 'section_name='+section_name
+        var cidev_parameters = 'section_name=' + section_name;
 
-				{/literal}
-				{if $product.productid ne ""}
-				{literal}
-					var productid = {/literal}{$product.productid}{literal};
-        	                        cidev_parameters = cidev_parameters + '&productid='+productid;
-                                {/literal}
-                                {/if}
-                                {literal}
-
-
-                                cidev_xmlHttp.onreadystatechange=function(){
-                                        if(cidev_xmlHttp.readyState==4){
-                                                if(cidev_xmlHttp.status==200){
+        {/literal}
+        {if $product.productid ne ""}
+        {literal}
+        var productid = {/literal}{$product.productid}{literal};
+        cidev_parameters = cidev_parameters + '&productid=' + productid;
+        {/literal}
+        {/if}
+        {literal}
 
 
-/* ------------------------------------------------------------------------------------- */
+        cidev_xmlHttp.onreadystatechange = function () {
+            if (cidev_xmlHttp.readyState == 4) {
+                if (cidev_xmlHttp.status == 200) {
+                    var data = cidev_xmlHttp.responseText;
 
-	var data = cidev_xmlHttp.responseText;
+                    if (data != "") {
+                        $("#" + section_name).show();
+                    }
 
-	if (data != ""){
-		$("#"+section_name).show();
-	}
+                    var obj = jQuery.parseJSON(data);
 
+                    var html = '<ul>';
+                    var a_href = '';
 
+                    var ga_page_name = '{/literal}{$ga_page_name}{literal}';
 
-/*
-	var jcarousel = $('#jcarousel_'+section_name).jcarousel();
+                    if (obj) {
+                        $.each(obj.items, function () {
+                            if (this.clean_url != '') {
+                                a_href = this.clean_url + '/';
+                            } else {
+                                a_href = 'product.php?productid=' + this.productid;
+                            }
+                            ga_page_name = this.ga_param;
+                            html += '<li data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price+'" data-position="'+this.N_key+'" class="active">' +
+                                    '<div style="text-align: center;">' +
+                                    '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>' +
+                                    '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">' + this.title + '</a>' +
+                                    '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price + '</font>' +
+                                    '</div>' +
+                                    '</li>';
+                        });
+                    }
 
-	$('#jcarousel-control-prev_'+section_name)
-            .on('jcarouselcontrol:active', function() {
-                $(this).removeClass('inactive');
-            })
-            .on('jcarouselcontrol:inactive', function() {
-                $(this).addClass('inactive');
-            })
-            .jcarouselControl({
-                target: '-=1'
-            });
+                    html += '</ul>';
 
-	$('#jcarousel-control-next_'+section_name)
-            .on('jcarouselcontrol:active', function() {
-                $(this).removeClass('inactive');
-            })
-            .on('jcarouselcontrol:inactive', function() {
-                $(this).addClass('inactive');
-            })
-            .jcarouselControl({
-                target: '+=1'
-            });
-*/
+                    $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
 
 
 
-	var obj = jQuery.parseJSON(data);
+                    jQuery(function ($) {
+                        'use strict';
 
-	var html = '<ul>';
-	var a_href = '';
+                        // -------------------------------------------------------------
+                        //   Basic Navigation
+                        // -------------------------------------------------------------
+                        (function () {
+                            var $frame = $('#jcarousel_' + section_name);
+                            var $wrap = $frame.parent().parent();
 
-	var ga_page_name = '{/literal}{$ga_page_name}{literal}';
+                            var options = {
+                                horizontal: 1,
+                                itemNav: 'basic',
+                                smart: 1,
+                                activateOn: 'click',
+                                mouseDragging: 1,
+                                touchDragging: 1,
+                                releaseSwing: 1,
+                                startAt: 0,
+                                scrollBar: $wrap.find('.scrollbar'),
+                                scrollBy: 0,
+                                pagesBar: $wrap.find('.pages'),
+                                activatePageOn: 'click',
+                                speed: 300,
+                                elasticBounds: 1,
+                                easing: 'easeOutExpo',
+                                dragHandle: 1,
+                                dynamicHandle: 1,
+                                clickBar: 1,
 
-	if (obj){
-	$.each(obj.items, function() {
-
-		if (this.clean_url != ''){
-			a_href = this.clean_url+'/';
-		} else {
-			a_href = 'product.php?productid='+ this.productid;
-		}
-        ga_page_name = this.ga_param;
-                html += '<li class="active">'+
-			  '<div style="text-align: center;">'+
-			  '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>'+
-			  '<br />'+ '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;">' + this.title + '</a>'+
-			  '<br /> <font class="ProductPrice">Our Price: US$ '+ this.price + '</font>'+
-			  '</div>'+
-			'</li>';
-	});
-	}
-
-	html += '</ul>';
-
-	// Append items
-//	jcarousel
-//	  .html(html);
-
-	$('#jcarousel_'+section_name).html(html).parent().after('<ul class="pages"></ul>');
-
-
-
-	// Reload carousel
-//	jcarousel
-//	  .jcarousel('reload');
-	//$('#jcarousel_'+section_name).jcarousel('reload');
-                                                    jQuery(function ($) {
-                                                        'use strict';
-
-                                                        // -------------------------------------------------------------
-                                                        //   Basic Navigation
-                                                        // -------------------------------------------------------------
-                                                        (function () {
-                                                            var $frame = $('#jcarousel_'+section_name);
-                                                            var $slidee = $frame.children('ul').eq(0);
-                                                            var $wrap = $frame.parent().parent();
-
-                                                            // Call Sly on frame
-                                                            $frame.sly({
-                                                                horizontal: 1,
-                                                                itemNav: 'basic',
-                                                                smart: 1,
-                                                                activateOn: 'click',
-                                                                mouseDragging: 1,
-                                                                touchDragging: 1,
-                                                                releaseSwing: 1,
-                                                                startAt: 0,
-                                                                scrollBar: $wrap.find('.scrollbar'),
-                                                                scrollBy: 0,
-                                                                pagesBar: $wrap.find('.pages'),
-                                                                activatePageOn: 'click',
-                                                                speed: 300,
-                                                                elasticBounds: 1,
-                                                                easing: 'easeOutExpo',
-                                                                dragHandle: 1,
-                                                                dynamicHandle: 1,
-                                                                clickBar: 1,
-
-                                                                // Buttons
-                                                                prevPage: $wrap.find('.jcarousel-control-prev'),
-                                                                nextPage: $wrap.find('.jcarousel-control-next')
-                                                            });
-
-                                                        }());
-
-                                                    });
+                                // Buttons
+                                prevPage: $wrap.find('.jcarousel-control-prev'),
+                                nextPage: $wrap.find('.jcarousel-control-next')
+                            };
+                            try {
+                                var frame = new Sly('#jcarousel_' + section_name, options, {
+                                    load: checkCarouselsVisibility,
+                                    moveEnd: checkCarouselsVisibility
+                                }).init();
+                            }
+                            catch(err) {
+                                //
+                            }
 
 
+                        }());
 
-/* ------------------------------------------------------------------------------------- */
+                    });
 
-                                                }else{
+
+                    /* ------------------------------------------------------------------------------------- */
+
+                } else {
 //                                                        cidev_Error('no_server', 'Y');
-                                                }
-                                        }
-                                };
+                }
+            }
+        };
 
-                                var tmp_rand = Math.random();
+        var tmp_rand = Math.random();
 
-                                cidev_xmlHttp.open('POST','cidev_ajax_suggestions.php?rand='+tmp_rand,true);
-                                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-                                //cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
-                                cidev_xmlHttp.setRequestHeader('Cache-Control','no-cache');
-                                cidev_xmlHttp.setRequestHeader('Cache-Control','no-store');
-                                //cidev_xmlHttp.setRequestHeader('Connection','close');
-                                cidev_xmlHttp.send(cidev_parameters);
-                        }
-                        else {
-                                setTimeout('func_load_ajax_carousel_products()', 1000);
-                        }
-        }
+        cidev_xmlHttp.open('POST', 'cidev_ajax_suggestions.php?rand=' + tmp_rand, true);
+        cidev_xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        //cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
+        cidev_xmlHttp.setRequestHeader('Cache-Control', 'no-cache');
+        cidev_xmlHttp.setRequestHeader('Cache-Control', 'no-store');
+        //cidev_xmlHttp.setRequestHeader('Connection','close');
+        cidev_xmlHttp.send(cidev_parameters);
+    }
+    else {
+        setTimeout('func_load_ajax_carousel_products()', 1000);
+    }
+}
 {/literal}
 //]]>
 </script>
@@ -730,6 +745,12 @@ $(document).ready(function() {
 		bodyHandler: function() {
 			return txt_tooltip_helper;
 	}});
+    $(document).scroll(function () {
+        clearTimeout($.data(this, 'scrollTimer'));
+        $.data(this, 'scrollTimer', setTimeout(function() {
+            checkCarouselsVisibility();
+        }, 700));
+    });
 });
 {/literal}
 //]]>
@@ -861,9 +882,10 @@ document.body.appendChild(element10);
 {literal}
 
 {/literal}
-/*
+
 {if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 {literal}
+/*
 var element11 = document.createElement("script");
 element11.src = "{/literal}{$SkinDir}{literal}/check_zipcode.js";
 document.body.appendChild(element11);
@@ -871,17 +893,10 @@ document.body.appendChild(element11);
 var element12 = document.createElement("script");
 element12.src = "{/literal}{$SkinDir}{literal}/cidev_ajax.js";
 document.body.appendChild(element12);
-
+*/
 {/literal}
 {/if}
-{literal}
-*/
 
-var element13 = document.createElement("script");
-element13.src = "//www.googleadservices.com/pagead/conversion.js";
-document.body.appendChild(element13);
-
-{/literal}
 {if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search" || 1==1}
 {literal}
     var element14 = document.createElement("script");

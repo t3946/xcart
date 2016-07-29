@@ -512,7 +512,6 @@ function func_flush($s = NULL) {
 #
 function func_html_location($url, $time=3) {
 	x_session_save();
-	global $use_sessions_type;
 
 	if ($use_sessions_type < 3) {
 		session_write_close();
@@ -2341,12 +2340,11 @@ function my_array_sort($array, $on, $order=SORT_ASC)
     return $new_array;
 }
 
-function func_log_order($orderid, $type, $log, $ulogin="") {
+function func_log_order($orderid, $type, $log, $login="") {
 	global $sql_tbl;
-	global $login;
-	if (empty($ulogin)) $ulogin = $login;
 
-	db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($ulogin)."', '".addslashes($log)."')");
+	if (!empty($log))
+		db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($login)."', '".addslashes($log)."')");
 //	db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($login)."', '".$log."')");
 }
 
@@ -2354,7 +2352,10 @@ function func_log_order_groups($query_data, $orderid, $manufacturerid, $type, $l
 	global $sql_tbl;
 
         $log = "";
-        $log_name = array("shipping_net", "shippingid", "shipping", "bd_status", "cb_status", "dc_status", "acc_paymentid", "po_status", "ru_status", "accounting_net_0", "accounting_gst_0", "accounting_pst_0", "accounting_gross_0", "accounting_net_1_cost_to_us", "accounting_gst_1_cost_to_us", "accounting_pst_1_cost_to_us", "accounting_gross_1_cost_to_us", "accounting_net_2_shipping", "accounting_gst_2_shipping", "accounting_pst_2_shipping", "accounting_gross_2_shipping", "accounting_net_3_ref_to_cust", "accounting_gst_3_ref_to_cust", "accounting_pst_3_ref_to_cust", "accounting_gross_3_ref_to_cust", "accounting_net_4_ref_to_us", "accounting_gst_4_ref_to_us", "accounting_pst_4_ref_to_us", "accounting_gross_4_ref_to_us", "accounting_net_5_profit", "accounting_gst_5_profit", "accounting_pst_5_profit", "accounting_gross_5_profit");
+        $log_name = array("shipping_net", "shippingid", "shipping", "bd_status", "cb_status", "dc_status", "acc_paymentid", "po_status", "ru_status",
+				"accounting_net_0", "accounting_gst_0", "accounting_pst_0", "accounting_gross_0",
+				// "accounting_net_1_cost_to_us", "accounting_gst_1_cost_to_us", "accounting_pst_1_cost_to_us", "accounting_gross_1_cost_to_us", "accounting_net_2_shipping", "accounting_gst_2_shipping", "accounting_pst_2_shipping", "accounting_gross_2_shipping", "accounting_net_3_ref_to_cust", "accounting_gst_3_ref_to_cust", "accounting_pst_3_ref_to_cust", "accounting_gross_3_ref_to_cust", "accounting_net_4_ref_to_us", "accounting_gst_4_ref_to_us", "accounting_pst_4_ref_to_us", "accounting_gross_4_ref_to_us", "accounting_net_5_profit", "accounting_gst_5_profit", "accounting_pst_5_profit", "accounting_gross_5_profit"
+		);
         $order_statuses_arr = array("bd_status", "cb_status", "dc_status", "po_status", "ru_status");
 	$code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$manufacturerid'");
 
@@ -2725,8 +2726,8 @@ function func_define_approximate_shippings($productid, $product_info=''){
                         $weight = $real_weight;
                     }*/
 					global $xcart_dir;
-					include_once $xcart_dir."/include/class/classShipping.php";
-					$classShipping = new classShipping();
+					include_once $xcart_dir."/include/class/classShippings.php";
+					$classShipping = new classShippings();
 					$weight = $classShipping->getShippingWeight($product_info['productid'], $shipping_id, 1, $product_info, $two_shippings[$shipping_id]);
 					unset ($classShipping);
 
@@ -3036,11 +3037,48 @@ function func_new_mail_notification($v_arr){
 
 				$statuses = func_query("SELECT cb_status, dc_status, bd_status FROM $sql_tbl[order_groups] WHERE orderid='$orderid'");
 
+				foreach ($statuses as $k => $v) {
+					$aRule = func_query_first("SELECT xo.* , xoc.name as cb_name, xod.name as dc_name, xob.name as bd_name
+											  FROM $sql_tbl[cidev_otrs_new_message_rules] xo
+											  INNER JOIN $sql_tbl[order_statuses] xoc ON '$v[cb_status]' = xoc.code
+											  INNER JOIN $sql_tbl[order_statuses] xod ON '$v[dc_status]' = xod.code
+											  INNER JOIN $sql_tbl[order_statuses] xob ON '$v[bd_status]' = xob.code
+											 WHERE (cb_status = '$v[cb_status]' OR cb_status = '*') AND
+												   (dc_status = '$v[dc_status]' OR dc_status = '*') AND
+												   (bd_status = '$v[bd_status]' OR bd_status = '*')
+											ORDER BY cb_status DESC, dc_status DESC, bd_status DESC");
+					if (!empty($aRule) && is_array($aRule))
+						$aRules[] = $aRule;
+				}
+
 				$log = "New OTRS message notification.<br />";
 
 				$tag_added_flag = false;
 
-				if (!empty($statuses)){
+				if (!empty($aRules) && is_array($aRules)) {
+					foreach ($aRules as $aRule) {
+						switch ($aRule['action']) {
+							case 'Include':
+								db_query("DELETE FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$status_id'");
+								db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '$status_id')");
+								$log .= "RuleID:$aRule[rule_id]; CB:$aRule[cb_name], DC:$aRule[dc_name], BD:$aRule[bd_name]<br />";
+								$log .= "'".$tag_name."' attention tag SET based on rules";
+								$tag_added_flag = true;
+								break;
+							case 'Exclude':
+								$log .= "RuleID:$aRule[rule_id]; CB:$aRule[cb_name], DC:$aRule[dc_name], BD:$aRule[bd_name]<br />";
+								break;
+						}
+						if ($tag_added_flag) break;
+					}
+				}
+
+				if (!$tag_added_flag)
+					$log .= "'".$tag_name."' attention tag NOT SET based on rules";
+
+
+
+/*				if (!empty($statuses)){
 					foreach ($statuses as $k => $v){
 
 						$cb_status = $v["cb_status"];
@@ -3048,13 +3086,14 @@ function func_new_mail_notification($v_arr){
 						$bd_status = $v["bd_status"];
 
 						if (
-(
-($cb_status=="AP" || $cb_status=="P" || $cb_status=="O" || $cb_status=="H" || $cb_status=="R" || $cb_status=="N") && ($dc_status=="C" || $dc_status=="L" || $dc_status=="B" || $dc_status=="G" || $dc_status=="S" || $dc_status=="T" || $dc_status=="E")
-)
-||
-(
-$cb_status=="A" || $cb_status=="D"
-)
+								(
+										($cb_status == "AP" || $cb_status == "P" || $cb_status == "O" || $cb_status == "H" || $cb_status == "R" || $cb_status == "N") &&
+										($dc_status == "C" || $dc_status == "L" || $dc_status == "B" || $dc_status == "G" || $dc_status == "S" || $dc_status == "T" || $dc_status == "E")
+								)
+								||
+								(
+										$cb_status == "A" || $cb_status == "D"
+								)
 						) {
 							db_query("DELETE FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$status_id'");
 							db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '$status_id')");
@@ -3066,11 +3105,11 @@ $cb_status=="A" || $cb_status=="D"
 						}
 	
 					}
-				} // if (!empty($statuses))
+				}
 
 				if (!$tag_added_flag){
 					$log .= "'".$tag_name."' attention tag NOT SET based on rules";
-				}
+				}*/
 
 				func_log_order($orderid, 'X', $log, 'OTRS');
                 print("OK");
@@ -3280,7 +3319,7 @@ function Get_AB_Variant($point_id){
 		return false;
 	}
 
-	if (isset($pointid_ab_testing_arr[$point_id])) {
+	if (isset($pointid_ab_testing_arr[$point_id]) && $is_robot != "Y") {
 		$variant_id = $pointid_ab_testing_arr[$point_id]["variant_id"];
 		return $variant_id;
 	}
@@ -3304,7 +3343,10 @@ function Get_AB_Variant($point_id){
 			(empty($$XCART_SESSION_NAME) && empty($XCARTSESSID))||
 			($ab_testing_point["exclude_mobile"] == "Y" && $detect_isMobile_was_created)
 	) {
-		$variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND is_default='Y'");
+		if ($is_robot == "Y" ||	defined("IS_ROBOT"))
+			$variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND (for_webbot ='Y' OR is_default = 'Y') ORDER BY for_webbot DESC, is_default DESC");
+			else $variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND is_default='Y'");
+
 	} else {
 		$variant_id = ($ab_testing_point["total_hits"] + 1) % $ab_testing_point["mod_param"];
 
@@ -4009,5 +4051,16 @@ if(!function_exists("array_column"))
 
 	}
 
+}
+function func_check_comma_in_field($orderid, $value, $sFieldName)
+{
+	global $login, $top_message;
+	if (strpos($value, ',') !== false) {
+		$sLog = "Comma in field <b>$sFieldName</b>: ".$value;
+		func_log_order($orderid, 'X', $sLog, $login);
+
+		return true;
+	}
+	return false;
 }
 ?>
