@@ -43,13 +43,13 @@ class classSQLBuilder
         return $this;
     }
 
-    public function addInnerJoin($sTable, $sAlias, $sCondition)
+    public function addInnerJoin($sTable, $sAlias=null, $sCondition)
     {
         $this->aInnerJoinTables[] = self::$sql_tbl[$sTable] . ((!empty($sAlias)) ? ' as ' . $sAlias : '') . ' ON ' . $sCondition;
         return $this;
     }
 
-    public function addFromTable($sTable, $sAlias)
+    public function addFromTable($sTable, $sAlias=null)
     {
         $this->aTables[] = self::$sql_tbl[$sTable] . ((!empty($sAlias)) ? ' as ' . $sAlias : '');
         return $this;

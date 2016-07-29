@@ -71,6 +71,13 @@ class classData
     public function setField($sFieldName, $sNewValue)
     {
         $this->aPrimaryTableValue[$sFieldName] = $sNewValue;
+        return $this;
+    }
+
+    public function setFields($aFieldNamesValues)
+    {
+        foreach ($aFieldNamesValues as $key => $value)
+            $this->aPrimaryTableValue[$key] = $value;
     }
 
     public function updateField($sFieldName, $sNewValue)
@@ -78,5 +85,11 @@ class classData
         $this->setField($sFieldName, $sNewValue);
         $aToUpdate[$sFieldName] = $sNewValue;
         func_array2update($this->sPrimaryTable, $aToUpdate, str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
+    }
+
+    public function updateFields($aFieldNamesValues)
+    {
+        $this->setFields($aFieldNamesValues);
+        func_array2update($this->sPrimaryTable, $aFieldNamesValues, str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
     }
 }
