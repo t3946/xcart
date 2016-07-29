@@ -2049,6 +2049,9 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
     </table>
 {elseif $d_section.distributor_section eq "40"}
     <div {if $distributor_section ne "40"}style="display: none;" {/if}>
+        {if $distributor_section eq "40"}
+            <input type="hidden" name="mode" value="excluded_marketplace" />
+        {/if}
     {include file="modules/External_Marketplaces/excluded_marketplaces_admin.tpl"}
     </div>
 {elseif $d_section.distributor_section eq "30"}

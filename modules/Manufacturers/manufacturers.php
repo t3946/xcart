@@ -104,6 +104,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "excluded_marketplace" && $manufacture
 	global $xcart_dir;
 	require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
 	classDisabledMarketPlace::deleteAllDisabledMarketPlace($manufacturerid, 'D');
+	if (!empty($excluded_marketplaces))
 	foreach($excluded_marketplaces as $iExcludedMarketplace) {
 		$oMarketPlace = new classDisabledMarketPlace();
 		$oMarketPlace->fillPrimaryTableValues(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $manufacturerid, 'resource_type' => 'D']);
