@@ -22,7 +22,7 @@ class classTransactionLog extends classData
     {
         $result = '';
         if (!empty($this->aLogLines)){
-            $result = explode('\n',$this->aLogLines);
+            $result = implode('\n',$this->aLogLines);
         }
         return nl2br($result);
     }

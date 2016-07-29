@@ -42,8 +42,10 @@ class classData
 
     public function fillPrimaryTableValues($aValues)
     {
-        if (!empty($aValues))
+        if (!empty($aValues)) {
             $this->aPrimaryTableValue = $aValues;
+            $this->aPrimaryKeysValues = array_intersect_key($aValues, array_flip($this->aPrimaryKeys));
+        }
     }
 
     /**
@@ -84,12 +86,16 @@ class classData
     {
         $this->setField($sFieldName, $sNewValue);
         $aToUpdate[$sFieldName] = $sNewValue;
+        if (empty($this->aPrimaryKeysValues))
+            throw new Exception('Empty primary keys values for update field');
         func_array2update($this->sPrimaryTable, $aToUpdate, str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
     }
 
     public function updateFields($aFieldNamesValues)
     {
         $this->setFields($aFieldNamesValues);
+        if (empty($this->aPrimaryKeysValues))
+            throw new Exception('Empty primary keys values for update fields');
         func_array2update($this->sPrimaryTable, $aFieldNamesValues, str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
     }
 }

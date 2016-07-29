@@ -7,6 +7,7 @@ require_once $xcart_dir . "/include/class/classTransactionLog.php";
 
 class classOrderTransaction extends classData
 {
+    const TRANSACTION_FAILED_TEXT = "Capture transaction ID:%s - failed\n";
     private $aTransactionResult = [];
     public function __construct($aParams = [])
     {
@@ -30,14 +31,14 @@ class classOrderTransaction extends classData
                 $oPaypal = new classPaypal();
             } catch (Exception $ex) {
                 $this->oTransactionLog->addNewLine($ex->getMessage());
-                $this->oTransactionLog->insertTransactionLog($this, false);
-                throw new Exception('Capture transaction ID:'.$this->getField('transaction_id').' - failed');
+                $this->oTransactionLog->insertTransactionLog($this);
+                throw new Exception(sprintf(TRANSACTION_FAILED_TEXT, $this->getField('transaction_id')));
             }
             $oOrder = new classOrder($this->getField('orderid'));
 
-            $aData["amount"]["currency"] = $oOrder->getField("currency");
-            $aData["amount"]["total"] = $fCaptureSumma;
-            $data_arr["is_final_capture"] = true;
+            $aData["amount"]["currency"] = $oOrder->getOrderCurrency();
+            $aData["amount"]["total"] = number_format($fCaptureSumma,2);
+            $aData["is_final_capture"] = true;
 
             $this->aTransactionResult = $oPaypal->captureTransaction($this->getField('transaction_id'), $aData);
 
@@ -48,15 +49,25 @@ class classOrderTransaction extends classData
                     'date'=>time(),
                     'login'=>$login,
                     'transaction_status'=>$this->aTransactionResult['state'],
-                    'transaction_response'=> $this->getTransactionResult()
+                    'transaction_response'=> addslashes(serialize($this->getTransactionResult()))
                 ]);
             }
             $this->oTransactionLog->insertTransactionLog($this);
             $this->oTransactionLog->insertOrderLog($this->getField('orderid'));
 
-            if (empty($this->aTransactionResult["id"])) throw new Exception('Capture transaction ID:'.$this->getField('transaction_id').' - failed');
+            if (empty($this->aTransactionResult["id"])) {
+                $log = nl2br(sprintf(TRANSACTION_FAILED_TEXT, $this->getField('transaction_id')));
+                $log .= addslashes(serialize($this->getTransactionResult()));
+                throw new Exception($log);
+
+            }
         }
         return $this;
+    }
+
+    public function getTransactionState()
+    {
+        return $this->aTransactionResult['state'];
     }
 
     public function getTransactionResult()
