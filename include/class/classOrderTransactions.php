@@ -58,7 +58,7 @@ class classOrderTransactions extends classData
             }
         }
 
-        $aCompletedTransactions = $this->getOrderTransactionsByOrderIdAndStatus($oOrder->getOrderId(), ['completed']);
+        $aCompletedTransactions = $this->getOrderTransactionsByOrderIdAndStatus($oOrder->getOrderId(), ['completed','Pending']);
         if (!empty($aCompletedTransactions)){
             foreach ($aCompletedTransactions as $oCompletedTransaction){
                 $fSummaToCapture-=$oCompletedTransaction->getTransactionAmount();
@@ -66,7 +66,7 @@ class classOrderTransactions extends classData
         }
 
         if ($fSummaToCapture > 0) {
-            $this->aOrderTransactions = $this->getOrderTransactionsByOrderIdAndStatus($oOrder->getOrderId(), ['AP', 'Pending', 'authorized', 'pending']);
+            $this->aOrderTransactions = $this->getOrderTransactionsByOrderIdAndStatus($oOrder->getOrderId(), ['AP',  'authorized']);
             if (empty($this->aOrderTransactions)) throw new Exception('Order transactions not found');
             try {
                 if (!empty($this->aOrderTransactions)) {
