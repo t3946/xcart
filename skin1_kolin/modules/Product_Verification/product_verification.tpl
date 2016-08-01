@@ -59,7 +59,7 @@
 				{assign var='oManufacturer' value = $oProduct->getManfacturerClass()}
 				{assign var='oVerifyDate' value = $oProduct->getProductLastVerifyDate()}
 				<tr{cycle values=', class="TableSubHead"'} {if $showManufacturer}data-manufacturer-id="{$oManufacturer->getField('manufacturerid')}"{/if}>
-					<td nowrap="nowrap" width="1%">
+					<td width="1%">
 						{if $showManufacturer}
 							<a style="font-weight: bold;" href="{$oManufacturer->getManufacturerModifyURL()}" target="_blank"> {$oManufacturer->getField('manufacturer')}</a>
 							{assign var='showManufacturer' value=false}
@@ -69,7 +69,7 @@
 					</td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getOrderModifyURL()}">{$oOrderManufacturer->getDisplayOrderNumber()}</a></td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getField('productcode')}</a></td>
-					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getField('product')}</a></td>
+					<td><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getField('product')}</a></td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
 					<td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
 					<td align="center">
@@ -101,7 +101,7 @@
 
 
     <tr id="click_to_back_changes" style="display:none;">
-        <td colspan="7" style="padding: 10px 3px; background-color:#FFF;"><a href="#" style="font-weight: bold;" onclick="$('#click_to_back_changes').next('tr').fadeToggle('slow'); return false;">View already verified products</a></td>
+        <td colspan="7" style="padding: 10px 3px; background-color:#FFF;"><a href="#" style="font-weight: bold;" onclick="$('#click_to_back_changes').nextAll('tr').fadeToggle('slow'); return false;">View already verified products</a></td>
     </tr>
 
 
@@ -152,8 +152,12 @@
                                         }
                                     }
                                     //rowtohide.show();
+                                    if ($('#click_to_back_changes').next('tr').is(':visible')) {
+                                        rowtohide.show();
+                                    }
 
                                     $('#click_to_back_changes').after(rowtohide);
+
                                     $('td:first-child > a',rowtohide).show();
                                     $('#click_to_back_changes').show();
                                 });

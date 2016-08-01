@@ -4,6 +4,7 @@ require_once $xcart_dir . "/include/class/classCloneData.php";
 require_once $xcart_dir . "/include/class/classManufacturer.php";
 require_once $xcart_dir . "/include/class/classStoreFront.php";
 require_once $xcart_dir . "/include/class/classOrders.php";
+require_once $xcart_dir . "/include/class/classProductVerifiactionStatus.php";
 
 class classProduct extends classCloneData
 {
@@ -111,7 +112,7 @@ class classProduct extends classCloneData
         return $sResult;
     }
 
-    public function changeVerificationStatus($iStatusId, $sNote='', $add2History = true)
+    public function changeVerificationStatus($iStatusId, $sNote='', $add2History = true, $aOrders)
     {
         global $login;
         $bResult['result'] = false;
@@ -136,14 +137,17 @@ class classProduct extends classCloneData
                 $bResult['result'] = true;
 
                 $this->setField('last_verify_date', $aUpdateParams['last_verify_date']);
-                $this->setField('verification_statusid', $aUpdateParams['verification_statusid']);
 
-                /*$aOrders = classOrders::getInstance()->getOrdersByProductId($this->primaryKeyValue);
-                if (!empty($aOrders)) {
-                    foreach ($aOrders as $oOrder) {
-                        $oOrder->updateVerificationStatus();
+                if (!empty($aOrders) && ($iStatusId == self::PRODUCT_STATUS_PROBLEM_NOT_FIXED || $iStatusId == self::PRODUCT_STATUS_PROBLEM_FIXED )) {
+                    foreach ($aOrders as $iOrderId) {
+                        $oVerificationStatusNew = new classProductVerificationStatus($iStatusId);
+                        $oVerificationStatusOld = new classProductVerificationStatus($this->getField('verification_statusid'));
+                        $sLogMessage = "<b>".$this->getField('productcode')."</b> product verification status: ".$oVerificationStatusOld->getField('name')." -> ".$oVerificationStatusNew->getField('name')."\n";
+                        if (!empty($sNote)) $sLogMessage.= 'Problem/fix description: '.$sNote;
+                        func_log_order($iOrderId, 'X', nl2br($sLogMessage));
                     }
-                }*/
+                }
+                $this->setField('verification_statusid', $aUpdateParams['verification_statusid']);
 
             } else $bResult['error'] = 'Status not updated';
         } else {

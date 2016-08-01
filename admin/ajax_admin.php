@@ -24,11 +24,11 @@ function changeVerifyProductStatus($aPostParam = array())
     $sNote = $aPostParam['note_text'];
     if (!empty($iProductId)) {
         $oProduct = new classProduct($iProductId);
-        $bResult = $oProduct->changeVerificationStatus($iStatusId, $sNote);
+        $bResult = $oProduct->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
         if (!empty($aOrders)) {
             foreach ($aOrders as $iOrderId) {
                 $oOrder = new classOrder($iOrderId);
-                $oOrder->updateVerificationStatus();
+                $oOrder->updateVerificationStatus($sNote);
             }
         }
     }
