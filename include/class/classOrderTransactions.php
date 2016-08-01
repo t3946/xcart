@@ -79,7 +79,7 @@ class classOrderTransactions extends classData
                         if ($fSummaToCapture<=0) break;
                     }
                     $aTransactionStates = $this->getTransactionsStates();
-                    if (!empty($aTransactionStates) && count($aTransactionStates) == 1 && $aTransactionStates['authorized'])
+                    if (!empty($aTransactionStates) && count($aTransactionStates) == 1 && $aTransactionStates['completed'])
                         foreach ($aOrderGroups as $oOrderGroup) {
                             $oOrderGroup->changeOrderGroupStatusCB('P');
                         }
