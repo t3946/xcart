@@ -20,6 +20,8 @@ class classProduct extends classCloneData
     private $oStoreFront;
     private $aProductVerificationHistoryLast = [];
 
+    private $aImagesD = [];
+
     public function __construct($iId = null)
     {
         $this->sPrimaryTable = "products";
@@ -47,6 +49,12 @@ class classProduct extends classCloneData
         return "";
     }
 
+    public function getSKU()
+    {
+        return $this->getField('productcode');
+    }
+
+
     public function getStoreFront()
     {
         if (is_null($this->oStoreFront)) {
@@ -73,7 +81,8 @@ class classProduct extends classCloneData
         return func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled));
     }
 
-    public function getHTMLShot() {
+    public function getHTMLShot()
+    {
         $sProductPage = file_get_contents($this->getProductFrontURL());
         return $sProductPage;
     }
@@ -112,7 +121,7 @@ class classProduct extends classCloneData
         return $sResult;
     }
 
-    public function changeVerificationStatus($iStatusId, $sNote='', $add2History = true, $aOrders)
+    public function changeVerificationStatus($iStatusId, $sNote = '', $add2History = true, $aOrders)
     {
         global $login;
         $bResult['result'] = false;
@@ -120,30 +129,30 @@ class classProduct extends classCloneData
             $aUpdateParams = ['verification_statusid' => $iStatusId];
             $oDatetime = new DateTime();
             if ($iStatusId == self::PRODUCT_STATUS_VERIFY) {
-                $aUpdateParams['last_verify_date'] =  $oDatetime->getTimestamp();
+                $aUpdateParams['last_verify_date'] = $oDatetime->getTimestamp();
             }
             $res = func_array2update($this->sPrimaryTable, $aUpdateParams, 'productid = ' . $this->primaryKeyValue);
 
             if ($res) {
                 if ($add2History) {
                     $aInsertArray = ['productid' => $this->primaryKeyValue,
-                    'verification_note' => addslashes($sNote),
-                    'timestamp' => $oDatetime->getTimestamp(),
-                    'username' => $login,
-                    'oldstatusid' => $this->getField('verification_statusid'),
-                    'newstatusid' => $iStatusId];
+                        'verification_note' => addslashes($sNote),
+                        'timestamp' => $oDatetime->getTimestamp(),
+                        'username' => $login,
+                        'oldstatusid' => $this->getField('verification_statusid'),
+                        'newstatusid' => $iStatusId];
                     func_array2insert('product_verification_history', $aInsertArray);
                 }
                 $bResult['result'] = true;
 
                 $this->setField('last_verify_date', $aUpdateParams['last_verify_date']);
 
-                if (!empty($aOrders) && ($iStatusId == self::PRODUCT_STATUS_PROBLEM_NOT_FIXED || $iStatusId == self::PRODUCT_STATUS_PROBLEM_FIXED )) {
+                if (!empty($aOrders) && ($iStatusId == self::PRODUCT_STATUS_PROBLEM_NOT_FIXED || $iStatusId == self::PRODUCT_STATUS_PROBLEM_FIXED)) {
                     foreach ($aOrders as $iOrderId) {
                         $oVerificationStatusNew = new classProductVerificationStatus($iStatusId);
                         $oVerificationStatusOld = new classProductVerificationStatus($this->getField('verification_statusid'));
-                        $sLogMessage = "<b>".$this->getField('productcode')."</b> product verification status: ".$oVerificationStatusOld->getField('name')." -> ".$oVerificationStatusNew->getField('name')."\n";
-                        if (!empty($sNote)) $sLogMessage.= 'Problem/fix description: '.$sNote;
+                        $sLogMessage = "<b>" . $this->getField('productcode') . "</b> product verification status: " . $oVerificationStatusOld->getField('name') . " -> " . $oVerificationStatusNew->getField('name') . "\n";
+                        if (!empty($sNote)) $sLogMessage .= 'Problem/fix description: ' . $sNote;
                         func_log_order($iOrderId, 'X', nl2br($sLogMessage));
                     }
                 }
@@ -155,6 +164,29 @@ class classProduct extends classCloneData
         }
         return $bResult;
 
+    }
+
+    public function getProductId()
+    {
+        return $this->getField('productid');
+    }
+
+    private function fetchImagesD()
+    {
+        if (empty($this->aImagesD)) {
+            $aImages = func_query("SELECT * FROM " . self::$sql_tbl['images_D'] . " WHERE id = ".$this->getProductId()." ORDER BY orderby ASC");
+            foreach ($aImages as $aImage) {
+                $oProductImage = new classProductImage('D');
+                $oProductImage->fillPrimaryTableValues($aImage);
+                $this->aImagesD[] = $oProductImage;
+            }
+        }
+    }
+
+    public function getImagesD()
+    {
+        $this->fetchImagesD();
+        return $this->aImagesD;
     }
 
 }
