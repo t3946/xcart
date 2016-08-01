@@ -5,6 +5,7 @@ require_once $xcart_dir . "/include/class/classManufacturer.php";
 require_once $xcart_dir . "/include/class/classStoreFront.php";
 require_once $xcart_dir . "/include/class/classOrders.php";
 require_once $xcart_dir . "/include/class/classProductVerifiactionStatus.php";
+require_once $xcart_dir . "/include/class/classProductImage.php";
 
 class classProduct extends classCloneData
 {
@@ -21,6 +22,10 @@ class classProduct extends classCloneData
     private $aProductVerificationHistoryLast = [];
 
     private $aImagesD = [];
+    private $aImagesP = [];
+    private $aImagesT = [];
+
+    private $aPricing = [];
 
     public function __construct($iId = null)
     {
@@ -171,22 +176,43 @@ class classProduct extends classCloneData
         return $this->getField('productid');
     }
 
-    private function fetchImagesD()
+    private function fetchImages($type)
     {
-        if (empty($this->aImagesD)) {
-            $aImages = func_query("SELECT * FROM " . self::$sql_tbl['images_D'] . " WHERE id = ".$this->getProductId()." ORDER BY orderby ASC");
+        $sImagesVar = "aImages".$type;
+        if (empty($this->$sImagesVar)) {
+            $aImages = func_query("SELECT * FROM " . self::$sql_tbl['images_'.$type] . " WHERE id = ".$this->getProductId()." ORDER BY orderby ASC");
+            if (!empty($aImages))
             foreach ($aImages as $aImage) {
-                $oProductImage = new classProductImage('D');
+                $oProductImage = new classProductImage($type);
                 $oProductImage->fillPrimaryTableValues($aImage);
-                $this->aImagesD[] = $oProductImage;
+                $var = &$this->$sImagesVar;
+                $var[] = $oProductImage;
             }
         }
     }
 
-    public function getImagesD()
+    public function getImages($type)
     {
-        $this->fetchImagesD();
-        return $this->aImagesD;
+        $sImagesVar = "aImages".$type;
+        $this->fetchImages($type);
+        return $this->$sImagesVar;
+    }
+
+    private function fetchPricing()
+    {
+        if (empty($this->aPricing)) {
+            $aPricing = func_query("SELECT * FROM " . self::$sql_tbl['pricing'] . " WHERE productid = ".$this->getProductId()." ORDER BY quantity ASC");
+            if (!empty($aPricing))
+                foreach ($aPricing as $aPrice){
+
+                }
+        }
+    }
+
+    public function getPricing()
+    {
+        $this->fetchPricing();
+        return $this->aPricing;
     }
 
 }

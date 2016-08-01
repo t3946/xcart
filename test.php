@@ -15,8 +15,9 @@ $oProduct = new classProduct(275567);
 
 $oHTMLShot = new classHTMLShot();
 $oHTMLShot->createHTMLShot($oProduct);
+var_dump($oProduct);
 
-$oProduct->getHTMLShot();
+//$oProduct->getHTMLShot();
 
 
 
