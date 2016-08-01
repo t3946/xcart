@@ -37,9 +37,9 @@
 
 define("NUMBER_VARS", "shipping_freight,price,list_price,weight,cost_to_us,price,map_price,new_map_price");
 define('USE_TRUSTED_POST_VARIABLES',1);
-# START: random:20460 [2010 Mar 18 13:43] 
+# START: random:20460 [2010 Mar 18 13:43]
 $trusted_post_variables = array("product_lng","product_new_descr","product_new_full_descr","descr","fulldescr","posted_data","js_code","efields","free_ship_text");
-# END: random:20460 [2010 Mar 18 13:43] 
+# END: random:20460 [2010 Mar 18 13:43]
 
 if ((isset($_POST['section']) && $_POST['section'] == 'lng') || (isset($_GET['section']) && $_GET['section'] == 'lng')) {
 	define("IS_MULTILANGUAGE", 1);

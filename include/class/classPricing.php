@@ -4,11 +4,11 @@ require_once $xcart_dir . "/include/class/classData.php";
 
 class classPricing extends classData
 {
-    public function __construct($iId = null)
+    public function __construct($aParams = [])
     {
-        $this->sPrimaryTable = "pricing";
-        $this->sPrimaryKeyFiled = "id";
+        $this->aPrimaryKeys = ['priceid', 'quantity'];
+        $this->sPrimaryTable = 'pricing';
+        parent::__construct($aParams);
 
-        parent::__construct($iId);
     }
 }

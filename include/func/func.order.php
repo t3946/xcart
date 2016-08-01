@@ -1537,16 +1537,19 @@ die("123");
 			$oProduct = new classProduct((int)$product['productid']);
 			$aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
 			if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
-				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY);
+				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
 			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0) {
 				$iLastProductVerifyDate = $oProduct->getField('last_verify_date');
 				$currentDate = new DateTime("now");
 				$iDaysInterval = $currentDate->diff($iLastProductVerifyDate)->days;
 				if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
-					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY);
+					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
 				}
 			} else {
-				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_NOT_VERIFY);
+				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_NOT_VERIFY,'', true, [$orderid]);
+				include_once $xcart_dir."/include/class/classHTMLShot.php";
+				$oHTMLShot = new classHTMLShot();
+				$oHTMLShot->createHTMLShot($oProduct, $orderid);
 			}
 
 		}

@@ -6,6 +6,8 @@ require_once $xcart_dir . "/include/class/classStoreFront.php";
 require_once $xcart_dir . "/include/class/classOrders.php";
 require_once $xcart_dir . "/include/class/classProductVerifiactionStatus.php";
 require_once $xcart_dir . "/include/class/classProductImage.php";
+require_once $xcart_dir . "/include/class/classPricing.php";
+require_once $xcart_dir . "/include/class/classHTMLShot.php";
 
 class classProduct extends classCloneData
 {
@@ -86,10 +88,15 @@ class classProduct extends classCloneData
         return func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled));
     }
 
-    public function getHTMLShot()
+    public function getHTMLShot($iOrderID)
     {
-        $sProductPage = file_get_contents($this->getProductFrontURL());
-        return $sProductPage;
+        $oResult = null;
+        $aHTMLShot = func_query_first("SELECT * FROM " . self::$sql_tbl['product_htmlshot'] . " WHERE product_id=".$this->getProductId()." AND order_id=$iOrderID");
+        if (!empty($aHTMLShot)){
+            $oResult = new classHTMLShot();
+            $oResult->fillPrimaryTableValues($aHTMLShot);
+        }
+        return $oResult;
     }
 
     public function getProductURLOnDistributorWebSite()
@@ -204,7 +211,9 @@ class classProduct extends classCloneData
             $aPricing = func_query("SELECT * FROM " . self::$sql_tbl['pricing'] . " WHERE productid = ".$this->getProductId()." ORDER BY quantity ASC");
             if (!empty($aPricing))
                 foreach ($aPricing as $aPrice){
-
+                    $oProductPricing = new classPricing();
+                    $oProductPricing->fillPrimaryTableValues($aPrice);
+                    $this->aPricing[] = $oProductPricing;
                 }
         }
     }
@@ -213,6 +222,11 @@ class classProduct extends classCloneData
     {
         $this->fetchPricing();
         return $this->aPricing;
+    }
+
+    public function getProductTableValues()
+    {
+        return $this->aPrimaryTableValue;
     }
 
 }

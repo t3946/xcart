@@ -23,7 +23,7 @@
 
 
 {capture name=dialog}
-	<div style="font-weight: bold; margin-bottom: 20px;">
+	<div style="margin-bottom: 20px;">
 		For each product compare FRONT END and DISTR WEBSITE columns to make sure that product descriptions and images are identical. If any descrepencies, choose VERIFIED = 'No' and explain what's the difference.
 	</div>
 
@@ -58,6 +58,7 @@
 			{if ($oProduct->getField('manufacturerid') == $iManufacturerId && $oProduct->getField('verification_statusid') < 3)}
 				{assign var='oManufacturer' value = $oProduct->getManfacturerClass()}
 				{assign var='oVerifyDate' value = $oProduct->getProductLastVerifyDate()}
+				{assign var='oHTMLShot' value = $oProduct->getHTMLShot($oOrderManufacturer->getField('orderid'))}
 				<tr{cycle values=', class="TableSubHead"'} {if $showManufacturer}data-manufacturer-id="{$oManufacturer->getField('manufacturerid')}"{/if}>
 					<td width="1%">
 						{if $showManufacturer}
@@ -69,7 +70,13 @@
 					</td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getOrderModifyURL()}">{$oOrderManufacturer->getDisplayOrderNumber()}</a></td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getField('productcode')}</a></td>
-					<td><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getField('product')}</a></td>
+					<td><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getField('product')}</a>
+                        {if (!empty($oHTMLShot))}
+                            <a title="View HTML-Shot" style="float:right; margin-top:3px;" href="#" class="html-shot-view">
+                                <img src="{$ImagesDir}/html-shot.png" />
+                            </a>
+                        {/if}
+                    </td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
 					<td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
 					<td align="center">
