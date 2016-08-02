@@ -90,6 +90,8 @@ class classAmazonMWS
     const BACK_PROCESS_LOG_NAME = 'AmazonFeeReport';
     const BACK_PROCESS_LOG_NAME_SETTLEMENT = 'Amazon_Reports_Cron';
     const DEFAULT_ORDER_MESSAGE = 'Thank you for your order!';
+    const AMAZON_ORDER_LINK = "https://sellercentral.amazon.com/gp/orders-v2/list/ref=ag_myo_apsearch_myosearch?searchType=OrderID&searchKeyword=%s&showPending=1&isDebug=&isAdvancedSearch=1&ignoreSearchType=0&searchLanguage=en_US";
+
     private $oMWSService;
     private $marketplaceIdArray;
     private $dom_xml_arr;
@@ -971,12 +973,30 @@ class classAmazonMWS
         return $this;
     }
 
+
     /**
      * @param classOrderGroup $oOrderGroup
+     * @param string $sAmazonShippingMethodSelect
+     * @return bool
      */
-    public function shipOrderGroupByAmazon($oOrderGroup, $sAmazonShippingMethodSelect)
+    public function shipOrderGroupByAmazon(classOrderGroup $oOrderGroup, $sAmazonShippingMethodSelect)
     {
+        global $login;
         $oOrder = $oOrderGroup->getOrderInstance();
+        $log = "Try to place order shipping by Amazon\n";
+
+        if ($oOrder->getOrderGroupsCount() == 1 && $oOrderGroup->getOrderGroupStatusCB() == 'AP') {
+            if (!$oOrder->captureOrderAmount()) {
+                func_log_order($oOrderGroup->getOrderId(), 'X', nl2br($log), $login);
+                return false;
+            }
+        }
+        if ($oOrderGroup->getOrderGroupStatusCB() != 'P') {
+            $log .= "Shipping order by Amazon - failed. Order group status not Paid.\n";
+            func_log_order($oOrderGroup->getOrderId(), 'X', nl2br($log), $login);
+            return false;
+        }
+
         $address = new FBAOutboundServiceMWS_Model_Address();
 
         $address->setName($oOrder->getClientShippingName());
@@ -1024,27 +1044,20 @@ class classAmazonMWS
             $req->setShippingSpeedCategory($sAmazonShippingMethodSelect);
             $req->setDestinationAddress($address);
 
-            $req->setItems($list); var_dump($req);
+            $req->setItems($list);
 
             try {
-                $response = $this->oMWSService->CreateFulfillmentOrder($req);
+                //$response = $this->oMWSService->CreateFulfillmentOrder($req);
 
-                $log = "Ship by Amazon. AmazonShippingOrderId: ".$oOrderGroup->getAmazonShippingOrderId()."\n";
+                $log .= "Amazon shipping order placed: <a href='".sprintf(self::AMAZON_ORDER_LINK,$oOrderGroup->getAmazonShippingOrderId())."' target='_blank'>".$oOrderGroup->getAmazonShippingOrderId()."</a> \n";
                 $log .= "DisplayableOrderComment: ".$sDisplayAmazonOrderComment."\n";
                 $log .= "ShippingSpeedCategory: ".$sAmazonShippingMethodSelect."\n";
-                $log .= "Amazon MWS Service Response\n";
-                $log .="==========================================  ===================================\n";
-                $dom = new DOMDocument();
-                $dom->loadXML($response->toXML());
-                $dom->preserveWhiteSpace = false;
-                $dom->formatOutput = true;
-                //$log .= $dom->saveXML();
-                $log .="ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n";
-
                 $oOrderGroup->updateField('amz_fullfilment_order_placed','Y');
+                $oOrderGroup->changeOrderGroupStatusDC('L');
+
 
             } catch (FBAOutboundServiceMWS_Exception $ex) {
-                $log = "Caught Exception: " . $ex->getMessage() . "\n";
+                $log .= "Caught Exception: " . $ex->getMessage() . "\n";
                 $log .="Response Status Code: " . $ex->getStatusCode() . "\n";
                 $log .="Error Code: " . $ex->getErrorCode() . "\n";
                 $log .="Error Type: " . $ex->getErrorType() . "\n";
@@ -1052,8 +1065,10 @@ class classAmazonMWS
                 $log .="XML: " . $ex->getXML() . "\n";
                 $log .="ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n";
             }
-            global $login;
+
             func_log_order($oOrderGroup->getOrderId(),'X',nl2br($log), $login);
+
+
         }
     }
 }

@@ -894,13 +894,6 @@ if ($REQUEST_METHOD == "POST") {
             $login_type = "C";
             $current_area = "C";
             foreach ($add_productcode as $kkk => $sku) {
-				if (func_check_comma_in_field($orderid, $add_amount[$kkk], 'add_amount')) {
-					$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-					$top_message["type"] = "I";
-					$section_name_top_message = $top_message;
-					x_session_save("section_name_top_message");
-					break;
-				}
                 $amount = intval($add_amount[$kkk]);
                 if (empty($amount)) {
                     continue;
@@ -1078,13 +1071,6 @@ if ($REQUEST_METHOD == "POST") {
 
         if (!empty($edit_additional_fee_name) && is_array($edit_additional_fee_name)) {
             foreach ($edit_additional_fee_name as $k => $v) {
-				if (func_check_comma_in_field($orderid, $add_additional_fee_value[$k], 'additional_fee_value')) {
-					$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-					$top_message["type"] = "I";
-					$section_name_top_message = $top_message;
-					x_session_save("section_name_top_message");
-					break;
-				}
 
                 $add_price = price_format($v["additional_fee_value"]);
                 $additional_fee_row["additional_fee_name"] = $v["additional_fee_name"];
@@ -2347,7 +2333,8 @@ $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_orde
 $smarty->assign("order", $order);
 
 
-$aAmazonShippingMethods = classShippings::getShippingMethodsByCode('Amazon');
+$oShippings = new classShippings();
+$aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');
 $aAmazonShippings = [];
 
 if (!empty($aAmazonShippingMethods)) {
