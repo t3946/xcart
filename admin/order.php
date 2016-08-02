@@ -1881,7 +1881,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 	# Send manufacturer notification and update order's manufacturer notified status
 	#
 
-	if ($order['product_verification_status_code'] != 'PV') {
+	if (!empty($active_modules['Product_Verification']) && $order['product_verification_status_code'] != 'PV') {
 		$top_message = array(
 				'content' => func_get_langvar_by_name('lbl_dispatch_deny_before_product_verification'),
 				'type' => 'I'
