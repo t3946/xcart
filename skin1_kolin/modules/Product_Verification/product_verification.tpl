@@ -187,7 +187,7 @@
         $('select.change_product_verify_status').each(function() {
             var id = $(this).data('product-verification-id');
             if (supervise[id]) {
-                $(this).parent().parent().remove();
+                //$(this).parent().parent().remove();
             }
             else {
                 supervise[id] = [];
@@ -195,6 +195,7 @@
             supervise[id].push($(this).data('order-id'));
 
         });
+
         $.each( supervise, function( key, value ) {
             $('select[data-product-verification-id='+key+']:visible').attr('data-order-id',value);
         });
