@@ -2343,3 +2343,4 @@ if (!empty($aAmazonShippingMethods)) {
 
     }
     $smarty->assign("aAmazonShippingMethods", $aAmazonShippings);
+}
