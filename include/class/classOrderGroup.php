@@ -989,7 +989,7 @@ class classOrderGroup extends classData
         return $this->getField('cb_status');
     }
 
-    public function getOrderGroupStatusBD($sNewStatus)
+    public function getOrderGroupStatusBD()
     {
         return $this->getField('bd_status');
     }

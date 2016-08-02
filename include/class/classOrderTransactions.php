@@ -22,6 +22,8 @@ class classOrderTransactions extends classData
     {
         $aOrderTransactions = [];
 
+        $this->oSQL->init();
+
         $this->oSQL->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition("orderid = " . $iOrderId);
         if (!empty($Status) && is_array($Status)) {
             $this->oSQL->addCondition("transaction_status IN ('" . implode("','", $Status)."')");
