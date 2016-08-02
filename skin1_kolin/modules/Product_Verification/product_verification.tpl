@@ -1,4 +1,3 @@
-
 {if $supplemental_category_section ne "Y"}
 
 {if ($smarty.get.mode ne "info")}
@@ -24,7 +23,7 @@
 
 {capture name=dialog}
 	<div style="margin-bottom: 20px;">
-		For each product compare FRONT END and DISTR WEBSITE columns to make sure that product descriptions and images are identical. If any descrepencies, choose VERIFIED = 'No' and explain what's the difference.
+        {$lng.lbl_product_verification_explanation}
 	</div>
 
     <div id="send_note_for_product" class="ajax_note_field" style="display: none;">

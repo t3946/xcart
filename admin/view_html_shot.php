@@ -80,6 +80,19 @@ if (!empty($id) && is_numeric($id)) {
 
     include $xcart_dir . "/modules/Wholesale_Trading/product.php";
 
+    $location = [];
+    if (!empty($product_info)) {
+        $location[] = array($product_info['product'],'');
+        if (is_array($location) && !empty($location)) {
+            if (is_array($location)) {
+                foreach (array_reverse($location) as $l) {
+                    $product_info['meta_keywords'] .= $l[0] . ', ';
+                }
+                $product_info['meta_keywords'] = trim(strip_tags(substr($product_info['meta_keywords'], 0, strlen($product_info['meta_keywords']) - 2)));
+            }
+        }
+    }
+
 }
 
 # Assign the current location line

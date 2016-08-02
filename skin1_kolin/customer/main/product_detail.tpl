@@ -1,8 +1,37 @@
+<html>
+<head>
+    <title>
+        {if $product.title_tag ne ""}
+            {$product.title_tag}
+        {else}
+            {capture name=title}
+                {if $config.SEO.page_title_format eq "A"}
+                    {section name=position loop=$location}
+                        {if not %position.first%}&nbsp;::&nbsp;{/if}
+                        {$location[position].0|strip_tags|escape}
+                    {/section}
+                {else}
+                    {section name=position loop=$location step=-1}
+                        {if not %position.first%}&nbsp;::&nbsp;{/if}
+                        {$location[position].0|strip_tags|escape}
+                    {/section}
+                {/if}
+            {/capture}
+            {if $config.SEO.page_title_limit <= 0}
+                {$smarty.capture.title|replace:"&amp;":"&"}
+            {else}
+                {$smarty.capture.title|replace:"&nbsp;":" "|truncate:$config.SEO.page_title_limit|replace:" ":"&nbsp;"}
+            {/if}
+        {/if}
+    </title>
+
 <script src="{$SkinDir}/jquery-1.4.3.min.js" type="text/javascript"></script>
 <script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
 <script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />
 <link rel="stylesheet" href="{$SkinDir}/skin1.css" />
+</head>
+<body>
 {if $oProduct->getField('seo_product_name') ne ""}
     {assign var="producttitle" value=$oProduct->getField('seo_product_name')}
 {elseif $oProduct->getField('producttitle') ne ""}
@@ -576,5 +605,5 @@
     <a name="dp_images"></a>
     {include file="modules/Detailed_Product_Images/product_images.tpl" }
 {/if}
-
-
+</body>
+</html>
