@@ -6,6 +6,7 @@ require_once $xcart_dir . "/include/class/classOrderGroup.php";
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
 require_once $xcart_dir . "/include/class/classManufacturers.php";
+require_once $xcart_dir . "/include/class/classOrderTransactions.php";
 
 class classOrder extends classCloneData
 {
@@ -245,11 +246,12 @@ class classOrder extends classCloneData
         $sClientName = '';
         $sTitle = $this->getField('s_title');
         if (!empty($sTitle))
-            $sClientName.= $sTitle.' ';
-        return $sClientName.$this->getField('s_firstname');
+            $sClientName .= $sTitle . ' ';
+        return $sClientName . $this->getField('s_firstname');
     }
 
-    public function getOrderDate($sFormat = null) {
+    public function getOrderDate($sFormat = null)
+    {
         $date = new DateTime();
         $date->setTimestamp((int)$this->getField('date'));
         if (!empty($sFormat)) {
@@ -261,8 +263,32 @@ class classOrder extends classCloneData
     /**
      * @return string
      */
-    public function getOrderPrefix() {
+    public function getOrderPrefix()
+    {
         return $this->getField('order_prefix');
+    }
+
+    public function getOrderId()
+    {
+        return $this->getField('orderid');
+    }
+
+    public function captureOrderAmount()
+    {
+        global $login;
+        $aOrderTransactions = new classOrderTransactions();
+        try {
+            $aOrderTransactions->captureOrderAmount($this);
+        } catch (Exception $ex) {
+            func_log_order($this->getOrderId(),'X',$ex->getMessage(),$login);
+            return false;
+        }
+        return $this;
+    }
+
+    public function getOrderCurrency()
+    {
+        return $this->getField('currency');
     }
 
 }
