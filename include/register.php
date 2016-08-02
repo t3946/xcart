@@ -565,7 +565,7 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 			# Currently logged admin cannot change self status or activity flag
 			$profile_values['change_password'] = empty($change_password) ? 'N' : 'Y';
 			$profile_values['status'] = empty($status) ? 'N' : $status;
-			$profile_values['activity'] = empty($activity) ? 'N' : $activity;
+			$profile_values['activity'] = empty($status) ? 'N' : $status;
 
 			$old_activity = func_query_first_cell("SELECT activity FROM $sql_tbl[customers] WHERE login='$uname' AND usertype='$login_type'");
 			$activity_changed = ($profile_values['activity'] != $old_activity);

@@ -29,5 +29,4 @@ class classOrderDetail extends classCloneData
     public function getAmount() {
         return $this->getField('amount');
     }
-
 }

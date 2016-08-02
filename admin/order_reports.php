@@ -68,11 +68,12 @@ if ($REQUEST_METHOD == "POST") {
 ##
 ###
 		if (!empty($posted_data["start_date"]) && !empty($posted_data["end_date"])){
-			$start_date_arr = explode("/", $posted_data["start_date"]);
-			$posted_data["start_date"] = mktime(0,0,0,$start_date_arr[0],$start_date_arr[1],$start_date_arr[2]);
 
-                        $end_date_arr = explode("/", $posted_data["end_date"]);
-                        $posted_data["end_date"] = mktime(23,59,59,$end_date_arr[0],$end_date_arr[1],$end_date_arr[2]);
+            $start_date_arr = explode("/", $posted_data["start_date"]);
+            $posted_data["start_date"] = mktime(0, 0, 0, $start_date_arr[0], $start_date_arr[1], $start_date_arr[2]);
+
+            $end_date_arr = explode("/", $posted_data["end_date"]);
+            $posted_data["end_date"] = mktime(23, 59, 59, $end_date_arr[0], $end_date_arr[1], $end_date_arr[2]);
 		}
 ###
 ##
@@ -88,7 +89,6 @@ if ($REQUEST_METHOD == "POST") {
 }
 
 if ($mode == "report") {
-
 	x_load('order', 'order_edit');
 
 	if (is_array($search_data["order_reports"])) {
@@ -125,6 +125,38 @@ if ($mode == "report") {
 		$search_condition .= " AND o.date>='".($start_date)."'";
 		$search_condition .= " AND o.date<='".($end_date)."'";
 	}
+
+    if ($data["report_mode"] == "graph") {
+
+
+        global $xcart_dir;
+        require_once $xcart_dir."/include/class/classOrderReports.php";
+        $oReport = new classOrderReports();
+        $oReport->setStartDate($start_date)->setEndDate($end_date)->setOrderSource($data['orders_source'])->
+        setStoreFronts($data['storefront_ids'])->setManufacturers($data['manufacturers'])->setAccountingMethod($data['accounting_method'])->
+        setOrderStatus($data['cb_status']);
+
+
+        switch($data['profit_margin_range']) {
+            case 'margin_1_2':
+                $oReport->setProfitMarginRange($data['profit_margin_range'],$data['profit_margin_range_1'], $data['profit_margin_range_2']);
+                break;
+            case 'margin_less_1':
+                $oReport->setProfitMarginRange($data['profit_margin_range'],null, $data['profit_margin_range_less_1']);
+                break;
+            default:
+                $oReport->setProfitMarginRange($data['profit_margin_range']);
+        }
+
+
+        $aReportsData = $oReport->setGraphPeriod($data['graph_report_period'])->getReportsData();
+        $smarty->assign("report_data", $aReportsData);
+
+        func_display("main/order_report_graph.tpl",$smarty);
+
+        exit;
+
+    }
 
 #
 ##
@@ -177,6 +209,9 @@ if ($mode == "report") {
 			$orders[$k]["shipping_groups"] = func_get_shipping_groups($v["orderid"]);
 			foreach ($orders[$k]["shipping_groups"] as $mid => $group) {
 
+				require_once $xcart_dir . "/include/class/classOrderGroup.php";
+				$oOrderGroup = new classOrderGroup(['orderid'=>$v["orderid"], 'manufacturerid'=>$mid]);
+				$orders[$k]["shipping_groups"][$mid]['reconcile_status'] = $oOrderGroup->getReconciledStatus();
 				if (
 				    (empty($group["invoices"]) && empty($group["memos"]) && $data['profit_margin_range'] == "margin_less_100") // Nothing to calculate
 		                    || (!empty($data['manufacturers']) && !in_array($mid, $data['manufacturers'])) 
@@ -192,12 +227,12 @@ if ($mode == "report") {
 				} else {
 
 
-                                         if ($data["accounting_method"] == "accrual" && $group["cb_status"] == "O"){
-                                                  $group["accounting"][0]["net"] = $group["total"]["net"];
-                                                  $group["accounting"][0]["gross"] = $group["total"]["gross"];
+					if ($data["accounting_method"] == "accrual" && $group["cb_status"] == "O") {
+						$group["accounting"][0]["net"] = $group["total"]["net"];
+						$group["accounting"][0]["gross"] = $group["total"]["gross"];
 
-                                                  $orders[$k]["shipping_groups"][$mid]["accounting"][0]["net"] = $group["total"]["net"];
-                                                  $orders[$k]["shipping_groups"][$mid]["accounting"][0]["gross"] = $group["total"]["gross"];
+						$orders[$k]["shipping_groups"][$mid]["accounting"][0]["net"] = $group["total"]["net"];
+						$orders[$k]["shipping_groups"][$mid]["accounting"][0]["gross"] = $group["total"]["gross"];
 
 
 ###
@@ -209,9 +244,9 @@ if ($mode == "report") {
 
 ##
 
-						$orders[$k]["shipping_groups"][$mid]["profit_margin"] = @price_format($group["accounting"][5]["net"]/$group["accounting"][0]["net"]*100);
+						$orders[$k]["shipping_groups"][$mid]["profit_margin"] = @price_format($group["accounting"][5]["net"] / $group["accounting"][0]["net"] * 100);
 
-                                         }
+					}
 
 
 					$manufacturers[$mid] = $group["code"];

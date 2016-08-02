@@ -1,4 +1,4 @@
-{if 
+{if
 	$ga_page_name ne "" &&
 	$N_key ne "" &&
 	(

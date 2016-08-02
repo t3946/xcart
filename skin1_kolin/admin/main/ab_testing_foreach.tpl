@@ -107,6 +107,7 @@
 	   <td style="background-color: #D9EAD3;">variant_id</td>
 	   <td style="background-color: #D9EAD3;">variant_name</td>
 	   <td style="background-color: #D9EAD3;">is_default</td>
+	   <td style="background-color: #D9EAD3;">variant for webbots</td>
 	   <td style="background-color: #D9EAD3;">total hits count</td>
 	   <td style="background-color: #D9EAD3;">reach goal count</td>
 	   <td style="background-color: #D9EAD3;">dollar amount of goal conversions (order total)</td>
@@ -131,6 +132,9 @@
                 </td>
 	        <td>
         	  <input type="checkbox" name="posted_data[ab_point_variants][{$vv.id}][is_default]" value="Y"{if $vv.is_default eq "Y"} checked="checked"{/if} />
+	        </td>
+		    <td>
+        	  <input type="checkbox" name="posted_data[ab_point_variants][{$vv.id}][for_webbot]" value="Y"{if $vv.for_webbot eq "Y"} checked="checked"{/if} />
 	        </td>
                 <td>
                   <input type="text" name="posted_data[ab_point_variants][{$vv.id}][total_hits_count]" value="{$vv.total_hits_count}" size="3" />

@@ -250,22 +250,32 @@ window.attachEvent("onload", anchor_fix);
 	var ga_page_name = '{/literal}{$ga_page_name}{literal}';
 
 	if (obj){
-	$.each(obj.items, function() {
+        $.each(obj.items, function () {
+            if (this.clean_url != '') {
+                a_href = this.clean_url + '/';
+            } else {
+                a_href = 'product.php?productid=' + this.productid;
+            }
+            ga_page_name = this.ga_param;
+            html += '<li class="active">' +
+                    '<div style="text-align: center;">' +
+                    '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>' +
+                    '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">' + this.title + '</a>' +
+                    '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price + '</font>' +
+                    '</div>' +
+                    '</li>';
 
-		if (this.clean_url != ''){
-			a_href = this.clean_url+'/';
-		} else {
-			a_href = 'product.php?productid='+ this.productid;
-		}
-        ga_page_name = this.ga_param;
-                html += '<li class="active">'+
-			  '<div style="text-align: center;">'+
-			  '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>'+
-			  '<br />'+ '<a href="'+ a_href +'" onclick="onProductClick(\''+ this.productid +'\',\''+ this.product +'\',\''+this.category+'\',\''+this.brand+'\',\''+this.N_key+'\',\''+ga_page_name+'\',\''+ this.price +'\'); return !ga.loaded;">' + this.title + '</a>'+
-			  '<br /> <font class="ProductPrice">Our Price: US$ '+ this.price + '</font>'+
-			  '</div>'+
-			'</li>';
-	});
+            ga('ec:addImpression', {
+                'id': this.productid,                   // Product details are provided in an impressionFieldObject.
+                'name': this.product,
+                'category': this.category,
+                'brand': this.brand,
+                'list': ga_page_name,
+                'price': this.price,
+                'position': this.N_key
+            });
+        });
+        ga('send', 'pageview');
 	}
 
 	html += '</ul>';
@@ -398,6 +408,9 @@ window.attachEvent("onload", anchor_fix);
                                         if(cidev_xmlHttp.readyState==4){
                                                 if(cidev_xmlHttp.status==200){
                                                         cidev_id$("show_next_products_block_"+ajax_navigation_page_next).innerHTML=cidev_xmlHttp.responseText;
+                                                    var t = document.getElementById('show_next_products_block_'+ajax_navigation_page_next);
+                                                    scripts = t.getElementsByTagName('script');
+                                                    $.globalEval($(scripts[0]).text());
 
 //-Start-//
 							$('#load_next_productids').attr('data-value','');
@@ -858,9 +871,10 @@ document.body.appendChild(element10);
 {literal}
 
 {/literal}
-/*
+
 {if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 {literal}
+/*
 var element11 = document.createElement("script");
 element11.src = "{/literal}{$SkinDir}{literal}/check_zipcode.js";
 document.body.appendChild(element11);
@@ -868,17 +882,10 @@ document.body.appendChild(element11);
 var element12 = document.createElement("script");
 element12.src = "{/literal}{$SkinDir}{literal}/cidev_ajax.js";
 document.body.appendChild(element12);
-
+*/
 {/literal}
 {/if}
-{literal}
-*/
 
-var element13 = document.createElement("script");
-element13.src = "//www.googleadservices.com/pagead/conversion.js";
-document.body.appendChild(element13);
-
-{/literal}
 {if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search" || 1==1}
 {literal}
     var element14 = document.createElement("script");

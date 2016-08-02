@@ -1085,9 +1085,9 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classProducts.php";
-		$classProduct = new classProducts();
-		$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
-		unset($classProduct);
+		$classProduct = new classProduct($product['productid']);
+		$mpn = $classProduct->getMPN();
+
 
         /*$pos = strpos($product['productcode'], '-');
         $mpn = '';
@@ -1098,8 +1098,9 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 	    $product['mpn'] = $mpn;
 
 	if (!empty($product["d_website_search_for_sku_url"]) && !empty($mpn) && ($current_area != 'C' && !empty($current_area))){
-		$product["d_website_search_for_sku_url"] = str_replace("{{mpn}}", $mpn, $product["d_website_search_for_sku_url"]);
+		$product["d_website_search_for_sku_url"] = $classProduct->getProductURLOnDistributorWebSite();
 	}
+	unset($classProduct);
 ###
 ##
 #

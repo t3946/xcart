@@ -168,7 +168,8 @@ class classManufacturers extends classCloneData
             'dcad_routing_number',
             'dcad_account_number',
             'parent_manufacturer_id',
-            'root_categoryid_for_cloned_products');
+            'root_categoryid_for_cloned_products',
+            'distributor_charges_for_each_order_twice_and_split_invoices');
 
         $this->arrCheckFields['shipping_rates']  = array('rateid',
             'shippingid',

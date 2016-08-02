@@ -2,9 +2,11 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classCloneData.php";
 require_once $xcart_dir . "/include/class/classOrderDetail.php";
+require_once $xcart_dir . "/include/class/classOrderGroup.php";
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
 require_once $xcart_dir . "/include/class/classManufacturers.php";
+require_once $xcart_dir . "/include/class/classOrderTransactions.php";
 
 class classOrder extends classCloneData
 {
@@ -16,6 +18,7 @@ class classOrder extends classCloneData
     const ADMIN_ORDER_MODIFY_URL = '/admin/order.php?orderid=%d';
 
     private $aOrderDetails = [];
+    private $aOrderGroups = [];
     /**
      * @var classProduct[]
      */
@@ -30,7 +33,8 @@ class classOrder extends classCloneData
         parent::__construct($aOrderData);
     }
 
-    public static function getInstance($iId = null){
+    public static function getInstance($iId = null)
+    {
         return new self($iId);
     }
 
@@ -47,6 +51,21 @@ class classOrder extends classCloneData
         return $this;
     }
 
+    private function fetchOrderGroups()
+    {
+        if (empty($this->aOrderGroups)) {
+            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_groups'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
+            if (!empty($aOrderGroups) && is_array($aOrderGroups)) {
+                foreach ($aOrderGroups as $aOrderGroup) {
+                    $oOrderGroup = new classOrderGroup();
+                    $oOrderGroup->fillPrimaryTableValues($aOrderGroup);
+                    $this->aOrderGroups[] = $oOrderGroup;
+                }
+            }
+        }
+        return $this;
+    }
+
     /**
      * @return classOrderDetail[]
      */
@@ -54,6 +73,21 @@ class classOrder extends classCloneData
     {
         $this->fetchOrderDetails();
         return $this->aOrderDetails;
+    }
+
+    /**
+     * @return classOrderGroup[]
+     */
+    public function getOrderGroups()
+    {
+        $this->fetchOrderGroups();
+        return $this->aOrderGroups;
+    }
+
+    public function getOrderGroupsCount()
+    {
+        $this->fetchOrderGroups();
+        return count($this->aOrderGroups);
     }
 
     private function fetchOrderProductsManufacturers()
@@ -128,8 +162,9 @@ class classOrder extends classCloneData
         return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled));
     }
 
-    public static function getOrderStatusByCode($sCode) {
-        return func_query_first("SELECT * FROM ".self::$sql_tbl['order_statuses']." WHERE code='$sCode'");
+    public static function getOrderStatusByCode($sCode)
+    {
+        return func_query_first("SELECT * FROM " . self::$sql_tbl['order_statuses'] . " WHERE code='$sCode'");
     }
 
     public function changeVerificationStatus($sNewStatus)
@@ -181,6 +216,82 @@ class classOrder extends classCloneData
             }
 
         }
+    }
+
+    public function isOrderAmazon()
+    {
+        $sAmazonOrderId = $this->getField('amazonorderid');
+        return !empty($sAmazonOrderId);
+    }
+
+    public function getAmazonChanell()
+    {
+        return $this->getField('amazon_fulfillment_channel');
+    }
+
+    public function recalculateAccounting()
+    {
+        $aOrderGroups = $this->getOrderGroups();
+        if (!empty($aOrderGroups)) {
+            foreach ($aOrderGroups as $oOrderGroup) {
+                $oOrderGroup->recalculateAccounting();
+            }
+        }
+    }
+
+    public function getOrderCustomerNotes()
+    {
+        return $this->getField('customer_notes');
+    }
+
+    public function getClientShippingName()
+    {
+        $sClientName = '';
+        $sTitle = $this->getField('s_title');
+        if (!empty($sTitle))
+            $sClientName .= $sTitle . ' ';
+        return $sClientName . $this->getField('s_firstname');
+    }
+
+    public function getOrderDate($sFormat = null)
+    {
+        $date = new DateTime();
+        $date->setTimestamp((int)$this->getField('date'));
+        if (!empty($sFormat)) {
+            return $date->format($sFormat);
+        }
+        return $date->getTimestamp();
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderPrefix()
+    {
+        return $this->getField('order_prefix');
+    }
+
+    public function getOrderId()
+    {
+        return $this->getField('orderid');
+    }
+
+    public function captureOrderAmount()
+    {
+        global $login;
+        $aOrderTransactions = new classOrderTransactions();
+        try {
+            $aOrderTransactions->captureOrderAmount($this);
+        } catch (Exception $ex) {
+            func_log_order($this->getOrderId(),'X',$ex->getMessage(),$login);
+            return false;
+        }
+        return $this;
+    }
+
+    public function getOrderCurrency()
+    {
+        return $this->getField('currency');
     }
 
 }

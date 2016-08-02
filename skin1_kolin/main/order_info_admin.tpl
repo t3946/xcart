@@ -1,6 +1,7 @@
 {*
 $Id: order_info_admin.tpl, v 1.0.0 2010/03/23 15:16:14 random Exp $
 vim: set ts=2 sw=2 sts=2 et:
+Use $product.oProduct classProduct
 *}
 <script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 {include file="check_zipcode_js.tpl"}
@@ -614,6 +615,10 @@ function check_r_fields(){
         <img title="This product is verified" style="float: right;" src="{$SkinDir}/images/green-verify.png" />
     {/if}
 
+  {if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}<br />
+    <a style="color: #3A3AFF;" href='{$product.oProduct->getProductURLOnDistributorWebSite()}' target="_blank">{$product.oProduct->getMPN()}</a>
+  {/if}
+
   </td>
   <td align="right">{if !$static}<input type="text" size="8" name="items[{$product.itemid}][price]" value="{$product.price|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{include file="currency2.tpl" value=$product.price|price_format}{/if}
 
@@ -715,18 +720,41 @@ Cost to us accurate
 </tr>
 {/foreach}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
-  <td nowrap="nowrap">Carrier:
+  <td nowrap="nowrap">
+    <div style="margin-bottom: 5px;">Carrier:
     {if $v.shipping_code ne ""}
       {$v.shipping_code}
     {else}Flat rate
-    {/if}<br><br>
-    Method:
+    {/if}</div>
+    <div>Method:
     {if !$static}
       <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}" {* style="width: 80%;" *}
-      {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}</td>
+      {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}
+    </div>
+  </td>
+  {assign var="oOrderGroup" value=$v.oOrderGroup}
+  {assign var="oOrderShipping" value= $oOrderGroup->getShippingInstance()}
+  {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
+  {if (!empty($oOrderGroup) && $oOrder->isOrderAmazon() == false && $oOrder->getField('fraud_status') == 'C' &&
+      ($oOrderGroup->getField('cb_status') == 'P' ||
+       $oOrderGroup->getField('cb_status') =='O' ||
+       ($oOrderGroup->getField('cb_status') =='AP' && $oOrder->getOrderGroupsCount()==1 && $order_transactions_totals.authorized_PLUS_captured_totals == $order.extra.total.gross)) &&
+       $oOrderGroup->checkFBAProductsAvailToShipping() && $oOrderGroup->getField('amz_fullfilment_order_placed') !='Y')}
+    <td colspan="2" align="center">
+      <input data-orderid="{$oOrderGroup->getOrderId()}" data-manufacturerid="{$oOrderGroup->getManufacturerId()}" id="submit_amazon_shipment" name="submit_amazon_shipment" type="button"  value="{if ($oOrderGroup->getField('cb_status') =='AP' && $oOrder->getOrderGroupsCount()==1 && $order_transactions_totals.authorized_PLUS_captured_totals == $order.extra.total.gross)}Capture & {/if}Ship now by Amazon" />
+      <select {if $oOrderShipping->isAmazonShipping()} disabled="disabled" {/if}style="margin-top: 7px; width: 88%;" name="amazon_shipping_method_select" id="amazon_shipping_method_select">
+        <option value=""></option>
+        {html_options options=$aAmazonShippingMethods selected=$oOrderGroup->getShippingMethodName()}
+      </select>
+
+    <td colspan="4" style="vertical-align: top;">
+      <input style="margin-bottom: 5px;" id="submit_amazon_shipment_with_notes" name="submit_amazon_shipment_with_notes" type="checkbox" />
+      <label style="position:relative; top:-2px;" for="submit_amazon_shipment_with_notes">with customer notes</label> <br/>
+      <textarea id="submit_amazon_shipment_notes" style="margin-left: 4px;width: 97%; height:26px;" name="submit_amazon_shipment_notes" type="text">{$oOrder->getOrderCustomerNotes()}</textarea>
+    </td>
+  {else}
   <td colspan="6">
     {if $v.tracking}
-
       {assign var="row_conter" value="0"}
       {foreach from=$v.tracking item=t}
 
@@ -751,10 +779,9 @@ Cost to us accurate
         </div>
 
       {/foreach}
-    {else}
-      &nbsp;
     {/if}
   </td>
+  {/if}
   <td align="right">
     {if !$static}
       <input type="hidden" name="groups[{$m_id}][shipping_cost_net_orig]" value="{$v.shipping_cost.net|price_format}" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
@@ -1260,7 +1287,7 @@ Total Product Cost to us
   </td>
   <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.gst hide_zero='Y'}</td>
 {*   <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.pst hide_zero='Y'}</td> *}
-  <td align="right">{include file="currency2.tpl" value=$order.display_subtotal}
+  <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.gross}
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
@@ -1305,15 +1332,15 @@ Total Product Cost to us
   <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.net}</td>
   <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.gst hide_zero='Y'}</td>
 {*  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.pst hide_zero='Y'}</td> *}
-  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.total}</td>
+  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.gross}</td>
   <td>&nbsp;</td>
 </tr>
 
 {if $order_transactions_totals ne ""}
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
-  <td>Transactions amount (authorized/pending +captured ) </td>
+  <td>Total transaction amount <br> (authorized + captured )</td>
   <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
+  <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
   <td>&nbsp;</td>
 </tr>
 
@@ -1413,3 +1440,38 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
 {/if}
 
 </form>
+
+{literal}
+<script type="text/javascript">
+  $( document ).ready(function() {
+    $('#submit_amazon_shipment').on('click', function () {
+      var submit_amazon_shipping_method = $('#amazon_shipping_method_select').val();
+      if (submit_amazon_shipping_method == '') {
+        alert('Please, select Amazon shipping method!');
+      } else {
+
+        if (confirm('Are You Shure?')) {
+          $(this).prop('disabled', true);
+          var orderid = $(this).data('orderid'),
+                  manufacturerid = $(this).data('manufacturerid'),
+                  submit_amazon_shipment_with_notes = $('#submit_amazon_shipment_with_notes').is(':checked'),
+                  submit_amazon_shipment_notes = $('#submit_amazon_shipment_notes').val();
+          $.post(
+                  "ajax_admin.php", {
+                    orderid: orderid,
+                    manufacturerid: manufacturerid,
+                    submit_amazon_shipment_with_notes: submit_amazon_shipment_with_notes,
+                    submit_amazon_shipment_notes: submit_amazon_shipment_notes,
+                    ajax_action: 'ship_order_by_amazon',
+                    amazon_shipping_method_select:  submit_amazon_shipping_method
+                  }
+          ).done(function (data) {
+            //$('#submit_amazon_shipment').prop('disabled', false);
+             window.location.reload();
+          })
+        }
+      }
+    });
+  });
+</script>
+{/literal}

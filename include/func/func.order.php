@@ -93,6 +93,10 @@ function func_get_shipping_groups($orderid) {
 		foreach ($return as $m_id => $group) {
 			$return[$m_id]["tracking"] = unserialize($group["tracking"]);
 
+			global $xcart_dir;
+			require_once $xcart_dir ."/include/class/classOrderGroup.php";
+			$return[$m_id]['oOrderGroup'] = new classOrderGroup(['manufacturerid'=>$m_id, 'orderid'=>$orderid]);
+
 
 #
 ## Fix for old tracking
@@ -209,7 +213,7 @@ function func_get_group_totals($group_products, $group_shipping) {
 # This function creates array with order data
 #
 function func_select_order($orderid) {
-	global $sql_tbl, $config, $current_area, $active_modules, $shop_language;
+	global $sql_tbl, $config, $current_area, $active_modules, $shop_language, $price_details_names;
 
 	$o_date = "date+'".$config["Appearance"]["timezone_offset"]."' as date";
 	$order = func_query_first("select *, $o_date from $sql_tbl[orders] where $sql_tbl[orders].orderid='$orderid'");
@@ -333,7 +337,35 @@ function func_select_order($orderid) {
 	}
 
 	$order["notes"] = stripslashes($order["notes"]);
+
 	$order["extra"] = @unserialize($order["extra"]);
+
+	if (!empty($order["b_company"]) || !empty($order["s_company"])) {
+		$order["extra"] = ["additional_fields" => []];
+		$order["extra"]["additional_fields"][] = ['fieldid' => 1, 'section' => 'B', 'value' => $order['b_company'], 'title' => 'Company'];
+		$order["extra"]["additional_fields"][] = ['fieldid' => 2, 'section' => 'S', 'value' => $order['s_company'], 'title' => 'Company'];
+	}
+	if (!empty($order['tax_info_display_taxed_order_totals']))
+		$order["extra"]['tax_info']['display_taxed_order_totals'] = $order['tax_info_display_taxed_order_totals'];
+	if (!empty($order['tax_info_display_cart_products_tax_rates']))
+		$order["extra"]['tax_info']['display_cart_products_tax_rates'] = $order['tax_info_display_cart_products_tax_rates'];
+
+	if (floatval($order['tax_info_taxed_subtotal']) > 0)
+		$order["extra"]['tax_info']['taxed_subtotal'] = $order['tax_info_taxed_subtotal'];
+	if (floatval($order['tax_info_taxed_discounted_subtotal']) > 0)
+		$order["extra"]['tax_info']['taxed_discounted_subtotal'] = $order['tax_info_taxed_discounted_subtotal'];
+	if (floatval($order['tax_info_taxed_shipping']) > 0)
+		$order["extra"]['tax_info']['taxed_shipping'] = $order['tax_info_taxed_shipping'];
+
+	foreach ($price_details_names as $pn) {
+		if (floatval($order['shipping_total_'.$pn]) > 0)
+			$order["extra"]['shipping_total'][$pn] = $order['shipping_total_'.$pn];
+		if (floatval($order['product_total_'.$pn]) > 0)
+			$order["extra"]['product_total'][$pn] = $order['product_total_'.$pn];
+		if (floatval($order['total_'.$pn]) > 0)
+			$order["extra"]['total'][$pn] = $order['total_'.$pn];
+	}
+
 	$extras = func_query("SELECT khash, value FROM $sql_tbl[order_extras] WHERE orderid = '$orderid'");
 	if (!empty($extras)) {
 		foreach($extras as $v)
@@ -696,10 +728,10 @@ function func_order_data($orderid) {
 
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classProducts.php";
-		$classProduct = new classProducts();
-		$mpn = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
-		unset($classProduct);
+		$classProduct = new classProduct($v['productid']);
+		$mpn = $classProduct->getMPN();
 		$v["mpn"] = $mpn;
+		$v["oProduct"] = $classProduct;
 
 /*#
 ##
@@ -1116,6 +1148,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 			//$current_order["display_shipping_cost"]);
 
+
+
 		if (!empty($active_modules["Special_Offers"]))
 			include $xcart_dir."/modules/Special_Offers/place_order_extra.php";
 
@@ -1226,7 +1260,13 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			'clickid' => $partner_clickid,
 			'language' => $userinfo['language'],
 			'order_prefix' => isset($order_prefix) ? $order_prefix : $config['General']['opt_order_prefix'],
-			'extra' => addslashes(serialize($_extra)));
+			'tax_info_display_taxed_order_totals' => $_extra["tax_info"]['display_taxed_order_totals'],
+			'tax_info_display_cart_products_tax_rates' => $_extra["tax_info"]['display_cart_products_tax_rates'],
+			'tax_info_taxed_subtotal' => $_extra["tax_info"]['taxed_subtotal'],
+			'tax_info_taxed_discounted_subtotal' => $_extra["tax_info"]['taxed_discounted_subtotal'],
+			'tax_info_taxed_shipping' => $_extra["tax_info"]['taxed_shipping'],
+			//'extra' => addslashes(serialize($_extra))
+		);
 
 		if (!empty($active_modules['Multiple_Storefronts'])) {
             if (isset($cart['source_sf']) && !empty($cart['source_sf'])) {
@@ -1234,6 +1274,16 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             } else {
 			$insert_data['storefrontid'] = $current_storefront;
 		}
+		}
+
+		if (!empty($extra['additional_fields'])) {
+			foreach ($extra['additional_fields'] as $aAddFiled) {
+				if ($aAddFiled['title'] == 'Company') {
+					$sFiledCompany = strtolower($aAddFiled['section']).'_company';
+					if (!empty($sFiledCompany))
+						$insert_data[$sFiledCompany] = $aAddFiled['value'];
+				}
+			}
 		}
 
 #
@@ -1489,6 +1539,7 @@ die("123");
 				$insert_data = array (
 					'orderid' => $orderid,
 					'productid' => $product['productid'],
+					'item_cost_to_us' => $product["cost_to_us"],
 					'product' => addslashes($product['product_orig']),
 					'product_options' => addslashes($product['product_options']),
 					'amount' => $product['amount'],
@@ -1633,8 +1684,18 @@ die("123");
 			
 				func_array2insert('order_groups', $insert_data);
 			}
+
+			//$insert_data = array('extra' => addslashes(serialize($_extra)));
+			$insert_data = array();
+
+			foreach ($price_details_names as $dn) {
+				$insert_data["shipping_total_$dn"] = $_extra['shipping_total'][$dn];
+				$insert_data["product_total_$dn"] = $_extra['product_total'][$dn];
+				$insert_data["total_$dn"] = $_extra['total'][$dn];
+			}
+
 			# Update order detailed totals
-			$insert_data = array('extra' => addslashes(serialize($_extra)));
+
 			func_array2update("orders", $insert_data, "orderid='$orderid'");
 			unset($group_shipping);
 			unset($group_total);
@@ -2397,7 +2458,7 @@ function func_get_order_manufacturers($orderid){
 				$mnfs[$m_id]["backorder_decision_request_message"] = $backorder_decision_request_message;
 */
 				
-				$mnfs[$m_id]["d_website_search_for_sku_url"] =  str_replace("{{mpn}}", "---mpn---", $mnfs[$m_id]["d_website_search_for_sku_url"]); 
+				$mnfs[$m_id]["d_website_search_for_sku_url"] =  str_replace("{{mpn}}", "---mpn---", $mnfs[$m_id]["d_website_search_for_sku_url"]);
 				$mnfs[$m_id]["d_link_to_order_distributors_website"] =  str_replace("{{orderid}}", $order["order_prefix"].$orderid, $mnfs[$m_id]["d_link_to_order_distributors_website"]); 
 ###
 
@@ -4510,11 +4571,19 @@ function func_other_customer_orders($email, $orderid = 0){
 ###
 
 function func_paypal_get_access_token(){
+	global $config;
 
-	$USERPWD_username_ClientId = "AVh--5P-zV8NIvZUKSfuckOWVjj9u6K_zRXPRfhns5KK2zJZuTGo1-0c7Q00dlvJr7IHvBlJQq7M7401"; 
-	$USERPWD_password_Secret = "EKJXWfXaHLJID0rUkPRP4BT7nSkUuGLB0QZE_yVJlX7AmM7crVQJvyMFakW2PHtTcOWB8X5kLkx_2_1o";
+	$USERPWD_username_ClientId = $config['Paypal_API']['live_client_id'];
+	$USERPWD_password_Secret = $config['Paypal_API']['live_secret_key'];
+	$paypalUrl = "https://api.paypal.com";
 
-	$url = "https://api.paypal.com/v1/oauth2/token";
+	if ($config['Paypal_API']['debug_mode'] == "Y") {
+		$USERPWD_username_ClientId = $config['Paypal_API']['sandbox_client_id'];
+		$USERPWD_password_Secret = $config['Paypal_API']['sandbox_secret_key'];
+		$paypalUrl = "https://api.sandbox.paypal.com";
+	}
+
+	$url = $paypalUrl."/v1/oauth2/token";
 
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Accept: application/json","Accept-Language: en_US"));
@@ -4554,7 +4623,15 @@ Use this resource to capture and process a previously created authorization. To 
 function func_paypal_capture($Access_Token, $Authorization_Id, $data_arr){
 
 	$data_json = json_encode($data_arr);
-	$url = "https://api.paypal.com/v1/payments/authorization/$Authorization_Id/capture";
+
+	global $config;
+
+	$paypalUrl = "https://api.paypal.com";
+	if ($config['Paypal_API']['debug_mode'] == "Y") {
+		$paypalUrl = "https://api.sandbox.paypal.com";
+	}
+
+	$url = $paypalUrl."/v1/payments/authorization/$Authorization_Id/capture";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
@@ -4583,7 +4660,13 @@ function func_paypal_capture($Access_Token, $Authorization_Id, $data_arr){
 function func_paypal_refund($Access_Token, $Authorization_Id, $data_arr){
 
         $data_json = json_encode($data_arr);
-        $url = "https://api.paypal.com/v1/payments/sale/$Authorization_Id/refund";
+
+		global $config;
+		$paypalUrl = "https://api.paypal.com";
+		if ($config['Paypal_API']['debug_mode'] == "Y") {
+			$paypalUrl = "https://api.sandbox.paypal.com";
+		}
+        $url = $paypalUrl."/v1/payments/sale/$Authorization_Id/refund";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
@@ -4616,7 +4699,12 @@ Use this call to void a previously authorized payment.
 */
 function func_paypal_void($Access_Token, $Authorization_Id){
 
-	$url = "https://api.paypal.com/v1/payments/authorization/$Authorization_Id/void";
+		global $config;
+		$paypalUrl = "https://api.paypal.com";
+		if ($config['Paypal_API']['debug_mode'] == "Y") {
+			$paypalUrl = "https://api.sandbox.paypal.com";
+		}
+		$url = $paypalUrl."/v1/payments/authorization/$Authorization_Id/void";
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -4640,7 +4728,12 @@ You can reauthorize a payment only once 4 to 29 days after 3-day honor period fo
 function func_paypal_reauthorize($Access_Token, $Authorization_Id, $data_arr){
 
         $data_json = json_encode($data_arr);
-        $url = "https://api.paypal.com/v1/payments/authorization/$Authorization_Id/reauthorize";
+		global $config;
+		$paypalUrl = "https://api.paypal.com";
+		if ($config['Paypal_API']['debug_mode'] == "Y") {
+			$paypalUrl = "https://api.sandbox.paypal.com";
+		}
+		$url = $paypalUrl."/v1/payments/authorization/$Authorization_Id/reauthorize";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
@@ -4662,7 +4755,12 @@ Depending on the payment_method and the funding_instrument, you can use the paym
 */
 function func_paypal_create_payment($Access_Token, $data_json){
 
-        $url = "https://api.paypal.com/v1/payments/payment";
+		global $config;
+		$paypalUrl = "https://api.paypal.com";
+		if ($config['Paypal_API']['debug_mode'] == "Y") {
+			$paypalUrl = "https://api.sandbox.paypal.com";
+		}
+		$url = $paypalUrl."/v1/payments/payment";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));
@@ -4690,7 +4788,13 @@ transaction_types:
  capture - Use this call to get details about a captured payment.
 */
 
-        $url = "https://api.paypal.com/v1/payments/$transaction_type/$Authorization_Id";
+		global $config;
+		$paypalUrl = "https://api.paypal.com";
+		if ($config['Paypal_API']['debug_mode'] == "Y") {
+			$paypalUrl = "https://api.sandbox.paypal.com";
+		}
+
+		$url = $paypalUrl."/v1/payments/$transaction_type/$Authorization_Id";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type:application/json","Authorization: Bearer $Access_Token"));

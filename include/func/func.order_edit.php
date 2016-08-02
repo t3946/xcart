@@ -57,6 +57,13 @@ function func_check_tracking_number($linkid, $tracknum) {
 }
 
 function func_recalculate_accounting(&$group, $all_processors = array(), $apply_per_trans=false, $refund = false) {
+
+	global $xcart_dir;
+	require_once $xcart_dir . "/include/class/classOrders.php";
+	$oOrderGroup = new classOrderGroup(['orderid'=>$group['orderid'], 'manufacturerid'=>$group['manufacturerid']]);
+	$oOrderGroup->recalculateAccounting();
+	return true;
+
 	global $sql_tbl, $price_details_names;
 
 #
@@ -465,6 +472,9 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 	unset($_extra["tax_info"]["product_tax_name"]);
 	$_extra['additional_fields'] = $userinfo['additional_fields'];
 
+
+
+
 	$taxes_applied = serialize($cart["taxes"]);
 
 	if (!empty($cart["use_shipping_cost_alt"]))
@@ -523,7 +533,12 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 		"payment_method" => $cart['payment_method'],
 		"paymentid" => $cart["paymentid"],
 		"payment_surcharge" => $cart["payment_surcharge"],
-		"extra" => serialize($_extra),
+		//"extra" => serialize($_extra),
+		'tax_info_display_taxed_order_totals' => $_extra["tax_info"]['display_taxed_order_totals'],
+		'tax_info_display_cart_products_tax_rates' => $_extra["tax_info"]['display_cart_products_tax_rates'],
+		'tax_info_taxed_subtotal' => $_extra["tax_info"]['taxed_subtotal'],
+		'tax_info_taxed_discounted_subtotal' => $_extra["tax_info"]['taxed_discounted_subtotal'],
+		'tax_info_taxed_shipping' => $_extra["tax_info"]['taxed_shipping'],
 
 		"membership" => !empty($memberships[$userinfo["membershipid"]]) ? $memberships[$userinfo["membershipid"]]['membership'] : '',
 		"membershipid" => $userinfo["membershipid"],
@@ -558,6 +573,17 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 		"url" => $userinfo["url"]
 
 	);
+
+	if (!empty($extra['additional_fields'])) {
+		foreach ($extra['additional_fields'] as $aAddFiled) {
+			if ($aAddFiled['title'] == 'Company') {
+				$sFiledCompany = strtolower($aAddFiled['section']).'_company';
+				if (!empty($sFiledCompany))
+					$query_data[$sFiledCompany] = $aAddFiled['value'];
+			}
+		}
+	}
+
 	$query_data = func_array_map("addslashes", $query_data);
 
 	if (@$user_account["flag"] != "FS") {
@@ -912,9 +938,17 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 			}
             func_send_order_status_notification($cart['orderid'], $last_status_change);
 		}
-		
+
+		$query_data = [];
+		foreach ($price_details_names as $dn) {
+			$query_data["shipping_total_$dn"] = $_extra['shipping_total'][$dn];
+			$query_data["product_total_$dn"] = $_extra['product_total'][$dn];
+			$query_data["total_$dn"] = $_extra['total'][$dn];
+		}
+
 		# Update order detailed totals
-		$query_data = array('extra' => addslashes(serialize($_extra)));
+		//$query_data = array('extra' => addslashes(serialize($_extra)));
+
 		if (@$user_account["flag"] != "FS") {
 			func_array2update("orders", $query_data, "orderid='$cart[orderid]'");
 		}

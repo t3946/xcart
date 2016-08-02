@@ -627,6 +627,8 @@ if ($mode == "search") {
         $inner_joins['categories'] = array(
             "on" => "$sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid"
         );
+        $fields[] = "$sql_tbl[categories].categoryid";
+        $fields[] = "$sql_tbl[categories].category";
     } else {
         if (!$search_all_website) {
             $inner_joins['categories'] = array(

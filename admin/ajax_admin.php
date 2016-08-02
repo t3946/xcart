@@ -12,10 +12,11 @@ switch ($_POST['ajax_action']) {
     case "change_verify_order_status" :
         changeVerifyOrderStatus($_POST);
         break;
-
+    case "ship_order_by_amazon" :
+        shipOrderByAmazon($_POST);
 }
 
-function changeVerifyProductStatus($aPostParam = array())
+function changeVerifyProductStatus($aPostParam = [])
 {
     $bResult = [];
     $iProductId = (int)$aPostParam['product_id'];
@@ -35,7 +36,7 @@ function changeVerifyProductStatus($aPostParam = array())
     print(json_encode($bResult));
 }
 
-function changeVerifyOrderStatus($aPostParam = array())
+function changeVerifyOrderStatus($aPostParam = [])
 {
     $bResult = [];
     $iOrderId = (int)$aPostParam['order_id'];
@@ -45,4 +46,20 @@ function changeVerifyOrderStatus($aPostParam = array())
         $bResult = $oOrder->changeVerificationStatus($sOrderStatus);
     }
     print(json_encode($bResult));
+}
+
+function shipOrderByAmazon($aPostParam = [])
+{
+    $iOrderId = (int) $aPostParam['orderid'];
+    $iManufacturerid = (int) $aPostParam['manufacturerid'];
+    $oOrderGroup = new classOrderGroup(['orderid'=>$iOrderId,'manufacturerid'=>$iManufacturerid]);
+    $sAmazonShipmentNotesSend = $aPostParam['submit_amazon_shipment_with_notes'];
+    $sAmazonShippingMethodSelect= $aPostParam['amazon_shipping_method_select'];
+    if ($sAmazonShipmentNotesSend) {
+        $sAmazonShipmentNotes = $aPostParam['submit_amazon_shipment_notes'];
+        $oOrderGroup->updateAmazonShipmentWithNotes('Y');
+        $oOrderGroup->updateAmazonShipmentNotes($sAmazonShipmentNotes);
+    }
+    if (!empty($sAmazonShippingMethodSelect))
+        $oOrderGroup->shipOrderGroupByAmazon($sAmazonShippingMethodSelect);
 }

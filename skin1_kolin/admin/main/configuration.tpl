@@ -214,6 +214,8 @@ Do NOT auto-submit to order entry operator if at least one of the following cond
 <input type="checkbox" name="ETA_date_is_present_for_at_least_one_of_the_items" {if $config.Autosubmit_orderentry_operator.ETA_date_is_present_for_at_least_one_of_the_items eq "Y"} checked="checked"{/if} /> ETA date is present for at least one of the items
 <br />
 <input type="checkbox" name="Customer_notes_field_is_NOT_empty" {if $config.Autosubmit_orderentry_operator.Customer_notes_field_is_NOT_empty eq "Y"} checked="checked"{/if} />Customer notes field is NOT empty
+<br />
+<input type="checkbox" name="Order_shipping_method_carrier" {if $config.Autosubmit_orderentry_operator.Order_shipping_method_carrier eq "Y"} checked="checked"{/if} />Order shipping method carrier: Amazon
 </td>
 </tr>
 <tr>

@@ -5,7 +5,6 @@ require_once $xcart_dir."/include/class/classProducts.php";
 
 class classShipping extends classCloneData
 {
-
     public function __construct($iId = null)
     {
         $this->sPrimaryTable = "shipping";
@@ -57,6 +56,18 @@ class classShipping extends classCloneData
             }
         }
         return $weight;
+    }
+    
+    public function getName() {
+
+        return $this->getField('shipping');
+    }
+
+    public function isAmazonShipping() {
+        $bResult = false;
+        if ($this->getField('code')=='Amazon')
+            $bResult = true;
+        return $bResult;
     }
 
 }

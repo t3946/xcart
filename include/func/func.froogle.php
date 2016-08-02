@@ -492,6 +492,7 @@ $start_time = round(microtime(true) * 1000);
 		break;
 		}
 	}
+	$product["custom_label_0"] = func_froogle_convert($product['brand']);
     
     // group prices in GMC by 50/100/150/200/250/300/400/500/600/700/800/900/1000/1200/1400
     $price_group_label = '0';
@@ -1375,7 +1376,7 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
 		}
 
 		
-		if ($pforsale == 'N' || (empty($product_info["product"]) || !is_array($product_info["product"])) || ($product_info["product"]["min_amount"]>1 && (empty($product_info["product"]["multipack"]) || $product_info["product"]["multipack"] == "")))  {
+		if ($pforsale == 'N' || (empty($product_info["product"]) || !is_array($product_info["product"])) || ($product_info["product"]["min_amount"]>1))  {
                 $postBody["entries"][$k_counter]["batchId"] = $v["productid"];
 	            $postBody["entries"][$k_counter]["merchantId"] = $MerchantID;
     	        $postBody["entries"][$k_counter]["method"] = "delete";
