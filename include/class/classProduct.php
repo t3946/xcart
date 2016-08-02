@@ -298,4 +298,20 @@ class classProduct extends classCloneData
         return $result;
     }
 
+    public function getPreviewImageURL()
+    {
+        $sUrl = null;
+        $this->getImages('P');
+        if (!empty($this->aImagesP)){
+            $oImage = reset($this->aImagesP);
+            $sUrl =  $oImage->getURL();
+        }
+        return $sUrl;
+    }
+
+    public function getDetailedImages()
+    {
+        return $this->getImages('D');
+    }
+
 }

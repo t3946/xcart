@@ -5,6 +5,8 @@ require_once $xcart_dir . "/include/class/classData.php";
 class classProductImage extends classData
 {
     private $sImageType = null;
+    private $bUseCDN = false;
+    private $sCDNURL = null;
 
     public function __construct($type, $iId = null)
     {
@@ -17,22 +19,51 @@ class classProductImage extends classData
 
     public function getFileName()
     {
-        return $this->getField("filename");
+        $aPath = pathinfo($this->getField("image_path"));
+        return $aPath['basename'];
+    }
+
+    public function getImagePath()
+    {
+        global $xcart_dir;
+        $sPath = null;
+        $aPath = pathinfo($this->getField("image_path"));
+        if ($this->bUseCDN)
+            $sPath = 'http://'.$this->sCDNURL . ltrim($aPath['dirname'], '.') . '/';
+        else
+            $sPath = $xcart_dir . ltrim($aPath['dirname'], '.') . '/';
+        return $sPath;
+    }
+
+    public function getURL()
+    {
+        return ltrim($this->getField("image_path"), '.');
     }
 
     public function saveImageTo($sPath)
     {
-        global $xcart_dir;
-        $image_folder_path = $xcart_dir . "/images/" . $this->sImageType . "/";
-        if (file_exists($image_folder_path . $this->getFileName()) && !is_dir($image_folder_path . $this->getFileName())) {
+        $image_folder_path = $this->getImagePath();
+
+        if ((file_exists($image_folder_path . $this->getFileName()) || $this->bUseCDN) && !is_dir($image_folder_path . $this->getFileName())) {
+
             if (!file_exists($sPath)) {
                 mkdir($sPath, 0755, true);
             }
 
             if (copy($image_folder_path . $this->getFileName(), $sPath . $this->getFileName())) {
                 return $this;
-            } else return false;
+            } else {
+                return false;
+            }
         }
         return false;
+    }
+
+    public function useCDN($flag, $sCDNUrl = null)
+    {
+        $this->bUseCDN = $flag;
+        if ($flag)
+            $this->sCDNURL = $sCDNUrl;
+        return $this;
     }
 }
