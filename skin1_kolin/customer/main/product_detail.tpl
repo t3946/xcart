@@ -1,3 +1,8 @@
+<script src="{$SkinDir}/jquery-1.4.3.min.js" type="text/javascript"></script>
+<script src="{$SkinDir}/jquery.tooltip.js" type="text/javascript"></script>
+<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />
+<link rel="stylesheet" href="{$SkinDir}/skin1.css" />
 {if $oProduct->getField('seo_product_name') ne ""}
     {assign var="producttitle" value=$oProduct->getField('seo_product_name')}
 {elseif $oProduct->getField('producttitle') ne ""}
@@ -6,15 +11,7 @@
     {assign var="producttitle" value=$oProduct->getField('product')}
 {/if}
 
-{if $oProduct->getField('new_notify_in_stock_price') ne ""}
-    {assign var="current_price" value=$oProduct->getField('new_notify_in_stock_price')}
-{else}
-    {if $oProduct->getField('map_price') gt $oProduct->getField('taxed_price')}
-        {assign var="current_price" value=$oProduct->getField('map_price')}
-    {else}
-        {assign var="current_price" value=$oProduct->getField('taxed_price')}
-    {/if}
-{/if}
+{assign var="current_price" value=$oProduct->getPrice()}
 
 {* igor_async
 {include file="main/include_js.tpl" src="main/popup_image.js"}
@@ -56,7 +53,7 @@
                     <td valign="top" width="140" style="padding-left: 20px;" rowspan="3">
 
 
-                        {if $oProduct->getField('map_price') lt $oProduct->getField('taxed_price')}
+                        {if $oProduct->getMapPrice() lt $current_price}
                             {include file="customer/main/product_prices.tpl"}
                         {/if}
 
@@ -92,6 +89,7 @@
                                 <tr>
                                     <td width="93" class="BlackT" valign="middle">{$lng.lbl_price}:</td>
                                     <td width="*" valign="middle">
+
                                         {if $current_price ne 0 || $variant_price_no_empty}
 
                                             {* --- *}
@@ -104,7 +102,7 @@
                                                                                         style="white-space: nowrap;">{include file="currency.tpl" value=$current_price plain_text_message=true price_type="product_price"}</span></font>
                                             <font class="MarketPrice"> <span id="product_alt_price"
                                                                              style="white-space: nowrap;">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price plain_text_message=true}</span></font>
-                                            {if $product.map_price gt $product.taxed_price}
+                                            {if $oProduct->getMapPrice() gt $current_price}
                                                 <br/>
                                                 <span class="map_price_help">{$config.Product_Page.map_bridge_text}</span>
                                             {/if}

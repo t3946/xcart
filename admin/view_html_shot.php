@@ -1,33 +1,88 @@
 <?php
 
 require "./auth.php";
-require $xcart_dir."/include/security.php";
-include_once $xcart_dir."/include/class/classProducts.php";
-include_once $xcart_dir."/include/class/classOrderDetail.php";
+require $xcart_dir . "/include/security.php";
+include_once $xcart_dir . "/include/class/classProducts.php";
+include_once $xcart_dir . "/include/class/classOrderDetail.php";
 
 x_load("category");
 x_load('product');
 
-$oProduct = new classProduct(331743);
-$productid = $oProduct->getProductId();
+if (!empty($id) && is_numeric($id)) {
 
-$oOrder = new classOrderDetail(62790);
+    $oHTMLShot = new classHTMLShot(['id'=>$id]);
+
+    $oProduct = $oHTMLShot->getHTMLShot();
+
+    //$oProduct = new classProduct(331743);
+    $aPricing = $oProduct->getPricing();
+
+    $productid = $oProduct->getProductId();
+
+    $smarty->assign("oProduct", $oProduct);
+
+    $product_info = $oProduct->getProductTableValues();
+    $product_info['price'] = $product_info['taxed_price'] = $oProduct->getPrice();
+    $product_info['cart_manufact_text_displayed'] = $oProduct->getManfacturerClass()->getField('cart_manufact_text_displayed');
+    $smarty->assign("product", $product_info);
+
+    $aImages = $oProduct->getImages('D');
+    foreach ($aImages as $oImage)
+        $aImageToView[] = $oImage->getFields(null);
 
 
-$smarty->assign("oProduct", $oProduct);
-
-$smarty->assign("product", $oProduct->getProductTableValues());
-$product_info = $oProduct->getProductTableValues();
-
-//echo func_product_price($product_info);
-//$oProduct->setField('taxed_price');
-$oProduct->setField('price',func_product_price($product_info));
+    $product_tabs[0]["title"] = "Product description";
+    $product_tabs[0]["tpl"] = "_product_description_";
+    $product_tabs[0]["anchor"] = 0;
 
 
+    $cidev_cart_manufact_text_displayed_arr = explode("<s3-tab>", $product_info["cart_manufact_text_displayed"]);
 
-include $xcart_dir."/modules/Wholesale_Trading/product.php";
+    $cidev_make_array_values = false;
+    if (!empty($cidev_cart_manufact_text_displayed_arr) && is_array($cidev_cart_manufact_text_displayed_arr)) {
+        foreach ($cidev_cart_manufact_text_displayed_arr as $k => $v) {
+            if (empty($v) || trim($v) == "") {
+                unset($cidev_cart_manufact_text_displayed_arr[$k]);
+                $cidev_make_array_values = true;
+            }
+        }
+    }
+    $cart_manufact_text_displayed_tabs = array();
+    $cart_manufact_text_displayed_tabs_index = 0;
+    if (!empty($cidev_cart_manufact_text_displayed_arr) && is_array($cidev_cart_manufact_text_displayed_arr)) {
+        foreach ($cidev_cart_manufact_text_displayed_arr as $k => $v) {
+            $cidev_pos2 = strpos($v, "</s3-tab>");
+            if ($cidev_pos2 !== false) {
+                $cart_manufact_text_displayed_tabs[$cart_manufact_text_displayed_tabs_index] = explode("</s3-tab>", $v);
+                $cart_manufact_text_displayed_tabs_index++;
+            }
+        }
+    }
+    if (empty($cart_manufact_text_displayed_tabs) && !empty($product_info["cart_manufact_text_displayed"])) {
+        $cart_manufact_text_displayed_tabs[0][0] = "Shipping information";
+        $cart_manufact_text_displayed_tabs[0][1] = $product_info["cart_manufact_text_displayed"];
+    }
+
+    if (!empty($cart_manufact_text_displayed_tabs) && is_array($cart_manufact_text_displayed_tabs)) {
+        $count_product_tabs = count($product_tabs);
+        foreach ($cart_manufact_text_displayed_tabs as $k => $v) {
+            $product_tabs[$k + $count_product_tabs]["title"] = $v[0];
+            $product_tabs[$k + $count_product_tabs]["tpl"] = $v[1];
+            $product_tabs[$k + $count_product_tabs]["anchor"] = $k + $count_product_tabs;
+        }
+    }
+
+
+    $smarty->assign('product_tabs', $product_tabs);
+
+    $smarty->assign("images", $aImageToView);
+
+
+    include $xcart_dir . "/modules/Wholesale_Trading/product.php";
+
+}
 
 # Assign the current location line
 $smarty->assign("location", $location);
 
-func_display("customer/main/product_detail.tpl",$smarty);
+func_display("customer/main/product_detail.tpl", $smarty);

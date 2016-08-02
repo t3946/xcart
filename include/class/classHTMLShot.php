@@ -32,6 +32,26 @@ class classHTMLShot extends classData
         $this->_insert();
     }
 
+    public function getId()
+    {
+        return $this->getField('id');
+    }
+
+    public function getOrderId()
+    {
+        return $this->getField('order_id');
+    }
+
+    public function getProductId()
+    {
+        return $this->getField('product_id');
+    }
+
+    public function getHTMLShot()
+    {
+        return unserialize(stripslashes($this->getField('htmlshot')));
+    }
+
     public function deleteHTMLShot()
     {
         db_query("DELETE FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE id = ".$this->getField('id'));

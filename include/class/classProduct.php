@@ -229,4 +229,73 @@ class classProduct extends classCloneData
         return $this->aPrimaryTableValue;
     }
 
+    public function isProductOutOfStock()
+    {
+        $result = true;
+        if (intval($this->getField('r_avail')) <= 0)
+            $result = false;
+        $iEtaDate = $this->getField('eta_date_mm_dd_yyyy');
+        if ($result && !empty($iEtaDate)){
+            $current_time = time();
+            if ($current_time < $iEtaDate){
+                $result = false;
+            }
+        }
+        if ($result && $this->getProductCostToUs() > $this->getPrice())
+            $result = false;
+
+        if ($result && floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false)
+            $result = false;
+
+        return $result;
+    }
+
+    public function getMapPrice()
+    {
+        return floatval($this->getField('new_map_price'));
+    }
+
+    public function getProductCostToUs()
+    {
+        return floatval($this->getField('cost_to_us'));
+    }
+
+    public function getPrice($forQuantity = 1)
+    {
+        $fPrice = 0;
+        if (!empty($this->aPricing)){
+            foreach ($this->aPricing as $oPrice) {
+                if ($forQuantity >= floatval($oPrice->getQuantity())){
+                    $fPrice = floatval($oPrice->getPrice());
+                    break;
+                }
+
+            }
+        }
+        $fMapPrice = $this->getMapPrice();
+        if ($fPrice < $fMapPrice) $fPrice = $fMapPrice;
+
+        return $fPrice;
+    }
+
+    public function getFrontendPrice($forQuantity = 1)
+    {
+        $fPrice = $this->getPrice($forQuantity);
+
+        if ($this->isSupplierFeedsEnabled() && !$this->isProductOutOfStock())
+        {
+            $fPrice = func_decreased_price($this->getProductCostToUs(), $fPrice, $this->getMapPrice());
+        }
+
+        return $fPrice;
+    }
+
+    public function  isSupplierFeedsEnabled()
+    {
+        $result = false;
+        $sEnabled = func_query_first_cell("SELECT enabled FROM ". self::$sql_tbl['supplier_feeds']." WHERE manufacturerid=".$this->getField('manufacturerid')." AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='" . $this->getField("controlled_by_feed") . "'))");
+        if ($sEnabled == 'Y') $result = true;
+        return $result;
+    }
+
 }

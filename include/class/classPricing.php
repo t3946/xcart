@@ -11,4 +11,19 @@ class classPricing extends classData
         parent::__construct($aParams);
 
     }
+
+    public function getQuantity()
+    {
+        return $this->getField('quantity');
+    }
+
+    public function getPrice()
+    {
+        return $this->getField('price');
+    }
+
+    public function getPriceTableValues()
+    {
+        return $this->aPrimaryTableValue;
+    }
 }

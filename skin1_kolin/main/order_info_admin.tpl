@@ -560,6 +560,11 @@ function check_r_fields(){
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
     <a href="{$product.links.customer}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.product}</a>
+    {if (!empty($oHTMLShot))}
+      <a title="View HTML-Shot" target="_blanks" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
+        <img src="{$ImagesDir}/html-shot.png" />
+      </a>
+    {/if}
 {* --------------------- *}
     {if $product.orig_product_classes ne ""}
 
