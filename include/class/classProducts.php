@@ -5,7 +5,7 @@ require_once $xcart_dir."/include/class/classManufacturers.php";
 require_once $xcart_dir."/include/class/classCategories.php";
 require_once $xcart_dir."/include/class/classProduct.php";
 
-class classProducts extends classProduct
+class classProducts extends classCloneData
 {
     private $aProductToQueue;
     public $addCounter;
@@ -825,5 +825,10 @@ class classProducts extends classProduct
 
     }
 
+    public function getManfacturerClass($iManufacurerId = null) {
+        if (!is_null($iManufacurerId))
+            return new classManufacturers($iManufacurerId);
+        else return  new classManufacturer($this->aPrimaryTableValue['manufacturerid']);
+    }
 
 }

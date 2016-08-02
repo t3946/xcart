@@ -1375,9 +1375,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                                 $insert_data["s_zipcode"] = $currect_s_zipcode;
                         }
                 }
-###
-##
-#
 
 
 
@@ -1584,23 +1581,26 @@ die("123");
 			}
 # START: random:20341 [2010 Jul 29 14:46] 
 			$current_order['shipping_groups'][func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid'])]['products'][] = $product;
-# END: random:20341 [2010 Jul 29 14:46] 
+# END: random:20341 [2010 Jul 29 14:46]
 
 			global $xcart_dir;
 			include_once $xcart_dir."/include/class/classProducts.php";
 			$oProduct = new classProduct((int)$product['productid']);
 			$aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
 			if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
-				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY);
+				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
 			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0) {
 				$iLastProductVerifyDate = $oProduct->getField('last_verify_date');
 				$currentDate = new DateTime("now");
 				$iDaysInterval = $currentDate->diff($iLastProductVerifyDate)->days;
 				if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
-					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY);
+					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
 				}
 			} else {
-				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_NOT_VERIFY);
+				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_NOT_VERIFY,'', true, [$orderid]);
+				include_once $xcart_dir."/include/class/classHTMLShot.php";
+				$oHTMLShot = new classHTMLShot();
+				$oHTMLShot->createHTMLShot($oProduct, $orderid);
 			}
 
 		}

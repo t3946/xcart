@@ -561,6 +561,12 @@ function check_r_fields(){
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
     <a href="{$product.links.customer}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.product}</a>
+    {assign var='oHTMLShot' value =$product.oProduct->getHTMLShot($order.orderid)}
+    {if (!empty($oHTMLShot))}
+      <a title="View HTML-Shot" target="_blanks" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
+        <img src="{$ImagesDir}/html-shot.png" />
+      </a>
+    {/if}
 {* --------------------- *}
     {if $product.orig_product_classes ne ""}
 
@@ -602,9 +608,9 @@ function check_r_fields(){
   </td>
   <td>
     {if $current_membership_flag ne 'FS'}<a href="{$product.links.admin}" title="" target="_blank">{$product.productcode}</a>{else}{$product.productcode}{/if}
-  {if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}<br />
-    <a style="color: #3A3AFF;" href='{$product.oProduct->getProductURLOnDistributorWebSite()}' target="_blank">{$product.oProduct->getMPN()}</a>
-  {/if}
+    {if $order_manufacturers[$m_id].d_website_search_for_sku_url ne ""}<br />
+      <a style="color: #3A3AFF;" href='{$product.oProduct->getProductURLOnDistributorWebSite()}' target="_blank">{$product.oProduct->getMPN()}</a>
+    {/if}
     {if $product.verification_statusid == 3}
         <img title="This product is verified" style="float: right;" src="{$SkinDir}/images/green-verify.png" />
     {/if}
