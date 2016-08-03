@@ -1,8 +1,8 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir . "/include/class/classCloneData.php";
+require_once $xcart_dir . "/include/class/classData.php";
 
-class classStoreFront extends classCloneData
+class classStoreFront extends classData
 {
     private $Enable_CDN = null;
     private $CDN_domain = null;
@@ -33,7 +33,7 @@ class classStoreFront extends classCloneData
         $sF = func_query_first("SELECT sfid FROM xcart_products_sf psf WHERE psf.productid = $iProductId");
         if (!empty($sF)) {
             if ($sF['sfid'] != 0)
-                $obj = new classStoreFront($sF['sfid']);
+                $obj = new classStoreFront(['storefrontid'=>$sF['sfid']]);
             else {
                 $obj = new classStoreFront();
                 $obj->setField('storefrontid', $sF['sfid']);
