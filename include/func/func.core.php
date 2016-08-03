@@ -4067,6 +4067,18 @@ function func_check_comma_in_field($orderid, $value, $sFieldName)
 	return false;
 }
 
+function func_check_comma_in_field($orderid, $value, $sFieldName)
+{
+	global $login, $top_message;
+	if (strpos($value, ',') !== false) {
+		$sLog = "Comma in field <b>$sFieldName</b>: ".$value;
+		func_log_order($orderid, 'X', $sLog, $login);
+
+		return true;
+	}
+	return false;
+}
+
 function file_get_contents_curl($url){
 	$curl = curl_init();
 	curl_setopt($curl, CURLOPT_URL, $url);

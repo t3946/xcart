@@ -462,6 +462,13 @@ else {
         
 		$word = 'word=' . $word;
 	}
+	if (!empty($search)) {
+		$searchValue = addslashes($search);
+		if (empty($where))
+			$sqlPrefix = 'WHERE'; else $sqlPrefix = 'AND';
+		$where.= " $sqlPrefix (b.brand LIKE '%$searchValue%')";
+		$word = 'search=' . $search;
+	}
 
 	if (!empty($active_modules['Multiple_Storefronts']) && $current_area == 'C') {
 		if (empty($where)) {

@@ -129,7 +129,9 @@ class classProducts extends classCloneData
             'shipping_dim_lock',
             'shipping_weight',
             'shipping_weight_lock',
-            'weight_lock'
+            'weight_lock',
+            'verification_statusid',
+            'last_verify_date'
         );
     }
 

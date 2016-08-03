@@ -1047,7 +1047,7 @@ class classAmazonMWS
             $req->setItems($list);
 
             try {
-                //$response = $this->oMWSService->CreateFulfillmentOrder($req);
+                $response = $this->oMWSService->CreateFulfillmentOrder($req);
 
                 $log .= "Amazon shipping order placed: <a href='".sprintf(self::AMAZON_ORDER_LINK,$oOrderGroup->getAmazonShippingOrderId())."' target='_blank'>".$oOrderGroup->getAmazonShippingOrderId()."</a> \n";
                 $log .= "DisplayableOrderComment: ".$sDisplayAmazonOrderComment."\n";
