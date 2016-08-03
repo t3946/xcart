@@ -5,9 +5,9 @@ require "./auth.php";
 require $xcart_dir."/include/security.php";
 require_once $xcart_dir . "/include/class/classOrders.php";
 
-if(!$active_modules['Product_Verification'])
+/*if(!$active_modules['Product_Verification'])
 	func_header_location ("error_message.php?access_denied&id=25");
-else
+else*/
 	include $xcart_dir."/modules/Product_Verification/product_verification.php";
 
 
