@@ -31,7 +31,7 @@
 <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />
 <link rel="stylesheet" href="{$SkinDir}/skin1.css" />
 </head>
-<body>
+<body style="margin: 0 auto; width: 960px;">
 {if $oProduct->getField('seo_product_name') ne ""}
     {assign var="producttitle" value=$oProduct->getField('seo_product_name')}
 {elseif $oProduct->getField('producttitle') ne ""}
@@ -154,6 +154,7 @@
 
                             {if $current_price gt 0 and $product.list_price gt 0 and $product.list_price gt $current_price}
                                 {math equation="100-(price/lprice)*100" price=$current_price lprice=$product.list_price format="%3.5f" assign=discount}
+                                {math equation="lprice-price" price=$current_price lprice=$product.list_price format="%3.5f" assign=discount_save}
                                 {if $discount gte 1}
                                     <TR id="save_percent_box"{if $product.taxed_price >= $product.list_price} style="display: none;"{/if}>
                                         <TD nowrap="nowrap" colspan="2">
@@ -164,7 +165,7 @@
                                                     <td><img src="{$ImagesDir}/new/product/dollar.png" alt=""/></td>
                                                     <td class="discount_class1">Discount:</td>
                                                     <td class="discount_class">
-                                                        <SPAN id="save_percent">{$discount|string_format:"%3.0f"}</SPAN>&nbsp;
+                                                        <SPAN id="save_percent">{$discount_save|string_format:"%3.0f"}</SPAN>&nbsp;
                                                     </td>
                                                 </tr>
                                             </table>
@@ -422,7 +423,7 @@
                                             <tr>
                                                 <td class="discount_class5">SAVE</td>
                                                 <td width="10">&nbsp;</td>
-                                                <td class="discount_class6" id="save_percent2"></td>
+                                                <td class="discount_class6" id="save_percent2">{$discount|string_format:"%3.0f"}</td>
                                                 {*                <td width="5">&nbsp;</td> *}
                                                 <td class="discount_class7" valign="bottom">%</td>
                                             </tr>
