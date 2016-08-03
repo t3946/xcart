@@ -29,7 +29,7 @@ class classProductImage extends classData
         $sPath = null;
         $aPath = pathinfo($this->getField("image_path"));
         if ($this->bUseCDN)
-            $sPath = 'http://'.$this->sCDNURL . ltrim($aPath['dirname'], '.') . '/';
+            $sPath = 'http://' . $this->sCDNURL . ltrim($aPath['dirname'], '.') . '/';
         else
             $sPath = $xcart_dir . ltrim($aPath['dirname'], '.') . '/';
         return $sPath;
@@ -49,11 +49,20 @@ class classProductImage extends classData
             if (!file_exists($sPath)) {
                 mkdir($sPath, 0755, true);
             }
-
-            if (copy($image_folder_path . $this->getFileName(), $sPath . $this->getFileName())) {
-                return $this;
+            if ($this->bUseCDN) {
+                $ImgData = file_get_contents_curl($image_folder_path . $this->getFileName());
+                if (!empty($ImgData)) {
+                    file_put_contents($sPath . $this->getFileName(), $ImgData);
+                    return $this;
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                if (copy($image_folder_path . $this->getFileName(), $sPath . $this->getFileName())) {
+                    return $this;
+                } else {
+                    return false;
+                }
             }
         }
         return false;
