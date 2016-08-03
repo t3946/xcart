@@ -33,7 +33,7 @@ class classStoreFront extends classData
         $sF = func_query_first("SELECT sfid FROM xcart_products_sf psf WHERE psf.productid = $iProductId");
         if (!empty($sF)) {
             if ($sF['sfid'] != 0)
-                $obj = new classStoreFront($sF['sfid']);
+                $obj = new classStoreFront(['storefrontid'=>$sF['sfid']]);
             else {
                 $obj = new classStoreFront();
                 $obj->setField('storefrontid', $sF['sfid']);
