@@ -991,6 +991,7 @@ class classAmazonMWS
                 return false;
             }
         }
+        $oOrderGroup->_refresh();
         if ($oOrderGroup->getOrderGroupStatusCB() != 'P') {
             $log .= "Shipping order by Amazon - failed. Order group status not Paid.\n";
             func_log_order($oOrderGroup->getOrderId(), 'X', nl2br($log), $login);

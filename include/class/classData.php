@@ -36,6 +36,11 @@ class classData
         func_array2insert($this->sPrimaryTable, $this->aPrimaryTableValue, $is_replace);
     }
 
+    public function _refresh()
+    {
+        $this->fillPrimaryTableInfo();
+    }
+
     protected function fillPrimaryTableInfo()
     {
         if (!empty($this->aPrimaryKeysValues))
