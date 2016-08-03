@@ -2070,6 +2070,17 @@ onclick="javasript:{literal} if (this.checked){$('#tr_d_send_to_email_14').show(
         {/if}
     {include file="modules/External_Marketplaces/excluded_marketplaces_admin.tpl"}
     </div>
+{elseif $d_section.distributor_section eq "31"}
+    <table width="100%" cellpadding="3" cellspacing="1" id="distributor_section_id_31" {if $distributor_section ne "31"}style="display: none;" {/if}>
+        <tr>
+            <td colspan="2" class="FormButton">Tick the checkbox if product verification is NOT required:</td>
+            <td><input style="margin:0;" type="checkbox" {if ($manufacturer.products_always_verify=='Y')}checked="checked"{/if} value="Y" name="products_always_verify"></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="FormButton">How long (in days) product verification remains valid?</td>
+            <td><input type="text" value="{$manufacturer.days_before_verify}" name="products_days_before_verify"></td>
+        </tr>
+    </table>    
 {elseif $d_section.distributor_section eq "30"}
     <table class="SubHeader" width="100%" cellspacing="0" {if $distributor_section ne "30"}style="display: none;" {/if}>
         <tbody>

@@ -512,6 +512,7 @@ function func_flush($s = NULL) {
 #
 function func_html_location($url, $time=3) {
 	x_session_save();
+	global $use_sessions_type;
 
 	if ($use_sessions_type < 3) {
 		session_write_close();
@@ -2340,11 +2341,13 @@ function my_array_sort($array, $on, $order=SORT_ASC)
     return $new_array;
 }
 
-function func_log_order($orderid, $type, $log, $login="") {
+function func_log_order($orderid, $type, $log, $ulogin="") {
 	global $sql_tbl;
+	global $login;
+	if (empty($ulogin)) $ulogin = $login;
 
 	if (!empty($log))
-		db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($login)."', '".addslashes($log)."')");
+	db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($ulogin)."', '".addslashes($log)."')");
 //	db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($login)."', '".$log."')");
 }
 
@@ -4039,6 +4042,18 @@ function func_get_geoip_locations ($CLIENT_IP, $geo_litecity_location_debug = "N
 		}
 	}
 	return $geo_litecity_location;
+}
+
+if(!function_exists("array_column"))
+{
+
+	function array_column($array,$column_name)
+	{
+
+		return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
+
+	}
+
 }
 
 function func_check_comma_in_field($orderid, $value, $sFieldName)

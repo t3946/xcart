@@ -4,6 +4,10 @@ require_once $xcart_dir . "/include/class/classCloneData.php";
 require_once $xcart_dir . "/include/class/classManufacturer.php";
 require_once $xcart_dir . "/include/class/classStoreFront.php";
 require_once $xcart_dir . "/include/class/classOrders.php";
+require_once $xcart_dir . "/include/class/classProductVerifiactionStatus.php";
+require_once $xcart_dir . "/include/class/classProductImage.php";
+require_once $xcart_dir . "/include/class/classPricing.php";
+require_once $xcart_dir . "/include/class/classHTMLShot.php";
 
 class classProduct extends classCloneData
 {
@@ -18,6 +22,12 @@ class classProduct extends classCloneData
     private $oManufacturer;
     private $oStoreFront;
     private $aProductVerificationHistoryLast = [];
+
+    private $aImagesD = [];
+    private $aImagesP = [];
+    private $aImagesT = [];
+
+    private $aPricing = [];
 
     public function __construct($iId = null)
     {
@@ -51,6 +61,7 @@ class classProduct extends classCloneData
         return $this->getField('productcode');
     }
 
+
     public function getStoreFront()
     {
         if (is_null($this->oStoreFront)) {
@@ -75,6 +86,17 @@ class classProduct extends classCloneData
     public function getProductFrontURL()
     {
         return func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled));
+    }
+
+    public function getHTMLShot($iOrderID)
+    {
+        $oResult = null;
+        $aHTMLShot = func_query_first("SELECT * FROM " . self::$sql_tbl['product_htmlshot'] . " WHERE product_id=".$this->getProductId()." AND order_id=$iOrderID");
+        if (!empty($aHTMLShot)){
+            $oResult = new classHTMLShot();
+            $oResult->fillPrimaryTableValues($aHTMLShot);
+        }
+        return $oResult;
     }
 
     public function getProductURLOnDistributorWebSite()
@@ -111,7 +133,7 @@ class classProduct extends classCloneData
         return $sResult;
     }
 
-    public function changeVerificationStatus($iStatusId, $sNote='', $add2History = true)
+    public function changeVerificationStatus($iStatusId, $sNote = '', $add2History = true, $aOrders)
     {
         global $login;
         $bResult['result'] = false;
@@ -119,31 +141,34 @@ class classProduct extends classCloneData
             $aUpdateParams = ['verification_statusid' => $iStatusId];
             $oDatetime = new DateTime();
             if ($iStatusId == self::PRODUCT_STATUS_VERIFY) {
-                $aUpdateParams['last_verify_date'] =  $oDatetime->getTimestamp();
+                $aUpdateParams['last_verify_date'] = $oDatetime->getTimestamp();
             }
             $res = func_array2update($this->sPrimaryTable, $aUpdateParams, 'productid = ' . $this->primaryKeyValue);
 
             if ($res) {
                 if ($add2History) {
                     $aInsertArray = ['productid' => $this->primaryKeyValue,
-                    'verification_note' => addslashes($sNote),
-                    'timestamp' => $oDatetime->getTimestamp(),
-                    'username' => $login,
-                    'oldstatusid' => $this->getField('verification_statusid'),
-                    'newstatusid' => $iStatusId];
+                        'verification_note' => addslashes($sNote),
+                        'timestamp' => $oDatetime->getTimestamp(),
+                        'username' => $login,
+                        'oldstatusid' => $this->getField('verification_statusid'),
+                        'newstatusid' => $iStatusId];
                     func_array2insert('product_verification_history', $aInsertArray);
                 }
                 $bResult['result'] = true;
 
                 $this->setField('last_verify_date', $aUpdateParams['last_verify_date']);
-                $this->setField('verification_statusid', $aUpdateParams['verification_statusid']);
 
-                /*$aOrders = classOrders::getInstance()->getOrdersByProductId($this->primaryKeyValue);
-                if (!empty($aOrders)) {
-                    foreach ($aOrders as $oOrder) {
-                        $oOrder->updateVerificationStatus();
+                if (!empty($aOrders) && ($iStatusId == self::PRODUCT_STATUS_PROBLEM_NOT_FIXED || $iStatusId == self::PRODUCT_STATUS_PROBLEM_FIXED)) {
+                    foreach ($aOrders as $iOrderId) {
+                        $oVerificationStatusNew = new classProductVerificationStatus($iStatusId);
+                        $oVerificationStatusOld = new classProductVerificationStatus($this->getField('verification_statusid'));
+                        $sLogMessage = "<b>" . $this->getField('productcode') . "</b> product verification status: " . $oVerificationStatusOld->getField('name') . " -> " . $oVerificationStatusNew->getField('name') . "\n";
+                        if (!empty($sNote)) $sLogMessage .= 'Problem/fix description: ' . $sNote;
+                        func_log_order($iOrderId, 'X', nl2br($sLogMessage));
                     }
-                }*/
+                }
+                $this->setField('verification_statusid', $aUpdateParams['verification_statusid']);
 
             } else $bResult['error'] = 'Status not updated';
         } else {
@@ -156,6 +181,137 @@ class classProduct extends classCloneData
     public function getProductId()
     {
         return $this->getField('productid');
+    }
+
+    private function fetchImages($type)
+    {
+        $sImagesVar = "aImages".$type;
+        if (empty($this->$sImagesVar)) {
+            $aImages = func_query("SELECT * FROM " . self::$sql_tbl['images_'.$type] . " WHERE id = ".$this->getProductId()." ORDER BY orderby ASC");
+            if (!empty($aImages))
+            foreach ($aImages as $aImage) {
+                $oProductImage = new classProductImage($type);
+                $oProductImage->fillPrimaryTableValues($aImage);
+                $var = &$this->$sImagesVar;
+                $var[] = $oProductImage;
+            }
+        }
+    }
+
+    public function getImages($type)
+    {
+        $sImagesVar = "aImages".$type;
+        $this->fetchImages($type);
+        return $this->$sImagesVar;
+    }
+
+    private function fetchPricing()
+    {
+        if (empty($this->aPricing)) {
+            $aPricing = func_query("SELECT * FROM " . self::$sql_tbl['pricing'] . " WHERE productid = ".$this->getProductId()." ORDER BY quantity ASC");
+            if (!empty($aPricing))
+                foreach ($aPricing as $aPrice){
+                    $oProductPricing = new classPricing();
+                    $oProductPricing->fillPrimaryTableValues($aPrice);
+                    $this->aPricing[] = $oProductPricing;
+                }
+        }
+    }
+
+    public function getPricing()
+    {
+        $this->fetchPricing();
+        return $this->aPricing;
+    }
+
+    public function getProductTableValues()
+    {
+        return $this->aPrimaryTableValue;
+    }
+
+    public function isProductOutOfStock()
+    {
+        $result = true;
+        if (intval($this->getField('r_avail')) <= 0)
+            $result = false;
+        $iEtaDate = $this->getField('eta_date_mm_dd_yyyy');
+        if ($result && !empty($iEtaDate)){
+            $current_time = time();
+            if ($current_time < $iEtaDate){
+                $result = false;
+            }
+        }
+        if ($result && $this->getProductCostToUs() > $this->getPrice())
+            $result = false;
+
+        if ($result && floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false)
+            $result = false;
+
+        return $result;
+    }
+
+    public function getMapPrice()
+    {
+        return floatval($this->getField('new_map_price'));
+    }
+
+    public function getProductCostToUs()
+    {
+        return floatval($this->getField('cost_to_us'));
+    }
+
+    public function getPrice($forQuantity = 1)
+    {
+        $fPrice = 0;
+        if (!empty($this->aPricing)){
+            foreach ($this->aPricing as $oPrice) {
+                if ($forQuantity >= floatval($oPrice->getQuantity())){
+                    $fPrice = floatval($oPrice->getPrice());
+                    break;
+                }
+
+            }
+        }
+        $fMapPrice = $this->getMapPrice();
+        if ($fPrice < $fMapPrice) $fPrice = $fMapPrice;
+
+        return $fPrice;
+    }
+
+    public function getFrontendPrice($forQuantity = 1)
+    {
+        $fPrice = $this->getPrice($forQuantity);
+
+        if ($this->isSupplierFeedsEnabled() && !$this->isProductOutOfStock())
+        {
+            $fPrice = func_decreased_price($this->getProductCostToUs(), $fPrice, $this->getMapPrice());
+        }
+
+        return $fPrice;
+    }
+
+    public function  isSupplierFeedsEnabled()
+    {
+        $result = false;
+        $sEnabled = func_query_first_cell("SELECT enabled FROM ". self::$sql_tbl['supplier_feeds']." WHERE manufacturerid=".$this->getField('manufacturerid')." AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='" . $this->getField("controlled_by_feed") . "'))");
+        if ($sEnabled == 'Y') $result = true;
+        return $result;
+    }
+
+    public function getPreviewImageURL()
+    {
+        $sUrl = null;
+        $this->getImages('P');
+        if (!empty($this->aImagesP)){
+            $oImage = reset($this->aImagesP);
+            $sUrl =  $oImage->getURL();
+        }
+        return $sUrl;
+    }
+
+    public function getDetailedImages()
+    {
+        return $this->getImages('D');
     }
 
 }

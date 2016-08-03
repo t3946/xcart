@@ -1,6 +1,6 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir."/include/class/classCloneData.php";
+require_once $xcart_dir."/include/class/classProduct.php";
 require_once $xcart_dir."/include/class/classManufacturers.php";
 require_once $xcart_dir."/include/class/classCategories.php";
 require_once $xcart_dir."/include/class/classProduct.php";
@@ -129,7 +129,9 @@ class classProducts extends classCloneData
             'shipping_dim_lock',
             'shipping_weight',
             'shipping_weight_lock',
-            'weight_lock'
+            'weight_lock',
+            'verification_statusid',
+            'last_verify_date'
         );
     }
 
@@ -191,6 +193,10 @@ class classProducts extends classCloneData
 
     public function getProductInfo($iProductId) {
         return func_query_first("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE productid = $iProductId");
+    }
+
+    public function getProductsInfo($aProductsId) {
+        return func_query("SELECT * FROM ".self::$sql_tbl[$this->sPrimaryTable]." WHERE productid IN (".implode(',',$aProductsId).")");
     }
 
     public function getMainProductCategoriesInfo($iProductId) {

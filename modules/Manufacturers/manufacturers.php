@@ -447,6 +447,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $manufacturerid)) {
 				"dcad_company_name" => trim($dcad_company_name),
 				"dcad_routing_number" => trim($dcad_routing_number),
 				"dcad_account_number" => trim($dcad_account_number),
+
+				"products_always_verify" => trim($products_always_verify),
+				"days_before_verify" => trim($products_days_before_verify),
 ###
 ##
 #
@@ -1258,6 +1261,12 @@ if ($distributor_section == "18"){
 		'title'  => 'External marketplaces',
 		'order_by' => '180',
 		'distributor_section' => '40'
+	);
+	
+	$distributor_sections[] = array(
+		'title'  => 'Product verification settings',
+		'order_by' => '180',
+		'distributor_section' => '31'
 	);
 
 
