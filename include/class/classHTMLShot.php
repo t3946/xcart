@@ -4,7 +4,7 @@ require_once $xcart_dir . "/include/class/classData.php";
 
 class classHTMLShot extends classData
 {
-    const PATH_TO_HTMLS_SHOT_IMAGES = "images/HTML/%d_%d/";
+    const PATH_TO_HTMLS_SHOT_IMAGES = "/images/HTML/%d_%d/";
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['id'];
@@ -14,17 +14,26 @@ class classHTMLShot extends classData
 
     public function createHTMLShot(classProduct $oProduct, $orderid)
     {
+        global $xcart_dir;
         $aImagesD = $oProduct->getImages('D');
         $aImagesP = $oProduct->getImages('P');
         $aImages = array_merge($aImagesD,$aImagesP);
+        $oStoreFront = $oProduct->getStoreFront()->getStoreFrontByProductId($oProduct->getProductId());
+
         foreach ($aImages as $oImage)
         {
-            if ($oImage->saveImageTo(sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES,$orderid,$oProduct->getProductId()))){
-                $oImage->setField('image_path','./'.sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES,$orderid,$oProduct->getProductId()).$oImage->getFileName());
+            if ($oStoreFront->isCDNEnable()){
+                $oImage->useCDN(true,$oStoreFront->getCDNURL());
+            } else $oImage->useCDN(false);
+
+
+            if ($oImage->saveImageTo($xcart_dir.sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES,$orderid,$oProduct->getProductId()))){
+                $oImage->setField('image_path',sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES,$orderid,$oProduct->getProductId()).$oImage->getFileName());
             }
 
         }
         $oProduct->getPricing();
+        $oStoreFront->setCDNDisable();
 
         $this->setField('htmlshot',addslashes(serialize($oProduct)));
         $this->setField('product_id',$oProduct->getProductId());

@@ -73,7 +73,10 @@
                             {include file="modules/Detailed_Product_Images/popup_image.tpl"}
                         {else}
                             {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
-                                <a style="font-size: 0px;" href="http://{$site_domain|lower}/{$canonical_url}#dp_images">{/if}{include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P"}{if $active_modules.Detailed_Product_Images ne "" && $images ne ''}</a>{/if}
+                                <a style="font-size: 0px;" href="/#dp_images">
+                                    <img src="{$oProduct->getPreviewImageURL()}" />
+                                </a>
+                            {/if}
                         {/if}
                         {if $active_modules.Magnifier ne "" && $config.Magnifier.magnifier_image_popup eq 'Y' && $zoomer_images ne '' && $js_enabled eq 'Y'}
                             {include file="modules/Magnifier/popup_magnifier.tpl"}
@@ -603,7 +606,18 @@
 {if $active_modules.Detailed_Product_Images ne "" && ($config.Detailed_Product_Images.det_image_popup ne 'Y' || $js_enabled ne 'Y')}
     <p/>
     <a name="dp_images"></a>
-    {include file="modules/Detailed_Product_Images/product_images.tpl" }
+    {assign var="aDetailedImages" value=$oProduct->getDetailedImages()}
+    {if (!empty($aDetailedImages))}
+        {capture name=dialog}
+        {foreach from=$aDetailedImages item=oDetailedImage }
+            <div align="center">
+            <img src="{$oDetailedImage->getURL()}"/><br/>
+            </div>
+        {/foreach}
+        {/capture}
+        {include file="dialog.tpl" title=$lng.lbl_detailed_images content=$smarty.capture.dialog extra='width="100%"' do_not_use_h1="Y"}
+    {/if}
+
 {/if}
 </body>
 </html>
