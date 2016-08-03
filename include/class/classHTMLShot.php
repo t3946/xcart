@@ -58,7 +58,7 @@ class classHTMLShot extends classData
 
     public function getHTMLShot()
     {
-        return unserialize(stripslashes($this->getField('htmlshot')));
+        return unserialize($this->getField('htmlshot'));
     }
 
     public function deleteHTMLShot()
