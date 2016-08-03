@@ -1447,7 +1447,7 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
         alert('Please, select Amazon shipping method!');
       } else {
 
-        if (confirm('Are You Shure?')) {
+        if (confirm('Are You Sure?')) {
           $(this).prop('disabled', true);
           var orderid = $(this).data('orderid'),
                   manufacturerid = $(this).data('manufacturerid'),
