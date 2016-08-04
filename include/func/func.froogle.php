@@ -79,7 +79,8 @@ $start_time = round(microtime(true) * 1000);
 ###
 ##
 #
-
+if ($sExtraLog=='Y')
+	echo 'Storefrontid: '.$use_storefrontid;
 
 	if (empty($productid)){
 //		$row = "title\tdescription\tlink\tadwords_redirect\tadwords_grouping\tadwords_labels\timage link\tadditional image link\tid\tprice\tpayment accepted\tpayment notes\tquantity\tweight\texpiration date\tbrand\tcondition\tproduct type\tmpn\tmodel number\tgtin\tcompatible with\tonline only\tshipping\tavailability\tmultipack\tgoogle product category\n";
@@ -449,6 +450,9 @@ $start_time = round(microtime(true) * 1000);
 	$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
 	$diff_end_time_approximate_shipping = (round(microtime(true) * 1000) - $start_time_approximate_shipping);
 
+	if ($sExtraLog =='Y'){
+		func_print_r($shipping_arr);
+	}
 
 	$product['custom_label_2'] = 'UPS rates';
 
@@ -760,7 +764,7 @@ function AddProductToGoogleBaseBatch($productid, $update_type, $forsale, $google
 }
 
 function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, $debug_mode = 'N', $sExtraLog = 'N'){
-        global $started_at, $sql_tbl, $froogle_tracing_token, $debug_requests;
+			global $started_at, $sql_tbl, $froogle_tracing_token, $debug_requests;
 
 	foreach ($ginventory as $k => $v){
 				/*func_build_quick_prices($v["productid"]);*/
