@@ -43,7 +43,7 @@ if ($REQUEST_METHOD == 'POST') {
 
 
 //	if (!empty($XCART_SESSION_VARS["cart"]["products"]) && is_array($XCART_SESSION_VARS["cart"]["products"])){
-	if (!empty($cart["products"]) && is_array($cart["products"])){
+	if (!empty($cart["products"]) && is_array($cart["products"]) && ($section_name != "recently_viewed_products")){
 		foreach ($cart["products"] as $k => $v){
 			$productids[] = $v["productid"];
 		}
@@ -52,33 +52,30 @@ if ($REQUEST_METHOD == 'POST') {
 	$sGoogleAnaliticsParam = "";
 
 	if (
-		$section_name == "products_also_bought_with_this_product"  || 
-		$section_name == "related_products"  || 
+		$section_name == "products_also_bought_with_this_product"  ||
+		$section_name == "related_products"  ||
 		$section_name == "recently_viewed_products"
 	){
 
 		$productids = implode("','", $productids);
 
 		if ($section_name == "products_also_bought_with_this_product"){
-			$p_query = "
-select RO.related_resource_id as needed_resource_id
-from xcart_cidev_related_objects RO
-        inner join xcart_products P ON P.productid = RO.related_resource_id and P.forsale = 'Y'
-where RO.resource_id = '$productid' and RO.resource_type = 'OP' and RO.related_resource_type = 'P'  and RO.related_resource_id NOT IN ('$productids')
-Order By RO.related_resource_orderby
-limit 20";
+			$p_query = "select RO.related_resource_id as needed_resource_id
+                          from xcart_cidev_related_objects RO
+                          inner join xcart_products P ON P.productid = RO.related_resource_id and P.forsale = 'Y'
+                        where RO.resource_id = '$productid' and RO.resource_type = 'OP' and RO.related_resource_type = 'P'  and RO.related_resource_id NOT IN ('$productids')
+                        Order By RO.related_resource_orderby limit 20";
 		}
 		elseif ($section_name == "recently_viewed_products"){
 
 			$meta_id = func_query_first_cell("SELECT id FROM xcart_cidev_surf_meta WHERE sessid='".$$XCART_SESSION_NAME."'");
 
-			$p_query = "
-select SP.resource_id as needed_resource_id
-from xcart_cidev_surf_path SP
-        inner join xcart_products P ON P.productid = SP.resource_id and P.forsale = 'Y'
-where SP.meta_id = '$meta_id' and SP.resource_type = 'P' and SP.resource_id NOT IN ('$productids')
-Group By SP.resource_id
-Order By SP.`position` desc";
+			$p_query = "select SP.resource_id as needed_resource_id
+                          from xcart_cidev_surf_path SP
+                          inner join xcart_products P ON P.productid = SP.resource_id and P.forsale = 'Y'
+                        where SP.meta_id = '$meta_id' and SP.resource_type = 'P' and SP.resource_id NOT IN ('$productids')
+                        Group By SP.resource_id
+                        Order By SP.`position` desc";
 		}
 		elseif ($section_name == "related_products"){
 
