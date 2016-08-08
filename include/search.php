@@ -502,6 +502,10 @@ if ($mode == "search") {
                 $search_words = array_splice($search_words, $search_word_limit - 1);
             }
         }
+        if (empty($left_joins['products_lng']))
+            $left_joins['products_lng'] = array(
+                "on" => "$sql_tbl[products].productid = $sql_tbl[products_lng].productid"
+        );
 
         foreach ($search_string_fields as $ssf) {
             if ($config['General']['allow_search_by_words'] == 'Y' && !empty($search_words) && in_array($data['including'], array("all", "any"))) {
@@ -1121,9 +1125,14 @@ if ($mode == "search") {
 #       
 
     }
-
     if ($current_area == "C" && $search_all_website) {
-        if (!empty($data["by_sku"])) {
+        if (!empty($data["by_sku"]) && empty($data["substring"])) {
+            $sLog = "Empty search substring\n";
+            $sLog .= "SESSIONID = $XCART_SESSION_NAME \n";
+            $sLog .= addslashes(serialize(func_get_backtrace()));
+            func_backprocess_log('debug_search',nl2br($sLog));
+        }
+        if (!empty($data["by_sku"]) && !empty($data["substring"])) {
             $search_subsearch = "(
                     SELECT productid
                     FROM $sql_tbl[products]
