@@ -38,6 +38,17 @@ class classData
         func_array2insert($this->sPrimaryTable, $this->aPrimaryTableValue, $is_replace);
     }
 
+    public function _delete()
+    {
+        if (!empty($this->aPrimaryKeysValues)) {
+            $aKeyArray = $this->aPrimaryKeysValues;
+            array_walk($aKeyArray, function (&$a, $b) {
+                $a = $b . ' = "' . $a . '"';
+            });
+            db_query("DELETE FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . implode(" AND ", $aKeyArray));
+        }
+    }
+
     public function _refresh()
     {
         $this->fillPrimaryTableInfo();
@@ -45,8 +56,13 @@ class classData
 
     protected function fillPrimaryTableInfo()
     {
-        if (!empty($this->aPrimaryKeysValues))
-            $this->aPrimaryTableValue = func_query_first("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . str_replace('&', ' AND ', http_build_query($this->aPrimaryKeysValues)));
+        if (!empty($this->aPrimaryKeysValues)) {
+            $aKeyArray = $this->aPrimaryKeysValues;
+            array_walk($aKeyArray, function (&$a, $b) {
+                $a = $b . ' = "' . $a . '"';
+            });
+            $this->aPrimaryTableValue = func_query_first("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . implode(" AND ", $aKeyArray));
+        }
     }
 
     public function fillPrimaryTableValues($aValues)

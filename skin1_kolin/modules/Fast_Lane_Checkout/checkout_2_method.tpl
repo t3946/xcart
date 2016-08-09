@@ -111,9 +111,8 @@ function cidev_save_payment(paymentid, checkout_step){
 {if $show_only_phone_method eq "Y"}
 <input type="hidden" name="paymentid" value="{$payment.paymentid}" />
 {else}
-<td width="1"><input type="radio" name="paymentid" onclick="cidev_save_payment('{$payment.paymentid}', '{$checkout_step}');" id="pm{$payment.paymentid}" value="{$payment.paymentid}"{if $payment.paymentid eq $cart.paymentid} checked="checked"{/if} /></td>
+<td width="1"><input type="radio" name="paymentid" onclick="cidev_save_payment('{$payment.paymentid}', '{$checkout_step}');" id="pm{$payment.paymentid}" value="{$payment.paymentid}"{if $payment.paymentid eq $cart.paymentid || (!empty($purchase_order_selected) && $payment.payment_method=='Purchase Order')} checked="checked"{/if} /></td>
 {/if}
-
 {if $payment.processor eq "ps_paypal_pro.php"}
 <td colspan="2">
 <table cellpadding="0" cellspacing="0"><tr>

@@ -2789,7 +2789,8 @@ function func_define_approximate_shippings($productid, $product_info=''){
 
 			$flat_rate_shipping_cost = "";
 			$flat_rate_shippings = func_query($query = "SELECT * FROM $sql_tbl[shipping_rates] WHERE zoneid='$customer_zone_ship_for_flat_rate' AND provider='master' AND mintotal<='$product_info[price]' AND maxtotal>='$product_info[price]' AND minweight<='$product_info[weight]' AND maxweight>='$product_info[weight]' AND type='D' AND manufacturerid='$product_info[manufacturerid]' ORDER BY maxtotal, maxweight");
-			if (!empty($flat_rate_shippings)){
+
+				if (!empty($flat_rate_shippings)){
 				foreach ($flat_rate_shippings as $k_fr => $v_fr){
 					$flat_rate_shippings[$k_fr]["shipping_cost"] = $v_fr["cost_marcup"] + $v_fr['rate'] + $v_fr['weight_rate']*$product_info["weight"] + $v_fr["item_rate"]*$product_info["min_amount"] + $product_info["price"]*$v_fr['rate_p'] / 100 + $product_info["shipping_freight"];
 				}
@@ -2814,7 +2815,8 @@ function func_define_approximate_shippings($productid, $product_info=''){
 
 
 				if ($flat_rate_shipping_cost != ""){
-					$Shipping_charge = min($Shipping_charge, $flat_rate_shipping_cost);
+					//$Shipping_charge = min($Shipping_charge, $flat_rate_shipping_cost);
+					$Shipping_charge = $flat_rate_shipping_cost;
 				}
 			} 
 			else {
