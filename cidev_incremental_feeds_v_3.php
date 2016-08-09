@@ -158,7 +158,8 @@ Select
  From xcart_cidev_updated_products UPM
                 left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
                 inner join xcart_products_sf PS ON PS.productid = P2.productid
- where UPM.`type` = 3 and P2.forsale = 'Y' /*and P2.min_amount=1*/) As T");
+ where UPM.`type` = 3 and P2.forsale = 'Y' /*and P2.min_amount=1*/) As T
+ where T.productid not in (320764,320761,320762,320764,320765,320766)");
 
     if ($UpdateProductsOverview > 0) {
         $paramYN = 'Y';
@@ -312,7 +313,8 @@ Select
         where UP.`type` <= 2  and P.forsale = '$paramYN'
         group by UP.resourceid
         HAVING utype = '2')
-        As T ");
+        As T
+         where T.productid not in (320764,320761,320762,320764,320765,320766)");
 
         if (!empty($query_products_count)) {
             $query_products = "
@@ -333,7 +335,8 @@ Select
                 where UP.`type` <= 2  and P.forsale = '$paramYN'
                 group by UP.resourceid
                 HAVING utype = '2')
-                As T ";
+                As T
+                 where T.productid not in (320764,320761,320762,320764,320765,320766)";
         } else {
 
             $query_products_count = func_query_first_cell("
@@ -366,7 +369,8 @@ Select
                             left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid
                             inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
                             left join xcart_products_sf PS2 ON PS.productid = PS2.productid
-             where UPM.`type` = 3 and P2.forsale='$paramYN') As T ");
+             where UPM.`type` = 3 and P2.forsale='$paramYN') As T
+             where T.productid not in (320764,320761,320762,320764,320765,320766)");
 
             if (!empty($query_products_count)) {
                 $query_products = "
@@ -399,7 +403,8 @@ Select
                                         left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
                                         inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
                                         left join xcart_products_sf PS2 ON PS.productid = PS2.productid
-                         where UPM.`type` = 3 and P2.forsale='$paramYN') As T ";
+                         where UPM.`type` = 3 and P2.forsale='$paramYN') As T
+                         where T.productid not in (320764,320761,320762,320764,320765,320766)";
             } else {
                 $tparamYN = $paramYN;
                 $tPARAMLIMIT = $PARAMLIMIT;
@@ -438,7 +443,7 @@ Select
                                         inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
                                         left join xcart_products_sf PS2 ON PS2.productid = PS.productid
                          where UPM.`type` = 3 and P2.forsale='$paramYN') As T
-
+                         where T.productid not in (320764,320761,320762,320764,320765,320766)
                          $PARAMLIMIT";
                 $paramYN = $tparamYN;
                 $PARAMLIMIT = $tPARAMLIMIT;
