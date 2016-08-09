@@ -51,7 +51,6 @@ x_session_register("e_search_data_orig_substring");
 ###
 ##
 #
-
 #
 ## Mobile
 ###

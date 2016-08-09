@@ -53,6 +53,11 @@ if (!empty($active_modules['Wishlist'])) {
 
 x_load('cart','user','order');
 
+x_session_register('purchase_order_selected');
+if (!empty($purchase_order_selected))
+{
+	$smarty->assign('purchase_order_selected', $purchase_order_selected);
+}
 #
 ##
 ###

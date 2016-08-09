@@ -3,6 +3,7 @@ require './auth.php';
 require '../include/security.php';
 require_once '../include/class/classProducts.php';
 require_once '../include/class/classOrder.php';
+require_once '../include/class/classPOPipeline.php';
 
 
 switch ($_POST['ajax_action']) {
@@ -14,6 +15,10 @@ switch ($_POST['ajax_action']) {
         break;
     case "ship_order_by_amazon" :
         shipOrderByAmazon($_POST);
+        break;
+    case "select_purchase_order_for_entry":
+        selectPurchaseOrderForEntry($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -29,7 +34,7 @@ function changeVerifyProductStatus($aPostParam = [])
         if (!empty($aOrders)) {
             foreach ($aOrders as $iOrderId) {
                 $oOrder = new classOrder($iOrderId);
-                $oOrder->updateVerificationStatus($sNote);
+                $oOrder->updateVerificationStatus();
             }
         }
     }
@@ -62,4 +67,16 @@ function shipOrderByAmazon($aPostParam = [])
     }
     if (!empty($sAmazonShippingMethodSelect))
         $oOrderGroup->shipOrderGroupByAmazon($sAmazonShippingMethodSelect);
+}
+
+function selectPurchaseOrderForEntry($aPostParam = [])
+{
+    if (!empty($aPostParam['ordernumber']) && is_numeric($aPostParam['ordernumber'])) {
+        $oPoPipeline =  new classPOPipeLine(['po_id'=>$aPostParam['ordernumber']]);
+        $iPoPipe = $oPoPipeline->getPOId();
+        if ($iPoPipe){
+            $aResult = $oPoPipeline->selectOrderForEntry();
+            print(json_encode($aResult));
+        }
+    }
 }
