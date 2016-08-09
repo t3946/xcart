@@ -1128,7 +1128,7 @@ if ($mode == "search") {
     if ($current_area == "C" && $search_all_website) {
         if (!empty($data["by_sku"]) && empty($data["substring"])) {
             $sLog = "Empty search substring\n";
-            $sLog .= "SESSIONID = $XCART_SESSION_NAME \n";
+            $sLog .= "SESSIONID = $XCARTSESSID \n";
             $sLog .= addslashes(serialize(func_get_backtrace()));
             func_backprocess_log('debug_search',nl2br($sLog));
         }

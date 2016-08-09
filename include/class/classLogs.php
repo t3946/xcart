@@ -22,10 +22,9 @@ class classLogs extends classData
         self::$log_resource_type = $log_resource_type;
     }
 
-    public static function _log($iResourceId, $sLogType, $sLog, $sLogin = null)
+    public static function _log($sResourceType, $iResourceId, $sLogType, $sLog, $sLogin = null)
     {
-        if (empty(self::$log_resource_type)) throw new Exception ('Log resource type is empty');
-        $aParams['resource_type'] = self::$log_resource_type;
+        $aParams['resource_type'] = $sResourceType;
         $aParams['resource_id'] = $iResourceId;
         $aParams['type'] = $sLogType;
         if (!isset($sLogin)) {
@@ -38,18 +37,24 @@ class classLogs extends classData
         func_array2insert('logs', $aParams);
     }
 
-    public static function _getLogs($iResourceId = null, $sLogType = null)
+    public static function _getFoundRows()
+    {
+        $aResult = func_query_column('SELECT FOUND_ROWS()');
+        return reset($aResult);
+    }
+
+    public static function _getLogs($page=1, $per_page=50, $iResourceId = null, $sLogType = null)
     {
         $aLogs = [];
         $oSQL = new classSQLBuilder();
-        $oSQL->addSelect('*')->addFromTable('logs')->addCondition("resource_type = '" . self::$log_resource_type . "'")->addOrderBy('id DESC');
+        $oSQL->addSelect('SQL_CALC_FOUND_ROWS *')->addFromTable('logs')->addCondition("resource_type = '" . self::$log_resource_type . "'")->addOrderBy('id DESC');
         if (!empty($iResourceId))
             $oSQL->addCondition("resource_id = $iResourceId");
         if (!empty($sLogType)) {
             $oSQL->addCondition("type='$sLogType'");
         }
 
-        $oSQL->setLimit('50');
+        $oSQL->setLimit(($page-1)*$per_page.",".$per_page);
 
         $aResult = $oSQL->Execute()->getQueryResult();
         if (!empty($aResult)) {

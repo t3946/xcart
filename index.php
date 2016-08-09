@@ -54,6 +54,9 @@ if (
     func_clean_url_permanent_redirect('S', intval($pageid));
 }
 
+if (!empty($purchase_order_selected)) {
+    x_session_save('purchase_order_selected');
+}
 
 require "./include/get_language.php";
 

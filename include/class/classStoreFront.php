@@ -6,13 +6,14 @@ class classStoreFront extends classData
 {
     private $Enable_CDN = null;
     private $CDN_domain = null;
+    private $CompanyName = null;
 
     private $sConfigTable = null;
 
     public function __construct($iId = null)
     {
         $this->sPrimaryTable = "storefronts";
-        $this->sPrimaryKeyFiled = "storefrontid";
+        $this->aPrimaryKeys = ["storefrontid"];
 
         parent::__construct($iId);
 
@@ -23,8 +24,10 @@ class classStoreFront extends classData
     {
         if ($this->getStoreFrontId() > 0) {
             $this->sConfigTable = self::$sql_tbl['storefronts_config'];
-        } else
+        } else {
             $this->sConfigTable = self::$sql_tbl['config'];
+            $this->fillPrimaryTableValues(['storefrontid'=>0, 'domain'=>MAIN_SF_DOMAIN]);
+        }
     }
 
     public function getStoreFrontByProductId($iProductId)
@@ -49,6 +52,7 @@ class classStoreFront extends classData
 
     public function fetchCDNSettings()
     {
+        $this->_init();
         if ($this->getStoreFrontId() > 0) {
             $addSQL = ' AND storefrontid=' . $this->getStoreFrontId();
         }
@@ -82,5 +86,23 @@ class classStoreFront extends classData
     public function setCDNDisable()
     {
         $this->Enable_CDN = false;
+    }
+
+    public function fetchCompanyName()
+    {
+        $this->_init();
+        if (empty($this->CompanyName)){
+            if ($this->getStoreFrontId() > 0) {
+                $addSQL = ' AND storefrontid=' . $this->getStoreFrontId();
+            }
+            $this->CompanyName = func_query_first_cell("SELECT value FROM " . $this->sConfigTable . " WHERE name='company_name' ".$addSQL);
+        }
+
+    }
+
+    public function getCompanyName()
+    {
+        $this->fetchCompanyName();
+        return $this->CompanyName;
     }
 }

@@ -1380,6 +1380,18 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
 		$orderid = func_array2insert('orders', $insert_data);
 
+		x_session_register('purchase_order_selected');
+		if(!empty($GLOBALS['purchase_order_selected']) && is_numeric($GLOBALS['purchase_order_selected'])){
+
+			include_once $xcart_dir."/include/class/classPOPipeline.php";
+			$oPoPipeline =  new classPOPipeLine(['po_id'=>$GLOBALS['purchase_order_selected']]);
+			$iPoPipe = $oPoPipeline->getPOId();
+			if ($iPoPipe){
+				$oPoPipeline->setOrderToPO($orderid);
+			}
+			x_session_unregister('purchase_order_selected');
+		}
+
 
 #
 ## https://basecamp.com/2070980/projects/1577907/messages/46647624
@@ -1705,6 +1717,8 @@ die("123");
 		include_once $xcart_dir."/include/class/classOrder.php";
 		$oOrder = new classOrder($orderid);
 		$oOrder->updateVerificationStatus();
+
+
 
 
 # END: random:20341 [2010 Jul 29 14:46] 
