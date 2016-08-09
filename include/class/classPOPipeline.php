@@ -14,6 +14,10 @@ class classPOPipeLine extends classData
     const PO_HAS_BEEN_DROPPED = "PO# %s has been dropped";
     const PO_HAS_BEEN_ENTERED = "PO# %s has been successfully entered";
 
+    const PO_STATUS_UPLOADED = 'uploaded';
+    const PO_STATUS_DROPED = 'droped';
+    const PO_STATUS_ENTERED = 'entered';
+
     private $oOrder = null;
 
     public function __construct($aParams = [])
@@ -58,7 +62,7 @@ class classPOPipeLine extends classData
     {
         global $sql_tbl;
         $aPOs = [];
-        $aOrders = func_query("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE status = 'uploaded'");
+        $aOrders = func_query("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE status = '" . self::PO_STATUS_UPLOADED . "'");
         if (!empty($aOrders)) {
             foreach ($aOrders as $aOrder) {
                 $oPo = new classPOPipeLine();
@@ -101,7 +105,7 @@ class classPOPipeLine extends classData
         $aResult = [];
         $oStoreFront = new classStoreFront(['storefrontid' => $this->getStoreFrontId()]);
         classLogs::_log('purchase_orders', $this->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(self::PO_HAS_BEEN_SELECTED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
-        $aResult['frontend_url'] = 'http://'.$oStoreFront->getDomain()."/?purchase_order_selected=".$this->getPOId();
+        $aResult['frontend_url'] = 'http://' . $oStoreFront->getDomain() . "/?purchase_order_selected=" . $this->getPOId();
         return $aResult;
     }
 
@@ -130,5 +134,14 @@ class classPOPipeLine extends classData
         } else {
             throw new Exception("PO#$purchase_order_number_upload upload failed");
         }
+    }
+
+    public static function getPOStatuses()
+    {
+        return [
+            self::PO_STATUS_UPLOADED => 'Uploaded',
+            self::PO_STATUS_DROPED => 'Droped',
+            self::PO_STATUS_ENTERED => 'Entered',
+        ];
     }
 }
