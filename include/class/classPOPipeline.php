@@ -14,6 +14,10 @@ class classPOPipeLine extends classData
     const PO_HAS_BEEN_DROPPED = "PO# %s has been dropped";
     const PO_HAS_BEEN_ENTERED = "PO# %s has been successfully entered";
 
+    const PO_STATUS_UPLOADED = 'uploaded';
+    const PO_STATUS_DROPED = 'droped';
+    const PO_STATUS_ENTERED = 'entered';
+
     private $oOrder = null;
 
     public function __construct($aParams = [])
@@ -58,7 +62,7 @@ class classPOPipeLine extends classData
     {
         global $sql_tbl;
         $aPOs = [];
-        $aOrders = func_query("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE status = 'uploaded'");
+        $aOrders = func_query("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE status = '".self::PO_STATUS_UPLOADED."'");
         if (!empty($aOrders)) {
             foreach ($aOrders as $aOrder) {
                 $oPo = new classPOPipeLine();
