@@ -4084,6 +4084,8 @@ function func_get_filter($fid) {
 
     $filter['fraud_statuses'] = func_query_column("SELECT fraud_status FROM $sql_tbl[filter_preset_fraud_statuses] WHERE fid='$fid'");
 
+	$filter['po_statuses'] = func_query_column("SELECT status FROM $sql_tbl[filter_preset_po_statuses] WHERE fid='$fid'");
+
     $attention_tags_values = func_query_column("SELECT status_id FROM $sql_tbl[filter_preset_attention_tag_statuses] WHERE fid='$fid'");
     if (!empty($attention_tags_values)){
 	    $filter['attention_tags_values'] = func_query_column("SELECT status_id FROM $sql_tbl[filter_preset_attention_tag_statuses] WHERE fid='$fid'");

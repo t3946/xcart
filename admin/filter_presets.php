@@ -1,34 +1,34 @@
 <?php
 /*****************************************************************************\
-+-----------------------------------------------------------------------------+
-| X-Cart                                                                      |
-| Copyright (c) 2001-2012 Ruslan R. Fazliev <rrf@rrf.ru>                      |
-| All rights reserved.                                                        |
-+-----------------------------------------------------------------------------+
-| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
-| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
-| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
-|                                                                             |
-| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
-| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
-| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
-| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
-| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
-| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
-| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
-| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
-| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
-| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
-| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
-| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
-| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
-| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
-|                                                                             |
-| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2012           |
-| Ruslan R. Fazliev. All Rights Reserved.                                     |
-+-----------------------------------------------------------------------------+
-\*****************************************************************************/
+ * +-----------------------------------------------------------------------------+
+ * | X-Cart                                                                      |
+ * | Copyright (c) 2001-2012 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+ * | All rights reserved.                                                        |
+ * +-----------------------------------------------------------------------------+
+ * | PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
+ * | FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
+ * | AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
+ * |                                                                             |
+ * | THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
+ * | THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
+ * | FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
+ * | AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
+ * | PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
+ * | CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
+ * | COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
+ * | (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
+ * | LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
+ * | AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
+ * | OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
+ * | AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
+ * | THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
+ * | THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
+ * |                                                                             |
+ * | The Initial Developer of the Original Code is Ruslan R. Fazliev             |
+ * | Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2012           |
+ * | Ruslan R. Fazliev. All Rights Reserved.                                     |
+ * +-----------------------------------------------------------------------------+
+ * \*****************************************************************************/
 
 #
 # $Id: filter_presets.php,v 1.0.0.0 2012/06/06 12:11:20 kirill Exp $
@@ -139,15 +139,18 @@ if ($REQUEST_METHOD == "POST" && !empty($fid)) {
         'placement_time_to_type'    => $placement_time_to_type,
         'enabled'                   => $enabled == 'Y' ? 'Y' : 'N',
         'bold'                      => $bold == 'Y' ? 'Y' : 'N',
+        'direct_link'  => $filter_direct_link,
     );
     func_array2update('filter_presets', $update, "fid='$fid'");
     
     db_query("DELETE FROM $sql_tbl[filter_preset_statuses] WHERE fid='$fid'");
+    if (!empty($status))
     foreach ($status as $s) {
         db_query("INSERT INTO $sql_tbl[filter_preset_statuses] (fid, status) VALUES('$fid', '$s')");
     }
     
     db_query("DELETE FROM $sql_tbl[filter_preset_distributors] WHERE fid='$fid'");
+    if (!empty($distributors))
     foreach ($distributors as $d) {
         db_query("INSERT INTO $sql_tbl[filter_preset_distributors] (fid, manufacturerid) VALUES('$fid', '$d')");
     }
@@ -185,13 +188,16 @@ if ($REQUEST_METHOD == "POST" && !empty($fid)) {
 
     db_query("DELETE FROM $sql_tbl[filter_preset_ship_to_country] WHERE fid='$fid'");
     if (!empty($ship_to_countries_filter))
-    foreach ($ship_to_countries_filter as $f) {
-        db_query("INSERT INTO $sql_tbl[filter_preset_ship_to_country] (fid, country_code) VALUES('$fid', '$f')");
+        foreach ($ship_to_countries_filter as $f) {
+            db_query("INSERT INTO $sql_tbl[filter_preset_ship_to_country] (fid, country_code) VALUES('$fid', '$f')");
+        }
+
+    db_query("DELETE FROM $sql_tbl[filter_preset_po_statuses] WHERE fid='$fid'");
+    if (!empty($po_status))
+    foreach ($po_status as $ps) {
+        db_query("INSERT INTO $sql_tbl[filter_preset_po_statuses] (fid, status) VALUES('$fid', '$ps')");
     }
-###
-##
-#
-    
+
     func_header_location("configuration.php?option=Filter_Presets&fid=$fid");
 }
 
@@ -287,7 +293,12 @@ if (isset($fid)) {
     $smarty->assign('filter', $filter);
     $smarty->assign('distributors', $distributors);
     $smarty->assign('statuses', $statuses);
-    
+
+    global $xcart_dir;
+    require_once $xcart_dir . "/include/class/classPOPipeline.php";
+    $oPOPipelineStatuses = classPOPipeLine::getPOStatuses();
+    $smarty->assign('po_statuses', $oPOPipelineStatuses);
+
     $smarty->assign('filter_preset_title', 'title');
 } else {
     $_filters = func_query("SELECT * FROM $sql_tbl[filter_presets] ORDER BY preset_position, fid");
