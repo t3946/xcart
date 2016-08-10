@@ -52,7 +52,7 @@ if(!empty($HTTP_USER_AGENT) && !defined("IS_ROBOT") && empty($is_robot)) {
 		"Ahrefs" => array("AhrefsBot/5.0","adidxbot/1.1"),
         "Spotbot" => array("spotbot - spotbot@indix.com","DotBot/1.1","Mail.RU_Bot/2.0","rogerbot/1.1","spotbot"),
 		"Google" => array("Googlebot","Mediapartners-Google","AdsBot-Google-Mobile","AdsBot-Google","TwengaBot-2.0","Googlebot-Image/1.0","GoogleBot/2.1","TwengaBot","AdsBot"),
-		"Bing" => array("bingbot"),
+		"Bing" => array("bing"),
 		"TheFind" => array("FatBot","ShopWiki/1.0","com.thefind.Shopping/3.2.1"),
 		"Excita" => array("ArchitextSpider"),
 		"Altavista" => array("Scooter","vscooter","Mercator","AltaVista-Intranet"),
@@ -213,6 +213,8 @@ if(!empty($HTTP_USER_AGENT) && !defined("IS_ROBOT") && empty($is_robot)) {
 		"WebZIP" => array("WebZIP"),
 		"World Wide Web Offline Explorer" => array("WWWOFFLE"),
 		"Xaldon" => array("Xaldon WebSpider"),
+		"spbot" => array("spbot"),
+		"Qwantify" => array("Qwantify"),
         "IstellaBot" => array("istellabot/")
 		);
 

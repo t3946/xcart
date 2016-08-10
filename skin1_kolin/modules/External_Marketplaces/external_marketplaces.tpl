@@ -113,7 +113,7 @@
                                     <td align="center">
                                         <select autocomplete="off" class="external_storefront_storefrontid"  style="width:98%;" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][0][storefront_id]">
                                             <option value=""></option>
-                                            {html_options values=$external_storefronts->getStoreFrontsIds() output=$external_storefronts->getStoreFrontsDomains()}
+                                            {html_options options=$external_storefronts->getStoreFrontsSelect()}
                                         </select>
                                     </td>
                                     <td align="center">

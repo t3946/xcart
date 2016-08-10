@@ -116,11 +116,13 @@ if ($REQUEST_METHOD == "POST" && !empty($fid)) {
     func_array2update('filter_presets', $update, "fid='$fid'");
 
     db_query("DELETE FROM $sql_tbl[filter_preset_statuses] WHERE fid='$fid'");
+    if (!empty($status))
     foreach ($status as $s) {
         db_query("INSERT INTO $sql_tbl[filter_preset_statuses] (fid, status) VALUES('$fid', '$s')");
     }
 
     db_query("DELETE FROM $sql_tbl[filter_preset_distributors] WHERE fid='$fid'");
+    if (!empty($distributors))
     foreach ($distributors as $d) {
         db_query("INSERT INTO $sql_tbl[filter_preset_distributors] (fid, manufacturerid) VALUES('$fid', '$d')");
     }
@@ -157,6 +159,12 @@ if ($REQUEST_METHOD == "POST" && !empty($fid)) {
         foreach ($ship_to_countries_filter as $f) {
             db_query("INSERT INTO $sql_tbl[filter_preset_ship_to_country] (fid, country_code) VALUES('$fid', '$f')");
         }
+
+    db_query("DELETE FROM $sql_tbl[filter_preset_po_statuses] WHERE fid='$fid'");
+    if (!empty($po_status))
+    foreach ($po_status as $ps) {
+        db_query("INSERT INTO $sql_tbl[filter_preset_po_statuses] (fid, status) VALUES('$fid', '$ps')");
+    }
 
     func_header_location("configuration.php?option=Filter_Presets&fid=$fid");
 }
@@ -234,7 +242,10 @@ if (isset($fid)) {
     $smarty->assign('distributors', $distributors);
     $smarty->assign('statuses', $statuses);
 
-
+    global $xcart_dir;
+    require_once $xcart_dir . "/include/class/classPOPipeline.php";
+    $oPOPipelineStatuses = classPOPipeLine::getPOStatuses();
+    $smarty->assign('po_statuses', $oPOPipelineStatuses);
 
     $smarty->assign('filter_preset_title', 'title');
 } else {
