@@ -14,7 +14,7 @@ if ($REQUEST_METHOD == "POST") {
 
     if (!empty($purchase_order_upload_submit)) {
         $oPO = classPOPipeLine::getPOByNumber($purchase_order_number_upload);
-        if (!empty($oPO)) {
+        if (!empty($oPO) && $oPO->getStatus() != classPOPipeLine::PO_STATUS_DROPED) {
             $oOrder = $oPO->getOrderInstance();
             if (!empty($oOrder)) {
                 $top_message["content"] = sprintf(classPOPipeLine::PO_LINK_ON_MODIFY, $purchase_order_number_upload, $oOrder->getOrderModifyURL(), $oOrder->getDisplayOrderNumber());
@@ -38,7 +38,7 @@ if ($REQUEST_METHOD == "POST") {
         }
     } elseif (!empty($purchase_order_search_submit)) {
         $oPoPipeline = classPOPipeLine::getPOByNumber($purchase_order_number_search);
-        if (empty($oPoPipeline)) {
+        if (empty($oPoPipeline) || $oPoPipeline->getStatus() == classPOPipeLine::PO_STATUS_DROPED) {
             $top_message["content"] = sprintf(classPOPipeLine::PO_NOT_IN_OUR_SYSTEM, $purchase_order_number_search);
             $top_message["type"] = "I";
             func_header_location("purchase_orders.php?po_found=no&po_number=$purchase_order_number_search");
@@ -58,7 +58,7 @@ if ($REQUEST_METHOD == "POST") {
                 $oPoPipeline = new classPOPipeLine(['po_id' => reset($po_selected)]);
                 $pOID = $oPoPipeline->getPOId();
                 if (!empty($pOID)) {
-                    $oPoPipeline->updateOrderStatus('deleted');
+                    $oPoPipeline->updateOrderStatus(classPOPipeLine::PO_STATUS_DROPED);
                     classLogs::_log('purchase_orders', $oPoPipeline->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_DROPPED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
                 }
             }
@@ -74,7 +74,7 @@ if (!empty($po_found) && $po_found == "no" && !empty($po_number)) {
 
 $smarty->assign("po_pending", $po_pending);
 
-if (empty($page))  $page = 1;
+if (empty($page)) $page = 1;
 $objects_per_page = 50;
 
 $oLogs = new classLogs('purchase_orders');
