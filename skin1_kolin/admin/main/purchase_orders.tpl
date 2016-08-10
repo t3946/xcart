@@ -114,9 +114,10 @@
                 {if !empty($aPendingOrdersLog)}
                 <tr>
                     {foreach from=$aPendingOrdersLog item=oPendingOrdersLog}
+                    {assign var="oCustomer" value=$oPendingOrdersLog->getCustomerEntity()}
                         <tr>
                             <td>{$oPendingOrdersLog->getLogDate()}</td>
-                            <td>{$oPendingOrdersLog->getLogin()}</td>
+                            <td>{$oCustomer->getCustomerFullName()}<br/>{if $oCustomer->getCustomerLogin()}({/if}{$oCustomer->getCustomerLogin()}{if $oCustomer->getCustomerLogin()}){/if}</td>
                             <td>{$oPendingOrdersLog->getLogText()}</td>
                         </tr>
                     {/foreach}

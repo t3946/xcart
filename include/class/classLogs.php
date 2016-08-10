@@ -2,6 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+require_once $xcart_dir . "/include/class/classCustomer.php";
 
 class classLogs extends classData
 {
@@ -11,6 +12,7 @@ class classLogs extends classData
     const LOG_TYPE_PAYMENT_PROCESSOR = 'PP';
 
     private static $log_resource_type = null;
+    private $oCustomer = null;
 
     public function __construct($log_resource_type)
     {
@@ -82,6 +84,14 @@ class classLogs extends classData
     public function getLogin()
     {
         return $this->getField('login');
+    }
+
+    public function getCustomerEntity()
+    {
+        if (empty($this->oCustomer)){
+            $this->oCustomer = new classCustomer(['login'=> $this->getLogin()]);
+        }
+        return $this->oCustomer;
     }
 
 }
