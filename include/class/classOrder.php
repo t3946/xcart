@@ -7,6 +7,7 @@ require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
 require_once $xcart_dir . "/include/class/classManufacturers.php";
 require_once $xcart_dir . "/include/class/classOrderTransactions.php";
+require_once $xcart_dir . "/include/class/classSQLBuilder.php";
 
 class classOrder extends classCloneData
 {
@@ -292,6 +293,14 @@ class classOrder extends classCloneData
     public function getOrderCurrency()
     {
         return $this->getField('currency');
+    }
+
+    public function isAttentionTagSet($iStatusId)
+    {
+        $oSQL = new classSQLBuilder();
+        $aQResult = $oSQL->init()->addSelect('status_id')->addFromTable('orders_additional_tags')->addCondition('orderid='.$this->getOrderId())->addCondition('status_id='.$iStatusId)->Execute()->getQueryResult();
+        $status_id = $aQResult['status_id'];
+        return !empty($status_id);
     }
 
 }

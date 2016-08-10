@@ -10,6 +10,8 @@ require_once $xcart_dir . "/include/class/classOrderGroupMemos.php";
 require_once $xcart_dir . "/include/class/classOrderRefundGroups.php";
 require_once $xcart_dir . "/include/class/classOrderAmazonDetails.php";
 require_once $xcart_dir . "/include/class/classAmazonMWS.php";
+require_once $xcart_dir . "/include/class/classAttentionTag.php";
+require_once $xcart_dir . "/include/class/classLogs.php";
 
 class classOrderGroup extends classData
 {
@@ -634,6 +636,11 @@ class classOrderGroup extends classData
         return $this;
     }
 
+    public function getAccountingNetProfit()
+    {
+        return floatval($this->getField('accounting_net_5_profit'));
+    }
+
     /**
      * @return classOrderGroup
      */
@@ -781,8 +788,23 @@ class classOrderGroup extends classData
 
                 $this->recalculateAccountingProfit()->updateAccounting();
             }
+            $this->setAttentionTagMoneyLost();
         }
         return $this;
+    }
+
+    public function setAttentionTagMoneyLost()
+    {
+        if ($this->getAccountingNetProfit() < 0) {
+            global $config;
+            if (!$this->getOrderInstance()->isAttentionTagSet($config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"])) {
+                $aInsertArray = ['orderid'=>$this->getOrderId(),'status_id'=>$config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]];
+                func_array2insert('orders_additional_tags',$aInsertArray, true);
+                $oAttentionTag = new classAttentionTag(['status_id'=>$config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
+                $sLog = "Attention tag added: " . $oAttentionTag->getStatus()."\n";
+                classLogs::_log('orders',$this->getOrderId(),'X',$sLog);
+            }
+        }
     }
 
     public function recalculateAccountingAmazon()

@@ -11,11 +11,8 @@ x_load('taxes');
 
 global $xcart_dir, $config;
 
-include_once $xcart_dir."/include/class/classProducts.php";
-
-$oclassProducts = new classProducts();
-cloneProductFilters();
-$a = $oclassProducts->getFilterValuesByNameAndFilterType('"English" oval wash',2866);
-var_dump($a);
+include_once $xcart_dir."/include/class/classOrderGroup.php";
+$oOrderGroup = new classOrderGroup(['orderid'=>64826, 'manufacturerid'=>42]);
+$oOrderGroup->setAttentionTagMoneyLost();
 
 

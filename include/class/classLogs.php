@@ -34,7 +34,15 @@ class classLogs extends classData
         $aParams['login'] = addslashes($sLogin);
         $aParams['log'] = addslashes($sLog);
 
-        func_array2insert('logs', $aParams);
+        if ($sResourceType == 'orders') {
+            unset($aParams['resource_type']);
+            $aParams['orderid'] = $iResourceId;
+            unset($aParams['resource_id']);
+            $aParams['date'] = time();
+            func_array2insert('order_logs', $aParams);
+        }
+        else
+            func_array2insert('logs', $aParams);
     }
 
     public static function _getFoundRows()
@@ -43,7 +51,7 @@ class classLogs extends classData
         return reset($aResult);
     }
 
-    public static function _getLogs($page=1, $per_page=50, $iResourceId = null, $sLogType = null)
+    public static function _getLogs($page = 1, $per_page = 50, $iResourceId = null, $sLogType = null)
     {
         $aLogs = [];
         $oSQL = new classSQLBuilder();
@@ -54,7 +62,7 @@ class classLogs extends classData
             $oSQL->addCondition("type='$sLogType'");
         }
 
-        $oSQL->setLimit(($page-1)*$per_page.",".$per_page);
+        $oSQL->setLimit(($page - 1) * $per_page . "," . $per_page);
 
         $aResult = $oSQL->Execute()->getQueryResult();
         if (!empty($aResult)) {
@@ -67,7 +75,7 @@ class classLogs extends classData
         return $aLogs;
     }
 
-    public function getLogDate($sDateFormat='d-M-Y H:i:s')
+    public function getLogDate($sDateFormat = 'd-M-Y H:i:s')
     {
         $oDate = new DateTime();
         $oDate->setTimestamp(strtotime($this->getField('date')));
