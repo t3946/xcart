@@ -73,6 +73,23 @@ class classPOPipeLine extends classData
         return $aPOs;
     }
 
+    public static function getPOrdersByStatuses($aStatuses)
+    {
+        global $sql_tbl;
+        $aPOs = [];
+        if (!empty($aStatuses) && is_array($aStatuses)) {
+            $aOrders = func_query("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE status IN ('" . implode(',',$aStatuses). "')");
+            if (!empty($aOrders)) {
+                foreach ($aOrders as $aOrder) {
+                    $oPo = new classPOPipeLine();
+                    $oPo->fillPrimaryTableValues($aOrder);
+                    $aPOs[] = $oPo;
+                }
+            }
+        }
+        return $aPOs;
+    }
+
     public function getOrderNumber()
     {
         return $this->getField('PO_number');

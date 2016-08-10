@@ -155,7 +155,7 @@ function managedate(type, status) {
 	{/foreach}
 {/if}
 
-{if $filter.count gt 0}<a target="_blank" href="orders.php?fid={$filter.fid}">{/if}{$filter.title} ({$filter.count|default:"0"}){if $filter.count gt 0}</a>{/if}
+{if $filter.count gt 0}<a target="_blank" {if !empty($filter.direct_link)}href="{$filter.direct_link}" {else}href="orders.php?fid={$filter.fid}"{/if}>{/if}{$filter.title} ({$filter.count|default:"0"}){if $filter.count gt 0}</a>{/if}
 	</td>
         {/if}
     {/foreach}

@@ -58,7 +58,7 @@
 {/capture}
 {capture name=dialog_pending}
     <form method="POST" name="purchase_order_enter">
-        <div style="margin-bottom: 20px;">
+        <div style="margin-bottom: 20px;" id="purchase_order_pending_anchor">
             First check - maybe PO has already been entered or it is pending entry.
         </div>
         <div style="margin-bottom: 20px;">
@@ -138,11 +138,17 @@
 <br/>
 {include file="dialog.tpl" title='PO pipeline log' content=$smarty.capture.dialog_log extra='width="100%"'}
 
-{if !empty($po_number)}
+{if !empty($po_number) || !empty($po_pending)}
     <script>
         {literal}
         $(document).ready(function () {
-            var el = $('#purchase_order_number_upload');
+            {/literal}
+            {if (!empty($po_pending))}
+                var el = $('#purchase_order_pending_anchor');
+            {else}
+                var el = $('#purchase_order_number_upload');
+            {/if}
+            {literal}
             el.val("{/literal}{$po_number}{literal}").focus();
             var elOffset = el.offset().top;
             var elHeight = el.height();

@@ -7,7 +7,7 @@ require_once $xcart_dir . "/include/class/classPOPipeline.php";
 require_once $xcart_dir . "/include/class/classLogs.php";
 require_once $xcart_dir . "/include/class/classStoreFronts.php";
 
-global $REQUEST_METHOD, $purchase_order_number_upload, $purchase_order_number_search, $purchase_order_storefront_upload, $location, $login;
+global $REQUEST_METHOD, $purchase_order_number_upload, $purchase_order_number_search, $purchase_order_storefront_upload, $location, $login, $po_pending;
 
 
 if ($REQUEST_METHOD == "POST") {
@@ -72,6 +72,7 @@ if (!empty($po_found) && $po_found == "no" && !empty($po_number)) {
     $smarty->assign("po_number", $po_number);
 }
 
+$smarty->assign("po_pending", $po_pending);
 
 if (empty($page))  $page = 1;
 $objects_per_page = 50;

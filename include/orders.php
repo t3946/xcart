@@ -114,6 +114,9 @@ if ($current_area == 'A' && isset($fid)) {
 	if (!empty($filter['distributors'])) {
 		$search_data['orders']['manufacturers'] = $filter['distributors'];
 	}
+	if (!empty($filter['po_statuses'])) {
+		$search_data['orders']['po_statuses'] = $filter['po_statuses'];
+	}
 	if ($filter['time_from_mode'] == 'D') {
 		$search_data['orders']['start_date'] = intval($filter['time_from_date']);
 	} else {
@@ -889,6 +892,13 @@ if ($mode == "search") {
 	unset($_res);
 
 	if ($filter_preset) {
+		if (!empty($filter['po_statuses']) && is_array($filter['po_statuses'])){
+			include $xcart_dir."/include/class/classPOPipeline.php";
+			$oPO = new classPOPipeLine();
+			$aPos = $oPO->getPOrdersByStatuses($filter['po_statuses']);
+			$total_items = (is_array($aPos)) ? count($aPos) : 0;
+		}
+
 		return;
 	}
 

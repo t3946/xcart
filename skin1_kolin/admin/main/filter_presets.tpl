@@ -167,6 +167,13 @@
         </td>
     </tr>
 
+    <tr>
+        <td width="15%" class="preset_bold">Direct link:</td>
+        <td width="85%">
+            <input type="text" value="{$filter.direct_link}" name="filter_direct_link" class="text preset_title"/>
+        </td>
+    </tr>
+
 
     <tr>
         <td width="15%" class="preset_bold">Processor:</td>
