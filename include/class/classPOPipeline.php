@@ -100,6 +100,11 @@ class classPOPipeLine extends classData
         return $this->getField('original_po_file');
     }
 
+    public function getStatus()
+    {
+        return $this->getField('status');
+    }
+
     public function setOrderToPO($iOrderId)
     {
         $this->updateField('order_id', $iOrderId);
