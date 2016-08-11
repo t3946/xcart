@@ -234,24 +234,24 @@ foreach ($supplier_feeds as $k => $v){
                         func_backprocess_log($log_category, $log_text);
 
 
-                        if (!empty($products["dont_update_fields"]) && is_array($products["dont_update_fields"])){
-	                        foreach ($products["dont_update_fields"] as $k_du => $v_du){
-        	                        $idx = array_search($v_du, array_keys($product_cols_replace));
-                                        if ($idx !== false) {
-                	                        $products["dont_update_fields"][] = $product_cols_replace[$v_du];
-                                                unset($products["dont_update_fields"][$k_du]);
-                                        }
-                                }
+			if (!empty($products["dont_update_fields"]) && is_array($products["dont_update_fields"])) {
+				foreach ($products["dont_update_fields"] as $k_du => $v_du) {
+					$idx = array_search($v_du, array_keys($product_cols_replace));
+					if ($idx !== false) {
+						$products["dont_update_fields"][] = $product_cols_replace[$v_du];
+						unset($products["dont_update_fields"][$k_du]);
+					}
+				}
 			}
 
-			if (!empty($products["defaults"]) && is_array($products["defaults"])){
-                                foreach ($products["defaults"] as $k_s => $v_s){
-                                        $idx = array_search($k_s, array_keys($product_cols_replace));
-                                        if ($idx !== false) {
-                                                $products["defaults"][$product_cols_replace[$k_s]] = $v_s;
-                                                unset($products["defaults"][$k_s]);
-                                        }
-                                }
+			if (!empty($products["defaults"]) && is_array($products["defaults"])) {
+				foreach ($products["defaults"] as $k_s => $v_s) {
+					$idx = array_search($k_s, array_keys($product_cols_replace));
+					if ($idx !== false) {
+						$products["defaults"][$product_cols_replace[$k_s]] = $v_s;
+						unset($products["defaults"][$k_s]);
+					}
+				}
 			}
 
 /* --------------------------------------------------------------------------------------------------- */

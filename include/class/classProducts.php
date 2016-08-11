@@ -281,7 +281,7 @@ class classProducts extends classCloneData
 
     public function getFilterValuesByNameAndFilterType($sFilterName, $iFilterTypeId){
         $sFilterName = addslashes($sFilterName);
-        return func_query_first("SELECT * FROM ".self::$sql_tbl['cidev_filter_values']." WHERE fv_name='$sFilterName' AND f_id=$iFilterTypeId");
+        return func_query_first("SELECT * FROM ".self::$sql_tbl['cidev_filter_values']." WHERE fv_name='".$sFilterName."' AND f_id=$iFilterTypeId");
     }
 
     public function getFilterValues ($iFilterValueId) {
@@ -299,14 +299,15 @@ class classProducts extends classCloneData
 
         if (isset($aFilterValues) && is_array($aFilterValues) && !empty($aFilterValues)) {
             foreach($aFilterValues as $oFilter) {
-                array_walk_recursive($oFilter, array(__CLASS__,'recursive_escape'));
                 $oFilter['f_id'] = $iNewFilterId;
                 unset($oFilter['fv_id']);
                 $aNewFilterValue = $this->getFilterValuesByNameAndFilterType($oFilter['fv_name'], $iNewFilterId);
                 if (isset($aNewFilterValue) && is_array($aNewFilterValue) && !empty($aNewFilterValue)) {
                     $aNewFilterValuesId[] = $aNewFilterValue['fv_id'];
-                } else
-                $aNewFilterValuesId[] = func_array2insert('cidev_filter_values', $oFilter);
+                } else {
+                    array_walk_recursive($oFilter, array(__CLASS__,'recursive_escape'));
+                    $aNewFilterValuesId[] = func_array2insert('cidev_filter_values', $oFilter);
+                }
             }
         }
         return($aNewFilterValuesId);
@@ -414,7 +415,8 @@ class classProducts extends classCloneData
         $classManufacturer = new classManufacturers();
 
         $aQueuedManufacturer = $classManufacturer->getMainufacturersInfo(array($this->aProductToQueue["manufacturerid"]));
-        $aQueuedManufacturer = reset($aQueuedManufacturer);
+        if (!empty($aQueuedManufacturer))
+            $aQueuedManufacturer = reset($aQueuedManufacturer);
 
 
         /*ЕСЛИ [PRODUCT] не существует ИЛИ [PRODUCT].forsale !="Y" ИЛИ trim([PRODUCT].clone_parent_productid) >0 или дистрибьютор от [xcart_clone_products_queue].manufacturerid не имеет родителя, ТО
