@@ -2167,27 +2167,6 @@ if ($REQUEST_METHOD == "POST") {
 
                 $update = func_add_accounting_fields($update, '', '', '', "order_groups", $order['shipping_groups'][$m_id]['accounting']);
 
-#
-##
-###
-                if ($update["accounting_gross_5_profit"] < 0 && $update["accounting_gross_5_profit"] != $order["shipping_groups"][$m_id]["accounting_gross_5_profit"]) {
-                    $tmp_use_profit_for_tag = $update["accounting_gross_5_profit"];
-//					if ($order["shipping_groups"][$m_id]["cb_status"] == "O")
-                    if (empty($update["accounting_net_0"]) || $update["accounting_net_0"] == "0.00") {
-                        $tmp_use_profit_for_tag += $order["shipping_groups"][$m_id]["total"]["net"];
-                    }
-
-                    if ($tmp_use_profit_for_tag < 0) {
-                        $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"] . "'");
-                        if (empty($status_id)) {
-                            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"] . "')");
-                            $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]["status"];
-                        }
-                    }
-                }
-###
-##
-#
                 if ($log != "<B>" . $order["shipping_groups"][$certain_mid]["code"] . "</B>:") {
                     func_log_order($orderid, 'X', $log, $login);
                 }

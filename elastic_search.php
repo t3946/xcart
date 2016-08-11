@@ -71,7 +71,7 @@
 			$classElastic->setQueryParams($e_search_data_substring);
 
 			$result = $classElastic->query($search_query);
-			$result["hits"]["total"] = $config["Appearance"]["products_per_page"];
+			//$result["hits"]["total"] = $config["Appearance"]["products_per_page"];
 		}
 
         $e_products = array();

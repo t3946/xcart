@@ -32,7 +32,7 @@ function func_amazon_all_FBA_products_flag($cart){
 		}
 	}
 
-	$query = "Select TRUNCATE(P.amazon_fba_avail * 0.8,0) - COALESCE(SUM(OD.amount- OD.back),0) As AvailOnFBA, P.manufacturerid,  P.productcode, P.productid, cidev_get_amazon_size_tier(P.productid) As SizeTier
+	$query = "Select TRUNCATE(P.amazon_fba_avail * 0.8,0) - COALESCE(SUM(OD.amount- OD.back),0) As AvailOnFBA, P.manufacturerid,  P.productcode, P.productid
 From xcart_order_groups OG
         left join xcart_orders O ON O.orderid = OG.orderid
         inner join xcart_products P ON P.productid  in ('".implode("','",$productids)."')
@@ -47,8 +47,7 @@ Group By P.productid";
 	if (!empty($result)){
 		$all_FBA_products_flag = true;
 		foreach ($result as $k => $v){
-//			if ($v["AvailOnFBA"] < $productid_amount[$v["productid"]] || strtolower($v["SizeTier"]) != "standart-size")
-			if ($v["AvailOnFBA"] < $productid_amount[$v["productid"]] || strpos(strtolower($v["SizeTier"]),"standart-size")===false){
+			if ($v["AvailOnFBA"] < $productid_amount[$v["productid"]]){
 				$all_FBA_products_flag = false;
 				break;
 			}

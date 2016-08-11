@@ -61,10 +61,10 @@ set_time_limit(0);
 x_load('backoffice', 'files', 'taxes', 'froogle', 'product', 'crypt');
 
 
-$xcart_states_US = func_query("SELECT state, code, country_code, base_state_zipcode FROM $sql_tbl[states] WHERE base_state_zipcode!='' AND country_code='US'");
+/*$xcart_states_US = func_query("SELECT state, code, country_code, base_state_zipcode FROM $sql_tbl[states] WHERE base_state_zipcode!='' AND country_code='US'");
 foreach ($xcart_states_US as $k => $v) {
     $xcart_states_US[$k]["city"] = func_query_first_cell("SELECT city FROM $sql_tbl[geo_litecity_location] WHERE country='US' AND postalCode='$v[base_state_zipcode]'");
-}
+}*/
 
 if ($config["cidev_incremental_feeds_launched_v_3"] == "Y") {
         die("Already launched"); // ################################
@@ -158,7 +158,8 @@ Select
  From xcart_cidev_updated_products UPM
                 left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
                 inner join xcart_products_sf PS ON PS.productid = P2.productid
- where UPM.`type` = 3 and P2.forsale = 'Y' /*and P2.min_amount=1*/) As T");
+ where UPM.`type` = 3 and P2.forsale = 'Y' /*and P2.min_amount=1*/) As T
+ where T.productid > 0");
 
     if ($UpdateProductsOverview > 0) {
         $paramYN = 'Y';
@@ -312,7 +313,8 @@ Select
         where UP.`type` <= 2  and P.forsale = '$paramYN'
         group by UP.resourceid
         HAVING utype = '2')
-        As T ");
+        As T
+         where T.productid > 0");
 
         if (!empty($query_products_count)) {
             $query_products = "
@@ -333,7 +335,8 @@ Select
                 where UP.`type` <= 2  and P.forsale = '$paramYN'
                 group by UP.resourceid
                 HAVING utype = '2')
-                As T ";
+                As T
+                 where T.productid > 0";
         } else {
 
             $query_products_count = func_query_first_cell("
@@ -366,7 +369,8 @@ Select
                             left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid
                             inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
                             left join xcart_products_sf PS2 ON PS.productid = PS2.productid
-             where UPM.`type` = 3 and P2.forsale='$paramYN') As T ");
+             where UPM.`type` = 3 and P2.forsale='$paramYN') As T
+             where T.productid > 0");
 
             if (!empty($query_products_count)) {
                 $query_products = "
@@ -399,7 +403,8 @@ Select
                                         left join xcart_products P2 ON P2.manufacturerid = UPM.resourceid 
                                         inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
                                         left join xcart_products_sf PS2 ON PS.productid = PS2.productid
-                         where UPM.`type` = 3 and P2.forsale='$paramYN') As T ";
+                         where UPM.`type` = 3 and P2.forsale='$paramYN') As T
+                         where T.productid > 0";
             } else {
                 $tparamYN = $paramYN;
                 $tPARAMLIMIT = $PARAMLIMIT;
@@ -438,13 +443,12 @@ Select
                                         inner join xcart_products_sf PS ON PS.productid = P2.productid and PS.sfid = '$storefrontid'
                                         left join xcart_products_sf PS2 ON PS2.productid = PS.productid
                          where UPM.`type` = 3 and P2.forsale='$paramYN') As T
-
+                         where T.productid > 0
                          $PARAMLIMIT";
                 $paramYN = $tparamYN;
                 $PARAMLIMIT = $tPARAMLIMIT;
             }
         }
-
 
         $products = db_query($query_products);
 
