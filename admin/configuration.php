@@ -172,6 +172,9 @@ elseif ($option == "OTRS_options") {
 elseif ($option == "HTML_shots_options") {
 	include "./html_shot_options.php";
 }
+elseif ($option == "Secure_data") {
+	include "./secure_data.php";
+}
 elseif ($option == "PBX_options") {
     include "./pbx_options.php";
 }
