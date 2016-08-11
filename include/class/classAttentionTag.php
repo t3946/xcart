@@ -16,4 +16,9 @@ class classAttentionTag extends classData
     {
         return $this->getField('status');
     }
+
+    public function getStatusId()
+    {
+        return $this->getField('status_id');
+    }
 }

@@ -299,8 +299,7 @@ class classOrder extends classCloneData
     {
         $oSQL = new classSQLBuilder();
         $aQResult = $oSQL->init()->addSelect('status_id')->addFromTable('orders_additional_tags')->addCondition('orderid='.$this->getOrderId())->addCondition('status_id='.$iStatusId)->Execute()->getQueryResult();
-        $status_id = $aQResult['status_id'];
-        return !empty($status_id);
+        return !empty($aQResult);
     }
 
 }
