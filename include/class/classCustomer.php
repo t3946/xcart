@@ -46,4 +46,19 @@ class classCustomer extends classData
         $aCustomers = $this->oSQL->init()->addSelect('*')->addFromTable('secure_data_users')->addCondition("login='" . $sLogin."'")->Execute()->getQueryResult();
         return !empty($aCustomers);
     }
+
+    public function getCustomerSecureData()
+    {
+        $aCustomerData = [];
+        $sLogin = $this->getCustomerLogin();
+        if (empty($sLogin)) return false;
+        $aCustomersData = $this->oSQL->init()->addSelect('xs.*')->addFromTable('secure_data','xs')->addInnerJoin('secure_data_users','sd','sd.secure_data_id = xs.id')->
+            addCondition("sd.login='" . $sLogin."'")->Execute()->getQueryResult();
+        if (!empty($aCustomersData)) {
+            foreach ($aCustomersData as &$aCustomerData) {
+                $aCustomerData['data'] = stripslashes(text_decrypt($aCustomerData['data']));
+            }
+        }
+        return ($aCustomersData);
+    }
 }

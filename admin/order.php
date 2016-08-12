@@ -3520,12 +3520,13 @@ require_once $xcart_dir . "/include/class/classCustomer.php";
 $oCustomer = new classCustomer(['login'=>$login]);
 if (!empty($oCustomer)) {
 	if ($oCustomer->isCustomerUseSecureData()) {
-		$main_order_tabs[$tabs_key]["title"] = "Secure data";
+		$main_order_tabs[$tabs_key]["title"] = "Secure";
 		$main_order_tabs[$tabs_key]["section"] = "secure_data";
 		$main_order_tabs[$tabs_key]["anchor"] = $main_order_tabs[$tabs_key]["section"];
 		$tabs_key++;
 	}
 }
+$smarty->assign('oCustomer', $oCustomer);
 
 $main_order_tabs[$tabs_key]["title"] = "Maps/Calls";
 $main_order_tabs[$tabs_key]["section"] = "ground_map";

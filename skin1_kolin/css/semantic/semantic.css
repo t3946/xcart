@@ -12,12 +12,12 @@
   vertical-align: baseline;
   background: #E0E1E2 none;
   color: rgba(0, 0, 0, 0.6);
-  font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  /*font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;*/
   margin: 0em 0.25em 0em 0em;
-  padding: 0.28571429em 1.5em 0.78571429em;
+  padding: 0.58571429em 0.88em 0.58571429em;
   text-transform: none;
   text-shadow: none;
-  font-weight: bold;
+  /*font-weight: bold;*/
   line-height: 1em;
   font-style: normal;
   text-align: center;
@@ -745,7 +745,7 @@
 .ui.buttons .button,
 .ui.buttons .or,
 .ui.button {
-  font-size: 1rem;
+  /*font-size: 1rem;*/
 }
 
 .ui.large.buttons .button,
@@ -778,7 +778,7 @@
 
 .ui.icon.buttons .button,
 .ui.icon.button {
-  padding: 0.78571429em 0.78571429em 0.78571429em;
+
 }
 
 .ui.icon.buttons .button > .icon,
@@ -3023,8 +3023,7 @@
 
 .ui.teal.buttons .button,
 .ui.teal.button {
-  background-color: #00B5AD;
-  color: #FFFFFF;
+  color: #550000;
   text-shadow: none;
   background-image: none;
 }
@@ -3035,22 +3034,16 @@
 
 .ui.teal.buttons .button:hover,
 .ui.teal.button:hover {
-  background-color: #009c95;
-  color: #FFFFFF;
   text-shadow: none;
 }
 
 .ui.teal.buttons .button:focus,
 .ui.teal.button:focus {
-  background-color: #008c86;
-  color: #FFFFFF;
   text-shadow: none;
 }
 
 .ui.teal.buttons .button:active,
 .ui.teal.button:active {
-  background-color: #00827c;
-  color: #FFFFFF;
   text-shadow: none;
 }
 
@@ -3058,9 +3051,7 @@
 .ui.teal.buttons .active.button:active,
 .ui.teal.active.button,
 .ui.teal.button .active.button:active {
-  background-color: #009c95;
-  color: #FFFFFF;
-  text-shadow: none;
+ text-shadow: none;
 }
 
 /* Basic */
@@ -3906,8 +3897,8 @@
 .ui.buttons .button:first-child {
   border-left: none;
   margin-left: 0em;
-  border-top-left-radius: 0.28571429rem;
-  border-bottom-left-radius: 0.28571429rem;
+  /*border-top-left-radius: 0.28571429rem;
+  border-bottom-left-radius: 0.28571429rem;*/
 }
 
 .ui.buttons .button:last-child {
@@ -27504,7 +27495,6 @@ a.ui.card:hover,
   vertical-align: baseline;
   font-style: normal;
   min-height: 17px;
-  font-size: 1rem;
   line-height: 17px;
   min-width: 17px;
 }
@@ -27533,7 +27523,7 @@ a.ui.card:hover,
   cursor: auto;
   position: relative;
   display: block;
-  padding-left: 1.85714em;
+  padding-left: 2.4em;
   outline: none;
   font-size: 1em;
 }
@@ -28408,6 +28398,7 @@ body.dimmable > .dimmer {
   -webkit-transition: opacity 0.1s ease;
   transition: opacity 0.1s ease;
   z-index: 11;
+  margin-top:1px;
   will-change: transform, opacity;
 }
 
@@ -28469,7 +28460,7 @@ body.dimmable > .dimmer {
   border-top: none;
   line-height: 1em;
   color: rgba(0, 0, 0, 0.87);
-  padding: 0.28571429rem 1.14285714rem !important;
+  padding: 0.28571429rem 0.94285714rem !important;
   text-transform: none;
   font-weight: normal;
   box-shadow: none;
@@ -28777,8 +28768,8 @@ select.ui.dropdown {
   width: auto;
   outline: none;
   margin: 0px -1px;
-  min-width: calc(100% +  2px );
-  width: calc(100% +  2px );
+  min-width: calc(100% +  0px );
+  width: calc(100% +  0px );
   border-radius: 0em 0em 0.28571429rem 0.28571429rem;
   box-shadow: 0px 2px 3px 0px rgba(34, 36, 38, 0.15);
   -webkit-transition: opacity 0.1s ease;
@@ -29156,7 +29147,7 @@ select.ui.dropdown {
 
 .ui.dropdown .menu .active.item {
   background: transparent;
-  font-weight: bold;
+  /*font-weight: bold;*/
   color: rgba(0, 0, 0, 0.95);
   box-shadow: none;
   z-index: 12;

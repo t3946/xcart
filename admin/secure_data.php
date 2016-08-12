@@ -48,7 +48,7 @@ if (empty($aSecureData))
     $aSecureData[] = ['id'=>1];
 } else {
     foreach ($aSecureData as &$SecureData) {
-        $SecureData['data'] = text_decrypt($SecureData['data']);
+        $SecureData['data'] = stripslashes(text_decrypt($SecureData['data']));
     }
 }
 
