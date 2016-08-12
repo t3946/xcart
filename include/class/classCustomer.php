@@ -38,4 +38,12 @@ class classCustomer extends classData
         }
         return $aOCustomers;
     }
+
+    public function isCustomerUseSecureData()
+    {
+        $sLogin = $this->getCustomerLogin();
+        if (empty($sLogin)) return false;
+        $aCustomers = $this->oSQL->init()->addSelect('*')->addFromTable('secure_data_users')->addCondition("login='" . $sLogin."'")->Execute()->getQueryResult();
+        return !empty($aCustomers);
+    }
 }

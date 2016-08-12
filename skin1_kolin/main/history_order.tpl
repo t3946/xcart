@@ -1296,6 +1296,11 @@ $(function() {ldelim}
 </table>
 {/capture}
 
+{capture name=secure_data}
+    {include file="admin/main/secure_data_tab.tpl"}
+{/capture}
+
+
 {capture name=ground_map}
 {include file="admin/main/ground_map.tpl"}
 {/capture}
