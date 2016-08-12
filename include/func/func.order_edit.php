@@ -574,6 +574,9 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 
 	);
 
+	if (empty($extra['additional_fields'])) {
+		$extra['additional_fields'] = $userinfo["additional_fields"];
+	}
 	if (!empty($extra['additional_fields'])) {
 		foreach ($extra['additional_fields'] as $aAddFiled) {
 			if ($aAddFiled['title'] == 'Company') {
