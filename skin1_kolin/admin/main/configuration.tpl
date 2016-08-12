@@ -172,6 +172,10 @@ tinymce.init({
 
 {include file="admin/main/html_shot_options.tpl"}
 
+{elseif $option eq "Secure_data"}
+
+{include file="admin/main/secure_data.tpl"}
+
 {elseif $option eq "PBX_options"}
 
 {include file="admin/main/pbx_options.tpl"}
