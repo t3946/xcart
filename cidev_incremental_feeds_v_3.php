@@ -67,7 +67,7 @@ foreach ($xcart_states_US as $k => $v) {
 }
 
 if ($config["cidev_incremental_feeds_launched_v_3"] == "Y") {
-        //die("Already launched"); // ################################
+        die("Already launched"); // ################################
 }
 
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='cidev_incremental_feeds_launched_v_3'");
