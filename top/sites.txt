@@ -1,0 +1,8 @@
+http://dev02.test.artistsupplysource.com/top/view.php?http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=795721107878;Сайт №1
+http://dev02.test.artistsupplysource.com/top/view.php?http://artistsupplysource.com;Сайт №2
+http://dev02.test.artistsupplysource.com/top/view.php?http://teachersupplysource.com;Сайт №3
+;Сайт №4
+;Сайт №5
+;Сайт №6
+;Сайт №7
+;Сайт №8
