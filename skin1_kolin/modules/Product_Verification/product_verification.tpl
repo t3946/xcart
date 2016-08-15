@@ -1,4 +1,3 @@
-
 {if $supplemental_category_section ne "Y"}
 
 {if ($smarty.get.mode ne "info")}
@@ -23,8 +22,8 @@
 
 
 {capture name=dialog}
-	<div style="font-weight: bold; margin-bottom: 20px;">
-		For each product compare FRONT END and DISTR WEBSITE columns to make sure that product descriptions and images are identical. If any descrepencies, choose VERIFIED = 'No' and explain what's the difference.
+	<div style="margin-bottom: 20px;">
+        {$lng.lbl_product_verification_explanation}
 	</div>
 
     <div id="send_note_for_product" class="ajax_note_field" style="display: none;">
@@ -58,8 +57,9 @@
 			{if ($oProduct->getField('manufacturerid') == $iManufacturerId && $oProduct->getField('verification_statusid') < 3)}
 				{assign var='oManufacturer' value = $oProduct->getManfacturerClass()}
 				{assign var='oVerifyDate' value = $oProduct->getProductLastVerifyDate()}
+				{assign var='oHTMLShot' value = $oProduct->getHTMLShot($oOrderManufacturer->getField('orderid'))}
 				<tr{cycle values=', class="TableSubHead"'} {if $showManufacturer}data-manufacturer-id="{$oManufacturer->getField('manufacturerid')}"{/if}>
-					<td nowrap="nowrap" width="1%">
+					<td width="1%">
 						{if $showManufacturer}
 							<a style="font-weight: bold;" href="{$oManufacturer->getManufacturerModifyURL()}" target="_blank"> {$oManufacturer->getField('manufacturer')}</a>
 							{assign var='showManufacturer' value=false}
@@ -69,7 +69,13 @@
 					</td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getOrderModifyURL()}">{$oOrderManufacturer->getDisplayOrderNumber()}</a></td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getField('productcode')}</a></td>
-					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getField('product')}</a></td>
+					<td><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getField('product')}</a>
+                        {if (!empty($oHTMLShot))}
+                            <a title="View HTML-Shot" target="_blank" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
+                                <img src="{$ImagesDir}/html-shot.png" />
+                            </a>
+                        {/if}
+                    </td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductURLOnDistributorWebSite()}">{$oProduct->getMPN()}</a></td>
 					<td nowrap="nowrap">{if ($oVerifyDate)}{$oVerifyDate->format('d-M-Y')}{/if}</td>
 					<td align="center">
@@ -101,7 +107,7 @@
 
 
     <tr id="click_to_back_changes" style="display:none;">
-        <td colspan="7" style="padding: 10px 3px; background-color:#FFF;"><a href="#" style="font-weight: bold;" onclick="$('#click_to_back_changes').next('tr').fadeToggle('slow'); return false;">View already verified products</a></td>
+        <td colspan="7" style="padding: 10px 3px; background-color:#FFF;"><a href="#" style="font-weight: bold;" onclick="$('#click_to_back_changes').nextAll('tr').fadeToggle('slow'); return false;">View already verified products</a></td>
     </tr>
 
 
@@ -152,8 +158,12 @@
                                         }
                                     }
                                     //rowtohide.show();
+                                    if ($('#click_to_back_changes').next('tr').is(':visible')) {
+                                        rowtohide.show();
+                                    }
 
                                     $('#click_to_back_changes').after(rowtohide);
+
                                     $('td:first-child > a',rowtohide).show();
                                     $('#click_to_back_changes').show();
                                 });
@@ -177,7 +187,7 @@
         $('select.change_product_verify_status').each(function() {
             var id = $(this).data('product-verification-id');
             if (supervise[id]) {
-                $(this).parent().parent().remove();
+                //$(this).parent().parent().remove();
             }
             else {
                 supervise[id] = [];
@@ -185,6 +195,7 @@
             supervise[id].push($(this).data('order-id'));
 
         });
+
         $.each( supervise, function( key, value ) {
             $('select[data-product-verification-id='+key+']:visible').attr('data-order-id',value);
         });

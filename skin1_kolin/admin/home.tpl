@@ -646,6 +646,9 @@ var runTests = function(editor) {
 {elseif $main eq "ab_testing"}
 {include file="admin/main/ab_testing.tpl"}
 
+{elseif $main eq "purchase_orders"}
+{include file="admin/main/purchase_orders.tpl"}
+
 {elseif $main eq "backprocess_logs"}
 {include file="admin/main/backprocess_logs.tpl"}
 

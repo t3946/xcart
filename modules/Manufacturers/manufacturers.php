@@ -1258,15 +1258,15 @@ if ($distributor_section == "18"){
 	);
 
 	$distributor_sections[] = array(
-		'title'  => 'Product verification settings',
-		'order_by' => '180',
-		'distributor_section' => '31'
-	);
-	
-	$distributor_sections[] = array(
 		'title'  => 'External marketplaces',
 		'order_by' => '180',
 		'distributor_section' => '40'
+	);
+	
+	$distributor_sections[] = array(
+		'title'  => 'Product verification settings',
+		'order_by' => '180',
+		'distributor_section' => '31'
 	);
 
 

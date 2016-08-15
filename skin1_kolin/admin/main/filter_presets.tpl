@@ -158,6 +158,22 @@
         </td>
     </tr>
 
+    <tr>
+        <td width="15%" class="preset_bold">PO status:</td>
+        <td width="85%">
+            <select name="po_status[]" multiple="multiple" class="select">
+                {html_options options=$po_statuses selected=$filter.po_statuses}
+            </select>
+        </td>
+    </tr>
+
+    <tr>
+        <td width="15%" class="preset_bold">Direct link:</td>
+        <td width="85%">
+            <input type="text" value="{$filter.direct_link}" name="filter_direct_link" class="text preset_title"/>
+        </td>
+    </tr>
+
 
     <tr>
         <td width="15%" class="preset_bold">Processor:</td>

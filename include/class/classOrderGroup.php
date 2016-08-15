@@ -10,13 +10,14 @@ require_once $xcart_dir . "/include/class/classOrderGroupMemos.php";
 require_once $xcart_dir . "/include/class/classOrderRefundGroups.php";
 require_once $xcart_dir . "/include/class/classOrderAmazonDetails.php";
 require_once $xcart_dir . "/include/class/classAmazonMWS.php";
+require_once $xcart_dir . "/include/class/classAttentionTag.php";
+require_once $xcart_dir . "/include/class/classLogs.php";
 
 class classOrderGroup extends classData
 {
     const RECONCILED_NONE = 0;
     const RECONCILED_FULLY = 1;
     const RECONCILED_PARTIAL = 2;
-
     /**
      * @var classOrder
      */
@@ -68,6 +69,11 @@ class classOrderGroup extends classData
         $this->oPaymentMethod = $oPay->getPaymentMethodInstance(['paymentid' => $this->getField('acc_paymentid')]);
     }
 
+    public function getTotalGross()
+    {
+        return floatval($this->getField('total_gross'));
+    }
+
     private function getTotalCostToUs()
     {
         $aCostToUs = func_query_first("SELECT sum(xo.item_cost_to_us) as cost_to_us_od, sum(xp.cost_to_us) as cost_to_us_pr
@@ -81,7 +87,7 @@ class classOrderGroup extends classData
         if (is_null($fCostToUs)) {
             $fCostToUs = $aCostToUs['cost_to_us_pr'];
         }
-        return $fCostToUs;
+        return floatval($fCostToUs);
     }
 
     /**
@@ -191,7 +197,7 @@ class classOrderGroup extends classData
      */
     public function initAccountingGross()
     {
-        $this->setField('accounting_gross_0', floatval($this->getField('total_gross')));
+        $this->setField('accounting_gross_0', $this->getTotalGross());
         return $this;
     }
 
@@ -200,7 +206,7 @@ class classOrderGroup extends classData
      */
     public function initAccountingGrossCostToUs()
     {
-        $this->setField('accounting_gross_1_cost_to_us', floatval($this->getTotalCostToUs()));
+        $this->setField('accounting_gross_1_cost_to_us', $this->getTotalCostToUs());
         $this->recalculateAccountingCostToUs();
         return $this;
     }
@@ -243,7 +249,7 @@ class classOrderGroup extends classData
      */
     public function addAccountingGross($fSumma)
     {
-        $this->setField('accounting_gross_0', floatval($this->getField('total_gross')) + floatval($fSumma));
+        $this->setField('accounting_gross_0', $this->getTotalGross() + floatval($fSumma));
         $this->recalculateAccountingNet();
         return $this;
     }
@@ -630,6 +636,11 @@ class classOrderGroup extends classData
         return $this;
     }
 
+    public function getAccountingNetProfit()
+    {
+        return floatval($this->getField('accounting_net_5_profit'));
+    }
+
     /**
      * @return classOrderGroup
      */
@@ -751,7 +762,7 @@ class classOrderGroup extends classData
         if ($this->getPaymentMethodInstance()->isPaymentMethodSet()) {
             if ($this->getOrderInstance()->isOrderAmazon()) $this->recalculateAccountingAmazon(); else {
                 $this
-                    ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getField('total_gross')))
+                    ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getTotalGross()))
                     ->initAccountingHST()
                     ->initAccountingPST();
 
@@ -777,8 +788,23 @@ class classOrderGroup extends classData
 
                 $this->recalculateAccountingProfit()->updateAccounting();
             }
+            $this->setAttentionTagMoneyLost();
         }
         return $this;
+    }
+
+    public function setAttentionTagMoneyLost()
+    {
+        if ($this->getAccountingNetProfit() < 0) {
+            global $config;
+            if (!$this->getOrderInstance()->isAttentionTagSet($config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"])) {
+                $oAttentionTag = new classAttentionTag(['status_id'=>$config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
+                $aInsertArray = ['orderid'=>$this->getOrderId(),'status_id'=>$oAttentionTag->getStatusId()];
+                func_array2insert('orders_additional_tags',$aInsertArray, true);
+                $sLog = "Attention tag added: " . $oAttentionTag->getStatus()."\n";
+                classLogs::_log('orders',$this->getOrderId(),'X',$sLog);
+            }
+        }
     }
 
     public function recalculateAccountingAmazon()
@@ -799,7 +825,7 @@ class classOrderGroup extends classData
         switch ($sAmazonChanell) {
             case 'MFN' :
                 $this
-                    ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getField('total_gross')))
+                    ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getTotalGross()))
                     ->initAccountingHST()
                     ->initAccountingPST()
                     ->initAccountingGrossCostToUs();
@@ -910,13 +936,13 @@ class classOrderGroup extends classData
 
     public function shipOrderGroupByAmazon($sAmazonShippingMethodSelect)
     {
-        $oAmazon = new classAmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01/');
-        $oAmazon->shipOrderGroupByAmazon($this, $sAmazonShippingMethodSelect);
+        $oAmazon = new classAmazonMWS('FBAOutboundServiceMWS_Client', '/FulfillmentOutboundShipment/2010-10-01/');
+        return $oAmazon->shipOrderGroupByAmazon($this, $sAmazonShippingMethodSelect);
     }
 
     public function getAmazonShippingOrderId()
     {
-        return $this->getOrderInstance()->getOrderPrefix().$this->getField('orderid') . '-' . $this->getField('manufacturerid');
+        return $this->getOrderInstance()->getOrderPrefix() . $this->getField('orderid') . '-' . $this->getField('manufacturerid');
     }
 
     public function getShippingInstance()
@@ -947,12 +973,47 @@ class classOrderGroup extends classData
         return $this->getField('shippingid');
     }
 
-    public function getOrderId() {
+    public function getOrderId()
+    {
         return $this->getField('orderid');
     }
 
-    public function getManufacturerId() {
+    public function getManufacturerId()
+    {
         return $this->getField('manufacturerid');
+    }
+
+    public function changeOrderGroupStatusDC($sNewStatus)
+    {
+        $this->updateField('dc_status', $sNewStatus);
+        return $this;
+    }
+
+    public function changeOrderGroupStatusCB($sNewStatus)
+    {
+        $this->updateField('cb_status', $sNewStatus);
+        return $this;
+    }
+
+    public function changeOrderGroupStatusBD($sNewStatus)
+    {
+        $this->updateField('bd_status', $sNewStatus);
+        return $this;
+    }
+
+    public function getOrderGroupStatusDC()
+    {
+        return $this->getField('dc_status');
+    }
+
+    public function getOrderGroupStatusCB()
+    {
+        return $this->getField('cb_status');
+    }
+
+    public function getOrderGroupStatusBD()
+    {
+        return $this->getField('bd_status');
     }
 
 }

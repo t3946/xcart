@@ -9,6 +9,7 @@ class classSQLBuilder
     private $aConditions = [];
     private $aOrders = [];
     private $aGroups = [];
+    private $aLimit = [];
     private $sqlQuery = null;
     private $aSqlQueryResult = [];
 
@@ -26,6 +27,7 @@ class classSQLBuilder
         $this->aConditions = [];
         $this->aOrders = [];
         $this->aGroups = [];
+        $this->aLimit = [];
         $this->sqlQuery = null;
         $this->aSqlQueryResult = [];
         return $this;
@@ -43,13 +45,13 @@ class classSQLBuilder
         return $this;
     }
 
-    public function addInnerJoin($sTable, $sAlias, $sCondition)
+    public function addInnerJoin($sTable, $sAlias=null, $sCondition)
     {
         $this->aInnerJoinTables[] = self::$sql_tbl[$sTable] . ((!empty($sAlias)) ? ' as ' . $sAlias : '') . ' ON ' . $sCondition;
         return $this;
     }
 
-    public function addFromTable($sTable, $sAlias)
+    public function addFromTable($sTable, $sAlias=null)
     {
         $this->aTables[] = self::$sql_tbl[$sTable] . ((!empty($sAlias)) ? ' as ' . $sAlias : '');
         return $this;
@@ -64,6 +66,12 @@ class classSQLBuilder
     public function addGroupBy($sGroupBy)
     {
         $this->aGroups[] = $sGroupBy;
+        return $this;
+    }
+
+    public function setLimit($sLimit)
+    {
+        $this->aLimit[] = $sLimit;
         return $this;
     }
 
@@ -87,6 +95,9 @@ class classSQLBuilder
         }
         if (!empty($this->aOrders)) {
             $this->sqlQuery .= " ORDER BY " . implode(',', $this->aOrders);
+        }
+        if (!empty($this->aLimit)) {
+            $this->sqlQuery .= " LIMIT " . implode(',', $this->aLimit);
         }
     }
 

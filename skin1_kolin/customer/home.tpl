@@ -50,6 +50,11 @@
 {/if}
 {/strip}</title>
 {include file="meta.tpl" }
+
+{if !empty($config.Appearance.Facebook_pixel_code)}
+        {$config.Appearance.Facebook_pixel_code}
+{/if}
+
 {*
 <script src="{$SkinDir}/jquery-1.4.3.min.js" type="text/javascript"></script>
 *}

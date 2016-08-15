@@ -1375,13 +1375,22 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                                 $insert_data["s_zipcode"] = $currect_s_zipcode;
                         }
                 }
-###
-##
-#
 
 
 
 		$orderid = func_array2insert('orders', $insert_data);
+
+		x_session_register('purchase_order_selected');
+		if(!empty($GLOBALS['purchase_order_selected']) && is_numeric($GLOBALS['purchase_order_selected'])){
+
+			include_once $xcart_dir."/include/class/classPOPipeline.php";
+			$oPoPipeline =  new classPOPipeLine(['po_id'=>$GLOBALS['purchase_order_selected']]);
+			$iPoPipe = $oPoPipeline->getPOId();
+			if ($iPoPipe){
+				$oPoPipeline->setOrderToPO($orderid);
+			}
+			x_session_unregister('purchase_order_selected');
+		}
 
 
 #
@@ -1584,23 +1593,26 @@ die("123");
 			}
 # START: random:20341 [2010 Jul 29 14:46] 
 			$current_order['shipping_groups'][func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid'])]['products'][] = $product;
-# END: random:20341 [2010 Jul 29 14:46] 
+# END: random:20341 [2010 Jul 29 14:46]
 
 			global $xcart_dir;
 			include_once $xcart_dir."/include/class/classProducts.php";
 			$oProduct = new classProduct((int)$product['productid']);
 			$aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
 			if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
-				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY);
+				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
 			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0) {
 				$iLastProductVerifyDate = $oProduct->getField('last_verify_date');
 				$currentDate = new DateTime("now");
 				$iDaysInterval = $currentDate->diff($iLastProductVerifyDate)->days;
 				if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
-					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY);
+					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
 				}
 			} else {
-				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_NOT_VERIFY);
+				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_NOT_VERIFY,'', true, [$orderid]);
+				include_once $xcart_dir."/include/class/classHTMLShot.php";
+				$oHTMLShot = new classHTMLShot();
+				$oHTMLShot->createHTMLShot($oProduct, $orderid);
 			}
 
 		}
@@ -1705,6 +1717,8 @@ die("123");
 		include_once $xcart_dir."/include/class/classOrder.php";
 		$oOrder = new classOrder($orderid);
 		$oOrder->updateVerificationStatus();
+
+
 
 
 # END: random:20341 [2010 Jul 29 14:46] 
@@ -4069,6 +4083,8 @@ function func_get_filter($fid) {
     $filter['storefront_ids'] = func_query_column("SELECT storefrontid FROM $sql_tbl[filter_preset_storefronts] WHERE fid='$fid'");
 
     $filter['fraud_statuses'] = func_query_column("SELECT fraud_status FROM $sql_tbl[filter_preset_fraud_statuses] WHERE fid='$fid'");
+
+	$filter['po_statuses'] = func_query_column("SELECT status FROM $sql_tbl[filter_preset_po_statuses] WHERE fid='$fid'");
 
     $attention_tags_values = func_query_column("SELECT status_id FROM $sql_tbl[filter_preset_attention_tag_statuses] WHERE fid='$fid'");
     if (!empty($attention_tags_values)){

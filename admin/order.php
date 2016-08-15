@@ -1881,7 +1881,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 	# Send manufacturer notification and update order's manufacturer notified status
 	#
 
-	if ($order['product_verification_status_code'] != 'PV') {
+	if (!empty($active_modules['Product_Verification']) && $order['product_verification_status_code'] != 'PV') {
 		$top_message = array(
 				'content' => func_get_langvar_by_name('lbl_dispatch_deny_before_product_verification'),
 				'type' => 'I'
@@ -3514,6 +3514,19 @@ $main_order_tabs[$tabs_key]["title"] = "RMA";
 $main_order_tabs[$tabs_key]["section"] = "RMA";
 $main_order_tabs[$tabs_key]["anchor"] = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
+
+global $xcart_dir, $login;
+require_once $xcart_dir . "/include/class/classCustomer.php";
+$oCustomer = new classCustomer(['login'=>$login]);
+if (!empty($oCustomer)) {
+	if ($oCustomer->isCustomerUseSecureData()) {
+		$main_order_tabs[$tabs_key]["title"] = "Secure";
+		$main_order_tabs[$tabs_key]["section"] = "secure_data";
+		$main_order_tabs[$tabs_key]["anchor"] = $main_order_tabs[$tabs_key]["section"];
+		$tabs_key++;
+	}
+}
+$smarty->assign('oCustomer', $oCustomer);
 
 $main_order_tabs[$tabs_key]["title"] = "Maps/Calls";
 $main_order_tabs[$tabs_key]["section"] = "ground_map";

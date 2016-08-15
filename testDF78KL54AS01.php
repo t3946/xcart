@@ -5,13 +5,14 @@ session_start();
 require "./top.inc.php";
 require "./init.php";
 
+x_load('froogle');
+x_load('backoffice');
+x_load('taxes');
+
 global $xcart_dir, $config;
-require_once $xcart_dir . "/include/class/classOrderGroup.php";
 
-$oOrderGroup = new classOrderGroup(['orderid'=>'62776','manufacturerid'=>'12']);
-var_dump($oOrderGroup->getAmazonShipmentNotes());
-
-
-
+include_once $xcart_dir."/include/class/classOrderGroup.php";
+$oOrderGroup = new classOrderGroup(['orderid'=>64824, 'manufacturerid'=>36]);
+$oOrderGroup->setAttentionTagMoneyLost();
 
 

@@ -28,24 +28,49 @@ class classData
         $this->oSQL = new classSQLBuilder();
     }
 
-    protected function _clone() {
+    protected function _clone()
+    {
         return clone $this;
     }
 
-    public function _insert($is_replace = false) {
+    public function _insert($is_replace = false)
+    {
         func_array2insert($this->sPrimaryTable, $this->aPrimaryTableValue, $is_replace);
+    }
+
+    public function _delete()
+    {
+        if (!empty($this->aPrimaryKeysValues)) {
+            $aKeyArray = $this->aPrimaryKeysValues;
+            array_walk($aKeyArray, function (&$a, $b) {
+                $a = $b . ' = "' . $a . '"';
+            });
+            db_query("DELETE FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . implode(" AND ", $aKeyArray));
+        }
+    }
+
+    public function _refresh()
+    {
+        $this->fillPrimaryTableInfo();
     }
 
     protected function fillPrimaryTableInfo()
     {
-        if (!empty($this->aPrimaryKeysValues))
-            $this->aPrimaryTableValue = func_query_first("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
+        if (!empty($this->aPrimaryKeysValues)) {
+            $aKeyArray = $this->aPrimaryKeysValues;
+            array_walk($aKeyArray, function (&$a, $b) {
+                $a = $b . ' = "' . $a . '"';
+            });
+            $this->aPrimaryTableValue = func_query_first("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . implode(" AND ", $aKeyArray));
+        }
     }
 
     public function fillPrimaryTableValues($aValues)
     {
-        if (!empty($aValues))
+        if (!empty($aValues)) {
             $this->aPrimaryTableValue = $aValues;
+            $this->aPrimaryKeysValues = array_intersect_key($aValues, array_flip($this->aPrimaryKeys));
+        }
     }
 
     /**
@@ -73,12 +98,34 @@ class classData
     public function setField($sFieldName, $sNewValue)
     {
         $this->aPrimaryTableValue[$sFieldName] = $sNewValue;
+        return $this;
+    }
+
+    public function setFields($aFieldNamesValues)
+    {
+        foreach ($aFieldNamesValues as $key => $value)
+            $this->aPrimaryTableValue[$key] = $value;
+        return $this;
     }
 
     public function updateField($sFieldName, $sNewValue)
     {
         $this->setField($sFieldName, $sNewValue);
         $aToUpdate[$sFieldName] = $sNewValue;
-        func_array2update($this->sPrimaryTable, $aToUpdate, str_replace('&',' AND ',http_build_query($this->aPrimaryKeysValues)));
+        if (empty($this->aPrimaryKeysValues))
+            throw new Exception('Empty primary keys values for update field');
+        func_array2update($this->sPrimaryTable, $aToUpdate, str_replace('&', ' AND ', http_build_query($this->aPrimaryKeysValues)));
+        return $this;
+    }
+
+    public function updateFields($aFieldNamesValues = [])
+    {
+        if (!empty($aFieldNamesValues)) {
+            $this->setFields($aFieldNamesValues);
+            if (empty($this->aPrimaryKeysValues))
+                throw new Exception('Empty primary keys values for update fields');
+            func_array2update($this->sPrimaryTable, $aFieldNamesValues, str_replace('&', ' AND ', http_build_query($this->aPrimaryKeysValues)));
+        }
+        return $this;
     }
 }

@@ -437,7 +437,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
         <tr><td><B>Order date:</B></td><td>{$order.date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
         <tr><td><B>Current date:</B>&nbsp;</td><td>{$current_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
         <tr><td nowrap="nowrap"><B>Fraud check:</B></td><td>{if $order.amazonorderid eq ""}<a href="fraud_page.php?orderid={$order.orderid}" target="_blank" style="color: #140BFC">{include file="main/fraud_status.tpl" fraud_status=$order.fraud_status fraud_static="Y"} ({$order.overall_fraud_score})</a>{else}Cleared by Amazon{/if}</td></tr>
-        <tr><td nowrap="nowrap" style="padding-right: 5px;"><b>Product verification:</b></td><td><a id="product_verification_status_link" href="#">{$order.product_verification_status}</a>
+        <tr><td nowrap="nowrap" style="padding-right: 5px;"><b><a href="/admin/product_verification.php" target="_blank">Product verification</a>:</b></td><td><a id="product_verification_status_link" href="#">{$order.product_verification_status}</a>
                 <select data-order-id="{$order.orderid}" id="product_verification_status_change" style="display:none;">
                     {foreach from=$order.product_verification_statuses item=product_verification_sts}
                         <option {if $order.product_verification_status == $product_verification_sts.name} selected="selected" {/if} value="{$product_verification_sts.code}">{$product_verification_sts.name}</option>
@@ -1295,6 +1295,11 @@ $(function() {ldelim}
 </tr>
 </table>
 {/capture}
+
+{capture name=secure_data}
+    {include file="admin/main/secure_data_tab.tpl"}
+{/capture}
+
 
 {capture name=ground_map}
 {include file="admin/main/ground_map.tpl"}

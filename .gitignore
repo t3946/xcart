@@ -24,6 +24,7 @@ Thumbs.db
 /config.local.php
 /robots.txt
 /test.php
+/modules/XPDF/dompdf/lib/fonts/log.htm
 ######################
 ## folders to exclude
 /images/**

@@ -5,7 +5,7 @@ require_once $xcart_dir."/include/class/classManufacturers.php";
 require_once $xcart_dir."/include/class/classCategories.php";
 require_once $xcart_dir."/include/class/classProduct.php";
 
-class classProducts extends classProduct
+class classProducts extends classCloneData
 {
     private $aProductToQueue;
     public $addCounter;
@@ -129,7 +129,9 @@ class classProducts extends classProduct
             'shipping_dim_lock',
             'shipping_weight',
             'shipping_weight_lock',
-            'weight_lock'
+            'weight_lock',
+            'verification_statusid',
+            'last_verify_date'
         );
     }
 
@@ -279,7 +281,7 @@ class classProducts extends classProduct
 
     public function getFilterValuesByNameAndFilterType($sFilterName, $iFilterTypeId){
         $sFilterName = addslashes($sFilterName);
-        return func_query_first("SELECT * FROM ".self::$sql_tbl['cidev_filter_values']." WHERE fv_name='$sFilterName' AND f_id=$iFilterTypeId");
+        return func_query_first("SELECT * FROM ".self::$sql_tbl['cidev_filter_values']." WHERE fv_name='".$sFilterName."' AND f_id=$iFilterTypeId");
     }
 
     public function getFilterValues ($iFilterValueId) {
@@ -297,14 +299,15 @@ class classProducts extends classProduct
 
         if (isset($aFilterValues) && is_array($aFilterValues) && !empty($aFilterValues)) {
             foreach($aFilterValues as $oFilter) {
-                array_walk_recursive($oFilter, array(__CLASS__,'recursive_escape'));
                 $oFilter['f_id'] = $iNewFilterId;
                 unset($oFilter['fv_id']);
                 $aNewFilterValue = $this->getFilterValuesByNameAndFilterType($oFilter['fv_name'], $iNewFilterId);
                 if (isset($aNewFilterValue) && is_array($aNewFilterValue) && !empty($aNewFilterValue)) {
                     $aNewFilterValuesId[] = $aNewFilterValue['fv_id'];
-                } else
-                $aNewFilterValuesId[] = func_array2insert('cidev_filter_values', $oFilter);
+                } else {
+                    array_walk_recursive($oFilter, array(__CLASS__,'recursive_escape'));
+                    $aNewFilterValuesId[] = func_array2insert('cidev_filter_values', $oFilter);
+                }
             }
         }
         return($aNewFilterValuesId);
@@ -412,7 +415,8 @@ class classProducts extends classProduct
         $classManufacturer = new classManufacturers();
 
         $aQueuedManufacturer = $classManufacturer->getMainufacturersInfo(array($this->aProductToQueue["manufacturerid"]));
-        $aQueuedManufacturer = reset($aQueuedManufacturer);
+        if (!empty($aQueuedManufacturer))
+            $aQueuedManufacturer = reset($aQueuedManufacturer);
 
 
         /*ЕСЛИ [PRODUCT] не существует ИЛИ [PRODUCT].forsale !="Y" ИЛИ trim([PRODUCT].clone_parent_productid) >0 или дистрибьютор от [xcart_clone_products_queue].manufacturerid не имеет родителя, ТО
@@ -796,27 +800,28 @@ class classProducts extends classProduct
 			конец если
 		КОНЕЦ ЦИКЛ по [Distributors]
          * */
+        if (!empty($aChildManufacturers)) {
+            foreach ($aChildManufacturers as $aChildManufacturer) {
+                //сформировать clonedSKU предполагаемого клона по очередному дистрибьютору: [Distributors].code-[PRODUCT].mpn
+                $sClonedSKU = $this->getClonedSKU($aChildManufacturer["code"], $this->getProductMPN($aProduct["productcode"], $aManufacturer["code"]));
 
-        foreach ($aChildManufacturers as $aChildManufacturer) {
-            //сформировать clonedSKU предполагаемого клона по очередному дистрибьютору: [Distributors].code-[PRODUCT].mpn
-            $sClonedSKU = $this->getClonedSKU($aChildManufacturer["code"], $this->getProductMPN($aProduct["productcode"],$aManufacturer["code"]));
+                $aProductSKU = $this->getProductBySKU($sClonedSKU);
+                if (isset($aProductSKU) && is_array($aProductSKU) && !empty($aProductSKU)) {
+                    //если clonedSKU существует в БД, то
 
-            $aProductSKU = $this->getProductBySKU($sClonedSKU);
-            if (isset($aProductSKU) && is_array($aProductSKU) && !empty($aProductSKU)) {
-                //если clonedSKU существует в БД, то
+                    //вызвать блок обновления продукта для очередного подчиненного дистрибьютора;
+                    $aParamToClone = array();
+                    $aParamToClone[$this->sPrimaryKeyFiled] = $aProduct[$this->sPrimaryKeyFiled];
+                    $aParamToClone["d_main_sf"] = $aChildManufacturer["d_main_sf"];
 
-                //вызвать блок обновления продукта для очередного подчиненного дистрибьютора;
-                $aParamToClone = array();
-                $aParamToClone[$this->sPrimaryKeyFiled] = $aProduct[$this->sPrimaryKeyFiled];
-                $aParamToClone["d_main_sf"] = $aChildManufacturer["d_main_sf"];
+                    if ($this->updateClonedProduct($aProduct, $aProductSKU, $aParamToClone)) {
+                        //посчитать успешное обновление
+                        $this->IncSuccessUpdate();
+                    }
+                } else {
+                    $this->message[] = "SKU $sClonedSKU not found, continue";
 
-                if ($this->updateClonedProduct($aProduct, $aProductSKU, $aParamToClone)) {
-                //посчитать успешное обновление
-                    $this->IncSuccessUpdate();
                 }
-            } else {
-                $this->message[] = "SKU $sClonedSKU not found, continue";
-
             }
         }
 
@@ -824,5 +829,10 @@ class classProducts extends classProduct
 
     }
 
+    public function getManfacturerClass($iManufacurerId = null) {
+        if (!is_null($iManufacurerId))
+            return new classManufacturers($iManufacurerId);
+        else return  new classManufacturer($this->aPrimaryTableValue['manufacturerid']);
+    }
 
 }

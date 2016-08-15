@@ -26,6 +26,19 @@ var requiredFields = [
 
 {if $mode ne "brand_info"}
 
+    {capture name=dialogsearch}
+        <form action="brands.php" method="get" name="search_brand">
+            <table cellpadding="3" cellspacing="1" width="100%">
+                <tr>
+                    <td width="100">
+                        <input name="search" type="text" />
+                    </td>
+                    <td> <input type="submit" value="Search"/></td>
+                </tr>
+            </table>
+        </form>
+    {/capture}
+
 {capture name=dialog}
 
 <table>
@@ -146,6 +159,10 @@ checkboxes = new Array({foreach from=$brands item=v key=k}{if $k > 0},{/if}'{if 
 {include file="customer/main/navigation.tpl"}
 
 {/capture}
+
+{include file="dialog.tpl" title='Search brand' content=$smarty.capture.dialogsearch extra='width="100%"'}
+    <br/>
+    <br/>
 {include file="dialog.tpl" title=$lng.lbl_brands_list content=$smarty.capture.dialog extra='width="100%"'}
 
 {else}

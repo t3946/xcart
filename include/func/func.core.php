@@ -512,6 +512,7 @@ function func_flush($s = NULL) {
 #
 function func_html_location($url, $time=3) {
 	x_session_save();
+	global $use_sessions_type;
 
 	if ($use_sessions_type < 3) {
 		session_write_close();
@@ -2340,11 +2341,13 @@ function my_array_sort($array, $on, $order=SORT_ASC)
     return $new_array;
 }
 
-function func_log_order($orderid, $type, $log, $login="") {
+function func_log_order($orderid, $type, $log, $ulogin="") {
 	global $sql_tbl;
+	global $login;
+	if (empty($ulogin)) $ulogin = $login;
 
 	if (!empty($log))
-		db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($login)."', '".addslashes($log)."')");
+	db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($ulogin)."', '".addslashes($log)."')");
 //	db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '".time()."', '".addslashes($login)."', '".$log."')");
 }
 
@@ -2786,7 +2789,8 @@ function func_define_approximate_shippings($productid, $product_info=''){
 
 			$flat_rate_shipping_cost = "";
 			$flat_rate_shippings = func_query($query = "SELECT * FROM $sql_tbl[shipping_rates] WHERE zoneid='$customer_zone_ship_for_flat_rate' AND provider='master' AND mintotal<='$product_info[price]' AND maxtotal>='$product_info[price]' AND minweight<='$product_info[weight]' AND maxweight>='$product_info[weight]' AND type='D' AND manufacturerid='$product_info[manufacturerid]' ORDER BY maxtotal, maxweight");
-			if (!empty($flat_rate_shippings)){
+
+				if (!empty($flat_rate_shippings)){
 				foreach ($flat_rate_shippings as $k_fr => $v_fr){
 					$flat_rate_shippings[$k_fr]["shipping_cost"] = $v_fr["cost_marcup"] + $v_fr['rate'] + $v_fr['weight_rate']*$product_info["weight"] + $v_fr["item_rate"]*$product_info["min_amount"] + $product_info["price"]*$v_fr['rate_p'] / 100 + $product_info["shipping_freight"];
 				}
@@ -2811,7 +2815,8 @@ function func_define_approximate_shippings($productid, $product_info=''){
 
 
 				if ($flat_rate_shipping_cost != ""){
-					$Shipping_charge = min($Shipping_charge, $flat_rate_shipping_cost);
+					//$Shipping_charge = min($Shipping_charge, $flat_rate_shipping_cost);
+					$Shipping_charge = $flat_rate_shipping_cost;
 				}
 			} 
 			else {
@@ -4062,5 +4067,28 @@ function func_check_comma_in_field($orderid, $value, $sFieldName)
 		return true;
 	}
 	return false;
+}
+
+function func_check_comma_in_field($orderid, $value, $sFieldName)
+{
+	global $login, $top_message;
+	if (strpos($value, ',') !== false) {
+		$sLog = "Comma in field <b>$sFieldName</b>: ".$value;
+		func_log_order($orderid, 'X', $sLog, $login);
+
+		return true;
+	}
+	return false;
+}
+
+function file_get_contents_curl($url){
+	$curl = curl_init();
+	curl_setopt($curl, CURLOPT_URL, $url);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl, CURLOPT_HEADER, false);
+	curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+	$data = curl_exec($curl);
+	curl_close($curl);
+	return $data;
 }
 ?>

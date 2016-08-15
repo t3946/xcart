@@ -234,24 +234,24 @@ foreach ($supplier_feeds as $k => $v){
                         func_backprocess_log($log_category, $log_text);
 
 
-                        if (!empty($products["dont_update_fields"]) && is_array($products["dont_update_fields"])){
-	                        foreach ($products["dont_update_fields"] as $k_du => $v_du){
-        	                        $idx = array_search($v_du, array_keys($product_cols_replace));
-                                        if ($idx !== false) {
-                	                        $products["dont_update_fields"][] = $product_cols_replace[$v_du];
-                                                unset($products["dont_update_fields"][$k_du]);
-                                        }
-                                }
+			if (!empty($products["dont_update_fields"]) && is_array($products["dont_update_fields"])) {
+				foreach ($products["dont_update_fields"] as $k_du => $v_du) {
+					$idx = array_search($v_du, array_keys($product_cols_replace));
+					if ($idx !== false) {
+						$products["dont_update_fields"][] = $product_cols_replace[$v_du];
+						unset($products["dont_update_fields"][$k_du]);
+					}
+				}
 			}
 
-			if (!empty($products["defaults"]) && is_array($products["defaults"])){
-                                foreach ($products["defaults"] as $k_s => $v_s){
-                                        $idx = array_search($k_s, array_keys($product_cols_replace));
-                                        if ($idx !== false) {
-                                                $products["defaults"][$product_cols_replace[$k_s]] = $v_s;
-                                                unset($products["defaults"][$k_s]);
-                                        }
-                                }
+			if (!empty($products["defaults"]) && is_array($products["defaults"])) {
+				foreach ($products["defaults"] as $k_s => $v_s) {
+					$idx = array_search($k_s, array_keys($product_cols_replace));
+					if ($idx !== false) {
+						$products["defaults"][$product_cols_replace[$k_s]] = $v_s;
+						unset($products["defaults"][$k_s]);
+					}
+				}
 			}
 
 /* --------------------------------------------------------------------------------------------------- */
@@ -475,29 +475,32 @@ die();
 
                                                         }
 
+										  				$image_file_name = str_replace(' ','',rawurldecode($image_file_name));
+
                                                         $image_file_path = $xcart_dir . "/images/D/".$image_file_name;
 
                                                         if ($k_img % 5 == 0) {
                                                                 func_flush(".");
                                                         }
+										  				$sDataImage = file_get_contents_curl($IMAGE_URL);
 
-                                                        if (url_exists($IMAGE_URL)){
-                                                                if (@copy($IMAGE_URL, $image_file_path)){
-                                                                        $img_info = getimagesize($image_file_path);
+                                                                if (!empty($sDataImage)){
+																		if (file_put_contents($image_file_path, $sDataImage)) {
+																			$img_info = getimagesize($image_file_path);
 
 //                                                                      $image_data[$k_img]['id'] = $productid;
-                                                                        $image_data[$k_img]['date'] = time();
-                                                                        $image_data[$k_img]['image_path'] = $image_file_path;
-                                                                        $image_data[$k_img]['image_type'] = $img_info["mime"];
-                                                                        $image_data[$k_img]['image_x'] = $img_info[0];
-                                                                        $image_data[$k_img]['image_y'] = $img_info[1];
-                                                                        $image_data[$k_img]['image_size'] = filesize($image_file_path);
-                                                                        $image_data[$k_img]['alt'] = $alt_context;
-                                                                        $image_data[$k_img]['avail'] = 'Y';
-                                                                        $image_data[$k_img]['orderby'] = 10*$k_img;
+																			$image_data[$k_img]['date'] = time();
+																			$image_data[$k_img]['image_path'] = $image_file_path;
+																			$image_data[$k_img]['image_type'] = $img_info["mime"];
+																			$image_data[$k_img]['image_x'] = $img_info[0];
+																			$image_data[$k_img]['image_y'] = $img_info[1];
+																			$image_data[$k_img]['image_size'] = filesize($image_file_path);
+																			$image_data[$k_img]['alt'] = $alt_context;
+																			$image_data[$k_img]['avail'] = 'Y';
+																			$image_data[$k_img]['orderby'] = 10 * $k_img;
+																		}
 
                                                                 }
-                                                        }
 						}
                                         }
 

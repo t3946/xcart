@@ -51,7 +51,6 @@ x_session_register("e_search_data_orig_substring");
 ###
 ##
 #
-
 #
 ## Mobile
 ###
@@ -474,7 +473,9 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 		$resource_type = "H";
 	}
 
-	func_log_cidev_surf($resource_type);
+	if ($detect_isMobile_was_created == 'Y' && $resource_type == 'H') {
+
+	} else func_log_cidev_surf($resource_type);
 }
 ###
 ##

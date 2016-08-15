@@ -33,10 +33,24 @@
 #
 # $Id: configuration.php,v 1.81.2.9 2007/01/16 09:06:31 twice Exp $
 #
-
+global $xcart_dir;
 define('USE_TRUSTED_POST_VARIABLES',1);
 define('USE_TRUSTED_SCRIPT_VARS',1);
-$trusted_post_variables = array("gpg_key", "pgp_key", "xpc_private_key_password", "xpc_private_key", "xpc_public_key", 'code_below_thumb', 'search_products_box_code', 'search_products_result_code', 'cidev_tracking_code', 'cidev_main_page_code', 'cidev_footer_code', 'cidev_keywords', 'cidev_description', 'cidev_header_code', 'cidev_top_header_code', 'cidev_yandex_code_number', 'cidev_ga_code_number', 'cidev_google_adwords', 'ssl_seal', 'templates_for_communication', 'request_availability_options', 'fraud_domains_free_email_provider', 'fraud_checks', 'common_footer_code', 'message_body', 'thank_you_message_body', 'po_instructions', 'product_question_message_body_to_brand', 'product_question_message_body_to_customer', 'backorder_message_body_condition_no_stock_no_eta', 'backorder_message_body_condition_no_stock_defined_eta', 'backorder_message_body_condition_partially_in_stock_no_eta', 'backorder_message_body_condition_partially_in_stock_defined_eta', 'Reconciliations', 'po_missing_subject_line', 'po_missing_instructions', 'common_header_code', 'product_advantages_code', 'stop_words', 'excluded_char_sequences', 'po_message_body', 'backorder_message_body_condition_case_a', 'backorder_message_body_condition_case_b', 'backorder_message_body_condition_case_c', 'backorder_message_body_condition_case_d', 'backorder_message_body_condition_case_e', 'backorder_message_body_condition_case_f', 'reference_text', 'signature', 'social_buttons_script_code', 'SIP_phone_settings_template', 'product_question_subject_line_to_distr', 'product_question_message_body_to_distr', 'product_answer_subject_line', 'product_answer_message_body', 'outside_sf_localization_warning','po_entry_dashboard_text', 'GTS_badge_code', 'GTS_order_confirmation_module_code', 'RMA_message','RMA_subject', 'RMA_to_department_Subject', 'RMA_to_department_Message','google_analitics_tracking_script', 'pop_up_code');
+$trusted_post_variables = ["gpg_key", "pgp_key", "xpc_private_key_password", "xpc_private_key", "xpc_public_key", 'code_below_thumb',
+		'search_products_box_code', 'search_products_result_code', 'cidev_tracking_code', 'cidev_main_page_code', 'cidev_footer_code',
+		'cidev_keywords', 'cidev_description', 'cidev_header_code', 'cidev_top_header_code', 'cidev_yandex_code_number', 'cidev_ga_code_number',
+		'cidev_google_adwords', 'ssl_seal', 'templates_for_communication', 'request_availability_options', 'fraud_domains_free_email_provider',
+		'fraud_checks', 'common_footer_code', 'message_body', 'thank_you_message_body', 'po_instructions', 'product_question_message_body_to_brand',
+		'product_question_message_body_to_customer', 'backorder_message_body_condition_no_stock_no_eta', 'backorder_message_body_condition_no_stock_defined_eta',
+		'backorder_message_body_condition_partially_in_stock_no_eta', 'backorder_message_body_condition_partially_in_stock_defined_eta', 'Reconciliations',
+		'po_missing_subject_line', 'po_missing_instructions', 'common_header_code', 'product_advantages_code', 'stop_words', 'excluded_char_sequences',
+		'po_message_body', 'backorder_message_body_condition_case_a', 'backorder_message_body_condition_case_b', 'backorder_message_body_condition_case_c',
+		'backorder_message_body_condition_case_d', 'backorder_message_body_condition_case_e', 'backorder_message_body_condition_case_f', 'reference_text',
+		'signature', 'social_buttons_script_code', 'SIP_phone_settings_template', 'product_question_subject_line_to_distr', 'product_question_message_body_to_distr',
+		'product_answer_subject_line', 'product_answer_message_body', 'outside_sf_localization_warning', 'po_entry_dashboard_text',
+		'GTS_badge_code', 'GTS_order_confirmation_module_code', 'RMA_message', 'RMA_subject', 'RMA_to_department_Subject',
+		'RMA_to_department_Message', 'google_analitics_tracking_script', 'pop_up_code', 'remove_shot_after_days', 'days_past_attn_tag_set','Facebook_pixel_code',
+		'secure_data'];
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
@@ -45,9 +59,6 @@ x_load('backoffice','mail','order');
 
 $options = func_query_column("SELECT category FROM $sql_tbl[config] WHERE category NOT IN ('UPS_OnLine_Tools', 'Taxes') AND category != '' AND category != 'Search_All' GROUP BY category");
 
-
-//func_print_r($templates_for_communication, $_POST);
-//die();
 
 #
 ##
@@ -171,6 +182,12 @@ elseif ($option == "Supplier_feeds") {
 }
 elseif ($option == "OTRS_options") {
     include "./otrs_options.php";
+}
+elseif ($option == "HTML_shots_options") {
+	include "./html_shot_options.php";
+}
+elseif ($option == "Secure_data") {
+	include "./secure_data.php";
 }
 elseif ($option == "PBX_options") {
     include "./pbx_options.php";

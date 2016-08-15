@@ -161,7 +161,7 @@ vim: set ts=2 sw=2 sts=2 et:
 {if $product.lead_time_message ne ""}
 onclick="javascript: if (confirm('{$product.lead_time_message}')) {ldelim}  ajax_add_to_cart('{$product.productid}', '{$product.add_date}', 'product'); $('#orderform-{$product.productid}').submit(); {rdelim}"
 {else}
-onclick="javascript: ajax_add_to_cart('{$product.productid}', '{$product.add_date}', 'product'); $('#orderform-{$product.productid}').submit();"
+onclick="javascript: $('#orderform-{$product.productid}').submit();"
 {/if}
 
                   >
@@ -307,7 +307,7 @@ function send_question_email_form(){
 {capture name=dialog}
 
 {if $brand_image.filename ne ""}
-<img src="images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
+<img src="/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
 {/if}
 
 <p align="justify">
