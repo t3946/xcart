@@ -46,7 +46,8 @@ x_load('order_edit', 'taxes');
 include $xcart_dir . "/shipping/shipping.php";
 include $xcart_dir . "/include/countries.php";
 include $xcart_dir . "/include/states.php";
-include $xcart_dir . "/include/class/classShippings.php";
+require_once $xcart_dir . "/include/class/classShippings.php";
+require_once $xcart_dir . "/include/class/classOrders.php";
 
 x_session_register("intershipper_rates");
 x_session_register("intershipper_recalc");
@@ -2193,7 +2194,7 @@ if ($REQUEST_METHOD == "POST") {
 
         }
         if ($mode == "table_accounting_apply" || $mode == "accounting_apply") {
-            require_once $xcart_dir . "/include/class/classOrders.php";
+
             $oOrder = new classOrder($orderid);
             $oOrder->recalculateAccounting();
         }
@@ -2290,6 +2291,8 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_order_show_button);
 $smarty->assign("order", $order);
 
+$oOrder = new classOrder($orderid);
+$smarty->assign("oOrder", $oOrder);
 
 $oShippings = new classShippings();
 $aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');
