@@ -361,57 +361,53 @@
 {if $customer.default_fields.s_firstname}
   <tr>
     <td><b>{$lng.lbl_first_name}:</b> </td>
-    <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="customer_info[s_firstname]" value="{$customer.s_firstname}" />{else}{$customer.s_firstname}{/if}
-&nbsp;<a target="_blank" href="https://www.google.com/#q={$customer.s_firstname|replace:' ':'+'}+{$customer.s_zipcode|replace:' ':'+'}" style="color: #1F08F8;">Google FN + zip code</a>
+    <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="customer_info[s_firstname]" value="{$oOrder->getShippingFirstName()}" />{else}{$oOrder->getShippingFirstName()}{/if}
+&nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getShippingFirstName()|replace:' ':'+'}+{$oOrder->getShippingZipCode()|replace:' ':'+'}" style="color: #1F08F8;">Google FN + zip code</a>
     </td>
   </tr>
 {/if}
 {if $customer.default_fields.s_lastname}
   <tr>
     <td><b>{$lng.lbl_last_name}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[s_lastname]" value="{$customer.s_lastname}" />{else}{$customer.s_lastname}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[s_lastname]" value="{$oOrder->getShippingLastName()}" />{else}{$oOrder->getShippingLastName()}{/if}</td>
   </tr>
 {/if}
-{foreach from=$customer.additional_fields item=v}
-{if $v.section eq 'S'}
   <tr>
-    <td>{if $v.title ne "Company"}<b>{/if}{$v.title}:{if $v.title ne "Company"}</b>{/if}</td>
-        <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="additional_fields[{$v.fieldid}]" value="{$v.value}" />{else}{$v.value}{/if}
-{if $v.title eq "Company"}&nbsp;<a target="_blank" href="https://www.google.com/#q={$s_company_company|replace:' ':'+'}" style="color: #1F08F8;">Google company</a>{/if}
+    <td>Company:</td>
+        <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="additional_fields[2]" value="{$oOrder->getShippingCompany()}" />{else}{$oOrder->getShippingCompany()}{/if}
+&nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getShippingCompany()|replace:' ':'+'}" style="color: #1F08F8;">Google company</a>
         </td>
   </tr>
-{/if}
-{/foreach}
 {if $customer.default_fields.s_address}
   <tr>
     <td><b>{$lng.lbl_address}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[s_address]" value="{$customer.s_address}" />{else}{$customer.s_address}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[s_address]" value="{$oOrder->getShippingAddress()}" />{else}{$oOrder->getShippingAddress()}{/if}</td>
   </tr>
   <tr>
     <td nowrap="nowrap">{$lng.lbl_address_2}: </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[s_address_2]" value="{$order.s_address_2}" />{else}{$order.s_address_2}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[s_address_2]" value="{$oOrder->getShippingAddress2()}" />{else}{$oOrder->getShippingAddress2()}{/if}</td>
   </tr>
 {/if}
 {if $customer.default_fields.s_city}
   <tr>
     <td><b>{$lng.lbl_city}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[s_city]" value="{$customer.s_city}" />{else}{$customer.s_city}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[s_city]" value="{$oOrder->getShippingCity()}" />{else}{$oOrder->getShippingCity()}{/if}</td>
   </tr>
 {/if}
 {if $customer.default_fields.s_county && $config.General.use_counties eq 'Y'}
   <tr>
     <td><b>{$lng.lbl_county}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[s_county]" value="{$customer.s_county}" />{else}{$customer.s_countyname}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[s_county]" value="{$oOrder->getShippingCounty()}" />{else}{$oOrder->getShippingCounty()}{/if}</td>
   </tr>
 {/if}
 {if $customer.default_fields.s_state}
   <tr>
     <td><b>{$lng.lbl_state}:</b> </td>
     <td width="100%">{if !$static}
-{include file="main/states.tpl" states=$states name="customer_info[s_state]" default=$customer.s_state default_country=$customer.s_country|default:$config.General.default_country country_name="customer_info[s_country]"}
-{else}{$customer.s_statename}{/if}
+{include file="main/states.tpl" states=$states name="customer_info[s_state]" default=$oOrder->getShippingState() default_country=$oOrder->getShippingCountry()|default:$config.General.default_country country_name="customer_info[s_country]"}
+{else}{$oOrder->getShippingState()}{/if}
 
-&nbsp; <B>Abbreviation:</B> {$customer.s_state}
+&nbsp; <B>Abbreviation:</B> {$oOrder->getShippingState()}
 
     </td>
   </tr>
@@ -422,20 +418,20 @@
     <td width="100%">{if !$static}
 <select name="customer_info[s_country]" id="customer_info_s_country" size="1">
 {section name=country_idx loop=$countries}
-<option value="{$countries[country_idx].country_code}"{if $customer.s_country eq $countries[country_idx].country_code} selected="selected"{elseif $countries[country_idx].country_code eq $config.General.default_country and $customer.s_country eq ""} selected="selected"{/if}>{$countries[country_idx].country|amp}</option>
+<option value="{$countries[country_idx].country_code}"{if $oOrder->getShippingCountry() eq $countries[country_idx].country_code} selected="selected"{elseif $countries[country_idx].country_code eq $config.General.default_country and $oOrder->getShippingCountry() eq ""} selected="selected"{/if}>{$countries[country_idx].country|amp}</option>
 {/section}
 {if $customer.default_fields.s_state}
-{include file="main/register_states.tpl" state_name="customer_info[s_state]" country_name="customer_info[s_country]" county_name="customer_info[s_county]" state_value=$customer.s_state county_value=$customer.s_county country_id="customer_info_s_country"}
+{include file="main/register_states.tpl" state_name="customer_info[s_state]" country_name="customer_info[s_country]" county_name="customer_info[s_county]" state_value=$oOrder->getShippingState() county_value=$oOrder->getShippingCounty() country_id="customer_info_s_country"}
 {/if}
 </select>
-{else}{$customer.s_countryname}{/if}</td>
+{else}{$oOrder->getShippingCountry()}{/if}</td>
   </tr>
 {/if}
 {if $customer.default_fields.s_zipcode}
   <tr>
     <td><b>{$lng.lbl_zip_code}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[s_zipcode]" value="{$customer.s_zipcode}" style="width: 50%;" />{else}{$customer.s_zipcode}{/if}
-&nbsp;<a style="color: blue;" href="javascript: void(0);" onclick="javascript: window.open('orders.php?fast_search=Y&posted_data[s_zipcode]={$order.s_zipcode}&mode=');">{$order.s_zipcode}</a>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[s_zipcode]" value="{$oOrder->getShippingZipCode()}" style="width: 50%;" />{else}{$oOrder->getShippingZipCode()}{/if}
+&nbsp;<a style="color: blue;" href="javascript: void(0);" onclick="javascript: window.open('orders.php?fast_search=Y&posted_data[s_zipcode]={$oOrder->getShippingZipCode()}&mode=');">{$oOrder->getShippingZipCode()}</a>
     </td>
   </tr>
 {/if}
@@ -447,57 +443,53 @@
 {if $customer.default_fields.b_firstname}
   <tr>
     <td><b>{$lng.lbl_first_name}:</b> </td>
-    <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="customer_info[b_firstname]" value="{$customer.b_firstname}" />{else}{$customer.b_firstname}{/if}
-&nbsp;<a target="_blank" href="https://www.google.com/#q={$customer.b_firstname|replace:' ':'+'}+{$customer.b_zipcode|replace:' ':'+'}" style="color: #1F08F8;">Google FN + zip code</a>
+    <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="customer_info[b_firstname]" value="{$oOrder->getBillingFirstName()}" />{else}{$oOrder->getBillingFirstName()}{/if}
+&nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getBillingFirstName()|replace:' ':'+'}+{$oOrder->getBillingZipCode()|replace:' ':'+'}" style="color: #1F08F8;">Google FN + zip code</a>
     </td>
   </tr>
 {/if}
 {if $customer.default_fields.b_lastname}
   <tr>
     <td><b>{$lng.lbl_last_name}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[b_lastname]" value="{$customer.b_lastname}" />{else}{$customer.b_lastname}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[b_lastname]" value="{$oOrder->getBillingLastName()}" />{else}{$oOrder->getBillingLastName()}{/if}</td>
   </tr>
 {/if}
-{foreach from=$customer.additional_fields item=v}
-{if $v.section eq 'B'}
   <tr>
-    <td>{if $v.title ne "Company"}<b>{/if}{$v.title}:{if $v.title ne "Company"}</b>{/if}</td>
-        <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="additional_fields[{$v.fieldid}]" value="{$v.value}" />{else}{$v.value}{/if}
-{if $v.title eq "Company"}&nbsp;<a target="_blank" href="https://www.google.com/#q={$b_company_company|replace:' ':'+'}" style="color: #1F08F8;">Google company</a>{/if}
+    <td>Company:</td>
+    <td width="100%" nowrap="nowrap">{if !$static}<input style="width: 55%;" type="text" name="additional_fields[1]" value="{$oOrder->getBillingCompany()}" />{else}{$oOrder->getBillingCompany()}{/if}
+    &nbsp;<a target="_blank" href="https://www.google.com/#q={$oOrder->getBillingCompany()|replace:' ':'+'}" style="color: #1F08F8;">Google company</a>
     </td>
   </tr>
-{/if}
-{/foreach}
 {if $customer.default_fields.b_address}
   <tr>
     <td><b>{$lng.lbl_address}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[b_address]" value="{$customer.b_address}" />{else}{$customer.b_address}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[b_address]" value="{$oOrder->getBillingAddress()}" />{else}{$oOrder->getBillingAddress()}{/if}</td>
   </tr>
   <tr>
     <td nowrap="nowrap">{$lng.lbl_address_2}: </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[b_address_2]" value="{$customer.b_address_2}" />{else}{$customer.b_address_2}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[b_address_2]" value="{$oOrder->getBillingAddress2()}" />{else}{$oOrder->getBillingAddress2()}{/if}</td>
   </tr>
 {/if}
 {if $customer.default_fields.b_city}
   <tr>
     <td><b>{$lng.lbl_city}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[b_city]" value="{$customer.b_city}" />{else}{$customer.b_city}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[b_city]" value="{$oOrder->getBillingCity()}" />{else}{$oOrder->getBillingCity()}{/if}</td>
   </tr>
 {/if}
 {if $customer.default_fields.b_county && $config.General.use_counties eq 'Y'}
   <tr>
     <td><b>{$lng.lbl_county}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[b_county]" id="customer_info_b_county" value="{$customer.b_county}" />{else}{$customer.b_countyname}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[b_county]" id="customer_info_b_county" value="{$oOrder->getBillingCounty()}" />{else}{$oOrder->getBillingCounty()}{/if}</td>
   </tr>
 {/if}
 {if $customer.default_fields.b_state}
   <tr>
     <td><b>{$lng.lbl_state}:</b> </td>
     <td width="100%">{if !$static}
-{include file="main/states.tpl" states=$states name="customer_info[b_state]" default=$customer.b_state default_country=$customer.b_country|default:$config.General.default_country country_name="customer_info[b_country]"}
-{else}{$customer.b_statename}{/if}
+{include file="main/states.tpl" states=$states name="customer_info[b_state]" default=$oOrder->getBillingState() default_country=$oOrder->getBillingCountry()|default:$config.General.default_country country_name="customer_info[b_country]"}
+{else}{$oOrder->getBillingState()}{/if}
 
-&nbsp; <B>Abbreviation:</B> {$customer.b_state}
+&nbsp; <B>Abbreviation:</B> {$oOrder->getBillingState()}
 
     </td>
   </tr>
@@ -508,19 +500,19 @@
     <td width="100%">{if !$static}
 <select name="customer_info[b_country]" id="customer_info_b_country" size="1">
 {section name=country_idx loop=$countries}
-<option value="{$countries[country_idx].country_code}"{if $customer.b_country eq $countries[country_idx].country_code} selected="selected"{elseif $countries[country_idx].country_code eq $config.General.default_country and $customer.b_country eq ""} selected="selected"{/if}>{$countries[country_idx].country|amp}</option>
+<option value="{$countries[country_idx].country_code}"{if $oOrder->getBillingCountry() eq $countries[country_idx].country_code} selected="selected"{elseif $countries[country_idx].country_code eq $config.General.default_country and $oOrder->getBillingCountry() eq ""} selected="selected"{/if}>{$countries[country_idx].country|amp}</option>
 {/section}
 </select>
 {if $customer.default_fields.b_state}
-{include file="main/register_states.tpl" state_name="customer_info[b_state]" country_name="customer_info[b_country]" county_name="customer_info[b_county]" state_value=$customer.b_state county_value=$customer.b_county country_id="customer_info_b_country"}
+{include file="main/register_states.tpl" state_name="customer_info[b_state]" country_name="customer_info[b_country]" county_name="customer_info[b_county]" state_value=$oOrder->getBillingState() county_value=$oOrder->getBillingCountry() country_id="customer_info_b_country"}
 {/if}
-{else}{$customer.b_countryname}{/if}</td>
+{else}{$oOrder->getBillingCountry()}{/if}</td>
   </tr>
 {/if}
 {if $customer.default_fields.b_zipcode}
   <tr>
     <td><b>{$lng.lbl_zip_code}:</b> </td>
-    <td width="100%">{if !$static}<input type="text" name="customer_info[b_zipcode]" value="{$customer.b_zipcode}" />{else}{$customer.b_zipcode}{/if}</td>
+    <td width="100%">{if !$static}<input type="text" name="customer_info[b_zipcode]" value="{$oOrder->getBillingZipCode()}" />{else}{$oOrder->getBillingZipCode()}{/if}</td>
   </tr>
 {/if}
 
