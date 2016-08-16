@@ -244,6 +244,113 @@ class classOrder extends classCloneData
     {
         return $this->getField('customer_notes');
     }
+    public function getShippingFirstName()
+    {
+        return $this->getField('s_firstname');
+    }
+
+    public function getShippingLastName()
+    {
+        return $this->getField('s_lastname');
+    }
+
+    public function getShippingCompany()
+    {
+        return $this->getField('s_company');
+    }
+
+    public function getShippingCity()
+    {
+        return $this->getField('s_city');
+    }
+
+    public function getShippingCounty()
+    {
+        return $this->getField('s_county');
+    }
+
+    public function getShippingState()
+    {
+        return $this->getField('s_state');
+    }
+
+    public function getShippingCountry()
+    {
+        return $this->getField('s_country');
+    }
+
+    public function getShippingAddress()
+    {
+        $row = [];
+        list($row['s_address'], $row['s_address_2']) = explode("\n", $this->getField('s_address'), 2);
+        return $row['s_address'];
+    }
+
+    public function getShippingAddress2()
+    {
+        $row = [];
+        list($row['s_address'], $row['s_address_2']) = explode("\n", $this->getField('s_address'), 2);
+        return $row['s_address_2'];
+    }
+
+    public function getShippingZipCode()
+    {
+        return $this->getField('s_zipcode');
+    }
+
+    public function getBillingCompany()
+    {
+        return $this->getField('b_company');
+    }
+
+    public function getBillingFirstName()
+    {
+        return $this->getField('b_firstname');
+    }
+
+    public function getBillingLastName()
+    {
+        return $this->getField('b_lastname');
+    }
+
+    public function getBillingCity()
+    {
+        return $this->getField('b_city');
+    }
+
+    public function getBillingCounty()
+    {
+        return $this->getField('b_county');
+    }
+
+    public function getBillingState()
+    {
+        return $this->getField('b_state');
+    }
+
+    public function getBillingCountry()
+    {
+        return $this->getField('b_country');
+    }
+
+    public function getBillingAddress()
+    {
+        $row = [];
+        list($row['b_address'], $row['b_address_2']) = explode("\n", $this->getField('b_address'), 2);
+        return $row['b_address'];
+    }
+
+    public function getBillingAddress2()
+    {
+        $row = [];
+        list($row['b_address'], $row['b_address_2']) = explode("\n", $this->getField('b_address'), 2);
+        return $row['b_address_2'];
+    }
+
+    public function getBillingZipCode()
+    {
+        return $this->getField('s_zipcode');
+    }
 
     public function getClientShippingName()
     {
