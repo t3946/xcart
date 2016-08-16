@@ -61,13 +61,13 @@ set_time_limit(0);
 x_load('backoffice', 'files', 'taxes', 'froogle', 'product', 'crypt');
 
 
-$xcart_states_US = func_query("SELECT state, code, country_code, base_state_zipcode FROM $sql_tbl[states] WHERE base_state_zipcode!='' AND country_code='US'");
+$xcart_states_US = func_query("SELECT stateid, state, code, country_code, base_state_zipcode FROM $sql_tbl[states] WHERE base_state_zipcode!='' AND country_code='US'");
 foreach ($xcart_states_US as $k => $v) {
     $xcart_states_US[$k]["city"] = func_query_first_cell("SELECT city FROM $sql_tbl[geo_litecity_location] WHERE country='US' AND postalCode='$v[base_state_zipcode]'");
 }
 
 if ($config["cidev_incremental_feeds_launched_v_3"] == "Y") {
-        die("Already launched"); // ################################
+        //die("Already launched"); // ################################
 }
 
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='cidev_incremental_feeds_launched_v_3'");
