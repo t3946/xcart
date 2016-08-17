@@ -349,7 +349,7 @@ class classOrder extends classCloneData
 
     public function getBillingZipCode()
     {
-        return $this->getField('s_zipcode');
+        return $this->getField('b_zipcode');
     }
 
     public function getClientShippingName()
