@@ -73,7 +73,7 @@ class classOrderGroup extends classData
     private function fetchPaymentMethodInstance()
     {
         $oPay = new classPaymentMethod(['paymentid' => $this->getPaymentMethodId()]);
-        $this->oPaymentMethod = $oPay->getPaymentMethodInstance(['paymentid' => getPaymentMethodId()]);
+        $this->oPaymentMethod = $oPay->getPaymentMethodInstance(['paymentid' => $this->getPaymentMethodId()]);
     }
 
     public function getTotalGross()
