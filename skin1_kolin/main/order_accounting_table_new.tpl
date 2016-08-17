@@ -288,11 +288,9 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
   <td>{if $v.total.net eq "0.01"}0.0001{else}{include file="currency2.tpl" value=$v.total.net}{/if}</td>
   <td>
   {if !$static || $static eq 'O'}
-  <select name="groups{if $static eq 'O'}[{$order.orderid}]{/if}[{$m_id}][paymentid]">
-  <option value="0"{if $v.acc_paymentid eq 0} selected="selected"{/if}></option>
-  {foreach from=$all_processors item=ps key=pid}
-  <option value="{$pid}"{if $pid eq $v.acc_paymentid} selected="selected"{/if}>{$ps.payment_method}</option>
-  {/foreach}
+  <select name="groups{if $static eq 'O'}[{$v.oOrderGroup->getOrderId()}]{/if}[{$v.oOrderGroup->getManufacturerId()}][paymentid]">
+      <option value="0"></option>
+      {html_options options=$v.oOrderGroup->getPaymentMethodsAvailForOrderGroup() selected=$v.oOrderGroup->getPaymentMethodId()}
   </select>
   {else}
   {foreach from=$all_processors item=ps key=pid}
@@ -516,9 +514,10 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 <input type="button" value="Update" onclick="javascript: $('#mode_accounting_page').val('table_accounting_apply'); $('#certain_mid').val('{$m_id}'); this.form.submit();" />
 {/if}
 </td>
-
+{assign var="oOrderShipping" value= $v.oOrderGroup->getShippingInstance()}
+{assign var="oOrder" value= $v.oOrderGroup->getOrderInstance()}
 <td align="right">
-{if $v.invoices eq ""}
+{if $v.invoices eq "" && !($oOrder->getAmazonChanell()=='AFN') && !($oOrderShipping->isAmazonShipping() && $oOrder->getAmazonChanell()=='')}
 <input type="button" value="Invoice received" onclick="javascript: $('#mode_accounting_page').val('invoice_received'); $('#certain_mid').val('{$m_id}'); this.form.submit();" />
 {/if}
 
