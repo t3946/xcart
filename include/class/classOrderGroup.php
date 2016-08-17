@@ -784,7 +784,7 @@ class classOrderGroup extends classData
     {
         $this->initAccounting();
         if ($this->getPaymentMethodInstance()->isPaymentMethodSet()) {
-            if ($this->getOrderInstance()->isOrderAmazon()) $this->recalculateAccountingAmazon(); else {
+            if ($this->getOrderInstance()->isOrderAmazon() || $this->isOrderGroupShippedByAmazon()) $this->recalculateAccountingAmazon(); else {
                 $this
                     ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getTotalGross()))
                     ->initAccountingHST()
@@ -864,7 +864,7 @@ class classOrderGroup extends classData
                     addAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
                 }
                 break;
-            case 'AFN' :
+            default : // 'AFN'
                 $this
                     ->addAccountingGross(
                         $FBAPerOrderFulfillmentFee +
@@ -1038,6 +1038,11 @@ class classOrderGroup extends classData
     public function getOrderGroupStatusBD()
     {
         return $this->getField('bd_status');
+    }
+
+    public function isOrderGroupShippedByAmazon()
+    {
+        return ($this->getField('amz_fullfilment_order_placed')=='Y');
     }
 
 }
