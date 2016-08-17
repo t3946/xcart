@@ -580,7 +580,7 @@ class classAmazonMWS
 
         $request->setReportTypeList($req);
         $request->setMaxCount("100");
-        //$request->setAcknowledged(false);
+        $request->setAcknowledged(false);
 
         $this->dom_xml_arr = $this->invokeGetReportList($request);
         if (!empty($this->dom_xml_arr["ReportId"])) {
