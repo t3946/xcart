@@ -827,14 +827,19 @@ class classAmazonMWS
 
                                         }
 
-
-
                                         if (!empty($vv["ItemPrice"])) {
                                             foreach ($vv["ItemPrice"] as $kkk => $vvv) {
                                                 if (in_array($vvv["Type"], array("Principal", "Shipping"))) {
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] = floatVal($vvv["Amount"]);
                                                 }
                                             }
+                                        }
+
+                                        if (!empty($vv["Promotion"])) {
+                                                if (in_array($vv["Promotion"]["Type"], array("Shipping"))) {
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += abs(floatVal($vv["Promotion"]["Amount"]));
+                                                }
+
                                         }
 
                                     } elseif ($k_name == "AdjustedItem") {
