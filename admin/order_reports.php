@@ -190,6 +190,7 @@ if ($mode == "report") {
 #
 	$orders = func_query($qqq="SELECT o.* FROM $sql_tbl[orders] AS o WHERE 1 $search_condition ORDER BY o.date");
 
+
 	$manufacturers = array();
 
 	if (!empty($orders)) {
@@ -213,8 +214,8 @@ if ($mode == "report") {
 				$oOrderGroup = new classOrderGroup(['orderid'=>$v["orderid"], 'manufacturerid'=>$mid]);
 				$orders[$k]["shipping_groups"][$mid]['reconcile_status'] = $oOrderGroup->getReconciledStatus();
 				if (
-				    (empty($group["invoices"]) && empty($group["memos"]) && $data['profit_margin_range'] == "margin_less_100") // Nothing to calculate
-		                    || (!empty($data['manufacturers']) && !in_array($mid, $data['manufacturers'])) 
+				    //(empty($group["invoices"]) && empty($group["memos"]) && $data['profit_margin_range'] == "margin_less_100")|| // Nothing to calculate
+		                    (!empty($data['manufacturers']) && !in_array($mid, $data['manufacturers']))
 		                    || ($data['profit_margin_range'] == "margin_less_100" && $group['profit_margin'] == 100) 
 							/*|| (empty($data['include_margin_100']) && $group['profit_margin'] == 100)*/
 				    || ($group["acc_paymentid"] == "0")
