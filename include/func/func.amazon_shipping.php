@@ -246,7 +246,7 @@ XML;
 }
 
 function func_get_amazon_shippings_for_all_states($product){
-	global $xcart_states_US, $b_service, $sql_tbl;
+	global $xcart_states_US, $b_service, $sql_tbl, $config;
 
 	$amazon_shippings_arr = array();
 
@@ -318,7 +318,7 @@ function func_get_amazon_shippings_for_all_states($product){
 						$oDate = new DateTime();
 						$oDate->setTimestamp(strtotime($aShippingRate['last_update']));
 						$iDaysInterval = $oDate->diff(new DateTime('now'))->days;
-						if ($iDaysInterval <= 10) {
+						if ($iDaysInterval <= $config["Froogle"]["froogle_days_cache_rates"]) {
 							$amazon_rates[] = ['subcode'=>$aShippingRate['shipping_id'],'rate'=>$aShippingRate['rate']];
 						}
 					}
