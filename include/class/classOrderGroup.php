@@ -871,7 +871,7 @@ class classOrderGroup extends classData
                         $FBAPerUnitFulfillmentFee +
                         $FBAWeightBasedFee +
                         $AmazonCommission)->initAccountingGrossCostToUs()
-                    ->setAccountingGrossShipping($fShipping + $FBATransportationFee);
+                    ->setAccountingGrossShipping($fShipping + abs($FBATransportationFee));
                 if ($this->getOrderAmazonDetails()->isRefundExists())
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
 
