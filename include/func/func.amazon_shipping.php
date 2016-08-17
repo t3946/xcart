@@ -246,7 +246,7 @@ XML;
 }
 
 function func_get_amazon_shippings_for_all_states($product){
-	global $xcart_states_US, $b_service, $sql_tbl;
+	global $xcart_states_US, $b_service, $sql_tbl, $config;
 
 	$amazon_shippings_arr = array();
 
@@ -282,8 +282,7 @@ function func_get_amazon_shippings_for_all_states($product){
 	}
 
 
-
-	if ($all_FBA_products_flag){
+	if ($all_FBA_products_flag) {
 
 		$avail_amazon_rates = array();
 		$not_found_rates_for_state = array();
@@ -291,26 +290,18 @@ function func_get_amazon_shippings_for_all_states($product){
 		$userinfo["s_firstname"] = "test";
 		$userinfo["s_address"] = "test";
 
-		foreach ($xcart_states_US as $k => $v){
+		foreach ($xcart_states_US as $k => $v) {
 
-########### for test purpose ###########
-# if (!in_array($v["code"], array("AK", "HI", "HW", "NY")))
-# continue;
-########### for test purpose ###########
+			$userinfo["s_country"] = $v["country_code"];
+			$userinfo["s_state"] = $v["code"];
+			$userinfo["s_zipcode"] = $v["base_state_zipcode"];
+			$userinfo["s_city"] = $v["city"];
 
+			$customer_zone = func_get_customer_zone_ship($userinfo, "master", "R", $manufacturerid);
 
+			$shippingid_in_rates = func_query("SELECT $sql_tbl[shipping_rates].*, $sql_tbl[shipping].subcode, $sql_tbl[shipping].shipping FROM $sql_tbl[shipping_rates] LEFT JOIN $sql_tbl[shipping] ON $sql_tbl[shipping].shippingid = $sql_tbl[shipping_rates].shippingid WHERE $sql_tbl[shipping].code='Amazon' AND $sql_tbl[shipping].active='Y' AND $sql_tbl[shipping_rates].manufacturerid='$manufacturerid' AND zoneid='$customer_zone' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
 
-	                $userinfo["s_country"] = $v["country_code"];
-        	        $userinfo["s_state"] = $v["code"];
-	                $userinfo["s_zipcode"] = $v["base_state_zipcode"];
-        	        $userinfo["s_city"] = $v["city"];
-
-                	$customer_zone = func_get_customer_zone_ship($userinfo, "master", "R", $manufacturerid);
-
-//	                $count_rates = func_query_first_cell("SELECT COUNT($sql_tbl[shipping_rates].rateid) FROM $sql_tbl[shipping_rates] LEFT JOIN $sql_tbl[shipping] ON $sql_tbl[shipping].shippingid = $sql_tbl[shipping_rates].shippingid WHERE $sql_tbl[shipping].code='Amazon' AND $sql_tbl[shipping].active='Y' AND $sql_tbl[shipping_rates].manufacturerid='$manufacturerid' AND zoneid='$customer_zone'");
-	                $shippingid_in_rates = func_query("SELECT $sql_tbl[shipping_rates].*, $sql_tbl[shipping].subcode, $sql_tbl[shipping].shipping FROM $sql_tbl[shipping_rates] LEFT JOIN $sql_tbl[shipping] ON $sql_tbl[shipping].shippingid = $sql_tbl[shipping_rates].shippingid WHERE $sql_tbl[shipping].code='Amazon' AND $sql_tbl[shipping].active='Y' AND $sql_tbl[shipping_rates].manufacturerid='$manufacturerid' AND zoneid='$customer_zone' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
-
-			if (!empty($shippingid_in_rates)){
+			if (!empty($shippingid_in_rates)) {
 				$count_rates = count($shippingid_in_rates);
 			} else {
 				$count_rates = 0;
@@ -318,159 +309,148 @@ function func_get_amazon_shippings_for_all_states($product){
 				$not_found_rates_for_state[] = $v["code"];
 			}
 
-//func_print_r($v["code"], $count_rates);
-//func_print_r($shippingid_in_rates);
-//die("---");
+			if ($count_rates >= 1) {
+				$amazon_rates = [];
+				$iProductId = $cart["products"][0]["productid"];
+				foreach ($shippingid_in_rates as $aShipping) {
+					$aShippingRate = func_query_first("SELECT * FROM ".$sql_tbl['products_amazon_rates']." WHERE product_id = $iProductId AND shipping_id = ".$aShipping['shippingid']." AND state_id = ".$v['stateid']);
+					if (!empty($aShippingRate)) {
+						$oDate = new DateTime();
+						$oDate->setTimestamp(strtotime($aShippingRate['last_update']));
+						$iDaysInterval = $oDate->diff(new DateTime('now'))->days;
+						if ($iDaysInterval <= $config["Froogle"]["froogle_days_cache_rates"]) {
+							$amazon_rates[] = ['subcode'=>$aShippingRate['shipping_id'],'rate'=>$aShippingRate['rate']];
+						}
+					}
+				}
+				if (empty($amazon_rates)) {
+					$request = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest();
+					$request->setSellerId(MERCHANT_ID);
 
-	                if ($count_rates >= 1){
-#
-##
-#####################################################################################
- $request = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest();
- $request->setSellerId(MERCHANT_ID);
+					$address = new FBAOutboundServiceMWS_Model_Address();
+					$address->setName($userinfo["s_firstname"]);
+					$address->setLine1($userinfo["s_address"]);
+					$address->setCity($userinfo["s_city"]);
+					$address->setCountryCode($userinfo["s_country"]);
+					$address->setStateOrProvinceCode($userinfo["s_state"]);
+					$address->setPostalCode($userinfo["s_zipcode"]);
+					$request->setAddress($address);
 
- $address = new FBAOutboundServiceMWS_Model_Address();
- $address->setName($userinfo["s_firstname"]);
- $address->setLine1($userinfo["s_address"]);
- $address->setCity($userinfo["s_city"]);
- $address->setCountryCode($userinfo["s_country"]);
- $address->setStateOrProvinceCode($userinfo["s_state"]);
- $address->setPostalCode($userinfo["s_zipcode"]);
- $request->setAddress($address);
+					$items = array();
+					foreach ($cart["products"] as $kp => $vp) {
+						$item = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
+						$item->setSellerSKU($vp["productcode"]);
+						$item->setQuantity($vp["amount"]);
+						$item->setSellerFulfillmentOrderItemId($vp["productcode"]);
+						$items[] = $item;
+					}
 
- $items = array();
- foreach ($cart["products"] as $kp => $vp){
-  $item = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
-  $item->setSellerSKU($vp["productcode"]);
-  $item->setQuantity($vp["amount"]);
-  $item->setSellerFulfillmentOrderItemId($vp["productcode"]);
-  $items[] = $item;
- }
+					$itemList = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList();
+					$itemList->setmember($items);
+					$request->setItems($itemList);
 
- $itemList = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList();
- $itemList->setmember($items);
- $request->setItems($itemList);
+					$shippingArray = new FBAOutboundServiceMWS_Model_ShippingSpeedCategoryList();
+					$shippingArray->setmember(array("Standard", "Expedited", "Priority"));
+					$request->setShippingSpeedCategories($shippingArray);
 
- $shippingArray = new FBAOutboundServiceMWS_Model_ShippingSpeedCategoryList();
- $shippingArray->setmember(array("Standard", "Expedited", "Priority"));
- $request->setShippingSpeedCategories($shippingArray);
+					$dom_xml = invokeGetFulfillmentPreview($b_service, $request);
 
- $dom_xml = invokeGetFulfillmentPreview($b_service, $request);
+					while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503") {
 
- while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503"){
+						func_flush("sleeping...");
+						func_flush();
+						sleep('123');
+						func_flush("Unsleeped");
+						func_flush();
 
-	func_flush("sleeping...");
-	func_flush();
-	sleep('123');
-	func_flush("Unsleeped");
-	func_flush();
+						print("..invokeGetFulfillmentPreview throttle cycle\r\n");
 
-	print("..invokeGetFulfillmentPreview throttle cycle\r\n");
+						$request = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest();
+						$request->setSellerId(MERCHANT_ID);
 
-########################
-	 $request = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest();
-	 $request->setSellerId(MERCHANT_ID);
+						$address = new FBAOutboundServiceMWS_Model_Address();
+						$address->setName($userinfo["s_firstname"]);
+						$address->setLine1($userinfo["s_address"]);
+						$address->setCity($userinfo["s_city"]);
+						$address->setCountryCode($userinfo["s_country"]);
+						$address->setStateOrProvinceCode($userinfo["s_state"]);
+						$address->setPostalCode($userinfo["s_zipcode"]);
+						$request->setAddress($address);
 
-	 $address = new FBAOutboundServiceMWS_Model_Address();
-	 $address->setName($userinfo["s_firstname"]);
-	 $address->setLine1($userinfo["s_address"]);
-	 $address->setCity($userinfo["s_city"]);
-	 $address->setCountryCode($userinfo["s_country"]);
-	 $address->setStateOrProvinceCode($userinfo["s_state"]);
-	 $address->setPostalCode($userinfo["s_zipcode"]);
-	 $request->setAddress($address);
+						$items = array();
+						foreach ($cart["products"] as $kp => $vp) {
+							$item = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
+							$item->setSellerSKU($vp["productcode"]);
+							$item->setQuantity($vp["amount"]);
+							$item->setSellerFulfillmentOrderItemId($vp["productcode"]);
+							$items[] = $item;
+						}
 
-	 $items = array();
-	 foreach ($cart["products"] as $kp => $vp){
-	  $item = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
-	  $item->setSellerSKU($vp["productcode"]);
-	  $item->setQuantity($vp["amount"]);
-	  $item->setSellerFulfillmentOrderItemId($vp["productcode"]);
-	  $items[] = $item;
-	 }
+						$itemList = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList();
+						$itemList->setmember($items);
+						$request->setItems($itemList);
 
-	 $itemList = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList();
-	 $itemList->setmember($items);
-	 $request->setItems($itemList);
+						$shippingArray = new FBAOutboundServiceMWS_Model_ShippingSpeedCategoryList();
+						$shippingArray->setmember(array("Standard", "Expedited", "Priority"));
+						$request->setShippingSpeedCategories($shippingArray);
 
-	 $shippingArray = new FBAOutboundServiceMWS_Model_ShippingSpeedCategoryList();
-	 $shippingArray->setmember(array("Standard", "Expedited", "Priority"));
-	 $request->setShippingSpeedCategories($shippingArray);
+						$dom_xml = invokeGetFulfillmentPreview($b_service, $request);
+					}
 
-	 $dom_xml = invokeGetFulfillmentPreview($b_service, $request);
-########################
+					if (empty($dom_xml["saveXML"])) {
+						continue;
+					}
 
- }
+					$amazon_rates = func_amazon_get_shipping_rates(false, false, $dom_xml["saveXML"]);
+					foreach ($amazon_rates as $aRates) {
+						$aInsertArray = ['product_id'=>$vp['productid'], 'shipping_id'=>$aRates['subcode'], 'state_id'=>$v['stateid'], 'rate'=>$aRates['rate']];
+						func_array2insert('products_amazon_rates',$aInsertArray, true);
+					}
+				}
 
- if (empty($dom_xml["saveXML"])){
-	continue;
- }
+				if (empty($amazon_rates)) {
+					continue;
+				}
 
- $amazon_rates = func_amazon_get_shipping_rates(false, false, $dom_xml["saveXML"]);
+				$tmp_amazon_rates_counter = 0;
+				foreach ($amazon_rates as $k_a => $v_a) {
+					foreach ($shippingid_in_rates as $kk_a => $vv_a) {
+						if ($v_a["subcode"] == $vv_a["subcode"]) {
+							$shipping_cost = $v_a['rate'];
 
- if (empty($amazon_rates)){
-	continue;
- }
+							if ($shipping_cost > 0) {
 
+								if ($vv_a['cost_marcup'] > 0) {
+									$shipping_cost *= $vv_a['cost_marcup'];
+								}
 
- $tmp_amazon_rates_counter = 0;
- foreach ($amazon_rates as $k_a => $v_a){
-	foreach ($shippingid_in_rates as $kk_a => $vv_a){
-		if ($v_a["subcode"] == $vv_a["subcode"]){
+								$shipping_cost += $vv_a['rate']
+										+ $total_weight_shipping * $vv_a['weight_rate']
+										+ $total_ship_items * $vv_a['item_rate']
+										+ $total_shipping * $vv_a['rate_p'] / 100;
+							}
 
+							$shipping_cost += $product['shipping_freight'];
 
-# this part is taken from func_calculate_shippings
-##
-			$shipping_cost = $v_a['rate'];
+							$avail_amazon_rates[$k][$tmp_amazon_rates_counter] = $v_a;
+							$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["s_country"] = $userinfo["s_country"];
+							$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["s_state"] = $userinfo["s_state"];
+							$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["s_zipcode"] = $userinfo["s_zipcode"];
+							$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["s_city"] = $userinfo["s_city"];
+							$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["shipping"] = $vv_a["shipping"];
+							$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["shippingid"] = $vv_a["shippingid"];
+							$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["shipping_cost"] = price_format($shipping_cost);
 
-	                if ($shipping_cost > 0){
-        	                
-                	        if ($vv_a['cost_marcup'] > 0){
-                        	        $shipping_cost *= $vv_a['cost_marcup'];
-	                        }
+							$tmp_amazon_rates_counter++;
+						}
+					}
+				}
 
-        	                $shipping_cost += $vv_a['rate']
-                	        + $total_weight_shipping * $vv_a['weight_rate']
-                        	+ $total_ship_items * $vv_a['item_rate']
-	                        + $total_shipping * $vv_a['rate_p'] / 100;
-//              	        + $tmp['surcharge']; // is not needed for Amazon
-	                }
+				func_flush(".");
+				func_flush();
 
-			$shipping_cost += $product['shipping_freight'];
-##
-#
-
-
-			$avail_amazon_rates[$k][$tmp_amazon_rates_counter] = $v_a;
-			$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["s_country"] = $userinfo["s_country"];
-			$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["s_state"] = $userinfo["s_state"];
-			$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["s_zipcode"] = $userinfo["s_zipcode"];
-			$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["s_city"] = $userinfo["s_city"];
-			$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["shipping"] = $vv_a["shipping"];
-			$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["shippingid"] = $vv_a["shippingid"];
-			$avail_amazon_rates[$k][$tmp_amazon_rates_counter]["shipping_cost"] = price_format($shipping_cost);
-
-			$tmp_amazon_rates_counter++;
-		}
-	}
- }
-
- func_flush(".");
- func_flush();
-
-
-//if ($k > 2 ) break; // <------------------------------------------------------------
-//func_print_r($avail_amazon_rates);
-//func_print_r($userinfo, $customer_zone);
-//func_print_r("count_rates:  ".$count_rates);
-//die("===");
-
-#####################################################################################
-##
-#
-
-                        } // if ($count_rates >= 1)
-                } // foreach ($states_info as $k => $v)
+			} // if ($count_rates >= 1)
+		} // foreach ($states_info as $k => $v)
 	} // $all_FBA_products_flag
 
 
