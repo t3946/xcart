@@ -874,6 +874,7 @@ class classOrderGroup extends classData
                     ->setAccountingGrossShipping($fShipping + abs($FBATransportationFee));
                 if ($this->getOrderAmazonDetails()->isRefundExists())
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                else $this->addAccountingGrossRefundToUs(abs($fRefund));
 
                 break;
 
@@ -885,6 +886,7 @@ class classOrderGroup extends classData
                         $AmazonCommission + $FBATransportationFee) + $fShipping);
                 if ($this->getOrderAmazonDetails()->isRefundExists())
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                else $this->addAccountingGrossRefundToUs(abs($fRefund));
 
                 break;
         }
