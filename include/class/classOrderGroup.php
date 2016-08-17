@@ -864,7 +864,7 @@ class classOrderGroup extends classData
                     addAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
                 }
                 break;
-            default : // 'AFN'
+            case 'AFN' :
                 $this
                     ->addAccountingGross(
                         $FBAPerOrderFulfillmentFee +
@@ -872,6 +872,17 @@ class classOrderGroup extends classData
                         $FBAWeightBasedFee +
                         $AmazonCommission)->initAccountingGrossCostToUs()
                     ->setAccountingGrossShipping($fShipping + $FBATransportationFee);
+                if ($this->getOrderAmazonDetails()->isRefundExists())
+                    $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+
+                break;
+
+            default :
+                $this->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getTotalGross()))->initAccountingGrossCostToUs()
+                    ->setAccountingGrossShipping(abs($FBAPerOrderFulfillmentFee +
+                        $FBAPerUnitFulfillmentFee +
+                        $FBAWeightBasedFee +
+                        $AmazonCommission + $FBATransportationFee) + $fShipping);
                 if ($this->getOrderAmazonDetails()->isRefundExists())
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
 
