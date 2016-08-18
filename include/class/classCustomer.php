@@ -53,7 +53,7 @@ class classCustomer extends classData
         $sLogin = $this->getCustomerLogin();
         if (empty($sLogin)) return false;
         $aCustomersData = $this->oSQL->init()->addSelect('xs.*')->addFromTable('secure_data','xs')->addInnerJoin('secure_data_users','sd','sd.secure_data_id = xs.id')->
-            addCondition("sd.login='" . $sLogin."'")->Execute()->getQueryResult();
+            addCondition("sd.login='" . $sLogin."'")->addOrderBy('xs.orderby')->Execute()->getQueryResult();
         if (!empty($aCustomersData)) {
             foreach ($aCustomersData as &$aCustomerData) {
                 $aCustomerData['data'] = stripslashes(text_decrypt($aCustomerData['data']));
