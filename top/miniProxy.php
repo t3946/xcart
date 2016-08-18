@@ -150,6 +150,7 @@ function makeRequest($url)
     //to be output together--separate them.
     $responseHeaders = substr($response, 0, $headerSize);
     $responseHeaders = str_replace('X-Frame-Options: SAMEORIG', '', $responseHeaders);
+    $responseHeaders = str_replace('X-Frame-Options: Deny', '', $responseHeaders);
     $responseBody = substr($response, $headerSize);
     return array("headers" => $responseHeaders, "body" => $responseBody, "responseInfo" => $responseInfo);
 }

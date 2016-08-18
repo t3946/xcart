@@ -15,6 +15,9 @@
                         <textarea style="min-height:150px; width: 98%;" name="secure_data[{$SecureData.id}]">{$SecureData.data}</textarea>
                         <input class="delete_data_checkbox" name="delete_data_checkbox[{$SecureData.id}]" type="checkbox"/>
                         <label style="position: relative; top: -3px;" for="delete_data_checkbox">delete data</label>
+                        &nbsp;&nbsp;
+                        <input size="10" type="text" value="{$SecureData.orderby}" name="secure_data_order[{$SecureData.id}]" class="secure_data_order" />
+                        <label style="position: relative; top: -3px;" for="secure_data_order">Order</label>
                     </td>
                     <td align="right" style="vertical-align: top;" width="25%">
                         <div style="text-align: center;"><b>Who can read this data</b></div>
@@ -69,11 +72,14 @@
             var tablerow = $(".secure_data_table").last(),
             tablerowdelimiter = tablerow.next('tr'),
             newtablerow = tablerow.clone(),
-            selectuser = $('select',newtablerow);
+            selectuser = $('select',newtablerow),
+            secure_data_order = $('.secure_data_order',newtablerow);
+
 
             var new_id = selectuser.data('user-select-id');
             new_id++;
             selectuser.val('').attr('data-user-select-id', new_id).attr('name','secure_data_use['+new_id+'][]');
+            secure_data_order.val('').attr('name','secure_data_order['+new_id+']');
             $('textarea',newtablerow).val('').attr('name','secure_data['+new_id+']');
             $('.delete_data_checkbox',newtablerow).prop( "checked", false ).attr('name','delete_data_checkbox['+new_id+']');
             tablerowdelimiter.after(newtablerow,tablerowdelimiter.clone());
