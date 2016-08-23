@@ -145,7 +145,7 @@
 	<td><img src="{$ImagesDir}/new/product/dollar.png" alt="" /></td>
 	<td class="discount_class1">Discount:</td>
 	<td class="discount_class">
-	<SPAN id="save_percent">{$discount|string_format:"%3.0f"}</SPAN>&nbsp;
+	<SPAN id="save_percent">{$discount|string_format:"%3.0f"}</SPAN>&nbsp;OFF&nbsp;
 	</td>
 	</tr>
 	</table>
