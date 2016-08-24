@@ -14,7 +14,7 @@ div.iframediv
     height: -moz-calc(100% - 100px);
     height: calc(100% - 100px);
     margin-top: 100px;
-    transition: width 2s ease 0s;
+    transition: width 0.1s ease 0s;
 }
 .iframediv.left {
     width: 100%;
@@ -48,7 +48,12 @@ iframe
 .buttons-wrap-left {
     width:50%;
     float: left;
-    text-align: center;
+    min-width: 850px;
+
+}
+.wrap-left{
+    width:710px;
+    height:100%;
     margin: 0 auto;
 }
 .buttons-wrap-right {
@@ -108,4 +113,15 @@ iframe
 #original_product{
     width: 130px;
     border-radius: 0.285714rem;
+    height: 100%;
+}
+#no_products{
+    display: none;
+    height: -webkit-calc(100% - 100px);
+    height: -moz-calc(100% - 100px);
+    height: calc(100% - 100px);
+    margin-top: 20%;
+    width:100%;
+    text-align: center;
+    font-size: 45px;
 }

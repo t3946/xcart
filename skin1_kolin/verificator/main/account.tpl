@@ -39,7 +39,8 @@
                 <b>Last produсt verified time:</b>
             </td>
             <td>
-                Last produсt verified time
+                {assign var=oLastDate value=$oCustomer->getAmazonLastVerifyDate()}
+                {$oLastDate->format('d-M-Y H:i')}
             </td>
         </tr>
         <tr class="TableSubHead">
@@ -47,7 +48,7 @@
                 <b>Products processed (matched, not matched and not sure):</b>
             </td>
             <td>
-                Products processed
+                {$oCustomer->getAmazonProductProcessedCount()}
             </td>
         </tr>
         <tr>
@@ -55,14 +56,15 @@
                 <b>Products (not sure):</b>
             </td>
             <td>
-                Products
+                {$oCustomer->getAmazonProductNotSureCount()}
             </td>
         </tr>
     </table>
-    <br/><br/>
+    <br/>
+    <br/>
     <table width="100%">
         <tr>
-            <td colspan="4">
+            <td colspan="5">
                 <table cellspacing="0" class="SubHeaderGrey">
                     <tr>
                         <td class="SubHeaderGrey">Current batches</td>
@@ -73,18 +75,37 @@
                 </table>
             </td>
         </tr>
-        <tr class="TableHead">
-            <td width="10">Batch #</td>
-            <td width="60" nowrap="nowrap" align="center">Products amount</td>
-            <td width="100" align="center">Products processed</td>
-            <td width="100" align="center">Status</td>
-        </tr>
-        <tr>
-            <td colspan="2">
-            </td>
-        </tr>
+        {if ($aCurrentBatches)}
+            <tr class="TableHead">
+                <td width="10">Batch #</td>
+                <td width="60" nowrap="nowrap" align="center">Products amount</td>
+                <td width="100" align="center">Products processed</td>
+                <td width="100" align="center">Status</td>
+                <td width="200" align="center"></td>
+            </tr>
+            {foreach from=$aCurrentBatches item=oCurrentBatch}
+                <tr>
+                    <td align="center">{$oCurrentBatch->getBatchNumber()}</td>
+                    <td align="center">{$oCurrentBatch->getBatchAmount()}</td>
+                    <td align="center">{$oCurrentBatch->getProductsInBatchCompletedCount()}</td>
+                    <td align="center">{$oCurrentBatch->getBatchStatus()}</td>
+                    <td align="center"><a target="_blank" href="{$oCurrentBatch->getBatchVerifyLink()}">continue batch #
+                            [{$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}
+                            _{$oCurrentBatch->getBatchAmount()}] processing</a></td>
+                </tr>
+            {/foreach}
+        {else}
+            <tr>
+                <td align="center" colspan="5">
+                    {$lng.no_current_in_progress_batches}
+                </td>
+            </tr>
+        {/if}
+
+
     </table>
-    <br/><br/>
+    <br/>
+    <br/>
     <table width="100%">
         <tr>
             <td colspan="8">
@@ -108,10 +129,21 @@
             <td width="100" align="center">1 item speed</td>
             <td width="100" align="center">Status</td>
         </tr>
-        <tr>
-            <td colspan="2">
-            </td>
-        </tr>
+        {if ($aPreviousBatches)}
+            {foreach from=$aPreviousBatches item=oPreviousBatch}
+                {assign var=oStartDate value=$oPreviousBatch->getStartDate()}
+                <tr>
+                    <td align="center">{$oPreviousBatch->getBatchNumber()}</td>
+                    <td align="center">{$oPreviousBatch->getBatchAmount()}</td>
+                    <td align="center">{$oStartDate->format('d-M-Y H:i')}</td>
+                    <td align="center">{$oPreviousBatch->getProductsInBatchMatchedCount()}</td>
+                    <td align="center">{$oPreviousBatch->getProductsInBatchNotMatchedCount()}</td>
+                    <td align="center">{$oPreviousBatch->getProductsInBatchNotSureCount()}</td>
+                    <td align="center">{$oPreviousBatch->getAverageVerifySpeed()} sec.</td>
+                    <td align="center">{$oPreviousBatch->getBatchStatus()}</td>
+                </tr>
+            {/foreach}
+        {/if}
     </table>
 {/capture}
 
