@@ -264,6 +264,7 @@
     </div>
     <div class="buttons-wrap-right" style="display:none;">
         <div class="buttons-right">
+            <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</span>
             <div id="action_buttons_block" class="ui buttons select" data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}" data-product-id="{$oVerificationBatch->getVerifiedProductId()}">
                 <button data-action="match" id="submit-product-match" class="ui left positive button">Product match</button>
                 <div class="or" data-text="or"></div>

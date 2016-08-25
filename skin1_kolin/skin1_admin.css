@@ -1792,3 +1792,10 @@ td.borderb-gray {
 	text-align: left;
 	background-color: #D9EAD3;
 }
+.verification_link {
+	color: #3A3AFF !important;
+	text-decoration: none !important;
+}
+.verification_link:hover {
+	text-decoration: underline !important;
+}

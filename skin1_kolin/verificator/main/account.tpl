@@ -89,7 +89,7 @@
                     <td align="center">{$oCurrentBatch->getBatchAmount()}</td>
                     <td align="center">{$oCurrentBatch->getProductsInBatchCompletedCount()}</td>
                     <td align="center">{$oCurrentBatch->getBatchStatus()}</td>
-                    <td align="center"><a target="_blank" href="{$oCurrentBatch->getBatchVerifyLink()}">continue batch #
+                    <td align="center"><a class="verification_link" target="_blank" href="{$oCurrentBatch->getBatchVerifyLink()}">continue batch #
                             [{$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}
                             _{$oCurrentBatch->getBatchAmount()}] processing</a></td>
                 </tr>
