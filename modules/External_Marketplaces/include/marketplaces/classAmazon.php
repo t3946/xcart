@@ -5,9 +5,9 @@ require_once $xcart_dir . "/modules/External_Marketplaces/include/classStoreFron
 
 class classAmazon extends classStoreFrontMarketPlace
 {
-    public function addProductToBatch($oProduct, $update_type, $sExtraLog = "N")
+    public function addProductToBatch(classProduct $oProduct, $update_type, $sExtraLog = "N")
     {
-        if ($this->checkProductExcludedMarketPlace($oProduct->getField('productid')) && $oProduct->getField("amazon_enabled") == "Y") {
+        if ($this->checkProductExcludedMarketPlace($oProduct->getProductId()) && $this->checkMarketplaceRestrictions($oProduct)) {
             if ($update_type == "2" || $update_type == "1,2" || $update_type == "1") {
                 $count_ainventory = count($this->aInventory);
                 $this->aInventory[$count_ainventory]["productid"] = $oProduct->getField('productid');
@@ -33,5 +33,13 @@ class classAmazon extends classStoreFrontMarketPlace
     public function submitProductsBatch($debug_mode = 'N', $extra_log='N') {
         SubmitAmazonProductsBatch();
         $this->setProductsBatchCount(0)->setProducts([]);
+    }
+
+    public function checkMarketplaceRestrictions(classProduct $oProduct)
+    {
+        $bResult = true;
+        if ($oProduct->getField("amazon_enabled") != "Y")
+            $bResult = false;
+        return $bResult;
     }
 }
