@@ -11,8 +11,7 @@ x_load('taxes');
 
 global $xcart_dir, $config;
 
-include_once $xcart_dir."/include/class/classOrderGroup.php";
-$oOrderGroup = new classOrderGroup(['orderid'=>64824, 'manufacturerid'=>36]);
-$oOrderGroup->recalculateAccountingAmazon();
+include_once $xcart_dir."/include/class/classProduct.php";
+$oProduct = new classProduct(426073);
 
 
