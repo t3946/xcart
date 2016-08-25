@@ -54,6 +54,9 @@ switch ($_usertype) {
 	case "C":
 		$location[] = array(func_get_langvar_by_name("lbl_create_customer_profile"), "");
 		break;
+	case "V":
+		$location[] = array(func_get_langvar_by_name("lbl_create_verificator_profile"), "");
+		break;
 	case "B":
 		$location[] = array(func_get_langvar_by_name("lbl_create_partner_profile"), "");
 }
@@ -89,8 +92,17 @@ require $xcart_dir."/include/register.php";
 #
 # Update profile or create new
 #
-
-$tpldir = ($usertype=="A"?"admin":($usertype=="P"?"provider":($usertype=="C"?"customer":"partner")));
+switch ($usertype) {
+	case "A" : $tpldir = "admin";
+		break;
+	case "P" : $tpldir = "provider";
+		break;
+	case "C" : $tpldir = "customer";
+		break;
+	case "V" : $tpldir = "verificator";
+		break;
+	default: $tpldir = "partner";
+}
 
 if ($active_modules["Simple_Mode"] && ($usertype=="A" || $usertype=="P"))
 	$tpldir = "admin"; 

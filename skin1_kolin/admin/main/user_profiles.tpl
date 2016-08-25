@@ -29,7 +29,12 @@ function displayVariants(obj, objv) {
 	<td rowspan="2" width="20%" nowrap="nowrap">{$lng.lbl_field_name}</td>
 {foreach from=$usertypes_array item=to_disable key=utype}
 	<td align="center">
-{if $utype eq "A"}{$lng.lbl_administrator}{elseif $utype eq "P"}{$lng.lbl_provider}{elseif $utype eq "B"}{$lng.lbl_partner}{elseif $utype eq "H"}{$lng.lbl_customer_at_checkout}{else}{$lng.lbl_customer}{/if}
+{if $utype eq "A"}{$lng.lbl_administrator}
+{elseif $utype eq "P"}{$lng.lbl_provider}
+{elseif $utype eq "B"}{$lng.lbl_partner}
+{elseif $utype eq "V"}{$lng.lbl_V_usertype}
+{elseif $utype eq "H"}{$lng.lbl_customer_at_checkout}
+{else}{$lng.lbl_customer}{/if}
 	</td>
 {/foreach}
 </tr>
