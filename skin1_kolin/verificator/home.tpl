@@ -13,11 +13,6 @@
 <!-- main area -->
 <table width="100%" cellpadding="0" cellspacing="0" align="center">
 <tr>
-<td class="VertMenuLeftColumn">
-<br />
-{ include file="help.tpl" }
-<img src="{$ImagesDir}/spacer.gif" width="150" height="1" alt="" />
-</td>
 <td valign="top">
 <!-- central space -->
 {include file="location.tpl"}
@@ -26,6 +21,8 @@
 
 {if $main == "home"}
 {include file="verificator/main/account.tpl"}
+{elseif $main eq "change_password"}
+{include file="main/change_password.tpl"}
 {elseif $main eq "access_denied"}
 {include file="verificator/main/error_access_denied.tpl"}
 {else}

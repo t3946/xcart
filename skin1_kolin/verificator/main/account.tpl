@@ -10,7 +10,7 @@
             <td colspan="2">
                 <table cellspacing="0" class="SubHeaderGrey">
                     <tr>
-                        <td class="SubHeaderGrey">Verificator information</td>
+                        <td class="SubHeaderGrey">{$lng.txt_verificator_information}</td>
                     </tr>
                     <tr>
                         <td class="SubHeaderGreyLine"><img alt="" class="Spc" src="{$SkinDir}/images/spacer.gif"></td>
