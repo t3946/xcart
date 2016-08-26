@@ -187,7 +187,8 @@ class classExternalVerificationBatch extends classData
         } else {
             $aProductsNextInBatch = $aOpenedProducts;
         }
-        $this->oVerifiedProduct = $aProductsNextInBatch;
+        if ($aProductsNextInBatch->getProductId() > 0)
+            $this->oVerifiedProduct = $aProductsNextInBatch;
         return $this;
     }
 
@@ -195,8 +196,8 @@ class classExternalVerificationBatch extends classData
     {
         global $login;
         if (!empty($this->oVerifiedProduct)) {
-            $aInserArray = ['productid' => $this->oVerifiedProduct->getProductId(), 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'open', 'value' => time()];
-            func_array2insert('external_verification_products', $aInserArray, true, false);
+            $aInsertArray = ['productid' => $this->oVerifiedProduct->getProductId(), 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'open', 'value' => time()];
+                func_array2insert('external_verification_products', $aInsertArray, true, false);
         }
 
     }
@@ -220,6 +221,7 @@ class classExternalVerificationBatch extends classData
             $this->getNextProductToVerify()->openProductToVerify();
         }
         $aLinkArray = [];
+
         if (!empty($this->oVerifiedProduct)) {
             $sASIN = $this->oVerifiedProduct->getAmazonASIN();
             $sUPC = $this->oVerifiedProduct->getUPC();

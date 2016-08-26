@@ -99,7 +99,6 @@ class classSQLBuilder
         if (!empty($this->aLimit)) {
             $this->sqlQuery .= " LIMIT " . implode(',', $this->aLimit);
         }
-        $this->sqlQuery = strtoupper($this->sqlQuery);
     }
 
     public function Execute($hashColumn = null)
