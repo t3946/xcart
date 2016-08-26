@@ -13,11 +13,6 @@
 <!-- main area -->
 <table width="100%" cellpadding="0" cellspacing="0" align="center">
 <tr>
-<td class="VertMenuLeftColumn">
-<br />
-{ include file="help.tpl" }
-<img src="{$ImagesDir}/spacer.gif" width="150" height="1" alt="" />
-</td>
 <td valign="top">
 <!-- central space -->
 {include file="location.tpl"}
