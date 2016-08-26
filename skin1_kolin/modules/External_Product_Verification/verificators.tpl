@@ -3,14 +3,7 @@
 <table width="100%">
     <tr>
         <td colspan="7">
-            <table cellspacing="0" class="SubHeaderGrey">
-                <tr>
-                    <td class="SubHeaderGrey">{$lng.list_of_verificators}</td>
-                </tr>
-                <tr>
-                    <td class="SubHeaderGreyLine"><img alt="" class="Spc" src="{$SkinDir}/images/spacer.gif"></td>
-                </tr>
-            </table>
+            
         </td>
     </tr>
     <tr class="TableHead">
