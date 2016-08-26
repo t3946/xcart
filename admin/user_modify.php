@@ -51,7 +51,8 @@ $_usertype = (($usertype == "P" && !empty($active_modules["Simple_Mode"])) ? "A"
 $_loc_type = array (
 	'A' => 'lbl_modify_admin_profile',
 	'P' => 'lbl_modify_provider_profile',
-	'C' => 'lbl_modify_customer_profile'
+	'C' => 'lbl_modify_customer_profile',
+	'V' => 'lbl_modify_verificator_profile',
 );
 
 if (!empty($active_modules['XAffiliate'])) {
@@ -149,13 +150,23 @@ if ($active_modules['Manufacturers'] && $login_type == 'P') {
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 require $xcart_dir."/include/register.php";
 
-$tpldir = ($login_type=="A"?"admin":($login_type=="P"?"provider":($login_type=="C"?"customer":"partner")));
+switch ($login_type) {
+	case "A" : $tpldir = "admin";
+		break;
+	case "P" : $tpldir = "provider";
+		break;
+	case "C" : $tpldir = "customer";
+		break;
+	case "V" : $tpldir = "verificator";
+		break;
+	default: $tpldir = "partner";
+}
 
 if ($active_modules["Simple_Mode"] && ($usertype=="A" || $usertype=="P"))
     $tpldir = "admin";
 
 # Display the 'Activity' input box for admin, provider or partner
-if (in_array($usertype, array("A", "P", "B")))
+if (in_array($usertype, array("A", "P", "B", "V")))
 	$smarty->assign("display_activity_box", "Y");
 
 $smarty->assign("main", "user_profile");

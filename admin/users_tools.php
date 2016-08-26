@@ -54,6 +54,7 @@ else {
 }
 
 $dialog_tools_data["left"][] = array("link" => "user_add.php?usertype=C", "title" => func_get_langvar_by_name("lbl_create_customer_profile"));
+$dialog_tools_data["left"][] = array("link" => "user_add.php?usertype=V", "title" => func_get_langvar_by_name("lbl_create_verificator_profile"));
 
 if (!empty($active_modules["XAffiliate"]))
 	$dialog_tools_data["left"][] = array("link" => "user_add.php?usertype=B", "title" => func_get_langvar_by_name("lbl_create_partner_profile"));
@@ -81,6 +82,8 @@ if (!$is_admin_usertype) {
 		$target_area = $xcart_catalogs['customer'];
 	elseif ($usertype == "B")
 		$target_area = $xcart_catalogs['partner'];
+	elseif ($usertype == "V")
+		$target_area = $xcart_catalogs['verificator'];
 	elseif ($usertype == "P")
 		$target_area = $xcart_catalogs['provider'];
 
