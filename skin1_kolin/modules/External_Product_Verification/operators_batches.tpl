@@ -77,7 +77,7 @@
             <h4 class="ui dividing header">Enter batch amount</h4>
 
             <div class="ui input focus">
-                <input data-login="{$oCustomer->getCustomerLogin()}" autocomplite="off" id="batch_amount" value="" />
+                <input data-login="{$oCustomer->getCustomerLogin()}" autocomplete="off" id="batch_amount" value="" />
             </div>
         </div>
     </div>
