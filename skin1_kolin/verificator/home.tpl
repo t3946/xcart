@@ -26,6 +26,8 @@
 
 {if $main == "home"}
 {include file="verificator/main/account.tpl"}
+{elseif $main eq "change_password"}
+{include file="main/change_password.tpl"}
 {elseif $main eq "access_denied"}
 {include file="verificator/main/error_access_denied.tpl"}
 {else}
