@@ -7,7 +7,7 @@
 <script src="{$SkinDir}/js/semantic/components/dimmer.min.js" type="text/javascript"></script>
 
 
-<h1 style="text-align: center">Opertors batches</h1>
+<h1 style="text-align: center">{$lng.txt_verificator_batches}</h1>
 {capture name=dialog}
     <div id="batches-filter" class="ui buttons left floated">
         <button data-status="all" class="ui left button {if !$batch_status}active{/if}">All</button>
@@ -58,13 +58,15 @@
                     <td align="center"><a data-status="{$oCurrentBatch->getBatchStatus()}" class="batch_status_link" href="#">{$oCurrentBatch->getBatchStatus()}</a></td>
                 </tr>
             {/foreach}
+        {else}
+            {$lng.txt_verificator_batches_not_found}
         {/if}
     </table>
     <div class="ui inverted dimmer transition hidden segment dimmable">
     </div>
 {/capture}
 
-{include file="dialog.tpl" title='Operator Batches' content=$smarty.capture.dialog extra='width="100%"'}
+{include file="dialog.tpl" title=$lng.txt_verificator_batches content=$smarty.capture.dialog extra='width="100%"'}
 
 <div class="ui small test modal">
     <div class="header">
