@@ -40,7 +40,9 @@
             </td>
             <td>
                 {assign var=oLastDate value=$oCustomer->getAmazonLastVerifyDate()}
-                {$oLastDate->format('d-M-Y H:i')}
+                {if ($oLastDate)}
+                    {$oLastDate->format('d-M-Y H:i')}
+                {/if}
             </td>
         </tr>
         <tr class="TableSubHead">

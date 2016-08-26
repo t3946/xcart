@@ -247,6 +247,11 @@ class classExternalVerificationBatch extends classData
         return $diffInSec;
     }
 
+    public function setVerificationStatus($sNewStatus)
+    {
+        $this->updateField('batch_status', $sNewStatus);
+    }
+
     public function updateVerificationStatus($aParams)
     {
         global $login;
@@ -351,6 +356,6 @@ class classExternalVerificationBatch extends classData
 
     public function getAverageVerifySpeed()
     {
-        return $this->getField('batch_product_speed');
+        return round(floatval($this->getField('batch_product_speed')));
     }
 }

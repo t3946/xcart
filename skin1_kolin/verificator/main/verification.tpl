@@ -19,6 +19,21 @@
         idx = 0;
         firstLoad = true;
 
+        function getFirstAvailStep(){
+            for (var prop in trans)
+                return prop;
+        }
+        function initButtons(){
+            var i=0;
+            for (var prop in trans) {
+                i++;
+                var b = $('#search_amazon_by_asin, #search_amazon_by_upc, #search_amazon_by_name').filter('[data-step-id='+prop+']');
+                if (i==1) b.addClass('left');
+                b.show();
+
+            }
+        }
+
         function getLocationId() {
             var slocation = location.href,
                     str_param = slocation.match(/step=([^&]+)/),
@@ -69,7 +84,10 @@
             $('#search_amazon_by_asin, #search_amazon_by_upc, #search_amazon_by_name').on('click', '', function () {
                 $(this).addClass('active').siblings().not('#original_product').removeClass('active');
                 $('.buttons-wrap-right').fadeOut();
-                loadRemoteFrame('ifrm', false, $(this).data('step-id'));
+
+                var currstep = $(this).data('step-id');
+
+                loadRemoteFrame('ifrm', false, currstep);
                 var check = $('#split-screen-checkbox').prop("checked");
                 if (!check) {
                     $('.iframediv.left').css('width', '100%');
@@ -121,17 +139,19 @@
                     history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep);
                 }
             });
-
-            if (trans.length > 0) {
-               $('.buttons-wrap-left button[data-step-id=' + getLocationId() + ']').click();
-                if (isShowOriginal() == 1) {
-                    $('#original_product').click();
+            initButtons();
+            if (trans) {
+                if (trans.length == 0) {
+                    $('#no_products').show();
+                } else {
+                    $('.buttons-wrap-left button[data-step-id=' + Math.max(getLocationId(), getFirstAvailStep()) + ']').click();
+                    if (isShowOriginal() == 1) {
+                        $('#original_product').click();
+                    }
+                    else if (isSplitScreen() == 1) {
+                        $('#split-screen-checkbox').prop("checked", true).change();
+                    }
                 }
-                else if (isSplitScreen() == 1) {
-                    $('#split-screen-checkbox').prop( "checked", true ).change();
-                }
-            } else {
-                $('#no_products').show();
             }
 
             $('#submit-product-match, #submit-product-not-sure, #submit-product-not-match').on('click', '', function () {
@@ -190,7 +210,6 @@
 
         function loadRemoteFrame(frame_Name, url, idx_force = false, appendto='.iframediv.left') {
             var i_frame = document.getElementById(frame_Name),
-                    len = trans.length,
                     idx = idx_force;
             var split = isSplitScreen();
             var ssplit = '';
@@ -242,13 +261,9 @@
             <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; top: -4px;">Compare</span>
             <div class="three ui buttons">
 
-                <button data-step-id="0" id="search_amazon_by_asin" class="ui left button attached active">Open product by
-                    ASIN
-                </button>
+                <button data-step-id="0" id="search_amazon_by_asin" class="ui button attached active">Open product by ASIN</button>
                 <button data-step-id="1" id="search_amazon_by_upc" class="ui attached button">Search product by UPC</button>
-                <button data-step-id="2" id="search_amazon_by_name" class="ui right attached button">Search product by
-                    Product Name
-                </button>
+                <button data-step-id="2" id="search_amazon_by_name" class="ui right attached button">Search product by Product Name</button>
                 <span style="font-size: 18px; margin-left: 25px; margin-top:14px;">AND</span>
                 <span style="margin-left: 25px;">
                 <button data-step-id="3" id="original_product" class="ui left attached button">Original product</button>
@@ -272,7 +287,6 @@
                 <div class="or" data-text="or"></div>
                 <button data-action="not_match" id="submit-product-not-match" class="ui negative button">Does not match</button>
             </div>
-
         </div>
     </div>
 </header>

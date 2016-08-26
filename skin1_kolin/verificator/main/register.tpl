@@ -130,7 +130,7 @@
 
 {include file="main/register_additional_info.tpl" section='A'}
 
-{include file="main/register_account.tpl" userinfo=$userinfo}
+{include file="verificator/main/register_account.tpl" userinfo=$userinfo}
 
 
 {if $active_modules.News_Management and $newslists}

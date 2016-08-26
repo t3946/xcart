@@ -125,3 +125,16 @@ iframe
     text-align: center;
     font-size: 45px;
 }
+.ui.progress > .label
+{
+    font-size:10px;
+}
+.ui.progress .bar > .progress{
+    right: 0;
+}
+.ui.active.progress .bar::after{
+    animation: none;
+}
+#search_amazon_by_asin, #search_amazon_by_upc{
+    display: none;
+}
