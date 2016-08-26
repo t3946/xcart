@@ -129,7 +129,7 @@ foreach ($default_user_profile_fields as $k=>$v) {
 $usertypes_array = array('A');
 if (empty($active_modules["Simple_Mode"]))
     $usertypes_array[] = "P";
-
+$usertypes_array[] = "V";
 $usertypes_array[] = 'C';
 $usertypes_array[] = 'H';
 if (!empty($active_modules["XAffiliate"]))

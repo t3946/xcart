@@ -76,7 +76,7 @@ $prefixPort = $_SERVER["SERVER_PORT"] != 80 ? ":" . $_SERVER["SERVER_PORT"] : ""
 $prefixHost = $_SERVER["HTTP_HOST"];
 $prefixHost = strpos($prefixHost, ":") ? implode(":", explode(":", $_SERVER["HTTP_HOST"], -1)) : $prefixHost;
 
-define("PROXY_PREFIX", "http" . (isset($_SERVER["HTTPS"]) ? "" : "") . "://" . $prefixHost . $prefixPort . $_SERVER["SCRIPT_NAME"] . "?");
+define("PROXY_PREFIX", "https" . (isset($_SERVER["HTTPS"]) ? "" : "") . "://" . $prefixHost . $prefixPort . $_SERVER["SCRIPT_NAME"] . "?");
 
 //Makes an HTTP request via cURL, using request data that was passed directly to this script.
 function makeRequest($url)
@@ -231,7 +231,7 @@ if (isset($_POST["miniProxyFormAction"])) {
     }
 }
 if (empty($url)) {
-    die("<html><head><title>miniProxy</title></head><body><h1>Welcome to miniProxy!</h1>miniProxy can be directly invoked like this: <a href=\"" . PROXY_PREFIX . "http://example.net/\">" . PROXY_PREFIX . "http://example.net/</a><br /><br />Or, you can simply enter a URL below:<br /><br /><form onsubmit=\"window.location.href='" . PROXY_PREFIX . "' + document.getElementById('site').value; return false;\"><input id=\"site\" type=\"text\" size=\"50\" /><input type=\"submit\" value=\"Proxy It!\" /></form></body></html>");
+    die("No url to view");
 } else if (strpos($url, ":/") !== strpos($url, "://")) {
     //Work around the fact that some web servers (e.g. IIS 8.5) change double slashes appearing in the URL to a single slash.
     //See https://github.com/joshdick/miniProxy/pull/14
@@ -504,8 +504,20 @@ if (stripos($contentType, "text/html") !== false) {
 
     }
 
+    $sASIN = null;
+
+    $sRegPattern = "/(\/gp\/product\/|\/gp\/offer-listing\/|\/dp\/)(\w+)/";
+
+    preg_match($sRegPattern, $url, $aMatchesASIN);
+
+    if (!empty($aMatchesASIN[2])) {
+        $sASIN = $aMatchesASIN[2];
+    }
+
+
     //echo "<!-- Proxified page constructed by miniProxy -->\n" . $doc;
-    echo $responseBody;
+    $add_script = "<script> window.onload = function() {parent.iframeLoaded('$sASIN')};</script>";
+    echo $responseBody.$add_script;
 } else if (stripos($contentType, "text/css") !== false) { //This is CSS, so proxify url() references.
     echo proxifyCSS($responseBody, $url);
 } else { //This isn't a web page or CSS, so serve unmodified through the proxy with the correct headers (images, JavaScript, etc.)

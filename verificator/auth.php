@@ -1,3 +1,4 @@
+<?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -31,100 +32,80 @@
 \*****************************************************************************/
 
 #
-# $Id: user_add.php,v 1.38.2.1 2006/10/02 08:02:31 twice Exp $
+# $Id: auth.php,v 1.45 2006/01/11 06:56:25 mclap Exp $
 #
 
-require "./auth.php";
-require $xcart_dir."/include/security.php";
+define('AREA_TYPE', 'V');
 
-define('USER_ADD', 1);
+@include_once "./top.inc.php";
+@include_once "../top.inc.php";
+@include_once "../../top.inc.php";
+if (!defined('DIR_CUSTOMER')) die("ERROR: Can not initiate application! Please check configuration.");
 
-$display_antibot = false;
+require_once $xcart_dir."/init.php";
 
-$location[] = array(func_get_langvar_by_name("lbl_users_management"), "users.php");
+x_load("backoffice");
 
-$_usertype = (($usertype == "P" and !empty($active_modules["Simple_Mode"])) ? "A" : $usertype);
-switch ($_usertype) {
-	case "A":
-		$location[] = array(func_get_langvar_by_name("lbl_create_admin_profile"), "");
-		break;
-	case "P":
-		$location[] = array(func_get_langvar_by_name("lbl_create_provider_profile"), "");
-		break;
-	case "C":
-		$location[] = array(func_get_langvar_by_name("lbl_create_customer_profile"), "");
-		break;
-	case "V":
-		$location[] = array(func_get_langvar_by_name("lbl_create_verificator_profile"), "");
-		break;
-	case "B":
-		$location[] = array(func_get_langvar_by_name("lbl_create_partner_profile"), "");
+x_session_register("login");
+x_session_register("login_type");
+
+x_session_register("logged");
+
+x_session_register("export_ranges");
+
+$smarty->assign("js_enabled", "Y");
+
+x_session_register("top_message");
+if (!empty($top_message)) {
+	$smarty->assign("top_message", $top_message);
+	if($config['Adaptives']['is_first_start'] != 'Y')
+		$top_message = "";
+	x_session_save("top_message");
 }
 
-include "./users_tools.php";
+$current_area="V";
 
-$smarty->assign("usertype_name", $usertypes[$usertype]);
+include $xcart_dir."/include/get_language.php";
 
-$mode = "add";
+$_loc = (!empty($active_modules["Simple_Mode"])) ? $xcart_catalogs["admin"]."/" : "";
 
-$login_ = $login;
-$login_type_ = $login_type;
+$location = array();
+$location[] = array(func_get_langvar_by_name("lbl_main_page"), $_loc."home.php");
 
-$login = $_GET['user'];
-$login_type = $_GET['usertype'];
-
-#
-##
-###
-$smarty->assign("new_login_type", $login_type);
-###
-##
-#
+@include $xcart_dir."/modules/gold_auth.php";
+include $xcart_dir."/include/check_useraccount.php";
 
 #
-# Where to forward <form action
+# Single Mode always active for root account
 #
-
-$smarty->assign("register_script_name",(($config["Security"]["use_https_login"]=="Y")?$xcart_catalogs_secure['admin']."/":"")."user_add.php");
-
-require $xcart_dir."/include/register.php";
-
-#
-# Update profile or create new
-#
-switch ($usertype) {
-	case "A" : $tpldir = "admin";
-		break;
-	case "P" : $tpldir = "provider";
-		break;
-	case "C" : $tpldir = "customer";
-		break;
-	case "V" : $tpldir = "verificator";
-		break;
-	default: $tpldir = "partner";
-}
-
-if ($active_modules["Simple_Mode"] && ($usertype=="A" || $usertype=="P"))
-	$tpldir = "admin"; 
-
-# Display the 'Activity' input box for admin, provider or partner
-if (in_array($usertype, array("A", "P", "B")))
-	$smarty->assign("display_activity_box", "Y");
-
-$smarty->assign("main","user_add");
-$smarty->assign("tpldir", $tpldir);
-
-$login=$login_;
-$login_type=$login_type_;
+if($user_account["flag"]=="RP") $single_mode=true;
+# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+if($user_account["flag"]=="CM") {
+	$category_staff = "Y";
+	$smarty->assign("category_staff", $category_staff);
+}	
+# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
 x_session_save();
 
-# Assign the current location line
-$smarty->assign("location", $location);
+$smarty->assign("redirect","verificator");
 
-# Assign the section navigation data
-$smarty->assign("dialog_tools_data", $dialog_tools_data);
+if (!empty($active_modules["News_Management"]))
+	include $xcart_dir."/modules/News_Management/news_last.php";
 
-@include $xcart_dir."/modules/gold_display.php";
-func_display("admin/home.tpl",$smarty);
+$statuses = func_query_hash('SELECT code, name, type'
+    . ' FROM ' . $sql_tbl['order_statuses'] . ' ORDER BY orderby', array('type', 'code'), false, true);
+$smarty->assign('statuses', $statuses);
+
+#
+##
+###
+if (!empty($login)){
+        $cidev_firstname = func_query_first_cell("SELECT firstname FROM $sql_tbl[customers] WHERE login='$login'");
+        $smarty->assign('cidev_firstname', $cidev_firstname);
+}
+###
+##
+#
+
 ?>

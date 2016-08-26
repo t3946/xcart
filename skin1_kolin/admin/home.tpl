@@ -178,6 +178,12 @@ var runTests = function(editor) {
 {elseif $main eq "product_verification"}
 {include file="modules/Product_Verification/product_verification.tpl"}
 
+{elseif $main eq "verificators"}
+{include file="modules/External_Product_Verification/verificators.tpl"}
+
+{elseif $main eq "operators_batches"}
+{include file="modules/External_Product_Verification/operators_batches.tpl"}
+
 {elseif $main eq "brands"}
 {include file="modules/Brands/brands.tpl"}
 

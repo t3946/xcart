@@ -4,6 +4,8 @@ require '../include/security.php';
 require_once '../include/class/classProducts.php';
 require_once '../include/class/classOrder.php';
 require_once '../include/class/classPOPipeline.php';
+global $xcart_dir;
+require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationBatches.php";
 
 
 switch ($_POST['ajax_action']) {
@@ -18,6 +20,12 @@ switch ($_POST['ajax_action']) {
         break;
     case "select_purchase_order_for_entry":
         selectPurchaseOrderForEntry($_POST);
+        break;
+    case "change_verify_batch_status":
+        changeVerifyBatchStatus($_POST);
+        break;
+    case "add_new_batch":
+        addNewBatch($_POST);
         break;
 }
 
@@ -55,11 +63,11 @@ function changeVerifyOrderStatus($aPostParam = [])
 
 function shipOrderByAmazon($aPostParam = [])
 {
-    $iOrderId = (int) $aPostParam['orderid'];
-    $iManufacturerid = (int) $aPostParam['manufacturerid'];
-    $oOrderGroup = new classOrderGroup(['orderid'=>$iOrderId,'manufacturerid'=>$iManufacturerid]);
+    $iOrderId = (int)$aPostParam['orderid'];
+    $iManufacturerid = (int)$aPostParam['manufacturerid'];
+    $oOrderGroup = new classOrderGroup(['orderid' => $iOrderId, 'manufacturerid' => $iManufacturerid]);
     $sAmazonShipmentNotesSend = $aPostParam['submit_amazon_shipment_with_notes'];
-    $sAmazonShippingMethodSelect= $aPostParam['amazon_shipping_method_select'];
+    $sAmazonShippingMethodSelect = $aPostParam['amazon_shipping_method_select'];
     if ($sAmazonShipmentNotesSend) {
         $sAmazonShipmentNotes = $aPostParam['submit_amazon_shipment_notes'];
         $oOrderGroup->updateAmazonShipmentWithNotes('Y');
@@ -72,11 +80,36 @@ function shipOrderByAmazon($aPostParam = [])
 function selectPurchaseOrderForEntry($aPostParam = [])
 {
     if (!empty($aPostParam['ordernumber']) && is_numeric($aPostParam['ordernumber'])) {
-        $oPoPipeline =  new classPOPipeLine(['po_id'=>$aPostParam['ordernumber']]);
+        $oPoPipeline = new classPOPipeLine(['po_id' => $aPostParam['ordernumber']]);
         $iPoPipe = $oPoPipeline->getPOId();
-        if ($iPoPipe){
+        if ($iPoPipe) {
             $aResult = $oPoPipeline->selectOrderForEntry();
             print(json_encode($aResult));
         }
     }
+}
+
+function changeVerifyBatchStatus($aPostParam = [])
+{
+    $aResult = [];
+    if (!empty($aPostParam['batch_id']) && is_numeric($aPostParam['batch_id'])) {
+        $oVerificationBatch = new classExternalVerificationBatch(['batch_id' => $aPostParam['batch_id']]);
+        if ($oVerificationBatch->getBatchStatus() != $aPostParam['verify_status_id']) {
+            $oVerificationBatch->setVerificationStatus($aPostParam['verify_status_id']);
+        }
+    }
+    print(json_encode($aResult));
+}
+
+function addNewBatch($aPostParam = [])
+{
+    $aResult = [];
+    $oVerificationBatch = new classExternalVerificationBatch();
+    $oVerificationBatch->setField('login', $aPostParam['login']);
+    $oVerificationBatch->setField('batch_amount', $aPostParam['batch_amount']);
+    $oCustomer = new classCustomer(['login' => $aPostParam['login']]);
+    $iMaxBatchNumber = $oCustomer->getAmazonBatchesMaxNumber();
+    $oVerificationBatch->setField('batch_number', $iMaxBatchNumber + 1);
+    $oVerificationBatch->_insert();
+    print(json_encode($aResult));
 }

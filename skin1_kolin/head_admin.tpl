@@ -2,7 +2,7 @@
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr> 
 	<td class="HeadLogo_admin" width="*">
-<a href="/{if $usertype eq "P"}provider{else}admin{/if}/">
+<a href="/{if $usertype eq "P"}provider{elseif $usertype eq "V"}verificator{else}admin{/if}/">
 {if $current_storefront_info.storefrontid gte 0}
 <img src="{$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" alt="" />
 {else}
@@ -12,7 +12,9 @@
 {if $login ne ""}
 
 	<td align="left" width="34%">
-		<a style="padding-left: 35px;" href="{$catalogs.admin}/orders.php?page_name=dashboard"><img src="{$ImagesDir}/cc_dashbord.png" alt="" /></a>
+        {if $usertype ne "V"}
+		    <a style="padding-left: 35px;" href="{$catalogs.admin}/orders.php?page_name=dashboard"><img src="{$ImagesDir}/cc_dashbord.png" alt="" /></a>
+        {/if}
 	</td>
 
 	<td align="right" width="33%">
