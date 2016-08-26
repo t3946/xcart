@@ -7,7 +7,7 @@ require $xcart_dir."/include/security.php";
 include $xcart_dir."/modules/External_Product_Verification/operators_batches.php";
 
 $location[] = array("Operators management", "operators.php");
-$location[] = array("Operator batches", "");
+$location[] = array(func_get_langvar_by_name('txt_verificator_batches'), "");
 
 # Assign the current location line
 $smarty->assign("location", $location);
