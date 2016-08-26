@@ -59,7 +59,11 @@
                 </tr>
             {/foreach}
         {else}
+            <tr>
+                <td align="center" colspan="7">
             {$lng.txt_verificator_batches_not_found}
+                </td>
+            </tr>
         {/if}
     </table>
     <div class="ui inverted dimmer transition hidden segment dimmable">
