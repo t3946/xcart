@@ -83,9 +83,10 @@ class classProduct extends classCloneData
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled), $this->getStoreFront()->getStoreFrontByProductId($this->primaryKeyValue)->getField('storefrontid'));
     }
 
-    public function getProductFrontURL()
+    public function getProductFrontURL($http = 'http://')
     {
-        return func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled));
+
+        return $http.$this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getDomain().'/'.func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled), false);
     }
 
     public function getHTMLShot($iOrderID)

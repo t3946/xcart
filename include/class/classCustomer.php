@@ -87,7 +87,7 @@ class classCustomer extends classData
     {
         $oDate = null;
         $aDate = $this->oSQL->init()->addSelect('value')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
-        addCondition("action IN('match','not_match','not_sure')")->addOrderBy('value DESC')->setLimit(1)->Execute()->getQueryResult();
+        addCondition('action IN("'.implode('","',classExternalVerificationBatch::$aProductStatuses['processed']).'")')->addOrderBy('value DESC')->setLimit(1)->Execute()->getQueryResult();
         if (!empty($aDate)) {
             $aD = reset($aDate);
             $oDate = new DateTime();
@@ -99,7 +99,7 @@ class classCustomer extends classData
     public function getAmazonProductProcessedCount()
     {
         $aCount = $this->oSQL->init()->addSelect('count(1)', 'product_count')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
-        addCondition("action IN('match','not_match','not_sure')")->Execute()->getQueryResult();
+        addCondition('action IN("'.implode('","',classExternalVerificationBatch::$aProductStatuses['processed']).'")')->Execute()->getQueryResult();
         $aC = reset($aCount);
         return $aC['product_count'];
     }
