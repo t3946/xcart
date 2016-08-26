@@ -68,10 +68,12 @@
 
         function iframeLoaded(ASIN) {
             if (ASIN != '') {
-                $('.buttons-wrap-right').fadeIn();
+                $('#product_not_found_button').hide();
+                $('#conclusion_buttons').fadeIn();
                 $('#action_buttons_block').attr('data-asin', ASIN);
             } else {
-                $('.buttons-wrap-right').fadeOut();
+                $('#conclusion_buttons').hide();
+                $('#product_not_found_button').fadeIn();
                 $('#action_buttons_block').attr('data-asin', '');
             }
 
@@ -83,7 +85,7 @@
         $(document).ready(function () {
             $('#search_amazon_by_asin, #search_amazon_by_upc, #search_amazon_by_name').on('click', '', function () {
                 $(this).addClass('active').siblings().not('#original_product').removeClass('active');
-                $('.buttons-wrap-right').fadeOut();
+                $('#conclusion_buttons').fadeOut();
 
                 var currstep = $(this).data('step-id');
 
@@ -154,14 +156,14 @@
                 }
             }
 
-            $('#submit-product-match, #submit-product-not-sure, #submit-product-not-match').on('click', '', function () {
+            $('#submit-product-match, #submit-product-not-sure, #submit-product-not-match, #submit-product-not-found').on('click', '', function () {
                 var active_button_action = $(this).data('action'),
                     active_batch_id = $(this).parent().data('batch-id'),
                     active_product_id = $(this).parent().data('product-id'),
                     active_asin = $(this).parent().data('asin');
                 $('.small.modal').modal({
                     onApprove: function () {
-                        $('.buttons-wrap-right').fadeOut();
+                        $('#conclusion_buttons').fadeOut();
                         $.post('ajax_admin.php',{
                                     verify_status_id : active_button_action,
                                     batch_id: active_batch_id,
@@ -277,15 +279,21 @@
             </div>
         </div>
     </div>
-    <div class="buttons-wrap-right" style="display:none;">
+    <div class="buttons-wrap-right" >
         <div class="buttons-right">
-            <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</span>
-            <div id="action_buttons_block" class="ui buttons select" data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}" data-product-id="{$oVerificationBatch->getVerifiedProductId()}">
-                <button data-action="match" id="submit-product-match" class="ui left positive button">Product match</button>
-                <div class="or" data-text="or"></div>
-                <button data-action="not_sure" id="submit-product-not-sure" class="ui yellow button">Not sure</button>
-                <div class="or" data-text="or"></div>
-                <button data-action="not_match" id="submit-product-not-match" class="ui negative button">Does not match</button>
+            <div id="conclusion_buttons" style="display:none;">
+                <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</span>
+                <div id="action_buttons_block" class="ui buttons select" data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}" data-product-id="{$oVerificationBatch->getVerifiedProductId()}">
+                    <button data-action="match" id="submit-product-match" class="ui left positive button">Product match</button>
+                    <div class="or" data-text="or"></div>
+                    <button data-action="not_sure" id="submit-product-not-sure" class="ui yellow button">Not sure</button>
+                    <div class="or" data-text="or"></div>
+                    <button data-action="not_match" id="submit-product-not-match" class="ui negative button">Does not match</button>
+
+                </div>
+            </div>
+            <div data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}" data-product-id="{$oVerificationBatch->getVerifiedProductId()}" class="ui buttons select" id="product_not_found_button">
+                <button data-action="not_found" id="submit-product-not-found" class="ui left button">Product not found</button>
             </div>
         </div>
     </div>

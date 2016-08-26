@@ -23,7 +23,7 @@ class classOrders extends classOrder
      */
     public function getOrdersWithProductsForVerification() {
         $this->aOrders = [];
-        $aOrders = func_query("SELECT * FROM ".self::$sql_tbl['orders']." WHERE vn_status != '".self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED."'");
+        $aOrders = func_query("SELECT * FROM ".self::$sql_tbl['orders']." WHERE vn_status != '".self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED."' LIMIT 50");
         if (!empty($aOrders) && is_array($aOrders)) {
             foreach ($aOrders as $aOrder)
                 $this->aOrders[] = new classOrder($aOrder);
