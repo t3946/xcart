@@ -158,11 +158,11 @@ class classExternalVerificationBatch extends classData
         $aProductsNextInBatch = null;
         $aOpenedProducts = $this->getProductsInBatchOpened();
         if (empty($aOpenedProducts)) {
-            $aNextProducts = $this->oSQL->init()->addSelect('p.productid')->addSelect('VP.login')->
+            $aNextProducts = $this->oSQL->init()->addSelect('P.productid')->addSelect('VP.login')->
             addSelect("(SELECT count(1)
                               FROM " . self::$sql_tbl['external_verification_products'] . " VP2
                               INNER JOIN xcart_external_verification_products_queue Q2 ON Q2.productid = VP2.productid AND Q2.status = 'In progress' AND Q2.cross_verify_count = 1
-                              WHERE VP2.login = VP.login AND VP2.batch_id = VP.batch_id)", 'batch_processed')->addFromTable('products', 'p')->
+                              WHERE VP2.login = VP.login AND VP2.batch_id = VP.batch_id)", 'batch_processed')->addFromTable('products', 'P')->
             addInnerJoin('external_verification_products_queue', 'Q', "Q.productid = P.productid AND Q.status = 'In progress' AND Q.cross_verify_count <= 1")->
             addInnerJoin('external_verification_products', 'VP', "VP.productid = P.productid AND VP.login != '$login'")->addCondition("P.forsale = 'Y'")->
             addGroupBy('P.productid')->addOrderBy('batch_processed DESC')->setLimit('1')->Execute()->getQueryResult();
