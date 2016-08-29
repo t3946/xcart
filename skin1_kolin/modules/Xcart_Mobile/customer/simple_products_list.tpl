@@ -16,7 +16,7 @@ vim: set ts=2 sw=2 sts=2 et:
             //]]>
           </script>
           <span class="product-title">
-            {$product.product|amp}
+            {$product.product}
           </span>
           {if $product.product_type ne "C"}
             {if $product.appearance.is_auction}

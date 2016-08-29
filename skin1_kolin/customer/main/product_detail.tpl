@@ -165,7 +165,7 @@
                                                     <td><img src="{$ImagesDir}/new/product/dollar.png" alt=""/></td>
                                                     <td class="discount_class1">Discount:</td>
                                                     <td class="discount_class">
-                                                        <SPAN id="save_percent">{include file="currency.tpl" value=$discount_save plain_text_message=true price_type="product_price"}</SPAN>&nbsp;
+                                                        <SPAN id="save_percent">{include file="currency.tpl" value=$discount_save plain_text_message=true price_type="product_price"}</SPAN>&nbsp;OFF&nbsp;
                                                     </td>
                                                 </tr>
                                             </table>

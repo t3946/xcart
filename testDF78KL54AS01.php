@@ -11,8 +11,6 @@ x_load('taxes');
 
 global $xcart_dir, $config;
 
-include_once $xcart_dir."/include/class/classOrderGroup.php";
-$oOrderGroup = new classOrderGroup(['orderid'=>64824, 'manufacturerid'=>36]);
-$oOrderGroup->recalculateAccountingAmazon();
+echo func_clean_url_cleanup_string('alumicolor&amp;alumidrafter trade 12 architect color metallic material aluminum size 12 type architect model 3145 1 price per each');
 
 
