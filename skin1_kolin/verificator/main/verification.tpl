@@ -260,9 +260,9 @@
 <header id="header">
     <div class="buttons-wrap-left">
         <div class="wrap-left">
-            <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; top: -4px;">Compare</span>
-            <div class="three ui buttons">
 
+            <div class="three ui buttons">
+                <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; ">Compare</span>
                 <button data-step-id="0" id="search_amazon_by_asin" class="ui button attached active">Open product by ASIN</button>
                 <button data-step-id="1" id="search_amazon_by_upc" class="ui attached button">Search product by UPC</button>
                 <button data-step-id="2" id="search_amazon_by_name" class="ui right attached button">Search product by Product Name</button>
