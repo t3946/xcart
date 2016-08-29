@@ -432,6 +432,7 @@ if (stripos($contentType, "text/html") !== false) {
     //Protects against cases where the server sends a Content-Type of "text/html" when
     //what's coming back is most likely not actually HTML.
     //TODO: Do this check before attempting to do any sort of DOM parsing?
+    $prependElem = null;
     if ($prependElem != NULL) {
 
         $scriptElem = $doc->createElement("script",

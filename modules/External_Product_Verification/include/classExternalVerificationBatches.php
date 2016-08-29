@@ -15,6 +15,7 @@ class classExternalVerificationBatch extends classData
     protected $aProductsInBatchNotSure = [];
     protected $aProductsInBatchNotMatched = [];
 
+    public static $aProductStatuses = ['processed'=>['match','not_match','not_sure','not_found'], 'open'=>'open'];
 
     /**
      * @var classProduct
@@ -49,7 +50,7 @@ class classExternalVerificationBatch extends classData
     {
         if (empty($this->aProductsInBatchCompleted)) {
             $aProducts = $this->oSQL->init()->addSelect('productid')->addFromTable('external_verification_products')->addCondition('batch_id=' . $this->getBatchId())->
-            addCondition('action IN ("match","not_match","not_sure")')->Execute()->getQueryResult();
+            addCondition('action IN ("'.implode('","',self::$aProductStatuses['processed']).'")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
                     $oProduct = new classProduct($aProduct['productid']);
@@ -142,7 +143,8 @@ class classExternalVerificationBatch extends classData
         $aProductsInBatchOpen = null;
         $aProducts = $this->oSQL->init()->addSelect('productid')->addFromTable('external_verification_products', 'xp')->addCondition('batch_id=' . $this->getBatchId())->
         addCondition('action IN ("open")')->addCondition('NOT EXISTS
-         (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' as xp2 WHERE batch_id = ' . $this->getBatchId() . ' AND action IN ("match", "not_match", "not_sure") AND xp2.productid = xp.productid)')->Execute()->getQueryResult();
+         (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' as xp2 WHERE batch_id = ' . $this->getBatchId() . ' AND action IN ("'.implode('","',self::$aProductStatuses['processed']).'") AND xp2.productid = xp.productid)')->Execute()->getQueryResult();
+
         if (!empty($aProducts)) {
             foreach ($aProducts as $aProduct) {
                 $oProduct = new classProduct($aProduct['productid']);
@@ -158,11 +160,11 @@ class classExternalVerificationBatch extends classData
         $aProductsNextInBatch = null;
         $aOpenedProducts = $this->getProductsInBatchOpened();
         if (empty($aOpenedProducts)) {
-            $aNextProducts = $this->oSQL->init()->addSelect('p.productid')->addSelect('VP.login')->
+            $aNextProducts = $this->oSQL->init()->addSelect('P.productid')->addSelect('VP.login')->
             addSelect("(SELECT count(1)
                               FROM " . self::$sql_tbl['external_verification_products'] . " VP2
                               INNER JOIN xcart_external_verification_products_queue Q2 ON Q2.productid = VP2.productid AND Q2.status = 'In progress' AND Q2.cross_verify_count = 1
-                              WHERE VP2.login = VP.login AND VP2.batch_id = VP.batch_id)", 'batch_processed')->addFromTable('products', 'p')->
+                              WHERE VP2.login = VP.login AND VP2.batch_id = VP.batch_id)", 'batch_processed')->addFromTable('products', 'P')->
             addInnerJoin('external_verification_products_queue', 'Q', "Q.productid = P.productid AND Q.status = 'In progress' AND Q.cross_verify_count <= 1")->
             addInnerJoin('external_verification_products', 'VP', "VP.productid = P.productid AND VP.login != '$login'")->addCondition("P.forsale = 'Y'")->
             addGroupBy('P.productid')->addOrderBy('batch_processed DESC')->setLimit('1')->Execute()->getQueryResult();
@@ -187,7 +189,8 @@ class classExternalVerificationBatch extends classData
         } else {
             $aProductsNextInBatch = $aOpenedProducts;
         }
-        $this->oVerifiedProduct = $aProductsNextInBatch;
+        if (is_object($aProductsNextInBatch) && $aProductsNextInBatch->getProductId() > 0)
+            $this->oVerifiedProduct = $aProductsNextInBatch;
         return $this;
     }
 
@@ -195,8 +198,8 @@ class classExternalVerificationBatch extends classData
     {
         global $login;
         if (!empty($this->oVerifiedProduct)) {
-            $aInserArray = ['productid' => $this->oVerifiedProduct->getProductId(), 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'open', 'value' => time()];
-            func_array2insert('external_verification_products', $aInserArray, true, false);
+            $aInsertArray = ['productid' => $this->oVerifiedProduct->getProductId(), 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => self::$aProductStatuses['open'], 'value' => time()];
+                func_array2insert('external_verification_products', $aInsertArray, true, false);
         }
 
     }
@@ -208,7 +211,7 @@ class classExternalVerificationBatch extends classData
         }
         $aLinkArray = [];
         if (!empty($this->oVerifiedProduct)) {
-            $aLinkArray[] = [$this->oVerifiedProduct->getProductFrontURL() . '?keep_https=yes', $this->oVerifiedProduct->getProductName()];
+            $aLinkArray[] = [$this->oVerifiedProduct->getProductFrontURL('https://') . '?keep_https=yes', $this->oVerifiedProduct->getProductName()];
         }
         return json_encode($aLinkArray, JSON_PRETTY_PRINT);
     }
@@ -220,6 +223,7 @@ class classExternalVerificationBatch extends classData
             $this->getNextProductToVerify()->openProductToVerify();
         }
         $aLinkArray = [];
+
         if (!empty($this->oVerifiedProduct)) {
             $sASIN = $this->oVerifiedProduct->getAmazonASIN();
             $sUPC = $this->oVerifiedProduct->getUPC();
@@ -239,7 +243,7 @@ class classExternalVerificationBatch extends classData
         addCondition('action = "open"')->addCondition('productid = ' . $iProductId)->Execute()->getQueryResult();
         if (!empty($aProductOpen)) {
             $aProductClose = $this->oSQL->init()->addSelect('*')->addFromTable('external_verification_products')->addCondition('batch_id=' . $this->getBatchId())->
-            addCondition('action IN ("match", "not_match", "not_sure")')->addCondition('productid = ' . $iProductId)->Execute()->getQueryResult();
+            addCondition('action IN ("'.implode('","',self::$aProductStatuses['processed']).'")')->addCondition('productid = ' . $iProductId)->Execute()->getQueryResult();
             if (!empty($aProductClose)) {
                 $diffInSec = intval($aProductClose[0]['value']) - intval($aProductOpen[0]['value']);
             }
