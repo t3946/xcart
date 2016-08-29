@@ -11,7 +11,6 @@ x_load('taxes');
 
 global $xcart_dir, $config;
 
-include_once $xcart_dir."/include/class/classProduct.php";
-$oProduct = new classProduct(426073);
+echo func_clean_url_cleanup_string('alumicolor&amp;alumidrafter trade 12 architect color metallic material aluminum size 12 type architect model 3145 1 price per each');
 
 
