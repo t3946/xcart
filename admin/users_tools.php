@@ -53,8 +53,9 @@ else {
 	$dialog_tools_data["left"][] = array("link" => "user_add.php?usertype=P", "title" => func_get_langvar_by_name("lbl_create_admin_profile"));
 }
 
-$dialog_tools_data["left"][] = array("link" => "user_add.php?usertype=C", "title" => func_get_langvar_by_name("lbl_create_customer_profile"));
 $dialog_tools_data["left"][] = array("link" => "user_add.php?usertype=V", "title" => func_get_langvar_by_name("lbl_create_verificator_profile"));
+$dialog_tools_data["left"][] = array("link" => "user_add.php?usertype=C", "title" => func_get_langvar_by_name("lbl_create_customer_profile"));
+
 
 if (!empty($active_modules["XAffiliate"]))
 	$dialog_tools_data["left"][] = array("link" => "user_add.php?usertype=B", "title" => func_get_langvar_by_name("lbl_create_partner_profile"));
