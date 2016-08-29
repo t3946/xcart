@@ -33,7 +33,7 @@ vim: set ts=2 sw=2 sts=2 et:
                   </div>
                 </div>
                 <div class="product-details">
-                  <span class="ui-li-heading">{$product.product|amp}</span>
+                  <span class="ui-li-heading">{$product.product}</span>
                   <div class="descr">
                     {if $giftregistry and $product.amount_purchased ge $product.amount}
                       <p class="product-details-title">{$lng.lbl_purchased}</p>
@@ -103,10 +103,10 @@ vim: set ts=2 sw=2 sts=2 et:
               </div>
             </form>
           </div>
-          <span onclick="$.mobile.changePage('product.php?productid={$product.productid}');" class="ui-li-link-alt ui-btn ui-btn-icon-notext ui-btn-up-d" data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="span" data-icon="false" data-iconpos="notext" data-theme="d" title="{$product.product|amp}">
+          <span onclick="$.mobile.changePage('product.php?productid={$product.productid}');" class="ui-li-link-alt ui-btn ui-btn-icon-notext ui-btn-up-d" data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="span" data-icon="false" data-iconpos="notext" data-theme="d" title="{$product.product}">
             <span class="ui-btn-inner">
               <span class="ui-btn-text"></span>
-              <span onclick="$.mobile.changePage('product.php?productid={$product.productid}');" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-icon="arrow-r" data-iconpos="notext" data-theme="a" title="{$product.product|amp}" class="ui-btn ui-btn-up-a ui-shadow ui-btn-corner-all ui-btn-icon-notext">
+              <span onclick="$.mobile.changePage('product.php?productid={$product.productid}');" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-icon="arrow-r" data-iconpos="notext" data-theme="a" title="{$product.product}" class="ui-btn ui-btn-up-a ui-shadow ui-btn-corner-all ui-btn-icon-notext">
                 <span class="ui-btn-inner ui-btn-corner-all">
                   <span class="ui-btn-text"></span>
                   <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>
