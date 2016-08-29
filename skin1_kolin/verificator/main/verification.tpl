@@ -84,17 +84,19 @@
 
         $(document).ready(function () {
             $('#search_amazon_by_asin, #search_amazon_by_upc, #search_amazon_by_name').on('click', '', function () {
-                $(this).addClass('active').siblings().not('#original_product').removeClass('active');
-                $('#conclusion_buttons').fadeOut();
+                if (!$(this).hasClass('active')) {
+                    $(this).addClass('active').siblings().removeClass('active');
+                    $('#conclusion_buttons').fadeOut();
 
-                var currstep = $(this).data('step-id');
+                    var currstep = $(this).data('step-id');
 
-                loadRemoteFrame('ifrm', false, currstep);
-                var check = $('#split-screen-checkbox').prop("checked");
-                if (!check) {
-                    $('.iframediv.left').css('width', '100%');
-                    $('.iframediv.right').css('width', '0');
-                    $('#original_product').removeClass('active').blur();
+                    loadRemoteFrame('ifrm', false, currstep);
+                    var check = $('#split-screen-checkbox').prop("checked");
+                    if (!check) {
+                        $('.iframediv.left').css('width', '100%');
+                        $('.iframediv.right').css('width', '0');
+                        $('#original_product').removeClass('active').blur();
+                    }
                 }
             });
             $('#original_product').on('click', '', function () {
@@ -260,10 +262,10 @@
 <header id="header">
     <div class="buttons-wrap-left">
         <div class="wrap-left">
-            <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; top: -4px;">Compare</span>
-            <div class="three ui buttons">
 
-                <button data-step-id="0" id="search_amazon_by_asin" class="ui button attached active">Open product by ASIN</button>
+            <div class="three ui buttons">
+                <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; ">Compare</span>
+                <button data-step-id="0" id="search_amazon_by_asin" class="ui button attached">Open product by ASIN</button>
                 <button data-step-id="1" id="search_amazon_by_upc" class="ui attached button">Search product by UPC</button>
                 <button data-step-id="2" id="search_amazon_by_name" class="ui right attached button">Search product by Product Name</button>
                 <span style="font-size: 18px; margin-left: 25px; margin-top:14px;">AND</span>

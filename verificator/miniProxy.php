@@ -328,10 +328,18 @@ if (stripos($contentType, "text/html") !== false) {
         $responseBody = mb_convert_encoding($responseBody, "HTML-ENTITIES", $detectedEncoding);
     }
 
+
     $responseBody = preg_replace_callback('/(?<=href=(\\"|\'))[^\\"\']+(?=(\\"|\'))/', function ($matches) {
         global $url;
         return PROXY_PREFIX . rel2abs($matches[0], $url);
     } , $responseBody);
+
+    $responseBody = preg_replace_callback( '/(<form[^<]*action=["|\'])([^"|\']+)(["|\'][^>]*>)(.*?)(<\/form>)/is', function ($matches) {
+        global $url;
+        $inputhidden = '<input type="hidden" name="miniProxyFormAction" value="' . rel2abs($matches[2], $url) . '" />';
+        $return_value = $matches[1].rtrim(PROXY_PREFIX, "?").$matches[3].$matches[4].$inputhidden.$matches[5];
+        return $return_value;
+    }, $responseBody);
 
 
     //include_once 'simple_html_dom.php';
