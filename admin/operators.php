@@ -6,7 +6,7 @@ require $xcart_dir."/include/security.php";
 
 include $xcart_dir."/modules/External_Product_Verification/verificators.php";
 
-$location[] = array("Operators management", "");
+$location[] = array("Verificator management", "");
 
 # Assign the current location line
 $smarty->assign("location", $location);

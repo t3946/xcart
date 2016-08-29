@@ -140,6 +140,12 @@ function makeRequest($url)
     //Set the request URL.
     curl_setopt($ch, CURLOPT_URL, $url);
 
+    global $login,$xcart_dir;
+    $cookieDir = $xcart_dir.'/verificator/cookies/cookie-'.$login.'.txt';
+
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieDir);
+    curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieDir);
+
     //Make the request.
     $response = curl_exec($ch);
     $responseInfo = curl_getinfo($ch);

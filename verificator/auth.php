@@ -104,6 +104,11 @@ if (!empty($login)){
         $cidev_firstname = func_query_first_cell("SELECT firstname FROM $sql_tbl[customers] WHERE login='$login'");
         $smarty->assign('cidev_firstname', $cidev_firstname);
 }
+
+if (empty($_SERVER["HTTPS"])){
+	$redirect_https_link = "https://".$xcart_http_host.$PHP_SELF . (($QUERY_STRING) ? ('?' . $QUERY_STRING) : '');
+	func_header_location($redirect_https_link);
+}
 ###
 ##
 #

@@ -120,13 +120,7 @@
 
 <table cellspacing="1" cellpadding="2" width="100%">
 
-{include file="main/register_personal_info.tpl" userinfo=$userinfo}
-
-{include file="main/register_shipping_address.tpl" userinfo=$userinfo}
-
-{include file="main/register_billing_address.tpl" userinfo=$userinfo}
-
-{include file="main/register_contact_info.tpl" userinfo=$userinfo}
+{include file="verificator/main/register_contact_info.tpl" userinfo=$userinfo}
 
 {include file="main/register_additional_info.tpl" section='A'}
 
