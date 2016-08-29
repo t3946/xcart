@@ -86,8 +86,8 @@ ga('ec:addImpression', {ldelim}
             </span>
             <span class="product-details">
               <span class="ui-li-heading">
-                <span class="list">{$product.product|amp}</span>
-                <span class="grid">{$product.product|amp|truncate:79:'...'}</span>
+                <span class="list">{$product.product}</span>
+                <span class="grid">{$product.product|truncate:79:'...'}</span>
                 {if $active_modules.New_Arrivals}
                   {include file="modules/New_Arrivals/new_arrivals_show_date.tpl" product=$product}
                 {/if}
