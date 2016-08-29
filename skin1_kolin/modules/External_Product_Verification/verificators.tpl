@@ -10,9 +10,9 @@
         <td width="10">Login</td>
         <td width="100">Full Name</td>
         <td width="10">Current batches</td>
-        <td width="10">Batches completed</td>
-        <td width="10">Batches paid</td>
-        <td width="100" align="center">Average 1 product time spent on all batches</td>
+        <td width="10">Completed batches</td>
+        <td width="10">Paid batches</td>
+        <td width="100" align="center">Average time spent per product</td>
     </tr>
     {if ($aCustomers)}
         {foreach from=$aCustomers item=oCustomer}
@@ -29,4 +29,4 @@
 </table>
 {/capture}
 
-{include file="dialog.tpl" title='Operators' content=$smarty.capture.dialog extra='width="100%"'}
+{include file="dialog.tpl" title='Verificators' content=$smarty.capture.dialog extra='width="100%"'}
