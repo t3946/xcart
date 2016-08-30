@@ -41,6 +41,10 @@
 <a href="{$catalogs.admin}/grandfathered_products.php" class="VertMenuItems">{$lng.lbl_grandfathered_products}</a><br />
 {/if}
 
+<a href="{$catalogs.admin}/operators.php" class="VertMenuItems">Amazon verification</a><br />
+
+
+
 {*
 {if !($membership_code eq "ADMIN_CUSTOMER_SERVICE")}
 <a href="{$catalogs.admin}/product_reports.php" class="VertMenuItems">{$lng.lbl_product_reports}</a><br />
