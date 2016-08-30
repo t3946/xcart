@@ -11,7 +11,7 @@ if (empty($login))
 if (!empty($active_modules["Simple_Mode"]))
     func_header_location($current_location . DIR_ADMIN . "/home.php");
 
-$location[] = array("Operator home", "");
+$location[] = array("Verificator panel", "");
 
 $oCustomer = new classCustomer(['login' => $login]);
 $smarty->assign('oCustomer', $oCustomer);

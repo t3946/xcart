@@ -7,8 +7,8 @@
         </td>
     </tr>
     <tr class="TableHead">
-        <td width="10">Login</td>
-        <td width="100">Full Name</td>
+        <td width="10">Login / Edit ver profile</td>
+        <td width="100">Full Name / Link to Upwork</td>
         <td width="10">Current batches</td>
         <td width="10">Completed batches</td>
         <td width="10">Paid batches</td>

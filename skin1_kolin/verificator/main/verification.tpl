@@ -10,6 +10,8 @@
     <script src="{$SkinDir}/js/semantic/components/dimmer.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/modal.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/transition.min.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/js/semantic/components/progress.min.js" type="text/javascript"></script>
+
     {literal}
     <script type="text/javascript">
         // <![CDATA[
@@ -165,6 +167,7 @@
                 }
             });
             initButtons();
+            $('.indicating.progress').progress();
             if (trans) {
                 if (trans.length == 0) {
                     $('#no_products').show();
@@ -290,13 +293,13 @@
     </script>
     {/literal}
 </head>
-<body>
+<body class="verifiaction">
 <header id="header">
     <div class="buttons-wrap-left">
         <div class="wrap-left">
 
             <div class="three ui buttons">
-                <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; ">Compare</span>
+                <span style="font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; ">Compare</span>
                 <button data-step-id="0" id="search_amazon_by_asin" class="ui button attached">Open product by ASIN
                 </button>
                 <button data-step-id="1" id="search_amazon_by_upc" class="ui attached button">Search product by UPC
@@ -304,23 +307,32 @@
                 <button data-step-id="2" id="search_amazon_by_name" class="ui right attached button">Search product by
                     Product Name
                 </button>
-                <span style="font-size: 18px; margin-left: 25px; margin-top:14px;">AND</span>
+                <span style="font-size: 18px; margin-left: 25px; margin-top:14px; font-family:Verdana;">AND</span>
                 <span style="margin-left: 25px;">
                 <button data-step-id="3" id="original_product" class="ui left attached button">Original product</button>
                 </span>
             </div>
         </div>
-        <div style="float: right; bottom: 48px; right: -70px;" class="form ui field">
-            <div class="ui slider checkbox" style="margin-top: 10px; float:left; width: 138px; font-size: 14px;">
+        <div style="float: right; bottom: 42px; right: -70px;" class="form ui field">
+            <div class="ui slider checkbox" style="margin-top: 10px; float:left; width: 158px; font-size: 14px;">
                 <input autocomplete="off" name="newsletter" id="split-screen-checkbox" type="checkbox">
-                <label>Split screen</label>
+                <label style="font-family:Verdana;">Split screen</label>
             </div>
         </div>
     </div>
     <div class="buttons-wrap-right">
+        <div class="ui indicating progress" id="progress-indicator"
+             data-value="{$oVerificationBatch->getProductsInBatchCompletedCount()}"
+             data-total="{$oVerificationBatch->getBatchAmount()}">
+            <div class="bar">
+                <div class="progress"></div>
+            </div>
+            <div class="label">{$oVerificationBatch->getProductsInBatchCompletedCount()}
+                /{$oVerificationBatch->getBatchAmount()}</div>
+        </div>
         <div class="buttons-right">
             <div id="conclusion_buttons" style="display:none;">
-                <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</span>
+                <span style="font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</span>
 
                 <div id="action_buttons_block" class="ui buttons select" data-asin=""
                      data-batch-id="{$oVerificationBatch->getBatchId()}"
@@ -335,7 +347,6 @@
                     <button data-action="not_match" id="submit-product-not-match" class="ui negative button">Does not
                         match
                     </button>
-
                 </div>
             </div>
             <div data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}"
@@ -344,6 +355,7 @@
                 <button data-action="not_found" id="submit-product-not-found" class="ui left button">Product not found
                 </button>
             </div>
+
         </div>
     </div>
 </header>

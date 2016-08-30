@@ -553,6 +553,8 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 #
 ##
 ###
+			$allow_operate_as_membership = '';
+			if(!empty($allow_operate_as_membership))
 			$allow_operate_as_membership = implode(",",array_keys($allow_operate_as_membership));
 			$profile_values['allow_operate_as_membership'] = $allow_operate_as_membership;
 ###
@@ -854,6 +856,7 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 		elseif (@$new_user_flag) {
 			# Profile is created
 			$top_message["content"] = func_get_langvar_by_name("msg_profile_add");
+			$top_message["show_user_reg_info"]="Y";
 		}
 		else {
 			if ($anonymous_user) {
