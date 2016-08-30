@@ -32,7 +32,7 @@
         <tr class="TableHead">
             <td width="10">Batch #</td>
             <td width="10">Batch ID</td>
-            <td width="10">Start date and time</td>
+            <td width="10">Start date<br/>and time</td>
             <td width="10">Products processed</td>
             <td width="10">Average time spent per product</td>
             <td width="100" align="center">Batch status</td>
@@ -45,7 +45,7 @@
                     <td align="center">{$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}
                         _{$oCurrentBatch->getBatchAmount()}</td>
                     {assign var=oStartDate value=$oCurrentBatch->getStartDate()}
-                    <td align="center">{$oStartDate->format('d-M-Y H:i')}</td>
+                    <td align="center">{$oStartDate->format('d-M-Y<\b\r>H:i')}</td>
                     <td align="left">
                         <div class="ui indicating progress"
                              data-value="{$oCurrentBatch->getProductsInBatchCompletedCount()}"
