@@ -8,7 +8,7 @@
 <script src="{$SkinDir}/js/semantic/components/form.min.js" type="text/javascript"></script>
 
 
-<h1 style="text-align: center">{$lng.txt_verificator_batches}</h1>
+<h1 style="text-align: center">{$lng.txt_verificator_batches|sprintf:$oCustomer->getCustomerFullName()}</h1>
 {capture name=dialog}
     <div id="batches-filter" class="ui buttons left floated">
         <button data-status="all" class="ui left button {if !$batch_status}active{/if}">All</button>
@@ -34,7 +34,7 @@
             <td width="10">Batch ID</td>
             <td width="10">Start date<br/>and time</td>
             <td width="10">Products processed</td>
-            <td width="10">Average time spent per product</td>
+            <td width="100">Average time spent per product</td>
             <td width="100" align="center">Batch status</td>
         </tr>
         {assign var=aBatches value=$oCustomer->getAmazonBatches($batch_status)}
@@ -74,7 +74,7 @@
     </div>
 {/capture}
 
-{include file="dialog.tpl" title=$lng.txt_verificator_batches content=$smarty.capture.dialog extra='width="100%"'}
+{include file="dialog.tpl" title=$lng.txt_verificator_batches|sprintf:$oCustomer->getCustomerFullName() content=$smarty.capture.dialog extra='width="100%"'}
 
 <div class="ui small test modal">
 
