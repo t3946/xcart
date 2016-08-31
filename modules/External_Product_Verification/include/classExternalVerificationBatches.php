@@ -230,7 +230,7 @@ class classExternalVerificationBatch extends classData
 
             if (!empty($sASIN)) $aLinkArray[0] = ['https://' . $xcart_https_host . DIR_VERIFICATOR . '/view.php?' . sprintf(self::LINK_SEARCH_BY_ASIN, $sASIN), 'Open product by ASIN: ' . $sASIN];
             if (!empty($sUPC)) $aLinkArray[1] = ['https://' . $xcart_https_host . DIR_VERIFICATOR . '/view.php?' . sprintf(self::LINK_SEARCH_BY_UPC, $sUPC), 'Search product by UPC: ' . $sUPC];
-            $aLinkArray[2] = ['https://' . $xcart_https_host . DIR_VERIFICATOR . '/view.php?' . sprintf(self::LINK_SEARCH_BY_NAME, $this->oVerifiedProduct->getProductName()), 'Search product by Product Name: ' . $this->oVerifiedProduct->getProductName()];
+            $aLinkArray[2] = ['https://' . $xcart_https_host . DIR_VERIFICATOR . '/view.php?' . sprintf(self::LINK_SEARCH_BY_NAME, html_entity_decode($this->oVerifiedProduct->getProductName())), 'Search product by Product Name: ' . $this->oVerifiedProduct->getProductName()];
 
         }
         return json_encode($aLinkArray, JSON_PRETTY_PRINT);
