@@ -12,27 +12,36 @@ class classGMC extends classStoreFrontMarketPlace
      * @param string $sExtraLog
      * @return classGMC
      */
-    public function addProductToBatch($oProduct, $update_type, $sExtraLog = "N")
+    public function addProductToBatch(classProduct $oProduct, $update_type, $sExtraLog = "N")
     {
-        if ($this->checkProductExcludedMarketPlace($oProduct->getField('productid'))) {
+        if ($this->checkProductExcludedMarketPlace($oProduct->getProductId()) && $this->checkMarketplaceRestrictions($oProduct)) {
             if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $oProduct->getField('forsale') == "N"))) {
                 $batchid = $this->iProductsBatchCount;
                 $count_bproducts = count($this->aProducts);
-                $this->aProducts[$count_bproducts]["productid"] = $oProduct->getField('productid');
+                $this->aProducts[$count_bproducts]["productid"] = $oProduct->getProductId();
                 $this->aProducts[$count_bproducts]["Batchid"] = $batchid;
-                $this->aProducts[$count_bproducts]["product_info"] = GetGoogleBaseOneRow($oProduct->getField('productid'), "main_google", $sExtraLog);
+                $this->aProducts[$count_bproducts]["product_info"] = GetGoogleBaseOneRow($oProduct->getProductId(), "main_google", $sExtraLog);
                 $this->iProductsBatchCount++;
 
             } elseif ($update_type == "2" && $oProduct->getField('forsale') == "Y") {
                 $batchid = $this->iInventoryBatchCount;
                 $count_binventory = count($this->aInventory);
-                $this->aInventory[$count_binventory]["productid"] = $oProduct->getField('productid');
+                $this->aInventory[$count_binventory]["productid"] = $oProduct->getProductId();
                 $this->aInventory[$count_binventory]["Batchid"] = $batchid;
                 $this->iInventoryBatchCount++;
             }
 
         }
         return $this;
+    }
+
+    public function checkMarketplaceRestrictions(classProduct $oProduct)
+    {
+        $bResult = true;
+        $aDetailedImages = $oProduct->getDetailedImages();
+        if (empty($aDetailedImages))
+            $bResult = false;
+        return $bResult;
     }
 
     private function getService($debug_mode = 'N')

@@ -115,7 +115,7 @@ $current_script = substr(func_normalize_path($REQUEST_URI,'/'), strlen($_locatio
 #
 # Generate additional PHPSESSID var
 #
-$additional_query = ($QUERY_STRING?"&":"?").(strstr($QUERY_STRING,$XCART_SESSION_NAME) ? "" : $XCART_SESSION_NAME."=".$XCARTSESSID);
+//$additional_query = ($QUERY_STRING?"&":"?").(strstr($QUERY_STRING,$XCART_SESSION_NAME) ? "" : $XCART_SESSION_NAME."=".$XCARTSESSID);
 if (!preg_match("/(?:^|&)sl=/", $additional_query) && $xcart_http_host != $xcart_https_host)
 	$additional_query .= "&sl=".$store_language."&is_https_redirect=Y";
 

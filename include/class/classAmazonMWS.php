@@ -792,21 +792,22 @@ class classAmazonMWS
                         if ($k_name == 'AdjustedItem' && !empty($v["AdjustmentID"])) $v["ShipmentID"] = $v["AdjustmentID"];
                         if (!empty($v["AmazonOrderID"]) && !empty($v["ShipmentID"])) {
 
-                            $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl['orders'] . " WHERE amazonorderid='$v[AmazonOrderID]'");
+                            if ($v['MarketplaceName'] == 'Non-Amazon'){
+                                preg_match("/\w+-(\d+)[-]?(\d+)?/", $v['MerchantOrderID'], $aMatchArray); //AR-65345-12
+                                if (!empty($aMatchArray)) {
+                                    if (!empty($aMatchArray[1])) {
+                                        $iOrderId = intval($aMatchArray[1]);
+                                        $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl['orders'] . " WHERE orderid=$iOrderId");
+                                    }
+                                }
+                            } else
+                                $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl['orders'] . " WHERE amazonorderid='$v[AmazonOrderID]'");
+
                             if (!empty($order_info)) {
 
                                 $log_text = "order processed: " . $v["AmazonOrderID"];
 
                                 func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
-                                $aUpdateFields = [];
-                                switch ($v["Fulfillment"]["MerchantFulfillmentID"]) {
-                                    case 'MFN':
-                                        $aUpdateFields['acc_paymentid'] = 1;
-                                        break;
-                                    case 'AFN':
-                                        $aUpdateFields['acc_paymentid'] = 101;
-                                        break;
-                                }
 
                                 foreach ($v["Fulfillment"] as $kk => $vv) {
 
@@ -826,20 +827,19 @@ class classAmazonMWS
 
                                         }
 
-                                        if (!empty($vv["ShipmentFees"])) {
-                                            foreach ($vv["ShipmentFees"] as $kkk => $vvv) {
-                                                if (in_array($vvv["Type"], array("FBATransportationFee"))) {
-                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] += floatVal($vvv["Amount"]);
-                                                }
-                                            }
-                                        }
-
                                         if (!empty($vv["ItemPrice"])) {
                                             foreach ($vv["ItemPrice"] as $kkk => $vvv) {
                                                 if (in_array($vvv["Type"], array("Principal", "Shipping"))) {
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] = floatVal($vvv["Amount"]);
                                                 }
                                             }
+                                        }
+
+                                        if (!empty($vv["Promotion"])) {
+                                                if (in_array($vv["Promotion"]["Type"], array("Shipping"))) {
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += abs(floatVal($vv["Promotion"]["Amount"]));
+                                                }
+
                                         }
 
                                     } elseif ($k_name == "AdjustedItem") {
@@ -877,6 +877,13 @@ class classAmazonMWS
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['type'] = 'Refund';
                                                 }
                                             }
+                                        }
+                                    }
+                                }
+                                if (!empty($v["ShipmentFees"])) {
+                                    foreach ($v["ShipmentFees"] as $kkk => $vvv) {
+                                        if (in_array($vvv["Type"], array("FBATransportationFee"))) {
+                                            $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] += floatVal($vvv["Amount"]);
                                         }
                                     }
                                 }
@@ -938,6 +945,7 @@ class classAmazonMWS
                                         unset($aUpdateValues['Rows']);
                                         unset($aUpdateValues['PrincipalRefund']);
                                         unset($aUpdateValues['Shipping']);
+                                        unset($aUpdateValues['FBATransportationFee']);
                                         unset($aUpdateValues['ShippingRefund']);
                                         func_array2update('order_details', $aUpdateValues, "orderid = $iOrderId AND productcode='$aFees[SKU]'");
 

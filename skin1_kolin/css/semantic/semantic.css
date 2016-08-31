@@ -16667,6 +16667,7 @@ ol.ui.horizontal.list li:before,
   height: 12em;
   min-height: 8em;
   max-height: 24em;
+  box-sizing: border-box;
 }
 
 .ui.form textarea,
@@ -33978,7 +33979,7 @@ html.ios body {
 
 .hidden.transition {
   display: none;
-  visibility: hidden;
+  /*visibility: hidden;*/
 }
 
 /* Visible */

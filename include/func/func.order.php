@@ -225,7 +225,6 @@ function func_select_order($orderid) {
 	        'CB'    => $order['cb_status'],
         	'DC'    => $order['dc_status'],
 	        'BD'    => $order['bd_status'],
-			'VP'	=> $order['vn_status'],
         );
 
 #
@@ -1396,8 +1395,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 #
 ## https://basecamp.com/2070980/projects/1577907/messages/46647624
 ### Start: Cart number feature
-		db_query("UPDATE $sql_tbl[sessions_data] SET cart_number='0' WHERE sessid='".addslashes($$XCART_SESSION_NAME)."'");
-		db_query("UPDATE $sql_tbl[customers] SET cart_number='0' WHERE login='".addslashes($userinfo['login'])."'");
+		//db_query("UPDATE $sql_tbl[sessions_data] SET cart_number='0' WHERE sessid='".addslashes($$XCART_SESSION_NAME)."'");
+		//db_query("UPDATE $sql_tbl[customers] SET cart_number='0' WHERE login='".addslashes($userinfo['login'])."'");
 ###
 ## End: Cart number feature
 #

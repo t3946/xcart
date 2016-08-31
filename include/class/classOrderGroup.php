@@ -50,6 +50,8 @@ class classOrderGroup extends classData
      */
     private $oShippingMethod = null;
 
+    private $availPaymentMethods = [];
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['orderid', 'manufacturerid'];
@@ -63,10 +65,15 @@ class classOrderGroup extends classData
         $this->oOrder = new classOrder($this->getField('orderid'));
     }
 
+    public function getPaymentMethodId()
+    {
+        return $this->getField('acc_paymentid');
+    }
+
     private function fetchPaymentMethodInstance()
     {
-        $oPay = new classPaymentMethod(['paymentid' => $this->getField('acc_paymentid')]);
-        $this->oPaymentMethod = $oPay->getPaymentMethodInstance(['paymentid' => $this->getField('acc_paymentid')]);
+        $oPay = new classPaymentMethod(['paymentid' => $this->getPaymentMethodId()]);
+        $this->oPaymentMethod = $oPay->getPaymentMethodInstance(['paymentid' => $this->getPaymentMethodId()]);
     }
 
     public function getTotalGross()
@@ -76,7 +83,7 @@ class classOrderGroup extends classData
 
     private function getTotalCostToUs()
     {
-        $aCostToUs = func_query_first("SELECT sum(xo.item_cost_to_us) as cost_to_us_od, sum(xp.cost_to_us) as cost_to_us_pr
+        $aCostToUs = func_query_first("SELECT sum(xo.item_cost_to_us*xo.amount) as cost_to_us_od, sum(xp.cost_to_us*xo.amount) as cost_to_us_pr
                                       FROM xcart_order_groups og
                                            INNER JOIN xcart_order_details xo USING (orderid)
                                            INNER JOIN xcart_products xp
@@ -158,6 +165,23 @@ class classOrderGroup extends classData
             $this->fetchPaymentMethodInstance();
         }
         return $this->oPaymentMethod;
+    }
+
+    public function getPaymentMethodsAvailForOrderGroup()
+    {
+        if (empty($this->availPaymentMethods)) {
+            $this->oSQL->init()->addSelect('paymentid, payment_method')->addFromTable('payment_methods')->addCondition("acc_proc='Y'")->addOrderBy('orderby');
+            if ($this->getOrderInstance()->getAmazonChanell())
+                $this->oSQL->addCondition("order_tag_preference = '".$this->getOrderInstance()->getAmazonChanell()."'");
+            $aPaymentMethods = $this->oSQL->Execute()->getQueryResult();
+            if (!empty($aPaymentMethods)) {
+                foreach ($aPaymentMethods as $aPaymentMethod) {
+                    $this->availPaymentMethods[$aPaymentMethod['paymentid']] = $aPaymentMethod['payment_method'];
+                }
+            }
+        }
+
+        return $this->availPaymentMethods;
     }
 
     public function initAccounting()
@@ -760,7 +784,7 @@ class classOrderGroup extends classData
     {
         $this->initAccounting();
         if ($this->getPaymentMethodInstance()->isPaymentMethodSet()) {
-            if ($this->getOrderInstance()->isOrderAmazon()) $this->recalculateAccountingAmazon(); else {
+            if ($this->getOrderInstance()->isOrderAmazon() || $this->isOrderGroupShippedByAmazon()) $this->recalculateAccountingAmazon(); else {
                 $this
                     ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getTotalGross()))
                     ->initAccountingHST()
@@ -847,9 +871,22 @@ class classOrderGroup extends classData
                         $FBAPerUnitFulfillmentFee +
                         $FBAWeightBasedFee +
                         $AmazonCommission)->initAccountingGrossCostToUs()
-                    ->setAccountingGrossShipping($fShipping + $FBATransportationFee);
+                    ->setAccountingGrossShipping($fShipping + abs($FBATransportationFee));
                 if ($this->getOrderAmazonDetails()->isRefundExists())
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                else $this->addAccountingGrossRefundToUs(abs($fRefund));
+
+                break;
+
+            default :
+                $this->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getTotalGross()))->initAccountingGrossCostToUs()
+                    ->setAccountingGrossShipping(abs($FBAPerOrderFulfillmentFee +
+                        $FBAPerUnitFulfillmentFee +
+                        $FBAWeightBasedFee +
+                        $AmazonCommission + $FBATransportationFee) + $fShipping);
+                if ($this->getOrderAmazonDetails()->isRefundExists())
+                    $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
+                else $this->addAccountingGrossRefundToUs(abs($fRefund));
 
                 break;
         }
@@ -921,7 +958,7 @@ class classOrderGroup extends classData
 
     public function updateAmazonShipmentNotes($sAmazonShipmentNotes)
     {
-        $this->updateField('amz_customer_notes', $sAmazonShipmentNotes);
+        $this->updateField('amz_customer_notes', addslashes($sAmazonShipmentNotes));
     }
 
     public function updateAmazonShipmentWithNotes($sAmazonShipmentNotes)
@@ -1014,6 +1051,11 @@ class classOrderGroup extends classData
     public function getOrderGroupStatusBD()
     {
         return $this->getField('bd_status');
+    }
+
+    public function isOrderGroupShippedByAmazon()
+    {
+        return ($this->getField('amz_fullfilment_order_placed')=='Y');
     }
 
 }

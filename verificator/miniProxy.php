@@ -76,7 +76,7 @@ $prefixPort = $_SERVER["SERVER_PORT"] != 80 ? ":" . $_SERVER["SERVER_PORT"] : ""
 $prefixHost = $_SERVER["HTTP_HOST"];
 $prefixHost = strpos($prefixHost, ":") ? implode(":", explode(":", $_SERVER["HTTP_HOST"], -1)) : $prefixHost;
 
-define("PROXY_PREFIX", "http" . (isset($_SERVER["HTTPS"]) ? "" : "") . "://" . $prefixHost . $prefixPort . $_SERVER["SCRIPT_NAME"] . "?");
+define("PROXY_PREFIX", "https" . (isset($_SERVER["HTTPS"]) ? "" : "") . "://" . $prefixHost . $prefixPort . $_SERVER["SCRIPT_NAME"] . "?");
 
 //Makes an HTTP request via cURL, using request data that was passed directly to this script.
 function makeRequest($url)
@@ -140,6 +140,12 @@ function makeRequest($url)
     //Set the request URL.
     curl_setopt($ch, CURLOPT_URL, $url);
 
+    global $login,$xcart_dir;
+    $cookieDir = $xcart_dir.'/verificator/cookies/cookie-'.$login.'.txt';
+
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieDir);
+    curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieDir);
+
     //Make the request.
     $response = curl_exec($ch);
     $responseInfo = curl_getinfo($ch);
@@ -150,6 +156,7 @@ function makeRequest($url)
     //to be output together--separate them.
     $responseHeaders = substr($response, 0, $headerSize);
     $responseHeaders = str_replace('X-Frame-Options: SAMEORIG', '', $responseHeaders);
+    $responseHeaders = str_replace('X-Frame-Options: Deny', '', $responseHeaders);
     $responseBody = substr($response, $headerSize);
     return array("headers" => $responseHeaders, "body" => $responseBody, "responseInfo" => $responseInfo);
 }
@@ -230,7 +237,7 @@ if (isset($_POST["miniProxyFormAction"])) {
     }
 }
 if (empty($url)) {
-    die("<html><head><title>miniProxy</title></head><body><h1>Welcome to miniProxy!</h1>miniProxy can be directly invoked like this: <a href=\"" . PROXY_PREFIX . "http://example.net/\">" . PROXY_PREFIX . "http://example.net/</a><br /><br />Or, you can simply enter a URL below:<br /><br /><form onsubmit=\"window.location.href='" . PROXY_PREFIX . "' + document.getElementById('site').value; return false;\"><input id=\"site\" type=\"text\" size=\"50\" /><input type=\"submit\" value=\"Proxy It!\" /></form></body></html>");
+    die("No url to view");
 } else if (strpos($url, ":/") !== strpos($url, "://")) {
     //Work around the fact that some web servers (e.g. IIS 8.5) change double slashes appearing in the URL to a single slash.
     //See https://github.com/joshdick/miniProxy/pull/14
@@ -327,10 +334,18 @@ if (stripos($contentType, "text/html") !== false) {
         $responseBody = mb_convert_encoding($responseBody, "HTML-ENTITIES", $detectedEncoding);
     }
 
+
     $responseBody = preg_replace_callback('/(?<=href=(\\"|\'))[^\\"\']+(?=(\\"|\'))/', function ($matches) {
         global $url;
         return PROXY_PREFIX . rel2abs($matches[0], $url);
     } , $responseBody);
+
+    $responseBody = preg_replace_callback( '/(<form[^<]*action=["|\'])([^"|\']+)(["|\'][^>]*>)(.*?)(<\/form>)/is', function ($matches) {
+        global $url;
+        $inputhidden = '<input type="hidden" name="miniProxyFormAction" value="' . rel2abs($matches[2], $url) . '" />';
+        $return_value = $matches[1].rtrim(PROXY_PREFIX, "?").$matches[3].$matches[4].$inputhidden.$matches[5];
+        return $return_value;
+    }, $responseBody);
 
 
     //include_once 'simple_html_dom.php';
@@ -431,6 +446,7 @@ if (stripos($contentType, "text/html") !== false) {
     //Protects against cases where the server sends a Content-Type of "text/html" when
     //what's coming back is most likely not actually HTML.
     //TODO: Do this check before attempting to do any sort of DOM parsing?
+    $prependElem = null;
     if ($prependElem != NULL) {
 
         $scriptElem = $doc->createElement("script",
@@ -503,8 +519,20 @@ if (stripos($contentType, "text/html") !== false) {
 
     }
 
+    $sASIN = null;
+
+    $sRegPattern = "/(\/gp\/product\/|\/gp\/offer-listing\/|\/dp\/)(\w+)/";
+
+    preg_match($sRegPattern, $url, $aMatchesASIN);
+
+    if (!empty($aMatchesASIN[2])) {
+        $sASIN = $aMatchesASIN[2];
+    }
+
+
     //echo "<!-- Proxified page constructed by miniProxy -->\n" . $doc;
-    echo $responseBody;
+    $add_script = "<script> window.onload = function() {parent.iframeLoaded('$sASIN')};</script>";
+    echo $responseBody.$add_script;
 } else if (stripos($contentType, "text/css") !== false) { //This is CSS, so proxify url() references.
     echo proxifyCSS($responseBody, $url);
 } else { //This isn't a web page or CSS, so serve unmodified through the proxy with the correct headers (images, JavaScript, etc.)

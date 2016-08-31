@@ -221,7 +221,8 @@ function func_clean_url_cleanup_string($string)
         return '';
     }
 
-    $string = preg_replace('/\&(?!#[0-9]+;)(?!#x[0-9a-f]+;)/', '-and-', preg_replace('/\&amp;/', '-and-', $string));
+    //$string = preg_replace('/\&(?!#[0-9]+;)(?!#x[0-9a-f]+;)/', '-and-', preg_replace('/\&amp;/', '-and-', $string));
+    $string = preg_replace('/&#?[a-z0-9]+;/', ' ' ,$string);
 
 //    return preg_replace('/-$/', '', preg_replace('/[-]+/', '-', preg_replace('/[^a-zA-Z0-9._-]/', '-', func_translit($string, $default_charset, '-'))));
     return preg_replace('/-$/', '', preg_replace('/[-]+/', '-', preg_replace('/[^a-zA-Z0-9_-]/', '-', func_translit($string, $default_charset, '-'))));
