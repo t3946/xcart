@@ -26,6 +26,16 @@ class classCustomer extends classData
         return $this->getField('login');
     }
 
+    public function getCustomerPassword()
+    {
+        return $this->getField('password');
+    }
+
+    public function getCustomerPasswordDecripted()
+    {
+        return text_decrypt($this->getField('password'));
+    }
+
     public function getCustomerURL()
     {
         return $this->getField('url');

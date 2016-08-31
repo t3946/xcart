@@ -7,6 +7,7 @@ $smarty->assign("main","operators_batches");
 
 $oCustomer = new classCustomer(['login'=>$operator]);
 $smarty->assign("oCustomer", $oCustomer);
+$location[] = array(sprintf(func_get_langvar_by_name('txt_verificator_batches',null,false,true),$oCustomer->getCustomerFullName()), "");
 
 if ($batch_status == 'all') $batch_status = null;
 $batch_status = str_replace('_',' ',$batch_status);

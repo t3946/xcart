@@ -37,6 +37,7 @@
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
+require_once $xcart_dir."/include/class/classCustomer.php";
 
 x_load('mail','user');
 
@@ -158,6 +159,8 @@ switch ($login_type) {
 	case "C" : $tpldir = "customer";
 		break;
 	case "V" : $tpldir = "verificator";
+			   $oCustomer = new classCustomer(['login'=>$login]);
+			   $smarty->assign("oCustomer",$oCustomer);
 		break;
 	default: $tpldir = "partner";
 }
