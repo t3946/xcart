@@ -12,6 +12,7 @@ abstract class classStoreFrontMarketPlace extends classData
     protected $aInventory = [];
     private $oExternalMarketPlace = null;
     protected $oService = null;
+    protected $aMerchantResponse = [];
 
     public function __construct($aExternalMarketPlace = null)
     {

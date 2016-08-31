@@ -47,9 +47,10 @@ class classGMC extends classStoreFrontMarketPlace
     private function getService($debug_mode = 'N')
     {
         if (empty($this->oService)) {
+            global $xcart_dir;
             //$service_account_name = 'account-2@careful-triumph-774.iam.gserviceaccount.com'; //Email Address
             $service_account_name = $this->getFTPLogin();
-            $key_file_location = '/var/www/stores/google-api-php-client/examples/key2.p12'; //key.p12
+            $key_file_location = $xcart_dir.'/google-api-php-client/examples/key2.p12'; //key.p12
 
             $client = new Google_Client();
             $client->setApplicationName("Client_Library_Examples");
@@ -93,5 +94,14 @@ class classGMC extends classStoreFrontMarketPlace
             $this->RestoreQueue($this->getProducts(), 1);
 
         $this->setProductsBatchCount(0)->setProducts([]);
+    }
+
+    public function getProductStatuses()
+    {
+        $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(),['includeInvalidInsertedItems'=>true]);
+
+        var_dump($oResponse->getResources());
+
+        return $this;
     }
 }
