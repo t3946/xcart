@@ -9,6 +9,7 @@ global $xcart_dir, $config;
 require_once $xcart_dir . "/include/class/classStoreFronts.php";
 require_once $xcart_dir . "/modules/External_Marketplaces/include/classStoreFrontMarketPlace.php";
 
+
 ini_set('memory_limit', '512M');
 set_time_limit(0);
 
