@@ -430,6 +430,8 @@ if (!empty($config["Appearance"]["Google_Trusted_Store_ID"])){
 			$ITEM_GOOGLE_SHOPPING_ID = $productid;
 		}
 		$GTS_badge_code = str_replace('ITEM_GOOGLE_SHOPPING_ID', $ITEM_GOOGLE_SHOPPING_ID, $GTS_badge_code);
+		
+		$GTS_badge_code = str_replace('gts.push(["google_base_offer_id", ""]);', "", $GTS_badge_code);
 
 		$smarty->assign("GTS_badge_code", $GTS_badge_code);
 //	}
