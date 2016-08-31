@@ -160,6 +160,7 @@ if (substr($xcart_dir, -1) == DIRECTORY_SEPARATOR)
 define ('DIR_CUSTOMER', '');
 define ('DIR_ADMIN', '/admin');
 define ('DIR_PROVIDER', '/provider');
+define ('DIR_VERIFICATOR', '/verificator');
 define ('DIR_PARTNER', '/partner');
 
 #

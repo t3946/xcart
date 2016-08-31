@@ -60,6 +60,11 @@ switch ($redirect) {
 		$current_type = 'B';
 		break;
 
+	case "verificator":
+		$redirect_to = DIR_VERIFICATOR;
+		$current_type = 'V';
+		break;
+
     default:
 		$redirect_to = DIR_CUSTOMER;
 		$current_type = 'C';

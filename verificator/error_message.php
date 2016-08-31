@@ -31,100 +31,31 @@
 \*****************************************************************************/
 
 #
-# $Id: user_add.php,v 1.38.2.1 2006/10/02 08:02:31 twice Exp $
+# $Id: error_message.php,v 1.19.2.1 2006/12/05 15:03:21 twice Exp $
 #
 
 require "./auth.php";
-require $xcart_dir."/include/security.php";
 
-define('USER_ADD', 1);
+require $xcart_dir."/include/error_message.php";
 
-$display_antibot = false;
 
-$location[] = array(func_get_langvar_by_name("lbl_users_management"), "users.php");
-
-$_usertype = (($usertype == "P" and !empty($active_modules["Simple_Mode"])) ? "A" : $usertype);
-switch ($_usertype) {
-	case "A":
-		$location[] = array(func_get_langvar_by_name("lbl_create_admin_profile"), "");
-		break;
-	case "P":
-		$location[] = array(func_get_langvar_by_name("lbl_create_provider_profile"), "");
-		break;
-	case "C":
-		$location[] = array(func_get_langvar_by_name("lbl_create_customer_profile"), "");
-		break;
-	case "V":
-		$location[] = array(func_get_langvar_by_name("lbl_create_verificator_profile"), "");
-		break;
-	case "B":
-		$location[] = array(func_get_langvar_by_name("lbl_create_partner_profile"), "");
+#
+# Assign login information
+#
+x_session_register("login_antibot_on");
+x_session_register("antibot_err");
+x_session_register("username");
+$smarty->assign("username", $username);
+$smarty->assign("login_antibot_on", $login_antibot_on);
+if ($antibot_err) {
+	$smarty->assign("antibot_err", $antibot_err);
+	$antibot_err = false;
 }
-
-include "./users_tools.php";
-
-$smarty->assign("usertype_name", $usertypes[$usertype]);
-
-$mode = "add";
-
-$login_ = $login;
-$login_type_ = $login_type;
-
-$login = $_GET['user'];
-$login_type = $_GET['usertype'];
-
-#
-##
-###
-$smarty->assign("new_login_type", $login_type);
-###
-##
-#
-
-#
-# Where to forward <form action
-#
-
-$smarty->assign("register_script_name",(($config["Security"]["use_https_login"]=="Y")?$xcart_catalogs_secure['admin']."/":"")."user_add.php");
-
-require $xcart_dir."/include/register.php";
-
-#
-# Update profile or create new
-#
-switch ($usertype) {
-	case "A" : $tpldir = "admin";
-		break;
-	case "P" : $tpldir = "provider";
-		break;
-	case "C" : $tpldir = "customer";
-		break;
-	case "V" : $tpldir = "verificator";
-		break;
-	default: $tpldir = "partner";
-}
-
-if ($active_modules["Simple_Mode"] && ($usertype=="A" || $usertype=="P"))
-	$tpldir = "admin"; 
-
-# Display the 'Activity' input box for admin, provider or partner
-if (in_array($usertype, array("A", "P", "B")))
-	$smarty->assign("display_activity_box", "Y");
-
-$smarty->assign("main","user_add");
-$smarty->assign("tpldir", $tpldir);
-
-$login=$login_;
-$login_type=$login_type_;
-
-x_session_save();
 
 # Assign the current location line
 $smarty->assign("location", $location);
 
-# Assign the section navigation data
-$smarty->assign("dialog_tools_data", $dialog_tools_data);
 
 @include $xcart_dir."/modules/gold_display.php";
-func_display("admin/home.tpl",$smarty);
+func_display("verificator/home.tpl",$smarty);
 ?>

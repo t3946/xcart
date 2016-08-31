@@ -2217,6 +2217,7 @@ function func_get_area_catalog($area = 'C', $https = null)
     $catalogs = array (
         'A' => 'admin',
         'P' => 'provider',
+        'V' => 'verificator',
         'C' => 'customer',
         'B' => 'partner',
     );
@@ -2227,7 +2228,7 @@ function func_get_area_catalog($area = 'C', $https = null)
         $area = 'A';
     }
 
-    if (!in_array($area, array('A','P','C','B'))) {
+    if (!in_array($area, array('A','P','C','B','V'))) {
         $area = 'C';
     }
 

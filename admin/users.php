@@ -169,11 +169,11 @@ if (!empty($search_data["users"]) && is_array($search_data)){
 	$smarty->assign("search_prefilled", $search_data["users"]);
 }
 
-$memberships = array("A" => array(), "P" => array(), "C" => array());
+$memberships = array("A" => array(), "P" => array(), "C" => array(), "V" => array());
 if (!empty($active_modules['XAffiliate'])) {
 	$memberships['B'] = array();
 }
-$tmp = func_query("SELECT $sql_tbl[memberships].area, $sql_tbl[memberships].membershipid, IFNULL($sql_tbl[memberships_lng].membership, $sql_tbl[memberships].membership) as membership FROM $sql_tbl[memberships] LEFT JOIN $sql_tbl[memberships_lng] ON $sql_tbl[memberships].membershipid = $sql_tbl[memberships_lng].membershipid AND $sql_tbl[memberships_lng].code = '$shop_language' WHERE $sql_tbl[memberships].active = 'Y' ORDER BY IF(FIELD($sql_tbl[memberships].area, 'A','P','C','B') > 0, FIELD($sql_tbl[memberships].area, 'A','P','C','B'), 100), $sql_tbl[memberships].orderby");
+$tmp = func_query("SELECT $sql_tbl[memberships].area, $sql_tbl[memberships].membershipid, IFNULL($sql_tbl[memberships_lng].membership, $sql_tbl[memberships].membership) as membership FROM $sql_tbl[memberships] LEFT JOIN $sql_tbl[memberships_lng] ON $sql_tbl[memberships].membershipid = $sql_tbl[memberships_lng].membershipid AND $sql_tbl[memberships_lng].code = '$shop_language' WHERE $sql_tbl[memberships].active = 'Y' ORDER BY IF(FIELD($sql_tbl[memberships].area, 'A','P','C','B','V') > 0, FIELD($sql_tbl[memberships].area, 'A','P','C','B','V'), 100), $sql_tbl[memberships].orderby");
 if (!empty($tmp)) {
 	foreach ($tmp as $v) {
 		$memberships[$v['area']][] = $v;

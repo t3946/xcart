@@ -83,16 +83,17 @@ class classProduct extends classCloneData
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled), $this->getStoreFront()->getStoreFrontByProductId($this->primaryKeyValue)->getField('storefrontid'));
     }
 
-    public function getProductFrontURL()
+    public function getProductFrontURL($http = 'http://')
     {
-        return func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled));
+
+        return $http.$this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getDomain().'/'.func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled), false);
     }
 
     public function getHTMLShot($iOrderID)
     {
         $oResult = null;
-        $aHTMLShot = func_query_first("SELECT * FROM " . self::$sql_tbl['product_htmlshot'] . " WHERE product_id=".$this->getProductId()." AND order_id=$iOrderID");
-        if (!empty($aHTMLShot)){
+        $aHTMLShot = func_query_first("SELECT * FROM " . self::$sql_tbl['product_htmlshot'] . " WHERE product_id=" . $this->getProductId() . " AND order_id=$iOrderID");
+        if (!empty($aHTMLShot)) {
             $oResult = new classHTMLShot();
             $oResult->fillPrimaryTableValues($aHTMLShot);
         }
@@ -104,7 +105,7 @@ class classProduct extends classCloneData
         $sWebsiteProduct = $this->getManfacturerClass()->getField('d_website_search_for_sku_url');
         if (empty($sWebsiteProduct))
             $sWebsiteProduct = $this->getManfacturerClass()->getField('url');
-        return str_replace(['{{mpn}}','{{supplier_internal_id}}'], [$this->getMPN(),$this->getField('supplier_internal_id')], $sWebsiteProduct);
+        return str_replace(['{{mpn}}', '{{supplier_internal_id}}'], [$this->getMPN(), $this->getField('supplier_internal_id')], $sWebsiteProduct);
     }
 
     public function getProductLastVerifyDate()
@@ -185,22 +186,22 @@ class classProduct extends classCloneData
 
     private function fetchImages($type)
     {
-        $sImagesVar = "aImages".$type;
+        $sImagesVar = "aImages" . $type;
         if (empty($this->$sImagesVar)) {
-            $aImages = func_query("SELECT * FROM " . self::$sql_tbl['images_'.$type] . " WHERE id = ".$this->getProductId()." ORDER BY orderby ASC");
+            $aImages = func_query("SELECT * FROM " . self::$sql_tbl['images_' . $type] . " WHERE id = " . $this->getProductId() . " ORDER BY orderby ASC");
             if (!empty($aImages))
-            foreach ($aImages as $aImage) {
-                $oProductImage = new classProductImage($type);
-                $oProductImage->fillPrimaryTableValues($aImage);
-                $var = &$this->$sImagesVar;
-                $var[] = $oProductImage;
-            }
+                foreach ($aImages as $aImage) {
+                    $oProductImage = new classProductImage($type);
+                    $oProductImage->fillPrimaryTableValues($aImage);
+                    $var = &$this->$sImagesVar;
+                    $var[] = $oProductImage;
+                }
         }
     }
 
     public function getImages($type)
     {
-        $sImagesVar = "aImages".$type;
+        $sImagesVar = "aImages" . $type;
         $this->fetchImages($type);
         return $this->$sImagesVar;
     }
@@ -208,9 +209,9 @@ class classProduct extends classCloneData
     private function fetchPricing()
     {
         if (empty($this->aPricing)) {
-            $aPricing = func_query("SELECT * FROM " . self::$sql_tbl['pricing'] . " WHERE productid = ".$this->getProductId()." ORDER BY quantity ASC");
+            $aPricing = func_query("SELECT * FROM " . self::$sql_tbl['pricing'] . " WHERE productid = " . $this->getProductId() . " ORDER BY quantity ASC");
             if (!empty($aPricing))
-                foreach ($aPricing as $aPrice){
+                foreach ($aPricing as $aPrice) {
                     $oProductPricing = new classPricing();
                     $oProductPricing->fillPrimaryTableValues($aPrice);
                     $this->aPricing[] = $oProductPricing;
@@ -235,9 +236,9 @@ class classProduct extends classCloneData
         if (intval($this->getField('r_avail')) <= 0)
             $result = false;
         $iEtaDate = $this->getField('eta_date_mm_dd_yyyy');
-        if ($result && !empty($iEtaDate)){
+        if ($result && !empty($iEtaDate)) {
             $current_time = time();
-            if ($current_time < $iEtaDate){
+            if ($current_time < $iEtaDate) {
                 $result = false;
             }
         }
@@ -263,9 +264,9 @@ class classProduct extends classCloneData
     public function getPrice($forQuantity = 1)
     {
         $fPrice = 0;
-        if (!empty($this->aPricing)){
+        if (!empty($this->aPricing)) {
             foreach ($this->aPricing as $oPrice) {
-                if ($forQuantity >= floatval($oPrice->getQuantity())){
+                if ($forQuantity >= floatval($oPrice->getQuantity())) {
                     $fPrice = floatval($oPrice->getPrice());
                     break;
                 }
@@ -282,8 +283,7 @@ class classProduct extends classCloneData
     {
         $fPrice = $this->getPrice($forQuantity);
 
-        if ($this->isSupplierFeedsEnabled() && !$this->isProductOutOfStock())
-        {
+        if ($this->isSupplierFeedsEnabled() && !$this->isProductOutOfStock()) {
             $fPrice = func_decreased_price($this->getProductCostToUs(), $fPrice, $this->getMapPrice());
         }
 
@@ -293,7 +293,7 @@ class classProduct extends classCloneData
     public function  isSupplierFeedsEnabled()
     {
         $result = false;
-        $sEnabled = func_query_first_cell("SELECT enabled FROM ". self::$sql_tbl['supplier_feeds']." WHERE manufacturerid=".$this->getField('manufacturerid')." AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='" . $this->getField("controlled_by_feed") . "'))");
+        $sEnabled = func_query_first_cell("SELECT enabled FROM " . self::$sql_tbl['supplier_feeds'] . " WHERE manufacturerid=" . $this->getField('manufacturerid') . " AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='" . $this->getField("controlled_by_feed") . "'))");
         if ($sEnabled == 'Y') $result = true;
         return $result;
     }
@@ -302,9 +302,9 @@ class classProduct extends classCloneData
     {
         $sUrl = null;
         $this->getImages('P');
-        if (!empty($this->aImagesP)){
+        if (!empty($this->aImagesP)) {
             $oImage = reset($this->aImagesP);
-            $sUrl =  $oImage->getURL();
+            $sUrl = $oImage->getURL();
         }
         return $sUrl;
     }
@@ -312,6 +312,22 @@ class classProduct extends classCloneData
     public function getDetailedImages()
     {
         return $this->getImages('D');
+    }
+
+    public function getAmazonASIN()
+    {
+        $sASIN = func_query_first_cell("SELECT asin FROM " . self::$sql_tbl['products_amz_fields'] . " WHERE productid=" . $this->getProductId());
+        return $sASIN;
+    }
+
+    public function getUPC()
+    {
+        return $this->getField('upc');
+    }
+
+    public function getProductName()
+    {
+        return $this->getField('product');
     }
 
 }
