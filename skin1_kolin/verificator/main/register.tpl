@@ -31,7 +31,33 @@
 {/if}
 {/if}
 {/if}
+{assign var="show_user_reg_info" value=$top_message.show_user_reg_info}
+{if ($show_user_reg_info == 'Y')}
+	{if $oCustomer}
+	<div id="user-info-message" align="center">
+		<table cellspacing="0" class="DialogInfo">
+			<tr>
+				<td class="DialogInfoBorder">
+					<table width="100%" cellspacing="1">
+						<tr>
+							<td valign="top" class="DialogBox">
+								<table>
+									<tr><td>Amazon product verification Username / Login / Email and Password</td></tr>
+									<tr><td></td></tr>
+									<tr><td><a href="https://www.artistsupplysource.com/verificator/">https://www.artistsupplysource.com/verificator/</a></td></tr>
+									<tr><td>Username: {$oCustomer->getCustomerLogin()}</td></tr>
+									<tr><td>Password: {$oCustomer->getCustomerPasswordDecripted()}</td></tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 
+	</div>
+	{/if}
+{/if}
 {include file="page_title.tpl" title=$title}
 
 <!-- IN THIS SECTION -->

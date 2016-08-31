@@ -20,7 +20,7 @@
         </tr>
         <tr>
             <td width="30%">
-                <b>Login:</b>
+                <b>Username:</b>
             </td>
             <td>
                 {$oCustomer->getCustomerLogin()}
@@ -36,7 +36,7 @@
         </tr>
         <tr>
             <td>
-                <b>Last produсt verified time:</b>
+                <b>Date and time when the last product was processed:</b>
             </td>
             <td>
                 {assign var=oLastDate value=$oCustomer->getAmazonLastVerifyDate()}
@@ -47,7 +47,7 @@
         </tr>
         <tr class="TableSubHead">
             <td>
-                <b>Products processed (matched, not matched and not sure):</b>
+                <b>Total number of products processed including 'Match', 'Not sure', and 'Does not match':</b>
             </td>
             <td>
                 {$oCustomer->getAmazonProductProcessedCount()}
@@ -55,7 +55,7 @@
         </tr>
         <tr>
             <td>
-                <b>Products (not sure):</b>
+                <b>Total number of 'Not sure' products processed:</b>
             </td>
             <td>
                 {$oCustomer->getAmazonProductNotSureCount()}
@@ -80,10 +80,10 @@
         {if ($aCurrentBatches)}
             <tr class="TableHead">
                 <td width="10">Batch #</td>
-                <td width="60" nowrap="nowrap" align="center">Products amount</td>
+                <td width="60" nowrap="nowrap" align="center">BATCH SIZE (# OF PROD)</td>
                 <td width="100" align="center">Products processed</td>
-                <td width="100" align="center">Status</td>
-                <td width="200" align="center"></td>
+                <td width="100" align="center">BATCH STATUS</td>
+                <td width="200" align="center">BATCH PRODUCT VERIFICATION LINK</td>
             </tr>
             {foreach from=$aCurrentBatches item=oCurrentBatch}
                 <tr>
@@ -91,9 +91,9 @@
                     <td align="center">{$oCurrentBatch->getBatchAmount()}</td>
                     <td align="center">{$oCurrentBatch->getProductsInBatchCompletedCount()}</td>
                     <td align="center">{$oCurrentBatch->getBatchStatus()}</td>
-                    <td align="center"><a class="verification_link" target="_blank" href="{$oCurrentBatch->getBatchVerifyLink()}">continue batch #
-                            [{$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}
-                            _{$oCurrentBatch->getBatchAmount()}] processing</a></td>
+                    <td align="center">continue the processing of batch ID: <a class="verification_link" target="_blank" href="{$oCurrentBatch->getBatchVerifyLink()}">
+                            {$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}
+                            _{$oCurrentBatch->getBatchAmount()}</a></td>
                 </tr>
             {/foreach}
         {else}
@@ -123,13 +123,13 @@
         </tr>
         <tr class="TableHead">
             <td nowrap="nowrap" width="10">Batch #</td>
-            <td width="100" nowrap="nowrap" align="center">Batch amount</td>
-            <td width="100" align="center">Start date</td>
+            <td width="100" nowrap="nowrap" align="center">BATCH SIZE</td>
+            <td width="100" align="center">STARTING DATE</td>
             <td width="100" align="center">Match</td>
-            <td width="100" align="center">Not match</td>
+            <td width="100" align="center">DOES NOT MATCH</td>
             <td width="100" align="center">Not sure</td>
-            <td width="100" align="center">1 item speed</td>
-            <td width="100" align="center">Status</td>
+            <td width="100" align="center">PER PRODUCT TIME</td>
+            <td width="100" align="center">BATCH STATUS</td>
         </tr>
         {if ($aPreviousBatches)}
             {foreach from=$aPreviousBatches item=oPreviousBatch}
@@ -149,4 +149,4 @@
     </table>
 {/capture}
 
-{include file="dialog.tpl" title='General information' content=$smarty.capture.dialog1 extra='width="100%"'}
+{include file="dialog.tpl" title='Verificator panel' content=$smarty.capture.dialog1 extra='width="100%"'}

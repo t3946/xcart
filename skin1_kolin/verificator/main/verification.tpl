@@ -10,6 +10,8 @@
     <script src="{$SkinDir}/js/semantic/components/dimmer.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/modal.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/transition.min.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/js/semantic/components/progress.min.js" type="text/javascript"></script>
+
     {literal}
     <script type="text/javascript">
         // <![CDATA[
@@ -19,16 +21,16 @@
         idx = 0;
         firstLoad = true;
 
-        function getFirstAvailStep(){
+        function getFirstAvailStep() {
             for (var prop in trans)
                 return prop;
         }
-        function initButtons(){
-            var i=0;
+        function initButtons() {
+            var i = 0;
             for (var prop in trans) {
                 i++;
-                var b = $('#search_amazon_by_asin, #search_amazon_by_upc, #search_amazon_by_name').filter('[data-step-id='+prop+']');
-                if (i==1) b.addClass('left');
+                var b = $('#search_amazon_by_asin, #search_amazon_by_upc, #search_amazon_by_name').filter('[data-step-id=' + prop + ']').removeClass('active');
+                if (i == 1) b.addClass('left');
                 b.show();
 
             }
@@ -80,12 +82,48 @@
             $('.ui.segment.dimmable').dimmer('hide');
         }
 
+        function clickOriginalProduct(button) {
+
+            button.toggleClass('active');
+            var check = $('#split-screen-checkbox').prop("checked");
+            if (button.hasClass('active')) {
+                if (!check) {
+                    $('.iframediv.left').css('width', '0');
+                    $('.iframediv.right').css('width', '100%');
+                }
+            } else {
+                if (!check) {
+                    $('.iframediv.left').css('width', '100%');
+                    $('.iframediv.right').css('width', '0');
+                }
+                button.blur();
+            }
+        }
+
+        function changeSplitScreen(split){
+            var check = split.prop("checked"),
+                    sstep = '',
+                    idx = getLocationId();
+            if (idx > 0) {
+                sstep = '&step=' + idx;
+            }
+            if (check) {
+                $('.iframediv.right').css('width', '50%');
+                $('.iframediv.left').css('width', '50%');
+                $('#original_product').removeClass('active').blur().prop('disabled', true);
+            } else {
+                $('.iframediv.left').css('width', '100%');
+                $('.iframediv.right').css('width', '0');
+                $('#original_product').prop('disabled', false);
+            }
+        }
+
         var spathName = location.pathname;
 
         $(document).ready(function () {
             $('#search_amazon_by_asin, #search_amazon_by_upc, #search_amazon_by_name').on('click', '', function () {
                 if (!$(this).hasClass('active')) {
-                    $(this).addClass('active').siblings().removeClass('active');
+                    $(this).addClass('active').siblings().removeClass('active').blur();
                     $('#conclusion_buttons').fadeOut();
 
                     var currstep = $(this).data('step-id');
@@ -100,74 +138,61 @@
                 }
             });
             $('#original_product').on('click', '', function () {
+                clickOriginalProduct($(this));
                 var sstep = '',
-                idx = getLocationId(),
-                check = $('#split-screen-checkbox').prop("checked");
+                    idx = getLocationId();
+
                 if (idx > 0) {
                     sstep = '&step=' + idx;
                 }
-
-                $(this).toggleClass('active');
                 if ($(this).hasClass('active')) {
                     history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep + '&show_original=1');
-                    if (!check) {
-                        $('.iframediv.left').css('width', '0');
-                        $('.iframediv.right').css('width', '100%');
-                    }
                 } else {
-                    history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep );
-                    if (!check) {
-                        $('.iframediv.left').css('width', '100%');
-                        $('.iframediv.right').css('width', '0');
-                    }
-                    $(this).blur();
+                    history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep);
                 }
             });
 
             $('#split-screen-checkbox').on('change', '', function () {
+                changeSplitScreen($(this));
                 var check = $(this).prop("checked"),
-                sstep = '',
-                idx = getLocationId();
+                        sstep = '',
+                        idx = getLocationId();
                 if (idx > 0) {
                     sstep = '&step=' + idx;
                 }
                 if (check) {
-                    $('.iframediv.right').css('width', '50%');
-                    $('.iframediv.left').css('width', '50%');
-                    $('#original_product').removeClass('active').blur().prop('disabled', true);
-                    history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep + '&split_screen=1' );
+                    history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep + '&split_screen=1');
                 } else {
-                    $('.iframediv.left').css('width', '100%');
-                    $('.iframediv.right').css('width', '0');
-                    $('#original_product').prop('disabled', false);
                     history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep);
                 }
             });
             initButtons();
+            $('.indicating.progress').progress();
             if (trans) {
                 if (trans.length == 0) {
                     $('#no_products').show();
                 } else {
                     $('.buttons-wrap-left button[data-step-id=' + Math.max(getLocationId(), getFirstAvailStep()) + ']').click();
                     if (isShowOriginal() == 1) {
-                        $('#original_product').click();
+                        clickOriginalProduct($('#original_product'));
                     }
                     else if (isSplitScreen() == 1) {
-                        $('#split-screen-checkbox').prop("checked", true).change();
+                        $('#split-screen-checkbox').prop("checked", true);
+                        changeSplitScreen($('#split-screen-checkbox'));
                     }
                 }
             }
 
             $('#submit-product-match, #submit-product-not-sure, #submit-product-not-match, #submit-product-not-found').on('click', '', function () {
                 var active_button_action = $(this).data('action'),
-                    active_batch_id = $(this).parent().data('batch-id'),
-                    active_product_id = $(this).parent().data('product-id'),
-                    active_asin = $(this).parent().data('asin');
+                        active_batch_id = $(this).parent().data('batch-id'),
+                        active_product_id = $(this).parent().data('product-id'),
+                        active_asin = $(this).parent().data('asin');
                 $('.small.modal').modal({
                     onApprove: function () {
                         $('#conclusion_buttons').fadeOut();
-                        $.post('ajax_admin.php',{
-                                    verify_status_id : active_button_action,
+                        $.post('ajax_admin.php', {
+                                    verify_status_id: active_button_action,
                                     batch_id: active_batch_id,
                                     product_id: active_product_id,
                                     note_text: $('#verify_comment').val(),
@@ -181,7 +206,7 @@
                                     if (split) {
                                         ssplit = '&split_screen=1';
                                     }
-                                    location.href = spathName+'?batch=' + getBatchId()+ssplit;
+                                    location.href = spathName + '?batch=' + getBatchId() + ssplit;
                                 }, 'json');
                     }
                 }).modal('show');
@@ -192,10 +217,20 @@
         });
 
         window.addEventListener("popstate", function () {
-            $('.buttons-wrap-left button[data-step-id=' + getLocationId() + ']').click();
+            initButtons();
+            firstLoad = true;
+            if (isShowOriginal() == 1) {
+                clickOriginalProduct($('#original_product'));
+            }
+            else if (isSplitScreen() == 1) {
+                changeSplitScreen($('#split-screen-checkbox'));
+            }
+            else {
+                $('.buttons-wrap-left button[data-step-id=' + getLocationId() + ']').click();
+            }
         });
 
-        function loadOriginalProduct(frame_Name){
+        function loadOriginalProduct(frame_Name) {
             if (sOriginalProduct.length > 0) {
                 var i_frame = document.getElementById(frame_Name);
                 if ($(i_frame).length) {
@@ -240,7 +275,7 @@
                     frameborder: 0
                 }).appendTo(appendto);
             }
-            if (!url && !firstLoad) {
+            if (!firstLoad) {
                 if (idx > 0) {
                     history.pushState(null, null, spathName + '?batch=' + getBatchId() + '&step=' + idx + ssplit);
                 }
@@ -258,45 +293,69 @@
     </script>
     {/literal}
 </head>
-<body>
+<body class="verifiaction">
 <header id="header">
     <div class="buttons-wrap-left">
         <div class="wrap-left">
 
             <div class="three ui buttons">
-                <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; ">Compare</span>
-                <button data-step-id="0" id="search_amazon_by_asin" class="ui button attached">Open product by ASIN</button>
-                <button data-step-id="1" id="search_amazon_by_upc" class="ui attached button">Search product by UPC</button>
-                <button data-step-id="2" id="search_amazon_by_name" class="ui right attached button">Search product by Product Name</button>
-                <span style="font-size: 18px; margin-left: 25px; margin-top:14px;">AND</span>
+                <span style="font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; ">Compare</span>
+                <button data-step-id="0" id="search_amazon_by_asin" class="ui button attached">Open product by ASIN
+                </button>
+                <button data-step-id="1" id="search_amazon_by_upc" class="ui attached button">Search product by UPC
+                </button>
+                <button data-step-id="2" id="search_amazon_by_name" class="ui right attached button">Search product by
+                    Product Name
+                </button>
+                <span style="font-size: 18px; margin-left: 25px; margin-top:14px; font-family:Verdana;">AND</span>
                 <span style="margin-left: 25px;">
                 <button data-step-id="3" id="original_product" class="ui left attached button">Original product</button>
                 </span>
             </div>
         </div>
-        <div style="float: right; bottom: 48px; right: -70px;" class="form ui field">
-            <div class="ui slider checkbox" style="margin-top: 10px; float:left; width: 138px; font-size: 14px;">
+        <div style="float: right; bottom: 42px; right: -70px;" class="form ui field">
+            <div class="ui slider checkbox" style="margin-top: 10px; float:left; width: 158px; font-size: 14px;">
                 <input autocomplete="off" name="newsletter" id="split-screen-checkbox" type="checkbox">
-                <label>Split screen</label>
+                <label style="font-family:Verdana;">Split screen</label>
             </div>
         </div>
     </div>
-    <div class="buttons-wrap-right" >
+    <div class="buttons-wrap-right">
+        <div class="ui indicating progress" id="progress-indicator"
+             data-value="{$oVerificationBatch->getProductsInBatchCompletedCount()}"
+             data-total="{$oVerificationBatch->getBatchAmount()}">
+            <div class="bar">
+                <div class="progress"></div>
+            </div>
+            <div class="label">{$oVerificationBatch->getProductsInBatchCompletedCount()}
+                /{$oVerificationBatch->getBatchAmount()}</div>
+        </div>
         <div class="buttons-right">
             <div id="conclusion_buttons" style="display:none;">
-                <span style="line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</span>
-                <div id="action_buttons_block" class="ui buttons select" data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}" data-product-id="{$oVerificationBatch->getVerifiedProductId()}">
-                    <button data-action="match" id="submit-product-match" class="ui left positive button">Product match</button>
-                    <div class="or" data-text="or"></div>
-                    <button data-action="not_sure" id="submit-product-not-sure" class="ui yellow button">Not sure</button>
-                    <div class="or" data-text="or"></div>
-                    <button data-action="not_match" id="submit-product-not-match" class="ui negative button">Does not match</button>
+                <span style="font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</span>
 
+                <div id="action_buttons_block" class="ui buttons select" data-asin=""
+                     data-batch-id="{$oVerificationBatch->getBatchId()}"
+                     data-product-id="{$oVerificationBatch->getVerifiedProductId()}">
+                    <button data-action="match" id="submit-product-match" class="ui left positive button">Product
+                        match
+                    </button>
+                    <div class="or" data-text="or"></div>
+                    <button data-action="not_sure" id="submit-product-not-sure" class="ui yellow button">Not sure
+                    </button>
+                    <div class="or" data-text="or"></div>
+                    <button data-action="not_match" id="submit-product-not-match" class="ui negative button">Does not
+                        match
+                    </button>
                 </div>
             </div>
-            <div data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}" data-product-id="{$oVerificationBatch->getVerifiedProductId()}" class="ui buttons select" id="product_not_found_button">
-                <button data-action="not_found" id="submit-product-not-found" class="ui left button">Product not found</button>
+            <div data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}"
+                 data-product-id="{$oVerificationBatch->getVerifiedProductId()}" class="ui buttons select"
+                 id="product_not_found_button">
+                <button data-action="not_found" id="submit-product-not-found" class="ui left button">Product not found
+                </button>
             </div>
+
         </div>
     </div>
 </header>

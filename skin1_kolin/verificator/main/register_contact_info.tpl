@@ -326,6 +326,7 @@
 <td valign="top">{if $default_fields.url.required eq 'Y'}<font class="Star">*</font>{else}&nbsp;{/if}</td>
 <td valign="top" nowrap="nowrap">
 <input type="text" id="url" name="url" size="32" maxlength="128" value="{$userinfo.url}" />
+<div style="font-style: italic; font-weight: bold;">e.g. https://www.upwork.com/o/profiles/users/_~01fea84fe049525e80/</div>
 {if $reg_error ne "" and $userinfo.url eq "" and $default_fields.url.required eq 'Y'}<font class="Star">&lt;&lt;</font>{/if}
 </td>
 </tr>

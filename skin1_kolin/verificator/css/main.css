@@ -1,5 +1,5 @@
 html {height:100%;}
-body
+body.verifiaction
 {
     margin: 0;
     padding: 0;
@@ -137,4 +137,19 @@ iframe
 }
 #search_amazon_by_asin, #search_amazon_by_upc{
     display: none;
+}
+#batch_amount {
+    font-size: 13px;
+}
+.ui.error.message {
+    font-size: 13px;
+}
+#progress-indicator{
+    width: 100px;
+    height: 18px;
+    font-family: Verdana;
+    float: right;
+    font-size: 10px;
+    right: 20px;
+    top: 32px;
 }
