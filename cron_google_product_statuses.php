@@ -8,6 +8,7 @@ require "./init.php";
 global $xcart_dir, $config;
 require_once $xcart_dir . "/include/class/classStoreFronts.php";
 require_once $xcart_dir . "/modules/External_Marketplaces/include/classStoreFrontMarketPlace.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/marketplaces/classGMC.php";
 
 
 ini_set('memory_limit', '512M');
@@ -27,7 +28,7 @@ $log_text = " * * *  Cron started  * * * ";
 
 $oStoreFronts = new classStoreFronts();
 $aStoreFronts = $oStoreFronts->getStoreFronts();
-if (!empty($aStoreFronts)) {
+/*if (!empty($aStoreFronts)) {
     foreach ($aStoreFronts as $aStoreFront) {
         $aMarketPlaces = classStoreFrontMarketPlace::getMarketPlacesByStoreFront($aStoreFront->getStoreFrontId());
         if (!empty($aMarketPlaces)) {
@@ -38,8 +39,11 @@ if (!empty($aStoreFronts)) {
             }
         }
     }
-}
+}*/
 
+$a = new classGMC();
+$a->setField('P1',1324811);
+$a->getProductStatuses();
 
 
 db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='" . LOG_CATEGORY . "'");
