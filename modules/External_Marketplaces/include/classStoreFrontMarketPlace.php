@@ -188,6 +188,14 @@ abstract class classStoreFrontMarketPlace extends classData
         }
     }
 
+    public function getUpdateExpiredBeforeDays()
+    {
+        return $this->getField('update_expired_before');
+    }
 
+    public function getUpdateMaxExpiredProductsPerDay()
+    {
+        return $this->getField('update_max_expired_products_per_day');
+    }
 
 }

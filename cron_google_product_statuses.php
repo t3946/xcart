@@ -28,7 +28,7 @@ $log_text = " * * *  Cron started  * * * ";
 
 $oStoreFronts = new classStoreFronts();
 $aStoreFronts = $oStoreFronts->getStoreFronts();
-/*if (!empty($aStoreFronts)) {
+if (!empty($aStoreFronts)) {
     foreach ($aStoreFronts as $aStoreFront) {
         $aMarketPlaces = classStoreFrontMarketPlace::getMarketPlacesByStoreFront($aStoreFront->getStoreFrontId());
         if (!empty($aMarketPlaces)) {
@@ -39,12 +39,7 @@ $aStoreFronts = $oStoreFronts->getStoreFronts();
             }
         }
     }
-}*/
-
-$a = new classGMC();
-$a->setField('P1',1324811);
-$a->getProductStatuses();
-
+}
 
 db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='" . LOG_CATEGORY . "'");
 
