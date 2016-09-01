@@ -117,8 +117,8 @@ class classGMC extends classStoreFrontMarketPlace
                             $oGMCQualityIssues->fillPrimaryTableValues(['productid' => $iProductId,
                                 'issue_id' => $oIssue->getIssueId(),
                                 'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
-                                'issue_data' => addslashes(serialize($oDataQualityIssues)),
-                                'issue_destination' => addslashes(serialize($oProduct->getDestinationStatuses()))
+                                'issue_data' => json_encode($oDataQualityIssues),
+                                'issue_destination' => json_encode($oProduct->getDestinationStatuses())
                             ]);
                             $oGMCQualityIssues->_insert();
                         }
