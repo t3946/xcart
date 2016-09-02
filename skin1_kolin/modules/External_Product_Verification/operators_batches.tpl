@@ -32,7 +32,7 @@
         <tr class="TableHead">
             <td width="10">Batch #</td>
             <td width="10">Batch ID</td>
-            <td width="10">Start date<br/>and time</td>
+            <td width="10">Starting date<br/>and time</td>
             <td width="10">Products processed</td>
             <td width="100">Average time spent per product</td>
             <td width="100" align="center">Batch status</td>
@@ -83,7 +83,7 @@
     </div>
     <div class="content">
         <div>
-            <h4 class="ui dividing header">Enter the number of products to be included in a new batch (the number must
+            <h4 class="ui dividing header">Enter the number of products to be included in a new batch<br>(the number must
                 be > 0)</h4>
 
             <form class="ui form">

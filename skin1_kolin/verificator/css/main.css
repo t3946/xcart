@@ -48,13 +48,12 @@ iframe
 .buttons-wrap-left {
     width:50%;
     float: left;
-    min-width: 640px;
+    min-width: 780px;
+    display: table;
 
 }
 .wrap-left{
-    width:710px;
-    height:100%;
-    margin: 0 auto;
+    display: table-cell;
 }
 .buttons-wrap-right {
     width:50%;
@@ -144,12 +143,25 @@ iframe
 .ui.error.message {
     font-size: 13px;
 }
-#progress-indicator{
-    width: 100px;
-    height: 18px;
-    font-family: Verdana;
+.progress-wrap{
     float: right;
-    font-size: 10px;
     right: 20px;
-    top: 32px;
+    width: 100px;
+    top: 15px;
+    font-family: Verdana;
+    font-size: 13px;
+    position: relative;
+}
+.progress-wrap > .label {
+    margin-bottom: 4px;
+}
+#progress-indicator{
+    height: 18px;
+    font-size: 10px;
+}
+.buttons-wrap-left .form.ui.field{
+    display: table-cell;
+    width:160px;
+    font-family: Verdana;
+    font-size: 13px;
 }
