@@ -197,6 +197,9 @@ elseif ($option == "External_marketplaces") {
 }
 elseif ($option == "Reconciliation") {
     include "./reconciliation_options.php";
+}elseif ($option == "Froogle") {
+	include $xcart_dir . '/modules/External_Marketplaces/external_marketplaces_processing_rules.php';
+	$smarty->assign('additional_config', 'admin/main/froogle_processing_rules.tpl');
 }
 elseif ($option == "currently_assigned_to_statuses") {
     include "./order_statuses.php";

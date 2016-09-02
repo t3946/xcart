@@ -13,6 +13,19 @@ class classIssuesProcessingRules extends classData
         parent::__construct($aIssuesProcessingRules);
     }
 
+    public static function getIssuesList()
+    {
+        $aResults = null;
+        $oSQL = new classSQLBuilder();
+        $aIssues = $oSQL->addSelect('issue_id')->addFromTable('cidev_issues_processing_rules')->Execute()->getQueryResult();
+        if (!empty($aIssues)) {
+            foreach ($aIssues as $aIssue) {
+                $aResults[] = new classIssuesProcessingRules(['issue_id' => $aIssue['issue_id']]);
+            }
+        }
+        return $aResults;
+    }
+
     public static function getIssueByGoogleIssueId($sGoogleId)
     {
         $oResult = null;
@@ -21,7 +34,7 @@ class classIssuesProcessingRules extends classData
             $aIssues = $oSQL->addSelect('*')->addFromTable('cidev_issues_processing_rules')->addCondition("issue_gmc_id = '$sGoogleId'")->Execute()->getQueryResult();
             if (!empty($aIssues)) {
                 foreach ($aIssues as $aIssue) {
-                    $oResult = new classIssuesProcessingRules(['issue_id'=>$aIssue['issue_id']]);
+                    $oResult = new classIssuesProcessingRules(['issue_id' => $aIssue['issue_id']]);
                 }
             }
         }
@@ -31,6 +44,21 @@ class classIssuesProcessingRules extends classData
     public function setIssueGMCId($GMCIssue)
     {
         $this->setField('issue_gmc_id', $GMCIssue);
+    }
+
+    public function getIssueGMCId()
+    {
+        return $this->getField('issue_gmc_id');
+    }
+
+    public function getIssueName()
+    {
+        return $this->getField('issue_name');
+    }
+
+    public function getIssueProcessing()
+    {
+        return $this->getField('issue_processing');
     }
 
     public function setIssueId($sIssue)
