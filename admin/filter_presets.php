@@ -99,19 +99,19 @@ if ($REQUEST_METHOD == "POST" && !empty($fid)) {
     }
 
     $update = array(
-        'title' => trim($title),
-        'preset_position' => $preset_position,
-        'marker' => $marker,
-        'orders_source' => $orders_source,
-        'processor_empty' => $processor_empty,
-        'time_from_date' => mktime(0, 0, 0, intval($fromMonth), intval($fromDay), intval($fromYear)),
-        'time_from' => intval($time_from),
-        'time_from_mode' => $time_from_mode,
-        'time_to' => intval($time_to),
-        'placement_time_from_type' => $placement_time_from_type,
-        'placement_time_to_type' => $placement_time_to_type,
-        'enabled' => $enabled == 'Y' ? 'Y' : 'N',
-        'bold' => $bold == 'Y' ? 'Y' : 'N',
+        'title'                     => trim($title),
+        'preset_position'           => $preset_position,
+        'marker'		    => $marker,
+        'orders_source'		    => $orders_source,
+        'processor_empty'           => $processor_empty,
+        'time_from_date'            => mktime(0, 0, 0, intval($fromMonth), intval($fromDay), intval($fromYear)),
+        'time_from'                 => intval($time_from),
+        'time_from_mode'            => $time_from_mode,
+        'time_to'                   => intval($time_to),
+        'placement_time_from_type'  => $placement_time_from_type,
+        'placement_time_to_type'    => $placement_time_to_type,
+        'enabled'                   => $enabled == 'Y' ? 'Y' : 'N',
+        'bold'                      => $bold == 'Y' ? 'Y' : 'N','direct_link'  => $filter_direct_link,
     );
     func_array2update('filter_presets', $update, "fid='$fid'");
 
