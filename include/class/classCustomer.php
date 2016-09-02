@@ -56,7 +56,7 @@ class classCustomer extends classData
         $aOCustomers = [];
         $oSQL = new classSQLBuilder();
         $oSQL->addSelect('*')->addFromTable('customers')->addCondition("usertype='" . $sType . "'");
-        if ($active != 'All') {
+        if ($active != 'all') {
             $oSQL->addCondition("status='$active'")->addCondition("activity='$active'");
         }
         $aCustomers = $oSQL->addOrderBy('b_firstname')->Execute()->getQueryResult();
@@ -177,5 +177,10 @@ class classCustomer extends classData
         Execute()->getQueryResult();
         $aC = reset($aCount);
         return $aC['max_number'];
+    }
+
+    public function sortByAmazonCompletedBatchesDesc($a, $b)
+    {
+        return $a->getAmazonBatchesCompletedCount() < $b->getAmazonBatchesCompletedCount();
     }
 }

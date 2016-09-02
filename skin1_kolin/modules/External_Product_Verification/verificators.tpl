@@ -1,5 +1,14 @@
+<link rel="stylesheet" href="{$SkinDir}/css/semantic/semantic.css">
+<link rel="stylesheet" href="{$SkinDir}/verificator/css/main.css"/>
+<script src="{$SkinDir}/js/semantic/components/form.min.js" type="text/javascript"></script>
+
 <h1 style="text-align: center">{$lng.list_of_verificators}</h1>
 {capture name=dialog}
+    <div id="batches-filter" class="ui buttons left floated">
+        <button data-status="all" class="ui left button {if $active=='all'}active{/if}">All</button>
+        <button data-status="Y" class="ui button {if $active == 'Y'}active{/if}">Active</button>
+        <button data-status="N" class="ui button {if $active == 'N'}active{/if}">Inactive</button>
+    </div>
 <table width="100%">
     <tr>
         <td colspan="7">
@@ -30,3 +39,13 @@
 {/capture}
 
 {include file="dialog.tpl" title='Verificators' content=$smarty.capture.dialog extra='width="100%"'}
+
+<script>
+    {literal}
+    $(document).ready(function () {
+        $('#batches-filter > button').on('click', '', function () {
+            location.href = "operators.php?active=" + $(this).data('status');
+        });
+    });
+    {/literal}
+</script>
