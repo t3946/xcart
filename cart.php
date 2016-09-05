@@ -862,6 +862,19 @@ if (!$func_is_cart_empty) {
 		$userinfo["s_statename"] = func_get_state($userinfo["s_state"], $userinfo["s_country"]);
 	}
 
+	x_session_register('remember_login');
+
+	if (!empty($remember_login)) {
+		include_once $xcart_dir . "/include/class/classCustomer.php";
+		$oCustomer = new classCustomer(['login' => $remember_login]);
+		$userinfo =  $oCustomer->getFields(['s_country','s_state','s_zipcode','s_city','s_countryname','s_statename','b_country','b_state','b_zipcode','b_city','b_countryname','b_statename']);
+		$userinfo["s_statename"] = $userinfo["s_state_text"] = func_get_state($userinfo["s_state"], $userinfo["s_country"]);
+		$userinfo["b_statename"] = func_get_state($userinfo["b_state"], $userinfo["b_country"]);
+		$userinfo["s_countryname"] = func_get_country($userinfo['s_country']);
+		$userinfo["b_countryname"] = func_get_country($userinfo['b_country']);
+		$smarty->assign('userinfo',$userinfo);
+	}
+
 	#
 	# Check if shipping cost is need to be calculated
 	#
@@ -1544,49 +1557,6 @@ if (!empty($shippings) && is_array($shippings)){
 	}
 }
 $smarty->assign("show_only_phone_method", $show_only_phone_method);
-
-/* # Moved to auth.php
-if (empty($login) && $mode=="checkout" && empty($userinfo["s_country"])){
-  if (!empty($CLIENT_IP)){
-	$CLIENT_IP_arr = explode(".", $CLIENT_IP);
-	if (!empty($CLIENT_IP_arr) && is_array($CLIENT_IP_arr)){
-		$CLIENT_IP_INTEGER = $CLIENT_IP_arr[0]*16777216 + $CLIENT_IP_arr[1]*65536 + $CLIENT_IP_arr[2]*256 + $CLIENT_IP_arr[3];
-	}
-
-	if (!empty($CLIENT_IP_INTEGER)){
-		$locId = func_query_first_cell("SELECT locId FROM $sql_tbl[geo_litecity_blocks] WHERE $CLIENT_IP_INTEGER BETWEEN startIpNum AND endIpNum LIMIT 1");
-
-		if ($geo_litecity_location_test == "Y"){
-
-			if (!empty($geo_litecity_location_test_locId)){
-				$locId = addslashes($geo_litecity_location_test_locId);
-//				$locId = "1087";  // New York
-			}
-		}
-
-		if (!empty($locId)){
-			$geo_litecity_location = func_query_first("SELECT * FROM $sql_tbl[geo_litecity_location] WHERE locId='".addslashes($locId)."'");
-
-			if (!empty($geo_litecity_location)){
-				$smarty->assign('geo_litecity_location', $geo_litecity_location);
-
-				if ($geo_litecity_location_debug == "Y"){
-					x_load("debug");
-					func_print_r($geo_litecity_location);
-				}
-			}
-		}
-	}
-  }
-}
-*/
-
-###
-##
-#
-
-//func_print_r($cart);
-//func_print_r($order_data);
 
 if (!empty($cart["products"]) && is_array($cart["products"])){
 	$productids_in_cart = array();
