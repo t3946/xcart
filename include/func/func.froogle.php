@@ -668,9 +668,9 @@ if ($sExtraLog=='Y')
 	$product['mpn'] = $mpn;
 	$product['gpc'] = $gpc;
 	$product['cats_path'] = $cats_path;
-	$product['google_descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert($product['descr'], 5000));
-	$product['google_brand'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert($product['brand'], 256));
-	$product['google_product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert($product['product'], 80));
+	$product['google_descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['descr']), 5000));
+	$product['google_brand'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['brand']), 256));
+	$product['google_product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['product']), 80));
 
 
 	if ($product['shipping_weight']) {
