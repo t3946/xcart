@@ -9,6 +9,12 @@ class classCustomer extends classData
 {
     const LINK_TO_MODIFY = '/admin/user_modify.php?user=%s&usertype=%s';
 
+    private $iAmazonBatchesCompletedCount = null;
+    private $iAmazonBatchesPaidCount = null;
+    private $iAmazonBatchesNotSureCount = null;
+    private $iAmazonBatchesInProgressCount = null;
+    private $iAmazonBatchesProcessedCount = null;
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['login'];
@@ -56,7 +62,7 @@ class classCustomer extends classData
         $aOCustomers = [];
         $oSQL = new classSQLBuilder();
         $oSQL->addSelect('*')->addFromTable('customers')->addCondition("usertype='" . $sType . "'");
-        if ($active != 'All') {
+        if ($active != 'all') {
             $oSQL->addCondition("status='$active'")->addCondition("activity='$active'");
         }
         $aCustomers = $oSQL->addOrderBy('b_firstname')->Execute()->getQueryResult();
@@ -108,26 +114,35 @@ class classCustomer extends classData
 
     public function getAmazonProductProcessedCount()
     {
-        $aCount = $this->oSQL->init()->addSelect('count(1)', 'product_count')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
-        addCondition('action IN("'.implode('","',classExternalVerificationBatch::$aProductStatuses['processed']).'")')->Execute()->getQueryResult();
-        $aC = reset($aCount);
-        return $aC['product_count'];
+        if (is_null($this->iAmazonBatchesProcessedCount)) {
+            $aCount = $this->oSQL->init()->addSelect('count(1)', 'product_count')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+            addCondition('action IN("' . implode('","', classExternalVerificationBatch::$aProductStatuses['processed']) . '")')->Execute()->getQueryResult();
+            $aC = reset($aCount);
+            $this->iAmazonBatchesProcessedCount = $aC['product_count'];
+        }
+        return $this->iAmazonBatchesProcessedCount;
     }
 
     public function getAmazonProductNotSureCount()
     {
-        $aCount = $this->oSQL->init()->addSelect('count(1)', 'product_count')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
-        addCondition("action IN('not_sure')")->Execute()->getQueryResult();
-        $aC = reset($aCount);
-        return $aC['product_count'];
+        if (is_null($this->iAmazonBatchesNotSureCount)) {
+            $aCount = $this->oSQL->init()->addSelect('count(1)', 'product_count')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+            addCondition("action IN('not_sure')")->Execute()->getQueryResult();
+            $aC = reset($aCount);
+            return $aC['product_count'];
+        }
+        return $this->iAmazonBatchesNotSureCount;
     }
 
     public function getAmazonBatchesInProgressCount()
     {
-        $aCount = $this->oSQL->init()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
-        addCondition("batch_status IN('In progress')")->Execute()->getQueryResult();
-        $aC = reset($aCount);
-        return $aC['batch_count'];
+        if (is_null($this->iAmazonBatchesInProgressCount)) {
+            $aCount = $this->oSQL->init()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+            addCondition("batch_status IN('In progress')")->Execute()->getQueryResult();
+            $aC = reset($aCount);
+            $this->iAmazonBatchesInProgressCount = $aC['batch_count'];
+        }
+        return $this->iAmazonBatchesInProgressCount;
     }
 
     public function getAmazonBatches($sStatus = null)
@@ -148,19 +163,26 @@ class classCustomer extends classData
 
     public function getAmazonBatchesCompletedCount()
     {
-        $aCount = $this->oSQL->init()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
-        addCondition("batch_status IN('Completed')")->Execute()->getQueryResult();
-        $aC = reset($aCount);
-        return $aC['batch_count'];
+        if (is_null($this->iAmazonBatchesCompletedCount)){
+            $aCount = $this->oSQL->init()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+            addCondition("batch_status IN('Completed')")->Execute()->getQueryResult();
+            $aC = reset($aCount);
+            $this->iAmazonBatchesCompletedCount = $aC['batch_count'];
+        }
+
+        return $this->iAmazonBatchesCompletedCount;
     }
 
 
     public function getAmazonBatchesPaidCount()
     {
-        $aCount = $this->oSQL->init()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
-        addCondition("batch_status IN('Paid')")->Execute()->getQueryResult();
-        $aC = reset($aCount);
-        return $aC['batch_count'];
+        if (is_null($this->iAmazonBatchesPaidCount)) {
+            $aCount = $this->oSQL->init()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+            addCondition("batch_status IN('Paid')")->Execute()->getQueryResult();
+            $aC = reset($aCount);
+            $this->iAmazonBatchesPaidCount = $aC['batch_count'];
+        }
+        return $this->iAmazonBatchesPaidCount;
     }
 
     public function getAmazonBatchesAverageSpeed()
@@ -177,5 +199,10 @@ class classCustomer extends classData
         Execute()->getQueryResult();
         $aC = reset($aCount);
         return $aC['max_number'];
+    }
+
+    public function sortByAmazonCompletedBatchesDesc($a, $b)
+    {
+        return $a->getAmazonBatchesCompletedCount() < $b->getAmazonBatchesCompletedCount();
     }
 }

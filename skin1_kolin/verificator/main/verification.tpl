@@ -296,8 +296,13 @@
 <body class="verifiaction">
 <header id="header">
     <div class="buttons-wrap-left">
+        <div class="form ui field">
+            <div class="ui slider checkbox">
+                <input autocomplete="off" name="newsletter" id="split-screen-checkbox" type="checkbox">
+                <label>Split screen</label>
+            </div>
+        </div>
         <div class="wrap-left">
-
             <div class="three ui buttons">
                 <span style="font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; ">Compare</span>
                 <button data-step-id="0" id="search_amazon_by_asin" class="ui button attached">Open product by ASIN
@@ -313,22 +318,20 @@
                 </span>
             </div>
         </div>
-        <div style="float: right; bottom: 42px; right: -70px;" class="form ui field">
-            <div class="ui slider checkbox" style="margin-top: 10px; float:left; width: 158px; font-size: 14px;">
-                <input autocomplete="off" name="newsletter" id="split-screen-checkbox" type="checkbox">
-                <label style="font-family:Verdana;">Split screen</label>
-            </div>
-        </div>
     </div>
     <div class="buttons-wrap-right">
-        <div class="ui indicating progress" id="progress-indicator"
-             data-value="{$oVerificationBatch->getProductsInBatchCompletedCount()}"
-             data-total="{$oVerificationBatch->getBatchAmount()}">
-            <div class="bar">
-                <div class="progress"></div>
+        <div class="progress-wrap">
+            <div class="label">Batch progress</div>
+            <div id="progress-indicator" class="ui indicating progress"
+                 data-value="{$oVerificationBatch->getProductsInBatchCompletedCount()}"
+                 data-total="{$oVerificationBatch->getBatchAmount()}">
+
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="label">{$oVerificationBatch->getProductsInBatchCompletedCount()}
+                    /{$oVerificationBatch->getBatchAmount()}</div>
             </div>
-            <div class="label">{$oVerificationBatch->getProductsInBatchCompletedCount()}
-                /{$oVerificationBatch->getBatchAmount()}</div>
         </div>
         <div class="buttons-right">
             <div id="conclusion_buttons" style="display:none;">

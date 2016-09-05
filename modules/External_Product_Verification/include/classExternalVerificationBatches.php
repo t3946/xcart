@@ -2,6 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classProducts.php";
+require_once $xcart_dir . "/include/class/classLogs.php";
 
 class classExternalVerificationBatch extends classData
 {
@@ -9,6 +10,7 @@ class classExternalVerificationBatch extends classData
     const LINK_SEARCH_BY_UPC = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias=aps&field-keywords=%s';
     const LINK_SEARCH_BY_NAME = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias=aps&field-keywords=%s';
     const LINK_TO_BATCH_VERIFY = 'verification.php?batch=%s';
+    const BATCH_STATUS_CHANGED_LOG_MESSAGE = 'Batch ID <b>%s</b> status has been changed: %s -> %s';
 
     protected $aProductsInBatchCompleted = [];
     protected $aProductsInBatchMatched = [];
@@ -253,7 +255,9 @@ class classExternalVerificationBatch extends classData
 
     public function setVerificationStatus($sNewStatus)
     {
+        classLogs::_log('amazon_product_verification', $this->getBatchId(), classLogs::LOG_TYPE_XCART, sprintf(self::BATCH_STATUS_CHANGED_LOG_MESSAGE,$this->getBatchLogin().'_'.$this->getBatchNumber().'_'.$this->getBatchAmount(), $this->getBatchStatus(),$sNewStatus));
         $this->updateField('batch_status', $sNewStatus);
+
     }
 
     public function updateVerificationStatus($aParams)
