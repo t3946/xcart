@@ -100,7 +100,7 @@
 {/if}
 {if $default_fields.firstname.avail eq 'Y'}
 <tr>
-<td class="cidev_padding_top" valign="top" align="right">{$lng.lbl_first_name}
+<td class="cidev_padding_top" valign="top" align="right"><b>{$lng.lbl_first_name}</b>
 {if $usertype eq "C" && $lng.lbl_CHECKOUT_FIELD_DESCRIPTION_first_name ne ""}<div class="cidev_checkout_descr"><b>{$lng.lbl_CHECKOUT_FIELD_DESCRIPTION_first_name}</b></div>{/if}
 </td>
 <td valign="top">{if $default_fields.firstname.required eq 'Y'}<font class="Star">*</font>{else}&nbsp;{/if}</td>

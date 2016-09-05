@@ -43,9 +43,14 @@
 							<td valign="top" class="DialogBox">
 								<table>
 									<tr><td><b>Send account login information to the verificator by email.</b></td></tr>
-									<tr><td><b>Subject line:</b> Amazon product verification Username / Login / Email and Password</td></tr>
 									<tr><td></td></tr>
-									<tr><td><b>Body:</b> <a href="https://www.artistsupplysource.com/verificator/">https://www.artistsupplysource.com/verificator/</a></td></tr>
+									<tr><td></td></tr>
+									<tr><td><b>Subject line:</b></td></tr>
+									<tr><td>Amazon product verification Username / Login / Email and Password</td></tr>
+									<tr><td></td></tr>
+									<tr><td></td></tr>
+									<tr><td><b>Body:</b></td></tr>
+									<tr><td><a href="https://www.artistsupplysource.com/verificator/">https://www.artistsupplysource.com/verificator/</a></td></tr>
 									<tr><td>Username: {$oCustomer->getCustomerLogin()}</td></tr>
 									<tr><td>Password: {$oCustomer->getCustomerPasswordDecripted()}</td></tr>
 								</table>
