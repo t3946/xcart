@@ -110,7 +110,7 @@ if ($REQUEST_METHOD == 'POST') {
 		$variant_id = $variant_id_for_point9;
 		if ($is_robot == 'Y' || defined("IS_ROBOT")) {
 			$variant_id = Get_AB_Variant(9);
-		} $variant_id = 1;
+		}
 		switch ($variant_id) {
 			case 0:
 				$similar_productids = func_query_first_cell("SELECT similar_productids FROM $sql_tbl[products] WHERE productid='$productid'");
