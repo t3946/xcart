@@ -110,7 +110,7 @@ if ($REQUEST_METHOD == 'POST') {
 		$variant_id = $variant_id_for_point9;
 		if ($is_robot == 'Y' || defined("IS_ROBOT")) {
 			$variant_id = Get_AB_Variant(9);
-		}
+		} $variant_id = 1;
 		switch ($variant_id) {
 			case 0:
 				$similar_productids = func_query_first_cell("SELECT similar_productids FROM $sql_tbl[products] WHERE productid='$productid'");
@@ -208,13 +208,13 @@ if ($REQUEST_METHOD == 'POST') {
 				$products_str .= '"category": "'.func_add_slashes($v["category"]).'",';
 				$products_str .= '"brand": "'.func_add_slashes($v["brand"]).'",';
 
-				$products_str .= '"product": "'.func_add_slashes($v["product"]).'",';
+				$products_str .= '"product": "'.func_add_slashes(str_replace(array("\r","\n"),"",$v["product"])).'",';
 
 				$N_key = $k + 1;
 				$products_str .= '"N_key": "'.$N_key.'",';
 				if (!empty($sGoogleAnaliticsParam)) $products_str .= '"ga_param": "'.$sGoogleAnaliticsParam.'",';
 
-				$products_str .= '"title": "'.addslashes($v["product"]).'"';
+				$products_str .= '"title": "'.addslashes(str_replace(array("\r","\n"),"",$v["product"])).'"';
 			$products_str .= '}';
 
 			if (($count_products -1)!= $k) $products_str .= ',';
