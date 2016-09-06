@@ -867,12 +867,14 @@ if (!$func_is_cart_empty) {
 	if (!empty($remember_login)) {
 		include_once $xcart_dir . "/include/class/classCustomer.php";
 		$oCustomer = new classCustomer(['login' => $remember_login]);
-		$userinfo =  $oCustomer->getFields(['s_country','s_state','s_zipcode','s_city','s_countryname','s_statename','b_country','b_state','b_zipcode','b_city','b_countryname','b_statename']);
-		$userinfo["s_statename"] = $userinfo["s_state_text"] = func_get_state($userinfo["s_state"], $userinfo["s_country"]);
-		$userinfo["b_statename"] = func_get_state($userinfo["b_state"], $userinfo["b_country"]);
-		$userinfo["s_countryname"] = func_get_country($userinfo['s_country']);
-		$userinfo["b_countryname"] = func_get_country($userinfo['b_country']);
-		$smarty->assign('userinfo',$userinfo);
+		$userinfo_add =  $oCustomer->getFields(['s_country','s_state','s_zipcode','s_city','s_countryname','s_statename','b_country','b_state','b_zipcode','b_city','b_countryname','b_statename']);
+		$userinfo_add["s_statename"] = $userinfo_add["s_state_text"] = func_get_state($userinfo_add["s_state"], $userinfo_add["s_country"]);
+		$userinfo_add["b_statename"] = func_get_state($userinfo_add["b_state"], $userinfo_add["b_country"]);
+		$userinfo_add["s_countryname"] = func_get_country($userinfo_add['s_country']);
+		$userinfo_add["b_countryname"] = func_get_country($userinfo_add['b_country']);
+		if (!empty($userinfo) && is_array($userinfo))
+			$userinfo = array_merge($userinfo, $userinfo_add);
+		$smarty->assign('userinfo', $userinfo_add);
 	}
 
 	#
