@@ -427,7 +427,7 @@ function ship2diffOpen() {
 <tr>
 		<td align="right"><label for="ship2diff"{* class="RegSectionTitle" *}>My billing address is different from my shipping address</label></td>
 		<td>&nbsp;</td>
-		<td><input type="checkbox" id="ship2diff" name="ship2diff" value="Y" onclick="javascript: ship2diffOpen();"{if $ship2diff} checked="checked"{/if} /></td>
+		<td><input autocomplete="off" type="checkbox" id="ship2diff" name="ship2diff" value="Y" onclick="javascript: ship2diffOpen();"{if $ship2diff} checked="checked"{/if} /></td>
 </tr>
 {/if}
 
@@ -804,7 +804,7 @@ placeholder="
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="b_city" name="b_city" size="32" maxlength="64" value="{if $geo_litecity_location.country ne "" && $userinfo.b_city eq ""}{$geo_litecity_location.city}{else}{$userinfo.b_city}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('b_city'); cidev_check_zip_b();" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
+<input autocomplete="off" type="text" id="b_city" name="b_city" size="32" maxlength="64" value="{if $geo_litecity_location.country ne "" && $userinfo.b_city eq ""}{$geo_litecity_location.city}{else}{$userinfo.b_city}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('b_city'); cidev_check_zip_b();" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
 </td>
 {if $usertype eq "C"}
 <td id="b_city_verified" valign="top" nowrap="nowrap" {if $geo_litecity_location.city eq "" && $userinfo.b_city eq ""}style="display: none;"{/if}>
