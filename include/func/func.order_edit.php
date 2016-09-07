@@ -608,6 +608,24 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 			func_log_order($cart["orderid"], 'X', $log, $login);
 		}
 
+		if (!empty($userinfo)) {
+			include_once $xcart_dir . "/include/class/classCustomer.php";
+			$oCustomer = new classCustomer(['login'=>$userinfo['login']]);
+			$arrNewValue = ['b_city'=>$userinfo['b_city'],
+							'b_firstname'=>$userinfo['b_firstname'],
+							'b_address'=>$userinfo['b_address'],
+							'b_state'=>$userinfo['b_state'],
+							'b_country'=>$userinfo['b_country'],
+							'b_zipcode'=>$userinfo['b_zipcode'],
+							's_address'=>$userinfo['s_address'],
+							's_firstname'=>$userinfo['s_firstname'],
+							's_city'=>$userinfo['s_city'],
+							's_state'=>$userinfo['s_state'],
+							's_country'=>$userinfo['s_country'],
+							's_zipcode'=>$userinfo['s_zipcode']];
+			$oCustomer->updateFields($arrNewValue);
+		}
+
 		func_array2update("orders", $query_data, "orderid='$cart[orderid]'");
 	}
 
