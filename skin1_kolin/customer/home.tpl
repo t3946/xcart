@@ -80,7 +80,7 @@
 
 <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
 
-<link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />
+{*<link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />*}
 
 {*
   <link rel="stylesheet" href="http://mehamalina.ru/css/style.css?v=1421903756">
@@ -806,14 +806,14 @@ element2.src = "{/literal}{$SkinDir}{literal}/ajax_add_to_cart.js";
 document.body.appendChild(element2);
 */
 
-var element3 = document.createElement("script");
+/*var element3 = document.createElement("script");
 element3.src = "{/literal}{$SkinDir}{literal}/customer/popup_open.js";
 document.body.appendChild(element3);
 
 var element4 = document.createElement("script");
 element4.src = "{/literal}{$SkinDir}{literal}/lib/colorbox/jquery.colorbox-min.js";
 document.body.appendChild(element4);
-
+*/
 {/literal}
 {if !($main eq "product" || $main eq "fast_lane_checkout")}
 {literal}

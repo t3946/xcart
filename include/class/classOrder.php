@@ -18,7 +18,13 @@ class classOrder extends classCloneData
 
     const ADMIN_ORDER_MODIFY_URL = '/admin/order.php?orderid=%d';
 
+    /**
+     * @var classOrderDetail[]
+     */
     private $aOrderDetails = [];
+    /**
+     * @var classOrderGroup[]
+     */
     private $aOrderGroups = [];
     /**
      * @var classProduct[]
@@ -74,6 +80,38 @@ class classOrder extends classCloneData
     {
         $this->fetchOrderDetails();
         return $this->aOrderDetails;
+    }
+
+    /**
+     * @return classOrderDetail[]
+     */
+    public function getOrderDetailsWithRetailTrust()
+    {
+        $aResult = [];
+        $this->fetchOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                if ($oOrderDetail->isRetailTrustEnabled())
+                    $aResult[] = $oOrderDetail;
+            }
+        }
+        return $aResult;
+    }
+
+    /**
+     * @return classProduct
+     */
+    public function getOrderDetailsProductsWithRetailTrust()
+    {
+        $aResult = [];
+        $this->fetchOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                if ($oOrderDetail->getOrderDetailProduct()->isRetailTrustEnabled())
+                    $aResult[] = $oOrderDetail->getOrderDetailProduct();
+            }
+        }
+        return $aResult;
     }
 
     /**
@@ -175,10 +213,10 @@ class classOrder extends classCloneData
         $aOldStatus = self::getOrderStatusByCode($this->getField('vn_status'));
         if ($aNewStatus['code'] != $aOldStatus['code']) {
             $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->primaryKeyValue);
-            $log = "vn_status: ". $aOldStatus['name'] . " -> ". $aNewStatus['name'];
+            $log = "vn_status: " . $aOldStatus['name'] . " -> " . $aNewStatus['name'];
             func_log_order($this->primaryKeyValue, 'X', $log);
         }
-        $this->setField('vn_status',$sNewStatus);
+        $this->setField('vn_status', $sNewStatus);
         return $bResult;
     }
 
@@ -244,6 +282,7 @@ class classOrder extends classCloneData
     {
         return $this->getField('customer_notes');
     }
+
     public function getShippingFirstName()
     {
         return $this->getField('s_firstname');
@@ -391,7 +430,7 @@ class classOrder extends classCloneData
         try {
             $aOrderTransactions->captureOrderAmount($this);
         } catch (Exception $ex) {
-            func_log_order($this->getOrderId(),'X',$ex->getMessage(),$login);
+            func_log_order($this->getOrderId(), 'X', $ex->getMessage(), $login);
             return false;
         }
         return $this;
@@ -405,7 +444,7 @@ class classOrder extends classCloneData
     public function isAttentionTagSet($iStatusId)
     {
         $oSQL = new classSQLBuilder();
-        $aQResult = $oSQL->init()->addSelect('status_id')->addFromTable('orders_additional_tags')->addCondition('orderid='.$this->getOrderId())->addCondition('status_id='.$iStatusId)->Execute()->getQueryResult();
+        $aQResult = $oSQL->init()->addSelect('status_id')->addFromTable('orders_additional_tags')->addCondition('orderid=' . $this->getOrderId())->addCondition('status_id=' . $iStatusId)->Execute()->getQueryResult();
         return !empty($aQResult);
     }
 

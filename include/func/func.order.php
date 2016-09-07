@@ -1472,48 +1472,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 		$orderids[] = $orderid;
 		$order=func_select_order($orderid);
 
-#
-##
-###
-/*
-                if (!empty($_POST["PO_Number"])){
-                        $new_po_fields["name_of_purchaser"] = $_POST["Name_of_purchaser"];
-                        $new_po_fields["purchase_manager_phone"] = $_POST["purchase_manager_phone"];
-                        $new_po_fields["purchase_manager_phone_ext"] = $_POST["purchase_manager_phone_ext"];
-                        $new_po_fields["po_fax"] = $_POST["po_fax"];
-                        $new_po_fields["purchase_manager_email"] = $_POST["purchase_manager_email"];
-                        $new_po_fields["accounts_payable_full_name"] = $_POST["accounts_payable_full_name"];
-                        $new_po_fields["accounts_payable_phone"] = $_POST["accounts_payable_phone"];
-                        $new_po_fields["accounts_payable_phone_ext"] = $_POST["accounts_payable_phone_ext"];
-                        $new_po_fields["accounts_payable_fax"] = $_POST["accounts_payable_fax"];
-                        $new_po_fields["accounts_payable_email"] = $_POST["accounts_payable_email"];
-
-
-			if (
-				$new_po_fields["name_of_purchaser"] == "unknown" ||
-				$new_po_fields["accounts_payable_full_name"] == "unknown" ||
-				$new_po_fields["purchase_manager_email"] == "unknown@unknown.com" ||
-				$new_po_fields["accounts_payable_email"] == "unknown@unknown.com" ||
-				$userinfo["email"] == "unknown@unknown.com" ||
-				$new_po_fields["purchase_manager_phone"] == "(000) 000-0000" ||
-				$new_po_fields["po_fax"] == "(000) 000-0000" ||
-				$new_po_fields["accounts_payable_phone"] == "(000) 000-0000" ||
-				$new_po_fields["accounts_payable_fax"] == "(000) 000-0000" ||
-				$userinfo["phone"] == "(000) 000-0000"
-			){
-				$set_cb_statuse = "IO"; //Incomplete: PO
-			}
-
-func_print_r($new_po_fields, $userinfo["phone"],  $userinfo["email"], $set_cb_statuse);
-die("123");
-
-//                        func_check_po_fields(array(), $new_po_fields, $order["order_prefix"], $orderid);
-                }
-*/
-###
-##
-#
-
 		$mes .= "STEP F ".date("H:i:s")."\n";
 
 		#
@@ -1560,7 +1518,7 @@ die("123");
 					'extra_data' => addslashes(serialize($product["extra_data"])),
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 					'original_provider' => addslashes($original_provider) ,
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+# END: random:1073746882_1073747063 [2008 Dec 24 16:25]
 					'productcode' => addslashes($product['productcode']));
 
 

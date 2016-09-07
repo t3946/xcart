@@ -330,4 +330,9 @@ class classProduct extends classCloneData
         return $this->getField('product');
     }
 
+    public function isRetailTrustEnabled()
+    {
+        return ($this->getField('retail_trust_enabled') == 'Y') ? true : false;
+    }
+
 }
