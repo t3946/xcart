@@ -147,7 +147,6 @@ class classExternalVerificationBatch extends classData
         $aProducts = $this->oSQL->init()->addSelect('productid')->addFromTable('external_verification_products', 'xp')->addCondition("login='$login'")->addCondition('batch_id='.$this->getBatchId())->
         addCondition('action IN ("open")')->addCondition('NOT EXISTS
          (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' as xp2 WHERE login = "' .$login . '" AND action IN ("'.implode('","',self::$aProductStatuses['processed']).'") AND xp2.productid = xp.productid)')->Execute()->getQueryResult();
-        echo $this->oSQL->getQuery(); exit;
         if (!empty($aProducts)) {
             foreach ($aProducts as $aProduct) {
                 $oProduct = new classProduct($aProduct['productid']);
