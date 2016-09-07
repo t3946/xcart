@@ -1236,6 +1236,18 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 {/if}
 {/foreach}
 
+  <tr class="TableHead">
+    <td width="35%">{$lng.lbl_product}</td>
+    <td width="17%">{$lng.lbl_sku}</td>
+    <td></td>
+    <td>{$lng.lbl_qty}</td>
+    <td colspan="3"></td>
+    <td width="7%">{$lng.lbl_price}</td>
+    <td width="7%"></td>
+    <td width="7%">{$lng.lbl_gross}</td>
+    <td width="7%"></td>
+  </tr>
+  <tr><td colspan="11"><hr /></td></tr>
 {*
 {if $all_vt_processors ne ""}
 <tr style="background-color: #F4CCCC; display: none; " id="vt_info" >
