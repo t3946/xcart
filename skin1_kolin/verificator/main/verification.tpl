@@ -188,7 +188,7 @@
                         active_batch_id = $(this).parent().data('batch-id'),
                         active_product_id = $(this).parent().data('product-id'),
                         active_asin = $(this).parent().data('asin');
-                $('.small.modal').modal({
+                $('.small.modal').modal('hide').modal({
                     onApprove: function () {
                         $('#conclusion_buttons').fadeOut();
                         $.post('ajax_admin.php', {
@@ -208,6 +208,9 @@
                                     }
                                     location.href = spathName + '?batch=' + getBatchId() + ssplit;
                                 }, 'json');
+                    },
+                    onDeny: function() {
+                        $(this).modal('hide').parent().removeClass('active');
                     }
                 }).modal('show');
             });
