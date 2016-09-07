@@ -41,11 +41,7 @@ class classData
     public function _delete()
     {
         if (!empty($this->aPrimaryKeysValues)) {
-            $aKeyArray = $this->aPrimaryKeysValues;
-            array_walk($aKeyArray, function (&$a, $b) {
-                $a = $b . ' = "' . $a . '"';
-            });
-            db_query("DELETE FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . implode(" AND ", $aKeyArray));
+            db_query("DELETE FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . $this->getWhereClause());
         }
     }
 
@@ -57,11 +53,7 @@ class classData
     protected function fillPrimaryTableInfo()
     {
         if (!empty($this->aPrimaryKeysValues)) {
-            $aKeyArray = $this->aPrimaryKeysValues;
-            array_walk($aKeyArray, function (&$a, $b) {
-                $a = $b . ' = "' . $a . '"';
-            });
-            $this->aPrimaryTableValue = func_query_first("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . implode(" AND ", $aKeyArray));
+            $this->aPrimaryTableValue = func_query_first("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . $this->getWhereClause());
         }
     }
 
@@ -118,7 +110,7 @@ class classData
         array_walk($aKeyArray, function (&$a, $b) {
             $a = $b . ' = "' . $a . '"';
         });
-        func_array2update($this->sPrimaryTable, $aToUpdate, implode(" AND ", $aKeyArray));
+        func_array2update($this->sPrimaryTable, $aToUpdate, $this->getWhereClause());
         return $this;
     }
 
@@ -128,12 +120,17 @@ class classData
             $this->setFields($aFieldNamesValues);
             if (empty($this->aPrimaryKeysValues))
                 throw new Exception('Empty primary keys values for update fields');
-            $aKeyArray = $this->aPrimaryKeysValues;
-            array_walk($aKeyArray, function (&$a, $b) {
-                $a = $b . ' = "' . $a . '"';
-            });
-            func_array2update($this->sPrimaryTable, $aFieldNamesValues, implode(" AND ", $aKeyArray));
+            func_array2update($this->sPrimaryTable, $aFieldNamesValues, $this->getWhereClause());
         }
         return $this;
+    }
+
+    private function getWhereClause()
+    {
+        $aKeyArray = $this->aPrimaryKeysValues;
+        array_walk($aKeyArray, function (&$a, $b) {
+            $a = $b . ' = "' . $a . '"';
+        });
+        return implode(" AND ", $aKeyArray);
     }
 }
