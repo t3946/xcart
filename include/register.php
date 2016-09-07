@@ -659,6 +659,8 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 			# Add new person to customers table
 			#
 			$intershipper_recalc = "Y";
+			if (!empty($remember_login))
+				$uname = $remember_login;
 
 			$profile_values['login'] = $uname;
 			$profile_values['usertype'] = $usertype;

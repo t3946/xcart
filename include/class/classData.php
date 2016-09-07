@@ -114,7 +114,11 @@ class classData
         $aToUpdate[$sFieldName] = $sNewValue;
         if (empty($this->aPrimaryKeysValues))
             throw new Exception('Empty primary keys values for update field');
-        func_array2update($this->sPrimaryTable, $aToUpdate, str_replace('&', ' AND ', http_build_query($this->aPrimaryKeysValues)));
+        $aKeyArray = $this->aPrimaryKeysValues;
+        array_walk($aKeyArray, function (&$a, $b) {
+            $a = $b . ' = "' . $a . '"';
+        });
+        func_array2update($this->sPrimaryTable, $aToUpdate, implode(" AND ", $aKeyArray));
         return $this;
     }
 
@@ -124,7 +128,11 @@ class classData
             $this->setFields($aFieldNamesValues);
             if (empty($this->aPrimaryKeysValues))
                 throw new Exception('Empty primary keys values for update fields');
-            func_array2update($this->sPrimaryTable, $aFieldNamesValues, str_replace('&', ' AND ', http_build_query($this->aPrimaryKeysValues)));
+            $aKeyArray = $this->aPrimaryKeysValues;
+            array_walk($aKeyArray, function (&$a, $b) {
+                $a = $b . ' = "' . $a . '"';
+            });
+            func_array2update($this->sPrimaryTable, $aFieldNamesValues, implode(" AND ", $aKeyArray));
         }
         return $this;
     }
