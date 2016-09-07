@@ -355,7 +355,7 @@
             <div data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}"
                  data-product-id="{$oVerificationBatch->getVerifiedProductId()}" class="ui buttons select"
                  id="product_not_found_button">
-                <button data-action="not_found" id="submit-product-not-found" class="ui left button">Product not found
+                <button data-action="not_found" id="submit-product-not-found" class="ui left negative button">Product not found
                 </button>
             </div>
 

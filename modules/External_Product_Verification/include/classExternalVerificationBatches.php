@@ -142,11 +142,11 @@ class classExternalVerificationBatch extends classData
 
     public function getProductsInBatchOpened()
     {
+        global $login;
         $aProductsInBatchOpen = null;
-        $aProducts = $this->oSQL->init()->addSelect('productid')->addFromTable('external_verification_products', 'xp')->addCondition('batch_id=' . $this->getBatchId())->
+        $aProducts = $this->oSQL->init()->addSelect('productid')->addFromTable('external_verification_products', 'xp')->addCondition("login='$login'")->addCondition('batch_id='.$this->getBatchId())->
         addCondition('action IN ("open")')->addCondition('NOT EXISTS
-         (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' as xp2 WHERE batch_id = ' . $this->getBatchId() . ' AND action IN ("'.implode('","',self::$aProductStatuses['processed']).'") AND xp2.productid = xp.productid)')->Execute()->getQueryResult();
-
+         (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' as xp2 WHERE login = "' .$login . '" AND action IN ("'.implode('","',self::$aProductStatuses['processed']).'") AND xp2.productid = xp.productid)')->Execute()->getQueryResult();
         if (!empty($aProducts)) {
             foreach ($aProducts as $aProduct) {
                 $oProduct = new classProduct($aProduct['productid']);
@@ -169,6 +169,7 @@ class classExternalVerificationBatch extends classData
                               WHERE VP2.login = VP.login AND VP2.batch_id = VP.batch_id)", 'batch_processed')->addFromTable('products', 'P')->
             addInnerJoin('external_verification_products_queue', 'Q', "Q.productid = P.productid AND Q.status = 'In progress' AND Q.cross_verify_count <= 1")->
             addInnerJoin('external_verification_products', 'VP', "VP.productid = P.productid AND VP.login != '$login'")->addCondition("P.forsale = 'Y'")->
+            addCondition("NOT EXISTS (SELECT 1 FROM xcart_external_verification_products VP3 WHERE VP3.productid = P.productid AND action !='open' AND login = '$login')")->
             addGroupBy('P.productid')->addOrderBy('batch_processed DESC')->setLimit('1')->Execute()->getQueryResult();
             if (!empty($aNextProducts)) {
                 foreach ($aNextProducts as $aNextProduct) {
