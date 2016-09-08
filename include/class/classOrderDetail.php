@@ -49,4 +49,14 @@ class classOrderDetail extends classCloneData
         }
         return $this->oProduct;
     }
+
+    public function getRetailTrustPrice()
+    {
+        return floatval($this->getField('retail_trust_price'));
+    }
+
+    public function getRetailTrustGross()
+    {
+        return floatval($this->getRetailTrustPrice());
+    }
 }

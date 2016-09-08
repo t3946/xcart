@@ -1235,50 +1235,96 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 {include file="main/refund_group.tpl" mid=$m_id group=$order.shipping_groups[$m_id]}
 {/if}
 {/foreach}
+  {if ($oOrder)}
+    {assign var=aRetailTrustDetails value=$oOrder->getOrderDetailsWithRetailTrust()}
+    {if $aRetailTrustDetails}
+      <tr class="TableHead">
+        <td width="35%">{$lng.lbl_product}</td>
+        <td width="17%">{$lng.lbl_sku}</td>
+        <td></td>
+        <td>{$lng.lbl_qty}</td>
+        <td colspan="3"></td>
+        <td width="7%">{$lng.lbl_price}</td>
+        <td width="7%"></td>
+        <td width="7%">{$lng.lbl_gross}</td>
+        <td width="7%"></td>
+      </tr>
 
-  <tr class="TableHead">
-    <td width="35%">{$lng.lbl_product}</td>
-    <td width="17%">{$lng.lbl_sku}</td>
-    <td></td>
-    <td>{$lng.lbl_qty}</td>
-    <td colspan="3"></td>
-    <td width="7%">{$lng.lbl_price}</td>
-    <td width="7%"></td>
-    <td width="7%">{$lng.lbl_gross}</td>
-    <td width="7%"></td>
+      {assign var=sumRetailPrice value=0}
+      {assign var=sumRetailGross value=0}
+      {foreach from=$aRetailTrustDetails item=oRetailTrustDetail}
+        {math equation="x + y" x=$oRetailTrustDetail->getRetailTrustPrice() y=$sumRetailPrice assign=sumRetailPrice}
+        {math equation="x + y" x=$oRetailTrustDetail->getRetailTrustGross() y=$sumRetailGross assign=sumRetailGross}
+      {/foreach}
+      <tr class="distributor-totals-line">
+        <td colspan="7"></td>
+        <td align="right">{$sumRetailPrice}</td>
+        <td></td>
+        <td align="right">{$sumRetailGross}</td>
+        <td></td>
+      </tr>
+      {foreach from=$aRetailTrustDetails item=oRetailTrustDetail}
+        {assign var=oOrderDetailProduct value=$oRetailTrustDetail->getOrderDetailProduct()}
+      <tr>
+        <td>
+          <a href="{$oOrderDetailProduct->getProductFrontURL()}">{$oOrderDetailProduct->getProductName()}</a>
+        </td>
+        <td>
+          <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKU()}</a>
+        </td>
+        <td></td>
+        <td align="center">
+          {$oRetailTrustDetail->getAmount()}
+        </td>
+        <td colspan="3"></td>
+        <td align="right">
+          {$oRetailTrustDetail->getRetailTrustPrice()|price_format}
+        </td>
+        <td></td>
+        <td align="right">
+          {$oRetailTrustDetail->getRetailTrustGross()|price_format}
+        </td>
+      </tr>
+      {/foreach}
+      <tr>
+        <td colspan="11">
+          <hr/>
+        </td>
+      </tr>
+    {/if}
+  {/if}
+
+  {*
+  {if $all_vt_processors ne ""}
+  <tr style="background-color: #F4CCCC; display: none; " id="vt_info" >
+  <td colspan="10">
+    <table>
+      <tr>
+        <td>
+          <b>Payment method:</b><br />
+          <select name="vt_paymentid" id="vt_paymentid" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if}>
+          <option value="0"></option>
+          {foreach from=$all_vt_processors item=item_vt key=key_vt}
+          <option {if $order.vt_paymentid eq $item_vt.paymentid} selected="selected"{/if} value="{$item_vt.paymentid}">{$item_vt.payment_method}</option>
+          {/foreach}
+          </select>
+        </td>
+        <td width="20">&nbsp;</td>
+        <td>
+            <b>Virtual terminal transaction ID:</b><br />
+            <input type="text" name="transaction_id_link" id="transaction_id_link" value="{$order.transaction_id_link}" size="40" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+        </td>
+        <td width="20">&nbsp;</td>
+        <td>
+            <b>AVS code:</b><br />
+            <input type="text" name="avs_code" id="avs_code" value="{$order.avs_code}" size="1" maxlength="1" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
+        </td>
+      </tr>
+    </table>
+  </td>
   </tr>
-  <tr><td colspan="11"><hr /></td></tr>
-{*
-{if $all_vt_processors ne ""}
-<tr style="background-color: #F4CCCC; display: none; " id="vt_info" >
-<td colspan="10">
-  <table>
-    <tr>
-      <td>
-        <b>Payment method:</b><br />
-        <select name="vt_paymentid" id="vt_paymentid" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if}>
-        <option value="0"></option>
-        {foreach from=$all_vt_processors item=item_vt key=key_vt}
-        <option {if $order.vt_paymentid eq $item_vt.paymentid} selected="selected"{/if} value="{$item_vt.paymentid}">{$item_vt.payment_method}</option>
-        {/foreach}
-        </select>
-      </td>
-      <td width="20">&nbsp;</td>
-      <td>
-          <b>Virtual terminal transaction ID:</b><br />
-          <input type="text" name="transaction_id_link" id="transaction_id_link" value="{$order.transaction_id_link}" size="40" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
-      </td>
-      <td width="20">&nbsp;</td>
-      <td>
-          <b>AVS code:</b><br />
-          <input type="text" name="avs_code" id="avs_code" value="{$order.avs_code}" size="1" maxlength="1" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
-      </td>
-    </tr>
-  </table>
-</td>
-</tr>
-{/if}
-*}
+  {/if}
+  *}
 
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Total Product Price

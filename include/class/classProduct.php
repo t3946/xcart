@@ -85,7 +85,6 @@ class classProduct extends classCloneData
 
     public function getProductFrontURL($http = 'http://')
     {
-
         return $http.$this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getDomain().'/'.func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled), false);
     }
 
