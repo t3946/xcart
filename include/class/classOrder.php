@@ -5,6 +5,7 @@ require_once $xcart_dir . "/include/class/classOrderDetail.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
+require_once $xcart_dir . "/include/class/classPaymentMethod.php";
 require_once $xcart_dir . "/include/class/classManufacturers.php";
 require_once $xcart_dir . "/include/class/classOrderTransactions.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
@@ -31,6 +32,8 @@ class classOrder extends classCloneData
      */
     private $aOrderProducts = null;
     private $aOrderProductsManufactueres = [];
+    private $aAdditionalFees = null;
+    private $oPaymentMethod = null;
 
     public function __construct($aOrderData = null)
     {
@@ -51,7 +54,9 @@ class classOrder extends classCloneData
             $aOrderDetails = func_query("SELECT * FROM " . self::$sql_tbl['order_details'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
             if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
                 foreach ($aOrderDetails as $aOrderDetail) {
-                    $this->aOrderDetails[] = new classOrderDetail($aOrderDetail);
+                    $oOrderDetail = new classOrderDetail();
+                    $oOrderDetail->fillPrimaryTableValues($aOrderDetail);
+                    $this->aOrderDetails[] = $oOrderDetail;
                 }
             }
         }
@@ -96,6 +101,30 @@ class classOrder extends classCloneData
             }
         }
         return $aResult;
+    }
+
+    public function getOrderRetailTrustPrice()
+    {
+        $fResult = 0;
+        $aRetaiTrust = $this->getOrderDetailsWithRetailTrust();
+        if (!empty($aRetaiTrust)) {
+            foreach ($aRetaiTrust as $oRetailTrust) {
+                $fResult += floatval($oRetailTrust->getRetailTrustPrice());
+            }
+        }
+        return $fResult;
+    }
+
+    public function getOrderRetailTrustGross()
+    {
+        $fResult = 0;
+        $aRetaiTrust = $this->getOrderDetailsWithRetailTrust();
+        if (!empty($aRetaiTrust)) {
+            foreach ($aRetaiTrust as $oRetailTrust) {
+                $fResult += floatval($oRetailTrust->getRetailTrustGross());
+            }
+        }
+        return $fResult;
     }
 
     /**
@@ -157,7 +186,8 @@ class classOrder extends classCloneData
                 if (!empty($aProducts) && is_array($aProducts)) {
                     $this->aOrderProductsManufactueres = [];
                     foreach ($aProducts as $aProduct) {
-                        $oProduct = new classProduct($aProduct);
+                        $oProduct = new classProduct();
+                        $oProduct->fillPrimaryTableValues($aProduct);
                         if (!in_array($oProduct->getField('manufacturerid'), $this->aOrderProductsManufactueres))
                             $this->aOrderProductsManufactueres[] = $oProduct->getField('manufacturerid');
                         $this->aOrderProducts[] = $oProduct;
@@ -447,5 +477,178 @@ class classOrder extends classCloneData
         $aQResult = $oSQL->init()->addSelect('status_id')->addFromTable('orders_additional_tags')->addCondition('orderid=' . $this->getOrderId())->addCondition('status_id=' . $iStatusId)->Execute()->getQueryResult();
         return !empty($aQResult);
     }
+
+    public function getOrderAdditionalFee()
+    {
+        $fResult = 0;
+        if (is_null($this->aAdditionalFees)) {
+            $oSQL = new classSQLBuilder();
+            $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
+        }
+        if (!empty($this->aAdditionalFees)) {
+            foreach($this->aAdditionalFees as $aAFee) {
+                $fResult += floatval($aAFee['additional_fee_value']);
+            }
+        }
+        return floatval($fResult);
+    }
+
+    public function getOrderShippingNet()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getShippingNet();
+            }
+        }
+        return $fResult;
+    }
+
+    public function getOrderShippingGross()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getShippingGross();
+            }
+        }
+        return $fResult;
+    }
+
+    public function getOrderShippingHST()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getShippingHST();
+            }
+        }
+        return floatval($fResult+$this->getOrderShippingPST());
+    }
+
+    public function getOrderShippingPST()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getShippingPST();
+            }
+        }
+        return $fResult;
+    }
+
+    public function getOrderTotalNet()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getTotalNet();
+            }
+        }
+        return $fResult + $this->getOrderAdditionalFee();
+    }
+
+    public function getOrderTotalHST()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getTotalHST();
+            }
+        }
+        return floatval($fResult+$this->getOrderTotalPST());
+    }
+
+    public function getOrderTotalPST()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getTotalPST();
+            }
+        }
+        return $fResult;
+    }
+
+    public function getOrderTotalGross()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getTotalGross();
+            }
+        }
+        return $fResult + $this->getOrderAdditionalFee();
+    }
+
+    public function getOrderCostToUs()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getTotalCostToUs();
+            }
+        }
+        return $fResult;
+    }
+
+    public function getProductPriceNet()
+    {
+        $fResult = 0;
+        $this->fetchOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                $fResult += $oOrderDetail->getTotalProductPrice();
+            }
+        }
+        return floatval($fResult);
+    }
+
+    public function getProductPriceHSTPST()
+    {
+        $fResult = 0;
+        $this->fetchOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                $fResult += $oOrderDetail->getProductHST();
+                $fResult += $oOrderDetail->getProductPST();
+            }
+        }
+        return floatval($fResult);
+    }
+
+    public function getProductPriceGross()
+    {
+        return floatval($this->getProductPriceNet()+$this->getProductPriceHSTPST());
+    }
+
+    public function getOrderGrandTotalNet()
+    {
+        return floatval($this->getOrderTotalNet()+$this->getOrderRetailTrustPrice());
+    }
+
+    public function getPaymentMethodId()
+    {
+        return $this->getField('paymentid');
+    }
+
+    public function getPaymentMethodInstance()
+    {
+        if (is_null($this->oPaymentMethod)) {
+            $oPay = new classPaymentMethod(['paymentid' => $this->getPaymentMethodId()]);
+            $this->oPaymentMethod = $oPay->getPaymentMethodInstance(['paymentid' => $this->getPaymentMethodId()]);
+        }
+        return $this->oPaymentMethod;
+    }
+
 
 }

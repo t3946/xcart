@@ -21,7 +21,7 @@ class classOrderGroup extends classData
     /**
      * @var classOrder
      */
-    private $oOrder;
+    private $oOrder = null;
     /**
      * @var classOrderGroupInvoice[]
      */
@@ -52,6 +52,8 @@ class classOrderGroup extends classData
 
     private $availPaymentMethods = [];
 
+    private $fCostToUs = null;
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['orderid', 'manufacturerid'];
@@ -81,20 +83,58 @@ class classOrderGroup extends classData
         return floatval($this->getField('total_gross'));
     }
 
-    private function getTotalCostToUs()
+    public function getTotalNet()
     {
-        $aCostToUs = func_query_first("SELECT sum(xo.item_cost_to_us*xo.amount) as cost_to_us_od, sum(xp.cost_to_us*xo.amount) as cost_to_us_pr
+        return floatval($this->getField('total_net'));
+    }
+
+    public function getTotalHST()
+    {
+        return floatval($this->getField('total_gst'));
+    }
+
+    public function getTotalPST()
+    {
+        return floatval($this->getField('total_pst'));
+    }
+
+    public function getShippingGross()
+    {
+        return floatval($this->getField('shipping_gross'));
+    }
+
+    public function getShippingNet()
+    {
+        return floatval($this->getField('shipping_net'));
+    }
+
+    public function getShippingHST()
+    {
+        return floatval($this->getField('shipping_gst'));
+    }
+
+    public function getShippingPST()
+    {
+        return floatval($this->getField('shipping_pst'));
+    }
+
+    public function getTotalCostToUs()
+    {
+        if (is_null($this->fCostToUs)) {
+            $aCostToUs = func_query_first("SELECT sum(xo.item_cost_to_us*xo.amount) as cost_to_us_od, sum(xp.cost_to_us*xo.amount) as cost_to_us_pr
                                       FROM xcart_order_groups og
                                            INNER JOIN xcart_order_details xo USING (orderid)
                                            INNER JOIN xcart_products xp
                                               ON xp.productid = xo.productid AND
                                                  xp.manufacturerid = og.manufacturerid
                                      WHERE og.orderid = " . $this->getField('orderid'));
-        $fCostToUs = $aCostToUs['cost_to_us_od'];
-        if (is_null($fCostToUs)) {
-            $fCostToUs = $aCostToUs['cost_to_us_pr'];
+            $fCostToUs = $aCostToUs['cost_to_us_od'];
+            if (is_null($fCostToUs)) {
+                $fCostToUs = $aCostToUs['cost_to_us_pr'];
+            }
+            $this->fCostToUs = floatval($fCostToUs);
         }
-        return floatval($fCostToUs);
+        return $this->fCostToUs;
     }
 
     /**
@@ -150,7 +190,7 @@ class classOrderGroup extends classData
      */
     public function getOrderInstance()
     {
-        if (empty($this->oOrder)) {
+        if (is_null($this->oOrder)) {
             $this->fetchOrderInstance();
         }
         return $this->oOrder;
@@ -172,7 +212,7 @@ class classOrderGroup extends classData
         if (empty($this->availPaymentMethods)) {
             $this->oSQL->init()->addSelect('paymentid, payment_method')->addFromTable('payment_methods')->addCondition("acc_proc='Y'")->addOrderBy('orderby');
             if ($this->getOrderInstance()->getAmazonChanell())
-                $this->oSQL->addCondition("order_tag_preference = '".$this->getOrderInstance()->getAmazonChanell()."'");
+                $this->oSQL->addCondition("order_tag_preference = '" . $this->getOrderInstance()->getAmazonChanell() . "'");
             $aPaymentMethods = $this->oSQL->Execute()->getQueryResult();
             if (!empty($aPaymentMethods)) {
                 foreach ($aPaymentMethods as $aPaymentMethod) {
@@ -822,11 +862,11 @@ class classOrderGroup extends classData
         if ($this->getAccountingNetProfit() < 0) {
             global $config;
             if (!$this->getOrderInstance()->isAttentionTagSet($config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"])) {
-                $oAttentionTag = new classAttentionTag(['status_id'=>$config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
-                $aInsertArray = ['orderid'=>$this->getOrderId(),'status_id'=>$oAttentionTag->getStatusId()];
-                func_array2insert('orders_additional_tags',$aInsertArray, true);
-                $sLog = "Attention tag added: " . $oAttentionTag->getStatus()."\n";
-                classLogs::_log('orders',$this->getOrderId(),'X',$sLog);
+                $oAttentionTag = new classAttentionTag(['status_id' => $config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
+                $aInsertArray = ['orderid' => $this->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
+                func_array2insert('orders_additional_tags', $aInsertArray, true);
+                $sLog = "Attention tag added: " . $oAttentionTag->getStatus() . "\n";
+                classLogs::_log('orders', $this->getOrderId(), 'X', $sLog);
             }
         }
     }
@@ -881,9 +921,9 @@ class classOrderGroup extends classData
             default :
                 $this->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getTotalGross()))->initAccountingGrossCostToUs()
                     ->setAccountingGrossShipping(abs($FBAPerOrderFulfillmentFee +
-                        $FBAPerUnitFulfillmentFee +
-                        $FBAWeightBasedFee +
-                        $AmazonCommission + $FBATransportationFee) + $fShipping);
+                            $FBAPerUnitFulfillmentFee +
+                            $FBAWeightBasedFee +
+                            $AmazonCommission + $FBATransportationFee) + $fShipping);
                 if ($this->getOrderAmazonDetails()->isRefundExists())
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
                 else $this->addAccountingGrossRefundToUs(abs($fRefund));
@@ -924,7 +964,8 @@ class classOrderGroup extends classData
             addCondition('p.manufacturerid = ' . $this->getField('manufacturerid'))->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct($aProduct);
+                    $oProduct = new classProduct();
+                    $oProduct->fillPrimaryTableValues($aProduct);
                     $this->oOrderGroupProducts[] = $oProduct;
                 }
             }
@@ -1055,7 +1096,7 @@ class classOrderGroup extends classData
 
     public function isOrderGroupShippedByAmazon()
     {
-        return ($this->getField('amz_fullfilment_order_placed')=='Y');
+        return ($this->getField('amz_fullfilment_order_placed') == 'Y');
     }
 
 }

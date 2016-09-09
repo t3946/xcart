@@ -454,7 +454,7 @@ Select
 
 
         while ($product = db_fetch_array($products)) {
-            $oProduct = new classProduct($product['productid']);
+            $oProduct = new classProduct(['productid'=>$product['productid']]);
             if ($storefrontid == $product["maxsf"])
                 db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
 
