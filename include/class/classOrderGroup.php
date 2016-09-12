@@ -83,9 +83,21 @@ class classOrderGroup extends classData
         return floatval($this->getField('total_gross'));
     }
 
+    public function addTotalGross($fSumma)
+    {
+        $this->setField('total_gross', floatval($this->getField('total_gross')) + $fSumma);
+        return $this;
+    }
+
     public function getTotalNet()
     {
         return floatval($this->getField('total_net'));
+    }
+
+    public function addTotalNet($fSumma)
+    {
+        $this->setField('total_net', floatval($this->getField('total_net')) + $fSumma);
+        return $this;
     }
 
     public function getTotalHST()
@@ -1097,6 +1109,20 @@ class classOrderGroup extends classData
     public function isOrderGroupShippedByAmazon()
     {
         return ($this->getField('amz_fullfilment_order_placed') == 'Y');
+    }
+
+    public static function getOrderGroupByOrderIdAndProductId($iOrderId, $iProductId)
+    {
+        $oResult = null;
+        $oSQL = new classSQLBuilder();
+        $aResults = $oSQL->addSelect('g.*')->addFromTable('order_groups','g')->addInnerJoin('manufacturers', 'm', 'm.manufacturerid=g.manufacturerid')->
+        addInnerJoin('products','p','p.manufacturerid= m.manufacturerid')->addCondition("g.orderid=$iOrderId")->addCondition("p.productid=$iProductId")->
+        Execute()->getQueryResult();
+        if (!empty($aResults)) {
+            $aResult = reset($aResults);
+            $oResult = new classOrderGroup(['orderid'=>$aResult['orderid'], 'manufacturerid'=>$aResult['manufacturerid']]);
+        }
+        return $oResult;
     }
 
 }

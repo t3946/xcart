@@ -550,7 +550,7 @@ class classOrder extends classCloneData
                 $fResult += $oOrderGroup->getTotalNet();
             }
         }
-        return $fResult + $this->getOrderAdditionalFee();
+        return $fResult + $this->getOrderAdditionalFee()+$this->getOrderRetailTrustPrice();
     }
 
     public function getOrderTotalHST()
@@ -586,7 +586,7 @@ class classOrder extends classCloneData
                 $fResult += $oOrderGroup->getTotalGross();
             }
         }
-        return $fResult + $this->getOrderAdditionalFee();
+        return $fResult + $this->getOrderAdditionalFee()+$this->getOrderRetailTrustPrice();
     }
 
     public function getOrderCostToUs()
@@ -631,16 +631,14 @@ class classOrder extends classCloneData
         return floatval($this->getProductPriceNet()+$this->getProductPriceHSTPST());
     }
 
-    public function getOrderGrandTotalNet()
-    {
-        return floatval($this->getOrderTotalNet()+$this->getOrderRetailTrustPrice());
-    }
-
     public function getPaymentMethodId()
     {
         return $this->getField('paymentid');
     }
 
+    /**
+     * @return classPaymentMethod
+     */
     public function getPaymentMethodInstance()
     {
         if (is_null($this->oPaymentMethod)) {
@@ -650,5 +648,19 @@ class classOrder extends classCloneData
         return $this->oPaymentMethod;
     }
 
+    public function getOrderStatusDC()
+    {
+        return $this->getField('dc_status');
+    }
+
+    public function getOrderStatusCB()
+    {
+        return $this->getField('cb_status');
+    }
+
+    public function getOrderStatusBD()
+    {
+        return $this->getField('bd_status');
+    }
 
 }

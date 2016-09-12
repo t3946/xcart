@@ -50,6 +50,11 @@ class classData
         $this->fillPrimaryTableInfo();
     }
 
+    public function _update()
+    {
+        func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, $this->getWhereClause());
+    }
+
     protected function fillPrimaryTableInfo()
     {
         if (!empty($this->aPrimaryKeysValues)) {

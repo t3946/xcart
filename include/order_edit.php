@@ -877,22 +877,7 @@ if ($REQUEST_METHOD == "POST") {
 
         $operator_login = $login;
 
-        if (!empty($add_retail_trust) && is_array($add_retail_trust)) {
-            foreach ($add_retail_trust as $sRetailTrustSKU) {
-                if (!empty($sRetailTrustSKU)) {
-                    $oProduct = classProduct::getProductBySKU($sRetailTrustSKU);
-                    if ($oProduct->getProductId())
-                        $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
-                    if (!empty($aOrderDetails)) {
-                        foreach ($aOrderDetails as $oOrderDetail) {
-                            $oOrderDetail->addRetailTrust();
-                        }
 
-                    }
-                }
-            }
-
-        }
 
         if (!empty($add_productcode) && is_array($add_productcode)) {
             foreach ($add_productcode as $kkk => $sku) {
@@ -1374,6 +1359,23 @@ if ($REQUEST_METHOD == "POST") {
                     func_change_order_group_status($orderid, $m_id, 'R');
                 }
             }
+        }
+
+        if (!empty($add_retail_trust) && is_array($add_retail_trust)) {
+            foreach ($add_retail_trust as $sRetailTrustSKU) {
+                if (!empty($sRetailTrustSKU)) {
+                    $oProduct = classProduct::getProductBySKU($sRetailTrustSKU);
+                    if ($oProduct->getProductId())
+                        $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
+                    if (!empty($aOrderDetails)) {
+                        foreach ($aOrderDetails as $oOrderDetail) {
+                            $oOrderDetail->addRetailTrust();
+                        }
+
+                    }
+                }
+            }
+
         }
 
         if ($send_email == 'Y') {

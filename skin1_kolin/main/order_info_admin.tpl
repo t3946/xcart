@@ -1253,14 +1253,14 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 
       <tr class="distributor-totals-line">
         <td colspan="7"></td>
-        <td align="right">{$oOrder->getOrderRetailTrustPrice()}</td>
+        <td align="right">{$oOrder->getOrderRetailTrustPrice()|price_format}</td>
         <td></td>
-        <td align="right">{$oOrder->getOrderRetailTrustGross()}</td>
+        <td align="right">{$oOrder->getOrderRetailTrustGross()|price_format}</td>
         <td></td>
       </tr>
       {foreach from=$aRetailTrustDetails item=oRetailTrustDetail}
         {assign var=oOrderDetailProduct value=$oRetailTrustDetail->getOrderDetailProduct()}
-      <tr>
+      <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
         <td>
           <a href="{$oOrderDetailProduct->getProductFrontURL()}">{$oOrderDetailProduct->getProductName()}</a>
         </td>
@@ -1279,7 +1279,11 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
         <td align="right">
           {$oRetailTrustDetail->getRetailTrustGross()|price_format}
         </td>
-        <td><input type="checkbox" value="Y" name="retail_trust_to_delete[{$oRetailTrustDetail->getOrderDetailId()}]" /></td>
+        <td>
+          {if $oOrder->getOrderStatusDC() != 'L' && $oOrder->getOrderStatusDC() != 'E' && $oOrder->getOrderStatusDC() != 'DP' && $oOrder->getOrderStatusDC() != 'C' && $oOrder->getOrderStatusDC() != 'G'}
+            <input type="checkbox" value="Y" name="retail_trust_to_delete[{$oRetailTrustDetail->getOrderDetailId()}]" />
+          {/if}
+        </td>
       </tr>
       {/foreach}
       <tr>
@@ -1460,7 +1464,7 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
   <td align="center" id="add_additional_fee_to_order_box_9"></td>
   <td>{include file="buttons/multirow_add.tpl" mark="add_additional_fee_to_order"}</td>
 </tr>
-
+{if $oOrder->getOrderStatusDC() != 'L' && $oOrder->getOrderStatusDC() != 'E' && $oOrder->getOrderStatusDC() != 'DP' && $oOrder->getOrderStatusDC() != 'C' && $oOrder->getOrderStatusDC() != 'G'}
   <tr id="add_retailtrust">
     <td align="center" id="add_retailtrust_box_0"></td>
     <td align="center" id="add_retailtrust_box_1"></td>
@@ -1474,7 +1478,7 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
     <td align="center" id="add_retailtrust_box_9"></td>
     <td>{include file="buttons/multirow_add.tpl" mark="add_retailtrust"}</td>
   </tr>
-
+{/if}
 
 </table>
 <br />

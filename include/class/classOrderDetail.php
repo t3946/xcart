@@ -3,6 +3,8 @@ global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
 require_once $xcart_dir . "/include/class/classOrder.php";
+require_once $xcart_dir . "/include/class/classOrderGroup.php";
+require_once $xcart_dir . "/include/class/classLogs.php";
 
 class classOrderDetail extends classData
 {
@@ -14,6 +16,10 @@ class classOrderDetail extends classData
      * @var classOrder
      */
     private $oOrder = null;
+    /**
+     * @var classOrderGroup
+     */
+    private $oOrderGroup = null;
 
     public function __construct($aParams = [])
     {
@@ -49,6 +55,16 @@ class classOrderDetail extends classData
         return $this->getField('price');
     }
 
+    public function getOrderId()
+    {
+        return $this->getField('orderid');
+    }
+
+    public function getProductId()
+    {
+        return $this->getField('productid');
+    }
+
     public function getOrderDetailId()
     {
         return $this->getField('itemid');
@@ -62,8 +78,8 @@ class classOrderDetail extends classData
     public function getOrderDetailProduct()
     {
         if (is_null($this->oProduct)) {
-            if ($this->getField('productid')) {
-                $this->oProduct = new classProduct(['productid' => $this->getField('productid')]);
+            if ($this->getProductId()) {
+                $this->oProduct = new classProduct(['productid' => $this->getProductId()]);
             }
         }
         return $this->oProduct;
@@ -98,24 +114,36 @@ class classOrderDetail extends classData
 
     public function removeRetailTrust()
     {
+        $fRetailTrust = $this->calculateRetailTrustPrice();
         $this->updateFields(['retail_trust_item' => 'N', 'retail_trust_price' => 0]);
+        classLogs::_log('orders', $this->getOrderId(), 'X', sprintf('Retail Trust $%s for %s - Removed', $fRetailTrust, $this->getOrderDetailProduct()->getSKU()));
+    }
+
+    public function getOrderGroupInstance()
+    {
+        if (is_null($this->oOrderGroup))
+            $this->oOrderGroup = classOrderGroup::getOrderGroupByOrderIdAndProductId($this->getOrderId(), $this->getProductId());
+        return $this->oOrderGroup;
     }
 
     public function addRetailTrust()
     {
-        if (!$this->isRetailTrustEnabled() && $this->getOrderDetailProduct()->isRetailTrustEnabled()) {
-            $this->updateFields(['retail_trust_item' => 'Y', 'retail_trust_price' => $this->calculateRetailTrustPrice()]);
+        if (!$this->isRetailTrustEnabled() && $this->getOrderDetailProduct()->isRetailTrustEnabled() && $this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() > 1) {
+            $fRetailTrust = $this->calculateRetailTrustPrice();
+            $this->updateFields(['retail_trust_item' => 'Y', 'retail_trust_price' => $fRetailTrust]);
+            $this->getOrderGroupInstance()->addTotalNet($fRetailTrust)->addTotalGross($fRetailTrust)->_update();
+            classLogs::_log('orders', $this->getOrderId(), 'X', sprintf('Retail Trust $%s for %s - Added', $fRetailTrust, $this->getOrderDetailProduct()->getSKU()));
         }
     }
 
     public function calculateRetailTrustPrice()
     {
-        return floatval($this->getTotalProductPrice() * (1-$this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier()));
+        return floatval(round($this->getTotalProductPrice() * ($this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() - 1),2));
     }
 
     private function fetchOrderInstance()
     {
-        $this->oOrder = new classOrder($this->getField('orderid'));
+        $this->oOrder = new classOrder($this->getOrderId());
     }
 
     public function getOrderInstance()
