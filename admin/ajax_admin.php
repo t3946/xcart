@@ -37,7 +37,7 @@ function changeVerifyProductStatus($aPostParam = [])
     $iStatusId = (int)$aPostParam['verify_status_id'];
     $sNote = $aPostParam['note_text'];
     if (!empty($iProductId)) {
-        $oProduct = new classProduct($iProductId);
+        $oProduct = new classProduct(['productid'=>$iProductId]);
         $bResult = $oProduct->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
         if (!empty($aOrders)) {
             foreach ($aOrders as $iOrderId) {

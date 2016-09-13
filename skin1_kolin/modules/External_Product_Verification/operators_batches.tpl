@@ -41,15 +41,14 @@
         {if ($aBatches)}
             {foreach from=$aBatches item=oCurrentBatch}
                 <tr data-batch-id="{$oCurrentBatch->getBatchId()}">
-                    <td align="center">{$oCurrentBatch->getBatchNumber()}</td>
-                    <td align="center">{$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}
-                        _{$oCurrentBatch->getBatchAmount()}</td>
+                    <td align="center">{$oCurrentBatch->getBatchNumber()}{if $oCurrentBatch->isTest()}T{/if}</td>
+                    <td align="center">{$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}{if $oCurrentBatch->isTest()}T{/if}_{$oCurrentBatch->getBatchAmount()}</td>
                     {assign var=oStartDate value=$oCurrentBatch->getStartDate()}
                     <td align="center">{$oStartDate->format('d-M-Y<\b\r>H:i')}</td>
                     <td align="left">
                         <div class="ui indicating progress"
                              data-value="{$oCurrentBatch->getProductsInBatchCompletedCount()}"
-                             data-total="{$oCurrentBatch->getBatchAmount()}" id="example5">
+                             data-total="{$oCurrentBatch->getBatchAmount()}">
                             <div class="bar">
                                 <div class="progress"></div>
                             </div>
@@ -58,8 +57,12 @@
                         </div>
                     </td>
                     <td align="center">{$oCurrentBatch->getAverageVerifySpeed()} sec.</td>
-                    <td align="center"><a data-status="{$oCurrentBatch->getBatchStatus()}" class="batch_status_link"
-                                          href="#">{$oCurrentBatch->getBatchStatus()}</a></td>
+                    <td align="center"><a data-status="{$oCurrentBatch->getBatchStatus()}" class="batch_status_link" href="#">{$oCurrentBatch->getBatchStatus()}</a>
+                        {if $oCurrentBatch->isTest() && $oCurrentBatch->countTestResults()}
+                            <br/>
+                            T: +{$oCurrentBatch->getRightAnswersCount()} -{$oCurrentBatch->getWrongAnswersCount()} ={$oCurrentBatch->getBatchAmount()}
+                        {/if}
+                    </td>
                 </tr>
             {/foreach}
         {else}
@@ -81,10 +84,15 @@
     <div class="header">
         Add new batch
     </div>
+    <div class="test-batch-header">
+        <div class="ui checkbox">
+            <input name="test_batch" type="checkbox">
+            <label>{$lng.txt_test_batch_checkbox}</label>
+        </div>
+    </div>
     <div class="content">
         <div>
-            <h4 class="ui dividing header">Enter the number of products to be included in a new batch<br>(the number must
-                be > 0)</h4>
+            <h4 class="ui dividing header">{$lng.txt_enter_the_number_of_products}</h4>
 
             <form class="ui form">
 

@@ -1,6 +1,6 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir . "/include/class/classCloneData.php";
+require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classManufacturer.php";
 require_once $xcart_dir . "/include/class/classStoreFront.php";
 require_once $xcart_dir . "/include/class/classOrders.php";
@@ -8,8 +8,9 @@ require_once $xcart_dir . "/include/class/classProductVerifiactionStatus.php";
 require_once $xcart_dir . "/include/class/classProductImage.php";
 require_once $xcart_dir . "/include/class/classPricing.php";
 require_once $xcart_dir . "/include/class/classHTMLShot.php";
+require_once $xcart_dir . "/include/class/classSQLBuilder.php";
 
-class classProduct extends classCloneData
+class classProduct extends classData
 {
     const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
@@ -31,8 +32,8 @@ class classProduct extends classCloneData
 
     public function __construct($iId = null)
     {
-        $this->sPrimaryTable = "products";
-        $this->sPrimaryKeyFiled = "productid";
+        $this->sPrimaryTable = 'products';
+        $this->aPrimaryKeys = ['productid'];
 
         parent::__construct($iId);
     }
@@ -80,13 +81,12 @@ class classProduct extends classCloneData
 
     public function getProductModifyURL()
     {
-        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled), $this->getStoreFront()->getStoreFrontByProductId($this->primaryKeyValue)->getField('storefrontid'));
+        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getField('storefrontid'));
     }
 
     public function getProductFrontURL($http = 'http://')
     {
-
-        return $http.$this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getDomain().'/'.func_clean_url_get('P', $this->getField($this->sPrimaryKeyFiled), false);
+        return $http . $this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
     }
 
     public function getHTMLShot($iOrderID)
@@ -127,7 +127,7 @@ class classProduct extends classCloneData
     public function getProductVerificationHistoryLastNote()
     {
         $sResult = '';
-        $this->aProductVerificationHistoryLast = func_query_first("SELECT * FROM " . self::$sql_tbl['product_verification_history'] . " WHERE productid = " . $this->primaryKeyValue . " ORDER BY timestamp DESC");
+        $this->aProductVerificationHistoryLast = func_query_first("SELECT * FROM " . self::$sql_tbl['product_verification_history'] . " WHERE productid = " . $this->getProductId() . " ORDER BY timestamp DESC");
         if (!empty($this->aProductVerificationHistoryLast)) {
             $sResult = stripslashes($this->aProductVerificationHistoryLast['verification_note']);
         }
@@ -144,11 +144,11 @@ class classProduct extends classCloneData
             if ($iStatusId == self::PRODUCT_STATUS_VERIFY) {
                 $aUpdateParams['last_verify_date'] = $oDatetime->getTimestamp();
             }
-            $res = func_array2update($this->sPrimaryTable, $aUpdateParams, 'productid = ' . $this->primaryKeyValue);
+            $res = func_array2update($this->sPrimaryTable, $aUpdateParams, 'productid = ' . $this->getProductId());
 
             if ($res) {
                 if ($add2History) {
-                    $aInsertArray = ['productid' => $this->primaryKeyValue,
+                    $aInsertArray = ['productid' => $this->getProductId(),
                         'verification_note' => addslashes($sNote),
                         'timestamp' => $oDatetime->getTimestamp(),
                         'username' => $login,
@@ -328,6 +328,24 @@ class classProduct extends classCloneData
     public function getProductName()
     {
         return $this->getField('product');
+    }
+
+    public function isRetailTrustEnabled()
+    {
+        return ($this->getField('retail_trust_enabled') == 'Y') ? true : false;
+    }
+
+    public static function getProductBySKU($sSKU)
+    {
+        $oProduct = null;
+        $oSQL = new classSQLBuilder();
+        $aProducts = $oSQL->addSelect('productid')->addFromTable('products')->addCondition("productcode='$sSKU'")->Execute()->getQueryResult();
+        if (!empty($aProducts)) {
+            $aProduct = reset($aProducts);
+            $oProduct = new classProduct(['productid' => $aProduct['productid']]);
+        }
+        return $oProduct;
+
     }
 
 }

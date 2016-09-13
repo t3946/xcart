@@ -195,6 +195,9 @@ elseif ($option == "PBX_options") {
 elseif ($option == "External_marketplaces") {
 	include $xcart_dir . '/modules/External_Marketplaces/external_marketplaces.php';
 }
+elseif ($option == "Amazon_Verification") {
+	include $xcart_dir . '/modules/External_Product_Verification/amazon_verification.php';
+}
 elseif ($option == "Reconciliation") {
     include "./reconciliation_options.php";
 }
