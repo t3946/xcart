@@ -32,7 +32,7 @@
                 <td align="center">
                     {if $aBatchesInProgress}
                         {foreach from=$aBatchesInProgress item=oBatchInProgress name=batchInProgress}
-                        <a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=in_progress">{$oBatchInProgress->getBatchNumber()} ({$oBatchInProgress->getProductsInBatchCompletedCount()}/{$oBatchInProgress->getBatchAmount()})</a>
+                        <a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=in_progress">{$oBatchInProgress->getBatchNumber()}{if $oBatchInProgress->isTest()}T{/if} ({$oBatchInProgress->getProductsInBatchCompletedCount()}/{$oBatchInProgress->getBatchAmount()})</a>
                         <br/>
                         {/foreach}
                     {else}
