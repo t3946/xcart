@@ -1023,15 +1023,25 @@ class classAmazonMWS
             $list = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
 
             foreach ($aProducts as $oProduct) {
-                $item = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
-                $item->setSellerSKU($oProduct->getSKU());
-                $item->setSellerFulfillmentOrderItemId($oProduct->getSKU());
-                $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($oOrderGroup->getOrderId(), $oProduct->getProductId());
                 $iAmount = 0;
+                $item = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
+
+                $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($oOrderGroup->getOrderId(), $oProduct->getProductId());
                 foreach ($aOrderDetails as $oOrderDetail) {
                     $iAmount+=$oOrderDetail->getAmount();
                 }
-                $item->setQuantity($iAmount);
+                $aProductsQty = $oProduct->getProductsAvailOnAmazonParentWithChild($iAmount);
+                if (!empty($aProductsQty)) {
+                    foreach ($aProductsQty as $aFBAAvail) {
+                        $item->setSellerSKU($aFBAAvail['oProduct']->getSKU());
+                        $item->setSellerFulfillmentOrderItemId($aFBAAvail['oProduct']->getSKU());
+                        $item->setQuantity($aFBAAvail['qty']);
+                    }
+                } else {
+                    $item->setSellerSKU($oProduct->getSKU());
+                    $item->setSellerFulfillmentOrderItemId($oProduct->getSKU());
+                    $item->setQuantity($iAmount);
+                }
                 $list->withmember($item);
             }
 

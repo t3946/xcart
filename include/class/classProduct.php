@@ -30,6 +30,8 @@ class classProduct extends classData
 
     private $aPricing = [];
 
+    private $iAmazonFbaAvail = null;
+
     public function __construct($iId = null)
     {
         $this->sPrimaryTable = 'products';
@@ -230,6 +232,11 @@ class classProduct extends classData
         return $this->aPrimaryTableValue;
     }
 
+    public function isParent()
+    {
+        return ($this->getField('clone_parent_productid') == 0);
+    }
+
     public function isProductOutOfStock()
     {
         $result = true;
@@ -320,6 +327,19 @@ class classProduct extends classData
         return $sASIN;
     }
 
+    public function getAmazonFBAAvail()
+    {
+        if (is_null($this->iAmazonFbaAvail)) {
+            $this->iAmazonFbaAvail = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_cloned_stock(" . $this->getProductId() . ") as amazon_fba_avail FROM dual"));
+        }
+        return $this->iAmazonFbaAvail;
+    }
+
+    public function getAmazonFBAAvailReal()
+    {
+        return intval($this->getField('amazon_fba_avail'));
+    }
+
     public function getUPC()
     {
         return $this->getField('upc');
@@ -346,6 +366,100 @@ class classProduct extends classData
         }
         return $oProduct;
 
+    }
+
+    /**
+     * @return classProduct[]
+     */
+    public function getChildProducts()
+    {
+        $aProducts = [];
+        $aChildProducts = $this->oSQL->init()->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition('clone_parent_productid = '.$this->getProductId())->Execute()->getQueryResult();
+        if (!empty($aChildProducts)) {
+            foreach ($aChildProducts as $aChild) {
+                $oChildProduct = new classProduct();
+                $oChildProduct->fillPrimaryTableValues($aChild);
+                $aProducts[] = $oChildProduct;
+            }
+        }
+        return $aProducts;
+    }
+
+    /**
+     * @return classProduct|null
+     */
+    public function getParentProduct()
+    {
+        $oParentProduct = null;
+        if ($this->getField('clone_parent_productid')) {
+            $oParentProduct = new classProduct(['productid'=>$this->getField('clone_parent_productid')]);
+        }
+        return $oParentProduct;
+    }
+
+    public function getProductsAvailOnAmazonParentWithChild($iQty)
+    {
+        $aProductAmazonArray = [];
+        $iShipNeed = $iQty;
+        if ($iQty > 0 && $this->getAmazonFBAAvail() >= $iQty) {
+            if ($this->getAmazonFBAAvailReal() > 0) {
+                if ($this->getAmazonFBAAvailReal() >= $iQty) {
+                    $aProductAmazonArray[] = ['oProduct' => $this, 'qty' => $iQty];
+                    $iShipNeed -= $iQty;
+                } else {
+                    $aProductAmazonArray[] = ['oProduct' => $this, 'qty' => $this->getAmazonFBAAvailReal()];
+                    $iShipNeed -= $this->getAmazonFBAAvailReal();
+                }
+            }
+            if ($iShipNeed > 0) {
+                if ($this->isParent()) { //parent
+                    $aChildProducts = $this->getChildProducts();
+                    if (!empty($aChildProducts)) {
+                        foreach($aChildProducts as $oChildProduct) {
+                            if ($oChildProduct->getAmazonFBAAvailReal() > 0) {
+                                if ($oChildProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
+                                    $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $iShipNeed];
+                                    $iShipNeed -= $iShipNeed;
+                                } else {
+                                    $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $oChildProduct->getAmazonFBAAvailReal()];
+                                    $iShipNeed -= $oChildProduct->getAmazonFBAAvailReal();
+                                }
+                            }
+                            if ($iShipNeed <=0) break;
+                        }
+                    }
+                } else { //child
+                    $oParentProduct = $this->getParentProduct();
+                    if ($oParentProduct->getAmazonFBAAvailReal() > 0) {
+                        if ($oParentProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
+                            $aProductAmazonArray[] = ['oProduct' => $oParentProduct, 'qty' => $iShipNeed];
+                            $iShipNeed -= $iShipNeed;
+                        } else {
+                            $aProductAmazonArray[] = ['oProduct' => $oParentProduct, 'qty' => $oParentProduct->getAmazonFBAAvailReal()];
+                            $iShipNeed -= $oParentProduct->getAmazonFBAAvailReal();
+                        }
+                    }
+                    if ($iShipNeed > 0) {
+                        $aChildProducts = $oParentProduct->getChildProducts();
+                        if (!empty($aChildProducts)) {
+                            foreach($aChildProducts as $oChildProduct) {
+                                if ($oChildProduct->getProductId() != $this->getProductId() && $oChildProduct->getAmazonFBAAvailReal() > 0) {
+                                    if ($oChildProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
+                                        $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $iShipNeed];
+                                        $iShipNeed -= $iShipNeed;
+                                    } else {
+                                        $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $oChildProduct->getAmazonFBAAvailReal()];
+                                        $iShipNeed -= $oChildProduct->getAmazonFBAAvailReal();
+                                    }
+                                }
+                                if ($iShipNeed <=0) break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $aProductAmazonArray;
     }
 
 }
