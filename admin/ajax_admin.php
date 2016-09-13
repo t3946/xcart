@@ -110,6 +110,8 @@ function addNewBatch($aPostParam = [])
     $oCustomer = new classCustomer(['login' => $aPostParam['login']]);
     $iMaxBatchNumber = $oCustomer->getAmazonBatchesMaxNumber();
     $oVerificationBatch->setField('batch_number', $iMaxBatchNumber + 1);
+    if (!empty($_POST['test_batch']) && $_POST['test_batch'] == 'Y')
+        $oVerificationBatch->setField('is_test', 'Y');
     $oVerificationBatch->_insert();
     print(json_encode($aResult));
 }

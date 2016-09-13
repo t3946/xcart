@@ -86,7 +86,7 @@
     </div>
     <div class="test-batch-header">
         <div class="ui checkbox">
-            <input name="test_batch" type="checkbox">
+            <input autocomplete="off" name="test_batch" id="test_batch_checkbox" type="checkbox" value="T">
             <label>{$lng.txt_test_batch_checkbox}</label>
         </div>
     </div>
@@ -160,10 +160,16 @@
                         return false;
 
                     } else {
-                        var batch_input = $('#batch_amount');
+                        var batch_input = $('#batch_amount'),
+                        test_batch = 'N';
+
+                        if ($('#test_batch_checkbox').is(':checked')){
+                            test_batch = 'Y';
+                        }
                         $('.ui.segment.dimmable').dimmer('show');
                         $.post('ajax_admin.php', {
                                     batch_amount: batch_input.val(),
+                                    test_batch: test_batch,
                                     login: batch_input.data('login'),
                                     ajax_action: 'add_new_batch'
                                 },
