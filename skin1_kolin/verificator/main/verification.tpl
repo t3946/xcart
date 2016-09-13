@@ -256,7 +256,9 @@
             }
         }
 
-        function loadRemoteFrame(frame_Name, url, idx_force = false, appendto='.iframediv.left') {
+        function loadRemoteFrame(frame_Name, url, idx_force, appendto) {
+
+            if (!(appendto)) appendto = '.iframediv.left';
             var i_frame = document.getElementById(frame_Name),
                     idx = idx_force;
             var split = isSplitScreen();

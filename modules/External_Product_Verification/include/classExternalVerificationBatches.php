@@ -170,15 +170,13 @@ class classExternalVerificationBatch extends classData
         $aOpenedProducts = $this->getProductsInBatchOpened();
         if (empty($aOpenedProducts)) {
             if (!$this->isTest()) {
-                $aNextProducts = $this->oSQL->init()->addSelect('P.productid')->addSelect('VP.login')->
-                addSelect("(SELECT count(1)
-                              FROM " . self::$sql_tbl['external_verification_products'] . " VP2
-                              INNER JOIN xcart_external_verification_products_queue Q2 ON Q2.productid = VP2.productid AND Q2.status = 'In progress' AND Q2.cross_verify_count = 1
-                              WHERE VP2.login = VP.login AND VP2.batch_id = VP.batch_id)", 'batch_processed')->addFromTable('products', 'P')->
-                addInnerJoin('external_verification_products_queue', 'Q', "Q.productid = P.productid AND Q.status = 'In progress' AND Q.cross_verify_count <= 1")->
-                addInnerJoin('external_verification_products', 'VP', "VP.productid = P.productid AND VP.login != '$login'")->addCondition("P.forsale = 'Y'")->
-                addCondition("NOT EXISTS (SELECT 1 FROM xcart_external_verification_products VP3 WHERE VP3.productid = P.productid AND action !='open' AND login = '$login')")->
-                addGroupBy('P.productid')->addOrderBy('batch_processed DESC')->setLimit('1')->Execute()->getQueryResult();
+                $aNextProducts = $this->oSQL->init()->addSelect('Q.productid')->addSelect('VP.login')->
+                addSelect("count(login)", 'p_count')->addFromTable('external_verification_products_queue','Q')->addInnerJoin('products', 'P','P.productid = Q.productid')->
+                addInnerJoin('external_verification_products', 'VP', "VP.action = 'open' AND VP.productid = P.productid AND VP.login != '$login'")->addCondition("P.forsale = 'Y'")->
+                addCondition("Q.status = 'In progress'")->addCondition("Q.cross_verify_count <= 1")->
+                addCondition("NOT EXISTS (SELECT 1 FROM xcart_external_verification_products VP3 WHERE VP3.productid = P.productid AND action ='open' AND login = '$login')")->
+                //addCondition("NOT EXISTS (SELECT 1 FROM xcart_external_verification_batches B WHERE B.batch_id = ".$this->getBatchId()." AND B.last_cross_verify_login = VP.login)")->
+                addGroupBy('Q.productid')->addHaving('p_count <= 1')->setLimit('1')->Execute()->getQueryResult();
                 if (!empty($aNextProducts)) {
                     foreach ($aNextProducts as $aNextProduct) {
                         $oProduct = new classProduct(['productid' => $aNextProduct['productid']]);
@@ -188,8 +186,7 @@ class classExternalVerificationBatch extends classData
                 } else {
                     $aNextProducts = $this->oSQL->init()->addSelect('p.productid')->addSelect('cross_verify_count', 'batch_processed')->addFromTable('products', 'p')->
                     addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid AND q.status = 'In progress' AND q.cross_verify_count <= 1")->
-                    addCondition("p.forsale = 'Y'")->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid AND login = \'' . $login . '\' AND action IN (\'open\'))')->addGroupBy('p.productid')->addOrderBy('cross_verify_count DESC')->setLimit('1')->Execute()->getQueryResult();
-
+                    addCondition("p.forsale = 'Y'")->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid AND action IN (\'open\'))')->addGroupBy('p.productid')->addOrderBy('cross_verify_count DESC')->setLimit('1')->Execute()->getQueryResult();
                     if (!empty($aNextProducts)) {
                         foreach ($aNextProducts as $aNextProduct) {
                             $oProduct = new classProduct(['productid' => $aNextProduct['productid']]);
@@ -200,7 +197,7 @@ class classExternalVerificationBatch extends classData
             } else { //Test batch
                 $aNextProducts = $this->oSQL->init()->addSelect('p.productid')->addSelect('cross_verify_count', 'batch_processed')->addFromTable('products', 'p')->
                 addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid AND q.status IN ('etalon_match','etalon_not_match')")->
-                addCondition("p.forsale = 'Y'")->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid AND login = \'' . $login . '\' AND action IN (\'open\'))')->addGroupBy('p.productid')->addOrderBy('RAND()')->setLimit('1')->Execute()->getQueryResult();
+                addCondition("p.forsale = 'Y'")->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid AND action IN (\'open\'))')->addGroupBy('p.productid')->addOrderBy('RAND()')->setLimit('1')->Execute()->getQueryResult();
                 if (!empty($aNextProducts)) {
                     foreach ($aNextProducts as $aNextProduct) {
                         $oProduct = new classProduct(['productid' => $aNextProduct['productid']]);
