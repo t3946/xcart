@@ -104,8 +104,7 @@
                     <td align="center">{$oCurrentBatch->getProductsInBatchCompletedCount()}</td>
                     <td align="center">{$oCurrentBatch->getBatchStatus()}</td>
                     <td align="center"><a class="verification_link" target="_blank" href="{$oCurrentBatch->getBatchVerifyLink()}">continue the processing of batch ID:
-                            {$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}
-                            _{$oCurrentBatch->getBatchAmount()}</a></td>
+                            {$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}_{$oCurrentBatch->getBatchAmount()}</a></td>
                 </tr>
             {/foreach}
         {else}
