@@ -899,7 +899,7 @@ class classOrderGroup extends classData
 
     public function updateAccounting()
     {
-        func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, 'orderid = ' . $this->getField('orderid') . ' and manufacturerid = ' . $this->getField('manufacturerid'));
+        func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, 'orderid = ' . $this->getOrderId() . ' and manufacturerid = ' . $this->getManufacturerId());
     }
 
     public function getReconciledStatus()
@@ -920,8 +920,8 @@ class classOrderGroup extends classData
             $aProducts = $this->oSQL->init()->
             addSelect('*')->
             addFromTable('products', 'p')->
-            addInnerJoin('order_details', 'od', 'od.productid=p.productid AND orderid = ' . $this->getField('orderid'))->
-            addCondition('p.manufacturerid = ' . $this->getField('manufacturerid'))->Execute()->getQueryResult();
+            addInnerJoin('order_details', 'od', 'od.productid=p.productid AND orderid = ' . $this->getOrderId())->
+            addCondition('p.manufacturerid = ' . $this->getManufacturerId())->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
                     $oProduct = new classProduct($aProduct);
@@ -940,12 +940,12 @@ class classOrderGroup extends classData
         if (!empty($this->oOrderGroupProducts)) {
             foreach ($this->oOrderGroupProducts as $oProduct) {
                 $iAmount = 0;
-                $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($this->getField('orderid'), $oProduct->getField('productid'));
+                $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($this->getOrderId(), $oProduct->getProductId());
 
                 foreach ($aOrderDetails as $oOrderDetail) {
-                    $iAmount += $oOrderDetail->getField('amount');
+                    $iAmount += $oOrderDetail->getAmount();
                 }
-                if ($oProduct->getField('amazon_fba_avail') >= $iAmount) {
+                if ($oProduct->getAmazonFBAAvail() >= $iAmount) {
                     $bResult = true;
                 } else {
                     $bResult = false;
@@ -979,7 +979,7 @@ class classOrderGroup extends classData
 
     public function getAmazonShippingOrderId()
     {
-        return $this->getOrderInstance()->getOrderPrefix() . $this->getField('orderid') . '-' . $this->getField('manufacturerid');
+        return $this->getOrderInstance()->getOrderPrefix() . $this->getOrderId() . '-' . $this->getManufacturerId();
     }
 
     public function getShippingInstance()

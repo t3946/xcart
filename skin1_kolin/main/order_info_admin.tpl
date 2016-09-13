@@ -639,7 +639,7 @@ Cost to us accurate
   </td>
   <td align="right" {* valign="top" *}>{if !$static}<input type="text" size="5" id="items_amount_{$m_id}_{$product.itemid}" name="items[{$product.itemid}][amount]" value="{$product.amount}" {* {if $v.dc_status eq 'C' || $v.dc_status eq 'L' || $v.dc_status eq 'S'}readonly="readonly"{/if} *} {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$product.amount}{/if}</td>
 
-  <td align="center">{$product.amazon_fba_avail}</td>
+  <td align="center">{$product.oProduct->getAmazonFBAAvail()}</td>
 
   <td align="right" {* valign="top" *}>
 {if !$static}
