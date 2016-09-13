@@ -225,6 +225,7 @@ function func_select_order($orderid) {
 	        'CB'    => $order['cb_status'],
         	'DC'    => $order['dc_status'],
 	        'BD'    => $order['bd_status'],
+			'VP'	=> $order['vn_status'],
         );
 
 #
@@ -727,7 +728,7 @@ function func_order_data($orderid) {
 
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classProducts.php";
-		$classProduct = new classProduct($v['productid']);
+		$classProduct = new classProduct(['productid'=>$v['productid']]);
 		$mpn = $classProduct->getMPN();
 		$v["mpn"] = $mpn;
 		$v["oProduct"] = $classProduct;
@@ -1596,7 +1597,7 @@ die("123");
 
 			global $xcart_dir;
 			include_once $xcart_dir."/include/class/classProducts.php";
-			$oProduct = new classProduct((int)$product['productid']);
+			$oProduct = new classProduct(['productid'=>(int)$product['productid']]);
 			$aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
 			if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
 				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);

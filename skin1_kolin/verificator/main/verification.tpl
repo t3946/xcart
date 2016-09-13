@@ -166,6 +166,11 @@
                     history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep);
                 }
             });
+
+            $('#negative_conclusion').on('click','',function(){
+                $('.small.modal').modal('hide').parent().removeClass('active');
+            });
+
             initButtons();
             $('.indicating.progress').progress();
             if (trans) {
@@ -188,7 +193,8 @@
                         active_batch_id = $(this).parent().data('batch-id'),
                         active_product_id = $(this).parent().data('product-id'),
                         active_asin = $(this).parent().data('asin');
-                $('.small.modal').modal({
+                $('#conclusion_title').text($(this).text()).removeClass('positive yellow negative').addClass($(this).data('class'));
+                $('.small.modal').modal('hide').modal({
                     onApprove: function () {
                         $('#conclusion_buttons').fadeOut();
                         $.post('ajax_admin.php', {
@@ -208,6 +214,9 @@
                                     }
                                     location.href = spathName + '?batch=' + getBatchId() + ssplit;
                                 }, 'json');
+                    },
+                    onDeny: function() {
+                        $(this).modal('hide').parent().removeClass('active');
                     }
                 }).modal('show');
             });
@@ -340,14 +349,14 @@
                 <div id="action_buttons_block" class="ui buttons select" data-asin=""
                      data-batch-id="{$oVerificationBatch->getBatchId()}"
                      data-product-id="{$oVerificationBatch->getVerifiedProductId()}">
-                    <button data-action="match" id="submit-product-match" class="ui left positive button">Product
+                    <button data-action="match" data-class="positive" id="submit-product-match" class="ui left positive button">Product
                         match
                     </button>
                     <div class="or" data-text="or"></div>
-                    <button data-action="not_sure" id="submit-product-not-sure" class="ui yellow button">Not sure
+                    <button data-action="not_sure" data-class="yellow" id="submit-product-not-sure" class="ui yellow button">Not sure
                     </button>
                     <div class="or" data-text="or"></div>
-                    <button data-action="not_match" id="submit-product-not-match" class="ui negative button">Does not
+                    <button data-action="not_match" data-class="negative" id="submit-product-not-match" class="ui negative button">Does not
                         match
                     </button>
                 </div>
@@ -355,7 +364,7 @@
             <div data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}"
                  data-product-id="{$oVerificationBatch->getVerifiedProductId()}" class="ui buttons select"
                  id="product_not_found_button">
-                <button data-action="not_found" id="submit-product-not-found" class="ui left negative button">Product not found
+                <button data-action="not_found" data-class="negative" id="submit-product-not-found" class="ui left negative button">Product not found
                 </button>
             </div>
 
@@ -375,7 +384,7 @@
 
 <div class="ui small test modal transition">
     <div class="header">
-        Comments
+        Conclusion: <button style="position: relative; bottom: 2px;" id="conclusion_title" class="ui positive button">Product match </button>
     </div>
     <div class="content">
         <div class="ui form">
@@ -387,9 +396,9 @@
         </div>
     </div>
     <div class="actions">
-        <div class="ui negative button">
+        <a id="negative_conclusion">
             Cancel
-        </div>
+        </a>
         <div class="ui positive right labeled icon button">
             Submit
             <i class="checkmark icon"></i>

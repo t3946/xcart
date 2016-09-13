@@ -119,7 +119,8 @@ class classOrder extends classCloneData
                 if (!empty($aProducts) && is_array($aProducts)) {
                     $this->aOrderProductsManufactueres = [];
                     foreach ($aProducts as $aProduct) {
-                        $oProduct = new classProduct($aProduct);
+                        $oProduct = new classProduct();
+                        $oProduct->fillPrimaryTableValues($aProduct);
                         if (!in_array($oProduct->getField('manufacturerid'), $this->aOrderProductsManufactueres))
                             $this->aOrderProductsManufactueres[] = $oProduct->getField('manufacturerid');
                         $this->aOrderProducts[] = $oProduct;

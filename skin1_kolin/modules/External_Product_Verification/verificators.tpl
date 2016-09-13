@@ -25,12 +25,22 @@
     </tr>
     {if ($aCustomers)}
         {foreach from=$aCustomers item=oCustomer}
+            {assign var=aBatchesInProgress value=$oCustomer->getAmazonBatches('in progress')}
             <tr>
                 <td>{if $oCustomer->getCustomerModifyLink()}<a href="{$oCustomer->getCustomerModifyLink()}" target="_blank">{/if}{$oCustomer->getCustomerLogin()}</a></td>
                 <td>{if $oCustomer->getCustomerURL()}<a target="_blank" href="{$oCustomer->getCustomerURL()}">{/if}{$oCustomer->getCustomerFullName()}{if $oCustomer->getCustomerURL()}</a>{/if}</td>
-                <td align="center"><a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}">{$oCustomer->getAmazonBatchesInProgressCount()}</a></td>
-                <td align="center"><a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}">{$oCustomer->getAmazonBatchesCompletedCount()}</a></td>
-                <td align="center"><a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}">{$oCustomer->getAmazonBatchesPaidCount()}</a></td>
+                <td align="center">
+                    {if $aBatchesInProgress}
+                        {foreach from=$aBatchesInProgress item=oBatchInProgress name=batchInProgress}
+                        <a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=in_progress">{$smarty.foreach.batchInProgress.iteration} ({$oBatchInProgress->getProductsInBatchCompletedCount()}/{$oBatchInProgress->getBatchAmount()})</a>
+                        <br/>
+                        {/foreach}
+                    {else}
+                    <a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=in_progress">0</a>
+                    {/if}
+                </td>
+                <td align="center"><a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=completed">{$oCustomer->getAmazonBatchesCompletedCount()}</a></td>
+                <td align="center"><a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=paid">{$oCustomer->getAmazonBatchesPaidCount()}</a></td>
                 <td align="center">{$oCustomer->getAmazonBatchesAverageSpeed()} sec.</td>
             </tr>
         {/foreach}

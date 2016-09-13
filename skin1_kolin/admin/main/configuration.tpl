@@ -115,7 +115,11 @@ tinymce.init({
 {/if}
 
 </table>
+    {if $option eq "Amazon_Verification"}
 
+        {include file="modules/External_Product_Verification/amazon_verification.tpl"}
+
+    {/if}
 {if $option ne 'Search_products'}
 {* <br /> *}
 {/if}

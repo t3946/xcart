@@ -3,6 +3,8 @@ global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classLogs.php";
+require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationProducts.php";
+require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationProductsQueue.php";
 
 class classExternalVerificationBatch extends classData
 {
@@ -17,7 +19,10 @@ class classExternalVerificationBatch extends classData
     protected $aProductsInBatchNotSure = [];
     protected $aProductsInBatchNotMatched = [];
 
-    public static $aProductStatuses = ['processed'=>['match','not_match','not_sure','not_found'], 'open'=>'open'];
+    private $iProductAnswerRight = 0;
+    private $iProductAnswerWrong = 0;
+
+    public static $aProductStatuses = ['processed' => ['match', 'not_match', 'not_sure', 'not_found'], 'open' => 'open'];
 
     /**
      * @var classProduct
@@ -51,11 +56,12 @@ class classExternalVerificationBatch extends classData
     public function getProductsInBatchCompleted()
     {
         if (empty($this->aProductsInBatchCompleted)) {
-            $aProducts = $this->oSQL->init()->addSelect('productid')->addFromTable('external_verification_products')->addCondition('batch_id=' . $this->getBatchId())->
-            addCondition('action IN ("'.implode('","',self::$aProductStatuses['processed']).'")')->Execute()->getQueryResult();
+            $aProducts = $this->oSQL->init()->addSelect('*')->addFromTable('external_verification_products')->addCondition('batch_id=' . $this->getBatchId())->
+            addCondition('action IN ("' . implode('","', self::$aProductStatuses['processed']) . '")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct($aProduct['productid']);
+                    $oProduct = new classExternalVerificationProducts();
+                    $oProduct->fillPrimaryTableValues($aProduct);
                     $this->aProductsInBatchCompleted[] = $oProduct;
                 }
             }
@@ -86,7 +92,7 @@ class classExternalVerificationBatch extends classData
             addCondition('action IN ("match")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct($aProduct['productid']);
+                    $oProduct = new classProduct(['productid' => $aProduct['productid']]);
                     $this->aProductsInBatchMatched[] = $oProduct;
                 }
             }
@@ -109,7 +115,7 @@ class classExternalVerificationBatch extends classData
             addCondition('action IN ("not_sure")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct($aProduct['productid']);
+                    $oProduct = new classProduct(['productid' => $aProduct['productid']]);
                     $this->aProductsInBatchNotSure[] = $oProduct;
                 }
             }
@@ -132,7 +138,7 @@ class classExternalVerificationBatch extends classData
             addCondition('action IN ("not_match")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct($aProduct['productid']);
+                    $oProduct = new classProduct(['productid' => $aProduct['productid']]);
                     $this->aProductsInBatchNotMatched[] = $oProduct;
                 }
             }
@@ -144,12 +150,12 @@ class classExternalVerificationBatch extends classData
     {
         global $login;
         $aProductsInBatchOpen = null;
-        $aProducts = $this->oSQL->init()->addSelect('productid')->addFromTable('external_verification_products', 'xp')->addCondition("login='$login'")->addCondition('batch_id='.$this->getBatchId())->
+        $aProducts = $this->oSQL->init()->addSelect('productid')->addFromTable('external_verification_products', 'xp')->addCondition("login='$login'")->addCondition('batch_id=' . $this->getBatchId())->
         addCondition('action IN ("open")')->addCondition('NOT EXISTS
-         (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' as xp2 WHERE login = "' .$login . '" AND action IN ("'.implode('","',self::$aProductStatuses['processed']).'") AND xp2.productid = xp.productid)')->Execute()->getQueryResult();
+         (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' as xp2 WHERE login = "' . $login . '" AND action IN ("' . implode('","', self::$aProductStatuses['processed']) . '") AND xp2.productid = xp.productid)')->Execute()->getQueryResult();
         if (!empty($aProducts)) {
             foreach ($aProducts as $aProduct) {
-                $oProduct = new classProduct($aProduct['productid']);
+                $oProduct = new classProduct(['productid' => $aProduct['productid']]);
                 $aProductsInBatchOpen = $oProduct;
             }
         }
@@ -160,31 +166,44 @@ class classExternalVerificationBatch extends classData
     {
         global $login;
         $aProductsNextInBatch = null;
+
         $aOpenedProducts = $this->getProductsInBatchOpened();
         if (empty($aOpenedProducts)) {
-            $aNextProducts = $this->oSQL->init()->addSelect('P.productid')->addSelect('VP.login')->
-            addSelect("(SELECT count(1)
+            if (!$this->isTest()) {
+                $aNextProducts = $this->oSQL->init()->addSelect('P.productid')->addSelect('VP.login')->
+                addSelect("(SELECT count(1)
                               FROM " . self::$sql_tbl['external_verification_products'] . " VP2
                               INNER JOIN xcart_external_verification_products_queue Q2 ON Q2.productid = VP2.productid AND Q2.status = 'In progress' AND Q2.cross_verify_count = 1
                               WHERE VP2.login = VP.login AND VP2.batch_id = VP.batch_id)", 'batch_processed')->addFromTable('products', 'P')->
-            addInnerJoin('external_verification_products_queue', 'Q', "Q.productid = P.productid AND Q.status = 'In progress' AND Q.cross_verify_count <= 1")->
-            addInnerJoin('external_verification_products', 'VP', "VP.productid = P.productid AND VP.login != '$login'")->addCondition("P.forsale = 'Y'")->
-            addCondition("NOT EXISTS (SELECT 1 FROM xcart_external_verification_products VP3 WHERE VP3.productid = P.productid AND action !='open' AND login = '$login')")->
-            addGroupBy('P.productid')->addOrderBy('batch_processed DESC')->setLimit('1')->Execute()->getQueryResult();
-            if (!empty($aNextProducts)) {
-                foreach ($aNextProducts as $aNextProduct) {
-                    $oProduct = new classProduct($aNextProduct['productid']);
-                    $aProductsNextInBatch = $oProduct;
-                    $this->updateField('last_cross_verify_login', $aNextProduct['login']);
-                }
-            } else {
-                $aNextProducts = $this->oSQL->init()->addSelect('p.productid')->addSelect('cross_verify_count', 'batch_processed')->addFromTable('products', 'p')->
-                addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid AND q.status = 'In progress' AND q.cross_verify_count <= 1")->
-                addCondition("p.forsale = 'Y'")->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid AND login = \'' . $login . '\' AND action IN (\'open\'))')->addGroupBy('p.productid')->addOrderBy('cross_verify_count DESC')->setLimit('1')->Execute()->getQueryResult();
-
+                addInnerJoin('external_verification_products_queue', 'Q', "Q.productid = P.productid AND Q.status = 'In progress' AND Q.cross_verify_count <= 1")->
+                addInnerJoin('external_verification_products', 'VP', "VP.productid = P.productid AND VP.login != '$login'")->addCondition("P.forsale = 'Y'")->
+                addCondition("NOT EXISTS (SELECT 1 FROM xcart_external_verification_products VP3 WHERE VP3.productid = P.productid AND action !='open' AND login = '$login')")->
+                addGroupBy('P.productid')->addOrderBy('batch_processed DESC')->setLimit('1')->Execute()->getQueryResult();
                 if (!empty($aNextProducts)) {
                     foreach ($aNextProducts as $aNextProduct) {
-                        $oProduct = new classProduct($aNextProduct['productid']);
+                        $oProduct = new classProduct(['productid' => $aNextProduct['productid']]);
+                        $aProductsNextInBatch = $oProduct;
+                        $this->updateField('last_cross_verify_login', $aNextProduct['login']);
+                    }
+                } else {
+                    $aNextProducts = $this->oSQL->init()->addSelect('p.productid')->addSelect('cross_verify_count', 'batch_processed')->addFromTable('products', 'p')->
+                    addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid AND q.status = 'In progress' AND q.cross_verify_count <= 1")->
+                    addCondition("p.forsale = 'Y'")->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid AND login = \'' . $login . '\' AND action IN (\'open\'))')->addGroupBy('p.productid')->addOrderBy('cross_verify_count DESC')->setLimit('1')->Execute()->getQueryResult();
+
+                    if (!empty($aNextProducts)) {
+                        foreach ($aNextProducts as $aNextProduct) {
+                            $oProduct = new classProduct(['productid' => $aNextProduct['productid']]);
+                            $aProductsNextInBatch = $oProduct;
+                        }
+                    }
+                }
+            } else { //Test batch
+                $aNextProducts = $this->oSQL->init()->addSelect('p.productid')->addSelect('cross_verify_count', 'batch_processed')->addFromTable('products', 'p')->
+                addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid AND q.status IN ('etalon_match','etalon_not_match')")->
+                addCondition("p.forsale = 'Y'")->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid AND login = \'' . $login . '\' AND action IN (\'open\'))')->addGroupBy('p.productid')->addOrderBy('RAND()')->setLimit('1')->Execute()->getQueryResult();
+                if (!empty($aNextProducts)) {
+                    foreach ($aNextProducts as $aNextProduct) {
+                        $oProduct = new classProduct(['productid' => $aNextProduct['productid']]);
                         $aProductsNextInBatch = $oProduct;
                     }
                 }
@@ -192,6 +211,7 @@ class classExternalVerificationBatch extends classData
         } else {
             $aProductsNextInBatch = $aOpenedProducts;
         }
+
         if (is_object($aProductsNextInBatch) && $aProductsNextInBatch->getProductId() > 0)
             $this->oVerifiedProduct = $aProductsNextInBatch;
         return $this;
@@ -202,7 +222,7 @@ class classExternalVerificationBatch extends classData
         global $login;
         if (!empty($this->oVerifiedProduct)) {
             $aInsertArray = ['productid' => $this->oVerifiedProduct->getProductId(), 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => self::$aProductStatuses['open'], 'value' => time()];
-                func_array2insert('external_verification_products', $aInsertArray, true, false);
+            func_array2insert('external_verification_products', $aInsertArray, true, false);
         }
 
     }
@@ -246,7 +266,7 @@ class classExternalVerificationBatch extends classData
         addCondition('action = "open"')->addCondition('productid = ' . $iProductId)->Execute()->getQueryResult();
         if (!empty($aProductOpen)) {
             $aProductClose = $this->oSQL->init()->addSelect('*')->addFromTable('external_verification_products')->addCondition('batch_id=' . $this->getBatchId())->
-            addCondition('action IN ("'.implode('","',self::$aProductStatuses['processed']).'")')->addCondition('productid = ' . $iProductId)->Execute()->getQueryResult();
+            addCondition('action IN ("' . implode('","', self::$aProductStatuses['processed']) . '")')->addCondition('productid = ' . $iProductId)->Execute()->getQueryResult();
             if (!empty($aProductClose)) {
                 $diffInSec = intval($aProductClose[0]['value']) - intval($aProductOpen[0]['value']);
             }
@@ -256,7 +276,7 @@ class classExternalVerificationBatch extends classData
 
     public function setVerificationStatus($sNewStatus)
     {
-        classLogs::_log('amazon_product_verification', $this->getBatchId(), classLogs::LOG_TYPE_XCART, sprintf(self::BATCH_STATUS_CHANGED_LOG_MESSAGE,$this->getBatchLogin().'_'.$this->getBatchNumber().'_'.$this->getBatchAmount(), $this->getBatchStatus(),$sNewStatus));
+        classLogs::_log('amazon_product_verification', $this->getBatchId(), classLogs::LOG_TYPE_XCART, sprintf(self::BATCH_STATUS_CHANGED_LOG_MESSAGE, $this->getBatchLogin() . '_' . $this->getBatchNumber() . '_' . $this->getBatchAmount(), $this->getBatchStatus(), $sNewStatus));
         $this->updateField('batch_status', $sNewStatus);
 
     }
@@ -293,6 +313,13 @@ class classExternalVerificationBatch extends classData
             if ($iCount >= $this->getField('batch_amount')) {
                 $this->updateField('batch_status', 'Completed');
                 $aResult['batch_completed'] = true;
+                if ($this->isTest()) {
+                    $this->countTestResults();
+                    global $config;
+                    if ($this->getWrongAnswersCount() >= intval($config['Amazon_Verification']['amazon_verification_maximum_mistakes'])) {
+                        $this->updateField('test_failed', 'Y');
+                    }
+                }
             }
         }
         return $aResult;
@@ -366,5 +393,52 @@ class classExternalVerificationBatch extends classData
     public function getAverageVerifySpeed()
     {
         return round(floatval($this->getField('batch_product_speed')));
+    }
+
+    public function isTest()
+    {
+        return ($this->getField('is_test') == 'Y');
+    }
+
+    public function countTestResults()
+    {
+        $this->iProductAnswerRight = $this->iProductAnswerWrong = 0;
+        $aCompletedProducts = $this->getProductsInBatchCompleted();
+        if (!empty($aCompletedProducts)) {
+            foreach ($aCompletedProducts as $oCompletedProduct) {
+                $oProductQueue = new classExternalVerificationProductsQueue(['productid' => $oCompletedProduct->getProductId()]);
+
+                if ($oProductQueue->getStatus() == 'etalon_match') {
+                    if ($oCompletedProduct->getAction() == 'match') {
+                        $this->iProductAnswerRight++;
+                    } else {
+                        $this->iProductAnswerWrong++;
+                    }
+                }
+                if ($oProductQueue->getStatus() == 'etalon_not_match') {
+                    if ($oCompletedProduct->getAction() == 'not_match') {
+                        $this->iProductAnswerRight++;
+                    } else {
+                        $this->iProductAnswerWrong++;
+                    }
+                }
+            }
+        }
+        return $this;
+    }
+
+    public function getRightAnswersCount()
+    {
+        return $this->iProductAnswerRight;
+    }
+
+    public function getWrongAnswersCount()
+    {
+        return $this->iProductAnswerWrong;
+    }
+
+    public function isTestFailed()
+    {
+        return ($this->getField('test_failed') == 'Y');
     }
 }
