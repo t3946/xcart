@@ -13,6 +13,7 @@ require_once $xcart_dir . "/include/class/classOrderAmazonDetails.php";
 require_once $xcart_dir . "/include/class/classAmazonMWS.php";
 require_once $xcart_dir . "/include/class/classAttentionTag.php";
 require_once $xcart_dir . "/include/class/classLogs.php";
+require_once $xcart_dir . "/include/class/classManufacturer.php";
 
 class classOrderGroup extends classData
 {
@@ -54,6 +55,12 @@ class classOrderGroup extends classData
     private $availPaymentMethods = [];
 
     private $fCostToUs = null;
+
+    /**
+     * @var classManufacturer
+     */
+
+    private $oManufacturer = null;
     /**
      * @var classOrderDetail[]
      */
@@ -144,7 +151,7 @@ class classOrderGroup extends classData
                                            INNER JOIN xcart_products xp
                                               ON xp.productid = xo.productid AND
                                                  xp.manufacturerid = og.manufacturerid
-                                     WHERE og.orderid = " . $this->getField('orderid'));
+                                     WHERE og.orderid = " . $this->getOrderId() ." AND og.manufacturerid = ".$this->getManufacturerId());
             $fCostToUs = $aCostToUs['cost_to_us_od'];
             if (is_null($fCostToUs)) {
                 $fCostToUs = $aCostToUs['cost_to_us_pr'];
@@ -1073,6 +1080,14 @@ class classOrderGroup extends classData
         return $this->getField('orderid');
     }
 
+    public function getManufacturerEntity()
+    {
+        if (is_null($this->oManufacturer)) {
+            $this->oManufacturer = new classManufacturer($this->getManufacturerId());
+        }
+        return $this->oManufacturer;
+    }
+
     public function getManufacturerId()
     {
         return $this->getField('manufacturerid');
@@ -1162,7 +1177,8 @@ class classOrderGroup extends classData
         return $aResult;
     }
 
-    public function getRetailTrustTotalNet() {
+    public function getRetailTrustTotalNet()
+    {
         $fSumma = 0;
         $aOrderDetails = $this->getOrderDetailsWithRetailTrust();
         if (!empty($aOrderDetails)) {
@@ -1173,7 +1189,8 @@ class classOrderGroup extends classData
         return $fSumma;
     }
 
-    public function getRetailTrustTotalGross() {
+    public function getRetailTrustTotalGross()
+    {
         $fSumma = 0;
         $aOrderDetails = $this->getOrderDetailsWithRetailTrust();
         if (!empty($aOrderDetails)) {

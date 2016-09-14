@@ -131,9 +131,6 @@ class classOrderDetail extends classData
         if (!$this->isRetailTrustEnabled() && $this->getOrderDetailProduct()->isRetailTrustEnabled() && $this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() > 1) {
             $fRetailTrust = $this->calculateRetailTrustPrice();
             $this->updateFields(['retail_trust_item' => 'Y', 'retail_trust_price' => $fRetailTrust]);
-            $fTotalRetailTrust = $this->getOrderInstance()->getOrderRetailTrustPrice();
-            $this->getOrderGroupInstance()->addTotalNet($fTotalRetailTrust)->addTotalGross($fTotalRetailTrust)->_update();
-            $this->getOrderGroupInstance()->getOrderInstance()->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
             classLogs::_log('orders', $this->getOrderId(), 'X', sprintf('Retail Trust $%s for %s - Added', $fRetailTrust, $this->getOrderDetailProduct()->getSKU()));
         }
     }

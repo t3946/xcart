@@ -54,6 +54,9 @@ x_session_register("intershipper_rates");
 x_session_register("intershipper_recalc");
 x_session_register("current_carrier", "UPS");
 
+$oOrder = new classOrder(['orderid'=>$orderid]);
+$smarty->assign("oOrder", $oOrder);
+
 $all_processors = func_query_hash("SELECT paymentid, payment_method, acc_per_trans, acc_percent FROM $sql_tbl[payment_methods] WHERE acc_proc='Y' ORDER BY orderby", "paymentid", false);
 $smarty->assign("all_processors", $all_processors);
 
@@ -1381,6 +1384,7 @@ if ($REQUEST_METHOD == "POST") {
                 $oOrderDetailRetailTrust->removeRetailTrust();
             }
         }
+        $oOrder->recalculateRetailTrust();
 
         if ($send_email == 'Y') {
 
@@ -2217,8 +2221,6 @@ if ($REQUEST_METHOD == "POST") {
 
         }
         if ($mode == "table_accounting_apply" || $mode == "accounting_apply") {
-
-            $oOrder = new classOrder(['orderid'=>$orderid]);
             $oOrder->recalculateAccounting();
         }
         func_header_location("order.php?orderid=$orderid");
@@ -2314,8 +2316,7 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_order_show_button);
 $smarty->assign("order", $order);
 
-$oOrder = new classOrder(['orderid'=>$orderid]);
-$smarty->assign("oOrder", $oOrder);
+
 
 $oShippings = new classShippings();
 $aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');

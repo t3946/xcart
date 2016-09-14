@@ -49,6 +49,6 @@ class classPaymentMethod extends classData
 
     public function getMaximumReAuthorizationMultiplier()
     {
-        return $this->getField('maximum_re_authorization_multiplier');
+        return floatval($this->getField('maximum_re_authorization_multiplier'));
     }
 }

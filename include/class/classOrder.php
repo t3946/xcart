@@ -26,7 +26,7 @@ class classOrder extends classData
     /**
      * @var classOrderGroup[]
      */
-    private $aOrderGroups = [];
+    private $aOrderGroups = null;
     /**
      * @var classProduct[]
      */
@@ -693,6 +693,27 @@ class classOrder extends classData
     public function getOrderStatusBD()
     {
         return $this->getField('bd_status');
+    }
+
+    public function recalculateRetailTrust()
+    {
+        $fTotalRetailTrust = 0;
+        $aOrderGroups = $this->getOrderGroups();
+        if (!empty($aOrderGroups)) {
+            foreach ($aOrderGroups as $oOrderGroup) {
+                $fTotalRetailTrustGroup = 0;
+                $aOrderDetails = $oOrderGroup->getOrderDetailsWithRetailTrust();
+                if (!empty($aOrderDetails)) {
+                    foreach ($aOrderDetails as $oOrderDetail) {
+                        $fTotalRetailTrustGroup += $oOrderDetail->getRetailTrustPrice();
+                    }
+                    $oOrderGroup->addTotalNet($fTotalRetailTrustGroup)->addTotalGross($fTotalRetailTrustGroup)->_update();
+                    $fTotalRetailTrust +=$fTotalRetailTrustGroup;
+                }
+            }
+            $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
+        }
+        return $this;
     }
 
 }

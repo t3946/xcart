@@ -1225,8 +1225,7 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 {/if}
 {/foreach}
   {if ($oOrder)}
-    {assign var=aRetailTrustDetails value=$oOrder->getOrderDetailsWithRetailTrust()}
-    {if $aRetailTrustDetails}
+    {if $oOrder->getOrderDetailsWithRetailTrust()}
       <tr class="TableHead">
         <td width="35%">{$lng.lbl_product}</td>
         <td width="17%">{$lng.lbl_sku}</td>
@@ -1247,33 +1246,51 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
         <td align="right">{$oOrder->getOrderRetailTrustGross()|price_format}</td>
         <td></td>
       </tr>
-      {foreach from=$aRetailTrustDetails item=oRetailTrustDetail}
-        {assign var=oOrderDetailProduct value=$oRetailTrustDetail->getOrderDetailProduct()}
-      <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
-        <td>
-          <a href="{$oOrderDetailProduct->getProductFrontURL()}">{$oOrderDetailProduct->getProductName()}</a>
-        </td>
-        <td>
-          <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKU()}</a>
-        </td>
-        <td></td>
-        <td align="center">
-          {$oRetailTrustDetail->getAmount()}
-        </td>
-        <td colspan="3"></td>
-        <td align="right">
-          {$oRetailTrustDetail->getRetailTrustPrice()|price_format}
-        </td>
-        <td></td>
-        <td align="right">
-          {$oRetailTrustDetail->getRetailTrustGross()|price_format}
-        </td>
-        <td>
-          {if $oOrder->getOrderStatusDC() != 'L' && $oOrder->getOrderStatusDC() != 'E' && $oOrder->getOrderStatusDC() != 'DP' && $oOrder->getOrderStatusDC() != 'C' && $oOrder->getOrderStatusDC() != 'G'}
-            <input type="checkbox" value="Y" name="retail_trust_to_delete[{$oRetailTrustDetail->getOrderDetailId()}]" />
-          {/if}
-        </td>
-      </tr>
+
+      {assign var=aOrderGroups value=$oOrder->getOrderGroups()}
+      {foreach from=$aOrderGroups item=oOrderGroupL}
+        {assign var=oManufacturer value=$oOrderGroupL->getManufacturerEntity()}
+        {assign var=aRetailTrustDetails value=$oOrderGroupL->getOrderDetailsWithRetailTrust()}
+        {if $aRetailTrustDetails}
+        <tr class="distributor-totals-line">
+          <td>
+            <a href="{$oManufacturer->getManufacturerModifyURL()}" target="_blank" style="color: green;">{$oManufacturer->getManufacturerName()}</a>
+          </td>
+          <td>
+            {$oManufacturer->getManufacturerCode()}
+          </td>
+        </tr>
+        {assign var=aRetailTrustDetails value=$oOrderGroupL->getOrderDetailsWithRetailTrust()}
+
+        {foreach from=$aRetailTrustDetails item=oRetailTrustDetail}
+          {assign var=oOrderDetailProduct value=$oRetailTrustDetail->getOrderDetailProduct()}
+        <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
+          <td>
+            <a href="{$oOrderDetailProduct->getProductFrontURL()}">{$oOrderDetailProduct->getProductName()}</a>
+          </td>
+          <td>
+            <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKU()}</a>
+          </td>
+          <td></td>
+          <td align="center">
+            {$oRetailTrustDetail->getAmount()}
+          </td>
+          <td colspan="3"></td>
+          <td align="right">
+            {$oRetailTrustDetail->getRetailTrustPrice()|price_format}
+          </td>
+          <td></td>
+          <td align="right">
+            {$oRetailTrustDetail->getRetailTrustGross()|price_format}
+          </td>
+          <td>
+            {if $oOrder->getOrderStatusDC() != 'L' && $oOrder->getOrderStatusDC() != 'E' && $oOrder->getOrderStatusDC() != 'DP' && $oOrder->getOrderStatusDC() != 'C' && $oOrder->getOrderStatusDC() != 'G'}
+              <input type="checkbox" value="Y" name="retail_trust_to_delete[{$oRetailTrustDetail->getOrderDetailId()}]" />
+            {/if}
+          </td>
+        </tr>
+        {/foreach}
+        {/if}
       {/foreach}
       <tr>
         <td colspan="11">
@@ -1366,7 +1383,14 @@ Total Product Cost to us
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Total transaction amount <br> (authorized + captured )</td>
   <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
+  {assign var=oPaymentProcessor value=$oOrder->getPaymentMethodInstance()}
+  {math assign="transaction_with_multiplier" equation="x*y" x=$order_transactions_totals.authorized_PLUS_captured_totals y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
+  {$transaction_with_multiplier|var_dump}
+  <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() == $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;
+          {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.authorized_PLUS_captured_totals && $oOrder->getOrderTotalGross() <= $transaction_with_multiplier}
+          yellow
+          {else}red
+          {/if};">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
   <td>&nbsp;</td>
 </tr>
 
@@ -1387,7 +1411,13 @@ Total Product Cost to us
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Captured total</td>
   <td colspan="8">&nbsp;</td>
-  <td align="right" style="font-size: 10px; {if $count_shipping_groups gt 1}background-color: {if $order.total eq $order_transactions_totals.captured_total}green{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
+  {math assign="transaction_capture_with_multiplier" equation="x*y" x=$order_transactions_totals.captured_total y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
+  <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() eq $order_transactions_totals.captured_total}
+          green
+          {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.captured_total && $oOrder->getOrderTotalGross() <= $transaction_capture_with_multiplier}
+          yellow
+          {else}
+          red{/if};">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
   <td>&nbsp;</td>
 </tr>
 {/if}
