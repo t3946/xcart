@@ -2,6 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classOrders.php";
+require_once $xcart_dir . "/include/class/classOrderDetail.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
 require_once $xcart_dir . "/include/class/classShipping.php";
 require_once $xcart_dir . "/include/class/classPaymentMethod.php";
@@ -53,6 +54,10 @@ class classOrderGroup extends classData
     private $availPaymentMethods = [];
 
     private $fCostToUs = null;
+    /**
+     * @var classOrderDetail[]
+     */
+    private $aOrderDetails = null;
 
     public function __construct($aParams = [])
     {
@@ -64,7 +69,7 @@ class classOrderGroup extends classData
 
     private function fetchOrderInstance()
     {
-        $this->oOrder = new classOrder($this->getField('orderid'));
+        $this->oOrder = new classOrder(['orderid' => $this->getOrderId()]);
     }
 
     public function getPaymentMethodId()
@@ -1115,14 +1120,68 @@ class classOrderGroup extends classData
     {
         $oResult = null;
         $oSQL = new classSQLBuilder();
-        $aResults = $oSQL->addSelect('g.*')->addFromTable('order_groups','g')->addInnerJoin('manufacturers', 'm', 'm.manufacturerid=g.manufacturerid')->
-        addInnerJoin('products','p','p.manufacturerid= m.manufacturerid')->addCondition("g.orderid=$iOrderId")->addCondition("p.productid=$iProductId")->
+        $aResults = $oSQL->addSelect('g.*')->addFromTable('order_groups', 'g')->addInnerJoin('manufacturers', 'm', 'm.manufacturerid=g.manufacturerid')->
+        addInnerJoin('products', 'p', 'p.manufacturerid= m.manufacturerid')->addCondition("g.orderid=$iOrderId")->addCondition("p.productid=$iProductId")->
         Execute()->getQueryResult();
         if (!empty($aResults)) {
             $aResult = reset($aResults);
-            $oResult = new classOrderGroup(['orderid'=>$aResult['orderid'], 'manufacturerid'=>$aResult['manufacturerid']]);
+            $oResult = new classOrderGroup(['orderid' => $aResult['orderid'], 'manufacturerid' => $aResult['manufacturerid']]);
         }
         return $oResult;
+    }
+
+    private function fetchOrderDetails()
+    {
+        if (empty($this->aOrderDetails)) {
+            $aOrderDetails = $this->oSQL->init()->addSelect('od.*')->addFromTable('order_details', 'od')->addInnerJoin('products', 'p', 'p.manufacturerid =' . $this->getManufacturerId() . ' AND p.productid = od.productid')->
+            addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
+            if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
+                foreach ($aOrderDetails as $aOrderDetail) {
+                    $oOrderDetail = new classOrderDetail();
+                    $oOrderDetail->fillPrimaryTableValues($aOrderDetail);
+                    $this->aOrderDetails[] = $oOrderDetail;
+                }
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return classOrderDetail[]
+     */
+    public function getOrderDetailsWithRetailTrust()
+    {
+        $aResult = [];
+        $this->fetchOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                if ($oOrderDetail->isRetailTrustEnabled())
+                    $aResult[] = $oOrderDetail;
+            }
+        }
+        return $aResult;
+    }
+
+    public function getRetailTrustTotalNet() {
+        $fSumma = 0;
+        $aOrderDetails = $this->getOrderDetailsWithRetailTrust();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $fSumma += $oOrderDetail->getRetailTrustPrice();
+            }
+        }
+        return $fSumma;
+    }
+
+    public function getRetailTrustTotalGross() {
+        $fSumma = 0;
+        $aOrderDetails = $this->getOrderDetailsWithRetailTrust();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $fSumma += $oOrderDetail->getRetailTrustGross();
+            }
+        }
+        return $fSumma;
     }
 
 }

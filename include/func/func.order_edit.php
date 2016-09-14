@@ -1102,12 +1102,6 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
         }
     }
 
-	if (!empty($_POST['retail_trust_to_delete']) && is_array($_POST['retail_trust_to_delete'])) {
-		foreach ($_POST['retail_trust_to_delete'] as $iOrderDetailRetailToDeleate => $value) {
-			$oOrderDetailRetailTrust = new classOrderDetail(['itemid'=>intval($iOrderDetailRetailToDeleate)]);
-			$oOrderDetailRetailTrust->removeRetailTrust();
-		}
-	}
 }
 
 #

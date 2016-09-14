@@ -6,10 +6,10 @@ class classOrders extends classOrder
 {
     private $aOrders = [];
 
-    public function __construct($aOrderData = null)
+    public function __construct($aOrderData = [])
     {
-        $this->sPrimaryTable = "orders";
-        $this->sPrimaryKeyFiled = "orderid";
+        $this->aPrimaryKeys = ['orderid'];
+        $this->sPrimaryTable = 'orders';
 
         parent::__construct($aOrderData);
     }
@@ -25,8 +25,11 @@ class classOrders extends classOrder
         $this->aOrders = [];
         $aOrders = func_query("SELECT * FROM ".self::$sql_tbl['orders']." WHERE vn_status != '".self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED."' LIMIT 50");
         if (!empty($aOrders) && is_array($aOrders)) {
-            foreach ($aOrders as $aOrder)
-                $this->aOrders[] = new classOrder($aOrder);
+            foreach ($aOrders as $aOrder) {
+                $oOrder = new classOrder();
+                $oOrder->fillPrimaryTableValues($aOrder);
+                $this->aOrders[] = $oOrder;
+            }
         }
         return $this->aOrders;
     }

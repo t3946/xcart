@@ -130,7 +130,7 @@ class classData
         return $this;
     }
 
-    private function getWhereClause()
+    protected function getWhereClause()
     {
         $aKeyArray = $this->aPrimaryKeysValues;
         array_walk($aKeyArray, function (&$a, $b) {

@@ -1,6 +1,6 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir . "/include/class/classCloneData.php";
+require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classOrderDetail.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
 require_once $xcart_dir . "/include/class/classProducts.php";
@@ -10,7 +10,7 @@ require_once $xcart_dir . "/include/class/classManufacturers.php";
 require_once $xcart_dir . "/include/class/classOrderTransactions.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
 
-class classOrder extends classCloneData
+class classOrder extends classData
 {
     const ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED = 'PV';
     const ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND = 'PF';
@@ -35,23 +35,33 @@ class classOrder extends classCloneData
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
 
-    public function __construct($aOrderData = null)
+    public function __construct($aOrderData = [])
     {
-        $this->sPrimaryTable = "orders";
-        $this->sPrimaryKeyFiled = "orderid";
+        $this->aPrimaryKeys = ['orderid'];
+        $this->sPrimaryTable = 'orders';
 
         parent::__construct($aOrderData);
     }
 
     public static function getInstance($iId = null)
     {
-        return new self($iId);
+        $oOrder = null;
+        if (is_array($iId)) {
+            $oOrder = new self();
+            $oOrder->fillPrimaryTableValues($iId);
+        }
+        else if (is_numeric($iId)) {
+            $oOrder = new self(['orderid'=>$iId]);
+        } else if (is_null($iId)) {
+            $oOrder = new self();
+        }
+        return $oOrder;
     }
 
     private function fetchOrderDetails()
     {
         if (empty($this->aOrderDetails)) {
-            $aOrderDetails = func_query("SELECT * FROM " . self::$sql_tbl['order_details'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
+            $aOrderDetails = func_query("SELECT * FROM " . self::$sql_tbl['order_details'] . " WHERE " . $this->getWhereClause());
             if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
                 foreach ($aOrderDetails as $aOrderDetail) {
                     $oOrderDetail = new classOrderDetail();
@@ -66,7 +76,7 @@ class classOrder extends classCloneData
     private function fetchOrderGroups()
     {
         if (empty($this->aOrderGroups)) {
-            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_groups'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
+            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_groups'] . " WHERE " . $this->getWhereClause());
             if (!empty($aOrderGroups) && is_array($aOrderGroups)) {
                 foreach ($aOrderGroups as $aOrderGroup) {
                     $oOrderGroup = new classOrderGroup();
@@ -223,12 +233,12 @@ class classOrder extends classCloneData
 
     public function getDisplayOrderNumber()
     {
-        return $this->getField('order_prefix') . $this->getField($this->sPrimaryKeyFiled);
+        return $this->getField('order_prefix') . $this->getOrderId();
     }
 
     public function getOrderModifyURL()
     {
-        return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled));
+        return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getOrderId());
     }
 
     public static function getOrderStatusByCode($sCode)
@@ -242,9 +252,9 @@ class classOrder extends classCloneData
         $aNewStatus = self::getOrderStatusByCode($sNewStatus);
         $aOldStatus = self::getOrderStatusByCode($this->getField('vn_status'));
         if ($aNewStatus['code'] != $aOldStatus['code']) {
-            $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->primaryKeyValue);
+            $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->getOrderId());
             $log = "vn_status: " . $aOldStatus['name'] . " -> " . $aNewStatus['name'];
-            func_log_order($this->primaryKeyValue, 'X', $log);
+            func_log_order($this->getOrderId(), 'X', $log);
         }
         $this->setField('vn_status', $sNewStatus);
         return $bResult;
@@ -543,50 +553,72 @@ class classOrder extends classCloneData
 
     public function getOrderTotalNet()
     {
-        $fResult = 0;
+        /*$fResult = 0;
         $this->fetchOrderGroups();
         if (!empty($this->aOrderGroups)) {
             foreach ($this->aOrderGroups as $oOrderGroup) {
                 $fResult += $oOrderGroup->getTotalNet();
             }
         }
-        return $fResult + $this->getOrderAdditionalFee()+$this->getOrderRetailTrustPrice();
+        return $fResult + $this->getOrderAdditionalFee();*/
+        return $this->getField('total_net');
+    }
+
+    public function addOrderTotaNet($fSumma)
+    {
+        $this->setField('total_net',floatval($this->getField('total_net'))+$fSumma);
+        return $this;
+    }
+
+    public function addOrderTotal($fSumma)
+    {
+        $this->setField('total',floatval($this->getField('total'))+$fSumma);
+        return $this;
     }
 
     public function getOrderTotalHST()
     {
-        $fResult = 0;
+        /*$fResult = 0;
         $this->fetchOrderGroups();
         if (!empty($this->aOrderGroups)) {
             foreach ($this->aOrderGroups as $oOrderGroup) {
                 $fResult += $oOrderGroup->getTotalHST();
             }
         }
-        return floatval($fResult+$this->getOrderTotalPST());
+        return floatval($fResult+$this->getOrderTotalPST());*/
+        return $this->getField('total_gst');
     }
 
     public function getOrderTotalPST()
     {
-        $fResult = 0;
+       /* $fResult = 0;
         $this->fetchOrderGroups();
         if (!empty($this->aOrderGroups)) {
             foreach ($this->aOrderGroups as $oOrderGroup) {
                 $fResult += $oOrderGroup->getTotalPST();
             }
         }
-        return $fResult;
+        return $fResult;*/
+        return $this->getField('total_pst');
+    }
+
+    public function addOrderTotalGross($fSumma)
+    {
+        $this->setField('total_gross',floatval($this->getField('total_gross'))+$fSumma);
+        return $this;
     }
 
     public function getOrderTotalGross()
     {
-        $fResult = 0;
+        /*$fResult = 0;
         $this->fetchOrderGroups();
         if (!empty($this->aOrderGroups)) {
             foreach ($this->aOrderGroups as $oOrderGroup) {
                 $fResult += $oOrderGroup->getTotalGross();
             }
         }
-        return $fResult + $this->getOrderAdditionalFee()+$this->getOrderRetailTrustPrice();
+        return $fResult + $this->getOrderAdditionalFee();*/
+        return $this->getField('total_gross');
     }
 
     public function getOrderCostToUs()

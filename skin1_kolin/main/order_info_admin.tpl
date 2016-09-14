@@ -1016,26 +1016,7 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
 <tr id="track_{$m_id}_tr">
 
   <td id="track_{$m_id}_box_3" style="padding-right: 5px;">
-
-{*
-<script type="text/javascript" language="JavaScript 1.2">
-<!--
-{literal}
-  $(function() {
-    $("#tracking_ship_date_{/literal}{$m_id}{literal}_box_0").datepicker();
-    $("#tracking_ship_date_{/literal}{$m_id}{literal}_box_0").datepicker('option', 'dateFormat', 'MM d, yy');
-  });
-{/literal}
--->
-</script>
-*}
-
   <input type="text" id="tracking_ship_date_{$m_id}_box_0" name="groups[{$m_id}][tracking_ship_date][0]" value="" size="15" {* {if $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly" {/if} *} onclick="javascript: $(this).datepicker(); /*$(this).datepicker('option', 'dateFormat', 'MM d, yy'); */ $(this).datepicker('show');" onchange="javascript: $(this).datepicker('hide');" />
-
-{*
-  <input type="text" id="tracking_ship_date_{$m_id}_box_0" name="groups[{$m_id}][tracking_ship_date][0]" value="" size="15" />
-*}
-
   </td>
 
   <td id="track_{$m_id}_box_4" style="padding-right: 10px;">
@@ -1077,9 +1058,17 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
 <td colspan="2" valign="top">
 </td>
 </tr>
-
-
-
+{assign var=aOrderDetailWithRetailTrust value=$oOrderGroup->getOrderDetailsWithRetailTrust()}
+{if ($aOrderDetailWithRetailTrust)}
+<tr>
+  <td colspan="7">
+    {$lng.retail_trust_order_group_line_title}
+  </td>
+  <td align="right">{$oOrderGroup->getRetailTrustTotalNet()}</td>
+  <td align="right"></td>
+  <td align="right">{$oOrderGroup->getRetailTrustTotalGross()}</td>
+</tr>
+{/if}
 
 {if $active_modules.Google_Checkout eq '' or $order.extra.goid eq ''}
 <tr style="background-color: #d9ead3;">

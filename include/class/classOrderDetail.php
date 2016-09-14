@@ -112,13 +112,6 @@ class classOrderDetail extends classData
         return floatval(floatval($aExtraData['taxes']['GST']['tax_value']) + floatval($aExtraData['taxes']['PST']['tax_value']));
     }
 
-    public function removeRetailTrust()
-    {
-        $fRetailTrust = $this->calculateRetailTrustPrice();
-        $this->updateFields(['retail_trust_item' => 'N', 'retail_trust_price' => 0]);
-        classLogs::_log('orders', $this->getOrderId(), 'X', sprintf('Retail Trust $%s for %s - Removed', $fRetailTrust, $this->getOrderDetailProduct()->getSKU()));
-    }
-
     public function getOrderGroupInstance()
     {
         if (is_null($this->oOrderGroup))
@@ -126,24 +119,33 @@ class classOrderDetail extends classData
         return $this->oOrderGroup;
     }
 
+    public function removeRetailTrust()
+    {
+        $fRetailTrust = $this->calculateRetailTrustPrice();
+        $this->updateFields(['retail_trust_item' => 'N', 'retail_trust_price' => 0]);
+        classLogs::_log('orders', $this->getOrderId(), 'X', sprintf('Retail Trust $%s for %s - Removed', $fRetailTrust, $this->getOrderDetailProduct()->getSKU()));
+    }
+
     public function addRetailTrust()
     {
         if (!$this->isRetailTrustEnabled() && $this->getOrderDetailProduct()->isRetailTrustEnabled() && $this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() > 1) {
             $fRetailTrust = $this->calculateRetailTrustPrice();
             $this->updateFields(['retail_trust_item' => 'Y', 'retail_trust_price' => $fRetailTrust]);
-            $this->getOrderGroupInstance()->addTotalNet($fRetailTrust)->addTotalGross($fRetailTrust)->_update();
+            $fTotalRetailTrust = $this->getOrderInstance()->getOrderRetailTrustPrice();
+            $this->getOrderGroupInstance()->addTotalNet($fTotalRetailTrust)->addTotalGross($fTotalRetailTrust)->_update();
+            $this->getOrderGroupInstance()->getOrderInstance()->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
             classLogs::_log('orders', $this->getOrderId(), 'X', sprintf('Retail Trust $%s for %s - Added', $fRetailTrust, $this->getOrderDetailProduct()->getSKU()));
         }
     }
 
     public function calculateRetailTrustPrice()
     {
-        return floatval(round($this->getTotalProductPrice() * ($this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() - 1),2));
+        return floatval(round($this->getTotalProductPrice() * ($this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() - 1), 2));
     }
 
     private function fetchOrderInstance()
     {
-        $this->oOrder = new classOrder($this->getOrderId());
+        $this->oOrder = new classOrder(['orderid'=>$this->getOrderId()]);
     }
 
     public function getOrderInstance()

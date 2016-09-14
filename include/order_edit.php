@@ -1371,11 +1371,15 @@ if ($REQUEST_METHOD == "POST") {
                         foreach ($aOrderDetails as $oOrderDetail) {
                             $oOrderDetail->addRetailTrust();
                         }
-
                     }
                 }
             }
-
+        }
+        if (!empty($retail_trust_to_delete) && is_array($retail_trust_to_delete)) {
+            foreach ($retail_trust_to_delete as $iOrderDetailRetailToDeleate => $value) {
+                $oOrderDetailRetailTrust = new classOrderDetail(['itemid'=>intval($iOrderDetailRetailToDeleate)]);
+                $oOrderDetailRetailTrust->removeRetailTrust();
+            }
         }
 
         if ($send_email == 'Y') {
@@ -2214,7 +2218,7 @@ if ($REQUEST_METHOD == "POST") {
         }
         if ($mode == "table_accounting_apply" || $mode == "accounting_apply") {
 
-            $oOrder = new classOrder($orderid);
+            $oOrder = new classOrder(['orderid'=>$orderid]);
             $oOrder->recalculateAccounting();
         }
         func_header_location("order.php?orderid=$orderid");
@@ -2310,7 +2314,7 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_order_show_button);
 $smarty->assign("order", $order);
 
-$oOrder = new classOrder($orderid);
+$oOrder = new classOrder(['orderid'=>$orderid]);
 $smarty->assign("oOrder", $oOrder);
 
 $oShippings = new classShippings();

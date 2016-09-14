@@ -1673,7 +1673,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 		}
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classOrder.php";
-		$oOrder = new classOrder($orderid);
+		$oOrder = new classOrder(['orderid'=>$orderid]);
 		$oOrder->updateVerificationStatus();
 
 
