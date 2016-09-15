@@ -22,7 +22,7 @@ class classOrder extends classData
     /**
      * @var classOrderDetail[]
      */
-    private $aOrderDetails = [];
+    private $aOrderDetails = null;
     /**
      * @var classOrderGroup[]
      */
@@ -31,7 +31,7 @@ class classOrder extends classData
      * @var classProduct[]
      */
     private $aOrderProducts = null;
-    private $aOrderProductsManufactueres = [];
+    private $aOrderProductsManufactueres = null;
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
 
@@ -695,8 +695,21 @@ class classOrder extends classData
         return $this->getField('bd_status');
     }
 
+    public function _refresh()
+    {
+        parent::_refresh();
+        $this->aOrderGroups = null;
+        $this->aOrderDetails = null;
+        $this->aOrderProducts = null;
+        $this->aOrderProductsManufactueres = null;
+        $this->aAdditionalFees = null;
+        $this->oPaymentMethod = null;
+
+    }
+
     public function recalculateRetailTrust()
     {
+        $this->_refresh();
         $fTotalRetailTrust = 0;
         $aOrderGroups = $this->getOrderGroups();
         if (!empty($aOrderGroups)) {

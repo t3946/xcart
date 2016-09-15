@@ -1385,7 +1385,6 @@ Total Product Cost to us
   <td colspan="8">&nbsp;</td>
   {assign var=oPaymentProcessor value=$oOrder->getPaymentMethodInstance()}
   {math assign="transaction_with_multiplier" equation="x*y" x=$order_transactions_totals.authorized_PLUS_captured_totals y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
-  {$transaction_with_multiplier|var_dump}
   <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() == $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;
           {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.authorized_PLUS_captured_totals && $oOrder->getOrderTotalGross() <= $transaction_with_multiplier}
           yellow
