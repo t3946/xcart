@@ -496,7 +496,7 @@ if ($sExtraLog=='Y')
 		break;
 		}
 	}
-	$product["custom_label_0"] = func_froogle_convert(trim($product['brand']));
+	//$product["custom_label_0"] = func_froogle_convert(trim($product['brand']));
     
     // group prices in GMC by 50/100/150/200/250/300/400/500/600/700/800/900/1000/1200/1400
     $price_group_label = '0';
