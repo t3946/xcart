@@ -43,5 +43,5 @@ if ($REQUEST_METHOD == 'POST') {
     func_header_location("configuration.php?option=Amazon_Verification");
 }
 
-$aProductsQueue = classExternalVerificationProductsQueue::getProductsQueue();
+$aProductsQueue = classExternalVerificationProductsQueue::getProductsQueueEtalon();
 $smarty->assign("aProductsQueue", $aProductsQueue);

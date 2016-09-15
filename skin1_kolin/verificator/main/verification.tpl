@@ -358,7 +358,7 @@
                     <button data-action="not_sure" data-class="yellow" id="submit-product-not-sure" class="ui yellow button">Not sure
                     </button>
                     <div class="or" data-text="or"></div>
-                    <button data-action="not_match" data-class="negative" id="submit-product-not-match" class="ui negative button">Does not
+                    <button data-action="not_match" data-class="negative" id="submit-product-not-match" class="ui negative button">Does NOT
                         match
                     </button>
                 </div>
@@ -398,9 +398,7 @@
         </div>
     </div>
     <div class="actions">
-        <a id="negative_conclusion">
-            Cancel
-        </a>
+        <a id="negative_conclusion">Cancel</a>
         <div class="ui positive right labeled icon button">
             Submit
             <i class="checkmark icon"></i>
