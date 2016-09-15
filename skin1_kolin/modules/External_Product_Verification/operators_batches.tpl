@@ -113,9 +113,7 @@
         </div>
     </div>
     <div class="actions">
-        <div class="ui negative button">
-            Cancel
-        </div>
+        <a id="negative_conclusion">Cancel</a>
         <div class="ui positive right labeled icon button">
             Add
             <i class="checkmark icon"></i>
@@ -148,6 +146,9 @@
 
         $('#batches-filter > button').on('click', '', function () {
             location.href = "operators_batches.php?operator={/literal}{$oCustomer->getCustomerLogin()}{literal}&batch_status=" + $(this).data('status');
+        });
+        $('#negative_conclusion').on('click','',function(){
+            $('.ui.modal').modal('hide').parent().removeClass('active');
         });
         $('.indicating.progress').progress();
         $('#add_batch_button').on('click', '', function () {
