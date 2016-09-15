@@ -3,7 +3,7 @@ if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
     die("Access denied");
 }
-global $xcart_dir, $REQUEST_METHOD;
+global $xcart_dir, $REQUEST_METHOD, $amazon_verification_maximum_mistakes;
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationProductsQueue.php";
 
@@ -37,6 +37,7 @@ if ($REQUEST_METHOD == 'POST') {
             }
         }
     }
+    db_query("UPDATE $sql_tbl[config] SET value='".$amazon_verification_maximum_mistakes."' WHERE name='amazon_verification_maximum_mistakes' AND category='$option'");
 
     $top_message["content"] = 'Done.';
     $top_message["type"] = "I";
