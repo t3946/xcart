@@ -170,7 +170,7 @@ class classExternalVerificationBatch extends classData
         $slogin = "";
         if ($isTest) {
             $sStatuses = "q.status IN ('etalon_match','etalon_not_match')";
-            $slogin = "AND login = '.$login.'";
+            $slogin = "AND login = '$login'";
         }
         $aNextProducts = $this->oSQL->init()->addSelect('p.productid')->addSelect('cross_verify_count', 'batch_processed')->addFromTable('products', 'p')->
         addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid AND $sStatuses")->
