@@ -54,7 +54,7 @@ class classExternalVerificationProductsQueue extends classData
         return $this->getField('cross_verify_count');
     }
 
-    public static function getProductsQueue()
+    public static function getProductsQueueEtalon()
     {
         $aResult = [];
         $oSQL = new classSQLBuilder();
@@ -68,5 +68,14 @@ class classExternalVerificationProductsQueue extends classData
             }
         }
         return $aResult;
+    }
+
+    public static function getProductsQueueEtalonCount()
+    {
+        $oSQL = new classSQLBuilder();
+        $aQueues = $oSQL->addSelect('count(1)', 'cnt')->addFromTable('external_verification_products_queue')->
+        addCondition("status in ('".self::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH."','".self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH."')")->Execute()->getQueryResult();
+        $aRes = reset($aQueues);
+        return intval($aRes['cnt']);
     }
 }

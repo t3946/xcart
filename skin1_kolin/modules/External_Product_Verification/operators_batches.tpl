@@ -60,7 +60,7 @@
                     <td align="center"><a data-status="{$oCurrentBatch->getBatchStatus()}" class="batch_status_link" href="#">{$oCurrentBatch->getBatchStatus()}</a>
                         {if $oCurrentBatch->isTest() && $oCurrentBatch->countTestResults()}
                             <br/>
-                            T: +{$oCurrentBatch->getRightAnswersCount()} -{$oCurrentBatch->getWrongAnswersCount()} ={$oCurrentBatch->getBatchAmount()}
+                            T: +{$oCurrentBatch->getRightAnswersCount()} -{$oCurrentBatch->getWrongAnswersCount()} ={$iNumberTestProducts}
                         {/if}
                     </td>
                 </tr>
