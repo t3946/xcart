@@ -9,6 +9,7 @@ class classSQLBuilder
     private $aConditions = [];
     private $aOrders = [];
     private $aGroups = [];
+    private $aHaving = [];
     private $aLimit = [];
     private $sqlQuery = null;
     private $aSqlQueryResult = [];
@@ -27,6 +28,7 @@ class classSQLBuilder
         $this->aConditions = [];
         $this->aOrders = [];
         $this->aGroups = [];
+        $this->aHaving = [];
         $this->aLimit = [];
         $this->sqlQuery = null;
         $this->aSqlQueryResult = [];
@@ -69,6 +71,12 @@ class classSQLBuilder
         return $this;
     }
 
+    public function addHaving($sHaving)
+    {
+        $this->aHaving[] = $sHaving;
+        return $this;
+    }
+
     public function setLimit($sLimit)
     {
         $this->aLimit[] = $sLimit;
@@ -92,6 +100,9 @@ class classSQLBuilder
         }
         if (!empty($this->aGroups)) {
             $this->sqlQuery .= " GROUP BY " . implode(',', $this->aGroups);
+        }
+        if (!empty($this->aHaving)) {
+            $this->sqlQuery .= " HAVING " . implode(',', $this->aHaving);
         }
         if (!empty($this->aOrders)) {
             $this->sqlQuery .= " ORDER BY " . implode(',', $this->aOrders);
