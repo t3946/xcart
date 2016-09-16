@@ -3727,6 +3727,7 @@ function func_send_order_status_notification($orderid, $status)
 
 				$attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
 				$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+				$mail_smarty->assign('cidev_hide_invoice', $order_notification["customer_hide_invoice"]);
 
 				$mail_smarty->assign('type', 'C');
 				func_send_mail($order_data['userinfo']['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
@@ -3734,6 +3735,7 @@ function func_send_order_status_notification($orderid, $status)
 
 				$attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
 				$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+				$mail_smarty->assign('cidev_hide_invoice', $order_notification["admin_hide_invoice"]);
 
 				$to = $config['Company']['orders_department'];
 				$from = $order_data['userinfo']['firstname'] . "<" . $config['Company']['orders_department'] . ">";

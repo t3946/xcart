@@ -1386,7 +1386,7 @@ if ($REQUEST_METHOD == "POST") {
         }
         $oOrder->recalculateRetailTrust();
 
-        if ($send_email == 'Y') {
+        /*if ($send_email == 'Y') {
 
             $customer_attach_pdf_invoice = "";
             $admin_attach_pdf_invoice = "";
@@ -1429,7 +1429,7 @@ if ($REQUEST_METHOD == "POST") {
                 $customer_attach_pdf_invoice = "";
                 $admin_attach_pdf_invoice = "";
             }
-        }
+        }*/
 
 
         if ($all_current_dc_status_NOT_eq_S) {

@@ -15,7 +15,7 @@ vim: set ts=2 sw=2 sts=2 et:
             plugins: [
                 "advlist autolink lists link image charmap print preview anchor",
                 "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table contextmenu paste"
+                "insertdatetime media table contextmenu paste fullpage"
             ],
             toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
             forced_root_block: false,
@@ -42,6 +42,14 @@ function show_settings() {
     initMCEexact();
   }, 'text');
 }
+
+$('body').on('change','.plane_checkbox',function(){
+    if ($(this).attr('checked')) {
+        tinymce.remove();
+    } else {
+        initMCEexact();
+    }
+});
 
 {/literal}
 -->
