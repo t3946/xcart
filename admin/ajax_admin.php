@@ -6,6 +6,7 @@ require_once '../include/class/classOrder.php';
 require_once '../include/class/classPOPipeline.php';
 global $xcart_dir;
 require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationBatches.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classIssuesProcessingRules.php";
 
 
 switch ($_POST['ajax_action']) {
@@ -23,6 +24,9 @@ switch ($_POST['ajax_action']) {
         break;
     case "change_verify_batch_status":
         changeVerifyBatchStatus($_POST);
+        break;
+    case "change_processing_rules":
+        changeProcessingRules($_POST);
         break;
     case "add_new_batch":
         addNewBatch($_POST);
@@ -113,5 +117,13 @@ function addNewBatch($aPostParam = [])
     if (!empty($_POST['test_batch']) && $_POST['test_batch'] == 'Y')
         $oVerificationBatch->setField('is_test', 'Y');
     $oVerificationBatch->_insert();
+    print(json_encode($aResult));
+}
+
+function changeProcessingRules($aParams = [])
+{
+    $aResult = [];
+    $aRule = new classIssuesProcessingRules(['issue_id'=> $aParams['rule_id']]);
+    $aRule->updateField('issue_processing', $aParams['status_id']);
     print(json_encode($aResult));
 }

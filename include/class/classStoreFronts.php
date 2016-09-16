@@ -25,14 +25,14 @@ class classStoreFronts extends classData
         if (empty($this->aStoreFronts)) {
             $oArtist = new classStoreFront(['storefrontid'=>0]);
             $this->aStoreFronts[] = $oArtist;
-            $aStoreFronts = func_query("SELECT * FROM " . self::$sql_tbl['storefronts'] . " ORDER BY domain" );
+            /*$aStoreFronts = func_query("SELECT * FROM " . self::$sql_tbl['storefronts'] . " ORDER BY domain" );
             if (!empty($aStoreFronts)) {
                 foreach ($aStoreFronts as $aStoreFront) {
                     $oStorefront = new classStoreFront();
                     $oStorefront->fillPrimaryTableValues($aStoreFront);
                     $this->aStoreFronts[] = $oStorefront;
                 }
-            }
+            }*/
         }
         return $this;
     }

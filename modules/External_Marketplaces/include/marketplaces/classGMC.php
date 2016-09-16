@@ -1,8 +1,10 @@
 <?php
 global $xcart_dir;
 require_once $xcart_dir . "/modules/External_Marketplaces/include/classStoreFrontMarketPlace.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classIssuesProcessingRules.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classGMCQualityIssues.php";
 require_once $xcart_dir . "/include/libs/autoload.php";
-include_once $xcart_dir. "/include/libs/google/apiclient/examples/templates/base.php";
+include_once $xcart_dir . "/include/libs/google/apiclient/examples/templates/base.php";
 
 class classGMC extends classStoreFrontMarketPlace
 {
@@ -51,7 +53,7 @@ class classGMC extends classStoreFrontMarketPlace
 
             $client = new Google_Client();
             $client->setApplicationName("Client_Library_Examples");
-            $client->setAuthConfig($xcart_dir.'/include/system/gapi-3c467d1a8e76.json');
+            $client->setAuthConfig($xcart_dir . '/include/system/gapi-3c467d1a8e76.json');
             $client->addScope(Google_Service_ShoppingContent::CONTENT);
             $this->oService = new Google_Service_ShoppingContent($client);
 
@@ -79,9 +81,65 @@ class classGMC extends classStoreFrontMarketPlace
 
     public function getProductStatuses()
     {
-        $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(),['includeInvalidInsertedItems'=>true]);
+        $iUpdateProductCount = 0;
+        do {
+            if (!empty($pageToken)) {
+                $parameters['pageToken'] = $pageToken;
+            }
+            $parameters['includeInvalidInsertedItems'] = true;
+            $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(), $parameters);
+            /** @var Google_Service_ShoppingContent_ProductStatus[] $aProducts */
+            $aProducts = $oResponse->getResources();
+            $aQueue = [];
+            if (!empty($aProducts)) {
+                foreach ($aProducts as $oProduct) {
+                    list($sStatus, $lang, $Country, $iProductId) = explode(':', $oProduct->getProductId());
 
-        var_dump($oResponse->getResources());
+                    /** @var Google_Service_ShoppingContent_ProductStatusDataQualityIssue $oDataQualityIssues */
+                    $aDataQualityIssues = $oProduct->getDataQualityIssues();
+
+                    if (!empty($aDataQualityIssues)) {
+                        foreach ($aDataQualityIssues as $oDataQualityIssues) {
+                            $oIssue = classIssuesProcessingRules::getIssueByGoogleIssueId($oDataQualityIssues->getId());
+                            if (empty($oIssue)) {
+                                $oIssue = new classIssuesProcessingRules();
+                                $oIssue->setIssueGMCId($oDataQualityIssues->getId());
+                                $iIssueId = $oIssue->_insert();
+                                if ($iIssueId) {
+                                    $oIssue->setIssueId($iIssueId);
+                                }
+                            }
+                            $oGMCQualityIssues = new classGMCQualityIssues(['productid' => $iProductId, 'issue_id' => $oIssue->getIssueId()]);
+                            if ($oGMCQualityIssues->getProductId()) {
+                                $oGMCQualityIssues->_delete();
+                                $oGMCQualityIssues = new classGMCQualityIssues();
+                            }
+
+                            $oIssueDate = DateTime::createFromFormat(DateTime::ISO8601, $oDataQualityIssues->getTimestamp());
+                            if (!$oIssueDate)
+                                $oIssueDate = new DateTime('NOW');
+                            $oGMCQualityIssues->fillPrimaryTableValues(['productid' => $iProductId,
+                                'issue_id' => $oIssue->getIssueId(),
+                                'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
+                                'issue_data' => addslashes(json_encode($oDataQualityIssues)),
+                                'issue_destination' => addslashes(json_encode($oProduct->getDestinationStatuses()))
+                            ]);
+                            $oGMCQualityIssues->_insert();
+                        }
+
+                    }
+
+                    $oExpiredDate = DateTime::createFromFormat(DateTime::ISO8601, $oProduct->getGoogleExpirationDate());
+                    $iDaysInterval = $oExpiredDate->diff(new DateTime('now'))->days;
+                    if ($iDaysInterval <= $this->getUpdateExpiredBeforeDays() && $iUpdateProductCount <= $this->getUpdateMaxExpiredProductsPerDay()) {
+                        $aQueue[] = ['productid' => $iProductId];
+                        $iUpdateProductCount++;
+                    }
+                }
+            }
+            $this->restoreQueue($aQueue, 1);
+            $pageToken = $oResponse->getNextPageToken();
+        } while ($pageToken);
 
         return $this;
     }
