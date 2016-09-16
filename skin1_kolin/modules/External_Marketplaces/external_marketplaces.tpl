@@ -217,7 +217,7 @@
             $('.external_storefront_ftp_path', change_row).attr('name',"external_storefront_marketplace["+marketplace_id+"]["+storefront_id+"][ftp_path]");
             $('.external_storefront_export_filename_suffix', change_row).attr('name',"external_storefront_marketplace["+marketplace_id+"]["+storefront_id+"][export_filename_suffix]");
             $('.external_storefront_update_expired_before', change_row).attr('name',"external_storefront_marketplace["+marketplace_id+"]["+storefront_id+"][update_expired_before]");
-            $('.external_storefront_update_max_expired_products', change_row).attr('name',"external_storefront_marketplace["+marketplace_id+"]["+storefront_id+"][update_max_expired_products]");
+            $('.external_storefront_update_max_expired_products', change_row).attr('name',"external_storefront_marketplace["+marketplace_id+"]["+storefront_id+"][update_max_expired_products_per_day]");
             $('.delete_checkbox', change_row).attr('name',"delete_checkbox["+marketplace_id+"]["+storefront_id+"]");
         }
 
