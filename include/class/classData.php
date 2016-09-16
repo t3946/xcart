@@ -111,10 +111,6 @@ class classData
         $aToUpdate[$sFieldName] = $sNewValue;
         if (empty($this->aPrimaryKeysValues))
             throw new Exception('Empty primary keys values for update field');
-        $aKeyArray = $this->aPrimaryKeysValues;
-        array_walk($aKeyArray, function (&$a, $b) {
-            $a = $b . ' = "' . $a . '"';
-        });
         func_array2update($this->sPrimaryTable, $aToUpdate, $this->getWhereClause());
         return $this;
     }

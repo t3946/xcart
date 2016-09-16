@@ -3672,67 +3672,57 @@ function func_order_details_translate($order_details, $force=false) {
 #
 # Send order status notification
 #
-function func_send_order_status_notification($orderid, $status) {
-    global $sql_tbl, $mail_smarty, $config, $statuses;
+function func_send_order_status_notification($orderid, $status)
+{
+	global $sql_tbl, $mail_smarty, $config, $statuses, $attach_pdf_invoice;
 
-    $order_data = func_order_data($orderid);
-    
-    $order_notification = func_get_order_notification($status, $order_data);
-    
-    if ($order_notification && $order_notification['enabled'] == 'Y') {
-        
-        $mail_smarty->assign('order_notification', $order_notification);
+	$order_data = func_order_data($orderid);
 
-        $tracking_links = func_query_hash('SELECT * FROM ' . $sql_tbl['tracking_links'], 'linkid', false);
-	$tracking_links_carrier = func_query_hash("SELECT * FROM $sql_tbl[tracking_links_carrier] ORDER BY orderby", 'carrier_id', false);
-        if (!empty($tracking_links)) {
-            $mail_smarty->assign('tracking_links', $tracking_links);
-            $mail_smarty->assign('tracking_links_carrier', $tracking_links_carrier);
-        }
+	$aorder_notification = func_get_order_notification($status, $order_data);
+	if (!empty($aorder_notification)) {
+		foreach ($aorder_notification as $oOrderNotification) {
+			if ($oOrderNotification->isEnabled()) {
+				$order_notification = $oOrderNotification->getFields();
 
-        # Send notification to customer
-        $to_customer = (($order_data['userinfo']['language']) ? $order_data['userinfo']['language'] : $config['default_customer_language']);
-        $mail_smarty->assign('products', func_translate_products($order_data['products'], $to_customer));
-        $mail_smarty->assign('giftcerts', $order_data['giftcerts']);
-        $mail_smarty->assign('order', $order_data['order']);
-        $mail_smarty->assign('userinfo', $order_data['userinfo']);
-        if (empty($statuses)) {
-            $statuses = func_query_hash('SELECT code, name, type FROM ' . $sql_tbl['order_statuses']
-                . ' ORDER BY orderby', array('type', 'code'), false, true);
-        }
-        $mail_smarty->assign('statuses', $statuses);
+				$mail_smarty->assign('order_notification', $order_notification);
 
-#
-##
-###
-	$attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
-	$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
-        
-        $mail_smarty->assign('type', 'C');
-        func_send_mail($order_data['userinfo']['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
-        $mail_smarty->assign('type', 'A');
-//        func_send_mail($config['Company']['orders_department'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $order_data['userinfo']['email'], false);
+				$tracking_links = func_query_hash('SELECT * FROM ' . $sql_tbl['tracking_links'], 'linkid', false);
+				$tracking_links_carrier = func_query_hash("SELECT * FROM $sql_tbl[tracking_links_carrier] ORDER BY orderby", 'carrier_id', false);
+				if (!empty($tracking_links)) {
+					$mail_smarty->assign('tracking_links', $tracking_links);
+					$mail_smarty->assign('tracking_links_carrier', $tracking_links_carrier);
+				}
 
+				# Send notification to customer
+				$to_customer = (($order_data['userinfo']['language']) ? $order_data['userinfo']['language'] : $config['default_customer_language']);
+				$mail_smarty->assign('products', func_translate_products($order_data['products'], $to_customer));
+				$mail_smarty->assign('giftcerts', $order_data['giftcerts']);
+				$mail_smarty->assign('order', $order_data['order']);
+				$mail_smarty->assign('userinfo', $order_data['userinfo']);
+				if (empty($statuses)) {
+					$statuses = func_query_hash('SELECT code, name, type FROM ' . $sql_tbl['order_statuses']
+							. ' ORDER BY orderby', array('type', 'code'), false, true);
+				}
+				$mail_smarty->assign('statuses', $statuses);
 
-#
-##
-###
-        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
+				$attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+				$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 
-	$to = $config['Company']['orders_department'];
-	$from = $order_data['userinfo']['firstname']."<".$config['Company']['orders_department'].">";
-	$reply_to = $order_data['userinfo']['firstname']."<".$order_data['userinfo']['email'].">";
-	func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, false, false, false, false, $reply_to);
+				$mail_smarty->assign('type', 'C');
+				func_send_mail($order_data['userinfo']['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+				$mail_smarty->assign('type', 'A');
 
+				$attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+				$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 
-    }
+				$to = $config['Company']['orders_department'];
+				$from = $order_data['userinfo']['firstname'] . "<" . $config['Company']['orders_department'] . ">";
+				$reply_to = $order_data['userinfo']['firstname'] . "<" . $order_data['userinfo']['email'] . ">";
+				func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, false, false, false, false, $reply_to);
+
+			}
+		}
+	}
 }
 
 function func_get_order_status_type($status) {
@@ -3850,24 +3840,20 @@ function func_set_filled_option($accounting) {
 }
 
 function func_get_order_notification($status, $order_data="") {
-    global $sql_tbl;
-    
-    $order_notification = func_query_first('SELECT * FROM ' . $sql_tbl['order_status_notifications'] 
-        . ' WHERE code = "' . $status . '"');
-
-    if (!empty($order_notification)) {
-
-###
-	if (!empty($order_data) && is_array($order_data)){
-		$order_notification['email_body'] = str_replace("{{c-fullname}}", $order_data["order"]["firstname"], $order_notification['email_body']);
+    global $xcart_dir;
+	require_once $xcart_dir . "/include/class/classOrderStatusNotification.php";
+	require_once $xcart_dir . "/include/class/classOrder.php";
+	$oOrder = null;
+	$aOrderNotifications = classOrderStatusNotification::getOrderStatusNotificationsByCode($status);
+	if (!empty($aOrderNotifications)) {
+		if (!empty($order_data) && is_array($order_data)){
+			$oOrder = new classOrder(['orderid'=>$order_data['order']['orderid']]);
+		}
+		foreach ($aOrderNotifications as &$oOrderNotification) {
+			$oOrderNotification->setBody($oOrder);
+		}
 	}
-###
-        $order_notification['email_body'] = func_eol2br($order_notification['email_body']);
-
-        return $order_notification;
-    }
-
-    return false;
+	return $aOrderNotifications;
 }
 
 function func_has_backordered_status(&$groups) {

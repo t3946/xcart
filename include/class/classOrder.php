@@ -323,6 +323,11 @@ class classOrder extends classData
         return $this->getField('customer_notes');
     }
 
+    public function getFirstName()
+    {
+        return $this->getField('firstname');
+    }
+
     public function getShippingFirstName()
     {
         return $this->getField('s_firstname');
