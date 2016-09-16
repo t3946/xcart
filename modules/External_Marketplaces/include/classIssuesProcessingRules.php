@@ -34,7 +34,8 @@ class classIssuesProcessingRules extends classData
             $aIssues = $oSQL->addSelect('*')->addFromTable('cidev_issues_processing_rules')->addCondition("issue_gmc_id = '$sGoogleId'")->Execute()->getQueryResult();
             if (!empty($aIssues)) {
                 foreach ($aIssues as $aIssue) {
-                    $oResult = new classIssuesProcessingRules(['issue_id' => $aIssue['issue_id']]);
+                    $oResult = new classIssuesProcessingRules();
+                    $oResult->fillPrimaryTableValues($aIssue);
                 }
             }
         }

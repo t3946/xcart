@@ -93,9 +93,11 @@ class classGMC extends classStoreFrontMarketPlace
             $aQueue = [];
             if (!empty($aProducts)) {
                 foreach ($aProducts as $oProduct) {
-                    list($sStatus, $lang, $Country, $iProductId) = explode(':',$oProduct->getProductId());
+                    list($sStatus, $lang, $Country, $iProductId) = explode(':', $oProduct->getProductId());
+
                     /** @var Google_Service_ShoppingContent_ProductStatusDataQualityIssue $oDataQualityIssues */
                     $aDataQualityIssues = $oProduct->getDataQualityIssues();
+
                     if (!empty($aDataQualityIssues)) {
                         foreach ($aDataQualityIssues as $oDataQualityIssues) {
                             $oIssue = classIssuesProcessingRules::getIssueByGoogleIssueId($oDataQualityIssues->getId());
@@ -114,11 +116,13 @@ class classGMC extends classStoreFrontMarketPlace
                             }
 
                             $oIssueDate = DateTime::createFromFormat(DateTime::ISO8601, $oDataQualityIssues->getTimestamp());
+                            if (!$oIssueDate)
+                                $oIssueDate = new DateTime('NOW');
                             $oGMCQualityIssues->fillPrimaryTableValues(['productid' => $iProductId,
                                 'issue_id' => $oIssue->getIssueId(),
                                 'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
-                                'issue_data' => json_encode($oDataQualityIssues),
-                                'issue_destination' => json_encode($oProduct->getDestinationStatuses())
+                                'issue_data' => addslashes(json_encode($oDataQualityIssues)),
+                                'issue_destination' => addslashes(json_encode($oProduct->getDestinationStatuses()))
                             ]);
                             $oGMCQualityIssues->_insert();
                         }
@@ -128,7 +132,7 @@ class classGMC extends classStoreFrontMarketPlace
                     $oExpiredDate = DateTime::createFromFormat(DateTime::ISO8601, $oProduct->getGoogleExpirationDate());
                     $iDaysInterval = $oExpiredDate->diff(new DateTime('now'))->days;
                     if ($iDaysInterval <= $this->getUpdateExpiredBeforeDays() && $iUpdateProductCount <= $this->getUpdateMaxExpiredProductsPerDay()) {
-                        $aQueue[] = ['productid'=>$iProductId];
+                        $aQueue[] = ['productid' => $iProductId];
                         $iUpdateProductCount++;
                     }
                 }
