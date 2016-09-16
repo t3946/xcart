@@ -1797,95 +1797,101 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
 		$mes .= "STEP L ".date("H:i:s")."\n";
 
-	        $order_notification = func_get_order_notification($order_status, $order_data);
+		$aorder_notification = func_get_order_notification($order_status, $order_data);
+		if (!empty($aorder_notification)) {
+			foreach ($aorder_notification as $oOrderNotification) {
+				if ($oOrderNotification->isEnabled()) {
+					$order_notification = $oOrderNotification->getFields();
 
-	        if ($order_notification['enabled'] == 'Y') {
-            
-        	    $mail_smarty->assign('order_notification', $order_notification);
+					if ($order_notification['enabled'] == 'Y') {
 
-			if ($customer_notify) {
-			#
-			# Notify customer by email
-			#
-				$to_customer = ($userinfo['language']?$userinfo['language']:$config['default_customer_language']);
-				$mail_smarty->assign("products", func_translate_products($order_data["products"], $to_customer));
-	                	$mail_smarty->assign('type', 'C');
+						$mail_smarty->assign('order_notification', $order_notification);
 
-		                func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
-			}
+						if ($customer_notify) {
+							#
+							# Notify customer by email
+							#
+							$to_customer = ($userinfo['language'] ? $userinfo['language'] : $config['default_customer_language']);
+							$mail_smarty->assign("products", func_translate_products($order_data["products"], $to_customer));
+							$mail_smarty->assign('type', 'C');
 
-			$mes .= "STEP M ".date("H:i:s")."\n";
+							func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
+						}
 
-			if (!empty($order_data["order"]['payment_method_orig'])) {
-				$order_data["order"]['payment_method'] = $order_data["order"]['payment_method_orig'];
-				$mail_smarty->assign("order",$order_data["order"]);
-			}
+						$mes .= "STEP M " . date("H:i:s") . "\n";
 
-			$mail_smarty->assign("products",$order_data["products"]);
-			if ($admin_notify) {
-			#
-			# Notify orders department by email
-			#
-				$mail_smarty->assign('type', 'A');
-				$mail_smarty->assign("show_order_details", "Y");
-				$mes .= "STEP N ".date("H:i:s")."\n";
-	                	$mail_smarty->assign('type', 'A');
+						if (!empty($order_data["order"]['payment_method_orig'])) {
+							$order_data["order"]['payment_method'] = $order_data["order"]['payment_method_orig'];
+							$mail_smarty->assign("order", $order_data["order"]);
+						}
 
-				$to = $config['Company']['orders_department'];				
-				$from = $userinfo["firstname"]."<".$config['Company']['orders_department'].">";
-				$reply_to = $userinfo["firstname"]."<".$userinfo['email'].">";
-			
-		                func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
+						$mail_smarty->assign("products", $order_data["products"]);
+						if ($admin_notify) {
+							#
+							# Notify orders department by email
+							#
+							$mail_smarty->assign('type', 'A');
+							$mail_smarty->assign("show_order_details", "Y");
+							$mes .= "STEP N " . date("H:i:s") . "\n";
+							$mail_smarty->assign('type', 'A');
+
+							$to = $config['Company']['orders_department'];
+							$from = $userinfo["firstname"] . "<" . $config['Company']['orders_department'] . ">";
+							$reply_to = $userinfo["firstname"] . "<" . $userinfo['email'] . ">";
+
+							func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
 
 ###
-func_send_mail("igor@s3stores.com", 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', "orders@s3stores.com", false);
+							func_send_mail("igor@s3stores.com", 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', "orders@s3stores.com", false);
 ###
 
-				$mes .= "STEP O ".date("H:i:s")."\n";
-                		$mail_smarty->assign("show_order_details", "N");
+							$mes .= "STEP O " . date("H:i:s") . "\n";
+							$mail_smarty->assign("show_order_details", "N");
 
-				#
-				# Notify provider (or providers) by email
-				#
-				$mail_smarty->assign('type', 'P');
-				if ((!$single_mode) && ($current_order["provider"]) && $config["Email_Note"]["send_notifications_to_provider"] == "Y") {
-					$pr_result = func_query_first ("SELECT email, language FROM $sql_tbl[customers] WHERE login='$current_order[provider]'");
-					$prov_email = $pr_result ["email"];
-					if ($prov_email != $config["Company"]["orders_department"]) {
-						$to_customer = $pr_result['language'];
-						if (empty($to_customer))
-							$to_customer = $config['default_admin_language'];
+							#
+							# Notify provider (or providers) by email
+							#
+							$mail_smarty->assign('type', 'P');
+							if ((!$single_mode) && ($current_order["provider"]) && $config["Email_Note"]["send_notifications_to_provider"] == "Y") {
+								$pr_result = func_query_first("SELECT email, language FROM $sql_tbl[customers] WHERE login='$current_order[provider]'");
+								$prov_email = $pr_result ["email"];
+								if ($prov_email != $config["Company"]["orders_department"]) {
+									$to_customer = $pr_result['language'];
+									if (empty($to_customer))
+										$to_customer = $config['default_admin_language'];
 
-						$mes .= "STEP P ".date("H:i:s")."\n";
+									$mes .= "STEP P " . date("H:i:s") . "\n";
 
-						func_send_mail($prov_email, "mail/".$prefix."order_notification_subj.tpl", "mail/order_notification.tpl", $userinfo["email"], false);
-						$mes .= "STEP R ".date("H:i:s")."\n";
-					}
-				}
-				elseif ($config["Email_Note"]["send_notifications_to_provider"] == "Y" && !empty($products) && is_array($products)) {
-					$providers = array();
-					foreach($products as $product) {
-						$pr_result = func_query_first("select email, language from $sql_tbl[customers] where login='$product[provider]'");
-						if ($pr_result["email"])
-							$providers[$product['provider']] = $pr_result;
-					}
+									func_send_mail($prov_email, "mail/" . $prefix . "order_notification_subj.tpl", "mail/order_notification.tpl", $userinfo["email"], false);
+									$mes .= "STEP R " . date("H:i:s") . "\n";
+								}
+							} elseif ($config["Email_Note"]["send_notifications_to_provider"] == "Y" && !empty($products) && is_array($products)) {
+								$providers = array();
+								foreach ($products as $product) {
+									$pr_result = func_query_first("select email, language from $sql_tbl[customers] where login='$product[provider]'");
+									if ($pr_result["email"])
+										$providers[$product['provider']] = $pr_result;
+								}
 
-					if ($providers) {
-						foreach ($providers as $prov_data) {
-							if ($prov_data['email'] == $config["Company"]["orders_department"])
-								continue;
+								if ($providers) {
+									foreach ($providers as $prov_data) {
+										if ($prov_data['email'] == $config["Company"]["orders_department"])
+											continue;
 
-							$to_customer = $prov_data['language'];
-							if (empty($to_customer))
-								$to_customer = $config['default_admin_language'];
-							$mes .= "STEP S ".date("H:i:s")."\n";
-							func_send_mail($prov_data['email'], "mail/".$prefix."order_notification_subj.tpl", "mail/order_notification.tpl", $userinfo["email"], false);
-							$mes .= "STEP T ".date("H:i:s")."\n";
+										$to_customer = $prov_data['language'];
+										if (empty($to_customer))
+											$to_customer = $config['default_admin_language'];
+										$mes .= "STEP S " . date("H:i:s") . "\n";
+										func_send_mail($prov_data['email'], "mail/" . $prefix . "order_notification_subj.tpl", "mail/order_notification.tpl", $userinfo["email"], false);
+										$mes .= "STEP T " . date("H:i:s") . "\n";
+									}
+								}
+							}
 						}
 					}
 				}
 			}
-	        }
+		}
 
 		if (!empty($active_modules['Survey']) && defined("AREA_TYPE") && constant("AREA_TYPE") == 'C') {
 			func_check_surveys_events("OPL", $order_data);
@@ -2784,94 +2790,100 @@ function func_process_order($orderids) {
 		#
 		# Send mail notifications
 		#
-        $order_notification = func_get_order_notification('P', $order_data);
+		$aorder_notification = func_get_order_notification('P', $order_data);
+		if (!empty($aorder_notification)) {
+			foreach ($aorder_notification as $oOrderNotification) {
+				if ($oOrderNotification->isEnabled()) {
+					$order_notification = $oOrderNotification->getFields();
+					if ($order_notification['enabled'] == 'Y' && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
 
-        if ($order_notification['enabled'] == 'Y' && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
-            
-            $mail_smarty->assign('order_notification', $order_notification);
+						$mail_smarty->assign('order_notification', $order_notification);
 
-		if ($config['Email_Note']['eml_order_p_notif_provider'] == 'Y') {
-			$providers= func_query("select provider from $sql_tbl[order_details] where $sql_tbl[order_details].orderid='$orderid' group by provider");
+						if ($config['Email_Note']['eml_order_p_notif_provider'] == 'Y') {
+							$providers = func_query("select provider from $sql_tbl[order_details] where $sql_tbl[order_details].orderid='$orderid' group by provider");
 
-			if (is_array($providers)) {
-				foreach($providers as $provider) {
-					$email_pro = func_query_first_cell("SELECT email FROM $sql_tbl[customers] WHERE login='$provider[provider]'");
-					if (!empty($email_pro) && $email_pro != $config["Company"]["orders_department"]) {
-						$to_customer = func_query_first_cell ("SELECT language FROM $sql_tbl[customers] WHERE login='$provider[provider]'");
-						if(empty($to_customer))
+							if (is_array($providers)) {
+								foreach ($providers as $provider) {
+									$email_pro = func_query_first_cell("SELECT email FROM $sql_tbl[customers] WHERE login='$provider[provider]'");
+									if (!empty($email_pro) && $email_pro != $config["Company"]["orders_department"]) {
+										$to_customer = func_query_first_cell("SELECT language FROM $sql_tbl[customers] WHERE login='$provider[provider]'");
+										if (empty($to_customer))
+											$to_customer = $config['default_admin_language'];
+#
+##
+###
+										$attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+										$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
+
+										func_send_mail($email_pro, "mail/order_notification_subj.tpl", "mail/order_notification.tpl", $config["Company"]["orders_department"], false);
+									}
+								}
+							}
+						}
+
+						$to_customer = func_query_first_cell("SELECT language FROM $sql_tbl[customers] WHERE login='$userinfo[login]'");
+						if (empty($to_customer))
+							$to_customer = $config['default_customer_language'];
+
+						if ($order_notification['enabled'] == 'Y') {
+
+							$mail_smarty->assign('type', 'C');
+
+							$mail_smarty->assign("products", func_translate_products($products, $to_customer));
+							$_userinfo = $userinfo;
+							$userinfo['title'] = func_get_title($userinfo['titleid'], $to_customer);
+							$userinfo['b_title'] = func_get_title($userinfo['b_titleid'], $to_customer);
+							$userinfo['s_title'] = func_get_title($userinfo['s_titleid'], $to_customer);
+							$mail_smarty->assign("customer", $userinfo);
+
+#
+##
+###
+							$attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+							$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+							func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+
+
+#
+##
+###
+							$attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+							$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+							$mail_smarty->assign('type', 'A');
 							$to_customer = $config['default_admin_language'];
-#
-##
-###
-					        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-					        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
+//	                func_send_mail($config['Company']['orders_department'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $userinfo['email'], true, true);
+
+							$to = $config['Company']['orders_department'];
+							$from = $userinfo["firstname"] . "<" . $config['Company']['orders_department'] . ">";
+							$reply_to = $userinfo["firstname"] . "<" . $userinfo['email'] . ">";
+							func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
 
 
-						func_send_mail($email_pro, "mail/order_notification_subj.tpl", "mail/order_notification.tpl", $config["Company"]["orders_department"], false);
+							$userinfo = $_userinfo;
+							unset($_userinfo);
+						}
+
+						/*$mail_smarty->assign("products",$products);
+                        $mail_smarty->assign("show_order_details", "Y");
+                        if ($config['Email_Note']['eml_order_p_notif_admin'] == 'Y') {
+                                $mail_smarty->assign('type', 'A');
+                            $to_customer = $config['default_admin_language'];
+                            func_send_mail($config["Company"]["orders_department"], "mail/order_notification_subj.tpl", "mail/order_notification_admin.tpl", $config["Company"]["orders_department"], true, true);
+                        }*/
 					}
 				}
 			}
 		}
-
-		$to_customer = func_query_first_cell ("SELECT language FROM $sql_tbl[customers] WHERE login='$userinfo[login]'");
-		if (empty($to_customer))
-			$to_customer = $config['default_customer_language'];
-
-            if ($order_notification['enabled'] == 'Y') {
-                
-	                $mail_smarty->assign('type', 'C');
-                
-			$mail_smarty->assign("products", func_translate_products($products, $to_customer));
-			$_userinfo = $userinfo;
-			$userinfo['title'] = func_get_title($userinfo['titleid'], $to_customer);
-			$userinfo['b_title'] = func_get_title($userinfo['b_titleid'], $to_customer);
-			$userinfo['s_title'] = func_get_title($userinfo['s_titleid'], $to_customer);
-			$mail_smarty->assign("customer",$userinfo);
-
-#
-##
-###
- 		        $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
-		        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
-        	        func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
-
-
-#
-##
-###
- 		        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-		        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
-	                $mail_smarty->assign('type', 'A');
-        	        $to_customer = $config['default_admin_language'];
-//	                func_send_mail($config['Company']['orders_department'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $userinfo['email'], true, true);
-
-                        $to = $config['Company']['orders_department'];
-                        $from = $userinfo["firstname"]."<".$config['Company']['orders_department'].">";
-                        $reply_to = $userinfo["firstname"]."<".$userinfo['email'].">";
-                        func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
-
-
-			$userinfo = $_userinfo;
-			unset($_userinfo);
-		}
-
-		/*$mail_smarty->assign("products",$products);
-		$mail_smarty->assign("show_order_details", "Y");
-		if ($config['Email_Note']['eml_order_p_notif_admin'] == 'Y') {
-                $mail_smarty->assign('type', 'A');
-			$to_customer = $config['default_admin_language'];
-			func_send_mail($config["Company"]["orders_department"], "mail/order_notification_subj.tpl", "mail/order_notification_admin.tpl", $config["Company"]["orders_department"], true, true);
-		}*/
-        }
 
 		$mail_smarty->assign("show_order_details", "");
 
@@ -2934,34 +2946,40 @@ function func_complete_order($orderid) {
 	#
 	# Send mail notifications
 	#
-	$order_notification = func_get_order_notification('C', $order_data);
-
-	if ($order_notification['enabled'] == 'Y' && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
-		$to_customer = func_query_first_cell ("SELECT language FROM $sql_tbl[customers] WHERE login='$userinfo[login]'");
-		if(empty($to_customer))
-			$to_customer = $config['default_customer_language'];
-		$userinfo['title'] = func_get_title($userinfo['titleid'], $to_customer);
-		$userinfo['b_title'] = func_get_title($userinfo['b_titleid'], $to_customer);
-		$userinfo['s_title'] = func_get_title($userinfo['s_titleid'], $to_customer);
-		$mail_smarty->assign("customer",$userinfo);
-		$mail_smarty->assign("products", func_translate_products($products, $to_customer));
-	        $mail_smarty->assign('statuses', $statuses);
-        	$mail_smarty->assign('order_notification', $order_notification);
+	$aorder_notification = func_get_order_notification('C', $order_data);
+	if (!empty($aorder_notification)) {
+		foreach ($aorder_notification as $oOrderNotification) {
+			if ($oOrderNotification->isEnabled()) {
+				$order_notification = $oOrderNotification->getFields();
+				if ($order_notification['enabled'] == 'Y' && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
+					$to_customer = func_query_first_cell("SELECT language FROM $sql_tbl[customers] WHERE login='$userinfo[login]'");
+					if (empty($to_customer))
+						$to_customer = $config['default_customer_language'];
+					$userinfo['title'] = func_get_title($userinfo['titleid'], $to_customer);
+					$userinfo['b_title'] = func_get_title($userinfo['b_titleid'], $to_customer);
+					$userinfo['s_title'] = func_get_title($userinfo['s_titleid'], $to_customer);
+					$mail_smarty->assign("customer", $userinfo);
+					$mail_smarty->assign("products", func_translate_products($products, $to_customer));
+					$mail_smarty->assign('statuses', $statuses);
+					$mail_smarty->assign('order_notification', $order_notification);
 ###
-        	$mail_smarty->assign('type', "C");
-        	$mail_smarty->assign('d_email_subject_14', "");
+					$mail_smarty->assign('type', "C");
+					$mail_smarty->assign('d_email_subject_14', "");
 ###
 
 #
 ##
 ###
-	        $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
-	        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+					$attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+					$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 ###
 ##
 #
 
-		func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+					func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+				}
+			}
+		}
 	}
 
 	if (!empty($active_modules['Survey']) && !empty($userinfo)) {
@@ -2993,29 +3011,30 @@ function func_not_paid_order($orderid) {
 	#
 	# Send mail notifications
 	#
-    $order_notification = func_get_order_notification('N', $order_data);
+	$aorder_notification = func_get_order_notification('N', $order_data);
+	if (!empty($aorder_notification)) {
+		foreach ($aorder_notification as $oOrderNotification) {
+			if ($oOrderNotification->isEnabled()) {
+				$order_notification = $oOrderNotification->getFields();
 
-    if ($order_notification['enabled'] == 'Y' && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
-	$to_customer = func_query_first_cell ("SELECT language FROM $sql_tbl[customers] WHERE login='$userinfo[login]'");
-	if (empty($to_customer)) {
-		$to_customer = $config['default_customer_language'];
+				if ($order_notification['enabled'] == 'Y' && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
+					$to_customer = func_query_first_cell("SELECT language FROM $sql_tbl[customers] WHERE login='$userinfo[login]'");
+					if (empty($to_customer)) {
+						$to_customer = $config['default_customer_language'];
+					}
+					$mail_smarty->assign('customer', $userinfo);
+					$mail_smarty->assign('products', func_translate_products($products, $to_customer));
+					$mail_smarty->assign('statuses', $statuses);
+					$mail_smarty->assign('order_notification', $order_notification);
+
+					$attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+					$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+
+					func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+				}
+			}
+		}
 	}
-	$mail_smarty->assign('customer',$userinfo);
-	$mail_smarty->assign('products', func_translate_products($products, $to_customer));
-        $mail_smarty->assign('statuses', $statuses);
-        $mail_smarty->assign('order_notification', $order_notification);
-
-#
-##
-###
-        $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
-        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
-
-        func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
-    }
 }
 
 #
@@ -3048,37 +3067,38 @@ function func_decline_order($orderids, $status = "D") {
 
 		# Send mail notifications
 		if ($status == 'D' || $status == 'A') {
-			$mail_smarty->assign("customer",$userinfo);
-			$mail_smarty->assign("products",$products);
-			$mail_smarty->assign("giftcerts",$giftcerts);
-			$mail_smarty->assign("order",$order);
+			$mail_smarty->assign("customer", $userinfo);
+			$mail_smarty->assign("products", $products);
+			$mail_smarty->assign("giftcerts", $giftcerts);
+			$mail_smarty->assign("order", $order);
 
-	                $order_notification = func_get_order_notification($status, $order_data);
+			$aorder_notification = func_get_order_notification($status, $order_data);
+			if (!empty($aorder_notification)) {
+				foreach ($aorder_notification as $oOrderNotification) {
+					if ($oOrderNotification->isEnabled()) {
+						$order_notification = $oOrderNotification->getFields();
 
-			if ($order_notification['enabled'] == 'Y' && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
-				$to_customer = func_query_first_cell ("SELECT language FROM $sql_tbl[customers] WHERE login='$userinfo[login]'");
-				if (empty($to_customer))
-					$to_customer = $config['default_customer_language'];
+						if ($order_notification['enabled'] == 'Y' && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
+							$to_customer = func_query_first_cell("SELECT language FROM $sql_tbl[customers] WHERE login='$userinfo[login]'");
+							if (empty($to_customer))
+								$to_customer = $config['default_customer_language'];
 
-				$mail_smarty->assign("products", func_translate_products($products, $to_customer));
-				$userinfo['title'] = func_get_title($userinfo['titleid'], $to_customer);
-				$userinfo['b_title'] = func_get_title($userinfo['b_titleid'], $to_customer);
-				$userinfo['s_title'] = func_get_title($userinfo['s_titleid'], $to_customer);
-				$mail_smarty->assign("customer",$userinfo);
-		                $mail_smarty->assign('statuses', $statuses);
-		                $mail_smarty->assign('order_notification', $order_notification);
+							$mail_smarty->assign("products", func_translate_products($products, $to_customer));
+							$userinfo['title'] = func_get_title($userinfo['titleid'], $to_customer);
+							$userinfo['b_title'] = func_get_title($userinfo['b_titleid'], $to_customer);
+							$userinfo['s_title'] = func_get_title($userinfo['s_titleid'], $to_customer);
+							$mail_smarty->assign("customer", $userinfo);
+							$mail_smarty->assign('statuses', $statuses);
+							$mail_smarty->assign('order_notification', $order_notification);
 
-#
-##
-###
-			        $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
-			        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
+							$attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+							$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 
+							func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+						}
 
-				func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl','mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+					}
+				}
 			}
 		}
 

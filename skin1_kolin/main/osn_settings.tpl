@@ -3,37 +3,13 @@ $Id: osn_settings.tpl, v 1.0.0 2011/10/18 13:54:21 kate Exp $
 vim: set ts=2 sw=2 sts=2 et:
 *}
 
+
+{if $aOrderNotifications}
+{foreach from=$aOrderNotifications item=oOrderNotification}
 <tr class="VariableSettings">
   <td><B>{$lng.lbl_body}</B></td>
   <td>
-{*
-{include file="main/textarea.tpl" name="update[email_body]" cols=45 rows=24 data=$osn_settings.email_body width="80%" btn_rows=4}
-*}
-
-<script src="{$SkinDir}/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-//<![CDATA[
-{literal}
-
-tinymce.init({
-    selector: "textarea.new_editor",
-    resize: "both",
-    plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
-        "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste"
-    ],
-    toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-    forced_root_block : false,
-    force_br_newlines : true,
-    force_p_newlines : false,
-    convert_urls: false,
-    relative_urls: false
-});
-
-{/literal}
-//]]>
-</script>
+{assign var=osn_settings value=$oOrderNotification->getFields()}
 
 
 <textarea rows="24" cols="45" name="update[email_body]" style="width: 80%;" class="new_editor">{$osn_settings.email_body|replace:"\n":"<br />"}</textarea>
@@ -81,3 +57,5 @@ tinymce.init({
   <td><B>Attach PDF invoice</B></td>
   <td><input type="checkbox" name="update[admin_attach_pdf_invoice]" value="Y"{if $osn_settings.admin_attach_pdf_invoice eq 'Y'} checked="checked"{/if} /></td>
 </tr>
+{/foreach}
+{/if}

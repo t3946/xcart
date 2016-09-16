@@ -86,12 +86,11 @@ if ($REQUEST_METHOD == 'POST') {
     }
     func_header_location('order_status_notifications.php');
 }
+global $xcart_dir;
+require_once $xcart_dir . "/include/class/classOrderStatusNotification.php";
+$aOrderNotifications = classOrderStatusNotification::getOrderStatusNotificationsByCode($selected_status);
 
-$osn_settings = func_query_first('SELECT code, customer_subject, copy_subject, email_body, enabled, customer_attach_pdf_invoice, admin_attach_pdf_invoice'
-    . ' FROM ' . $sql_tbl['order_status_notifications']
-    . ' WHERE code = "' . $selected_status . '"');
-
-$smarty->assign('osn_settings', $osn_settings);
+$smarty->assign('aOrderNotifications', $aOrderNotifications);
 
 $status_types = array(
     'CB'    => func_get_langvar_by_name('lbl_cust_bus_payment_status'),

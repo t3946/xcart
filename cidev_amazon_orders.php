@@ -565,32 +565,32 @@ while (!empty($NextToken)){
 
         	                $mes .= "STEP L ".date("H:i:s")."\n";
 
-	                        $order_notification = func_get_order_notification($order_status, $order_data);
+				$aorder_notification = func_get_order_notification($order_status, $order_data);
+				if (!empty($aorder_notification)) {
+					foreach ($aorder_notification as $oOrderNotification) {
+						if ($oOrderNotification->isEnabled()) {
+							$order_notification = $oOrderNotification->getFields();
 
-                	        if ($order_notification['enabled'] == 'Y') {
-        	                        $mail_smarty->assign('order_notification', $order_notification);
+							if ($order_notification['enabled'] == 'Y') {
+								$mail_smarty->assign('order_notification', $order_notification);
 
-	                                $mail_smarty->assign('type', 'A');
-                                	$mail_smarty->assign("show_order_details", "Y");
+								$mail_smarty->assign('type', 'A');
+								$mail_smarty->assign("show_order_details", "Y");
 
-					$mail_smarty->assign("show_amazon_order", "Y");
+								$mail_smarty->assign("show_amazon_order", "Y");
 
-                        	        $to = $config['Company']['orders_department'];
-                	                $from = $userinfo["firstname"]."<".$config['Company']['orders_department'].">";
-        	                        $reply_to = $userinfo["firstname"]."<".$userinfo['email'].">";
+								$to = $config['Company']['orders_department'];
+								$from = $userinfo["firstname"] . "<" . $config['Company']['orders_department'] . ">";
+								$reply_to = $userinfo["firstname"] . "<" . $userinfo['email'] . ">";
 
-#
-##
-###
-				        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-				        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
+								$attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+								$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 
-	
-        	                        func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);  // <-----------------
-	                        }
+								func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);  // <-----------------
+							}
+						}
+					}
+				}
 ###
 
 
