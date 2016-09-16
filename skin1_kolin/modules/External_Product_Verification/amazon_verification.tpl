@@ -25,7 +25,7 @@
                     <input name="answer[{$oProduct->getProductId()}]" {if $oProductsQueue->getStatus() == 'etalon_match'} checked {/if} value="etalon_match" type="radio"/>
                     <label>Match</label>
                     <input name="answer[{$oProduct->getProductId()}]" {if $oProductsQueue->getStatus() == 'etalon_not_match'} checked {/if} value="etalon_not_match" type="radio"/>
-                    <label>Does not matched</label>
+                    <label>Does NOT match</label>
                 </td>
                 <td><input type="checkbox" name="etalon_delete[{$oProduct->getProductId()}]"/></td>
             </tr>
@@ -43,7 +43,7 @@
             <input name="correct_answer[0]" value="etalon_match" type="radio"/>
             <label>Match</label>
             <input name="correct_answer[0]" value="etalon_not_match" type="radio"/>
-            <label>Does not matched</label>
+            <label>Does NOT match</label>
         </td>
         <td>
             {include file="buttons/multirow_add.tpl" mark="add_test_sku"}
