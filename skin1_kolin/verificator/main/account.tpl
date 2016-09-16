@@ -47,7 +47,7 @@
         </tr>
         <tr class="TableSubHead">
             <td>
-                <b>Total number of products processed including 'Match', 'Not sure', and 'Does not match':</b>
+                <b>Total number of products processed including 'Match', 'Not sure', and 'Does NOT match':</b>
             </td>
             <td>
                 {$oCustomer->getAmazonProductProcessedCount()}
