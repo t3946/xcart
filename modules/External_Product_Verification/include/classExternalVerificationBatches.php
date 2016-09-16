@@ -314,16 +314,17 @@ class classExternalVerificationBatch extends classData
             if ($diffInSec) {
                 $this->updateField('batch_product_speed', (floatval($this->getField('batch_product_speed')) * ($iCount - 1) + $diffInSec) / ($iCount));
             }
+            if ($this->isTest()) {
+                $this->countTestResults();
+                global $config;
+                if ($this->getWrongAnswersCount() >= intval($config['Amazon_Verification']['amazon_verification_maximum_mistakes'])) {
+                    $this->updateField('test_failed', 'Y');
+                }
+            }
             if ($iCount >= $this->getField('batch_amount')) {
                 $this->updateField('batch_status', 'Completed');
                 $aResult['batch_completed'] = true;
-                if ($this->isTest()) {
-                    $this->countTestResults();
-                    global $config;
-                    if ($this->getWrongAnswersCount() >= intval($config['Amazon_Verification']['amazon_verification_maximum_mistakes'])) {
-                        $this->updateField('test_failed', 'Y');
-                    }
-                }
+
             }
         }
         return $aResult;
@@ -444,5 +445,23 @@ class classExternalVerificationBatch extends classData
     public function isTestFailed()
     {
         return ($this->getField('test_failed') == 'Y');
+    }
+
+    public function isAccountSuspended()
+    {
+        $bResult = false;
+        $aBatches = $this->getCurrentBatches();
+        foreach ($aBatches as $oBatch) {
+            if ($oBatch->isTestFailed()) {
+                $bResult = true;
+            }
+        }
+        $aBatches = $this->getPreviousBatches();
+        foreach ($aBatches as $oBatch) {
+            if ($oBatch->isTestFailed()) {
+                $bResult = true;
+            }
+        }
+        return $bResult;
     }
 }

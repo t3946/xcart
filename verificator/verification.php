@@ -11,7 +11,7 @@ if (empty($batch)) {
     if (!$bAccess)
         func_header_location ("error_message.php?access_denied&id=2");
     $bStatus = $oVerificationBatch->getBatchStatus();
-    if ($bStatus != 'In progress') {
+    if ($bStatus != 'In progress' || $oVerificationBatch->isAccountSuspended()) {
         func_header_location ("index.php");
     }
 
