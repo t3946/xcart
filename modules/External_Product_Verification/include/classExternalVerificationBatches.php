@@ -43,7 +43,17 @@ class classExternalVerificationBatch extends classData
 
     public function getBatchStatus()
     {
-        return $this->getField('batch_status');
+        if ($this->isTest()) {
+			$aProductsNextInBatch = $this->getNextProduct($this->isTest());
+			if (empty($aProductsNextInBatch)) {
+				$this->countTestResults();
+				global $config;
+				if ($this->getWrongAnswersCount() >= intval($config['Amazon_Verification']['amazon_verification_maximum_mistakes'])) {
+					$this->updateField('test_failed', 'Y');
+				}
+			}
+        }
+		return $this->getField('batch_status');
     }
 
     public function getVerifiedProductId()
@@ -313,13 +323,6 @@ class classExternalVerificationBatch extends classData
             $diffInSec = $this->getProductVerificationTime($aParams['product_id']);
             if ($diffInSec) {
                 $this->updateField('batch_product_speed', (floatval($this->getField('batch_product_speed')) * ($iCount - 1) + $diffInSec) / ($iCount));
-            }
-            if ($this->isTest()) {
-                $this->countTestResults();
-                global $config;
-                if ($this->getWrongAnswersCount() >= intval($config['Amazon_Verification']['amazon_verification_maximum_mistakes'])) {
-                    $this->updateField('test_failed', 'Y');
-                }
             }
             if ($iCount >= $this->getField('batch_amount')) {
                 $this->updateField('batch_status', 'Completed');
