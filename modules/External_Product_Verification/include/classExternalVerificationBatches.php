@@ -174,7 +174,7 @@ class classExternalVerificationBatch extends classData
         }
         $aNextProducts = $this->oSQL->init()->addSelect('p.productid')->addSelect('cross_verify_count', 'batch_processed')->addFromTable('products', 'p')->
         addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid $sStatuses")->
-        addCondition("p.forsale = 'Y'")->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid' . $slogin . ' AND action IN (\'open\'))')->addGroupBy('p.productid')->addOrderBy('cross_verify_count DESC')->setLimit('1')->Execute()->getQueryResult();
+        addCondition("p.forsale = 'Y'")->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid' . $slogin . ' AND action IN (\'open\'))')->addGroupBy('p.productid')->addOrderBy('position ASC, cross_verify_count DESC')->setLimit('1')->Execute()->getQueryResult();
         if (!empty($aNextProducts)) {
             foreach ($aNextProducts as $aNextProduct) {
                 $oProduct = new classProduct(['productid' => $aNextProduct['productid']]);
