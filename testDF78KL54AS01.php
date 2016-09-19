@@ -1,19 +1,24 @@
 <?php
 session_start();
 
+ini_set('memory_limit', '512M');
+set_time_limit(0);
 
 require "./top.inc.php";
 require "./init.php";
 
-x_load('froogle');
-x_load('backoffice');
-x_load('taxes');
-
 global $xcart_dir, $config;
+include_once $xcart_dir.'/include/class/classSQLBuilder.php';
 include_once $xcart_dir.'/include/class/classProduct.php';
 
-$oProduct = new classProduct(['productid'=>400609]);
-$a = $oProduct->getProductsAvailOnAmazonParentWithChild(12);
-foreach ($a as $o) {
-    echo $o['oProduct']->getProductId(). ' -> '.$o['qty'].'<br>';
+$oSQL = new classSQLBuilder();
+$aProducts = $oSQL->addSelect('p.productid, p.upc')->addFromTable('products','p')->addInnerJoin('supplier_feeds','f',' f.manufacturerid = p.manufacturerid')->
+addCondition("p.forsale='Y'")->addCondition("f.enabled = 'Y'")->addGroupBy('p.productid')->Execute()->getQueryResult();
+foreach ($aProducts as $aProduct) {
+    $newUPC = classProduct::calculateUPC($aProduct['upc']);
+    if ($newUPC != $aProduct['upc']) {
+        echo $aProduct['productid']." - ". $aProduct['upc'].'('.strlen($aProduct['upc']).')'.' -> '.$newUPC.'('.strlen($newUPC).')<br>';
+        //func_array2update('products', ['upc'=>$newUPC], 'productid='.$aProduct['productid']);
+    }
 }
+
