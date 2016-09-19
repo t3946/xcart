@@ -374,7 +374,7 @@ class classProduct extends classData
     public function getChildProducts()
     {
         $aProducts = [];
-        $aChildProducts = $this->oSQL->init()->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition('clone_parent_productid = '.$this->getProductId())->Execute()->getQueryResult();
+        $aChildProducts = $this->oSQL->init()->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition('clone_parent_productid = ' . $this->getProductId())->Execute()->getQueryResult();
         if (!empty($aChildProducts)) {
             foreach ($aChildProducts as $aChild) {
                 $oChildProduct = new classProduct();
@@ -392,7 +392,7 @@ class classProduct extends classData
     {
         $oParentProduct = null;
         if ($this->getField('clone_parent_productid')) {
-            $oParentProduct = new classProduct(['productid'=>$this->getField('clone_parent_productid')]);
+            $oParentProduct = new classProduct(['productid' => $this->getField('clone_parent_productid')]);
         }
         return $oParentProduct;
     }
@@ -415,7 +415,7 @@ class classProduct extends classData
                 if ($this->isParent()) { //parent
                     $aChildProducts = $this->getChildProducts();
                     if (!empty($aChildProducts)) {
-                        foreach($aChildProducts as $oChildProduct) {
+                        foreach ($aChildProducts as $oChildProduct) {
                             if ($oChildProduct->getAmazonFBAAvailReal() > 0) {
                                 if ($oChildProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
                                     $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $iShipNeed];
@@ -425,7 +425,7 @@ class classProduct extends classData
                                     $iShipNeed -= $oChildProduct->getAmazonFBAAvailReal();
                                 }
                             }
-                            if ($iShipNeed <=0) break;
+                            if ($iShipNeed <= 0) break;
                         }
                     }
                 } else { //child
@@ -442,7 +442,7 @@ class classProduct extends classData
                     if ($iShipNeed > 0) {
                         $aChildProducts = $oParentProduct->getChildProducts();
                         if (!empty($aChildProducts)) {
-                            foreach($aChildProducts as $oChildProduct) {
+                            foreach ($aChildProducts as $oChildProduct) {
                                 if ($oChildProduct->getProductId() != $this->getProductId() && $oChildProduct->getAmazonFBAAvailReal() > 0) {
                                     if ($oChildProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
                                         $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $iShipNeed];
@@ -452,7 +452,7 @@ class classProduct extends classData
                                         $iShipNeed -= $oChildProduct->getAmazonFBAAvailReal();
                                     }
                                 }
-                                if ($iShipNeed <=0) break;
+                                if ($iShipNeed <= 0) break;
                             }
                         }
                     }
@@ -462,4 +462,66 @@ class classProduct extends classData
         return $aProductAmazonArray;
     }
 
+    private static function UPC_calculate_check_digit($upc_code)
+    {
+        $sum = 0;
+        $mult = 3;
+        for ($i = (strlen($upc_code) - 2); $i >= 0; $i--) {
+            $sum += $mult * $upc_code[$i];
+            if ($mult == 3) {
+                $mult = 1;
+            } else {
+                $mult = 3;
+            }
+        }
+        if ($sum % 10 == 0) {
+            $sum = ($sum % 10);
+        } else {
+            $sum = 10 - ($sum % 10);
+        }
+        return $sum;
+    }
+
+    private static function isISBN($sCode)
+    {
+        $bResult = false;
+        if (in_array(strlen($sCode) ,[10,13])) {
+            if (in_array(substr($sCode,0,3), [978,979])){
+                $bResult = true;
+            }
+        }
+        return $bResult;
+    }
+
+    public static function calculateUPC($upc_code)
+    {
+        $upc_code = preg_replace("/[^0-9]/", "", $upc_code);
+        switch (strlen($upc_code)) {
+            case 8:
+            case 14:
+                $cd = self::UPC_calculate_check_digit($upc_code);
+                if ($cd != $upc_code[strlen($upc_code) - 1]) {
+                    return substr($upc_code,0,-1).$cd;
+                } else {
+                    return $upc_code;
+                }
+                break;
+            case 11:
+            case 12:
+            case 13:
+                $cd = self::UPC_calculate_check_digit($upc_code);
+                if ($cd != $upc_code[strlen($upc_code) - 1]) {
+                    if (!self::isISBN($upc_code) || (self::isISBN($upc_code) && strlen($upc_code)==12)) {
+                        $cd = self::UPC_calculate_check_digit($upc_code . "1");
+                        return $upc_code . $cd;
+                    } else {
+                        return "";
+                    }
+                } else {
+                    return $upc_code;
+                }
+                break;
+        }
+        return "";
+    }
 }
