@@ -18,7 +18,7 @@ foreach ($aProducts as $aProduct) {
     $newUPC = classProduct::calculateUPC($aProduct['upc']);
     if ($newUPC != $aProduct['upc']) {
         echo $aProduct['productid']." - ". $aProduct['upc'].'('.strlen($aProduct['upc']).')'.' -> '.$newUPC.'('.strlen($newUPC).')<br>';
-        //func_array2update('products', ['upc'=>$newUPC], 'productid='.$aProduct['productid']);
+        func_array2update('products', ['upc'=>$newUPC], 'productid='.$aProduct['productid']);
     }
 }
 
