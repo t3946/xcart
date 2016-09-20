@@ -41,7 +41,7 @@ if ($REQUEST_METHOD == 'POST') {
                 }
                 $oProductQueue->updateField('position', $test_position[$idx]);
                 if ($oProductQueue->getProductId()) {
-
+                    $oProductQueue->updateStatus($correct_answer[$idx]);
                 } else {
                     if (!empty($correct_answer)) {
                         if (empty($sAsin) && in_array($correct_answer[$idx], [classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH, classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH])) {
