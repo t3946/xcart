@@ -47,7 +47,7 @@
         </tr>
         <tr class="TableSubHead">
             <td>
-                <b>Total number of products processed including 'Match', 'Not sure', and 'Does not match':</b>
+                <b>Total number of products processed including 'Match', 'Not sure', and 'Does NOT match':</b>
             </td>
             <td>
                 {$oCustomer->getAmazonProductProcessedCount()}
@@ -64,14 +64,8 @@
     </table>
     <br/>
     <br/>
-    {if ($aPreviousBatches)}
-        {foreach from=$aPreviousBatches item=oPreviousBatch}
-            {if $oPreviousBatch->isTest() && $oPreviousBatch->isTestFailed()}
-                {assign var=bAccountBlocked value="Y"}
-            {/if}
-        {/foreach}
-    {/if}
-    {if $bAccountBlocked && $bAccountBlocked == 'Y'}
+
+    {if $isAccountSuspended}
         <div style="font-size: 1.5em; text-align: center; color:red; font-weight: bold;">
             You've made too many mistakes on control products. Therefore your account has been suspended. <br>Please contact the manager.
         </div>

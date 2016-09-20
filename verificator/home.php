@@ -24,6 +24,7 @@ $smarty->assign('aCurrentBatches', $aCurrentBatches);
 $aPreviousBatches = $oBatches->getPreviousBatches();
 $smarty->assign('aPreviousBatches', $aPreviousBatches);
 
+$smarty->assign('isAccountSuspended', $oBatches->isAccountSuspended());
 
 if (!empty($login))
     $smarty->assign("location", $location);
