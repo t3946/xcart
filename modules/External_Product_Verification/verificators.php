@@ -6,7 +6,7 @@ require_once $xcart_dir . "/modules/External_Product_Verification/include/classE
 $smarty->assign("main", "verificators");
 
 if (empty($active)) {
-    $active = 'all';
+    $active = 'Y';
 }
 $oClassCustomer = new classCustomer();
 $aCustomers = $oClassCustomer->getCustomersByType('V', $active);
