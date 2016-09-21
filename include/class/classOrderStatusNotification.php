@@ -9,7 +9,7 @@ class classOrderStatusNotification extends classMail
 
     public function __construct($aParams = [])
     {
-        $this->aPrimaryKeys = ['code', 'number'];
+        $this->aPrimaryKeys = ['code'];
         $this->sPrimaryTable = 'order_status_notifications';
         parent::__construct($aParams);
 
@@ -23,7 +23,7 @@ class classOrderStatusNotification extends classMail
     {
         $aOrderNotifications = null;
         $oSQL = new classSQLBuilder();
-        $aStatuses = $oSQL->addSelect('*')->addFromTable('order_status_notifications')->addCondition("code='$sStatus'")->addOrderBy('number')->Execute()->getQueryResult();
+        $aStatuses = $oSQL->addSelect('*')->addFromTable('order_status_notifications')->addCondition("code='$sStatus'")->Execute()->getQueryResult();
         if (!empty($aStatuses)) {
             foreach ($aStatuses as $aStatus) {
                 $oStatus = new classOrderStatusNotification();
