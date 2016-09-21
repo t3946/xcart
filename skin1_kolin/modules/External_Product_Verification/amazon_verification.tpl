@@ -45,6 +45,9 @@
                 <td><input type="checkbox" name="etalon_delete[{$oProduct->getProductId()}]"/></td>
             </tr>
         {/foreach}
+        <tr>
+            <td colspan="7"><hr/></td>
+        </tr>
     {/if}
     <tr id="add_test_sku_row">
         <td id="add_test_sku_box_0" width="3%"> </td>
