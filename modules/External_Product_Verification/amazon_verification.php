@@ -22,8 +22,9 @@ if ($REQUEST_METHOD == 'POST') {
                     $top_message["content"] = func_get_langvar_by_name("lbl_ASIN_not_entered");
                     $top_message["type"] = "E";
                 } else {
-                    $oProductQueue->updateFields(['position' => $position[$ikey], 'status' => $answer[$ikey], 'asin' => $sAsin]);
+                    $oProductQueue->updateFields(['status' => $answer[$ikey], 'asin' => $sAsin]);
                 }
+                $oProductQueue->updateField('position', $position[$ikey]);
             }
         }
     }
