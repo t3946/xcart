@@ -34,6 +34,10 @@ class classOrder extends classData
     private $aOrderProductsManufactueres = null;
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
+    /**
+     * @var classStoreFront
+     */
+    private $oStoreFront = null;
 
     public function __construct($aOrderData = [])
     {
@@ -49,9 +53,8 @@ class classOrder extends classData
         if (is_array($iId)) {
             $oOrder = new self();
             $oOrder->fillPrimaryTableValues($iId);
-        }
-        else if (is_numeric($iId)) {
-            $oOrder = new self(['orderid'=>$iId]);
+        } else if (is_numeric($iId)) {
+            $oOrder = new self(['orderid' => $iId]);
         } else if (is_null($iId)) {
             $oOrder = new self();
         }
@@ -501,7 +504,7 @@ class classOrder extends classData
             $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
         }
         if (!empty($this->aAdditionalFees)) {
-            foreach($this->aAdditionalFees as $aAFee) {
+            foreach ($this->aAdditionalFees as $aAFee) {
                 $fResult += floatval($aAFee['additional_fee_value']);
             }
         }
@@ -541,7 +544,7 @@ class classOrder extends classData
                 $fResult += $oOrderGroup->getShippingHST();
             }
         }
-        return floatval($fResult+$this->getOrderShippingPST());
+        return floatval($fResult + $this->getOrderShippingPST());
     }
 
     public function getOrderShippingPST()
@@ -571,13 +574,13 @@ class classOrder extends classData
 
     public function addOrderTotaNet($fSumma)
     {
-        $this->setField('total_net',floatval($this->getField('total_net'))+$fSumma);
+        $this->setField('total_net', floatval($this->getField('total_net')) + $fSumma);
         return $this;
     }
 
     public function addOrderTotal($fSumma)
     {
-        $this->setField('total',floatval($this->getField('total'))+$fSumma);
+        $this->setField('total', floatval($this->getField('total')) + $fSumma);
         return $this;
     }
 
@@ -596,20 +599,20 @@ class classOrder extends classData
 
     public function getOrderTotalPST()
     {
-       /* $fResult = 0;
-        $this->fetchOrderGroups();
-        if (!empty($this->aOrderGroups)) {
-            foreach ($this->aOrderGroups as $oOrderGroup) {
-                $fResult += $oOrderGroup->getTotalPST();
-            }
-        }
-        return $fResult;*/
+        /* $fResult = 0;
+         $this->fetchOrderGroups();
+         if (!empty($this->aOrderGroups)) {
+             foreach ($this->aOrderGroups as $oOrderGroup) {
+                 $fResult += $oOrderGroup->getTotalPST();
+             }
+         }
+         return $fResult;*/
         return $this->getField('total_pst');
     }
 
     public function addOrderTotalGross($fSumma)
     {
-        $this->setField('total_gross',floatval($this->getField('total_gross'))+$fSumma);
+        $this->setField('total_gross', floatval($this->getField('total_gross')) + $fSumma);
         return $this;
     }
 
@@ -665,7 +668,7 @@ class classOrder extends classData
 
     public function getProductPriceGross()
     {
-        return floatval($this->getProductPriceNet()+$this->getProductPriceHSTPST());
+        return floatval($this->getProductPriceNet() + $this->getProductPriceHSTPST());
     }
 
     public function getPaymentMethodId()
@@ -726,12 +729,24 @@ class classOrder extends classData
                         $fTotalRetailTrustGroup += $oOrderDetail->getRetailTrustPrice();
                     }
                     $oOrderGroup->addTotalNet($fTotalRetailTrustGroup)->addTotalGross($fTotalRetailTrustGroup)->_update();
-                    $fTotalRetailTrust +=$fTotalRetailTrustGroup;
+                    $fTotalRetailTrust += $fTotalRetailTrustGroup;
                 }
             }
             $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
         }
         return $this;
+    }
+
+    public function getOrderStoreFront()
+    {
+        if (is_null($this->oStoreFront)) {
+            $aOrderProducts = $this->getOrderProducts();
+            if (!empty($aOrderProducts)) {
+                $oProduct = reset($aOrderProducts);
+                $this->oStoreFront = $oProduct->getStoreFront();
+            }
+        }
+        return $this->oStoreFront;
     }
 
 }

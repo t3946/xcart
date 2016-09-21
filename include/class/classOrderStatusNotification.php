@@ -1,9 +1,8 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir . "/include/class/classData.php";
-require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+require_once $xcart_dir . "/include/class/classMail.php";
 
-class classOrderStatusNotification extends classData
+class classOrderStatusNotification extends classMail
 {
     private $sSubject = null;
     private $sBody = null;
@@ -33,19 +32,6 @@ class classOrderStatusNotification extends classData
             }
         }
         return $aOrderNotifications;
-    }
-
-    public function getEmailBody()
-    {
-        return $this->getField('email_body');
-    }
-
-    public function setBody(classOrder $oOrder)
-    {
-        if (!empty($oOrder)) {
-            $this->setField('email_body', str_replace("{{c-fullname}}", $oOrder->getFirstName(), $this->getEmailBody()));
-        }
-        $this->setField('email_body',func_eol2br($this->getEmailBody()));
     }
 
     public function isEnabled()

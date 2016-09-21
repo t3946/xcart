@@ -3745,6 +3745,25 @@ function func_send_order_status_notification($orderid, $status)
 			}
 		}
 	}
+	if ($status == 'N') {
+		global $xcart_dir;
+		require_once $xcart_dir.'/include/class/classMail.php';
+		$oOrder = new classOrder(['orderid'=>$orderid]);
+		$oMail = new classMail();
+		$oMail->setBody($config['Retail_Trust']['retail_trust_message'])->replaceBody($oOrder);
+		$oMail->setSubject($config['Retail_Trust']['retail_trust_subject'])->replaceSubject($oOrder);
+		$mail_smarty->assign('body', $oMail->getEmailBody());
+		$mail_smarty->assign('subject', $oMail->getSubject());
+		$mail_smarty->assign('type', 'C');
+		func_send_mail($order_data['userinfo']['email'], "mail/compose_message_subj.tpl", "mail/compose_message.tpl", $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid,true,true);
+		$mail_smarty->assign('type', 'A');
+		$to = $config['Company']['orders_department'];
+		$from = $order_data['userinfo']['firstname'] . "<" . $config['Company']['orders_department'] . ">";
+		$reply_to = $order_data['userinfo']['firstname'] . "<" . $order_data['userinfo']['email'] . ">";
+		$oMail->setSubject($config['Retail_Trust']['retail_trust_bcc_subject'])->replaceSubject($oOrder);
+		$mail_smarty->assign('subject', $oMail->getSubject());
+		func_send_mail($to, "mail/compose_message_subj.tpl", "mail/compose_message.tpl",$from, false, false, false, false, $reply_to,'N',false,true,true);
+	}
 }
 
 function func_get_order_status_type($status) {
@@ -3872,7 +3891,8 @@ function func_get_order_notification($status, $order_data="") {
 			$oOrder = new classOrder(['orderid'=>$order_data['order']['orderid']]);
 		}
 		foreach ($aOrderNotifications as &$oOrderNotification) {
-			$oOrderNotification->setBody($oOrder);
+			$oOrderNotification->replaceBody($oOrder);
+			$oOrderNotification->replaceSubject($oOrder);
 		}
 	}
 	return $aOrderNotifications;

@@ -22,7 +22,8 @@ vim: set ts=2 sw=2 sts=2 et:
             force_br_newlines: true,
             force_p_newlines: false,
             convert_urls: false,
-            relative_urls: false
+            relative_urls: false,
+            apply_source_formatting : true
         });
     }
     initMCEexact();
