@@ -165,9 +165,11 @@ function func_send_mail($to, $subject_template, $body_template, $from, $to_admin
 	if ($config["Email"]["html_mail"] == "Y" && !$encrypt_mail) {
 		if (file_exists($mail_smarty->template_dir."/mail/html/".basename($body_template))) {
 			$mail_smarty->assign("mail_body_template","mail/html/".basename($body_template));
-			$mail_message = func_display("mail/html/html_message_template.tpl",$mail_smarty,false);
+			if (!$only_html) {
+				$mail_message = func_display("mail/html/html_message_template.tpl", $mail_smarty, false);
 
-			list($mail_message, $files) = func_attach_images($mail_message);
+				list($mail_message, $files) = func_attach_images($mail_message);
+			}
 
 #
 ##

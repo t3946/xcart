@@ -141,6 +141,10 @@ if ($option == 'Product_Page') {
 	include $xcart_dir . '/include/product_page_options.php';
 }
 
+if ($option == 'Retail_Trust') {
+	include $xcart_dir . '/include/retail_trust_options.php';
+}
+
 if ($option == "User_Profiles") {
 	include "./user_profiles.php";
 }

@@ -141,16 +141,16 @@ class classOrder extends classData
     }
 
     /**
-     * @return classProduct
+     * @return classOrderDetail[]
      */
-    public function getOrderDetailsProductsWithRetailTrust()
+    public function getOrderDetailsWithProductsRetailTrust()
     {
         $aResult = [];
         $this->fetchOrderDetails();
         if (!empty($this->aOrderDetails)) {
             foreach ($this->aOrderDetails as $oOrderDetail) {
-                if ($oOrderDetail->getOrderDetailProduct()->isRetailTrustEnabled())
-                    $aResult[] = $oOrderDetail->getOrderDetailProduct();
+                if ($oOrderDetail->getOrderDetailProduct()->isRetailTrustEnabled() && $this->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() > 1)
+                    $aResult[] = $oOrderDetail;
             }
         }
         return $aResult;

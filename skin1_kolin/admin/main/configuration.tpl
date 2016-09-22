@@ -988,6 +988,9 @@ class="new_editor" rows="30" cols="60"
 {if $option eq "Product_Page"}
 	{include file="admin/main/product_page_options.tpl"}
 {/if}
+{if $option eq "Retail_Trust"}
+  {include file="admin/main/retail_trust_config.tpl"}
+{/if}
 <tr>
 <td colspan="3"><br /><br />
 <input type="submit" value=" {$lng.lbl_save|strip_tags:false|escape} "  />

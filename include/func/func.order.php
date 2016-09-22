@@ -3745,7 +3745,7 @@ function func_send_order_status_notification($orderid, $status)
 			}
 		}
 	}
-	if ($status == 'N') {
+	if ($status == $config['retail_trust_order_status']) {
 		global $xcart_dir;
 		require_once $xcart_dir.'/include/class/classMail.php';
 		$oOrder = new classOrder(['orderid'=>$orderid]);
