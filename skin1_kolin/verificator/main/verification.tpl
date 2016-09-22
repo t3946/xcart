@@ -11,6 +11,7 @@
     <script src="{$SkinDir}/js/semantic/components/modal.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/transition.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/progress.min.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/js/semantic/components/popup.min.js" type="text/javascript"></script>
 
     {literal}
     <script type="text/javascript">
@@ -137,6 +138,9 @@
                     }
                 }
             });
+
+            $('#make_conclusion_button').popup({on: 'click'}).click(function(){return false;});
+
             $('#original_product').on('click', '', function () {
                 clickOriginalProduct($(this));
                 var sstep = '',
@@ -346,7 +350,7 @@
         </div>
         <div class="buttons-right">
             <div id="conclusion_buttons" style="display:none;">
-                <span style="font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</span>
+                <a data-content="{$config.Amazon_Verification.amazon_verification_make_conclusion_popup_message}" id="make_conclusion_button" href="#" style="border-bottom: 1px dotted; color: #0000ff; text-decoration: none; font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</a>
 
                 <div id="action_buttons_block" class="ui buttons select" data-asin=""
                      data-batch-id="{$oVerificationBatch->getBatchId()}"
