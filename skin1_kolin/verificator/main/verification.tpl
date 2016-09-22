@@ -139,7 +139,7 @@
                 }
             });
 
-            $('#make_conclusion_button').popup({on: 'click'});
+            $('#make_conclusion_button').popup({on: 'click'}).click(function(){return false;});
 
             $('#original_product').on('click', '', function () {
                 clickOriginalProduct($(this));
