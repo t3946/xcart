@@ -137,17 +137,17 @@ class classOrderDetail extends classData
 
     public function calculateRetailTrustPricePerProduct()
     {
-        return floatval(round(($this->getTotalProductPrice() * ($this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() - 1))/$this->getAmount(), 2));
+        return floatval(round(($this->getPrice() * ($this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() - 1)), 2));
     }
 
     public function calculateRetailTrustPrice()
     {
-        return floatval(round($this->getTotalProductPrice() * ($this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() - 1), 2));
+        return floatval(round($this->calculateRetailTrustPricePerProduct() * $this->getAmount(), 2));
     }
 
     private function fetchOrderInstance()
     {
-        $this->oOrder = new classOrder(['orderid'=>$this->getOrderId()]);
+        $this->oOrder = new classOrder(['orderid' => $this->getOrderId()]);
     }
 
     public function getOrderInstance()

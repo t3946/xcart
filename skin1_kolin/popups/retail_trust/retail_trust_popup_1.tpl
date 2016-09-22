@@ -44,7 +44,7 @@
             <section id="items_table">
                 <form name="retail_form" id="retail_form">
                     <input type="hidden" id="retail_trust_order_id" name="retail_trust_order_id" value="{$oOrder->getOrderId()}"/>
-                    <table>
+                    <table id="items_table_table">
                         <caption>Purchase Retail Trust For:</caption>
                         <thead>
                         <tr>
@@ -55,7 +55,7 @@
                         </thead>
                         <tfoot>
                         <tr>
-                            <td colspan="3">Retail Trust total: US$ 63.54</td>
+                            <td colspan="3">Retail Trust total: {include file="currency.tpl" value=$oOrder->calculateOrderRetailTrustProductsTotal()}</td>
                         </tr>
                         </tfoot>
                         <tbody>
@@ -63,7 +63,7 @@
                             {assign var=oRetailTrustDetailProduct value=$oRetailTrustDetail->getOrderDetailProduct()}
                             <tr>
                                 <td>
-                                    <input type="checkbox" value="{$oRetailTrustDetailProduct->getProductId()}" name="retail_trust_item" id="retail_item{$smarty.foreach.retailTrustForeach.index}"/>
+                                    <input type="checkbox" value="{$oRetailTrustDetail->getOrderDetailId()}" name="retail_trust_item" id="retail_item{$smarty.foreach.retailTrustForeach.index}"/>
                                     <label for="retail_item{$smarty.foreach.retailTrustForeach.index}">{$oRetailTrustDetailProduct->getProductName()}</label>
                                     <div class="sum">
                                        {$oRetailTrustDetail->getAmount()}  х  {include file="currency.tpl" value=$oRetailTrustDetail->calculateRetailTrustPricePerProduct()}  =  <strong> {include file="currency.tpl" value=$oRetailTrustDetail->calculateRetailTrustPrice()}</strong>

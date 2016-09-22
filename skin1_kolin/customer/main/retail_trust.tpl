@@ -36,14 +36,12 @@
                         ajax_action: 'add_retail_trust'
                     },
                     function (data) {
-                        if (data.result==false)
-                            alert('Error verification order status change!');
+                        $.featherlight('#retail_trust_message_after_close', {
+                            afterClose: function () {
+                            }
+                        })
                     });
-            $.featherlight('#retail_trust_message_after_close', {
-                    afterClose: function () {
-                        alert('Done');
-                    }
-                })
+
         });
     });
     {/literal}

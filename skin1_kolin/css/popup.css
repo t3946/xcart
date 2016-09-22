@@ -215,6 +215,10 @@
   padding: 8px 8px 3.5px 8px;
   border-top: 1px solid #e1e1e1; }
 
+input[type="checkbox"] {
+  display: none;
+}
+
 input[type="checkbox"] + label::before {
   content: "";
   display: inline-block;
@@ -234,7 +238,7 @@ label:hover {
 .sum {
   margin-top: 4.5px; }
 
-.item_descr .item_cont div, .item_descr div.sum {
+.item_descr .item_cont div, .item_descr div.sum, #items_table label, #items_table div.sum {
   font-size: 0.8125em !important; }
 
 .item_descr:hover {
@@ -331,6 +335,11 @@ label:hover {
   color: #54ac19;
   font-weight: bold; }
 
+#items_table_table {
+  width:97%;
+}
+.featherlight-content { margin:0;}
+
 @media only screen and (min-width: 527px) {
 
   #wrapper {
@@ -384,7 +393,7 @@ label:hover {
     margin-top: 19px; }
 
   #retail_block #fig_block figure {
-    width: 32.7%;
+    width: 32.6%;
     display: inline-block;
     vertical-align: top; }
 
