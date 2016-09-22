@@ -68,6 +68,7 @@ if ($REQUEST_METHOD == 'POST') {
         }
     }
     db_query("UPDATE $sql_tbl[config] SET value='" . $amazon_verification_maximum_mistakes . "' WHERE name='amazon_verification_maximum_mistakes' AND category='$option'");
+    db_query("UPDATE $sql_tbl[config] SET value='" . $amazon_verification_make_conclusion_popup_message . "' WHERE name='amazon_verification_make_conclusion_popup_message' AND category='$option'");
 
     if (empty($top_message)) {
         $top_message["content"] = 'Done.';

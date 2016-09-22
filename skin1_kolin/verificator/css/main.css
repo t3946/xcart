@@ -183,3 +183,6 @@ iframe
 .ui.modal .actions > .button.positive{
     background-color: #e0e1e2!important;
 }
+.ui.popup {
+    z-index: 13000;
+}
