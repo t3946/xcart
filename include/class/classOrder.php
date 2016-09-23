@@ -254,7 +254,7 @@ class classOrder extends classData
 
     public function getDisplayOrderNumber()
     {
-        return $this->getField('order_prefix') . $this->getOrderId();
+        return $this->getOrderPrefix() . $this->getOrderId();
     }
 
     public function getOrderModifyURL()

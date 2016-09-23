@@ -1,10 +1,11 @@
 <?php
+require "./auth.php";
 global $xcart_dir, $config;
-require_once $xcart_dir . "/include/class/classOrderDetail.php";
+require_once $xcart_dir . '/include/class/classOrderDetail.php';
 require_once $xcart_dir.'/include/class/classMail.php';
 require_once $xcart_dir.'/include/class/classOrderStatusNotification.php';
 require_once $xcart_dir.'/include/class/classOrder.php';
-require "./auth.php";
+
 
 switch ($ajax_action) {
     case 'add_retail_trust':
