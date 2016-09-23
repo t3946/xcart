@@ -80,7 +80,7 @@
         </div>
         <footer id="main_footer">
             <div class="full_terms">
-                <a href="#">Full Terms & Conditions</a>
+                <a target="_blank" href="/page/44/retail-trust-full-terms-and-coditions/">Full Terms & Conditions</a>
             </div>
             <div id="order">
                 <a href="#" class="thanks">No, thanks</a>

@@ -89,6 +89,14 @@ class classOrderStatusNotification extends classMail
         $mail_smarty->assign('order_notification', $this->getFields());
         $mail_smarty->assign('oOrder', $this->oOrder);
 
-        func_send_mail($this->oOrder->getCustomerEntity()->getEmail(), 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
+        func_send_mail($this->oOrder->getEmail(), 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
+
+        $mail_smarty->assign('type', 'A');
+        $mail_smarty->assign("show_order_details", "Y");
+        $to = $config['Company']['orders_department'];
+        $from = $this->oOrder->getFirstName() . "<" . $config['Company']['orders_department'] . ">";
+        $reply_to = $this->oOrder->getFirstName() . "<" . $this->oOrder->getEmail() . ">";
+
+        func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
     }
 }

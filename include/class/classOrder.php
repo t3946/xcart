@@ -349,6 +349,12 @@ class classOrder extends classData
         return $this->getField('firstname');
     }
 
+    public function getEmail()
+    {
+        return $this->getField('email');
+    }
+
+
     public function getShippingFirstName()
     {
         return $this->getField('s_firstname');

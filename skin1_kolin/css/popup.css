@@ -355,6 +355,9 @@ label:hover {
 .featherlight-content { margin:0;}
 
 @media only screen and (min-width: 527px) {
+  #retail_trust_message label.ui-btn-text, #retail_trust_message label.ui-btn-text:hover{
+    font-size: 0.875rem;
+  }
 
   #retail_trust_message_after_close {
     min-width:700px;
@@ -646,7 +649,11 @@ label:hover {
   background: none;
   margin:0;
   padding:0;
-  font: 16px LatoRegular, sans-serif;
+  font-family: LatoRegular, sans-serif;
+  font-weight: normal;
+}
+#retail_trust_message label span.ui-btn-text, #retail_trust_message label span.ui-btn-text:hover{
+  font-size: 0.8125rem;
 }
 #retail_trust_message label > span {
   padding:0;
