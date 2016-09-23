@@ -9,6 +9,7 @@ require_once $xcart_dir . "/include/class/classPaymentMethod.php";
 require_once $xcart_dir . "/include/class/classManufacturers.php";
 require_once $xcart_dir . "/include/class/classOrderTransactions.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+require_once $xcart_dir . "/include/class/classCustomer.php";
 
 class classOrder extends classData
 {
@@ -34,6 +35,10 @@ class classOrder extends classData
     private $aOrderProductsManufactueres = null;
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
+    /**
+     * @var classCustomer
+     */
+    private $oCustomer = null;
     /**
      * @var classStoreFront
      */
@@ -725,6 +730,7 @@ class classOrder extends classData
         $this->aOrderProductsManufactueres = null;
         $this->aAdditionalFees = null;
         $this->oPaymentMethod = null;
+        $this->oCustomer = null;
 
     }
 
@@ -746,6 +752,7 @@ class classOrder extends classData
                 }
             }
             $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
+            $this->_refresh();
         }
         return $this;
     }
@@ -760,6 +767,19 @@ class classOrder extends classData
             }
         }
         return $this->oStoreFront;
+    }
+
+    public function getLogin()
+    {
+        return $this->getField('login');
+    }
+
+    public function getCustomerEntity()
+    {
+        if (is_null($this->oCustomer)) {
+            $this->oCustomer = new classCustomer(['login'=>$this->getLogin()]);
+        }
+        return $this->oCustomer;
     }
 
 }

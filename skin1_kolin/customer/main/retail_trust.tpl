@@ -9,12 +9,8 @@
     </div>
 </div>
 <div style='display:none;'>
-    <div id='retail_trust_message_after_close' style='padding:10px; background:#fff;'>
-        <p><strong>This content comes from a hidden element on this page.</strong></p>
-
-        <p>The inline option preserves bound JavaScript events and changes, and it puts the content back where it came
-            from when it is closed.</p>
-
+    <div id='retail_trust_message_after_close' style='background:#fff;'>
+        {include file='popups/retail_trust/retail_trust_popup_2.tpl'}
     </div>
 </div>
 <script>
@@ -36,11 +32,16 @@
                         ajax_action: 'add_retail_trust'
                     },
                     function (data) {
-                        $.featherlight('#retail_trust_message_after_close', {
-                            afterClose: function () {
-                            }
-                        })
-                    });
+                        if (data && data.retail_price !='') {
+                            $('#retail_price_value').html(data.retail_price);
+                            $.featherlight('#retail_trust_message_after_close', {
+                                otherClose: "a#close",
+                                closeIcon: null,
+                                afterClose: function () {
+                                }
+                            })
+                        }
+                    }, 'json');
 
         });
     });

@@ -205,4 +205,14 @@ class classCustomer extends classData
     {
         return $a->getAmazonBatchesCompletedCount() < $b->getAmazonBatchesCompletedCount();
     }
+
+    public function getLanguage()
+    {
+        return $this->getField('language');
+    }
+
+    public function getEmail()
+    {
+        return $this->getField('email');
+    }
 }
