@@ -3694,15 +3694,19 @@ function func_order_details_translate($order_details, $force=false) {
 #
 function func_send_order_status_notification($orderid, $status)
 {
-	global $sql_tbl, $mail_smarty, $config, $statuses, $attach_pdf_invoice;
+	global $sql_tbl, $mail_smarty, $config, $statuses, $attach_pdf_invoice, $xcart_dir;
 
 	$order_data = func_order_data($orderid);
 
 	$aorder_notification = func_get_order_notification($status, $order_data);
+	require_once $xcart_dir . "/include/class/classOrder.php";
+	$oOrder = new classOrder(['orderid'=>$orderid]);
+	$mail_smarty->assign('oOrder', $oOrder);
 	if (!empty($aorder_notification)) {
 		foreach ($aorder_notification as $oOrderNotification) {
 			if ($oOrderNotification->isEnabled()) {
 				$order_notification = $oOrderNotification->getFields();
+
 
 				$mail_smarty->assign('order_notification', $order_notification);
 
