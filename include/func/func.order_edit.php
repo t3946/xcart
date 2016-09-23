@@ -715,8 +715,11 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 ###
 ##
 #
-
-			$query_data = array(
+			$query_data = [];
+			if (!empty($product['itemid'])) {
+				$query_data = func_query_first("SELECT * FROM $sql_tbl[order_details] WHERE itemid='$product[itemid]'");
+			}
+			$query_data_tmp = array(
 				"itemid" => $product['itemid'],
 				"orderid" => $cart['orderid'],
 				"productid" => $product['productid'],
@@ -729,7 +732,10 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 				"productcode" => $product['productcode'],
 				"product" => $product['product']
 			);
-			$query_data = func_array_map("addslashes", $query_data);
+			$query_data_tmp = func_array_map("addslashes", $query_data_tmp);
+			$query_data = array_merge($query_data, $query_data_tmp);
+
+
 
 			if (@$user_account["flag"] != "FS") {
 
@@ -753,6 +759,7 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 
 				$items[] = $products[$pk]['itemid'] = func_array2insert("order_details", $query_data, true);
 			}
+
 
 	                if (!isset($back_products[$product['manufacturerid']])) {
         	            $back_products[$product['manufacturerid']] = -1;
@@ -936,7 +943,6 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
             }
 				
 		}
-       
 
 #
 ##
@@ -1095,6 +1101,7 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 */
         }
     }
+
 }
 
 #

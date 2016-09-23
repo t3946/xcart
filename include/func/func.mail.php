@@ -53,7 +53,7 @@ function func_mail_enc_base64(&$content) {
 # Send mail abstract function
 # $from - from/reply-to address
 #
-function func_send_mail($to, $subject_template, $body_template, $from, $to_admin, $crypted=false, $preg_from=false, $send_anyway=false, $reply_to_email="", $files_attached='N', $orderid=false, $check_from_to_email=true) {
+function func_send_mail($to, $subject_template, $body_template, $from, $to_admin, $crypted=false, $preg_from=false, $send_anyway=false, $reply_to_email="", $files_attached='N', $orderid=false, $check_from_to_email=true, $only_html = false) {
 	global $mail_smarty, $sql_tbl;
 	global $config;
 	global $current_language, $store_language, $shop_language;
@@ -165,9 +165,11 @@ function func_send_mail($to, $subject_template, $body_template, $from, $to_admin
 	if ($config["Email"]["html_mail"] == "Y" && !$encrypt_mail) {
 		if (file_exists($mail_smarty->template_dir."/mail/html/".basename($body_template))) {
 			$mail_smarty->assign("mail_body_template","mail/html/".basename($body_template));
-			$mail_message = func_display("mail/html/html_message_template.tpl",$mail_smarty,false);
+			if (!$only_html) {
+				$mail_message = func_display("mail/html/html_message_template.tpl", $mail_smarty, false);
 
-			list($mail_message, $files) = func_attach_images($mail_message);
+				list($mail_message, $files) = func_attach_images($mail_message);
+			}
 
 #
 ##
@@ -291,6 +293,10 @@ function func_send_mail($to, $subject_template, $body_template, $from, $to_admin
         	if ($cell) {
 	            $msgs['content'][] = $cell;
 	        }
+	}
+
+	if ($only_html) {
+		array_shift($msgs['content'][0]['content']);
 	}
 
 	list($message_header, $mail_message) = func_parse_mail($msgs);

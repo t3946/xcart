@@ -50,6 +50,11 @@ class classData
         $this->fillPrimaryTableInfo();
     }
 
+    public function _update()
+    {
+        func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, $this->getWhereClause());
+    }
+
     protected function fillPrimaryTableInfo()
     {
         if (!empty($this->aPrimaryKeysValues)) {
@@ -106,10 +111,6 @@ class classData
         $aToUpdate[$sFieldName] = $sNewValue;
         if (empty($this->aPrimaryKeysValues))
             throw new Exception('Empty primary keys values for update field');
-        $aKeyArray = $this->aPrimaryKeysValues;
-        array_walk($aKeyArray, function (&$a, $b) {
-            $a = $b . ' = "' . $a . '"';
-        });
         func_array2update($this->sPrimaryTable, $aToUpdate, $this->getWhereClause());
         return $this;
     }
@@ -125,7 +126,7 @@ class classData
         return $this;
     }
 
-    private function getWhereClause()
+    protected function getWhereClause()
     {
         $aKeyArray = $this->aPrimaryKeysValues;
         array_walk($aKeyArray, function (&$a, $b) {

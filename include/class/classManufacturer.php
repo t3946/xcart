@@ -18,4 +18,14 @@ class classManufacturer extends classCloneData
     {
         return sprintf(self::ADMIN_MANUFACTURER_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled));
     }
+
+    public function getManufacturerName()
+    {
+        return $this->getField('manufacturer');
+    }
+
+    public function getManufacturerCode()
+    {
+        return $this->getField('code');
+    }
 }

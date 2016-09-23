@@ -10,10 +10,13 @@ x_load('backoffice');
 x_load('taxes');
 
 global $xcart_dir, $config;
-include_once $xcart_dir.'/include/class/classProduct.php';
+include_once $xcart_dir.'/include/class/classOrders.php';
+include_once $xcart_dir.'/include/class/classOrderStatusNotification.php';
 
-$oProduct = new classProduct(['productid'=>400609]);
-$a = $oProduct->getProductsAvailOnAmazonParentWithChild(12);
-foreach ($a as $o) {
-    echo $o['oProduct']->getProductId(). ' -> '.$o['qty'].'<br>';
+$oOrder = new classOrder(['orderid'=>66064]);
+
+$oOrderNotification = new classOrderStatusNotification(['code'=>'Q']);
+if ($oOrderNotification->isEnabled()) {
+    $oOrderNotification->prepareMail($oOrder)->sendEmail();
 }
+

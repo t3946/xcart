@@ -84,6 +84,25 @@
 
 {/section}
 
+{*Retail trust table*}
+{if $oOrder}
+{assign var=aRetailTrustOrderDetails value=$oOrder->getOrderDetailsWithRetailTrust()}
+{if $aRetailTrustOrderDetails}
+{$lng.lbl_retailtrust_ordered}:
+-------
+{foreach from=$aRetailTrustOrderDetails item=oRetailTrustOrderDetail}
+{assign var=oRetailTrustProduct value=$oRetailTrustOrderDetail->getOrderDetailProduct()}
+{$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustProduct->getSKU()}
+{$lng.lbl_product|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustProduct->getProductName()}
+{$lng.lbl_item_price|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$oRetailTrustOrderDetail->calculateRetailTrustPricePerProduct()}
+{$lng.lbl_qty_ord|capitalize|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustOrderDetail->getAmount()}
+{$lng.lbl_extended|capitalize|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$oRetailTrustOrderDetail->getRetailTrustGross()}
+{/foreach}
+
+
+{/if}
+{/if}
+
 {$lng.lbl_extended}:
 -------
 {$lng.lbl_payment_method|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$order.payment_method}
@@ -121,6 +140,10 @@
 {$lng.lbl_giftcert_discount|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$order.giftcert_discount}
 {/if}
 
+{if $oOrder && $oOrder->getOrderRetailTrustGross() > 0}
+{$lng.lbl_retailtrust_ordered_total|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$oOrder->getOrderRetailTrustGross()}
+
+{/if}
 {$lng.lbl_total|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$order.total}
 
 {if $_userinfo.tax_exempt ne "Y"}
