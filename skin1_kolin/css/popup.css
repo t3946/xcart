@@ -637,3 +637,19 @@ label:hover {
   padding: 0 !important;
   border-bottom:none;
 }
+
+#retail_trust_message span.ui-icon.ui-icon-shadow.ui-icon-checkbox-on{
+  display: none;
+}
+#retail_trust_message label, #retail_trust_message label:hover{
+  border:none;
+  background: none;
+  margin:0;
+  padding:0;
+  font: 16px LatoRegular, sans-serif;
+}
+#retail_trust_message label > span {
+  padding:0;
+  margin:0;
+  font-size: 0.875em;
+}

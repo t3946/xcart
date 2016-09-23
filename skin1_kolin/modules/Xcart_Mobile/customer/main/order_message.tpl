@@ -13,4 +13,10 @@ vim: set ts=2 sw=2 sts=2 et:
 {if $active_modules.XAuth}
   {include file="modules/XAuth/rpx_ss_invoice.tpl"}
 {/if}
+{assign var=aRetailTrustProductDetails value=$oOrder->getOrderDetailsWithProductsRetailTrust()}
+{assign var=aRetailTrustOrderDetails value=$oOrder->getOrderDetailsWithRetailTrust()}
+{if !empty($aRetailTrustProductDetails) && empty($aRetailTrustOrderDetails)}
+  {assign var=oOrder value=$oOrder}
+  {include file="customer/main/retail_trust.tpl"}
+{/if}
 
