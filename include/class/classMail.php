@@ -24,7 +24,7 @@ class classMail extends classData
     public function replaceSubject(classOrder $oOrder)
     {
         if (!empty($oOrder)) {
-            $this->setField('customer_subject', str_replace("{{orderid}}", $oOrder->getOrderId(), $this->getSubject()));
+            $this->setField('customer_subject', str_replace("{{orderid}}", $oOrder->getDisplayOrderNumber(), $this->getSubject()));
         }
     }
 
@@ -44,7 +44,7 @@ class classMail extends classData
     {
         if (!empty($oOrder)) {
             $this->setField('email_body', str_replace("{{c-fullname}}", $oOrder->getFirstName(), $this->getEmailBody()))->
-            setField('email_body', str_replace("{{orderid}}", $oOrder->getOrderId(), $this->getEmailBody()))->
+            setField('email_body', str_replace("{{orderid}}", $oOrder->getDisplayOrderNumber(), $this->getEmailBody()))->
             setField('email_body', str_replace("{{site_url}}", $oOrder->getOrderStoreFront()->getStoreFrontURL(), $this->getEmailBody()));
         }
         $this->setField('email_body',func_eol2br($this->getEmailBody()));
