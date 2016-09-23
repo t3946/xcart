@@ -38,11 +38,17 @@
                                 otherClose: "a#close",
                                 closeIcon: null,
                                 afterClose: function () {
+                                    if (gts_code)
+                                        $("body").append(gts_code);
                                 }
                             })
                         }
                     }, 'json');
 
+        });
+        $('#retail_trust_message a#close, #retail_trust_message a.thanks').on('click','', function() {
+            if (gts_code)
+                $("body").append(gts_code);
         });
     });
     {/literal}

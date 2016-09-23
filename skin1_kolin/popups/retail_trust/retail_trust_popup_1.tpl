@@ -63,7 +63,7 @@
                             {assign var=oRetailTrustDetailProduct value=$oRetailTrustDetail->getOrderDetailProduct()}
                             <tr>
                                 <td>
-                                    <input type="checkbox" value="{$oRetailTrustDetail->getOrderDetailId()}" name="retail_trust_item" id="retail_item{$smarty.foreach.retailTrustForeach.index}"/>
+                                    <input checked="checked" type="checkbox" value="{$oRetailTrustDetail->getOrderDetailId()}" name="retail_trust_item" id="retail_item{$smarty.foreach.retailTrustForeach.index}"/>
                                     <label for="retail_item{$smarty.foreach.retailTrustForeach.index}">{$oRetailTrustDetailProduct->getProductName()}</label>
                                     <div class="sum">
                                        {$oRetailTrustDetail->getAmount()}  х  {include file="currency.tpl" value=$oRetailTrustDetail->calculateRetailTrustPricePerProduct()}  =  <strong> {include file="currency.tpl" value=$oRetailTrustDetail->calculateRetailTrustPrice()}</strong>

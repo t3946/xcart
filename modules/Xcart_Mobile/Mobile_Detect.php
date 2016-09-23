@@ -1030,7 +1030,7 @@ class Mobile_Detect
      */
     public function isMobile($userAgent = null, $httpHeaders = null)
     {
-return true;
+
         if ($httpHeaders) {
             $this->setHttpHeaders($httpHeaders);
         }
