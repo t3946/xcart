@@ -165,7 +165,7 @@ class classExternalVerificationBatch extends classData
         return $aProductsInBatchOpen;
     }
 
-    public function getNextProduct($isTest = false)
+    public function getNextProduct($isTest = false, $checkOpen = true)
     {
         global $login;
         $oProduct = null;
@@ -175,9 +175,13 @@ class classExternalVerificationBatch extends classData
             $sStatuses = " AND q.status IN ('etalon_match','etalon_not_match', 'etalon_not_found') ";
             $slogin = " AND login = '$login' ";
         }
-        $aNextProducts = $this->oSQL->init()->addSelect('p.productid')->addSelect('cross_verify_count', 'batch_processed')->addFromTable('products', 'p')->
-        addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid $sStatuses")->
-        addCondition("p.forsale = 'Y'")->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid' . $slogin . ' AND action IN (\'open\'))')->addGroupBy('p.productid')->addOrderBy('position ASC, cross_verify_count DESC')->setLimit('1')->Execute()->getQueryResult();
+        $this->oSQL->init()->addSelect('p.productid')->addSelect('cross_verify_count', 'batch_processed')->addFromTable('products', 'p')->
+        addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid $sStatuses")->addCondition("p.forsale = 'Y'");
+        if ($checkOpen)
+            $this->oSQL->addCondition("NOT EXISTS (SELECT 1 FROM " . self::$sql_tbl['external_verification_products'] . " vp WHERE vp.productid = p.productid" . $slogin . " AND action IN ('open'))");
+            else
+            $this->oSQL->addCondition("NOT EXISTS (SELECT 1 FROM " . self::$sql_tbl['external_verification_products'] . " vp WHERE vp.productid = p.productid" . $slogin . " AND action IN ('".implode("','", self::$aProductStatuses['processed'])."'))");
+        $aNextProducts = $this->oSQL->addGroupBy('p.productid')->addOrderBy('position ASC, cross_verify_count DESC')->setLimit('1')->Execute()->getQueryResult();
         if (!empty($aNextProducts)) {
             foreach ($aNextProducts as $aNextProduct) {
                 $oProduct = new classProduct(['productid' => $aNextProduct['productid']]);
@@ -521,7 +525,7 @@ class classExternalVerificationBatch extends classData
     public function checkBatchTestProductsComplete()
     {
         if ($this->isTest()) {
-            $aProductsNextInBatch = $this->getNextProduct($this->isTest());
+            $aProductsNextInBatch = $this->getNextProduct($this->isTest(), false);
             if (empty($aProductsNextInBatch)) {
                 $this->countTestResults();
                 global $config;
