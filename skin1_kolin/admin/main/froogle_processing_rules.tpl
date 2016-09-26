@@ -11,27 +11,43 @@
             </td>
         </tr>
         <tr class="TableHead">
+            {if !$is_edit}
             <td width="100">Issue GMC ID</td>
+            {/if}
             <td width="*">Name</td>
-            <td wisth="10">Products impacted</td>
+            <td width="100">Products impacted</td>
             <td width="160">Processing</td>
         </tr>
         {if $aProcessingRules}
             {foreach from=$aProcessingRules item=aProcessingRule}
                 <tr data-rule-id="{$aProcessingRule->getIssueId()}">
-                    <td>{$aProcessingRule->getIssueGMCId()}</td>
-                    <td><input style="width:98%;" name="processing_rule_name[{$aProcessingRule->getIssueId()}]" type="text" value="{$aProcessingRule->getIssueName()}"/></td>
+                    {if !$is_edit}<td>{$aProcessingRule->getIssueGMCId()}</td>{/if}
+                    <td>
+                        {if !$is_edit}
+                        <input style="width:98%;" name="processing_rule_name[{$aProcessingRule->getIssueId()}]" type="text" value="{$aProcessingRule->getIssueName()}"/>
+                        {else}
+                            <a href="" target="_blank">
+                                {if !$aProcessingRule->getIssueName()}
+                                    {$aProcessingRule->getIssueGMCId()}
+                                {else}
+                                    {$aProcessingRule->getIssueName()}
+                                {/if}
+                            </a>
+                        {/if}
+                    </td>
                     <td align="center">{$aProcessingRule->getProductImpactedCount()}</td>
                     <td align="center"><a data-status="{$aProcessingRule->getIssueProcessing()}" class="issue_processing" href="#">{$aProcessingRule->getIssueProcessing()}</a>
                     </td>
                 </tr>
             {/foreach}
         {/if}
+        {if !$is_edit}
         <tr>
             <td colspan="3"><br><br>
                 <input type="submit" value="{$lng.lbl_save}">
             </td>
         </tr>
+        {/if}
     </table>
 </form>
 {/capture}
@@ -61,6 +77,7 @@
                         clickbutton.removeClass('loading');
                         clickbutton.parent().html($('<a data-status="' + new_status + '" href="#" class="issue_processing">' + new_status + '</a>'));
                     }, 'json');
+            return false;
         });
     });
     {/literal}

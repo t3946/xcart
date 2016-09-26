@@ -175,6 +175,9 @@ var runTests = function(editor) {
 {elseif $main eq "manufacturers"}
 {include file="modules/Manufacturers/manufacturers.tpl"}
 
+{elseif $main eq "external_marketplaces_quality_issues"}
+{include file="admin/main/external_marketplaces_quality_issues.tpl"}
+
 {elseif $main eq "product_verification"}
 {include file="modules/Product_Verification/product_verification.tpl"}
 
