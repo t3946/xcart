@@ -3,6 +3,7 @@
 <br>
 <br>
 {capture name=dialog_processing}
+<form enctype="multipart/form-data" name="processing_rules_form" method="post" action="configuration.php?option=Froogle">
     <table width="100%" id="processing_rules_table">
         <tr>
             <td colspan="3">
@@ -12,19 +13,27 @@
         <tr class="TableHead">
             <td width="100">Issue GMC ID</td>
             <td width="*">Name</td>
+            <td wisth="10">Products impacted</td>
             <td width="160">Processing</td>
         </tr>
         {if $aProcessingRules}
             {foreach from=$aProcessingRules item=aProcessingRule}
                 <tr data-rule-id="{$aProcessingRule->getIssueId()}">
                     <td>{$aProcessingRule->getIssueGMCId()}</td>
-                    <td>{$aProcessingRule->getIssueName()}</td>
+                    <td><input style="width:98%;" name="processing_rule_name[{$aProcessingRule->getIssueId()}]" type="text" value="{$aProcessingRule->getIssueName()}"/></td>
+                    <td align="center">{$aProcessingRule->getProductImpactedCount()}</td>
                     <td align="center"><a data-status="{$aProcessingRule->getIssueProcessing()}" class="issue_processing" href="#">{$aProcessingRule->getIssueProcessing()}</a>
                     </td>
                 </tr>
             {/foreach}
         {/if}
+        <tr>
+            <td colspan="3"><br><br>
+                <input type="submit" value="{$lng.lbl_save}">
+            </td>
+        </tr>
     </table>
+</form>
 {/capture}
 {include file="dialog.tpl" title='Quality Issues Processing Rules' content=$smarty.capture.dialog_processing extra='width="100%"'}
 <script>

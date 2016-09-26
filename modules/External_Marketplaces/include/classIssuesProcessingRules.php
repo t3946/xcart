@@ -54,7 +54,13 @@ class classIssuesProcessingRules extends classData
 
     public function getIssueName()
     {
-        return $this->getField('issue_name');
+        return stripslashes($this->getField('issue_name'));
+    }
+
+    public function updateIssueName($sIssueName)
+    {
+        $this->updateField('issue_name',addslashes($sIssueName));
+        return $this;
     }
 
     public function getIssueProcessing()
@@ -77,5 +83,13 @@ class classIssuesProcessingRules extends classData
         $oDate = new DateTime();
         $oDate->setTimestamp(strtotime($this->getField('issue_date')));
         return $oDate;
+    }
+
+    public function getProductImpactedCount()
+    {
+        $aCount = $this->oSQL->addSelect('count(1)', 'cnt')->addFromTable('cidev_gmc_quality_issues', 'xc')->addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'")->
+        addCondition('xc.issue_id = '.$this->getIssueId())->Execute()->getQueryResult();
+        $aC = reset($aCount);
+        return $aC['cnt'];
     }
 }
