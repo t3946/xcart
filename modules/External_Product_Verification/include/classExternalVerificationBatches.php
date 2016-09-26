@@ -178,7 +178,9 @@ class classExternalVerificationBatch extends classData
         $this->oSQL->init()->addSelect('p.productid')->addSelect('cross_verify_count', 'batch_processed')->addFromTable('products', 'p')->
         addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid $sStatuses")->addCondition("p.forsale = 'Y'");
         if ($checkOpen)
-            $this->oSQL->addCondition('NOT EXISTS (SELECT 1 FROM ' . self::$sql_tbl['external_verification_products'] . ' vp WHERE vp.productid = p.productid' . $slogin . ' AND action IN (\'open\'))');
+            $this->oSQL->addCondition("NOT EXISTS (SELECT 1 FROM " . self::$sql_tbl['external_verification_products'] . " vp WHERE vp.productid = p.productid" . $slogin . " AND action IN ('open'))");
+            else
+            $this->oSQL->addCondition("NOT EXISTS (SELECT 1 FROM " . self::$sql_tbl['external_verification_products'] . " vp WHERE vp.productid = p.productid" . $slogin . " AND action IN ('".implode("','", self::$aProductStatuses['processed'])."'))");
         $aNextProducts = $this->oSQL->addGroupBy('p.productid')->addOrderBy('position ASC, cross_verify_count DESC')->setLimit('1')->Execute()->getQueryResult();
         if (!empty($aNextProducts)) {
             foreach ($aNextProducts as $aNextProduct) {
