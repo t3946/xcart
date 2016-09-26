@@ -86,7 +86,7 @@ class classOrderStatusNotification extends classMail
         $to_customer = ($this->oOrder->getCustomerEntity()->getLanguage() ? $this->oOrder->getCustomerEntity()->getLanguage() : $config['default_customer_language']);
         $mail_smarty->assign("products", func_translate_products($order_data["products"], $to_customer));
         $mail_smarty->assign('type', 'C');
-        $mail_smarty->assign('order_notification', $this->getFields());
+        $mail_smarty->assign('order_notification',  $this->oMail->getFields());
         $mail_smarty->assign('oOrder', $this->oOrder);
 
         func_send_mail($this->oOrder->getEmail(), 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);

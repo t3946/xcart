@@ -43,10 +43,10 @@ class classMail extends classData
     public function replaceBody(classOrder $oOrder)
     {
         if (!empty($oOrder)) {
-            $this->setField('email_body', str_replace("{{c-fullname}}", $oOrder->getFirstName(), $this->getEmailBody()))->
-            setField('email_body', str_replace("{{orderid}}", $oOrder->getDisplayOrderNumber(), $this->getEmailBody()))->
-            setField('email_body', str_replace("{{site_url}}", $oOrder->getOrderStoreFront()->getStoreFrontURL(), $this->getEmailBody()));
+            $this->setBody(str_replace("{{c-fullname}}", $oOrder->getFirstName(), $this->getEmailBody()))->
+            setBody(str_replace("{{orderid}}", $oOrder->getDisplayOrderNumber(), $this->getEmailBody()))->
+            setBody(str_replace("{{site_url}}", $oOrder->getOrderStoreFront()->getStoreFrontURL(), $this->getEmailBody()));
         }
-        $this->setField('email_body',func_eol2br($this->getEmailBody()));
+        $this->setBody(func_eol2br($this->getEmailBody()));
     }
 }

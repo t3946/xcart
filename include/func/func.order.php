@@ -1380,6 +1380,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
 		$orderid = func_array2insert('orders', $insert_data);
 
+		global $xcart_dir;
+		include_once $xcart_dir."/include/class/classOrders.php";
+		$oOrder = new classOrder(['orderid'=>$orderid]);
+
 		x_session_register('purchase_order_selected');
 		if(!empty($GLOBALS['purchase_order_selected']) && is_numeric($GLOBALS['purchase_order_selected'])){
 
@@ -1671,9 +1675,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			unset($group_total);
 			unset($insert_data);
 		}
-		global $xcart_dir;
-		include_once $xcart_dir."/include/class/classOrder.php";
-		$oOrder = new classOrder(['orderid'=>$orderid]);
+
 		$oOrder->updateVerificationStatus();
 
 
@@ -1792,6 +1794,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 		$mail_smarty->assign("order",$order_data["order"]);
 		$mail_smarty->assign("userinfo",$order_data["userinfo"]);
 		$mail_smarty->assign('statuses', $statuses);
+		$mail_smarty->assign('oOrder', $oOrder);
 
 		$prefix = ($order_status=="I"?"init_":"");
 
