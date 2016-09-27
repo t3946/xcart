@@ -20,6 +20,8 @@ if ($REQUEST_METHOD == "POST" && $mode == "update" && !empty($google_product_cat
 	func_header_location("category_structure.php");
 }
 
+if (!empty($ready_to_classify) && $ready_to_classify == 'Y')
+	define('NEED_READY_CLASSIFY', 1);
 
 $cat = 0;
 require $xcart_dir."/include/categories.php";
