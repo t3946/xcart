@@ -24,7 +24,7 @@ $smarty->assign('aCurrentBatches', $aCurrentBatches);
 $aPreviousBatches = $oBatches->getPreviousBatches();
 $smarty->assign('aPreviousBatches', $aPreviousBatches);
 
-$smarty->assign('isAccountSuspended', $oBatches->isAccountSuspended());
+$smarty->assign('isAccountSuspended', $oCustomer->isAmazonAccountSuspended());
 
 if (!empty($login))
     $smarty->assign("location", $location);

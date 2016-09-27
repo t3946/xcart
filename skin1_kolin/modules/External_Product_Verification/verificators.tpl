@@ -9,7 +9,7 @@
         <button data-status="Y" class="ui button {if $active == 'Y'}active{/if}">Active</button>
         <button data-status="N" class="ui button {if $active == 'N'}active{/if}">Inactive</button>
     </div>
-<table width="100%">
+<table width="100%" id="table_verificators">
     <tr>
         <td colspan="7">
             
@@ -28,7 +28,15 @@
             {assign var=aBatchesInProgress value=$oCustomer->getAmazonBatches('in progress')}
             <tr>
                 <td>{if $oCustomer->getCustomerModifyLink()}<a href="{$oCustomer->getCustomerModifyLink()}" target="_blank">{/if}{$oCustomer->getCustomerLogin()}</a></td>
-                <td>{if $oCustomer->getCustomerURL()}<a target="_blank" href="{$oCustomer->getCustomerURL()}">{/if}{$oCustomer->getCustomerFullName()}{if $oCustomer->getCustomerURL()}</a>{/if}</td>
+                <td data-customer-id="{$oCustomer->getCustomerLogin()}">
+                    {if $oCustomer->getCustomerURL()}
+                        <a target="_blank" href="{$oCustomer->getCustomerURL()}">{/if}{$oCustomer->getCustomerFullName()}{if $oCustomer->getCustomerURL()}</a>{/if}&nbsp;&nbsp;
+                    {if $oCustomer->isAmazonAccountSuspended()}
+                        <span style="white-space: nowrap;">
+                            <a class="verificator_status" style="color:red;" href="#">Blocked</a>
+                        </span>
+                    {/if}
+                </td>
                 <td align="center">
                     {if $aBatchesInProgress}
                         {foreach from=$aBatchesInProgress item=oBatchInProgress name=batchInProgress}
@@ -52,10 +60,34 @@
 
 <script>
     {literal}
+    function getSelectStatusHTML() {
+        var select_html = $('<select class="change_user_status_select"><option value="blocked">Blocked</option><option value="unblocked">Unblocked</option></select>' + '&nbsp;<button class="ui button button_save_status"><i class="save icon"></i>Ok</button>');
+        return select_html;
+    }
     $(document).ready(function () {
         $('#batches-filter > button').on('click', '', function () {
             location.href = "operators.php?active=" + $(this).data('status');
         });
+
+        $('#table_verificators').on('click', 'a.verificator_status', function () {
+            var select_html = getSelectStatusHTML();
+            $(this).parent().html(select_html);
+            return false;
+        }).on('click', '.button_save_status', function () {
+            var clickbutton = $(this);
+            var new_status = clickbutton.siblings('select.change_user_status_select').val();
+            var customer_id = clickbutton.parent().parent().data('customer-id');
+            $(this).addClass('loading');
+            $.post('ajax_admin.php', {
+                        user_status_id: new_status,
+                        customer_id: customer_id,
+                        ajax_action: 'change_verificator_status'
+                    },
+                    function (data) {
+                        clickbutton.removeClass('loading');
+                        clickbutton.parent().empty();
+                    }, 'json');
+        })
     });
     {/literal}
 </script>
