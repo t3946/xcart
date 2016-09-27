@@ -26,7 +26,7 @@
                         {if !$is_edit}
                         <input style="width:98%;" name="processing_rule_name[{$aProcessingRule->getIssueId()}]" type="text" value="{$aProcessingRule->getIssueName()}"/>
                         {else}
-                            <a href="" target="_blank">
+                            <a href="external_marketplaces_quality_issues.php?issue={$aProcessingRule->getIssueId()}" target="_blank">
                                 {if !$aProcessingRule->getIssueName()}
                                     {$aProcessingRule->getIssueGMCId()}
                                 {else}

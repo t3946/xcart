@@ -2,9 +2,12 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classGMCQualityIssues.php";
 
 class classIssuesProcessingRules extends classData
 {
+    private $aProductsIssues;
+
     public function __construct($aIssuesProcessingRules = null)
     {
         $this->sPrimaryTable = 'cidev_issues_processing_rules';
@@ -54,12 +57,16 @@ class classIssuesProcessingRules extends classData
 
     public function getIssueName()
     {
-        return stripslashes($this->getField('issue_name'));
+        $sIssueName = $this->getField('issue_name');
+        if (empty($sIssueName)) {
+            return $this->getIssueGMCId();
+        }
+        return stripslashes($sIssueName);
     }
 
     public function updateIssueName($sIssueName)
     {
-        $this->updateField('issue_name',addslashes($sIssueName));
+        $this->updateField('issue_name', addslashes($sIssueName));
         return $this;
     }
 
@@ -88,8 +95,25 @@ class classIssuesProcessingRules extends classData
     public function getProductImpactedCount()
     {
         $aCount = $this->oSQL->addSelect('count(1)', 'cnt')->addFromTable('cidev_gmc_quality_issues', 'xc')->addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'")->
-        addCondition('xc.issue_id = '.$this->getIssueId())->Execute()->getQueryResult();
+        addCondition('xc.issue_id = ' . $this->getIssueId())->Execute()->getQueryResult();
         $aC = reset($aCount);
         return $aC['cnt'];
+    }
+
+    public function getProductImpacted()
+    {
+        if (is_null($this->aProductsIssues)) {
+            $aProductImpacted = $this->oSQL->addSelect('xc.*')->addFromTable('cidev_gmc_quality_issues', 'xc')->addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'")->
+            addCondition('xc.issue_id = ' . $this->getIssueId())->Execute()->getQueryResult();
+            if ($aProductImpacted) {
+                foreach ($aProductImpacted as $aProducts) {
+                    $oIssue = new classGMCQualityIssues();
+                    $oIssue->fillPrimaryTableValues($aProducts);
+                    $this->aProductsIssues[] = $oIssue;
+                }
+            }
+        }
+
+        return $this->aProductsIssues;
     }
 }
