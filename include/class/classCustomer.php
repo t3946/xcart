@@ -215,6 +215,7 @@ class classCustomer extends classData
     public function getEmail()
     {
         return $this->getField('email');
+    }
 
     public function isAmazonAccountSuspended()
     {
