@@ -206,6 +206,7 @@ class classCustomer extends classData
         return $a->getAmazonBatchesCompletedCount() < $b->getAmazonBatchesCompletedCount();
     }
 
+
     public function getLanguage()
     {
         return $this->getField('language');
@@ -214,5 +215,26 @@ class classCustomer extends classData
     public function getEmail()
     {
         return $this->getField('email');
+
+    public function isAmazonAccountSuspended()
+    {
+        $bResult = false;
+        $aBatches = $this->getAmazonBatches();
+        foreach ($aBatches as $oBatch) {
+            if ($oBatch->isTestFailed()) {
+                $bResult = true;
+                break;
+            }
+        }
+        return $bResult;
+    }
+    public function unblockAmazonAccount()
+    {
+        $aBatches = $this->getAmazonBatches();
+        foreach ($aBatches as $oBatch) {
+            if ($oBatch->isTestFailed())
+                $oBatch->updateField('test_failed', 'N');
+        }
+
     }
 }

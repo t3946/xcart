@@ -27,6 +27,8 @@ switch ($_POST['ajax_action']) {
         break;
     case "change_processing_rules":
         changeProcessingRules($_POST);
+    case "change_verificator_status":
+        changeVerificatorStatus($_POST);
         break;
     case "add_new_batch":
         addNewBatch($_POST);
@@ -100,6 +102,20 @@ function changeVerifyBatchStatus($aPostParam = [])
         $oVerificationBatch = new classExternalVerificationBatch(['batch_id' => $aPostParam['batch_id']]);
         if ($oVerificationBatch->getBatchStatus() != $aPostParam['verify_status_id']) {
             $oVerificationBatch->setVerificationStatus($aPostParam['verify_status_id']);
+        }
+    }
+    print(json_encode($aResult));
+}
+
+function changeVerificatorStatus($aPostParam = [])
+{
+    $aResult = [];
+    if (!empty($aPostParam['customer_id'])) {
+        if (!empty($aPostParam['user_status_id']) && $aPostParam['user_status_id']=='unblocked') {
+            $oCustomer = new classCustomer(['login' => $aPostParam['customer_id']]);
+            if ($oCustomer->getCustomerLogin()) {
+                $oCustomer->unblockAmazonAccount();
+            }
         }
     }
     print(json_encode($aResult));

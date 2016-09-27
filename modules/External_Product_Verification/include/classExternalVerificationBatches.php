@@ -29,6 +29,8 @@ class classExternalVerificationBatch extends classData
      */
     private $oVerifiedProduct = null;
 
+    private $oCustomer = null;
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['batch_id'];
@@ -179,8 +181,8 @@ class classExternalVerificationBatch extends classData
         addInnerJoin('external_verification_products_queue', 'q', "q.productid = p.productid $sStatuses")->addCondition("p.forsale = 'Y'");
         if ($checkOpen)
             $this->oSQL->addCondition("NOT EXISTS (SELECT 1 FROM " . self::$sql_tbl['external_verification_products'] . " vp WHERE vp.productid = p.productid" . $slogin . " AND action IN ('open'))");
-            else
-            $this->oSQL->addCondition("NOT EXISTS (SELECT 1 FROM " . self::$sql_tbl['external_verification_products'] . " vp WHERE vp.productid = p.productid" . $slogin . " AND action IN ('".implode("','", self::$aProductStatuses['processed'])."'))");
+        else
+            $this->oSQL->addCondition("NOT EXISTS (SELECT 1 FROM " . self::$sql_tbl['external_verification_products'] . " vp WHERE vp.productid = p.productid" . $slogin . " AND action IN ('" . implode("','", self::$aProductStatuses['processed']) . "'))");
         $aNextProducts = $this->oSQL->addGroupBy('p.productid')->addOrderBy('position ASC, cross_verify_count DESC')->setLimit('1')->Execute()->getQueryResult();
         if (!empty($aNextProducts)) {
             foreach ($aNextProducts as $aNextProduct) {
@@ -439,9 +441,7 @@ class classExternalVerificationBatch extends classData
                         $iResult = -1;
                         break;
                     case 'not_match' :
-                        if (in_array($oCompletedProduct->getAsin(), $oProductQueue->getAsin())) {
-                            $iResult = 1;
-                        } else $iResult = -1;
+                        $iResult = 1;
                         break;
                     case 'not_sure' :
                         $iResult = -1;
@@ -504,22 +504,17 @@ class classExternalVerificationBatch extends classData
         return ($this->getField('test_failed') == 'Y');
     }
 
+    public function getCustomer()
+    {
+        if (is_null($this->oCustomer)) {
+            $this->oCustomer = new classCustomer(['login'=>$this->getBatchLogin()]);
+        }
+        return $this->oCustomer;
+    }
+
     public function isAccountSuspended()
     {
-        $bResult = false;
-        $aBatches = $this->getCurrentBatches();
-        foreach ($aBatches as $oBatch) {
-            if ($oBatch->isTestFailed()) {
-                $bResult = true;
-            }
-        }
-        $aBatches = $this->getPreviousBatches();
-        foreach ($aBatches as $oBatch) {
-            if ($oBatch->isTestFailed()) {
-                $bResult = true;
-            }
-        }
-        return $bResult;
+        return $this->getCustomer()->isAmazonAccountSuspended();
     }
 
     public function checkBatchTestProductsComplete()
