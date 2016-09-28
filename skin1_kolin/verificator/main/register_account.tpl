@@ -37,7 +37,7 @@
 {* Anonymous account *}
 
 <tr>
-<td align="right">{$lng.lbl_username}</td>
+<td align="right"><b>{$lng.lbl_username}</b></td>
 <td>&nbsp;</td>
 <td nowrap="nowrap">
 <input type="text" id="uname" name="uname" size="32" maxlength="32" value="{if $userinfo.uname}{$userinfo.uname}{else}{$userinfo.login}{/if}" />
@@ -46,14 +46,14 @@
 </tr>
 
 <tr>
-<td align="right">{$lng.lbl_password}</td>
+<td align="right"><b>{$lng.lbl_password}</b></td>
 <td>&nbsp;</td>
 <td nowrap="nowrap"><input type="password" name="passwd1" size="32" maxlength="64" value="{$userinfo.passwd1}" />
 </td>
 </tr>
 
 <tr>
-<td align="right">{$lng.lbl_confirm_password}</td>
+<td align="right"><b>{$lng.lbl_confirm_password}</b></td>
 <td>&nbsp;</td>
 <td nowrap="nowrap"><input type="password" name="passwd2" size="32" maxlength="64" value="{$userinfo.passwd2}" />
 </td>
@@ -69,7 +69,7 @@
 {* NOT anonymous account *}
 
 <tr>
-<td align="right">{$lng.lbl_username}</td>
+<td align="right"><b>{$lng.lbl_username}</b></td>
 <td class="Star">*</td>
 <td nowrap="nowrap">
 {if $userinfo.login ne "" || ($login eq $userinfo.uname && $login ne '')}
@@ -83,7 +83,7 @@
 </tr>
 
 <tr>
-<td align="right">{$lng.lbl_password}</td>
+<td align="right"><b>{$lng.lbl_password}</b></td>
 <td><font class="Star">*</font></td>
 <td nowrap="nowrap"><input type="password" id="passwd1" name="passwd1" size="32" maxlength="64" value="{$userinfo.passwd1}" />
 {if $reg_error ne "" and $userinfo.passwd1 eq ""}<font class="Star">&lt;&lt;</font>{/if} 
@@ -91,7 +91,7 @@
 </tr>
 
 <tr>
-<td align="right">{$lng.lbl_confirm_password}</td>
+<td align="right"><b>{$lng.lbl_confirm_password}</b></td>
 <td class="Star">*</td>
 <td nowrap="nowrap"><input type="password" id="passwd2" name="passwd2" size="32" maxlength="64" value="{$userinfo.passwd2}" />
 {if $reg_error ne "" and $userinfo.passwd2 eq ""}<font class="Star">&lt;&lt;</font>{/if} 
@@ -106,7 +106,7 @@
 
 {if $userinfo.status ne "A"}{* only for non-anonymous users *}
 <tr valign="middle">
-<td align="right">User status:</td>
+<td align="right"><b>User status:</b></td>
 <td>&nbsp;</td>
 <td nowrap="nowrap">
 	<select name="status">

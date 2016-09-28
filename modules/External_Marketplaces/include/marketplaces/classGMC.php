@@ -1,8 +1,10 @@
 <?php
 global $xcart_dir;
 require_once $xcart_dir . "/modules/External_Marketplaces/include/classStoreFrontMarketPlace.php";
-include_once $xcart_dir . "/google-api-php-client/examples/templates/base.php";
-require_once $xcart_dir . "/google-api-php-client/autoload.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classIssuesProcessingRules.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classGMCQualityIssues.php";
+require_once $xcart_dir . "/include/libs/autoload.php";
+include_once $xcart_dir . "/include/libs/google/apiclient/examples/templates/base.php";
 
 class classGMC extends classStoreFrontMarketPlace
 {
@@ -47,32 +49,14 @@ class classGMC extends classStoreFrontMarketPlace
     private function getService($debug_mode = 'N')
     {
         if (empty($this->oService)) {
-            //$service_account_name = 'account-2@careful-triumph-774.iam.gserviceaccount.com'; //Email Address
-            $service_account_name = $this->getFTPLogin();
-            $key_file_location = '/var/www/stores/google-api-php-client/examples/key2.p12'; //key.p12
+            global $xcart_dir;
 
             $client = new Google_Client();
             $client->setApplicationName("Client_Library_Examples");
+            $client->setAuthConfig($xcart_dir . '/include/system/gapi-3c467d1a8e76.json');
+            $client->addScope(Google_Service_ShoppingContent::CONTENT);
             $this->oService = new Google_Service_ShoppingContent($client);
 
-            if (isset($_SESSION['service_token'])) {
-                $client->setAccessToken($_SESSION['service_token']);
-            }
-
-            $key = file_get_contents($key_file_location);
-            $cred = new Google_Auth_AssertionCredentials(
-                $service_account_name,
-                //array('https://www.googleapis.com/auth/content'),
-                [$this->getP0()],
-                $key
-            );
-            $client->setAssertionCredentials($cred);
-            if ($debug_mode != "Y") {
-                if ($client->getAuth()->isAccessTokenExpired()) {
-                    $client->getAuth()->refreshTokenWithAssertion($cred);
-                }
-            }
-            $_SESSION['service_token'] = $client->getAccessToken();
         }
         return $this->oService;
     }
@@ -93,5 +77,70 @@ class classGMC extends classStoreFrontMarketPlace
             $this->RestoreQueue($this->getProducts(), 1);
 
         $this->setProductsBatchCount(0)->setProducts([]);
+    }
+
+    public function getProductStatuses()
+    {
+        $iUpdateProductCount = 0;
+        do {
+            if (!empty($pageToken)) {
+                $parameters['pageToken'] = $pageToken;
+            }
+            $parameters['includeInvalidInsertedItems'] = true;
+            $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(), $parameters);
+            /** @var Google_Service_ShoppingContent_ProductStatus[] $aProducts */
+            $aProducts = $oResponse->getResources();
+            $aQueue = [];
+            if (!empty($aProducts)) {
+                foreach ($aProducts as $oProduct) {
+                    list($sStatus, $lang, $Country, $iProductId) = explode(':', $oProduct->getProductId());
+
+                    /** @var Google_Service_ShoppingContent_ProductStatusDataQualityIssue $oDataQualityIssues */
+                    $aDataQualityIssues = $oProduct->getDataQualityIssues();
+
+                    if (!empty($aDataQualityIssues)) {
+                        foreach ($aDataQualityIssues as $oDataQualityIssues) {
+                            $oIssue = classIssuesProcessingRules::getIssueByGoogleIssueId($oDataQualityIssues->getId());
+                            if (empty($oIssue)) {
+                                $oIssue = new classIssuesProcessingRules();
+                                $oIssue->setIssueGMCId($oDataQualityIssues->getId());
+                                $iIssueId = $oIssue->_insert();
+                                if ($iIssueId) {
+                                    $oIssue->setIssueId($iIssueId);
+                                }
+                            }
+                            $oGMCQualityIssues = new classGMCQualityIssues(['productid' => $iProductId, 'issue_id' => $oIssue->getIssueId()]);
+                            if ($oGMCQualityIssues->getProductId()) {
+                                $oGMCQualityIssues->_delete();
+                                $oGMCQualityIssues = new classGMCQualityIssues();
+                            }
+
+                            $oIssueDate = DateTime::createFromFormat(DateTime::ISO8601, $oDataQualityIssues->getTimestamp());
+                            if (!$oIssueDate)
+                                $oIssueDate = new DateTime('NOW');
+                            $oGMCQualityIssues->fillPrimaryTableValues(['productid' => $iProductId,
+                                'issue_id' => $oIssue->getIssueId(),
+                                'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
+                                'issue_data' => addslashes(json_encode($oDataQualityIssues)),
+                                'issue_destination' => addslashes(json_encode($oProduct->getDestinationStatuses()))
+                            ]);
+                            $oGMCQualityIssues->_insert();
+                        }
+
+                    }
+
+                    $oExpiredDate = DateTime::createFromFormat(DateTime::ISO8601, $oProduct->getGoogleExpirationDate());
+                    $iDaysInterval = $oExpiredDate->diff(new DateTime('now'))->days;
+                    if ($iDaysInterval <= $this->getUpdateExpiredBeforeDays() && $iUpdateProductCount <= $this->getUpdateMaxExpiredProductsPerDay()) {
+                        $aQueue[] = ['productid' => $iProductId];
+                        $iUpdateProductCount++;
+                    }
+                }
+            }
+            $this->restoreQueue($aQueue, 1);
+            $pageToken = $oResponse->getNextPageToken();
+        } while ($pageToken);
+
+        return $this;
     }
 }

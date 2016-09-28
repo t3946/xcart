@@ -273,7 +273,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                                 }
 
                                 require_once $xcart_dir . "/include/class/classOrders.php";
-                                $oOrder = new classOrder($orderid);
+                                $oOrder = new classOrder(['orderid'=>$orderid]);
                                 $oOrder->recalculateAccounting();
                         }
 
@@ -488,7 +488,7 @@ if (!$curl_err){
                                     include_once $xcart_dir . "/include/class/classShippings.php";
                                     foreach ($order['shipping_groups'] as $k_group => $v_group){
                                         $classShipping = new classShipping($v_group['shippingid']);
-                                        if ($classShipping->getField('code') == 'Amazon') {
+                                        if ($classShipping->isAmazonShipping()) {
                                             $allow_send_to_operator = false;
                                             break;
                                         }
@@ -501,38 +501,43 @@ if (!$curl_err){
 			}
 
 
-				if ($allow_send_to_operator) {
-                                  foreach ($mnfs as $mnf_id => $v){
+                if ($allow_send_to_operator) {
+                    foreach ($mnfs as $mnf_id => $v) {
+                        include_once $xcart_dir . "/include/class/classOrderGroup.php";
+                        $oOrderGroup = new classOrderGroup(['orderid'=>$orderid, 'manufacturerid'=>$mnf_id]);
+                        $oOrder = $oOrderGroup->getOrderInstance();
+
+                        if ($oOrder->getOrderGroupsCount()==1 && $oOrderGroup->checkFBAProductsAvailToShipping()) continue;
 
 //if (1==1){
-				    if ( ($v["cb_status"] == "P" || $v["cb_status"] == "O" || $v["cb_status"] == "3" || $v["cb_status"] == "H" || $v["cb_status"] == "AP") && ($v["dc_status"] == "T" || $v["dc_status"] == "K" || $v["dc_status"] == "M") ){
-				        $manufacturer_name = $v["manufacturer"];
-				        $d_instructions_to_order_entry_operator = $v["d_instructions_to_order_entry_operator"];
-				        $d_order_entry_operator_subject_line_8 = $v["d_order_entry_operator_subject_line_8"];
-			                $d_order_entry_operator_email = $v["d_order_entry_operator_email"];
-				        $d_url_to_login_to_distributor_website = $v["d_url_to_login_to_distributor_website"];
-			                $d_login = $v["d_login"];
-			                $d_password = $v["d_password"];
+				    if (($v["cb_status"] == "P" || $v["cb_status"] == "O" || $v["cb_status"] == "3" || $v["cb_status"] == "H" || $v["cb_status"] == "AP") && ($v["dc_status"] == "T" || $v["dc_status"] == "K" || $v["dc_status"] == "M")) {
+                        $manufacturer_name = $v["manufacturer"];
+                        $d_instructions_to_order_entry_operator = $v["d_instructions_to_order_entry_operator"];
+                        $d_order_entry_operator_subject_line_8 = $v["d_order_entry_operator_subject_line_8"];
+                        $d_order_entry_operator_email = $v["d_order_entry_operator_email"];
+                        $d_url_to_login_to_distributor_website = $v["d_url_to_login_to_distributor_website"];
+                        $d_login = $v["d_login"];
+                        $d_password = $v["d_password"];
 
-			//              $message_body = "Please enter order below in distributor system ASAP.\r\n<br />\r\n<br />";
-			                $message_body .= func_eol2br(stripslashes($d_instructions_to_order_entry_operator));
-			                $message_body .= "--\r\n";
+                        //              $message_body = "Please enter order below in distributor system ASAP.\r\n<br />\r\n<br />";
+                        $message_body .= func_eol2br(stripslashes($d_instructions_to_order_entry_operator));
+                        $message_body .= "--\r\n";
 //			                $message_body .= "Distributor website login credentials are as follows:\r\n";
 //			                $message_body .= "Website: $d_url_to_login_to_distributor_website\r\n";
 //			                $message_body .= "Login/username: $d_login \r\n";
 //			                $message_body .= "Password: $d_password \r\n";
 
-			                $mail_smarty->assign('mnf_operator_notify', 'Y');
-					$mail_smarty->assign("manufacturerid",$mnf_id);
+                        $mail_smarty->assign('mnf_operator_notify', 'Y');
+                        $mail_smarty->assign("manufacturerid", $mnf_id);
 
-					$message_body = "<em><b>** This email has been AUTOMATICALLY sent by X-cart.</b> </em><br />\r\n".$message_body."\r\n(auto-sent by X-cart)";
+                        $message_body = "<em><b>** This email has been AUTOMATICALLY sent by X-cart.</b> </em><br />\r\n" . $message_body . "\r\n(auto-sent by X-cart)";
 
-			                $mail_smarty->assign('message_body', $message_body);
-			                $mail_smarty->assign('d_email_subject_14', $d_order_entry_operator_subject_line_8);
+                        $mail_smarty->assign('message_body', $message_body);
+                        $mail_smarty->assign('d_email_subject_14', $d_order_entry_operator_subject_line_8);
 //			                $mail_smarty->assign('order', $order);
-			                $mail_smarty->assign('order', $order_after_refund);
+                        $mail_smarty->assign('order', $order_after_refund);
 
-					$mail_smarty->assign('email_is_sent_to_operator', 'Y');
+                        $mail_smarty->assign('email_is_sent_to_operator', 'Y');
 
 #
 ##
@@ -541,34 +546,33 @@ if (!$curl_err){
 //  https://basecamp.com/2070980/projects/1577907/messages/35485972
 
 
-				                func_send_mail($d_order_entry_operator_email, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $config['Company']['orders_department'], false);
+                        func_send_mail($d_order_entry_operator_email, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $config['Company']['orders_department'], false);
 
-				                $log = "The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><B>From: </B>".$config['Company']['orders_department']."<br /><B>To: </B>".$d_order_entry_operator_email."<br /><B>Subject: </B>".$d_order_entry_operator_subject_line_8;
-				                func_log_order($orderid, 'X', $log, $login);
+                        $log = "The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $d_order_entry_operator_email . "<br /><B>Subject: </B>" . $d_order_entry_operator_subject_line_8;
+                        func_log_order($orderid, 'X', $log, $login);
 
 
+                        $current_dc_status = $order["shipping_groups"][$mnf_id]["dc_status"];
+                        $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
+                        $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
 
-				                $current_dc_status = $order["shipping_groups"][$mnf_id]["dc_status"];
-				                $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
-				                $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
+                        if ($current_dc_status != "E") {
+                            $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='E'");
+                            $log = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
+                            func_log_order($orderid, 'X', $log, $login);
+                        }
 
-				                if ($current_dc_status != "E"){
-				                      $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='E'");
-			        	              $log = "<B>".$code.":</B> dc_status: ". $current_dc_status_value . " -> ". $new_value;
-			                	      func_log_order($orderid, 'X', $log, $login);
-				                }
-
-						// | E    | Pending order entry                        | DC   |      20 |     
-				                db_query("UPDATE $sql_tbl[order_groups] SET dc_status='E' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
+                        // | E    | Pending order entry                        | DC   |      20 |
+                        db_query("UPDATE $sql_tbl[order_groups] SET dc_status='E' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 ###
 ##
 #
 
 
-				    } //  if ( ($v["cb_status"] == "P" || $v["cb_status"] == "O" || $v["cb_status"] == "3" || $v["cb_status"] == "H" || $v["cb_status"] == "AP") && ($v["dc_status"] == "T" || $v["dc_status"] == "K" || $v["dc_status"] == "M") )
+                    } //  if ( ($v["cb_status"] == "P" || $v["cb_status"] == "O" || $v["cb_status"] == "3" || $v["cb_status"] == "H" || $v["cb_status"] == "AP") && ($v["dc_status"] == "T" || $v["dc_status"] == "K" || $v["dc_status"] == "M") )
 
                                   } // foreach ($mnfs as $mnf_id => $v
-				} // if ($allow_send_to_operator)
+                } // if ($allow_send_to_operator)
 //func_print_r($mnfs);
 			}
 //die("test");

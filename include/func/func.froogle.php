@@ -496,7 +496,7 @@ if ($sExtraLog=='Y')
 		break;
 		}
 	}
-	$product["custom_label_0"] = func_froogle_convert(trim($product['brand']));
+	//$product["custom_label_0"] = func_froogle_convert(trim($product['brand']));
     
     // group prices in GMC by 50/100/150/200/250/300/400/500/600/700/800/900/1000/1200/1400
     $price_group_label = '0';
@@ -668,9 +668,9 @@ if ($sExtraLog=='Y')
 	$product['mpn'] = $mpn;
 	$product['gpc'] = $gpc;
 	$product['cats_path'] = $cats_path;
-	$product['google_descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert($product['descr'], 5000));
+	$product['google_descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['descr']), 5000));
 	$product['google_brand'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['brand']), 256));
-	$product['google_product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert($product['product'], 80));
+	$product['google_product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['product']), 80));
 
 
 	if ($product['shipping_weight']) {
@@ -697,7 +697,7 @@ if ($sExtraLog=='Y')
 //	(($product['avail'] < 0) ? 0 : ($product['avail']))."\t".
 	$product['weight'].($product['weight'] > 0 ? " lb":"")."\t".
 	date("Y-m-d", time()+(empty($config['Froogle']['froogle_expiration_date']) ? 0.5 : $config['Froogle']['froogle_expiration_date'])*86400)."\t".
-	trim($product['google_brand'])."\t".
+	$product['google_brand']."\t".
 	"new\t".
 	"$cats_path"."\t".
 	"$mpn\t".

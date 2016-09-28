@@ -34,7 +34,7 @@ class classOrderTransaction extends classData
                 $this->oTransactionLog->insertTransactionLog($this);
                 throw new Exception(sprintf(TRANSACTION_FAILED_TEXT, $this->getField('transaction_id')));
             }
-            $oOrder = new classOrder($this->getField('orderid'));
+            $oOrder = new classOrder(['orderid'=>$this->getField('orderid')]);
 
             $aData["amount"]["currency"] = $oOrder->getOrderCurrency();
             $aData["amount"]["total"] = number_format($fCaptureSumma,2);

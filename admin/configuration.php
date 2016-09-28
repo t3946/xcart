@@ -50,7 +50,7 @@ $trusted_post_variables = ["gpg_key", "pgp_key", "xpc_private_key_password", "xp
 		'product_answer_subject_line', 'product_answer_message_body', 'outside_sf_localization_warning', 'po_entry_dashboard_text',
 		'GTS_badge_code', 'GTS_order_confirmation_module_code', 'RMA_message', 'RMA_subject', 'RMA_to_department_Subject',
 		'RMA_to_department_Message', 'google_analitics_tracking_script', 'pop_up_code', 'remove_shot_after_days', 'days_past_attn_tag_set','Facebook_pixel_code',
-		'secure_data'];
+		'secure_data','amazon_verification_make_conclusion_popup_message', 'retail_trust_message'];
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
@@ -141,6 +141,10 @@ if ($option == 'Product_Page') {
 	include $xcart_dir . '/include/product_page_options.php';
 }
 
+if ($option == 'Retail_Trust') {
+	include $xcart_dir . '/include/retail_trust_options.php';
+}
+
 if ($option == "User_Profiles") {
 	include "./user_profiles.php";
 }
@@ -195,8 +199,14 @@ elseif ($option == "PBX_options") {
 elseif ($option == "External_marketplaces") {
 	include $xcart_dir . '/modules/External_Marketplaces/external_marketplaces.php';
 }
+elseif ($option == "Amazon_Verification") {
+	include $xcart_dir . '/modules/External_Product_Verification/amazon_verification.php';
+}
 elseif ($option == "Reconciliation") {
     include "./reconciliation_options.php";
+}elseif ($option == "Froogle") {
+	include $xcart_dir . '/modules/External_Marketplaces/external_marketplaces_processing_rules.php';
+	$smarty->assign('additional_config', 'admin/main/froogle_processing_rules.tpl');
 }
 elseif ($option == "currently_assigned_to_statuses") {
     include "./order_statuses.php";

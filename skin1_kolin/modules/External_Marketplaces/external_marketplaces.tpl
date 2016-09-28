@@ -61,13 +61,15 @@
                                 <td>FTP Password</td>
                                 <td>FTP Path</td>
                                 <td>File Suffix</td>
+                                <td>Update expired before (days)</td>
+                                <td>Update max expired products per day</td>
                                 <td>Delete</td>
                             </tr>
                             {if ($oMarketPlace->getStoreFrontMarketplaces())}
                             {foreach from=$oMarketPlace->getStoreFrontMarketplaces() item=oStoreFrontMarketPlace }
                             <tr data-marketplace-id="{$oMarketPlace->getMarketPlaceId()}">
                                 <td align="center">
-                                    <select autocomplete="off" class="external_storefront_storefrontid"  style="width:98%;" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}][storefront_id]">
+                                    <select autocomplete="off" class="external_storefront_storefrontid" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}][storefront_id]">
                                         <option value=""></option>
                                         {html_options options=$external_storefronts->getStoreFrontsSelect() selected=$oStoreFrontMarketPlace->getStoreFrontId()}
                                     </select>
@@ -101,6 +103,12 @@
                                 </td>
                                 <td align="center">
                                     <input class="external_storefront_export_filename_suffix" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}][export_filename_suffix]" type="text" size="15" value="{$oStoreFrontMarketPlace->getFileNameSuffix()}"/>
+                                </td>
+                                <td align="center">
+                                    <input class="external_storefront_update_expired_before" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}][update_expired_before]" type="text" size="15" value="{$oStoreFrontMarketPlace->getUpdateExpiredBeforeDays()}"/>
+                                </td>
+                                <td align="center">
+                                    <input class="external_storefront_update_max_expired_products" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}][update_max_expired_products_per_day]" type="text" size="15" value="{$oStoreFrontMarketPlace->getUpdateMaxExpiredProductsPerDay()}"/>
                                 </td>
                                 <td>
                                     <input class="delete_checkbox" type="checkbox" name="external_storefront_marketplace_to_delete[{$oMarketPlace->getMarketPlaceId()}][{$oStoreFrontMarketPlace->getStoreFrontId()}]"/>
@@ -146,6 +154,12 @@
                                     <td align="center">
                                         <input class="external_storefront_export_filename_suffix" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][0][export_filename_suffix]" type="text" size="15" value=""/>
                                     </td>
+                                    <td align="center">
+                                        <input class="external_storefront_update_expired_before" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][0][update_expired_before]" type="text" size="15" value=""/>
+                                    </td>
+                                    <td align="center">
+                                        <input class="external_storefront_update_max_expired_products" name="external_storefront_marketplace[{$oMarketPlace->getMarketPlaceId()}][0][update_max_expired_products_per_day]" type="text" size="15" value=""/>
+                                    </td>
                                     <td>
                                         <input class="delete_checkbox" type="checkbox" name="external_storefront_marketplace_to_delete[{$oMarketPlace->getMarketPlaceId()}][0]"/>
                                         <a href="javascript: void(0);" class="add_storefront"><img src="{$ImagesDir}/plus.gif"></a>
@@ -186,6 +200,8 @@
             $("input.external_storefront_ftp_path", clone_row).val('');
             $("input.external_storefront_ftp_path", clone_row).val('');
             $("input.external_storefront_export_filename_suffix", clone_row).val('');
+            $("input.external_storefront_update_expired_before", clone_row).val('');
+            $("input.external_storefront_update_max_expired_products", clone_row).val('');
         }
 
         function setRowMarketplaceAndStorefront(change_row, marketplace_id, storefront_id){
@@ -200,6 +216,8 @@
             $('.external_storefront_ftp_password', change_row).attr('name',"external_storefront_marketplace["+marketplace_id+"]["+storefront_id+"][ftp_password]");
             $('.external_storefront_ftp_path', change_row).attr('name',"external_storefront_marketplace["+marketplace_id+"]["+storefront_id+"][ftp_path]");
             $('.external_storefront_export_filename_suffix', change_row).attr('name',"external_storefront_marketplace["+marketplace_id+"]["+storefront_id+"][export_filename_suffix]");
+            $('.external_storefront_update_expired_before', change_row).attr('name',"external_storefront_marketplace["+marketplace_id+"]["+storefront_id+"][update_expired_before]");
+            $('.external_storefront_update_max_expired_products', change_row).attr('name',"external_storefront_marketplace["+marketplace_id+"]["+storefront_id+"][update_max_expired_products_per_day]");
             $('.delete_checkbox', change_row).attr('name',"delete_checkbox["+marketplace_id+"]["+storefront_id+"]");
         }
 
@@ -247,7 +265,6 @@
                 var change_row = $(this).parent().parent(),
                 marketplace_id = change_row.data('marketplace-id');
                 setRowMarketplaceAndStorefront(change_row, marketplace_id, $(this).val());
-                console.log($(this).val());
             });
         });
     </script>

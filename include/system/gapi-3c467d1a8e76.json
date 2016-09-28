@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "careful-triumph-774",
+  "private_key_id": "3c467d1a8e76193102078461b03fa91e2cb3cb70",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDEmKVnHl2rUf41\nc4kX7Us/9xtsrD2Xh6Cgo0CAjqVwfAyDrK4rxlqn6AH3qXb/Gg/BGHmsMoy9Aitm\nOVhbbJjUTPsaAuPSCT43Egnj9u3VlBuPIWUu/2as5SCxAvzzVG+H4mfojN6PagKp\njvunKqexD7Gh2ZNdKEjqOGP1/joCPCF9ULVNuU7Lx1mTygFbq0mT7g4jRHIkAgmH\nKZEoRGIAKSJ35csTNrCqtw8xud01epPO8ecwC5IbzJDErupMwHye6SgT6j08aLH+\n6ZOrEtqiOLmoffpb5hJILNWy/W8V1YuGuq/n6b0FwcKzICnIU7aCi3uaiYNLgTvS\nr0Yckct/AgMBAAECggEABLf5OFllPChypovIXZend7iRovEbZVivBUwFz1AdLm77\nyelKIOjY4jDSY0RhA8x3VlYlDXoFIMA9lG2J7l/T5zyVxlENcMwh/yZisGML4FV2\nt9/AUvl0WHADcdw1gA2lw6gugElpSh3sRG+XILMIZVqQE+dp/xFpdp214ICimc0W\n2u5onkncjF5TUcEgcPSybIjEWQSGHPnDWRjS8qiToQMWljehiHJ59KNf/OCfF4/e\nmz8eu4YYecM/bJCztNgkLMRFT5GJZei0obkzuwitHRl6tnhmAovhpE4OGZQp5VuT\nYErkXCCU/sRkZZZoewSMvLeWLfHzXG1/d/LAKkY+2QKBgQD3C9MF3jmg5s3KRQgY\nFiH9XnZjgeYVvXLkvD2vwADQcrn3dG0s/qPeAWh9Yvh8jFcy2QBUeMoK3mMjM2L1\n88n7ag2GvkGTzwyq8lF3ufiSjvKWIJNy9Tnp6pN5PP8eZP1+T8itHOusD0iv1XTu\n0DgUKUL8eckvMQWZcaO9a5OnmwKBgQDLuLsdLQUoZ65CUMzyNZCPOQRMb20mSZxG\nBARyqUbwgCKUbGg4g5CkQo9nSi5ChdQYCA2RonPRJljMJ1QMLqxztqgwk9pODc99\nS8RNYNfbZbCa/rPuRAZzhiwXrcXD1JJG2SjpuhOHYqLfcPxuAJDZ9u6DwtNR7RmD\n33aaQ49z7QKBgGo2GzOapwwWLsOXijNQ0KwtwJhncJRILu1IQP0efzsfF/TbiVSe\n5bS8xj+iHVLuw06JHSs0AylJEzY/EXzMozoEDmyvv2Hc0oVsSLpAqi3YZ1NEDiCO\nbaezwlONdeGLabC0fIJwvKHssENoci16N6HzW2lQsr4nRVEDGnKFnaWhAoGAEFj7\nkuTI9CwVvLaVK56Gwid2I9gRLzBa/PdXkAfrbGMr4zMrzdUo5zV8InK+cZIhqegD\nhrs9hfwIxiElynB4YDS5HGTQ8NCE5O4Oi5MI308ys81ajPUie2S55xCHvSYyssK8\nWL0Y0hVlMn7zkrQy63q4OxSINpvLH1zwPILNYSUCgYBgYI1cyR+GJQYROtK8rnTI\nJP6cT3pvMjDvacNt2V+mZVpTMOE36Y5v4WQ7hcbBDGGhFRLRbi+Nc7N1rYHMwfuA\nC+6QqYho1O31Z2t7f0q4IN0v3u3oo2/07TGivtrnE+mhjUjlh50htMzd9EZzYC+s\noou5saS+whZ5sKpRJQaUOA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "account-2@careful-triumph-774.iam.gserviceaccount.com",
+  "client_id": "101673544036513888949",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/account-2%40careful-triumph-774.iam.gserviceaccount.com"
+}

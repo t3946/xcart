@@ -6,6 +6,7 @@ require_once '../include/class/classOrder.php';
 require_once '../include/class/classPOPipeline.php';
 global $xcart_dir;
 require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationBatches.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classIssuesProcessingRules.php";
 
 
 switch ($_POST['ajax_action']) {
@@ -24,6 +25,11 @@ switch ($_POST['ajax_action']) {
     case "change_verify_batch_status":
         changeVerifyBatchStatus($_POST);
         break;
+    case "change_processing_rules":
+        changeProcessingRules($_POST);
+    case "change_verificator_status":
+        changeVerificatorStatus($_POST);
+        break;
     case "add_new_batch":
         addNewBatch($_POST);
         break;
@@ -37,11 +43,11 @@ function changeVerifyProductStatus($aPostParam = [])
     $iStatusId = (int)$aPostParam['verify_status_id'];
     $sNote = $aPostParam['note_text'];
     if (!empty($iProductId)) {
-        $oProduct = new classProduct($iProductId);
+        $oProduct = new classProduct(['productid'=>$iProductId]);
         $bResult = $oProduct->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
         if (!empty($aOrders)) {
             foreach ($aOrders as $iOrderId) {
-                $oOrder = new classOrder($iOrderId);
+                $oOrder = new classOrder(['orderid'=>$iOrderId]);
                 $oOrder->updateVerificationStatus();
             }
         }
@@ -55,7 +61,7 @@ function changeVerifyOrderStatus($aPostParam = [])
     $iOrderId = (int)$aPostParam['order_id'];
     $sOrderStatus = $aPostParam['order_verify_status'];
     if (!empty($iOrderId)) {
-        $oOrder = new classOrder($iOrderId);
+        $oOrder = new classOrder(['orderid'=>$iOrderId]);
         $bResult = $oOrder->changeVerificationStatus($sOrderStatus);
     }
     print(json_encode($bResult));
@@ -101,6 +107,20 @@ function changeVerifyBatchStatus($aPostParam = [])
     print(json_encode($aResult));
 }
 
+function changeVerificatorStatus($aPostParam = [])
+{
+    $aResult = [];
+    if (!empty($aPostParam['customer_id'])) {
+        if (!empty($aPostParam['user_status_id']) && $aPostParam['user_status_id']=='unblocked') {
+            $oCustomer = new classCustomer(['login' => $aPostParam['customer_id']]);
+            if ($oCustomer->getCustomerLogin()) {
+                $oCustomer->unblockAmazonAccount();
+            }
+        }
+    }
+    print(json_encode($aResult));
+}
+
 function addNewBatch($aPostParam = [])
 {
     $aResult = [];
@@ -110,6 +130,16 @@ function addNewBatch($aPostParam = [])
     $oCustomer = new classCustomer(['login' => $aPostParam['login']]);
     $iMaxBatchNumber = $oCustomer->getAmazonBatchesMaxNumber();
     $oVerificationBatch->setField('batch_number', $iMaxBatchNumber + 1);
+    if (!empty($_POST['test_batch']) && $_POST['test_batch'] == 'Y')
+        $oVerificationBatch->setField('is_test', 'Y');
     $oVerificationBatch->_insert();
+    print(json_encode($aResult));
+}
+
+function changeProcessingRules($aParams = [])
+{
+    $aResult = [];
+    $aRule = new classIssuesProcessingRules(['issue_id'=> $aParams['rule_id']]);
+    $aRule->updateField('issue_processing', $aParams['status_id']);
     print(json_encode($aResult));
 }

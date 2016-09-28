@@ -2,6 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classCustomer.php";
 require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationBatches.php";
+require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationProductsQueue.php";
 
 $smarty->assign("main","operators_batches");
 
@@ -15,3 +16,5 @@ $smarty->assign("batch_status", $batch_status);
 
 $aStatuses = ['In progress', 'Completed', 'Paid'];
 $smarty->assign("batch_statuses", $aStatuses);
+
+$smarty->assign("iNumberTestProducts", classExternalVerificationProductsQueue::getProductsQueueEtalonCount());

@@ -1,15 +1,17 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir . "/include/class/classCloneData.php";
+require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classOrderDetail.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
+require_once $xcart_dir . "/include/class/classPaymentMethod.php";
 require_once $xcart_dir . "/include/class/classManufacturers.php";
 require_once $xcart_dir . "/include/class/classOrderTransactions.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+require_once $xcart_dir . "/include/class/classCustomer.php";
 
-class classOrder extends classCloneData
+class classOrder extends classData
 {
     const ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED = 'PV';
     const ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND = 'PF';
@@ -18,34 +20,61 @@ class classOrder extends classCloneData
 
     const ADMIN_ORDER_MODIFY_URL = '/admin/order.php?orderid=%d';
 
-    private $aOrderDetails = [];
-    private $aOrderGroups = [];
+    /**
+     * @var classOrderDetail[]
+     */
+    private $aOrderDetails = null;
+    /**
+     * @var classOrderGroup[]
+     */
+    private $aOrderGroups = null;
     /**
      * @var classProduct[]
      */
     private $aOrderProducts = null;
-    private $aOrderProductsManufactueres = [];
+    private $aOrderProductsManufactueres = null;
+    private $aAdditionalFees = null;
+    private $oPaymentMethod = null;
+    /**
+     * @var classCustomer
+     */
+    private $oCustomer = null;
+    /**
+     * @var classStoreFront
+     */
+    private $oStoreFront = null;
 
-    public function __construct($aOrderData = null)
+    public function __construct($aOrderData = [])
     {
-        $this->sPrimaryTable = "orders";
-        $this->sPrimaryKeyFiled = "orderid";
+        $this->aPrimaryKeys = ['orderid'];
+        $this->sPrimaryTable = 'orders';
 
         parent::__construct($aOrderData);
     }
 
     public static function getInstance($iId = null)
     {
-        return new self($iId);
+        $oOrder = null;
+        if (is_array($iId)) {
+            $oOrder = new self();
+            $oOrder->fillPrimaryTableValues($iId);
+        } else if (is_numeric($iId)) {
+            $oOrder = new self(['orderid' => $iId]);
+        } else if (is_null($iId)) {
+            $oOrder = new self();
+        }
+        return $oOrder;
     }
 
     private function fetchOrderDetails()
     {
         if (empty($this->aOrderDetails)) {
-            $aOrderDetails = func_query("SELECT * FROM " . self::$sql_tbl['order_details'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
+            $aOrderDetails = func_query("SELECT * FROM " . self::$sql_tbl['order_details'] . " WHERE " . $this->getWhereClause());
             if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
                 foreach ($aOrderDetails as $aOrderDetail) {
-                    $this->aOrderDetails[] = new classOrderDetail($aOrderDetail);
+                    $oOrderDetail = new classOrderDetail();
+                    $oOrderDetail->fillPrimaryTableValues($aOrderDetail);
+                    $this->aOrderDetails[] = $oOrderDetail;
                 }
             }
         }
@@ -55,7 +84,7 @@ class classOrder extends classCloneData
     private function fetchOrderGroups()
     {
         if (empty($this->aOrderGroups)) {
-            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_groups'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
+            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_groups'] . " WHERE " . $this->getWhereClause());
             if (!empty($aOrderGroups) && is_array($aOrderGroups)) {
                 foreach ($aOrderGroups as $aOrderGroup) {
                     $oOrderGroup = new classOrderGroup();
@@ -74,6 +103,75 @@ class classOrder extends classCloneData
     {
         $this->fetchOrderDetails();
         return $this->aOrderDetails;
+    }
+
+    /**
+     * @return classOrderDetail[]
+     */
+    public function getOrderDetailsWithRetailTrust()
+    {
+        $aResult = [];
+        $this->fetchOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                if ($oOrderDetail->isRetailTrustEnabled())
+                    $aResult[] = $oOrderDetail;
+            }
+        }
+        return $aResult;
+    }
+
+    public function getOrderRetailTrustPrice()
+    {
+        $fResult = 0;
+        $aRetaiTrust = $this->getOrderDetailsWithRetailTrust();
+        if (!empty($aRetaiTrust)) {
+            foreach ($aRetaiTrust as $oRetailTrust) {
+                $fResult += floatval($oRetailTrust->getRetailTrustPrice());
+            }
+        }
+        return $fResult;
+    }
+
+    public function getOrderRetailTrustGross()
+    {
+        $fResult = 0;
+        $aRetaiTrust = $this->getOrderDetailsWithRetailTrust();
+        if (!empty($aRetaiTrust)) {
+            foreach ($aRetaiTrust as $oRetailTrust) {
+                $fResult += floatval($oRetailTrust->getRetailTrustGross());
+            }
+        }
+        return $fResult;
+    }
+
+    public function calculateOrderRetailTrustProductsTotal()
+    {
+        $fSumma = 0;
+        $oOrderDetails = $this->getOrderDetailsWithProductsRetailTrust();
+        if (!empty($oOrderDetails)) {
+            foreach ($oOrderDetails as $oOrderDetail)
+            {
+                $fSumma+=$oOrderDetail->calculateRetailTrustPrice();
+            }
+        }
+        return $fSumma;
+    }
+
+    /**
+     * @return classOrderDetail[]
+     */
+    public function getOrderDetailsWithProductsRetailTrust()
+    {
+        $aResult = [];
+        $this->fetchOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                if ($oOrderDetail->getOrderDetailProduct()->isRetailTrustEnabled() && $this->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() > 1)
+                    $aResult[] = $oOrderDetail;
+            }
+        }
+        return $aResult;
     }
 
     /**
@@ -119,7 +217,8 @@ class classOrder extends classCloneData
                 if (!empty($aProducts) && is_array($aProducts)) {
                     $this->aOrderProductsManufactueres = [];
                     foreach ($aProducts as $aProduct) {
-                        $oProduct = new classProduct($aProduct);
+                        $oProduct = new classProduct();
+                        $oProduct->fillPrimaryTableValues($aProduct);
                         if (!in_array($oProduct->getField('manufacturerid'), $this->aOrderProductsManufactueres))
                             $this->aOrderProductsManufactueres[] = $oProduct->getField('manufacturerid');
                         $this->aOrderProducts[] = $oProduct;
@@ -155,12 +254,12 @@ class classOrder extends classCloneData
 
     public function getDisplayOrderNumber()
     {
-        return $this->getField('order_prefix') . $this->getField($this->sPrimaryKeyFiled);
+        return $this->getOrderPrefix() . $this->getOrderId();
     }
 
     public function getOrderModifyURL()
     {
-        return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled));
+        return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getOrderId());
     }
 
     public static function getOrderStatusByCode($sCode)
@@ -174,11 +273,11 @@ class classOrder extends classCloneData
         $aNewStatus = self::getOrderStatusByCode($sNewStatus);
         $aOldStatus = self::getOrderStatusByCode($this->getField('vn_status'));
         if ($aNewStatus['code'] != $aOldStatus['code']) {
-            $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->primaryKeyValue);
-            $log = "vn_status: ". $aOldStatus['name'] . " -> ". $aNewStatus['name'];
-            func_log_order($this->primaryKeyValue, 'X', $log);
+            $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->getOrderId());
+            $log = "vn_status: " . $aOldStatus['name'] . " -> " . $aNewStatus['name'];
+            func_log_order($this->getOrderId(), 'X', $log);
         }
-        $this->setField('vn_status',$sNewStatus);
+        $this->setField('vn_status', $sNewStatus);
         return $bResult;
     }
 
@@ -244,6 +343,18 @@ class classOrder extends classCloneData
     {
         return $this->getField('customer_notes');
     }
+
+    public function getFirstName()
+    {
+        return $this->getField('firstname');
+    }
+
+    public function getEmail()
+    {
+        return $this->getField('email');
+    }
+
+
     public function getShippingFirstName()
     {
         return $this->getField('s_firstname');
@@ -391,7 +502,7 @@ class classOrder extends classCloneData
         try {
             $aOrderTransactions->captureOrderAmount($this);
         } catch (Exception $ex) {
-            func_log_order($this->getOrderId(),'X',$ex->getMessage(),$login);
+            func_log_order($this->getOrderId(), 'X', $ex->getMessage(), $login);
             return false;
         }
         return $this;
@@ -405,8 +516,276 @@ class classOrder extends classCloneData
     public function isAttentionTagSet($iStatusId)
     {
         $oSQL = new classSQLBuilder();
-        $aQResult = $oSQL->init()->addSelect('status_id')->addFromTable('orders_additional_tags')->addCondition('orderid='.$this->getOrderId())->addCondition('status_id='.$iStatusId)->Execute()->getQueryResult();
+        $aQResult = $oSQL->init()->addSelect('status_id')->addFromTable('orders_additional_tags')->addCondition('orderid=' . $this->getOrderId())->addCondition('status_id=' . $iStatusId)->Execute()->getQueryResult();
         return !empty($aQResult);
+    }
+
+    public function getOrderAdditionalFee()
+    {
+        $fResult = 0;
+        if (is_null($this->aAdditionalFees)) {
+            $oSQL = new classSQLBuilder();
+            $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
+        }
+        if (!empty($this->aAdditionalFees)) {
+            foreach ($this->aAdditionalFees as $aAFee) {
+                $fResult += floatval($aAFee['additional_fee_value']);
+            }
+        }
+        return floatval($fResult);
+    }
+
+    public function getOrderShippingNet()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getShippingNet();
+            }
+        }
+        return $fResult;
+    }
+
+    public function getOrderShippingGross()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getShippingGross();
+            }
+        }
+        return $fResult;
+    }
+
+    public function getOrderShippingHST()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getShippingHST();
+            }
+        }
+        return floatval($fResult + $this->getOrderShippingPST());
+    }
+
+    public function getOrderShippingPST()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getShippingPST();
+            }
+        }
+        return $fResult;
+    }
+
+    public function getOrderTotalNet()
+    {
+        /*$fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getTotalNet();
+            }
+        }
+        return $fResult + $this->getOrderAdditionalFee();*/
+        return $this->getField('total_net');
+    }
+
+    public function addOrderTotaNet($fSumma)
+    {
+        $this->setField('total_net', floatval($this->getField('total_net')) + $fSumma);
+        return $this;
+    }
+
+    public function addOrderTotal($fSumma)
+    {
+        $this->setField('total', floatval($this->getField('total')) + $fSumma);
+        return $this;
+    }
+
+    public function getOrderTotalHST()
+    {
+        /*$fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getTotalHST();
+            }
+        }
+        return floatval($fResult+$this->getOrderTotalPST());*/
+        return $this->getField('total_gst');
+    }
+
+    public function getOrderTotalPST()
+    {
+        /* $fResult = 0;
+         $this->fetchOrderGroups();
+         if (!empty($this->aOrderGroups)) {
+             foreach ($this->aOrderGroups as $oOrderGroup) {
+                 $fResult += $oOrderGroup->getTotalPST();
+             }
+         }
+         return $fResult;*/
+        return $this->getField('total_pst');
+    }
+
+    public function addOrderTotalGross($fSumma)
+    {
+        $this->setField('total_gross', floatval($this->getField('total_gross')) + $fSumma);
+        return $this;
+    }
+
+    public function getOrderTotalGross()
+    {
+        /*$fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getTotalGross();
+            }
+        }
+        return $fResult + $this->getOrderAdditionalFee();*/
+        return $this->getField('total_gross');
+    }
+
+    public function getOrderCostToUs()
+    {
+        $fResult = 0;
+        $this->fetchOrderGroups();
+        if (!empty($this->aOrderGroups)) {
+            foreach ($this->aOrderGroups as $oOrderGroup) {
+                $fResult += $oOrderGroup->getTotalCostToUs();
+            }
+        }
+        return $fResult;
+    }
+
+    public function getProductPriceNet()
+    {
+        $fResult = 0;
+        $this->fetchOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                $fResult += $oOrderDetail->getTotalProductPrice();
+            }
+        }
+        return floatval($fResult);
+    }
+
+    public function getProductPriceHSTPST()
+    {
+        $fResult = 0;
+        $this->fetchOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                $fResult += $oOrderDetail->getProductHST();
+                $fResult += $oOrderDetail->getProductPST();
+            }
+        }
+        return floatval($fResult);
+    }
+
+    public function getProductPriceGross()
+    {
+        return floatval($this->getProductPriceNet() + $this->getProductPriceHSTPST());
+    }
+
+    public function getPaymentMethodId()
+    {
+        return $this->getField('paymentid');
+    }
+
+    /**
+     * @return classPaymentMethod
+     */
+    public function getPaymentMethodInstance()
+    {
+        if (is_null($this->oPaymentMethod)) {
+            $oPay = new classPaymentMethod(['paymentid' => $this->getPaymentMethodId()]);
+            $this->oPaymentMethod = $oPay->getPaymentMethodInstance(['paymentid' => $this->getPaymentMethodId()]);
+        }
+        return $this->oPaymentMethod;
+    }
+
+    public function getOrderStatusDC()
+    {
+        return $this->getField('dc_status');
+    }
+
+    public function getOrderStatusCB()
+    {
+        return $this->getField('cb_status');
+    }
+
+    public function getOrderStatusBD()
+    {
+        return $this->getField('bd_status');
+    }
+
+    public function _refresh()
+    {
+        parent::_refresh();
+        $this->aOrderGroups = null;
+        $this->aOrderDetails = null;
+        $this->aOrderProducts = null;
+        $this->aOrderProductsManufactueres = null;
+        $this->aAdditionalFees = null;
+        $this->oPaymentMethod = null;
+        $this->oCustomer = null;
+
+    }
+
+    public function recalculateRetailTrust()
+    {
+        $this->_refresh();
+        $fTotalRetailTrust = 0;
+        $aOrderGroups = $this->getOrderGroups();
+        if (!empty($aOrderGroups)) {
+            foreach ($aOrderGroups as $oOrderGroup) {
+                $fTotalRetailTrustGroup = 0;
+                $aOrderDetails = $oOrderGroup->getOrderDetailsWithRetailTrust();
+                if (!empty($aOrderDetails)) {
+                    foreach ($aOrderDetails as $oOrderDetail) {
+                        $fTotalRetailTrustGroup += $oOrderDetail->getRetailTrustPrice();
+                    }
+                    $oOrderGroup->addTotalNet($fTotalRetailTrustGroup)->addTotalGross($fTotalRetailTrustGroup)->_update();
+                    $fTotalRetailTrust += $fTotalRetailTrustGroup;
+                }
+            }
+            $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
+            $this->_refresh();
+        }
+        return $this;
+    }
+
+    public function getOrderStoreFront()
+    {
+        if (is_null($this->oStoreFront)) {
+            $aOrderProducts = $this->getOrderProducts();
+            if (!empty($aOrderProducts)) {
+                $oProduct = reset($aOrderProducts);
+                $this->oStoreFront = $oProduct->getStoreFront();
+            }
+        }
+        return $this->oStoreFront;
+    }
+
+    public function getLogin()
+    {
+        return $this->getField('login');
+    }
+
+    public function getCustomerEntity()
+    {
+        if (is_null($this->oCustomer)) {
+            $this->oCustomer = new classCustomer(['login'=>$this->getLogin()]);
+        }
+        return $this->oCustomer;
     }
 
 }

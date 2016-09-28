@@ -48,6 +48,9 @@ class classStoreFronts extends classData
     }
 
     public function getStoreFronts() {
+        if (empty($this->aStoreFronts)) {
+            $this->fetchStoreFronts();
+        }
         return $this->aStoreFronts;
     }
 }

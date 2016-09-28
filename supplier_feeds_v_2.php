@@ -1014,6 +1014,13 @@ die();
 						$product['eta_date_lock'] = "N";
 					}
 
+					require_once $xcart_dir.'/include/class/classProduct.php';
+					$newUPC = classProduct::calculateUPC($product['upc']);
+					if ($product['upc'] != $newUPC) {
+						func_array2insert('products_upc_changes',['productid'=>$productid, 'original_upc'=>$product['upc'], 'corrected_upc'=>$newUPC],true);
+						$product['upc'] = $newUPC;
+					}
+
 
                     print("DB update products section\n");
 					func_array2update("products", $product, "productid = '$productid'");

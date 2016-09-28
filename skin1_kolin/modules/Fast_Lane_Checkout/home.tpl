@@ -150,9 +150,6 @@
  {if $GTS_badge_code ne ""}
        {$GTS_badge_code}
  {/if}
- {if $GTS_order_confirmation_module_code ne ""}
-       {$GTS_order_confirmation_module_code}
- {/if}
 
 </body>
 </html>

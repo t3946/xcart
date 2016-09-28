@@ -83,6 +83,11 @@ class classStoreFront extends classData
         return $this->getField('domain');
     }
 
+    public function getStoreFrontURL($protocol = 'http://')
+    {
+        return $protocol.$this->getDomain();
+    }
+
     public function setCDNDisable()
     {
         $this->Enable_CDN = false;

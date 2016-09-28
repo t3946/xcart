@@ -37,11 +37,11 @@
 require './auth.php';
 require '../include/security.php';
 
-$osn_settings = func_query_first('SELECT code, customer_subject, copy_subject, email_body, enabled, customer_attach_pdf_invoice, admin_attach_pdf_invoice'
-    . ' FROM ' . $sql_tbl['order_status_notifications']
-    . ' WHERE code = "' . $status . '"');
+global $xcart_dir;
+require_once $xcart_dir . "/include/class/classOrderStatusNotification.php";
+$aOrderNotifications = classOrderStatusNotification::getOrderStatusNotificationsByCode($status);
 
-$smarty->assign('osn_settings', $osn_settings);
+$smarty->assign('aOrderNotifications', $aOrderNotifications);
 
 header('Content-Type: application/json; charset=utf-8');
 func_display('main/osn_settings.tpl', $smarty);

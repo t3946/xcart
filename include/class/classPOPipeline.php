@@ -53,7 +53,7 @@ class classPOPipeLine extends classData
         if (is_null($this->oOrder)) {
             $iOrderId = $this->getField('order_id');
             if (!empty($iOrderId))
-                $this->oOrder = new classOrder($iOrderId);
+                $this->oOrder = new classOrder(['orderid'=>$iOrderId]);
         }
         return $this->oOrder;
     }

@@ -169,6 +169,7 @@ if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
 	$e_search_data["substring"] = stripslashes($e_search_data["substring"]);
 	$e_search_data["substring"] = trim($e_search_data["substring"]);
 	$e_search_data["substring"] = str_replace("&#039;", "'", $e_search_data["substring"]);
+	$e_search_data["substring"] = str_replace("&", " ", $e_search_data["substring"]);
 	$e_search_data["orig_substring"] = $e_search_data["substring"];
 
 //func_print_r($_POST);
@@ -177,7 +178,7 @@ if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
 
 	x_session_save("e_search_data");
 
-        $redirect_substring = str_replace(array(' ','#',':'), '-', $e_search_data["substring"]);
+        $redirect_substring = str_replace(array(' ','#',':', '&'), '-', $e_search_data["substring"]);
 
 
         func_header_location("/keyword/".$redirect_substring."/?mode_search=Y");

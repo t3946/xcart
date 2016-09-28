@@ -80,7 +80,7 @@
 
 <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
 
-<link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />
+{*<link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />*}
 
 {*
   <link rel="stylesheet" href="http://mehamalina.ru/css/style.css?v=1421903756">
@@ -212,30 +212,14 @@ window.attachEvent("onload", anchor_fix);
             section_name.trim();
 
             if ((ajax_counter - 1) == i) {
-//                                alert(section_name);
-
-                load_ajax_carousel_flag = true;
-
-                if (section_name == "similar_products") {
-
-                    var products_also_bought_with_this_product_style_display;
-                    products_also_bought_with_this_product_style_display = $("#products_also_bought_with_this_product").css("display");
-
-                    if (products_also_bought_with_this_product_style_display == "block") {
-                        load_ajax_carousel_flag = true;
-                    }
-                }
-
-                if (load_ajax_carousel_flag) {
                     func_load_ajax_carousel_products(section_name);
-                }
             }
         });
 
 //$("#test_text").val(ajax_counter);
 
         ajax_counter++;
-        setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1100);
+        setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1400);
 	}
 
 function func_load_ajax_carousel_products(section_name) {
@@ -364,7 +348,7 @@ function func_load_ajax_carousel_products(section_name) {
         cidev_xmlHttp.send(cidev_parameters);
     }
     else {
-        setTimeout('func_load_ajax_carousel_products()', 1000);
+        setTimeout('func_load_ajax_carousel_products()', 1400);
     }
 }
 {/literal}
@@ -795,9 +779,6 @@ $(document).ready(function() {
 {if $GTS_badge_code ne ""}
 	{$GTS_badge_code}
 {/if}
-{if $GTS_order_confirmation_module_code ne ""}
-	{$GTS_order_confirmation_module_code}
-{/if}
 
 
 {* async javascripts to eliminate blocking of render page *}
@@ -822,14 +803,14 @@ element2.src = "{/literal}{$SkinDir}{literal}/ajax_add_to_cart.js";
 document.body.appendChild(element2);
 */
 
-var element3 = document.createElement("script");
+/*var element3 = document.createElement("script");
 element3.src = "{/literal}{$SkinDir}{literal}/customer/popup_open.js";
 document.body.appendChild(element3);
 
 var element4 = document.createElement("script");
 element4.src = "{/literal}{$SkinDir}{literal}/lib/colorbox/jquery.colorbox-min.js";
 document.body.appendChild(element4);
-
+*/
 {/literal}
 {if !($main eq "product" || $main eq "fast_lane_checkout")}
 {literal}
