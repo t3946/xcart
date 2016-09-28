@@ -347,5 +347,4 @@ class classProduct extends classData
         return $oProduct;
 
     }
-
 }

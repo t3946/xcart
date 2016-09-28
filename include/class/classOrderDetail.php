@@ -6,8 +6,6 @@ require_once $xcart_dir . "/include/class/classOrder.php";
 
 class classOrderDetail extends classData
 {
-    public function __construct($aOrderDetailsData = null)
-=======
     /**
      * @var classProduct
      */

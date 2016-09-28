@@ -2003,7 +2003,7 @@ if ($source != 'XML_Sitemap') {
     }
 
     if ($current_area != "C") {
-        if ($search_data["products"]["productcode"]) {
+        if (!empty($search_data["products"]["productcode"])) {
             $search_data["products"]["extra_sku"] = array();
             $search_data["products"]["extra_sku"][] = $search_data["products"]["productcode"];
             unset($search_data["products"]["productcode"]);
