@@ -47,7 +47,7 @@
         </tr>
         <tr class="TableSubHead">
             <td>
-                <b>Total number of products processed including 'Match', 'Not sure', and 'Does not match':</b>
+                <b>Total number of products processed including 'Match', 'Not sure', and 'Does NOT match':</b>
             </td>
             <td>
                 {$oCustomer->getAmazonProductProcessedCount()}
@@ -64,6 +64,12 @@
     </table>
     <br/>
     <br/>
+
+    {if $isAccountSuspended}
+        <div style="font-size: 1.5em; text-align: center; color:red; font-weight: bold;">
+            You've made too many mistakes on control products. Therefore your account has been suspended. <br>Please contact the manager.
+        </div>
+    {else}
     <table width="100%">
         <tr>
             <td colspan="5">
@@ -80,7 +86,7 @@
         {if ($aCurrentBatches)}
             <tr class="TableHead">
                 <td width="10">Batch #</td>
-                <td width="60" nowrap="nowrap" align="center">BATCH SIZE (# OF PROD)</td>
+                <td width="60" nowrap="nowrap" align="center">BATCH SIZE<br>(# OF PRODUCTS)</td>
                 <td width="100" align="center">Products processed</td>
                 <td width="100" align="center">BATCH STATUS</td>
                 <td width="200" align="center">BATCH PRODUCT VERIFICATION LINK</td>
@@ -91,9 +97,8 @@
                     <td align="center">{$oCurrentBatch->getBatchAmount()}</td>
                     <td align="center">{$oCurrentBatch->getProductsInBatchCompletedCount()}</td>
                     <td align="center">{$oCurrentBatch->getBatchStatus()}</td>
-                    <td align="center">continue the processing of batch ID: <a class="verification_link" target="_blank" href="{$oCurrentBatch->getBatchVerifyLink()}">
-                            {$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}
-                            _{$oCurrentBatch->getBatchAmount()}</a></td>
+                    <td align="center"><a class="verification_link" target="_blank" href="{$oCurrentBatch->getBatchVerifyLink()}">continue the processing of batch ID:
+                            {$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}_{$oCurrentBatch->getBatchAmount()}</a></td>
                 </tr>
             {/foreach}
         {else}
@@ -106,6 +111,7 @@
 
 
     </table>
+    {/if}
     <br/>
     <br/>
     <table width="100%">

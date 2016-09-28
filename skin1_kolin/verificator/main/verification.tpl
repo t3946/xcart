@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
     <link rel="stylesheet" href="{$SkinDir}/css/semantic/semantic.css">
     <link rel="stylesheet" href="{$SkinDir}/verificator/css/main.css"/>
 
@@ -11,6 +12,7 @@
     <script src="{$SkinDir}/js/semantic/components/modal.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/transition.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/progress.min.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/js/semantic/components/popup.min.js" type="text/javascript"></script>
 
     {literal}
     <script type="text/javascript">
@@ -137,6 +139,9 @@
                     }
                 }
             });
+
+            $('#make_conclusion_button').popup({on: 'click'}).click(function(){return false;});
+
             $('#original_product').on('click', '', function () {
                 clickOriginalProduct($(this));
                 var sstep = '',
@@ -166,6 +171,11 @@
                     history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep);
                 }
             });
+
+            $('#negative_conclusion').on('click','',function(){
+                $('.small.modal').modal('hide').parent().removeClass('active');
+            });
+
             initButtons();
             $('.indicating.progress').progress();
             if (trans) {
@@ -188,7 +198,8 @@
                         active_batch_id = $(this).parent().data('batch-id'),
                         active_product_id = $(this).parent().data('product-id'),
                         active_asin = $(this).parent().data('asin');
-                $('.small.modal').modal({
+                $('#conclusion_title').text($(this).text()).removeClass('positive yellow negative').addClass($(this).data('class'));
+                $('.small.modal').modal('hide').modal({
                     onApprove: function () {
                         $('#conclusion_buttons').fadeOut();
                         $.post('ajax_admin.php', {
@@ -208,6 +219,9 @@
                                     }
                                     location.href = spathName + '?batch=' + getBatchId() + ssplit;
                                 }, 'json');
+                    },
+                    onDeny: function() {
+                        $(this).modal('hide').parent().removeClass('active');
                     }
                 }).modal('show');
             });
@@ -247,7 +261,9 @@
             }
         }
 
-        function loadRemoteFrame(frame_Name, url, idx_force = false, appendto='.iframediv.left') {
+        function loadRemoteFrame(frame_Name, url, idx_force, appendto) {
+
+            if (!(appendto)) appendto = '.iframediv.left';
             var i_frame = document.getElementById(frame_Name),
                     idx = idx_force;
             var split = isSplitScreen();
@@ -296,8 +312,13 @@
 <body class="verifiaction">
 <header id="header">
     <div class="buttons-wrap-left">
+        <div class="form ui field">
+            <div class="ui slider checkbox">
+                <input autocomplete="off" name="newsletter" id="split-screen-checkbox" type="checkbox">
+                <label>Split screen</label>
+            </div>
+        </div>
         <div class="wrap-left">
-
             <div class="three ui buttons">
                 <span style="font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; ">Compare</span>
                 <button data-step-id="0" id="search_amazon_by_asin" class="ui button attached">Open product by ASIN
@@ -313,38 +334,36 @@
                 </span>
             </div>
         </div>
-        <div style="float: right; bottom: 42px; right: -70px;" class="form ui field">
-            <div class="ui slider checkbox" style="margin-top: 10px; float:left; width: 158px; font-size: 14px;">
-                <input autocomplete="off" name="newsletter" id="split-screen-checkbox" type="checkbox">
-                <label style="font-family:Verdana;">Split screen</label>
-            </div>
-        </div>
     </div>
     <div class="buttons-wrap-right">
-        <div class="ui indicating progress" id="progress-indicator"
-             data-value="{$oVerificationBatch->getProductsInBatchCompletedCount()}"
-             data-total="{$oVerificationBatch->getBatchAmount()}">
-            <div class="bar">
-                <div class="progress"></div>
+        <div class="progress-wrap">
+            <div class="label">Batch progress</div>
+            <div id="progress-indicator" class="ui indicating progress"
+                 data-value="{$oVerificationBatch->getProductsInBatchCompletedCount()}"
+                 data-total="{$oVerificationBatch->getBatchAmount()}">
+
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="label">{$oVerificationBatch->getProductsInBatchCompletedCount()}
+                    /{$oVerificationBatch->getBatchAmount()}</div>
             </div>
-            <div class="label">{$oVerificationBatch->getProductsInBatchCompletedCount()}
-                /{$oVerificationBatch->getBatchAmount()}</div>
         </div>
         <div class="buttons-right">
             <div id="conclusion_buttons" style="display:none;">
-                <span style="font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</span>
+                <a data-html="{$config.Amazon_Verification.amazon_verification_make_conclusion_popup_message}" id="make_conclusion_button" href="#" style="border-bottom: 1px dotted; color: #0000ff; text-decoration: none; font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; max-width: 475px;">Make a conclusion</a>
 
                 <div id="action_buttons_block" class="ui buttons select" data-asin=""
                      data-batch-id="{$oVerificationBatch->getBatchId()}"
                      data-product-id="{$oVerificationBatch->getVerifiedProductId()}">
-                    <button data-action="match" id="submit-product-match" class="ui left positive button">Product
+                    <button data-action="match" data-class="positive" id="submit-product-match" class="ui left positive button">Product
                         match
                     </button>
                     <div class="or" data-text="or"></div>
-                    <button data-action="not_sure" id="submit-product-not-sure" class="ui yellow button">Not sure
+                    <button data-action="not_sure" data-class="yellow" id="submit-product-not-sure" class="ui yellow button">Not sure
                     </button>
                     <div class="or" data-text="or"></div>
-                    <button data-action="not_match" id="submit-product-not-match" class="ui negative button">Does not
+                    <button data-action="not_match" data-class="negative" id="submit-product-not-match" class="ui negative button">Does NOT
                         match
                     </button>
                 </div>
@@ -352,7 +371,7 @@
             <div data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}"
                  data-product-id="{$oVerificationBatch->getVerifiedProductId()}" class="ui buttons select"
                  id="product_not_found_button">
-                <button data-action="not_found" id="submit-product-not-found" class="ui left button">Product not found
+                <button data-action="not_found" data-class="negative" id="submit-product-not-found" class="ui left negative button">Product not found
                 </button>
             </div>
 
@@ -372,7 +391,7 @@
 
 <div class="ui small test modal transition">
     <div class="header">
-        Comments
+        Conclusion: <button style="position: relative; bottom: 2px;" id="conclusion_title" class="ui positive button">Product match </button>
     </div>
     <div class="content">
         <div class="ui form">
@@ -384,9 +403,7 @@
         </div>
     </div>
     <div class="actions">
-        <div class="ui negative button">
-            Cancel
-        </div>
+        <a id="negative_conclusion">Cancel</a>
         <div class="ui positive right labeled icon button">
             Submit
             <i class="checkmark icon"></i>

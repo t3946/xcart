@@ -315,7 +315,7 @@ Category {$v} is not ready to classification!<br />
 {if $kk eq ($v.relevant_cats.1.categoryid_path_arr_count - 1)}<a href="http://{$current_storefront_info.domain}/home.php?cat={$v.relevant_cats.1.categoryid}" target="_blank" style="color: blue;">
 {if $v.relevant_cats.1.product_count gt 0}<B>{/if}
 {/if}
-{$vv}{if $kk eq ($v.relevant_cats.1.categoryid_path_arr_count - 1)}{if $v.relevant_cats.1.product_count gt 0}</B>{/if}</a>{/if}{if $kk < ($v.relevant_cats.1.categoryid_path_arr_count - 1)} <B>></B> {/if} {if $v.relevant_cats.1.product_count gt 0 && $kk eq ($v.relevant_cats.1.categoryid_path_arr_count - 1)}({$v.relevant_cats.1.count_pc_products} / <a href="javascript: void(0);" onclick="javascript: $('#form1_correct_categoryid_id_{$k}').val('{$v.relevant_cats.1.categoryid}');">{$v.relevant_cats.1.categoryid}</a>){/if}
+{$vv}{if $kk eq ($v.relevant_cats.1.categoryid_path_arr_count - 1)}{if $v.relevant_cats.1.product_count gt 0}</B>{/if}</a>{/if}{if $kk < ($v.relevant_cats.1.categoryid_path_arr_count - 1)} <B>></B> {/if} {if $v.relevant_cats.1.product_count gt 0 && $kk eq ($v.relevant_cats.1.categoryid_path_arr_count - 1)}({$v.relevant_cats.1.count_pc_products} / <a href="javascript: void(0);" onclick="javascript: $('#form1_correct_categoryid_id_{$k}').val('{$v.relevant_cats.1.categoryid}').change();">{$v.relevant_cats.1.categoryid}</a>){/if}
 
 {/foreach}
 

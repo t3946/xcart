@@ -32,7 +32,7 @@
         <tr class="TableHead">
             <td width="10">Batch #</td>
             <td width="10">Batch ID</td>
-            <td width="10">Start date<br/>and time</td>
+            <td width="10">Starting date<br/>and time</td>
             <td width="10">Products processed</td>
             <td width="100">Average time spent per product</td>
             <td width="100" align="center">Batch status</td>
@@ -41,15 +41,14 @@
         {if ($aBatches)}
             {foreach from=$aBatches item=oCurrentBatch}
                 <tr data-batch-id="{$oCurrentBatch->getBatchId()}">
-                    <td align="center">{$oCurrentBatch->getBatchNumber()}</td>
-                    <td align="center">{$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}
-                        _{$oCurrentBatch->getBatchAmount()}</td>
+                    <td align="center">{$oCurrentBatch->getBatchNumber()}{if $oCurrentBatch->isTest()}T{/if}</td>
+                    <td align="center">{$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}{if $oCurrentBatch->isTest()}T{/if}_{$oCurrentBatch->getBatchAmount()}</td>
                     {assign var=oStartDate value=$oCurrentBatch->getStartDate()}
                     <td align="center">{$oStartDate->format('d-M-Y<\b\r>H:i')}</td>
                     <td align="left">
                         <div class="ui indicating progress"
                              data-value="{$oCurrentBatch->getProductsInBatchCompletedCount()}"
-                             data-total="{$oCurrentBatch->getBatchAmount()}" id="example5">
+                             data-total="{$oCurrentBatch->getBatchAmount()}">
                             <div class="bar">
                                 <div class="progress"></div>
                             </div>
@@ -58,8 +57,12 @@
                         </div>
                     </td>
                     <td align="center">{$oCurrentBatch->getAverageVerifySpeed()} sec.</td>
-                    <td align="center"><a data-status="{$oCurrentBatch->getBatchStatus()}" class="batch_status_link"
-                                          href="#">{$oCurrentBatch->getBatchStatus()}</a></td>
+                    <td align="center"><a data-status="{$oCurrentBatch->getBatchStatus()}" class="batch_status_link" href="#">{$oCurrentBatch->getBatchStatus()}</a>
+                        {if $oCurrentBatch->isTest() && $oCurrentBatch->countTestResults()}
+                            <br/>
+                            T: +{$oCurrentBatch->getRightAnswersCount()} -{$oCurrentBatch->getWrongAnswersCount()} ={$iNumberTestProducts}
+                        {/if}
+                    </td>
                 </tr>
             {/foreach}
         {else}
@@ -81,10 +84,15 @@
     <div class="header">
         Add new batch
     </div>
+    <div class="test-batch-header">
+        <div class="ui checkbox">
+            <input autocomplete="off" name="test_batch" id="test_batch_checkbox" type="checkbox" value="T">
+            <label>{$lng.txt_test_batch_checkbox}</label>
+        </div>
+    </div>
     <div class="content">
         <div>
-            <h4 class="ui dividing header">Enter the number of products to be included in a new batch (the number must
-                be > 0)</h4>
+            <h4 class="ui dividing header">{$lng.txt_enter_the_number_of_products}</h4>
 
             <form class="ui form">
 
@@ -105,9 +113,7 @@
         </div>
     </div>
     <div class="actions">
-        <div class="ui negative button">
-            Cancel
-        </div>
+        <a id="negative_conclusion">Cancel</a>
         <div class="ui positive right labeled icon button">
             Add
             <i class="checkmark icon"></i>
@@ -141,6 +147,9 @@
         $('#batches-filter > button').on('click', '', function () {
             location.href = "operators_batches.php?operator={/literal}{$oCustomer->getCustomerLogin()}{literal}&batch_status=" + $(this).data('status');
         });
+        $('#negative_conclusion').on('click','',function(){
+            $('.ui.modal').modal('hide').parent().removeClass('active');
+        });
         $('.indicating.progress').progress();
         $('#add_batch_button').on('click', '', function () {
             $('form.ui.form').removeClass('error');
@@ -152,10 +161,16 @@
                         return false;
 
                     } else {
-                        var batch_input = $('#batch_amount');
+                        var batch_input = $('#batch_amount'),
+                        test_batch = 'N';
+
+                        if ($('#test_batch_checkbox').is(':checked')){
+                            test_batch = 'Y';
+                        }
                         $('.ui.segment.dimmable').dimmer('show');
                         $.post('ajax_admin.php', {
                                     batch_amount: batch_input.val(),
+                                    test_batch: test_batch,
                                     login: batch_input.data('login'),
                                     ajax_action: 'add_new_batch'
                                 },

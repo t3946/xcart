@@ -100,8 +100,8 @@
 {/if}
 {if $default_fields.firstname.avail eq 'Y'}
 <tr>
-<td class="cidev_padding_top" valign="top" align="right">{$lng.lbl_first_name}
-{if $usertype eq "C" && $lng.lbl_CHECKOUT_FIELD_DESCRIPTION_first_name ne ""}<div class="cidev_checkout_descr">{$lng.lbl_CHECKOUT_FIELD_DESCRIPTION_first_name}</div>{/if}
+<td class="cidev_padding_top" valign="top" align="right"><b>{$lng.lbl_first_name}</b>
+{if $usertype eq "C" && $lng.lbl_CHECKOUT_FIELD_DESCRIPTION_first_name ne ""}<div class="cidev_checkout_descr"><b>{$lng.lbl_CHECKOUT_FIELD_DESCRIPTION_first_name}</b></div>{/if}
 </td>
 <td valign="top">{if $default_fields.firstname.required eq 'Y'}<font class="Star">*</font>{else}&nbsp;{/if}</td>
 <td valign="top" nowrap="nowrap">
@@ -205,7 +205,7 @@
 {/if}
 {if $usertype eq "A" or $usertype eq "P"}
 <tr>
-<td valign="top" align="right">{$lng.lbl_referred_by}</td>
+<td valign="top" align="right"><b>{$lng.lbl_referred_by}</b></td>
 <td valign="top"></td>
 <td nowrap="nowrap">
 {if $userinfo.referer}
@@ -276,7 +276,7 @@
 {/if}
 {if $default_fields.email.avail eq 'Y'}
 <tr>
-<td valign="top" align="right" class="cidev_padding_top">{$lng.lbl_email}
+<td valign="top" align="right" class="cidev_padding_top"><b>{$lng.lbl_email}</b>
 {if $usertype eq "C"}<div class="cidev_checkout_descr">{$lng.lbl_CHECKOUT_FIELD_DESCRIPTION_email}</div>{/if}
 </td>
 <td valign="top">{if $default_fields.email.required eq 'Y'}<font class="Star">*</font>{else}&nbsp;{/if}</td>
@@ -322,11 +322,11 @@
 {/if}
 {if $default_fields.url.avail eq 'Y'}
 <tr>
-<td valign="top" align="right">{$lng.lbl_upwork_site}</td>
+<td valign="top" align="right"><b>{$lng.lbl_upwork_site}</b></td>
 <td valign="top">{if $default_fields.url.required eq 'Y'}<font class="Star">*</font>{else}&nbsp;{/if}</td>
 <td valign="top" nowrap="nowrap">
 <input type="text" id="url" name="url" size="32" maxlength="128" value="{$userinfo.url}" />
-<div style="font-style: italic; font-weight: bold;">e.g. https://www.upwork.com/o/profiles/users/_~01fea84fe049525e80/</div>
+<div style="font-style: italic;"><span style="font-weight: bold;">e.g.</span> https://www.upwork.com/o/profiles/users/_~01fea84fe049525e80/</div>
 {if $reg_error ne "" and $userinfo.url eq "" and $default_fields.url.required eq 'Y'}<font class="Star">&lt;&lt;</font>{/if}
 </td>
 </tr>

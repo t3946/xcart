@@ -32,7 +32,7 @@ function func_amazon_all_FBA_products_flag($cart){
 		}
 	}
 
-	$query = "Select TRUNCATE(P.amazon_fba_avail * 0.8,0) - COALESCE(SUM(OD.amount- OD.back),0) As AvailOnFBA, P.manufacturerid,  P.productcode, P.productid
+	$query = "Select TRUNCATE(cidev_get_amazon_FBA_cloned_stock(P.productid) * 0.8,0) - COALESCE(SUM(OD.amount- OD.back),0) As AvailOnFBA, P.manufacturerid,  P.productcode, P.productid
 From xcart_order_groups OG
         left join xcart_orders O ON O.orderid = OG.orderid
         inner join xcart_products P ON P.productid  in ('".implode("','",$productids)."')

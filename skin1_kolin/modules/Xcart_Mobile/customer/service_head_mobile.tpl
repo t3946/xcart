@@ -126,3 +126,6 @@ vim: set ts=2 sw=2 sts=2 et:
 {/if}
 {load_defer_code type="css"}
 {load_defer_code type="js"}
+{if $GTS_badge_code ne ""}
+  {$GTS_badge_code}
+{/if}
