@@ -58,6 +58,7 @@ iframe
 .buttons-wrap-right {
     width:50%;
     float: left;
+    min-width: 700px;
 }
 .buttons-right{
     height: 100px;
@@ -185,4 +186,21 @@ iframe
 }
 .ui.popup {
     z-index: 13000;
+    min-width: 475px;
+}
+@media only screen and (max-width: 1559px) {
+    div.iframediv {
+        height: -webkit-calc(100% - 170px);
+        height: -moz-calc(100% - 170px);
+        height: calc(100% - 170px);
+        margin-top: 170px;
+        transition: width 0.1s ease 0s;
+    }
+
+    .buttons-wrap-left {
+        width:100%;
+    }
+    .buttons-wrap-right {
+        width:100%;
+    }
 }
