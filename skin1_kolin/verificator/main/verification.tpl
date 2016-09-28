@@ -351,7 +351,7 @@
         </div>
         <div class="buttons-right">
             <div id="conclusion_buttons" style="display:none;">
-                <a data-html="{$config.Amazon_Verification.amazon_verification_make_conclusion_popup_message}" id="make_conclusion_button" href="#" style="border-bottom: 1px dotted; color: #0000ff; text-decoration: none; font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative; max-width: 475px;">Make a conclusion</a>
+                <a data-html="{$config.Amazon_Verification.amazon_verification_make_conclusion_popup_message}" id="make_conclusion_button" href="#" style="border-bottom: 1px dotted; color: #0000ff; text-decoration: none; font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</a>
 
                 <div id="action_buttons_block" class="ui buttons select" data-asin=""
                      data-batch-id="{$oVerificationBatch->getBatchId()}"

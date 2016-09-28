@@ -186,6 +186,7 @@ iframe
 }
 .ui.popup {
     z-index: 13000;
+    min-width: 475px;
 }
 @media only screen and (max-width: 1559px) {
     div.iframediv {
