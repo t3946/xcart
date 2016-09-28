@@ -53,7 +53,7 @@ class classExternalVerificationBatch extends classData
             addCondition('action IN ("'.implode('","',self::$aProductStatuses['processed']).'")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct($aProduct['productid']);
+                    $oProduct = new classProduct(['productid'=>$aProduct['productid']]);
                     $this->aProductsInBatchCompleted[] = $oProduct;
                 }
             }
@@ -84,7 +84,7 @@ class classExternalVerificationBatch extends classData
             addCondition('action IN ("match")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct($aProduct['productid']);
+                    $oProduct = new classProduct(['productid'=>$aProduct['productid']]);
                     $this->aProductsInBatchMatched[] = $oProduct;
                 }
             }
@@ -107,7 +107,7 @@ class classExternalVerificationBatch extends classData
             addCondition('action IN ("not_sure")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct($aProduct['productid']);
+                    $oProduct = new classProduct(['productid'=>$aProduct['productid']]);
                     $this->aProductsInBatchNotSure[] = $oProduct;
                 }
             }
@@ -130,7 +130,7 @@ class classExternalVerificationBatch extends classData
             addCondition('action IN ("not_match")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct($aProduct['productid']);
+                    $oProduct = new classProduct(['productid'=>$aProduct['productid']]);
                     $this->aProductsInBatchNotMatched[] = $oProduct;
                 }
             }
@@ -147,7 +147,7 @@ class classExternalVerificationBatch extends classData
 
         if (!empty($aProducts)) {
             foreach ($aProducts as $aProduct) {
-                $oProduct = new classProduct($aProduct['productid']);
+                $oProduct = new classProduct(['productid'=>$aProduct['productid']]);
                 $aProductsInBatchOpen = $oProduct;
             }
         }
@@ -170,7 +170,7 @@ class classExternalVerificationBatch extends classData
             addGroupBy('P.productid')->addOrderBy('batch_processed DESC')->setLimit('1')->Execute()->getQueryResult();
             if (!empty($aNextProducts)) {
                 foreach ($aNextProducts as $aNextProduct) {
-                    $oProduct = new classProduct($aNextProduct['productid']);
+                    $oProduct = new classProduct(['productid'=>$aNextProduct['productid']]);
                     $aProductsNextInBatch = $oProduct;
                     $this->updateField('last_cross_verify_login', $aNextProduct['login']);
                 }
@@ -181,7 +181,7 @@ class classExternalVerificationBatch extends classData
 
                 if (!empty($aNextProducts)) {
                     foreach ($aNextProducts as $aNextProduct) {
-                        $oProduct = new classProduct($aNextProduct['productid']);
+                        $oProduct = new classProduct(['productid'=>$aNextProduct['productid']]);
                         $aProductsNextInBatch = $oProduct;
                     }
                 }

@@ -1085,7 +1085,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classProducts.php";
-		$classProduct = new classProduct($product['productid']);
+		$classProduct = new classProduct(['productid'=>$product['productid']]);
 		$mpn = $classProduct->getMPN();
 
 

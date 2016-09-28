@@ -1231,38 +1231,60 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
 {include file="main/refund_group.tpl" mid=$m_id group=$order.shipping_groups[$m_id]}
 {/if}
 {/foreach}
+  {if ($oOrder)}
+    {assign var=aRetailTrustDetails value=$oOrder->getOrderDetailsWithRetailTrust()}
+    {if $aRetailTrustDetails}
+      <tr class="TableHead">
+        <td width="35%">{$lng.lbl_product}</td>
+        <td width="17%">{$lng.lbl_sku}</td>
+        <td></td>
+        <td>{$lng.lbl_qty}</td>
+        <td colspan="3"></td>
+        <td width="7%">{$lng.lbl_price}</td>
+        <td width="7%"></td>
+        <td width="7%">{$lng.lbl_gross}</td>
+        <td width="7%">{$lng.lbl_remove}</td>
+      </tr>
 
-{*
-{if $all_vt_processors ne ""}
-<tr style="background-color: #F4CCCC; display: none; " id="vt_info" >
-<td colspan="10">
-  <table>
-    <tr>
-      <td>
-        <b>Payment method:</b><br />
-        <select name="vt_paymentid" id="vt_paymentid" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if}>
-        <option value="0"></option>
-        {foreach from=$all_vt_processors item=item_vt key=key_vt}
-        <option {if $order.vt_paymentid eq $item_vt.paymentid} selected="selected"{/if} value="{$item_vt.paymentid}">{$item_vt.payment_method}</option>
-        {/foreach}
-        </select>
-      </td>
-      <td width="20">&nbsp;</td>
-      <td>
-          <b>Virtual terminal transaction ID:</b><br />
-          <input type="text" name="transaction_id_link" id="transaction_id_link" value="{$order.transaction_id_link}" size="40" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
-      </td>
-      <td width="20">&nbsp;</td>
-      <td>
-          <b>AVS code:</b><br />
-          <input type="text" name="avs_code" id="avs_code" value="{$order.avs_code}" size="1" maxlength="1" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
-      </td>
-    </tr>
-  </table>
-</td>
-</tr>
-{/if}
-*}
+
+      <tr class="distributor-totals-line">
+        <td colspan="7"></td>
+        <td align="right">{$oOrder->getOrderRetailTrustPrice()}</td>
+        <td></td>
+        <td align="right">{$oOrder->getOrderRetailTrustGross()}</td>
+        <td></td>
+      </tr>
+      {foreach from=$aRetailTrustDetails item=oRetailTrustDetail}
+        {assign var=oOrderDetailProduct value=$oRetailTrustDetail->getOrderDetailProduct()}
+      <tr>
+        <td>
+          <a href="{$oOrderDetailProduct->getProductFrontURL()}">{$oOrderDetailProduct->getProductName()}</a>
+        </td>
+        <td>
+          <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKU()}</a>
+        </td>
+        <td></td>
+        <td align="center">
+          {$oRetailTrustDetail->getAmount()}
+        </td>
+        <td colspan="3"></td>
+        <td align="right">
+          {$oRetailTrustDetail->getRetailTrustPrice()|price_format}
+        </td>
+        <td></td>
+        <td align="right">
+          {$oRetailTrustDetail->getRetailTrustGross()|price_format}
+        </td>
+        <td><input type="checkbox" value="Y" name="retail_trust_to_delete[{$oRetailTrustDetail->getOrderDetailId()}]" /></td>
+      </tr>
+      {/foreach}
+      <tr>
+        <td colspan="11">
+          <hr/>
+        </td>
+      </tr>
+    {/if}
+  {/if}
 
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Total Product Price
@@ -1273,36 +1295,46 @@ Total Product Cost to us
 
   </td>
   <td colspan="6">&nbsp;</td>
-  <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.net}
+  <td align="right">{include file="currency2.tpl" value=$oOrder->getProductPriceNet()}
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
-{include file="currency2.tpl" value=$cost_to_us_total|price_format}
+{include file="currency2.tpl" value=$oOrder->getOrderCostToUs()|price_format}
 </div>
 {* --- *}
 
   </td>
-  <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.gst hide_zero='Y'}</td>
+  <td align="right">{include file="currency2.tpl" value=$oOrder->getProductPriceHSTPST() hide_zero='Y'}</td>
 {*   <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.pst hide_zero='Y'}</td> *}
-  <td align="right">{include file="currency2.tpl" value=$order.extra.product_total.gross}
+  <td align="right">{include file="currency2.tpl" value=$oOrder->getProductPriceGross()}
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
-{include file="currency2.tpl" value=$cost_to_us_total|price_format}
+{include file="currency2.tpl" value=$oOrder->getOrderCostToUs()|price_format}
 </div>
 {* --- *}
 
   </td>
   <td>&nbsp;</td>
 </tr>
-
+{if $oOrder->getOrderRetailTrustPrice() != 0}
+<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+  <td>
+      Retail Trust Total
+  </td>
+  <td colspan="6">&nbsp;</td>
+  <td align="right">{$oOrder->getOrderRetailTrustPrice()|price_format}</td>
+  <td></td>
+  <td align="right">{$oOrder->getOrderRetailTrustGross()|price_format}</td>
+</tr>
+{/if}
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Total Shipping Charge</td>
   <td colspan="6">&nbsp;</td>
-  <td align="right">{include file="currency2.tpl" value=$order.extra.shipping_total.net hide_zero='Y'}</td>
-  <td align="right">{include file="currency2.tpl" value=$order.extra.shipping_total.gst hide_zero='Y'}</td>
+  <td align="right">{include file="currency2.tpl" value=$oOrder->getOrderShippingNet() hide_zero='Y'}</td>
+  <td align="right">{include file="currency2.tpl" value=$oOrder->getOrderShippingHST() hide_zero='Y'}</td>
 {*  <td align="right">{include file="currency2.tpl" value=$order.extra.shipping_total.pst hide_zero='Y'}</td> *}
-  <td align="right">{include file="currency2.tpl" value=$order.shipping_cost hide_zero='Y'}</td>
+  <td align="right">{include file="currency2.tpl" value=$oOrder->getOrderShippingGross() hide_zero='Y'}</td>
   <td>&nbsp;</td>
 </tr>
 
@@ -1326,10 +1358,10 @@ Total Product Cost to us
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"} style="font-weight: bold;">
   <td style="font-size: 12px;">{$lng.lbl_grand_total}</td>
   <td colspan="6">&nbsp;</td>
-  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.net}</td>
-  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.gst hide_zero='Y'}</td>
+  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$oOrder->getOrderTotalNet()}</td>
+  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$oOrder->getOrderTotalHST() hide_zero='Y'}</td>
 {*  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.pst hide_zero='Y'}</td> *}
-  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$order.extra.total.gross}</td>
+  <td align="right" style="font-size: 12px;">{include file="currency2.tpl" value=$oOrder->getOrderTotalGross()}</td>
   <td>&nbsp;</td>
 </tr>
 
@@ -1386,7 +1418,7 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
 <tr class="TableHead">
   <td width="27%" style="background-color: #cfe2f3;">additional fee / sales tax name</td>
   <td width="14%" style="background-color: #fff2cc;">product sku</td>
-  <td width="10%"></td>
+  <td width="10%">retail trust</td>
   <td width="5%" style="background-color: #fff2cc;">Qty</td>
   <td width="*"></td>
   <td width="5%"></td>
@@ -1424,6 +1456,21 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
   <td align="center" id="add_additional_fee_to_order_box_9"></td>
   <td>{include file="buttons/multirow_add.tpl" mark="add_additional_fee_to_order"}</td>
 </tr>
+
+  <tr id="add_retailtrust">
+    <td align="center" id="add_retailtrust_box_0"></td>
+    <td align="center" id="add_retailtrust_box_1"></td>
+    <td align="center" id="add_retailtrust_box_2"><input type="text" name="add_retail_trust[0]" value="" style="width: 94%;" {if $order.amazonorderid ne ""}readonly="readonly"{/if} /></td>
+    <td align="center" id="add_retailtrust_box_3"></td>
+    <td align="center" id="add_retailtrust_box_4"></td>
+    <td align="center" id="add_retailtrust_box_5"></td>
+    <td align="center" id="add_retailtrust_box_6"></td>
+    <td align="center" id="add_retailtrust_box_7"></td>
+    <td align="center" id="add_retailtrust_box_8"></td>
+    <td align="center" id="add_retailtrust_box_9"></td>
+    <td>{include file="buttons/multirow_add.tpl" mark="add_retailtrust"}</td>
+  </tr>
+
 
 </table>
 <br />
