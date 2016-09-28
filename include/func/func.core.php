@@ -2855,12 +2855,12 @@ function func_define_approximate_shippings($productid, $product_info=''){
 function func_pc_find_new_categoryid($productid){
 	global $sql_tbl;
 
-	$product = func_query_first("SELECT product, fulldescr FROM $sql_tbl[products] WHERE productid='$productid'");
+	$product = func_query_first("SELECT product, fulldescr, seo_product_name, title_tag FROM $sql_tbl[products] WHERE productid='$productid'");
 //func_print_r($product);	
 	$sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$productid'");
 	$pc_options = func_query_first("SELECT * FROM $sql_tbl[pc_options] WHERE storefrontid='$sfid'");
 
-	$text = $product["product"] . " " . $product["product"] . " " . $product["fulldescr"];
+	$text = $product["product"] . " " . $product["product"] . " " . $product["fulldescr"] . " " . $product["title_tag"] . " " . $product["seo_product_name"];
 	$text = func_del_excluded_char_sequences($text, $pc_options["excluded_char_sequences"]);
 	$text = func_del_stop_words($text, $pc_options["stop_words"]);
 
@@ -2900,7 +2900,7 @@ function func_pc_find_new_categoryid($productid){
 		foreach ($text_arr as $word){
 			if (in_array($word, $current_category_terms_arr)){
 				// sleep for some time 
-				usleep(5000);
+				//usleep(5000);
 				//$termid = func_query_first_cell("SELECT termid FROM $sql_tbl[pc_terms] WHERE term='$word' and $sql_tbl[pc_terms].storefrontid = '$sfid'");
 				//$bayes_weight = 0;
 				//$bayes_weight = func_query_first_cell("SELECT bayes_weight FROM $sql_tbl[pc_category_terms] WHERE categoryid='$categoryid' AND termid='$termid'");
