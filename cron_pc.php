@@ -92,7 +92,7 @@ echo "1";
 
 //func_print_r($categoryid);
 
-			$products = db_query("SELECT $sql_tbl[products].productid, $sql_tbl[products].product, $sql_tbl[products].fulldescr FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid = $sql_tbl[products].productid WHERE ($sql_tbl[products].pc_classify_status='MC' OR $sql_tbl[products].pc_classify_status='ACC') AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products_categories].categoryid='$categoryid'");
+			$products = db_query("SELECT $sql_tbl[products].productid, $sql_tbl[products].product, $sql_tbl[products].fulldescr, $sql_tbl[products].title_tag, $sql_tbl[products].seo_product_name FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid = $sql_tbl[products].productid WHERE ($sql_tbl[products].pc_classify_status='MC' OR $sql_tbl[products].pc_classify_status='ACC') AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products_categories].categoryid='$categoryid'");
 
 			while ($product = db_fetch_array($products)){
 
@@ -100,7 +100,7 @@ echo "1";
 
 //			$sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$product[productid]'");
 
-				$text = $product["product"] . " " . $product["product"] . " " . $product["fulldescr"];
+				$text = $product["product"] . " " . $product["product"] . " " . $product["fulldescr"] . " " . $product["title_tag"] . " " . $product["seo_product_name"];
 				$text = func_del_excluded_char_sequences($text, $pc_options[$storefrontid]["excluded_char_sequences"]);
 				$text = func_del_stop_words($text, $pc_options[$storefrontid]["stop_words"]);
 
@@ -226,11 +226,16 @@ echo "4";
 	$products = func_query($query = "SELECT $sql_tbl[products].productid FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid = $sql_tbl[products].productid WHERE pc_classify_status='NC' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products_sf].sfid='$storefrontid' ORDER BY RAND() LIMIT $limit");
 
 //func_print_r($query, $products);
-
+	$p_count = 0;
 	if (!empty($products)){
 		foreach ($products as $product){
+			$p_count++;
 			$productid = $product["productid"];
 			func_pc_find_new_categoryid($productid);
+			if ($p_count>15)
+				{
+					break;
+				}
 		}
 	}
 
