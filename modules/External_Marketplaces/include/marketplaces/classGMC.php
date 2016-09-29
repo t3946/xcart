@@ -109,22 +109,35 @@ class classGMC extends classStoreFrontMarketPlace
                                     $oIssue->setIssueId($iIssueId);
                                 }
                             }
-                            $oGMCQualityIssues = new classGMCQualityIssues(['productid' => $iProductId, 'issue_id' => $oIssue->getIssueId()]);
-                            if ($oGMCQualityIssues->getProductId()) {
-                                $oGMCQualityIssues->_delete();
-                                $oGMCQualityIssues = new classGMCQualityIssues();
-                            }
 
                             $oIssueDate = DateTime::createFromFormat(DateTime::ISO8601, $oDataQualityIssues->getTimestamp());
-                            if (!$oIssueDate)
-                                $oIssueDate = new DateTime('NOW');
-                            $oGMCQualityIssues->fillPrimaryTableValues(['productid' => $iProductId,
-                                'issue_id' => $oIssue->getIssueId(),
-                                'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
-                                'issue_data' => addslashes(json_encode($oDataQualityIssues)),
-                                'issue_destination' => addslashes(json_encode($oProduct->getDestinationStatuses()))
-                            ]);
-                            $oGMCQualityIssues->_insert();
+                            if (!$oIssueDate) $oIssueDate = new DateTime('NOW');
+                            $oGMCQualityIssues = new classGMCQualityIssues(['productid' => $iProductId, 'issue_id' => $oIssue->getIssueId()]);
+                            if ($oGMCQualityIssues->getProductId()) {
+                                if ($oIssueDate > $oGMCQualityIssues->getIssueDate()) {
+                                    $oGMCQualityIssues->_delete();
+                                    $oGMCQualityIssues = new classGMCQualityIssues();
+                                }
+                            }
+                            if (!$oGMCQualityIssues->getProductId()) {
+                                $oGMCQualityIssues->fillPrimaryTableValues(['productid' => $iProductId,
+                                    'issue_id' => $oIssue->getIssueId(),
+                                    'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
+                                    'issue_data' => addslashes(json_encode($oDataQualityIssues)),
+                                    'issue_destination' => addslashes(json_encode($oProduct->getDestinationStatuses()))
+                                ]);
+                                if ($oIssue->getIssueProcessing() == 'exclude') {
+                                    //Google
+                                    $oDisableMarketplace = new classDisabledMarketPlace();
+                                    $oDisableMarketplace->fillPrimaryTableValues(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
+                                    $oDisableMarketplace->addDisabledMarketPlace();
+                                    //Bing
+                                    $oDisableMarketplace->fillPrimaryTableValues(['marketplace_id' => 2, 'resource_id' => $iProductId, 'resource_type' => 'P']);
+                                    $oDisableMarketplace->addDisabledMarketPlace();
+                                    $oGMCQualityIssues->setField('fixed','Y');
+                                }
+                                $oGMCQualityIssues->_insert();
+                            }
                         }
 
                     }

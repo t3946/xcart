@@ -6,7 +6,8 @@ require_once $xcart_dir . "/modules/External_Marketplaces/include/classGMCQualit
 
 class classIssuesProcessingRules extends classData
 {
-    private $aProductsIssues;
+    private $aProductsIssues = null;
+    private $iProductCount = null;
 
     public function __construct($aIssuesProcessingRules = null)
     {
@@ -95,22 +96,25 @@ class classIssuesProcessingRules extends classData
         return $oDate;
     }
 
-    public function getProductImpactedCount($aParams = ['fixed'=>'N'])
+    public function getProductImpactedCount($aParams = ['fixed' => 'N'])
     {
-        $iIssueId = $this->getIssueId();
-        if ($iIssueId) $aParams['issue_id'] = $this->getIssueId();
+        if (is_null($this->iProductCount)) {
+            $iIssueId = $this->getIssueId();
+            if ($iIssueId) $aParams['issue_id'] = $this->getIssueId();
 
-        $this->oSQL->init()->addSelect('count(1)', 'cnt')->addFromTable('cidev_gmc_quality_issues', 'xc')->
+            $this->oSQL->init()->addSelect('count(1)', 'cnt')->addFromTable('cidev_gmc_quality_issues', 'xc')->
             addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'");
-        if (!empty($aParams['search'])) {
-            $sSearch = addslashes($aParams['search']);
-            $this->oSQL->addCondition("(xp.productcode LIKE '%".$sSearch."%' OR xp.product LIKE '%".$sSearch."%')");
-            unset($aParams['search']);
-        }
-        $aCount = $this->oSQL->addFilter($aParams)->Execute()->getQueryResult();
+            if (!empty($aParams['search'])) {
+                $sSearch = addslashes($aParams['search']);
+                $this->oSQL->addCondition("(xp.productcode LIKE '%" . $sSearch . "%' OR xp.product LIKE '%" . $sSearch . "%')");
+                unset($aParams['search']);
+            }
+            $aCount = $this->oSQL->addFilter($aParams)->Execute()->getQueryResult();
 
-        $aC = reset($aCount);
-        return $aC['cnt'];
+            $aC = reset($aCount);
+            $this->iProductCount = $aC['cnt'];
+        }
+        return $this->iProductCount;
     }
 
     public function getProductImpacted($first_page = 0, $objects_per_page = 50, $aParams)
@@ -119,13 +123,13 @@ class classIssuesProcessingRules extends classData
             $iIssueId = $this->getIssueId();
             if ($iIssueId) $aParams['issue_id'] = $this->getIssueId();
             $this->oSQL->init()->addSelect('xc.*')->addFromTable('cidev_gmc_quality_issues', 'xc')->
-                addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'");
+            addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'");
             if (!empty($aParams['search'])) {
                 $sSearch = addslashes($aParams['search']);
-                $this->oSQL->addCondition("(xp.productcode LIKE '%".$sSearch."%' OR xp.product LIKE '%".$sSearch."%')");
+                $this->oSQL->addCondition("(xp.productcode LIKE '%" . $sSearch . "%' OR xp.product LIKE '%" . $sSearch . "%')");
                 unset($aParams['search']);
             }
-            $aProductImpacted =  $this->oSQL->addFilter($aParams)->setLimit("$first_page, $objects_per_page")->Execute()->getQueryResult();
+            $aProductImpacted = $this->oSQL->addFilter($aParams)->setLimit("$first_page, $objects_per_page")->Execute()->getQueryResult();
 
             if ($aProductImpacted) {
                 foreach ($aProductImpacted as $aProducts) {
@@ -138,7 +142,8 @@ class classIssuesProcessingRules extends classData
 
         return $this->aProductsIssues;
     }
-    public function sortByIssueProductsCount($a, $b)
+
+    public static function sortByIssueProductsCount($a, $b)
     {
         return $a->getProductImpactedCount() < $b->getProductImpactedCount();
     }

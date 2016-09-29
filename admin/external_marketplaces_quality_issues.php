@@ -67,7 +67,9 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
 } else {
     $smarty->assign("main", "external_marketplaces_quality_issues");
 
-    $smarty->assign('aProcessingRules', classIssuesProcessingRules::getIssuesList());
+    $aIssueList = classIssuesProcessingRules::getIssuesList();
+    usort ($aIssueList,['classIssuesProcessingRules','sortByIssueProductsCount']);
+    $smarty->assign('aProcessingRules', $aIssueList);
     $smarty->assign('statuses', ['exclude', 'manual']);
     $location[] = ['Quality Issues Processing Rules', ""];
 }

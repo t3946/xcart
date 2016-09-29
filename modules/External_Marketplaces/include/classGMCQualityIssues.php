@@ -51,4 +51,8 @@ class classGMCQualityIssues extends classData
     {
         return stripslashes($this->getField('issue_destination'));
     }
+
+    public function getIssueDate(){
+        return new DateTime($this->getField('issue_date'));
+    }
 }
