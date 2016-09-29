@@ -45,6 +45,7 @@ x_session_register("search_data");
 #
 $dialog_tools_data["left"][] = array("link" => "search.php", "title" => func_get_langvar_by_name("lbl_search_products"));
 $dialog_tools_data["left"][] = array("link" => "product_modify.php", "title" => func_get_langvar_by_name("lbl_add_product"));
+$dialog_tools_data["left"][] = array("link" => "external_marketplaces_quality_issues.php", "title" => func_get_langvar_by_name("lbl_external_marketplaces_quality_issues"));
 if ($current_area == "A" or !empty($active_modules["Simple_Mode"]))
     $dialog_tools_data["right"][] = array("link" => "categories.php", "title" => func_get_langvar_by_name("lbl_categories"));
 if (!empty($active_modules["Manufacturers"]))

@@ -47,13 +47,13 @@ class classSQLBuilder
         return $this;
     }
 
-    public function addInnerJoin($sTable, $sAlias=null, $sCondition)
+    public function addInnerJoin($sTable, $sAlias = null, $sCondition)
     {
         $this->aInnerJoinTables[] = self::$sql_tbl[$sTable] . ((!empty($sAlias)) ? ' as ' . $sAlias : '') . ' ON ' . $sCondition;
         return $this;
     }
 
-    public function addFromTable($sTable, $sAlias=null)
+    public function addFromTable($sTable, $sAlias = null)
     {
         $this->aTables[] = self::$sql_tbl[$sTable] . ((!empty($sAlias)) ? ' as ' . $sAlias : '');
         return $this;
@@ -130,6 +130,25 @@ class classSQLBuilder
     public function getQueryResult()
     {
         return $this->aSqlQueryResult;
+    }
+
+    public function addFilter($aParams)
+    {
+        if (!empty($aParams)) {
+            foreach ($aParams as $key=>$value) {
+                if (is_array($value)) {
+                    $this->addCondition("$key IN('" . implode("','",$value) . "')");
+                } else {
+                    $this->addCondition("$key='" . addslashes($value) . "'");
+                }
+            }
+        }
+        return $this;
+    }
+
+    public function getFoundRows()
+    {
+        return func_query_first_cell('SELECT FOUND_ROWS()');
     }
 
 }
