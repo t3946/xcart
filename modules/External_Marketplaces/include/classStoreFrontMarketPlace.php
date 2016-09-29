@@ -3,6 +3,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
 
 abstract class classStoreFrontMarketPlace extends classData
 {
@@ -12,6 +13,7 @@ abstract class classStoreFrontMarketPlace extends classData
     protected $aInventory = [];
     private $oExternalMarketPlace = null;
     protected $oService = null;
+    protected $aMerchantResponse = [];
 
     public function __construct($aExternalMarketPlace = null)
     {
@@ -187,6 +189,14 @@ abstract class classStoreFrontMarketPlace extends classData
         }
     }
 
+    public function getUpdateExpiredBeforeDays()
+    {
+        return $this->getField('update_expired_before');
+    }
 
+    public function getUpdateMaxExpiredProductsPerDay()
+    {
+        return $this->getField('update_max_expired_products_per_day');
+    }
 
 }

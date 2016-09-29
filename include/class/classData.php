@@ -35,7 +35,7 @@ class classData
 
     public function _insert($is_replace = false)
     {
-        func_array2insert($this->sPrimaryTable, $this->aPrimaryTableValue, $is_replace);
+        return func_array2insert($this->sPrimaryTable, $this->aPrimaryTableValue, $is_replace);
     }
 
     public function _delete()

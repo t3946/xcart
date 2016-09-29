@@ -88,7 +88,11 @@ class classProduct extends classData
 
     public function getProductFrontURL($http = 'http://')
     {
+<<<<<<< HEAD
         return $http . $this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
+=======
+        return $http.$this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getDomain().'/'.func_clean_url_get('P', $this->getProductId(), false);
+>>>>>>> dev02_8282068_GMC_item_and_account_disapprovals
     }
 
     public function getHTMLShot($iOrderID)
@@ -362,11 +366,16 @@ class classProduct extends classData
         $aProducts = $oSQL->addSelect('productid')->addFromTable('products')->addCondition("productcode='$sSKU'")->Execute()->getQueryResult();
         if (!empty($aProducts)) {
             $aProduct = reset($aProducts);
+<<<<<<< HEAD
             $oProduct = new classProduct(['productid' => $aProduct['productid']]);
+=======
+            $oProduct = new classProduct(['productid'=>$aProduct['productid']]);
+>>>>>>> dev02_8282068_GMC_item_and_account_disapprovals
         }
         return $oProduct;
 
     }
+<<<<<<< HEAD
 
     /**
      * @return classProduct[]
@@ -524,4 +533,6 @@ class classProduct extends classData
         }
         return "";
     }
+=======
+>>>>>>> dev02_8282068_GMC_item_and_account_disapprovals
 }

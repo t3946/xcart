@@ -1,0 +1,150 @@
+<?php
+global $xcart_dir;
+require_once $xcart_dir . "/include/class/classData.php";
+require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classGMCQualityIssues.php";
+
+class classIssuesProcessingRules extends classData
+{
+    private $aProductsIssues = null;
+    private $iProductCount = null;
+
+    public function __construct($aIssuesProcessingRules = null)
+    {
+        $this->sPrimaryTable = 'cidev_issues_processing_rules';
+        $this->aPrimaryKeys = ['issue_id'];
+
+        parent::__construct($aIssuesProcessingRules);
+    }
+
+    public static function getIssuesList()
+    {
+        $aResults = null;
+        $oSQL = new classSQLBuilder();
+        $oSQL->addSelect('*')->addFromTable('cidev_issues_processing_rules');
+        $aIssues = $oSQL->Execute()->getQueryResult();
+        if (!empty($aIssues)) {
+            foreach ($aIssues as $aIssue) {
+                $oIssue = new classIssuesProcessingRules();
+                $oIssue->fillPrimaryTableValues($aIssue);
+                $aResults[] = $oIssue;
+            }
+        }
+        return $aResults;
+    }
+
+    public static function getIssueByGoogleIssueId($sGoogleId)
+    {
+        $oResult = null;
+        if (!empty($sGoogleId)) {
+            $oSQL = new classSQLBuilder();
+            $aIssues = $oSQL->addSelect('*')->addFromTable('cidev_issues_processing_rules')->addCondition("issue_gmc_id = '$sGoogleId'")->Execute()->getQueryResult();
+            if (!empty($aIssues)) {
+                foreach ($aIssues as $aIssue) {
+                    $oResult = new classIssuesProcessingRules();
+                    $oResult->fillPrimaryTableValues($aIssue);
+                }
+            }
+        }
+        return $oResult;
+    }
+
+    public function setIssueGMCId($GMCIssue)
+    {
+        $this->setField('issue_gmc_id', $GMCIssue);
+    }
+
+    public function getIssueGMCId()
+    {
+        return $this->getField('issue_gmc_id');
+    }
+
+    public function getIssueName()
+    {
+        $sIssueName = $this->getField('issue_name');
+        if (empty($sIssueName)) {
+            return $this->getIssueGMCId();
+        }
+        return stripslashes($sIssueName);
+    }
+
+    public function updateIssueName($sIssueName)
+    {
+        $this->updateField('issue_name', addslashes($sIssueName));
+        return $this;
+    }
+
+    public function getIssueProcessing()
+    {
+        return $this->getField('issue_processing');
+    }
+
+    public function setIssueId($sIssue)
+    {
+        $this->setField('issue_id', $sIssue);
+    }
+
+    public function getIssueId()
+    {
+        return $this->getField('issue_id');
+    }
+
+    public function getIssueDate()
+    {
+        $oDate = new DateTime();
+        $oDate->setTimestamp(strtotime($this->getField('issue_date')));
+        return $oDate;
+    }
+
+    public function getProductImpactedCount($aParams = ['fixed' => 'N'])
+    {
+        if (is_null($this->iProductCount)) {
+            $iIssueId = $this->getIssueId();
+            if ($iIssueId) $aParams['issue_id'] = $this->getIssueId();
+
+            $this->oSQL->init()->addSelect('count(1)', 'cnt')->addFromTable('cidev_gmc_quality_issues', 'xc')->
+            addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'");
+            if (!empty($aParams['search'])) {
+                $sSearch = addslashes($aParams['search']);
+                $this->oSQL->addCondition("(xp.productcode LIKE '%" . $sSearch . "%' OR xp.product LIKE '%" . $sSearch . "%')");
+                unset($aParams['search']);
+            }
+            $aCount = $this->oSQL->addFilter($aParams)->Execute()->getQueryResult();
+
+            $aC = reset($aCount);
+            $this->iProductCount = $aC['cnt'];
+        }
+        return $this->iProductCount;
+    }
+
+    public function getProductImpacted($first_page = 0, $objects_per_page = 50, $aParams)
+    {
+        if (is_null($this->aProductsIssues)) {
+            $iIssueId = $this->getIssueId();
+            if ($iIssueId) $aParams['issue_id'] = $this->getIssueId();
+            $this->oSQL->init()->addSelect('xc.*')->addFromTable('cidev_gmc_quality_issues', 'xc')->
+            addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'");
+            if (!empty($aParams['search'])) {
+                $sSearch = addslashes($aParams['search']);
+                $this->oSQL->addCondition("(xp.productcode LIKE '%" . $sSearch . "%' OR xp.product LIKE '%" . $sSearch . "%')");
+                unset($aParams['search']);
+            }
+            $aProductImpacted = $this->oSQL->addFilter($aParams)->setLimit("$first_page, $objects_per_page")->Execute()->getQueryResult();
+
+            if ($aProductImpacted) {
+                foreach ($aProductImpacted as $aProducts) {
+                    $oIssue = new classGMCQualityIssues();
+                    $oIssue->fillPrimaryTableValues($aProducts);
+                    $this->aProductsIssues[] = $oIssue;
+                }
+            }
+        }
+
+        return $this->aProductsIssues;
+    }
+
+    public static function sortByIssueProductsCount($a, $b)
+    {
+        return $a->getProductImpactedCount() < $b->getProductImpactedCount();
+    }
+}
