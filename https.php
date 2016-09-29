@@ -164,7 +164,7 @@ if (_smarty_console)
 //die("123");
 			}
 			else {
-				func_header_location($tmp_location);
+				func_header_location($tmp_location, true, 301);
 			}
 		}
 	}
