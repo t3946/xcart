@@ -97,7 +97,7 @@
   height: 22px;
   float: right;
   right: 9px;
-  bottom: 32px;
+  /*bottom: 32px;*/
 }
 
 #close:hover {
@@ -382,7 +382,7 @@ label:hover {
     float: right;
   }
   .popup_thank_you #close {
-    bottom: 45px;
+    /*bottom: 45px;*/
   }
 
   #items_table_table label, #items_table_table div.sum{
