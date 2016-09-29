@@ -30,6 +30,8 @@ class classProduct extends classData
 
     private $aPricing = [];
 
+    private $iAmazonFbaAvail = null;
+
     public function __construct($iId = null)
     {
         $this->sPrimaryTable = 'products';
@@ -86,7 +88,7 @@ class classProduct extends classData
 
     public function getProductFrontURL($http = 'http://')
     {
-        return $http.$this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getDomain().'/'.func_clean_url_get('P', $this->getProductId(), false);
+        return $http . $this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
     }
 
     public function getHTMLShot($iOrderID)
@@ -230,6 +232,11 @@ class classProduct extends classData
         return $this->aPrimaryTableValue;
     }
 
+    public function isParent()
+    {
+        return ($this->getField('clone_parent_productid') == 0);
+    }
+
     public function isProductOutOfStock()
     {
         $result = true;
@@ -320,6 +327,19 @@ class classProduct extends classData
         return $sASIN;
     }
 
+    public function getAmazonFBAAvail()
+    {
+        if (is_null($this->iAmazonFbaAvail)) {
+            $this->iAmazonFbaAvail = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_cloned_stock(" . $this->getProductId() . ") as amazon_fba_avail FROM dual"));
+        }
+        return $this->iAmazonFbaAvail;
+    }
+
+    public function getAmazonFBAAvailReal()
+    {
+        return intval($this->getField('amazon_fba_avail'));
+    }
+
     public function getUPC()
     {
         return $this->getField('upc');
@@ -342,9 +362,166 @@ class classProduct extends classData
         $aProducts = $oSQL->addSelect('productid')->addFromTable('products')->addCondition("productcode='$sSKU'")->Execute()->getQueryResult();
         if (!empty($aProducts)) {
             $aProduct = reset($aProducts);
-            $oProduct = new classProduct(['productid'=>$aProduct['productid']]);
+            $oProduct = new classProduct(['productid' => $aProduct['productid']]);
         }
         return $oProduct;
 
+    }
+
+    /**
+     * @return classProduct[]
+     */
+    public function getChildProducts()
+    {
+        $aProducts = [];
+        $aChildProducts = $this->oSQL->init()->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition('clone_parent_productid = ' . $this->getProductId())->Execute()->getQueryResult();
+        if (!empty($aChildProducts)) {
+            foreach ($aChildProducts as $aChild) {
+                $oChildProduct = new classProduct();
+                $oChildProduct->fillPrimaryTableValues($aChild);
+                $aProducts[] = $oChildProduct;
+            }
+        }
+        return $aProducts;
+    }
+
+    /**
+     * @return classProduct|null
+     */
+    public function getParentProduct()
+    {
+        $oParentProduct = null;
+        if ($this->getField('clone_parent_productid')) {
+            $oParentProduct = new classProduct(['productid' => $this->getField('clone_parent_productid')]);
+        }
+        return $oParentProduct;
+    }
+
+    public function getProductsAvailOnAmazonParentWithChild($iQty)
+    {
+        $aProductAmazonArray = [];
+        $iShipNeed = $iQty;
+        if ($iQty > 0 && $this->getAmazonFBAAvail() >= $iQty) {
+            if ($this->getAmazonFBAAvailReal() > 0) {
+                if ($this->getAmazonFBAAvailReal() >= $iQty) {
+                    $aProductAmazonArray[] = ['oProduct' => $this, 'qty' => $iQty];
+                    $iShipNeed -= $iQty;
+                } else {
+                    $aProductAmazonArray[] = ['oProduct' => $this, 'qty' => $this->getAmazonFBAAvailReal()];
+                    $iShipNeed -= $this->getAmazonFBAAvailReal();
+                }
+            }
+            if ($iShipNeed > 0) {
+                if ($this->isParent()) { //parent
+                    $aChildProducts = $this->getChildProducts();
+                    if (!empty($aChildProducts)) {
+                        foreach ($aChildProducts as $oChildProduct) {
+                            if ($oChildProduct->getAmazonFBAAvailReal() > 0) {
+                                if ($oChildProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
+                                    $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $iShipNeed];
+                                    $iShipNeed -= $iShipNeed;
+                                } else {
+                                    $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $oChildProduct->getAmazonFBAAvailReal()];
+                                    $iShipNeed -= $oChildProduct->getAmazonFBAAvailReal();
+                                }
+                            }
+                            if ($iShipNeed <= 0) break;
+                        }
+                    }
+                } else { //child
+                    $oParentProduct = $this->getParentProduct();
+                    if ($oParentProduct->getAmazonFBAAvailReal() > 0) {
+                        if ($oParentProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
+                            $aProductAmazonArray[] = ['oProduct' => $oParentProduct, 'qty' => $iShipNeed];
+                            $iShipNeed -= $iShipNeed;
+                        } else {
+                            $aProductAmazonArray[] = ['oProduct' => $oParentProduct, 'qty' => $oParentProduct->getAmazonFBAAvailReal()];
+                            $iShipNeed -= $oParentProduct->getAmazonFBAAvailReal();
+                        }
+                    }
+                    if ($iShipNeed > 0) {
+                        $aChildProducts = $oParentProduct->getChildProducts();
+                        if (!empty($aChildProducts)) {
+                            foreach ($aChildProducts as $oChildProduct) {
+                                if ($oChildProduct->getProductId() != $this->getProductId() && $oChildProduct->getAmazonFBAAvailReal() > 0) {
+                                    if ($oChildProduct->getAmazonFBAAvailReal() >= $iShipNeed) {
+                                        $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $iShipNeed];
+                                        $iShipNeed -= $iShipNeed;
+                                    } else {
+                                        $aProductAmazonArray[] = ['oProduct' => $oChildProduct, 'qty' => $oChildProduct->getAmazonFBAAvailReal()];
+                                        $iShipNeed -= $oChildProduct->getAmazonFBAAvailReal();
+                                    }
+                                }
+                                if ($iShipNeed <= 0) break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $aProductAmazonArray;
+    }
+
+    private static function UPC_calculate_check_digit($upc_code)
+    {
+        $sum = 0;
+        $mult = 3;
+        for ($i = (strlen($upc_code) - 2); $i >= 0; $i--) {
+            $sum += $mult * $upc_code[$i];
+            if ($mult == 3) {
+                $mult = 1;
+            } else {
+                $mult = 3;
+            }
+        }
+        if ($sum % 10 == 0) {
+            $sum = ($sum % 10);
+        } else {
+            $sum = 10 - ($sum % 10);
+        }
+        return $sum;
+    }
+
+    private static function isISBN($sCode)
+    {
+        $bResult = false;
+        if (in_array(strlen($sCode) ,[10,13])) {
+            if (in_array(substr($sCode,0,3), [978,979])){
+                $bResult = true;
+            }
+        }
+        return $bResult;
+    }
+
+    public static function calculateUPC($upc_code)
+    {
+        $upc_code = preg_replace("/[^0-9]/", "", $upc_code);
+        switch (strlen($upc_code)) {
+            case 8:
+            case 14:
+                $cd = self::UPC_calculate_check_digit($upc_code);
+                if ($cd != $upc_code[strlen($upc_code) - 1]) {
+                    return substr($upc_code,0,-1).$cd;
+                } else {
+                    return $upc_code;
+                }
+                break;
+            case 11:
+            case 12:
+            case 13:
+                $cd = self::UPC_calculate_check_digit($upc_code);
+                if ($cd != $upc_code[strlen($upc_code) - 1]) {
+                    if (!self::isISBN($upc_code) || (self::isISBN($upc_code) && strlen($upc_code)==12)) {
+                        $cd = self::UPC_calculate_check_digit($upc_code . "1");
+                        return $upc_code . $cd;
+                    } else {
+                        return "";
+                    }
+                } else {
+                    return $upc_code;
+                }
+                break;
+        }
+        return "";
     }
 }
