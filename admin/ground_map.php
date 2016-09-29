@@ -40,7 +40,7 @@ if (!empty($mnfs) && is_array($mnfs)){
 		continue;
 	  }
 
-	  $full_server_url = "http://www.ups.com/maps/results";
+	  $full_server_url = "https://www.ups.com/maps/results";
 	  $data = "loc=en_US&zip=$zip&stype=O";
 
           $curl_err = false;
@@ -80,7 +80,7 @@ if (!empty($mnfs) && is_array($mnfs)){
         	        if (isset($result[1][0]) && !empty($result[1][0])){
                 	        $map = trim($result[1][0]);
                         	if (!empty($map)){
-					$map_url = "http://www.ups.com/using/services/servicemaps/maps25/map_".$map;
+					$map_url = "https://www.ups.com/using/services/servicemaps/maps25/map_".$map;
 					db_query("INSERT INTO $sql_tbl[ground_map] (zipcode, map_url) VALUES ('$zip', '$map_url')");
 					$mnfs[$k]["map_url"] = $map_url;
         	                }
