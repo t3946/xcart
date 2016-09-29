@@ -132,6 +132,10 @@ if ($REQUEST_METHOD == 'GET' && empty($_GET['keep_https'])) {
 		$do_redirect = empty($login_redirect);
 		x_session_unregister("login_redirect");
 		if ($do_redirect) {
+			$aParsedStr = parse_url($current_script);
+			parse_str($aParsedStr['query'],$aRequest);
+			if (!empty($aRequest['request_uri']))
+				$current_script = $aRequest['request_uri'];
 			$tmp_location = $http_location.DIR_CUSTOMER.$current_script.$additional_query;
 		}
 	}
@@ -160,7 +164,7 @@ if (_smarty_console)
 //die("123");
 			}
 			else {
-				func_header_location($tmp_location);
+				func_header_location($tmp_location, true, 301);
 			}
 		}
 	}
