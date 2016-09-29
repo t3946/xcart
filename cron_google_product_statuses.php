@@ -19,7 +19,7 @@ const BACK_PROCESS_LOG_NAME = 'google_product_statuses';
 
 if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log(BACK_PROCESS_LOG_NAME, 'Already launched');
-//    die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
