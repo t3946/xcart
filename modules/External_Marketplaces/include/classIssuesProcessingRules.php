@@ -138,4 +138,8 @@ class classIssuesProcessingRules extends classData
 
         return $this->aProductsIssues;
     }
+    public function sortByIssueProductsCount($a, $b)
+    {
+        return $a->getProductImpactedCount() < $b->getProductImpactedCount();
+    }
 }
