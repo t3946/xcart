@@ -222,8 +222,9 @@ class classCustomer extends classData
     {
         $aBatches = $this->getAmazonBatches();
         foreach ($aBatches as $oBatch) {
-            if ($oBatch->isTestFailed())
-                $oBatch->updateField('test_failed', 'N');
+            if ($oBatch->isTestFailed()) {
+                $oBatch->updateFields(['test_failed'=>'N', 'is_test'=>'U']);
+            }
         }
     }
 }
