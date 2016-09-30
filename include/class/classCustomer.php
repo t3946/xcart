@@ -65,7 +65,7 @@ class classCustomer extends classData
         if ($active != 'all') {
             $oSQL->addCondition("status='$active'")->addCondition("activity='$active'");
         }
-        $aCustomers = $oSQL->addOrderBy('b_firstname')->Execute()->getQueryResult();
+        $aCustomers = $oSQL->addOrderBy('firstname')->Execute()->getQueryResult();
         if (!empty($aCustomers)) {
             foreach ($aCustomers as $aCustomer) {
                 $OCustomer = new classCustomer();
@@ -233,8 +233,9 @@ class classCustomer extends classData
     {
         $aBatches = $this->getAmazonBatches();
         foreach ($aBatches as $oBatch) {
-            if ($oBatch->isTestFailed())
-                $oBatch->updateField('test_failed', 'N');
+            if ($oBatch->isTestFailed()) {
+                $oBatch->updateFields(['test_failed'=>'N', 'is_test'=>'U']);
+            }
         }
 
     }
