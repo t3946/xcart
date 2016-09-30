@@ -25,6 +25,7 @@ db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
+func_backprocess_log(BACK_PROCESS_LOG_NAME, $log_text);
 
 $oStoreFronts = new classStoreFronts();
 $aStoreFronts = $oStoreFronts->getStoreFronts();

@@ -81,78 +81,87 @@ class classGMC extends classStoreFrontMarketPlace
 
     public function getProductStatuses()
     {
-        $iUpdateProductCount = 0;
+        $iUpdateProductCount = $iNewIssues = 0;
         do {
             if (!empty($pageToken)) {
                 $parameters['pageToken'] = $pageToken;
             }
             $parameters['includeInvalidInsertedItems'] = true;
-            $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(), $parameters);
-            /** @var Google_Service_ShoppingContent_ProductStatus[] $aProducts */
-            $aProducts = $oResponse->getResources();
             $aQueue = [];
-            if (!empty($aProducts)) {
-                foreach ($aProducts as $oProduct) {
-                    list($sStatus, $lang, $Country, $iProductId) = explode(':', $oProduct->getProductId());
+            try {
+                $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(), $parameters);
+                /** @var Google_Service_ShoppingContent_ProductStatus[] $aProducts */
+                $aProducts = $oResponse->getResources();
+                if (!empty($aProducts)) {
+                    foreach ($aProducts as $oProduct) {
+                        list($sStatus, $lang, $Country, $iProductId) = explode(':', $oProduct->getProductId());
 
-                    /** @var Google_Service_ShoppingContent_ProductStatusDataQualityIssue $oDataQualityIssues */
-                    $aDataQualityIssues = $oProduct->getDataQualityIssues();
+                        /** @var Google_Service_ShoppingContent_ProductStatusDataQualityIssue $oDataQualityIssues */
+                        $aDataQualityIssues = $oProduct->getDataQualityIssues();
 
-                    if (!empty($aDataQualityIssues)) {
-                        foreach ($aDataQualityIssues as $oDataQualityIssues) {
-                            $oIssue = classIssuesProcessingRules::getIssueByGoogleIssueId($oDataQualityIssues->getId());
-                            if (empty($oIssue)) {
-                                $oIssue = new classIssuesProcessingRules();
-                                $oIssue->setIssueGMCId($oDataQualityIssues->getId());
-                                $iIssueId = $oIssue->_insert();
-                                if ($iIssueId) {
-                                    $oIssue->setIssueId($iIssueId);
+                        if (!empty($aDataQualityIssues)) {
+                            foreach ($aDataQualityIssues as $oDataQualityIssues) {
+                                $oIssue = classIssuesProcessingRules::getIssueByGoogleIssueId($oDataQualityIssues->getId());
+                                if (empty($oIssue)) {
+                                    $oIssue = new classIssuesProcessingRules();
+                                    $oIssue->setIssueGMCId($oDataQualityIssues->getId());
+                                    $iIssueId = $oIssue->_insert();
+                                    if ($iIssueId) {
+                                        $oIssue->setIssueId($iIssueId);
+                                    }
+                                }
+
+                                $oIssueDate = DateTime::createFromFormat(DateTime::ISO8601, $oDataQualityIssues->getTimestamp());
+                                if (!$oIssueDate) $oIssueDate = new DateTime('NOW');
+                                $oGMCQualityIssues = new classGMCQualityIssues(['productid' => $iProductId, 'issue_id' => $oIssue->getIssueId()]);
+                                if ($oGMCQualityIssues->getProductId()) {
+                                    if ($oIssueDate > $oGMCQualityIssues->getIssueDate()) {
+                                        $oGMCQualityIssues->_delete();
+                                        $oGMCQualityIssues = new classGMCQualityIssues();
+                                    }
+                                }
+                                if (!$oGMCQualityIssues->getProductId()) {
+                                    $oGMCQualityIssues->fillPrimaryTableValues(['productid' => $iProductId,
+                                        'issue_id' => $oIssue->getIssueId(),
+                                        'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
+                                        'issue_data' => addslashes(json_encode($oDataQualityIssues)),
+                                        'issue_destination' => addslashes(json_encode($oProduct->getDestinationStatuses()))
+                                    ]);
+                                    if ($oIssue->getIssueProcessing() == 'exclude') {
+                                        //Google
+                                        $oDisableMarketplace = new classDisabledMarketPlace();
+                                        $oDisableMarketplace->fillPrimaryTableValues(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
+                                        $oDisableMarketplace->addDisabledMarketPlace();
+                                        //Bing
+                                        $oDisableMarketplace->fillPrimaryTableValues(['marketplace_id' => 2, 'resource_id' => $iProductId, 'resource_type' => 'P']);
+                                        $oDisableMarketplace->addDisabledMarketPlace();
+                                        $oGMCQualityIssues->setField('fixed', 'Y');
+                                    }
+                                    $oGMCQualityIssues->_insert();
+                                    $iNewIssues++;
                                 }
                             }
 
-                            $oIssueDate = DateTime::createFromFormat(DateTime::ISO8601, $oDataQualityIssues->getTimestamp());
-                            if (!$oIssueDate) $oIssueDate = new DateTime('NOW');
-                            $oGMCQualityIssues = new classGMCQualityIssues(['productid' => $iProductId, 'issue_id' => $oIssue->getIssueId()]);
-                            if ($oGMCQualityIssues->getProductId()) {
-                                if ($oIssueDate > $oGMCQualityIssues->getIssueDate()) {
-                                    $oGMCQualityIssues->_delete();
-                                    $oGMCQualityIssues = new classGMCQualityIssues();
-                                }
-                            }
-                            if (!$oGMCQualityIssues->getProductId()) {
-                                $oGMCQualityIssues->fillPrimaryTableValues(['productid' => $iProductId,
-                                    'issue_id' => $oIssue->getIssueId(),
-                                    'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
-                                    'issue_data' => addslashes(json_encode($oDataQualityIssues)),
-                                    'issue_destination' => addslashes(json_encode($oProduct->getDestinationStatuses()))
-                                ]);
-                                if ($oIssue->getIssueProcessing() == 'exclude') {
-                                    //Google
-                                    $oDisableMarketplace = new classDisabledMarketPlace();
-                                    $oDisableMarketplace->fillPrimaryTableValues(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
-                                    $oDisableMarketplace->addDisabledMarketPlace();
-                                    //Bing
-                                    $oDisableMarketplace->fillPrimaryTableValues(['marketplace_id' => 2, 'resource_id' => $iProductId, 'resource_type' => 'P']);
-                                    $oDisableMarketplace->addDisabledMarketPlace();
-                                    $oGMCQualityIssues->setField('fixed','Y');
-                                }
-                                $oGMCQualityIssues->_insert();
-                            }
                         }
 
-                    }
-
-                    $oExpiredDate = DateTime::createFromFormat(DateTime::ISO8601, $oProduct->getGoogleExpirationDate());
-                    $iDaysInterval = $oExpiredDate->diff(new DateTime('now'))->days;
-                    if ($iDaysInterval <= $this->getUpdateExpiredBeforeDays() && $iUpdateProductCount <= $this->getUpdateMaxExpiredProductsPerDay()) {
-                        $aQueue[] = ['productid' => $iProductId];
-                        $iUpdateProductCount++;
+                        $oExpiredDate = DateTime::createFromFormat(DateTime::ISO8601, $oProduct->getGoogleExpirationDate());
+                        $iDaysInterval = $oExpiredDate->diff(new DateTime('now'))->days;
+                        if ($iDaysInterval <= $this->getUpdateExpiredBeforeDays() && $iUpdateProductCount <= $this->getUpdateMaxExpiredProductsPerDay()) {
+                            $aQueue[] = ['productid' => $iProductId];
+                            $iUpdateProductCount++;
+                        }
                     }
                 }
+            }
+            catch (Google_Service_Exception $e) {
+                func_backprocess_log('google_product_statuses', sprintf('Google_Service_Exception. %s', $e->getMessage()));
             }
             $this->restoreQueue($aQueue, 1);
             $pageToken = $oResponse->getNextPageToken();
         } while ($pageToken);
+
+        func_backprocess_log('google_product_statuses', sprintf('%d new issues found.', $iNewIssues));
+        func_backprocess_log('google_product_statuses', sprintf('%d products added for update queue.', $iUpdateProductCount));
 
         return $this;
     }
