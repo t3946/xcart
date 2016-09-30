@@ -121,6 +121,7 @@ class classGMC extends classStoreFrontMarketPlace
                 $parameters['pageToken'] = $pageToken;
             }
             $parameters['includeInvalidInsertedItems'] = true;
+            $parameters['maxResults'] = 250;
             $aQueue = [];
             try {
                 $oResponse = $this->getServiceNew()->productstatuses->listProductstatuses($this->getP1(), $parameters);
