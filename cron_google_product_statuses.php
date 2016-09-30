@@ -35,6 +35,7 @@ if (!empty($aStoreFronts)) {
         if (!empty($aMarketPlaces)) {
             foreach ($aMarketPlaces as $oMarketPlace) {
                 if ($oMarketPlace instanceof classGMC) {
+                    func_backprocess_log(BACK_PROCESS_LOG_NAME, sprintf('---Storefront %d---',$aStoreFront->getStoreFrontId()));
                     $oMarketPlace->getProductStatuses();
                 }
             }

@@ -1,5 +1,5 @@
 <?php
-global $xcart_dir, $config, $REQUEST_METHOD, $location, $first_page;;
+global $xcart_dir, $config, $REQUEST_METHOD, $location, $first_page, $current_storefront;
 
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
@@ -8,6 +8,8 @@ require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledM
 require_once $xcart_dir . "/modules/External_Marketplaces/include/marketplaces/classGMC.php";
 
 $objects_per_page = intval($config['Appearance']['products_per_page_admin']);
+
+$smarty->assign("storefrontid", $current_storefront);
 
 if (!empty($issue) && is_numeric($issue) || !empty($search)) {
 
@@ -52,6 +54,8 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
         $location[] = ['Search results', ""];
     }
 
+    $oIssue->setStoreFront($current_storefront);
+
     $smarty->assign("oIssueProcessingRule", $oIssue);
     $totalcount = $oIssue->getProductImpactedCount($aFilterParams);
     if ($totalcount > 0) {
@@ -67,11 +71,11 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
 } else {
     $smarty->assign("main", "external_marketplaces_quality_issues");
 
-    $aIssueList = classIssuesProcessingRules::getIssuesList();
+    $aIssueList = classIssuesProcessingRules::getIssuesList($current_storefront);
     if (!empty($aIssueList))
         usort ($aIssueList,['classIssuesProcessingRules','sortByIssueProductsCount']);
     $smarty->assign('aProcessingRules', $aIssueList);
-    $smarty->assign('statuses', ['exclude', 'manual']);
+    $smarty->assign('statuses', ['exclude', 'manual','skip']);
     $location[] = ['Quality Issues Processing Rules', ""];
 }
 
