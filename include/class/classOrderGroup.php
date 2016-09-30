@@ -129,7 +129,7 @@ class classOrderGroup extends classData
                                                  xp.manufacturerid = og.manufacturerid
                                      WHERE og.orderid = " . $this->getField('orderid'));
             $fCostToUs = $aCostToUs['cost_to_us_od'];
-            if (is_null($fCostToUs)) {
+            if (is_null($fCostToUs) || !$fCostToUs) {
                 $fCostToUs = $aCostToUs['cost_to_us_pr'];
             }
             $this->fCostToUs = floatval($fCostToUs);
