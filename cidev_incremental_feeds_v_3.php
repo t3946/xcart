@@ -2,8 +2,8 @@
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
-include_once "google-api-php-client/examples/templates/base.php";
-require_once "./google-api-php-client/autoload.php";
+//include_once "google-api-php-client/examples/templates/base.php";
+//require_once "./google-api-php-client/autoload.php";
 
 require "./top.inc.php";
 require "./init.php";

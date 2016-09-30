@@ -50,40 +50,6 @@ class classGMC extends classStoreFrontMarketPlace
     {
         if (empty($this->oService)) {
             global $xcart_dir;
-            //$service_account_name = 'account-2@careful-triumph-774.iam.gserviceaccount.com'; //Email Address
-            $service_account_name = $this->getFTPLogin();
-            $key_file_location = $xcart_dir.'/google-api-php-client/examples/key2.p12'; //key.p12
-
-            $client = new Google_Client();
-            $client->setApplicationName("Client_Library_Examples");
-            $this->oService = new Google_Service_ShoppingContent($client);
-
-            if (isset($_SESSION['service_token'])) {
-                $client->setAccessToken($_SESSION['service_token']);
-            }
-
-            $key = file_get_contents($key_file_location);
-            $cred = new Google_Auth_AssertionCredentials(
-                $service_account_name,
-                //array('https://www.googleapis.com/auth/content'),
-                [$this->getP0()],
-                $key
-            );
-            $client->setAssertionCredentials($cred);
-            if ($debug_mode != "Y") {
-                if ($client->getAuth()->isAccessTokenExpired()) {
-                    $client->getAuth()->refreshTokenWithAssertion($cred);
-                }
-            }
-            $_SESSION['service_token'] = $client->getAccessToken();
-        }
-        return $this->oService;
-    }
-
-    private function getServiceNew($debug_mode = 'N')
-    {
-        if (empty($this->oService)) {
-            global $xcart_dir;
 
             $client = new Google_Client();
             $client->setApplicationName("Client_Library_Examples");
@@ -124,7 +90,7 @@ class classGMC extends classStoreFrontMarketPlace
             $parameters['maxResults'] = 250;
             $aQueue = [];
             try {
-                $oResponse = $this->getServiceNew()->productstatuses->listProductstatuses($this->getP1(), $parameters);
+                $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(), $parameters);
                 /** @var Google_Service_ShoppingContent_ProductStatus[] $aProducts */
                 $aProducts = $oResponse->getResources();
                 if (!empty($aProducts)) {
