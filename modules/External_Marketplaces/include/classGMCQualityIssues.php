@@ -42,14 +42,25 @@ class classGMCQualityIssues extends classData
         return $this->oProduct;
     }
 
-    public function getIssueData()
+    public function getIssueDataHuman()
     {
-        return stripslashes($this->getField('issue_data'));
+        $sResult = null;
+        $oIssue = json_decode($this->getField('issue_data'));
+        if ($oIssue) {
+            $class_vars = get_object_vars($oIssue);
+
+            foreach ($class_vars as $name => $value) {
+                if ($value) {
+                    $sResult .= "<b>$name</b>: $value<br/>";
+                }
+            }
+        }
+        return $sResult;
     }
 
     public function getIssueDestination()
     {
-        return stripslashes($this->getField('issue_destination'));
+        return json_decode($this->getField('issue_destination'));
     }
 
     public function getIssueDate(){

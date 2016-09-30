@@ -8,6 +8,7 @@ class classIssuesProcessingRules extends classData
 {
     private $aProductsIssues = null;
     private $iProductCount = null;
+    private $iStoreFrontId = null;
 
     public function __construct($aIssuesProcessingRules = null)
     {
@@ -17,7 +18,7 @@ class classIssuesProcessingRules extends classData
         parent::__construct($aIssuesProcessingRules);
     }
 
-    public static function getIssuesList()
+    public static function getIssuesList($iStorefrontId = null)
     {
         $aResults = null;
         $oSQL = new classSQLBuilder();
@@ -27,7 +28,10 @@ class classIssuesProcessingRules extends classData
             foreach ($aIssues as $aIssue) {
                 $oIssue = new classIssuesProcessingRules();
                 $oIssue->fillPrimaryTableValues($aIssue);
-                $aResults[] = $oIssue;
+                if (!is_null($iStorefrontId))
+                    $oIssue->setStoreFront($iStorefrontId);
+                if ($oIssue->getProductImpactedCount() > 0)
+                    $aResults[] = $oIssue;
             }
         }
         return $aResults;
@@ -109,6 +113,9 @@ class classIssuesProcessingRules extends classData
                 $this->oSQL->addCondition("(xp.productcode LIKE '%" . $sSearch . "%' OR xp.product LIKE '%" . $sSearch . "%')");
                 unset($aParams['search']);
             }
+            if (!is_null($this->getStoreFront())) {
+                $this->oSQL->addInnerJoin('products_sf', 'psf', 'psf.productid = xc.productid AND psf.sfid=' . $this->getStoreFront());
+            }
             $aCount = $this->oSQL->addFilter($aParams)->Execute()->getQueryResult();
 
             $aC = reset($aCount);
@@ -129,6 +136,10 @@ class classIssuesProcessingRules extends classData
                 $this->oSQL->addCondition("(xp.productcode LIKE '%" . $sSearch . "%' OR xp.product LIKE '%" . $sSearch . "%')");
                 unset($aParams['search']);
             }
+            if (!is_null($this->getStoreFront())) {
+                $this->oSQL->addInnerJoin('products_sf', 'psf', 'psf.productid = xc.productid AND psf.sfid=' . $this->getStoreFront());
+            }
+
             $aProductImpacted = $this->oSQL->addFilter($aParams)->setLimit("$first_page, $objects_per_page")->Execute()->getQueryResult();
 
             if ($aProductImpacted) {
@@ -146,5 +157,15 @@ class classIssuesProcessingRules extends classData
     public static function sortByIssueProductsCount($a, $b)
     {
         return $a->getProductImpactedCount() < $b->getProductImpactedCount();
+    }
+
+    public function setStoreFront($iStoreFrontId)
+    {
+        $this->iStoreFrontId = $iStoreFrontId;
+    }
+
+    public function getStoreFront()
+    {
+        return $this->iStoreFrontId;
     }
 }

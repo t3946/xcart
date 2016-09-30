@@ -37,10 +37,10 @@
         {foreach from=$aImpactedProducts item=oImpactedProduct}
             {assign var=oProduct value=$oImpactedProduct->getProductEntity()}
             {assign var=oIssueEntity value=$oImpactedProduct->getIssueEntity()}
-            <tr>
+            <tr {cycle values=', class="TableSubHead"'}>
                 <td><a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getSKU()}</a></td>
                 <td><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getProductName()}</a></td>
-                <td style="word-break: break-all">{$oImpactedProduct->getIssueData()}<br/>{$oImpactedProduct->getIssueDestination()}</td>
+                <td style="word-break: break-all">{$oImpactedProduct->getIssueDataHuman()}</td>
                 <td style="text-align: center">
                     {if $oIssueEntity->getIssueProcessing() == 'manual'}
                         <input name="action_fix_issue[{$oImpactedProduct->getProductId()}:{$oImpactedProduct->getIssueId()}]" type="submit" value="Fixed"/>
