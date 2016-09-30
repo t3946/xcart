@@ -92,6 +92,7 @@ class classGMC extends classStoreFrontMarketPlace
             $aProducts = $oResponse->getResources();
             $aQueue = [];
             if (!empty($aProducts)) {
+                func_backprocess_log('google_product_statuses', sprintf('Get %d products for update from GMC.', count($aProducts)));
                 foreach ($aProducts as $oProduct) {
                     list($sStatus, $lang, $Country, $iProductId) = explode(':', $oProduct->getProductId());
 
@@ -145,6 +146,7 @@ class classGMC extends classStoreFrontMarketPlace
                     $oExpiredDate = DateTime::createFromFormat(DateTime::ISO8601, $oProduct->getGoogleExpirationDate());
                     $iDaysInterval = $oExpiredDate->diff(new DateTime('now'))->days;
                     if ($iDaysInterval <= $this->getUpdateExpiredBeforeDays() && $iUpdateProductCount <= $this->getUpdateMaxExpiredProductsPerDay()) {
+                        func_backprocess_log('google_product_statuses', sprintf('Add product %d for update queue.', $iProductId));
                         $aQueue[] = ['productid' => $iProductId];
                         $iUpdateProductCount++;
                     }
