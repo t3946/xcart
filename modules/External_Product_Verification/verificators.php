@@ -12,7 +12,7 @@ $oClassCustomer = new classCustomer();
 $aCustomers = $oClassCustomer->getCustomersByType('V', $active);
 $oBatches = new classExternalVerificationBatch();
 
-usort($aCustomers, array($oClassCustomer, "sortByAmazonCompletedBatchesDesc"));
+//usort($aCustomers, array($oClassCustomer, "sortByAmazonCompletedBatchesDesc"));
 
 $smarty->assign("aCustomers", $aCustomers);
 $smarty->assign("active", $active);

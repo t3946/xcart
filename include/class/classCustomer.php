@@ -65,7 +65,8 @@ class classCustomer extends classData
         if ($active != 'all') {
             $oSQL->addCondition("status='$active'")->addCondition("activity='$active'");
         }
-        $aCustomers = $oSQL->addOrderBy('b_firstname')->Execute()->getQueryResult();
+        $aCustomers = $oSQL->addOrderBy('firstname')->Execute()->getQueryResult();
+        echo $oSQL->getQuery();
         if (!empty($aCustomers)) {
             foreach ($aCustomers as $aCustomer) {
                 $OCustomer = new classCustomer();
