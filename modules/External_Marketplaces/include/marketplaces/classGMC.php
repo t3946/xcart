@@ -90,7 +90,7 @@ class classGMC extends classStoreFrontMarketPlace
             $parameters['maxResults'] = 250;
             $aQueue = [];
             try {
-                $oResponse = $this->getServiceNew()->productstatuses->listProductstatuses($this->getP1(), $parameters);
+                $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(), $parameters);
                 /** @var Google_Service_ShoppingContent_ProductStatus[] $aProducts */
                 $aProducts = $oResponse->getResources();
                 if (!empty($aProducts)) {
