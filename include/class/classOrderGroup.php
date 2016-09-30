@@ -120,7 +120,7 @@ class classOrderGroup extends classData
 
     public function getTotalCostToUs()
     {
-        if (is_null($this->fCostToUs)) {
+        if (empty($this->fCostToUs)) {
             $aCostToUs = func_query_first("SELECT sum(xo.item_cost_to_us*xo.amount) as cost_to_us_od, sum(xp.cost_to_us*xo.amount) as cost_to_us_pr
                                       FROM xcart_order_groups og
                                            INNER JOIN xcart_order_details xo USING (orderid)
@@ -128,8 +128,8 @@ class classOrderGroup extends classData
                                               ON xp.productid = xo.productid AND
                                                  xp.manufacturerid = og.manufacturerid
                                      WHERE og.orderid = " . $this->getField('orderid'));
-            $fCostToUs = $aCostToUs['cost_to_us_od'];
-            if (is_null($fCostToUs) || !$fCostToUs) {
+            $fCostToUs = floatval($aCostToUs['cost_to_us_od']);
+            if (is_null($fCostToUs) || $fCostToUs == 0) {
                 $fCostToUs = $aCostToUs['cost_to_us_pr'];
             }
             $this->fCostToUs = floatval($fCostToUs);
