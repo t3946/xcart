@@ -351,21 +351,104 @@
         </div>
         <div class="buttons-right">
             <div id="conclusion_buttons" style="display:none;">
-                <a data-html="{$config.Amazon_Verification.amazon_verification_make_conclusion_popup_message}" id="make_conclusion_button" href="#" style="border-bottom: 1px dotted; color: #0000ff; text-decoration: none; font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</a>
+                <div class="ui vertical steps">
+                    <div class="step">
+                        <i class="question icon"></i>
+                        <div class="content">
+                            <div class="title">Product images show</div>
+                            <div class="description">
+                                <div class="ui form">
+                                    <div class="grouped fields">
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_image" type="radio">
+                                                <label>different products</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_image" type="radio">
+                                                <label>the same product</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <i class="question icon"></i>
+                        <div class="content">
+                            <div class="title">Product names</div>
+                            <div class="description">
+                                <div class="ui form">
+                                    <div class="grouped fields">
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_names" type="radio">
+                                                <label>contradict to each other</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_names" type="radio">
+                                                <label>do NOT contradict</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <i class="question icon"></i>
+                        <div class="content">
+                            <div class="title">Product descriptions</div>
+                            <div class="description">
+                                <div class="ui form">
+                                    <div class="grouped fields">
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_description" type="radio">
+                                                <label>contradict to each other</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_description" type="radio">
+                                                <label>do NOT contradict</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <i class="question icon"></i>
+                        <div class="content">
+                            <div class="title">Product quantity listed on Amazon</div>
+                            <div class="description">
+                                <div class="ui form">
+                                    <div class="grouped fields">
+                                        <div class="field">
+                                            <div class="ui mini input">
+                                                <label>On Amazon:</label>
+                                                <input autocomplete="off" type="text" value="1"/>
+                                            </div>
+                                        </div>
+                                        <div class="field">
 
-                <div id="action_buttons_block" class="ui buttons select" data-asin=""
-                     data-batch-id="{$oVerificationBatch->getBatchId()}"
-                     data-product-id="{$oVerificationBatch->getVerifiedProductId()}">
-                    <button data-action="match" data-class="positive" id="submit-product-match" class="ui left positive button">Product
-                        match
-                    </button>
-                    <div class="or" data-text="or"></div>
-                    <button data-action="not_sure" data-class="yellow" id="submit-product-not-sure" class="ui yellow button">Not sure
-                    </button>
-                    <div class="or" data-text="or"></div>
-                    <button data-action="not_match" data-class="negative" id="submit-product-not-match" class="ui negative button">Does NOT
-                        match
-                    </button>
+                                            <div class="ui mini input">
+                                                <label>On our website:</label>
+                                                <input autocomplete="off" type="text" value="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}"

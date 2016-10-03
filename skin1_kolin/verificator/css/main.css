@@ -206,3 +206,27 @@ iframe
         width:100%;
     }
 }
+.ui.steps .step .title {
+    font-family: Verdana;
+    font-size: 0.9em;
+}
+.ui.steps .step .description, .ui.checkbox .box, .ui.checkbox label {
+    font-size: 0.82em;
+    margin: 0.05em 0em;
+}
+.ui.radio.checkbox .box::after, .ui.radio.checkbox label::after {
+    top: 2px;
+    width: 17px;
+}
+.ui.form .grouped.fields .field, .ui.form .grouped.inline.fields .field {
+    margin: 0.05em 0em;
+}
+.ui.mini.input label {
+    width:60%;
+    line-height: 2em;
+}
+.ui.mini.input input {
+    padding:2px;
+    text-align: right;
+    width:1% !important;
+}
