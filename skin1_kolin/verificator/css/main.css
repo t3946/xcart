@@ -212,8 +212,9 @@ iframe
 }
 .ui.steps .step .description, .ui.checkbox .box, .ui.checkbox label {
     font-size: 0.82em;
-    margin: 0.05em 0em;
+    margin: 0!important;
 }
+
 .ui.radio.checkbox .box::after, .ui.radio.checkbox label::after {
     top: 2px;
     width: 17px;
@@ -229,4 +230,7 @@ iframe
     padding:2px;
     text-align: right;
     width:1% !important;
+}
+.popup_drop_link{
+    border-bottom: 1px dotted; color: #0000ff; text-decoration: none; font-family:Verdana;
 }
