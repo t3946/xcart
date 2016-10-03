@@ -121,7 +121,7 @@ class classGMC extends classStoreFrontMarketPlace
                                         $oGMCQualityIssues = new classGMCQualityIssues();
                                     }
                                 }
-                                if (!$oGMCQualityIssues->getProductId()) {
+                                if (!$oGMCQualityIssues->getProductId() && $oIssue->getIssueProcessing() != 'skip') {
                                     $oGMCQualityIssues->fillPrimaryTableValues(['productid' => $iProductId,
                                         'issue_id' => $oIssue->getIssueId(),
                                         'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
@@ -147,7 +147,7 @@ class classGMC extends classStoreFrontMarketPlace
 
                         $oExpiredDate = DateTime::createFromFormat(DateTime::ISO8601, $oProduct->getGoogleExpirationDate());
                         $iDaysInterval = $oExpiredDate->diff(new DateTime('now'))->days;
-                        if ($iDaysInterval <= $this->getUpdateExpiredBeforeDays() && $iUpdateProductCount <= $this->getUpdateMaxExpiredProductsPerDay()) {
+                        if ($iDaysInterval <= $this->getUpdateExpiredBeforeDays() && $iUpdateProductCount < $this->getUpdateMaxExpiredProductsPerDay()) {
                             $aQueue[] = ['productid' => $iProductId];
                             $iUpdateProductCount++;
                         }
