@@ -16,8 +16,8 @@
         </td>
     </tr>
     <tr class="TableHead">
-        <td width="10">Login / Edit ver profile</td>
         <td width="100">Full Name / Link to Upwork</td>
+        <td width="10">Login / Edit ver profile</td>
         <td width="10">Current batches</td>
         <td width="10">Completed batches</td>
         <td width="10">Paid batches</td>
@@ -27,7 +27,6 @@
         {foreach from=$aCustomers item=oCustomer}
             {assign var=aBatchesInProgress value=$oCustomer->getAmazonBatches('in progress')}
             <tr>
-                <td>{if $oCustomer->getCustomerModifyLink()}<a href="{$oCustomer->getCustomerModifyLink()}" target="_blank">{/if}{$oCustomer->getCustomerLogin()}</a></td>
                 <td data-customer-id="{$oCustomer->getCustomerLogin()}">
                     {if $oCustomer->getCustomerURL()}
                         <a target="_blank" href="{$oCustomer->getCustomerURL()}">{/if}{$oCustomer->getCustomerFullName()}{if $oCustomer->getCustomerURL()}</a>{/if}&nbsp;&nbsp;
@@ -37,6 +36,7 @@
                         </span>
                     {/if}
                 </td>
+                <td>{if $oCustomer->getCustomerModifyLink()}<a href="{$oCustomer->getCustomerModifyLink()}" target="_blank">{/if}{$oCustomer->getCustomerLogin()}</a></td>
                 <td align="center">
                     {if $aBatchesInProgress}
                         {foreach from=$aBatchesInProgress item=oBatchInProgress name=batchInProgress}
@@ -56,7 +56,60 @@
 </table>
 {/capture}
 
+{capture name=verification_results}
+<table width="100%" id="table_verificators">
+    <tr>
+        <td colspan="7">
+
+        </td>
+    </tr>
+    <tr class="TableHead">
+        <td rowspan="2" width="100">SKU</td>
+        <td rowspan="2" width="10">Product name</td>
+        <td rowspan="2"width="10">Verificator</td>
+        <td rowspan="2" width="10">Date and time</td>
+        <td colspan="5" width="10">Verification questions</td>
+        <td rowspan="2" width="100">Conclusion</td>
+    </tr>
+    <tr class="TableHead">
+        <td>ASIN</td>
+        <td>Image</td>
+        <td>Name</td>
+        <td>Description</td>
+        <td>Pack qty</td>
+    </tr>
+    {if $aVerifiactionResults}
+        {foreach from=$aVerifiactionResults item=oVerificationResult}
+            {assign var=oProduct value=$oVerificationResult->getProductEntity()}
+            {assign var=aVerificatorResults value=$oVerificationResult->getVerificatorsResults()}
+            {if $aVerificatorResults}
+                {foreach from=$aVerificatorResults item=oVerificatorResult}
+                    {assign var=oCustomer value=$oVerificatorResult->getCustomerEntity()}
+                    {assign var=oVerifyDate value=$oVerificatorResult->getValueAsDateTime()}
+                <tr>
+                    <td rowspan="2"><a href="{$oProduct->getProductModifyURL()}" target="_blank">{$oProduct->getSKU()}</a></td>
+                    <td rowspan="2"><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getProductName()}</a></td>
+                    <td>{$oCustomer->getCustomerFullName()}<br/>{$oCustomer->getCustomerLogin()}</td>
+                    <td align="center">{$oVerifyDate->format('d-M-Y H:i')}</td>
+                    <td>{$oVerificatorResult->getAsin()}</td>
+                    <td>{$oVerificatorResult->getProductImage()}</td>
+                    <td>{$oVerificatorResult->getProductName()}</td>
+                    <td>{$oVerificatorResult->getProductDescription()}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {/foreach}
+            {/if}
+        {/foreach}
+    {/if}
+</table>
+{/capture}
+
 {include file="dialog.tpl" title='Verificators' content=$smarty.capture.dialog extra='width="100%"'}
+<br/>
+{include file="dialog.tpl" title='Verification results' content=$smarty.capture.verification_results extra='width="100%"'}
 
 <script>
     {literal}

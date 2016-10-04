@@ -132,4 +132,9 @@ class classSQLBuilder
         return $this->aSqlQueryResult;
     }
 
+    public function getQueryResultFirst()
+    {
+        return reset($this->aSqlQueryResult);
+    }
+
 }

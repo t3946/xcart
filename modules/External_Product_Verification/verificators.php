@@ -2,6 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classCustomer.php";
 require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationBatches.php";
+require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationProductsQueue.php";
 
 $smarty->assign("main", "verificators");
 
@@ -19,3 +20,5 @@ $smarty->assign("active", $active);
 
 
 $smarty->assign('oBatches', $oBatches);
+
+$smarty->assign('aVerifiactionResults', classExternalVerificationProductsQueue::getVerificationResultsProducts());

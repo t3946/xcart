@@ -54,6 +54,11 @@ class classData
         $this->fillPrimaryTableInfo();
     }
 
+    public function _update()
+    {
+        func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, $this->getWhereClause());
+    }
+
     protected function fillPrimaryTableInfo()
     {
         if (!empty($this->aPrimaryKeysValues)) {
@@ -65,7 +70,7 @@ class classData
         }
     }
 
-    public function fillPrimaryTableValues($aValues)
+    protected function fillPrimaryTableValues($aValues)
     {
         if (!empty($aValues)) {
             $this->aPrimaryTableValue = $aValues;
@@ -130,9 +135,24 @@ class classData
         return $this;
     }
 
+    protected function getWhereClause()
+    {
+        $aKeyArray = $this->aPrimaryKeysValues;
+        array_walk($aKeyArray, function (&$a, $b) {
+            $a = $b . ' = "' . $a . '"';
+        });
+        return implode(" AND ", $aKeyArray);
+    }
+
     public static function model($aParams = [])
     {
         $class = get_called_class();
         return new $class($aParams);
+    }
+
+    protected function fill($aParams)
+    {
+        $this->fillPrimaryTableValues($aParams);
+        return $this;
     }
 }
