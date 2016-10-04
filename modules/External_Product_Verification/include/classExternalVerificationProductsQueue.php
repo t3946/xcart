@@ -52,7 +52,7 @@ class classExternalVerificationProductsQueue extends classData
 
     public function getCrossVerifyCount()
     {
-        return $this->getField('cross_verify_count');
+        return intval($this->getField('cross_verify_count'));
     }
 
     public static function getProductsQueueEtalon()

@@ -13,6 +13,7 @@
     <script src="{$SkinDir}/js/semantic/components/transition.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/progress.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/popup.min.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/js/semantic/components/dropdown.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/verificator/js/verificator.js" type="text/javascript"></script>
 
     {literal}
@@ -77,14 +78,14 @@
                                     <div class="grouped fields">
                                         <div class="field">
                                             <div class="ui radio checkbox">
-                                                <input autocomplete="off" name="product_image" type="radio">
-                                                <label>different products</label>
+                                                <input autocomplete="off" name="product_image" id="product_image_1" type="radio" value="different">
+                                                <label for="product_image_1">different products</label>
                                             </div>
                                         </div>
                                         <div class="field">
                                             <div class="ui radio checkbox">
-                                                <input autocomplete="off" name="product_image" type="radio">
-                                                <label>the same product</label>
+                                                <input autocomplete="off" name="product_image" id="product_image_2" type="radio" value="same">
+                                                <label for="product_image_2">the same product</label>
                                             </div>
                                         </div>
                                     </div>
@@ -101,14 +102,14 @@
                                     <div class="grouped fields">
                                         <div class="field">
                                             <div class="ui radio checkbox">
-                                                <input autocomplete="off" name="product_names" type="radio">
-                                                <label>contradict to each other</label>
+                                                <input autocomplete="off" name="product_names" id="product_name_1" type="radio" value="contradict">
+                                                <label for="product_name_1">contradict to each other</label>
                                             </div>
                                         </div>
                                         <div class="field">
                                             <div class="ui radio checkbox">
-                                                <input autocomplete="off" name="product_names" type="radio">
-                                                <label>do NOT contradict</label>
+                                                <input autocomplete="off" name="product_names" id="product_name_2" type="radio" value="not_contradict">
+                                                <label for="product_name_2">do NOT contradict</label>
                                             </div>
                                         </div>
                                     </div>
@@ -127,14 +128,14 @@
                                     <div class="grouped fields">
                                         <div class="field">
                                             <div class="ui radio checkbox">
-                                                <input autocomplete="off" name="product_description" type="radio">
-                                                <label>contradict to each other</label>
+                                                <input autocomplete="off" name="product_description" id="product_description_1" type="radio" value="contradict">
+                                                <label for="product_description_1">contradict to each other</label>
                                             </div>
                                         </div>
                                         <div class="field">
                                             <div class="ui radio checkbox">
-                                                <input autocomplete="off" name="product_description" type="radio">
-                                                <label>do NOT contradict</label>
+                                                <input autocomplete="off" name="product_description" id="product_description_2" type="radio" value="not_contradict">
+                                                <label for="product_description_2">do NOT contradict</label>
                                             </div>
                                         </div>
                                     </div>
@@ -146,24 +147,33 @@
                         <i class="question icon"></i>
                         <div class="content">
                             <div class="title">
-                                <a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_make_conclusion_popup_message}" href="#">Product quantity listed on Amazon</a>
+                                <a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_quantity_popup_message}" href="#">Product quantity listed on Amazon</a>
                             </div>
                             <div class="description">
-                                <div class="ui form">
-                                    <div class="grouped fields">
+                                <div class="ui form buttons">
+                                    <div class="grouped fields amazon_products_listed">
                                         <div class="field">
                                             <div class="ui mini input">
-                                                <label>On Amazon:</label>
-                                                <input autocomplete="off" type="text" value="1"/>
+                                                <label>on Amazon:</label>
+                                                <input autocomplete="off" name="qty_on_amazon" type="text" value="1"/>
                                             </div>
                                         </div>
                                         <div class="field">
 
                                             <div class="ui mini input">
-                                                <label>On our website:</label>
-                                                <input autocomplete="off" type="text" value="1"/>
+                                                <label>on our website:</label>
+                                                <input autocomplete="off" type="text" name="qty_on_our_website" value="1"/>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="conclusion_submit_button" data-asin="">
+                                            <div class="ui simple button left submit-amazon-button disabled" data-action="submit">Submit</div>
+                                            <div class="ui dropdown button disabled">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    <div class="item submit-amazon-button" data-action="submit_with_comment">Submit with comments</div>
+                                                </div>
+                                            </div>
                                     </div>
                                 </div>
                             </div>
@@ -193,9 +203,6 @@
 </div>
 
 <div class="ui small test modal transition">
-    <div class="header">
-        Conclusion: <button style="position: relative; bottom: 2px;" id="conclusion_title" class="ui positive button">Product match </button>
-    </div>
     <div class="content">
         <div class="ui form">
             <h4 class="ui dividing header">Write your comments (if you have any)</h4>

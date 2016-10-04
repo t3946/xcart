@@ -71,6 +71,7 @@ class classData
             $this->aPrimaryTableValue = $aValues;
             $this->aPrimaryKeysValues = array_intersect_key($aValues, array_flip($this->aPrimaryKeys));
         }
+        return $this;
     }
 
     /**
@@ -127,5 +128,11 @@ class classData
             func_array2update($this->sPrimaryTable, $aFieldNamesValues, str_replace('&', ' AND ', http_build_query($this->aPrimaryKeysValues)));
         }
         return $this;
+    }
+
+    public static function model($aParams = [])
+    {
+        $class = get_called_class();
+        return new $class($aParams);
     }
 }

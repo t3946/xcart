@@ -209,10 +209,12 @@ iframe
 .ui.steps .step .title {
     font-family: Verdana;
     font-size: 0.9em;
+    margin-bottom: 0.1em;
 }
 .ui.steps .step .description, .ui.checkbox .box, .ui.checkbox label {
     font-size: 0.82em;
     margin: 0!important;
+    cursor:pointer;
 }
 
 .ui.radio.checkbox .box::after, .ui.radio.checkbox label::after {
@@ -220,7 +222,7 @@ iframe
     width: 17px;
 }
 .ui.form .grouped.fields .field, .ui.form .grouped.inline.fields .field {
-    margin: 0.05em 0em;
+    margin: 0.05em 0;
 }
 .ui.mini.input label {
     width:60%;
@@ -233,4 +235,24 @@ iframe
 }
 .popup_drop_link{
     border-bottom: 1px dotted; color: #0000ff; text-decoration: none; font-family:Verdana;
+}
+.amazon_products_listed {
+    width:60%;
+    float:left;
+    margin:0!important;
+}
+.conclusion_submit_button{
+    margin-top:0.7em;
+    float:right;
+    margin-left:auto;
+}
+.conclusion_submit_button .button {
+    float:left;
+}
+.conclusion_submit_button .menu{
+    right:0;
+    left:auto !important;
+}
+.conclusion_submit_button .ui.dropdown .menu > .item {
+    padding: 0.68571429rem 1.94285714rem !important;
 }
