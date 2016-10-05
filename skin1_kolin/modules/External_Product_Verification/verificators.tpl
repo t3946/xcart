@@ -103,9 +103,9 @@
                         {/if}
                         <tr {$classVar}>
                             {if $smarty.foreach.ver_rows.iteration == 1}
-                                <td rowspan="2"><a href="{$oProduct->getProductModifyURL()}"
+                                <td rowspan="{$aVerificatorResults|@count}"><a href="{$oProduct->getProductModifyURL()}"
                                                    target="_blank">{$oProduct->getSKU()}</a></td>
-                                <td rowspan="2"><a target="_blank"
+                                <td rowspan="{$aVerificatorResults|@count}"><a target="_blank"
                                                    href="{$oProduct->getProductFrontURL()}">{$oProduct->getProductName()}</a>
                                 </td>
                             {/if}
