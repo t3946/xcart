@@ -15,7 +15,8 @@ class classExternalVerificationProducts extends classData
     private $ProductDescription = null;
     private $QtyOnAmazon = null;
     private $QtyOnOurWebSite = null;
-    private $aActionsName = ['match'=>'Match', 'not_match'=>'Does NOT match', 'not_found'=>'Product not found'];
+    private static $aActionsName = ['match'=>'Match', 'not_match'=>'Does NOT match', 'not_found'=>'Product not found', 'not_sure' => 'Not sure'];
+    private static $aQuestionsName = ['different'=>'Different', 'same'=>'Same', 'contradict'=>'Contradict', 'not_contradict' => 'Not'];
 
     public function __construct($aParams = [])
     {
@@ -86,7 +87,7 @@ class classExternalVerificationProducts extends classData
 
     public function getActionDisplayName()
     {
-        return $this->aActionsName[$this->getAction()];
+        return self::$aActionsName[$this->getAction()];
     }
 
     public function getProductImage()
@@ -94,7 +95,7 @@ class classExternalVerificationProducts extends classData
         if (is_null($this->ProductImage)) {
             $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_image']);
             if ($oImage->getProductId()) {
-                $this->ProductImage = $oImage->getValue();
+                $this->ProductImage = self::$aQuestionsName[$oImage->getValue()];
             }
         }
         return $this->ProductImage;
@@ -105,7 +106,7 @@ class classExternalVerificationProducts extends classData
         if (is_null($this->ProductName)) {
             $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_names']);
             if ($oImage->getProductId()) {
-                $this->ProductName = $oImage->getValue();
+                $this->ProductName = self::$aQuestionsName[$oImage->getValue()];
             }
         }
         return $this->ProductName;
@@ -116,7 +117,7 @@ class classExternalVerificationProducts extends classData
         if (is_null($this->ProductDescription)) {
             $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_description']);
             if ($oImage->getProductId()) {
-                $this->ProductDescription = $oImage->getValue();
+                $this->ProductDescription = self::$aQuestionsName[$oImage->getValue()];
             }
         }
         return $this->ProductDescription;

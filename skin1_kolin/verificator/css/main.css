@@ -265,3 +265,9 @@ iframe
 .question_not_same {
     background-color: #fff2cc;
 }
+#table_verificators .TableHead td {
+    text-transform: inherit;
+}
+#table_verificators td {
+    text-transform: capitalize;
+}
