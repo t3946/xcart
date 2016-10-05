@@ -155,7 +155,7 @@ class classExternalVerificationProductsQueue extends classData
 
             if (!is_null($iBatchId) && in_array($this->getStatus(),[self::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH,self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH, self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_FOUND])) {
                 $this->oSQL->addCondition('batch_id='.$iBatchId);
-                $this->aVerificatorResults[] = classExternalVerificationProducts::model()->setAction($this->getStatus())->setValue(time());
+                $this->aVerificatorResults[] = classExternalVerificationProducts::model()->setAction($this->getStatus())->setValue(time())->setField('productid',$this->getProductId());
             }
 
             $aResults = $this->oSQL->Execute()->getQueryResult();
