@@ -120,14 +120,23 @@ class classExternalVerificationProductsQueue extends classData
         return $aAsins;
     }
 
-    public static function getVerificationResultsProducts($limit = 50)
+    public static function getVerificationResultsProducts($aParams = null)
     {
         $aResults = [];
+
+        $limit = 50;
+        if (!empty($aParams['limit']) && is_numeric($aParams['limit']))
+            $limit = (int) $aParams['limit'];
+
         $oSQL = new classSQLBuilder();
         $oSQL->addSelect('xe.*')->
                addFromTable('external_verification_products_queue', 'xe')->
                addInnerJoin('external_verification_products', 'xp', 'xp.productid = xe.productid AND xp.action IN ("' . implode('","', classExternalVerificationBatch::$aProductStatuses['processed']) . '")')->
-            addCondition('cross_verify_count = 2')->addGroupBy('xe.productid')->addOrderBy('xp.value DESC')->setLimit($limit);
+               addGroupBy('xe.productid')->addOrderBy('xp.value DESC')->setLimit($limit);
+        if (!empty($aParams['batch_id']) && is_numeric($aParams['batch_id'])) {
+            $oSQL->addCondition('batch_id='.(int)$aParams['batch_id']);
+        } else
+            $oSQL->addCondition('cross_verify_count = 2');
         $aVerificationResults = $oSQL->Execute()->getQueryResult();
         if (!empty($aVerificationResults)) {
             foreach ($aVerificationResults as $aVerificationResult) {
@@ -137,11 +146,18 @@ class classExternalVerificationProductsQueue extends classData
         return $aResults;
     }
 
-    public function getVerificatorsResults()
+    public function getVerificatorsResults($iBatchId = null)
     {
         if (is_null($this->aVerificatorResults)) {
             $this->oSQL->init()->addSelect('*')->addFromTable('external_verification_products')->
-                addCondition('productid = '.$this->getProductId())->addCondition('action IN ("' . implode('","', classExternalVerificationBatch::$aProductStatuses['processed']) . '")');
+                addCondition('productid = '.$this->getProductId())->
+                addCondition('action IN ("' . implode('","', classExternalVerificationBatch::$aProductStatuses['processed']) . '")');
+
+            if (!is_null($iBatchId) && in_array($this->getStatus(),[self::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH,self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH, self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_FOUND])) {
+                $this->oSQL->addCondition('batch_id='.$iBatchId);
+                $this->aVerificatorResults[] = classExternalVerificationProducts::model()->setAction($this->getStatus())->setValue(time());
+            }
+
             $aResults = $this->oSQL->Execute()->getQueryResult();
             if (!empty($aResults)) {
                 foreach($aResults as $aVerificationProduct) {

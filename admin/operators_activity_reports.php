@@ -131,4 +131,3 @@ $smarty->assign("location", $location);
 @include $xcart_dir."/modules/gold_display.php";
 
 func_display("admin/home.tpl",$smarty);
-?>
