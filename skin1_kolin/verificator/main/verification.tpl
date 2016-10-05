@@ -72,7 +72,7 @@
                     <div class="step">
                         <i class="question icon"></i>
                         <div class="content">
-                            <div class="title">Product images show</div>
+                            <div class="title"><a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_images_popup_message}" href="#">Product images</a> show</div>
                             <div class="description">
                                 <div class="ui form">
                                     <div class="grouped fields">
@@ -96,7 +96,7 @@
                     <div class="step">
                         <i class="question icon"></i>
                         <div class="content">
-                            <div class="title">Product names</div>
+                            <div class="title"><a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_names_popup_message}" href="#">Product names</a></div>
                             <div class="description">
                                 <div class="ui form">
                                     <div class="grouped fields">
@@ -144,10 +144,10 @@
                         </div>
                     </div>
                     <div class="step">
-                        <i class="question icon"></i>
+                        <i class="exclamation icon"></i>
                         <div class="content">
                             <div class="title">
-                                <a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_quantity_popup_message}" href="#">Product quantity listed on Amazon</a>
+                                <a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_quantity_popup_message}" href="#">Product quantity</a> listed
                             </div>
                             <div class="description">
                                 <div class="ui form buttons">

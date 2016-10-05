@@ -62,7 +62,7 @@ class classData
         }
     }
 
-    protected function fillPrimaryTableValues($aValues)
+    public function fillPrimaryTableValues($aValues)
     {
         if (!empty($aValues)) {
             $this->aPrimaryTableValue = $aValues;
