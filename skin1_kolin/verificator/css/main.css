@@ -211,6 +211,9 @@ iframe
     font-size: 0.9em;
     margin-bottom: 0.1em;
 }
+.ui.steps .step label{
+    font-family: Verdana;
+}
 .ui.steps .step .description, .ui.checkbox .box, .ui.checkbox label {
     font-size: 0.82em;
     margin: 0!important;
@@ -225,7 +228,7 @@ iframe
     margin: 0.05em 0;
 }
 .ui.mini.input label {
-    width:60%;
+    width:75%;
     line-height: 2em;
 }
 .ui.mini.input input {
@@ -237,14 +240,14 @@ iframe
     border-bottom: 1px dotted; color: #0000ff; text-decoration: none; font-family:Verdana;
 }
 .amazon_products_listed {
-    width:60%;
+    width:140px;
     float:left;
     margin:0!important;
 }
 .conclusion_submit_button{
     margin-top:0.7em;
     float:right;
-    margin-left:auto;
+    margin-left:20px;
 }
 .conclusion_submit_button .button {
     float:left;

@@ -124,9 +124,10 @@ class classExternalVerificationProductsQueue extends classData
     {
         $aResults = [];
         $oSQL = new classSQLBuilder();
-        $oSQL->addSelect('*')->addFromTable('external_verification_products_queue')->
-            addCondition('cross_verify_count = 2')->
-            addOrderBy('cross_verify_count DESC')->setLimit($limit);
+        $oSQL->addSelect('xe.*')->
+               addFromTable('external_verification_products_queue', 'xe')->
+               addInnerJoin('external_verification_products', 'xp', 'xp.productid = xe.productid AND xp.action IN ("' . implode('","', classExternalVerificationBatch::$aProductStatuses['processed']) . '")')->
+            addCondition('cross_verify_count = 2')->addGroupBy('xe.productid')->addOrderBy('xp.value DESC')->setLimit($limit);
         $aVerificationResults = $oSQL->Execute()->getQueryResult();
         if (!empty($aVerificationResults)) {
             foreach ($aVerificationResults as $aVerificationResult) {
