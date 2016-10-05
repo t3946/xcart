@@ -13,6 +13,8 @@
     <script src="{$SkinDir}/js/semantic/components/transition.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/progress.min.js" type="text/javascript"></script>
     <script src="{$SkinDir}/js/semantic/components/popup.min.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/js/semantic/components/dropdown.min.js" type="text/javascript"></script>
+    <script src="{$SkinDir}/verificator/js/verificator.js" type="text/javascript"></script>
 
     {literal}
     <script type="text/javascript">
@@ -20,291 +22,6 @@
         var trans =  {/literal}{$oVerificationBatch->getSearchLinksJson()} {literal};
         var sOriginalProduct =  {/literal}{$oVerificationBatch->getOriginalLinksJson()} {literal};
 
-        idx = 0;
-        firstLoad = true;
-
-        function getFirstAvailStep() {
-            for (var prop in trans)
-                return prop;
-        }
-        function initButtons() {
-            var i = 0;
-            for (var prop in trans) {
-                i++;
-                var b = $('#search_amazon_by_asin, #search_amazon_by_upc, #search_amazon_by_name').filter('[data-step-id=' + prop + ']').removeClass('active');
-                if (i == 1) b.addClass('left');
-                b.show();
-
-            }
-        }
-
-        function getLocationId() {
-            var slocation = location.href,
-                    str_param = slocation.match(/step=([^&]+)/),
-                    id = 0;
-            if (str_param != null && str_param.length > 0)
-                id = str_param[1];
-            return (id);
-        }
-        function getBatchId() {
-            var slocation = location.href,
-                    str_param = slocation.match(/batch=([^&]+)/);
-            if (str_param != null && str_param.length > 0)
-                id = str_param[1];
-            return id;
-        }
-        function isShowOriginal() {
-            var slocation = location.href,
-                    str_param = slocation.match(/show_original=([^&]+)/),
-                    id = 0;
-            if (str_param != null && str_param.length > 0)
-                id = str_param[1];
-            return (id);
-        }
-        function isSplitScreen() {
-            var slocation = location.href,
-                    str_param = slocation.match(/split_screen=([^&]+)/),
-                    id = 0;
-            if (str_param != null && str_param.length > 0)
-                id = str_param[1];
-            return (id);
-        }
-
-        function iframeLoaded(ASIN) {
-            if (ASIN != '') {
-                $('#product_not_found_button').hide();
-                $('#conclusion_buttons').fadeIn();
-                $('#action_buttons_block').attr('data-asin', ASIN);
-            } else {
-                $('#conclusion_buttons').hide();
-                $('#product_not_found_button').fadeIn();
-                $('#action_buttons_block').attr('data-asin', '');
-            }
-
-            $('.ui.segment.dimmable').dimmer('hide');
-        }
-
-        function clickOriginalProduct(button) {
-
-            button.toggleClass('active');
-            var check = $('#split-screen-checkbox').prop("checked");
-            if (button.hasClass('active')) {
-                if (!check) {
-                    $('.iframediv.left').css('width', '0');
-                    $('.iframediv.right').css('width', '100%');
-                }
-            } else {
-                if (!check) {
-                    $('.iframediv.left').css('width', '100%');
-                    $('.iframediv.right').css('width', '0');
-                }
-                button.blur();
-            }
-        }
-
-        function changeSplitScreen(split){
-            var check = split.prop("checked"),
-                    sstep = '',
-                    idx = getLocationId();
-            if (idx > 0) {
-                sstep = '&step=' + idx;
-            }
-            if (check) {
-                $('.iframediv.right').css('width', '50%');
-                $('.iframediv.left').css('width', '50%');
-                $('#original_product').removeClass('active').blur().prop('disabled', true);
-            } else {
-                $('.iframediv.left').css('width', '100%');
-                $('.iframediv.right').css('width', '0');
-                $('#original_product').prop('disabled', false);
-            }
-        }
-
-        var spathName = location.pathname;
-
-        $(document).ready(function () {
-            $('#search_amazon_by_asin, #search_amazon_by_upc, #search_amazon_by_name').on('click', '', function () {
-                if (!$(this).hasClass('active')) {
-                    $(this).addClass('active').siblings().removeClass('active').blur();
-                    $('#conclusion_buttons').fadeOut();
-
-                    var currstep = $(this).data('step-id');
-
-                    loadRemoteFrame('ifrm', false, currstep);
-                    var check = $('#split-screen-checkbox').prop("checked");
-                    if (!check) {
-                        $('.iframediv.left').css('width', '100%');
-                        $('.iframediv.right').css('width', '0');
-                        $('#original_product').removeClass('active').blur();
-                    }
-                }
-            });
-
-            $('#make_conclusion_button').popup({on: 'click'}).click(function(){return false;});
-
-            $('#original_product').on('click', '', function () {
-                clickOriginalProduct($(this));
-                var sstep = '',
-                    idx = getLocationId();
-
-                if (idx > 0) {
-                    sstep = '&step=' + idx;
-                }
-                if ($(this).hasClass('active')) {
-                    history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep + '&show_original=1');
-                } else {
-                    history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep);
-                }
-            });
-
-            $('#split-screen-checkbox').on('change', '', function () {
-                changeSplitScreen($(this));
-                var check = $(this).prop("checked"),
-                        sstep = '',
-                        idx = getLocationId();
-                if (idx > 0) {
-                    sstep = '&step=' + idx;
-                }
-                if (check) {
-                    history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep + '&split_screen=1');
-                } else {
-                    history.pushState(null, null, spathName + '?batch=' + getBatchId() + sstep);
-                }
-            });
-
-            $('#negative_conclusion').on('click','',function(){
-                $('.small.modal').modal('hide').parent().removeClass('active');
-            });
-
-            initButtons();
-            $('.indicating.progress').progress();
-            if (trans) {
-                if (trans.length == 0) {
-                    $('#no_products').show();
-                } else {
-                    $('.buttons-wrap-left button[data-step-id=' + Math.max(getLocationId(), getFirstAvailStep()) + ']').click();
-                    if (isShowOriginal() == 1) {
-                        clickOriginalProduct($('#original_product'));
-                    }
-                    else if (isSplitScreen() == 1) {
-                        $('#split-screen-checkbox').prop("checked", true);
-                        changeSplitScreen($('#split-screen-checkbox'));
-                    }
-                }
-            }
-
-            $('#submit-product-match, #submit-product-not-sure, #submit-product-not-match, #submit-product-not-found').on('click', '', function () {
-                var active_button_action = $(this).data('action'),
-                        active_batch_id = $(this).parent().data('batch-id'),
-                        active_product_id = $(this).parent().data('product-id'),
-                        active_asin = $(this).parent().data('asin');
-                $('#conclusion_title').text($(this).text()).removeClass('positive yellow negative').addClass($(this).data('class'));
-                $('.small.modal').modal('hide').modal({
-                    onApprove: function () {
-                        $('#conclusion_buttons').fadeOut();
-                        $.post('ajax_admin.php', {
-                                    verify_status_id: active_button_action,
-                                    batch_id: active_batch_id,
-                                    product_id: active_product_id,
-                                    note_text: $('#verify_comment').val(),
-                                    asin: active_asin,
-                                    ajax_action: 'change_verify_product_status'
-                                },
-                                function (data) {
-                                    $('#verify_comment').val('');
-                                    var split = isSplitScreen();
-                                    var ssplit = '';
-                                    if (split) {
-                                        ssplit = '&split_screen=1';
-                                    }
-                                    location.href = spathName + '?batch=' + getBatchId() + ssplit;
-                                }, 'json');
-                    },
-                    onDeny: function() {
-                        $(this).modal('hide').parent().removeClass('active');
-                    }
-                }).modal('show');
-            });
-
-            loadOriginalProduct('ifrm2');
-
-        });
-
-        window.addEventListener("popstate", function () {
-            initButtons();
-            firstLoad = true;
-            if (isShowOriginal() == 1) {
-                clickOriginalProduct($('#original_product'));
-            }
-            else if (isSplitScreen() == 1) {
-                changeSplitScreen($('#split-screen-checkbox'));
-            }
-            else {
-                $('.buttons-wrap-left button[data-step-id=' + getLocationId() + ']').click();
-            }
-        });
-
-        function loadOriginalProduct(frame_Name) {
-            if (sOriginalProduct.length > 0) {
-                var i_frame = document.getElementById(frame_Name);
-                if ($(i_frame).length) {
-                    var frame = i_frame.cloneNode(false);
-                    frame.src = sOriginalProduct;
-                    i_frame.parentNode.replaceChild(frame, i_frame);
-                } else {
-                    $('<iframe>', {
-                        src: sOriginalProduct,
-                        id: frame_Name,
-                        frameborder: 0
-                    }).appendTo('.iframediv.right');
-                }
-            }
-        }
-
-        function loadRemoteFrame(frame_Name, url, idx_force, appendto) {
-
-            if (!(appendto)) appendto = '.iframediv.left';
-            var i_frame = document.getElementById(frame_Name),
-                    idx = idx_force;
-            var split = isSplitScreen();
-            var ssplit = '';
-            if (split) {
-                ssplit = '&split_screen=1';
-            }
-
-            $('.ui.segment.dimmable').dimmer('show');
-            setTimeout(function () {
-                $('.ui.segment.dimmable').dimmer('hide')
-            }, 3000);
-
-            if ($(i_frame).length) {
-
-                var frame = i_frame.cloneNode(false);
-                frame.src = trans[idx][0];
-                i_frame.parentNode.replaceChild(frame, i_frame);
-
-
-            } else {
-                $('<iframe>', {
-                    src: trans[idx][0],
-                    id: frame_Name,
-                    frameborder: 0
-                }).appendTo(appendto);
-            }
-            if (!firstLoad) {
-                if (idx > 0) {
-                    history.pushState(null, null, spathName + '?batch=' + getBatchId() + '&step=' + idx + ssplit);
-                }
-                if (idx == 0) {
-                    history.pushState(null, null, spathName + '?batch=' + getBatchId() + ssplit);
-                }
-            }
-            firstLoad = false;
-
-            document.title = trans[idx][1];
-
-            return false;
-        }
         // ]]>
     </script>
     {/literal}
@@ -351,21 +68,117 @@
         </div>
         <div class="buttons-right">
             <div id="conclusion_buttons" style="display:none;">
-                <a data-html="{$config.Amazon_Verification.amazon_verification_make_conclusion_popup_message}" id="make_conclusion_button" href="#" style="border-bottom: 1px dotted; color: #0000ff; text-decoration: none; font-family:Verdana; line-height: 50px; margin-right: 15px; font-size: 18px;  position: relative;">Make a conclusion</a>
+                <div class="ui vertical steps">
+                    <div class="step">
+                        <i class="question icon"></i>
+                        <div class="content">
+                            <div class="title">Product images show</div>
+                            <div class="description">
+                                <div class="ui form">
+                                    <div class="grouped fields">
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_image" id="product_image_1" type="radio" value="different">
+                                                <label for="product_image_1">different products</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_image" id="product_image_2" type="radio" value="same">
+                                                <label for="product_image_2">the same product</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <i class="question icon"></i>
+                        <div class="content">
+                            <div class="title">Product names</div>
+                            <div class="description">
+                                <div class="ui form">
+                                    <div class="grouped fields">
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_names" id="product_name_1" type="radio" value="contradict">
+                                                <label for="product_name_1">contradict to each other</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_names" id="product_name_2" type="radio" value="not_contradict">
+                                                <label for="product_name_2">do NOT contradict</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <i class="question icon"></i>
+                        <div class="content">
+                            <div class="title">
+                                <a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_make_conclusion_popup_message}" href="#">Product descriptions</a>
+                            </div>
+                            <div class="description">
+                                <div class="ui form">
+                                    <div class="grouped fields">
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_description" id="product_description_1" type="radio" value="contradict">
+                                                <label for="product_description_1">contradict to each other</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio checkbox">
+                                                <input autocomplete="off" name="product_description" id="product_description_2" type="radio" value="not_contradict">
+                                                <label for="product_description_2">do NOT contradict</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <i class="question icon"></i>
+                        <div class="content">
+                            <div class="title">
+                                <a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_quantity_popup_message}" href="#">Product quantity listed on Amazon</a>
+                            </div>
+                            <div class="description">
+                                <div class="ui form buttons">
+                                    <div class="grouped fields amazon_products_listed">
+                                        <div class="field">
+                                            <div class="ui mini input">
+                                                <label>on Amazon:</label>
+                                                <input autocomplete="off" name="qty_on_amazon" type="text" value="1"/>
+                                            </div>
+                                        </div>
+                                        <div class="field">
 
-                <div id="action_buttons_block" class="ui buttons select" data-asin=""
-                     data-batch-id="{$oVerificationBatch->getBatchId()}"
-                     data-product-id="{$oVerificationBatch->getVerifiedProductId()}">
-                    <button data-action="match" data-class="positive" id="submit-product-match" class="ui left positive button">Product
-                        match
-                    </button>
-                    <div class="or" data-text="or"></div>
-                    <button data-action="not_sure" data-class="yellow" id="submit-product-not-sure" class="ui yellow button">Not sure
-                    </button>
-                    <div class="or" data-text="or"></div>
-                    <button data-action="not_match" data-class="negative" id="submit-product-not-match" class="ui negative button">Does NOT
-                        match
-                    </button>
+                                            <div class="ui mini input">
+                                                <label>on our website:</label>
+                                                <input autocomplete="off" type="text" name="qty_on_our_website" value="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="conclusion_submit_button" data-asin="">
+                                            <div class="ui simple button left submit-amazon-button disabled" data-action="submit">Submit</div>
+                                            <div class="ui dropdown button disabled">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    <div class="item submit-amazon-button" data-action="submit_with_comment">Submit with comments</div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div data-asin="" data-batch-id="{$oVerificationBatch->getBatchId()}"
@@ -390,9 +203,6 @@
 </div>
 
 <div class="ui small test modal transition">
-    <div class="header">
-        Conclusion: <button style="position: relative; bottom: 2px;" id="conclusion_title" class="ui positive button">Product match </button>
-    </div>
     <div class="content">
         <div class="ui form">
             <h4 class="ui dividing header">Write your comments (if you have any)</h4>

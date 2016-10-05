@@ -65,9 +65,7 @@ class classExternalVerificationBatch extends classData
             addCondition('action IN ("' . implode('","', self::$aProductStatuses['processed']) . '")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $oProduct = new classExternalVerificationProducts();
-                    $oProduct->fillPrimaryTableValues($aProduct);
-                    $this->aProductsInBatchCompleted[] = $oProduct;
+                    $this->aProductsInBatchCompleted[] = classExternalVerificationProducts::model()->fillPrimaryTableValues($aProduct);
                 }
             }
         }
@@ -298,27 +296,41 @@ class classExternalVerificationBatch extends classData
     {
         global $login;
         $aResult = [];
+        /** @var classExternalVerificationProducts $oExternaVerificationProduct */
+        $oExternaVerificationProduct = classExternalVerificationProducts::model();
+        $sNewConlusionStatus = $aParams['status'];
+        if ($aParams['status'] == 'submit') {
+            if (!empty($aParams['aConclusion'])) {
+                $sNewConlusionStatus = 'not_match';
+                if ($aParams['aConclusion']['product_image'] == 'same' &&
+                    $aParams['aConclusion']['product_names'] == 'not_contradict' &&
+                    $aParams['aConclusion']['product_description'] == 'not_contradict' &&
+                    intval($aParams['aConclusion']['qty_on_amazon']) <= intval($aParams['aConclusion']['qty_on_our_website'])
+                ) {
+                    $sNewConlusionStatus = 'match';
+                }
+                foreach ($aParams['aConclusion'] as $keyConclusion => $valueConclusion) {
+                    $oExternaVerificationProduct->fillPrimaryTableValues(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => $keyConclusion, 'value' => $valueConclusion])->_insert(true);
+                }
+            }
+        }
 
-        $aInserArray = ['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => $aParams['status'], 'value' => time()];
-        func_array2insert('external_verification_products', $aInserArray, true, false);
+        $oExternaVerificationProduct->fillPrimaryTableValues(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => $sNewConlusionStatus, 'value' => time()])->_insert(true);
 
         if (!empty($aParams['note'])) {
-            $aInserArray = ['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'comments_if_not', 'value' => $aParams['note']];
-            func_array2insert('external_verification_products', $aInserArray, true, false);
+            $oExternaVerificationProduct->fillPrimaryTableValues(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'comments_if_not', 'value' => $aParams['note']])->_insert(true);
         }
 
         if (!empty($aParams['asin'])) {
-            $aInserArray = ['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'asin_on_amazon', 'value' => $aParams['asin']];
-            func_array2insert('external_verification_products', $aInserArray, true, false);
+            $oExternaVerificationProduct->fillPrimaryTableValues(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'asin_on_amazon', 'value' => $aParams['asin']])->_insert(true);
         }
 
-        $sql = "UPDATE " . self::$sql_tbl['external_verification_products_queue'] . " SET cross_verify_count = cross_verify_count+1 WHERE productid = " . $aParams['product_id'];
-        db_query($sql);
+        /** @var classExternalVerificationProductsQueue $oProductQueue */
+        $oProductQueue = classExternalVerificationProductsQueue::model(['productid' => $aParams['product_id']]);
+        $oProductQueue->updateField('cross_verify_count', $oProductQueue->getCrossVerifyCount() + 1);
 
-        $aCompleted = $this->getProductsInBatchCompleted();
-
-        if (!empty($aCompleted)) {
-            $iCount = count($aCompleted);
+        $iCount = $this->getProductsInBatchCompletedCount();
+        if ($iCount) {
             $diffInSec = $this->getProductVerificationTime($aParams['product_id']);
             if ($diffInSec) {
                 $this->updateField('batch_product_speed', (floatval($this->getField('batch_product_speed')) * ($iCount - 1) + $diffInSec) / ($iCount));
@@ -507,7 +519,7 @@ class classExternalVerificationBatch extends classData
     public function getCustomer()
     {
         if (is_null($this->oCustomer)) {
-            $this->oCustomer = new classCustomer(['login'=>$this->getBatchLogin()]);
+            $this->oCustomer = new classCustomer(['login' => $this->getBatchLogin()]);
         }
         return $this->oCustomer;
     }

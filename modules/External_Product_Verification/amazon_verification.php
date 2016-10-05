@@ -3,7 +3,8 @@ if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
     die("Access denied");
 }
-global $xcart_dir, $REQUEST_METHOD, $amazon_verification_maximum_mistakes;
+global $xcart_dir, $REQUEST_METHOD, $amazon_verification_maximum_mistakes, $product_names, $product_description, $pack_qty_amazon, $pack_qty_website,
+       $test_position, $correct_answer, $amazon_verification_make_conclusion_popup_message, $amazon_verification_product_quantity_popup_message;
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationProductsQueue.php";
 
@@ -13,7 +14,8 @@ if ($REQUEST_METHOD == 'POST') {
     if (!empty($position)) {
         foreach ($position as $ikey => $sPosition) {
             $sAsin = '';
-            $oProductQueue = new classExternalVerificationProductsQueue(['productid' => $ikey]);
+            /** @var classExternalVerificationProductsQueue $oProductQueue */
+            $oProductQueue = classExternalVerificationProductsQueue::model(['productid' => $ikey]);
             if ($oProductQueue->getProductId()) {
                 if (!empty($answerasin[$ikey])) {
                     $sAsin = implode(',', $answerasin[$ikey]);
@@ -22,9 +24,16 @@ if ($REQUEST_METHOD == 'POST') {
                     $top_message["content"] = func_get_langvar_by_name("lbl_ASIN_not_entered");
                     $top_message["type"] = "E";
                 } else {
-                    $oProductQueue->updateFields(['status' => $answer[$ikey], 'asin' => $sAsin]);
+                    $aUpdateArray = ['status' => $answer[$ikey], 'asin' => $sAsin];
+                    $oProductQueue->setField('status', $answer[$ikey])->setField('asin', $sAsin);
                 }
-                $oProductQueue->updateField('position', $position[$ikey]);
+
+                $oProductQueue->setField('product_image', $product_image[$ikey])->
+                setField('product_names', $product_names[$ikey])->
+                setField('product_description', $product_description[$ikey])->
+                setField('pack_qty_amazon', $pack_qty_amazon[$ikey])->
+                setField('pack_qty_website', $pack_qty_website[$ikey])->
+                setField('position', $position[$ikey])->_update();
             }
         }
     }
@@ -35,14 +44,19 @@ if ($REQUEST_METHOD == 'POST') {
             $sAsin = '';
             $iProductId = $oProducts->getProductIdBySKU($sSKU);
             if (!empty($iProductId)) {
-                $oProductQueue = new classExternalVerificationProductsQueue(['productid' => $iProductId]);
+                $oProductQueue = classExternalVerificationProductsQueue::model(['productid' => $iProductId]);
                 if (!empty($test_asin[$idx])) {
                     $sAsin = implode(',', $test_asin[$idx]);
-                    $oProductQueue->updateField('asin', $sAsin);
+                    $oProductQueue->setField('asin', $sAsin);
                 }
-                $oProductQueue->updateField('position', $test_position[$idx]);
+                $oProductQueue->setField('position', $test_position[$idx])->
+                setField('product_image', $product_image[$idx])->
+                setField('product_names', $product_names[$idx])->
+                setField('product_description', $product_description[$idx])->
+                setField('pack_qty_amazon', $pack_qty_amazon[$idx])->
+                setField('pack_qty_website', $pack_qty_website[$idx]);
                 if ($oProductQueue->getProductId()) {
-                    $oProductQueue->updateStatus($correct_answer[$idx]);
+                    $oProductQueue->setStatus($correct_answer[$idx])->_update();
                 } else {
                     if (!empty($correct_answer)) {
                         if (empty($sAsin) && in_array($correct_answer[$idx], [classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH, classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH])) {
@@ -69,6 +83,7 @@ if ($REQUEST_METHOD == 'POST') {
     }
     db_query("UPDATE $sql_tbl[config] SET value='" . $amazon_verification_maximum_mistakes . "' WHERE name='amazon_verification_maximum_mistakes' AND category='$option'");
     db_query("UPDATE $sql_tbl[config] SET value='" . $amazon_verification_make_conclusion_popup_message . "' WHERE name='amazon_verification_make_conclusion_popup_message' AND category='$option'");
+    db_query("UPDATE $sql_tbl[config] SET value='" . $amazon_verification_product_quantity_popup_message . "' WHERE name='amazon_verification_product_quantity_popup_message' AND category='$option'");
 
     if (empty($top_message)) {
         $top_message["content"] = 'Done.';
