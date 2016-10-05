@@ -196,7 +196,12 @@ function getFormValues(id) {
     var $inputs = $(id).find('input');
     var values = {};
     $inputs.each(function () {
-        values[this.name] = $(this).val();
+        console.log($(this).attr('type'));
+        if ($(this).attr('type') == 'radio') {
+            if ($(this).prop('checked'))
+                values[this.name] = $(this).val();
+        } else
+            values[this.name] = $(this).val();
     });
     return values;
 }

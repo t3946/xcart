@@ -256,3 +256,9 @@ iframe
 .conclusion_submit_button .ui.dropdown .menu > .item {
     padding: 0.68571429rem 1.94285714rem !important;
 }
+.action_not_same {
+    background-color: #F2A3A8;
+}
+.question_not_same {
+    background-color: #fff2cc;
+}
