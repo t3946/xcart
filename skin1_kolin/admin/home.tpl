@@ -184,6 +184,9 @@ var runTests = function(editor) {
 {elseif $main eq "operators_batches"}
 {include file="modules/External_Product_Verification/operators_batches.tpl"}
 
+{elseif $main eq "operators_batch_view"}
+{include file="modules/External_Product_Verification/operators_batch_view.tpl"}
+
 {elseif $main eq "brands"}
 {include file="modules/Brands/brands.tpl"}
 
