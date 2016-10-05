@@ -1601,10 +1601,9 @@ die("123");
 			$aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
 			if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
 				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
-			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0) {
-				$iLastProductVerifyDate = $oProduct->getField('last_verify_date');
+			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0 && $oProduct->getProductLastVerifyDate()) {
 				$currentDate = new DateTime("now");
-				$iDaysInterval = $currentDate->diff($iLastProductVerifyDate)->days;
+				$iDaysInterval = $currentDate->diff($oProduct->getProductLastVerifyDate())->days;
 				if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
 					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
 				}
