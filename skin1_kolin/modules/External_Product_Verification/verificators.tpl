@@ -77,8 +77,8 @@
         </tr>
         <tr class="TableHead">
             <td rowspan="2" width="100">SKU</td>
-            <td rowspan="2" width="10">Product name</td>
-            <td rowspan="2" width="10">Verificator</td>
+            <td style="width: 250px; white-space: nowrap;" rowspan="2" width="10">Product name</td>
+            <td style="width: 200px; white-space: nowrap;" rowspan="2" width="10">Verificator</td>
             <td rowspan="2" width="10">Date and time</td>
             <td colspan="5" width="10">Verification questions</td>
             <td rowspan="2" width="100">Conclusion</td>
@@ -87,7 +87,7 @@
             <td>ASIN</td>
             <td>Image</td>
             <td>Name</td>
-            <td>Description</td>
+            <td>Desc</td>
             <td>Pack qty</td>
         </tr>
         {if $aVerifiactionResults}
@@ -115,7 +115,7 @@
                                 <br/>{if $oCustomer->getCustomerModifyLink()}<a
                                 href="{$oCustomer->getCustomerModifyLink()}"
                                 target="_blank">{/if}{$oCustomer->getCustomerLogin()}</td>
-                            <td align="center">{$oVerifyDate->format('d-M-Y H:i')}</td>
+                            <td align="center">{$oVerifyDate->format('d-M-Y<\b\r>H:i')}</td>
                             <td align="center"
                                     {if $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin()}
                                         class="question_not_same"

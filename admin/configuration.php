@@ -50,7 +50,8 @@ $trusted_post_variables = ["gpg_key", "pgp_key", "xpc_private_key_password", "xp
 		'product_answer_subject_line', 'product_answer_message_body', 'outside_sf_localization_warning', 'po_entry_dashboard_text',
 		'GTS_badge_code', 'GTS_order_confirmation_module_code', 'RMA_message', 'RMA_subject', 'RMA_to_department_Subject',
 		'RMA_to_department_Message', 'google_analitics_tracking_script', 'pop_up_code', 'remove_shot_after_days', 'days_past_attn_tag_set','Facebook_pixel_code',
-		'secure_data','amazon_verification_make_conclusion_popup_message', 'retail_trust_message', 'amazon_verification_product_quantity_popup_message'];
+		'secure_data','amazon_verification_make_conclusion_popup_message','retail_trust_message', 'amazon_verification_product_quantity_popup_message','amazon_verification_product_names_popup_message',
+		'amazon_verification_product_images_popup_message'];
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
