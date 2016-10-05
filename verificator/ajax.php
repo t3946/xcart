@@ -18,9 +18,9 @@ function changeVerifyProductStatus($aPostParam = [])
     $sStatus = $aPostParam['verify_status_id'];
     $sASIN = $aPostParam['asin'];
     $sNote = $aPostParam['note_text'];
+    $aConclusion = $aPostParam['conclusion_buttons'];
     if (!empty($iProductId) && !empty($iBatchId) && !empty($sStatus)) {
-        $oVerificationBatch = new classExternalVerificationBatch(['batch_id'=>$iBatchId]);
-        $bResult = $oVerificationBatch->updateVerificationStatus(['product_id'=>$iProductId, 'batch_id'=>$iBatchId, 'status'=>$sStatus, 'note'=>$sNote, 'asin'=>$sASIN]);
+        $bResult = classExternalVerificationBatch::model(['batch_id'=>$iBatchId])->updateVerificationStatus(['product_id'=>$iProductId, 'batch_id'=>$iBatchId, 'status'=>$sStatus, 'note'=>$sNote, 'asin'=>$sASIN, 'aConclusion'=>$aConclusion]);
     }
     print(json_encode($bResult));
 }

@@ -62,12 +62,13 @@ class classData
         }
     }
 
-    public function fillPrimaryTableValues($aValues)
+    protected function fillPrimaryTableValues($aValues)
     {
         if (!empty($aValues)) {
             $this->aPrimaryTableValue = $aValues;
             $this->aPrimaryKeysValues = array_intersect_key($aValues, array_flip($this->aPrimaryKeys));
         }
+        return $this;
     }
 
     /**
@@ -133,5 +134,17 @@ class classData
             $a = $b . ' = "' . $a . '"';
         });
         return implode(" AND ", $aKeyArray);
+    }
+
+    public static function model($aParams = [])
+    {
+        $class = get_called_class();
+        return new $class($aParams);
+    }
+
+    protected function fill($aParams)
+    {
+        $this->fillPrimaryTableValues($aParams);
+        return $this;
     }
 }

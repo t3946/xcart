@@ -150,5 +150,10 @@ class classSQLBuilder
     {
         return func_query_first_cell('SELECT FOUND_ROWS()');
     }
+    
+    public function getQueryResultFirst()
+    {
+        return reset($this->aSqlQueryResult);
+    }
 
 }
