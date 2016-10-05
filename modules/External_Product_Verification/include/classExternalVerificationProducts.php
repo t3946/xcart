@@ -70,11 +70,16 @@ class classExternalVerificationProducts extends classData
     public function getAsin()
     {
         if (is_null($this->sAsin)) {
-            if (in_array($this->getAction(), classExternalVerificationBatch::$aProductStatuses['processed'])) {
-                $oAsin = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'asin_on_amazon']);
-                if ($oAsin->getProductId()) {
-                    $this->sAsin = $oAsin->getValue();
+            if ($this->getBatchId()) {
+                if (in_array($this->getAction(), classExternalVerificationBatch::$aProductStatuses['processed'])) {
+                    $oAsin = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'asin_on_amazon']);
+                    if ($oAsin->getProductId()) {
+                        $this->sAsin = $oAsin->getValue();
+                    }
                 }
+            } else {
+                $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
+                $this->sAsin = implode(',',$oEtalonImage->getAsin());
             }
         }
         return $this->sAsin;
@@ -115,7 +120,7 @@ class classExternalVerificationProducts extends classData
     public function getProductImage()
     {
         if (is_null($this->ProductImage)) {
-            if ($this->getProductId()) {
+            if ($this->getBatchId()) {
                 $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_image']);
                 if ($oImage->getProductId()) {
                     $this->ProductImage = self::$aQuestionsName[$oImage->getValue()];
@@ -132,7 +137,7 @@ class classExternalVerificationProducts extends classData
     public function getProductName()
     {
         if (is_null($this->ProductName)) {
-            if ($this->getProductId()) {
+            if ($this->getBatchId()) {
                 $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_names']);
                 if ($oImage->getProductId()) {
                     $this->ProductName = self::$aQuestionsName[$oImage->getValue()];
@@ -148,7 +153,7 @@ class classExternalVerificationProducts extends classData
     public function getProductDescription()
     {
         if (is_null($this->ProductDescription)) {
-            if ($this->getProductId()) {
+            if ($this->getBatchId()) {
                 $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_description']);
                 if ($oImage->getProductId()) {
                     $this->ProductDescription = self::$aQuestionsName[$oImage->getValue()];
@@ -164,7 +169,7 @@ class classExternalVerificationProducts extends classData
     public function getQtyOnAmazon()
     {
         if (is_null($this->QtyOnAmazon)) {
-            if ($this->getProductId()) {
+            if ($this->getBatchId()) {
                 $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'qty_on_amazon']);
                 if ($oImage->getProductId()) {
                     $this->QtyOnAmazon = $oImage->getValue();
@@ -180,7 +185,7 @@ class classExternalVerificationProducts extends classData
     public function getQtyOnOurWebSite()
     {
         if (is_null($this->QtyOnOurWebSite)) {
-            if ($this->getProductId()) {
+            if ($this->getBatchId()) {
                 $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'qty_on_our_website']);
                 if ($oImage->getProductId()) {
                     $this->QtyOnOurWebSite = $oImage->getValue();
