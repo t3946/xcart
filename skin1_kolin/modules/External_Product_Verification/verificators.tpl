@@ -9,7 +9,7 @@
         <button data-status="Y" class="ui button {if $active == 'Y'}active{/if}">Active</button>
         <button data-status="N" class="ui button {if $active == 'N'}active{/if}">Inactive</button>
     </div>
-    <table width="100%" id="table_verificators">
+    <table width="100%" id="table_verificators" cellpadding="3" cellspacing="1">
         <tr>
             <td colspan="7">
 
@@ -69,7 +69,7 @@
 {/capture}
 
 {capture name=verification_results}
-    <table width="100%" id="table_verificators">
+    <table width="100%" id="table_verificators" cellpadding="3" cellspacing="1">
         <tr>
             <td colspan="7">
 
@@ -96,6 +96,7 @@
                 {assign var=aVerificatorResults value=$oVerificationResult->getVerificatorsResults()}
                 {if $aVerificatorResults}
                     {foreach from=$aVerificatorResults item=oVerificatorResult name=ver_rows}
+                        {if $aVerificatorResults|@count > 1}
                         {assign var=oCustomer value=$oVerificatorResult->getCustomerEntity()}
                         {assign var=oVerifyDate value=$oVerificatorResult->getValueAsDateTime()}
                         {if $smarty.foreach.ver_rows.iteration == 1}
@@ -141,6 +142,7 @@
                                 <b>{$oVerificatorResult->getActionDisplayName()}</b>
                             </td>
                         </tr>
+                        {/if}
                     {/foreach}
                 {/if}
             {/foreach}
