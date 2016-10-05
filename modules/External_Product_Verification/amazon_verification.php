@@ -4,7 +4,8 @@ if (!defined('XCART_SESSION_START')) {
     die("Access denied");
 }
 global $xcart_dir, $REQUEST_METHOD, $amazon_verification_maximum_mistakes, $product_names, $product_description, $pack_qty_amazon, $pack_qty_website,
-       $test_position, $correct_answer, $amazon_verification_make_conclusion_popup_message, $amazon_verification_product_quantity_popup_message;
+       $test_position, $correct_answer, $amazon_verification_make_conclusion_popup_message, $amazon_verification_product_quantity_popup_message,
+       $amazon_verification_product_names_popup_message, $amazon_verification_product_images_popup_message;
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationProductsQueue.php";
 
@@ -84,6 +85,8 @@ if ($REQUEST_METHOD == 'POST') {
     db_query("UPDATE $sql_tbl[config] SET value='" . $amazon_verification_maximum_mistakes . "' WHERE name='amazon_verification_maximum_mistakes' AND category='$option'");
     db_query("UPDATE $sql_tbl[config] SET value='" . $amazon_verification_make_conclusion_popup_message . "' WHERE name='amazon_verification_make_conclusion_popup_message' AND category='$option'");
     db_query("UPDATE $sql_tbl[config] SET value='" . $amazon_verification_product_quantity_popup_message . "' WHERE name='amazon_verification_product_quantity_popup_message' AND category='$option'");
+    db_query("UPDATE $sql_tbl[config] SET value='" . $amazon_verification_product_names_popup_message . "' WHERE name='amazon_verification_product_names_popup_message' AND category='$option'");
+    db_query("UPDATE $sql_tbl[config] SET value='" . $amazon_verification_product_images_popup_message . "' WHERE name='amazon_verification_product_images_popup_message' AND category='$option'");
 
     if (empty($top_message)) {
         $top_message["content"] = 'Done.';
