@@ -16,7 +16,7 @@ class classExternalVerificationProducts extends classData
     private $QtyOnAmazon = null;
     private $QtyOnOurWebSite = null;
     private $sComment = null;
-    private static $aActionsName = ['match' => 'Match', 'not_match' => 'Does NOT match', 'not_found' => 'Product not found', 'not_sure' => 'Not sure'];
+    private static $aActionsName = ['match' => 'Match', 'not_match' => 'Does NOT match', 'not_found' => 'Not found', 'not_sure' => 'Not sure'];
     private static $aQuestionsName = ['different' => 'Different', 'same' => 'Same', 'contradict' => 'Contradict', 'not_contradict' => 'Not'];
 
     public function __construct($aParams = [])
