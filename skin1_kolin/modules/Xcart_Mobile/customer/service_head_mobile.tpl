@@ -2,6 +2,9 @@
 $Id: service_head_mobile.tpl 78 2012-12-28 13:59:37Z skot $ 
 vim: set ts=2 sw=2 sts=2 et:
 *}
+{if $config.SEO.clean_urls_enabled eq "Y"}
+  <base href="{$catalogs.customer}/" />
+{/if}
 {get_title page_type=$meta_page_type page_id=$meta_page_id}
 <meta charset="{$default_charset|default:"utf-8"}" />
 <meta name="viewport" content="width=device-width, initial-scale={if $is_tablet}0.9{else}0.6{/if}, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
@@ -15,9 +18,7 @@ vim: set ts=2 sw=2 sts=2 et:
 {if $canonical_url}
   <link rel="canonical" href="{$current_location}/{$canonical_url}" />
 {/if}
-{if $config.SEO.clean_urls_enabled eq "Y"}
-  <base href="{$catalogs.customer}/" />
-{/if}
+
 {* for Photoswipe *}
 {load_defer file="lib/photoswipe/klass.min.js" type="js"}
 {include file="customer/service_js.tpl"}

@@ -1,12 +1,13 @@
 {* $Id: home.tpl,v 1.115.2.1 2006/11/22 07:22:04 svowl Exp $ *}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<link rel="shortcut icon" href="{$ImagesDir}/favicon.ico" type="image/vnd.microsoft.icon" />
+<!DOCTYPE html>
 { config_load file="$skin_config" }
 <html>
 <head>
 <title>{$lng.txt_site_title}</title>
 { include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
+<link rel="shortcut icon" href="{$ImagesDir}/favicon.ico" type="image/vnd.microsoft.icon" />
+
 </head>
 <body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" marginwidth="0" marginheight="0"{$reading_direction_tag}>
 { include file="rectangle_top.tpl" }

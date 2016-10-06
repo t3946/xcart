@@ -11,7 +11,6 @@
         <td class="cidev_minicart_r_empty"></td>
 	{/if}
 </tr>
-</tr>
 </table>
 {if $minicart_total_items gt 0 && $variant_id_for_point2 eq "0" && $variant_id_for_point2 ne ""}
 <div style="position: absolute; margin-top: 2px; padding-left: 2px;">
