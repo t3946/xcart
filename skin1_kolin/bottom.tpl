@@ -63,8 +63,8 @@
 </td>
 
 <tr>
-{/if}
 <td class="Bottom" style="padding-left: 10px;text-align: center" {* height="30" *}>
+{/if}
 {include file="copyright.tpl"}{if $usertype eq "C"} <br/><br/>
 </td>
 </tr>
