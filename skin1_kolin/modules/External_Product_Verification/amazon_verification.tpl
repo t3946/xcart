@@ -8,7 +8,7 @@
         <th width="1">Pos.</th>
         <th width="1">SKU</th>
         <th style="width: 250px; overflow: hidden; display: inline-block; white-space: nowrap;">Product name</th>
-        <th style="width: 120px; overflow: hidden; display: inline-block; white-space: nowrap;">Asin</th>
+        <th style="width: 120px; overflow: hidden; white-space: nowrap;">Asin</th>
         <th>Image</th>
         <th>Name</th>
         <th>Description</th>
