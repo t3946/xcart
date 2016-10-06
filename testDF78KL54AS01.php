@@ -15,10 +15,10 @@ $oSQL = new classSQLBuilder();
 $aProducts = $oSQL->addSelect('p.productid, p.upc')->addFromTable('products','p')->addInnerJoin('supplier_feeds','f',' f.manufacturerid = p.manufacturerid')->
 addCondition("p.forsale='Y'")->addCondition("f.enabled = 'Y'")->addGroupBy('p.productid')->Execute()->getQueryResult();
 foreach ($aProducts as $aProduct) {
-    $newUPC = classProduct::calculateUPC($aProduct['upc']);
-    if ($newUPC != $aProduct['upc']) {
-        echo $aProduct['productid']." - ". $aProduct['upc'].'('.strlen($aProduct['upc']).')'.' -> '.$newUPC.'('.strlen($newUPC).')<br>';
-        func_array2update('products', ['upc'=>$newUPC], 'productid='.$aProduct['productid']);
-    }
-}
 
+$currentDate = new DateTime("now");
+$iDaysInterval = $currentDate->diff($oProduct->getProductLastVerifyDate())->days;
+echo $iDaysInterval;
+if ($iDaysInterval <= 20) {
+    echo 1;
+}

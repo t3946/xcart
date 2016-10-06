@@ -153,12 +153,18 @@ class classGMC extends classStoreFrontMarketPlace
                         }
                     }
                 }
-            }
-            catch (Google_Service_Exception $e) {
+            } catch (Exception $e) {
                 func_backprocess_log('google_product_statuses', sprintf('Google_Service_Exception. %s', $e->getMessage()));
             }
             $this->restoreQueue($aQueue, 1);
-            $pageToken = $oResponse->getNextPageToken();
+
+            try {
+                $pageToken = $oResponse->getNextPageToken();
+            } catch (Exception $e) {
+                func_backprocess_log('google_product_statuses', sprintf('Error Get Next Page Token. %s', $e->getMessage()));
+                $pageToken = false;
+            }
+
         } while ($pageToken);
 
         func_backprocess_log('google_product_statuses', sprintf('%d new issues found.', $iNewIssues));

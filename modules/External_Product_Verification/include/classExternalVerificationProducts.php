@@ -15,8 +15,8 @@ class classExternalVerificationProducts extends classData
     private $ProductDescription = null;
     private $QtyOnAmazon = null;
     private $QtyOnOurWebSite = null;
-    private static $aActionsName = ['match'=>'Match', 'not_match'=>'Does NOT match', 'not_found'=>'Product not found', 'not_sure' => 'Not sure'];
-    private static $aQuestionsName = ['different'=>'Different', 'same'=>'Same', 'contradict'=>'Contradict', 'not_contradict' => 'Not'];
+    private static $aActionsName = ['match' => 'Match', 'not_match' => 'Does NOT match', 'not_found' => 'Product not found', 'not_sure' => 'Not sure'];
+    private static $aQuestionsName = ['different' => 'Different', 'same' => 'Same', 'contradict' => 'Contradict', 'not_contradict' => 'Not'];
 
     public function __construct($aParams = [])
     {
@@ -70,11 +70,16 @@ class classExternalVerificationProducts extends classData
     public function getAsin()
     {
         if (is_null($this->sAsin)) {
-            if (in_array($this->getAction(), classExternalVerificationBatch::$aProductStatuses['processed'])) {
-                $oAsin = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'asin_on_amazon']);
-                if ($oAsin->getProductId()) {
-                    $this->sAsin = $oAsin->getValue();
+            if ($this->getBatchId()) {
+                if (in_array($this->getAction(), classExternalVerificationBatch::$aProductStatuses['processed'])) {
+                    $oAsin = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'asin_on_amazon']);
+                    if ($oAsin->getProductId()) {
+                        $this->sAsin = $oAsin->getValue();
+                    }
                 }
+            } else {
+                $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
+                $this->sAsin = implode(',',$oEtalonImage->getAsin());
             }
         }
         return $this->sAsin;
@@ -85,6 +90,28 @@ class classExternalVerificationProducts extends classData
         return $this->getField('action');
     }
 
+    public function setAction($sAction)
+    {
+        switch ($sAction) {
+            case classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH :
+                $sAction = 'match';
+                break;
+            case classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH :
+                $sAction = 'not_match';
+                break;
+            case classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_FOUND :
+                $sAction = 'not_found';
+                break;
+        }
+        return $this->setField('action', $sAction);
+
+    }
+
+    public function setValue($sValue)
+    {
+        return $this->setField('value', $sValue);
+    }
+
     public function getActionDisplayName()
     {
         return self::$aActionsName[$this->getAction()];
@@ -93,10 +120,16 @@ class classExternalVerificationProducts extends classData
     public function getProductImage()
     {
         if (is_null($this->ProductImage)) {
-            $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_image']);
-            if ($oImage->getProductId()) {
-                $this->ProductImage = self::$aQuestionsName[$oImage->getValue()];
+            if ($this->getBatchId()) {
+                $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_image']);
+                if ($oImage->getProductId()) {
+                    $this->ProductImage = self::$aQuestionsName[$oImage->getValue()];
+                }
+            } else {
+                $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
+                $this->ProductImage = $oEtalonImage->getProductImage();
             }
+
         }
         return $this->ProductImage;
     }
@@ -104,9 +137,14 @@ class classExternalVerificationProducts extends classData
     public function getProductName()
     {
         if (is_null($this->ProductName)) {
-            $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_names']);
-            if ($oImage->getProductId()) {
-                $this->ProductName = self::$aQuestionsName[$oImage->getValue()];
+            if ($this->getBatchId()) {
+                $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_names']);
+                if ($oImage->getProductId()) {
+                    $this->ProductName = self::$aQuestionsName[$oImage->getValue()];
+                }
+            } else {
+                $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
+                $this->ProductName = $oEtalonImage->getProductName();
             }
         }
         return $this->ProductName;
@@ -115,9 +153,14 @@ class classExternalVerificationProducts extends classData
     public function getProductDescription()
     {
         if (is_null($this->ProductDescription)) {
-            $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_description']);
-            if ($oImage->getProductId()) {
-                $this->ProductDescription = self::$aQuestionsName[$oImage->getValue()];
+            if ($this->getBatchId()) {
+                $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'product_description']);
+                if ($oImage->getProductId()) {
+                    $this->ProductDescription = self::$aQuestionsName[$oImage->getValue()];
+                }
+            } else {
+                $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
+                $this->ProductDescription = $oEtalonImage->getProductDescription();
             }
         }
         return $this->ProductDescription;
@@ -126,9 +169,14 @@ class classExternalVerificationProducts extends classData
     public function getQtyOnAmazon()
     {
         if (is_null($this->QtyOnAmazon)) {
-            $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'qty_on_amazon']);
-            if ($oImage->getProductId()) {
-                $this->QtyOnAmazon = $oImage->getValue();
+            if ($this->getBatchId()) {
+                $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'qty_on_amazon']);
+                if ($oImage->getProductId()) {
+                    $this->QtyOnAmazon = $oImage->getValue();
+                }
+            } else {
+                $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
+                $this->QtyOnAmazon = $oEtalonImage->getPackQtyAmazon();
             }
         }
         return $this->QtyOnAmazon;
@@ -137,9 +185,14 @@ class classExternalVerificationProducts extends classData
     public function getQtyOnOurWebSite()
     {
         if (is_null($this->QtyOnOurWebSite)) {
-            $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'qty_on_our_website']);
-            if ($oImage->getProductId()) {
-                $this->QtyOnOurWebSite = $oImage->getValue();
+            if ($this->getBatchId()) {
+                $oImage = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'qty_on_our_website']);
+                if ($oImage->getProductId()) {
+                    $this->QtyOnOurWebSite = $oImage->getValue();
+                }
+            } else {
+                $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
+                $this->QtyOnOurWebSite = $oEtalonImage->getPackQtyWebsite();
             }
         }
         return $this->QtyOnOurWebSite;

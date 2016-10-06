@@ -43,43 +43,43 @@ $(function(){
       {/if}
     {/if}
 
-    {if $smarty.get.pageid ne $top_pages_menu[top_page].pageid}<a class="top_links" href="/pages.php?pageid={$top_pages_menu[top_page].pageid}">{else}<font style="color: #cccccc;">{/if}{$top_pages_menu[top_page].title}{if $smarty.get.pageid ne $top_pages_menu[top_page].pageid}</a>{else}</font>{/if}
+    {if $smarty.get.pageid ne $top_pages_menu[top_page].pageid}<a class="top_links" href="/pages.php?pageid={$top_pages_menu[top_page].pageid}">{else}<span style="color: #cccccc;">{/if}{$top_pages_menu[top_page].title}{if $smarty.get.pageid ne $top_pages_menu[top_page].pageid}</a>{else}</span>{/if}
 
     {* if !%top_page.last% *}
-      <font class="top_links">&nbsp;|&nbsp;</font>
+      <span class="top_links">&nbsp;|&nbsp;</span>
     {* /if *}
 
   {/section}
 
-  {if $main ne "help" && $smarty.get.section ne "contactus"}<a class="top_links" href="/help.php?section=contactus&mode=update">{else}<font style="color: #cccccc;">{/if}Contact Us{if $main ne "help" && $smarty.get.section ne "contactus"}</a>{else}</font>{/if}
+  {if $main ne "help" && $smarty.get.section ne "contactus"}<a class="top_links" href="/help.php?section=contactus&mode=update">{else}<span style="color: #cccccc;">{/if}Contact Us{if $main ne "help" && $smarty.get.section ne "contactus"}</a>{else}</span>{/if}
 
 {/if}
   </td>
   <td width="*" align="right" style="padding-right: 20px;">
-<font class="top_text_1">
+<span class="top_text_1">
  Place order online or call
-</font>
-<font class="top_text_2">
+</span>
+<span class="top_text_2">
 {if $geo_litecity_location.phone ne ""}
 &nbsp; {$geo_litecity_location.phone}
 {else}
 &nbsp; {$config.Company.cidev_top_header_code}
 {/if}
-</font>
+</span>
   </td>
  </tr>
 </table>
 
 
 
-<TABLE border="0" cellpadding="0" cellspacing="0" {if $main eq "fast_lane_checkout"}class="header_line_flc2"{else}class="header_line2"{/if} align="center">
-<TR>
-<TD {* height="130" *} valign="bottom">
+<table border="0" cellpadding="0" cellspacing="0" {if $main eq "fast_lane_checkout"} class="header_line_flc2" {else} class="header_line2" {/if} align="center">
+<tr>
+<td {* height="130" *} valign="bottom">
         <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
         <tr>
 
         <td width="250" valign="middle">
-        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}<a href="/">{/if}<img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="Home page" >{if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}</a>{/if}
+        {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}<a href="/">{/if}<img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="Home page" />{if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}</a>{/if}
         </td>
 
 {if $main eq "fast_lane_checkout" || $main eq "order_message"}
@@ -99,7 +99,7 @@ $(function(){
                         <td valign="middle" width="*" align="center">
                         </td>
                         <td width="10">&nbsp;</td>
-                        <td width="204" valign="middle" align="right">
+                        <td width=" 204" valign="middle" align="right">
                         {include file="customer/menu_cart.tpl"}
 
 {if $variant_id_for_point5 ne "" && $variant_id_for_point5 eq "0" && $main ne "product" && !($main eq "catalog" && $current_category.category eq "")}
@@ -114,9 +114,9 @@ $(function(){
 {/if}
         </tr>
         </table>
-</TD>
-</TR>
-</TABLE>
+</td>
+</tr>
+</table>
 
 </td>
 </tr>

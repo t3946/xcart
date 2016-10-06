@@ -42,7 +42,7 @@
             {foreach from=$aBatches item=oCurrentBatch}
                 <tr data-batch-id="{$oCurrentBatch->getBatchId()}">
                     <td align="center">{$oCurrentBatch->getBatchNumber()}{if $oCurrentBatch->isTest()}T{/if}</td>
-                    <td align="center">{$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}{if $oCurrentBatch->isTest()}T{/if}_{$oCurrentBatch->getBatchAmount()}</td>
+                    <td align="center"><a href="{$oCurrentBatch->getBatchViewLink()}" target="_blank">{$oCurrentBatch->getBatchLogin()}_{$oCurrentBatch->getBatchNumber()}{if $oCurrentBatch->isTest()}T{/if}_{$oCurrentBatch->getBatchAmount()}</a></td>
                     {assign var=oStartDate value=$oCurrentBatch->getStartDate()}
                     <td align="center">{$oStartDate->format('d-M-Y<\b\r>H:i')}</td>
                     <td align="left">

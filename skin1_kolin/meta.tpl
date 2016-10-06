@@ -19,7 +19,7 @@
 <meta name="{$bench_name}" content="{$bench_time}" />
 
 <!-- vewport test -->
-<meta name="viewport" content="width=device-width, initial-scale=2">
+<meta name="viewport" content="width=device-width, initial-scale=2"/>
 
 {include file="presets_js.tpl"}
 
