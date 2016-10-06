@@ -1,4 +1,6 @@
-
+<link rel="stylesheet" href="{$SkinDir}/css/semantic/semantic.css">
+<script src="{$SkinDir}/js/semantic/components/popup.min.js" type="text/javascript"></script>
+<script src="{$SkinDir}/js/semantic/components/transition.min.js" type="text/javascript"></script>
 <table width="100%" id="table_verificators" cellpadding="3" cellspacing="1">
     <tr>
         <td colspan="7">
@@ -71,7 +73,7 @@
                                     {/if}>
                                 <b>{$oVerificatorResult->getActionDisplayName()}</b>
                                 {if $oVerificatorResult->getComment()}
-                                    <span class="verificator_comments_icon"><img src="{$ImagesDir}/comment.png" /></span>
+                                    <span data-html="{$oVerificatorResult->getComment()}" class="verificator_comments_icon"><img src="{$ImagesDir}/comment.png" /></span>
                                 {/if}
                             </td>
                         </tr>
@@ -81,3 +83,10 @@
         {/foreach}
     {/if}
 </table>
+<script type="text/javascript">
+    {literal}
+    $('.verificator_comments_icon').popup({on: 'click', inline: true}).click(function () {
+        return false;
+    });
+    {/literal}
+</script>

@@ -279,3 +279,6 @@ iframe
 .verificator_comments_icon{
     cursor:pointer;
 }
+#table_verificators .popup {
+    font-size: 10px;
+}
