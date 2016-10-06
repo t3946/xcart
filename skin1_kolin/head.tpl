@@ -99,7 +99,7 @@ $(function(){
                         <td valign="middle" width="*" align="center">
                         </td>
                         <td width="10">&nbsp;</td>
-                        <td width="204" valign="middle" align="right">
+                        <td width=" 204" valign="middle" align="right">
                         {include file="customer/menu_cart.tpl"}
 
 {if $variant_id_for_point5 ne "" && $variant_id_for_point5 eq "0" && $main ne "product" && !($main eq "catalog" && $current_category.category eq "")}
