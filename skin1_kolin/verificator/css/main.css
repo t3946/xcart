@@ -276,3 +276,6 @@ iframe
 #table_verificators td {
     text-transform: capitalize;
 }
+.verificator_comments_icon{
+    cursor:pointer;
+}

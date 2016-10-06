@@ -1,3 +1,4 @@
+
 <table width="100%" id="table_verificators" cellpadding="3" cellspacing="1">
     <tr>
         <td colspan="7">
@@ -70,7 +71,7 @@
                                     {/if}>
                                 <b>{$oVerificatorResult->getActionDisplayName()}</b>
                                 {if $oVerificatorResult->getComment()}
-                                    <img src="{$ImagesDir}/comment.png" />
+                                    <span class="verificator_comments_icon"><img src="{$ImagesDir}/comment.png" /></span>
                                 {/if}
                             </td>
                         </tr>
