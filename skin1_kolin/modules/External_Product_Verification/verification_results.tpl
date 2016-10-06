@@ -69,6 +69,9 @@
                                 class="action_not_same"
                                     {/if}>
                                 <b>{$oVerificatorResult->getActionDisplayName()}</b>
+                                {if $oVerificatorResult->getComment()}
+                                    <img src="{$ImagesDir}/comment.png" />
+                                {/if}
                             </td>
                         </tr>
                     {/if}

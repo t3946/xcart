@@ -15,6 +15,7 @@ class classExternalVerificationProducts extends classData
     private $ProductDescription = null;
     private $QtyOnAmazon = null;
     private $QtyOnOurWebSite = null;
+    private $sComment = null;
     private static $aActionsName = ['match' => 'Match', 'not_match' => 'Does NOT match', 'not_found' => 'Product not found', 'not_sure' => 'Not sure'];
     private static $aQuestionsName = ['different' => 'Different', 'same' => 'Same', 'contradict' => 'Contradict', 'not_contradict' => 'Not'];
 
@@ -70,6 +71,7 @@ class classExternalVerificationProducts extends classData
     public function getAsin()
     {
         if (is_null($this->sAsin)) {
+            $this->sAsin = '';
             if ($this->getBatchId()) {
                 if (in_array($this->getAction(), classExternalVerificationBatch::$aProductStatuses['processed'])) {
                     $oAsin = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'asin_on_amazon']);
@@ -79,10 +81,24 @@ class classExternalVerificationProducts extends classData
                 }
             } else {
                 $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
-                $this->sAsin = implode(',',$oEtalonImage->getAsin());
+                $this->sAsin = implode(',', $oEtalonImage->getAsin());
             }
         }
         return $this->sAsin;
+    }
+
+    public function getComment()
+    {
+        if (is_null($this->sComment)) {
+            $this->sComment = '';
+            if (in_array($this->getAction(), classExternalVerificationBatch::$aProductStatuses['processed'])) {
+                $oAsin = classExternalVerificationProducts::model(['productid' => $this->getProductId(), 'batch_id' => $this->getBatchId(), 'action' => 'comments_if_not']);
+                if ($oAsin->getProductId()) {
+                    $this->sComment = $oAsin->getValue();
+                }
+            }
+        }
+        return $this->sComment;
     }
 
     public function getAction()

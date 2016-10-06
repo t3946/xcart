@@ -189,7 +189,12 @@ iframe
     min-width: 475px;
     font-size: 0.875em;
     font-family: Verdana;
+
 }
+.ui.popup, .ui.popup::before {
+    background-color: #fff2cc !important;
+}
+
 @media only screen and (max-width: 1559px) {
     div.iframediv {
         height: -webkit-calc(100% - 170px);
