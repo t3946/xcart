@@ -106,7 +106,7 @@
 	  {if $v.categoryid eq $subcat.categoryid && $v.count_products gt 0} 
 		{if $v.supplemental_category ne "Y"}
 	<tr>
-	<td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><font class="CategoriesList"><a class="VertMenuItems" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</font></a> ({$v.count_products})</td>
+	<td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><a class="VertMenuItems CategoriesList" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</a> ({$v.count_products})</td>
 	</tr>
 		{else}
 			{assign var="supplemental_category_found" value="Y"}
@@ -123,7 +123,7 @@
         {foreach from=$keyword_subcategories item=subcat}
 	{if $subcat.supplemental_category ne "Y"}
         <tr>
-        <td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><font class="CategoriesList"><a class="VertMenuItems" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</font></a> ({$subcat.count})</td>
+        <td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><a class="VertMenuItems CategoriesList" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</a> ({$subcat.count})</td>
         </tr>
 	{else}
 		{assign var="supplemental_category_found" value="Y"}

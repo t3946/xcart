@@ -1,17 +1,10 @@
 {* $Id: home.tpl,v 1.88.2.4 2006/10/13 10:41:21 svowl Exp $ *}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-{if $current_storefront_info.storefrontid ne ""}
-<link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=F" type="image/vnd.microsoft.icon" />
-{else}
-{* <link rel="shortcut icon" href="{$ImagesDir}/favicon.ico" type="image/vnd.microsoft.icon" /> *}
-<link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id=0&amp;type=F" type="image/vnd.microsoft.icon" />
-{/if}
-{if $printable ne ''}
-{include file="customer/home_printable.tpl"}
-{else}
-{config_load file="$skin_config"}
-<html>
+<!DOCTYPE html>
+<html lang="en-US">
 <head>
+{if $config.SEO.clean_urls_enabled eq "Y"}
+<base href="{$catalogs.customer}/" />
+{/if}
 <title>{strip}
 {if $brand.title ne "" && $main eq "brand_products"}
 {$brand.title}
@@ -49,15 +42,48 @@
 {/if}
 {/if}
 {/strip}</title>
-{include file="meta.tpl" }
+    {if $current_storefront_info.storefrontid ne ""}
+<link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=F" type="image/vnd.microsoft.icon"/>
+    {else}
+<link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id=0&amp;type=F" type="image/vnd.microsoft.icon"/>
+    {/if}
+    {if $printable ne ''}
+    {include file="customer/home_printable.tpl"}
+    {else}
+    {config_load file="$skin_config"}
 
-{if !empty($config.Appearance.Facebook_pixel_code)}
-        {$config.Appearance.Facebook_pixel_code}
-{/if}
+    <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />
+    <link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
+    <link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
+    <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
+    <link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />
+    <!--[if IE]>
+    <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
+    <![endif]-->
+    {if $canonical_url}
+        <link rel="canonical" href="http://{$site_domain|lower}/{$canonical_url}" />
+    {/if}
+    {if $main eq "catalog" && $current_category.category eq "" && $clean_url_data.resource_type ne "K"}
+        <link rel="canonical" href="http://{$site_domain|lower}/"/>
+    {/if}
+    {if $config.Product_Page.map_bridge_text_background ne ''}
+    {literal}
+        <style>
+            #tooltip, .tooltip_helper {
+            background-color: #{/literal}{$config.Product_Page.map_bridge_text_background};{literal}
+            }
+        </style>
+    {/literal}
+    {/if}
+    {literal}
+    <style>
+        #tooltip {
+            max-width: {/literal}{$config.Product_Page.max_width_map_text}{literal}px;
+        }
+    </style>
+    {/literal}
 
-{*
-<script src="{$SkinDir}/jquery-1.4.3.min.js" type="text/javascript"></script>
-*}
+    {include file="meta.tpl" }
 
 {if ($main eq "product")}
 {* igor_async *}
@@ -67,43 +93,11 @@
 <script src="{$SkinDir}/js/sly.min.js" type="text/javascript"></script>
 {if ($main eq "product")}
 {* igor_async *}
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 <script type="text/javascript" src="{$SkinDir}/js/jquery.visible.min.js"></script>
 {/if}
-
-{* {include file="jquery_ui.tpl"} *}
-
-<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />
-
-<link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
-<link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
-
-<link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
-
-<link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />
-
-{*
-  <link rel="stylesheet" href="http://mehamalina.ru/css/style.css?v=1421903756">
- *}
-
-<!-- igor_async <script src="{$SkinDir}/lib/colorbox/jquery.colorbox-min.js" type="text/javascript"></script> -->
-
-
-<!--[if IE]>
-	<link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
-<![endif]-->
-
-{if $canonical_url}
-  <link rel="canonical" href="http://{$site_domain|lower}/{$canonical_url}" />
-{/if}
-{if $main eq "catalog" && $current_category.category eq "" && $clean_url_data.resource_type ne "K"}
-  <link rel="canonical" href="http://{$site_domain|lower}/"/>
-{/if}
-
-
 <script type="text/javascript">
 //<![CDATA[
-
 {if $config.SEO.clean_urls_enabled eq "Y"}
 {literal}
 //  Fix a.href if base url is defined for page
@@ -128,15 +122,11 @@ window.attachEvent("onload", anchor_fix);
 
 //]]>
 </script>
-
-{if $config.SEO.clean_urls_enabled eq "Y"}
-  <base href="{$catalogs.customer}/" />
-{/if}
-
-
 </head>
 <body{$reading_direction_tag}{if $body_onload ne ''} onload="javascript: {$body_onload}"{/if}>
-
+{if !empty($config.Appearance.Facebook_pixel_code)}
+    {$config.Appearance.Facebook_pixel_code}
+{/if}
 {if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 <script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
 {/if}
@@ -494,15 +484,6 @@ function func_load_ajax_carousel_products(section_name) {
 {include file="cidev_tracking_code.tpl" }
 {* ------------------- *}
 
-
-{literal}
-<style>
-#tooltip {
-    max-width: {/literal}{$config.Product_Page.max_width_map_text}{literal}px;
-}
-</style>
-{/literal}
-
 {include file="head.tpl" }
 {include file="rectangle_top.tpl" }
 
@@ -711,15 +692,6 @@ func_load_ALL_ajax_carousels("recently_viewed_products", 0);
 {/if}
 {include file="rectangle_bottom.tpl" }
 {include file="ga_code.tpl" }
-{if $config.Product_Page.map_bridge_text_background ne ''}
-{literal}
-<style>
-#tooltip, .tooltip_helper {
-	background-color: #{/literal}{$config.Product_Page.map_bridge_text_background};{literal}
-}
-</style>
-{/literal}
-{/if}
 
 {if $main eq "product"}
 <script type="text/javascript">
