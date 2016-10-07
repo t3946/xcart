@@ -40,7 +40,7 @@ class classOrderDetail extends classData
     }
 
     public function getAmount() {
-        return $this->getField('amount');
+        return intval($this->getField('amount'));
     }
 
     public function getPrice()
@@ -123,5 +123,14 @@ class classOrderDetail extends classData
             $this->fetchOrderInstance();
         }
         return $this->oOrder;
+    }
+
+    public function getCostToUs()
+    {
+        $fCostToUs = floatval($this->getField('item_cost_to_us'));
+        if (!$fCostToUs) {
+            $fCostToUs = $this->getOrderDetailProduct()->getProductCostToUs();
+        }
+        return $fCostToUs*$this->getAmount();
     }
 }
