@@ -53,7 +53,9 @@
                                     {if $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin()}
                                         class="question_not_same"
                                     {/if}
-                            >{$oVerificatorResult->getAsin()}</td>
+                            >
+                                {if ($oVerificatorResult->getAsin())}<a target="_blank" href="{$oVerificatorResult->getAmazonProductLink()}">{/if}{$oVerificatorResult->getAsin()}{if ($oVerificatorResult->getAsin())}</a>{/if}
+                            </td>
                             <td align="center" {if $aVerificatorResults[0]->getProductImage() != $aVerificatorResults[1]->getProductImage()}
                                 class="question_not_same"
                                     {/if}>{$oVerificatorResult->getProductImage()}</td>

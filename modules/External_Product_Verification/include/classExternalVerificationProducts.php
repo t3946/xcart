@@ -6,6 +6,8 @@ require_once $xcart_dir . "/modules/External_Product_Verification/include/classE
 
 class classExternalVerificationProducts extends classData
 {
+    const AMAZON_PRODUCT_LINK = 'https://www.amazon.com/dp/%s/';
+
     private $oProduct = null;
     private $oCustomer = null;
 
@@ -212,5 +214,10 @@ class classExternalVerificationProducts extends classData
             }
         }
         return $this->QtyOnOurWebSite;
+    }
+
+    public function getAmazonProductLink()
+    {
+        return sprintf(self::AMAZON_PRODUCT_LINK, $this->getAsin());
     }
 }
