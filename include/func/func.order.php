@@ -728,10 +728,12 @@ function func_order_data($orderid) {
 
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classProducts.php";
-		$classProduct = new classProduct(['productid'=>$v['productid']]);
+		include_once $xcart_dir."/include/class/classOrderDetail.php";
+		$classProduct = classProduct::model(['productid'=>$v['productid']]);
 		$mpn = $classProduct->getMPN();
 		$v["mpn"] = $mpn;
 		$v["oProduct"] = $classProduct;
+		$v["oOrderDetail"] = classOrderDetail::model(['itemid'=>$v['itemid']]);
 
 /*#
 ##
