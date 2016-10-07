@@ -43,6 +43,7 @@ $trusted_post_variables = array('update', 'mnf_body');
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
+require_once $xcart_dir . "/include/class/classProduct.php";
 
 x_load('mail','order');
 
@@ -367,7 +368,7 @@ if ($REQUEST_METHOD == "GET") {
 
                 if (!empty($order_details_table) && is_array($order_details_table)){
                         foreach($order_details_table as $k => $v){
-                                $insert_data3 = array (
+							    $insert_data3 = array (
                                         'orderid' => $new_orderid,
                                         'productid' => $v['productid'],
                                         'price' => $v['price'],
@@ -379,14 +380,11 @@ if ($REQUEST_METHOD == "GET") {
                                         'productcode' => $v['productcode'],
                                         'product' => addslashes($v['product']),
                                         'original_provider' => $v['original_provider'],
-                                        'items_stock' => $v['items_stock']
+                                        'items_stock' => $v['items_stock'],
+										'item_cost_to_us' => classProduct::model(['productid'=>$v['productid']])->getProductCostToUs()
                                 );
 
-				if (!empty($v['item_cost_to_us'])){
-					$insert_data3['item_cost_to_us'] = $v['item_cost_to_us'];
-				}
-
-                                func_array2insert('order_details', $insert_data3);
+				                func_array2insert('order_details', $insert_data3);
                                 unset($insert_data3);
                         }
                 }
