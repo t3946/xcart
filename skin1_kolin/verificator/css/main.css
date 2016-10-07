@@ -273,12 +273,16 @@ iframe
 #table_verificators .TableHead td {
     text-transform: inherit;
 }
-#table_verificators td {
-    text-transform: capitalize;
-}
 .verificator_comments_icon{
     cursor:pointer;
 }
 #table_verificators .popup {
     font-size: 10px;
+}
+.ui.steps .step.not.completed > .icon:before,
+.ui.ordered.steps .step.not.completed:before {
+    content: '\f00d';
+    font-family: 'Icons';
+    color: red;
+    /* '' */
 }

@@ -241,9 +241,7 @@ $(document).ready(function () {
         }
     });
 
-    $('.popup_drop_link').popup({on: 'click'}).click(function () {
-        return false;
-    });
+    $('.popup_drop_link').popup({on: 'click'}).click(function () {return false;});
 
     $('#original_product').click(function () {
         clickOriginalProduct($(this));
@@ -307,7 +305,12 @@ $(document).ready(function () {
     });
 
     $('#conclusion_buttons').find('input[type=radio]').change(function () {
-        $(this).closest('div.step').addClass('completed');
+
+        var step = $(this).closest('div.step').addClass('completed').removeClass('not');
+        if ($(this).val()=='contradict' || $(this).val()=='different') {
+            step.addClass('not');
+        }
+
         var completed_steps = $(this).closest('#conclusion_buttons').find('.step.completed');
         if (completed_steps.length == 3) {
             $('#conclusion_buttons').find('.submit-amazon-button').removeClass('disabled').siblings().removeClass('disabled');
