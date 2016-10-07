@@ -733,6 +733,8 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 				"product" => $product['product'],
 				"item_cost_to_us" => $product['cost_to_us']
 			);
+			if (floatval($query_data['item_cost_to_us']) != 0)
+				unset($query_data_tmp['item_cost_to_us']);
 			$query_data_tmp = func_array_map("addslashes", $query_data_tmp);
 			$query_data = array_merge($query_data, $query_data_tmp);
 

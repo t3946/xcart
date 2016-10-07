@@ -151,7 +151,7 @@ class classOrderGroup extends classData
                                            INNER JOIN xcart_products xp
                                               ON xp.productid = xo.productid AND
                                                  xp.manufacturerid = og.manufacturerid
-                                     WHERE og.orderid = " . $this->getOrderId() ." AND og.manufacturerid = ".$this->getManufacturerId());
+                                     WHERE og.orderid = " . $this->getOrderId() . " AND og.manufacturerid = " . $this->getManufacturerId());
             $fCostToUs = floatval($aCostToUs['cost_to_us_od']);
             if (is_null($fCostToUs) || $fCostToUs == 0) {
                 $fCostToUs = $aCostToUs['cost_to_us_pr'];
