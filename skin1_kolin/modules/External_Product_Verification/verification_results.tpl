@@ -11,9 +11,9 @@
         <td rowspan="2" width="100">SKU</td>
         <td style="width: 250px; white-space: nowrap;" rowspan="2" width="10">Product name</td>
         <td style="width: 130px; white-space: nowrap;" rowspan="2" width="10">Verificator</td>
-        <td rowspan="2" width="10">Date and time</td>
+        <td style="width: 70px; white-space: nowrap;" rowspan="2" width="10">Date and time</td>
         <td colspan="5" width="10">Verification questions</td>
-        <td style="width: 130px; white-space: nowrap;" rowspan="2" width="100">Conclusion</td>
+        <td style="width: 160px; white-space: nowrap;" rowspan="2" width="100">Conclusion</td>
     </tr>
     <tr class="TableHead">
         <td>ASIN</td>
@@ -65,8 +65,7 @@
                                     {/if}>{$oVerificatorResult->getProductDescription()}</td>
                             <td align="center" {if $aVerificatorResults[0]->getQtyOnAmazon() != $aVerificatorResults[1]->getQtyOnAmazon() || $aVerificatorResults[0]->getQtyOnOurWebSite() != $aVerificatorResults[1]->getQtyOnOurWebSite()}
                                 class="question_not_same"
-                                    {/if}>{$oVerificatorResult->getQtyOnAmazon()}
-                                <br/>{$oVerificatorResult->getQtyOnOurWebSite()}</td>
+                                    {/if}>{$oVerificatorResult->getQtyOnAmazon()}<br/>{$oVerificatorResult->getQtyOnOurWebSite()}</td>
                             <td align="center"
                                     {if $aVerificatorResults[0]->getAction() != $aVerificatorResults[1]->getAction()}
                                 class="action_not_same"
