@@ -379,14 +379,11 @@ if ($REQUEST_METHOD == "GET") {
                                         'productcode' => $v['productcode'],
                                         'product' => addslashes($v['product']),
                                         'original_provider' => $v['original_provider'],
-                                        'items_stock' => $v['items_stock']
+                                        'items_stock' => $v['items_stock'],
+										'item_cost_to_us' => $v['item_cost_to_us']
                                 );
 
-				if (!empty($v['item_cost_to_us'])){
-					$insert_data3['item_cost_to_us'] = $v['item_cost_to_us'];
-				}
-
-                                func_array2insert('order_details', $insert_data3);
+				                func_array2insert('order_details', $insert_data3);
                                 unset($insert_data3);
                         }
                 }
