@@ -6,7 +6,7 @@
                 <a href="?ready_to_classify=Y">Ready to classification</a>
         </div>
     {/if}
-<form name="pc_form2" method="POST">
+<form name="pc_form2" method="POST" autocomplete="off">
 <input type="hidden" name="mode" value="update">
 <input type="hidden" name="last_taxonomy" value="{$last_taxonomy}" id="last_taxonomy">
 <table border="0" width="100%" cellpadding="3" cellspacing="1" style="background: #EEEEEE;">
