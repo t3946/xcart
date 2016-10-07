@@ -251,7 +251,7 @@ Category {$v} is not ready to classification!<br />
 <table border="0" width="100%" cellpadding="3" cellspacing="1">
 
 <tr class='TableSubHead' >
-<td><B>Product name</B></td>
+<td style="width: 300px; overflow: hidden; display: inline-block; white-space: nowrap;"><B>Product name</B></td>
 <td><B>Suggested category (products / categoryid)</td>
 <td><B>Score</B></td>
 <td><B>Delta</B></td>
@@ -261,7 +261,7 @@ Category {$v} is not ready to classification!<br />
 
 {foreach from=$products_minimum_number_of_autoclassify_product_per_turn item=v key=k}
 <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
-<td width="350" nowrap="nowrap">
+<td>
 <a href="http://{$current_storefront_info.domain}/product.php?productid={$v.productid}" target="_blank" style="color: blue;">{$v.product}</a>
 <input type="hidden" name="posted_data[{$k}][productid]" value="{$v.productid}" />
 
