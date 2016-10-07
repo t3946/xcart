@@ -730,7 +730,8 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 				"provider" => $product["provider"],
 				"extra_data" => serialize($product["extra_data"]),
 				"productcode" => $product['productcode'],
-				"product" => $product['product']
+				"product" => $product['product'],
+				"item_cost_to_us" => $product['cost_to_us']
 			);
 			$query_data_tmp = func_array_map("addslashes", $query_data_tmp);
 			$query_data = array_merge($query_data, $query_data_tmp);
