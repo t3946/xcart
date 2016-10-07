@@ -13,7 +13,7 @@
         <td style="width: 130px; white-space: nowrap;" rowspan="2" width="10">Verificator</td>
         <td rowspan="2" width="10">Date and time</td>
         <td colspan="5" width="10">Verification questions</td>
-        <td rowspan="2" width="100">Conclusion</td>
+        <td style="width: 130px; white-space: nowrap;" rowspan="2" width="100">Conclusion</td>
     </tr>
     <tr class="TableHead">
         <td>ASIN</td>

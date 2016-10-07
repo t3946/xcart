@@ -1799,3 +1799,6 @@ td.borderb-gray {
 .verification_link:hover {
 	text-decoration: underline !important;
 }
+#amazon_verification ~ table td:nth-child(2) {
+	font-weight:bold;
+}

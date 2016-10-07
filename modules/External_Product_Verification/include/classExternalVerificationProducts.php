@@ -16,7 +16,7 @@ class classExternalVerificationProducts extends classData
     private $QtyOnAmazon = null;
     private $QtyOnOurWebSite = null;
     private $sComment = null;
-    private static $aActionsName = ['match' => 'Match', 'not_match' => 'Does NOT match', 'not_found' => 'Product not found', 'not_sure' => 'Not sure'];
+    private static $aActionsName = ['match' => 'Match', 'not_match' => 'Does NOT match', 'not_found' => 'Not found', 'not_sure' => 'Not sure'];
     private static $aQuestionsName = ['different' => 'Different', 'same' => 'Same', 'contradict' => 'Contradict', 'not_contradict' => 'Not'];
 
     public function __construct($aParams = [])
@@ -143,7 +143,7 @@ class classExternalVerificationProducts extends classData
                 }
             } else {
                 $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
-                $this->ProductImage = $oEtalonImage->getProductImage();
+                $this->ProductImage = self::$aQuestionsName[$oEtalonImage->getProductImage()];
             }
 
         }
@@ -160,7 +160,7 @@ class classExternalVerificationProducts extends classData
                 }
             } else {
                 $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
-                $this->ProductName = $oEtalonImage->getProductName();
+                $this->ProductName = self::$aQuestionsName[$oEtalonImage->getProductName()];
             }
         }
         return $this->ProductName;
@@ -176,7 +176,7 @@ class classExternalVerificationProducts extends classData
                 }
             } else {
                 $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
-                $this->ProductDescription = $oEtalonImage->getProductDescription();
+                $this->ProductDescription = self::$aQuestionsName[$oEtalonImage->getProductDescription()];
             }
         }
         return $this->ProductDescription;
