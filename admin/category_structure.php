@@ -6,6 +6,18 @@ x_load('backoffice','files','category');
 
 x_session_register("last_taxonomy_var");
 
+$location[] = array("Category structure", "");
+
+$sAdditionalQuery = '';
+if (!empty($ready_to_classify) && $ready_to_classify == 'Y') {
+	define('NEED_READY_CLASSIFY', 1);
+	$sAdditionalQuery = '?ready_to_classify=Y';
+	array_pop($location);
+	$location[] = array("Category structure", "category_structure.php");
+	$location[] = array("Ready to classification", "");
+	$smarty->assign('ready_to_classify',$ready_to_classify);
+}
+
 if ($REQUEST_METHOD == "POST" && $mode == "update" && !empty($google_product_category_arr) && is_array($google_product_category_arr)) {
 
 	foreach ($google_product_category_arr as $categoryid => $google_product_category){
@@ -17,11 +29,9 @@ if ($REQUEST_METHOD == "POST" && $mode == "update" && !empty($google_product_cat
 	$last_taxonomy_var = $last_taxonomy;
 	x_session_save("last_taxonomy_var");
 
-	func_header_location("category_structure.php");
+	func_header_location("category_structure.php".$sAdditionalQuery);
 }
 
-if (!empty($ready_to_classify) && $ready_to_classify == 'Y')
-	define('NEED_READY_CLASSIFY', 1);
 
 $cat = 0;
 require $xcart_dir."/include/categories.php";
@@ -63,7 +73,7 @@ $smarty->assign("last_taxonomy", $last_taxonomy_var);
 
 //func_print_r($all_categories);
 
-$location[] = array("Category structure", "");
+
 
 $smarty->assign("main", "category_structure");
 $smarty->assign("location", $location);
