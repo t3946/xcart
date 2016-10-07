@@ -147,7 +147,7 @@
                         <i class="exclamation icon"></i>
                         <div class="content">
                             <div class="title">
-                                <a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_quantity_popup_message}" href="#">Product quantity</a> listed
+                                <a class="popup_drop_link" data-html="{$config.Amazon_Verification.amazon_verification_product_quantity_popup_message}" href="#">Pack quantity</a> listed
                             </div>
                             <div class="description">
                                 <div class="ui form buttons">

@@ -143,7 +143,7 @@ class classExternalVerificationProducts extends classData
                 }
             } else {
                 $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
-                $this->ProductImage = $oEtalonImage->getProductImage();
+                $this->ProductImage = self::$aQuestionsName[$oEtalonImage->getProductImage()];
             }
 
         }
@@ -160,7 +160,7 @@ class classExternalVerificationProducts extends classData
                 }
             } else {
                 $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
-                $this->ProductName = $oEtalonImage->getProductName();
+                $this->ProductName = self::$aQuestionsName[$oEtalonImage->getProductName()];
             }
         }
         return $this->ProductName;
@@ -176,7 +176,7 @@ class classExternalVerificationProducts extends classData
                 }
             } else {
                 $oEtalonImage = classExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
-                $this->ProductDescription = $oEtalonImage->getProductDescription();
+                $this->ProductDescription = self::$aQuestionsName[$oEtalonImage->getProductDescription()];
             }
         }
         return $this->ProductDescription;

@@ -542,7 +542,7 @@ class classExternalVerificationBatch extends classData
             if (empty($aProductsNextInBatch)) {
                 $this->countTestResults();
                 global $config;
-                if ($this->getWrongAnswersCount() >= intval($config['Amazon_Verification']['amazon_verification_maximum_mistakes'])) {
+                if ($this->getWrongAnswersCount() > intval($config['Amazon_Verification']['amazon_verification_maximum_mistakes'])) {
                     $this->updateField('test_failed', 'Y');
                 }
             }
