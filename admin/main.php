@@ -91,7 +91,7 @@ SELECT SUM($sql_tbl[transaction_logs].transaction_total) FROM $sql_tbl[transacti
 						INNER JOIN $sql_tbl[order_groups] og USING (orderid) "
 			. " WHERE og.cb_status='AP' $date_condition") ;
 
-	$authorized_total_value = price_format($authorized_total_value_arr['summa']- $ref_total_gross);
+	$authorized_total_value = price_format($authorized_total_value_arr['summa']);
 
     $authorized_total[] = array ('value' => $authorized_total_value, 'count' => $authorized_total_value_arr['order_count']);
 
