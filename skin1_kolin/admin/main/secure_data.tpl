@@ -50,7 +50,7 @@
             </td>
             <td>
                 <div class="ui teal buttons">
-                    <div id="update_button" class="ui button" style="border: 1px solid #808080;" onclick="javascript: submitForm($('form[name=processform]').get(0), 'update');" />{$lng.lbl_update|strip_tags:false|escape}</div>
+                    <div id="update_button" class="ui button" style="border: 1px solid #808080;" onclick="javascript: submitForm($('form[name=processform]').get(0), 'update');">{$lng.lbl_update|strip_tags:false|escape}</div>
                     <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;" class="ui combo top right dropdown icon button">
                         <i class="dropdown icon"></i>
                         <div class="menu">
