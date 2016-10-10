@@ -54,9 +54,10 @@ class classProduct extends classData
 
     public function getMPN()
     {
-        if (strpos($this->getField('productcode'), $this->getManfacturerClass()->getField('code')) == 0)
-            return preg_replace("/^(" . $this->getManfacturerClass()->getField('code') . "-)/i", "", $this->getField('productcode'));
-        return "";
+        $sMPN = '';
+        if (strpos($this->getSKU(), $this->getManfacturerClass()->getField('code')) == 0)
+            $sMPN = preg_replace("/^(" . $this->getManfacturerClass()->getField('code') . "-)/i", "", $this->getSKU());
+        return $sMPN;
     }
 
     public function getSKU()
