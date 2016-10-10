@@ -52,7 +52,7 @@ $start_dates[] = mktime(0,0,0,date("m",$curtime),date("d",$curtime),date("Y",$cu
 $start_week = $curtime - (date("w",$curtime))*24*3600; # Week starts since Sunday
 $start_dates[] = mktime(0,0,0,date("m",$start_week),date("d",$start_week),date("Y",$start_week))-$config["Appearance"]["timezone_offset"]; # Current week
 $start_dates[] = mktime(0,0,0,date("m",$curtime),1,date("Y",$curtime))-$config["Appearance"]["timezone_offset"]; # Current month
-
+$start_dates[] = 0;
 
 foreach($start_dates as $start_date) {
 
@@ -67,7 +67,7 @@ foreach($start_dates as $start_date) {
         . " WHERE (cb_status='F' OR cb_status='D') $date_condition");
     $orders['I'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE cb_status='I' $date_condition");
     $orders['Q'][] = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE cb_status='Q' $date_condition");*/
-    $aOrderStat = func_query_first("SELECT SUM(total) as summa, count(1) as order_count FROM $sql_tbl[orders] WHERE 1 $date_condition");
+    $aOrderStat = func_query_first("SELECT SUM(og.total_gross) as summa, COUNT(DISTINCT orderid) as order_count FROM $sql_tbl[orders] INNER JOIN $sql_tbl[order_groups] og USING (orderid) WHERE 1 $date_condition");
 
 	$gross_total[] = array ('value' => price_format($aOrderStat['summa']), 'count' => $aOrderStat['order_count']);
 
@@ -87,8 +87,9 @@ SELECT SUM($sql_tbl[transaction_logs].transaction_total) FROM $sql_tbl[transacti
     $authorized_total[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
         . " WHERE cb_status='AP' $date_condition") - $ref_total_gross);
 */
-    $authorized_total_value_arr = func_query_first("SELECT SUM(total) as summa, count(1) as order_count FROM $sql_tbl[orders]"
-        . " WHERE cb_status='AP' $date_condition") ;
+	$authorized_total_value_arr = func_query_first("SELECT SUM(og.total_gross) as summa, COUNT(DISTINCT orderid) as order_count FROM $sql_tbl[orders]
+						INNER JOIN $sql_tbl[order_groups] og USING (orderid) "
+			. " WHERE og.cb_status='AP' $date_condition") ;
 
 	$authorized_total_value = price_format($authorized_total_value_arr['summa']- $ref_total_gross);
 
@@ -129,8 +130,8 @@ where OG.cb_status IN ('H','V','3','R','P','AP')
     $total_paid[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
         . " WHERE (cb_status='P' OR dc_status='C') $date_condition") - $ref_total_gross);
 */
-    $total_paid_value_arr = func_query_first("SELECT SUM(total) as summa, count(1) as order_count FROM $sql_tbl[orders]"
-        . " WHERE (cb_status='P' OR dc_status='C') $date_condition");
+    $total_paid_value_arr = func_query_first("SELECT SUM(og.total_gross) as summa, COUNT(DISTINCT orderid) as order_count FROM $sql_tbl[orders] INNER JOIN $sql_tbl[order_groups] og USING (orderid)"
+        . " WHERE (og.cb_status='P' OR og.dc_status='C') $date_condition");
 
 	$total_paid_value = price_format($total_paid_value_arr['summa']);
 	$total_paid[] = array ('value' => $total_paid_value, 'count' => $total_paid_value_arr['order_count']);

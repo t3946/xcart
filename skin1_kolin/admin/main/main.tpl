@@ -135,11 +135,12 @@
 <table cellpadding="3" cellspacing="0" width="100%">
 
 <tr class="TableHead">
-<td>{$lng.lbl_status}</td>
-<td colspan="2" nowrap="nowrap" align="center">{$lng.lbl_since_last_log_in}</td>
-<td colspan="2" align="center">{$lng.lbl_today}</td>
-<td colspan="2" nowrap="nowrap" align="center">{$lng.lbl_this_week}</td>
-<td colspan="2" nowrap="nowrap" align="center">{$lng.lbl_this_month}</td>
+<td class="borderr-black">{$lng.lbl_status}</td>
+<td class="borderr-black" colspan="2" nowrap="nowrap" align="center">{$lng.lbl_since_last_log_in}</td>
+<td class="borderr-black" colspan="2" align="center">{$lng.lbl_today}</td>
+<td class="borderr-black" colspan="2" nowrap="nowrap" align="center">{$lng.lbl_this_week}</td>
+<td class="borderr-black" colspan="2" nowrap="nowrap" align="center">{$lng.lbl_this_month}</td>
+<td colspan="2" nowrap="nowrap" align="center">Up to date</td>
 </tr>
 
 
@@ -147,16 +148,16 @@
 <tr class="{cycle values='SectionBox,TableSubHead'}">
 <td class="borderr-black" align="right"><b>ALL ORDERS INCLUDING JUNK:</b></td>
 {foreach key=key item=item from=$gross_total name=period}
-<td class="borderb-gray"align="center">{include file="currency.tpl" value=$item.value}</td>
-<td class="borderr-black" align="center">{$item.count}</td>
+<td class="borderb-gray"align="center">{if !$smarty.foreach.period.last}{include file="currency.tpl" value=$item.value}{/if}</td>
+<td class="borderr-black" align="center">{if !$smarty.foreach.period.last}{$item.count}{/if}</td>
 {/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'} BoldRowText">
 <td class="borderr-black" align="right"><b>TOTAL AUTHORIZED AND PAID:</b></td>
 {foreach name=period key=key item=item from=$total_authorized_and_paid}
-<td class="borderb-gray" align="center">{include file="currency.tpl" value=$item.value}</td>
-<td class="borderr-black" align="center">{$item.count}</td>
+<td class="borderb-gray" align="center">{if !$smarty.foreach.period.last}{include file="currency.tpl" value=$item.value}{/if}</td>
+<td class="borderr-black" align="center">{if !$smarty.foreach.period.last}{$item.count}{/if}</td>
 {/foreach}
 </tr>
 
@@ -171,23 +172,23 @@
 <tr class="{cycle values='SectionBox,TableSubHead'}">
 <td class="borderr-black" align="right"><b>TOTAL PAID:</b></td>
 {foreach name=period key=key item=item from=$total_paid}
- <td class="borderb-gray" align="center">{include file="currency.tpl" value=$item.value}</td>
- <td class="borderr-black" align="center">{$item.count}</td>
+ <td class="borderb-gray" align="center">{if !$smarty.foreach.period.last}{include file="currency.tpl" value=$item.value}{/if}</td>
+ <td class="borderr-black" align="center">{if !$smarty.foreach.period.last}{$item.count}{/if}</td>
 {/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
 <td class="borderr-black" align="right"><b>TOTAL REFUNDED:</b></td>
 {foreach name=period key=key item=item from=$total_refunded}
-<td class="borderb-gray" align="center">{include file="currency.tpl" value=$item.value}</td>
-<td class="borderr-black" class="borderr-black" align="center">{$item.count}</td>
+<td class="borderb-gray" align="center">{if !$smarty.foreach.period.last}{include file="currency.tpl" value=$item.value}{/if}</td>
+<td class="borderr-black" class="borderr-black" align="center">{if !$smarty.foreach.period.last}{$item.count}{/if}</td>
 {/foreach}
 </tr>
 
 <tr class="{cycle values='SectionBox,TableSubHead'}">
 <td class="borderr-black" align="right"><b>Refund rate:</b></td>
 {section name=period loop=$refund_rate}
-<td class="borderb-gray" align="center">{$refund_rate[period]} %</td>
+<td class="borderb-gray" align="center">{if !$smarty.foreach.period.last}{$refund_rate[period]} %{/if}</td>
 <td class="borderr-black">&nbsp;</td>
 {/section}
 </tr>
