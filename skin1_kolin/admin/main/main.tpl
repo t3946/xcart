@@ -188,7 +188,7 @@
 <tr class="{cycle values='SectionBox,TableSubHead'}">
 <td class="borderr-black" align="right"><b>Refund rate:</b></td>
 {section name=period loop=$refund_rate}
-<td class="borderb-gray" align="center">{if !$smarty.foreach.period.last}{$refund_rate[period]} %{/if}</td>
+<td class="borderb-gray" align="center">{if !$smarty.section.period.last}{$refund_rate[period]} %{/if}</td>
 <td class="borderr-black">&nbsp;</td>
 {/section}
 </tr>

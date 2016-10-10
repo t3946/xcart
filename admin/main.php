@@ -83,10 +83,6 @@ SELECT SUM($sql_tbl[transaction_logs].transaction_total) FROM $sql_tbl[transacti
 	$ref_total_gross = 0;
     }
 
-/*
-    $authorized_total[] = price_format(func_query_first_cell("SELECT SUM(total) FROM $sql_tbl[orders]"
-        . " WHERE cb_status='AP' $date_condition") - $ref_total_gross);
-*/
 	$authorized_total_value_arr = func_query_first("SELECT SUM(og.total_gross) as summa, COUNT(DISTINCT orderid) as order_count FROM $sql_tbl[orders]
 						INNER JOIN $sql_tbl[order_groups] og USING (orderid) "
 			. " WHERE og.cb_status='AP' $date_condition") ;
@@ -131,7 +127,7 @@ where OG.cb_status IN ('H','V','3','R','P','AP')
         . " WHERE (cb_status='P' OR dc_status='C') $date_condition") - $ref_total_gross);
 */
     $total_paid_value_arr = func_query_first("SELECT SUM(og.total_gross) as summa, COUNT(DISTINCT orderid) as order_count FROM $sql_tbl[orders] INNER JOIN $sql_tbl[order_groups] og USING (orderid)"
-        . " WHERE (og.cb_status='P' OR og.dc_status='C') $date_condition");
+        . " WHERE og.cb_status='P' $date_condition");
 
 	$total_paid_value = price_format($total_paid_value_arr['summa']);
 	$total_paid[] = array ('value' => $total_paid_value, 'count' => $total_paid_value_arr['order_count']);
