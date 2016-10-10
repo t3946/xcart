@@ -45,6 +45,13 @@
 <input type="hidden" name="mid" value="{$k}" />
 <input type="submit" value="Shipping quote" />
 </form>
+<br/>
+    <form action="order.php" method="post" name="ground_map_incorrect_form">
+        <input type="hidden" name="mode" value="map_incorrect" />
+        <input type="hidden" name="orderid" value="{$order.orderid}" />
+        <input type="hidden" name="zipcode" value="{$v.m_zipcode}" />
+        <input type="submit" value='Map is incorrect.&#13;&#10;Reload please' />
+    </form>
 <br />
 {if $show_intershipper_rates ne ""}
 {foreach from=$show_intershipper_rates item=vr key=kr}
