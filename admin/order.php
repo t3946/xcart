@@ -44,6 +44,7 @@ $trusted_post_variables = array('update', 'mnf_body');
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 require_once $xcart_dir . "/include/class/classProduct.php";
+require_once $xcart_dir . "/include/class/classGroundMap.php";
 
 x_load('mail','order');
 
@@ -1499,7 +1500,11 @@ if ($REQUEST_METHOD == "POST") {
                 func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-");
         }
 
-    elseif ($mode == "invoice_received") {
+    elseif ($mode == 'map_incorrect' && !empty($zipcode)) {
+		classGroundMap::model(['zipcode'=>$zipcode])->_delete();
+		func_header_location("order.php?orderid=".$orderid);
+	}
+	elseif ($mode == "invoice_received") {
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 
