@@ -76,4 +76,22 @@ class classCategories extends classCloneData
         }
     }
 
+    public function updateProductsInChildCategories($iParentCategoryId, $sStatus)
+    {
+        $bResult = false;
+        if (!empty($iParentCategoryId)) {
+            $sSQL = "UPDATE
+             xcart_k.xcart_categories    c,
+                xcart_k.xcart_categories c2,
+                 xcart_k.xcart_products p
+                 INNER JOIN xcart_k.xcart_products_categories pc
+                    ON pc.productid = p.productid
+            SET  p.pc_classify_status = '$sStatus'
+            WHERE p.forsale = 'Y' AND c.categoryid = $iParentCategoryId
+            AND c2.categoryid_path LIKE CONCAT(c.categoryid_path, '%') AND pc.categoryid = c2.categoryid";
+            $bResult = db_query($sSQL);
+        }
+        return $bResult;
+    }
+
 }
