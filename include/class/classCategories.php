@@ -79,7 +79,7 @@ class classCategories extends classCloneData
     public function updateProductsInChildCategories($iParentCategoryId, $sStatus)
     {
         $bResult = false;
-        if (!empty($iParentCategoryId)) {
+        if (!empty($iParentCategoryId) && !empty($sStatus)) {
             $sSQL = "UPDATE
              ". self::$sql_tbl['categories']. " c,
                 ". self::$sql_tbl['categories']. " c2,
