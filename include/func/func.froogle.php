@@ -359,9 +359,9 @@ if ($sExtraLog=='Y')
 
 	global $xcart_dir;
 	include_once $xcart_dir."/include/class/classProducts.php";
-	$classProduct = new classProducts();
-	$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
-	$product['custom_label_3'] = $classProduct->getManfacturerClass($product['manufacturerid'])->getField("manufacturer");
+	$classProduct = classProduct::model(['productid'=>$product['productid']]);
+	$mpn = $classProduct->getMPN();
+	$product['custom_label_3'] = $classProduct->getManfacturerClass()->getField("manufacturer");
 
 	/*$pos = strpos($product['productcode'], '-');
 	$mpn = '';
