@@ -2,6 +2,7 @@
 require './auth.php';
 require '../include/security.php';
 require_once '../include/class/classProducts.php';
+require_once '../include/class/classCategories.php';
 require_once '../include/class/classOrder.php';
 require_once '../include/class/classPOPipeline.php';
 global $xcart_dir;
@@ -33,6 +34,9 @@ switch ($_POST['ajax_action']) {
         break;
     case "add_new_batch":
         addNewBatch($_POST);
+        break;
+    case "category_structure_change":
+        changeCategoryStructure($_POST);
         break;
 }
 
@@ -142,5 +146,22 @@ function changeProcessingRules($aParams = [])
     $aResult = [];
     $aRule = new classIssuesProcessingRules(['issue_id'=> $aParams['rule_id']]);
     $aRule->updateField('issue_processing', $aParams['status_id']);
+    print(json_encode($aResult));
+}
+
+function changeCategoryStructure($aParams = []) {
+    $aResult = [];
+    $sStatus = '';
+    $iCategoryId = (int) $aParams['category'];
+    switch ($aParams['action']){
+        case 'Relist':
+            $sStatus = 'AC';
+            break;
+        case 'Reclassify':
+            $sStatus = 'NC';
+            break;
+    }
+    $oProducts = new classCategories();
+    $aResult['result'] = $oProducts->updateProductsInChildCategories($iCategoryId, $sStatus);
     print(json_encode($aResult));
 }
