@@ -4152,10 +4152,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
                 //$tmp_sku = substr($v["productcode"], 4);
 				global $xcart_dir;
 				include_once $xcart_dir."/include/class/classProducts.php";
-				$classProduct = new classProducts();
-				$tmp_sku = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
-				unset($classProduct);
-
+				$tmp_sku = classProduct::model(['productid'=>$v['productid']])->getMPN();
                 $instock_items = $v["amount"] - $v["back"];
 
 		$current_product_instock = false;
