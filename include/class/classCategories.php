@@ -81,12 +81,12 @@ class classCategories extends classCloneData
         $bResult = false;
         if (!empty($iParentCategoryId)) {
             $sSQL = "UPDATE
-             xcart_k.xcart_categories    c,
-                xcart_k.xcart_categories c2,
-                 xcart_k.xcart_products p
-                 INNER JOIN xcart_k.xcart_products_categories pc
+             ". self::$sql_tbl['categories']. " c,
+                ". self::$sql_tbl['categories']. " c2,
+                 ". self::$sql_tbl['products']. " p
+                 INNER JOIN ". self::$sql_tbl['products_categories']. " pc
                     ON pc.productid = p.productid
-            SET  p.pc_classify_status = '$sStatus'
+            SET p.pc_classify_status = '$sStatus'
             WHERE p.forsale = 'Y' AND c.categoryid = $iParentCategoryId
             AND c2.categoryid_path LIKE CONCAT(c.categoryid_path, '%') AND pc.categoryid = c2.categoryid";
             $bResult = db_query($sSQL);
