@@ -125,6 +125,8 @@ window.attachEvent("onload", anchor_fix);
 //]]>
 </script>
 <script src="{$SkinDir}/js/infinite_scroll.js" type="text/javascript"></script>
+
+{include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 </head>
 <body{$reading_direction_tag}{if $body_onload ne ''} onload="javascript: {$body_onload}"{/if}>
 {if !empty($config.Appearance.Facebook_pixel_code)}

@@ -439,7 +439,6 @@ Subtotal:
 {*
 <!-- igor_async {include file="main/include_js.tpl" src="ajax_add_to_cart.js"} -->
 *}
-{include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 
 <script type="text/javascript">
 var lbl_added = "{$lng.lbl_added}";

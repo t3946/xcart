@@ -46,7 +46,7 @@
             _$window = $(window),
             _$body = $('body'),
             _$scroll = _isWindow ? _$window : $e,
-            _nextHref = $.trim(_$next.attr('href') + ' ' + _options.contentSelector),
+            _nextHref = $.trim(_$next.attr('data-href') + ' ' + _options.contentSelector),
 
         // Check if a loading image is defined and preload
             _preloadImage = function() {
@@ -87,7 +87,6 @@
 
         // Observe the scroll event for when to trigger the next load
             _observe = function() {
-                return _load();
                 if ($e.is(':visible')) {
                     _wrapInnerContent();
                     var $inner = $e.find('div.jscroll-inner').first(),
@@ -142,20 +141,26 @@
                 } else {
                     _$scroll.unbind('.jscroll');
                     $next.bind('click.jscroll', function() {
+                        $('.jscroll-added').last().show();
                         _nextWrap($next);
-                        _load();
+                        _preload();
                         return false;
                     });
                 }
             },
+            _preload = function() {
+                _load(true);
+            },
 
         // Load the next set of content, if available
-            _load = function() {
+            _load = function(hidden) {
                 var $inner = $e.find('div.jscroll-inner').first(),
                     data = $e.data('jscroll');
 
                 data.waiting = true;
-                $inner.append('<div class="jscroll-added" />')
+                var ablock = $('<div class="jscroll-added" />');
+                if (hidden == true) ablock.hide();
+                $inner.append(ablock)
                     .children('.jscroll-added').last()
                     .html('<div class="jscroll-loading" id="jscroll-loading">' + _options.loadingHtml + '</div>')
                     .promise()
@@ -166,27 +171,20 @@
                     });
 
                 return $e.animate({scrollTop: $inner.outerHeight()}, 0, function() {
-                    $.ajax({
-                        'url': data.nextHref,
-                        'type': 'POST',
-                        'data': $('#yourFormId').serialize(),
-                        'success': function(result){
-                            $inner.find('div.jscroll-added').last().html(result);
-                                if (status === 'error') {
-                                    return _destroy();
-                                }
-                                var $next = $(this).find(_options.nextSelector).first();
-                                data.waiting = false;
-                                data.nextHref = $next.attr('href') ? $.trim($next.attr('href') + ' ' + _options.contentSelector) : false;
-                                $('.jscroll-next-parent', $e).remove(); // Remove the previous next link now that we have a new one
-                                _checkNextHref();
-                                if (_options.callback) {
-                                    _options.callback.call(this);
-                                }
-                                _debug('dir', data);
+                    $inner.find('div.jscroll-added').last().load(data.nextHref, function(r, status) {
+                        if (status === 'error') {
+                            return _destroy();
                         }
+                        var $next = $(this).find(_options.nextSelector).first();
+                        data.waiting = false;
+                        data.nextHref = $next.attr('data-href') ? $.trim($next.attr('data-href') + ' ' + _options.contentSelector) : false;
+                        $('.jscroll-next-parent', $e).remove(); // Remove the previous next link now that we have a new one
+                        _checkNextHref();
+                        if (_options.callback) {
+                            _options.callback.call(this);
+                        }
+                        _debug('dir', data);
                     });
-
                 });
             },
 
@@ -214,6 +212,7 @@
         _wrapInnerContent();
         _preloadImage();
         _setBindings();
+        _preload();
 
         // Expose API methods via the jQuery.jscroll namespace, e.g. $('sel').jscroll.method()
         $.extend($e.jscroll, {
@@ -239,11 +238,9 @@
 })(jQuery);
 
 $( document ).ready(function() {
-    $('[id^=show_next_products_block]').jscroll({
-        autoTrigger: true,
+    $('.load_more_wrapper').jscroll({
+        autoTrigger: false,
         loadingHtml: '<span class="infinte_scroll_span cidev_new_button cidev_new_white"><div class="infinte_scroll_link">Loading...</div></span>',
-        nextSelector: 'div.infinte_scroll_link:last',
-        autoTriggerUntil:1
-    }
-    );
+        nextSelector: 'div.infinte_scroll_link:last'
+    });
 });
