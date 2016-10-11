@@ -76,8 +76,8 @@ ga('send', 'pageview');
 	{if $last_item lt $total_items}
 		<div id="show_next_products_block_{$ajax_navigation_page_next}">
 			<span class="infinte_scroll_span cidev_new_button cidev_new_white">
-				<a class="infinte_scroll_link" href="infinite_products.php?ajax_navigation_page_next={$ajax_navigation_page_next}&cat={$cat}&cidev_filter_mode=load_more_products"
-						id="lb_LoadMore_button_text_{$ajax_navigation_page_next}">{$lng.lb_LoadMore_button_text}</a>
+				<div class="infinte_scroll_link" href="infinite_products.php?ajax_navigation_page_next={$ajax_navigation_page_next}&cat={$cat}&cidev_filter_mode=load_more_products"
+						id="lb_LoadMore_button_text_{$ajax_navigation_page_next}">{$lng.lb_LoadMore_button_text}</div>
 			</span>
 
 		</div>

@@ -87,6 +87,7 @@
 
         // Observe the scroll event for when to trigger the next load
             _observe = function() {
+                return _load();
                 if ($e.is(':visible')) {
                     _wrapInnerContent();
                     var $inner = $e.find('div.jscroll-inner').first(),
@@ -165,20 +166,27 @@
                     });
 
                 return $e.animate({scrollTop: $inner.outerHeight()}, 0, function() {
-                    $inner.find('div.jscroll-added').last().load(data.nextHref, function(r, status) {
-                        if (status === 'error') {
-                            return _destroy();
+                    $.ajax({
+                        'url': data.nextHref,
+                        'type': 'POST',
+                        'data': $('#yourFormId').serialize(),
+                        'success': function(result){
+                            $inner.find('div.jscroll-added').last().html(result);
+                                if (status === 'error') {
+                                    return _destroy();
+                                }
+                                var $next = $(this).find(_options.nextSelector).first();
+                                data.waiting = false;
+                                data.nextHref = $next.attr('href') ? $.trim($next.attr('href') + ' ' + _options.contentSelector) : false;
+                                $('.jscroll-next-parent', $e).remove(); // Remove the previous next link now that we have a new one
+                                _checkNextHref();
+                                if (_options.callback) {
+                                    _options.callback.call(this);
+                                }
+                                _debug('dir', data);
                         }
-                        var $next = $(this).find(_options.nextSelector).first();
-                        data.waiting = false;
-                        data.nextHref = $next.attr('href') ? $.trim($next.attr('href') + ' ' + _options.contentSelector) : false;
-                        $('.jscroll-next-parent', $e).remove(); // Remove the previous next link now that we have a new one
-                        _checkNextHref();
-                        if (_options.callback) {
-                            _options.callback.call(this);
-                        }
-                        _debug('dir', data);
                     });
+
                 });
             },
 
@@ -231,5 +239,11 @@
 })(jQuery);
 
 $( document ).ready(function() {
-    $('[id^=show_next_products_block]').jscroll({autoTrigger: false, loadingHtml: '<span class="infinte_scroll_span cidev_new_button cidev_new_white">Loading...</span>'});
+    $('[id^=show_next_products_block]').jscroll({
+        autoTrigger: true,
+        loadingHtml: '<span class="infinte_scroll_span cidev_new_button cidev_new_white"><div class="infinte_scroll_link">Loading...</div></span>',
+        nextSelector: 'div.infinte_scroll_link:last',
+        autoTriggerUntil:1
+    }
+    );
 });
