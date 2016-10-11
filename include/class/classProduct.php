@@ -343,7 +343,7 @@ class classProduct extends classData
 
     public function isProductFBAAvail()
     {
-        return ($this->getAmazonFBAAvail() > 0 && $this->getField('amazon_fba') == 'Y' && $this->getField('amazon_enabled') == 'Y');
+        return ($this->getAmazonFBAAvail() > 0);
     }
 
     public function getUPC()
