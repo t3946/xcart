@@ -32,7 +32,7 @@ else {
 }
 
 
-if ($REQUEST_METHOD == 'POST')
+if ($REQUEST_METHOD == 'POST' || $REQUEST_METHOD == 'GET')
  {
 	 x_session_register("notify_email");
 	 $smarty->assign("notify_email", $notify_email);
