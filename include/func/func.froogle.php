@@ -1581,6 +1581,13 @@ if ($debug_mode != 'Y') {
 		$log_text = "An error occurred: (" . $e->getCode() . ") " . $e->getMessage();
 		func_backprocess_log("incremental feeds", $log_text);
 	}
+	catch (Exception $e) {
+		// Other error.
+		print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
+
+		$log_text = "An error occurred: (" . $e->getCode() . ") " . $e->getMessage();
+		func_backprocess_log("incremental feeds", $log_text);
+	}
 }
 
 

@@ -2061,6 +2061,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 										$log_tag = "<br />'" . $tag_name . "' attention tag added";
 										func_log_order($orderid, 'X', $log_tag, $login);
 									}
+
+									func_header_location("order.php?orderid=" . $orderid);
 ##
 #
 
@@ -2092,6 +2094,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 				} // if (!empty($order["shipping_groups"][$mnf_id]))
 
 			} // if ($current_cb_status == "AP")
+
+
 ###
 ##
 #
