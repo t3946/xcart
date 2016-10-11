@@ -440,9 +440,11 @@ if ($sExtraLog=='Y')
 
 # Check/Get Amazon shippings
 ##
-	$start_time_amazon_shipping = round(microtime(true) * 1000);
-	$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
-	$diff_end_time_amazon_shipping = (round(microtime(true) * 1000) - $start_time_amazon_shipping);
+	if ($classProduct->isProductFBAAvail()) {
+		$start_time_amazon_shipping = round(microtime(true) * 1000);
+		$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
+		$diff_end_time_amazon_shipping = (round(microtime(true) * 1000) - $start_time_amazon_shipping);
+	}
 
 ##
 #
