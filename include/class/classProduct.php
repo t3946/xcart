@@ -341,6 +341,11 @@ class classProduct extends classData
         return intval($this->getField('amazon_fba_avail'));
     }
 
+    public function isProductFBAAvail()
+    {
+        return ($this->getAmazonFBAAvail() > 0);
+    }
+
     public function getUPC()
     {
         return $this->getField('upc');
@@ -486,8 +491,8 @@ class classProduct extends classData
     private static function isISBN($sCode)
     {
         $bResult = false;
-        if (in_array(strlen($sCode) ,[10,13])) {
-            if (in_array(substr($sCode,0,3), [978,979])){
+        if (in_array(strlen($sCode), [10, 13])) {
+            if (in_array(substr($sCode, 0, 3), [978, 979])) {
                 $bResult = true;
             }
         }
@@ -502,7 +507,7 @@ class classProduct extends classData
             case 14:
                 $cd = self::UPC_calculate_check_digit($upc_code);
                 if ($cd != $upc_code[strlen($upc_code) - 1]) {
-                    return substr($upc_code,0,-1).$cd;
+                    return substr($upc_code, 0, -1) . $cd;
                 } else {
                     return $upc_code;
                 }
@@ -512,7 +517,7 @@ class classProduct extends classData
             case 13:
                 $cd = self::UPC_calculate_check_digit($upc_code);
                 if ($cd != $upc_code[strlen($upc_code) - 1]) {
-                    if (!self::isISBN($upc_code) || (self::isISBN($upc_code) && strlen($upc_code)==12)) {
+                    if (!self::isISBN($upc_code) || (self::isISBN($upc_code) && strlen($upc_code) == 12)) {
                         $cd = self::UPC_calculate_check_digit($upc_code . "1");
                         return $upc_code . $cd;
                     } else {
