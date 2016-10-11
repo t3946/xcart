@@ -396,7 +396,7 @@ if ($sExtraLog=='Y')
 			if ($up_pos && is_numeric($up_pos) && $up_pos + 1 != strlen($up['productcode'])) {
 				$up_mpn = substr($up['productcode'], $up_pos + 1);
 			}*/
-			$up_mpn = $classProduct->getProductMPN($up['productcode'], "", $up['productid']);
+			$up_mpn = $classProduct->getMPN();
 			if ($compatible_with != '') {
 				$compatible_with .= ', ';
 			}
