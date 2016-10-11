@@ -534,6 +534,11 @@ while (!empty($NextToken)){
 					
 				}
 
+				global $xcart_dir;
+				include_once $xcart_dir."/include/class/classOrder.php";
+				$oOrder = new classOrder($new_orderid);
+				$oOrder->updateVerificationStatus();
+
 				$extra["product_total"]["net"] = $extra["product_total"]["gross"] = $product_total;
 				db_query("UPDATE $sql_tbl[orders] SET extra='".serialize($extra)."', subtotal='$product_total' WHERE orderid='$new_orderid'");
 
@@ -720,8 +725,7 @@ while (!empty($NextToken)){
 						'storefrontid' => '0',
 						'fraud_status' => 'C',
 						'overall_fraud_score' => '50',
-						'tracking_all_filled' => 'N',
-						'vn_status' => ($order_info['FulfillmentChannel']=='AFN' ? 'PV' : 'NS')
+						'tracking_all_filled' => 'N'
 				);
 
 				func_array2update("orders", $insert_data, "orderid = '$new_orderid'");
