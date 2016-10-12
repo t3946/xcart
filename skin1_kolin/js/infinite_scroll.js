@@ -46,7 +46,7 @@
             _$window = $(window),
             _$body = $('body'),
             _$scroll = _isWindow ? _$window : $e,
-            _nextHref = $.trim(_$next.attr('data-href') + ' ' + _options.contentSelector),
+            _nextHref = $.trim(_$next.attr('data-infinite') + ' ' + _options.contentSelector),
 
         // Check if a loading image is defined and preload
             _preloadImage = function() {
@@ -141,9 +141,17 @@
                 } else {
                     _$scroll.unbind('.jscroll');
                     $next.bind('click.jscroll', function() {
-                        $('.jscroll-added').last().show();
-                        _nextWrap($next);
-                        _preload();
+                        if ($e.data('jscroll').waiting ===false) {
+                            $('.jscroll-added').last().show();
+                            _nextWrap($next);
+                            _preload();
+                        } else {
+                            $(this).html('<div class="jscroll-loading" id="jscroll-loading">' + _options.loadingHtml + '</div>');
+                            $e.data('jscroll').clicked = true;
+                        }
+                        if (_options.callback) {
+                            _options.callback.call(this);
+                        }
                         return false;
                     });
                 }
@@ -162,7 +170,7 @@
                 if (hidden == true) ablock.hide();
                 $inner.append(ablock)
                     .children('.jscroll-added').last()
-                    .html('<div class="jscroll-loading" id="jscroll-loading">' + _options.loadingHtml + '</div>')
+                    //.html('<div class="jscroll-loading" id="jscroll-loading">' + _options.loadingHtml + '</div>')
                     .promise()
                     .done(function(){
                         if (_options.loadingFunction) {
@@ -175,13 +183,15 @@
                         if (status === 'error') {
                             return _destroy();
                         }
-                        var $next = $(this).find(_options.nextSelector).first();
                         data.waiting = false;
-                        data.nextHref = $next.attr('data-href') ? $.trim($next.attr('data-href') + ' ' + _options.contentSelector) : false;
+                        var $next = $(this).find(_options.nextSelector).first();
+                        data.nextHref = $next.attr('data-infinite') ? $.trim($next.attr('data-infinite') + ' ' + _options.contentSelector) : false;
                         $('.jscroll-next-parent', $e).remove(); // Remove the previous next link now that we have a new one
                         _checkNextHref();
-                        if (_options.callback) {
-                            _options.callback.call(this);
+                        if ($e.data('jscroll').clicked === true) {
+                            $e.data('jscroll').clicked = false;
+                            $('.jscroll-added').last().fadeIn().prev().find('.load_more_wrapper').empty();
+                            _preload();
                         }
                         _debug('dir', data);
                     });
@@ -237,10 +247,23 @@
 
 })(jQuery);
 
+function replaceUrlParam(url, paramName, paramValue){
+    if(paramValue == null)
+        paramValue = '';
+    var pattern = new RegExp('\\b('+paramName+'=).*?(&|$)');
+    if(url.search(pattern)>=0){
+        return url.replace(pattern,'$1' + paramValue + '$2');
+    }
+    return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue
+}
+
 $( document ).ready(function() {
     $('.load_more_wrapper').jscroll({
         autoTrigger: false,
-        loadingHtml: '<span class="infinte_scroll_span cidev_new_button cidev_new_white"><div class="infinte_scroll_link">Loading...</div></span>',
-        nextSelector: 'div.infinte_scroll_link:last'
+        loadingHtml: '<div class="infinte_scroll_link">Loading...</div>',
+        nextSelector: 'div.infinte_scroll_link:last',
+        callback: function () {
+            history.replaceState(null, null, replaceUrlParam(location.href,'p',$(this).data('page')));
+        }
     });
 });

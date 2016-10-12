@@ -3,7 +3,12 @@
         $page = isset($page) ? abs(intval($page)) : 1;
         if (empty($page)) $page = 1;
 
-        $e_search_data["products_per_page"] = intval($config["Appearance"]["products_per_page"]);
+		if (isset($_GET['p']) && is_numeric($_GET['p'])) {
+			$page = 1;
+			$e_search_data["products_per_page"] = intval($_GET['p']) * intval($config["Appearance"]["products_per_page"]);
+			$smarty->assign('ajax_navigation_page', intval($_GET['p']));
+		} else
+	        $e_search_data["products_per_page"] = intval($config["Appearance"]["products_per_page"]);
 
 /*
         if (!empty($current_storefront)){
@@ -211,19 +216,15 @@
 	        include $xcart_dir."/include/navigation.php";
         	#
 
-#
-##
-		$first_item = $e_search_data["products_per_page"]*($e_search_data["page"]-1)+1;
-		$last_item = $e_search_data["products_per_page"]*$e_search_data["page"];
-		if ($last_item > $e_search_data["total"]){
-			$last_item = $e_search_data["total"];
-		}
+			$first_item = $e_search_data["products_per_page"] * ($e_search_data["page"] - 1) + 1;
+			$last_item = $e_search_data["products_per_page"] * $e_search_data["page"];
+			if ($last_item > $e_search_data["total"]) {
+				$last_item = $e_search_data["total"];
+			}
 
-                $smarty->assign('first_item', $first_item);
-                $smarty->assign('last_item', $last_item);
-                $smarty->assign('total_items', $e_search_data["total"]);
-##
-#
+		$smarty->assign('first_item', $first_item);
+		$smarty->assign('last_item', $last_item);
+		$smarty->assign('total_items', $e_search_data["total"]);
 
 
 #
@@ -247,6 +248,8 @@
 		}
 ##
 #
+		$smarty->assign('cidev_filter_mode','load_more_e_products');
+		$smarty->assign('e_search_data_substring',$e_search_data_substring);
 
 
 	}
