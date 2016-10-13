@@ -535,7 +535,7 @@ while (!empty($NextToken)){
 				}
 
 				global $xcart_dir;
-				include_once $xcart_dir."/include/class/classOrder.php";
+				include_once $xcart_dir."/include/class/classOrders.php";
 				$oOrder = new classOrder($new_orderid);
 				$oOrder->updateVerificationStatus();
 
