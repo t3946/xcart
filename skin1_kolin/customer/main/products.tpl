@@ -61,8 +61,9 @@
 {/if}
 
 {assign var="discount" value=0}
-<table width="100%">
-<tr>
+<table width="100%" class="product_list_row">
+<tr class="google_impression_object" data-productid="{$products[product].productid}" data-name="{$products[product].product|escape}"
+	data-category="{$products[product].category|escape}" data-brand="{$products[product].brand|escape}" data-list="{$ga_page_name}" data-price="{$products[product].price}" data-position="{$N_key}">
 <td class="PListImgBox">
 <div class="PListImgBox">
 <a {include file="on_product_click.tpl"} href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}http://{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}"  {if $search_all_website eq 'Y'}target="_blank"{/if}>{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url}</a>
