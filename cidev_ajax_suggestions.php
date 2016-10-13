@@ -74,6 +74,7 @@ if ($REQUEST_METHOD == 'POST') {
                           from xcart_cidev_surf_path SP
                           inner join xcart_products P ON P.productid = SP.resource_id and P.forsale = 'Y'
                         where SP.meta_id = '$meta_id' and SP.resource_type = 'P' and SP.resource_id NOT IN ('$productids')
+                        and SP.meta_id > 0
                         Group By SP.resource_id
                         Order By SP.`position` desc";
 		}
