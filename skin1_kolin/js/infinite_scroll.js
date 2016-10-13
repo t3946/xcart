@@ -264,6 +264,7 @@ $( document ).ready(function() {
         nextSelector: 'div.infinte_scroll_link:last',
         callback: function () {
             history.replaceState(null, null, replaceUrlParam(location.href,'p',$(this).data('page')));
+            checkCarouselsVisibility();
         }
     });
 });
