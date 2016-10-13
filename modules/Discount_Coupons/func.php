@@ -37,8 +37,10 @@
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../../"); die("Access denied"); }
 
 if (!empty($active_modules['Multiple_Storefronts'])) {
-	x_session_register('current_storefront');
-	$sf_condition = "AND storefrontid=$current_storefront";
+	if (in_array(AREA_TYPE, array('A', 'P'))) {
+		x_session_register('current_storefront');
+		$sf_condition = "AND storefrontid=$current_storefront";
+	}
 } else {
 	$sf_condition = '';
 }
