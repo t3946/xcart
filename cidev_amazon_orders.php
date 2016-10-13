@@ -533,6 +533,11 @@ while (!empty($NextToken)){
 					
 				}
 
+				global $xcart_dir;
+				include_once $xcart_dir."/include/class/classOrders.php";
+				$oOrder = new classOrder($new_orderid);
+				$oOrder->updateVerificationStatus();
+
 				$extra["product_total"]["net"] = $extra["product_total"]["gross"] = $product_total;
 				db_query("UPDATE $sql_tbl[orders] SET extra='".serialize($extra)."', subtotal='$product_total' WHERE orderid='$new_orderid'");
 
