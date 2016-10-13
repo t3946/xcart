@@ -112,6 +112,8 @@ for (var i = 0; i < links.length; i++) {
 }
 }
 
+
+
 if (window.addEventListener)
 window.addEventListener("load", anchor_fix, false);
 
@@ -122,6 +124,9 @@ window.attachEvent("onload", anchor_fix);
 
 //]]>
 </script>
+<script src="{$SkinDir}/js/infinite_scroll.js" type="text/javascript"></script>
+
+{include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 </head>
 <body{$reading_direction_tag}{if $body_onload ne ''} onload="javascript: {$body_onload}"{/if}>
 {if !empty($config.Appearance.Facebook_pixel_code)}
@@ -350,129 +355,7 @@ function func_load_ajax_carousel_products(section_name) {
 
 {if $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 
-<script type="text/javascript">
-//<![CDATA[
-{literal}
-        function func_load_more_products(ajax_navigation_page_next){
 
-                        cidev_xmlHttp=cidev_createHttpRequestObject();
-                        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
-
-				var current_storefront = '{/literal}{$current_storefront}{literal}';
-				var e_products_found = '{/literal}{if $e_products_found eq "Y"}Y{/if}{literal}';
-				var cidev_filter_mode = 'load_more_products';
-				var additional_params = '';
-				var ga_page_name = '{/literal}{if $ga_page_name ne ""}{$ga_page_name}{/if}{literal}';
-	
-				if (e_products_found == "Y"){
-					cidev_filter_mode = 'load_more_e_products';
-
-					if (current_storefront == "41"){
-						additional_params = '&products_template=products_new_style'
-					}
-
-					additional_params = additional_params + '&e_search_data_substring=' + $("#twotabsearchtextbox").val();
-				}
-				
-				var cat = {/literal}{if $cat ne ""}{$cat}{else}{literal}''{/literal}{/if}{literal};
-
-                                var cidev_parameters = 'cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+'&ga_page_name='+ga_page_name+additional_params;
-
-//-Start-//
-                                var LN_total_items = $('#LN_total_items').attr('data-value');
-                                var load_next_productids = $('#load_next_productids').attr('data-value');
-				load_next_productids = load_next_productids.trim();
-
-				if (load_next_productids != ""){
-					cidev_parameters = cidev_parameters + '&load_next_productids='+load_next_productids+'&total_items='+LN_total_items;
-				}
-//-End-//
-
-                                cidev_xmlHttp.onreadystatechange=function(){
-                                        if(cidev_xmlHttp.readyState==4){
-                                                if(cidev_xmlHttp.status==200){
-                                                        cidev_id$("show_next_products_block_"+ajax_navigation_page_next).innerHTML=cidev_xmlHttp.responseText;
-                                                    var t = document.getElementById('show_next_products_block_'+ajax_navigation_page_next);
-                                                    scripts = t.getElementsByTagName('script');
-                                                    $.globalEval($(scripts[0]).text());
-
-//-Start-//
-							$('#load_next_productids').attr('data-value','');
-							ajax_navigation_page_next++;
-							var cidev_parameters_load_next = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+additional_params;
-							func_load_more_next_productids(cidev_parameters_load_next, 'N');
-//-End-//
-                                                }else{
-                                                        cidev_Error('no_server', 'Y');
-                                                }
-                                        }
-                                };
-
-                                cidev_xmlHttp.open('POST','infinite_products.php',true);
-                                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
-                                cidev_xmlHttp.setRequestHeader('Connection','close');
-                                cidev_xmlHttp.send(cidev_parameters);
-                        }
-                        else {
-                                setTimeout('func_load_more_products()', 1000);
-                        }
-        }
-
-//-Start-//
-        function func_load_more_next_productids(cidev_parameters, first_on_load){
-
-			if (first_on_load == "Y"){
-                                var current_storefront = '{/literal}{$current_storefront}{literal}';
-                                var e_products_found = '{/literal}{if $e_products_found eq "Y"}Y{/if}{literal}';
-                                var cidev_filter_mode = 'load_more_products';
-                                var additional_params = '';
-        
-                                if (e_products_found == "Y"){
-                                        cidev_filter_mode = 'load_more_e_products';
-
-                                        if (current_storefront == "41"){
-                                                additional_params = '&products_template=products_new_style'
-                                        }
-
-                                        additional_params = additional_params + '&e_search_data_substring=' + $("#twotabsearchtextbox").val();
-                                }
-                                
-                                var cat = {/literal}{if $cat ne ""}{$cat}{else}{literal}''{/literal}{/if}{literal};
-
-                                cidev_parameters = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next=2&cat='+cat+additional_params;
-			}
-
-                        cidev_xmlHttp=cidev_createHttpRequestObject();
-                        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
-
-                                cidev_xmlHttp.onreadystatechange=function(){
-                                        if(cidev_xmlHttp.readyState==4){
-                                                if(cidev_xmlHttp.status==200){
-                                                        $('#load_next_productids').attr('data-value',cidev_xmlHttp.responseText);
-                                                }else{
-							if (first_on_load!= "Y"){
-	                                                        cidev_Error('no_server', 'Y');
-							}
-                                                }
-                                        }
-                                };
-
-                                cidev_xmlHttp.open('POST','infinite_products.php',true);
-                                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
-                                cidev_xmlHttp.setRequestHeader('Connection','close');
-                                cidev_xmlHttp.send(cidev_parameters);
-                        }
-                        else {
-                                setTimeout('func_load_more_next_productids()', 1000);
-                        }
-        }
-//-End-//
-
-{/literal}
-//]]>
-</script>
 
 <div style="display: none;" id="load_next_productids" data-value="{include file="customer/main/infinite_products_load_next_productids.tpl"}"></div>
 <div style="display: none;" id="LN_total_items" data-value="{$total_items}"></div>
@@ -498,7 +381,7 @@ function func_load_ajax_carousel_products(section_name) {
 {if ($main eq "catalog" && $current_category.category ne "") || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 <script type="text/javascript">
 //<![CDATA[
-func_load_more_next_productids('','Y');
+//func_load_more_next_productids('','Y');
 //]]>
 </script>
 {/if}
@@ -595,60 +478,9 @@ func_load_more_next_productids('','Y');
 </tr>
 </table>
 
-{*include file="customer/home_main.tpl"*}
-
-
 <!-- /central space -->
 </td>
-{*
-<td class="VertMenuRightColumn">
-<br>
-{if $active_modules.SnS_connector && $config.SnS_connector.sns_display_button eq 'Y' && $sns_collector_path_url ne ''}
-{include file="modules/SnS_connector/button.tpl"}
-<br />
-{/if}
-{if $active_modules.Feature_Comparison ne "" && $comparison_products ne ''}
-{include file="modules/Feature_Comparison/product_list.tpl" }
-<br />
-{/if}
-{include file="customer/menu_cart.tpl" }
-{if $login eq "" }
-{include file="auth.tpl" }
-{else}
-{include file="authbox.tpl" }
-{/if}
-{if $active_modules.XAffiliate ne ""}
-<br />
-{include file="partner/menu_affiliate.tpl" }
-{/if}
-{if $active_modules.Interneka ne ""}
-<br />
-{include file="modules/Interneka/menu_interneka.tpl" }
-{/if}
-<!--br /-->
-{include file="poweredby.tpl" }
-<br />
-{include file="help.tpl"}
-<br />
-{include file="customer/special.tpl"}
-<br />
-<br />
-<div style="padding-left: 8px"><a href="{$xcart_web_dir}/home.php?cat=248"><img src="{$ImagesDir}/Art-Brushes-Ad.jpg" alt="" /></a></div>
-<br />
-{if $active_modules.Mailchimp_Subscription}
-{include file="modules/Mailchimp_Subscription/news.tpl" }
-{else}
-{include file="news.tpl" }
-{/if}
-<br>
-<img src="{$ImagesDir}/spacer.gif" width="150" height="1" alt="" />
-</td>
-*}
-{*
-<td>
-<img src="{$ImagesDir}/spacer.gif" width="9" height="1" alt="" />
-</td>
-*}
+
 </tr>
 </table>
 

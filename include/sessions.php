@@ -209,13 +209,6 @@ function x_session_start($sessid = '') {
 	$curtime = time();
 	$expiry_time = $curtime + $config["Sessions"]["session_length"];
 
-	if (defined("AREA_TYPE")) {
-		if (constant("AREA_TYPE") == 'A' || constant("AREA_TYPE") == 'P') {
-
-			db_query("DELETE FROM $sql_tbl[sessions_data] WHERE expiry<'".time()."'");
-			}
-		}
-
 	# Erase old service array (Group editing of products functionality)
 	if (defined("AREA_TYPE")) {
 		if (constant("AREA_TYPE") == 'A' || constant("AREA_TYPE") == 'P') {

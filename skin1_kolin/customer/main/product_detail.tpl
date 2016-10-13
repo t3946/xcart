@@ -488,7 +488,6 @@
                                     {if $config.General.unlimited_products eq "Y" or ($product.avail gt 0 and $product.avail ge $product.min_amount)}
                                         {if $js_enabled}
 
-                                            {include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
                                             <script type="text/javascript">
                                                 var lbl_added = "{$lng.lbl_added}";
                                                 var lbl_error = "{$lng.lbl_error}";
