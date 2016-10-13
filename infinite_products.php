@@ -3,7 +3,7 @@
 //print_r($_POST);
 //print_r($_GET);
 
-if ($_POST["cidev_filter_mode"] == "load_more_products_SKU") {
+if (!empty($_POST["cidev_filter_mode"]) && $_POST["cidev_filter_mode"] == "load_more_products_SKU") {
 
     /*
         $sku = $_POST["sku"];
