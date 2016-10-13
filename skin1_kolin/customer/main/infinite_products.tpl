@@ -72,11 +72,13 @@ ga('send', 'pageview');
 	{/if}
 
 	{math equation="page+1" page=$ajax_navigation_page assign="ajax_navigation_page_next"}
-
 	{if $last_item lt $total_items}
-		<div id="show_next_products_block_{$ajax_navigation_page_next}">
-
-			<span style="width: 100%; height: 47px; font: 24px/100% Arial,Helvetica,sans-serif; padding: 0px; margin-top: 10px;" class="cidev_new_button cidev_new_white" onclick="javascript: $('#lb_LoadMore_button_text_{$ajax_navigation_page_next}').html('Loading...'); func_load_more_products({$ajax_navigation_page_next});"><div style="padding-top: 10px; font: 24px/100% Arial,Helvetica,sans-serif; padding: 0px; margin-top: 10px; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3); color: #606060;" id="lb_LoadMore_button_text_{$ajax_navigation_page_next}">{$lng.lb_LoadMore_button_text}</div></span>
+		<div class="load_more_wrapper">
+			<span class="infinte_scroll_span cidev_new_button cidev_new_white">
+				<div data-page="{$ajax_navigation_page_next}" class="infinte_scroll_link" data-infinite="infinite_products.php?ajax_navigation_page_next={$ajax_navigation_page_next}&cat={$cat}&e_search_data_substring={$e_search_data_substring|escape:"url"}&cidev_filter_mode={$cidev_filter_mode}" id="lb_LoadMore_button_text_{$ajax_navigation_page_next}">
+					{$lng.lb_LoadMore_button_text}
+				</div>
+			</span>
 
 		</div>
 	{/if}
