@@ -45,7 +45,6 @@ function sendGoogleAnalitics()
     }
 
     if (counter > 0) {
-        console.log(ga);
         ga('send', 'pageview');
     }
 
