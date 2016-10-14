@@ -294,8 +294,9 @@ class classOrder extends classData
                     $iMinStatus = min($iMinStatus, $iVerifyStatus);
                 }
             }
-
-            if ($iMinStatus == $iMaxStatus) {
+            if ($this->getAmazonChanell() == 'AFN') {
+                $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED);
+            } elseif ($iMinStatus == $iMaxStatus) {
                 switch ($iMaxStatus) {
                     case (classProduct::PRODUCT_STATUS_NOT_VERIFY) :
                         $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_NOT_YET_STARTED);

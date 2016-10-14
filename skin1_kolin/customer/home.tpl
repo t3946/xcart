@@ -729,7 +729,6 @@ function openPopUp()
                             timer_id = setTimeout(function () {
                                 interval_id = setInterval(fireTitleChange, 3000);
                                 var el = $("#products_also_bought_with_this_product, #related_products, #similar_products, #recently_viewed_products").filter(':visible:first');
-                                console.log(el);
                                 var elOffset = el.offset().top;
                                 var elHeight = el.height();
                                 var windowHeight = $(window).height();
@@ -763,7 +762,7 @@ function openPopUp()
             }
 
             $(this).data("prevType", e.type);
-        })
+        });
         {/literal}
 
     </script>
