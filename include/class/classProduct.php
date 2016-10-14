@@ -7,7 +7,6 @@ require_once $xcart_dir . "/include/class/classOrders.php";
 require_once $xcart_dir . "/include/class/classProductVerifiactionStatus.php";
 require_once $xcart_dir . "/include/class/classProductImage.php";
 require_once $xcart_dir . "/include/class/classPricing.php";
-require_once $xcart_dir . "/include/class/classHTMLShot.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
 
 class classProduct extends classData
@@ -101,6 +100,24 @@ class classProduct extends classData
             $oResult->fillPrimaryTableValues($aHTMLShot);
         }
         return $oResult;
+    }
+
+    public function createHTMLShot($iOrderID)
+    {
+        $aManufacturerProductVerifySettings = $this->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
+        if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
+            $this->changeVerificationStatus(self::PRODUCT_STATUS_VERIFY,'', true, [$iOrderID]);
+        } elseif (intval($aManufacturerProductVerifySettings['days_before_verify']) > 0 && $this->getProductLastVerifyDate()) {
+            $currentDate = new DateTime("now");
+            $iDaysInterval = $currentDate->diff($this->getProductLastVerifyDate())->days;
+            if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
+                $this->changeVerificationStatus(self::PRODUCT_STATUS_VERIFY,'', true, [$iOrderID]);
+            }
+        } else {
+            $this->changeVerificationStatus(self::PRODUCT_STATUS_NOT_VERIFY,'', true, [$iOrderID]);
+            $oHTMLShot = new classHTMLShot();
+            $oHTMLShot->createHTMLShot($this, $iOrderID);
+        }
     }
 
     public function getProductURLOnDistributorWebSite()
