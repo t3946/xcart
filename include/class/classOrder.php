@@ -237,10 +237,10 @@ class classOrder extends classCloneData
         $aOldStatus = self::getOrderStatusByCode($this->getField('vn_status'));
         if ($aNewStatus['code'] != $aOldStatus['code']) {
             $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->primaryKeyValue);
-            $log = "vn_status: ". $aOldStatus['name'] . " -> ". $aNewStatus['name'];
+            $log = "vn_status: " . $aOldStatus['name'] . " -> " . $aNewStatus['name'];
             func_log_order($this->primaryKeyValue, 'X', $log);
         }
-        $this->setField('vn_status',$sNewStatus);
+        $this->setField('vn_status', $sNewStatus);
         return $bResult;
     }
 
@@ -257,8 +257,9 @@ class classOrder extends classCloneData
                     $iMinStatus = min($iMinStatus, $iVerifyStatus);
                 }
             }
-
-            if ($iMinStatus == $iMaxStatus) {
+            if ($this->getAmazonChanell() == 'AFN') {
+                $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED);
+            } elseif ($iMinStatus == $iMaxStatus) {
                 switch ($iMaxStatus) {
                     case (classProduct::PRODUCT_STATUS_NOT_VERIFY) :
                         $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_NOT_YET_STARTED);
@@ -306,6 +307,7 @@ class classOrder extends classCloneData
     {
         return $this->getField('customer_notes');
     }
+
     public function getShippingFirstName()
     {
         return $this->getField('s_firstname');
@@ -453,7 +455,7 @@ class classOrder extends classCloneData
         try {
             $aOrderTransactions->captureOrderAmount($this);
         } catch (Exception $ex) {
-            func_log_order($this->getOrderId(),'X',$ex->getMessage(),$login);
+            func_log_order($this->getOrderId(), 'X', $ex->getMessage(), $login);
             return false;
         }
         return $this;
@@ -467,7 +469,7 @@ class classOrder extends classCloneData
     public function isAttentionTagSet($iStatusId)
     {
         $oSQL = new classSQLBuilder();
-        $aQResult = $oSQL->init()->addSelect('status_id')->addFromTable('orders_additional_tags')->addCondition('orderid='.$this->getOrderId())->addCondition('status_id='.$iStatusId)->Execute()->getQueryResult();
+        $aQResult = $oSQL->init()->addSelect('status_id')->addFromTable('orders_additional_tags')->addCondition('orderid=' . $this->getOrderId())->addCondition('status_id=' . $iStatusId)->Execute()->getQueryResult();
         return !empty($aQResult);
     }
 
@@ -479,7 +481,7 @@ class classOrder extends classCloneData
             $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
         }
         if (!empty($this->aAdditionalFees)) {
-            foreach($this->aAdditionalFees as $aAFee) {
+            foreach ($this->aAdditionalFees as $aAFee) {
                 $fResult += floatval($aAFee['additional_fee_value']);
             }
         }
@@ -519,7 +521,7 @@ class classOrder extends classCloneData
                 $fResult += $oOrderGroup->getShippingHST();
             }
         }
-        return floatval($fResult+$this->getOrderShippingPST());
+        return floatval($fResult + $this->getOrderShippingPST());
     }
 
     public function getOrderShippingPST()
@@ -555,7 +557,7 @@ class classOrder extends classCloneData
                 $fResult += $oOrderGroup->getTotalHST();
             }
         }
-        return floatval($fResult+$this->getOrderTotalPST());
+        return floatval($fResult + $this->getOrderTotalPST());
     }
 
     public function getOrderTotalPST()
@@ -621,12 +623,12 @@ class classOrder extends classCloneData
 
     public function getProductPriceGross()
     {
-        return floatval($this->getProductPriceNet()+$this->getProductPriceHSTPST());
+        return floatval($this->getProductPriceNet() + $this->getProductPriceHSTPST());
     }
 
     public function getOrderGrandTotalNet()
     {
-        return floatval($this->getOrderTotalNet()+$this->getOrderRetailTrustPrice());
+        return floatval($this->getOrderTotalNet() + $this->getOrderRetailTrustPrice());
     }
 
     public function getPaymentMethodId()
