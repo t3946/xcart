@@ -94,8 +94,9 @@
 {if ($main eq "product")}
 {* igor_async *}
 <script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
-<script type="text/javascript" src="{$SkinDir}/js/jquery.visible.min.js"></script>
 {/if}
+<script type="text/javascript" src="{$SkinDir}/js/jquery.visible.min.js"></script>
+<script src="{$SkinDir}/js/google_analytics_impressions.js" type="text/javascript"></script>
 <script type="text/javascript">
 //<![CDATA[
 {if $config.SEO.clean_urls_enabled eq "Y"}
@@ -125,7 +126,6 @@ window.attachEvent("onload", anchor_fix);
 //]]>
 </script>
 <script src="{$SkinDir}/js/infinite_scroll.js" type="text/javascript"></script>
-
 {include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 </head>
 <body{$reading_direction_tag}{if $body_onload ne ''} onload="javascript: {$body_onload}"{/if}>
@@ -146,56 +146,6 @@ window.attachEvent("onload", anchor_fix);
 //<![CDATA[
 {literal}
 
-    sendItems = [];
-    sendItemsValues = [];
-    sentItems = [];
-    function checkCarouselsVisibility() {
-        $('#similar_products .jcarousel, #related_products .jcarousel, #products_also_bought_with_this_product .jcarousel, #recently_viewed_products .jcarousel').each(function () {
-            $('li::visible', $(this)).each (function () {
-                var t = $(this).visible(false, false),
-                        wraper_width = $(this).parent().parent().width(),
-                        ul_left = Math.abs($(this).parent().position().left),
-                        el_left = $(this).position().left;
-                if (t && ((el_left >= ul_left) && ((ul_left + wraper_width) > el_left))) {
-                    var productid = $(this).data('productid');
-                    if (sendItems.indexOf(productid) === -1 && sentItems.indexOf(productid) === -1) {
-                        sendItems.push(productid);
-                        sendItemsValues.push({
-                            productid: productid,
-                            name: $(this).data('name'),
-                            category: $(this).data('category'),
-                            brand: $(this).data('brand'),
-                            list: $(this).data('list'),
-                            price: $(this).data('price'),
-                            position: $(this).data('position')
-                        });
-                    }
-                }
-            });
-        });
-        var counter = 0;
-        while (sendItems.length > 0) {
-            counter++;
-            var productid = sendItems.pop();
-            var valtosend = sendItemsValues.pop();
-            ga('ec:addImpression', {
-                'id': valtosend.productid,
-                'name': valtosend.product,
-                'category': valtosend.category,
-                'brand': valtosend.brand,
-                'list': valtosend.ga_page_name,
-                'price': valtosend.price,
-                'position': valtosend.N_key
-            });
-
-            sentItems.push(productid);
-        }
-
-        if (counter > 0) {
-            ga('send', 'pageview');
-        }
-
-    }
 	function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter){
 
         var load_ajax_sections_arr = load_ajax_sections.split(',');
@@ -258,7 +208,7 @@ function func_load_ajax_carousel_products(section_name) {
                                 a_href = 'product.php?productid=' + this.productid;
                             }
                             ga_page_name = this.ga_param;
-                            html += '<li data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price+'" data-position="'+this.N_key+'" class="active">' +
+                            html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price+'" data-position="'+this.N_key+'" class="active">' +
                                     '<div style="text-align: center;">' +
                                     '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>' +
                                     '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">' + this.title + '</a>' +
