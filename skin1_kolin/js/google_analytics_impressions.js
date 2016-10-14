@@ -1,36 +1,66 @@
-sendItems = [];
-sendItemsValues = [];
-sentItems = [];
+var sendItems = [];
+var sendItemsValues = [];
+var sentItems = [];
+
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+            || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+                timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+}());
 
 function collectVisibleElements(obj) {
 
-    var t = obj.visible(false, false),
-        wraper_width = obj.parent().parent().width(),
-        ul_left = Math.abs(obj.parent().position().left),
+    var t = obj.visible(false, false);
+    if (t) {
+        var po = obj.parent(),
+        wraper_width = po.parent().width(),
+        ul_left = Math.abs(po.position().left),
         el_left = obj.position().left;
-    if (t && ((el_left >= ul_left) && ((ul_left + wraper_width) > el_left))) {
-        var productid = obj.data('productid');
-        if (sendItems.indexOf(productid) === -1 && sentItems.indexOf(productid) === -1) {
-            sendItems.push(productid);
-            sendItemsValues.push({
-                productid: productid,
-                name: obj.data('name'),
-                category: obj.data('category'),
-                brand: obj.data('brand'),
-                list: obj.data('list'),
-                price: obj.data('price'),
-                position: obj.data('position')
-            });
+        if ((el_left >= ul_left) && ((ul_left + wraper_width) > el_left)) {
+            var productid = obj.data('productid');
+            if (sendItems.indexOf(productid) === -1 && sentItems.indexOf(productid) === -1) {
+                sendItems.push(productid);
+                sendItemsValues.push({
+                    productid: productid,
+                    name: obj.data('name'),
+                    category: obj.data('category'),
+                    brand: obj.data('brand'),
+                    list: obj.data('list'),
+                    price: obj.data('price'),
+                    position: obj.data('position')
+                });
+            }
         }
     }
 }
 function sendGoogleAnalitics()
 {
     var counter = 0;
+    var listtype = '';
     while (sendItems.length > 0) {
         counter++;
         var productid = sendItems.pop();
         var valtosend = sendItemsValues.pop();
+        listtype = valtosend.list;
         ga('ec:addImpression', {
             'id': valtosend.productid,
             'name': valtosend.name,
@@ -45,21 +75,24 @@ function sendGoogleAnalitics()
     }
 
     if (counter > 0) {
-        ga('send', 'pageview');
+        ga('send', 'event', listtype);
     }
 
 }
 
 function checkCarouselsVisibility() {
-    $('#similar_products .jcarousel, #related_products .jcarousel, #products_also_bought_with_this_product .jcarousel, #recently_viewed_products .jcarousel, .product_list_row').each(function () {
-        $('.google_impression_object::visible', $(this)).each (function () {
-            collectVisibleElements($(this))
-        });
+    $('#similar_products .jcarousel, ' +
+      '#related_products .jcarousel, ' +
+      '#products_also_bought_with_this_product .jcarousel, ' +
+      '#recently_viewed_products .jcarousel, .product_list_row').find('.google_impression_object').each(function () {
+         collectVisibleElements($(this))
     });
-
     sendGoogleAnalitics();
 }
 
 $(window).scroll(function(){
-    checkCarouselsVisibility()
+    requestAnimationFrame(checkCarouselsVisibility);
+});
+$( document ).ready(function() {
+    requestAnimationFrame(checkCarouselsVisibility);
 });
