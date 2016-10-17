@@ -193,7 +193,7 @@ func_backprocess_log("amazon_info", $log_text);
 
 
 $Fulfillment_Inventory_Pricing_arr = array(
-	"ffr_" => "Fulfillment"
+//	"ffr_" => "Fulfillment"
 //	"ir_" => "Inventory", 
 //	"pr_" => "Pricing"
 );

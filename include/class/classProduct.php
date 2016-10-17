@@ -363,15 +363,7 @@ class classProduct extends classData
 
     public static function getProductBySKU($sSKU)
     {
-        $oProduct = null;
-        $oSQL = new classSQLBuilder();
-        $aProducts = $oSQL->addSelect('productid')->addFromTable('products')->addCondition("productcode='$sSKU'")->Execute()->getQueryResult();
-        if (!empty($aProducts)) {
-            $aProduct = reset($aProducts);
-            $oProduct = new classProduct(['productid' => $aProduct['productid']]);
-        }
-        return $oProduct;
-
+        return classProduct::model()->find(classSQLBuilder::getInstance()->addCondition("productcode = '$sSKU'"));
     }
 
     /**
@@ -379,16 +371,10 @@ class classProduct extends classData
      */
     public function getChildProducts()
     {
-        $aProducts = [];
-        $aChildProducts = $this->oSQL->init()->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition('clone_parent_productid = ' . $this->getProductId())->Execute()->getQueryResult();
-        if (!empty($aChildProducts)) {
-            foreach ($aChildProducts as $aChild) {
-                $oChildProduct = new classProduct();
-                $oChildProduct->fillPrimaryTableValues($aChild);
-                $aProducts[] = $oChildProduct;
-            }
-        }
-        return $aProducts;
+        $aResult = [];
+        if ($this->getProductId())
+            $aResult = classProduct::model()->findAll(classSQLBuilder::getInstance()->addCondition('clone_parent_productid = ' . $this->getProductId()));
+        return $aResult;
     }
 
     /**
@@ -398,7 +384,7 @@ class classProduct extends classData
     {
         $oParentProduct = null;
         if ($this->getField('clone_parent_productid')) {
-            $oParentProduct = new classProduct(['productid' => $this->getField('clone_parent_productid')]);
+            $oParentProduct = classProduct::model(['productid' => $this->getField('clone_parent_productid')]);
         }
         return $oParentProduct;
     }

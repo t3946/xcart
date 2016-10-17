@@ -84,11 +84,14 @@ require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Exception.php";
 
 require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
+require_once $xcart_dir . "/include/class/classCidevAmazonFbaProducts.php";
+require_once $xcart_dir . "/include/class/classSQLBuilder.php";
 
 class classAmazonMWS
 {
     const BACK_PROCESS_LOG_NAME = 'AmazonFeeReport';
     const BACK_PROCESS_LOG_NAME_SETTLEMENT = 'Amazon_Reports_Cron';
+    const BACK_PROCESS_LOG_NAME_ORDER_INFO = 'amazon_info';
     const DEFAULT_ORDER_MESSAGE = 'Thank you for your order!';
     const AMAZON_ORDER_LINK = "https://sellercentral.amazon.com/gp/orders-v2/list/ref=ag_myo_apsearch_myosearch?searchType=OrderID&searchKeyword=%s&showPending=1&isDebug=&isAdvancedSearch=1&ignoreSearchType=0&searchLanguage=en_US";
 
@@ -103,6 +106,7 @@ class classAmazonMWS
     private $amazonReportType;
     private $sql_tbl;
     private $sBackProcessLogName = null;
+    private $tStartDate = null;
 
 
     public function __construct($oServiceClass = 'MarketplaceWebService_Client', $uri = '')
@@ -132,6 +136,12 @@ class classAmazonMWS
     public function setBackProcessName($sName)
     {
         $this->sBackProcessLogName = $sName;
+        return $this;
+    }
+
+    public function setStartDate($tDate)
+    {
+        $this->tStartDate = $tDate;
         return $this;
     }
 
@@ -524,15 +534,19 @@ class classAmazonMWS
         $request = new MarketplaceWebService_Model_RequestReportRequest();
         $request->setMarketplaceIdList($this->marketplaceIdArray);
         $request->setMerchant(MERCHANT_ID);
-        $request->setReportType('_GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA_');
+        $request->setReportType($this->amazonReportType);
 
-        $s_date = new DateTime('-3 days', new DateTimeZone('UTC'));
-        $start_date = $s_date->format("Y-m-d\T00:00:00P");
-
-        $request->setStartDate(new DateTime($start_date, new DateTimeZone('UTC')));
+        if (!is_null($this->tStartDate))
+            $request->setStartDate(new DateTime($this->tStartDate->format("Y-m-d\T00:00:00P"), new DateTimeZone('UTC')));
 
         $this->dom_xml_arr = $this->invokeRequestReport($request);
-        $log_text = 'RequestReport -> ReportRequestId:' . $this->dom_xml_arr['ReportRequestId'];
+
+        if (!empty($this->dom_xml_arr['Caught_Exception'])) {
+            $this->error[] = $this->dom_xml_arr["Caught_Exception"];
+            $log_text = 'RequestReport -> Error:' . $this->dom_xml_arr["Caught_Exception"];
+        } else {
+            $log_text = 'RequestReport -> ReportRequestId:' . $this->dom_xml_arr['ReportRequestId'];
+        }
         func_backprocess_log($this->sBackProcessLogName, $log_text);
         return $this;
     }
@@ -543,24 +557,31 @@ class classAmazonMWS
 
         $this->setTimeOut(45);
 
+        if ($this->dom_xml_arr['ReportRequestId']) {
         $this->aWaitLoopExitCondition = [['ReportProcessingStatus' => '_DONE_'], ['ReportProcessingStatus' => '_DONE_NO_DATA_'], ['ReportProcessingStatus' => '_CANCELLED_']];
-        $reportRequestIdList = new MarketplaceWebService_Model_IdList();
-        $reportRequestIdList->setId($this->dom_xml_arr['ReportRequestId']);
 
-        $request = new MarketplaceWebService_Model_GetReportRequestListRequest();
-        $request->setMerchant(MERCHANT_ID);
-        $request->setReportRequestIdList($reportRequestIdList);
+            $reportRequestIdList = new MarketplaceWebService_Model_IdList();
+            $reportRequestIdList->setId($this->dom_xml_arr['ReportRequestId']);
 
-        $this->dom_xml_arr = $this->invokeGetReportRequestList($request);
+            $request = new MarketplaceWebService_Model_GetReportRequestListRequest();
+            $request->setMerchant(MERCHANT_ID);
+            $request->setReportRequestIdList($reportRequestIdList);
 
-        $log_text = 'GetReportRequestList -> ReportProcessingStatus:' . $this->dom_xml_arr['ReportProcessingStatus'];
-        func_backprocess_log($this->sBackProcessLogName, $log_text);
+            $this->dom_xml_arr = $this->invokeGetReportRequestList($request);
 
-        if ($this->dom_xml_arr['ReportProcessingStatus'] == '_CANCELLED_') {
-            $this->error[] = 'RequestReport ' . $this->dom_xml_arr['ReportRequestId'] . ' is CANCELED by Amazon MWS';
-        }
-        if ($this->dom_xml_arr['ReportProcessingStatus'] == '_DONE_NO_DATA_') {
-            $this->error[] = 'RequestReport ' . $this->dom_xml_arr['ReportRequestId'] . ' is DONE_NO_DATA';
+            $log_text = 'GetReportRequestList -> ReportProcessingStatus:' . $this->dom_xml_arr['ReportProcessingStatus'];
+            func_backprocess_log($this->sBackProcessLogName, $log_text);
+
+            if (!empty($this->dom_xml_arr['Caught_Exception'])) {
+                $this->error[] = $this->dom_xml_arr["Caught_Exception"];
+            }
+
+            if ($this->dom_xml_arr['ReportProcessingStatus'] == '_CANCELLED_') {
+                $this->error[] = 'RequestReport ' . $this->dom_xml_arr['ReportRequestId'] . ' is CANCELED by Amazon MWS';
+            }
+            if ($this->dom_xml_arr['ReportProcessingStatus'] == '_DONE_NO_DATA_') {
+                $this->error[] = 'RequestReport ' . $this->dom_xml_arr['ReportRequestId'] . ' is DONE_NO_DATA';
+            }
         }
         return $this;
     }
@@ -624,16 +645,18 @@ class classAmazonMWS
         $request = new MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest();
         $request->setMerchant(MERCHANT_ID);
 
-        foreach ($this->aReportIds as $iReportId) {
-            $idList = new MarketplaceWebService_Model_IdList();
+        if (!empty($this->aReportIds)) {
+            foreach ($this->aReportIds as $iReportId) {
+                $idList = new MarketplaceWebService_Model_IdList();
 
-            $request->setReportIdList($idList->withId($iReportId));
-            $request->setAcknowledged(true); //true
+                $request->setReportIdList($idList->withId($iReportId));
+                $request->setAcknowledged(true); //true
 
-            $this->invokeUpdateReportAcknowledgements($request);
+                $this->invokeUpdateReportAcknowledgements($request);
 
-            $log_text = 'UpdateReportAcknowledgements -> ReportId:' . $iReportId;
-            func_backprocess_log($this->sBackProcessLogName, $log_text);
+                $log_text = 'UpdateReportAcknowledgements -> ReportId:' . $iReportId;
+                func_backprocess_log($this->sBackProcessLogName, $log_text);
+            }
         }
 
         return $this;
@@ -706,7 +729,7 @@ class classAmazonMWS
                     $cntLine++;
                 }
                 $aReportData = [];
-                $log_text = "Processing " . count($aReportValue) . " products";
+                $log_text = "Processing " . ($cntLine-2) . " products";
                 func_backprocess_log($this->sBackProcessLogName, $log_text);
                 for ($y = 0; $y < count($aReportValue); $y++) {
                     foreach ($aReportValue[$y] as $iKey => $sItem) {
@@ -1086,8 +1109,68 @@ class classAmazonMWS
             }
 
             func_log_order($oOrderGroup->getOrderId(),'X',nl2br($log), $login);
-
-
         }
+        return $this;
+    }
+
+    public function processReportReservedInventory()
+    {
+        $this->aReportValue = [];
+        $ReportContent = $this->getReportContent();
+        if (!empty($ReportContent)) {
+            foreach ($ReportContent as $report_id => $report_data) {
+                $cntLine = 0;
+                $aReportValue = [];
+                foreach (preg_split("/((\r?\n)|(\r\n?))/", $report_data) as $sLine) {
+                    echo $sLine."<br/>";
+                    $arrM = explode("\t", $sLine);
+                    if (!empty($arrM)) {
+                        if ($cntLine == 0) {
+                            foreach ($arrM as &$value)
+                                $value = str_replace('-', '_', $value);
+                        }
+                        $aReportValue[] = $arrM;
+                    }
+                    $cntLine++;
+                }
+                $aReportData = [];
+                $log_text = "Processing " . ($cntLine-2) . " products";
+                func_backprocess_log($this->sBackProcessLogName, $log_text);
+                for ($y = 0; $y < count($aReportValue); $y++) {
+                    foreach ($aReportValue[$y] as $iKey => $sItem) {
+
+                        if ($y == 0) {
+
+                        } else {
+                            if ($aReportValue[0][$iKey] == 'sku') {
+                                $sSKU = $sItem;
+                            }
+                            $aReportData[$sSKU][$aReportValue[0][$iKey]] = $sItem;
+                        }
+                    }
+                }
+                $this->aReportValue[] = $aReportData;
+            }
+
+            $report_date = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
+
+            foreach ($this->aReportValue as $aReport)
+                foreach ($aReport as $sSKU => $aItem) {
+                    if (!empty($aItem['sku']))
+                        $oFbaProduct = classCidevAmazonFbaProducts::model()->find(classSQLBuilder::getInstance()->addCondition("productcode = '".$sSKU."'")->addCondition("report_date = $report_date"));
+                    else $oFbaProduct = classCidevAmazonFbaProducts::model();
+
+                    $oFbaProduct->setField('reserved_qty', $aItem['reserved_qty']);
+                    $oFbaProduct->setField('reserved_customerorders', $aItem['reserved_customerorders']);
+                    $oFbaProduct->setField('reserved_fc_transfers', $aItem['reserved_fc_transfers']);
+                    $oFbaProduct->setField('reserved_fc_processing', $aItem['reserved_fc_processing']);
+                    $oFbaProduct->setField('productid', classProduct::getProductBySKU($sSKU)->getProductId());
+                    $oFbaProduct->setField('productcode', $sSKU);
+                    $oFbaProduct->setField('ASIN', $aItem['asin']);
+                    $oFbaProduct->setField('report_date', $report_date);
+                    $oFbaProduct->_save();
+                }
+        }
+        return $this;
     }
 }
