@@ -1134,7 +1134,7 @@ class classAmazonMWS
                     $cntLine++;
                 }
                 $aReportData = [];
-                $log_text = "Processing " . ($cntLine - 2) . " products";
+                $log_text = "Processing Reserved Inventory Report for " . ($cntLine - 2) . " products";
                 func_backprocess_log($this->sBackProcessLogName, $log_text);
                 for ($y = 0; $y < count($aReportValue); $y++) {
                     foreach ($aReportValue[$y] as $iKey => $sItem) {
@@ -1182,13 +1182,15 @@ class classAmazonMWS
         /** @var classCidevAmazonFbaProducts[][] $aAggregateRows */
         /** @var classCidevAmazonFbaProducts[] $aFbaProducts */
 
-        for ($i = 500; $i >= $config['Amazon_FBA_options']['Amazon_FBA_Month']; $i--) {
-            $aAggregateRows = $aAggregateStat = [];
+        for ($i = 24; $i >= $config['Amazon_FBA_options']['Amazon_FBA_Month']; $i--) {
+            $aAggregateRows = $aAggregateStat = $aFbaProducts = null;
             $currentDate = new DateTime(date('Y-m-d', strtotime("first day of this month")));
             $currentDate->sub(new DateInterval('P' . $i . 'M'));
 
             $aFbaProducts = classCidevAmazonFbaProducts::model()->findAll(classSQLBuilder::getInstance()->addCondition("report_date < " . $currentDate->getTimestamp())->addCondition("precise_data='Y'"));
             if ($aFbaProducts) {
+                $log_text = 'Aggregate FBA products data for %s products. Period %s';
+                func_backprocess_log($this->sBackProcessLogName, sprintf($log_text, count($aFbaProducts), $currentDate->format('d-M-Y')));
                 foreach ($aFbaProducts as $oFbaProduct) {
                     $iReportTimeStamp = $oFbaProduct->getReportPeriod()->getTimeStamp();
                     $iProductId = $oFbaProduct->getField('productid');
@@ -1240,7 +1242,7 @@ class classAmazonMWS
 
                     if ($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('lp_FulfillmentChannel') != 'AFN') {
                         if ($oFbaProduct->getField('lp_FulfillmentChannel') == '') $oFbaProduct->setField('lp_FulfillmentChannel', 'AFN');
-                            $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('lp_FulfillmentChannel', $oFbaProduct->getField('lp_FulfillmentChannel'));
+                        $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('lp_FulfillmentChannel', $oFbaProduct->getField('lp_FulfillmentChannel'));
                     }
                     $aAggregateStat[$iProductId][$iReportTimeStamp]['lp_FulfillmentChannel']++;
 
@@ -1259,16 +1261,16 @@ class classAmazonMWS
                 foreach ($aAggregateRows as $iProductId => $aAggregateRow) {
                     foreach ($aAggregateRow as $iPeriod => $oAggregateRow) {
                         if ($aAggregateStat[$iProductId][$iPeriod]['cpr_LandedPrice'])
-                            $oAggregateRow->setField('cpr_LandedPrice', round($oAggregateRow->getField('cpr_LandedPrice') / $aAggregateStat[$iProductId][$iPeriod]['cpr_LandedPrice'],2));
+                            $oAggregateRow->setField('cpr_LandedPrice', round($oAggregateRow->getField('cpr_LandedPrice') / $aAggregateStat[$iProductId][$iPeriod]['cpr_LandedPrice'], 2));
                         if ($aAggregateStat[$iProductId][$iPeriod]['cpr_belongs_LandedPrice'])
-                            $oAggregateRow->setField('cpr_belongs_LandedPrice', round($oAggregateRow->getField('cpr_belongs_LandedPrice') / $aAggregateStat[$iProductId][$iPeriod]['cpr_belongs_LandedPrice'],2));
+                            $oAggregateRow->setField('cpr_belongs_LandedPrice', round($oAggregateRow->getField('cpr_belongs_LandedPrice') / $aAggregateStat[$iProductId][$iPeriod]['cpr_belongs_LandedPrice'], 2));
                         $oAggregateRow->setField('cpr_SalesRank', round($oAggregateRow->getField('cpr_SalesRank') / $aAggregateStat[$iProductId][$iPeriod]['cpr_SalesRank']));
                         if ($aAggregateStat[$iProductId][$iPeriod]['lis_TotalSupplyQuantity'])
                             $oAggregateRow->setField('lis_TotalSupplyQuantity', round($oAggregateRow->getField('lis_TotalSupplyQuantity') / $aAggregateStat[$iProductId][$iPeriod]['lis_TotalSupplyQuantity']));
                         if ($aAggregateStat[$iProductId][$iPeriod]['lis_InStockSupplyQuantity'])
                             $oAggregateRow->setField('lis_InStockSupplyQuantity', round($oAggregateRow->getField('lis_InStockSupplyQuantity') / $aAggregateStat[$iProductId][$iPeriod]['lis_InStockSupplyQuantity']));
                         if ($aAggregateStat[$iProductId][$iPeriod]['lp_LandedPrice'])
-                            $oAggregateRow->setField('lp_LandedPrice', round($oAggregateRow->getField('lp_LandedPrice') / $aAggregateStat[$iProductId][$iPeriod]['lp_LandedPrice'],2));
+                            $oAggregateRow->setField('lp_LandedPrice', round($oAggregateRow->getField('lp_LandedPrice') / $aAggregateStat[$iProductId][$iPeriod]['lp_LandedPrice'], 2));
                         if ($aAggregateStat[$iProductId][$iPeriod]['lp_SellerFeedbackCount'])
                             $oAggregateRow->setField('lp_SellerFeedbackCount', round($oAggregateRow->getField('lp_SellerFeedbackCount') / $aAggregateStat[$iProductId][$iPeriod]['lp_SellerFeedbackCount']));
                         $oAggregateRow->setField('precise_data', 'N');
@@ -1281,7 +1283,7 @@ class classAmazonMWS
 
             if ($aFbaProducts) {
                 foreach ($aFbaProducts as $oFbaProduct) {
-                    $oFbaProduct->updateField('precise_data', 'D');
+                    $oFbaProduct->_delete();
                 }
             }
 
