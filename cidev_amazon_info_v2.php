@@ -8,7 +8,7 @@ require "./init.php";
 global $xcart_dir, $config;
 require_once $xcart_dir . "/include/class/classAmazonMWS.php";
 
-ini_set('memory_limit', '512M');
+ini_set('memory_limit', '1512M');
 set_time_limit(0);
 
 const LOG_CATEGORY = 'cidev_amazon_info';
@@ -25,13 +25,15 @@ $log_text = " * * *  Cron started  * * * ";
 $classAmazonMWS = new classAmazonMWS();
 func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 
-$classAmazonMWS->setReportType('_GET_RESERVED_INVENTORY_DATA_')->setBackProcessName($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO)
+/*$classAmazonMWS->setReportType('_GET_RESERVED_INVENTORY_DATA_')->setBackProcessName($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO)
     ->_Request('RequestReport')
     ->_Request('GetReportRequestList')
     ->_Request('GetReportList')
     ->_Request('GetReport')
     ->_Request('UpdateReportAcknowledgements')
-    ->processReportReservedInventory();
+    ->processReportReservedInventory();*/
+
+$classAmazonMWS->groupAmazonFBAProducts();
 
 db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='" . LOG_CATEGORY . "'");
 

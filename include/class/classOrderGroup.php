@@ -210,10 +210,10 @@ class classOrderGroup extends classData
     public function getPaymentMethodsAvailForOrderGroup()
     {
         if (empty($this->availPaymentMethods)) {
-            $this->oSQL->init()->addSelect('paymentid, payment_method')->addFromTable('payment_methods')->addCondition("acc_proc='Y'")->addOrderBy('orderby');
+            $oSQL = classSQLBuilder::getInstance()->addSelect('paymentid, payment_method')->addFromTable('payment_methods')->addCondition("acc_proc='Y'")->addOrderBy('orderby');
             if ($this->getOrderInstance()->getAmazonChanell())
-                $this->oSQL->addCondition("order_tag_preference = '" . $this->getOrderInstance()->getAmazonChanell() . "'");
-            $aPaymentMethods = $this->oSQL->Execute()->getQueryResult();
+                $oSQL->addCondition("order_tag_preference = '" . $this->getOrderInstance()->getAmazonChanell() . "'");
+            $aPaymentMethods = $oSQL->Execute()->getQueryResult();
             if (!empty($aPaymentMethods)) {
                 foreach ($aPaymentMethods as $aPaymentMethod) {
                     $this->availPaymentMethods[$aPaymentMethod['paymentid']] = $aPaymentMethod['payment_method'];
@@ -957,18 +957,11 @@ class classOrderGroup extends classData
     public function getOrderGroupProducts()
     {
         if (empty($this->oOrderGroupProducts)) {
-            $aProducts = $this->oSQL->init()->
-            addSelect('*')->
-            addFromTable('products', 'p')->
-            addInnerJoin('order_details', 'od', 'od.productid=p.productid AND orderid = ' . $this->getOrderId())->
-            addCondition('p.manufacturerid = ' . $this->getManufacturerId())->Execute()->getQueryResult();
-            if (!empty($aProducts)) {
-                foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct();
-                    $oProduct->fillPrimaryTableValues($aProduct);
-                    $this->oOrderGroupProducts[] = $oProduct;
-                }
-            }
+            if ($this->getOrderId())
+                $this->oOrderGroupProducts = classProduct::model()->findAll(
+                    classSQLBuilder::getInstance()->
+                    addInnerJoin('order_details', 'od', 'od.productid=main.productid AND orderid = ' . $this->getOrderId())->
+                    addCondition('manufacturerid = ' . $this->getManufacturerId()));
         }
 
         return $this->oOrderGroupProducts;

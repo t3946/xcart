@@ -11,4 +11,11 @@ class classCidevAmazonFbaProducts extends classData
 
         parent::__construct($iId);
     }
+
+    public function getReportPeriod()
+    {
+        $oDate =  new DateTime();
+        $oDate->setTimestamp($this->getField('report_date'))->modify('first day of this month');
+        return $oDate;
+    }
 }
