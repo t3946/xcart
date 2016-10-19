@@ -52,6 +52,7 @@ class classStoreFront extends classData
 
     public function fetchCDNSettings()
     {
+        $addSQL = '';
         $this->_init();
         if ($this->getStoreFrontId() > 0) {
             $addSQL = ' AND storefrontid=' . $this->getStoreFrontId();

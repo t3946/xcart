@@ -10,7 +10,7 @@ require_once $xcart_dir . "/include/class/classManufacturers.php";
 require_once $xcart_dir . "/include/class/classOrderTransactions.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
 
-class classOrder extends classCloneData
+class classOrder extends classData
 {
     const ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED = 'PV';
     const ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND = 'PF';
@@ -19,55 +19,35 @@ class classOrder extends classCloneData
 
     const ADMIN_ORDER_MODIFY_URL = '/admin/order.php?orderid=%d';
 
-    private $aOrderDetails = [];
-    private $aOrderGroups = [];
+    /**
+     * @var classOrderDetail[]
+     */
+    private $aOrderDetails = null;
+    /**
+     * @var classOrderGroup[]
+     */
+    private $aOrderGroups = null;
     /**
      * @var classProduct[]
      */
     private $aOrderProducts = null;
-    private $aOrderProductsManufactueres = [];
+    private $aOrderProductsManufactueres = null;
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
 
     public function __construct($aOrderData = null)
     {
-        $this->sPrimaryTable = "orders";
-        $this->sPrimaryKeyFiled = "orderid";
+        $this->aPrimaryKeys = ['orderid'];
+        $this->sPrimaryTable = 'orders';
 
         parent::__construct($aOrderData);
     }
 
-    public static function getInstance($iId = null)
-    {
-        return new self($iId);
-    }
-
-    private function fetchOrderDetails()
-    {
-        if (empty($this->aOrderDetails)) {
-            $aOrderDetails = func_query("SELECT * FROM " . self::$sql_tbl['order_details'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
-            if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
-                foreach ($aOrderDetails as $aOrderDetail) {
-                    $oOrderDetail = new classOrderDetail();
-                    $oOrderDetail->fillPrimaryTableValues($aOrderDetail);
-                    $this->aOrderDetails[] = $oOrderDetail;
-                }
-            }
-        }
-        return $this;
-    }
 
     private function fetchOrderGroups()
     {
-        if (empty($this->aOrderGroups)) {
-            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_groups'] . " WHERE " . $this->sPrimaryKeyFiled . " = " . $this->primaryKeyValue);
-            if (!empty($aOrderGroups) && is_array($aOrderGroups)) {
-                foreach ($aOrderGroups as $aOrderGroup) {
-                    $oOrderGroup = new classOrderGroup();
-                    $oOrderGroup->fillPrimaryTableValues($aOrderGroup);
-                    $this->aOrderGroups[] = $oOrderGroup;
-                }
-            }
+        if (is_null($this->aOrderGroups)) {
+            $this->aOrderGroups = classOrderGroup::model()->findAll(classSQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
         }
         return $this;
     }
@@ -77,7 +57,9 @@ class classOrder extends classCloneData
      */
     public function getOrderDetails()
     {
-        $this->fetchOrderDetails();
+        if (empty($this->aOrderDetails)) {
+            $this->aOrderDetails = classOrderDetail::model()->findAll(classSQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+        }
         return $this->aOrderDetails;
     }
 
@@ -87,7 +69,7 @@ class classOrder extends classCloneData
     public function getOrderDetailsWithRetailTrust()
     {
         $aResult = [];
-        $this->fetchOrderDetails();
+        $this->getOrderDetails();
         if (!empty($this->aOrderDetails)) {
             foreach ($this->aOrderDetails as $oOrderDetail) {
                 if ($oOrderDetail->isRetailTrustEnabled())
@@ -127,7 +109,7 @@ class classOrder extends classCloneData
     public function getOrderDetailsProductsWithRetailTrust()
     {
         $aResult = [];
-        $this->fetchOrderDetails();
+        $this->getOrderDetails();
         if (!empty($this->aOrderDetails)) {
             foreach ($this->aOrderDetails as $oOrderDetail) {
                 if ($oOrderDetail->getOrderDetailProduct()->isRetailTrustEnabled())
@@ -217,12 +199,12 @@ class classOrder extends classCloneData
 
     public function getDisplayOrderNumber()
     {
-        return $this->getField('order_prefix') . $this->getField($this->sPrimaryKeyFiled);
+        return $this->getField('order_prefix') . $this->getOrderId();
     }
 
     public function getOrderModifyURL()
     {
-        return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled));
+        return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getOrderId());
     }
 
     public static function getOrderStatusByCode($sCode)
@@ -236,9 +218,9 @@ class classOrder extends classCloneData
         $aNewStatus = self::getOrderStatusByCode($sNewStatus);
         $aOldStatus = self::getOrderStatusByCode($this->getField('vn_status'));
         if ($aNewStatus['code'] != $aOldStatus['code']) {
-            $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->primaryKeyValue);
+            $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->getOrderId());
             $log = "vn_status: " . $aOldStatus['name'] . " -> " . $aNewStatus['name'];
-            func_log_order($this->primaryKeyValue, 'X', $log);
+            func_log_order($this->getOrderId(), 'X', $log);
         }
         $this->setField('vn_status', $sNewStatus);
         return $bResult;
@@ -280,6 +262,7 @@ class classOrder extends classCloneData
             }
 
         }
+        return $this;
     }
 
     public function isOrderAmazon()
@@ -599,7 +582,7 @@ class classOrder extends classCloneData
     public function getProductPriceNet()
     {
         $fResult = 0;
-        $this->fetchOrderDetails();
+        $this->getOrderDetails();
         if (!empty($this->aOrderDetails)) {
             foreach ($this->aOrderDetails as $oOrderDetail) {
                 $fResult += $oOrderDetail->getTotalProductPrice();
@@ -611,7 +594,7 @@ class classOrder extends classCloneData
     public function getProductPriceHSTPST()
     {
         $fResult = 0;
-        $this->fetchOrderDetails();
+        $this->getOrderDetails();
         if (!empty($this->aOrderDetails)) {
             foreach ($this->aOrderDetails as $oOrderDetail) {
                 $fResult += $oOrderDetail->getProductHST();
@@ -645,5 +628,12 @@ class classOrder extends classCloneData
         return $this->oPaymentMethod;
     }
 
-
+    public function reCalculateTotals()
+    {
+        $aOrderGroups = $this->getOrderGroups();
+        if (!empty($aOrderGroups))
+            foreach ($aOrderGroups as $oOrderGroup) {
+                $oOrderGroup->reCalculateTotals();
+            }
+    }
 }

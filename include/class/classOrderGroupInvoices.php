@@ -96,7 +96,7 @@ class classOrderGroupInvoices extends classData
      * @param classOrderGroupInvoice $oLastInvoice
      * @return classOrderGroupInvoices
      */
-    public function createCloneInvoice($oInvoice)
+    public function createCloneInvoice(classOrderGroupInvoice $oInvoice)
     {
         $oCloneInvoice = $oInvoice->_clone();
         $oCloneInvoice->setInvoiceNumber($oInvoice->getInvoiceNumber() + 1);

@@ -202,6 +202,10 @@ class classProduct extends classData
         }
     }
 
+    /**
+     * @param $type
+     * @return classProductImage[]
+     */
     public function getImages($type)
     {
         $sImagesVar = "aImages" . $type;
@@ -361,6 +365,10 @@ class classProduct extends classData
         return ($this->getField('retail_trust_enabled') == 'Y') ? true : false;
     }
 
+    /**
+     * @param $sSKU
+     * @return classProduct
+     */
     public static function getProductBySKU($sSKU)
     {
         return classProduct::model()->find(classSQLBuilder::getInstance()->addCondition("productcode = '$sSKU'"));

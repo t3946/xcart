@@ -12,7 +12,9 @@ class classData
     protected $oSQL = null;
 
     /**
+     * classData constructor.
      * @param array $aParams
+     * @throws Exception
      */
     public function __construct($aParams = [])
     {
@@ -25,9 +27,11 @@ class classData
             $this->aPrimaryKeysValues = array_intersect_key($aParams, array_flip($this->aPrimaryKeys));
             $this->fillPrimaryTableInfo();
         }
-        $this->oSQL = new classSQLBuilder();
     }
 
+    /**
+     * @return static
+     */
     protected function _clone()
     {
         return clone $this;
@@ -153,6 +157,9 @@ class classData
         return implode(" AND ", $aKeyArray);
     }
 
+    /**
+     * @return static
+     */
     public static function model($aParams = [])
     {
         $class = get_called_class();

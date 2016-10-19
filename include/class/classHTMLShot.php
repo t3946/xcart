@@ -17,6 +17,7 @@ class classHTMLShot extends classData
         global $xcart_dir;
         $aImagesD = $oProduct->getImages('D');
         $aImagesP = $oProduct->getImages('P');
+        /** @var classProductImage[] $aImages */
         $aImages = array_merge($aImagesD,$aImagesP);
         $oStoreFront = $oProduct->getStoreFront()->getStoreFrontByProductId($oProduct->getProductId());
 

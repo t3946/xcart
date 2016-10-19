@@ -6,6 +6,9 @@ require_once $xcart_dir . "/include/class/classOrderGroupMemo.php";
 
 class classOrderGroupMemos extends classData
 {
+    /**
+     * @var classOrderGroupMemo[]
+     */
     private $aGroupMemos = [];
 
     public function __construct($aParams = [])

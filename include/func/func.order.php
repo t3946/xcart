@@ -1716,7 +1716,7 @@ die("123");
 		}
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classOrder.php";
-		$oOrder = new classOrder($orderid);
+		$oOrder = classOrder::model(['orderid'=>$orderid]);
 		$oOrder->updateVerificationStatus();
 
 

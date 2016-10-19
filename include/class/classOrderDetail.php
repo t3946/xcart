@@ -39,7 +39,8 @@ class classOrderDetail extends classData
         return $oOrderDetails;
     }
 
-    public function getAmount() {
+    public function getAmount()
+    {
         return intval($this->getField('amount'));
     }
 
@@ -109,12 +110,12 @@ class classOrderDetail extends classData
 
     public function calculateRetailTrustPrice()
     {
-        return floatval($this->getTotalProductPrice() * (1-$this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier()));
+        return floatval($this->getTotalProductPrice() * (1 - $this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier()));
     }
 
     private function fetchOrderInstance()
     {
-        $this->oOrder = new classOrder($this->getField('orderid'));
+        $this->oOrder = classOrder::model(['orderid' => $this->getField('orderid')]);
     }
 
     public function getOrderInstance()
@@ -131,6 +132,6 @@ class classOrderDetail extends classData
         if (!$fCostToUs) {
             $fCostToUs = $this->getOrderDetailProduct()->getProductCostToUs();
         }
-        return $fCostToUs*$this->getAmount();
+        return $fCostToUs * $this->getAmount();
     }
 }

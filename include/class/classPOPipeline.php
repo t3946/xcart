@@ -53,7 +53,7 @@ class classPOPipeLine extends classData
         if (is_null($this->oOrder)) {
             $iOrderId = $this->getField('order_id');
             if (!empty($iOrderId))
-                $this->oOrder = new classOrder($iOrderId);
+                $this->oOrder = classOrder::model(['orderid' => $iOrderId]);
         }
         return $this->oOrder;
     }
@@ -78,7 +78,7 @@ class classPOPipeLine extends classData
         global $sql_tbl;
         $aPOs = [];
         if (!empty($aStatuses) && is_array($aStatuses)) {
-            $aOrders = func_query("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE status IN ('" . implode(',',$aStatuses). "')");
+            $aOrders = func_query("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE status IN ('" . implode(',', $aStatuses) . "')");
             if (!empty($aOrders)) {
                 foreach ($aOrders as $aOrder) {
                     $oPo = new classPOPipeLine();

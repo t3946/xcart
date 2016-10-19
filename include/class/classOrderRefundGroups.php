@@ -5,7 +5,10 @@ require_once $xcart_dir . "/include/class/classOrderRefundGroup.php";
 
 class classOrderRefundGroups extends classData
 {
-    private $aRefundGroups = [];
+    /**
+     * @var classOrderRefundGroup[]
+     */
+    private $aRefundGroups = null;
 
     public function __construct($aParams = [])
     {
