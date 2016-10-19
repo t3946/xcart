@@ -34,7 +34,7 @@ $classAmazonMWS->setReportType('_GET_RESERVED_INVENTORY_DATA_')->setBackProcessN
     ->_Request('UpdateReportAcknowledgements')
     ->processReportReservedInventory();
 
-
+x_load('backoffice','files','taxes', 'froogle', 'product', 'crypt', 'xml', 'mail', 'order');
 
 function invokeListInventorySupply(FBAInventoryServiceMWS_Interface $service, $request)
 {
