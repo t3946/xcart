@@ -168,7 +168,7 @@ class classData
     public function findAll(classSQLBuilder $oSQL)
     {
         $aSearchResult = null;
-        $aResult = $oSQL->setSelect('*')->setFromTable($this->sPrimaryTable, 'main')->query()->getQueryResult();
+        $aResult = $oSQL->setSelect('main.*')->setFromTable($this->sPrimaryTable, 'main')->query()->getQueryResult();
         if (!empty($aResult)) {
             foreach ($aResult as $aReturnResult) {
                 $aSearchResult[] = $this::model()->fill($aReturnResult);
@@ -180,7 +180,7 @@ class classData
     public function find(classSQLBuilder $oSQL)
     {
         $oSearchResult = $this::model();
-        $aResult = $oSQL->setSelect('*')->setFromTable($this->sPrimaryTable, 'main')->query_first()->getQueryResult();
+        $aResult = $oSQL->setSelect('main.*')->setFromTable($this->sPrimaryTable, 'main')->query_first()->getQueryResult();
         if (!empty($aResult)) $oSearchResult->fill($aResult);
         return $oSearchResult;
     }
