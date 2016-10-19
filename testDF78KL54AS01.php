@@ -11,14 +11,8 @@ global $xcart_dir, $config;
 include_once $xcart_dir.'/include/class/classSQLBuilder.php';
 include_once $xcart_dir.'/include/class/classProduct.php';
 
-$oSQL = new classSQLBuilder();
-$aProducts = $oSQL->addSelect('p.productid, p.upc')->addFromTable('products','p')->addInnerJoin('supplier_feeds','f',' f.manufacturerid = p.manufacturerid')->
-addCondition("p.forsale='Y'")->addCondition("f.enabled = 'Y'")->addGroupBy('p.productid')->Execute()->getQueryResult();
-foreach ($aProducts as $aProduct) {
+//$oSQL = new classSQLBuilder();
+//$oSQL->addCondition('productcode LIKE "%ART-KS-1001%"')->setLimit('5, 5');
+//$aProducts = classProduct::model()->findAll($oSQL);
 
-$currentDate = new DateTime("now");
-$iDaysInterval = $currentDate->diff($oProduct->getProductLastVerifyDate())->days;
-echo $iDaysInterval;
-if ($iDaysInterval <= 20) {
-    echo 1;
-}
+var_dump(classOrderGroup::model(['orderid'=>66080, 'manufacturerid'=>30])->getOrderGroupProducts());

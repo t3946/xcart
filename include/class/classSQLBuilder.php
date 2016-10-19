@@ -10,7 +10,7 @@ class classSQLBuilder
     private $aOrders = [];
     private $aGroups = [];
     private $aHaving = [];
-    private $aLimit = [];
+    private $sLimit = null;
     private $sqlQuery = null;
     private $aSqlQueryResult = [];
 
@@ -29,10 +29,15 @@ class classSQLBuilder
         $this->aOrders = [];
         $this->aGroups = [];
         $this->aHaving = [];
-        $this->aLimit = [];
+        $this->sLimit = null;
         $this->sqlQuery = null;
         $this->aSqlQueryResult = [];
         return $this;
+    }
+
+    public static function getInstance()
+    {
+        return new self();
     }
 
     public function addCondition($sCondition)
@@ -47,6 +52,13 @@ class classSQLBuilder
         return $this;
     }
 
+    public function setSelect($sSelect, $sAlias = null)
+    {
+        $this->aSelect = [];
+        $this->addSelect($sSelect, $sAlias);
+        return $this;
+    }
+
     public function addInnerJoin($sTable, $sAlias = null, $sCondition)
     {
         $this->aInnerJoinTables[] = self::$sql_tbl[$sTable] . ((!empty($sAlias)) ? ' as ' . $sAlias : '') . ' ON ' . $sCondition;
@@ -56,6 +68,13 @@ class classSQLBuilder
     public function addFromTable($sTable, $sAlias = null)
     {
         $this->aTables[] = self::$sql_tbl[$sTable] . ((!empty($sAlias)) ? ' as ' . $sAlias : '');
+        return $this;
+    }
+
+    public function setFromTable($sTable, $sAlias = null)
+    {
+        $this->aTables = [];
+        $this->addFromTable($sTable, $sAlias);
         return $this;
     }
 
@@ -79,7 +98,7 @@ class classSQLBuilder
 
     public function setLimit($sLimit)
     {
-        $this->aLimit[] = $sLimit;
+        $this->sLimit = $sLimit;
         return $this;
     }
 
@@ -107,8 +126,8 @@ class classSQLBuilder
         if (!empty($this->aOrders)) {
             $this->sqlQuery .= " ORDER BY " . implode(',', $this->aOrders);
         }
-        if (!empty($this->aLimit)) {
-            $this->sqlQuery .= " LIMIT " . implode(',', $this->aLimit);
+        if (!empty($this->sLimit)) {
+            $this->sqlQuery .= " LIMIT " . $this->sLimit;
         }
     }
 
@@ -119,6 +138,19 @@ class classSQLBuilder
             $this->aSqlQueryResult = func_query_hash($this->sqlQuery, $hashColumn);
         } else
             $this->aSqlQueryResult = func_query($this->sqlQuery);
+        return $this;
+    }
+
+    public function query($hashColumn = null)
+    {
+        return $this->Execute($hashColumn);
+    }
+
+    public function query_first()
+    {
+        $this->setLimit('1');
+        $this->generateSQL();
+        $this->aSqlQueryResult = func_query_first($this->sqlQuery);
         return $this;
     }
 
