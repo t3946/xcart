@@ -1183,7 +1183,7 @@ class classAmazonMWS
         /** @var classCidevAmazonFbaProducts[] $aFbaProducts */
 
         for ($i = 500; $i >= $config['Amazon_FBA_options']['Amazon_FBA_Month']; $i--) {
-            $aAggregateRows = $aAggregateStat = [];
+            $aAggregateRows = $aAggregateStat = $aFbaProducts = null;
             $currentDate = new DateTime(date('Y-m-d', strtotime("first day of this month")));
             $currentDate->sub(new DateInterval('P' . $i . 'M'));
 
