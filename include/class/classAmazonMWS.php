@@ -1251,8 +1251,11 @@ class classAmazonMWS
                         $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('lp_SellerPositiveFeedbackRating', $oFbaProduct->getField('lp_SellerPositiveFeedbackRating'));
                     $aAggregateStat[$iProductId][$iReportTimeStamp]['lp_SellerPositiveFeedbackRating']++;
 
-                    if ($oFbaProduct->getField('lp_ShippingTime') != '' && intval($oFbaProduct->getField('lp_ShippingTime')) <= intval($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('lp_ShippingTime')))
-                        $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('lp_ShippingTime', $oFbaProduct->getField('lp_ShippingTime'));
+                    if ($oFbaProduct->getField('lp_ShippingTime') != '') {
+                        if ($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('lp_ShippingTime') == '') $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('lp_ShippingTime', $oFbaProduct->getField('lp_ShippingTime'));
+                        if (intval($oFbaProduct->getField('lp_ShippingTime')) <= intval($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('lp_ShippingTime')))
+                            $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('lp_ShippingTime', $oFbaProduct->getField('lp_ShippingTime'));
+                    }
                     $aAggregateStat[$iProductId][$iReportTimeStamp]['lp_ShippingTime']++;
                 }
             }
@@ -1283,7 +1286,7 @@ class classAmazonMWS
 
             if ($aFbaProducts) {
                 foreach ($aFbaProducts as $oFbaProduct) {
-                    $oFbaProduct->_delete();
+                    $oFbaProduct->updateField('precise_data','D');
                 }
             }
 
