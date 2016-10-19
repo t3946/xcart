@@ -36,7 +36,135 @@ $classAmazonMWS->setReportType('_GET_RESERVED_INVENTORY_DATA_')->setBackProcessN
 
 
 
+function invokeListInventorySupply(FBAInventoryServiceMWS_Interface $service, $request)
+{
+    try {
+        $response = $service->ListInventorySupply($request);
 
+        $dom = new DOMDocument();
+        $dom->loadXML($response->toXML());
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        return $dom->saveXML();
+
+    } catch (FBAInventoryServiceMWS_Exception $ex) {
+        $return_echo["function"] = "invokeListInventorySupply";
+        $return_echo["Caught_Exception"] = $ex->getMessage();
+        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+        $return_echo["Error_Code"] = $ex->getErrorCode();
+        $return_echo["Error_Type"] = $ex->getErrorType();
+        $return_echo["Request_ID"] = $ex->getRequestId();
+        $return_echo["XML"] = $ex->getXML();
+        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+        func_print_r($return_echo);
+        return $return_echo;
+    }
+}
+
+function invokeGetCompetitivePricingForSKU(MarketplaceWebServiceProducts_Interface $service, $request)
+{
+    try {
+        $response = $service->GetCompetitivePricingForSKU($request);
+
+        $dom = new DOMDocument();
+        $dom->loadXML($response->toXML());
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        return $dom->saveXML();
+
+    } catch (MarketplaceWebServiceProducts_Exception $ex) {
+        $return_echo["function"] = "invokeGetCompetitivePricingForSKU";
+        $return_echo["Caught_Exception"] = $ex->getMessage();
+        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+        $return_echo["Error_Code"] = $ex->getErrorCode();
+        $return_echo["Error_Type"] = $ex->getErrorType();
+        $return_echo["Request_ID"] = $ex->getRequestId();
+        $return_echo["XML"] = $ex->getXML();
+        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+        func_print_r($return_echo);
+        return $return_echo;
+    }
+}
+
+
+
+function invokeListRecommendations(MWSRecommendationsSectionService_Interface $service, $request)
+{
+    try {
+        $response = $service->ListRecommendations($request);
+
+        $dom = new DOMDocument();
+        $dom->loadXML($response->toXML());
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        return $dom->saveXML();
+
+    } catch (MWSRecommendationsSectionService_Exception $ex) {
+        $return_echo["function"] = "invokeListRecommendations";
+        $return_echo["Caught_Exception"] = $ex->getMessage();
+        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+        $return_echo["Error_Code"] = $ex->getErrorCode();
+        $return_echo["Error_Type"] = $ex->getErrorType();
+        $return_echo["Request_ID"] = $ex->getRequestId();
+        $return_echo["XML"] = $ex->getXML();
+        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+        func_print_r($return_echo);
+        return $return_echo;
+    }
+}
+
+function invokeListRecommendationsByNextToken(MWSRecommendationsSectionService_Interface $service, $request)
+{
+    try {
+        $response = $service->ListRecommendationsByNextToken($request);
+
+        $dom = new DOMDocument();
+        $dom->loadXML($response->toXML());
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        return $dom->saveXML();
+
+    } catch (MWSRecommendationsSectionService_Exception $ex) {
+        $return_echo["function"] = "invokeListRecommendationsByNextToken";
+        $return_echo["Caught_Exception"] = $ex->getMessage();
+        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+        $return_echo["Error_Code"] = $ex->getErrorCode();
+        $return_echo["Error_Type"] = $ex->getErrorType();
+        $return_echo["Request_ID"] = $ex->getRequestId();
+        $return_echo["XML"] = $ex->getXML();
+        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        func_print_r($return_echo);
+        return $return_echo;
+    }
+}
+
+function invokeGetLowestOfferListingsForSKU(MarketplaceWebServiceProducts_Interface $service, $request)
+{
+    try {
+        $response = $service->GetLowestOfferListingsForSKU($request);
+
+        $dom = new DOMDocument();
+        $dom->loadXML($response->toXML());
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        return $dom->saveXML();
+
+    } catch (MarketplaceWebServiceProducts_Exception $ex) {
+        $return_echo["function"] = "invokeGetLowestOfferListingsForSKU";
+        $return_echo["Caught_Exception"] = $ex->getMessage();
+        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+        $return_echo["Error_Code"] = $ex->getErrorCode();
+        $return_echo["Error_Type"] = $ex->getErrorType();
+        $return_echo["Request_ID"] = $ex->getRequestId();
+        $return_echo["XML"] = $ex->getXML();
+        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        func_print_r($return_echo);
+        return $return_echo;
+    }
+}
 
 #
 # Step 2 start
