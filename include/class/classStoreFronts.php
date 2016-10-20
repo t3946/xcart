@@ -29,7 +29,7 @@ class classStoreFronts extends classData
             if (!empty($aStoreFronts)) {
                 foreach ($aStoreFronts as $aStoreFront) {
                     $oStorefront = new classStoreFront();
-                    $oStorefront->fillPrimaryTableValues($aStoreFront);
+                    $oStorefront->fill($aStoreFront);
                     $this->aStoreFronts[] = $oStorefront;
                 }
             }

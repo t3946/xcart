@@ -1286,7 +1286,7 @@ class classAmazonMWS
 
             if ($aFbaProducts) {
                 foreach ($aFbaProducts as $oFbaProduct) {
-                    $oFbaProduct->updateField('precise_data','D');
+                    $oFbaProduct->_delete();
                 }
             }
 

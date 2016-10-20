@@ -107,7 +107,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "excluded_marketplace" && $manufacture
 	if (!empty($excluded_marketplaces))
 	foreach($excluded_marketplaces as $iExcludedMarketplace) {
 		$oMarketPlace = new classDisabledMarketPlace();
-		$oMarketPlace->fillPrimaryTableValues(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $manufacturerid, 'resource_type' => 'D']);
+		$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $manufacturerid, 'resource_type' => 'D']);
 		$oMarketPlace->addDisabledMarketPlace();
 	}
 }

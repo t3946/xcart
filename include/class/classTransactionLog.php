@@ -38,7 +38,7 @@ class classTransactionLog extends classData
         if (!empty($aResponse))
             $aResponse['xcart_log'] = $this->getLogText();
         else $aResponse = $this->getLogLines();
-        $this->fillPrimaryTableValues([
+        $this->fill([
             'orderid'=>$oTransaction->getField('orderid'),
             'paymentid'=>$oTransaction->getField('paymentid'),
             'transaction_id'=>$oTransaction->getField('transaction_id'),

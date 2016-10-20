@@ -30,10 +30,10 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
                 $oStoreFrontMarketPlace->restoreQueue([['productid' => $iProductId]], 1);
                 //Google
                 $oDisableMarketplace = new classDisabledMarketPlace();
-                $oDisableMarketplace->fillPrimaryTableValues(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
+                $oDisableMarketplace->fill(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
                 $oDisableMarketplace->addDisabledMarketPlace();
                 //Bing
-                $oDisableMarketplace->fillPrimaryTableValues(['marketplace_id' => 2, 'resource_id' => $iProductId, 'resource_type' => 'P']);
+                $oDisableMarketplace->fill(['marketplace_id' => 2, 'resource_id' => $iProductId, 'resource_type' => 'P']);
                 $oDisableMarketplace->addDisabledMarketPlace();
             }
         }

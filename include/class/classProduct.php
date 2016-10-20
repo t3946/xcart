@@ -98,7 +98,7 @@ class classProduct extends classData
         $aHTMLShot = func_query_first("SELECT * FROM " . self::$sql_tbl['product_htmlshot'] . " WHERE product_id=" . $this->getProductId() . " AND order_id=$iOrderID");
         if (!empty($aHTMLShot)) {
             $oResult = new classHTMLShot();
-            $oResult->fillPrimaryTableValues($aHTMLShot);
+            $oResult->fill($aHTMLShot);
         }
         return $oResult;
     }
@@ -195,13 +195,17 @@ class classProduct extends classData
             if (!empty($aImages))
                 foreach ($aImages as $aImage) {
                     $oProductImage = new classProductImage($type);
-                    $oProductImage->fillPrimaryTableValues($aImage);
+                    $oProductImage->fill($aImage);
                     $var = &$this->$sImagesVar;
                     $var[] = $oProductImage;
                 }
         }
     }
 
+    /**
+     * @param $type
+     * @return classProductImage[]
+     */
     public function getImages($type)
     {
         $sImagesVar = "aImages" . $type;
@@ -216,7 +220,7 @@ class classProduct extends classData
             if (!empty($aPricing))
                 foreach ($aPricing as $aPrice) {
                     $oProductPricing = new classPricing();
-                    $oProductPricing->fillPrimaryTableValues($aPrice);
+                    $oProductPricing->fill($aPrice);
                     $this->aPricing[] = $oProductPricing;
                 }
         }
@@ -361,6 +365,10 @@ class classProduct extends classData
         return ($this->getField('retail_trust_enabled') == 'Y') ? true : false;
     }
 
+    /**
+     * @param $sSKU
+     * @return classProduct
+     */
     public static function getProductBySKU($sSKU)
     {
         return classProduct::model()->find(classSQLBuilder::getInstance()->addCondition("productcode = '$sSKU'"));

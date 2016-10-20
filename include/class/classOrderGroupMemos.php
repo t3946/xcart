@@ -6,6 +6,9 @@ require_once $xcart_dir . "/include/class/classOrderGroupMemo.php";
 
 class classOrderGroupMemos extends classData
 {
+    /**
+     * @var classOrderGroupMemo[]
+     */
     private $aGroupMemos = [];
 
     public function __construct($aParams = [])
@@ -28,7 +31,7 @@ class classOrderGroupMemos extends classData
         if (!empty($aRes)) {
             foreach ($aRes as $aGroupMemo) {
                 $oGroupMemo = new classOrderGroupInvoice();
-                $oGroupMemo->fillPrimaryTableValues($aGroupMemo);
+                $oGroupMemo->fill($aGroupMemo);
                 $this->aGroupMemos[] = $oGroupMemo;
             }
         }

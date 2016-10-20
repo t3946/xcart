@@ -26,7 +26,7 @@ class classStoreFront extends classData
             $this->sConfigTable = self::$sql_tbl['storefronts_config'];
         } else {
             $this->sConfigTable = self::$sql_tbl['config'];
-            $this->fillPrimaryTableValues(['storefrontid'=>0, 'domain'=>MAIN_SF_DOMAIN]);
+            $this->fill(['storefrontid'=>0, 'domain'=>MAIN_SF_DOMAIN]);
         }
     }
 
@@ -52,6 +52,7 @@ class classStoreFront extends classData
 
     public function fetchCDNSettings()
     {
+        $addSQL = '';
         $this->_init();
         if ($this->getStoreFrontId() > 0) {
             $addSQL = ' AND storefrontid=' . $this->getStoreFrontId();
