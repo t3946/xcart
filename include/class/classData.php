@@ -9,10 +9,11 @@ class classData
     protected $aPrimaryKeysValues = [];
     protected $aPrimaryTableValue;
     protected $sPrimaryTable;
-    protected $oSQL = null;
 
     /**
+     * classData constructor.
      * @param array $aParams
+     * @throws Exception
      */
     public function __construct($aParams = [])
     {
@@ -25,9 +26,11 @@ class classData
             $this->aPrimaryKeysValues = array_intersect_key($aParams, array_flip($this->aPrimaryKeys));
             $this->fillPrimaryTableInfo();
         }
-        $this->oSQL = new classSQLBuilder();
     }
 
+    /**
+     * @return static
+     */
     protected function _clone()
     {
         return clone $this;
@@ -55,6 +58,15 @@ class classData
         func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, $this->getWhereClause());
     }
 
+    public function _save($is_replace = false)
+    {
+        if (empty($this->aPrimaryKeysValues)) {
+            $this->_insert($is_replace);
+        } else {
+            $this->_update();
+        }
+    }
+
     protected function fillPrimaryTableInfo()
     {
         if (!empty($this->aPrimaryKeysValues)) {
@@ -62,7 +74,7 @@ class classData
         }
     }
 
-    public function fillPrimaryTableValues($aValues)
+    public function fill($aValues)
     {
         if (!empty($aValues)) {
             $this->aPrimaryTableValue = $aValues;
@@ -77,9 +89,10 @@ class classData
      */
     public function getField($sFieldName = null)
     {
+        $res = null;
         if (empty($sFieldName))
             $res = $this->getFields();
-        else $res = $this->aPrimaryTableValue[$sFieldName];
+        else if (isset($this->aPrimaryTableValue[$sFieldName])) $res = $this->aPrimaryTableValue[$sFieldName];
         return $res;
     }
 
@@ -96,13 +109,16 @@ class classData
     public function setField($sFieldName, $sNewValue)
     {
         $this->aPrimaryTableValue[$sFieldName] = $sNewValue;
+
+        if (in_array($sFieldName, $this->aPrimaryKeys))
+            $this->aPrimaryKeysValues[$sFieldName] = $sNewValue;
         return $this;
     }
 
     public function setFields($aFieldNamesValues)
     {
         foreach ($aFieldNamesValues as $key => $value)
-            $this->aPrimaryTableValue[$key] = $value;
+            $this->setField($key, $value);
         return $this;
     }
 
@@ -140,15 +156,38 @@ class classData
         return implode(" AND ", $aKeyArray);
     }
 
+    /**
+     * @return static
+     */
     public static function model($aParams = [])
     {
         $class = get_called_class();
         return new $class($aParams);
     }
 
-    protected function fill($aParams)
+    /*protected function fill($aParams)
     {
         $this->fillPrimaryTableValues($aParams);
         return $this;
+    }*/
+
+    public function findAll(classSQLBuilder $oSQL)
+    {
+        $aSearchResult = null;
+        $aResult = $oSQL->setSelect('main.*')->setFromTable($this->sPrimaryTable, 'main')->query()->getQueryResult();
+        if (!empty($aResult)) {
+            foreach ($aResult as $aReturnResult) {
+                $aSearchResult[] = $this::model()->fill($aReturnResult);
+            }
+        }
+        return $aSearchResult;
+    }
+
+    public function find(classSQLBuilder $oSQL)
+    {
+        $oSearchResult = $this::model();
+        $aResult = $oSQL->setSelect('main.*')->setFromTable($this->sPrimaryTable, 'main')->query_first()->getQueryResult();
+        if (!empty($aResult)) $oSearchResult->fill($aResult);
+        return $oSearchResult;
     }
 }
