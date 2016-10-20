@@ -309,7 +309,7 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 		classDisabledMarketPlace::deleteAllDisabledMarketPlace($brandid, 'B');
 		foreach($excluded_marketplaces as $iExcludedMarketplace) {
 			$oMarketPlace = new classDisabledMarketPlace();
-			$oMarketPlace->fillPrimaryTableValues(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $brandid, 'resource_type'=>'B']);
+			$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $brandid, 'resource_type'=>'B']);
 			$oMarketPlace->addDisabledMarketPlace();
 		}
 	}

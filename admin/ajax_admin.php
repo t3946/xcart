@@ -47,12 +47,10 @@ function changeVerifyProductStatus($aPostParam = [])
     $iStatusId = (int)$aPostParam['verify_status_id'];
     $sNote = $aPostParam['note_text'];
     if (!empty($iProductId)) {
-        $oProduct = new classProduct(['productid'=>$iProductId]);
-        $bResult = $oProduct->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
+        $bResult = classProduct::model(['productid'=>$iProductId])->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
         if (!empty($aOrders)) {
             foreach ($aOrders as $iOrderId) {
-                $oOrder = new classOrder(['orderid'=>$iOrderId]);
-                $oOrder->updateVerificationStatus();
+                classOrder::model(['orderid'=>$iOrderId])->updateVerificationStatus();
             }
         }
     }
@@ -65,8 +63,7 @@ function changeVerifyOrderStatus($aPostParam = [])
     $iOrderId = (int)$aPostParam['order_id'];
     $sOrderStatus = $aPostParam['order_verify_status'];
     if (!empty($iOrderId)) {
-        $oOrder = new classOrder(['orderid'=>$iOrderId]);
-        $bResult = $oOrder->changeVerificationStatus($sOrderStatus);
+        $bResult = classOrder::model(['orderid'=>$iOrderId])->changeVerificationStatus($sOrderStatus);
     }
     print(json_encode($bResult));
 }

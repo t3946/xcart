@@ -43,7 +43,7 @@ class classOrderGroupInvoices extends classData
             if (!empty($aRes)) {
                 foreach ($aRes as $aGroupInvoice) {
                     $oGroupInvoice = new classOrderGroupInvoice();
-                    $oGroupInvoice->fillPrimaryTableValues($aGroupInvoice);
+                    $oGroupInvoice->fill($aGroupInvoice);
                     $this->aGroupInvoices[] = $oGroupInvoice;
                 }
             }
@@ -96,7 +96,7 @@ class classOrderGroupInvoices extends classData
      * @param classOrderGroupInvoice $oLastInvoice
      * @return classOrderGroupInvoices
      */
-    public function createCloneInvoice($oInvoice)
+    public function createCloneInvoice(classOrderGroupInvoice $oInvoice)
     {
         $oCloneInvoice = $oInvoice->_clone();
         $oCloneInvoice->setInvoiceNumber($oInvoice->getInvoiceNumber() + 1);

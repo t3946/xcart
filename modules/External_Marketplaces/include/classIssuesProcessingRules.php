@@ -27,7 +27,7 @@ class classIssuesProcessingRules extends classData
         if (!empty($aIssues)) {
             foreach ($aIssues as $aIssue) {
                 $oIssue = new classIssuesProcessingRules();
-                $oIssue->fillPrimaryTableValues($aIssue);
+                $oIssue->fill($aIssue);
                 if (!is_null($iStorefrontId))
                     $oIssue->setStoreFront($iStorefrontId);
                 if ($oIssue->getProductImpactedCount() > 0)
@@ -46,7 +46,7 @@ class classIssuesProcessingRules extends classData
             if (!empty($aIssues)) {
                 foreach ($aIssues as $aIssue) {
                     $oResult = new classIssuesProcessingRules();
-                    $oResult->fillPrimaryTableValues($aIssue);
+                    $oResult->fill($aIssue);
                 }
             }
         }
@@ -106,17 +106,18 @@ class classIssuesProcessingRules extends classData
             $iIssueId = $this->getIssueId();
             if ($iIssueId) $aParams['issue_id'] = $this->getIssueId();
 
-            $this->oSQL->init()->addSelect('count(1)', 'cnt')->addFromTable('cidev_gmc_quality_issues', 'xc')->
+            $oSQL = classSQLBuilder::getInstance();
+            $oSQL->addSelect('count(1)', 'cnt')->addFromTable('cidev_gmc_quality_issues', 'xc')->
             addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'");
             if (!empty($aParams['search'])) {
                 $sSearch = addslashes($aParams['search']);
-                $this->oSQL->addCondition("(xp.productcode LIKE '%" . $sSearch . "%' OR xp.product LIKE '%" . $sSearch . "%')");
+                $oSQL->addCondition("(xp.productcode LIKE '%" . $sSearch . "%' OR xp.product LIKE '%" . $sSearch . "%')");
                 unset($aParams['search']);
             }
             if (!is_null($this->getStoreFront())) {
-                $this->oSQL->addInnerJoin('products_sf', 'psf', 'psf.productid = xc.productid AND psf.sfid=' . $this->getStoreFront());
+                $oSQL->addInnerJoin('products_sf', 'psf', 'psf.productid = xc.productid AND psf.sfid=' . $this->getStoreFront());
             }
-            $aCount = $this->oSQL->addFilter($aParams)->Execute()->getQueryResult();
+            $aCount = $oSQL->addFilter($aParams)->Execute()->getQueryResult();
 
             $aC = reset($aCount);
             $this->iProductCount = $aC['cnt'];
@@ -129,23 +130,24 @@ class classIssuesProcessingRules extends classData
         if (is_null($this->aProductsIssues)) {
             $iIssueId = $this->getIssueId();
             if ($iIssueId) $aParams['issue_id'] = $this->getIssueId();
-            $this->oSQL->init()->addSelect('xc.*')->addFromTable('cidev_gmc_quality_issues', 'xc')->
+            $oSQL = classSQLBuilder::getInstance();
+            $oSQL->addSelect('xc.*')->addFromTable('cidev_gmc_quality_issues', 'xc')->
             addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'");
             if (!empty($aParams['search'])) {
                 $sSearch = addslashes($aParams['search']);
-                $this->oSQL->addCondition("(xp.productcode LIKE '%" . $sSearch . "%' OR xp.product LIKE '%" . $sSearch . "%')");
+                $oSQL->addCondition("(xp.productcode LIKE '%" . $sSearch . "%' OR xp.product LIKE '%" . $sSearch . "%')");
                 unset($aParams['search']);
             }
             if (!is_null($this->getStoreFront())) {
-                $this->oSQL->addInnerJoin('products_sf', 'psf', 'psf.productid = xc.productid AND psf.sfid=' . $this->getStoreFront());
+                $oSQL->addInnerJoin('products_sf', 'psf', 'psf.productid = xc.productid AND psf.sfid=' . $this->getStoreFront());
             }
 
-            $aProductImpacted = $this->oSQL->addFilter($aParams)->setLimit("$first_page, $objects_per_page")->Execute()->getQueryResult();
+            $aProductImpacted = $oSQL->addFilter($aParams)->setLimit("$first_page, $objects_per_page")->Execute()->getQueryResult();
 
             if ($aProductImpacted) {
                 foreach ($aProductImpacted as $aProducts) {
                     $oIssue = new classGMCQualityIssues();
-                    $oIssue->fillPrimaryTableValues($aProducts);
+                    $oIssue->fill($aProducts);
                     $this->aProductsIssues[] = $oIssue;
                 }
             }

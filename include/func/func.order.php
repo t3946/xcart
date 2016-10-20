@@ -728,10 +728,12 @@ function func_order_data($orderid) {
 
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classProducts.php";
-		$classProduct = new classProduct(['productid'=>$v['productid']]);
+		include_once $xcart_dir."/include/class/classOrderDetail.php";
+		$classProduct = classProduct::model(['productid'=>$v['productid']]);
 		$mpn = $classProduct->getMPN();
 		$v["mpn"] = $mpn;
 		$v["oProduct"] = $classProduct;
+		$v["oOrderDetail"] = classOrderDetail::model(['itemid'=>$v['itemid']]);
 
 /*#
 ##
@@ -1563,10 +1565,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			$aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
 			if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
 				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
-			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0) {
-				$iLastProductVerifyDate = $oProduct->getField('last_verify_date');
+			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0 && $oProduct->getProductLastVerifyDate()) {
 				$currentDate = new DateTime("now");
-				$iDaysInterval = $currentDate->diff($iLastProductVerifyDate)->days;
+				$iDaysInterval = $currentDate->diff($oProduct->getProductLastVerifyDate())->days;
 				if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
 					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
 				}
@@ -1675,7 +1676,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			unset($group_total);
 			unset($insert_data);
 		}
-
+		global $xcart_dir;
+		include_once $xcart_dir."/include/class/classOrder.php";
+		$oOrder = classOrder::model(['orderid'=>$orderid]);
 		$oOrder->updateVerificationStatus();
 
 
@@ -2130,9 +2133,7 @@ function func_get_order_manufacturers($orderid){
                                                         //$tmp_sku = substr($v["productcode"], 4);
 														global $xcart_dir;
 														include_once $xcart_dir."/include/class/classProducts.php";
-														$classProduct = new classProducts();
-														$tmp_sku = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
-														unset($classProduct);
+														$tmp_sku = classProduct::model(['productid'=>$v['productid']])->getMPN();
 
                                                         $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">'.$tmp_sku.'</td><td width="250px" style="text-align: left;"><a href="'.$v["links"]["customer"].'">'.$v["product"].'</a>'.$selected_product_options.'</td><td style="text-align: right;">'.$v["amount"].'</td></tr>';
 

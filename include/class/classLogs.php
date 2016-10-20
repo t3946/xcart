@@ -70,7 +70,7 @@ class classLogs extends classData
         if (!empty($aResult)) {
             foreach ($aResult as $oResult) {
                 $oLogs = new classLogs($oResult['resource_type']);
-                $oLogs->fillPrimaryTableValues($oResult);
+                $oLogs->fill($oResult);
                 $aLogs[] = $oLogs;
             }
         }

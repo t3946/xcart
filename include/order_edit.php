@@ -34,7 +34,7 @@
 #
 # $Id: order_edit.php, v 1.0.0 2010/03/24 12:08:09 random Exp $
 #
-global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt;
+global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt, $top_message;
 
 if (!defined("XCART_SESSION_START")) {
     header("Location: ../");
@@ -1386,7 +1386,7 @@ if ($REQUEST_METHOD == "POST") {
         }
         $oOrder->recalculateRetailTrust();
 
-        /*if ($send_email == 'Y') {
+        if ($send_email == 'Y') {
 
             $customer_attach_pdf_invoice = "";
             $admin_attach_pdf_invoice = "";
@@ -1429,7 +1429,7 @@ if ($REQUEST_METHOD == "POST") {
                 $customer_attach_pdf_invoice = "";
                 $admin_attach_pdf_invoice = "";
             }
-        }*/
+        }
 
 
         if ($all_current_dc_status_NOT_eq_S) {

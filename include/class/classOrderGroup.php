@@ -76,7 +76,7 @@ class classOrderGroup extends classData
 
     private function fetchOrderInstance()
     {
-        $this->oOrder = new classOrder(['orderid' => $this->getOrderId()]);
+        $this->oOrder = classOrder::model(['orderid' => $this->getOrderId()]);
     }
 
     public function getPaymentMethodId()
@@ -120,6 +120,30 @@ class classOrderGroup extends classData
     public function getTotalPST()
     {
         return floatval($this->getField('total_pst'));
+    }
+
+    public function setTotalNet($fSumma)
+    {
+        $this->setField('total_net', $fSumma);
+        return $this;
+    }
+
+    public function setTotalHST($fSumma)
+    {
+        $this->setField('total_gst', $fSumma);
+        return $this;
+    }
+
+    public function setTotalPST($fSumma)
+    {
+        $this->setField('total_pst', $fSumma);
+        return $this;
+    }
+
+    public function setTotalGross($fSumma)
+    {
+        $this->setField('total_gross', $fSumma);
+        return $this;
     }
 
     public function getShippingGross()
@@ -1192,6 +1216,36 @@ class classOrderGroup extends classData
             }
         }
         return $fSumma;
+    }
+
+    /**
+     * @return classOrderDetail[]
+     */
+    public function getOrderDetails()
+    {
+        return classOrderDetail::model()->findAll(classSQLBuilder::getInstance()->
+        addInnerJoin('products', 'p', "p.productid = main.productid AND p.manufacturerid = " . $this->getManufacturerId())->
+        addCondition('orderid = ' . $this->getOrderId()));
+    }
+
+    private function calculateTotalNet()
+    {
+        $this->setTotalNet($this->getTotalGross() - $this->getTotalHST() - $this->getTotalPST());
+    }
+
+    public function reCalculateTotals()
+    {
+        $aOrderDetails = $this->getOrderDetails();
+        if (!empty($aOrderDetails)) {
+            $this->setTotalGross(0)->setTotalNet(0);
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $this->setTotalGross($this->getTotalGross() + ($oOrderDetail->getTotalProductPrice()));
+            }
+            $this->setTotalGross($this->getTotalGross() + $this->getShippingGross());
+            $this->calculateTotalNet();
+            $this->_save();
+        }
+
     }
 
 }

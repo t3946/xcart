@@ -28,7 +28,7 @@ class classExternalMarketPlace extends classData
                 $sProcessorClass = __CLASS__;
                 /** @var classStoreFrontMarketPlace $oProcessor */
                 $oProcessor = new $sProcessorClass();
-                $oProcessor->fillPrimaryTableValues($aMarketPlace);
+                $oProcessor->fill($aMarketPlace);
                 $aMP[] = $oProcessor;
             }
         }
@@ -89,7 +89,7 @@ class classExternalMarketPlace extends classData
             if (!empty($aMarketPlaces)) {
                 foreach ($aMarketPlaces as $aMarketPlace) {
                     $oStoreMarketPlace = $this->getExternalMarketPlace($this->getMarketPlaceId(),$aMarketPlace['storefront_id']);
-                    $oStoreMarketPlace->fillPrimaryTableValues($aMarketPlace);
+                    $oStoreMarketPlace->fill($aMarketPlace);
                     $this->aStoreMarketPlaces[] = $oStoreMarketPlace;
                 }
             }

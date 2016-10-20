@@ -534,13 +534,15 @@ while (!empty($NextToken)){
 					
 				}
 
-				global $xcart_dir;
-				include_once $xcart_dir."/include/class/classOrders.php";
-				$oOrder = new classOrder($new_orderid);
-				$oOrder->updateVerificationStatus();
 
 				$extra["product_total"]["net"] = $extra["product_total"]["gross"] = $product_total;
 				db_query("UPDATE $sql_tbl[orders] SET extra='".serialize($extra)."', subtotal='$product_total' WHERE orderid='$new_orderid'");
+
+				global $xcart_dir;
+				include_once $xcart_dir."/include/class/classOrders.php";
+				/** @var classOrder $oOrder */
+				$oOrder = classOrder::model(['orderid'=>$new_orderid]);
+				$oOrder->updateVerificationStatus()->reCalculateTotals();
 
 				$id = func_query_first_cell("SELECT id FROM $sql_tbl[cidev_amazon_order_raw] WHERE orderid='$new_orderid'");
 				if (!empty($id)){
@@ -749,11 +751,11 @@ while (!empty($NextToken)){
                                                 'orderid' => $new_orderid,
                                                 'manufacturerid' => $prod_info["manufacturerid"],
                                                 'shipping' => addslashes($order_info['ShipmentServiceLevelCategory']),
-						'cb_status' => ($order_info['OrderStatus']=='Canceled' ? 'A' : 'P'),
+												'cb_status' => ($order_info['OrderStatus']=='Canceled' ? 'A' : 'P'),
                                                 'dc_status' => ($order_info['OrderStatus']=='Unshipped' ? 'T' : 'S'),
                                                 'bd_status' => 'W',
-                                                'total_net' => $order_info['OrderTotal']['Amount'],
-                                                'total_gross' => $order_info['OrderTotal']['Amount']
+                                                //'total_net' => $order_info['OrderTotal']['Amount'],
+                                                //'total_gross' => $order_info['OrderTotal']['Amount']
 //                                              'acc_paymentid' => '1'
                                             );
 
@@ -795,6 +797,8 @@ while (!empty($NextToken)){
 
                                 $extra["product_total"]["net"] = $extra["product_total"]["gross"] = $product_total;
                                 db_query("UPDATE $sql_tbl[orders] SET extra='".serialize($extra)."', subtotal='$product_total' WHERE orderid='$new_orderid'");
+
+
 
                                 $id = func_query_first_cell("SELECT id FROM $sql_tbl[cidev_amazon_order_raw] WHERE orderid='$new_orderid'");
                                 if (!empty($id)){

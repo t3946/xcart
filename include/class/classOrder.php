@@ -35,16 +35,8 @@ class classOrder extends classData
     private $aOrderProductsManufactueres = null;
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
-    /**
-     * @var classCustomer
-     */
-    private $oCustomer = null;
-    /**
-     * @var classStoreFront
-     */
-    private $oStoreFront = null;
 
-    public function __construct($aOrderData = [])
+    public function __construct($aOrderData = null)
     {
         $this->aPrimaryKeys = ['orderid'];
         $this->sPrimaryTable = 'orders';
@@ -52,46 +44,11 @@ class classOrder extends classData
         parent::__construct($aOrderData);
     }
 
-    public static function getInstance($iId = null)
-    {
-        $oOrder = null;
-        if (is_array($iId)) {
-            $oOrder = new self();
-            $oOrder->fillPrimaryTableValues($iId);
-        } else if (is_numeric($iId)) {
-            $oOrder = new self(['orderid' => $iId]);
-        } else if (is_null($iId)) {
-            $oOrder = new self();
-        }
-        return $oOrder;
-    }
-
-    private function fetchOrderDetails()
-    {
-        if (empty($this->aOrderDetails)) {
-            $aOrderDetails = func_query("SELECT * FROM " . self::$sql_tbl['order_details'] . " WHERE " . $this->getWhereClause());
-            if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
-                foreach ($aOrderDetails as $aOrderDetail) {
-                    $oOrderDetail = new classOrderDetail();
-                    $oOrderDetail->fillPrimaryTableValues($aOrderDetail);
-                    $this->aOrderDetails[] = $oOrderDetail;
-                }
-            }
-        }
-        return $this;
-    }
 
     private function fetchOrderGroups()
     {
-        if (empty($this->aOrderGroups)) {
-            $aOrderGroups = func_query("SELECT * FROM " . self::$sql_tbl['order_groups'] . " WHERE " . $this->getWhereClause());
-            if (!empty($aOrderGroups) && is_array($aOrderGroups)) {
-                foreach ($aOrderGroups as $aOrderGroup) {
-                    $oOrderGroup = new classOrderGroup();
-                    $oOrderGroup->fillPrimaryTableValues($aOrderGroup);
-                    $this->aOrderGroups[] = $oOrderGroup;
-                }
-            }
+        if (is_null($this->aOrderGroups)) {
+            $this->aOrderGroups = classOrderGroup::model()->findAll(classSQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
         }
         return $this;
     }
@@ -101,7 +58,9 @@ class classOrder extends classData
      */
     public function getOrderDetails()
     {
-        $this->fetchOrderDetails();
+        if (empty($this->aOrderDetails)) {
+            $this->aOrderDetails = classOrderDetail::model()->findAll(classSQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+        }
         return $this->aOrderDetails;
     }
 
@@ -111,7 +70,7 @@ class classOrder extends classData
     public function getOrderDetailsWithRetailTrust()
     {
         $aResult = [];
-        $this->fetchOrderDetails();
+        $this->getOrderDetails();
         if (!empty($this->aOrderDetails)) {
             foreach ($this->aOrderDetails as $oOrderDetail) {
                 if ($oOrderDetail->isRetailTrustEnabled())
@@ -164,7 +123,7 @@ class classOrder extends classData
     public function getOrderDetailsWithProductsRetailTrust()
     {
         $aResult = [];
-        $this->fetchOrderDetails();
+        $this->getOrderDetails();
         if (!empty($this->aOrderDetails)) {
             foreach ($this->aOrderDetails as $oOrderDetail) {
                 if ($oOrderDetail->getOrderDetailProduct()->isRetailTrustEnabled() && $this->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() > 1)
@@ -218,7 +177,7 @@ class classOrder extends classData
                     $this->aOrderProductsManufactueres = [];
                     foreach ($aProducts as $aProduct) {
                         $oProduct = new classProduct();
-                        $oProduct->fillPrimaryTableValues($aProduct);
+                        $oProduct->fill($aProduct);
                         if (!in_array($oProduct->getField('manufacturerid'), $this->aOrderProductsManufactueres))
                             $this->aOrderProductsManufactueres[] = $oProduct->getField('manufacturerid');
                         $this->aOrderProducts[] = $oProduct;
@@ -317,6 +276,7 @@ class classOrder extends classData
             }
 
         }
+        return $this;
     }
 
     public function isOrderAmazon()
@@ -669,7 +629,7 @@ class classOrder extends classData
     public function getProductPriceNet()
     {
         $fResult = 0;
-        $this->fetchOrderDetails();
+        $this->getOrderDetails();
         if (!empty($this->aOrderDetails)) {
             foreach ($this->aOrderDetails as $oOrderDetail) {
                 $fResult += $oOrderDetail->getTotalProductPrice();
@@ -681,7 +641,7 @@ class classOrder extends classData
     public function getProductPriceHSTPST()
     {
         $fResult = 0;
-        $this->fetchOrderDetails();
+        $this->getOrderDetails();
         if (!empty($this->aOrderDetails)) {
             foreach ($this->aOrderDetails as $oOrderDetail) {
                 $fResult += $oOrderDetail->getProductHST();
@@ -694,6 +654,11 @@ class classOrder extends classData
     public function getProductPriceGross()
     {
         return floatval($this->getProductPriceNet() + $this->getProductPriceHSTPST());
+    }
+
+    public function getOrderGrandTotalNet()
+    {
+        return floatval($this->getOrderTotalNet() + $this->getOrderRetailTrustPrice());
     }
 
     public function getPaymentMethodId()
@@ -787,6 +752,15 @@ class classOrder extends classData
             $this->oCustomer = new classCustomer(['login'=>$this->getLogin()]);
         }
         return $this->oCustomer;
+    }
+
+    public function reCalculateTotals()
+    {
+        $aOrderGroups = $this->getOrderGroups();
+        if (!empty($aOrderGroups))
+            foreach ($aOrderGroups as $oOrderGroup) {
+                $oOrderGroup->reCalculateTotals();
+            }
     }
 
 }

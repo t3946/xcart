@@ -33,7 +33,7 @@ class classOrderTransactions extends classData
         if (!empty($aRes)) {
             foreach ($aRes as $aOrderTransaction) {
                 $oOrderTransaction = new classOrderTransaction();
-                $oOrderTransaction->fillPrimaryTableValues($aOrderTransaction);
+                $oOrderTransaction->fill($aOrderTransaction);
                 $aOrderTransactions[] = $oOrderTransaction;
             }
         }

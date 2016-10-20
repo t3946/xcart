@@ -68,7 +68,7 @@ class classCustomer extends classData
         if (!empty($aCustomers)) {
             foreach ($aCustomers as $aCustomer) {
                 $OCustomer = new classCustomer();
-                $OCustomer->fillPrimaryTableValues($aCustomer);
+                $OCustomer->fill($aCustomer);
                 $aOCustomers[] = $OCustomer;
             }
         }
@@ -153,7 +153,7 @@ class classCustomer extends classData
         if (!empty($aBatches)) {
             foreach ($aBatches as $aBatch) {
                 $oBatch = new classExternalVerificationBatch();
-                $oBatch->fillPrimaryTableValues($aBatch);
+                $oBatch->fill($aBatch);
                 $aB[] = $oBatch;
             }
         }

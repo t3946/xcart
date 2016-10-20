@@ -335,7 +335,7 @@ if ($REQUEST_METHOD == "POST") {
 		classDisabledMarketPlace::deleteAllDisabledMarketPlace($productid, 'P');
 		foreach($excluded_marketplaces as $iExcludedMarketplace) {
 			$oMarketPlace = new classDisabledMarketPlace();
-			$oMarketPlace->fillPrimaryTableValues(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $productid, 'resource_type'=>'P']);
+			$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $productid, 'resource_type'=>'P']);
 			$oMarketPlace->addDisabledMarketPlace();
 		}
 	}
