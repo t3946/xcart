@@ -962,6 +962,8 @@ if ($REQUEST_METHOD == "POST") {
                         }
                     }
 
+                    classProduct::model(['productid'=>$newproductid])->createHTMLShot($orderid);
+
                     # Update wholesale price
                     $prd["price"] = func_query_first_cell("SELECT MIN($sql_tbl[pricing].price) FROM $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid='$newproductid' AND $sql_tbl[pricing].quantity<='$amount' AND $sql_tbl[pricing].variantid = '$newvariantid'");
 
