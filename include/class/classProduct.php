@@ -115,8 +115,7 @@ class classProduct extends classData
             }
         } else {
             $this->changeVerificationStatus(self::PRODUCT_STATUS_NOT_VERIFY,'', true, [$iOrderID]);
-            $oHTMLShot = new classHTMLShot();
-            $oHTMLShot->createHTMLShot($this, $iOrderID);
+            classHTMLShot::model()->createHTMLShot($this, $iOrderID);
         }
     }
 
