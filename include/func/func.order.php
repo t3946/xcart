@@ -1599,23 +1599,8 @@ die("123");
 
 			global $xcart_dir;
 			include_once $xcart_dir."/include/class/classProducts.php";
-			$oProduct = new classProduct(['productid'=>(int)$product['productid']]);
-			$aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
-			if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
-				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
-			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0 && $oProduct->getProductLastVerifyDate()) {
-				$currentDate = new DateTime("now");
-				$iDaysInterval = $currentDate->diff($oProduct->getProductLastVerifyDate())->days;
-				if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
-					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
-				}
-			} else {
-				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_NOT_VERIFY,'', true, [$orderid]);
-				include_once $xcart_dir."/include/class/classHTMLShot.php";
-				$oHTMLShot = new classHTMLShot();
-				$oHTMLShot->createHTMLShot($oProduct, $orderid);
-			}
-
+			$oProduct = classProduct::model(['productid'=>(int)$product['productid']]);
+			$oProduct->createHTMLShot($orderid);
 		}
 
 		$mes .= "STEP H ".date("H:i:s")."\n";

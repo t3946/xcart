@@ -5,6 +5,7 @@ require_once $xcart_dir . "/include/class/classData.php";
 class classHTMLShot extends classData
 {
     const PATH_TO_HTMLS_SHOT_IMAGES = "/images/HTML/%d_%d/";
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['id'];
@@ -18,28 +19,27 @@ class classHTMLShot extends classData
         $aImagesD = $oProduct->getImages('D');
         $aImagesP = $oProduct->getImages('P');
         /** @var classProductImage[] $aImages */
-        $aImages = array_merge($aImagesD,$aImagesP);
+        $aImages = array_merge($aImagesD, $aImagesP);
         $oStoreFront = $oProduct->getStoreFront()->getStoreFrontByProductId($oProduct->getProductId());
 
-        foreach ($aImages as $oImage)
+        foreach ($aImages as $oImage) {
         {
-            if ($oStoreFront->isCDNEnable()){
-                $oImage->useCDN(true,$oStoreFront->getCDNURL());
+            if ($oStoreFront->isCDNEnable()) {
+                $oImage->useCDN(true, $oStoreFront->getCDNURL());
             } else $oImage->useCDN(false);
 
 
-            if ($oImage->saveImageTo($xcart_dir.sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES,$orderid,$oProduct->getProductId()))){
-                $oImage->setField('image_path',sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES,$orderid,$oProduct->getProductId()).$oImage->getFileName());
+            if ($oImage->saveImageTo($xcart_dir . sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES, $orderid, $oProduct->getProductId()))) {
+                $oImage->setField('image_path', sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES, $orderid, $oProduct->getProductId()) . $oImage->getFileName());
             }
 
         }
         $oProduct->getPricing();
         $oStoreFront->setCDNDisable();
 
-        $this->setField('htmlshot',addslashes(serialize($oProduct)));
-        $this->setField('product_id',$oProduct->getProductId());
-        $this->setField('order_id',$orderid);
-        $this->_insert();
+        $this->setField('htmlshot', addslashes(serialize($oProduct)))->
+               setField('product_id', $oProduct->getProductId())->
+               setField('order_id', $orderid)->_insert();
     }
 
     public function getId()
@@ -64,6 +64,6 @@ class classHTMLShot extends classData
 
     public function deleteHTMLShot()
     {
-        db_query("DELETE FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE id = ".$this->getField('id'));
+        $this->_delete();
     }
 }
