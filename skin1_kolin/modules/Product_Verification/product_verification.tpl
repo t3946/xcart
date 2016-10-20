@@ -70,7 +70,7 @@
 					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getOrderModifyURL()}">{$oOrderManufacturer->getDisplayOrderNumber()}</a></td>
 					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getField('productcode')}</a></td>
 					<td><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getField('product')}</a>
-                        {if (!empty($oHTMLShot))}
+                        {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
                             <a title="View HTML-Shot" target="_blank" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
                                 <img src="{$ImagesDir}/html-shot.png" />
                             </a>
