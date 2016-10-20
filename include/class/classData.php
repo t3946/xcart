@@ -9,7 +9,6 @@ class classData
     protected $aPrimaryKeysValues = [];
     protected $aPrimaryTableValue;
     protected $sPrimaryTable;
-    protected $oSQL = null;
 
     /**
      * classData constructor.

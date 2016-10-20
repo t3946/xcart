@@ -43,14 +43,10 @@ class classOrderAmazonDetails extends classData
 
     public function getOrderAmazonDetails($aParams = [])
     {
-        $aRes = func_query("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE orderid = " . $aParams['orderid'] . " AND manufacturerid = " . $aParams['manufacturerid']);
-        if (!empty($aRes)) {
-            foreach ($aRes as $aAmazonDetail) {
-                $oAmazonDetail = new classOrderAmazonDetail();
-                $oAmazonDetail->fill($aAmazonDetail);
-                $this->aAmazonDetails[] = $oAmazonDetail;
-            }
-        }
+        $this->aAmazonDetails = classOrderAmazonDetail::model()->findAll(
+            classSQLBuilder::getInstance()->
+                addCondition('orderid = '. $aParams['orderid'])->
+                addCondition('manufacturerid = '. $aParams['manufacturerid']));
         return $this;
     }
 

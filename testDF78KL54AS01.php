@@ -9,9 +9,9 @@ require "./init.php";
 
 global $xcart_dir, $config;
 include_once $xcart_dir.'/include/class/classSQLBuilder.php';
-include_once $xcart_dir.'/include/class/classOrders.php';
+include_once $xcart_dir.'/include/class/classOrderAmazonDetails.php';
 
 
-$oOrder = classOrder::model(['orderid'=>62543]);
+$oOrder = classOrderAmazonDetails::model();
 
-$oOrder->reCalculateTotals();
+var_dump($oOrder->getOrderAmazonDetails(['orderid'=>65022, 'manufacturerid'=>12]));
