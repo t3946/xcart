@@ -8,6 +8,7 @@ require_once $xcart_dir . "/include/class/classProductVerifiactionStatus.php";
 require_once $xcart_dir . "/include/class/classProductImage.php";
 require_once $xcart_dir . "/include/class/classPricing.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+require_once $xcart_dir . "/include/class/classHTMLShot.php";
 
 class classProduct extends classData
 {
@@ -93,13 +94,7 @@ class classProduct extends classData
 
     public function getHTMLShot($iOrderID)
     {
-        $oResult = null;
-        $aHTMLShot = func_query_first("SELECT * FROM " . self::$sql_tbl['product_htmlshot'] . " WHERE product_id=" . $this->getProductId() . " AND order_id=$iOrderID");
-        if (!empty($aHTMLShot)) {
-            $oResult = new classHTMLShot();
-            $oResult->fillPrimaryTableValues($aHTMLShot);
-        }
-        return $oResult;
+        return classHTMLShot::model()->find(classSQLBuilder::getInstance()->addCondition('product_id = ' . $this->getProductId())->addCondition('order_id = ' . $iOrderID));
     }
 
     public function createHTMLShot($iOrderID)
