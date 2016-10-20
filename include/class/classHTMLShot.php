@@ -23,23 +23,24 @@ class classHTMLShot extends classData
         $oStoreFront = $oProduct->getStoreFront()->getStoreFrontByProductId($oProduct->getProductId());
 
         foreach ($aImages as $oImage) {
-        {
-            if ($oStoreFront->isCDNEnable()) {
-                $oImage->useCDN(true, $oStoreFront->getCDNURL());
-            } else $oImage->useCDN(false);
+            {
+                if ($oStoreFront->isCDNEnable()) {
+                    $oImage->useCDN(true, $oStoreFront->getCDNURL());
+                } else $oImage->useCDN(false);
 
 
-            if ($oImage->saveImageTo($xcart_dir . sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES, $orderid, $oProduct->getProductId()))) {
-                $oImage->setField('image_path', sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES, $orderid, $oProduct->getProductId()) . $oImage->getFileName());
+                if ($oImage->saveImageTo($xcart_dir . sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES, $orderid, $oProduct->getProductId()))) {
+                    $oImage->setField('image_path', sprintf(self::PATH_TO_HTMLS_SHOT_IMAGES, $orderid, $oProduct->getProductId()) . $oImage->getFileName());
+                }
+
             }
+            $oProduct->getPricing();
+            $oStoreFront->setCDNDisable();
 
+            $this->setField('htmlshot', addslashes(serialize($oProduct)))->
+            setField('product_id', $oProduct->getProductId())->
+            setField('order_id', $orderid)->_insert();
         }
-        $oProduct->getPricing();
-        $oStoreFront->setCDNDisable();
-
-        $this->setField('htmlshot', addslashes(serialize($oProduct)))->
-               setField('product_id', $oProduct->getProductId())->
-               setField('order_id', $orderid)->_insert();
     }
 
     public function getId()
