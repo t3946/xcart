@@ -151,14 +151,14 @@ vim: set ts=2 sw=2 sts=2 et:
   <div class="right-box">
     <table cellspacing="0" class="totals" summary="{$lng.lbl_total|escape}">
       <tr>
-        <td class="total-name">{$lng.lbl_subtotal}</td>
-        <td class="total-value">{currency value=$cart.display_subtotal}</td>
-        <td class="total-alt-value">{alter_currency value=$cart.display_subtotal}</td>
+        <td class="total-name">{$lng.lbl_total}</td>
+        <td class="total-value"></td>
+        <td class="total-alt-value">{include file="currency.tpl" value=$cart.display_subtotal}</td>
       </tr>
       {if $cart.discount gt 0}
         <tr>
           <td class="total-name">{$lng.lbl_discount}</td>
-          <td class="total-value">{currency value=$cart.discount}</td>
+          <td class="total-value">{include file="currency.tpl" value=$cart.discount}</td>
           <td class="total-alt-value">{alter_currency value=$cart.discount}</td>
         </tr>
       {/if}
@@ -180,14 +180,14 @@ vim: set ts=2 sw=2 sts=2 et:
           <td class="total-alt-value">{alter_currency value=$cart.display_discounted_subtotal}</td>
         </tr>
       {/if}
-      {if $config.Shipping.enable_shipping eq "Y"}
+      {if 1 == 1}
         <tr>
           <td class="total-name dcoupons-clear">
-          {$lng.lbl_shipping_cost}{if $cart.coupon_discount ne 0 and $cart.coupon_type eq "free_ship"} ({$lng.lbl_discounted} <a href="cart.php?mode=unset_coupons" title="{$lng.lbl_unset_coupon|escape}"><img src="{$ImagesDir}/spacer.gif" alt="{$lng.lbl_unset_coupon|escape}" /></a>){/if}
+          {$lng.lbl_total_shipping_cost}{if $cart.coupon_discount ne 0 and $cart.coupon_type eq "free_ship"} ({$lng.lbl_discounted} <a href="cart.php?mode=unset_coupons" title="{$lng.lbl_unset_coupon|escape}"><img src="{$ImagesDir}/spacer.gif" alt="{$lng.lbl_unset_coupon|escape}" /></a>){/if}
         </td>
         {if ($shipping ne '' or not $need_shipping) and $userinfo ne "" or $config.General.apply_default_country eq "Y" or $cart.shipping_cost gt 0}
-          <td class="total-value">{currency value=$shipping_cost}</td>
-          <td class="total-alt-value">{alter_currency value=$shipping_cost}</td>
+          <td class="total-value"></td>
+          <td class="total-alt-value">{include file="currency.tpl" value=$shipping_cost}</td>
         {else}
           <td class="total-value">{$lng.txt_not_available_value}</td>
           <td>&nbsp;</td>
@@ -235,12 +235,12 @@ vim: set ts=2 sw=2 sts=2 et:
       </tr>
     {/if}
     <tr>
-      <td colspan="3" class="total-hr"><img src="{$ImagesDir}/spacer.gif" alt="" /></td>
+      <td colspan="3"><hr size="1" noshade="noshade"></td>
     </tr>
     <tr class="total-row">
-      <td class="total">{$lng.lbl_cart_total}</td>
-      <td class="total-value">{currency value=$cart.total_cost}</td>
-      <td class="total-alt-value">{alter_currency value=$cart.total_cost}</td>
+      <td class="total">{$lng.lbl_grand_total}</td>
+      <td class="total-value"></td>
+      <td class="total-alt-value">{include file="currency.tpl" value=$cart.total_cost}</td>
     </tr>
     {if $paid_amount}
       <tr class="total-row">
@@ -288,7 +288,7 @@ vim: set ts=2 sw=2 sts=2 et:
   <input type="hidden" name="mode" value="{$smarty.get.mode|escape:"html"}" />
   <input type="hidden" name="action" value="update" />
 {/if}
-{if $display_ups_trademarks and $current_carrier eq "UPS"}
+{if 1 != 1 and $current_carrier eq "UPS"}
   <br />
   {include file="modules/UPS_OnLine_Tools/ups_notice.tpl"}
 {/if}
