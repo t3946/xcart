@@ -122,7 +122,7 @@ class classGMC extends classStoreFrontMarketPlace
                                     }
                                 }
                                 if (!$oGMCQualityIssues->getProductId() && $oIssue->getIssueProcessing() != 'skip') {
-                                    $oGMCQualityIssues->fillPrimaryTableValues(['productid' => $iProductId,
+                                    $oGMCQualityIssues->fill(['productid' => $iProductId,
                                         'issue_id' => $oIssue->getIssueId(),
                                         'issue_date' => $oIssueDate->format('Y-m-d H:i:s'),
                                         'issue_data' => addslashes(json_encode($oDataQualityIssues)),
@@ -131,10 +131,10 @@ class classGMC extends classStoreFrontMarketPlace
                                     if ($oIssue->getIssueProcessing() == 'exclude') {
                                         //Google
                                         $oDisableMarketplace = new classDisabledMarketPlace();
-                                        $oDisableMarketplace->fillPrimaryTableValues(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
+                                        $oDisableMarketplace->fill(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
                                         $oDisableMarketplace->addDisabledMarketPlace();
                                         //Bing
-                                        $oDisableMarketplace->fillPrimaryTableValues(['marketplace_id' => 2, 'resource_id' => $iProductId, 'resource_type' => 'P']);
+                                        $oDisableMarketplace->fill(['marketplace_id' => 2, 'resource_id' => $iProductId, 'resource_type' => 'P']);
                                         $oDisableMarketplace->addDisabledMarketPlace();
                                         $oGMCQualityIssues->setField('fixed', 'Y');
                                     }

@@ -163,7 +163,7 @@ class classOrder extends classData
                     $this->aOrderProductsManufactueres = [];
                     foreach ($aProducts as $aProduct) {
                         $oProduct = new classProduct();
-                        $oProduct->fillPrimaryTableValues($aProduct);
+                        $oProduct->fill($aProduct);
                         if (!in_array($oProduct->getField('manufacturerid'), $this->aOrderProductsManufactueres))
                             $this->aOrderProductsManufactueres[] = $oProduct->getField('manufacturerid');
                         $this->aOrderProducts[] = $oProduct;

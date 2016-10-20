@@ -41,7 +41,7 @@ class classPOPipeLine extends classData
             $aOrder = func_query_first("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE PO_number = '$sPONumber'");
             if (!(empty($aOrder))) {
                 $oPo = new classPOPipeLine();
-                $oPo->fillPrimaryTableValues($aOrder);
+                $oPo->fill($aOrder);
             }
         }
         return $oPo;
@@ -66,7 +66,7 @@ class classPOPipeLine extends classData
         if (!empty($aOrders)) {
             foreach ($aOrders as $aOrder) {
                 $oPo = new classPOPipeLine();
-                $oPo->fillPrimaryTableValues($aOrder);
+                $oPo->fill($aOrder);
                 $aPOs[] = $oPo;
             }
         }
@@ -82,7 +82,7 @@ class classPOPipeLine extends classData
             if (!empty($aOrders)) {
                 foreach ($aOrders as $aOrder) {
                     $oPo = new classPOPipeLine();
-                    $oPo->fillPrimaryTableValues($aOrder);
+                    $oPo->fill($aOrder);
                     $aPOs[] = $oPo;
                 }
             }

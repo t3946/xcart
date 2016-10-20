@@ -31,7 +31,7 @@ class classOrderGroupMemos extends classData
         if (!empty($aRes)) {
             foreach ($aRes as $aGroupMemo) {
                 $oGroupMemo = new classOrderGroupInvoice();
-                $oGroupMemo->fillPrimaryTableValues($aGroupMemo);
+                $oGroupMemo->fill($aGroupMemo);
                 $this->aGroupMemos[] = $oGroupMemo;
             }
         }

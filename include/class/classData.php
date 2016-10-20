@@ -75,7 +75,7 @@ class classData
         }
     }
 
-    public function fillPrimaryTableValues($aValues)
+    public function fill($aValues)
     {
         if (!empty($aValues)) {
             $this->aPrimaryTableValue = $aValues;
@@ -166,11 +166,11 @@ class classData
         return new $class($aParams);
     }
 
-    protected function fill($aParams)
+    /*protected function fill($aParams)
     {
         $this->fillPrimaryTableValues($aParams);
         return $this;
-    }
+    }*/
 
     public function findAll(classSQLBuilder $oSQL)
     {

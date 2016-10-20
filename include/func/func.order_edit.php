@@ -612,13 +612,13 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 			include_once $xcart_dir . "/include/class/classCustomer.php";
 			$oCustomer = new classCustomer(['login'=>$userinfo['login']]);
 			$arrNewValue = ['b_city'=>$userinfo['b_city'],
-							'b_firstname'=>$userinfo['b_firstname'],
-							'b_address'=>$userinfo['b_address'],
+							'b_firstname'=>addslashes($userinfo['b_firstname']),
+							'b_address'=>addslashes($userinfo['b_address']),
 							'b_state'=>$userinfo['b_state'],
 							'b_country'=>$userinfo['b_country'],
 							'b_zipcode'=>$userinfo['b_zipcode'],
-							's_address'=>$userinfo['s_address'],
-							's_firstname'=>$userinfo['s_firstname'],
+							's_address'=>addslashes($userinfo['s_address']),
+							's_firstname'=>addslashes($userinfo['s_firstname']),
 							's_city'=>$userinfo['s_city'],
 							's_state'=>$userinfo['s_state'],
 							's_country'=>$userinfo['s_country'],

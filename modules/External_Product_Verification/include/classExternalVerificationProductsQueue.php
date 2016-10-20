@@ -90,7 +90,7 @@ class classExternalVerificationProductsQueue extends classData
         if (!empty($aQueues)) {
             foreach ($aQueues as $aQueue) {
                 $oQueue = new classExternalVerificationProductsQueue();
-                $oQueue->fillPrimaryTableValues($aQueue);
+                $oQueue->fill($aQueue);
                 $aResult[] = $oQueue;
             }
         }

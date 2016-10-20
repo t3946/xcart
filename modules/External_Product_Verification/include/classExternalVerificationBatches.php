@@ -67,7 +67,7 @@ class classExternalVerificationBatch extends classData
             addCondition('action IN ("' . implode('","', self::$aProductStatuses['processed']) . '")')->Execute()->getQueryResult();
             if (!empty($aProducts)) {
                 foreach ($aProducts as $aProduct) {
-                    $this->aProductsInBatchCompleted[] = classExternalVerificationProducts::model()->fillPrimaryTableValues($aProduct);
+                    $this->aProductsInBatchCompleted[] = classExternalVerificationProducts::model()->fill($aProduct);
                 }
             }
         }
@@ -338,19 +338,19 @@ class classExternalVerificationBatch extends classData
                     $sNewConlusionStatus = 'match';
                 }
                 foreach ($aParams['aConclusion'] as $keyConclusion => $valueConclusion) {
-                    $oExternaVerificationProduct->fillPrimaryTableValues(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => $keyConclusion, 'value' => $valueConclusion])->_insert(true);
+                    $oExternaVerificationProduct->fill(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => $keyConclusion, 'value' => $valueConclusion])->_insert(true);
                 }
             }
         }
 
-        $oExternaVerificationProduct->fillPrimaryTableValues(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => $sNewConlusionStatus, 'value' => time()])->_insert(true);
+        $oExternaVerificationProduct->fill(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => $sNewConlusionStatus, 'value' => time()])->_insert(true);
 
         if (!empty($aParams['note'])) {
-            $oExternaVerificationProduct->fillPrimaryTableValues(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'comments_if_not', 'value' => $aParams['note']])->_insert(true);
+            $oExternaVerificationProduct->fill(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'comments_if_not', 'value' => $aParams['note']])->_insert(true);
         }
 
         if (!empty($aParams['asin'])) {
-            $oExternaVerificationProduct->fillPrimaryTableValues(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'asin_on_amazon', 'value' => $aParams['asin']])->_insert(true);
+            $oExternaVerificationProduct->fill(['productid' => $aParams['product_id'], 'login' => $login, 'batch_id' => $this->getBatchId(), 'action' => 'asin_on_amazon', 'value' => $aParams['asin']])->_insert(true);
         }
 
         /** @var classExternalVerificationProductsQueue $oProductQueue */
@@ -398,7 +398,7 @@ class classExternalVerificationBatch extends classData
         if (!empty($aBatches)) {
             foreach ($aBatches as $aBatch) {
                 $oBatch = new classExternalVerificationBatch();
-                $oBatch->fillPrimaryTableValues($aBatch);
+                $oBatch->fill($aBatch);
                 $aB[] = $oBatch;
             }
         }
@@ -420,7 +420,7 @@ class classExternalVerificationBatch extends classData
         if (!empty($aBatches)) {
             foreach ($aBatches as $aBatch) {
                 $oBatch = new classExternalVerificationBatch();
-                $oBatch->fillPrimaryTableValues($aBatch);
+                $oBatch->fill($aBatch);
                 $aB[] = $oBatch;
             }
         }

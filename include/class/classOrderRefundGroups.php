@@ -30,7 +30,7 @@ class classOrderRefundGroups extends classData
         if (!empty($aRes)) {
             foreach ($aRes as $aRefundGroup) {
                 $oRefundGroup = new classOrderRefundGroup();
-                $oRefundGroup->fillPrimaryTableValues($aRefundGroup);
+                $oRefundGroup->fill($aRefundGroup);
                 $this->aRefundGroups[] = $oRefundGroup;
             }
         }

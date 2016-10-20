@@ -12,6 +12,6 @@ include_once $xcart_dir.'/include/class/classSQLBuilder.php';
 include_once $xcart_dir.'/include/class/classOrders.php';
 
 
-$oOrder = classOrder::model(['orderid'=>65079]);
+$oOrder = classOrder::model(['orderid'=>62543]);
 
 $oOrder->reCalculateTotals();

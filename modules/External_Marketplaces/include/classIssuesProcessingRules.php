@@ -27,7 +27,7 @@ class classIssuesProcessingRules extends classData
         if (!empty($aIssues)) {
             foreach ($aIssues as $aIssue) {
                 $oIssue = new classIssuesProcessingRules();
-                $oIssue->fillPrimaryTableValues($aIssue);
+                $oIssue->fill($aIssue);
                 if (!is_null($iStorefrontId))
                     $oIssue->setStoreFront($iStorefrontId);
                 if ($oIssue->getProductImpactedCount() > 0)
@@ -46,7 +46,7 @@ class classIssuesProcessingRules extends classData
             if (!empty($aIssues)) {
                 foreach ($aIssues as $aIssue) {
                     $oResult = new classIssuesProcessingRules();
-                    $oResult->fillPrimaryTableValues($aIssue);
+                    $oResult->fill($aIssue);
                 }
             }
         }
@@ -147,7 +147,7 @@ class classIssuesProcessingRules extends classData
             if ($aProductImpacted) {
                 foreach ($aProductImpacted as $aProducts) {
                     $oIssue = new classGMCQualityIssues();
-                    $oIssue->fillPrimaryTableValues($aProducts);
+                    $oIssue->fill($aProducts);
                     $this->aProductsIssues[] = $oIssue;
                 }
             }

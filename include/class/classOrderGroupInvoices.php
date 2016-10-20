@@ -43,7 +43,7 @@ class classOrderGroupInvoices extends classData
             if (!empty($aRes)) {
                 foreach ($aRes as $aGroupInvoice) {
                     $oGroupInvoice = new classOrderGroupInvoice();
-                    $oGroupInvoice->fillPrimaryTableValues($aGroupInvoice);
+                    $oGroupInvoice->fill($aGroupInvoice);
                     $this->aGroupInvoices[] = $oGroupInvoice;
                 }
             }

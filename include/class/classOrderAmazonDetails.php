@@ -47,7 +47,7 @@ class classOrderAmazonDetails extends classData
         if (!empty($aRes)) {
             foreach ($aRes as $aAmazonDetail) {
                 $oAmazonDetail = new classOrderAmazonDetail();
-                $oAmazonDetail->fillPrimaryTableValues($aAmazonDetail);
+                $oAmazonDetail->fill($aAmazonDetail);
                 $this->aAmazonDetails[] = $oAmazonDetail;
             }
         }
