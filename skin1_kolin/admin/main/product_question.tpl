@@ -1,5 +1,5 @@
 {include file="change_states_js.tpl"}
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 <script src="{$SkinDir}/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -85,7 +85,7 @@ $(function() {ldelim}
 </tr>
 </table>
 
-{capture name=dialog}
+
 
 <form name="sqform" action="product_question.php" method="post" enctype="multipart/form-data">
 <input type="hidden" name="mode" value="" id="mode" />
@@ -528,6 +528,5 @@ $(function() {ldelim}
 
 </form>
 
-{/capture}
-{include file="dialog.tpl" title="Product question communication" content=$smarty.capture.dialog extra='width="100%"'}
+
 

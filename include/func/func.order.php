@@ -1383,10 +1383,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 		$orderid = func_array2insert('orders', $insert_data);
 
 		x_session_register('purchase_order_selected');
-		if(!empty($GLOBALS['purchase_order_selected']) && is_numeric($GLOBALS['purchase_order_selected'])){
+		if(!empty($purchase_order_selected) && is_numeric($purchase_order_selected)){
 
 			include_once $xcart_dir."/include/class/classPOPipeline.php";
-			$oPoPipeline =  new classPOPipeLine(['po_id'=>$GLOBALS['purchase_order_selected']]);
+			$oPoPipeline =  new classPOPipeLine(['po_id'=>$purchase_order_selected]);
 			$iPoPipe = $oPoPipeline->getPOId();
 			if ($iPoPipe){
 				$oPoPipeline->setOrderToPO($orderid);

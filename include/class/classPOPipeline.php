@@ -13,12 +13,14 @@ class classPOPipeLine extends classData
     const PO_HAS_BEEN_SELECTED = "PO# %s has been selected for entry";
     const PO_HAS_BEEN_DROPPED = "PO# %s has been dropped";
     const PO_HAS_BEEN_ENTERED = "PO# %s has been successfully entered";
+    const PO_FILE_LINK = "/files/purchase_orders/%s";
 
     const PO_STATUS_UPLOADED = 'uploaded';
     const PO_STATUS_DROPED = 'droped';
     const PO_STATUS_ENTERED = 'entered';
 
     private $oOrder = null;
+    private static $aPORecievedBy = ['fax' => 'fax', 'mail_to_us' => 'mail to US address', 'mail_to_ca' => 'mail to Canadian address', 'email' => 'email', 'website' => 'website'];
 
     public function __construct($aParams = [])
     {
@@ -33,25 +35,19 @@ class classPOPipeLine extends classData
         return $this->getField('po_id');
     }
 
+    /**
+     * @param $sPONumber
+     * @return classPOPipeline
+     */
     public static function getPOByNumber($sPONumber)
     {
-        global $sql_tbl;
-        $oPo = null;
-        if (!empty($sPONumber)) {
-            $aOrder = func_query_first("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE PO_number = '$sPONumber'");
-            if (!(empty($aOrder))) {
-                $oPo = new classPOPipeLine();
-                $oPo->fill($aOrder);
-            }
-        }
-        return $oPo;
-
+        return self::model()->find(classSQLBuilder::getInstance()->addCondition("PO_number = '$sPONumber'"));
     }
 
     public function getOrderInstance()
     {
         if (is_null($this->oOrder)) {
-            $iOrderId = $this->getField('order_id');
+            $iOrderId = $this->getOrderId();
             if (!empty($iOrderId))
                 $this->oOrder = classOrder::model(['orderid' => $iOrderId]);
         }
@@ -60,34 +56,17 @@ class classPOPipeLine extends classData
 
     public static function getPendingPOrders()
     {
-        global $sql_tbl;
-        $aPOs = [];
-        $aOrders = func_query("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE status = '" . self::PO_STATUS_UPLOADED . "'");
-        if (!empty($aOrders)) {
-            foreach ($aOrders as $aOrder) {
-                $oPo = new classPOPipeLine();
-                $oPo->fill($aOrder);
-                $aPOs[] = $oPo;
-            }
-        }
-        return $aPOs;
+        return self::model()->findAll(classSQLBuilder::getInstance()->addCondition("status = '" . self::PO_STATUS_UPLOADED . "'"));
     }
 
     public static function getPOrdersByStatuses($aStatuses)
     {
-        global $sql_tbl;
-        $aPOs = [];
-        if (!empty($aStatuses) && is_array($aStatuses)) {
-            $aOrders = func_query("SELECT * FROM " . $sql_tbl['po_pipeline'] . " WHERE status IN ('" . implode(',', $aStatuses) . "')");
-            if (!empty($aOrders)) {
-                foreach ($aOrders as $aOrder) {
-                    $oPo = new classPOPipeLine();
-                    $oPo->fill($aOrder);
-                    $aPOs[] = $oPo;
-                }
-            }
-        }
-        return $aPOs;
+        return self::model()->findAll(classSQLBuilder::getInstance()->addCondition("status IN '" . implode(',', $aStatuses) . "'"));
+    }
+
+    public function getOrderId()
+    {
+        return $this->getField('order_id');
     }
 
     public function getOrderNumber()
@@ -98,6 +77,11 @@ class classPOPipeLine extends classData
     public function getOrderOriginalFileName()
     {
         return $this->getField('original_po_file');
+    }
+
+    public function getOrderFileLink()
+    {
+        return sprintf(self::PO_FILE_LINK, $this->getField('file_name'));
     }
 
     public function getStatus()
@@ -125,9 +109,8 @@ class classPOPipeLine extends classData
     public function selectOrderForEntry()
     {
         $aResult = [];
-        $oStoreFront = new classStoreFront(['storefrontid' => $this->getStoreFrontId()]);
         classLogs::_log('purchase_orders', $this->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(self::PO_HAS_BEEN_SELECTED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
-        $aResult['frontend_url'] = 'http://' . $oStoreFront->getDomain() . "/?purchase_order_selected=" . $this->getPOId();
+        $aResult['frontend_url'] = 'http://' . classStoreFront::model(['storefrontid' => $this->getStoreFrontId()])->getDomain() . "/?purchase_order_selected=" . $this->getPOId();
         return $aResult;
     }
 
@@ -136,12 +119,12 @@ class classPOPipeLine extends classData
         return $this->getField('storefront_id');
     }
 
-    public function uploadPurchaseOrder($purchase_order_number_upload, $purchase_order_storefront_upload)
+    public function uploadPurchaseOrder($purchase_order_number_upload, $purchase_order_storefront_upload, $purchase_order_received_status)
     {
         global $xcart_dir, $login;
         $aPathInfo = (pathinfo($_FILES["purchase_order_file"]['name']));
         $sFileName = $purchase_order_number_upload . '.' . $aPathInfo['extension'];
-        $sNewFilePath = $xcart_dir . '/files/purchase_orders/' . $sFileName;
+        $sNewFilePath = $xcart_dir . sprintf(self::PO_FILE_LINK, $sFileName);
 
         if (move_uploaded_file($_FILES["purchase_order_file"]['tmp_name'], $sNewFilePath)) {
             $this->setField('PO_number', $purchase_order_number_upload);
@@ -149,6 +132,7 @@ class classPOPipeLine extends classData
             $this->setField('file_name', $sFileName);
             $this->setField('storefront_id', $purchase_order_storefront_upload);
             $this->setField('original_po_file', $_FILES["purchase_order_file"]['name']);
+            $this->setField('received_by', $purchase_order_received_status);
             $this->setOrderStatus('uploaded');
             $this->_insert();
             classLogs::_log('purchase_orders', $this->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
@@ -166,4 +150,15 @@ class classPOPipeLine extends classData
             self::PO_STATUS_ENTERED => 'Entered',
         ];
     }
+
+    public static function getRecievedStatuses()
+    {
+        return self::$aPORecievedBy;
+    }
+
+    public function getReceivedByName()
+    {
+        return self::$aPORecievedBy[$this->getField('received_by')];
+    }
+
 }

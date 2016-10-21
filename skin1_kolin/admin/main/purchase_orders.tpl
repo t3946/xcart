@@ -1,3 +1,4 @@
+<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 {if $supplemental_category_section ne "Y"}
 
     {if ($smarty.get.mode ne "info")}
@@ -21,8 +22,19 @@
     {assign var="capture_dialog_name" value="PO pipeline"}
 {/if}
 
+<div id="po-tabs-container">
+    <ul>
+        <li><a href="#po_check">PO# check</a></li>
+        <li><a href="#po_upload">Upload PO</a></li>
+        <li><a href="#pending_po">Pending entry POs</a></li>
+        <li><a href="#po_pipeline_log">PO pipeline log</a></li>
+
+    </ul>
+
+
 {capture name=dialog}
-    <form method="POST" name="purchase_order_search">
+<div id="po_check">
+    <form method="POST" action="purchase_orders.php" name="purchase_order_search">
         <div style="margin-bottom: 20px;">
             First check - maybe PO has already been entered or it is pending entry.
         </div>
@@ -31,35 +43,44 @@
                     id="purchase_order_search_submit" name="purchase_order_search_submit" type="submit" value="Search"/>
         </div>
     </form>
+ </div>
 {/capture}
 {capture name=dialog_upload}
-    <form method="POST" name="purchase_order_upload" enctype="multipart/form-data">
+    <div id="po_upload">
+    <form method="POST" action="purchase_orders.php" name="purchase_order_upload" enctype="multipart/form-data">
         <div style="margin-bottom: 20px;">
             Enter PO# indicated on the original PO.
         </div>
         <div style="margin-bottom: 20px;">
-            <b>PO#</b> <input type="text" id="purchase_order_number_upload" name="purchase_order_number_upload"/>
+            <b>PO#</b> <input size="13" type="text" id="purchase_order_number_upload" name="purchase_order_number_upload"/>
             <select name="purchase_order_storefront_upload" id="purchase_order_storefront_upload">
                 <option value="-1">Select StoreFront</option>
                 {html_options options=$aStorefronts->getStoreFrontsSelect() selected=-1}
             </select>
         </div>
-        <div style="margin-bottom: 10px;">
-            Attach original PO.
+        <div>
+            <b>PO has been received by</b>
+            <select name="purchase_order_received_status" style="width: 198px;">
+                {html_options options=$aRecievedStatuses}
+            </select>
         </div>
-        <div style="margin-bottom: 20px;">
-            <input type="file" name="purchase_order_file" value="Choose flie"/>
+        <div style="margin-bottom: 10px; margin-top: 10px;">
+            <div><b>Attach original PO.</b>
+                <input type="file" name="purchase_order_file" value="Choose flie"/>
+            </div>
+
         </div>
         <div>
             <input type="submit" id="purchase_order_upload_submit" name="purchase_order_upload_submit" value="Upload"/>
         </div>
 
     </form>
+    </div>
 {/capture}
 {capture name=dialog_pending}
-    <form method="POST" name="purchase_order_enter">
+<div id="pending_po">
+    <form method="POST" action="purchase_orders.php" name="purchase_order_enter">
         <div style="margin-bottom: 20px;" id="purchase_order_pending_anchor">
-            First check - maybe PO has already been entered or it is pending entry.
         </div>
         <div style="margin-bottom: 20px;">
             <table cellpadding="3" cellspacing="1" width="50%">
@@ -68,41 +89,38 @@
                     <td width="100">PO #</td>
                     <td width="*" align="center">Original PO file</td>
                     <td width="100" align="center">StoreFront</td>
-                    <td width="100" align="center">Select</td>
+                    <td width="100" align="center">Received by</td>
+                    <td align="center">Select</td>
                 </tr>
                 {if !empty($aPendingOrders)}
                     {foreach from=$aPendingOrders item=oPendingOrder}
                         <tr>
                             <td align="center">{$oPendingOrder->getOrderNumber()}</td>
-                            <td>{$oPendingOrder->getOrderOriginalFileName()}</td>
+                            <td><a target="_blank" href="{$oPendingOrder->getOrderFileLink()}">{$oPendingOrder->getOrderOriginalFileName()}</a></td>
                             <td>
                                 <select name="purchase_order_storefront[{$oPendingOrder->getPOId()}]">
                                     {html_options options=$aStorefronts->getStoreFrontsSelect() selected=$oPendingOrder->getStoreFrontId()}
                                 </select
                             </td>
-                            <td align="center"><input autocomplete="off" name="po_selected[]" type="radio"
-                                                      value="{$oPendingOrder->getPOId()}"/></td>
+                            <td align="center" nowrap="nowrap">{$oPendingOrder->getReceivedByName()}</td>
+                            <td align="center"><input autocomplete="off" name="po_selected[]" type="radio" value="{$oPendingOrder->getPOId()}"/></td>
                         </tr>
                     {/foreach}
                 {/if}
             </table>
         </div>
         <div style="margin-bottom: 10px;">
-            Enter PO using front-end checkout process.
-        </div>
-        <div style="margin-bottom: 10px;">
-            <input type="button" id="purchase_order_enter_submit" name="purchase_order_enter_submit" value="Enter PO"/>
-        </div>
-        <div style="margin-bottom: 10px;">
-            or drop PO if it has already been entered or has been canceled.
-        </div>
-        <div>
+            <span>Enter PO using front-end checkout process.</span>
+            <input type="submit" id="purchase_order_enter_submit" name="purchase_order_enter_submit" value="Enter PO"/>
+            <b>OR</b> <span>drop PO if it has already been entered or has been canceled.</span>
             <input type="submit" name="purchase_order_drop_submit" value="Drop PO"/>
         </div>
     </form>
+   </div>
 {/capture}
 
 {capture name=dialog_log}
+<div id="po_pipeline_log">
         <div style="margin-bottom: 20px;">
             <table cellpadding="3" cellspacing="1" width="100%" >
 
@@ -126,18 +144,14 @@
             </table>
             {include file="customer/main/navigation.tpl"}
         </div>
+</div>
 {/capture}
 
-{include file="dialog.tpl" title='PO# check' content=$smarty.capture.dialog extra='width="100%"'}
-<br/>
-<br/>
-{include file="dialog.tpl" title='Upload PO' content=$smarty.capture.dialog_upload extra='width="100%"'}
-<br/>
-<br/>
-{include file="dialog.tpl" title='Pending entry POs' content=$smarty.capture.dialog_pending extra='width="100%"'}
-<br/>
-<br/>
-{include file="dialog.tpl" title='PO pipeline log' content=$smarty.capture.dialog_log extra='width="100%"'}
+{$smarty.capture.dialog}
+{$smarty.capture.dialog_upload}
+{$smarty.capture.dialog_pending}
+{$smarty.capture.dialog_log}
+</div>
 
 {if !empty($po_number) || !empty($po_pending)}
     <script>
@@ -174,24 +188,21 @@
 <script>
     {literal}
     $(document).ready(function () {
-        $("#purchase_order_enter_submit").on("click", function () {
+        $('#po-tabs-container').tabs();
+        $("#purchase_order_enter_submit").click(function () {
             var ordernumber = $("input[name^='po_selected']:checked");
             if (ordernumber.length != 0) {
-                $.post(
-                        "ajax_admin.php", {
-                            ordernumber: ordernumber.val(),
-                            ajax_action: 'select_purchase_order_for_entry'
-                        }, function (data) {
-                            window.open(data.frontend_url, '_blank')
-                        }, "json");
+                $(this).closest('form').attr('target', '_blank');
+                return true;
 
             } else {
-                alert('Select purchase order for entry!');
+                alert('Please select PO for entry!');
+                return false;
             }
         });
         $("#purchase_order_upload_submit").on('click','',function() {
             if ($("#purchase_order_storefront_upload").val()==-1) {
-                alert("Select StoreFront");
+                alert("Please select StoreFront");
                 return false;
             }
         });
