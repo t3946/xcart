@@ -9,6 +9,7 @@ require_once $xcart_dir . "/include/class/classPaymentMethod.php";
 require_once $xcart_dir . "/include/class/classManufacturers.php";
 require_once $xcart_dir . "/include/class/classOrderTransactions.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+require_once $xcart_dir . "/include/class/classPOPipeline.php";
 
 class classOrder extends classData
 {
@@ -635,5 +636,10 @@ class classOrder extends classData
             foreach ($aOrderGroups as $oOrderGroup) {
                 $oOrderGroup->reCalculateTotals();
             }
+    }
+
+    public function getPOPipelineInstance()
+    {
+        return classPOPipeLine::model()->find(classSQLBuilder::getInstance()->addCondition('order_id='.$this->getOrderId()));
     }
 }

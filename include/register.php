@@ -659,8 +659,11 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 			# Add new person to customers table
 			#
 			$intershipper_recalc = "Y";
-			if (!empty($remember_login) && $current_area == 'C')
-				$uname = $remember_login;
+			if (!empty($remember_login) && $current_area == 'C') {
+				include_once $xcart_dir . "/include/class/classCustomer.php";
+				if (classCustomer::model(['login'=>$remember_login])->getField('usertype') == $current_area)
+					$uname = $remember_login;
+			}
 
 			$profile_values['login'] = $uname;
 			$profile_values['usertype'] = $usertype;

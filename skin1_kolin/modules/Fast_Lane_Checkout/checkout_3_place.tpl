@@ -6,7 +6,7 @@
 {*
 {capture name=dialog}
 *}
-<form action="{$payment_data.payment_script_url}" method="post" name="checkout_form">
+<form action="{$payment_data.payment_script_url}" method="post" name="checkout_form" enctype= "multipart/form-data">
 
 {* --- *}
 {if $payment_data.payment_template eq "customer/main/payment_giftcert.tpl" || $payment_data.payment_template eq "customer/main/payment_po.tpl"}
