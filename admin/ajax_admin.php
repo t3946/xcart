@@ -20,9 +20,6 @@ switch ($_POST['ajax_action']) {
     case "ship_order_by_amazon" :
         shipOrderByAmazon($_POST);
         break;
-    case "select_purchase_order_for_entry":
-        selectPurchaseOrderForEntry($_POST);
-        break;
     case "change_verify_batch_status":
         changeVerifyBatchStatus($_POST);
         break;
@@ -84,17 +81,6 @@ function shipOrderByAmazon($aPostParam = [])
         $oOrderGroup->shipOrderGroupByAmazon($sAmazonShippingMethodSelect);
 }
 
-function selectPurchaseOrderForEntry($aPostParam = [])
-{
-    if (!empty($aPostParam['ordernumber']) && is_numeric($aPostParam['ordernumber'])) {
-        $oPoPipeline = new classPOPipeLine(['po_id' => $aPostParam['ordernumber']]);
-        $iPoPipe = $oPoPipeline->getPOId();
-        if ($iPoPipe) {
-            $aResult = $oPoPipeline->selectOrderForEntry();
-            print(json_encode($aResult));
-        }
-    }
-}
 
 function changeVerifyBatchStatus($aPostParam = [])
 {

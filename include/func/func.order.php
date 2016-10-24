@@ -1383,19 +1383,42 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 		$orderid = func_array2insert('orders', $insert_data);
 
 		global $xcart_dir;
-		include_once $xcart_dir."/include/class/classOrders.php";
-		$oOrder = new classOrder(['orderid'=>$orderid]);
-
+		include_once $xcart_dir."/include/class/classPOPipeline.php";
+		global $purchase_order_selected;
 		x_session_register('purchase_order_selected');
-		if(!empty($GLOBALS['purchase_order_selected']) && is_numeric($GLOBALS['purchase_order_selected'])){
+		if(!empty($purchase_order_selected) && is_numeric($purchase_order_selected)){
 
-			include_once $xcart_dir."/include/class/classPOPipeline.php";
-			$oPoPipeline =  new classPOPipeLine(['po_id'=>$GLOBALS['purchase_order_selected']]);
-			$iPoPipe = $oPoPipeline->getPOId();
+
+			global $login;
+			$oPoPipeline =  classPOPipeLine::model(['po_id'=>$purchase_order_selected]);
+			if ($oPoPipeline->getPOId()){
 			if ($iPoPipe){
 				$oPoPipeline->setOrderToPO($orderid);
+			} else {
+				$oOrder = classOrder::model(['orderid'=>$orderid]);
+				try {
+					$oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
+				}
+				catch (Exception $ex) {
+					classLogs::_log('purchase_orders', $oPoPipeline->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
+				}
+
 			}
+			$purchase_order_selected = null;
 			x_session_unregister('purchase_order_selected');
+			x_session_save($purchase_order_selected);
+		} else
+		if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] == UPLOAD_ERR_OK) {
+			$oPoPipeline =  classPOPipeLine::model();
+			$oOrder = classOrder::model(['orderid'=>$orderid]);
+			try {
+				$oPoPipeline = $oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
+				$oPoPipeline->setOrderToPO($orderid);
+				$oPoPipeline->_save();
+			}
+			catch (Exception $ex) {
+				classLogs::_log('purchase_orders', $oPoPipeline->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $ex->getMessage()));
+			}
 		}
 
 

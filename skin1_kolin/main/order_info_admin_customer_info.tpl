@@ -98,7 +98,7 @@
 </tr>
 {/if}
 {if $customer.default_fields.title}
-<tr> 
+<tr>
 <td><b>{$lng.lbl_title}:</b></td>
 <td width="100%">{if !$static}<input type="text" name="customer_info[title]" value="{$customer.title}" />{else}{$customer.title}{/if}</td>
 </tr>
@@ -171,63 +171,97 @@
   </td>
   <td width="5%">&nbsp;</td>
   <td width="47%" style="vertical-align: top;">
-  {if $order.po_details}
-  <input type="hidden" name="po_update" value="1" />
-  <table cellspacing="0" cellpadding="0" class="customer-info-edit" width="100%">
-  <tr>
-    <td width="24%"><b>{if $count_po_number gt 1}<font style="color: #FF0000;">{/if}{$lng.lbl_po_number}:{if $count_po_number gt 1}</font>{/if}</b></td>
-    <td width="76%"><input type="text" name="po_number" id="po_number" value="{$order.po_details.po_number|escape}" /></td>
-  </tr>
-{if $count_po_number gt 1 && $used_po_for_the_same_order ne ""}
-  <tr>
-    <td colspan="2"><b>Orders with the same PO Number:</b> 
-      {foreach from=$used_po_for_the_same_order item=v_po key=k_po}
-        <a style="color: #1F08F8;" target="_blank" href="order.php?orderid={$v_po.orderid}">{$v_po.order_prefix}{$v_po.orderid}</a>{if $k_po ne $last_index_used_po_for_the_same_order},{/if}
-      {/foreach}
-    </td>
-  </tr>
-{/if}
-  <tr>
-    <td width="24%"><b>{$lng.lbl_company_name}:</b></td>
-    <td width="76%"><input type="text" name="po_company_name" id="po_company_name" value="{$order.po_details.company_name|escape}" /></td>
-  </tr>
+      {if $order.po_details}
+          {assign var=oPOPipeLine value=$oOrder->getPOPipelineInstance()}
+          <input type="hidden" name="po_update" value="1"/>
+          <table cellspacing="0" cellpadding="0" class="customer-info-edit" width="100%">
+              <tr>
+                  <td width="24%"><b>Received by:</b></td>
+                  <td width="76%">
+                      <select name="purchase_order_received_status">
+                        {html_options options=$oPOPipeLine->getRecievedStatuses() selected=$oPOPipeLine->getField('received_by')}
+                      </select>
+                  </td>
+              </tr>
+              <tr>
+                  <td width="24%"><b>{if $count_po_number gt 1}<span style="color: #FF0000;">{/if}{$lng.lbl_po_number}
+                              :{if $count_po_number gt 1}</span>{/if}</b></td>
+                  <td width="76%"><input type="text" name="po_number" id="po_number"
+                                         value="{$order.po_details.po_number|escape}"/></td>
+              </tr>
+              {if $count_po_number gt 1 && $used_po_for_the_same_order ne ""}
+                  <tr>
+                      <td colspan="2"><b>Orders with the same PO Number:</b>
+                          {foreach from=$used_po_for_the_same_order item=v_po key=k_po}
+                              <a style="color: #1F08F8;" target="_blank"
+                                 href="order.php?orderid={$v_po.orderid}">{$v_po.order_prefix}{$v_po.orderid}</a>{if $k_po ne $last_index_used_po_for_the_same_order},{/if}
+                          {/foreach}
+                      </td>
+                  </tr>
+              {/if}
+              <tr>
+                  <td width="24%"><b>{$lng.lbl_company_name}:</b></td>
+                  <td width="76%"><input type="text" name="po_company_name" id="po_company_name"
+                                         value="{$order.po_details.company_name|escape}"/></td>
+              </tr>
 
-{* --- *}
-<tr>
-  <td><b>Link to original PO:</b></td>
-  <td width="100%" nowrap="nowrap">
-  <input type="text" name="orig_po" id="orig_po" value="{$order.orig_po|escape}" style="width: 60%; {if $order.orig_po eq ""}background-color: #F4CCCC;{/if}" />
-  {if $order.orig_po ne ""}<a target="_blank" href="{$order.orig_po}" style="color: #1F08F8;">{/if}View original PO{if $order.orig_po ne ""}</a>{/if}
-  </td>
-</tr>
+              {* --- *}
+              <tr>
+                  <td><b>Link to original PO:</b></td>
+                  <td width="100%" nowrap="nowrap">
+                      <input type="text" name="orig_po" id="orig_po" value="{$order.orig_po|escape}"
+                             style="width: 60%; {if $order.orig_po eq ""}background-color: #F4CCCC;{/if}"/>
+                      {if $oPOPipeLine->getPOId()}
+                        <a target="_blank" href="{$oPOPipeLine->getOrderFileLink()}" style="color: #1F08F8;">View original PO</a>
+                      {else}
+                        {if $order.orig_po ne ""}
+                            <a target="_blank" href="{$order.orig_po}" style="color: #1F08F8;">{/if}View original PO{if $order.orig_po ne ""}</a>
+                        {/if}
+                      {/if}
 
-<tr>
-  <td><b>PO issued to:</b></td>
-  <td width="100%" nowrap="nowrap">
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <b>Upload date:</b>
+                  </td>
+                  <td>
+                      {$oPOPipeLine->getUploadDate()}
+                  </td>
+              </tr>
 
-  <input style="width: 7%;" type="radio" id="po_issued_to" name="po_issued_to" value="S"{if $order.po_issued_to eq "S"} checked="checked"{/if} />{$po_issued_to_arr.S}
-&nbsp;&nbsp;&nbsp;
-  <input style="width: 7%;" type="radio" id="po_issued_to" name="po_issued_to" value="A"{if $order.po_issued_to eq "A" || $order.po_issued_to eq ""} checked="checked"{/if} /><span {if $order.po_issued_to eq 'A' || $order.po_issued_to eq ""}style="background-color: #F4CCCC;"{/if}>{$po_issued_to_arr.A}</span>
+              <tr>
+                  <td><b>PO issued to:</b></td>
+                  <td width="100%" nowrap="nowrap">
 
-  </td>
-</tr>
+                      <input style="width: 7%;" type="radio" id="po_issued_to" name="po_issued_to"
+                             value="S"{if $order.po_issued_to eq "S"} checked="checked"{/if} />{$po_issued_to_arr.S}
+                      &nbsp;&nbsp;&nbsp;
+                      <input style="width: 7%;" type="radio" id="po_issued_to" name="po_issued_to"
+                             value="A"{if $order.po_issued_to eq "A" || $order.po_issued_to eq ""} checked="checked"{/if} /><span
+                              {if $order.po_issued_to eq 'A' || $order.po_issued_to eq ""}style="background-color: #F4CCCC;"{/if}>{$po_issued_to_arr.A}</span>
 
-<tr>
-  <td><b>Total shipping charge on original PO:</b></td>
-  <td width="100%">
-  <input type="text" name="total_shipping_charge_on_orig_po" id="total_shipping_charge_on_orig_po" value="{$order.total_shipping_charge_on_orig_po|escape}" style="width: 20%; {if $order.total_shipping_charge_on_orig_po lte 0}background-color: #F4CCCC;{/if}" />
-  </td>
-</tr>
-{* --- *}
+                  </td>
+              </tr>
 
-{*
-  <tr>
-    <td width="24%"><b>Position:</b> </td>
-    <td width="76%"><input type="text" name="po_position" id="po_position" value="{$order.po_details.position|escape}" /></td>
-  </tr>
-*}
-  </table>
-  {/if}
+              <tr>
+                  <td><b>Total shipping charge on original PO:</b></td>
+                  <td width="100%">
+                      <input type="text" name="total_shipping_charge_on_orig_po" id="total_shipping_charge_on_orig_po"
+                             value="{$order.total_shipping_charge_on_orig_po|escape}"
+                             style="width: 20%; {if $order.total_shipping_charge_on_orig_po lte 0}background-color: #F4CCCC;{/if}"/>
+                  </td>
+              </tr>
+              {* --- *}
+
+              {*
+                <tr>
+                  <td width="24%"><b>Position:</b> </td>
+                  <td width="76%"><input type="text" name="po_position" id="po_position" value="{$order.po_details.position|escape}" /></td>
+                </tr>
+              *}
+          </table>
+      {/if}
   </td>
 </tr>
 </table>
