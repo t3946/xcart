@@ -88,7 +88,7 @@
         </div>
         <div style="margin-bottom: 10px; margin-top: 10px;">
             <div><b>Attach original PO.</b>
-                <input type="file" name="purchase_order_file" value="Choose flie"/>
+                <input accept=".pdf" type="file" name="purchase_order_file" value="Choose flie"/>
             </div>
 
         </div>
