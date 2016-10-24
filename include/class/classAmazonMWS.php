@@ -1,6 +1,6 @@
 <?php
 global $xcart_dir;
-include_once $xcart_dir . "/MarketplaceWebService/Samples/.config.inc.php";
+//include_once $xcart_dir . "/MarketplaceWebService/Samples/.config.inc.php";
 require_once $xcart_dir . "/MarketplaceWebService/Client.php";
 require_once $xcart_dir . "/MarketplaceWebService/Exception.php";
 require_once $xcart_dir . "/MarketplaceWebService/Model/CancelFeedSubmissionsRequest.php";
@@ -86,6 +86,14 @@ require_once $xcart_dir . "/include/class/classProducts.php";
 require_once $xcart_dir . "/include/class/classOrderGroup.php";
 require_once $xcart_dir . "/include/class/classCidevAmazonFbaProducts.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+
+define ('DATE_FORMAT', 'Y-m-d\TH:i:s\Z');
+define('AWS_ACCESS_KEY_ID', 'AKIAJFLBZ4Y7BVG5Q22A');
+define('AWS_SECRET_ACCESS_KEY', '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');
+define('APPLICATION_NAME', 's3stores');
+define('APPLICATION_VERSION', '1');
+define ('MERCHANT_ID', 'A2SWKX6V1OVQ89');
+define ('MARKETPLACE_ID', 'ATVPDKIKX0DER');
 
 class classAmazonMWS
 {
