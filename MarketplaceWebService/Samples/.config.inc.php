@@ -33,6 +33,7 @@
     * marketplace ID.
     ***********************************************************************/
     define ('MERCHANT_ID', 'A2SWKX6V1OVQ89');
+    define ('MARKETPLACE_ID', 'ATVPDKIKX0DER');
     
    /************************************************************************ 
     * OPTIONAL ON SOME INSTALLATIONS
@@ -48,7 +49,8 @@
     print (get_include_path().'<br>');
 */
 
-/*set_include_path('/disk2/test.stores/dev1/src/');*/
+/*set_include_path('/disk2/test.stores/dev1/src/');
+*/
     
    /************************************************************************ 
     * OPTIONAL ON SOME INSTALLATIONS  

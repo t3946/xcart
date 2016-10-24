@@ -22,17 +22,7 @@ $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
 
-$classAmazonMWS = new classAmazonMWS();
-func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 
-
-$classAmazonMWS->setReportType('_GET_RESERVED_INVENTORY_DATA_')->setBackProcessName($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO)
-    ->_Request('RequestReport')
-    ->_Request('GetReportRequestList')
-    ->_Request('GetReportList')
-    ->_Request('GetReport')
-    ->_Request('UpdateReportAcknowledgements')
-    ->processReportReservedInventory();
 
 x_load('backoffice','files','taxes', 'froogle', 'product', 'crypt', 'xml', 'mail', 'order');
 
@@ -947,7 +937,17 @@ if (!empty($amazon_fba_products) && is_array($amazon_fba_products))
     }
 
 
+$classAmazonMWS = new classAmazonMWS();
+func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 
+
+$classAmazonMWS->setReportType('_GET_RESERVED_INVENTORY_DATA_')->setBackProcessName($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO)
+    ->_Request('RequestReport')
+    ->_Request('GetReportRequestList')
+    ->_Request('GetReportList')
+    ->_Request('GetReport')
+    ->_Request('UpdateReportAcknowledgements')
+    ->processReportReservedInventory();
 
 $classAmazonMWS->groupAmazonFBAProducts();
 
