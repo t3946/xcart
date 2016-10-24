@@ -29,6 +29,7 @@ if ($REQUEST_METHOD == "POST") {
                     classPOPipeLine::model()->uploadPurchaseOrder($purchase_order_number_upload, $purchase_order_storefront_upload, $purchase_order_received_status);
                     $top_message["content"] = sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $purchase_order_number_upload);
                     $top_message["type"] = "I";
+                    func_header_location("purchase_orders.php#pending_po");
                 } catch (Exception $ex) {
                     $top_message["content"] = $ex->getMessage();
                     $top_message["type"] = "E";
@@ -40,7 +41,7 @@ if ($REQUEST_METHOD == "POST") {
         if (empty($oPoPipeline) || $oPoPipeline->getStatus() == classPOPipeLine::PO_STATUS_DROPED || !$oPoPipeline->getPOId()) {
             $top_message["content"] = sprintf(classPOPipeLine::PO_NOT_IN_OUR_SYSTEM, $purchase_order_number_search);
             $top_message["type"] = "I";
-            func_header_location("purchase_orders.php?po_found=no&po_number=$purchase_order_number_search");
+            func_header_location("purchase_orders.php?po_found=no&po_number=$purchase_order_number_search#po_upload");
         } else {
             $oOrder = $oPoPipeline->getOrderInstance();
             if (!empty($oOrder)) {

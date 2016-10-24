@@ -96,7 +96,7 @@
                     {foreach from=$aPendingOrders item=oPendingOrder}
                         <tr>
                             <td align="center">{$oPendingOrder->getOrderNumber()}</td>
-                            <td><a target="_blank" href="{$oPendingOrder->getOrderFileLink()}">{$oPendingOrder->getOrderOriginalFileName()}</a></td>
+                                <td><a target="_blank" href="{$oPendingOrder->getOrderFileLink()}">{$oPendingOrder->getOrderOriginalFileName()}</a></td>
                             <td>
                                 <select name="purchase_order_storefront[{$oPendingOrder->getPOId()}]">
                                     {html_options options=$aStorefronts->getStoreFrontsSelect() selected=$oPendingOrder->getStoreFrontId()}
@@ -153,18 +153,16 @@
 {$smarty.capture.dialog_log}
 </div>
 
-{if !empty($po_number) || !empty($po_pending)}
+
     <script>
         {literal}
         $(document).ready(function () {
-            {/literal}
-            {if (!empty($po_pending))}
-                var el = $('#purchase_order_pending_anchor');
-            {else}
-                var el = $('#purchase_order_number_upload');
+            var el = $('#purchase_order_number_upload');{/literal}
+            {if (!empty($po_number))}{literal}
+                el.val("{/literal}{$po_number}{literal}").focus();{/literal}
             {/if}
             {literal}
-            el.val("{/literal}{$po_number}{literal}").focus();
+
             var elOffset = el.offset().top;
             var elHeight = el.height();
             var windowHeight = $(window).height();
@@ -177,14 +175,11 @@
                 offset = elOffset;
             }
             var speed = 700;
-            $('html, body').animate({scrollTop: offset}, speed);
-
+            setTimeout(function() {$('html, body').animate({scrollTop: offset}, speed)}, 100);
         });
-
-
         {/literal}
     </script>
-{/if}
+
 <script>
     {literal}
     $(document).ready(function () {

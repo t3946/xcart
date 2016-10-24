@@ -16,11 +16,11 @@ class classPOPipeLine extends classData
     const PO_FILE_LINK = "/files/purchase_orders/%s";
 
     const PO_STATUS_UPLOADED = 'uploaded';
-    const PO_STATUS_DROPED = 'droped';
+    const PO_STATUS_DROPED = 'dropped';
     const PO_STATUS_ENTERED = 'entered';
 
     private $oOrder = null;
-    private static $aPORecievedBy = ['fax' => 'fax', 'mail_to_us' => 'mail to US address', 'mail_to_ca' => 'mail to Canadian address', 'email' => 'email', 'website' => 'website'];
+    public static $aPORecievedBy = ['fax' => 'fax', 'mail_to_us' => 'mail to US address', 'mail_to_ca' => 'mail to Canadian address', 'email' => 'email', 'website' => 'website'];
 
     public function __construct($aParams = [])
     {
@@ -94,6 +94,7 @@ class classPOPipeLine extends classData
         $this->updateField('order_id', $iOrderId);
         $this->updateOrderStatus('entered');
         classLogs::_log('purchase_orders', $this->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(self::PO_HAS_BEEN_ENTERED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
+        return $this;
     }
 
     public function setOrderStatus($sStatus)
@@ -119,26 +120,39 @@ class classPOPipeLine extends classData
         return $this->getField('storefront_id');
     }
 
+    public function getUploadDate()
+    {
+        if ($this->getField('modify_date')) {
+            $oDate = new DateTime();
+            $oDate->setTimestamp(strtotime($this->getField('modify_date')));
+            return $oDate->format('d-M-Y H:i');
+        }
+        return '';
+    }
+
     public function uploadPurchaseOrder($purchase_order_number_upload, $purchase_order_storefront_upload, $purchase_order_received_status)
     {
         global $xcart_dir, $login;
         $aPathInfo = (pathinfo($_FILES["purchase_order_file"]['name']));
         $sFileName = $purchase_order_number_upload . '.' . $aPathInfo['extension'];
         $sNewFilePath = $xcart_dir . sprintf(self::PO_FILE_LINK, $sFileName);
+        $allow_extensions = ['pdf'];
+        $ext = preg_replace('/.+?\.(.+)$/', '$1', $_FILES['purchase_order_file']['name']);
+        if (in_array($ext, $allow_extensions)) {
+            if (move_uploaded_file($_FILES["purchase_order_file"]['tmp_name'], $sNewFilePath)) {
+                $this->setField('PO_number', $purchase_order_number_upload);
+                $this->setField('login', $login);
+                $this->setField('file_name', $sFileName);
+                $this->setField('storefront_id', $purchase_order_storefront_upload);
+                $this->setField('original_po_file', $_FILES["purchase_order_file"]['name']);
+                $this->setField('received_by', $purchase_order_received_status);
+                $this->setOrderStatus('uploaded');
+                $this->_insert();
+                classLogs::_log('purchase_orders', $this->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
 
-        if (move_uploaded_file($_FILES["purchase_order_file"]['tmp_name'], $sNewFilePath)) {
-            $this->setField('PO_number', $purchase_order_number_upload);
-            $this->setField('login', $login);
-            $this->setField('file_name', $sFileName);
-            $this->setField('storefront_id', $purchase_order_storefront_upload);
-            $this->setField('original_po_file', $_FILES["purchase_order_file"]['name']);
-            $this->setField('received_by', $purchase_order_received_status);
-            $this->setOrderStatus('uploaded');
-            $this->_insert();
-            classLogs::_log('purchase_orders', $this->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
-
-        } else {
-            throw new Exception("PO#$purchase_order_number_upload upload failed");
+            } else {
+                throw new Exception("PO#$purchase_order_number_upload upload failed");
+            }
         }
     }
 
@@ -146,14 +160,14 @@ class classPOPipeLine extends classData
     {
         return [
             self::PO_STATUS_UPLOADED => 'Uploaded',
-            self::PO_STATUS_DROPED => 'Droped',
+            self::PO_STATUS_DROPED => 'Dropped',
             self::PO_STATUS_ENTERED => 'Entered',
         ];
     }
 
     public static function getRecievedStatuses()
     {
-        return self::$aPORecievedBy;
+        return array_merge([''=>''],self::$aPORecievedBy);
     }
 
     public function getReceivedByName()
