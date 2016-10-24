@@ -5,6 +5,7 @@ require "./auth.php";
 require $xcart_dir . "/include/security.php";
 require_once $xcart_dir . "/include/class/classPOPipeline.php";
 require_once $xcart_dir . "/include/class/classLogs.php";
+require_once $xcart_dir . "/include/class/classLocks.php";
 require_once $xcart_dir . "/include/class/classStoreFronts.php";
 
 global $REQUEST_METHOD, $purchase_order_number_upload, $purchase_order_number_search, $purchase_order_storefront_upload, $location, $login, $po_pending, $purchase_order_received_status;
@@ -14,7 +15,7 @@ if ($REQUEST_METHOD == "POST") {
 
     if (!empty($purchase_order_upload_submit)) {
         $oPO = classPOPipeLine::getPOByNumber($purchase_order_number_upload);
-        if (!empty($oPO) && $oPO->getPOId() &&  $oPO->getStatus() != classPOPipeLine::PO_STATUS_DROPED) {
+        if (!empty($oPO) && $oPO->getPOId() && $oPO->getStatus() != classPOPipeLine::PO_STATUS_DROPED) {
             $oOrder = $oPO->getOrderInstance();
             if (!empty($oOrder)) {
                 $top_message["content"] = sprintf(classPOPipeLine::PO_LINK_ON_MODIFY, $purchase_order_number_upload, $oOrder->getOrderModifyURL(), $oOrder->getDisplayOrderNumber());
@@ -78,6 +79,10 @@ if ($REQUEST_METHOD == "POST") {
         }
     }
 
+    if (!empty($entity_type_unlock)) {
+        classLocks::model(['lock_type' => $entity_type_unlock])->unlockEntity();
+    }
+
     func_header_location("purchase_orders.php");
 }
 
@@ -108,6 +113,17 @@ $oStoreFronts = new classStoreFronts();
 $smarty->assign("aStorefronts", $oStoreFronts);
 
 $smarty->assign("aRecievedStatuses", classPOPipeLine::getRecievedStatuses());
+
+$oLock = classLocks::model(['lock_type' => 'purchase_order']);
+if (!$oLock->getLockType()) {
+    $oLock->setField('lock_type', 'purchase_order');
+}
+$oLock->checkLock();
+
+$oLock = classLocks::model(['lock_type' => 'purchase_order']);
+//$oLock->unlockEntity();
+
+$smarty->assign("lockEntity", $oLock);
 
 $smarty->assign("main", "purchase_orders");
 

@@ -22,6 +22,28 @@
     {assign var="capture_dialog_name" value="PO pipeline"}
 {/if}
 
+{if $lockEntity && $lockEntity->isLocked()}
+
+    <table width="100%">
+        <tr>
+            <td align="center" style="border: solid 1px #000000;
+            {if $lockEntity->isSelfLocking()}background: #D9EAD3; {else} background: #F4CCCC; {/if}
+            ">
+                {if ($lockEntity->isSelfLocking())}
+                    <form method="POST" name="unlockentityform">
+                        <input type="hidden" name="entity_type_unlock" value="purchase_order" />
+                        {$lockEntity->getWarningMessage()}
+                        <input type="button" value="Unlock it now" onclick="javascript: this.form.submit();" />.
+                    </form>
+                {else}
+                    {$lockEntity->getWarningMessage()}
+                {/if}
+            </td>
+        </tr>
+    </table>
+{/if}
+<br/>
+
 <div id="po-tabs-container">
     <ul>
         <li><a href="#po_check">PO# check</a></li>
@@ -71,7 +93,7 @@
 
         </div>
         <div>
-            <input type="submit" id="purchase_order_upload_submit" name="purchase_order_upload_submit" value="Upload"/>
+            <input type="submit" id="purchase_order_upload_submit" name="purchase_order_upload_submit" value="Upload" {if $lockEntity && $lockEntity->isLocked() && !$lockEntity->isSelfLocking()} disabled="disabled" {/if}/>
         </div>
 
     </form>
@@ -111,9 +133,9 @@
         </div>
         <div style="margin-bottom: 10px;">
             <span>Enter PO using front-end checkout process.</span>
-            <input type="submit" id="purchase_order_enter_submit" name="purchase_order_enter_submit" value="Enter PO"/>
+            <input type="submit" id="purchase_order_enter_submit" name="purchase_order_enter_submit" value="Enter PO" {if $lockEntity && $lockEntity->isLocked() && !$lockEntity->isSelfLocking()} disabled="disabled" {/if}/>
             <b>OR</b> <span>drop PO if it has already been entered or has been canceled.</span>
-            <input type="submit" name="purchase_order_drop_submit" value="Drop PO"/>
+            <input type="submit" name="purchase_order_drop_submit" value="Drop PO" {if $lockEntity && $lockEntity->isLocked() && !$lockEntity->isSelfLocking()} disabled="disabled" {/if} />
         </div>
     </form>
    </div>

@@ -137,8 +137,7 @@ class classPOPipeLine extends classData
         $sFileName = $purchase_order_number_upload . '.' . $aPathInfo['extension'];
         $sNewFilePath = $xcart_dir . sprintf(self::PO_FILE_LINK, $sFileName);
         $allow_extensions = ['pdf'];
-        $ext = preg_replace('/.+?\.(.+)$/', '$1', $_FILES['purchase_order_file']['name']);
-        if (in_array($ext, $allow_extensions)) {
+        if (in_array($aPathInfo['extension'], $allow_extensions)) {
             if (move_uploaded_file($_FILES["purchase_order_file"]['tmp_name'], $sNewFilePath)) {
                 $this->setField('PO_number', $purchase_order_number_upload);
                 $this->setField('login', $login);
@@ -147,13 +146,17 @@ class classPOPipeLine extends classData
                 $this->setField('original_po_file', $_FILES["purchase_order_file"]['name']);
                 $this->setField('received_by', $purchase_order_received_status);
                 $this->setOrderStatus('uploaded');
-                $this->_insert();
+                $iPoID = $this->_insert();
+                if ($iPoID) {
+                    $this->setField('po_id',$iPoID);
+                }
                 classLogs::_log('purchase_orders', $this->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
 
             } else {
                 throw new Exception("PO#$purchase_order_number_upload upload failed");
             }
         }
+        return $this;
     }
 
     public static function getPOStatuses()
