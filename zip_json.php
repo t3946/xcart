@@ -50,15 +50,18 @@ $zipcode = $zip;
 }
 elseif (isset($city)){
 
-	$address_info = func_query("SELECT 
-                        Z.zip,
+	if (!empty($state)) {
+		$sStateCondition = " AND state = '".addslashes($state)."' ";
+	}
+	$address_info = func_query("SELECT
                         TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(CONCAT(Z.primary_city,',',Z.acceptable_cities), ',', ZH.n), ',', -1)) As city,
                         Z.state
                 From xcart_k.xcart_zip_code_info Z
                         left join xcart_k.xcart_zip_code_info_helper ZH ON 1=1
                 Where CONCAT(Z.primary_city,',',Z.acceptable_cities) like CONCAT('%','".addslashes($city)."','%')
-                Group By Z.zip, 2
-                HAVING city != '' and city like CONCAT('".addslashes($city)."','%')");
+                $sStateCondition
+                Group By 2
+                HAVING city != '' and city like CONCAT('".addslashes($city)."','%') ORDER BY 1");
 
                 if (!empty($address_info) && is_array($address_info)){
                         foreach ($address_info as $k => $v){
