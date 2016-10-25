@@ -1392,7 +1392,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			global $login;
 			$oPoPipeline =  classPOPipeLine::model(['po_id'=>$purchase_order_selected]);
 			if ($oPoPipeline->getPOId()){
-			if ($iPoPipe){
 				$oPoPipeline->setOrderToPO($orderid);
 			} else {
 				$oOrder = classOrder::model(['orderid'=>$orderid]);
