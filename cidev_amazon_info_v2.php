@@ -21,7 +21,7 @@ db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
-
+func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 
 
 x_load('backoffice','files','taxes', 'froogle', 'product', 'crypt', 'xml', 'mail', 'order');
@@ -938,7 +938,7 @@ if (!empty($amazon_fba_products) && is_array($amazon_fba_products))
 
 
 $classAmazonMWS = new classAmazonMWS();
-func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
+
 
 
 $classAmazonMWS->setReportType('_GET_RESERVED_INVENTORY_DATA_')->setBackProcessName($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO)
