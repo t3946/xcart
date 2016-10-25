@@ -8,7 +8,7 @@
 
 $(document).ready(function() {
 
-    $("#s_zipcode, #s_city").autocomplete("zip_json.php", {
+    $("#s_zipcode").autocomplete("zip_json.php", {
         minChars: 3,
         selectFirst: true,
         matchSubset: true,
@@ -35,22 +35,59 @@ $(document).ready(function() {
             return a;
         },
         formatItem: function (item) {
-	  if ($("#s_countryname").val() == "United States"){
-            return "<span class='ac_zip'>" + item.zip + "</span>" +
-                              "<span class='ac_city'>" + item.city +
-                              ", " + item.state + "</span>";
-	  } else {
-            return false;
-	  }
+
+          if ($("#s_countryname").val() == "United States"){
+                return "<span class='ac_zip'>" + item.zip + "</span>" +
+                                  "<span class='ac_city'>" + item.city +
+                                  ", " + item.state + "</span>";
+          } else {
+                return false;
+          }
         },
     });
 
-    $("#s_zipcode, #s_city").result(function (event, item) {
+    $("#s_city").autocomplete("zip_json.php", {
+        minChars: 3,
+        selectFirst: true,
+        matchSubset: false,
+//        width: 220,
+        scrollHeight: 300,
+        max: 1024,
+        dataType: 'json',
+        extraParams: {
+            state: function () {
+                return cidev_get_state_code("s_statename", "s_countryname");
+            },
+            city: function () {
+                var c = $("#s_city:focus").val();
+                return c && c + '%'
+            }
+        },
+        parse: function (data) {
+            var a = [];
+            for(var i = 0;i < data.length; i++)
+                a.push({ data: data[i],
+                    value: data[i].city,
+                    result: data[i].city
+                });
+            return a;
+        },
+        formatItem: function (item) {
+
+            if ($("#s_countryname").val() == "United States"){
+                return item.city + ", " + item.state;
+            } else {
+                return false;
+            }
+        }
+    });
+
+    /*$("#s_zipcode, #s_city").result(function (event, item) {
         $("#s_zipcode").val(item.zip);
         $("#s_city").val(item.city);
         $("#s_state").val(item.state);
         $("#s_statename").val(item.state_name);
-    });
+    });*/
 
 });
 
@@ -73,7 +110,7 @@ $(function(){
 //]]>
 </script>
 
-<script type="text/javascript" language="JavaScript 1.2">
+<script type="text/javascript">
 //<![CDATA[
 {literal}
 
@@ -753,10 +790,10 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
 <tr>
 <td valign="top" nowrap="nowrap">
 
-<input type="text" id="s_zipcode" name="s_zipcode" size="32" maxlength="32" value="{if $userinfo.s_zipcode eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_zipcode}{else}{if $geo_litecity_location.country ne "" && $geo_litecity_location.country eq "US" && $userinfo.s_zipcode eq ""}{$geo_litecity_location.postalCode}{else}{$userinfo.s_zipcode}{/if}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_zipcode'); cidev_check_address();" onchange="cidev_new_check_zip_code(); check_zip_code_ship('s_zipcode', 's_countryname');" {/if} autocomplete="off" placeholder="{if $geo_litecity_location.postalCode ne ""}{$geo_litecity_location.postalCode}{else}{$lng.lbl_fill_in_examples_zip}{/if}" />
+<input type="text" id="s_zipcode" name="s_zipcode" size="32" maxlength="32" value="{if $userinfo.s_zipcode eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_zipcode}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_zipcode'); cidev_check_address();" onchange="cidev_new_check_zip_code(); check_zip_code_ship('s_zipcode', 's_countryname');" {/if} autocomplete="off" placeholder="{if $geo_litecity_location.postalCode ne ""}{$geo_litecity_location.postalCode}{else}{$lng.lbl_fill_in_examples_zip}{/if}" />
 </td>
 {if $usertype eq "C"}
-<td id="s_zipcode_verified" valign="top" nowrap="nowrap" {if $geo_litecity_location.postalCode eq "" && $userinfo.s_zipcode eq ""}style="display: none;"{/if}>
+<td id="s_zipcode_verified" valign="top" nowrap="nowrap" style="display: none;">
 <img src="{$ImagesDir}/checkmark-verified.png" alt="" />
 </td>
 
@@ -792,17 +829,7 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
 <tr>
 <td valign="top" nowrap="nowrap">
 <input type="text" id="s_statename" name="s_statename" size="32" maxlength="64" 
-value="
-{if $geo_litecity_location.region ne "" && $userinfo.s_statename eq ""}
-{section name=state_idx loop=$states}
-{if $geo_litecity_location.country eq $states[state_idx].country_code && $geo_litecity_location.region eq $states[state_idx].state_code}
-{if $states[state_idx].state ne ""}{$states[state_idx].state|amp}{assign var="cidev_is_state" value="Y"}{/if}
-{/if}
-{/section}
-{else}
-{if $userinfo.s_statename ne ""}{$userinfo.s_statename}{assign var="cidev_is_state" value="Y"}{/if}
-{/if}
-" 
+value=""
 onkeyup="cidev_check_field_country('s_statename'); cidev_check_zip(); cidev_check_verified_image_for_field('s_zipcode');" 
 autocomplete="off" 
 placeholder="
@@ -883,10 +910,10 @@ placeholder="
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="s_city" name="s_city" size="32" maxlength="64" value="{if $userinfo.s_city eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_city}{else}{if $geo_litecity_location.country ne "" && $userinfo.s_city eq ""}{$geo_litecity_location.city}{else}{$userinfo.s_city}{/if}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_city'); cidev_check_zip(); cidev_check_verified_image_for_field('s_zipcode');" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
+<input type="text" id="s_city" name="s_city" size="32" maxlength="64" value="{if $userinfo.s_city eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_city}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_city'); cidev_check_zip(); cidev_check_verified_image_for_field('s_zipcode');" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
 </td>
 {if $usertype eq "C"}
-<td id="s_city_verified" valign="top" nowrap="nowrap" {if $geo_litecity_location.city eq "" && $userinfo.s_city eq ""}style="display: none;"{/if}>
+<td id="s_city_verified" valign="top" nowrap="nowrap" style="display: none;">
 <img src="{$ImagesDir}/checkmark-verified.png" alt="" />
 </td>
 
