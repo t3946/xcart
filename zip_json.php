@@ -60,8 +60,8 @@ elseif (isset($city)){
                         left join xcart_k.xcart_zip_code_info_helper ZH ON 1=1
                 Where CONCAT(Z.primary_city,',',Z.acceptable_cities) like CONCAT('%','".addslashes($city)."','%')
                 $sStateCondition
-                Group By 2
-                HAVING city != '' and city like CONCAT('".addslashes($city)."','%') ORDER BY 1");
+                Group By 1,2
+                HAVING city != '' and city like CONCAT('%','".addslashes($city)."','%') ORDER BY 1");
 
                 if (!empty($address_info) && is_array($address_info)){
                         foreach ($address_info as $k => $v){
