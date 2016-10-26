@@ -61,7 +61,7 @@ class classPOPipeLine extends classData
 
     public static function getPOrdersByStatuses($aStatuses)
     {
-        return self::model()->findAll(classSQLBuilder::getInstance()->addCondition("status IN '" . implode(',', $aStatuses) . "'"));
+        return self::model()->findAll(classSQLBuilder::getInstance()->addCondition("status IN ('" . implode(',', $aStatuses) . "')"));
     }
 
     public function getOrderId()
