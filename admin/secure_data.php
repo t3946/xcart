@@ -64,7 +64,7 @@ if (!empty($aSecureDataLogins)) {
 
 
 $smarty->assign("aSecureData", $aSecureData);
-$aCustomers = classCustomer::getCustomersByType('A');
+$aCustomers = Xcart\Customer::getCustomersByType('A');
 if (!empty($aCustomers)) {
     $aCustomersSelect = [];
     foreach ($aCustomers as $oCustomers) {

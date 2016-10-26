@@ -305,9 +305,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 	}
 	elseif ($mode == "excluded_marketplace" && $brandid) {
 		global $xcart_dir;
-		classDisabledMarketPlace::deleteAllDisabledMarketPlace($brandid, 'B');
+		Xcart\External_MarketPlace\DisabledMarketPlace::deleteAllDisabledMarketPlace($brandid, 'B');
 		foreach($excluded_marketplaces as $iExcludedMarketplace) {
-			$oMarketPlace = new Xcart\DisabledMarketPlace();
+			$oMarketPlace = new Xcart\External_MarketPlace\DisabledMarketPlace();
 			$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $brandid, 'resource_type'=>'B']);
 			$oMarketPlace->addDisabledMarketPlace();
 		}

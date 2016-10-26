@@ -13,7 +13,7 @@ set_time_limit(0);
 const LOG_CATEGORY = 'cidev_amazon_info_v2';
 
 if ($config[LOG_CATEGORY] == "Y") {
-    func_backprocess_log(classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, 'Already launched');
+    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, 'Already launched');
     die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");

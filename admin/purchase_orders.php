@@ -10,21 +10,21 @@ global $REQUEST_METHOD, $purchase_order_number_upload, $purchase_order_number_se
 if ($REQUEST_METHOD == "POST") {
 
     if (!empty($purchase_order_upload_submit)) {
-        $oPO = classPOPipeLine::getPOByNumber($purchase_order_number_upload);
-        if (!empty($oPO) && $oPO->getPOId() && $oPO->getStatus() != classPOPipeLine::PO_STATUS_DROPED) {
+        $oPO = Xcart\POPipeLine::getPOByNumber($purchase_order_number_upload);
+        if (!empty($oPO) && $oPO->getPOId() && $oPO->getStatus() != Xcart\POPipeLine::PO_STATUS_DROPED) {
             $oOrder = $oPO->getOrderInstance();
             if (!empty($oOrder)) {
-                $top_message["content"] = sprintf(classPOPipeLine::PO_LINK_ON_MODIFY, $purchase_order_number_upload, $oOrder->getOrderModifyURL(), $oOrder->getDisplayOrderNumber());
+                $top_message["content"] = sprintf(Xcart\POPipeLine::PO_LINK_ON_MODIFY, $purchase_order_number_upload, $oOrder->getOrderModifyURL(), $oOrder->getDisplayOrderNumber());
                 $top_message["type"] = "I";
             } else {
-                $top_message["content"] = sprintf(classPOPipeLine::PO_HAS_ALREADY_BEEN_ADDED, $purchase_order_number_upload);
+                $top_message["content"] = sprintf(Xcart\POPipeLine::PO_HAS_ALREADY_BEEN_ADDED, $purchase_order_number_upload);
                 $top_message["type"] = "E";
             }
         } else {
             if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] == UPLOAD_ERR_OK) {
                 try {
-                    classPOPipeLine::model()->uploadPurchaseOrder($purchase_order_number_upload, $purchase_order_storefront_upload, $purchase_order_received_status);
-                    $top_message["content"] = sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $purchase_order_number_upload);
+                    Xcart\POPipeLine::model()->uploadPurchaseOrder($purchase_order_number_upload, $purchase_order_storefront_upload, $purchase_order_received_status);
+                    $top_message["content"] = sprintf(Xcart\POPipeLine::PO_HAS_BEEN_UPLOADED, $purchase_order_number_upload);
                     $top_message["type"] = "I";
                     func_header_location("purchase_orders.php#pending_po");
                 } catch (Exception $ex) {
@@ -34,25 +34,25 @@ if ($REQUEST_METHOD == "POST") {
             }
         }
     } elseif (!empty($purchase_order_search_submit)) {
-        $oPoPipeline = classPOPipeLine::getPOByNumber($purchase_order_number_search);
-        if (empty($oPoPipeline) || $oPoPipeline->getStatus() == classPOPipeLine::PO_STATUS_DROPED || !$oPoPipeline->getPOId()) {
-            $top_message["content"] = sprintf(classPOPipeLine::PO_NOT_IN_OUR_SYSTEM, $purchase_order_number_search);
+        $oPoPipeline = Xcart\POPipeLine::getPOByNumber($purchase_order_number_search);
+        if (empty($oPoPipeline) || $oPoPipeline->getStatus() == Xcart\POPipeLine::PO_STATUS_DROPED || !$oPoPipeline->getPOId()) {
+            $top_message["content"] = sprintf(Xcart\POPipeLine::PO_NOT_IN_OUR_SYSTEM, $purchase_order_number_search);
             $top_message["type"] = "I";
             func_header_location("purchase_orders.php?po_found=no&po_number=$purchase_order_number_search#po_upload");
         } else {
             $oOrder = $oPoPipeline->getOrderInstance();
             if (!empty($oOrder)) {
-                $top_message["content"] = sprintf(classPOPipeLine::PO_LINK_ON_MODIFY, $purchase_order_number_search, $oOrder->getOrderModifyURL(), $oOrder->getDisplayOrderNumber());
+                $top_message["content"] = sprintf(Xcart\POPipeLine::PO_LINK_ON_MODIFY, $purchase_order_number_search, $oOrder->getOrderModifyURL(), $oOrder->getDisplayOrderNumber());
                 $top_message["type"] = "I";
             } else {
-                $top_message["content"] = sprintf(classPOPipeLine::PO_HAS_ALREADY_BEEN_ADDED, $purchase_order_number_upload);
+                $top_message["content"] = sprintf(Xcart\POPipeLine::PO_HAS_ALREADY_BEEN_ADDED, $purchase_order_number_upload);
                 $top_message["type"] = "I";
                 func_header_location("purchase_orders.php#pending_po");
             }
         }
     } elseif (!empty($purchase_order_enter_submit)) {
         if (!empty($po_selected) && is_array($po_selected)) {
-            $oPoPipeline = classPOPipeLine::model(['po_id' => reset($po_selected)]);
+            $oPoPipeline = Xcart\POPipeLine::model(['po_id' => reset($po_selected)]);
             $iPoPipe = $oPoPipeline->getPOId();
             if ($iPoPipe) {
                 $aResult = $oPoPipeline->selectOrderForEntry();
@@ -68,8 +68,8 @@ if ($REQUEST_METHOD == "POST") {
                 $oPoPipeline = new Xcart\POPipeLine(['po_id' => reset($po_selected)]);
                 $pOID = $oPoPipeline->getPOId();
                 if (!empty($pOID)) {
-                    $oPoPipeline->updateOrderStatus(classPOPipeLine::PO_STATUS_DROPED);
-                    Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_DROPPED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
+                    $oPoPipeline->updateOrderStatus(Xcart\POPipeLine::PO_STATUS_DROPED);
+                    Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), Xcart\Logs::LOG_TYPE_CLIENT, sprintf(Xcart\POPipeLine::PO_HAS_BEEN_DROPPED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
                 }
             }
         }

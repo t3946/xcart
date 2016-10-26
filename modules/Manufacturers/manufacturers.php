@@ -108,7 +108,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "excluded_marketplace" && $manufacture
 	DisabledMarketPlace::deleteAllDisabledMarketPlace($manufacturerid, 'D');
 	if (!empty($excluded_marketplaces))
 	foreach($excluded_marketplaces as $iExcludedMarketplace) {
-		$oMarketPlace = new Xcart\DisabledMarketPlace();
+		$oMarketPlace = new Xcart\External_MarketPlace\DisabledMarketPlace();
 		$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $manufacturerid, 'resource_type' => 'D']);
 		$oMarketPlace->addDisabledMarketPlace();
 	}

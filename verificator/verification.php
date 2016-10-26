@@ -1,5 +1,5 @@
 <?php
-use External_Product_Verification\ExternalVerificationBatch;
+use Xcart\External_Product_Verification\ExternalVerificationBatch;
 global $xcart_dir;
 require "./auth.php";
 

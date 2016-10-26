@@ -1,5 +1,6 @@
 <?php
 namespace Xcart\External_MarketPlace;
+
 use Xcart\Data;
 
 
@@ -47,7 +48,8 @@ class ExternalMarketPlace extends Data
         $aMarketPlace = func_query_first("SELECT * FROM " . self::$sql_tbl['products_external_marketplaces'] . " WHERE id = $iMarketPlaceId");
         if (!empty($aMarketPlace)) {
             $sProcessorClass = $aMarketPlace['processor_class'];
-            $oProcessor = new $sProcessorClass(['marketplace_id'=>$iMarketPlaceId, 'storefront_id'=>$iStoreFrontId]);
+            if (class_exists($sProcessorClass))
+                $oProcessor = new $sProcessorClass(['marketplace_id' => $iMarketPlaceId, 'storefront_id' => $iStoreFrontId]);
         }
         return $oProcessor;
     }
@@ -83,9 +85,11 @@ class ExternalMarketPlace extends Data
             $aMarketPlaces = func_query("SELECT * FROM " . self::$sql_tbl['storefronts_external_marketplaces'] . " WHERE marketplace_id = " . $this->getMarketPlaceId());
             if (!empty($aMarketPlaces)) {
                 foreach ($aMarketPlaces as $aMarketPlace) {
-                    $oStoreMarketPlace = $this->getExternalMarketPlace($this->getMarketPlaceId(),$aMarketPlace['storefront_id']);
-                    $oStoreMarketPlace->fill($aMarketPlace);
-                    $this->aStoreMarketPlaces[] = $oStoreMarketPlace;
+                    $oStoreMarketPlace = $this->getExternalMarketPlace($this->getMarketPlaceId(), $aMarketPlace['storefront_id']);
+                    if ($oStoreMarketPlace) {
+                        $oStoreMarketPlace->fill($aMarketPlace);
+                        $this->aStoreMarketPlaces[] = $oStoreMarketPlace;
+                    }
                 }
             }
         }

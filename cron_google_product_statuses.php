@@ -28,10 +28,10 @@ $oStoreFronts = new Xcart\StoreFronts();
 $aStoreFronts = $oStoreFronts->getStoreFronts();
 if (!empty($aStoreFronts)) {
     foreach ($aStoreFronts as $aStoreFront) {
-        $aMarketPlaces = classStoreFrontMarketPlace::getMarketPlacesByStoreFront($aStoreFront->getStoreFrontId());
+        $aMarketPlaces = Xcart\External_MarketPlace\StoreFrontMarketPlace::getMarketPlacesByStoreFront($aStoreFront->getStoreFrontId());
         if (!empty($aMarketPlaces)) {
             foreach ($aMarketPlaces as $oMarketPlace) {
-                if ($oMarketPlace instanceof classGMC) {
+                if ($oMarketPlace instanceof Xcart\External_MarketPlace\GMC) {
                     func_backprocess_log(BACK_PROCESS_LOG_NAME, sprintf('---Storefront %d---',$aStoreFront->getStoreFrontId()));
                     $oMarketPlace->getProductStatuses();
                 }

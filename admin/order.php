@@ -1496,7 +1496,7 @@ if ($REQUEST_METHOD == "POST") {
         }
 
     elseif ($mode == 'map_incorrect' && !empty($zipcode)) {
-		classGroundMap::model(['zipcode'=>$zipcode])->_delete();
+		Xcart\GroundMap::model(['zipcode'=>$zipcode])->_delete();
 		func_header_location("order.php?orderid=".$orderid);
 	}
 	elseif ($mode == "invoice_received") {

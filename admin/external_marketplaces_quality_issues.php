@@ -14,19 +14,19 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
         if (!empty($action_fix_issue)) {
             foreach ($action_fix_issue as $key => $value) {
                 list($iProductId, $iIssueId) = explode(':', $key);
-                $oIssue = new Xcart\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
+                $oIssue = new Xcart\External_MarketPlace\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
                 $oIssue->updateField('fixed', 'Y');
             }
         }
         if (!empty($action_exclude_from_gmc)) {
-            $oStoreFrontMarketPlace = new Xcart\GMC();
+            $oStoreFrontMarketPlace = new Xcart\External_MarketPlace\GMC();
             foreach ($action_exclude_from_gmc as $key => $value) {
                 list($iProductId, $iIssueId) = explode(':', $key);
-                $oIssue = new Xcart\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
+                $oIssue = new Xcart\External_MarketPlace\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
                 $oIssue->updateField('fixed', 'Y');
                 $oStoreFrontMarketPlace->restoreQueue([['productid' => $iProductId]], 1);
                 //Google
-                $oDisableMarketplace = new Xcart\DisabledMarketPlace();
+                $oDisableMarketplace = new Xcart\External_MarketPlace\DisabledMarketPlace();
                 $oDisableMarketplace->fill(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
                 $oDisableMarketplace->addDisabledMarketPlace();
                 //Bing
@@ -41,13 +41,13 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
     $aIssueParam = null;
     if (!empty($issue)) {
         $aIssueParam = ['issue_id' => $issue];
-        $oIssue = new Xcart\IssuesProcessingRules($aIssueParam);
+        $oIssue = new Xcart\External_MarketPlace\IssuesProcessingRules($aIssueParam);
         $smarty->assign("navigation_script", "external_marketplaces_quality_issues.php?issue=$issue");
         $location[] = [$oIssue->getIssueName(), ""];
     }
     if (!empty($search)) {
         $aFilterParams ['search'] = $search;
-        $oIssue = new Xcart\IssuesProcessingRules($aIssueParam);
+        $oIssue = new Xcart\External_MarketPlace\IssuesProcessingRules($aIssueParam);
         $location[] = ['Search results', ""];
     }
 
@@ -68,7 +68,7 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
 } else {
     $smarty->assign("main", "external_marketplaces_quality_issues");
 
-    $aIssueList = classIssuesProcessingRules::getIssuesList($current_storefront);
+    $aIssueList = Xcart\External_MarketPlace\IssuesProcessingRules::getIssuesList($current_storefront);
     if (!empty($aIssueList))
         usort ($aIssueList,['classIssuesProcessingRules','sortByIssueProductsCount']);
     $smarty->assign('aProcessingRules', $aIssueList);

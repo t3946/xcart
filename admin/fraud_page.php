@@ -272,7 +272,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                                     func_change_order_group_status($orderid, $m_id, 'R');
                                 }
 
-                                $oOrder = classOrder::model(['orderid'=>$orderid]);
+                                $oOrder = Xcart\Order::model(['orderid'=>$orderid]);
                                 $oOrder->recalculateAccounting();
                         }
 

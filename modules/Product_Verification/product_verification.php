@@ -1,8 +1,6 @@
 <?php
 use Xcart\Orders;
 
-/** @var Order $oOrderManufacturer */
-
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
 $oOrders = new Orders();
