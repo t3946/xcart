@@ -34,7 +34,7 @@ class classOrderStatusNotification extends classMail
         if (!empty($aStatuses)) {
             foreach ($aStatuses as $aStatus) {
                 $oStatus = new classOrderStatusNotification();
-                $oStatus->fillPrimaryTableValues($aStatus);
+                $oStatus->fill($aStatus);
                 $aOrderNotifications[] = $oStatus;
             }
         }
