@@ -1171,7 +1171,7 @@ class classOrderGroup extends classData
             if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
                 foreach ($aOrderDetails as $aOrderDetail) {
                     $oOrderDetail = new classOrderDetail();
-                    $oOrderDetail->fillPrimaryTableValues($aOrderDetail);
+                    $oOrderDetail->fill($aOrderDetail);
                     $this->aOrderDetails[] = $oOrderDetail;
                 }
             }
