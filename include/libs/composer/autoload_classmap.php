@@ -32,4 +32,7 @@ return array(
     'Google\\Auth\\Subscriber\\SimpleSubscriber' => $vendorDir . '/google/auth/src/Subscriber/SimpleSubscriber.php',
     'Google_Service_Exception' => $vendorDir . '/google/apiclient/src/Google/Service/Exception.php',
     'Google_Service_Resource' => $vendorDir . '/google/apiclient/src/Google/Service/Resource.php',
+    'Xcart\\External_MarketPlace\\Amazon' => $baseDir . '/modules/External_Marketplaces/include/marketplaces/Amazon.php',
+    'Xcart\\External_MarketPlace\\Bing' => $baseDir . '/modules/External_Marketplaces/include/marketplaces/Bing.php',
+    'Xcart\\External_MarketPlace\\GMC' => $baseDir . '/modules/External_Marketplaces/include/marketplaces/GMC.php',
 );
