@@ -39,7 +39,7 @@ class classOrderDetail extends classData
         $aOrderDetails = func_query("SELECT * FROM " . self::$sql_tbl['order_details'] . " WHERE orderid = $iOrderId AND productid = $iProductId");
         foreach ($aOrderDetails as $aOrderDetail) {
             $oOrderDetail = new classOrderDetail();
-            $oOrderDetail->fillPrimaryTableValues($aOrderDetail);
+            $oOrderDetail->fill($aOrderDetail);
             $oOrderDetails[] = $oOrderDetail;
         }
         return $oOrderDetails;
