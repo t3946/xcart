@@ -1148,7 +1148,8 @@ class classOrderGroup extends classData
     private function fetchOrderDetails()
     {
         if (empty($this->aOrderDetails)) {
-            $aOrderDetails = $this->oSQL->init()->addSelect('od.*')->addFromTable('order_details', 'od')->addInnerJoin('products', 'p', 'p.manufacturerid =' . $this->getManufacturerId() . ' AND p.productid = od.productid')->
+            $oSQL = new classSQLBuilder();
+            $aOrderDetails = $oSQL->addSelect('od.*')->addFromTable('order_details', 'od')->addInnerJoin('products', 'p', 'p.manufacturerid =' . $this->getManufacturerId() . ' AND p.productid = od.productid')->
             addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
             if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
                 foreach ($aOrderDetails as $aOrderDetail) {
