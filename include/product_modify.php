@@ -36,6 +36,7 @@
 #
 # $Id: product_modify.php,v 1.171.2.15 2006/12/25 07:51:23 max Exp $
 #
+use Xcart\External_MarketPlace\ExternalMarketPlace;
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
@@ -331,10 +332,9 @@ if ($REQUEST_METHOD == "POST") {
 
 	if ($mode == "excluded_marketplace" && $productid) {
 		global $xcart_dir;
-		require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
 		classDisabledMarketPlace::deleteAllDisabledMarketPlace($productid, 'P');
 		foreach($excluded_marketplaces as $iExcludedMarketplace) {
-			$oMarketPlace = new classDisabledMarketPlace();
+			$oMarketPlace = new Xcart\DisabledMarketPlace();
 			$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $productid, 'resource_type'=>'P']);
 			$oMarketPlace->addDisabledMarketPlace();
 		}
@@ -1469,8 +1469,7 @@ $product_info["count_shipping_rates_for_canada"] = func_query_first_cell($qqq="S
 ##
 #
 
-include_once $xcart_dir."/include/class/classProducts.php";
-$classProduct = new classProducts();
+$classProduct = new Xcart\Products();
 if ($product_info['clone_parent_productid'] > 0) {
 	$aParentProduct = $classProduct->getProductInfo($product_info['clone_parent_productid']);
 	$product_info["parent_product"] = $aParentProduct;
@@ -1487,9 +1486,7 @@ unset($classProduct);
 unset($aParentProduct);
 
 global $xcart_dir;
-require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
-require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
-$aMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
+$aMarketplaces = ExternalMarketPlace::getExternalMarketPlaces();
 $aExternalMarketplaces = [];
 if (!empty($aMarketplaces)) {
 	foreach ($aMarketplaces as $oMarketPlace) {
@@ -1499,7 +1496,7 @@ if (!empty($aMarketplaces)) {
 }
 $smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
 if (!empty($product_info['productid'])) {
-$aDisabledMarketPlaces = classDisabledMarketPlace::getDisabledMarketPlaces($product_info['productid'], 'P');
+$aDisabledMarketPlaces = Xcart\External_MarketPlace\DisabledMarketPlace::getDisabledMarketPlaces($product_info['productid'], 'P');
 $smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
 }
 

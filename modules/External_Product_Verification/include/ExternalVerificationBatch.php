@@ -1,5 +1,5 @@
 <?php
-namespace Xcart\ExternalProductVerification;
+namespace Xcart\External_Product_Verification;
 use Xcart\Data;
 use Xcart\Product;
 use Xcart\SQLBuilder;

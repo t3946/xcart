@@ -1,6 +1,7 @@
 <?php
-namespace External_MarketPlace;
+namespace Xcart\External_MarketPlace;
 use Xcart\Data;
+use Xcart\SQLBuilder;
 
 class IssuesProcessingRules extends Data
 {
@@ -24,7 +25,7 @@ class IssuesProcessingRules extends Data
         $aIssues = $oSQL->Execute()->getQueryResult();
         if (!empty($aIssues)) {
             foreach ($aIssues as $aIssue) {
-                $oIssue = new External_MarketPlace\IssuesProcessingRules();
+                $oIssue = new IssuesProcessingRules();
                 $oIssue->fill($aIssue);
                 if (!is_null($iStorefrontId))
                     $oIssue->setStoreFront($iStorefrontId);
@@ -39,11 +40,11 @@ class IssuesProcessingRules extends Data
     {
         $oResult = null;
         if (!empty($sGoogleId)) {
-            $oSQL = new Xcart\SQLBuilder();
+            $oSQL = new SQLBuilder();
             $aIssues = $oSQL->addSelect('*')->addFromTable('cidev_issues_processing_rules')->addCondition("issue_gmc_id = '$sGoogleId'")->Execute()->getQueryResult();
             if (!empty($aIssues)) {
                 foreach ($aIssues as $aIssue) {
-                    $oResult = new Xcart\IssuesProcessingRules();
+                    $oResult = new IssuesProcessingRules();
                     $oResult->fill($aIssue);
                 }
             }
@@ -93,7 +94,7 @@ class IssuesProcessingRules extends Data
 
     public function getIssueDate()
     {
-        $oDate = new DateTime();
+        $oDate = new \DateTime();
         $oDate->setTimestamp(strtotime($this->getField('issue_date')));
         return $oDate;
     }
@@ -104,7 +105,7 @@ class IssuesProcessingRules extends Data
             $iIssueId = $this->getIssueId();
             if ($iIssueId) $aParams['issue_id'] = $this->getIssueId();
 
-            $oSQL = classSQLBuilder::getInstance();
+            $oSQL = SQLBuilder::getInstance();
             $oSQL->addSelect('count(1)', 'cnt')->addFromTable('cidev_gmc_quality_issues', 'xc')->
             addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'");
             if (!empty($aParams['search'])) {
@@ -128,7 +129,7 @@ class IssuesProcessingRules extends Data
         if (is_null($this->aProductsIssues)) {
             $iIssueId = $this->getIssueId();
             if ($iIssueId) $aParams['issue_id'] = $this->getIssueId();
-            $oSQL = classSQLBuilder::getInstance();
+            $oSQL = SQLBuilder::getInstance();
             $oSQL->addSelect('xc.*')->addFromTable('cidev_gmc_quality_issues', 'xc')->
             addInnerJoin('products', 'xp', "xp.productid = xc.productid AND xp.forsale='Y'");
             if (!empty($aParams['search'])) {
@@ -144,7 +145,7 @@ class IssuesProcessingRules extends Data
 
             if ($aProductImpacted) {
                 foreach ($aProductImpacted as $aProducts) {
-                    $oIssue = new Xcart\GMCQualityIssues();
+                    $oIssue = new GMCQualityIssues();
                     $oIssue->fill($aProducts);
                     $this->aProductsIssues[] = $oIssue;
                 }

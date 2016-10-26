@@ -1,5 +1,5 @@
 <?php
-namespace External_MarketPlace;
+namespace Xcart\External_MarketPlace;
 use Xcart\Product;
 
 class Bing extends StoreFrontMarketPlace

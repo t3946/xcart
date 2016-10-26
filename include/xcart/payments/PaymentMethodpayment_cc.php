@@ -1,5 +1,6 @@
 <?php
-namespace Xcart;
+namespace Xcart\Payments;
+use Xcart\PaymentMethod;
 
 class PaymentMethodpayment_cc extends PaymentMethod
 {
@@ -8,6 +9,5 @@ class PaymentMethodpayment_cc extends PaymentMethod
         $this->aPrimaryKeys = ['paymentid'];
         $this->sPrimaryTable = 'payment_methods';
         parent::__construct($aParams);
-
     }
 }

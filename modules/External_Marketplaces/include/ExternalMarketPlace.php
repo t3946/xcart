@@ -1,5 +1,5 @@
 <?php
-namespace External_MarketPlace;
+namespace Xcart\External_MarketPlace;
 use Xcart\Data;
 
 
@@ -25,7 +25,7 @@ class ExternalMarketPlace extends Data
         if (!empty($aMarketPlaces)) {
             foreach ($aMarketPlaces as $aMarketPlace) {
                 $sProcessorClass = __CLASS__;
-                /** @var classStoreFrontMarketPlace $oProcessor */
+                /** @var StoreFrontMarketPlace $oProcessor */
                 $oProcessor = new $sProcessorClass();
                 $oProcessor->fill($aMarketPlace);
                 $aMP[] = $oProcessor;
@@ -37,7 +37,7 @@ class ExternalMarketPlace extends Data
     /**
      * @param int $iMarketPlaceId
      * @param int $iStoreFrontId
-     * @return classStoreFrontMarketPlace
+     * @return StoreFrontMarketPlace
      */
     public static function getExternalMarketPlace($iMarketPlaceId, $iStoreFrontId)
     {

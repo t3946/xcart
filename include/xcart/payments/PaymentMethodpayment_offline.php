@@ -1,5 +1,6 @@
 <?php
-namespace Xcart;
+namespace Xcart\Payments;
+use Xcart\PaymentMethod;
 
 class PaymentMethodpayment_offline extends PaymentMethod
 {

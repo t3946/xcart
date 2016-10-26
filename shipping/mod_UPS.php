@@ -523,8 +523,7 @@ EOT;
                         $B += $bi * $product['amount'];
                     }*/
 					global $xcart_dir;
-					include_once $xcart_dir."/include/class/classShippings.php";
-					$classShipping = new classShippings();
+					$classShipping = new Xcart\Shippings();
 					$wn = $classShipping->getShippingWeight($product['productid'], $v['methodid'], $product['amount'], $product, $v);
 					unset ($classShipping);
 					$B += $wn;

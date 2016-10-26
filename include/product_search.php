@@ -5,10 +5,8 @@ if (!defined('XCART_SESSION_START')) {
 }
 
 global $xcart_dir;
-require_once $xcart_dir . "/include/class/classSQLBuilder.php";
-require_once $xcart_dir . "/include/class/classProduct.php";
 
-$oSQL = new classSQLBuilder();
+$oSQL = new Xcart\SQLBuilder();
 if (!empty($sort) && isset($sort_fields[$sort])) {
     if (isset($sort_direction)) {
         $sort .= ' ' . $sort_direction;
@@ -23,4 +21,4 @@ switch ($current_area) {
         break;
 }
 
-$aProducts = classProduct::model()->find($oSQL);
+$aProducts = Xcart\Product::model()->find($oSQL);

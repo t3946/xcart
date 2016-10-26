@@ -8,10 +8,8 @@ require "./top.inc.php";
 require "./init.php";
 
 global $xcart_dir, $config;
-include_once $xcart_dir.'/include/class/classSQLBuilder.php';
-include_once $xcart_dir.'/include/class/classOrderAmazonDetails.php';
 
+use Xcart\PaymentMethod;
 
-$oOrder = classOrderAmazonDetails::model();
-
-var_dump($oOrder->getOrderAmazonDetails(['orderid'=>65022, 'manufacturerid'=>12]));
+$oPaymentMethod = PaymentMethod::model(['paymentid' => '17']);
+var_dump($oPaymentMethod->getPaymentMethodInstance(['paymentid' => '17']));

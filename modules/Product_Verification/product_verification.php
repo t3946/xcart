@@ -1,10 +1,11 @@
 <?php
+use Xcart\Orders;
 
-/** @var classOrder $oOrderManufacturer */
+/** @var Order $oOrderManufacturer */
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
-$oOrders = new classOrders();
+$oOrders = new Orders();
 $aOrders = $oOrders->getOrdersWithProductsForVerification();
 
 if (!empty($aOrders)) {
@@ -35,7 +36,7 @@ if (!empty($aOrders)) {
         }
     }
 
-    $aVerifyStatuses = classProduct::getProductVerificationStatuses();
+    $aVerifyStatuses = Xcart\Product::getProductVerificationStatuses();
 
     $smarty->assign('aVerifyStatuses',$aVerifyStatuses);
     $smarty->assign('aManufacturers',$aManufacturers);
