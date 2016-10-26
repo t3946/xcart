@@ -347,9 +347,9 @@ return true; ///////////////////////////////////
                         onSelectChange_b();
                 } 
 
-                if (countrySelected != "US") {
+                /*if (countrySelected != "US") {
                         $('#b_city').unautocomplete();
-                }
+                }*/
 
                 if (countrySelected != "US" && countrySelected != "CA") {
                         $('#b_statename').unautocomplete();

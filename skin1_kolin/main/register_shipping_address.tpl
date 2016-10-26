@@ -461,7 +461,7 @@ return true; ///////////////////////////////////
 
 
 		if (countrySelected != "US") {
-			$('#s_city').unautocomplete();
+			//$('#s_city').unautocomplete();
 		}
 
 		if (countrySelected != "US" && countrySelected != "CA") {
