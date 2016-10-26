@@ -74,6 +74,12 @@ class classData
         }
     }
 
+    protected function nullField($sFieldName)
+    {
+        $query = "UPDATE ". self::$sql_tbl[$this->sPrimaryTable]." SET `$sFieldName` = NULL WHERE " . $this->getWhereClause();
+        db_query($query);
+    }
+
     public function fill($aValues)
     {
         if (!empty($aValues)) {
@@ -164,12 +170,6 @@ class classData
         $class = get_called_class();
         return new $class($aParams);
     }
-
-    /*protected function fill($aParams)
-    {
-        $this->fillPrimaryTableValues($aParams);
-        return $this;
-    }*/
 
     public function findAll(classSQLBuilder $oSQL)
     {

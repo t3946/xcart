@@ -77,7 +77,7 @@ class classLocks extends classData
     public function unlockEntity()
     {
         if (!is_null($this->getLogin()))
-            $this->updateField('last_time_visited', null);
+            $this->nullField('last_time_visited');
     }
 
     public function checkLock($captureLock = true)
