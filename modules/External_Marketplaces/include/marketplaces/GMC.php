@@ -1,9 +1,13 @@
 <?php
-namespace Xcart\External_MarketPlace;
+namespace Xcart\External_MarketPlace\Marketplaces;
 use Xcart\Product;
+use Xcart\External_MarketPlace\StoreFrontMarketPlace;
+use Xcart\External_MarketPlace\IssuesProcessingRules;
+use Xcart\External_MarketPlace\GMCQualityIssues;
+use Xcart\External_MarketPlace\DisabledMarketPlace;
 use Google_Client;
-use Google_Service_ShoppingContent;
 use Google_Service_ShoppingContent_ProductStatus;
+use Google_Service_ShoppingContent;
 use Google_Service_ShoppingContent_ProductStatusDataQualityIssue;
 
 global $xcart_dir;

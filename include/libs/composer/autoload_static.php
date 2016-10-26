@@ -155,9 +155,6 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         'Google\\Auth\\Subscriber\\SimpleSubscriber' => __DIR__ . '/..' . '/google/auth/src/Subscriber/SimpleSubscriber.php',
         'Google_Service_Exception' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Exception.php',
         'Google_Service_Resource' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Resource.php',
-        'Xcart\\External_MarketPlace\\Amazon' => __DIR__ . '/../../..' . '/modules/External_Marketplaces/include/marketplaces/Amazon.php',
-        'Xcart\\External_MarketPlace\\Bing' => __DIR__ . '/../../..' . '/modules/External_Marketplaces/include/marketplaces/Bing.php',
-        'Xcart\\External_MarketPlace\\GMC' => __DIR__ . '/../../..' . '/modules/External_Marketplaces/include/marketplaces/GMC.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
