@@ -66,7 +66,7 @@ No data
 <td valign="top" width="70%">
 {include file="customer/main/subheader.tpl" title=$lng.lbl_payment_method}
 
-<script type="text/javascript" language="JavaScript 1.2">
+<script type="text/javascript">
 //<![CDATA[
 {literal}
 function cidev_save_payment(paymentid, checkout_step){
@@ -111,7 +111,7 @@ function cidev_save_payment(paymentid, checkout_step){
 {if $show_only_phone_method eq "Y"}
 <input type="hidden" name="paymentid" value="{$payment.paymentid}" />
 {else}
-<td width="1"><input type="radio" name="paymentid" onclick="cidev_save_payment('{$payment.paymentid}', '{$checkout_step}');" id="pm{$payment.paymentid}" value="{$payment.paymentid}"{if $payment.paymentid eq $cart.paymentid || (!empty($purchase_order_selected) && $payment.payment_method=='Purchase Order')} checked="checked"{/if} /></td>
+<td width="1"><input type="radio" name="paymentid" onclick="cidev_save_payment('{$payment.paymentid}', '{$checkout_step}');" id="pm{$payment.paymentid}" value="{$payment.paymentid}"{if ($payment.paymentid eq $cart.paymentid && empty($purchase_order_selected))|| (!empty($purchase_order_selected) && $payment.payment_method=='Purchase Order')} checked="checked"{/if} /></td>
 {/if}
 {if $payment.processor eq "ps_paypal_pro.php"}
 <td colspan="2">
