@@ -6,7 +6,7 @@ class OrderAmazonDetails extends Data
     const TYPE_REFUND = 'Refund';
     const TYPE_FEE = 'Fee';
     /**
-     * @var classOrderAmazonDetail[]
+     * @var OrderAmazonDetail[]
      */
     private $aAmazonDetails = [];
 
@@ -40,8 +40,8 @@ class OrderAmazonDetails extends Data
 
     public function getOrderAmazonDetails($aParams = [])
     {
-        $this->aAmazonDetails = classOrderAmazonDetail::model()->findAll(
-            classSQLBuilder::getInstance()->
+        $this->aAmazonDetails = OrderAmazonDetail::model()->findAll(
+            SQLBuilder::getInstance()->
                 addCondition('orderid = '. $aParams['orderid'])->
                 addCondition('manufacturerid = '. $aParams['manufacturerid']));
         return $this;

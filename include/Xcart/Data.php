@@ -12,7 +12,7 @@ class Data
     /**
      * classData constructor.
      * @param array $aParams
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct($aParams = [])
     {
@@ -21,7 +21,7 @@ class Data
 
         if (!empty($aParams)) {
             if (!is_array($aParams))
-                throw new Exception('Parameter must be an array');
+                throw new \Exception('Parameter must be an array');
             $this->aPrimaryKeysValues = array_intersect_key($aParams, array_flip($this->aPrimaryKeys));
             $this->fillPrimaryTableInfo();
         }
@@ -126,7 +126,7 @@ class Data
         $this->setField($sFieldName, $sNewValue);
         $aToUpdate[$sFieldName] = $sNewValue;
         if (empty($this->aPrimaryKeysValues))
-            throw new Exception('Empty primary keys values for update field');
+            throw new \Exception('Empty primary keys values for update field');
         $aKeyArray = $this->aPrimaryKeysValues;
         array_walk($aKeyArray, function (&$a, $b) {
             $a = $b . ' = "' . $a . '"';
@@ -140,7 +140,7 @@ class Data
         if (!empty($aFieldNamesValues)) {
             $this->setFields($aFieldNamesValues);
             if (empty($this->aPrimaryKeysValues))
-                throw new Exception('Empty primary keys values for update fields');
+                throw new \Exception('Empty primary keys values for update fields');
             func_array2update($this->sPrimaryTable, $aFieldNamesValues, $this->getWhereClause());
         }
         return $this;
@@ -170,7 +170,7 @@ class Data
         return $this;
     }*/
 
-    public function findAll(classSQLBuilder $oSQL)
+    public function findAll(SQLBuilder $oSQL)
     {
         $aSearchResult = null;
         $aResult = $oSQL->setSelect('main.*')->setFromTable($this->sPrimaryTable, 'main')->query()->getQueryResult();
@@ -182,7 +182,7 @@ class Data
         return $aSearchResult;
     }
 
-    public function find(classSQLBuilder $oSQL)
+    public function find(SQLBuilder $oSQL)
     {
         $oSearchResult = $this::model();
         $aResult = $oSQL->setSelect('main.*')->setFromTable($this->sPrimaryTable, 'main')->query_first()->getQueryResult();

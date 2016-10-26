@@ -1,5 +1,6 @@
 <?php
 namespace Xcart;
+use Xcart\External_Product_Verification\ExternalVerificationBatch;
 
 class Customer extends Data
 {
@@ -56,14 +57,14 @@ class Customer extends Data
     public static function getCustomersByType($sType, $active = 'Y')
     {
         $aOCustomers = [];
-        $oSQL = classSQLBuilder::getInstance()->addSelect('*')->addFromTable('customers')->addCondition("usertype='" . $sType . "'");
+        $oSQL = SQLBuilder::getInstance()->addSelect('*')->addFromTable('customers')->addCondition("usertype='" . $sType . "'");
         if ($active != 'all') {
             $oSQL->addCondition("status='$active'")->addCondition("activity='$active'");
         }
         $aCustomers = $oSQL->addOrderBy('firstname')->Execute()->getQueryResult();
         if (!empty($aCustomers)) {
             foreach ($aCustomers as $aCustomer) {
-                $OCustomer = new classCustomer();
+                $OCustomer = new Customer();
                 $OCustomer->fill($aCustomer);
                 $aOCustomers[] = $OCustomer;
             }
@@ -75,7 +76,7 @@ class Customer extends Data
     {
         $sLogin = $this->getCustomerLogin();
         if (empty($sLogin)) return false;
-        $aCustomers = classSQLBuilder::getInstance()->addSelect('*')->addFromTable('secure_data_users')->addCondition("login='" . $sLogin . "'")->Execute()->getQueryResult();
+        $aCustomers = SQLBuilder::getInstance()->addSelect('*')->addFromTable('secure_data_users')->addCondition("login='" . $sLogin . "'")->Execute()->getQueryResult();
         return !empty($aCustomers);
     }
 
@@ -84,7 +85,7 @@ class Customer extends Data
         $aCustomerData = [];
         $sLogin = $this->getCustomerLogin();
         if (empty($sLogin)) return false;
-        $aCustomersData = classSQLBuilder::getInstance()->addSelect('xs.*')->addFromTable('secure_data', 'xs')->addInnerJoin('secure_data_users', 'sd', 'sd.secure_data_id = xs.id')->
+        $aCustomersData = SQLBuilder::getInstance()->addSelect('xs.*')->addFromTable('secure_data', 'xs')->addInnerJoin('secure_data_users', 'sd', 'sd.secure_data_id = xs.id')->
         addCondition("sd.login='" . $sLogin . "'")->addOrderBy('xs.orderby')->Execute()->getQueryResult();
         if (!empty($aCustomersData)) {
             foreach ($aCustomersData as &$aCustomerData) {
@@ -97,11 +98,11 @@ class Customer extends Data
     public function getAmazonLastVerifyDate()
     {
         $oDate = null;
-        $aDate = classSQLBuilder::getInstance()->addSelect('value')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
-        addCondition('action IN("'.implode('","',classExternalVerificationBatch::$aProductStatuses['processed']).'")')->addOrderBy('value DESC')->setLimit(1)->Execute()->getQueryResult();
+        $aDate = SQLBuilder::getInstance()->addSelect('value')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+        addCondition('action IN("'.implode('","',ExternalVerificationBatch::$aProductStatuses['processed']).'")')->addOrderBy('value DESC')->setLimit(1)->Execute()->getQueryResult();
         if (!empty($aDate)) {
             $aD = reset($aDate);
-            $oDate = new DateTime();
+            $oDate = new \DateTime();
             $oDate->setTimestamp($aD['value']);
         }
         return $oDate;
@@ -110,8 +111,8 @@ class Customer extends Data
     public function getAmazonProductProcessedCount()
     {
         if (is_null($this->iAmazonBatchesProcessedCount)) {
-            $aCount = classSQLBuilder::getInstance()->addSelect('count(1)', 'product_count')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
-            addCondition('action IN("' . implode('","', classExternalVerificationBatch::$aProductStatuses['processed']) . '")')->Execute()->getQueryResult();
+            $aCount = SQLBuilder::getInstance()->addSelect('count(1)', 'product_count')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+            addCondition('action IN("' . implode('","', ExternalVerificationBatch::$aProductStatuses['processed']) . '")')->Execute()->getQueryResult();
             $aC = reset($aCount);
             $this->iAmazonBatchesProcessedCount = $aC['product_count'];
         }
@@ -121,7 +122,7 @@ class Customer extends Data
     public function getAmazonProductNotSureCount()
     {
         if (is_null($this->iAmazonBatchesNotSureCount)) {
-            $aCount = classSQLBuilder::getInstance()->addSelect('count(1)', 'product_count')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+            $aCount = SQLBuilder::getInstance()->addSelect('count(1)', 'product_count')->addFromTable('external_verification_products')->addCondition("login='" . $this->getCustomerLogin() . "'")->
             addCondition("action IN('not_sure')")->Execute()->getQueryResult();
             $aC = reset($aCount);
             return $aC['product_count'];
@@ -132,7 +133,7 @@ class Customer extends Data
     public function getAmazonBatchesInProgressCount()
     {
         if (is_null($this->iAmazonBatchesInProgressCount)) {
-            $aCount = classSQLBuilder::getInstance()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+            $aCount = SQLBuilder::getInstance()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
             addCondition("batch_status IN('In progress')")->Execute()->getQueryResult();
             $aC = reset($aCount);
             $this->iAmazonBatchesInProgressCount = $aC['batch_count'];
@@ -143,12 +144,12 @@ class Customer extends Data
     public function getAmazonBatches($sStatus = null)
     {
         $aB = [];
-        $oSQL = classSQLBuilder::getInstance()->addSelect('*')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'");
+        $oSQL = SQLBuilder::getInstance()->addSelect('*')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'");
         if (!empty($sStatus) && in_array($sStatus,['in progress','completed','paid'])) $oSQL->addCondition("batch_status IN('$sStatus')");
         $aBatches = $oSQL->Execute()->getQueryResult();
         if (!empty($aBatches)) {
             foreach ($aBatches as $aBatch) {
-                $oBatch = new classExternalVerificationBatch();
+                $oBatch = new ExternalVerificationBatch();
                 $oBatch->fill($aBatch);
                 $aB[] = $oBatch;
             }
@@ -159,7 +160,7 @@ class Customer extends Data
     public function getAmazonBatchesCompletedCount()
     {
         if (is_null($this->iAmazonBatchesCompletedCount)){
-            $aCount = classSQLBuilder::getInstance()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+            $aCount = SQLBuilder::getInstance()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
             addCondition("batch_status IN('Completed')")->Execute()->getQueryResult();
             $aC = reset($aCount);
             $this->iAmazonBatchesCompletedCount = $aC['batch_count'];
@@ -172,7 +173,7 @@ class Customer extends Data
     public function getAmazonBatchesPaidCount()
     {
         if (is_null($this->iAmazonBatchesPaidCount)) {
-            $aCount = classSQLBuilder::getInstance()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+            $aCount = SQLBuilder::getInstance()->addSelect('count(1)', 'batch_count')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
             addCondition("batch_status IN('Paid')")->Execute()->getQueryResult();
             $aC = reset($aCount);
             $this->iAmazonBatchesPaidCount = $aC['batch_count'];
@@ -182,7 +183,7 @@ class Customer extends Data
 
     public function getAmazonBatchesAverageSpeed()
     {
-        $aCount = classSQLBuilder::getInstance()->addSelect('AVG(batch_product_speed)', 'batch_speed')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+        $aCount = SQLBuilder::getInstance()->addSelect('AVG(batch_product_speed)', 'batch_speed')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
         addCondition('batch_product_speed > 0')->Execute()->getQueryResult();
         $aC = reset($aCount);
         return round(floatval($aC['batch_speed']));
@@ -190,7 +191,7 @@ class Customer extends Data
 
     public function getAmazonBatchesMaxNumber()
     {
-        $aCount = classSQLBuilder::getInstance()->addSelect('max(batch_number)', 'max_number')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
+        $aCount = SQLBuilder::getInstance()->addSelect('max(batch_number)', 'max_number')->addFromTable('external_verification_batches')->addCondition("login='" . $this->getCustomerLogin() . "'")->
         Execute()->getQueryResult();
         $aC = reset($aCount);
         return $aC['max_number'];

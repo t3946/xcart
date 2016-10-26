@@ -4,7 +4,7 @@ namespace Xcart;
 class OrderRefundGroups extends Data
 {
     /**
-     * @var classOrderRefundGroup[]
+     * @var OrderRefundGroup[]
      */
     private $aRefundGroups = null;
 
@@ -27,7 +27,7 @@ class OrderRefundGroups extends Data
         $aRes = func_query("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE orderid = " . $aParams['orderid'] . " AND manufacturerid = " . $aParams['manufacturerid']);
         if (!empty($aRes)) {
             foreach ($aRes as $aRefundGroup) {
-                $oRefundGroup = new classOrderRefundGroup();
+                $oRefundGroup = new OrderRefundGroup();
                 $oRefundGroup->fill($aRefundGroup);
                 $this->aRefundGroups[] = $oRefundGroup;
             }

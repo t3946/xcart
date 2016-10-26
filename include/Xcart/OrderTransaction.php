@@ -11,13 +11,13 @@ class OrderTransaction extends Data
         $this->aPrimaryKeys = ['id'];
         $this->sPrimaryTable = 'order_transactions';
         parent::__construct($aParams);
-        $this->oTransactionLog = new classTransactionLog();
+        $this->oTransactionLog = new TransactionLog();
     }
 
     /**
      * @param $fCaptureSumma
-     * @return classOrderTransaction
-     * @throws Exception
+     * @return OrderTransaction
+     * @throws \Exception
      */
     public function captureTransaction($fCaptureSumma)
     {
@@ -25,14 +25,14 @@ class OrderTransaction extends Data
         if ($fCaptureSumma <= $this->getTransactionAmount()) {
             $oPaypal = null;
             try {
-                $oPaypal = new classPaypal();
-            } catch (Exception $ex) {
+                $oPaypal = new Paypal();
+            } catch (\Exception $ex) {
                 $this->oTransactionLog->addNewLine($ex->getMessage());
                 $this->oTransactionLog->insertTransactionLog($this);
-                throw new Exception(sprintf(self::TRANSACTION_FAILED_TEXT, $this->getField('transaction_id')));
+                throw new \Exception(sprintf(self::TRANSACTION_FAILED_TEXT, $this->getField('transaction_id')));
             }
-            /** @var classOrder $oOrder */
-            $oOrder = classOrder::model(['orderid' => $this->getField('orderid')]);
+            /** @var Order $oOrder */
+            $oOrder = Order::model(['orderid' => $this->getField('orderid')]);
 
             $aData["amount"]["currency"] = $oOrder->getOrderCurrency();
             $aData["amount"]["total"] = number_format($fCaptureSumma, 2);
@@ -56,7 +56,7 @@ class OrderTransaction extends Data
             if (empty($this->aTransactionResult["id"])) {
                 $log = nl2br(sprintf(self::TRANSACTION_FAILED_TEXT, $this->getField('transaction_id')));
                 $log .= addslashes(serialize($this->getTransactionResult()));
-                throw new Exception($log);
+                throw new \Exception($log);
 
             }
         }

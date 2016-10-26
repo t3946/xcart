@@ -12,12 +12,12 @@ class HTMLShot extends Data
         parent::__construct($aParams);
     }
 
-    public function createHTMLShot(classProduct $oProduct, $orderid)
+    public function createHTMLShot(Product $oProduct, $orderid)
     {
         global $xcart_dir;
         $aImagesD = $oProduct->getImages('D');
         $aImagesP = $oProduct->getImages('P');
-        /** @var classProductImage[] $aImages */
+        /** @var ProductImage[] $aImages */
         $aImages = array_merge($aImagesD, $aImagesP);
         $oStoreFront = $oProduct->getStoreFront()->getStoreFrontByProductId($oProduct->getProductId());
 
@@ -59,6 +59,8 @@ class HTMLShot extends Data
 
     public function getHTMLShot()
     {
+        global $xcart_dir;
+        require_once $xcart_dir."/include/classProduct.php";
         return unserialize($this->getField('htmlshot'));
     }
 

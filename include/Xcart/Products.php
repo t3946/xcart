@@ -226,7 +226,7 @@ class Products extends CloneData
         if (empty($sPrefixManufacturer) && isset($iProductId)) {
             $aProduct = $this->getProductInfo($iProductId);
             if (!empty($aProduct)) {
-                $classManufacturer = new classManufacturers();
+                $classManufacturer = new Manufacturers();
                 $sPrefixManufacturer = $classManufacturer->getManufacturerCodeById($aProduct['manufacturerid']);
             }
         }
@@ -409,7 +409,7 @@ class Products extends CloneData
 
     protected function cloneProduct($aProduct, $aParamToClone = array()) {
 
-        $classManufacturer = new classManufacturers();
+        $classManufacturer = new Manufacturers();
 
         $aQueuedManufacturer = $classManufacturer->getMainufacturersInfo(array($this->aProductToQueue["manufacturerid"]));
         if (!empty($aQueuedManufacturer))
@@ -561,7 +561,7 @@ class Products extends CloneData
             Иерархию категорий продукта берем только с главной категории продукта [xcart_products_categories].main = 'Y'*/
 
 
-        $classCategory = new classCategories();
+        $classCategory = new Categories();
 
         $aProductCategories = $this->getMainProductCategoriesInfo($aProduct["productid"]);
 
@@ -781,7 +781,7 @@ class Products extends CloneData
         /*
          ИНАЧЕ получить все подчиненные дистрибьюторы дистрибьютора продукта [PRODUCT] --> [Distributors] (получить code дистрибьютора , отобрать всех дистрибьюторов у которых parent_manufacturer_id = manufacturer_id)
 	    */
-        $classManufacturer = new classManufacturers();
+        $classManufacturer = new Manufacturers();
 
         $aManufacturer = $classManufacturer->getMainufacturersInfo(array($aProduct["manufacturerid"]));
         $aManufacturer = reset($aManufacturer);
@@ -828,8 +828,8 @@ class Products extends CloneData
 
     public function getManfacturerClass($iManufacurerId = null) {
         if (!is_null($iManufacurerId))
-            return new classManufacturers($iManufacurerId);
-        else return  new classManufacturer($this->aPrimaryTableValue['manufacturerid']);
+            return new Manufacturers($iManufacurerId);
+        else return  new Manufacturer($this->aPrimaryTableValue['manufacturerid']);
     }
 
 }

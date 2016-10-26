@@ -34,11 +34,11 @@ class POPipeLine extends Data
 
     /**
      * @param $sPONumber
-     * @return classPOPipeline
+     * @return POPipeline
      */
     public static function getPOByNumber($sPONumber)
     {
-        return self::model()->find(classSQLBuilder::getInstance()->addCondition("PO_number = '$sPONumber'"));
+        return self::model()->find(SQLBuilder::getInstance()->addCondition("PO_number = '$sPONumber'"));
     }
 
     public function getOrderInstance()
@@ -46,19 +46,19 @@ class POPipeLine extends Data
         if (is_null($this->oOrder)) {
             $iOrderId = $this->getOrderId();
             if (!empty($iOrderId))
-                $this->oOrder = classOrder::model(['orderid' => $iOrderId]);
+                $this->oOrder = Order::model(['orderid' => $iOrderId]);
         }
         return $this->oOrder;
     }
 
     public static function getPendingPOrders()
     {
-        return self::model()->findAll(classSQLBuilder::getInstance()->addCondition("status = '" . self::PO_STATUS_UPLOADED . "'"));
+        return self::model()->findAll(SQLBuilder::getInstance()->addCondition("status = '" . self::PO_STATUS_UPLOADED . "'"));
     }
 
     public static function getPOrdersByStatuses($aStatuses)
     {
-        return self::model()->findAll(classSQLBuilder::getInstance()->addCondition("status IN ('" . implode(',', $aStatuses) . "')"));
+        return self::model()->findAll(SQLBuilder::getInstance()->addCondition("status IN ('" . implode(',', $aStatuses) . "')"));
     }
 
     public function getOrderId()
@@ -90,7 +90,7 @@ class POPipeLine extends Data
     {
         $this->updateField('order_id', $iOrderId);
         $this->updateOrderStatus('entered');
-        classLogs::_log('purchase_orders', $this->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(self::PO_HAS_BEEN_ENTERED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
+        Logs::_log('purchase_orders', $this->getPOId(), Logs::LOG_TYPE_CLIENT, sprintf(self::PO_HAS_BEEN_ENTERED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
         return $this;
     }
 
@@ -107,8 +107,8 @@ class POPipeLine extends Data
     public function selectOrderForEntry()
     {
         $aResult = [];
-        classLogs::_log('purchase_orders', $this->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(self::PO_HAS_BEEN_SELECTED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
-        $aResult['frontend_url'] = 'http://' . classStoreFront::model(['storefrontid' => $this->getStoreFrontId()])->getDomain() . "/?purchase_order_selected=" . $this->getPOId();
+        Logs::_log('purchase_orders', $this->getPOId(), Logs::LOG_TYPE_CLIENT, sprintf(self::PO_HAS_BEEN_SELECTED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
+        $aResult['frontend_url'] = 'http://' . StoreFront::model(['storefrontid' => $this->getStoreFrontId()])->getDomain() . "/?purchase_order_selected=" . $this->getPOId();
         return $aResult;
     }
 
@@ -120,7 +120,7 @@ class POPipeLine extends Data
     public function getUploadDate()
     {
         if ($this->getField('modify_date')) {
-            $oDate = new DateTime();
+            $oDate = new \DateTime();
             $oDate->setTimestamp(strtotime($this->getField('modify_date')));
             return $oDate->format('d-M-Y H:i');
         }
@@ -147,10 +147,10 @@ class POPipeLine extends Data
                 if ($iPoID) {
                     $this->setField('po_id',$iPoID);
                 }
-                classLogs::_log('purchase_orders', $this->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
+                Logs::_log('purchase_orders', $this->getPOId(), Logs::LOG_TYPE_CLIENT, sprintf(POPipeLine::PO_HAS_BEEN_UPLOADED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
 
             } else {
-                throw new Exception("PO#$purchase_order_number_upload upload failed");
+                throw new \Exception("PO#$purchase_order_number_upload upload failed");
             }
         }
         return $this;

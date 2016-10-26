@@ -4,5 +4,12 @@
     },
     "require": {
         "google/apiclient": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Xcart\\": "include/xcart",
+            "Xcart\\External_Product_Verification\\": "modules/External_Product_Verification/include",
+            "Xcart\\External_MarketPlace\\": "modules/External_Marketplaces/include"
+        }
     }
 }

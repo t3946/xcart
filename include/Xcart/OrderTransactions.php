@@ -4,7 +4,7 @@ namespace Xcart;
 class OrderTransactions extends Data
 {
     /**
-     * @var classOrderTransaction[]
+     * @var OrderTransaction[]
      */
     private $aOrderTransactions = [];
 
@@ -20,7 +20,7 @@ class OrderTransactions extends Data
     {
         $aOrderTransactions = [];
 
-        $oSQL = classSQLBuilder::getInstance();
+        $oSQL = SQLBuilder::getInstance();
 
         $oSQL->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition("orderid = " . $iOrderId);
         if (!empty($Status) && is_array($Status)) {
@@ -29,7 +29,7 @@ class OrderTransactions extends Data
         $aRes = $oSQL->Execute()->getQueryResult();
         if (!empty($aRes)) {
             foreach ($aRes as $aOrderTransaction) {
-                $oOrderTransaction = new classOrderTransaction();
+                $oOrderTransaction = new OrderTransaction();
                 $oOrderTransaction->fill($aOrderTransaction);
                 $aOrderTransactions[] = $oOrderTransaction;
             }
@@ -48,7 +48,7 @@ class OrderTransactions extends Data
         return $aTransactionStates;
     }
 
-    public function captureOrderAmount(classOrder $oOrder)
+    public function captureOrderAmount(Order $oOrder)
     {
         $fSummaToCapture = 0;
         $aOrderGroups = $oOrder->getOrderGroups();
@@ -67,7 +67,7 @@ class OrderTransactions extends Data
 
         if ($fSummaToCapture > 0) {
             $this->aOrderTransactions = $this->getOrderTransactionsByOrderIdAndStatus($oOrder->getOrderId(), ['AP',  'authorized', 'Pending']);
-            if (empty($this->aOrderTransactions)) throw new Exception('Order transactions not found');
+            if (empty($this->aOrderTransactions)) throw new \Exception('Order transactions not found');
             try {
                 if (!empty($this->aOrderTransactions)) {
                     foreach ($this->aOrderTransactions as $oOrderTransaction) {
@@ -86,7 +86,7 @@ class OrderTransactions extends Data
                 }
 
             }
-            catch (Exception $ex) {
+            catch (\Exception $ex) {
                 throw $ex;
             }
         }

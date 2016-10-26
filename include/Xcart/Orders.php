@@ -18,14 +18,14 @@ class Orders extends Order
     }
 
     /**
-     * @return classOrder[]
+     * @return Order[]
      */
     public function getOrdersWithProductsForVerification() {
-        return classOrder::model()->findAll(classSQLBuilder::getInstance()->addCondition("vn_status != '".classOrder::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED."'"));
+        return Order::model()->findAll(SQLBuilder::getInstance()->addCondition("vn_status != '".Order::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED."'"));
     }
 
     /**
-     * @return classOrder[]
+     * @return Order[]
      */
     public function getOrdersByProductId($iProduct) {
         $aResult = [];
@@ -33,7 +33,7 @@ class Orders extends Order
                                 FROM xcart_orders xo INNER JOIN xcart_order_details USING (orderid)
                                 WHERE productid = $iProduct AND vn_status != '".self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED."'");
         foreach ($aOrders as $aOrder) {
-            $aResult[] = classOrder::model()->fill($aOrder);
+            $aResult[] = Order::model()->fill($aOrder);
         }
         return $aResult;
     }

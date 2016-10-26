@@ -2,15 +2,13 @@
 
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
-include_once $xcart_dir . "/include/class/classProducts.php";
-include_once $xcart_dir . "/include/class/classOrderDetail.php";
 
 x_load("category");
 x_load('product');
 
 if (!empty($id) && is_numeric($id)) {
 
-    $oHTMLShot = new classHTMLShot(['id'=>$id]);
+    $oHTMLShot = new Xcart\HTMLShot(['id'=>$id]);
 
     $oProduct = $oHTMLShot->getHTMLShot();
 

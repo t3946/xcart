@@ -6,7 +6,6 @@ require "./top.inc.php";
 require "./init.php";
 
 global $xcart_dir, $config;
-require_once $xcart_dir . "/include/class/classAmazonMWS.php";
 
 ini_set('memory_limit', '2048M');
 set_time_limit(0);
@@ -937,7 +936,7 @@ if (!empty($amazon_fba_products) && is_array($amazon_fba_products))
     }
 
 
-$classAmazonMWS = new classAmazonMWS();
+$classAmazonMWS = new Xcart\AmazonMWS();
 
 
 

@@ -11,15 +11,15 @@ class Order extends Data
     const ADMIN_ORDER_MODIFY_URL = '/admin/order.php?orderid=%d';
 
     /**
-     * @var classOrderDetail[]
+     * @var OrderDetail[]
      */
     private $aOrderDetails = null;
     /**
-     * @var classOrderGroup[]
+     * @var OrderGroup[]
      */
     private $aOrderGroups = null;
     /**
-     * @var classProduct[]
+     * @var Product[]
      */
     private $aOrderProducts = null;
     private $aOrderProductsManufactueres = null;
@@ -38,24 +38,24 @@ class Order extends Data
     private function fetchOrderGroups()
     {
         if (is_null($this->aOrderGroups)) {
-            $this->aOrderGroups = classOrderGroup::model()->findAll(classSQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            $this->aOrderGroups = OrderGroup::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
         }
         return $this;
     }
 
     /**
-     * @return classOrderDetail[]
+     * @return OrderDetail[]
      */
     public function getOrderDetails()
     {
         if (empty($this->aOrderDetails)) {
-            $this->aOrderDetails = classOrderDetail::model()->findAll(classSQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            $this->aOrderDetails = OrderDetail::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
         }
         return $this->aOrderDetails;
     }
 
     /**
-     * @return classOrderDetail[]
+     * @return OrderDetail[]
      */
     public function getOrderDetailsWithRetailTrust()
     {
@@ -95,7 +95,7 @@ class Order extends Data
     }
 
     /**
-     * @return classProduct
+     * @return Product
      */
     public function getOrderDetailsProductsWithRetailTrust()
     {
@@ -111,7 +111,7 @@ class Order extends Data
     }
 
     /**
-     * @return classOrderGroup[]
+     * @return OrderGroup[]
      */
     public function getOrderGroups()
     {
@@ -128,7 +128,7 @@ class Order extends Data
     private function fetchOrderProductsManufacturers()
     {
         if (!empty($this->aOrderProductsManufactueres) && is_array($this->aOrderProductsManufactueres)) {
-            $oManufacturers = new classManufacturers();
+            $oManufacturers = new Manufacturers();
             $aManufacturersInfo = $oManufacturers->getMainufacturersInfo($this->aOrderProductsManufactueres);
             foreach ($this->aOrderProducts as &$oOrderProduct) {
                 $key = array_search($oOrderProduct->getField('manufacturerid'), array_column($aManufacturersInfo, 'manufacturerid'));
@@ -145,7 +145,7 @@ class Order extends Data
             $aProductIds = [];
             $aOrderDetails = $this->getOrderDetails();
             if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
-                $oProducts = new classProducts();
+                $oProducts = new Products();
                 foreach ($aOrderDetails as $oOrderDetail) {
                     $aProductIds[] = $oOrderDetail->getField('productid');
                 }
@@ -153,7 +153,7 @@ class Order extends Data
                 if (!empty($aProducts) && is_array($aProducts)) {
                     $this->aOrderProductsManufactueres = [];
                     foreach ($aProducts as $aProduct) {
-                        $oProduct = new classProduct();
+                        $oProduct = new Product();
                         $oProduct->fill($aProduct);
                         if (!in_array($oProduct->getField('manufacturerid'), $this->aOrderProductsManufactueres))
                             $this->aOrderProductsManufactueres[] = $oProduct->getField('manufacturerid');
@@ -167,7 +167,7 @@ class Order extends Data
     }
 
     /**
-     * @return classProduct[]
+     * @return Product[]
      */
     public function getOrderProducts()
     {
@@ -223,7 +223,7 @@ class Order extends Data
         if (!empty($aOrderProducts) && is_array($aOrderProducts)) {
             $iMaxStatus = $iMinStatus = null;
             foreach ($aOrderProducts as $oOrderProduct) {
-                if ($oOrderProduct instanceof classProduct) {
+                if ($oOrderProduct instanceof Product) {
                     $iVerifyStatus = $oOrderProduct->getField('verification_statusid');
                     if (is_null($iMinStatus)) $iMinStatus = $iVerifyStatus;
                     $iMaxStatus = max($iMaxStatus, $iVerifyStatus);
@@ -234,21 +234,21 @@ class Order extends Data
                 $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED);
             } elseif ($iMinStatus == $iMaxStatus) {
                 switch ($iMaxStatus) {
-                    case (classProduct::PRODUCT_STATUS_NOT_VERIFY) :
+                    case (Product::PRODUCT_STATUS_NOT_VERIFY) :
                         $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_NOT_YET_STARTED);
                         break;
-                    case (classProduct::PRODUCT_STATUS_PROBLEM_NOT_FIXED) :
-                    case (classProduct::PRODUCT_STATUS_PROBLEM_FIXED) :
+                    case (Product::PRODUCT_STATUS_PROBLEM_NOT_FIXED) :
+                    case (Product::PRODUCT_STATUS_PROBLEM_FIXED) :
                         $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND);
                         break;
-                    case (classProduct::PRODUCT_STATUS_VERIFY):
+                    case (Product::PRODUCT_STATUS_VERIFY):
                         $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED);
                         break;
                 }
 
-            } elseif ($iMinStatus == classProduct::PRODUCT_STATUS_NOT_VERIFY && $iMaxStatus > classProduct::PRODUCT_STATUS_NOT_VERIFY) {
+            } elseif ($iMinStatus == Product::PRODUCT_STATUS_NOT_VERIFY && $iMaxStatus > Product::PRODUCT_STATUS_NOT_VERIFY) {
                 $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_IN_PROGRESS);
-            } elseif ($iMinStatus > classProduct::PRODUCT_STATUS_NOT_VERIFY && $iMaxStatus > classProduct::PRODUCT_STATUS_NOT_VERIFY) {
+            } elseif ($iMinStatus > Product::PRODUCT_STATUS_NOT_VERIFY && $iMaxStatus > Product::PRODUCT_STATUS_NOT_VERIFY) {
                 $this->changeVerificationStatus(self::ORDER_VERIFICATION_STATUS_PRODUCT_PROBLEM_FOUND);
             }
 
@@ -401,7 +401,7 @@ class Order extends Data
 
     public function getOrderDate($sFormat = null)
     {
-        $date = new DateTime();
+        $date = new \DateTime();
         $date->setTimestamp((int)$this->getField('date'));
         if (!empty($sFormat)) {
             return $date->format($sFormat);
@@ -425,10 +425,10 @@ class Order extends Data
     public function captureOrderAmount()
     {
         global $login;
-        $aOrderTransactions = new classOrderTransactions();
+        $aOrderTransactions = new OrderTransactions();
         try {
             $aOrderTransactions->captureOrderAmount($this);
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             func_log_order($this->getOrderId(), 'X', $ex->getMessage(), $login);
             return false;
         }
@@ -442,7 +442,7 @@ class Order extends Data
 
     public function isAttentionTagSet($iStatusId)
     {
-        $oSQL = new classSQLBuilder();
+        $oSQL = new SQLBuilder();
         $aQResult = $oSQL->init()->addSelect('status_id')->addFromTable('orders_additional_tags')->addCondition('orderid=' . $this->getOrderId())->addCondition('status_id=' . $iStatusId)->Execute()->getQueryResult();
         return !empty($aQResult);
     }
@@ -451,7 +451,7 @@ class Order extends Data
     {
         $fResult = 0;
         if (is_null($this->aAdditionalFees)) {
-            $oSQL = new classSQLBuilder();
+            $oSQL = new SQLBuilder();
             $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
         }
         if (!empty($this->aAdditionalFees)) {
@@ -613,7 +613,7 @@ class Order extends Data
     public function getPaymentMethodInstance()
     {
         if (is_null($this->oPaymentMethod)) {
-            $oPay = new classPaymentMethod(['paymentid' => $this->getPaymentMethodId()]);
+            $oPay = new PaymentMethod(['paymentid' => $this->getPaymentMethodId()]);
             $this->oPaymentMethod = $oPay->getPaymentMethodInstance(['paymentid' => $this->getPaymentMethodId()]);
         }
         return $this->oPaymentMethod;
@@ -630,6 +630,6 @@ class Order extends Data
 
     public function getPOPipelineInstance()
     {
-        return classPOPipeLine::model()->find(classSQLBuilder::getInstance()->addCondition('order_id='.$this->getOrderId()));
+        return POPipeLine::model()->find(SQLBuilder::getInstance()->addCondition('order_id='.$this->getOrderId()));
     }
 }

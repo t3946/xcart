@@ -31,7 +31,7 @@ class TransactionLog extends Data
         return $this->aLogLines;
     }
 
-    public function insertTransactionLog(classOrderTransaction $oTransaction ) {
+    public function insertTransactionLog(OrderTransaction $oTransaction ) {
         global $login;
         $aResponse = $oTransaction->getTransactionResult();
         if (!empty($aResponse))

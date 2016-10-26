@@ -20,7 +20,7 @@ class OrderReports
 
     public function __construct()
     {
-        $this->oSQL = new classSQLBuilder();
+        $this->oSQL = new SQLBuilder();
     }
 
     public function setStartDate($iStartDate)

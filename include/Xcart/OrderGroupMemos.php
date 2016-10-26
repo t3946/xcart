@@ -4,7 +4,7 @@ namespace Xcart;
 class OrderGroupMemos extends Data
 {
     /**
-     * @var classOrderGroupMemo[]
+     * @var OrderGroupMemo[]
      */
     private $aGroupMemos = [];
 
@@ -27,7 +27,7 @@ class OrderGroupMemos extends Data
         $aRes = func_query("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE orderid = " . $aParams['orderid'] . " AND manufacturerid = " . $aParams['manufacturerid']);
         if (!empty($aRes)) {
             foreach ($aRes as $aGroupMemo) {
-                $oGroupMemo = new classOrderGroupInvoice();
+                $oGroupMemo = new OrderGroupInvoice();
                 $oGroupMemo->fill($aGroupMemo);
                 $this->aGroupMemos[] = $oGroupMemo;
             }

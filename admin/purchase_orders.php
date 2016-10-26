@@ -3,10 +3,6 @@ global $xcart_dir;
 
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
-require_once $xcart_dir . "/include/class/classPOPipeline.php";
-require_once $xcart_dir . "/include/class/classLogs.php";
-require_once $xcart_dir . "/include/class/classLocks.php";
-require_once $xcart_dir . "/include/class/classStoreFronts.php";
 
 global $REQUEST_METHOD, $purchase_order_number_upload, $purchase_order_number_search, $purchase_order_storefront_upload, $location, $login, $po_pending, $purchase_order_received_status;
 
@@ -69,18 +65,18 @@ if ($REQUEST_METHOD == "POST") {
     } elseif (!empty($purchase_order_drop_submit)) {
         if (!empty($po_selected)) {
             foreach ($po_selected as $sOrderNumber) {
-                $oPoPipeline = new classPOPipeLine(['po_id' => reset($po_selected)]);
+                $oPoPipeline = new Xcart\POPipeLine(['po_id' => reset($po_selected)]);
                 $pOID = $oPoPipeline->getPOId();
                 if (!empty($pOID)) {
                     $oPoPipeline->updateOrderStatus(classPOPipeLine::PO_STATUS_DROPED);
-                    classLogs::_log('purchase_orders', $oPoPipeline->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_DROPPED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
+                    Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_DROPPED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
                 }
             }
         }
     }
 
     if (!empty($entity_type_unlock)) {
-        classLocks::model(['lock_type' => $entity_type_unlock])->unlockEntity();
+        Xcart\Locks::model(['lock_type' => $entity_type_unlock])->unlockEntity();
     }
 
     func_header_location("purchase_orders.php");
@@ -95,7 +91,7 @@ $smarty->assign("po_pending", $po_pending);
 if (empty($page)) $page = 1;
 $objects_per_page = 50;
 
-$oLogs = new classLogs('purchase_orders');
+$oLogs = new Xcart\Logs('purchase_orders');
 $aLogs = $oLogs->_getLogs($page, $objects_per_page);
 if (!empty($aLogs) && count($aLogs) > 0) {
 
@@ -107,20 +103,20 @@ if (!empty($aLogs) && count($aLogs) > 0) {
 }
 
 $smarty->assign("aPendingOrdersLog", $aLogs);
-$smarty->assign("aPendingOrders", classPOPipeLine::getPendingPOrders());
+$smarty->assign("aPendingOrders", Xcart\POPipeLine::getPendingPOrders());
 
-$oStoreFronts = new classStoreFronts();
+$oStoreFronts = new Xcart\StoreFronts();
 $smarty->assign("aStorefronts", $oStoreFronts);
 
-$smarty->assign("aRecievedStatuses", classPOPipeLine::getRecievedStatuses());
+$smarty->assign("aRecievedStatuses", Xcart\POPipeLine::getRecievedStatuses());
 
-$oLock = classLocks::model(['lock_type' => 'purchase_order']);
+$oLock = Xcart\Locks::model(['lock_type' => 'purchase_order']);
 if (!$oLock->getLockType()) {
     $oLock->setField('lock_type', 'purchase_order');
 }
 $oLock->checkLock();
 
-$oLock = classLocks::model(['lock_type' => 'purchase_order']);
+$oLock = Xcart\Locks::model(['lock_type' => 'purchase_order']);
 //$oLock->unlockEntity();
 
 $smarty->assign("lockEntity", $oLock);

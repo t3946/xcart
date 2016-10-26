@@ -9,7 +9,7 @@ class Locks extends Data
         'purchase_order' => 'You locked this PO page. Nobody can make any changes to it. The page will be unlocked at %s. You can also'];
 
     /**
-     * @var classCustomer
+     * @var Customer
      */
     private $oCustomer = null;
 
@@ -49,7 +49,7 @@ class Locks extends Data
     public function getCustomer()
     {
         if (is_null($this->oCustomer))
-            $this->oCustomer = classCustomer::model(['login' => $this->getLogin()]);
+            $this->oCustomer = Customer::model(['login' => $this->getLogin()]);
         return $this->oCustomer;
     }
 

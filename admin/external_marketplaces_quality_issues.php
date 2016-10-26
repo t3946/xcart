@@ -3,9 +3,6 @@ global $xcart_dir, $config, $REQUEST_METHOD, $location, $first_page, $current_st
 
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
-require_once $xcart_dir . "/modules/External_Marketplaces/include/classIssuesProcessingRules.php";
-require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
-require_once $xcart_dir . "/modules/External_Marketplaces/include/marketplaces/classGMC.php";
 
 $objects_per_page = intval($config['Appearance']['products_per_page_admin']);
 
@@ -17,19 +14,19 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
         if (!empty($action_fix_issue)) {
             foreach ($action_fix_issue as $key => $value) {
                 list($iProductId, $iIssueId) = explode(':', $key);
-                $oIssue = new classGMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
+                $oIssue = new Xcart\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
                 $oIssue->updateField('fixed', 'Y');
             }
         }
         if (!empty($action_exclude_from_gmc)) {
-            $oStoreFrontMarketPlace = new classGMC();
+            $oStoreFrontMarketPlace = new Xcart\GMC();
             foreach ($action_exclude_from_gmc as $key => $value) {
                 list($iProductId, $iIssueId) = explode(':', $key);
-                $oIssue = new classGMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
+                $oIssue = new Xcart\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
                 $oIssue->updateField('fixed', 'Y');
                 $oStoreFrontMarketPlace->restoreQueue([['productid' => $iProductId]], 1);
                 //Google
-                $oDisableMarketplace = new classDisabledMarketPlace();
+                $oDisableMarketplace = new Xcart\DisabledMarketPlace();
                 $oDisableMarketplace->fill(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
                 $oDisableMarketplace->addDisabledMarketPlace();
                 //Bing
@@ -44,13 +41,13 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
     $aIssueParam = null;
     if (!empty($issue)) {
         $aIssueParam = ['issue_id' => $issue];
-        $oIssue = new classIssuesProcessingRules($aIssueParam);
+        $oIssue = new Xcart\IssuesProcessingRules($aIssueParam);
         $smarty->assign("navigation_script", "external_marketplaces_quality_issues.php?issue=$issue");
         $location[] = [$oIssue->getIssueName(), ""];
     }
     if (!empty($search)) {
         $aFilterParams ['search'] = $search;
-        $oIssue = new classIssuesProcessingRules($aIssueParam);
+        $oIssue = new Xcart\IssuesProcessingRules($aIssueParam);
         $location[] = ['Search results', ""];
     }
 

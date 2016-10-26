@@ -1,39 +1,40 @@
 <?php
+namespace Xcart;
 
-class OrderGroup extends classData
+class OrderGroup extends Data
 {
     const RECONCILED_NONE = 0;
     const RECONCILED_FULLY = 1;
     const RECONCILED_PARTIAL = 2;
     /**
-     * @var classOrder
+     * @var Order
      */
     private $oOrder = null;
     /**
-     * @var classOrderGroupInvoice[]
+     * @var OrderGroupInvoice[]
      */
     private $oOrderInvoices = [];
     /**
-     * @var classOrderGroupMemo[]
+     * @var OrderGroupMemo[]
      */
     private $oOrderMemos = [];
     /**
-     * @var classOrderRefundGroup[]
+     * @var OrderRefundGroup[]
      */
     private $oOrderRefunds = [];
     /**
-     * @var classOrderAmazonDetail[]
+     * @var OrderAmazonDetail[]
      */
     private $oOrderAmazonDetails = [];
 
     private $oPaymentMethod = null;
     /**
-     * @var classProduct[]
+     * @var Product[]
      */
     private $oOrderGroupProducts = [];
 
     /**
-     * @var classShipping
+     * @var Shipping
      */
     private $oShippingMethod = null;
 
@@ -51,7 +52,7 @@ class OrderGroup extends classData
 
     private function fetchOrderInstance()
     {
-        $this->oOrder = classOrder::model(['orderid' => $this->getField('orderid')]);
+        $this->oOrder = Order::model(['orderid' => $this->getField('orderid')]);
     }
 
     public function getPaymentMethodId()
@@ -61,7 +62,7 @@ class OrderGroup extends classData
 
     private function fetchPaymentMethodInstance()
     {
-        $oPay = new classPaymentMethod(['paymentid' => $this->getPaymentMethodId()]);
+        $oPay = new PaymentMethod(['paymentid' => $this->getPaymentMethodId()]);
         $this->oPaymentMethod = $oPay->getPaymentMethodInstance(['paymentid' => $this->getPaymentMethodId()]);
     }
 
@@ -149,55 +150,55 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroupInvoices
+     * @return OrderGroupInvoices
      */
     public function getOrderGroupInvoices()
     {
         if (empty($this->oOrderInvoices)) {
-            $this->oOrderInvoices = new classOrderGroupInvoices();
+            $this->oOrderInvoices = new OrderGroupInvoices();
             $this->oOrderInvoices = $this->oOrderInvoices->getOrderGroupInvoices(['orderid' => $this->getField('orderid'), 'manufacturerid' => $this->getField('manufacturerid')]);
         }
         return $this->oOrderInvoices;
     }
 
     /**
-     * @return classOrderGroupMemos
+     * @return OrderGroupMemos
      */
     public function getOrderGroupMemos()
     {
         if (empty($this->oOrderMemos)) {
-            $this->oOrderMemos = new classOrderGroupMemos();
+            $this->oOrderMemos = new OrderGroupMemos();
             $this->oOrderMemos = $this->oOrderMemos->getOrderGroupMemos(['orderid' => $this->getField('orderid'), 'manufacturerid' => $this->getField('manufacturerid')]);
         }
         return $this->oOrderMemos;
     }
 
     /**
-     * @return classOrderRefundGroups
+     * @return OrderRefundGroups
      */
     public function getOrderRefundGroups()
     {
         if (empty($this->oOrderRefunds)) {
-            $this->oOrderRefunds = new classOrderRefundGroups();
+            $this->oOrderRefunds = new OrderRefundGroups();
             $this->oOrderRefunds = $this->oOrderRefunds->getOrderRefundGroups(['orderid' => $this->getField('orderid'), 'manufacturerid' => $this->getField('manufacturerid')]);
         }
         return $this->oOrderRefunds;
     }
 
     /**
-     * @return classOrderAmazonDetails
+     * @return OrderAmazonDetails
      */
     public function getOrderAmazonDetails()
     {
         if (empty($this->oOrderAmazonDetails)) {
-            $this->oOrderAmazonDetails = new classOrderAmazonDetails();
+            $this->oOrderAmazonDetails = new OrderAmazonDetails();
             $this->oOrderAmazonDetails = $this->oOrderAmazonDetails->getOrderAmazonDetails(['orderid' => $this->getField('orderid'), 'manufacturerid' => $this->getField('manufacturerid')]);
         }
         return $this->oOrderAmazonDetails;
     }
 
     /**
-     * @return classOrder
+     * @return Order
      */
     public function getOrderInstance()
     {
@@ -208,7 +209,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classPaymentMethod
+     * @return PaymentMethod
      */
     public function getPaymentMethodInstance()
     {
@@ -221,7 +222,7 @@ class OrderGroup extends classData
     public function getPaymentMethodsAvailForOrderGroup()
     {
         if (empty($this->availPaymentMethods)) {
-            $oSQL = classSQLBuilder::getInstance()->addSelect('paymentid, payment_method')->addFromTable('payment_methods')->addCondition("acc_proc='Y'")->addOrderBy('orderby');
+            $oSQL = SQLBuilder::getInstance()->addSelect('paymentid, payment_method')->addFromTable('payment_methods')->addCondition("acc_proc='Y'")->addOrderBy('orderby');
             if ($this->getOrderInstance()->getAmazonChanell())
                 $oSQL->addCondition("order_tag_preference = '" . $this->getOrderInstance()->getAmazonChanell() . "'");
             $aPaymentMethods = $oSQL->Execute()->getQueryResult();
@@ -250,7 +251,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingHST()
     {
@@ -259,7 +260,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingPST()
     {
@@ -268,7 +269,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingGross()
     {
@@ -277,7 +278,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingGrossCostToUs()
     {
@@ -288,7 +289,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingPST($fSumma)
     {
@@ -299,7 +300,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingHST($fSumma)
     {
@@ -310,7 +311,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingNet($fSumma)
     {
@@ -320,7 +321,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingGross($fSumma)
     {
@@ -331,7 +332,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function setAccountingGross($fSumma)
     {
@@ -342,7 +343,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingNetCostToUs($fSumma)
     {
@@ -352,7 +353,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingGrossCostToUs($fSumma)
     {
@@ -363,7 +364,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function setAccountingGrossCostToUs($fSumma)
     {
@@ -379,7 +380,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingPSTCostToUs($fSumma)
     {
@@ -390,7 +391,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingHSTCostToUs($fSumma)
     {
@@ -401,7 +402,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function setAccountingHSTCostToUs($fSumma)
     {
@@ -412,7 +413,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingNetShipping($fSumma)
     {
@@ -422,7 +423,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingGrossShipping($fSumma)
     {
@@ -432,7 +433,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingNetShipping()
     {
@@ -441,7 +442,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingGrossShipping()
     {
@@ -450,7 +451,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingPSTShipping()
     {
@@ -459,7 +460,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingHSTShipping()
     {
@@ -469,7 +470,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function setAccountingGrossShipping($fSumma)
     {
@@ -480,7 +481,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingPSTShipping($fSumma)
     {
@@ -491,7 +492,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingHSTShipping($fSumma)
     {
@@ -502,7 +503,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fRefundSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingNetRefundToCustomer($fRefundSumma)
     {
@@ -512,7 +513,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fRefundSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingGrossRefundToCustomer($fRefundSumma)
     {
@@ -523,7 +524,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fRefundSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function setAccountingGrossRefundToCustomer($fRefundSumma)
     {
@@ -534,7 +535,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fRefundSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function setAccountingGrossRefundToUs($fRefundSumma)
     {
@@ -544,7 +545,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingNetRefundToCustomer()
     {
@@ -553,7 +554,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingGrossRefundToCustomer()
     {
@@ -562,7 +563,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingPSTRefundToCustomer()
     {
@@ -571,7 +572,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingHSTRefundToCustomer()
     {
@@ -580,7 +581,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingNetRefundToUs()
     {
@@ -589,7 +590,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingGrossRefundToUs()
     {
@@ -598,7 +599,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingPSTRefundToUs()
     {
@@ -608,7 +609,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function initAccountingHSTRefundToUs()
     {
@@ -619,7 +620,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fRefundSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingPSTRefundToCustomer($fRefundSumma)
     {
@@ -630,7 +631,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fRefundSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function setAccountingPSTRefundToCustomer($fRefundSumma)
     {
@@ -648,7 +649,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fRefundSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function setAccountingHSTRefundToCustomer($fRefundSumma)
     {
@@ -659,7 +660,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingNetRefundToUs($fSumma)
     {
@@ -669,7 +670,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingGrossRefundToUs($fSumma)
     {
@@ -680,7 +681,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingPSTRefundToUs($fSumma)
     {
@@ -691,7 +692,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function addAccountingHSTRefundToUs($fSumma)
     {
@@ -702,7 +703,7 @@ class OrderGroup extends classData
 
     /**
      * @param float $fSumma
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function setAccountingHSTRefundToUs($fSumma)
     {
@@ -717,7 +718,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function calculateAccountingNetProfit()
     {
@@ -742,7 +743,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function calculateAccountingHSTProfit()
     {
@@ -756,7 +757,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function calculateAccountingGrossProfit()
     {
@@ -819,7 +820,7 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderGroup
+     * @return OrderGroup
      */
     public function recalculateAccountingProfit()
     {
@@ -873,11 +874,11 @@ class OrderGroup extends classData
         if ($this->getAccountingNetProfit() < 0) {
             global $config;
             if (!$this->getOrderInstance()->isAttentionTagSet($config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"])) {
-                $oAttentionTag = new classAttentionTag(['status_id' => $config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
+                $oAttentionTag = new AttentionTag(['status_id' => $config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
                 $aInsertArray = ['orderid' => $this->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
                 func_array2insert('orders_additional_tags', $aInsertArray, true);
                 $sLog = "Attention tag added: " . $oAttentionTag->getStatus() . "\n";
-                classLogs::_log('orders', $this->getOrderId(), 'X', $sLog);
+                Logs::_log('orders', $this->getOrderId(), 'X', $sLog);
             }
         }
     }
@@ -969,8 +970,8 @@ class OrderGroup extends classData
     {
         if (empty($this->oOrderGroupProducts)) {
             if ($this->getOrderId())
-                $this->oOrderGroupProducts = classProduct::model()->findAll(
-                    classSQLBuilder::getInstance()->
+                $this->oOrderGroupProducts = Product::model()->findAll(
+                    SQLBuilder::getInstance()->
                     addInnerJoin('order_details', 'od', 'od.productid=main.productid AND orderid = ' . $this->getOrderId())->
                     addCondition('manufacturerid = ' . $this->getManufacturerId()));
         }
@@ -985,7 +986,7 @@ class OrderGroup extends classData
         if (!empty($this->oOrderGroupProducts)) {
             foreach ($this->oOrderGroupProducts as $oProduct) {
                 $iAmount = 0;
-                $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($this->getOrderId(), $oProduct->getProductId());
+                $aOrderDetails = OrderDetail::getOrderDetailsByOrderIdAndProductId($this->getOrderId(), $oProduct->getProductId());
 
                 foreach ($aOrderDetails as $oOrderDetail) {
                     $iAmount += $oOrderDetail->getAmount();
@@ -1018,7 +1019,7 @@ class OrderGroup extends classData
 
     public function shipOrderGroupByAmazon($sAmazonShippingMethodSelect)
     {
-        $oAmazon = new classAmazonMWS('FBAOutboundServiceMWS_Client', '/FulfillmentOutboundShipment/2010-10-01/');
+        $oAmazon = new AmazonMWS('FBAOutboundServiceMWS_Client', '/FulfillmentOutboundShipment/2010-10-01/');
         return $oAmazon->shipOrderGroupByAmazon($this, $sAmazonShippingMethodSelect);
     }
 
@@ -1030,7 +1031,7 @@ class OrderGroup extends classData
     public function getShippingInstance()
     {
         if (empty($this->oShippingMethod)) {
-            $this->oShippingMethod = new classShipping($this->getField('shippingid'));
+            $this->oShippingMethod = new Shipping($this->getField('shippingid'));
         }
         return $this->oShippingMethod;
     }
@@ -1104,11 +1105,11 @@ class OrderGroup extends classData
     }
 
     /**
-     * @return classOrderDetail[]
+     * @return OrderDetail[]
      */
     public function getOrderDetails()
     {
-        return classOrderDetail::model()->findAll(classSQLBuilder::getInstance()->
+        return OrderDetail::model()->findAll(SQLBuilder::getInstance()->
         addInnerJoin('products', 'p', "p.productid = main.productid AND p.manufacturerid = " . $this->getManufacturerId())->
         addCondition('orderid = ' . $this->getOrderId()));
     }

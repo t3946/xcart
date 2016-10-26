@@ -53,7 +53,7 @@ class Logs extends Data
     public static function _getLogs($page = 1, $per_page = 50, $iResourceId = null, $sLogType = null)
     {
         $aLogs = [];
-        $oSQL = new classSQLBuilder();
+        $oSQL = new SQLBuilder();
         $oSQL->addSelect('SQL_CALC_FOUND_ROWS *')->addFromTable('logs')->addCondition("resource_type = '" . self::$log_resource_type . "'")->addOrderBy('id DESC');
         if (!empty($iResourceId))
             $oSQL->addCondition("resource_id = $iResourceId");
@@ -66,7 +66,7 @@ class Logs extends Data
         $aResult = $oSQL->Execute()->getQueryResult();
         if (!empty($aResult)) {
             foreach ($aResult as $oResult) {
-                $oLogs = new classLogs($oResult['resource_type']);
+                $oLogs = new Logs($oResult['resource_type']);
                 $oLogs->fill($oResult);
                 $aLogs[] = $oLogs;
             }
@@ -76,7 +76,7 @@ class Logs extends Data
 
     public function getLogDate($sDateFormat = 'd-M-Y H:i:s')
     {
-        $oDate = new DateTime();
+        $oDate = new \DateTime();
         $oDate->setTimestamp(strtotime($this->getField('date')));
         return $oDate->format($sDateFormat);
     }
@@ -94,7 +94,7 @@ class Logs extends Data
     public function getCustomerEntity()
     {
         if (empty($this->oCustomer)){
-            $this->oCustomer = new classCustomer(['login'=> $this->getLogin()]);
+            $this->oCustomer = new Customer(['login'=> $this->getLogin()]);
         }
         return $this->oCustomer;
     }

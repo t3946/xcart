@@ -4,7 +4,7 @@ namespace Xcart;
 class StoreFronts extends Data
 {
     /**
-     * @var classStorefront[]
+     * @var Storefront[]
      */
     private $aStoreFronts = [];
 
@@ -20,12 +20,12 @@ class StoreFronts extends Data
     public function fetchStoreFronts()
     {
         if (empty($this->aStoreFronts)) {
-            $oArtist = new classStoreFront(['storefrontid'=>0]);
+            $oArtist = new StoreFront(['storefrontid'=>0]);
             $this->aStoreFronts[] = $oArtist;
             $aStoreFronts = func_query("SELECT * FROM " . self::$sql_tbl['storefronts'] . " ORDER BY domain" );
             if (!empty($aStoreFronts)) {
                 foreach ($aStoreFronts as $aStoreFront) {
-                    $oStorefront = new classStoreFront();
+                    $oStorefront = new StoreFront();
                     $oStorefront->fill($aStoreFront);
                     $this->aStoreFronts[] = $oStorefront;
                 }

@@ -4,7 +4,7 @@ namespace Xcart;
 class OrderGroupInvoices extends Data
 {
     /**
-     * @var classOrderGroupInvoice[]
+     * @var OrderGroupInvoice[]
      */
     private $aGroupInvoices = [];
 
@@ -40,7 +40,7 @@ class OrderGroupInvoices extends Data
             $aRes = func_query("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE ".str_replace('&',' AND ',http_build_query($aParams)). " ORDER BY invoice_number");
             if (!empty($aRes)) {
                 foreach ($aRes as $aGroupInvoice) {
-                    $oGroupInvoice = new classOrderGroupInvoice();
+                    $oGroupInvoice = new OrderGroupInvoice();
                     $oGroupInvoice->fill($aGroupInvoice);
                     $this->aGroupInvoices[] = $oGroupInvoice;
                 }
@@ -91,10 +91,10 @@ class OrderGroupInvoices extends Data
         return $oLastInvoice;
     }
     /**
-     * @param classOrderGroupInvoice $oLastInvoice
-     * @return classOrderGroupInvoices
+     * @param OrderGroupInvoice $oLastInvoice
+     * @return OrderGroupInvoices
      */
-    public function createCloneInvoice(classOrderGroupInvoice $oInvoice)
+    public function createCloneInvoice(OrderGroupInvoice $oInvoice)
     {
         $oCloneInvoice = $oInvoice->_clone();
         $oCloneInvoice->setInvoiceNumber($oInvoice->getInvoiceNumber() + 1);

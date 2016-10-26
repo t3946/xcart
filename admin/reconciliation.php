@@ -33,9 +33,8 @@ function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_
         }
         */
 		global $xcart_dir;
-		require_once $xcart_dir . "/include/class/classManufacturers.php";
 		$aManufacturersToCheck = [];
-		$oClassManufacurer = new classManufacturers($v["manufacturerid"]);
+		$oClassManufacurer = new Xcart\Manufacturers($v["manufacturerid"]);
 		if ($oClassManufacurer->getField('parent_manufacturer_id') == -1) {
 			$aManufacturers = $oClassManufacurer->getChildrenManufacturers($v["manufacturerid"]);
 			if (!empty($aManufacturers)) {
@@ -1207,8 +1206,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 
 					if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false) {
 						$manufacturerid = $kk;
-						require_once $xcart_dir . "/include/class/classManufacturer.php";
-						$aManufacturersForReconciliation[$kk] = new classManufacturer($kk);
+						$aManufacturersForReconciliation[$kk] = new Xcart\Manufacturer($kk);
 						$reconciliations[$k]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>" . $vv_s_r_UPPER . "</B>", $v_description_csv_UPPER);
 
 						//preg_match('',$v_description_csv_UPPER, $aMatches);

@@ -6,9 +6,6 @@ require "./top.inc.php";
 require "./init.php";
 
 global $xcart_dir, $config;
-require_once $xcart_dir . "/include/class/classStoreFronts.php";
-require_once $xcart_dir . "/modules/External_Marketplaces/include/classStoreFrontMarketPlace.php";
-require_once $xcart_dir . "/modules/External_Marketplaces/include/marketplaces/classGMC.php";
 
 
 ini_set('memory_limit', '512M');
@@ -27,7 +24,7 @@ $start_time = time();
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log(BACK_PROCESS_LOG_NAME, $log_text);
 
-$oStoreFronts = new classStoreFronts();
+$oStoreFronts = new Xcart\StoreFronts();
 $aStoreFronts = $oStoreFronts->getStoreFronts();
 if (!empty($aStoreFronts)) {
     foreach ($aStoreFronts as $aStoreFront) {

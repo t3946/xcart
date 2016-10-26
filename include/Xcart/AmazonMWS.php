@@ -1,4 +1,8 @@
 <?php
+namespace Xcart;
+
+use Xcart\OrderGroup;
+
 global $xcart_dir;
 //include_once $xcart_dir . "/MarketplaceWebService/Samples/.config.inc.php";
 require_once $xcart_dir . "/MarketplaceWebService/Client.php";
@@ -535,13 +539,13 @@ class AmazonMWS
         if (!empty($this->error)) return $this;
 
         $this->aWaitLoopExitCondition = [];
-        $request = new MarketplaceWebService_Model_RequestReportRequest();
+        $request = new \MarketplaceWebService_Model_RequestReportRequest();
         $request->setMarketplaceIdList($this->marketplaceIdArray);
         $request->setMerchant(MERCHANT_ID);
         $request->setReportType($this->amazonReportType);
 
         if (!is_null($this->tStartDate))
-            $request->setStartDate(new DateTime($this->tStartDate->format("Y-m-d\T00:00:00P"), new DateTimeZone('UTC')));
+            $request->setStartDate(new \DateTime($this->tStartDate->format("Y-m-d\T00:00:00P"), new \DateTimeZone('UTC')));
 
         $this->dom_xml_arr = $this->invokeRequestReport($request);
 
@@ -646,12 +650,12 @@ class AmazonMWS
     {
         $this->setTimeOut(45);
 
-        $request = new MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest();
+        $request = new \MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest();
         $request->setMerchant(MERCHANT_ID);
 
         if (!empty($this->aReportIds)) {
             foreach ($this->aReportIds as $iReportId) {
-                $idList = new MarketplaceWebService_Model_IdList();
+                $idList = new \MarketplaceWebService_Model_IdList();
 
                 $request->setReportIdList($idList->withId($iReportId));
                 $request->setAcknowledged(true); //true
@@ -742,7 +746,7 @@ class AmazonMWS
                         } else {
                             $aReportData[$y][$aReportValue[0][$iKey]] = $sItem;
                             if ($aReportValue[0][$iKey] == 'sku') {
-                                $oClassProducts = new classProducts();
+                                $oClassProducts = new Products();
                                 $iProductId = $oClassProducts->getProductIdBySKU($sItem);
                                 if ($iProductId) {
                                     $aReportData[$y]['productid'] = (int)$iProductId;
@@ -943,7 +947,7 @@ class AmazonMWS
                                 $aOrderDetailData['Refund'] = floatval(abs($aFees['Refund']));
                                 $aOrderDetailData['reportId'] = $report_id;
                                 $iOrderId = $aOrderDetailData['orderid'] = intval($aFees['orderid']);
-                                $oProducts = new classProducts();
+                                $oProducts = new Products();
                                 $aProduct = $oProducts->getProductBySKU($aOrderDetailData['SKU']);
                                 if (!empty($aProduct))
                                     $aOrderDetailData['manufacturerid'] = $aProduct['manufacturerid'];
@@ -978,7 +982,7 @@ class AmazonMWS
 
 
                                         if (!empty($aProduct)) {
-                                            $oOrderGroup = new classOrderGroup(['orderid' => $iOrderId, 'manufacturerid' => $aProduct['manufacturerid']]);
+                                            $oOrderGroup = new OrderGroup(['orderid' => $iOrderId, 'manufacturerid' => $aProduct['manufacturerid']]);
                                             $oOrderGroup->recalculateAccounting();
                                         }
                                     }
@@ -1010,11 +1014,11 @@ class AmazonMWS
 
 
     /**
-     * @param classOrderGroup $oOrderGroup
+     * @param OrderGroup $oOrderGroup
      * @param string $sAmazonShippingMethodSelect
      * @return bool
      */
-    public function shipOrderGroupByAmazon(classOrderGroup $oOrderGroup, $sAmazonShippingMethodSelect)
+    public function shipOrderGroupByAmazon(OrderGroup $oOrderGroup, $sAmazonShippingMethodSelect)
     {
         global $login;
         $oOrder = $oOrderGroup->getOrderInstance();
@@ -1033,7 +1037,7 @@ class AmazonMWS
             return false;
         }
 
-        $address = new FBAOutboundServiceMWS_Model_Address();
+        $address = new \FBAOutboundServiceMWS_Model_Address();
 
         $address->setName($oOrder->getClientShippingName());
         $address->setLine1($oOrder->getField('s_address'));
@@ -1047,13 +1051,13 @@ class AmazonMWS
 
         $aProducts = $oOrderGroup->getOrderGroupProducts();
         if (!empty($aProducts)) {
-            $list = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
+            $list = new \FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
 
             foreach ($aProducts as $oProduct) {
                 $iAmount = 0;
-                $item = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
+                $item = new \FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
 
-                $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($oOrderGroup->getOrderId(), $oProduct->getProductId());
+                $aOrderDetails = OrderDetail::getOrderDetailsByOrderIdAndProductId($oOrderGroup->getOrderId(), $oProduct->getProductId());
                 foreach ($aOrderDetails as $oOrderDetail) {
                     $iAmount += $oOrderDetail->getAmount();
                 }
@@ -1072,7 +1076,7 @@ class AmazonMWS
                 $list->withmember($item);
             }
 
-            $req = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest();
+            $req = new \FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest();
             $req->setSellerId(MERCHANT_ID);
             $req->setSellerFulfillmentOrderId($oOrderGroup->getAmazonShippingOrderId());
             $req->setDisplayableOrderId($oOrderGroup->getAmazonShippingOrderId());
@@ -1102,7 +1106,7 @@ class AmazonMWS
                 $oOrderGroup->changeOrderGroupStatusDC('L');
 
 
-            } catch (FBAOutboundServiceMWS_Exception $ex) {
+            } catch (\FBAOutboundServiceMWS_Exception $ex) {
                 $log .= "Caught Exception: " . $ex->getMessage() . "\n";
                 $log .= "Response Status Code: " . $ex->getStatusCode() . "\n";
                 $log .= "Error Code: " . $ex->getErrorCode() . "\n";
@@ -1147,7 +1151,7 @@ class AmazonMWS
 
                         } else {
                             if ($aReportValue[0][$iKey] == 'sku') {
-                                $iProductId = classProduct::getProductBySKU($sItem)->getProductId();
+                                $iProductId = Product::getProductBySKU($sItem)->getProductId();
                             }
                             $aReportData[$iProductId][$aReportValue[0][$iKey]] = $sItem;
                         }
@@ -1160,10 +1164,10 @@ class AmazonMWS
 
             foreach ($this->aReportValue as $aReport)
                 foreach ($aReport as $iProductId => $aItem) {
-                    /** @var classCidevAmazonFbaProducts $oFbaProduct */
+                    /** @var CidevAmazonFbaProducts $oFbaProduct */
                     if (!empty($aItem['sku']))
-                        $oFbaProduct = classCidevAmazonFbaProducts::model()->find(classSQLBuilder::getInstance()->addCondition("productid = '" . $iProductId . "'")->addCondition("report_date = $report_date"));
-                    else $oFbaProduct = classCidevAmazonFbaProducts::model();
+                        $oFbaProduct = CidevAmazonFbaProducts::model()->find(SQLBuilder::getInstance()->addCondition("productid = '" . $iProductId . "'")->addCondition("report_date = $report_date"));
+                    else $oFbaProduct = CidevAmazonFbaProducts::model();
 
                     $oFbaProduct->setField('reserved_qty', $aItem['reserved_qty']);
                     $oFbaProduct->setField('reserved_customerorders', $aItem['reserved_customerorders']);
@@ -1183,15 +1187,15 @@ class AmazonMWS
     {
 
         global $config;
-        /** @var classCidevAmazonFbaProducts[][] $aAggregateRows */
-        /** @var classCidevAmazonFbaProducts[] $aFbaProducts */
+        /** @var CidevAmazonFbaProducts[][] $aAggregateRows */
+        /** @var CidevAmazonFbaProducts[] $aFbaProducts */
 
         for ($i = 24; $i >= $config['Amazon_FBA_options']['Amazon_FBA_Month']; $i--) {
             $aAggregateRows = $aAggregateStat = $aFbaProducts = null;
-            $currentDate = new DateTime(date('Y-m-d', strtotime("first day of this month")));
-            $currentDate->sub(new DateInterval('P' . $i . 'M'));
+            $currentDate = new \DateTime(date('Y-m-d', strtotime("first day of this month")));
+            $currentDate->sub(new \DateInterval('P' . $i . 'M'));
 
-            $aFbaProducts = classCidevAmazonFbaProducts::model()->findAll(classSQLBuilder::getInstance()->addCondition("report_date < " . $currentDate->getTimestamp())->addCondition("precise_data='Y'"));
+            $aFbaProducts = CidevAmazonFbaProducts::model()->findAll(SQLBuilder::getInstance()->addCondition("report_date < " . $currentDate->getTimestamp())->addCondition("precise_data='Y'"));
             if ($aFbaProducts) {
                 $log_text = 'Aggregate FBA products data for %s products. Period %s';
                 func_backprocess_log($this->sBackProcessLogName, sprintf($log_text, count($aFbaProducts), $currentDate->format('d-M-Y')));
@@ -1199,7 +1203,7 @@ class AmazonMWS
                     $iReportTimeStamp = $oFbaProduct->getReportPeriod()->getTimeStamp();
                     $iProductId = $oFbaProduct->getField('productid');
                     if (!isset($aAggregateRows[$iProductId][$iReportTimeStamp]))
-                        $aAggregateRows[$iProductId][$iReportTimeStamp] = classCidevAmazonFbaProducts::model();
+                        $aAggregateRows[$iProductId][$iReportTimeStamp] = CidevAmazonFbaProducts::model();
                     $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('productid', $iProductId);
                     $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('productcode', $oFbaProduct->getField('productcode'));
                     $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('ASIN', $oFbaProduct->getField('ASIN'));

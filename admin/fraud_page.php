@@ -272,7 +272,6 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                                     func_change_order_group_status($orderid, $m_id, 'R');
                                 }
 
-                                require_once $xcart_dir . "/include/class/classOrders.php";
                                 $oOrder = classOrder::model(['orderid'=>$orderid]);
                                 $oOrder->recalculateAccounting();
                         }
@@ -485,9 +484,8 @@ if (!$curl_err){
                                                 }
                                 }
                                 if ($config["Autosubmit_orderentry_operator"]["Order_shipping_method_carrier"] == "Y") {
-                                    include_once $xcart_dir . "/include/class/classShippings.php";
                                     foreach ($order['shipping_groups'] as $k_group => $v_group){
-                                        $classShipping = new classShipping($v_group['shippingid']);
+                                        $classShipping = new Xcart\Shipping($v_group['shippingid']);
                                         if ($classShipping->isAmazonShipping()) {
                                             $allow_send_to_operator = false;
                                             break;
@@ -503,8 +501,7 @@ if (!$curl_err){
 
                 if ($allow_send_to_operator) {
                     foreach ($mnfs as $mnf_id => $v) {
-                        include_once $xcart_dir . "/include/class/classOrderGroup.php";
-                        $oOrderGroup = new classOrderGroup(['orderid'=>$orderid, 'manufacturerid'=>$mnf_id]);
+                        $oOrderGroup = new Xcart\OrderGroup(['orderid'=>$orderid, 'manufacturerid'=>$mnf_id]);
                         $oOrder = $oOrderGroup->getOrderInstance();
 
                         if ($oOrder->getOrderGroupsCount()==1 && $oOrderGroup->checkFBAProductsAvailToShipping()) continue;

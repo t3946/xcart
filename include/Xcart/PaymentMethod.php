@@ -19,7 +19,7 @@ class PaymentMethod extends Data
     public function getPaymentMethodInstance($aParams)
     {
         if (intval($this->getField('paymentid')) > 0) {
-            $sPaymentClassName = 'classPaymentMethod' . str_replace('.php', '', $this->getField('payment_script'));
+            $sPaymentClassName = 'Xcart\Payments\PaymentMethod' . str_replace('.php', '', $this->getField('payment_script'));
             return new $sPaymentClassName($aParams);
         } else return $this;
     }

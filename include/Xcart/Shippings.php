@@ -17,7 +17,7 @@ class Shippings extends Shipping
 
     public function getShippingWeight($iProductId, $iShippingId, $iAmount = 1, $aProduct = array(), $aShipping = array(), $bUseShippingParametrs = true) {
         if (empty($aProduct)) {
-            $classProducts = new classProducts();
+            $classProducts = new Products();
             $aProduct = $classProducts->getProductInfo($iProductId);
             unset ($classProducts);
         }
@@ -63,7 +63,7 @@ class Shippings extends Shipping
         $aShippings = func_query("SELECT * FROM ".self::$sql_tbl['shipping']." WHERE code = '$sCode'");
         if (!empty($aShippings))
             foreach ($aShippings as $aShipping) {
-                $oShipping = new classShipping($aShipping);
+                $oShipping = new Shipping($aShipping);
                 $aOShippings[] = $oShipping;
             }
         return $aOShippings;

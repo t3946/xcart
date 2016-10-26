@@ -34,10 +34,10 @@ class Product extends Data
     public function getManfacturerClass($iManufacurerId = null)
     {
         if (!is_null($iManufacurerId))
-            return new classManufacturer($iManufacurerId);
+            return new Manufacturer($iManufacurerId);
         else {
             if (is_null($this->oManufacturer)) {
-                $this->oManufacturer = new classManufacturer($this->aPrimaryTableValue['manufacturerid']);
+                $this->oManufacturer = new Manufacturer($this->aPrimaryTableValue['manufacturerid']);
             }
             return $this->oManufacturer;
         }
@@ -60,7 +60,7 @@ class Product extends Data
     public function getStoreFront()
     {
         if (is_null($this->oStoreFront)) {
-            $this->oStoreFront = new classStoreFront();
+            $this->oStoreFront = new StoreFront();
         }
         return $this->oStoreFront;
     }
@@ -68,7 +68,7 @@ class Product extends Data
     public function setProductManufacturer($aManufacturerInfo)
     {
         if (!empty($aManufacturerInfo) && is_array($aManufacturerInfo)) {
-            $this->oManufacturer = new classManufacturer($aManufacturerInfo);
+            $this->oManufacturer = new Manufacturer($aManufacturerInfo);
         }
         return $this;
     }
@@ -85,7 +85,7 @@ class Product extends Data
 
     public function getHTMLShot($iOrderID)
     {
-        return classHTMLShot::model()->find(classSQLBuilder::getInstance()->addCondition('product_id = ' . $this->getProductId())->addCondition('order_id = ' . $iOrderID));
+        return HTMLShot::model()->find(SQLBuilder::getInstance()->addCondition('product_id = ' . $this->getProductId())->addCondition('order_id = ' . $iOrderID));
     }
 
     public function createHTMLShot($iOrderID)
@@ -94,14 +94,14 @@ class Product extends Data
         if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
             $this->changeVerificationStatus(self::PRODUCT_STATUS_VERIFY,'', true, [$iOrderID]);
         } elseif (intval($aManufacturerProductVerifySettings['days_before_verify']) > 0 && $this->getProductLastVerifyDate()) {
-            $currentDate = new DateTime("now");
+            $currentDate = new \DateTime("now");
             $iDaysInterval = $currentDate->diff($this->getProductLastVerifyDate())->days;
             if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
                 $this->changeVerificationStatus(self::PRODUCT_STATUS_VERIFY,'', true, [$iOrderID]);
             }
         } else {
             $this->changeVerificationStatus(self::PRODUCT_STATUS_NOT_VERIFY,'', true, [$iOrderID]);
-            classHTMLShot::model()->createHTMLShot($this, $iOrderID);
+            HTMLShot::model()->createHTMLShot($this, $iOrderID);
         }
     }
 
@@ -117,7 +117,7 @@ class Product extends Data
     {
         $iDate = (int)$this->getField('last_verify_date');
         if (!empty($iDate)) {
-            $oDatetime = new DateTime();
+            $oDatetime = new \DateTime();
             $oDatetime->setTimestamp($iDate);
             return $oDatetime;
         }
@@ -145,7 +145,7 @@ class Product extends Data
         $bResult['result'] = false;
         if ($this->getField('verification_statusid') != $iStatusId) {
             $aUpdateParams = ['verification_statusid' => $iStatusId];
-            $oDatetime = new DateTime();
+            $oDatetime = new \DateTime();
             if ($iStatusId == self::PRODUCT_STATUS_VERIFY) {
                 $aUpdateParams['last_verify_date'] = $oDatetime->getTimestamp();
             }
@@ -167,8 +167,8 @@ class Product extends Data
 
                 if (!empty($aOrders) && ($iStatusId == self::PRODUCT_STATUS_PROBLEM_NOT_FIXED || $iStatusId == self::PRODUCT_STATUS_PROBLEM_FIXED)) {
                     foreach ($aOrders as $iOrderId) {
-                        $oVerificationStatusNew = new classProductVerificationStatus($iStatusId);
-                        $oVerificationStatusOld = new classProductVerificationStatus($this->getField('verification_statusid'));
+                        $oVerificationStatusNew = new ProductVerificationStatus($iStatusId);
+                        $oVerificationStatusOld = new ProductVerificationStatus($this->getField('verification_statusid'));
                         $sLogMessage = "<b>" . $this->getField('productcode') . "</b> product verification status: " . $oVerificationStatusOld->getField('name') . " -> " . $oVerificationStatusNew->getField('name') . "\n";
                         if (!empty($sNote)) $sLogMessage .= 'Problem/fix description: ' . $sNote;
                         func_log_order($iOrderId, 'X', nl2br($sLogMessage));
@@ -196,7 +196,7 @@ class Product extends Data
             $aImages = func_query("SELECT * FROM " . self::$sql_tbl['images_' . $type] . " WHERE id = " . $this->getProductId() . " ORDER BY orderby ASC");
             if (!empty($aImages))
                 foreach ($aImages as $aImage) {
-                    $oProductImage = new classProductImage($type);
+                    $oProductImage = new ProductImage($type);
                     $oProductImage->fill($aImage);
                     $var = &$this->$sImagesVar;
                     $var[] = $oProductImage;
@@ -206,7 +206,7 @@ class Product extends Data
 
     /**
      * @param $type
-     * @return classProductImage[]
+     * @return ProductImage[]
      */
     public function getImages($type)
     {
@@ -221,7 +221,7 @@ class Product extends Data
             $aPricing = func_query("SELECT * FROM " . self::$sql_tbl['pricing'] . " WHERE productid = " . $this->getProductId() . " ORDER BY quantity ASC");
             if (!empty($aPricing))
                 foreach ($aPricing as $aPrice) {
-                    $oProductPricing = new classPricing();
+                    $oProductPricing = new Pricing();
                     $oProductPricing->fill($aPrice);
                     $this->aPricing[] = $oProductPricing;
                 }
@@ -369,32 +369,32 @@ class Product extends Data
 
     /**
      * @param $sSKU
-     * @return classProduct
+     * @return Product
      */
     public static function getProductBySKU($sSKU)
     {
-        return classProduct::model()->find(classSQLBuilder::getInstance()->addCondition("productcode = '$sSKU'"));
+        return Product::model()->find(SQLBuilder::getInstance()->addCondition("productcode = '$sSKU'"));
     }
 
     /**
-     * @return classProduct[]
+     * @return Product[]
      */
     public function getChildProducts()
     {
         $aResult = [];
         if ($this->getProductId())
-            $aResult = classProduct::model()->findAll(classSQLBuilder::getInstance()->addCondition('clone_parent_productid = ' . $this->getProductId()));
+            $aResult = Product::model()->findAll(SQLBuilder::getInstance()->addCondition('clone_parent_productid = ' . $this->getProductId()));
         return $aResult;
     }
 
     /**
-     * @return classProduct|null
+     * @return Product|null
      */
     public function getParentProduct()
     {
         $oParentProduct = null;
         if ($this->getField('clone_parent_productid')) {
-            $oParentProduct = classProduct::model(['productid' => $this->getField('clone_parent_productid')]);
+            $oParentProduct = Product::model(['productid' => $this->getField('clone_parent_productid')]);
         }
         return $oParentProduct;
     }

@@ -1,7 +1,7 @@
 <?php
 namespace Xcart;
 
-class classBrands extends CloneData
+class Brands extends CloneData
 {
     public function __construct($iId = null)
     {

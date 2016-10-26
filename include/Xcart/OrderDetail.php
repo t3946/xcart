@@ -4,11 +4,11 @@ namespace Xcart;
 class OrderDetail extends Data
 {
     /**
-     * @var classProduct
+     * @var Product
      */
     private $oProduct = null;
     /**
-     * @var classOrder
+     * @var Order
      */
     private $oOrder = null;
 
@@ -22,14 +22,14 @@ class OrderDetail extends Data
     /**
      * @param int $iOrderId
      * @param int $iProductId
-     * @return classOrderDetail[]
+     * @return OrderDetail[]
      */
     public static function getOrderDetailsByOrderIdAndProductId($iOrderId, $iProductId)
     {
         $oOrderDetails = [];
         $aOrderDetails = func_query("SELECT * FROM " . self::$sql_tbl['order_details'] . " WHERE orderid = $iOrderId AND productid = $iProductId");
         foreach ($aOrderDetails as $aOrderDetail) {
-            $oOrderDetail = new classOrderDetail();
+            $oOrderDetail = new OrderDetail();
             $oOrderDetail->fill($aOrderDetail);
             $oOrderDetails[] = $oOrderDetail;
         }
@@ -60,7 +60,7 @@ class OrderDetail extends Data
     {
         if (is_null($this->oProduct)) {
             if ($this->getField('productid')) {
-                $this->oProduct = new classProduct(['productid' => $this->getField('productid')]);
+                $this->oProduct = new Product(['productid' => $this->getField('productid')]);
             }
         }
         return $this->oProduct;
@@ -112,7 +112,7 @@ class OrderDetail extends Data
 
     private function fetchOrderInstance()
     {
-        $this->oOrder = classOrder::model(['orderid' => $this->getField('orderid')]);
+        $this->oOrder = Order::model(['orderid' => $this->getField('orderid')]);
     }
 
     public function getOrderInstance()

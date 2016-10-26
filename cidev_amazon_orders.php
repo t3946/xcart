@@ -539,7 +539,6 @@ while (!empty($NextToken)){
 				db_query("UPDATE $sql_tbl[orders] SET extra='".serialize($extra)."', subtotal='$product_total' WHERE orderid='$new_orderid'");
 
 				global $xcart_dir;
-				include_once $xcart_dir."/include/class/classOrders.php";
 				/** @var classOrder $oOrder */
 				$oOrder = classOrder::model(['orderid'=>$new_orderid]);
 				$oOrder->updateVerificationStatus()->reCalculateTotals();

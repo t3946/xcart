@@ -4,7 +4,7 @@ namespace Xcart;
 class OrderGroupInvoice extends Data
 {
     /**
-     * @var classReconciliation
+     * @var Reconciliation
      */
     private $oReconciliation = null;
 
@@ -94,7 +94,7 @@ class OrderGroupInvoice extends Data
 
     protected function getReconciliationEntity() {
         if (intval($this->getField('reconciliation_id')) > 0 && empty($this->oReconciliation)) {
-            $this->oReconciliation = new classReconciliation(['id'=>$this->getField('reconciliation_id')]);
+            $this->oReconciliation = new Reconciliation(['id'=>$this->getField('reconciliation_id')]);
         }
         return $this->oReconciliation;
     }

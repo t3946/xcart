@@ -596,8 +596,7 @@ if (
 				# Define "mpn"
 
 				global $xcart_dir;
-				include_once $xcart_dir."/include/class/classProducts.php";
-				$mpn = classProduct::model(['productid'=>$product['productid']])->getMPN();
+				$mpn = Xcart\Product::model(['productid'=>$product['productid']])->getMPN();
 
 				/*$pos = strpos($product['productcode'], '-');
 				$mpn = '';

@@ -16,7 +16,7 @@ class Shipping extends CloneData
 
     public function getShippingWeight($iProductId, $iShippingId, $iAmount = 1, $aProduct = array(), $aShipping = array(), $bUseShippingParametrs = true) {
         if (empty($aProduct)) {
-            $classProducts = new classProducts();
+            $classProducts = new Products();
             $aProduct = $classProducts->getProductInfo($iProductId);
             unset ($classProducts);
         }
