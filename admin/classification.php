@@ -175,7 +175,7 @@ if (!empty($productids_in_pc_locks_arr)){
 //$where1 .= " AND $sql_tbl[products].pc_most_relevant_categories != '' "; //////////////////////////////////////////////////// <----------
 ############################
 
-$products_minimum_number_of_autoclassify_product_per_turn = func_query($query="SELECT $sql_tbl[products].productid, $sql_tbl[products].product, $sql_tbl[products].pc_classify_status, $sql_tbl[categories].categoryid, $sql_tbl[categories].categoryid_path, $sql_tbl[categories].google_product_category, $sql_tbl[products].pc_most_relevant_categories, $sql_tbl[products].pc_delta FROM $sql_tbl[products]  LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid LEFT JOIN $sql_tbl[categories] ON $sql_tbl[categories].categoryid=$sql_tbl[products_categories].categoryid WHERE $sql_tbl[products_sf].sfid='".$current_storefront_info["storefrontid"]."' AND $sql_tbl[categories].pc_ready_to_classify='Y' AND $sql_tbl[products].pc_classify_status='AC' AND $sql_tbl[products].forsale='Y' $where1 GROUP BY $sql_tbl[products].productid ORDER BY $sql_tbl[products].pc_delta LIMIT ".$limit);
+$products_minimum_number_of_autoclassify_product_per_turn = func_query($query="SELECT $sql_tbl[products].productid, $sql_tbl[products].product, $sql_tbl[products].pc_classify_status, $sql_tbl[categories].categoryid, $sql_tbl[categories].categoryid_path, $sql_tbl[categories].google_product_category, $sql_tbl[products].pc_most_relevant_categories, $sql_tbl[products].pc_delta FROM $sql_tbl[products]  LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid LEFT JOIN $sql_tbl[categories] ON $sql_tbl[categories].categoryid=$sql_tbl[products_categories].categoryid WHERE $sql_tbl[products_sf].sfid='".$current_storefront_info["storefrontid"]."' AND $sql_tbl[products].pc_classify_status='AC' AND $sql_tbl[products].forsale='Y' $where1 GROUP BY $sql_tbl[products].productid ORDER BY $sql_tbl[products].pc_delta LIMIT ".$limit);
 
 if (!empty($products_minimum_number_of_autoclassify_product_per_turn)){
 	foreach ($products_minimum_number_of_autoclassify_product_per_turn as $k => $product){
@@ -192,37 +192,38 @@ if (!empty($products_minimum_number_of_autoclassify_product_per_turn)){
 
 			$pc_most_relevant_categories_arr_0 = explode(",", $pc_most_relevant_categories_arr[0]);
 			$relevant_cats[0]["categoryid"] = $pc_most_relevant_categories_arr_0[1];
-			$relevant_cats[0]["google_product_category"] = func_query_first_cell("SELECT google_product_category FROM $sql_tbl[categories] WHERE categoryid='".$relevant_cats[0]["categoryid"]."'");
+			$relevant_cats[0]["google_product_category"] = func_query_first_cell("SELECT google_product_category FROM $sql_tbl[categories] WHERE categoryid='" . $relevant_cats[0]["categoryid"] . "'");
 			$relevant_cats[0]["score"] = round($pc_most_relevant_categories_arr_0[0]);
-			$cat_path_arr = func_categoryid_path2category_path($product["categoryid_path"]);
+			$categoryid_path_0 = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='" . $relevant_cats[0]["categoryid"] . "'");
+			$cat_path_arr = func_categoryid_path2category_path($categoryid_path_0);
 			$relevant_cats[0]["categoryid_path_arr"] = $cat_path_arr;
 			$relevant_cats[0]["categoryid_path_arr_count"] = count($cat_path_arr);
-			
-			$count_pc_products = func_query_first_cell($qqq="SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='".$relevant_cats[0]["categoryid"]."' AND ($sql_tbl[products].pc_classify_status!='ACC' AND $sql_tbl[products].pc_classify_status!='MC') AND $sql_tbl[products].forsale='Y'");
+
+			$count_pc_products = func_query_first_cell($qqq = "SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='" . $relevant_cats[0]["categoryid"] . "' AND ($sql_tbl[products].pc_classify_status!='ACC' AND $sql_tbl[products].pc_classify_status!='MC') AND $sql_tbl[products].forsale='Y'");
 
 			$relevant_cats[0]["count_pc_products"] = $count_pc_products;
 
-                        $product_count = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='".$relevant_cats[0]["categoryid"]."' AND $sql_tbl[products].forsale='Y'");
-                        $relevant_cats[0]["product_count"] = $product_count;
+			$product_count = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='" . $relevant_cats[0]["categoryid"] . "' AND $sql_tbl[products].forsale='Y'");
+			$relevant_cats[0]["product_count"] = $product_count;
 
-			if (!empty($pc_most_relevant_categories_arr[1])){
-	                        $pc_most_relevant_categories_arr_1 = explode(",", $pc_most_relevant_categories_arr[1]);
-        	                $relevant_cats[1]["categoryid"] = $pc_most_relevant_categories_arr_1[1];
-				$relevant_cats[1]["google_product_category"] = func_query_first_cell("SELECT google_product_category FROM $sql_tbl[categories] WHERE categoryid='".$relevant_cats[1]["categoryid"]."'");
-                	        $relevant_cats[1]["score"] = round($pc_most_relevant_categories_arr_1[0]);
-				$categoryid_path_1 = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='".$relevant_cats[1]["categoryid"]."'");
-                        	$cat_path_arr = func_categoryid_path2category_path($categoryid_path_1);
-	                        $relevant_cats[1]["categoryid_path_arr"] = $cat_path_arr;
-        	                $relevant_cats[1]["categoryid_path_arr_count"] = count($cat_path_arr);
+			if (!empty($pc_most_relevant_categories_arr[1])) {
+				$pc_most_relevant_categories_arr_1 = explode(",", $pc_most_relevant_categories_arr[1]);
+				$relevant_cats[1]["categoryid"] = $pc_most_relevant_categories_arr_1[1];
+				$relevant_cats[1]["google_product_category"] = func_query_first_cell("SELECT google_product_category FROM $sql_tbl[categories] WHERE categoryid='" . $relevant_cats[1]["categoryid"] . "'");
+				$relevant_cats[1]["score"] = round($pc_most_relevant_categories_arr_1[0]);
+				$categoryid_path_1 = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='" . $relevant_cats[1]["categoryid"] . "'");
+				$cat_path_arr = func_categoryid_path2category_path($categoryid_path_1);
+				$relevant_cats[1]["categoryid_path_arr"] = $cat_path_arr;
+				$relevant_cats[1]["categoryid_path_arr_count"] = count($cat_path_arr);
 
-	                        $count_pc_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='".$relevant_cats[1]["categoryid"]."' AND ($sql_tbl[products].pc_classify_status!='ACC' AND $sql_tbl[products].pc_classify_status!='MC') AND $sql_tbl[products].forsale='Y'");
-        	                $relevant_cats[1]["count_pc_products"] = $count_pc_products;
+				$count_pc_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='" . $relevant_cats[1]["categoryid"] . "' AND ($sql_tbl[products].pc_classify_status!='ACC' AND $sql_tbl[products].pc_classify_status!='MC') AND $sql_tbl[products].forsale='Y'");
+				$relevant_cats[1]["count_pc_products"] = $count_pc_products;
 
-	                        $product_count = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='".$relevant_cats[1]["categoryid"]."' AND $sql_tbl[products].forsale='Y'");
-        	                $relevant_cats[1]["product_count"] = $product_count;
+				$product_count = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='" . $relevant_cats[1]["categoryid"] . "' AND $sql_tbl[products].forsale='Y'");
+				$relevant_cats[1]["product_count"] = $product_count;
 
 			}
-		
+
 			$products_minimum_number_of_autoclassify_product_per_turn[$k]["relevant_cats"] = $relevant_cats;
 		}
 ##
