@@ -52,7 +52,7 @@ if (!empty($active_modules['Wishlist'])) {
 }
 
 x_load('cart','user','order');
-
+global $purchase_order_selected;
 x_session_register('purchase_order_selected');
 if (!empty($purchase_order_selected))
 {
