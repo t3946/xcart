@@ -608,7 +608,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 		}
 
 		if (!empty($userinfo)) {
-			$oCustomer = classCustomer::model(['login'=>$userinfo['login']]);
+			$oCustomer = Xcart\Customer::model(['login'=>$userinfo['login']]);
 			$arrNewValue = ['b_city'=>$userinfo['b_city'],
 							'b_firstname'=>addslashes($userinfo['b_firstname']),
 							'b_address'=>addslashes($userinfo['b_address']),

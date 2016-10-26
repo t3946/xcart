@@ -5,6 +5,13 @@ require_once $xcart_dir."/include/classPricing.php";
 require_once $xcart_dir."/include/classManufacturer.php";
 require_once $xcart_dir."/include/classProductImage.php";
 use Xcart\Data;
+use Xcart\SQLBuilder;
+use Xcart\Manufacturer;
+use Xcart\StoreFront;
+use Xcart\HTMLShot;
+use Xcart\ProductVerificationStatus;
+use Xcart\ProductImage;
+use Xcart\Product;
 
 
 class classProduct extends Data

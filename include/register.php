@@ -660,7 +660,7 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 			#
 			$intershipper_recalc = "Y";
 			if (!empty($remember_login) && $current_area == 'C') {
-				if (classCustomer::model(['login'=>$remember_login])->getField('usertype') == $current_area)
+				if (Xcart\Customer::model(['login'=>$remember_login])->getField('usertype') == $current_area)
 					$uname = $remember_login;
 			}
 
