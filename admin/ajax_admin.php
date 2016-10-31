@@ -37,6 +37,9 @@ switch ($_POST['ajax_action']) {
     case "missing_structure_change":
         changeMissingStructure($_POST);
         break;
+    case "issue_processing":
+        changeIssueProcessing($_POST);
+        break;
     case "category_structure_change":
         changeCategoryStructure($_POST);
         break;
@@ -204,5 +207,35 @@ function changeMissingStructure($aParams = [])
             $aResult['error'] = 'Action not defined';
     }
 
+    print(json_encode($aResult));
+}
+
+function changeIssueProcessing($aParams = [])
+{
+    $aResult = [];
+    $aResult['result'] = false;
+    $iProductId = (int) $aParams['product_id'];
+    $iIssueId = (int) $aParams['issue_id'];
+    switch ($aParams['action']) {
+        case 'fixed':
+            $oIssue = new Xcart\External_MarketPlace\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
+            $oIssue->updateField('fixed', 'Y');
+            $aResult['result'] = true;
+            break;
+        case 'exclude':
+            $oStoreFrontMarketPlace = new Xcart\External_MarketPlace\Marketplaces\GMC();
+            $oIssue = new Xcart\External_MarketPlace\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
+            $oIssue->updateField('fixed', 'Y');
+            $oStoreFrontMarketPlace->restoreQueue([['productid' => $iProductId]], 1);
+            //Google
+            $oDisableMarketplace = new Xcart\External_MarketPlace\DisabledMarketPlace();
+            $oDisableMarketplace->fill(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
+            $oDisableMarketplace->addDisabledMarketPlace();
+            //Bing
+            $oDisableMarketplace->fill(['marketplace_id' => 2, 'resource_id' => $iProductId, 'resource_type' => 'P']);
+            $oDisableMarketplace->addDisabledMarketPlace();
+            $aResult['result'] = true;
+            break;
+    }
     print(json_encode($aResult));
 }

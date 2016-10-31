@@ -10,31 +10,6 @@ $smarty->assign("storefrontid", $current_storefront);
 
 if (!empty($issue) && is_numeric($issue) || !empty($search)) {
 
-    if ($REQUEST_METHOD == 'POST') {
-        if (!empty($action_fix_issue)) {
-            foreach ($action_fix_issue as $key => $value) {
-                list($iProductId, $iIssueId) = explode(':', $key);
-                $oIssue = new Xcart\External_MarketPlace\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
-                $oIssue->updateField('fixed', 'Y');
-            }
-        }
-        if (!empty($action_exclude_from_gmc)) {
-            $oStoreFrontMarketPlace = new Xcart\External_MarketPlace\GMC();
-            foreach ($action_exclude_from_gmc as $key => $value) {
-                list($iProductId, $iIssueId) = explode(':', $key);
-                $oIssue = new Xcart\External_MarketPlace\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
-                $oIssue->updateField('fixed', 'Y');
-                $oStoreFrontMarketPlace->restoreQueue([['productid' => $iProductId]], 1);
-                //Google
-                $oDisableMarketplace = new Xcart\External_MarketPlace\DisabledMarketPlace();
-                $oDisableMarketplace->fill(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
-                $oDisableMarketplace->addDisabledMarketPlace();
-                //Bing
-                $oDisableMarketplace->fill(['marketplace_id' => 2, 'resource_id' => $iProductId, 'resource_type' => 'P']);
-                $oDisableMarketplace->addDisabledMarketPlace();
-            }
-        }
-    }
     $location[] = ['Quality Issues Processing Rules', "external_marketplaces_quality_issues.php"];
 
     $aFilterParams = ['fixed' => 'N'];
@@ -70,7 +45,7 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
 
     $aIssueList = Xcart\External_MarketPlace\IssuesProcessingRules::getIssuesList($current_storefront);
     if (!empty($aIssueList))
-        usort ($aIssueList,['classIssuesProcessingRules','sortByIssueProductsCount']);
+        usort ($aIssueList,['Xcart\External_MarketPlace\IssuesProcessingRules','sortByIssueProductsCount']);
     $smarty->assign('aProcessingRules', $aIssueList);
     $smarty->assign('statuses', ['exclude', 'manual','skip']);
     $location[] = ['Quality Issues Processing Rules', ""];

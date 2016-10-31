@@ -31,7 +31,7 @@ if (!empty($aStoreFronts)) {
         $aMarketPlaces = Xcart\External_MarketPlace\StoreFrontMarketPlace::getMarketPlacesByStoreFront($aStoreFront->getStoreFrontId());
         if (!empty($aMarketPlaces)) {
             foreach ($aMarketPlaces as $oMarketPlace) {
-                if ($oMarketPlace instanceof Xcart\External_MarketPlace\GMC) {
+                if ($oMarketPlace instanceof Xcart\External_MarketPlace\Marketplaces\GMC) {
                     func_backprocess_log(BACK_PROCESS_LOG_NAME, sprintf('---Storefront %d---',$aStoreFront->getStoreFrontId()));
                     $oMarketPlace->getProductStatuses();
                 }

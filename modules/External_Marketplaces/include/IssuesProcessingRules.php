@@ -140,6 +140,7 @@ class IssuesProcessingRules extends Data
             if (!is_null($this->getStoreFront())) {
                 $oSQL->addInnerJoin('products_sf', 'psf', 'psf.productid = xc.productid AND psf.sfid=' . $this->getStoreFront());
             }
+            $oSQL->addOrderBy('xp.productcode');
 
             $aProductImpacted = $oSQL->addFilter($aParams)->setLimit("$first_page, $objects_per_page")->Execute()->getQueryResult();
 
