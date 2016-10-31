@@ -11,5 +11,7 @@ global $xcart_dir, $config;
 
 use Xcart\PaymentMethod;
 
-$oPaymentMethod = PaymentMethod::model(['paymentid' => '17']);
-var_dump($oPaymentMethod->getPaymentMethodInstance(['paymentid' => '17']));
+global $config;
+$to = $config['Company']['product_management'];
+$from = 'team@s3stores.com';
+func_send_mail($to, 'mail/missing_sku_subj.tpl', 'mail/missing_sku.tpl', $from, true);

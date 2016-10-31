@@ -1507,6 +1507,10 @@ class AmazonMWS
                                     } else
                                         if ($oFbaMissing->getField('missing_productcode') == '') {
                                             $oFbaMissing->setField('missing_productcode', $sAmazonSKU)->setField('productid', 0)->_insert();
+                                            global $config;
+                                            $to = $config['Company']['product_management'];
+                                            $from = 'team@s3stores.com';
+                                            func_send_mail($to, 'mail/missing_sku_subj.tpl', 'mail/missing_sku.tpl', $from, true);
                                         }
                                 }
 
