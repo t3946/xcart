@@ -185,8 +185,10 @@ if (!empty($products_minimum_number_of_autoclassify_product_per_turn)){
 		$products_minimum_number_of_autoclassify_product_per_turn[$k]["categoryid_path_arr_count"] = count($categoryid_path_arr);
 #
 ##
-		if (!empty($product["pc_most_relevant_categories"])){
-			$relevant_cats = array();
+        $relevant_cats = array();
+
+        if (!empty($product["pc_most_relevant_categories"])){
+
 
 			$pc_most_relevant_categories_arr = explode(";", $product["pc_most_relevant_categories"]);
 
@@ -224,8 +226,38 @@ if (!empty($products_minimum_number_of_autoclassify_product_per_turn)){
 
 			}
 
+            if ($relevant_cats[1]["categoryid"] != $product["categoryid"]  && $relevant_cats[0]["categoryid"] != $product["categoryid"]) {
+                $current_cat["categoryid"] = $product["categoryid"];
+                $current_cat["google_product_category"] = func_query_first_cell("SELECT google_product_category FROM $sql_tbl[categories] WHERE categoryid='" . $product["categoryid"] . "'");
+                $categoryid_path_1 = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='" . $product["categoryid"] . "'");
+                $cat_path_arr = func_categoryid_path2category_path($categoryid_path_1);
+                $current_cat["categoryid_path_arr"] = $cat_path_arr;
+                $current_cat["categoryid_path_arr_count"] = count($cat_path_arr);
+                $count_pc_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='" . $current_cat["categoryid"] . "' AND ($sql_tbl[products].pc_classify_status!='ACC' AND $sql_tbl[products].pc_classify_status!='MC') AND $sql_tbl[products].forsale='Y'");
+                $current_cat["count_pc_products"] = $count_pc_products;
+
+                $product_count = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='" . $current_cat["categoryid"] . "' AND $sql_tbl[products].forsale='Y'");
+                $current_cat["product_count"] = $product_count;
+
+                $products_minimum_number_of_autoclassify_product_per_turn[$k]["current_category"] = $current_cat;
+            }
+
 			$products_minimum_number_of_autoclassify_product_per_turn[$k]["relevant_cats"] = $relevant_cats;
-		}
+		} else {
+            $current_cat["categoryid"] = $product["categoryid"];
+            $current_cat["google_product_category"] = func_query_first_cell("SELECT google_product_category FROM $sql_tbl[categories] WHERE categoryid='" . $product["categoryid"] . "'");
+            $categoryid_path_1 = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='" . $product["categoryid"] . "'");
+            $cat_path_arr = func_categoryid_path2category_path($categoryid_path_1);
+            $current_cat["categoryid_path_arr"] = $cat_path_arr;
+            $current_cat["categoryid_path_arr_count"] = count($cat_path_arr);
+            $count_pc_products = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='" . $current_cat["categoryid"] . "' AND ($sql_tbl[products].pc_classify_status!='ACC' AND $sql_tbl[products].pc_classify_status!='MC') AND $sql_tbl[products].forsale='Y'");
+            $current_cat["count_pc_products"] = $count_pc_products;
+
+            $product_count = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid=$sql_tbl[products].productid WHERE $sql_tbl[products_categories].categoryid='" . $current_cat["categoryid"] . "' AND $sql_tbl[products].forsale='Y'");
+            $current_cat["product_count"] = $product_count;
+
+            $products_minimum_number_of_autoclassify_product_per_turn[$k]["current_category"] = $current_cat;
+        }
 ##
 #
 		db_query("INSERT INTO $sql_tbl[pc_locks] (productid, lock_date, login) VALUES ('$product[productid]', '".time()."', '$login')");
