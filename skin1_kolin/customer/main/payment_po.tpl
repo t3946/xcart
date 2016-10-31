@@ -165,7 +165,8 @@ requiredFields[9] = ["purchase_manager_email", "{$lng.lbl_purchase_manager_email
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" size="32" id="PO_Number" name="PO_Number" placeholder="{$lng.lbl_fill_in_examples_PO_Number}" onkeyup="cidev_check_field_if_empty('PO_Number')" />
+<input type="text" size="32" id="PO_Number" name="PO_Number" placeholder="{$lng.lbl_fill_in_examples_PO_Number}" onkeyup="cidev_check_field_if_empty('PO_Number')"
+value="{if ($selectedPO && $selectedPO->getPOId())}{$selectedPO->getOrderNumber()}{/if}" />
 </td>
 {if $usertype eq "C"}
 <td id="PO_Number_verified" valign="top" nowrap="nowrap" style="display: none;">
@@ -491,6 +492,35 @@ requiredFields[9] = ["purchase_manager_email", "{$lng.lbl_purchase_manager_email
         </table>
         </td>
         </tr>
+
+    <tr valign="middle">
+        <td height="20" colspan="3">
+            <table cellspacing="0" class="SubHeader">
+                <tr>
+                    <td class="Green2">Original PO</td>
+                </tr>
+                <tr>
+                    <td class="SubHeaderLine"><img alt="" class="Spc" src="/skin1_kolin/images/spacer.gif"><br></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr valign="middle">
+        <td class="cidev_padding_top" valign="top" align="right" width="48%">Attach original PO <span style="font-size: 11px; font-style: italic; color: #8F8F8F;">(optional)</span>
+            <div class="cidev_checkout_descr">Alternatively fax PO to (813) 944-4516</div>
+        </td>
+        <td valign="top"></td>
+        <td valign="top" nowrap="nowrap">
+            <input accept=".pdf" type="file" name="purchase_order_file" id="po_pipeline_original_file" style="display:none;"/>
+            <span class='cidev_new_button cidev_new_white' onclick="$(this).prev().click();">Choose File</span>
+            <span id='val'>{if ($selectedPO && $selectedPO->getPOId())}{$selectedPO->getOrderOriginalFileName()}{/if}</span>
+            <script>
+                $("#po_pipeline_original_file").change(function(){literal}{{/literal}
+                    $('#val').text(this.value);
+                    {literal}}{/literal})
+            </script>
+        </td>
+    </tr>
 
 </table>
 

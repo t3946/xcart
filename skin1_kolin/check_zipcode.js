@@ -258,7 +258,7 @@ function cidev_check_field_address (id) {
 	}
 }
 
-function cidev_set_check_state_field(country_val, state_id) {
+    function cidev_set_check_state_field(country_val, state_id) {
                 if (country_val != "US" && country_val != "CA" && country_val != "AT" && country_val != "DE" && country_val != "AU" && country_val != "BE" && country_val != "ES" && country_val != "FR" && country_val != "IT" && country_val != "LU" && country_val != "NL"){
                         $("#"+state_id).keyup(function(){
                                 cidev_check_field(state_id);

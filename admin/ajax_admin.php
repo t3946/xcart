@@ -2,6 +2,7 @@
 require './auth.php';
 require '../include/security.php';
 require_once '../include/class/classProducts.php';
+require_once '../include/class/classCategories.php';
 require_once '../include/class/classOrder.php';
 require_once '../include/class/classPOPipeline.php';
 global $xcart_dir;
@@ -19,9 +20,6 @@ switch ($_POST['ajax_action']) {
     case "ship_order_by_amazon" :
         shipOrderByAmazon($_POST);
         break;
-    case "select_purchase_order_for_entry":
-        selectPurchaseOrderForEntry($_POST);
-        break;
     case "change_verify_batch_status":
         changeVerifyBatchStatus($_POST);
         break;
@@ -33,6 +31,9 @@ switch ($_POST['ajax_action']) {
     case "add_new_batch":
         addNewBatch($_POST);
         break;
+    case "category_structure_change":
+        changeCategoryStructure($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -43,12 +44,10 @@ function changeVerifyProductStatus($aPostParam = [])
     $iStatusId = (int)$aPostParam['verify_status_id'];
     $sNote = $aPostParam['note_text'];
     if (!empty($iProductId)) {
-        $oProduct = new classProduct(['productid'=>$iProductId]);
-        $bResult = $oProduct->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
+        $bResult = classProduct::model(['productid'=>$iProductId])->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
         if (!empty($aOrders)) {
             foreach ($aOrders as $iOrderId) {
-                $oOrder = new classOrder(['orderid'=>$iOrderId]);
-                $oOrder->updateVerificationStatus();
+                classOrder::model(['orderid'=>$iOrderId])->updateVerificationStatus();
             }
         }
     }
@@ -61,8 +60,7 @@ function changeVerifyOrderStatus($aPostParam = [])
     $iOrderId = (int)$aPostParam['order_id'];
     $sOrderStatus = $aPostParam['order_verify_status'];
     if (!empty($iOrderId)) {
-        $oOrder = new classOrder(['orderid'=>$iOrderId]);
-        $bResult = $oOrder->changeVerificationStatus($sOrderStatus);
+        $bResult = classOrder::model(['orderid'=>$iOrderId])->changeVerificationStatus($sOrderStatus);
     }
     print(json_encode($bResult));
 }
@@ -83,17 +81,6 @@ function shipOrderByAmazon($aPostParam = [])
         $oOrderGroup->shipOrderGroupByAmazon($sAmazonShippingMethodSelect);
 }
 
-function selectPurchaseOrderForEntry($aPostParam = [])
-{
-    if (!empty($aPostParam['ordernumber']) && is_numeric($aPostParam['ordernumber'])) {
-        $oPoPipeline = new classPOPipeLine(['po_id' => $aPostParam['ordernumber']]);
-        $iPoPipe = $oPoPipeline->getPOId();
-        if ($iPoPipe) {
-            $aResult = $oPoPipeline->selectOrderForEntry();
-            print(json_encode($aResult));
-        }
-    }
-}
 
 function changeVerifyBatchStatus($aPostParam = [])
 {
@@ -141,5 +128,22 @@ function changeProcessingRules($aParams = [])
     $aResult = [];
     $aRule = new classIssuesProcessingRules(['issue_id'=> $aParams['rule_id']]);
     $aRule->updateField('issue_processing', $aParams['status_id']);
+    print(json_encode($aResult));
+}
+
+function changeCategoryStructure($aParams = []) {
+    $aResult = [];
+    $sStatus = '';
+    $iCategoryId = (int) $aParams['category'];
+    switch ($aParams['action']){
+        case 'Relist':
+            $sStatus = 'AC';
+            break;
+        case 'Reclassify':
+            $sStatus = 'NC';
+            break;
+    }
+    $oProducts = new classCategories();
+    $aResult['result'] = $oProducts->updateProductsInChildCategories($iCategoryId, $sStatus);
     print(json_encode($aResult));
 }

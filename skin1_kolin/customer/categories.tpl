@@ -106,7 +106,7 @@
 	  {if $v.categoryid eq $subcat.categoryid && $v.count_products gt 0} 
 		{if $v.supplemental_category ne "Y"}
 	<tr>
-	<td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><font class="CategoriesList"><a class="VertMenuItems" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</font></a> ({$v.count_products})</td>
+	<td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><a class="VertMenuItems CategoriesList" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</a> ({$v.count_products})</td>
 	</tr>
 		{else}
 			{assign var="supplemental_category_found" value="Y"}
@@ -123,7 +123,7 @@
         {foreach from=$keyword_subcategories item=subcat}
 	{if $subcat.supplemental_category ne "Y"}
         <tr>
-        <td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><font class="CategoriesList"><a class="VertMenuItems" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</font></a> ({$subcat.count})</td>
+        <td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><a class="VertMenuItems CategoriesList" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</a> ({$subcat.count})</td>
         </tr>
 	{else}
 		{assign var="supplemental_category_found" value="Y"}
@@ -199,7 +199,7 @@
 
 <!-- igor_async <script type="text/javascript" src="{$SkinDir}/customer/popup_open.js"></script> -->
 
-<form name="f_searchform" action="{$canonical_url}/" method="GET">
+<form name="f_searchform" action="{$canonical_url}" method="GET">
 <input type="hidden" name="f_mode" value="f_search" id="f_mode" >
 
 <br />
@@ -296,32 +296,9 @@
   <tr><td colspan="2">&nbsp;</td><tr>
   <tr><td colspan="2"><B>Price:</B></td><tr>
   {if $filter_max_price_selected gt "0"}
-
-<script language="JavaScript" type="text/javascript">
-<!--
-{literal}
-function uncheckAll_prices(flag, form, prefix) {
-        if (!form)
-                return;
-
-        if (prefix)
-                var reg = new RegExp("^"+prefix, "");
-        for (var i = 0; i < form.elements.length; i++) {
-                if (form.elements[i].type == "checkbox" && (!prefix || form.elements[i].name.search(reg) == 0) && !form.elements[i].disabled){
-                        form.elements[i].checked = false;
-                }
-        }
-}
-{/literal}
--->
-</script>
-
-
 	<tr>
 	<td>
-		<input name="price_ids_range" id="price_ids_range" value="Y" type="checkbox" checked="checked" onclick="javascript: uncheckAll_prices(true, document.f_searchform, 'p_ids');" >
-		<input name="filter_min_price_selected" value="{$filter_min_price_selected}" type="hidden" >
-		<input name="filter_max_price_selected" value="{$filter_max_price_selected}" type="hidden" >
+		<input name="p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]" id="price_ids_range" value="Y" type="checkbox" checked="checked">
 	</td>
 	<td>
 		{$config.General.currency_symbol}{$filter_min_price_selected} - {$config.General.currency_symbol}{$filter_max_price_selected}

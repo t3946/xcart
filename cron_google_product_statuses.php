@@ -19,12 +19,13 @@ const BACK_PROCESS_LOG_NAME = 'google_product_statuses';
 
 if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log(BACK_PROCESS_LOG_NAME, 'Already launched');
-//    die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
+func_backprocess_log(BACK_PROCESS_LOG_NAME, $log_text);
 
 $oStoreFronts = new classStoreFronts();
 $aStoreFronts = $oStoreFronts->getStoreFronts();
@@ -34,6 +35,7 @@ if (!empty($aStoreFronts)) {
         if (!empty($aMarketPlaces)) {
             foreach ($aMarketPlaces as $oMarketPlace) {
                 if ($oMarketPlace instanceof classGMC) {
+                    func_backprocess_log(BACK_PROCESS_LOG_NAME, sprintf('---Storefront %d---',$aStoreFront->getStoreFrontId()));
                     $oMarketPlace->getProductStatuses();
                 }
             }

@@ -614,6 +614,8 @@ class Mobile_Detect
         'webOS'            => array('webOS/[VER]', 'hpwOS/[VER];'),
     );
 
+    protected $isMobile = null;
+
     /**
      * Construct an instance of this class.
      *
@@ -1031,22 +1033,24 @@ class Mobile_Detect
     public function isMobile($userAgent = null, $httpHeaders = null)
     {
 
-        if ($httpHeaders) {
-            $this->setHttpHeaders($httpHeaders);
+        if (is_null($this->isMobile)) {
+            if ($httpHeaders) {
+                $this->setHttpHeaders($httpHeaders);
+            }
+
+            if ($userAgent) {
+                $this->setUserAgent($userAgent);
+            }
+
+            $this->setDetectionType(self::DETECTION_TYPE_MOBILE);
+
+            if ($this->checkHttpHeadersForMobile()) {
+                $this->isMobile = true;
+            } else {
+                $this->isMobile = $this->matchDetectionRulesAgainstUA();
+            }
         }
-
-        if ($userAgent) {
-            $this->setUserAgent($userAgent);
-        }
-
-        $this->setDetectionType(self::DETECTION_TYPE_MOBILE);
-
-        if ($this->checkHttpHeadersForMobile()) {
-            return true;
-        } else {
-            return $this->matchDetectionRulesAgainstUA();
-        }
-
+        return $this->isMobile;
     }
 
     /**

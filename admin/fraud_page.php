@@ -273,7 +273,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                                 }
 
                                 require_once $xcart_dir . "/include/class/classOrders.php";
-                                $oOrder = new classOrder(['orderid'=>$orderid]);
+                                $oOrder = classOrder::model(['orderid'=>$orderid]);
                                 $oOrder->recalculateAccounting();
                         }
 

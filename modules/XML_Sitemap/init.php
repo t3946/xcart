@@ -16,7 +16,7 @@ if (!defined('XCART_START')) { header('Location: ../../'); die('Access denied');
 
 $cron_tasks[] = array('function' => 'xmlmap_generate');
 
-if (!empty($active_modules['Multiple_Storefronts'])) {
+if (!empty($active_modules['Multiple_Storefronts']) && defined('AREA_TYPE') && in_array(constant('AREA_TYPE'), array('A', 'P'))) {
 	x_session_register('current_storefront');
 }
 

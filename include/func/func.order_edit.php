@@ -610,15 +610,15 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 
 		if (!empty($userinfo)) {
 			include_once $xcart_dir . "/include/class/classCustomer.php";
-			$oCustomer = new classCustomer(['login'=>$userinfo['login']]);
+			$oCustomer = classCustomer::model(['login'=>$userinfo['login']]);
 			$arrNewValue = ['b_city'=>$userinfo['b_city'],
-							'b_firstname'=>$userinfo['b_firstname'],
-							'b_address'=>$userinfo['b_address'],
+							'b_firstname'=>addslashes($userinfo['b_firstname']),
+							'b_address'=>addslashes($userinfo['b_address']),
 							'b_state'=>$userinfo['b_state'],
 							'b_country'=>$userinfo['b_country'],
 							'b_zipcode'=>$userinfo['b_zipcode'],
-							's_address'=>$userinfo['s_address'],
-							's_firstname'=>$userinfo['s_firstname'],
+							's_address'=>addslashes($userinfo['s_address']),
+							's_firstname'=>addslashes($userinfo['s_firstname']),
 							's_city'=>$userinfo['s_city'],
 							's_state'=>$userinfo['s_state'],
 							's_country'=>$userinfo['s_country'],
@@ -730,8 +730,11 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 				"provider" => $product["provider"],
 				"extra_data" => serialize($product["extra_data"]),
 				"productcode" => $product['productcode'],
-				"product" => $product['product']
+				"product" => $product['product'],
+				"item_cost_to_us" => $product['cost_to_us']
 			);
+			if (floatval($query_data['item_cost_to_us']) != 0)
+				unset($query_data_tmp['item_cost_to_us']);
 			$query_data_tmp = func_array_map("addslashes", $query_data_tmp);
 			$query_data = array_merge($query_data, $query_data_tmp);
 
@@ -758,6 +761,12 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 		                }
 
 				$items[] = $products[$pk]['itemid'] = func_array2insert("order_details", $query_data, true);
+			}
+			if (!empty($_POST['retail_trust_to_delete']) && is_array($_POST['retail_trust_to_delete'])) {
+				foreach ($_POST['retail_trust_to_delete'] as $iOrderDetailRetailToDeleate => $value) {
+					$oOrderDetailRetailTrust = new classOrderDetail(['itemid'=>intval($iOrderDetailRetailToDeleate)]);
+					$oOrderDetailRetailTrust->removeRetailTrust();
+				}
 			}
 
 

@@ -999,10 +999,7 @@ if (!empty($cat)){
 
 global $xcart_dir;
 include_once $xcart_dir."/include/class/classProducts.php";
-$classProduct = new classProducts();
-$mpn = $classProduct->getProductMPN($product_info['productcode'], "", $product_info['productid']);
-unset($classProduct);
-$smarty->assign("cidev_mpn", $mpn);
+$smarty->assign("cidev_mpn", classProduct::model(['productid'=>$product_info['productid']])->getMPN());
 
 /*$pos = strpos($product_info['productcode'], '-');
 $mpn = '';

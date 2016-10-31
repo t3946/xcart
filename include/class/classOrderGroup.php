@@ -76,7 +76,7 @@ class classOrderGroup extends classData
 
     private function fetchOrderInstance()
     {
-        $this->oOrder = new classOrder(['orderid' => $this->getOrderId()]);
+        $this->oOrder = classOrder::model(['orderid' => $this->getOrderId()]);
     }
 
     public function getPaymentMethodId()
@@ -122,6 +122,30 @@ class classOrderGroup extends classData
         return floatval($this->getField('total_pst'));
     }
 
+    public function setTotalNet($fSumma)
+    {
+        $this->setField('total_net', $fSumma);
+        return $this;
+    }
+
+    public function setTotalHST($fSumma)
+    {
+        $this->setField('total_gst', $fSumma);
+        return $this;
+    }
+
+    public function setTotalPST($fSumma)
+    {
+        $this->setField('total_pst', $fSumma);
+        return $this;
+    }
+
+    public function setTotalGross($fSumma)
+    {
+        $this->setField('total_gross', $fSumma);
+        return $this;
+    }
+
     public function getShippingGross()
     {
         return floatval($this->getField('shipping_gross'));
@@ -144,16 +168,16 @@ class classOrderGroup extends classData
 
     public function getTotalCostToUs()
     {
-        if (is_null($this->fCostToUs)) {
+        if (empty($this->fCostToUs)) {
             $aCostToUs = func_query_first("SELECT sum(xo.item_cost_to_us*xo.amount) as cost_to_us_od, sum(xp.cost_to_us*xo.amount) as cost_to_us_pr
                                       FROM xcart_order_groups og
                                            INNER JOIN xcart_order_details xo USING (orderid)
                                            INNER JOIN xcart_products xp
                                               ON xp.productid = xo.productid AND
                                                  xp.manufacturerid = og.manufacturerid
-                                     WHERE og.orderid = " . $this->getOrderId() ." AND og.manufacturerid = ".$this->getManufacturerId());
-            $fCostToUs = $aCostToUs['cost_to_us_od'];
-            if (is_null($fCostToUs)) {
+                                     WHERE og.orderid = " . $this->getOrderId() . " AND og.manufacturerid = " . $this->getManufacturerId());
+            $fCostToUs = floatval($aCostToUs['cost_to_us_od']);
+            if (is_null($fCostToUs) || $fCostToUs == 0) {
                 $fCostToUs = $aCostToUs['cost_to_us_pr'];
             }
             $this->fCostToUs = floatval($fCostToUs);
@@ -234,10 +258,10 @@ class classOrderGroup extends classData
     public function getPaymentMethodsAvailForOrderGroup()
     {
         if (empty($this->availPaymentMethods)) {
-            $this->oSQL->init()->addSelect('paymentid, payment_method')->addFromTable('payment_methods')->addCondition("acc_proc='Y'")->addOrderBy('orderby');
+            $oSQL = classSQLBuilder::getInstance()->addSelect('paymentid, payment_method')->addFromTable('payment_methods')->addCondition("acc_proc='Y'")->addOrderBy('orderby');
             if ($this->getOrderInstance()->getAmazonChanell())
-                $this->oSQL->addCondition("order_tag_preference = '" . $this->getOrderInstance()->getAmazonChanell() . "'");
-            $aPaymentMethods = $this->oSQL->Execute()->getQueryResult();
+                $oSQL->addCondition("order_tag_preference = '" . $this->getOrderInstance()->getAmazonChanell() . "'");
+            $aPaymentMethods = $oSQL->Execute()->getQueryResult();
             if (!empty($aPaymentMethods)) {
                 foreach ($aPaymentMethods as $aPaymentMethod) {
                     $this->availPaymentMethods[$aPaymentMethod['paymentid']] = $aPaymentMethod['payment_method'];
@@ -981,18 +1005,11 @@ class classOrderGroup extends classData
     public function getOrderGroupProducts()
     {
         if (empty($this->oOrderGroupProducts)) {
-            $aProducts = $this->oSQL->init()->
-            addSelect('*')->
-            addFromTable('products', 'p')->
-            addInnerJoin('order_details', 'od', 'od.productid=p.productid AND orderid = ' . $this->getOrderId())->
-            addCondition('p.manufacturerid = ' . $this->getManufacturerId())->Execute()->getQueryResult();
-            if (!empty($aProducts)) {
-                foreach ($aProducts as $aProduct) {
-                    $oProduct = new classProduct();
-                    $oProduct->fillPrimaryTableValues($aProduct);
-                    $this->oOrderGroupProducts[] = $oProduct;
-                }
-            }
+            if ($this->getOrderId())
+                $this->oOrderGroupProducts = classProduct::model()->findAll(
+                    classSQLBuilder::getInstance()->
+                    addInnerJoin('order_details', 'od', 'od.productid=main.productid AND orderid = ' . $this->getOrderId())->
+                    addCondition('manufacturerid = ' . $this->getManufacturerId()));
         }
 
         return $this->oOrderGroupProducts;
@@ -1148,12 +1165,13 @@ class classOrderGroup extends classData
     private function fetchOrderDetails()
     {
         if (empty($this->aOrderDetails)) {
-            $aOrderDetails = $this->oSQL->init()->addSelect('od.*')->addFromTable('order_details', 'od')->addInnerJoin('products', 'p', 'p.manufacturerid =' . $this->getManufacturerId() . ' AND p.productid = od.productid')->
+            $oSQL = new classSQLBuilder();
+            $aOrderDetails = $oSQL->addSelect('od.*')->addFromTable('order_details', 'od')->addInnerJoin('products', 'p', 'p.manufacturerid =' . $this->getManufacturerId() . ' AND p.productid = od.productid')->
             addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
             if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
                 foreach ($aOrderDetails as $aOrderDetail) {
                     $oOrderDetail = new classOrderDetail();
-                    $oOrderDetail->fillPrimaryTableValues($aOrderDetail);
+                    $oOrderDetail->fill($aOrderDetail);
                     $this->aOrderDetails[] = $oOrderDetail;
                 }
             }
@@ -1199,6 +1217,36 @@ class classOrderGroup extends classData
             }
         }
         return $fSumma;
+    }
+
+    /**
+     * @return classOrderDetail[]
+     */
+    public function getOrderDetails()
+    {
+        return classOrderDetail::model()->findAll(classSQLBuilder::getInstance()->
+        addInnerJoin('products', 'p', "p.productid = main.productid AND p.manufacturerid = " . $this->getManufacturerId())->
+        addCondition('orderid = ' . $this->getOrderId()));
+    }
+
+    private function calculateTotalNet()
+    {
+        $this->setTotalNet($this->getTotalGross() - $this->getTotalHST() - $this->getTotalPST());
+    }
+
+    public function reCalculateTotals()
+    {
+        $aOrderDetails = $this->getOrderDetails();
+        if (!empty($aOrderDetails)) {
+            $this->setTotalGross(0)->setTotalNet(0);
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $this->setTotalGross($this->getTotalGross() + ($oOrderDetail->getTotalProductPrice()));
+            }
+            $this->setTotalGross($this->getTotalGross() + $this->getShippingGross());
+            $this->calculateTotalNet();
+            $this->_save();
+        }
+
     }
 
 }

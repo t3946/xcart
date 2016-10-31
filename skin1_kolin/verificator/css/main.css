@@ -187,7 +187,14 @@ iframe
 .ui.popup {
     z-index: 13000;
     min-width: 475px;
+    font-size: 0.875em;
+    font-family: Verdana;
+
 }
+.ui.popup, .ui.popup::before {
+    background-color: #fff2cc !important;
+}
+
 @media only screen and (max-width: 1559px) {
     div.iframediv {
         height: -webkit-calc(100% - 170px);
@@ -203,4 +210,79 @@ iframe
     .buttons-wrap-right {
         width:100%;
     }
+}
+.ui.steps .step .title {
+    font-family: Verdana;
+    font-size: 0.9em;
+    margin-bottom: 0.1em;
+}
+.ui.steps .step label{
+    font-family: Verdana;
+}
+.ui.steps .step .description, .ui.checkbox .box, .ui.checkbox label {
+    font-size: 0.82em;
+    margin: 0!important;
+    cursor:pointer;
+}
+
+.ui.radio.checkbox .box::after, .ui.radio.checkbox label::after {
+    top: 2px;
+    width: 17px;
+}
+.ui.form .grouped.fields .field, .ui.form .grouped.inline.fields .field {
+    margin: 0.05em 0;
+}
+.ui.mini.input label {
+    width:75%;
+    line-height: 2em;
+}
+.ui.mini.input input {
+    padding:2px;
+    text-align: right;
+    width:1% !important;
+}
+.popup_drop_link{
+    border-bottom: 1px dotted; color: #0000ff; text-decoration: none; font-family:Verdana;
+}
+.amazon_products_listed {
+    width:140px;
+    float:left;
+    margin:0!important;
+}
+.conclusion_submit_button{
+    margin-top:0.7em;
+    float:right;
+    margin-left:20px;
+}
+.conclusion_submit_button .button {
+    float:left;
+}
+.conclusion_submit_button .menu{
+    right:0;
+    left:auto !important;
+}
+.conclusion_submit_button .ui.dropdown .menu > .item {
+    padding: 0.68571429rem 1.94285714rem !important;
+}
+.action_not_same {
+    background-color: #F2A3A8;
+}
+.question_not_same {
+    background-color: #fff2cc;
+}
+#table_verificators .TableHead td {
+    text-transform: inherit;
+}
+.verificator_comments_icon{
+    cursor:pointer;
+}
+#table_verificators .popup {
+    font-size: 10px;
+}
+.ui.steps .step.not.completed > .icon:before,
+.ui.ordered.steps .step.not.completed:before {
+    content: '\f00d';
+    font-family: 'Icons';
+    color: red;
+    /* '' */
 }

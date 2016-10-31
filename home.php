@@ -48,6 +48,10 @@ x_load("category");
 ###
 x_session_register("e_search_data");
 x_session_register("e_search_data_orig_substring");
+
+if (!empty($purchase_order_selected)) {
+	x_session_save('purchase_order_selected');
+}
 ###
 ##
 #

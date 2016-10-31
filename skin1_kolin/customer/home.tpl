@@ -1,17 +1,10 @@
 {* $Id: home.tpl,v 1.88.2.4 2006/10/13 10:41:21 svowl Exp $ *}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-{if $current_storefront_info.storefrontid ne ""}
-<link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=F" type="image/vnd.microsoft.icon" />
-{else}
-{* <link rel="shortcut icon" href="{$ImagesDir}/favicon.ico" type="image/vnd.microsoft.icon" /> *}
-<link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id=0&amp;type=F" type="image/vnd.microsoft.icon" />
-{/if}
-{if $printable ne ''}
-{include file="customer/home_printable.tpl"}
-{else}
-{config_load file="$skin_config"}
-<html>
+<!DOCTYPE html>
+<html lang="en-US">
 <head>
+{if $config.SEO.clean_urls_enabled eq "Y"}
+<base href="{$catalogs.customer}/" />
+{/if}
 <title>{strip}
 {if $brand.title ne "" && $main eq "brand_products"}
 {$brand.title}
@@ -49,15 +42,48 @@
 {/if}
 {/if}
 {/strip}</title>
-{include file="meta.tpl" }
+    {if $current_storefront_info.storefrontid ne ""}
+<link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id={$current_storefront_info.storefrontid}&amp;type=F" type="image/vnd.microsoft.icon"/>
+    {else}
+<link rel="shortcut icon" href="{$xcart_web_dir}/image.php?id=0&amp;type=F" type="image/vnd.microsoft.icon"/>
+    {/if}
+    {if $printable ne ''}
+    {include file="customer/home_printable.tpl"}
+    {else}
+    {config_load file="$skin_config"}
 
-{if !empty($config.Appearance.Facebook_pixel_code)}
-        {$config.Appearance.Facebook_pixel_code}
-{/if}
+    <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />
+    <link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
+    <link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
+    <link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
+    <link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />
+    <!--[if IE]>
+    <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
+    <![endif]-->
+    {if $canonical_url}
+        <link rel="canonical" href="http://{$site_domain|lower}/{$canonical_url}" />
+    {/if}
+    {if $main eq "catalog" && $current_category.category eq "" && $clean_url_data.resource_type ne "K"}
+        <link rel="canonical" href="http://{$site_domain|lower}/"/>
+    {/if}
+    {if $config.Product_Page.map_bridge_text_background ne ''}
+    {literal}
+        <style>
+            #tooltip, .tooltip_helper {
+            background-color: #{/literal}{$config.Product_Page.map_bridge_text_background};{literal}
+            }
+        </style>
+    {/literal}
+    {/if}
+    {literal}
+    <style>
+        #tooltip {
+            max-width: {/literal}{$config.Product_Page.max_width_map_text}{literal}px;
+        }
+    </style>
+    {/literal}
 
-{*
-<script src="{$SkinDir}/jquery-1.4.3.min.js" type="text/javascript"></script>
-*}
+    {include file="meta.tpl" }
 
 {if ($main eq "product")}
 {* igor_async *}
@@ -67,43 +93,12 @@
 <script src="{$SkinDir}/js/sly.min.js" type="text/javascript"></script>
 {if ($main eq "product")}
 {* igor_async *}
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+{/if}
 <script type="text/javascript" src="{$SkinDir}/js/jquery.visible.min.js"></script>
-{/if}
-
-{* {include file="jquery_ui.tpl"} *}
-
-<link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.theme.css" />
-
-<link rel="stylesheet" href="{$SkinDir}/{#CSSFile#}" />
-<link rel="stylesheet" href="{$SkinDir}/jquery.tooltip.css" />
-
-<link rel="stylesheet" href="{$SkinDir}/US_City_List/jquery.autocomplete.css" />
-
-{*<link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />*}
-
-{*
-  <link rel="stylesheet" href="http://mehamalina.ru/css/style.css?v=1421903756">
- *}
-
-<!-- igor_async <script src="{$SkinDir}/lib/colorbox/jquery.colorbox-min.js" type="text/javascript"></script> -->
-
-
-<!--[if IE]>
-	<link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
-<![endif]-->
-
-{if $canonical_url}
-  <link rel="canonical" href="http://{$site_domain|lower}/{$canonical_url}" />
-{/if}
-{if $main eq "catalog" && $current_category.category eq "" && $clean_url_data.resource_type ne "K"}
-  <link rel="canonical" href="http://{$site_domain|lower}/"/>
-{/if}
-
-
+<script src="{$SkinDir}/js/google_analytics_impressions.js" type="text/javascript"></script>
 <script type="text/javascript">
 //<![CDATA[
-
 {if $config.SEO.clean_urls_enabled eq "Y"}
 {literal}
 //  Fix a.href if base url is defined for page
@@ -118,6 +113,8 @@ for (var i = 0; i < links.length; i++) {
 }
 }
 
+
+
 if (window.addEventListener)
 window.addEventListener("load", anchor_fix, false);
 
@@ -128,15 +125,13 @@ window.attachEvent("onload", anchor_fix);
 
 //]]>
 </script>
-
-{if $config.SEO.clean_urls_enabled eq "Y"}
-  <base href="{$catalogs.customer}/" />
-{/if}
-
-
+<script src="{$SkinDir}/js/infinite_scroll.js" type="text/javascript"></script>
+{include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 </head>
 <body{$reading_direction_tag}{if $body_onload ne ''} onload="javascript: {$body_onload}"{/if}>
-
+{if !empty($config.Appearance.Facebook_pixel_code)}
+    {$config.Appearance.Facebook_pixel_code}
+{/if}
 {if $main eq "product" || $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 <script src="{$SkinDir}/cidev_ajax.js" type="text/javascript"></script>
 {/if}
@@ -151,56 +146,6 @@ window.attachEvent("onload", anchor_fix);
 //<![CDATA[
 {literal}
 
-    sendItems = [];
-    sendItemsValues = [];
-    sentItems = [];
-    function checkCarouselsVisibility() {
-        $('#similar_products .jcarousel, #related_products .jcarousel, #products_also_bought_with_this_product .jcarousel, #recently_viewed_products .jcarousel').each(function () {
-            $('li::visible', $(this)).each (function () {
-                var t = $(this).visible(false, false),
-                        wraper_width = $(this).parent().parent().width(),
-                        ul_left = Math.abs($(this).parent().position().left),
-                        el_left = $(this).position().left;
-                if (t && ((el_left >= ul_left) && ((ul_left + wraper_width) > el_left))) {
-                    var productid = $(this).data('productid');
-                    if (sendItems.indexOf(productid) === -1 && sentItems.indexOf(productid) === -1) {
-                        sendItems.push(productid);
-                        sendItemsValues.push({
-                            productid: productid,
-                            name: $(this).data('name'),
-                            category: $(this).data('category'),
-                            brand: $(this).data('brand'),
-                            list: $(this).data('list'),
-                            price: $(this).data('price'),
-                            position: $(this).data('position')
-                        });
-                    }
-                }
-            });
-        });
-        var counter = 0;
-        while (sendItems.length > 0) {
-            counter++;
-            var productid = sendItems.pop();
-            var valtosend = sendItemsValues.pop();
-            ga('ec:addImpression', {
-                'id': valtosend.productid,
-                'name': valtosend.product,
-                'category': valtosend.category,
-                'brand': valtosend.brand,
-                'list': valtosend.ga_page_name,
-                'price': valtosend.price,
-                'position': valtosend.N_key
-            });
-
-            sentItems.push(productid);
-        }
-
-        if (counter > 0) {
-            ga('send', 'pageview');
-        }
-
-    }
 	function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter){
 
         var load_ajax_sections_arr = load_ajax_sections.split(',');
@@ -263,7 +208,7 @@ function func_load_ajax_carousel_products(section_name) {
                                 a_href = 'product.php?productid=' + this.productid;
                             }
                             ga_page_name = this.ga_param;
-                            html += '<li data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price+'" data-position="'+this.N_key+'" class="active">' +
+                            html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price+'" data-position="'+this.N_key+'" class="active">' +
                                     '<div style="text-align: center;">' +
                                     '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>' +
                                     '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">' + this.title + '</a>' +
@@ -360,129 +305,7 @@ function func_load_ajax_carousel_products(section_name) {
 
 {if $main eq "catalog" || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 
-<script type="text/javascript">
-//<![CDATA[
-{literal}
-        function func_load_more_products(ajax_navigation_page_next){
 
-                        cidev_xmlHttp=cidev_createHttpRequestObject();
-                        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
-
-				var current_storefront = '{/literal}{$current_storefront}{literal}';
-				var e_products_found = '{/literal}{if $e_products_found eq "Y"}Y{/if}{literal}';
-				var cidev_filter_mode = 'load_more_products';
-				var additional_params = '';
-				var ga_page_name = '{/literal}{if $ga_page_name ne ""}{$ga_page_name}{/if}{literal}';
-	
-				if (e_products_found == "Y"){
-					cidev_filter_mode = 'load_more_e_products';
-
-					if (current_storefront == "41"){
-						additional_params = '&products_template=products_new_style'
-					}
-
-					additional_params = additional_params + '&e_search_data_substring=' + $("#twotabsearchtextbox").val();
-				}
-				
-				var cat = {/literal}{if $cat ne ""}{$cat}{else}{literal}''{/literal}{/if}{literal};
-
-                                var cidev_parameters = 'cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+'&ga_page_name='+ga_page_name+additional_params;
-
-//-Start-//
-                                var LN_total_items = $('#LN_total_items').attr('data-value');
-                                var load_next_productids = $('#load_next_productids').attr('data-value');
-				load_next_productids = load_next_productids.trim();
-
-				if (load_next_productids != ""){
-					cidev_parameters = cidev_parameters + '&load_next_productids='+load_next_productids+'&total_items='+LN_total_items;
-				}
-//-End-//
-
-                                cidev_xmlHttp.onreadystatechange=function(){
-                                        if(cidev_xmlHttp.readyState==4){
-                                                if(cidev_xmlHttp.status==200){
-                                                        cidev_id$("show_next_products_block_"+ajax_navigation_page_next).innerHTML=cidev_xmlHttp.responseText;
-                                                    var t = document.getElementById('show_next_products_block_'+ajax_navigation_page_next);
-                                                    scripts = t.getElementsByTagName('script');
-                                                    $.globalEval($(scripts[0]).text());
-
-//-Start-//
-							$('#load_next_productids').attr('data-value','');
-							ajax_navigation_page_next++;
-							var cidev_parameters_load_next = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next='+ajax_navigation_page_next+'&cat='+cat+additional_params;
-							func_load_more_next_productids(cidev_parameters_load_next, 'N');
-//-End-//
-                                                }else{
-                                                        cidev_Error('no_server', 'Y');
-                                                }
-                                        }
-                                };
-
-                                cidev_xmlHttp.open('POST','infinite_products.php',true);
-                                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
-                                cidev_xmlHttp.setRequestHeader('Connection','close');
-                                cidev_xmlHttp.send(cidev_parameters);
-                        }
-                        else {
-                                setTimeout('func_load_more_products()', 1000);
-                        }
-        }
-
-//-Start-//
-        function func_load_more_next_productids(cidev_parameters, first_on_load){
-
-			if (first_on_load == "Y"){
-                                var current_storefront = '{/literal}{$current_storefront}{literal}';
-                                var e_products_found = '{/literal}{if $e_products_found eq "Y"}Y{/if}{literal}';
-                                var cidev_filter_mode = 'load_more_products';
-                                var additional_params = '';
-        
-                                if (e_products_found == "Y"){
-                                        cidev_filter_mode = 'load_more_e_products';
-
-                                        if (current_storefront == "41"){
-                                                additional_params = '&products_template=products_new_style'
-                                        }
-
-                                        additional_params = additional_params + '&e_search_data_substring=' + $("#twotabsearchtextbox").val();
-                                }
-                                
-                                var cat = {/literal}{if $cat ne ""}{$cat}{else}{literal}''{/literal}{/if}{literal};
-
-                                cidev_parameters = 'mode_load_next_productids=Y&cidev_filter_mode='+cidev_filter_mode+'&ajax_navigation_page_next=2&cat='+cat+additional_params;
-			}
-
-                        cidev_xmlHttp=cidev_createHttpRequestObject();
-                        if (cidev_xmlHttp.readyState==4 || cidev_xmlHttp.readyState==0){
-
-                                cidev_xmlHttp.onreadystatechange=function(){
-                                        if(cidev_xmlHttp.readyState==4){
-                                                if(cidev_xmlHttp.status==200){
-                                                        $('#load_next_productids').attr('data-value',cidev_xmlHttp.responseText);
-                                                }else{
-							if (first_on_load!= "Y"){
-	                                                        cidev_Error('no_server', 'Y');
-							}
-                                                }
-                                        }
-                                };
-
-                                cidev_xmlHttp.open('POST','infinite_products.php',true);
-                                cidev_xmlHttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-                                cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
-                                cidev_xmlHttp.setRequestHeader('Connection','close');
-                                cidev_xmlHttp.send(cidev_parameters);
-                        }
-                        else {
-                                setTimeout('func_load_more_next_productids()', 1000);
-                        }
-        }
-//-End-//
-
-{/literal}
-//]]>
-</script>
 
 <div style="display: none;" id="load_next_productids" data-value="{include file="customer/main/infinite_products_load_next_productids.tpl"}"></div>
 <div style="display: none;" id="LN_total_items" data-value="{$total_items}"></div>
@@ -493,15 +316,6 @@ function func_load_ajax_carousel_products(section_name) {
 {* ------------------- *}
 {include file="cidev_tracking_code.tpl" }
 {* ------------------- *}
-
-
-{literal}
-<style>
-#tooltip {
-    max-width: {/literal}{$config.Product_Page.max_width_map_text}{literal}px;
-}
-</style>
-{/literal}
 
 {include file="head.tpl" }
 {include file="rectangle_top.tpl" }
@@ -517,7 +331,7 @@ function func_load_ajax_carousel_products(section_name) {
 {if ($main eq "catalog" && $current_category.category ne "") || $main eq "brand_products" || $main eq "search" || $main eq "advanced_search"}
 <script type="text/javascript">
 //<![CDATA[
-func_load_more_next_productids('','Y');
+//func_load_more_next_productids('','Y');
 //]]>
 </script>
 {/if}
@@ -614,60 +428,9 @@ func_load_more_next_productids('','Y');
 </tr>
 </table>
 
-{*include file="customer/home_main.tpl"*}
-
-
 <!-- /central space -->
 </td>
-{*
-<td class="VertMenuRightColumn">
-<br>
-{if $active_modules.SnS_connector && $config.SnS_connector.sns_display_button eq 'Y' && $sns_collector_path_url ne ''}
-{include file="modules/SnS_connector/button.tpl"}
-<br />
-{/if}
-{if $active_modules.Feature_Comparison ne "" && $comparison_products ne ''}
-{include file="modules/Feature_Comparison/product_list.tpl" }
-<br />
-{/if}
-{include file="customer/menu_cart.tpl" }
-{if $login eq "" }
-{include file="auth.tpl" }
-{else}
-{include file="authbox.tpl" }
-{/if}
-{if $active_modules.XAffiliate ne ""}
-<br />
-{include file="partner/menu_affiliate.tpl" }
-{/if}
-{if $active_modules.Interneka ne ""}
-<br />
-{include file="modules/Interneka/menu_interneka.tpl" }
-{/if}
-<!--br /-->
-{include file="poweredby.tpl" }
-<br />
-{include file="help.tpl"}
-<br />
-{include file="customer/special.tpl"}
-<br />
-<br />
-<div style="padding-left: 8px"><a href="{$xcart_web_dir}/home.php?cat=248"><img src="{$ImagesDir}/Art-Brushes-Ad.jpg" alt="" /></a></div>
-<br />
-{if $active_modules.Mailchimp_Subscription}
-{include file="modules/Mailchimp_Subscription/news.tpl" }
-{else}
-{include file="news.tpl" }
-{/if}
-<br>
-<img src="{$ImagesDir}/spacer.gif" width="150" height="1" alt="" />
-</td>
-*}
-{*
-<td>
-<img src="{$ImagesDir}/spacer.gif" width="9" height="1" alt="" />
-</td>
-*}
+
 </tr>
 </table>
 
@@ -711,15 +474,6 @@ func_load_ALL_ajax_carousels("recently_viewed_products", 0);
 {/if}
 {include file="rectangle_bottom.tpl" }
 {include file="ga_code.tpl" }
-{if $config.Product_Page.map_bridge_text_background ne ''}
-{literal}
-<style>
-#tooltip, .tooltip_helper {
-	background-color: #{/literal}{$config.Product_Page.map_bridge_text_background};{literal}
-}
-</style>
-{/literal}
-{/if}
 
 {if $main eq "product"}
 <script type="text/javascript">
@@ -975,7 +729,6 @@ function openPopUp()
                             timer_id = setTimeout(function () {
                                 interval_id = setInterval(fireTitleChange, 3000);
                                 var el = $("#products_also_bought_with_this_product, #related_products, #similar_products, #recently_viewed_products").filter(':visible:first');
-                                console.log(el);
                                 var elOffset = el.offset().top;
                                 var elHeight = el.height();
                                 var windowHeight = $(window).height();
@@ -1009,7 +762,7 @@ function openPopUp()
             }
 
             $(this).data("prevType", e.type);
-        })
+        });
         {/literal}
 
     </script>

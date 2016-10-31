@@ -3,7 +3,7 @@ $Id: order_info_admin.tpl, v 1.0.0 2010/03/23 15:16:14 random Exp $
 vim: set ts=2 sw=2 sts=2 et:
 Use $product.oProduct classProduct
 *}
-<script type="text/javascript" language="JavaScript 1.2" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
+<script type="text/javascript" src="{$SkinDir}/lib/jqueryui/jquery-ui.custom.min.js"></script>
 {include file="check_zipcode_js.tpl"}
 
 <a name="order_info"></a>
@@ -14,7 +14,7 @@ Use $product.oProduct classProduct
 
 {include file="change_states_js.tpl"}
 
-<script type="text/javascript" language="JavaScript 1.2">
+<script type="text/javascript">
 <!--
 
 {literal}
@@ -463,8 +463,6 @@ function check_r_fields(){
 </script>
 
 
-
-
 <form action="order.php" method="post" name="ordereditform1" onsubmit="javascript: check_r_fields(); return false;">
 
 <input type="hidden" name="mode" value="order_edit_apply" id="ordereditform_mode" />
@@ -561,8 +559,8 @@ function check_r_fields(){
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td>
     <a href="{$product.links.customer}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}" title="" target="_blank">{$product.product}</a>
-    {assign var='oHTMLShot' value =$product.oProduct->getHTMLShot($order.orderid)}
-    {if (!empty($oHTMLShot))}
+    {assign var='oHTMLShot' value = $product.oProduct->getHTMLShot($order.orderid)}
+    {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
       <a title="View HTML-Shot" target="_blanks" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
         <img src="{$ImagesDir}/html-shot.png" />
       </a>
@@ -660,7 +658,7 @@ Cost to us accurate
 
 {if !($order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y")}
 
-<script type="text/javascript" language="JavaScript 1.2">
+<script type="text/javascript">
 <!--
 {literal}
   $(function() {
@@ -691,7 +689,7 @@ Cost to us accurate
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
-{include file="currency2.tpl" value=$product.cost_to_us*$product.amount}
+{include file="currency2.tpl" value=$product.oOrderDetail->getCostToUs()}
 </div>
 {* --- *}
   </td>
@@ -707,7 +705,7 @@ Cost to us accurate
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
-{include file="currency2.tpl" value=$product.cost_to_us*$product.amount}
+{include file="currency2.tpl" value=$product.oOrderDetail->getCostToUs()}
 </div>
 {* --- *}
 
@@ -1076,7 +1074,7 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
     <tr>
       <td style="vertical-align: top; padding-right: 10px; padding-bottom: 4px;">
 
-<script type="text/javascript" language="JavaScript 1.2">
+<script type="text/javascript">
 <!--
 {literal}
   $(function() {

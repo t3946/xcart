@@ -9,54 +9,72 @@
         <button data-status="Y" class="ui button {if $active == 'Y'}active{/if}">Active</button>
         <button data-status="N" class="ui button {if $active == 'N'}active{/if}">Inactive</button>
     </div>
-<table width="100%" id="table_verificators">
-    <tr>
-        <td colspan="7">
-            
-        </td>
-    </tr>
-    <tr class="TableHead">
-        <td width="10">Login / Edit ver profile</td>
-        <td width="100">Full Name / Link to Upwork</td>
-        <td width="10">Current batches</td>
-        <td width="10">Completed batches</td>
-        <td width="10">Paid batches</td>
-        <td width="100" align="center">Average time spent per product</td>
-    </tr>
-    {if ($aCustomers)}
-        {foreach from=$aCustomers item=oCustomer}
-            {assign var=aBatchesInProgress value=$oCustomer->getAmazonBatches('in progress')}
-            <tr>
-                <td>{if $oCustomer->getCustomerModifyLink()}<a href="{$oCustomer->getCustomerModifyLink()}" target="_blank">{/if}{$oCustomer->getCustomerLogin()}</a></td>
-                <td data-customer-id="{$oCustomer->getCustomerLogin()}">
-                    {if $oCustomer->getCustomerURL()}
-                        <a target="_blank" href="{$oCustomer->getCustomerURL()}">{/if}{$oCustomer->getCustomerFullName()}{if $oCustomer->getCustomerURL()}</a>{/if}&nbsp;&nbsp;
-                    {if $oCustomer->isAmazonAccountSuspended()}
-                        <span style="white-space: nowrap;">
+    <table width="100%" id="table_verificators" cellpadding="3" cellspacing="1">
+        <tr>
+            <td colspan="7">
+
+            </td>
+        </tr>
+        <tr class="TableHead">
+            <td width="100">Full Name / Link to Upwork</td>
+            <td width="10">Login / Edit ver profile</td>
+            <td width="10">Current batches</td>
+            <td width="10">Completed batches</td>
+            <td width="10">Paid batches</td>
+            <td width="100" align="center">Average time spent per product</td>
+        </tr>
+        {if ($aCustomers)}
+            {foreach from=$aCustomers item=oCustomer}
+                {assign var=aBatchesInProgress value=$oCustomer->getAmazonBatches('in progress')}
+                <tr>
+                    <td data-customer-id="{$oCustomer->getCustomerLogin()}">
+                        {if $oCustomer->getCustomerURL()}
+                        <a target="_blank"
+                           href="{$oCustomer->getCustomerURL()}">{/if}{$oCustomer->getCustomerFullName()}{if $oCustomer->getCustomerURL()}</a>{/if}
+                        &nbsp;&nbsp;
+                        {if $oCustomer->isAmazonAccountSuspended()}
+                            <span style="white-space: nowrap;">
                             <a class="verificator_status" style="color:red;" href="#">Blocked</a>
                         </span>
-                    {/if}
-                </td>
-                <td align="center">
-                    {if $aBatchesInProgress}
-                        {foreach from=$aBatchesInProgress item=oBatchInProgress name=batchInProgress}
-                        <a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=in_progress">{$oBatchInProgress->getBatchNumber()}{if $oBatchInProgress->isTest()}T{/if} ({$oBatchInProgress->getProductsInBatchCompletedCount()}/{$oBatchInProgress->getBatchAmount()})</a>
-                        <br/>
-                        {/foreach}
-                    {else}
-                    <a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=in_progress">0</a>
-                    {/if}
-                </td>
-                <td align="center"><a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=completed">{$oCustomer->getAmazonBatchesCompletedCount()}</a></td>
-                <td align="center"><a target="_blank" href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=paid">{$oCustomer->getAmazonBatchesPaidCount()}</a></td>
-                <td align="center">{$oCustomer->getAmazonBatchesAverageSpeed()} sec.</td>
-            </tr>
-        {/foreach}
-    {/if}
-</table>
+                        {/if}
+                    </td>
+                    <td>{if $oCustomer->getCustomerModifyLink()}<a href="{$oCustomer->getCustomerModifyLink()}"
+                                                                   target="_blank">{/if}{$oCustomer->getCustomerLogin()}</a>
+                    </td>
+                    <td align="center">
+                        {if $aBatchesInProgress}
+                            {foreach from=$aBatchesInProgress item=oBatchInProgress name=batchInProgress}
+                                <a target="_blank"
+                                   href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=in_progress">{$oBatchInProgress->getBatchNumber()}{if $oBatchInProgress->isTest()}T{/if}
+                                    ({$oBatchInProgress->getProductsInBatchCompletedCount()}
+                                    /{$oBatchInProgress->getBatchAmount()})</a>
+                                <br/>
+                            {/foreach}
+                        {else}
+                            <a target="_blank"
+                               href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=in_progress">0</a>
+                        {/if}
+                    </td>
+                    <td align="center"><a target="_blank"
+                                          href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=completed">{$oCustomer->getAmazonBatchesCompletedCount()}</a>
+                    </td>
+                    <td align="center"><a target="_blank"
+                                          href="/admin/operators_batches.php?operator={$oCustomer->getCustomerLogin()}&batch_status=paid">{$oCustomer->getAmazonBatchesPaidCount()}</a>
+                    </td>
+                    <td align="center">{$oCustomer->getAmazonBatchesAverageSpeed()} sec.</td>
+                </tr>
+            {/foreach}
+        {/if}
+    </table>
+{/capture}
+
+{capture name=verification_results}
+    {include file="modules/External_Product_Verification/verification_results.tpl"}
 {/capture}
 
 {include file="dialog.tpl" title='Verificators' content=$smarty.capture.dialog extra='width="100%"'}
+<br/>
+{include file="dialog.tpl" title='Verification results' content=$smarty.capture.verification_results extra='width="100%"'}
 
 <script>
     {literal}

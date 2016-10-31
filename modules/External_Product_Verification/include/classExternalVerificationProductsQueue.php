@@ -13,6 +13,7 @@ class classExternalVerificationProductsQueue extends classData
     const PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_FOUND = 'etalon_not_found';
 
     private $oProduct = null;
+    private $aVerificatorResults = null;
 
     public function __construct($aParams = [])
     {
@@ -43,6 +44,31 @@ class classExternalVerificationProductsQueue extends classData
         return $this->getField('productid');
     }
 
+    public function getProductImage()
+    {
+        return $this->getField('product_image');
+    }
+
+    public function getProductName()
+    {
+        return $this->getField('product_names');
+    }
+
+    public function getProductDescription()
+    {
+        return $this->getField('product_description');
+    }
+
+    public function getPackQtyAmazon()
+    {
+        return $this->getField('pack_qty_amazon');
+    }
+
+    public function getPackQtyWebsite()
+    {
+        return $this->getField('pack_qty_website');
+    }
+
     public function getProductEntity()
     {
         if (is_null($this->oProduct))
@@ -52,7 +78,7 @@ class classExternalVerificationProductsQueue extends classData
 
     public function getCrossVerifyCount()
     {
-        return $this->getField('cross_verify_count');
+        return intval($this->getField('cross_verify_count'));
     }
 
     public static function getProductsQueueEtalon()
@@ -64,7 +90,7 @@ class classExternalVerificationProductsQueue extends classData
         if (!empty($aQueues)) {
             foreach ($aQueues as $aQueue) {
                 $oQueue = new classExternalVerificationProductsQueue();
-                $oQueue->fillPrimaryTableValues($aQueue);
+                $oQueue->fill($aQueue);
                 $aResult[] = $oQueue;
             }
         }
@@ -75,9 +101,8 @@ class classExternalVerificationProductsQueue extends classData
     {
         $oSQL = new classSQLBuilder();
         $aQueues = $oSQL->addSelect('count(1)', 'cnt')->addFromTable('external_verification_products_queue')->
-        addCondition("status in ('".self::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH."','".self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH."','".self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_FOUND."')")->Execute()->getQueryResult();
-        $aRes = reset($aQueues);
-        return intval($aRes['cnt']);
+        addCondition("status in ('".self::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH."','".self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH."','".self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_FOUND."')")->Execute()->getQueryResultFirst();
+        return intval($aQueues['cnt']);
     }
 
     public function getPosition()
@@ -93,5 +118,54 @@ class classExternalVerificationProductsQueue extends classData
             $aAsins = explode(',',$sAsin);
         }
         return $aAsins;
+    }
+
+    public static function getVerificationResultsProducts($aParams = null)
+    {
+        $aResults = [];
+
+        $limit = 50;
+        if (!empty($aParams['limit']) && is_numeric($aParams['limit']))
+            $limit = (int) $aParams['limit'];
+
+        $oSQL = new classSQLBuilder();
+        $oSQL->addSelect('xe.*')->
+               addFromTable('external_verification_products_queue', 'xe')->
+               addInnerJoin('external_verification_products', 'xp', 'xp.productid = xe.productid AND xp.action IN ("' . implode('","', classExternalVerificationBatch::$aProductStatuses['processed']) . '")')->
+               addGroupBy('xe.productid')->addOrderBy('xp.value DESC')->setLimit($limit);
+        if (!empty($aParams['batch_id']) && is_numeric($aParams['batch_id'])) {
+            $oSQL->addCondition('batch_id='.(int)$aParams['batch_id']);
+        } else
+            $oSQL->addCondition('cross_verify_count = 2');
+        $aVerificationResults = $oSQL->Execute()->getQueryResult();
+        if (!empty($aVerificationResults)) {
+            foreach ($aVerificationResults as $aVerificationResult) {
+                $aResults[] = classExternalVerificationProductsQueue::model()->fill($aVerificationResult);
+            }
+        }
+        return $aResults;
+    }
+
+    public function getVerificatorsResults($iBatchId = null)
+    {
+        if (is_null($this->aVerificatorResults)) {
+            $oSQL = classSQLBuilder::getInstance();
+            $oSQL->addSelect('*')->addFromTable('external_verification_products')->
+                addCondition('productid = '.$this->getProductId())->
+                addCondition('action IN ("' . implode('","', classExternalVerificationBatch::$aProductStatuses['processed']) . '")');
+
+            if (!is_null($iBatchId) && in_array($this->getStatus(),[self::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH,self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH, self::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_FOUND])) {
+                $oSQL->addCondition('batch_id='.$iBatchId);
+                $this->aVerificatorResults[] = classExternalVerificationProducts::model()->setAction($this->getStatus())->setValue(time())->setField('productid',$this->getProductId());
+            }
+
+            $aResults = $oSQL->Execute()->getQueryResult();
+            if (!empty($aResults)) {
+                foreach($aResults as $aVerificationProduct) {
+                    $this->aVerificatorResults[] = classExternalVerificationProducts::model()->fill($aVerificationProduct);
+                }
+            }
+        }
+        return $this->aVerificatorResults;
     }
 }

@@ -333,7 +333,7 @@ function send_question_email_form(){
   <td><font class="Star">*</font></td>
   <td nowrap="nowrap">
         <input type="text" id="email" name="email" size="32" maxlength="128" value="" />
-        <input type="hidden" id="question_productid" name="question_productid" size="32" maxlength="128" value="{$product.productid}" />
+        <input type="hidden" id="question_productid" name="question_productid" value="{$product.productid}" />
   </td>
  </tr>
 

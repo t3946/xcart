@@ -435,39 +435,40 @@ while (!empty($NextToken)){
 
 				$Address = $order_info['ShippingAddress']['AddressLine1'] .(!empty($order_info['ShippingAddress']['AddressLine2'])?' '.$order_info['ShippingAddress']['AddressLine2'] :'').(!empty($order_info['ShippingAddress']['AddressLine3'])?' '.$order_info['ShippingAddress']['AddressLine3'] :'');
 
-        		        $insert_data = array (
-		                        'order_prefix' => 'AZ-',
-                		        'login' => 'amazon',
-		                        'amazonorderid' => $order_info["AmazonOrderId"],
-					'amazon_fulfillment_channel' => $order_info["FulfillmentChannel"],
-                		        'total' => $order_info['OrderTotal']['Amount'],
-		                        'date' => $PurchaseDate,
-					'cb_status' => ($order_info['OrderStatus']=='Canceled' ? 'A' : 'P'),
-		                        'dc_status' => ($order_info['OrderStatus']=='Unshipped' ? 'T' : 'S'),
-                		        'bd_status' => 'W',
-		                        'payment_method' => 'Amazon Seller',
-                		        'firstname' => addslashes($order_info['BuyerName']),
-                		        's_firstname' => addslashes($order_info['ShippingAddress']['Name']),
-		                        's_address' => addslashes($Address),
-		                        's_city' => addslashes($order_info['ShippingAddress']['City']),
-		                        's_state' => addslashes($StateOrRegion),
-                		        's_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
-		                        's_zipcode' => addslashes($PostalCode),
-		                        'b_firstname' => addslashes($order_info['BuyerName']),
-                                        'b_address' => addslashes($Address),
-                                        'b_city' => addslashes($order_info['ShippingAddress']['City']),
-                                        'b_state' => addslashes($StateOrRegion),
-                                        'b_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
-		                        'b_zipcode' => addslashes($PostalCode),
-                		        'phone' => addslashes($order_info['ShippingAddress']['Phone']),
-		                        'email' => addslashes($order_info['BuyerEmail']),
-                		        'language' => 'US',
+				$insert_data = array(
+						'order_prefix' => 'AZ-',
+						'login' => 'amazon',
+						'amazonorderid' => $order_info["AmazonOrderId"],
+						'amazon_fulfillment_channel' => $order_info["FulfillmentChannel"],
+						'total' => $order_info['OrderTotal']['Amount'],
+						'date' => $PurchaseDate,
+						'cb_status' => ($order_info['OrderStatus'] == 'Canceled' ? 'A' : 'P'),
+						'dc_status' => ($order_info['OrderStatus'] == 'Unshipped' ? 'T' : 'S'),
+						'bd_status' => 'W',
+						'payment_method' => 'Amazon Seller',
+						'firstname' => addslashes($order_info['BuyerName']),
+						's_firstname' => addslashes($order_info['ShippingAddress']['Name']),
+						's_address' => addslashes($Address),
+						's_city' => addslashes($order_info['ShippingAddress']['City']),
+						's_state' => addslashes($StateOrRegion),
+						's_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
+						's_zipcode' => addslashes($PostalCode),
+						'b_firstname' => addslashes($order_info['BuyerName']),
+						'b_address' => addslashes($Address),
+						'b_city' => addslashes($order_info['ShippingAddress']['City']),
+						'b_state' => addslashes($StateOrRegion),
+						'b_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
+						'b_zipcode' => addslashes($PostalCode),
+						'phone' => addslashes($order_info['ShippingAddress']['Phone']),
+						'email' => addslashes($order_info['BuyerEmail']),
+						'language' => 'US',
 //		                        'paymentid' => '1',
-                		        'storefrontid' => '0',
-		                        'fraud_status' => 'C',
-                		        'overall_fraud_score' => '50',
-		                        'tracking_all_filled' => 'N'
-                		);
+						'storefrontid' => '0',
+						'fraud_status' => 'C',
+						'overall_fraud_score' => '50',
+						'tracking_all_filled' => 'N',
+						'vn_status' => ($order_info['FulfillmentChannel']=='AFN' ? 'PV' : 'NS')
+				);
 
                 		$new_orderid = func_array2insert('orders', $insert_data);
 				unset($insert_data);
@@ -533,8 +534,15 @@ while (!empty($NextToken)){
 					
 				}
 
+
 				$extra["product_total"]["net"] = $extra["product_total"]["gross"] = $product_total;
 				db_query("UPDATE $sql_tbl[orders] SET extra='".serialize($extra)."', subtotal='$product_total' WHERE orderid='$new_orderid'");
+
+				global $xcart_dir;
+				include_once $xcart_dir."/include/class/classOrders.php";
+				/** @var classOrder $oOrder */
+				$oOrder = classOrder::model(['orderid'=>$new_orderid]);
+				$oOrder->updateVerificationStatus()->reCalculateTotals();
 
 				$id = func_query_first_cell("SELECT id FROM $sql_tbl[cidev_amazon_order_raw] WHERE orderid='$new_orderid'");
 				if (!empty($id)){
@@ -689,39 +697,38 @@ while (!empty($NextToken)){
 				$new_orderid = $orderid;
 
 
-                                $insert_data = array (
-                                        'order_prefix' => 'AZ-',
-                                        'login' => 'amazon',
-                                        'amazonorderid' => $order_info["AmazonOrderId"],
-					'amazon_fulfillment_channel' => $order_info["FulfillmentChannel"],
-                                        'total' => $order_info['OrderTotal']['Amount'],
-                                        'date' => $PurchaseDate,
-					'cb_status' => ($order_info['OrderStatus']=='Canceled' ? 'A' : 'P'),
-                                        'dc_status' => ($order_info['OrderStatus']=='Unshipped' ? 'T' : 'S'),
-                                        'bd_status' => 'W',
-                                        'payment_method' => 'Amazon Seller',
-                                        'firstname' => addslashes($order_info['BuyerName']),
-                                        's_firstname' => addslashes($order_info['ShippingAddress']['Name']),
-                                        's_address' => addslashes($Address),
-                                        's_city' => addslashes($order_info['ShippingAddress']['City']),
-                                        's_state' => addslashes($StateOrRegion),
-                                        's_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
-                                        's_zipcode' => addslashes($PostalCode),
-                                        'b_firstname' => addslashes($order_info['BuyerName']),
-                                        'b_address' => addslashes($Address),
-                                        'b_city' => addslashes($order_info['ShippingAddress']['City']),
-                                        'b_state' => addslashes($StateOrRegion),
-                                        'b_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
-                                        'b_zipcode' => addslashes($PostalCode),
-                                        'phone' => addslashes($order_info['ShippingAddress']['Phone']),
-                                        'email' => addslashes($order_info['BuyerEmail']),
-                                        'language' => 'US',
-//                                        'paymentid' => '1',
-                                        'storefrontid' => '0',
-                                        'fraud_status' => 'C',
-                                        'overall_fraud_score' => '50',
-                                        'tracking_all_filled' => 'N'
-                                );
+				$insert_data = array(
+						'order_prefix' => 'AZ-',
+						'login' => 'amazon',
+						'amazonorderid' => $order_info["AmazonOrderId"],
+						'amazon_fulfillment_channel' => $order_info["FulfillmentChannel"],
+						'total' => $order_info['OrderTotal']['Amount'],
+						'date' => $PurchaseDate,
+						'cb_status' => ($order_info['OrderStatus'] == 'Canceled' ? 'A' : 'P'),
+						'dc_status' => ($order_info['OrderStatus'] == 'Unshipped' ? 'T' : 'S'),
+						'bd_status' => 'W',
+						'payment_method' => 'Amazon Seller',
+						'firstname' => addslashes($order_info['BuyerName']),
+						's_firstname' => addslashes($order_info['ShippingAddress']['Name']),
+						's_address' => addslashes($Address),
+						's_city' => addslashes($order_info['ShippingAddress']['City']),
+						's_state' => addslashes($StateOrRegion),
+						's_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
+						's_zipcode' => addslashes($PostalCode),
+						'b_firstname' => addslashes($order_info['BuyerName']),
+						'b_address' => addslashes($Address),
+						'b_city' => addslashes($order_info['ShippingAddress']['City']),
+						'b_state' => addslashes($StateOrRegion),
+						'b_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
+						'b_zipcode' => addslashes($PostalCode),
+						'phone' => addslashes($order_info['ShippingAddress']['Phone']),
+						'email' => addslashes($order_info['BuyerEmail']),
+						'language' => 'US',
+						'storefrontid' => '0',
+						'fraud_status' => 'C',
+						'overall_fraud_score' => '50',
+						'tracking_all_filled' => 'N'
+				);
 
 				func_array2update("orders", $insert_data, "orderid = '$new_orderid'");
                                 unset($insert_data);
@@ -744,11 +751,11 @@ while (!empty($NextToken)){
                                                 'orderid' => $new_orderid,
                                                 'manufacturerid' => $prod_info["manufacturerid"],
                                                 'shipping' => addslashes($order_info['ShipmentServiceLevelCategory']),
-						'cb_status' => ($order_info['OrderStatus']=='Canceled' ? 'A' : 'P'),
+												'cb_status' => ($order_info['OrderStatus']=='Canceled' ? 'A' : 'P'),
                                                 'dc_status' => ($order_info['OrderStatus']=='Unshipped' ? 'T' : 'S'),
                                                 'bd_status' => 'W',
-                                                'total_net' => $order_info['OrderTotal']['Amount'],
-                                                'total_gross' => $order_info['OrderTotal']['Amount']
+                                                //'total_net' => $order_info['OrderTotal']['Amount'],
+                                                //'total_gross' => $order_info['OrderTotal']['Amount']
 //                                              'acc_paymentid' => '1'
                                             );
 
@@ -790,6 +797,8 @@ while (!empty($NextToken)){
 
                                 $extra["product_total"]["net"] = $extra["product_total"]["gross"] = $product_total;
                                 db_query("UPDATE $sql_tbl[orders] SET extra='".serialize($extra)."', subtotal='$product_total' WHERE orderid='$new_orderid'");
+
+
 
                                 $id = func_query_first_cell("SELECT id FROM $sql_tbl[cidev_amazon_order_raw] WHERE orderid='$new_orderid'");
                                 if (!empty($id)){

@@ -597,10 +597,8 @@ if (
 
 				global $xcart_dir;
 				include_once $xcart_dir."/include/class/classProducts.php";
-				$classProduct = new classProducts();
-				$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
-				unset($classProduct);
-	
+				$mpn = classProduct::model(['productid'=>$product['productid']])->getMPN();
+
 				/*$pos = strpos($product['productcode'], '-');
 				$mpn = '';
 	

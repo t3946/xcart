@@ -359,9 +359,9 @@ if ($sExtraLog=='Y')
 
 	global $xcart_dir;
 	include_once $xcart_dir."/include/class/classProducts.php";
-	$classProduct = new classProducts();
-	$mpn = $classProduct->getProductMPN($product['productcode'], "", $product['productid']);
-	$product['custom_label_3'] = $classProduct->getManfacturerClass($product['manufacturerid'])->getField("manufacturer");
+	$classProduct = classProduct::model(['productid'=>$product['productid']]);
+	$mpn = $classProduct->getMPN();
+	$product['custom_label_3'] = $classProduct->getManfacturerClass()->getField("manufacturer");
 
 	/*$pos = strpos($product['productcode'], '-');
 	$mpn = '';
@@ -396,7 +396,7 @@ if ($sExtraLog=='Y')
 			if ($up_pos && is_numeric($up_pos) && $up_pos + 1 != strlen($up['productcode'])) {
 				$up_mpn = substr($up['productcode'], $up_pos + 1);
 			}*/
-			$up_mpn = $classProduct->getProductMPN($up['productcode'], "", $up['productid']);
+			$up_mpn = $classProduct->getMPN();
 			if ($compatible_with != '') {
 				$compatible_with .= ', ';
 			}
@@ -440,9 +440,11 @@ if ($sExtraLog=='Y')
 
 # Check/Get Amazon shippings
 ##
-	$start_time_amazon_shipping = round(microtime(true) * 1000);
-	$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
-	$diff_end_time_amazon_shipping = (round(microtime(true) * 1000) - $start_time_amazon_shipping);
+	if ($classProduct->isProductFBAAvail()) {
+		$start_time_amazon_shipping = round(microtime(true) * 1000);
+		$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
+		$diff_end_time_amazon_shipping = (round(microtime(true) * 1000) - $start_time_amazon_shipping);
+	}
 
 ##
 #
@@ -873,6 +875,13 @@ if ($debug_mode != 'Y') {
 		func_backprocess_log("incremental feeds", $log_text);
 
 	} catch (Google_Exception $e) {
+		// Other error.
+		print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
+
+		$log_text = "An error occurred: (" . $e->getCode() . ") " . $e->getMessage();
+		func_backprocess_log("incremental feeds", $log_text);
+	}
+	catch (Exception $e) {
 		// Other error.
 		print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
 
@@ -1568,6 +1577,13 @@ if ($debug_mode != 'Y') {
 		$log_text = "Error code :" . $e->getCode() . "\n" . "Error message: " . $e->getMessage();
 		func_backprocess_log("incremental feeds", $log_text);
 	} catch (Google_Exception $e) {
+		// Other error.
+		print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
+
+		$log_text = "An error occurred: (" . $e->getCode() . ") " . $e->getMessage();
+		func_backprocess_log("incremental feeds", $log_text);
+	}
+	catch (Exception $e) {
 		// Other error.
 		print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
 

@@ -3,6 +3,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
+require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
 
 abstract class classStoreFrontMarketPlace extends classData
 {

@@ -43,6 +43,8 @@ $trusted_post_variables = array('update', 'mnf_body');
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
+require_once $xcart_dir . "/include/class/classProduct.php";
+require_once $xcart_dir . "/include/class/classGroundMap.php";
 
 x_load('mail','order');
 
@@ -159,124 +161,117 @@ if ($REQUEST_METHOD == "GET") {
 	if ($mode == "clone_order" && !empty($orderid)){
 
 		$order_table = func_query_first("SELECT * FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-		
+
 		$details = '';
 
-	        if ($order_table["paymentid"] == 2) {
+		if ($order_table["paymentid"] == 2) {
 
 			$o_details = text_decrypt($order_table["details"]);
 			$o_details = stripslashes($o_details);
 
-        	        # Get PO data from order details text
-                	$tmp = explode("\n",$o_details);
+			# Get PO data from order details text
+			$tmp = explode("\n", $o_details);
 
-	                if ($tmp) {
-        	                $po_fields = array("po_number" => "PO Number", "company_name" => "Company name",        "name_of_purchaser" => "Name of purchaser",     "position" => "Position", "po_fax" => "po fax", "accounts_payable_full_name" => "accounts payable full name", "accounts_payable_phone" => "accounts payable phone", "accounts_payable_fax" => "accounts payable fax", "accounts_payable_email" => "accounts payable email", "purchase_manager_phone" => "purchase manager phone", "purchase_manager_email" => "purchase manager email", "purchase_manager_phone_ext" => "purchase manager phone ext", "accounts_payable_phone_ext" => "accounts payable phone ext");
+			if ($tmp) {
+				$po_fields = array("po_number" => "PO Number", "company_name" => "Company name", "name_of_purchaser" => "Name of purchaser", "position" => "Position", "po_fax" => "po fax", "accounts_payable_full_name" => "accounts payable full name", "accounts_payable_phone" => "accounts payable phone", "accounts_payable_fax" => "accounts payable fax", "accounts_payable_email" => "accounts payable email", "purchase_manager_phone" => "purchase manager phone", "purchase_manager_email" => "purchase manager email", "purchase_manager_phone_ext" => "purchase manager phone ext", "accounts_payable_phone_ext" => "accounts payable phone ext");
 
-                	        $po_details = array();
-	                        foreach ($tmp as $line) {
+				$po_details = array();
+				foreach ($tmp as $line) {
 
-        	                        if (empty($po_fields)) {
-                	                        break;
-                        	        }
-                                	foreach ($po_fields as $k => $po_text) {
-                                        	if (($a = strpos($line, $po_text.":")) !== false) {
-	                                                $po_details[] = $line;
-        	                                        unset($po_fields[$k]);
-                	                                break;
-                        	                }
-                                	}
-	                        }
+					if (empty($po_fields)) {
+						break;
+					}
+					foreach ($po_fields as $k => $po_text) {
+						if (($a = strpos($line, $po_text . ":")) !== false) {
+							$po_details[] = $line;
+							unset($po_fields[$k]);
+							break;
+						}
+					}
+				}
 
-				$details = implode("\n",$po_details);
+				$details = implode("\n", $po_details);
 				$details = text_crypt($details);
-        	        }
-	        }
+			}
+		}
 
-                $insert_data = array (
- 			'order_prefix' => $order_table['order_prefix'],
- 			'login' => $order_table['login'],
- 			'membership' => $order_table['membership'],
- 			'total' => $order_table['total'],
- 			'giftcert_discount' => $order_table['giftcert_discount'],
- 			'giftcert_ids' => $order_table['giftcert_ids'],
- 			'subtotal' => $order_table['subtotal'],
- 			'discount' => $order_table['discount'],
- 			'coupon' => $order_table['coupon'],
- 			'coupon_discount' => $order_table['coupon_discount'],
- 			'shippingid' => $order_table['shippingid'],
- 			'tracking' => $order_table['tracking'],
- 			'shipping_cost' => $order_table['shipping_cost'],
- 			'shipping_costs' => $order_table['shipping_costs'],
- 			'tax' => $order_table['tax'],
- 			'taxes_applied' => $order_table['taxes_applied'],
- 			'date' => time(),
- 			'cb_status' => 'Q',
- 			'dc_status' => 'T',
- 			'bd_status' => 'W',
- 			'payment_method' => $order_table['payment_method'],
- 			'flag' => $order_table['flag'],
- 			'notes' => $order_table['notes'],
-// 			'details' => $order_table['details'],
- 			'details' => $details,
-// 			'customer_notes' => $order_table['customer_notes'],
- 			'customer_notes' => '',
- 			'customer' => $order_table['customer'],
- 			'title' => $order_table['title'],
- 			'firstname' => $order_table['firstname'],
- 			'lastname' => $order_table['lastname'],
- 			'company' => $order_table['company'],
- 			'b_title' => $order_table['b_title'],
- 			'b_firstname' => $order_table['b_firstname'],
- 			'b_lastname' => $order_table['b_lastname'],
- 			'b_address' => $order_table['b_address'],
- 			'b_city' => $order_table['b_city'],
- 			'b_county' => $order_table['b_county'],
- 			'b_state' => $order_table['b_state'],
- 			'b_country' => $order_table['b_country'],
- 			'b_zipcode' => $order_table['b_zipcode'],
- 			's_title' => $order_table['s_title'],
- 			's_firstname' => $order_table['s_firstname'],
- 			's_lastname' => $order_table['s_lastname'],
- 			's_address' => $order_table['s_address'],
- 			's_city' => $order_table['s_city'],
- 			's_county' => $order_table['s_county'],
- 			's_state' => $order_table['s_state'],
- 			's_country' => $order_table['s_country'],
- 			's_zipcode' => $order_table['s_zipcode'],
- 			'phone' => $order_table['phone'],
- 			'fax' => $order_table['fax'],
- 			'url' => $order_table['url'],
- 			'email' => $order_table['email'],
- 			'language' => $order_table['language'],
- 			'clickid' => $order_table['clickid'],
- 			'extra' => $order_table['extra'],
- 			'membershipid' => $order_table['membershipid'],
- 			'paymentid' => $order_table['paymentid'],
- 			'payment_surcharge' => $order_table['payment_surcharge'],
- 			'tax_number' => $order_table['tax_number'],
- 			'tax_exempt' => $order_table['tax_exempt'],
- 			'shipping_groups' => $order_table['shipping_groups'],
- 			'storefrontid' => $order_table['storefrontid'],
- 			'phone_ext' => $order_table['phone_ext'],
- 			'orig_po' => $order_table['orig_po'],
- 			'total_shipping_charge_on_orig_po' => $order_table['total_shipping_charge_on_orig_po'],
- 			'po_issued_to' => $order_table['po_issued_to'],
-// 			'ca_status' => '',
- 			'po_number' => $order_table['po_number'],
-// 			'fraud_status' => (!empty($order_table['fraud_status']) ? $order_table['fraud_status'] : 'N'),
-// 			'overall_fraud_score' => $order_table['overall_fraud_score'],
- 			'vt_paymentid' => $order_table['vt_paymentid'],
- 			'transaction_id_link' => $order_table['transaction_id_link'],
- 			'avs_code' => $order_table['avs_code'],
- 			'otrs_ticket' => '',
-// 			'tracking_all_filled' => $order_table['tracking_all_filled'],
- 			'tracking_all_filled' => '',
-// 			'tracking_fill_time' => $order_table['tracking_fill_time'],
- 			'tracking_fill_time' => '0',
- 			'note_is_taken_care_of' => $order_table['note_is_taken_care_of'],
- 			'cloned_from' => $order_table['orderid'],
- 			'cloned_by' => $login
+		$insert_data = array(
+				'order_prefix' => $order_table['order_prefix'],
+				'login' => $order_table['login'],
+				'membership' => $order_table['membership'],
+				'total' => $order_table['total'],
+				'giftcert_discount' => $order_table['giftcert_discount'],
+				'giftcert_ids' => $order_table['giftcert_ids'],
+				'subtotal' => $order_table['subtotal'],
+				'discount' => $order_table['discount'],
+				'coupon' => $order_table['coupon'],
+				'coupon_discount' => $order_table['coupon_discount'],
+				'shippingid' => $order_table['shippingid'],
+				'tracking' => $order_table['tracking'],
+				'shipping_cost' => $order_table['shipping_cost'],
+				'shipping_costs' => $order_table['shipping_costs'],
+				'tax' => $order_table['tax'],
+				'taxes_applied' => $order_table['taxes_applied'],
+				'date' => time(),
+				'cb_status' => 'Q',
+				'dc_status' => 'T',
+				'bd_status' => 'W',
+				'payment_method' => $order_table['payment_method'],
+				'flag' => $order_table['flag'],
+				'notes' => $order_table['notes'],
+				'details' => $details,
+				'customer_notes' => '',
+				'customer' => $order_table['customer'],
+				'title' => $order_table['title'],
+				'firstname' => $order_table['firstname'],
+				'lastname' => $order_table['lastname'],
+				'company' => $order_table['company'],
+				'b_title' => $order_table['b_title'],
+				'b_firstname' => $order_table['b_firstname'],
+				'b_lastname' => $order_table['b_lastname'],
+				'b_address' => $order_table['b_address'],
+				'b_city' => $order_table['b_city'],
+				'b_county' => $order_table['b_county'],
+				'b_state' => $order_table['b_state'],
+				'b_country' => $order_table['b_country'],
+				'b_zipcode' => $order_table['b_zipcode'],
+				's_title' => $order_table['s_title'],
+				's_firstname' => $order_table['s_firstname'],
+				's_lastname' => $order_table['s_lastname'],
+				's_address' => $order_table['s_address'],
+				's_city' => $order_table['s_city'],
+				's_county' => $order_table['s_county'],
+				's_state' => $order_table['s_state'],
+				's_country' => $order_table['s_country'],
+				's_zipcode' => $order_table['s_zipcode'],
+				'phone' => $order_table['phone'],
+				'fax' => $order_table['fax'],
+				'url' => $order_table['url'],
+				'email' => $order_table['email'],
+				'language' => $order_table['language'],
+				'clickid' => $order_table['clickid'],
+				'extra' => $order_table['extra'],
+				'membershipid' => $order_table['membershipid'],
+				'paymentid' => $order_table['paymentid'],
+				'payment_surcharge' => $order_table['payment_surcharge'],
+				'tax_number' => $order_table['tax_number'],
+				'tax_exempt' => $order_table['tax_exempt'],
+				'shipping_groups' => $order_table['shipping_groups'],
+				'storefrontid' => $order_table['storefrontid'],
+				'phone_ext' => $order_table['phone_ext'],
+				'orig_po' => $order_table['orig_po'],
+				'total_shipping_charge_on_orig_po' => $order_table['total_shipping_charge_on_orig_po'],
+				'po_issued_to' => $order_table['po_issued_to'],
+				'po_number' => $order_table['po_number'],
+				'vt_paymentid' => $order_table['vt_paymentid'],
+				'transaction_id_link' => $order_table['transaction_id_link'],
+				'avs_code' => $order_table['avs_code'],
+				'otrs_ticket' => '',
+				'tracking_all_filled' => '',
+				'tracking_fill_time' => '0',
+				'note_is_taken_care_of' => $order_table['note_is_taken_care_of'],
+				'cloned_from' => $order_table['orderid'],
+				'cloned_by' => $login
 		);
 
 		$new_orderid = func_array2insert('orders', $insert_data);
@@ -367,7 +362,9 @@ if ($REQUEST_METHOD == "GET") {
 
                 if (!empty($order_details_table) && is_array($order_details_table)){
                         foreach($order_details_table as $k => $v){
-                                $insert_data3 = array (
+							/** @var classProduct $oProduct */
+							$oProduct = classProduct::model(['productid'=>$v['productid']]);
+							    $insert_data3 = array (
                                         'orderid' => $new_orderid,
                                         'productid' => $v['productid'],
                                         'price' => $v['price'],
@@ -379,15 +376,14 @@ if ($REQUEST_METHOD == "GET") {
                                         'productcode' => $v['productcode'],
                                         'product' => addslashes($v['product']),
                                         'original_provider' => $v['original_provider'],
-                                        'items_stock' => $v['items_stock']
+                                        'items_stock' => $v['items_stock'],
+										'item_cost_to_us' => $oProduct->getProductCostToUs()
                                 );
 
-				if (!empty($v['item_cost_to_us'])){
-					$insert_data3['item_cost_to_us'] = $v['item_cost_to_us'];
-				}
-
-                                func_array2insert('order_details', $insert_data3);
+				                func_array2insert('order_details', $insert_data3);
                                 unset($insert_data3);
+
+								$oProduct->createHTMLShot($new_orderid);
                         }
                 }
 
@@ -1501,7 +1497,11 @@ if ($REQUEST_METHOD == "POST") {
                 func_header_location("order.php?orderid=".$orderid."&tab=y#main_order_tabs-");
         }
 
-    elseif ($mode == "invoice_received") {
+    elseif ($mode == 'map_incorrect' && !empty($zipcode)) {
+		classGroundMap::model(['zipcode'=>$zipcode])->_delete();
+		func_header_location("order.php?orderid=".$orderid);
+	}
+	elseif ($mode == "invoice_received") {
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 
@@ -2058,6 +2058,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 										$log_tag = "<br />'" . $tag_name . "' attention tag added";
 										func_log_order($orderid, 'X', $log_tag, $login);
 									}
+
+									func_header_location("order.php?orderid=" . $orderid);
 ##
 #
 
@@ -2089,6 +2091,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator") {
 				} // if (!empty($order["shipping_groups"][$mnf_id]))
 
 			} // if ($current_cb_status == "AP")
+
+
 ###
 ##
 #

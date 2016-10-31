@@ -123,11 +123,6 @@
 {/if}
 	<td {if $new_three_columns_template ne "Y"}class="BuyNowPrices"{/if}>
 <input type="hidden" name="mode" value="add" />
-
-    {if $new_three_columns_template ne "Y"}
-	<img src="{$ImagesDir}/spacer.gif" width="150px" height="1px" border="0" />
-    {/if}
-
 {include file="customer/main/product_prices.tpl" no_span=true}
 	</td>
 </tr>
@@ -151,7 +146,6 @@
 {*
 <!--igor_async {include file="main/include_js.tpl" src="ajax_add_to_cart.js"} -->
 *}
-{include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 
 <script type="text/javascript">
 <!--

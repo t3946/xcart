@@ -2,6 +2,7 @@
 global $xcart_dir;
 require_once $xcart_dir . "/include/class/classData.php";
 require_once $xcart_dir . "/include/class/classOrderTransaction.php";
+require_once $xcart_dir . "/include/class/classSQLBuilder.php";
 
 class classOrderTransactions extends classData
 {
@@ -22,17 +23,17 @@ class classOrderTransactions extends classData
     {
         $aOrderTransactions = [];
 
-        $this->oSQL->init();
+        $oSQL = classSQLBuilder::getInstance();
 
-        $this->oSQL->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition("orderid = " . $iOrderId);
+        $oSQL->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition("orderid = " . $iOrderId);
         if (!empty($Status) && is_array($Status)) {
-            $this->oSQL->addCondition("transaction_status IN ('" . implode("','", $Status)."')");
+            $oSQL->addCondition("transaction_status IN ('" . implode("','", $Status)."')");
         }
-        $aRes = $this->oSQL->Execute()->getQueryResult();
+        $aRes = $oSQL->Execute()->getQueryResult();
         if (!empty($aRes)) {
             foreach ($aRes as $aOrderTransaction) {
                 $oOrderTransaction = new classOrderTransaction();
-                $oOrderTransaction->fillPrimaryTableValues($aOrderTransaction);
+                $oOrderTransaction->fill($aOrderTransaction);
                 $aOrderTransactions[] = $oOrderTransaction;
             }
         }

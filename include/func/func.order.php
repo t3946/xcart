@@ -728,10 +728,12 @@ function func_order_data($orderid) {
 
 		global $xcart_dir;
 		include_once $xcart_dir."/include/class/classProducts.php";
-		$classProduct = new classProduct(['productid'=>$v['productid']]);
+		include_once $xcart_dir."/include/class/classOrderDetail.php";
+		$classProduct = classProduct::model(['productid'=>$v['productid']]);
 		$mpn = $classProduct->getMPN();
 		$v["mpn"] = $mpn;
 		$v["oProduct"] = $classProduct;
+		$v["oOrderDetail"] = classOrderDetail::model(['itemid'=>$v['itemid']]);
 
 /*#
 ##
@@ -1381,19 +1383,41 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 		$orderid = func_array2insert('orders', $insert_data);
 
 		global $xcart_dir;
-		include_once $xcart_dir."/include/class/classOrders.php";
-		$oOrder = new classOrder(['orderid'=>$orderid]);
-
+		include_once $xcart_dir."/include/class/classPOPipeline.php";
+		global $purchase_order_selected;
 		x_session_register('purchase_order_selected');
-		if(!empty($GLOBALS['purchase_order_selected']) && is_numeric($GLOBALS['purchase_order_selected'])){
+		if(!empty($purchase_order_selected) && is_numeric($purchase_order_selected)){
 
-			include_once $xcart_dir."/include/class/classPOPipeline.php";
-			$oPoPipeline =  new classPOPipeLine(['po_id'=>$GLOBALS['purchase_order_selected']]);
-			$iPoPipe = $oPoPipeline->getPOId();
-			if ($iPoPipe){
+
+			global $login;
+			$oPoPipeline =  classPOPipeLine::model(['po_id'=>$purchase_order_selected]);
+			if ($oPoPipeline->getPOId()){
 				$oPoPipeline->setOrderToPO($orderid);
+			} else {
+				$oOrder = classOrder::model(['orderid'=>$orderid]);
+				try {
+					$oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
+				}
+				catch (Exception $ex) {
+					classLogs::_log('purchase_orders', $oPoPipeline->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
+				}
+
 			}
+			$purchase_order_selected = null;
 			x_session_unregister('purchase_order_selected');
+			x_session_save($purchase_order_selected);
+		} else
+		if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] == UPLOAD_ERR_OK) {
+			$oPoPipeline =  classPOPipeLine::model();
+			$oOrder = classOrder::model(['orderid'=>$orderid]);
+			try {
+				$oPoPipeline = $oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
+				$oPoPipeline->setOrderToPO($orderid);
+				$oPoPipeline->_save();
+			}
+			catch (Exception $ex) {
+				classLogs::_log('purchase_orders', $oPoPipeline->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $ex->getMessage()));
+			}
 		}
 
 
@@ -1563,10 +1587,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			$aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
 			if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
 				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
-			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0) {
-				$iLastProductVerifyDate = $oProduct->getField('last_verify_date');
+			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0 && $oProduct->getProductLastVerifyDate()) {
 				$currentDate = new DateTime("now");
-				$iDaysInterval = $currentDate->diff($iLastProductVerifyDate)->days;
+				$iDaysInterval = $currentDate->diff($oProduct->getProductLastVerifyDate())->days;
 				if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
 					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
 				}
@@ -1675,7 +1698,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			unset($group_total);
 			unset($insert_data);
 		}
-
+		global $xcart_dir;
+		include_once $xcart_dir."/include/class/classOrder.php";
+		$oOrder = classOrder::model(['orderid'=>$orderid]);
 		$oOrder->updateVerificationStatus();
 
 
@@ -2130,9 +2155,7 @@ function func_get_order_manufacturers($orderid){
                                                         //$tmp_sku = substr($v["productcode"], 4);
 														global $xcart_dir;
 														include_once $xcart_dir."/include/class/classProducts.php";
-														$classProduct = new classProducts();
-														$tmp_sku = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
-														unset($classProduct);
+														$tmp_sku = classProduct::model(['productid'=>$v['productid']])->getMPN();
 
                                                         $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">'.$tmp_sku.'</td><td width="250px" style="text-align: left;"><a href="'.$v["links"]["customer"].'">'.$v["product"].'</a>'.$selected_product_options.'</td><td style="text-align: right;">'.$v["amount"].'</td></tr>';
 
@@ -4152,10 +4175,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
                 //$tmp_sku = substr($v["productcode"], 4);
 				global $xcart_dir;
 				include_once $xcart_dir."/include/class/classProducts.php";
-				$classProduct = new classProducts();
-				$tmp_sku = $classProduct->getProductMPN($v['productcode'], "", $v['productid']);
-				unset($classProduct);
-
+				$tmp_sku = classProduct::model(['productid'=>$v['productid']])->getMPN();
                 $instock_items = $v["amount"] - $v["back"];
 
 		$current_product_instock = false;

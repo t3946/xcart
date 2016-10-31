@@ -25,7 +25,8 @@ $log_text = " * * *  Cron started  * * * ";
 $classAmazonMWS = new classAmazonMWS();
 func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME, $log_text);
 
-$classAmazonMWS->_Request('RequestReport')
+$classAmazonMWS->setStartDate(new DateTime('-3 days', new DateTimeZone('UTC')))
+    ->_Request('RequestReport')
     ->_Request('GetReportRequestList')
     ->_Request('GetReportList')
     ->_Request('GetReport')

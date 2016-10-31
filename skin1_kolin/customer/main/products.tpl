@@ -61,8 +61,9 @@
 {/if}
 
 {assign var="discount" value=0}
-<table width="100%">
-<tr>
+<table width="100%" class="product_list_row">
+<tr class="google_impression_object" data-productid="{$products[product].productid}" data-name="{$products[product].product|escape}"
+	data-category="{$products[product].category|escape}" data-brand="{$products[product].brand|escape}" data-list="{$ga_page_name}" data-price="{$products[product].price}" data-position="{$N_key}">
 <td class="PListImgBox">
 <div class="PListImgBox">
 <a {include file="on_product_click.tpl"} href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}http://{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}"  {if $search_all_website eq 'Y'}target="_blank"{/if}>{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url}</a>
@@ -83,15 +84,14 @@
 <a {include file="on_product_click.tpl"} href="{if $search_all_website eq 'Y'}{if $products[product].clean_url ne ""}{$products[product].clean_url}{else}http://{$products[product].domain}/product.php?productid={$products[product].productid}{/if}{else}/product.php?productid={$products[product].productid}{/if}" {if $search_all_website eq 'Y'}target="_blank"{/if}><font class="ProductTitle">{$products[product].product}</font></a>
 {if $config.Appearance.display_productcode_in_list eq "Y" and $products[product].productcode ne ""}
 <br />
-<font color="#006600" size=2>{$lng.lbl_sku}: {$products[product].productcode}</font>
+<span style="color:#006600;">{$lng.lbl_sku}: {$products[product].productcode}</span>
 {/if}
-<font size="2">
 <br />
 <br />
 <div style="max-height: 44px; overflow: hidden; line-height: 14px">
 	<span class="SPItems-description">{$products[product].descr|default:$products[product].fulldescr|strip_tags|truncate:225:"...":true}</span>
 </div>
-</font>
+
 {*<hr class="PListLine" size="1" />*}
 <br>
 {if $products[product].product_type eq "C"}
@@ -106,15 +106,15 @@
 {if $products[product].list_price gt 0 and $current_price lt $products[product].list_price}
 {math equation="100-(price/lprice)*100" price=$current_price lprice=$products[product].list_price format="%3.0f" assign=discount}
 {if $discount gt 0}
-<font class="MarketPrice">{$lng.lbl_market_price}:
+<span class="MarketPrice">{$lng.lbl_market_price}:
 <s>{include file="currency.tpl" value=$products[product].list_price}</s>
-</font><br />
+</span><br />
 {/if}
 {/if}
 {if $active_modules.Special_Offers ne "" and $products[product].use_special_price ne ""}
 <s>
 {/if}
-<font class="ProductPrice">{$lng.lbl_our_price}: {include file="currency.tpl" value=$current_price}</font><font class="MarketPrice">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price}</font>{if $discount gt 0}{if $config.General.alter_currency_symbol ne ""},{/if}<font class="ProductPrice">, {$lng.lbl_save_price} {$discount}%</font>{/if}
+<span class="ProductPrice">{$lng.lbl_our_price}: {include file="currency.tpl" value=$current_price}</span><span class="MarketPrice">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price}</span>{if $discount gt 0}{if $config.General.alter_currency_symbol ne ""},{/if}<font class="ProductPrice">, {$lng.lbl_save_price} {$discount}%</font>{/if}
 {if $products[product].map_price gt $products[product].taxed_price}
 <br />
 <span class="map_price_help">{$config.Product_Page.map_bridge_text}</span>
@@ -130,20 +130,20 @@
 {include file="modules/Special_Offers/customer/product_special_price.tpl" product=$products[product]}
 {/if}
 {else}
-<font class="ProductPrice">{$lng.lbl_enter_your_price}</font>
+<span class="ProductPrice">{$lng.lbl_enter_your_price}</span>
 {/if}
 {/if}
 
 {if $products[product].eta_date_in_future eq "Y"}
 <br />
 <br />
-<font color="#000000" size=2>
+<span style="color:#000000">
 Expected availability: {$products[product].eta_date_mm_dd_yyyy|date_format:'%d-%b-%Y'}
 {if $products[product].allow_pre_orders ne "Y"}
 <br />
 Sorry we don't take pre-orders.
 {/if}
-</font>
+</span>
 {/if}
 
 {if $usertype eq "C" and $config.Appearance.buynow_button_enabled eq "Y"}

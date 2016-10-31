@@ -439,7 +439,6 @@ Subtotal:
 {*
 <!-- igor_async {include file="main/include_js.tpl" src="ajax_add_to_cart.js"} -->
 *}
-{include file="main/include_js.tpl" src="ajax_add_to_cart.js"}
 
 <script type="text/javascript">
 var lbl_added = "{$lng.lbl_added}";
@@ -540,28 +539,23 @@ var lbl_error = "{$lng.lbl_error}";
 <input type="hidden" name="page" value="{$smarty.get.page|escape:"html"}" />
 </form>
 {/capture}
-
-
 {include file="dialog.tpl" title=$producttitle content=$smarty.capture.dialog extra='width="100%"' product=$product save_label="true" product_sku=$product.productcode product_free_ship=$product.free_ship_text use_h1="Y" lbl_minimum_order_amount_message_product=$product.lbl_minimum_order_amount_message_product d_minimum_order_amount_in_us=$product.d_minimum_order_amount_in_us}
 {/if}
-
-
-        {if $config.Appearance.code_below_thumb}
-                <table width="300">
-                <tr>
-                        <td align="right">
-<div style="margin-top: -56px; margin-left: -39px;">
-                                <table cellpadding="0" cellspacing="0">
-                                <tr>
-                                        <td>{$config.Appearance.code_below_thumb|substitute:"prn":"`$product.product`"|substitute:"url":"`$current_location`/product.php?productid=`$product.productid`"}</td>
-                                </tr>
-                                </table>
-                        </td>
-                </tr>
-                </table>
-</div>
-        {/if}
-
+{if $config.Appearance.code_below_thumb}
+	<table width="300">
+		<tr>
+			<td align="right">
+				<div style="margin-top: -56px; margin-left: -39px;">
+					<table cellpadding="0" cellspacing="0">
+						<tr>
+							<td>{$config.Appearance.code_below_thumb|substitute:"prn":"`$product.product`"|substitute:"url":"`$current_location`/product.php?productid=`$product.productid`"}</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>
+{/if}
 {if $product.upc_ean_isbn}
 <br />
 <table width="100%" cellpadding="0" cellspacing="0">

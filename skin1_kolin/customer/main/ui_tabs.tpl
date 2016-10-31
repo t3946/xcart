@@ -246,7 +246,7 @@ function send_question_email_form(){
   <td><font class="Star">*</font></td>
   <td nowrap="nowrap">
 	<input type="text" id="email" name="email" size="32" maxlength="128" value="" />
-	<input type="hidden" id="question_productid" name="question_productid" size="32" maxlength="128" value="{$productid}" />
+	<input type="hidden" id="question_productid" name="question_productid" value="{$productid}" />
   </td>
  </tr>
 
@@ -280,7 +280,7 @@ function send_question_email_form(){
 </form>
 </div>
 
-<div id="product_question_after"></div>
+<div id="product_question_after">
 
 
 {if $product.product_questions ne ""}
@@ -291,24 +291,23 @@ function send_question_email_form(){
 
 	<span style="color: #cc0000; font-weight: bold; font-size: 12px;">QUESTION</span><br />
 	{$v_q.question}<br />
-	<span style="color: #aaaaaa;"><I>asked {if $v_q.firstname ne ""}by {$v_q.firstname} {/if}on {$v_q.date|date_format:'%b %d, %Y'}</I></a>
+	<span style="color: #aaaaaa;"><I>asked {if $v_q.firstname ne ""}by {$v_q.firstname} {/if}on {$v_q.date|date_format:'%b %d, %Y'}</I></span>
 
 	{if $v_q.answer ne ""}
-		<div style="padding-left: 50px; padding-top: 10px;">
-		<span style="color: #006500; font-weight: bold; font-size: 12px;">BEST ANSWER</span><br />
-		{$v_q.answer}<br />
+        <div style="padding-left: 50px; padding-top: 10px;">
+            <span style="color: #006500; font-weight: bold; font-size: 12px;">BEST ANSWER</span><br/>
+            {$v_q.answer}<br/>
 
-		{if $v_q.operator_name ne ""}
-		<span style="color: #aaaaaa;"><I>answered by {$v_q.operator_first_name} (Staff) on {$v_q.answered_date|date_format:'%b %d, %Y'}</I></a>
-		{/if}
-		</div>
+            {if $v_q.operator_name ne ""}
+                <span style="color: #aaaaaa;"><I>answered by {$v_q.operator_first_name} (Staff)
+                        on {$v_q.answered_date|date_format:'%b %d, %Y'}</I></span>
+            {/if}
+        </div>
 	{/if}
 <br />
 {/foreach}
 {/if}
-{* --------------------------------------------------*}
-
-	{else}
+{else}
 
 {if $tab.title eq "Shipping"}
 	{if $product.weight ne "0.00" || $variants ne '' || $show_dimensions}

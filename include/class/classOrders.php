@@ -22,16 +22,7 @@ class classOrders extends classOrder
      * @return classOrder[]
      */
     public function getOrdersWithProductsForVerification() {
-        $this->aOrders = [];
-        $aOrders = func_query("SELECT * FROM ".self::$sql_tbl['orders']." WHERE vn_status != '".self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED."' LIMIT 50");
-        if (!empty($aOrders) && is_array($aOrders)) {
-            foreach ($aOrders as $aOrder) {
-                $oOrder = new classOrder();
-                $oOrder->fillPrimaryTableValues($aOrder);
-                $this->aOrders[] = $oOrder;
-            }
-        }
-        return $this->aOrders;
+        return classOrder::model()->findAll(classSQLBuilder::getInstance()->addCondition("vn_status != '".classOrder::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED."'"));
     }
 
     /**
@@ -43,7 +34,7 @@ class classOrders extends classOrder
                                 FROM xcart_orders xo INNER JOIN xcart_order_details USING (orderid)
                                 WHERE productid = $iProduct AND vn_status != '".self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED."'");
         foreach ($aOrders as $aOrder) {
-            $aResult[] = classOrder::getInstance($aOrder);
+            $aResult[] = classOrder::model()->fill($aOrder);
         }
         return $aResult;
     }

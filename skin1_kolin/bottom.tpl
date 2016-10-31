@@ -5,7 +5,7 @@
 
 <table cellspacing="0" cellpadding="0" width="100%" style="margin-left: 13px;" border="0">
 <tr>
-<td align="left" style="vertical-align: top;" colspan="4">
+<td align="left" style="vertical-align: top;">
 <span class="ProductPrice">{$lng.lbl_help}</span>
 </td>
 </tr>
@@ -60,12 +60,13 @@
 {/if}
 {* --- *}
 
-</td></td>
+</td>
 
-<TR>
-<TD class="Bottom" align="left" colspan="4" style="padding-left: 10px;" {* height="30" *}>
+<tr>
+<td class="Bottom" style="padding-left: 10px;text-align: center" {* height="30" *}>
 {/if}
-{include file="copyright.tpl"}{if $usertype eq "C"}</TD>
-</TR>
-</TABLE>
+{include file="copyright.tpl"}{if $usertype eq "C"} <br/><br/>
+</td>
+</tr>
+</table>
 {/if}

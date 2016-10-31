@@ -165,7 +165,7 @@ if ($active_modules['Users_online'] && !defined('IS_ROBOT')) {
 # Remember visitor for a long time period
 #
 if ($remember_user && $remember_user_days > 0) {
-	x_session_register("remember_login", false);
+	//x_session_register("remember_login", false);
 	x_session_register("remember_data");
 
 	$remember_key = $XCART_SESSION_NAME.$current_area."_remember";

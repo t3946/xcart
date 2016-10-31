@@ -161,9 +161,12 @@
     <tr>
         <td width="15%" class="preset_bold">PO status:</td>
         <td width="85%">
-            <select name="po_status[]" multiple="multiple" class="select">
+            <select style="float:left;" name="po_status[]" multiple="multiple" class="select">
                 {html_options options=$po_statuses selected=$filter.po_statuses}
             </select>
+            <span style="line-height: 60px; margin-left: 20px;">
+                This setting is used to reflect correct number in ()
+            </span>
         </td>
     </tr>
 

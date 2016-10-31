@@ -7,8 +7,8 @@ require_once $xcart_dir . "/include/class/classOrders.php";
 require_once $xcart_dir . "/include/class/classProductVerifiactionStatus.php";
 require_once $xcart_dir . "/include/class/classProductImage.php";
 require_once $xcart_dir . "/include/class/classPricing.php";
-require_once $xcart_dir . "/include/class/classHTMLShot.php";
 require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+require_once $xcart_dir . "/include/class/classHTMLShot.php";
 
 class classProduct extends classData
 {
@@ -54,9 +54,10 @@ class classProduct extends classData
 
     public function getMPN()
     {
-        if (strpos($this->getField('productcode'), $this->getManfacturerClass()->getField('code')) == 0)
-            return preg_replace("/^(" . $this->getManfacturerClass()->getField('code') . "-)/i", "", $this->getField('productcode'));
-        return "";
+        $sMPN = '';
+        if (strpos($this->getSKU(), $this->getManfacturerClass()->getField('code')) == 0)
+            $sMPN = preg_replace("/^(" . $this->getManfacturerClass()->getField('code') . "-)/i", "", $this->getSKU());
+        return $sMPN;
     }
 
     public function getSKU()
@@ -93,13 +94,24 @@ class classProduct extends classData
 
     public function getHTMLShot($iOrderID)
     {
-        $oResult = null;
-        $aHTMLShot = func_query_first("SELECT * FROM " . self::$sql_tbl['product_htmlshot'] . " WHERE product_id=" . $this->getProductId() . " AND order_id=$iOrderID");
-        if (!empty($aHTMLShot)) {
-            $oResult = new classHTMLShot();
-            $oResult->fillPrimaryTableValues($aHTMLShot);
+        return classHTMLShot::model()->find(classSQLBuilder::getInstance()->addCondition('product_id = ' . $this->getProductId())->addCondition('order_id = ' . $iOrderID));
+    }
+
+    public function createHTMLShot($iOrderID)
+    {
+        $aManufacturerProductVerifySettings = $this->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
+        if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
+            $this->changeVerificationStatus(self::PRODUCT_STATUS_VERIFY,'', true, [$iOrderID]);
+        } elseif (intval($aManufacturerProductVerifySettings['days_before_verify']) > 0 && $this->getProductLastVerifyDate()) {
+            $currentDate = new DateTime("now");
+            $iDaysInterval = $currentDate->diff($this->getProductLastVerifyDate())->days;
+            if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
+                $this->changeVerificationStatus(self::PRODUCT_STATUS_VERIFY,'', true, [$iOrderID]);
+            }
+        } else {
+            $this->changeVerificationStatus(self::PRODUCT_STATUS_NOT_VERIFY,'', true, [$iOrderID]);
+            classHTMLShot::model()->createHTMLShot($this, $iOrderID);
         }
-        return $oResult;
     }
 
     public function getProductURLOnDistributorWebSite()
@@ -194,13 +206,17 @@ class classProduct extends classData
             if (!empty($aImages))
                 foreach ($aImages as $aImage) {
                     $oProductImage = new classProductImage($type);
-                    $oProductImage->fillPrimaryTableValues($aImage);
+                    $oProductImage->fill($aImage);
                     $var = &$this->$sImagesVar;
                     $var[] = $oProductImage;
                 }
         }
     }
 
+    /**
+     * @param $type
+     * @return classProductImage[]
+     */
     public function getImages($type)
     {
         $sImagesVar = "aImages" . $type;
@@ -215,7 +231,7 @@ class classProduct extends classData
             if (!empty($aPricing))
                 foreach ($aPricing as $aPrice) {
                     $oProductPricing = new classPricing();
-                    $oProductPricing->fillPrimaryTableValues($aPrice);
+                    $oProductPricing->fill($aPrice);
                     $this->aPricing[] = $oProductPricing;
                 }
         }
@@ -340,6 +356,11 @@ class classProduct extends classData
         return intval($this->getField('amazon_fba_avail'));
     }
 
+    public function isProductFBAAvail()
+    {
+        return ($this->getAmazonFBAAvail() > 0);
+    }
+
     public function getUPC()
     {
         return $this->getField('upc');
@@ -355,17 +376,13 @@ class classProduct extends classData
         return ($this->getField('retail_trust_enabled') == 'Y') ? true : false;
     }
 
+    /**
+     * @param $sSKU
+     * @return classProduct
+     */
     public static function getProductBySKU($sSKU)
     {
-        $oProduct = null;
-        $oSQL = new classSQLBuilder();
-        $aProducts = $oSQL->addSelect('productid')->addFromTable('products')->addCondition("productcode='$sSKU'")->Execute()->getQueryResult();
-        if (!empty($aProducts)) {
-            $aProduct = reset($aProducts);
-            $oProduct = new classProduct(['productid' => $aProduct['productid']]);
-        }
-        return $oProduct;
-
+        return classProduct::model()->find(classSQLBuilder::getInstance()->addCondition("productcode = '$sSKU'"));
     }
 
     /**
@@ -373,16 +390,10 @@ class classProduct extends classData
      */
     public function getChildProducts()
     {
-        $aProducts = [];
-        $aChildProducts = $this->oSQL->init()->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition('clone_parent_productid = ' . $this->getProductId())->Execute()->getQueryResult();
-        if (!empty($aChildProducts)) {
-            foreach ($aChildProducts as $aChild) {
-                $oChildProduct = new classProduct();
-                $oChildProduct->fillPrimaryTableValues($aChild);
-                $aProducts[] = $oChildProduct;
-            }
-        }
-        return $aProducts;
+        $aResult = [];
+        if ($this->getProductId())
+            $aResult = classProduct::model()->findAll(classSQLBuilder::getInstance()->addCondition('clone_parent_productid = ' . $this->getProductId()));
+        return $aResult;
     }
 
     /**
@@ -392,7 +403,7 @@ class classProduct extends classData
     {
         $oParentProduct = null;
         if ($this->getField('clone_parent_productid')) {
-            $oParentProduct = new classProduct(['productid' => $this->getField('clone_parent_productid')]);
+            $oParentProduct = classProduct::model(['productid' => $this->getField('clone_parent_productid')]);
         }
         return $oParentProduct;
     }
@@ -485,8 +496,8 @@ class classProduct extends classData
     private static function isISBN($sCode)
     {
         $bResult = false;
-        if (in_array(strlen($sCode) ,[10,13])) {
-            if (in_array(substr($sCode,0,3), [978,979])){
+        if (in_array(strlen($sCode), [10, 13])) {
+            if (in_array(substr($sCode, 0, 3), [978, 979])) {
                 $bResult = true;
             }
         }
@@ -501,7 +512,7 @@ class classProduct extends classData
             case 14:
                 $cd = self::UPC_calculate_check_digit($upc_code);
                 if ($cd != $upc_code[strlen($upc_code) - 1]) {
-                    return substr($upc_code,0,-1).$cd;
+                    return substr($upc_code, 0, -1) . $cd;
                 } else {
                     return $upc_code;
                 }
@@ -511,7 +522,7 @@ class classProduct extends classData
             case 13:
                 $cd = self::UPC_calculate_check_digit($upc_code);
                 if ($cd != $upc_code[strlen($upc_code) - 1]) {
-                    if (!self::isISBN($upc_code) || (self::isISBN($upc_code) && strlen($upc_code)==12)) {
+                    if (!self::isISBN($upc_code) || (self::isISBN($upc_code) && strlen($upc_code) == 12)) {
                         $cd = self::UPC_calculate_check_digit($upc_code . "1");
                         return $upc_code . $cd;
                     } else {
