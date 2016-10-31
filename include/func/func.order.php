@@ -884,10 +884,10 @@ function func_order_data($orderid) {
     $order['has_backordered_status'] = func_has_backordered_status($order['shipping_groups']);
     $order['refund_groups'] = func_get_refund_groups($order['orderid'], $order["storefrontid"]);
 
-	$aOrderStatuses= func_query_first("SELECT * FROM $sql_tbl[order_statuses] WHERE code='".$order['order_status']['VP']."'");
-	$order['product_verification_status'] = $aOrderStatuses['name'];
-	$order['product_verification_status_code'] = $aOrderStatuses['code'];
-	$order['product_verification_statuses'] = func_query("SELECT * FROM $sql_tbl[order_statuses] WHERE type='PV'");
+	$oOrderStatus = \Xcart\OrderStatus::model(['code' => $order['order_status']['VP']]);
+	$order['product_verification_status'] = $oOrderStatus->getField('name');
+	$order['product_verification_status_code'] = $oOrderStatus->getField('code');
+	$order['product_verification_statuses'] = \Xcart\OrderStatus::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition("type='PV'"));
 
 #
 ## 15.02.2014

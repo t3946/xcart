@@ -34,6 +34,9 @@ switch ($_POST['ajax_action']) {
     case "add_new_batch":
         addNewBatch($_POST);
         break;
+    case "missing_structure_change":
+        changeMissingStructure($_POST);
+        break;
     case "category_structure_change":
         changeCategoryStructure($_POST);
         break;
@@ -47,10 +50,10 @@ function changeVerifyProductStatus($aPostParam = [])
     $iStatusId = (int)$aPostParam['verify_status_id'];
     $sNote = $aPostParam['note_text'];
     if (!empty($iProductId)) {
-        $bResult = Product::model(['productid'=>$iProductId])->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
+        $bResult = Product::model(['productid' => $iProductId])->changeVerificationStatus($iStatusId, $sNote, true, $aOrders);
         if (!empty($aOrders)) {
             foreach ($aOrders as $iOrderId) {
-                Order::model(['orderid'=>$iOrderId])->updateVerificationStatus();
+                Order::model(['orderid' => $iOrderId])->updateVerificationStatus();
             }
         }
     }
@@ -63,7 +66,7 @@ function changeVerifyOrderStatus($aPostParam = [])
     $iOrderId = (int)$aPostParam['order_id'];
     $sOrderStatus = $aPostParam['order_verify_status'];
     if (!empty($iOrderId)) {
-        $bResult = Order::model(['orderid'=>$iOrderId])->changeVerificationStatus($sOrderStatus);
+        $bResult = Order::model(['orderid' => $iOrderId])->changeVerificationStatus($sOrderStatus);
     }
     print(json_encode($bResult));
 }
@@ -101,7 +104,7 @@ function changeVerificatorStatus($aPostParam = [])
 {
     $aResult = [];
     if (!empty($aPostParam['customer_id'])) {
-        if (!empty($aPostParam['user_status_id']) && $aPostParam['user_status_id']=='unblocked') {
+        if (!empty($aPostParam['user_status_id']) && $aPostParam['user_status_id'] == 'unblocked') {
             $oCustomer = new Customer(['login' => $aPostParam['customer_id']]);
             if ($oCustomer->getCustomerLogin()) {
                 $oCustomer->unblockAmazonAccount();
@@ -129,16 +132,17 @@ function addNewBatch($aPostParam = [])
 function changeProcessingRules($aParams = [])
 {
     $aResult = [];
-    $aRule = new IssuesProcessingRules(['issue_id'=> $aParams['rule_id']]);
+    $aRule = new IssuesProcessingRules(['issue_id' => $aParams['rule_id']]);
     $aRule->updateField('issue_processing', $aParams['status_id']);
     print(json_encode($aResult));
 }
 
-function changeCategoryStructure($aParams = []) {
+function changeCategoryStructure($aParams = [])
+{
     $aResult = [];
     $sStatus = '';
-    $iCategoryId = (int) $aParams['category'];
-    switch ($aParams['action']){
+    $iCategoryId = (int)$aParams['category'];
+    switch ($aParams['action']) {
         case 'Relist':
             $sStatus = 'AC';
             break;
@@ -148,5 +152,57 @@ function changeCategoryStructure($aParams = []) {
     }
     $oProducts = new Categories();
     $aResult['result'] = $oProducts->updateProductsInChildCategories($iCategoryId, $sStatus);
+    print(json_encode($aResult));
+}
+
+function changeMissingStructure($aParams = [])
+{
+    $aResult = [];
+    $aResult['result'] = false;
+    $oProduct = null;
+    $sNewSKU = $aParams['new_sku'];
+    $iNewProductid = (int) $aParams['new_productid'];
+    $sOldSKU = $aParams['category'];
+    $sOldSKUAdd = $aParams['amazon_sku'];
+    switch ($aParams['action']) {
+        case 'Edit':
+            if (!empty($sNewSKU)) {
+                $oProduct = Xcart\Product::model()->getProductBySKU($sNewSKU);
+            } elseif ($iNewProductid) {
+                $oProduct = Xcart\Product::model(['productid'=>$iNewProductid]);
+            }
+            if ($oProduct->getProductId()) {
+                if ($oProduct->isForSale()) {
+                    if (!empty($sOldSKUAdd)) {
+                        Xcart\FbaMissingSku::model()->setField('missing_productcode', $sOldSKUAdd)->setField('productid', $oProduct->getProductId())->_insert(true);
+                    } else {
+                        Xcart\FbaMissingSku::model(['missing_productcode' => $sOldSKU])->setField('productid', $oProduct->getProductId())->_update();
+                    }
+                    $aResult['result'] = true;
+                } else {
+                    $aResult['error'] = func_get_langvar_by_name('lbl_match_fba_missing_workplace_not_enabled_sku');
+                    $aResult['result'] = false;
+                }
+            } else {
+                $aResult['error'] = func_get_langvar_by_name('lbl_match_fba_missing_workplace_product_not_found');
+                $aResult['result'] = false;
+            }
+
+            break;
+        case 'Delete':
+            Xcart\FbaMissingSku::model(['missing_productcode' => $sOldSKU])->_delete();
+            $aResult['result'] = true;
+            break;
+        case 'Fix_orders':
+            if (!empty($sOldSKU)) {
+                Xcart\FbaMissingSku::model(['missing_productcode' => $sOldSKU])->fixOrders();
+            }
+            $aResult['result'] = true;
+            break;
+        default :
+            $aResult['result'] = false;
+            $aResult['error'] = 'Action not defined';
+    }
+
     print(json_encode($aResult));
 }

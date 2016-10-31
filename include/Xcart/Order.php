@@ -198,19 +198,14 @@ class Order extends Data
         return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getOrderId());
     }
 
-    public static function getOrderStatusByCode($sCode)
-    {
-        return func_query_first("SELECT * FROM " . self::$sql_tbl['order_statuses'] . " WHERE code='$sCode'");
-    }
-
     public function changeVerificationStatus($sNewStatus)
     {
         $bResult['result'] = true;
-        $aNewStatus = self::getOrderStatusByCode($sNewStatus);
-        $aOldStatus = self::getOrderStatusByCode($this->getField('vn_status'));
-        if ($aNewStatus['code'] != $aOldStatus['code']) {
-            $bResult['result'] = func_array2update($this->sPrimaryTable, ['vn_status' => $sNewStatus], 'orderid = ' . $this->getOrderId());
-            $log = "vn_status: " . $aOldStatus['name'] . " -> " . $aNewStatus['name'];
+        $oNewStatus = OrderStatus::model(['code' => $sNewStatus]);
+        $oOldStatus = OrderStatus::model(['code' => $this->getField('vn_status')]);
+        if ($oNewStatus->getField('code') != $oOldStatus->getField('code')) {
+            $this->updateField('vn_status', $sNewStatus);
+            $log = "vn_status: " . $oOldStatus->getField('name') . " -> " . $oNewStatus->getField('name');
             func_log_order($this->getOrderId(), 'X', $log);
         }
         $this->setField('vn_status', $sNewStatus);
@@ -630,6 +625,6 @@ class Order extends Data
 
     public function getPOPipelineInstance()
     {
-        return POPipeLine::model()->find(SQLBuilder::getInstance()->addCondition('order_id='.$this->getOrderId()));
+        return POPipeLine::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
     }
 }

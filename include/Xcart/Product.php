@@ -43,6 +43,11 @@ class Product extends Data
         }
     }
 
+    public function getManufacturerId()
+    {
+        return $this->getField('manufacturerid');
+    }
+
     public function getMPN()
     {
         $sMPN = '';
@@ -92,15 +97,15 @@ class Product extends Data
     {
         $aManufacturerProductVerifySettings = $this->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
         if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
-            $this->changeVerificationStatus(self::PRODUCT_STATUS_VERIFY,'', true, [$iOrderID]);
+            $this->changeVerificationStatus(self::PRODUCT_STATUS_VERIFY, '', true, [$iOrderID]);
         } elseif (intval($aManufacturerProductVerifySettings['days_before_verify']) > 0 && $this->getProductLastVerifyDate()) {
             $currentDate = new \DateTime("now");
             $iDaysInterval = $currentDate->diff($this->getProductLastVerifyDate())->days;
             if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
-                $this->changeVerificationStatus(self::PRODUCT_STATUS_VERIFY,'', true, [$iOrderID]);
+                $this->changeVerificationStatus(self::PRODUCT_STATUS_VERIFY, '', true, [$iOrderID]);
             }
         } else {
-            $this->changeVerificationStatus(self::PRODUCT_STATUS_NOT_VERIFY,'', true, [$iOrderID]);
+            $this->changeVerificationStatus(self::PRODUCT_STATUS_NOT_VERIFY, '', true, [$iOrderID]);
             HTMLShot::model()->createHTMLShot($this, $iOrderID);
         }
     }
@@ -242,6 +247,11 @@ class Product extends Data
     public function isParent()
     {
         return ($this->getField('clone_parent_productid') == 0);
+    }
+
+    public function isForSale()
+    {
+        return ($this->getField('forsale') == 'Y' ? true : false);
     }
 
     public function isProductOutOfStock()

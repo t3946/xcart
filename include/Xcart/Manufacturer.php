@@ -17,4 +17,5 @@ class Manufacturer extends CloneData
     {
         return sprintf(self::ADMIN_MANUFACTURER_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled));
     }
+
 }

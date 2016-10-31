@@ -164,12 +164,9 @@ class Data
         return new $class($aParams);
     }
 
-    /*protected function fill($aParams)
-    {
-        $this->fillPrimaryTableValues($aParams);
-        return $this;
-    }*/
-
+    /**
+     * @return static[]
+     */
     public function findAll(SQLBuilder $oSQL)
     {
         $aSearchResult = null;
@@ -182,6 +179,9 @@ class Data
         return $aSearchResult;
     }
 
+    /**
+     * @return static
+     */
     public function find(SQLBuilder $oSQL)
     {
         $oSearchResult = $this::model();

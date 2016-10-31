@@ -11,6 +11,6 @@
             "Xcart\\External_Product_Verification\\": "modules/External_Product_Verification/include",
             "Xcart\\External_MarketPlace\\": "modules/External_Marketplaces/include"
         },
-        "classmap": ["MarketplaceWebService","src/FBAOutboundServiceMWS"]
+        "classmap": ["MarketplaceWebService","src/FBAOutboundServiceMWS", "MarketplaceWebServiceOrders"]
     }
 }

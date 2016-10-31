@@ -42,6 +42,8 @@ class OrderGroup extends Data
 
     private $fCostToUs = null;
 
+    private $oManufacturer = null;
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['orderid', 'manufacturerid'];
@@ -1064,6 +1066,16 @@ class OrderGroup extends Data
     public function getManufacturerId()
     {
         return $this->getField('manufacturerid');
+    }
+
+    /**
+     * @return Manufacturer
+     */
+    public function getManufacturerEntity()
+    {
+        if (is_null($this->oManufacturer))
+            $this->oManufacturer = new Manufacturer($this->getManufacturerId());
+        return $this->oManufacturer;
     }
 
     public function changeOrderGroupStatusDC($sNewStatus)
