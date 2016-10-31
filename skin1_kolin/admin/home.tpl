@@ -82,7 +82,8 @@ var runTests = function(editor) {
 {/literal}
 </script>
 {/if}
-
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body{$reading_direction_tag}>
 { include file="rectangle_top.tpl" }
