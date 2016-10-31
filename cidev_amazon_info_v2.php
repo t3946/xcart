@@ -21,7 +21,7 @@ db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
-func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
+func_backprocess_log(classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 
 
 x_load('backoffice','files','taxes', 'froogle', 'product', 'crypt', 'xml', 'mail', 'order');
@@ -964,6 +964,6 @@ $str_time = sprintf("%02d:%02d:%02d", $hour, $minutes, $seconds);
 
 $log_text = "Cron completed. ";
 $log_text .= "Processing time: $str_time";
-func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
+func_backprocess_log(classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 
 die("DONE!");
