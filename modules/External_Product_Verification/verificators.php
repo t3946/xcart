@@ -1,17 +1,16 @@
 <?php
-global $xcart_dir;
-require_once $xcart_dir . "/include/class/classCustomer.php";
-require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationBatches.php";
-require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationProductsQueue.php";
+use Xcart\External_Product_Verification\ExternalVerificationBatch;
+use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
+use Xcart\Customer;
 
 $smarty->assign("main", "verificators");
 
 if (empty($active)) {
     $active = 'Y';
 }
-$oClassCustomer = new classCustomer();
+$oClassCustomer = new Customer();
 $aCustomers = $oClassCustomer->getCustomersByType('V', $active);
-$oBatches = new classExternalVerificationBatch();
+$oBatches = new ExternalVerificationBatch();
 
 //usort($aCustomers, array($oClassCustomer, "sortByAmazonCompletedBatchesDesc"));
 
@@ -21,4 +20,4 @@ $smarty->assign("active", $active);
 
 $smarty->assign('oBatches', $oBatches);
 
-$smarty->assign('aVerifiactionResults', classExternalVerificationProductsQueue::getVerificationResultsProducts());
+$smarty->assign('aVerifiactionResults', ExternalVerificationProductsQueue::getVerificationResultsProducts());

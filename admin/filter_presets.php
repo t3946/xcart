@@ -243,8 +243,7 @@ if (isset($fid)) {
     $smarty->assign('statuses', $statuses);
 
     global $xcart_dir;
-    require_once $xcart_dir . "/include/class/classPOPipeline.php";
-    $oPOPipelineStatuses = classPOPipeLine::getPOStatuses();
+    $oPOPipelineStatuses = Xcart\POPipeLine::getPOStatuses();
     $smarty->assign('po_statuses', $oPOPipelineStatuses);
 
     $smarty->assign('filter_preset_title', 'title');

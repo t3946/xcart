@@ -8,10 +8,10 @@ require "./top.inc.php";
 require "./init.php";
 
 global $xcart_dir, $config;
-include_once $xcart_dir.'/include/class/classSQLBuilder.php';
-include_once $xcart_dir.'/include/class/classOrderAmazonDetails.php';
 
+use Xcart\PaymentMethod;
 
-$oOrder = classOrderAmazonDetails::model();
-
-var_dump($oOrder->getOrderAmazonDetails(['orderid'=>65022, 'manufacturerid'=>12]));
+global $config;
+$to = $config['Company']['product_management'];
+$from = 'team@s3stores.com';
+func_send_mail($to, 'mail/missing_sku_subj.tpl', 'mail/missing_sku.tpl', $from, true);

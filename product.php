@@ -998,8 +998,7 @@ if (!empty($cat)){
 */
 
 global $xcart_dir;
-include_once $xcart_dir."/include/class/classProducts.php";
-$smarty->assign("cidev_mpn", classProduct::model(['productid'=>$product_info['productid']])->getMPN());
+$smarty->assign("cidev_mpn", Xcart\Product::model(['productid'=>$product_info['productid']])->getMPN());
 
 /*$pos = strpos($product_info['productcode'], '-');
 $mpn = '';

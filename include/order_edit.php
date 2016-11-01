@@ -46,9 +46,6 @@ x_load('order_edit', 'taxes');
 include $xcart_dir . "/shipping/shipping.php";
 include $xcart_dir . "/include/countries.php";
 include $xcart_dir . "/include/states.php";
-require_once $xcart_dir . "/include/class/classShippings.php";
-require_once $xcart_dir . "/include/class/classOrders.php";
-require_once $xcart_dir . "/include/class/classProduct.php";
 
 x_session_register("intershipper_rates");
 x_session_register("intershipper_recalc");
@@ -880,9 +877,9 @@ if ($REQUEST_METHOD == "POST") {
         if (!empty($add_retail_trust) && is_array($add_retail_trust)) {
             foreach ($add_retail_trust as $sRetailTrustSKU) {
                 if (!empty($sRetailTrustSKU)) {
-                    $oProduct = classProduct::getProductBySKU($sRetailTrustSKU);
+                    $oProduct = Xcart\Product::getProductBySKU($sRetailTrustSKU);
                     if ($oProduct->getProductId())
-                        $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
+                        $aOrderDetails = Xcart\OrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
                     if (!empty($aOrderDetails)) {
                         foreach ($aOrderDetails as $oOrderDetail) {
                             $oOrderDetail->addRetailTrust();
@@ -974,7 +971,7 @@ if ($REQUEST_METHOD == "POST") {
                         }
                     }
 
-                    classProduct::model(['productid'=>$newproductid])->createHTMLShot($orderid);
+                    Xcart\Product::model(['productid'=>$newproductid])->createHTMLShot($orderid);
 
                     # Update wholesale price
                     $prd["price"] = func_query_first_cell("SELECT MIN($sql_tbl[pricing].price) FROM $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid='$newproductid' AND $sql_tbl[pricing].quantity<='$amount' AND $sql_tbl[pricing].variantid = '$newvariantid'");
@@ -2112,11 +2109,9 @@ if ($REQUEST_METHOD == "POST") {
 
                         if ($update_invoices_table_flag) {
                             func_array2update("order_group_invoices", $group_invoices, "orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='$invoice_number'");
-                            require_once $xcart_dir . "/include/class/classManufacturer.php";
-                            $oManufacturer = new classManufacturer($certain_mid);
+                            $oManufacturer = new Xcart\Manufacturer($certain_mid);
                             if ($oManufacturer->getField('distributor_charges_for_each_order_twice_and_split_invoices') == 'Y') {
-                                require_once $xcart_dir . "/include/class/classOrderGroupInvoices.php";
-                                $oGroupInvoices = new classOrderGroupInvoices();
+                                $oGroupInvoices = new Xcart\OrderGroupInvoices();
                                 $oInvoices = $oGroupInvoices->getOrderGroupInvoices(['orderid' => $orderid, 'manufacturerid' => $certain_mid]);
                                 if ($oInvoices->countOrderGroupInvoices() == 1) {
                                     $oLastInvoice = $oInvoices->getLastInvoice();
@@ -2214,8 +2209,8 @@ if ($REQUEST_METHOD == "POST") {
         }
         if ($mode == "table_accounting_apply" || $mode == "accounting_apply") {
 
-            /** @var classOrder $oOrder */
-            $oOrder = classOrder::model(['orderid' => $orderid]);
+            /** @var Xcart\Order $oOrder */
+            $oOrder = Xcart\Order::model(['orderid' => $orderid]);
             $oOrder->recalculateAccounting();
         }
         func_header_location("order.php?orderid=$orderid");
@@ -2311,10 +2306,10 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_order_show_button);
 $smarty->assign("order", $order);
 
-$oOrder = classOrder::model(['orderid' => $orderid]);
+$oOrder = Xcart\Order::model(['orderid' => $orderid]);
 $smarty->assign("oOrder", $oOrder);
 
-$oShippings = new classShippings();
+$oShippings = new Xcart\Shippings();
 $aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');
 $aAmazonShippings = [];
 

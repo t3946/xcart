@@ -1,12 +1,11 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir . "/include/class/classCustomer.php";
-require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationBatches.php";
-require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationProductsQueue.php";
+use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
+use Xcart\Customer;
 
 $smarty->assign("main","operators_batches");
 
-$oCustomer = new classCustomer(['login'=>$operator]);
+$oCustomer = new Xcart\Customer(['login'=>$operator]);
 $smarty->assign("oCustomer", $oCustomer);
 $location[] = array(sprintf(func_get_langvar_by_name('txt_verificator_batches',null,false,true),$oCustomer->getCustomerFullName()), "");
 
@@ -17,4 +16,4 @@ $smarty->assign("batch_status", $batch_status);
 $aStatuses = ['In progress', 'Completed', 'Paid'];
 $smarty->assign("batch_statuses", $aStatuses);
 
-$smarty->assign("iNumberTestProducts", classExternalVerificationProductsQueue::getProductsQueueEtalonCount());
+$smarty->assign("iNumberTestProducts", ExternalVerificationProductsQueue::getProductsQueueEtalonCount());

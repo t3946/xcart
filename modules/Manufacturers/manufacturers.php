@@ -38,6 +38,9 @@
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
+use Xcart\External_MarketPlace\ExternalMarketPlace;
+use Xcart\External_MarketPlace\DisabledMarketPlace;
+
 x_load('backoffice','image');
 
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
@@ -102,11 +105,10 @@ if ($REQUEST_METHOD == "POST" && $mode == "add_new_line" && $manufacturerid){
 
 if ($REQUEST_METHOD == "POST" && $mode == "excluded_marketplace" && $manufacturerid){
 	global $xcart_dir;
-	require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
-	classDisabledMarketPlace::deleteAllDisabledMarketPlace($manufacturerid, 'D');
+	DisabledMarketPlace::deleteAllDisabledMarketPlace($manufacturerid, 'D');
 	if (!empty($excluded_marketplaces))
 	foreach($excluded_marketplaces as $iExcludedMarketplace) {
-		$oMarketPlace = new classDisabledMarketPlace();
+		$oMarketPlace = new Xcart\External_MarketPlace\DisabledMarketPlace();
 		$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $manufacturerid, 'resource_type' => 'D']);
 		$oMarketPlace->addDisabledMarketPlace();
 	}
@@ -136,10 +138,8 @@ if ($REQUEST_METHOD == "POST" && $mode == "delete_distributor_return_address" &&
 if ($REQUEST_METHOD == "POST" && $mode == "copy_distributor" && $manufacturerid) {
 	$bErrorClone = false;
 
-	require_once $xcart_dir."/include/class/classManufacturers.php";
-	require_once $xcart_dir."/include/class/classCategories.php";
-	$classManufacturer = new classManufacturers();
-	$classCategories = new classCategories();
+	$classManufacturer = new Xcart\Manufacturers();
+	$classCategories = new Xcart\Categories();
 
 	$storefont_info = func_get_storefront_info($storefront_to_copy_manufacturer, "ID");
 
@@ -189,8 +189,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "copy_distributor" && $manufacturerid)
 if ($REQUEST_METHOD == "POST" && $mode == "copy_products" && $manufacturerid) {
 
 
-	require_once $xcart_dir."/include/class/classManufacturers.php";
-	$classManufacturer = new classManufacturers();
+	$classManufacturer = new Xcart\Manufacturers();
 
 	if (!empty($product_to_copy_manufacturer)) {
 		$countAddedProducts = $classManufacturer->addProductsToQueue($manufacturerid, $product_to_copy_manufacturer);
@@ -922,8 +921,7 @@ else {
 
 		include $xcart_dir."/include/navigation.php";
 
-		require_once $xcart_dir."/include/class/classManufacturers.php";
-		$classManufacturer = new classManufacturers();
+		$classManufacturer = new Xcart\Manufacturers();
 
 		#
 		# Get the manufacturers list
@@ -1203,8 +1201,7 @@ if (!empty($page))
     }
 
 	if ($distributor_section == "30") {
-		require_once $xcart_dir."/include/class/classManufacturers.php";
-		$classManufacturer = new classManufacturers();
+		$classManufacturer = new Xcart\Manufacturers();
 		$aParentManufacturer = $classManufacturer->getChildrenManufacturers($manufacturerid);
 
 		$smarty->assign("aParentManufacturer", $aParentManufacturer);
@@ -1214,9 +1211,7 @@ if (!empty($page))
 
 	if ($distributor_section == "40") {
 		global $xcart_dir;
-		require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
-		require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
-		$aMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
+		$aMarketplaces = ExternalMarketPlace::getExternalMarketPlaces();
 		$aExternalMarketplaces = [];
 		if (!empty($aMarketplaces)) {
 			foreach ($aMarketplaces as $oMarketPlace) {
@@ -1224,7 +1219,7 @@ if (!empty($page))
 				$aExternalMarketplaces['names'][] = $oMarketPlace->getMarketPlaceName();
 			}
 		}
-		$aDisabledMarketPlaces = classDisabledMarketPlace::getDisabledMarketPlaces($manufacturerid, 'D');
+		$aDisabledMarketPlaces = DisabledMarketPlace::getDisabledMarketPlaces($manufacturerid, 'D');
 		$smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
 		$smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
 	}

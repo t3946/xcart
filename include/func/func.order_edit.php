@@ -59,8 +59,7 @@ function func_check_tracking_number($linkid, $tracknum) {
 function func_recalculate_accounting(&$group, $all_processors = array(), $apply_per_trans=false, $refund = false) {
 
 	global $xcart_dir;
-	require_once $xcart_dir . "/include/class/classOrders.php";
-	$oOrderGroup = new classOrderGroup(['orderid'=>$group['orderid'], 'manufacturerid'=>$group['manufacturerid']]);
+	$oOrderGroup = new Xcart\OrderGroup(['orderid'=>$group['orderid'], 'manufacturerid'=>$group['manufacturerid']]);
 	$oOrderGroup->recalculateAccounting();
 	return true;
 
@@ -609,8 +608,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 		}
 
 		if (!empty($userinfo)) {
-			include_once $xcart_dir . "/include/class/classCustomer.php";
-			$oCustomer = classCustomer::model(['login'=>$userinfo['login']]);
+			$oCustomer = Xcart\Customer::model(['login'=>$userinfo['login']]);
 			$arrNewValue = ['b_city'=>$userinfo['b_city'],
 							'b_firstname'=>addslashes($userinfo['b_firstname']),
 							'b_address'=>addslashes($userinfo['b_address']),
@@ -764,7 +762,7 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 			}
 			if (!empty($_POST['retail_trust_to_delete']) && is_array($_POST['retail_trust_to_delete'])) {
 				foreach ($_POST['retail_trust_to_delete'] as $iOrderDetailRetailToDeleate => $value) {
-					$oOrderDetailRetailTrust = new classOrderDetail(['itemid'=>intval($iOrderDetailRetailToDeleate)]);
+					$oOrderDetailRetailTrust = new Xcart\OrderDetail(['itemid'=>intval($iOrderDetailRetailToDeleate)]);
 					$oOrderDetailRetailTrust->removeRetailTrust();
 				}
 			}

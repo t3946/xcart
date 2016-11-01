@@ -12,8 +12,6 @@ define('x_session_save_to_db__do_not_use', 'Y');
 require "./top.inc.php";
 require "./init.php"; #uses xid.X
 
-include_once $xcart_dir."/include/class/classBrands.php";
-include_once $xcart_dir."/include/class/classElasticSearch.php";
 
 $current_area="C";
 ###
@@ -102,7 +100,7 @@ if ($REQUEST_METHOD == 'POST') {
 	}
 	elseif ($section_name == "similar_products"){
 
-		$classElastic = new classElasticSearch($config["ElasticSearch_options"],$site_domain);
+		$classElastic = new Xcart\ElasticSearch($config["ElasticSearch_options"],$site_domain);
 		$classElastic->setSource("*._id");
 		$classElastic->setType("product");
 		$classElastic->setSize(30);
@@ -143,7 +141,7 @@ if ($REQUEST_METHOD == 'POST') {
 				$sGoogleAnaliticsParam = 'similar_products_all_carousel';
 				break;
 			case 2:
-				$classBrands = new classBrands();
+				$classBrands = new Xcart\Brands();
 				$aBrand = $classBrands->getBrandByProductId($productid);
 				$classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands($aBrand['brand']));
 				$res = $classElastic->query();

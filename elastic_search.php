@@ -1,5 +1,4 @@
 <?php
-	include_once("include/class/classElasticSearch.php");
         $page = isset($page) ? abs(intval($page)) : 1;
         if (empty($page)) $page = 1;
 
@@ -56,7 +55,7 @@
 
 
 
-        $classElastic = new classElasticSearch($config["ElasticSearch_options"],$site_domain);
+        $classElastic = new Xcart\ElasticSearch($config["ElasticSearch_options"],$site_domain);
 	    $classElastic->setSource("*._id");
 		$classElastic->setMinScore($config["ElasticSearch_options"]["search_results_minimum_score_value"]);
 		$classElastic->setType('product');
