@@ -46,15 +46,12 @@ x_load('order_edit', 'taxes');
 include $xcart_dir . "/shipping/shipping.php";
 include $xcart_dir . "/include/countries.php";
 include $xcart_dir . "/include/states.php";
-require_once $xcart_dir . "/include/class/classShippings.php";
-require_once $xcart_dir . "/include/class/classOrders.php";
-require_once $xcart_dir . "/include/class/classProduct.php";
 
 x_session_register("intershipper_rates");
 x_session_register("intershipper_recalc");
 x_session_register("current_carrier", "UPS");
 
-$oOrder = new classOrder(['orderid'=>$orderid]);
+$oOrder = new Xcart\Order(['orderid'=>$orderid]);
 $smarty->assign("oOrder", $oOrder);
 
 $all_processors = func_query_hash("SELECT paymentid, payment_method, acc_per_trans, acc_percent FROM $sql_tbl[payment_methods] WHERE acc_proc='Y' ORDER BY orderby", "paymentid", false);
@@ -1371,7 +1368,7 @@ if ($REQUEST_METHOD == "POST") {
                 if (!empty($sRetailTrustSKU)) {
                     $oProduct = classProduct::getProductBySKU($sRetailTrustSKU);
                     if ($oProduct->getProductId())
-                        $aOrderDetails = classOrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
+                        $aOrderDetails = Xcart\OrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
                     if (!empty($aOrderDetails)) {
                         foreach ($aOrderDetails as $oOrderDetail) {
                             $oOrderDetail->addRetailTrust();
@@ -1382,7 +1379,7 @@ if ($REQUEST_METHOD == "POST") {
         }
         if (!empty($retail_trust_to_delete) && is_array($retail_trust_to_delete)) {
             foreach ($retail_trust_to_delete as $iOrderDetailRetailToDeleate => $value) {
-                $oOrderDetailRetailTrust = new classOrderDetail(['itemid'=>intval($iOrderDetailRetailToDeleate)]);
+                $oOrderDetailRetailTrust = new Xcart\OrderDetail(['itemid'=>intval($iOrderDetailRetailToDeleate)]);
                 $oOrderDetailRetailTrust->removeRetailTrust();
             }
         }
