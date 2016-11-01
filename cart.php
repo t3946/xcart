@@ -1593,7 +1593,7 @@ if ($mode == 'order_message') {
 }
 
 if (!empty($orderid) && is_numeric($orderid)) {
-	$oOrder = new classOrder(['orderid'=>$orderid]);
+	$oOrder = new Xcart\Order(['orderid'=>$orderid]);
 	$smarty->assign('oOrder',$oOrder);
 }
 

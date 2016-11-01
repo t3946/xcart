@@ -538,10 +538,8 @@ while (!empty($NextToken)){
 				$extra["product_total"]["net"] = $extra["product_total"]["gross"] = $product_total;
 				db_query("UPDATE $sql_tbl[orders] SET extra='".serialize($extra)."', subtotal='$product_total' WHERE orderid='$new_orderid'");
 
-				global $xcart_dir;
-				include_once $xcart_dir."/include/class/classOrders.php";
-				/** @var classOrder $oOrder */
-				$oOrder = classOrder::model(['orderid'=>$new_orderid]);
+				/** @var Xcart\Order $oOrder */
+				$oOrder = Xcart\Order::model(['orderid'=>$new_orderid]);
 				$oOrder->updateVerificationStatus()->reCalculateTotals();
 
 				$id = func_query_first_cell("SELECT id FROM $sql_tbl[cidev_amazon_order_raw] WHERE orderid='$new_orderid'");
