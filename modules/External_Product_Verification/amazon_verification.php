@@ -3,11 +3,10 @@ if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
     die("Access denied");
 }
+use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 global $xcart_dir, $REQUEST_METHOD, $amazon_verification_maximum_mistakes, $product_names, $product_description, $pack_qty_amazon, $pack_qty_website,
        $test_position, $correct_answer, $amazon_verification_make_conclusion_popup_message, $amazon_verification_product_quantity_popup_message,
        $amazon_verification_product_names_popup_message, $amazon_verification_product_images_popup_message;
-require_once $xcart_dir . "/include/class/classProducts.php";
-require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationProductsQueue.php";
 
 $top_message = [];
 if ($REQUEST_METHOD == 'POST') {
@@ -15,13 +14,13 @@ if ($REQUEST_METHOD == 'POST') {
     if (!empty($position)) {
         foreach ($position as $ikey => $sPosition) {
             $sAsin = '';
-            /** @var classExternalVerificationProductsQueue $oProductQueue */
-            $oProductQueue = classExternalVerificationProductsQueue::model(['productid' => $ikey]);
+            /** @var ExternalVerificationProductsQueue $oProductQueue */
+            $oProductQueue = ExternalVerificationProductsQueue::model(['productid' => $ikey]);
             if ($oProductQueue->getProductId()) {
                 if (!empty($answerasin[$ikey])) {
                     $sAsin = implode(',', $answerasin[$ikey]);
                 }
-                if (empty($sAsin) && in_array($answer[$ikey], [classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH, classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH])) {
+                if (empty($sAsin) && in_array($answer[$ikey], [ExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH, ExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH])) {
                     $top_message["content"] = func_get_langvar_by_name("lbl_ASIN_not_entered");
                     $top_message["type"] = "E";
                 } else {
@@ -40,12 +39,12 @@ if ($REQUEST_METHOD == 'POST') {
     }
 
     if (!empty($test_sku) && is_array($test_sku)) {
-        $oProducts = new classProducts();
+        $oProducts = new Xcart\Products();
         foreach ($test_sku as $idx => $sSKU) {
             $sAsin = '';
             $iProductId = $oProducts->getProductIdBySKU($sSKU);
             if (!empty($iProductId)) {
-                $oProductQueue = classExternalVerificationProductsQueue::model(['productid' => $iProductId]);
+                $oProductQueue = ExternalVerificationProductsQueue::model(['productid' => $iProductId]);
                 if (!empty($test_asin[$idx])) {
                     $sAsin = implode(',', $test_asin[$idx]);
                     $oProductQueue->setField('asin', $sAsin);
@@ -60,7 +59,7 @@ if ($REQUEST_METHOD == 'POST') {
                     $oProductQueue->setStatus($correct_answer[$idx])->_update();
                 } else {
                     if (!empty($correct_answer)) {
-                        if (empty($sAsin) && in_array($correct_answer[$idx], [classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH, classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH])) {
+                        if (empty($sAsin) && in_array($correct_answer[$idx], [ExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH, ExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH])) {
                             $top_message["content"] = func_get_langvar_by_name("lbl_ASIN_not_entered");
                             $top_message["type"] = "E";
                         } else {
@@ -73,12 +72,12 @@ if ($REQUEST_METHOD == 'POST') {
     }
     if (!empty($etalon_delete) && is_array($etalon_delete)) {
         foreach ($etalon_delete as $id => $etalon) {
-            $oProductQueue = new classExternalVerificationProductsQueue(['productid' => $id]);
+            $oProductQueue = new ExternalVerificationProductsQueue(['productid' => $id]);
             if ($oProductQueue->getProductId()) {
                 if ($oProductQueue->getCrossVerifyCount() < 2) {
-                    $oProductQueue->updateStatus(classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_PROGRESS);
+                    $oProductQueue->updateStatus(ExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_IN_PROGRESS);
                 } else
-                    $oProductQueue->updateStatus(classExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_VERIFIED);
+                    $oProductQueue->updateStatus(ExternalVerificationProductsQueue::PRODUCT_QUEUE_STATUS_VERIFIED);
             }
         }
     }
@@ -95,5 +94,5 @@ if ($REQUEST_METHOD == 'POST') {
     func_header_location("configuration.php?option=Amazon_Verification");
 }
 
-$aProductsQueue = classExternalVerificationProductsQueue::getProductsQueueEtalon();
+$aProductsQueue = ExternalVerificationProductsQueue::getProductsQueueEtalon();
 $smarty->assign("aProductsQueue", $aProductsQueue);

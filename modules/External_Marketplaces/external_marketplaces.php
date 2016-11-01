@@ -3,9 +3,8 @@ if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
     die("Access denied");
 }
+use Xcart\External_MarketPlace\ExternalMarketPlace;
 global $xcart_dir;
-require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
-require_once $xcart_dir . "/include/class/classStoreFronts.php";
 global $sql_tbl;
 
 if ($REQUEST_METHOD == 'POST') {
@@ -45,8 +44,8 @@ if ($REQUEST_METHOD == 'POST') {
     func_header_location("configuration.php?option=External_marketplaces");
 }
 
-$aExternalMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
+$aExternalMarketplaces = ExternalMarketPlace::getExternalMarketPlaces();
 
 $smarty->assign("external_marketplaces", $aExternalMarketplaces);
-$oStoreFronts = new classStoreFronts();
+$oStoreFronts = new Xcart\StoreFronts();
 $smarty->assign("external_storefronts", $oStoreFronts);

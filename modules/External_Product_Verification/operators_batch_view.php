@@ -1,7 +1,7 @@
 <?php
-global $xcart_dir;
+use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 
 $smarty->assign("main","operators_batch_view");
 
-$smarty->assign('aVerifiactionResults', classExternalVerificationProductsQueue::getVerificationResultsProducts(['batch_id'=>(int)$batch]));
+$smarty->assign('aVerifiactionResults', ExternalVerificationProductsQueue::getVerificationResultsProducts(['batch_id'=>(int)$batch]));
 

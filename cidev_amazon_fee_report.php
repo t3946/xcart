@@ -7,7 +7,6 @@ require "./top.inc.php";
 require "./init.php";
 
 global $xcart_dir, $config;
-require_once $xcart_dir . "/include/class/classAmazonMWS.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -22,7 +21,7 @@ $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
 
-$classAmazonMWS = new classAmazonMWS();
+$classAmazonMWS = new Xcart\AmazonMWS();
 func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME, $log_text);
 
 $classAmazonMWS->setStartDate(new DateTime('-3 days', new DateTimeZone('UTC')))

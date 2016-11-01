@@ -94,8 +94,7 @@ function func_get_shipping_groups($orderid) {
 			$return[$m_id]["tracking"] = unserialize($group["tracking"]);
 
 			global $xcart_dir;
-			require_once $xcart_dir ."/include/class/classOrderGroup.php";
-			$return[$m_id]['oOrderGroup'] = new classOrderGroup(['manufacturerid'=>$m_id, 'orderid'=>$orderid]);
+			$return[$m_id]['oOrderGroup'] = new \Xcart\OrderGroup(['manufacturerid'=>$m_id, 'orderid'=>$orderid]);
 
 
 #
@@ -727,13 +726,11 @@ function func_order_data($orderid) {
 
 
 		global $xcart_dir;
-		include_once $xcart_dir."/include/class/classProducts.php";
-		include_once $xcart_dir."/include/class/classOrderDetail.php";
-		$classProduct = classProduct::model(['productid'=>$v['productid']]);
+		$classProduct = \Xcart\Product::model(['productid'=>$v['productid']]);
 		$mpn = $classProduct->getMPN();
 		$v["mpn"] = $mpn;
 		$v["oProduct"] = $classProduct;
-		$v["oOrderDetail"] = classOrderDetail::model(['itemid'=>$v['itemid']]);
+		$v["oOrderDetail"] = \Xcart\OrderDetail::model(['itemid'=>$v['itemid']]);
 
 /*#
 ##
@@ -887,10 +884,10 @@ function func_order_data($orderid) {
     $order['has_backordered_status'] = func_has_backordered_status($order['shipping_groups']);
     $order['refund_groups'] = func_get_refund_groups($order['orderid'], $order["storefrontid"]);
 
-	$aOrderStatuses= func_query_first("SELECT * FROM $sql_tbl[order_statuses] WHERE code='".$order['order_status']['VP']."'");
-	$order['product_verification_status'] = $aOrderStatuses['name'];
-	$order['product_verification_status_code'] = $aOrderStatuses['code'];
-	$order['product_verification_statuses'] = func_query("SELECT * FROM $sql_tbl[order_statuses] WHERE type='PV'");
+	$oOrderStatus = \Xcart\OrderStatus::model(['code' => $order['order_status']['VP']]);
+	$order['product_verification_status'] = $oOrderStatus->getField('name');
+	$order['product_verification_status_code'] = $oOrderStatus->getField('code');
+	$order['product_verification_statuses'] = \Xcart\OrderStatus::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition("type='PV'"));
 
 #
 ## 15.02.2014
@@ -1382,24 +1379,22 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
 		$orderid = func_array2insert('orders', $insert_data);
 
-		global $xcart_dir;
-		include_once $xcart_dir."/include/class/classPOPipeline.php";
 		global $purchase_order_selected;
 		x_session_register('purchase_order_selected');
 		if(!empty($purchase_order_selected) && is_numeric($purchase_order_selected)){
 
 
 			global $login;
-			$oPoPipeline =  classPOPipeLine::model(['po_id'=>$purchase_order_selected]);
+			$oPoPipeline =  \Xcart\POPipeLine::model(['po_id'=>$purchase_order_selected]);
 			if ($oPoPipeline->getPOId()){
 				$oPoPipeline->setOrderToPO($orderid);
 			} else {
-				$oOrder = classOrder::model(['orderid'=>$orderid]);
+				$oOrder = \Xcart\Order::model(['orderid'=>$orderid]);
 				try {
 					$oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
 				}
 				catch (Exception $ex) {
-					classLogs::_log('purchase_orders', $oPoPipeline->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
+					\Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), \Xcart\Logs::LOG_TYPE_CLIENT, sprintf(\Xcart\POPipeLine::PO_HAS_BEEN_UPLOADED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
 				}
 
 			}
@@ -1408,15 +1403,15 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			x_session_save($purchase_order_selected);
 		} else
 		if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] == UPLOAD_ERR_OK) {
-			$oPoPipeline =  classPOPipeLine::model();
-			$oOrder = classOrder::model(['orderid'=>$orderid]);
+			$oPoPipeline =  \Xcart\POPipeLine::model();
+			$oOrder = \Xcart\Order::model(['orderid'=>$orderid]);
 			try {
 				$oPoPipeline = $oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
 				$oPoPipeline->setOrderToPO($orderid);
 				$oPoPipeline->_save();
 			}
 			catch (Exception $ex) {
-				classLogs::_log('purchase_orders', $oPoPipeline->getPOId(), classLogs::LOG_TYPE_CLIENT, sprintf(classPOPipeLine::PO_HAS_BEEN_UPLOADED, $ex->getMessage()));
+				\Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), \Xcart\Logs::LOG_TYPE_CLIENT, sprintf(\Xcart\POPipeLine::PO_HAS_BEEN_UPLOADED, $ex->getMessage()));
 			}
 		}
 
@@ -1582,24 +1577,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 # END: random:20341 [2010 Jul 29 14:46]
 
 			global $xcart_dir;
-			include_once $xcart_dir."/include/class/classProducts.php";
-			$oProduct = new classProduct(['productid'=>(int)$product['productid']]);
-			$aManufacturerProductVerifySettings = $oProduct->getManfacturerClass()->getFields(['products_always_verify', 'days_before_verify']);
-			if ($aManufacturerProductVerifySettings['products_always_verify'] == 'Y') {
-				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
-			} elseif ($aManufacturerProductVerifySettings['days_before_verify'] > 0 && $oProduct->getProductLastVerifyDate()) {
-				$currentDate = new DateTime("now");
-				$iDaysInterval = $currentDate->diff($oProduct->getProductLastVerifyDate())->days;
-				if ($iDaysInterval <= $aManufacturerProductVerifySettings['days_before_verify']) {
-					$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_VERIFY,'', true, [$orderid]);
-				}
-			} else {
-				$oProduct->changeVerificationStatus(classProduct::PRODUCT_STATUS_NOT_VERIFY,'', true, [$orderid]);
-				include_once $xcart_dir."/include/class/classHTMLShot.php";
-				$oHTMLShot = new classHTMLShot();
-				$oHTMLShot->createHTMLShot($oProduct, $orderid);
-			}
-
+			$oProduct = \Xcart\Product::model(['productid'=>(int)$product['productid']]);
+			$oProduct->createHTMLShot($orderid);
 		}
 
 		$mes .= "STEP H ".date("H:i:s")."\n";
@@ -1819,7 +1798,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 		$mail_smarty->assign("order",$order_data["order"]);
 		$mail_smarty->assign("userinfo",$order_data["userinfo"]);
 		$mail_smarty->assign('statuses', $statuses);
-		$mail_smarty->assign('oOrder', $oOrder);
 
 		$prefix = ($order_status=="I"?"init_":"");
 
@@ -2154,8 +2132,7 @@ function func_get_order_manufacturers($orderid){
 
                                                         //$tmp_sku = substr($v["productcode"], 4);
 														global $xcart_dir;
-														include_once $xcart_dir."/include/class/classProducts.php";
-														$tmp_sku = classProduct::model(['productid'=>$v['productid']])->getMPN();
+														$tmp_sku = \Xcart\Product::model(['productid'=>$v['productid']])->getMPN();
 
                                                         $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">'.$tmp_sku.'</td><td width="250px" style="text-align: left;"><a href="'.$v["links"]["customer"].'">'.$v["product"].'</a>'.$selected_product_options.'</td><td style="text-align: right;">'.$v["amount"].'</td></tr>';
 
@@ -3725,8 +3702,7 @@ function func_send_order_status_notification($orderid, $status)
 	$order_data = func_order_data($orderid);
 
 	$aorder_notification = func_get_order_notification($status, $order_data);
-	require_once $xcart_dir . "/include/class/classOrder.php";
-	$oOrder = new classOrder(['orderid'=>$orderid]);
+	$oOrder = new Xcqrt\Order(['orderid'=>$orderid]);
 	$mail_smarty->assign('oOrder', $oOrder);
 	if (!empty($aorder_notification)) {
 		foreach ($aorder_notification as $oOrderNotification) {
@@ -3778,7 +3754,7 @@ function func_send_order_status_notification($orderid, $status)
 	if ($status == $config['retail_trust_order_status']) {
 		global $xcart_dir;
 		require_once $xcart_dir.'/include/class/classMail.php';
-		$oMail = new classMail();
+		$oMail = new Xcart\Mail();
 		$oMail->setBody($config['Retail_Trust']['retail_trust_message'])->replaceBody($oOrder);
 		$oMail->setSubject($config['Retail_Trust']['retail_trust_subject'])->replaceSubject($oOrder);
 		$mail_smarty->assign('body', $oMail->getEmailBody());
@@ -3911,13 +3887,11 @@ function func_set_filled_option($accounting) {
 
 function func_get_order_notification($status, $order_data="") {
     global $xcart_dir;
-	require_once $xcart_dir . "/include/class/classOrderStatusNotification.php";
-	require_once $xcart_dir . "/include/class/classOrder.php";
 	$oOrder = null;
-	$aOrderNotifications = classOrderStatusNotification::getOrderStatusNotificationsByCode($status);
+	$aOrderNotifications = Xcart\OrderStatusNotification::getOrderStatusNotificationsByCode($status);
 	if (!empty($aOrderNotifications)) {
 		if (!empty($order_data) && is_array($order_data)){
-			$oOrder = new classOrder(['orderid'=>$order_data['order']['orderid']]);
+			$oOrder = new Xcart\Order(['orderid'=>$order_data['order']['orderid']]);
 		}
 		foreach ($aOrderNotifications as &$oOrderNotification) {
 			$oOrderNotification->replaceBody($oOrder);
@@ -4174,8 +4148,7 @@ function func_instock_and_outofstock_items_table($products, $type_of_message='')
 
                 //$tmp_sku = substr($v["productcode"], 4);
 				global $xcart_dir;
-				include_once $xcart_dir."/include/class/classProducts.php";
-				$tmp_sku = classProduct::model(['productid'=>$v['productid']])->getMPN();
+				$tmp_sku = \Xcart\Product::model(['productid'=>$v['productid']])->getMPN();
                 $instock_items = $v["amount"] - $v["back"];
 
 		$current_product_instock = false;

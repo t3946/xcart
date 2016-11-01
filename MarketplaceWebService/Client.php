@@ -19,8 +19,8 @@
 /**
  *  @see MarketplaceWebService_Interface
  */
-require_once ('Interface.php');
-require_once ('RequestType.php');
+require_once('Interface.php');
+require_once('RequestType.php');
 
 define('CONVERTED_PARAMETERS_KEY', 'PARAMETERS');
 define('CONVERTED_HEADERS_KEY', 'HEADERS');

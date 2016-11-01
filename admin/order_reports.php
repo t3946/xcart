@@ -130,8 +130,7 @@ if ($mode == "report") {
 
 
         global $xcart_dir;
-        require_once $xcart_dir."/include/class/classOrderReports.php";
-        $oReport = new classOrderReports();
+        $oReport = new Xcart\OrderReports();
         $oReport->setStartDate($start_date)->setEndDate($end_date)->setOrderSource($data['orders_source'])->
         setStoreFronts($data['storefront_ids'])->setManufacturers($data['manufacturers'])->setAccountingMethod($data['accounting_method'])->
         setOrderStatus($data['cb_status']);
@@ -210,8 +209,7 @@ if ($mode == "report") {
 			$orders[$k]["shipping_groups"] = func_get_shipping_groups($v["orderid"]);
 			foreach ($orders[$k]["shipping_groups"] as $mid => $group) {
 
-				require_once $xcart_dir . "/include/class/classOrderGroup.php";
-				$oOrderGroup = new classOrderGroup(['orderid'=>$v["orderid"], 'manufacturerid'=>$mid]);
+				$oOrderGroup = new Xcart\OrderGroup(['orderid'=>$v["orderid"], 'manufacturerid'=>$mid]);
 				$orders[$k]["shipping_groups"][$mid]['reconcile_status'] = $oOrderGroup->getReconciledStatus();
 				if (
 				    //(empty($group["invoices"]) && empty($group["memos"]) && $data['profit_margin_range'] == "margin_less_100")|| // Nothing to calculate
