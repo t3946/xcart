@@ -76,7 +76,7 @@ if ($REQUEST_METHOD == 'POST') {
                         where SP.meta_id = '$meta_id' and SP.resource_type = 'P' and SP.resource_id NOT IN ('$productids')
                         and SP.meta_id > 0
                         Group By SP.resource_id
-                        Order By SP.`position` desc";
+                        Order By max(SP.`position`) desc";
 		}
 		elseif ($section_name == "related_products"){
 
