@@ -711,4 +711,20 @@ class Order extends Data
         $this->setField('total_gross', floatval($this->getField('total_gross')) + $fSumma);
         return $this;
     }
+
+    /**
+     * @return OrderDetail[]
+     */
+    public function getOrderDetailsWithProductsRetailTrust()
+    {
+        $aResult = [];
+        $this->getOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                if ($oOrderDetail->getOrderDetailProduct()->isRetailTrustEnabled() && $this->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() > 1)
+                    $aResult[] = $oOrderDetail;
+            }
+        }
+        return $aResult;
+    }
 }
