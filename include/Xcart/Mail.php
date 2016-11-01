@@ -1,10 +1,8 @@
 <?php
 
-global $xcart_dir;
-require_once $xcart_dir . "/include/class/classData.php";
-require_once $xcart_dir . "/include/class/classSQLBuilder.php";
+namespace Xcart;
 
-class classMail extends classData
+class Mail extends Data
 {
     public function __construct($aParams = [])
     {
@@ -21,7 +19,7 @@ class classMail extends classData
         return $this->getField('customer_subject');
     }
 
-    public function replaceSubject(classOrder $oOrder)
+    public function replaceSubject(Order $oOrder)
     {
         if (!empty($oOrder)) {
             $this->setField('customer_subject', str_replace("{{orderid}}", $oOrder->getDisplayOrderNumber(), $this->getSubject()));
@@ -40,7 +38,7 @@ class classMail extends classData
         return $this;
     }
 
-    public function replaceBody(classOrder $oOrder)
+    public function replaceBody(Order $oOrder)
     {
         if (!empty($oOrder)) {
             $this->setBody(str_replace("{{c-fullname}}", $oOrder->getFirstName(), $this->getEmailBody()))->

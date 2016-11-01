@@ -3753,7 +3753,7 @@ function func_send_order_status_notification($orderid, $status)
 	}
 	if ($status == $config['retail_trust_order_status']) {
 		global $xcart_dir;
-		require_once $xcart_dir.'/include/class/classMail.php';
+		require_once $xcart_dir . '/include/class/Mail.php';
 		$oMail = new Xcart\Mail();
 		$oMail->setBody($config['Retail_Trust']['retail_trust_message'])->replaceBody($oOrder);
 		$oMail->setSubject($config['Retail_Trust']['retail_trust_subject'])->replaceSubject($oOrder);

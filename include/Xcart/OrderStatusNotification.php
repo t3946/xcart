@@ -1,16 +1,14 @@
 <?php
-global $xcart_dir;
-require_once $xcart_dir . "/include/class/classMail.php";
-require_once $xcart_dir . "/include/class/classOrder.php";
+namespace Xcart;
 
-class classOrderStatusNotification extends classMail
+class OrderStatusNotification extends Mail
 {
     /**
-     * @var classMail
+     * @var Mail
      */
     private $oMail = null;
     /**
-     * @var classOrder
+     * @var Order
      */
     private $oOrder = null;
 
@@ -24,16 +22,16 @@ class classOrderStatusNotification extends classMail
 
     /**
      * @param $sStatus
-     * @return classOrderStatusNotification[]
+     * @return OrderStatusNotification[]
      */
     public static function getOrderStatusNotificationsByCode($sStatus)
     {
         $aOrderNotifications = null;
-        $oSQL = new classSQLBuilder();
+        $oSQL = new SQLBuilder();
         $aStatuses = $oSQL->addSelect('*')->addFromTable('order_status_notifications')->addCondition("code='$sStatus'")->Execute()->getQueryResult();
         if (!empty($aStatuses)) {
             foreach ($aStatuses as $aStatus) {
-                $oStatus = new classOrderStatusNotification();
+                $oStatus = new OrderStatusNotification();
                 $oStatus->fill($aStatus);
                 $aOrderNotifications[] = $oStatus;
             }
@@ -61,9 +59,9 @@ class classOrderStatusNotification extends classMail
         return $this->getField('copy_subject');
     }
 
-    public function prepareMail(classOrder $oOrder)
+    public function prepareMail(Order $oOrder)
     {
-        $this->oMail = new classMail();
+        $this->oMail = new Mail();
         $this->oMail->setSubject($this->getSubject())->replaceSubject($oOrder);
         $this->oMail->setBody($this->getBody())->replaceBody($oOrder);
         $this->oOrder = $oOrder;

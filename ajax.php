@@ -2,8 +2,8 @@
 require "./auth.php";
 global $xcart_dir, $config;
 require_once $xcart_dir . '/include/class/classOrderDetail.php';
-require_once $xcart_dir.'/include/class/classMail.php';
-require_once $xcart_dir.'/include/class/classOrderStatusNotification.php';
+require_once $xcart_dir . '/include/class/Mail.php';
+require_once $xcart_dir . '/include/class/OrderStatusNotification.php';
 require_once $xcart_dir.'/include/class/classOrder.php';
 
 

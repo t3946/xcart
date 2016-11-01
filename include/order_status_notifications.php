@@ -96,7 +96,7 @@ if ($REQUEST_METHOD == 'POST') {
     func_header_location('order_status_notifications.php');
 }
 global $xcart_dir;
-require_once $xcart_dir . "/include/class/classOrderStatusNotification.php";
+require_once $xcart_dir . "/include/class/OrderStatusNotification.php";
 $aOrderNotifications = classOrderStatusNotification::getOrderStatusNotificationsByCode($selected_status);
 
 $smarty->assign('aOrderNotifications', $aOrderNotifications);

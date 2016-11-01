@@ -22,6 +22,12 @@ class Order extends Data
      * @var Product[]
      */
     private $aOrderProducts = null;
+    /**
+     * @var Customer[]
+     */
+    private $oCustomer = null;
+
+
     private $aOrderProductsManufactueres = null;
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
@@ -626,5 +632,18 @@ class Order extends Data
     public function getPOPipelineInstance()
     {
         return POPipeLine::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
+    }
+
+    public function getCustomerEntity()
+    {
+        if (is_null($this->oCustomer)) {
+            $this->oCustomer = new Customer(['login'=>$this->getLogin()]);
+        }
+        return $this->oCustomer;
+    }
+
+    public function getLogin()
+    {
+        return $this->getField('login');
     }
 }
