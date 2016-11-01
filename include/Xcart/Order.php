@@ -283,6 +283,17 @@ class Order extends Data
         return $this->getField('customer_notes');
     }
 
+
+    public function getFirstName()
+    {
+        return $this->getField('firstname');
+    }
+
+    public function getEmail()
+    {
+        return $this->getField('email');
+    }
+
     public function getShippingFirstName()
     {
         return $this->getField('s_firstname');

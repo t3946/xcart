@@ -1677,9 +1677,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			unset($group_total);
 			unset($insert_data);
 		}
-		global $xcart_dir;
-		include_once $xcart_dir."/include/class/classOrder.php";
-		$oOrder = classOrder::model(['orderid'=>$orderid]);
+		$oOrder = Xcart\Order::model(['orderid'=>$orderid]);
 		$oOrder->updateVerificationStatus();
 
 
@@ -3702,7 +3700,7 @@ function func_send_order_status_notification($orderid, $status)
 	$order_data = func_order_data($orderid);
 
 	$aorder_notification = func_get_order_notification($status, $order_data);
-	$oOrder = new Xcqrt\Order(['orderid'=>$orderid]);
+	$oOrder = new Xcart\Order(['orderid'=>$orderid]);
 	$mail_smarty->assign('oOrder', $oOrder);
 	if (!empty($aorder_notification)) {
 		foreach ($aorder_notification as $oOrderNotification) {
@@ -3752,8 +3750,6 @@ function func_send_order_status_notification($orderid, $status)
 		}
 	}
 	if ($status == $config['retail_trust_order_status']) {
-		global $xcart_dir;
-		require_once $xcart_dir . '/include/class/Mail.php';
 		$oMail = new Xcart\Mail();
 		$oMail->setBody($config['Retail_Trust']['retail_trust_message'])->replaceBody($oOrder);
 		$oMail->setSubject($config['Retail_Trust']['retail_trust_subject'])->replaceSubject($oOrder);
