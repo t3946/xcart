@@ -727,4 +727,17 @@ class Order extends Data
         }
         return $aResult;
     }
+
+    public function calculateOrderRetailTrustProductsTotal()
+    {
+        $fSumma = 0;
+        $oOrderDetails = $this->getOrderDetailsWithProductsRetailTrust();
+        if (!empty($oOrderDetails)) {
+            foreach ($oOrderDetails as $oOrderDetail)
+            {
+                $fSumma+=$oOrderDetail->calculateRetailTrustPrice();
+            }
+        }
+        return $fSumma;
+    }
 }
