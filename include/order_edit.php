@@ -2209,8 +2209,8 @@ if ($REQUEST_METHOD == "POST") {
         }
         if ($mode == "table_accounting_apply" || $mode == "accounting_apply") {
 
-            /** @var classOrder $oOrder */
-            $oOrder = classOrder::model(['orderid' => $orderid]);
+            /** @var Xcart\Order $oOrder */
+            $oOrder = Xcart\Order::model(['orderid' => $orderid]);
             $oOrder->recalculateAccounting();
         }
         func_header_location("order.php?orderid=$orderid");
