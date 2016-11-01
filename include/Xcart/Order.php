@@ -27,6 +27,7 @@ class Order extends Data
      */
     private $oCustomer = null;
 
+    private $oStoreFront = null;
 
     private $aOrderProductsManufactueres = null;
     private $aAdditionalFees = null;
@@ -678,6 +679,36 @@ class Order extends Data
             $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
             $this->_refresh();
         }
+        return $this;
+    }
+
+    public function getOrderStoreFront()
+    {
+        if (is_null($this->oStoreFront)) {
+            $aOrderProducts = $this->getOrderProducts();
+            if (!empty($aOrderProducts)) {
+                $oProduct = reset($aOrderProducts);
+                $this->oStoreFront = $oProduct->getStoreFront();
+            }
+        }
+        return $this->oStoreFront;
+    }
+
+    public function addOrderTotaNet($fSumma)
+    {
+        $this->setField('total_net', floatval($this->getField('total_net')) + $fSumma);
+        return $this;
+    }
+
+    public function addOrderTotal($fSumma)
+    {
+        $this->setField('total', floatval($this->getField('total')) + $fSumma);
+        return $this;
+    }
+
+    public function addOrderTotalGross($fSumma)
+    {
+        $this->setField('total_gross', floatval($this->getField('total_gross')) + $fSumma);
         return $this;
     }
 }

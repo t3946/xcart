@@ -1193,4 +1193,16 @@ class OrderGroup extends Data
         }
         return $fSumma;
     }
+
+    public function addTotalNet($fSumma)
+    {
+        $this->setField('total_net', floatval($this->getField('total_net')) + $fSumma);
+        return $this;
+    }
+
+    public function addTotalGross($fSumma)
+    {
+        $this->setField('total_gross', floatval($this->getField('total_gross')) + $fSumma);
+        return $this;
+    }
 }
