@@ -646,4 +646,27 @@ class Order extends Data
     {
         return $this->getField('login');
     }
+
+    public function recalculateRetailTrust()
+    {
+        $this->_refresh();
+        $fTotalRetailTrust = 0;
+        $aOrderGroups = $this->getOrderGroups();
+        if (!empty($aOrderGroups)) {
+            foreach ($aOrderGroups as $oOrderGroup) {
+                $fTotalRetailTrustGroup = 0;
+                $aOrderDetails = $oOrderGroup->getOrderDetailsWithRetailTrust();
+                if (!empty($aOrderDetails)) {
+                    foreach ($aOrderDetails as $oOrderDetail) {
+                        $fTotalRetailTrustGroup += $oOrderDetail->getRetailTrustPrice();
+                    }
+                    $oOrderGroup->addTotalNet($fTotalRetailTrustGroup)->addTotalGross($fTotalRetailTrustGroup)->_update();
+                    $fTotalRetailTrust += $fTotalRetailTrustGroup;
+                }
+            }
+            $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
+            $this->_refresh();
+        }
+        return $this;
+    }
 }
