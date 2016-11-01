@@ -1796,6 +1796,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 		$mail_smarty->assign("order",$order_data["order"]);
 		$mail_smarty->assign("userinfo",$order_data["userinfo"]);
 		$mail_smarty->assign('statuses', $statuses);
+		$mail_smarty->assign('oOrder', $oOrder);
 
 		$prefix = ($order_status=="I"?"init_":"");
 
