@@ -1,7 +1,7 @@
 <?php
 namespace Xcart;
 
-class POPipeLine extends Data
+class POPipeline extends Data
 {
     const PO_LINK_ON_MODIFY = "PO# %s corresponds to the following order(s): <a href='%s' target='_blank'>%s</a>";
     const PO_NOT_IN_OUR_SYSTEM = "PO# %s is not yet in our system";
@@ -147,7 +147,7 @@ class POPipeLine extends Data
                 if ($iPoID) {
                     $this->setField('po_id',$iPoID);
                 }
-                Logs::_log('purchase_orders', $this->getPOId(), Logs::LOG_TYPE_CLIENT, sprintf(POPipeLine::PO_HAS_BEEN_UPLOADED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
+                Logs::_log('purchase_orders', $this->getPOId(), Logs::LOG_TYPE_CLIENT, sprintf(POPipeline::PO_HAS_BEEN_UPLOADED, $this->getOrderNumber() . " (" . $this->getOrderOriginalFileName() . ")"));
 
             } else {
                 throw new \Exception("PO#$purchase_order_number_upload upload failed");

@@ -244,7 +244,7 @@ if (isset($fid)) {
     $smarty->assign('statuses', $statuses);
 
     global $xcart_dir;
-    $oPOPipelineStatuses = Xcart\POPipeLine::getPOStatuses();
+    $oPOPipelineStatuses = Xcart\POPipeline::getPOStatuses();
     $smarty->assign('po_statuses', $oPOPipelineStatuses);
 
     $smarty->assign('filter_preset_title', 'title');
