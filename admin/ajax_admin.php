@@ -1,6 +1,6 @@
 <?php
 use Xcart\External_Product_Verification\ExternalVerificationBatch;
-use Xcart\External_MarketPlace\IssuesProcessingRules;
+use Xcart\External_Marketplaces\IssuesProcessingRules;
 use Xcart\Order;
 use Xcart\OrderGroup;
 use Xcart\Product;
@@ -217,17 +217,17 @@ function changeIssueProcessing($aParams = [])
     $iIssueId = (int) $aParams['issue_id'];
     switch ($aParams['action']) {
         case 'fixed':
-            $oIssue = new Xcart\External_MarketPlace\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
+            $oIssue = new Xcart\External_Marketplaces\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
             $oIssue->updateField('fixed', 'Y');
             $aResult['result'] = true;
             break;
         case 'exclude':
-            $oStoreFrontMarketPlace = new Xcart\External_MarketPlace\Marketplaces\GMC();
-            $oIssue = new Xcart\External_MarketPlace\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
+            $oStoreFrontMarketPlace = new Xcart\External_Marketplaces\Marketplaces\GMC();
+            $oIssue = new Xcart\External_Marketplaces\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
             $oIssue->updateField('fixed', 'Y');
             $oStoreFrontMarketPlace->restoreQueue([['productid' => $iProductId]], 1);
             //Google
-            $oDisableMarketplace = new Xcart\External_MarketPlace\DisabledMarketPlace();
+            $oDisableMarketplace = new Xcart\External_Marketplaces\DisabledMarketPlace();
             $oDisableMarketplace->fill(['marketplace_id' => 1, 'resource_id' => $iProductId, 'resource_type' => 'P']);
             $oDisableMarketplace->addDisabledMarketPlace();
             //Bing

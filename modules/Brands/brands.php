@@ -305,9 +305,9 @@ if ($REQUEST_METHOD == "POST" || ($mode == "delete_image" && $brandid)) {
 	}
 	elseif ($mode == "excluded_marketplace" && $brandid) {
 		global $xcart_dir;
-		Xcart\External_MarketPlace\DisabledMarketPlace::deleteAllDisabledMarketPlace($brandid, 'B');
+		Xcart\External_Marketplaces\DisabledMarketPlace::deleteAllDisabledMarketPlace($brandid, 'B');
 		foreach($excluded_marketplaces as $iExcludedMarketplace) {
-			$oMarketPlace = new Xcart\External_MarketPlace\DisabledMarketPlace();
+			$oMarketPlace = new Xcart\External_Marketplaces\DisabledMarketPlace();
 			$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $brandid, 'resource_type'=>'B']);
 			$oMarketPlace->addDisabledMarketPlace();
 		}
@@ -430,7 +430,7 @@ if ($mode == "add" or !empty($brandid)) {
 
 	$smarty->assign("mode", "brand_info");
 	global $xcart_dir;
-	$aMarketplaces = \Xcart\External_MarketPlace\ExternalMarketPlace::getExternalMarketPlaces();
+	$aMarketplaces = \Xcart\External_Marketplaces\ExternalMarketPlace::getExternalMarketPlaces();
 	$aExternalMarketplaces = [];
 	if (!empty($aMarketplaces)) {
 		foreach ($aMarketplaces as $oMarketPlace) {
@@ -438,7 +438,7 @@ if ($mode == "add" or !empty($brandid)) {
 			$aExternalMarketplaces['names'][] = $oMarketPlace->getMarketPlaceName();
 		}
 	}
-	$aDisabledMarketPlaces = \Xcart\External_MarketPlace\DisabledMarketPlace::getDisabledMarketPlaces($brandid, 'B');
+	$aDisabledMarketPlaces = \Xcart\External_Marketplaces\DisabledMarketPlace::getDisabledMarketPlaces($brandid, 'B');
 	$smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
 	$smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
 }

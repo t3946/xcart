@@ -2336,7 +2336,8 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_order_show_button);
 $smarty->assign("order", $order);
 
-
+$oOrder = Xcart\Order::model(['orderid' => $orderid]);
+$smarty->assign("oOrder", $oOrder);
 
 $oShippings = new Xcart\Shippings();
 $aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');

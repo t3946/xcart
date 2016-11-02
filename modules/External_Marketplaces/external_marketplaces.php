@@ -3,7 +3,7 @@ if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
     die("Access denied");
 }
-use Xcart\External_MarketPlace\ExternalMarketPlace;
+use Xcart\External_Marketplaces\ExternalMarketPlace;
 global $xcart_dir;
 global $sql_tbl;
 

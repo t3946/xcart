@@ -38,8 +38,8 @@
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
-use Xcart\External_MarketPlace\ExternalMarketPlace;
-use Xcart\External_MarketPlace\DisabledMarketPlace;
+use Xcart\External_Marketplaces\ExternalMarketPlace;
+use Xcart\External_Marketplaces\DisabledMarketPlace;
 
 x_load('backoffice','image');
 
@@ -108,7 +108,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "excluded_marketplace" && $manufacture
 	DisabledMarketPlace::deleteAllDisabledMarketPlace($manufacturerid, 'D');
 	if (!empty($excluded_marketplaces))
 	foreach($excluded_marketplaces as $iExcludedMarketplace) {
-		$oMarketPlace = new Xcart\External_MarketPlace\DisabledMarketPlace();
+		$oMarketPlace = new Xcart\External_Marketplaces\DisabledMarketPlace();
 		$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $manufacturerid, 'resource_type' => 'D']);
 		$oMarketPlace->addDisabledMarketPlace();
 	}

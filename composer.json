@@ -9,7 +9,7 @@
         "psr-4": {
             "Xcart\\": "include/Xcart",
             "Xcart\\External_Product_Verification\\": "modules/External_Product_Verification/include",
-            "Xcart\\External_MarketPlace\\": "modules/External_Marketplaces/include"
+            "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include"
         },
         "classmap": ["MarketplaceWebService","src/FBAOutboundServiceMWS", "MarketplaceWebServiceOrders"]
     }
