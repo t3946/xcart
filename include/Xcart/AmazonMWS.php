@@ -1369,7 +1369,7 @@ class AmazonMWS
                 $request->setSellerId(MERCHANT_ID);
                 $request->setMarketplaceId(MARKETPLACE_ID);
                 $request->setCreatedAfter(gmdate('Y-m-d\TH:i:s\Z', time() - $timeoffset));
-                $request->setOrderStatus(['Shipped','Unshipped','Canceled']);
+                $request->setOrderStatus(['Shipped','Unshipped', 'PartiallyShipped', 'Canceled']);
                 $this->dom_xml_arr = $this->invokeListOrders($request);
             } else {
                 $request = new \MarketplaceWebServiceOrders_Model_ListOrdersByNextTokenRequest();
