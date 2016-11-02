@@ -1,6 +1,6 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir."/include/xcart/Data.php";
+require_once $xcart_dir."/include/Xcart/Data.php";
 use Xcart\Data;
 
 class classPricing extends Data

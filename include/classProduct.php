@@ -1,6 +1,6 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir."/include/xcart/Data.php";
+require_once $xcart_dir."/include/Xcart/Data.php";
 require_once $xcart_dir."/include/classPricing.php";
 require_once $xcart_dir."/include/classManufacturer.php";
 require_once $xcart_dir."/include/classProductImage.php";
