@@ -56,13 +56,14 @@ class FbaMissingSku extends Data
     {
         $aOrderDetails = $this->getOrdersWithMissingSKU();
         if (!empty($aOrderDetails)) {
-            foreach($aOrderDetails as $oOrderDetail) {
+            foreach ($aOrderDetails as $oOrderDetail) {
                 $oOrderDetail->updateFields([
                     'productcode' => $this->getProductInstance()->getSKU(),
-                    'productid' =>  $this->getProductInstance()->getProductId()
+                    'productid' => $this->getProductInstance()->getProductId(),
+                    'item_cost_to_us' => $this->getProductInstance()->getProductCostToUs()
                 ]);
-                $aOrderDetails = $oOrderDetail->getOrderInstance()->getOrderDetails();
-                if (count($aOrderDetails) == 1)
+                $aDetails = $oOrderDetail->getOrderInstance()->getOrderDetails();
+                if (count($aDetails) == 1)
                     OrderGroup::model(['orderid' => $oOrderDetail->getField('orderid'), 'manufacturerid' => 0])->updateField('manufacturerid', $this->getProductInstance()->getManufacturerId());
             }
         }
