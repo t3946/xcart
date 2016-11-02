@@ -9,9 +9,5 @@ require "./init.php";
 
 global $xcart_dir, $config;
 
-use Xcart\PaymentMethod;
-
-global $config;
-$to = $config['Company']['product_management'];
-$from = 'team@s3stores.com';
-func_send_mail($to, 'mail/missing_sku_subj.tpl', 'mail/missing_sku.tpl', $from, true);
+$aExternalMarketPlaces = Xcart\External_Marketplaces\StoreFrontMarketPlace::getMarketPlacesByStoreFront(67);
+var_dump($aExternalMarketPlaces);

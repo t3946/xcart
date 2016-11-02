@@ -1385,7 +1385,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
 
 			global $login;
-			$oPoPipeline =  \Xcart\POPipeLine::model(['po_id'=>$purchase_order_selected]);
+			$oPoPipeline =  \Xcart\POPipeline::model(['po_id'=>$purchase_order_selected]);
 			if ($oPoPipeline->getPOId()){
 				$oPoPipeline->setOrderToPO($orderid);
 			} else {
@@ -1394,7 +1394,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 					$oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
 				}
 				catch (Exception $ex) {
-					\Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), \Xcart\Logs::LOG_TYPE_CLIENT, sprintf(\Xcart\POPipeLine::PO_HAS_BEEN_UPLOADED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
+					\Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), \Xcart\Logs::LOG_TYPE_CLIENT, sprintf(\Xcart\POPipeline::PO_HAS_BEEN_UPLOADED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
 				}
 
 			}
@@ -1403,7 +1403,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			x_session_save($purchase_order_selected);
 		} else
 		if (!empty($_FILES['purchase_order_file']) && $_FILES['purchase_order_file']['error'] == UPLOAD_ERR_OK) {
-			$oPoPipeline =  \Xcart\POPipeLine::model();
+			$oPoPipeline =  \Xcart\POPipeline::model();
 			$oOrder = \Xcart\Order::model(['orderid'=>$orderid]);
 			try {
 				$oPoPipeline = $oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
@@ -1411,7 +1411,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 				$oPoPipeline->_save();
 			}
 			catch (Exception $ex) {
-				\Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), \Xcart\Logs::LOG_TYPE_CLIENT, sprintf(\Xcart\POPipeLine::PO_HAS_BEEN_UPLOADED, $ex->getMessage()));
+				\Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), \Xcart\Logs::LOG_TYPE_CLIENT, sprintf(\Xcart\POPipeline::PO_HAS_BEEN_UPLOADED, $ex->getMessage()));
 			}
 		}
 
