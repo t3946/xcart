@@ -37,6 +37,7 @@ class AmazonMWS
     private $nextToken = 'start';
     private $oOrder = null;
     private $sServiceUrl = null;
+    private $getOnlyAcknowledged = true;
 
 
     public function __construct($oServiceClass = 'MarketplaceWebService_Client', $uri = '')
@@ -83,6 +84,12 @@ class AmazonMWS
     public function setStartDate($tDate)
     {
         $this->tStartDate = $tDate;
+        return $this;
+    }
+
+    public function setProcessWithoutAcknowledgedFlag()
+    {
+        $this->getOnlyAcknowledged = false;
         return $this;
     }
 
@@ -659,7 +666,8 @@ class AmazonMWS
 
         $request->setReportTypeList($req);
         $request->setMaxCount("100");
-        $request->setAcknowledged(false);
+        if ($this->getOnlyAcknowledged)
+            $request->setAcknowledged(false);
 
         $this->dom_xml_arr = $this->invokeGetReportList($request);
         if (!empty($this->dom_xml_arr["ReportId"])) {
@@ -902,9 +910,7 @@ class AmazonMWS
 
                                             foreach ($vv["ItemFees"] as $kkk => $vvv) {
                                                 if (in_array($vvv["Type"], array("FBAPerOrderFulfillmentFee", "FBAPerUnitFulfillmentFee", "FBAWeightBasedFee", "Commission", "ShippingChargeback"))) {
-                                                    if ($vvv["Type"] == "ShippingChargeback")
-                                                        $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]["Commission"] += floatVal($vvv["Amount"]);
-                                                    else $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] += floatVal($vvv["Amount"]);
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] += floatval($vvv["Amount"]);
                                                 }
                                             }
                                         }
@@ -919,7 +925,7 @@ class AmazonMWS
 
                                         if (!empty($vv["Promotion"])) {
                                             if (in_array($vv["Promotion"]["Type"], array("Shipping"))) {
-                                                $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += abs(floatVal($vv["Promotion"]["Amount"]));
+                                                $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += abs(floatval($vv["Promotion"]["Amount"]));
                                             }
 
                                         }
@@ -931,17 +937,17 @@ class AmazonMWS
                                                 $field_name = $vvv["Type"];
                                                 if (($field_name == "Principal" || $field_name == "Shipping") && !empty($vvv["Amount"])) {
                                                     $RefundSum += $vvv["Amount"];
-                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += floatVal($vvv["Amount"]);
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += floatval($vvv["Amount"]);
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['SKU'] = addslashes($vv['SKU']);
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['orderid'] = $order_info['orderid'];
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['type'] = 'Refund';
                                                 }
                                                 switch ($field_name) {
                                                     case "Principal":
-                                                        $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['PrincipalRefund'] = floatVal($vvv["Amount"]);
+                                                        $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['PrincipalRefund'] = floatval($vvv["Amount"]);
                                                         break;
                                                     case "Shipping":
-                                                        $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['ShippingRefund'] = floatVal($vvv["Amount"]);
+                                                        $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['ShippingRefund'] = floatval($vvv["Amount"]);
                                                         break;
                                                 }
                                             }
@@ -953,7 +959,7 @@ class AmazonMWS
                                                 $field_name = $vvv["Type"];
                                                 if (($field_name == "Commission" || $field_name == "RefundCommission" || $field_name == "VariableClosingFee" || $field_name == "ShippingChargeback") && !empty($vvv["Amount"])) {
                                                     $RefundSum += $vvv["Amount"];
-                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += floatVal($vvv["Amount"]);
+                                                    $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += floatval($vvv["Amount"]);
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['SKU'] = addslashes($vv['SKU']);
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['orderid'] = $order_info['orderid'];
                                                     $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['type'] = 'Refund';
@@ -965,7 +971,7 @@ class AmazonMWS
                                 if (!empty($v["ShipmentFees"])) {
                                     foreach ($v["ShipmentFees"] as $kkk => $vvv) {
                                         if (in_array($vvv["Type"], array("FBATransportationFee"))) {
-                                            $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] += floatVal($vvv["Amount"]);
+                                            $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']][$vvv["Type"]] += floatval($vvv["Amount"]);
                                         }
                                     }
                                 }
@@ -985,6 +991,7 @@ class AmazonMWS
                                 $aOrderDetailData['FBAPerUnitFulfillmentFee'] = floatval($aFees['FBAPerUnitFulfillmentFee']);
                                 $aOrderDetailData['FBATransportationFee'] = floatval($aFees['FBATransportationFee']);
                                 $aOrderDetailData['FBAWeightBasedFee'] = floatval($aFees['FBAWeightBasedFee']);
+                                $aOrderDetailData['ShippingFee'] = floatval($aFees['ShippingChargeback']);
                                 $aOrderDetailData['AmazonCommission'] = floatval($aFees['Commission']);
                                 $aOrderDetailData['Principal'] = floatval($aFees['Principal']);
                                 $aOrderDetailData['PrincipalRefund'] = floatval($aFees['PrincipalRefund']);
@@ -1013,6 +1020,7 @@ class AmazonMWS
                                                      SUM(FBATransportationFee) AS FBATransportationFee,
                                                      SUM(FBAWeightBasedFee) AS FBAWeightBasedFee,
                                                      SUM(AmazonCommission) AS AmazonCommission,
+                                                     SUM(ShippingFee) AS ShippingFee,
                                                      SUM(Refund) AS Refund,
                                                      SUM(Shipping) AS Shipping,
                                                      SUM(ShippingRefund) AS ShippingRefund,
@@ -1134,7 +1142,7 @@ class AmazonMWS
             $req->setFulfillmentAction('Ship');
             $req->setFulfillmentPolicy('FillOrKill');
 
-            $req->setDisplayableOrderDateTime($oOrder->getOrderDate(DateTime::ISO8601));
+            $req->setDisplayableOrderDateTime($oOrder->getOrderDate(\DateTime::ISO8601));
             $sDisplayAmazonOrderComment = self::DEFAULT_ORDER_MESSAGE;
             $sAmazonShippingNotes = $oOrderGroup->getAmazonShipmentNotes();
             if (!empty($sAmazonShippingNotes))

@@ -8,7 +8,7 @@ class OrderAmazonDetails extends Data
     /**
      * @var OrderAmazonDetail[]
      */
-    private $aAmazonDetails = [];
+    private $aAmazonDetails = null;
 
     public function __construct($aParams = [])
     {
@@ -40,10 +40,12 @@ class OrderAmazonDetails extends Data
 
     public function getOrderAmazonDetails($aParams = [])
     {
-        $this->aAmazonDetails = OrderAmazonDetail::model()->findAll(
-            SQLBuilder::getInstance()->
-                addCondition('orderid = '. $aParams['orderid'])->
-                addCondition('manufacturerid = '. $aParams['manufacturerid']));
+        if (is_null($this->aAmazonDetails)) {
+            $this->aAmazonDetails = OrderAmazonDetail::model()->findAll(
+                SQLBuilder::getInstance()->
+                addCondition('orderid = ' . $aParams['orderid'])->
+                addCondition('manufacturerid = ' . $aParams['manufacturerid']));
+        }
         return $this;
     }
 
@@ -108,6 +110,17 @@ class OrderAmazonDetails extends Data
         if (!empty($this->aAmazonDetails)) {
             foreach ($this->aAmazonDetails as $oAmazonDetail) {
                 $fRes += floatval($oAmazonDetail->getField('AmazonCommission'));
+            }
+        }
+        return $fRes;
+    }
+
+    public function getOrderShippingFee()
+    {
+        $fRes = 0;
+        if (!empty($this->aAmazonDetails)) {
+            foreach ($this->aAmazonDetails as $oAmazonDetail) {
+                $fRes += floatval($oAmazonDetail->getField('ShippingFee'));
             }
         }
         return $fRes;
