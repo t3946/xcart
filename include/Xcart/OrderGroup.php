@@ -11,21 +11,21 @@ class OrderGroup extends Data
      */
     private $oOrder = null;
     /**
-     * @var OrderGroupInvoice[]
+     * @var OrderGroupInvoices
      */
-    private $oOrderInvoices = [];
+    private $oOrderInvoices = null;
     /**
-     * @var OrderGroupMemo[]
+     * @var OrderGroupMemos
      */
-    private $oOrderMemos = [];
+    private $oOrderMemos = null;
     /**
-     * @var OrderRefundGroup[]
+     * @var OrderRefundGroups
      */
-    private $oOrderRefunds = [];
+    private $oOrderRefunds = null;
     /**
-     * @var OrderAmazonDetail[]
+     * @var OrderAmazonDetails
      */
-    private $oOrderAmazonDetails = [];
+    private $oOrderAmazonDetails = null;
 
     private $oPaymentMethod = null;
     /**
@@ -161,9 +161,8 @@ class OrderGroup extends Data
      */
     public function getOrderGroupInvoices()
     {
-        if (empty($this->oOrderInvoices)) {
-            $this->oOrderInvoices = new OrderGroupInvoices();
-            $this->oOrderInvoices = $this->oOrderInvoices->getOrderGroupInvoices(['orderid' => $this->getField('orderid'), 'manufacturerid' => $this->getField('manufacturerid')]);
+        if (is_null($this->oOrderInvoices)) {
+            $this->oOrderInvoices = OrderGroupInvoices::model()->getOrderGroupInvoices(['orderid' => $this->getOrderId(), 'manufacturerid' => $this->getManufacturerId()]);
         }
         return $this->oOrderInvoices;
     }
@@ -173,9 +172,8 @@ class OrderGroup extends Data
      */
     public function getOrderGroupMemos()
     {
-        if (empty($this->oOrderMemos)) {
-            $this->oOrderMemos = new OrderGroupMemos();
-            $this->oOrderMemos = $this->oOrderMemos->getOrderGroupMemos(['orderid' => $this->getField('orderid'), 'manufacturerid' => $this->getField('manufacturerid')]);
+        if (is_null($this->oOrderMemos)) {
+            $this->oOrderMemos = OrderGroupMemos::model()->getOrderGroupMemos(['orderid' => $this->getOrderId(), 'manufacturerid' => $this->getManufacturerId()]);
         }
         return $this->oOrderMemos;
     }
@@ -185,9 +183,8 @@ class OrderGroup extends Data
      */
     public function getOrderRefundGroups()
     {
-        if (empty($this->oOrderRefunds)) {
-            $this->oOrderRefunds = new OrderRefundGroups();
-            $this->oOrderRefunds = $this->oOrderRefunds->getOrderRefundGroups(['orderid' => $this->getField('orderid'), 'manufacturerid' => $this->getField('manufacturerid')]);
+        if (is_null($this->oOrderRefunds)) {
+            $this->oOrderRefunds = OrderRefundGroups::model()->getOrderRefundGroups(['orderid' => $this->getOrderId(), 'manufacturerid' => $this->getManufacturerId()]);
         }
         return $this->oOrderRefunds;
     }
@@ -197,9 +194,8 @@ class OrderGroup extends Data
      */
     public function getOrderAmazonDetails()
     {
-        if (empty($this->oOrderAmazonDetails)) {
-            $this->oOrderAmazonDetails = new OrderAmazonDetails();
-            $this->oOrderAmazonDetails = $this->oOrderAmazonDetails->getOrderAmazonDetails(['orderid' => $this->getField('orderid'), 'manufacturerid' => $this->getField('manufacturerid')]);
+        if (is_null($this->oOrderAmazonDetails)) {
+            $this->oOrderAmazonDetails = OrderAmazonDetails::model()->getOrderAmazonDetails(['orderid' => $this->getOrderId(), 'manufacturerid' => $this->getManufacturerId()]);
         }
         return $this->oOrderAmazonDetails;
     }
@@ -892,7 +888,7 @@ class OrderGroup extends Data
 
     public function recalculateAccountingAmazon()
     {
-        $fRefund = $fPrincipalRefund = $fShippingRefund = $fShipping = $FBAPerOrderFulfillmentFee = $FBAPerUnitFulfillmentFee = $FBATransportationFee = $FBAWeightBasedFee = $AmazonCommission = 0;
+        $fRefund = $fPrincipalRefund = $fShippingRefund = $fShipping = $FBAPerOrderFulfillmentFee = $FBAPerUnitFulfillmentFee = $FBATransportationFee = $FBAWeightBasedFee = $AmazonCommission = $ShippingFee= 0;
         if ($this->getOrderAmazonDetails()->countOrderAmazonDetails() > 0) {
             $fRefund = $this->getOrderAmazonDetails()->getOrderAmazonRefund();
             $fPrincipalRefund = $this->getOrderAmazonDetails()->getOrderAmazonPrincipalRefund();
@@ -903,6 +899,7 @@ class OrderGroup extends Data
             $FBATransportationFee = $this->getOrderAmazonDetails()->getOrderAmazonFBATransportationFee();
             $FBAWeightBasedFee = $this->getOrderAmazonDetails()->getOrderAmazonFBAWeightBasedFee();
             $AmazonCommission = $this->getOrderAmazonDetails()->getOrderAmazonCommission();
+            $ShippingFee = $this->getOrderAmazonDetails()->getOrderShippingFee();
         }
         $sAmazonChanell = $this->getOrderInstance()->getAmazonChanell();
         switch ($sAmazonChanell) {
@@ -929,7 +926,8 @@ class OrderGroup extends Data
                         $FBAPerOrderFulfillmentFee +
                         $FBAPerUnitFulfillmentFee +
                         $FBAWeightBasedFee +
-                        $AmazonCommission)->initAccountingGrossCostToUs()
+                        $AmazonCommission +
+                        $ShippingFee)->initAccountingGrossCostToUs()
                     ->setAccountingGrossShipping($fShipping + abs($FBATransportationFee));
                 if ($this->getOrderAmazonDetails()->isRefundExists())
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
@@ -942,7 +940,7 @@ class OrderGroup extends Data
                     ->setAccountingGrossShipping(abs($FBAPerOrderFulfillmentFee +
                             $FBAPerUnitFulfillmentFee +
                             $FBAWeightBasedFee +
-                            $AmazonCommission + $FBATransportationFee) + $fShipping);
+                            $AmazonCommission + $FBATransportationFee) + $fShipping + $ShippingFee);
                 if ($this->getOrderAmazonDetails()->isRefundExists())
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
                 else $this->addAccountingGrossRefundToUs(abs($fRefund));

@@ -120,6 +120,9 @@ class OrderDetail extends Data
         $this->oOrder = Order::model(['orderid' => $this->getField('orderid')]);
     }
 
+    /**
+     * @return Order
+     */
     public function getOrderInstance()
     {
         if (is_null($this->oOrder)) {

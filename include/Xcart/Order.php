@@ -55,7 +55,7 @@ class Order extends Data
      */
     public function getOrderDetails()
     {
-        if (empty($this->aOrderDetails)) {
+        if (is_null($this->aOrderDetails)) {
             $this->aOrderDetails = OrderDetail::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
         }
         return $this->aOrderDetails;

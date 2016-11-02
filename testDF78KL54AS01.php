@@ -9,5 +9,6 @@ require "./init.php";
 
 global $xcart_dir, $config;
 
-$aExternalMarketPlaces = Xcart\External_Marketplaces\StoreFrontMarketPlace::getMarketPlacesByStoreFront(67);
-var_dump($aExternalMarketPlaces);
+$oG = Xcart\OrderGroup::model(['orderid'=>60, 'manufacturerid' => 0]);
+
+$oG->updateField('manufacturerid', 12);
