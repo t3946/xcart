@@ -1369,12 +1369,16 @@ class AmazonMWS
                 $request->setSellerId(MERCHANT_ID);
                 $request->setMarketplaceId(MARKETPLACE_ID);
                 $request->setCreatedAfter(gmdate('Y-m-d\TH:i:s\Z', time() - $timeoffset));
+                $request->setOrderStatus(['Shipped','Unshipped','Canceled']);
                 $this->dom_xml_arr = $this->invokeListOrders($request);
             } else {
                 $request = new \MarketplaceWebServiceOrders_Model_ListOrdersByNextTokenRequest();
                 $request->setNextToken($this->nextToken);
                 $request->setSellerId(MERCHANT_ID);
                 $this->dom_xml_arr = $this->invokeListOrdersByNextToken($request);
+            }
+            if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503"){
+                return $this;
             }
             $this->processOrderList();
         }
