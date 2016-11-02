@@ -20,7 +20,7 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         'X' => 
         array (
             'Xcart\\External_Product_Verification\\' => 36,
-            'Xcart\\External_MarketPlace\\' => 27,
+            'Xcart\\External_Marketplaces\\' => 28,
             'Xcart\\' => 6,
         ),
         'R' => 
@@ -60,7 +60,7 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         array (
             0 => __DIR__ . '/../../..' . '/modules/External_Product_Verification/include',
         ),
-        'Xcart\\External_MarketPlace\\' => 
+        'Xcart\\External_Marketplaces\\' => 
         array (
             0 => __DIR__ . '/../../..' . '/modules/External_Marketplaces/include',
         ),
