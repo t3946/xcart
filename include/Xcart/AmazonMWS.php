@@ -1419,24 +1419,25 @@ class AmazonMWS
                     $sOrderStatus = $orderNode->getElementsByTagName('OrderStatus')->item(0)->nodeValue;
                     $oOrder = Order::model()->find(SQLBuilder::getInstance()->addCondition("amazonorderid='" . $sAmazonOrderId . "'"));
                     if (!$oOrder->getOrderId()) {
-                        $oOrder->setField('amazonorderid', $sAmazonOrderId);
-                        $this->oOrder = $oOrder;
-                        $this->_Request('OrderRequest');
-
-                        $docOrders = new \DOMDocument;
-                        $this->dom_xml_arr = str_replace($this->sServiceUrl, '', $this->dom_xml_arr);
-                        $docOrders->loadXML($this->dom_xml_arr);
-                        $xpath2 = new \DOMXPath($docOrders);
-
-                        $aOrderInfo = $xpath2->query('/GetOrderResponse/GetOrderResult/Orders/Order')->item(0);
-
-
-                        print("ORDER INFO: \r\n");
-                        func_print_r($aOrderInfo->nodeValue);
-                        $log_text = "Processing order: " . $oOrder->getField('amazonorderid') . "  status: " . $sOrderStatus;
-                        print($log_text . "\r\n");
-
                         if (in_array($sOrderStatus, ['Unshipped', 'Shipped'])) {
+                            $oOrder->setField('amazonorderid', $sAmazonOrderId);
+                            $this->oOrder = $oOrder;
+                            $this->_Request('OrderRequest');
+
+                            $docOrders = new \DOMDocument;
+                            $this->dom_xml_arr = str_replace($this->sServiceUrl, '', $this->dom_xml_arr);
+                            $docOrders->loadXML($this->dom_xml_arr);
+                            $xpath2 = new \DOMXPath($docOrders);
+
+                            $aOrderInfo = $xpath2->query('/GetOrderResponse/GetOrderResult/Orders/Order')->item(0);
+
+
+                            print("ORDER INFO: \r\n");
+                            func_print_r($aOrderInfo->nodeValue);
+                            $log_text = "Processing order: " . $oOrder->getField('amazonorderid') . "  status: " . $sOrderStatus;
+                            print($log_text . "\r\n");
+
+
                             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
 
                             $this->_Request('OrderInfoRequest');
@@ -1604,8 +1605,7 @@ class AmazonMWS
                     } else {
                         $sLog = '';
                         if (in_array($sOrderStatus, ['Shipped', 'Canceled'])) {
-                            $log_text = "Processing order: " . $oOrder->getField('amazonorderid') . " - " . $oOrder->getOrderId() . "  status: " . $sOrderStatus;
-                            func_backprocess_log(self::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
+
                             /** @var OrderGroup $oOrderGroup */
                             $aOrderGroups = $oOrder->getOrderGroups();
                             switch ($sOrderStatus) {
