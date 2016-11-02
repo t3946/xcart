@@ -24,7 +24,7 @@ $log_text = " * * *  Cron started  * * * ";
 $classAmazonMWS = new Xcart\AmazonMWS('MarketplaceWebServiceOrders_Client', '/Orders/2013-09-01');
 func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
 
-$classAmazonMWS->setTimeOut(75)->_Request('OrderListRequest');
+$classAmazonMWS->_Request('OrderListRequest');
 
 db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='" . LOG_CATEGORY . "'");
 
