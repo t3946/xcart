@@ -45,7 +45,7 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
 
     $aIssueList = Xcart\External_Marketplaces\IssuesProcessingRules::getIssuesList($current_storefront);
     if (!empty($aIssueList))
-        usort ($aIssueList,['Xcart\External_MarketPlace\IssuesProcessingRules','sortByIssueProductsCount']);
+        usort ($aIssueList,['Xcart\External_Marketplaces\IssuesProcessingRules','sortByIssueProductsCount']);
     $smarty->assign('aProcessingRules', $aIssueList);
     $smarty->assign('statuses', ['exclude', 'manual','skip']);
     $location[] = ['Quality Issues Processing Rules', ""];
