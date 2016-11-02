@@ -8,7 +8,7 @@ $baseDir = dirname(dirname($vendorDir));
 return array(
     'phpseclib\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Xcart\\External_Product_Verification\\' => array($baseDir . '/modules/External_Product_Verification/include'),
-    'Xcart\\External_MarketPlace\\' => array($baseDir . '/modules/External_Marketplaces/include'),
+    'Xcart\\External_Marketplaces\\' => array($baseDir . '/modules/External_Marketplaces/include'),
     'Xcart\\' => array($baseDir . '/include/Xcart'),
     'React\\Promise\\' => array($vendorDir . '/react/promise/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),

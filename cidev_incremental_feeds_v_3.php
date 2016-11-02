@@ -221,8 +221,8 @@ Select
 
         print("\n " . strftime("%X") . " --- storefront: " . $storefrontid . " --- \n");
 
-        /** @var Xcart\External_MarketPlace\StoreFrontMarketPlace[] $aExternalMarketPlaces */
-        $aExternalMarketPlaces = Xcart\External_MarketPlace\StoreFrontMarketPlace::getMarketPlacesByStoreFront($storefrontid);
+        /** @var Xcart\External_Marketplaces\StoreFrontMarketPlace[] $aExternalMarketPlaces */
+        $aExternalMarketPlaces = Xcart\External_Marketplaces\StoreFrontMarketPlace::getMarketPlacesByStoreFront($storefrontid);
 
 
 #####################################################################################################################

@@ -1,5 +1,5 @@
 <?php
-namespace Xcart\External_MarketPlace;
+namespace Xcart\External_Marketplaces;
 
 use Xcart\Data;
 
@@ -47,7 +47,7 @@ class ExternalMarketPlace extends Data
         self::$sql_tbl = $sql_tbl;
         $aMarketPlace = func_query_first("SELECT * FROM " . self::$sql_tbl['products_external_marketplaces'] . " WHERE id = $iMarketPlaceId");
         if (!empty($aMarketPlace)) {
-            $sProcessorClass = __NAMESPACE__. DIRECTORY_SEPARATOR . 'Marketplaces' . DIRECTORY_SEPARATOR . $aMarketPlace['processor_class'];
+            $sProcessorClass = __NAMESPACE__. '\\Marketplaces\\' . $aMarketPlace['processor_class'];
             if (class_exists($sProcessorClass))
                 $oProcessor = new $sProcessorClass(['marketplace_id' => $iMarketPlaceId, 'storefront_id' => $iStoreFrontId]);
         }
