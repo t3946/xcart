@@ -49,7 +49,10 @@ class FbaMissingSku extends Data
 
     public function getOrdersWithMissingSKU()
     {
-        return OrderDetail::model()->findAll(SQLBuilder::getInstance()->addCondition("productcode = '" . $this->getMissingSKU() . "'"));
+        return OrderDetail::model()->findAll(
+            SQLBuilder::getInstance()->
+            addCondition("productcode = '" . $this->getMissingSKU() . "'")
+        );
     }
 
     public function fixOrders()
