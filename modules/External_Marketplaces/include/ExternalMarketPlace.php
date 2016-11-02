@@ -1,5 +1,5 @@
 <?php
-namespace Xcart\External_MarketPlace;
+namespace Xcart\External_Marketplaces;
 
 use Xcart\Data;
 

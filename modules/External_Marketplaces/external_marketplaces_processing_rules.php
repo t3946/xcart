@@ -1,5 +1,5 @@
 <?php
-use Xcart\External_MarketPlace\IssuesProcessingRules;
+use Xcart\External_Marketplaces\IssuesProcessingRules;
 global $xcart_dir;
 
 if ($REQUEST_METHOD == 'POST') {

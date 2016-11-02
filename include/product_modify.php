@@ -36,7 +36,7 @@
 #
 # $Id: product_modify.php,v 1.171.2.15 2006/12/25 07:51:23 max Exp $
 #
-use Xcart\External_MarketPlace\ExternalMarketPlace;
+use Xcart\External_Marketplaces\ExternalMarketPlace;
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
@@ -1496,7 +1496,7 @@ if (!empty($aMarketplaces)) {
 }
 $smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
 if (!empty($product_info['productid'])) {
-$aDisabledMarketPlaces = Xcart\External_MarketPlace\DisabledMarketPlace::getDisabledMarketPlaces($product_info['productid'], 'P');
+$aDisabledMarketPlaces = Xcart\External_Marketplaces\DisabledMarketPlace::getDisabledMarketPlaces($product_info['productid'], 'P');
 $smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
 }
 

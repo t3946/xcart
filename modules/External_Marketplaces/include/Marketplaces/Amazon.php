@@ -1,7 +1,7 @@
 <?php
-namespace Xcart\External_MarketPlace\Marketplaces;
+namespace Xcart\External_Marketplaces\Marketplaces;
 use Xcart\Product;
-use Xcart\External_MarketPlace\StoreFrontMarketPlace;
+use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Amazon extends StoreFrontMarketPlace
 {

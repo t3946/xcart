@@ -16,13 +16,13 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
     $aIssueParam = null;
     if (!empty($issue)) {
         $aIssueParam = ['issue_id' => $issue];
-        $oIssue = new Xcart\External_MarketPlace\IssuesProcessingRules($aIssueParam);
+        $oIssue = new Xcart\External_Marketplaces\IssuesProcessingRules($aIssueParam);
         $smarty->assign("navigation_script", "external_marketplaces_quality_issues.php?issue=$issue");
         $location[] = [$oIssue->getIssueName(), ""];
     }
     if (!empty($search)) {
         $aFilterParams ['search'] = $search;
-        $oIssue = new Xcart\External_MarketPlace\IssuesProcessingRules($aIssueParam);
+        $oIssue = new Xcart\External_Marketplaces\IssuesProcessingRules($aIssueParam);
         $location[] = ['Search results', ""];
     }
 
@@ -43,7 +43,7 @@ if (!empty($issue) && is_numeric($issue) || !empty($search)) {
 } else {
     $smarty->assign("main", "external_marketplaces_quality_issues");
 
-    $aIssueList = Xcart\External_MarketPlace\IssuesProcessingRules::getIssuesList($current_storefront);
+    $aIssueList = Xcart\External_Marketplaces\IssuesProcessingRules::getIssuesList($current_storefront);
     if (!empty($aIssueList))
         usort ($aIssueList,['Xcart\External_MarketPlace\IssuesProcessingRules','sortByIssueProductsCount']);
     $smarty->assign('aProcessingRules', $aIssueList);
