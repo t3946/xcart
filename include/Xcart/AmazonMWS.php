@@ -1425,10 +1425,11 @@ class AmazonMWS
 
                         print("ORDER INFO: \r\n");
                         func_print_r($aOrderInfo->nodeValue);
-                        $log_text = "Processing order: " . $oOrder->getField('amazonorderid') . " - " . $oOrder->getOrderId() . "  status: " . $sOrderStatus;
+                        $log_text = "Processing order: " . $oOrder->getField('amazonorderid') . "  status: " . $sOrderStatus;
                         print($log_text . "\r\n");
-                        func_backprocess_log(self::BACK_PROCESS_LOG_NAME_ORDERS,$log_text);
+
                         if (!empty($aOrderItems) && $aOrderItems->length > 0 && in_array($sOrderStatus, ['Unshipped', 'Shipped'])) {
+                            func_backprocess_log(self::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
 
                             $this->_Request('OrderInfoRequest');
 
@@ -1591,40 +1592,44 @@ class AmazonMWS
                         }
                     } else {
                         $sLog = '';
-                        /** @var OrderGroup $oOrderGroup */
-                        $aOrderGroups = $oOrder->getOrderGroups();
-                        switch ($sOrderStatus) {
-                            case 'Shipped':
-                                foreach ($aOrderGroups as $oOrderGroup) {
-                                    if ($oOrderGroup->getOrderGroupStatusCB() != "P") {
-                                        if (!empty($sLog)) $sLog .= '<br />';
-                                        $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> cb_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusCB()])->getName() . " -> " . OrderStatus::model(['code' => 'P'])->getName();
-                                        $oOrderGroup->updateField('cb_status', 'P');
-                                        $oOrder->updateField('cb_status', 'P');
+                        if (in_array($sOrderStatus, ['Shipped', 'Canceled'])) {
+                            $log_text = "Processing order: " . $oOrder->getField('amazonorderid') . " - " . $oOrder->getOrderId() . "  status: " . $sOrderStatus;
+                            func_backprocess_log(self::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
+                            /** @var OrderGroup $oOrderGroup */
+                            $aOrderGroups = $oOrder->getOrderGroups();
+                            switch ($sOrderStatus) {
+                                case 'Shipped':
+                                    foreach ($aOrderGroups as $oOrderGroup) {
+                                        if ($oOrderGroup->getOrderGroupStatusCB() != "P") {
+                                            if (!empty($sLog)) $sLog .= '<br />';
+                                            $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> cb_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusCB()])->getName() . " -> " . OrderStatus::model(['code' => 'P'])->getName();
+                                            $oOrderGroup->updateField('cb_status', 'P');
+                                            $oOrder->updateField('cb_status', 'P');
+                                        }
+                                        if ($oOrderGroup->getOrderGroupStatusDC() != "S") {
+                                            if (!empty($sLog)) $sLog .= '<br />';
+                                            $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> dc_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusDC()])->getName() . " -> " . OrderStatus::model(['code' => 'S'])->getName();
+                                            $oOrderGroup->updateField('dc_status', 'S');
+                                            $oOrder->updateField('dc_status', 'S');
+                                        }
                                     }
-                                    if ($oOrderGroup->getOrderGroupStatusDC() != "S") {
-                                        if (!empty($sLog)) $sLog .= '<br />';
-                                        $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> dc_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusDC()])->getName() . " -> " . OrderStatus::model(['code' => 'S'])->getName();
-                                        $oOrderGroup->updateField('dc_status', 'S');
-                                        $oOrder->updateField('dc_status', 'S');
-                                    }
-                                }
 
-                                break;
-                            case 'Canceled':
-                                foreach ($aOrderGroups as $oOrderGroup) {
-                                    if ($oOrderGroup->getOrderGroupStatusCB() != "A") {
-                                        if (!empty($sLog)) $sLog .= '<br />';
-                                        $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> cb_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusCB()])->getName() . " -> " . OrderStatus::model(['code' => 'A'])->getName();
-                                        $oOrderGroup->updateField('cb_status', 'A');
-                                        $oOrder->updateField('cb_status', 'A');
+                                    break;
+                                case 'Canceled':
+                                    foreach ($aOrderGroups as $oOrderGroup) {
+                                        if ($oOrderGroup->getOrderGroupStatusCB() != "A") {
+                                            if (!empty($sLog)) $sLog .= '<br />';
+                                            $sLog .= "<b>" . $oOrderGroup->getManufacturerEntity()->getField('code') . ":</b> cb_status: " . OrderStatus::model(['code' => $oOrderGroup->getOrderGroupStatusCB()])->getName() . " -> " . OrderStatus::model(['code' => 'A'])->getName();
+                                            $oOrderGroup->updateField('cb_status', 'A');
+                                            $oOrder->updateField('cb_status', 'A');
+                                        }
                                     }
-                                }
 
-                                break;
+                                    break;
+                            }
+                            if (!empty($sLog))
+                                Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $sLog, 'Amazon');
                         }
-                        if (!empty($sLog))
-                            Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $sLog, 'Amazon');
                     }
 
                 }
