@@ -1604,8 +1604,7 @@ class AmazonMWS
                     } else {
                         $sLog = '';
                         if (in_array($sOrderStatus, ['Shipped', 'Canceled'])) {
-                            $log_text = "Processing order: " . $oOrder->getField('amazonorderid') . " - " . $oOrder->getOrderId() . "  status: " . $sOrderStatus;
-                            func_backprocess_log(self::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
+                            
                             /** @var OrderGroup $oOrderGroup */
                             $aOrderGroups = $oOrder->getOrderGroups();
                             switch ($sOrderStatus) {
