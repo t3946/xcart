@@ -123,7 +123,7 @@ class Data
 
     public function updateField($sFieldName, $sNewValue)
     {
-        $this->setField($sFieldName, $sNewValue);
+
         $aToUpdate[$sFieldName] = $sNewValue;
         if (empty($this->aPrimaryKeysValues))
             throw new \Exception('Empty primary keys values for update field');
@@ -132,16 +132,17 @@ class Data
             $a = $b . ' = "' . $a . '"';
         });
         func_array2update($this->sPrimaryTable, $aToUpdate, $this->getWhereClause());
+        $this->setField($sFieldName, $sNewValue);
         return $this;
     }
 
     public function updateFields($aFieldNamesValues = [])
     {
         if (!empty($aFieldNamesValues)) {
-            $this->setFields($aFieldNamesValues);
             if (empty($this->aPrimaryKeysValues))
                 throw new \Exception('Empty primary keys values for update fields');
             func_array2update($this->sPrimaryTable, $aFieldNamesValues, $this->getWhereClause());
+            $this->setFields($aFieldNamesValues);
         }
         return $this;
     }
