@@ -32,7 +32,7 @@
             <td>{$oMatchProduct->getMissingSKU()}</td>
             <td><input class="new_match_sku" name="xcart_match_sku" value="{$oProduct->getSKU()}"/></td>
             <td><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getProductName()}</a></td>
-            <td align="center">{$oMatchProduct->getOrdersCount()}</td>
+            <td align="center" class="missing_order_count">{$oMatchProduct->getOrdersCount()}</td>
             <td style="text-align: center">
                 <div class="action_reclass_buttons ui buttons" data-missing-sku="{$oMatchProduct->getMissingSKU()}">
                     <div data-action="Edit" class="ui button item" style="border: 1px solid #808080;">Edit</div>
@@ -41,7 +41,7 @@
                         <i class="dropdown icon"></i>
                         <div class="menu">
                             {if ($oMatchProduct->getOrdersCount())}
-                            <div data-action="Fix_orders" class="item">Fix orders</div>
+                            <div data-action="Fix_orders" class="item fix_order_button">Fix orders</div>
                             {/if}
                             <div data-action="Add" class="item">Add</div>
                             <div data-action="Delete" class="item">Delete</div>
@@ -124,7 +124,7 @@
                 clone_row.dropdown().find('td:first-child').html($('<input/>').attr('name','amazon_sku').addClass('amazon_sku')).end()
                         .find('.new_match_sku').val('').end()
                         .find('td:nth-child(3)').empty().end()
-                        .find('td:nth-child(4)').html(menu).find('.dropdown').dropdown();
+                        .find('td:nth-child(5)').html(menu).find('.dropdown').dropdown();
                 button.closest('tr').after(clone_row);
             } else {
                 if (confirm("Are you sure?")) {
@@ -143,6 +143,11 @@
                                             break;
                                         case 'Delete' :
                                             button.closest('tr').remove();
+                                            break;
+                                        case 'Fix_orders' :
+                                            var tr = button.closest('tr');
+                                                tr.find('.missing_order_count').html('0');
+                                                tr.find('.fix_order_button').remove();
                                             break;
                                     }
                                     alert(action_value + " has been done!");
