@@ -1,6 +1,6 @@
 <?php
 global $xcart_dir;
-require_once $xcart_dir."/include/xcart/CloneData.php";
+require_once $xcart_dir."/include/Xcart/CloneData.php";
 use Xcart\CloneData;
 
 class classManufacturer extends CloneData
