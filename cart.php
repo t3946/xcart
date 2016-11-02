@@ -863,7 +863,7 @@ if (!$func_is_cart_empty) {
 	}
 
 	if (!empty($purchase_order_selected) && is_numeric($purchase_order_selected)) {
-		$smarty->assign('selectedPO', Xcart\POPipeLine::model(['po_id' => $purchase_order_selected]));
+		$smarty->assign('selectedPO', Xcart\POPipeline::model(['po_id' => $purchase_order_selected]));
 	}
 
 	//x_session_register('remember_login');

@@ -625,6 +625,6 @@ class Order extends Data
 
     public function getPOPipelineInstance()
     {
-        return POPipeLine::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
+        return POPipeline::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
     }
 }
