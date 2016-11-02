@@ -1436,7 +1436,7 @@ class AmazonMWS
                         $log_text = "Processing order: " . $oOrder->getField('amazonorderid') . "  status: " . $sOrderStatus;
                         print($log_text . "\r\n");
 
-                        if (!empty($aOrderItems) && $aOrderItems->length > 0 && in_array($sOrderStatus, ['Unshipped', 'Shipped'])) {
+                        if (in_array($sOrderStatus, ['Unshipped', 'Shipped'])) {
                             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
 
                             $this->_Request('OrderInfoRequest');
@@ -1447,154 +1447,157 @@ class AmazonMWS
                             $xpath3 = new \DOMXPath($docOrders);
                             $aOrderItems = $xpath3->query('/ListOrderItemsResponse/ListOrderItemsResult/OrderItems');
 
-                            $sOrderTotal = $aOrderInfo->getElementsByTagName('OrderTotal')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue;
-                            $oShippingAddress = $aOrderInfo->getElementsByTagName('ShippingAddress')->item(0);
-                            $sShippingAddressName = addslashes($oShippingAddress->getElementsByTagName('Name')->item(0)->nodeValue);
-                            $sShippingAddressCity = addslashes($oShippingAddress->getElementsByTagName('City')->item(0)->nodeValue);
-                            $sShippingAddressCountryCode = addslashes($oShippingAddress->getElementsByTagName('CountryCode')->item(0)->nodeValue);
-                            $sShippingAddressPhone = addslashes($oShippingAddress->getElementsByTagName('Phone')->item(0)->nodeValue);
-                            $sShippingAddressPostalCode = addslashes($oShippingAddress->getElementsByTagName('PostalCode')->item(0)->nodeValue);
-                            $sShippingAddressStateOrRegion = addslashes($oShippingAddress->getElementsByTagName('StateOrRegion')->item(0)->nodeValue);
-                            $StateOrRegion_code = State::model()->find(SQLBuilder::getInstance()->addCondition("country_code = '$sShippingAddressCountryCode'")->addCondition("state = '$sShippingAddressStateOrRegion'"))->getField('code');
-                            if (!empty($StateOrRegion_code)) {
-                                $sShippingAddressStateOrRegion = addslashes($StateOrRegion_code);
-                            }
-                            $sFulfilmentChanel = $aOrderInfo->getElementsByTagName('FulfillmentChannel')->item(0)->nodeValue;
+                            if (!empty($aOrderItems) && $aOrderItems->length > 0) {
 
-                            $sAddress = addslashes($oShippingAddress->getElementsByTagName('AddressLine1')->item(0)->nodeValue .
-                                (!empty($oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue : '') .
-                                (!empty($oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue : ''));
-
-                            $sBuyerName = addslashes($aOrderInfo->getElementsByTagName('BuyerName')->item(0)->nodeValue);
-
-
-                            $oOrder->
-                            setField('order_prefix', 'AZ-')->
-                            setField('login', 'amazon')->
-                            setField('amazon_fulfillment_channel', $sFulfilmentChanel)->
-                            setField('total', $sOrderTotal)->
-                            setField('date', strtotime($aOrderInfo->getElementsByTagName('PurchaseDate')->item(0)->nodeValue))->
-                            setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
-                            setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
-                            setField('bd_status', 'W')->
-                            setField('payment_method', 'Amazon Seller')->
-                            setField('firstname', $sBuyerName)->
-                            setField('s_firstname', $sShippingAddressName)->
-                            setField('s_address', $sAddress)->
-                            setField('s_city', $sShippingAddressCity)->
-                            setField('s_state', $sShippingAddressStateOrRegion)->
-                            setField('s_country', $sShippingAddressCountryCode)->
-                            setField('s_zipcode', $sShippingAddressPostalCode)->
-                            setField('b_firstname', $sBuyerName)->
-                            setField('b_address', $sAddress)->
-                            setField('b_city', $sShippingAddressCity)->
-                            setField('b_state', $sShippingAddressStateOrRegion)->
-                            setField('b_country', $sShippingAddressCountryCode)->
-                            setField('b_zipcode', $sShippingAddressPostalCode)->
-                            setField('phone', $sShippingAddressPhone)->
-                            setField('email', addslashes($aOrderInfo->getElementsByTagName('BuyerEmail')->item(0)->nodeValue))->
-                            setField('language', 'US')->
-                            setField('storefrontid', 0)->
-                            setField('fraud_status', 'C')->
-                            setField('overall_fraud_score', 50)->
-                            setField('tracking_all_filled', 'N')->
-                            setField('vn_status', ($sFulfilmentChanel == 'AFN' ? 'PV' : 'NS'));
-                            $oOrder->setField('orderid', $oOrder->_insert());
-
-                            $aManufacturerid_arr = [];
-                            $product_total = 0;
-
-                            foreach ($aOrderItems as $oOrderItem) {
-                                $sAmazonSKU = addslashes($oOrderItem->getElementsByTagName('SellerSKU')->item(0)->nodeValue);
-                                $oProduct = Product::model()->getProductBySKU($sAmazonSKU);
-
-                                if (!$oProduct->getProductId()) {
-                                    /*search product in fba_missing_sku*/
-                                    $oFbaMissing = FbaMissingSku::model(['missing_productcode' => $sAmazonSKU]);
-                                    if ($oFbaMissing->getProductId()) {
-                                        $oProduct = Product::model(['productid' => $oFbaMissing->getProductId()]);
-                                    } else
-                                        if ($oFbaMissing->getField('missing_productcode') == '') {
-                                            $oFbaMissing->setField('missing_productcode', $sAmazonSKU)->setField('productid', 0)->_insert();
-                                            global $config;
-                                            $to = $config['Company']['product_management'];
-                                            $from = 'team@s3stores.com';
-                                            func_send_mail($to, 'mail/missing_sku_subj.tpl', 'mail/missing_sku.tpl', $from, true);
-                                        }
+                                $sOrderTotal = $aOrderInfo->getElementsByTagName('OrderTotal')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue;
+                                $oShippingAddress = $aOrderInfo->getElementsByTagName('ShippingAddress')->item(0);
+                                $sShippingAddressName = addslashes($oShippingAddress->getElementsByTagName('Name')->item(0)->nodeValue);
+                                $sShippingAddressCity = addslashes($oShippingAddress->getElementsByTagName('City')->item(0)->nodeValue);
+                                $sShippingAddressCountryCode = addslashes($oShippingAddress->getElementsByTagName('CountryCode')->item(0)->nodeValue);
+                                $sShippingAddressPhone = addslashes($oShippingAddress->getElementsByTagName('Phone')->item(0)->nodeValue);
+                                $sShippingAddressPostalCode = addslashes($oShippingAddress->getElementsByTagName('PostalCode')->item(0)->nodeValue);
+                                $sShippingAddressStateOrRegion = addslashes($oShippingAddress->getElementsByTagName('StateOrRegion')->item(0)->nodeValue);
+                                $StateOrRegion_code = State::model()->find(SQLBuilder::getInstance()->addCondition("country_code = '$sShippingAddressCountryCode'")->addCondition("state = '$sShippingAddressStateOrRegion'"))->getField('code');
+                                if (!empty($StateOrRegion_code)) {
+                                    $sShippingAddressStateOrRegion = addslashes($StateOrRegion_code);
                                 }
+                                $sFulfilmentChanel = $aOrderInfo->getElementsByTagName('FulfillmentChannel')->item(0)->nodeValue;
 
-                                if (!in_array($oProduct->getManufacturerId(), $aManufacturerid_arr)) {
-                                    $oOrderGroup = OrderGroup::model()->
+                                $sAddress = addslashes($oShippingAddress->getElementsByTagName('AddressLine1')->item(0)->nodeValue .
+                                    (!empty($oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue : '') .
+                                    (!empty($oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue : ''));
+
+                                $sBuyerName = addslashes($aOrderInfo->getElementsByTagName('BuyerName')->item(0)->nodeValue);
+
+
+                                $oOrder->
+                                setField('order_prefix', 'AZ-')->
+                                setField('login', 'amazon')->
+                                setField('amazon_fulfillment_channel', $sFulfilmentChanel)->
+                                setField('total', $sOrderTotal)->
+                                setField('date', strtotime($aOrderInfo->getElementsByTagName('PurchaseDate')->item(0)->nodeValue))->
+                                setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
+                                setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
+                                setField('bd_status', 'W')->
+                                setField('payment_method', 'Amazon Seller')->
+                                setField('firstname', $sBuyerName)->
+                                setField('s_firstname', $sShippingAddressName)->
+                                setField('s_address', $sAddress)->
+                                setField('s_city', $sShippingAddressCity)->
+                                setField('s_state', $sShippingAddressStateOrRegion)->
+                                setField('s_country', $sShippingAddressCountryCode)->
+                                setField('s_zipcode', $sShippingAddressPostalCode)->
+                                setField('b_firstname', $sBuyerName)->
+                                setField('b_address', $sAddress)->
+                                setField('b_city', $sShippingAddressCity)->
+                                setField('b_state', $sShippingAddressStateOrRegion)->
+                                setField('b_country', $sShippingAddressCountryCode)->
+                                setField('b_zipcode', $sShippingAddressPostalCode)->
+                                setField('phone', $sShippingAddressPhone)->
+                                setField('email', addslashes($aOrderInfo->getElementsByTagName('BuyerEmail')->item(0)->nodeValue))->
+                                setField('language', 'US')->
+                                setField('storefrontid', 0)->
+                                setField('fraud_status', 'C')->
+                                setField('overall_fraud_score', 50)->
+                                setField('tracking_all_filled', 'N')->
+                                setField('vn_status', ($sFulfilmentChanel == 'AFN' ? 'PV' : 'NS'));
+                                $oOrder->setField('orderid', $oOrder->_insert());
+
+                                $aManufacturerid_arr = [];
+                                $product_total = 0;
+
+                                foreach ($aOrderItems as $oOrderItem) {
+                                    $sAmazonSKU = addslashes($oOrderItem->getElementsByTagName('SellerSKU')->item(0)->nodeValue);
+                                    $oProduct = Product::model()->getProductBySKU($sAmazonSKU);
+
+                                    if (!$oProduct->getProductId()) {
+                                        /*search product in fba_missing_sku*/
+                                        $oFbaMissing = FbaMissingSku::model(['missing_productcode' => $sAmazonSKU]);
+                                        if ($oFbaMissing->getProductId()) {
+                                            $oProduct = Product::model(['productid' => $oFbaMissing->getProductId()]);
+                                        } else
+                                            if ($oFbaMissing->getField('missing_productcode') == '') {
+                                                $oFbaMissing->setField('missing_productcode', $sAmazonSKU)->setField('productid', 0)->_insert();
+                                                global $config;
+                                                $to = $config['Company']['product_management'];
+                                                $from = 'team@s3stores.com';
+                                                func_send_mail($to, 'mail/missing_sku_subj.tpl', 'mail/missing_sku.tpl', $from, true);
+                                            }
+                                    }
+
+                                    if (!in_array($oProduct->getManufacturerId(), $aManufacturerid_arr)) {
+                                        $oOrderGroup = OrderGroup::model()->
+                                        setField('orderid', $oOrder->getOrderId())->
+                                        setField('manufacturerid', $oProduct->getManufacturerId())->
+                                        setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->NodeValue))->
+                                        setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
+                                        setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
+                                        setField('bd_status', 'W');
+                                        $oOrderGroup->_insert();
+                                        $aManufacturerid_arr[] = $oProduct->getManufacturerId();
+                                    }
+
+                                    $oOrderDetail = OrderDetail::model()->
                                     setField('orderid', $oOrder->getOrderId())->
-                                    setField('manufacturerid', $oProduct->getManufacturerId())->
-                                    setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->NodeValue))->
-                                    setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
-                                    setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
-                                    setField('bd_status', 'W');
-                                    $oOrderGroup->_insert();
-                                    $aManufacturerid_arr[] = $oProduct->getManufacturerId();
-                                }
+                                    setField('productid', $oProduct->getProductId())->
+                                    setField('item_cost_to_us', $oProduct->getProductCostToUs())->
+                                    setField('price', floatval($oOrderItem->getElementsByTagName('ItemPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue) /
+                                        intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue))->
+                                    setField('amount', intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue))->
+                                    setField('productcode', $sAmazonSKU)->
+                                    setField('AmazonOrderItemCode', addslashes($oOrderItem->getElementsByTagName('OrderItemId')->item(0)->nodeValue))->
+                                    setField('product', addslashes($oProduct->getProductName()));
+                                    $oOrderDetail->_insert();
 
-                                $oOrderDetail = OrderDetail::model()->
-                                setField('orderid', $oOrder->getOrderId())->
-                                setField('productid', $oProduct->getProductId())->
-                                setField('item_cost_to_us', $oProduct->getProductCostToUs())->
-                                setField('price', floatval($oOrderItem->getElementsByTagName('ItemPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue) /
-                                    intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue))->
-                                setField('amount', intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue))->
-                                setField('productcode', $sAmazonSKU)->
-                                setField('AmazonOrderItemCode', addslashes($oOrderItem->getElementsByTagName('OrderItemId')->item(0)->nodeValue))->
-                                setField('product', addslashes($oProduct->getProductName()));
-                                $oOrderDetail->_insert();
+                                    $oOrder->updateVerificationStatus()->reCalculateTotals();
 
-                                $oOrder->updateVerificationStatus()->reCalculateTotals();
+                                    $product_total += $oOrderDetail->getTotalProductPrice();
 
-                                $product_total += $oOrderDetail->getTotalProductPrice();
+                                    $oOrderRaw = CidevAmazonOrderRaw::model()->find(SQLBuilder::getInstance()->addCondition('orderid = ' . $oOrder->getOrderId()));
+                                    $oOrderRaw->setField('orderid', $oOrder->getOrderId())->
+                                    setField('order_info', $xpath2->document->saveXML())->
+                                    setField('orderitems_info', $xpath3->document->saveXML());
+                                    $oOrderRaw->_insert(true);
 
-                                $oOrderRaw = CidevAmazonOrderRaw::model()->find(SQLBuilder::getInstance()->addCondition('orderid = ' . $oOrder->getOrderId()));
-                                $oOrderRaw->setField('orderid', $oOrder->getOrderId())->
-                                setField('order_info', $xpath2->document->saveXML())->
-                                setField('orderitems_info', $xpath3->document->saveXML());
-                                $oOrderRaw->_insert(true);
-
-                                $log = '<a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID=' . $sAmazonOrderId . '" target="_blank">Amazon order # ' . $sAmazonOrderId . '</a><br />Grand total: $' . $product_total;
-                                Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $log, 'Amazon');
+                                    $log = '<a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID=' . $sAmazonOrderId . '" target="_blank">Amazon order # ' . $sAmazonOrderId . '</a><br />Grand total: $' . $product_total;
+                                    Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $log, 'Amazon');
 
 
-                                $statuses = func_query_hash('SELECT code, name, type FROM xcart_order_statuses ORDER BY orderby', array('type', 'code'), false, true);
+                                    $statuses = func_query_hash('SELECT code, name, type FROM xcart_order_statuses ORDER BY orderby', array('type', 'code'), false, true);
 
-                                x_load('order');
-                                x_load('mail');
-                                $order_data = func_order_data($oOrder->getOrderId());
-                                $order_status = "I";
+                                    x_load('order');
+                                    x_load('mail');
+                                    $order_data = func_order_data($oOrder->getOrderId());
+                                    $order_status = "I";
 
-                                global $mail_smarty, $config;
+                                    global $mail_smarty, $config;
 
-                                $mail_smarty->assign("products", $order_data["products"]);
-                                $mail_smarty->assign("giftcerts", $order_data["giftcerts"]);
-                                $mail_smarty->assign("order", $order_data["order"]);
-                                $mail_smarty->assign("userinfo", $order_data["userinfo"]);
-                                $mail_smarty->assign('statuses', $statuses);
+                                    $mail_smarty->assign("products", $order_data["products"]);
+                                    $mail_smarty->assign("giftcerts", $order_data["giftcerts"]);
+                                    $mail_smarty->assign("order", $order_data["order"]);
+                                    $mail_smarty->assign("userinfo", $order_data["userinfo"]);
+                                    $mail_smarty->assign('statuses', $statuses);
 
-                                $order_notification = func_get_order_notification($order_status, $order_data);
+                                    $order_notification = func_get_order_notification($order_status, $order_data);
 
-                                if ($order_notification['enabled'] == 'Y') {
-                                    $mail_smarty->assign('order_notification', $order_notification);
+                                    if ($order_notification['enabled'] == 'Y') {
+                                        $mail_smarty->assign('order_notification', $order_notification);
 
-                                    $mail_smarty->assign('type', 'A');
-                                    $mail_smarty->assign("show_order_details", "Y");
+                                        $mail_smarty->assign('type', 'A');
+                                        $mail_smarty->assign("show_order_details", "Y");
 
-                                    $mail_smarty->assign("show_amazon_order", "Y");
+                                        $mail_smarty->assign("show_amazon_order", "Y");
 
-                                    $to = $config['Company']['orders_department'];
-                                    $from = "<" . $config['Company']['orders_department'] . ">";
-                                    $reply_to = '';
+                                        $to = $config['Company']['orders_department'];
+                                        $from = "<" . $config['Company']['orders_department'] . ">";
+                                        $reply_to = '';
 
-                                    $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-                                    $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+                                        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+                                        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 
-                                    func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
+                                        func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
 
+                                    }
                                 }
                             }
                         }
