@@ -223,4 +223,14 @@ class Customer extends Data
             }
         }
     }
+
+    public function getLanguage()
+    {
+        return $this->getField('language');
+    }
+
+    public function getEmail()
+    {
+        return $this->getField('email');
+    }
 }
