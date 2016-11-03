@@ -102,7 +102,7 @@ class Order extends Data
     }
 
     /**
-     * @return Product
+     * @return Product[]
      */
     public function getOrderDetailsProductsWithRetailTrust()
     {
