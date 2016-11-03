@@ -69,7 +69,7 @@
                                 class="question_not_same"
                                     {/if}>{$oVerificatorResult->getQtyOnAmazon()}<br/>{$oVerificatorResult->getQtyOnOurWebSite()}</td>
                             <td align="center"
-                                    {if $aVerificatorResults[0]->getAction() != $aVerificatorResults[1]->getAction()}
+                                    {if $aVerificatorResults[1]->checkAnswerCorrect($oVerificationResult) < 0}
                                 class="action_not_same"
                                     {/if}>
                                 <b>{$oVerificatorResult->getActionDisplayName()}</b>
