@@ -48,7 +48,8 @@ tinymce.init({
 <td>Publish?</td>
 </tr>
 
-{foreach from=$product_questions_arr item=v key=k}
+{foreach from=$product_questions_arr item=oProductQuestion key=k}
+    {assign var="v" value=$oProductQuestion->getFields()}
 <tr>
 
  <td>
@@ -114,7 +115,15 @@ tinymce.init({
  </td>
 
 </tr>
-
+{if $oProductQuestion->getField('added_from_product_modify_page') == 'N'}
+    <tr>
+        <td></td>
+        <td></td>
+        <td>
+            This Q&A has been transferred from <a style="color: #3A3AFF;" target="_blank" href="{$oProductQuestion->getProductQuestionModifyURL()}">this product question</a>.
+        </td>
+    </tr>
+{/if}
 <tr><td colspan="5"><hr /></td></tr>
 
 {/foreach}

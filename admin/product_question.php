@@ -312,10 +312,12 @@ if ($REQUEST_METHOD == "POST") {
     }
 }
 
-$product_question = func_query_first("SELECT * FROM $sql_tbl[product_question] WHERE id='$id'");
+$oProductQuestion = \Xcart\ProductQuestion::model(['id' => $id]);
+$product_question = $oProductQuestion->getFields();
 $prefix_product_question_id = "PRQN-".sprintf('%1$05d', $id);
 
-$use_current_storefront = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$product_question[productid]'");
+$use_current_storefront = $oProductQuestion->getProductEntity()->getStoreFront()->getStoreFrontId();
+
 $product_info = func_select_product($product_question["productid"], 0, false, false, false, false, $use_current_storefront);
 
 
@@ -521,6 +523,8 @@ $smarty->assign("distributor_info", $distributor_info);
 $smarty->assign("product_question", $product_question);
 $smarty->assign("mode", $mode);
 $smarty->assign("main", "product_question");
+$smarty->assign("oProductQuestion", $oProductQuestion);
+$smarty->assign("current_date", date("d-M-Y H:i:s", time() + $config["Appearance"]["timezone_offset"]));
 
 # Assign the current location line
 $smarty->assign("location", $location);
