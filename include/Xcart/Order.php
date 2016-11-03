@@ -740,4 +740,32 @@ class Order extends Data
         }
         return $fSumma;
     }
+
+    public function getOrderStatusDC()
+    {
+        return $this->getField('dc_status');
+    }
+
+    public function getOrderStatusCB()
+    {
+        return $this->getField('cb_status');
+    }
+
+    public function getOrderStatusBD()
+    {
+        return $this->getField('bd_status');
+    }
+
+    public function _refresh()
+    {
+        parent::_refresh();
+        $this->aOrderGroups = null;
+        $this->aOrderDetails = null;
+        $this->aOrderProducts = null;
+        $this->aOrderProductsManufactueres = null;
+        $this->aAdditionalFees = null;
+        $this->oPaymentMethod = null;
+        $this->oCustomer = null;
+
+    }
 }
