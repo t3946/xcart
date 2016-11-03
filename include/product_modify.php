@@ -1627,8 +1627,10 @@ if ($config['product_queries']['product_queries_enable'] == 'Y'){
 ##
 ###
 //$product_questions_arr = func_query("SELECT * FROM $sql_tbl[product_question] WHERE answered_on_page='Y' AND productid='$productid' ORDER BY order_by");
-$product_questions_arr = $oProduct->getProductQuestions();
-$smarty->assign("product_questions_arr", $product_questions_arr);
+if (!empty($oProduct)) {
+	$product_questions_arr = $oProduct->getProductQuestions();
+	$smarty->assign("product_questions_arr", $product_questions_arr);
+}
 //func_print_r($product_questions_arr);
 ###
 ##
