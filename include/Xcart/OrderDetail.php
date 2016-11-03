@@ -112,7 +112,7 @@ class OrderDetail extends Data
 
     public function calculateRetailTrustPrice()
     {
-        return floatval($this->getTotalProductPrice() * (1 - $this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier()));
+        return floatval($this->getTotalProductPrice() * ($this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() - 1));
     }
 
     private function fetchOrderInstance()
