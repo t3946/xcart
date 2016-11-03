@@ -220,4 +220,9 @@ class ExternalVerificationProducts extends Data
     {
         return sprintf(self::AMAZON_PRODUCT_LINK, $this->getAsin());
     }
+
+    public function checkAnswerCorrect(ExternalVerificationProductsQueue $oProductQueue)
+    {
+        return ExternalVerificationBatch::checkAnswerCorrect($this, $oProductQueue);
+    }
 }

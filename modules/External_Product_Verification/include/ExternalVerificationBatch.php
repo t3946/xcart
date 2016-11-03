@@ -11,7 +11,7 @@ class ExternalVerificationBatch extends Data
     const LINK_SEARCH_BY_ASIN = 'https://www.amazon.com/dp/%s/';
     const LINK_SEARCH_BY_UPC = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias=aps&field-keywords=%s';
     const LINK_SEARCH_BY_NAME = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias=aps&field-keywords=%s';
-    const LINK_TO_BATCH_VERIFY = 'verification.php?batch=%s';
+    const LINK_TO_BATCH_VERIFY = 'verification.php?batch=%s&split_screen=1';
     const LINK_TO_BATCH_VIEW = 'operators_batch_view.php?batch=%s';
     const BATCH_STATUS_CHANGED_LOG_MESSAGE = 'Batch ID <b>%s</b> status has been changed: %s -> %s';
 
