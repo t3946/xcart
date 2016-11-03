@@ -106,6 +106,26 @@ $(function() {ldelim}
 
 
   <div id="question_tabs-status">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+              <td width="34%" valign="top">
+                  <table cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                          <td><b>PQ date:</b></td>
+                          {assign var="oQDate" value=$oProductQuestion->getQuestionDate()}
+                          <td>{$oQDate->format('d-M-Y H:i')}</td>
+                      </tr>
+                      <tr>
+                          <td><b>Current date:</b>&nbsp;</td>
+                          <td>{$current_date|date_format:'%d-%b-%Y %H:%M'}</td>
+                      </tr>
+                  </table>
+              </td>
+          </tr>
+          <tr>
+              <td>&nbsp;</td>
+          </tr>
+      </table>
 
 {include file="main/subheader.tpl" title="Question status"}
 

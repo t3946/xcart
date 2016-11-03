@@ -21,6 +21,11 @@ class Product extends Data
 
     private $aPricing = [];
 
+    /**
+     * @var ProductQuestion[]
+     */
+    private $aProductQuestions = null;
+
     private $iAmazonFbaAvail = null;
 
     public function __construct($iId = null)
@@ -65,7 +70,7 @@ class Product extends Data
     public function getStoreFront()
     {
         if (is_null($this->oStoreFront)) {
-            $this->oStoreFront = new StoreFront();
+            $this->oStoreFront = StoreFront::getStoreFrontByProductId($this->getProductId());
         }
         return $this->oStoreFront;
     }
@@ -80,12 +85,12 @@ class Product extends Data
 
     public function getProductModifyURL()
     {
-        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getField('storefrontid'));
+        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->getField('storefrontid'));
     }
 
     public function getProductFrontURL($http = 'http://')
     {
-        return $http . $this->getStoreFront()->getStoreFrontByProductId($this->getProductId())->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
+        return $http . $this->getStoreFront()->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
     }
 
     public function getHTMLShot($iOrderID)
@@ -535,5 +540,15 @@ class Product extends Data
                 break;
         }
         return "";
+    }
+
+    /**
+     * @return ProductQuestion[]
+     */
+    public function getProductQuestions()
+    {
+        if (is_null($this->aProductQuestions))
+            $this->aProductQuestions = ProductQuestion::model()->findAll(SQLBuilder::getInstance()->addCondition('productid=' . $this->getProductId()));
+        return $this->aProductQuestions;
     }
 }
