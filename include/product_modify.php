@@ -334,9 +334,9 @@ if ($REQUEST_METHOD == "POST") {
 
 	if ($mode == "excluded_marketplace" && $productid) {
 		global $xcart_dir;
-		classDisabledMarketPlace::deleteAllDisabledMarketPlace($productid, 'P');
+		\Xcart\External_Marketplaces\DisabledMarketPlace::deleteAllDisabledMarketPlace($productid, 'P');
 		foreach($excluded_marketplaces as $iExcludedMarketplace) {
-			$oMarketPlace = new Xcart\DisabledMarketPlace();
+			$oMarketPlace = new \Xcart\External_Marketplaces\DisabledMarketPlace();
 			$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $productid, 'resource_type'=>'P']);
 			$oMarketPlace->addDisabledMarketPlace();
 		}
