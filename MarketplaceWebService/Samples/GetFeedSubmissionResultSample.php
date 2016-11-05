@@ -20,7 +20,7 @@
  * Get Feed Submission Result  Sample
  */
 
-include_once ('.config.inc.php'); 
+include_once('.config.inc.php');
 
 /************************************************************************
 * Uncomment to configure the client instance. Configuration settings

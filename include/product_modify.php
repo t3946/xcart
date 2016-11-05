@@ -36,6 +36,7 @@
 #
 # $Id: product_modify.php,v 1.171.2.15 2006/12/25 07:51:23 max Exp $
 #
+use Xcart\External_Marketplaces\ExternalMarketPlace;
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
@@ -222,6 +223,8 @@ if ($productid != "") {
 	$product_languages = func_query_first ("SELECT $sql_tbl[products_lng].* FROM $sql_tbl[products_lng] WHERE $sql_tbl[products_lng].productid='$productid' AND $sql_tbl[products_lng].code = '$edit_lng'");
 
 	$smarty->assign("page_title", func_get_langvar_by_name("lbl_adm_product_management"));
+	$oProduct = \Xcart\Product::model(['productid' => $productid]);
+	$smarty->assign("oProduct", $oProduct);
 
 }
 else {
@@ -331,10 +334,9 @@ if ($REQUEST_METHOD == "POST") {
 
 	if ($mode == "excluded_marketplace" && $productid) {
 		global $xcart_dir;
-		require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
-		classDisabledMarketPlace::deleteAllDisabledMarketPlace($productid, 'P');
+		\Xcart\External_Marketplaces\DisabledMarketPlace::deleteAllDisabledMarketPlace($productid, 'P');
 		foreach($excluded_marketplaces as $iExcludedMarketplace) {
-			$oMarketPlace = new classDisabledMarketPlace();
+			$oMarketPlace = new \Xcart\External_Marketplaces\DisabledMarketPlace();
 			$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $productid, 'resource_type'=>'P']);
 			$oMarketPlace->addDisabledMarketPlace();
 		}
@@ -1469,8 +1471,7 @@ $product_info["count_shipping_rates_for_canada"] = func_query_first_cell($qqq="S
 ##
 #
 
-include_once $xcart_dir."/include/class/classProducts.php";
-$classProduct = new classProducts();
+$classProduct = new Xcart\Products();
 if ($product_info['clone_parent_productid'] > 0) {
 	$aParentProduct = $classProduct->getProductInfo($product_info['clone_parent_productid']);
 	$product_info["parent_product"] = $aParentProduct;
@@ -1487,9 +1488,7 @@ unset($classProduct);
 unset($aParentProduct);
 
 global $xcart_dir;
-require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
-require_once $xcart_dir . "/modules/External_Marketplaces/include/classDisabledMarketPlace.php";
-$aMarketplaces = classExternalMarketPlace::getExternalMarketPlaces();
+$aMarketplaces = ExternalMarketPlace::getExternalMarketPlaces();
 $aExternalMarketplaces = [];
 if (!empty($aMarketplaces)) {
 	foreach ($aMarketplaces as $oMarketPlace) {
@@ -1499,7 +1498,7 @@ if (!empty($aMarketplaces)) {
 }
 $smarty->assign('aExternalMarketplaces', $aExternalMarketplaces);
 if (!empty($product_info['productid'])) {
-$aDisabledMarketPlaces = classDisabledMarketPlace::getDisabledMarketPlaces($product_info['productid'], 'P');
+$aDisabledMarketPlaces = Xcart\External_Marketplaces\DisabledMarketPlace::getDisabledMarketPlaces($product_info['productid'], 'P');
 $smarty->assign('aDisabledMarketPlaces', array_values($aDisabledMarketPlaces));
 }
 
@@ -1627,8 +1626,11 @@ if ($config['product_queries']['product_queries_enable'] == 'Y'){
 #
 ##
 ###
-$product_questions_arr = func_query("SELECT * FROM $sql_tbl[product_question] WHERE answered_on_page='Y' AND productid='$productid' ORDER BY order_by");
-$smarty->assign("product_questions_arr", $product_questions_arr);
+//$product_questions_arr = func_query("SELECT * FROM $sql_tbl[product_question] WHERE answered_on_page='Y' AND productid='$productid' ORDER BY order_by");
+if (!empty($oProduct)) {
+	$product_questions_arr = $oProduct->getProductQuestions();
+	$smarty->assign("product_questions_arr", $product_questions_arr);
+}
 //func_print_r($product_questions_arr);
 ###
 ##

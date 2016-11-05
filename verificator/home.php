@@ -1,9 +1,7 @@
 <?php
+use Xcart\External_Product_Verification\ExternalVerificationBatch;
 global $login, $xcart_dir;
-
 require "./auth.php";
-require_once $xcart_dir . "/include/class/classCustomer.php";
-require_once $xcart_dir . "/modules/External_Product_Verification/include/classExternalVerificationBatches.php";
 
 if (empty($login))
     func_header_location("error_message.php?antibot_error");
@@ -13,11 +11,11 @@ if (!empty($active_modules["Simple_Mode"]))
 
 $location[] = array("Verificator panel", "");
 
-$oCustomer = new classCustomer(['login' => $login]);
+$oCustomer = new Xcart\Customer(['login' => $login]);
 $smarty->assign('oCustomer', $oCustomer);
 
 
-$oBatches = new classExternalVerificationBatch();
+$oBatches = new ExternalVerificationBatch();
 $aCurrentBatches = $oBatches->getCurrentBatches();
 $smarty->assign('aCurrentBatches', $aCurrentBatches);
 

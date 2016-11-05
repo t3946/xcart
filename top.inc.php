@@ -1,4 +1,6 @@
 <?php
+require_once "include/libs/autoload.php";
+
 if (!function_exists( "qt_debug")) {
 //    require_once "qt_debug.php";
 }

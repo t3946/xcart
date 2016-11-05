@@ -14,9 +14,6 @@ require_once "MarketplaceWebService/Client.php";
 require_once "MarketplaceWebService/Exception.php";
 require_once "MarketplaceWebService/Model/SubmitFeedRequest.php";
 global $xcart_dir;
-require_once $xcart_dir . "/modules/External_Marketplaces/include/classExternalMarketPlace.php";
-require_once $xcart_dir . "/modules/External_Marketplaces/include/classStoreFrontMarketPlace.php";
-require_once $xcart_dir . "/include/class/classProduct.php";
 
 global $config, $storefronts;
 
@@ -224,8 +221,8 @@ Select
 
         print("\n " . strftime("%X") . " --- storefront: " . $storefrontid . " --- \n");
 
-        /** @var classStoreFrontMarketPlace[] $aExternalMarketPlaces */
-        $aExternalMarketPlaces = classStoreFrontMarketPlace::getMarketPlacesByStoreFront($storefrontid);
+        /** @var Xcart\External_Marketplaces\StoreFrontMarketPlace[] $aExternalMarketPlaces */
+        $aExternalMarketPlaces = Xcart\External_Marketplaces\StoreFrontMarketPlace::getMarketPlacesByStoreFront($storefrontid);
 
 
 #####################################################################################################################
@@ -454,7 +451,7 @@ Select
 
 
         while ($product = db_fetch_array($products)) {
-            $oProduct = new classProduct(['productid'=>$product['productid']]);
+            $oProduct = new Xcart\Product(['productid'=>$product['productid']]);
             if ($storefrontid == $product["maxsf"])
                 db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
 

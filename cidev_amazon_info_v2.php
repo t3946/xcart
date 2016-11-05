@@ -6,7 +6,6 @@ require "./top.inc.php";
 require "./init.php";
 
 global $xcart_dir, $config;
-require_once $xcart_dir . "/include/class/classAmazonMWS.php";
 
 ini_set('memory_limit', '2048M');
 set_time_limit(0);
@@ -14,14 +13,14 @@ set_time_limit(0);
 const LOG_CATEGORY = 'cidev_amazon_info_v2';
 
 if ($config[LOG_CATEGORY] == "Y") {
-    func_backprocess_log(classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, 'Already launched');
+    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, 'Already launched');
     die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
-func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
+func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 
 
 x_load('backoffice','files','taxes', 'froogle', 'product', 'crypt', 'xml', 'mail', 'order');
@@ -499,7 +498,19 @@ if (!empty($products_arr)){
             $request2->setExcludeMe(true);
 
             // object or array of parameters
-            $dom_xml2 =  invokeGetLowestOfferListingsForSKU($service, $request2);
+            try {
+                $dom_xml2 =  invokeGetLowestOfferListingsForSKU($service, $request2);
+            }
+            catch (Exception $e)
+            {
+                print "Error code :" . $e->getCode() . "\n";
+                // Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
+                print "Error message: " . $e->getMessage() . "\n";
+
+                $log_text = "Error code :" . $e->getCode() . "\n" . "Error message: " . $e->getMessage();
+                func_backprocess_log(LOG_CATEGORY, $log_text);
+            }
+
 
             while (!empty($dom_xml2["Caught_Exception"]) && $dom_xml2["Caught_Exception"] == "Request is throttled" && $dom_xml2["Response_Status_Code"] == "503"){
                 func_flush("sleeping...");
@@ -937,7 +948,7 @@ if (!empty($amazon_fba_products) && is_array($amazon_fba_products))
     }
 
 
-$classAmazonMWS = new classAmazonMWS();
+$classAmazonMWS = new Xcart\AmazonMWS();
 
 
 
@@ -964,6 +975,6 @@ $str_time = sprintf("%02d:%02d:%02d", $hour, $minutes, $seconds);
 
 $log_text = "Cron completed. ";
 $log_text .= "Processing time: $str_time";
-func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
+func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 
 die("DONE!");

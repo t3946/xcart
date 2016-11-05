@@ -8,10 +8,7 @@ require "./top.inc.php";
 require "./init.php";
 
 global $xcart_dir, $config;
-include_once $xcart_dir.'/include/class/classSQLBuilder.php';
-include_once $xcart_dir.'/include/class/classOrderAmazonDetails.php';
 
+$oG = Xcart\OrderGroup::model(['orderid'=>60, 'manufacturerid' => 0]);
 
-$oOrder = classOrderAmazonDetails::model();
-
-var_dump($oOrder->getOrderAmazonDetails(['orderid'=>65022, 'manufacturerid'=>12]));
+$oG->updateField('manufacturerid', 12);

@@ -82,7 +82,8 @@ var runTests = function(editor) {
 {/literal}
 </script>
 {/if}
-
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body{$reading_direction_tag}>
 { include file="rectangle_top.tpl" }
@@ -177,6 +178,9 @@ var runTests = function(editor) {
 
 {elseif $main eq "external_marketplaces_quality_issues"}
 {include file="admin/main/external_marketplaces_quality_issues.tpl"}
+
+{elseif $main eq "match_amazon_missing_sku"}
+{include file="admin/main/match_amazon_missing_sku.tpl"}
 
 {elseif $main eq "external_marketplaces_quality_issues_view"}
 {include file="admin/main/external_marketplaces_quality_issues.tpl"}

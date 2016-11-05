@@ -319,8 +319,7 @@
                         {section name=prov loop=$providers}
                             <option value="{$providers[prov].login}"
                                     {if $product.pc_mc_operator eq $providers[prov].login}selected="selected"{/if}>{$providers[prov].login}
-                                ({if $providers[prov].title ne "" }{$providers[prov].title} {/if}{$providers[prov].lastname} {$providers[prov].firstname}
-                                )
+                                ({if $providers[prov].title ne ""}{$providers[prov].title}{/if}{$providers[prov].lastname}{$providers[prov].firstname})
                             </option>
                         {/section}
                     </select>

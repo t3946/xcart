@@ -297,19 +297,9 @@ Category {$v} is not ready to classification!<br />
 
 {/if}
 
-{*
 {if $v.relevant_cats.1.categoryid_path_arr ne ""}
-<br />
-<a href="http://{$current_storefront_info.domain}/home.php?cat={$v.relevant_cats.1.categoryid}" target="_blank" style="color: blue;">
-{foreach from=$v.relevant_cats.1.categoryid_path_arr item=vv key=kk}
-{$vv}{if $kk < ($v.relevant_cats.1.categoryid_path_arr_count - 1)} > {/if}
-{/foreach}
-</a>
-{/if}
-*}
 
-{if $v.relevant_cats.1.categoryid_path_arr ne ""}
-<br />
+	<br />
 {foreach from=$v.relevant_cats.1.categoryid_path_arr item=vv key=kk}
 
 {if $kk eq ($v.relevant_cats.1.categoryid_path_arr_count - 1)}<a href="http://{$current_storefront_info.domain}/home.php?cat={$v.relevant_cats.1.categoryid}" target="_blank" style="color: blue;">
@@ -319,15 +309,28 @@ Category {$v} is not ready to classification!<br />
 
 {/foreach}
 
-{*
-{if $v.relevant_cats.1.google_product_category eq ""}
-<input id="google_product_category_{$k}_1" type="text" name="posted_data[{$k}][google_product_category][{$v.relevant_cats.1.categoryid}]" value="{$v.relevant_cats.1.google_product_category}" />
-{/if}
-*}
-
-
 {/if}
 
+{if $v.current_category.categoryid_path_arr ne ""}
+    <div {if ($v.relevant_cats)}style="border-top:1px solid" {/if}>
+        <span style="color:red; font-weight: bold;">Current category:</span>
+        {foreach from=$v.current_category.categoryid_path_arr item=vv key=kk}
+            {if $kk eq ($v.current_category.categoryid_path_arr_count - 1)}
+                <a href="http://{$current_storefront_info.domain}/home.php?cat={$v.current_category.categoryid}" target="_blank" style="color: blue;">
+                {if $v.current_category.product_count gt 0}<B>{/if}
+            {/if}
+            {$vv}
+            {if $kk eq ($v.current_category.categoryid_path_arr_count - 1)}
+                {if $v.current_category.product_count gt 0}</B>{/if}
+                </a>
+            {/if}
+            {if $kk < ($v.current_category.categoryid_path_arr_count - 1)} <B>></B> {/if}
+            {if $v.current_category.product_count gt 0 && $kk eq ($v.current_category.categoryid_path_arr_count - 1)}
+                ({$v.current_category.count_pc_products} / <a href="javascript: void(0);" onclick="javascript: $('#form1_correct_categoryid_id_{$k}').val('{$v.current_category.categoryid}').change();">{$v.current_category.categoryid}</a>)
+            {/if}
+        {/foreach}
+    </div>
+{/if}
 
 </td>
 

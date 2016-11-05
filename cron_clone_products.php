@@ -15,8 +15,7 @@ if ($config[$log_category] == "Y"){
 
 global $xcart_dir;
 
-include_once $xcart_dir."/include/class/classProducts.php";
-$classProducts = new classProducts();
+$classProducts = new Xcart\Products();
 
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='$log_category'");
 

@@ -863,15 +863,13 @@ if (!$func_is_cart_empty) {
 	}
 
 	if (!empty($purchase_order_selected) && is_numeric($purchase_order_selected)) {
-		include_once $xcart_dir . "/include/class/classPOPipeline.php";
-		$smarty->assign('selectedPO', classPOPipeLine::model(['po_id' => $purchase_order_selected]));
+		$smarty->assign('selectedPO', Xcart\POPipeline::model(['po_id' => $purchase_order_selected]));
 	}
 
 	//x_session_register('remember_login');
 
 	if (!empty($remember_login)) {
-		include_once $xcart_dir . "/include/class/classCustomer.php";
-		$userinfo_add =  classCustomer::model(['login' => $remember_login])->getFields(['s_country','s_state','s_zipcode','s_city','s_countryname','s_statename','b_country','b_state','b_zipcode','b_city','b_countryname','b_statename']);
+		$userinfo_add =  Xcart\Customer::model(['login' => $remember_login])->getFields(['s_country','s_state','s_zipcode','s_city','s_countryname','s_statename','b_country','b_state','b_zipcode','b_city','b_countryname','b_statename']);
 		$userinfo_add["s_statename"] = $userinfo_add["s_state_text"] = func_get_state($userinfo_add["s_state"], $userinfo_add["s_country"]);
 		$userinfo_add["b_statename"] = func_get_state($userinfo_add["b_state"], $userinfo_add["b_country"]);
 		$userinfo_add["s_countryname"] = func_get_country($userinfo_add['s_country']);

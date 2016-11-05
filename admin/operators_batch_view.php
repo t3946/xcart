@@ -4,12 +4,10 @@ global $xcart_dir, $login, $batch;
 
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
-require_once $xcart_dir."/modules/External_Product_Verification/include/classExternalVerificationBatches.php";
-require_once $xcart_dir."/modules/External_Product_Verification/include/classExternalVerificationProductsQueue.php";
 
 
 $location[] = array("Verificator management", "operators.php");
-$location[] = array("Verification batches", "operators_batches.php?operator=".classExternalVerificationBatch::model(['batch_id' => (int)$batch])->getBatchLogin());
+$location[] = array("Verification batches", "operators_batches.php?operator=".\Xcart\External_Product_Verification\ExternalVerificationBatch::model(['batch_id' => (int)$batch])->getBatchLogin());
 
 include $xcart_dir . "/modules/External_Product_Verification/operators_batch_view.php";
 $smarty->assign('batch_id', (int)$batch);

@@ -1,0 +1,1 @@
+{config_load file="$skin_config"}{$lng.lbl_fba_to_xcart_notmatching_sku_email_body}

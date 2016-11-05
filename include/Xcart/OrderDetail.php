@@ -1,0 +1,137 @@
+<?php
+namespace Xcart;
+
+class OrderDetail extends Data
+{
+    /**
+     * @var Product
+     */
+    private $oProduct = null;
+    /**
+     * @var Order
+     */
+    private $oOrder = null;
+
+    public function __construct($aParams = [])
+    {
+        $this->aPrimaryKeys = ['itemid'];
+        $this->sPrimaryTable = 'order_details';
+        parent::__construct($aParams);
+    }
+
+    /**
+     * @param int $iOrderId
+     * @param int $iProductId
+     * @return OrderDetail[]
+     */
+    public static function getOrderDetailsByOrderIdAndProductId($iOrderId, $iProductId)
+    {
+        $oOrderDetails = [];
+        $aOrderDetails = func_query("SELECT * FROM " . self::$sql_tbl['order_details'] . " WHERE orderid = $iOrderId AND productid = $iProductId");
+        foreach ($aOrderDetails as $aOrderDetail) {
+            $oOrderDetail = new OrderDetail();
+            $oOrderDetail->fill($aOrderDetail);
+            $oOrderDetails[] = $oOrderDetail;
+        }
+        return $oOrderDetails;
+    }
+
+    public function getAmount()
+    {
+        return intval($this->getField('amount'));
+    }
+
+    public function getPrice()
+    {
+        return $this->getField('price');
+    }
+
+    public function getOrderDetailId()
+    {
+        return $this->getField('itemid');
+    }
+
+    public function isRetailTrustEnabled()
+    {
+        return ($this->getField('retail_trust_item') == 'Y') ? true : false;
+    }
+
+    public function getOrderDetailProduct()
+    {
+        if (is_null($this->oProduct)) {
+            if ($this->getField('productid')) {
+                $this->oProduct = new Product(['productid' => $this->getField('productid')]);
+            }
+        }
+        return $this->oProduct;
+    }
+
+    public function getRetailTrustPrice()
+    {
+        return floatval($this->getField('retail_trust_price'));
+    }
+
+    public function getRetailTrustGross()
+    {
+        return floatval($this->getRetailTrustPrice());
+    }
+
+    public function getTotalProductPrice()
+    {
+        return floatval($this->getPrice() * $this->getAmount());
+    }
+
+    public function getProductHST()
+    {
+        $aExtraData = unserialize($this->getField('extra_data'));
+        return floatval($aExtraData['taxes']['HST']['tax_value']);
+    }
+
+    public function getProductPST()
+    {
+        $aExtraData = unserialize($this->getField('extra_data'));
+        return floatval(floatval($aExtraData['taxes']['GST']['tax_value']) + floatval($aExtraData['taxes']['PST']['tax_value']));
+    }
+
+    public function removeRetailTrust()
+    {
+        $this->updateFields(['retail_trust_item' => 'N', 'retail_trust_price' => 0]);
+    }
+
+    public function addRetailTrust()
+    {
+        if (!$this->isRetailTrustEnabled() && $this->getOrderDetailProduct()->isRetailTrustEnabled()) {
+            $this->updateFields(['retail_trust_item' => 'Y', 'retail_trust_price' => $this->calculateRetailTrustPrice()]);
+        }
+    }
+
+    public function calculateRetailTrustPrice()
+    {
+        return floatval($this->getTotalProductPrice() * (1 - $this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier()));
+    }
+
+    private function fetchOrderInstance()
+    {
+        $this->oOrder = Order::model(['orderid' => $this->getField('orderid')]);
+    }
+
+    /**
+     * @return Order
+     */
+    public function getOrderInstance()
+    {
+        if (is_null($this->oOrder)) {
+            $this->fetchOrderInstance();
+        }
+        return $this->oOrder;
+    }
+
+    public function getCostToUs()
+    {
+        $fCostToUs = floatval($this->getField('item_cost_to_us'));
+        if (!$fCostToUs) {
+            $fCostToUs = $this->getOrderDetailProduct()->getProductCostToUs();
+        }
+        return $fCostToUs * $this->getAmount();
+    }
+}
