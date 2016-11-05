@@ -440,7 +440,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
         <tr><td nowrap="nowrap" style="padding-right: 5px;"><b><a href="/admin/product_verification.php" target="_blank">Product verification</a>:</b></td><td><a id="product_verification_status_link" href="#">{$order.product_verification_status}</a>
                 <select data-order-id="{$order.orderid}" id="product_verification_status_change" style="display:none;">
                     {foreach from=$order.product_verification_statuses item=product_verification_sts}
-                        <option {if $order.product_verification_status == $product_verification_sts.name} selected="selected" {/if} value="{$product_verification_sts.code}">{$product_verification_sts.name}</option>
+                        <option {if $order.product_verification_status == $product_verification_sts->getField('name')} selected="selected" {/if} value="{$product_verification_sts->getField('code')}">{$product_verification_sts->getField('name')}</option>
                     {/foreach}
                 </select>
             </td></tr>

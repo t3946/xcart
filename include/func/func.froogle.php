@@ -358,8 +358,7 @@ if ($sExtraLog=='Y')
 /*	https://s3stores.teamwork.com/tasks/6654526 */
 
 	global $xcart_dir;
-	include_once $xcart_dir."/include/class/classProducts.php";
-	$classProduct = classProduct::model(['productid'=>$product['productid']]);
+	$classProduct = Xcart\Product::model(['productid'=>$product['productid']]);
 	$mpn = $classProduct->getMPN();
 	$product['custom_label_3'] = $classProduct->getManfacturerClass()->getField("manufacturer");
 

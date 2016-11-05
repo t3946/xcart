@@ -893,8 +893,7 @@ if ($mode == "search") {
 
 	if ($filter_preset) {
 		if (!empty($filter['po_statuses']) && is_array($filter['po_statuses'])){
-			include $xcart_dir."/include/class/classPOPipeline.php";
-			$oPO = new classPOPipeLine();
+			$oPO = new Xcart\POPipeline();
 			$aPos = $oPO->getPOrdersByStatuses($filter['po_statuses']);
 			$total_items = (is_array($aPos)) ? count($aPos) : 0;
 		}

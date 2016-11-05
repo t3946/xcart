@@ -37,9 +37,7 @@
 require './auth.php';
 require '../include/security.php';
 
-global $xcart_dir;
-require_once $xcart_dir . "/include/class/classOrderStatusNotification.php";
-$aOrderNotifications = classOrderStatusNotification::getOrderStatusNotificationsByCode($status);
+$aOrderNotifications = Xcart\OrderStatusNotification::getOrderStatusNotificationsByCode($status);
 
 $smarty->assign('aOrderNotifications', $aOrderNotifications);
 

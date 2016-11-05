@@ -20,7 +20,7 @@
  * Get Report Schedule List By Next Token  Sample
  */
 
-include_once ('.config.inc.php'); 
+include_once('.config.inc.php');
 
 /************************************************************************
 * Uncomment to configure the client instance. Configuration settings

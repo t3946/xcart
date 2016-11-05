@@ -7,6 +7,8 @@
 { include file="meta.tpl" }
 <link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
 <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.admin.css" />
+    <link rel="shortcut icon" href="/favicon_O.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon_O.ico" type="image/x-icon">
 </head>
 <body{$reading_direction_tag}>
 { include file="rectangle_top.tpl" }

@@ -43,8 +43,6 @@ $trusted_post_variables = array('update', 'mnf_body');
 
 require "./auth.php";
 require $xcart_dir."/include/security.php";
-require_once $xcart_dir . "/include/class/classProduct.php";
-require_once $xcart_dir . "/include/class/classGroundMap.php";
 
 x_load('mail','order');
 
@@ -363,7 +361,7 @@ if ($REQUEST_METHOD == "GET") {
                 if (!empty($order_details_table) && is_array($order_details_table)){
                         foreach($order_details_table as $k => $v){
 							/** @var classProduct $oProduct */
-							$oProduct = classProduct::model(['productid'=>$v['productid']]);
+							$oProduct = Xcart\Product::model(['productid'=>$v['productid']]);
 							    $insert_data3 = array (
                                         'orderid' => $new_orderid,
                                         'productid' => $v['productid'],
@@ -1498,7 +1496,7 @@ if ($REQUEST_METHOD == "POST") {
         }
 
     elseif ($mode == 'map_incorrect' && !empty($zipcode)) {
-		classGroundMap::model(['zipcode'=>$zipcode])->_delete();
+		Xcart\GroundMap::model(['zipcode'=>$zipcode])->_delete();
 		func_header_location("order.php?orderid=".$orderid);
 	}
 	elseif ($mode == "invoice_received") {
@@ -3525,8 +3523,7 @@ $main_order_tabs[$tabs_key]["anchor"] = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
 
 global $xcart_dir, $login;
-require_once $xcart_dir . "/include/class/classCustomer.php";
-$oCustomer = new classCustomer(['login'=>$login]);
+$oCustomer = new Xcart\Customer(['login'=>$login]);
 if (!empty($oCustomer)) {
 	if ($oCustomer->isCustomerUseSecureData()) {
 		$main_order_tabs[$tabs_key]["title"] = "Secure";

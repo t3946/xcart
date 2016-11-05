@@ -1,10 +1,6 @@
 <?php
 require "./auth.php";
-global $xcart_dir, $config;
-require_once $xcart_dir . '/include/class/classOrderDetail.php';
-require_once $xcart_dir.'/include/class/classMail.php';
-require_once $xcart_dir.'/include/class/classOrderStatusNotification.php';
-require_once $xcart_dir.'/include/class/classOrder.php';
+global $config, $ajax_action;
 
 
 switch ($ajax_action) {
@@ -21,7 +17,7 @@ switch ($ajax_action) {
         if (!empty($aParams['retail_trust_item'])) {
 
             foreach ($aParams['retail_trust_item'] as $iRetailTrustItem) {
-                $oOrderDetail = new classOrderDetail(['itemid' => (int)$iRetailTrustItem]);
+                $oOrderDetail = new Xcart\OrderDetail(['itemid' => (int)$iRetailTrustItem]);
                 if ($oOrderDetail->getOrderDetailId()) {
                     $oOrderDetail->addRetailTrust();
                     $fRetailTrustSumma += $oOrderDetail->getRetailTrustPrice();
@@ -30,10 +26,10 @@ switch ($ajax_action) {
         }
         if ($fRetailTrustSumma > 0) {
 
-            $oOrder = new classOrder(['orderid'=>$iOrderId]);
+            $oOrder = new Xcart\Order(['orderid'=>$iOrderId]);
             $oOrder->recalculateRetailTrust();
 
-            $oOrderNotification = new classOrderStatusNotification(['code'=>'Q']);
+            $oOrderNotification = new Xcart\OrderStatusNotification(['code'=>'Q']);
             if ($oOrderNotification->isEnabled()) {
                 $oOrderNotification->prepareMail($oOrder)->sendEmail();
             }

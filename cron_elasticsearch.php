@@ -6,7 +6,6 @@ define("CIDEV_CRON_START", "CRON");
 require "./top.inc.php";
 require "./init.php";
 
-require_once $xcart_dir."/include/class/classElasticSearch.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -551,7 +550,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
 //                $deleted_ok_found = false;
                 foreach ($cidev_storefronts as $k => $v){
 
-                    $classElasticSearch = new classElasticSearch($config["ElasticSearch_options"], $v["domain"]);
+                    $classElasticSearch = new Xcart\ElasticSearch($config["ElasticSearch_options"], $v["domain"]);
 
                     $classElasticSearch->setType('category');
 
@@ -592,7 +591,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         else {
 
 
-            $classElasticSearch = new classElasticSearch($config["ElasticSearch_options"], $cidev_storefronts[$category_info["storefrontid"]]["domain"]);
+            $classElasticSearch = new Xcart\ElasticSearch($config["ElasticSearch_options"], $cidev_storefronts[$category_info["storefrontid"]]["domain"]);
 
             $classElasticSearch->setType('category');
 

@@ -657,7 +657,7 @@ $(document).ready(function(){
 <script src="{$SkinDir}/ajax_home_page.js" type="text/javascript"></script>
 
 {* --- viralmarketingbomb --- *}
-{if $viralmarketingbomb_shown ne "Y" && $config.Company.pop_up_in ne "" && $config.Company.pop_up_code ne ""}
+{if $viralmarketingbomb_shown ne "Y" && $config.Company.pop_up_in && $config.Company.pop_up_code ne ""}
 <script src="{$SkinDir}/jquery.bpopup.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 {literal}

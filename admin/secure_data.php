@@ -8,7 +8,6 @@ global $login;
 if (!in_array($login, ['sergey2', 'elena', 'igor']))
     func_header_location("error_message.php?access_denied&id=25");
 global $xcart_dir;
-require_once $xcart_dir . "/include/class/classCustomer.php";
 x_load('crypt');
 
 if ($REQUEST_METHOD == 'POST' && $mode == "update") {
@@ -65,7 +64,7 @@ if (!empty($aSecureDataLogins)) {
 
 
 $smarty->assign("aSecureData", $aSecureData);
-$aCustomers = classCustomer::getCustomersByType('A');
+$aCustomers = Xcart\Customer::getCustomersByType('A');
 if (!empty($aCustomers)) {
     $aCustomersSelect = [];
     foreach ($aCustomers as $oCustomers) {

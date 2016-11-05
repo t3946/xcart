@@ -144,7 +144,9 @@
 {$lng.lbl_retailtrust_ordered_total|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$oOrder->getOrderRetailTrustGross()}
 
 {/if}
+{if ($oOrder)}
 {$lng.lbl_total|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$oOrder->getOrderTotalGross()}
+{/if}
 
 {if $_userinfo.tax_exempt ne "Y"}
 {if $order.applied_taxes and $order.extra.tax_info.display_taxed_order_totals eq "Y"}
