@@ -498,7 +498,19 @@ if (!empty($products_arr)){
             $request2->setExcludeMe(true);
 
             // object or array of parameters
-            $dom_xml2 =  invokeGetLowestOfferListingsForSKU($service, $request2);
+            try {
+                $dom_xml2 =  invokeGetLowestOfferListingsForSKU($service, $request2);
+            }
+            catch (Exception $e)
+            {
+                print "Error code :" . $e->getCode() . "\n";
+                // Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
+                print "Error message: " . $e->getMessage() . "\n";
+
+                $log_text = "Error code :" . $e->getCode() . "\n" . "Error message: " . $e->getMessage();
+                func_backprocess_log(LOG_CATEGORY, $log_text);
+            }
+
 
             while (!empty($dom_xml2["Caught_Exception"]) && $dom_xml2["Caught_Exception"] == "Request is throttled" && $dom_xml2["Response_Status_Code"] == "503"){
                 func_flush("sleeping...");

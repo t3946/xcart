@@ -223,6 +223,8 @@ if ($productid != "") {
 	$product_languages = func_query_first ("SELECT $sql_tbl[products_lng].* FROM $sql_tbl[products_lng] WHERE $sql_tbl[products_lng].productid='$productid' AND $sql_tbl[products_lng].code = '$edit_lng'");
 
 	$smarty->assign("page_title", func_get_langvar_by_name("lbl_adm_product_management"));
+	$oProduct = \Xcart\Product::model(['productid' => $productid]);
+	$smarty->assign("oProduct", $oProduct);
 
 }
 else {
@@ -332,9 +334,9 @@ if ($REQUEST_METHOD == "POST") {
 
 	if ($mode == "excluded_marketplace" && $productid) {
 		global $xcart_dir;
-		classDisabledMarketPlace::deleteAllDisabledMarketPlace($productid, 'P');
+		\Xcart\External_Marketplaces\DisabledMarketPlace::deleteAllDisabledMarketPlace($productid, 'P');
 		foreach($excluded_marketplaces as $iExcludedMarketplace) {
-			$oMarketPlace = new Xcart\DisabledMarketPlace();
+			$oMarketPlace = new \Xcart\External_Marketplaces\DisabledMarketPlace();
 			$oMarketPlace->fill(['marketplace_id' => $iExcludedMarketplace, 'resource_id' => $productid, 'resource_type'=>'P']);
 			$oMarketPlace->addDisabledMarketPlace();
 		}
@@ -1624,8 +1626,11 @@ if ($config['product_queries']['product_queries_enable'] == 'Y'){
 #
 ##
 ###
-$product_questions_arr = func_query("SELECT * FROM $sql_tbl[product_question] WHERE answered_on_page='Y' AND productid='$productid' ORDER BY order_by");
-$smarty->assign("product_questions_arr", $product_questions_arr);
+//$product_questions_arr = func_query("SELECT * FROM $sql_tbl[product_question] WHERE answered_on_page='Y' AND productid='$productid' ORDER BY order_by");
+if (!empty($oProduct)) {
+	$product_questions_arr = $oProduct->getProductQuestions();
+	$smarty->assign("product_questions_arr", $product_questions_arr);
+}
 //func_print_r($product_questions_arr);
 ###
 ##
