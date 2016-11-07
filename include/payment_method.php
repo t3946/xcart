@@ -113,6 +113,9 @@ $ship_lastname = empty($userinfo['s_lastname']) ? $userinfo['lastname'] : $useri
 $ship_name = $ship_firstname;
 if (!empty($ship_lastname))
     $ship_name .= (empty($ship_firstname) ? "" : " ").$ship_lastname;
-
+if (!empty($customer_notes))
+{
+	x_session_save("customer_notes");
+}
 
 ?>
