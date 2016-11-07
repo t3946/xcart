@@ -160,8 +160,8 @@ function check_options() {
 
 	} else {
 
-		if (document.getElementById('product_price'))
-			document.getElementById('product_price').innerHTML = currency_symbol+price_format(price < 0 ? 0 : price);
+		if (document.getElementById('so_o_price'))
+			document.getElementById('so_o_price').innerHTML = price_format(price < 0 ? 0 : price);
 
 	}
 
@@ -463,7 +463,7 @@ function check_wholesale(qty) {
 		var product_price_value = (wl_price < 0 ? 0 : wl_price);
 		var product_price_value_price_format = price_format(product_price_value);
 
-		document.getElementById('product_price').innerHTML = currency_symbol+product_price_value_price_format;
+		document.getElementById('so_o_price').innerHTML = product_price_value_price_format;
 
 	        if (document.getElementById('product_subtotal_value')){
         	        var product_subtotal_value =  product_price_value*qty;

@@ -128,7 +128,7 @@ function send_question_email_form(){
 <meta id="so_category" itemprop="category" content="{$cat_name_for_itemprop}"/>
 {/if}
 
-<meta id="so_o_condition" itemprop="itemCondition" content="http://schema.org/NewCondition"/>
+<meta id="so_o_condition" itemprop="itemCondition" content="NewCondition"/>
 <meta id="so_o_currency" itemprop="priceCurrency" content="USD">
 
 <meta id="so_o_function" itemprop="businessFunction" href="http://purl.org/goodrelations/v1#Sell"/>
