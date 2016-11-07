@@ -19,7 +19,7 @@ class HTMLShot extends Data
         $aImagesP = $oProduct->getImages('P');
         /** @var ProductImage[] $aImages */
         $aImages = array_merge($aImagesD, $aImagesP);
-        $oStoreFront = $oProduct->getStoreFront()->getStoreFrontByProductId($oProduct->getProductId());
+        $oStoreFront = $oProduct->getStoreFront();
 
         foreach ($aImages as $oImage) {
             {

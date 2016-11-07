@@ -57,7 +57,7 @@ vim: set ts=2 sw=2 sts=2 et:
 <meta id="so_category" itemprop="category" content="{$cat_name_for_itemprop}"/>
 {/if}
 
-<meta id="so_o_condition" itemprop="itemCondition" content="http://schema.org/NewCondition"/>
+<meta id="so_o_condition" itemprop="itemCondition" content="NewCondition"/>
 <meta id="so_o_currency" itemprop="priceCurrency" content="USD">
 
 <meta id="so_o_function" itemprop="businessFunction" href="http://purl.org/goodrelations/v1#Sell"/>
@@ -120,7 +120,7 @@ vim: set ts=2 sw=2 sts=2 et:
       <div class="ui-block-a">
         <div class="sku{if $product.appearance.has_market_price and $product.appearance.market_price_discount gt 0} save-mark-here{/if}"> {if $main eq "product"}{if $use_schema_org eq "Y"}<span id="so_sku" itemprop="sku">{/if}{/if}{$product.productcode|escape}{if $main eq "product"}{if $use_schema_org eq "Y"}</span>{/if}{/if}</div>
         {if $product.distribution eq "" && !($product.product_type eq "C" and $active_modules.Product_Configurator)}
-          <div id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}http://schema.org/InStock{else}http://schema.org/OutOfStock{/if}" class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
+          <div id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}" class="product-quantity-text-top{if $product.avail gt 0 or $config.General.unlimited_products eq "Y"} in-stock{/if}">
 
             {if $product.avail gt 0 or $config.General.unlimited_products eq "Y"}
               {$lng.lbl_in_stock_top}

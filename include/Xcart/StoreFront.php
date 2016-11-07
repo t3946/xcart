@@ -29,10 +29,10 @@ class StoreFront extends Data
         }
     }
 
-    public function getStoreFrontByProductId($iProductId)
+    public static function getStoreFrontByProductId($iProductId)
     {
         $obj = null;
-        $sF = func_query_first("SELECT sfid FROM xcart_products_sf psf WHERE psf.productid = $iProductId");
+        $sF = SQLBuilder::getInstance()->addSelect('sfid')->addFromTable('products_sf')->addCondition('productid='.$iProductId)->query_first()->getQueryResult();
         if (!empty($sF)) {
             if ($sF['sfid'] != 0)
                 $obj = new StoreFront(['storefrontid'=>$sF['sfid']]);

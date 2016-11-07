@@ -1534,7 +1534,7 @@ class AmazonMWS
                                         $oOrderGroup = OrderGroup::model()->
                                         setField('orderid', $oOrder->getOrderId())->
                                         setField('manufacturerid', $oProduct->getManufacturerId())->
-                                        setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->NodeValue))->
+                                        setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->nodeValue))->
                                         setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
                                         setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
                                         setField('bd_status', 'W');
