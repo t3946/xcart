@@ -95,7 +95,7 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 if (is_array($cart_tmp["products"])) {
     foreach ($cart_tmp["products"] as $k => $v) {
         $cart_tmp["products"][$k]["free_price"] = $v["price"];
-        $cart_tmp["products"][$k]["price"] = $v["display_price"];
+        $cart_tmp["products"][$k]["price"] = $v["price"];
         if (!empty($v["extra_data"]["taxes"]) && is_array($v["extra_data"]["taxes"])) {
             foreach ($v["extra_data"]["taxes"] as $_tax) {
                 if (($_tax["price_includes_tax"] == "Y" || $_tax['display_including_tax'] == 'Y') && $config["Taxes"]["display_taxed_order_totals"] == 'Y')
