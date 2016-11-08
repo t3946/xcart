@@ -1386,52 +1386,6 @@ if ($REQUEST_METHOD == "POST") {
         }
         $oOrder->recalculateRetailTrust();
 
-        if ($send_email == 'Y') {
-
-            $customer_attach_pdf_invoice = "";
-            $admin_attach_pdf_invoice = "";
-
-            $send_email_flag = false;
-
-            $current_cb_dc_statuses = func_query("SELECT cb_status, dc_status FROM $sql_tbl[order_groups] WHERE orderid='$orderid'");
-
-            if (!empty($current_cb_dc_statuses) && is_array($current_cb_dc_statuses)) {
-                foreach ($current_cb_dc_statuses as $kc => $vc) {
-
-                    $order_notification_info = func_query_first("SELECT enabled, customer_attach_pdf_invoice, admin_attach_pdf_invoice FROM $sql_tbl[order_status_notifications] WHERE code='$vc[cb_status]'");
-
-
-                    if ($order_notification_info["enabled"] == "Y") {
-                        $send_email_flag = true;
-
-                        $customer_attach_pdf_invoice = $order_notification_info["customer_attach_pdf_invoice"];
-                        $admin_attach_pdf_invoice = $order_notification_info["admin_attach_pdf_invoice"];
-
-                        break;
-                    } else {
-                        $order_notification_info = func_query_first_cell("SELECT enabled, customer_attach_pdf_invoice, admin_attach_pdf_invoice FROM $sql_tbl[order_status_notifications] WHERE code='$vc[dc_status]'");
-
-                        if ($order_notification_info["enabled"] == "Y") {
-                            $send_email_flag = true;
-
-                            $customer_attach_pdf_invoice = $order_notification_info["customer_attach_pdf_invoice"];
-                            $admin_attach_pdf_invoice = $order_notification_info["admin_attach_pdf_invoice"];
-
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if ($send_email_flag) {
-                include $xcart_dir . '/include/send_order_email.php';
-
-                $customer_attach_pdf_invoice = "";
-                $admin_attach_pdf_invoice = "";
-            }
-        }
-
-
         if ($all_current_dc_status_NOT_eq_S) {
             #send email PO instructions
 
