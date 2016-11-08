@@ -156,7 +156,7 @@ function invokeGetLowestOfferListingsForSKU(MarketplaceWebServiceProducts_Interf
 }
 
 #
-# Step 2 start
+echo  "Report 1 start\n";
 #
 
 
@@ -712,6 +712,7 @@ db_free_result($products);
 
 #
 # Step 3 Start
+echo  "Report 2 start\n";
 #
 
 //include_once "FBAInventoryServiceMWS/Samples/.config.inc.php";
@@ -947,6 +948,8 @@ if (!empty($amazon_fba_products) && is_array($amazon_fba_products))
         }
     }
 
+
+echo  "Report 3 start\n";
 
 $classAmazonMWS = new Xcart\AmazonMWS();
 
