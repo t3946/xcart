@@ -1380,11 +1380,15 @@ if ($REQUEST_METHOD == "POST") {
                             /* retail trust sku not enabled*/
                             $top_message["content"] .= func_get_langvar_by_name("retail_trust_not_retailtrust_enabled_sku");
                             $top_message["type"] = "I";
+                            $section_name_top_message = $top_message;
+                            x_session_save("section_name_top_message");
                         }
                     } else {
                         /*product not found*/
                         $top_message["content"] .= func_get_langvar_by_name("retail_trust_nonordered_sku_for_retailtrust");
                         $top_message["type"] = "I";
+                        $section_name_top_message = $top_message;
+                        x_session_save("section_name_top_message");
                     }
                 }
             }
