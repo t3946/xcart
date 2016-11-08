@@ -737,7 +737,6 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 			$query_data = array_merge($query_data, $query_data_tmp);
 
 
-
 			if (@$user_account["flag"] != "FS") {
 
 		                $log = "";

@@ -1061,9 +1061,9 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
   <td colspan="7">
     {$lng.retail_trust_order_group_line_title}
   </td>
-  <td align="right">{$oOrderGroup->getRetailTrustTotalNet()}</td>
+  <td align="right">{$oOrderGroup->getRetailTrustTotalNet()|price_format}</td>
   <td align="right"></td>
-  <td align="right">{$oOrderGroup->getRetailTrustTotalGross()}</td>
+  <td align="right">{$oOrderGroup->getRetailTrustTotalGross()|price_format}</td>
 </tr>
 {/if}
 
@@ -1266,7 +1266,7 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
             <a href="{$oOrderDetailProduct->getProductFrontURL()}">{$oOrderDetailProduct->getProductName()}</a>
           </td>
           <td>
-            <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKU()}</a>
+            <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKURetailTrust()}</a>
           </td>
           <td></td>
           <td align="center">

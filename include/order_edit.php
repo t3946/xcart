@@ -34,7 +34,7 @@
 #
 # $Id: order_edit.php, v 1.0.0 2010/03/24 12:08:09 random Exp $
 #
-global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt, $top_message;
+global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt, $top_message, $mail_smarty;
 
 if (!defined("XCART_SESSION_START")) {
     header("Location: ../");
@@ -52,7 +52,8 @@ x_session_register("intershipper_recalc");
 x_session_register("current_carrier", "UPS");
 
 $oOrder = new Xcart\Order(['orderid'=>$orderid]);
-$smarty->assign("oOrder", $oOrder);
+$smarty->assign('oOrder', $oOrder);
+$mail_smarty->assign('oOrder', $oOrder);
 
 $all_processors = func_query_hash("SELECT paymentid, payment_method, acc_per_trans, acc_percent FROM $sql_tbl[payment_methods] WHERE acc_proc='Y' ORDER BY orderby", "paymentid", false);
 $smarty->assign("all_processors", $all_processors);
@@ -1366,7 +1367,7 @@ if ($REQUEST_METHOD == "POST") {
         if (!empty($add_retail_trust) && is_array($add_retail_trust)) {
             foreach ($add_retail_trust as $sRetailTrustSKU) {
                 if (!empty($sRetailTrustSKU)) {
-                    $oProduct = classProduct::getProductBySKU($sRetailTrustSKU);
+                    $oProduct = \Xcart\Product::getProductBySKU($sRetailTrustSKU);
                     if ($oProduct->getProductId())
                         $aOrderDetails = Xcart\OrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
                     if (!empty($aOrderDetails)) {
@@ -2338,6 +2339,7 @@ $smarty->assign("order", $order);
 
 $oOrder = Xcart\Order::model(['orderid' => $orderid]);
 $smarty->assign("oOrder", $oOrder);
+$mail_smarty->assign('oOrder', $oOrder);
 
 $oShippings = new Xcart\Shippings();
 $aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');

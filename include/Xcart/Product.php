@@ -10,6 +10,8 @@ class Product extends Data
     const PRODUCT_STATUS_PROBLEM_FIXED = 2;
     const PRODUCT_STATUS_VERIFY = 3;
 
+    const RETAIL_TRUST_SKU_PREFIX = 'RT*';
+
 
     private $oManufacturer;
     private $oStoreFront;
@@ -550,5 +552,10 @@ class Product extends Data
         if (is_null($this->aProductQuestions))
             $this->aProductQuestions = ProductQuestion::model()->findAll(SQLBuilder::getInstance()->addCondition('productid=' . $this->getProductId()));
         return $this->aProductQuestions;
+    }
+
+    public function getSKURetailTrust()
+    {
+        return self::RETAIL_TRUST_SKU_PREFIX.$this->getSKU();
     }
 }

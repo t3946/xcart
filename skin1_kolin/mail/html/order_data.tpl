@@ -203,7 +203,7 @@
             {foreach from=$aRetailTrustOrderDetails item=oRetailTrustOrderDetail}
                 {assign var=oRetailTrustProduct value=$oRetailTrustOrderDetail->getOrderDetailProduct()}
                 <tr>
-                <td align="center">{$oRetailTrustProduct->getSKU()}</td>
+                <td align="center">{$oRetailTrustProduct->getSKURetailTrust()}</td>
                 <td><a href="{$oRetailTrustProduct->getProductFrontURL()}" target="_blank" style="FONT-SIZE: 11px">{$oRetailTrustProduct->getProductName()}</a></td>
                 <td align="center">{include file="currency.tpl" value=$oRetailTrustOrderDetail->calculateRetailTrustPricePerProduct()}</td>
                 <td align="center">{$oRetailTrustOrderDetail->getAmount()}</td>

@@ -57,7 +57,6 @@
 {assign var=aRetailTrustProductDetails value=$oOrder->getOrderDetailsWithProductsRetailTrust()}
 {assign var=aRetailTrustOrderDetails value=$oOrder->getOrderDetailsWithRetailTrust()}
 {if !empty($aRetailTrustProductDetails) && empty($aRetailTrustOrderDetails)}
-  {assign var=oOrder value=$oOrder}
   {include file="customer/main/retail_trust.tpl"}
 {else}
 {if $GTS_order_confirmation_module_code ne ""}

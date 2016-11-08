@@ -92,7 +92,7 @@
 -------
 {foreach from=$aRetailTrustOrderDetails item=oRetailTrustOrderDetail}
 {assign var=oRetailTrustProduct value=$oRetailTrustOrderDetail->getOrderDetailProduct()}
-{$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustProduct->getSKU()}
+{$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustProduct->getSKURetailTrust()}
 {$lng.lbl_product|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustProduct->getProductName()}
 {$lng.lbl_item_price|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$oRetailTrustOrderDetail->calculateRetailTrustPricePerProduct()}
 {$lng.lbl_qty_ord|capitalize|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustOrderDetail->getAmount()}
