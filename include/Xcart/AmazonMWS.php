@@ -1537,6 +1537,7 @@ class AmazonMWS
                                         setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->nodeValue))->
                                         setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
                                         setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
+                                        setField('acc_paymentid', PaymentMethod::model()->find(SQLBuilder::getInstance()->addCondition("order_tag_preference='$sFulfilmentChanel'"))->getField('paymentid'))->
                                         setField('bd_status', 'W');
                                         $oOrderGroup->_insert();
                                         $aManufacturerid_arr[] = $oProduct->getManufacturerId();
@@ -1555,6 +1556,7 @@ class AmazonMWS
                                     $oOrderDetail->_insert();
 
                                     $oOrder->updateVerificationStatus()->reCalculateTotals();
+                                    $oOrder->recalculateAccounting();
 
                                     $product_total += $oOrderDetail->getTotalProductPrice();
 
