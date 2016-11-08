@@ -1329,7 +1329,7 @@ function func_update_refunded_groups(&$groups, $orderid, $can_delete_group = fal
 
 //                $query_data['accounting'] = unserialize($query_data['accounting']);
 ###
-		$query_data['accounting'] = func_make_accounting('','', $query_data); // $tbl = refund_groups
+				//$query_data['accounting'] = func_make_accounting('','', $query_data); // $tbl = refund_groups
 ###
 
                 $query_data['shipping_cost_net_orig'] = $max_ship;

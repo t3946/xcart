@@ -67,8 +67,8 @@
 {/foreach}
 </td>
 {/if}
-<td align="center" nowrap="nowrap">{include file="currency.tpl" value=$product.display_price}</td>
-<td align="center">{$product.amount}</td>
+<td align="center" nowrap="nowrap">{include file="currency.tpl" value=$product.oOrderDetail->getPrice()}</td>
+<td align="center">{$product.oOrderDetail->getAmount()}</td>
 {if $order.has_backordered_status}
     <td align="center">
         {if $v.dc_status eq 'B' || $v.dc_status eq 'G' || $v.dc_status eq 'S'}
@@ -85,7 +85,7 @@
         {/if}
     </td>
 {/if}
-<td align="right" nowrap="nowrap">{math assign="total" equation="amount*price" amount=$product.amount price=$product.display_price}{include file="currency.tpl" value=$total}&nbsp;&nbsp;</td>
+<td align="right" nowrap="nowrap">{include file="currency.tpl" value=$product.oOrderDetail->getTotalProductPrice()}&nbsp;&nbsp;</td>
 </tr>
 {/foreach}
 {if $v.products}
