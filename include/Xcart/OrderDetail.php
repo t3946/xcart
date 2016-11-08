@@ -46,6 +46,11 @@ class OrderDetail extends Data
         return $this->getField('price');
     }
 
+    public function getOrderId()
+    {
+        return $this->getField('orderid');
+    }
+
     public function getOrderDetailId()
     {
         return $this->getField('itemid');
