@@ -362,6 +362,20 @@ class Product extends Data
         return intval($this->getField('amazon_fba_avail'));
     }
 
+    public function getAmazonFBAAvailExcludedProcessing()
+    {
+        $aResult = SQLBuilder::getInstance()->addSelect('COALESCE(SUM(OD.amount- OD.back),0)', 'AvailOnFBA')->
+        addFromTable('order_groups', 'OG')->
+        addInnerJoin('orders', 'O', 'O.orderid = OG.orderid', 'LEFT JOIN')->
+        addInnerJoin('order_details', 'OD', 'OD.orderid = O.orderid', 'LEFT JOIN')->
+        addInnerJoin('products', 'P', 'P.productid = ' . $this->getProductId() . ' AND OD.productid = P.productid')->
+        addCondition("OG.cb_status IN ('IO','P','H','3','Q','N','O','AP')")->
+        addCondition("OG.dc_status IN ('B','M','T','K','DP','E','G')")->
+        addCondition('FROM_UNIXTIME(O.date) > DATE_ADD(NOW(),INTERVAL -4 WEEK)')->
+        query_first()->getQueryResult();
+        return intval($this->getAmazonFBAAvail() * 0.8) - intval($aResult['AvailOnFBA']);
+    }
+
     public function isProductFBAAvail()
     {
         return ($this->getAmazonFBAAvail() > 0);

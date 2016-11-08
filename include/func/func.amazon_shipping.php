@@ -13,48 +13,21 @@ function func_amazon_shippings (){
 
 function func_amazon_all_FBA_products_flag($cart){
 
-	if (!$cart){
-		return false;
-	}
+	$all_FBA_products_flag = null;
 
-	$productids = array();
-
-	foreach ($cart["products"] as $k => $v){
-
-		if (!isset($productid_amount[$v["productid"]])){
-			$productid_amount[$v["productid"]] = 0;
-		}
-
-		$productid_amount[$v["productid"]] += $v["amount"];
-
-		if (!in_array($v["productid"], $productids)){
-			$productids[] = $v["productid"];
-		}
-	}
-
-	$query = "Select TRUNCATE(cidev_get_amazon_FBA_cloned_stock(P.productid) * 0.8,0) - COALESCE(SUM(OD.amount- OD.back),0) As AvailOnFBA, P.manufacturerid,  P.productcode, P.productid
-From xcart_order_groups OG
-        left join xcart_orders O ON O.orderid = OG.orderid
-        inner join xcart_products P ON P.productid  in ('".implode("','",$productids)."')
-        left join xcart_order_details OD ON OD.productid = P.productid and OD.orderid = O.orderid
-Where OG.cb_status IN ('IO','P','H','3','Q','N','O','AP') 
-            and OG.dc_status IN ('B','M','T','K','DP','E','G')
-            and FROM_UNIXTIME(O.date) > DATE_ADD(NOW(),INTERVAL -4 WEEK)
-Group By P.productid";
-
-	$result = func_query($query);
-
-	if (!empty($result)){
-		$all_FBA_products_flag = true;
-		foreach ($result as $k => $v){
-			if ($v["AvailOnFBA"] < $productid_amount[$v["productid"]]){
+	foreach ($cart['products'] as $k => $v){
+		$oProduct = \Xcart\Product::model(['productid' => $v['productid']]);
+		if ($oProduct->getProductId()){
+			if ($oProduct->getAmazonFBAAvailExcludedProcessing() >= intval($v['amount'])) {
+				$all_FBA_products_flag = true;
+			} else {
 				$all_FBA_products_flag = false;
 				break;
 			}
 		}
-	} else {
-		$all_FBA_products_flag = false;
 	}
+	if (is_null($all_FBA_products_flag))
+		$all_FBA_products_flag = false;
 
 	return $all_FBA_products_flag;
 }
@@ -75,30 +48,14 @@ function func_need_amazon_shipping_flag($cart, $userinfo){
 
 		$count_rates = func_query_first_cell("SELECT COUNT($sql_tbl[shipping_rates].rateid) FROM $sql_tbl[shipping_rates] LEFT JOIN $sql_tbl[shipping] ON $sql_tbl[shipping].shippingid = $sql_tbl[shipping_rates].shippingid WHERE $sql_tbl[shipping].code='Amazon' AND $sql_tbl[shipping].active='Y' AND $sql_tbl[shipping_rates].manufacturerid='$manufacturerid' AND zoneid='$customer_zone'");
 
-//func_print_r("count_rates:  ".$count_rates);
-//die();
-
 		if ($count_rates >= 1){
 			$all_FBA_products_flag = func_amazon_all_FBA_products_flag($cart);
 
 			if ($all_FBA_products_flag){
 				$need_amazon_shipping = true;
 			}
-
-#########################################################
-# $need_amazon_shipping = true; //for test ONLY!!!!!!!
-# func_print_r("TEST need_amazon_shipping: ".$need_amazon_shipping);
-#########################################################
-
 		}
 	}
-
-
-#########################################################
-//$need_amazon_shipping = true; //for test ONLY!!!!!!!
-//func_print_r("TEST need_amazon_shipping: ".$need_amazon_shipping);
-#########################################################
-
 	$smarty->assign("need_amazon_shipping",$need_amazon_shipping);
 
 	return $need_amazon_shipping;
