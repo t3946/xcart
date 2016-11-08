@@ -759,12 +759,7 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 
 				$items[] = $products[$pk]['itemid'] = func_array2insert("order_details", $query_data, true);
 			}
-			if (!empty($_POST['retail_trust_to_delete']) && is_array($_POST['retail_trust_to_delete'])) {
-				foreach ($_POST['retail_trust_to_delete'] as $iOrderDetailRetailToDeleate => $value) {
-					$oOrderDetailRetailTrust = new Xcart\OrderDetail(['itemid'=>intval($iOrderDetailRetailToDeleate)]);
-					$oOrderDetailRetailTrust->removeRetailTrust();
-				}
-			}
+			
 
 
 	                if (!isset($back_products[$product['manufacturerid']])) {
