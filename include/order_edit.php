@@ -1375,6 +1375,11 @@ if ($REQUEST_METHOD == "POST") {
                                 foreach ($aOrderDetails as $oOrderDetail) {
                                     $oOrderDetail->addRetailTrust();
                                 }
+                            } else {
+                                $top_message["content"] .= func_get_langvar_by_name("retail_trust_nonordered_sku_for_retailtrust");
+                                $top_message["type"] = "I";
+                                $section_name_top_message = $top_message;
+                                x_session_save("section_name_top_message");
                             }
                         } else {
                             /* retail trust sku not enabled*/
