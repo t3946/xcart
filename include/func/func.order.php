@@ -1677,7 +1677,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			unset($group_total);
 			unset($insert_data);
 		}
-		$oOrder = Xcart\Order::model(['orderid'=>$orderid]);
+		$oOrder = \Xcart\Order::model(['orderid'=>$orderid]);
 		$oOrder->updateVerificationStatus();
 
 
@@ -1964,6 +1964,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 	$mes .= "STEP V ".date("H:i:s")."\n";
 
 	x_log_add("order_time",$mes,true);
+
+	x_session_unregister('customer_notes');
 
 	return $orderids;
 }
