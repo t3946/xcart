@@ -2001,6 +2001,8 @@ func_send_mail("igor@s3stores.com", 'mail/order_notification_subj.tpl', 'mail/or
 
 	x_log_add("order_time",$mes,true);
 
+	x_session_unregister('customer_notes');
+
 	return $orderids;
 }
 
