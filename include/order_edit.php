@@ -1368,12 +1368,23 @@ if ($REQUEST_METHOD == "POST") {
             foreach ($add_retail_trust as $sRetailTrustSKU) {
                 if (!empty($sRetailTrustSKU)) {
                     $oProduct = \Xcart\Product::getProductBySKU($sRetailTrustSKU);
-                    if ($oProduct->getProductId())
-                        $aOrderDetails = Xcart\OrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
-                    if (!empty($aOrderDetails)) {
-                        foreach ($aOrderDetails as $oOrderDetail) {
-                            $oOrderDetail->addRetailTrust();
+                    if ($oProduct->getProductId()) {
+                        if ($oProduct->isRetailTrustEnabled()) {
+                            $aOrderDetails = Xcart\OrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
+                            if (!empty($aOrderDetails)) {
+                                foreach ($aOrderDetails as $oOrderDetail) {
+                                    $oOrderDetail->addRetailTrust();
+                                }
+                            }
+                        } else {
+                            /* retail trust sku not enabled*/
+                            $top_message["content"] .= func_get_langvar_by_name("retail_trust_not_retailtrust_enabled_sku");
+                            $top_message["type"] = "I";
                         }
+                    } else {
+                        /*product not found*/
+                        $top_message["content"] .= func_get_langvar_by_name("retail_trust_nonordered_sku_for_retailtrust");
+                        $top_message["type"] = "I";
                     }
                 }
             }
