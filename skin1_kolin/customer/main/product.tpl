@@ -112,7 +112,7 @@
 	{/if}
 	{* --- *}
 
-<font class="ProductPriceConverting2"><span id="product_price" style="white-space: nowrap;">{include file="currency.tpl" value=$current_price plain_text_message=true price_type="product_price"}</span></font>
+<span class="ProductPriceConverting2"><span id="product_price" style="white-space: nowrap;">{include file="currency.tpl" value=$current_price plain_text_message=true price_type="product_price"}</span></span>
 <font class="MarketPrice"> <span id="product_alt_price" style="white-space: nowrap;">{include file="customer/main/alter_currency_value.tpl" alter_currency_value=$current_price plain_text_message=true}</span></font>
 {if $product.map_price gt $product.taxed_price}
 <br />

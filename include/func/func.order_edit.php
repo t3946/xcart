@@ -686,12 +686,12 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 
 			}
 
-			$product["extra_data"]["product_options"] = $options;
-			$product["extra_data"]["product_options_alt"] = $options_alt;
-			$product["extra_data"]["taxes"] = $product["taxes"];
-			$product["extra_data"]["display"]["price"] = doubleval($product["display_price"]);
-			$product["extra_data"]["display"]["discounted_price"] = doubleval($product["display_discounted_price"]);
-			$product["extra_data"]["display"]["subtotal"] = doubleval($product["display_subtotal"]);
+			//$product["extra_data"]["product_options"] = $options;
+			//$product["extra_data"]["product_options_alt"] = $options_alt;
+			//$product["extra_data"]["taxes"] = $product["taxes"];
+			//$product["extra_data"]["display"]["price"] = doubleval($product["display_price"]);
+			//$product["extra_data"]["display"]["discounted_price"] = doubleval($product["display_discounted_price"]);
+			//$product["extra_data"]["display"]["subtotal"] = doubleval($product["display_subtotal"]);
 
 
 
@@ -1329,7 +1329,7 @@ function func_update_refunded_groups(&$groups, $orderid, $can_delete_group = fal
 
 //                $query_data['accounting'] = unserialize($query_data['accounting']);
 ###
-		$query_data['accounting'] = func_make_accounting('','', $query_data); // $tbl = refund_groups
+				//$query_data['accounting'] = func_make_accounting('','', $query_data); // $tbl = refund_groups
 ###
 
                 $query_data['shipping_cost_net_orig'] = $max_ship;

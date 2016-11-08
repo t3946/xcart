@@ -685,7 +685,7 @@ Cost to us accurate
 {/if}
   </td>
 
-  <td align="right">{include file="currency2.tpl" value=$product.price*$product.amount}
+  <td align="right">{include file="currency2.tpl" value=$product.oOrderDetail->getTotalProductPrice()}
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
@@ -701,7 +701,7 @@ Cost to us accurate
 {*  <td align="right">{include file="currency2.tpl" value=$product.extra_data.taxes.PST.tax_value hide_zero='Y'}</td> *}
   <td align="right">
 
-{include file="currency2.tpl" value=$product.display_subtotal}
+{include file="currency2.tpl" value=$product.oOrderDetail->getTotalProductPrice()}
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">

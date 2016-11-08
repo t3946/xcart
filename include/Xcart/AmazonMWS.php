@@ -1560,8 +1560,8 @@ class AmazonMWS
 
                                     $oOrderRaw = CidevAmazonOrderRaw::model()->find(SQLBuilder::getInstance()->addCondition('orderid = ' . $oOrder->getOrderId()));
                                     $oOrderRaw->setField('orderid', $oOrder->getOrderId())->
-                                    setField('order_info', $xpath2->document->saveXML())->
-                                    setField('orderitems_info', $xpath3->document->saveXML());
+                                    setField('order_info', addslashes($xpath2->document->saveXML()))->
+                                    setField('orderitems_info', addslashes($xpath3->document->saveXML()));
                                     $oOrderRaw->_insert(true);
 
                                     $log = '<a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID=' . $sAmazonOrderId . '" target="_blank">Amazon order # ' . $sAmazonOrderId . '</a><br />Grand total: $' . $product_total;
