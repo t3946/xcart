@@ -790,6 +790,7 @@ function func_order_data($orderid) {
 ##
 ###
 		$order['shipping_groups'][$m_id]['products'][$v["itemid"]] = $v;
+		$order['shipping_groups'][$m_id]['oOrderGroup'] = \Xcart\OrderGroup::model(['orderid' => $orderid, 'manufacturerid' => $m_id]);
 ###
 ##
 #

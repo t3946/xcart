@@ -23,6 +23,9 @@ class Product extends Data
 
     private $aPricing = [];
 
+    private $iAmazonQuantity = null;
+    private $fAmazonPrice = null;
+
     /**
      * @var ProductQuestion[]
      */
@@ -571,5 +574,31 @@ class Product extends Data
     public function getSKURetailTrust()
     {
         return self::RETAIL_TRUST_SKU_PREFIX.$this->getSKU();
+    }
+
+    public function getAmazonQuantity()
+    {
+        if (is_null($this->iAmazonQuantity)) {
+            $aResult = SQLBuilder::getInstance()->
+            addSelect('cidev_get_amazon_quantity(' . $this->getProductId() . ')', 'aquantity')->
+            addFromTable('products')->
+            addCondition('productid='.$this->getProductId())->
+            query_first()->getQueryResult();
+            $this->iAmazonQuantity = $aResult['aquantity'];
+        }
+        return $this->iAmazonQuantity;
+    }
+
+    public function getAmazonPrice()
+    {
+        if (is_null($this->fAmazonPrice)) {
+            $aResult = SQLBuilder::getInstance()->
+            addSelect('cidev_get_amazon_price(' . $this->getProductId() . ')', 'aprice')->
+            addFromTable('products')->
+            addCondition('productid='.$this->getProductId())->
+            query_first()->getQueryResult();
+            $this->fAmazonPrice = $aResult['aprice'];
+        }
+        return $this->fAmazonPrice;
     }
 }

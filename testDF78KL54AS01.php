@@ -8,4 +8,7 @@ require "./top.inc.php";
 require "./init.php";
 
 
-Xcart\Order::model(['orderid'=>66186])->reCalculateTotals();
+$oProduct = \Xcart\Product::model(['productid'=>16445]);
+echo $oProduct->getAmazonQuantity();
+echo $oProduct->getAmazonPrice();
+echo $oProduct->getManfacturerClass()->getAmazonLeadtimetoship();
