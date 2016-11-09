@@ -179,6 +179,41 @@
 {/if}
 
 </table>
+
+{*Retail trust table*}
+{if $oOrder}
+    {assign var=aRetailTrustOrderDetails value=$oOrder->getOrderDetailsWithRetailTrust()}
+    {if $aRetailTrustOrderDetails}
+
+        <table cellspacing="0" cellpadding="0" width="100%" border="0">
+
+            <tr>
+                <td align="center"><font style="FONT-SIZE: 14px; FONT-WEIGHT: bold;">{$lng.lbl_retailtrust_ordered}</font></td>
+            </tr>
+
+        </table>
+        <table cellspacing="0" cellpadding="3" width="100%" border="1">
+            <tr>
+                <th width="60" bgcolor="#cccccc" align="center">{$lng.lbl_sku}</th>
+                <th width="*" align="center" bgcolor="#cccccc">{$lng.lbl_product}</th>
+                <th width="50" nowrap="nowrap" bgcolor="#cccccc" align="center">{$lng.lbl_item_price|capitalize}</th>
+                <th width="50" nowrap="nowrap" bgcolor="#cccccc" align="center">{$lng.lbl_qty_ord|capitalize}</th>
+                <th nowrap="nowrap" width="50" bgcolor="#cccccc" align="center">{$lng.lbl_extended}</th>
+            </tr>
+            {foreach from=$aRetailTrustOrderDetails item=oRetailTrustOrderDetail}
+                {assign var=oRetailTrustProduct value=$oRetailTrustOrderDetail->getOrderDetailProduct()}
+                <tr>
+                <td align="center">{$oRetailTrustProduct->getSKURetailTrust()}</td>
+                <td><a href="{$oRetailTrustProduct->getProductFrontURL()}" target="_blank" style="FONT-SIZE: 11px">{$oRetailTrustProduct->getProductName()}</a></td>
+                <td align="center">{include file="currency.tpl" value=$oRetailTrustOrderDetail->calculateRetailTrustPricePerProduct()}</td>
+                <td align="center">{$oRetailTrustOrderDetail->getAmount()}</td>
+                <td align="center">{include file="currency.tpl" value=$oRetailTrustOrderDetail->getRetailTrustGross()}</td>
+                </tr>
+            {/foreach}
+        </table>
+    {/if}
+{/if}
+
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
 
 <tr>
@@ -255,6 +290,12 @@
 {/foreach}
 {/if}
 
+{if $oOrder && $oOrder->getOrderRetailTrustGross() > 0}
+    <tr>
+        <td align="right" width="100%" height="20"><b>{$lng.lbl_retailtrust_ordered_total}:</b>&nbsp;</td>
+        <td align="right" nowrap="nowrap">{include file="currency.tpl" value=$oOrder->getOrderRetailTrustGross()}</td>
+    </tr>
+{/if}
 
 <tr>
 <td colspan="2"> {* <img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" style="height: 2px;max-height: 2px;" /> *} <hr style="width:100%;margin: 0px; border: 0 none; border-bottom: 1px solid #999999;"></td>
@@ -262,7 +303,9 @@
 
 <tr>
 <td align="right" width="100%" bgcolor="#cccccc" height="25"><b>{$lng.lbl_grand_total|capitalize}:</b>&nbsp;</td>
-<td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap"><b>{include file="currency.tpl" value=$order.total}</b></td>
+{if $oOrder}
+<td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap"><b>{include file="currency.tpl" value=$oOrder->getOrderTotalGross()}</b></td>
+{/if}
 </tr>
 
 {if $_userinfo.tax_exempt ne "Y"}

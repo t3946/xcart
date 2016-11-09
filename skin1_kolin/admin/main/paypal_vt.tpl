@@ -346,10 +346,16 @@ $(document).ready(function(){
 </form>
 
 <table align="right" cellspacing="1" cellpadding="1">
+    {assign var=oPaymentProcessor value=$oOrder->getPaymentMethodInstance()}
+    {math assign="transaction_with_multiplier" equation="x*y" x=$order_transactions_totals.authorized_PLUS_captured_totals y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Transactions amount (authorized/pending +captured ) </td>
   <td>&nbsp;</td>
-  <td align="right" style="font-size: 10px; {if $count_shipping_groups eq "1"} background-color: {if $order.total eq $order_transactions_totals.authorized_PLUS_captured_totals}green{else}red{/if}; {/if}">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
+  <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() == $order_transactions_totals.authorized_PLUS_captured_totals}#d9ead3;
+  {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.authorized_PLUS_captured_totals && $oOrder->getOrderTotalGross() <= $transaction_with_multiplier}
+          yellow
+          {else}red
+  {/if};">{include file="currency2.tpl" value=$order_transactions_totals.authorized_PLUS_captured_totals}</td>
 </tr>
 
 <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
@@ -363,11 +369,16 @@ $(document).ready(function(){
   <td>&nbsp;</td>
   <td align="right" style="font-size: 10px;">{include file="currency2.tpl" value=$order_transactions_totals.authorized_total}</td>
 </tr>
-
-<tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
+    {math assign="transaction_capture_with_multiplier" equation="x*y" x=$order_transactions_totals.captured_total y=$oPaymentProcessor->getMaximumReAuthorizationMultiplier()}
+    <tr{cycle values=", class='TableSubHead'" name="cycle_totals"}>
   <td>Captured total</td>
   <td>&nbsp;</td>
-  <td align="right" style="font-size: 10px; {if $count_shipping_groups gt 1}background-color: {if $order.total eq $order_transactions_totals.captured_total}green{else}red{/if};{/if}">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
+  <td align="right" style="font-size: 10px; background-color: {if $oOrder->getOrderTotalGross() eq $order_transactions_totals.captured_total}
+          green
+          {elseif $oOrder->getOrderTotalGross() > $order_transactions_totals.captured_total && $oOrder->getOrderTotalGross() <= $transaction_capture_with_multiplier}
+          yellow
+          {else}
+          red{/if};">{include file="currency2.tpl" value=$order_transactions_totals.captured_total}</td>
 </tr>
 </table>
 

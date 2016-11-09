@@ -308,6 +308,7 @@ function func_add_to_cart(&$cart, $product_data) {
 				"cartid" => $cartid,
 				"productid" => $productid,
 				"cost_to_us" => $added_product["cost_to_us"],
+				"retail_trust_enabled" => $added_product["retail_trust_enabled"],
 				"amount" => $amount,
 				"options" => $product_options,
 				"free_price" => @price_format(@$free_price),

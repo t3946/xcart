@@ -4057,7 +4057,6 @@ if(!function_exists("array_column"))
 	}
 
 }
-
 function func_check_comma_in_field($orderid, $value, $sFieldName)
 {
 	global $login, $top_message;

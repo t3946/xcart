@@ -9,5 +9,6 @@ class PaymentMethodpayment_offline extends PaymentMethod
         $this->aPrimaryKeys = ['paymentid'];
         $this->sPrimaryTable = 'payment_methods';
         parent::__construct($aParams);
+
     }
 }

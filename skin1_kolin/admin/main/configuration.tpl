@@ -12,7 +12,7 @@ tinymce.init({
     plugins: [
         "advlist autolink lists link image charmap print preview anchor",
         "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste"
+        "insertdatetime media table contextmenu paste fullpage"
     ],
     toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
     forced_root_block : false,
@@ -666,6 +666,10 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
   {include file="modules/XPayments_Connector/config_recommends.tpl"}
 {/if}
 
+{if $option eq "Retail_Trust"}
+    {$lng.txt_retail_trust_info}
+{/if}
+
 <table cellpadding="3" cellspacing="1" width=100%>
 
 {assign var="first_row" value=1}
@@ -919,7 +923,7 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
 {elseif $configuration[cat_num].type eq "textarea"}
 <textarea 
 
-{if $configuration[cat_num].name eq "thank_you_message_body" || $configuration[cat_num].name eq "po_instructions" || $configuration[cat_num].name eq "po_missing_instructions" || $configuration[cat_num].name eq "reference_text" || $configuration[cat_num].name eq "signature" || $configuration[cat_num].name eq "outside_sf_localization_warning" || $configuration[cat_num].name eq "po_entry_dashboard_text" || $configuration[cat_num].name eq "RMA_message" || $configuration[cat_num].name eq "RMA_to_department_Message"}
+{if $configuration[cat_num].name eq "retail_trust_message" || $configuration[cat_num].name eq "thank_you_message_body" || $configuration[cat_num].name eq "po_instructions" || $configuration[cat_num].name eq "po_missing_instructions" || $configuration[cat_num].name eq "reference_text" || $configuration[cat_num].name eq "signature" || $configuration[cat_num].name eq "outside_sf_localization_warning" || $configuration[cat_num].name eq "po_entry_dashboard_text" || $configuration[cat_num].name eq "RMA_message" || $configuration[cat_num].name eq "RMA_to_department_Message"}
 class="new_editor" rows="30" cols="60"
 {/if}
 
@@ -987,6 +991,9 @@ class="new_editor" rows="30" cols="60"
 {/if}
 {if $option eq "Product_Page"}
 	{include file="admin/main/product_page_options.tpl"}
+{/if}
+{if $option eq "Retail_Trust"}
+  {include file="admin/main/retail_trust_config.tpl"}
 {/if}
 <tr>
 <td colspan="3"><br /><br />

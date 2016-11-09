@@ -22,6 +22,13 @@ class Order extends Data
      * @var Product[]
      */
     private $aOrderProducts = null;
+    /**
+     * @var Customer[]
+     */
+    private $oCustomer = null;
+
+    private $oStoreFront = null;
+
     private $aOrderProductsManufactueres = null;
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
@@ -95,7 +102,7 @@ class Order extends Data
     }
 
     /**
-     * @return Product
+     * @return Product[]
      */
     public function getOrderDetailsProductsWithRetailTrust()
     {
@@ -275,6 +282,17 @@ class Order extends Data
     public function getOrderCustomerNotes()
     {
         return $this->getField('customer_notes');
+    }
+
+
+    public function getFirstName()
+    {
+        return $this->getField('firstname');
+    }
+
+    public function getEmail()
+    {
+        return $this->getField('email');
     }
 
     public function getShippingFirstName()
@@ -626,5 +644,128 @@ class Order extends Data
     public function getPOPipelineInstance()
     {
         return POPipeline::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
+    }
+
+    public function getCustomerEntity()
+    {
+        if (is_null($this->oCustomer)) {
+            $this->oCustomer = new Customer(['login'=>$this->getLogin()]);
+        }
+        return $this->oCustomer;
+    }
+
+    public function getLogin()
+    {
+        return $this->getField('login');
+    }
+
+    public function recalculateRetailTrust()
+    {
+        $this->_refresh();
+        $fTotalRetailTrust = 0;
+        $aOrderGroups = $this->getOrderGroups();
+        if (!empty($aOrderGroups)) {
+            foreach ($aOrderGroups as $oOrderGroup) {
+                $fTotalRetailTrustGroup = 0;
+                $aOrderDetails = $oOrderGroup->getOrderDetailsWithRetailTrust();
+                if (!empty($aOrderDetails)) {
+                    foreach ($aOrderDetails as $oOrderDetail) {
+                        $fTotalRetailTrustGroup += $oOrderDetail->getRetailTrustPrice();
+                    }
+                    $oOrderGroup->addTotalNet($fTotalRetailTrustGroup)->addTotalGross($fTotalRetailTrustGroup)->_update();
+                    $fTotalRetailTrust += $fTotalRetailTrustGroup;
+                }
+            }
+            $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
+            $this->_refresh();
+        }
+        return $this;
+    }
+
+    public function getOrderStoreFront()
+    {
+        if (is_null($this->oStoreFront)) {
+            $aOrderProducts = $this->getOrderProducts();
+            if (!empty($aOrderProducts)) {
+                $oProduct = reset($aOrderProducts);
+                $this->oStoreFront = $oProduct->getStoreFront();
+            }
+        }
+        return $this->oStoreFront;
+    }
+
+    public function addOrderTotaNet($fSumma)
+    {
+        $this->setField('total_net', floatval($this->getField('total_net')) + $fSumma);
+        return $this;
+    }
+
+    public function addOrderTotal($fSumma)
+    {
+        $this->setField('total', floatval($this->getField('total')) + $fSumma);
+        return $this;
+    }
+
+    public function addOrderTotalGross($fSumma)
+    {
+        $this->setField('total_gross', floatval($this->getField('total_gross')) + $fSumma);
+        return $this;
+    }
+
+    /**
+     * @return OrderDetail[]
+     */
+    public function getOrderDetailsWithProductsRetailTrust()
+    {
+        $aResult = [];
+        $this->getOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                if ($oOrderDetail->getOrderDetailProduct()->isRetailTrustEnabled() && $this->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() > 1)
+                    $aResult[] = $oOrderDetail;
+            }
+        }
+        return $aResult;
+    }
+
+    public function calculateOrderRetailTrustProductsTotal()
+    {
+        $fSumma = 0;
+        $oOrderDetails = $this->getOrderDetailsWithProductsRetailTrust();
+        if (!empty($oOrderDetails)) {
+            foreach ($oOrderDetails as $oOrderDetail)
+            {
+                $fSumma+=$oOrderDetail->calculateRetailTrustPrice();
+            }
+        }
+        return $fSumma;
+    }
+
+    public function getOrderStatusDC()
+    {
+        return $this->getField('dc_status');
+    }
+
+    public function getOrderStatusCB()
+    {
+        return $this->getField('cb_status');
+    }
+
+    public function getOrderStatusBD()
+    {
+        return $this->getField('bd_status');
+    }
+
+    public function _refresh()
+    {
+        parent::_refresh();
+        $this->aOrderGroups = null;
+        $this->aOrderDetails = null;
+        $this->aOrderProducts = null;
+        $this->aOrderProductsManufactueres = null;
+        $this->aAdditionalFees = null;
+        $this->oPaymentMethod = null;
+        $this->oCustomer = null;
+
     }
 }

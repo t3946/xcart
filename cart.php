@@ -1592,6 +1592,12 @@ if ($mode == 'order_message') {
     $perform_autologout = 'Y';
 }
 
+if (!empty($orderid) && is_numeric($orderid)) {
+	$oOrder = new Xcart\Order(['orderid'=>$orderid]);
+	$smarty->assign('oOrder',$oOrder);
+}
+
+
 $smarty->assign("partner", $partner);
 # Assign the current location line
 $smarty->assign("location", $location);

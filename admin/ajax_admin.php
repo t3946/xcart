@@ -25,11 +25,10 @@ switch ($_POST['ajax_action']) {
     case "change_verify_batch_status":
         changeVerifyBatchStatus($_POST);
         break;
-    case "change_verificator_status":
-        changeVerificatorStatus($_POST);
-        break;
     case "change_processing_rules":
         changeProcessingRules($_POST);
+    case "change_verificator_status":
+        changeVerificatorStatus($_POST);
         break;
     case "add_new_batch":
         addNewBatch($_POST);

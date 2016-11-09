@@ -111,7 +111,8 @@ if ($REQUEST_METHOD == "POST" && !empty($fid)) {
         'placement_time_from_type'  => $placement_time_from_type,
         'placement_time_to_type'    => $placement_time_to_type,
         'enabled'                   => $enabled == 'Y' ? 'Y' : 'N',
-        'bold'                      => $bold == 'Y' ? 'Y' : 'N','direct_link'  => $filter_direct_link,
+        'bold'                      => $bold == 'Y' ? 'Y' : 'N',
+        'direct_link'  => $filter_direct_link,
     );
     func_array2update('filter_presets', $update, "fid='$fid'");
 
