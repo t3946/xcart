@@ -1607,7 +1607,7 @@ $feed = <<<EOD
    <MessageType>Inventory</MessageType>
 EOD;
 
-	$MessageID = 0;
+	$MessageID = 1;
 	foreach ($ainventory as $k => $v) {
 
 		/*$fields = ", IFNULL($sql_tbl[variants].avail, $sql_tbl[products].r_avail) as r_avail, IFNULL($sql_tbl[variants].productcode, $sql_tbl[products].productcode) as productcode, $sql_tbl[products].cost_to_us, $sql_tbl[products].map_price, $sql_tbl[products].manufacturerid, $sql_tbl[products].eta_date_mm_dd_yyyy";
@@ -1641,21 +1641,33 @@ EOD;
 
 
 
-			$MessageID++;
+		$aFBAProductCodes = null;
 
 			if ($oProduct->getAmazonFBAAvailReal() > 0) {
-				$feed .= <<<EOD
+				$aFBAProductCodes[] =  $productcode;
+				$aMissingSKU = \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('productid = '.$oProduct->getProductId()));
+				if (!empty($aMissingSKU)) {
+					foreach ($aMissingSKU as $oMissingSKU) {
+						$aFBAProductCodes[] = $oMissingSKU->getMissingSKU();
+					}
+				}
+
+				foreach ($aFBAProductCodes as $sProductCode) {
+
+					$feed .= <<<EOD
 <Message>
 <MessageID>$MessageID</MessageID>
 <OperationType>Update</OperationType>
 <Inventory>
-<SKU>$productcode</SKU>
+<SKU>$sProductCode</SKU>
 <FulfillmentCenterID>AMAZON_NA</FulfillmentCenterID>
 <Lookup>FulfillmentNetwork</Lookup>
 <SwitchFulfillmentTo>AFN</SwitchFulfillmentTo>
 </Inventory>
 </Message>
 EOD;
+					$MessageID++;
+				}
 			} else {
 
 				$avail = $oProduct->getAmazonQuantity();
@@ -1674,6 +1686,7 @@ EOD;
 </Inventory>
 </Message>
 EOD;
+				$MessageID++;
 			}
 	}
 
@@ -1728,24 +1741,37 @@ EOD;
    <MessageType>Price</MessageType>
 EOD;
 
-        $MessageID = 0;
+        $MessageID = 1;
         foreach ($ainventory as $k => $product){
 
+			$aFBAProductCodes = null;
 			$oProduct = \Xcart\Product::model(['productid' => $product["productid"]]);
-			$productcode = $oProduct->getSKU();
 			$price = $oProduct->getAmazonPrice();
 
-                    $MessageID++;
 
+			$aFBAProductCodes[] = $oProduct->getSKU();
+
+			if ($oProduct->getAmazonFBAAvailReal() > 0) {
+				$aMissingSKU = \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('productid = '.$oProduct->getProductId()));
+				if (!empty($aMissingSKU)) {
+					foreach ($aMissingSKU as $oMissingSKU) {
+						$aFBAProductCodes[] = $oMissingSKU->getMissingSKU();
+					}
+				}
+			}
+
+			foreach ($aFBAProductCodes as $sProductCode) {
                     $feed .= <<<EOD
 <Message>
 <MessageID>$MessageID</MessageID>
 <Price>
-<SKU>$productcode</SKU>
+<SKU>$sProductCode</SKU>
 <StandardPrice currency="USD">$price</StandardPrice>
 </Price>
 </Message>
 EOD;
+				$MessageID++;
+			}
         }
 
         $feed .= <<<EOD
