@@ -34,7 +34,8 @@
 {if $v.products}
 <tr>
 <td colspan="{$colspan}">
-<b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$v.manufacturer_data.m_city:"STATE":$v.manufacturer_data.m_state:"COUNTRY":$v.manufacturer_data.m_country} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):</b>
+    {assign var="oManufacturer" value=$v.oOrderGroup->getManufacturerEntity()}
+<b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$oManufacturer->getField('m_city'):"STATE":$oManufacturer->getField('m_state'):"COUNTRY":$oManufacturer->getField('m_country')} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):</b>
 </td>
 </tr>
 {/if}

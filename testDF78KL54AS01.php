@@ -8,4 +8,4 @@ require "./top.inc.php";
 require "./init.php";
 
 
-echo Xcart\Product::model(['productid'=>76912])->getAmazonFBAAvailExcludedProcessing();
+Xcart\Order::model(['orderid'=>66186])->reCalculateTotals();

@@ -1114,9 +1114,6 @@ class OrderGroup extends Data
         return ($this->getField('amz_fullfilment_order_placed') == 'Y');
     }
 
-    /**
-     * @return OrderDetail[]
-     */
     public function getOrderDetails()
     {
         return OrderDetail::model()->findAll(SQLBuilder::getInstance()->
