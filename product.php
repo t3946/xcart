@@ -159,6 +159,8 @@ if (empty($product_info)) {
 	func_header_location("search.php?substring=".urlencode($sku)."&by_sku=1&mode=search&from=fast_search");
 }
 
+$oProduct = Xcart\Product::model(['productid'=>$product_info['productid']]);
+
 #
 ##
 ###
@@ -998,7 +1000,8 @@ if (!empty($cat)){
 */
 
 global $xcart_dir;
-$smarty->assign("cidev_mpn", Xcart\Product::model(['productid'=>$product_info['productid']])->getMPN());
+$smarty->assign("cidev_mpn", $oProduct->getMPN());
+$smarty->assign("oProduct", $oProduct);
 
 /*$pos = strpos($product_info['productcode'], '-');
 $mpn = '';

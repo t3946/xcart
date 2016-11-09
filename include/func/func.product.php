@@ -1083,7 +1083,6 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 		}
 	}
 
-		global $xcart_dir;
 		$classProduct = new Xcart\Product(['productid'=>$product['productid']]);
 		$mpn = $classProduct->getMPN();
 

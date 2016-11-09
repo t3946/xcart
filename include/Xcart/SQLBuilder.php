@@ -60,9 +60,9 @@ class SQLBuilder
         return $this;
     }
 
-    public function addInnerJoin($sTable, $sAlias = null, $sCondition)
+    public function addInnerJoin($sTable, $sAlias = null, $sCondition, $sType = 'INNER JOIN')
     {
-        $this->aInnerJoinTables[] = self::$sql_tbl[$sTable] . ((!empty($sAlias)) ? ' as ' . $sAlias : '') . ' ON ' . $sCondition;
+        $this->aInnerJoinTables[] = ['type' => $sType, 'condition' => self::$sql_tbl[$sTable] . ((!empty($sAlias)) ? ' as ' . $sAlias : '') . ' ON ' . $sCondition];
         return $this;
     }
 
@@ -112,8 +112,10 @@ class SQLBuilder
             $this->sqlQuery .= " FROM " . implode(',', $this->aTables);
         }
         if (!empty($this->aInnerJoinTables)) {
-            $this->sqlQuery .= ' INNER JOIN ';
-            $this->sqlQuery .= implode(' INNER JOIN ', $this->aInnerJoinTables);
+            foreach ($this->aInnerJoinTables as $aJoin) {
+                $this->sqlQuery .= ' ' . $aJoin['type'] . ' ';
+                $this->sqlQuery .= $aJoin['condition'];
+            }
         }
         if (!empty($this->aConditions)) {
             $this->sqlQuery .= " WHERE " . implode(' AND ', $this->aConditions);
