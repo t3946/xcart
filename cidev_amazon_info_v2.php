@@ -160,81 +160,6 @@ echo  "Report 1 start\n";
 #
 
 
-### Amazon ###
-//include_once "MarketplaceWebServiceProducts/Samples/.config.inc.php";
-require_once "MarketplaceWebServiceProducts/Client.php";
-require_once "MarketplaceWebServiceProducts/Exception.php";
-require_once "MarketplaceWebServiceProducts/Model/GetCompetitivePricingForSKURequest.php";
-require_once "MarketplaceWebServiceProducts/Model/SellerSKUIdentifier.php";
-require_once "MarketplaceWebServiceProducts/Model/SellerSKUListType.php";
-require_once "MarketplaceWebServiceProducts/Model/ShippingTimeType.php";
-require_once "MarketplaceWebServiceProducts/Model/SalesRankType.php";
-require_once "MarketplaceWebServiceProducts/Model/SalesRankList.php";
-require_once "MarketplaceWebServiceProducts/Model/ResponseMetadata.php";
-require_once "MarketplaceWebServiceProducts/Model/ResponseHeaderMetadata.php";
-require_once "MarketplaceWebServiceProducts/Model/RelationshipList.php";
-require_once "MarketplaceWebServiceProducts/Model/QualifiersType.php";
-require_once "MarketplaceWebServiceProducts/Model/Product.php";
-require_once "MarketplaceWebServiceProducts/Model/ProductList.php";
-require_once "MarketplaceWebServiceProducts/Model/PriceType.php";
-require_once "MarketplaceWebServiceProducts/Model/Points.php";
-require_once "MarketplaceWebServiceProducts/Model/OfferType.php";
-require_once "MarketplaceWebServiceProducts/Model/OffersList.php";
-require_once "MarketplaceWebServiceProducts/Model/OfferListingCountType.php";
-require_once "MarketplaceWebServiceProducts/Model/NumberOfOfferListingsList.php";
-require_once "MarketplaceWebServiceProducts/Model/MoneyType.php";
-require_once "MarketplaceWebServiceProducts/Model/Message.php";
-require_once "MarketplaceWebServiceProducts/Model/MessageList.php";
-require_once "MarketplaceWebServiceProducts/Model/LowestOfferListingType.php";
-require_once "MarketplaceWebServiceProducts/Model/LowestOfferListingList.php";
-require_once "MarketplaceWebServiceProducts/Model/ListMatchingProductsResult.php";
-require_once "MarketplaceWebServiceProducts/Model/ListMatchingProductsResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/ListMatchingProductsRequest.php";
-require_once "MarketplaceWebServiceProducts/Model/IdListType.php";
-require_once "MarketplaceWebServiceProducts/Model/IdentifierType.php";
-require_once "MarketplaceWebServiceProducts/Model/GetServiceStatusResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetServiceStatusResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetServiceStatusRequest.php";
-require_once "MarketplaceWebServiceProducts/Model/GetProductCategoriesForSKUResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetProductCategoriesForSKUResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetProductCategoriesForSKURequest.php";
-require_once "MarketplaceWebServiceProducts/Model/GetProductCategoriesForASINResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetProductCategoriesForASINResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetProductCategoriesForASINRequest.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMyPriceForSKUResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMyPriceForSKUResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMyPriceForSKURequest.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMyPriceForASINResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMyPriceForASINResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMyPriceForASINRequest.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMatchingProductResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMatchingProductResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMatchingProductRequest.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMatchingProductForIdResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMatchingProductForIdResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetMatchingProductForIdRequest.php";
-require_once "MarketplaceWebServiceProducts/Model/GetLowestOfferListingsForSKUResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetLowestOfferListingsForSKUResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetLowestOfferListingsForSKURequest.php";
-require_once "MarketplaceWebServiceProducts/Model/GetLowestOfferListingsForASINResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetLowestOfferListingsForASINResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetLowestOfferListingsForASINRequest.php";
-require_once "MarketplaceWebServiceProducts/Model/GetCompetitivePricingForSKUResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetCompetitivePricingForSKUResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetCompetitivePricingForASINResult.php";
-require_once "MarketplaceWebServiceProducts/Model/GetCompetitivePricingForASINResponse.php";
-require_once "MarketplaceWebServiceProducts/Model/GetCompetitivePricingForASINRequest.php";
-require_once "MarketplaceWebServiceProducts/Model/Error.php";
-require_once "MarketplaceWebServiceProducts/Model/ErrorDetail.php";
-require_once "MarketplaceWebServiceProducts/Model/CompetitivePricingType.php";
-require_once "MarketplaceWebServiceProducts/Model/CompetitivePriceType.php";
-require_once "MarketplaceWebServiceProducts/Model/CompetitivePriceList.php";
-require_once "MarketplaceWebServiceProducts/Model/Categories.php";
-require_once "MarketplaceWebServiceProducts/Model/AttributeSetList.php";
-require_once "MarketplaceWebServiceProducts/Model/ASINListType.php";
-require_once "MarketplaceWebServiceProducts/Model/ASINIdentifier.php";
-### ###
-
 $a_config = array (
     'ServiceURL' => "https://mws.amazonservices.com/Products/2011-10-01",
     'ProxyHost' => null,
@@ -715,8 +640,7 @@ db_free_result($products);
 echo  "Report 2 start\n";
 #
 
-//include_once "FBAInventoryServiceMWS/Samples/.config.inc.php";
-require_once "FBAInventoryServiceMWS/Client.php";
+/*require_once "FBAInventoryServiceMWS/Client.php";
 require_once "FBAInventoryServiceMWS/Exception.php";
 require_once "FBAInventoryServiceMWS/Model/ListInventorySupplyRequest.php";
 require_once "FBAInventoryServiceMWS/Model/ListInventorySupplyByNextTokenRequest.php";
@@ -734,7 +658,7 @@ require_once "FBAInventoryServiceMWS/Model/ListInventorySupplyResult.php";
 require_once "FBAInventoryServiceMWS/Model/ResponseHeaderMetadata.php";
 require_once "FBAInventoryServiceMWS/Model/ResponseMetadata.php";
 require_once "FBAInventoryServiceMWS/Model/SellerSkuList.php";
-require_once "FBAInventoryServiceMWS/Model/Timepoint.php";
+require_once "FBAInventoryServiceMWS/Model/Timepoint.php";*/
 
 
 $a_config = array (
@@ -785,6 +709,7 @@ if (!empty($products_arr2)){
                     $request->setSellerSkus($sellerSKUs);
                     // object or array of parameters
                     $dom_xml = invokeListInventorySupply($service, $request);
+                    print $dom_xml;
 
                     while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503"){
                         func_flush("sleeping...");
@@ -800,6 +725,7 @@ if (!empty($products_arr2)){
                         $request->setSellerSkus($sellerSKUs);
                         // object or array of parameters
                         $dom_xml = invokeListInventorySupply($service, $request);
+                        print $dom_xml;
                     }
 
 
@@ -847,6 +773,7 @@ if (!empty($products_arr2)){
 
                     // object or array of parameters
                     $dom_xml = invokeListInventorySupplyByNextToken($service, $request);
+                    print $dom_xml;
 
                     while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503"){
                         func_flush("sleeping...");
@@ -865,6 +792,7 @@ if (!empty($products_arr2)){
 
                         // object or array of parameters
                         $dom_xml = invokeListInventorySupplyByNextToken($service, $request);
+                        print $dom_xml;
                     }
 
 //func_print_r($dom_xml);
