@@ -3886,7 +3886,6 @@ function func_set_filled_option($accounting) {
 }
 
 function func_get_order_notification($status, $order_data="") {
-    global $xcart_dir;
 	$oOrder = null;
 	$aOrderNotifications = Xcart\OrderStatusNotification::getOrderStatusNotificationsByCode($status);
 	if (!empty($aOrderNotifications)) {
