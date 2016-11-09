@@ -13,7 +13,7 @@ function func_amazon_shippings (){
 
 function func_amazon_all_FBA_products_flag($cart){
 
-	$all_FBA_products_flag = null;
+	$all_FBA_products_flag = false;
 
 	foreach ($cart['products'] as $k => $v){
 		$oProduct = \Xcart\Product::model(['productid' => $v['productid']]);
@@ -26,9 +26,6 @@ function func_amazon_all_FBA_products_flag($cart){
 			}
 		}
 	}
-	if (is_null($all_FBA_products_flag))
-		$all_FBA_products_flag = false;
-
 	return $all_FBA_products_flag;
 }
 

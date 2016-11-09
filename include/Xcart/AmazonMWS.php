@@ -1480,6 +1480,7 @@ class AmazonMWS
                                 setField('login', 'amazon')->
                                 setField('amazon_fulfillment_channel', $sFulfilmentChanel)->
                                 setField('total', $sOrderTotal)->
+                                setField('subtotal', $sOrderTotal)->
                                 setField('date', strtotime($aOrderInfo->getElementsByTagName('PurchaseDate')->item(0)->nodeValue))->
                                 setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
                                 setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->

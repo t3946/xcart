@@ -635,10 +635,11 @@ class Order extends Data
     public function reCalculateTotals()
     {
         $aOrderGroups = $this->getOrderGroups();
-        if (!empty($aOrderGroups))
+        if (!empty($aOrderGroups)) {
             foreach ($aOrderGroups as $oOrderGroup) {
                 $oOrderGroup->reCalculateTotals();
             }
+        }
     }
 
     public function getPOPipelineInstance()
