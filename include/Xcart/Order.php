@@ -677,8 +677,10 @@ class Order extends Data
                     $fTotalRetailTrust += $fTotalRetailTrustGroup;
                 }
             }
-            $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
-            $this->_refresh();
+            if ($fTotalRetailTrust > 0) {
+                $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
+                $this->_refresh();
+            }
         }
         return $this;
     }
