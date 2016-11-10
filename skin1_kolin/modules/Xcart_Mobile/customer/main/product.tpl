@@ -30,7 +30,7 @@ vim: set ts=2 sw=2 sts=2 et:
 <link id="pm_4" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PayPal" />
 
 
-<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_offer"/>
+<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_model so_offer"/>
 
 <div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
 	<meta itemprop="logo" content="http://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
@@ -38,7 +38,7 @@ vim: set ts=2 sw=2 sts=2 et:
 	<meta itemprop="name" content="S3 Stores Inc."/>
 </div>
 
-<div id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Organization">
+<div id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
 	<meta itemprop="name" content="{$product.cidev_brand_name}"/>
 </div> 
 <div id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
@@ -47,6 +47,7 @@ vim: set ts=2 sw=2 sts=2 et:
 
 {if $cidev_mpn ne ""}
 <meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
+<meta id="so_model" itemprop="model" content="{$cidev_mpn}"/>
 {/if}
 
 <meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_stock so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
