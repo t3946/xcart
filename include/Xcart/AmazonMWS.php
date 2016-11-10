@@ -1369,7 +1369,7 @@ class AmazonMWS
                 $request->setSellerId(MERCHANT_ID);
                 $request->setMarketplaceId(MARKETPLACE_ID);
                 $request->setCreatedAfter(gmdate('Y-m-d\TH:i:s\Z', time() - $timeoffset));
-                $request->setOrderStatus(['Shipped','Unshipped', 'PartiallyShipped', 'Canceled']);
+                $request->setOrderStatus(['Shipped', 'Unshipped', 'PartiallyShipped', 'Canceled']);
                 $this->dom_xml_arr = $this->invokeListOrders($request);
             } else {
                 $request = new \MarketplaceWebServiceOrders_Model_ListOrdersByNextTokenRequest();
@@ -1377,7 +1377,7 @@ class AmazonMWS
                 $request->setSellerId(MERCHANT_ID);
                 $this->dom_xml_arr = $this->invokeListOrdersByNextToken($request);
             }
-            if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503"){
+            if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
                 return $this;
             }
             $this->processOrderList();
@@ -1480,6 +1480,7 @@ class AmazonMWS
                                 setField('login', 'amazon')->
                                 setField('amazon_fulfillment_channel', $sFulfilmentChanel)->
                                 setField('total', $sOrderTotal)->
+                                setField('subtotal', $sOrderTotal)->
                                 setField('date', strtotime($aOrderInfo->getElementsByTagName('PurchaseDate')->item(0)->nodeValue))->
                                 setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
                                 setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
@@ -1537,6 +1538,7 @@ class AmazonMWS
                                         setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->nodeValue))->
                                         setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
                                         setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
+                                        setField('acc_paymentid', PaymentMethod::model()->find(SQLBuilder::getInstance()->addCondition("order_tag_preference='$sFulfilmentChanel'"))->getField('paymentid'))->
                                         setField('bd_status', 'W');
                                         $oOrderGroup->_insert();
                                         $aManufacturerid_arr[] = $oProduct->getManufacturerId();
@@ -1555,6 +1557,7 @@ class AmazonMWS
                                     $oOrderDetail->_insert();
 
                                     $oOrder->updateVerificationStatus()->reCalculateTotals();
+                                    $oOrder->recalculateAccounting();
 
                                     $product_total += $oOrderDetail->getTotalProductPrice();
 
@@ -1583,25 +1586,32 @@ class AmazonMWS
                                     $mail_smarty->assign("userinfo", $order_data["userinfo"]);
                                     $mail_smarty->assign('statuses', $statuses);
 
-                                    $order_notification = func_get_order_notification($order_status, $order_data);
+                                    $aorder_notification = func_get_order_notification($order_status, $order_data);
+                                    if (!empty($aorder_notification)) {
+                                        foreach ($aorder_notification as $oOrderNotification) {
+                                            if ($oOrderNotification->isEnabled()) {
+                                                $order_notification = $oOrderNotification->getFields();
 
-                                    if ($order_notification['enabled'] == 'Y') {
-                                        $mail_smarty->assign('order_notification', $order_notification);
+                                                if ($order_notification['enabled'] == 'Y') {
+                                                    $mail_smarty->assign('order_notification', $order_notification);
 
-                                        $mail_smarty->assign('type', 'A');
-                                        $mail_smarty->assign("show_order_details", "Y");
+                                                    $mail_smarty->assign('type', 'A');
+                                                    $mail_smarty->assign("show_order_details", "Y");
 
-                                        $mail_smarty->assign("show_amazon_order", "Y");
+                                                    $mail_smarty->assign("show_amazon_order", "Y");
 
-                                        $to = $config['Company']['orders_department'];
-                                        $from = "<" . $config['Company']['orders_department'] . ">";
-                                        $reply_to = '';
+                                                    $to = $config['Company']['orders_department'];
+                                                    $from = "<" . $config['Company']['orders_department'] . ">";
+                                                    $reply_to = '';
 
-                                        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-                                        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+                                                    $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+                                                    $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 
-                                        func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
+                                                    func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
 
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }

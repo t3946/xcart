@@ -52,10 +52,19 @@ class Data
         $this->fillPrimaryTableInfo();
     }
 
+    protected function recursive_escape(&$item)
+    {
+        $item = addslashes($item);
+    }
+
     public function _update()
     {
-        func_array2update($this->sPrimaryTable, $this->aPrimaryTableValue, $this->getWhereClause());
+        $aUpdateValues = $this->aPrimaryTableValue;
+        array_walk_recursive($aUpdateValues, array(__CLASS__, 'recursive_escape'));
+        func_array2update($this->sPrimaryTable, $aUpdateValues, $this->getWhereClause());
     }
+
+
 
     public function _save($is_replace = false)
     {

@@ -868,16 +868,16 @@ if (!$func_is_cart_empty) {
 
 	//x_session_register('remember_login');
 
-	if (!empty($remember_login)) {
+	/*if (!empty($remember_login)) {
 		$userinfo_add =  Xcart\Customer::model(['login' => $remember_login])->getFields(['s_country','s_state','s_zipcode','s_city','s_countryname','s_statename','b_country','b_state','b_zipcode','b_city','b_countryname','b_statename']);
 		$userinfo_add["s_statename"] = $userinfo_add["s_state_text"] = func_get_state($userinfo_add["s_state"], $userinfo_add["s_country"]);
 		$userinfo_add["b_statename"] = func_get_state($userinfo_add["b_state"], $userinfo_add["b_country"]);
 		$userinfo_add["s_countryname"] = func_get_country($userinfo_add['s_country']);
 		$userinfo_add["b_countryname"] = func_get_country($userinfo_add['b_country']);
-		if (!empty($userinfo) && is_array($userinfo))
+		/*if (!empty($userinfo) && is_array($userinfo))
 			$userinfo = array_merge($userinfo, $userinfo_add);
-		$smarty->assign('userinfo', $userinfo_add);
-	}
+		$smarty->assign('userinfo', $userinfo);
+	}*/
 
 	#
 	# Check if shipping cost is need to be calculated
@@ -1591,6 +1591,12 @@ if ($mode == 'order_message') {
     x_session_register('perform_autologout');
     $perform_autologout = 'Y';
 }
+
+if (!empty($orderid) && is_numeric($orderid)) {
+	$oOrder = new Xcart\Order(['orderid'=>$orderid]);
+	$smarty->assign('oOrder',$oOrder);
+}
+
 
 $smarty->assign("partner", $partner);
 # Assign the current location line

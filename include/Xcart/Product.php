@@ -10,6 +10,8 @@ class Product extends Data
     const PRODUCT_STATUS_PROBLEM_FIXED = 2;
     const PRODUCT_STATUS_VERIFY = 3;
 
+    const RETAIL_TRUST_SKU_PREFIX = 'RT*';
+
 
     private $oManufacturer;
     private $oStoreFront;
@@ -20,6 +22,9 @@ class Product extends Data
     private $aImagesT = [];
 
     private $aPricing = [];
+
+    private $iAmazonQuantity = null;
+    private $fAmazonPrice = null;
 
     /**
      * @var ProductQuestion[]
@@ -362,6 +367,20 @@ class Product extends Data
         return intval($this->getField('amazon_fba_avail'));
     }
 
+    public function getAmazonFBAAvailExcludedProcessing()
+    {
+        $aResult = SQLBuilder::getInstance()->addSelect('COALESCE(SUM(OD.amount- OD.back),0)', 'AvailOnFBA')->
+        addFromTable('order_groups', 'OG')->
+        addInnerJoin('orders', 'O', 'O.orderid = OG.orderid', 'LEFT JOIN')->
+        addInnerJoin('order_details', 'OD', 'OD.orderid = O.orderid', 'LEFT JOIN')->
+        addInnerJoin('products', 'P', 'P.productid = ' . $this->getProductId() . ' AND OD.productid = P.productid')->
+        addCondition("OG.cb_status IN ('IO','P','H','3','Q','N','O','AP')")->
+        addCondition("OG.dc_status IN ('B','M','T','K','DP','E','G')")->
+        addCondition('FROM_UNIXTIME(O.date) > DATE_ADD(NOW(),INTERVAL -4 WEEK)')->
+        query_first()->getQueryResult();
+        return intval($this->getAmazonFBAAvail() * 0.8) - intval($aResult['AvailOnFBA']);
+    }
+
     public function isProductFBAAvail()
     {
         return ($this->getAmazonFBAAvail() > 0);
@@ -550,5 +569,36 @@ class Product extends Data
         if (is_null($this->aProductQuestions))
             $this->aProductQuestions = ProductQuestion::model()->findAll(SQLBuilder::getInstance()->addCondition('productid=' . $this->getProductId()));
         return $this->aProductQuestions;
+    }
+
+    public function getSKURetailTrust()
+    {
+        return self::RETAIL_TRUST_SKU_PREFIX.$this->getSKU();
+    }
+
+    public function getAmazonQuantity()
+    {
+        if (is_null($this->iAmazonQuantity)) {
+            $aResult = SQLBuilder::getInstance()->
+            addSelect('cidev_get_amazon_quantity(' . $this->getProductId() . ')', 'aquantity')->
+            addFromTable('products')->
+            addCondition('productid='.$this->getProductId())->
+            query_first()->getQueryResult();
+            $this->iAmazonQuantity = $aResult['aquantity'];
+        }
+        return $this->iAmazonQuantity;
+    }
+
+    public function getAmazonPrice()
+    {
+        if (is_null($this->fAmazonPrice)) {
+            $aResult = SQLBuilder::getInstance()->
+            addSelect('cidev_get_amazon_price(' . $this->getProductId() . ')', 'aprice')->
+            addFromTable('products')->
+            addCondition('productid='.$this->getProductId())->
+            query_first()->getQueryResult();
+            $this->fAmazonPrice = $aResult['aprice'];
+        }
+        return $this->fAmazonPrice;
     }
 }

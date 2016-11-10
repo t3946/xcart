@@ -38,6 +38,11 @@ class OrderGroup extends Data
      */
     private $oShippingMethod = null;
 
+    /**
+     * @var OrderDetail
+     */
+    private $aOrderDetails = null;
+
     private $availPaymentMethods = [];
 
     private $fCostToUs = null;
@@ -1114,14 +1119,14 @@ class OrderGroup extends Data
         return ($this->getField('amz_fullfilment_order_placed') == 'Y');
     }
 
-    /**
-     * @return OrderDetail[]
-     */
     public function getOrderDetails()
     {
-        return OrderDetail::model()->findAll(SQLBuilder::getInstance()->
-        addInnerJoin('products', 'p', "p.productid = main.productid AND p.manufacturerid = " . $this->getManufacturerId())->
-        addCondition('orderid = ' . $this->getOrderId()));
+        if (is_null($this->aOrderDetails)) {
+            $this->aOrderDetails = OrderDetail::model()->findAll(SQLBuilder::getInstance()->
+            addInnerJoin('products', 'p', "p.productid = main.productid AND p.manufacturerid = " . $this->getManufacturerId())->
+            addCondition('orderid = ' . $this->getOrderId()));
+        }
+        return $this->aOrderDetails;
     }
 
     private function calculateTotalNet()
@@ -1144,4 +1149,55 @@ class OrderGroup extends Data
 
     }
 
+    /**
+     * @return OrderDetail[]
+     */
+    public function getOrderDetailsWithRetailTrust()
+    {
+        $aResult = [];
+        $this->getOrderDetails();
+        if (!empty($this->aOrderDetails)) {
+            foreach ($this->aOrderDetails as $oOrderDetail) {
+                if ($oOrderDetail->isRetailTrustEnabled())
+                    $aResult[] = $oOrderDetail;
+            }
+        }
+        return $aResult;
+    }
+
+    public function getRetailTrustTotalNet()
+    {
+        $fSumma = 0;
+        $aOrderDetails = $this->getOrderDetailsWithRetailTrust();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $fSumma += $oOrderDetail->getRetailTrustPrice();
+            }
+        }
+        return $fSumma;
+    }
+
+    public function getRetailTrustTotalGross()
+    {
+        $fSumma = 0;
+        $aOrderDetails = $this->getOrderDetailsWithRetailTrust();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $fSumma += $oOrderDetail->getRetailTrustGross();
+            }
+        }
+        return $fSumma;
+    }
+
+    public function addTotalNet($fSumma)
+    {
+        $this->setField('total_net', floatval($this->getField('total_net')) + $fSumma);
+        return $this;
+    }
+
+    public function addTotalGross($fSumma)
+    {
+        $this->setField('total_gross', floatval($this->getField('total_gross')) + $fSumma);
+        return $this;
+    }
 }

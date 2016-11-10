@@ -789,8 +789,7 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-
-<input type="text" id="s_zipcode" name="s_zipcode" size="32" maxlength="32" value="{if $userinfo.s_zipcode eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_zipcode}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_zipcode'); cidev_check_address();" onchange="cidev_new_check_zip_code(); check_zip_code_ship('s_zipcode', 's_countryname');" {/if} autocomplete="off" placeholder="{if $geo_litecity_location.postalCode ne ""}{$geo_litecity_location.postalCode}{else}{$lng.lbl_fill_in_examples_zip}{/if}" />
+<input type="text" id="s_zipcode" name="s_zipcode" size="32" maxlength="32" value="{if $userinfo.s_zipcode eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_zipcode}{else}{if $userinfo.s_zipcode ne ""}{$userinfo.s_zipcode}{/if}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_zipcode'); cidev_check_address();" onchange="cidev_new_check_zip_code(); check_zip_code_ship('s_zipcode', 's_countryname');" {/if} autocomplete="off" placeholder="{if $geo_litecity_location.postalCode ne ""}{$geo_litecity_location.postalCode}{else}{$lng.lbl_fill_in_examples_zip}{/if}" />
 </td>
 {if $usertype eq "C"}
 <td id="s_zipcode_verified" valign="top" nowrap="nowrap" style="display: none;">
@@ -829,7 +828,7 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
 <tr>
 <td valign="top" nowrap="nowrap">
 <input type="text" id="s_statename" name="s_statename" size="32" maxlength="64" 
-value=""
+value="{if $userinfo.s_statename ne ""}{$userinfo.s_statename}{/if}"
 onkeyup="cidev_check_field_country('s_statename'); cidev_check_zip(); cidev_check_verified_image_for_field('s_zipcode');" 
 autocomplete="off" 
 placeholder="
@@ -910,7 +909,7 @@ placeholder="
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="s_city" name="s_city" size="32" maxlength="64" value="{if $userinfo.s_city eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_city}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_city'); cidev_check_zip(); cidev_check_verified_image_for_field('s_zipcode');" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
+<input type="text" id="s_city" name="s_city" size="32" maxlength="64" value="{if $userinfo.s_city eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_city}{else}{if $userinfo.s_city ne ""}{$userinfo.s_city}{/if}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_city'); cidev_check_zip(); cidev_check_verified_image_for_field('s_zipcode');" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
 </td>
 {if $usertype eq "C"}
 <td id="s_city_verified" valign="top" nowrap="nowrap" style="display: none;">

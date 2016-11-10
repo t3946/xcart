@@ -180,7 +180,6 @@ if (!empty($module_params["processor"])) {
 
 	x_session_save();
 
-	x_session_save("customer_notes");
 
 	# Set CVV2 info line...
 	$a = strlen($userinfo["card_cvv2"]);

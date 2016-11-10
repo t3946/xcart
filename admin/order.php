@@ -1779,88 +1779,93 @@ if ($mode == 'ref_notify') {
 //            . ' WHERE code = "' . $tmp_cb_status . '"');
 
 
-	$order_notification = func_get_order_notification($tmp_cb_status, $order_data);
+		$aorder_notification = func_get_order_notification($tmp_cb_status, $order_data);
+		if (!empty($aorder_notification)) {
+			foreach ($aorder_notification as $oOrderNotification) {
+				if ($oOrderNotification->isEnabled()) {
+					$order_notification = $oOrderNotification->getFields();
+					if ($order_notification /* && $order_notification['enabled'] == 'Y' */) {
 
-        if ($order_notification /* && $order_notification['enabled'] == 'Y' */) {
+						$mail_smarty->assign('order_notification', $order_notification);
 
-	    $order_notification["email_body"] = func_eol2br(stripslashes($order_notification["email_body"]));
-
-            $mail_smarty->assign('order_notification', $order_notification);
-        
-            $manufacturer_code = func_query_first_cell('SELECT code FROM ' . $sql_tbl['manufacturers'] 
-                . ' WHERE manufacturerid = "' . $notify_mid . '"');
-            if (!$manufacturer_code) {
-                $manufacturer_code = '';
-            }
+						$manufacturer_code = func_query_first_cell('SELECT code FROM ' . $sql_tbl['manufacturers']
+								. ' WHERE manufacturerid = "' . $notify_mid . '"');
+						if (!$manufacturer_code) {
+							$manufacturer_code = '';
+						}
 
 
-            foreach ($order['refund_groups'][$notify_mid]['products'] as $pk => $product) {
+						foreach ($order['refund_groups'][$notify_mid]['products'] as $pk => $product) {
 //                $order['refund_groups'][$notify_mid]['products'][$pk]['fee'] = func_calculate_fee($product['extra_data']['price'], $product['ref_price']);
 
-		$clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$product[productid]'");
-		$order['refund_groups'][$notify_mid]['products'][$pk]['clean_url'] = $clean_url_link;
-            }
-           
- 
-            $mail_smarty->assign('order', $order);
-            $mail_smarty->assign('userinfo', $userinfo);
-            $mail_smarty->assign('manufacturerid', $notify_mid);
-            $mail_smarty->assign('manufacturer_code', $manufacturer_code);
-            $mail_smarty->assign('statuses', $statuses);
+							$clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$product[productid]'");
+							$order['refund_groups'][$notify_mid]['products'][$pk]['clean_url'] = $clean_url_link;
+						}
 
 
-	    if ($ref_notify_button_clicked == "Update_C2B_status"){
+						$mail_smarty->assign('order', $order);
+						$mail_smarty->assign('userinfo', $userinfo);
+						$mail_smarty->assign('manufacturerid', $notify_mid);
+						$mail_smarty->assign('manufacturer_code', $manufacturer_code);
+						$mail_smarty->assign('statuses', $statuses);
 
-#
-##
-###
-	        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-	        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
 
-		    func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
-	    } elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" || $ref_notify_button_clicked == "Send_refund_notification"){
-
-/*	    if ($ref_notify_do_not_send_email != "Y") */
-#
-##
-###
- 	        $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
-	        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
-	            func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid, false);
-            // Copy to Orders Department
+						if ($ref_notify_button_clicked == "Update_C2B_status"){
 
 #
 ##
 ###
-	        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-	        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+							$attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+							$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 ###
 ##
 #
 
-	            func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
+							func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
+						} elseif ($ref_notify_button_clicked == "Update_C2B_status_and_Send_refund_notification" || $ref_notify_button_clicked == "Send_refund_notification"){
+
+							/*	    if ($ref_notify_do_not_send_email != "Y") */
+#
+##
+###
+							$attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
+							$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+							func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid, false);
+							// Copy to Orders Department
+
+#
+##
+###
+							$attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+							$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+###
+##
+#
+
+							func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
 
 
-	            db_query('UPDATE ' . $sql_tbl['refund_groups'] . ' SET notify_status = "S", refund_reason="'.addslashes($ref_groups[$notify_mid]["refund_reason"]).'"'
-        	        . ' WHERE orderid = "' . $orderid . '" AND manufacturerid = "' . $notify_mid . '"');
+							db_query('UPDATE ' . $sql_tbl['refund_groups'] . ' SET notify_status = "S", refund_reason="'.addslashes($ref_groups[$notify_mid]["refund_reason"]).'"'
+									. ' WHERE orderid = "' . $orderid . '" AND manufacturerid = "' . $notify_mid . '"');
 
-	
-	            $top_message = array(
-			'content' => func_get_langvar_by_name('txt_ref_notification_sent')
-	            );
-	    }
-	    else {
-	            $top_message = array(
-			'content' => 'Done.'
-	            );
-	    }
-        }
+
+							$top_message = array(
+									'content' => func_get_langvar_by_name('txt_ref_notification_sent')
+							);
+						}
+						else {
+							$top_message = array(
+									'content' => 'Done.'
+							);
+						}
+					}
+				}
+			}
+		}
+
     } else {
         $top_message = array(
             'content'   => func_get_langvar_by_name('txt_ref_notify_wrong_email'),
