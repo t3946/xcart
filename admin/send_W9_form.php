@@ -1,6 +1,10 @@
 <?php
 global $REQUEST_METHOD, $xcart_dir, $config, $login, $send_w9_form_name, $send_w9_form_message, $send_w9_form_subject, $send_w9_form_email, $current_storefront;
+define('USE_TRUSTED_POST_VARIABLES',1);
+$trusted_post_variables = ['send_w9_form_message'];
+
 require "./auth.php";
+
 require $xcart_dir . "/include/security.php";
 
 
@@ -15,7 +19,7 @@ if ($REQUEST_METHOD == 'POST' && !empty($w9_submit) && $w9_submit == 'Send') {
     $oCustomer = \Xcart\Customer::model(['login' => $login]);
 
     $oMail = \Xcart\Mail::model()->
-        setBody(func_eol2br($send_w9_form_message))->
+        setBody($send_w9_form_message)->
         setSubject($send_w9_form_subject);
 
     $oMail->addReplaceRule('{{requester_name}}', $send_w9_form_name)->
@@ -27,7 +31,7 @@ if ($REQUEST_METHOD == 'POST' && !empty($w9_submit) && $w9_submit == 'Send') {
 
     $oMail->addAttachment($xcart_dir . '/files/w9_form_files/' . $config['w9_form_file']);
     $oMail->sendEmail();
-    $top_message["content"] = 'W-9 form has been send';
+    $top_message["content"] = 'W-9 form has been sent';
     $top_message["type"] = "I";
     func_header_location('send_W9_form.php');
 }

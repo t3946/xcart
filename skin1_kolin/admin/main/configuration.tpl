@@ -936,7 +936,18 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
 {elseif $configuration[cat_num].type eq "textarea"}
 <textarea 
 
-{if $configuration[cat_num].name eq "retail_trust_message" || $configuration[cat_num].name eq "thank_you_message_body" || $configuration[cat_num].name eq "po_instructions" || $configuration[cat_num].name eq "po_missing_instructions" || $configuration[cat_num].name eq "reference_text" || $configuration[cat_num].name eq "signature" || $configuration[cat_num].name eq "outside_sf_localization_warning" || $configuration[cat_num].name eq "po_entry_dashboard_text" || $configuration[cat_num].name eq "RMA_message" || $configuration[cat_num].name eq "RMA_to_department_Message"}
+{if $configuration[cat_num].name eq "retail_trust_message" ||
+    $configuration[cat_num].name eq "thank_you_message_body" ||
+    $configuration[cat_num].name eq "po_instructions" ||
+    $configuration[cat_num].name eq "po_missing_instructions" ||
+    $configuration[cat_num].name eq "reference_text" ||
+    $configuration[cat_num].name eq "signature" ||
+    $configuration[cat_num].name eq "outside_sf_localization_warning" ||
+    $configuration[cat_num].name eq "po_entry_dashboard_text" ||
+    $configuration[cat_num].name eq "RMA_message" ||
+    $configuration[cat_num].name eq "RMA_to_department_Message"||
+    $configuration[cat_num].name eq "w9_message"
+}
 class="new_editor" rows="30" cols="60"
 {/if}
 

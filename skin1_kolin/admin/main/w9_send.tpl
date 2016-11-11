@@ -1,3 +1,29 @@
+<script src="{$SkinDir}/tinymce/js/tinymce/tinymce.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    //<![CDATA[
+    {literal}
+
+    tinymce.init({
+        selector: "textarea.new_editor",
+        resize: "both",
+        plugins: [
+            "advlist autolink lists link image charmap print preview anchor",
+            "searchreplace visualblocks code fullscreen",
+            "insertdatetime media table contextmenu paste fullpage"
+        ],
+        toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+        forced_root_block : false,
+        force_br_newlines : true,
+        force_p_newlines : false,
+        convert_urls: false,
+        relative_urls: false
+    });
+
+    {/literal}
+    //]]>
+</script>
+
 {include file="page_title.tpl" title='Send W-9 form'}
 {capture name=dialog}
 
@@ -61,7 +87,7 @@
             Message:
         </td>
         <td width="60%">
-            <textarea style="width:100%; height: 200px;" name="send_w9_form_message">{$config.W9_Form.w9_message}</textarea>
+            <textarea class="new_editor" rows="30" cols="60" style="width:100%; height: 200px;" name="send_w9_form_message">{$config.W9_Form.w9_message}</textarea>
         </td>
     </tr>
     <tr>
