@@ -3753,10 +3753,10 @@ function func_send_order_status_notification($orderid, $status)
 			}
 		}
 	}
-	if ($status == $config['retail_trust_order_status']) {
-		$oMail = new Xcart\Mail();
-		$oMail->setBody($config['Retail_Trust']['retail_trust_message'])->replaceBody($oOrder);
-		$oMail->setSubject($config['Retail_Trust']['retail_trust_subject'])->replaceSubject($oOrder);
+	if ($status == $config['retail_trust_order_status'] && count($oOrder->getOrderDetailsWithRetailTrust()) > 0) {
+		$oMail = new Xcart\OrderStatusNotification();
+		$oMail->setOrder($oOrder)->setBody($config['Retail_Trust']['retail_trust_message'])->replaceBody();
+		$oMail->setSubject($config['Retail_Trust']['retail_trust_subject'])->replaceSubject();
 		$mail_smarty->assign('body', $oMail->getEmailBody());
 		$mail_smarty->assign('subject', $oMail->getSubject());
 		$mail_smarty->assign('type', 'C');
@@ -3765,7 +3765,7 @@ function func_send_order_status_notification($orderid, $status)
 		$to = $config['Company']['orders_department'];
 		$from = $order_data['userinfo']['firstname'] . "<" . $config['Company']['orders_department'] . ">";
 		$reply_to = $order_data['userinfo']['firstname'] . "<" . $order_data['userinfo']['email'] . ">";
-		$oMail->setSubject($config['Retail_Trust']['retail_trust_bcc_subject'])->replaceSubject($oOrder);
+		$oMail->setSubject($config['Retail_Trust']['retail_trust_bcc_subject'])->replaceSubject();
 		$mail_smarty->assign('subject', $oMail->getSubject());
 		func_send_mail($to, "mail/compose_message_subj.tpl", "mail/compose_message.tpl",$from, false, false, false, false, $reply_to,'N',false,true,true);
 	}
@@ -3886,7 +3886,6 @@ function func_set_filled_option($accounting) {
 }
 
 function func_get_order_notification($status, $order_data="") {
-    global $xcart_dir;
 	$oOrder = null;
 	$aOrderNotifications = Xcart\OrderStatusNotification::getOrderStatusNotificationsByCode($status);
 	if (!empty($aOrderNotifications)) {
@@ -3894,8 +3893,8 @@ function func_get_order_notification($status, $order_data="") {
 			$oOrder = new Xcart\Order(['orderid'=>$order_data['order']['orderid']]);
 		}
 		foreach ($aOrderNotifications as &$oOrderNotification) {
-			$oOrderNotification->replaceBody($oOrder);
-			$oOrderNotification->replaceSubject($oOrder);
+			$oOrderNotification->setOrder($oOrder)->replaceBody();
+			$oOrderNotification->replaceSubject();
 		}
 	}
 	return $aOrderNotifications;

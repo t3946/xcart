@@ -161,6 +161,9 @@ var runTests = function(editor) {
 {elseif $main eq "wishlists"}
 {include file="modules/Wishlist/wishlists.tpl"}
 
+{elseif $main eq "w9_send"}
+{include file="admin/main/w9_send.tpl"}
+
 {elseif $main eq "wishlist"}
 {include file="modules/Wishlist/display_wishlist.tpl"}
 
