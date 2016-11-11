@@ -670,10 +670,23 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
     {$lng.txt_retail_trust_info}
 {/if}
 
+
+
 <table cellpadding="3" cellspacing="1" width=100%>
 
 {assign var="first_row" value=1}
+    {if $option eq "W9_Form"}
+        <tr>
+            <td>
 
+            </td>
+            <td>
+
+                {$lng.w9_form_request_options_instructions}
+
+            </td>
+        </tr>
+    {/if}
 {section name=cat_num loop=$configuration}
 
 {assign var="opt_comment" value="opt_`$configuration[cat_num].name`"}
@@ -993,8 +1006,13 @@ class="new_editor" rows="30" cols="60"
 	{include file="admin/main/product_page_options.tpl"}
 {/if}
 {if $option eq "Retail_Trust"}
-  {include file="admin/main/retail_trust_config.tpl"}
+    {include file="admin/main/retail_trust_config.tpl"}
 {/if}
+
+{if $option eq "W9_Form"}
+        <td>{include file="admin/main/w9_form_config.tpl"}</td>
+{/if}
+
 <tr>
 <td colspan="3"><br /><br />
 <input type="submit" value=" {$lng.lbl_save|strip_tags:false|escape} "  />

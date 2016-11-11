@@ -146,6 +146,10 @@ if ($option == 'Retail_Trust') {
 	include $xcart_dir . '/include/retail_trust_options.php';
 }
 
+if ($option == 'W9_Form') {
+	include $xcart_dir . '/include/w9_form_options.php';
+}
+
 if ($option == "User_Profiles") {
 	include "./user_profiles.php";
 }
