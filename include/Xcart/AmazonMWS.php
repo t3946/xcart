@@ -1450,7 +1450,7 @@ class AmazonMWS
                             $this->dom_xml_arr = str_replace($this->sServiceUrl, '', $this->dom_xml_arr);
                             $docOrders->loadXML($this->dom_xml_arr);
                             $xpath3 = new \DOMXPath($docOrders);
-                            $aOrderItems = $xpath3->query('/ListOrderItemsResponse/ListOrderItemsResult/OrderItems');
+                            $aOrderItems = $xpath3->query('/ListOrderItemsResponse/ListOrderItemsResult/OrderItems/OrderItem');
 
                             if (!empty($aOrderItems) && $aOrderItems->length > 0) {
 
@@ -1556,60 +1556,59 @@ class AmazonMWS
                                     setField('product', addslashes($oProduct->getProductName()));
                                     $oOrderDetail->_insert();
 
-                                    $oOrder->updateVerificationStatus()->reCalculateTotals();
-                                    $oOrder->recalculateAccounting();
-
                                     $product_total += $oOrderDetail->getTotalProductPrice();
+                                }
 
-                                    $oOrderRaw = CidevAmazonOrderRaw::model()->find(SQLBuilder::getInstance()->addCondition('orderid = ' . $oOrder->getOrderId()));
-                                    $oOrderRaw->setField('orderid', $oOrder->getOrderId())->
-                                    setField('order_info', addslashes($xpath2->document->saveXML()))->
-                                    setField('orderitems_info', addslashes($xpath3->document->saveXML()));
-                                    $oOrderRaw->_insert(true);
+                                $oOrder->updateVerificationStatus()->reCalculateTotals();
+                                $oOrder->recalculateAccounting();
 
-                                    $log = '<a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID=' . $sAmazonOrderId . '" target="_blank">Amazon order # ' . $sAmazonOrderId . '</a><br />Grand total: $' . $product_total;
-                                    Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $log, 'Amazon');
+                                $oOrderRaw = CidevAmazonOrderRaw::model()->find(SQLBuilder::getInstance()->addCondition('orderid = ' . $oOrder->getOrderId()));
+                                $oOrderRaw->setField('orderid', $oOrder->getOrderId())->
+                                setField('order_info', addslashes($xpath2->document->saveXML()))->
+                                setField('orderitems_info', addslashes($xpath3->document->saveXML()));
+                                $oOrderRaw->_insert(true);
 
+                                $log = '<a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID=' . $sAmazonOrderId . '" target="_blank">Amazon order # ' . $sAmazonOrderId . '</a><br />Grand total: $' . $product_total;
+                                Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $log, 'Amazon');
 
-                                    $statuses = func_query_hash('SELECT code, name, type FROM xcart_order_statuses ORDER BY orderby', array('type', 'code'), false, true);
+                                $statuses = func_query_hash('SELECT code, name, type FROM xcart_order_statuses ORDER BY orderby', array('type', 'code'), false, true);
 
-                                    x_load('order');
-                                    x_load('mail');
-                                    $order_data = func_order_data($oOrder->getOrderId());
-                                    $order_status = "I";
+                                x_load('order');
+                                x_load('mail');
+                                $order_data = func_order_data($oOrder->getOrderId());
+                                $order_status = "I";
 
-                                    global $mail_smarty, $config;
+                                global $mail_smarty, $config;
 
-                                    $mail_smarty->assign("products", $order_data["products"]);
-                                    $mail_smarty->assign("giftcerts", $order_data["giftcerts"]);
-                                    $mail_smarty->assign("order", $order_data["order"]);
-                                    $mail_smarty->assign("userinfo", $order_data["userinfo"]);
-                                    $mail_smarty->assign('statuses', $statuses);
+                                $mail_smarty->assign("products", $order_data["products"]);
+                                $mail_smarty->assign("giftcerts", $order_data["giftcerts"]);
+                                $mail_smarty->assign("order", $order_data["order"]);
+                                $mail_smarty->assign("userinfo", $order_data["userinfo"]);
+                                $mail_smarty->assign('statuses', $statuses);
 
-                                    $aorder_notification = func_get_order_notification($order_status, $order_data);
-                                    if (!empty($aorder_notification)) {
-                                        foreach ($aorder_notification as $oOrderNotification) {
-                                            if ($oOrderNotification->isEnabled()) {
-                                                $order_notification = $oOrderNotification->getFields();
+                                $aorder_notification = func_get_order_notification($order_status, $order_data);
+                                if (!empty($aorder_notification)) {
+                                    foreach ($aorder_notification as $oOrderNotification) {
+                                        if ($oOrderNotification->isEnabled()) {
+                                            $order_notification = $oOrderNotification->getFields();
 
-                                                if ($order_notification['enabled'] == 'Y') {
-                                                    $mail_smarty->assign('order_notification', $order_notification);
+                                            if ($order_notification['enabled'] == 'Y') {
+                                                $mail_smarty->assign('order_notification', $order_notification);
 
-                                                    $mail_smarty->assign('type', 'A');
-                                                    $mail_smarty->assign("show_order_details", "Y");
+                                                $mail_smarty->assign('type', 'A');
+                                                $mail_smarty->assign("show_order_details", "Y");
 
-                                                    $mail_smarty->assign("show_amazon_order", "Y");
+                                                $mail_smarty->assign("show_amazon_order", "Y");
 
-                                                    $to = $config['Company']['orders_department'];
-                                                    $from = "<" . $config['Company']['orders_department'] . ">";
-                                                    $reply_to = '';
+                                                $to = $config['Company']['orders_department'];
+                                                $from = "<" . $config['Company']['orders_department'] . ">";
+                                                $reply_to = '';
 
-                                                    $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-                                                    $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+                                                $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
+                                                $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 
-                                                    func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
+                                                func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
 
-                                                }
                                             }
                                         }
                                     }
