@@ -233,6 +233,7 @@ function managedate(type, status) {
 {capture name=dialog}
 <table cellpadding="3" cellspacing="1" width="100%">
  <tr>
+ <td width="100px"><a target="_blank" href="send_W9_form.php">Send W-9 form</a></td>
   <td width="20%" valign="top" align="center">
 {if $inquiries ne ""}
 <B>Inquiry types</B><br />
