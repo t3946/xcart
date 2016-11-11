@@ -1696,7 +1696,7 @@ function func_get_default_image($type) {
 # if content hasn't any tags
 #
 function func_eol2br($content) {
-	return ($content == strip_tags($content)) ? str_replace("\n", "<br />", $content) : $content;
+	return ($content == strip_tags($content)) ? nl2br($content) : $content;
 }
 
 #
