@@ -16,7 +16,7 @@ if (!defined('XCART_SESSION_START')) {
 
 if ($REQUEST_METHOD == 'POST' && !empty($w9_submit) && $w9_submit == 'Send') {
 
-    if (!empty($send_w9_form_email)) {
+    if (!empty($send_w9_form_email) || !empty($send_w9_form_fax)) {
         $oCustomer = \Xcart\Customer::model(['login' => $login]);
 
         $oMail = \Xcart\Mail::model()->
@@ -28,14 +28,21 @@ if ($REQUEST_METHOD == 'POST' && !empty($w9_submit) && $w9_submit == 'Send') {
         addReplaceRule('{{userfirstname}}', $oCustomer->getCustomerFullName())->
         addReplaceRule('{{signature}}', func_get_signature($current_storefront));
 
-        $oMail->setTo($send_w9_form_email)->setFrom($oCustomer->getCustomerFullName() . "<" . $config['Company']['site_administrator'] . ">");
+        if (empty($send_w9_form_email))
+        {
+            $oMail->setTo(preg_replace("/[^0-9]/S", "", $send_w9_form_fax).'@faxage.com');
+        } else {
+            $oMail->setTo($send_w9_form_email);
+        }
+
+        $oMail->setFrom($oCustomer->getCustomerFullName() . "<" . $config['Company']['site_administrator'] . ">");
 
         $oMail->addAttachment($xcart_dir . '/files/w9_form_files/' . $config['w9_form_file']);
         $oMail->sendEmail();
         $top_message["content"] = 'W-9 form has been sent';
         $top_message["type"] = "I";
     } else {
-        $top_message["content"] = 'Please enter Email address';
+        $top_message["content"] = 'Please enter Email address or Fax#';
         $top_message["type"] = "E";
     }
     func_header_location('send_W9_form.php');
