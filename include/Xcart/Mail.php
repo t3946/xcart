@@ -28,7 +28,11 @@ class Mail extends Data
 
     public function replaceSubject()
     {
-
+        if (!empty($this->aReplaceRules)) {
+            foreach ($this->aReplaceRules as $key => $sRule) {
+                $this->setSubject(str_replace($key, $sRule, $this->getSubject()));
+            }
+        }
     }
 
     public function setBody($str)
