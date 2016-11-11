@@ -27,6 +27,9 @@ if ($REQUEST_METHOD == 'POST' && !empty($w9_submit) && $w9_submit == 'Send') {
 
     $oMail->addAttachment($xcart_dir . '/files/w9_form_files/' . $config['w9_form_file']);
     $oMail->sendEmail();
+    $top_message["content"] = 'W-9 form has been send';
+    $top_message["type"] = "I";
+    func_header_location('send_W9_form.php');
 }
 
 $location[] = array('Send W-9 form', '');

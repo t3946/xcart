@@ -99,7 +99,7 @@ class Mail extends Data
 
         $lng_code = $shop_language;
 
-        $charset = func_query_first_cell ("SELECT charset FROM xcart_countries WHERE code='$lng_code'");
+        $charset = Countries::model(['code' => $lng_code])->getField('charset');
 
         $mail_subject = chop(func_display($subject_template,$mail_smarty,false));
 
@@ -194,15 +194,10 @@ class Mail extends Data
         }
 
         if (preg_match('/([^ @,;<>]+@[^ @,;<>]+)/S', $this->getFrom(), $m)) {
-
-            $start = date("H:i:s");
             return @mail($this->getTo(),$mail_subject,$mail_message,$headers, "-f".$m[1]);
         } else {
             return @mail($this->getTo(),$mail_subject,$mail_message,$headers);
-            $finish = date("H:i:s");
-            x_log_add("mail_time","MAIL TO $to START $start FINISH $finish",true);
         }
-        return $this;
     }
 
     public function getTo()
@@ -228,7 +223,7 @@ class Mail extends Data
 
     public function setFrom($sFrom)
     {
-        $this->sFrom = $sFrom;
+        $this->sFrom = preg_replace('![\x00-\x1f].*$!sm', '', $sFrom);
         return $this;
     }
 }
