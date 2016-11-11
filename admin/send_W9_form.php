@@ -16,23 +16,28 @@ if (!defined('XCART_SESSION_START')) {
 
 if ($REQUEST_METHOD == 'POST' && !empty($w9_submit) && $w9_submit == 'Send') {
 
-    $oCustomer = \Xcart\Customer::model(['login' => $login]);
+    if (!empty($send_w9_form_email)) {
+        $oCustomer = \Xcart\Customer::model(['login' => $login]);
 
-    $oMail = \Xcart\Mail::model()->
+        $oMail = \Xcart\Mail::model()->
         setBody($send_w9_form_message)->
         setSubject($send_w9_form_subject);
 
-    $oMail->addReplaceRule('{{requester_name}}', $send_w9_form_name)->
+        $oMail->addReplaceRule('{{requester_name}}', $send_w9_form_name)->
         addReplaceRule('{{requester_organization}}', empty($send_w9_form_organization) ? 'your organization' : $send_w9_form_organization)->
         addReplaceRule('{{userfirstname}}', $oCustomer->getCustomerFullName())->
         addReplaceRule('{{signature}}', func_get_signature($current_storefront));
 
-    $oMail->setTo($send_w9_form_email)->setFrom($oCustomer->getCustomerFullName() . "<" . $config['Company']['site_administrator'] . ">");
+        $oMail->setTo($send_w9_form_email)->setFrom($oCustomer->getCustomerFullName() . "<" . $config['Company']['site_administrator'] . ">");
 
-    $oMail->addAttachment($xcart_dir . '/files/w9_form_files/' . $config['w9_form_file']);
-    $oMail->sendEmail();
-    $top_message["content"] = 'W-9 form has been sent';
-    $top_message["type"] = "I";
+        $oMail->addAttachment($xcart_dir . '/files/w9_form_files/' . $config['w9_form_file']);
+        $oMail->sendEmail();
+        $top_message["content"] = 'W-9 form has been sent';
+        $top_message["type"] = "I";
+    } else {
+        $top_message["content"] = 'Please enter Email address';
+        $top_message["type"] = "E";
+    }
     func_header_location('send_W9_form.php');
 }
 
