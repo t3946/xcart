@@ -1585,6 +1585,7 @@ class AmazonMWS
                                 $mail_smarty->assign("order", $order_data["order"]);
                                 $mail_smarty->assign("userinfo", $order_data["userinfo"]);
                                 $mail_smarty->assign('statuses', $statuses);
+                                $mail_smarty->assign('oOrder', $oOrder);
 
                                 $aorder_notification = func_get_order_notification($order_status, $order_data);
                                 if (!empty($aorder_notification)) {
