@@ -446,7 +446,7 @@ Use my trucking account #
 				</label>
 			{else}
 				<label for="shippingid{$s.shippingid}">
-				{$s.shipping|trademark:$insert_trademark}{if $s.shipping_time ne ""} - {$s.shipping_time}{/if}{if $config.Appearance.display_shipping_cost eq "Y" and ($login ne "" or $config.General.apply_default_country eq "Y" or $cart.shipping_cost gt 0)}: {include file="currency.tpl" value=$s.rate}{/if}
+				{$s.frontend_name|default:$s.shipping|trademark:$insert_trademark}{if $s.shipping_time ne ""} - {$s.shipping_time}{/if}{if $config.Appearance.display_shipping_cost eq "Y" and ($login ne "" or $config.General.apply_default_country eq "Y" or $cart.shipping_cost gt 0)}: {include file="currency.tpl" value=$s.rate}{/if}
 				</label>
 			{/if}
 		</td>

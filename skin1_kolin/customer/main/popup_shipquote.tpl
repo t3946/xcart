@@ -728,7 +728,7 @@ $(document).ready(function() {
 
 				<td width="5"><input type="radio" id="shippingid{$s.shippingid}" name="shippingids[{$k}]" value="{$s.shippingid}"{if $s.shippingid eq $shippingids[$k].shippingid || ($shippingids[$k] eq "" && $selected_any eq "N")}{assign var="selected_any" value="Y"}    
 
-{assign var="cidev_shipping1" value=$s.shipping|trademark:"`$insert_trademark`"}
+{assign var="cidev_shipping1" value=$s.frontend_name|default:$s.shipping|trademark:"`$insert_trademark`"}
 {if $s.shipping_time ne ""} 
 {assign var="cidev_shipping" value="`$cidev_shipping1` - `$s.shipping_time`: $`$s.rate`"}
 {/if}
@@ -810,7 +810,7 @@ Use my trucking account #
                                         Ship by the fastest possible shipping method upon your discretion and add shipping charge to my order's total
                                 </label>
                         {else}
-<label for="shippingid{$s.shippingid}">{$s.shipping|trademark:$insert_trademark}{if $s.shipping_time ne ""} - {$s.shipping_time}{/if}{if $config.Appearance.display_shipping_cost eq "Y"}: {include file="currency.tpl" value=$s.rate}{/if}</label>
+<label for="shippingid{$s.shippingid}">{$s.frontend_name|default:$s.shipping|trademark:$insert_trademark}{if $s.shipping_time ne ""} - {$s.shipping_time}{/if}{if $config.Appearance.display_shipping_cost eq "Y"}: {include file="currency.tpl" value=$s.rate}{/if}</label>
 			{/if}
 
 				</td>

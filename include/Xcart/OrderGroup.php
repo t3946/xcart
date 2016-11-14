@@ -1036,7 +1036,7 @@ class OrderGroup extends Data
     public function getShippingInstance()
     {
         if (empty($this->oShippingMethod)) {
-            $this->oShippingMethod = new Shipping($this->getField('shippingid'));
+            $this->oShippingMethod = Shipping::model(['shippingid'=>$this->getField('shippingid')]);
         }
         return $this->oShippingMethod;
     }

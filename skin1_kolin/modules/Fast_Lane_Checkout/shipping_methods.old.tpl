@@ -71,7 +71,7 @@ No data
 <table cellpadding="1" cellspacing="0" width="100%"{cycle values=" class='TableSubHead', "}>
 <tr>
 	<td width="5"><input type="radio" id="shippingid{$s.shippingid}" name="shippingid" value="{$s.shippingid}"{if $s.shippingid eq $cart.shippingid} checked="checked"{/if}{if $allow_cod} onclick="javascript: display_cod({if $s.is_cod eq 'Y'}true{else}false{/if});"{/if} /></td>
-	<td><label for="shippingid{$s.shippingid}">{$s.shipping|trademark:$insert_trademark}{if $s.shipping_time ne ""} - {$s.shipping_time}{/if}{if $config.Appearance.display_shipping_cost eq "Y" and ($login ne "" or $config.General.apply_default_country eq "Y" or $cart.shipping_cost gt 0)} ({include file="currency.tpl" value=$s.rate}){/if}</label></td>
+	<td><label for="shippingid{$s.shippingid}">{$s.frontend_name|default:$s.shipping|trademark:$insert_trademark}{if $s.shipping_time ne ""} - {$s.shipping_time}{/if}{if $config.Appearance.display_shipping_cost eq "Y" and ($login ne "" or $config.General.apply_default_country eq "Y" or $cart.shipping_cost gt 0)} ({include file="currency.tpl" value=$s.rate}){/if}</label></td>
 </tr>
 {if $s.warning ne ""}
 <tr>

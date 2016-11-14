@@ -32,7 +32,7 @@
 <tr {$trstyle}>
 <td class="Green2">
 {foreach from=$shipping item=s}
-{if $cart.shippingid eq $s.shippingid}{$s.shipping}{/if}
+{if $cart.shippingid eq $s.shippingid}{$s.frontend_name|default:$s.shipping}{/if}
 {/foreach}
 </td>
 <td class="Green2">{$lng.lbl_shipping_cost}</td>

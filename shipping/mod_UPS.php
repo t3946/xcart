@@ -513,19 +513,7 @@ EOT;
                         $L_G_flag = true;
                     }
                     
-                    /*if ($Vi < $v['vol_threshold']) {
-                        $B += $product['weight'] * $product['amount'];
-                    } else {
-                        $bi = $Vi / $v['dim_factor'];
-                        if ($bi < $product['weight']) {
-                            $bi = $product['weight'];
-                        }
-                        $B += $bi * $product['amount'];
-                    }*/
-					global $xcart_dir;
-					$classShipping = new Xcart\Shippings();
-					$wn = $classShipping->getShippingWeight($product['productid'], $v['methodid'], $product['amount'], $product, $v);
-					unset ($classShipping);
+					$wn = Xcart\Shipping::getShippingWeight($product['productid'], $v['methodid'], $product['amount'], $product, $v);
 					$B += $wn;
 
 

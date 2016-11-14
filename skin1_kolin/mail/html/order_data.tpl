@@ -35,7 +35,7 @@
 <tr>
 <td colspan="{$colspan}">
     {assign var="oManufacturer" value=$v.oOrderGroup->getManufacturerEntity()}
-<b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$oManufacturer->getField('m_city'):"STATE":$oManufacturer->getField('m_state'):"COUNTRY":$oManufacturer->getField('m_country')} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):</b>
+<b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$oManufacturer->getField('m_city'):"STATE":$oManufacturer->getField('m_state'):"COUNTRY":$oManufacturer->getField('m_country')} {$v.frontend_name|default:$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):</b>
 </td>
 </tr>
 {/if}

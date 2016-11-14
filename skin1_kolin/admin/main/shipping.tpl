@@ -105,7 +105,6 @@ function expand_all(flag) {
 <table cellpadding="2" cellspacing="1" width="100%">
 <tr class="TableHead">
 	<td>{$lng.lbl_shipping_method}</td>
-	<td>{$lng.lbl_shipping_method_front_end_name}</td>
 	<td>{$lng.lbl_delivery_time}</td>
 	<td>{$lng.lbl_destination}</td>
 	<td>{$lng.lbl_service_code}</td>
@@ -123,7 +122,6 @@ function expand_all(flag) {
 	<input type="hidden" name="data[{$s.shippingid}][is_new]" value="" />
 	<input type="text" name="data[{$s.shippingid}][shipping]" value="{$s.shipping|escape}" />
 	</td>
-	<td><input type="text" name="data[{$s.shippingid}][shipping_frontend_name]" value="{$s.front_end_name}" /></td>
 	<td align="center"><input type="text" name="data[{$s.shippingid}][shipping_time]" size="8" value="{$s.shipping_time}" /></td>
 	<td align="center"><select name="data[{$s.shippingid}][destination]">
 	<option value="L"{if $s.destination eq "L"} selected="selected"{/if}>{$lng.lbl_national}</option>
@@ -221,18 +219,21 @@ visibleBox('{$carrier}');
 
 <tr class="TableHead">
 	<td>{$lng.lbl_shipping_method}</td>
+	<td>{$lng.lbl_shipping_method_front_end_name}</td>
 	<td>{$lng.lbl_delivery_time}</td>
 	<td>{$lng.lbl_destination}</td>
 	<td>{$lng.lbl_weight_limit} ({$config.General.weight_symbol})</td>
 	<td>{$lng.lbl_pos}</td>
 	<td>{$lng.lbl_active}</td>
 	<td>{$lng.lbl_cod}</td>
+	<td></td>
 </tr>
 
 {foreach from=$shipping item=s}
 {if $s.code eq ""}
 <tr>
 	<td><input type="text" name="data[{$s.shippingid}][shipping]" size="32" value="{$s.shipping}" /></td>
+	<td><input type="text" name="data[{$s.shippingid}][frontend_name]" size="32" value="{$s.frontend_name}" /></td>
 	<td align="center"><input type="text" name="data[{$s.shippingid}][shipping_time]" size="8" value="{$s.shipping_time}" /></td>
 	<td align="center"><select name="data[{$s.shippingid}][destination]">
 		<option value="I" {if $s.destination eq "I"}selected{/if}>{$lng.lbl_international}</option>
@@ -253,6 +254,7 @@ visibleBox('{$carrier}');
 
 <tr>
 	<td><input type="text" name="add[shipping]" size="32" /></td>
+	<td align="center"><input type="text" size="32"  name="add[frontend_name]"/></td>
 	<td align="center"><input type="text" name="add[shipping_time]" size="10" /></td>
 	<td align="center"><select name="add[destination]">
 		<option value="I">{$lng.lbl_international}</option>

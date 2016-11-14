@@ -485,7 +485,7 @@ if (!$curl_err){
                                 }
                                 if ($config["Autosubmit_orderentry_operator"]["Order_shipping_method_carrier"] == "Y") {
                                     foreach ($order['shipping_groups'] as $k_group => $v_group){
-                                        $classShipping = new Xcart\Shipping($v_group['shippingid']);
+                                        $classShipping = Xcart\Shipping::model(['shippingid' => $v_group['shippingid']]);
                                         if ($classShipping->isAmazonShipping()) {
                                             $allow_send_to_operator = false;
                                             break;
