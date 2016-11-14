@@ -139,19 +139,11 @@ class OrderGroup extends Data
 
     public function getTotalCostToUs()
     {
-        if (empty($this->fCostToUs)) {
-            $aCostToUs = func_query_first("SELECT sum(xo.item_cost_to_us*xo.amount) as cost_to_us_od, sum(xp.cost_to_us*xo.amount) as cost_to_us_pr
-                                      FROM xcart_order_groups og
-                                           INNER JOIN xcart_order_details xo USING (orderid)
-                                           INNER JOIN xcart_products xp
-                                              ON xp.productid = xo.productid AND
-                                                 xp.manufacturerid = og.manufacturerid
-                                     WHERE og.orderid = " . $this->getOrderId() . " AND og.manufacturerid = " . $this->getManufacturerId());
-            $fCostToUs = floatval($aCostToUs['cost_to_us_od']);
-            if (is_null($fCostToUs) || $fCostToUs == 0) {
-                $fCostToUs = $aCostToUs['cost_to_us_pr'];
+        if (is_null($this->fCostToUs)) {
+            $this->fCostToUs = 0;
+            foreach ($this->getOrderDetails() as $oOrderDetails) {
+                $this->fCostToUs += $oOrderDetails->getCostToUs();
             }
-            $this->fCostToUs = floatval($fCostToUs);
         }
         return $this->fCostToUs;
     }
@@ -874,8 +866,9 @@ class OrderGroup extends Data
 
     public function setAttentionTagMoneyLost()
     {
-        if ($this->getAccountingNetProfit() < 0) {
-            global $config;
+        global $config;
+
+        if ($this->getAccountingNetProfit() < 0 && !in_array($this->getOrderGroupStatusCB(), ['R','V'])) {
             if (!$this->getOrderInstance()->isAttentionTagSet($config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"])) {
                 $oAttentionTag = new AttentionTag(['status_id' => $config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
                 $aInsertArray = ['orderid' => $this->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
@@ -888,7 +881,7 @@ class OrderGroup extends Data
 
     public function recalculateAccountingAmazon()
     {
-        $fRefund = $fPrincipalRefund = $fShippingRefund = $fShipping = $FBAPerOrderFulfillmentFee = $FBAPerUnitFulfillmentFee = $FBATransportationFee = $FBAWeightBasedFee = $AmazonCommission = $ShippingFee= 0;
+        $fRefund = $fPrincipalRefund = $fShippingRefund = $fShipping = $FBAPerOrderFulfillmentFee = $FBAPerUnitFulfillmentFee = $FBATransportationFee = $FBAWeightBasedFee = $AmazonCommission = $ShippingFee = 0;
         if ($this->getOrderAmazonDetails()->countOrderAmazonDetails() > 0) {
             $fRefund = $this->getOrderAmazonDetails()->getOrderAmazonRefund();
             $fPrincipalRefund = $this->getOrderAmazonDetails()->getOrderAmazonPrincipalRefund();
