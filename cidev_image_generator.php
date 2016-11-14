@@ -28,7 +28,8 @@ set_time_limit(0);
 $sleep_time = 2; //  seconds
 $cnt = 0;
 
-$query = "Select 
+$query = <<<SQL
+Select 
 		P.productid,
 		ID.image_path,
 		IT.id as no_image_T,
@@ -39,7 +40,8 @@ from xcart_products P
 		left join xcart_images_P IP ON IP.id = P.productid
 where P.forsale = 'Y' and ID.id is not null and (IT.id is null or IP.id is null)
 group by P.productid
-limit 500";
+limit 500
+SQL;
 
 $products = db_query($query);
 
@@ -106,12 +108,18 @@ while ($product = db_fetch_array($products)){
 	if (empty($product["no_image_T"])){
 		if (func_generate_image($product["productid"], 'D', 'T', false, false, $image_id)) {
 			func_save_product_thumb_image($product["productid"], 'T');
+		} else {
+			$log_text = 'Error generate thumbnail. Imageid:'.$image_id;
+			func_backprocess_log("image generator", $log_text);
 		}
 	}
 
         if (empty($product["no_image_P"])){
 		if (func_generate_image($product["productid"], 'D', 'P', false, false, $image_id)) {
 			func_save_product_thumb_image($product["productid"], 'P');
+		} else {
+			$log_text = 'Error generate product image. Imageid:'.$image_id;
+			func_backprocess_log("image generator", $log_text);
 		}
 	}
 

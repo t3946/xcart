@@ -109,7 +109,7 @@ function send_question_email_form(){
 </table>
 {/if}
 
-<div id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Organization">
+<div id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
 	<meta itemprop="name" content="{$product.cidev_brand_name}"/>
 </div>
 <div id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
@@ -118,6 +118,7 @@ function send_question_email_form(){
 
 {if $cidev_mpn ne ""}
 <meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
+<meta id="so_model" itemprop="model" content="{$cidev_mpn}"/>
 {/if}
 
 <meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_stock so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
