@@ -109,6 +109,8 @@ function send_question_email_form(){
 </table>
 {/if}
 
+{assign var="oStorefront" value=$oProduct->getStoreFront()}
+
 <span id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
     <span itemprop="name" content="{$product.cidev_brand_name}">    </span>
     <span itemprop="url" content="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/">    </span>
