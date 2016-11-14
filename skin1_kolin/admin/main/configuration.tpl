@@ -670,10 +670,23 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
     {$lng.txt_retail_trust_info}
 {/if}
 
+
+
 <table cellpadding="3" cellspacing="1" width=100%>
 
 {assign var="first_row" value=1}
+    {if $option eq "W9_Form"}
+        <tr>
+            <td>
 
+            </td>
+            <td>
+
+                {$lng.w9_form_request_options_instructions}
+
+            </td>
+        </tr>
+    {/if}
 {section name=cat_num loop=$configuration}
 
 {assign var="opt_comment" value="opt_`$configuration[cat_num].name`"}
@@ -923,7 +936,18 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
 {elseif $configuration[cat_num].type eq "textarea"}
 <textarea 
 
-{if $configuration[cat_num].name eq "retail_trust_message" || $configuration[cat_num].name eq "thank_you_message_body" || $configuration[cat_num].name eq "po_instructions" || $configuration[cat_num].name eq "po_missing_instructions" || $configuration[cat_num].name eq "reference_text" || $configuration[cat_num].name eq "signature" || $configuration[cat_num].name eq "outside_sf_localization_warning" || $configuration[cat_num].name eq "po_entry_dashboard_text" || $configuration[cat_num].name eq "RMA_message" || $configuration[cat_num].name eq "RMA_to_department_Message"}
+{if $configuration[cat_num].name eq "retail_trust_message" ||
+    $configuration[cat_num].name eq "thank_you_message_body" ||
+    $configuration[cat_num].name eq "po_instructions" ||
+    $configuration[cat_num].name eq "po_missing_instructions" ||
+    $configuration[cat_num].name eq "reference_text" ||
+    $configuration[cat_num].name eq "signature" ||
+    $configuration[cat_num].name eq "outside_sf_localization_warning" ||
+    $configuration[cat_num].name eq "po_entry_dashboard_text" ||
+    $configuration[cat_num].name eq "RMA_message" ||
+    $configuration[cat_num].name eq "RMA_to_department_Message"||
+    $configuration[cat_num].name eq "w9_message"
+}
 class="new_editor" rows="30" cols="60"
 {/if}
 
@@ -993,8 +1017,13 @@ class="new_editor" rows="30" cols="60"
 	{include file="admin/main/product_page_options.tpl"}
 {/if}
 {if $option eq "Retail_Trust"}
-  {include file="admin/main/retail_trust_config.tpl"}
+    {include file="admin/main/retail_trust_config.tpl"}
 {/if}
+
+{if $option eq "W9_Form"}
+        <td>{include file="admin/main/w9_form_config.tpl"}</td>
+{/if}
+
 <tr>
 <td colspan="3"><br /><br />
 <input type="submit" value=" {$lng.lbl_save|strip_tags:false|escape} "  />

@@ -687,25 +687,17 @@ if ($sExtraLog=='Y')
 	$product['google_descr']."\t".
 	$product['link'] . "\t".
 	$product['adwords_redirect'] . "\t".
-//	$product['adwords_grouping'] . "\t".
-//	$product['adwords_labels'] . "\t".
 	$tmp_image_link."\t".
 	$additional_image_link."\t".
 	$product['productid']."\t".
 	$product['price']."\t".
-//	func_froogle_convert($config['Froogle']['froogle_payment_accepted'], 65536)."\t".
-//	func_froogle_convert($config['Froogle']['froogle_payment_notes'], 65536)."\t".
-//	(($product['avail'] < 0) ? 0 : ($product['avail']))."\t".
 	$product['weight'].($product['weight'] > 0 ? " lb":"")."\t".
 	date("Y-m-d", time()+(empty($config['Froogle']['froogle_expiration_date']) ? 0.5 : $config['Froogle']['froogle_expiration_date'])*86400)."\t".
 	$product['google_brand']."\t".
 	"new\t".
 	"$cats_path"."\t".
 	"$mpn\t".
-//	"$mpn\t".
 	trim($product['upc']) . "\t".
-//	trim($compatible_with) . "\t".
-//	"$online_only\t".
 	"$shipping\t" .
 	"$product_availability\t".$multipack."\t".$gpc;
 
@@ -1605,7 +1597,7 @@ function SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray)
 	}
 	$sMerchantId = $ainventory[''];
 ######################### Avail start #########################
-	$feed = <<<EOD
+$feed = <<<EOD
 <?xml version="1.0" encoding="utf-8" ?>
 <AmazonEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="amzn-envelope.xsd">
 <Header>
@@ -1615,76 +1607,73 @@ function SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray)
    <MessageType>Inventory</MessageType>
 EOD;
 
-	$MessageID = 0;
-	foreach ($ainventory as $k => $v){
+	$MessageID = 1;
+	foreach ($ainventory as $k => $v) {
 
-                $fields = ", IFNULL($sql_tbl[variants].avail, $sql_tbl[products].r_avail) as r_avail, IFNULL($sql_tbl[variants].productcode, $sql_tbl[products].productcode) as productcode, $sql_tbl[products].cost_to_us, $sql_tbl[products].map_price, $sql_tbl[products].manufacturerid, $sql_tbl[products].eta_date_mm_dd_yyyy";
-                $joins = " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
-                $joins .= " INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0'";
-                $joins .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[variants].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].variantid = $sql_tbl[variants].variantid";
-                $where = " AND $sql_tbl[products_sf].productid = '$v[productid]' AND IFNULL($sql_tbl[variants].avail, $sql_tbl[products].avail) >= '0'";
+		/*$fields = ", IFNULL($sql_tbl[variants].avail, $sql_tbl[products].r_avail) as r_avail, IFNULL($sql_tbl[variants].productcode, $sql_tbl[products].productcode) as productcode, $sql_tbl[products].cost_to_us, $sql_tbl[products].map_price, $sql_tbl[products].manufacturerid, $sql_tbl[products].eta_date_mm_dd_yyyy";
+		$joins = " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
+		$joins .= " INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0'";
+		$joins .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[variants].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].variantid = $sql_tbl[variants].variantid";
+		$where = " AND $sql_tbl[products_sf].productid = '$v[productid]' AND IFNULL($sql_tbl[variants].avail, $sql_tbl[products].avail) >= '0'";
 
-                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].product_type, $sql_tbl[products].amazon_fba_avail, $sql_tbl[pricing].price $fields FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
+		$product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].product_type, $sql_tbl[products].amazon_fba_avail, $sql_tbl[pricing].price $fields FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");*/
+
+		$oProduct = \Xcart\Product::model(['productid' => $v["productid"]]);
+		$productcode = $oProduct->getSKU();
 
 
-###
 
-		$product["productid"] = $v["productid"];
-		$productcode = $product["productcode"];
-        $product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
 
-		$ainventory[$k] = $product;
-
-		$a_query = "Select cidev_get_amazon_price('$v[productid]') As 'aprice', M.amazon_leadtimetoship As 'aleadtime', cidev_get_amazon_quantity('$v[productid]') As 'aquantity' from xcart_products P left join xcart_manufacturers M ON M.manufacturerid = P.manufacturerid where P.productid = '$v[productid]'";
-		$a_result = func_query_first($a_query);
-
-		if ($a_result["aquantity"]==0){
+		/*if ($a_result["aquantity"] == 0) {
 			$product["product_availability"] = "out of stock";
-	        $price = $a_result["aprice"];
+			$price = $a_result["aprice"];
 			$product["price"] = $price;
-        	$aleadtime = $a_result["aleadtime"];
+			$aleadtime = $a_result["aleadtime"];
 			$avail = $a_result["aquantity"];
 			$product["avail"] = $avail;
 		} else {
-	        $price = $a_result["aprice"];
+			$price = $a_result["aprice"];
 			$product["price"] = $price;
-        	$aleadtime = $a_result["aleadtime"];
+			$aleadtime = $a_result["aleadtime"];
 			$avail = $a_result["aquantity"];
 			$product["avail"] = $avail;
-		}
+		}*/
 
-		if ($product["product_availability"] == "in stock"||$product["product_availability"] == "out of stock"){
-			$MessageID++;
 
-/*
-			$feed .= <<<EOD
+
+		$aFBAProductCodes = null;
+
+			if ($oProduct->getAmazonFBAAvailReal() > 0) {
+				$aFBAProductCodes[] =  $productcode;
+				$aMissingSKU = \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('productid = '.$oProduct->getProductId()));
+				if (!empty($aMissingSKU)) {
+					foreach ($aMissingSKU as $oMissingSKU) {
+						$aFBAProductCodes[] = $oMissingSKU->getMissingSKU();
+					}
+				}
+
+				foreach ($aFBAProductCodes as $sProductCode) {
+
+					$feed .= <<<EOD
 <Message>
 <MessageID>$MessageID</MessageID>
 <OperationType>Update</OperationType>
 <Inventory>
-<SKU>$productcode</SKU>
-<Quantity>$avail</Quantity>
-<FulfillmentLatency>$aleadtime</FulfillmentLatency>
-</Inventory>
-</Message>
-EOD;
-*/
-
-			if ($product["amazon_fba_avail"] > 0){
-                        $feed .= <<<EOD
-<Message>
-<MessageID>$MessageID</MessageID>
-<OperationType>Update</OperationType>
-<Inventory>
-<SKU>$productcode</SKU>
+<SKU>$sProductCode</SKU>
 <FulfillmentCenterID>AMAZON_NA</FulfillmentCenterID>
 <Lookup>FulfillmentNetwork</Lookup>
 <SwitchFulfillmentTo>AFN</SwitchFulfillmentTo>
 </Inventory>
 </Message>
 EOD;
-			} elseif ($product["amazon_fba_avail"] <= 0){
-                        $feed .= <<<EOD
+					$MessageID++;
+				}
+			} else {
+
+				$avail = $oProduct->getAmazonQuantity();
+				$aleadtime = $oProduct->getManfacturerClass()->getAmazonLeadtimetoship();
+
+				$feed .= <<<EOD
 <Message>
 <MessageID>$MessageID</MessageID>
 <OperationType>Update</OperationType>
@@ -1697,17 +1686,14 @@ EOD;
 </Inventory>
 </Message>
 EOD;
+				$MessageID++;
 			}
-		}
 	}
 
 	$feed .= <<<EOD
 </AmazonEnvelope>
 EOD;
 
-/*
-
-*/
 	print($feed."\n\n");
 
 	print("INVENTORY pull\n\n");
@@ -1755,42 +1741,37 @@ EOD;
    <MessageType>Price</MessageType>
 EOD;
 
-        $MessageID = 0;
+        $MessageID = 1;
         foreach ($ainventory as $k => $product){
 
-                $productcode = $product["productcode"];
-                $productid = $product["productid"];
-                
-				$a_query = "Select cidev_get_amazon_price('$productid') As 'aprice', M.amazon_leadtimetoship As 'aleadtime', cidev_get_amazon_quantity('$v[productid]') As 'aquantity'  from xcart_products P left join xcart_manufacturers M ON M.manufacturerid = P.manufacturerid where P.productid = '$productid'";
-				$a_result = func_query_first($a_query);
+			$aFBAProductCodes = null;
+			$oProduct = \Xcart\Product::model(['productid' => $product["productid"]]);
+			$price = $oProduct->getAmazonPrice();
 
-				if ($a_result["aquantity"]==0){
-					$product["product_availability"] = "out of stock";
-	                $price = $a_result["aprice"];
-					$product["price"] = $price;
 
-        	        $aleadtime = $a_result["aleadtime"];
-				} else {
-					$product["product_availability"] = "in stock";
-	                $price = $a_result["aprice"];
-					$product["price"] = $price;
+			$aFBAProductCodes[] = $oProduct->getSKU();
 
-        	        $aleadtime = $a_result["aleadtime"];
+			if ($oProduct->getAmazonFBAAvailReal() > 0) {
+				$aMissingSKU = \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('productid = '.$oProduct->getProductId()));
+				if (!empty($aMissingSKU)) {
+					foreach ($aMissingSKU as $oMissingSKU) {
+						$aFBAProductCodes[] = $oMissingSKU->getMissingSKU();
+					}
 				}
+			}
 
-				if ($product["product_availability"] == "in stock"||$product["product_availability"] == "out of stock"){
-                    $MessageID++;
-
+			foreach ($aFBAProductCodes as $sProductCode) {
                     $feed .= <<<EOD
 <Message>
 <MessageID>$MessageID</MessageID>
 <Price>
-<SKU>$productcode</SKU>
+<SKU>$sProductCode</SKU>
 <StandardPrice currency="USD">$price</StandardPrice>
 </Price>
 </Message>
 EOD;
-                }
+				$MessageID++;
+			}
         }
 
         $feed .= <<<EOD

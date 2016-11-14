@@ -685,7 +685,7 @@ Cost to us accurate
 {/if}
   </td>
 
-  <td align="right">{include file="currency2.tpl" value=$product.price*$product.amount}
+  <td align="right">{include file="currency2.tpl" value=$product.oOrderDetail->getTotalProductPrice()}
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
@@ -701,7 +701,7 @@ Cost to us accurate
 {*  <td align="right">{include file="currency2.tpl" value=$product.extra_data.taxes.PST.tax_value hide_zero='Y'}</td> *}
   <td align="right">
 
-{include file="currency2.tpl" value=$product.display_subtotal}
+{include file="currency2.tpl" value=$product.oOrderDetail->getTotalProductPrice()}
 
 {* --- *}
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">
@@ -1061,9 +1061,9 @@ multirowInputSets['track_{$m_id}'].noCloneContent = 1;
   <td colspan="7">
     {$lng.retail_trust_order_group_line_title}
   </td>
-  <td align="right">{$oOrderGroup->getRetailTrustTotalNet()}</td>
+  <td align="right">{$oOrderGroup->getRetailTrustTotalNet()|price_format}</td>
   <td align="right"></td>
-  <td align="right">{$oOrderGroup->getRetailTrustTotalGross()}</td>
+  <td align="right">{$oOrderGroup->getRetailTrustTotalGross()|price_format}</td>
 </tr>
 {/if}
 
@@ -1266,7 +1266,7 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
             <a href="{$oOrderDetailProduct->getProductFrontURL()}">{$oOrderDetailProduct->getProductName()}</a>
           </td>
           <td>
-            <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKU()}</a>
+            <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKURetailTrust()}</a>
           </td>
           <td></td>
           <td align="center">

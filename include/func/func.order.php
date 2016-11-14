@@ -790,6 +790,7 @@ function func_order_data($orderid) {
 ##
 ###
 		$order['shipping_groups'][$m_id]['products'][$v["itemid"]] = $v;
+		$order['shipping_groups'][$m_id]['oOrderGroup'] = \Xcart\OrderGroup::model(['orderid' => $orderid, 'manufacturerid' => $m_id]);
 ###
 ##
 #
@@ -1677,7 +1678,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 			unset($group_total);
 			unset($insert_data);
 		}
-		$oOrder = Xcart\Order::model(['orderid'=>$orderid]);
+		$oOrder = \Xcart\Order::model(['orderid'=>$orderid]);
 		$oOrder->updateVerificationStatus();
 
 
@@ -1964,6 +1965,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 	$mes .= "STEP V ".date("H:i:s")."\n";
 
 	x_log_add("order_time",$mes,true);
+
+	x_session_unregister('customer_notes');
 
 	return $orderids;
 }
@@ -3750,10 +3753,10 @@ function func_send_order_status_notification($orderid, $status)
 			}
 		}
 	}
-	if ($status == $config['retail_trust_order_status']) {
-		$oMail = new Xcart\Mail();
-		$oMail->setBody($config['Retail_Trust']['retail_trust_message'])->replaceBody($oOrder);
-		$oMail->setSubject($config['Retail_Trust']['retail_trust_subject'])->replaceSubject($oOrder);
+	if ($status == $config['retail_trust_order_status'] && count($oOrder->getOrderDetailsWithRetailTrust()) > 0) {
+		$oMail = new Xcart\OrderStatusNotification();
+		$oMail->setOrder($oOrder)->setBody($config['Retail_Trust']['retail_trust_message'])->replaceBody();
+		$oMail->setSubject($config['Retail_Trust']['retail_trust_subject'])->replaceSubject();
 		$mail_smarty->assign('body', $oMail->getEmailBody());
 		$mail_smarty->assign('subject', $oMail->getSubject());
 		$mail_smarty->assign('type', 'C');
@@ -3762,7 +3765,7 @@ function func_send_order_status_notification($orderid, $status)
 		$to = $config['Company']['orders_department'];
 		$from = $order_data['userinfo']['firstname'] . "<" . $config['Company']['orders_department'] . ">";
 		$reply_to = $order_data['userinfo']['firstname'] . "<" . $order_data['userinfo']['email'] . ">";
-		$oMail->setSubject($config['Retail_Trust']['retail_trust_bcc_subject'])->replaceSubject($oOrder);
+		$oMail->setSubject($config['Retail_Trust']['retail_trust_bcc_subject'])->replaceSubject();
 		$mail_smarty->assign('subject', $oMail->getSubject());
 		func_send_mail($to, "mail/compose_message_subj.tpl", "mail/compose_message.tpl",$from, false, false, false, false, $reply_to,'N',false,true,true);
 	}
@@ -3883,7 +3886,6 @@ function func_set_filled_option($accounting) {
 }
 
 function func_get_order_notification($status, $order_data="") {
-    global $xcart_dir;
 	$oOrder = null;
 	$aOrderNotifications = Xcart\OrderStatusNotification::getOrderStatusNotificationsByCode($status);
 	if (!empty($aOrderNotifications)) {
@@ -3891,8 +3893,8 @@ function func_get_order_notification($status, $order_data="") {
 			$oOrder = new Xcart\Order(['orderid'=>$order_data['order']['orderid']]);
 		}
 		foreach ($aOrderNotifications as &$oOrderNotification) {
-			$oOrderNotification->replaceBody($oOrder);
-			$oOrderNotification->replaceSubject($oOrder);
+			$oOrderNotification->setOrder($oOrder)->replaceBody();
+			$oOrderNotification->replaceSubject();
 		}
 	}
 	return $aOrderNotifications;

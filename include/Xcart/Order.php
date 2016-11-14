@@ -635,10 +635,11 @@ class Order extends Data
     public function reCalculateTotals()
     {
         $aOrderGroups = $this->getOrderGroups();
-        if (!empty($aOrderGroups))
+        if (!empty($aOrderGroups)) {
             foreach ($aOrderGroups as $oOrderGroup) {
                 $oOrderGroup->reCalculateTotals();
             }
+        }
     }
 
     public function getPOPipelineInstance()
@@ -676,8 +677,10 @@ class Order extends Data
                     $fTotalRetailTrust += $fTotalRetailTrustGroup;
                 }
             }
-            $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
-            $this->_refresh();
+            if ($fTotalRetailTrust > 0) {
+                $this->addOrderTotaNet($fTotalRetailTrust)->addOrderTotalGross($fTotalRetailTrust)->addOrderTotal($fTotalRetailTrust)->_update();
+                $this->_refresh();
+            }
         }
         return $this;
     }

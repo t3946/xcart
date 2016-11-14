@@ -1119,9 +1119,6 @@ class OrderGroup extends Data
         return ($this->getField('amz_fullfilment_order_placed') == 'Y');
     }
 
-    /**
-     * @return OrderDetail[]
-     */
     public function getOrderDetails()
     {
         if (is_null($this->aOrderDetails)) {

@@ -1516,7 +1516,10 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 		$product_keys[] = "provider";
 		$product_keys[] = "discount_avail";
 		$product_keys[] = "weight";
-# START: random:20460 [2010 Mar 18 13:43] 
+		$product_keys[] = "itemid";
+		$product_keys[] = "oProduct";
+		$product_keys[] = "oOrderDetail";
+# START: random:20460 [2010 Mar 18 13:43]
 		$product_keys[] = "free_ship_zone";
 # END: random:20460 [2010 Mar 18 13:43] 
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 

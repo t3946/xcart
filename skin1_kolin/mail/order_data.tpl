@@ -3,13 +3,13 @@
 -----------------
 
 {foreach from=$order.shipping_groups item=v key=k name="shgrform"}
-
-{if $products}{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$v.manufacturer_data.m_city:"STATE":$v.manufacturer_data.m_state:"COUNTRY":$v.manufacturer_data.m_country} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):{/if}
+	{assign var="oManufacturer" value=$v.oOrderGroup->getManufacturerEntity()}
+{if $products}{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$oManufacturer->getField('m_city'):"STATE":$oManufacturer->getField('m_state'):"COUNTRY":$oManufacturer->getField('m_country')} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):{/if}
 
 {section name=prod_num loop=$products}
 {$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$products[prod_num].productcode}
 {$lng.lbl_product|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$products[prod_num].product}
-{$lng.lbl_qty_ord|capitalize|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$products[prod_num].amount}
+{$lng.lbl_qty_ord|capitalize|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$products[prod_num].oOrderDetail->getAmount()}
 {if $order.has_backordered_status}
 {$lng.lbl_qty_ship|capitalize|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{if $v.dc_status eq 'B' || $v.dc_status eq 'G' || $v.dc_status eq 'S'}{$products[prod_num].ship}
 {else}-
@@ -22,7 +22,7 @@
 {$lng.lbl_selected_options}:
 {include file="modules/Product_Options/display_options.tpl" options=$products[prod_num].product_options options_txt=$products[prod_num].product_options_txt is_plain="Y"}
 {/if}
-{$lng.lbl_item_price|capitalize|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$products[prod_num].display_price}
+{$lng.lbl_item_price|capitalize|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$products[prod_num].oOrderDetail->getPrice()}
 {if $order.extra.tax_info.display_cart_products_tax_rates eq "Y" and $_userinfo.tax_exempt ne "Y"}
 
 {foreach from=$products[prod_num].extra_data.taxes key=tax_name item=tax}
@@ -92,7 +92,7 @@
 -------
 {foreach from=$aRetailTrustOrderDetails item=oRetailTrustOrderDetail}
 {assign var=oRetailTrustProduct value=$oRetailTrustOrderDetail->getOrderDetailProduct()}
-{$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustProduct->getSKU()}
+{$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustProduct->getSKURetailTrust()}
 {$lng.lbl_product|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustProduct->getProductName()}
 {$lng.lbl_item_price|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$oRetailTrustOrderDetail->calculateRetailTrustPricePerProduct()}
 {$lng.lbl_qty_ord|capitalize|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$oRetailTrustOrderDetail->getAmount()}

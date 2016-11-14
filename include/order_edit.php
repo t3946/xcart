@@ -34,7 +34,7 @@
 #
 # $Id: order_edit.php, v 1.0.0 2010/03/24 12:08:09 random Exp $
 #
-global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt, $top_message;
+global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt, $top_message, $mail_smarty;
 
 if (!defined("XCART_SESSION_START")) {
     header("Location: ../");
@@ -52,7 +52,8 @@ x_session_register("intershipper_recalc");
 x_session_register("current_carrier", "UPS");
 
 $oOrder = new Xcart\Order(['orderid'=>$orderid]);
-$smarty->assign("oOrder", $oOrder);
+$smarty->assign('oOrder', $oOrder);
+$mail_smarty->assign('oOrder', $oOrder);
 
 $all_processors = func_query_hash("SELECT paymentid, payment_method, acc_per_trans, acc_percent FROM $sql_tbl[payment_methods] WHERE acc_proc='Y' ORDER BY orderby", "paymentid", false);
 $smarty->assign("all_processors", $all_processors);
@@ -98,7 +99,7 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 if (is_array($cart_tmp["products"])) {
     foreach ($cart_tmp["products"] as $k => $v) {
         $cart_tmp["products"][$k]["free_price"] = $v["price"];
-        $cart_tmp["products"][$k]["price"] = $v["display_price"];
+        $cart_tmp["products"][$k]["price"] = $v["price"];
         if (!empty($v["extra_data"]["taxes"]) && is_array($v["extra_data"]["taxes"])) {
             foreach ($v["extra_data"]["taxes"] as $_tax) {
                 if (($_tax["price_includes_tax"] == "Y" || $_tax['display_including_tax'] == 'Y') && $config["Taxes"]["display_taxed_order_totals"] == 'Y')
@@ -1366,13 +1367,33 @@ if ($REQUEST_METHOD == "POST") {
         if (!empty($add_retail_trust) && is_array($add_retail_trust)) {
             foreach ($add_retail_trust as $sRetailTrustSKU) {
                 if (!empty($sRetailTrustSKU)) {
-                    $oProduct = classProduct::getProductBySKU($sRetailTrustSKU);
-                    if ($oProduct->getProductId())
-                        $aOrderDetails = Xcart\OrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
-                    if (!empty($aOrderDetails)) {
-                        foreach ($aOrderDetails as $oOrderDetail) {
-                            $oOrderDetail->addRetailTrust();
+                    $oProduct = \Xcart\Product::getProductBySKU($sRetailTrustSKU);
+                    if ($oProduct->getProductId()) {
+                        if ($oProduct->isRetailTrustEnabled()) {
+                            $aOrderDetails = Xcart\OrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
+                            if (!empty($aOrderDetails)) {
+                                foreach ($aOrderDetails as $oOrderDetail) {
+                                    $oOrderDetail->addRetailTrust();
+                                }
+                            } else {
+                                $top_message["content"] .= func_get_langvar_by_name("retail_trust_nonordered_sku_for_retailtrust");
+                                $top_message["type"] = "I";
+                                $section_name_top_message = $top_message;
+                                x_session_save("section_name_top_message");
+                            }
+                        } else {
+                            /* retail trust sku not enabled*/
+                            $top_message["content"] .= func_get_langvar_by_name("retail_trust_not_retailtrust_enabled_sku");
+                            $top_message["type"] = "I";
+                            $section_name_top_message = $top_message;
+                            x_session_save("section_name_top_message");
                         }
+                    } else {
+                        /*product not found*/
+                        $top_message["content"] .= func_get_langvar_by_name("retail_trust_nonordered_sku_for_retailtrust");
+                        $top_message["type"] = "I";
+                        $section_name_top_message = $top_message;
+                        x_session_save("section_name_top_message");
                     }
                 }
             }
@@ -1384,52 +1405,6 @@ if ($REQUEST_METHOD == "POST") {
             }
         }
         $oOrder->recalculateRetailTrust();
-
-        if ($send_email == 'Y') {
-
-            $customer_attach_pdf_invoice = "";
-            $admin_attach_pdf_invoice = "";
-
-            $send_email_flag = false;
-
-            $current_cb_dc_statuses = func_query("SELECT cb_status, dc_status FROM $sql_tbl[order_groups] WHERE orderid='$orderid'");
-
-            if (!empty($current_cb_dc_statuses) && is_array($current_cb_dc_statuses)) {
-                foreach ($current_cb_dc_statuses as $kc => $vc) {
-
-                    $order_notification_info = func_query_first("SELECT enabled, customer_attach_pdf_invoice, admin_attach_pdf_invoice FROM $sql_tbl[order_status_notifications] WHERE code='$vc[cb_status]'");
-
-
-                    if ($order_notification_info["enabled"] == "Y") {
-                        $send_email_flag = true;
-
-                        $customer_attach_pdf_invoice = $order_notification_info["customer_attach_pdf_invoice"];
-                        $admin_attach_pdf_invoice = $order_notification_info["admin_attach_pdf_invoice"];
-
-                        break;
-                    } else {
-                        $order_notification_info = func_query_first_cell("SELECT enabled, customer_attach_pdf_invoice, admin_attach_pdf_invoice FROM $sql_tbl[order_status_notifications] WHERE code='$vc[dc_status]'");
-
-                        if ($order_notification_info["enabled"] == "Y") {
-                            $send_email_flag = true;
-
-                            $customer_attach_pdf_invoice = $order_notification_info["customer_attach_pdf_invoice"];
-                            $admin_attach_pdf_invoice = $order_notification_info["admin_attach_pdf_invoice"];
-
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if ($send_email_flag) {
-                include $xcart_dir . '/include/send_order_email.php';
-
-                $customer_attach_pdf_invoice = "";
-                $admin_attach_pdf_invoice = "";
-            }
-        }
-
 
         if ($all_current_dc_status_NOT_eq_S) {
             #send email PO instructions
@@ -2338,6 +2313,7 @@ $smarty->assign("order", $order);
 
 $oOrder = Xcart\Order::model(['orderid' => $orderid]);
 $smarty->assign("oOrder", $oOrder);
+$mail_smarty->assign('oOrder', $oOrder);
 
 $oShippings = new Xcart\Shippings();
 $aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');

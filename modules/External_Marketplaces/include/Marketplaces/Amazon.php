@@ -31,7 +31,6 @@ class Amazon extends StoreFrontMarketPlace
     }
 
     public function submitProductsBatch($debug_mode = 'N', $extra_log='N') {
-        SubmitAmazonProductsBatch();
         $this->setProductsBatchCount(0)->setProducts([]);
     }
 

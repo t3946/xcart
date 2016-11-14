@@ -31,7 +31,7 @@ switch ($ajax_action) {
 
             $oOrderNotification = new Xcart\OrderStatusNotification(['code'=>'Q']);
             if ($oOrderNotification->isEnabled()) {
-                $oOrderNotification->prepareMail($oOrder)->sendEmail();
+                $oOrderNotification->setOrder($oOrder)->sendEmail();
             }
 
             $smarty->assign('value', $fRetailTrustSumma);

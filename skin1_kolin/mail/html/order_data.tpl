@@ -34,7 +34,8 @@
 {if $v.products}
 <tr>
 <td colspan="{$colspan}">
-<b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$v.manufacturer_data.m_city:"STATE":$v.manufacturer_data.m_state:"COUNTRY":$v.manufacturer_data.m_country} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):</b>
+    {assign var="oManufacturer" value=$v.oOrderGroup->getManufacturerEntity()}
+<b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$oManufacturer->getField('m_city'):"STATE":$oManufacturer->getField('m_state'):"COUNTRY":$oManufacturer->getField('m_country')} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):</b>
 </td>
 </tr>
 {/if}
@@ -67,8 +68,8 @@
 {/foreach}
 </td>
 {/if}
-<td align="center" nowrap="nowrap">{include file="currency.tpl" value=$product.display_price}</td>
-<td align="center">{$product.amount}</td>
+<td align="center" nowrap="nowrap">{include file="currency.tpl" value=$product.oOrderDetail->getPrice()}</td>
+<td align="center">{$product.oOrderDetail->getAmount()}</td>
 {if $order.has_backordered_status}
     <td align="center">
         {if $v.dc_status eq 'B' || $v.dc_status eq 'G' || $v.dc_status eq 'S'}
@@ -85,7 +86,7 @@
         {/if}
     </td>
 {/if}
-<td align="right" nowrap="nowrap">{math assign="total" equation="amount*price" amount=$product.amount price=$product.display_price}{include file="currency.tpl" value=$total}&nbsp;&nbsp;</td>
+<td align="right" nowrap="nowrap">{include file="currency.tpl" value=$product.oOrderDetail->getTotalProductPrice()}&nbsp;&nbsp;</td>
 </tr>
 {/foreach}
 {if $v.products}
@@ -203,7 +204,7 @@
             {foreach from=$aRetailTrustOrderDetails item=oRetailTrustOrderDetail}
                 {assign var=oRetailTrustProduct value=$oRetailTrustOrderDetail->getOrderDetailProduct()}
                 <tr>
-                <td align="center">{$oRetailTrustProduct->getSKU()}</td>
+                <td align="center">{$oRetailTrustProduct->getSKURetailTrust()}</td>
                 <td><a href="{$oRetailTrustProduct->getProductFrontURL()}" target="_blank" style="FONT-SIZE: 11px">{$oRetailTrustProduct->getProductName()}</a></td>
                 <td align="center">{include file="currency.tpl" value=$oRetailTrustOrderDetail->calculateRetailTrustPricePerProduct()}</td>
                 <td align="center">{$oRetailTrustOrderDetail->getAmount()}</td>

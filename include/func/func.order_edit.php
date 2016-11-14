@@ -686,12 +686,12 @@ function func_oe_update_order($cart, $shipping_groups, $old_products="") {
 
 			}
 
-			$product["extra_data"]["product_options"] = $options;
-			$product["extra_data"]["product_options_alt"] = $options_alt;
-			$product["extra_data"]["taxes"] = $product["taxes"];
-			$product["extra_data"]["display"]["price"] = doubleval($product["display_price"]);
-			$product["extra_data"]["display"]["discounted_price"] = doubleval($product["display_discounted_price"]);
-			$product["extra_data"]["display"]["subtotal"] = doubleval($product["display_subtotal"]);
+			//$product["extra_data"]["product_options"] = $options;
+			//$product["extra_data"]["product_options_alt"] = $options_alt;
+			//$product["extra_data"]["taxes"] = $product["taxes"];
+			//$product["extra_data"]["display"]["price"] = doubleval($product["display_price"]);
+			//$product["extra_data"]["display"]["discounted_price"] = doubleval($product["display_discounted_price"]);
+			//$product["extra_data"]["display"]["subtotal"] = doubleval($product["display_subtotal"]);
 
 
 
@@ -737,7 +737,6 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 			$query_data = array_merge($query_data, $query_data_tmp);
 
 
-
 			if (@$user_account["flag"] != "FS") {
 
 		                $log = "";
@@ -760,12 +759,7 @@ if ($shipping_groups[$product['manufacturerid']]["cb_status"] == "P"){
 
 				$items[] = $products[$pk]['itemid'] = func_array2insert("order_details", $query_data, true);
 			}
-			if (!empty($_POST['retail_trust_to_delete']) && is_array($_POST['retail_trust_to_delete'])) {
-				foreach ($_POST['retail_trust_to_delete'] as $iOrderDetailRetailToDeleate => $value) {
-					$oOrderDetailRetailTrust = new Xcart\OrderDetail(['itemid'=>intval($iOrderDetailRetailToDeleate)]);
-					$oOrderDetailRetailTrust->removeRetailTrust();
-				}
-			}
+			
 
 
 	                if (!isset($back_products[$product['manufacturerid']])) {
@@ -1330,7 +1324,7 @@ function func_update_refunded_groups(&$groups, $orderid, $can_delete_group = fal
 
 //                $query_data['accounting'] = unserialize($query_data['accounting']);
 ###
-		$query_data['accounting'] = func_make_accounting('','', $query_data); // $tbl = refund_groups
+				//$query_data['accounting'] = func_make_accounting('','', $query_data); // $tbl = refund_groups
 ###
 
                 $query_data['shipping_cost_net_orig'] = $max_ship;

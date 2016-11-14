@@ -1696,7 +1696,7 @@ function func_get_default_image($type) {
 # if content hasn't any tags
 #
 function func_eol2br($content) {
-	return ($content == strip_tags($content)) ? str_replace("\n", "<br />", $content) : $content;
+	return ($content == strip_tags($content)) ? nl2br($content) : $content;
 }
 
 #
@@ -3592,59 +3592,59 @@ function func_backprocess_log($process_id="", $log_text="") {
 
 function func_product_availability($r_avail=false, $price=false, $cost_to_us=false, $eta_date_mm_dd_yyyy=false, $productid=false, $product=false){
 
-        if ($r_avail==false && $price==false && $cost_to_us==false && $eta_date_mm_dd_yyyy==false && $productid==false && $product==false){
-                $availability = "out of stock";
-                return $availability;
-        }
+	if ($r_avail == false && $price == false && $cost_to_us == false && $eta_date_mm_dd_yyyy == false && $productid == false && $product == false) {
+		$availability = "out of stock";
+		return $availability;
+	}
 
-        if (!empty($productid) || (!empty($product) && is_array($product))){
+	if (!empty($productid) || (!empty($product) && is_array($product))) {
 
-                if (!empty($productid)){
+		if (!empty($productid)) {
 
-                        if (function_exists('func_select_product')) {
-                                x_load("product");
-                        }
+			if (function_exists('func_select_product')) {
+				x_load("product");
+			}
 
-                        $product = func_select_product($productid, '0', 'false');
-                }
+			$product = func_select_product($productid, '0', 'false');
+		}
 
-                if (
+		if (
 			(empty($product) || !is_array($product))
 			||
 			($product["shipping_freight"] == "0.00" && strpos($product["productcode"], "ART-") === false)
-		){
-                        $availability = "out of stock";
-                        return $availability;
-                }
+		) {
+			$availability = "out of stock";
+			return $availability;
+		}
 
-                $r_avail = $product["r_avail"];
-                $price = $product["price"];
-                $cost_to_us = $product["cost_to_us"];
-                $eta_date_mm_dd_yyyy = $product["eta_date_mm_dd_yyyy"];
-        }
+		$r_avail = $product["r_avail"];
+		$price = $product["price"];
+		$cost_to_us = $product["cost_to_us"];
+		$eta_date_mm_dd_yyyy = $product["eta_date_mm_dd_yyyy"];
+	}
 
-        $availability = "in stock";
+	$availability = "in stock";
 
-        if ($r_avail <= 0){
-                $availability = "out of stock";
-        }
+	if ($r_avail <= 0) {
+		$availability = "out of stock";
+	}
 
-        if ($availability == "in stock" && !empty($eta_date_mm_dd_yyyy)){
+	if ($availability == "in stock" && !empty($eta_date_mm_dd_yyyy)) {
 //                $eta_date_mm_dd_yyyy_arr = explode("/", $eta_date_mm_dd_yyyy);
 //                $eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_arr[0], $eta_date_mm_dd_yyyy_arr[1], $eta_date_mm_dd_yyyy_arr[2]);
-                $current_time = time();
+		$current_time = time();
 
 //                if ($current_time < $eta_date_mm_dd_yyyy_time){
-                if ($current_time < $eta_date_mm_dd_yyyy){
-                        $availability = "out of stock";
-                }
-        }
+		if ($current_time < $eta_date_mm_dd_yyyy) {
+			$availability = "out of stock";
+		}
+	}
 
-        if ($availability == "in stock" && $price != false && $cost_to_us != false){
-                if ($cost_to_us > $price){
-                        $availability = "out of stock";
-                }
-        }
+	if ($availability == "in stock" && $price != false && $cost_to_us != false) {
+		if ($cost_to_us > $price) {
+			$availability = "out of stock";
+		}
+	}
 
         return $availability;
 }
