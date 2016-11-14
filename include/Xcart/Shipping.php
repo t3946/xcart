@@ -58,7 +58,7 @@ class Shipping extends Data
 
     public function getFrontendName() {
 
-        return $this->getField('frontend_name');
+        return (!$this->getField('frontend_name')) ? $this->getName() : $this->getField('frontend_name');
     }
 
     public function isAmazonShipping() {
