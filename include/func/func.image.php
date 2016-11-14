@@ -223,7 +223,7 @@ function func_move_images($type, $config_data) {
 		$error = $error || ($sd === false);
 		if (!$sd || !function_exists($move_func))
 			continue;
-		
+
 		$error = $error || !$move_func($sd, $type, $rec_no, $config_data);
 
 		db_free_result($sd);
@@ -435,7 +435,7 @@ function func_check_image_perms($type, $get_message = true) {
 			return $return;
 		}
 	}
-	
+
 	return true;
 }
 
@@ -705,7 +705,7 @@ function func_echo_dot(&$rec_no, $threshold_dot, $threshold_newline) {
 		echo ".";
 		flush();
 	}
-	
+
 	if ($threshold_newline==1 || ($rec_no % $threshold_newline) == 0) {
 		echo "<br />\n";
 		flush();
@@ -788,13 +788,13 @@ function func_generate_image($id, $from_type = 'P', $to_type = 'T', $allow_not_r
 			}
 
 		} else {
-			$image_filename = ($config['setup_images'][$from_type]['location'] == "DB") ? 
-				func_temp_store($image['image']) : 
+			$image_filename = ($config['setup_images'][$from_type]['location'] == "DB") ?
+				func_temp_store($image['image']) :
 				func_image_dir($from_type).'/'.basename($image['image_path']);
 		}
 	}
 
-	$image_type = func_get_image_ext($image['image_type']);
+	$image_type = func_get_image_ext(mime_content_type($image_filename));
 
 	if (empty($image_filename)) {
 		$top_message = array(
@@ -860,7 +860,7 @@ function func_generate_image($id, $from_type = 'P', $to_type = 'T', $allow_not_r
 
 	} else {
 		#
-		# Prepare data to store image	
+		# Prepare data to store image
 		#
 
 		if ($config['setup_images'][$from_type]['location'] == "DB") {
@@ -869,7 +869,7 @@ function func_generate_image($id, $from_type = 'P', $to_type = 'T', $allow_not_r
 
 		if ($config['setup_images'][$to_type]['location'] == "DB") {
 			#
-			# Store image to DB 
+			# Store image to DB
 			#
 
 			$new_image['image'] = func_temp_read($new_image['file_path'], true);
@@ -934,7 +934,7 @@ function func_generate_image($id, $from_type = 'P', $to_type = 'T', $allow_not_r
 			$new_image['id'] = $id;
 			func_array2insert($to, $new_image);
 		}
-		
+
 		if ($to_type == 'T') {
 			$record_exist = func_query_first_cell('SELECT COUNT(*) FROM ' . $sql_tbl['quick_flags'] . ' WHERE productid=' . $id);
 			if ($record_exist) {
@@ -972,7 +972,7 @@ function func_resize_image($image_filename, $new_x, $new_y, $image_type = 'jpeg'
 		$auto_thumb_error = 'lbl_auto_resize_no_file';
 		return false;
 	}
-	
+
 	if ($image_type == 'jpg') {
 		$image_type = 'jpeg';
 	}
@@ -1000,7 +1000,7 @@ function func_resize_image($image_filename, $new_x, $new_y, $image_type = 'jpeg'
 	if ($proportional && $expansion) {
 		list ($new_x, $new_y) = func_get_proper_dimensions($image_x, $image_y, $new_x, $new_y);
 	}
-	
+
 	$new_x = intval(round($new_x));
 	$new_y = intval(round($new_y));
 
@@ -1055,7 +1055,7 @@ function func_resize_image($image_filename, $new_x, $new_y, $image_type = 'jpeg'
 
 	func_imagedestroy($new_image);
 	func_imagedestroy($image);
-	
+
 	if ($pthumb) {
 		$result = array(
 			'file_path' => $new_file,
@@ -1114,7 +1114,7 @@ function func_set_correct_det_img($image_info, $update = false){
 
 	if (!empty($image_info["image_path"])){
 		$file_name_path = $image_info["image_path"];
-	} 
+	}
 	elseif (!empty($image_info["file_path"])){
 		$file_name_path = $image_info["file_path"];
 	}
@@ -1124,11 +1124,11 @@ function func_set_correct_det_img($image_info, $update = false){
 
 	if ($width >= $config['Appearance']['max_width_det_img']  || $height >= $config['Appearance']['max_height_det_img']){
         	$im = new Imagick();
-                try {
-	               $im->pingImage($file_name_path);
-                } catch (ImagickException $e) {
+		try {
+			$im->pingImage($file_name_path);
+		} catch (ImagickException $e) {
 			throw new Exception(_('Invalid or corrupted image file, please try uploading another image.'));
-                }
+		}
 
                 try {
                /* send thumbnail parameters to Imagick so that libjpeg can resize images
