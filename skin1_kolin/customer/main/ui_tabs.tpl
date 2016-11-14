@@ -109,12 +109,15 @@ function send_question_email_form(){
 </table>
 {/if}
 
-<div id="so_brand" itemprop="name" itemscope="" itemtype="http://schema.org/Brand" content="{$product.cidev_brand_name}">
+<span id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
+    <span itemprop="name" content="{$product.cidev_brand_name}">    </span>
+    <span itemprop="url" content="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/">    </span>
+</span>
 
-</div>
-<div id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
-	<meta itemprop="name" content="{$product.manufacturer}"/>
-</div>
+<span id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
+	<span itemprop="name" content="{$product.manufacturer}">
+	</span>
+</span>
 
 {if $cidev_mpn ne ""}
 <meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
