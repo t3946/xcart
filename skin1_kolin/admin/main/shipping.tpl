@@ -105,6 +105,7 @@ function expand_all(flag) {
 <table cellpadding="2" cellspacing="1" width="100%">
 <tr class="TableHead">
 	<td>{$lng.lbl_shipping_method}</td>
+	<td>{$lng.lbl_shipping_method_front_end_name}</td>
 	<td>{$lng.lbl_delivery_time}</td>
 	<td>{$lng.lbl_destination}</td>
 	<td>{$lng.lbl_service_code}</td>
@@ -122,6 +123,7 @@ function expand_all(flag) {
 	<input type="hidden" name="data[{$s.shippingid}][is_new]" value="" />
 	<input type="text" name="data[{$s.shippingid}][shipping]" value="{$s.shipping|escape}" />
 	</td>
+	<td><input type="text" name="data[{$s.shippingid}][shipping_frontend_name]" value="{$s.front_end_name}" /></td>
 	<td align="center"><input type="text" name="data[{$s.shippingid}][shipping_time]" size="8" value="{$s.shipping_time}" /></td>
 	<td align="center"><select name="data[{$s.shippingid}][destination]">
 	<option value="L"{if $s.destination eq "L"} selected="selected"{/if}>{$lng.lbl_national}</option>
