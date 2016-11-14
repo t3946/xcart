@@ -2315,7 +2315,7 @@ $oOrder = Xcart\Order::model(['orderid' => $orderid]);
 $smarty->assign("oOrder", $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 
-$oShippings = new Xcart\Shippings();
+$oShippings = new Xcart\Shipping();
 $aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');
 $aAmazonShippings = [];
 

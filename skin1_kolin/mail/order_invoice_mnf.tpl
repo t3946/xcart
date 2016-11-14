@@ -65,7 +65,7 @@
 {foreach from=$order.shipping_groups item=v key=k}
 {if $k eq $manufacturerid}
 {if $show_shipping eq 'Y'}
-{$lng.lbl_delivery|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space} {$v.shipping|trademark:""}
+{$lng.lbl_delivery|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space} {$v.frontend_name|default:$v.shipping|trademark:""}
 
 {/if}
 {section name=prod_num loop=$v.products}
