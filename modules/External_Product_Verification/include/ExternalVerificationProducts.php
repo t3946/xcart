@@ -83,7 +83,7 @@ class ExternalVerificationProducts extends Data
                 }
             } else {
                 $oEtalonImage = ExternalVerificationProductsQueue::model(['productid' => $this->getProductId()]);
-                $this->sAsin = implode(',', $oEtalonImage->getAsin());
+                $this->sAsin = $oEtalonImage->getAsin();
             }
         }
         return $this->sAsin;
