@@ -38,12 +38,17 @@ vim: set ts=2 sw=2 sts=2 et:
 	<meta itemprop="name" content="S3 Stores Inc."/>
 </div>
 
-<div id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
-	<meta itemprop="name" content="{$product.cidev_brand_name}"/>
-</div> 
-<div id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
-	<meta itemprop="name" content="{$product.manufacturer}"/>
-</div>
+{assign var="oStorefront" value=$oProduct->getStoreFront()}
+
+<span id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
+    <span itemprop="name" content="{$product.cidev_brand_name}">    </span>
+    <span itemprop="url" content="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/">    </span>
+</span>
+
+<span id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
+	<span itemprop="name" content="{$product.manufacturer}">
+	</span>
+</span>
 
 {if $cidev_mpn ne ""}
 <meta id="so_mpn" itemprop="mpn" content="{$cidev_mpn}"/>
