@@ -61,7 +61,7 @@
                             >
                                 {if (is_array($Asin))}
                                     {foreach from=$Asin item=sAsin}
-                                        <a target="_blank" href="{$oVerificatorResult->getAmazonProductLink()}">{$sAsin}</a>
+                                        <a target="_blank" href="https://www.amazon.com/dp/{$sAsin}/">{$sAsin}</a>
                                     {/foreach}
                                 {else}
                                     <a target="_blank" href="{$oVerificatorResult->getAmazonProductLink()}">{$Asin}</a>
