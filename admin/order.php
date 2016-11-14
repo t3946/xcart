@@ -692,48 +692,51 @@ if ($REQUEST_METHOD == "POST") {
 
 if ($mode == "submit_message" && !empty($notes) && !empty($orderid)) {
 
-        $section_name = "main_order_tabs-logs";
-        x_session_save("section_name");
+	$section_name = "main_order_tabs-logs";
+	x_session_save("section_name");
 
-	$order_prefix = func_query_first_cell("SELECT order_prefix FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-        $notes_arr = explode("\n", $notes);
-	$first_line = trim($notes_arr[0]);
-        $subj = $order_prefix.$orderid.": ".$first_line;
+	$oOrder = \Xcart\Order::model(['orderid' => $orderid]);
+	$order_prefix = $oOrder->getOrderPrefix();
+
+	if (empty($subject_line)) {
+		$notes_arr = explode("\n", $notes);
+		$first_line = trim($notes_arr[0]);
+	}
+	else $first_line = $subject_line;
+	$subj = $order_prefix . $orderid . " note: " . $first_line;
 
 	$notes_length = strlen($notes);
 
-	if ($notes_length > 260){
+	if ($notes_length > 260) {
 		$log1 = "'Post to OTRS only' at 'Important messages'";
 		$date_sent = date("j-M-Y_H-i-s");
-//		$log2 = "<a href='https://mail.google.com/mail/u/0/?rld=1#search/".$order_prefix.$orderid."+AND+".$date_sent."' target='_blank' style='color: #1411FF;'>Link to Gmail message:".$date_sent."</a>";
 
-		if (empty($ticket_resolver_link)){
-			$ticket_resolver_link = func_query_first_cell("SELECT otrs_ticket FROM $sql_tbl[orders] WHERE orderid='$orderid'");
+		if (empty($ticket_resolver_link)) {
+			$ticket_resolver_link = $oOrder->getField('otrs_ticket');
 		}
 
-		if (!empty($ticket_resolver_link)){
-			$log2 = "Message was posted to <a href='".$ticket_resolver_link."' target='_blank' style='color: #1411FF;'>OTRS ticket system</a>";
+		if (!empty($ticket_resolver_link)) {
+			$log2 = "Message was posted to <a href='" . $ticket_resolver_link . "' target='_blank' style='color: #1411FF;'>OTRS ticket system</a>";
 		} else {
 			$log2 = "Message was posted to OTRS ticket system";
 		}
 
-		$subj .= " (posted on ".$date_sent.")";
+		$subj .= " (posted on " . $date_sent . ")";
 	} else {
 		$log1 = "'Post message' at 'Important messages'";
-        	$log2 = $notes;
+		$log2 = "<b>$subject_line</b><br/>".$notes;
 	}
 
-       	func_log_order($orderid, 'X', $log1, $login);
-        func_log_order($orderid, 'S', $log2, $login);
+	func_log_order($orderid, 'X', $log1, $login);
+	func_log_order($orderid, 'S', $log2, $login);
 
-	$body = $notes."\n\nposted by ".$userfullname." (".$login.")";
-	$from = $userfullname."<helpdesk@s3stores.com>";
+	$body = $notes . "\n\nposted by " . $userfullname . " (" . $login . ")";
+	$from = $userfullname . "<helpdesk@s3stores.com>";
 	$to = "orders@s3stores.com";
-//	$to = "xcartmaster@gmail.com";
 
 	func_send_simple_mail($to, $subj, $body, $from);
 
-        func_header_location("order.php?orderid=".$orderid);
+	func_header_location("order.php?orderid=" . $orderid);
 }
 
 if ($mode == "order_edit_apply") {

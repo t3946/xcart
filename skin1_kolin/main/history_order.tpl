@@ -235,6 +235,11 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
             <input type="hidden" name="send_email" value="N"/>
             <input type="hidden" name="orderid" value="{$order.orderid}"/>
             {$cidev_firstname} ({$login}) notes:<br/>
+            <div>
+                <p><b>Subject line:</b></p>
+                <input style="width: 100%;" type="text" name="subject_line"/>
+            </div>
+            <p><b>Message body:</b></p>
             <textarea id="notes" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br/>
 
             {* <input type="submit" value="Post message" id="post_message" /> *}
