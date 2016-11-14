@@ -38,6 +38,8 @@ vim: set ts=2 sw=2 sts=2 et:
 	<meta itemprop="name" content="S3 Stores Inc."/>
 </div>
 
+{assign var="oStorefront" value=$oProduct->getStoreFront()}
+
 <span id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
     <span itemprop="name" content="{$product.cidev_brand_name}">    </span>
     <span itemprop="url" content="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/">    </span>
