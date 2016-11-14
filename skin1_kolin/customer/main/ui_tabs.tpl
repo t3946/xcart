@@ -109,8 +109,8 @@ function send_question_email_form(){
 </table>
 {/if}
 
-<div id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
-	<meta itemprop="name" content="{$product.cidev_brand_name}"/>
+<div id="so_brand" itemprop="name" itemscope="" itemtype="http://schema.org/Brand" content="{$product.cidev_brand_name}">
+
 </div>
 <div id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
 	<meta itemprop="name" content="{$product.manufacturer}"/>
