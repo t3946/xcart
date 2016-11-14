@@ -85,7 +85,7 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 	if ($current_carrier == "UPS") {
 		global $xcart_dir;
 		$iShippingId = 1;
-		$classShipping = new Xcart\Shippings();
+		$classShipping = new Xcart\Shipping();
 		$total_weight_shipping = $classShipping->getProductsShippingWeight($iShippingId, $products);
 		$total_weight_shipping_valid = $total_weight_shipping;
 		$total_weight_shipping_with_free = $total_weight_shipping;
@@ -624,9 +624,7 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 								} else {
 									$weight = $real_weight;
 								}*/
-								$classShipping = new Xcart\Shippings();
-								$weight = $classShipping->getShippingWeight($v_p['productid'], $v['shippingid'], $v_p["amount"], $v_p, $v);
-								unset ($classShipping);
+								$weight = Xcart\Shipping::getShippingWeight($v_p['productid'], $v['shippingid'], $v_p["amount"], $v_p, $v);
 
 								$total_weight += $weight;
 							}

@@ -713,21 +713,22 @@ Cost to us accurate
   <td align="center">{if !$static}<input type="checkbox" value="Y" name="items[{$product.itemid}][delete]" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}</td>
 </tr>
 {/foreach}
+    {assign var="oOrderGroup" value=$v.oOrderGroup}
+    {assign var="oOrderShipping" value= $oOrderGroup->getShippingInstance()}
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
   <td nowrap="nowrap">
     <div style="margin-bottom: 5px;">Carrier:
-    {if $v.shipping_code ne ""}
-      {$v.shipping_code}
-    {else}Flat rate
-    {/if}</div>
+    {if $v.shipping_code ne ""}{$v.shipping_code}{else}Flat rate{/if}</div>
     <div>Method:
     {if !$static}
-      <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}" {* style="width: 80%;" *}
+      <input type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}"
       {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />{else}{$v.shipping}{/if}
+        {if ($v.shipping != $oOrderShipping->getName())}
+            <div style="margin-left: 50px;">{$oOrderShipping->getName()}</div>
+        {/if}
     </div>
   </td>
-  {assign var="oOrderGroup" value=$v.oOrderGroup}
-  {assign var="oOrderShipping" value= $oOrderGroup->getShippingInstance()}
+
   {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
   {if (!empty($oOrderGroup) && $oOrder->isOrderAmazon() == false && $oOrder->getField('fraud_status') == 'C' &&
       ($oOrderGroup->getOrderGroupStatusCB() == 'P' ||

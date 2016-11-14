@@ -1,27 +1,22 @@
 <?php
 namespace Xcart;
 
-class Shipping extends CloneData
+class Shipping extends Data
 {
     public function __construct($iId = null)
     {
-        $this->sPrimaryTable = "shipping";
-        $this->sPrimaryKeyFiled = "shippingid";
+        $this->sPrimaryTable = 'shipping';
+        $this->aPrimaryKeys = ['shippingid'];
         parent::__construct($iId);
     }
 
-    public function getShippingInfo($iShippingId) {
-        return func_query("SELECT * FROM ".self::$sql_tbl['shipping']." WHERE shippingid = $iShippingId");
-    }
 
-    public function getShippingWeight($iProductId, $iShippingId, $iAmount = 1, $aProduct = array(), $aShipping = array(), $bUseShippingParametrs = true) {
+    public static function getShippingWeight($iProductId, $iShippingId, $iAmount = 1, $aProduct = array(), $aShipping = array(), $bUseShippingParametrs = true) {
         if (empty($aProduct)) {
-            $classProducts = new Products();
-            $aProduct = $classProducts->getProductInfo($iProductId);
-            unset ($classProducts);
+            $aProduct = Product::model(['productid' => $iProductId])->getFields();
         }
         if (empty($aShipping)) {
-            $aShipping = $this->getShippingInfo($iShippingId);
+            $aShipping = self::model(['shippingid' => $iShippingId])->getFields();
         }
 
         if (empty($aProduct["weight"]) || floatval($aProduct["weight"]) == 0) {
@@ -50,7 +45,7 @@ class Shipping extends CloneData
         $weight = 0;
         if (!empty($aProducts)) {
             foreach ($aProducts as $aProduct) {
-                $weight += $this->getShippingWeight($aProduct['productid'], $iShippingId, $aProduct['amount'], $aProduct, $aShipping);
+                $weight += self::getShippingWeight($aProduct['productid'], $iShippingId, $aProduct['amount'], $aProduct, $aShipping);
             }
         }
         return $weight;
@@ -61,11 +56,21 @@ class Shipping extends CloneData
         return $this->getField('shipping');
     }
 
+    public function getFrontendName() {
+
+        return (!$this->getField('frontend_name')) ? $this->getName() : $this->getField('frontend_name');
+    }
+
     public function isAmazonShipping() {
         $bResult = false;
         if ($this->getField('code')=='Amazon')
             $bResult = true;
         return $bResult;
+    }
+
+    public function getShippingMethodsByCode($sCode)
+    {
+        return Shipping::model()->findAll(SQLBuilder::getInstance()->addCondition("code = '$sCode'"));
     }
 
 }

@@ -26,7 +26,7 @@
 {/if}
 
 {if $order.refund_groups[$manufacturerid].shipping && $order.refund_groups[$manufacturerid].shipping_gross gt 0}
-{$lng.lbl_adjustment_to} {$order.refund_groups[$manufacturerid].shipping}: ({include file="currency.tpl" value=$order.refund_groups[$manufacturerid].shipping_gross})
+{$lng.lbl_adjustment_to} {$order.refund_groups[$manufacturerid].frontend_name|default:$order.refund_groups[$manufacturerid].shipping}: ({include file="currency.tpl" value=$order.refund_groups[$manufacturerid].shipping_gross})
 {/if}
 
 {$lng.lbl_total_refund_to} {$order.shipping_groups[$manufacturerid].acc_payment_method}: ({include file="currency.tpl" value=$order.refund_groups[$manufacturerid].total_gross})

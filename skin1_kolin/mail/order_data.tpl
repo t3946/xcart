@@ -4,7 +4,7 @@
 
 {foreach from=$order.shipping_groups item=v key=k name="shgrform"}
 	{assign var="oManufacturer" value=$v.oOrderGroup->getManufacturerEntity()}
-{if $products}{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$oManufacturer->getField('m_city'):"STATE":$oManufacturer->getField('m_state'):"COUNTRY":$oManufacturer->getField('m_country')} {$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):{/if}
+{if $products}{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery_from_by|substitute:"CITY":$oManufacturer->getField('m_city'):"STATE":$oManufacturer->getField('m_state'):"COUNTRY":$oManufacturer->getField('m_country')} {$v.frontend_name|default:$v.shipping|trademark:''}, {include file="currency.tpl" value=$v.shipping_cost.gross|default:"0"}):{/if}
 
 {section name=prod_num loop=$products}
 {$lng.lbl_sku|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$products[prod_num].productcode}
@@ -108,7 +108,7 @@
 {$lng.lbl_payment_method|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{$order.payment_method}
 {$lng.lbl_delivery|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}
 {foreach from=$order.shipping_groups item=v key=k}
-{$v.shipping|trademark:""}
+{$v.frontend_name|default:$v.shipping|trademark:""}
 {/foreach}
 {$lng.lbl_subtotal|truncate:$max_truncate:"...":true|cat:":"|string_format:$max_space}{include file="currency.tpl" value=$order.display_subtotal}
 

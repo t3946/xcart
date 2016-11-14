@@ -17,7 +17,7 @@
 			<td valign="top">
 <font style="FONT-SIZE: 28px"><b style="text-transform: uppercase;">{$lng.lbl_invoice}</b></font>
 <br /><br />
-<b>{$lng.lbl_date}:</b> {$order.date|date_format:$config.Appearance.datetime_format}<br /><b>{$lng.lbl_order_id}:</b> {$order.order_prefix}{$order.orderid}<br />{if $show_shipping eq 'Y'}<b>{$lng.lbl_delivery}:</b><br />{foreach from=$order.shipping_groups item=v key=k}{if $k eq $manufacturerid}{$v.shipping|trademark:''}{/if}{/foreach}{else}<br />{/if}<br /><br /><br /><br /><br />
+<b>{$lng.lbl_date}:</b> {$order.date|date_format:$config.Appearance.datetime_format}<br /><b>{$lng.lbl_order_id}:</b> {$order.order_prefix}{$order.orderid}<br />{if $show_shipping eq 'Y'}<b>{$lng.lbl_delivery}:</b><br />{foreach from=$order.shipping_groups item=v key=k}{if $k eq $manufacturerid}{$v.frontend_name|default:$v.shipping|trademark:''}{/if}{/foreach}{else}<br />{/if}<br /><br /><br /><br /><br />
 			</td>
 			<td valign="bottom" align="right">
 <b>{$config.Company.operating_company_name}</b><br />
@@ -240,7 +240,7 @@
 {if $show_shipping eq 'Y'}
 <tr>
 <td colspan="3">
-<b>{$v.group_name} Items (delivery by {$v.shipping|trademark:''}):</b>
+<b>{$v.group_name} Items (delivery by {$v.frontend_name|default:$v.shipping|trademark:''}):</b>
 </td>
 </tr>
 {/if}

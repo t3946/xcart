@@ -5,7 +5,7 @@
 <table cellspacing="0" cellpadding="0" width="100%">
 {foreach from=$order.shipping_groups item=v key=k}
 <tr>
-	<td colspan="2" valign="top" class="ProductTitle" align="center"><b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery}: {$v.shipping}, {include file="currency.tpl" value=$v.shipping_cost.gross})</b><br />
+	<td colspan="2" valign="top" class="ProductTitle" align="center"><b>{$v.group_name} {$lng.lbl_items} ({$lng.lbl_delivery}: {$v.shipping} ({$v.frontend_name}), {include file="currency.tpl" value=$v.shipping_cost.gross})</b><br />
 </td>
 </tr>
 <tr>
