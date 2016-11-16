@@ -505,8 +505,8 @@ Use my trucking account #
 	        {if $userinfo.s_country ne "US" && $cart.confirmation_of_responsibility ne "Y"}
 		{literal}
 
-	                document.getElementById("continue_btn_able").style.display = 'none';
-        	        document.getElementById("continue_btn_disable").style.display = '';
+	                document.getElementById("continue_btn_able").style.display = '';
+        	        document.getElementById("continue_btn_disable").style.display = 'none';
 			$("#id_confirmation_of_responsibility_checkbox").focus();
 
 		{/literal}
