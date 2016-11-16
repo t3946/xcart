@@ -164,6 +164,7 @@ function expand_all(flag) {
 <table cellpadding="2" cellspacing="1" width="100%">
 <tr class="TableHead">
 	<td>{$lng.lbl_shipping_method}</td>
+	<td>{$lng.lbl_shipping_method_front_end_name}</td>
 	<td>{$lng.lbl_delivery_time}</td>
 	<td>{$lng.lbl_destination}</td>
 	<td nowrap="nowrap">{$lng.lbl_weight_limit} ({$config.General.weight_symbol})</td>
@@ -179,6 +180,7 @@ function expand_all(flag) {
 
 <tr{cycle values=", class='TableSubHead'"}>
 	<td>{$s.shipping|trademark:$insert_trademark}</td>
+	<td><input type="text" name="data[{$s.shippingid}][frontend_name]" size="24" value="{$s.frontend_name}" /></td>
 	<td align="center"><input type="text" name="data[{$s.shippingid}][shipping_time]" size="8" value="{$s.shipping_time}" /></td>
 	<td align="center">{if $s.destination eq "L"}{$lng.lbl_national}{else}{$lng.lbl_international}{/if}</td>
 	<td align="center" nowrap="nowrap"><input type="text" size="8" name="data[{$s.shippingid}][weight_min]" value="{$s.weight_min|default:0|formatprice}" /> - <input type="text" size="8" name="data[{$s.shippingid}][weight_limit]" value="{$s.weight_limit|formatprice}" /></td>
