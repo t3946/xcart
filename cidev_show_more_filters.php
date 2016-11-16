@@ -27,6 +27,15 @@ if (!empty($p_ids)) {
     $oFilter->setPriceRange(reset($aPriceRange));
 }
 
+if (!empty($b_ids)) {
+    $aBrandSelected = explode(',', $b_ids);
+    if (!empty($aBrandSelected)) {
+        $oFilter->setBrandSelected(
+            \Xcart\Brand::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('brandid IN (' . implode(',', $aBrandSelected) . ')'))
+        );
+    }
+}
+
 $aFilterValues = null;
 
 if ($filter == "brand") {

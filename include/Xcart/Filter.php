@@ -5,6 +5,9 @@ namespace Xcart;
 
 class Filter extends Data
 {
+    /**
+     * @var FilterValue[]
+     */
     private $aFilterValues = null;
     /**
      * @var StoreFront
@@ -18,6 +21,10 @@ class Filter extends Data
      * @var FilterValue[]
      */
     private $aFilterValuesSelected = null;
+    /**
+     * @var Brand[]
+     */
+    private $aBrandSelected = null;
 
     private $aValueFound = null;
 
@@ -65,6 +72,12 @@ class Filter extends Data
         return $this;
     }
 
+    public function setBrandSelected($aBrandSelected)
+    {
+        $this->aBrandSelected = $aBrandSelected;
+        return $this;
+    }
+
     public function getFilterValuesSelected()
     {
         return $this->aFilterValuesSelected;
@@ -86,8 +99,8 @@ class Filter extends Data
                 INNER JOIN xcart_cidev_filters f ON f.f_id = fv.f_id
 SQL;
             }
-            $aResult[] = $sFilterSQL . " WHERE xc1.fv_id IN (" . implode(',', $aFVId) . ")";
-            $aResult[] = " having count(xc1 . productid) = " . count($this->aFilterValuesSelected);
+            $aResult[] = $sFilterSQL . " AND xc1.fv_id IN (" . implode(',', $aFVId) . ")";
+            $aResult[] = " having count(p . productid) = " . count($this->aFilterValuesSelected);
         }
         return $aResult;
     }
@@ -96,9 +109,23 @@ SQL;
     {
         $sSQLprice = '';
         if (!empty($this->fPriceMin) && !empty($this->fPriceMax)) {
-            $sSQLprice = " AND cidev_get_XCART_price(p.productid, 0, 'xcart', 0) between $this->fPriceMin and $this->fPriceMax ";
+            $fPriceMinMinus = $this->fPriceMin + 0.01;
+            $sSQLprice = " AND cidev_get_XCART_price(p.productid, 0, 'xcart', 0) BETWEEN $fPriceMinMinus and $this->fPriceMax ";
         }
         return $sSQLprice;
+    }
+
+    private function getBrandQueryCondition()
+    {
+        $sBrand = null;
+        if (!empty($this->aBrandSelected)) {
+            $aBId = null;
+            foreach ($this->aBrandSelected as $oBrand) {
+                $aBId[] = $oBrand->getBrandId();
+            }
+            $sBrand = " AND p.brandid IN (".implode(',', $aBId).")";
+        }
+        return $sBrand;
     }
 
     protected function getFilteredProductsQuery()
@@ -106,17 +133,17 @@ SQL;
         list($sSQLfv, $sSQLfv2) = $this->getFilterQueryCondition();
         $sSQL = <<<SQL
 SELECT p.*
-FROM xcart_cidev_filter_values    xc
-     INNER JOIN xcart_cidev_filter_products xc1 ON xc1.fv_id = xc.fv_id
-     INNER JOIN xcart_products_categories pc ON xc1.productid = pc.productid
-     INNER JOIN xcart_products p ON p.productid = xc1.productid AND forsale ='Y' {$this->getPriceQueryCondition()}
-     INNER JOIN xcart_pc_options po ON po.storefrontid = {$this->oStorefront->getStoreFrontId()} AND ((po.disable_AC_products = 'N')
-                                                            OR (    po.disable_AC_products = 'Y' AND p.pc_classify_status != 'AC'))
-     INNER JOIN xcart_categories c ON pc.categoryid = c.categoryid AND c.categoryid_path like '{$this->oCategory->getPath()}%' AND c.storefrontid = {$this->oStorefront->getStoreFrontId()}                                                        
-     {$sSQLfv}
-     GROUP BY xc1.productid
-     {$sSQLfv2} 
-
+      FROM xcart_products p
+           INNER JOIN xcart_products_categories pc ON p.productid = pc.productid
+           INNER JOIN xcart_pc_options po ON po.storefrontid = {$this->oStorefront->getStoreFrontId()} AND 
+                                          ((po.disable_AC_products = 'N') OR (po.disable_AC_products = 'Y' AND p.pc_classify_status != 'AC'))
+           INNER JOIN xcart_categories c ON pc.categoryid = c.categoryid AND c.categoryid_path LIKE '{$this->oCategory->getPath()}' AND c.storefrontid = {$this->oStorefront->getStoreFrontId()}
+           LEFT JOIN xcart_cidev_filter_products xc1 ON xc1.productid = p.productid 
+           LEFT JOIN  xcart_cidev_filter_values xc ON xc.fv_id = xc1.fv_id
+      WHERE forsale = 'Y' {$this->getPriceQueryCondition()} {$this->getBrandQueryCondition()}
+      {$sSQLfv}
+      GROUP BY p.productid
+      {$sSQLfv2}
 SQL;
     return $sSQL;
     }
@@ -156,6 +183,7 @@ SELECT xb.brandid, xb.brand, count(1) as cnt FROM ({$this->getFilteredProductsQu
      GROUP BY xb.brandid 
      ORDER BY xb.brand
 SQL;
+            echo $sSQL;
             $aResults = SQLBuilder::getInstance()->setQuery($sSQL)->query()->getQueryResult();
             if (!empty($aResults)) {
                 foreach ($aResults as $aResult) {
