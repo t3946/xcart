@@ -101,7 +101,7 @@ SQL;
         return $sSQLprice;
     }
 
-    public function getFilteredProductsQuery()
+    protected function getFilteredProductsQuery()
     {
         list($sSQLfv, $sSQLfv2) = $this->getFilterQueryCondition();
         $sSQL = <<<SQL

@@ -77,45 +77,6 @@ if ($top_btn == "Y"){
 	func_header_location($redirect_url);
 
 }
-###
-##
-#
-
-#
-##
-###
-/*if ($mode == "notify" && !empty($productid) && !empty($notify_email) && !empty($cat)){
-        $is_in_table = func_query_first_cell("SELECT COUNT(sent) FROM $sql_tbl[notify_when_in_stock] WHERE email='$notify_email' AND sent='N' AND productid='$productid' AND storefrontid='$current_storefront'");
-		x_session_save('notify_email');
-        if (empty($is_in_table)){
-
-                $notify_when_in_stock[$productid] = "Y";
-                x_session_save('notify_when_in_stock');
-
-
-                db_query("INSERT INTO $sql_tbl[notify_when_in_stock] (productid, email, date, storefrontid) VALUES ('$productid', '$notify_email', '".time()."','$current_storefront')");
-		$top_message["content"] = 'Thank you! You will be notified when the product is in stock.';
-                $top_message["type"] = "I";
-        } else {
-                $top_message["content"] = 'You already signed up for this notification.';
-                $top_message["type"] = "E";
-        }
-
-	if (!empty($redirect_to_notify_url)){
-		$clean_url_link = $redirect_to_notify_url;
-	} else {
-	        $clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='C' AND resource_id='$cat'");
-	}
-
-	if (!empty($page)){
-		$clean_url_link .= "&page=".$page;
-	}
-
-        func_header_location($clean_url_link);
-}*/
-###
-##
-#
 
 if (
     $cat > 0
@@ -176,10 +137,6 @@ if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
 	$e_search_data["substring"] = str_replace("&", " ", $e_search_data["substring"]);
 	$e_search_data["orig_substring"] = $e_search_data["substring"];
 
-//func_print_r($_POST);
-//func_print_r($e_search_data["substring"]);
-//die();
-
 	x_session_save("e_search_data");
 
         $redirect_substring = str_replace(array(' ','#',':', '&'), '-', $e_search_data["substring"]);
@@ -187,15 +144,6 @@ if ($REQUEST_METHOD == 'POST' && $e_mode == "e_search"){
 
         func_header_location("/keyword/".$redirect_substring."/?mode_search=Y");
 
-
-	/*
-        if (!empty($e_current_url) && !empty($cat)){
-            func_header_location($e_current_url);
-        } else {
-    //		func_header_location("home.php");
-            func_header_location("/");
-        }
-    */
 }
 
 
@@ -213,34 +161,17 @@ if (strpos($_SERVER["QUERY_STRING"], "request_uri=") !== false){
 
         $smarty->assign("action_notify_url", $action_notify_url);
 }
-###
-##
-#
 
-//func_print_r($action_notify_url);
-
-//func_print_r($_POST, $_GET, $e_search_data);
-//die();
-
-//if ($e_mode == "e_search" && is_array($e_search_data) && !empty($e_search_data["substring"])){
-
-#
-##
 if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 
         if ($cat != $e_search_data["current_categoryid"] && !empty($e_search_data["substring"])){
-//                $e_search_data_previous_substring = $e_search_data["substring"];
-//                $smarty->assign("e_search_data_previous_substring", $e_search_data_previous_substring);
 
 		if (empty($mode_search)) {
 			$e_search_data = "";
 		}
         }
 
-//        $e_search_data["current_categoryid"] = $cat;
 }
-##
-#
 
 if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 
@@ -308,7 +239,6 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 				$keyword_subcategories[$v["root_catid"]]["orderby"] = $keyword_subcategories[$v["root_catid"]]["count"];
 			}
 
-//			$keyword_subcategories = my_array_sort($keyword_subcategories, "category");
 			usort($keyword_subcategories, 'func_sort_arr_by_orderby_desc');
 
 			$smarty->assign('keyword_subcategories', $keyword_subcategories);
@@ -336,13 +266,10 @@ if (!empty($keyphrase)) {
     include $xcart_dir . '/include/search_categories.php';
 }
 
-/*if ($active_modules["Bestsellers"])
-	include $xcart_dir."/modules/Bestsellers/bestsellers.php";
-*/
+
 
 if (!empty($current_category) and is_array($current_category["category_location"])) {
 	foreach ($current_category["category_location"] as $k => $v) {
-//		$v[1] .= '&path='.$k;
 		$location[] = $v;
 	}
 }
@@ -356,13 +283,6 @@ if (!empty($current_category) && is_array($location)) {
 	$smarty->assign('current_category', $current_category);
 }
 
-/*if (!empty($active_modules["Special_Offers"])) {
-	include $xcart_dir."/modules/Special_Offers/category_offers.php";
-}*/
-
-#
-##
-###
 $tmp_count_location = count($location);
 if (!empty($current_category) && is_array($location) && (empty($page) || $page == "1") ) {
         $counter_location = 0;
@@ -373,67 +293,23 @@ if (!empty($current_category) && is_array($location) && (empty($page) || $page =
                 }
         }
 }
-###
-##
-#
 
-#
-##
-###
 if ((empty($cat) || $cat=="0") && (empty($page) || $page == "1")){
         include './newproducts.php';
 }
-###
-##
-#
-
-#
-## Filter
-###
-if (empty($cat) || $cat=="0"){
-	x_session_register("sorted_filter_values_id");
-	x_session_register("filter_selected_brandids");
-	x_session_register("filter_prices");
-        $sorted_filter_values_id = "";
-        $filter_selected_brandids = "";
-        $filter_prices = "";
-        x_session_save("filter_prices");
-        x_session_save("filter_selected_brandids");
-        x_session_save("sorted_filter_values_id");
-
-        $filter_min_price_selected = "";
-        $filter_max_price_selected = "";
-        x_session_save("filter_min_price_selected");
-        x_session_save("filter_max_price_selected");
-}
-###
-##
-#
 
 #
 ## Brands
 ###
 if ($config["Brands"]["enable_advanced_brands_block"] == "Y" && (empty($cat) || $cat=="0")){
 
-/*	$menu_brands_query = "Select 
-        B.brandid, B.brand, COUNT(distinct P.productid) as count
-from xcart_orders O
-        left join xcart_order_details OD ON OD.orderid = O.orderid
-        inner join xcart_products P ON P.productid = OD.productid and P.forsale = 'Y'
-        inner join xcart_products_sf PS ON PS.productid = P.productid and PS.sfid = '$current_storefront'
-        left join xcart_brands B ON B.brandid = P.brandid
-Where FROM_UNIXTIME(O.date) > DATE_ADD(NOW(), INTERVAL -".$config["Brands"]["depth_in_months_to_calculate_brands_powers"]." MONTH)
-Group By B.brandid
-HAVING COUNT(distinct P.productid)>0
-Order By 3 desc;";
-*/
+
 	$menu_brands_query = "Select
         B.brandid, B.brand, COUNT(distinct P.productid) as count
 from xcart_brands B
         inner join xcart_products P ON P.brandid = B.brandid and P.forsale = 'Y'
         inner join xcart_products_sf PS ON PS.productid = P.productid and PS.sfid = '$current_storefront'
 Group By B.brandid
-/*HAVING COUNT(distinct P.productid)>0*/
 Order By 3 desc;";
 
 	$menu_brands_query = "SELECT xb.brandid, brand
@@ -458,15 +334,8 @@ Order By 3 desc;";
 	$smarty->assign("menu_brands", $menu_brands);
 	$smarty->assign("count_menu_brands", $count_menu_brands);
 
-//func_print_r($menu_brands);
 }
-###
-##
-#
 
-#
-##
-###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 
 	if (!empty($clean_url_data["resource_type"])){
@@ -482,13 +351,7 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 
 	} else func_log_cidev_surf($resource_type);
 }
-###
-##
-#
 
-#
-##
-###
 	if ( !(empty($cat) && empty($keyphrase)) && $cat_with_one_brand_filter != "Y"){
 		$ga_page_name = "category_list";
 	}
@@ -503,9 +366,6 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 	$smarty->assign("notify_email", $notify_email);
 
 	$smarty->assign("ga_page_name", $ga_page_name);
-###
-##
-#
 
 $smarty->assign("e_search_data_orig_substring", $e_search_data_orig_substring);
 
