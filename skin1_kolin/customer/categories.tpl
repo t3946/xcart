@@ -197,9 +197,9 @@
 {if $filter_found_fv_ids ne "" || $filter_selected_and_found_brands ne "" || $filter_prices ne ""}
 {assign var="show_clear_all_button" value="N"}
 
-<!-- igor_async <script type="text/javascript" src="{$SkinDir}/customer/popup_open.js"></script> -->
+<script type="text/javascript" src="{$SkinDir}/customer/popup_open.js"></script>
 
-<form name="f_searchform" action="{$canonical_url}" method="GET">
+<form id="f_searchform" name="f_searchform" action="{$canonical_url}" method="GET">
 <input type="hidden" name="f_mode" value="f_search" id="f_mode" >
 
 <br />
@@ -248,7 +248,9 @@
         <tr>
         <td colspan="2" align="right">
 
-<a class="simple-button" target="_blank" title="Show more" onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&filter=fvalues&f_id={$v.f_id}', '{$v.f_name}'); return false;" href="/cidev_show_more_filters.php?target=show_more&filter=fvalues&f_id={$v.f_id}"><span>Show more</span></a>
+            <a class="simple-button" target="_blank" title="Show more"
+               onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&return={$canonical_url}&filter=fvalues&p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]=Y&categoryid={$current_category.categoryid}&f_id={$v.f_id}{if $fv_ids_arr}&fv_sel={','|implode:$fv_ids_arr}{/if}', '{$v.f_name}'); return false;"
+               href="/cidev_show_more_filters.php?target=show_more&filter=fvalues&f_id={$v.f_id}"><span>Show more</span></a>
 
         </td>
         <tr>
@@ -285,7 +287,7 @@
      <tr>
          <td colspan="2" align="right">
              <a class="simple-button" target="_blank" title="Show more"
-                onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&filter=brand', 'Brand'); return false;"
+                onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&return={$canonical_url}&filter=brand&p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]=Y&categoryid={$current_category.categoryid}&f_id={$v.f_id}{if $fv_ids_arr}&fv_sel={','|implode:$fv_ids_arr}{/if}', 'Brand'); return false;"
                 href="/cidev_show_more_filters.php?target=show_more&filter=brand"><span>Show more</span></a>
          </td>
      <tr>

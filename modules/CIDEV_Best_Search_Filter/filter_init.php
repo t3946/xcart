@@ -476,4 +476,5 @@ include $xcart_dir . "/include/search.php";
         $smarty->assign("filter_min_price_selected", $filter_min_price_selected);
         $smarty->assign("filter_max_price_selected", $filter_max_price_selected);
     }
+    $smarty->assign("fv_ids_arr", $fv_ids_arr);
 
