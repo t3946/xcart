@@ -130,8 +130,8 @@ SELECT xc2.fv_id, fv_name, count(1) as cnt FROM ({$this->getFilteredProductsQuer
      INNER JOIN xcart_cidev_filter_products xc2 ON xc2.productid = pq.productid
      INNER JOIN xcart_cidev_filter_values fv ON fv.fv_id = xc2.fv_id AND fv.f_id = {$this->getFilterId()}
      INNER JOIN xcart_cidev_filters f ON f.f_id = fv.f_id
-     group by fv.fv_id
-     order by fv_name
+     GROUP BY fv.fv_id
+     ORDER BY fv_name
 SQL;
             $aResults = SQLBuilder::getInstance()->setQuery($sSQL)->query()->getQueryResult();
             if (!empty($aResults)) {
@@ -151,11 +151,10 @@ SQL;
         if (is_null($this->aValueFound)) {
 
             $sSQL = <<<SQL
-SELECT xb.brandid, xb.brand, count(1) as cnt FROM (
-     {$this->getFilteredProductsQuery()}) pq                                                          
+SELECT xb.brandid, xb.brand, count(1) as cnt FROM ({$this->getFilteredProductsQuery()}) pq                                                          
      INNER JOIN xcart_brands xb ON pq.brandid = xb.brandid
-     group by xb.brandid 
-     order by xb.brand
+     GROUP BY xb.brandid 
+     ORDER BY xb.brand
 SQL;
             $aResults = SQLBuilder::getInstance()->setQuery($sSQL)->query()->getQueryResult();
             if (!empty($aResults)) {
