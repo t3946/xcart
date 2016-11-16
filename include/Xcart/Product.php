@@ -32,6 +32,7 @@ class Product extends Data
     private $aProductQuestions = null;
 
     private $iAmazonFbaAvail = null;
+    private $iAmazonFbaStockTotal = null;
 
     public function __construct($iId = null)
     {
@@ -357,9 +358,17 @@ class Product extends Data
     public function getAmazonFBAAvail()
     {
         if (is_null($this->iAmazonFbaAvail)) {
-            $this->iAmazonFbaAvail = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_cloned_stock(" . $this->getProductId() . ") as amazon_fba_avail FROM dual"));
+            $this->iAmazonFbaAvail = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_cloned_stock(" . $this->getProductId() . ") as amazon_fba_avail"));
         }
         return $this->iAmazonFbaAvail;
+    }
+
+    public function getAmazonFBAStockTotal()
+    {
+        if (is_null($this->iAmazonFbaStockTotal)) {
+            $this->iAmazonFbaStockTotal = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_stock_total(" . $this->getProductId() . ") as stock_total"));
+        }
+        return $this->iAmazonFbaStockTotal;
     }
 
     public function getAmazonFBAAvailReal()
