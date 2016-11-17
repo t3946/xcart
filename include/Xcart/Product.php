@@ -17,11 +17,11 @@ class Product extends Data
     private $oStoreFront;
     private $aProductVerificationHistoryLast = [];
 
-    private $aImagesD = [];
-    private $aImagesP = [];
-    private $aImagesT = [];
+    private $aImagesD = null;
+    private $aImagesP = null;
+    private $aImagesT = null;
 
-    private $aPricing = [];
+    private $aPricing = null;
 
     private $iAmazonQuantity = null;
     private $fAmazonPrice = null;
@@ -204,20 +204,6 @@ class Product extends Data
         return $this->getField('productid');
     }
 
-    private function fetchImages($type)
-    {
-        $sImagesVar = "aImages" . $type;
-        if (empty($this->$sImagesVar)) {
-            $aImages = func_query("SELECT * FROM " . self::$sql_tbl['images_' . $type] . " WHERE id = " . $this->getProductId() . " ORDER BY orderby ASC");
-            if (!empty($aImages))
-                foreach ($aImages as $aImage) {
-                    $oProductImage = new ProductImage($type);
-                    $oProductImage->fill($aImage);
-                    $var = &$this->$sImagesVar;
-                    $var[] = $oProductImage;
-                }
-        }
-    }
 
     /**
      * @param $type
@@ -226,13 +212,15 @@ class Product extends Data
     public function getImages($type)
     {
         $sImagesVar = "aImages" . $type;
-        $this->fetchImages($type);
+        if (is_null($this->$sImagesVar)) {
+            $this->$sImagesVar = (new ProductImage($type))->findAll(SQLBuilder::getInstance()->addCondition('id = '. $this->getProductId())->addOrderBy('orderby ASC'));
+        }
         return $this->$sImagesVar;
     }
 
     private function fetchPricing()
     {
-        if (empty($this->aPricing)) {
+        if (is_null($this->aPricing)) {
             $aPricing = func_query("SELECT * FROM " . self::$sql_tbl['pricing'] . " WHERE productid = " . $this->getProductId() . " ORDER BY quantity ASC");
             if (!empty($aPricing))
                 foreach ($aPricing as $aPrice) {

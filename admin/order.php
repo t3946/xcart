@@ -360,7 +360,6 @@ if ($REQUEST_METHOD == "GET") {
 
                 if (!empty($order_details_table) && is_array($order_details_table)){
                         foreach($order_details_table as $k => $v){
-							/** @var classProduct $oProduct */
 							$oProduct = Xcart\Product::model(['productid'=>$v['productid']]);
 							    $insert_data3 = array (
                                         'orderid' => $new_orderid,

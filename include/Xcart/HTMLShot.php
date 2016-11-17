@@ -21,8 +21,8 @@ class HTMLShot extends Data
         $aImages = array_merge($aImagesD, $aImagesP);
         $oStoreFront = $oProduct->getStoreFront();
 
-        foreach ($aImages as $oImage) {
-            {
+        if (!empty($aImages)) {
+            foreach ($aImages as $oImage) {
                 if ($oStoreFront->isCDNEnable()) {
                     $oImage->useCDN(true, $oStoreFront->getCDNURL());
                 } else $oImage->useCDN(false);
@@ -33,13 +33,13 @@ class HTMLShot extends Data
                 }
 
             }
-            $oProduct->getPricing();
-            $oStoreFront->setCDNDisable();
-
-            $this->setField('htmlshot', addslashes(serialize($oProduct)))->
-            setField('product_id', $oProduct->getProductId())->
-            setField('order_id', $orderid)->_insert();
         }
+        $oProduct->getPricing();
+        $oStoreFront->setCDNDisable();
+
+        $this->setField('htmlshot', addslashes(serialize($oProduct)))->
+        setField('product_id', $oProduct->getProductId())->
+        setField('order_id', $orderid)->_insert();
     }
 
     public function getId()
@@ -57,10 +57,13 @@ class HTMLShot extends Data
         return $this->getField('product_id');
     }
 
+    /**
+     * @return Product
+     */
     public function getHTMLShot()
     {
         global $xcart_dir;
-        require_once $xcart_dir."/include/classProduct.php";
+        require_once $xcart_dir . "/include/classProduct.php";
         return unserialize($this->getField('htmlshot'));
     }
 
