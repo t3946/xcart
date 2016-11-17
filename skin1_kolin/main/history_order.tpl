@@ -225,8 +225,12 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                  </table>
 </div>
     <div style="position: relative; margin-top: 10px;">
-        <a href="#" onclick="$(this).parent().siblings('#send_note_form_js').toggle(); return false;">
-            <img src="/skin1_kolin/images/noteicon.png"/>
+        <a href="#" onclick="{if $you_have_right_to_change_order}$(this).parent().siblings('#send_note_form_js').toggle();{/if} return false;">
+            {if $you_have_right_to_change_order}
+                <img src="{$ImagesDir}/noteicon.png"/>
+            {else}
+                <img src="{$ImagesDir}/noteicon_disable.png"/>
+            {/if}
         </a>
     </div>
     <div id="send_note_form_js">
