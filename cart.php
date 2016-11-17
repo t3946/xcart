@@ -1068,7 +1068,9 @@ if ($mode == "checkout"){
 		$cart['groups_delivery'] = array();
 		if (!empty($cart['shippingids']))
 			foreach ($cart['shippingids'] as $m_id => $sh_id) {
-				$cart['groups_delivery'][$m_id] = \Xcart\Shipping::model(['shippingid' => $sh_id])->getFrontendName();
+				$oShipping = \Xcart\Shipping::model(['shippingid' => $sh_id]);
+				$cart['groups_delivery'][$m_id] = $oShipping->getFrontendName();
+				$cart['groups_delivery_time'][$m_id] = $oShipping->getField('shipping_time');
 			}
 # END: random:17710_17631 [2009 Mar 26 09:25] 
 		$smarty->assign("shipping_groups", $cart["shipping_groups"]);
