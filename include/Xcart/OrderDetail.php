@@ -146,6 +146,6 @@ class OrderDetail extends Data
         if (!$fCostToUs) {
             $fCostToUs = $this->getOrderDetailProduct()->getProductCostToUs();
         }
-        return $fCostToUs * $this->getAmount();
+        return floatval($fCostToUs * $this->getAmount());
     }
 }

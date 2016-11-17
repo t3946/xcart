@@ -13,6 +13,9 @@
 <meta name="google-site-verification" content="Nux2sodJiVrMIFGY7YfCfZWD2EMhE8OEEMQZPcep-9g" />
 <meta name="google-site-verification" content="vM3-Elmvi0TR9VO_WAvobjwmH4o7PhfppZ9BdKb1PDQ" />
 
+<!-- Pinterest verification META tags-->
+<meta name="p:domain_verify" content="543ab25e760af4e2b3d7bb2ed68e81b2"/>
+
 <!-- Google verification META tags -->
 
 <!-- bench time -->

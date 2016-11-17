@@ -31,6 +31,7 @@
                     {if $aVerificatorResults|@count > 1}
                         {assign var=oCustomer value=$oVerificatorResult->getCustomerEntity()}
                         {assign var=oVerifyDate value=$oVerificatorResult->getValueAsDateTime()}
+                        {assign var=Asin value=$oVerificatorResult->getAsin()}
                         {if $smarty.foreach.ver_rows.iteration == 1}
                             {cycle assign=classVar name=$type values=", class='TableSubHead'"}
                         {/if}
@@ -50,11 +51,21 @@
                                 target="_blank">{/if}{$oCustomer->getCustomerLogin()}</td>
                             <td align="center">{$oVerifyDate->format('d-M-Y<\b\r>H:i')}</td>
                             <td align="center"
-                                    {if $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin()}
-                                        class="question_not_same"
+                                    {if (is_array($aVerificatorResults[0]->getAsin()))}
+                                        {if (!in_array($aVerificatorResults[1]->getAsin(), $aVerificatorResults[0]->getAsin()))}
+                                            class="question_not_same"
+                                        {/if}
+                                    {elseif ($aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin()) }
+                                            class="question_not_same"
                                     {/if}
                             >
-                                {if ($oVerificatorResult->getAsin())}<a target="_blank" href="{$oVerificatorResult->getAmazonProductLink()}">{/if}{$oVerificatorResult->getAsin()}{if ($oVerificatorResult->getAsin())}</a>{/if}
+                                {if (is_array($Asin))}
+                                    {foreach from=$Asin item=sAsin}
+                                        <a target="_blank" href="https://www.amazon.com/dp/{$sAsin}/">{$sAsin}</a>
+                                    {/foreach}
+                                {else}
+                                    <a target="_blank" href="{$oVerificatorResult->getAmazonProductLink()}">{$Asin}</a>
+                                {/if}
                             </td>
                             <td align="center" {if $aVerificatorResults[0]->getProductImage() != $aVerificatorResults[1]->getProductImage()}
                                 class="question_not_same"

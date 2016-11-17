@@ -105,32 +105,34 @@ class SQLBuilder
 
     private function generateSQL()
     {
-        if (!empty($this->aSelect)) {
-            $this->sqlQuery = "SELECT " . implode(',', $this->aSelect);
-        }
-        if (!empty($this->aTables)) {
-            $this->sqlQuery .= " FROM " . implode(',', $this->aTables);
-        }
-        if (!empty($this->aInnerJoinTables)) {
-            foreach ($this->aInnerJoinTables as $aJoin) {
-                $this->sqlQuery .= ' ' . $aJoin['type'] . ' ';
-                $this->sqlQuery .= $aJoin['condition'];
+        if (empty($this->sqlQuery)) {
+            if (!empty($this->aSelect)) {
+                $this->sqlQuery = "SELECT " . implode(',', $this->aSelect);
             }
-        }
-        if (!empty($this->aConditions)) {
-            $this->sqlQuery .= " WHERE " . implode(' AND ', $this->aConditions);
-        }
-        if (!empty($this->aGroups)) {
-            $this->sqlQuery .= " GROUP BY " . implode(',', $this->aGroups);
-        }
-        if (!empty($this->aHaving)) {
-            $this->sqlQuery .= " HAVING " . implode(',', $this->aHaving);
-        }
-        if (!empty($this->aOrders)) {
-            $this->sqlQuery .= " ORDER BY " . implode(',', $this->aOrders);
-        }
-        if (!empty($this->sLimit)) {
-            $this->sqlQuery .= " LIMIT " . $this->sLimit;
+            if (!empty($this->aTables)) {
+                $this->sqlQuery .= " FROM " . implode(',', $this->aTables);
+            }
+            if (!empty($this->aInnerJoinTables)) {
+                foreach ($this->aInnerJoinTables as $aJoin) {
+                    $this->sqlQuery .= ' ' . $aJoin['type'] . ' ';
+                    $this->sqlQuery .= $aJoin['condition'];
+                }
+            }
+            if (!empty($this->aConditions)) {
+                $this->sqlQuery .= " WHERE " . implode(' AND ', $this->aConditions);
+            }
+            if (!empty($this->aGroups)) {
+                $this->sqlQuery .= " GROUP BY " . implode(',', $this->aGroups);
+            }
+            if (!empty($this->aHaving)) {
+                $this->sqlQuery .= " HAVING " . implode(',', $this->aHaving);
+            }
+            if (!empty($this->aOrders)) {
+                $this->sqlQuery .= " ORDER BY " . implode(',', $this->aOrders);
+            }
+            if (!empty($this->sLimit)) {
+                $this->sqlQuery .= " LIMIT " . $this->sLimit;
+            }
         }
     }
 
@@ -162,6 +164,12 @@ class SQLBuilder
         return $this->sqlQuery;
     }
 
+    public function setQuery($sSql)
+    {
+        $this->sqlQuery = $sSql;
+        return $this;
+    }
+
     public function getQueryResult()
     {
         return $this->aSqlQueryResult;
@@ -170,9 +178,9 @@ class SQLBuilder
     public function addFilter($aParams)
     {
         if (!empty($aParams)) {
-            foreach ($aParams as $key=>$value) {
+            foreach ($aParams as $key => $value) {
                 if (is_array($value)) {
-                    $this->addCondition("$key IN('" . implode("','",$value) . "')");
+                    $this->addCondition("$key IN('" . implode("','", $value) . "')");
                 } else {
                     $this->addCondition("$key='" . addslashes($value) . "'");
                 }

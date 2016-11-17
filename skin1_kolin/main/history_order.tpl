@@ -235,6 +235,11 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
             <input type="hidden" name="send_email" value="N"/>
             <input type="hidden" name="orderid" value="{$order.orderid}"/>
             {$cidev_firstname} ({$login}) notes:<br/>
+            <div>
+                <p><b>Subject line:</b></p>
+                <input style="width: 100%;" type="text" name="subject_line"/>
+            </div>
+            <p><b>Message body:</b></p>
             <textarea id="notes" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br/>
 
             {* <input type="submit" value="Post message" id="post_message" /> *}
@@ -927,12 +932,14 @@ $( document ).ready(function() {
 {/literal}
     </script>
 
-{foreach from=$order_manufacturers item=v key=mnf_id}
+{assign var="oOrderGroups" value=$oOrder->getOrderGroups()}
+{foreach from=$oOrderGroups item=oOrderGroup}
+    {assign var="key" value=$oOrderGroup->getManufacturerId()}
+    {assign var="v" value=$order_manufacturers.$key}
 
-
- {assign var=show_to_order_entry_operator value=""}
- {assign var=show_request_availability value=""}
- {assign var=show_dispatch_to_distributor value=""}
+    {assign var=show_to_order_entry_operator value=""}
+    {assign var=show_request_availability value=""}
+    {assign var=show_dispatch_to_distributor value=""}
 
  {if $v.d_availability_must_be_checked eq "Y" && $v.submit_to_operator eq "through_distributor_website"}
 	{if $v.dc_status eq 'T'}
@@ -1182,8 +1189,8 @@ $( document ).ready(function() {
 	<input name="send_email_button" type="button" value="Send (Dispatch to distributor)" onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.manuf_notifyform_{$mnf_id}, 'dispatch_to_distributor_', 'mnf_body', {$mnf_id});" {if $allowed_elements.send_dispatch_to_distributor_btn eq "N"}disabled="disabled"{/if} />{if $allowed_elements.send_dispatch_to_distributor_btn eq "N"}&nbsp;&nbsp;<span style="color: #FF0000;">You are NOT authorized to click this button.</span>{/if}
 
    {/if}
-
-&nbsp;Requested shipping method: <span style="color: red;">{$order.shipping_groups.$mnf_id.shipping|trademark:$insert_trademark}</span>
+{assign var="oShipping" value=$oOrderGroup->getShippingInstance()}
+&nbsp;Requested shipping method: <span style="color: red;">{$oOrderGroup->getShippingMethodName()|trademark:$insert_trademark}</span>
   </td>
   </tr>
   </table>

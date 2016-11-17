@@ -809,27 +809,16 @@ if ($debug_mode != 'Y') {
 		$params["postBody"] = $postBody;
 
 
-//        $optParams = array();
-		/*if tracing token defined - then it is should be included in all GoogleContentAPI requests*/
-//        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
 		if (!empty($froogle_tracing_token)) {
 			$params['trace'] = 'token:' . $froogle_tracing_token;
 		}
-//        $params = array('postBody' => $postBody);
-//        $params = array_merge($params, $optParams);
-//		$params = array('postBody' => $postBody);
-//		$params = array_merge($params, $optParams);
 
+		print("GB: call custombatch return Google_Service_ShoppingContent_InventoryCustomBatchResponse");
 
 		$results = $service->inventory->call('custombatch', array($params), "Google_Service_ShoppingContent_InventoryCustomBatchResponse");
 
+		print("GB: call custombatch end");
 
-//	        if ($debug_requests == "Y"){
-//        	        func_print_r($results);
-//	        }
-
-
-###
 		$results_arr = (array)$results;
 		$log_text = "";
 		foreach ($results_arr as $k => $v) {
@@ -846,6 +835,8 @@ if ($debug_mode != 'Y') {
 				}
 			}
 		}
+		print("GB: End process results");
+
 		if (!empty($log_text)) {
 			func_backprocess_log("incremental feeds", $log_text);
 		}
@@ -857,14 +848,6 @@ if ($debug_mode != 'Y') {
 //$ginventory_new = json_encode($postBody);
 //func_print_r($ginventory_new);
 //		$results = $service->inventory->custombatch($ginventory_new);
-	} catch (Google_ServiceException $e) {
-		print "Error code :" . $e->getCode() . "\n";
-		// Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
-		print "Error message: " . $e->getMessage() . "\n";
-
-		$log_text = "Error code :" . $e->getCode() . "\n" . "Error message: " . $e->getMessage();
-		func_backprocess_log("incremental feeds", $log_text);
-
 	} catch (Google_Exception $e) {
 		// Other error.
 		print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";
@@ -1512,26 +1495,17 @@ if ($debug_mode != 'Y') {
 		$log_text = "GB: tried to submit $k_counter items as product feed ($MerchantID)";
 		func_backprocess_log("incremental feeds", $log_text);
 
-		/*
-                $optParams = array();
-                #if tracing token defined - then it is should be included in all GoogleContentAPI requests
-        //        $froogle_tracing_token = 'ANY78kJ4JZKJvq1ERBvhqan1Qb50axWpAqDpaSIMRNku6p7dYqtLOwjCxUNK7ilmfkEPc3W4xbV5LEoOaCiW7nenfw2LmU2rc2MrgPYMTXtnhqT1VHEoqpE';
-                if (!empty($froogle_tracing_token)) {
-                    $optParams = array('trace' => 'token:'.$froogle_tracing_token);
-                }
-                $params = array('postBody' => $postBody);
-                $params = array_merge($params, $optParams);
-        */
-
-
 		$params = array();
 		$params["postBody"] = $postBody;
 		if (!empty($froogle_tracing_token)) {
 			$params['trace'] = 'token:' . $froogle_tracing_token;
 		}
 
+		print("GB: call custombatch return Google_Service_ShoppingContent_ProductsCustomBatchResponse");
 
 		$results = $service->products->call('custombatch', array($params), "Google_Service_ShoppingContent_ProductsCustomBatchResponse");
+
+		print("GB: call custombatch end");
 
 		if ($debug_requests == "Y") {
 			func_print_r($results);
@@ -1555,18 +1529,13 @@ if ($debug_mode != 'Y') {
 				}
 			}
 		}
+		print("GB: end process results");
+
 		if (!empty($log_text)) {
 			func_backprocess_log("incremental feeds", $log_text);
 		}
 ###
 
-	} catch (Google_ServiceException $e) {
-		print "Error code :" . $e->getCode() . "\n";
-		// Error message is formatted as "Error calling <REQUEST METHOD> <REQUEST URL>: (<CODE>) <MESSAGE OR REASON>".
-		print "Error message: " . $e->getMessage() . "\n";
-
-		$log_text = "Error code :" . $e->getCode() . "\n" . "Error message: " . $e->getMessage();
-		func_backprocess_log("incremental feeds", $log_text);
 	} catch (Google_Exception $e) {
 		// Other error.
 		print "An error occurred: (" . $e->getCode() . ") " . $e->getMessage() . "\n";

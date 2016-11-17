@@ -62,6 +62,7 @@ if ($f_mode == "clear") {
     } else {
         $filter_selected_brandids = "";
     }
+    $smarty->assign('filter_selected_brandids',$filter_selected_brandids);
 
 
     $cidev_redirect_url = $xcart_web_dir . "/" . $dispatched_request . "/";
@@ -476,4 +477,5 @@ include $xcart_dir . "/include/search.php";
         $smarty->assign("filter_min_price_selected", $filter_min_price_selected);
         $smarty->assign("filter_max_price_selected", $filter_max_price_selected);
     }
+    $smarty->assign("fv_ids_arr", $fv_ids_arr);
 
