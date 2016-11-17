@@ -26,7 +26,7 @@ if (!empty($id) && is_numeric($id)) {
 
     $aImages = $oProduct->getImages('D');
     foreach ($aImages as $oImage)
-        $aImageToView[] = $oImage->getFields(null);
+        $aImageToView[] = $oImage->getFields();
 
 
     $product_tabs[0]["title"] = "Product description";
