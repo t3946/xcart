@@ -57,6 +57,9 @@ class HTMLShot extends Data
         return $this->getField('product_id');
     }
 
+    /**
+     * @return Product
+     */
     public function getHTMLShot()
     {
         global $xcart_dir;
