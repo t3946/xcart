@@ -32,6 +32,7 @@ function func_amazon_all_FBA_products_flag($cart){
 function func_need_amazon_shipping_flag($cart, $userinfo){
 
 	global $smarty, $sql_tbl;
+	$count_rates = 0;
 
 	$need_amazon_shipping = false;
 
@@ -43,7 +44,8 @@ function func_need_amazon_shipping_flag($cart, $userinfo){
 
 		$customer_zone = func_get_customer_zone_ship($userinfo, "master", "R", $manufacturerid);
 
-		$count_rates = func_query_first_cell("SELECT COUNT($sql_tbl[shipping_rates].rateid) FROM $sql_tbl[shipping_rates] LEFT JOIN $sql_tbl[shipping] ON $sql_tbl[shipping].shippingid = $sql_tbl[shipping_rates].shippingid WHERE $sql_tbl[shipping].code='Amazon' AND $sql_tbl[shipping].active='Y' AND $sql_tbl[shipping_rates].manufacturerid='$manufacturerid' AND zoneid='$customer_zone'");
+		if (!is_null($customer_zone))
+			$count_rates = func_query_first_cell("SELECT COUNT($sql_tbl[shipping_rates].rateid) FROM $sql_tbl[shipping_rates] LEFT JOIN $sql_tbl[shipping] ON $sql_tbl[shipping].shippingid = $sql_tbl[shipping_rates].shippingid WHERE $sql_tbl[shipping].code='Amazon' AND $sql_tbl[shipping].active='Y' AND $sql_tbl[shipping_rates].manufacturerid='$manufacturerid' AND zoneid='$customer_zone'");
 
 		if ($count_rates >= 1){
 			$all_FBA_products_flag = func_amazon_all_FBA_products_flag($cart);
@@ -253,7 +255,8 @@ function func_get_amazon_shippings_for_all_states($product){
 
 			$customer_zone = func_get_customer_zone_ship($userinfo, "master", "R", $manufacturerid);
 
-			$shippingid_in_rates = func_query("SELECT $sql_tbl[shipping_rates].*, $sql_tbl[shipping].subcode, $sql_tbl[shipping].shipping FROM $sql_tbl[shipping_rates] LEFT JOIN $sql_tbl[shipping] ON $sql_tbl[shipping].shippingid = $sql_tbl[shipping_rates].shippingid WHERE $sql_tbl[shipping].code='Amazon' AND $sql_tbl[shipping].active='Y' AND $sql_tbl[shipping_rates].manufacturerid='$manufacturerid' AND zoneid='$customer_zone' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
+			if (!is_null($customer_zone))
+				$shippingid_in_rates = func_query("SELECT $sql_tbl[shipping_rates].*, $sql_tbl[shipping].subcode, $sql_tbl[shipping].shipping FROM $sql_tbl[shipping_rates] LEFT JOIN $sql_tbl[shipping] ON $sql_tbl[shipping].shippingid = $sql_tbl[shipping_rates].shippingid WHERE $sql_tbl[shipping].code='Amazon' AND $sql_tbl[shipping].active='Y' AND $sql_tbl[shipping_rates].manufacturerid='$manufacturerid' AND zoneid='$customer_zone' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
 
 			if (!empty($shippingid_in_rates)) {
 				$count_rates = count($shippingid_in_rates);
