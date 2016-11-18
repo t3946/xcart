@@ -287,7 +287,7 @@
                  <tr>
                      <td colspan="2" align="right">
                          <a class="simple-button" target="_blank" title="Show more"
-                            onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&return={$canonical_url}&filter=brand&p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]=Y&categoryid={$current_category.categoryid}&f_id={$v.f_id}{if $fv_ids_arr}&fv_sel={','|implode:$fv_ids_arr}{/if}', 'Brand'); return false;"
+                            onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&return={$canonical_url}&filter=brand&p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]=Y&categoryid={$current_category.categoryid}{if $fv_ids_arr}&fv_sel={','|implode:$fv_ids_arr}{/if}', 'Brand'); return false;"
                             href="/cidev_show_more_filters.php?target=show_more&filter=brand"><span>Show more</span></a>
                      </td>
                  <tr>
