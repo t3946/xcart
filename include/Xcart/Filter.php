@@ -140,8 +140,8 @@ SELECT p.*
            INNER JOIN xcart_categories c ON pc.categoryid = c.categoryid AND c.categoryid_path LIKE '{$this->oCategory->getPath()}%' AND c.storefrontid = {$this->oStorefront->getStoreFrontId()}
            LEFT JOIN xcart_cidev_filter_products xc1 ON xc1.productid = p.productid 
            LEFT JOIN  xcart_cidev_filter_values xc ON xc.fv_id = xc1.fv_id
+           {$sSQLfv}
       WHERE forsale = 'Y' {$this->getPriceQueryCondition()} {$this->getBrandQueryCondition()}
-      {$sSQLfv}
       GROUP BY p.productid
       {$sSQLfv2}
 SQL;

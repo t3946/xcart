@@ -305,7 +305,7 @@ include $xcart_dir . "/include/search.php";
 
     $aFilterSelected = null;
     if (!empty($fv_sel))
-        $aFilterSelected = explode(',', $fv_sel);
+        $aFilterSelected = array_keys($fv_sel);
 
     if (!empty($f_id)) {
         $oFilter = \Xcart\Filter::model(['f_id' => $f_id]);
