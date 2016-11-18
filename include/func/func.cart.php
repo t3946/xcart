@@ -76,7 +76,7 @@ function func_is_customer_free_ship_zone($zoneid, $userinfo, $provider) {
 function func_get_customer_zone_ship ($username, $provider, $type, $for_manufacturerid=0, $iShippingMethod = null) {
 	global $sql_tbl;
 	global $single_mode;
-
+	$zone = null;
 #
 ##
 ###
@@ -115,28 +115,10 @@ function func_get_customer_zone_ship ($username, $provider, $type, $for_manufact
 
 
 
-	$zone = 0; # default zone
 	if (is_array($zones)) {
-		//$provider_condition = ($single_mode) ? "" : " AND provider='".addslashes($provider)."'";
-		$tmp = func_query_column("SELECT zoneid FROM $sql_tbl[shipping_rates] WHERE zoneid IN ('".implode("','", array_keys($zones))."') $provider_condition AND type='$type' GROUP BY zoneid");
-		if (is_array($tmp) && !empty($tmp)) {
-			$unused = $zones;
-			# remove not available zones
-			foreach($tmp as $v) {
-				if (isset($unused[intval($v)]))
-					unset($unused[intval($v)]);
-			}
-			if (!empty($unused)) {
-				foreach($unused as $k => $v)
-					unset($zones[$k]);
-			}
-
-			reset($zones);
-			$zone = key($zones); #extract first zone
-		}
+		reset($zones);
+		$zone = key($zones); #extract first zone
 	}
-
-//func_print_r($zone);
 
 	return $zone;
 }
@@ -247,8 +229,9 @@ if (isset($_GET["mode"]) && $_GET["mode"] == "checkout" && isset($_GET["paymenti
 #
 */
 
-//		if ($customer_info[$address_prefix."country"] != "US" || $zoneid > 0 || empty($type) || empty($for_manufacturerid))
-		if ($customer_info[$address_prefix."country"] != "US" || empty($type) || empty($for_manufacturerid)){
+		if (1==2/*$customer_info[$address_prefix."country"] != "US" || empty($type) || empty($for_manufacturerid)*/)
+
+		{
 
 			// empty for_manufacturerid for free_shipping = Y AND for getting all avalable zones for taxes
 
@@ -1267,7 +1250,8 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 		return $return;
 
 	$customer_zone = func_get_customer_zone_ship($customer_info, $provider,"D", $for_manufacturerid, $shipping_id);
-	$shipping = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='D' AND manufacturerid='$for_manufacturerid' ORDER BY maxtotal, maxweight");
+	if (!is_null($customer_zone))
+		$shipping = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='D' AND manufacturerid='$for_manufacturerid' ORDER BY maxtotal, maxweight");
 
 	if ($shipping && $total_ship_items > 0) {
 		$shipping_cost =
@@ -1298,8 +1282,9 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 		$shipping_cost = $tmp['rate'];
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		$customer_zone = func_get_customer_zone_ship($customer_info, $provider,"R", $for_manufacturerid, $shipping_id);
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-		$shipping_rt = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND manufacturerid='$for_manufacturerid' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
+# START: random:1073746882_1073747063 [2008 Dec 24 16:25]
+		if (!is_null($customer_zone))
+			$shipping_rt = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND manufacturerid='$for_manufacturerid' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
 		if ($shipping_rt && $shipping_cost > 0){

@@ -869,7 +869,8 @@ function func_is_shipping_method_allowable($shippingid, $customer_info, $product
 		#
 		# Find existing shipping rates for $customer_zone
 		#
-		$shipping = func_query_first_cell($qqq="SELECT COUNT(*) FROM $sql_tbl[shipping_rates] WHERE shippingid='$shippingid' AND minweight<='$weight' AND maxweight>='$weight' AND mintotal<='$subtotal' AND maxtotal>='$subtotal' $provider_condition AND zoneid='$customer_zone' AND type='D' AND manufacturerid='$product[manufacturerid]'");
+		if (!is_null($customer_zone))
+			$shipping = func_query_first_cell($qqq="SELECT COUNT(*) FROM $sql_tbl[shipping_rates] WHERE shippingid='$shippingid' AND minweight<='$weight' AND maxweight>='$weight' AND mintotal<='$subtotal' AND maxtotal>='$subtotal' $provider_condition AND zoneid='$customer_zone' AND type='D' AND manufacturerid='$product[manufacturerid]'");
 
 //func_print_r($qqq, $shipping);
 
