@@ -2,8 +2,8 @@
 require_once "top.inc.php";
 require_once "init.php";
 
-if (!empty($_GET))
-{
+//if (!empty($_REQUEST))
+//{
     $getArray = [];
 
     foreach ($_GET as $key => $value)
@@ -15,14 +15,38 @@ if (!empty($_GET))
             $value = '!EMPTY!';
         }
 
-        $getArray[] = "{$key}: {$value}";
+        $getArray[] = "GET|{$key}: {$value}";
+    }
+
+    foreach ($_POST as $key => $value)
+    {
+        if (!empty($value)) {
+            $value = getClearValue($value);
+        }
+        else {
+            $value = '!EMPTY!';
+        }
+
+        $getArray[] = "POST|{$key}: {$value}";
+    }
+
+    foreach ($_FILES as $key => $values)
+    {
+        if (!empty($value)) {
+            $value = getClearValue($value);
+        }
+        else {
+            $value = '!EMPTY!';
+        }
+
+        $getArray[] = "FILES|{$key}: {$value}";
     }
 
 
     if (!empty($getArray)) {
-        func_backprocess_log('anveo_logging', implode("\n-\n", $getArray));
+        func_backprocess_log('anveo_logging', implode("\n---\n", $getArray));
     }
-}
+//}
 
 function getClearValue($value)
 {
