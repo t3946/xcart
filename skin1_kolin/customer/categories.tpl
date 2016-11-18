@@ -261,37 +261,37 @@
  {/if}
 
 
-         {if $filter_selected_and_found_brands ne ""}
-         {if $filter_name ne ""}
-     <tr>
-         <td colspan="2">&nbsp;</td>
-     <tr>
-     {/if}
-     <tr>
-         <td colspan="2"><B>Brand:</B></td>
-     </tr>
-     {assign var="row_conter" value="0"}
-     {foreach from=$filter_selected_and_found_brands item=v key=k name=brandloop}
-         {if $smarty.foreach.brandloop.index < $show_N_brands}
-             <tr>
-                 <td width="5"><input name="b_ids[{$v.brandid}]" id="b_id_{$v.brandid}" value="Y"
-                                      type="checkbox" {if $v.selected eq 'Y'} checked="checked" {assign var="show_clear_all_button" value="Y"} {/if}>
-                 </td>
-                 <td {if $v.selected eq 'Y' && $v.selected_and_found ne "Y"}style="color: #cccccc;"{/if}>{$v.brand}
-                     ({$v.count_products})
-                 </td>
-             </tr>
-         {/if}
-     {/foreach}
-     {if count($filter_selected_and_found_brands) gt $show_N_brands}
-     <tr>
-         <td colspan="2" align="right">
-             <a class="simple-button" target="_blank" title="Show more"
-                onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&return={$canonical_url}&filter=brand&p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]=Y&categoryid={$current_category.categoryid}&f_id={$v.f_id}{if $fv_ids_arr}&fv_sel={','|implode:$fv_ids_arr}{/if}', 'Brand'); return false;"
-                href="/cidev_show_more_filters.php?target=show_more&filter=brand"><span>Show more</span></a>
-         </td>
-     <tr>
-         {/if}
+         {if $aBrandFilters|@count > 0}
+             {if $filter_name ne ""}
+                 <tr>
+                     <td colspan="2">&nbsp;</td>
+                 <tr>
+                 {/if}
+                 <tr>
+                     <td colspan="2"><B>Brand:</B></td>
+                 </tr>
+                 {assign var="row_conter" value="0"}
+                 {foreach from=$aBrandFilters item=oBrand key=k name=brandloop}
+                     {if $smarty.foreach.brandloop.index < 5}
+                         <tr>
+                             <td width="5"><input name="b_ids[{$oBrand->getBrandId()}]" id="b_id_{$oBrand->getBrandId()}" value="Y"
+                                                  type="checkbox" {if $filter_selected_brandids && in_array($oBrand->getBrandId(), $filter_selected_brandids)} checked="checked" {assign var="show_clear_all_button" value="Y"} {/if}>
+                             </td>
+                             <td {if $v.selected eq 'Y' && $v.selected_and_found ne "Y"}style="color: #cccccc;"{/if}>{$oBrand->getBrandName()}
+                                 ({$oBrand->getCount()})
+                             </td>
+                         </tr>
+                     {/if}
+                 {/foreach}
+                 {if count($aBrandFilters|@count) gt $show_N_brands}
+                 <tr>
+                     <td colspan="2" align="right">
+                         <a class="simple-button" target="_blank" title="Show more"
+                            onclick="javascript: popupOpen('cidev_show_more_filters.php?target=show_more&return={$canonical_url}&filter=brand&p_ids[{$filter_min_price_selected}_{$filter_max_price_selected}]=Y&categoryid={$current_category.categoryid}&f_id={$v.f_id}{if $fv_ids_arr}&fv_sel={','|implode:$fv_ids_arr}{/if}', 'Brand'); return false;"
+                            href="/cidev_show_more_filters.php?target=show_more&filter=brand"><span>Show more</span></a>
+                     </td>
+                 <tr>
+             {/if}
          {/if}
 
 {if $filter_prices ne ""}
