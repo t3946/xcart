@@ -1,4 +1,38 @@
 <?php
+
+$aFilterSelected = null;
+if (!empty($fv_ids))
+    $aFilterSelected = array_keys($fv_ids);
+
+if (!empty($f_id)) {
+    $oFilter = \Xcart\Filter::model(['f_id' => $f_id]);
+} else $oFilter = \Xcart\Filter::model();
+
+$oFilter->setStoreFront(\Xcart\StoreFront::model(['storefrontid' => $current_storefront]))->
+setCategory(\Xcart\Category::model(['categoryid' => $cat]));
+if (!empty($aFilterSelected)) {
+    $oFilter->setFilterValuesSelected(
+        \Xcart\FilterValue::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('fv_id IN (' . implode(',', $aFilterSelected) . ')'))
+    );
+}
+if (!empty($p_ids)) {
+    $aPriceRange = array_keys($p_ids);
+    $oFilter->setPriceRange(reset($aPriceRange));
+}
+
+if (!empty($b_ids)) {
+    if (!empty($b_ids)) {
+        $oFilter->setBrandSelected(
+            \Xcart\Brand::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('brandid IN (' . implode(',', array_keys($b_ids)) . ')'))
+        );
+    }
+}
+
+$aFilterValues = $oFilter->getMoreBrands();
+$smarty->assign("aBrandFilters", $aFilterValues);
+
+
+
 $search_data["products"]["search_in_subcategories"] = "Y";
 $filter_selected_and_found_brands = "";
 $cidev_filters_tree_sorted = "";
@@ -303,36 +337,7 @@ include $xcart_dir . "/include/search.php";
         }
     }
 
-    $aFilterSelected = null;
-    if (!empty($fv_sel))
-        $aFilterSelected = array_keys($fv_sel);
 
-    if (!empty($f_id)) {
-        $oFilter = \Xcart\Filter::model(['f_id' => $f_id]);
-    } else $oFilter = \Xcart\Filter::model();
-
-    $oFilter->setStoreFront(\Xcart\StoreFront::model(['storefrontid' => $current_storefront]))->
-    setCategory(\Xcart\Category::model(['categoryid' => $cat]));
-    if (!empty($aFilterSelected)) {
-        $oFilter->setFilterValuesSelected(
-            \Xcart\FilterValue::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('fv_id IN (' . implode(',', $aFilterSelected) . ')'))
-        );
-    }
-    if (!empty($p_ids)) {
-        $aPriceRange = array_keys($p_ids);
-        $oFilter->setPriceRange(reset($aPriceRange));
-    }
-
-    if (!empty($b_ids)) {
-        if (!empty($b_ids)) {
-            $oFilter->setBrandSelected(
-                \Xcart\Brand::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('brandid IN (' . implode(',', array_keys($b_ids)) . ')'))
-            );
-        }
-    }
-
-    $aFilterValues = $oFilter->getMoreBrands();
-    $smarty->assign("aBrandFilters", $aFilterValues);
 
     $filter_prices_old = $filter_prices;
     $filter_prices = "";
