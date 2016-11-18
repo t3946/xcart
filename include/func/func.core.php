@@ -2788,7 +2788,8 @@ function func_define_approximate_shippings($productid, $product_info=''){
 			$customer_zone_ship_for_flat_rate = func_get_customer_zone_ship($customer_info, "master", "D", $product_info["manufacturerid"]);
 
 			$flat_rate_shipping_cost = "";
-			$flat_rate_shippings = func_query($query = "SELECT * FROM $sql_tbl[shipping_rates] WHERE zoneid='$customer_zone_ship_for_flat_rate' AND provider='master' AND mintotal<='$product_info[price]' AND maxtotal>='$product_info[price]' AND minweight<='$product_info[weight]' AND maxweight>='$product_info[weight]' AND type='D' AND manufacturerid='$product_info[manufacturerid]' ORDER BY maxtotal, maxweight");
+				if (!is_null($customer_zone_ship_for_flat_rate))
+					$flat_rate_shippings = func_query($query = "SELECT * FROM $sql_tbl[shipping_rates] WHERE zoneid='$customer_zone_ship_for_flat_rate' AND provider='master' AND mintotal<='$product_info[price]' AND maxtotal>='$product_info[price]' AND minweight<='$product_info[weight]' AND maxweight>='$product_info[weight]' AND type='D' AND manufacturerid='$product_info[manufacturerid]' ORDER BY maxtotal, maxweight");
 
 				if (!empty($flat_rate_shippings)){
 				foreach ($flat_rate_shippings as $k_fr => $v_fr){
