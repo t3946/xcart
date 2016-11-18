@@ -450,6 +450,8 @@ $a_config = array (
   'MaxErrorRetry' => 3,
 );
 
+$oAmazon = new \Xcart\AmazonMWS();
+
  $service = new MarketplaceWebService_Client(
      AWS_ACCESS_KEY_ID,
      AWS_SECRET_ACCESS_KEY,
