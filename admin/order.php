@@ -102,6 +102,8 @@ if ($REQUEST_METHOD == "POST" && $mode == "unlock_order") {
                 }
         }
 
+        $smarty->assign('you_have_right_to_change_order', $you_have_right_to_change_order);
+
         $time_unlock = $time_last_opened_or_saved + $time_for_order_in_mins*60 + 60*60;
 
         if (!$you_have_right_to_change_order){

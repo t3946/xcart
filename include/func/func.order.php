@@ -2223,32 +2223,33 @@ function func_get_order_manufacturers($orderid){
                                 $mess_body = str_replace("{{received}}", $cidev_mess_body, $mess_body);
                                 $mess_body = str_replace("{{orderid}}", $order["order_prefix"].$orderid, $mess_body);
 
-				$orig_shipping_name = func_query_first_cell("SELECT shipping FROM $sql_tbl[shipping] WHERE shippingid='".$order["shipping_groups"][$m_id]["shippingid"]."'");
+							$oShipping = \Xcart\Shipping::model(['shippingid' => $order["shipping_groups"][$m_id]["shippingid"]]);
+							$orig_shipping_name = $oShipping->getName();
 
-				$d_shipping_options_arr = array();
+							$d_shipping_options_arr = array();
 
-				if ($orig_shipping_name == "_USE_MY_UPS_FEDEX_ACCOUNT_"){
-					$d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
-					$d_shipping_options_arr[] = "the least expensive shipping method";
-                                } elseif ($orig_shipping_name == "_USE_MY_TRUCKING_ACCOUNT_"){
-                                        $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
-                                        $d_shipping_options_arr[] = "the least expensive shipping method";
-				} else {
-                                        $d_shipping_options_arr[] = "the least expensive shipping method";
-                                        $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
-				}
-
-                                if (!empty($mv["d_shipping_options"])){
-                                        $d_shipping_options_arr_add = explode(",", $mv["d_shipping_options"]);
-					if (!empty($d_shipping_options_arr_add) && is_array($d_shipping_options_arr_add)){
-						foreach ($d_shipping_options_arr_add as $k_s => $v_s){
-							$additional_shipping_method = trim($v_s);
-							if (!empty($additional_shipping_method)){
-								$d_shipping_options_arr[] = $additional_shipping_method;
+							if ($orig_shipping_name == "_USE_MY_UPS_FEDEX_ACCOUNT_") {
+								$d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
+								$d_shipping_options_arr[] = "the least expensive shipping method";
+							} elseif ($orig_shipping_name == "_USE_MY_TRUCKING_ACCOUNT_") {
+								$d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
+								$d_shipping_options_arr[] = "the least expensive shipping method";
+							} else {
+								$d_shipping_options_arr[] = "the least expensive shipping method";
+								$d_shipping_options_arr[] = $oShipping->getName();
 							}
-						}
-					}
-				}
+
+							if (!empty($mv["d_shipping_options"])) {
+								$d_shipping_options_arr_add = explode(",", $mv["d_shipping_options"]);
+								if (!empty($d_shipping_options_arr_add) && is_array($d_shipping_options_arr_add)) {
+									foreach ($d_shipping_options_arr_add as $k_s => $v_s) {
+										$additional_shipping_method = trim($v_s);
+										if (!empty($additional_shipping_method)) {
+											$d_shipping_options_arr[] = $additional_shipping_method;
+										}
+									}
+								}
+							}
 
 				$mnfs[$m_id]["d_shipping_options_arr"] = $d_shipping_options_arr;
 				unset($d_shipping_options_arr);

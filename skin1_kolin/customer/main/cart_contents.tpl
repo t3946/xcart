@@ -89,7 +89,7 @@
 The fastest possible shipping method
 
 {else}
-{$cart.groups_delivery[$k]|trademark:$insert_trademark}
+{$cart.groups_delivery[$k]|trademark:$insert_trademark} {if $cart.groups_delivery_time[$k]} - {$cart.groups_delivery_time[$k]}{/if}
 {/if}
 
 </td>

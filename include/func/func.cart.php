@@ -255,9 +255,70 @@ if (isset($_GET["mode"]) && $_GET["mode"] == "checkout" && isset($_GET["paymenti
 			# Possible zones for customer's country...
 			$possible_zones = func_query("SELECT $sql_tbl[zone_element].zoneid FROM $sql_tbl[zone_element], $sql_tbl[zones] WHERE $sql_tbl[zone_element].zoneid=$sql_tbl[zones].zoneid AND $sql_tbl[zone_element].field='".$customer_info[$address_prefix."country"]."'  AND $sql_tbl[zone_element].field_type='C' $provider_condition GROUP BY $sql_tbl[zone_element].zoneid");
 
-//func_print_r($customer_info[$address_prefix."country"] , $zoneid, $type, $for_manufacturerid, $possible_zones);
-//die("123");
+			if (is_array($possible_zones)) {
 
+				$zones_completion = array();
+				$_possible_zones = array();
+				foreach ($possible_zones as $pzone) {
+					$_possible_zones[$pzone["zoneid"]] = func_query_column("SELECT field_type FROM $sql_tbl[zone_element] WHERE zoneid='$pzone[zoneid]' AND field<>'%'");
+				}
+
+				foreach ($_possible_zones as $_pzoneid=>$_elements) {
+					if (is_array($_elements)) {
+						foreach ($_elements as $k=>$v) {
+							$zones_completion[$_pzoneid] += $z_flags[$v];
+						}
+					}
+				}
+
+				$cs_state = $customer_info[$address_prefix."state"];
+				$cs_country = $customer_info[$address_prefix."country"];
+				$cs_pair = $cs_country."_".$cs_state;
+
+				$empty_condition = " AND $sql_tbl[zone_element].field<>'%'";
+
+				foreach ($possible_zones as $pzone) {
+					$zones[$pzone["zoneid"]] = $z_flags["C"];
+
+					# If only country is defined for this zone, skip further actions
+					if ($zones_completion[$pzone["zoneid"]] == $z_flags["C"])
+						continue;
+
+					foreach ($z_flags as $field_type=>$field_type_flag) {
+
+						if ($field_type == "C")
+							continue;
+
+						if ($zones_completion[$pzone["zoneid"]] & $field_type_flag) {
+							# Checking the field for  equal...
+
+							if ($field_type == "S") {
+								# Checking the state...
+								$found_zones = func_query_first_cell("SELECT zoneid FROM $sql_tbl[zone_element], $sql_tbl[states] WHERE $sql_tbl[zone_element].field='".addslashes($cs_pair)."' AND $sql_tbl[zone_element].field_type='S' AND $sql_tbl[states].code='".addslashes($cs_state)."' AND $sql_tbl[states].country_code='".addslashes($cs_country)."' AND $sql_tbl[zone_element].zoneid='$pzone[zoneid]'");
+							} elseif ($field_type == "G") {
+								# Checking the county...
+								$found_zones = func_query_first_cell("SELECT zoneid FROM $sql_tbl[zone_element] WHERE field_type='G' AND field='".$customer_info[$address_prefix."county"]."' AND zoneid='$pzone[zoneid]'");
+							}
+							else {
+								# Checking the rest fields (city, zipcode, address)
+								$found_zones = func_query_first_cell("SELECT $sql_tbl[zone_element].zoneid FROM $sql_tbl[zone_element], $sql_tbl[zones] WHERE $sql_tbl[zone_element].zoneid=$sql_tbl[zones].zoneid AND $sql_tbl[zone_element].field_type='$field_type' AND '".addslashes($customer_info[$address_prefix.$zone_element_types[$field_type]])."' LIKE $sql_tbl[zone_element].field  AND $sql_tbl[zone_element].zoneid='$pzone[zoneid]' $empty_condition $provider_condition");
+							}
+
+							if (!empty($found_zones)) {
+								# Field is found: increase the priority
+								$zones[$pzone["zoneid"]] += $field_type_flag;
+							}
+							else {
+								# Remove zone from available zones list
+								unset($zones[$pzone["zoneid"]]);
+								continue;
+							}
+						}
+					} # /foreach ($z_flags)
+				} # /foreach ($possible_zones)
+			}
+			$zones[0] = 0;
+			arsort($zones, SORT_NUMERIC);
 		}
 		else {
 ###########
@@ -278,7 +339,7 @@ GROUP BY ZE.zoneid
 */
 
 $possible_zones = func_query($possible_zones_query = "
-SELECT ZE.zoneid
+SELECT ZE.zoneid, COUNT(distinct ZES.field) as cnt
 FROM xcart_zone_element As ZE
         left join xcart_zones Z ON 1=1
         inner join xcart_shipping_rates SR ON SR.zoneid = ZE.zoneid
@@ -291,80 +352,23 @@ WHERE
 	    AND SR.type='$type'
 	    AND SR.manufacturerid='$for_manufacturerid' 
 GROUP BY ZE.zoneid
-Order By COUNT(distinct ZES.field)
+Order By cnt
 ");
 //Order By COUNT(SR.rateid)
 ###########
-
-		}
-
-
-		if (is_array($possible_zones)) {
-
-			$zones_completion = array();
-			$_possible_zones = array();
-			foreach ($possible_zones as $pzone) {
-				$_possible_zones[$pzone["zoneid"]] = func_query_column("SELECT field_type FROM $sql_tbl[zone_element] WHERE zoneid='$pzone[zoneid]' AND field<>'%' GROUP BY zoneid, field_type");
-			}
-
-			foreach ($_possible_zones as $_pzoneid=>$_elements) {
-				if (is_array($_elements)) {
-					foreach ($_elements as $k=>$v) {
-						$zones_completion[$_pzoneid] += $z_flags[$v];
-					}
+			if (!empty($possible_zones)){
+				foreach ($possible_zones as $pos_zone) {
+					$zones[$pos_zone['zoneid']] =  $pos_zone['cnt'];
 				}
+
+			} else {
+				$zones[0] = 0;
 			}
 
-			$cs_state = $customer_info[$address_prefix."state"];
-			$cs_country = $customer_info[$address_prefix."country"];
-			$cs_pair = $cs_country."_".$cs_state;
-
-			$empty_condition = " AND $sql_tbl[zone_element].field<>'%'";
-
-			foreach ($possible_zones as $pzone) {
-				$zones[$pzone["zoneid"]] = $z_flags["C"];
-
-				# If only country is defined for this zone, skip further actions
-				if ($zones_completion[$pzone["zoneid"]] == $z_flags["C"])
-					continue;
-
-				foreach ($z_flags as $field_type=>$field_type_flag) {
-
-					if ($field_type == "C")
-						continue;
-
-					if ($zones_completion[$pzone["zoneid"]] & $field_type_flag) {
-						# Checking the field for  equal...
-
-						if ($field_type == "S") {
-							# Checking the state...
-							$found_zones = func_query_first_cell("SELECT zoneid FROM $sql_tbl[zone_element], $sql_tbl[states] WHERE $sql_tbl[zone_element].field='".addslashes($cs_pair)."' AND $sql_tbl[zone_element].field_type='S' AND $sql_tbl[states].code='".addslashes($cs_state)."' AND $sql_tbl[states].country_code='".addslashes($cs_country)."' AND $sql_tbl[zone_element].zoneid='$pzone[zoneid]'");
-						} elseif ($field_type == "G") {
-							# Checking the county...
-							$found_zones = func_query_first_cell("SELECT zoneid FROM $sql_tbl[zone_element] WHERE field_type='G' AND field='".$customer_info[$address_prefix."county"]."' AND zoneid='$pzone[zoneid]'");
-						}
-						else {
-							# Checking the rest fields (city, zipcode, address)
-							$found_zones = func_query_first_cell("SELECT $sql_tbl[zone_element].zoneid FROM $sql_tbl[zone_element], $sql_tbl[zones] WHERE $sql_tbl[zone_element].zoneid=$sql_tbl[zones].zoneid AND $sql_tbl[zone_element].field_type='$field_type' AND '".addslashes($customer_info[$address_prefix.$zone_element_types[$field_type]])."' LIKE $sql_tbl[zone_element].field  AND $sql_tbl[zone_element].zoneid='$pzone[zoneid]' $empty_condition $provider_condition");
-						}
-
-						if (!empty($found_zones)) {
-							# Field is found: increase the priority
-							$zones[$pzone["zoneid"]] += $field_type_flag;
-						}
-						else {
-							# Remove zone from available zones list
-							unset($zones[$pzone["zoneid"]]);
-							continue;
-						}
-					}
-				} # /foreach ($z_flags)
-			} # /foreach ($possible_zones)
 		}
 	}
 
-	$zones[0] = 0;
-	arsort($zones, SORT_NUMERIC);
+
 
 	if (!empty($customer_login)) {
 		$results_cache[$data_key] = $zones;

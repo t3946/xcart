@@ -1,5 +1,4 @@
 <?php
-require_once "include/libs/autoload.php";
 
 if (!function_exists( "qt_debug")) {
 //    require_once "qt_debug.php";
@@ -48,6 +47,7 @@ define('XCART_START_TIME',microtime());
 define('XCART_START_MEM', function_exists("memory_get_usage") ? memory_get_usage() : 0);
 
 define('XC_DS', DIRECTORY_SEPARATOR);
+
 
 #
 # Save backtrace information regarding lines in which errors occur
@@ -184,4 +184,5 @@ define('PAYMENT_CHARGED_STATUS', 4);
 define('X_USE_PAYPAL_FLOW', true);
 
 }
+require_once "include/libs/autoload.php";
 ?>

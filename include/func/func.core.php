@@ -41,6 +41,7 @@ if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); 
 # Use this function to load code of functions on demand (include/func/func.*.php)
 #
 function x_load() {
+	return true;
 	global $xcart_dir;
 
 	$names = func_get_args();
