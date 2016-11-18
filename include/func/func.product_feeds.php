@@ -34,7 +34,7 @@
 # $Id: func.product_feeds.php, v 1.0.0 2014/01/10 13:21:12 xcartmaster@gmail.com Exp $
 #
 
-if ( !defined('XCART_SESSION_START') ) { header("Location: ../../"); die("Access denied"); }
+if ( !defined('XCART_START') ) { header("Location: ../../"); die("Access denied"); }
 
 x_load('cart','mail','order','product','taxes', 'files', 'backoffice', "image", "gd", "xml");
 

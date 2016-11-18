@@ -34,7 +34,7 @@
 # $Id: func.fraud.php, v 1.0.0 2013/12/23 13:21:12 xcartmaster@gmail.com Exp $
 #
 
-if ( !defined('XCART_SESSION_START') ) { header("Location: ../../"); die("Access denied"); }
+if ( !defined('XCART_START') ) { header("Location: ../../"); die("Access denied"); }
 
 x_load('cart','mail','order','product','taxes');
 
