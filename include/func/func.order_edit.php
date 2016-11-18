@@ -35,7 +35,7 @@
 # $Id: func.order_edit.php, v 1.0.0 2010/03/24 14:51:12 random Exp $
 #
 
-if ( !defined('XCART_SESSION_START') ) { header("Location: ../../"); die("Access denied"); }
+if ( !defined('XCART_START') ) { header("Location: ../../"); die("Access denied"); }
 
 x_load('cart','mail','order','product','taxes');
 
