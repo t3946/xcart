@@ -321,48 +321,32 @@ if (isset($_GET["mode"]) && $_GET["mode"] == "checkout" && isset($_GET["paymenti
 			arsort($zones, SORT_NUMERIC);
 		}
 		else {
-###########
-### Igor###
+			$cs_state = $customer_info[$address_prefix."state"];
+			$cs_country = $customer_info[$address_prefix."country"];
+			$sCA_ST = $cs_country."_".$cs_state;
 
-/*
-$possible_zones = func_query("
-SELECT ZE.zoneid 
-FROM xcart_zone_element As ZE
-        left join xcart_zones Z ON 1=1
-        inner join xcart_shipping_rates SR ON SR.zoneid = ZE.zoneid
-WHERE ZE.zoneid=Z.zoneid 
-      AND ZE.field='US' 
-            AND ZE.field_type='C' 
-            AND Z.provider='master' 
-GROUP BY ZE.zoneid
-");
-*/
+$possible_zones = func_query($possible_zones_query = <<<SQL
+SELECT ZE.zoneid, COUNT(DISTINCT ZES.field) cnt
+FROM xcart_zone_element AS ZE
+INNER JOIN xcart_zone_element AS ZES USING (zoneid, field_type)
+INNER JOIN xcart_shipping_rates SR ON SR.manufacturerid = {$for_manufacturerid} AND ZE.zoneid = SR.zoneid AND SR.type='{$type}'
+WHERE ZE.field_type = 'S' AND ZE.field ='{$sCA_ST}'
+GROUP BY ZE.zoneid 
+UNION
+SELECT zoneid, 999999999
+FROM xcart_shipping_rates
+WHERE manufacturerid = {$for_manufacturerid} AND zoneid = 0 AND type='R'
+GROUP BY zoneid
+ORDER BY cnt
+SQL
+);
 
-$possible_zones = func_query($possible_zones_query = "
-SELECT ZE.zoneid, COUNT(distinct ZES.field) as cnt
-FROM xcart_zone_element As ZE
-        left join xcart_zones Z ON 1=1
-        inner join xcart_shipping_rates SR ON SR.zoneid = ZE.zoneid
-        left join xcart_zone_element ZES ON ZES.zoneid = Z.zoneid and ZES.field_type = 'S'
-WHERE 
-	    ZE.zoneid=Z.zoneid 
-	    AND ZE.field='US' 
-            AND ZE.field_type='C' 
-            AND Z.provider='master' 
-	    AND SR.type='$type'
-	    AND SR.manufacturerid='$for_manufacturerid' 
-GROUP BY ZE.zoneid
-Order By cnt
-");
 //Order By COUNT(SR.rateid)
 ###########
 			if (!empty($possible_zones)){
 				foreach ($possible_zones as $pos_zone) {
 					$zones[$pos_zone['zoneid']] =  $pos_zone['cnt'];
 				}
-
-			} else {
-				$zones[0] = 0;
 			}
 
 		}
