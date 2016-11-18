@@ -1,5 +1,4 @@
 <?php
-
   function invokeGetReport(MarketplaceWebService_Interface $service, $request)
   {
       try {
