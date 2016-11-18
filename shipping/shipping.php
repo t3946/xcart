@@ -458,7 +458,7 @@ function func_get_shipping_methods_list($cart, $products, $userinfo, $return_all
 		#
 		$tmp_shipping = array();
 		foreach ($shipping as $k=>$v) {
-			if (($config["Shipping"]["realtime_shipping"]=="Y" && $v["code"]=="") || $config["Shipping"]["realtime_shipping"]!="Y") {
+			if (($config["Shipping"]["realtime_shipping"]=="Y")) {
 				#
 				# Check accessibility only for defined shipping methods
 				#
