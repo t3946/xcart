@@ -48,7 +48,7 @@ define('XCART_START_MEM', function_exists("memory_get_usage") ? memory_get_usage
 
 define('XC_DS', DIRECTORY_SEPARATOR);
 
-require_once "include/libs/autoload.php";
+
 #
 # Save backtrace information regarding lines in which errors occur
 #
@@ -184,4 +184,5 @@ define('PAYMENT_CHARGED_STATUS', 4);
 define('X_USE_PAYPAL_FLOW', true);
 
 }
+require_once "include/libs/autoload.php";
 ?>
