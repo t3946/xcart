@@ -1290,6 +1290,46 @@ if ($mode == "search") {
         $search_query_brandids .= " HAVING " . implode(" AND ", $having);
     }
     $search_query_count_NEW = $search_query_count;
+
+    /***
+     * Если есть результаты последнего поиска и сортировка по умолчанию
+     * поднимаем 50 продуктов в выводе категории согластно последнегому поисковому результату.
+     */
+    if (empty($data["sort_field"]) || $data["sort_field"] == 'orderby')
+    {
+        x_session_register('e_last_search_substring');
+        x_session_register('e_founded_product_ids');
+
+        if ( $e_last_search_substring )
+        {
+
+            $t_arr = array();
+            foreach ($e_founded_product_ids as $product)
+            {
+                if (count($t_arr) == 50) { break; }
+                $push = false;
+
+                if (!empty($categoryids) && !empty($product['categoryid'])) {
+                    if (!empty(array_intersect($categoryids, $product['categoryid']))) {
+                        $push = true;
+                    }
+                }
+                else { $push = true; }
+
+                if ($push) {
+                    $t_arr[] = "'{$product['productid']}'";
+                }
+            }
+
+            if (!empty($t_arr))
+            {
+                $order_by_lastsearch =  "IF(FIELD( xcart_products.productid, " . implode(',', $t_arr) . ") = 0,1,0) ASC";
+
+                array_unshift($orderbys, $order_by_lastsearch);
+            }
+        }
+    }
+
     if (!empty($orderbys)) {
         $search_query .= " ORDER BY " . implode(", ", $orderbys);
         $search_query_count .= " ORDER BY " . implode(", ", $orderbys);
