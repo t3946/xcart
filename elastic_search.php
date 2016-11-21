@@ -86,7 +86,7 @@
         x_session_register('e_last_search_substring', $e_search_data_substring);
         x_session_register('e_founded_product_ids', array());
 
-        if ($e_last_search_substring != $e_search_data_substring) {
+        if ($e_last_search_substring != $e_search_data_substring && $load_all_e_products) {
             $e_founded_product_ids = array();
         }
 
@@ -116,7 +116,7 @@
 						$e_products[$k]["categoryid"] = (!empty($categories)) ? $categories[0]: '';
                         $founded_ids['categoryid'][] = $e_products[$k]["categoryid"];
 					}
-                    $e_founded_product_ids[$v["_id"]] = $founded_ids;
+                    $e_founded_product_ids[] = $founded_ids;
 				}
                 $e_products = array_values($e_products);
         }

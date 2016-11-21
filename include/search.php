@@ -1323,9 +1323,10 @@ if ($mode == "search") {
 
             if (!empty($t_arr))
             {
-                $order_by_lastsearch =  "IF(FIELD( xcart_products.productid, " . implode(',', $t_arr) . ") = 0,1,0) ASC";
+                $order_by_lastsearch_1 =  "IF(FIELD( xcart_products.productid, " . implode(',', $t_arr) . ") = 0,1,0) ASC";
+                $order_by_lastsearch_2 =  "FIELD( xcart_products.productid, " . implode(',', $t_arr) . ") ASC";
 
-                array_unshift($orderbys, $order_by_lastsearch);
+                array_unshift($orderbys, $order_by_lastsearch_1, $order_by_lastsearch_2);
             }
         }
     }
