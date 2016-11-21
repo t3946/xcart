@@ -3,7 +3,8 @@
         "vendor-dir": "include/libs"
     },
     "require": {
-        "google/apiclient": "^2.0"
+        "google/apiclient": "^2.0",
+        "paypal/rest-api-sdk-php": "*"
     },
     "autoload": {
         "psr-4": {
