@@ -1,5 +1,5 @@
 <?php
-  function invokeGetFulfillmentPreview(FBAOutboundServiceMWS_Interface $b_service, $request)
+  /*function invokeGetFulfillmentPreview(FBAOutboundServiceMWS_Interface $b_service, $request)
   {
       try {
         $response = $b_service->GetFulfillmentPreview($request);
@@ -27,7 +27,7 @@
 
 	return $return_echo;
      }
- }
+ }*/
 
 
 
