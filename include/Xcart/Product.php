@@ -33,6 +33,7 @@ class Product extends Data
 
     private $iAmazonFbaAvail = null;
     private $iAmazonFbaStockTotal = null;
+    private $iAmazonFbaStockReservedTransfers = null;
 
     public function __construct($iId = null)
     {
@@ -359,6 +360,14 @@ class Product extends Data
         return $this->iAmazonFbaStockTotal;
     }
 
+    public function getAmazonFBAStockReservedTransfers()
+    {
+        if (is_null($this->iAmazonFbaStockReservedTransfers)) {
+            $this->iAmazonFbaStockReservedTransfers = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_stock_reserved_transfers(" . $this->getProductId() . ") as stock_total"));
+        }
+        return $this->iAmazonFbaStockReservedTransfers;
+    }
+
     public function getAmazonFBAAvailReal()
     {
         return intval($this->getField('amazon_fba_avail'));
@@ -381,6 +390,11 @@ class Product extends Data
     public function isProductFBAAvail()
     {
         return ($this->getAmazonFBAAvail() > 0);
+    }
+
+    public function isAmazonFBAEnabled()
+    {
+        return ($this->getField('amazon_fba') == 'Y');
     }
 
     public function getUPC()
