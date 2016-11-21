@@ -7,8 +7,9 @@ require "./init.php";
 
 global $config;
 
-ini_set('memory_limit', '512M');
 set_time_limit(0);
+
+register_shutdown_function('process_errors');
 
 const LOG_CATEGORY = 'cidev_amazon_orders_v2';
 
@@ -20,22 +21,13 @@ db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 $start_time = time();
 
 $log_text = " * * *  Cron started  * * * ";
-try {
-    $classAmazonMWS = new Xcart\AmazonMWS('MarketplaceWebServiceOrders_Client', '/Orders/2013-09-01');
-    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
+$classAmazonMWS = new Xcart\AmazonMWS('MarketplaceWebServiceOrders_Client', '/Orders/2013-09-01');
+func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
 
-    $classAmazonMWS->_Request('OrderListRequest');
+$classAmazonMWS->_Request('OrderListRequest');
 
-    db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='" . LOG_CATEGORY . "'");
+db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='" . LOG_CATEGORY . "'");
 
-}
-catch (Exception $e) {
-    $oMail = \Xcart\Mail::model()->
-    setTo('team@s3stores.com')->
-    setFrom('team@s3stores.com')->
-    setBody($e->getMessage().'\n'.$e->getTraceAsString())->
-    setSubject(sprintf('Attention! Xcart cron %s failed',LOG_CATEGORY))->sendEmail();
-}
 $current_time = time();
 
 $pid_diff = $current_time - $start_time;
@@ -50,3 +42,15 @@ $log_text .= "Processing time: $str_time";
 func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDERS, $log_text);
 
 die("DONE!");
+
+function process_errors()
+{
+    $error = error_get_last();
+    if ($error && ($error['type'] & 1)) {
+        \Xcart\Mail::model()->
+        setTo('team@s3stores.com')->
+        setFrom('team@s3stores.com')->
+        setBody($error['message'])->
+        setSubject(sprintf('Attention! Xcart cron %s failed', LOG_CATEGORY))->sendEmail();
+    }
+}
