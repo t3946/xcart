@@ -1,15 +1,7 @@
 <?php
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
-/*
-function func_amazon_shippings (){
 
-
-
-
-
-}
-*/
 
 function func_amazon_all_FBA_products_flag($cart){
 
