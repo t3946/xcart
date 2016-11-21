@@ -1478,12 +1478,12 @@ class AmazonMWS
                                     if (!empty($StateOrRegion_code)) {
                                         $sShippingAddressStateOrRegion = addslashes($StateOrRegion_code);
                                     }
+                                    $sAddress = addslashes($oShippingAddress->getElementsByTagName('AddressLine1')->item(0)->nodeValue .
+                                        (!empty($oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue : '') .
+                                        (!empty($oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue : ''));
                                 }
-                                $sFulfilmentChanel = $aOrderInfo->getElementsByTagName('FulfillmentChannel')->item(0)->nodeValue;
 
-                                $sAddress = addslashes($oShippingAddress->getElementsByTagName('AddressLine1')->item(0)->nodeValue .
-                                    (!empty($oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue : '') .
-                                    (!empty($oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue : ''));
+                                $sFulfilmentChanel = $aOrderInfo->getElementsByTagName('FulfillmentChannel')->item(0)->nodeValue;
 
                                 $sBuyerName = addslashes($aOrderInfo->getElementsByTagName('BuyerName')->item(0)->nodeValue);
 
