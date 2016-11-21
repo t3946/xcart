@@ -6,7 +6,7 @@ session_start();
 require "./top.inc.php";
 require "./init.php";
 
-include $xcart_dir ."/include/func/func.amazon.php";
+//include $xcart_dir ."/include/func/func.amazon.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -90,7 +90,7 @@ if ($mode == "GetReport" && !empty($reportId)){
 
  func_print_r($request);    
 
- $dom_xml_3 = invokeGetReport($service, $request);
+ $dom_xml_3 = invokeGetReport((new \Xcart\AmazonMWS)->getService(), $request);
 
  func_print_r($dom_xml_3);
 

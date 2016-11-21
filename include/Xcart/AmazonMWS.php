@@ -1675,4 +1675,9 @@ class AmazonMWS
             $this->nextToken = $xpath->query('/*/*/NextToken')->item(0)->nodeValue;
         }
     }
+
+    public function getService()
+    {
+        return $this->oMWSService;
+    }
 }
