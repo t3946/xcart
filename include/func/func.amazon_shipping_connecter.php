@@ -1,38 +1,31 @@
 <?php
-  /*function invokeGetFulfillmentPreview(FBAOutboundServiceMWS_Interface $b_service, $request)
-  {
-      try {
-        $response = $b_service->GetFulfillmentPreview($request);
+if (!function_exists('invokeGetFulfillmentPreview')) {
+ function invokeGetFulfillmentPreview(FBAOutboundServiceMWS_Interface $service, $request)
+ {
+  try {
+   $response = $service->GetFulfillmentPreview($request);
 
-//        echo ("Service Response\n");
-//        echo ("=============================================================================\n");
+   echo ("Service Response\n");
+   echo ("=============================================================================\n");
 
-        $dom = new DOMDocument();
-        $dom->loadXML($response->toXML());
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        $return_echo["saveXML"] = $dom->saveXML();
-        $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
+   $dom = new DOMDocument();
+   $dom->loadXML($response->toXML());
+   $dom->preserveWhiteSpace = false;
+   $dom->formatOutput = true;
+   echo $dom->saveXML();
+   echo("ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
 
-	return $return_echo;
-
-     } catch (FBAOutboundServiceMWS_Exception $ex) {
-        $return_echo["Caught_Exception"] = $ex->getMessage();
-        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
-        $return_echo["Error_Code"] = $ex->getErrorCode();
-        $return_echo["Error_Type"] = $ex->getErrorType();
-        $return_echo["Request_ID"] = $ex->getRequestId();
-        $return_echo["XML"] = $ex->getXML();
-        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
-
-	return $return_echo;
-     }
- }*/
-
-
-
-
-
+  } catch (FBAOutboundServiceMWS_Exception $ex) {
+   echo("Caught Exception: " . $ex->getMessage() . "\n");
+   echo("Response Status Code: " . $ex->getStatusCode() . "\n");
+   echo("Error Code: " . $ex->getErrorCode() . "\n");
+   echo("Error Type: " . $ex->getErrorType() . "\n");
+   echo("Request ID: " . $ex->getRequestId() . "\n");
+   echo("XML: " . $ex->getXML() . "\n");
+   echo("ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n");
+  }
+ }
+}
 
  $b_config = array (
    'ServiceURL' => "https://mws.amazonservices.com/FulfillmentOutboundShipment/2010-10-01",
