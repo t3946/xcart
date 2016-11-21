@@ -1,80 +1,5 @@
 <?php
-
-### Amazon ###
-include_once $xcart_dir . "/src/FBAOutboundServiceMWS/Samples/.config.inc.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Client.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Exception.php";
-
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/Address.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CancelFulfillmentOrderRequest.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CancelFulfillmentOrderResponse.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CODSettings.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderItemList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderItem.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderRequest.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/CreateFulfillmentOrderResponse.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/Currency.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/DeliveryWindowList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/DeliveryWindow.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FeeList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/Fee.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentMethodList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentOrderItemList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentOrderItem.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentOrderList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentOrder.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentPreviewItemList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentPreviewItem.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentPreviewList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentPreview.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentPreviewShipmentList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentPreviewShipment.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentShipmentItemList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentShipmentItem.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentShipmentList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentShipmentPackageList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentShipmentPackage.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/FulfillmentShipment.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetFulfillmentOrderRequest.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetFulfillmentOrderResponse.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetFulfillmentOrderResult.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetFulfillmentPreviewItemList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetFulfillmentPreviewItem.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetFulfillmentPreviewRequest.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetFulfillmentPreviewResponse.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetFulfillmentPreviewResult.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetPackageTrackingDetailsRequest.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetPackageTrackingDetailsResponse.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetPackageTrackingDetailsResult.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetServiceStatusRequest.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetServiceStatusResponse.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/GetServiceStatusResult.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersByNextTokenRequest.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersByNextTokenResponse.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersByNextTokenResult.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersRequest.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersResponse.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/ListAllFulfillmentOrdersResult.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/NotificationEmailList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/ResponseHeaderMetadata.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/ResponseMetadata.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/ScheduledDeliveryInfo.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/ShippingSpeedCategoryList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/StringList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/TrackingAddress.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/TrackingEventList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/TrackingEvent.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/UnfulfillablePreviewItemList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/UnfulfillablePreviewItem.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/UpdateFulfillmentOrderItemList.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/UpdateFulfillmentOrderItem.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/UpdateFulfillmentOrderRequest.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/UpdateFulfillmentOrderResponse.php";
-require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/Weight.php";
-
-
-
-  function invokeGetFulfillmentPreview(FBAOutboundServiceMWS_Interface $b_service, $request)
+  /*function invokeGetFulfillmentPreview(FBAOutboundServiceMWS_Interface $b_service, $request)
   {
       try {
         $response = $b_service->GetFulfillmentPreview($request);
@@ -102,7 +27,7 @@ require_once $xcart_dir . "/src/FBAOutboundServiceMWS/Model/Weight.php";
 
 	return $return_echo;
      }
- }
+ }*/
 
 
 
