@@ -1524,7 +1524,6 @@ class AmazonMWS
                                 $oOrder->_update();
 
 
-
                                 $aManufacturerid_arr = [];
                                 $product_total = 0;
 
@@ -1547,38 +1546,54 @@ class AmazonMWS
                                             }
                                     }
 
-                                    if (!in_array($oProduct->getManufacturerId(), $aManufacturerid_arr)) {
-                                        $oOrderGroup = OrderGroup::model()->
+                                    $iOrderQuantity = intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue);
+                                    if ($iOrderQuantity > 0) {
+                                        $oOrderDetail = OrderDetail::model()->
                                         setField('orderid', $oOrder->getOrderId())->
-                                        setField('manufacturerid', $oProduct->getManufacturerId())->
-                                        setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->nodeValue))->
-                                        setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
-                                        setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
-                                        setField('acc_paymentid', PaymentMethod::model()->find(SQLBuilder::getInstance()->addCondition("order_tag_preference='$sFulfilmentChanel'"))->getField('paymentid'))->
-                                        setField('bd_status', 'W');
-                                        $oOrderGroup->_insert();
-                                        $aManufacturerid_arr[] = $oProduct->getManufacturerId();
+                                        setField('productid', $oProduct->getProductId())->
+                                        setField('item_cost_to_us', $oProduct->getProductCostToUs())->
+                                        setField('price', floatval($oOrderItem->getElementsByTagName('ItemPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue) / $iOrderQuantity)->
+                                        setField('amount', $iOrderQuantity)->
+                                        setField('productcode', $oProduct->getSKU())->
+                                        setField('AmazonOrderItemCode', addslashes($oOrderItem->getElementsByTagName('OrderItemId')->item(0)->nodeValue))->
+                                        setField('product', addslashes($oProduct->getProductName()));
+                                        $oOrderDetail->_insert();
+
+                                        if (!in_array($oProduct->getManufacturerId(), $aManufacturerid_arr)) {
+                                            $fShippingPrice = $fShippingDiscount = 0;
+
+                                            $oShippingPrice = $oOrderItem->getElementsByTagName('ShippingPrice');
+                                            if ($oShippingPrice && $oShippingPrice->length > 0) {
+                                                $fShippingPrice = floatval($oOrderItem->getElementsByTagName('ShippingPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue);
+                                            }
+                                            $oShippingDiscount = $oOrderItem->getElementsByTagName('ShippingDiscount');
+                                            if ($oShippingDiscount && $oShippingDiscount->length > 0) {
+                                                $fShippingDiscount = floatval($oOrderItem->getElementsByTagName('ShippingDiscount')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue);
+                                            }
+
+
+                                            $oOrderGroup = OrderGroup::model(['orderid' => $oOrder->getOrderId(), 'manufacturerid' => $oProduct->getManufacturerId()]);
+                                            $oOrderGroup->setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->nodeValue))->
+                                            setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
+                                            setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
+                                            setField('acc_paymentid', PaymentMethod::model()->find(SQLBuilder::getInstance()->addCondition("order_tag_preference='$sFulfilmentChanel'"))->getField('paymentid'))->
+                                            setField('bd_status', 'W')->
+                                            setField('shipping_gross', $oOrderGroup->getShippingGross() + ($fShippingPrice - $fShippingDiscount));
+                                            if (!$oOrderGroup->getOrderId()) {
+                                                $oOrderGroup->setField('orderid', $oOrder->getOrderId())->
+                                                setField('manufacturerid', $oProduct->getManufacturerId())->_insert();
+                                            } else {
+                                                $oOrderGroup->_update();
+                                            }
+                                        }
+                                        $product_total += $oOrderDetail->getTotalProductPrice();
                                     }
 
-                                    $oOrderDetail = OrderDetail::model()->
-                                    setField('orderid', $oOrder->getOrderId())->
-                                    setField('productid', $oProduct->getProductId())->
-                                    setField('item_cost_to_us', $oProduct->getProductCostToUs())->
-                                    setField('price', floatval($oOrderItem->getElementsByTagName('ItemPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue) /
-                                        intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue))->
-                                    setField('amount', intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue))->
-                                    setField('amazon_shipping_price_addon', floatval($oOrderItem->getElementsByTagName('ShippingPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue))->
-                                    setField('productcode', $oProduct->getSKU())->
-                                    setField('AmazonOrderItemCode', addslashes($oOrderItem->getElementsByTagName('OrderItemId')->item(0)->nodeValue))->
-                                    setField('product', addslashes($oProduct->getProductName()));
-                                    $oOrderDetail->_insert();
 
-                                    $product_total += $oOrderDetail->getTotalProductPrice();
                                 }
 
                                 $oOrder->updateVerificationStatus()->reCalculateTotals();
                                 $oOrder->recalculateAccounting();
-
 
 
                                 $log = '<a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID=' . $sAmazonOrderId . '" target="_blank">Amazon order # ' . $sAmazonOrderId . '</a><br />Grand total: $' . $product_total;
