@@ -868,7 +868,7 @@ class OrderGroup extends Data
     {
         global $config;
 
-        if ($this->getAccountingNetProfit() < 0 && !in_array($this->getOrderGroupStatusCB(), ['R','V'])) {
+        if ($this->getAccountingNetProfit() < 0 && !in_array($this->getOrderGroupStatusCB(), ['R'])) {
             if (!$this->getOrderInstance()->isAttentionTagSet($config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"])) {
                 $oAttentionTag = new AttentionTag(['status_id' => $config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
                 $aInsertArray = ['orderid' => $this->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
