@@ -261,7 +261,7 @@
  {/if}
 
 
-         {if $aBrandFilters|@count > 0}
+         {if count($aBrandFilters) > 0}
              {if $filter_name ne ""}
                  <tr>
                      <td colspan="2">&nbsp;</td>
@@ -283,7 +283,7 @@
                          </tr>
                      {/if}
                  {/foreach}
-                 {if $aBrandFilters@count gt 5}
+                 {if count($aBrandFilters) gt 5}
                  <tr>
                      <td colspan="2" align="right">
                          <a class="simple-button" target="_blank" title="Show more"
