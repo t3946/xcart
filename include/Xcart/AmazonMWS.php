@@ -729,6 +729,11 @@ class AmazonMWS
         return $this;
     }
 
+    public function setOrder($oORder)
+    {
+        $this->oOrder = $oORder;
+    }
+
     public function setReportId($aReportId)
     {
         $this->aReportIds = $aReportId;
@@ -1453,6 +1458,12 @@ class AmazonMWS
                             $aOrderItems = $xpath3->query('/ListOrderItemsResponse/ListOrderItemsResult/OrderItems/OrderItem');
 
                             if (!empty($aOrderItems) && $aOrderItems->length > 0) {
+                                $oOrder->setField('orderid', $oOrder->_insert());
+                                $oOrderRaw = CidevAmazonOrderRaw::model()->find(SQLBuilder::getInstance()->addCondition('orderid = ' . $oOrder->getOrderId()));
+                                $oOrderRaw->setField('orderid', $oOrder->getOrderId())->
+                                setField('order_info', addslashes($xpath2->document->saveXML()))->
+                                setField('orderitems_info', addslashes($xpath3->document->saveXML()));
+                                $oOrderRaw->_insert(true);
 
                                 $sOrderTotal = $aOrderInfo->getElementsByTagName('OrderTotal')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue;
                                 $oShippingAddress = $aOrderInfo->getElementsByTagName('ShippingAddress')->item(0);
@@ -1507,7 +1518,9 @@ class AmazonMWS
                                 setField('overall_fraud_score', 50)->
                                 setField('tracking_all_filled', 'N')->
                                 setField('vn_status', ($sFulfilmentChanel == 'AFN' ? 'PV' : 'NS'));
-                                $oOrder->setField('orderid', $oOrder->_insert());
+                                $oOrder->_update();
+
+
 
                                 $aManufacturerid_arr = [];
                                 $product_total = 0;
@@ -1562,11 +1575,7 @@ class AmazonMWS
                                 $oOrder->updateVerificationStatus()->reCalculateTotals();
                                 $oOrder->recalculateAccounting();
 
-                                $oOrderRaw = CidevAmazonOrderRaw::model()->find(SQLBuilder::getInstance()->addCondition('orderid = ' . $oOrder->getOrderId()));
-                                $oOrderRaw->setField('orderid', $oOrder->getOrderId())->
-                                setField('order_info', addslashes($xpath2->document->saveXML()))->
-                                setField('orderitems_info', addslashes($xpath3->document->saveXML()));
-                                $oOrderRaw->_insert(true);
+
 
                                 $log = '<a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID=' . $sAmazonOrderId . '" target="_blank">Amazon order # ' . $sAmazonOrderId . '</a><br />Grand total: $' . $product_total;
                                 Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $log, 'Amazon');
