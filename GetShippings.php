@@ -6,7 +6,7 @@ session_start();
 require "./top.inc.php";
 require "./init.php";
 
-include $xcart_dir ."/include/func/func.amazon_shipping_connecter.php";
+//include $xcart_dir ."/include/func/func.amazon_shipping_connecter.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
