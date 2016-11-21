@@ -637,6 +637,7 @@ class Order extends Data
         $aOrderGroups = $this->getOrderGroups();
         if (!empty($aOrderGroups)) {
             foreach ($aOrderGroups as $oOrderGroup) {
+                $oOrderGroup->reCalculateShipping();
                 $oOrderGroup->reCalculateTotals();
             }
         }
