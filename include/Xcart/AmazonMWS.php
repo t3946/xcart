@@ -1567,6 +1567,7 @@ class AmazonMWS
                                     setField('price', floatval($oOrderItem->getElementsByTagName('ItemPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue) /
                                         intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue))->
                                     setField('amount', intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue))->
+                                    setField('amazon_shipping_price_addon', floatval($oOrderItem->getElementsByTagName('ShippingPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue))->
                                     setField('productcode', $oProduct->getSKU())->
                                     setField('AmazonOrderItemCode', addslashes($oOrderItem->getElementsByTagName('OrderItemId')->item(0)->nodeValue))->
                                     setField('product', addslashes($oProduct->getProductName()));
@@ -1674,5 +1675,10 @@ class AmazonMWS
 
             $this->nextToken = $xpath->query('/*/*/NextToken')->item(0)->nodeValue;
         }
+    }
+
+    public function getService()
+    {
+        return $this->oMWSService;
     }
 }
