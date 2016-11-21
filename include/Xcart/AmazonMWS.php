@@ -729,9 +729,9 @@ class AmazonMWS
         return $this;
     }
 
-    public function setOrder($oORder)
+    public function setOrder($oOrder)
     {
-        $this->oOrder = $oORder;
+        $this->oOrder = $oOrder;
     }
 
     public function setReportId($aReportId)
