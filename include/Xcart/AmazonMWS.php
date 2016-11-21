@@ -1458,6 +1458,7 @@ class AmazonMWS
                             $aOrderItems = $xpath3->query('/ListOrderItemsResponse/ListOrderItemsResult/OrderItems/OrderItem');
 
                             if (!empty($aOrderItems) && $aOrderItems->length > 0) {
+                                $sAddress = $sShippingAddressCity = $sShippingAddressStateOrRegion = $sShippingAddressCountryCode = $sShippingAddressPostalCode = $sShippingAddressPhone = null;
                                 $oOrder->setField('orderid', $oOrder->_insert());
                                 $oOrderRaw = CidevAmazonOrderRaw::model()->find(SQLBuilder::getInstance()->addCondition('orderid = ' . $oOrder->getOrderId()));
                                 $oOrderRaw->setField('orderid', $oOrder->getOrderId())->
