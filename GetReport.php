@@ -58,7 +58,7 @@ func_print_r("setAcknowledged1_value:", $setAcknowledged1);
  //$dom_xml3_a =  invokeGetReportList($service, $request);
  func_print_r($request);
  
- $dom_xml_arr = invokeGetReportList($service, $request);
+ $dom_xml_arr = invokeGetReportList((new \Xcart\AmazonMWS())->getService(), $request);
 
  func_print_r($dom_xml_arr);
 
@@ -90,7 +90,7 @@ if ($mode == "GetReport" && !empty($reportId)){
 
  func_print_r($request);    
 
- $dom_xml_3 = invokeGetReport((new \Xcart\AmazonMWS)->getService(), $request);
+ $dom_xml_3 = invokeGetReport((new \Xcart\AmazonMWS())->getService(), $request);
 
  func_print_r($dom_xml_3);
 
@@ -107,7 +107,7 @@ if ($mode == "Acknowledgement" && !empty($reportId) && !empty($setAcknowledged))
                 $request->setAcknowledged($setAcknowledged); 
 
                 func_print_r($request);
-                invokeUpdateReportAcknowledgements($service, $request);
+                invokeUpdateReportAcknowledgements((new \Xcart\AmazonMWS())->getService(), $request);
 }
 
 
