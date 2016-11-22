@@ -86,7 +86,7 @@
         x_session_register('e_last_search_substring', $e_search_data_substring);
         x_session_register('e_founded_product_ids', array());
 
-        if ($e_last_search_substring != $e_search_data_substring && $load_all_e_products) {
+        if (isset($search_mode) && $search_mode) {
             $e_founded_product_ids = array();
         }
 
@@ -94,34 +94,53 @@
         {
                 x_load("product");
 
-                foreach ($result["hits"]["hits"] as $k => $v)
-                {
-                    $founded_ids = array('productid' => $v["_id"], 'categoryid' => array());
+                foreach ($result["hits"]["hits"] as $k => $v) {
+                    $founded_ids = array('productid' => $v["_id"], 'categoryid' => array(), 'score' => $v['_score']);
 
-					if (!$load_all_e_products)
-					{
-									$e_product_info = func_select_product($v["_id"], @$user_account['membershipid'], false);
+                    if (!$load_all_e_products) {
+                        $e_product_info = func_select_product($v["_id"], @$user_account['membershipid'], false);
 
-									if (!empty($e_product_info)){
+                        if (!empty($e_product_info)) {
 
-											$e_products[$k] = $e_product_info;
-											if (!empty($e_products[$k]["clean_url"])){
-													if (substr($e_products[$k]["clean_url"], -1) != "/"){
-															$e_products[$k]["clean_url"] .= "/";
-													}
-											}
-									}
-					} else {
-                        $categories = func_query_column("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$v[_id]' ORDER BY FIELD(main, 'Y', 'N')");
-						$e_products[$k]["categoryid"] = (!empty($categories)) ? $categories[0]: '';
-                        $founded_ids['categoryid'][] = $e_products[$k]["categoryid"];
-					}
+                            $e_products[$k] = $e_product_info;
+                            if (!empty($e_products[$k]["clean_url"])) {
+                                if (substr($e_products[$k]["clean_url"], -1) != "/") {
+                                    $e_products[$k]["clean_url"] .= "/";
+                                }
+                            }
+                        }
+                    }
+
+                    $categories = func_query_column("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$v[_id]' ORDER BY FIELD(main, 'Y', 'N')");
+
+                    if ($load_all_e_products) {
+                        $e_products[$k]["categoryid"] = (!empty($categories)) ? $categories[0] : '';
+                    }
+
+                    $founded_ids['categoryid'] = $categories;
                     $e_founded_product_ids[] = $founded_ids;
-				}
+                }
                 $e_products = array_values($e_products);
         }
 
-        x_session_save('e_last_search_data_substring', 'e_founded_product_ids');
+        if (isset($search_mode) && $search_mode)
+        {
+            $e_last_search_substring = $e_search_data_substring;
+            x_session_save('e_last_search_substring', 'e_founded_product_ids');
+        }
+
+
+
+$tt_arr = array();
+foreach ($e_founded_product_ids as $founded) {
+    $tt_arr[(string)$founded['score']] = $founded['productid'];
+}
+$tt_count = count($tt_arr);
+echo "<pre>";
+echo "/* founded: count - {$tt_count} \n";
+print_r($tt_arr);
+echo "</pre>";
+
 
 
 	if (!$load_all_e_products){

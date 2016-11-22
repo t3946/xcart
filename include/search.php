@@ -1297,39 +1297,109 @@ if ($mode == "search") {
      */
     if (empty($data["sort_field"]) || $data["sort_field"] == 'orderby')
     {
+
+        var_dump($variant_id_for_point10);
+        var_dump($variant_id_for_point11);
+
         x_session_register('e_last_search_substring');
         x_session_register('e_founded_product_ids');
 
-        if ( $e_last_search_substring )
+        $t1_arr = array();
+        $t2_arr = array();
+        $t3_arr = array();
+
+        $st_arr = array();
+        $related_like_text = false;
+
+        if ( !empty($e_founded_product_ids) && $variant_id_for_point11 == 1)
         {
-
-            $t_arr = array();
-            foreach ($e_founded_product_ids as $product)
-            {
-                if (count($t_arr) == 50) { break; }
-                $push = false;
-
-                if (!empty($categoryids) && !empty($product['categoryid'])) {
+            if (!empty($categoryids) && $variant_id_for_point12 == 1) {
+                foreach ($e_founded_product_ids as $product)
+                {
                     if (!empty(array_intersect($categoryids, $product['categoryid']))) {
-                        $push = true;
+                        $related_like_text = true;
+                        break;
                     }
                 }
-                else { $push = true; }
+            }
 
-                if ($push) {
-                    $t_arr[] = "'{$product['productid']}'";
+            $st_arr = $e_founded_product_ids;
+        }
+
+        $related_ids = array();
+
+        if ($variant_id_for_point10 == 1) {
+            $related_ids = Xcart\Helpers\CategorySearchOrders::getOrderByLikeLastViewed((($related_like_text)?$e_last_search_substring:null));
+        }
+
+        if (!empty($related_ids)) {
+            $st_arr = array_merge($st_arr, $related_ids);
+        }
+
+
+        usort($st_arr, function($a, $b)
+        {
+            return ($a['score'] < $b['score']) ? -1 : 1;
+        });
+        $st_arr = array_reverse($st_arr);
+
+
+        $t_ids_product_arr = array();
+        foreach ($st_arr as $product)
+        {
+            $push = false;
+            $push_el = "'{$product['productid']}'";
+
+            if (in_array($push_el, $t_ids_product_arr)) { continue; }
+            if (count($t_ids_product_arr) == 50) { break; }
+
+            if (!empty($categoryids) && !empty($product['categoryid'])) {
+                if (!empty(array_intersect($categoryids, $product['categoryid']))) {
+                    $push = true;
                 }
             }
+            else { $push = true; }
 
-            if (!empty($t_arr))
-            {
-                $order_by_lastsearch_1 =  "IF(FIELD( xcart_products.productid, " . implode(',', $t_arr) . ") = 0,1,0) ASC";
-                $order_by_lastsearch_2 =  "FIELD( xcart_products.productid, " . implode(',', $t_arr) . ") ASC";
-
-                array_unshift($orderbys, $order_by_lastsearch_1, $order_by_lastsearch_2);
+            if ($push) {
+                $t_ids_product_arr[] = $push_el;
+                $t3_arr[(string)$product['score']] = $product['productid'];
             }
         }
+
+
+        if (!empty($t_ids_product_arr))
+        {
+            $order_by_lastsearch_1 =  "IF(FIELD( xcart_products.productid, " . implode(',', $t_ids_product_arr) . ") = 0,1,0) ASC";
+            $order_by_lastsearch_2 =  "FIELD( xcart_products.productid, " . implode(',', $t_ids_product_arr) . ") ASC";
+
+            array_unshift($orderbys, $order_by_lastsearch_1, $order_by_lastsearch_2);
+        }
     }
+
+
+    foreach ($related_ids as $rel) {
+        $t1_arr[(string)$rel['score']] = $rel['productid'];
+    }
+    foreach ($e_founded_product_ids as $founded) {
+        $t2_arr[(string)$founded['score']] = $founded['productid'];
+    }
+
+    echo "<pre>";
+    echo "/* related by \n";
+    print_r($t1_arr);
+    echo "</pre>";
+
+
+    echo "<pre>";
+    echo "/* founded \n";
+    print_r($t2_arr);
+    echo "</pre>";
+
+    echo "<pre>";
+    echo "/* in category | sorted by \n";
+    print_r($t3_arr);
+    echo "</pre>";
+
 
     if (!empty($orderbys)) {
         $search_query .= " ORDER BY " . implode(", ", $orderbys);
