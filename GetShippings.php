@@ -6,7 +6,6 @@ session_start();
 require "./top.inc.php";
 require "./init.php";
 
-//include $xcart_dir ."/include/func/func.amazon_shipping_connecter.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -63,7 +62,7 @@ if (
  $shippingArray->setmember(array("Standard", "Expedited", "Priority"));
  $request->setShippingSpeedCategories($shippingArray);
 
- $dom_xml = invokeGetFulfillmentPreview((new Xcart\AmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01'))->getService(), $request);
+ $dom_xml = (new Xcart\AmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01'))->invokeGetFulfillmentPreview($request);
 
  print($dom_xml["saveXML"]);
 // print_r($dom_xml);

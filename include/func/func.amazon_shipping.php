@@ -194,7 +194,7 @@ XML;
 }
 
 function func_get_amazon_shippings_for_all_states($product){
-	global $xcart_states_US, $b_service, $sql_tbl, $config;
+	global $xcart_states_US, $sql_tbl, $config;
 
 	$amazon_shippings_arr = array();
 
@@ -203,7 +203,15 @@ function func_get_amazon_shippings_for_all_states($product){
 	}
 
 
-//func_print_r($product);
+	$oProduct = \Xcart\Product::model(['productid' => $product['productid']]);
+	if (!$oProduct->isAmazonFBAEnabled()) {
+		$aProducts = $oProduct->getProductsAvailOnAmazonParentWithChild(1);
+		if (!empty($aProducts)) {
+			$oProductParentOrChild = reset($aProducts);
+			$oProduct = $oProductParentOrChild['oProduct'];
+			$product = $oProduct->getFields();
+		}
+	}
 
 	$product["amount"] = $product["min_amount"];
         $cart["products"][0] = $product;
@@ -239,6 +247,7 @@ function func_get_amazon_shippings_for_all_states($product){
 		$userinfo["s_address"] = "test";
 
 		foreach ($xcart_states_US as $k => $v) {
+			$shippingid_in_rates = null;
 
 			$userinfo["s_country"] = $v["country_code"];
 			$userinfo["s_state"] = $v["code"];
@@ -247,8 +256,26 @@ function func_get_amazon_shippings_for_all_states($product){
 
 			$customer_zone = func_get_customer_zone_ship($userinfo, "master", "R", $manufacturerid);
 
-			if (!is_null($customer_zone))
-				$shippingid_in_rates = func_query("SELECT $sql_tbl[shipping_rates].*, $sql_tbl[shipping].subcode, $sql_tbl[shipping].shipping FROM $sql_tbl[shipping_rates] LEFT JOIN $sql_tbl[shipping] ON $sql_tbl[shipping].shippingid = $sql_tbl[shipping_rates].shippingid WHERE $sql_tbl[shipping].code='Amazon' AND $sql_tbl[shipping].active='Y' AND $sql_tbl[shipping_rates].manufacturerid='$manufacturerid' AND zoneid='$customer_zone' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
+			if (!is_null($customer_zone)) {
+				$sSql = <<<SQL
+SELECT {$sql_tbl['shipping_rates']}.*, 
+	   {$sql_tbl['shipping']}.subcode, 
+	   {$sql_tbl['shipping']}.shipping 
+  FROM {$sql_tbl['shipping_rates']} 
+  LEFT JOIN {$sql_tbl['shipping']} ON {$sql_tbl['shipping']}.shippingid = {$sql_tbl['shipping_rates']}.shippingid 
+  WHERE {$sql_tbl['shipping']}.code='Amazon' AND 
+		{$sql_tbl['shipping']}.active='Y' AND 
+		{$sql_tbl['shipping_rates']}.manufacturerid='{$manufacturerid}' AND 
+		zoneid='{$customer_zone}' AND 
+		mintotal<='{$total_shipping}' AND 
+		maxtotal>='{$total_shipping}' AND 
+		minweight<='{$total_weight_shipping}' AND 
+		maxweight>='{$total_weight_shipping}' AND 
+		type='R' 
+  ORDER BY maxtotal, maxweight
+SQL;
+				$shippingid_in_rates = func_query($sSql);
+			}
 
 			if (!empty($shippingid_in_rates)) {
 				$count_rates = count($shippingid_in_rates);
@@ -260,15 +287,15 @@ function func_get_amazon_shippings_for_all_states($product){
 
 			if ($count_rates >= 1) {
 				$amazon_rates = [];
-				$iProductId = $cart["products"][0]["productid"];
+
 				foreach ($shippingid_in_rates as $aShipping) {
-					$aShippingRate = func_query_first("SELECT * FROM ".$sql_tbl['products_amazon_rates']." WHERE product_id = $iProductId AND shipping_id = ".$aShipping['shippingid']." AND state_id = ".$v['stateid']);
-					if (!empty($aShippingRate)) {
+					$oShippingRate = \Xcart\ProductAmazonRates::model(['product_id' => $oProduct->getProductId(), 'shipping_id' => $aShipping['shippingid'], 'state_id' => $v['stateid']]);
+					if ($oShippingRate->getField('product_id')) {
 						$oDate = new DateTime();
-						$oDate->setTimestamp(strtotime($aShippingRate['last_update']));
+						$oDate->setTimestamp(strtotime($oShippingRate->getField('last_update')));
 						$iDaysInterval = $oDate->diff(new DateTime('now'))->days;
 						if ($iDaysInterval <= $config["Froogle"]["froogle_days_cache_rates"]) {
-							$amazon_rates[] = ['subcode'=>$aShippingRate['shipping_id'],'rate'=>$aShippingRate['rate']];
+							$amazon_rates[] = ['subcode' => $oShippingRate->getField('shipping_id'), 'rate' => $oShippingRate->getField('rate')];
 						}
 					}
 				}
@@ -302,7 +329,8 @@ function func_get_amazon_shippings_for_all_states($product){
 					$shippingArray->setmember(array("Standard", "Expedited", "Priority"));
 					$request->setShippingSpeedCategories($shippingArray);
 
-					$dom_xml = (new \Xcart\AmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01'))->invokeGetFulfillmentPreview($request);
+					$oAmazon = new \Xcart\AmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01');
+					$dom_xml = $oAmazon->invokeGetFulfillmentPreview($request);
 
 					while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503") {
 
@@ -343,7 +371,7 @@ function func_get_amazon_shippings_for_all_states($product){
 						$shippingArray->setmember(array("Standard", "Expedited", "Priority"));
 						$request->setShippingSpeedCategories($shippingArray);
 
-						$dom_xml = invokeGetFulfillmentPreview($b_service, $request);
+						$dom_xml = $oAmazon->invokeGetFulfillmentPreview($request);
 					}
 
 					if (empty($dom_xml["saveXML"])) {
@@ -352,8 +380,11 @@ function func_get_amazon_shippings_for_all_states($product){
 
 					$amazon_rates = func_amazon_get_shipping_rates(false, false, $dom_xml["saveXML"]);
 					foreach ($amazon_rates as $aRates) {
-						$aInsertArray = ['product_id'=>$vp['productid'], 'shipping_id'=>$aRates['subcode'], 'state_id'=>$v['stateid'], 'rate'=>$aRates['rate']];
-						func_array2insert('products_amazon_rates',$aInsertArray, true);
+						\Xcart\ProductAmazonRates::model()->fill(
+							['product_id'=>$oProduct->getProductId(),
+							'shipping_id'=>$aRates['subcode'],
+							'state_id'=>$v['stateid'],
+							'rate'=>$aRates['rate']])->_insert(true);
 					}
 				}
 

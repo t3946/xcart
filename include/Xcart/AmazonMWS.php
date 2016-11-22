@@ -587,28 +587,28 @@ class AmazonMWS
 
     public function invokeGetFulfillmentPreview($request)
     {
+        $return_echo = [];
         try {
             $response = $this->oMWSService->GetFulfillmentPreview($request);
 
-            echo ("Service Response\n");
-            echo ("=============================================================================\n");
-
-            $dom = new DOMDocument();
+            $dom = new \DOMDocument();
             $dom->loadXML($response->toXML());
             $dom->preserveWhiteSpace = false;
             $dom->formatOutput = true;
-            echo $dom->saveXML();
-            echo("ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
+            $return_echo["saveXML"] = $dom->saveXML();
+            $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
 
-        } catch (FBAOutboundServiceMWS_Exception $ex) {
-            echo("Caught Exception: " . $ex->getMessage() . "\n");
-            echo("Response Status Code: " . $ex->getStatusCode() . "\n");
-            echo("Error Code: " . $ex->getErrorCode() . "\n");
-            echo("Error Type: " . $ex->getErrorType() . "\n");
-            echo("Request ID: " . $ex->getRequestId() . "\n");
-            echo("XML: " . $ex->getXML() . "\n");
-            echo("ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n");
+        } catch (\FBAOutboundServiceMWS_Exception $ex) {
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            $return_echo["message"] = "Delay 2 minutes and trying the same Request";
         }
+        return $return_echo;
     }
 
     public function setTimeOut($iTimeOut)
