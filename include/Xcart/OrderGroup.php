@@ -1142,6 +1142,12 @@ class OrderGroup extends Data
 
     }
 
+    public function reCalculateShipping()
+    {
+        $this->setField('shipping_net', $this->getShippingGross() - floatval($this->getField('shipping_gst')) - floatval($this->getField('shipping_pst')));
+        $this->_save();
+    }
+
     /**
      * @return OrderDetail[]
      */

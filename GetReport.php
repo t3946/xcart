@@ -12,6 +12,8 @@ ini_set('memory_limit', '512M');
 set_time_limit(0);
 x_load('backoffice','files','taxes', 'froogle', 'product', 'crypt', 'xml');
 
+
+
 if ($sid != "2376dthjdcbsjct67et23dfxafdgbhsdj08r67fija" || empty($mode)){
 	func_header_location("/");
 }
@@ -89,6 +91,7 @@ if ($mode == "GetReport" && !empty($reportId)){
 //$request->setMWSAuthToken('<MWS Auth Token>'); // Optional
 
  func_print_r($request);    
+
 
  $dom_xml_3 = invokeGetReport((new \Xcart\AmazonMWS())->getService(), $request);
 

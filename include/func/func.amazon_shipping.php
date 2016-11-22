@@ -352,7 +352,7 @@ function func_get_amazon_shippings_for_all_states($product){
 
 					$amazon_rates = func_amazon_get_shipping_rates(false, false, $dom_xml["saveXML"]);
 					foreach ($amazon_rates as $aRates) {
-						$aInsertArray = ['product_id'=>$vp['productid'], 'shipping_id'=>$aRates['subcode'], 'state_id'=>$v['stateid'], 'rate'=>$aRates['rate']];
+						$aInsertArray = ['product_id'=>$iProductId, 'shipping_id'=>$aRates['subcode'], 'state_id'=>$v['stateid'], 'rate'=>$aRates['rate']];
 						func_array2insert('products_amazon_rates',$aInsertArray, true);
 					}
 				}
