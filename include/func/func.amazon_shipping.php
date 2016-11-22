@@ -302,7 +302,7 @@ function func_get_amazon_shippings_for_all_states($product){
 					$shippingArray->setmember(array("Standard", "Expedited", "Priority"));
 					$request->setShippingSpeedCategories($shippingArray);
 
-					$dom_xml = invokeGetFulfillmentPreview($b_service, $request);
+					$dom_xml = (new \Xcart\AmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01'))->invokeGetFulfillmentPreview($request);
 
 					while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503") {
 
