@@ -507,7 +507,16 @@ if (!$curl_err){
                         if ($oOrder->getOrderGroupsCount()==1 && $oOrderGroup->checkFBAProductsAvailToShipping()) continue;
 
 //if (1==1){
-				    if (($v["cb_status"] == "P" || $v["cb_status"] == "O" || $v["cb_status"] == "3" || $v["cb_status"] == "H" || $v["cb_status"] == "AP") && ($v["dc_status"] == "T" || $v["dc_status"] == "K" || $v["dc_status"] == "M")) {
+				    if (($v["cb_status"] == "P" ||
+                         $v["cb_status"] == "O" ||
+                         $v["cb_status"] == "3" ||
+                         $v["cb_status"] == "H" ||
+                         $v["cb_status"] == "AP") &&
+                        ($v["dc_status"] == "T" ||
+                         $v["dc_status"] == "K" ||
+                         $v["dc_status"] == "M") &&
+                            $oOrderGroup->getOrderInstance()->getField('vn_status') == \Xcart\Order::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED
+                         ) {
                         $manufacturer_name = $v["manufacturer"];
                         $d_instructions_to_order_entry_operator = $v["d_instructions_to_order_entry_operator"];
                         $d_order_entry_operator_subject_line_8 = $v["d_order_entry_operator_subject_line_8"];
