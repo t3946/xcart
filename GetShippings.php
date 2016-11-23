@@ -45,6 +45,16 @@ if (
  $items = array();
  foreach ($cart["products"] as $k => $v){
 
+  $oProduct = \Xcart\Product::model(['productid' => $v['productid']]);
+  if (!$oProduct->isAmazonFBAEnabled()) {
+   $aProducts = $oProduct->getProductsAvailOnAmazonParentWithChild(1);
+   if (!empty($aProducts)) {
+    $oProductParentOrChild = reset($aProducts);
+    $oProduct = $oProductParentOrChild['oProduct'];
+    $v = $oProduct->getFields();
+   }
+  }
+
   $item = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
   $item->setSellerSKU($v["productcode"]);
   $item->setQuantity($v["amount"]);

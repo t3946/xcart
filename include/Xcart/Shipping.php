@@ -1,6 +1,8 @@
 <?php
 namespace Xcart;
 
+use Xcart\Shipping\ShippingProcessor;
+
 class Shipping extends Data
 {
     public function __construct($iId = null)
@@ -78,7 +80,7 @@ class Shipping extends Data
         return Shipping::model()->findAll(SQLBuilder::getInstance()->addCondition("code = '$sCode'"));
     }
 
-    public function getShippingMethods(Customer $oCustomer, Manufacturer $oManufacturer, $type = 'R')
+    public function getShippingProcessor(Customer $oCustomer, Manufacturer $oManufacturer, $type = 'R')
     {
         $aShippingMethods = null;
         $cs_state = $oCustomer->getField("s_state");
@@ -119,7 +121,11 @@ SQL;
                             if (empty($aShippingProcessor) || !in_array($sShippingCode, array_keys($aShippingProcessor))){
                                 $sProcessor =  __NAMESPACE__. '\\Shipping\\' . $sShippingCode;
                                 if (class_exists($sProcessor)) {
-                                    $aShippingProcessor[$sShippingCode] = new $sProcessor();
+                                    $oProcessor = new $sProcessor();
+                                    $oProcessor->setManufacturer($oManufacturer);
+                                    $oProcessor->setShippingZone(ShippingZone::model(['zoneid' => $aShippingZone['zoneid']]));
+                                    $oProcessor->setShippingType($type);
+                                    $aShippingProcessor[$sShippingCode] = $oProcessor;
                                 }
                             }
                         }
@@ -129,15 +135,6 @@ SQL;
                 $aShippingMethods[$aShippingZone['zoneid']] = $aShippingProcessor;
             }
         }
-
-        /*a$ShippingRate = ShippingRate::model()->findAll(
-            SQLBuilder::getInstance()->
-            addInnerJoin('shipping', 's', 'main.shippingid = s.shippingid')->
-            addCondition('zoneid = ' . $ShippingZone->getField('zoneid'))->
-            addCondition('manufacturerid = ' . $oManufacturer->getManufacturerId())->
-            addCondition("type = '$type'")->
-            addCondition("s.active = 'Y'")
-        );*/
 
         return $aShippingMethods;
     }
