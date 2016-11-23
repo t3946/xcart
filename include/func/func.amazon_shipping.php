@@ -147,14 +147,14 @@ XML;
 	}
 
 
-	if (!empty($amazon_shippings) && is_array($amazon_shippings)){
+	if (!empty($amazon_shippings) && is_array($amazon_shippings)) {
 
 		$tmp_counter = 0;
 		$amazon_rates = array();
-		
-		foreach ($amazon_shippings as $shipping => $rate){
+
+		foreach ($amazon_shippings as $shipping => $rate) {
 			$subcode = func_query_first_cell("SELECT subcode FROM $sql_tbl[shipping] WHERE subcode IN (20001, 20003, 20005) AND shipping LIKE '%$shipping%'");
-			if (!empty($subcode)){
+			if (!empty($subcode)) {
 				$amazon_rates[$tmp_counter]["subcode"] = $subcode;
 				$amazon_rates[$tmp_counter]["rate"] = $rate;
 

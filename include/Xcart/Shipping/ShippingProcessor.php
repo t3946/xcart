@@ -7,18 +7,34 @@ use Xcart\Manufacturer;
 use Xcart\ShippingZone;
 use Xcart\ShippingRate;
 use Xcart\SQLBuilder;
+use Xcart\Product;
+use Xcart\Customer;
 
 abstract class ShippingProcessor
 {
     private $oManufacturer = null;
     private $oShippingZone = null;
     private $sShippingType = null;
+    /**
+     * @var Customer
+     */
+    private $oCustomer = null;
+
+    /**
+     * @var Product[]
+     */
+    private $aProducts = null;
+
+    /**
+     * @var ShippingRate[]
+     */
     private $aShippingRates = null;
 
     /**
      * @return boolean
      */
     abstract public function isProcessorApplicable();
+    abstract public function getShippingRates();
 
     /**
      * @return Manufacturer
@@ -68,7 +84,10 @@ abstract class ShippingProcessor
         $this->sShippingType = $sShippingType;
     }
 
-    public function getShippingRates()
+    /**
+     * @return ShippingRate[]
+     */
+    public function getShippingRatesEntities()
     {
         if (is_null($this->aShippingRates)) {
             $this->aShippingRates = ShippingRate::model()->findAll(
@@ -81,6 +100,38 @@ abstract class ShippingProcessor
             );
         }
         return $this->aShippingRates;
+    }
+
+    /**
+     * @return Product[]
+     */
+    public function getProducts()
+    {
+        return $this->aProducts;
+    }
+
+    /**
+     * @param Product[] $aProducts
+     */
+    public function setProducts($aProducts)
+    {
+        $this->aProducts = $aProducts;
+    }
+
+    /**
+     * @return Customer
+     */
+    public function getCustomer()
+    {
+        return $this->oCustomer;
+    }
+
+    /**
+     * @param Customer $oCustomer
+     */
+    public function setCustomer($oCustomer)
+    {
+        $this->oCustomer = $oCustomer;
     }
 
 

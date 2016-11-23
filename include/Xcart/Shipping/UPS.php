@@ -9,4 +9,14 @@ class UPS extends ShippingProcessor
         $bResult = false;
         return $bResult;
     }
+
+    public function getShippingRates()
+    {
+        $aShippingRates = $this->getShippingRatesEntities();
+        if (!empty($aShippingRates)) {
+            foreach ($aShippingRates as $oShippingRate) {
+
+            }
+        }
+    }
 }

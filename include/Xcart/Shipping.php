@@ -118,13 +118,14 @@ SQL;
                     foreach ($aShippingsMethods as $oShippingMethod) {
                         $sShippingCode = $oShippingMethod->getField('code');
                         if (!empty($sShippingCode)) {
-                            if (empty($aShippingProcessor) || !in_array($sShippingCode, array_keys($aShippingProcessor))){
-                                $sProcessor =  __NAMESPACE__. '\\Shipping\\' . $sShippingCode;
+                            if (empty($aShippingProcessor) || !in_array($sShippingCode, array_keys($aShippingProcessor))) {
+                                $sProcessor = __NAMESPACE__ . '\\Shipping\\' . $sShippingCode;
                                 if (class_exists($sProcessor)) {
                                     $oProcessor = new $sProcessor();
                                     $oProcessor->setManufacturer($oManufacturer);
                                     $oProcessor->setShippingZone(ShippingZone::model(['zoneid' => $aShippingZone['zoneid']]));
                                     $oProcessor->setShippingType($type);
+                                    $oProcessor->setCustomer($oCustomer);
                                     $aShippingProcessor[$sShippingCode] = $oProcessor;
                                 }
                             }

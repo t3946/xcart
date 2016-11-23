@@ -12,4 +12,9 @@ class State extends Data
 
         parent::__construct($aOrderData);
     }
+
+    public function getStateId()
+    {
+        return $this->getField('stateid');
+    }
 }

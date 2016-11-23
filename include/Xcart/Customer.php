@@ -12,6 +12,8 @@ class Customer extends Data
     private $iAmazonBatchesInProgressCount = null;
     private $iAmazonBatchesProcessedCount = null;
 
+    private $oState = null;
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['login'];
@@ -232,5 +234,16 @@ class Customer extends Data
     public function getEmail()
     {
         return $this->getField('email');
+    }
+
+    /**
+     * @return State
+     */
+    public function getShippingStateEntity()
+    {
+        if (is_null($this->oState)) {
+            $this->oState = State::model()->find(SQLBuilder::getInstance()->addCondition("code = '".$this->getField("s_state")."'"));
+        }
+        return $this->oState;
     }
 }

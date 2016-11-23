@@ -11,6 +11,9 @@ $aShippings = \Xcart\Shipping::model()->getShippingProcessor(\Xcart\Customer::mo
 
 $a = reset($aShippings);
 foreach ($a as $oShippingProcessor) {
+    $oShippingProcessor->setProducts(
+        [\Xcart\Product::model(['productid' => 20501])]
+    );
     $m = $oShippingProcessor->getShippingRates();
     var_dump($m);
 }
