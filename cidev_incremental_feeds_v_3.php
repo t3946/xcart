@@ -28,11 +28,6 @@ $marketplaceIdArray = array("Id" => array('ATVPDKIKX0DER'));
 ### ###
 
 
-#
-#
-include $xcart_dir . "/include/func/func.amazon_shipping_connecter.php";
-#
-#
 
 
 #
