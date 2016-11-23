@@ -14,12 +14,15 @@ class Amazon extends ShippingProcessor
 
     public function getShippingRates()
     {
+        $aFoundShippingRates = null;
         global $config;
+
 
         $aShippingRates = $this->getShippingRatesEntities();
         if (!empty($aShippingRates)) {
             foreach ($aShippingRates as $oShippingRate) {
                 $aProducts = $this->getProducts();
+
                 if (!empty($aProducts)) {
                     if (count($aProducts) == 1) {
                         /*get proxy amazon rates for 1 product*/
@@ -34,12 +37,13 @@ class Amazon extends ShippingProcessor
                             $iDaysInterval = $oDate->diff(new \DateTime('now'))->days;
                             if ($iDaysInterval <= $config["Froogle"]["froogle_days_cache_rates"]) {
                                 $oShippingRate->setShippingCharge($oProductAmazonRates->getField('rate'));
+                                $aFoundShippingRates[] = $oShippingRate;
                             }
                         }
                     }
                 }
             }
         }
-        return $aShippingRates;
+        return $aFoundShippingRates;
     }
 }
