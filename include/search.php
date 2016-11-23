@@ -1290,6 +1290,91 @@ if ($mode == "search") {
         $search_query_brandids .= " HAVING " . implode(" AND ", $having);
     }
     $search_query_count_NEW = $search_query_count;
+
+    /***
+     * Если есть результаты последнего поиска и сортировка по умолчанию
+     * поднимаем 50 продуктов в выводе категории согластно последнегому поисковому результату,
+     * так-же поднимает товары похожие на уже просмотренные в данном разделе.
+     */
+    if (empty($data["sort_field"]) || $data["sort_field"] == 'orderby')
+    {
+        x_session_register('e_last_search_substring');
+        x_session_register('e_founded_product_ids');
+
+        $search_related_products_ids = [];
+        $related_ids = [];
+        $related_like_text = null;
+
+        if ( !empty($e_founded_product_ids)  && $variant_id_for_point11 == 1)
+        {
+            if (!empty($categoryids) && 0 ) { //TODO: disabled
+                foreach ($e_founded_product_ids as $product)
+                {
+                    $ai = array_intersect($categoryids, $product['categoryid']);
+
+                    if (!empty($ai)) {
+                        $related_like_text = $e_last_search_substring;
+                        break;
+                    }
+                }
+            }
+
+            $search_related_products_ids = $e_founded_product_ids;
+        }
+
+        if ($variant_id_for_point10 == 1) {
+            $related_products = new Xcart\Helpers\ViewedRelatedProducts($categoryids, $related_like_text);
+            $related_ids = $related_products->getRelated();
+        }
+
+        if (!empty($related_ids)) {
+            $search_related_products_ids = array_merge($search_related_products_ids, $related_ids);
+        }
+
+        if (!empty($search_related_products_ids))
+        {
+            usort($search_related_products_ids, function($a, $b)
+            {
+                return ($a['score'] < $b['score']) ? -1 : 1;
+            });
+
+            $search_related_products_ids = array_reverse($search_related_products_ids);
+            $t_ids_product_arr = [];
+
+            foreach ($search_related_products_ids as $product)
+            {
+                $push = false;
+                $push_el = "'{$product['productid']}'";
+
+                if (in_array($push_el, $t_ids_product_arr)) { continue; }
+                if (count($t_ids_product_arr) == 50) { break; }
+
+                if (!empty($categoryids) && !empty($product['categoryid']))
+                {
+                    $ai = array_intersect($categoryids, $product['categoryid']);
+
+                    if (!empty($ai)) {
+                        $push = true;
+                    }
+                }
+                else { $push = true; }
+
+                if ($push) {
+                    $t_ids_product_arr[] = $push_el;
+                }
+            }
+
+
+            if (!empty($t_ids_product_arr))
+            {
+                $order_by_lastsearch_1 =  "IF(FIELD( xcart_products.productid, " . implode(',', $t_ids_product_arr) . ") = 0,1,0) ASC";
+                $order_by_lastsearch_2 =  "FIELD( xcart_products.productid, " . implode(',', $t_ids_product_arr) . ") ASC";
+
+                array_unshift($orderbys, $order_by_lastsearch_1, $order_by_lastsearch_2);
+            }
+        }
+    }
+
     if (!empty($orderbys)) {
         $search_query .= " ORDER BY " . implode(", ", $orderbys);
         $search_query_count .= " ORDER BY " . implode(", ", $orderbys);

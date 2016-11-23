@@ -82,7 +82,7 @@ if (!empty($orderids) && $_GET["mode"] == "order_message") {
 ###
 //	if ($order_data["order"]["paymentid"] != "4"){
 		# 4 - Phone Ordering
-		AB_Goal_Hit(array("1","2", "3", "4", "5", "6", "9"), $orders[0]["order"]["orderid"]);
+		AB_Goal_Hit(array("1","2", "3", "4", "5", "6", "9", "10", "11"), $orders[0]["order"]["orderid"]);
 //	}
 ###
 
