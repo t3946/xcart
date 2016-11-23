@@ -3,22 +3,66 @@ namespace Xcart\Helpers;
 
 use Xcart\ElasticSearch;
 
-class CategorySearchOrders
+class ViewedRelatedProducts
 {
-    public static function getOrderByLikeLastViewed($search_string = null)
+    private $categories = null;
+    private $search_string = null;
+    private $ssid = null;
+
+    public function __construct( $categories = null, $search_string = null )
     {
         global $XCART_SESSION_NAME;
         global $$XCART_SESSION_NAME;
 
-        $ssid = $$XCART_SESSION_NAME;
-        $t_arr = array();
+        $this->ssid = $$XCART_SESSION_NAME;
 
-        $sql =  /** @lang MySQL */<<<SQL
+        if (!empty($categories)) {
+            $this->categories = $categories;
+        }
+        if (!empty($search_string)) {
+            $this->search_string = $search_string;
+        }
+    }
+
+    public function setCategories($categories)
+    {
+        if (!empty($categories)) {
+            $this->categories = $categories;
+        }
+    }
+    public function setSearchString($search_string)
+    {
+        if (!empty($search_string)) {
+            $this->search_string = $search_string;
+        }
+    }
+
+    public function getRelated()
+    {
+        $last_viewed_ids = $this->getLastViewedProducts($this->categories);
+        $elastic_query = $this->getElasticQuery($last_viewed_ids, $this->search_string);
+
+        return self::getFromElastic($elastic_query);
+    }
+
+
+    public function getLastViewedProducts($categories = null)
+    {
+        $ids = [];
+        $to_sql = '';
+
+        if (!empty($categories) && is_array($categories)) {
+            $cats = implode(',', $categories);
+            $to_sql = "and c.categoryid in ({$cats})";
+        }
+
+        $sql =  /** @lang MySQL */ <<<SQL
 select SP.resource_id as needed_resource_id
 from xcart_cidev_surf_path SP
 inner join xcart_products P ON P.productid = SP.resource_id and P.forsale = 'Y'
+join xcart_products_categories c ON c.productid = P.productid {$to_sql}
 
-where SP.meta_id = (SELECT id FROM xcart_cidev_surf_meta WHERE sessid='{$ssid}' limit 1)
+where SP.meta_id = (SELECT id FROM xcart_cidev_surf_meta WHERE sessid='{$this->ssid}' limit 1)
   and SP.resource_type = 'P'
   and SP.meta_id > 0
   
@@ -26,27 +70,30 @@ group by SP.resource_id
 order by max(SP.`position`) desc
 SQL;
 
-        $pids = func_query($sql);
-        $ids = array();
-        foreach ($pids as $pid)
-        {
-            $ids[] = $pid['needed_resource_id'];
+        $pids = func_query_column($sql);
+
+        if (empty($pids)) {
+            return [];
         }
-        $ids = array_slice($ids, 0, 5);
 
+        return $pids;
+    }
 
+    public function getElasticQuery($product_ids, $search_string = null)
+    {
+        $ids = array_slice($product_ids, 0, 5);
         $ids = implode(', ', $ids);
 
         $json = /** @lang JSON */ <<<JSON
 {
     "more_like_this": {
         "fields": [ 
-            "productname", "description", "brand"
+            "productname", "description"
         ],
         "ids": [{$ids}],
-        "min_term_freq": 2,
         "percent_terms_to_match": 0.7,
-        "min_doc_freq": 5
+        "min_doc_freq": 2,
+        "min_term_freq": 5
     }
 }
 JSON;
@@ -56,14 +103,10 @@ JSON;
             $query->more_like_this->like_text = $search_string;
         }
 
-        print_r(json_encode($query));
-
-        $t_arr = self::getFromElastic($query);
-
-        return $t_arr;
+        return $query;
     }
 
-    public static function getFromElastic($query = array(), $minScope = 0.8, $size = 50, $from = 0)
+    public static function getFromElastic($query = array(), $minScope = 0.8, $size = 50, $from = 0, $pull_categories = true)
     {
         global $config;
         global $site_domain;
@@ -77,15 +120,21 @@ JSON;
 
         if ($result['hits']['total'])
         {
-            return self::pullCategoriesToElasticProducts(self::clearProductsFromElastic($result['hits']['hits']));
+            $products = self::clearProductsFromElastic($result['hits']['hits']);
+
+            if ($pull_categories) {
+                return self::pullCategoriesToElasticProducts($products);
+            }
+
+            return $products;
         }
 
-        return array();
+        return [];
     }
 
     private static function clearProductsFromElastic($products)
     {
-        $t_arr = array();
+        $t_arr = [];
         foreach ($products as $product) {
             $t_arr[] = array(
                 'productid' => $product['_id'],
@@ -99,9 +148,7 @@ JSON;
 
     private static function pullCategoriesToElasticProducts($products)
     {
-        global $sql_tbl;
-
-        $p_ids = array();
+        $p_ids = [];
 
         foreach ($products as $product) {
             $p_ids[] = $product['productid'];
@@ -111,7 +158,7 @@ JSON;
 
         $sql = <<<SQL
 SELECT productid, group_concat(categoryid) as categories 
-FROM {$sql_tbl['products_categories']}
+FROM xcart_products_categories
 WHERE productid in ({$p_ids}) 
 group by productid
 ORDER BY FIELD(main, 'Y', 'N')

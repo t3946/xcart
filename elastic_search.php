@@ -130,19 +130,6 @@
         }
 
 
-
-$tt_arr = array();
-foreach ($e_founded_product_ids as $founded) {
-    $tt_arr[(string)$founded['score']] = $founded['productid'];
-}
-$tt_count = count($tt_arr);
-echo "<pre>";
-echo "/* founded: count - {$tt_count} \n";
-print_r($tt_arr);
-echo "</pre>";
-
-
-
 	if (!$load_all_e_products){
 
 	        $e_search_data["page"] = $page;
