@@ -44,6 +44,7 @@ if (
 
  $items = array();
  foreach ($cart["products"] as $k => $v){
+  $iAmount = $v['amount'];
 
   $oProduct = \Xcart\Product::model(['productid' => $v['productid']]);
   if (!$oProduct->isAmazonFBAEnabled()) {
@@ -57,7 +58,7 @@ if (
 
   $item = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
   $item->setSellerSKU($v["productcode"]);
-  $item->setQuantity($v["amount"]);
+  $item->setQuantity($iAmount);
   $item->setSellerFulfillmentOrderItemId($v["productcode"]);
   $items[] = $item;
 
