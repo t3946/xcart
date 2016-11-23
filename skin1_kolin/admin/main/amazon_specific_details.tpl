@@ -87,6 +87,13 @@
             </tr>
 
             <tr>
+                <td width="25%">Amazon_enabled</td>
+                <td width="*"><input type="text" name="amazon_category_item_type"
+                                     value="{$amazon_specific_details.amazon_category_item_type}" style="width: 95%;"/>
+                </td>
+            </tr>
+
+            <tr>
                 <td width="25%">longest_side</td>
                 <td width="*">{$amazon_specific_details.longest_side}</td>
             </tr>

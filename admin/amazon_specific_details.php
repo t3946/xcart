@@ -9,8 +9,8 @@ require $xcart_dir."/include/security.php";
 if (empty($productid)){
 	die("Empty productid");
 }
-
-$product = func_query_first_cell("SELECT product FROM $sql_tbl[products] WHERE productid='$productid'");
+$oProduct = \Xcart\Product::model(['productid' => $productid]);
+$product = $oProduct->getFields();
 
 $location[] = array($product, "product_modify.php?productid=$productid");
 $location[] = array("Amazon specific details", "");
@@ -76,6 +76,7 @@ if (empty($amazon_specific_details)){
 
 $smarty->assign("amazon_specific_details", $amazon_specific_details);
 $smarty->assign("product", $product);
+$smarty->assign("oProduct", $oProduct);
 $smarty->assign("main", "amazon_specific_details");
 $smarty->assign("location", $location);
 
