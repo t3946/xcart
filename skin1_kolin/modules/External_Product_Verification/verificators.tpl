@@ -31,11 +31,10 @@
                         {if $oCustomer->getCustomerURL()}
                         <a target="_blank"
                            href="{$oCustomer->getCustomerURL()}">{/if}{$oCustomer->getCustomerFullName()}{if $oCustomer->getCustomerURL()}</a>{/if}
-                        &nbsp;&nbsp;
                         {if $oCustomer->isAmazonAccountSuspended()}
                             <span style="white-space: nowrap;">
-                            <a class="verificator_status" style="color:red;" href="#">Blocked</a>
-                        </span>
+                                <a class="verificator_status" style="color:red;" href="#">Blocked</a>
+                            </span>
                         {/if}
                     </td>
                     <td>{if $oCustomer->getCustomerModifyLink()}<a href="{$oCustomer->getCustomerModifyLink()}"

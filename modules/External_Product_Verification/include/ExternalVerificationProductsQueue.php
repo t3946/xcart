@@ -120,7 +120,7 @@ class ExternalVerificationProductsQueue extends Data
         return $aAsins;
     }
 
-    public static function getVerificationResultsProductsWithNotSameASIN()
+    public static function getVerificationResultsProductsWithNotSameASIN($aParams = null)
     {
         $aResults = [];
 
@@ -133,12 +133,15 @@ class ExternalVerificationProductsQueue extends Data
         addInnerJoin('external_verification_products', 'xp', 'xp.productid = xe.productid AND xp.action IN ("' . implode('","', ExternalVerificationBatch::$aProductStatuses['processed']) . '")')->
         addInnerJoin('external_verification_products', 'xp2', 'xp.productid = xp2.productid AND xp2.action IN ("asin_on_amazon")')->
         addInnerJoin('external_verification_products', 'xp3', 'xp.productid = xp3.productid AND xp3.action IN ("asin_on_amazon")')->
+        addInnerJoin('external_verification_products', 'xp4', 'xp.productid = xp4.productid AND xp4.action IN ("arbitrage_confirmation")', 'LEFT JOIN')->
         addGroupBy('xe.productid')->addOrderBy('xp.value DESC')->setLimit($limit);
         if (!empty($aParams['batch_id']) && is_numeric($aParams['batch_id'])) {
             $oSQL->addCondition('batch_id='.(int)$aParams['batch_id']);
         } else {
             $oSQL->addCondition('cross_verify_count = 2');
             $oSQL->addCondition('xp3.value != xp2.value');
+            $oSQL->addCondition('xp3.batch_id != xp2.batch_id');
+            $oSQL->addCondition('xp4.productid IS NULL');
         }
         $aVerificationResults = $oSQL->Execute()->getQueryResult();
         if (!empty($aVerificationResults)) {
