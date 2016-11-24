@@ -37,8 +37,11 @@
                         {/if}
                         <tr {$classVar}>
                             {if $smarty.foreach.ver_rows.iteration == 1}
-                                <td rowspan="{$aVerificatorResults|@count}"><a href="{$oProduct->getProductModifyURL()}"
-                                                                               target="_blank">{$oProduct->getSKU()}</a></td>
+                                <td rowspan="{$aVerificatorResults|@count}">
+                                    <p><a target="_blank" href="{$oVerificatorResult->getSearchByUPCOnAmazonLink()}">Amazon UPC search</a></p>
+                                    <a href="{$oProduct->getProductModifyURL()}"
+                                                                               target="_blank">{$oProduct->getSKU()}</a>
+                                </td>
                                 <td rowspan="{$aVerificatorResults|@count}"><a target="_blank"
                                                                                href="{$oProduct->getProductFrontURL()}">{$oProduct->getProductName()}</a>
                                 </td>
