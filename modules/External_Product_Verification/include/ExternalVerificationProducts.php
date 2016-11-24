@@ -225,4 +225,9 @@ class ExternalVerificationProducts extends Data
     {
         return ExternalVerificationBatch::checkAnswerCorrect($this, $oProductQueue);
     }
+
+    public function getSearchByUPCOnAmazonLink()
+    {
+        return sprintf(ExternalVerificationBatch::LINK_SEARCH_BY_UPC, $this->getProductEntity()->getUPC());
+    }
 }
