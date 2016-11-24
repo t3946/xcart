@@ -87,6 +87,31 @@
             </tr>
 
             <tr>
+                <td width="25%">Amazon_enabled</td>
+                <td width="*"><input type="checkbox" name="amazon_enabled" value="Y" {if $oProduct->getField('amazon_enabled')=='Y'}checked="checked"{/if}/>
+                </td>
+            </tr>
+
+            <tr>
+                <td width="25%">Amazon_FBA</td>
+                <td width="*"><input type="checkbox" name="amazon_fba"
+                                     value="Y" {if $oProduct->isAmazonFBAEnabled()}checked="checked"{/if} />
+                </td>
+            </tr>
+
+            <tr>
+                <td width="25%">Amazon_FBA_restricted</td>
+                <td width="*"><input type="checkbox" name="amazon_fba_restricted"
+                                     value="Y"  {if $amazon_specific_details.amazon_fba_restricted=='Y'}checked="checked"{/if}/>
+                </td>
+            </tr>
+            <tr>
+                <td width="25%">Amazon_FBA_restricted_reason</td>
+                <td width="*"><textarea style="width: 95%;" name="amazon_fba_restricted_reason">{$amazon_specific_details.amazon_fba_restricted_reason}</textarea>
+                </td>
+            </tr>
+
+            <tr>
                 <td width="25%">longest_side</td>
                 <td width="*">{$amazon_specific_details.longest_side}</td>
             </tr>
