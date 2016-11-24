@@ -18,6 +18,33 @@
 
 <!-- Google verification META tags -->
 
+
+<meta name="AB_relations" content="{$variant_id_for_point10}" />
+<meta name="AB_search" content="{$variant_id_for_point11}" />
+
+<script lang="text/javascript" id="sorting-info">
+    console.groupCollapsed('Modification category output');
+    console.group('A/B');
+    console.log('AB relations',{$variant_id_for_point10});
+    console.log('AB search',{$variant_id_for_point11});
+    console.groupEnd();
+
+    console.group('Founded in last search');
+    console.table({$t2_arr});
+    console.groupEnd();
+
+    console.group('Relations for last viewed');
+    console.table({$t1_arr});
+    console.groupEnd();
+
+    console.group('Append in sorting');
+    console.table({$t3_arr});
+    console.groupEnd();
+
+    console.groupEnd();
+</script>
+
+
 <!-- bench time -->
 <meta name="{$bench_name}" content="{$bench_time}" />
 
