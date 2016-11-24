@@ -1301,6 +1301,10 @@ if ($mode == "search") {
         x_session_register('e_last_search_substring');
         x_session_register('e_founded_product_ids');
 
+        $t1_arr = array();
+        $t2_arr = array();
+        $t3_arr = array();
+
         $search_related_products_ids = [];
         $related_ids = [];
         $related_like_text = null;
@@ -1361,6 +1365,7 @@ if ($mode == "search") {
 
                 if ($push) {
                     $t_ids_product_arr[] = $push_el;
+                    $t3_arr[(string)$product['score']] = $product['productid'];
                 }
             }
 
@@ -1373,6 +1378,29 @@ if ($mode == "search") {
                 array_unshift($orderbys, $order_by_lastsearch_1, $order_by_lastsearch_2);
             }
         }
+        if (!empty($related_ids)) {
+            foreach ($related_ids as $rel) {
+                $t1_arr[(string)$rel['score']] = $rel['productid'];
+            }
+        }
+
+        if (!empty($e_founded_product_ids)) {
+            foreach ($e_founded_product_ids as $founded) {
+                $t2_arr[(string)$founded['score']] = $founded['productid'];
+            }
+        }
+
+
+//        $t1_arr = print_r($t1_arr, true);
+//        $t2_arr = print_r($t2_arr, true);
+//        $t3_arr = print_r($t3_arr, true);
+        $t1_arr = json_encode($t1_arr);
+        $t2_arr = json_encode($t2_arr);
+        $t3_arr = json_encode($t3_arr);
+
+        $smarty->assign("t1_arr", $t1_arr);
+        $smarty->assign("t2_arr", $t2_arr);
+        $smarty->assign("t3_arr", $t3_arr);
     }
 
     if (!empty($orderbys)) {
