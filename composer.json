@@ -21,7 +21,6 @@
             "include/func/func.core.php",
             "include/func/func.amazon.php",
             "include/func/func.amazon_shipping.php",
-            "include/func/func.amazon_shipping_connecter.php",
             "include/func/func.backoffice.php",
             "include/func/func.cart.php",
             "include/func/func.category.php",
