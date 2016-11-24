@@ -397,6 +397,11 @@ class Product extends Data
         return ($this->getField('amazon_fba') == 'Y');
     }
 
+    public function isAmazonEnabled()
+    {
+        return ($this->getField('amazon_enabled') == 'Y');
+    }
+
     public function getUPC()
     {
         return $this->getField('upc');
