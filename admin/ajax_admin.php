@@ -27,6 +27,7 @@ switch ($_POST['ajax_action']) {
         break;
     case "change_processing_rules":
         changeProcessingRules($_POST);
+        break;
     case "change_verificator_status":
         changeVerificatorStatus($_POST);
         break;
@@ -41,6 +42,9 @@ switch ($_POST['ajax_action']) {
         break;
     case "category_structure_change":
         changeCategoryStructure($_POST);
+        break;
+    case "verification_arbitrage_confirmation":
+        confirmVerificationArbitrage($_POST);
         break;
 }
 
@@ -236,5 +240,24 @@ function changeIssueProcessing($aParams = [])
             $aResult['result'] = true;
             break;
     }
+    print(json_encode($aResult));
+}
+
+function confirmVerificationArbitrage($aParams = [])
+{
+    global $login;
+    $aResult = [];
+    $aResult['result'] = false;
+    $iProductId = (int) $aParams['product_id'];
+    $iBatchId = (int) $aParams['batch_id'];
+    $sLogin = $aParams['login'];
+    $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
+        setField('productid', $iProductId)->
+        setField('batch_id', $iBatchId)->
+        setField('login', $sLogin)->
+        setField('action', 'arbitrage_confirmation')->
+        setField('value', $login)->_insert(true);
+    $aResult['result'] = ($bS !== false);
+
     print(json_encode($aResult));
 }

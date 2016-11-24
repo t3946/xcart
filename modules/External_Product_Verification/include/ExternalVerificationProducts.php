@@ -45,6 +45,11 @@ class ExternalVerificationProducts extends Data
         return $this->getField('batch_id');
     }
 
+    public function getBatchEntity()
+    {
+        return ExternalVerificationBatch::model(['batch_id' => $this->getBatchId()]);
+    }
+
     public function getValue()
     {
         return $this->getField('value');

@@ -32,10 +32,11 @@
                         {assign var=oCustomer value=$oVerificatorResult->getCustomerEntity()}
                         {assign var=oVerifyDate value=$oVerificatorResult->getValueAsDateTime()}
                         {assign var=Asin value=$oVerificatorResult->getAsin()}
+                        {assign var=Batch value=$aVerificatorResults[0]->getBatchEntity()}
                         {if $smarty.foreach.ver_rows.iteration == 1}
                             {cycle assign=classVar name=$type values=", class='TableSubHead'"}
                         {/if}
-                        <tr {$classVar}>
+                        <tr data-productid="{$oProduct->getProductId()}" {$classVar}>
                             {if $smarty.foreach.ver_rows.iteration == 1}
                                 <td rowspan="{$aVerificatorResults|@count}">
                                     <p><a target="_blank" href="{$oVerificatorResult->getSearchByUPCOnAmazonLink()}">Amazon UPC search</a></p>
@@ -83,13 +84,17 @@
                                 class="question_not_same"
                                     {/if}>{$oVerificatorResult->getQtyOnAmazon()}<br/>{$oVerificatorResult->getQtyOnOurWebSite()}</td>
                             <td align="center"
-                                    {if $aVerificatorResults[1]->checkAnswerCorrect($oVerificationResult) < 0}
-                                class="action_not_same"
+                                    {if ((is_null($Batch->getBatchId()) && $aVerificatorResults[1]->checkAnswerCorrect($oVerificationResult) < 0) ||
+                                        ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAction() != $aVerificatorResults[1]->getAction()))
+                                    }
+                                        class="action_not_same"
                                     {/if}>
                                 <b>{$oVerificatorResult->getActionDisplayName()}</b>
                                 {if $oVerificatorResult->getComment()}
                                     <span data-html="{$oVerificatorResult->getComment()}" class="verificator_comments_icon"><img src="{$ImagesDir}/comment.png" /></span>
                                 {/if}
+                                <br/>
+                                {if ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin())}<input name="radio_{$oProduct->getProductId()}" class="arbitration_radio" data-login="{$oCustomer->getCustomerLogin()}"  data-arbitrage-confirmation-batch="{$oVerificatorResult->getBatchId()}" type="radio" />{/if}
                             </td>
                         </tr>
                     {/if}
@@ -102,6 +107,27 @@
     {literal}
     $('.verificator_comments_icon').popup({on: 'click', inline: true}).click(function () {
         return false;
+    });
+    $('.arbitration_radio').change(function() {
+        var tr = $(this).closest('tr');
+        var iProduct = tr.data('productid');
+        var iBatchId = $(this).data('arbitrage-confirmation-batch');
+        var sLogin = $(this).data('login');
+
+        if (confirm('Are You Sure?')) {
+            var trpair = tr.siblings('tr[data-productid='+iProduct+']').andSelf().css({opacity: 0.4});
+            $.post('ajax_admin.php', {
+                        product_id: iProduct,
+                        batch_id: iBatchId,
+                        login: sLogin,
+                        ajax_action: 'verification_arbitrage_confirmation'
+                    },
+                    function (data) {
+                        if (data && data.result) {
+                            trpair.fadeOut(function(){$(this).remove()});
+                        }
+                    }, 'json');
+        }
     });
     {/literal}
 </script>
