@@ -20,4 +20,4 @@ $smarty->assign("active", $active);
 
 $smarty->assign('oBatches', $oBatches);
 
-$smarty->assign('aVerifiactionResults', ExternalVerificationProductsQueue::getVerificationResultsProducts());
+$smarty->assign('aVerifiactionResults', ExternalVerificationProductsQueue::getVerificationResultsProductsWithNotSameASIN(['limit' => 50]));
