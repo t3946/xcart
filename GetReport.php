@@ -90,7 +90,7 @@ if ($mode == "GetReport" && !empty($reportId)){
  $request->setReportId($reportId);
 //$request->setMWSAuthToken('<MWS Auth Token>'); // Optional
 
- func_print_r($request);
+ func_print_r($request);    
 
 
  $dom_xml_3 = invokeGetReport((new \Xcart\AmazonMWS())->getService(), $request);
