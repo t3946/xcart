@@ -3338,42 +3338,19 @@ function Get_AB_Variant($point_id){
 	) {
 		if ($is_robot == "Y" ||	defined("IS_ROBOT"))
 			$variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND (for_webbot ='Y' OR is_default = 'Y') ORDER BY for_webbot DESC, is_default DESC");
-			else $variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND is_default='Y'");
-
-	} else {
-		$variant_id = ($ab_testing_point["total_hits"] + 1) % $ab_testing_point["mod_param"];
-
-		if ($variant_id == "") {
-			$variant_id = 0;
+        else $variant_id = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND is_default='Y'");
+	}
+	else {
+		$variant_id_balanced = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id = $point_id ORDER BY total_hits_count ASC, RAND()");
+		if (empty($variant_id_balanced)) {
+			$variant_id_balanced = 0;
 		}
 
-		$variant_id_balanced = func_query_first_cell("SELECT variant_id FROM $sql_tbl[ab_point_variants] WHERE point_id = $point_id ORDER BY total_hits_count ASC, variant_id = $variant_id DESC");
-		if (empty($variant_id_balanced)) $variant_id_balanced = 0;
-
-#
-##
-###
-		/*if ($variant_id > 1) {
-			$variant_id = 1;
-		}
-
-		$total_hits_count_v0 = func_query_first_cell("SELECT total_hits_count FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND variant_id='0'");
-		$total_hits_count_v1 = func_query_first_cell("SELECT total_hits_count FROM $sql_tbl[ab_point_variants] WHERE point_id='$point_id' AND variant_id='1'");
-
-		if ($total_hits_count_v1 > $total_hits_count_v0 && $variant_id == 1) {
-			$variant_id = 0;
-		}
-
-		if ($total_hits_count_v0 > $total_hits_count_v1 && $variant_id == 0) {
-			$variant_id = 1;
-		}*/
-###
-##
-#
 		db_query("UPDATE $sql_tbl[ab_testing_points] SET total_hits=total_hits+1 WHERE point_id='$point_id'");
 		db_query("UPDATE $sql_tbl[ab_point_variants] SET total_hits_count=total_hits_count+1 WHERE point_id='$point_id' AND variant_id='$variant_id_balanced'");
 
 		$pointid_ab_testing_arr[$point_id]["variant_id"] = $variant_id_balanced;
+        $variant_id = $variant_id_balanced;
 
 		x_session_save('pointid_ab_testing_arr');
 	}
