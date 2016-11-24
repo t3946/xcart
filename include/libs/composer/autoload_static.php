@@ -13,7 +13,6 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         '38aa9ffa312700065ceed8bf7bcb7a53' => __DIR__ . '/../../..' . '/include/func/func.core.php',
         'f550ebde9e69876a00625883277835ce' => __DIR__ . '/../../..' . '/include/func/func.amazon.php',
         'dca41d7b610d234855ab845f35115f14' => __DIR__ . '/../../..' . '/include/func/func.amazon_shipping.php',
-        'a7463b49d5c2acfa9226540eacf141cb' => __DIR__ . '/../../..' . '/include/func/func.amazon_shipping_connecter.php',
         'c074bc0f3f52cf1c23cb50d0b4b45a7d' => __DIR__ . '/../../..' . '/include/func/func.backoffice.php',
         'c735e56e84931684b20d9a61359574fb' => __DIR__ . '/../../..' . '/include/func/func.cart.php',
         '4fe8cfc3c08ff324bbca0dc5a2183eb2' => __DIR__ . '/../../..' . '/include/func/func.category.php',

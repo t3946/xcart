@@ -585,6 +585,32 @@ class AmazonMWS
         }
     }
 
+    public function invokeGetFulfillmentPreview($request)
+    {
+        $return_echo = [];
+        try {
+            $response = $this->oMWSService->GetFulfillmentPreview($request);
+
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            $return_echo["saveXML"] = $dom->saveXML();
+            $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
+
+        } catch (\FBAOutboundServiceMWS_Exception $ex) {
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+        }
+        return $return_echo;
+    }
+
     public function setTimeOut($iTimeOut)
     {
         $this->sleepTimeOut = $iTimeOut;
