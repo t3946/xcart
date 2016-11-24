@@ -120,6 +120,35 @@ class ExternalVerificationProductsQueue extends Data
         return $aAsins;
     }
 
+    public static function getVerificationResultsProductsWithNotSameASIN()
+    {
+        $aResults = [];
+
+        $limit = 50;
+        if (!empty($aParams['limit']) && is_numeric($aParams['limit']))
+            $limit = (int) $aParams['limit'];
+        $oSQL = new SQLBuilder();
+        $oSQL->addSelect('xe.*')->
+        addFromTable('external_verification_products_queue', 'xe')->
+        addInnerJoin('external_verification_products', 'xp', 'xp.productid = xe.productid AND xp.action IN ("' . implode('","', ExternalVerificationBatch::$aProductStatuses['processed']) . '")')->
+        addInnerJoin('external_verification_products', 'xp2', 'xp.productid = xp2.productid AND xp2.action IN ("asin_on_amazon")')->
+        addInnerJoin('external_verification_products', 'xp3', 'xp.productid = xp3.productid AND xp3.action IN ("asin_on_amazon")')->
+        addGroupBy('xe.productid')->addOrderBy('xp.value DESC')->setLimit($limit);
+        if (!empty($aParams['batch_id']) && is_numeric($aParams['batch_id'])) {
+            $oSQL->addCondition('batch_id='.(int)$aParams['batch_id']);
+        } else {
+            $oSQL->addCondition('cross_verify_count = 2');
+            $oSQL->addCondition('xp3.value != xp2.value');
+        }
+        $aVerificationResults = $oSQL->Execute()->getQueryResult();
+        if (!empty($aVerificationResults)) {
+            foreach ($aVerificationResults as $aVerificationResult) {
+                $aResults[] = ExternalVerificationProductsQueue::model()->fill($aVerificationResult);
+            }
+        }
+        return $aResults;
+    }
+
     public static function getVerificationResultsProducts($aParams = null)
     {
         $aResults = [];
@@ -127,7 +156,6 @@ class ExternalVerificationProductsQueue extends Data
         $limit = 50;
         if (!empty($aParams['limit']) && is_numeric($aParams['limit']))
             $limit = (int) $aParams['limit'];
-
         $oSQL = new SQLBuilder();
         $oSQL->addSelect('xe.*')->
                addFromTable('external_verification_products_queue', 'xe')->
