@@ -53,7 +53,10 @@ class AmazonMWS
             'MaxErrorRetry' => 3,
         );
 
-        if ($oServiceClass == 'MarketplaceWebServiceOrders_Client') {
+        if ($oServiceClass == 'MarketplaceWebServiceOrders_Client' ||
+            $oServiceClass == 'FBAInventoryServiceMWS_Client' ||
+            $oServiceClass == 'MarketplaceWebServiceProducts_Client'
+            ) {
             $this->oMWSService = new $oServiceClass(
                 AWS_ACCESS_KEY_ID,
                 AWS_SECRET_ACCESS_KEY,
@@ -93,39 +96,126 @@ class AmazonMWS
         return $this;
     }
 
+    public function invokeGetCompetitivePricingForSKU($request)
+    {
+        try {
+            $response = $this->oMWSService->GetCompetitivePricingForSKU($request);
+
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+
+        } catch (\MarketplaceWebServiceProducts_Exception $ex) {
+            $return_echo["function"] = "invokeGetCompetitivePricingForSKU";
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+            func_print_r($return_echo);
+            return $return_echo;
+        }
+    }
+
+    public function invokeGetLowestOfferListingsForSKU($request)
+    {
+        try {
+            $response = $this->oMWSService->GetLowestOfferListingsForSKU($request);
+
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+
+        } catch (\MarketplaceWebServiceProducts_Exception $ex) {
+            $return_echo["function"] = "invokeGetLowestOfferListingsForSKU";
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            func_print_r($return_echo);
+            return $return_echo;
+        }
+    }
+
+    public function invokeListInventorySupplyByNextToken($request)
+    {
+        try {
+            $response = $this->oMWSService->ListInventorySupplyByNextToken($request);
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+
+        } catch (\FBAInventoryServiceMWS_Exception $ex) {
+            $return_echo["function"] = "invokeListInventorySupplyByNextToken";
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+            return $return_echo;
+        }
+    }
+
+    public function invokeListInventorySupply($request)
+    {
+        try {
+            $response = $this->oMWSService->ListInventorySupply($request);
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+
+        } catch (\FBAInventoryServiceMWS_Exception $ex) {
+            $return_echo["function"] = "invokeListInventorySupply";
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+            return $return_echo;
+        }
+    }
+
     private function invokeGetReport($request)
     {
         try {
             $response = $this->oMWSService->getReport($request);
 
-//                echo ("Service Response\n");
-//                echo ("=============================================================================\n");
-
-//                echo("        GetReportResponse\n");
             if ($response->isSetGetReportResult()) {
                 $getReportResult = $response->getGetReportResult();
-//                  echo ("            GetReport");
 
                 if ($getReportResult->isSetContentMd5()) {
-//                    echo ("                ContentMd5");
                     $return_echo["ContentMd5"] = $getReportResult->getContentMd5();
                 }
             }
             if ($response->isSetResponseMetadata()) {
-//                    echo("            ResponseMetadata\n");
                 $responseMetadata = $response->getResponseMetadata();
                 if ($responseMetadata->isSetRequestId()) {
-//                        echo("                RequestId\n");
                     $return_echo["RequestId"] = $responseMetadata->getRequestId();
                 }
             }
 
-//                echo ("        Report Contents\n");
-//                echo (stream_get_contents($request->getReport()) . "\n");
             $return_echo["Report_Contents"] = stream_get_contents($request->getReport());
-
             $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
-
             return $return_echo;
         } catch (\MarketplaceWebService_Exception $ex) {
             $return_echo["Caught_Exception"] = $ex->getMessage();
@@ -144,78 +234,42 @@ class AmazonMWS
     {
         try {
             $response = $this->oMWSService->requestReport($request);
-
-//                echo ("Service Response\n");
-//                echo ("=============================================================================\n");
-
-//                echo("        RequestReportResponse\n");
             if ($response->isSetRequestReportResult()) {
-//                    echo("            RequestReportResult\n");
                 $requestReportResult = $response->getRequestReportResult();
-
                 if ($requestReportResult->isSetReportRequestInfo()) {
-
                     $reportRequestInfo = $requestReportResult->getReportRequestInfo();
-//                          echo("                ReportRequestInfo\n");
                     if ($reportRequestInfo->isSetReportRequestId()) {
-//                              echo("                    ReportRequestId\n");
-//                              echo("                        " . $reportRequestInfo->getReportRequestId() . "\n");
                         $return_echo["ReportRequestId"] = $reportRequestInfo->getReportRequestId();
                     }
                     if ($reportRequestInfo->isSetReportType()) {
-//                              echo("                    ReportType\n");
-//                              echo("                        " . $reportRequestInfo->getReportType() . "\n");
                         $return_echo["ReportType"] = $reportRequestInfo->getReportType();
                     }
                     if ($reportRequestInfo->isSetStartDate()) {
-//                              echo("                    StartDate\n");
-//                              echo("                        " . $reportRequestInfo->getStartDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["StartDate"] = $reportRequestInfo->getStartDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetEndDate()) {
-//                              echo("                    EndDate\n");
-//                              echo("                        " . $reportRequestInfo->getEndDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["EndDate"] = $reportRequestInfo->getEndDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetSubmittedDate()) {
-//                              echo("                    SubmittedDate\n");
-//                              echo("                        " . $reportRequestInfo->getSubmittedDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["SubmittedDate"] = $reportRequestInfo->getSubmittedDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetReportProcessingStatus()) {
-//                              echo("                    ReportProcessingStatus\n");
-//                              echo("                        " . $reportRequestInfo->getReportProcessingStatus() . "\n");
                         $return_echo["ReportProcessingStatus"] = $reportRequestInfo->getReportProcessingStatus();
                     }
                 }
             }
             if ($response->isSetResponseMetadata()) {
-//                    echo("            ResponseMetadata\n");
                 $responseMetadata = $response->getResponseMetadata();
                 if ($responseMetadata->isSetRequestId()) {
-//                        echo("                RequestId\n");
-//                        echo("                    " . $responseMetadata->getRequestId() . "\n");
                     $return_echo["RequestId"] = $responseMetadata->getRequestId();
                 }
             }
 
-//                echo("            ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
             $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
 
             return $return_echo;
 
         } catch (\MarketplaceWebService_Exception $ex) {
-
-            /*
-                     echo("Caught Exception: " . $ex->getMessage() . "\n");
-                     echo("Response Status Code: " . $ex->getStatusCode() . "\n");
-                     echo("Error Code: " . $ex->getErrorCode() . "\n");
-                     echo("Error Type: " . $ex->getErrorType() . "\n");
-                     echo("Request ID: " . $ex->getRequestId() . "\n");
-                     echo("XML: " . $ex->getXML() . "\n");
-                     echo("ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n");
-            */
-
             $return_echo["function"] = "invokeRequestReport";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -227,7 +281,6 @@ class AmazonMWS
             $return_echo["message"] = "Delay 2 minutes and trying the same Request";
             func_print_r($return_echo);
             return $return_echo;
-
         }
     }
 
@@ -235,110 +288,61 @@ class AmazonMWS
     {
         try {
             $response = $this->oMWSService->getReportRequestList($request);
-
-//                echo ("Service Response\n");
-//                echo ("=============================================================================\n");
-
-//                echo("        GetReportRequestListResponse\n");
             if ($response->isSetGetReportRequestListResult()) {
-//                    echo("            GetReportRequestListResult\n");
-
                 $getReportRequestListResult = $response->getGetReportRequestListResult();
                 if ($getReportRequestListResult->isSetNextToken()) {
-//                        echo("                NextToken\n");
-//                        echo("                    " . $getReportRequestListResult->getNextToken() . "\n");
                     $return_echo["NextToken"] = $getReportRequestListResult->getNextToken();
                 }
                 if ($getReportRequestListResult->isSetHasNext()) {
-//                        echo("                HasNext\n");
-//                        echo("                    " . $getReportRequestListResult->getHasNext() . "\n");
                     $return_echo["HasNext"] = $getReportRequestListResult->getHasNext();
                 }
                 $reportRequestInfoList = $getReportRequestListResult->getReportRequestInfoList();
                 foreach ($reportRequestInfoList as $reportRequestInfo) {
-//                        echo("                ReportRequestInfo\n");
                     if ($reportRequestInfo->isSetReportRequestId()) {
-//                              echo("                    ReportRequestId\n");
-//                              echo("                        " . $reportRequestInfo->getReportRequestId() . "\n");
                         $return_echo["ReportRequestId"] = $reportRequestInfo->getReportRequestId();
                     }
                     if ($reportRequestInfo->isSetReportType()) {
-//                              echo("                    ReportType\n");
-//                              echo("                        " . $reportRequestInfo->getReportType() . "\n");
                         $return_echo["ReportType"] = $reportRequestInfo->getReportType();
                     }
                     if ($reportRequestInfo->isSetStartDate()) {
-//                              echo("                    StartDate\n");
-//                              echo("                        " . $reportRequestInfo->getStartDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["StartDate"] = $reportRequestInfo->getStartDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetEndDate()) {
-//                              echo("                    EndDate\n");
-//                              echo("                        " . $reportRequestInfo->getEndDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["EndDate"] = $reportRequestInfo->getEndDate()->format(DATE_FORMAT);
                     }
-                    // add start
                     if ($reportRequestInfo->isSetScheduled()) {
-//                              echo("                    Scheduled\n");
-//                              echo("                        " . $reportRequestInfo->getScheduled() . "\n");
                         $return_echo["Scheduled"] = $reportRequestInfo->getScheduled();
                     }
-                    // add end
                     if ($reportRequestInfo->isSetSubmittedDate()) {
-//                              echo("                    SubmittedDate\n");
-//                              echo("                        " . $reportRequestInfo->getSubmittedDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["SubmittedDate"] = $reportRequestInfo->getSubmittedDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetReportProcessingStatus()) {
-//                              echo("                    ReportProcessingStatus\n");
-//                              echo("                        " . $reportRequestInfo->getReportProcessingStatus() . "\n");
                         $return_echo["ReportProcessingStatus"] = $reportRequestInfo->getReportProcessingStatus();
                     }
-                    // add start
                     if ($reportRequestInfo->isSetGeneratedReportId()) {
-//                              echo("                    GeneratedReportId\n");
-//                              echo("                        " . $reportRequestInfo->getGeneratedReportId() . "\n");
                         $return_echo["GeneratedReportId"] = $reportRequestInfo->getGeneratedReportId();
                     }
                     if ($reportRequestInfo->isSetStartedProcessingDate()) {
-//                              echo("                    StartedProcessingDate\n");
-//                              echo("                        " . $reportRequestInfo->getStartedProcessingDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["StartedProcessingDate"] = $reportRequestInfo->getStartedProcessingDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetCompletedDate()) {
-//                              echo("                    CompletedDate\n");
-//                              echo("                        " . $reportRequestInfo->getCompletedDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["CompletedDate"] = $reportRequestInfo->getCompletedDate()->format(DATE_FORMAT);
                     }
-                    // add end
 
                 }
             }
             if ($response->isSetResponseMetadata()) {
-//                    echo("            ResponseMetadata\n");
                 $responseMetadata = $response->getResponseMetadata();
                 if ($responseMetadata->isSetRequestId()) {
-//                        echo("                RequestId\n");
-//                        echo("                    " . $responseMetadata->getRequestId() . "\n");
                     $return_echo["RequestId"] = $responseMetadata->getRequestId();
                 }
             }
 
-//                echo("            ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
             $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
 
             return $return_echo;
 
         } catch (\MarketplaceWebService_Exception $ex) {
-            /*
-                     echo("Caught Exception: " . $ex->getMessage() . "\n");
-                     echo("Response Status Code: " . $ex->getStatusCode() . "\n");
-                     echo("Error Code: " . $ex->getErrorCode() . "\n");
-                     echo("Error Type: " . $ex->getErrorType() . "\n");
-                     echo("Request ID: " . $ex->getRequestId() . "\n");
-                     echo("XML: " . $ex->getXML() . "\n");
-                     echo("ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n");
-            */
             $return_echo["function"] = "invokeGetReportRequestList";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();

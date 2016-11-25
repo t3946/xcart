@@ -21,6 +21,8 @@
 <a href="{$catalogs.admin}/distributors_logins_view_log.php?mode=search" class="VertMenuItems">Distributors logins view log</a><br />
 
 <a href="{$catalogs.admin}/operators_activity_reports.php" class="VertMenuItems">Operators activity report</a><br />
+
+<a href="{$catalogs.admin}/list_inventory_supply_reports.php" class="VertMenuItems">List Inventory Supply report</a><br />
 {/if}
 
 {/capture}
