@@ -70,7 +70,9 @@ SQL;
 
                 while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503") {
                     sleep('60');
-
+                    if (empty($useQueryStartDateTime)) {
+                        func_flush('.');
+                    }
                     $request = new FBAInventoryServiceMWS_Model_ListInventorySupplyRequest();
                     $request->setSellerId(MERCHANT_ID);
                     $sellerSKUs = new FBAInventoryServiceMWS_Model_SellerSkuList();
@@ -97,7 +99,7 @@ SQL;
 
                 // object or array of parameters
                 $dom_xml = $oAmasonRecomendation->invokeListInventorySupplyByNextToken($request);
-                while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503"){
+                while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503") {
                     sleep('60');
 
                     $request = new FBAInventoryServiceMWS_Model_ListInventorySupplyByNextTokenRequest();
@@ -113,25 +115,24 @@ SQL;
                 }
                 $dom_xml_arr = func_xml2hash($dom_xml, "UTF-8");
 
-                if (!empty($dom_xml_arr["ListInventorySupplyByNextTokenResponse"]["ListInventorySupplyByNextTokenResult"]["NextToken"])){
+                if (!empty($dom_xml_arr["ListInventorySupplyByNextTokenResponse"]["ListInventorySupplyByNextTokenResult"]["NextToken"])) {
                     $NextToken = $dom_xml_arr["ListInventorySupplyByNextTokenResponse"]["ListInventorySupplyByNextTokenResult"]["NextToken"];
-                }
-                else {
+                } else {
                     $NextToken = "";
                 }
             }
         }
 
     }
-    $file_name = "list_inventory_supply_report_" . time();
+    $file_name = "list_inventory_supply_report_" . time() . ".txt";
     if (empty($useQueryStartDateTime)) {
-        $ffilename =  "{$xcart_dir}/files/igortest/.{$file_name}";
+        $ffilename = "{$xcart_dir}/files/igortest/{$file_name}";
         file_put_contents($ffilename, $resTxt);
-        echo "Done. ".$ffilename;
+        echo "Done. " . $ffilename;
     } else {
 
         header("Content-type: text/plain");
-        header("Content-Disposition: attachment;filename={$file_name}.txt");
+        header("Content-Disposition: attachment;filename={$file_name}");
         header("Content-Transfer-Encoding: binary");
         header('Pragma: no-cache');
         header('Expires: 0');
