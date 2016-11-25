@@ -2,6 +2,8 @@
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
 
+set_time_limit(0);
+
 $location[] = array("List inventory supply report", "");
 
 if ($REQUEST_METHOD == 'POST') {
