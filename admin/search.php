@@ -101,7 +101,7 @@ if ($REQUEST_METHOD == 'GET' && $mode == "search") {
 if ($mode == 'search'){
         if ($REQUEST_METHOD == "POST") {
 
-            if (!empty($posted_data["extra_sku"][0])) {
+            if (!empty($posted_data["extra_sku"]) && count($posted_data["extra_sku"]) == 1) {
                 $sFindSKU = addslashes($posted_data["extra_sku"][0]);
                 $oProduct = \Xcart\Product::model()->find(\Xcart\SQLBuilder::getInstance()->addCondition("productcode='{$sFindSKU}'"));
                 if ($oProduct->getProductId()) {
