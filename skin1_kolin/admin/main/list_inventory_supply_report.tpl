@@ -23,9 +23,9 @@
                 QueryStartDateTime diff (days)
             </td>
             <td>
-                <input type="checkbox" name="useQueryStartDateTime" />
+                <input type="checkbox" name="useQueryStartDateTime" checked="checked" />
 
-                <input id="id_start_date" class="hasDatepicker" size="11" name="QueryStartDateTime"  type="text" value ="1">
+                <input id="id_start_date" class="hasDatepicker" size="11" name="QueryStartDateTime"  type="text" value = "1">
             </td>
         </tr>
         <tr>
