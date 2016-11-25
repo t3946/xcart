@@ -18,31 +18,38 @@
 
 <!-- Google verification META tags -->
 
-
+{if $variant_id_for_point10}
 <meta name="AB_relations" content="{$variant_id_for_point10}" />
 <meta name="AB_search" content="{$variant_id_for_point11}" />
 
-<script lang="text/javascript" id="sorting-info">
+<script type="text/javascript" lang="Javascript" id="sorting-info">
     console.groupCollapsed('Modification category output');
     console.group('A/B');
     console.log('AB relations',{$variant_id_for_point10});
     console.log('AB search',{$variant_id_for_point11});
     console.groupEnd();
 
+    {if $t2_arr}
     console.group('Founded in last search');
     console.table({$t2_arr});
     console.groupEnd();
+    {/if}
 
+    {if $t1_arr}
     console.group('Relations for last viewed');
     console.table({$t1_arr});
     console.groupEnd();
+    {/if}
 
+    {if $t3_arr}
     console.group('Append in sorting');
     console.table({$t3_arr});
     console.groupEnd();
+    {/if}
 
     console.groupEnd();
 </script>
+{/if}
 
 
 <!-- bench time -->
