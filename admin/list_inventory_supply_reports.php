@@ -2,6 +2,8 @@
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
 
+set_time_limit(0);
+
 $location[] = array("List inventory supply report", "");
 
 if ($REQUEST_METHOD == 'POST') {
@@ -43,6 +45,9 @@ SQL;
 
         while (!empty($NextToken)) {
             $dom_xml_arr = [];
+            if (empty($useQueryStartDateTime)) {
+                func_flush('.');
+            }
 
             if ($NextToken == "start") {
 
@@ -118,15 +123,20 @@ SQL;
         }
 
     }
+    $file_name = "list_inventory_supply_report_" . time();
+    if (empty($useQueryStartDateTime)) {
+        $ffilename =  "{$xcart_dir}/files/igortest/.{$file_name}";
+        file_put_contents($ffilename, $resTxt);
+        echo "Done. ".$ffilename;
+    } else {
 
-
-    $file_name = "List_inventory_supply_report_" . time();
-    header("Content-type: text/plain");
-    header("Content-Disposition: attachment;filename={$file_name}.txt");
-    header("Content-Transfer-Encoding: binary");
-    header('Pragma: no-cache');
-    header('Expires: 0');
-    print html_entity_decode($resTxt);
+        header("Content-type: text/plain");
+        header("Content-Disposition: attachment;filename={$file_name}.txt");
+        header("Content-Transfer-Encoding: binary");
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        print html_entity_decode($resTxt);
+    }
 
 } else {
 
