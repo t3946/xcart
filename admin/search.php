@@ -101,6 +101,14 @@ if ($REQUEST_METHOD == 'GET' && $mode == "search") {
 if ($mode == 'search'){
         if ($REQUEST_METHOD == "POST") {
 
+            if (!empty($posted_data["extra_sku"][0])) {
+                $sFindSKU = addslashes($posted_data["extra_sku"][0]);
+                $oProduct = \Xcart\Product::model()->find(\Xcart\SQLBuilder::getInstance()->addCondition("productcode='{$sFindSKU}'"));
+                if ($oProduct->getProductId()) {
+                    func_header_location('product_modify.php?productid=' . $oProduct->getProductId() . '&switch_sf=true');
+                }
+            }
+
                 if (!empty($filter_name_id) && is_array($filter_name_id) && !empty($filter_value_id) && is_array($filter_value_id)){
                         foreach ($filter_name_id as $k => $v){
                                 if (empty($v)){
