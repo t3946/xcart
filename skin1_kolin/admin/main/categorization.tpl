@@ -156,24 +156,11 @@ function func_approve_button_clicked(code){
 
 	filled_or_not_arr[code] = "Y";
 
-        $('#form1_div_correct_categoryid_'+code).hide();
+    $('#form1_div_correct_categoryid_'+code).hide();
 	$('#form1_div_approve_button_'+code).hide();
 	$('#form1_div_skip_button_'+code).hide();
 
 	$('#form1_div_cancel_approve_button_'+code).show();
-
-
-/*
-        var button_value = $('#form1_approve_button_id_'+code).val();
-
-        if (button_value == "Approve"){
-                $('#form1_approve_button_id_'+code).val("Cancel approve");
-		filled_or_not_arr[code] = "Y";
-        } else {
-                $('#form1_approve_button_id_'+code).val("Approve");
-		filled_or_not_arr[code] = "N";
-        }
-*/
 
 	func_check_all_filled_or_not();
 }
