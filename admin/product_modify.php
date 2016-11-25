@@ -50,8 +50,8 @@ require $xcart_dir."/include/security.php";
 
 require $xcart_dir."/include/product_modify.php";
 
-$storefront_independant = 'Y';
-require  $xcart_dir."/include/categories.php";
+//$storefront_independant = 'Y';
+//require  $xcart_dir."/include/categories.php";
 $storefront_independant = 'N';
 
 $smarty->assign('abbreviations', preg_replace('/\s/','', $config['Product_Page']['features_abbreviations']));
