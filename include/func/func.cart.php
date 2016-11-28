@@ -77,6 +77,10 @@ function func_get_customer_zone_ship ($username, $provider, $type, $for_manufact
 	global $sql_tbl;
 	global $single_mode;
 	$zone = null;
+
+	if (empty($for_manufacturerid)) {
+        $for_manufacturerid = 0;
+	}
 #
 ##
 ###
@@ -145,6 +149,10 @@ function func_get_customer_zones_avail ($username, $provider, $address_type="S",
 		"Z" => "zipcode",
 		"A" => "address");
 	static $results_cache = array();
+
+	if (empty($for_manufacturerid)) {
+        $for_manufacturerid = 0;
+	}
 
 	if ($config["General"]["use_counties"] != "Y") {
 		unset($z_flags["G"]);
