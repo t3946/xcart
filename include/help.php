@@ -231,6 +231,7 @@ if ($REQUEST_METHOD=="POST" && $action=="contactus") {
 					$productcode = trim($productcode);
 
 					if (!empty($productcode)){
+                        $productcode = mysql_escape_mimic(html_entity_decode($productcode, ENT_QUOTES));
 						$productid = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='$productcode'");
 						if (!empty($productid)){
 							require $xcart_dir."/product_question.php";
