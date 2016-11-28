@@ -215,6 +215,7 @@ if(!empty($HTTP_USER_AGENT) && !defined("IS_ROBOT") && empty($is_robot)) {
 		"Xaldon" => array("Xaldon WebSpider"),
 		"spbot" => array("spbot"),
 		"Qwantify" => array("Qwantify"),
+        "BLEXBot" => array("BLEXBot"),
         "IstellaBot" => array("istellabot/")
 		);
 
