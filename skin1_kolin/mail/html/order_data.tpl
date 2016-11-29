@@ -304,9 +304,11 @@
 
 <tr>
 <td align="right" width="100%" bgcolor="#cccccc" height="25"><b>{$lng.lbl_grand_total|capitalize}:</b>&nbsp;</td>
+<td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap">
 {if $oOrder}
-<td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap"><b>{include file="currency.tpl" value=$oOrder->getOrderTotalGross()}</b></td>
+    <b>{include file="currency.tpl" value=$oOrder->getOrderTotalGross()}</b>
 {/if}
+</td>
 </tr>
 
 {if $_userinfo.tax_exempt ne "Y"}
