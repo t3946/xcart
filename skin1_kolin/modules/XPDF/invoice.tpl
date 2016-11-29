@@ -3,6 +3,7 @@ $Id: invoice.tpl 188 2011-06-04 16:36:19Z max $
 vim: set ts=2 sw=2 sts=2 et:
 *}
 {foreach from=$orders item=order}
+  {assign var="oOrder" value=$order.oOrder}
   {include file="mail/html/order_invoice.tpl" is_nomail='Y' products=$order.products giftcerts=$order.giftcerts userinfo=$order.userinfo order=$order.order}
   <br />
   <br />

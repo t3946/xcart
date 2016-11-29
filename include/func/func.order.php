@@ -941,9 +941,11 @@ function func_order_data($orderid) {
 
 	return array(
 		"order" => $order,
+		"oOrder" => \Xcart\Order::model(['orderid' => $orderid]),
 		"products" => $products,
 		"userinfo" => $userinfo,
-		"giftcerts" => $giftcerts);
+		"giftcerts" => $giftcerts
+    );
 }
 
 #
@@ -2443,7 +2445,7 @@ function func_get_order_manufacturers($orderid){
 */
 				
 				$mnfs[$m_id]["d_website_search_for_sku_url"] =  str_replace("{{mpn}}", "---mpn---", $mnfs[$m_id]["d_website_search_for_sku_url"]);
-				$mnfs[$m_id]["d_link_to_order_distributors_website"] =  str_replace("{{orderid}}", $order["order_prefix"].$orderid, $mnfs[$m_id]["d_link_to_order_distributors_website"]); 
+				$mnfs[$m_id]["d_link_to_order_distributors_website"] =  str_replace("{{orderid}}", $order["order_prefix"].$orderid, $mnfs[$m_id]["d_link_to_order_distributors_website"]);
 ###
 
 
