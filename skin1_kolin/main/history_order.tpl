@@ -532,7 +532,6 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 *}
 {/if}
 
-
 {if $usertype eq 'A' && $order_manufacturers && $current_membership_flag ne 'FS'}
 {assign var=found_show_stock_availability_form value=""}
 {foreach from=$order_manufacturers item=v key=mnf_id}
@@ -939,6 +938,7 @@ $( document ).ready(function() {
 {assign var="oOrderGroups" value=$oOrder->getOrderGroups()}
 {foreach from=$oOrderGroups item=oOrderGroup}
     {assign var="key" value=$oOrderGroup->getManufacturerId()}
+    {assign var="mnf_id" value=$oOrderGroup->getManufacturerId()}
     {assign var="v" value=$order_manufacturers.$key}
 
     {assign var=show_to_order_entry_operator value=""}
