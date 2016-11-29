@@ -18,7 +18,7 @@
 
 <!-- Google verification META tags -->
 
-{if $variant_id_for_point10}
+{if $variant_id_for_point10 or $variant_id_for_point11}
 <meta name="AB_relations" content="{$variant_id_for_point10}" />
 <meta name="AB_search" content="{$variant_id_for_point11}" />
 
