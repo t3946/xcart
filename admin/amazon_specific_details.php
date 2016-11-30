@@ -45,7 +45,7 @@ if ($REQUEST_METHOD == 'POST') {
 
         $aProductsFields = [
             'amazon_enabled' => (empty($amazon_enabled) ? 'N' : $amazon_enabled),
-            'amazon_fba' => (empty($amazon_fba) ? 'N' : ($query_data['amazon_fba_restricted'] != 'Y') ? $amazon_fba : 'N'),
+            'amazon_fba' => (empty($amazon_fba) ? 'N' : $amazon_fba),
         ];
         $oProduct->updateFields($aProductsFields);
 

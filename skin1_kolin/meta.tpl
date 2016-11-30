@@ -14,7 +14,7 @@
 <meta name="google-site-verification" content="vM3-Elmvi0TR9VO_WAvobjwmH4o7PhfppZ9BdKb1PDQ" />
 
 <!-- Pinterest verification META tags-->
-<meta name="p:domain_verify" content="543ab25e760af4e2b3d7bb2ed68e81b2"/>
+<meta name="p:domain_verify" content="5ff39d33efcb0710fb45e8addaf474e5"/>
 
 <!-- Google verification META tags -->
 
