@@ -3,7 +3,8 @@
         "vendor-dir": "include/libs"
     },
     "require": {
-        "google/apiclient": "^2.0"
+        "google/apiclient": "^2.0",
+        "mindy/query_builder": "^2.1"
     },
     "autoload": {
         "psr-4": {

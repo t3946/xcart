@@ -81,6 +81,9 @@ function remove_order_manually_row(index, r_id) {
 <td width="50" nowrap="nowrap">
 {if $tab ne "import"}<a href="reconciliation.php?tab=import">{else}<B>{/if}Import&nbsp;transactions{if $tab ne "import"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
 </td>
+    <td width="50" nowrap="nowrap">
+        {if $tab ne "inventory"}<a href="reconciliation.php?tab=inventory">{else}<B>{/if}Inventory{if $tab ne "inventory"}</a>{else}</B>{/if}
+    </td>
 <td width="*">&nbsp;</td>
 <td width="50" nowrap="nowrap">
 {if $tab ne "accounts_payable"}<a href="reconciliation.php?tab=accounts_payable">{else}<B>{/if}Payables{if $tab ne "accounts_payable"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
@@ -987,4 +990,35 @@ Empty
 {/if}
 {/capture}
 {include file="dialog.tpl" title="Uploaded files" content=$smarty.capture.dialog extra="width=100%"}
+{/if}
+
+
+{if $tab eq "inventory"}
+    <br>
+    {capture name=dialog}
+    <table cellpadding="3" cellspacing="1" width="100%">
+        <tr class="TableHead">
+            <td>Report Date</td>
+            <td>Items count</td>
+            <td>AVG item cost</td>
+            <td>AVG item amount</td>
+            <td>Total amount</td>
+            <td>total cost</td>
+        </tr>
+        {foreach from=$cidev_daily_fba_stats item=item}
+            <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
+                <td nowrap="nowrap">
+                    {$item.reportdate|date_format:'%d-%b-%Y'}
+                </td>
+                <td align="right">{$item.items_count} $</td>
+                <td align="right">{$item.avg_item_cost} $</td>
+                <td align="right">{$item.avg_item_amount} $</td>
+                <td align="right">{$item.total_amount} $</td>
+                <td align="right">{$item.total_cost} $</td>
+            </tr>
+        {/foreach}
+    </table>
+
+    {/capture}
+    {include file="dialog.tpl" title="Inventory" content=$smarty.capture.dialog extra="width=100%"}
 {/if}
