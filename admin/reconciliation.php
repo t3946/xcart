@@ -9,7 +9,7 @@ ini_set('memory_limit', '512M');
 
 x_session_register("search_data");
 
-$all_tabs = array("unreconciled", "reconciled", "dropped", "expense_report", "import", "calculation", "accounts_payable", "receivables", "rules");
+$all_tabs = array("unreconciled", "reconciled", "dropped", "expense_report", "import", "calculation", "accounts_payable", "receivables", "rules", "inventory");
 
 
 function func_find_reconciliations_orders($reconciliations_to_check, $orders_to_check)
@@ -1490,6 +1490,30 @@ if ($tab == "expense_report"){
 
 	$smarty->assign("expense_report_sum_total_amount", $expense_report_sum_total_amount);
 	$smarty->assign("expense_report_sum_total_amount_with_abs", $expense_report_sum_total_amount_with_abs);
+}
+
+if ($tab == "inventory") {
+    $order_by = 'reportdate';
+    $order_direction = 'desc';
+
+    $o_direction = ($order_direction == 'desc') ? '-' : '';
+
+    $connection = new \Doctrine\DBAL\Driver\PDOConnection("mysql:host={$sql_host};dbname={$sql_db}", $sql_user, $sql_password);
+    $adapter = new Mindy\QueryBuilder\Database\Mysql\Adapter();
+    $lookup_builder = new Mindy\QueryBuilder\LookupBuilder\LookupBuilder();
+
+    $bf = new \Mindy\QueryBuilder\QueryBuilderFactory($connection, $adapter, $lookup_builder);
+    $qb = $bf->getQueryBuilder();
+    $sql = $qb
+        ->setTypeSelect()
+        ->select('*')
+        ->from('xcart_cidev_daily_fba_stats')
+        ->order([$o_direction . $order_by])
+        ->toSQL();
+
+    $cidev_daily_fba_stats = $connection->query($sql)->fetchAll();
+
+    $smarty->assign("cidev_daily_fba_stats", $cidev_daily_fba_stats);
 }
 
 $smarty->assign("tab", $tab);
