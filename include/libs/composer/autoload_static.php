@@ -10,6 +10,7 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+        '68f9084e889ebf718663435970ab45e3' => __DIR__ . '/..' . '/mindy/query_builder/src/Conditions.php',
         '38aa9ffa312700065ceed8bf7bcb7a53' => __DIR__ . '/../../..' . '/include/func/func.core.php',
         'f550ebde9e69876a00625883277835ce' => __DIR__ . '/../../..' . '/include/func/func.amazon.php',
         'dca41d7b610d234855ab845f35115f14' => __DIR__ . '/../../..' . '/include/func/func.amazon_shipping.php',
@@ -71,6 +72,7 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Mindy\\QueryBuilder\\' => 19,
         ),
         'G' => 
         array (
@@ -83,6 +85,10 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         'F' => 
         array (
             'Firebase\\JWT\\' => 13,
+        ),
+        'D' => 
+        array (
+            'Doctrine\\Common\\Cache\\' => 22,
         ),
     );
 
@@ -123,6 +129,10 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'Mindy\\QueryBuilder\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mindy/query_builder/src',
+        ),
         'GuzzleHttp\\Stream\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/streams/src',
@@ -147,6 +157,10 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
+        'Doctrine\\Common\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -159,6 +173,33 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
             'Google_' => 
             array (
                 0 => __DIR__ . '/..' . '/google/apiclient/src',
+            ),
+        ),
+        'D' => 
+        array (
+            'Doctrine\\DBAL\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/dbal/lib',
+            ),
+            'Doctrine\\Common\\Lexer\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/lexer/lib',
+            ),
+            'Doctrine\\Common\\Inflector\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/inflector/lib',
+            ),
+            'Doctrine\\Common\\Collections\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/collections/lib',
+            ),
+            'Doctrine\\Common\\Annotations\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/annotations/lib',
+            ),
+            'Doctrine\\Common\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/common/lib',
             ),
         ),
     );
