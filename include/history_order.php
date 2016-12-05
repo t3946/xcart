@@ -92,6 +92,7 @@ if ($mode == "invoice" or $mode == "label") {
 # END: random:20341 [2010 Jul 29 14:46] 
 # END: random:18591_18598 [2009 Jul 29 10:36] 
 			$order = $order_data["order"];
+			$oOrder = $order_data["oOrder"];
 			$customer = $order_data["userinfo"];
 			$giftcerts = $order_data["giftcerts"];
 			$products = $order_data['products'];
@@ -134,7 +135,7 @@ if ($mode == "invoice" or $mode == "label") {
 ###
 ##
 #
-			$orders_data[] = array ("order" => $order, "customer" => $customer, "products" => $products, "giftcerts" => $giftcerts);
+			$orders_data[] = array ("order" => $order, "customer" => $customer, "products" => $products, "giftcerts" => $giftcerts, 'oOrder' => $oorder,);
 		}
 
 

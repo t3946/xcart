@@ -939,9 +939,10 @@ function func_order_data($orderid) {
 
 //func_print_r($order);
 
+    $order['oOrder'] = \Xcart\Order::model(['orderid' => $orderid]);
 	return array(
 		"order" => $order,
-		"oOrder" => \Xcart\Order::model(['orderid' => $orderid]),
+		"oOrder" => $order['oOrder'],
 		"products" => $products,
 		"userinfo" => $userinfo,
 		"giftcerts" => $giftcerts
