@@ -856,22 +856,35 @@ class AmazonMWS
 
     public function processReportFeeData()
     {
+        $allItemsCount = 0;
+        $skippedItemsCount = 0;
+
         $this->fillReportFeeDataFromFile();
 
         $aFieldsToUpdate = ['productid', 'fnsku', 'asin', 'longest_side', 'median_side', 'shortest_side', 'length_and_girth', 'unit_of_dimension',
             'item_package_weight', 'unit_of_weight', 'product_size_tier', 'estimated_fee_total', 'estimated_referral_fee_per_unit', 'estimated_variable_closing_fee',
             'estimated_order_handling_fee_per_order', 'estimated_pick_pack_fee_per_unit', 'estimated_weight_handling_fee_per_unit', 'amazon_fee_preview_last_update_date'];
         $aFieldsToUpdate = array_flip($aFieldsToUpdate);
-        foreach ($this->aReportValue as $aReport)
+        foreach ($this->aReportValue as $aReport) {
             foreach ($aReport as $aItem) {
                 $aArrInsert = array_intersect_key($aItem, $aFieldsToUpdate);
                 $aArrInsert['amazon_fee_preview_last_update_date'] = time();
+                $allItemsCount++;
 
-                if (in_array('--', $aArrInsert)) { continue; }//@TASK: 9973238
+                if (in_array('--', $aArrInsert)) { //@TASK: 9973238
+                    $skippedItemsCount++;
+                    continue;
+                }
 
                 if (!empty($aArrInsert['productid']))
                     func_array2insert('products_amz_fields', $aArrInsert, true);
             }
+        }
+
+        if ($skippedItemsCount > 0) {
+            func_backprocess_log($this::BACK_PROCESS_LOG_NAME, "processReportFeeData: skipped Items count: {$skippedItemsCount}; all items count: {$allItemsCount}");
+        }
+
         return $this;
     }
 
