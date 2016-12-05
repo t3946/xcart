@@ -467,4 +467,15 @@ $smarty->assign('viralmarketingbomb_shown', $viralmarketingbomb_shown);
 ##
 #
 
-?>
+$gPage_status = [
+    'match' => false
+];
+
+$matches = [];
+preg_match_all('/\/([\w\d-]+)/i', $_GET['request_uri'], $matches);
+
+if (!empty($matches[1]))
+{
+    $gPage_status['match'] = true;
+    list($gPage_status['type'], $gPage_status['page_id'], $gPage_status['slut']) = $matches[1];
+}
