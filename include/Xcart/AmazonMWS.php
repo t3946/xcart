@@ -866,6 +866,9 @@ class AmazonMWS
             foreach ($aReport as $aItem) {
                 $aArrInsert = array_intersect_key($aItem, $aFieldsToUpdate);
                 $aArrInsert['amazon_fee_preview_last_update_date'] = time();
+
+                if (in_array('--', $aArrInsert)) { continue; }//@TASK: 9973238
+
                 if (!empty($aArrInsert['productid']))
                     func_array2insert('products_amz_fields', $aArrInsert, true);
             }
