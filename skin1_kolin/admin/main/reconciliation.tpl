@@ -1010,11 +1010,11 @@ Empty
                 <td nowrap="nowrap">
                     {$item.reportdate|date_format:'%d-%b-%Y'}
                 </td>
-                <td>{$item.items_count}</td>
-                <td align="right">{$item.avg_item_cost} $</td>
-                <td align="right">{$item.avg_item_amount} $</td>
-                <td align="right">{$item.total_amount} $</td>
-                <td align="right">{$item.total_cost} $</td>
+                <td align="right">{$item.items_count}</td>
+                <td align="right">{$config.General.currency_symbol} {$item.avg_item_cost}</td>
+                <td align="right">{$item.avg_item_amount}</td>
+                <td align="right">{$item.total_amount}</td>
+                <td align="right">{$config.General.currency_symbol} {$item.total_cost}</td>
             </tr>
         {/foreach}
     </table>
