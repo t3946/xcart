@@ -1011,10 +1011,10 @@ Empty
                     {$item.reportdate|date_format:'%d-%b-%Y'}
                 </td>
                 <td align="right">{$item.items_count}</td>
-                <td align="right">{$config.General.currency_symbol} {$item.avg_item_cost}</td>
-                <td align="right">{$item.avg_item_amount}</td>
-                <td align="right">{$item.total_amount}</td>
-                <td align="right">{$config.General.currency_symbol} {$item.total_cost}</td>
+                <td align="right">{$config.General.currency_symbol} {$item.avg_item_cost|number_format:2:'.':' '}</td>
+                <td align="right">{$item.avg_item_amount|number_format:2:'.':' '}</td>
+                <td align="right">{$item.total_amount|number_format:0:'.':' '}</td>
+                <td align="right">{$config.General.currency_symbol} {$item.total_cost|number_format:2:'.':' '}</td>
             </tr>
         {/foreach}
     </table>
