@@ -1912,3 +1912,11 @@ body.xpc_iframe,
         top: 1px;
 }
 
+.slider-products * {
+    box-sizing: border-box;
+}
+
+.slider-products .product {
+  width: 160px;
+}
+
