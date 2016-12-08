@@ -39,7 +39,7 @@ select b.*
 from xcart_banners as b
 
 join (
-    select distinct 'AS' as value
+    select distinct 'AR' as value
     from xcart_storefronts_config
     where 'www.artistsupplysource.com' = '{$site_domain}'
     union
