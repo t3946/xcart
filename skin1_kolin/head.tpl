@@ -141,6 +141,14 @@ $(function(){
  </tr>
 </table>
 
+<table width="960" cellpadding="0" cellspacing="0" align="center">
+    <tr>
+        <td align="center">
+            {getBanners position='top'}
+        </td>
+    </tr>
+</table>
+
 {if $main eq "order_message"}
 <br />
 <table border="0" cellpadding="0" cellspacing="0" align="center">
