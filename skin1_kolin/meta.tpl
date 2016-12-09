@@ -18,7 +18,6 @@
 
 <!-- Google verification META tags -->
 
-{if $variant_id_for_point10 or $variant_id_for_point11}
 <meta name="AB_relations" content="{$variant_id_for_point10}" />
 <meta name="AB_search" content="{$variant_id_for_point11}" />
 
@@ -29,6 +28,7 @@
     console.log('AB search',{$variant_id_for_point11});
     console.groupEnd();
 
+{if $variant_id_for_point10 or $variant_id_for_point11}
     {if $t2_arr}
     console.group('Founded in last search');
     console.table({$t2_arr});
@@ -48,8 +48,9 @@
     {/if}
 
     console.groupEnd();
-</script>
+
 {/if}
+</script>
 
 
 <!-- bench time -->
