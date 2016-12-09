@@ -127,61 +127,6 @@ vim: set ts=2 sw=2 sts=2 et:
   {load_defer file="modules/XMultiCurrency/customer/func.js" type="js" queue="10001"}
 {/if}
 
-
-
-{*{load_defer url="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" type="css"}*}
-{*{load_defer url="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js" type="js"}*}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
-{capture name=javascript_slick_code}
-{literal}
-    (function(){
-        $(document).on('pageload ready', function(){
-            $('.slider-products').not('.slick-initialized').slick({
-                lazyLoad: 'ondemand',
-    //			dots: true,
-                arrows: false,
-                infinite: true,
-                speed: 500,
-                slidesToShow: 5,
-                mobileFirst: true,
-                responsive: [
-                    {
-                        breakpoint: 320,
-                        settings: {
-                            arrows: false,
-                            centerMode: false,
-                            slidesToScroll: 2,
-                            slidesToShow: 2
-                        }
-                    },
-
-                    {
-                        breakpoint: 480,
-                        settings: {
-                            arrows: false,
-                            centerMode: false,
-                            slidesToScroll: 2,
-                            slidesToShow: 2
-                        }
-                    },
-                    {
-                        breakpoint: 640,
-                        settings: {
-                            arrows: false,
-                            centerMode: false,
-                            slidesToScroll: 3,
-                            slidesToShow: 3
-                        }
-                    }
-                ]
-            });
-        });
-    })();
-{/literal}
-{/capture}
-{load_defer file="javascript_slick_code" direct_info=$smarty.capture.javascript_slick_code type="js" queue="9999"}
-
 {load_defer_code type="css"}
 {load_defer_code type="js"}
 {if $GTS_badge_code ne ""}
