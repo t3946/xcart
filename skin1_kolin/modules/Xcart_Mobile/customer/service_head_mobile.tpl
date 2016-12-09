@@ -7,7 +7,8 @@ vim: set ts=2 sw=2 sts=2 et:
 {/if}
 {get_title page_type=$meta_page_type page_id=$meta_page_id}
 <meta charset="{$default_charset|default:"utf-8"}" />
-<meta name="viewport" content="width=device-width, initial-scale={if $is_tablet}0.9{else}0.6{/if}, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />
+{*<meta name="viewport" content="width=width, initial-scale=1, minimum-scale=0.25, maximum-scale=5, user-scalable=yes" />*}
+<meta name="viewport" content="width=width, initial-scale={if $is_tablet}0.9{else}0.6{/if}, minimum-scale=0.6, maximum-scale=1, user-scalable=yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <link rel="shortcut icon" type="image/png" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{if $add_http_if_cdn eq "Y"}http://{/if}{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/favicon.ico" />
 <link rel="apple-touch-icon-precomposed" href="{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{if $add_http_if_cdn eq "Y"}http://{/if}{$config.Appearance.CDN_domain}{else}{$current_location}{/if}/touch-icon-iphone-retina.png" />
@@ -126,63 +127,10 @@ vim: set ts=2 sw=2 sts=2 et:
   {load_defer file="modules/XMultiCurrency/customer/func.js" type="js" queue="10001"}
 {/if}
 
-
-
-{*{load_defer url="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" type="css"}*}
-{*{load_defer url="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js" type="js"}*}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
-{capture name=javascript_slick_code}
-{literal}
-    (function(){
-        $(document).on('pageload ready', function(){
-            $('.slider-products').not('.slick-initialized').slick({
-                lazyLoad: 'ondemand',
-    //			dots: true,
-                arrows: false,
-                infinite: true,
-                speed: 500,
-                slidesToShow: 5,
-                mobileFirst: true,
-                responsive: [
-                    {
-                        breakpoint: 320,
-                        settings: {
-                            arrows: false,
-                            centerMode: false,
-                            slidesToScroll: 2,
-                            slidesToShow: 2
-                        }
-                    },
-
-                    {
-                        breakpoint: 480,
-                        settings: {
-                            arrows: false,
-                            centerMode: false,
-                            slidesToScroll: 2,
-                            slidesToShow: 2
-                        }
-                    },
-                    {
-                        breakpoint: 640,
-                        settings: {
-                            arrows: false,
-                            centerMode: false,
-                            slidesToScroll: 3,
-                            slidesToShow: 3
-                        }
-                    }
-                ]
-            });
-        });
-    })();
-{/literal}
-{/capture}
-{load_defer file="javascript_slick_code" direct_info=$smarty.capture.javascript_slick_code type="js" queue="9999"}
-
 {load_defer_code type="css"}
 {load_defer_code type="js"}
 {if $GTS_badge_code ne ""}
     {$GTS_badge_code}
 {/if}
+
+{include file='sliders/head_inlines.tpl'}

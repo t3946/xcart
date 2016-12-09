@@ -61,6 +61,9 @@ vim: set ts=2 sw=2 sts=2 et:
 {/if}
 
 </div>
+
+{include file="sliders/slider.tpl" mode='recently_viewed_products' title="Your Recently Viewed Items"}
+
 {literal}
   <script type=text/javascript>
     //<![CDATA[
