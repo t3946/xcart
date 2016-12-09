@@ -62,6 +62,7 @@ vim: set ts=2 sw=2 sts=2 et:
 {if $categories || !$show_subnav}
   {if $current_category.description ne ""}
 <br />
+    {include file="sliders/slider.tpl" mode='recently_viewed_products' title="Your Recently Viewed Items"}
     <div class="subcategory-descr">{$current_category.description}</div>
   {/if}
 {/if}
