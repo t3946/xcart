@@ -94,7 +94,19 @@ vim: set ts=2 sw=2 sts=2 et:
         {/if}
       {/if}
     </div>
+      {if $main eq 'product'}
+          {include file="sliders/slider.tpl" productid=$product.productid mode='related_products' title="Related products"}
+          {include file="sliders/slider.tpl" productid=$product.productid mode='products_also_bought_with_this_product'  title="Customers Who Bought This Item Also Bought"}
+          {include file="sliders/slider.tpl" productid=$product.productid mode='similar_products'  title="Similar products"}
+          {include file="sliders/slider.tpl" mode='recently_viewed_products' title="Your Recently Viewed Items"}
+      {/if}
+
+      {if $main eq 'brand_products'}
+        {include file="sliders/slider.tpl" mode='recently_viewed_products' title="Your Recently Viewed Items"}
+      {/if}
+
     {if !$no_nav}
+
       {include file="customer/main/switch_view.tpl"}
       <div data-role="footer" data-inline="true">
         <h4 class="footer">
