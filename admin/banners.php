@@ -5,7 +5,6 @@ $trusted_post_variables = array("html");
 
 $location[] = array("Banners");
 
-require "./auth.php";
 require $xcart_dir."/include/security.php";
 
 
@@ -20,6 +19,9 @@ $connection = \Doctrine\DBAL\DriverManager::getConnection([
 
 $qb = \Mindy\QueryBuilder\QueryBuilder::getInstance($connection);
 
+if (!isset($bannerid) && !empty($_POST['bannerid'])) {
+    $bannerid = $_POST['bannerid'];
+}
 
 if (!empty($bannerid) || $mode == 'new')
 {
@@ -51,7 +53,7 @@ if (!empty($bannerid) || $mode == 'new')
             }
 
             $connection->exec($qb->toSQL());
-            func_header_location("banners.php");
+            func_header_location("/admin/configuration.php?option=Banners");
         }
 
 
@@ -88,7 +90,7 @@ if (!empty($bannerid) || $mode == 'new')
                 $connection->exec($qb->insert('xcart_banners', $params));
                 $bannerid = $connection->lastInsertId();
 
-                func_header_location("banners.php?bannerid={$bannerid}");
+                func_header_location("/admin/configuration.php?option=Banners&bannerid={$bannerid}");
             }
             else {
                 $sql = $qb->setTypeUpdate()->update('xcart_banners', $params)->where(['id' => $bannerid])->toSQL();
@@ -128,6 +130,6 @@ $smarty->assign("single_mode", $single_mode);
 $smarty->assign("main","banners");
 $smarty->assign("location", $location);
 
-@include $xcart_dir."/modules/gold_display.php";
-func_display("admin/home.tpl",$smarty);
+//@include $xcart_dir."/modules/gold_display.php";
+//func_display("admin/home.tpl",$smarty);
 

@@ -3,11 +3,11 @@
 {if $section eq 'form'}
     {capture name=dialog}
 
-        <a href="banners.php?mode=new">
+        <a href="/admin/configuration.php?option=Banners&mode=new">
             Add
         </a>
         &shy;&nbsp;
-        <a href="banners.php">
+        <a href="/admin/configuration.php?option=Banners">
             List
         </a>
         <br>
@@ -130,7 +130,7 @@
 {elseif $section eq 'list'}
 
     {capture name=dialog}
-        <a href="banners.php?mode=new">
+        <a href="/admin/banners.php?mode=new">
             Add
         </a>
         <br>
@@ -151,7 +151,7 @@
                 <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
 
                     <td align="">
-                        <a href="banners.php?bannerid={$item.id}">
+                        <a href="/admin/configuration.php?option=Banners&bannerid={$item.id}">
                             {$item.name}
                         </a>
                     </td>
@@ -167,7 +167,8 @@
                     <td align="">{$item.storefronts}</td>
                     <td align="">{$item.enabled}</td>
                     <td align="">
-                        <form action="banners.php?bannerid={$item.id}" method="post">
+                        <form action="/admin/configuration.php?option=Banners&bannerid={$item.id}" method="post">
+                            <input type="hidden" name="bannerid" value="{$item.id}">
                             {if $item.enabled eq 'Y'}
                                 <button name="action" value="Disable"> Click to Disable </button>
                             {else}
