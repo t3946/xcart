@@ -1975,7 +1975,7 @@ if ($mode == "search") {
 #
 ## Calculate correct price
 ###
-                    $products[$k]["product_availability"] = func_product_availability(false, false, false, false, false, $products[$k]);
+                    $products[$k]["product_availability"] = func_product_availability(false, $products[$k]);
                     $products[$k]["supplier_feeds_enabled"] = func_query_first_cell("SELECT enabled FROM $sql_tbl[supplier_feeds] WHERE manufacturerid='$v[manufacturerid]' AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='" . $v["controlled_by_feed"] . "'))");
                     $products[$k]["price"] = $products[$k]["taxed_price"] = func_product_price($products[$k]);
 
