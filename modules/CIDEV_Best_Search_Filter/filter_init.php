@@ -36,8 +36,10 @@ $smarty->assign("aBrandFilters", $aFilterValues);
 if ($gPage_status['match'] && $gPage_status['type'] == 'brand')
 {
     $selected_brandids = [];
-    foreach ($aFilterValues as $aFilterValue) {
-        $selected_brandids[] = $aFilterValue->getBrandId();
+    if (!empty($aFilterValues)) {
+        foreach ($aFilterValues as $aFilterValue) {
+            $selected_brandids[] = $aFilterValue->getBrandId();
+        }
     }
 
     $smarty->assign('filter_selected_brandids', $selected_brandids);

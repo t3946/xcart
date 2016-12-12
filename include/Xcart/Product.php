@@ -256,21 +256,21 @@ class Product extends Data
 
     public function isProductOutOfStock()
     {
-        $result = true;
-        if (intval($this->getField('r_avail')) <= 0)
-            $result = false;
+        $result = false;
+        if (intval($this->getField('avail')) <= 0)
+            $result = true;
         $iEtaDate = $this->getField('eta_date_mm_dd_yyyy');
         if ($result && !empty($iEtaDate)) {
             $current_time = time();
             if ($current_time < $iEtaDate) {
-                $result = false;
+                $result = true;
             }
         }
         if ($result && $this->getProductCostToUs() > $this->getPrice())
-            $result = false;
+            $result = true;
 
         if ($result && floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false)
-            $result = false;
+            $result = true;
 
         return $result;
     }
