@@ -657,10 +657,17 @@ if ($mode == "search") {
         'on' => "$sql_tbl[products].manufacturerid = $sql_tbl[manufacturers].manufacturerid"
     );
 
-    if (!empty($data["categoryid"])) {
+    if (!empty($data["categoryid"]) || !empty($cat)) {
         # Search by category...
 
-        $data["categoryid"] = intval($data["categoryid"]);
+        if (!empty($data["categoryid"])) {
+            $data["categoryid"] = intval($data["categoryid"]);
+        }
+        elseif (!empty($cat)) {
+            $data["categoryid"] = intval($cat);
+            $data["search_in_subcategories"] = true;
+            $data["category_main"] = 'Y';
+        }
 
         $category_sign = "";
 
