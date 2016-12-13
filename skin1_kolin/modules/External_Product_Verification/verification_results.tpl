@@ -94,6 +94,7 @@
                                     <span data-html="{$oVerificatorResult->getComment()}" class="verificator_comments_icon"><img src="{$ImagesDir}/comment.png" /></span>
                                 {/if}
                                 <br/>
+                                {$Batch->getBatchId()} {$Batch->isTest()}
                                 {if ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin())}<input name="radio_{$oProduct->getProductId()}" class="arbitration_radio" data-login="{$oCustomer->getCustomerLogin()}"  data-arbitrage-confirmation-batch="{$oVerificatorResult->getBatchId()}" type="radio" />{/if}
                             </td>
                         </tr>
