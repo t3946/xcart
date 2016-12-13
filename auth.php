@@ -161,6 +161,7 @@ if (!empty($top_message)) {
 
 $cat = intval(@$cat);
 $page = intval(@$page);
+$smarty->assign('cat', $cat);
 
 if (!empty($active_modules['XAffiliate'])) {
 	include $xcart_dir."/include/partner_info.php";
