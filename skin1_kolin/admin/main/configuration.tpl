@@ -172,6 +172,10 @@ tinymce.init({
 
 {include file="admin/main/otrs_options.tpl"}
 
+{elseif $option eq "Banners"}
+
+{include file="admin/main/banners.tpl"}
+
 {elseif $option eq "HTML_shots_options"}
 
 {include file="admin/main/html_shot_options.tpl"}

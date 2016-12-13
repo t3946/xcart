@@ -216,6 +216,9 @@ elseif ($option == "Reconciliation") {
 elseif ($option == "currently_assigned_to_statuses") {
     include "./order_statuses.php";
 }
+elseif ($option == "Banners") {
+    include "./banners.php";
+}
 
 
 elseif ($option == "Search_products") {

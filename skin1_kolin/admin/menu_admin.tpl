@@ -91,9 +91,5 @@
 <a href="{$catalogs.admin}/search_all_website.php" class="VertMenuItems">{$lng.lbl_search_all_website}</a><br />
 {/if}
 
-{if !($membership_code eq "ADMIN_PRODUCT_MANAGER" || $membership_code eq "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER")}
-<a href="{$catalogs.admin}/banners.php" class="VertMenuItems">Banners</a><br />
-{/if}
-
 {/capture}
 { include file="menu.tpl" dingbats="dingbats_categorie.gif" menu_title=$lng.lbl_administration menu_content=$smarty.capture.menu }
