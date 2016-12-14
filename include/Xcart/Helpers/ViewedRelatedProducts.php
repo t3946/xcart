@@ -74,16 +74,17 @@ class ViewedRelatedProducts
         $sql =  /** @lang MySQL */ <<<SQL
 select SP.*
 from (
-    select SP.*, max(SP.`position`) as max_position
+    select SP.*
     from xcart_cidev_surf_path SP
     where SP.meta_id = (SELECT id FROM xcart_cidev_surf_meta WHERE sessid='{$this->ssid}' limit 1)
       and SP.resource_type in ('S') 
       and SP.meta_id > 0
+      and SP.position = (select max(sp1.position) from xcart_cidev_surf_path sp1 where sp1.meta_id = SP.meta_id and sp1.resource_type = 'S')
     group by SP.resource_id, SP.additional_data
     
     union
     
-    select SP.*, max(SP.`position`) as max_position
+    select SP.*
     from xcart_cidev_surf_path SP
     join xcart_products P ON P.productid = SP.resource_id and P.forsale = 'Y'
     join xcart_products_categories c ON c.productid = P.productid {$to_sql}
@@ -93,7 +94,7 @@ from (
       and SP.meta_id > 0
     group by SP.resource_id
 ) as SP
-order by SP.position desc
+order by FIELD(SP.resource_type, 'S', 'P') asc, SP.position desc
 SQL;
 
         $resources = func_query($sql);
@@ -109,7 +110,7 @@ SQL;
     {
         global $variant_id_for_point10, $variant_id_for_point11;
 
-        $resources = array_slice($last_viewed, 0, 10);
+        $resources = array_slice($last_viewed, 0, 11);
         $summary_pids = [];
         $jsons = [];
         $mlt_s_phrase = '';
@@ -120,8 +121,23 @@ SQL;
             if ($resource['resource_type'] == 'P' &&  $variant_id_for_point10 == 1)
             {
                 $summary_pids[] = $resource['resource_id'];
+                $o_boost = $boost;
 
                 $jsons[] = /** @lang JSON */ <<<JSQN
+{
+    "constantScore" : {
+        "filter" : { 
+            "and": [ 
+                {
+                    "terms": { 
+                        "_id": [ {$resource['resource_id']} ]
+                    }
+                }
+            ] 
+        },
+        "boost" : {$o_boost}
+    }
+},
 {
     "more_like_this": {
         "analyzer": "snowball",
@@ -141,7 +157,7 @@ JSQN;
                 $s_phrase = trim($s_phrase);
 
                 $this->elastic->reinit();
-                $this->elastic->setDisMaxBoost($boost);
+                $this->elastic->setDisMaxBoost($boost * 2);
                 $this->elastic->setQueryParams($s_phrase);
 
                 $jsons[] = json_encode($this->elastic->getQuery());
@@ -159,10 +175,8 @@ JSQN;
         $jsons = implode(',', $jsons);
         $json = /** @lang JSON */ <<<JSON
 {
-    "bool": {
-        "minimum_should_match" : 1,
-        "disable_coord": true,
-        "should": [ {$jsons} ]
+    "dis_max": {
+        "queries": [ {$jsons} ]
     }
 }
 JSON;

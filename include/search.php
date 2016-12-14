@@ -1325,7 +1325,7 @@ if ($mode == "search") {
             $search_related_products_ids = array_reverse($search_related_products_ids);
             $t_ids_product_arr = [];
 
-            foreach ($search_related_products_ids as $product)
+            foreach ($search_related_products_ids as $n => $product)
             {
                 $push = false;
                 $push_el = "'{$product['productid']}'";
@@ -1344,7 +1344,7 @@ if ($mode == "search") {
 
                 if ($push) {
                     $t_ids_product_arr[] = $push_el;
-                    $t3_arr[(string)$product['score']] = $product['productid'];
+                    $t3_arr[] = ['score' =>$product['score'], 'productid' => $product['productid']];
                 }
             }
 
@@ -1364,11 +1364,12 @@ if ($mode == "search") {
             }
         }
 
-
+        $t1_arr_count = count($t1_arr);
         $t1_arr = json_encode($t1_arr);
         $t3_arr = json_encode($t3_arr);
 
         $smarty->assign("t1_arr", $t1_arr);
+        $smarty->assign("t1_arr_count", $t1_arr_count);
         $smarty->assign("t3_arr", $t3_arr);
     }
 
