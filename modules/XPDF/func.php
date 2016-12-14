@@ -88,9 +88,6 @@ function xpdf_convert_tpl($tpl, &$smarty, $html_prepare_callback = null)
         $html = call_user_func($html_prepare_callback, $html, $tpl);
     }
 
-    $smarty->assign('ImagesDir', $images_dir);
-    $smarty->assign('SkinDir', $skin_dir);
-
     return xpdf_convert($html);
 }
 
