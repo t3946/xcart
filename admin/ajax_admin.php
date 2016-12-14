@@ -272,14 +272,16 @@ function enterVerificationArbitrageAsin($aParams = [])
     $iProductId = (int) $aParams['product_id'];
     $iBatchId = (int) $aParams['batch_id'];
     $sLogin = $aParams['login'];
-    $sASIN = $aParams['ASIN'];
-    $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
+    $sASIN = trim($aParams['ASIN']);
+    if (!empty($sASIN)) {
+        $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
         setField('productid', $iProductId)->
         setField('batch_id', $iBatchId)->
         setField('login', $sLogin)->
         setField('action', 'arbitrage_asin')->
-        setField('value', trim($sASIN))->_insert(true);
-    $aResult['result'] = ($bS !== false);
+        setField('value', $sASIN)->_insert(true);
+        $aResult['result'] = ($bS !== false);
+    }
 
     print(json_encode($aResult));
 }
