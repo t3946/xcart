@@ -92,8 +92,8 @@
 {if $v.products}
 <tr>
     <td colspan="{$colspan}">
-        <b>{$lng.lbl_payment_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.cb_status|default:$order.cb_status mode="static" status_type="CB"}<br />
-        <b>{$lng.lbl_shipping_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.dc_status|default:$order.dc_status mode="static" status_type="DC"}
+        <b>{$lng.lbl_payment_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.oOrderGroup->getOrderGroupStatusCB()|default:$order.cb_status mode="static" status_type="CB"}<br />
+        <b>{$lng.lbl_shipping_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.oOrderGroup->getOrderGroupStatusDC()|default:$order.dc_status mode="static" status_type="DC"}
     </td>
 </tr>
 {/if}

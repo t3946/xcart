@@ -1808,6 +1808,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
 		$aorder_notification = func_get_order_notification($order_status, $order_data);
 		if (!empty($aorder_notification)) {
+			global $attach_pdf_invoice, $statuses;
 			foreach ($aorder_notification as $oOrderNotification) {
 				if ($oOrderNotification->isEnabled()) {
 					$order_notification = $oOrderNotification->getFields();
@@ -1823,6 +1824,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 							$to_customer = ($userinfo['language'] ? $userinfo['language'] : $config['default_customer_language']);
 							$mail_smarty->assign("products", func_translate_products($order_data["products"], $to_customer));
 							$mail_smarty->assign('type', 'C');
+							$attach_pdf_invoice = $oOrderNotification->getField('customer_attach_pdf_invoice');
 
 							func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
 						}
@@ -1847,6 +1849,8 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 							$to = $config['Company']['orders_department'];
 							$from = $userinfo["firstname"] . "<" . $config['Company']['orders_department'] . ">";
 							$reply_to = $userinfo["firstname"] . "<" . $userinfo['email'] . ">";
+
+							$attach_pdf_invoice = $oOrderNotification->getField('admin_attach_pdf_invoice');
 
 							func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
 
@@ -2816,16 +2820,12 @@ function func_process_order($orderids) {
 									$email_pro = func_query_first_cell("SELECT email FROM $sql_tbl[customers] WHERE login='$provider[provider]'");
 									if (!empty($email_pro) && $email_pro != $config["Company"]["orders_department"]) {
 										$to_customer = func_query_first_cell("SELECT language FROM $sql_tbl[customers] WHERE login='$provider[provider]'");
-										if (empty($to_customer))
+										if (empty($to_customer)) {
 											$to_customer = $config['default_admin_language'];
-#
-##
-###
+										}
+
 										$attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
 										$mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-###
-##
-#
 
 
 										func_send_mail($email_pro, "mail/order_notification_subj.tpl", "mail/order_notification.tpl", $config["Company"]["orders_department"], false);
