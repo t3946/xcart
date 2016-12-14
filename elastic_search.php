@@ -82,14 +82,6 @@
 
         $manufacturer_product_feed_enabled = array();
 
-
-        x_session_register('e_last_search_substring', $e_search_data_substring);
-        x_session_register('e_founded_product_ids', array());
-
-        if (isset($search_mode) && $search_mode) {
-            $e_founded_product_ids = array();
-        }
-
         if (!empty($result["hits"]["hits"]) && is_array($result["hits"]["hits"]))
         {
                 x_load("product");
@@ -111,24 +103,13 @@
                         }
                     }
 
-                    $categories = func_query_column("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$v[_id]' ORDER BY FIELD(main, 'Y', 'N')");
-
                     if ($load_all_e_products) {
+                        $categories = func_query_column("SELECT categoryid FROM $sql_tbl[products_categories] WHERE productid='$v[_id]' ORDER BY FIELD(main, 'Y', 'N')");
                         $e_products[$k]["categoryid"] = (!empty($categories)) ? $categories[0] : '';
                     }
-
-                    $founded_ids['categoryid'] = $categories;
-                    $e_founded_product_ids[] = $founded_ids;
                 }
                 $e_products = array_values($e_products);
         }
-
-        if (isset($search_mode) && $search_mode)
-        {
-            $e_last_search_substring = $e_search_data_substring;
-            x_session_save('e_last_search_substring', 'e_founded_product_ids');
-        }
-
 
 	if (!$load_all_e_products){
 
