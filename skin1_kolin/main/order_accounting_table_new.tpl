@@ -514,9 +514,9 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 <input type="button" value="Update" onclick="javascript: $('#mode_accounting_page').val('table_accounting_apply'); $('#certain_mid').val('{$m_id}'); this.form.submit();" />
 {/if}
 </td>
-
+{assign var="oOrder" value= $v.oOrderGroup->getOrderInstance()}
 <td align="right">
-{if $v.invoices eq "" && !($v.oOrderGroup->isOrderGroupShippedByAmazon())}
+{if $v.invoices eq "" && !$oOrder->getAmazonChanell()=='AFN' && !$v.oOrderGroup->isOrderGroupShippedByAmazon()}
 <input type="button" value="Invoice received" onclick="javascript: $('#mode_accounting_page').val('invoice_received'); $('#certain_mid').val('{$m_id}'); this.form.submit();" />
 {/if}
 
