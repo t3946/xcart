@@ -3,7 +3,7 @@
 <script src="{$SkinDir}/js/semantic/components/transition.min.js" type="text/javascript"></script>
 <table width="100%" id="table_verificators" cellpadding="3" cellspacing="1">
     <tr>
-        <td colspan="7">
+        <td colspan="11">
 
         </td>
     </tr>
@@ -13,7 +13,7 @@
         <td style="width: 130px; white-space: nowrap;" rowspan="2" width="10">Verificator</td>
         <td style="width: 70px; white-space: nowrap;" rowspan="2" width="10">Date and time</td>
         <td colspan="5" width="10">Verification questions</td>
-        <td style="width: 160px; white-space: nowrap;" rowspan="2" width="100">Conclusion</td>
+        <td style="width: 160px; white-space: nowrap;" rowspan="2" colspan="2" width="100">Conclusion</td>
     </tr>
     <tr class="TableHead">
         <td>ASIN</td>
@@ -83,19 +83,25 @@
                             <td align="center" {if $aVerificatorResults[0]->getQtyOnAmazon() != $aVerificatorResults[1]->getQtyOnAmazon() || $aVerificatorResults[0]->getQtyOnOurWebSite() != $aVerificatorResults[1]->getQtyOnOurWebSite()}
                                 class="question_not_same"
                                     {/if}>{$oVerificatorResult->getQtyOnAmazon()}<br/>{$oVerificatorResult->getQtyOnOurWebSite()}</td>
-                            <td align="center"
+                            <td align="center" class="conclusion_action
                                     {if ((is_null($Batch->getBatchId()) && $aVerificatorResults[1]->checkAnswerCorrect($oVerificationResult) < 0) ||
                                         ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAction() != $aVerificatorResults[1]->getAction()))
-                                    }
-                                        class="action_not_same"
-                                    {/if}>
+                                    } action_not_same
+                                    {/if}">
                                 <b>{$oVerificatorResult->getActionDisplayName()}</b>
                                 {if $oVerificatorResult->getComment()}
                                     <span data-html="{$oVerificatorResult->getComment()}" class="verificator_comments_icon"><img src="{$ImagesDir}/comment.png" /></span>
                                 {/if}
                                 <br/>
-                                {if ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin())}<input name="radio_{$oProduct->getProductId()}" class="arbitration_radio" data-login="{$oCustomer->getCustomerLogin()}"  data-arbitrage-confirmation-batch="{$oVerificatorResult->getBatchId()}" type="radio" />{/if}
+                                {if ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin())}
+                                    <input name="radio_{$oProduct->getProductId()}" class="arbitration_radio" data-login="{$oCustomer->getCustomerLogin()}"  data-arbitrage-confirmation-batch="{$oVerificatorResult->getBatchId()}" type="radio" />
+                                {/if}
                             </td>
+                            {if $smarty.foreach.ver_rows.iteration == 1}
+                                {if ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin())}
+                                    <td data-arbitrage-asin-batch="{$Batch->getBatchId()}" data-login="{$oCustomer->getCustomerLogin()}" rowspan="{$aVerificatorResults|@count}"><button class="arbitrage_asin_button">ASIN</button></td>
+                                {/if}
+                            {/if}
                         </tr>
                     {/if}
                 {/foreach}
@@ -126,6 +132,29 @@
                         if (data && data.result) {
                             trpair.fadeOut(function(){$(this).remove()});
                         }
+                    }, 'json');
+        }
+    });
+    $('.arbitrage_asin_button').click(function() {
+        var tr = $(this).closest('tr');
+        var iProduct = tr.data('productid');
+        var iBatchId = $(this).parent().data('arbitrage-asin-batch');
+        var sLogin = $(this).parent().data('login');
+        var correctASIN = prompt("Please enter a valid ASIN");
+        if (correctASIN != null) {
+            var trpair = tr.siblings('tr[data-productid='+iProduct+']').andSelf().css({opacity: 0.4});
+            $.post('ajax_admin.php', {
+                        product_id: iProduct,
+                        batch_id: iBatchId,
+                        login: sLogin,
+                        ASIN: correctASIN,
+                        ajax_action: 'verification_arbitrage_asin_enter'
+                    },
+                    function (data) {
+                        if (data && data.result) {
+                            trpair.fadeOut(function(){$(this).remove()});
+                        }
+                        trpair.css({opacity: 1});
                     }, 'json');
         }
     });

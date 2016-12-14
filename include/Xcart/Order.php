@@ -896,7 +896,7 @@ class Order extends Data
 
                 $oMail->sendEmail();
 
-                $log = "The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $d_order_entry_operator_email . "<br /><B>Subject: </B>" . $d_order_entry_operator_subject_line_8;
+                $log = "The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $d_order_entry_operator_email . "<br /><B>Subject: </B>" . $oMail->getSubject();
                 Logs::model()->_log('orders', $this->getOrderId(), 'S', $log, $login);
 
                 if ($oOrderGroup->getOrderGroupStatusDC() != "E") {

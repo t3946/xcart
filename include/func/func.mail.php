@@ -268,7 +268,7 @@ function func_send_mail($to, $subject_template, $body_template, $from, $to_admin
                     }
 		}
 
-	        if ($active_modules['XPDF'] && (xpdf_is_need_invoice($body_template) && $attach_pdf_invoice == "Y")) {
+	        if ($active_modules['XPDF'] && $attach_pdf_invoice == "Y") {
         	    $cell = xpdf_get_mail_invoice($lend);
 	            if ($cell) {
         	        $msgs['content'][] = $cell;

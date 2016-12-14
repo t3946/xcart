@@ -46,6 +46,9 @@ switch ($_POST['ajax_action']) {
     case "verification_arbitrage_confirmation":
         confirmVerificationArbitrage($_POST);
         break;
+    case "verification_arbitrage_asin_enter":
+        enterVerificationArbitrageAsin($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -258,6 +261,27 @@ function confirmVerificationArbitrage($aParams = [])
         setField('action', 'arbitrage_confirmation')->
         setField('value', $login)->_insert(true);
     $aResult['result'] = ($bS !== false);
+
+    print(json_encode($aResult));
+}
+
+function enterVerificationArbitrageAsin($aParams = [])
+{
+    $aResult = [];
+    $aResult['result'] = false;
+    $iProductId = (int) $aParams['product_id'];
+    $iBatchId = (int) $aParams['batch_id'];
+    $sLogin = $aParams['login'];
+    $sASIN = trim($aParams['ASIN']);
+    if (!empty($sASIN)) {
+        $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
+        setField('productid', $iProductId)->
+        setField('batch_id', $iBatchId)->
+        setField('login', $sLogin)->
+        setField('action', 'arbitrage_asin')->
+        setField('value', $sASIN)->_insert(true);
+        $aResult['result'] = ($bS !== false);
+    }
 
     print(json_encode($aResult));
 }

@@ -134,6 +134,7 @@ class ExternalVerificationProductsQueue extends Data
         addInnerJoin('external_verification_products', 'xp2', 'xp.productid = xp2.productid AND xp2.action IN ("asin_on_amazon")')->
         addInnerJoin('external_verification_products', 'xp3', 'xp.productid = xp3.productid AND xp3.action IN ("asin_on_amazon")')->
         addInnerJoin('external_verification_products', 'xp4', 'xp.productid = xp4.productid AND xp4.action IN ("arbitrage_confirmation")', 'LEFT JOIN')->
+        addInnerJoin('external_verification_products', 'xp5', 'xp.productid = xp5.productid AND xp5.action IN ("arbitrage_asin")', 'LEFT JOIN')->
         addGroupBy('xe.productid')->addOrderBy('xp.value DESC')->setLimit($limit);
         if (!empty($aParams['batch_id']) && is_numeric($aParams['batch_id'])) {
             $oSQL->addCondition('batch_id='.(int)$aParams['batch_id']);
@@ -142,6 +143,7 @@ class ExternalVerificationProductsQueue extends Data
             $oSQL->addCondition('xp3.value != xp2.value');
             $oSQL->addCondition('xp3.batch_id != xp2.batch_id');
             $oSQL->addCondition('xp4.productid IS NULL');
+            $oSQL->addCondition('xp5.productid IS NULL');
         }
         $aVerificationResults = $oSQL->Execute()->getQueryResult();
         if (!empty($aVerificationResults)) {
