@@ -782,6 +782,10 @@ class Order extends Data
         if (!$this->isOrderAmazon()) {
 
             $allow_send_to_operator = true;
+            if ($this->getField('fraud_status') != 'C')
+            {
+                $allow_send_to_operator = false;
+            }
 
             if ($config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages"] == "Y" && $this->getOTRSTicketMessages() != $config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages_is_NOT_equal_to_value"]) {
                 $allow_send_to_operator = false;

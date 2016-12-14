@@ -374,20 +374,8 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
 ##
 ###
 		$current_fraud_status = $order["fraud_status"];
+        $old_fraud_status = $current_fraud_status;
 
-//if (1==1){
-
-		if (
-		  ($mode == "apply_changes_and_update_fraud_scores" || $mode == "apply_changes_and_update_fraud_scores_and_change_fraud_check_status") &&
-		  ($overall_fraud_score > $config["Fraud_check"]["Overall_FC_threshold_for_Clear_status"]) &&
-		  ($current_fraud_status != "C") &&
-		  (empty($manual_action_not_selected))
-		){
-            if ($orderid) {
-                $oOrder = \Xcart\Order::model(['orderid'=>$orderid]);
-                $oOrder->submitOrderEntry();
-            }
-		}
 
 		if ($mode == "apply_changes_and_update_fraud_scores"){
 			if ($overall_fraud_score > $config["Fraud_check"]["Overall_FC_threshold_for_Clear_status"]){
@@ -400,7 +388,6 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
 			} else {
 				$new_fraud_status = $config["Fraud_check"]["below_threshold_status"];
 			}
-//				$current_fraud_status = func_query_first_cell("SELECT fraud_status FROM $sql_tbl[orders] WHERE orderid='$orderid'");
 
 			if ($current_fraud_status != $new_fraud_status){
                                	if ($log != "") $log .= "<br />";
@@ -413,7 +400,6 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
 
 		if ($mode == "apply_changes_and_update_fraud_scores_and_change_fraud_check_status"){
 
-//			$current_fraud_status = func_query_first_cell("SELECT fraud_status FROM $sql_tbl[orders] WHERE orderid='$orderid'");
 			if ($current_fraud_status != $fraud_status){
 
 				if ($log != "") $log .= "<br />";
@@ -424,6 +410,18 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
 				db_query("UPDATE $sql_tbl[orders] SET fraud_status='$fraud_status' WHERE orderid='$orderid'");
 			}
 		}
+
+        if (
+            ($mode == "apply_changes_and_update_fraud_scores" || $mode == "apply_changes_and_update_fraud_scores_and_change_fraud_check_status") &&
+            ($overall_fraud_score > $config["Fraud_check"]["Overall_FC_threshold_for_Clear_status"]) &&
+            ($old_fraud_status != "C") &&
+            (empty($manual_action_not_selected))
+        ){
+            if ($orderid) {
+                $oOrder = \Xcart\Order::model(['orderid'=>$orderid]);
+                $oOrder->submitOrderEntry();
+            }
+        }
 
 		if ($log != ""){
 			func_log_order($orderid, 'X', $log, $login);
