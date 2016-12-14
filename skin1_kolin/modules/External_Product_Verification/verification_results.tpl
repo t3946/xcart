@@ -98,7 +98,9 @@
                                 {/if}
                             </td>
                             {if $smarty.foreach.ver_rows.iteration == 1}
-                                <td data-arbitrage-asin-batch="{$Batch->getBatchId()}" data-login="{$oCustomer->getCustomerLogin()}" rowspan="{$aVerificatorResults|@count}"><button class="arbitrage_asin_button">ASIN</button></td>
+                                {if ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin())}
+                                    <td data-arbitrage-asin-batch="{$Batch->getBatchId()}" data-login="{$oCustomer->getCustomerLogin()}" rowspan="{$aVerificatorResults|@count}"><button class="arbitrage_asin_button">ASIN</button></td>
+                                {/if}
                             {/if}
                         </tr>
                     {/if}
