@@ -135,7 +135,7 @@ function xpdf_get_invoice($orderids, $output = true, $internal = false)
 {
     x_load('order');
 
-    global $smarty, $shop_language, $current_area, $login;
+    global $smarty, $shop_language, $current_area, $login, $statuses;
     global $sql_tbl;
 
     if (!is_array($orderids)) {
@@ -190,6 +190,7 @@ function xpdf_get_invoice($orderids, $output = true, $internal = false)
     }
 
     $smarty->assign('orders', $orders);
+    $smarty->assign('statuses', $statuses);
 
 #
 ##
