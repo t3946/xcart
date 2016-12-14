@@ -29,16 +29,9 @@
     console.groupEnd();
 
 {if $variant_id_for_point10 or $variant_id_for_point11}
-    {if $t2_arr}
-    console.group('Founded in last search');
-    console.table({$t2_arr});
-    console.groupEnd();
-    {/if}
 
     {if $t1_arr}
-    console.group('Relations for last viewed');
-    console.table({$t1_arr});
-    console.groupEnd();
+    console.log('Relations for last viewed', 'Count: {$t1_arr_count}' );
     {/if}
 
     {if $t3_arr}
