@@ -838,7 +838,7 @@ class OrderGroup extends Data
                     ->initAccountingPST();
 
                 if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
-                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal())->
+                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal() + $this->getOrderGroupInvoices()->getOrderGroupInvoicesHST())->
                     setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
                     setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
