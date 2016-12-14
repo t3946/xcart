@@ -131,9 +131,11 @@ class SliderData
                 case 1:
                     $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
                     $res = $classElastic->query();
-                    foreach ($res["hits"]["hits"] as $key => $sValue){
-                        if ($sValue["_id"] != $productid) {
-                            $pids[]["needed_resource_id"] = $sValue["_id"];
+                    if (!empty($res["hits"]["hits"])) {
+                        foreach ($res["hits"]["hits"] as $key => $sValue){
+                            if ($sValue["_id"] != $productid) {
+                                $pids[]["needed_resource_id"] = $sValue["_id"];
+                            }
                         }
                     }
                     $sGoogleAnaliticsParam = 'similar_products_all_carousel';
@@ -143,9 +145,11 @@ class SliderData
                     $aBrand = $classBrands->getBrandByProductId($productid);
                     $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands($aBrand['brand']));
                     $res = $classElastic->query();
-                    foreach ($res["hits"]["hits"] as $key => $sValue){
-                        if ($sValue["_id"] != $productid) {
-                            $pids[]["needed_resource_id"] = $sValue["_id"];
+                    if (!empty($res["hits"]["hits"])) {
+                        foreach ($res["hits"]["hits"] as $key => $sValue){
+                            if ($sValue["_id"] != $productid) {
+                                $pids[]["needed_resource_id"] = $sValue["_id"];
+                            }
                         }
                     }
                     unset($aBrand);

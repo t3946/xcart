@@ -19,15 +19,32 @@ class ElasticSearch
     function __construct($elasticConfig = array(),$index = ''){
         $this->server = $elasticConfig["es_url"];
         $this->index = $index;
-        //$this->queryParams["_source"] = "*._id";
         //$this->queryParams["min_score"] = $elasticConfig["search_results_minimum_score_value"];
-        $this->queryParams["query"] = array();
-        $this->queryParams["query"]["dis_max"] = array();
-        $this->queryParams["query"]["dis_max"]["queries"] = array();
+        $this->init();
     }
 
-    public function setSource($sSource) {
-        $this->queryParams["_source"] = "*._id";
+    private function init()
+    {
+        $this->setSource();
+        $this->queryParams["query"] = [];
+        $this->queryParams["query"]["dis_max"] = [];
+        $this->queryParams["query"]["dis_max"]["queries"] = [];
+    }
+
+    public function reinit()
+    {
+        $this->init();
+        $this->hitsCount = null;
+        $this->hitsTotal = null;
+        $this->curl_info = null;
+        $this->data_json = null;
+        $this->_id = null;
+        $this->queryParams = [];
+    }
+
+    public function setSource($sSource = "*._id")
+    {
+        $this->queryParams["_source"] = $sSource;
     }
 
     function call($path, $data_json = array()){
@@ -51,7 +68,13 @@ class ElasticSearch
         return $result;
     }
 
-    public function setQueryParamsDefault($sQuery){
+    public function setDisMaxBoost($boost)
+    {
+        $this->queryParams["query"]["dis_max"]['boost'] = $boost;
+    }
+
+    public function setQueryParamsDefault($sQuery)
+    {
         $query = array();
         $query["query_string"]["query"] = $sQuery;
         $query["query_string"]["fields"] = array("productname.productname_original^1.5","sku","upc","brand.brand_original^0.5","description.description_original");
@@ -65,6 +88,11 @@ class ElasticSearch
         $query = array();
         $query["match_phrase_prefix"]["sku_original"] = $sQuery;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
+    }
+
+    public function getQuery()
+    {
+        return  $this->queryParams["query"];
     }
 
     public function setQueryParams($sQuery, $aDismax = array()){

@@ -660,13 +660,12 @@ if ($mode == "search") {
     if (!empty($data["categoryid"]) || !empty($cat)) {
         # Search by category...
 
-        if (!empty($data["categoryid"])) {
-            $data["categoryid"] = intval($data["categoryid"]);
-        }
-        elseif (!empty($cat)) {
+        if (!empty($cat)) {
             $data["categoryid"] = intval($cat);
             $data["search_in_subcategories"] = true;
             $data["category_main"] = 'Y';
+        }elseif (!empty($data["categoryid"]) ) {
+            $data["categoryid"] = intval($data["categoryid"]);
         }
 
         $category_sign = "";
@@ -1305,42 +1304,15 @@ if ($mode == "search") {
      */
     if (empty($data["sort_field"]) || $data["sort_field"] == 'orderby')
     {
-        x_session_register('e_last_search_substring');
-        x_session_register('e_founded_product_ids');
-
         $t1_arr = array();
-        $t2_arr = array();
         $t3_arr = array();
 
         $search_related_products_ids = [];
         $related_ids = [];
         $related_like_text = null;
 
-        if ( !empty($e_founded_product_ids)  && $variant_id_for_point11 == 1)
-        {
-            if (!empty($categoryids) && 0 ) { //TODO: disabled
-                foreach ($e_founded_product_ids as $product)
-                {
-                    $ai = array_intersect($categoryids, $product['categoryid']);
-
-                    if (!empty($ai)) {
-                        $related_like_text = $e_last_search_substring;
-                        break;
-                    }
-                }
-            }
-
-            $search_related_products_ids = $e_founded_product_ids;
-        }
-
-        if ($variant_id_for_point10 == 1) {
-            $related_products = new Xcart\Helpers\ViewedRelatedProducts($categoryids, $related_like_text);
-            $related_ids = $related_products->getRelated();
-        }
-
-        if (!empty($related_ids)) {
-            $search_related_products_ids = array_merge($search_related_products_ids, $related_ids);
-        }
+        $related_products = new Xcart\Helpers\ViewedRelatedProducts();
+        $search_related_products_ids = $related_products->getRelated();
 
         if (!empty($search_related_products_ids))
         {
@@ -1352,7 +1324,7 @@ if ($mode == "search") {
             $search_related_products_ids = array_reverse($search_related_products_ids);
             $t_ids_product_arr = [];
 
-            foreach ($search_related_products_ids as $product)
+            foreach ($search_related_products_ids as $n => $product)
             {
                 $push = false;
                 $push_el = "'{$product['productid']}'";
@@ -1368,11 +1340,10 @@ if ($mode == "search") {
                         $push = true;
                     }
                 }
-                else { $push = true; }
 
                 if ($push) {
                     $t_ids_product_arr[] = $push_el;
-                    $t3_arr[(string)$product['score']] = $product['productid'];
+                    $t3_arr[] = ['score' =>$product['score'], 'productid' => $product['productid']];
                 }
             }
 
@@ -1385,28 +1356,19 @@ if ($mode == "search") {
                 array_unshift($orderbys, $order_by_lastsearch_1, $order_by_lastsearch_2);
             }
         }
-        if (!empty($related_ids)) {
-            foreach ($related_ids as $rel) {
-                $t1_arr[(string)$rel['score']] = $rel['productid'];
+
+        if (!empty($search_related_products_ids)) {
+            foreach ($search_related_products_ids as $founded) {
+                $t1_arr[(string)$founded['score']] = $founded['productid'];
             }
         }
 
-        if (!empty($e_founded_product_ids)) {
-            foreach ($e_founded_product_ids as $founded) {
-                $t2_arr[(string)$founded['score']] = $founded['productid'];
-            }
-        }
-
-
-//        $t1_arr = print_r($t1_arr, true);
-//        $t2_arr = print_r($t2_arr, true);
-//        $t3_arr = print_r($t3_arr, true);
+        $t1_arr_count = count($t1_arr);
         $t1_arr = json_encode($t1_arr);
-        $t2_arr = json_encode($t2_arr);
         $t3_arr = json_encode($t3_arr);
 
         $smarty->assign("t1_arr", $t1_arr);
-        $smarty->assign("t2_arr", $t2_arr);
+        $smarty->assign("t1_arr_count", $t1_arr_count);
         $smarty->assign("t3_arr", $t3_arr);
     }
 
