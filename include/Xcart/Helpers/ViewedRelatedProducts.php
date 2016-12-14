@@ -157,7 +157,7 @@ JSQN;
                 $s_phrase = trim($s_phrase);
 
                 $this->elastic->reinit();
-                $this->elastic->setDisMaxBoost($boost * 2);
+                $this->elastic->setDisMaxBoost($boost * 10 * 0.5);
                 $this->elastic->setQueryParams($s_phrase);
 
                 $jsons[] = json_encode($this->elastic->getQuery());
