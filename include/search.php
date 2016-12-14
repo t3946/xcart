@@ -660,13 +660,12 @@ if ($mode == "search") {
     if (!empty($data["categoryid"]) || !empty($cat)) {
         # Search by category...
 
-        if (!empty($data["categoryid"])) {
-            $data["categoryid"] = intval($data["categoryid"]);
-        }
-        elseif (!empty($cat)) {
+        if (!empty($cat)) {
             $data["categoryid"] = intval($cat);
             $data["search_in_subcategories"] = true;
             $data["category_main"] = 'Y';
+        }elseif (!empty($data["categoryid"]) ) {
+            $data["categoryid"] = intval($data["categoryid"]);
         }
 
         $category_sign = "";
