@@ -154,6 +154,7 @@
                         if (data && data.result) {
                             trpair.fadeOut(function(){$(this).remove()});
                         }
+                        trpair.css({opacity: 1});
                     }, 'json');
         }
     });
