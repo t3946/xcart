@@ -74,13 +74,18 @@ function xpdf_convert($content)
 
 function xpdf_convert_tpl($tpl, &$smarty, $html_prepare_callback = null)
 {
-    global $xcart_http_host;
+    global $xcart_http_host, $config;
+
+    $http_host = 'http://' . $xcart_http_host;
+    if ($config["Appearance"]["Enable_CDN"] == "Y" && !empty($config["Appearance"]["CDN_domain"])) {
+        $http_host = '';
+    }
 
     $images_dir = $smarty->_tpl_vars['ImagesDir'];
-    $smarty->assign('ImagesDir', 'http://' . $xcart_http_host . $images_dir);
+    $smarty->assign('ImagesDir', $http_host . $images_dir);
 
     $skin_dir = $smarty->_tpl_vars['SkinDir'];
-    $smarty->assign('SkinDir', 'http://' . $xcart_http_host . $skin_dir);
+    $smarty->assign('SkinDir', $http_host . $skin_dir);
 
     $smarty->assign('pdf_template', $tpl);
 
