@@ -34,13 +34,20 @@ class Connection
      * @param string $sql_password
      * @return static
      */
-    static public function init($sql_host = null, $sql_db = null, $sql_user = null, $sql_password = null)
+    public function init($sql_host = null, $sql_db = null, $sql_user = null, $sql_password = null)
     {
-        self::$_connection = new \Doctrine\DBAL\Driver\PDOConnection("mysql:host={$sql_host};dbname={$sql_db}", $sql_user, $sql_password);
+        self::$_connection = \Doctrine\DBAL\DriverManager::getConnection([
+            'memory' => true,
+            'driver' => 'pdo_mysql',
+            'dbname' => $sql_db,
+            'host' => $sql_host,
+            'user' => $sql_user,
+            'password' => $sql_password
+        ]);
         return self::$_instance;
     }
 
-    static public function getConnection()
+    public function getConnection()
     {
         return self::$_connection;
     }
