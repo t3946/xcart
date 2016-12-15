@@ -1001,13 +1001,7 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 
 			foreach ($orders as $k => $v){
 
-
 				$accounting = func_make_accounting($v["orderid"], $v["manufacturerid"]);
-
-//				$accounting = unserialize($v["accounting"]);
-
-//func_print_r($v["total_gross"]);
-//die();
 
 				$v["accounting"] = $accounting;
 

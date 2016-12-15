@@ -21,4 +21,9 @@ class Reconciliation extends Data
     public function findReconciliationOrder() {
         
     }
+
+    public function getReceivablesTotalReport()
+    {
+
+    }
 }

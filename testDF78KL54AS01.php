@@ -7,9 +7,12 @@ set_time_limit(0);
 require "./top.inc.php";
 require "./init.php";
 
-$oOrder = \Xcart\Order::model(['orderid' => 72813]);
 
-$oOrder->submitOrderEntry();
+var_dump(\Xcart\Connection::getInstance()->getConnection());
+
+//$oOrder = \Xcart\Order::model(['orderid' => 72813]);
+
+//$oOrder->submitOrderEntry();
 
 
 /*
