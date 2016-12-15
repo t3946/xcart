@@ -49,7 +49,7 @@ var arg_sku = '{$smarty.get.sku}';
     options.setAutoComplete(true);
     customSearchControl.setAutoCompletionId('{$config.Search_all.search_all_website_gcs_id}');
     customSearchControl.setSearchStartingCallback(this, function (control, searcher, query) {
-        var expSKU = /^[a-z]{3}-/i;
+        var expSKU = /^[a-z]{3,4}-/i;
         if (inputQuery != query && expSKU.test(query)) { 
             control.cancelSearch();
             $.get('index.php', 'sku=' + query + '&mode=check_all', function (ans) {
