@@ -6,7 +6,6 @@ namespace Xcart;
 class Connection
 {
     private static $_instance = null;
-    private static $_connection = null;
 
     private function __construct()
     {
@@ -17,38 +16,14 @@ class Connection
     }
 
     /**
-     * @return Connection
+     * @param array $params
+     * @return \Doctrine\DBAL\Connection
      */
-    static public function getInstance()
+    static public function getInstance($params = null)
     {
         if (is_null(self::$_instance)) {
-            self::$_instance = new self();
+            self::$_instance = \Doctrine\DBAL\DriverManager::getConnection($params);
         }
         return self::$_instance;
-    }
-
-    /**
-     * @param string $sql_host
-     * @param string $sql_db
-     * @param string $sql_user
-     * @param string $sql_password
-     * @return static
-     */
-    public function init($sql_host = null, $sql_db = null, $sql_user = null, $sql_password = null)
-    {
-        self::$_connection = \Doctrine\DBAL\DriverManager::getConnection([
-            'memory' => true,
-            'driver' => 'pdo_mysql',
-            'dbname' => $sql_db,
-            'host' => $sql_host,
-            'user' => $sql_user,
-            'password' => $sql_password
-        ]);
-        return self::$_instance;
-    }
-
-    public function getConnection()
-    {
-        return self::$_connection;
     }
 }

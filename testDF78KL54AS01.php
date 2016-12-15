@@ -8,7 +8,7 @@ require "./top.inc.php";
 require "./init.php";
 
 
-var_dump(\Xcart\Connection::getInstance()->getConnection());
+var_dump(\Xcart\Connection::getInstance());
 
 //$oOrder = \Xcart\Order::model(['orderid' => 72813]);
 
