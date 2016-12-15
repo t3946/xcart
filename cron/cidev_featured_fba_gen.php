@@ -2,8 +2,8 @@
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
-require "./top.inc.php";
-require "./init.php";
+require "../top.inc.php";
+require "../init.php";
 
 $sql = /*** @lang MySQL */ <<<SQL
 select *
@@ -46,14 +46,12 @@ from (
 order by FIELD(p.pfrom, 'F', 'O') asc
 SQL;
 
-func_query("truncate xcart_featured_products");
-
 $sfids = func_query_column("select storefrontid as sfid from xcart_storefronts");
 $sfids[] = 0;
+$values = [];
 
 foreach ( $sfids as $sfid)
 {
-    $values = [];
     $min_required = 50;
     $psql = str_replace(':sfid', $sfid, $sql);
     $products = func_query($psql);
@@ -65,17 +63,20 @@ foreach ( $sfids as $sfid)
             if (($product['pfrom'] == 'F') || (($min_required > 0) && ($product['pfrom'] == 'O')) )
             {
                 $min_required--;
-
                 $values[] = "({$product['productid']}, {$sfid}, {$n})";
             }
             else { break; }
         }
-
-        if (!empty($values))
-        {
-            func_query("insert into xcart_featured_products (productid, storefrontid, product_order) VALUES " . implode(', ', $values));
-        }
     }
 }
 
+if (!empty($values))
+{
+    func_query("truncate xcart_featured_products");
+
+    foreach (array_chunk($values, 100) as $c_values)
+    {
+        func_query("insert into xcart_featured_products (productid, storefrontid, product_order) VALUES " . implode(', ', $c_values));
+    }
+}
 
