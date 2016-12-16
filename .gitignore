@@ -19,7 +19,7 @@ Thumbs.db
 /robots.txt.php
 /modules/Multiple_Storefronts/init.php
 /modules/Multiple_Storefronts/config.php
-/init.php
+#/init.php
 /config.php
 /config.local.php
 /robots.txt
