@@ -81,8 +81,6 @@
 <br />
 <br />
 
-<a href="cidev_featured_gen.php?mode=start&storefrontid={$current_storefront_info.storefrontid}">Auto generate featured products</a>
-
 	</td>
 </tr>
 
