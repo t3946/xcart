@@ -139,7 +139,7 @@ class CloneData
         if (isset($this->aClonedData) && is_array($this->aClonedData) && count($this->aClonedData) > 0) {
             foreach ($this->aClonedData as $sTable => $aRowsToClone) {
                 if ($sTable == 'products_amz_fields') {
-                    if (Product::model(['productid' => $aRowsToClone['key_field']])->isAmazonEnabled()) continue;
+                    if (Product::model(['productid' => $aCloneParam[$this->sPrimaryKeyFiled]])->isAmazonEnabled()) continue;
                 }
                 if ($deleteBeforeInsert) {
                     $this->deleteFromTableByKeyValue($sTable, $aRowsToClone['key_field'], $aCloneParam[$this->sPrimaryKeyFiled]);
