@@ -86,6 +86,7 @@ SELECT og.*
 FROM xcart_order_groups og
 WHERE og.cb_status IN ('O') AND og.dc_status IN ('G', 'S')
 {$sIntervalQuery}
+ORDER BY orderid DESC 
 SQL;
         $aOrders = Connection::getInstance()->query($sSql)->fetchAll();
         if (!empty($aOrders)) {
