@@ -397,7 +397,7 @@ if (preg_match("/^(\d+\.\d+\.\d+)/", mysql_get_server_info(), $match)) {
 #
 ## Set the session name here
 ###
-if (AREA_TYPE == 'C' || 1==1){
+
 
 	$cidev_tmp_storefrontid = func_query_first_cell("SELECT storefrontid FROM xcart_storefronts WHERE domain='$_SERVER[HTTP_HOST]'");
 
@@ -409,7 +409,6 @@ if (AREA_TYPE == 'C' || 1==1){
 		$xcart_https_host = $_SERVER["HTTP_HOST"];
 
 	}
-}
 
 $XCART_SESSION_NAME = "xid".$cidev_tmp_storefrontid;
 ###
