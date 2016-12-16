@@ -49,6 +49,9 @@ switch ($_POST['ajax_action']) {
     case "verification_arbitrage_asin_enter":
         enterVerificationArbitrageAsin($_POST);
         break;
+    case "get_receivables_orders":
+        getReceivablesOrders($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -284,4 +287,46 @@ function enterVerificationArbitrageAsin($aParams = [])
     }
 
     print(json_encode($aResult));
+}
+
+function getReceivablesOrders($aParams = [])
+{
+    $html = <<<HTML
+<tr>
+<td colspan="5">
+    <table style="width:100%;">    
+    <tr class="TableHead">
+    <td style="background-color: #D9EAD3;" width="90">Date</td>
+    <td style="background-color: #D9EAD3;" width="90">Order #</td>
+    <td style="background-color: #D9EAD3;" width="100">PO #</td>
+    <td style="background-color: #D9EAD3;" width="*">COMPANY NAME</td>
+    <td style="background-color: #D9EAD3;" width="200">BUYER'S NAME</td>
+    <td style="background-color: #D9EAD3;" width="90">AMOUNT</td>
+    </tr>
+    
+HTML;
+    $aOrderGroups = ((new Xcart\Reconciliation)->getReceivablesOrderGroups($aParams['period']));
+    if (!empty($aOrderGroups)){
+        foreach ($aOrderGroups as $oOrderGroup) {
+            $oOrder = $oOrderGroup->getOrderInstance();
+            $aOrderDetails = $oOrder->getDetails();
+            $html .= <<<HTML
+<tr>
+<td align="center">{$oOrder->getOrderDate('d-M-Y')}</td>
+<td align="center"><a href="{$oOrder->getOrderModifyURL()}">{$oOrder->getDisplayOrderNumber()}</a></td>
+<td>{$aOrderDetails['po_number']}</td>
+<td>{$aOrderDetails['company_name']}</td>
+<td>{$aOrderDetails['name_of_purchaser']}</td>
+<td align="center">{$oOrderGroup->getTotalGross()}</td>
+</tr>
+HTML;
+
+        }
+    }
+    $html .= <<<HTML
+</table>
+</td>
+</tr>
+HTML;
+    echo $html;
 }

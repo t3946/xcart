@@ -2,6 +2,7 @@
 
 namespace Xcart;
 
+use \Doctrine\DBAL\DriverManager;
 
 class Connection
 {
@@ -19,10 +20,10 @@ class Connection
      * @param array $params
      * @return \Doctrine\DBAL\Connection
      */
-    static public function getInstance($params = null)
+    static public function getInstance($params = [])
     {
         if (is_null(self::$_instance)) {
-            self::$_instance = \Doctrine\DBAL\DriverManager::getConnection($params);
+            self::$_instance = DriverManager::getConnection($params);
         }
         return self::$_instance;
     }
