@@ -42,33 +42,6 @@
 
 if (!defined('XCART_START')) { header("Location: index.php"); die("Access denied"); }
 
-#
-##
-###
-if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON"){
-
-        if (empty($_SERVER['HTTP_HOST'])){
-//                $_SERVER['HTTP_HOST'] = "dev1.test.artistsupplysource.com";
-              $_SERVER['HTTP_HOST'] = "www.artistsupplysource.com";
-        }
-
-        if (empty($_SERVER['REQUEST_URI'])){
-                $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_FILENAME'];
-        }
-}
-###
-##
-#
-
-
-$cur_host = $_SERVER['HTTP_HOST'];
-$cur_url = $_SERVER['REQUEST_URI'];
-if ($cur_host == 'www.kolinskyartbrushes.com') {
-    $new_url = ((!empty($HTTPS)) ? 'https://' : 'http://') . 'www.artistsupplysource.com' .  $cur_url;
-    header('HTTP/1.1 301 Moved Permanently');
-    header('Location: ' . $new_url);
-    exit();
-}
 
 @require_once $xcart_dir."/prepare.php";
 @require_once $xcart_dir."/include/func/func.core.php";
@@ -91,6 +64,15 @@ if (!@is_readable($xcart_dir."/config.php")) {
 @require_once $xcart_dir."/config.php";
 
 @include_once $xcart_dir."/config.local.php";
+
+$cur_host = $_SERVER['HTTP_HOST'];
+$cur_url = $_SERVER['REQUEST_URI'];
+if ($cur_host == 'www.kolinskyartbrushes.com') {
+	$new_url = ((!empty($HTTPS)) ? 'https://' : 'http://') . 'www.artistsupplysource.com' .  $cur_url;
+	header('HTTP/1.1 301 Moved Permanently');
+	header('Location: ' . $new_url);
+	exit();
+}
 
 $file_temp_dir = $var_dirs["tmp"];
 
