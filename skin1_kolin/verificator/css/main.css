@@ -269,6 +269,7 @@ iframe
 }
 .question_not_same {
     background-color: #fff2cc;
+    position: relative;
 }
 #table_verificators .TableHead td {
     text-transform: inherit;
@@ -289,4 +290,15 @@ iframe
 .conclusion_action
 {
     width: 200px;
+}
+.arbitrage_switch_button
+{
+    background-color: inherit !important;
+    border: 1px solid !important;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding: 0 !important;
 }
