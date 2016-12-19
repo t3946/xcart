@@ -1017,6 +1017,9 @@ if ($tab == "unreconciled" || $tab == "reconciled" || $tab == "dropped" || $tab 
 		if ($tab == "receivables") {
             $smarty->assign("aTotalReceivables", (new \Xcart\Reconciliation())->getReceivablesTotalReport());
         }
+		if ($tab == "accounts_payable") {
+			$smarty->assign("aTotalPayable", (new \Xcart\Reconciliation())->getPayableTotalReport());
+		}
 
 	} else {
 
