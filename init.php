@@ -1206,10 +1206,5 @@ if (!function_exists('fn_shutdown')) {
 	register_shutdown_function('fn_shutdown');
 }
 
-
-#
-# WARNING !
-# Please ensure that you have no whitespaces / empty lines below this message.
-# Adding a whitespace or an empty line below this line will cause a PHP error.
-#
-?>
+$smarty->register_function('getBanners', array('Xcart\Helpers\Banners', 'getBannerSmarty'));
+$smarty->register_function('getSliderData', array('Xcart\Helpers\SliderData', 'getSliderDataSmarty'));
