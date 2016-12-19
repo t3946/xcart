@@ -2244,9 +2244,9 @@ function func_get_order_manufacturers($orderid){
 								$d_shipping_options_arr[] = "the least expensive shipping method";
 							}
 							elseif ($oShipping->getName() !=$order["shipping_groups"][$m_id]["shipping"]) {
+                                $d_shipping_options_arr[] = "the least expensive shipping method";
                                 $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
                                 $d_shipping_options_arr[] = $oShipping->getName();
-                                $d_shipping_options_arr[] = "the least expensive shipping method";
                             }
                             else{
 								$d_shipping_options_arr[] = "the least expensive shipping method";
