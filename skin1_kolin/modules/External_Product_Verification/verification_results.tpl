@@ -182,11 +182,11 @@
                                         data-login="{$oCustomer->getCustomerLogin()}"
                                         rowspan="{$aVerificatorResults|@count}">
                                         {if $arbitrageAction}
-                                            <p><input placeholder="ASIN" size="10" type="text" /></p>
+                                            <p><input id="asin_arbitrage" placeholder="ASIN" size="10" type="text" /></p>
                                         {/if}
                                         {if $notsameQty}
-                                            <p><input placeholder="Amazon qty" size="10" type="text" /></p>
-                                            <p><input placeholder="Qty on our site" size="10" type="text" /></p>
+                                            <p><input id="amz_qty_arbitrage" placeholder="Amazon qty" size="10" type="text" /></p>
+                                            <p><input id="our_qty_arbitrage" placeholder="Qty on our site" size="10" type="text" /></p>
                                          {/if}
                                         <p style="text-align: center">
                                             <button class="ui button arbitrage_asin_button">Submit</button>
@@ -229,9 +229,11 @@
         }
     });
     $('.arbitrage_asin_button').click(function () {
+        const err_validation_message = 'Required fields are not selected!';
         var tr = $(this).closest('tr');
         var iProduct = tr.data('productid');
         var trpair = tr.siblings('tr[data-productid=' + iProduct + ']').andSelf();
+        var asin_arbitrage = trpair.find('input#asin_arbitrage').val();
         var iBatchId = $(this).parent().data('arbitrage-asin-batch');
         var sLogin = $(this).parent().data('login');
         //var correctASIN = prompt("Please enter a valid ASIN");
@@ -243,7 +245,12 @@
             for (i = 0; i < arrCheckType.length; i++) {
                 var anButtons = trpair.find('button[data-type='+arrCheckType[i]+'].active');
                 if (!anButtons.length) {
-                    alert('Required fields are not');
+                    if (
+                        ((arrCheckType == 'action' && asin_arbitrage == '') || arrCheckType != 'action')
+                       )
+                    {
+                        alert(err_validation_message);
+                    }
                 }
             }
 
