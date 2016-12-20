@@ -70,3 +70,4 @@ Thumbs.db
 /testDF78KL54AS01.php
 node_modules
 /skin1_kolin/pages/
+!/config.php
