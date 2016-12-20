@@ -39,15 +39,6 @@ if (!defined('XCART_START')) {
     die('Access denied');
 }
 
-# Main storefront: domain
-if (defined('LOCAL_SF_DOMAIN')) {
-    define('MAIN_SF_DOMAIN', LOCAL_SF_DOMAIN);
-}
-else{
-    define('MAIN_SF_DOMAIN', 'www.artistsupplysource.com');
-}
-
-
 # The maximum quantity of storefronts
 define('MAX_STOREFRONTS', 26);
 $smarty->assign('MAX_STOREFRONTS', MAX_STOREFRONTS);

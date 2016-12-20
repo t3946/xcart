@@ -18,7 +18,6 @@ Thumbs.db
 ## scripts to exclude
 /robots.txt.php
 #/init.php
-/config.php
 /config.local.php
 /robots.txt
 /test.php
