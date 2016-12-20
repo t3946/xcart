@@ -42,13 +42,14 @@
 
 if (!defined('XCART_START')) { header("Location: index.php"); die("Access denied"); }
 
+if (empty($_SERVER['SERVER_NAME']) && !empty($_SERVER['HTTP_HOST'])) {
+    $s_name_a = explode(':',$_SERVER['HTTP_HOST']);
+    $_SERVER['SERVER_NAME'] = $s_name_a[0];
+}
 
 @require_once $xcart_dir."/prepare.php";
-@require_once $xcart_dir."/include/func/func.core.php";
 
 $bench1 = func_microtime();
-
-x_load('db','files', 'debug', 'clean_urls');
 
 if (func_version_compare(phpversion(), "5.3.0") >= 0) {
    define('X_PHP530_COMPAT', true);
