@@ -102,6 +102,13 @@
                             ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAction() != $aVerificatorResults[1]->getAction()))}
                                 {assign var=notsameAction value=true}
                             {/if}
+
+                            {if ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin())}
+                                {assign var=arbitrageAction value=true}
+                            {else}
+                                {assign var=arbitrageAction value=false}
+                            {/if}
+
                             <td align="center" {if $notsameASIN}class="question_not_same"{/if}>
                                 {if (is_array($Asin))}
                                     {foreach from=$Asin item=sAsin}
@@ -151,13 +158,19 @@
                                 {/if}
                             </td>
                             <td align="center" class="conclusion_action {if $notsameAction}action_not_same{/if}">
-                                <b>{$oVerificatorResult->getActionDisplayName()}</b>
+                                {if $arbitrageAction}
+                                    <button data-type="action" class="ui button arbitrage_action toggle">
+                                {/if}
+                                    <b>{$oVerificatorResult->getActionDisplayName()}</b>
+                                {if $arbitrageAction}
+                                    </button>
+                                {/if}
                                 {if $oVerificatorResult->getComment()}
                                     <span data-html="{$oVerificatorResult->getComment()}"
                                           class="verificator_comments_icon"><img src="{$ImagesDir}/comment.png"/></span>
                                 {/if}
                                 <br/>
-                                {if ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin())}
+                                {if $arbitrageAction && 1!=1}
                                     <input name="radio_{$oProduct->getProductId()}" class="arbitration_radio"
                                            data-login="{$oCustomer->getCustomerLogin()}"
                                            data-arbitrage-confirmation-batch="{$oVerificatorResult->getBatchId()}"
@@ -165,13 +178,20 @@
                                 {/if}
                             </td>
                             {if $smarty.foreach.ver_rows.iteration == 1}
-                                {if ($Batch->getBatchId() && $Batch->isTest() === false && $aVerificatorResults[0]->getAsin() != $aVerificatorResults[1]->getAsin())}
                                     <td data-arbitrage-asin-batch="{$Batch->getBatchId()}"
                                         data-login="{$oCustomer->getCustomerLogin()}"
                                         rowspan="{$aVerificatorResults|@count}">
-                                        <button class="arbitrage_asin_button">ASIN</button>
+                                        {if $arbitrageAction}
+                                            <p><input placeholder="ASIN" size="10" type="text" /></p>
+                                        {/if}
+                                        {if $notsameQty}
+                                            <p><input placeholder="Amazon qty" size="10" type="text" /></p>
+                                            <p><input placeholder="Qty on our site" size="10" type="text" /></p>
+                                         {/if}
+                                        <p style="text-align: center">
+                                            <button class="ui button arbitrage_asin_button">Submit</button>
+                                        </p>
                                     </td>
-                                {/if}
                             {/if}
                         </tr>
                     {/if}
@@ -211,11 +231,26 @@
     $('.arbitrage_asin_button').click(function () {
         var tr = $(this).closest('tr');
         var iProduct = tr.data('productid');
+        var trpair = tr.siblings('tr[data-productid=' + iProduct + ']').andSelf();
         var iBatchId = $(this).parent().data('arbitrage-asin-batch');
         var sLogin = $(this).parent().data('login');
-        var correctASIN = prompt("Please enter a valid ASIN");
+        //var correctASIN = prompt("Please enter a valid ASIN");
+        var arrCheckType = [], errors = [];
+        tr.find('button.arbitrage_switch_button, button.arbitrage_action').each(function() {
+            arrCheckType.push($(this).data('type'));
+        });
+        if (arrCheckType.length > 0) {
+            for (i = 0; i < arrCheckType.length; i++) {
+                var anButtons = trpair.find('button[data-type='+arrCheckType[i]+'].active');
+                if (!anButtons.length) {
+                    alert('Required fields are not');
+                }
+            }
+
+        }
         if (correctASIN != null) {
-            var trpair = tr.siblings('tr[data-productid=' + iProduct + ']').andSelf().css({opacity: 0.4});
+
+            trpair.css({opacity: 0.4});
             $.post('ajax_admin.php', {
                         product_id: iProduct,
                         batch_id: iBatchId,
@@ -234,10 +269,10 @@
         }
     });
 
-    $('#table_verificators button.button.arbitrage_switch_button').click(function () {
+    $('#table_verificators button.button.arbitrage_switch_button, #table_verificators button.button.arbitrage_action').click(function () {
         if (!$(this).hasClass('active')) {
             var tr = $(this).closest('tr');
-            tr.siblings('tr[data-productid=' + tr.data('productid') + ']').find('button.arbitrage_switch_button[data-type='+$(this).data('type')+']').removeClass('active');
+            tr.siblings('tr[data-productid=' + tr.data('productid') + ']').find('button[data-type='+$(this).data('type')+']').removeClass('active');
             $(this).addClass('active');
         } else {
             $(this).removeClass('active');
@@ -259,7 +294,6 @@
         }
 
         $('#table_verificators button.active').each(function (val) {
-            console.log($(this));
             {
                 kvp2[kvp2.length] = [key, $(this).data('filter')].join('=');
             }
