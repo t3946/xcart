@@ -958,6 +958,8 @@ class="new_editor" rows="30" cols="60"
  name="{$configuration[cat_num].name}" cols="71" rows="5">
 {if $configuration[cat_num].name eq "thank_you_message_body" || $configuration[cat_num].name eq "po_instructions"}
 {$configuration[cat_num].value|replace:"\n":"<br />"}
+{elseif $configuration[cat_num].name eq "html_into_head" }
+{$configuration[cat_num].value}
 {else}
 {$configuration[cat_num].value|escape:html}
 {/if}
