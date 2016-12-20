@@ -17,10 +17,7 @@ Thumbs.db
 ###################################
 ## scripts to exclude
 /robots.txt.php
-/modules/Multiple_Storefronts/init.php
-/modules/Multiple_Storefronts/config.php
 #/init.php
-/config.php
 /config.local.php
 /robots.txt
 /test.php

@@ -62,8 +62,28 @@ if (!@is_readable($xcart_dir."/config.php")) {
 	exit;
 }
 @require_once $xcart_dir."/config.php";
-
 @include_once $xcart_dir."/config.local.php";
+
+# Main storefront: domain
+define('DEFAULT_SF_DOMAIN', 'www.artistsupplysource.com');
+
+if (defined('LOCAL_SF_DOMAIN')) {
+    define('MAIN_SF_DOMAIN', LOCAL_SF_DOMAIN);
+}
+else{
+    define('MAIN_SF_DOMAIN', DEFAULT_SF_DOMAIN);
+}
+
+if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
+
+    if (empty($_SERVER['HTTP_HOST'])) {
+        $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'] = MAIN_SF_DOMAIN;
+    }
+
+    if (empty($_SERVER['REQUEST_URI'])) {
+        $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_FILENAME'];
+    }
+}
 
 $cur_host = $_SERVER['HTTP_HOST'];
 $cur_url = $_SERVER['REQUEST_URI'];
@@ -73,6 +93,15 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
 	header('Location: ' . $new_url);
 	exit();
 }
+
+Xcart\Connection::getInstance([
+    'memory' => true,
+    'driver' => 'pdo_mysql',
+    'dbname' => $sql_db,
+    'host' => $sql_host,
+    'user' => $sql_user,
+    'password' => $sql_password
+])->connect();
 
 $file_temp_dir = $var_dirs["tmp"];
 
@@ -1072,6 +1101,17 @@ if (is_array($active_modules)) {
 			include $xcart_dir."/modules/".$__k."/init.php";
 	}
 	}
+}
+
+if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
+
+    if (empty($_SERVER['HTTP_HOST'])) {
+        $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'] = MAIN_SF_DOMAIN;
+    }
+
+    if (empty($_SERVER['REQUEST_URI'])) {
+        $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_FILENAME'];
+    }
 }
 
 #

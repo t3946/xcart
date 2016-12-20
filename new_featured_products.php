@@ -152,7 +152,7 @@ if ($page > 1) {
     if (!empty($f_new_products) && is_array($f_new_products)) {
         foreach ($f_new_products as $k => $v) {
             if (!empty($active_modules["Xcart_Mobile"]) && $config["Appearance"]["Enable_Mobile_skin"] == "Y") {
-                if ($detect->isMobile() && $k > 9) {
+                if ((isset($detect) && $detect->isMobile()) && $k > 9) {
                     unset($f_new_products[$k]);
                     continue;
                 }
