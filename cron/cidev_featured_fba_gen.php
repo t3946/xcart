@@ -19,7 +19,7 @@ from (
     
     WHERE p.forsale = 'Y'
       and p.amazon_fba_avail >= 2
-      and cidev_get_amazon_FBA_cloned_stock(P.productid) > 1
+      and cidev_get_amazon_FBA_cloned_stock(p.productid) > 1
       and cidev_get_amazon_FBA_sold_items(p.productid, -3) / cidev_get_amazon_FBA_overall_instock_days(p.productid, 3) < 0.1000
     
     union
