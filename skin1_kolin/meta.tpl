@@ -150,6 +150,9 @@ var usertype = "{$usertype}";
  *}
  {/if}
 {/if}
+
+{$current_storefront_info.html_into_head}
+
 {if $webmaster_mode eq "editor"}
 <script type="text/javascript" language="JavaScript 1.2">
 <!--

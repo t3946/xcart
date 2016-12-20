@@ -42,13 +42,14 @@
 
 if (!defined('XCART_START')) { header("Location: index.php"); die("Access denied"); }
 
+if (empty($_SERVER['SERVER_NAME']) && !empty($_SERVER['HTTP_HOST'])) {
+    $s_name_a = explode(':',$_SERVER['HTTP_HOST']);
+    $_SERVER['SERVER_NAME'] = $s_name_a[0];
+}
 
 @require_once $xcart_dir."/prepare.php";
-@require_once $xcart_dir."/include/func/func.core.php";
 
 $bench1 = func_microtime();
-
-x_load('db','files', 'debug', 'clean_urls');
 
 if (func_version_compare(phpversion(), "5.3.0") >= 0) {
    define('X_PHP530_COMPAT', true);
@@ -62,8 +63,28 @@ if (!@is_readable($xcart_dir."/config.php")) {
 	exit;
 }
 @require_once $xcart_dir."/config.php";
-
 @include_once $xcart_dir."/config.local.php";
+
+# Main storefront: domain
+define('DEFAULT_SF_DOMAIN', 'www.artistsupplysource.com');
+
+if (defined('LOCAL_SF_DOMAIN')) {
+    define('MAIN_SF_DOMAIN', LOCAL_SF_DOMAIN);
+}
+else{
+    define('MAIN_SF_DOMAIN', DEFAULT_SF_DOMAIN);
+}
+
+if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
+
+    if (empty($_SERVER['HTTP_HOST'])) {
+        $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'] = MAIN_SF_DOMAIN;
+    }
+
+    if (empty($_SERVER['REQUEST_URI'])) {
+        $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_FILENAME'];
+    }
+}
 
 $cur_host = $_SERVER['HTTP_HOST'];
 $cur_url = $_SERVER['REQUEST_URI'];
@@ -73,6 +94,15 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
 	header('Location: ' . $new_url);
 	exit();
 }
+
+Xcart\Connection::getInstance([
+    'memory' => true,
+    'driver' => 'pdo_mysql',
+    'dbname' => $sql_db,
+    'host' => $sql_host,
+    'user' => $sql_user,
+    'password' => $sql_password
+])->connect();
 
 $file_temp_dir = $var_dirs["tmp"];
 
@@ -89,15 +119,10 @@ define('THUMB_QUALITY', 97);
 $sql_tbl = array (
 	"avs_codes" => "xcart_avs_codes",
 	"benchmark_pages" => "xcart_benchmark_pages",
-# START: random:18298_18304_18324 [2009 Jun 08 09:50] 
 	"brands" => "xcart_brands",
 	"brands_lng" => "xcart_brands_lng",
-	"images_B" => "xcart_images_B",
-# END: random:18298_18304_18324 [2009 Jun 08 09:50] 
 	"categories" => "xcart_categories",
-# START: random:20766 [2010 May 11 13:18] 
 	"categories_parents" => "xcart_categories_parents",
-# END: random:20766 [2010 May 11 13:18] 
 	"categories_subcount" => "xcart_categories_subcount",
 	"categories_lng" => "xcart_categories_lng",
 	"category_memberships" => "xcart_category_memberships",
@@ -136,11 +161,16 @@ $sql_tbl = array (
 	"ge_products" => "xcart_ge_products",
 	"giftcerts" => "xcart_giftcerts",
 	"images_A" => "xcart_images_A",
-	"images_T" => "xcart_images_T",
-	"images_P" => "xcart_images_P",
-	"images_D" => "xcart_images_D",
-	"images_C" => "xcart_images_C",
-	"images_M" => "xcart_images_M",
+    "images_B" => "xcart_images_B",
+    "images_C" => "xcart_images_C",
+    "images_D" => "xcart_images_D",
+    "images_F" => "xcart_images_F",
+    "images_M" => "xcart_images_M",
+    "images_P" => "xcart_images_P",
+    "images_R" => "xcart_images_R",
+    "images_S" => "xcart_images_S",
+    "images_T" => "xcart_images_T",
+    "images_W" => "xcart_images_W",
 	"import_cache" => "xcart_import_cache",
 	"languages" => "xcart_languages",
 	"languages_alt" => "xcart_languages_alt",
@@ -155,9 +185,7 @@ $sql_tbl = array (
 	"newslists" => "xcart_newslists",
 	"old_passwords" => "xcart_old_passwords",
 	"order_details" => "xcart_order_details",
-# START: random:20341 [2010 Jul 29 14:46] 
 	"order_groups" => "xcart_order_groups",
-# END: random:20341 [2010 Jul 29 14:46] 
 	"order_extras" => "xcart_order_extras",
     'order_statuses' => 'xcart_order_statuses',
     'order_status_notifications' => 'xcart_order_status_notifications',
@@ -193,7 +221,6 @@ $sql_tbl = array (
 	"shipping_cache" => "xcart_shipping_cache",
 	"shipping_options" => "xcart_shipping_options",
 	"shipping_rates" => "xcart_shipping_rates",
-	"shipping_cache" => "xcart_shipping_cache",
 	"states" => "xcart_states",
 	"stats_adaptive" => "xcart_stats_adaptive",
 	"stats_cart_funnel" => "xcart_stats_cart_funnel",
@@ -210,30 +237,18 @@ $sql_tbl = array (
 	"taxes" => "xcart_taxes",
 	"temporary_data" => "xcart_temporary_data",
 	"titles" => "xcart_titles",
-# START: random:18591_18598 [2009 Jul 29 10:36] 
 	"tracking_links" => "xcart_tracking_links",
-# END: random:18591_18598 [2009 Jul 29 10:36] 
 	"wishlist" => "xcart_wishlist",
 	"users_online" => "xcart_users_online",
 	"zip_code_info" => "xcart_zip_code_info",
 	"zone_element" => "xcart_zone_element",
 	"zones" => "xcart_zones",
-	
 	"geo_litecity_blocks" => "xcart_geo_litecity_blocks",
 	"geo_litecity_location" => "xcart_geo_litecity_location",
-
-#
-##
-###
     "clean_urls"                        => "xcart_clean_urls",
     "clean_urls_history"                => "xcart_clean_urls_history",
-###
-##
-#
     "Telephone_area_codes" => "xcart_Telephone_area_codes",
-
     "distributor_contacts" => "xcart_distributor_contacts",
-
     "info_pages_categories" => "xcart_info_pages_categories",
     "info_pages" => "xcart_info_pages",
     "info_pages_subcount" => "xcart_info_pages_subcount",
@@ -253,7 +268,6 @@ $sql_tbl = array (
     "filter_preset_ship_to_country" => "xcart_filter_preset_ship_to_country",
     "seo_categories_keyphrases" => "xcart_seo_categories_keyphrases",
     "reconciliations" => "xcart_reconciliations",
-//    "reconciliation_orderid" => "xcart_reconciliation_orderid",
     "reconciliation_upload_info" => "xcart_reconciliation_upload_info",
     "bpu_rows" => "xcart_bpu_rows",
     "bpu_result" => "xcart_bpu_result",
@@ -291,9 +305,7 @@ $sql_tbl = array (
     "cidev_amazon_fba_products" => "xcart_cidev_amazon_fba_products",
     "off_hours_messages" => "xcart_off_hours_messages",
     "links_to_distributor_memos" => "xcart_links_to_distributor_memos",
-//    "reconciliations_memos" => "xcart_reconciliations_memos",
     "order_group_memos" => "xcart_order_group_memos",
-//    "reconciliations_invoices" => "xcart_reconciliations_invoices",
     "order_group_invoices" => "xcart_order_group_invoices",
     "order_group_invoices_products" => "xcart_order_group_invoices_products",
     "tracking_links_carrier" => "xcart_tracking_links_carrier",
@@ -307,7 +319,6 @@ $sql_tbl = array (
     "rma_statuses" => "xcart_rma_statuses",
     "rma_details" => "xcart_rma_details",
     "rma_would_like_variants" => "xcart_rma_would_like_variants",
-    "images_R" => "xcart_images_R",
     "manufacturer_feed_fields" => "xcart_manufacturer_feed_fields",
     "cidev_updated_products" => "xcart_cidev_updated_products",
     "transaction_logs" => "xcart_transaction_logs",
@@ -334,7 +345,8 @@ $sql_tbl = array (
     "cidev_issues_processing_rules" => "xcart_cidev_issues_processing_rules",
 	"products_upc_changes" => "xcart_products_upc_changes",
 	"locks" => "xcart_locks",
-	"fba_missing_sku" => "xcart_fba_missing_sku"
+	"fba_missing_sku" => "xcart_fba_missing_sku",
+	"storefronts_config" => "xcart_storefronts_config"
 );
 
 # START: random:20341 [2010 Jul 29 14:46] 
@@ -1092,6 +1104,17 @@ if (is_array($active_modules)) {
 	}
 }
 
+if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
+
+    if (empty($_SERVER['HTTP_HOST'])) {
+        $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'] = MAIN_SF_DOMAIN;
+    }
+
+    if (empty($_SERVER['REQUEST_URI'])) {
+        $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_FILENAME'];
+    }
+}
+
 #
 ## Working hours
 ###
@@ -1206,10 +1229,5 @@ if (!function_exists('fn_shutdown')) {
 	register_shutdown_function('fn_shutdown');
 }
 
-
-#
-# WARNING !
-# Please ensure that you have no whitespaces / empty lines below this message.
-# Adding a whitespace or an empty line below this line will cause a PHP error.
-#
-?>
+$smarty->register_function('getBanners', array('Xcart\Helpers\Banners', 'getBannerSmarty'));
+$smarty->register_function('getSliderData', array('Xcart\Helpers\SliderData', 'getSliderDataSmarty'));

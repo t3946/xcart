@@ -134,10 +134,12 @@ function func_get_storefront_info($sf_id, $type = 'ID', $full = false) {
 	if ($type == 'ID') {
 		
 		$sf_id = intval($sf_id);
-	
+
 		if ($sf_id == 0) {
 			$sf_info = array(
 				'storefrontid'	=> 0,
+				'sf_top_image_alt'	=> (!empty($config['Company']['sf_top_image_alt']) ? $config['Company']['sf_top_image_alt'] : $config['Company']['company_name']),
+				'html_into_head'	=> (!empty($config['Company']['html_into_head']) ? $config['Company']['html_into_head'] : ''),
 				'status'		=> ($config['General']['shop_closed'] == 'Y') ? 'D' : 'E',
 				'prefix'		=> MAIN_SF_PREFIX,
 				'top_banner'	=> 'default',
