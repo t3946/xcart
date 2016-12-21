@@ -9,7 +9,7 @@
 		dots: true ,
 		arrows: false,
 		adaptiveHeight:true,
-		autoplay: true,
+		autoplay: false,
 		pauseOnHover: true,
 		pauseOnFocus: true,
 		autoplaySpeed: 4000,

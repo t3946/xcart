@@ -17,10 +17,7 @@ Thumbs.db
 ###################################
 ## scripts to exclude
 /robots.txt.php
-/modules/Multiple_Storefronts/init.php
-/modules/Multiple_Storefronts/config.php
-/init.php
-/config.php
+#/init.php
 /config.local.php
 /robots.txt
 /test.php
@@ -73,3 +70,4 @@ Thumbs.db
 /testDF78KL54AS01.php
 node_modules
 /skin1_kolin/pages/
+!/config.php

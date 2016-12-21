@@ -782,6 +782,9 @@ class Order extends Data
         if (!$this->isOrderAmazon()) {
 
             $allow_send_to_operator = true;
+            if ($this->getField('fraud_status') != 'C') {
+                $allow_send_to_operator = false;
+            }
 
             if ($config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages"] == "Y" && $this->getOTRSTicketMessages() != $config["Autosubmit_orderentry_operator"]["number_of_OTRS_messages_is_NOT_equal_to_value"]) {
                 $allow_send_to_operator = false;
@@ -949,5 +952,31 @@ class Order extends Data
             }
         }
         return $ticket_resolver_messages;
+    }
+
+    public function getDetails()
+    {
+        $po_details = [];
+        $details = text_decrypt($this->getField('details'));
+        $tmp = explode("\n", $details);
+
+        if ($tmp) {
+            $po_fields = array("po_number" => "PO Number", "company_name" => "Company name", "name_of_purchaser" => "Name of purchaser", "position" => "Position", "po_fax" => "po fax");
+            $po_details = array();
+            foreach ($tmp as $line) {
+                if (empty($po_fields)) {
+                    break;
+                }
+                foreach ($po_fields as $kk => $po_text) {
+                    if (($a = strpos($line, $po_text)) !== false) {
+                        $value = substr($line, $a + strlen($po_text) + 2);
+                        $po_details[$kk] = $value;
+                        unset($po_fields[$kk]);
+                        break;
+                    }
+                }
+            }
+        }
+        return $po_details;
     }
 }

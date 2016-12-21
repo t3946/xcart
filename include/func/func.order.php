@@ -2238,10 +2238,17 @@ function func_get_order_manufacturers($orderid){
 							if ($orig_shipping_name == "_USE_MY_UPS_FEDEX_ACCOUNT_") {
 								$d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
 								$d_shipping_options_arr[] = "the least expensive shipping method";
-							} elseif ($orig_shipping_name == "_USE_MY_TRUCKING_ACCOUNT_") {
+							}
+							elseif ($orig_shipping_name == "_USE_MY_TRUCKING_ACCOUNT_") {
 								$d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
 								$d_shipping_options_arr[] = "the least expensive shipping method";
-							} else {
+							}
+							elseif ($oShipping->getName() !=$order["shipping_groups"][$m_id]["shipping"]) {
+                                $d_shipping_options_arr[] = "the least expensive shipping method";
+                                $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
+                                $d_shipping_options_arr[] = $oShipping->getName();
+                            }
+                            else{
 								$d_shipping_options_arr[] = "the least expensive shipping method";
 								$d_shipping_options_arr[] = $oShipping->getName();
 							}

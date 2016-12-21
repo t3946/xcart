@@ -575,21 +575,11 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 	$fillerror = (($categoryid == "") ||
 		(!$category_exists) ||
 		empty($product) ||
-//		$clean_url_check_result == false ||
-		empty($fulldescr) ||
-//		($avail == "" && !$is_variant) ||
+		(empty($fulldescr) && !empty($product_info['fulldescr'])) ||
 		($r_avail == "" && !$is_variant) ||
 		empty($low_avail_limit) ||
 		($productcode == '') ||
-#
-##
-###
-//		empty($cost_to_us) || $cost_to_us == "" || $cost_to_us < 0 ||
 		$check_cost_to_us_result == false ||
-###
-##
-#
-
 		$sku_is_exist);
 
 

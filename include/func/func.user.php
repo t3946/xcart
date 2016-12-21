@@ -308,21 +308,27 @@ function func_check_county($countyid, $statecode, $countrycode) {
 #
 # This function validate accordance a state code to a country code
 #
-function func_check_state($states, $statecode, $countrycode) {
-	$country_flag = $state_flag = false;
-	$return = true;
-	foreach ($states as $val) {
-		if ($val["country_code"] == $countrycode) {
-			$country_flag = true;
-			if ($val["state_code"] == $statecode)
-				$state_flag = true;
-		}
-	}
+function func_check_state($states, $statecode, $countrycode)
+{
+    if (!in_array($countrycode, ['US', 'CA'])) { //disable if not USA or Canada
+        return true;
+    }
 
-	if ($country_flag && !$state_flag)
-		$return = false;
+    $country_flag = $state_flag = false;
+    $return = true;
+    foreach ($states as $val) {
+        if ($val["country_code"] == $countrycode) {
+            $country_flag = true;
+            if ($val["state_code"] == $statecode)
+                $state_flag = true;
+        }
+    }
 
-	return $return;
+    if ($country_flag && !$state_flag) {
+        $return = false;
+    }
+
+    return $return;
 }
 
 #

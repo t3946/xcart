@@ -181,8 +181,6 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 		func_header_location("/keyword/".$redirect_substring."/");
 	}
 
-	$search_mode = true;
-
 	include $xcart_dir."/elastic_search.php";
 
 	if ($e_search_data["total"] > $config["Appearance"]["products_per_page"]){
@@ -193,7 +191,6 @@ if (is_array($e_search_data) && !empty($e_search_data["substring"])){
 
 		$load_all_e_products = false;
 	}
-	$search_mode = false;
 
 	$found_cat_ids = array();
 	if (!empty($e_products) && is_array($e_products)){
