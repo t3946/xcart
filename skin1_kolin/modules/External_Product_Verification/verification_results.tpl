@@ -122,47 +122,47 @@
 
 
                             <td align="center" {if $notsameImage}class="question_not_same"{/if}>
-                                {if $notsameImage && "image"|in_array:$filter}
+                                {if $notsameImage && (empty($filter) || "image"|in_array:$filter)}
                                     <button data-type="image" class="ui button arbitrage_switch_button toggle">
                                 {/if}
                                     {$oVerificatorResult->getProductImage()}
-                                {if $notsameImage && "image"|in_array:$filter}
+                                {if $notsameImage && (empty($filter) || "image"|in_array:$filter)}
                                     </button>
                                 {/if}
                             </td>
                             <td align="center" {if $notsameName}class="question_not_same"{/if}>
-                                {if $notsameName && "name"|in_array:$filter}
+                                {if $notsameName && (empty($filter) || "name"|in_array:$filter)}
                                     <button data-type="name" class="ui button arbitrage_switch_button toggle">
                                 {/if}
                                 {$oVerificatorResult->getProductName()}
-                                {if $notsameImage && "name"|in_array:$filter}
+                                {if $notsameImage && (empty($filter) || "name"|in_array:$filter)}
                                     </button>
                                 {/if}
                             </td>
                             <td align="center" {if $notsameDesc}class="question_not_same"{/if}>
-                                {if $notsameDesc && "desc"|in_array:$filter}
+                                {if $notsameDesc && (empty($filter) || "desc"|in_array:$filter)}
                                     <button data-type="desc" class="ui button arbitrage_switch_button toggle">
                                 {/if}
                                 {$oVerificatorResult->getProductDescription()}
-                                {if $notsameDesc && "desc"|in_array:$filter}
+                                {if $notsameDesc && (empty($filter) || "desc"|in_array:$filter)}
                                     </button>
                                 {/if}
                             </td>
                             <td align="center" {if $notsameQty}class="question_not_same"{/if}>
-                                {if $notsameQty && "qty"|in_array:$filter}
+                                {if $notsameQty && (empty($filter) || "qty"|in_array:$filter)}
                                     <button data-type="qty" class="ui button arbitrage_switch_button toggle">
                                 {/if}
                                     {$oVerificatorResult->getQtyOnAmazon()}<br/>{$oVerificatorResult->getQtyOnOurWebSite()}
-                                {if $notsameQty && "qty"|in_array:$filter}
+                                {if $notsameQty && (empty($filter) || "qty"|in_array:$filter)}
                                     </button>
                                 {/if}
                             </td>
                             <td  align="center" class="conclusion_action {if $notsameAction}action_not_same{/if}">
-                                {if $arbitrageAction && "asin"|in_array:$filter}
+                                {if $arbitrageAction && (empty($filter) || "asin"|in_array:$filter)}
                                     <button data-type="action" class="ui button arbitrage_action toggle">
                                 {/if}
                                     <b>{$oVerificatorResult->getActionDisplayName()}</b>
-                                {if $arbitrageAction && "asin"|in_array:$filter}
+                                {if $arbitrageAction && (empty($filter) || "asin"|in_array:$filter)}
                                     </button>
                                 {/if}
                                 {if $oVerificatorResult->getComment()}
@@ -173,10 +173,10 @@
                             </td>
                             {if $smarty.foreach.ver_rows.iteration == 1}
                                     <td rowspan="{$aVerificatorResults|@count}">
-                                        {if $arbitrageAction && "asin"|in_array:$filter}
+                                        {if $arbitrageAction && (empty($filter) || "asin"|in_array:$filter)}
                                             <p><input id="asin_arbitrage" placeholder="ASIN" size="10" type="text" /></p>
                                         {/if}
-                                        {if $notsameQty && "qty"|in_array:$filter}
+                                        {if $notsameQty && (empty($filter) || "qty"|in_array:$filter)}
                                             <p><input id="amz_qty_arbitrage" placeholder="Amazon qty" size="10" type="text" /></p>
                                             <p><input id="our_qty_arbitrage" placeholder="Qty on our site" size="10" type="text" /></p>
                                          {/if}
@@ -222,8 +222,9 @@
     });
     $('.arbitrage_asin_button').click(function () {
         const err_validation_message = 'Required fields are not selected!';
-        var asin_batch_id, asin_login;
-        var arrCheckType = [], errors = [], arbitrageArr = [];
+        var asin_batch_id, asin_login,
+        arrCheckType = [], errors = [], arbitrageArr = [],
+        error = false;
 
         var tr = $(this).closest('tr');
         var iProduct = tr.data('productid');
@@ -237,7 +238,7 @@
         tr.find('button.arbitrage_switch_button, button.arbitrage_action').each(function() {
             arrCheckType.push($(this).data('type'));
         });
-        var error = false;
+
         if (arrCheckType.length > 0) {
             for (i = 0; i < arrCheckType.length; i++) {
                 var anButtons = trpair.find('button[data-type='+arrCheckType[i]+'].active');
