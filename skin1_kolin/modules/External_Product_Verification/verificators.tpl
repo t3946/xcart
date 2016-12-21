@@ -8,6 +8,7 @@
         <button data-status="all" class="ui left button {if $active=='all'}active{/if}">All</button>
         <button data-status="Y" class="ui button {if $active == 'Y'}active{/if}">Active</button>
         <button data-status="N" class="ui button {if $active == 'N'}active{/if}">Inactive</button>
+        <button data-status="B" class="ui button {if $active == 'B'}active{/if}">Blocked</button>
     </div>
     <table width="100%" id="table_verificators" cellpadding="3" cellspacing="1">
         <tr>
@@ -73,7 +74,7 @@
 
 {include file="dialog.tpl" title='Verificators' content=$smarty.capture.dialog extra='width="100%"'}
 <br/>
-{include file="dialog.tpl" title='Verification results' content=$smarty.capture.verification_results extra='width="100%"'}
+{include file="dialog.tpl" title="Verification results: `$foundRows`" content=$smarty.capture.verification_results extra='width="100%"'}
 
 <script>
     {literal}
