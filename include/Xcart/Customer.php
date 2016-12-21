@@ -56,6 +56,11 @@ class Customer extends Data
         return sprintf(self::LINK_TO_MODIFY,$this->getCustomerLogin(),$this->getCustomerUserType());
     }
 
+    /**
+     * @param string $sType
+     * @param string $active
+     * @return Customer[]
+     */
     public static function getCustomersByType($sType, $active = 'Y')
     {
         $aOCustomers = [];
@@ -143,6 +148,10 @@ class Customer extends Data
         return $this->iAmazonBatchesInProgressCount;
     }
 
+    /**
+     * @param string $sStatus
+     * @return ExternalVerificationBatch[]
+     */
     public function getAmazonBatches($sStatus = null)
     {
         $aB = [];
