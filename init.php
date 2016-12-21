@@ -1184,7 +1184,7 @@ define('PURCHASE_ORDER_PAYMENTID', 2);
 # Froogle title length
 #
 
-define('FROOGLE_TITLE_LENGTH', 70);
+define('FROOGLE_TITLE_LENGTH', 150);
 $smarty->assign('FROOGLE_TITLE_LENGTH', FROOGLE_TITLE_LENGTH);
 
 #
