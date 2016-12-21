@@ -528,7 +528,7 @@
                     {/if}
                     <td class="FormButton" nowrap="nowrap">Title (&lt;title&gt;):</td>
                     <td class="ProductDetails"><input type="text" name="title_tag" size="20"
-                                                      value="{$product.title_tag}" class="InputWidth"/></td>
+                                                      value="{$product.title_tag|escape}" class="InputWidth"/></td>
                 </tr>
                 <tr>
                     {if $geid ne ''}
@@ -536,14 +536,14 @@
                     {/if}
                     <td class="FormButton" nowrap="nowrap">SEO product name (&lt;H1&gt;):</td>
                     <td class="ProductDetails"><input type="text" name="seo_product_name" size="20"
-                                                      value="{$product.seo_product_name}" class="InputWidth"/></td>
+                                                      value="{$product.seo_product_name|escape}" class="InputWidth"/></td>
                 </tr>
                 <tr>
                     {if $geid ne ''}
                         <td width="15" class="TableSubHead">&nbsp;</td>
                     {/if}
                     <td class="FormButton" nowrap="nowrap">SEO (&lt;H2&gt;):</td>
-                    <td class="ProductDetails"><input type="text" name="seo_h2" size="20" value="{$product.seo_h2}"
+                    <td class="ProductDetails"><input type="text" name="seo_h2" size="20" value="{$product.seo_h2|escape}"
                                                       class="InputWidth"/></td>
                 </tr>
                 <tr>
@@ -553,7 +553,7 @@
                     <td class="FormButton" nowrap="nowrap">SEO meta 'Description':</td>
                     <td class="ProductDetails">
                         <textarea style="width: 80%" name="seo_meta_descr" cols="60"
-                                  rows="4">{$product.seo_meta_descr}</textarea>
+                                  rows="4">{$product.seo_meta_descr|escape}</textarea>
                     </td>
                 </tr>
             {/if}
