@@ -123,7 +123,7 @@ class ExternalVerificationProductsQueue extends Data
 
     public static function getVerificationResultsProductsWithNotSameVariants($aParams = null)
     {
-        $aResults = $aActionFilter = [];
+        $aResults = $aActionFilter = $aArbitrageFilter = $aArbitrageManualFilter = [];
 
         $limit = 50;
         if (!empty($aParams['limit']) && is_numeric($aParams['limit'])) {
@@ -135,19 +135,27 @@ class ExternalVerificationProductsQueue extends Data
                 switch ($sFilter) {
                     case 'asin' :
                         $aActionFilter[] = 'asin_on_amazon';
+                        $aArbitrageFilter[] = 'arbitrage_confirmation';
+                        $aArbitrageManualFilter[] = 'arbitrage_asin';
                         break;
                     case 'image' :
                         $aActionFilter[] = 'product_image';
+                        $aArbitrageFilter[] = 'arbitrage_confirmation_image';
                         break;
                     case 'name' :
                         $aActionFilter[] = 'product_names';
+                        $aArbitrageFilter[] = 'arbitrage_confirmation_name';
                         break;
                     case 'desc' :
                         $aActionFilter[] = 'product_description';
+                        $aArbitrageFilter[] = 'arbitrage_confirmation_desc';
                         break;
                     case 'qty' :
                         $aActionFilter[] = 'qty_on_amazon';
                         $aActionFilter[] = 'qty_on_our_website';
+                        $aArbitrageFilter[] = 'arbitrage_confirmation_qty';
+                        $aArbitrageManualFilter[] = 'arbitrage_amazon_qty';
+                        $aArbitrageManualFilter[] = 'our_qty_arbitrage';
                         break;
                 }
             }
@@ -158,10 +166,14 @@ class ExternalVerificationProductsQueue extends Data
         addFromTable('external_verification_products_queue', 'xe')->
         addInnerJoin('external_verification_products', 'xp', 'xp.productid = xe.productid AND xp.action IN ("' . implode('","', ExternalVerificationBatch::$aProductStatuses['processed']) . '")')->
         addInnerJoin('external_verification_products', 'xp2', 'xp.productid = xp2.productid AND xp2.action IN ("' . implode('","', $aActionFilter) . '")')->
-        addInnerJoin('external_verification_products', 'xp3', 'xp.productid = xp3.productid AND xp3.action IN ("' . implode('","', $aActionFilter) . '")')->
-        addInnerJoin('external_verification_products', 'xp4', 'xp.productid = xp4.productid AND xp4.action IN ("arbitrage_confirmation")', 'LEFT JOIN')->
-        addInnerJoin('external_verification_products', 'xp5', 'xp.productid = xp5.productid AND xp5.action IN ("arbitrage_asin")', 'LEFT JOIN')->
-        addGroupBy('xe.productid')->addOrderBy('xp.value DESC')->setLimit($limit);
+        addInnerJoin('external_verification_products', 'xp3', 'xp.productid = xp3.productid AND xp3.action IN ("' . implode('","', $aActionFilter) . '")');
+        if (!empty($aArbitrageFilter)) {
+            $oSQL->addInnerJoin('external_verification_products', 'xp4', 'xp.productid = xp4.productid AND xp4.action IN ("' . implode('","', $aArbitrageFilter) . '")', 'LEFT JOIN');
+        }
+        if (!empty($aArbitrageManualFilter)) {
+            $oSQL->addInnerJoin('external_verification_products', 'xp5', 'xp.productid = xp5.productid AND xp5.action IN ("' . implode('","', $aArbitrageManualFilter) . '")', 'LEFT JOIN');
+        }
+        $oSQL->addGroupBy('xe.productid')->addOrderBy('xp.value DESC')->setLimit($limit);
         if (!empty($aParams['batch_id']) && is_numeric($aParams['batch_id'])) {
             $oSQL->addCondition('batch_id=' . (int)$aParams['batch_id']);
         } else {
@@ -169,8 +181,10 @@ class ExternalVerificationProductsQueue extends Data
             $oSQL->addCondition('xp3.value != xp2.value');
             $oSQL->addCondition('xp3.action = xp2.action');
             $oSQL->addCondition('xp3.batch_id != xp2.batch_id');
-            if (in_array('asin_on_amazon', $aActionFilter)) {
+            if (!empty($aArbitrageFilter)) {
                 $oSQL->addCondition('xp4.productid IS NULL');
+            }
+            if (!empty($aArbitrageManualFilter)) {
                 $oSQL->addCondition('xp5.productid IS NULL');
             }
         }

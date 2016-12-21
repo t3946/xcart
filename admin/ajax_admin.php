@@ -43,11 +43,8 @@ switch ($_POST['ajax_action']) {
     case "category_structure_change":
         changeCategoryStructure($_POST);
         break;
-    case "verification_arbitrage_confirmation":
-        confirmVerificationArbitrage($_POST);
-        break;
-    case "verification_arbitrage_asin_enter":
-        enterVerificationArbitrageAsin($_POST);
+    case "verification_arbitrage_full":
+        enterVerificationArbitrageFull($_POST);
         break;
     case "get_receivables_orders":
         getReceivablesOrders($_POST);
@@ -176,7 +173,7 @@ function changeMissingStructure($aParams = [])
     $aResult['result'] = false;
     $oProduct = null;
     $sNewSKU = $aParams['new_sku'];
-    $iNewProductid = (int) $aParams['new_productid'];
+    $iNewProductid = (int)$aParams['new_productid'];
     $sOldSKU = $aParams['category'];
     $sOldSKUAdd = $aParams['amazon_sku'];
     switch ($aParams['action']) {
@@ -184,7 +181,7 @@ function changeMissingStructure($aParams = [])
             if (!empty($sNewSKU)) {
                 $oProduct = Xcart\Product::model()->getProductBySKU($sNewSKU);
             } elseif ($iNewProductid) {
-                $oProduct = Xcart\Product::model(['productid'=>$iNewProductid]);
+                $oProduct = Xcart\Product::model(['productid' => $iNewProductid]);
             }
             if ($oProduct->getProductId()) {
                 if ($oProduct->isForSale()) {
@@ -226,8 +223,8 @@ function changeIssueProcessing($aParams = [])
 {
     $aResult = [];
     $aResult['result'] = false;
-    $iProductId = (int) $aParams['product_id'];
-    $iIssueId = (int) $aParams['issue_id'];
+    $iProductId = (int)$aParams['product_id'];
+    $iIssueId = (int)$aParams['issue_id'];
     switch ($aParams['action']) {
         case 'fixed':
             $oIssue = new Xcart\External_Marketplaces\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
@@ -252,43 +249,81 @@ function changeIssueProcessing($aParams = [])
     print(json_encode($aResult));
 }
 
-function confirmVerificationArbitrage($aParams = [])
+function enterVerificationArbitrageFull($aParams = [])
 {
     global $login;
     $aResult = [];
     $aResult['result'] = false;
-    $iProductId = (int) $aParams['product_id'];
-    $iBatchId = (int) $aParams['batch_id'];
-    $sLogin = $aParams['login'];
-    $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
-        setField('productid', $iProductId)->
-        setField('batch_id', $iBatchId)->
-        setField('login', $sLogin)->
-        setField('action', 'arbitrage_confirmation')->
-        setField('value', $login)->_insert(true);
-    $aResult['result'] = ($bS !== false);
+    $sAmazonAsin = $iAmazonQty = $iOurSiteQty = $sExternalVerificationProductsAction = null;
 
-    print(json_encode($aResult));
-}
-
-function enterVerificationArbitrageAsin($aParams = [])
-{
-    $aResult = [];
-    $aResult['result'] = false;
-    $iProductId = (int) $aParams['product_id'];
-    $iBatchId = (int) $aParams['batch_id'];
-    $sLogin = $aParams['login'];
-    $sASIN = trim($aParams['ASIN']);
-    if (!empty($sASIN)) {
-        $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
-        setField('productid', $iProductId)->
-        setField('batch_id', $iBatchId)->
-        setField('login', $sLogin)->
-        setField('action', 'arbitrage_asin')->
-        setField('value', $sASIN)->_insert(true);
-        $aResult['result'] = ($bS !== false);
+    $iProductId = (int)$aParams['product_id'];
+    if (!empty($aParams['asin_arbitrage']) || !empty($aParams['amazon_qty_arbitrage']) || !empty($aParams['our_qty_arbitrage'])) {
+        $aRows = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->findAll(
+            Xcart\SQLBuilder::getInstance()->addCondition('productid='.$iProductId)->
+            addCondition("action='asin_on_amazon'")
+        );
+        if (!empty($aRows)) {
+            foreach ($aRows as $oRow) {
+                $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
+                setField('productid', $iProductId)->
+                setField('batch_id', $oRow->getBatchId())->
+                setField('login', $oRow->getLogin());
+                $sAmazonAsin = trim($aParams['asin_arbitrage']);
+                if (!empty($sAmazonAsin)) {
+                    $bS->setField('action', 'arbitrage_asin')->
+                    setField('value', $sAmazonAsin)->_insert(true);
+                    $aResult['result'] = ($bS !== false);
+                }
+                if (!empty($aParams['amazon_qty_arbitrage'])) {
+                    $iAmazonQty = intval($aParams['amazon_qty_arbitrage']);
+                    $bS->setField('action', 'arbitrage_amazon_qty')->
+                    setField('value', $iAmazonQty)->_insert(true);
+                    $aResult['result'] = ($bS !== false);
+                }
+                if (!empty($aParams['our_qty_arbitrage'])) {
+                    $iOurSiteQty = intval($aParams['our_qty_arbitrage']);
+                    $bS->setField('action', 'arbitrage_our_qty')->
+                    setField('value', $iOurSiteQty)->_insert(true);
+                    $aResult['result'] = ($bS !== false);
+                }
+            }
+        }
     }
 
+    if (!empty($aParams['arbitrage']) && is_array($aParams['arbitrage'])) {
+        foreach ($aParams['arbitrage'] as $aArbitrageValues) {
+            switch ($aArbitrageValues['action']) {
+                case 'action':
+                    if (!is_null($sAmazonAsin)) {
+                        continue;
+                    }
+                    $sExternalVerificationProductsAction = 'arbitrage_confirmation';
+                    break;
+                case 'qty':
+                    if (!is_null($iAmazonQty) && !is_null($iOurSiteQty)) {
+                        continue;
+                    }
+                    $sExternalVerificationProductsAction = 'arbitrage_confirmation_qty';
+                    break;
+                case 'image':
+                    $sExternalVerificationProductsAction = 'arbitrage_confirmation_image';
+                    break;
+                case 'name':
+                    $sExternalVerificationProductsAction = 'arbitrage_confirmation_name';
+                    break;
+                case 'desc':
+                    $sExternalVerificationProductsAction = 'arbitrage_confirmation_desc';
+                    break;
+            }
+            $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
+            setField('productid', $iProductId)->
+            setField('batch_id', $aArbitrageValues['batch_id'])->
+            setField('login', $aArbitrageValues['login'])->
+            setField('action', $sExternalVerificationProductsAction)->
+            setField('value', $login)->_insert(true);
+            $aResult['result'] = ($bS !== false);
+        }
+    }
     print(json_encode($aResult));
 }
 
@@ -309,7 +344,7 @@ function getReceivablesOrders($aParams = [])
     
 HTML;
     $aOrderGroups = ((new Xcart\Reconciliation)->getReceivablesOrderGroups($aParams['period']));
-    if (!empty($aOrderGroups)){
+    if (!empty($aOrderGroups)) {
         foreach ($aOrderGroups as $oOrderGroup) {
             $oOrder = $oOrderGroup->getOrderInstance();
             $aOrderDetails = $oOrder->getDetails();
@@ -348,7 +383,7 @@ function getPayablesOrders($aParams = [])
     
 HTML;
     $aOrderGroups = ((new Xcart\Reconciliation)->getPayablesOrderGroups($aParams['period']));
-    if (!empty($aOrderGroups)){
+    if (!empty($aOrderGroups)) {
         foreach ($aOrderGroups as $oOrderGroup) {
             $oOrder = $oOrderGroup->getOrderInstance();
             $html .= <<<HTML

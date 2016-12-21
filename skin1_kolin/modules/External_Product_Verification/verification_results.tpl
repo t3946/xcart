@@ -51,7 +51,7 @@
                         {if $smarty.foreach.ver_rows.iteration == 1}
                             {cycle assign=classVar name=$type values=", class='TableSubHead'"}
                         {/if}
-                        <tr data-productid="{$oProduct->getProductId()}" {$classVar}>
+                        <tr data-arbitrage-asin-batch="{$oVerificatorResult->getBatchId()}" data-login="{$oCustomer->getCustomerLogin()}" data-productid="{$oProduct->getProductId()}" {$classVar}>
                             {if $smarty.foreach.ver_rows.iteration == 1}
                                 <td rowspan="{$aVerificatorResults|@count}">
                                     <p><a target="_blank" href="{$oVerificatorResult->getSearchByUPCOnAmazonLink()}">Amazon
@@ -122,69 +122,61 @@
 
 
                             <td align="center" {if $notsameImage}class="question_not_same"{/if}>
-                                {if $notsameImage}
+                                {if $notsameImage && "image"|in_array:$filter}
                                     <button data-type="image" class="ui button arbitrage_switch_button toggle">
                                 {/if}
                                     {$oVerificatorResult->getProductImage()}
-                                {if $notsameImage}
+                                {if $notsameImage && "image"|in_array:$filter}
                                     </button>
                                 {/if}
                             </td>
                             <td align="center" {if $notsameName}class="question_not_same"{/if}>
-                                {if $notsameName}
+                                {if $notsameName && "name"|in_array:$filter}
                                     <button data-type="name" class="ui button arbitrage_switch_button toggle">
                                 {/if}
                                 {$oVerificatorResult->getProductName()}
-                                {if $notsameImage}
+                                {if $notsameImage && "name"|in_array:$filter}
                                     </button>
                                 {/if}
                             </td>
                             <td align="center" {if $notsameDesc}class="question_not_same"{/if}>
-                                {if $notsameDesc}
+                                {if $notsameDesc && "desc"|in_array:$filter}
                                     <button data-type="desc" class="ui button arbitrage_switch_button toggle">
                                 {/if}
                                 {$oVerificatorResult->getProductDescription()}
-                                {if $notsameDesc}
+                                {if $notsameDesc && "desc"|in_array:$filter}
                                     </button>
                                 {/if}
                             </td>
                             <td align="center" {if $notsameQty}class="question_not_same"{/if}>
-                                {if $notsameQty}
+                                {if $notsameQty && "qty"|in_array:$filter}
                                     <button data-type="qty" class="ui button arbitrage_switch_button toggle">
                                 {/if}
                                     {$oVerificatorResult->getQtyOnAmazon()}<br/>{$oVerificatorResult->getQtyOnOurWebSite()}
-                                {if $notsameQty}
+                                {if $notsameQty && "qty"|in_array:$filter}
                                     </button>
                                 {/if}
                             </td>
-                            <td align="center" class="conclusion_action {if $notsameAction}action_not_same{/if}">
-                                {if $arbitrageAction}
+                            <td  align="center" class="conclusion_action {if $notsameAction}action_not_same{/if}">
+                                {if $arbitrageAction && "asin"|in_array:$filter}
                                     <button data-type="action" class="ui button arbitrage_action toggle">
                                 {/if}
                                     <b>{$oVerificatorResult->getActionDisplayName()}</b>
-                                {if $arbitrageAction}
+                                {if $arbitrageAction && "asin"|in_array:$filter}
                                     </button>
                                 {/if}
                                 {if $oVerificatorResult->getComment()}
                                     <span data-html="{$oVerificatorResult->getComment()}"
                                           class="verificator_comments_icon"><img src="{$ImagesDir}/comment.png"/></span>
                                 {/if}
-                                <br/>
-                                {if $arbitrageAction && 1!=1}
-                                    <input name="radio_{$oProduct->getProductId()}" class="arbitration_radio"
-                                           data-login="{$oCustomer->getCustomerLogin()}"
-                                           data-arbitrage-confirmation-batch="{$oVerificatorResult->getBatchId()}"
-                                           type="radio"/>
-                                {/if}
+
                             </td>
                             {if $smarty.foreach.ver_rows.iteration == 1}
-                                    <td data-arbitrage-asin-batch="{$Batch->getBatchId()}"
-                                        data-login="{$oCustomer->getCustomerLogin()}"
-                                        rowspan="{$aVerificatorResults|@count}">
-                                        {if $arbitrageAction}
+                                    <td rowspan="{$aVerificatorResults|@count}">
+                                        {if $arbitrageAction && "asin"|in_array:$filter}
                                             <p><input id="asin_arbitrage" placeholder="ASIN" size="10" type="text" /></p>
                                         {/if}
-                                        {if $notsameQty}
+                                        {if $notsameQty && "qty"|in_array:$filter}
                                             <p><input id="amz_qty_arbitrage" placeholder="Amazon qty" size="10" type="text" /></p>
                                             <p><input id="our_qty_arbitrage" placeholder="Qty on our site" size="10" type="text" /></p>
                                          {/if}
@@ -230,40 +222,66 @@
     });
     $('.arbitrage_asin_button').click(function () {
         const err_validation_message = 'Required fields are not selected!';
+        var asin_batch_id, asin_login;
+        var arrCheckType = [], errors = [], arbitrageArr = [];
+
         var tr = $(this).closest('tr');
         var iProduct = tr.data('productid');
         var trpair = tr.siblings('tr[data-productid=' + iProduct + ']').andSelf();
         var asin_arbitrage = trpair.find('input#asin_arbitrage').val();
-        var iBatchId = $(this).parent().data('arbitrage-asin-batch');
-        var sLogin = $(this).parent().data('login');
-        //var correctASIN = prompt("Please enter a valid ASIN");
-        var arrCheckType = [], errors = [];
+        var amazon_qty_arbitrage = trpair.find('input#amz_qty_arbitrage').val();
+        var our_qty_arbitrage = trpair.find('input#our_qty_arbitrage').val();
+
+
+
         tr.find('button.arbitrage_switch_button, button.arbitrage_action').each(function() {
             arrCheckType.push($(this).data('type'));
         });
+        var error = false;
         if (arrCheckType.length > 0) {
             for (i = 0; i < arrCheckType.length; i++) {
                 var anButtons = trpair.find('button[data-type='+arrCheckType[i]+'].active');
                 if (!anButtons.length) {
+
                     if (
-                        ((arrCheckType == 'action' && asin_arbitrage == '') || arrCheckType != 'action')
+                        (arrCheckType[i] == 'action' && asin_arbitrage == '')||
+                        (arrCheckType[i] == 'qty' && (amazon_qty_arbitrage == '' || our_qty_arbitrage == '')) ||
+                        ($.inArray(arrCheckType[i], ['action', 'qty']) < 0)
                        )
                     {
+                        error = true;
                         alert(err_validation_message);
+                        break;
+                    }
+                } else {
+                    var buttonactive;
+                    if ($.isArray(anButtons)) {
+                        buttonactive = anButtons[0];
+                    } else {
+                        buttonactive = anButtons;
+                    }
+                    if (buttonactive.length > 0) {
+                        asin_batch_id = buttonactive.closest('tr').data('arbitrage-asin-batch');
+                        asin_login = buttonactive.closest('tr').data('login');
+                        arbitrageArr.push({
+                            'action': arrCheckType[i],
+                            'batch_id': asin_batch_id,
+                            'login': asin_login
+                        });
                     }
                 }
             }
 
         }
-        if (correctASIN != null) {
-
+        if (!error) {
             trpair.css({opacity: 0.4});
             $.post('ajax_admin.php', {
                         product_id: iProduct,
-                        batch_id: iBatchId,
-                        login: sLogin,
-                        ASIN: correctASIN,
-                        ajax_action: 'verification_arbitrage_asin_enter'
+                        arbitrage: arbitrageArr,
+                        asin_arbitrage: asin_arbitrage,
+                        amazon_qty_arbitrage: amazon_qty_arbitrage,
+                        our_qty_arbitrage: our_qty_arbitrage,
+                        ajax_action: 'verification_arbitrage_full'
                     },
                     function (data) {
                         if (data && data.result) {
