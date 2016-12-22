@@ -124,6 +124,10 @@ if (AREA_TYPE == 'C' && defined('LOCAL_SF_ID'))
 
     $current_storefront = LOCAL_SF_ID;
     $current_storefront_info = func_get_storefront_info($current_storefront, 'ID');
+
+    if (LOCAL_SF_ID === 0) {
+        $site_domain = DEFAULT_SF_DOMAIN;
+    }
 }
 ###################################
 
