@@ -1,4 +1,3 @@
-<?php /* ADDED: random:20341 [2010 Jul 29 14:46][Custom development (Accounting features for X-Cart orders management)] */ ?>
 <?php
 /*****************************************************************************\
  * +-----------------------------------------------------------------------------+
@@ -31,9 +30,6 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
-#
-# $Id: order_edit.php, v 1.0.0 2010/03/24 12:08:09 random Exp $
-#
 global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt, $top_message, $mail_smarty;
 
 if (!defined("XCART_SESSION_START")) {
@@ -51,7 +47,7 @@ x_session_register("intershipper_rates");
 x_session_register("intershipper_recalc");
 x_session_register("current_carrier", "UPS");
 
-$oOrder = new Xcart\Order(['orderid'=>$orderid]);
+$oOrder = new Xcart\Order(['orderid' => $orderid]);
 $smarty->assign('oOrder', $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 
@@ -63,31 +59,32 @@ $smarty->assign("all_processors", $all_processors);
 #
 $real_taxes = "Y";
 
-if ($real_taxes == "Y" && !defined('XAOM'))
+if ($real_taxes == "Y" && !defined('XAOM')) {
     define("XAOM", 1);
+}
 
 $intershipper_recalc = "Y";
 
-$cart_tmp = $order;
-$cart_tmp["orders"][0] = $order_data["order"];
-$cart_tmp["total_cost"] = $cart_tmp["total"];
-$cart_tmp["giftcerts"] = $order_data["giftcerts"];
-$cart_tmp["products"] = $order_data["products"];
-$cart_tmp["userinfo"] = $order_data["userinfo"];
-$cart_tmp["discount_coupon"] = $order_data["order"]["coupon"];
+$cart_tmp                     = $order;
+$cart_tmp["orders"][0]        = $order_data["order"];
+$cart_tmp["total_cost"]       = $cart_tmp["total"];
+$cart_tmp["giftcerts"]        = $order_data["giftcerts"];
+$cart_tmp["products"]         = $order_data["products"];
+$cart_tmp["userinfo"]         = $order_data["userinfo"];
+$cart_tmp["discount_coupon"]  = $order_data["order"]["coupon"];
 $cart_tmp["use_discount_alt"] = "Y";
-$cart_tmp["discount_alt"] = $order_data["order"]["discount"];
+$cart_tmp["discount_alt"]     = $order_data["order"]["discount"];
 
 if (empty($cart_tmp['extra']['discount_info'])) {
-    $cart_tmp['extra']['discount_info'] = array(
-        "discount" => $order_data["order"]["discount"],
-        "discount_type" => "absolute"
-    );
+    $cart_tmp['extra']['discount_info'] = [
+        "discount"      => $order_data["order"]["discount"],
+        "discount_type" => "absolute",
+    ];
 }
 
 $cart_tmp["use_shipping_costs_alt"] = "Y";
-$cart_tmp["shipping_costs_alt"] = array();
-$cart_tmp["shipping_cost_alt"] = 0;
+$cart_tmp["shipping_costs_alt"]     = [];
+$cart_tmp["shipping_cost_alt"]      = 0;
 
 if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
     foreach ($order["shipping_groups"] as $m_id => $v) {
@@ -97,13 +94,15 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 }
 
 if (is_array($cart_tmp["products"])) {
-    foreach ($cart_tmp["products"] as $k => $v) {
+    foreach ($cart_tmp["products"] as $k => $v)
+    {
         $cart_tmp["products"][$k]["free_price"] = $v["price"];
-        $cart_tmp["products"][$k]["price"] = $v["price"];
+        $cart_tmp["products"][$k]["price"]      = $v["price"];
         if (!empty($v["extra_data"]["taxes"]) && is_array($v["extra_data"]["taxes"])) {
             foreach ($v["extra_data"]["taxes"] as $_tax) {
-                if (($_tax["price_includes_tax"] == "Y" || $_tax['display_including_tax'] == 'Y') && $config["Taxes"]["display_taxed_order_totals"] == 'Y')
+                if (($_tax["price_includes_tax"] == "Y" || $_tax['display_including_tax'] == 'Y') && $config["Taxes"]["display_taxed_order_totals"] == 'Y') {
                     $cart_tmp["products"][$k]["price"] -= price_format($_tax["tax_value_precise"]);
+                }
             }
         }
         $cart_tmp["products"][$k]["taxed_price"] = $v["display_price"];
@@ -125,24 +124,21 @@ if (!empty($debug)) {
 #
 # Process and update orders data
 #
-if ($REQUEST_METHOD == "POST") {
-
-#
-##
-###
-    if ($mode == "convert_to_regular_order" && !empty($order["shipping_groups"])) {
-
-        $new_cb_status = "N";
+if ($REQUEST_METHOD == "POST")
+{
+    if ($mode == "convert_to_regular_order" && !empty($order["shipping_groups"]))
+    {
+        $new_cb_status       = "N";
         $new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$new_cb_status'");
 
         $log = "'Convert to regular order' at 'Customer info'";
 
-        foreach ($order["shipping_groups"] as $m_id => $v) {
-
+        foreach ($order["shipping_groups"] as $m_id => $v)
+        {
             $current_cb_status = $v["cb_status"];
 
-            if (in_array($current_cb_status, array("IO", "O")) && $current_cb_status != $new_cb_status) {
-
+            if (in_array($current_cb_status, ["IO", "O"]) && $current_cb_status != $new_cb_status)
+            {
                 db_query("UPDATE $sql_tbl[order_groups] SET cb_status='$new_cb_status' WHERE orderid = '$orderid' AND manufacturerid='$m_id'");
 
                 $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
@@ -153,27 +149,28 @@ if ($REQUEST_METHOD == "POST") {
         func_log_order($orderid, 'X', $log, $login);
 
         func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-customer_info");
-    } elseif ($mode == "order_edit_apply") {
+    }
+    elseif ($mode == "order_edit_apply") {
 
         $tmp_mnfs = func_get_order_manufacturers($orderid);
         global $po_update, $name_of_purchaser, $accounts_payable_full_name, $purchase_manager_email, $accounts_payable_email;
         global $customer_info, $purchase_manager_phone, $po_fax, $accounts_payable_phone, $accounts_payable_fax, $total_shipping_charge_on_orig_po, $po_issued_to, $orig_po;
         if ($po_update == "1") {
             if (
-                $name_of_purchaser != "unknown" &&
-                $accounts_payable_full_name != "unknown" &&
-                $purchase_manager_email != "unknown@unknown.com" &&
-                $accounts_payable_email != "unknown@unknown.com" &&
-                $customer_info["email"] != "unknown@unknown.com" &&
-                $purchase_manager_phone != "(000) 000-0000" &&
-                $po_fax != "(000) 000-0000" &&
-                $accounts_payable_phone != "(000) 000-0000" &&
-                $accounts_payable_fax != "(000) 000-0000" &&
-                $customer_info["phone"] != "(000) 000-0000" &&
-                $total_shipping_charge_on_orig_po > 0 &&
-                $po_issued_to != "A" &&
-                $po_issued_to != "" &&
-                $orig_po != ""
+                $name_of_purchaser != "unknown"
+                && $accounts_payable_full_name != "unknown"
+                && $purchase_manager_email != "unknown@unknown.com"
+                && $accounts_payable_email != "unknown@unknown.com"
+                && $customer_info["email"] != "unknown@unknown.com"
+                && $purchase_manager_phone != "(000) 000-0000"
+                && $po_fax != "(000) 000-0000"
+                && $accounts_payable_phone != "(000) 000-0000"
+                && $accounts_payable_fax != "(000) 000-0000"
+                && $customer_info["phone"] != "(000) 000-0000"
+                && $total_shipping_charge_on_orig_po > 0
+                && $po_issued_to != "A"
+                && $po_issued_to != ""
+                && $orig_po != ""
             ) {
                 $new_cb_status = "O";
 
@@ -185,7 +182,8 @@ if ($REQUEST_METHOD == "POST") {
                         }
                     }
                 }
-            } else {
+            }
+            else {
                 if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
                     $new_cb_status = "IO";
 
@@ -199,20 +197,23 @@ if ($REQUEST_METHOD == "POST") {
             }
         }
 
-        $all_groups_cb_status_eq_P = true;
+        $all_groups_cb_status_eq_P   = true;
         $groups_cb_status_eq_P_found = false;
 
         $cart_tmp["flag_change"] = true;
 
         if (!empty($items)) {
-            foreach ($items as $itemid => $v) {
+            foreach ($items as $itemid => $v)
+            {
                 $k = -1;
-                foreach ($cart_tmp["products"] as $kp => $vp) {
+                foreach ($cart_tmp["products"] as $kp => $vp)
+                {
                     if ($vp["itemid"] == $itemid) {
                         $k = $kp;
                         break;
                     }
                 }
+
                 if ($k == -1) {
                     continue;
                 }
@@ -230,8 +231,7 @@ if ($REQUEST_METHOD == "POST") {
                 if (!empty($ref_values) && $ref_values['is_refunded'] || !is_numeric($v['amount'])) {
 
                     $v['amount'] = func_query_first_cell('SELECT amount FROM ' . $sql_tbl['order_details']
-                        . ' WHERE itemid="' . $itemid . '" AND orderid="' . $orderid . '"');
-
+                                                         . ' WHERE itemid="' . $itemid . '" AND orderid="' . $orderid . '"');
                 }
 
                 if (!empty($ref_values) && $ref_values['is_refunded']) {
@@ -246,7 +246,7 @@ if ($REQUEST_METHOD == "POST") {
                 $cart_tmp['products'][$k]['refund'] = $ref_values;
 
                 $v["amount"] = intval($v["amount"]);
-                $v['back'] = intval($v['back']);
+                $v['back']   = intval($v['back']);
 
                 // back can't be more than amount
                 if ($v['back'] > $v['amount']) {
@@ -254,11 +254,11 @@ if ($REQUEST_METHOD == "POST") {
                 }
 
                 $current_back = $cart_tmp['products'][$k]['back'];
-                $new_back = $v['back'];
+                $new_back     = $v['back'];
 
-                $current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+                $current_eta_date_mm_dd_yyyy      = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
                 $current_eta_date_mm_dd_yyyy_time = $current_eta_date_mm_dd_yyyy;
-                $current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
+                $current_eta_date_mm_dd_yyyy      = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
                 $new_eta_date_mm_dd_yyyy = $v['eta_date_mm_dd_yyyy'];
 
@@ -266,22 +266,19 @@ if ($REQUEST_METHOD == "POST") {
                     $current_eta_date_mm_dd_yyyy_time = 0;
                 }
 
-
                 if (!empty($new_eta_date_mm_dd_yyyy)) {
-                    $new_eta_date_mm_dd_yyyy_arr = explode("/", $new_eta_date_mm_dd_yyyy);
+                    $new_eta_date_mm_dd_yyyy_arr  = explode("/", $new_eta_date_mm_dd_yyyy);
                     $new_eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $new_eta_date_mm_dd_yyyy_arr[0], $new_eta_date_mm_dd_yyyy_arr[1], $new_eta_date_mm_dd_yyyy_arr[2]);
-                } else {
+                }
+                else {
                     $new_eta_date_mm_dd_yyyy_time = 0;
                 }
 
                 $tmp_manufacturerid = $cart_tmp['products'][$k]["manufacturerid"];
 
-                if (
-                    ($current_back == "0" || ($current_eta_date_mm_dd_yyyy_time < time() || empty($current_eta_date_mm_dd_yyyy)))
-                    &&
-                    ($new_back > 0 && $new_eta_date_mm_dd_yyyy_time > time())
+                if (($current_back == "0" || ($current_eta_date_mm_dd_yyyy_time < time() || empty($current_eta_date_mm_dd_yyyy)))
+                    && ($new_back > 0 && $new_eta_date_mm_dd_yyyy_time > time())
                 ) {
-
                     $order['shipping_groups'][$tmp_manufacturerid]['dc_status'] = "M";
 
                     if (!empty($groups[$tmp_manufacturerid]['dc_status'])) {
@@ -289,7 +286,8 @@ if ($REQUEST_METHOD == "POST") {
                     }
                 }
 
-                if (!empty($vt_paymentid) && empty($transaction_id_link)) {
+                if (!empty($vt_paymentid) && empty($transaction_id_link))
+                {
                     $payment_transaction_id_link = func_query_first_cell("SELECT transaction_id_link FROM $sql_tbl[payment_methods] WHERE paymentid='$vt_paymentid'");
                     if (!empty($payment_transaction_id_link)) {
                         $groups[$tmp_manufacturerid]["cb_status"] = $order['shipping_groups'][$tmp_manufacturerid]['cb_status'];
@@ -300,10 +298,10 @@ if ($REQUEST_METHOD == "POST") {
 
                     if ($groups[$tmp_manufacturerid]["cb_status"] != "P") {
                         $all_groups_cb_status_eq_P = false;
-                    } else {
+                    }
+                    else {
                         $groups_cb_status_eq_P_found = true;
                     }
-
                 }
 
                 ### LOG: START
@@ -325,7 +323,6 @@ if ($REQUEST_METHOD == "POST") {
                     continue;
                 }
 
-
                 if ($groups[$tmp_manufacturerid]["cb_status"] == "P" || $groups[$tmp_manufacturerid]["cb_status"] == "3" || $groups[$tmp_manufacturerid]["cb_status"] == "V" || $groups[$tmp_manufacturerid]["cb_status"] == "H" || $groups[$tmp_manufacturerid]["cb_status"] == "R") {
 
                     if ($v["price"] != $cart_tmp["products"][$k]["price"]) {
@@ -333,12 +330,13 @@ if ($REQUEST_METHOD == "POST") {
 
                         if (!isset($top_message["content"])) {
                             $top_message["content"] = "";
-                        } else {
+                        }
+                        else {
                             $top_message["content"] .= "<br />";
                         }
 
                         $top_message["content"] .= func_get_langvar_by_name("txt_shipping_cost_net_not_saved");
-                        $top_message["type"] = "I";
+                        $top_message["type"]      = "I";
                         $section_name_top_message = $top_message;
                         x_session_save("section_name_top_message");
                     }
@@ -346,14 +344,15 @@ if ($REQUEST_METHOD == "POST") {
                     if (strpos($v["amount"], "r") === false && (strpos($v["amount"], "R")) === false && $v["amount"] != $cart_tmp["products"][$k]["amount"]) {
                         if (!isset($top_message["content"])) {
                             $top_message["content"] = "";
-                        } else {
+                        }
+                        else {
                             $top_message["content"] .= "<br />";
                         }
 
                         $v["amount"] = $cart_tmp["products"][$k]["amount"];
 
                         $top_message["content"] .= func_get_langvar_by_name("txt_shipping_cost_net_not_saved");
-                        $top_message["type"] = "I";
+                        $top_message["type"]      = "I";
                         $section_name_top_message = $top_message;
                         x_session_save("section_name_top_message");
                     }
@@ -370,8 +369,8 @@ if ($REQUEST_METHOD == "POST") {
 
                 $v["price"] = price_format($v["price"]);
 
-                $cart_tmp["products"][$k]["price"] = $v["price"];
-                $cart_tmp["products"][$k]["free_price"] = $v["price"];
+                $cart_tmp["products"][$k]["price"]        = $v["price"];
+                $cart_tmp["products"][$k]["free_price"]   = $v["price"];
                 $cart_tmp["products"][$k]["stock_update"] = "N";
             } // foreach ($items as $itemid => $v
         }
@@ -379,21 +378,19 @@ if ($REQUEST_METHOD == "POST") {
         if (!empty($groups)) {
             $cart_tmp["shipping_cost_alt"] = 0;
 
-
             $payment_method_info = func_query_first("SELECT vt, how_process_payment_at_checkout FROM $sql_tbl[payment_methods] WHERE paymentid='" . $order["paymentid"] . "'");
 
             foreach ($groups as $m_id => $v) {
-
                 if (func_check_comma_in_field($orderid, $v['shipping_cost_net'], 'shipping_cost_net')) {
                     $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                    $top_message["type"] = "I";
+                    $top_message["type"]      = "I";
                     $section_name_top_message = $top_message;
                     x_session_save("section_name_top_message");
                     break;
                 }
                 if (func_check_comma_in_field($orderid, $v['actual_shipping_cost_net'], 'actual_shipping_cost_net')) {
                     $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                    $top_message["type"] = "I";
+                    $top_message["type"]      = "I";
                     $section_name_top_message = $top_message;
                     x_session_save("section_name_top_message");
                     break;
@@ -402,7 +399,7 @@ if ($REQUEST_METHOD == "POST") {
                 ### LOG: START
                 $current_actual_shipping_net = func_query_first_cell("SELECT actual_shipping_net FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$m_id'");
 
-                $log = "";
+                $log  = "";
                 $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$m_id'");
 
                 $current_shipping_value_selectbox = func_query_first_cell("SELECT shipping_value_selectbox FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$m_id'");
@@ -415,13 +412,12 @@ if ($REQUEST_METHOD == "POST") {
                 if (!empty($v["additional_shipping_status"])) {
 
                     $current_additional_shipping_status = $order['shipping_groups'][$m_id]['additional_shipping_status'];
-                    $new_additional_shipping_status = $v["additional_shipping_status"];
+                    $new_additional_shipping_status     = $v["additional_shipping_status"];
 
                     if (
                         (
                             ($v["cb_status"] == "O" && $new_additional_shipping_status == "P")
-                            ||
-                            ($v["cb_status"] == "AP" && $new_additional_shipping_status == "A")
+                            || ($v["cb_status"] == "AP" && $new_additional_shipping_status == "A")
                         )
                         && $current_additional_shipping_status != $new_additional_shipping_status
                     ) {
@@ -446,7 +442,7 @@ if ($REQUEST_METHOD == "POST") {
                         $groups[$m_id]["accounting"][5]["gross"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
 
                         $v["shipping_cost_net"] += $tmp_mnfs[$m_id]["additional_shipping_charge"];
-                        $groups[$m_id]["shipping_cost_net"] = $v["shipping_cost_net"];
+                        $groups[$m_id]["shipping_cost_net"]                   = $v["shipping_cost_net"];
                         $order["shipping_groups"][$m_id]["shipping_cost_net"] = $v["shipping_cost_net"];
                     }
                     if ($current_additional_shipping_status != $new_additional_shipping_status) {
@@ -456,8 +452,6 @@ if ($REQUEST_METHOD == "POST") {
                         $log .= "<B>" . $code . ": </B>" . "additional_shipping_status: " . $additional_shipping_statuses[$current_additional_shipping_status] . " -> " . $additional_shipping_statuses[$new_additional_shipping_status];
                     }
                 }
-
-### https://basecamp.com/2070980/projects/1577907/messages/33784697
 
                 if ($v["cb_status"] == "P" || $v["cb_status"] == "3" || $v["cb_status"] == "V" || $v["cb_status"] == "H" || $v["cb_status"] == "R") {
                     if (
@@ -470,12 +464,13 @@ if ($REQUEST_METHOD == "POST") {
 
                         if (!isset($top_message["content"])) {
                             $top_message["content"] = "";
-                        } else {
+                        }
+                        else {
                             $top_message["content"] .= "<br />";
                         }
 
                         $top_message["content"] .= func_get_langvar_by_name("txt_shipping_cost_net_not_saved");
-                        $top_message["type"] = "I";
+                        $top_message["type"]      = "I";
                         $section_name_top_message = $top_message;
                         x_session_save("section_name_top_message");
                     }
@@ -489,19 +484,20 @@ if ($REQUEST_METHOD == "POST") {
 
                     if (!empty($log)) {
                         $log .= "<br />";
-                    } else {
+                    }
+                    else {
                         $log = "";
                     }
 
                     $log .= "<B>" . $code . ": </B>" . "Actual shipping cost net: " . $current_actual_shipping_net . " -> " . $tmp_actual_shipping_cost_net;
                 }
 
-
                 if ($log != "") {
 
                     if ($save_additional_vt) {
                         $set_type = "S";
-                    } else {
+                    }
+                    else {
                         $set_type = "X";
                     }
 
@@ -511,14 +507,14 @@ if ($REQUEST_METHOD == "POST") {
 
                 $v["actual_shipping_cost_net"] = preg_replace("/[^0-9\.]/S", "", $v["actual_shipping_cost_net"]);
 
-
                 $actual_shipping_gross = $v["actual_shipping_cost_net"];
 
                 if ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_select'] == "applies_to_all_orders") {
                     if (!empty($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'])) {
                         $actual_shipping_gross += $order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'];
                     }
-                } elseif ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_select'] == "applies_to_orders_below_minimum_order_amount_only") {
+                }
+                elseif ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_select'] == "applies_to_orders_below_minimum_order_amount_only") {
                     if (!empty($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'])) {
 
                         $sum_cost_to_us = 0;
@@ -548,50 +544,62 @@ if ($REQUEST_METHOD == "POST") {
                 }
                 $order['shipping_groups'][$m_id]['refund'] = $ref_values;
 
-                $v["shipping_cost_net"] = preg_replace("/[^0-9\.]/S", "", $v["shipping_cost_net"]);
+                $v["shipping_cost_net"]      = preg_replace("/[^0-9\.]/S", "", $v["shipping_cost_net"]);
                 $v["shipping_cost_net_orig"] = preg_replace("/[^0-9\.]/S", "", $v["shipping_cost_net_orig"]);
 
                 $order['shipping_groups'][$m_id]['shipping_cost_net_orig'] = $v['shipping_cost_net_orig'];
 
                 $order["shipping_groups"][$m_id]["shipping_cost"] = func_tax_price_details($v["shipping_cost_net"], $order["shipping_groups"][$m_id]["taxes"]);
-                $cart_tmp["shipping_costs_alt"][$m_id] = $order["shipping_groups"][$m_id]["shipping_cost"]["gross"];
+                $cart_tmp["shipping_costs_alt"][$m_id]            = $order["shipping_groups"][$m_id]["shipping_cost"]["gross"];
                 $cart_tmp["shipping_cost_alt"] += $cart_tmp["shipping_costs_alt"][$m_id];
-                $order["shipping_groups"][$m_id]["shipping"] = $v["shipping"];
-                if (!in_array($v['dc_status'], array('C', 'S')) && $user_account['flag'] == 'FS') {
+
+                if (isset($v["shipping"])) {
+                    $order["shipping_groups"][$m_id]["shipping"] = $v["shipping"];
+                }
+
+                if (isset($v["real_shipping_method"])) {
+                    $order["shipping_groups"][$m_id]["real_shipping_method"] = $v["real_shipping_method"];
+                }
+
+                if (!in_array($v['dc_status'], ['C', 'S']) && $user_account['flag'] == 'FS') {
                     $v['dc_status'] = 'C';
                 }
+
                 $order['shipping_groups'][$m_id]['cb_status'] = $v['cb_status'];
                 $order['shipping_groups'][$m_id]['dc_status'] = $v['dc_status'];
                 $order['shipping_groups'][$m_id]['bd_status'] = $v['bd_status'];
                 $order['shipping_groups'][$m_id]['po_status'] = $v['po_status'];
 
                 if (empty($order["shipping_groups"][$m_id]["tracking"])) {
-                    $tracking = array();
-                } else {
+                    $tracking = [];
+                }
+                else {
                     $tracking = $order["shipping_groups"][$m_id]["tracking"];
                 }
                 if (!is_array($tracking)) {
-                    $tracking = array();
+                    $tracking = [];
                 }
 
                 $add_tracking_log = false;
-                $log = "<B>Tracking numbers:</B><br /><B>Added:</B><br />";
+                $log              = "<B>Tracking numbers:</B><br /><B>Added:</B><br />";
                 foreach ($v["tracking_carrier"] as $_k => $sh) {
                     if (!empty($v["tracking_carrier"][$_k])) {
 
                         if (!isset($v["tracking_shipper"][$_k])) {
                             $linkid = 0;
-                        } else {
+                        }
+                        else {
                             $linkid = $v["tracking_shipper"][$_k];
                         }
 
-                        $tracking[] = array('linkid' => $linkid, 'tracknum' => trim($v["tracking_number"][$_k]), 'ship_date' => trim($v["tracking_ship_date"][$_k]), 'carrier_id' => $sh);
+                        $tracking[]                                   = ['linkid' => $linkid, 'tracknum' => trim($v["tracking_number"][$_k]), 'ship_date' => trim($v["tracking_ship_date"][$_k]), 'carrier_id' => $sh];
                         $order['shipping_groups'][$m_id]['dc_status'] = 'S';
                         define('TRACKING_ADDED', 1);
 
                         if (!empty($linkid)) {
                             $shipping_link = func_query_first_cell("SELECT shipping FROM $sql_tbl[tracking_links] WHERE linkid='$linkid'");
-                        } else {
+                        }
+                        else {
                             $shipping_link = "";
                         }
 
@@ -606,23 +614,21 @@ if ($REQUEST_METHOD == "POST") {
                 if ($add_tracking_log) {
                     func_log_order($orderid, 'X', $log, $login);
                 }
-                $log = "";
-                $authorized_transactions_info = "";
-                if (
-                    $v["dc_status"] == "L" && $cart_tmp['shipping_groups'][$m_id]["dc_status"] != "L" &&
-                    $v["cb_status"] == "AP"
-                ) {
-                    $bRefundPresent = false;
-                    $authorized_transactions_info = func_query("SELECT transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
-                    $authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
+                $log                          = "";
+                $authorized_transactions_info = "";
+                if ($v["dc_status"] == "L" && $cart_tmp['shipping_groups'][$m_id]["dc_status"] != "L"
+                    && $v["cb_status"] == "AP"
+                ) {
+                    $bRefundPresent                = false;
+                    $authorized_transactions_info  = func_query("SELECT transaction_id, transaction_amount FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
+                    $authorized_transaction_amount = func_query_first_cell("SELECT SUM(transaction_amount) FROM $sql_tbl[order_transactions] WHERE orderid='$orderid' AND transaction_status IN ('AP','Pending','authorized')");
 
                     $count_shipping_groups = count($order["shipping_groups"]);
 
                     $transaction_log = "";
 
                     if ((empty($Access_Token) || !isset($Access_Token)) && $count_shipping_groups == "1") {
-
                         $Access_Token = func_paypal_get_access_token();
 
                         if (empty($Access_Token)) {
@@ -631,13 +637,12 @@ if ($REQUEST_METHOD == "POST") {
                     }
 
                     if (!empty($cart_tmp["shipping_groups"][$m_id]["products"]) && !empty($items) && is_array($items)) {
-
                         $total_prod_price = 0;
                         foreach ($cart_tmp["shipping_groups"][$m_id]["products"] as $k_prod => $v_prod) {
                             $total_prod_price += $items[$k_prod]["price"] * $v_prod["amount"];
                         }
 
-                        $CaptureAmount = $total_prod_price + $v["shipping_cost_net"];
+                        $CaptureAmount  = $total_prod_price + $v["shipping_cost_net"];
                         $OriginalAmount = $CaptureAmount;
 
                         if (isset($ref_products[$m_id])) {
@@ -654,22 +659,25 @@ if ($REQUEST_METHOD == "POST") {
 
                         $CaptureAmount = price_format($CaptureAmount);
 
-                        if ($CaptureAmount <= $authorized_transaction_amount) {
-
-                            if (!empty($Access_Token) && $count_shipping_groups == "1" && !empty($authorized_transactions_info)) {
-
+                        if ($CaptureAmount <= $authorized_transaction_amount)
+                        {
+                            if (!empty($Access_Token) && $count_shipping_groups == "1" && !empty($authorized_transactions_info))
+                            {
                                 $capture_failed_flag = false;
-                                $tCaptureAmount = $CaptureAmount;
-                                foreach ($authorized_transactions_info as $authorized_transaction) {
+                                $tCaptureAmount      = $CaptureAmount;
 
+                                foreach ($authorized_transactions_info as $authorized_transaction)
+                                {
                                     $authorized_transaction_id = $authorized_transaction["transaction_id"];
 
                                     $data_arr["amount"]["currency"] = $order["currency"];
                                     if ($authorized_transaction["transaction_amount"] < $tCaptureAmount) {
                                         $data_arr["amount"]["total"] = $authorized_transaction["transaction_amount"];
-                                    } else {
+                                    }
+                                    else {
                                         $data_arr["amount"]["total"] = $tCaptureAmount;
                                     }
+
                                     $data_arr["is_final_capture"] = true;
 
                                     $result = func_paypal_capture($Access_Token, $authorized_transaction_id, $data_arr);
@@ -678,19 +686,19 @@ if ($REQUEST_METHOD == "POST") {
                                         $transaction_log .= "<br />Transaction: " . $authorized_transaction_id . " -> " . $result["id"];
                                         $result_serialized = serialize($result);
                                         db_query("UPDATE $sql_tbl[order_transactions] SET transaction_id='$result[id]', transaction_amount='" . $result["amount"]["total"] . "', date='" . time() . "', login='$login', transaction_status='$result[state]', transaction_response='" . addslashes($result_serialized) . "' WHERE orderid='$orderid' AND transaction_id='$authorized_transaction_id'");
-
-                                    } else {
+                                    }
+                                    else {
                                         $capture_failed_flag = true;
                                     }
 
                                     $transaction_id = $result["id"];
 
-                                    $transaction_status = $result["state"];
+                                    $transaction_status   = $result["state"];
                                     $transaction_currency = $result["amount"]["currency"];
-                                    $transaction_total = $result["amount"]["total"];
+                                    $transaction_total    = $result["amount"]["total"];
 
                                     $result["xcart_log"] = $transaction_log;
-                                    $serialize_result = serialize($result);
+                                    $serialize_result    = serialize($result);
 
                                     db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '" . time() . "', '$login', '" . addslashes($serialize_result) . "')");
 
@@ -703,25 +711,26 @@ if ($REQUEST_METHOD == "POST") {
 
                                         if (!isset($top_message["content"])) {
                                             $top_message["content"] = "";
-                                        } else {
+                                        }
+                                        else {
                                             $top_message["content"] .= "<br />";
                                         }
                                         $top_message["content"] .= func_get_langvar_by_name("txt_capture_failed");
-                                        $top_message["type"] = "I";
+                                        $top_message["type"]      = "I";
                                         $section_name_top_message = $top_message;
                                         x_session_save("section_name_top_message");
 
                                         $set_new_additional_tag = '37';
-                                        $is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
+                                        $is_such_tag_in_db      = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
                                         if (empty($is_such_tag_in_db)) {
                                             db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('$set_new_additional_tag','$orderid')");
 
                                             $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$set_new_additional_tag'");
-                                            $log_tag = "<br />'" . $tag_name . "' attention tag added";
+                                            $log_tag  = "<br />'" . $tag_name . "' attention tag added";
                                             func_log_order($orderid, 'X', $log_tag, $login);
                                         }
-
-                                    } else {
+                                    }
+                                    else {
                                         $v['cb_status'] = $groups[$m_id]['cb_status'] = $order["shipping_groups"][$m_id]['cb_status'] = "P";
                                         db_query("UPDATE $sql_tbl[order_groups] SET order_entry_flag='Y' WHERE manufacturerid='$m_id' AND orderid='$orderid'");
                                         func_log_order($orderid, 'X', $code . ": order_entry_flag='Y'", $login);
@@ -729,12 +738,12 @@ if ($REQUEST_METHOD == "POST") {
 
                                     $tCaptureAmount = $tCaptureAmount - $authorized_transaction["transaction_amount"];
                                     if ($tCaptureAmount <= 0) break;
-
                                 }
                             }
-                        } else {
-                            $top_message["content"] = func_get_langvar_by_name("lbl_captureamount_not_equal_order_amount");
-                            $top_message["type"] = "R";
+                        }
+                        else {
+                            $top_message["content"]   = func_get_langvar_by_name("lbl_captureamount_not_equal_order_amount");
+                            $top_message["type"]      = "R";
                             $section_name_top_message = $top_message;
                             x_session_save("section_name_top_message");
 
@@ -765,7 +774,6 @@ if ($REQUEST_METHOD == "POST") {
                             $time_to_dispatch = time() - $order["date"];
 
                             db_query("UPDATE $sql_tbl[order_groups] SET time_to_dispatch='$time_to_dispatch' $addition_column WHERE manufacturerid='$m_id' AND orderid='$orderid'");
-
                         }
 
                         if ($v['dc_status'] == "L") {
@@ -781,13 +789,13 @@ if ($REQUEST_METHOD == "POST") {
 
             $make_paypal_void = false;
             foreach ($cart_tmp["shipping_groups"] as $k_cart_tmp => $v_cart_tmp) {
-                if (
-                    isset($v_cart_tmp["cb_status"]) && isset($groups[$k_cart_tmp]["cb_status"]) &&
-                    ($groups[$k_cart_tmp]["cb_status"] == "D" || $groups[$k_cart_tmp]["cb_status"] == "A") &&
-                    $v_cart_tmp["cb_status"] == "AP"
+                if (isset($v_cart_tmp["cb_status"]) && isset($groups[$k_cart_tmp]["cb_status"])
+                    && ($groups[$k_cart_tmp]["cb_status"] == "D" || $groups[$k_cart_tmp]["cb_status"] == "A")
+                    && $v_cart_tmp["cb_status"] == "AP"
                 ) {
                     $make_paypal_void = true;
-                } else {
+                }
+                else {
                     $make_paypal_void = false;
                     break;
                 }
@@ -798,7 +806,7 @@ if ($REQUEST_METHOD == "POST") {
 
                 if (!empty($void_transaction_ids)) {
                     foreach ($void_transaction_ids as $void_transaction) {
-                        $transaction_log = "";
+                        $transaction_log     = "";
                         $void_transaction_id = $void_transaction["transaction_id"];
 
                         if (empty($Access_Token) || !isset($Access_Token)) {
@@ -819,12 +827,12 @@ if ($REQUEST_METHOD == "POST") {
 
                             $transaction_id = $result["id"];
 
-                            $transaction_status = $result["state"];
+                            $transaction_status   = $result["state"];
                             $transaction_currency = $result["amount"]["currency"];
-                            $transaction_total = $result["amount"]["total"];
+                            $transaction_total    = $result["amount"]["total"];
 
                             $result["xcart_log"] = $transaction_log;
-                            $serialize_result = serialize($result);
+                            $serialize_result    = serialize($result);
 
                             db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '5', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '" . time() . "', '$login', '" . addslashes($serialize_result) . "')");
 
@@ -836,15 +844,16 @@ if ($REQUEST_METHOD == "POST") {
 
                                 if (!isset($top_message["content"])) {
                                     $top_message["content"] = "";
-                                } else {
+                                }
+                                else {
                                     $top_message["content"] .= "<br />";
                                 }
                                 $top_message["content"] .= func_get_langvar_by_name("txt_void_failed");
-                                $top_message["type"] = "I";
+                                $top_message["type"]      = "I";
                                 $section_name_top_message = $top_message;
                                 x_session_save("section_name_top_message");
-
-                            } else {
+                            }
+                            else {
                                 db_query("UPDATE $sql_tbl[order_transactions] SET transaction_id='$result[id]', transaction_amount='$transaction_total', date='" . time() . "', login='$login', transaction_status='$result[state]', transaction_response='" . addslashes($result_serialized) . "' WHERE orderid='$orderid' AND transaction_id='$void_transaction_id'");
                             }
                         }
@@ -867,7 +876,8 @@ if ($REQUEST_METHOD == "POST") {
                     if ($current_tracking_all_filled != "Y") {
                         db_query("UPDATE $sql_tbl[orders] SET tracking_all_filled='Y', tracking_fill_time='" . time() . "' WHERE orderid='$orderid'");
                     }
-                } else {
+                }
+                else {
                     if ($current_tracking_all_filled == "Y") {
                         db_query("UPDATE $sql_tbl[orders] SET tracking_all_filled='N' WHERE orderid='$orderid'");
                     }
@@ -875,10 +885,7 @@ if ($REQUEST_METHOD == "POST") {
             }
         } // foreach ($groups as $m_id => $v)
 
-
         $operator_login = $login;
-
-
 
         if (!empty($add_productcode) && is_array($add_productcode)) {
             foreach ($add_productcode as $kkk => $sku) {
@@ -888,24 +895,29 @@ if ($REQUEST_METHOD == "POST") {
             }
         }
 
-        if (!empty($add_productcode)) {
-
-            $saved_data = compact("login", "login_type", "current_area");
-            $login = $cart_tmp["userinfo"]["login"];
-            $login_type = "C";
+        if (!empty($add_productcode))
+        {
+            $saved_data   = compact("login", "login_type", "current_area");
+            $login        = $cart_tmp["userinfo"]["login"];
+            $login_type   = "C";
             $current_area = "C";
-            foreach ($add_productcode as $kkk => $sku) {
-                if (func_check_comma_in_field($orderid, $add_amount[$kkk], 'add_amount')) {
+            foreach ($add_productcode as $kkk => $sku)
+            {
+                if (func_check_comma_in_field($orderid, $add_amount[$kkk], 'add_amount'))
+                {
                     $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                    $top_message["type"] = "I";
+                    $top_message["type"]      = "I";
                     $section_name_top_message = $top_message;
                     x_session_save("section_name_top_message");
                     break;
                 }
+
                 $amount = intval($add_amount[$kkk]);
+
                 if (empty($amount)) {
                     continue;
                 }
+
                 $newproductid = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='" . trim($sku) . "'");
                 if (empty($newproductid)) {
                     $_tmp = func_query_first("SELECT productid, variantid FROM $sql_tbl[variants] WHERE productcode='" . trim($sku) . "'");
@@ -918,30 +930,30 @@ if ($REQUEST_METHOD == "POST") {
                     }
                 }
 
-
                 global $add_from_order_edit;
                 $add_from_order_edit = true;
 
                 $prd = func_select_product($newproductid, $customer_membershipid, false, false, true);
 
-                if (!empty($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"]) && in_array($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"], ["P", "3", "V", "H", "R"])) {
-
+                if (!empty($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"]) && in_array($order["shipping_groups"][$prd["manufacturerid"]]["cb_status"], ["P", "3", "V", "H", "R"]))
+                {
                     if (!isset($top_message["content"])) {
                         $top_message["content"] = "";
-                    } else {
+                    }
+                    else {
                         $top_message["content"] .= "<br />";
                     }
 
                     $top_message["content"] .= func_get_langvar_by_name("txt_product_was_not_added");
-                    $top_message["type"] = "I";
+                    $top_message["type"]      = "I";
                     $section_name_top_message = $top_message;
                     x_session_save("section_name_top_message");
 
                     continue;
                 }
 
-                if (!empty($prd)) {
-
+                if (!empty($prd))
+                {
                     $log = "<B>Add product:</B> " . $sku . " x " . $amount;
                     func_log_order($orderid, 'X', $log, $operator_login);
 
@@ -960,66 +972,67 @@ if ($REQUEST_METHOD == "POST") {
                         }
                     }
 
-                    Xcart\Product::model(['productid'=>$newproductid])->createHTMLShot($orderid);
+                    Xcart\Product::model(['productid' => $newproductid])->createHTMLShot($orderid);
 
                     # Update wholesale price
                     $prd["price"] = func_query_first_cell("SELECT MIN($sql_tbl[pricing].price) FROM $sql_tbl[pricing] WHERE $sql_tbl[pricing].productid='$newproductid' AND $sql_tbl[pricing].quantity<='$amount' AND $sql_tbl[pricing].variantid = '$newvariantid'");
 
                     $prd["new_map_price"] = func_query_first_cell("SELECT new_map_price FROM $sql_tbl[products] WHERE productid='$newproductid'");
-                    $prd["price"] = max($prd["price"], $prd["new_map_price"]);
+                    $prd["price"]         = max($prd["price"], $prd["new_map_price"]);
 
                     $prd["catalog_price"] = $prd["price"];
 
                     if ($active_modules["Product_Options"]) {
                         if ($newvariantid && $vars = func_get_product_variants($newproductid, $customer_membershipid, 'C')) {
-                            $variant = $vars[$newvariantid];
-                            $variant["variantid"] = $newvariantid;
-                            $product_options_result = $variant["options"];
-                            $prd['extra_data']["product_options"] = array();
+                            $variant                              = $vars[$newvariantid];
+                            $variant["variantid"]                 = $newvariantid;
+                            $product_options_result               = $variant["options"];
+                            $prd['extra_data']["product_options"] = [];
                             if ($product_options_result) {
                                 foreach ($product_options_result as $opt) {
                                     $prd['extra_data']["product_options"][$opt["classid"]] = $opt["optionid"];
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             $prd['extra_data']["product_options"] = func_get_default_options($newproductid, $amount, $customer_membershipid);
                             list($variant, $product_options_result) = func_get_product_options_data($newproductid, $prd['extra_data']["product_options"], $customer_membershipid);
                         }
-                        $surcharge = 0;
+                        $surcharge              = 0;
                         $prd['product_options'] = $product_options_result;
                         if ($product_options_result) {
-                            foreach ($product_options_result as $key => $o)
+                            foreach ($product_options_result as $key => $o) {
                                 $surcharge += ($o['modifier_type'] == '%' ? ($prd['price'] * $o['price_modifier'] / 100) : $o['price_modifier']);
+                            }
                         }
                         if (!empty($variant) && !empty($variant["productcode"]) && $variant["productid"] == $cart_tmp["products"][$k]["productid"]) {
-                            $cart_tmp["products"][$k]["productcode"] = $variant["productcode"];
-                            $cart_tmp["products"][$k]["variantid"] = $variant["variantid"];
+                            $cart_tmp["products"][$k]["productcode"]   = $variant["productcode"];
+                            $cart_tmp["products"][$k]["variantid"]     = $variant["variantid"];
                             $cart_tmp["products"][$k]["catalog_price"] = $prd["price"] = $variant["price"];
                         }
 
                         $prd["price"] = price_format($prd["price"] + $surcharge);
                     }
                     $prd["amount"] = $amount;
-                    $prd["new"] = true;
+                    $prd["new"]    = true;
 
                     $cart_tmp["products"][] = $prd;
                     if (!array_key_exists($prd["manufacturerid"], $order["shipping_groups"])) {
-                        $order["shipping_groups"][$prd["manufacturerid"]] = array("new" => true);
+                        $order["shipping_groups"][$prd["manufacturerid"]] = ["new" => true];
                     }
                     unset($prd);
                 }
 
-                $top_message["content"] = func_get_langvar_by_name("txt_do_not_forget_re_calculate_shipping");
-                $top_message["type"] = "I";
+                $top_message["content"]   = func_get_langvar_by_name("txt_do_not_forget_re_calculate_shipping");
+                $top_message["type"]      = "I";
                 $section_name_top_message = $top_message;
                 x_session_save("section_name_top_message");
-
             }
             extract($saved_data);
         }
 
-        $log = "";
-        $additional_fee = array();
+        $log            = "";
+        $additional_fee = [];
 
         if (!empty($delete_additional_fee) && is_array($delete_additional_fee) && !empty($edit_additional_fee_name) && is_array($edit_additional_fee_name)) {
             foreach ($delete_additional_fee as $k => $v) {
@@ -1050,27 +1063,28 @@ if ($REQUEST_METHOD == "POST") {
                     if (!empty($v)) {
                         if (func_check_comma_in_field($orderid, $add_additional_fee_value[$k], 'add_additional_fee_value')) {
                             $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                            $top_message["type"] = "I";
+                            $top_message["type"]      = "I";
                             $section_name_top_message = $top_message;
                             x_session_save("section_name_top_message");
                             break;
                         }
-                        $add_price = price_format($add_additional_fee_value[$k]);
-                        $additional_fee_row["additional_fee_name"] = $v;
+                        $add_price                                  = price_format($add_additional_fee_value[$k]);
+                        $additional_fee_row["additional_fee_name"]  = $v;
                         $additional_fee_row["additional_fee_value"] = $add_price;
-                        $additional_fee[] = $additional_fee_row;
+                        $additional_fee[]                           = $additional_fee_row;
                         $log .= $v . " $" . $add_price . " - Added <br />";
 
                         db_query("INSERT INTO $sql_tbl[order_additional_fee] (orderid, additional_fee_name, additional_fee_value) VALUES ('$orderid', '" . $v . "', '$add_price')");
                     }
                 }
-            } else {
+            }
+            else {
 
                 foreach ($add_additional_fee_name as $k => $v) {
                     $v = trim($v);
                     if (!empty($v)) {
-                        $top_message["content"] = func_get_langvar_by_name("txt_product_was_not_added");
-                        $top_message["type"] = "I";
+                        $top_message["content"]   = func_get_langvar_by_name("txt_product_was_not_added");
+                        $top_message["type"]      = "I";
                         $section_name_top_message = $top_message;
                         x_session_save("section_name_top_message");
                         break;
@@ -1079,20 +1093,23 @@ if ($REQUEST_METHOD == "POST") {
             }
         }
 
-        if (!empty($edit_additional_fee_name) && is_array($edit_additional_fee_name)) {
-            foreach ($edit_additional_fee_name as $k => $v) {
-                if (func_check_comma_in_field($orderid, $add_additional_fee_value[$k], 'additional_fee_value')) {
+        if (!empty($edit_additional_fee_name) && is_array($edit_additional_fee_name))
+        {
+            foreach ($edit_additional_fee_name as $k => $v)
+            {
+                if (func_check_comma_in_field($orderid, $add_additional_fee_value[$k], 'additional_fee_value'))
+                {
                     $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                    $top_message["type"] = "I";
+                    $top_message["type"]      = "I";
                     $section_name_top_message = $top_message;
                     x_session_save("section_name_top_message");
                     break;
                 }
 
-                $add_price = price_format($v["additional_fee_value"]);
-                $additional_fee_row["additional_fee_name"] = $v["additional_fee_name"];
+                $add_price                                  = price_format($v["additional_fee_value"]);
+                $additional_fee_row["additional_fee_name"]  = $v["additional_fee_name"];
                 $additional_fee_row["additional_fee_value"] = $add_price;
-                $additional_fee[] = $additional_fee_row;
+                $additional_fee[]                           = $additional_fee_row;
 
                 $current_fee_info = func_query_first("SELECT additional_fee_name, additional_fee_value FROM $sql_tbl[order_additional_fee] WHERE id='$k'");
                 if ($current_fee_info["additional_fee_name"] != $v["additional_fee_name"] || $current_fee_info["additional_fee_value"] != $add_price) {
@@ -1121,12 +1138,12 @@ if ($REQUEST_METHOD == "POST") {
                         $cart_tmp["userinfo"]["additional_fields"][$_uk]["value"] = stripslashes($av);
                         break;
                     }
-
                 }
             }
         }
 
-        if ($order["paymentid"] == PAYMENT_PURCHASE_ID) {
+        if ($order["paymentid"] == PAYMENT_PURCHASE_ID)
+        {
             # Get PO data from order details text
             $data = explode("\n", $order["details"]);
 
@@ -1158,9 +1175,9 @@ if ($REQUEST_METHOD == "POST") {
                     $data[] = "accounts payable phone ext:";
                 }
                 global $po_number, $po_company_name, $name_of_purchaser, $po_position, $accounts_payable_phone_ext, $purchase_manager_phone_ext;
-                $po_fields = array("PO Number" => $po_number, "Company name" => $po_company_name, "Name of purchaser" => $name_of_purchaser, "Position" => $po_position, "po fax" => $po_fax, "accounts payable full name" => $accounts_payable_full_name, "accounts payable phone" => $accounts_payable_phone, "accounts payable fax" => $accounts_payable_fax, "accounts payable email" => $accounts_payable_email, "purchase manager phone" => $purchase_manager_phone, "purchase manager email" => $purchase_manager_email, "accounts payable phone ext" => $accounts_payable_phone_ext, "purchase manager phone ext" => $purchase_manager_phone_ext);
+                $po_fields = ["PO Number" => $po_number, "Company name" => $po_company_name, "Name of purchaser" => $name_of_purchaser, "Position" => $po_position, "po fax" => $po_fax, "accounts payable full name" => $accounts_payable_full_name, "accounts payable phone" => $accounts_payable_phone, "accounts payable fax" => $accounts_payable_fax, "accounts payable email" => $accounts_payable_email, "purchase manager phone" => $purchase_manager_phone, "purchase manager email" => $purchase_manager_email, "accounts payable phone ext" => $accounts_payable_phone_ext, "purchase manager phone ext" => $purchase_manager_phone_ext];
 
-                $order["po_details"] = array();
+                $order["po_details"] = [];
                 foreach ($data as $i => $line) {
                     if (empty($po_fields)) {
                         break;
@@ -1176,10 +1193,10 @@ if ($REQUEST_METHOD == "POST") {
                 if ($po_update) {
 
                     $count_data_current = count($data_current);
-                    $count_data = count($data);
-                    $count_po_fields = max($count_data_current, $count_data);
+                    $count_data         = count($data);
+                    $count_po_fields    = max($count_data_current, $count_data);
 
-                    $log = "<B>Order details:</B><br />";
+                    $log           = "<B>Order details:</B><br />";
                     $insert_po_log = false;
 
                     for ($i = 0; $i < $count_po_fields; $i++) {
@@ -1200,8 +1217,8 @@ if ($REQUEST_METHOD == "POST") {
             }
         }
 
-        if (!empty($orderid) && !empty($groups) && is_array($groups)) {
-
+        if (!empty($orderid) && !empty($groups) && is_array($groups))
+        {
             $all_cb_status_eq_O = true;
             $all_dc_status_eq_S = true;
 
@@ -1234,8 +1251,7 @@ if ($REQUEST_METHOD == "POST") {
 
         if (!empty($groups) && is_array($groups)) {
 
-
-            $new_groups = array();
+            $new_groups = [];
 
             foreach ($groups as $m_id => $v) {
 
@@ -1243,12 +1259,11 @@ if ($REQUEST_METHOD == "POST") {
                     $new_groups[$m_id]["paymentid"] = $vt_paymentid;
                 }
                 $new_groups[$m_id]["acc"] = $order['shipping_groups'][$m_id]['accounting'];
-
             }
 
             $groups = $new_groups;
 
-            $applied_per_trans_payments = array();
+            $applied_per_trans_payments = [];
             foreach ($groups as $m_id => $v) {
 
                 if (isset($v['paymentid'])) {
@@ -1258,22 +1273,22 @@ if ($REQUEST_METHOD == "POST") {
                 $order['shipping_groups'][$m_id]['manufacturerid'] = $m_id;
 
                 if (is_array($order['shipping_groups'][$m_id]['accounting']) && !empty($order['shipping_groups'][$m_id]['accounting'])) {
-                    $acc_zero_data = array(
-                        ACC_COST_TO_US => true,
+                    $acc_zero_data = [
+                        ACC_COST_TO_US  => true,
                         ACC_REF_TO_CUST => true,
-                        ACC_REF_TO_US => true,
-                    );
-                    $acc_new_data = array(
-                        ACC_COST_TO_US => false,
+                        ACC_REF_TO_US   => true,
+                    ];
+                    $acc_new_data  = [
+                        ACC_COST_TO_US  => false,
                         ACC_REF_TO_CUST => false,
-                        ACC_REF_TO_US => false,
-                    );
+                        ACC_REF_TO_US   => false,
+                    ];
 
                     foreach ($order['shipping_groups'][$m_id]['accounting'] as $col => $sga) {
                         foreach ($sga as $pdn => $pdv) {
                             if (
                                 in_array($col, array_keys($acc_zero_data))
-                                && !in_array($pdn, array('filled', 'net'))
+                                && !in_array($pdn, ['filled', 'net'])
                             ) {
                                 $pdv = intval($pdv);
 
@@ -1295,18 +1310,19 @@ if ($REQUEST_METHOD == "POST") {
                 for ($ak = 1; $ak <= 4; $ak++) {
                     if ($ak == ACC_REF_TO_CUST) {
                         $refund_group = func_query_first('SELECT total_net, total_gst, total_pst, total_gross'
-                            . ' FROM ' . $sql_tbl['refund_groups']
-                            . ' WHERE orderid = "' . $order['shipping_groups'][$m_id]['orderid'] . '"'
-                            . ' AND manufacturerid = "' . $m_id . '"');
+                                                         . ' FROM ' . $sql_tbl['refund_groups']
+                                                         . ' WHERE orderid = "' . $order['shipping_groups'][$m_id]['orderid'] . '"'
+                                                         . ' AND manufacturerid = "' . $m_id . '"');
                     }
 
-                    $order['shipping_groups'][$m_id]['accounting'][$ak] = array();
+                    $order['shipping_groups'][$m_id]['accounting'][$ak] = [];
 
                     foreach ($price_details_names as $af) {
                         if ($ak == ACC_REF_TO_CUST) {
                             if (!empty($refund_group)) {
                                 $v['acc'][$ak][$af] = $refund_group['total_' . $af];
-                            } else {
+                            }
+                            else {
                                 $v['acc'][$ak][$af] = 0;
                             }
                         }
@@ -1314,13 +1330,13 @@ if ($REQUEST_METHOD == "POST") {
                         $order['shipping_groups'][$m_id]['accounting'][$ak][$af] = $v['acc'][$ak][$af];
                     }
                 }
-//                              }
 
                 if (!isset($v['paymentid']) && !isset($v['acc_paymentid']) && isset($order['shipping_groups'][$m_id]["acc_paymentid"])) {
                     if ($apply_per_trans = !in_array($order['shipping_groups'][$m_id]["acc_paymentid"], $applied_per_trans_payments)) {
                         $applied_per_trans_payments[] = $order['shipping_groups'][$m_id]["acc_paymentid"];
                     }
-                } else {
+                }
+                else {
                     if ($apply_per_trans = !in_array($v['paymentid'], $applied_per_trans_payments)) {
                         $applied_per_trans_payments[] = $v['paymentid'];
                     }
@@ -1328,11 +1344,9 @@ if ($REQUEST_METHOD == "POST") {
 
                 func_recalculate_accounting($order['shipping_groups'][$m_id], $all_processors, $apply_per_trans, true);
 
+                $update = [];
 
-                $update = array();
-
-
-                $update = func_add_accounting_fields($update, '', '', '', "order_groups", $order['shipping_groups'][$m_id]['accounting']);
+                $update                  = func_add_accounting_fields($update, '', '', '', "order_groups", $order['shipping_groups'][$m_id]['accounting']);
                 $update['profit_margin'] = $order['shipping_groups'][$m_id]['profit_margin'];
 
                 if (isset($v['paymentid'])) {
@@ -1344,13 +1358,13 @@ if ($REQUEST_METHOD == "POST") {
 
                 // Change the order group status
 
-                if (
-                    $acc_zero_data[ACC_REF_TO_US]
+                if ($acc_zero_data[ACC_REF_TO_US]
                     && $acc_new_data[ACC_REF_TO_US]
                 ) {
                     func_change_order_group_status($orderid, $m_id, 'Z');
-                } elseif ($acc_zero_data[ACC_COST_TO_US]
-                    && $acc_new_data[ACC_COST_TO_US]
+                }
+                elseif ($acc_zero_data[ACC_COST_TO_US]
+                        && $acc_new_data[ACC_COST_TO_US]
                 ) {
                     func_change_order_group_status($orderid, $m_id, 'X');
                 }
@@ -1364,49 +1378,62 @@ if ($REQUEST_METHOD == "POST") {
             }
         }
 
-        if (!empty($add_retail_trust) && is_array($add_retail_trust)) {
-            foreach ($add_retail_trust as $sRetailTrustSKU) {
-                if (!empty($sRetailTrustSKU)) {
+        if (!empty($add_retail_trust) && is_array($add_retail_trust))
+        {
+            foreach ($add_retail_trust as $sRetailTrustSKU)
+            {
+                if (!empty($sRetailTrustSKU))
+                {
                     $oProduct = \Xcart\Product::getProductBySKU($sRetailTrustSKU);
-                    if ($oProduct->getProductId()) {
-                        if ($oProduct->isRetailTrustEnabled()) {
+
+                    if ($oProduct->getProductId())
+                    {
+                        if ($oProduct->isRetailTrustEnabled())
+                        {
                             $aOrderDetails = Xcart\OrderDetail::getOrderDetailsByOrderIdAndProductId($orderid, $oProduct->getProductId());
-                            if (!empty($aOrderDetails)) {
+                            if (!empty($aOrderDetails))
+                            {
                                 foreach ($aOrderDetails as $oOrderDetail) {
                                     $oOrderDetail->addRetailTrust();
                                 }
-                            } else {
+                            }
+                            else {
                                 $top_message["content"] .= func_get_langvar_by_name("retail_trust_nonordered_sku_for_retailtrust");
-                                $top_message["type"] = "I";
+                                $top_message["type"]      = "I";
                                 $section_name_top_message = $top_message;
                                 x_session_save("section_name_top_message");
                             }
-                        } else {
+                        }
+                        else {
                             /* retail trust sku not enabled*/
                             $top_message["content"] .= func_get_langvar_by_name("retail_trust_not_retailtrust_enabled_sku");
-                            $top_message["type"] = "I";
+                            $top_message["type"]      = "I";
                             $section_name_top_message = $top_message;
                             x_session_save("section_name_top_message");
                         }
-                    } else {
+                    }
+                    else {
                         /*product not found*/
                         $top_message["content"] .= func_get_langvar_by_name("retail_trust_nonordered_sku_for_retailtrust");
-                        $top_message["type"] = "I";
+                        $top_message["type"]      = "I";
                         $section_name_top_message = $top_message;
                         x_session_save("section_name_top_message");
                     }
                 }
             }
         }
-        if (!empty($retail_trust_to_delete) && is_array($retail_trust_to_delete)) {
-            foreach ($retail_trust_to_delete as $iOrderDetailRetailToDeleate => $value) {
-                $oOrderDetailRetailTrust = new Xcart\OrderDetail(['itemid'=>intval($iOrderDetailRetailToDeleate)]);
+        if (!empty($retail_trust_to_delete) && is_array($retail_trust_to_delete))
+        {
+            foreach ($retail_trust_to_delete as $iOrderDetailRetailToDeleate => $value)
+            {
+                $oOrderDetailRetailTrust = new Xcart\OrderDetail(['itemid' => intval($iOrderDetailRetailToDeleate)]);
                 $oOrderDetailRetailTrust->removeRetailTrust();
             }
         }
         $oOrder->recalculateRetailTrust();
 
-        if ($all_current_dc_status_NOT_eq_S) {
+        if ($all_current_dc_status_NOT_eq_S)
+        {
             #send email PO instructions
 
             # N 1
@@ -1420,7 +1447,6 @@ if ($REQUEST_METHOD == "POST") {
             $po_instructions = $config['Purchase_Order']['po_instructions'];
             $po_instructions = str_replace("{{orderid}}", $orderid, $po_instructions);
 
-
             $order = func_order_data($orderid);
             $mail_smarty->assign("products", $order['products']);
             $mail_smarty->assign("order", $order['order']);
@@ -1429,37 +1455,37 @@ if ($REQUEST_METHOD == "POST") {
             $attach_pdf_invoice = "Y";
             $mail_smarty->assign("attach_pdf_invoice", $attach_pdf_invoice);
 
-            $signature = func_get_signature(false, $order['products']);
+            $signature       = func_get_signature(false, $order['products']);
             $po_instructions = str_replace("{{signature}}", $signature, $po_instructions);
 
-            $firstname = trim($order['userinfo']['firstname']);
+            $firstname       = trim($order['userinfo']['firstname']);
             $c_firstname_arr = explode(" ", $firstname);
-            $c_firstname = array_pop($c_firstname_arr);
+            $c_firstname     = array_pop($c_firstname_arr);
             $po_instructions = str_replace("{{userfirstname}}", $userfirstname, $po_instructions);
             $po_instructions = str_replace("{{userfullname}}", $userfullname, $po_instructions);
-
 
             $po_instructions_subject_line = str_replace("{{signature}}", $signature, $po_instructions_subject_line);
             $po_instructions_subject_line = str_replace("{{userfirstname}}", $userfirstname, $po_instructions_subject_line);
             $po_instructions_subject_line = str_replace("{{userfullname}}", $userfullname, $po_instructions_subject_line);
-
 
             $mail_smarty->assign("po_instructions_subject_line", $po_instructions_subject_line);
             $mail_smarty->assign("po_instructions", $po_instructions);
 
             func_send_mail($send_to_email, 'mail/purchase_order_shipped_subj.tpl', 'mail/purchase_order_shipped.tpl', $config['Company']['orders_department'], true, false, false, true);
 
-
             # N 2
-            $tmp_order_details = func_query_first_cell("SELECT details FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-            $tmp_order_details = text_decrypt($tmp_order_details);
+            $tmp_order_details     = func_query_first_cell("SELECT details FROM $sql_tbl[orders] WHERE orderid='$orderid'");
+            $tmp_order_details     = text_decrypt($tmp_order_details);
             $tmp_order_details_arr = explode("\n", $tmp_order_details);
-            if (!empty($tmp_order_details_arr) && is_array($tmp_order_details_arr)) {
-                foreach ($tmp_order_details_arr as $k => $v) {
+
+            if (!empty($tmp_order_details_arr) && is_array($tmp_order_details_arr))
+            {
+                foreach ($tmp_order_details_arr as $k => $v)
+                {
                     if ((strpos($v, "po fax:")) !== false) {
                         $po_fax_num_arr = explode("po fax:", $v);
-                        $po_fax_num = $po_fax_num_arr[1];
-                        $po_fax_num = preg_replace("/[^0-9]/S", "", $po_fax_num);
+                        $po_fax_num     = $po_fax_num_arr[1];
+                        $po_fax_num     = preg_replace("/[^0-9]/S", "", $po_fax_num);
                     }
                 }
             }
@@ -1481,17 +1507,16 @@ if ($REQUEST_METHOD == "POST") {
                 $send_to_email .= ",custserv@s3stores.com";
 
                 func_send_mail($send_to_email, 'mail/purchase_order_shipped_subj.tpl', 'mail/purchase_order_shipped.tpl', $config['Company']['orders_department'], true, false, false, true);
-
             }
         }
 
-
         func_header_location("order.php?orderid=$orderid");
-    } elseif ((($mode == "accounting_apply" && $user_account["flag"] != "FS") || $mode == "table_accounting_apply") && !empty($certain_mid)) {
+    }
+    elseif ((($mode == "accounting_apply" && $user_account["flag"] != "FS") || $mode == "table_accounting_apply") && !empty($certain_mid)) {
 
         if (!empty($groups)) {
-            $tracking_in_all_distrs = true;
-            $applied_per_trans_payments = array();
+            $tracking_in_all_distrs     = true;
+            $applied_per_trans_payments = [];
             foreach ($groups as $m_id => $v) {
 
                 if ($m_id != $certain_mid) {
@@ -1501,14 +1526,14 @@ if ($REQUEST_METHOD == "POST") {
 
                     if (!empty($tracknums[$m_id]) && is_array($tracknums[$m_id])) {
 
-                        $tmp_tracknums = array();
+                        $tmp_tracknums         = [];
                         $tmp_tracknums_counter = 0;
 
                         foreach ($tracknums[$m_id] as $invoice_number => $v_tracknums) {
                             if (!empty($v_tracknums) && is_array($v_tracknums)) {
                                 foreach ($v_tracknums as $row_conter => $vv_tracknums) {
 
-                                    $tmp_tracknums[$tmp_tracknums_counter] = $vv_tracknums;
+                                    $tmp_tracknums[$tmp_tracknums_counter]                   = $vv_tracknums;
                                     $tmp_tracknums[$tmp_tracknums_counter]["invoice_number"] = $invoice_number;
 
                                     $tmp_tracknums_counter++;
@@ -1517,13 +1542,12 @@ if ($REQUEST_METHOD == "POST") {
                         }
 
                         $tracknums[$m_id] = $tmp_tracknums;
-                    } else {
+                    }
+                    else {
                         $tmp_tracknums_counter = 0;
                     }
 
-
                     $Tracking_number_Added_flag = false;
-
 
                     if (!empty($v["tracking_carrier"]) && is_array($v["tracking_carrier"])) {
 
@@ -1531,28 +1555,30 @@ if ($REQUEST_METHOD == "POST") {
                             if (!empty($v_tracking_carrier) && is_array($v_tracking_carrier)) {
 
                                 $add_tracking_log = false;
-                                $log = "<B>Tracking numbers:</B><br /><B>Added:</B><br />";
+                                $log              = "<B>Tracking numbers:</B><br /><B>Added:</B><br />";
                                 foreach ($v_tracking_carrier as $_k => $sh) {
                                     if (!empty($sh)) {
 
                                         if (!isset($v["tracking_shipper"][$invoice_number][$_k])) {
                                             $linkid = 0;
-                                        } else {
+                                        }
+                                        else {
                                             $linkid = $v["tracking_shipper"][$invoice_number][$_k];
                                         }
 
-                                        $tracknums[$m_id][$tmp_tracknums_counter] = array('linkid' => $linkid, 'tracknum' => trim($v["tracking_number"][$invoice_number][$_k]), 'invoice_number' => $invoice_number, 'ship_date' => trim($v["tracking_ship_date"][$invoice_number][$_k]), 'carrier_id' => $sh);
+                                        $tracknums[$m_id][$tmp_tracknums_counter] = ['linkid' => $linkid, 'tracknum' => trim($v["tracking_number"][$invoice_number][$_k]), 'invoice_number' => $invoice_number, 'ship_date' => trim($v["tracking_ship_date"][$invoice_number][$_k]), 'carrier_id' => $sh];
                                         $tmp_tracknums_counter++;
 
                                         if (!empty($linkid)) {
                                             $shipping_link = func_query_first_cell("SELECT shipping FROM $sql_tbl[tracking_links] WHERE linkid='$linkid'");
-                                        } else {
+                                        }
+                                        else {
                                             $shipping_link = "";
                                         }
 
                                         $carrier = func_query_first_cell("SELECT carrier FROM $sql_tbl[tracking_links_carrier] WHERE carrier_id='$sh'");
                                         $log .= "invoice_number_" . $invoice_number . ": " . $carrier . " " . $shipping_link . ": " . trim($v["tracking_number"][$invoice_number][$_k]) . "<br />";
-                                        $add_tracking_log = true;
+                                        $add_tracking_log           = true;
                                         $Tracking_number_Added_flag = true;
                                     }
                                 }
@@ -1563,12 +1589,11 @@ if ($REQUEST_METHOD == "POST") {
                                     if ($current_dc_status != "S") {
 
                                         $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
-                                        $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='S'");
+                                        $new_value               = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='S'");
                                         $log .= "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
 
                                         db_query("UPDATE $sql_tbl[order_groups] SET dc_status='S' WHERE orderid = '$orderid' AND manufacturerid='$m_id'");
                                     }
-
 
                                     func_log_order($orderid, 'X', $log, $login);
                                 }
@@ -1577,15 +1602,15 @@ if ($REQUEST_METHOD == "POST") {
                         }
                     }
 
-
                     $current_trackings = func_query_first_cell("SELECT tracking FROM $sql_tbl[order_groups] WHERE manufacturerid='$m_id' AND orderid='$orderid'");
                     $current_trackings = unserialize($current_trackings);
-                    if (empty($current_trackings) || !is_array($current_trackings))
-                        $current_trackings = array();
+                    if (empty($current_trackings) || !is_array($current_trackings)) {
+                        $current_trackings = [];
+                    }
 
                     $log = "<B>Tracking numbers:</B><br />";
 
-                    $current_trackings_for_diff = array();
+                    $current_trackings_for_diff = [];
                     if (!empty($current_trackings) && is_array($current_trackings)) {
                         $log .= "<B>Before:</B><br />";
                         foreach ($current_trackings as $kk => $vv) {
@@ -1594,8 +1619,8 @@ if ($REQUEST_METHOD == "POST") {
                                 $invoice_number = 1;
                             }
                             $shipping_link = $vv["shipping"];
-                            $carrier_id = $vv["carrier_id"];
-                            $carrier = func_query_first_cell("SELECT carrier FROM $sql_tbl[tracking_links_carrier] WHERE carrier_id='$carrier_id'");
+                            $carrier_id    = $vv["carrier_id"];
+                            $carrier       = func_query_first_cell("SELECT carrier FROM $sql_tbl[tracking_links_carrier] WHERE carrier_id='$carrier_id'");
 
                             $current_tracking_str = "invoice_number_" . $invoice_number . ": " . $carrier . " " . $shipping_link . ": " . $vv["tracknum"];
                             $log .= $current_tracking_str . "<br />";
@@ -1605,22 +1630,22 @@ if ($REQUEST_METHOD == "POST") {
 
                     db_query("UPDATE $sql_tbl[order_groups] SET tracking='' WHERE manufacturerid='$m_id' AND orderid='$orderid'");
 
-                    $tracknums_to_db = array();
-                    $trackings_for_diff = array();
+                    $tracknums_to_db    = [];
+                    $trackings_for_diff = [];
                     if (!empty($tracknums[$m_id]) && is_array($tracknums[$m_id])) {
                         $tracknums_to_db_index = 0;
                         $log .= "<B>Now:</B><br />";
                         foreach ($tracknums[$m_id] as $kk => $vv) {
                             if (!empty($vv["carrier_id"])) {
-                                $tracknums_to_db[$tracknums_to_db_index]["linkid"] = $vv["linkid"];
-                                $tracknums_to_db[$tracknums_to_db_index]["tracknum"] = $vv["tracknum"];
+                                $tracknums_to_db[$tracknums_to_db_index]["linkid"]         = $vv["linkid"];
+                                $tracknums_to_db[$tracknums_to_db_index]["tracknum"]       = $vv["tracknum"];
                                 $tracknums_to_db[$tracknums_to_db_index]["invoice_number"] = $vv["invoice_number"];
-                                $tracknums_to_db[$tracknums_to_db_index]["ship_date"] = $vv["ship_date"];
-                                $tracknums_to_db[$tracknums_to_db_index]["carrier_id"] = $vv["carrier_id"];
+                                $tracknums_to_db[$tracknums_to_db_index]["ship_date"]      = $vv["ship_date"];
+                                $tracknums_to_db[$tracknums_to_db_index]["carrier_id"]     = $vv["carrier_id"];
                                 $tracknums_to_db_index++;
 
                                 $shipping_link = $vv["shipping"];
-                                $carrier_id = $vv["carrier_id"];
+                                $carrier_id    = $vv["carrier_id"];
 
                                 $carrier = func_query_first_cell("SELECT carrier FROM $sql_tbl[tracking_links_carrier] WHERE carrier_id='$carrier_id'");
 
@@ -1629,7 +1654,8 @@ if ($REQUEST_METHOD == "POST") {
                                 $trackings_for_diff[] = $tracking_str;
                             }
                         }
-                    } else {
+                    }
+                    else {
                         $tracking_in_all_distrs = false;
                     }
 
@@ -1649,62 +1675,59 @@ if ($REQUEST_METHOD == "POST") {
                         $old_v = $v;
                         include $xcart_dir . '/include/send_order_email.php';
                         $v = $old_v;
-
                     }
-
                 } //if ($mode == "accounting_apply" && $user_account["flag"] != "FS")
 
-                $v["acc"][1]["gst"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][1]["gst"]);
-                $v["acc"][1]["pst"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][1]["pst"]);
+                $v["acc"][1]["gst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][1]["gst"]);
+                $v["acc"][1]["pst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][1]["pst"]);
                 $v["acc"][1]["gross"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][1]["gross"]);
 
-                $v["acc"][2]["gst"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][2]["gst"]);
-                $v["acc"][2]["pst"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][2]["pst"]);
+                $v["acc"][2]["gst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][2]["gst"]);
+                $v["acc"][2]["pst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][2]["pst"]);
                 $v["acc"][2]["gross"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][2]["gross"]);
 
-                $v["acc"][3]["gst"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][3]["gst"]);
-                $v["acc"][3]["pst"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][3]["pst"]);
+                $v["acc"][3]["gst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][3]["gst"]);
+                $v["acc"][3]["pst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][3]["pst"]);
                 $v["acc"][3]["gross"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][3]["gross"]);
 
-                $v["acc"][4]["gst"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][4]["gst"]);
-                $v["acc"][4]["pst"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][4]["pst"]);
+                $v["acc"][4]["gst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][4]["gst"]);
+                $v["acc"][4]["pst"]   = preg_replace("/[^0-9\.]/S", "", $v["acc"][4]["pst"]);
                 $v["acc"][4]["gross"] = preg_replace("/[^0-9\.]/S", "", $v["acc"][4]["gross"]);
-
 
                 if ($order['shipping_groups'][$m_id]['ru_status'] == "RR") {
                     $v["ru_status"] = "RR";
-                } else {
+                }
+                else {
                     if ($v["acc"][4]["gross"] > 0) {
                         $v["ru_status"] = "RP";
-                    } else {
+                    }
+                    else {
                         $v["ru_status"] = "";
                     }
                 }
 
-                $order['shipping_groups'][$m_id]['acc_paymentid'] = $v['paymentid'];
+                $order['shipping_groups'][$m_id]['acc_paymentid']  = $v['paymentid'];
                 $order['shipping_groups'][$m_id]['manufacturerid'] = $m_id;
-
 
                 if ($mode == "table_accounting_apply") {
 
-
                     if (is_array($order['shipping_groups'][$m_id]['accounting']) && !empty($order['shipping_groups'][$m_id]['accounting'])) {
-                        $acc_zero_data = array(
-                            ACC_COST_TO_US => true,
+                        $acc_zero_data = [
+                            ACC_COST_TO_US  => true,
                             ACC_REF_TO_CUST => true,
-                            ACC_REF_TO_US => true,
-                        );
-                        $acc_new_data = array(
-                            ACC_COST_TO_US => false,
+                            ACC_REF_TO_US   => true,
+                        ];
+                        $acc_new_data  = [
+                            ACC_COST_TO_US  => false,
                             ACC_REF_TO_CUST => false,
-                            ACC_REF_TO_US => false,
-                        );
+                            ACC_REF_TO_US   => false,
+                        ];
 
                         foreach ($order['shipping_groups'][$m_id]['accounting'] as $col => $sga) {
                             foreach ($sga as $pdn => $pdv) {
                                 if (
                                     in_array($col, array_keys($acc_zero_data))
-                                    && !in_array($pdn, array('filled', 'net'))
+                                    && !in_array($pdn, ['filled', 'net'])
                                 ) {
                                     $pdv = intval($pdv);
 
@@ -1726,18 +1749,20 @@ if ($REQUEST_METHOD == "POST") {
                     for ($ak = 1; $ak <= 4; $ak++) {
                         if ($ak == ACC_REF_TO_CUST) {
                             $refund_group = func_query_first('SELECT total_net, total_gst, total_pst, total_gross'
-                                . ' FROM ' . $sql_tbl['refund_groups']
-                                . ' WHERE orderid = "' . $order['shipping_groups'][$m_id]['orderid'] . '"'
-                                . ' AND manufacturerid = "' . $m_id . '"');
+                                                             . ' FROM ' . $sql_tbl['refund_groups']
+                                                             . ' WHERE orderid = "' . $order['shipping_groups'][$m_id]['orderid'] . '"'
+                                                             . ' AND manufacturerid = "' . $m_id . '"');
                         }
 
-                        $order['shipping_groups'][$m_id]['accounting'][$ak] = array();
+                        $order['shipping_groups'][$m_id]['accounting'][$ak] = [];
 
-                        foreach ($price_details_names as $af) {
+                        foreach ($price_details_names as $af)
+                        {
                             if ($ak == ACC_REF_TO_CUST) {
                                 if (!empty($refund_group)) {
                                     $v['acc'][$ak][$af] = $refund_group['total_' . $af];
-                                } else {
+                                }
+                                else {
                                     $v['acc'][$ak][$af] = 0;
                                 }
                             }
@@ -1745,16 +1770,13 @@ if ($REQUEST_METHOD == "POST") {
                             $order['shipping_groups'][$m_id]['accounting'][$ak][$af] = $v['acc'][$ak][$af];
                         }
                     }
-//				}
-
                 } //if ($mode == "table_accounting_apply")
-
 
                 if ($apply_per_trans = !in_array($v['paymentid'], $applied_per_trans_payments)) {
                     $applied_per_trans_payments[] = $v['paymentid'];
                 }
 
-                $update = array();
+                $update = [];
 
                 if ($mode == "table_accounting_apply" || ($mode == "accounting_apply" && $user_account["flag"] != "FS")) {
                     $update['acc_paymentid'] = $v['paymentid'];
@@ -1765,26 +1787,25 @@ if ($REQUEST_METHOD == "POST") {
                 }
 
                 if ($mode == "accounting_apply" && $user_account["flag"] != "FS" && !empty($manufacturer_memos_data[$certain_mid]) && is_array($manufacturer_memos_data[$certain_mid])) {
-                    $SUM_ref_to_us = 0;
-                    $SUM_ref_to_us_HST = 0;
+                    $SUM_ref_to_us       = 0;
+                    $SUM_ref_to_us_HST   = 0;
                     $SUM_ref_to_us_total = 0;
-
 
                     $log = "<B>" . $order["shipping_groups"][$certain_mid]["code"] . "</B>:";
 
                     foreach ($manufacturer_memos_data[$certain_mid] as $memo_number => $memo_data) {
 
                         $update_memos_table_flag = false;
-                        $group_memos = array();
+                        $group_memos             = [];
 
                         $ref_to_us_HST = $memo_data["ref_to_us_HST"];
-												if (func_check_comma_in_field($orderid, $ref_to_us_HST, 'ref_to_us_HST')) {
-													$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-													$top_message["type"] = "I";
-													$section_name_top_message = $top_message;
-													x_session_save("section_name_top_message");
-													break;
-												}
+                        if (func_check_comma_in_field($orderid, $ref_to_us_HST, 'ref_to_us_HST')) {
+                            $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+                            $top_message["type"]      = "I";
+                            $section_name_top_message = $top_message;
+                            x_session_save("section_name_top_message");
+                            break;
+                        }
                         $SUM_ref_to_us_HST += $ref_to_us_HST;
 
                         if ($ref_to_us_HST != $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["ref_to_us_HST"]) {
@@ -1795,13 +1816,13 @@ if ($REQUEST_METHOD == "POST") {
 
                         $ref_to_us_total = $memo_data["ref_to_us_total"];
 
-											if (func_check_comma_in_field($orderid, $ref_to_us_total, 'ref_to_us_total')) {
-												$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-												$top_message["type"] = "I";
-												$section_name_top_message = $top_message;
-												x_session_save("section_name_top_message");
-												break;
-											}
+                        if (func_check_comma_in_field($orderid, $ref_to_us_total, 'ref_to_us_total')) {
+                            $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+                            $top_message["type"]      = "I";
+                            $section_name_top_message = $top_message;
+                            x_session_save("section_name_top_message");
+                            break;
+                        }
                         $SUM_ref_to_us_total += $ref_to_us_total;
 
                         if ($ref_to_us_total != $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["ref_to_us_total"]) {
@@ -1810,7 +1831,7 @@ if ($REQUEST_METHOD == "POST") {
                             $update_memos_table_flag = true;
                         }
 
-                        $ref_to_us = $ref_to_us_total - $ref_to_us_HST;
+                        $ref_to_us                = $ref_to_us_total - $ref_to_us_HST;
                         $group_memos["ref_to_us"] = $ref_to_us;
                         $SUM_ref_to_us += $ref_to_us;
 
@@ -1818,11 +1839,11 @@ if ($REQUEST_METHOD == "POST") {
                         if ($memo_descr != $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["memo_descr"]) {
                             $log .= "<br />memo_number-" . $memo_number . ": memo_descr: " . $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["memo_descr"] . " -> " . $memo_descr;
                             $group_memos["memo_descr"] = $memo_descr;
-                            $update_memos_table_flag = true;
+                            $update_memos_table_flag   = true;
                         }
 
                         if ($order["shipping_groups"][$certain_mid]["memos"][$memo_number]["status"] != "R") {
-                            $group_memos["status"] = "U";
+                            $group_memos["status"]   = "U";
                             $update_memos_table_flag = true;
                         }
 
@@ -1830,7 +1851,6 @@ if ($REQUEST_METHOD == "POST") {
 
                             func_array2update("order_group_memos", $group_memos, "orderid='$orderid' AND manufacturerid='$certain_mid' AND memo_number='$memo_number'");
                         }
-
                     } // foreach ($manufacturer_memos_data[$certain_mid] as $memo_number => $memo_data)
 
                     if ($log != "<B>" . $order["shipping_groups"][$certain_mid]["code"] . "</B>:") {
@@ -1854,34 +1874,33 @@ if ($REQUEST_METHOD == "POST") {
 
                 if ($mode == "accounting_apply" && $user_account["flag"] != "FS" && !empty($manufacturer_invoices_data[$certain_mid]) && is_array($manufacturer_invoices_data[$certain_mid])) {
 
-                    $SUM_HST_charged = 0;
-                    $SUM_tax_charged_except_HST = 0;
+                    $SUM_HST_charged                     = 0;
+                    $SUM_tax_charged_except_HST          = 0;
                     $SUM_cost_to_us_for_products_charged = 0;
-                    $SUM_shipping_charged = 0;
-                    $SUM_drop_ship_fee_charged = 0;
-
+                    $SUM_shipping_charged                = 0;
+                    $SUM_drop_ship_fee_charged           = 0;
 
                     $log = "<B>" . $order["shipping_groups"][$certain_mid]["code"] . "</B>:";
 
                     foreach ($manufacturer_invoices_data[$certain_mid] as $invoice_number => $invoice_data) {
 
-                        $update_invoices_table_flag = false;
+                        $update_invoices_table_flag      = false;
                         $cost_to_us_for_products_charged = 0;
 
                         if (!empty($invoice_data["unit_cost"]) && is_array($invoice_data["unit_cost"])) {
                             foreach ($invoice_data["unit_cost"] as $itemid => $unit_cost) {
 
-								if (func_check_comma_in_field($orderid, $unit_cost, 'invoice_unit_cost')) {
-									$top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-									$top_message["type"] = "I";
-									$section_name_top_message = $top_message;
-									x_session_save("section_name_top_message");
-									break;
-								}
+                                if (func_check_comma_in_field($orderid, $unit_cost, 'invoice_unit_cost')) {
+                                    $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
+                                    $top_message["type"]      = "I";
+                                    $section_name_top_message = $top_message;
+                                    x_session_save("section_name_top_message");
+                                    break;
+                                }
 
-                                $invoices_products = array();
+                                $invoices_products = [];
 
-                                $qty_inv = $invoice_data["qty_inv"][$itemid];
+                                $qty_inv         = $invoice_data["qty_inv"][$itemid];
                                 $unit_cost_total = price_format($qty_inv * $unit_cost);
 
                                 if ($unit_cost != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["products"][$itemid]["unit_cost"]) {
@@ -1896,7 +1915,6 @@ if ($REQUEST_METHOD == "POST") {
                                             db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"] . "')");
 
                                             $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"]]["status"];
-
                                         }
                                     }
 
@@ -1951,7 +1969,7 @@ if ($REQUEST_METHOD == "POST") {
                             }
                         }
 
-                        $group_invoices = array();
+                        $group_invoices = [];
 
                         $cost_to_us_for_products_charged = price_format($cost_to_us_for_products_charged);
                         $SUM_cost_to_us_for_products_charged += floatval($cost_to_us_for_products_charged);
@@ -1971,7 +1989,6 @@ if ($REQUEST_METHOD == "POST") {
                                     db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"] . "')");
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"]]["status"];
-
                                 }
                             }
                         }
@@ -1988,7 +2005,6 @@ if ($REQUEST_METHOD == "POST") {
                                     db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"] . "')");
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"]]["status"];
-
                                 }
                             }
                         }
@@ -2005,19 +2021,18 @@ if ($REQUEST_METHOD == "POST") {
                                     db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"] . "')");
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"]]["status"];
-
                                 }
                             }
                         }
 
-                        $products_total = price_format(floatval($cost_to_us_for_products_charged) + floatval($tax_charged_except_HST));
+                        $products_total                   = price_format(floatval($cost_to_us_for_products_charged) + floatval($tax_charged_except_HST));
                         $group_invoices["products_total"] = $products_total;
 
                         $shipping_charged = $invoice_data["shipping_charged"];
 
                         if (func_check_comma_in_field($orderid, $shipping_charged, 'shipping_charged')) {
                             $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                            $top_message["type"] = "I";
+                            $top_message["type"]      = "I";
                             $section_name_top_message = $top_message;
                             x_session_save("section_name_top_message");
                             break;
@@ -2036,7 +2051,6 @@ if ($REQUEST_METHOD == "POST") {
                                     db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"] . "')");
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"]]["status"];
-
                                 }
                             }
 
@@ -2046,7 +2060,6 @@ if ($REQUEST_METHOD == "POST") {
                                     db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"] . "')");
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"]]["status"];
-
                                 }
                             }
                         }
@@ -2055,7 +2068,7 @@ if ($REQUEST_METHOD == "POST") {
 
                         if (func_check_comma_in_field($orderid, $drop_ship_fee_charged, 'drop_ship_fee_charged')) {
                             $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                            $top_message["type"] = "I";
+                            $top_message["type"]      = "I";
                             $section_name_top_message = $top_message;
                             x_session_save("section_name_top_message");
                             break;
@@ -2077,13 +2090,13 @@ if ($REQUEST_METHOD == "POST") {
                             }
                         }
 
-                        $shipping_total = price_format($shipping_charged + $drop_ship_fee_charged);
+                        $shipping_total                   = price_format($shipping_charged + $drop_ship_fee_charged);
                         $group_invoices["shipping_total"] = $shipping_total;
 
                         $HST_charged = $invoice_data["HST_charged"];
                         if (func_check_comma_in_field($orderid, $HST_charged, 'HST_charged')) {
                             $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                            $top_message["type"] = "I";
+                            $top_message["type"]      = "I";
                             $section_name_top_message = $top_message;
                             x_session_save("section_name_top_message");
                             break;
@@ -2102,16 +2115,15 @@ if ($REQUEST_METHOD == "POST") {
                                     db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"] . "')");
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"]]["status"];
-
                                 }
                             }
                         }
 
-                        $invoice_total = price_format(floatval($products_total) + floatval($shipping_total) + floatval($HST_charged));
+                        $invoice_total                   = price_format(floatval($products_total) + floatval($shipping_total) + floatval($HST_charged));
                         $group_invoices["invoice_total"] = $invoice_total;
 
                         if ($order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["status"] != "R") {
-                            $group_invoices["status"] = "U";
+                            $group_invoices["status"]   = "U";
                             $update_invoices_table_flag = true;
                         }
 
@@ -2120,7 +2132,7 @@ if ($REQUEST_METHOD == "POST") {
                             $oManufacturer = new Xcart\Manufacturer($certain_mid);
                             if ($oManufacturer->getField('distributor_charges_for_each_order_twice_and_split_invoices') == 'Y') {
                                 $oGroupInvoices = new Xcart\OrderGroupInvoices();
-                                $oInvoices = $oGroupInvoices->getOrderGroupInvoices(['orderid' => $orderid, 'manufacturerid' => $certain_mid]);
+                                $oInvoices      = $oGroupInvoices->getOrderGroupInvoices(['orderid' => $orderid, 'manufacturerid' => $certain_mid]);
                                 if ($oInvoices->countOrderGroupInvoices() == 1) {
                                     $oLastInvoice = $oInvoices->getLastInvoice();
                                     if ($oLastInvoice->getOrderGroupInvoiceProductsTotal() != 0 && $oLastInvoice->getOrderGroupInvoicesShippingTotal() != 0) {
@@ -2132,7 +2144,6 @@ if ($REQUEST_METHOD == "POST") {
                                 }
                             }
                         }
-
                     } // foreach ($manufacturer_invoices_data[$certain_mid] as $invoice_number => $invoice_data)
 
                     if ($order['shipping_groups'][$m_id]['accounting'][1]["gst"] != price_format($SUM_HST_charged)) {
@@ -2150,8 +2161,6 @@ if ($REQUEST_METHOD == "POST") {
                     }
                 }
 
-###
-
                 func_recalculate_accounting($order['shipping_groups'][$m_id], $all_processors, $apply_per_trans, true);
 
                 $update['profit_margin'] = $order['shipping_groups'][$m_id]['profit_margin'];
@@ -2162,39 +2171,26 @@ if ($REQUEST_METHOD == "POST") {
                     func_log_order($orderid, 'X', $log, $login);
                 }
 
-
                 func_log_order_groups($update, $orderid, $m_id, 'X', $login);
 
                 func_array2update("order_groups", $update, "orderid='$orderid' AND manufacturerid='$m_id'");
 
-
                 if ($mode == "table_accounting_apply") {
                     // Change the order group status
 
-                    if (
-                        $acc_zero_data[ACC_REF_TO_US]
-                        && $acc_new_data[ACC_REF_TO_US]
-                    ) {
+                    if ( $acc_zero_data[ACC_REF_TO_US] && $acc_new_data[ACC_REF_TO_US] ) {
                         func_change_order_group_status($orderid, $m_id, 'Z');
-                    } elseif ($acc_zero_data[ACC_COST_TO_US]
-                        && $acc_new_data[ACC_COST_TO_US]
-                    ) {
+                    }
+                    elseif ($acc_zero_data[ACC_COST_TO_US] && $acc_new_data[ACC_COST_TO_US] ) {
                         func_change_order_group_status($orderid, $m_id, 'X');
                     }
 
-                    if (
-                        $acc_zero_data[ACC_REF_TO_CUST]
-                        && $acc_new_data[ACC_REF_TO_CUST]
-                    ) {
+                    if ( $acc_zero_data[ACC_REF_TO_CUST] && $acc_new_data[ACC_REF_TO_CUST] ) {
                         func_change_order_group_status($orderid, $m_id, 'R');
                     }
                 }
             }
 
-
-#
-## 11.04.2014
-###
             if ($mode == "accounting_apply" && $user_account["flag"] != "FS") {
 
                 $current_tracking_all_filled = func_query_first_cell("SELECT tracking_all_filled FROM $sql_tbl[orders] WHERE orderid='$orderid'");
@@ -2203,38 +2199,35 @@ if ($REQUEST_METHOD == "POST") {
                     if ($current_tracking_all_filled != "Y") {
                         db_query("UPDATE $sql_tbl[orders] SET tracking_all_filled='Y', tracking_fill_time='" . time() . "' WHERE orderid='$orderid'");
                     }
-                } else {
+                }
+                else {
                     if ($current_tracking_all_filled == "Y") {
                         db_query("UPDATE $sql_tbl[orders] SET tracking_all_filled='N' WHERE orderid='$orderid'");
                     }
                 }
             }
-###
-##
-#
-
-
         }
+
         if ($mode == "table_accounting_apply" || $mode == "accounting_apply") {
             $oOrder->recalculateAccounting();
         }
         func_header_location("order.php?orderid=$orderid");
     }
-
 }
-
 
 if (empty($order["refund_groups"]) && is_array($order["refund_groups"])) {
     unset($order["refund_groups"]);
 }
 
 if (!empty($order["refund_groups"]) && is_array($order["refund_groups"])) {
-    foreach ($order["refund_groups"] as $m_id => $r_v) {
+    foreach ($order["refund_groups"] as $m_id => $r_v)
+    {
         if (!empty($r_v["products"]) && is_array($r_v["products"])) {
-            foreach ($r_v["products"] as $itemid => $r_p) {
+            foreach ($r_v["products"] as $itemid => $r_p)
+            {
                 if (!empty($order["shipping_groups"][$m_id]["products"]) && is_array($order["shipping_groups"][$m_id]["products"])) {
-                    foreach ($order["shipping_groups"][$m_id]["products"] as $k => $v) {
-//						if ($v["itemid"] == $itemid && $v["back"] == $r_p["ref_qty"]){
+                    foreach ($order["shipping_groups"][$m_id]["products"] as $k => $v)
+                    {
                         if ($v["itemid"] == $itemid) {
                             $order["shipping_groups"][$m_id]["products"][$k]["dropped"] = "Y";
                         }
@@ -2245,68 +2238,49 @@ if (!empty($order["refund_groups"]) && is_array($order["refund_groups"])) {
     }
 }
 
-$convert_to_regular_order_show_button = false;
+$convert_to_regular_order_show_button  = false;
 $order["lng_order_contains_FBA_items"] = "N";
 
 if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 
-    foreach ($order["shipping_groups"] as $k => $v) {
-
-#
-##
+    foreach ($order["shipping_groups"] as $k => $v)
+    {
         $order["shipping_groups"][$k]["product_total"]["net"] = price_format($v["total"]["net"] - $v["shipping_cost"]["net"]);
 
         if (!empty($v["shippingid"])) {
-            $real_drop_ship_fee = func_query_first_cell("SELECT real_drop_ship_fee FROM $sql_tbl[shipping_rates] WHERE shippingid='$v[shippingid]' AND manufacturerid='$k' AND mintotal <= '" . $order["shipping_groups"][$k]["product_total"]["net"] . "' AND maxtotal >= '" . $order["shipping_groups"][$k]["product_total"]["net"] . "'");
+            $real_drop_ship_fee                                 = func_query_first_cell("SELECT real_drop_ship_fee FROM $sql_tbl[shipping_rates] WHERE shippingid='$v[shippingid]' AND manufacturerid='$k' AND mintotal <= '" . $order["shipping_groups"][$k]["product_total"]["net"] . "' AND maxtotal >= '" . $order["shipping_groups"][$k]["product_total"]["net"] . "'");
             $order["shipping_groups"][$k]["real_drop_ship_fee"] = $real_drop_ship_fee;
 
-
-            $shipping_code = func_query_first_cell("SELECT code FROM $sql_tbl[shipping] WHERE shippingid='$v[shippingid]'");
+            $shipping_code                                 = func_query_first_cell("SELECT code FROM $sql_tbl[shipping] WHERE shippingid='$v[shippingid]'");
             $order["shipping_groups"][$k]["shipping_code"] = $shipping_code;
-
         }
-##
-#
 
-
-#
-##
         if ($v["cb_status"] == "IO" || $v["cb_status"] == "O") {
             $convert_to_regular_order_show_button = true;
         }
-##
-#
 
-
-###
         if ($v["dc_status"] == "DP" && $v["all_distributor_info"]["allow_dispatch_off_working_hours"] == "Y") {
             $order["shipping_groups"][$k]["allow_dispatch_off_working_hours_functionality_enabled"] = "Y";
-            $order["allow_dispatch_off_working_hours_functionality_enabled_found"] = "Y";
+            $order["allow_dispatch_off_working_hours_functionality_enabled_found"]                  = "Y";
         }
-###
 
         if ($v["products"] && is_array($v["products"])) {
             foreach ($v["products"] as $kk => $vv) {
 
-                if ($order["lng_order_contains_FBA_items"] == "N" && $vv["amazon_fba_avail"] > 0 && !in_array($order["amazon_fulfillment_channel"], array("AFN", "MFN"))) {
+                if ($order["lng_order_contains_FBA_items"] == "N" && $vv["amazon_fba_avail"] > 0 && !in_array($order["amazon_fulfillment_channel"], ["AFN", "MFN"])) {
                     $order["lng_order_contains_FBA_items"] = "Y";
                 }
 
-                if (!empty($vv["eta_date_mm_dd_yyyy"]) || $vv["eta_date_mm_dd_yyyy"] > 0) {
-//                                        $current_eta_date_mm_dd_yyyy_arr = explode("/", $vv["eta_date_mm_dd_yyyy"]);
-//                                        $current_eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $current_eta_date_mm_dd_yyyy_arr[0], $current_eta_date_mm_dd_yyyy_arr[1], $current_eta_date_mm_dd_yyyy_arr[2]);
-
-//					if (time() > $current_eta_date_mm_dd_yyyy_time)
+                if (!empty($vv["eta_date_mm_dd_yyyy"]) || $vv["eta_date_mm_dd_yyyy"] > 0)
+                {
                     if (time() > $vv["eta_date_mm_dd_yyyy"]) {
                         $order["shipping_groups"][$k]["products"][$kk]["eta_date_mm_dd_yyyy"] = "";
                     }
                 }
-
             }
         }
     }
 }
-
 
 $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_order_show_button);
 $smarty->assign("order", $order);
@@ -2315,14 +2289,13 @@ $oOrder = Xcart\Order::model(['orderid' => $orderid]);
 $smarty->assign("oOrder", $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 
-$oShippings = new Xcart\Shipping();
+$oShippings             = new Xcart\Shipping();
 $aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');
-$aAmazonShippings = [];
+$aAmazonShippings       = [];
 
 if (!empty($aAmazonShippingMethods)) {
     foreach ($aAmazonShippingMethods as $oShippingMethod) {
         $aAmazonShippings[$oShippingMethod->getField('shipping')] = $oShippingMethod->getField('shipping');
-
     }
     $smarty->assign("aAmazonShippingMethods", $aAmazonShippings);
 }
