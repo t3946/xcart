@@ -310,9 +310,9 @@ function func_show_full_info(code){
 <td align="right">
  <B>{$lng.lbl_processor}:</B>
   <select name="groups[{$m_id}][paymentid]">
-  <option value="0"{if $v.acc_paymentid eq 0} selected="selected"{/if}></option>
+  <option value="0"></option>
   {foreach from=$all_processors item=ps key=pid}
-  <option value="{$pid}"{if $pid eq $v.acc_paymentid} selected="selected"{/if}>{$ps.payment_method}</option>
+  <option value="{$pid}" {if ($pid eq $v.acc_paymentid) || $pid eq $order.paymentid} selected="selected" {/if}>{$ps.payment_method}</option>
   {/foreach}
   </select>
 </td>
