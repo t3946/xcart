@@ -269,6 +269,7 @@ if ($REQUEST_METHOD == "GET")
                     'manufacturerid'                  => $v['manufacturerid'],
                     'shippingid'                      => $v['shippingid'],
                     'shipping'                        => $v['shipping'],
+                    'real_shipping_method'            => $v['real_shipping_method'],
                     'cb_status'                       => 'Q',
                     'dc_status'                       => 'T',
                     'bd_status'                       => 'W',

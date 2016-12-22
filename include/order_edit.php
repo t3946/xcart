@@ -552,7 +552,14 @@ if ($REQUEST_METHOD == "POST")
                 $order["shipping_groups"][$m_id]["shipping_cost"] = func_tax_price_details($v["shipping_cost_net"], $order["shipping_groups"][$m_id]["taxes"]);
                 $cart_tmp["shipping_costs_alt"][$m_id]            = $order["shipping_groups"][$m_id]["shipping_cost"]["gross"];
                 $cart_tmp["shipping_cost_alt"] += $cart_tmp["shipping_costs_alt"][$m_id];
-                $order["shipping_groups"][$m_id]["shipping"] = $v["shipping"];
+
+                if (isset($v["shipping"])) {
+                    $order["shipping_groups"][$m_id]["shipping"] = $v["shipping"];
+                }
+
+                if (isset($v["real_shipping_method"])) {
+                    $order["shipping_groups"][$m_id]["real_shipping_method"] = $v["real_shipping_method"];
+                }
 
                 if (!in_array($v['dc_status'], ['C', 'S']) && $user_account['flag'] == 'FS') {
                     $v['dc_status'] = 'C';

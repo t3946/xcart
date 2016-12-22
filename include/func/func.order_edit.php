@@ -785,7 +785,14 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             else {
                 if (@$user_account["flag"] != "FS") {
                     $query_data['shippingid'] = $v['shippingid'];
-                    $query_data['shipping'] = $v['shipping'];
+
+                    if (isset($v['shipping'])) {
+                        $query_data['shipping'] = $v['shipping'];
+                    }
+
+                    if (isset($v['real_shipping_method'])) {
+                        $query_data['real_shipping_method'] = $v['real_shipping_method'];
+                    }
                 }
                 else {
                     $query_data = [];
