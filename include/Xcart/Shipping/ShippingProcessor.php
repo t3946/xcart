@@ -21,20 +21,29 @@ abstract class ShippingProcessor
     private $oCustomer = null;
 
     /**
-     * @var Product[]
+     * @var ShippingCart
      */
-    private $aProducts = null;
+    private $oCart = null;
 
     /**
      * @var ShippingRate[]
      */
-    private $aShippingRates = null;
+    private $aShippingRatesEntities = null;
+    /**
+     * @var ShippingRate[]
+     */
+    protected $aShippingRates = null;
 
     /**
      * @return boolean
      */
     abstract public function isProcessorApplicable();
-    abstract public function getShippingRates();
+
+    abstract public function getShippingQuotes();
+
+    abstract public function getShippingQuotesCached();
+
+    abstract public function saveShippingQuotesCached(Product $oProduct);
 
     /**
      * @return Manufacturer
@@ -89,33 +98,56 @@ abstract class ShippingProcessor
      */
     public function getShippingRatesEntities()
     {
-        if (is_null($this->aShippingRates)) {
-            $this->aShippingRates = ShippingRate::model()->findAll(
+        if (is_null($this->aShippingRatesEntities)) {
+            $this->aShippingRatesEntities = ShippingRate::model()->findAll(
                 SQLBuilder::getInstance()->
                 addInnerJoin('shipping', 's', 'main.shippingid = s.shippingid')->
                 addCondition('zoneid = ' . $this->getShippingZone()->getField('zoneid'))->
                 addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
-                addCondition("type = '" . $this->getShippingType() . "'")->
                 addCondition("s.active = 'Y'")
             );
+            if (!empty($this->aShippingRatesEntities)) {
+                foreach ($this->aShippingRatesEntities as $key => $oShippingRate) {
+                    $oShippingRate->setCart($this->getCart());
+                    if (!$oShippingRate->checkShippingRateByFilterValues()) {
+                        unset($this->aShippingRatesEntities[$key]);
+                    }
+                }
+            }
+        }
+        return $this->aShippingRatesEntities;
+    }
+
+    public function getShippingRates()
+    {
+
+        $this->getShippingQuotesCached();
+        $this->getShippingQuotes();
+        if (!empty($this->aShippingRates)) {
+            foreach ($this->aShippingRates as $oShippingRate) {
+                $oShippingRate->setCart($this->getCart());
+            }
         }
         return $this->aShippingRates;
     }
 
     /**
-     * @return Product[]
+     * @return ShippingCart
      */
-    public function getProducts()
+    public function getCart()
     {
-        return $this->aProducts;
+        return $this->oCart;
     }
 
     /**
-     * @param Product[] $aProducts
+     * @param Product $oProduct
      */
-    public function setProducts($aProducts)
+    public function addProduct($oProduct, $qty)
     {
-        $this->aProducts = $aProducts;
+        if (is_null($this->oCart)) {
+            $this->oCart = new ShippingCart();
+        }
+        $this->oCart->addToCart($oProduct, $qty);
     }
 
     /**
@@ -135,4 +167,53 @@ abstract class ShippingProcessor
     }
 
 
+}
+
+class ShippingCart
+{
+    private $aCart;
+
+    public function addToCart(Product $oProduct, $qty)
+    {
+        $this->aCart[$oProduct->getProductId()]['qty'] += $qty;
+        $this->aCart[$oProduct->getProductId()]['entity'] = $oProduct;
+    }
+
+    public function getProductCount()
+    {
+        $qty = 0;
+        if (!empty($this->aCart)) {
+            foreach ($this->aCart as $aProduct) {
+                $qty += $aProduct['qty'];
+            }
+        }
+        return $qty;
+    }
+
+    public function getProducts()
+    {
+        return $this->aCart;
+    }
+
+    /*public function getShippingWeight()
+    {
+        $fShippingWeight = 0;
+        if (!empty($this->aCart)) {
+            foreach ($this->aCart as $aCartRow) {
+                $fShippingWeight += $aCartRow['entity']->getShippingWeight($aCartRow['qty']);
+            }
+        }
+        return $fShippingWeight;
+    }*/
+
+    public function getCost()
+    {
+        $fCost = 0;
+        if (!empty($this->aCart)) {
+            foreach ($this->aCart as $aCartRow) {
+                $fCost += $aCartRow['entity']->getPrice() * $aCartRow['qty'];
+            }
+        }
+        return $fCost;
+    }
 }

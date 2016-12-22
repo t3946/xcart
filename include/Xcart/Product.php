@@ -215,7 +215,7 @@ class Product extends Data
     {
         $sImagesVar = "aImages" . $type;
         if (is_null($this->$sImagesVar)) {
-            $this->$sImagesVar = (new ProductImage($type))->findAll(SQLBuilder::getInstance()->addCondition('id = '. $this->getProductId())->addOrderBy('orderby ASC'));
+            $this->$sImagesVar = (new ProductImage($type))->findAll(SQLBuilder::getInstance()->addCondition('id = ' . $this->getProductId())->addOrderBy('orderby ASC'));
         }
         return $this->$sImagesVar;
     }
@@ -288,6 +288,9 @@ class Product extends Data
     public function getPrice($forQuantity = 1)
     {
         $fPrice = 0;
+        if (is_null($this->aPricing)) {
+            $this->getPricing();
+        }
         if (!empty($this->aPricing)) {
             foreach ($this->aPricing as $oPrice) {
                 if ($forQuantity >= floatval($oPrice->getQuantity())) {
@@ -314,7 +317,7 @@ class Product extends Data
         return $fPrice;
     }
 
-    public function  isSupplierFeedsEnabled()
+    public function isSupplierFeedsEnabled()
     {
         $result = false;
         $sEnabled = func_query_first_cell("SELECT enabled FROM " . self::$sql_tbl['supplier_feeds'] . " WHERE manufacturerid=" . $this->getField('manufacturerid') . " AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='" . $this->getField("controlled_by_feed") . "'))");
@@ -589,7 +592,7 @@ class Product extends Data
 
     public function getSKURetailTrust()
     {
-        return self::RETAIL_TRUST_SKU_PREFIX.$this->getSKU();
+        return self::RETAIL_TRUST_SKU_PREFIX . $this->getSKU();
     }
 
     public function getAmazonQuantity()
@@ -598,7 +601,7 @@ class Product extends Data
             $aResult = SQLBuilder::getInstance()->
             addSelect('cidev_get_amazon_quantity(' . $this->getProductId() . ')', 'aquantity')->
             addFromTable('products')->
-            addCondition('productid='.$this->getProductId())->
+            addCondition('productid=' . $this->getProductId())->
             query_first()->getQueryResult();
             $this->iAmazonQuantity = $aResult['aquantity'];
         }
@@ -611,10 +614,36 @@ class Product extends Data
             $aResult = SQLBuilder::getInstance()->
             addSelect('cidev_get_amazon_price(' . $this->getProductId() . ')', 'aprice')->
             addFromTable('products')->
-            addCondition('productid='.$this->getProductId())->
+            addCondition('productid=' . $this->getProductId())->
             query_first()->getQueryResult();
             $this->fAmazonPrice = $aResult['aprice'];
         }
         return $this->fAmazonPrice;
+    }
+
+    public function getShippingVolume($iAmount = 1)
+    {
+        if (($this->getField('shipping_dim_x') || $this->getField('shipping_dim_y') || $this->getField('shipping_dim_z'))) {
+            $aVolume = $this->getField('shipping_dim_x') * $this->getField('shipping_dim_y') * $this->getField('shipping_dim_z') * $iAmount;
+        } else {
+            $aVolume = $this->getField('dim_x') * $this->getField('dim_y') * $this->getField('dim_z') * $iAmount;
+        }
+        return $aVolume;
+    }
+
+    public function getShippingWeight($iAmount = 1)
+    {
+        $fProductWeight = 0.1;
+        if (floatval($this->getField('shipping_weight')) > 0) {
+            $fProductWeight = floatval($this->getField('shipping_weight'));
+        } elseif (floatval($this->getField('weight')) > 0) {
+            $fProductWeight = floatval($this->getField('weight'));
+        }
+        return $fProductWeight * $iAmount;
+    }
+
+    public function getShippingFreight()
+    {
+        return floatval($this->getField('shipping_freight'));
     }
 }

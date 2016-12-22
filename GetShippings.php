@@ -73,7 +73,7 @@ if (
  $shippingArray->setmember(array("Standard", "Expedited", "Priority"));
  $request->setShippingSpeedCategories($shippingArray);
 
- $dom_xml = (new Xcart\AmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01'))->invokeGetFulfillmentPreview($request);
+ $dom_xml = (new Xcart\AmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01/'))->invokeGetFulfillmentPreview($request);
 
  print($dom_xml["saveXML"]);
 // print_r($dom_xml);

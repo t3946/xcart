@@ -2,6 +2,8 @@
 
 namespace Xcart\Shipping;
 
+use Xcart\Product;
+
 class UPS extends ShippingProcessor
 {
     public function isProcessorApplicable()
@@ -18,5 +20,17 @@ class UPS extends ShippingProcessor
 
             }
         }
+    }
+    public function getShippingQuotes()
+    {
+
+    }
+    public function getShippingQuotesCached()
+    {
+
+    }
+    public function saveShippingQuotesCached(Product $oProduct)
+    {
+
     }
 }
