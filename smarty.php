@@ -97,9 +97,7 @@ $smarty->assign("smarty_skin_dir", $smarty_skin_dir);
 #
 $mail_smarty = $smarty;
 
-#
-# WARNING :
-# Please ensure that you have no whitespaces / empty lines below this message.
-# Adding a whitespace or an empty line below this line will cause a PHP error.
-#
-?>
+if (defined('SMARTY_AUTO_RECOMPILE') && SMARTY_AUTO_RECOMPILE)
+{
+    $smarty->compile_check = true;
+}

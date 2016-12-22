@@ -83,6 +83,10 @@ TABLE,IMG {
 	BORDER: 0px;
 }
 
+IMG {
+    white-space: normal;
+    word-break: break-all;
+}
 /*
 	Content enviroment styles
 */
