@@ -2243,9 +2243,11 @@ function func_get_order_manufacturers($orderid){
 								$d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
 								$d_shipping_options_arr[] = "the least expensive shipping method";
 							}
-							elseif ($oShipping->getName() !=$order["shipping_groups"][$m_id]["shipping"]) {
+							elseif (!empty($order["shipping_groups"][$m_id]["real_shipping_method"])
+                                    && $oShipping->getName() != $order["shipping_groups"][$m_id]["real_shipping_method"]
+                            ) {
                                 $d_shipping_options_arr[] = "the least expensive shipping method";
-                                $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["shipping"];
+                                $d_shipping_options_arr[] = $order["shipping_groups"][$m_id]["real_shipping_method"];
                                 $d_shipping_options_arr[] = $oShipping->getName();
                             }
                             else{
