@@ -75,18 +75,54 @@ class ElasticSearch
 
     public function setQueryParamsDefault($sQuery)
     {
-        $query = array();
-        $query["query_string"]["query"] = $sQuery;
-        $query["query_string"]["fields"] = array("productname.productname_original^1.5","sku","upc","brand.brand_original^0.5","description.description_original");
+        $query = /** @lang JSON */ <<<JSON
+{
+    "multi_match": {
+        "analyzer": "snowball",
+        "cutoff_frequency": 0.001,
+        "fields": [
+            "productname.productname^1.5",
+            "description.description",
+            "brand.brand^0.3",
+            "sku",
+            "upc"
+        ],
+        "query": "",
+        "type": "best_fields"
+    }
+}
+JSON;
+        $query = json_decode($query, true);
+
+        $query["multi_match"]["query"] = $sQuery;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
-        $query = array();
-        $query["query_string"]["query"] = $sQuery;
-        $query["query_string"]["fields"] = array("productname.productname","sku","upc","brand.brand","description.description");
-        $query["query_string"]["fields"] = array("productname.productname^1.5","sku","upc","brand.brand^0.5","description.description");
-        $query["query_string"]["analyzer"] = "snowball";
+
+        $query["multi_match"]["slop"] = 3;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
-        $query = array();
-        $query["match_phrase_prefix"]["sku_original"] = $sQuery;
+
+        $query = /** @lang JSON */ <<<JSON
+{
+    "multi_match": {
+        "analyzer": "snowball",
+        "boost": 0.5,
+        "cutoff_frequency": 0.001,
+        "fields": [
+            "productname.productname^1.5",
+            "description.description",
+            "brand.brand^0.3",
+            "sku",
+            "upc"
+        ],
+        "fuzziness": 1.1,
+        "query": "",
+        "slop": 3,
+        "type": "phrase"
+    }
+}
+JSON;
+        $query = json_decode($query, true);
+
+        $query["multi_match"]["query"] = $sQuery;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
     }
 
@@ -144,7 +180,7 @@ class ElasticSearch
         }
 
         return $Similar_products_other_brands;
-}
+    }
 
     public function setSearchQuery ($aQuery = array()) {
         $this->queryParams['query'] = $aQuery;
