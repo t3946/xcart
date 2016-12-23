@@ -137,9 +137,13 @@ SQL;
                             if (class_exists($sProcessor)) {
                                 $oProcessor = new $sProcessor();
                                 $oProcessor->setManufacturer($oManufacturer);
-                                $oProcessor->setShippingZone(ShippingZone::model(['zoneid' => $aShippingZone['zoneid']]));
                                 $oProcessor->setShippingType($type);
                                 $oProcessor->setCustomer($oCustomer);
+                                $oShippingZone = ShippingZone::model(['zoneid' => $aShippingZone['zoneid']]);
+                                if ($aShippingZone['zoneid'] == 0) {
+                                    $oShippingZone->setField('zoneid', 0);
+                                }
+                                $oProcessor->setShippingZone($oShippingZone);
                                 $aShippingProcessor[$sShippingCode] = $oProcessor;
                             }
                         }

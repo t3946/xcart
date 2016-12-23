@@ -120,12 +120,15 @@ abstract class ShippingProcessor
 
     public function getShippingRates()
     {
-
-        $this->getShippingQuotesCached();
-        $this->getShippingQuotes();
-        if (!empty($this->aShippingRates)) {
-            foreach ($this->aShippingRates as $oShippingRate) {
-                $oShippingRate->setCart($this->getCart());
+        if ($this->getCart()->getProductCount() > 0) {
+            if ($this->isProcessorApplicable()) {
+                $this->getShippingQuotesCached();
+                $this->getShippingQuotes();
+                if (!empty($this->aShippingRates)) {
+                    foreach ($this->aShippingRates as $oShippingRate) {
+                        $oShippingRate->setCart($this->getCart());
+                    }
+                }
             }
         }
         return $this->aShippingRates;
@@ -175,8 +178,10 @@ class ShippingCart
 
     public function addToCart(Product $oProduct, $qty)
     {
-        $this->aCart[$oProduct->getProductId()]['qty'] += $qty;
-        $this->aCart[$oProduct->getProductId()]['entity'] = $oProduct;
+        if ($oProduct->getProductId()) {
+            $this->aCart[$oProduct->getProductId()]['qty'] += $qty;
+            $this->aCart[$oProduct->getProductId()]['entity'] = $oProduct;
+        }
     }
 
     public function getProductCount()

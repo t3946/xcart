@@ -1805,37 +1805,39 @@ class AmazonMWS
                 $shippingArray->setmember($aShipName);
                 $request->setShippingSpeedCategories($shippingArray);
                 $aXML = $this->invokeGetFulfillmentPreview($request);
-                $aXML['saveXML'] = str_replace('http://mws.amazonaws.com', 'https://mws.amazonservices.com', $aXML['saveXML']);
-                $this->dom_xml_arr = str_replace($this->sServiceUrl, '', $aXML['saveXML']);
-                $docShipping = new \DOMDocument;
-                $docShipping->loadXML($this->dom_xml_arr);
-                $xpath = new \DOMXPath($docShipping);
-                $aShippingEntries = $xpath->query('/*/*/FulfillmentPreviews/member');
+                if (!empty($aXML['saveXML'])) {
+                    $aXML['saveXML'] = str_replace('http://mws.amazonaws.com', 'https://mws.amazonservices.com', $aXML['saveXML']);
+                    $this->dom_xml_arr = str_replace($this->sServiceUrl, '', $aXML['saveXML']);
+                    $docShipping = new \DOMDocument;
+                    $docShipping->loadXML($this->dom_xml_arr);
+                    $xpath = new \DOMXPath($docShipping);
+                    $aShippingEntries = $xpath->query('/*/*/FulfillmentPreviews/member');
 
-                if (!empty($aShippingEntries) && $aShippingEntries->length > 0) {
-                    foreach ($aShippingEntries as $k => $shippingNode) {
-                        $fAmount = 0;
-                        $ShippingSpeedCategory = $shippingNode->getElementsByTagName('ShippingSpeedCategory');
-                        if ($ShippingSpeedCategory->length) {
-                            $sShippingName = $ShippingSpeedCategory->item(0)->nodeValue;
-                        }
-                        $EstimatedFees = $shippingNode->getElementsByTagName('EstimatedFees');
-                        if ($EstimatedFees->length) {
-                            $aShippingFees = $EstimatedFees->item(0)->getElementsByTagName('member');
-                        }
-                        if (!empty($aShippingFees) && $aShippingFees->length > 0) {
-                            foreach ($aShippingFees as $oShippingFee) {
-                                $Amount = $oShippingFee->getElementsByTagName('Amount');
-                                if ($Amount->length) {
-                                    $value = $Amount->item(0)->getElementsByTagName('Value');
-                                    if ($value->length) {
-                                        $fAmount += floatval($value->item(0)->nodeValue);
-                                    }
-                                }
-
+                    if (!empty($aShippingEntries) && $aShippingEntries->length > 0) {
+                        foreach ($aShippingEntries as $k => $shippingNode) {
+                            $fAmount = 0;
+                            $ShippingSpeedCategory = $shippingNode->getElementsByTagName('ShippingSpeedCategory');
+                            if ($ShippingSpeedCategory->length) {
+                                $sShippingName = $ShippingSpeedCategory->item(0)->nodeValue;
                             }
+                            $EstimatedFees = $shippingNode->getElementsByTagName('EstimatedFees');
+                            if ($EstimatedFees->length) {
+                                $aShippingFees = $EstimatedFees->item(0)->getElementsByTagName('member');
+                            }
+                            if (!empty($aShippingFees) && $aShippingFees->length > 0) {
+                                foreach ($aShippingFees as $oShippingFee) {
+                                    $Amount = $oShippingFee->getElementsByTagName('Amount');
+                                    if ($Amount->length) {
+                                        $value = $Amount->item(0)->getElementsByTagName('Value');
+                                        if ($value->length) {
+                                            $fAmount += floatval($value->item(0)->nodeValue);
+                                        }
+                                    }
+
+                                }
+                            }
+                            $aShippingRatesCalc[$sShippingName] = $fAmount;
                         }
-                        $aShippingRatesCalc[$sShippingName] = $fAmount;
                     }
                 }
             }

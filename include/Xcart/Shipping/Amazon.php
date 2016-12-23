@@ -11,6 +11,12 @@ class Amazon extends ShippingProcessor
     public function isProcessorApplicable()
     {
         $bResult = false;
+        $oShippingCart = $this->getCart()->getProducts();
+        if (!empty($oShippingCart)) {
+            foreach ($oShippingCart as $aProduct) {
+                $bResult &= ($aProduct['entity']->isAmazonFBAEnabled() && $aProduct['entity']->getAmazonFBAAvailExcludedProcessing() > 0);
+            }
+        }
         return $bResult;
     }
 
@@ -50,17 +56,20 @@ class Amazon extends ShippingProcessor
             $aShippingRates = $this->getShippingRatesEntities();
             $oShippingCart = $this->getCart();
             $aFetchRates = (new AmazonMWS('FBAOutboundServiceMWS_Client', '/FulfillmentOutboundShipment/2010-10-01/'))->getGetFulfillmentRates($this->getCustomer(), $this->getCart(), $aShippingRates);
-            $aAmazonMethods = array_keys($aFetchRates);
-            foreach ($aShippingRates as $oShippingRate) {
-                if (in_array($oShippingRate->getShippingEntity()->getName(), $aAmazonMethods)) {
-                    $this->aShippingRates[] = $oShippingRate->setShippingChargeQuote($aFetchRates[$oShippingRate->getShippingEntity()->getName()]);
+            if (!empty($aFetchRates)) {
+                $aAmazonMethods = array_keys($aFetchRates);
+
+                foreach ($aShippingRates as $oShippingRate) {
+                    if (in_array($oShippingRate->getShippingEntity()->getName(), $aAmazonMethods)) {
+                        $this->aShippingRates[] = $oShippingRate->setShippingChargeQuote($aFetchRates[$oShippingRate->getShippingEntity()->getName()]);
+                    }
                 }
-            }
-            if ($oShippingCart->getProductCount() == 1 && !empty($this->aShippingRates)) {
-                /*save rates into proxy*/
-                $aProd = $oShippingCart->getProducts();
-                $oProduct = reset($aProd)['entity'];
-                $this->saveShippingQuotesCached($oProduct);
+                if ($oShippingCart->getProductCount() == 1 && !empty($this->aShippingRates)) {
+                    /*save rates into proxy*/
+                    $aProd = $oShippingCart->getProducts();
+                    $oProduct = reset($aProd)['entity'];
+                    $this->saveShippingQuotesCached($oProduct);
+                }
             }
         }
         return $this->aShippingRates;

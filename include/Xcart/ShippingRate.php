@@ -102,10 +102,12 @@ class ShippingRate extends Data
     {
         $shippingWeight = 0;
         $oCart = $this->getCart()->getProducts();
-        foreach ($oCart as $aProducts) {
-            $shippingWeight += $this->getShippingEntity()->getShippingWeightN(
-                $aProducts['entity']->getShippingWeight($aProducts['qty']),
-                $aProducts['entity']->getShippingVolume($aProducts['qty']));
+        if (!empty($oCart)) {
+            foreach ($oCart as $aProducts) {
+                $shippingWeight += $this->getShippingEntity()->getShippingWeightN(
+                    $aProducts['entity']->getShippingWeight($aProducts['qty']),
+                    $aProducts['entity']->getShippingVolume($aProducts['qty']));
+            }
         }
         return $shippingWeight;
     }
@@ -114,8 +116,10 @@ class ShippingRate extends Data
     {
         $shippingFreight = 0;
         $oCart = $this->getCart()->getProducts();
-        foreach ($oCart as $aProducts) {
-            $shippingFreight += $aProducts['entity']->getShippingFreight() * $aProducts['qty'];
+        if (!empty($oCart)) {
+            foreach ($oCart as $aProducts) {
+                $shippingFreight += $aProducts['entity']->getShippingFreight() * $aProducts['qty'];
+            }
         }
         return $shippingFreight;
     }

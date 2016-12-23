@@ -8,7 +8,7 @@ class Flat extends ShippingProcessor
 {
     public function isProcessorApplicable()
     {
-        $bResult = false;
+        $bResult = true;
         return $bResult;
     }
 
