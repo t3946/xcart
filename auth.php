@@ -480,6 +480,3 @@ if (!empty($matches[1]))
     $gPage_status['match'] = true;
     list($gPage_status['type'], $gPage_status['page_id'], $gPage_status['slut']) = $matches[1];
 }
-
-$smarty->register_function('getBanners', array('Xcart\Helpers\Banners', 'getBannerSmarty'));
-$smarty->register_function('getSliderData', array('Xcart\Helpers\SliderData', 'getSliderDataSmarty'));
