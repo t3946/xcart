@@ -11,6 +11,7 @@ class ShippingRate extends Data
     private $oShipping;
     private $fShippingCharge = null;
     private $oCart = null;
+    private $fCartShippingWeight = null;
 
     public function __construct($aParams = [])
     {
@@ -28,6 +29,11 @@ class ShippingRate extends Data
     public function getShippingQuote()
     {
         return $this->fShippingQuote;
+    }
+
+    public function getShippingId()
+    {
+        return intval($this->getField('shippingid'));
     }
 
     /**
@@ -98,18 +104,23 @@ class ShippingRate extends Data
         return $this->oCart;
     }
 
+    /**
+     * @return float
+     */
     public function getCartShippingWeight()
     {
-        $shippingWeight = 0;
-        $oCart = $this->getCart()->getProducts();
-        if (!empty($oCart)) {
-            foreach ($oCart as $aProducts) {
-                $shippingWeight += $this->getShippingEntity()->getShippingWeightN(
-                    $aProducts['entity']->getShippingWeight($aProducts['qty']),
-                    $aProducts['entity']->getShippingVolume($aProducts['qty']));
+        if (is_null($this->fCartShippingWeight)) {
+            $this->fCartShippingWeight = 0;
+            $oCart = $this->getCart()->getProducts();
+            if (!empty($oCart)) {
+                foreach ($oCart as $aProducts) {
+                    $this->fCartShippingWeight += $this->getShippingEntity()->getShippingWeightN(
+                        $aProducts['entity']->getShippingWeight($aProducts['qty']),
+                        $aProducts['entity']->getShippingVolume($aProducts['qty']));
+                }
             }
         }
-        return $shippingWeight;
+        return $this->fCartShippingWeight;
     }
 
     public function getCartShippingFreight()

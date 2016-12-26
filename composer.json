@@ -4,7 +4,8 @@
     },
     "require": {
         "google/apiclient": "^2.0",
-        "mindy/query_builder": "^2.1"
+        "mindy/query_builder": "^2.1",
+        "gabrielbull/ups-api": "^0.4.0"
     },
     "autoload": {
         "psr-4": {

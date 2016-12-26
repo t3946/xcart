@@ -45,6 +45,30 @@ abstract class ShippingProcessor
 
     abstract public function saveShippingQuotesCached(Product $oProduct);
 
+    abstract public function getServerQuotes($aShippingRates);
+
+    public function getShippingRates()
+    {
+        if ($this->getCart()->getProductCount() > 0) {
+            if ($this->isProcessorApplicable()) {
+                $this->getShippingQuotesCached();
+                $this->getShippingQuotes();
+                if (!empty($this->aShippingRates)) {
+                    usort($this->aShippingRates, ['\Xcart\Shipping\ShippingProcessor', 'sortShippingRatesByCostAsc']);
+                    foreach ($this->aShippingRates as $oShippingRate) {
+                        $oShippingRate->setCart($this->getCart());
+                    }
+                }
+            }
+        }
+        return $this->aShippingRates;
+    }
+
+    public function sortShippingRatesByCostAsc(ShippingRate $a, ShippingRate $b)
+    {
+        return $a->getShippingCharge() > $b->getShippingCharge();
+    }
+
     /**
      * @return Manufacturer
      */
@@ -118,22 +142,6 @@ abstract class ShippingProcessor
         return $this->aShippingRatesEntities;
     }
 
-    public function getShippingRates()
-    {
-        if ($this->getCart()->getProductCount() > 0) {
-            if ($this->isProcessorApplicable()) {
-                $this->getShippingQuotesCached();
-                $this->getShippingQuotes();
-                if (!empty($this->aShippingRates)) {
-                    foreach ($this->aShippingRates as $oShippingRate) {
-                        $oShippingRate->setCart($this->getCart());
-                    }
-                }
-            }
-        }
-        return $this->aShippingRates;
-    }
-
     /**
      * @return ShippingCart
      */
@@ -200,16 +208,6 @@ class ShippingCart
         return $this->aCart;
     }
 
-    /*public function getShippingWeight()
-    {
-        $fShippingWeight = 0;
-        if (!empty($this->aCart)) {
-            foreach ($this->aCart as $aCartRow) {
-                $fShippingWeight += $aCartRow['entity']->getShippingWeight($aCartRow['qty']);
-            }
-        }
-        return $fShippingWeight;
-    }*/
 
     public function getCost()
     {

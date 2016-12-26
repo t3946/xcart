@@ -12,4 +12,9 @@ class ApproximationShippingRates extends Data
         parent::__construct($aParams);
 
     }
+
+    public function getId()
+    {
+        return $this->getField('id');
+    }
 }

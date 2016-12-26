@@ -95,11 +95,12 @@ class Shipping extends Data
     public function getShippingProcessor(Customer $oCustomer, Manufacturer $oManufacturer, $type = 'R')
     {
         $aShippingMethods = null;
-        $cs_state = $oCustomer->getField("s_state");
-        $cs_country = $oCustomer->getField("s_country");
-        $sCA_ST = $cs_country . "_" . $cs_state;
+        if ($oCustomer->getCustomerLogin()) {
+            $cs_state = $oCustomer->getField("s_state");
+            $cs_country = $oCustomer->getField("s_country");
+            $sCA_ST = $cs_country . "_" . $cs_state;
 
-        $sSQL = <<<SQL
+            $sSQL = <<<SQL
 SELECT ZE.zoneid, COUNT(DISTINCT ZES.field) cnt
 FROM xcart_zone_element AS ZE
 INNER JOIN xcart_zone_element AS ZES USING (zoneid, field_type)
@@ -113,44 +114,46 @@ WHERE manufacturerid = {$oManufacturer->getManufacturerId()} AND zoneid = 0
 GROUP BY zoneid
 ORDER BY cnt
 SQL;
-        $aShippingZones = SQLBuilder::getInstance()->setQuery($sSQL)->query()->getQueryResult();
-        if (!empty($aShippingZones)) {
-            foreach ($aShippingZones as $aShippingZone) {
-                $aShippingProcessor = null;
-                $aShippingsMethods = Shipping::model()->findAll(
-                    SQLBuilder::getInstance()->
-                    addInnerJoin('shipping_rates', 'sr', 'main.shippingid = sr.shippingid')->
-                    addCondition("active = 'Y'")->
-                    addCondition('manufacturerid = ' . $oManufacturer->getManufacturerId())->
-                    addCondition('zoneid = ' . $aShippingZone['zoneid'])->
-                    //addCondition("type = '$type'")->
-                    addOrderBy('orderby')
-                );
-                if (!empty($aShippingsMethods)) {
-                    foreach ($aShippingsMethods as $oShippingMethod) {
-                        $sShippingCode = $oShippingMethod->getField('code');
-                        if (empty($sShippingCode)) {
-                            $sShippingCode = 'Flat';
-                        }
-                        if (empty($aShippingProcessor) || !in_array($sShippingCode, array_keys($aShippingProcessor))) {
-                            $sProcessor = __NAMESPACE__ . '\\Shipping\\' . $sShippingCode;
-                            if (class_exists($sProcessor)) {
-                                $oProcessor = new $sProcessor();
-                                $oProcessor->setManufacturer($oManufacturer);
-                                $oProcessor->setShippingType($type);
-                                $oProcessor->setCustomer($oCustomer);
-                                $oShippingZone = ShippingZone::model(['zoneid' => $aShippingZone['zoneid']]);
-                                if ($aShippingZone['zoneid'] == 0) {
-                                    $oShippingZone->setField('zoneid', 0);
+
+            $aShippingZones = SQLBuilder::getInstance()->setQuery($sSQL)->query()->getQueryResult();
+            if (!empty($aShippingZones)) {
+                foreach ($aShippingZones as $aShippingZone) {
+                    $aShippingProcessor = null;
+                    $aShippingsMethods = Shipping::model()->findAll(
+                        SQLBuilder::getInstance()->
+                        addInnerJoin('shipping_rates', 'sr', 'main.shippingid = sr.shippingid')->
+                        addCondition("active = 'Y'")->
+                        addCondition('manufacturerid = ' . $oManufacturer->getManufacturerId())->
+                        addCondition('zoneid = ' . $aShippingZone['zoneid'])->
+                        //addCondition("type = '$type'")->
+                        addOrderBy('orderby')
+                    );
+                    if (!empty($aShippingsMethods)) {
+                        foreach ($aShippingsMethods as $oShippingMethod) {
+                            $sShippingCode = $oShippingMethod->getField('code');
+                            if (empty($sShippingCode)) {
+                                $sShippingCode = 'Flat';
+                            }
+                            if (empty($aShippingProcessor) || !in_array($sShippingCode, array_keys($aShippingProcessor))) {
+                                $sProcessor = __NAMESPACE__ . '\\Shipping\\' . $sShippingCode;
+                                if (class_exists($sProcessor)) {
+                                    $oProcessor = new $sProcessor();
+                                    $oProcessor->setManufacturer($oManufacturer);
+                                    $oProcessor->setShippingType($type);
+                                    $oProcessor->setCustomer($oCustomer);
+                                    $oShippingZone = ShippingZone::model(['zoneid' => $aShippingZone['zoneid']]);
+                                    if ($aShippingZone['zoneid'] == 0) {
+                                        $oShippingZone->setField('zoneid', 0);
+                                    }
+                                    $oProcessor->setShippingZone($oShippingZone);
+                                    $aShippingProcessor[$sShippingCode] = $oProcessor;
                                 }
-                                $oProcessor->setShippingZone($oShippingZone);
-                                $aShippingProcessor[$sShippingCode] = $oProcessor;
                             }
                         }
                     }
-                }
 
-                $aShippingMethods[$aShippingZone['zoneid']] = $aShippingProcessor;
+                    $aShippingMethods[$aShippingZone['zoneid']] = $aShippingProcessor;
+                }
             }
         }
 

@@ -31,4 +31,9 @@ class Flat extends ShippingProcessor
     {
 
     }
+
+    public function getServerQuotes($aShippingRates)
+    {
+
+    }
 }
