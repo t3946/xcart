@@ -1194,7 +1194,14 @@ $( document ).ready(function() {
 
    {/if}
 {assign var="oShipping" value=$oOrderGroup->getShippingInstance()}
-&nbsp;Requested shipping method: <span style="color: red;">{$oOrderGroup->getShippingMethodName()|trademark:$insert_trademark}</span>
+&nbsp;Requested shipping method:
+<span style="color: red;">
+{if ($oOrderGroup->getRealShippingMethod() eq '')}
+  {$oOrderGroup->getShippingMethodName()|trademark:$insert_trademark}
+{else}
+  {$oOrderGroup->getRealShippingMethod()}
+{/if}
+</span>
   </td>
   </tr>
   </table>
