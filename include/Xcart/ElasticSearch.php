@@ -29,6 +29,7 @@ class ElasticSearch
         $this->queryParams["query"] = [];
         $this->queryParams["query"]["dis_max"] = [];
         $this->queryParams["query"]["dis_max"]["queries"] = [];
+        $this->queryParams["query"]["dis_max"]["tie_breaker"] = 0.4;
     }
 
     public function reinit()
@@ -78,12 +79,11 @@ class ElasticSearch
         $query = /** @lang JSON */ <<<JSON
 {
     "multi_match": {
-        "analyzer": "snowball",
         "cutoff_frequency": 0.001,
         "fields": [
-            "productname.productname^1.5",
-            "description.description",
-            "brand.brand^0.3",
+            "productname.productname_original^1.5",
+            "description.description_original",
+            "brand.brand_original^0.3",
             "sku",
             "upc"
         ],
@@ -98,6 +98,7 @@ JSON;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
 
         $query["multi_match"]["slop"] = 3;
+        $query["multi_match"]["analyzer"] = "snowball";
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
 
         $query = /** @lang JSON */ <<<JSON
@@ -107,11 +108,14 @@ JSON;
         "boost": 0.5,
         "cutoff_frequency": 0.001,
         "fields": [
-            "productname.productname^1.5",
-            "description.description",
-            "brand.brand^0.3",
-            "sku",
-            "upc"
+             "productname.productname^1.5",
+             "productname.productname^1.2",
+             "description.description^0.7",
+             "description.description_original",
+             "brand.brand_original^0.3",
+             "brand.brand^0.1",
+             "sku",
+             "upc"
         ],
         "fuzziness": 1.1,
         "query": "",
