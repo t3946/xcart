@@ -78,9 +78,11 @@ class CloneData
             }
         }
 
-        $diffArray = func_array_compare($this->arrCheckFields, $currentDBSchema);
+        $diffArray = array_diff($this->arrCheckFields, $currentDBSchema);
 
-        if (count($diffArray) > 0) $bResult = false;
+        if (!empty($diffArray)) {
+            $bResult = false;
+        }
 
         return $bResult;
     }
