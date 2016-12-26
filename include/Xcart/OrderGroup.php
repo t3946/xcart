@@ -117,6 +117,17 @@ class OrderGroup extends Data
         return $this;
     }
 
+
+    public function getRealShippingMethod()
+    {
+        return $this->getField('real_shipping_method');
+    }
+
+    public function setRealShippingMethod($val)
+    {
+        $this->setField('real_shipping_method', $val);
+    }
+
     public function getShippingGross()
     {
         return floatval($this->getField('shipping_gross'));
