@@ -829,6 +829,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 			//"keywords" => $keywords,
 			"descr" => $descr,
 			"fulldescr" => $fulldescr,
+			"seo_fulldescr" => $seo_fulldescr,
 			"list_price" => $list_price,
 			'map_price' => $map_price,
 			'new_map_price' => $new_map_price,
