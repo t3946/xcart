@@ -396,7 +396,7 @@ $(document).ready(function() {
 {* ------------------- *}
 
 
-<form action="popup_shipquote.php" method="post" name="shipquoteform">
+<form method="post" name="shipquoteform">
 <input type="hidden" name="mode" value="{if $mode eq 'grandtotal'}checkout{elseif $mode eq 'shipping'}grandtotal{else}shipping{/if}" />
 
 

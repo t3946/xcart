@@ -1753,6 +1753,7 @@ class AmazonMWS
      */
     public function getGetFulfillmentRates(Customer $oCustomer, ShippingCart $oShippingCart, $aShippingRates)
     {
+        $aShippingRatesCalc = null;
         if (!empty($aShippingRates)) {
             foreach ($aShippingRates as $oShippingRate) {
                 $aShipName[] = $oShippingRate->getShippingEntity()->getName();
@@ -1760,7 +1761,7 @@ class AmazonMWS
         }
 
         if (!empty($aShipName)) {
-            $aShippingRatesCalc = null;
+
             $request = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest();
             $request->setSellerId(MERCHANT_ID);
 
@@ -1838,6 +1839,10 @@ class AmazonMWS
                             }
                             $aShippingRatesCalc[$sShippingName] = $fAmount;
                         }
+                    }
+                } else {
+                    if (!empty($aXML['Caught_Exception'])){
+                        throw new \Exception($aXML['Caught_Exception']);
                     }
                 }
             }

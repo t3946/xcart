@@ -3,6 +3,7 @@
 namespace Xcart\Shipping;
 
 use Xcart\AmazonMWS;
+use Xcart\Logs;
 use Xcart\Product;
 use Xcart\ProductAmazonRates;
 
@@ -14,7 +15,7 @@ class Amazon extends ShippingProcessor
         $oShippingCart = $this->getCart()->getProducts();
         if (!empty($oShippingCart)) {
             foreach ($oShippingCart as $aProduct) {
-                $bResult &= ($aProduct['entity']->isAmazonFBAEnabled() && $aProduct['entity']->getAmazonFBAAvailExcludedProcessing() > 0);
+                $bResult &= ($aProduct['entity']->isAmazonFBAEnabled() && ($aProduct['entity']->getAmazonFBAAvailExcludedProcessing() > 0));
             }
         }
         return $bResult;
@@ -51,7 +52,14 @@ class Amazon extends ShippingProcessor
 
     public function getServerQuotes($aShippingRates)
     {
-        return (new AmazonMWS('FBAOutboundServiceMWS_Client', '/FulfillmentOutboundShipment/2010-10-01/'))->getGetFulfillmentRates($this->getCustomer(), $this->getCart(), $aShippingRates);
+        $aResponses = null;
+        try {
+            $aResponses = (new AmazonMWS('FBAOutboundServiceMWS_Client', '/FulfillmentOutboundShipment/2010-10-01/'))->getGetFulfillmentRates($this->getCustomer(), $this->getCart(), $aShippingRates);
+        }
+        catch (\Exception $e) {
+            Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__.': '. $e->getMessage());
+        }
+        return $aResponses;
     }
 
     public function getShippingQuotes()

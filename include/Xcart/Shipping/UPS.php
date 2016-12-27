@@ -8,6 +8,7 @@ use Ups\Entity\PackagingType;
 use Ups\Entity\ShipFrom;
 use Ups\Entity\Shipment;
 use Ups\Rate;
+use Xcart\Logs;
 use Xcart\Product;
 use Xcart\ApproximationShippingRates;
 use Xcart\ShippingRate;
@@ -57,11 +58,8 @@ class UPS extends ShippingProcessor
         global $config;
         $aResponses = null;
         if (!empty($aShippingRates)) {
-            $shippingWeight = 0;
-            foreach ($aShippingRates as $oShippingRate) {
-                $shippingWeight = max($shippingWeight, $oShippingRate->getCartShippingWeight());
-                $shippingWeight = min (self::MAX_WEIGHT_FOR_UPS_PACKAGE, $shippingWeight);
-            }
+            $oShippingRate = reset($aShippingRates);
+            $shippingWeight = min(self::MAX_WEIGHT_FOR_UPS_PACKAGE, $oShippingRate->getCartShippingWeight());
 
             $UPS_username = text_decrypt(trim($config["UPS_OnLine_Tools"]["UPS_username"]));
             $UPS_password = text_decrypt(trim($config["UPS_OnLine_Tools"]["UPS_password"]));
@@ -75,34 +73,28 @@ class UPS extends ShippingProcessor
             try {
                 $oCustomer = $this->getCustomer();
                 $shipment = new Shipment();
-
                 $shipperAddress = $shipment->getShipper()->getAddress();
                 $shipperAddress->setPostalCode($this->getManufacturer()->getField('m_zipcode'));
-
                 $address = new Address();
                 $address->setPostalCode($this->getManufacturer()->getField('m_zipcode'));
                 $address->setCountryCode($this->getManufacturer()->getField('m_country'));
                 $shipFrom = new ShipFrom();
                 $shipFrom->setAddress($address);
                 $shipment->setShipFrom($shipFrom);
-
                 $shipTo = $shipment->getShipTo();
                 $shipTo->setCompanyName("Shipping To {$oCustomer->getField('s_zipcode')}");
                 $shipToAddress = $shipTo->getAddress();
                 $shipToAddress->setPostalCode($oCustomer->getField('s_zipcode'));
                 $shipToAddress->setCountryCode($oCustomer->getField('s_country'));
-
                 $package = new Package();
                 $package->getPackagingType()->setCode(PackagingType::PT_PACKAGE);
-
                 $package->getPackageWeight()->setWeight($shippingWeight);
-
                 $shipment->addPackage($package);
-
                 $aResponses = $rate->shopRates($shipment);
 
             } catch (\Exception $e) {
                 //log
+                Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__.': '.$e->getMessage());
             }
         }
 
@@ -114,49 +106,52 @@ class UPS extends ShippingProcessor
         if (empty($this->aShippingRates)) {
             $aShippingRates = $this->getShippingRatesEntities();
             if (!empty($aShippingRates)) {
+                foreach ($aShippingRates as $oShippingRate) {
+                    if ($oShippingRate->getShippingId() == self::APPROXIMATION_SHIPPING_METHOD) {
+                        /*get aproximation rates for UPS Ground*/
+                        $oApproximationRates = ApproximationShippingRates::model()->find(
+                            SQLBuilder::getInstance()->
+                            addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
+                            addCondition('last_updated_date >= ' . (time() - self::APPROXIMATION_MAX_VALID_TIME))->
+                            addCondition("state = '{$this->getCustomer()->getShippingStateEntity()->getCode()}'")
+                        );
+                        if ($oApproximationRates->getField('id')) {
+                            $weight = ceil($oShippingRate->getCartShippingWeight());
+                            $shippingCharge = 0;
+                            switch ($weight) {
+                                case ($weight > 0 && $weight <= 1):
+                                    $shippingCharge = $oApproximationRates->getField('bw_1');
+                                    break;
+                                case ($weight > 1 && $weight <= 75):
+                                    $shippingCharge = $oApproximationRates->getField('bw_1') + ($oApproximationRates->getField('bw_75') - $oApproximationRates->getField('bw_1')) / (75 - 1) * ($weight - 1);
+                                    break;
+                                case ($weight > 75):
+                                    $shippingCharge = $oApproximationRates->getField('bw_75') + ($oApproximationRates->getField('bw_150') - $oApproximationRates->getField('bw_75')) / (150 - 75) * ($weight - 75);
+                                    break;
+                            }
+                            $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
+                        }
+                    }
+                }
                 $aResponses = $this->getServerQuotes($aShippingRates);
                 if (!empty($aResponses)) {
-                    foreach ($aShippingRates as $oShippingRate) {
-                        if ($oShippingRate->getShippingId() == self::APPROXIMATION_SHIPPING_METHOD) {
-                            /*get aproximation rates for UPS Ground*/
-                            $oApproximationRates = ApproximationShippingRates::model()->find(
-                                SQLBuilder::getInstance()->
-                                addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
-                                addCondition('last_updated_date >= ' . (time() - self::APPROXIMATION_MAX_VALID_TIME))->
-                                addCondition("state = '{$this->getCustomer()->getShippingStateEntity()->getCode()}'")
-                            );
-                            if ($oApproximationRates->getField('id')) {
-                                $weight = ceil($oShippingRate->getCartShippingWeight());
-                                $shippingCharge = 0;
-                                switch ($weight) {
-                                    case ($weight > 0 && $weight <= 1):
-                                        $shippingCharge = $oApproximationRates->getField('bw_1');
-                                        break;
-                                    case ($weight > 1 && $weight <= 75):
-                                        $shippingCharge = $oApproximationRates->getField('bw_1') + ($oApproximationRates->getField('bw_75') - $oApproximationRates->getField('bw_1')) / (75 - 1) * ($weight - 1);
-                                        break;
-                                    case ($weight > 75):
-                                        $shippingCharge = $oApproximationRates->getField('bw_75') + ($oApproximationRates->getField('bw_150') - $oApproximationRates->getField('bw_75')) / (150 - 75) * ($weight - 75);
-                                        break;
-                                }
-                                $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate->setShippingChargeQuote(round($shippingCharge,2));
-                            }
-                        }
-                        if ($oShippingRate->getShippingId() != self::APPROXIMATION_SHIPPING_METHOD ||
-                            (empty($this->aShippingRates[$oShippingRate->getShippingId()]) && $oShippingRate->getShippingId() == self::APPROXIMATION_SHIPPING_METHOD)){
-                            if (!empty($aResponses)) {
-                                foreach ($aResponses as $aResponse) {
-                                    foreach ($aResponse as $Rate) {
-                                        if (in_array($oShippingRate->getShippingEntity()->getField('service_code'), $this->ups_services[$Rate->Service->getCode()])) {
-                                            $oShippingRate->setShippingChargeQuote($Rate->TotalCharges->MonetaryValue);
-                                            $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate;
-                                        }
+                    foreach ($aResponses as $aResponse) {
+                        foreach ($aResponse as $Rate) {
+                            foreach ($aShippingRates as $oShippingRate) {
+                                if (in_array($oShippingRate->getShippingEntity()->getField('service_code'), $this->ups_services[$Rate->Service->getCode()])) {
+                                    if ($oShippingRate->getShippingId() != self::APPROXIMATION_SHIPPING_METHOD ||
+                                        ($oShippingRate->getShippingId() == self::APPROXIMATION_SHIPPING_METHOD && empty($this->aShippingRates[$oShippingRate->getShippingId()]))
+                                    ) {
+                                        $oShippingRate->setShippingChargeQuote($Rate->TotalCharges->MonetaryValue);
+                                        $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate;
                                     }
                                 }
                             }
                         }
                     }
+
                 }
+
             }
         }
 

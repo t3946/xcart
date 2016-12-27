@@ -46,10 +46,10 @@ class Product extends Data
     public function getManfacturerClass($iManufacurerId = null)
     {
         if (!is_null($iManufacurerId))
-            return new Manufacturer($iManufacurerId);
+            return new Manufacturer(['manufacturerid' => $iManufacurerId]);
         else {
             if (is_null($this->oManufacturer)) {
-                $this->oManufacturer = new Manufacturer($this->aPrimaryTableValue['manufacturerid']);
+                $this->oManufacturer = new Manufacturer(['manufacturerid' => $this->aPrimaryTableValue['manufacturerid']]);
             }
             return $this->oManufacturer;
         }
@@ -85,7 +85,7 @@ class Product extends Data
     public function setProductManufacturer($aManufacturerInfo)
     {
         if (!empty($aManufacturerInfo) && is_array($aManufacturerInfo)) {
-            $this->oManufacturer = new Manufacturer($aManufacturerInfo);
+            $this->oManufacturer = (new Manufacturer())->fill($aManufacturerInfo);
         }
         return $this;
     }

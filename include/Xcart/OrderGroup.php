@@ -1070,7 +1070,7 @@ class OrderGroup extends Data
     public function getManufacturerEntity()
     {
         if (is_null($this->oManufacturer)) {
-            $this->oManufacturer = new Manufacturer($this->getManufacturerId());
+            $this->oManufacturer = new Manufacturer(['manufacturerid' => $this->getManufacturerId()]);
         }
         return $this->oManufacturer;
     }

@@ -830,7 +830,7 @@ class Products extends CloneData
     public function getManfacturerClass($iManufacurerId = null) {
         if (!is_null($iManufacurerId))
             return new Manufacturers($iManufacurerId);
-        else return  new Manufacturer($this->aPrimaryTableValue['manufacturerid']);
+        else return  new Manufacturer(['manufacturerid' => $this->aPrimaryTableValue['manufacturerid']]);
     }
 
 }
