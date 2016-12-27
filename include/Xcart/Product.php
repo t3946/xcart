@@ -301,7 +301,7 @@ class Product extends Data
             }
         }
         $fMapPrice = $this->getMapPrice();
-        if ($fPrice < $fMapPrice) $fPrice = $fMapPrice;
+        $fPrice = max($fPrice, $fMapPrice);
 
         return $fPrice;
     }

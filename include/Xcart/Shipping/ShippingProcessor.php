@@ -49,7 +49,7 @@ abstract class ShippingProcessor
 
     public function getShippingRates()
     {
-        if ($this->getCart()->getProductCount() > 0) {
+        if ($this->getCart() && $this->getCart()->getProductCount() > 0) {
             if ($this->isProcessorApplicable()) {
                 $this->getShippingQuotesCached();
                 $this->getShippingQuotes();

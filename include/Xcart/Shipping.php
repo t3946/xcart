@@ -92,10 +92,16 @@ class Shipping extends Data
         return Shipping::model()->findAll(SQLBuilder::getInstance()->addCondition("code = '$sCode'"));
     }
 
+    /**
+     * @param Customer $oCustomer
+     * @param Manufacturer $oManufacturer
+     * @param string $type
+     * @return ShippingProcessor[]
+     */
     public function getShippingProcessor(Customer $oCustomer, Manufacturer $oManufacturer, $type = 'R')
     {
         $aShippingMethods = null;
-        if ($oCustomer->getCustomerLogin()) {
+        if ($oCustomer->getField("s_country")) {
             $cs_state = $oCustomer->getField("s_state");
             $cs_country = $oCustomer->getField("s_country");
             $sCA_ST = $cs_country . "_" . $cs_state;

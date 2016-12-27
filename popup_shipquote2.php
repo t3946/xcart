@@ -172,37 +172,37 @@ window.close();
 
 		$products = func_products_in_cart($cart, (!empty($shipquote_userinfo["membershipid"]) ? $shipquote_userinfo["membershipid"] : ""));
 
-		$current_carrier = 'UPS';
-		$_current_carrier = $current_carrier;
-
 		$shipping_groups = $cart["shipping_groups"];
 		$shippings = array();
 
-		$oCustomer = (new \Xcart\Customer())->fill($shipquote_userinfo);
+		$oCustomer = (new Xcart\Customer())->fill($shipquote_userinfo);
 		foreach ($shipping_groups as $k => $v) {
-			$oManufacturer = \Xcart\Manufacturer::model()->fill();
-			$aShippings = \Xcart\Shipping::model()->getShippingProcessor($oCustomer, $oOrderGroup->getManufacturerEntity());
-
+			$oManufacturer = Xcart\Manufacturer::model(['manufacturerid' => $k]);
+			$aShippings = Xcart\Shipping::model()->getShippingProcessor($oCustomer, $oManufacturer);
 			if (!empty($aShippings)) {
 				foreach ($aShippings as $oShipping) {
 					foreach ($oShipping as $oShippingProcessor) {
-						foreach ($products as $_product)
-							$oShippingProcessor->addProduct(\Xcart\Product::model(['productid' => $_product['productid']]), $_product['amount']);
-
-						$m = $oShippingProcessor->getShippingRates();
-						if (!empty($m)) {
-							foreach ($m as $m1) {
-								echo $m1->getShippingEntity()->getName() . ': ' . $m1->getShippingCharge() . '<br>';
+						foreach ($products as $_product) {
+							$oProduct = Xcart\Product::model(['productid' => $_product['productid']]);
+							if ($oProduct->getManufacturerId() == $k) {
+								$oShippingProcessor->addProduct($oProduct, $_product['amount']);
 							}
 						}
+						$aShippingRates = $oShippingProcessor->getShippingRates();
 					}
-					if (!empty($m)) {
+					if (!empty($aShippingRates)) {
 						break;
 					}
 				}
 
-				//$shipping = func_get_shipping_methods_list($cart, $_products, $shipquote_userinfo, false, $k);
-
+				$shipping = [];
+				if (!empty($aShippingRates)) {
+					foreach ($aShippingRates as $oShippingRate) {
+						$shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
+						$shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
+						$shipping[$oShippingRate->getShippingId()]['allowed'] = 1;
+					}
+				}
 				$shippings[$k] = $shipping;
 			}
 		}
@@ -218,7 +218,7 @@ window.close();
 				foreach ($shippingids as $m_id => $sh_id) {
 					$sq_cart['groups_delivery'][$m_id] = func_query_first_cell("SELECT shipping FROM $sql_tbl[shipping] WHERE shippingid = '$sh_id'");
 				}
-			}	
+			}
 
 		    $sq_cart = func_array_merge($sq_cart, func_calculate($sq_cart, $products, $login, $current_area, 0));
 			$sq_products = func_products_in_cart($sq_cart, (!empty($shipquote_userinfo["membershipid"]) ? $shipquote_userinfo["membershipid"] : ""));
@@ -226,8 +226,19 @@ window.close();
 			$cart = $sq_cart;
 //			$smarty->assign("cart", $sq_cart);
 			$smarty->assign("products", $sq_products);
+			$cart['display_shipping_cost'] = $cart['shipping_cost'] = 0;
 
+			if (!empty($shippingids) && is_array($shippingids)) {
+				$sq_cart["shippingids"] = $shippingids;
+				foreach ($shippingids as $m_id => $sh_id) {
+					$cart['shipping_costs'][$m_id] = $shippings[$m_id][$sh_id]['rate'];
+					$cart['display_shipping_costs'][$m_id] = $cart['shipping_costs'][$m_id];
+					$cart['shipping_cost'] += $shippings[$m_id][$sh_id]['rate'];
+					$cart['display_shipping_cost'] = $cart['shipping_cost'];
+				}
+			}
 		}
+		$cart['total_cost'] = $cart['subtotal'] + $cart['shipping_cost'];
 
 		$smarty->assign("shipping_groups", $shipping_groups);
 		$smarty->assign("shippings", $shippings);
