@@ -743,10 +743,10 @@ Cost to us accurate
   </td>
 
   {assign var="oOrder" value=$oOrderGroup->getOrderInstance()}
-  {if (!empty($oOrderGroup) && $oOrder->isOrderAmazon() == false && $oOrder->getField('fraud_status') == 'C' &&
+  {if (!empty($oOrderGroup) && (($oOrder->isOrderAmazon() == false) || ($oOrder->isOrderAmazon() && $oOrder->getAmazonChanell() == 'MFN')) && $oOrder->getField('fraud_status') == 'C' &&
       ($oOrderGroup->getOrderGroupStatusCB() == 'P' ||
        $oOrderGroup->getOrderGroupStatusCB() =='O' ||
-       ($oOrderGroup->getOrderGroupStatusCB() =='AP' && $oOrder->getOrderGroupsCount()==1 && $order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross())
+       ($oOrderGroup->getOrderGroupStatusCB() =='AP' && $oOrder->getOrderGroupsCount()==1 && ($order_transactions_totals.authorized_PLUS_captured_totals == $oOrder->getOrderTotalGross() || $oOrder->getAmazonChanell() == 'MFN'))
       ) &&
         ($oOrderGroup->getOrderGroupStatusDC() == 'E' || $oOrderGroup->getOrderGroupStatusDC() == 'M' || $oOrderGroup->getOrderGroupStatusDC() == 'T' || $oOrderGroup->getOrderGroupStatusDC() == 'K') &&
         $oOrderGroup->checkFBAProductsAvailToShipping() &&
