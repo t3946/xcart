@@ -78,6 +78,20 @@ function func_print_r() {
 	$count++;
 }
 
+function func_dump()
+{
+    $cron  = defined('CIDEV_CRON_START');
+
+    foreach (func_get_args() as $arg)
+    {
+        if (!$cron) { echo "<pre>"; }
+
+        print_r($arg);
+
+        if (!$cron) { echo "</pre>"; }
+    }
+}
+
 #
 # For testing purpose: outputs contents of requested global variables
 # example:
