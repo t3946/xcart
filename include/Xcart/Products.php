@@ -129,7 +129,8 @@ class Products extends CloneData
             'verification_statusid',
             'last_verify_date',
             'retail_trust_enabled',
-            'log_stock_history'
+            'log_stock_history',
+            'seo_fulldescr'
         );
     }
 

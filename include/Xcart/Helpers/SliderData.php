@@ -166,8 +166,10 @@ class SliderData
         {
             foreach ($pids as $k => $v)
             {
-                $productid = $v["needed_resource_id"];
-                $product_info = func_select_product($productid, 0, false);
+                if (!empty($productid) && $v["needed_resource_id"] == $productid) {
+                    continue;
+                }
+                $product_info = func_select_product($v["needed_resource_id"], 0, false);
 
                 if (!empty($product_info)){
 

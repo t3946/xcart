@@ -106,7 +106,6 @@ vim: set ts=2 sw=2 sts=2 et:
       {/if}
 
     {if !$no_nav}
-
       {include file="customer/main/switch_view.tpl"}
       <div data-role="footer" data-inline="true">
         <h4 class="footer">
