@@ -53,13 +53,11 @@ if (!empty($HTTP_USER_AGENT) && !defined("IS_ROBOT") && empty($is_robot))
         || $cr->setMode(CrawlerDetect::MODE_BY_IP)->setCrawlers(new CrawlersIp())->isCrawler()
     ) {
         define("IS_ROBOT", 1);
-        define("ROBOT", $cr->getMatches());
     }
     unset($cr);
 
     if (defined("IS_ROBOT")) {
         $is_robot = 'Y';
-        $robot    = ROBOT;
     }
     else {
         $is_robot = 'N';
@@ -71,6 +69,5 @@ elseif (defined("IS_ROBOT")) {
 elseif (!empty($is_robot)) {
     if ($is_robot == 'Y') {
         define("IS_ROBOT", 1);
-        define("ROBOT", $robot);
     }
 }
