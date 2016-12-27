@@ -161,6 +161,7 @@ if (!empty($top_message)) {
 
 $cat = intval(@$cat);
 $page = intval(@$page);
+$smarty->assign('cat', $cat);
 
 if (!empty($active_modules['XAffiliate'])) {
 	include $xcart_dir."/include/partner_info.php";
@@ -397,6 +398,17 @@ $variant_id_for_point9 = Get_AB_Variant(9);
 x_session_save("variant_id_for_point9");
 $smarty->assign("variant_id_for_point9", $variant_id_for_point9);
 
+x_session_register('variant_id_for_point10');
+$variant_id_for_point10 = Get_AB_Variant(10);
+x_session_save("variant_id_for_point10");
+$smarty->assign("variant_id_for_point10", $variant_id_for_point10);
+
+x_session_register('variant_id_for_point11');
+$variant_id_for_point11 = Get_AB_Variant(11);
+x_session_save("variant_id_for_point11");
+$smarty->assign("variant_id_for_point11", $variant_id_for_point11);
+
+
 
 //$smarty->assign("pointid_ab_testing_arr", $pointid_ab_testing_arr); // try to move to func_display
 ###
@@ -456,4 +468,15 @@ $smarty->assign('viralmarketingbomb_shown', $viralmarketingbomb_shown);
 ##
 #
 
-?>
+$gPage_status = [
+    'match' => false
+];
+
+$matches = [];
+preg_match_all('/\/([\w\d-]+)/i', $_GET['request_uri'], $matches);
+
+if (!empty($matches[1]))
+{
+    $gPage_status['match'] = true;
+    list($gPage_status['type'], $gPage_status['page_id'], $gPage_status['slut']) = $matches[1];
+}

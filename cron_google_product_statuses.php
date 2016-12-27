@@ -16,6 +16,11 @@ const BACK_PROCESS_LOG_NAME = 'google_product_statuses';
 
 if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log(BACK_PROCESS_LOG_NAME, 'Already launched');
+    Xcart\Mail::model()->
+    setTo('team@s3stores.com')->
+    setFrom('team@s3stores.com')->
+    setBody(BACK_PROCESS_LOG_NAME . ' already launched')->
+    setSubject(sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY))->sendEmail();
     die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");

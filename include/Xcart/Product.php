@@ -17,11 +17,11 @@ class Product extends Data
     private $oStoreFront;
     private $aProductVerificationHistoryLast = [];
 
-    private $aImagesD = [];
-    private $aImagesP = [];
-    private $aImagesT = [];
+    private $aImagesD = null;
+    private $aImagesP = null;
+    private $aImagesT = null;
 
-    private $aPricing = [];
+    private $aPricing = null;
 
     private $iAmazonQuantity = null;
     private $fAmazonPrice = null;
@@ -32,6 +32,8 @@ class Product extends Data
     private $aProductQuestions = null;
 
     private $iAmazonFbaAvail = null;
+    private $iAmazonFbaStockTotal = null;
+    private $iAmazonFbaStockReservedTransfers = null;
 
     public function __construct($iId = null)
     {
@@ -204,20 +206,6 @@ class Product extends Data
         return $this->getField('productid');
     }
 
-    private function fetchImages($type)
-    {
-        $sImagesVar = "aImages" . $type;
-        if (empty($this->$sImagesVar)) {
-            $aImages = func_query("SELECT * FROM " . self::$sql_tbl['images_' . $type] . " WHERE id = " . $this->getProductId() . " ORDER BY orderby ASC");
-            if (!empty($aImages))
-                foreach ($aImages as $aImage) {
-                    $oProductImage = new ProductImage($type);
-                    $oProductImage->fill($aImage);
-                    $var = &$this->$sImagesVar;
-                    $var[] = $oProductImage;
-                }
-        }
-    }
 
     /**
      * @param $type
@@ -226,13 +214,15 @@ class Product extends Data
     public function getImages($type)
     {
         $sImagesVar = "aImages" . $type;
-        $this->fetchImages($type);
+        if (is_null($this->$sImagesVar)) {
+            $this->$sImagesVar = (new ProductImage($type))->findAll(SQLBuilder::getInstance()->addCondition('id = '. $this->getProductId())->addOrderBy('orderby ASC'));
+        }
         return $this->$sImagesVar;
     }
 
     private function fetchPricing()
     {
-        if (empty($this->aPricing)) {
+        if (is_null($this->aPricing)) {
             $aPricing = func_query("SELECT * FROM " . self::$sql_tbl['pricing'] . " WHERE productid = " . $this->getProductId() . " ORDER BY quantity ASC");
             if (!empty($aPricing))
                 foreach ($aPricing as $aPrice) {
@@ -266,21 +256,21 @@ class Product extends Data
 
     public function isProductOutOfStock()
     {
-        $result = true;
-        if (intval($this->getField('r_avail')) <= 0)
-            $result = false;
+        $result = false;
+        if (intval($this->getField('avail')) <= 0)
+            $result = true;
         $iEtaDate = $this->getField('eta_date_mm_dd_yyyy');
         if ($result && !empty($iEtaDate)) {
             $current_time = time();
             if ($current_time < $iEtaDate) {
-                $result = false;
+                $result = true;
             }
         }
         if ($result && $this->getProductCostToUs() > $this->getPrice())
-            $result = false;
+            $result = true;
 
         if ($result && floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false)
-            $result = false;
+            $result = true;
 
         return $result;
     }
@@ -357,9 +347,25 @@ class Product extends Data
     public function getAmazonFBAAvail()
     {
         if (is_null($this->iAmazonFbaAvail)) {
-            $this->iAmazonFbaAvail = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_cloned_stock(" . $this->getProductId() . ") as amazon_fba_avail FROM dual"));
+            $this->iAmazonFbaAvail = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_cloned_stock(" . $this->getProductId() . ") as amazon_fba_avail"));
         }
         return $this->iAmazonFbaAvail;
+    }
+
+    public function getAmazonFBAStockTotal()
+    {
+        if (is_null($this->iAmazonFbaStockTotal)) {
+            $this->iAmazonFbaStockTotal = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_stock_total(" . $this->getProductId() . ") as stock_total"));
+        }
+        return $this->iAmazonFbaStockTotal;
+    }
+
+    public function getAmazonFBAStockReservedTransfers()
+    {
+        if (is_null($this->iAmazonFbaStockReservedTransfers)) {
+            $this->iAmazonFbaStockReservedTransfers = intval(func_query_first_cell("SELECT cidev_get_amazon_FBA_stock_reserved_transfers(" . $this->getProductId() . ") as stock_total"));
+        }
+        return $this->iAmazonFbaStockReservedTransfers;
     }
 
     public function getAmazonFBAAvailReal()
@@ -384,6 +390,16 @@ class Product extends Data
     public function isProductFBAAvail()
     {
         return ($this->getAmazonFBAAvail() > 0);
+    }
+
+    public function isAmazonFBAEnabled()
+    {
+        return ($this->getField('amazon_fba') == 'Y');
+    }
+
+    public function isAmazonEnabled()
+    {
+        return ($this->getField('amazon_enabled') == 'Y');
     }
 
     public function getUPC()

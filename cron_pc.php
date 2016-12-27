@@ -61,23 +61,8 @@ echo "0-1";
 //if ($storefrontid == ""){
 //	die("Error. Storefrontid=''.");
 //}
+		db_query("delete CT, T from $sql_tbl[pc_category_terms] as CT inner join $sql_tbl[pc_terms] T ON T.termid = CT.termid where T.storefrontid = '$storefrontid';");
 
-
-
-
-
-#
-## DEL
-###
-//		$to_del_termid = func_query("SELECT termid FROM $sql_tbl[pc_terms] WHERE storefrontid='$storefrontid'");
-		db_query("DELETE FROM $sql_tbl[pc_terms] WHERE storefrontid='$storefrontid'");
-		db_query("delete CT from $sql_tbl[pc_category_terms] as CT left join $sql_tbl[categories] C ON C.categoryid = CT.categoryid where C.storefrontid = '$storefrontid';");
-		
-//		if (!empty($to_del_termid)){
-//			foreach ($to_del_termid as $k => $v){
-//				db_query("DELETE FROM $sql_tbl[pc_category_terms] WHERE termid='$v[termid]'");
-//			}
-//		}
 ###
 ##
 #

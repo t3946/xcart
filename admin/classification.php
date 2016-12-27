@@ -63,6 +63,17 @@ if ($REQUEST_METHOD == "POST") {
 				else {
 					//Approve ACC
 					$count_approved_products++;
+					$oProduct = \Xcart\Product::model(['productid' => $v['productid']]);
+					$sMostRelefantCats = $oProduct->getField('pc_most_relevant_categories');
+					if (!empty($sMostRelefantCats)) {
+						$aRelCats = explode(';', $sMostRelefantCats);
+						if (!empty($aRelCats)) {
+							$aR = explode(',', $sMostRelefantCats);
+							if (!empty($aR[1]) && ($correct_categoryid = (int) $aR[1])) {
+									db_query("UPDATE $sql_tbl[products_categories] SET categoryid='$correct_categoryid' WHERE productid='$v[productid]' AND main='Y'");
+							}
+						}
+					}
 					db_query("UPDATE $sql_tbl[products] SET pc_classify_status='ACC', pc_acc_operator='$login' WHERE productid='$v[productid]'");
 				}
 			}

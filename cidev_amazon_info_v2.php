@@ -5,7 +5,7 @@ session_start();
 require "./top.inc.php";
 require "./init.php";
 
-global $xcart_dir, $config;
+global $config, $sql_tbl;
 
 ini_set('memory_limit', '2048M');
 set_time_limit(0);
@@ -14,6 +14,11 @@ const LOG_CATEGORY = 'cidev_amazon_info_v2';
 
 if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, 'Already launched');
+    Xcart\Mail::model()->
+    setTo('team@s3stores.com')->
+    setFrom('team@s3stores.com')->
+    setBody(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO . ' already launched')->
+    setSubject(sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY))->sendEmail();
     die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
@@ -22,187 +27,21 @@ $start_time = time();
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 
-
-x_load('backoffice','files','taxes', 'froogle', 'product', 'crypt', 'xml', 'mail', 'order');
-
-function invokeListInventorySupply(FBAInventoryServiceMWS_Interface $service, $request)
-{
-    try {
-        $response = $service->ListInventorySupply($request);
-
-        $dom = new DOMDocument();
-        $dom->loadXML($response->toXML());
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        return $dom->saveXML();
-
-    } catch (FBAInventoryServiceMWS_Exception $ex) {
-        $return_echo["function"] = "invokeListInventorySupply";
-        $return_echo["Caught_Exception"] = $ex->getMessage();
-        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
-        $return_echo["Error_Code"] = $ex->getErrorCode();
-        $return_echo["Error_Type"] = $ex->getErrorType();
-        $return_echo["Request_ID"] = $ex->getRequestId();
-        $return_echo["XML"] = $ex->getXML();
-        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
-        $return_echo["message"] = "Delay 2 minutes and trying the same Request";
-        func_print_r($return_echo);
-        return $return_echo;
-    }
-}
-
-function invokeGetCompetitivePricingForSKU(MarketplaceWebServiceProducts_Interface $service, $request)
-{
-    try {
-        $response = $service->GetCompetitivePricingForSKU($request);
-
-        $dom = new DOMDocument();
-        $dom->loadXML($response->toXML());
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        return $dom->saveXML();
-
-    } catch (MarketplaceWebServiceProducts_Exception $ex) {
-        $return_echo["function"] = "invokeGetCompetitivePricingForSKU";
-        $return_echo["Caught_Exception"] = $ex->getMessage();
-        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
-        $return_echo["Error_Code"] = $ex->getErrorCode();
-        $return_echo["Error_Type"] = $ex->getErrorType();
-        $return_echo["Request_ID"] = $ex->getRequestId();
-        $return_echo["XML"] = $ex->getXML();
-        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
-        $return_echo["message"] = "Delay 2 minutes and trying the same Request";
-        func_print_r($return_echo);
-        return $return_echo;
-    }
-}
-
-
-
-function invokeListRecommendations(MWSRecommendationsSectionService_Interface $service, $request)
-{
-    try {
-        $response = $service->ListRecommendations($request);
-
-        $dom = new DOMDocument();
-        $dom->loadXML($response->toXML());
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        return $dom->saveXML();
-
-    } catch (MWSRecommendationsSectionService_Exception $ex) {
-        $return_echo["function"] = "invokeListRecommendations";
-        $return_echo["Caught_Exception"] = $ex->getMessage();
-        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
-        $return_echo["Error_Code"] = $ex->getErrorCode();
-        $return_echo["Error_Type"] = $ex->getErrorType();
-        $return_echo["Request_ID"] = $ex->getRequestId();
-        $return_echo["XML"] = $ex->getXML();
-        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
-        $return_echo["message"] = "Delay 2 minutes and trying the same Request";
-        func_print_r($return_echo);
-        return $return_echo;
-    }
-}
-
-function invokeListRecommendationsByNextToken(MWSRecommendationsSectionService_Interface $service, $request)
-{
-    try {
-        $response = $service->ListRecommendationsByNextToken($request);
-
-        $dom = new DOMDocument();
-        $dom->loadXML($response->toXML());
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        return $dom->saveXML();
-
-    } catch (MWSRecommendationsSectionService_Exception $ex) {
-        $return_echo["function"] = "invokeListRecommendationsByNextToken";
-        $return_echo["Caught_Exception"] = $ex->getMessage();
-        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
-        $return_echo["Error_Code"] = $ex->getErrorCode();
-        $return_echo["Error_Type"] = $ex->getErrorType();
-        $return_echo["Request_ID"] = $ex->getRequestId();
-        $return_echo["XML"] = $ex->getXML();
-        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
-        func_print_r($return_echo);
-        return $return_echo;
-    }
-}
-
-function invokeGetLowestOfferListingsForSKU(MarketplaceWebServiceProducts_Interface $service, $request)
-{
-    try {
-        $response = $service->GetLowestOfferListingsForSKU($request);
-
-        $dom = new DOMDocument();
-        $dom->loadXML($response->toXML());
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        return $dom->saveXML();
-
-    } catch (MarketplaceWebServiceProducts_Exception $ex) {
-        $return_echo["function"] = "invokeGetLowestOfferListingsForSKU";
-        $return_echo["Caught_Exception"] = $ex->getMessage();
-        $return_echo["Response_Status_Code"] = $ex->getStatusCode();
-        $return_echo["Error_Code"] = $ex->getErrorCode();
-        $return_echo["Error_Type"] = $ex->getErrorType();
-        $return_echo["Request_ID"] = $ex->getRequestId();
-        $return_echo["XML"] = $ex->getXML();
-        $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
-        func_print_r($return_echo);
-        return $return_echo;
-    }
-}
-
-#
 echo  "Report 1 start\n";
-#
 
+$oAmazonProduct = new \Xcart\AmazonMWS('MarketplaceWebServiceProducts_Client', '/Products/2011-10-01');
 
-$a_config = array (
-    'ServiceURL' => "https://mws.amazonservices.com/Products/2011-10-01",
-    'ProxyHost' => null,
-    'ProxyPort' => -1,
-    'ProxyUsername' => null,
-    'ProxyPassword' => null,
-    'MaxErrorRetry' => 3,
-);
-
-$service = new MarketplaceWebServiceProducts_Client(
-    AWS_ACCESS_KEY_ID,
-    AWS_SECRET_ACCESS_KEY,
-    APPLICATION_NAME,
-    APPLICATION_VERSION,
-    $a_config);
-
-
-
-################################################################!!!!!!!!!!!!!!!!!!!!!!!
-$where = "";
-//$where = " OR  P.productcode IN ('ALV-610E', 'ALV-WS00335', 'ALV-3010-1', 'ALV-310A', 'ALV-610A', 'ALV-3050L-20/0', 'ALV-SN46036', 'ALV-TD435', 'ALV-TX320', 'ALV-85T', 'ALV-5608-04', 'ALV-E2', 'ALV-2150B-2/0', 'ALV-ST457-3', 'ALV-WS00336', 'ALV-BHS605', 'ALV-MC0461SP', 'ALV-B90', 'ALV-PM118', 'ALV-P260', 'ALV-G800BP', 'ALV-HM0305', 'ALV-SN44011', 'ALV-SN46030')";
 $where = " or ((P.amazon_fba = 'Y' or P.amazon_enabled = 'Y') and P.forsale = 'Y')";
-//$where = " or ((P.amazon_fba = 'Y' or P.amazon_enabled = 'Y') and P.forsale = 'Y' and P.productcode like 'PPF-%')";
-################################################################
 
 
-
-/*
-$xcart_query = "Select P.productcode, P.productid
-From xcart_orders O
-        left join xcart_order_details OD ON OD.orderid = O.orderid
-        left join xcart_products P ON P.productid = OD.productid
-Where O.amazon_fulfillment_channel = 'AFN' $where GROUP BY P.productcode";
-*/
-
-$xcart_query = "Select P.productcode, P.productid
+$xcart_query = <<<SQL
+Select P.productcode, P.productid
 From xcart_k.xcart_products P
-where P.forsale = 'Y' and (P.amazon_enabled = 'Y' or P.amazon_fba = 'Y')";
+where P.forsale = 'Y' and (P.amazon_enabled = 'Y' or P.amazon_fba = 'Y')
+SQL;
 
 $products = db_query($xcart_query);
 
-//$tmp_products = func_query($xcart_query);
-//func_print_r($tmp_products);
 
 
 $max_products = 20;
@@ -239,10 +78,6 @@ while($product = db_fetch_array($products)) {
     }
 }
 
-
-//func_print_r($products_arr);
-
-
 if (!empty($products_arr)){
     foreach ($products_arr as $k_p => $v_arr){
         if (!empty($v_arr) && is_array($v_arr)){
@@ -255,11 +90,6 @@ if (!empty($products_arr)){
                 $sku_arr[] = $vv_p["productcode"];
             }
 
-
-//func_print_r($productcode_productid_arr, $sku_arr);
-//die("---");
-
-
             $request = new MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKURequest();
             $request->setSellerId(MERCHANT_ID);
             $request->setMarketplaceId(MARKETPLACE_ID);
@@ -270,7 +100,7 @@ if (!empty($products_arr)){
             $request->setSellerSKUList($SellerSKUList);
 
             // object or array of parameters
-            $dom_xml = invokeGetCompetitivePricingForSKU($service, $request);
+            $dom_xml = $oAmazonProduct->invokeGetCompetitivePricingForSKU($request);
 
 
             while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503"){
@@ -289,7 +119,7 @@ if (!empty($products_arr)){
                 $request->setSellerSKUList($SellerSKUList);
 
                 // object or array of parameters
-                $dom_xml = invokeGetCompetitivePricingForSKU($service, $request);
+                $dom_xml = $oAmazonProduct->invokeGetCompetitivePricingForSKU($request);
             }
 
             if (!empty($dom_xml) && !is_array($dom_xml)){
@@ -345,15 +175,8 @@ if (!empty($products_arr)){
 
                 $dom_xml_arr = func_xml2hash($dom_xml, "UTF-8");
 
-//			        func_print_r($dom_xml_arr);
 
                 if (!empty($dom_xml_arr["GetCompetitivePricingForSKUResponse"]) && is_array($dom_xml_arr["GetCompetitivePricingForSKUResponse"])){
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
-
-//func_print_r($dom_xml_arr);
-
                     foreach ($dom_xml_arr["GetCompetitivePricingForSKUResponse"] as $k_cpr => $v_cpr_arr){
 
                         if (
@@ -363,13 +186,11 @@ if (!empty($products_arr)){
                             $v_cpr_arr["Product"]["CompetitivePricing"]["CompetitivePrices"]["CompetitivePrice"]["CompetitivePrice_subcondition"] == "New"
                         ){
 
-###
                             if (!isset($v_cpr_arr["Product"]["SalesRankings"]["SalesRank"])){
                                 $amazon_fba_products[$v_cpr_arr["productid"]]["cpr_SalesRank"] = 0;
                             } else {
                                 $amazon_fba_products[$v_cpr_arr["productid"]]["cpr_SalesRank"] = $v_cpr_arr["Product"]["SalesRankings"]["SalesRank"]["Rank"];
                             }
-###
 
                             if ($v_cpr_arr["Product"]["CompetitivePricing"]["CompetitivePrices"]["CompetitivePrice"]["CompetitivePrice_belongsToRequester"] == "true"){
 
@@ -385,8 +206,6 @@ if (!empty($products_arr)){
                             }
                             elseif ($v_cpr_arr["Product"]["CompetitivePricing"]["CompetitivePrices"]["CompetitivePrice"]["CompetitivePrice_belongsToRequester"] == "false"){
 
-####### should be redone accorning several CompetitivePrice #######
-
                                 $LandedPrice = "";
 
                                 if (isset($v_cpr_arr["Product"]["CompetitivePricing"]["CompetitivePrices"]["CompetitivePrice"]["Price"]["LandedPrice"]["Amount"])){
@@ -396,24 +215,13 @@ if (!empty($products_arr)){
                                 }
 
                                 $amazon_fba_products[$v_cpr_arr["productid"]]["cpr_LandedPrice"] = $LandedPrice;
-####### #######
                             }
 
                         } //if
                     } // foreach ($dom_xml_arr["GetCompetitivePricingForSKUResponse"] as $k_cpr => $v_cpr_arr)
 
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
                 }
-                ##################################################################################
             }
-
-
-
-### ### ###
-
-##
 
             $request2 = new MarketplaceWebServiceProducts_Model_GetLowestOfferListingsForSKURequest();
             $request2->setSellerId(MERCHANT_ID);
@@ -424,7 +232,7 @@ if (!empty($products_arr)){
 
             // object or array of parameters
             try {
-                $dom_xml2 =  invokeGetLowestOfferListingsForSKU($service, $request2);
+                $dom_xml2 =  $oAmazonProduct->invokeGetLowestOfferListingsForSKU($request2);
             }
             catch (Exception $e)
             {
@@ -453,7 +261,7 @@ if (!empty($products_arr)){
                 $request2->setExcludeMe(true);
 
                 // object or array of parameters
-                $dom_xml2 =  invokeGetLowestOfferListingsForSKU($service, $request2);
+                $dom_xml2 =  $oAmazonProduct->invokeGetLowestOfferListingsForSKU($request2);
             }
 
             if (!empty($dom_xml2)){
@@ -518,11 +326,7 @@ if (!empty($products_arr)){
 
                 $dom_xml_arr = func_xml2hash($dom_xml, "UTF-8");
 
-###
                 if (!empty($dom_xml_arr["GetLowestOfferListingsForSKUResponse"]) && is_array($dom_xml_arr["GetLowestOfferListingsForSKUResponse"])){
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
 
                     foreach ($dom_xml_arr["GetLowestOfferListingsForSKUResponse"] as $k_lol => $v_lol_arr){
 
@@ -532,12 +336,8 @@ if (!empty($products_arr)){
                             !empty($v_lol_arr["Product"]["LowestOfferListings"]) &&
                             is_array($v_lol_arr["Product"]["LowestOfferListings"])
                         ){
-
-#
                             $lowest_LandedPrice = "";
                             $use_lowest_k_LowestOfferListing = "";
-#
-
                             foreach ($v_lol_arr["Product"]["LowestOfferListings"] as $k_LowestOfferListing => $LowestOfferListing){
 
                                 if (
@@ -545,7 +345,6 @@ if (!empty($products_arr)){
                                     $LowestOfferListing["Qualifiers"]["ItemSubcondition"] == "New" &&
                                     ($LowestOfferListing["Qualifiers"]["ShipsDomestically"] == "Unknown" || $LowestOfferListing["Qualifiers"]["ShipsDomestically"] == "True")
                                 ){
-#
                                     if ($lowest_LandedPrice == ""){
                                         $lowest_LandedPrice = $LowestOfferListing["Price"]["LandedPrice"]["Amount"];
                                         $use_lowest_k_LowestOfferListing = $k_LowestOfferListing;
@@ -596,38 +395,13 @@ if (!empty($products_arr)){
                                 $amazon_fba_products[$v_lol_arr["productid"]]["lp_ShippingTime"] = "";
                                 $amazon_fba_products[$v_lol_arr["productid"]]["lp_SellerPositiveFeedbackRating"] = "";
                             }
-
-//func_print_r($v_lol_arr["productid"],$amazon_fba_products[$v_lol_arr["productid"]]);
-
-                        } //if
-                    } // foreach ($dom_xml_arr[""] as $k_lol => $v_lol_arr)
-
-
-##############################################################################################################################
-##############################################################################################################################
-##############################################################################################################################
+                        }
+                    }
                 }
-###
-
-                ##################################################################################
             }
-
-
-
-
-//func_print_r( $dom_xml_arr);
-//die("asdad");
-
-##
-
-### ### ###
-
-
-//die("EEE");
-
-        } // if (!empty($v_arr) && is_array($v_arr))
-    } // foreach ($products_arr as $k_p => $v_arr)
-} // if (!empty($products_arr))
+        }
+    }
+}
 db_free_result($products);
 
 #
@@ -638,46 +412,9 @@ db_free_result($products);
 #
 # Step 3 Start
 echo  "Report 2 start\n";
-#
-
-/*require_once "FBAInventoryServiceMWS/Client.php";
-require_once "FBAInventoryServiceMWS/Exception.php";
-require_once "FBAInventoryServiceMWS/Model/ListInventorySupplyRequest.php";
-require_once "FBAInventoryServiceMWS/Model/ListInventorySupplyByNextTokenRequest.php";
-require_once "FBAInventoryServiceMWS/Model/GetServiceStatusRequest.php";
-require_once "FBAInventoryServiceMWS/Model/GetServiceStatusResponse.php";
-require_once "FBAInventoryServiceMWS/Model/GetServiceStatusResult.php";
-require_once "FBAInventoryServiceMWS/Model/InventorySupplyDetailList.php";
-require_once "FBAInventoryServiceMWS/Model/InventorySupplyDetail.php";
-require_once "FBAInventoryServiceMWS/Model/InventorySupplyList.php";
-require_once "FBAInventoryServiceMWS/Model/InventorySupply.php";
-require_once "FBAInventoryServiceMWS/Model/ListInventorySupplyByNextTokenResponse.php";
-require_once "FBAInventoryServiceMWS/Model/ListInventorySupplyByNextTokenResult.php";
-require_once "FBAInventoryServiceMWS/Model/ListInventorySupplyResponse.php";
-require_once "FBAInventoryServiceMWS/Model/ListInventorySupplyResult.php";
-require_once "FBAInventoryServiceMWS/Model/ResponseHeaderMetadata.php";
-require_once "FBAInventoryServiceMWS/Model/ResponseMetadata.php";
-require_once "FBAInventoryServiceMWS/Model/SellerSkuList.php";
-require_once "FBAInventoryServiceMWS/Model/Timepoint.php";*/
 
 
-$a_config = array (
-    'ServiceURL' => "https://mws.amazonservices.com/FulfillmentInventory/2010-10-01",
-    'ProxyHost' => null,
-    'ProxyPort' => -1,
-    'ProxyUsername' => null,
-    'ProxyPassword' => null,
-    'MaxErrorRetry' => 3,
-);
-
-$service = new FBAInventoryServiceMWS_Client(
-    AWS_ACCESS_KEY_ID,
-    AWS_SECRET_ACCESS_KEY,
-    APPLICATION_NAME,
-    APPLICATION_VERSION,
-    $a_config);
-
-
+$oAmasonRecomendation = new \Xcart\AmazonMWS('FBAInventoryServiceMWS_Client','/FulfillmentInventory/2010-10-01');
 
 if (!empty($products_arr2)){
     foreach ($products_arr2 as $k_p => $v_arr){
@@ -690,8 +427,6 @@ if (!empty($products_arr2)){
                 $productcode_productid_arr[$vv_p["productcode"]] = $vv_p["productid"];
                 $sku_arr[] = $vv_p["productcode"];
             }
-
-
 
             $NextToken = "start";
 
@@ -708,7 +443,7 @@ if (!empty($products_arr2)){
                     $sellerSKUs->setmember($sku_arr);
                     $request->setSellerSkus($sellerSKUs);
                     // object or array of parameters
-                    $dom_xml = invokeListInventorySupply($service, $request);
+                    $dom_xml = $oAmasonRecomendation->invokeListInventorySupply($request);
                     print $dom_xml;
 
                     while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503"){
@@ -724,7 +459,7 @@ if (!empty($products_arr2)){
                         $sellerSKUs->setmember($sku_arr);
                         $request->setSellerSkus($sellerSKUs);
                         // object or array of parameters
-                        $dom_xml = invokeListInventorySupply($service, $request);
+                        $dom_xml = $oAmasonRecomendation->invokeListInventorySupply($request);
                         print $dom_xml;
                     }
 
@@ -745,8 +480,6 @@ if (!empty($products_arr2)){
 
                         $dom_xml_arr = func_xml2hash($dom_xml, "UTF-8");
 
-//func_print_r($dom_xml_arr);
-//die();
 
                         $dom_xml_member_arr = $dom_xml_arr["ListInventorySupplyResponse"]["ListInventorySupplyResult"]["InventorySupplyList"];
                     }
@@ -759,7 +492,7 @@ if (!empty($products_arr2)){
                         $NextToken = "";
                     }
 
-                } // if ($NextToken == "start")
+                }
                 elseif (!empty($NextToken)) {
 
 
@@ -767,12 +500,8 @@ if (!empty($products_arr2)){
                     $request->setSellerId(MERCHANT_ID);
                     $request->setNextToken($NextToken);
 
-#    $sellerSKUs = new FBAInventoryServiceMWS_Model_SellerSkuList();
-#    $sellerSKUs->setmember($sku_arr);
-#    $request->setSellerSkus($sellerSKUs);
-
                     // object or array of parameters
-                    $dom_xml = invokeListInventorySupplyByNextToken($service, $request);
+                    $dom_xml = $oAmasonRecomendation->invokeListInventorySupplyByNextToken($request);
                     print $dom_xml;
 
                     while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503"){
@@ -786,16 +515,10 @@ if (!empty($products_arr2)){
                         $request->setSellerId(MERCHANT_ID);
                         $request->setNextToken($NextToken);
 
-#       $sellerSKUs = new FBAInventoryServiceMWS_Model_SellerSkuList();
-#       $sellerSKUs->setmember($sku_arr);
-#       $request->setSellerSkus($sellerSKUs);
-
                         // object or array of parameters
-                        $dom_xml = invokeListInventorySupplyByNextToken($service, $request);
+                        $dom_xml = $oAmasonRecomendation->invokeListInventorySupplyByNextToken($request);
                         print $dom_xml;
                     }
-
-//func_print_r($dom_xml);
 
                     if (!empty($dom_xml)){
                         $pos = strpos($dom_xml, "<member>");
@@ -821,36 +544,21 @@ if (!empty($products_arr2)){
                     else {
                         $NextToken = "";
                     }
-
-//die("NextToken");
-
-                } // elseif (!empty($NextToken))
-
+                }
 
                 if (empty($dom_xml_member_arr)){
                     continue;
                 }
-
-#############################################
-
-// func_print_r($dom_xml_member_arr, $productcode_productid_arr);
-//die();
-
-
                 foreach ($dom_xml_member_arr as $k_member => $v_member_arr){
 
                     $amazon_fba_products[$productcode_productid_arr[$v_member_arr["SellerSKU"]]]["lis_TotalSupplyQuantity"] = $v_member_arr["TotalSupplyQuantity"];
                     $amazon_fba_products[$productcode_productid_arr[$v_member_arr["SellerSKU"]]]["lis_InStockSupplyQuantity"] = $v_member_arr["InStockSupplyQuantity"];
 
-                } // foreach ($dom_xml_member_arr as $k_member => $v_member_arr)
-
-#############################################
-
-            } // while (!empty($NextToken))
-
-        } // if (!empty($v_arr) && is_array($v_arr))
-    } // foreach ($products_arr2 as $k_p => $v_arr)
-} // if (!empty($products_arr2))
+                }
+            }
+        }
+    }
+}
 
 
 
@@ -883,7 +591,7 @@ $classAmazonMWS = new Xcart\AmazonMWS();
 
 
 
-$classAmazonMWS->setReportType('_GET_RESERVED_INVENTORY_DATA_')->setBackProcessName($classAmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO)
+$classAmazonMWS->setReportType('_GET_RESERVED_INVENTORY_DATA_')->setBackProcessName(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO)
     ->_Request('RequestReport')
     ->_Request('GetReportRequestList')
     ->_Request('GetReportList')

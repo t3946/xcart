@@ -652,7 +652,7 @@ if ($sExtraLog=='Y')
 		$product['weight'] = "0.1";
 	}
 
-		$product_availability = $product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+		$product_availability = $product["product_availability"] = func_product_availability(false,$product);
 
 		$multipack = "";
 		if ($product["min_amount"]>1 && $product["mult_order_quantity"] == "Y")
@@ -671,7 +671,7 @@ if ($sExtraLog=='Y')
 	$product['cats_path'] = $cats_path;
 	$product['google_descr'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['descr']), 5000));
 	$product['google_brand'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['brand']), 256));
-	$product['google_product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert(trim($product['product']), 80));
+	$product['google_product'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT",func_froogle_convert((trim($product['product_froogle']) ? trim($product['product_froogle']) : trim($product['product'])), 80));
 
 
 	if ($product['shipping_weight']) {
@@ -769,10 +769,10 @@ function SubmitGoogleInventoryBatch($ginventory, $service, $MerchantID, $debug_m
                 $joins .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[variants].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].variantid = $sql_tbl[variants].variantid";
                 $where = " AND $sql_tbl[products_sf].productid = '$v[productid]' AND IFNULL($sql_tbl[variants].avail, $sql_tbl[products].avail) >= '0'";
 
-                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].provider, $sql_tbl[products].new_map_price, $sql_tbl[products].r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
+                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].provider, $sql_tbl[products].new_map_price, $sql_tbl[products].r_avail, $sql_tbl[products].avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
 				
-				$product_availability = $product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+				$product_availability = $product["product_availability"] = func_product_availability(false,$product);
 				If ($product["min_amount"]>1 and $product["mult_order_quantity"] == "Y")
 					{
 						$product['multipack'] = $product["min_amount"];
@@ -888,10 +888,10 @@ function SubmitBingInventoryBatch($binventory, $sEndpoint, $MerchantID, $Catalog
                 $joins .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[variants].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].variantid = $sql_tbl[variants].variantid";
                 $where = " AND $sql_tbl[products_sf].productid = '$v[productid]' AND IFNULL($sql_tbl[variants].avail, $sql_tbl[products].avail) >= '0' and $sql_tbl[products_sf].sfid = $use_storefrontid";
 
-                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].provider, $sql_tbl[products].new_map_price, $sql_tbl[products].r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
+                $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].provider, $sql_tbl[products].new_map_price, $sql_tbl[products].avail, $sql_tbl[products].r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
 				
-				$product_availability = $product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+				$product_availability = $product["product_availability"] = func_product_availability(false,$product);
 				If ($product["min_amount"]>1 and $product["mult_order_quantity"] == "Y")
 					{
 						$product['multipack'] = $product["min_amount"];
@@ -1141,7 +1141,7 @@ function SubmitBingProductsBatch($bproducts, $sEndpoint, $MerchantID, $CatalogID
 			$postBody["entries"][$k_counter]["product"]["targetCountry"] = "US";
 			$postBody["entries"][$k_counter]["product"]["channel"] = "online";
 ###
-			$product_availability = func_product_availability(false,false,false,false,false,$product_info["product"]);
+			$product_availability = func_product_availability(false,$product_info["product"]);
 ###
 			$postBody["entries"][$k_counter]["product"]["availability"] = $product_availability;
 			$postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
@@ -1395,7 +1395,7 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
 */
 
 ###
-				$product_availability = func_product_availability(false,false,false,false,false,$product_info["product"]);
+				$product_availability = func_product_availability(false,$product_info["product"]);
 ###
                 $postBody["entries"][$k_counter]["product"]["availability"] = $product_availability;
                 $postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
@@ -1579,40 +1579,12 @@ EOD;
 	$MessageID = 1;
 	foreach ($ainventory as $k => $v) {
 
-		/*$fields = ", IFNULL($sql_tbl[variants].avail, $sql_tbl[products].r_avail) as r_avail, IFNULL($sql_tbl[variants].productcode, $sql_tbl[products].productcode) as productcode, $sql_tbl[products].cost_to_us, $sql_tbl[products].map_price, $sql_tbl[products].manufacturerid, $sql_tbl[products].eta_date_mm_dd_yyyy";
-		$joins = " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
-		$joins .= " INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0'";
-		$joins .= " LEFT JOIN $sql_tbl[variants] ON $sql_tbl[variants].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].variantid = $sql_tbl[variants].variantid";
-		$where = " AND $sql_tbl[products_sf].productid = '$v[productid]' AND IFNULL($sql_tbl[variants].avail, $sql_tbl[products].avail) >= '0'";
-
-		$product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].product_type, $sql_tbl[products].amazon_fba_avail, $sql_tbl[pricing].price $fields FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");*/
-
 		$oProduct = \Xcart\Product::model(['productid' => $v["productid"]]);
 		$productcode = $oProduct->getSKU();
 
-
-
-
-		/*if ($a_result["aquantity"] == 0) {
-			$product["product_availability"] = "out of stock";
-			$price = $a_result["aprice"];
-			$product["price"] = $price;
-			$aleadtime = $a_result["aleadtime"];
-			$avail = $a_result["aquantity"];
-			$product["avail"] = $avail;
-		} else {
-			$price = $a_result["aprice"];
-			$product["price"] = $price;
-			$aleadtime = $a_result["aleadtime"];
-			$avail = $a_result["aquantity"];
-			$product["avail"] = $avail;
-		}*/
-
-
-
 		$aFBAProductCodes = null;
 
-			if ($oProduct->getAmazonFBAAvailReal() > 0) {
+			if ($oProduct->isAmazonFBAEnabled() && ($oProduct->getAmazonFBAAvailReal() > 0 || $oProduct->getAmazonFBAStockReservedTransfers() > 0)) {
 				$aFBAProductCodes[] =  $productcode;
 				$aMissingSKU = \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('productid = '.$oProduct->getProductId()));
 				if (!empty($aMissingSKU)) {
@@ -1720,7 +1692,7 @@ EOD;
 
 			$aFBAProductCodes[] = $oProduct->getSKU();
 
-			if ($oProduct->getAmazonFBAAvailReal() > 0) {
+			if ($oProduct->isAmazonFBAEnabled() && ($oProduct->getAmazonFBAAvailReal() > 0 || $oProduct->getAmazonFBAStockReservedTransfers() > 0)) {
 				$aMissingSKU = \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('productid = '.$oProduct->getProductId()));
 				if (!empty($aMissingSKU)) {
 					foreach ($aMissingSKU as $oMissingSKU) {

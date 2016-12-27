@@ -99,7 +99,10 @@ class Filter extends Data
                 INNER JOIN xcart_cidev_filters f ON f.f_id = fv.f_id
 SQL;
             }
-            $aResult[] = $sFilterSQL . " AND xc1.fv_id IN (" . implode(',', $aFVId) . ")";
+            $aResult[] = $sFilterSQL . "
+             INNER JOIN xcart_cidev_filter_products xc1 ON xc1.productid = p.productid 
+             INNER JOIN  xcart_cidev_filter_values xc ON xc.fv_id = xc1.fv_id
+             AND xc1.fv_id IN (" . implode(',', $aFVId) . ")";
             $aResult[] = " having count(p . productid) = " . count($this->aFilterValuesSelected);
         }
         return $aResult;
@@ -137,11 +140,10 @@ SELECT p.*
            INNER JOIN xcart_products_categories pc ON p.productid = pc.productid
            INNER JOIN xcart_pc_options po ON po.storefrontid = {$this->oStorefront->getStoreFrontId()} AND 
                                           ((po.disable_AC_products = 'N') OR (po.disable_AC_products = 'Y' AND p.pc_classify_status != 'AC'))
-           INNER JOIN xcart_categories c ON pc.categoryid = c.categoryid AND c.categoryid_path LIKE '{$this->oCategory->getPath()}' AND c.storefrontid = {$this->oStorefront->getStoreFrontId()}
-           LEFT JOIN xcart_cidev_filter_products xc1 ON xc1.productid = p.productid 
-           LEFT JOIN  xcart_cidev_filter_values xc ON xc.fv_id = xc1.fv_id
+           INNER JOIN xcart_categories c ON pc.categoryid = c.categoryid AND c.categoryid_path LIKE '{$this->oCategory->getPath()}%' AND c.storefrontid = {$this->oStorefront->getStoreFrontId()}
+           
+           {$sSQLfv}
       WHERE forsale = 'Y' {$this->getPriceQueryCondition()} {$this->getBrandQueryCondition()}
-      {$sSQLfv}
       GROUP BY p.productid
       {$sSQLfv2}
 SQL;
@@ -150,7 +152,11 @@ SQL;
 
     public function getMoreFilterValues()
     {
-        if (is_null($this->aValueFound)) {
+        if (is_null($this->aValueFound))
+        {
+            if (!$this->getFilterId()) {
+                return [];
+            }
 
             $sSQL = <<<SQL
 SELECT xc2.fv_id, fv_name, count(1) as cnt FROM ({$this->getFilteredProductsQuery()}) pq                                                         
@@ -183,7 +189,6 @@ SELECT xb.brandid, xb.brand, count(1) as cnt FROM ({$this->getFilteredProductsQu
      GROUP BY xb.brandid 
      ORDER BY xb.brand
 SQL;
-            echo $sSQL;
             $aResults = SQLBuilder::getInstance()->setQuery($sSQL)->query()->getQueryResult();
             if (!empty($aResults)) {
                 foreach ($aResults as $aResult) {

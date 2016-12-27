@@ -14,6 +14,12 @@ set_time_limit(0);
 const LOG_CATEGORY = 'cidev_amazon_fee_report';
 
 if ($config[LOG_CATEGORY] == "Y") {
+    func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME, 'Already launched');
+    Xcart\Mail::model()->
+    setTo('team@s3stores.com')->
+    setFrom('team@s3stores.com')->
+    setBody(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME . ' already launched')->
+    setSubject(sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY))->sendEmail();
     die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
@@ -22,7 +28,7 @@ $start_time = time();
 $log_text = " * * *  Cron started  * * * ";
 
 $classAmazonMWS = new Xcart\AmazonMWS();
-func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME, $log_text);
+func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME, $log_text);
 
 $classAmazonMWS->setStartDate(new DateTime('-3 days', new DateTimeZone('UTC')))
     ->_Request('RequestReport')
@@ -46,6 +52,6 @@ $str_time = sprintf("%02d:%02d:%02d", $hour, $minutes, $seconds);
 
 $log_text = "Cron completed. ";
 $log_text .= "Processing time: $str_time";
-func_backprocess_log($classAmazonMWS::BACK_PROCESS_LOG_NAME, $log_text);
+func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME, $log_text);
 
 die("DONE!");

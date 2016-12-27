@@ -225,8 +225,12 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                  </table>
 </div>
     <div style="position: relative; margin-top: 10px;">
-        <a href="#" onclick="$(this).parent().siblings('#send_note_form_js').toggle(); return false;">
-            <img src="/skin1_kolin/images/noteicon.png"/>
+        <a href="#" onclick="{if $you_have_right_to_change_order}$(this).parent().siblings('#send_note_form_js').toggle();{/if} return false;">
+            {if $you_have_right_to_change_order}
+                <img src="{$ImagesDir}/noteicon.png"/>
+            {else}
+                <img src="{$ImagesDir}/noteicon_disable.png"/>
+            {/if}
         </a>
     </div>
     <div id="send_note_form_js">
@@ -527,7 +531,6 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 <br />
 *}
 {/if}
-
 
 {if $usertype eq 'A' && $order_manufacturers && $current_membership_flag ne 'FS'}
 {assign var=found_show_stock_availability_form value=""}
@@ -932,12 +935,15 @@ $( document ).ready(function() {
 {/literal}
     </script>
 
-{foreach from=$order_manufacturers item=v key=mnf_id}
+{assign var="oOrderGroups" value=$oOrder->getOrderGroups()}
+{foreach from=$oOrderGroups item=oOrderGroup}
+    {assign var="key" value=$oOrderGroup->getManufacturerId()}
+    {assign var="mnf_id" value=$oOrderGroup->getManufacturerId()}
+    {assign var="v" value=$order_manufacturers.$key}
 
-
- {assign var=show_to_order_entry_operator value=""}
- {assign var=show_request_availability value=""}
- {assign var=show_dispatch_to_distributor value=""}
+    {assign var=show_to_order_entry_operator value=""}
+    {assign var=show_request_availability value=""}
+    {assign var=show_dispatch_to_distributor value=""}
 
  {if $v.d_availability_must_be_checked eq "Y" && $v.submit_to_operator eq "through_distributor_website"}
 	{if $v.dc_status eq 'T'}
@@ -1187,8 +1193,15 @@ $( document ).ready(function() {
 	<input name="send_email_button" type="button" value="Send (Dispatch to distributor)" onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.manuf_notifyform_{$mnf_id}, 'dispatch_to_distributor_', 'mnf_body', {$mnf_id});" {if $allowed_elements.send_dispatch_to_distributor_btn eq "N"}disabled="disabled"{/if} />{if $allowed_elements.send_dispatch_to_distributor_btn eq "N"}&nbsp;&nbsp;<span style="color: #FF0000;">You are NOT authorized to click this button.</span>{/if}
 
    {/if}
-
-&nbsp;Requested shipping method: <span style="color: red;">{$order.shipping_groups.$mnf_id.shipping|trademark:$insert_trademark}</span>
+{assign var="oShipping" value=$oOrderGroup->getShippingInstance()}
+&nbsp;Requested shipping method:
+<span style="color: red;">
+{if ($oOrderGroup->getRealShippingMethod() eq '')}
+  {$oOrderGroup->getShippingMethodName()|trademark:$insert_trademark}
+{else}
+  {$oOrderGroup->getRealShippingMethod()}
+{/if}
+</span>
   </td>
   </tr>
   </table>

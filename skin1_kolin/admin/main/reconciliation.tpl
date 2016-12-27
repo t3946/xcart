@@ -81,6 +81,9 @@ function remove_order_manually_row(index, r_id) {
 <td width="50" nowrap="nowrap">
 {if $tab ne "import"}<a href="reconciliation.php?tab=import">{else}<B>{/if}Import&nbsp;transactions{if $tab ne "import"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
 </td>
+    <td width="50" nowrap="nowrap">
+        {if $tab ne "inventory"}<a href="reconciliation.php?tab=inventory">{else}<B>{/if}Inventory{if $tab ne "inventory"}</a>{else}</B>{/if}
+    </td>
 <td width="*">&nbsp;</td>
 <td width="50" nowrap="nowrap">
 {if $tab ne "accounts_payable"}<a href="reconciliation.php?tab=accounts_payable">{else}<B>{/if}Payables{if $tab ne "accounts_payable"}</a>{else}</B>{/if}&nbsp;&nbsp;&nbsp;
@@ -670,6 +673,82 @@ Empty
 {/if}
 
 {elseif $tab eq "receivables"}
+    {if $aTotalReceivables}
+        <table cellpadding="3" cellspacing="1" width="100%">
+            <tr class="TableHead">
+                <td style="background-color: #D9EAD3;" >Total</td>
+                <td style="background-color: #D9EAD3;" >1 month</td>
+                <td style="background-color: #D9EAD3;" >3 month</td>
+                <td style="background-color: #D9EAD3;" >6 month</td>
+                <td style="background-color: #D9EAD3;" >1 year and more</td>
+            </tr>
+            <tr id="total_receivables_row">
+                <td align="center">
+                    {if $aTotalReceivables.total > 0}
+                        <a href="#" data-period="total" class="order_list_dropdown">
+                    {/if}
+                        {$aTotalReceivables.total|price_format}
+                    {if $aTotalReceivables.total > 0}
+                        </a>
+                    {/if}
+                </td>
+                <td align="center">
+                    {if $aTotalReceivables.one_month > 0}
+                    <a href="#" data-period="one_month" class="order_list_dropdown">
+                    {/if}
+                        {$aTotalReceivables.one_month|price_format}
+                    {if $aTotalReceivables.one_month > 0}
+                    </a>
+                    {/if}
+                </td>
+                <td align="center">
+                    {if $aTotalReceivables.three_month > 0}
+                        <a href="#" data-period="three_month" class="order_list_dropdown">
+                    {/if}
+                        {$aTotalReceivables.three_month|price_format}
+                    {if $aTotalReceivables.three_month > 0}
+                        </a>
+                    {/if}
+                </td>
+                <td align="center">
+                    {if $aTotalReceivables.six_month > 0}
+                        <a href="#" data-period="six_month" class="order_list_dropdown">
+                    {/if}
+                        {$aTotalReceivables.six_month|price_format}
+                    {if $aTotalReceivables.six_month > 0}
+                        </a>
+                    {/if}
+                </td>
+                <td align="center">
+                    {if $aTotalReceivables.one_year > 0}
+                        <a href="#" data-period="one_year" class="order_list_dropdown">
+                    {/if}
+                        {$aTotalReceivables.one_year|price_format}
+                    {if $aTotalReceivables.one_year > 0}
+                        </a>
+                    {/if}
+                </td>
+
+            </tr>
+        </table>
+        <br/>
+        <br/>
+        {literal}
+        <script type="text/javascript">
+            $('.order_list_dropdown').click(function () {
+                $(this).closest('tr#total_receivables_row').nextAll().andSelf().css('opacity', 0.4);
+                $.post('ajax_admin.php',{
+                            period : $(this).data('period'),
+                            ajax_action: 'get_receivables_orders'
+                        },
+                        function (data) {
+                            $('#total_receivables_row').next().remove().end().css('opacity', 1).after(data);
+                        });
+                return false;
+            })
+        </script>
+        {/literal}
+    {/if}
 
 {if $orders ne ""}
 <table cellpadding="3" cellspacing="1" width="100%">
@@ -697,7 +776,6 @@ Empty
 </tr>
 </table>
 {else}
-Empty
 {/if}
 
 {elseif $tab eq "expense_report"}
@@ -776,6 +854,82 @@ function func_show_full_info(id){
   {/if}
 
 {elseif $tab eq "accounts_payable"}
+    {if $aTotalPayable}
+        <table cellpadding="3" cellspacing="1" width="100%">
+            <tr class="TableHead">
+                <td style="background-color: #D9EAD3;" >Total</td>
+                <td style="background-color: #D9EAD3;" >1 month</td>
+                <td style="background-color: #D9EAD3;" >3 month</td>
+                <td style="background-color: #D9EAD3;" >6 month</td>
+                <td style="background-color: #D9EAD3;" >1 year and more</td>
+            </tr>
+            <tr id="total_payable_row">
+                <td align="center">
+                    {if $aTotalPayable.total > 0}
+                    <a href="#" data-period="total" class="order_list_dropdown">
+                        {/if}
+                        {$aTotalPayable.total|price_format}
+                        {if $aTotalPayable.total > 0}
+                    </a>
+                    {/if}
+                </td>
+                <td align="center">
+                    {if $aTotalPayable.one_month > 0}
+                    <a href="#" data-period="one_month" class="order_list_dropdown">
+                        {/if}
+                        {$aTotalPayable.one_month|price_format}
+                        {if $aTotalPayable.one_month > 0}
+                    </a>
+                    {/if}
+                </td>
+                <td align="center">
+                    {if $aTotalPayable.three_month > 0}
+                    <a href="#" data-period="three_month" class="order_list_dropdown">
+                        {/if}
+                        {$aTotalPayable.three_month|price_format}
+                        {if $aTotalPayable.three_month > 0}
+                    </a>
+                    {/if}
+                </td>
+                <td align="center">
+                    {if $aTotalPayable.six_month > 0}
+                    <a href="#" data-period="six_month" class="order_list_dropdown">
+                        {/if}
+                        {$aTotalPayable.six_month|price_format}
+                        {if $aTotalPayable.six_month > 0}
+                    </a>
+                    {/if}
+                </td>
+                <td align="center">
+                    {if $aTotalPayable.one_year > 0}
+                    <a href="#" data-period="one_year" class="order_list_dropdown">
+                        {/if}
+                        {$aTotalPayable.one_year|price_format}
+                        {if $aTotalPayable.one_year > 0}
+                    </a>
+                    {/if}
+                </td>
+
+            </tr>
+        </table>
+        <br/>
+        <br/>
+    {literal}
+        <script type="text/javascript">
+            $('.order_list_dropdown').click(function () {
+                $(this).closest('tr#total_payable_row').nextAll().andSelf().css('opacity', 0.4);
+                $.post('ajax_admin.php',{
+                            period : $(this).data('period'),
+                            ajax_action: 'get_payable_orders'
+                        },
+                        function (data) {
+                            $('#total_payable_row').next().remove().end().css('opacity', 1).after(data);
+                        });
+                return false;
+            })
+        </script>
+    {/literal}
+    {/if}
 
   {if $all_manufacturers_orders ne ""}
 
@@ -987,4 +1141,35 @@ Empty
 {/if}
 {/capture}
 {include file="dialog.tpl" title="Uploaded files" content=$smarty.capture.dialog extra="width=100%"}
+{/if}
+
+
+{if $tab eq "inventory"}
+    <br>
+    {capture name=dialog}
+    <table cellpadding="3" cellspacing="1" width="100%">
+        <tr class="TableHead">
+            <td>Report Date</td>
+            <td>Items count</td>
+            <td>AVG item cost</td>
+            <td>AVG item amount</td>
+            <td>Total amount</td>
+            <td>total cost</td>
+        </tr>
+        {foreach from=$cidev_daily_fba_stats item=item}
+            <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
+                <td nowrap="nowrap">
+                    {$item.reportdate|date_format:'%d-%b-%Y'}
+                </td>
+                <td align="right">{$item.items_count}</td>
+                <td align="right">{$config.General.currency_symbol} {$item.avg_item_cost|number_format:2:'.':' '}</td>
+                <td align="right">{$item.avg_item_amount|number_format:2:'.':' '}</td>
+                <td align="right">{$item.total_amount|number_format:0:'.':' '}</td>
+                <td align="right">{$config.General.currency_symbol} {$item.total_cost|number_format:2:'.':' '}</td>
+            </tr>
+        {/foreach}
+    </table>
+
+    {/capture}
+    {include file="dialog.tpl" title="Inventory" content=$smarty.capture.dialog extra="width=100%"}
 {/if}

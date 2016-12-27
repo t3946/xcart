@@ -6,7 +6,6 @@ session_start();
 require "./top.inc.php";
 require "./init.php";
 
-include $xcart_dir ."/include/func/func.amazon_shipping_connecter.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -45,10 +44,21 @@ if (
 
  $items = array();
  foreach ($cart["products"] as $k => $v){
+  $iAmount = $v['amount'];
+
+  $oProduct = \Xcart\Product::model(['productid' => $v['productid']]);
+  if (!$oProduct->isAmazonFBAEnabled()) {
+   $aProducts = $oProduct->getProductsAvailOnAmazonParentWithChild(1);
+   if (!empty($aProducts)) {
+    $oProductParentOrChild = reset($aProducts);
+    $oProduct = $oProductParentOrChild['oProduct'];
+    $v = $oProduct->getFields();
+   }
+  }
 
   $item = new FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
   $item->setSellerSKU($v["productcode"]);
-  $item->setQuantity($v["amount"]);
+  $item->setQuantity($iAmount);
   $item->setSellerFulfillmentOrderItemId($v["productcode"]);
   $items[] = $item;
 
@@ -63,7 +73,7 @@ if (
  $shippingArray->setmember(array("Standard", "Expedited", "Priority"));
  $request->setShippingSpeedCategories($shippingArray);
 
- $dom_xml = invokeGetFulfillmentPreview($b_service, $request);
+ $dom_xml = (new Xcart\AmazonMWS('FBAOutboundServiceMWS_Client','/FulfillmentOutboundShipment/2010-10-01'))->invokeGetFulfillmentPreview($request);
 
  print($dom_xml["saveXML"]);
 // print_r($dom_xml);

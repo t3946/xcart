@@ -78,9 +78,11 @@ class CloneData
             }
         }
 
-        $diffArray = func_array_compare($this->arrCheckFields, $currentDBSchema);
+        $diffArray = array_diff($this->arrCheckFields, $currentDBSchema);
 
-        if (count($diffArray) > 0) $bResult = false;
+        if (!empty($diffArray)) {
+            $bResult = false;
+        }
 
         return $bResult;
     }
@@ -138,6 +140,9 @@ class CloneData
 
         if (isset($this->aClonedData) && is_array($this->aClonedData) && count($this->aClonedData) > 0) {
             foreach ($this->aClonedData as $sTable => $aRowsToClone) {
+                if ($sTable == 'products_amz_fields') {
+                    if (Product::model(['productid' => $aCloneParam[$this->sPrimaryKeyFiled]])->isAmazonEnabled()) continue;
+                }
                 if ($deleteBeforeInsert) {
                     $this->deleteFromTableByKeyValue($sTable, $aRowsToClone['key_field'], $aCloneParam[$this->sPrimaryKeyFiled]);
                 }
@@ -153,7 +158,7 @@ class CloneData
 
 
                         array_walk_recursive($aRow, array(__CLASS__, 'recursive_escape'));
-//func_print_r($aRow);
+
                         if ($sTable == 'pricing' && $deleteBeforeInsert == false) {
                             func_backprocess_log("clone_products_cron", "Clone pricing table. productid = " . $aCloneParam[$this->sPrimaryKeyFiled] . "; aCloneRow - " . serialize($aRow));
                         }

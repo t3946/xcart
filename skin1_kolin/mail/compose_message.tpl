@@ -1,5 +1,6 @@
 {$body}
 
 {if $attach_pdf_invoice eq "Y"}
-{include file="mail/order_invoice.tpl"}
+    {assign var="oOrder" value=$order.oOrder}
+    {include file="mail/order_invoice.tpl"}
 {/if}

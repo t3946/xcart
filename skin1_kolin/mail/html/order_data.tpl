@@ -92,8 +92,8 @@
 {if $v.products}
 <tr>
     <td colspan="{$colspan}">
-        <b>{$lng.lbl_payment_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.cb_status|default:$order.cb_status mode="static" status_type="CB"}<br />
-        <b>{$lng.lbl_shipping_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.dc_status|default:$order.dc_status mode="static" status_type="DC"}
+        <b>{$lng.lbl_payment_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.oOrderGroup->getOrderGroupStatusCB()|default:$order.cb_status mode="static" status_type="CB"}<br />
+        <b>{$lng.lbl_shipping_status|cat:":"}</b>&nbsp;{include file="main/order_status.tpl" status=$v.oOrderGroup->getOrderGroupStatusDC()|default:$order.dc_status mode="static" status_type="DC"}
     </td>
 </tr>
 {/if}
@@ -304,9 +304,11 @@
 
 <tr>
 <td align="right" width="100%" bgcolor="#cccccc" height="25"><b>{$lng.lbl_grand_total|capitalize}:</b>&nbsp;</td>
+<td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap">
 {if $oOrder}
-<td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap"><b>{include file="currency.tpl" value=$oOrder->getOrderTotalGross()}</b></td>
+    <b>{include file="currency.tpl" value=$oOrder->getOrderTotalGross()}</b>
 {/if}
+</td>
 </tr>
 
 {if $_userinfo.tax_exempt ne "Y"}

@@ -53,7 +53,10 @@ class AmazonMWS
             'MaxErrorRetry' => 3,
         );
 
-        if ($oServiceClass == 'MarketplaceWebServiceOrders_Client') {
+        if ($oServiceClass == 'MarketplaceWebServiceOrders_Client' ||
+            $oServiceClass == 'FBAInventoryServiceMWS_Client' ||
+            $oServiceClass == 'MarketplaceWebServiceProducts_Client'
+            ) {
             $this->oMWSService = new $oServiceClass(
                 AWS_ACCESS_KEY_ID,
                 AWS_SECRET_ACCESS_KEY,
@@ -93,39 +96,126 @@ class AmazonMWS
         return $this;
     }
 
+    public function invokeGetCompetitivePricingForSKU($request)
+    {
+        try {
+            $response = $this->oMWSService->GetCompetitivePricingForSKU($request);
+
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+
+        } catch (\MarketplaceWebServiceProducts_Exception $ex) {
+            $return_echo["function"] = "invokeGetCompetitivePricingForSKU";
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+            func_print_r($return_echo);
+            return $return_echo;
+        }
+    }
+
+    public function invokeGetLowestOfferListingsForSKU($request)
+    {
+        try {
+            $response = $this->oMWSService->GetLowestOfferListingsForSKU($request);
+
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+
+        } catch (\MarketplaceWebServiceProducts_Exception $ex) {
+            $return_echo["function"] = "invokeGetLowestOfferListingsForSKU";
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            func_print_r($return_echo);
+            return $return_echo;
+        }
+    }
+
+    public function invokeListInventorySupplyByNextToken($request)
+    {
+        try {
+            $response = $this->oMWSService->ListInventorySupplyByNextToken($request);
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+
+        } catch (\FBAInventoryServiceMWS_Exception $ex) {
+            $return_echo["function"] = "invokeListInventorySupplyByNextToken";
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+            return $return_echo;
+        }
+    }
+
+    public function invokeListInventorySupply($request)
+    {
+        try {
+            $response = $this->oMWSService->ListInventorySupply($request);
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+
+        } catch (\FBAInventoryServiceMWS_Exception $ex) {
+            $return_echo["function"] = "invokeListInventorySupply";
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+            return $return_echo;
+        }
+    }
+
     private function invokeGetReport($request)
     {
         try {
             $response = $this->oMWSService->getReport($request);
 
-//                echo ("Service Response\n");
-//                echo ("=============================================================================\n");
-
-//                echo("        GetReportResponse\n");
             if ($response->isSetGetReportResult()) {
                 $getReportResult = $response->getGetReportResult();
-//                  echo ("            GetReport");
 
                 if ($getReportResult->isSetContentMd5()) {
-//                    echo ("                ContentMd5");
                     $return_echo["ContentMd5"] = $getReportResult->getContentMd5();
                 }
             }
             if ($response->isSetResponseMetadata()) {
-//                    echo("            ResponseMetadata\n");
                 $responseMetadata = $response->getResponseMetadata();
                 if ($responseMetadata->isSetRequestId()) {
-//                        echo("                RequestId\n");
                     $return_echo["RequestId"] = $responseMetadata->getRequestId();
                 }
             }
 
-//                echo ("        Report Contents\n");
-//                echo (stream_get_contents($request->getReport()) . "\n");
             $return_echo["Report_Contents"] = stream_get_contents($request->getReport());
-
             $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
-
             return $return_echo;
         } catch (\MarketplaceWebService_Exception $ex) {
             $return_echo["Caught_Exception"] = $ex->getMessage();
@@ -144,78 +234,42 @@ class AmazonMWS
     {
         try {
             $response = $this->oMWSService->requestReport($request);
-
-//                echo ("Service Response\n");
-//                echo ("=============================================================================\n");
-
-//                echo("        RequestReportResponse\n");
             if ($response->isSetRequestReportResult()) {
-//                    echo("            RequestReportResult\n");
                 $requestReportResult = $response->getRequestReportResult();
-
                 if ($requestReportResult->isSetReportRequestInfo()) {
-
                     $reportRequestInfo = $requestReportResult->getReportRequestInfo();
-//                          echo("                ReportRequestInfo\n");
                     if ($reportRequestInfo->isSetReportRequestId()) {
-//                              echo("                    ReportRequestId\n");
-//                              echo("                        " . $reportRequestInfo->getReportRequestId() . "\n");
                         $return_echo["ReportRequestId"] = $reportRequestInfo->getReportRequestId();
                     }
                     if ($reportRequestInfo->isSetReportType()) {
-//                              echo("                    ReportType\n");
-//                              echo("                        " . $reportRequestInfo->getReportType() . "\n");
                         $return_echo["ReportType"] = $reportRequestInfo->getReportType();
                     }
                     if ($reportRequestInfo->isSetStartDate()) {
-//                              echo("                    StartDate\n");
-//                              echo("                        " . $reportRequestInfo->getStartDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["StartDate"] = $reportRequestInfo->getStartDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetEndDate()) {
-//                              echo("                    EndDate\n");
-//                              echo("                        " . $reportRequestInfo->getEndDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["EndDate"] = $reportRequestInfo->getEndDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetSubmittedDate()) {
-//                              echo("                    SubmittedDate\n");
-//                              echo("                        " . $reportRequestInfo->getSubmittedDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["SubmittedDate"] = $reportRequestInfo->getSubmittedDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetReportProcessingStatus()) {
-//                              echo("                    ReportProcessingStatus\n");
-//                              echo("                        " . $reportRequestInfo->getReportProcessingStatus() . "\n");
                         $return_echo["ReportProcessingStatus"] = $reportRequestInfo->getReportProcessingStatus();
                     }
                 }
             }
             if ($response->isSetResponseMetadata()) {
-//                    echo("            ResponseMetadata\n");
                 $responseMetadata = $response->getResponseMetadata();
                 if ($responseMetadata->isSetRequestId()) {
-//                        echo("                RequestId\n");
-//                        echo("                    " . $responseMetadata->getRequestId() . "\n");
                     $return_echo["RequestId"] = $responseMetadata->getRequestId();
                 }
             }
 
-//                echo("            ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
             $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
 
             return $return_echo;
 
         } catch (\MarketplaceWebService_Exception $ex) {
-
-            /*
-                     echo("Caught Exception: " . $ex->getMessage() . "\n");
-                     echo("Response Status Code: " . $ex->getStatusCode() . "\n");
-                     echo("Error Code: " . $ex->getErrorCode() . "\n");
-                     echo("Error Type: " . $ex->getErrorType() . "\n");
-                     echo("Request ID: " . $ex->getRequestId() . "\n");
-                     echo("XML: " . $ex->getXML() . "\n");
-                     echo("ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n");
-            */
-
             $return_echo["function"] = "invokeRequestReport";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -227,7 +281,6 @@ class AmazonMWS
             $return_echo["message"] = "Delay 2 minutes and trying the same Request";
             func_print_r($return_echo);
             return $return_echo;
-
         }
     }
 
@@ -235,110 +288,61 @@ class AmazonMWS
     {
         try {
             $response = $this->oMWSService->getReportRequestList($request);
-
-//                echo ("Service Response\n");
-//                echo ("=============================================================================\n");
-
-//                echo("        GetReportRequestListResponse\n");
             if ($response->isSetGetReportRequestListResult()) {
-//                    echo("            GetReportRequestListResult\n");
-
                 $getReportRequestListResult = $response->getGetReportRequestListResult();
                 if ($getReportRequestListResult->isSetNextToken()) {
-//                        echo("                NextToken\n");
-//                        echo("                    " . $getReportRequestListResult->getNextToken() . "\n");
                     $return_echo["NextToken"] = $getReportRequestListResult->getNextToken();
                 }
                 if ($getReportRequestListResult->isSetHasNext()) {
-//                        echo("                HasNext\n");
-//                        echo("                    " . $getReportRequestListResult->getHasNext() . "\n");
                     $return_echo["HasNext"] = $getReportRequestListResult->getHasNext();
                 }
                 $reportRequestInfoList = $getReportRequestListResult->getReportRequestInfoList();
                 foreach ($reportRequestInfoList as $reportRequestInfo) {
-//                        echo("                ReportRequestInfo\n");
                     if ($reportRequestInfo->isSetReportRequestId()) {
-//                              echo("                    ReportRequestId\n");
-//                              echo("                        " . $reportRequestInfo->getReportRequestId() . "\n");
                         $return_echo["ReportRequestId"] = $reportRequestInfo->getReportRequestId();
                     }
                     if ($reportRequestInfo->isSetReportType()) {
-//                              echo("                    ReportType\n");
-//                              echo("                        " . $reportRequestInfo->getReportType() . "\n");
                         $return_echo["ReportType"] = $reportRequestInfo->getReportType();
                     }
                     if ($reportRequestInfo->isSetStartDate()) {
-//                              echo("                    StartDate\n");
-//                              echo("                        " . $reportRequestInfo->getStartDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["StartDate"] = $reportRequestInfo->getStartDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetEndDate()) {
-//                              echo("                    EndDate\n");
-//                              echo("                        " . $reportRequestInfo->getEndDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["EndDate"] = $reportRequestInfo->getEndDate()->format(DATE_FORMAT);
                     }
-                    // add start
                     if ($reportRequestInfo->isSetScheduled()) {
-//                              echo("                    Scheduled\n");
-//                              echo("                        " . $reportRequestInfo->getScheduled() . "\n");
                         $return_echo["Scheduled"] = $reportRequestInfo->getScheduled();
                     }
-                    // add end
                     if ($reportRequestInfo->isSetSubmittedDate()) {
-//                              echo("                    SubmittedDate\n");
-//                              echo("                        " . $reportRequestInfo->getSubmittedDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["SubmittedDate"] = $reportRequestInfo->getSubmittedDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetReportProcessingStatus()) {
-//                              echo("                    ReportProcessingStatus\n");
-//                              echo("                        " . $reportRequestInfo->getReportProcessingStatus() . "\n");
                         $return_echo["ReportProcessingStatus"] = $reportRequestInfo->getReportProcessingStatus();
                     }
-                    // add start
                     if ($reportRequestInfo->isSetGeneratedReportId()) {
-//                              echo("                    GeneratedReportId\n");
-//                              echo("                        " . $reportRequestInfo->getGeneratedReportId() . "\n");
                         $return_echo["GeneratedReportId"] = $reportRequestInfo->getGeneratedReportId();
                     }
                     if ($reportRequestInfo->isSetStartedProcessingDate()) {
-//                              echo("                    StartedProcessingDate\n");
-//                              echo("                        " . $reportRequestInfo->getStartedProcessingDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["StartedProcessingDate"] = $reportRequestInfo->getStartedProcessingDate()->format(DATE_FORMAT);
                     }
                     if ($reportRequestInfo->isSetCompletedDate()) {
-//                              echo("                    CompletedDate\n");
-//                              echo("                        " . $reportRequestInfo->getCompletedDate()->format(DATE_FORMAT) . "\n");
                         $return_echo["CompletedDate"] = $reportRequestInfo->getCompletedDate()->format(DATE_FORMAT);
                     }
-                    // add end
 
                 }
             }
             if ($response->isSetResponseMetadata()) {
-//                    echo("            ResponseMetadata\n");
                 $responseMetadata = $response->getResponseMetadata();
                 if ($responseMetadata->isSetRequestId()) {
-//                        echo("                RequestId\n");
-//                        echo("                    " . $responseMetadata->getRequestId() . "\n");
                     $return_echo["RequestId"] = $responseMetadata->getRequestId();
                 }
             }
 
-//                echo("            ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
             $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
 
             return $return_echo;
 
         } catch (\MarketplaceWebService_Exception $ex) {
-            /*
-                     echo("Caught Exception: " . $ex->getMessage() . "\n");
-                     echo("Response Status Code: " . $ex->getStatusCode() . "\n");
-                     echo("Error Code: " . $ex->getErrorCode() . "\n");
-                     echo("Error Type: " . $ex->getErrorType() . "\n");
-                     echo("Request ID: " . $ex->getRequestId() . "\n");
-                     echo("XML: " . $ex->getXML() . "\n");
-                     echo("ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n");
-            */
             $return_echo["function"] = "invokeGetReportRequestList";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
@@ -585,6 +589,32 @@ class AmazonMWS
         }
     }
 
+    public function invokeGetFulfillmentPreview($request)
+    {
+        $return_echo = [];
+        try {
+            $response = $this->oMWSService->GetFulfillmentPreview($request);
+
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            $return_echo["saveXML"] = $dom->saveXML();
+            $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
+
+        } catch (\FBAOutboundServiceMWS_Exception $ex) {
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+            $return_echo["message"] = "Delay 2 minutes and trying the same Request";
+        }
+        return $return_echo;
+    }
+
     public function setTimeOut($iTimeOut)
     {
         $this->sleepTimeOut = $iTimeOut;
@@ -729,6 +759,11 @@ class AmazonMWS
         return $this;
     }
 
+    public function setOrder($oOrder)
+    {
+        $this->oOrder = $oOrder;
+    }
+
     public function setReportId($aReportId)
     {
         $this->aReportIds = $aReportId;
@@ -821,19 +856,35 @@ class AmazonMWS
 
     public function processReportFeeData()
     {
+        $allItemsCount = 0;
+        $skippedItemsCount = 0;
+
         $this->fillReportFeeDataFromFile();
 
         $aFieldsToUpdate = ['productid', 'fnsku', 'asin', 'longest_side', 'median_side', 'shortest_side', 'length_and_girth', 'unit_of_dimension',
             'item_package_weight', 'unit_of_weight', 'product_size_tier', 'estimated_fee_total', 'estimated_referral_fee_per_unit', 'estimated_variable_closing_fee',
             'estimated_order_handling_fee_per_order', 'estimated_pick_pack_fee_per_unit', 'estimated_weight_handling_fee_per_unit', 'amazon_fee_preview_last_update_date'];
         $aFieldsToUpdate = array_flip($aFieldsToUpdate);
-        foreach ($this->aReportValue as $aReport)
+        foreach ($this->aReportValue as $aReport) {
             foreach ($aReport as $aItem) {
                 $aArrInsert = array_intersect_key($aItem, $aFieldsToUpdate);
                 $aArrInsert['amazon_fee_preview_last_update_date'] = time();
+                $allItemsCount++;
+
+                if (in_array('--', $aArrInsert)) { //@TASK: 9973238
+                    $skippedItemsCount++;
+                    continue;
+                }
+
                 if (!empty($aArrInsert['productid']))
                     func_array2insert('products_amz_fields', $aArrInsert, true);
             }
+        }
+
+        if ($skippedItemsCount > 0) {
+            func_backprocess_log($this::BACK_PROCESS_LOG_NAME, "processReportFeeData: skipped Items count: {$skippedItemsCount}; all items count: {$allItemsCount}");
+        }
+
         return $this;
     }
 
@@ -925,7 +976,7 @@ class AmazonMWS
 
                                         if (!empty($vv["Promotion"])) {
                                             if (in_array($vv["Promotion"]["Type"], array("Shipping"))) {
-                                                $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += abs(floatval($vv["Promotion"]["Amount"]));
+                                                //$aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += abs(floatval($vv["Promotion"]["Amount"]));
                                             }
 
                                         }
@@ -1453,24 +1504,33 @@ class AmazonMWS
                             $aOrderItems = $xpath3->query('/ListOrderItemsResponse/ListOrderItemsResult/OrderItems/OrderItem');
 
                             if (!empty($aOrderItems) && $aOrderItems->length > 0) {
+                                $sAddress = $sShippingAddressCity = $sShippingAddressStateOrRegion = $sShippingAddressCountryCode = $sShippingAddressPostalCode = $sShippingAddressPhone = null;
+                                $oOrder->setField('orderid', $oOrder->_insert());
+                                $oOrderRaw = CidevAmazonOrderRaw::model()->find(SQLBuilder::getInstance()->addCondition('orderid = ' . $oOrder->getOrderId()));
+                                $oOrderRaw->setField('orderid', $oOrder->getOrderId())->
+                                setField('order_info', addslashes($xpath2->document->saveXML()))->
+                                setField('orderitems_info', addslashes($xpath3->document->saveXML()));
+                                $oOrderRaw->_insert(true);
 
                                 $sOrderTotal = $aOrderInfo->getElementsByTagName('OrderTotal')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue;
                                 $oShippingAddress = $aOrderInfo->getElementsByTagName('ShippingAddress')->item(0);
-                                $sShippingAddressName = addslashes($oShippingAddress->getElementsByTagName('Name')->item(0)->nodeValue);
-                                $sShippingAddressCity = addslashes($oShippingAddress->getElementsByTagName('City')->item(0)->nodeValue);
-                                $sShippingAddressCountryCode = addslashes($oShippingAddress->getElementsByTagName('CountryCode')->item(0)->nodeValue);
-                                $sShippingAddressPhone = addslashes($oShippingAddress->getElementsByTagName('Phone')->item(0)->nodeValue);
-                                $sShippingAddressPostalCode = addslashes($oShippingAddress->getElementsByTagName('PostalCode')->item(0)->nodeValue);
-                                $sShippingAddressStateOrRegion = addslashes($oShippingAddress->getElementsByTagName('StateOrRegion')->item(0)->nodeValue);
-                                $StateOrRegion_code = State::model()->find(SQLBuilder::getInstance()->addCondition("country_code = '$sShippingAddressCountryCode'")->addCondition("state = '$sShippingAddressStateOrRegion'"))->getField('code');
-                                if (!empty($StateOrRegion_code)) {
-                                    $sShippingAddressStateOrRegion = addslashes($StateOrRegion_code);
+                                if (!empty($oShippingAddress)) {
+                                    $sShippingAddressName = addslashes($oShippingAddress->getElementsByTagName('Name')->item(0)->nodeValue);
+                                    $sShippingAddressCity = addslashes($oShippingAddress->getElementsByTagName('City')->item(0)->nodeValue);
+                                    $sShippingAddressCountryCode = addslashes($oShippingAddress->getElementsByTagName('CountryCode')->item(0)->nodeValue);
+                                    $sShippingAddressPhone = addslashes($oShippingAddress->getElementsByTagName('Phone')->item(0)->nodeValue);
+                                    $sShippingAddressPostalCode = addslashes($oShippingAddress->getElementsByTagName('PostalCode')->item(0)->nodeValue);
+                                    $sShippingAddressStateOrRegion = addslashes($oShippingAddress->getElementsByTagName('StateOrRegion')->item(0)->nodeValue);
+                                    $StateOrRegion_code = State::model()->find(SQLBuilder::getInstance()->addCondition("country_code = '$sShippingAddressCountryCode'")->addCondition("state = '$sShippingAddressStateOrRegion'"))->getField('code');
+                                    if (!empty($StateOrRegion_code)) {
+                                        $sShippingAddressStateOrRegion = addslashes($StateOrRegion_code);
+                                    }
+                                    $sAddress = addslashes($oShippingAddress->getElementsByTagName('AddressLine1')->item(0)->nodeValue .
+                                        (!empty($oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue : '') .
+                                        (!empty($oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue : ''));
                                 }
-                                $sFulfilmentChanel = $aOrderInfo->getElementsByTagName('FulfillmentChannel')->item(0)->nodeValue;
 
-                                $sAddress = addslashes($oShippingAddress->getElementsByTagName('AddressLine1')->item(0)->nodeValue .
-                                    (!empty($oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine2')->item(0)->nodeValue : '') .
-                                    (!empty($oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue) ? ' ' . $oShippingAddress->getElementsByTagName('AddressLine3')->item(0)->nodeValue : ''));
+                                $sFulfilmentChanel = $aOrderInfo->getElementsByTagName('FulfillmentChannel')->item(0)->nodeValue;
 
                                 $sBuyerName = addslashes($aOrderInfo->getElementsByTagName('BuyerName')->item(0)->nodeValue);
 
@@ -1487,7 +1547,7 @@ class AmazonMWS
                                 setField('bd_status', 'W')->
                                 setField('payment_method', 'Amazon Seller')->
                                 setField('firstname', $sBuyerName)->
-                                setField('s_firstname', $sShippingAddressName)->
+                                setField('s_firstname', (empty($sShippingAddressName) ? $sBuyerName : $sShippingAddressName))->
                                 setField('s_address', $sAddress)->
                                 setField('s_city', $sShippingAddressCity)->
                                 setField('s_state', $sShippingAddressStateOrRegion)->
@@ -1507,7 +1567,8 @@ class AmazonMWS
                                 setField('overall_fraud_score', 50)->
                                 setField('tracking_all_filled', 'N')->
                                 setField('vn_status', ($sFulfilmentChanel == 'AFN' ? 'PV' : 'NS'));
-                                $oOrder->setField('orderid', $oOrder->_insert());
+                                $oOrder->_update();
+
 
                                 $aManufacturerid_arr = [];
                                 $product_total = 0;
@@ -1531,42 +1592,55 @@ class AmazonMWS
                                             }
                                     }
 
-                                    if (!in_array($oProduct->getManufacturerId(), $aManufacturerid_arr)) {
-                                        $oOrderGroup = OrderGroup::model()->
+                                    $iOrderQuantity = intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue);
+                                    if ($iOrderQuantity > 0) {
+                                        $oOrderDetail = OrderDetail::model()->
                                         setField('orderid', $oOrder->getOrderId())->
-                                        setField('manufacturerid', $oProduct->getManufacturerId())->
-                                        setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->nodeValue))->
-                                        setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
-                                        setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
-                                        setField('acc_paymentid', PaymentMethod::model()->find(SQLBuilder::getInstance()->addCondition("order_tag_preference='$sFulfilmentChanel'"))->getField('paymentid'))->
-                                        setField('bd_status', 'W');
-                                        $oOrderGroup->_insert();
-                                        $aManufacturerid_arr[] = $oProduct->getManufacturerId();
+                                        setField('productid', $oProduct->getProductId())->
+                                        setField('item_cost_to_us', $oProduct->getProductCostToUs())->
+                                        setField('price', floatval($oOrderItem->getElementsByTagName('ItemPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue) / $iOrderQuantity)->
+                                        setField('amount', $iOrderQuantity)->
+                                        setField('productcode', $oProduct->getSKU())->
+                                        setField('AmazonOrderItemCode', addslashes($oOrderItem->getElementsByTagName('OrderItemId')->item(0)->nodeValue))->
+                                        setField('product', addslashes($oProduct->getProductName()));
+                                        $oOrderDetail->_insert();
+
+                                        if (!in_array($oProduct->getManufacturerId(), $aManufacturerid_arr)) {
+                                            $fShippingPrice = $fShippingDiscount = 0;
+
+                                            $oShippingPrice = $oOrderItem->getElementsByTagName('ShippingPrice');
+                                            if ($oShippingPrice && $oShippingPrice->length > 0) {
+                                                $fShippingPrice = floatval($oOrderItem->getElementsByTagName('ShippingPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue);
+                                            }
+                                            $oShippingDiscount = $oOrderItem->getElementsByTagName('ShippingDiscount');
+                                            if ($oShippingDiscount && $oShippingDiscount->length > 0) {
+                                                $fShippingDiscount = floatval($oOrderItem->getElementsByTagName('ShippingDiscount')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue);
+                                            }
+
+
+                                            $oOrderGroup = OrderGroup::model(['orderid' => $oOrder->getOrderId(), 'manufacturerid' => $oProduct->getManufacturerId()]);
+                                            $oOrderGroup->setField('shipping', addslashes($aOrderInfo->getElementsByTagName('ShipmentServiceLevelCategory')->item(0)->nodeValue))->
+                                            setField('cb_status', ($sOrderStatus == 'Canceled' ? 'A' : 'P'))->
+                                            setField('dc_status', ($sOrderStatus == 'Unshipped' ? 'T' : 'S'))->
+                                            setField('acc_paymentid', PaymentMethod::model()->find(SQLBuilder::getInstance()->addCondition("order_tag_preference='$sFulfilmentChanel'"))->getField('paymentid'))->
+                                            setField('bd_status', 'W')->
+                                            setField('shipping_gross', $oOrderGroup->getShippingGross() + ($fShippingPrice - $fShippingDiscount));
+                                            if (!$oOrderGroup->getOrderId()) {
+                                                $oOrderGroup->setField('orderid', $oOrder->getOrderId())->
+                                                setField('manufacturerid', $oProduct->getManufacturerId())->_insert();
+                                            } else {
+                                                $oOrderGroup->_update();
+                                            }
+                                        }
+                                        $product_total += $oOrderDetail->getTotalProductPrice();
                                     }
 
-                                    $oOrderDetail = OrderDetail::model()->
-                                    setField('orderid', $oOrder->getOrderId())->
-                                    setField('productid', $oProduct->getProductId())->
-                                    setField('item_cost_to_us', $oProduct->getProductCostToUs())->
-                                    setField('price', floatval($oOrderItem->getElementsByTagName('ItemPrice')->item(0)->getElementsByTagName('Amount')->item(0)->nodeValue) /
-                                        intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue))->
-                                    setField('amount', intval($oOrderItem->getElementsByTagName('QuantityOrdered')->item(0)->nodeValue))->
-                                    setField('productcode', $oProduct->getSKU())->
-                                    setField('AmazonOrderItemCode', addslashes($oOrderItem->getElementsByTagName('OrderItemId')->item(0)->nodeValue))->
-                                    setField('product', addslashes($oProduct->getProductName()));
-                                    $oOrderDetail->_insert();
 
-                                    $product_total += $oOrderDetail->getTotalProductPrice();
                                 }
 
                                 $oOrder->updateVerificationStatus()->reCalculateTotals();
                                 $oOrder->recalculateAccounting();
 
-                                $oOrderRaw = CidevAmazonOrderRaw::model()->find(SQLBuilder::getInstance()->addCondition('orderid = ' . $oOrder->getOrderId()));
-                                $oOrderRaw->setField('orderid', $oOrder->getOrderId())->
-                                setField('order_info', addslashes($xpath2->document->saveXML()))->
-                                setField('orderitems_info', addslashes($xpath3->document->saveXML()));
-                                $oOrderRaw->_insert(true);
 
                                 $log = '<a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID=' . $sAmazonOrderId . '" target="_blank">Amazon order # ' . $sAmazonOrderId . '</a><br />Grand total: $' . $product_total;
                                 Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $log, 'Amazon');
@@ -1662,5 +1736,10 @@ class AmazonMWS
 
             $this->nextToken = $xpath->query('/*/*/NextToken')->item(0)->nodeValue;
         }
+    }
+
+    public function getService()
+    {
+        return $this->oMWSService;
     }
 }

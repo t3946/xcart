@@ -27,6 +27,7 @@ switch ($_POST['ajax_action']) {
         break;
     case "change_processing_rules":
         changeProcessingRules($_POST);
+        break;
     case "change_verificator_status":
         changeVerificatorStatus($_POST);
         break;
@@ -41,6 +42,15 @@ switch ($_POST['ajax_action']) {
         break;
     case "category_structure_change":
         changeCategoryStructure($_POST);
+        break;
+    case "verification_arbitrage_full":
+        enterVerificationArbitrageFull($_POST);
+        break;
+    case "get_receivables_orders":
+        getReceivablesOrders($_POST);
+        break;
+    case "get_payable_orders":
+        getPayablesOrders($_POST);
         break;
 }
 
@@ -163,7 +173,7 @@ function changeMissingStructure($aParams = [])
     $aResult['result'] = false;
     $oProduct = null;
     $sNewSKU = $aParams['new_sku'];
-    $iNewProductid = (int) $aParams['new_productid'];
+    $iNewProductid = (int)$aParams['new_productid'];
     $sOldSKU = $aParams['category'];
     $sOldSKUAdd = $aParams['amazon_sku'];
     switch ($aParams['action']) {
@@ -171,7 +181,7 @@ function changeMissingStructure($aParams = [])
             if (!empty($sNewSKU)) {
                 $oProduct = Xcart\Product::model()->getProductBySKU($sNewSKU);
             } elseif ($iNewProductid) {
-                $oProduct = Xcart\Product::model(['productid'=>$iNewProductid]);
+                $oProduct = Xcart\Product::model(['productid' => $iNewProductid]);
             }
             if ($oProduct->getProductId()) {
                 if ($oProduct->isForSale()) {
@@ -213,8 +223,8 @@ function changeIssueProcessing($aParams = [])
 {
     $aResult = [];
     $aResult['result'] = false;
-    $iProductId = (int) $aParams['product_id'];
-    $iIssueId = (int) $aParams['issue_id'];
+    $iProductId = (int)$aParams['product_id'];
+    $iIssueId = (int)$aParams['issue_id'];
     switch ($aParams['action']) {
         case 'fixed':
             $oIssue = new Xcart\External_Marketplaces\GMCQualityIssues(['productid' => $iProductId, 'issue_id' => $iIssueId]);
@@ -237,4 +247,159 @@ function changeIssueProcessing($aParams = [])
             break;
     }
     print(json_encode($aResult));
+}
+
+function enterVerificationArbitrageFull($aParams = [])
+{
+    global $login;
+    $aResult = [];
+    $aResult['result'] = false;
+    $sAmazonAsin = $iAmazonQty = $iOurSiteQty = $sExternalVerificationProductsAction = null;
+
+    $iProductId = (int)$aParams['product_id'];
+    if (!empty($aParams['asin_arbitrage']) || !empty($aParams['amazon_qty_arbitrage']) || !empty($aParams['our_qty_arbitrage'])) {
+        $aRows = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->findAll(
+            Xcart\SQLBuilder::getInstance()->addCondition('productid='.$iProductId)->
+            addCondition("action='asin_on_amazon'")
+        );
+        if (!empty($aRows)) {
+            foreach ($aRows as $oRow) {
+                $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
+                setField('productid', $iProductId)->
+                setField('batch_id', $oRow->getBatchId())->
+                setField('login', $oRow->getLogin());
+                $sAmazonAsin = trim($aParams['asin_arbitrage']);
+                if (!empty($sAmazonAsin)) {
+                    $bS->setField('action', 'arbitrage_asin')->
+                    setField('value', $sAmazonAsin)->_insert(true);
+                    $aResult['result'] = ($bS !== false);
+                }
+                if (!empty($aParams['amazon_qty_arbitrage'])) {
+                    $iAmazonQty = intval($aParams['amazon_qty_arbitrage']);
+                    $bS->setField('action', 'arbitrage_amazon_qty')->
+                    setField('value', $iAmazonQty)->_insert(true);
+                    $aResult['result'] = ($bS !== false);
+                }
+                if (!empty($aParams['our_qty_arbitrage'])) {
+                    $iOurSiteQty = intval($aParams['our_qty_arbitrage']);
+                    $bS->setField('action', 'arbitrage_our_qty')->
+                    setField('value', $iOurSiteQty)->_insert(true);
+                    $aResult['result'] = ($bS !== false);
+                }
+            }
+        }
+    }
+
+    if (!empty($aParams['arbitrage']) && is_array($aParams['arbitrage'])) {
+        foreach ($aParams['arbitrage'] as $aArbitrageValues) {
+            switch ($aArbitrageValues['action']) {
+                case 'action':
+                    if (!is_null($sAmazonAsin)) {
+                        continue;
+                    }
+                    $sExternalVerificationProductsAction = 'arbitrage_confirmation';
+                    break;
+                case 'qty':
+                    if (!is_null($iAmazonQty) && !is_null($iOurSiteQty)) {
+                        continue;
+                    }
+                    $sExternalVerificationProductsAction = 'arbitrage_confirmation_qty';
+                    break;
+                case 'image':
+                    $sExternalVerificationProductsAction = 'arbitrage_confirmation_image';
+                    break;
+                case 'name':
+                    $sExternalVerificationProductsAction = 'arbitrage_confirmation_name';
+                    break;
+                case 'desc':
+                    $sExternalVerificationProductsAction = 'arbitrage_confirmation_desc';
+                    break;
+            }
+            $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
+            setField('productid', $iProductId)->
+            setField('batch_id', $aArbitrageValues['batch_id'])->
+            setField('login', $aArbitrageValues['login'])->
+            setField('action', $sExternalVerificationProductsAction)->
+            setField('value', $login)->_insert(true);
+            $aResult['result'] = ($bS !== false);
+        }
+    }
+    print(json_encode($aResult));
+}
+
+function getReceivablesOrders($aParams = [])
+{
+    $html = <<<HTML
+<tr>
+<td colspan="5">
+    <table style="width:100%;">    
+    <tr class="TableHead">
+    <td style="background-color: #D9EAD3;" width="90">Date</td>
+    <td style="background-color: #D9EAD3;" width="90">Order #</td>
+    <td style="background-color: #D9EAD3;" width="100">PO #</td>
+    <td style="background-color: #D9EAD3;" width="*">COMPANY NAME</td>
+    <td style="background-color: #D9EAD3;" width="200">BUYER'S NAME</td>
+    <td style="background-color: #D9EAD3;" width="90">AMOUNT</td>
+    </tr>
+    
+HTML;
+    $aOrderGroups = ((new Xcart\Reconciliation)->getReceivablesOrderGroups($aParams['period']));
+    if (!empty($aOrderGroups)) {
+        foreach ($aOrderGroups as $oOrderGroup) {
+            $oOrder = $oOrderGroup->getOrderInstance();
+            $aOrderDetails = $oOrder->getDetails();
+            $html .= <<<HTML
+<tr>
+<td align="center">{$oOrder->getOrderDate('d-M-Y')}</td>
+<td align="center"><a target="_blank" href="{$oOrder->getOrderModifyURL()}">{$oOrder->getDisplayOrderNumber()}</a></td>
+<td>{$aOrderDetails['po_number']}</td>
+<td>{$aOrderDetails['company_name']}</td>
+<td>{$aOrderDetails['name_of_purchaser']}</td>
+<td align="center">{$oOrderGroup->getTotalGross()}</td>
+</tr>
+HTML;
+
+        }
+    }
+    $html .= <<<HTML
+</table>
+</td>
+</tr>
+HTML;
+    echo $html;
+}
+
+function getPayablesOrders($aParams = [])
+{
+    $html = <<<HTML
+<tr>
+<td colspan="5">
+    <table style="width:100%;">    
+    <tr class="TableHead">
+    <td style="background-color: #D9EAD3;" width="90">Date</td>
+    <td style="background-color: #D9EAD3;" width="90">Order #</td>
+    <td style="background-color: #D9EAD3;" width="90">AMOUNT</td>
+    </tr>
+    
+HTML;
+    $aOrderGroups = ((new Xcart\Reconciliation)->getPayablesOrderGroups($aParams['period']));
+    if (!empty($aOrderGroups)) {
+        foreach ($aOrderGroups as $oOrderGroup) {
+            $oOrder = $oOrderGroup->getOrderInstance();
+            $html .= <<<HTML
+<tr>
+<td align="center">{$oOrder->getOrderDate('d-M-Y')}</td>
+<td align="center"><a target="_blank" href="{$oOrder->getOrderModifyURL()}">{$oOrder->getDisplayOrderNumber()}</a></td>
+<td align="center">{$oOrderGroup->getTotalGross()}</td>
+</tr>
+HTML;
+
+        }
+    }
+    $html .= <<<HTML
+</table>
+</td>
+</tr>
+HTML;
+    echo $html;
 }

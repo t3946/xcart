@@ -1,4 +1,52 @@
 <?php
+
+if ($gPage_status['match'] && $gPage_status['type'] == 'brand') {
+    $b_ids = [$gPage_status['page_id'] => "Y"];
+}
+
+$aFilterSelected = null;
+if (!empty($fv_ids))
+    $aFilterSelected = array_keys($fv_ids);
+
+if (!empty($f_id)) {
+    $oFilter = \Xcart\Filter::model(['f_id' => $f_id]);
+} else $oFilter = \Xcart\Filter::model();
+
+$oFilter->setStoreFront(\Xcart\StoreFront::model(['storefrontid' => $current_storefront]))->
+setCategory(\Xcart\Category::model(['categoryid' => $cat]));
+if (!empty($aFilterSelected)) {
+    $oFilter->setFilterValuesSelected(
+        \Xcart\FilterValue::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('fv_id IN (' . implode(',', $aFilterSelected) . ')'))
+    );
+}
+if (!empty($p_ids)) {
+    $aPriceRange = array_keys($p_ids);
+    $oFilter->setPriceRange(reset($aPriceRange));
+}
+
+if (!empty($b_ids)) {
+    $oFilter->setBrandSelected(
+        \Xcart\Brand::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('brandid IN (' . implode(',', array_keys($b_ids)) . ')'))
+    );
+}
+
+$aFilterValues = $oFilter->getMoreBrands();
+$smarty->assign("aBrandFilters", $aFilterValues);
+
+if ($gPage_status['match'] && $gPage_status['type'] == 'brand')
+{
+    $selected_brandids = [];
+    if (!empty($aFilterValues)) {
+        foreach ($aFilterValues as $aFilterValue) {
+            $selected_brandids[] = $aFilterValue->getBrandId();
+        }
+    }
+
+    $smarty->assign('filter_selected_brandids', $selected_brandids);
+}
+
+
+
 $search_data["products"]["search_in_subcategories"] = "Y";
 $filter_selected_and_found_brands = "";
 $cidev_filters_tree_sorted = "";
@@ -303,100 +351,7 @@ include $xcart_dir . "/include/search.php";
         }
     }
 
-    if (!empty($filter_selected_and_found_brands) && is_array($filter_selected_and_found_brands)) {
 
-        $seach_query_brands_count = $search_query_count_NEW;
-
-//print($seach_query_brands_count);
-
-        $seach_query_brands_count_arr = explode("GROUP BY", $seach_query_brands_count);
-
-        $count_selected_brands = 0;
-
-        /*
-         * https://s3stores.teamwork.com/tasks/6258406
-        */
-
-
-        if ($bOptimisedSelectBrands) {
-            $seach_query_brands_count_arr[1] = "$sql_tbl[products].brandid";
-
-            //$seach_query_brands_count_arr[0] = str_replace("SELECT COUNT(*), $sql_tbl[products].productid","SELECT COUNT(DISTINCT $sql_tbl[products].productid) as brand_count, $seach_query_brands_count_arr[1] ",$seach_query_brands_count_arr[0]);
-            $seach_query_brands_count_arr[0] = preg_replace('/SELECT(.*?)FROM/is', "SELECT COUNT(DISTINCT $sql_tbl[products].productid) as brand_count, $seach_query_brands_count_arr[1] FROM", $seach_query_brands_count_arr[0]);
-
-            $seach_query_brands_count = $seach_query_brands_count_arr[0] . " GROUP BY " . $seach_query_brands_count_arr[1];
-
-            $seach_query_brands_count_products = func_query_hash($seach_query_brands_count, "brandid", false);
-
-            foreach ($filter_selected_and_found_brands as $k => $v) {
-                $filter_selected_and_found_brands[$k]["count_products"] = $seach_query_brands_count_products[$filter_selected_and_found_brands[$k]['brandid']]['brand_count'];
-                if ($v["selected"] == "Y") {
-                    $count_selected_brands++;
-                }
-            }
-
-            db_free_result($seach_query_brands_count_products);
-
-        } else {
-
-            foreach ($filter_selected_and_found_brands as $k => $v) {
-                $filter_brand_sub_query = "$sql_tbl[products].brandid='" . $v["brandid"] . "'";
-                $seach_query_brands_count = $seach_query_brands_count_arr[0] . " AND " . $filter_brand_sub_query . " GROUP BY " . $seach_query_brands_count_arr[1];
-                $seach_query_brands_count_products = db_query($seach_query_brands_count);
-                $filter_count_brands = db_num_rows($seach_query_brands_count_products);
-                db_free_result($seach_query_brands_count_products);
-                $filter_selected_and_found_brands[$k]["count_products"] = $filter_count_brands;
-
-                if ($v["selected"] == "Y") {
-                    $count_selected_brands++;
-                }
-            }
-        }
-
-//func_print_r($filter_selected_and_found_brands); exit;
-
-        $filter_selected_and_found_brands = my_array_sort($filter_selected_and_found_brands, 'brand');
-
-        /*
-                if ($count_selected_brands > 0){
-                $tmp_selected_brands_arr = array();
-
-                        foreach ($filter_selected_and_found_brands as $k => $v){
-                    if ($v["selected"] == "Y"){
-                        $tmp_selected_brands_arr[] = $v;
-                        unset($filter_selected_and_found_brands[$k]);
-                    }
-                        }
-
-                $new_filter_selected_and_found_brands = array();
-                foreach ($tmp_selected_brands_arr as $k => $v){
-                    $new_filter_selected_and_found_brands[] = $v;
-                }
-
-                        foreach ($filter_selected_and_found_brands as $k => $v){
-                    $new_filter_selected_and_found_brands[] = $v;
-                        }
-
-                $filter_selected_and_found_brands = $new_filter_selected_and_found_brands;
-                }
-        */
-
-
-        $smarty->assign("filter_selected_and_found_brands", $filter_selected_and_found_brands);
-
-        $show_N_brands = 5;
-        if ($count_selected_brands > 5) {
-            $show_N_brands = $count_selected_brands;
-        }
-
-//$show_N_brands = 1;
-        $smarty->assign("show_N_brands", $show_N_brands);
-
-    }
-    //x_session_save("filter_selected_and_found_brands");
-###
-##
-#
 
     $filter_prices_old = $filter_prices;
     $filter_prices = "";

@@ -3,7 +3,9 @@
         "vendor-dir": "include/libs"
     },
     "require": {
-        "google/apiclient": "^2.0"
+        "google/apiclient": "^2.0",
+        "mindy/query_builder": "^2.1",
+        "jaybizzle/crawler-detect": "^1.2"
     },
     "autoload": {
         "psr-4": {
@@ -11,6 +13,48 @@
             "Xcart\\External_Product_Verification\\": "modules/External_Product_Verification/include",
             "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include"
         },
-        "classmap": ["MarketplaceWebService","src/FBAOutboundServiceMWS", "MarketplaceWebServiceOrders", "FBAInventoryServiceMWS", "MarketplaceWebServiceProducts"]
+        "classmap": ["MarketplaceWebService",
+            "src/FBAOutboundServiceMWS",
+            "MarketplaceWebServiceOrders",
+            "FBAInventoryServiceMWS",
+            "MarketplaceWebServiceProducts"
+        ],
+        "files": [
+            "include/func/func.core.php",
+            "include/func/func.amazon.php",
+            "include/func/func.amazon_shipping.php",
+            "include/func/func.backoffice.php",
+            "include/func/func.cart.php",
+            "include/func/func.category.php",
+            "include/func/func.clean_urls.php",
+            "include/func/func.crypt.php",
+            "include/func/func.db.php",
+            "include/func/func.debug.php",
+            "include/func/func.export.php",
+            "include/func/func.files.php",
+            "include/func/func.fraud.php",
+            "include/func/func.froogle.php",
+            "include/func/func.gd.php",
+            "include/func/func.http.php",
+            "include/func/func.https_curl.php",
+            "include/func/func.https_httpscli.php",
+            "include/func/func.https_libcurl.php",
+            "include/func/func.https_openssl.php",
+            "include/func/func.https_ssleay.php",
+            "include/func/func.image.php",
+            "include/func/func.import.php",
+            "include/func/func.mail.php",
+            "include/func/func.order.php",
+            "include/func/func.order_edit.php",
+            "include/func/func.payment.php",
+            "include/func/func.product.php",
+            "include/func/func.product_feeds.php",
+            "include/func/func.snapshots.php",
+            "include/func/func.taxes.php",
+            "include/func/func.templater.php",
+            "include/func/func.tests.php",
+            "include/func/func.user.php",
+            "include/func/func.xml.php"
+        ]
     }
 }

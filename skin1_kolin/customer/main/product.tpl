@@ -225,14 +225,14 @@ function func_dec_inc_qty(type_of_action, qty_step){
 
 	qty_val = parseInt(qty_val);
 	qty_step = parseInt(qty_step);
-	
+
 	if (type_of_action == "inc"){
 		qty_val += qty_step;
-	} 
+	}
 
         if (type_of_action == "dec"){
                 qty_val = qty_val - qty_step;
-        } 
+        }
 
 	if (qty_val > product_avail){
 		qty_val = avail;
@@ -620,7 +620,7 @@ func_load_ALL_ajax_carousels("products_also_bought_with_this_product,related_pro
 {/if}
 
 {if $similar_products ne ""}
-<br /> 
+<br />
 <p />
 {include file="customer/main/similar_products.tpl"}
 {/if}

@@ -17,14 +17,11 @@ Thumbs.db
 ###################################
 ## scripts to exclude
 /robots.txt.php
-/modules/Multiple_Storefronts/init.php
-/modules/Multiple_Storefronts/config.php
-/init.php
-/config.php
 /config.local.php
 /robots.txt
 /test.php
 /modules/XPDF/dompdf/lib/fonts/log.htm
+!/config.php
 ######################
 ## folders to exclude
 /images/**
@@ -70,3 +67,5 @@ Thumbs.db
 /.idea/**
 /verificator/cookies
 /include/system/
+node_modules
+/skin1_kolin/pages/

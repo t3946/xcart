@@ -105,20 +105,21 @@ while ($product = db_fetch_array($products)){
 */
 
 	print($product["productid"]."\n\r");
-	if (empty($product["no_image_T"])){
+	if (empty($product["no_image_T"])) {
 		if (func_generate_image($product["productid"], 'D', 'T', false, false, $image_id)) {
 			func_save_product_thumb_image($product["productid"], 'T');
 		} else {
-			$log_text = 'Error generate thumbnail. Imageid:'.$image_id;
+			$log_text = 'Error generate thumbnail. Delete image file ' . $image_data['image_path'] . ' from ' . $product['productcode'];
+
 			func_backprocess_log("image generator", $log_text);
 		}
 	}
 
-        if (empty($product["no_image_P"])){
+	if (empty($product["no_image_P"])) {
 		if (func_generate_image($product["productid"], 'D', 'P', false, false, $image_id)) {
 			func_save_product_thumb_image($product["productid"], 'P');
 		} else {
-			$log_text = 'Error generate product image. Imageid:'.$image_id;
+			$log_text = 'Error generate thumbnail. Delete image file ' . $image_data['image_path'] . ' from ' . $product['productcode'];
 			func_backprocess_log("image generator", $log_text);
 		}
 	}

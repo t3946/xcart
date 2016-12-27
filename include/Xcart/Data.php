@@ -65,7 +65,6 @@ class Data
     }
 
 
-
     public function _save($is_replace = false)
     {
         if (empty($this->aPrimaryKeysValues)) {
@@ -98,9 +97,11 @@ class Data
     public function getField($sFieldName = null)
     {
         $res = null;
-        if (empty($sFieldName))
+        if (empty($sFieldName)) {
             $res = $this->getFields();
-        else if (isset($this->aPrimaryTableValue[$sFieldName])) $res = $this->aPrimaryTableValue[$sFieldName];
+        } else if (isset($this->aPrimaryTableValue[$sFieldName])) {
+            $res = $this->aPrimaryTableValue[$sFieldName];
+        }
         return $res;
     }
 

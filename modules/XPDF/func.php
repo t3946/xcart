@@ -76,12 +76,6 @@ function xpdf_convert_tpl($tpl, &$smarty, $html_prepare_callback = null)
 {
     global $xcart_http_host;
 
-    $images_dir = $smarty->_tpl_vars['ImagesDir'];
-    $smarty->assign('ImagesDir', 'http://' . $xcart_http_host . $images_dir);
-
-    $skin_dir = $smarty->_tpl_vars['SkinDir'];
-    $smarty->assign('SkinDir', 'http://' . $xcart_http_host . $skin_dir);
-
     $smarty->assign('pdf_template', $tpl);
 
     global $already_included_files;
@@ -93,9 +87,6 @@ function xpdf_convert_tpl($tpl, &$smarty, $html_prepare_callback = null)
     if ($html_prepare_callback) {
         $html = call_user_func($html_prepare_callback, $html, $tpl);
     }
-
-    $smarty->assign('ImagesDir', $images_dir);
-    $smarty->assign('SkinDir', $skin_dir);
 
     return xpdf_convert($html);
 }
@@ -135,7 +126,7 @@ function xpdf_get_invoice($orderids, $output = true, $internal = false)
 {
     x_load('order');
 
-    global $smarty, $shop_language, $current_area, $login;
+    global $smarty, $shop_language, $current_area, $login, $statuses;
     global $sql_tbl;
 
     if (!is_array($orderids)) {
@@ -190,6 +181,7 @@ function xpdf_get_invoice($orderids, $output = true, $internal = false)
     }
 
     $smarty->assign('orders', $orders);
+    $smarty->assign('statuses', $statuses);
 
 #
 ##

@@ -45,6 +45,11 @@ class ExternalVerificationProducts extends Data
         return $this->getField('batch_id');
     }
 
+    public function getBatchEntity()
+    {
+        return ExternalVerificationBatch::model(['batch_id' => $this->getBatchId()]);
+    }
+
     public function getValue()
     {
         return $this->getField('value');
@@ -224,5 +229,10 @@ class ExternalVerificationProducts extends Data
     public function checkAnswerCorrect(ExternalVerificationProductsQueue $oProductQueue)
     {
         return ExternalVerificationBatch::checkAnswerCorrect($this, $oProductQueue);
+    }
+
+    public function getSearchByUPCOnAmazonLink()
+    {
+        return sprintf(ExternalVerificationBatch::LINK_SEARCH_BY_UPC, $this->getProductEntity()->getUPC());
     }
 }

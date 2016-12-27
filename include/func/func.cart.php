@@ -76,7 +76,11 @@ function func_is_customer_free_ship_zone($zoneid, $userinfo, $provider) {
 function func_get_customer_zone_ship ($username, $provider, $type, $for_manufacturerid=0, $iShippingMethod = null) {
 	global $sql_tbl;
 	global $single_mode;
+	$zone = null;
 
+	if (empty($for_manufacturerid)) {
+        $for_manufacturerid = 0;
+	}
 #
 ##
 ###
@@ -115,28 +119,10 @@ function func_get_customer_zone_ship ($username, $provider, $type, $for_manufact
 
 
 
-	$zone = 0; # default zone
 	if (is_array($zones)) {
-		//$provider_condition = ($single_mode) ? "" : " AND provider='".addslashes($provider)."'";
-		$tmp = func_query_column("SELECT zoneid FROM $sql_tbl[shipping_rates] WHERE zoneid IN ('".implode("','", array_keys($zones))."') $provider_condition AND type='$type' GROUP BY zoneid");
-		if (is_array($tmp) && !empty($tmp)) {
-			$unused = $zones;
-			# remove not available zones
-			foreach($tmp as $v) {
-				if (isset($unused[intval($v)]))
-					unset($unused[intval($v)]);
-			}
-			if (!empty($unused)) {
-				foreach($unused as $k => $v)
-					unset($zones[$k]);
-			}
-
-			reset($zones);
-			$zone = key($zones); #extract first zone
-		}
+		reset($zones);
+		$zone = key($zones); #extract first zone
 	}
-
-//func_print_r($zone);
 
 	return $zone;
 }
@@ -163,6 +149,10 @@ function func_get_customer_zones_avail ($username, $provider, $address_type="S",
 		"Z" => "zipcode",
 		"A" => "address");
 	static $results_cache = array();
+
+	if (empty($for_manufacturerid)) {
+        $for_manufacturerid = 0;
+	}
 
 	if ($config["General"]["use_counties"] != "Y") {
 		unset($z_flags["G"]);
@@ -247,124 +237,113 @@ if (isset($_GET["mode"]) && $_GET["mode"] == "checkout" && isset($_GET["paymenti
 #
 */
 
-//		if ($customer_info[$address_prefix."country"] != "US" || $zoneid > 0 || empty($type) || empty($for_manufacturerid))
-		if ($customer_info[$address_prefix."country"] != "US" || empty($type) || empty($for_manufacturerid)){
+		if (1==2/*$customer_info[$address_prefix."country"] != "US" || empty($type) || empty($for_manufacturerid)*/)
+
+		{
 
 			// empty for_manufacturerid for free_shipping = Y AND for getting all avalable zones for taxes
 
 			# Possible zones for customer's country...
 			$possible_zones = func_query("SELECT $sql_tbl[zone_element].zoneid FROM $sql_tbl[zone_element], $sql_tbl[zones] WHERE $sql_tbl[zone_element].zoneid=$sql_tbl[zones].zoneid AND $sql_tbl[zone_element].field='".$customer_info[$address_prefix."country"]."'  AND $sql_tbl[zone_element].field_type='C' $provider_condition GROUP BY $sql_tbl[zone_element].zoneid");
 
-//func_print_r($customer_info[$address_prefix."country"] , $zoneid, $type, $for_manufacturerid, $possible_zones);
-//die("123");
+			if (is_array($possible_zones)) {
 
+				$zones_completion = array();
+				$_possible_zones = array();
+				foreach ($possible_zones as $pzone) {
+					$_possible_zones[$pzone["zoneid"]] = func_query_column("SELECT field_type FROM $sql_tbl[zone_element] WHERE zoneid='$pzone[zoneid]' AND field<>'%'");
+				}
+
+				foreach ($_possible_zones as $_pzoneid=>$_elements) {
+					if (is_array($_elements)) {
+						foreach ($_elements as $k=>$v) {
+							$zones_completion[$_pzoneid] += $z_flags[$v];
+						}
+					}
+				}
+
+				$cs_state = $customer_info[$address_prefix."state"];
+				$cs_country = $customer_info[$address_prefix."country"];
+				$cs_pair = $cs_country."_".$cs_state;
+
+				$empty_condition = " AND $sql_tbl[zone_element].field<>'%'";
+
+				foreach ($possible_zones as $pzone) {
+					$zones[$pzone["zoneid"]] = $z_flags["C"];
+
+					# If only country is defined for this zone, skip further actions
+					if ($zones_completion[$pzone["zoneid"]] == $z_flags["C"])
+						continue;
+
+					foreach ($z_flags as $field_type=>$field_type_flag) {
+
+						if ($field_type == "C")
+							continue;
+
+						if ($zones_completion[$pzone["zoneid"]] & $field_type_flag) {
+							# Checking the field for  equal...
+
+							if ($field_type == "S") {
+								# Checking the state...
+								$found_zones = func_query_first_cell("SELECT zoneid FROM $sql_tbl[zone_element], $sql_tbl[states] WHERE $sql_tbl[zone_element].field='".addslashes($cs_pair)."' AND $sql_tbl[zone_element].field_type='S' AND $sql_tbl[states].code='".addslashes($cs_state)."' AND $sql_tbl[states].country_code='".addslashes($cs_country)."' AND $sql_tbl[zone_element].zoneid='$pzone[zoneid]'");
+							} elseif ($field_type == "G") {
+								# Checking the county...
+								$found_zones = func_query_first_cell("SELECT zoneid FROM $sql_tbl[zone_element] WHERE field_type='G' AND field='".$customer_info[$address_prefix."county"]."' AND zoneid='$pzone[zoneid]'");
+							}
+							else {
+								# Checking the rest fields (city, zipcode, address)
+								$found_zones = func_query_first_cell("SELECT $sql_tbl[zone_element].zoneid FROM $sql_tbl[zone_element], $sql_tbl[zones] WHERE $sql_tbl[zone_element].zoneid=$sql_tbl[zones].zoneid AND $sql_tbl[zone_element].field_type='$field_type' AND '".addslashes($customer_info[$address_prefix.$zone_element_types[$field_type]])."' LIKE $sql_tbl[zone_element].field  AND $sql_tbl[zone_element].zoneid='$pzone[zoneid]' $empty_condition $provider_condition");
+							}
+
+							if (!empty($found_zones)) {
+								# Field is found: increase the priority
+								$zones[$pzone["zoneid"]] += $field_type_flag;
+							}
+							else {
+								# Remove zone from available zones list
+								unset($zones[$pzone["zoneid"]]);
+								continue;
+							}
+						}
+					} # /foreach ($z_flags)
+				} # /foreach ($possible_zones)
+			}
+			$zones[0] = 0;
+			arsort($zones, SORT_NUMERIC);
 		}
 		else {
-###########
-### Igor###
+			$cs_state = $customer_info[$address_prefix."state"];
+			$cs_country = $customer_info[$address_prefix."country"];
+			$sCA_ST = $cs_country."_".$cs_state;
 
-/*
-$possible_zones = func_query("
-SELECT ZE.zoneid 
-FROM xcart_zone_element As ZE
-        left join xcart_zones Z ON 1=1
-        inner join xcart_shipping_rates SR ON SR.zoneid = ZE.zoneid
-WHERE ZE.zoneid=Z.zoneid 
-      AND ZE.field='US' 
-            AND ZE.field_type='C' 
-            AND Z.provider='master' 
-GROUP BY ZE.zoneid
-");
-*/
+$possible_zones = func_query($possible_zones_query = <<<SQL
+SELECT ZE.zoneid, COUNT(DISTINCT ZES.field) cnt
+FROM xcart_zone_element AS ZE
+INNER JOIN xcart_zone_element AS ZES USING (zoneid, field_type)
+INNER JOIN xcart_shipping_rates SR ON SR.manufacturerid = {$for_manufacturerid} AND ZE.zoneid = SR.zoneid AND SR.type='{$type}'
+WHERE ZE.field_type = 'S' AND ZE.field ='{$sCA_ST}'
+GROUP BY ZE.zoneid 
+UNION
+SELECT zoneid, 999999999
+FROM xcart_shipping_rates
+WHERE manufacturerid = {$for_manufacturerid} AND zoneid = 0 AND type='R'
+GROUP BY zoneid
+ORDER BY cnt
+SQL
+);
 
-$possible_zones = func_query($possible_zones_query = "
-SELECT ZE.zoneid
-FROM xcart_zone_element As ZE
-        left join xcart_zones Z ON 1=1
-        inner join xcart_shipping_rates SR ON SR.zoneid = ZE.zoneid
-        left join xcart_zone_element ZES ON ZES.zoneid = Z.zoneid and ZES.field_type = 'S'
-WHERE 
-	    ZE.zoneid=Z.zoneid 
-	    AND ZE.field='US' 
-            AND ZE.field_type='C' 
-            AND Z.provider='master' 
-	    AND SR.type='$type'
-	    AND SR.manufacturerid='$for_manufacturerid' 
-GROUP BY ZE.zoneid
-Order By COUNT(distinct ZES.field)
-");
 //Order By COUNT(SR.rateid)
 ###########
-
-		}
-
-
-		if (is_array($possible_zones)) {
-
-			$zones_completion = array();
-			$_possible_zones = array();
-			foreach ($possible_zones as $pzone) {
-				$_possible_zones[$pzone["zoneid"]] = func_query_column("SELECT field_type FROM $sql_tbl[zone_element] WHERE zoneid='$pzone[zoneid]' AND field<>'%' GROUP BY zoneid, field_type");
-			}
-
-			foreach ($_possible_zones as $_pzoneid=>$_elements) {
-				if (is_array($_elements)) {
-					foreach ($_elements as $k=>$v) {
-						$zones_completion[$_pzoneid] += $z_flags[$v];
-					}
+			if (!empty($possible_zones)){
+				foreach ($possible_zones as $pos_zone) {
+					$zones[$pos_zone['zoneid']] =  $pos_zone['cnt'];
 				}
 			}
 
-			$cs_state = $customer_info[$address_prefix."state"];
-			$cs_country = $customer_info[$address_prefix."country"];
-			$cs_pair = $cs_country."_".$cs_state;
-
-			$empty_condition = " AND $sql_tbl[zone_element].field<>'%'";
-
-			foreach ($possible_zones as $pzone) {
-				$zones[$pzone["zoneid"]] = $z_flags["C"];
-
-				# If only country is defined for this zone, skip further actions
-				if ($zones_completion[$pzone["zoneid"]] == $z_flags["C"])
-					continue;
-
-				foreach ($z_flags as $field_type=>$field_type_flag) {
-
-					if ($field_type == "C")
-						continue;
-
-					if ($zones_completion[$pzone["zoneid"]] & $field_type_flag) {
-						# Checking the field for  equal...
-
-						if ($field_type == "S") {
-							# Checking the state...
-							$found_zones = func_query_first_cell("SELECT zoneid FROM $sql_tbl[zone_element], $sql_tbl[states] WHERE $sql_tbl[zone_element].field='".addslashes($cs_pair)."' AND $sql_tbl[zone_element].field_type='S' AND $sql_tbl[states].code='".addslashes($cs_state)."' AND $sql_tbl[states].country_code='".addslashes($cs_country)."' AND $sql_tbl[zone_element].zoneid='$pzone[zoneid]'");
-						} elseif ($field_type == "G") {
-							# Checking the county...
-							$found_zones = func_query_first_cell("SELECT zoneid FROM $sql_tbl[zone_element] WHERE field_type='G' AND field='".$customer_info[$address_prefix."county"]."' AND zoneid='$pzone[zoneid]'");
-						}
-						else {
-							# Checking the rest fields (city, zipcode, address)
-							$found_zones = func_query_first_cell("SELECT $sql_tbl[zone_element].zoneid FROM $sql_tbl[zone_element], $sql_tbl[zones] WHERE $sql_tbl[zone_element].zoneid=$sql_tbl[zones].zoneid AND $sql_tbl[zone_element].field_type='$field_type' AND '".addslashes($customer_info[$address_prefix.$zone_element_types[$field_type]])."' LIKE $sql_tbl[zone_element].field  AND $sql_tbl[zone_element].zoneid='$pzone[zoneid]' $empty_condition $provider_condition");
-						}
-
-						if (!empty($found_zones)) {
-							# Field is found: increase the priority
-							$zones[$pzone["zoneid"]] += $field_type_flag;
-						}
-						else {
-							# Remove zone from available zones list
-							unset($zones[$pzone["zoneid"]]);
-							continue;
-						}
-					}
-				} # /foreach ($z_flags)
-			} # /foreach ($possible_zones)
 		}
 	}
 
-	$zones[0] = 0;
-	arsort($zones, SORT_NUMERIC);
+
 
 	if (!empty($customer_login)) {
 		$results_cache[$data_key] = $zones;
@@ -1279,7 +1258,8 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 		return $return;
 
 	$customer_zone = func_get_customer_zone_ship($customer_info, $provider,"D", $for_manufacturerid, $shipping_id);
-	$shipping = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='D' AND manufacturerid='$for_manufacturerid' ORDER BY maxtotal, maxweight");
+	if (!is_null($customer_zone))
+		$shipping = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='D' AND manufacturerid='$for_manufacturerid' ORDER BY maxtotal, maxweight");
 
 	if ($shipping && $total_ship_items > 0) {
 		$shipping_cost =
@@ -1310,8 +1290,9 @@ function func_calculate_shippings($products, $shipping_id, $customer_info, $prov
 		$shipping_cost = $tmp['rate'];
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 		$customer_zone = func_get_customer_zone_ship($customer_info, $provider,"R", $for_manufacturerid, $shipping_id);
-# START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-		$shipping_rt = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND manufacturerid='$for_manufacturerid' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
+# START: random:1073746882_1073747063 [2008 Dec 24 16:25]
+		if (!is_null($customer_zone))
+			$shipping_rt = func_query("SELECT * FROM $sql_tbl[shipping_rates] WHERE shippingid='$shipping_id' $provider_condition AND zoneid='$customer_zone' AND manufacturerid='$for_manufacturerid' AND mintotal<='$total_shipping' AND maxtotal>='$total_shipping' AND minweight<='$total_weight_shipping' AND maxweight>='$total_weight_shipping' AND type='R' ORDER BY maxtotal, maxweight");
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
 		if ($shipping_rt && $shipping_cost > 0){

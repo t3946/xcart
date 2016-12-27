@@ -1112,7 +1112,7 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 #
 ## Calculate correct price for customer area
 ###
-	$product["product_availability"] = func_product_availability(false,false,false,false,false,$product);
+	$product["product_availability"] = func_product_availability(false,$product);
 
 	if ($current_area == 'C' || empty($current_area)){
 		$product["price"] = $product["taxed_price"] = func_product_price($product);

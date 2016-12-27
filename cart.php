@@ -82,7 +82,7 @@ if (!empty($orderids) && $_GET["mode"] == "order_message") {
 ###
 //	if ($order_data["order"]["paymentid"] != "4"){
 		# 4 - Phone Ordering
-		AB_Goal_Hit(array("1","2", "3", "4", "5", "6", "9"), $orders[0]["order"]["orderid"]);
+		AB_Goal_Hit(array("1","2", "3", "4", "5", "6", "9", "10", "11"), $orders[0]["order"]["orderid"]);
 //	}
 ###
 
@@ -1068,7 +1068,9 @@ if ($mode == "checkout"){
 		$cart['groups_delivery'] = array();
 		if (!empty($cart['shippingids']))
 			foreach ($cart['shippingids'] as $m_id => $sh_id) {
-				$cart['groups_delivery'][$m_id] = \Xcart\Shipping::model(['shippingid' => $sh_id])->getFrontendName();
+				$oShipping = \Xcart\Shipping::model(['shippingid' => $sh_id]);
+				$cart['groups_delivery'][$m_id] = $oShipping->getFrontendName();
+				$cart['groups_delivery_time'][$m_id] = $oShipping->getField('shipping_time');
 			}
 # END: random:17710_17631 [2009 Mar 26 09:25] 
 		$smarty->assign("shipping_groups", $cart["shipping_groups"]);

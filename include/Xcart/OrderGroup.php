@@ -117,6 +117,17 @@ class OrderGroup extends Data
         return $this;
     }
 
+
+    public function getRealShippingMethod()
+    {
+        return $this->getField('real_shipping_method');
+    }
+
+    public function setRealShippingMethod($val)
+    {
+        $this->setField('real_shipping_method', $val);
+    }
+
     public function getShippingGross()
     {
         return floatval($this->getField('shipping_gross'));
@@ -838,7 +849,7 @@ class OrderGroup extends Data
                     ->initAccountingPST();
 
                 if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
-                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal())->
+                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal() + $this->getOrderGroupInvoices()->getOrderGroupInvoicesHST())->
                     setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
                     setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
@@ -868,7 +879,7 @@ class OrderGroup extends Data
     {
         global $config;
 
-        if ($this->getAccountingNetProfit() < 0 && !in_array($this->getOrderGroupStatusCB(), ['R','V'])) {
+        if ($this->getAccountingNetProfit() < 0 && !in_array($this->getOrderGroupStatusCB(), ['R'])) {
             if (!$this->getOrderInstance()->isAttentionTagSet($config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"])) {
                 $oAttentionTag = new AttentionTag(['status_id' => $config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
                 $aInsertArray = ['orderid' => $this->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
@@ -1069,8 +1080,9 @@ class OrderGroup extends Data
      */
     public function getManufacturerEntity()
     {
-        if (is_null($this->oManufacturer))
+        if (is_null($this->oManufacturer)) {
             $this->oManufacturer = new Manufacturer($this->getManufacturerId());
+        }
         return $this->oManufacturer;
     }
 
@@ -1140,6 +1152,12 @@ class OrderGroup extends Data
             $this->_save();
         }
 
+    }
+
+    public function reCalculateShipping()
+    {
+        $this->setField('shipping_net', $this->getShippingGross() - floatval($this->getField('shipping_gst')) - floatval($this->getField('shipping_pst')));
+        $this->_save();
     }
 
     /**

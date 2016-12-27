@@ -25,8 +25,10 @@ if (!empty($id) && is_numeric($id)) {
     $smarty->assign("product", $product_info);
 
     $aImages = $oProduct->getImages('D');
-    foreach ($aImages as $oImage)
-        $aImageToView[] = $oImage->getFields(null);
+    if (!empty($aImages)) {
+        foreach ($aImages as $oImage)
+            $aImageToView[] = $oImage->getFields();
+    }
 
 
     $product_tabs[0]["title"] = "Product description";
