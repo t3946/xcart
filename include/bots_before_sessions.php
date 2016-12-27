@@ -34,7 +34,8 @@
 #
 
 use Xcart\Helpers\CrawlerDetect\CrawlerDetect;
-use \Xcart\Helpers\CrawlerDetect\Crawlers;
+use Xcart\Helpers\CrawlerDetect\Crawlers;
+use Xcart\Helpers\CrawlerDetect\CrawlersIp;
 
 if (!defined('XCART_START')) {
     header("Location: ../");
@@ -47,44 +48,12 @@ if (!empty($HTTP_USER_AGENT) && !defined("IS_ROBOT") && empty($is_robot))
 {
     $cr = new CrawlerDetect;
 
-    if ($cr->isCrawler() || ($cr->setCrawlers(new Crawlers())->isCrawler()))
-    {
+    if (   $cr->isCrawler()
+        || $cr->setCrawlers(new Crawlers())->isCrawler()
+        || $cr->setMode(CrawlerDetect::MODE_BY_IP)->setCrawlers(new CrawlersIp())->isCrawler()
+    ) {
         define("IS_ROBOT", 1);
         define("ROBOT", $cr->getMatches());
-    }
-    else {
-        $hosts = [
-            "Infoseek" => ['198.5.210.', '204.162.96.', '204.162.97.', '204.162.98.', '205.226.201.', '205.226.203.', '205.226.204.'],
-            "Lycos"    => ['206.79.171.', '207.77.90.', '208.146.26.', '209.67.228.', '209.67.229.'],
-        ];
-
-        if (!defined("IS_ROBOT") && !empty($REMOTE_ADDR)) {
-            $reg = [];
-
-            foreach ($hosts as $k => $v)
-            {
-                $v = str_replace('.', '\.', implode('|', $v));
-                $reg[] = "($v)";
-            }
-
-            $reg = implode('|', $reg);
-
-            if (preg_match("/{$reg}/i", $REMOTE_ADDR, $matches))
-            {
-                define("IS_ROBOT", 1);
-
-                $h = array_keys($hosts);
-                unset($matches[0]);
-
-                foreach ($matches as $k => $v)
-                {
-                    if (!empty($v)) {
-                        define("ROBOT", $h[$k-1]);
-                    }
-                }
-            }
-        }
-        unset($hosts);
     }
     unset($cr);
 
