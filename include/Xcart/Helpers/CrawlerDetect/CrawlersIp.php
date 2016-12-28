@@ -38,4 +38,9 @@ class CrawlersIp extends AbstractProvider
         return $h[$n];
     }
 
+    public function getMode()
+    {
+        return CrawlerDetect::MODE_BY_IP;
+    }
+
 }
