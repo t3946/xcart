@@ -97,8 +97,13 @@ JSON;
         $query["multi_match"]["query"] = $sQuery;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
 
-        $query["multi_match"]["slop"] = 3;
         $query["multi_match"]["analyzer"] = "snowball";
+        $query["multi_match"]["fields"] = [];
+        $query["multi_match"]["fields"][] = 'productname.productname^1.5';
+        $query["multi_match"]["fields"][] = 'description.description';
+        $query["multi_match"]["fields"][] = 'brand.brand^0.3';
+        $query["multi_match"]["fields"][] = 'sku';
+        $query["multi_match"]["fields"][] = 'upc';
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
 
         $query = /** @lang JSON */ <<<JSON
