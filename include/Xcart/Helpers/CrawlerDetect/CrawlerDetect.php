@@ -25,6 +25,10 @@ class CrawlerDetect extends \Jaybizzle\CrawlerDetect\CrawlerDetect
     {
         $this->crawlers = $crawlers;
 
+        if (method_exists($this->crawlers, 'getMode')) {
+            $this->setMode($this->crawlers->getMode());
+        }
+
         return $this;
     }
 
@@ -47,7 +51,6 @@ class CrawlerDetect extends \Jaybizzle\CrawlerDetect\CrawlerDetect
         return $this->mode;
     }
 
-
     public function isCrawler($userAgent = null)
     {
         if ($this->mode == self::MODE_BY_IP)
@@ -57,6 +60,7 @@ class CrawlerDetect extends \Jaybizzle\CrawlerDetect\CrawlerDetect
 
         return parent::isCrawler($userAgent);
     }
+
     public function getMatches()
     {
         if (method_exists($this->crawlers, 'getCrawlerName'))
