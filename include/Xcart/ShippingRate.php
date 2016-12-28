@@ -88,6 +88,11 @@ class ShippingRate extends Data
             $this->fShippingCharge += $this->fAdditionalShippingCharge;
             $this->fShippingCharge += $this->getCartShippingFreight();
             $this->fShippingCharge = round($this->fShippingCharge, 2);
+
+            if ($oCart->getExtraMarginValue() > 0) {
+                $this->fShippingCharge -= $oCart->getExtraMarginValue();
+                $this->fShippingCharge = max($this->fShippingCharge, 0);
+            }
         }
         return $this->fShippingCharge;
     }
@@ -140,21 +145,9 @@ class ShippingRate extends Data
     {
         $weight = $this->getCartShippingWeight();
         $total = $this->getCart()->getCost();
-        if ($this->getField('minweight') <= $weight && $this->getField('maxweight') >= $weight) {
-            $bResult = true;
-        } else {
-            $bResult = false;
-        }
-        if ($this->getField('mintotal') <= $total && $this->getField('maxtotal') >= $total && $bResult) {
-            $bResult = true;
-        } else {
-            $bResult = false;
-        }
-        if ($this->getField('maxamount') <= $this->getCart()->getProductCount() && $bResult) {
-            $bResult = true;
-        } else {
-            $bResult = false;
-        }
+        $bResult = ($this->getField('minweight') <= $weight && $this->getField('maxweight') >= $weight) &&
+            ($this->getField('mintotal') <= $total && $this->getField('maxtotal') >= $total) &&
+            ($this->getField('maxamount') <= $this->getCart()->getProductCount());
         return $bResult;
     }
 

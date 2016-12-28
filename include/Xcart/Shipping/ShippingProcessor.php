@@ -130,7 +130,8 @@ abstract class ShippingProcessor
                 addInnerJoin('shipping', 's', 'main.shippingid = s.shippingid')->
                 addCondition('zoneid = ' . $this->getShippingZone()->getField('zoneid'))->
                 addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
-                addCondition("s.active = 'Y'")
+                addCondition("s.active = 'Y'")->
+                addOrderBy("s.orderby")
             );
             if (!empty($this->aShippingRatesEntities)) {
                 foreach ($this->aShippingRatesEntities as $key => $oShippingRate) {
@@ -185,6 +186,9 @@ abstract class ShippingProcessor
 class ShippingCart
 {
     private $aCart;
+    private $fCost = null;
+    private $iCount = null;
+    private $fExtraMarginValue = null;
 
     public function addToCart(Product $oProduct, $qty)
     {
@@ -196,13 +200,15 @@ class ShippingCart
 
     public function getProductCount()
     {
-        $qty = 0;
-        if (!empty($this->aCart)) {
-            foreach ($this->aCart as $aProduct) {
-                $qty += $aProduct['qty'];
+        if (is_null($this->iCount)) {
+            $this->iCount = 0;
+            if (!empty($this->aCart)) {
+                foreach ($this->aCart as $aProduct) {
+                    $this->iCount += $aProduct['qty'];
+                }
             }
         }
-        return $qty;
+        return $this->iCount;
     }
 
     public function getProducts()
@@ -210,15 +216,26 @@ class ShippingCart
         return $this->aCart;
     }
 
-
     public function getCost()
     {
-        $fCost = 0;
-        if (!empty($this->aCart)) {
-            foreach ($this->aCart as $aCartRow) {
-                $fCost += $aCartRow['entity']->getPrice() * $aCartRow['qty'];
+        if (is_null($this->fCost)) {
+            $this->fCost = 0;
+            if (!empty($this->aCart)) {
+                foreach ($this->aCart as $aProduct) {
+                    $this->fCost += $aProduct['entity']->getPrice() * $aProduct['qty'];
+                }
             }
         }
-        return $fCost;
+        return $this->fCost;
+    }
+
+    public function getExtraMarginValue()
+    {
+        if (is_null($this->fExtraMarginValue) && !empty($this->aCart)) {
+            foreach ($this->aCart as $aProduct) {
+                $this->fExtraMarginValue += $aProduct['entity']->getExtraMarginValue($aProduct['qty']);
+            }
+        }
+        return $this->fExtraMarginValue;
     }
 }

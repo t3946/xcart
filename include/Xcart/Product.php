@@ -35,6 +35,9 @@ class Product extends Data
     private $iAmazonFbaStockTotal = null;
     private $iAmazonFbaStockReservedTransfers = null;
 
+    private $fExtraMarginValue = null;
+    private $fPrice = null;
+
     public function __construct($iId = null)
     {
         $this->sPrimaryTable = 'products';
@@ -287,23 +290,30 @@ class Product extends Data
 
     public function getPrice($forQuantity = 1)
     {
-        $fPrice = 0;
-        if (is_null($this->aPricing)) {
-            $this->getPricing();
-        }
-        if (!empty($this->aPricing)) {
-            foreach ($this->aPricing as $oPrice) {
-                if ($forQuantity >= floatval($oPrice->getQuantity())) {
-                    $fPrice = floatval($oPrice->getPrice());
-                    break;
-                }
-
+        if (is_null($this->fPrice)) {
+            $this->fPrice = 0;
+            if (is_null($this->aPricing)) {
+                $this->getPricing();
             }
-        }
-        $fMapPrice = $this->getMapPrice();
-        $fPrice = max($fPrice, $fMapPrice);
+            if (!empty($this->aPricing)) {
+                foreach ($this->aPricing as $oPrice) {
+                    if ($forQuantity >= floatval($oPrice->getQuantity())) {
+                        $this->fPrice = floatval($oPrice->getPrice());
+                        break;
+                    }
 
-        return $fPrice;
+                }
+            }
+            $fMapPrice = $this->getMapPrice();
+            $this->fPrice = max($this->fPrice, $fMapPrice);
+        }
+
+        return $this->fPrice;
+    }
+
+    public function setPrice($fPrice)
+    {
+        $this->fPrice = $fPrice;
     }
 
     public function getFrontendPrice($forQuantity = 1)
@@ -645,5 +655,17 @@ class Product extends Data
     public function getShippingFreight()
     {
         return floatval($this->getField('shipping_freight'));
+    }
+
+    public function getExtraMarginValue($forQuantity = 1)
+    {
+        if (is_null($this->fExtraMarginValue)) {
+            $oManufacturer = $this->getManfacturerClass();
+            if ($oManufacturer->getField('reduce_extra_margin') == 'Y') {
+                $fExpectedMargin = round(($this->getProductCostToUs() * floatval($oManufacturer->getField('price_coef_x')) + floatval($oManufacturer->getField('price_coef_y'))) / floatval($oManufacturer->getField('price_coef_z')),2);
+                $this->fExtraMarginValue = $this->getPrice($forQuantity) - $fExpectedMargin;
+            }
+        }
+        return $this->fExtraMarginValue;
     }
 }

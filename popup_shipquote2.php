@@ -184,6 +184,7 @@ window.close();
 					foreach ($oShipping as $oShippingProcessor) {
 						foreach ($products as $_product) {
 							$oProduct = Xcart\Product::model(['productid' => $_product['productid']]);
+							$oProduct->setPrice($_product['price']);
 							if ($oProduct->getManufacturerId() == $k) {
 								$oShippingProcessor->addProduct($oProduct, $_product['amount']);
 							}
