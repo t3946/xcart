@@ -47,6 +47,8 @@ abstract class ShippingProcessor
 
     abstract public function getServerQuotes($aShippingRates);
 
+    abstract public function getAdditionalShippingFee($weight);
+
     public function getShippingRates()
     {
         if ($this->getCart() && $this->getCart()->getProductCount() > 0) {

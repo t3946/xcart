@@ -12,6 +12,7 @@ class ShippingRate extends Data
     private $fShippingCharge = null;
     private $oCart = null;
     private $fCartShippingWeight = null;
+    private $fAdditionalShippingCharge = 0;
 
     public function __construct($aParams = [])
     {
@@ -74,7 +75,7 @@ class ShippingRate extends Data
 
     public function getShippingCharge()
     {
-        if (!is_null($this->fShippingQuote)) {
+        if (is_null($this->fShippingCharge) && !is_null($this->fShippingQuote)) {
             $this->fShippingCharge = $this->fShippingQuote;
             if ($this->getCostMarcup() > 0) {
                 $this->fShippingCharge *= $this->getCostMarcup();
@@ -84,11 +85,11 @@ class ShippingRate extends Data
             $this->fShippingCharge += $oCart->getProductCount() * $this->getItemRate();
             $this->fShippingCharge += $oCart->getCost() * $this->getRateP();
             $this->fShippingCharge += $this->getCartShippingWeight() * $this->getWeightRate();
-
+            $this->fShippingCharge += $this->fAdditionalShippingCharge;
             $this->fShippingCharge += $this->getCartShippingFreight();
-
+            $this->fShippingCharge = round($this->fShippingCharge, 2);
         }
-        return round($this->fShippingCharge, 2);
+        return $this->fShippingCharge;
     }
 
     public function setCart(ShippingCart $oCart)
@@ -155,5 +156,10 @@ class ShippingRate extends Data
             $bResult = false;
         }
         return $bResult;
+    }
+
+    public function setAdditionalShippingCharge($fShippingCharge)
+    {
+        $this->fAdditionalShippingCharge = $fShippingCharge;
     }
 }

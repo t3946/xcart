@@ -59,6 +59,7 @@ class UPS extends ShippingProcessor
         $aResponses = null;
         if (!empty($aShippingRates)) {
             $oShippingRate = reset($aShippingRates);
+
             $shippingWeight = min(self::MAX_WEIGHT_FOR_UPS_PACKAGE, $oShippingRate->getCartShippingWeight());
 
             $UPS_username = text_decrypt(trim($config["UPS_OnLine_Tools"]["UPS_username"]));
@@ -94,7 +95,7 @@ class UPS extends ShippingProcessor
 
             } catch (\Exception $e) {
                 //log
-                Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__.': '.$e->getMessage());
+                Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__ . ': ' . $e->getMessage());
             }
         }
 
@@ -142,16 +143,21 @@ class UPS extends ShippingProcessor
                                     if ($oShippingRate->getShippingId() != self::APPROXIMATION_SHIPPING_METHOD ||
                                         ($oShippingRate->getShippingId() == self::APPROXIMATION_SHIPPING_METHOD && empty($this->aShippingRates[$oShippingRate->getShippingId()]))
                                     ) {
-                                        $oShippingRate->setShippingChargeQuote($Rate->TotalCharges->MonetaryValue);
+                                        $weight = ceil($oShippingRate->getCartShippingWeight());
+                                        if ($weight >= self::MAX_WEIGHT_FOR_UPS_PACKAGE) {
+                                            $weight_multiplier = ($weight / self::MAX_WEIGHT_FOR_UPS_PACKAGE);
+                                        } else {
+                                            $weight_multiplier = 1;
+                                        }
+                                        $oShippingRate->setShippingChargeQuote(round($Rate->TotalCharges->MonetaryValue * $weight_multiplier, 2));
+                                        $oShippingRate->setAdditionalShippingCharge($this->getAdditionalShippingFee($weight));
                                         $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate;
                                     }
                                 }
                             }
                         }
                     }
-
                 }
-
             }
         }
 
@@ -166,5 +172,15 @@ class UPS extends ShippingProcessor
     public function saveShippingQuotesCached(Product $oProduct)
     {
 
+    }
+
+    public function getAdditionalShippingFee($weight)
+    {
+        global $config;
+        $fAdditionalShippingFee = 0;
+        if ($weight >= $config['Oversize_Package']['oversize_lg_threshold']) {
+            $fAdditionalShippingFee = $config['Oversize_Package']['oversize_surcharge'];
+        }
+        return $fAdditionalShippingFee;
     }
 }
