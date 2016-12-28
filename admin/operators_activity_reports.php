@@ -66,7 +66,7 @@ if ($REQUEST_METHOD == "POST") {
        INNER JOIN $sql_tbl[order_groups] xo ON xo.orderid = o.orderid
        INNER JOIN $sql_tbl[order_statuses] xo1 ON xo.cb_status = xo1.code AND xo1.type = 'CB'
        INNER JOIN $sql_tbl[customers] xc ON OL.login = xc.login
-      where OL.id is not NULL  $search_condition AND usertype='A' AND status = 'Y'
+      where OL.id is not NULL  $search_condition AND usertype='A'
       group by o.orderid, OL.id
       order by o.date, OL.date ASC
       ");
@@ -121,7 +121,7 @@ if ($REQUEST_METHOD == "POST") {
 
 }
 
-$operators = func_query_hash("SELECT usertype, login, status, activity, firstname FROM $sql_tbl[customers] WHERE usertype='A' AND status = 'Y' ORDER BY firstname", "login",true);
+$operators = func_query_hash("SELECT usertype, login, status, activity, firstname FROM $sql_tbl[customers] WHERE usertype='A' ORDER BY firstname", "login",true);
 $smarty->assign("operators", $operators);
 
 
