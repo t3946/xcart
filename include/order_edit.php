@@ -2129,7 +2129,7 @@ if ($REQUEST_METHOD == "POST")
 
                         if ($update_invoices_table_flag) {
                             func_array2update("order_group_invoices", $group_invoices, "orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='$invoice_number'");
-                            $oManufacturer = new Xcart\Manufacturer($certain_mid);
+                            $oManufacturer = new Xcart\Manufacturer(['manufacturerid' => $certain_mid]);
                             if ($oManufacturer->getField('distributor_charges_for_each_order_twice_and_split_invoices') == 'Y') {
                                 $oGroupInvoices = new Xcart\OrderGroupInvoices();
                                 $oInvoices      = $oGroupInvoices->getOrderGroupInvoices(['orderid' => $orderid, 'manufacturerid' => $certain_mid]);

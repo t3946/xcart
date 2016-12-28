@@ -1,7 +1,7 @@
 <?php
 namespace Xcart;
 
-class Manufacturer extends CloneData
+class Manufacturer extends Data
 {
     const ADMIN_MANUFACTURER_MODIFY_URL = '/admin/manufacturers.php?manufacturerid=%d';
 
@@ -9,15 +9,15 @@ class Manufacturer extends CloneData
 
     public function __construct($iId = null)
     {
-        $this->sPrimaryTable = "manufacturers";
-        $this->sPrimaryKeyFiled = "manufacturerid";
+        $this->sPrimaryTable = 'manufacturers';
+        $this->aPrimaryKeys = ['manufacturerid'];
 
         parent::__construct($iId);
     }
 
     public function getManufacturerModifyURL()
     {
-        return sprintf(self::ADMIN_MANUFACTURER_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled));
+        return sprintf(self::ADMIN_MANUFACTURER_MODIFY_URL, $this->getField($this->getManufacturerId()));
     }
 
     public function getManufacturerName()

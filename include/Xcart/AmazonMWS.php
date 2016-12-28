@@ -3,6 +3,7 @@ namespace Xcart;
 
 use Xcart\OrderGroup;
 use Xcart\Order;
+use Xcart\Shipping\ShippingCart;
 
 
 define('DATE_FORMAT', 'Y-m-d\TH:i:s\Z');
@@ -56,7 +57,7 @@ class AmazonMWS
         if ($oServiceClass == 'MarketplaceWebServiceOrders_Client' ||
             $oServiceClass == 'FBAInventoryServiceMWS_Client' ||
             $oServiceClass == 'MarketplaceWebServiceProducts_Client'
-            ) {
+        ) {
             $this->oMWSService = new $oServiceClass(
                 AWS_ACCESS_KEY_ID,
                 AWS_SECRET_ACCESS_KEY,
@@ -1741,5 +1742,112 @@ class AmazonMWS
     public function getService()
     {
         return $this->oMWSService;
+    }
+
+
+    /**
+     * @param Customer $oCustomer
+     * @param ShippingCart $oShippingCart
+     * @param ShippingRate[] $aShippingRates
+     * @return array|string
+     */
+    public function getGetFulfillmentRates(Customer $oCustomer, ShippingCart $oShippingCart, $aShippingRates)
+    {
+        $aShippingRatesCalc = null;
+        if (!empty($aShippingRates)) {
+            foreach ($aShippingRates as $oShippingRate) {
+                $aShipName[] = $oShippingRate->getShippingEntity()->getName();
+            }
+        }
+
+        if (!empty($aShipName)) {
+
+            $request = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest();
+            $request->setSellerId(MERCHANT_ID);
+
+            $address = new \FBAOutboundServiceMWS_Model_Address();
+            $address->setName($oCustomer->getField("s_firstname"));
+            $address->setLine1($oCustomer->getField("s_address"));
+            if ($oCustomer->getField("s_address_2")) {
+                $address->setLine2($oCustomer->getField("s_address_2"));
+            }
+            $address->setCity($oCustomer->getField("s_city"));
+            $address->setCountryCode($oCustomer->getField("s_country"));
+            $address->setStateOrProvinceCode($oCustomer->getField("s_state"));
+            $address->setPostalCode($oCustomer->getField("s_zipcode"));
+            $request->setAddress($address);
+
+            $items = [];
+
+            $aProductsCart = $oShippingCart->getProducts();
+
+            if (!empty($aProductsCart)) {
+                foreach ($aProductsCart as $oProduct) {
+                    if (!$oProduct['entity']->isAmazonFBAEnabled()) {
+                        $aProducts = $oProduct['entity']->getProductsAvailOnAmazonParentWithChild(1);
+                        if (!empty($aProducts)) {
+                            $oProductParentOrChild = reset($aProducts);
+                            $oProduct['entity'] = $oProductParentOrChild['oProduct'];
+                        }
+                    }
+                    $item = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
+                    $item->setSellerSKU($oProduct['entity']->getSKU());
+                    $item->setQuantity($oProduct['qty']);
+                    $item->setSellerFulfillmentOrderItemId($oProduct['entity']->getSKU());
+                    $items[] = $item;
+                }
+                $itemList = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList();
+                $itemList->setmember($items);
+                $request->setItems($itemList);
+                $shippingArray = new \FBAOutboundServiceMWS_Model_ShippingSpeedCategoryList();
+                $aShipName = [];
+
+
+                $shippingArray->setmember($aShipName);
+                $request->setShippingSpeedCategories($shippingArray);
+                $aXML = $this->invokeGetFulfillmentPreview($request);
+                if (!empty($aXML['saveXML'])) {
+                    $aXML['saveXML'] = str_replace('http://mws.amazonaws.com', 'https://mws.amazonservices.com', $aXML['saveXML']);
+                    $this->dom_xml_arr = str_replace($this->sServiceUrl, '', $aXML['saveXML']);
+                    $docShipping = new \DOMDocument;
+                    $docShipping->loadXML($this->dom_xml_arr);
+                    $xpath = new \DOMXPath($docShipping);
+                    $aShippingEntries = $xpath->query('/*/*/FulfillmentPreviews/member');
+
+                    if (!empty($aShippingEntries) && $aShippingEntries->length > 0) {
+                        foreach ($aShippingEntries as $k => $shippingNode) {
+                            $fAmount = 0;
+                            $ShippingSpeedCategory = $shippingNode->getElementsByTagName('ShippingSpeedCategory');
+                            if ($ShippingSpeedCategory->length) {
+                                $sShippingName = $ShippingSpeedCategory->item(0)->nodeValue;
+                            }
+                            $EstimatedFees = $shippingNode->getElementsByTagName('EstimatedFees');
+                            if ($EstimatedFees->length) {
+                                $aShippingFees = $EstimatedFees->item(0)->getElementsByTagName('member');
+                            }
+                            if (!empty($aShippingFees) && $aShippingFees->length > 0) {
+                                foreach ($aShippingFees as $oShippingFee) {
+                                    $Amount = $oShippingFee->getElementsByTagName('Amount');
+                                    if ($Amount->length) {
+                                        $value = $Amount->item(0)->getElementsByTagName('Value');
+                                        if ($value->length) {
+                                            $fAmount += floatval($value->item(0)->nodeValue);
+                                        }
+                                    }
+
+                                }
+                            }
+                            $aShippingRatesCalc[$sShippingName] = $fAmount;
+                        }
+                    }
+                } else {
+                    if (!empty($aXML['Caught_Exception'])){
+                        throw new \Exception($aXML['Caught_Exception']);
+                    }
+                }
+            }
+
+        }
+        return $aShippingRatesCalc;
     }
 }

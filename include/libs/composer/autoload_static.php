@@ -59,6 +59,10 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
             'Xcart\\External_Marketplaces\\' => 28,
             'Xcart\\' => 6,
         ),
+        'U' => 
+        array (
+            'Ups\\' => 4,
+        ),
         'R' => 
         array (
             'React\\Promise\\' => 14,
@@ -112,6 +116,10 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         'Xcart\\' => 
         array (
             0 => __DIR__ . '/../../..' . '/include/Xcart',
+        ),
+        'Ups\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gabrielbull/ups-api/src/Ups',
         ),
         'React\\Promise\\' => 
         array (

@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="{$SkinDir}/lib/colorbox/colorbox.css" />
 <script src="{$SkinDir}/lib/colorbox/jquery.colorbox-min.js" type="text/javascript"></script>
 
-<script type="text/javascript" language="JavaScript 1.2">
+<script type="text/javascript">
 <!--
 {literal}
 
@@ -80,7 +80,7 @@ $(document).ready(function() {
         function cidev_get_country_code (countryname_id){
 
                 var countryname_value = $('#'+countryname_id).val();
-                countryname_value = $.trim(countryname_value); 
+                countryname_value = $.trim(countryname_value);
 
                 var countrycode_value = countryname_value;
 
@@ -99,8 +99,8 @@ $(document).ready(function() {
 
         function cidev_get_state_code (statename_id, countryname_id){
 
-                var statename_value = $('#'+statename_id).val(); 
-                statename_value = $.trim(statename_value); 
+                var statename_value = $('#'+statename_id).val();
+                statename_value = $.trim(statename_value);
                 var statecode_value = statename_value;
                 var countrycode_value = cidev_get_country_code(countryname_id);
 
@@ -113,7 +113,7 @@ $(document).ready(function() {
                 {/literal}
                 {/section}
                 {literal}
-                
+
                 return statecode_value;
         }
 
@@ -234,32 +234,13 @@ $(document).ready(function() {
 
         function onSelectChange() {
 
-return true; ///////////////////////////////////
+            return true;
 
-                var cityFilePath = '';
-                var stateSelected = cidev_get_state_code("s_statename", "s_countryname");
-
-                $('#s_city').unautocomplete();
-
-                var countrySelected = cidev_get_country_code("s_countryname"); 
-        
-                if (countrySelected == "US"){
-
-                        cityFilePath = "skin1_kolin/US_City_List/" +stateSelected.toLowerCase()+".js";
-
-                        $.getScript(cityFilePath, function() {
-
-                                $('#s_city').autocomplete(city, {
-                                        autoFill: false,
-                                        cacheLength: 1
-                                });
-                        });
-                }
         };
 
         function cidev_load_countries() {
                 var countryFilePath = "skin1_kolin/US_City_List/all_countries.js";
-                
+
                         $.getScript(countryFilePath, function() {
 
                                 $('#s_countryname').autocomplete(country_names, {
@@ -273,14 +254,14 @@ return true; ///////////////////////////////////
 
                 var stateFilePath = "";
                 var country_code = cidev_get_country_code("s_countryname");
-        
+
                 if (country_code == "US"){
                         stateFilePath = "skin1_kolin/US_City_List/us_states.js";
                 }
                 if (country_code == "CA"){
                         stateFilePath = "skin1_kolin/US_City_List/ca_states.js";
                 }
-                
+
                 $('#s_statename').unautocomplete();
 
                 if (country_code == "US" || country_code == "CA"){
@@ -315,7 +296,7 @@ return true; ///////////////////////////////////
 <script type="text/javascript">
 //<![CDATA[
 {literal}
-$(document).ready(function() {  
+$(document).ready(function() {
 
         $('#s_countryname').focusout(function() {
 
@@ -324,7 +305,7 @@ $(document).ready(function() {
                 if (countrySelected == "US" || countrySelected == "CA"){
                         cidev_load_states();
                         onSelectChange();
-                } 
+                }
 
                 if (countrySelected != "US") {
                         $('#s_city').unautocomplete();
@@ -354,7 +335,7 @@ $(document).ready(function() {
 
 		{/literal}{/if}{literal}
 	}
-       
+
         window.onload = start();
 });
 
@@ -392,11 +373,11 @@ $(document).ready(function() {
 
 
 {* ------------------- *}
-{include file="cidev_tracking_code.tpl" } 
+{include file="cidev_tracking_code.tpl" }
 {* ------------------- *}
 
 
-<form action="popup_shipquote.php" method="post" name="shipquoteform">
+<form method="post" name="shipquoteform">
 <input type="hidden" name="mode" value="{if $mode eq 'grandtotal'}checkout{elseif $mode eq 'shipping'}grandtotal{else}shipping{/if}" />
 
 
@@ -411,9 +392,9 @@ $(document).ready(function() {
 	<td class="PopupBG" height="1"><img src="{$ImagesDir}/spacer.gif" class="Spc" alt="" /></td>
 </tr>
 {if $err ne ''}
-<tr> 
+<tr>
     <td align="center"><br /><font class="Star">{if $err eq 'exception'}{$lng.txt_exception_warning}{elseif $err eq 'avail'}{$lng.txt_out_of_stock}{/if}</font><br /></td>
-</tr> 
+</tr>
 {/if}
 <tr>
 	<td class="Container">
@@ -446,7 +427,7 @@ $(document).ready(function() {
                         <td align="right" width="200"><b>{$lng.lbl_country}</b></td>
                         <td width="15"><font class="Star">*</font></td>
                         <td nowrap="nowrap" align="left" width="300">
-<input type="text" id="s_countryname" name="s_countryname" size="32" maxlength="64" value="{if $userinfo.s_countryname ne ""}{$userinfo.s_countryname}{else}{if $geo_litecity_location.country ne ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{$countries[country_idx].country|amp}{/if}{/section}{/if}{/if}" 
+<input type="text" id="s_countryname" name="s_countryname" size="32" maxlength="64" value="{if $userinfo.s_countryname ne ""}{$userinfo.s_countryname}{else}{if $geo_litecity_location.country ne ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{$countries[country_idx].country|amp}{/if}{/section}{/if}{/if}"
 onkeyup="cidev_check_country_usa('s_countryname'); cidev_check_field_country('s_countryname'); cidev_check_zip();"  onchange="cidev_check_field_country('s_countryname'); cidev_check_zip();"
 autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{$countries[country_idx].country|amp}{/if}{/section}{/if}" />
 {if $reg_error ne "" and $userinfo.s_country eq "" and $default_fields.s_country.required eq 'Y'}<font class="Star">&lt;&lt;</font>{/if}
@@ -472,7 +453,7 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
                 <tr id="tr_show_text_for_us">
 		<td colspan="3" align="center">
 {$lng.lbl_popup_shipquote_text}
-		</td>		
+		</td>
                 </tr>
 
 
@@ -481,7 +462,7 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
                         <td>&nbsp;</td>
                         <td nowrap="nowrap" align="left">
 
-<input type="text" id="s_statename" name="s_statename" size="32" maxlength="64" 
+<input type="text" id="s_statename" name="s_statename" size="32" maxlength="64"
 value="
 {if $userinfo.s_statename ne ""}
 {$userinfo.s_statename}
@@ -494,9 +475,9 @@ value="
 {/section}
 {/if}
 {/if}
-" 
-onkeyup="cidev_check_field_country('s_statename'); cidev_check_zip();" 
-autocomplete="off" 
+"
+onkeyup="cidev_check_field_country('s_statename'); cidev_check_zip();"
+autocomplete="off"
 placeholder="
 {if $geo_litecity_location.region ne ""}
 {section name=state_idx loop=$states}
@@ -518,7 +499,7 @@ placeholder="
                         <td align="right"><b>{$lng.lbl_city}</b> <font style="font-size: 11px; font-family: italic; color: #8F8F8F;"><I>(optional)</I></font></td>
                         <td>&nbsp;</td>
                         <td nowrap="nowrap" align="left">
-<input type="text" id="s_city" name="s_city" size="32" maxlength="64" value="{if $userinfo.s_city ne ""}{$userinfo.s_city}{else}{if $geo_litecity_location.country ne ""}{$geo_litecity_location.city}{/if}{/if}" 
+<input type="text" id="s_city" name="s_city" size="32" maxlength="64" value="{if $userinfo.s_city ne ""}{$userinfo.s_city}{else}{if $geo_litecity_location.country ne ""}{$geo_litecity_location.city}{/if}{/if}"
 onkeyup="cidev_check_field('s_city'); cidev_check_zip();" placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
 {if $reg_error ne "" and $userinfo.s_city eq "" and $default_fields.s_city.required eq 'Y'}<font class="Star">&lt;&lt;</font>{/if}
                         </td>
@@ -531,7 +512,7 @@ onkeyup="cidev_check_field('s_city'); cidev_check_zip();" placeholder="{if $geo_
 		<tr>
 			<td class="ButtonsRow" align="center" colspan="3" nowrap="nowrap">
 
-<script type="text/javascript" language="JavaScript 1.2">
+<script type="text/javascript">
 //<![CDATA[
 {literal}
 function cidev_sqCALCULATE() {
@@ -546,8 +527,8 @@ function cidev_sqCALCULATE() {
  var yaGoalParams = {
     Country: {/literal}cidev_s_country{literal},
     State: {/literal}cidev_s_state{literal},
-    City: {/literal}cidev_s_city{literal}, 
-    ZipCode: {/literal}cidev_s_zipcode{literal} 
+    City: {/literal}cidev_s_city{literal},
+    ZipCode: {/literal}cidev_s_zipcode{literal}
  };
 
  var cidev_yandex_code_number = "{/literal}{$config.Company.cidev_yandex_code_number}{literal}";
@@ -581,7 +562,7 @@ function cidev_check_zipcode() {
 		cidev_sqCALCULATE();
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -615,7 +596,7 @@ function cidev_check_zipcode() {
 			</td>
 			<td width="70%">
 
-<script type="text/javascript" language="JavaScript 1.2">
+<script type="text/javascript">
 <!--
 {literal}
 function cidev_select_shipping(id) {
@@ -726,10 +707,10 @@ $(document).ready(function() {
                 <input type="hidden" id="shippingid{$s.shippingid}" name="shippingids[{$k}]" value="{$s.shippingid}">
           {else}
 
-				<td width="5"><input type="radio" id="shippingid{$s.shippingid}" name="shippingids[{$k}]" value="{$s.shippingid}"{if $s.shippingid eq $shippingids[$k].shippingid || ($shippingids[$k] eq "" && $selected_any eq "N")}{assign var="selected_any" value="Y"}    
+				<td width="5"><input type="radio" id="shippingid{$s.shippingid}" name="shippingids[{$k}]" value="{$s.shippingid}"{if $s.shippingid eq $shippingids[$k].shippingid || ($shippingids[$k] eq "" && $selected_any eq "N")}{assign var="selected_any" value="Y"}
 
 {assign var="cidev_shipping1" value=$s.frontend_name|default:$s.shipping|trademark:"`$insert_trademark`"}
-{if $s.shipping_time ne ""} 
+{if $s.shipping_time ne ""}
 {assign var="cidev_shipping" value="`$cidev_shipping1` - `$s.shipping_time`: $`$s.rate`"}
 {/if}
 
@@ -843,17 +824,17 @@ var yaGoalParams = {
     Country: "{/literal}{$userinfo.s_country}{literal}",
     State: "{/literal}{$userinfo.s_statename}{literal}",
     City: "{/literal}{$userinfo.s_city}{literal}",
-    ZipCode: "{/literal}{$userinfo.s_zipcode}{literal}", 
+    ZipCode: "{/literal}{$userinfo.s_zipcode}{literal}",
     Delivery: {/literal}cidev_Delivery{literal},
-goods: 
-[ 
+goods:
+[
 {/literal}
 {assign var="tmp_counter" value=0}
 {foreach from=$cart.products item=item key=key}
 {math assign="tmp_counter" equation="x+1" x=$tmp_counter}
 {literal}
 {
-id:"{/literal}{$item.productcode}{literal}", 
+id:"{/literal}{$item.productcode}{literal}",
 name:"{/literal}{$item.product|escape}{literal}",
 price: {/literal}{$item.price}{literal},
 quantity: {/literal}{$item.amount}{literal}
@@ -862,7 +843,7 @@ quantity: {/literal}{$item.amount}{literal}
 {if $tmp_counter ne $count_products}{literal},{/literal}{/if}
 {/foreach}
 {literal}
-] 
+]
  };
 
  var cidev_yandex_code_number = "{/literal}{$config.Company.cidev_yandex_code_number}{literal}";
@@ -962,17 +943,17 @@ var yaGoalParams = {
     Country: "{/literal}{$userinfo.s_country}{literal}",
     State: "{/literal}{$userinfo.s_statename}{literal}",
     City: "{/literal}{$userinfo.s_city}{literal}",
-    ZipCode: "{/literal}{$userinfo.s_zipcode}{literal}", 
+    ZipCode: "{/literal}{$userinfo.s_zipcode}{literal}",
     Delivery: {/literal}cidev_Delivery{literal},
-goods: 
-[ 
+goods:
+[
 {/literal}
 {assign var="tmp_counter" value=0}
 {foreach from=$cart.products item=item key=key}
 {math assign="tmp_counter" equation="x+1" x=$tmp_counter}
 {literal}
 {
-id:"{/literal}{$item.productcode}{literal}", 
+id:"{/literal}{$item.productcode}{literal}",
 name:"{/literal}{$item.product|escape}{literal}",
 price: {/literal}{$item.price}{literal},
 quantity: {/literal}{$item.amount}{literal}
@@ -981,7 +962,7 @@ quantity: {/literal}{$item.amount}{literal}
 {if $tmp_counter ne $count_products}{literal},{/literal}{/if}
 {/foreach}
 {literal}
-] 
+]
  };
 
  var cidev_yandex_code_number = "{/literal}{$config.Company.cidev_yandex_code_number}{literal}";
