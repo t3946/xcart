@@ -1114,7 +1114,7 @@ if (!empty($reconciliations) && is_array($reconciliations)){
 
 					if (strpos($v_description_csv_UPPER, $vv_s_r_UPPER) !== false) {
 						$manufacturerid = $kk;
-						$aManufacturersForReconciliation[$kk] = new Xcart\Manufacturer($kk);
+						$aManufacturersForReconciliation[$kk] = new Xcart\Manufacturer(['manufacturerid' => $manufacturerid]);
 						$reconciliations[$k]["description_csv"] = str_replace($vv_s_r_UPPER, "<B>" . $vv_s_r_UPPER . "</B>", $v_description_csv_UPPER);
 
 						//preg_match('',$v_description_csv_UPPER, $aMatches);
