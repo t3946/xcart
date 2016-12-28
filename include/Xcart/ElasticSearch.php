@@ -78,32 +78,49 @@ class ElasticSearch
     {
         $query = /** @lang JSON */ <<<JSON
 {
-    "multi_match": {
-        "cutoff_frequency": 0.001,
+    "query_string": {
         "fields": [
-            "productname.productname_original^1.5",
-            "description.description_original",
-            "brand.brand_original^0.3",
-            "sku",
-            "upc"
+         "productname.productname_original^1.5",
+         "productname.title_tag^1.5",
+         "productname.seo_productname^1.5",
+         "productname.seo_h2^1.5",
+         "sku",
+         "upc",
+         "brand.brand_original^0.5",
+         "description.description_original",
+         "description.seo_description"
         ],
-        "query": "",
-        "type": "best_fields"
+        "query": ""
     }
 }
 JSON;
         $query = json_decode($query, true);
 
-        $query["multi_match"]["query"] = $sQuery;
+        $query["query_string"]["query"] = $sQuery;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
 
-        $query["multi_match"]["analyzer"] = "snowball";
-        $query["multi_match"]["fields"] = [];
-        $query["multi_match"]["fields"][] = 'productname.productname^1.5';
-        $query["multi_match"]["fields"][] = 'description.description';
-        $query["multi_match"]["fields"][] = 'brand.brand^0.3';
-        $query["multi_match"]["fields"][] = 'sku';
-        $query["multi_match"]["fields"][] = 'upc';
+        $query = /** @lang JSON */ <<<JSON
+{
+    "query_string": {
+        "analyzer": "snowball",
+        "fields": [
+             "productname.productname^1.5",
+             "productname.title_tag^1.5",
+             "productname.seo_productname^1.5",
+             "productname.seo_h2^1.5",
+             "sku",
+             "upc",
+             "brand.brand^0.5",
+             "description.description",
+             "description.seo_description"
+        ],
+        "query": ""
+    }
+}
+JSON;
+        $query = json_decode($query, true);
+
+        $query["query_string"]["query"] = $sQuery;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
 
         $query = /** @lang JSON */ <<<JSON
@@ -111,18 +128,14 @@ JSON;
     "multi_match": {
         "analyzer": "snowball",
         "boost": 0.5,
-        "cutoff_frequency": 0.001,
         "fields": [
-             "productname.productname^1.5",
-             "productname.productname^1.2",
-             "description.description^0.7",
-             "description.description_original",
-             "brand.brand_original^0.3",
-             "brand.brand^0.1",
-             "sku",
-             "upc"
+            "description.seo_description",
+            "description.description_original",
+            "productname.productname_original" ,
+            "productname.title_tag" ,
+            "productname.seo_productname" ,
+            "productname.seo_h2"
         ],
-        "fuzziness": 1.1,
         "query": "",
         "slop": 3,
         "type": "phrase"
