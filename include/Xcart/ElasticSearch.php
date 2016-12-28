@@ -29,6 +29,7 @@ class ElasticSearch
         $this->queryParams["query"] = [];
         $this->queryParams["query"]["dis_max"] = [];
         $this->queryParams["query"]["dis_max"]["queries"] = [];
+        $this->queryParams["query"]["dis_max"]["tie_breaker"] = 0.4;
     }
 
     public function reinit()
@@ -75,18 +76,75 @@ class ElasticSearch
 
     public function setQueryParamsDefault($sQuery)
     {
-        $query = array();
+        $query = /** @lang JSON */ <<<JSON
+{
+    "query_string": {
+        "fields": [
+         "productname.productname_original^1.5",
+         "productname.title_tag^1.5",
+         "productname.seo_productname^1.5",
+         "productname.seo_h2^1.5",
+         "sku",
+         "upc",
+         "brand.brand_original^0.5",
+         "description.description_original",
+         "description.seo_description"
+        ],
+        "query": ""
+    }
+}
+JSON;
+        $query = json_decode($query, true);
+
         $query["query_string"]["query"] = $sQuery;
-        $query["query_string"]["fields"] = array("productname.productname_original^1.5","sku","upc","brand.brand_original^0.5","description.description_original");
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
-        $query = array();
+
+        $query = /** @lang JSON */ <<<JSON
+{
+    "query_string": {
+        "analyzer": "snowball",
+        "fields": [
+             "productname.productname^1.5",
+             "productname.title_tag^1.5",
+             "productname.seo_productname^1.5",
+             "productname.seo_h2^1.5",
+             "sku",
+             "upc",
+             "brand.brand^0.5",
+             "description.description",
+             "description.seo_description"
+        ],
+        "query": ""
+    }
+}
+JSON;
+        $query = json_decode($query, true);
+
         $query["query_string"]["query"] = $sQuery;
-        $query["query_string"]["fields"] = array("productname.productname","sku","upc","brand.brand","description.description");
-        $query["query_string"]["fields"] = array("productname.productname^1.5","sku","upc","brand.brand^0.5","description.description");
-        $query["query_string"]["analyzer"] = "snowball";
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
-        $query = array();
-        $query["match_phrase_prefix"]["sku_original"] = $sQuery;
+
+        $query = /** @lang JSON */ <<<JSON
+{
+    "multi_match": {
+        "analyzer": "snowball",
+        "boost": 0.5,
+        "fields": [
+            "description.seo_description",
+            "description.description_original",
+            "productname.productname_original" ,
+            "productname.title_tag" ,
+            "productname.seo_productname" ,
+            "productname.seo_h2"
+        ],
+        "query": "",
+        "slop": 3,
+        "type": "phrase"
+    }
+}
+JSON;
+        $query = json_decode($query, true);
+
+        $query["multi_match"]["query"] = $sQuery;
         $this->queryParams["query"]["dis_max"]["queries"][] = $query;
     }
 
@@ -144,7 +202,7 @@ class ElasticSearch
         }
 
         return $Similar_products_other_brands;
-}
+    }
 
     public function setSearchQuery ($aQuery = array()) {
         $this->queryParams['query'] = $aQuery;
