@@ -175,6 +175,10 @@ window.close();
 		$shipping_groups = $cart["shipping_groups"];
 		$shippings = array();
 
+		$point_id = "1";
+		$variant_id = Get_AB_Variant($point_id);
+		$smarty->assign("variant_id", $variant_id);
+
 		$oCustomer = (new Xcart\Customer())->fill($shipquote_userinfo);
 		foreach ($shipping_groups as $k => $v) {
 			$oManufacturer = Xcart\Manufacturer::model(['manufacturerid' => $k]);
@@ -184,7 +188,7 @@ window.close();
 					foreach ($oShipping as $oShippingProcessor) {
 						foreach ($products as $_product) {
 							$oProduct = Xcart\Product::model(['productid' => $_product['productid']]);
-							$oProduct->setPrice($_product['price']);
+							$oProduct->setPrice($_product['price']); //calculate regarding cart product price
 							if ($oProduct->getManufacturerId() == $k) {
 								$oShippingProcessor->addProduct($oProduct, $_product['amount']);
 							}

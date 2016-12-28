@@ -663,7 +663,7 @@ class Product extends Data
             $oManufacturer = $this->getManfacturerClass();
             if ($oManufacturer->getField('reduce_extra_margin') == 'Y') {
                 $fExpectedMargin = round(($this->getProductCostToUs() * floatval($oManufacturer->getField('price_coef_x')) + floatval($oManufacturer->getField('price_coef_y'))) / floatval($oManufacturer->getField('price_coef_z')),2);
-                $this->fExtraMarginValue = $this->getPrice($forQuantity) - $fExpectedMargin;
+                $this->fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
             }
         }
         return $this->fExtraMarginValue;
