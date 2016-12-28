@@ -121,6 +121,49 @@ if ($action == "contactus" || $section == 'contactus')
 
 if ($REQUEST_METHOD == "POST" && $action == "contactus")
 {
+    $bad_user = true;
+
+    if (isset($_POST['g-recaptcha-response']))
+    {
+
+        $options = [
+            'verify' => false,
+            'body' => [
+                'secret'   => $key_recaptcha_secret,
+                'response' => $_POST['g-recaptcha-response'],
+                'remoteip' => $_SERVER['REMOTE_ADDR'],
+            ]
+        ];
+
+        $client = new \GuzzleHttp\Client();
+        $response = $client->post('https://www.google.com/recaptcha/api/siteverify', $options);
+        $response = json_decode($response->getBody(), true);
+
+        if ($response['success']) {
+            $bad_user = false;
+        }
+    }
+
+    if ($bad_user)
+    {
+        $errors = [
+            400 => 'Bad Request',
+            402 => 'Payment Required',
+            404 => 'Not Found',
+            406 => 'Not Acceptable',
+            410 => 'Gone',
+            418 => 'I\'m a teapot',
+            429 => 'Too Many Requests ',
+            434 => 'Requested host unavailable',
+            451 => 'Unavailable For Legal Reasons',
+            500 => 'Internal Server Error',
+            503 => 'Service Unavailable ',
+        ];
+        $key = array_rand($errors);
+        http_response_code($key);
+        func_show_error_page($key, $errors[$key], 'You didn\'t pass verification. Go back and try again.');
+    }
+
     #
     # Send mail to support
     #

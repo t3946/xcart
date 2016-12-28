@@ -133,19 +133,30 @@ requiredFields[{counter name="requiredFields"}] = ["message_body","{$lng.lbl_mes
     }
 
 {if $field.field ne "email" && $field.field  ne "company" && $field.field ne "b_address" && $field.field ne "phone" && $field.field ne "department" && $field.field ne "b_zipcode"}
-<script type="text/javascript" language="JavaScript 1.2">
-//<![CDATA[
+<script type="text/javascript">
+    var verified_image_for_field = '{$field.field}';
+
 {literal}
-
-  $(document).ready(function() {  
-
-        $('#{/literal}{$field.field}{literal}').focusout(function() {
-                cidev_check_verified_image_for_field('{/literal}{$field.field}{literal}', '');
+  $(document).ready(function() {
+        $('#' + verified_image_for_field).focusout(function() {
+                cidev_check_verified_image_for_field(verified_image_for_field, '');
         });
-
   });
+
+	function registerFormOnSubmit() {
+		document.registerform.submit();
+	}
+
+	function registerFormOnValidate() {
+        if (checkEmailAddress(document.registerform.email)
+            && checkRequired(requiredFields)
+            && check_zip_code(document.getElementById('b_country'), document.getElementById('b_zipcode'))
+        ) {
+            grecaptcha.execute();
+
+        }
+	}
 {/literal}
-//]]>
 </script>
 {/if}
 
@@ -391,11 +402,18 @@ requiredFields[{counter name="requiredFields"}] = ["message_body","{$lng.lbl_mes
 {include file="modules/Image_Verification/spambot_arrest.tpl" mode="advanced" id=$antibot_sections.on_contact_us}
 {/if}
 <tr valign="middle">
-<td>&nbsp;</td>
+<td align="center">
+    <span class="g-recaptcha right"
+          data-sitekey="{$key_recaptcha_public}"
+          data-callback="registerFormOnSubmit"
+          data-size="invisible"
+          data-badge="inline" >
+    </span>
+</td>
 <td>&nbsp;</td>
 <td>
 {if $js_enabled}
-{include file="buttons/submit.tpl" href="javascript: if (checkEmailAddress(document.registerform.email) && checkRequired(requiredFields) && check_zip_code(document.getElementById('b_country'), document.getElementById('b_zipcode'))) document.registerform.submit()" js_to_href="Y" b="1"}
+{include file="buttons/submit.tpl" href="javascript: registerFormOnValidate();" js_to_href="Y" b="1"}
 {else}
 {include file="submit_wo_js.tpl" value=$lng.lbl_submit}
 {/if}
@@ -408,5 +426,6 @@ requiredFields[{counter name="requiredFields"}] = ["message_body","{$lng.lbl_mes
 {else}
 {$lng.txt_contact_us_sent}
 {/if}
+    <script src='https://www.google.com/recaptcha/api.js' type="text/javascript" async defer></script>
 {/capture}
 {include file="dialog.tpl" title=$lng.lbl_contact_us content=$smarty.capture.dialog extra='width="100%"'}
