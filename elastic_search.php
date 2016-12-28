@@ -60,7 +60,6 @@
 		$classElastic->setMinScore($config["ElasticSearch_options"]["search_results_minimum_score_value"]);
 		$classElastic->setType('product');
 		$classElastic->setQueryParams($e_search_data_substring);
-		//$classElastic->setMinScore("0.1");
 		if (!empty($all_productids_arr) && is_array($all_productids_arr)){
 			//$data_arr["filter"]["terms"]["_id"] = $all_productids_arr;
 			$classElastic->setFilterTerms($all_productids_arr);
@@ -69,7 +68,7 @@
 		$result = $classElastic->query($search_query);
 
 		if ($classElastic->hitsTotal < $config["ElasticSearch_options"]["results_count_if_less_than"] && !$load_all_e_products) {
-			$classElastic->setMinScore("0");
+			$classElastic->setMinScore(0.01);
 			$classElastic->setType('product');
 			$aQueryArray = array();
 			$classElastic->setQueryParams($e_search_data_substring);
