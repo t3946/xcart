@@ -960,6 +960,14 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
         <td><input type="text" size="9" name="supplier_products_price_multiplier" value="{$manufacturer.supplier_products_price_multiplier}" /></td>
 </tr>
 
+<tr>
+        <td nowrap="nowrap" class="FormButton">Reduce extra margin from shipping cost</td>
+        <td>&nbsp;</td>
+        <td><select name="reduce_extra_margin">
+                <option value="N">N</option>
+                <option value="Y" {if $manufacturer.reduce_extra_margin == 'Y'} selected="selected"{/if}>Y</option>
+            </select></td>
+ </tr>
 </table>
 
 
