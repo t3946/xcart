@@ -36,9 +36,12 @@ if ($REQUEST_METHOD == 'POST' && !empty($w9_submit) && $w9_submit == 'Send') {
         }
 
         $oMail->setFrom($oCustomer->getCustomerFullName() . "<" . $config['Company']['site_administrator'] . ">");
-
         $oMail->addAttachment($xcart_dir . '/files/w9_form_files/' . $config['w9_form_file']);
         $oMail->sendEmail();
+
+        $oMail->setTo('helpdesk@s3stores.com');
+        $oMail->sendEmail();
+
         $top_message["content"] = 'W-9 form has been sent';
         $top_message["type"] = "I";
     } else {
