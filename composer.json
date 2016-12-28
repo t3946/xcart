@@ -5,7 +5,8 @@
     "require": {
         "google/apiclient": "^2.0",
         "mindy/query_builder": "^2.1",
-        "gabrielbull/ups-api": "^0.4.0"
+        "gabrielbull/ups-api": "^0.4.0",
+        "jaybizzle/crawler-detect": "^1.2"
     },
     "autoload": {
         "psr-4": {

@@ -76,30 +76,16 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
                     $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
 
-                    $data_arr["productname"]                      = $product["product"];
-                    $data_arr["productname.productname_original"] = $product["product"];
+                    $data_arr["productname"] = $product["product"];
+                    $data_arr["sku"]         = $product["productcode"];
+                    $data_arr["upc"]         = $product["upc"];
+                    $data_arr["brand"]       = $product["brand"];
+                    $data_arr["description"] = strip_tags($product["fulldescr"]);
 
-                    $data_arr["sku"]                              = $product["productcode"];
-                    $data_arr["upc"]                              = $product["upc"];
-                    $data_arr["brand"]                            = $product["brand"];
-                    $data_arr["brand.brand_original"]             = $product["brand"];
-                    $data_arr["description"]                      = strip_tags($product["fulldescr"]);
-                    $data_arr["description.description_original"] = strip_tags($product["fulldescr"]);
-
-                    if (!empty($product["seo_fulldescr"])) {
-                        $data_arr["description.seo_fulldescr"] = strip_tags($product["seo_fulldescr"]);
-                    }
-
-                    if (!empty($product["seo_fulldescr"])) {
-                        $data_arr["productname.seo_productname"] = strip_tags($product["seo_productname"]);
-                    }
-
-                    if (!empty($product["seo_fulldescr"])) {
-                        $data_arr["productname.seo_h2"] = strip_tags($product["seo_h2"]);
-                    }
-                    if (!empty($product["title_tag"])) {
-                        $data_arr["productname.title_tag"] = strip_tags($product["title_tag"]);
-                    }
+                    $data_arr["description.seo_fulldescr"]   = strip_tags($product["seo_fulldescr"]);
+                    $data_arr["productname.seo_productname"] = strip_tags($product["seo_product_name"]);
+                    $data_arr["productname.seo_h2"]          = strip_tags($product["seo_h2"]);
+                    $data_arr["productname.title_tag"]       = strip_tags($product["title_tag"]);
 
                     $data_json = json_encode($data_arr);
 
@@ -143,14 +129,21 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                         $flag61 = true;
                     }
 
+                    $product["fulldescr"] = str_replace("/r/n", " ", $product["fulldescr"]);
+                    $product["fulldescr"] = str_replace("\r\n", " ", $product["fulldescr"]);
+
                     $data_arr["productname"] = $product["product"];
                     $data_arr["sku"]         = $product["productcode"];
                     $data_arr["upc"]         = $product["upc"];
                     $data_arr["brand"]       = $product["brand"];
-                    $product["fulldescr"]    = str_replace("/r/n", " ", $product["fulldescr"]);
-                    $product["fulldescr"]    = str_replace("\r\n", " ", $product["fulldescr"]);
                     $data_arr["description"] = strip_tags($product["fulldescr"]);
-                    $data_json               = json_encode($data_arr);
+
+                    $data_arr["description.seo_fulldescr"]   = strip_tags($product["seo_fulldescr"]);
+                    $data_arr["productname.seo_productname"] = strip_tags($product["seo_product_name"]);
+                    $data_arr["productname.seo_h2"]          = strip_tags($product["seo_h2"]);
+                    $data_arr["productname.title_tag"]       = strip_tags($product["title_tag"]);
+
+                    $data_json = json_encode($data_arr);
 
                     $url = $config["ElasticSearch_options"]["es_url"] . $product["domain"] . "/product/" . $product["productid"];
                     $ch  = curl_init($url);

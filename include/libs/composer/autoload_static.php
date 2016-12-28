@@ -78,6 +78,10 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
             'Monolog\\' => 8,
             'Mindy\\QueryBuilder\\' => 19,
         ),
+        'J' => 
+        array (
+            'Jaybizzle\\CrawlerDetect\\' => 24,
+        ),
         'G' => 
         array (
             'GuzzleHttp\\Stream\\' => 18,
@@ -140,6 +144,10 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         'Mindy\\QueryBuilder\\' => 
         array (
             0 => __DIR__ . '/..' . '/mindy/query_builder/src',
+        ),
+        'Jaybizzle\\CrawlerDetect\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src',
         ),
         'GuzzleHttp\\Stream\\' => 
         array (
