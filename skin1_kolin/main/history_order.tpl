@@ -418,7 +418,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
 	<td id="amazonorderid_contact_link" nowrap="nowrap" style="display: none;" align="right" width="200">
 {if $order.amazonorderid ne ""}
-	<a target="_blank" href="https://sellercentral.amazon.com/gp/orders-v2/contact?ie=UTF8&orderID={$order.amazonorderid}" style="color: #1411FF;">Contact customer through Amazon Seller Central</a>
+	<a target="_blank" href="https://sellercentral.amazon.com/gp/orders-v2/contact?ie=UTF8&orderID={$order.amazonorderid}" style="color: #1411FF;">Contact customer through<br/>Amazon Seller Central</a>
 {/if}
 	</td>
 

@@ -680,14 +680,11 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
 
 {assign var="first_row" value=1}
     {if $option eq "W9_Form"}
-        <tr>
+        <tr class="w9form_instructions">
             <td>
-
             </td>
-            <td>
-
+            <td colspan="2">
                 {$lng.w9_form_request_options_instructions}
-
             </td>
         </tr>
     {/if}
