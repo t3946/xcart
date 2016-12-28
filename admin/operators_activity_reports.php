@@ -121,7 +121,7 @@ if ($REQUEST_METHOD == "POST") {
 
 }
 
-$operators = func_query_hash("SELECT usertype, login, status, activity, firstname FROM $sql_tbl[customers] WHERE usertype='A' ORDER BY firstname", "login",true);
+$operators = func_query_hash("SELECT usertype, login, status, activity, firstname FROM $sql_tbl[customers] WHERE usertype='A' ORDER BY status DESC, firstname", "login",true);
 $smarty->assign("operators", $operators);
 
 
