@@ -285,7 +285,7 @@ if ($REQUEST_METHOD == "POST") {
 			
 		if (!empty($active_modules['Multiple_Storefronts'])) {
 			$parent_sf = func_get_category_sf($cat_location);
-			if ($parent_sf != func_get_category_sf($cat) || $parent_sf != $current_storefront) {
+			if ($cat_location > 0 && ($parent_sf != func_get_category_sf($cat) || $parent_sf != $current_storefront)) {
 				$sf_error = true;
 			}
 		}
