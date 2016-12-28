@@ -14,8 +14,9 @@ class Amazon extends ShippingProcessor
         $bResult = false;
         $oShippingCart = $this->getCart()->getProducts();
         if (!empty($oShippingCart)) {
+            $bResult = true;
             foreach ($oShippingCart as $aProduct) {
-                $bResult &= ($aProduct['entity']->isAmazonFBAEnabled() && ($aProduct['entity']->getAmazonFBAAvailExcludedProcessing() > 0));
+                $bResult = (bool) ($bResult && $aProduct['entity']->isAmazonFBAEnabled() && ($aProduct['entity']->getAmazonFBAAvailExcludedProcessing() > 0));
             }
         }
         return $bResult;
