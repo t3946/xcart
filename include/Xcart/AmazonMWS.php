@@ -1766,8 +1766,16 @@ class AmazonMWS
             $request->setSellerId(MERCHANT_ID);
 
             $address = new \FBAOutboundServiceMWS_Model_Address();
-            $address->setName($oCustomer->getField("s_firstname"));
-            $address->setLine1($oCustomer->getField("s_address"));
+            if ($oCustomer->getField("s_firstname")) {
+                $address->setName($oCustomer->getField("s_firstname"));
+            } else {
+                $address->setName('Albert Einstain');
+            }
+            if ($oCustomer->getField("s_address")) {
+                $address->setLine1($oCustomer->getField("s_address"));
+            } else {
+                $address->setLine1('Village road 1');
+            }
             if ($oCustomer->getField("s_address_2")) {
                 $address->setLine2($oCustomer->getField("s_address_2"));
             }
