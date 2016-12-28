@@ -8,6 +8,11 @@ class Logs extends Data
     const LOG_TYPE_SYSTEM = 'S';
     const LOG_TYPE_PAYMENT_PROCESSOR = 'PP';
 
+    const LOG_RESOURCE_ORDERS = 'orders';
+    const LOG_RESOURCE_PURCHASE_ORDERS = 'purchase_orders';
+    const LOG_RESOURCE_AMAZON_PRODUCT_VERIFICATION = 'amazon_product_verification';
+    const LOG_RESOURCE_SHIPPING_QUOTES= 'shipping_quotes';
+
     private static $log_resource_type = null;
     private $oCustomer = null;
 

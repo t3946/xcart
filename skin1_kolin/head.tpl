@@ -5,13 +5,18 @@
 //<![CDATA[
 {literal}
 $(function(){
- document.onkeydown = function(e) {
-        if (e.keyCode == "81"){
-                if (document.getElementById('s3_logo')){
-			$('#s3_logo').attr('href', "javascript: window.open('popup_shipquote.php','popup_shipquote','width=800,height=600,toolbar=no,status=no,scrollbars=yes,menubar=no,location=no,direction=no'); void(0);");
-                }
+    document.onkeydown = function (e) {
+        if (e.keyCode == "81") {
+            if (document.getElementById('s3_logo')) {
+                $('#s3_logo').attr('href', "javascript: window.open('popup_shipquote.php','popup_shipquote','width=800,height=600,toolbar=no,status=no,scrollbars=yes,menubar=no,location=no,direction=no'); void(0);");
+            }
         }
- }
+        if (e.keyCode == "87") {
+            if (document.getElementById('s3_logo')) {
+                $('#s3_logo').attr('href', "javascript: window.open('popup_shipquote2.php','popup_shipquote2','width=800,height=600,toolbar=no,status=no,scrollbars=yes,menubar=no,location=no,direction=no'); void(0);");
+            }
+        }
+    }
 
  document.onkeyup = function(e) {
 	if (document.getElementById('s3_logo')){

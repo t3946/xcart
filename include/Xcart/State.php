@@ -17,4 +17,9 @@ class State extends Data
     {
         return $this->getField('stateid');
     }
+
+    public function getCode()
+    {
+        return $this->getField('code');
+    }
 }
