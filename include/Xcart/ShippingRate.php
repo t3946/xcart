@@ -2,9 +2,6 @@
 
 namespace Xcart;
 
-
-use Xcart\Shipping\ShippingCart;
-
 class ShippingRate extends Data
 {
     private $fShippingQuote = null;
@@ -97,13 +94,19 @@ class ShippingRate extends Data
         return $this->fShippingCharge;
     }
 
-    public function setCart(ShippingCart $oCart)
+    public function addShippingCharge($fCharge)
+    {
+        $this->getShippingCharge();
+        $this->fShippingCharge += $fCharge;
+    }
+
+    public function setCart(\Xcart\Cart $oCart)
     {
         $this->oCart = $oCart;
     }
 
     /**
-     * @return ShippingCart
+     * @return \Xcart\Cart
      */
     public function getCart()
     {
@@ -154,5 +157,29 @@ class ShippingRate extends Data
     public function setAdditionalShippingCharge($fShippingCharge)
     {
         $this->fAdditionalShippingCharge = $fShippingCharge;
+    }
+
+    public function getSimilarShippingRateByDeliveryTime($aMinPriorityShippingRates)
+    {
+        return $this->getTimeDeliveryDiff($aMinPriorityShippingRates);
+    }
+
+    /**
+     * @param ShippingRate[] $aMinPriorityShippingRates
+     */
+    public function getTimeDeliveryDiff($aMinPriorityShippingRates)
+    {
+        $i = null;
+        if (!empty($aMinPriorityShippingRates)) {
+            foreach ($aMinPriorityShippingRates as $key => $oMinPriorityShippingRate) {
+                $oShipping = $oMinPriorityShippingRate->getShippingEntity();
+                $oShippingThis = $this->getShippingEntity();
+                $aResults [(abs(floatval($oShipping->getField('days_min')) - floatval($oShippingThis->getField('days_min'))) +
+                    abs(floatval($oShipping->getField('days_max')) - floatval($oShippingThis->getField('days_max'))))] = $key;
+            }
+            ksort($aResults);
+            $i = array_shift($aResults);
+        }
+        return $i;
     }
 }

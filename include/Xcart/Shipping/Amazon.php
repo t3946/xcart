@@ -4,6 +4,7 @@ namespace Xcart\Shipping;
 
 use Xcart\AmazonMWS;
 use Xcart\Logs;
+use Xcart\Cart;
 use Xcart\Product;
 use Xcart\ProductAmazonRates;
 
@@ -11,14 +12,7 @@ class Amazon extends ShippingProcessor
 {
     public function isProcessorApplicable()
     {
-        $bResult = false;
-        $oShippingCart = $this->getCart()->getProducts();
-        if (!empty($oShippingCart)) {
-            $bResult = true;
-            foreach ($oShippingCart as $aProduct) {
-                $bResult = (bool) ($bResult && $aProduct['entity']->isAmazonFBAEnabled() && ($aProduct['entity']->getAmazonFBAAvailExcludedProcessing() > 0));
-            }
-        }
+        $bResult = true;
         return $bResult;
     }
 
@@ -107,5 +101,19 @@ class Amazon extends ShippingProcessor
     {
         $fAdditionalShippingFee = 0;
         return $fAdditionalShippingFee;
+    }
+
+    public function getCart()
+    {
+        $oAmazonCart = new Cart();
+        $aProducts = $this->oCart->getProducts();
+        if (!empty($aProducts)) {
+            foreach ($aProducts as $aProduct) {
+                if ($aProduct['entity']->isAmazonFBAEnabled() && ($aProduct['entity']->getAmazonFBAAvailExcludedProcessing() > 0)) {
+                    $oAmazonCart->addToCart($aProduct['entity'], $aProduct['qty']);
+                }
+            }
+        }
+        return $oAmazonCart;
     }
 }
