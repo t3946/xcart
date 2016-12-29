@@ -95,10 +95,10 @@ class Shipping extends Data
     /**
      * @param Customer $oCustomer
      * @param Manufacturer $oManufacturer
-     * @param string $type
+     * @param Cart $oCart
      * @return ShippingProcessor[]
      */
-    public function getShippingProcessor(Customer $oCustomer, Manufacturer $oManufacturer, $type = 'R')
+    public function getShippingZonesProcessors(Customer $oCustomer, Manufacturer $oManufacturer, $oCart)
     {
         $aShippingMethods = null;
         if ($oCustomer->getField("s_country")) {
@@ -143,9 +143,9 @@ SQL;
                             if (empty($aShippingProcessor) || !in_array($sShippingCode, array_keys($aShippingProcessor))) {
                                 $sProcessor = __NAMESPACE__ . '\\Shipping\\' . $sShippingCode;
                                 if (class_exists($sProcessor)) {
-                                    $oProcessor = new $sProcessor();
+                                    /** @var ShippingProcessor $oProcessor */
+                                    $oProcessor = new $sProcessor($oCart);
                                     $oProcessor->setManufacturer($oManufacturer);
-                                    $oProcessor->setShippingType($type);
                                     $oProcessor->setCustomer($oCustomer);
                                     $oShippingZone = ShippingZone::model(['zoneid' => $aShippingZone['zoneid']]);
                                     if ($aShippingZone['zoneid'] == 0) {
@@ -166,4 +166,48 @@ SQL;
         return $aShippingMethods;
     }
 
+    public function getShippingRates(Customer $oCustomer, Manufacturer $oManufacturer, Cart $oCart)
+    {
+        $aResult = null;
+        $aShippingZoneRatesPriority = [];
+        $iMinProcessorPriority = 0;
+        $aShippingZones = Shipping::model()->getShippingZonesProcessors($oCustomer, $oManufacturer, $oCart);
+        if (!empty($aShippingZones)) {
+            foreach ($aShippingZones as $oShippingZone) {
+                /** @var ShippingProcessor $oShippingProcessor */
+                foreach ($oShippingZone as $oShippingProcessor) {
+                    $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $oShippingProcessor->getShippingRates();
+                }
+                if (!($oCart->getProductCount())) {
+                    break;
+                }
+            }
+            if (!empty($aShippingZoneRatesPriority)) {
+                $iMinProcessorPriority = min(array_keys($aShippingZoneRatesPriority));
+                krsort($aShippingZoneRatesPriority);
+                foreach ($aShippingZoneRatesPriority as $priority => $aShippingZoneRates) {
+                    foreach ($aShippingZoneRates as $aShippingRates) {
+                        $aMinPriority = $aShippingZoneRatesPriority[$iMinProcessorPriority];
+                        /** @var \Xcart\ShippingRate $oShippingRate */
+                        foreach ($aShippingRates as $oShippingRate) {
+                            if ($priority != $iMinProcessorPriority) {
+                                /** @var ShippingRate[] $aShippingZoneRate */
+                                foreach ($aMinPriority as $keyPriority => $aShippingZoneRate) {
+                                    $iSimilarRateKey = $oShippingRate->getSimilarShippingRateByDeliveryTime($aShippingZoneRate);
+                                    if (!is_null($iSimilarRateKey)) {
+                                        $aShippingZoneRate[$iSimilarRateKey]->addShippingCharge($oShippingRate->getShippingCharge());
+                                        unset ($aMinPriority[$keyPriority][$iSimilarRateKey]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (!empty($aShippingZoneRatesPriority[$iMinProcessorPriority])) {
+            $aResult = $aShippingZoneRatesPriority[$iMinProcessorPriority];
+        }
+        return $aResult;
+    }
 }

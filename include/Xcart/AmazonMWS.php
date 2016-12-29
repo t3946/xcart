@@ -3,7 +3,7 @@ namespace Xcart;
 
 use Xcart\OrderGroup;
 use Xcart\Order;
-use Xcart\Shipping\ShippingCart;
+use Xcart\Cart;
 
 
 define('DATE_FORMAT', 'Y-m-d\TH:i:s\Z');
@@ -1747,11 +1747,11 @@ class AmazonMWS
 
     /**
      * @param Customer $oCustomer
-     * @param ShippingCart $oShippingCart
+     * @param Cart $oShippingCart
      * @param ShippingRate[] $aShippingRates
      * @return array|string
      */
-    public function getGetFulfillmentRates(Customer $oCustomer, ShippingCart $oShippingCart, $aShippingRates)
+    public function getGetFulfillmentRates(Customer $oCustomer, Cart $oShippingCart, $aShippingRates)
     {
         $aShippingRatesCalc = null;
         if (!empty($aShippingRates)) {
