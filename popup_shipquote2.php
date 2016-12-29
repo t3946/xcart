@@ -193,6 +193,7 @@ if ($REQUEST_METHOD == "POST" || $shipping_error == "Y") {
             $aShippingZones = Xcart\Shipping::model()->getShippingRates($oCustomer, $oManufacturer, $oCart);
             if (!empty($aShippingZones)) {
                 foreach ($aShippingZones as $aShippingRates) {
+                    /** @var \Xcart\ShippingRate $oShippingRate */
                     foreach ($aShippingRates as $oShippingRate) {
                         $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
                         $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
