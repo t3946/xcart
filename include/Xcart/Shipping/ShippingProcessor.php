@@ -68,10 +68,10 @@ abstract class ShippingProcessor
                 $this->getShippingQuotesCached();
                 $this->getShippingQuotes();
                 if (!empty($this->aShippingRates)) {
-                    usort($this->aShippingRates, ['\Xcart\Shipping\ShippingProcessor', 'sortShippingRatesByCostAsc']);
                     foreach ($this->aShippingRates as $oShippingRate) {
                         $oShippingRate->setCart($this->getCart());
                     }
+                    usort($this->aShippingRates, ['\Xcart\Shipping\ShippingProcessor', 'sortShippingRatesByCostAsc']);
                     $this->removeFromCart();
                 }
             }
