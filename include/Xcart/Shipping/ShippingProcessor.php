@@ -4,11 +4,13 @@ namespace Xcart\Shipping;
 
 
 use Xcart\Manufacturer;
+use Xcart\ShippingCarrier;
 use Xcart\ShippingZone;
 use Xcart\ShippingRate;
 use Xcart\SQLBuilder;
 use Xcart\Product;
 use Xcart\Customer;
+use Xcart\Cart;
 
 abstract class ShippingProcessor
 {
@@ -21,9 +23,9 @@ abstract class ShippingProcessor
     private $oCustomer = null;
 
     /**
-     * @var ShippingCart
+     * @var Cart
      */
-    private $oCart = null;
+    protected $oCart = null;
 
     /**
      * @var ShippingRate[]
@@ -33,6 +35,11 @@ abstract class ShippingProcessor
      * @var ShippingRate[]
      */
     protected $aShippingRates = null;
+
+    /**
+     * @var ShippingCarrier
+     */
+    private $oShippingCarrier = null;
 
     /**
      * @return boolean
@@ -49,6 +56,11 @@ abstract class ShippingProcessor
 
     abstract public function getAdditionalShippingFee($weight);
 
+    public function __construct(Cart $oShippingCart)
+    {
+        $this->oCart = $oShippingCart;
+    }
+
     public function getShippingRates()
     {
         if ($this->getCart() && $this->getCart()->getProductCount() > 0) {
@@ -60,6 +72,7 @@ abstract class ShippingProcessor
                     foreach ($this->aShippingRates as $oShippingRate) {
                         $oShippingRate->setCart($this->getCart());
                     }
+                    $this->removeFromCart();
                 }
             }
         }
@@ -146,22 +159,11 @@ abstract class ShippingProcessor
     }
 
     /**
-     * @return ShippingCart
+     * @return Cart
      */
-    public function getCart()
+    protected function getCart()
     {
         return $this->oCart;
-    }
-
-    /**
-     * @param Product $oProduct
-     */
-    public function addProduct($oProduct, $qty)
-    {
-        if (is_null($this->oCart)) {
-            $this->oCart = new ShippingCart();
-        }
-        $this->oCart->addToCart($oProduct, $qty);
     }
 
     /**
@@ -180,62 +182,24 @@ abstract class ShippingProcessor
         $this->oCustomer = $oCustomer;
     }
 
-
-}
-
-class ShippingCart
-{
-    private $aCart;
-    private $fCost = null;
-    private $iCount = null;
-    private $fExtraMarginValue = null;
-
-    public function addToCart(Product $oProduct, $qty)
+    public function removeFromCart()
     {
-        if ($oProduct->getProductId()) {
-            $this->aCart[$oProduct->getProductId()]['qty'] += $qty;
-            $this->aCart[$oProduct->getProductId()]['entity'] = $oProduct;
+        $aProducts = $this->getCart()->getProducts();
+        foreach ($aProducts as $aProduct) {
+            $this->oCart->removeFromCart($aProduct['entity']);
         }
     }
 
-    public function getProductCount()
+    public function getPriority()
     {
-        if (is_null($this->iCount)) {
-            $this->iCount = 0;
-            if (!empty($this->aCart)) {
-                foreach ($this->aCart as $aProduct) {
-                    $this->iCount += $aProduct['qty'];
-                }
-            }
-        }
-        return $this->iCount;
+        return $this->getShippingCarrier()->getPriority();
     }
 
-    public function getProducts()
+    public function getShippingCarrier()
     {
-        return $this->aCart;
-    }
-
-    public function getCost()
-    {
-        if (is_null($this->fCost)) {
-            $this->fCost = 0;
-            if (!empty($this->aCart)) {
-                foreach ($this->aCart as $aProduct) {
-                    $this->fCost += $aProduct['entity']->getPrice() * $aProduct['qty'];
-                }
-            }
+        if (is_null($this->oShippingCarrier)){
+            $this->oShippingCarrier = ShippingCarrier::model(['carrier_code' => (new \ReflectionClass($this))->getShortName()]);
         }
-        return $this->fCost;
-    }
-
-    public function getExtraMarginValue()
-    {
-        if (is_null($this->fExtraMarginValue) && !empty($this->aCart)) {
-            foreach ($this->aCart as $aProduct) {
-                $this->fExtraMarginValue += $aProduct['entity']->getExtraMarginValue($aProduct['qty']);
-            }
-        }
-        return $this->fExtraMarginValue;
+        return $this->oShippingCarrier;
     }
 }

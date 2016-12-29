@@ -346,7 +346,8 @@ $sql_tbl = array (
 	"products_upc_changes" => "xcart_products_upc_changes",
 	"locks" => "xcart_locks",
 	"fba_missing_sku" => "xcart_fba_missing_sku",
-	"storefronts_config" => "xcart_storefronts_config"
+	"storefronts_config" => "xcart_storefronts_config",
+    "shipping_carrier" => "xcart_shipping_carrier"
 );
 
 # START: random:20341 [2010 Jul 29 14:46] 
