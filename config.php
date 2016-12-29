@@ -401,6 +401,11 @@ $anonymous_password="42a51f1538a39636879414b681dd7df6";
 #
 $license ='C1C79239';
 
+/***
+ * Google reCaptcha
+ */
+$key_recaptcha_public = '6Leg-w8UAAAAAHBvpqqNR9seJJMR6OEhX9RNGMUe';
+$key_recaptcha_secret = '6Leg-w8UAAAAALFKGjXdzGktWnBZauSNvGsAiv2e';
 
 ################################################################################
 # NEVER CHANGE THE SETTINGS BELOW THIS LINE MANUALLY

@@ -1232,3 +1232,5 @@ if (!function_exists('fn_shutdown')) {
 
 $smarty->register_function('getBanners', array('Xcart\Helpers\Banners', 'getBannerSmarty'));
 $smarty->register_function('getSliderData', array('Xcart\Helpers\SliderData', 'getSliderDataSmarty'));
+
+$smarty->assign('key_recaptcha_public', $key_recaptcha_public);
