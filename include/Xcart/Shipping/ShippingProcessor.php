@@ -163,7 +163,14 @@ abstract class ShippingProcessor
      */
     protected function getCart()
     {
-        return $this->oCart;
+        $oCart = new Cart();
+        $aProducts = $this->oCart->getProducts();
+        if (!empty($aProducts)) {
+            foreach ($aProducts as $aProduct) {
+                    $oCart->addToCart($aProduct['entity'], $aProduct['qty']);
+            }
+        }
+        return $oCart;
     }
 
     /**
