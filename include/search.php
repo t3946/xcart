@@ -1,7 +1,3 @@
-<?php /* MODIFIED: random:19530 [2009 Nov 12 13:25][Custom development (Add an option to search for duplicated SKUs)] */ ?>
-<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (��������� ��� ������ UPS + ��������� � ������ ����� Tracking numbers ��� �������)] */ ?>
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (����� ��� �������� ����������� "��������������" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
-<?php /* MODIFIED: random:1073746882_1073747063 [2008 Dec 24 16:25][Custom development (Shipping Calculation for Several Providers in the USA)] */ ?>
 <?php
 /*****************************************************************************\
  * +-----------------------------------------------------------------------------+
@@ -34,9 +30,7 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
-#
-# $Id: search.php,v 1.141.2.25 2007/01/25 07:04:50 max Exp $
-#
+use Xcart\Product;
 
 x_load('product');
 
@@ -1707,11 +1701,17 @@ if ($mode == "search") {
                 x_session_register("cart");
 
                 # Get tax rates cache
-                $ids = array();
-                foreach ($products as $v) {
+                $ids = [];
+                $pids = [];
+
+                foreach ($products as $v)
+                {
+                    $pids[] = $v['productid'];
                     if ($v['is_taxes'] == 'Y')
                         $ids[] = $v;
                 }
+
+                Product::updateShowInLists($pids);
 
                 $_taxes = array();
                 if (!empty($ids)) {
