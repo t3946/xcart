@@ -1,3 +1,4 @@
+
 {* $Id: order_message.tpl,v 1.35 2005/11/28 14:19:29 max Exp $ *}
 {if $this_is_printable_version eq ""}
 {capture name=dialog}
@@ -16,6 +17,7 @@
 {if $active_modules.Interneka ne ""}
 { include file="modules/Interneka/interneka_tags.tpl" } 
 {/if}
+<IMG src="https://shareasale.com/sale.cfm?amount={$orders[oi].order.subtotal}&tracking={$orders[oi].order.order_prefix}{$orders[oi].order.orderid}&transtype=sale&merchantID=68716" width="1" height=1>
 {/section}
 {if $this_is_printable_version eq ""}
 <table width="100%">
