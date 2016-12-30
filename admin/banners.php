@@ -7,16 +7,7 @@ $location[] = array("Banners");
 
 require $xcart_dir."/include/security.php";
 
-
-$connection = \Doctrine\DBAL\DriverManager::getConnection([
-    'memory' => true,
-    'driver' => 'pdo_mysql',
-    'dbname' => $sql_db,
-    'host' => $sql_host,
-    'user' => $sql_user,
-    'password' => $sql_password
-]);
-
+$connection = Xcart\Connection::getInstance();
 $qb = \Mindy\QueryBuilder\QueryBuilder::getInstance($connection);
 
 if (!isset($bannerid) && !empty($_POST['bannerid'])) {

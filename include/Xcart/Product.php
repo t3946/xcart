@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\QueryBuilder;
+
 class Product extends Data
 {
     const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
@@ -669,5 +672,19 @@ class Product extends Data
             }
         }
         return $this->fExtraMarginValue;
+    }
+
+    public static function updateShowInLists(array $ids)
+    {
+        if (!empty($ids))
+        {
+            $sql = QueryBuilder::getInstance(Connection::getInstance())
+                ->setTypeUpdate()
+                ->where(['productid__in' => $ids])
+                ->update('xcart_products', ['in_list_showed' => new Expression('in_list_showed + 1')])
+                ->toSQL();
+
+            Connection::getInstance()->exec($sql);
+        }
     }
 }

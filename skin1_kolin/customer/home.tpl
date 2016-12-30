@@ -146,155 +146,110 @@ window.attachEvent("onload", anchor_fix);
 //<![CDATA[
 {literal}
 
-	function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter){
-
+    function func_load_ALL_ajax_carousels(load_ajax_sections, ajax_counter)
+    {
         var load_ajax_sections_arr = load_ajax_sections.split(',');
-        var count_ajax_sections = load_ajax_sections_arr.length;
-        var load_ajax_carousel_flag;
 
         load_ajax_sections_arr.forEach(function (section_name, i, load_ajax_sections_arr) {
-
-            section_name.trim();
-
-            if ((ajax_counter - 1) == i) {
-                    func_load_ajax_carousel_products(section_name);
-            }
+            setTimeout(function(){section_name.trim(); func_load_ajax_carousel_products(section_name)}.bind(section_name), 1400);
         });
 
-//$("#test_text").val(ajax_counter);
+    }
 
-        ajax_counter++;
-        setTimeout("func_load_ALL_ajax_carousels('" + load_ajax_sections + "'," + ajax_counter + ")", 1400);
-	}
+function func_load_ajax_carousel_products(section_name)
+{
+    var tmp_rand = Math.random();
+    var options = {'section_name': section_name};
+    {/literal}
+    {if $product.productid ne ""}
+        {literal}options['productid'] = {/literal}{$product.productid}{literal};{/literal}
+    {/if}
+    {literal}
 
-function func_load_ajax_carousel_products(section_name) {
+    $.post('cidev_ajax_suggestions.php?rand=' + tmp_rand,options, function(data)
+    {
+        if (data)
+        {
+            var obj = $.parseJSON(data);
+            var html = '<ul>';
+            var a_href = '';
 
-    cidev_xmlHttp = cidev_createHttpRequestObject();
-    if (cidev_xmlHttp.readyState == 4 || cidev_xmlHttp.readyState == 0) {
+            var ga_page_name = '{/literal}{$ga_page_name}{literal}';
 
-        var cidev_parameters = 'section_name=' + section_name;
-
-        {/literal}
-        {if $product.productid ne ""}
-        {literal}
-        var productid = {/literal}{$product.productid}{literal};
-        cidev_parameters = cidev_parameters + '&productid=' + productid;
-        {/literal}
-        {/if}
-        {literal}
-
-
-        cidev_xmlHttp.onreadystatechange = function () {
-            if (cidev_xmlHttp.readyState == 4) {
-                if (cidev_xmlHttp.status == 200) {
-                    var data = cidev_xmlHttp.responseText;
-
-                    if (data != "") {
-                        $("#" + section_name).show();
+            if (obj) {
+                $.each(obj.items, function () {
+                    if (this.clean_url != '') {
+                        a_href = this.clean_url + '/';
+                    } else {
+                        a_href = 'product.php?productid=' + this.productid;
                     }
-
-                    var obj = jQuery.parseJSON(data);
-
-                    var html = '<ul>';
-                    var a_href = '';
-
-                    var ga_page_name = '{/literal}{$ga_page_name}{literal}';
-
-                    if (obj) {
-                        $.each(obj.items, function () {
-                            if (this.clean_url != '') {
-                                a_href = this.clean_url + '/';
-                            } else {
-                                a_href = 'product.php?productid=' + this.productid;
-                            }
-                            ga_page_name = this.ga_param;
-                            html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price+'" data-position="'+this.N_key+'" class="active">' +
-                                    '<div style="text-align: center;">' +
-                                    '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>' +
-                                    '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">' + this.title + '</a>' +
-                                    '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price + '</font>' +
-                                    '</div>' +
-                                    '</li>';
-                        });
-                    }
-
-                    html += '</ul>';
-
-                    $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
-
-
-
-                    jQuery(function ($) {
-                        'use strict';
-
-                        // -------------------------------------------------------------
-                        //   Basic Navigation
-                        // -------------------------------------------------------------
-                        (function () {
-                            var $frame = $('#jcarousel_' + section_name);
-                            var $wrap = $frame.parent().parent();
-
-                            var options = {
-                                horizontal: 1,
-                                itemNav: 'basic',
-                                smart: 1,
-                                activateOn: 'click',
-                                mouseDragging: 1,
-                                touchDragging: 1,
-                                releaseSwing: 1,
-                                startAt: 0,
-                                scrollBar: $wrap.find('.scrollbar'),
-                                scrollBy: 0,
-                                pagesBar: $wrap.find('.pages'),
-                                activatePageOn: 'click',
-                                speed: 300,
-                                elasticBounds: 1,
-                                easing: 'easeOutExpo',
-                                dragHandle: 1,
-                                dynamicHandle: 1,
-                                clickBar: 1,
-
-                                // Buttons
-                                prevPage: $wrap.find('.jcarousel-control-prev'),
-                                nextPage: $wrap.find('.jcarousel-control-next')
-                            };
-                            try {
-                                var frame = new Sly('#jcarousel_' + section_name, options, {
-                                    load: checkCarouselsVisibility,
-                                    moveEnd: checkCarouselsVisibility
-                                }).init();
-                            }
-                            catch(err) {
-                                //
-                            }
-
-
-                        }());
-
-                    });
-
-
-                    /* ------------------------------------------------------------------------------------- */
-
-                } else {
-//                                                        cidev_Error('no_server', 'Y');
-                }
+                    ga_page_name = this.ga_param;
+                    html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price+'" data-position="'+this.N_key+'" class="active">' +
+                        '<div style="text-align: center;">' +
+                        '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>' +
+                        '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">' + this.title + '</a>' +
+                        '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price + '</font>' +
+                        '</div>' +
+                        '</li>';
+                });
             }
-        };
 
-        var tmp_rand = Math.random();
+            html += '</ul>';
 
-        cidev_xmlHttp.open('POST', 'cidev_ajax_suggestions.php?rand=' + tmp_rand, true);
-        cidev_xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        //cidev_xmlHttp.setRequestHeader('Content-length',cidev_parameters.length);
-        cidev_xmlHttp.setRequestHeader('Cache-Control', 'no-cache');
-        cidev_xmlHttp.setRequestHeader('Cache-Control', 'no-store');
-        //cidev_xmlHttp.setRequestHeader('Connection','close');
-        cidev_xmlHttp.send(cidev_parameters);
-    }
-    else {
-        setTimeout('func_load_ajax_carousel_products()', 1400);
-    }
+            if (data != "") {
+                $("#" + section_name).show();
+            }
+
+            $('#jcarousel_' + section_name).html(html).parent().after('<ul class="pages"></ul>');
+            jQuery(function ($) {
+                'use strict';
+
+                // -------------------------------------------------------------
+                //   Basic Navigation
+                // -------------------------------------------------------------
+                (function () {
+                    var $frame = $('#jcarousel_' + section_name);
+                    var $wrap = $frame.parent().parent();
+
+                    var options = {
+                        horizontal: 1,
+                        itemNav: 'basic',
+                        smart: 1,
+                        activateOn: 'click',
+                        mouseDragging: 1,
+                        touchDragging: 1,
+                        releaseSwing: 1,
+                        startAt: 0,
+                        scrollBar: $wrap.find('.scrollbar'),
+                        scrollBy: 0,
+                        pagesBar: $wrap.find('.pages'),
+                        activatePageOn: 'click',
+                        speed: 300,
+                        elasticBounds: 1,
+                        easing: 'easeOutExpo',
+                        dragHandle: 1,
+                        dynamicHandle: 1,
+                        clickBar: 1,
+
+                        // Buttons
+                        prevPage: $wrap.find('.jcarousel-control-prev'),
+                        nextPage: $wrap.find('.jcarousel-control-next')
+                    };
+                    try {
+                        var frame = new Sly('#jcarousel_' + section_name, options, {
+                            load: checkCarouselsVisibility,
+                            moveEnd: checkCarouselsVisibility
+                        }).init();
+                    }
+                    catch(err) {
+                    }
+
+
+                }());
+
+            });
+        }
+    });
 }
 {/literal}
 //]]>
@@ -444,9 +399,7 @@ function func_load_ajax_carousel_products(section_name) {
 <div id="recently_viewed_products" style="display: none;">{include file="customer/main/ajax_carousel_products.tpl" section_name="recently_viewed_products" section_title=$lng.lbl_recently_viewed_products}</div>
 
 <script type="text/javascript">
-//<![CDATA[
-func_load_ALL_ajax_carousels("recently_viewed_products", 0);
-//]]>
+    func_load_ALL_ajax_carousels("recently_viewed_products", 0);
 </script>
 {/if}
 {* ------------------------- *}

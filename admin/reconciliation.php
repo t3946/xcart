@@ -2,6 +2,9 @@
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
+use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\Connection;
+
 x_load('backoffice','files', 'order');
 
 set_time_limit(0);
@@ -1317,20 +1320,14 @@ if ($tab == "inventory") {
 
     $o_direction = ($order_direction == 'desc') ? '-' : '';
 
-    $connection = new \Doctrine\DBAL\Driver\PDOConnection("mysql:host={$sql_host};dbname={$sql_db}", $sql_user, $sql_password);
-    $adapter = new Mindy\QueryBuilder\Database\Mysql\Adapter();
-    $lookup_builder = new Mindy\QueryBuilder\LookupBuilder\LookupBuilder();
-
-    $bf = new \Mindy\QueryBuilder\QueryBuilderFactory($connection, $adapter, $lookup_builder);
-    $qb = $bf->getQueryBuilder();
+    $qb = QueryBuilder::getInstance(Connection::getInstance());
     $sql = $qb
         ->setTypeSelect()
-        ->select('*')
         ->from('xcart_cidev_daily_fba_stats')
         ->order([$o_direction . $order_by])
         ->toSQL();
 
-    $cidev_daily_fba_stats = $connection->query($sql)->fetchAll();
+    $cidev_daily_fba_stats = Connection::getInstance()->fetchAll($sql);
 
     $smarty->assign("cidev_daily_fba_stats", $cidev_daily_fba_stats);
 }
