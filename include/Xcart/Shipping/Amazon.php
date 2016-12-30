@@ -16,36 +16,6 @@ class Amazon extends ShippingProcessor
         return $bResult;
     }
 
-    public function getShippingQuotesCached()
-    {
-        return null;
-        global $config;
-        $aShippingRates = $this->getShippingRatesEntities();
-        $oShippingCart = $this->getCart();
-        /*get proxy amazon rates for 1 product*/
-        if ($oShippingCart->getProductCount() == 1) {
-            foreach ($aShippingRates as $oShippingRate) {
-                $aProd = $oShippingCart->getProducts();
-                /** @var Product $oProduct */
-                $oProduct = reset($aProd)['entity'];
-                $oProductAmazonRates = ProductAmazonRates::model([
-                    'product_id' => $oProduct->getProductId(),
-                    'shipping_id' => $oShippingRate->getField('shippingid'),
-                    'state_id' => $this->getCustomer()->getShippingStateEntity()->getStateId()]);
-                if ($oProductAmazonRates->getField('product_id')) {
-                    $oDate = new \DateTime();
-                    $oDate->setTimestamp(strtotime($oProductAmazonRates->getField('last_update')));
-                    $iDaysInterval = $oDate->diff(new \DateTime('now'))->days;
-                    if ($iDaysInterval <= $config["Froogle"]["froogle_days_cache_rates"]) {
-                        $oShippingRate->setShippingChargeQuote($oProductAmazonRates->getField('rate'));
-                        $this->aShippingRates[] = $oShippingRate;
-                    }
-                }
-            }
-        }
-        return $this->aShippingRates;
-    }
-
     public function getServerQuotes($aShippingRates)
     {
         $aResponses = null;
@@ -79,7 +49,7 @@ class Amazon extends ShippingProcessor
                         $oProduct = reset($aProd)['entity'];
                         //$this->saveShippingQuotesCached($oProduct);
                     }
-                    $this->saveShippingQuotesCached($this->getCustomer(), $this->getManufacturer(), $this->getCart(), $this->aShippingRates);
+                    $this->saveShippingQuotesCached();
                 }
             }
         }

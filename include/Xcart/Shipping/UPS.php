@@ -160,17 +160,12 @@ class UPS extends ShippingProcessor
                             }
                         }
                     }
-                    $this->saveShippingQuotesCached($this->getCustomer(), $this->getManufacturer(), $this->getCart(), $this->aShippingRates);
+                    $this->saveShippingQuotesCached();
                 }
             }
         }
 
         return $this->aShippingRates;
-    }
-
-    public function getShippingQuotesCached()
-    {
-
     }
 
     public function getAdditionalShippingFee($weight)

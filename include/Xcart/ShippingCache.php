@@ -13,7 +13,7 @@ class ShippingCache extends Data
 {
     public function __construct($aParams = [])
     {
-        $this->aPrimaryKeys = ['shipping_cahce_id'];
+        $this->aPrimaryKeys = ['shipping_cache_id'];
         $this->sPrimaryTable = 'shipping_cache_simple';
         parent::__construct($aParams);
     }
