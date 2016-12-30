@@ -687,27 +687,28 @@ class Product extends Data
                                ->update($table, ['in_list_showed' => new Expression('in_list_showed + 1')])
                                ->toSQL();
 
-
-
             if ($connection->exec($sql) != count($ids))
             {
+                $e_ids = [];
                 $sql   = QueryBuilder::getInstance($connection)
                                      ->setTypeSelect()
                                      ->from($table)
                                      ->select(['productid'])
                                      ->where(['productid__in' => $ids])
                                      ->toSQL();
-                $i_ids = [];
 
                 foreach ($connection->fetchAll($sql) as $item) {
-                    if (!in_array($item['productid'], $ids)) {
-                        $i_ids[] = $item;
-                    }
+                    $e_ids[] = $item['productid'];
                 }
 
-                if (!empty($i_ids))
+                $ids = array_diff($ids, $e_ids);
+
+                if (!empty($ids))
                 {
-                    $sql = QueryBuilder::getInstance($connection)->insert($table, $i_ids);
+                    $ids = array_map(function ($id) { return ['productid' => $id]; }, $ids);
+                    $ids = array_values($ids);
+
+                    $sql = QueryBuilder::getInstance($connection)->insert($table, $ids);
                     $connection->exec($sql);
                 }
             }
