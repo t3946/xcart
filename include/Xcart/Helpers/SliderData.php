@@ -219,7 +219,7 @@ class SliderData
             }
         }
 
-        Product::updateShowInLists($p_ids);
+//        Product::updateShowInLists($p_ids);
 
         return [$products, $sGoogleAnaliticsParam];
     }
