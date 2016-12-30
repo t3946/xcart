@@ -686,4 +686,5 @@ class Product extends Data
 
             Connection::getInstance()->exec($sql);
         }
+    }
 }
