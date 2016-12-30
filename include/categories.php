@@ -212,10 +212,10 @@ function func_get_categories_list($cat=0, $short_list=true, $flag=null, $max_dep
 	}
 	else if (defined('NEED_READY_CLASSIFY')) {
 		$to_search .= ", SUM(IF(c2.pc_ready_to_classify='Y',1,0))+IF(xcart_categories.pc_ready_to_classify='Y',1,0) ready_to_class";
-		$inner_join = " LEFT JOIN xcart_categories c2 ON c2.categoryid_path like CONCAT(xcart_categories.categoryid_path,'/%') and c2.pc_ready_to_classify = 'Y' and c2.storefrontid = xcart_categories.storefrontid ";
+		$inner_join = " LEFT JOIN xcart_categories c2 ON c2.categoryid_path like CONCAT(xcart_categories.categoryid_path,'/%') and c2.avail = 'Y' and c2.pc_ready_to_classify = 'Y' and c2.storefrontid = xcart_categories.storefrontid ";
 		$_categories = db_query("SELECT $to_search
 									FROM $sql_tbl[categories] FORCE INDEX (am) $join_tbl " . $inner_join.
-				(!empty($search_condition) ? 'WHERE ' . implode(' AND ', $search_condition) : '') . " GROUP BY $sql_tbl[categories].categoryid HAVING ready_to_class > 0 " . $sort_condition);
+				(!empty($search_condition) ? 'WHERE ' . implode(' AND ', $search_condition) : '') . " AND $sql_tbl[categories].avail = 'Y' GROUP BY $sql_tbl[categories].categoryid HAVING ready_to_class > 0 " . $sort_condition);
 	}
 	else {
 		$_categories = db_query("SELECT $to_search FROM $sql_tbl[categories] FORCE INDEX (am) $join_tbl " . (!empty($search_condition) ? 'WHERE ' . implode(' AND ', $search_condition) : '') . " GROUP BY $sql_tbl[categories].categoryid " . $sort_condition);
