@@ -1,8 +1,12 @@
 <?php
 namespace Xcart\Helpers;
 
+use Mindy\QueryBuilder\Q\QAndNot;
+use Mindy\QueryBuilder\QueryBuilder;
 use Xcart\Brands;
+use Xcart\Connection;
 use Xcart\ElasticSearch;
+use Xcart\Product;
 
 class SliderData
 {
@@ -19,6 +23,26 @@ class SliderData
         list($products, $gaparam) = self::getSliderData($params['mode'], $params['productid']);
 
         $smarty->assign($params['assign'], $products);
+    }
+
+    public static function getRandFbaProducts($limit = 3, array $no_ids = null)
+    {
+        $where = ['amazon_fba' => 'Y', 'amazon_fba_avail__gt' => 1];
+
+        if (!empty($no_ids)) {
+            $where[] = new QAndNot(['productid__in' => $no_ids]);
+        }
+
+        $sql = QueryBuilder::getInstance(Connection::getInstance())
+                           ->setTypeSelect()
+                           ->select(['needed_resource_id' => 'productid'])
+                           ->from('xcart_products')
+                           ->order(['in_list_showed', '?'])
+                           ->where($where)
+                           ->limit($limit)
+                           ->toSQL();
+
+        return Connection::getInstance()->fetchAll($sql);
     }
 
     public static function getSliderData ($mode, $productid = null)
@@ -160,10 +184,24 @@ class SliderData
         }
 
 
-
+        $p_ids = [];
         $products = [];
         if (!empty($pids))
         {
+            if (!in_array($section_name, ['related_products', 'recently_viewed_products']))
+            {
+                $p_ids[] = $productid;
+
+                foreach ($pids as $pid) {
+                    $p_ids[] = $pid['needed_resource_id'];
+                }
+
+                if ($fba_pids = self::getRandFbaProducts(rand(2,4), $p_ids))
+                {
+                    $pids = array_merge($fba_pids, $pids);
+                }
+            }
+
             foreach ($pids as $k => $v)
             {
                 if (!empty($productid) && $v["needed_resource_id"] == $productid) {
@@ -171,13 +209,17 @@ class SliderData
                 }
                 $product_info = func_select_product($v["needed_resource_id"], 0, false);
 
-                if (!empty($product_info)){
+                if (!empty($product_info))
+                {
+                    $p_ids[] = $v["needed_resource_id"];
 
                     $product_info["product"] = str_replace("'", "&#39;", $product_info["product"]);
                     $products[] = $product_info;
                 }
             }
         }
+
+        Product::updateShowInLists($p_ids);
 
         return [$products, $sGoogleAnaliticsParam];
     }
