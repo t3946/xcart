@@ -7,7 +7,8 @@ $location[] = array("Banners");
 
 require $xcart_dir."/include/security.php";
 
-$qb = \Mindy\QueryBuilder\QueryBuilder::getInstance(Xcart\Connection::getInstance());
+$connection = Xcart\Connection::getInstance();
+$qb = \Mindy\QueryBuilder\QueryBuilder::getInstance($connection);
 
 if (!isset($bannerid) && !empty($_POST['bannerid'])) {
     $bannerid = $_POST['bannerid'];
