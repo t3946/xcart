@@ -404,7 +404,7 @@ x_session_save("variant_id_for_point10");
 $smarty->assign("variant_id_for_point10", $variant_id_for_point10);
 
 x_session_register('variant_id_for_point11');
-$variant_id_for_point11 = (defined('LOCAL_SF_ID') ? 1 : Get_AB_Variant(10));
+$variant_id_for_point11 = (defined('LOCAL_SF_ID') ? 1 : Get_AB_Variant(11));
 x_session_save("variant_id_for_point11");
 $smarty->assign("variant_id_for_point11", $variant_id_for_point11);
 
