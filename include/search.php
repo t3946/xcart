@@ -1711,7 +1711,7 @@ if ($mode == "search") {
                         $ids[] = $v;
                 }
 
-//                Product::updateShowInLists($pids);
+                Product::updateShowInLists($pids);
 
                 $_taxes = array();
                 if (!empty($ids)) {
