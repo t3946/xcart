@@ -4,6 +4,8 @@ namespace Xcart\Shipping;
 
 
 use Xcart\Manufacturer;
+use Xcart\ShippingCache;
+use Xcart\ShippingCacheProducts;
 use Xcart\ShippingCarrier;
 use Xcart\ShippingZone;
 use Xcart\ShippingRate;
@@ -49,8 +51,6 @@ abstract class ShippingProcessor
     abstract public function getShippingQuotes();
 
     abstract public function getShippingQuotesCached();
-
-    abstract public function saveShippingQuotesCached(Product $oProduct);
 
     abstract public function getServerQuotes($aShippingRates);
 
@@ -167,7 +167,7 @@ abstract class ShippingProcessor
         $aProducts = $this->oCart->getProducts();
         if (!empty($aProducts)) {
             foreach ($aProducts as $aProduct) {
-                    $oCart->addToCart($aProduct['entity'], $aProduct['qty']);
+                $oCart->addToCart($aProduct['entity'], $aProduct['qty']);
             }
         }
         return $oCart;
@@ -204,9 +204,39 @@ abstract class ShippingProcessor
 
     public function getShippingCarrier()
     {
-        if (is_null($this->oShippingCarrier)){
+        if (is_null($this->oShippingCarrier)) {
             $this->oShippingCarrier = ShippingCarrier::model(['carrier_code' => (new \ReflectionClass($this))->getShortName()]);
         }
         return $this->oShippingCarrier;
+    }
+
+    protected function saveShippingQuotesCached(Customer $oCustomer, Manufacturer $oManufacturer, Cart $oCart, $aShippingRates)
+    {
+        if (!empty($aShippingRates)) {
+            $iShippingCacheId = ShippingCache::model()->fill(
+                ['shipping_carrier' => (new \ReflectionClass($this))->getShortName(),
+                    'zip_to' => $oCustomer->getField('s_zipcode'),
+                    'zip_from' => $oManufacturer->getField('m_zipcode'),
+                    'state_to' => $oCustomer->getField('s_state'),
+                    'state_from' => $oManufacturer->getField('m_state'),
+                    'country_to' => $oCustomer->getField('s_country'),
+                    'country_from' => $oManufacturer->getField('m_country'),
+                    'shipping_rates' => addslashes(serialize($aShippingRates))]
+            )->_insert(true);
+            if ($iShippingCacheId) {
+                $aProducts = $oCart->getProducts();
+                if (!empty($aProducts)) {
+                    foreach ($aProducts as $aProduct) {
+                        ShippingCacheProducts::model()->fill(
+                            [
+                                'shipping_cache_id' => $iShippingCacheId,
+                                'product_id' => $aProduct['entity']->getProductId(),
+                                'product_quantity' => $aProduct['qty'],
+                            ]
+                        )->_insert(true);
+                    }
+                }
+            }
+        }
     }
 }

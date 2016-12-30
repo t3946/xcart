@@ -172,33 +172,43 @@ SQL;
         $aResult = null;
         $aShippingZoneRatesPriority = [];
         $iMinProcessorPriority = 0;
-        $aShippingZones = Shipping::model()->getShippingZonesProcessors($oCustomer, $oManufacturer, $oCart);
-        if (!empty($aShippingZones)) {
-            foreach ($aShippingZones as $oShippingZone) {
-                /** @var ShippingProcessor $oShippingProcessor */
-                foreach ($oShippingZone as $oShippingProcessor) {
-                    $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $oShippingProcessor->getShippingRates();
+
+        if (!$oCustomer->getField('s_zipcode') && !$oCustomer->getField('s_country')) {
+            throw new \Exception('Shipping rates error: Customers country or state not set');
+        }
+        if (!$oManufacturer->getManufacturerId()) {
+            throw new \Exception('Shipping rates error: Manufacturer not set');
+        }
+
+        if ($oCart->getProductCount()) {
+            $aShippingZones = Shipping::model()->getShippingZonesProcessors($oCustomer, $oManufacturer, $oCart);
+            if (!empty($aShippingZones)) {
+                foreach ($aShippingZones as $oShippingZone) {
+                    /** @var ShippingProcessor $oShippingProcessor */
+                    foreach ($oShippingZone as $oShippingProcessor) {
+                        $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $oShippingProcessor->getShippingRates();
+                    }
+                    if (!($oCart->getProductCount())) {
+                        break;
+                    }
                 }
-                if (!($oCart->getProductCount())) {
-                    break;
-                }
-            }
-            if (!empty($aShippingZoneRatesPriority)) {
-                $iMinProcessorPriority = min(array_keys($aShippingZoneRatesPriority));
-                krsort($aShippingZoneRatesPriority);
-                foreach ($aShippingZoneRatesPriority as $priority => $aShippingZoneRates) {
-                    foreach ($aShippingZoneRates as $aShippingRates) {
-                        if (!empty($aShippingRates)) {
-                            $aMinPriority = $aShippingZoneRatesPriority[$iMinProcessorPriority];
-                            /** @var \Xcart\ShippingRate $oShippingRate */
-                            foreach ($aShippingRates as $oShippingRate) {
-                                if ($priority != $iMinProcessorPriority) {
-                                    /** @var ShippingRate[] $aShippingZoneRate */
-                                    foreach ($aMinPriority as $keyPriority => $aShippingZoneRate) {
-                                        $iSimilarRateKey = $oShippingRate->getSimilarShippingRateByDeliveryTime($aShippingZoneRate);
-                                        if (!is_null($iSimilarRateKey)) {
-                                            $aShippingZoneRate[$iSimilarRateKey]->addShippingCharge($oShippingRate->getShippingCharge());
-                                            unset ($aMinPriority[$keyPriority][$iSimilarRateKey]);
+                if (!empty($aShippingZoneRatesPriority)) {
+                    $iMinProcessorPriority = min(array_keys($aShippingZoneRatesPriority));
+                    krsort($aShippingZoneRatesPriority);
+                    foreach ($aShippingZoneRatesPriority as $priority => $aShippingZoneRates) {
+                        foreach ($aShippingZoneRates as $aShippingRates) {
+                            if (!empty($aShippingRates)) {
+                                $aMinPriority = $aShippingZoneRatesPriority[$iMinProcessorPriority];
+                                /** @var \Xcart\ShippingRate $oShippingRate */
+                                foreach ($aShippingRates as $oShippingRate) {
+                                    if ($priority != $iMinProcessorPriority) {
+                                        /** @var ShippingRate[] $aShippingZoneRate */
+                                        foreach ($aMinPriority as $keyPriority => $aShippingZoneRate) {
+                                            $iSimilarRateKey = $oShippingRate->getSimilarShippingRateByDeliveryTime($aShippingZoneRate);
+                                            if (!is_null($iSimilarRateKey)) {
+                                                $aShippingZoneRate[$iSimilarRateKey]->addShippingCharge($oShippingRate->getShippingCharge());
+                                                unset ($aMinPriority[$keyPriority][$iSimilarRateKey]);
+                                            }
                                         }
                                     }
                                 }

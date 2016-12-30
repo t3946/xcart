@@ -18,6 +18,7 @@ class Amazon extends ShippingProcessor
 
     public function getShippingQuotesCached()
     {
+        return null;
         global $config;
         $aShippingRates = $this->getShippingRatesEntities();
         $oShippingCart = $this->getCart();
@@ -76,15 +77,16 @@ class Amazon extends ShippingProcessor
                         /*save rates into proxy*/
                         $aProd = $oShippingCart->getProducts();
                         $oProduct = reset($aProd)['entity'];
-                        $this->saveShippingQuotesCached($oProduct);
+                        //$this->saveShippingQuotesCached($oProduct);
                     }
+                    $this->saveShippingQuotesCached($this->getCustomer(), $this->getManufacturer(), $this->getCart(), $this->aShippingRates);
                 }
             }
         }
         return $this->aShippingRates;
     }
 
-    public function saveShippingQuotesCached(Product $oProduct)
+    /*public function saveShippingQuotesCached(Product $oProduct)
     {
         if (!empty($this->aShippingRates)) {
             foreach ($this->aShippingRates as $oShippingRate) {
@@ -95,7 +97,7 @@ class Amazon extends ShippingProcessor
                     'rate' => $oShippingRate->getShippingQuote()])->_insert(true);
             }
         }
-    }
+    }*/
 
     public function getAdditionalShippingFee($weight)
     {
