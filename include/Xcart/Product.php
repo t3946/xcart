@@ -678,13 +678,39 @@ class Product extends Data
     {
         if (!empty($ids))
         {
-            $sql = QueryBuilder::getInstance(Connection::getInstance())
-                ->setTypeUpdate()
-                ->where(['productid__in' => $ids])
-                ->update('xcart_products', ['in_list_showed' => new Expression('in_list_showed + 1')])
-                ->toSQL();
+            $table      = 'xcart_products_showed';
+            $connection = Connection::getInstance();
 
-            Connection::getInstance()->exec($sql);
+            $sql = QueryBuilder::getInstance($connection)
+                               ->setTypeUpdate()
+                               ->where(['productid__in' => $ids])
+                               ->update($table, ['in_list_showed' => new Expression('in_list_showed + 1')])
+                               ->toSQL();
+
+
+
+            if ($connection->exec($sql) != count($ids))
+            {
+                $sql   = QueryBuilder::getInstance($connection)
+                                     ->setTypeSelect()
+                                     ->from($table)
+                                     ->select(['productid'])
+                                     ->where(['productid__in' => $ids])
+                                     ->toSQL();
+                $i_ids = [];
+
+                foreach ($connection->fetchAll($sql) as $item) {
+                    if (!in_array($item['productid'], $ids)) {
+                        $i_ids[] = $item;
+                    }
+                }
+
+                if (!empty($i_ids))
+                {
+                    $sql = QueryBuilder::getInstance($connection)->insert($table, $i_ids);
+                    $connection->exec($sql);
+                }
+            }
         }
     }
 }
