@@ -76,7 +76,7 @@
         <td width="3%">
         </td>
         <td width="37%">
-            Phone
+            Phone:
         </td>
         <td>
             <input style="width:60%" type="text" id="phone" name="send_w9_form_phone" size="32" maxlength="32" placeholder="{$lng.lbl_contact_placeholder_phone}" />
