@@ -33,16 +33,19 @@ class SliderData
             $where[] = new QAndNot(['productid__in' => $no_ids]);
         }
 
-        $sql = QueryBuilder::getInstance(Connection::getInstance())
+        $connection = Connection::getInstance();
+        $sql = QueryBuilder::getInstance($connection)
                            ->setTypeSelect()
-                           ->select(['needed_resource_id' => 'productid'])
+                           ->select(['needed_resource_id' => 'p.productid'])
                            ->from('xcart_products')
-                           ->order(['in_list_showed', '?'])
+                           ->setAlias('p')
+                           ->join('left join', 'xcart_products_showed', ['p.productid' => 's.productid'], 's')
+                           ->order(['s.in_list_showed', '?'])
                            ->where($where)
                            ->limit($limit)
                            ->toSQL();
 
-        return Connection::getInstance()->fetchAll($sql);
+        return $connection->fetchAll($sql);
     }
 
     public static function getSliderData ($mode, $productid = null)
@@ -196,7 +199,7 @@ class SliderData
                     $p_ids[] = $pid['needed_resource_id'];
                 }
 
-                if ($fba_pids = self::getRandFbaProducts(rand(2,4), $p_ids))
+                if ($fba_pids = self::getRandFbaProducts(2, $p_ids))
                 {
                     $pids = array_merge($fba_pids, $pids);
                 }
@@ -219,7 +222,7 @@ class SliderData
             }
         }
 
-//        Product::updateShowInLists($p_ids);
+        Product::updateShowInLists($p_ids);
 
         return [$products, $sGoogleAnaliticsParam];
     }

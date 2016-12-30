@@ -75,13 +75,14 @@ class CloneData
         foreach (array_keys($this->arrCheckFields) as $sTable) {
             if (isset(self::$sql_tbl[$sTable]) && !empty(self::$sql_tbl[$sTable])) {
                 $currentDBSchema[$sTable] = array_keys(func_query_first("SELECT * FROM " . self::$sql_tbl[$sTable] . " LIMIT 1"));
+
+                $diffArray = array_diff($this->arrCheckFields[$sTable], $currentDBSchema[$sTable]);
+
+                if (!empty($diffArray) && $bResult) {
+                    $bResult = false;
+                    break;
+                }
             }
-        }
-
-        $diffArray = array_diff($this->arrCheckFields, $currentDBSchema);
-
-        if (!empty($diffArray)) {
-            $bResult = false;
         }
 
         return $bResult;
