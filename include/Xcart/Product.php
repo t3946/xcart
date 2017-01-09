@@ -676,7 +676,7 @@ class Product extends Data
 
     public static function updateShowInLists(array $ids)
     {
-        if (!empty($ids))
+        if (!empty($ids) && !defined('IS_ROBOT'))
         {
             $table      = 'xcart_products_showed';
             $connection = Connection::getInstance();
