@@ -123,7 +123,7 @@ if ($REQUEST_METHOD == "POST" && $action == "contactus")
 {
     $bad_user = true;
 
-    if (isset($_POST['g-recaptcha-response']))
+    if (isset($_POST['g-recaptcha-response']) && $recaptcha_enable)
     {
 
         $options = [
@@ -142,6 +142,14 @@ if ($REQUEST_METHOD == "POST" && $action == "contactus")
         if ($response['success']) {
             $bad_user = false;
         }
+    }
+    elseif (!$recaptcha_enable) {
+        if (empty($_POST['company'])) {
+            $bad_user = false;
+        }
+    }
+    else {
+        $bad_user = false;
     }
 
     if ($bad_user)

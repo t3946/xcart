@@ -404,6 +404,7 @@ $license ='C1C79239';
 /***
  * Google reCaptcha
  */
+$recaptcha_enable = false;
 $key_recaptcha_public = '6Leg-w8UAAAAAHBvpqqNR9seJJMR6OEhX9RNGMUe';
 $key_recaptcha_secret = '6Leg-w8UAAAAALFKGjXdzGktWnBZauSNvGsAiv2e';
 

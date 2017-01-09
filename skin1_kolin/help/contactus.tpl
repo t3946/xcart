@@ -137,25 +137,29 @@ requiredFields[{counter name="requiredFields"}] = ["message_body","{$lng.lbl_mes
     var verified_image_for_field = '{$field.field}';
 
 {literal}
-  $(document).ready(function() {
+    $(document).ready(function() {
         $('#' + verified_image_for_field).focusout(function() {
                 cidev_check_verified_image_for_field(verified_image_for_field, '');
         });
-  });
+    });
 
-	function registerFormOnSubmit() {
-		document.registerform.submit();
-	}
+    function registerFormOnSubmit() {
+        document.registerform.submit();
+    }
 
-	function registerFormOnValidate() {
+    function registerFormOnValidate() {
         if (checkEmailAddress(document.registerform.email)
             && checkRequired(requiredFields)
             && check_zip_code(document.getElementById('b_country'), document.getElementById('b_zipcode'))
         ) {
-            grecaptcha.execute();
-
+            if (typeof window['grecaptcha'] !== "undefined") {
+                grecaptcha.execute();
+            }
+            else {
+                registerFormOnSubmit()
+            }
         }
-	}
+    }
 {/literal}
 </script>
 {/if}
@@ -403,12 +407,20 @@ requiredFields[{counter name="requiredFields"}] = ["message_body","{$lng.lbl_mes
 {/if}
 <tr valign="middle">
 <td align="center">
-    <span class="g-recaptcha right"
-          data-sitekey="{$key_recaptcha_public}"
-          data-callback="registerFormOnSubmit"
-          data-size="invisible"
-          data-badge="inline" >
-    </span>
+    {if $recaptcha_enable}
+        <span class="g-recaptcha right"
+              data-sitekey="{$key_recaptcha_public}"
+              data-callback="registerFormOnSubmit"
+              data-size="invisible"
+              data-badge="inline" >
+        </span>
+    {else}
+        <div style="text-indent: -9999px">
+            <div>
+                <input type="text" name="company" value="">
+            </div>
+        </div>
+    {/if}
 </td>
 <td>&nbsp;</td>
 <td>
@@ -426,6 +438,8 @@ requiredFields[{counter name="requiredFields"}] = ["message_body","{$lng.lbl_mes
 {else}
 {$lng.txt_contact_us_sent}
 {/if}
+{if $recaptcha_enable}
     <script src='https://www.google.com/recaptcha/api.js' type="text/javascript" async defer></script>
+{/if}
 {/capture}
 {include file="dialog.tpl" title=$lng.lbl_contact_us content=$smarty.capture.dialog extra='width="100%"'}
