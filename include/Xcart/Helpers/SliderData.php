@@ -1,10 +1,7 @@
 <?php
 namespace Xcart\Helpers;
 
-use Mindy\QueryBuilder\Q\QAndNot;
-use Mindy\QueryBuilder\QueryBuilder;
 use Xcart\Brands;
-use Xcart\Connection;
 use Xcart\ElasticSearch;
 use Xcart\Product;
 
@@ -23,29 +20,6 @@ class SliderData
         list($products, $gaparam) = self::getSliderData($params['mode'], $params['productid']);
 
         $smarty->assign($params['assign'], $products);
-    }
-
-    public static function getRandFbaProducts($limit = 3, array $no_ids = null)
-    {
-        $where = ['amazon_fba' => 'Y', 'amazon_fba_avail__gt' => 1];
-
-        if (!empty($no_ids)) {
-            $where[] = new QAndNot(['productid__in' => $no_ids]);
-        }
-
-        $connection = Connection::getInstance();
-        $sql = QueryBuilder::getInstance($connection)
-                           ->setTypeSelect()
-                           ->select(['needed_resource_id' => 'p.productid'])
-                           ->from('xcart_products')
-                           ->setAlias('p')
-                           ->join('left join', 'xcart_products_showed', ['p.productid' => 's.productid'], 's')
-                           ->order(['s.in_list_showed', '?'])
-                           ->where($where)
-                           ->limit($limit)
-                           ->toSQL();
-
-        return $connection->fetchAll($sql);
     }
 
     public static function getSliderData ($mode, $productid = null)
@@ -199,7 +173,7 @@ class SliderData
                     $p_ids[] = $pid['needed_resource_id'];
                 }
 
-                if ($fba_pids = self::getRandFbaProducts(2, $p_ids))
+                if ($fba_pids = Product::getRandFbaProducts(2, $p_ids))
                 {
                     $pids = array_merge($fba_pids, $pids);
                 }
