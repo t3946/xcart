@@ -1315,6 +1315,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                     $oPoPipeline = $oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
                     $oPoPipeline->setOrderToPO($orderid);
                     $oPoPipeline->_save();
+                    $oOrder->updateField('orig_po', $oOrder->getOrderStoreFront()->getStoreFrontURL().$oPoPipeline->getOrderFileLink());
                 }
                 catch (Exception $ex) {
                     \Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), \Xcart\Logs::LOG_TYPE_CLIENT, sprintf(\Xcart\POPipeline::PO_HAS_BEEN_UPLOADED, $ex->getMessage()));
