@@ -692,11 +692,7 @@ class Order extends Data
     public function getOrderStoreFront()
     {
         if (is_null($this->oStoreFront)) {
-            $aOrderProducts = $this->getOrderProducts();
-            if (!empty($aOrderProducts)) {
-                $oProduct = reset($aOrderProducts);
-                $this->oStoreFront = $oProduct->getStoreFront();
-            }
+            $this->oStoreFront = StoreFront::model(['storefrontid' => $this->getField('storefrontid')]);
         }
         return $this->oStoreFront;
     }
