@@ -255,7 +255,7 @@ abstract class ShippingProcessor
             }
             $sProductFilter = implode(' OR ', $aProductFilter);
 
-            $oSQLBuilder = SQLBuilder::getInstance()->addSelect('xs.shipping_cache_id, count(DISTINCT xs1.product_id) as cnt')->
+            $oSQLBuilder = SQLBuilder::getInstance()->addSelect('xs.shipping_cache_id, count(DISTINCT xs1.product_id) as cnt_found, count(DISTINCT xs2.product_id) as cnt_total')->
             addFromTable('shipping_cache_simple', 'xs')->
             addCondition("zip_to='{$oCustomer->getField('s_zipcode')}'")->
             addCondition("zip_from='{$oManufacturer->getField('m_zipcode')}'")->
@@ -264,19 +264,20 @@ abstract class ShippingProcessor
             addCondition("country_to='{$oCustomer->getField('s_country')}'")->
             addCondition("country_from='{$oManufacturer->getField('m_country')}'")->
             addCondition("shipping_carrier='{$sCarrierName}'")->
-            addInnerJoin('shipping_cache_products', 'xs1', "xs1.shipping_cache_id = xs.shipping_cache_id AND {$sProductFilter}");
+            addInnerJoin('shipping_cache_products', 'xs1', "xs1.shipping_cache_id = xs.shipping_cache_id AND {$sProductFilter}")->
+            addInnerJoin('shipping_cache_products', 'xs2', "xs2.shipping_cache_id = xs.shipping_cache_id AND {$sProductFilter}");
 
 
             $res = $oSQLBuilder->query()->getQueryResult();
             if (!empty($res)) {
                 $oShippingCache = null;
                 foreach ($res as $aShippingCacheRes) {
-                    if ($aShippingCacheRes['cnt'] == count($aProducts)) {
+                    if ($aShippingCacheRes['cnt_total'] == count($aProducts)) {
                         $oShippingCache = ShippingCache::model(['shipping_cache_id' => $aShippingCacheRes['shipping_cache_id']]);
                         break;
                     }
                 }
-                if ($oShippingCache->getField('shipping_cache_id')) {
+                if ($oShippingCache && $oShippingCache->getField('shipping_cache_id')) {
                     $this->aShippingRates = unserialize($oShippingCache->getField('shipping_rates'));
                 }
             }
