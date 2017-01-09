@@ -1283,11 +1283,13 @@ if ($mode == "search") {
 
     if (!empty($groupbys)) {
         $search_query .= " GROUP BY " . implode(", ", $groupbys);
+        $search_query_fba .= " GROUP BY " . implode(", ", $groupbys);
         $search_query_count .= " GROUP BY " . implode(", ", $groupbys);
         $search_query_brandids .= " GROUP BY " . implode(", ", $groupbys);
     }
     if (!empty($having)) {
         $search_query .= " HAVING " . implode(" AND ", $having);
+        $search_query_fba .= " HAVING " . implode(" AND ", $having);
         $search_query_count .= " HAVING " . implode(" AND ", $having);
         $search_query_brandids .= " HAVING " . implode(" AND ", $having);
     }
@@ -1673,24 +1675,38 @@ if ($mode == "search") {
 
                 $products = func_query($search_query);
 
-                $sql_fba = "{$search_query_fba}  order by s.in_list_showed ASC, RAND() ASC limit 1";
+                $max_fba = 5;
+                $sql_fba = "{$search_query_fba} order by s.in_list_showed ASC, RAND() ASC limit {$max_fba}";
 
-                if ($products_fba = func_query($sql_fba))
+                if (!defined('IS_ROBOT') && $products_fba = func_query($sql_fba))
                 {
-                    $tmp_products = [];
-                    $fba_pos = rand(1, 3);
-
-                    foreach ($products as $pos => $product)
-                    {
-                        if ($pos == $fba_pos) {
-                            $tmp_products[] = $products_fba[0];
+                    foreach ($products as $product) {
+                        for ($i = 0; $i < count($products_fba); $i++) {
+                            if ($product['productid'] == $products_fba[$i]['productid']) {
+                                unset($products_fba[$i]);
+                            }
                         }
-
-                        $tmp_products[] = $product;
                     }
 
-                    $products = $tmp_products;
-                    unset($tmp_products, $products_fba);
+                    if (count($products_fba) == $max_fba || ($page <= $max_fba && count($products_fba) >= $page))
+                    {
+                        $tmp_products = [];
+                        $fba_pos      = rand(1, 3);
+
+                        if (!empty($products_fba)) {
+                            foreach ($products as $pos => $product) {
+                                if ($pos == $fba_pos) {
+                                    $tmp_products[] = reset($products_fba);
+                                }
+
+                                $tmp_products[] = $product;
+                            }
+
+                            $products = $tmp_products;
+                        }
+
+                        unset($tmp_products, $products_fba);
+                    }
                 }
             }
 
