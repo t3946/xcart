@@ -61,16 +61,12 @@
             -->
         </script>
     {/if}
-    <script type="text/javascript" language="JavaScript 1.2">
-        <!--
+    <script type="text/javascript">
+        var froogle_title_length = '{$FROOGLE_TITLE_LENGTH}';
         {literal}
 
         function copy_product_title_to_froogle() {
-            var froogle_title = $('#product_name').val().substring(0,70);
-            /*if (froogle_title.length > 70) {
-                var froogle_title = froogle_title.substring(0,67);
-                froogle_title = froogle_title + '...';
-            }*/
+            var froogle_title = $('#product_name').val().substring(0, froogle_title_length);
             $('#froogle_title').val(froogle_title);
         }
 
@@ -108,7 +104,6 @@
 
             $('#' + id).val(round(res, 2));
         {rdelim}
-        -->
     </script>
     {if $manufacturer_feed_fields.eta_date_mm_dd_yyyy.disable eq "Y"}
         <script type="text/javascript" language="JavaScript 1.2">
@@ -603,8 +598,6 @@
                 {include file="main/clean_url_field.tpl" clean_url=$product.clean_url clean_urls_history=$product.clean_urls_history clean_url_fill_error=$top_message.clean_url_fill_error tooltip_id='clean_url_tooltip_link'}
             {/if}
 
-
-            {if $product.product|strlen > $FROOGLE_TITLE_LENGTH || $new_product eq 1}
                 <tr>
                     {if $geid ne ''}
                         <td width="15" class="TableSubHead"><input type="checkbox" value="Y" name="fields[product]"/>
@@ -613,12 +606,12 @@
                     <td class="FormButton" nowrap="nowrap">{$lng.lbl_product_name_froogle}:</td>
                     <td class="ProductDetails">
                         <textarea type="text" name="product_froogle" id="froogle_title" maxlength="{$FROOGLE_TITLE_LENGTH}" class="InputWidth"
-                               {if $manufacturer_feed_fields.product_froogle.disable eq "Y"}readonly="readonly"{/if}>{$product.product_froogle|escape}</textarea>
-                        &nbsp;<input type="button" value=" {$lng.lbl_copy|strip_tags:false|escape} "
-                                     onclick="javascript: copy_product_title_to_froogle();"/>
+                               {if $manufacturer_feed_fields.product_froogle.disable eq "Y"}readonly="readonly"{/if}
+                        >{$product.product_froogle|escape}</textarea>
+                        &nbsp;
+                        <input type="button" value="{$lng.lbl_copy|strip_tags:false|escape}" onclick="javascript: copy_product_title_to_froogle();"/>
                     </td>
                 </tr>
-            {/if}
 
             <tr>
                 {if $geid ne ''}
