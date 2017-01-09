@@ -1221,7 +1221,7 @@ $bench2 = func_microtime();
 ###
 ##
 #
-if (!function_exists('fn_shutdown')) {
+if (false && !function_exists('fn_shutdown')) {
 	function fn_shutdown()
 	{
 		$error = error_get_last();
