@@ -24,8 +24,8 @@
 <script type="text/javascript" lang="Javascript" id="sorting-info">
     console.groupCollapsed('Modification category output');
     console.group('A/B');
-    console.log('AB relations',{$variant_id_for_point10});
-    console.log('AB search',{$variant_id_for_point11});
+    console.log('AB relations','{$variant_id_for_point10}');
+    console.log('AB search','{$variant_id_for_point11}');
     console.groupEnd();
 
 {if $variant_id_for_point10 or $variant_id_for_point11}
