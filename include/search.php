@@ -1176,6 +1176,7 @@ if ($mode == "search") {
     $search_query .= func_generate_joins($joins);
     $search_query_count .= func_generate_joins($joins_count);
     $search_query_brandids .= func_generate_joins($joins_count);
+    $search_query_fba = $search_query . ' left join xcart_products_showed s on xcart_products.productid = s.productid';
 
 #
 ## Search_Filter
@@ -1275,6 +1276,7 @@ if ($mode == "search") {
     }
 
     $search_query .= " WHERE " . implode(" AND ", $where);
+    $search_query_fba .= " WHERE " . implode(" AND ", $where) . " and amazon_fba = 'Y' and amazon_fba_avail > 1";
     $search_query_count .= " WHERE " . implode(" AND ", $where);
     $search_query_brandids .= " WHERE " . implode(" AND ", $where);
     $search_query_brandids .= " AND $sql_tbl[products].brandid > 0 ";
@@ -1659,30 +1661,37 @@ if ($mode == "search") {
                     }
                 }
 
-
-#
-##
-###
                 if ($current_area == "C" && $first_page >= 12 && $new_featured_functionality == "Y" && $page > 1) {
                     $first_page -= 12;
                 }
-###
-##
-#
 
-
-# https://basecamp.com/2070980/projects/1577907/messages/52794955
-## FIX: current php errors
-###
-                if (!isset($first_page) || $first_page == "") {
+                if (empty($first_page)) {
                     $first_page = 0;
                 }
-###
-##
-#
 
                 $search_query .= " LIMIT $first_page, $objects_per_page";
+
                 $products = func_query($search_query);
+
+                $sql_fba = "{$search_query_fba}  order by s.in_list_showed ASC, RAND() ASC limit 1";
+
+                if ($products_fba = func_query($sql_fba))
+                {
+                    $tmp_products = [];
+                    $fba_pos = rand(1, 3);
+
+                    foreach ($products as $pos => $product)
+                    {
+                        if ($pos == $fba_pos) {
+                            $tmp_products[] = $products_fba[0];
+                        }
+
+                        $tmp_products[] = $product;
+                    }
+
+                    $products = $tmp_products;
+                    unset($tmp_products, $products_fba);
+                }
             }
 
             # Clear service arrays
