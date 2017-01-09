@@ -726,7 +726,12 @@ class Product extends Data
     {
         global $current_storefront_info;
 
-        $where = ['amazon_fba' => 'Y', 'amazon_fba_avail__gt' => 1, 'forsale' => 'Y', 'ps.sfid' => $current_storefront_info['storefrontid']];
+        $sfid = 0;
+        if (!empty($current_storefront_info)) {
+            $sfid = $current_storefront_info['storefrontid'];
+        }
+
+        $where = ['amazon_fba' => 'Y', 'amazon_fba_avail__gt' => 1, 'forsale' => 'Y', 'ps.sfid' => $sfid];
 
         if (!empty($no_ids)) {
             $where[] = new QAndNot(['productid__in' => $no_ids]);
