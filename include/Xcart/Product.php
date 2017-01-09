@@ -2,6 +2,7 @@
 namespace Xcart;
 
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\QueryBuilder;
 
 class Product extends Data
@@ -719,5 +720,31 @@ class Product extends Data
                 }
             }
         }
+    }
+
+    public static function getRandFbaProducts($limit = 2, array $no_ids = null)
+    {
+        global $current_storefront_info;
+
+        $where = ['amazon_fba' => 'Y', 'amazon_fba_avail__gt' => 1, 'forsale' => 'Y', 'ps.sfid' => $current_storefront_info['storefrontid']];
+
+        if (!empty($no_ids)) {
+            $where[] = new QAndNot(['productid__in' => $no_ids]);
+        }
+
+        $connection = Connection::getInstance();
+        $sql = QueryBuilder::getInstance($connection)
+                           ->setTypeSelect()
+                           ->select(['needed_resource_id' => 'p.productid'])
+                           ->from('xcart_products')
+                           ->setAlias('p')
+                           ->join('inner join', 'xcart_products_sf', ['ps.productid' => 'p.productid'], 'ps')
+                           ->join('left join',  'xcart_products_showed', ['p.productid' => 's.productid'], 's')
+                           ->order(['s.in_list_showed', '?'])
+                           ->where($where)
+                           ->limit($limit)
+                           ->toSQL();
+
+        return $connection->fetchAll($sql);
     }
 }
