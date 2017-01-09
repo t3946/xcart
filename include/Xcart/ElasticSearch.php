@@ -90,6 +90,7 @@ class ElasticSearch
          "description.description_original",
          "description.seo_description"
         ],
+        "analyzer":  "english",
         "query": ""
     }
 }
