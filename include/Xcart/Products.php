@@ -519,6 +519,10 @@ class Products extends CloneData
                         "provider" => $this->changeProvider,
                         "original_provider" => $this->changeProvider,
                         "clone_parent_productid" => $aProduct['productid'],
+                        "product_froogle" => "",
+                        "seo_product_name" => "",
+                        "seo_meta_descr" => "",
+                        "seo_h2" => "",
                     );
 
                     $this->primaryKeyValue = $this->insertClonedProduct($aProduct, $aParamToClone);
