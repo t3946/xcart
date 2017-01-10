@@ -27,11 +27,6 @@ class Flat extends ShippingProcessor
         return $this->aShippingRates;
     }
 
-    public function saveShippingQuotesCached(Product $oProduct)
-    {
-
-    }
-
     public function getServerQuotes($aShippingRates)
     {
 
