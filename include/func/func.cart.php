@@ -1678,123 +1678,128 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 # END: random:17710_17631 [2009 Mar 26 09:25] 
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 	$whole_taxes = array();
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-	if ($config["Shipping"]["disable_shipping"] != "Y" && $calculate_enable_flag || $cart["use_shipping_cost_alt"] == "Y") {
-		#
-		# Calculate shipping cost
-		#
+# END: random:1073746882_1073747063 [2008 Dec 24 16:25]
+	if (empty($config['Shipping']['new_shipping_calculation'])) {
+		if ($config["Shipping"]["disable_shipping"] != "Y" && $calculate_enable_flag || $cart["use_shipping_cost_alt"] == "Y") {
+			#
+			# Calculate shipping cost
+			#
 # START: random:20341 [2010 Jul 29 14:46] 
-		if ($cart["use_shipping_costs_alt"] == "Y") {
-			$shipping_cost = $display_shipping_cost = $cart["shipping_cost_alt"];
-			$shipping_costs = $display_shipping_costs = $cart["shipping_costs_alt"];			
-		}
-		elseif ($cart["use_shipping_cost_alt"] == "Y") {
+			if ($cart["use_shipping_costs_alt"] == "Y") {
+				$shipping_cost = $display_shipping_cost = $cart["shipping_cost_alt"];
+				$shipping_costs = $display_shipping_costs = $cart["shipping_costs_alt"];
+			} elseif ($cart["use_shipping_cost_alt"] == "Y") {
 # END: random:20341 [2010 Jul 29 14:46] 
 # END: random:17710_17631 [2009 Mar 26 09:25] 
-			$shipping_cost = $cart["shipping_cost_alt"];
+				$shipping_cost = $cart["shipping_cost_alt"];
 # START: random:17710_17631 [2009 Mar 26 09:25] 
-			$display_shipping_costs = array($shipping_cost);			
+				$display_shipping_costs = array($shipping_cost);
 # END: random:17710_17631 [2009 Mar 26 09:25] 
-		}
-		else {
+			} else {
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-			$display_shipping_costs = array();
+				$display_shipping_costs = array();
 # START: random:17710_17631 [2009 Mar 26 09:25] 
 # START: random:20341 [2010 Jul 29 14:46] 
-			$shipping_taxes = array();
+				$shipping_taxes = array();
 # END: random:20341 [2010 Jul 29 14:46] 
-			$shippingids = @$cart["shippingids"];
-			if (!empty($shippingids) && is_array($shippingids)) {
-				foreach ($shippingids as $ks => $shipping_id) {
-					if (!empty($shipping_id)) {
+				$shippingids = @$cart["shippingids"];
+				if (!empty($shippingids) && is_array($shippingids)) {
+					foreach ($shippingids as $ks => $shipping_id) {
+						if (!empty($shipping_id)) {
 # END: random:17710_17631 [2009 Mar 26 09:25] 
-						$_products_ = array(); 
+							$_products_ = array();
 # START: random:17710_17631 [2009 Mar 26 09:25] 
-						foreach ($products as $kp => $vp) {
+							foreach ($products as $kp => $vp) {
 # START: random:20341 [2010 Jul 29 14:46] 
-							if ($ks == func_manufacturerid_for_group($vp['shipping_freight'], $vp['manufacturerid']))
+								if ($ks == func_manufacturerid_for_group($vp['shipping_freight'], $vp['manufacturerid']))
 # END: random:20341 [2010 Jul 29 14:46] 
-								$_products_[] = $vp;
+									$_products_[] = $vp;
 # END: random:17710_17631 [2009 Mar 26 09:25] 
-						}
-						
+							}
+
 							$shippings_ret = func_calculate_shippings($_products_, $shipping_id, $customer_info, $provider_for);
 #
 # Extract returned variables to global variables set:
 # $shipping_cost
 #
-						extract($shippings_ret);
-						unset($shippings_ret);
-						$shipping_costs[$ks] = $shipping_cost;
-						$manuf_taxes = func_calculate_taxes($_products_, $customer_info, $shipping_cost, $provider_for);
+							extract($shippings_ret);
+							unset($shippings_ret);
+							$shipping_costs[$ks] = $shipping_cost;
+							$manuf_taxes = func_calculate_taxes($_products_, $customer_info, $shipping_cost, $provider_for);
 # START: random:20341 [2010 Jul 29 14:46] 
-						$shipping_taxes[$ks] = array();
-						if ($manuf_taxes["taxes"]) {
-							foreach ($manuf_taxes["taxes"] as $__tk => $__tv ) {
-								if ($__tk == 'GST' || $__tk == 'HST') {
-									$shipping_taxes[$ks]['gst'] = $__tv['tax_cost_shipping'];
-								} elseif ($__tk == 'PST') {
-									$shipping_taxes[$ks]['pst'] = $__tv['tax_cost_shipping'];
+							$shipping_taxes[$ks] = array();
+							if ($manuf_taxes["taxes"]) {
+								foreach ($manuf_taxes["taxes"] as $__tk => $__tv) {
+									if ($__tk == 'GST' || $__tk == 'HST') {
+										$shipping_taxes[$ks]['gst'] = $__tv['tax_cost_shipping'];
+									} elseif ($__tk == 'PST') {
+										$shipping_taxes[$ks]['pst'] = $__tv['tax_cost_shipping'];
+									}
 								}
 							}
-						}
 # END: random:20341 [2010 Jul 29 14:46] 
-						$display_shipping_costs[$ks] = $shipping_cost + $manuf_taxes["shipping"];
-						if (empty($whole_taxes)) {
-							$whole_taxes = $manuf_taxes;
-						} else {
-							$whole_taxes["total"] += $manuf_taxes["total"];
-							$whole_taxes["shipping"] += $manuf_taxes["shipping"];
-							if ($manuf_taxes["taxes"]) {
-								foreach ($manuf_taxes["taxes"] as $__tk => $__tv ) {
+							$display_shipping_costs[$ks] = $shipping_cost + $manuf_taxes["shipping"];
+							if (empty($whole_taxes)) {
+								$whole_taxes = $manuf_taxes;
+							} else {
+								$whole_taxes["total"] += $manuf_taxes["total"];
+								$whole_taxes["shipping"] += $manuf_taxes["shipping"];
+								if ($manuf_taxes["taxes"]) {
+									foreach ($manuf_taxes["taxes"] as $__tk => $__tv) {
 # START: random:20341 [2010 Jul 29 14:46] 
-									if (!empty($whole_taxes["taxes"]) && array_key_exists($__tk, $whole_taxes["taxes"])) {
+										if (!empty($whole_taxes["taxes"]) && array_key_exists($__tk, $whole_taxes["taxes"])) {
 # END: random:20341 [2010 Jul 29 14:46] 
-										$whole_taxes["taxes"][$__tk]["tax_value_precise"] += $__tv["tax_value_precise"];
-										$whole_taxes["taxes"][$__tk]["tax_value"] += $__tv["tax_value"];
-										$whole_taxes["taxes"][$__tk]["taxed_price"] += $__tv["taxed_price"];
-										$whole_taxes["taxes"][$__tk]["tax_cost"] += $__tv["tax_cost"];
-										$whole_taxes["taxes"][$__tk]["tax_cost_no_shipping"] += $__tv["tax_cost_no_shipping"];
-										$whole_taxes["taxes"][$__tk]["tax_cost_shipping"] += $__tv["tax_cost_shipping"];
-									} else {
-										$whole_taxes["taxes"][$__tk] = $__tv;
+											$whole_taxes["taxes"][$__tk]["tax_value_precise"] += $__tv["tax_value_precise"];
+											$whole_taxes["taxes"][$__tk]["tax_value"] += $__tv["tax_value"];
+											$whole_taxes["taxes"][$__tk]["taxed_price"] += $__tv["taxed_price"];
+											$whole_taxes["taxes"][$__tk]["tax_cost"] += $__tv["tax_cost"];
+											$whole_taxes["taxes"][$__tk]["tax_cost_no_shipping"] += $__tv["tax_cost_no_shipping"];
+											$whole_taxes["taxes"][$__tk]["tax_cost_shipping"] += $__tv["tax_cost_shipping"];
+										} else {
+											$whole_taxes["taxes"][$__tk] = $__tv;
+										}
 									}
 								}
 							}
 						}
 					}
-				}
-				$shipping_cost = 0;
-				$display_shipping_cost = 0;
-				if (is_array($shipping_costs)) {
-					foreach ($shipping_costs as $ksc => $vsc) { 
-						$shipping_cost += $shipping_costs[$ksc];
-						$display_shipping_cost += $display_shipping_costs[$ksc];
+					$shipping_cost = 0;
+					$display_shipping_cost = 0;
+					if (is_array($shipping_costs)) {
+						foreach ($shipping_costs as $ksc => $vsc) {
+							$shipping_cost += $shipping_costs[$ksc];
+							$display_shipping_cost += $display_shipping_costs[$ksc];
+						}
 					}
-				}
 
-			} 
+				}
 # START: random:17710_17631 [2009 Mar 26 09:25] 
-			if (empty($shipping_cost) && !empty($cart['shippingid'])) {
-				$shipping_id = $cart['shippingid'];
+				if (empty($shipping_cost) && !empty($cart['shippingid'])) {
+					$shipping_id = $cart['shippingid'];
 # END: random:17710_17631 [2009 Mar 26 09:25] 
-			$shippings_ret = func_calculate_shippings($products, $shipping_id, $customer_info, $provider_for);
-			extract($shippings_ret);
-			unset($shippings_ret);
-		}
-			}	
-		if (!empty($coupon_type) && $coupon_type == "free_ship") {
-			#
-			# Apply discount coupon 'Free shipping'
-			#
-			if (($single_mode) || ($provider_for == $discount_coupon_data["provider"])) {
-				$coupon_discount = $shipping_cost;
-				$shipping_cost = 0;
+					$shippings_ret = func_calculate_shippings($products, $shipping_id, $customer_info, $provider_for);
+					extract($shippings_ret);
+					unset($shippings_ret);
+				}
+			}
+			if (!empty($coupon_type) && $coupon_type == "free_ship") {
+				#
+				# Apply discount coupon 'Free shipping'
+				#
+				if (($single_mode) || ($provider_for == $discount_coupon_data["provider"])) {
+					$coupon_discount = $shipping_cost;
+					$shipping_cost = 0;
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-				$display_shipping_cost = $shipping_cost;
+					$display_shipping_cost = $shipping_cost;
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+				}
 			}
 		}
+	} else {
+		$shipping_cost = $cart['shipping_cost'];
+		$display_shipping_cost = $cart['display_shipping_cost'];
+		$shipping_costs = $cart['shipping_costs'];
+		$display_shipping_costs = $cart['display_shipping_costs'];
 	}
 
 

@@ -1336,9 +1336,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             $log .= "<B>Order details:</B> <br />" . $order_details_br;
         }
 
-        $log .= "<br /><B>REMOTE_ADDR:</B> " . $ip_info;
 
-        func_log_order($orderid, 'C', $log, $userinfo['login']);
         unset($insert_data);
 
         if (!empty($extras) && is_array($extras)) {
@@ -1425,7 +1423,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 }
                 $current_order['shipping_groups'][func_manufacturerid_for_group($product['shipping_freight'], $product['manufacturerid'])]['products'][] = $product;
 
-                global $xcart_dir;
                 $oProduct = \Xcart\Product::model(['productid' => (int)$product['productid']]);
                 $oProduct->createHTMLShot($orderid);
             }
@@ -1435,7 +1432,11 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
         if (!empty($current_order['shipping_groups'])) {
             # Reset order detailed totals
+            $shippingLogMessage = null;
             $_extra['total'] = $_extra['product_total'] = $_extra['shipping_total'] = ['net' => 0, 'gst' => 0, 'pst' => 0, 'gross' => 0];
+            if (!empty($config['Shipping']['new_shipping_calculation']) && $config['Shipping']['new_shipping_calculation'] == 'Y') {
+                $shippingLogMessage = "<br/><b>Shipping cost:</b> <br/>";
+            }
             foreach ($current_order['shipping_groups'] as $mid => $v) {
                 $insert_data                   = [];
                 $insert_data['orderid']        = $orderid;
@@ -1476,8 +1477,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 $insert_data['bd_status'] = 'W';
 
                 // Get manufacturer data
-                $manufact_data = func_query_first('SELECT m_city, m_state, m_country FROM ' . $sql_tbl['manufacturers']
-                                                  . ' WHERE manufacturerid = "' . $mid . '"');
+                $oManufacturer = \Xcart\Manufacturer::model(['manufacturerid' => $mid]);
+                $manufact_data = $oManufacturer->getFields(['m_city', 'm_state', 'm_country']);
+
                 if (!empty($manufact_data) && is_array($manufact_data)) {
                     $insert_data['manufacturer_data'] = serialize($manufact_data);
                 }
@@ -1487,7 +1489,37 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 }
 
                 func_array2insert('order_groups', $insert_data);
+                if (!empty($config['Shipping']['new_shipping_calculation']) && $config['Shipping']['new_shipping_calculation'] == 'Y') {
+                    $total_shipping_cost = price_format($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['rate']);
+                    $shippingLogMessage .= "<b>{$oManufacturer->getManufacturerCode()} ({$total_shipping_cost})</b><br/>";
+                    if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'])) {
+                        foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'] as $aAddedShippingRate) {
+                            $oShippingAdded = \Xcart\Shipping::model(['shippingid' => $aAddedShippingRate['shippingid']]);
+                            $addedCharge = price_format($aAddedShippingRate['shipping_charge']);
+                            $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getName()} ({$addedCharge}) <br/>";
+                            if (!empty($aAddedShippingRate['products'])) {
+                                foreach ($aAddedShippingRate['products'] as $sProductSKU) {
+                                    $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
+                                }
+                            }
+                            $total_shipping_cost -= $addedCharge;
+                        }
+                    }
+                    $oShippingAdded = \Xcart\Shipping::model(['shippingid' => $cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['shippingid']]);
+                    $total_shipping_cost = price_format($total_shipping_cost);
+                    $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getName()} ({$total_shipping_cost}) <br/>";
+                    if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'])) {
+                        foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'] as $sProductSKU) {
+                            $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
+                        }
+                    }
+                }
             }
+            if (!empty($shippingLogMessage)) {
+                $log .= $shippingLogMessage;
+            }
+            $log .= "<br /><B>REMOTE_ADDR:</B> " . $ip_info;
+            \Xcart\Logs::_log('orders', $orderid, \Xcart\Logs::LOG_TYPE_CLIENT, $log, $userinfo['login']);
 
             $insert_data = [];
 

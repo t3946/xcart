@@ -5,6 +5,11 @@ use Xcart\Shipping\ShippingProcessor;
 
 class Shipping extends Data
 {
+    /**
+     * @var ShippingCarrier
+     */
+    private $oShippingCarrier = null;
+
     public function __construct($iId = null)
     {
         $this->sPrimaryTable = 'shipping';
@@ -69,8 +74,7 @@ class Shipping extends Data
 
     public function getName()
     {
-
-        return $this->getField('shipping');
+        return func_insert_trademark($this->getField('shipping'), true);
     }
 
     public function getFrontendName()
@@ -127,7 +131,7 @@ SQL;
                     $aShippingProcessor = null;
                     $aShippingsMethods = Shipping::model()->findAll(
                         SQLBuilder::getInstance()->
-                        addInnerJoin('shipping_carrier', 'sc', 'main.code = sc.carrier_code')->
+                        addInnerJoin('shipping_carrier', 'sc', 'main.code = sc.carrier_code OR (main.code = "" AND sc.carrier_code = "Flat") ')->
                         addInnerJoin('shipping_rates', 'sr', 'main.shippingid = sr.shippingid')->
                         addCondition("active = 'Y'")->
                         addCondition('manufacturerid = ' . $oManufacturer->getManufacturerId())->
@@ -183,10 +187,12 @@ SQL;
         if ($oCart->getProductCount()) {
             $aShippingZones = Shipping::model()->getShippingZonesProcessors($oCustomer, $oManufacturer, $oCart);
             if (!empty($aShippingZones)) {
-                foreach ($aShippingZones as $oShippingZone) {
-                    /** @var ShippingProcessor $oShippingProcessor */
-                    foreach ($oShippingZone as $oShippingProcessor) {
-                        $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $oShippingProcessor->getShippingRates();
+                foreach ($aShippingZones as $aShippingZonesArr) {
+                    if (!empty($aShippingZonesArr)) {
+                        /** @var ShippingProcessor $oShippingProcessor */
+                        foreach ($aShippingZonesArr as $oShippingProcessor) {
+                            $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $oShippingProcessor->getShippingRates();
+                        }
                     }
                     if (!($oCart->getProductCount())) {
                         break;
@@ -206,7 +212,7 @@ SQL;
                                         foreach ($aMinPriority as $keyPriority => $aShippingZoneRate) {
                                             $iSimilarRateKey = $oShippingRate->getSimilarShippingRateByDeliveryTime($aShippingZoneRate);
                                             if (!is_null($iSimilarRateKey)) {
-                                                $aShippingZoneRate[$iSimilarRateKey]->addShippingCharge($oShippingRate->getShippingCharge());
+                                                $aShippingZoneRate[$iSimilarRateKey]->addShippingCharge($oShippingRate);
                                                 unset ($aMinPriority[$keyPriority][$iSimilarRateKey]);
                                             }
                                         }
@@ -222,5 +228,20 @@ SQL;
             $aResult = $aShippingZoneRatesPriority[$iMinProcessorPriority];
         }
         return $aResult;
+    }
+
+    /**
+     * @return ShippingCarrier
+     */
+    public function getShippingCarrier()
+    {
+        if (is_null($this->oShippingCarrier)) {
+            $sCode = $this->getField('code');
+            if (empty($sCode)) {
+                $sCode = 'Flat';
+            }
+            $this->oShippingCarrier = ShippingCarrier::model(['carrier_code' => $sCode]);
+        }
+        return $this->oShippingCarrier;
     }
 }

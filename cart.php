@@ -845,22 +845,90 @@ if (!$func_is_cart_empty) {
                         $_products[] = $v2;
                     }
                 }
-                $current_carrier = 'UPS';
-                $intershipper_recalc = 'Y';
-                $shipping = func_get_shipping_methods_list($cart, $_products, $userinfo, false, $k);
-                $shippings[$k] = $shipping;
-                if (!$shipping) {
-                    $no_shipping_in_group = true;
-                } elseif (is_array($shipping)) {
-                    $shipping_matched = false;
-                    foreach ($shipping as $shipping_method) {
-                        if (@$cart["shippingids"][$k] == $shipping_method["shippingid"])
-                            $shipping_matched = true;
-                    }
+                if (!empty($config['Shipping']['new_shipping_calculation']) && $config['Shipping']['new_shipping_calculation'] == 'Y') {
+                    if (!empty($_products)) {
+                        $oManufacturer = Xcart\Manufacturer::model(['manufacturerid' => $k]);
+                        $oCart = new Xcart\Cart();
+                        foreach ($_products as $_product) {
+                            $oProduct = Xcart\Product::model(['productid' => $_product['productid']]);
+                            $oProduct->setPrice($_product['price']); //calculate regarding cart product price
+                            if ($oProduct->getManufacturerId() == $k) {
+                                $oCart->addToCart($oProduct, $_product['amount']);
+                            }
+                        }
+                        $oCustomer = (new Xcart\Customer())->fill($userinfo);
+                        try {
+                            $aShippingZones = Xcart\Shipping::model()->getShippingRates($oCustomer, $oManufacturer, $oCart);
+                        }
+                        catch(\Exception $e){
+                            $aShippingZones = [];
+                        }
+                        $shipping = [];
+                        if (!empty($aShippingZones)) {
+                            /** @var \Xcart\ShippingRate[] $aShippingRates */
+                            foreach ($aShippingZones as $aShippingRates) {
+                                foreach ($aShippingRates as $oShippingRate) {
+                                    $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
+                                    $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
+                                    $shipping[$oShippingRate->getShippingId()]['allowed'] = true;
+                                    $aProducts = $oShippingRate->getCart()->getProducts();
+                                    if (!empty($aProducts)) {
+                                        foreach ($aProducts as $aProduct) {
+                                            $shipping[$oShippingRate->getShippingId()]['products'][] = $aProduct['entity']->getSKU();
+                                        }
+                                    }
+                                    $aAddedShippingRates = $oShippingRate->getAddedShippingRates();
+                                    if (!empty($aAddedShippingRates)) {
+                                        foreach ($aAddedShippingRates as $oAddedShippingRate) {
+                                            $aShipping = $oAddedShippingRate->getFields();
+                                            $aShipping['shipping_charge'] = $oAddedShippingRate->getShippingCharge();
+                                            $aProducts = $oAddedShippingRate->getCart()->getProducts();
+                                            if (!empty($aProducts)) {
+                                                foreach ($aProducts as $aProduct) {
+                                                    $aShipping['products'][] = $aProduct['entity']->getSKU();
+                                                }
+                                            }
+                                            $shipping[$oShippingRate->getShippingId()]['added_shipping'][] = $aShipping;
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
+                        $shippings[$k] = $shipping;
+                        if ((!empty($cart["shippingids"][$k]) && !in_array($cart["shippingids"][$k], array_keys($shipping))) || empty($cart["shippingids"][$k])) {
+                                $aShippingFirst = reset($shipping);
+                                $cart["shippingids"][$k] = $aShippingFirst["shippingid"];
+                        }
+
+                        if (!empty($cart["shippingids"]) && is_array($cart["shippingids"])) {
+                            $cart['shipping_cost'] = 0;
+                            foreach ($cart["shippingids"] as $m_id => $sh_id) {
+                                $cart['shipping_costs'][$m_id] = $shippings[$m_id][$sh_id]['rate'];
+                                $cart['display_shipping_costs'][$m_id] = $cart['shipping_costs'][$m_id];
+                                $cart['shipping_cost'] += $shippings[$m_id][$sh_id]['rate'];
+                                $cart['display_shipping_cost'] = $cart['shipping_cost'];
+                            }
+                        }
+                    }
+                } else {
+                    $current_carrier = 'UPS';
+                    $intershipper_recalc = 'Y';
+                    $shipping = func_get_shipping_methods_list($cart, $_products, $userinfo, false, $k);
+                    $shippings[$k] = $shipping;
+                    if (!$shipping) {
+                        $no_shipping_in_group = true;
+                    } elseif (is_array($shipping)) {
+                        $shipping_matched = false;
+                        foreach ($shipping as $shipping_method) {
+                            if (@$cart["shippingids"][$k] == $shipping_method["shippingid"])
+                                $shipping_matched = true;
+                        }
+
+                    }
+                    if (!$shipping_matched)
+                        $cart["shippingids"][$k] = $shipping[0]["shippingid"];
                 }
-                if (!$shipping_matched)
-                    $cart["shippingids"][$k] = $shipping[0]["shippingid"];
             }
         }
         $cidev_redirect = false;
@@ -1380,7 +1448,6 @@ if (!empty($order_data["products"]) && is_array($order_data["products"])) {
     $smarty->assign('productids_in_cart_imploded', $productids_in_cart_imploded);
     $smarty->assign('order_data_subtotal', $order_data['order']['subtotal']);
 }
-
 
 if (!empty($active_modules["Fast_Lane_Checkout"]))
     include $xcart_dir . "/modules/Fast_Lane_Checkout/cart.php";
