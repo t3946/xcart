@@ -66,7 +66,7 @@
 {/if}
 {/if}
 {section name=oi loop=$orders}
-    <IMG src="https://shareasale.com/sale.cfm?amount={$orders[oi].order.subtotal}&tracking={$orders[oi].order.order_prefix}{$orders[oi].order.orderid}&transtype=sale&merchantID=68716" width="1" height=1>
+    <IMG src="https://shareasale.com/sale.cfm?amount={$orders[oi].order.subtotal}&tracking={$orders[oi].order.order_prefix}{$orders[oi].order.orderid}&transtype=sale&merchantID=69373" width="1" height=1>
 {/section}
 
 
