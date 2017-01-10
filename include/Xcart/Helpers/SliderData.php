@@ -57,23 +57,36 @@ class SliderData
             $productids = implode("','", $productids);
 
             if ($section_name == "products_also_bought_with_this_product"){
-                $p_query = "select RO.related_resource_id as needed_resource_id
-                          from xcart_cidev_related_objects RO
-                          inner join xcart_products P ON P.productid = RO.related_resource_id and P.forsale = 'Y'
-                        where RO.resource_id = '$productid' and RO.resource_type = 'OP' and RO.related_resource_type = 'P'  and RO.related_resource_id NOT IN ('$productids')
-                        Order By RO.related_resource_orderby limit 20";
+                $p_query = <<<SQL
+select RO.related_resource_id as needed_resource_id
+from xcart_cidev_related_objects RO
+inner join xcart_products P ON P.productid = RO.related_resource_id and P.forsale = 'Y'
+where RO.resource_id = '{$productid}' 
+  and RO.resource_type = 'OP' 
+  and RO.related_resource_type = 'P'  
+  and RO.related_resource_id NOT IN ('{$productids}')
+  
+order By RO.related_resource_orderby 
+limit 30
+SQL;
             }
             elseif ($section_name == "recently_viewed_products"){
 
                 $meta_id = func_query_first_cell("SELECT id FROM xcart_cidev_surf_meta WHERE sessid='".$$XCART_SESSION_NAME."'");
 
-                $p_query = "select SP.resource_id as needed_resource_id
-                          from xcart_cidev_surf_path SP
-                          inner join xcart_products P ON P.productid = SP.resource_id and P.forsale = 'Y'
-                        where SP.meta_id = '$meta_id' and SP.resource_type = 'P' and SP.resource_id NOT IN ('$productids')
-                        and SP.meta_id > 0
-                        Group By SP.resource_id
-                        Order By max(SP.`position`) desc";
+                $p_query = <<<SQL
+select SP.resource_id as needed_resource_id
+from xcart_cidev_surf_path SP
+inner join xcart_products P ON P.productid = SP.resource_id and P.forsale = 'Y'
+where SP.meta_id = '{$meta_id}' 
+  and SP.resource_type = 'P' 
+  and SP.resource_id NOT IN ('{$productids}')
+  and SP.meta_id > 0
+  
+group By SP.resource_id
+order By max(SP.`position`) desc
+LIMIT 30
+SQL;
             }
             elseif ($section_name == "related_products"){
 
