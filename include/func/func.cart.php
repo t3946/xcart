@@ -1679,7 +1679,7 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 	$whole_taxes = array();
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25]
-	if (empty($config['Shipping']['new_shipping_calculation'])) {
+	if (empty($config['Shipping']['new_shipping_calculation']) || (!empty($config['Shipping']['new_shipping_calculation'])) && $config['Shipping']['new_shipping_calculation'] !='Y') {
 		if ($config["Shipping"]["disable_shipping"] != "Y" && $calculate_enable_flag || $cart["use_shipping_cost_alt"] == "Y") {
 			#
 			# Calculate shipping cost
