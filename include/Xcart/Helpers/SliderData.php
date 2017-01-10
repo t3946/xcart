@@ -85,7 +85,7 @@ where SP.meta_id = '{$meta_id}'
   
 group By SP.resource_id
 order By max(SP.`position`) desc
-LIMIT 30
+LIMIT 50
 SQL;
             }
             elseif ($section_name == "related_products"){
