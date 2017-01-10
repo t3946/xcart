@@ -86,6 +86,9 @@ class UPS extends ShippingProcessor
                 $shipTo->setCompanyName("Shipping To {$oCustomer->getField('s_zipcode')}");
                 $shipToAddress = $shipTo->getAddress();
                 $shipToAddress->setPostalCode($oCustomer->getField('s_zipcode'));
+                if ($oCustomer->getField('s_state')) {
+                    $shipToAddress->setStateProvinceCode($oCustomer->getField('s_state'));
+                }
                 $shipToAddress->setCountryCode($oCustomer->getField('s_country'));
                 $package = new Package();
                 $package->getPackagingType()->setCode(PackagingType::PT_PACKAGE);
@@ -157,21 +160,12 @@ class UPS extends ShippingProcessor
                             }
                         }
                     }
+                    $this->saveShippingQuotesCached();
                 }
             }
         }
 
         return $this->aShippingRates;
-    }
-
-    public function getShippingQuotesCached()
-    {
-
-    }
-
-    public function saveShippingQuotesCached(Product $oProduct)
-    {
-
     }
 
     public function getAdditionalShippingFee($weight)
