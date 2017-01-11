@@ -39,7 +39,7 @@ class Cart
             foreach ($iterator as $k => $v) {
                 if ($v->getProduct()->getProductId() == $oProduct->getProductId()) {
                     $iterator->offsetUnset($k);
-                    $this->iCount = null;
+                    $this->iProductCount = null;
                 }
             }
         }
