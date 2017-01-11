@@ -7,7 +7,7 @@ class Cart
 {
     private $aCart;
     private $fCost = null;
-    private $iCount = null;
+    private $iProductCount = null;
     private $fExtraMarginValue = null;
     private $aArrayOfObjects = null;
 
@@ -25,8 +25,7 @@ class Cart
 
     public function addObjectToCart(CartElement $oObject)
     {
-        $iter = $this->aArrayOfObjects->getIterator();
-        foreach ($iter as $k => $v) {
+        foreach ($this->aArrayOfObjects->getIterator() as $k => $v) {
             if ($v->getProduct()->getProductId() == $oObject->getProduct()->getProductId()) {
                 $v->setQuantity($v->getQuantity() + $oObject->getQuantity());
                 return $this;
@@ -38,10 +37,10 @@ class Cart
 
     public function removeProductFromCart(Product $oProduct)
     {
-        $iter = $this->aArrayOfObjects->getIterator();
-        foreach ($iter as $k => $v) {
+        $iterator = $this->aArrayOfObjects->getIterator();
+        foreach ($iterator as $k => $v) {
             if ($v->getProduct()->getProductId() == $oProduct->getProductId()) {
-                $iter->offsetUnset($k);
+                $iterator->offsetUnset($k);
             }
         }
     }
@@ -51,21 +50,21 @@ class Cart
         $aProducts = $this->getProducts();
         if (!empty($aProducts) && isset($this->aCart[$oProduct->getProductId()])) {
             unset($this->aCart[$oProduct->getProductId()]);
-            $this->iCount = null;
+            $this->iProductCount = null;
         }
     }
 
     public function getProductCount()
     {
-        if (is_null($this->iCount)) {
-            $this->iCount = 0;
+        if (is_null($this->iProductCount)) {
+            $this->iProductCount = 0;
             if (!empty($this->aCart)) {
                 foreach ($this->aCart as $aProduct) {
-                    $this->iCount += $aProduct['qty'];
+                    $this->iProductCount += $aProduct['qty'];
                 }
             }
         }
-        return $this->iCount;
+        return $this->iProductCount;
     }
 
     public function getProducts()

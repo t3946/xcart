@@ -5,6 +5,9 @@ namespace Xcart;
 
 class CartElement
 {
+    /**
+     * @var Product
+     */
     private $oProduct = null;
     private $iQty = 0;
 
