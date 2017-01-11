@@ -23,11 +23,13 @@ class Cart
                 foreach ($iterator as $k => $v) {
                     if ($v->getProduct()->getProductId() == $oObject->getProduct()->getProductId()) {
                         $v->setQuantity($v->getQuantity() + $oObject->getQuantity());
+                        $this->iProductCount = null;
                         return $this;
                     }
                 }
             }
             $this->aArrayOfObjects->append($oObject);
+            $this->iProductCount = null;
         }
         return $this;
     }
