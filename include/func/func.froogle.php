@@ -1580,11 +1580,15 @@ EOD;
 	foreach ($ainventory as $k => $v) {
 
 		$oProduct = \Xcart\Product::model(['productid' => $v["productid"]]);
+		$oProductAmazonFields = \Xcart\ProductsAmazonFields::model(['productid' => $v["productid"]]);
 		$productcode = $oProduct->getSKU();
 
 		$aFBAProductCodes = null;
 
-			if ($oProduct->isAmazonFBAEnabled() && ($oProduct->getAmazonFBAAvailReal() > 0 || $oProduct->getAmazonFBAStockReservedTransfers() > 0)) {
+			if ($oProduct->isAmazonFBAEnabled() &&
+				($oProduct->getAmazonFBAAvailReal() > 0 || $oProduct->getAmazonFBAStockReservedTransfers() > 0) &&
+				!in_array($oProductAmazonFields->getPreventSellingOnAmazon(), ['FBA', 'MFN'])
+			) {
 				$aFBAProductCodes[] =  $productcode;
 				$aMissingSKU = \Xcart\FbaMissingSku::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('productid = '.$oProduct->getProductId()));
 				if (!empty($aMissingSKU)) {
@@ -1612,6 +1616,9 @@ EOD;
 			} else {
 
 				$avail = $oProduct->getAmazonQuantity();
+				if ($oProductAmazonFields->getPreventSellingOnAmazon() == 'MFN') {
+					$avail = 0;
+				}
 				$aleadtime = $oProduct->getManfacturerClass()->getAmazonLeadtimetoship();
 
 				$feed .= <<<EOD
