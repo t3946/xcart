@@ -24,72 +24,58 @@ if ($mode == "search"){
 
 
 #*insert debit cash
-	db_query("INSERT INTO xcart_fba_roi_accounting
-(edate,credit,debit,account,comments)
-Select DATE(FROM_UNIXTIME(O.date)), 0, OD.amount*OD.price, 'cash', CONCAT('Sale order ', O.order_prefix, O.orderid)
+	$sql = <<<SQL
+INSERT INTO xcart_fba_roi_accounting
+(edate, credit, debit, account, comments, orderid, productid)
+Select DATE(FROM_UNIXTIME(O.date)), __f1__, __f2__, :type, CONCAT('Sale order ', O.order_prefix, O.orderid,' SKU: ',P.productcode), O.orderid, OD.productid
 From xcart_orders O
+            left join xcart_k.xcart_order_groups OG ON OG.orderid = O.orderid
 			left join xcart_order_details OD ON OD.orderid = O.orderid
-			left join xcart_products P ON P.productid = OD.productid
-			left join xcart_fba_roi_accounting A ON A.comments like CONCAT('%',O.order_prefix,O.orderid,'%') and A.account = 'cash'
-where O.amazon_fulfillment_channel = 'AFN' and O.cb_status = 'P' and A.comments is NULL");
+			inner join xcart_products P ON P.productid = OD.productid AND P.manufacturerid = OG.manufacturerid
+			left join xcart_fba_roi_accounting A ON A.orderid= O.orderid and A.productid = OD.productid and A.account = :type
+where O.amazon_fulfillment_channel = 'AFN' and O.cb_status = 'P' and A.id is NULL
+SQL;
 
-#insert credit inventory
-        db_query("INSERT INTO xcart_fba_roi_accounting
-(edate,credit,debit,account,comments)
-Select DATE(FROM_UNIXTIME(O.date)), OD.amount*P.cost_to_us, 0, 'inventory', CONCAT('Sale order ', O.order_prefix, O.orderid)
-From xcart_orders O
-			left join xcart_order_details OD ON OD.orderid = O.orderid
-			left join xcart_products P ON P.productid = OD.productid
-			left join xcart_fba_roi_accounting A ON A.comments like CONCAT('%',O.order_prefix,O.orderid,'%') and A.account = 'inventory'
-where O.amazon_fulfillment_channel = 'AFN' and O.cb_status = 'P' and A.comments is NULL");
+    $sql1 = str_replace('__f1__', '0',$sql);
+    $sql1 = str_replace('__f2__', 'OD.amount * OD.price',$sql1);
+    $statement = \Xcart\Connection::getInstance()->prepare($sql1);
+    $statement->bindValue('type', 'cash');
+    $statement->execute();
 
-#insert debit/credit equity
-        db_query("INSERT INTO xcart_fba_roi_accounting
-(edate,credit,debit,account,comments)
-Select DATE(FROM_UNIXTIME(O.date)), OD.amount*P.cost_to_us*1.3, OD.amount*P.cost_to_us, 'equity', CONCAT('Sale order ', O.order_prefix, O.orderid)
-From xcart_orders O
-			left join xcart_order_details OD ON OD.orderid = O.orderid
-			left join xcart_products P ON P.productid = OD.productid
-			left join xcart_fba_roi_accounting A ON A.comments like CONCAT('%',O.order_prefix,O.orderid,'%') and A.account = 'equity'
-where O.amazon_fulfillment_channel = 'AFN' and O.cb_status = 'P' and A.comments is NULL");
+    $sql2 = str_replace('__f1__', 'OD.amount*P.cost_to_us',$sql);
+    $sql2 = str_replace('__f2__', '0',$sql2);
+    $statement = \Xcart\Connection::getInstance()->prepare($sql2);
+    $statement->bindValue('type', 'inventory');
+    $statement->execute();
 
+    $sql3 = str_replace('__f1__', 'OD.amount * P.cost_to_us * 1.3',$sql);
+    $sql3 = str_replace('__f2__', 'OD.amount*P.cost_to_us',$sql3);
+    $statement = \Xcart\Connection::getInstance()->prepare($sql3);
+    $statement->bindValue('type', 'equity');
+    $statement->execute();
 
 $select = array();
-$select[] = func_query_first("
-Select 
-			'notes payable',
+$sql = <<<SQL
+Select :type,
 			IF(SUM(A.debit)-SUM(A.credit)>0,SUM(A.debit)-SUM(A.credit),0) As Debit,
 			IF(SUM(A.debit)-SUM(A.credit)<0,ABS(SUM(A.debit)-SUM(A.credit)),0) As Credit
 From xcart_fba_roi_accounting A
-Where A.account = 'notes payable';
-");
+Where A.account = :type
+SQL;    
 
-$select[] = func_query_first("
-Select 
-			'cash',
-			IF(SUM(A.debit)-SUM(A.credit)>0,SUM(A.debit)-SUM(A.credit),0) As Debit,
-			IF(SUM(A.debit)-SUM(A.credit)<0,ABS(SUM(A.debit)-SUM(A.credit)),0) As Credit
-From xcart_fba_roi_accounting A
-Where A.account = 'cash';
-");
+$statement = \Xcart\Connection::getInstance()->prepare($sql);
+$statement->bindValue('type', 'notes payable');
+$select[] = $statement->fetch();
 
-$select[] = func_query_first("
-Select 
-			'inventory',
-			IF(SUM(A.debit)-SUM(A.credit)>0,SUM(A.debit)-SUM(A.credit),0) As Debit,
-			IF(SUM(A.debit)-SUM(A.credit)<0,ABS(SUM(A.debit)-SUM(A.credit)),0) As Credit
-From xcart_fba_roi_accounting A
-Where A.account = 'inventory';
-");
+$statement->bindValue('type', 'cash');
+$select[] = $statement->fetch();
 
-$select[] = func_query_first("
-Select 
-			'fba_expense',
-			IF(SUM(A.debit)-SUM(A.credit)>0,SUM(A.debit)-SUM(A.credit),0) As Debit,
-			IF(SUM(A.debit)-SUM(A.credit)<0,ABS(SUM(A.debit)-SUM(A.credit)),0) As Credit
-From xcart_fba_roi_accounting A
-Where A.account = 'fba_expense';
-");
+$statement->bindValue('type', 'inventory');
+$select[] = $statement->fetch();
+
+$statement->bindValue('type', 'fba_expense');
+$select[] = $statement->fetch();
+
 
 $select[] = func_query_first("
 Select 
