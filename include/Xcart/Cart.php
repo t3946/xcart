@@ -9,12 +9,40 @@ class Cart
     private $fCost = null;
     private $iCount = null;
     private $fExtraMarginValue = null;
+    private $aArrayOfObjects = null;
 
+    public function __construct()
+    {
+        $this->aArrayOfObjects = new \ArrayObject();
+    }
     public function addToCart(Product $oProduct, $qty)
     {
         if ($oProduct->getProductId()) {
             $this->aCart[$oProduct->getProductId()]['qty'] += $qty;
             $this->aCart[$oProduct->getProductId()]['entity'] = $oProduct;
+        }
+    }
+
+    public function addObjectToCart(CartElement $oObject)
+    {
+        $iter = $this->aArrayOfObjects->getIterator();
+        foreach ($iter as $k => $v) {
+            if ($v->getProduct()->getProductId() == $oObject->getProduct()->getProductId()) {
+                $v->setQuantity($v->getQuantity() + $oObject->getQuantity());
+                return $this;
+            }
+        }
+        $this->aArrayOfObjects->append($oObject);
+        return $this;
+    }
+
+    public function removeProductFromCart(Product $oProduct)
+    {
+        $iter = $this->aArrayOfObjects->getIterator();
+        foreach ($iter as $k => $v) {
+            if ($v->getProduct()->getProductId() == $oProduct->getProductId()) {
+                $iter->offsetUnset($k);
+            }
         }
     }
 

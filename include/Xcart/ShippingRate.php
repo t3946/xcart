@@ -105,13 +105,13 @@ class ShippingRate extends Data
         $this->aAddedShippingRates[] = $oShippingRate;
     }
 
-    public function setCart(\Xcart\Cart $oCart)
+    public function setCart(Cart $oCart)
     {
         $this->oCart = $oCart;
     }
 
     /**
-     * @return \Xcart\Cart
+     * @return Cart
      */
     public function getCart()
     {
@@ -170,7 +170,8 @@ class ShippingRate extends Data
     }
 
     /**
-     * @param ShippingRate[] $aMinPriorityShippingRates
+     * @param ShippingRate[] $aMinPriorityShippingRates\
+     * @return int|null
      */
     public function getTimeDeliveryDiff($aMinPriorityShippingRates)
     {
