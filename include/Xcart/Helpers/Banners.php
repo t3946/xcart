@@ -12,17 +12,19 @@ class Banners
     /***
      * @param $params array
      * @param $smarty \Smarty
-     * @return string|void
+     * @return string
      */
     public static function getBannerSmarty($params, $smarty)
     {
+        $return = self::getBanner($params['position'], $params['page']);
+
         if (isset($params['assign']))
         {
-            $smarty->assign($params['assign'], self::getBanner($params['position'], $params['page']));
+            $smarty->assign($params['assign'], $return);
+            $return = false;
         }
-        else {
-            return self::getBanner($params['position'], $params['page']);
-        }
+
+        return $return;
     }
 
     /***
@@ -34,7 +36,7 @@ class Banners
     {
         global $config, $sql_tbl, $site_domain;
 
-        $sql = <<<SQL
+        $sql = /** @lang MySQL */ <<<SQL
 select b.* 
 from xcart_banners as b
 
