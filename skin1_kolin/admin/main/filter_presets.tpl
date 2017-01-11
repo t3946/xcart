@@ -27,8 +27,10 @@
         <td width="85%">
             <select name="orders_source" class="select">
                 <option value="any">Any channel</option>
-                <option value="xcart_orders_only" {if $filter.orders_source eq "xcart_orders_only"}selected="selected"{/if}>S3 Stores websites</option>
+                <option value="xcart_orders_only"  {if $filter.orders_source eq "xcart_orders_only"}selected="selected"{/if} >S3 Stores websites</option>
                 <option value="amazon_orders_only" {if $filter.orders_source eq "amazon_orders_only"}selected="selected"{/if}>Amazon website</option>
+                <option value="amazon_orders_MFN"  {if $filter.orders_source eq "amazon_orders_MFN"}selected="selected"{/if} >- MFN</option>
+                <option value="amazon_orders_FBA"  {if $filter.orders_source eq "amazon_orders_FBA"}selected="selected"{/if} >- FBA</option>
             </select>
         </td>
     </tr>
