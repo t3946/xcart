@@ -3,6 +3,7 @@
 namespace Xcart\Shipping;
 
 use Xcart\AmazonMWS;
+use Xcart\CartElement;
 use Xcart\Logs;
 use Xcart\Cart;
 use Xcart\Product;
@@ -33,7 +34,6 @@ class Amazon extends ShippingProcessor
         if (empty($this->aShippingRates)) {
             /*get rates from Amazon*/
             $aShippingRates = $this->getShippingRatesEntities();
-            $oShippingCart = $this->getCart();
             if (!empty($aShippingRates)) {
                 $aFetchRates = $this->getServerQuotes($aShippingRates);
                 if (!empty($aFetchRates)) {
@@ -43,31 +43,12 @@ class Amazon extends ShippingProcessor
                             $this->aShippingRates[] = $oShippingRate->setShippingChargeQuote($aFetchRates[$oShippingRate->getShippingEntity()->getName()]);
                         }
                     }
-                    if ($oShippingCart->getProductCount() == 1 && !empty($this->aShippingRates)) {
-                        /*save rates into proxy*/
-                        $aProd = $oShippingCart->getProducts();
-                        $oProduct = reset($aProd)['entity'];
-                        //$this->saveShippingQuotesCached($oProduct);
-                    }
                     $this->saveShippingQuotesCached();
                 }
             }
         }
         return $this->aShippingRates;
     }
-
-    /*public function saveShippingQuotesCached(Product $oProduct)
-    {
-        if (!empty($this->aShippingRates)) {
-            foreach ($this->aShippingRates as $oShippingRate) {
-                ProductAmazonRates::model()->fill([
-                    'product_id' => $oProduct->getProductId(),
-                    'shipping_id' => $oShippingRate->getField('shippingid'),
-                    'state_id' => $this->getCustomer()->getShippingStateEntity()->getStateId(),
-                    'rate' => $oShippingRate->getShippingQuote()])->_insert(true);
-            }
-        }
-    }*/
 
     public function getAdditionalShippingFee($weight)
     {
@@ -78,11 +59,12 @@ class Amazon extends ShippingProcessor
     public function getCart()
     {
         $oAmazonCart = new Cart();
-        $aProducts = $this->oCart->getProducts();
+        $aProducts = $this->oCart->getElements();
         if (!empty($aProducts)) {
-            foreach ($aProducts as $aProduct) {
-                if ($aProduct['entity']->isAmazonFBAEnabled() && ($aProduct['entity']->getAmazonFBAAvailExcludedProcessing() > 0)) {
-                    $oAmazonCart->addToCart($aProduct['entity'], $aProduct['qty']);
+            /** @var CartElement $oCartElement */
+            foreach ($aProducts as $oCartElement) {
+                if ($oCartElement->getProduct()->isAmazonFBAEnabled() && ($oCartElement->getProduct()->getAmazonFBAAvailExcludedProcessing() > 0)) {
+                    $oAmazonCart->addObjectToCart($oCartElement);
                 }
             }
         }

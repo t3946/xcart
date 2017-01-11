@@ -5,53 +5,72 @@ namespace Xcart;
 
 class Cart
 {
-    private $aCart;
     private $fCost = null;
-    private $iCount = null;
+    private $iProductCount = null;
     private $fExtraMarginValue = null;
+    private $aArrayOfObjects = null;
 
-    public function addToCart(Product $oProduct, $qty)
+    public function __construct()
     {
-        if ($oProduct->getProductId()) {
-            $this->aCart[$oProduct->getProductId()]['qty'] += $qty;
-            $this->aCart[$oProduct->getProductId()]['entity'] = $oProduct;
+        $this->aArrayOfObjects = new \ArrayObject();
+    }
+
+    public function addObjectToCart(CartElement $oObject)
+    {
+        if ($oObject->getProduct()->getProductId() && $oObject->getQuantity()) {
+            $iterator = $this->aArrayOfObjects->getIterator();
+            if (!empty($iterator)) {
+                foreach ($iterator as $k => $v) {
+                    if ($v->getProduct()->getProductId() == $oObject->getProduct()->getProductId()) {
+                        $v->setQuantity($v->getQuantity() + $oObject->getQuantity());
+                        return $this;
+                    }
+                }
+            }
+            $this->aArrayOfObjects->append($oObject);
+        }
+        return $this;
+    }
+
+    public function removeProductFromCart(Product $oProduct)
+    {
+        $iterator = $this->aArrayOfObjects->getIterator();
+        if (!empty($iterator)) {
+            foreach ($iterator as $k => $v) {
+                if ($v->getProduct()->getProductId() == $oProduct->getProductId()) {
+                    $iterator->offsetUnset($k);
+                }
+            }
         }
     }
 
-    public function removeFromCart(Product $oProduct)
+    public function getElements()
     {
-        $aProducts = $this->getProducts();
-        if (!empty($aProducts) && isset($this->aCart[$oProduct->getProductId()])) {
-            unset($this->aCart[$oProduct->getProductId()]);
-            $this->iCount = null;
-        }
+        return $this->aArrayOfObjects->getIterator();
     }
 
     public function getProductCount()
     {
-        if (is_null($this->iCount)) {
-            $this->iCount = 0;
-            if (!empty($this->aCart)) {
-                foreach ($this->aCart as $aProduct) {
-                    $this->iCount += $aProduct['qty'];
+        if (is_null($this->iProductCount)) {
+            $this->iProductCount = 0;
+            $iterator = $this->aArrayOfObjects->getIterator();
+            if (!empty($iterator)) {
+                foreach ($iterator as $k => $v) {
+                    $this->iProductCount += $v->getQuantity();
                 }
             }
         }
-        return $this->iCount;
-    }
-
-    public function getProducts()
-    {
-        return $this->aCart;
+        return $this->iProductCount;
     }
 
     public function getCost()
     {
         if (is_null($this->fCost)) {
             $this->fCost = 0;
-            if (!empty($this->aCart)) {
-                foreach ($this->aCart as $aProduct) {
-                    $this->fCost += $aProduct['entity']->getPrice() * $aProduct['qty'];
+            $iterator = $this->aArrayOfObjects->getIterator();
+            if (!empty($iterator)) {
+                foreach ($iterator as $k => $v) {
+                    $this->fCost += $v->getProduct()->getPrice() * $v->getQuantity();
                 }
             }
         }
@@ -60,9 +79,12 @@ class Cart
 
     public function getExtraMarginValue()
     {
-        if (is_null($this->fExtraMarginValue) && !empty($this->aCart)) {
-            foreach ($this->aCart as $aProduct) {
-                $this->fExtraMarginValue += $aProduct['entity']->getExtraMarginValue($aProduct['qty']);
+        if (is_null($this->fExtraMarginValue)) {
+            $iterator = $this->aArrayOfObjects->getIterator();
+            if (!empty($iterator)) {
+                foreach ($iterator as $k => $v) {
+                    $this->fExtraMarginValue += $v->getProduct()->getExtraMarginValue($v->getQuantity());
+                }
             }
         }
         return $this->fExtraMarginValue;
