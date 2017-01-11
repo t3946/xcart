@@ -112,6 +112,17 @@
             </tr>
 
             <tr>
+                <td width="25%">Prevent Selling on Amazon</td>
+                <td width="*">
+                    <select name="prevent_selling_on_amazon">
+                        <option value="No"{if $amazon_specific_details.prevent_selling_on_amazon == 'No'} selected="selected"{/if}>No</option>
+                        <option value="FBA"{if $amazon_specific_details.prevent_selling_on_amazon == 'FBA'} selected="selected"{/if}>FBA Channel</option>
+                        <option value="MFN"{if $amazon_specific_details.prevent_selling_on_amazon == 'MFN'} selected="selected"{/if}>FBA and MFN channel</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
                 <td width="25%">longest_side</td>
                 <td width="*">{$amazon_specific_details.longest_side}</td>
             </tr>
@@ -177,4 +188,4 @@
 
     </form>
 {/capture}
-{include file="dialog.tpl" title="$product" content=$smarty.capture.dialog extra='width="100%"'}
+{include file="dialog.tpl" title=$oProduct->getProductName() content=$smarty.capture.dialog extra='width="100%"'}
