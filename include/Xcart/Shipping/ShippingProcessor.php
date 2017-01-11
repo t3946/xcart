@@ -3,6 +3,7 @@
 namespace Xcart\Shipping;
 
 
+use Xcart\CartElement;
 use Xcart\Manufacturer;
 use Xcart\ShippingCache;
 use Xcart\ShippingCacheProducts;
@@ -10,7 +11,6 @@ use Xcart\ShippingCarrier;
 use Xcart\ShippingZone;
 use Xcart\ShippingRate;
 use Xcart\SQLBuilder;
-use Xcart\Product;
 use Xcart\Customer;
 use Xcart\Cart;
 
@@ -162,10 +162,10 @@ abstract class ShippingProcessor
     protected function getCart()
     {
         $oCart = new Cart();
-        $aProducts = $this->oCart->getProducts();
+        $aProducts = $this->oCart->getElements();
         if (!empty($aProducts)) {
-            foreach ($aProducts as $aProduct) {
-                $oCart->addToCart($aProduct['entity'], $aProduct['qty']);
+            foreach ($aProducts as $oCartElement) {
+                $oCart->addObjectToCart($oCartElement);
             }
         }
         return $oCart;
@@ -189,9 +189,12 @@ abstract class ShippingProcessor
 
     public function removeFromCart()
     {
-        $aProducts = $this->getCart()->getProducts();
-        foreach ($aProducts as $aProduct) {
-            $this->oCart->removeFromCart($aProduct['entity']);
+        $aProducts = $this->getCart()->getElements();
+        if (!empty($aProducts)) {
+            /** @var CartElement $oCartElement */
+            foreach ($aProducts as $oCartElement) {
+                $this->oCart->removeProductFromCart($oCartElement->getProduct());
+            }
         }
     }
 
@@ -225,14 +228,15 @@ abstract class ShippingProcessor
                     'shipping_rates' => addslashes(serialize($this->aShippingRates))]
             )->_insert(true);
             if ($iShippingCacheId) {
-                $aProducts = $oCart->getProducts();
+                $aProducts = $oCart->getElements();
                 if (!empty($aProducts)) {
-                    foreach ($aProducts as $aProduct) {
+                    /** @var CartElement $oCartElement */
+                    foreach ($aProducts as $oCartElement) {
                         ShippingCacheProducts::model()->fill(
                             [
                                 'shipping_cache_id' => $iShippingCacheId,
-                                'product_id' => $aProduct['entity']->getProductId(),
-                                'product_quantity' => $aProduct['qty'],
+                                'product_id' => $oCartElement->getProduct()->getProductId(),
+                                'product_quantity' => $oCartElement->getQuantity(),
                             ]
                         )->_insert(true);
                     }
@@ -248,10 +252,11 @@ abstract class ShippingProcessor
         $oManufacturer = $this->getManufacturer();
         $oCart = $this->getCart();
         $sCarrierName = (new \ReflectionClass($this))->getShortName();
-        $aProducts = $oCart->getProducts();
-        if (!empty($aProducts)) {
-            foreach ($aProducts as $aProduct) {
-                $aProductFilter[] = " (xs1.product_id = {$aProduct['entity']->getProductId()} AND xs1.product_quantity = {$aProduct['qty']}) ";
+        $aCartElements = $oCart->getElements();
+        if (!empty($aCartElements)) {
+            /** @var CartElement $oCartElement */
+            foreach ($aCartElements as $oCartElement) {
+                $aProductFilter[] = " (xs1.product_id = {$oCartElement->getProduct()->getProductId()} AND xs1.product_quantity = {$oCartElement->getQuantity()}) ";
             }
             $sProductFilter = implode(' OR ', $aProductFilter);
 
@@ -272,7 +277,7 @@ abstract class ShippingProcessor
             if (!empty($res)) {
                 $oShippingCache = null;
                 foreach ($res as $aShippingCacheRes) {
-                    if ($aShippingCacheRes['cnt_total'] == count($aProducts)) {
+                    if ($aShippingCacheRes['cnt_total'] == count($aCartElements)) {
                         $oShippingCache = ShippingCache::model(['shipping_cache_id' => $aShippingCacheRes['shipping_cache_id']]);
                         break;
                     }

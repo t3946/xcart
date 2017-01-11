@@ -186,7 +186,7 @@ if ($REQUEST_METHOD == "POST" || $shipping_error == "Y") {
                 $oProduct = Xcart\Product::model(['productid' => $_product['productid']]);
                 $oProduct->setPrice($_product['price']); //calculate regarding cart product price
                 if ($oProduct->getManufacturerId() == $k) {
-                    $oCart->addToCart($oProduct, $_product['amount']);
+                    $oCart->addObjectToCart(new \Xcart\CartElement($oProduct, $_product['amount']));
                 }
             }
             $shipping = [];
@@ -194,10 +194,12 @@ if ($REQUEST_METHOD == "POST" || $shipping_error == "Y") {
             if (!empty($aShippingZones)) {
                 /** @var \Xcart\ShippingRate[] $aShippingRates */
                 foreach ($aShippingZones as $aShippingRates) {
-                    foreach ($aShippingRates as $oShippingRate) {
-                        $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
-                        $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
-                        $shipping[$oShippingRate->getShippingId()]['allowed'] = 1;
+                    if (!empty($aShippingRates)) {
+                        foreach ($aShippingRates as $oShippingRate) {
+                            $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
+                            $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
+                            $shipping[$oShippingRate->getShippingId()]['allowed'] = 1;
+                        }
                     }
                 }
                 $shippings[$k] = $shipping;

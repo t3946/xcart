@@ -125,12 +125,13 @@ class ShippingRate extends Data
     {
         if (is_null($this->fCartShippingWeight)) {
             $this->fCartShippingWeight = 0;
-            $oCart = $this->getCart()->getProducts();
-            if (!empty($oCart)) {
-                foreach ($oCart as $aProducts) {
+            $aCartObjects = $this->getCart()->getElements();
+            if (!empty($aCartObjects)) {
+                /** @var CartElement $oCartElement */
+                foreach ($aCartObjects as $oCartElement) {
                     $this->fCartShippingWeight += $this->getShippingEntity()->getShippingWeightN(
-                        $aProducts['entity']->getShippingWeight($aProducts['qty']),
-                        $aProducts['entity']->getShippingVolume($aProducts['qty']));
+                        $oCartElement->getProduct()->getShippingWeight($oCartElement->getQuantity()),
+                        $oCartElement->getProduct()->getShippingVolume($oCartElement->getQuantity()));
                 }
             }
         }
@@ -140,10 +141,11 @@ class ShippingRate extends Data
     public function getCartShippingFreight()
     {
         $shippingFreight = 0;
-        $oCart = $this->getCart()->getProducts();
-        if (!empty($oCart)) {
-            foreach ($oCart as $aProducts) {
-                $shippingFreight += $aProducts['entity']->getShippingFreight() * $aProducts['qty'];
+        $aCartObjects = $this->getCart()->getElements();
+        if (!empty($aCartObjects)) {
+            /** @var CartElement $oCartElement */
+            foreach ($aCartObjects as $oCartElement) {
+                $shippingFreight += $oCartElement->getProduct()->getShippingFreight() * $oCartElement->getQuantity();
             }
         }
         return $shippingFreight;

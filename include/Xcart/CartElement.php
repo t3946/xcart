@@ -31,4 +31,9 @@ class CartElement
     {
         $this->iQty = $iQty;
     }
+
+    public function setProduct($oProduct)
+    {
+        $this->oProduct = $oProduct;
+    }
 }
