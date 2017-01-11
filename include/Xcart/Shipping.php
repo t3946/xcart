@@ -74,7 +74,7 @@ class Shipping extends Data
 
     public function getName()
     {
-        return func_insert_trademark($this->getField('shipping'), true);
+        return func_insert_trademark($this->getField('shipping'));
     }
 
     public function getFrontendName()

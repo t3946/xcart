@@ -853,7 +853,7 @@ if (!$func_is_cart_empty) {
                             $oProduct = Xcart\Product::model(['productid' => $_product['productid']]);
                             $oProduct->setPrice($_product['price']); //calculate regarding cart product price
                             if ($oProduct->getManufacturerId() == $k) {
-                                $oCart->addToCart($oProduct, $_product['amount']);
+                                $oCart->addObjectToCart(new \Xcart\CartElement($oProduct, $_product['amount']));
                             }
                         }
                         $oCustomer = (new Xcart\Customer())->fill($userinfo);
@@ -867,28 +867,32 @@ if (!$func_is_cart_empty) {
                         if (!empty($aShippingZones)) {
                             /** @var \Xcart\ShippingRate[] $aShippingRates */
                             foreach ($aShippingZones as $aShippingRates) {
-                                foreach ($aShippingRates as $oShippingRate) {
-                                    $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
-                                    $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
-                                    $shipping[$oShippingRate->getShippingId()]['allowed'] = true;
-                                    $aProducts = $oShippingRate->getCart()->getProducts();
-                                    if (!empty($aProducts)) {
-                                        foreach ($aProducts as $aProduct) {
-                                            $shipping[$oShippingRate->getShippingId()]['products'][] = $aProduct['entity']->getSKU();
-                                        }
-                                    }
-                                    $aAddedShippingRates = $oShippingRate->getAddedShippingRates();
-                                    if (!empty($aAddedShippingRates)) {
-                                        foreach ($aAddedShippingRates as $oAddedShippingRate) {
-                                            $aShipping = $oAddedShippingRate->getFields();
-                                            $aShipping['shipping_charge'] = $oAddedShippingRate->getShippingCharge();
-                                            $aProducts = $oAddedShippingRate->getCart()->getProducts();
-                                            if (!empty($aProducts)) {
-                                                foreach ($aProducts as $aProduct) {
-                                                    $aShipping['products'][] = $aProduct['entity']->getSKU();
-                                                }
+                                if (!empty($aShippingRates)) {
+                                    foreach ($aShippingRates as $oShippingRate) {
+                                        $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
+                                        $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
+                                        $shipping[$oShippingRate->getShippingId()]['allowed'] = true;
+                                        $aCartElements = $oShippingRate->getCart()->getElements();
+                                        if (!empty($aCartElements)) {
+                                            /** @var \Xcart\CartElement $oCartElement */
+                                            foreach ($aCartElements as $oCartElement) {
+                                                $shipping[$oShippingRate->getShippingId()]['products'][] = $oCartElement->getProduct()->getSKU();
                                             }
-                                            $shipping[$oShippingRate->getShippingId()]['added_shipping'][] = $aShipping;
+                                        }
+                                        $aAddedShippingRates = $oShippingRate->getAddedShippingRates();
+                                        if (!empty($aAddedShippingRates)) {
+                                            foreach ($aAddedShippingRates as $oAddedShippingRate) {
+                                                $aShipping = $oAddedShippingRate->getFields();
+                                                $aShipping['shipping_charge'] = $oAddedShippingRate->getShippingCharge();
+                                                $aProducts = $oAddedShippingRate->getCart()->getElements();
+                                                if (!empty($aProducts)) {
+                                                    /** @var \Xcart\CartElement $oCartElement */
+                                                    foreach ($aProducts as $oCartElement) {
+                                                        $aShipping['products'][] = $oCartElement->getProduct()->getSKU();
+                                                    }
+                                                }
+                                                $shipping[$oShippingRate->getShippingId()]['added_shipping'][] = $aShipping;
+                                            }
                                         }
                                     }
                                 }
