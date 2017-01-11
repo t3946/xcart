@@ -36,6 +36,7 @@ if ($REQUEST_METHOD == 'POST') {
             "amazon_category_item_type" => $amazon_category_item_type,
             "amazon_fba_restricted" => (empty($amazon_fba_restricted) ? 'N' : $amazon_fba_restricted),
             "amazon_fba_restricted_reason" => $amazon_fba_restricted_reason,
+            "prevent_selling_on_amazon" => $prevent_selling_on_amazon,
         );
 
         if (!func_array2insert("products_amz_fields", $query_data, false, true)) {
