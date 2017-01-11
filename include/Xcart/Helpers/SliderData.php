@@ -55,6 +55,7 @@ class SliderData
         ){
 
             $productids = implode("','", $productids);
+            $p_query = '';
 
             if ($section_name == "products_also_bought_with_this_product"){
                 $p_query = <<<SQL
@@ -70,7 +71,7 @@ order By RO.related_resource_orderby
 limit 30
 SQL;
             }
-            elseif ($section_name == "recently_viewed_products"){
+            elseif ($section_name == "recently_viewed_products" && !defined('IS_ROBOT')){
 
                 $meta_id = func_query_first_cell("SELECT id FROM xcart_cidev_surf_meta WHERE sessid='".$$XCART_SESSION_NAME."'");
 
@@ -98,7 +99,11 @@ SQL;
                 $p_query = "SELECT $sql_tbl[products].productid as needed_resource_id FROM $sql_tbl[product_links], $sql_tbl[products] WHERE $sql_tbl[products].productid=$sql_tbl[product_links].productid2 AND $sql_tbl[product_links].productid1='$productid' AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[products].productid NOT IN ('$productids') $avail_condition GROUP BY $sql_tbl[products].productid ORDER BY $sql_tbl[product_links].orderby, product";
             }
 
-            $pids = func_query($p_query);
+            $pids = [];
+
+            if (!empty($p_query)) {
+                $pids = func_query($p_query);
+            }
 
             switch ($section_name) {
                 case 'products_also_bought_with_this_product': $sGoogleAnaliticsParam = 'customer_also_bought_carousel';
