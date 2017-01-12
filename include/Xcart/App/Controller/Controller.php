@@ -3,7 +3,7 @@ namespace Xcart\App\Controller;
 
 use Xcart\App\Traits\RenderTrait;
 
-class BaseController
+class Controller
 {
     use RenderTrait;
 

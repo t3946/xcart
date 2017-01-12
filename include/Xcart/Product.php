@@ -679,6 +679,7 @@ class Product extends Data
     {
         if (!empty($ids) && !defined('IS_ROBOT'))
         {
+            $ids        = array_unique($ids);
             $table      = 'xcart_products_showed';
             $connection = Connection::getInstance();
 
