@@ -8,7 +8,7 @@
 
 namespace Xcart\App\Controller;
 
-class AdminController extends BaseController
+class AdminController extends Controller
 {
     public function init()
     {
