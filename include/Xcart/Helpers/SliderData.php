@@ -185,13 +185,13 @@ SQL;
         {
             if (!in_array($section_name, ['related_products', 'recently_viewed_products']))
             {
-                $p_ids[] = $productid;
+                $i_ids = [$productid];
 
                 foreach ($pids as $pid) {
-                    $p_ids[] = $pid['needed_resource_id'];
+                    $i_ids[] = $pid['needed_resource_id'];
                 }
 
-                if ($fba_pids = Product::getRandFbaProducts(2, $p_ids))
+                if ($fba_pids = Product::getRandFbaProducts(2, $i_ids))
                 {
                     $pids = array_merge($fba_pids, $pids);
                 }
