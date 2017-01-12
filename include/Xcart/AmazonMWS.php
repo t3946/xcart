@@ -20,6 +20,7 @@ class AmazonMWS
     const BACK_PROCESS_LOG_NAME_SETTLEMENT = 'Amazon_Reports_Cron';
     const BACK_PROCESS_LOG_NAME_ORDERS = 'amazon_orders';
     const BACK_PROCESS_LOG_NAME_ORDER_INFO = 'amazon_info';
+    const BACK_PROCESS_LOG_NAME_OFBA_INVENTORY = 'amazon_fba_inventory_receipts';
     const DEFAULT_ORDER_MESSAGE = 'Thank you for your order!';
     const AMAZON_ORDER_LINK = "https://sellercentral.amazon.com/gp/orders-v2/list/ref=ag_myo_apsearch_myosearch?searchType=OrderID&searchKeyword=%s&showPending=1&isDebug=&isAdvancedSearch=1&ignoreSearchType=0&searchLanguage=en_US";
 
@@ -806,6 +807,11 @@ class AmazonMWS
             }
         }
         return $aResultArray;
+    }
+
+    private function processReportFulfillmentInventoryData()
+    {
+
     }
 
     private function fillReportFeeDataFromFile()

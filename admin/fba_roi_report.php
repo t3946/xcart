@@ -1,6 +1,5 @@
 <?php
 @set_time_limit(0);
-
 global $xcart_dir, $mode, $REQUEST_METHOD;
 
 require "./auth.php";
@@ -21,6 +20,22 @@ if ($REQUEST_METHOD == "POST") {
 }
 
 if ($mode == "search") {
+
+
+    $classAmazonMWS = new Xcart\AmazonMWS();
+
+    $classAmazonMWS->setReportType('_GET_FBA_FULFILLMENT_INVENTORY_RECEIPTS_DATA_')
+        ->setBackProcessName(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_OFBA_INVENTORY)
+        ->setProcessWithoutAcknowledgedFlag()
+        ->setStartDate(new DateTime('-1024 days', new DateTimeZone('UTC')))
+        //->_Request('RequestReport')
+        //->_Request('GetReportRequestList')
+        ->_Request('GetReportList')
+        ->_Request('GetReport')
+        ->_Request('UpdateReportAcknowledgements')
+        ->processReportFulfillmentInventoryData();
+    print "<pre>". (reset($classAmazonMWS->getReportContent())) ."</pre>";
+    exit;
 
 
 #*insert debit cash
