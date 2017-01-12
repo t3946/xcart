@@ -684,12 +684,10 @@ class Product extends Data
 
             $sql = QueryBuilder::getInstance($connection)
                                ->setTypeUpdate()
+                               ->setOptions('LOW_PRIORITY')
                                ->where(['productid__in' => $ids])
                                ->update($table, ['in_list_showed' => new Expression('in_list_showed + 1')])
                                ->toSQL();
-
-            $sql = strtolower($sql);
-            $sql = str_replace('update', 'update LOW_PRIORITY', $sql);
 
             if ($connection->exec($sql) != count($ids))
             {
@@ -713,9 +711,7 @@ class Product extends Data
                     $ids = array_map(function ($id) { return ['productid' => $id]; }, $ids);
                     $ids = array_values($ids);
 
-                    $sql = QueryBuilder::getInstance($connection)->insert($table, $ids);
-                    $sql = strtolower($sql);
-                    $sql = str_replace('insert', 'insert ignore', $sql);
+                    $sql = QueryBuilder::getInstance($connection)->setOptions('ignore')->insert($table, $ids);
                     $connection->exec($sql);
                 }
             }
