@@ -42,14 +42,14 @@ SQL;
     $statement->bindValue('type', 'cash');
     $statement->execute();
 
-    $sql2 = str_replace('__f1__', 'OD.amount*P.cost_to_us', $sql);
+    $sql2 = str_replace('__f1__', 'OD.amount * COALESCE(OD.item_cost_to_us, P.cost_to_us)', $sql);
     $sql2 = str_replace('__f2__', '0', $sql2);
     $statement = \Xcart\Connection::getInstance()->prepare($sql2);
     $statement->bindValue('type', 'inventory');
     $statement->execute();
 
-    $sql3 = str_replace('__f1__', 'OD.amount * P.cost_to_us * 1.3', $sql);
-    $sql3 = str_replace('__f2__', 'OD.amount*P.cost_to_us', $sql3);
+    $sql3 = str_replace('__f1__', 'OD.amount * OD.price', $sql);
+    $sql3 = str_replace('__f2__', 'OD.amount * COALESCE(OD.item_cost_to_us, P.cost_to_us)', $sql3);
     $statement = \Xcart\Connection::getInstance()->prepare($sql3);
     $statement->bindValue('type', 'equity');
     $statement->execute();
@@ -64,7 +64,7 @@ Where A.account = :type
 SQL;
 
     $statement = \Xcart\Connection::getInstance()->prepare($sql);
-    $statement->bindValue('type', 'notes payable');
+    $statement->bindValue('type', 'notes_payable');
     $statement->execute();
     $select[] = $statement->fetch();
 
