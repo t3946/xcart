@@ -99,6 +99,7 @@ return array(
     'FBAOutboundServiceMWS_Model_UpdateFulfillmentOrderRequest' => $baseDir . '/src/FBAOutboundServiceMWS/Model/UpdateFulfillmentOrderRequest.php',
     'FBAOutboundServiceMWS_Model_UpdateFulfillmentOrderResponse' => $baseDir . '/src/FBAOutboundServiceMWS/Model/UpdateFulfillmentOrderResponse.php',
     'FBAOutboundServiceMWS_Model_Weight' => $baseDir . '/src/FBAOutboundServiceMWS/Model/Weight.php',
+    'Fenom' => $vendorDir . '/fenom/fenom/src/Fenom.php',
     'Google\\Auth\\ApplicationDefaultCredentials' => $vendorDir . '/google/auth/src/ApplicationDefaultCredentials.php',
     'Google\\Auth\\CacheTrait' => $vendorDir . '/google/auth/src/CacheTrait.php',
     'Google\\Auth\\Cache\\InvalidArgumentException' => $vendorDir . '/google/auth/src/Cache/InvalidArgumentException.php',

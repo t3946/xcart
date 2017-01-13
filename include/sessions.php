@@ -444,11 +444,13 @@ function x_session_save_to_db() {
 		$cidev_tmp_sessions_data = stripslashes($cidev_tmp_sessions_data);
 		$cidev_tmp_sessions_data = unserialize($cidev_tmp_sessions_data);
 
-		$var_x_session_DO_NOT_save_to_db_var = x_session_DO_NOT_save_to_db_var;
+		if (defined('x_session_DO_NOT_save_to_db_var')) {
+            $var_x_session_DO_NOT_save_to_db_var = x_session_DO_NOT_save_to_db_var;
 
-		if (!empty($cidev_tmp_sessions_data[x_session_DO_NOT_save_to_db_var])){
-			$XCART_SESSION_VARS[x_session_DO_NOT_save_to_db_var] = $cidev_tmp_sessions_data[x_session_DO_NOT_save_to_db_var];
-		}
+            if (!empty($cidev_tmp_sessions_data[x_session_DO_NOT_save_to_db_var])){
+                $XCART_SESSION_VARS[x_session_DO_NOT_save_to_db_var] = $cidev_tmp_sessions_data[x_session_DO_NOT_save_to_db_var];
+            }
+        }
 	}
 ###
 ##
