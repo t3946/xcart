@@ -30,6 +30,11 @@ abstract class ShippingProcessor
     protected $oCart = null;
 
     /**
+     * @var Cart
+     */
+    protected $oCarierCart = null;
+
+    /**
      * @var ShippingRate[]
      */
     private $aShippingRatesEntities = null;
@@ -42,6 +47,8 @@ abstract class ShippingProcessor
      * @var ShippingCarrier
      */
     private $oShippingCarrier = null;
+
+    protected $bGetOnlyApproximationRates = false;
 
     /**
      * @return boolean
@@ -287,5 +294,10 @@ abstract class ShippingProcessor
                 }
             }
         }
+    }
+
+    public function setGetOnlyApproximationRates($bValue)
+    {
+        $this->bGetOnlyApproximationRates = $bValue;
     }
 }
