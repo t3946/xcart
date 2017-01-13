@@ -4,12 +4,12 @@ namespace Xcart\App\Traits;
 trait RenderTrait
 {
     /**
-     * @param $view
+     * @param $template
      * @param array|null $params
      *
      * @return string
      */
-    public function view($view, array $params = null)
+    public function render($template, array $params = [])
     {
         $render = \Templater::getInstance();
 
@@ -19,6 +19,6 @@ trait RenderTrait
             }
         }
 
-        return func_display($view, $render, false);
+        return func_display($template, $render, false);
     }
 }
