@@ -11,7 +11,7 @@ class CartElement
     private $oProduct = null;
     private $iQty = 0;
 
-    public function __construct($oProduct, $iQty)
+    public function __construct($oProduct, $iQty = 1)
     {
         $this->oProduct = $oProduct;
         $this->iQty = $iQty;

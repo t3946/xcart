@@ -171,7 +171,7 @@ SQL;
         return $aShippingMethods;
     }
 
-    public function getShippingRates(Customer $oCustomer, Manufacturer $oManufacturer, Cart $oCart)
+    public function getShippingRates(Customer $oCustomer, Manufacturer $oManufacturer, Cart $oCart, $bGetOnlyApproximationRates = false)
     {
         $aResult = null;
         $aShippingZoneRatesPriority = [];
@@ -191,6 +191,7 @@ SQL;
                     if (!empty($aShippingZonesArr)) {
                         /** @var ShippingProcessor $oShippingProcessor */
                         foreach ($aShippingZonesArr as $oShippingProcessor) {
+                            $oShippingProcessor->setGetOnlyApproximationRates($bGetOnlyApproximationRates);
                             $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $oShippingProcessor->getShippingRates();
                         }
                     }

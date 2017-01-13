@@ -135,7 +135,11 @@ class UPS extends ShippingProcessor
                             }
                             $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate->setShippingChargeQuote(round($shippingCharge, 2));
                         }
+                        break;
                     }
+                }
+                if ($this->bGetOnlyApproximationRates && !empty($this->aShippingRates)) {
+                    return $this->aShippingRates;
                 }
                 $aResponses = $this->getServerQuotes($aShippingRates);
                 if (!empty($aResponses)) {

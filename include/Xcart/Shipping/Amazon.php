@@ -22,9 +22,8 @@ class Amazon extends ShippingProcessor
         $aResponses = null;
         try {
             $aResponses = (new AmazonMWS('FBAOutboundServiceMWS_Client', '/FulfillmentOutboundShipment/2010-10-01/'))->getGetFulfillmentRates($this->getCustomer(), $this->getCart(), $aShippingRates);
-        }
-        catch (\Exception $e) {
-            Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__.': '. $e->getMessage());
+        } catch (\Exception $e) {
+            Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__ . ': ' . $e->getMessage());
         }
         return $aResponses;
     }
@@ -58,16 +57,20 @@ class Amazon extends ShippingProcessor
 
     public function getCart()
     {
-        $oAmazonCart = new Cart();
-        $aProducts = $this->oCart->getElements();
-        if (!empty($aProducts)) {
-            /** @var CartElement $oCartElement */
-            foreach ($aProducts as $oCartElement) {
-                if ($oCartElement->getProduct()->isAmazonFBAEnabled() && ($oCartElement->getProduct()->getAmazonFBAAvailExcludedProcessing() > 0)) {
-                    $oAmazonCart->addObjectToCart($oCartElement);
+        if (is_null($this->oCarierCart)) {
+            $this->oCarierCart = new Cart();
+            $aProducts = $this->oCart->getElements();
+            if (!empty($aProducts)) {
+                /** @var CartElement $oCartElement */
+                foreach ($aProducts as $oCartElement) {
+                    if (($oCartElement->getProduct()->isAmazonFBAEnabled() && ($oCartElement->getProduct()->getAmazonFBAAvailExcludedProcessing() > 0)) ||
+                        count($oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild($oCartElement->getQuantity())) > 0
+                    ) {
+                        $this->oCarierCart->addObjectToCart($oCartElement);
+                    }
                 }
             }
         }
-        return $oAmazonCart;
+        return $this->oCarierCart;
     }
 }
