@@ -436,7 +436,6 @@ if ($sExtraLog=='Y')
 		if (in_array('Amazon', $aShippingCarrier)) {
 			$product['custom_label_2'] = 'Amazon rates';
 		}
-		var_dump($shipping_arr);
 	} else {
 		if ($classProduct->isProductFBAAvail()) {
 			$start_time_amazon_shipping = round(microtime(true) * 1000);
