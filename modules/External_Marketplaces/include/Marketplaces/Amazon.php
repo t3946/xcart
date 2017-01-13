@@ -5,7 +5,7 @@ use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Amazon extends StoreFrontMarketPlace
 {
-    public function addProductToBatch(Product $oProduct, $update_type, $sExtraLog = "N")
+    public function addProductToBatch(Product $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
     {
         if ($this->checkProductExcludedMarketPlace($oProduct->getProductId()) && $this->checkMarketplaceRestrictions($oProduct)) {
             if ($update_type == "2" || $update_type == "1,2" || $update_type == "1") {
@@ -40,5 +40,10 @@ class Amazon extends StoreFrontMarketPlace
         if ($oProduct->getField("amazon_enabled") != "Y")
             $bResult = false;
         return $bResult;
+    }
+
+    public function getGoogleOneRow(Product $oProduct, $sExtraLog)
+    {
+        return null;
     }
 }

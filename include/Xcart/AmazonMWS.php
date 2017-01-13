@@ -1792,17 +1792,18 @@ class AmazonMWS
             if (!empty($aProductsCart)) {
                 /** @var CartElement $oCartElement */
                 foreach ($aProductsCart as $oCartElement) {
-                    if (!($oCartElement->getProduct()->isAmazonFBAEnabled())) {
-                        $aProducts = $oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild(1);
+                    $oProduct = $oCartElement->getProduct();
+                    if (!($oProduct->isAmazonFBAEnabled())) {
+                        $aProducts = $oProduct->getProductsAvailOnAmazonParentWithChild(1);
                         if (!empty($aProducts)) {
                             $oProductParentOrChild = reset($aProducts);
-                            $oCartElement->setProduct($oProductParentOrChild['oProduct']);
+                            $oProduct = $oProductParentOrChild['oProduct'];
                         }
                     }
                     $item = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
-                    $item->setSellerSKU($oCartElement->getProduct()->getSKU());
+                    $item->setSellerSKU($oProduct->getSKU());
                     $item->setQuantity($oCartElement->getQuantity());
-                    $item->setSellerFulfillmentOrderItemId($oCartElement->getProduct()->getSKU());
+                    $item->setSellerFulfillmentOrderItemId($oProduct->getSKU());
                     $items[] = $item;
                 }
                 $itemList = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList();
