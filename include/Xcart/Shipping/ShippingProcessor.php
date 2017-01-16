@@ -143,9 +143,13 @@ abstract class ShippingProcessor
     public function getShippingRatesEntities()
     {
         if (is_null($this->aShippingRatesEntities)) {
+            $sCarrier = (new \ReflectionClass($this))->getShortName();
+            if ($sCarrier == 'Flat') {
+                $sCarrier = '';
+            }
             $this->aShippingRatesEntities = ShippingRate::model()->findAll(
                 SQLBuilder::getInstance()->
-                addInnerJoin('shipping', 's', 'main.shippingid = s.shippingid')->
+                addInnerJoin('shipping', 's', "main.shippingid = s.shippingid AND s.code = '{$sCarrier}'")->
                 addCondition('zoneid = ' . $this->getShippingZone()->getField('zoneid'))->
                 addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
                 addCondition("s.active = 'Y'")->
