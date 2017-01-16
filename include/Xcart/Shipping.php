@@ -148,7 +148,6 @@ SQL;
                 addCondition("active = 'Y'")->
                 addCondition('manufacturerid = ' . $oManufacturer->getManufacturerId())->
                 addCondition('zoneid = ' . $iShippingZone)->
-                //addCondition("type = '$type'")->
                 addOrderBy('sc.priority DESC')
             );
         }
