@@ -1359,15 +1359,15 @@ if ($mode == "checkout" && empty($login) && !$func_is_cart_empty) {
     $checkout_step = 1;*/
 }
 
-require $xcart_dir . "/include/categories.php";
+//require $xcart_dir . "/include/categories.php";
 
-
-if ($active_modules["Brands"])
-    include $xcart_dir . "/modules/Brands/customer_brands.php";
-else
-    if ($active_modules["Manufacturers"])
-        include $xcart_dir . "/modules/Manufacturers/customer_manufacturers.php";
-
+if ($mode == "order_message") {
+    if ($active_modules["Brands"])
+        include $xcart_dir . "/modules/Brands/customer_brands.php";
+    else
+        if ($active_modules["Manufacturers"])
+            include $xcart_dir . "/modules/Manufacturers/customer_manufacturers.php";
+}
 $giftcerts = (!empty($cart["giftcerts"]) ? $cart["giftcerts"] : array());
 
 #

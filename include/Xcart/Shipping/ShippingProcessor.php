@@ -166,7 +166,7 @@ abstract class ShippingProcessor
     /**
      * @return Cart
      */
-    protected function getCart()
+    public function getCart()
     {
         $oCart = new Cart();
         $aProducts = $this->oCart->getElements();
@@ -224,28 +224,30 @@ abstract class ShippingProcessor
             $oCustomer = $this->getCustomer();
             $oManufacturer = $this->getManufacturer();
             $oCart = $this->getCart();
-            $iShippingCacheId = ShippingCache::model()->fill(
-                ['shipping_carrier' => (new \ReflectionClass($this))->getShortName(),
-                    'zip_to' => $oCustomer->getField('s_zipcode'),
-                    'zip_from' => $oManufacturer->getField('m_zipcode'),
-                    'state_to' => $oCustomer->getField('s_state'),
-                    'state_from' => $oManufacturer->getField('m_state'),
-                    'country_to' => $oCustomer->getField('s_country'),
-                    'country_from' => $oManufacturer->getField('m_country'),
-                    'shipping_rates' => addslashes(serialize($this->aShippingRates))]
-            )->_insert(true);
-            if ($iShippingCacheId) {
-                $aProducts = $oCart->getElements();
-                if (!empty($aProducts)) {
-                    /** @var CartElement $oCartElement */
-                    foreach ($aProducts as $oCartElement) {
-                        ShippingCacheProducts::model()->fill(
-                            [
-                                'shipping_cache_id' => $iShippingCacheId,
-                                'product_id' => $oCartElement->getProduct()->getProductId(),
-                                'product_quantity' => $oCartElement->getQuantity(),
-                            ]
-                        )->_insert(true);
+            if (empty($aShippingCache)) {
+                $iShippingCacheId = ShippingCache::model()->fill(
+                    ['shipping_carrier' => (new \ReflectionClass($this))->getShortName(),
+                        'zip_to' => $oCustomer->getField('s_zipcode'),
+                        'zip_from' => $oManufacturer->getField('m_zipcode'),
+                        'state_to' => $oCustomer->getField('s_state'),
+                        'state_from' => $oManufacturer->getField('m_state'),
+                        'country_to' => $oCustomer->getField('s_country'),
+                        'country_from' => $oManufacturer->getField('m_country'),
+                        'shipping_rates' => addslashes(serialize($this->aShippingRates))]
+                )->_insert();
+                if ($iShippingCacheId) {
+                    $aProducts = $oCart->getElements();
+                    if (!empty($aProducts)) {
+                        /** @var CartElement $oCartElement */
+                        foreach ($aProducts as $oCartElement) {
+                            ShippingCacheProducts::model()->fill(
+                                [
+                                    'shipping_cache_id' => $iShippingCacheId,
+                                    'product_id' => $oCartElement->getProduct()->getProductId(),
+                                    'product_quantity' => $oCartElement->getQuantity(),
+                                ]
+                            )->_insert();
+                        }
                     }
                 }
             }
@@ -277,7 +279,7 @@ abstract class ShippingProcessor
             addCondition("country_from='{$oManufacturer->getField('m_country')}'")->
             addCondition("shipping_carrier='{$sCarrierName}'")->
             addInnerJoin('shipping_cache_products', 'xs1', "xs1.shipping_cache_id = xs.shipping_cache_id AND {$sProductFilter}")->
-            addInnerJoin('shipping_cache_products', 'xs2', "xs2.shipping_cache_id = xs.shipping_cache_id AND {$sProductFilter}");
+            addInnerJoin('shipping_cache_products', 'xs2', "xs2.shipping_cache_id = xs.shipping_cache_id ");
 
 
             $res = $oSQLBuilder->query()->getQueryResult();
@@ -294,6 +296,7 @@ abstract class ShippingProcessor
                 }
             }
         }
+        return $this->aShippingRates;
     }
 
     public function setGetOnlyApproximationRates($bValue)

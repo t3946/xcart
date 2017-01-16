@@ -5,7 +5,7 @@ session_start();
 require "./top.inc.php";
 require "./init.php";
 
-global $xcart_dir, $config, $storefronts;
+global $xcart_dir, $config, $storefronts, $aManufacturerZones;
 
 #
 ##
@@ -15,6 +15,7 @@ $froogle_tracing_token = 'ANY78kLeWOxH4je4ZmHHsdNUGUhaxDLr2qkUcqeZ3MPGH1qjH2RdLq
 ###
 ##
 #
+const LOG_CATEGORY = 'cidev_incremental_feeds_launched_v_3';
 
 define("FROOGLE_TAIL", '...');
 define("FROOGLE_TAIL_LEN", strlen(constant("FROOGLE_TAIL")));
@@ -27,18 +28,24 @@ define('EXTRA_LOG', 'N');
 set_time_limit(0);
 
 $xcart_states_US = func_query("SELECT stateid, state, code, country_code, base_state_zipcode FROM $sql_tbl[states] WHERE base_state_zipcode!='' AND country_code='US'");
-foreach ($xcart_states_US as $k => $v) {
+/*foreach ($xcart_states_US as $k => $v) {
     $xcart_states_US[$k]["city"] = func_query_first_cell("SELECT city FROM $sql_tbl[geo_litecity_location] WHERE country='US' AND postalCode='$v[base_state_zipcode]'");
+}*/
+
+if ($config[LOG_CATEGORY] == "Y") {
+    func_backprocess_log('incremental feeds', 'Already launched');
+    Xcart\Mail::model()->
+    setTo('team@s3stores.com')->
+    setFrom('team@s3stores.com')->
+    setBody(LOG_CATEGORY. ' already launched')->
+    setSubject(sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY))->sendEmail();
+    die("Already launched");
 }
 
-if ($config["cidev_incremental_feeds_launched_v_3"] == "Y") {
-        die("Already launched"); // ################################
-}
-
-db_query("REPLACE $sql_tbl[config] SET value='Y', name='cidev_incremental_feeds_launched_v_3'");
+db_query("REPLACE $sql_tbl[config] SET value='Y', name='".LOG_CATEGORY."'");
 
 
-$started_at = time();
+$started_at = $start_time = time();
 
 func_backprocess_log("incremental feeds", " ");
 $log_text = " * * *  Cron started  * * * SUBMIT_DISABLE = '" . SUBMIT_DISABLE . "', EXTRA_LOG = '" . EXTRA_LOG . "'";
@@ -317,13 +324,14 @@ Select
                 db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
 
                 db_query("UPDATE $sql_tbl[products] SET last_incremental_update='" . time() . "' WHERE productid='" . $product["productid"] . "'");
-
+                $googleOneRow = null;
                 foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
-                    if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
-                        $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], EXTRA_LOG);
+                    if (is_null($googleOneRow)) {
+                        $googleOneRow = $oExternalMarketPlace->getGoogleOneRow($oProduct, EXTRA_LOG);
                     }
-
-
+                    if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
+                        $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], $googleOneRow, EXTRA_LOG);
+                    }
 
                     if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
                         $oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
@@ -362,17 +370,19 @@ Select
 }
 
 
-$finished_at = time();
+$current_time = time();
 
-$duration = $started_at - $finished_at;
-$duration = $duration / (60 * 60);
-$duration = round($duration, 1);
+$pid_diff = $current_time - $start_time;
+$hour = intval($pid_diff / (60 * 60));
+$minutes = intval(($pid_diff - $hour * 60 * 60) / 60);
+$seconds = ($pid_diff - $hour * 60 * 60 - $minutes * 60);
+
 
 //        print ("Why we dont update params ?");
 db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_incremental_feeds_launched_v_3'");
 //        print ("We done correctly ?");
 
-$log_text = "Cron completed. Duration: " . $duration . " hours";
+$log_text = "Cron completed. Duration: " . sprintf("%02d:%02d:%02d", $hour, $minutes, $seconds) . " sec.";
 func_backprocess_log("incremental feeds", $log_text);
 
 die("DONE!");
