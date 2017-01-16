@@ -228,10 +228,9 @@ SQL;
                         foreach ($aShippingZonesArr as $oShippingProcessor) {
                             $oShippingProcessor->setGetOnlyApproximationRates($bGetOnlyApproximationRates);
                             $aRates = $oShippingProcessor->getShippingRates();
-                                if (!empty($aRates)) {
+                            if (!empty($aRates)) {
                                     $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $aRates;
-                                }
-                            $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $aRates;
+                            }
                         }
                     }
                     if (!($oCart->getProductCount())) {
