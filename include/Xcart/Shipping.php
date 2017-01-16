@@ -227,7 +227,11 @@ SQL;
                         /** @var ShippingProcessor $oShippingProcessor */
                         foreach ($aShippingZonesArr as $oShippingProcessor) {
                             $oShippingProcessor->setGetOnlyApproximationRates($bGetOnlyApproximationRates);
-                            $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $oShippingProcessor->getShippingRates();
+                            $aRates = $oShippingProcessor->getShippingRates();
+                                if (!empty($aRates)) {
+                                    $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $aRates;
+                                }
+                            $aShippingZoneRatesPriority[$oShippingProcessor->getPriority()][] = $aRates;
                         }
                     }
                     if (!($oCart->getProductCount())) {
