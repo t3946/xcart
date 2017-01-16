@@ -93,22 +93,6 @@ function db_query($query) {
 	global $debug_mode;
 	global $mysql_autorepair, $sql_max_allowed_packet;
 	$b1 = func_microtime();
-	          
-
-/* speed optimization no bench
-	if (defined("START_TIME")) {
-		global $__sql_time;
-		$t = func_microtime();
-	}
-*/
-/* code below appears to be added by someone for debugging purposes - removed by random 2011-02-10
-	x_load('debug');
-	if (preg_match("/xcart_categories_subcount/is",$query)){
-		x_log_add('subcount',"SUBCOUNT: $query",true);
-	} elseif (preg_match("/xcart_products_categories/is",$query)){
-                x_log_add('subcount',"PRODUCTS CATEGORIES: $query",true);
-        }	
-*/
 
 	if ($sql_max_allowed_packet && strlen($query) > $sql_max_allowed_packet) {
 
@@ -131,62 +115,15 @@ function db_query($query) {
 		return false;
 	}
 
-//	__add_mark();
-/* speed optimization       if( class_exists( 'SQL_Logger')) { // abr@x-cart.com {{{
-                $sql = SQL_Logger::getInstance('SQL_Logger');
-                $result = $sql->run_query( $query);
-        } else // }}}*/
-	$result = mysql_query($query);
+	$result = \Xcart\Connection::getInstance()->executeQuery($query);
 
-/* speed optimization no bench
-	$t_end = func_microtime();
-	if (defined("START_TIME")) {
-		$__sql_time += func_microtime()-$t;
-	}
-*/
-	#
-	# Auto repair
-	#
-/* speed optimization	
-	if (!$result && $mysql_autorepair && preg_match("/'(\S+)\.(MYI|MYD)/",mysql_error(), $m)) {
-		$stm = "REPAIR TABLE $m[1] EXTENDED";
-		error_log("Repairing table $m[1]", 0);
-		if ($debug_mode == 1 || $debug_mode == 3) {
-			$mysql_error = mysql_errno()." : ".mysql_error();
-			echo "<b><font COLOR=DARKRED>Repairing table $m[1]...</font></b>$mysql_error<br />";
-			flush();
-		}
+	//$result = mysql_query($query);
 
-		$result = mysql_query($stm);
-		if (!$result)
-			error_log("Repaire table $m[1] is failed: ".mysql_errno()." : ".mysql_error(), 0);
-		else
-			$result = mysql_query($query); # try repeat query...
-	}
-*/
-	if (db_error($result, $query) && $debug_mode==1)
-		exit;
+	/*if (db_error($result, $query) && $debug_mode==1)
+		exit;*/
 
-/* speed optimizations no bench
-	$explain = array();
-	if (
-		defined("BENCH") && constant("BENCH") &&
-		!defined("BENCH_BLOCK") && !defined("BENCH_DISPLAY") && 
-		defined("BENCH_DISPLAY_TYPE") && constant("BENCH_DISPLAY_TYPE") == "A" &&
-		!strncasecmp("SELECT", $query, 6)
-	) {
-		$r = mysql_query('EXPLAIN '.$query);
-		if ($r !== false) {
-			while ($arr = db_fetch_array($r))
-				$explain[] = $arr;
 
-			db_free_result($r);
-		}
-	}
-	*/
-
-//	__add_mark(array("query" => $query, "explain" => $explain), "SQL");
-        $b2 = func_microtime();
+        /*$b2 = func_microtime();
         if ($b2-$b1 > 0.001) {
     		$l_query = $query;
     		if (strlen($l_query) > 8000) {
@@ -194,7 +131,7 @@ function db_query($query) {
     			}
 		log_query($l_query);
         	log_query("Bench: ".floatval($b2-$b1)."\n");
-        	}
+        	}*/
                     
 	return $result;
 }
@@ -204,11 +141,11 @@ function db_result($result, $offset) {
 }
 
 function db_fetch_row($result) {
-	return mysql_fetch_row($result);
+	return $result->fetch(PDO::FETCH_NUM);
 }
 
 function db_fetch_array($result, $flag=MYSQL_ASSOC) {
-	return mysql_fetch_array($result, $flag);
+	return $result->fetch(PDO::FETCH_BOTH);
 }
 
 function db_fetch_field($result, $num = 0) {
