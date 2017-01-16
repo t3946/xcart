@@ -2,33 +2,10 @@
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
-//include_once "google-api-php-client/examples/templates/base.php";
-//require_once "./google-api-php-client/autoload.php";
-
 require "./top.inc.php";
 require "./init.php";
 
-### Amazon ###
-include_once "MarketplaceWebService/Samples/.config.inc.php";
-require_once "MarketplaceWebService/Client.php";
-require_once "MarketplaceWebService/Exception.php";
-require_once "MarketplaceWebService/Model/SubmitFeedRequest.php";
-global $xcart_dir;
-
-global $config, $storefronts;
-
-$a_config = array(
-    'ServiceURL' => "https://mws.amazonservices.com",
-    'ProxyHost' => null,
-    'ProxyPort' => -1,
-    'MaxErrorRetry' => 3,
-);
-
-$marketplaceIdArray = array("Id" => array('ATVPDKIKX0DER'));
-### ###
-
-
-
+global $xcart_dir, $config, $storefronts, $aManufacturerZones;
 
 #
 ##
@@ -38,6 +15,7 @@ $froogle_tracing_token = 'ANY78kLeWOxH4je4ZmHHsdNUGUhaxDLr2qkUcqeZ3MPGH1qjH2RdLq
 ###
 ##
 #
+const LOG_CATEGORY = 'cidev_incremental_feeds_launched_v_3';
 
 define("FROOGLE_TAIL", '...');
 define("FROOGLE_TAIL_LEN", strlen(constant("FROOGLE_TAIL")));
@@ -47,26 +25,27 @@ define('EXCLUDE_CATEGORYID_BRANCH', 5099);
 define('SUBMIT_DISABLE', 'N');
 define('EXTRA_LOG', 'N');
 
-ini_set('memory_limit', '512M');
 set_time_limit(0);
 
-x_load('backoffice', 'files', 'taxes', 'froogle', 'product', 'crypt');
-
-
 $xcart_states_US = func_query("SELECT stateid, state, code, country_code, base_state_zipcode FROM $sql_tbl[states] WHERE base_state_zipcode!='' AND country_code='US'");
-foreach ($xcart_states_US as $k => $v) {
+/*foreach ($xcart_states_US as $k => $v) {
     $xcart_states_US[$k]["city"] = func_query_first_cell("SELECT city FROM $sql_tbl[geo_litecity_location] WHERE country='US' AND postalCode='$v[base_state_zipcode]'");
+}*/
+
+if ($config[LOG_CATEGORY] == "Y") {
+    func_backprocess_log('incremental feeds', 'Already launched');
+    Xcart\Mail::model()->
+    setTo('team@s3stores.com')->
+    setFrom('team@s3stores.com')->
+    setBody(LOG_CATEGORY. ' already launched')->
+    setSubject(sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY))->sendEmail();
+    die("Already launched");
 }
 
-if ($config["cidev_incremental_feeds_launched_v_3"] == "Y") {
-        die("Already launched"); // ################################
-}
-
-db_query("REPLACE $sql_tbl[config] SET value='Y', name='cidev_incremental_feeds_launched_v_3'");
-//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_incremental_feeds_launched_v_2'");
+db_query("REPLACE $sql_tbl[config] SET value='Y', name='".LOG_CATEGORY."'");
 
 
-$started_at = time();
+$started_at = $start_time = time();
 
 func_backprocess_log("incremental feeds", " ");
 $log_text = " * * *  Cron started  * * * SUBMIT_DISABLE = '" . SUBMIT_DISABLE . "', EXTRA_LOG = '" . EXTRA_LOG . "'";
@@ -171,116 +150,12 @@ Select
     $BingMerchantID = '';
     $BingCatalogID = '';
 
-    /*
-    7 Sporting Goods			55	51722 "www.7sportinggoods.com"
-    ACU Healthcare				42	51787 "www.acuhealthcare.com"
-    Artist Supply Source		0	51788 "www.artistsupplysource.com"
-    Astro Jewelry				12	51789 "www.astrojewelry.com"
-    Business Supply Source		35	51790 "www.businesssupplysource.com"
-    Electronic Toolbox			57	51791 "www.electronictoolbox.com"
-    Furnishings Mart			52	51792 "www.furnishingsmart.com"
-    Hunter Supply Source		50	51793 "www.huntersupplysource.com"
-    Just Poker Supplies			63	51794 "www.justpokersupplies.com"
-    Kid Stuff Station			41	51795 "www.kidstuffstation.com"
-    Light Kits and More			37	51796 "www.lightkitsandmore.com"
-    Musical Instrument Shoppe	62	51797 "www.musicalinstrumentshoppe.com"
-    Organic Life				56	51798 "www.organiclifesource.com"
-    Pet Supplies Place			59	51799 "www.petsuppliesplace.com"
-    RFID Locks and More			34	51800 "www.rfidlocksandmore.com"
-    Sincere Wedding				60	51801 "www.sincerewedding.com"
-    Teacher Supply Source		10	51802 "www.teachersupplysource.com"
-    Tradeshow Exhibitor Supply	38	51803 "www.tradeshowexhibitorsupply.com"
-     */
-
-    /*
-    $bing_catalog = array(	55=>array( 'store' => 51722, 'catalog' =>46227 ),
-                            42=>array( 'store' => 51787, 'catalog' =>46276 ),
-                            0=>array( 'store' => 51788, 'catalog' =>46105 ),
-                            12=>array( 'store' => 51789, 'catalog' =>46225 ),
-                            35=>array( 'store' => 51790, 'catalog' =>46223 ),
-                            57=>array( 'store' => 51791, 'catalog' =>42673 ),
-                            52=>array( 'store' => 51792, 'catalog' =>46210 ),
-                            50=>array( 'store' => 51793, 'catalog' =>45947 ),
-                            63=>array( 'store' => 51794, 'catalog' =>46212 ),
-                            41=>array( 'store' => 51795, 'catalog' =>46214 ),
-                            37=>array( 'store' => 51796, 'catalog' =>46216 ),
-                            62=>array( 'store' => 51797, 'catalog' =>46218 ),
-                            56=>array( 'store' => 51798, 'catalog' =>46220 ),
-                            59=>array( 'store' => 51799, 'catalog' =>46208 ),
-                            34=>array( 'store' => 51800, 'catalog' =>46202 ),
-                            60=>array( 'store' => 51801, 'catalog' =>46204 ),
-                            10=>array( 'store' => 51802, 'catalog' =>46148 ),
-                            38=>array( 'store' => 51803, 'catalog' =>46206 ) );
-    */
     foreach ($cidev_storefronts as $storefrontid => $sf_info) {
 
         print("\n " . strftime("%X") . " --- storefront: " . $storefrontid . " --- \n");
 
         /** @var Xcart\External_Marketplaces\StoreFrontMarketPlace[] $aExternalMarketPlaces */
         $aExternalMarketPlaces = Xcart\External_Marketplaces\StoreFrontMarketPlace::getMarketPlacesByStoreFront($storefrontid);
-
-
-#####################################################################################################################
-#####################################################################################################################
-#####################################################################################################################
-
-        /*if (!isset($all_froogle_options[$storefrontid])) {
-            $BingMerchantID = '';
-            $BingCatalogID = '';
-        } else {
-            $BingMerchantID = $all_froogle_options[$storefrontid]['BingMerchantID'];
-            $BingCatalogID = $all_froogle_options[$storefrontid]['BingCatalogID'];
-        }
-
-        $bing_username = "API_s3stores";
-        $bing_password = "3QpmZz3V4xELHwGf";
-        $bing_token = "01122QXWZ9646473";
-
-        $MerchantID = $all_froogle_options[$storefrontid]["MerchantID"];
-        $client_id = $all_froogle_options[$storefrontid]["ClientID"]; //Client ID
-        $service_account_name = 'account-2@careful-triumph-774.iam.gserviceaccount.com'; //Email Address
-        $key_file_location = '/var/www/stores/google-api-php-client/examples/key2.p12'; //key.p12
-
-
-        $client = new Google_Client();
-        $client->setApplicationName("Client_Library_Examples");
-        $service = new Google_Service_ShoppingContent($client);
-
-        if (isset($_SESSION['service_token'])) {
-            $client->setAccessToken($_SESSION['service_token']);
-        }
-
-        $key = file_get_contents($key_file_location);
-        $cred = new Google_Auth_AssertionCredentials(
-            $service_account_name,
-            array('https://www.googleapis.com/auth/content'),
-            $key
-        );
-        $client->setAssertionCredentials($cred);
-        if (SUBMIT_DISABLE != "Y") {
-            if ($client->getAuth()->isAccessTokenExpired()) {
-                $client->getAuth()->refreshTokenWithAssertion($cred);
-            }
-        }
-        $_SESSION['service_token'] = $client->getAccessToken();*/
-#####################################################################################################################
-#####################################################################################################################
-#####################################################################################################################
-
-
-       /* $google_inventory_batch_count = 0;
-        $google_products_batch_count = 0;
-        $ginventory = array(); // или new Google_Service_ShoppingContent_InventoryCustomBatchRequest()
-        $gproducts = array(); // или new Google_Service_ShoppingContent_ProductsCustomBatchRequest()
-
-        $bing_inventory_batch_count = 0;
-        $bing_products_batch_count = 0;
-        $binventory = array();
-        $bproducts = array();
-
-        $max_google_batch = 140;
-        $max_amazon_batch = 2000;
-        $max_bing_batch = 140;*/
 
         $cnt = 0;
 
@@ -402,8 +277,6 @@ Select
                 $tPARAMLIMIT = $PARAMLIMIT;
                 $paramYN = 'N';
                 $PARAMLIMIT = 'LIMIT 130';
-                //$log_text = "//// processing SF DISCONTINUED ITEMS ";
-                //func_backprocess_log("incremental feeds", $log_text);
 
                 $query_products = "
                         Select *
@@ -451,13 +324,14 @@ Select
                 db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
 
                 db_query("UPDATE $sql_tbl[products] SET last_incremental_update='" . time() . "' WHERE productid='" . $product["productid"] . "'");
-
+                $googleOneRow = null;
                 foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
-                    if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
-                        $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], EXTRA_LOG);
+                    if (is_null($googleOneRow)) {
+                        $googleOneRow = $oExternalMarketPlace->getGoogleOneRow($oProduct, EXTRA_LOG);
                     }
-
-
+                    if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {
+                        $oExternalMarketPlace->addProductToBatch($oProduct, $product["utype"], $googleOneRow, EXTRA_LOG);
+                    }
 
                     if ($oExternalMarketPlace->getCurrentInventoryBatchCount() == $oExternalMarketPlace->getInventoryBatchCount()) {
                         $oExternalMarketPlace->submitInventoryBatch(SUBMIT_DISABLE, EXTRA_LOG);
@@ -496,24 +370,19 @@ Select
 }
 
 
-$finished_at = time();
+$current_time = time();
 
-$duration = $started_at - $finished_at;
-$duration = $duration / (60 * 60);
-$duration = round($duration, 1);
+$pid_diff = $current_time - $start_time;
+$hour = intval($pid_diff / (60 * 60));
+$minutes = intval(($pid_diff - $hour * 60 * 60) / 60);
+$seconds = ($pid_diff - $hour * 60 * 60 - $minutes * 60);
 
-/*
-$subj = "Finish googlebase2 process";
-$body = "Started at: ".date("Y-m-d H:i:s", $started_at)."\n";
-$body .= "Finished at: ".date("Y-m-d H:i:s", $finished_at)."\n";
-$body .= "Duration: ".$duration." Hours\n";
-func_send_simple_mail($to, $subj, $body, $from);
-*/
+
 //        print ("Why we dont update params ?");
 db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_incremental_feeds_launched_v_3'");
 //        print ("We done correctly ?");
 
-$log_text = "Cron completed. Duration: " . $duration . " hours";
+$log_text = "Cron completed. Duration: " . sprintf("%02d:%02d:%02d", $hour, $minutes, $seconds) . " sec.";
 func_backprocess_log("incremental feeds", $log_text);
 
 die("DONE!");

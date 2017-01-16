@@ -1,8 +1,6 @@
 <?php
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
-x_load('product','core', 'amazon_shipping', 'xml');
-
 #
 # Translation string to frogle-compatibility-string
 #
@@ -52,21 +50,10 @@ function GetGooglePrice($fproduct){
 }
 
 function GetGoogleBaseOneRow($productid, $scrip_name="", $sExtraLog = "N"){
-	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
-
+	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location, $xcart_states_US, $aManufacturerZones;
 
 $start_time = round(microtime(true) * 1000);
 
-/////////////////////////////////////////////////////////////////////
-//$productid = 281820;
-//func_print_r("func.froogle.php: productid: " , $productid);
-/////////////////////////////////////////////////////////////////////
-
-
-
-#
-##
-###
         global $storefrontid, $current_storefront;
 
         if ($storefrontid !=""){
@@ -76,9 +63,7 @@ $start_time = round(microtime(true) * 1000);
 	                $use_storefrontid = $current_storefront; // froogle.php
 		}
         }
-###
-##
-#
+
 if ($sExtraLog=='Y')
 	echo 'Storefrontid: '.$use_storefrontid;
 
@@ -95,24 +80,12 @@ if ($sExtraLog=='Y')
 	$fields = "";
 	$joins = "";
 
-//	if (!empty($active_modules['Multiple_Storefronts'])) {
 		$fields .= ", $sql_tbl[products_sf].sfid";
 		$joins .= " INNER JOIN $sql_tbl[products_sf] ON  $sql_tbl[products].productid= $sql_tbl[products_sf].productid";
 		$where .= " AND $sql_tbl[products_sf].productid = $productid";
-//	}
-
-#
-##
-###
         if (isset($use_storefrontid)){
                 $where .= " AND $sql_tbl[products_sf].sfid = '$use_storefrontid'";
         }
-###
-##
-#
-
-
-//	if ($config["General"]["disable_outofstock_products"] == "Y") {
 
 	    if ($scrip_name == "main_google" || $scrip_name == "main_google_with_min_amount"){
 		if (!empty($active_modules['Product_Options'])) {
@@ -128,8 +101,6 @@ if ($sExtraLog=='Y')
                         $where .= " AND $sql_tbl[products].avail > '0'";
                 }
 	    }
-
-//	}
 
 	$joins .= " INNER JOIN $sql_tbl[quick_prices] ON $sql_tbl[quick_prices].productid = $sql_tbl[products].productid AND $sql_tbl[quick_prices].membershipid = '0'";
 	if (!empty($active_modules['Product_Options'])) {
@@ -152,13 +123,7 @@ if ($sExtraLog=='Y')
 		$joins .= " LEFT JOIN $sql_tbl[brands] ON $sql_tbl[products].brandid = $sql_tbl[brands].brandid LEFT JOIN $sql_tbl[brands_lng] ON $sql_tbl[products].brandid = $sql_tbl[brands_lng].brandid AND $sql_tbl[brands_lng].code = '$froogle_lng'";
 	}
 
-	$product = func_query_first($qqq="SELECT SQL_NO_CACHE $sql_tbl[products].*, $sql_tbl[categories].categoryid_path, $sql_tbl[pricing].price, $sql_tbl[images_T].image_path $fields FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) LEFT JOIN $sql_tbl[images_T] ON $sql_tbl[products].productid = $sql_tbl[images_T].id $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[products_categories].main='Y' AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[categories].avail = 'Y' $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
-
-
-//func_print_r($product, $qqq);
-
-//func_print_r($product, $config["General"]["disable_outofstock_products"]);
-//die("1");
+	$product = func_query_first($qqq="SELECT $sql_tbl[products].*, $sql_tbl[categories].categoryid_path, $sql_tbl[pricing].price, $sql_tbl[images_T].image_path $fields FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) LEFT JOIN $sql_tbl[images_T] ON $sql_tbl[products].productid = $sql_tbl[images_T].id $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[products_categories].main='Y' AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[categories].avail = 'Y' $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
 
 	if (empty($product))
@@ -166,26 +131,15 @@ if ($sExtraLog=='Y')
 
 	if ($scrip_name != "main_google"){
 	        if ($product["min_amount"] > 1){
-//        	        return;
 		}
 	}
-
-
-
 	$sf_info = func_get_storefront_info($product['sfid'], 'ID', true);
 
 	$product_categories = func_query_hash("SELECT $sql_tbl[products].productid, $sql_tbl[categories].categoryid_path FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[products]) WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[products].forsale = 'Y' AND $sql_tbl[categories].avail = 'Y' AND $sql_tbl[products].productid='$productid'", 'productid', true, true);
 
 	if (!empty($product["eta_date_mm_dd_yyyy"])){
-//		$eta_date_mm_dd_yyyy_time_arr = explode("/", $product["eta_date_mm_dd_yyyy"]);
-//		if (!empty($eta_date_mm_dd_yyyy_time_arr) && is_array($eta_date_mm_dd_yyyy_time_arr)){
-//			$eta_date_mm_dd_yyyy_time = mktime(0, 0, 0, $eta_date_mm_dd_yyyy_time_arr[0], $eta_date_mm_dd_yyyy_time_arr[1], $eta_date_mm_dd_yyyy_time_arr[2]);
-//			if ($eta_date_mm_dd_yyyy_time > time())
 			if ($product["eta_date_mm_dd_yyyy"] > time()){
-//				print"ETA date in future.";
-//				return;
 			}
-//		}
 	}
 
 	if(isset($product['sfid']) && $product['sfid'] != 0) {
@@ -230,7 +184,6 @@ if ($sExtraLog=='Y')
 
 	# Get google product category
 	$gpc = func_query_first_cell(" SELECT C.google_product_category FROM $sql_tbl[categories] As C LEFT JOIN $sql_tbl[products_categories] As PC ON PC.categoryid = C.categoryid WHERE PC.productid = ".$product['productid']." and PC.main = 'Y'");
-
 	# Define product category path
 	$cats = array();
 	if (is_array($product_categories) && isset($product_categories[$product['productid']]) && is_array($product_categories[$product['productid']])) {
@@ -260,7 +213,6 @@ if ($sExtraLog=='Y')
 			}
 		}
 	}
-
 	if (!empty($cats[0])){
 		$cats_path = $cats[0];
 	}
@@ -322,7 +274,6 @@ if ($sExtraLog=='Y')
 		"country" => $config['General']['default_country'],
 		"zipcode" => $config['General']['default_zipcode']
 	);
-
 	if (!empty($active_modules['Product_Options']))
 		$product['price'] += func_get_default_options_markup($product['productid'], $product['price']);
 
@@ -354,31 +305,12 @@ if ($sExtraLog=='Y')
 		$product['adwords_labels'] .= ", offlist";
 	}
 
-	# Define "mpn"
-/*	https://s3stores.teamwork.com/tasks/6654526 */
-
-	global $xcart_dir;
 	$classProduct = Xcart\Product::model(['productid'=>$product['productid']]);
 	$mpn = $classProduct->getMPN();
 	$product['custom_label_3'] = $classProduct->getManfacturerClass()->getField("manufacturer");
 
-	/*$pos = strpos($product['productcode'], '-');
-	$mpn = '';
-
-	if ($pos && is_numeric($pos) && $pos + 1 != strlen($product['productcode'])) {
-		$mpn = substr($product['productcode'], $pos + 1);
-	}
-	else {
-		$mpn = $product['productcode'];
-	}
-
-	if (strlen($mpn) < 3){
-		$mpn .= "-GBFIX";
-	}*/
-
 	# Define "compatible with"
 	$upselling_products = func_query("SELECT p.product_froogle, p.productcode, p.upc, b.brand FROM $sql_tbl[product_links] as pl, $sql_tbl[products] as p LEFT JOIN $sql_tbl[brands] b ON b.brandid=p.brandid WHERE pl.productid1=$product[productid] AND p.productid=pl.productid2");
-
 	$compatible_with = '';
 
 	if (!empty($upselling_products) && is_array($upselling_products)) {
@@ -390,11 +322,6 @@ if ($sExtraLog=='Y')
 				$up['upc'] = "";
 			}
 
-			/*$up_pos = strpos($up['productcode'], '-');
-			$up_mpn = '';
-			if ($up_pos && is_numeric($up_pos) && $up_pos + 1 != strlen($up['productcode'])) {
-				$up_mpn = substr($up['productcode'], $up_pos + 1);
-			}*/
 			$up_mpn = $classProduct->getMPN();
 			if ($compatible_with != '') {
 				$compatible_with .= ', ';
@@ -409,9 +336,7 @@ if ($sExtraLog=='Y')
 		}
 	}
 
-	# Define "online only"
 	$online_only = '';
-
 	if ($product['shipping_freight'] == 0.00) {
 		$online_only = 'n';
 		$product["onlineOnly"] = "0";
@@ -419,87 +344,110 @@ if ($sExtraLog=='Y')
 		$online_only = 'y';
 		$product["onlineOnly"] = "1";
 	}
+	$newShipping = $classProduct->getStoreFront()->getConfigValue('new_shipping_calculation');
+	if (!empty($newShipping) && $newShipping == 'Y') {
+		$shippings_str_arr = $shippings_google_arr = $aShippingCarrier = [];
+		$shipping_currency = "USD";
+		$oManufacturer = $classProduct->getManfacturerClass();
+		foreach ($xcart_states_US as $k => $v) {
+			$oCart = new Xcart\Cart();
+			$oCart->addObjectToCart(new \Xcart\CartElement($classProduct));
+			$oCustomer = new Xcart\Customer();
+			$oCustomer->setField('s_country', $v["country_code"]);
+			$oCustomer->setField('s_state', $v["code"]);
+			$oCustomer->setField('s_zipcode', $v["base_state_zipcode"]);
+			$oShipping = Xcart\Shipping::model();
 
+			if (!empty($aManufacturerZones['zones'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')])) {
+				$oShipping->setShippingZones($aManufacturerZones['zones'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')]);
+			}
+			if (!empty($aManufacturerZones['methods'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')])) {
+				$oShipping->setZoneShippingMethods($aManufacturerZones['methods'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')]);
+			}
 
-/*
-	# Define "shipping"
-	if ($product['free_ship_zone'] == -1) {
-		$shipping = '';
-	} elseif ($product['free_ship_zone'] == 0) {
-		$shipping = '::Ground:0.00';
+			try {
+				$aShippingZoneRates = $oShipping->getShippingRates($oCustomer, $oManufacturer, $oCart, true);
+			} catch (\Exception $e) {
+				$aShippingZoneRates = [];
+			}
+			$aManufacturerZones['zones'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')] = $oShipping->getShippingZones($oCustomer, $oManufacturer);
+			$aManufacturerZones['methods'][$oManufacturer->getManufacturerId()][$oCustomer->getField('s_country')][$oCustomer->getField('s_state')] = $oShipping->getZoneShippingMethods();
+
+			if (!empty($aShippingZoneRates)) {
+				foreach ($aShippingZoneRates as $aShippingRates) {
+					if (!empty($aShippingRates)) {
+						/** @var \Xcart\ShippingRate $oShippingRate */
+						$oShippingRate = reset($aShippingRates);
+						$shippings_str_arr[] = $v["country_code"] . ":" . $v["state"] . ":" . $oShippingRate->getShippingEntity()->getFrontendName() . ":" . $oShippingRate->getShippingCharge() . $shipping_currency;
+						$shippings_google_arr[$k]["price"]["value"] = $oShippingRate->getShippingCharge();
+						$shippings_google_arr[$k]["price"]["currency"] = trim($shipping_currency);
+						$shippings_google_arr[$k]["country"] = $v["country_code"];
+						$shippings_google_arr[$k]["region"] = $v["state"];
+						$shippings_google_arr[$k]["service"] = $oShippingRate->getShippingEntity()->getFrontendName();
+						$aShippingCarrier[] = $oShippingRate->getShippingEntity()->getShippingCarrier()->getName();
+						break;
+					}
+				}
+			}
+		}
+		$shipping_arr["shippings_str"] = implode(",", $shippings_str_arr);
+		$shipping_arr["shippings_google_arr"] = $shippings_google_arr;
+		$product['custom_label_2'] = 'UPS rates';
+		if (in_array('Amazon', $aShippingCarrier)) {
+			$product['custom_label_2'] = 'Amazon rates';
+		}
 	} else {
-		$zone_countries = func_query_column('SELECT field FROM '.$sql_tbl['zone_element']. ' WHERE zoneid='.$product['free_ship_zone'].' AND field_type = "C"');
-		$shipping = implode('::Ground:0.00, ', $zone_countries).'::Ground:0.00';
-	}
-*/
-#
-##
-###
+		if ($classProduct->isProductFBAAvail()) {
+			$start_time_amazon_shipping = round(microtime(true) * 1000);
+			$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
+			$diff_end_time_amazon_shipping = (round(microtime(true) * 1000) - $start_time_amazon_shipping);
+		}
 
+		$start_time_approximate_shipping = round(microtime(true) * 1000);
+		$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
+		$diff_end_time_approximate_shipping = (round(microtime(true) * 1000) - $start_time_approximate_shipping);
 
-# Check/Get Amazon shippings
-##
-	if ($classProduct->isProductFBAAvail()) {
-		$start_time_amazon_shipping = round(microtime(true) * 1000);
-		$amazon_shippings_arr = func_get_amazon_shippings_for_all_states($product);
-		$diff_end_time_amazon_shipping = (round(microtime(true) * 1000) - $start_time_amazon_shipping);
-	}
+		if ($sExtraLog == 'Y') {
+			func_print_r($shipping_arr);
+		}
 
-##
-#
-	$start_time_approximate_shipping = round(microtime(true) * 1000);
-	$shipping_arr = func_define_approximate_shippings($product["productid"], $product);
-	$diff_end_time_approximate_shipping = (round(microtime(true) * 1000) - $start_time_approximate_shipping);
+		$product['custom_label_2'] = 'UPS rates';
 
-	if ($sExtraLog =='Y'){
-		func_print_r($shipping_arr);
-	}
+		if (!empty($amazon_shippings_arr)) {
 
-	$product['custom_label_2'] = 'UPS rates';
+			$shipping_ground_arr = $shipping_arr;
+			$shipping_arr = $amazon_shippings_arr;
 
-	if (!empty($amazon_shippings_arr)){
+			if (is_array($shipping_arr["not_found_rates_for_state"]) && !empty($shipping_ground_arr["shippings_google_arr"])) {
 
-		$shipping_ground_arr = $shipping_arr;
-		$shipping_arr = $amazon_shippings_arr;
-
-		if (is_array($shipping_arr["not_found_rates_for_state"]) && !empty($shipping_ground_arr["shippings_google_arr"])) {
-
-			foreach ($shipping_arr["not_found_rates_for_state"] as $k_n => $v_n) {
-				foreach ($shipping_ground_arr["shippings_google_arr"] as $k_g => $v_g) {
-					if ($v_g["region"] == $v_n) {
-						$shipping_arr["shippings_google_arr"][] = $v_g;
-						$shipping_arr["shippings_str"] .= ",US:" . $v_n . ":Ground:" . $v_g["price"]["value"] . "USD";
-						$product['custom_label_2'] = 'FBA rates';
+				foreach ($shipping_arr["not_found_rates_for_state"] as $k_n => $v_n) {
+					foreach ($shipping_ground_arr["shippings_google_arr"] as $k_g => $v_g) {
+						if ($v_g["region"] == $v_n) {
+							$shipping_arr["shippings_google_arr"][] = $v_g;
+							$shipping_arr["shippings_str"] .= ",US:" . $v_n . ":Ground:" . $v_g["price"]["value"] . "USD";
+							$product['custom_label_2'] = 'FBA rates';
+						}
 					}
 				}
 			}
 		}
 	}
-
-
 	$shipping = $shipping_arr["shippings_str"];
 	$custom_label_0 = '';
 	$custom_label_1 = '';
 	$base_rel = 12/17;
 	$product["shippings_google_arr"] = $shipping_arr["shippings_google_arr"];
-	foreach($shipping_arr["shippings_google_arr"] as $cl_k => $cl_sh) {
-		if ($cl_sh['region'] == "CA"){
-//		print("CA price: ".$cl_sh['price']['value']."\r\n");
-//		print("Product price: ".$product['price']."\r\n");
-//		print("Product id: ".$product['productid']."\r\n");
-//		print("Product id: ".$cl_sh['price']['value']/$product['price']."\r\n");
-		if ($cl_sh['price']['value']/$product['price'] > $base_rel) {
-		    $product["custom_label_0"] = "junk";
-		}else{
-		    $product["custom_label_0"] = "normal";
-		}
-//		print("Label0: ".$product['custom_label_0']."\r\n");
-		break;
+	foreach ($shipping_arr["shippings_google_arr"] as $cl_k => $cl_sh) {
+		if ($cl_sh['region'] == "CA") {
+			if ($cl_sh['price']['value'] / $product['price'] > $base_rel) {
+				$product["custom_label_0"] = "junk";
+			} else {
+				$product["custom_label_0"] = "normal";
+			}
+			break;
 		}
 	}
-	//$product["custom_label_0"] = func_froogle_convert(trim($product['brand']));
-    
-    // group prices in GMC by 50/100/150/200/250/300/400/500/600/700/800/900/1000/1200/1400
+
     $price_group_label = '0';
     $cmp_price = $product['price'];
     if ($cmp_price<10) {
@@ -553,10 +501,6 @@ if ($sExtraLog=='Y')
     }
     $product["custom_label_1"] = $price_group_label;
     
-//	func_print_r($shipping_arr["shippings_google_arr"]);
-###
-##
-#
 	#
 	# Define Detailed product image
 	#
@@ -623,14 +567,10 @@ if ($sExtraLog=='Y')
 		}
 
 	}
-
 	$tmbn_no_img = "";
 	if ((strpos($tmbn, "default_image") !== false) || empty($tmbn)) {
 		$tmbn_no_img = "Y";
 	}
-
-
-//if ($scrip_name == "main_google")
 
 	if ($sf_info["config"]["Appearance"]["Enable_CDN"]=="Y" && !empty($sf_info["config"]["Appearance"]["CDN_domain"])){
                 $tmbn = str_replace($sf_info["domain"], $sf_info["config"]["Appearance"]["CDN_domain"], $tmbn);
@@ -663,7 +603,6 @@ if ($sExtraLog=='Y')
 		
 		$product['price'] = price_format(GetGooglePrice($product));
 		$product['taxed_price'] = $product['price'];
-		
 
 
 	$product['mpn'] = $mpn;
@@ -712,9 +651,6 @@ if ($sExtraLog=='Y')
 
 	return $row_arr;
 }
-
-
-
 
 function AddProductToAmazonBatch($productid, $update_type, $amazon_inventory_batch_count, $ainventory){
 

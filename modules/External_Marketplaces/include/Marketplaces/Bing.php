@@ -5,7 +5,7 @@ use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Bing extends StoreFrontMarketPlace
 {
-    public function addProductToBatch(Product $oProduct, $update_type, $sExtraLog = "N")
+    public function addProductToBatch(Product $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
     {
         if ($this->checkProductExcludedMarketPlace($oProduct->getProductId()) && $this->checkMarketplaceRestrictions($oProduct)) {
             if ($update_type == "1" || $update_type == "1,2" || (($update_type == "2" && $oProduct->getField('forsale') == "N"))) {
@@ -13,7 +13,7 @@ class Bing extends StoreFrontMarketPlace
                 $count_bproducts = count($this->aProducts);
                 $this->aProducts[$count_bproducts]["productid"] = $oProduct->getProductId();
                 $this->aProducts[$count_bproducts]["Batchid"] = $batchid;
-                $this->aProducts[$count_bproducts]["product_info"] = GetGoogleBaseOneRow($oProduct->getProductId(), "main_google", $sExtraLog);
+                $this->aProducts[$count_bproducts]["product_info"] = $googleOneRow;
                 $this->iProductsBatchCount++;
 
             } elseif ($update_type == "2" && $oProduct->getField('forsale') == "Y") {

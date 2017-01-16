@@ -110,4 +110,14 @@ class StoreFront extends Data
         $this->fetchCompanyName();
         return $this->CompanyName;
     }
+
+    public function getConfigValue($sName){
+        $addSQL = '';
+        $this->_init();
+        if ($this->getStoreFrontId() > 0) {
+            $addSQL = ' AND storefrontid=' . $this->getStoreFrontId();
+        }
+        $sValue = func_query_first_cell("SELECT value FROM " . $this->sConfigTable . " WHERE name='$sName' " . $addSQL);
+        return $sValue;
+    }
 }

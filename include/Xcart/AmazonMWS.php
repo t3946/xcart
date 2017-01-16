@@ -1787,21 +1787,23 @@ class AmazonMWS
 
             $items = [];
 
-            $aProductsCart = $oShippingCart->getProducts();
+            $aProductsCart = $oShippingCart->getElements();
 
             if (!empty($aProductsCart)) {
-                foreach ($aProductsCart as $oProduct) {
-                    if (!$oProduct['entity']->isAmazonFBAEnabled()) {
-                        $aProducts = $oProduct['entity']->getProductsAvailOnAmazonParentWithChild(1);
+                /** @var CartElement $oCartElement */
+                foreach ($aProductsCart as $oCartElement) {
+                    $oProduct = $oCartElement->getProduct();
+                    if (!($oProduct->isAmazonFBAEnabled())) {
+                        $aProducts = $oProduct->getProductsAvailOnAmazonParentWithChild(1);
                         if (!empty($aProducts)) {
                             $oProductParentOrChild = reset($aProducts);
-                            $oProduct['entity'] = $oProductParentOrChild['oProduct'];
+                            $oProduct = $oProductParentOrChild['oProduct'];
                         }
                     }
                     $item = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem();
-                    $item->setSellerSKU($oProduct['entity']->getSKU());
-                    $item->setQuantity($oProduct['qty']);
-                    $item->setSellerFulfillmentOrderItemId($oProduct['entity']->getSKU());
+                    $item->setSellerSKU($oProduct->getSKU());
+                    $item->setQuantity($oCartElement->getQuantity());
+                    $item->setSellerFulfillmentOrderItemId($oProduct->getSKU());
                     $items[] = $item;
                 }
                 $itemList = new \FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList();

@@ -7,7 +7,7 @@ abstract class StoreFrontMarketPlace extends Data
 {
     protected $iProductsBatchCount = 0;
     protected $iInventoryBatchCount = 0;
-    protected $aProducts = [];
+    public $aProducts = [];
     protected $aInventory = [];
     private $oExternalMarketPlace = null;
     protected $oService = null;
@@ -22,7 +22,7 @@ abstract class StoreFrontMarketPlace extends Data
         $this->fetchExternalMarketPlace();
     }
 
-    abstract public function addProductToBatch(Product $oProduct, $update_type, $sExtraLog = "N");
+    abstract public function addProductToBatch(Product $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N");
     abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N');
     abstract public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N');
     abstract public function checkMarketplaceRestrictions(Product $oProduct);
@@ -195,6 +195,11 @@ abstract class StoreFrontMarketPlace extends Data
     public function getUpdateMaxExpiredProductsPerDay()
     {
         return $this->getField('update_max_expired_products_per_day');
+    }
+
+    public function getGoogleOneRow(Product $oProduct, $sExtraLog)
+    {
+        return GetGoogleBaseOneRow($oProduct->getProductId(), "main_google", $sExtraLog);
     }
 
 }
