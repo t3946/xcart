@@ -53,45 +53,15 @@ function mysql_escape_mimic($inp) {
     return $inp;
 }
 
-#
-# Database abstract layer functions
-#
-function db_connect($sql_host, $sql_user, $sql_password) {
-	return mysql_connect($sql_host, $sql_user, $sql_password);
-}
-
-function db_select_db($sql_db) {
-	return mysql_select_db($sql_db);
-}
-
 function log_query($query) {
-    global $REMOTE_ADDR;
-    if ( (1==2) and ($REMOTE_ADDR == '78.25.90.251' || $REMOTE_ADDR == '185.44.237.223') )
-      {
-	$lq_file = '/var/www/stores/var/log/log_query.log';
-        file_put_contents($lq_file,$query."\n",FILE_APPEND);
-        if (strpos($query,"Bench:")===false)
-        {} else {
-            $lq_stack = debug_backtrace();
-            $lq_string = "";
-            $i=0;
-            foreach($lq_stack as $k=>$v)
-        	{
-                if ($i>0) {
-                    $lq_string = $lq_string.substr(strrchr($v['file'],"/"),1)."[".$v['line']."] (".$v['function'].") / ";
-                          }
-                $i++;
-                }
-            file_put_contents($lq_file,$lq_string."\n\n",FILE_APPEND);
-            }
-      }
-return true;
+	return true;
 }
 
 
 function db_query($query) {
 	global $debug_mode;
 	global $mysql_autorepair, $sql_max_allowed_packet;
+	$result = null;
 	$b1 = func_microtime();
 
 	if ($sql_max_allowed_packet && strlen($query) > $sql_max_allowed_packet) {
@@ -115,76 +85,66 @@ function db_query($query) {
 		return false;
 	}
 
-	$result = \Xcart\Connection::getInstance()->executeQuery($query);
-
-	//$result = mysql_query($query);
-
-	/*if (db_error($result, $query) && $debug_mode==1)
-		exit;*/
-
-
-        /*$b2 = func_microtime();
-        if ($b2-$b1 > 0.001) {
-    		$l_query = $query;
-    		if (strlen($l_query) > 8000) {
-    			$l_query = substr($l_query,0,8000);
-    			}
-		log_query($l_query);
-        	log_query("Bench: ".floatval($b2-$b1)."\n");
-        	}*/
-                    
+	try {
+		$result = \Xcart\Connection::getInstance()->executeQuery($query);
+	}
+	catch (Doctrine\DBAL\Exception\SyntaxErrorException $e) {
+		db_error($e, $query);
+	}
 	return $result;
 }
 
-function db_result($result, $offset) {
-	return mysql_result($result, $offset);
+function db_result(\Doctrine\DBAL\Driver\Statement $result, $offset) {
+	return db_fetch_field($result, $offset);
 }
 
-function db_fetch_row($result) {
+function db_fetch_row(\Doctrine\DBAL\Driver\Statement $result) {
 	return $result->fetch(PDO::FETCH_NUM);
 }
 
-function db_fetch_array($result, $flag=MYSQL_ASSOC) {
+function db_fetch_array(\Doctrine\DBAL\Driver\Statement $result, $flag=MYSQL_ASSOC) {
 	return $result->fetch(PDO::FETCH_BOTH);
 }
 
-function db_fetch_field($result, $num = 0) {
-	return mysql_fetch_field($result, $num); 
+function db_fetch_field(\Doctrine\DBAL\Driver\Statement $result, $num = 0) {
+	return $result->fetchColumn($num);
 }
 
-function db_free_result($result) {
-	@mysql_free_result($result);
+function db_free_result(\Doctrine\DBAL\Driver\Statement $result) {
+	$result->closeCursor();
 }
 
-function db_num_rows($result) {
-	return mysql_num_rows($result);
+function db_num_rows(\Doctrine\DBAL\Driver\Statement $result) {
+	return $result->rowCount();
 }
 
-function db_num_fields($result) {
-	return mysql_num_fields($result);
+function db_num_fields(\Doctrine\DBAL\Driver\Statement $result) {
+	return $result->columnCount();
 }
 
 function db_insert_id() {
-	return mysql_insert_id();
+	return \Xcart\Connection::getInstance()->lastInsertId();
 }
 
-function db_affected_rows() {
-	return mysql_affected_rows();
+function db_affected_rows(\Doctrine\DBAL\Driver\Statement $result) {
+	return $result->rowCount();
 }
 
-function db_error($mysql_result, $query) {
-	global $config, $login, $REMOTE_ADDR, $current_location;
+function db_mysql_get_server_info()
+{
+	//return \Xcart\Connection::getInstance()->getDriver()->
+}
 
-	if ($mysql_result)
-		return false;
+function db_error(Doctrine\DBAL\Exception\SyntaxErrorException $mysql_result, $query) {
+	global $login, $REMOTE_ADDR, $current_location;
 
-	$mysql_error = mysql_errno()." : ".mysql_error();
+	$mysql_error = $mysql_result->getMessage().' : '.$mysql_result->getErrorCode();
 	$msg  = "Site        : ".$current_location."\n";
 	$msg .= "Remote IP   : $REMOTE_ADDR\n";
 	$msg .= "Logged as   : $login\n";
 	$msg .= "SQL query   : $query\n";
-	$msg .= "Error code  : ".mysql_errno()."\n";
-	$msg .= "Description : ".mysql_error();
+	$msg .= "Error code  : ".$mysql_result->getErrorCode()."\n";
+	$msg .= "Description : ".$mysql_result->getMessage();
 
 	db_error_generic($query, $mysql_error, $msg);
 
@@ -192,7 +152,7 @@ function db_error($mysql_result, $query) {
 }
 
 function db_error_generic($query, $query_error, $msg) {
-	global $debug_mode, $config;
+	global $debug_mode, $config, $xcart_dir;
 
 	$email = false;
 
@@ -208,8 +168,10 @@ function db_error_generic($query, $query_error, $msg) {
 
 	$do_log = ($debug_mode == 2 || $debug_mode == 3);
 
-	if ($email !== false || $do_log)
+	if ($email !== false || $do_log) {
+		@require_once $xcart_dir."/include/logging.php";
 		x_log_add('SQL', $msg, true, 1, $email, !$do_log);
+	}
 }
 
 function db_prepare_query($query, $params) {

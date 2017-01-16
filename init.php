@@ -387,9 +387,9 @@ include_once($xcart_dir."/include/bench.php");
 #
 # Connect to database
 #
-$db_connect_limit = 5;
+/*$db_connect_limit = 5;
 while ($db_connect_limit-- > 0 && !@db_connect($sql_host, $sql_user, $sql_password)) { }
-db_select_db($sql_db) || die("Sorry, the shop is inaccessible temporarily. Please try again later.");
+db_select_db($sql_db) || die("Sorry, the shop is inaccessible temporarily. Please try again later.");*/
 
 $tmp = func_query_first("SHOW VARIABLES LIKE 'max_allowed_packet'");
 $sql_max_allowed_packet = intval($tmp['Value']);
