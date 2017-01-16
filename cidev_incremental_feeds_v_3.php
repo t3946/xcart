@@ -27,12 +27,17 @@ define('EXTRA_LOG', 'N');
 
 set_time_limit(0);
 
-$xcart_states_US = func_query("SELECT stateid, state, code, country_code, base_state_zipcode FROM $sql_tbl[states] WHERE base_state_zipcode!='' AND country_code='US'");
+$xcart_states_US = func_query(<<<SQL
+SELECT stateid, state, code, country_code, base_state_zipcode, city FROM {$sql_tbl['states']}
+LEFT JOIN {$sql_tbl['geo_litecity_location']} ON country = country_code AND postalCode = base_state_zipcode
+ WHERE base_state_zipcode!='' AND country_code='US' GROUP BY stateid
+SQL
+);
 /*foreach ($xcart_states_US as $k => $v) {
     $xcart_states_US[$k]["city"] = func_query_first_cell("SELECT city FROM $sql_tbl[geo_litecity_location] WHERE country='US' AND postalCode='$v[base_state_zipcode]'");
 }*/
 
-if ($config[LOG_CATEGORY] == "Y") {
+ if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log('incremental feeds', 'Already launched');
     Xcart\Mail::model()->
     setTo('team@s3stores.com')->
@@ -43,7 +48,6 @@ if ($config[LOG_CATEGORY] == "Y") {
 }
 
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='".LOG_CATEGORY."'");
-
 
 $started_at = $start_time = time();
 
