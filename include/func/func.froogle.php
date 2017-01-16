@@ -355,6 +355,7 @@ if ($sExtraLog=='Y')
 			$oCustomer = new Xcart\Customer();
 			$oCustomer->setField('s_country', $v["country_code"]);
 			$oCustomer->setField('s_state', $v["code"]);
+			$oCustomer->setField('s_city', $v["city"]);
 			$oCustomer->setField('s_zipcode', $v["base_state_zipcode"]);
 			$oShipping = Xcart\Shipping::model();
 
