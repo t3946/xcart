@@ -23,6 +23,11 @@ class Shipping extends Data
         parent::__construct($iId);
     }
 
+    public function getShippingId()
+    {
+        return $this->getField('shippingid');
+    }
+
 
     public static function getShippingWeight($iProductId, $iShippingId, $iAmount = 1, $aProduct = array(), $aShipping = array(), $bUseShippingParametrs = true)
     {
@@ -195,8 +200,10 @@ SQL;
                                 $oShippingZone->setField('zoneid', $aShippingZone['zoneid']); // for 0 zoneid
                                 $oProcessor->setShippingZone($oShippingZone);
                                 $aShippingProcessor[$sShippingCode] = $oProcessor;
+
                             }
                         }
+                        $aShippingProcessor[$sShippingCode]->addShippingMethod($oShippingMethod);
                     }
                 }
 
