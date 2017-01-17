@@ -809,8 +809,35 @@ class AmazonMWS
         return $aResultArray;
     }
 
-    private function processReportFulfillmentInventoryData()
+    public function processReportFulfillmentInventoryData()
     {
+        $this->aReportValue = [];
+        $ReportContent = $this->getReportContent();
+        $report_data = reset($ReportContent);
+        $aReportValue = [];
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $report_data) as $sLine) {
+            $arrM = explode("\t", $sLine);
+            if (!empty($arrM)) {
+                $aReportValue[] = $arrM;
+            }
+        }
+        array_shift($aReportValue);
+        $log_text = "Processing " . (count($aReportValue)) . " rows";
+        func_backprocess_log($this->sBackProcessLogName, $log_text);
+        $aResult = SQLBuilder::getInstance()->addSelect('max(received_date)', 'rdate')->addFromTable('fba_inventory_receipts')->query_first()->getQueryResult();
+        $oMaxdate = \DateTime::createFromFormat('Y-m-d', $aResult['rdate']);
+        foreach ($aReportValue as $vArr) {
+            list($date, $fnsku, $sku, $pn, $qty, $fba_shipment_id, $fulfillment_center_id) = $vArr;
+            $rDate = \DateTime::createFromFormat(DATE_ISO8601, $date);
+            if ($rDate->diff($oMaxdate)->days >= 0) {
+                func_array2insert('fba_inventory_receipts',
+                    ['received_date' => $rDate->format('Y-m-d'),
+                        'sku' => addslashes($sku),
+                        'quantity' => $qty,
+                        'fba_shipment_id' => $fba_shipment_id
+                    ]);
+            }
+        }
 
     }
 
@@ -1855,7 +1882,7 @@ class AmazonMWS
                         }
                     }
                 } else {
-                    if (!empty($aXML['Caught_Exception'])){
+                    if (!empty($aXML['Caught_Exception'])) {
                         throw new \Exception($aXML['Caught_Exception']);
                     }
                 }
