@@ -34,7 +34,6 @@ if ($mode == "search") {
         ->_Request('GetReport')
         ->_Request('UpdateReportAcknowledgements')
         ->processReportFulfillmentInventoryData();
-    print "<pre>". (reset($classAmazonMWS->getReportContent())) ."</pre>";
     exit;
 
 
