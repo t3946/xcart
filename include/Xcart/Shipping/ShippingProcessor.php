@@ -167,6 +167,15 @@ abstract class ShippingProcessor
         return $this->aShippingRatesEntities;
     }
 
+    public function addShippingRate(ShippingRate $oShippingRate)
+    {
+        $oShippingRate->setCart($this->getCart());
+        if ($oShippingRate->checkShippingRateByFilterValues()) {
+            $this->aShippingRatesEntities[] = $oShippingRate;
+        }
+        return $this;
+    }
+
     /**
      * @return Cart
      */
