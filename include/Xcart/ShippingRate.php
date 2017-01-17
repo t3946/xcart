@@ -49,6 +49,12 @@ class ShippingRate extends Data
         return $this->oShipping;
     }
 
+    public function setShippingEntity(Shipping $oShipping)
+    {
+        $this->oShipping = $oShipping;
+        return $this;
+    }
+
     public function getCostMarcup()
     {
         return floatval($this->getField('cost_marcup'));
