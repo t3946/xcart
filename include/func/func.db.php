@@ -132,7 +132,7 @@ function db_affected_rows(\Doctrine\DBAL\Driver\Statement $result) {
 
 function db_mysql_get_server_info()
 {
-	return \Xcart\Connection::getInstance()->getServerVersion();
+	return \Xcart\Connection::getInstance()->getWrappedConnection()->getServerVersion();
 }
 
 function db_error(Doctrine\DBAL\Exception\SyntaxErrorException $mysql_result, $query) {
