@@ -49,6 +49,10 @@ class ShippingRate extends Data
         return $this->oShipping;
     }
 
+    /**
+     * @param Shipping $oShipping
+     * @return ShippingRate
+     */
     public function setShippingEntity(Shipping $oShipping)
     {
         $this->oShipping = $oShipping;
