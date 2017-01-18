@@ -348,6 +348,8 @@ $sql_tbl = array (
 	"fba_missing_sku" => "xcart_fba_missing_sku",
 	"storefronts_config" => "xcart_storefronts_config",
     "shipping_carrier" => "xcart_shipping_carrier",
+    "shipping_cache_products" => "xcart_shipping_cache_products",
+    "shipping_cache_simple" => "xcart_shipping_cache_simple",
     "fba_inventory_receipts" => "xcart_fba_inventory_receipts",
     "fba_roi_accounting" => "xcart_fba_roi_accounting",
 );

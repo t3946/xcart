@@ -656,8 +656,6 @@ if ($mode == "search") {
 
         if (!empty($cat)) {
             $data["categoryid"] = intval($cat);
-            $data["search_in_subcategories"] = true;
-            $data["category_main"] = 'Y';
         }elseif (!empty($data["categoryid"]) ) {
             $data["categoryid"] = intval($data["categoryid"]);
         }

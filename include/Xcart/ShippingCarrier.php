@@ -16,4 +16,9 @@ class ShippingCarrier extends Data
     {
         return $this->getField('priority');
     }
+
+    public function getName()
+    {
+        return $this->getField('carrier_code');
+    }
 }

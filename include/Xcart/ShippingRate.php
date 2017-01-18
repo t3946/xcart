@@ -10,6 +10,10 @@ class ShippingRate extends Data
     private $oCart = null;
     private $fCartShippingWeight = null;
     private $fAdditionalShippingCharge = 0;
+    /**
+     * @var ShippingRate[]
+     */
+    private $aAddedShippingRates = null;
 
     public function __construct($aParams = [])
     {
@@ -43,6 +47,12 @@ class ShippingRate extends Data
             $this->oShipping = Shipping::model(['shippingid' => $this->getField('shippingid')]);
         }
         return $this->oShipping;
+    }
+
+    public function setShippingEntity(Shipping $oShipping)
+    {
+        $this->oShipping = $oShipping;
+        return $this;
     }
 
     public function getCostMarcup()
@@ -80,7 +90,7 @@ class ShippingRate extends Data
             $oCart = $this->getCart();
             $this->fShippingCharge += $this->getRate();
             $this->fShippingCharge += $oCart->getProductCount() * $this->getItemRate();
-            $this->fShippingCharge += $oCart->getCost() * $this->getRateP();
+            $this->fShippingCharge += $oCart->getCost() * $this->getRateP()/100;
             $this->fShippingCharge += $this->getCartShippingWeight() * $this->getWeightRate();
             $this->fShippingCharge += $this->fAdditionalShippingCharge;
             $this->fShippingCharge += $this->getCartShippingFreight();
@@ -94,19 +104,20 @@ class ShippingRate extends Data
         return $this->fShippingCharge;
     }
 
-    public function addShippingCharge($fCharge)
+    public function addShippingCharge(ShippingRate $oShippingRate)
     {
         $this->getShippingCharge();
-        $this->fShippingCharge += $fCharge;
+        $this->fShippingCharge += $oShippingRate->getShippingCharge();
+        $this->aAddedShippingRates[] = $oShippingRate;
     }
 
-    public function setCart(\Xcart\Cart $oCart)
+    public function setCart(Cart $oCart)
     {
         $this->oCart = $oCart;
     }
 
     /**
-     * @return \Xcart\Cart
+     * @return Cart
      */
     public function getCart()
     {
@@ -120,12 +131,13 @@ class ShippingRate extends Data
     {
         if (is_null($this->fCartShippingWeight)) {
             $this->fCartShippingWeight = 0;
-            $oCart = $this->getCart()->getProducts();
-            if (!empty($oCart)) {
-                foreach ($oCart as $aProducts) {
+            $aCartObjects = $this->getCart()->getElements();
+            if (!empty($aCartObjects)) {
+                /** @var CartElement $oCartElement */
+                foreach ($aCartObjects as $oCartElement) {
                     $this->fCartShippingWeight += $this->getShippingEntity()->getShippingWeightN(
-                        $aProducts['entity']->getShippingWeight($aProducts['qty']),
-                        $aProducts['entity']->getShippingVolume($aProducts['qty']));
+                        $oCartElement->getProduct()->getShippingWeight($oCartElement->getQuantity()),
+                        $oCartElement->getProduct()->getShippingVolume($oCartElement->getQuantity()));
                 }
             }
         }
@@ -135,10 +147,11 @@ class ShippingRate extends Data
     public function getCartShippingFreight()
     {
         $shippingFreight = 0;
-        $oCart = $this->getCart()->getProducts();
-        if (!empty($oCart)) {
-            foreach ($oCart as $aProducts) {
-                $shippingFreight += $aProducts['entity']->getShippingFreight() * $aProducts['qty'];
+        $aCartObjects = $this->getCart()->getElements();
+        if (!empty($aCartObjects)) {
+            /** @var CartElement $oCartElement */
+            foreach ($aCartObjects as $oCartElement) {
+                $shippingFreight += $oCartElement->getProduct()->getShippingFreight() * $oCartElement->getQuantity();
             }
         }
         return $shippingFreight;
@@ -165,7 +178,8 @@ class ShippingRate extends Data
     }
 
     /**
-     * @param ShippingRate[] $aMinPriorityShippingRates
+     * @param ShippingRate[] $aMinPriorityShippingRates\
+     * @return int|null
      */
     public function getTimeDeliveryDiff($aMinPriorityShippingRates)
     {
@@ -181,5 +195,10 @@ class ShippingRate extends Data
             $i = array_shift($aResults);
         }
         return $i;
+    }
+
+    public function getAddedShippingRates()
+    {
+        return $this->aAddedShippingRates;
     }
 }

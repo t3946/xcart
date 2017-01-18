@@ -3,6 +3,7 @@
 namespace Xcart\Shipping;
 
 use Xcart\AmazonMWS;
+use Xcart\CartElement;
 use Xcart\Logs;
 use Xcart\Cart;
 use Xcart\Product;
@@ -16,43 +17,13 @@ class Amazon extends ShippingProcessor
         return $bResult;
     }
 
-    public function getShippingQuotesCached()
-    {
-        global $config;
-        $aShippingRates = $this->getShippingRatesEntities();
-        $oShippingCart = $this->getCart();
-        /*get proxy amazon rates for 1 product*/
-        if ($oShippingCart->getProductCount() == 1) {
-            foreach ($aShippingRates as $oShippingRate) {
-                $aProd = $oShippingCart->getProducts();
-                /** @var Product $oProduct */
-                $oProduct = reset($aProd)['entity'];
-                $oProductAmazonRates = ProductAmazonRates::model([
-                    'product_id' => $oProduct->getProductId(),
-                    'shipping_id' => $oShippingRate->getField('shippingid'),
-                    'state_id' => $this->getCustomer()->getShippingStateEntity()->getStateId()]);
-                if ($oProductAmazonRates->getField('product_id')) {
-                    $oDate = new \DateTime();
-                    $oDate->setTimestamp(strtotime($oProductAmazonRates->getField('last_update')));
-                    $iDaysInterval = $oDate->diff(new \DateTime('now'))->days;
-                    if ($iDaysInterval <= $config["Froogle"]["froogle_days_cache_rates"]) {
-                        $oShippingRate->setShippingChargeQuote($oProductAmazonRates->getField('rate'));
-                        $this->aShippingRates[] = $oShippingRate;
-                    }
-                }
-            }
-        }
-        return $this->aShippingRates;
-    }
-
     public function getServerQuotes($aShippingRates)
     {
         $aResponses = null;
         try {
             $aResponses = (new AmazonMWS('FBAOutboundServiceMWS_Client', '/FulfillmentOutboundShipment/2010-10-01/'))->getGetFulfillmentRates($this->getCustomer(), $this->getCart(), $aShippingRates);
-        }
-        catch (\Exception $e) {
-            Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__.': '. $e->getMessage());
+        } catch (\Exception $e) {
+            Logs::_log(Logs::LOG_RESOURCE_SHIPPING_QUOTES, time(), Logs::LOG_TYPE_SYSTEM, __CLASS__ . ': ' . $e->getMessage());
         }
         return $aResponses;
     }
@@ -62,7 +33,6 @@ class Amazon extends ShippingProcessor
         if (empty($this->aShippingRates)) {
             /*get rates from Amazon*/
             $aShippingRates = $this->getShippingRatesEntities();
-            $oShippingCart = $this->getCart();
             if (!empty($aShippingRates)) {
                 $aFetchRates = $this->getServerQuotes($aShippingRates);
                 if (!empty($aFetchRates)) {
@@ -72,29 +42,11 @@ class Amazon extends ShippingProcessor
                             $this->aShippingRates[] = $oShippingRate->setShippingChargeQuote($aFetchRates[$oShippingRate->getShippingEntity()->getName()]);
                         }
                     }
-                    if ($oShippingCart->getProductCount() == 1 && !empty($this->aShippingRates)) {
-                        /*save rates into proxy*/
-                        $aProd = $oShippingCart->getProducts();
-                        $oProduct = reset($aProd)['entity'];
-                        $this->saveShippingQuotesCached($oProduct);
-                    }
+                    $this->saveShippingQuotesCached();
                 }
             }
         }
         return $this->aShippingRates;
-    }
-
-    public function saveShippingQuotesCached(Product $oProduct)
-    {
-        if (!empty($this->aShippingRates)) {
-            foreach ($this->aShippingRates as $oShippingRate) {
-                ProductAmazonRates::model()->fill([
-                    'product_id' => $oProduct->getProductId(),
-                    'shipping_id' => $oShippingRate->getField('shippingid'),
-                    'state_id' => $this->getCustomer()->getShippingStateEntity()->getStateId(),
-                    'rate' => $oShippingRate->getShippingQuote()])->_insert(true);
-            }
-        }
     }
 
     public function getAdditionalShippingFee($weight)
@@ -105,15 +57,20 @@ class Amazon extends ShippingProcessor
 
     public function getCart()
     {
-        $oAmazonCart = new Cart();
-        $aProducts = $this->oCart->getProducts();
-        if (!empty($aProducts)) {
-            foreach ($aProducts as $aProduct) {
-                if ($aProduct['entity']->isAmazonFBAEnabled() && ($aProduct['entity']->getAmazonFBAAvailExcludedProcessing() > 0)) {
-                    $oAmazonCart->addToCart($aProduct['entity'], $aProduct['qty']);
+        if (is_null($this->oCarierCart)) {
+            $this->oCarierCart = new Cart();
+            $aProducts = $this->oCart->getElements();
+            if (!empty($aProducts)) {
+                /** @var CartElement $oCartElement */
+                foreach ($aProducts as $oCartElement) {
+                    if (($oCartElement->getProduct()->isAmazonFBAEnabled() && ($oCartElement->getProduct()->getAmazonFBAAvailExcludedProcessing() > 0)) ||
+                        count($oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild($oCartElement->getQuantity())) > 0
+                    ) {
+                        $this->oCarierCart->addObjectToCart($oCartElement);
+                    }
                 }
             }
         }
-        return $oAmazonCart;
+        return $this->oCarierCart;
     }
 }

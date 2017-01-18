@@ -1,4 +1,4 @@
-<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (Форма для отправки нотификаций "производителям" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
+<?php /* MODIFIED: random:18298_18304_18324 [2009 Jun 08 09:50][Custom development (О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫" (X-Cart's Manufacturers) + Add new "Brands" module + Search URLs feature)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -62,7 +62,11 @@ if ($active_modules["Manufacturers"])
 
 if (!empty($active_modules["Xcart_Mobile"]) && $config["Appearance"]["Enable_Mobile_skin"] == "Y"){
 	if ($detect->isMobile()){
-		$pages_dir = $smarty->template_dir[1]."/pages/$store_language/";
+        if (is_array($smarty->template_dir)) {
+            $pages_dir = $smarty->template_dir[1] . "/pages/$store_language/";
+        } else {
+            $pages_dir = $smarty->template_dir."/pages/$store_language/";
+        }
 	} else {
 		$pages_dir = $smarty->template_dir."/pages/$store_language/";
 	}

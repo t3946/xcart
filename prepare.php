@@ -432,7 +432,7 @@ if (empty($REQUEST_URI))
 #
 # HTTP_REFERER override
 #
-if ($_GET['iframe_referer']) {
+if (!empty($_GET['iframe_referer'])) {
 	$HTTP_REFERER = urldecode($_GET['iframe_referer']);
 }
 
