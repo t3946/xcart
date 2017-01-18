@@ -344,7 +344,7 @@ abstract class ShippingProcessor
             }
             $sProductFilter = implode(' OR ', $aProductFilter);
 
-            $oSQLBuilder = SQLBuilder::getInstance()->addSelect('xs.shipping_cache_id, count(DISTINCT xs1.product_id) as cnt_found, count(DISTINCT xs2.product_id) as cnt_total')->
+            $oSQLBuilder = SQLBuilder::getInstance()->addSelect('xs.*, count(DISTINCT xs1.product_id) as cnt_found, count(DISTINCT xs2.product_id) as cnt_total')->
             addFromTable('shipping_cache_simple', 'xs')->
             addCondition("zip_to='{$oCustomer->getField('s_zipcode')}'")->
             addCondition("zip_from='{$oManufacturer->getField('m_zipcode')}'")->
@@ -355,18 +355,24 @@ abstract class ShippingProcessor
             addCondition("shipping_carrier='{$sCarrierName}'")->
             addInnerJoin('shipping_cache_products', 'xs1', "xs1.shipping_cache_id = xs.shipping_cache_id AND {$sProductFilter}")->
             addInnerJoin('shipping_cache_products', 'xs2', "xs2.shipping_cache_id = xs.shipping_cache_id ")->
-            addGroupBy('xs.shipping_cache_id');
+            addGroupBy('xs.shipping_cache_id')->
+            addHaving('cnt_found = cnt_total AND cnt_total = '.count($aCartElements));
 
-
-            $res = $oSQLBuilder->query()->getQueryResult();
+            $res = $oSQLBuilder->query_first()->getQueryResult();
             if (!empty($res)) {
-                $oShippingCache = null;
-                foreach ($res as $aShippingCacheRes) {
-                    if ($aShippingCacheRes['cnt_total'] == count($aCartElements)) {
-                        $oShippingCache = ShippingCache::model(['shipping_cache_id' => $aShippingCacheRes['shipping_cache_id']]);
-                        break;
-                    }
-                }
+                $oShippingCache = ShippingCache::model()->fill([
+                    'shipping_cache_id' => $res['shipping_cache_id'],
+                    'zip_from' => $res['zip_from'],
+                    'zip_to' => $res['zip_to'],
+                    'state_from' => $res['state_from'],
+                    'state_to' => $res['state_to'],
+                    'country_from' => $res['country_from'],
+                    'country_to' => $res['country_to'],
+                    'shipping_rates' => $res['shipping_rates'],
+                    'shipping_carrier' => $res['shipping_carrier'],
+                    'cache_date' => $res['cache_date']
+                ]);
+
                 if ($oShippingCache && $oShippingCache->getField('shipping_cache_id')) {
                     $this->aShippingRates = unserialize($oShippingCache->getField('shipping_rates'));
                 }
