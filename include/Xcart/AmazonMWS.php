@@ -20,7 +20,7 @@ class AmazonMWS
     const BACK_PROCESS_LOG_NAME_SETTLEMENT = 'Amazon_Reports_Cron';
     const BACK_PROCESS_LOG_NAME_ORDERS = 'amazon_orders';
     const BACK_PROCESS_LOG_NAME_ORDER_INFO = 'amazon_info';
-    const BACK_PROCESS_LOG_NAME_OFBA_INVENTORY = 'amazon_fba_inventory_receipts';
+    const BACK_PROCESS_LOG_NAME_FBA_INVENTORY = 'amazon_fba_inventory_receipts';
     const DEFAULT_ORDER_MESSAGE = 'Thank you for your order!';
     const AMAZON_ORDER_LINK = "https://sellercentral.amazon.com/gp/orders-v2/list/ref=ag_myo_apsearch_myosearch?searchType=OrderID&searchKeyword=%s&showPending=1&isDebug=&isAdvancedSearch=1&ignoreSearchType=0&searchLanguage=en_US";
 
@@ -822,23 +822,65 @@ class AmazonMWS
             }
         }
         array_shift($aReportValue);
-        $log_text = "Processing " . (count($aReportValue)) . " rows";
-        func_backprocess_log($this->sBackProcessLogName, $log_text);
-        $aResult = SQLBuilder::getInstance()->addSelect('max(received_date)', 'rdate')->addFromTable('fba_inventory_receipts')->query_first()->getQueryResult();
-        $oMaxdate = \DateTime::createFromFormat('Y-m-d', $aResult['rdate']);
-        foreach ($aReportValue as $vArr) {
-            list($date, $fnsku, $sku, $pn, $qty, $fba_shipment_id, $fulfillment_center_id) = $vArr;
-            $rDate = \DateTime::createFromFormat(DATE_ISO8601, $date);
-            if ($rDate->diff($oMaxdate)->days >= 0) {
-                func_array2insert('fba_inventory_receipts',
-                    ['received_date' => $rDate->format('Y-m-d'),
-                        'sku' => addslashes($sku),
-                        'quantity' => $qty,
-                        'fba_shipment_id' => $fba_shipment_id
-                    ]);
+        if (!empty($aReportValue)) {
+            $log_text = "Processing " . (count($aReportValue)) . " rows";
+            func_backprocess_log($this->sBackProcessLogName, $log_text);
+            $aResult = SQLBuilder::getInstance()->addSelect('max(received_date)', 'rdate')->addFromTable('fba_inventory_receipts')->query_first()->getQueryResult();
+            $oMaxdate = \DateTime::createFromFormat('Y-m-d', $aResult['rdate']);
+            $cnt = 0;
+            foreach ($aReportValue as $vArr) {
+                list($date, $fnsku, $sku, $pn, $qty, $fba_shipment_id, $fulfillment_center_id) = $vArr;
+                $rDate = \DateTime::createFromFormat(DATE_ISO8601, $date);
+                if ($oMaxdate < $rDate) {
+                    Connection::getInstance()->insert('xcart_fba_inventory_receipts',
+                        ['received_date' => $rDate->format('Y-m-d'),
+                            'sku' => addslashes($sku),
+                            'quantity' => $qty,
+                            'fba_shipment_id' => $fba_shipment_id
+                        ]);
+                    $cnt++;
+                }
+
+            }
+            if ($cnt) {
+                $log_text = "Inserted " . $cnt . " new rows";
+                func_backprocess_log($this->sBackProcessLogName, $log_text);
+            }
+
+            Connection::getInstance()->delete('xcart_fba_roi_accounting', array('source' => 'inventory_receipts'));
+
+            $sSql = <<<SQL
+SELECT min(received_date) rdate, sku, sum(quantity) qty, fba_shipment_id 
+FROM xcart_fba_inventory_receipts 
+GROUP BY sku, fba_shipment_id
+SQL;
+            $aResult = SQLBuilder::getInstance()->setQuery($sSql)->query()->getQueryResult();
+            if (!empty($aResult)) {
+                foreach ($aResult as $aAggData) {
+                    $oProduct = Product::model()->getProductBySKU($aAggData['sku']);
+                    if ($oProduct->getProductId()) {
+                        Connection::getInstance()->insert('xcart_fba_roi_accounting', [
+                            'edate' => $aAggData['rdate'],
+                            'productid' => $oProduct->getProductId(),
+                            'credit' => round(($oProduct->getProductCostToUs() * $aAggData['qty']), 2),
+                            'debit' => 0,
+                            'orderid' => 0,
+                            'account' => 'notes_payable',
+                            'source' => 'inventory_receipts'
+                        ]);
+                        Connection::getInstance()->insert('xcart_fba_roi_accounting', [
+                            'edate' => $aAggData['rdate'],
+                            'productid' => $oProduct->getProductId(),
+                            'debit' => round(($oProduct->getProductCostToUs() * $aAggData['qty']), 2),
+                            'credit' => 0,
+                            'orderid' => 0,
+                            'account' => 'cash',
+                            'source' => 'inventory_receipts'
+                        ]);
+                    }
+                }
             }
         }
-
     }
 
     private function fillReportFeeDataFromFile()

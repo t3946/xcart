@@ -22,19 +22,7 @@ if ($REQUEST_METHOD == "POST") {
 if ($mode == "search") {
 
 
-    $classAmazonMWS = new Xcart\AmazonMWS();
 
-    $classAmazonMWS->setReportType('_GET_FBA_FULFILLMENT_INVENTORY_RECEIPTS_DATA_')
-        ->setBackProcessName(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_OFBA_INVENTORY)
-        ->setProcessWithoutAcknowledgedFlag()
-        ->setStartDate(new DateTime('-1024 days', new DateTimeZone('UTC')))
-        //->_Request('RequestReport')
-        //->_Request('GetReportRequestList')
-        ->_Request('GetReportList')
-        ->_Request('GetReport')
-        ->_Request('UpdateReportAcknowledgements')
-        ->processReportFulfillmentInventoryData();
-    exit;
 
 
 #*insert debit cash
@@ -46,7 +34,7 @@ From xcart_orders O
             left join xcart_k.xcart_order_groups OG ON OG.orderid = O.orderid
 			left join xcart_order_details OD ON OD.orderid = O.orderid
 			inner join xcart_products P ON P.productid = OD.productid AND P.manufacturerid = OG.manufacturerid
-			left join xcart_fba_roi_accounting A ON A.orderid= O.orderid and A.productid = OD.productid and A.account = :type
+			left join xcart_fba_roi_accounting A ON A.orderid= O.orderid and A.productid = OD.productid and A.account = :type and source = 'orders'
 where O.amazon_fulfillment_channel = 'AFN' and OG.cb_status = 'P' and A.id is NULL
 SQL;
 
