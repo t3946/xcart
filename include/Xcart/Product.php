@@ -42,6 +42,16 @@ class Product extends Data
     private $fExtraMarginValue = null;
     private $fPrice = null;
 
+    /**
+     * @var ProductCategories[]
+     */
+    private $aProductCategories = null;
+
+    /**
+     * @var Category
+     */
+    private $oMainCategory = null;
+
     public function __construct($iId = null)
     {
         $this->sPrimaryTable = 'products';
@@ -677,27 +687,25 @@ class Product extends Data
 
     public static function updateShowInLists(array $ids)
     {
-        if (!empty($ids) && !defined('IS_ROBOT'))
-        {
-            $table      = 'xcart_products_showed';
+        if (!empty($ids) && !defined('IS_ROBOT')) {
+            $table = 'xcart_products_showed';
             $connection = Connection::getInstance();
 
             $sql = QueryBuilder::getInstance($connection)
-                               ->setTypeUpdate()
-                               ->setOptions('LOW_PRIORITY')
-                               ->where(['productid__in' => $ids])
-                               ->update($table, ['in_list_showed' => new Expression('in_list_showed + 1')])
-                               ->toSQL();
+                ->setTypeUpdate()
+                ->setOptions('LOW_PRIORITY')
+                ->where(['productid__in' => $ids])
+                ->update($table, ['in_list_showed' => new Expression('in_list_showed + 1')])
+                ->toSQL();
 
-            if ($connection->exec($sql) != count($ids))
-            {
+            if ($connection->exec($sql) != count($ids)) {
                 $e_ids = [];
-                $sql   = QueryBuilder::getInstance($connection)
-                                     ->setTypeSelect()
-                                     ->from($table)
-                                     ->select(['productid'])
-                                     ->where(['productid__in' => $ids])
-                                     ->toSQL();
+                $sql = QueryBuilder::getInstance($connection)
+                    ->setTypeSelect()
+                    ->from($table)
+                    ->select(['productid'])
+                    ->where(['productid__in' => $ids])
+                    ->toSQL();
 
                 foreach ($connection->fetchAll($sql) as $item) {
                     $e_ids[] = $item['productid'];
@@ -705,10 +713,11 @@ class Product extends Data
 
                 $ids = array_diff($ids, $e_ids);
 
-                if (!empty($ids))
-                {
+                if (!empty($ids)) {
                     $ids = array_unique($ids);
-                    $ids = array_map(function ($id) { return ['productid' => $id]; }, $ids);
+                    $ids = array_map(function ($id) {
+                        return ['productid' => $id];
+                    }, $ids);
                     $ids = array_values($ids);
 
                     $sql = QueryBuilder::getInstance($connection)->setOptions('ignore')->insert($table, $ids);
@@ -735,17 +744,64 @@ class Product extends Data
 
         $connection = Connection::getInstance();
         $sql = QueryBuilder::getInstance($connection)
-                           ->setTypeSelect()
-                           ->select(['needed_resource_id' => 'p.productid'])
-                           ->from('xcart_products')
-                           ->setAlias('p')
-                           ->join('inner join', 'xcart_products_sf', ['ps.productid' => 'p.productid'], 'ps')
-                           ->join('left join',  'xcart_products_showed', ['p.productid' => 's.productid'], 's')
-                           ->order(['s.in_list_showed', '?'])
-                           ->where($where)
-                           ->limit($limit)
-                           ->toSQL();
+            ->setTypeSelect()
+            ->select(['needed_resource_id' => 'p.productid'])
+            ->from('xcart_products')
+            ->setAlias('p')
+            ->join('inner join', 'xcart_products_sf', ['ps.productid' => 'p.productid'], 'ps')
+            ->join('left join', 'xcart_products_showed', ['p.productid' => 's.productid'], 's')
+            ->order(['s.in_list_showed', '?'])
+            ->where($where)
+            ->limit($limit)
+            ->toSQL();
 
         return $connection->fetchAll($sql);
+    }
+
+    public function getProductCategories()
+    {
+        if (is_null($this->aProductCategories)) {
+            $this->aProductCategories = ProductCategories::model()->findAll(SQLBuilder::getInstance()->addCondition('productid = ' . $this->getProductId())->addOrderBy('orderby'));
+        }
+        return $this->aProductCategories;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getMainCategory()
+    {
+        if (is_null($this->oMainCategory)) {
+            $aCats = $this->getProductCategories();
+            if (!empty($aCats)) {
+                foreach ($aCats as $oCat) {
+                    if ($oCat->isMain()) {
+                        $this->oMainCategory = Category::model(['categoryid' => $oCat->getField('categoryid')]);
+                        break;
+                    }
+                }
+            }
+        }
+        return $this->oMainCategory;
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getAdditionalCategories()
+    {
+        $aRes = [];
+        $aCats = $this->getProductCategories();
+        if (!empty($aCats)) {
+            foreach ($aCats as $oCat) {
+                if (!($oCat->isMain())) {
+                    $oCategory = Category::model(['categoryid' => $oCat->getField('categoryid')]);
+                    if ($oCategory->getCategoryId()) {
+                        $aRes[] = $oCategory;
+                    }
+                }
+            }
+        }
+        return $aRes;
     }
 }
