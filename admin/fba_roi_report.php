@@ -1,6 +1,5 @@
 <?php
 @set_time_limit(0);
-
 global $xcart_dir, $mode, $REQUEST_METHOD;
 
 require "./auth.php";
@@ -23,6 +22,9 @@ if ($REQUEST_METHOD == "POST") {
 if ($mode == "search") {
 
 
+
+
+
 #*insert debit cash
     $sql = <<<SQL
 INSERT INTO xcart_fba_roi_accounting
@@ -32,7 +34,7 @@ From xcart_orders O
             left join xcart_k.xcart_order_groups OG ON OG.orderid = O.orderid
 			left join xcart_order_details OD ON OD.orderid = O.orderid
 			inner join xcart_products P ON P.productid = OD.productid AND P.manufacturerid = OG.manufacturerid
-			left join xcart_fba_roi_accounting A ON A.orderid= O.orderid and A.productid = OD.productid and A.account = :type
+			left join xcart_fba_roi_accounting A ON A.orderid= O.orderid and A.productid = OD.productid and A.account = :type and source = 'orders'
 where O.amazon_fulfillment_channel = 'AFN' and OG.cb_status = 'P' and A.id is NULL
 SQL;
 
