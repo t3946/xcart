@@ -859,10 +859,11 @@ SQL;
                 foreach ($aResult as $aAggData) {
                     $oProduct = Product::model()->getProductBySKU($aAggData['sku']);
                     if ($oProduct->getProductId()) {
+                        $oDate = \DateTime::createFromFormat('Y-m-d', $aAggData['rdate']);
                         Connection::getInstance()->insert('xcart_fba_roi_accounting', [
                             'edate' => $aAggData['rdate'],
                             'productid' => $oProduct->getProductId(),
-                            'credit' => round(($oProduct->getProductCostToUs() * $aAggData['qty']), 2),
+                            'credit' => round(($oProduct->getProductCostToUs($oDate) * $aAggData['qty']), 2),
                             'debit' => 0,
                             'orderid' => 0,
                             'account' => 'notes_payable',
@@ -871,7 +872,7 @@ SQL;
                         Connection::getInstance()->insert('xcart_fba_roi_accounting', [
                             'edate' => $aAggData['rdate'],
                             'productid' => $oProduct->getProductId(),
-                            'debit' => round(($oProduct->getProductCostToUs() * $aAggData['qty']), 2),
+                            'debit' => round(($oProduct->getProductCostToUs($oDate) * $aAggData['qty']), 2),
                             'credit' => 0,
                             'orderid' => 0,
                             'account' => 'cash',
