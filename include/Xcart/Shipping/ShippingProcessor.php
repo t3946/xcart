@@ -273,7 +273,8 @@ abstract class ShippingProcessor
                     'state_from' => $oManufacturer->getField('m_state'),
                     'country_to' => $oCustomer->getField('s_country'),
                     'country_from' => $oManufacturer->getField('m_country'),
-                    'shipping_rates' => addslashes(serialize($this->aShippingRates))]
+                    'shipping_rates' => base64_encode(addslashes(gzcompress(serialize($this->aShippingRates)))),
+                    'compressed' => 1]
             )->_insert();
             if ($iShippingCacheId) {
                 $aProducts = $oCart->getElements();
@@ -334,11 +335,16 @@ abstract class ShippingProcessor
                     'country_to' => $res['country_to'],
                     'shipping_rates' => $res['shipping_rates'],
                     'shipping_carrier' => $res['shipping_carrier'],
-                    'cache_date' => $res['cache_date']
+                    'cache_date' => $res['cache_date'],
+                    'compressed' => $res['compressed']
                 ]);
 
                 if ($oShippingCache && $oShippingCache->getField('shipping_cache_id')) {
-                    $this->aShippingRates = unserialize($oShippingCache->getField('shipping_rates'));
+                    if ($oShippingCache->getField('compressed')) {
+                        $this->aShippingRates = unserialize(gzuncompress(stripslashes(base64_decode($oShippingCache->getField('shipping_rates')))));
+                    } else {
+                        $this->aShippingRates = unserialize($oShippingCache->getField('shipping_rates'));
+                    }
                 }
             }
         }
