@@ -173,44 +173,17 @@ abstract class ShippingProcessor
     public function getShippingRatesEntities()
     {
         if (is_null($this->aShippingRatesEntities)) {
-            $sCarrier = (new \ReflectionClass($this))->getShortName();
-            if ($sCarrier == 'Flat') {
-                $sCarrier = '';
-            }
-
             if (!empty($this->aShippingMethods)) {
                 foreach ($this->aShippingMethods as $oShipping) {
-                    $oSql = SQLBuilder::getInstance()->addSelect('main.*, s.*')->
-                    addFromTable('shipping_rates', 'main')->
-                    addInnerJoin('shipping', 's', "main.shippingid = s.shippingid AND s.shippingid = '{$oShipping->getShippingId()}'")->
-                    addCondition('zoneid = ' . $this->getShippingZone()->getField('zoneid'))->
-                    addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
-                    addCondition("s.active = 'Y'")->
-                    addOrderBy("s.orderby");
-                    $oSql->addCondition($this->getShippingRateFilterValues($oShipping));
-
-                    $aResults = $oSql->Execute()->getQueryResult();
+                    $aResults = ShippingRate::model()->findAll(
+                        SQLBuilder::getInstance()->addSelect('*')->
+                        addFromTable('shipping_rates')->
+                        addCondition('zoneid = ' . $this->getShippingZone()->getField('zoneid'))->
+                        addCondition('shippingid = ' . $oShipping->getShippingId())->
+                        addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
+                        addCondition($this->getShippingRateFilterValues($oShipping)));
                     if (!empty($aResults)) {
-                        foreach ($aResults as $aResult) {
-                            $oShippingRate = ShippingRate::model()->fill([
-                                'rateid' => $aResult['rateid'],
-                                'shippingid' => $aResult['shippingid'],
-                                'zoneid' => $aResult['zoneid'],
-                                'maxamount' => $aResult['maxamount'],
-                                'minweight' => $aResult['minweight'],
-                                'maxweight' => $aResult['maxweight'],
-                                'mintotal' => $aResult['mintotal'],
-                                'maxtotal' => $aResult['maxtotal'],
-                                'rate' => $aResult['rate'],
-                                'item_rate' => $aResult['item_rate'],
-                                'weight_rate' => $aResult['weight_rate'],
-                                'rate_p' => $aResult['rate_p'],
-                                'provider' => $aResult['provider'],
-                                'type' => $aResult['type'],
-                                'manufacturerid' => $aResult['manufacturerid'],
-                                'cost_marcup' => $aResult['cost_marcup'],
-                                'real_drop_ship_fee' => $aResult['real_drop_ship_fee'],
-                            ]);
+                        foreach ($aResults as $oShippingRate) {
                             $oShippingRate->setShippingEntity($oShipping);
                             $oShippingRate->setCart($this->getCart());
                             $this->aShippingRatesEntities[] = $oShippingRate;
@@ -218,15 +191,6 @@ abstract class ShippingProcessor
                     }
                 }
             }
-
-            /*if (!empty($this->aShippingRatesEntities)) {
-                foreach ($this->aShippingRatesEntities as $key => $oShippingRate) {
-                    $oShippingRate->setCart($this->getCart());
-                    if (!$oShippingRate->checkShippingRateByFilterValues()) {
-                        unset($this->aShippingRatesEntities[$key]);
-                    }
-                }
-            }*/
         }
         return $this->aShippingRatesEntities;
     }
@@ -356,7 +320,7 @@ abstract class ShippingProcessor
             addInnerJoin('shipping_cache_products', 'xs1', "xs1.shipping_cache_id = xs.shipping_cache_id AND {$sProductFilter}")->
             addInnerJoin('shipping_cache_products', 'xs2', "xs2.shipping_cache_id = xs.shipping_cache_id ")->
             addGroupBy('xs.shipping_cache_id')->
-            addHaving('cnt_found = cnt_total AND cnt_total = '.count($aCartElements));
+            addHaving('cnt_found = cnt_total AND cnt_total = ' . count($aCartElements));
 
             $res = $oSQLBuilder->query_first()->getQueryResult();
             if (!empty($res)) {
