@@ -9,6 +9,7 @@ use PayPal\Api\MerchantInfo;
 use PayPal\Api\Phone;
 use PayPal\Api\Invoice;
 use PayPal\Api\InvoiceAddress;
+use PayPal\Api\InvoiceItem;
 
 class Paypal
 {
@@ -90,13 +91,26 @@ class Paypal
             $billing = $invoice->getBillingInfo();
             $billing[0]->setEmail($aParams['paypal_request_email']);
 
-            $Currency = new Currency();
-            $Currency->setCurrency($aParams['paypal_request_currency'])
-                ->setValue(floatval($aParams['paypal_request_amount']));
-            $invoice->setTotalAmount($Currency);
+            $items = array();
+            $items[0] = new InvoiceItem();
+            $items[0]
+                ->setName($aParams['paypal_request_notes'])
+                ->setQuantity(1)
+                ->setUnitPrice(new Currency());
 
-            //$invoice->create($this->apiContext);
-            //$sendStatus = $invoice->send($this->apiContext);
+            $items[0]->getUnitPrice()
+                ->setCurrency($aParams['paypal_request_currency'])
+                ->setValue(price_format($aParams['paypal_request_amount']));
+
+            $invoice->setItems($items);
+
+            $invoice->setLogoUrl('https://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-S2.png');
+            try {
+                $invoice->create($this->apiContext);
+                $sendStatus = $invoice->send($this->apiContext);
+            } catch (\Exception $e) {
+                $sendStatus = false;
+            }
         }
         return $sendStatus;
     }

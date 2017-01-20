@@ -71,7 +71,12 @@
                         $.post('ajax_admin.php', param,
                                 function (data) {
                                     form.css('opacity', 1).find('.ui.loader').removeClass('active');
-                                    alert('The Invoice has been send');
+                                    if (data == 'true') {
+                                        form.find('#paypal_request_amount').val('0.00').end().find('#paypal_request_notes').val('');
+                                        alert('The Invoice has been send');
+                                    } else {
+                                        alert('Error occurred');
+                                    }
                                 });
                         return false;
                     },

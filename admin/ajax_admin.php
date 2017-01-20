@@ -409,5 +409,6 @@ HTML;
 
 function sendPayPalRequest($aParams = [])
 {
-    (new \Xcart\Paypal())->sendPaypalRequest($aParams);
+    $aResult = (new \Xcart\Paypal())->sendPaypalRequest($aParams);
+    print(json_encode($aResult));
 }
