@@ -262,7 +262,7 @@ function enterVerificationArbitrageFull($aParams = [])
     $iProductId = (int)$aParams['product_id'];
     if (!empty($aParams['asin_arbitrage']) || !empty($aParams['amazon_qty_arbitrage']) || !empty($aParams['our_qty_arbitrage'])) {
         $aRows = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->findAll(
-            Xcart\SQLBuilder::getInstance()->addCondition('productid='.$iProductId)->
+            Xcart\SQLBuilder::getInstance()->addCondition('productid=' . $iProductId)->
             addCondition("action='asin_on_amazon'")
         );
         if (!empty($aRows)) {
@@ -409,6 +409,27 @@ HTML;
 
 function sendPayPalRequest($aParams = [])
 {
-    $aResult = (new \Xcart\Paypal())->sendPaypalRequest($aParams);
-    print(json_encode($aResult));
+    $bResult = false;
+    if (!empty($aParams['send_request_orderid'])) {
+        $iOrderId = (int)$aParams['send_request_orderid'];
+        Xcart\Logs::_log('orders', $iOrderId, 'X', "'Send request' at 'Paypal Payment request' pressed");
+        $oInv = (new \Xcart\Paypal())->sendPaypalRequest($aParams);
+        if (!empty($oInv)) {
+            \Xcart\Connection::getInstance()->insert('xcart_order_cx_invoices', [
+                'orderid' => $iOrderId,
+                'invoice_order_number' => $aParams['invoice_next_number'],
+                'invoice_number' => $oInv->getId(),
+                'status' => $oInv->getStatus(),
+                'payer_email' => $aParams['paypal_request_email'],
+                'payment_request_subject' => $aParams['paypal_request_subject'],
+                'short_payment_description' => $aParams['paypal_request_notes'],
+                'amount' => $aParams['paypal_request_amount'],
+                'currency' => $aParams['paypal_request_currency'],
+            ]);
+            Xcart\Logs::_log('orders', $iOrderId, 'X',
+                "Paypal Cx invoice # <a target='_blank' href='https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$oInv->getId()}'>{$oInv->getId()}</a> has been sent");
+            $bResult = true;
+        }
+    }
+    print(json_encode($bResult));
 }

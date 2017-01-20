@@ -2884,7 +2884,7 @@ $main_order_tabs[$tabs_key]["section"] = "VT";
 $main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
 
-$main_order_tabs[$tabs_key]["title"]   = "PayPal Request";
+$main_order_tabs[$tabs_key]["title"]   = "PP req";
 $main_order_tabs[$tabs_key]["section"] = "paypal_request";
 $main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;

@@ -352,6 +352,7 @@ $sql_tbl = array (
     "shipping_cache_simple" => "xcart_shipping_cache_simple",
     "fba_inventory_receipts" => "xcart_fba_inventory_receipts",
     "fba_roi_accounting" => "xcart_fba_roi_accounting",
+    "order_cx_invoices" => "xcart_order_cx_invoices",
 );
 
 # START: random:20341 [2010 Jul 29 14:46] 

@@ -62,7 +62,7 @@ class Paypal
 
     public function sendPaypalRequest($aParams = [])
     {
-        $sendStatus = false;
+        $invoice = null;
         if (!empty($aParams['paypal_request_email'])) {
             $invoice = new Invoice();
 
@@ -78,7 +78,7 @@ class Paypal
                 ->setAddress(new InvoiceAddress());
 
             $invoice->getMerchantInfo()->getPhone()
-                ->setCountryCode("1")
+                ->setCountryCode("001")
                 ->setNationalNumber("8009292431");
 
             $invoice->getMerchantInfo()->getAddress()
@@ -88,8 +88,10 @@ class Paypal
                 ->setPostalCode("N7L 3G4")
                 ->setCountryCode("CA");
 
+            $oOrder = Order::model(['orderid' => (int)$aParams['send_request_orderid']]);
             $billing = $invoice->getBillingInfo();
             $billing[0]->setEmail($aParams['paypal_request_email']);
+            $billing[0]->setFirstName($oOrder->getCustomerEntity()->getCustomerFullName());
 
             $items = array();
             $items[0] = new InvoiceItem();
@@ -105,13 +107,21 @@ class Paypal
             $invoice->setItems($items);
 
             $invoice->setLogoUrl('https://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-S2.png');
+            if (!empty($aParams['paypal_request_invoice_number'])) {
+                $invoice->setNumber($aParams['paypal_request_invoice_number']);
+            }
+
             try {
                 $invoice->create($this->apiContext);
                 $sendStatus = $invoice->send($this->apiContext);
+                if (!$sendStatus) {
+                    $invoice = null;
+                }
             } catch (\Exception $e) {
-                $sendStatus = false;
+                Logs::_log('orders', $oOrder->getOrderId(), 'X', $e->getMessage());
+                $invoice = null;
             }
         }
-        return $sendStatus;
+        return $invoice;
     }
 }

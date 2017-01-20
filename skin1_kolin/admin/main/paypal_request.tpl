@@ -1,29 +1,38 @@
 <link rel="stylesheet" href="{$SkinDir}/js/semantic/components/loader.min.css">
 <script src="{$SkinDir}/js/semantic/components/form.min.js" type="text/javascript"></script>
-{include file="main/subheader.tpl" title="Send PayPal Request"}
-
+{include file="main/subheader.tpl" title="Send PayPal Payment Request"}
+<p>{$lng.lbl_payment_request_notes_text}</p>
 {capture name=paypal_request}
 <form action="order.php" method="post" name="paypal_request" class="ui form paypal_request">
-    <input type="hidden" id="order_email" name="order_email" value="{$order.email}"/>
+    <input type="hidden" id="order_email" name="order_email" value="{$oOrder->getEmail()}"/>
+    <input type="hidden" id="send_request_orderid" name="send_request_orderid" value="{$oOrder->getOrderId()}"/>
+    <input type="hidden" id="invoice_next_number" name="invoice_next_number" value="{$oOrder->getCustomerInvoiceNextNumber()}"/>
     <div class="ui centered loader"></div>
     <table cellspacing="5" cellpadding="0" align="center">
         <tr>
             <td align="right" style="font-size: 12px;">
-                <b><label for="paypal_request_email">Payer email* :</label></b>
+                <b>Cx invoice number :</b>
             </td>
             <td>
-                <input class="field" style="font-size: 12px;" type="text" name="paypal_request_email" value="{$order.email}" size="64" id="paypal_request_email" />
+                <input readonly="readonly" class="field" style="font-size: 12px;" type="text" name="paypal_request_invoice_number" value="{$oOrder->getDisplayOrderNumber()}-{$oOrder->getCustomerInvoiceNextNumber()}" size="20" id="paypal_request_invoice_number" />
             </td>
         </tr>
         <tr>
-            <td align="right" style="font-size: 12px;"><b>Request subject* :</b>
-                <div class="cidev_field_descr">(put S3Stores name and order number at least)</div>
+            <td align="right" style="font-size: 12px;">
+                <b>Payer email* :</b>
             </td>
-            <td><input class="field" style="font-size: 12px;" type="text" name="paypal_request_subject" value="PayPal money request from S3 Stores, Inc. Order # {$oOrder->getDisplayOrderNumber()}" size="64" id="paypal_request_subject" /></td>
+            <td>
+                <input class="field" style="font-size: 12px;" type="text" name="paypal_request_email" value="{$oOrder->getEmail()}" size="64" id="paypal_request_email" />
+            </td>
         </tr>
         <tr>
-            <td align="right" style="font-size: 12px;"><b>Request notes* :</b>
-                <div class="cidev_field_descr">(put payment details)</div>
+            <td align="right" style="font-size: 12px;"><b>Payment Request subject* :</b>
+                <div class="cidev_field_descr">(put S3 Stores Inc. name and order number at least)</div>
+            </td>
+            <td><input class="field" style="font-size: 12px;" type="text" name="paypal_request_subject" value="PayPal money request for order # {$oOrder->getDisplayOrderNumber()} from S3 Stores, Inc." size="64" id="paypal_request_subject" /></td>
+        </tr>
+        <tr>
+            <td align="right" style="font-size: 12px;"><b>Short payment description* :</b>
             </td>
             <td><input class="field" style="font-size: 12px;" type="text" name="paypal_request_notes" value="" size="64" id="paypal_request_notes" /></td>
         </tr>
@@ -44,13 +53,13 @@
         </tr>
         <tr>
             <td></td>
-            <td><input type="submit" value="Send request" name="send_paypal_request"/></td>
+            <td><input type="submit" value="Send request" name="send_paypal_request" id="send_paypal_request"/></td>
         </tr>
 
 </table>
 </form>
 {/capture}
-{include file="dialog.tpl" title="Send PayPal Request" content=$smarty.capture.paypal_request extra='width="100%"'}
+{include file="dialog.tpl" title="Send PayPal Payment Request" content=$smarty.capture.paypal_request extra='width="100%"'}
 {literal}
     <script type="text/javascript">
         $.fn.form.settings.rules.gtzero = function(value) {
@@ -58,6 +67,9 @@
         };
         $('.ui.form.paypal_request')
                 .form({
+                    onValid: function(){
+                        $('.ui.error.message').empty();
+                    },
                     onSuccess: function () {
                         $('.ui.error.message').empty();
                         if ($('#order_email').val() != $('#paypal_request_email').val()) {
@@ -67,16 +79,19 @@
                         }
                         var form = $(this);
                         var param = form.css('opacity', 0.4).find('.ui.loader').addClass('active').end().serializeArray();
+                        form.find('#send_paypal_request').attr('disabled', 'disabled');
                         param.push({name: 'ajax_action', value: 'send_paypal_request'});
                         $.post('ajax_admin.php', param,
                                 function (data) {
-                                    form.css('opacity', 1).find('.ui.loader').removeClass('active');
+                                    form.css('opacity', 1).find('.ui.loader').removeClass('active').end().find('#send_paypal_request').removeAttr('disabled');
                                     if (data == 'true') {
-                                        form.find('#paypal_request_amount').val('0.00').end().find('#paypal_request_notes').val('');
+                                        form.find('#paypal_request_amount').val('0.00').end()
+                                                .find('#paypal_request_notes').val('').end();
                                         alert('The Invoice has been send');
                                     } else {
-                                        alert('Error occurred');
+                                        alert('An error occurred');
                                     }
+                                    window.location.reload();
                                 });
                         return false;
                     },
@@ -99,7 +114,7 @@
                             rules: [
                                 {
                                     type   : 'empty',
-                                    prompt : '<b>Request subject</b>: Mandatory field is empty!'
+                                    prompt : '<b>Payment Request subject</b>: Mandatory field is empty!'
                                 }
                             ]
                         },
@@ -108,7 +123,7 @@
                             rules: [
                                 {
                                     type   : 'empty',
-                                    prompt : '<b>Request notes</b>: Mandatory field is empty!'
+                                    prompt : '<b>Short payment description</b>: Mandatory field is empty!'
                                 }
                             ]
                         },
