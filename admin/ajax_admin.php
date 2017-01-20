@@ -52,6 +52,9 @@ switch ($_POST['ajax_action']) {
     case "get_payable_orders":
         getPayablesOrders($_POST);
         break;
+    case "send_paypal_request":
+        sendPayPalRequest($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -402,4 +405,9 @@ HTML;
 </tr>
 HTML;
     echo $html;
+}
+
+function sendPayPalRequest($aParams = [])
+{
+    (new \Xcart\Paypal())->sendPaypalRequest($aParams);
 }

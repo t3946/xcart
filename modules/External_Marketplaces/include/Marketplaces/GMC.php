@@ -11,7 +11,6 @@ use Google_Service_ShoppingContent;
 use Google_Service_ShoppingContent_ProductStatusDataQualityIssue;
 
 global $xcart_dir;
-include_once $xcart_dir . "/include/libs/google/apiclient/examples/templates/base.php";
 
 class GMC extends StoreFrontMarketPlace
 {
