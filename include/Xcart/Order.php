@@ -975,4 +975,18 @@ class Order extends Data
         }
         return $po_details;
     }
+
+    public function getCustomerInvoiceNextNumber()
+    {
+        $i = 1;
+        $sSQL = <<<SQL
+SELECT MAX(invoice_order_number)+1 as next_inv_number FROM xcart_order_cx_invoices WHERE orderid = {$this->getOrderId()}
+SQL;
+        $aRes = Connection::getInstance()->executeQuery($sSQL)->fetch();
+        if (!empty($aRes['next_inv_number'])) {
+            $i = (int) $aRes['next_inv_number'];
+        }
+        return $i;
+
+    }
 }

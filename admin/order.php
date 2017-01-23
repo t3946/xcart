@@ -2884,6 +2884,12 @@ $main_order_tabs[$tabs_key]["section"] = "VT";
 $main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
 $tabs_key++;
 
+$main_order_tabs[$tabs_key]["title"]   = "PP req";
+$main_order_tabs[$tabs_key]["section"] = "paypal_request";
+$main_order_tabs[$tabs_key]["anchor"]  = $main_order_tabs[$tabs_key]["section"];
+$tabs_key++;
+
+
 if ($allowed_elements["email_tab_1"] != "N") {
     $main_order_tabs[$tabs_key]["title"]   = "Email comm";
     $main_order_tabs[$tabs_key]["section"] = "email_communications";
@@ -3166,6 +3172,10 @@ if (!empty($order["refund_groups"])) {
     if ($show_cancel_message && $TOTAL_refund_groups_total_gross == $order["total"]) {
         $smarty->assign("show_cancel_message", "Y");
     }
+}
+
+if (!empty($orderid)) {
+    $smarty->assign('cx_invoices', \Xcart\OrderCxInvoice::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('orderid = ' . $orderid)->addOrderBy('invoice_order_number')));
 }
 
 # Assign the current location line
