@@ -884,6 +884,15 @@ SQL;
                             'debit' => round(($oProduct->getProductCostToUs($oDate) * $aAggData['qty']), 2),
                             'credit' => 0,
                             'orderid' => 0,
+                            'account' => 'cash',
+                            'source' => 'inventory_receipts'
+                        ]);
+                        Connection::getInstance()->insert('xcart_fba_roi_accounting', [
+                            'edate' => $aAggData['rdate'],
+                            'productid' => $oProduct->getProductId(),
+                            'debit' => round(($oProduct->getProductCostToUs($oDate) * $aAggData['qty']), 2),
+                            'credit' => 0,
+                            'orderid' => 0,
                             'account' => 'inventory',
                             'source' => 'inventory_receipts'
                         ]);
