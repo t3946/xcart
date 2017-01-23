@@ -86,9 +86,11 @@
     {/if}
 {/capture}
 {include file="dialog.tpl" title="Send PayPal Payment Request" content=$smarty.capture.paypal_request extra='width="100%"'}
-<br/>
-<br/>
-{include file="dialog.tpl" title="PayPal Invoices" content=$smarty.capture.paypal_invoices extra='width="100%"'}
+{if ($cx_invoices)}
+    <br/>
+    <br/>
+    {include file="dialog.tpl" title="PayPal Invoices" content=$smarty.capture.paypal_invoices extra='width="100%"'}
+{/if}
 {literal}
     <script type="text/javascript">
         $('#main_order_tabs-container').bind('tabsshow', function(event, ui) {
