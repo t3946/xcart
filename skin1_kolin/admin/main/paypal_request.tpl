@@ -11,7 +11,7 @@
     <table cellspacing="5" cellpadding="0" align="center">
         <tr>
             <td align="right" style="font-size: 12px;">
-                <b>Cx invoice number :</b>
+                <b>Cx invoice number* :</b>
             </td>
             <td>
                 <input readonly="readonly" class="field" style="font-size: 12px;" type="text" name="paypal_request_invoice_number" value="{$oOrder->getDisplayOrderNumber()}-{$oOrder->getCustomerInvoiceNextNumber()}" size="20" id="paypal_request_invoice_number" />
@@ -59,7 +59,30 @@
 </table>
 </form>
 {/capture}
+
+{capture name=paypal_invoices}
+    {if ($cx_invoices)}
+    <table cellspacing="5" cellpadding="0" align="center">
+        <thead>
+        <th>Cx invoice #</th>
+        <th>PP invoice #</th>
+        <th>Payment description</th>
+        <th>Payment amount</th>
+        <th>Invoice status</th>
+        </thead>
+
+        {foreach from=$cx_invoices item="inv_item"}
+            <td>{$inv_item->getField('')}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        {/foreach}
+    </table>
+    {/if}
+{/capture}
 {include file="dialog.tpl" title="Send PayPal Payment Request" content=$smarty.capture.paypal_request extra='width="100%"'}
+{include file="dialog.tpl" title="PayPal Invoices" content=$smarty.capture.paypal_invoices extra='width="100%"'}
 {literal}
     <script type="text/javascript">
         $.fn.form.settings.rules.gtzero = function(value) {

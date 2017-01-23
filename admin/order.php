@@ -3174,6 +3174,10 @@ if (!empty($order["refund_groups"])) {
     }
 }
 
+if (!empty($orderid)) {
+    $smarty->assign('cx_invoices', \Xcart\OrderCxInvoice::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('orderid = ' . $orderid)));
+}
+
 # Assign the current location line
 $smarty->assign("location", $location);
 
