@@ -40,7 +40,7 @@ class Paypal
             array(
                 'mode' => ($config['Paypal_API']['debug_mode'] == "Y") ? 'sandbox' : 'live',
                 'log.LogEnabled' => true,
-                'log.FileName' => '../var/log/paypal.log',
+                'log.FileName' => sprintf('../var/log/paypal-%s.php',date('ymd')),
                 'log.LogLevel' => ($config['Paypal_API']['debug_mode'] == "Y") ? 'DEBUG' : 'INFO',
                 'cache.enabled' => true,
                 'http.CURLOPT_SSLVERSION' => 1,
