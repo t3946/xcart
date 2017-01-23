@@ -297,9 +297,25 @@ class Product extends Data
         return floatval($this->getField('new_map_price'));
     }
 
-    public function getProductCostToUs()
+    public function getProductCostToUs(\DateTime $oDate = null)
     {
-        return floatval($this->getField('cost_to_us'));
+        $fResult = floatval($this->getField('cost_to_us'));
+        if (!is_null($oDate) && $oDate instanceof \DateTime) {
+            $sSQL = <<<SQL
+SELECT value
+FROM xcart_history_data
+WHERE     resource_type = 'product'
+      AND resourceid = :product_id
+      AND changedate < :date
+      ORDER BY changedate DESC
+LIMIT 1
+SQL;
+            $aResult = Connection::getInstance()->executeQuery($sSQL, ['product_id' => $this->getProductId(), 'date' => $oDate->format('Y-m-d')])->fetch();
+            if (!empty($aResult)) {
+                $fResult = floatval($aResult['value']);
+            }
+        }
+        return $fResult;
     }
 
     public function getPrice($forQuantity = 1)
