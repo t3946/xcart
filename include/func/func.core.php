@@ -729,7 +729,7 @@ function func_display($tpl, &$templater, $to_display = true)
                 $result = func_webmaster_convert_labels($predefined_vars);
             }
 
-            $templater->_tpl_vars['lng'] = func_array_merge($templater->_tpl_vars['lng'], $predefined_vars);
+            $templater->_tpl_vars['lng'] = func_array_merge(isset($templater->_tpl_vars['lng']) ? $templater->_tpl_vars['lng'] : [], $predefined_vars);
 
             if (!isset($__X_LNG[$shop_language])) {
                 $__X_LNG[$shop_language] = $predefined_vars;

@@ -4,13 +4,11 @@ namespace Xcart\App\Controller;
 use ReflectionMethod;
 use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Exceptions\InvalidConfigException;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Request\Request;
-use Xcart\App\Traits\RenderTrait;
 
 class Controller
 {
-    use RenderTrait;
-
     /**
      * @var Request
      */
@@ -74,6 +72,16 @@ class Controller
             $this->{$action}();
         }
         return true;
+    }
+
+    /**
+     * @param string $template Path to template
+     * @param array $params
+     * @return string
+     */
+    public function render($template, $params = [])
+    {
+        return Xcart::app()->template->render($template, $params);
     }
 
     public function redirect($url, $data = [], $status = 302)

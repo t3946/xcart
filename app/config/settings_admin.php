@@ -15,7 +15,8 @@ return [
         ],
         'errorHandler' => [
             'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-            'debug' => true
+            'debug' => true,
+            'errHandler' => false
         ],
         'request' => [
             'class' => '\\Xcart\\App\\Request\\RequestManager',
@@ -31,7 +32,7 @@ return [
         ],
         'router' => [
             'class' => '\\Xcart\\App\\Router\\Router',
-            'pathRoutes' => 'base.config.routes',
+            'pathRoutes' => 'base.config.routes_admin',
             'basePath' => '/admin/controllers.php?',
         ],
         'template' => [

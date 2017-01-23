@@ -8,7 +8,10 @@
 
 namespace Xcart\App\Controller;
 
+use Xcart\App\Traits\SmartyRenderTrait;
+
 class AdminController extends Controller
 {
+    use SmartyRenderTrait;
 
 }

@@ -104,8 +104,9 @@ class TemplateManager
         $this->_renderer->addAccessorSmart("request", "request", Fenom::ACCESSOR_PROPERTY);
         $this->_renderer->request = Xcart::app()->request;
 
-        $this->_renderer->addAccessorSmart("user", "user", Fenom::ACCESSOR_PROPERTY);
-        $this->_renderer->user = Xcart::app()->getUser();
+        //Not module class
+//        $this->_renderer->addAccessorSmart("user", "user", Fenom::ACCESSOR_PROPERTY);
+//        $this->_renderer->user = Xcart::app()->getUser();
 
         $this->_renderer->addModifier('class', function($object) {
             if (is_object($object)) {
@@ -146,7 +147,7 @@ class TemplateManager
             }
         }
         foreach ($classes as $class) {
-            if (class_exists($class) && is_a($class, TemplateLibrary::class, true)) {
+            if (class_exists($class) && is_a($class, TemplateLibrary::className(), true)) {
                 $class::load($this->getRenderer());
             }
         }

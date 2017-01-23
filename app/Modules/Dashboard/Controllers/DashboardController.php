@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 12.01.2017
- * Time: 17:34
- */
 
 namespace Modules\Dashboard\Controllers;
 
@@ -18,7 +12,26 @@ class DashboardController extends AdminController
 
     public function index()
     {
-        func_dump(Connection::getInstance()->fetchAssoc('select 1 as temp')) ;
-        echo 123;
+        func_dump($this->getRequest()->get->get('module'));
+    }
+
+    public function search()
+    {
+        $render = '';
+
+        if (isset($_GET['search']))
+        {
+
+
+        }
+        else {
+            $render = $this->render('dashboard/search_form.tpl');
+        }
+
+        echo $this->renderSmarty("admin/home.tpl",[
+            'single_mode' => true,
+            'main' => 'raw_html',
+            'content' => $render,
+        ]);
     }
 }

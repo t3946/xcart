@@ -18,17 +18,15 @@
 
 <!-- Google verification META tags -->
 
-<meta name="AB_relations" content="{$variant_id_for_point10}" />
-<meta name="AB_search" content="{$variant_id_for_point11}" />
-
 <script type="text/javascript" lang="Javascript" id="sorting-info">
-    console.groupCollapsed('Modification category output');
-    console.group('A/B');
-    console.log('AB relations','{$variant_id_for_point10}');
-    console.log('AB search','{$variant_id_for_point11}');
-    console.groupEnd();
 
-{if $variant_id_for_point10 or $variant_id_for_point11}
+{if isset($variant_id_for_point10) or isset($variant_id_for_point11)}
+
+console.groupCollapsed('Modification category output');
+console.group('A/B');
+console.log('AB relations','{$variant_id_for_point10}');
+console.log('AB search','{$variant_id_for_point11}');
+console.groupEnd();
 
     {if $t1_arr}
     console.log('Relations for last viewed', 'Count: {$t1_arr_count}' );
@@ -45,9 +43,10 @@
 {/if}
 </script>
 
-
+{if isset($bench_name)}
 <!-- bench time -->
 <meta name="{$bench_name}" content="{$bench_time}" />
+{/if}
 
 <!-- vewport test -->
 <meta name="viewport" content="width=device-width, initial-scale=2"/>

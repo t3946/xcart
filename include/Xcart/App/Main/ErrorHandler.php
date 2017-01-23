@@ -31,6 +31,8 @@ class ErrorHandler
     public $exceptionTemplate = 'exception.tpl';
 
     public $debug = false;
+    public $errHandler = true;
+    public $excHandler = true;
 
     public function init()
     {
@@ -40,8 +42,13 @@ class ErrorHandler
     public function setHandlers()
     {
 //        ini_set('display_errors', false);
-        set_error_handler([$this, 'handleError']);
-        set_exception_handler([$this, 'handleException']);
+
+        if ($this->errHandler) {
+            set_error_handler([$this, 'handleError']);
+        }
+        if ($this->excHandler) {
+            set_exception_handler([$this, 'handleException']);
+        }
     }
 
     public function unsetHandlers()
@@ -118,9 +125,6 @@ class ErrorHandler
                 'itemLines' => $itemLines
             ];
         }
-
-
-        func_dump($template);
 
         echo self::renderTemplate($template, [
             'exception' => $exception,

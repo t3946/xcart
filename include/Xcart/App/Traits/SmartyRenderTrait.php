@@ -1,7 +1,7 @@
 <?php
 namespace Xcart\App\Traits;
 
-trait RenderTrait
+trait SmartyRenderTrait
 {
     /**
      * @param $template
@@ -9,7 +9,7 @@ trait RenderTrait
      *
      * @return string
      */
-    public function render($template, array $params = [])
+    public function renderSmarty($template, array $params = [])
     {
         $render = \Templater::getInstance();
 
