@@ -823,10 +823,11 @@ class AmazonMWS
         }
         array_shift($aReportValue);
         if (!empty($aReportValue)) {
-            $log_text = "Processing " . (count($aReportValue)) . " rows";
-            func_backprocess_log($this->sBackProcessLogName, $log_text);
+            $log_text = "Processing " . (count($aReportValue)) . " rows.";
             $aResult = SQLBuilder::getInstance()->addSelect('max(received_date)', 'rdate')->addFromTable('fba_inventory_receipts')->query_first()->getQueryResult();
             $oMaxdate = \DateTime::createFromFormat('Y-m-d', $aResult['rdate']);
+            $log_text .= " Max report date: {$oMaxdate->format('Y-m-d')}";
+            func_backprocess_log($this->sBackProcessLogName, $log_text);
             $cnt = 0;
             foreach ($aReportValue as $vArr) {
                 list($date, $fnsku, $sku, $pn, $qty, $fba_shipment_id, $fulfillment_center_id) = $vArr;
