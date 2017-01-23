@@ -132,7 +132,7 @@
                         $.post('ajax_admin.php', param,
                                 function (data) {
                                     form.css('opacity', 1).find('.ui.loader').removeClass('active').end().find('#send_paypal_request').removeAttr('disabled');
-                                    if (data) {
+                                    if (data.result) {
                                         form.find('#paypal_request_amount').val('0.00').end()
                                                 .find('#paypal_request_notes').val('').end();
                                         alert('The Invoice has been send');
