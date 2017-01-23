@@ -44,7 +44,9 @@ x_load('user');
 x_session_register("shipquote_userinfo");
 x_session_register('short_phrase');
 
-
+if((!empty($config['Shipping']['new_shipping_calculation']) && $config['Shipping']['new_shipping_calculation'] == 'Y')){
+	func_header_location('popup_shipquote2.php');
+}
 #
 ##
 ###
