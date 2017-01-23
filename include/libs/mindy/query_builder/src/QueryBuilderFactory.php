@@ -8,7 +8,7 @@
 
 namespace Mindy\QueryBuilder;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Connection;
 use Mindy\QueryBuilder\Interfaces\ICallback;
 use Mindy\QueryBuilder\Interfaces\ILookupBuilder;
 

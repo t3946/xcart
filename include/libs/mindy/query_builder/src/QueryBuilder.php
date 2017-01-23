@@ -8,7 +8,7 @@
 
 namespace Mindy\QueryBuilder;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Connection;
 use Exception;
 use Mindy\QueryBuilder\Aggregation\Aggregation;
 use Mindy\QueryBuilder\Interfaces\ILookupBuilder;
@@ -113,6 +113,12 @@ class QueryBuilder
     private $_aliasesCount = 0;
 
     private $_joinAlias = [];
+
+    /**
+     * Strings options query
+     * @var string
+     */
+    private $_queryOptions = '';
     /**
      * @var Connection
      */
@@ -216,6 +222,12 @@ class QueryBuilder
         return empty($this->_type) ? self::TYPE_SELECT : $this->_type;
     }
 
+    public function setOptions($options = '')
+    {
+        $this->_queryOptions = $options;
+        return $this;
+    }
+
     public function distinct($distinct)
     {
         $this->_distinct = $distinct;
@@ -307,7 +319,7 @@ class QueryBuilder
         } else if (is_string($this->_select)) {
             $select = $this->addColumnAlias($this->_select);
         }
-        return $this->getAdapter()->sqlSelect($select, $this->_distinct);
+        return $this->getAdapter()->sqlSelect($select, $this->_distinct, $this->_queryOptions);
     }
 
     public function select($select, $distinct = null)
@@ -547,7 +559,7 @@ class QueryBuilder
      */
     public function insert($tableName, $rows)
     {
-        return $this->getAdapter()->generateInsertSQL($tableName, $rows);
+        return $this->getAdapter()->generateInsertSQL($tableName, $rows, $this->_queryOptions);
     }
 
     /**
@@ -802,7 +814,7 @@ class QueryBuilder
     public function generateDeleteSql()
     {
         return strtr('{delete}{from}{where}', [
-            '{delete}' => 'DELETE',
+            '{delete}' => 'DELETE ' . $this->_queryOptions,
             '{from}' => $this->buildFrom(),
             '{where}' => $this->buildWhere()
         ]);
@@ -813,7 +825,7 @@ class QueryBuilder
         list($tableName, $values) = $this->_update;
         $this->setAlias(null);
         return strtr('{update}{where}', [
-            '{update}' => $this->getAdapter()->sqlUpdate($tableName, $values),
+            '{update}' => $this->getAdapter()->sqlUpdate($tableName, $values, $this->_queryOptions),
             '{where}' => $this->buildWhere(),
         ]);
     }
