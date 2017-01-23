@@ -32,10 +32,11 @@ INSERT INTO xcart_fba_roi_accounting
 Select DATE(FROM_UNIXTIME(O.date)), __f1__, __f2__, :type, CONCAT('Sale order ', O.order_prefix, O.orderid,' SKU: ',P.productcode), O.orderid, OD.productid
 From xcart_orders O
             left join xcart_k.xcart_order_groups OG ON OG.orderid = O.orderid
+            left join xcart_k.xcart_shipping S ON OG.shippingid = S.shippingid AND S.code = 'Amazon'
 			left join xcart_order_details OD ON OD.orderid = O.orderid
 			inner join xcart_products P ON P.productid = OD.productid AND P.manufacturerid = OG.manufacturerid
 			left join xcart_fba_roi_accounting A ON A.orderid= O.orderid and A.productid = OD.productid and A.account = :type and source = 'orders'
-where O.amazon_fulfillment_channel = 'AFN' and OG.cb_status = 'P' and A.id is NULL
+where (O.amazon_fulfillment_channel = 'AFN' OR (O.amazon_fulfillment_channel = ''  AND S.shippingid IS NOT NULL)) and OG.cb_status = 'P' and A.id is NULL
 SQL;
 
     $sql1 = str_replace('__f1__', '0', $sql);
