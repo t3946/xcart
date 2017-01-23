@@ -124,4 +124,10 @@ class Paypal
         }
         return $invoice;
     }
+
+    public function getPayPalInvoice($invoiceId)
+    {
+        $invoice = Invoice::get($invoiceId, $this->apiContext);
+        return $invoice;
+    }
 }

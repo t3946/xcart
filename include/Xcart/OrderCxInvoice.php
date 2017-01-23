@@ -12,4 +12,9 @@ class OrderCxInvoice extends Data
 
         parent::__construct($aParam);
     }
+
+    public function getInvoiceDate()
+    {
+        return \DateTime::createFromFormat("Y-m-d H:i:s", $this->getField('invoice_date'));
+    }
 }

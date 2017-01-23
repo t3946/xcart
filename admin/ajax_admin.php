@@ -55,6 +55,9 @@ switch ($_POST['ajax_action']) {
     case "send_paypal_request":
         sendPayPalRequest($_POST);
         break;
+    case "get_paypal_invoice_status":
+        getPayPalInvoiceStatus($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -419,7 +422,7 @@ function sendPayPalRequest($aParams = [])
                 'orderid' => $iOrderId,
                 'invoice_order_number' => $aParams['invoice_next_number'],
                 'invoice_number' => $oInv->getId(),
-                'status' => $oInv->getStatus(),
+                'status' => $this->getPayPalInvoiceStatus($oInv->getId()),
                 'payer_email' => $aParams['paypal_request_email'],
                 'payment_request_subject' => $aParams['paypal_request_subject'],
                 'short_payment_description' => $aParams['paypal_request_notes'],
@@ -432,4 +435,19 @@ function sendPayPalRequest($aParams = [])
         }
     }
     print(json_encode($bResult));
+}
+
+function getPayPalInvoiceStatus($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['paypal_invoice_id'])) {
+        $oInv = (new \Xcart\Paypal())->getPayPalInvoice($aParams['paypal_invoice_id']);
+        if ($oInv) {
+            $oOrderCxInv = \Xcart\OrderCxInvoice::model()->find(\Xcart\SQLBuilder::getInstance()->addCondition("invoice_number = '{$aParams['paypal_invoice_id']}'"));
+            $oOrderCxInv->updateField('status', $oInv->getStatus());
+            $aResult['result'] = true;
+            $aResult['status'] = $oInv->getStatus();
+        }
+    }
+    print(json_encode($aResult));
 }

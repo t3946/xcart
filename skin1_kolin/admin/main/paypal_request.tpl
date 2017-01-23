@@ -62,29 +62,54 @@
 
 {capture name=paypal_invoices}
     {if ($cx_invoices)}
-    <table cellspacing="5" cellpadding="0" align="center">
+    <table cellspacing="5" cellpadding="0" width="100%">
         <thead>
+        <th>Invoice date</th>
         <th>Cx invoice #</th>
         <th>PP invoice #</th>
         <th>Payment description</th>
         <th>Payment amount</th>
         <th>Invoice status</th>
         </thead>
-
         {foreach from=$cx_invoices item="inv_item"}
-            <td>{$inv_item->getField('')}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <tr class="invoice_list_row" data-status="new">
+                {assign var="invDate" value=$inv_item->getInvoiceDate()}
+                <td>{$invDate->format('d-M-Y H:i')}</td>
+                <td>{$oOrder->getDisplayOrderNumber()}-{$inv_item->getField('invoice_order_number')}</td>
+                <td class="pp_invoice_number" data-inv-number="{$inv_item->getField('invoice_number')}"><a href="https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$inv_item->getField('invoice_number')}" target="_blank">{$inv_item->getField('invoice_number')}</a></td>
+                <td>{$inv_item->getField('short_payment_description')}</td>
+                <td align="center">{$inv_item->getField('currency')} {include file="currency2.tpl" value=$inv_item->getField('amount')}</td>
+                <td class="inv_status ui centered inline mini loader" align="center">{$inv_item->getField('status')}</td>
+            </tr>
         {/foreach}
     </table>
     {/if}
 {/capture}
 {include file="dialog.tpl" title="Send PayPal Payment Request" content=$smarty.capture.paypal_request extra='width="100%"'}
+<br/>
+<br/>
 {include file="dialog.tpl" title="PayPal Invoices" content=$smarty.capture.paypal_invoices extra='width="100%"'}
 {literal}
     <script type="text/javascript">
+        $('#main_order_tabs-container').bind('tabsshow', function(event, ui) {
+            if ($(ui.tab).attr('href') == '#main_order_tabs-paypal_request'){
+                $('.invoice_list_row[data-status=new]').each(function(){
+                    var row = $(this);
+                    var inv_number = $(this).find('.pp_invoice_number').data('inv-number');
+                    row.find('.inv_status').addClass('active').text('');
+                    $.post('ajax_admin.php', {
+                                ajax_action: 'get_paypal_invoice_status',
+                                paypal_invoice_id: inv_number
+                            },
+                            function (data) {
+                                if (data.result) {
+                                    row.attr('data-status', 'updated');
+                                    row.find('.inv_status').removeClass('active').removeClass('ui').text(data.status);
+                                }
+                            }, 'json');
+                })
+            }
+        });
         $.fn.form.settings.rules.gtzero = function(value) {
             return (value > 0)
         };
@@ -107,7 +132,7 @@
                         $.post('ajax_admin.php', param,
                                 function (data) {
                                     form.css('opacity', 1).find('.ui.loader').removeClass('active').end().find('#send_paypal_request').removeAttr('disabled');
-                                    if (data == 'true') {
+                                    if (data) {
                                         form.find('#paypal_request_amount').val('0.00').end()
                                                 .find('#paypal_request_notes').val('').end();
                                         alert('The Invoice has been send');
@@ -115,7 +140,7 @@
                                         alert('An error occurred');
                                     }
                                     window.location.reload();
-                                });
+                                }, 'json');
                         return false;
                     },
                     fields: {
