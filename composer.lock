@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b99b2d6b8c2eaada0e8ef62083745b0e",
-    "content-hash": "634bb210e4172ed8bfa548fa600a3d7e",
+    "hash": "066a0607e2dcfc643716447638faeb68",
+    "content-hash": "26543c74819f34afe32c9f74f85be272",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -286,20 +286,20 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "v2.5.5",
+            "version": "v2.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "9f8c05cd5225a320d56d4bfdb4772f10d045a0c9"
+                "reference": "6314d55f60f85f0295c90688397b75c13faf9f0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/9f8c05cd5225a320d56d4bfdb4772f10d045a0c9",
-                "reference": "9f8c05cd5225a320d56d4bfdb4772f10d045a0c9",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/6314d55f60f85f0295c90688397b75c13faf9f0e",
+                "reference": "6314d55f60f85f0295c90688397b75c13faf9f0e",
                 "shasum": ""
             },
             "require": {
-                "doctrine/common": ">=2.4,<2.7-dev",
+                "doctrine/common": ">=2.4,<2.8-dev",
                 "php": ">=5.3.2"
             },
             "require-dev": {
@@ -353,7 +353,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2016-09-09 19:13:33"
+            "time": "2017-01-17 17:48:38"
         },
         {
             "name": "doctrine/inflector",
@@ -585,27 +585,27 @@
         },
         {
             "name": "google/apiclient",
-            "version": "v2.1.0",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client.git",
-                "reference": "f4a8ef0642cdbea0a07f6966158337bab846d4de"
+                "reference": "360e656f48c3262a6f7fefc0207521efa66caedf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/f4a8ef0642cdbea0a07f6966158337bab846d4de",
-                "reference": "f4a8ef0642cdbea0a07f6966158337bab846d4de",
+                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/360e656f48c3262a6f7fefc0207521efa66caedf",
+                "reference": "360e656f48c3262a6f7fefc0207521efa66caedf",
                 "shasum": ""
             },
             "require": {
                 "firebase/php-jwt": "~2.0|~3.0|~4.0",
-                "google/apiclient-services": "^0.8",
+                "google/apiclient-services": "^0.9",
                 "google/auth": "^0.11",
                 "guzzlehttp/guzzle": "~5.2|~6.0",
                 "guzzlehttp/psr7": "^1.2",
                 "monolog/monolog": "^1.17",
                 "php": ">=5.4",
-                "phpseclib/phpseclib": "~2.0"
+                "phpseclib/phpseclib": "~0.3.10|~2.0"
             },
             "require-dev": {
                 "cache/filesystem-adapter": "^0.3.2",
@@ -640,20 +640,20 @@
             "keywords": [
                 "google"
             ],
-            "time": "2016-11-02 14:28:02"
+            "time": "2017-01-11 19:44:46"
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.8",
+            "version": "v0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client-services.git",
-                "reference": "26bcd71cb4fcf78020ec24052ddfb28550e01bc8"
+                "reference": "c400c655d1b7ca412ad4dd344e569c6865e74a83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/26bcd71cb4fcf78020ec24052ddfb28550e01bc8",
-                "reference": "26bcd71cb4fcf78020ec24052ddfb28550e01bc8",
+                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/c400c655d1b7ca412ad4dd344e569c6865e74a83",
+                "reference": "c400c655d1b7ca412ad4dd344e569c6865e74a83",
                 "shasum": ""
             },
             "require": {
@@ -674,7 +674,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2016-10-18 01:01:16"
+            "time": "2017-01-11 18:53:21"
         },
         {
             "name": "google/auth",
@@ -937,16 +937,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.27",
+            "version": "v1.2.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "44b83fc0017e9611371b748c653032fa4649af78"
+                "reference": "a7909ee330669d5fc13ab4f6c6b43cc2e5f22542"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/44b83fc0017e9611371b748c653032fa4649af78",
-                "reference": "44b83fc0017e9611371b748c653032fa4649af78",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/a7909ee330669d5fc13ab4f6c6b43cc2e5f22542",
+                "reference": "a7909ee330669d5fc13ab4f6c6b43cc2e5f22542",
                 "shasum": ""
             },
             "require": {
@@ -981,7 +981,7 @@
                 "crawlerdetect",
                 "php crawler detect"
             ],
-            "time": "2016-12-27 19:24:49"
+            "time": "2017-01-17 21:57:49"
         },
         {
             "name": "mindy/query_builder",
@@ -1102,6 +1102,55 @@
                 "psr-3"
             ],
             "time": "2016-11-26 00:15:39"
+        },
+        {
+            "name": "paypal/rest-api-sdk-php",
+            "version": "1.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
+                "reference": "7e664f12be32b975575371e8ad3bc17b6b318851"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/7e664f12be32b975575371e8ad3bc17b6b318851",
+                "reference": "7e664f12be32b975575371e8ad3bc17b6b318851",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=5.3.0",
+                "psr/log": "^1.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PayPal": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "PayPal",
+                    "homepage": "https://github.com/paypal/rest-api-sdk-php/contributors"
+                }
+            ],
+            "description": "PayPal's PHP SDK for REST APIs",
+            "homepage": "http://paypal.github.io/PayPal-PHP-SDK/",
+            "keywords": [
+                "payments",
+                "paypal",
+                "rest",
+                "sdk"
+            ],
+            "time": "2016-12-14 21:59:21"
         },
         {
             "name": "phpseclib/phpseclib",

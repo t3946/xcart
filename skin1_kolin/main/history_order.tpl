@@ -1331,6 +1331,10 @@ $(function() {ldelim}
 {include file="admin/main/paypal_vt.tpl"}
 {/capture}
 
+{capture name=paypal_request}
+{include file="admin/main/paypal_request.tpl"}
+{/capture}
+
 <div id="main_order_tabs-container">
   <ul>
   {foreach from=$main_order_tabs item=tab key=ind}
