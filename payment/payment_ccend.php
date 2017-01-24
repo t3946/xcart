@@ -43,7 +43,7 @@ require($xcart_dir."/payment/payment_ccmid.php");
 x_session_register("cart");
 
 if ($bill_error) {
-	if (!empty($bill_output) && $bill_output['code'] == 2) {
+	if (!empty($bill_output) && $bill_output['code'] == 2 && $bill_output['billmes'] == 'Cancelled') {
 		$request = $xcart_catalogs['customer']."/cart.php?mode=checkout&paymentid=21";
 	} else {
 		$request = $current_location . DIR_CUSTOMER . "/error_message.php?" . $sessurl . "error=" . $bill_error . $reason;
