@@ -1831,7 +1831,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
     x_log_add("order_time", $mes, true);
 
-    x_session_unregister('customer_notes');
 
     return $orderids;
 }
