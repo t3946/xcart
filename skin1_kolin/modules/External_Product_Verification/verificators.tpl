@@ -10,6 +10,7 @@
         <button data-status="N" class="ui button {if $active == 'N'}active{/if}">Inactive</button>
         <button data-status="B" class="ui button {if $active == 'B'}active{/if}">Blocked</button>
     </div>
+    <a style="float: right; line-height: 25px;" target="_blank" href="az_create_listings.php">Creating Product Listings on Amazon</a>
     <table width="100%" id="table_verificators" cellpadding="3" cellspacing="1">
         <tr>
             <td colspan="7">
@@ -84,7 +85,7 @@
     }
     $(document).ready(function () {
         $('#batches-filter > button').on('click', '', function () {
-            location.href = "operators.php?active=" + $(this).data('status');
+            location.href = "az_operators.php?active=" + $(this).data('status');
         });
 
         $('#table_verificators').on('click', 'a.verificator_status', function () {
