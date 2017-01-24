@@ -241,7 +241,7 @@ else {
 		"amount" => sprintf("%0.2f", $cart["total_cost"]),
 		"currency_code" => $pp_curr,
 		"return" => $_location."/payment/ps_paypal.php?mode=success&secureid=$order_secureid",
-		"cancel_return" => $_location.DIR_CUSTOMER."/cart.php",
+		"cancel_return" => $_location.DIR_CUSTOMER."/cart.php?mode=checkout&paymentid={$paymentid}",
 		"notify_url" => $_location."/payment/ps_paypal.php",
 		"bn" => "x-cart"
 	);
