@@ -65,9 +65,13 @@ class FbaMissingSku extends Data
                     'productid' => $this->getProductInstance()->getProductId(),
                     'item_cost_to_us' => $this->getProductInstance()->getProductCostToUs()
                 ]);
-                $aDetails = $oOrderDetail->getOrderInstance()->getOrderDetails();
-                if (count($aDetails) == 1)
+                /** @var Order $oOrder */
+                $oOrder = $oOrderDetail->getOrderInstance();
+                $aDetails = $oOrder->getOrderDetails();
+                if (count($aDetails) == 1) {
                     OrderGroup::model(['orderid' => $oOrderDetail->getField('orderid'), 'manufacturerid' => 0])->updateField('manufacturerid', $this->getProductInstance()->getManufacturerId());
+                }
+                $oOrder->reCalculateTotals()->recalculateAccounting();
             }
         }
     }
