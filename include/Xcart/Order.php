@@ -644,6 +644,7 @@ class Order extends Data
                 $oOrderGroup->reCalculateTotals();
             }
         }
+        return $this;
     }
 
     public function getPOPipelineInstance()
