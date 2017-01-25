@@ -1501,9 +1501,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                             $mapCharge = floatval($aAddedShippingRate['shipping_extra_margin_value']);
                             if ($mapCharge > 0) {
                                 $smapCharge = price_format($mapCharge);
-                                $subMapCharge = "(-{$smapCharge})";
+                                $subMapCharge = " (-{$smapCharge})";
                             }
-                            $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$addedCharge} {$subMapCharge}) <br/>";
+                            $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$addedCharge}{$subMapCharge}) <br/>";
                             if (!empty($aAddedShippingRate['products'])) {
                                 foreach ($aAddedShippingRate['products'] as $sProductSKU) {
                                     $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
@@ -1517,9 +1517,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                     $subMapCharge = '';
                     if ($mapCharge > 0) {
                         $smapCharge = price_format($mapCharge);
-                        $subMapCharge = "(-{$smapCharge})";
+                        $subMapCharge = " (-{$smapCharge})";
                     }
-                    $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$total_shipping_cost} {$subMapCharge})<br/>";
+                    $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$total_shipping_cost}{$subMapCharge})<br/>";
                     if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'])) {
                         foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'] as $sProductSKU) {
                             $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
