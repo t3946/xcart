@@ -725,6 +725,9 @@ var runTests = function(editor) {
 {elseif $main eq "operators_activity_reports"}
 {include file="admin/main/operators_activity_reports.tpl"}
 
+{elseif $main eq "az_create_listings"}
+{include file="admin/main/az_create_listings.tpl"}
+
 {elseif $main eq "list_inventory_supply_report"}
 {include file="admin/main/list_inventory_supply_report.tpl"}
 
