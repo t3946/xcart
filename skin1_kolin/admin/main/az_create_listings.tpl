@@ -19,7 +19,9 @@
     {if $aVerifiactionResults}
     {foreach from=$aVerifiactionResults item=aVerifiactionResult}
         <tr {cycle values=", class='TableSubHead'"}>
-            <td><input name="productids[{$aVerifiactionResult.Product->getProductId()}]" type="checkbox"/></td>
+            <td><input name="productids[{$aVerifiactionResult.Product->getProductId()}]" type="checkbox"/>
+                <input type="hidden" name="productasin[{$aVerifiactionResult.Product->getProductId()}]" value="{$aVerifiactionResult.pasin}" />
+            </td>
             <td>
                 <a target="_blank" href="{$aVerifiactionResult.Product->getProductModifyURL()}">{$aVerifiactionResult.Product->getSKU()}</a>
             </td>
@@ -33,7 +35,9 @@
     {/foreach}
 {/if}
 </table>
-    <br/>
+    <p>
+        <input type="submit" value="Submit to listing loader" />
+    </p>
     {include file="customer/main/per_page_editor.tpl" per_page=$per_page per_page_text='Products per page'}
     {include file="customer/main/navigation.tpl"}
 </form>

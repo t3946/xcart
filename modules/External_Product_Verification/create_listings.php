@@ -1,7 +1,21 @@
 <?php
 use \Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 
-global $xcart_dir, $per_page, $page;
+global $xcart_dir, $per_page, $page, $REQUEST_METHOD, $productasin;
+
+if ($REQUEST_METHOD == "POST") {
+    if (!empty($productids)) {
+        $aFeed = null;
+        $aProductsIds = array_keys($productids);
+        foreach ($aProductsIds as $iProductId) {
+            $aFeed[$iProductId]['Product'] = \Xcart\Product::model(['productid' => $iProductId]);
+            $aFeed[$iProductId]['ASIN'] = $productasin[$iProductId];
+            $aFeed[$iProductId]['cidev_get_amazon_fulfillment_latency'] = \Xcart\Connection::getInstance()->executeQuery("SELECT cidev_get_amazon_fulfillment_latency('MMM')")->fetchColumn();
+        }
+
+        $res = (new \Xcart\AmazonMWS())->submitToListingLoader($aFeed);
+    }
+}
 
 if (empty($per_page)) {
     $per_page = 30;

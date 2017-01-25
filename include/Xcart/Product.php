@@ -656,7 +656,7 @@ SQL;
             addFromTable('products')->
             addCondition('productid=' . $this->getProductId())->
             query_first()->getQueryResult();
-            $this->fAmazonPrice = $aResult['aprice'];
+            $this->fAmazonPrice = floatval($aResult['aprice']);
         }
         return $this->fAmazonPrice;
     }

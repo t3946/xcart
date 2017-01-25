@@ -1,6 +1,7 @@
 <?php
 namespace Xcart;
 
+use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 use Xcart\OrderGroup;
 use Xcart\Order;
 use Xcart\Cart;
@@ -1956,5 +1957,124 @@ SQL;
 
         }
         return $aShippingRatesCalc;
+    }
+
+    public function submitToListingLoader($aFeeds)
+    {
+        $aRows = $aResult = [];
+        if (!empty($aFeeds)){
+            $oAmazonMarketPlace = $sFeed = null;
+            foreach ($aFeeds as $aFeed) {
+                /** @var Product $oProduct */
+                $oProduct = $aFeed['Product'];
+                $aRows[] = [
+                    $oProduct->getSKU(),
+                    price_format($oProduct->getAmazonPrice()),
+                    0,
+                    'ASIN',
+                    $aFeed['ASIN'],
+                    'New',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    $aFeed['cidev_get_amazon_fulfillment_latency'],
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''];
+            }
+
+            $aMarketPlaces = StoreFrontMarketPlace::getMarketPlacesByStoreFront(0);
+            if (!empty($aMarketPlaces)) {
+                foreach ($aMarketPlaces as $oMarketPlace)
+                {
+                    if ($oMarketPlace instanceof \Xcart\External_Marketplaces\Marketplaces\Amazon) {
+                        $oAmazonMarketPlace = $oMarketPlace;
+                    }
+                }
+            }
+            if ($oAmazonMarketPlace & !empty($aRows)) {
+                foreach ($aRows as $aRow){
+                    $sFeed .= implode("\t", $aRow) . PHP_EOL;
+                }
+
+                $feedHandle = @fopen('php://temp', 'rw+');
+                fwrite($feedHandle, $sFeed);
+                if ($feedHandle) {
+                    rewind($feedHandle);
+                    $parameters = array(
+                        'Merchant' => MERCHANT_ID,
+                        'MarketplaceIdList' => ["Id" => [$oAmazonMarketPlace->getP2()], "MerchantIdentifier"=>$oAmazonMarketPlace->getP1()],
+                        'FeedType' => '_POST_FLAT_FILE_LISTINGS_DATA_',
+                        'FeedContent' => $feedHandle,
+                        'PurgeAndReplace' => false,
+                        'ContentMd5' => base64_encode(md5(stream_get_contents($feedHandle), true)),
+                    );
+
+                    $request = new \MarketplaceWebService_Model_SubmitFeedRequest($parameters);
+                    $aResult = $this->invokeSubmitFeed($request);
+                }
+            }
+        }
+        return $aResult;
+    }
+
+    public function invokeSubmitFeed($request)
+    {
+        $return_echo = [];
+        try {
+            /** @var \MarketplaceWebService_Model_SubmitFeedResponse $response */
+            $response = $this->oMWSService->submitFeed($request);
+
+            if ($response->isSetSubmitFeedResult()) {
+                $submitFeedResult = $response->getSubmitFeedResult();
+                if ($submitFeedResult->isSetFeedSubmissionInfo()) {
+                    $feedSubmissionInfo = $submitFeedResult->getFeedSubmissionInfo();
+                    if ($feedSubmissionInfo->isSetFeedSubmissionId()) {
+                        $return_echo['FeedSubmissionId'] = $feedSubmissionInfo->getFeedSubmissionId();
+                    }
+                    if ($feedSubmissionInfo->isSetFeedType()) {
+                        $return_echo['FeedType'] =  $feedSubmissionInfo->getFeedType();
+                    }
+                    if ($feedSubmissionInfo->isSetSubmittedDate()) {
+                        $return_echo['SubmittedDate'] =  $feedSubmissionInfo->getSubmittedDate()->format(DATE_FORMAT);
+                    }
+                    if ($feedSubmissionInfo->isSetFeedProcessingStatus()) {
+                        $return_echo['FeedProcessingStatus'] = $feedSubmissionInfo->getFeedProcessingStatus();
+                    }
+                    if ($feedSubmissionInfo->isSetStartedProcessingDate()) {
+                        $return_echo['StartedProcessingDate'] = $feedSubmissionInfo->getStartedProcessingDate()->format(DATE_FORMAT);
+                    }
+                    if ($feedSubmissionInfo->isSetCompletedProcessingDate()) {
+                        $return_echo['CompletedProcessingDate'] = $feedSubmissionInfo->getCompletedProcessingDate()->format(DATE_FORMAT);
+                    }
+                }
+            }
+            if ($response->isSetResponseMetadata()) {
+                $responseMetadata = $response->getResponseMetadata();
+                if ($responseMetadata->isSetRequestId()) {
+                    $return_echo['RequestId'] = $responseMetadata->getRequestId();
+                }
+            }
+
+            $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
+        } catch (\MarketplaceWebService_Exception $ex) {
+            $return_echo["function"] = "invokeSubmitFeed";
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        }
+        return $return_echo;
     }
 }

@@ -235,13 +235,11 @@ class ExternalVerificationProductsQueue extends Data
         $queryBuilder
             ->select('SQL_CALC_FOUND_ROWS xp.*', 'cidev_get_amazon_verification_asin(xe.productid) as pasin')
             ->from('xcart_external_verification_products_queue', 'xe')
-            ->innerJoin('xe','xcart_products', 'xp', "xp.productid = xe.productid AND xp.forsale = 'Y' AND amazon_enabled !='N'")
+            ->innerJoin('xe','xcart_products', 'xp', "xp.productid = xe.productid AND xp.forsale = 'Y' AND amazon_enabled !='Y'")
             ->leftJoin('xe','xcart_products_amz_fields', 'paf', "paf.productid = xe.productid")
             ->innerJoin('xe','xcart_external_verification_products', 'xp1', "xp1.productid = xe.productid AND xp1.action = 'match'")
             ->innerJoin('xe','xcart_external_verification_products', 'xp2', "xp2.productid = xe.productid AND xp2.action = 'match'")
-            ->where('xe.cross_verify_count = 2')
-            ->where('xp1.batch_id != xp2.batch_id')
-            ->where ("(ISNULL(paf.amazon_fba_restricted) OR amazon_fba_restricted != 'Y')")
+            ->where('xe.cross_verify_count = 2', 'xp1.batch_id != xp2.batch_id', "(ISNULL(paf.amazon_fba_restricted) OR amazon_fba_restricted != 'Y')")
             ->groupBy('xe.productid')
             ->orderBy('productcode')
             ->having('NOT ISNULL(pasin)');
@@ -252,8 +250,9 @@ class ExternalVerificationProductsQueue extends Data
         $aRes = $state->fetchAll();
         if (!empty($aRes)) {
             foreach ($aRes as $k => $aRe) {
-                $aRes[$k]['Product'] = Product::model()->fill($aRe);
                 $aRes[$k]['AsinLink'] = sprintf(ExternalVerificationProducts::AMAZON_PRODUCT_LINK, $aRe['pasin']);
+                unset($aRe['pasin']);
+                $aRes[$k]['Product'] = Product::model()->fill($aRe);
             }
         }
         return ['resultSet' => $aRes, 'FoundRows' => Connection::getInstance()->executeQuery('SELECT FOUND_ROWS() AS foundRows')->fetchColumn(0)];
