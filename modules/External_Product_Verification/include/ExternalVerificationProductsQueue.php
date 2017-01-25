@@ -233,9 +233,9 @@ class ExternalVerificationProductsQueue extends Data
 
         $queryBuilder = Connection::getInstance()->createQueryBuilder();
         $queryBuilder
-            ->select('xp.*', 'cidev_get_amazon_verification_asin(xe.productid) as pasin')
+            ->select('SQL_CALC_FOUND_ROWS xp.*', 'cidev_get_amazon_verification_asin(xe.productid) as pasin')
             ->from('xcart_external_verification_products_queue', 'xe')
-            ->innerJoin('xe','xcart_products', 'xp', "xp.productid = xe.productid AND xp.forsale = 'Y' AND amazon_enabled !='Y'")
+            ->innerJoin('xe','xcart_products', 'xp', "xp.productid = xe.productid AND xp.forsale = 'Y' AND amazon_enabled !='N'")
             ->leftJoin('xe','xcart_products_amz_fields', 'paf', "paf.productid = xe.productid")
             ->innerJoin('xe','xcart_external_verification_products', 'xp1', "xp1.productid = xe.productid AND xp1.action = 'match'")
             ->innerJoin('xe','xcart_external_verification_products', 'xp2', "xp2.productid = xe.productid AND xp2.action = 'match'")
@@ -248,14 +248,15 @@ class ExternalVerificationProductsQueue extends Data
 
         $queryBuilder->setFirstResult(($page-1) * $limit);
         $queryBuilder->setMaxResults($limit);
-        $aRes = $queryBuilder->execute()->fetchAll();
+        $state = $queryBuilder->execute();
+        $aRes = $state->fetchAll();
         if (!empty($aRes)) {
             foreach ($aRes as $k => $aRe) {
                 $aRes[$k]['Product'] = Product::model()->fill($aRe);
                 $aRes[$k]['AsinLink'] = sprintf(ExternalVerificationProducts::AMAZON_PRODUCT_LINK, $aRe['pasin']);
             }
         }
-        return $aRes;
+        return ['resultSet' => $aRes, 'FoundRows' => Connection::getInstance()->executeQuery('SELECT FOUND_ROWS() AS foundRows')->fetchColumn(0)];
     }
 
     public function getVerificatorsResults($iBatchId = null)
