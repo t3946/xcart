@@ -873,7 +873,7 @@ if (!$func_is_cart_empty) {
                                         $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
                                         $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
                                         $shipping[$oShippingRate->getShippingId()]['allowed'] = true;
-                                        $shipping['shipping_extra_margin_value'] = $oShippingRate->getCart()->getExtraMarginValue();
+                                        $shipping[$oShippingRate->getShippingId()]['shipping_extra_margin_value'] = $oShippingRate->getCart()->getExtraMarginValue();
                                         $aCartElements = $oShippingRate->getCart()->getElements();
                                         if (!empty($aCartElements)) {
                                             /** @var \Xcart\CartElement $oCartElement */
