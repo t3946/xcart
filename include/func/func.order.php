@@ -1495,9 +1495,15 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                     $shippingLogMessage .= "<b>{$oManufacturer->getManufacturerCode()} ({$total_shipping_cost})</b><br/>";
                     if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'])) {
                         foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'] as $aAddedShippingRate) {
+                            $subMapCharge = '';
                             $oShippingAdded = \Xcart\Shipping::model(['shippingid' => $aAddedShippingRate['shippingid']]);
                             $addedCharge = price_format($aAddedShippingRate['shipping_charge']);
-                            $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$addedCharge}) <br/>";
+                            $mapCharge = floatval($aAddedShippingRate['shipping_extra_margin_value']);
+                            if ($mapCharge > 0) {
+                                $smapCharge = price_format($mapCharge);
+                                $subMapCharge = " (-{$smapCharge})";
+                            }
+                            $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$addedCharge}{$subMapCharge}) <br/>";
                             if (!empty($aAddedShippingRate['products'])) {
                                 foreach ($aAddedShippingRate['products'] as $sProductSKU) {
                                     $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
@@ -1507,8 +1513,13 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                         }
                     }
                     $oShippingAdded = \Xcart\Shipping::model(['shippingid' => $cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['shippingid']]);
-                    $total_shipping_cost = price_format($total_shipping_cost);
-                    $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$total_shipping_cost}) <br/>";
+                    $mapCharge = floatval($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['shipping_extra_margin_value']);
+                    $subMapCharge = '';
+                    if ($mapCharge > 0) {
+                        $smapCharge = price_format($mapCharge);
+                        $subMapCharge = " (-{$smapCharge})";
+                    }
+                    $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$total_shipping_cost}{$subMapCharge})<br/>";
                     if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'])) {
                         foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'] as $sProductSKU) {
                             $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";

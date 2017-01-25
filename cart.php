@@ -873,6 +873,7 @@ if (!$func_is_cart_empty) {
                                         $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
                                         $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
                                         $shipping[$oShippingRate->getShippingId()]['allowed'] = true;
+                                        $shipping[$oShippingRate->getShippingId()]['shipping_extra_margin_value'] = $oShippingRate->getCart()->getExtraMarginValue();
                                         $aCartElements = $oShippingRate->getCart()->getElements();
                                         if (!empty($aCartElements)) {
                                             /** @var \Xcart\CartElement $oCartElement */
@@ -885,6 +886,7 @@ if (!$func_is_cart_empty) {
                                             foreach ($aAddedShippingRates as $oAddedShippingRate) {
                                                 $aShipping = $oAddedShippingRate->getFields();
                                                 $aShipping['shipping_charge'] = $oAddedShippingRate->getShippingCharge();
+                                                $aShipping['shipping_extra_margin_value'] = $oAddedShippingRate->getCart()->getExtraMarginValue();
                                                 $aProducts = $oAddedShippingRate->getCart()->getElements();
                                                 if (!empty($aProducts)) {
                                                     /** @var \Xcart\CartElement $oCartElement */
