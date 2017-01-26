@@ -791,7 +791,7 @@ Use my trucking account #
                                         Ship by the fastest possible shipping method upon your discretion and add shipping charge to my order's total
                                 </label>
                         {else}
-<label for="shippingid{$s.shippingid}">{$s.frontend_name|default:$s.shipping|trademark:$insert_trademark}{if $s.shipping_time ne ""} - {$s.shipping_time}{/if}{if $config.Appearance.display_shipping_cost eq "Y"}: {include file="currency.tpl" value=$s.rate}{/if}</label>
+<label for="shippingid{$s.shippingid}">{$s.frontend_name|default:$s.shipping|trademark:$insert_trademark}{if $s.shipping_time ne ""} - {$s.shipping_time}{/if}{if $config.Appearance.display_shipping_cost eq "Y"}: {include file="currency.tpl" value=$s.rate}{if $s.shipping_extra_margin_value} (-{include file="currency.tpl" value=$s.shipping_extra_margin_value}){/if}{/if}</label>
 			{/if}
 
 				</td>
