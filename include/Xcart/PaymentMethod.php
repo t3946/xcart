@@ -1,8 +1,7 @@
 <?php
 namespace Xcart;
 
-class
-PaymentMethod extends Data
+class PaymentMethod extends Data
 {
     public function __construct($aParams = [])
     {
