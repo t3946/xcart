@@ -6,7 +6,7 @@ return [
 //        'namespace' => 'main'
 //    ],
     [
-        'route' => 'module=dashboard&',
+        'route' => '/admin/dashboard',
         'path' => 'Modules.Dashboard.routes_admin',
         'namespace' => 'dashboard'
     ],

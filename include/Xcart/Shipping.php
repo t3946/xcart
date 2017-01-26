@@ -3,7 +3,8 @@ namespace Xcart;
 
 use Xcart\Shipping\ShippingProcessor;
 
-class Shipping extends Data
+class
+Shipping extends Data
 {
     /**
      * @var ShippingCarrier

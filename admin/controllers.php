@@ -9,6 +9,11 @@
 
 defined('XCART_EXT_ENV') ?: define('XCART_EXT_ENV', 1);
 
+//if (!empty($_GET['patch'])) {
+//    $_SERVER['HTTP_X_REWRITE_URL'] = urlencode($_GET['patch']);
+//    unset ($_GET['patch']);
+//}
+
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 

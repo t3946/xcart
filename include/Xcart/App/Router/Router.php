@@ -39,6 +39,9 @@ class Router
      */
     public $pathRoutes;
 
+    public $mode = 'path'; // path | get
+    public $get_param = 'path';
+
     /**
      * @var array Array of default match types (regex helpers)
      */
@@ -161,6 +164,15 @@ class Router
         // Replace named parameters
         $route = $this->_namedRoutes[$routeName];
 
+        if (strtolower($this->mode) == 'get' && !empty($this->get_param))
+        {
+            $route = http_build_query([$this->get_param => $route]);
+
+            if (strpos($this->_basePath, '?') === false) {
+                $route = '?' . $route;
+            }
+        }
+
         // prepend base path to route url again
         $url = $this->_basePath . $route;
 
@@ -201,7 +213,6 @@ class Router
      */
     public function match($requestUrl = null, $requestMethod = null)
     {
-
         $params = array();
         $match = false;
 
@@ -213,7 +224,9 @@ class Router
         }
 
         // strip base path from request url
-        $requestUrl = substr($requestUrl, strlen($this->_basePath));
+        if (!empty($this->_basePath) && strpos($requestUrl, $this->_basePath)) {
+            $requestUrl = substr($requestUrl, strlen($this->_basePath));
+        }
 
         // Strip query string (?a=b) from Request Url
         if (($strpos = strpos($requestUrl, '?')) !== false && $this->pathGet == false) {

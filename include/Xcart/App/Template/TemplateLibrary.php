@@ -25,7 +25,7 @@ class TemplateLibrary
     use ClassNames;
 
     public static $excludedMethods = [];
-    public static $excludedMethodsInternal = ['load', 'getExtensionName', 'getPrefix', 'getModuleName', 'addExtension'];
+    public static $excludedMethodsInternal = ['load', 'getExtensionName', 'getPrefix', 'getModuleName', 'addExtension', 'className', 'classNameShort', 'classNameUnderscore'];
 
     public static function load($renderer)
     {

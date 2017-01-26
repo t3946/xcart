@@ -77,6 +77,8 @@ class HttpRequest extends Request
 
     public $csrfTokenHeader = "X-CSRF-Token";
 
+    public $from_get = false;
+
     protected $_csrfToken;
 
     public function init()
@@ -372,21 +374,30 @@ class HttpRequest extends Request
      */
     protected function resolveRequestUri()
     {
-        if (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // IIS
-            $requestUri = $_SERVER['HTTP_X_REWRITE_URL'];
-        } elseif (isset($_SERVER['REQUEST_URI'])) {
+        if ($this->from_get && !empty($_GET[$this->from_get])) {
+            $requestUri = urldecode($_GET[$this->from_get]);
+            unset ($_GET[$this->from_get]);
+            unset ($_REQUEST[$this->from_get]);
+        }
+        elseif (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // IIS
+            $requestUri = urldecode($_SERVER['HTTP_X_REWRITE_URL']);
+        }
+        elseif (isset($_SERVER['REQUEST_URI'])) {
             $requestUri = $_SERVER['REQUEST_URI'];
             if ($requestUri !== '' && $requestUri[0] !== '/') {
                 $requestUri = preg_replace('/^(http|https):\/\/[^\/]+/i', '', $requestUri);
             }
-        } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0 CGI
+        }
+        elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0 CGI
             $requestUri = $_SERVER['ORIG_PATH_INFO'];
             if (!empty($_SERVER['QUERY_STRING'])) {
                 $requestUri .= '?' . $_SERVER['QUERY_STRING'];
             }
-        } else {
+        }
+        else {
             throw new InvalidConfigException('Unable to determine the request URI.');
         }
+
         return $requestUri;
     }
 

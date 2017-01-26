@@ -7,7 +7,7 @@ return [
         'www' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..'])),
     ],
     'modules' => [
-        'Admin',
+        'Dashboard',
     ],
     'components' => [
         'db' => [

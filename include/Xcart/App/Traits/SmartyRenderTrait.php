@@ -1,6 +1,8 @@
 <?php
 namespace Xcart\App\Traits;
 
+use Xcart\App\Main\Xcart;
+
 trait SmartyRenderTrait
 {
     /**
@@ -18,6 +20,8 @@ trait SmartyRenderTrait
                 $render->assign($name, $param);
             }
         }
+
+        Xcart::app()->errorHandler->errHandler = false;
 
         return func_display($template, $render, false);
     }

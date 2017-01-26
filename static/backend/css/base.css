@@ -188,23 +188,94 @@
     box-sizing: border-box;
 }
 
-fieldset.collapsed {
+.admin fieldset.collapsed {
     border: none;
     border-top: 1px solid #FF8600;
     background: none;
 }
 
-fieldset {
+.admin fieldset {
     border: 1px solid #FF8600;
     background-color: #fff;
+    margin-bottom: 15px;
 }
 
-fieldset legend {
+.admin fieldset legend {
     padding-left: 13px;
     font-weight: bold;
     cursor: pointer;
     background: transparent url(../images/expanded.gif) no-repeat center left;
 }
-fieldset.collapsed legend {
+.admin fieldset.collapsed legend {
     background: transparent url(../images/collapsed.gif) no-repeat center left;
+}
+
+
+
+.ul-main {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+.ul-main > li {
+    margin-bottom: 10px;
+}
+
+.ul-main > li > div {
+    padding: 0 10px;
+}
+
+.ul-main > li .label {
+    width: 30%;
+    float: left;
+    display: inline-block;
+    font-weight: bold;
+
+}
+.ul-main li .label + .input {
+    width: 69%;
+    clear: both;
+
+    display: inline-block;
+}
+
+.admin fieldset.collapsed .ul-main {
+    display: none;
+}
+
+.as_a span {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.as_a span:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.admin .big {
+    width: 335px;
+    min-width: 335px;
+}
+
+.admin input[type=radio] {
+    vertical-align: middle;
+    margin: 0;
+}
+.admin input[type=radio] + label {
+    /*vertical-align: middle;*/
+    margin-right: 5px;
+}
+
+.admin .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    padding-bottom: 5px !important;
+}
+.admin .select2-selection__rendered {
+    padding-right: 19px !important;
+}
+
+.admin .select2-selection__clear {
+    position: absolute;
+    float: none;
+    right: 0;
 }
