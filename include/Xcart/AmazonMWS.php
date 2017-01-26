@@ -2000,7 +2000,7 @@ SQL;
                     }
                 }
             }
-            if ($oAmazonMarketPlace & !empty($aRows)) {
+            if ($oAmazonMarketPlace && !empty($aRows)) {
                 foreach ($aRows as $aRow){
                     $sFeed .= implode("\t", $aRow) . PHP_EOL;
                 }
