@@ -7,6 +7,7 @@ class ShippingRate extends Data
     private $fShippingQuote = null;
     private $oShipping;
     private $fShippingCharge = null;
+    private $fShippingChargeBeforeMAP = null;
     private $oCart = null;
     private $fCartShippingWeight = null;
     private $fAdditionalShippingCharge = 0;
@@ -98,15 +99,21 @@ class ShippingRate extends Data
             $this->fShippingCharge += $this->getCartShippingWeight() * $this->getWeightRate();
             $this->fShippingCharge += $this->fAdditionalShippingCharge;
             $this->fShippingCharge += $this->getCartShippingFreight();
-            $this->fShippingCharge = round($this->fShippingCharge, 2);
-
             if ($oCart->getExtraMarginValue() > 0) {
+                $this->fShippingChargeBeforeMAP = $this->fShippingCharge;
                 $this->fShippingCharge -= $oCart->getExtraMarginValue();
                 $this->fShippingCharge = max($this->fShippingCharge, 0);
             }
+            $this->fShippingCharge = round($this->fShippingCharge, 2);
         }
         return $this->fShippingCharge;
     }
+
+    public function getShippingChargeBeforeMap()
+    {
+        return $this->fShippingChargeBeforeMAP;
+    }
+
 
     public function addShippingCharge(ShippingRate $oShippingRate)
     {
