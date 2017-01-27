@@ -26,7 +26,7 @@ trait SmartProperties
 
     public function __set($name, $value)
     {
-        $this->__smartSet($name, $value);
+        return $this->__smartSet($name, $value);
     }
 
     public function __smartGet($name)
@@ -34,7 +34,10 @@ trait SmartProperties
         $method = 'get' . ucfirst($name);
         if (method_exists($this, $method)) {
             return $this->$method();
-        } else {
+        }  elseif (property_exists($this, $name)) {
+            return $this->{$name};
+        }
+        else {
             throw new UnknownPropertyException('Unknown property ' . $name);
         }
     }
@@ -44,7 +47,11 @@ trait SmartProperties
         $method = 'set' . ucfirst($name);
         if (method_exists($this, $method)) {
             return $this->$method($value);
-        } else {
+        } elseif (property_exists($this, $name)) {
+            $this->{$name} = $value;
+            return true;
+        }
+        else {
             throw new UnknownPropertyException('Unknown property ' . $name);
         }
     }

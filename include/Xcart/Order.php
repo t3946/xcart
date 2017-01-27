@@ -42,6 +42,11 @@ class Order extends Data
     }
 
 
+    public function __toString()
+    {
+        return $this->getField('order_prefix') . $this->getField('orderid');
+    }
+
     private function fetchOrderGroups()
     {
         if (is_null($this->aOrderGroups)) {

@@ -120,7 +120,7 @@
                     </div>
 
                     <div class="input">
-                        <select name="search[order][features][]" id="o_features" class="big" multiple>
+                        <select name="search[features][]" id="o_features" class="big" multiple>
                             {foreach $features as $code => $name}
                                 <option value="{$code}">{$name}</option>
                             {/foreach}
@@ -164,7 +164,11 @@
                     <div class="input">
                         <select name="search[order][delivery_method][]" id="o_delivery" class="big" multiple>
                             {foreach $shipping_methods as $method}
-                                <option value="{$method.shippingid}">{$method.shipping}</option>
+                                <option value="{$method.shippingid}">
+                                    {if $method.code}[{$method.code}]{/if}
+                                    {$method.shipping}
+                                    {if $method.frontend_name}({$method.frontend_name}){/if}
+                                </option>
                             {/foreach}
                         </select>
                     </div>
@@ -324,17 +328,7 @@
             <ul class="ul-main">
                 <li>
                     <div class="label">
-                        <label for="c_company">Company:</label>
-                    </div>
-
-                    <div class="input">
-                        <select name="search[customer][company][]" id="c_company" class="big" multiple data-ajax-from="company"></select>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="label">
-                        <label for="c_company">Search by address:</label>
+                        <label for="c_company">Search in address:</label>
                     </div>
 
                     <div class="input">
@@ -348,6 +342,17 @@
                         <label for="c_in_address_shipping">Shipping</label>
                     </div>
                 </li>
+
+                <li>
+                    <div class="label">
+                        <label for="c_company">Company:</label>
+                    </div>
+
+                    <div class="input">
+                        <select name="search[customer][company][]" id="c_company" class="big" multiple data-ajax-from="company"></select>
+                    </div>
+                </li>
+
 
                 <li>
                     <div class="label">
@@ -439,6 +444,11 @@
                 tags: true,
                 minimumInputLength: 3,
                 createTag : function (params) {
+
+                    if (!this.$element.data('combobox')) {
+                        return null;
+                    }
+
                     var term = $.trim(params.term);
 
                     if (term === '') {

@@ -2,10 +2,12 @@
 
 namespace Modules\Dashboard\Controllers;
 
+use Mindy\QueryBuilder\Q\QAndNot;
 use Modules\Dashboard\Sqls\SearchSql;
-use Modules\Dashboard\Stores\SearchStore;
+use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Controller\AdminController;
 use Xcart\Connection;
+use Xcart\Order;
 
 class DashboardController extends AdminController
 {
@@ -18,45 +20,58 @@ class DashboardController extends AdminController
 
     public function search()
     {
-        $render = '';
+        $content = '';
 
         if (isset($_GET['search']))
         {
-            func_dump($_GET['search']);
-            $render = $this->render('dashboard/search_form.tpl');
-        }
-        else {
-            $attention_tags = Connection::getInstance()->fetchAll("select * from xcart_attention_tags_values ORDER BY orderby ASC");
-            $fraud_statuses = Connection::getInstance()->fetchAll("select * from xcart_order_fraud_statuses ORDER BY order_by ASC");
-            $raw_statuses = Connection::getInstance()->fetchAll("select * from xcart_order_statuses ORDER BY type ASC, orderby ASC");
-            $shipping_methods = Connection::getInstance()->fetchAll("select * from xcart_shipping");
-            $payment_methods  = Connection::getInstance()->fetchAll("select * from xcart_payment_methods");
+//            $models = Order::objects()->filter([new QAndNot(['s_company' => '']) ])->exclude(['orderid__in' => [51005,63472]])->limit(5)->all();
+//            $models = Order::objects()->filter(['s_company' => ''])->exclude(['orderid__in' => [51005,63472]])->limit(5)->all();
 
-            $order_statuses = [];
-            foreach ($raw_statuses as $status) {
-                if (!isset($order_statuses[$status['type']])) {
-                    $order_statuses[$status['type']] = [];
-                }
+            $qs = (new OrderSearchStore())->populate($_GET['search']);
+            echo 'Count:' . $qs->count() ."<br/>";
 
-                $order_statuses[$status['type']][] = $status;
+            $models = $qs->all();
+
+            foreach ($models as $model) {
+                echo '|'.$model;
             }
 
-            $render = $this->render('dashboard/search_form.tpl', [
-                'fraud_statuses' => $fraud_statuses,
-                'order_statuses' => $order_statuses,
-                'attention_tags' => $attention_tags,
-                'shipping_methods' => $shipping_methods,
-                'payment_methods' => $payment_methods,
-                'features' => SearchStore::getFeatures(),
-                'sources' => SearchStore::getSources(),
-                'question_statuses' => SearchStore::getQuestionStatuses(),
-            ]);
+//            $content = $this->render('dashboard/search_form.tpl');
         }
+        else {
+
+        }
+
+        $attention_tags = Connection::getInstance()->fetchAll("select * from xcart_attention_tags_values ORDER BY orderby ASC");
+        $fraud_statuses = Connection::getInstance()->fetchAll("select * from xcart_order_fraud_statuses ORDER BY order_by ASC");
+        $raw_statuses = Connection::getInstance()->fetchAll("select * from xcart_order_statuses ORDER BY type ASC, orderby ASC");
+        $shipping_methods = Connection::getInstance()->fetchAll("select * from xcart_shipping");
+        $payment_methods  = Connection::getInstance()->fetchAll("select * from xcart_payment_methods");
+
+        $order_statuses = [];
+        foreach ($raw_statuses as $status) {
+            if (!isset($order_statuses[$status['type']])) {
+                $order_statuses[$status['type']] = [];
+            }
+
+            $order_statuses[$status['type']][] = $status;
+        }
+
+        $content = $this->render('dashboard/search_form.tpl', [
+            'fraud_statuses' => $fraud_statuses,
+            'order_statuses' => $order_statuses,
+            'attention_tags' => $attention_tags,
+            'shipping_methods' => $shipping_methods,
+            'payment_methods' => $payment_methods,
+            'features' => OrderSearchStore::getFeatures(),
+            'sources' => OrderSearchStore::getSources(),
+            'question_statuses' => OrderSearchStore::getQuestionStatuses(),
+        ]);
 
         echo $this->renderSmarty("admin/home.tpl",[
             'single_mode' => true,
             'main' => 'raw_html',
-            'content' => $render,
+            'content' => $content,
         ]);
     }
 
@@ -100,6 +115,10 @@ class DashboardController extends AdminController
                     $data = Connection::getInstance()->fetchAll(SearchSql::getZipOrderSql(), ['like' => $query]);
                     break;
             }
+
+//            if (!empty($_GET['combobox'])) {
+//                array_unshift($data, ['id' => $_GET['q'], 'text' => '> '.$_GET['q']]);
+//            }
         }
 
         $this->jsonResponse($data);

@@ -1,8 +1,14 @@
 <?php
 namespace Xcart;
 
+use Xcart\App\Helpers\ClassNames;
+use Xcart\App\Helpers\SmartProperties;
+use Xcart\App\Orm\Manager;
+
 class Data
 {
+    use ClassNames;
+
     protected static $sql_tbl = [];
     protected $aPrimaryKeys = [];
     protected $aPrimaryKeysValues = [];
@@ -25,6 +31,82 @@ class Data
             $this->aPrimaryKeysValues = array_intersect_key($aParams, array_flip($this->aPrimaryKeys));
             $this->fillPrimaryTableInfo();
         }
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return \Xcart\Data
+     */
+    public static function create(array $row)
+    {
+        $className = static::className();
+        /** @var Data $record */
+        $record = new $className;
+        $record->fill($row);
+
+        return $record;
+    }
+
+
+    public static function objects($instance = null)
+    {
+        $className = get_called_class();
+
+        return new Manager($instance ? $instance : new $className);
+    }
+
+    public function getTableName()
+    {
+        return self::$sql_tbl[$this->sPrimaryTable];
+    }
+
+    public function __set($name, $value)
+    {
+        return $this->__smartSet($name, $value);
+    }
+
+    public function __get($name)
+    {
+        return $this->__smartGet($name);
+    }
+
+    public function __smartGet($name)
+    {
+        $method = 'get' . ucfirst($name);
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        }  elseif (property_exists($this, $name)) {
+            return $this->{$name};
+        }
+        else {
+            return $this->getField($name);
+        }
+    }
+
+    public function __smartSet($name, $value)
+    {
+        $method = 'set' . ucfirst($name);
+        if (method_exists($this, $method)) {
+            return $this->$method($value);
+        } elseif (property_exists($this, $name)) {
+            $this->{$name} = $value;
+            return true;
+        }
+        else {
+            return $this->setField($name, $value);
+        }
+    }
+
+    public function __isset($name)
+    {
+        return isset($this->aPrimaryTableValue[$name]);
+    }
+
+
+    public function getPrimaryKey()
+    {
+        return $this->aPrimaryKeys;
     }
 
     /**

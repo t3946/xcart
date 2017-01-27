@@ -130,6 +130,14 @@ class QueryBuilder
     }
 
     /**
+     * @param  $connection \Doctrine\DBAL\Connection
+     */
+    public function setConnection($connection)
+    {
+        $this->connection = $connection;
+    }
+
+    /**
      * @return \Doctrine\DBAL\Platforms\AbstractPlatform
      */
     public function getDatabasePlatform()

@@ -1,17 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 23.01.2017
- * Time: 11:21
- */
 
 namespace Xcart\App\Store;
 
 use Xcart\App\Helpers\SmartProperties;
+use Xcart\App\Orm\QuerySet;
 
-class BaseStore
+abstract class BaseStore
 {
     use SmartProperties;
+
+    /**
+     * @param array $data
+     *
+     * @return QuerySet
+     */
+    abstract public function populate(array $data);
 
 }
