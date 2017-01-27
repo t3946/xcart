@@ -8,12 +8,12 @@ if ($REQUEST_METHOD == "POST") {
         $aFeed = null;
         $aProductsIds = array_keys($productids);
         foreach ($aProductsIds as $iProductId) {
-            $aFeed[$iProductId]['Product'] = \Xcart\Product::model(['productid' => $iProductId]);
+            $aFeed[$iProductId]['Product'] = $oProduct = \Xcart\Product::model(['productid' => $iProductId]);
             $aFeed[$iProductId]['ASIN'] = $productasin[$iProductId];
-            $aFeed[$iProductId]['cidev_get_amazon_fulfillment_latency'] = \Xcart\Connection::getInstance()->executeQuery("SELECT cidev_get_amazon_fulfillment_latency('MMM')")->fetchColumn();
+            $aFeed[$iProductId]['cidev_get_amazon_fulfillment_latency'] = $oProduct->getManfacturerClass()->getField('amazon_leadtime_to_ship');
         }
-
         $res = (new \Xcart\AmazonMWS())->submitToListingLoader($aFeed);
+        func_header_location('az_create_listings.php');
     }
 }
 

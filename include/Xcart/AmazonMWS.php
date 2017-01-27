@@ -975,8 +975,11 @@ SQL;
                     continue;
                 }
 
-                if (!empty($aArrInsert['productid']))
-                    func_array2insert('products_amz_fields', $aArrInsert, true);
+                if (!empty($aArrInsert['productid'])) {
+                    if (!(Connection::getInstance()->update('xcar_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]))) {
+                        Connection::getInstance()->insert('xcar_products_amz_fields', $aArrInsert);
+                    }
+                }
             }
         }
 
@@ -1961,18 +1964,20 @@ SQL;
 
     public function submitToListingLoader($aFeeds)
     {
-        $aRows = $aResult = [];
+        $aRows = $aResult = $aProductIds = [];
         if (!empty($aFeeds)){
             $oAmazonMarketPlace = $sFeed = null;
+            $sFeed = "TemplateType=Offer\tVersion=2014.0703".str_repeat("\t",254).PHP_EOL;
             foreach ($aFeeds as $aFeed) {
                 /** @var Product $oProduct */
                 $oProduct = $aFeed['Product'];
+                $aProductIds[] = $oProduct->getProductId();
                 $aRows[] = [
                     $oProduct->getSKU(),
                     price_format($oProduct->getAmazonPrice()),
                     0,
-                    'ASIN',
                     $aFeed['ASIN'],
+                    'ASIN',
                     'New',
                     '',
                     '',
@@ -1983,6 +1988,10 @@ SQL;
                     '',
                     '',
                     $aFeed['cidev_get_amazon_fulfillment_latency'],
+                    '',
+                    '',
+                    '',
+                    '',
                     '',
                     '',
                     '',
@@ -2002,10 +2011,10 @@ SQL;
             }
             if ($oAmazonMarketPlace && !empty($aRows)) {
                 foreach ($aRows as $aRow){
-                    $sFeed .= implode("\t", $aRow) . PHP_EOL;
+                    $sFeed .= implode("\t", $aRow). str_repeat("\t",231) . PHP_EOL;
                 }
-
-                $feedHandle = @fopen('php://temp', 'rw+');
+global $xcart_dir;
+                $feedHandle = fopen($xcart_dir.'\test.txt', 'w');
                 fwrite($feedHandle, $sFeed);
                 if ($feedHandle) {
                     rewind($feedHandle);
@@ -2019,7 +2028,18 @@ SQL;
                     );
 
                     $request = new \MarketplaceWebService_Model_SubmitFeedRequest($parameters);
-                    $aResult = $this->invokeSubmitFeed($request);
+                    //$aResult = $this->invokeSubmitFeed($request);
+                    if (!empty($aResult)) {
+                        if (!empty($aResult['FeedSubmissionId'])){
+                            if (Connection::getInstance()->insert('xcart_external_verification_feeds', ['amazon_submition_id' => $aResult['FeedSubmissionId']])){
+                                $iFeedId = Connection::getInstance()->lastInsertId();
+                                foreach ($aProductIds as $iProductId) {
+                                    Connection::getInstance()->update('xcart_external_verification_products_queue',
+                                        ['feed_id' => $iFeedId, 'amz_listing_status' => 'submitted_to_listing_loader'], ['productid' => $iProductId]);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
