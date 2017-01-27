@@ -1968,6 +1968,33 @@ SQL;
         if (!empty($aFeeds)){
             $oAmazonMarketPlace = $sFeed = null;
             $sFeed = "TemplateType=Offer\tVersion=2014.0703".str_repeat("\t",254).PHP_EOL;
+            $aHeader = ['sku',
+                'price',
+                'quantity',
+                'product-id',
+                'product-id-type',
+                'condition-type',
+                'condition-note',
+                'ASIN-hint',
+                'title',
+                'product-tax-code',
+                'operation-type',
+                'sale-price',
+                'sale-start-date',
+                'sale-end-date',
+                'leadtime-to-ship',
+                'launch-date',
+                'is-giftwrap-available',
+                'is-gift-message-available',
+                'fulfillment-center-id',
+                'main-offer-image',
+                'offer-image1',
+                'offer-image2',
+                'offer-image3',
+                'offer-image4',
+                'offer-image5'];
+            $sFeed .= implode("\t",$aHeader).str_repeat("\t",231).PHP_EOL;
+            $sFeed .= implode("\t",$aHeader).str_repeat("\t",231).PHP_EOL;
             foreach ($aFeeds as $aFeed) {
                 /** @var Product $oProduct */
                 $oProduct = $aFeed['Product'];
@@ -2013,8 +2040,7 @@ SQL;
                 foreach ($aRows as $aRow){
                     $sFeed .= implode("\t", $aRow). str_repeat("\t",231) . PHP_EOL;
                 }
-global $xcart_dir;
-                $feedHandle = fopen($xcart_dir.'\test.txt', 'w');
+                $feedHandle = @fopen('php://temp', 'rw+');
                 fwrite($feedHandle, $sFeed);
                 if ($feedHandle) {
                     rewind($feedHandle);
@@ -2028,7 +2054,7 @@ global $xcart_dir;
                     );
 
                     $request = new \MarketplaceWebService_Model_SubmitFeedRequest($parameters);
-                    //$aResult = $this->invokeSubmitFeed($request);
+                    $aResult = $this->invokeSubmitFeed($request);
                     if (!empty($aResult)) {
                         if (!empty($aResult['FeedSubmissionId'])){
                             if (Connection::getInstance()->insert('xcart_external_verification_feeds', ['amazon_submition_id' => $aResult['FeedSubmissionId']])){
