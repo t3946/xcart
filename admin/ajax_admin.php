@@ -58,6 +58,9 @@ switch ($_POST['ajax_action']) {
     case "get_paypal_invoice_status":
         getPayPalInvoiceStatus($_POST);
         break;
+    case "get_amazon_feed_status":
+        getAmazonFeedStatus($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -449,6 +452,19 @@ function getPayPalInvoiceStatus($aParams = [])
             $aResult['result'] = true;
             $aResult['status'] = $oInv->getStatus();
         }
+    }
+    print(json_encode($aResult));
+}
+
+function getAmazonFeedStatus($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['feed_id'])) {
+        $oAmazonMWS = new Xcart\AmazonMWS();
+        $aRes = $oAmazonMWS
+            ->setReportId([$aParams['feed_id']])
+            ->_Request('GetSubmitionResults')->getReportContent();
+        var_dump($aRes);
     }
     print(json_encode($aResult));
 }

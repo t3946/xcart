@@ -645,7 +645,9 @@ class AmazonMWS
         } else {
             $log_text = 'RequestReport -> ReportRequestId:' . $this->dom_xml_arr['ReportRequestId'];
         }
-        func_backprocess_log($this->sBackProcessLogName, $log_text);
+        if (!empty($this->sBackProcessLogName)) {
+            func_backprocess_log($this->sBackProcessLogName, $log_text);
+        }
         return $this;
     }
 
@@ -668,7 +670,10 @@ class AmazonMWS
             $this->dom_xml_arr = $this->invokeGetReportRequestList($request);
 
             $log_text = 'GetReportRequestList -> ReportProcessingStatus:' . $this->dom_xml_arr['ReportProcessingStatus'];
-            func_backprocess_log($this->sBackProcessLogName, $log_text);
+
+            if (!empty($this->sBackProcessLogName)) {
+                func_backprocess_log($this->sBackProcessLogName, $log_text);
+            }
 
             if (!empty($this->dom_xml_arr['Caught_Exception'])) {
                 $this->error[] = $this->dom_xml_arr["Caught_Exception"];
@@ -708,7 +713,9 @@ class AmazonMWS
         } else {
             $log_text = 'GetReportList -> No reports found';
         }
-        func_backprocess_log($this->sBackProcessLogName, $log_text);
+        if (!empty($this->sBackProcessLogName)) {
+            func_backprocess_log($this->sBackProcessLogName, $log_text);
+        }
 
         $this->setReportId($this->dom_xml_arr["ReportId"]);
         return $this;
@@ -730,7 +737,9 @@ class AmazonMWS
                     $request->setReportId($reportId);
                     $this->dom_xml_arr[$reportId] = $this->invokeGetReport($request);
                     $log_text = 'GetReport -> ReportId:' . $reportId;
-                    func_backprocess_log($this->sBackProcessLogName, $log_text);
+                    if (!empty($this->sBackProcessLogName)) {
+                        func_backprocess_log($this->sBackProcessLogName, $log_text);
+                    }
                 }
             }
         }
@@ -755,7 +764,10 @@ class AmazonMWS
                 $this->invokeUpdateReportAcknowledgements($request);
 
                 $log_text = 'UpdateReportAcknowledgements -> ReportId:' . $iReportId;
-                func_backprocess_log($this->sBackProcessLogName, $log_text);
+
+                if (!empty($this->sBackProcessLogName)) {
+                    func_backprocess_log($this->sBackProcessLogName, $log_text);
+                }
             }
         }
 
@@ -767,6 +779,10 @@ class AmazonMWS
         $this->oOrder = $oOrder;
     }
 
+    /**
+     * @param array $aReportId
+     * @return $this
+     */
     public function setReportId($aReportId)
     {
         $this->aReportIds = $aReportId;
@@ -830,7 +846,9 @@ class AmazonMWS
                 $oMaxdate = \DateTime::createFromFormat('Y-m-d', $aResult['rdate']);
                 $log_text .= " Max report date: {$oMaxdate->format('Y-m-d')}";
             }
-            func_backprocess_log($this->sBackProcessLogName, $log_text);
+            if (!empty($this->sBackProcessLogName)) {
+                func_backprocess_log($this->sBackProcessLogName, $log_text);
+            }
             $cnt = 0;
             foreach ($aReportValue as $vArr) {
                 list($date, $fnsku, $sku, $pn, $qty, $fba_shipment_id, $fulfillment_center_id) = $vArr;
@@ -848,7 +866,9 @@ class AmazonMWS
             }
             if ($cnt) {
                 $log_text = "Inserted " . $cnt . " new rows";
-                func_backprocess_log($this->sBackProcessLogName, $log_text);
+                if (!empty($this->sBackProcessLogName)) {
+                    func_backprocess_log($this->sBackProcessLogName, $log_text);
+                }
             }
 
             Connection::getInstance()->delete('xcart_fba_roi_accounting', array('source' => 'inventory_receipts'));
@@ -913,7 +933,9 @@ SQL;
         if (!empty($ReportContent)) {
 
             $log_text = "Processing " . count($ReportContent) . " reports";
-            func_backprocess_log($this->sBackProcessLogName, $log_text);
+            if (!empty($this->sBackProcessLogName)) {
+                func_backprocess_log($this->sBackProcessLogName, $log_text);
+            }
 
             foreach ($ReportContent as $report_data) {
                 $cntLine = 0;
@@ -931,7 +953,9 @@ SQL;
                 }
                 $aReportData = [];
                 $log_text = "Processing " . ($cntLine - 2) . " products";
-                func_backprocess_log($this->sBackProcessLogName, $log_text);
+                if (!empty($this->sBackProcessLogName)) {
+                    func_backprocess_log($this->sBackProcessLogName, $log_text);
+                }
                 for ($y = 0; $y < count($aReportValue); $y++) {
                     foreach ($aReportValue[$y] as $iKey => $sItem) {
                         if ($y == 0) {
@@ -1964,6 +1988,7 @@ SQL;
 
     public function submitToListingLoader($aFeeds)
     {
+        global $login;
         $aRows = $aResult = $aProductIds = [];
         if (!empty($aFeeds)){
             $oAmazonMarketPlace = $sFeed = null;
@@ -2057,7 +2082,12 @@ SQL;
                     $aResult = $this->invokeSubmitFeed($request);
                     if (!empty($aResult)) {
                         if (!empty($aResult['FeedSubmissionId'])){
-                            if (Connection::getInstance()->insert('xcart_external_verification_feeds', ['amazon_submition_id' => $aResult['FeedSubmissionId']])){
+                            if (Connection::getInstance()->insert('xcart_external_verification_feeds',
+                                ['amazon_submition_id' => $aResult['FeedSubmissionId'],
+                                 'status' => $aResult['FeedProcessingStatus'],
+                                 'login' => $login]
+                            ))
+                            {
                                 $iFeedId = Connection::getInstance()->lastInsertId();
                                 foreach ($aProductIds as $iProductId) {
                                     Connection::getInstance()->update('xcart_external_verification_products_queue',
@@ -2122,5 +2152,55 @@ SQL;
             $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
         }
         return $return_echo;
+    }
+
+    public function invokeGetFeedSubmissionResult($request)
+    {
+        $return_echo = [];
+        try {
+            $response = $this->oMWSService->getFeedSubmissionResult($request);
+
+            if ($response->isSetGetFeedSubmissionResultResult()) {
+                $getFeedSubmissionResultResult = $response->getGetFeedSubmissionResultResult();
+                if ($getFeedSubmissionResultResult->isSetContentMd5()) {
+                    $return_echo['ContentMd5'] = $getFeedSubmissionResultResult->getContentMd5();
+                }
+            }
+            if ($response->isSetResponseMetadata()) {
+                $responseMetadata = $response->getResponseMetadata();
+                if ($responseMetadata->isSetRequestId()) {
+                    $return_echo['RequestId'] = $responseMetadata->getRequestId();
+                }
+            }
+            $return_echo['ResponseHeaderMetadata'] = $response->getResponseHeaderMetadata();
+        } catch (\MarketplaceWebService_Exception $ex) {
+            $return_echo["Caught Exception"] = $ex->getMessage();
+            $return_echo["Response Status Code"] = $ex->getStatusCode();
+            $return_echo["Error Code"] = $ex->getErrorCode();
+            $return_echo["Error Type"] = $ex->getErrorType();
+            $return_echo["Request ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        }
+        return $return_echo;
+    }
+
+    public function doGetSubmitionResults()
+    {
+        if (!empty($this->error)) return $this;
+
+        $this->aWaitLoopExitCondition = [];
+        $request = new \MarketplaceWebService_Model_GetFeedSubmissionResultRequest();
+        $request->setMerchant(MERCHANT_ID);
+        $request->setFeedSubmissionId(reset($this->aReportIds));
+        $request->setFeedSubmissionResult(@fopen('php://memory', 'rw+'));
+
+        $this->dom_xml_arr = $this->invokeGetFeedSubmissionResult($request);
+
+        if (!empty($this->dom_xml_arr['Caught_Exception'])) {
+            $this->error[] = $this->dom_xml_arr["Caught_Exception"];
+        }
+
+        return $this;
     }
 }
