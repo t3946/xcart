@@ -974,8 +974,11 @@ SQL;
                     continue;
                 }
 
-                if (!empty($aArrInsert['productid']))
-                    func_array2insert('products_amz_fields', $aArrInsert, true);
+                if (!empty($aArrInsert['productid'])) {
+                    if (!(Connection::getInstance()->update('xcar_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]))) {
+                        Connection::getInstance()->insert('xcar_products_amz_fields', $aArrInsert);
+                    }
+                }
             }
         }
 
