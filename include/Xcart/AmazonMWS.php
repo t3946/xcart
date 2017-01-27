@@ -975,8 +975,8 @@ SQL;
                 }
 
                 if (!empty($aArrInsert['productid'])) {
-                    if (!(Connection::getInstance()->update('xcar_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]))) {
-                        Connection::getInstance()->insert('xcar_products_amz_fields', $aArrInsert);
+                    if (!(Connection::getInstance()->update('xcart_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]))) {
+                        Connection::getInstance()->insert('xcart_products_amz_fields', $aArrInsert);
                     }
                 }
             }
