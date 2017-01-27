@@ -379,11 +379,11 @@ if ($sExtraLog=='Y')
 					if (!empty($aShippingRates)) {
 						/** @var \Xcart\ShippingRate $oShippingRate */
 						$oShippingRate = reset($aShippingRates);
-						$shippings_str_arr[] = $v["country_code"] . ":" . $v["state"] . ":" . $oShippingRate->getShippingEntity()->getFrontendName() . ":" . price_format($oShippingRate->getShippingCharge()) . $shipping_currency;
+						$shippings_str_arr[] = $v["country_code"] . ":" . $v["code"] . ":" . $oShippingRate->getShippingEntity()->getFrontendName() . ":" . price_format($oShippingRate->getShippingCharge()) . $shipping_currency;
 						$shippings_google_arr[$k]["price"]["value"] = price_format($oShippingRate->getShippingCharge());
 						$shippings_google_arr[$k]["price"]["currency"] = trim($shipping_currency);
 						$shippings_google_arr[$k]["country"] = $v["country_code"];
-						$shippings_google_arr[$k]["region"] = $v["state"];
+						$shippings_google_arr[$k]["region"] = $v["code"];
 						$shippings_google_arr[$k]["service"] = $oShippingRate->getShippingEntity()->getFrontendName();
 						$aShippingCarrier[] = $oShippingRate->getShippingEntity()->getShippingCarrier()->getName();
 						break;
