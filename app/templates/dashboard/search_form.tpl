@@ -18,7 +18,8 @@
                                data-range="true"
                                data-multiple-dates-separator=" - "
                                data-language="en"
-                               class="datepicker-here">
+                               data-clear-button="1"
+                               class="datepicker-here big">
 
                         <div class="templates as_a date_templates">
                             <span data-range="this_month">This month</span>
@@ -26,6 +27,7 @@
                             <span data-range="today">Today</span>
                             <span data-range="last_31">Last 31 days</span>
                             <span data-range="last_7">Last 7 days</span>
+                            <span data-range="clear">[ Clear ]</span>
                         </div>
                     </div>
                 </li>
@@ -48,7 +50,7 @@
                     </div>
 
                     <div class="input">
-                        <input type="text" name="search[customer][name]" id="c_name" class="big">
+                        <select name="search[customer][name]" id="c_name" class="big" multiple data-ajax-from="search_customer_name" data-combobox="1"></select>
                     </div>
                 </li>
 
@@ -208,9 +210,24 @@
                     </div>
 
                     <div class="input">
-                        <select type="text" name="search[order][po_status][]" id="o_transit" class="big" multiple>
+                        <select type="text" name="search[order][po_transit_status][]" id="o_transit" class="big" multiple>
                             {foreach $order_statuses.PO as $status}
                                 <option value="{$status.code}">{$status.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </li>
+
+
+                <li>
+                    <div class="label">
+                        <label for="o_po">PO status:</label>
+                    </div>
+
+                    <div class="input">
+                        <select type="text" name="search[order][po_status][]" id="o_po" class="big" multiple>
+                            {foreach $po_statuses as $code => $name}
+                                <option value="{$code}">{$name}</option>
                             {/foreach}
                         </select>
                     </div>
@@ -224,6 +241,20 @@
                     <div class="input">
                         <select name="search[order][fraud_status][]" id="o_fraud" class="big" multiple>
                             {foreach $fraud_statuses as $status}
+                                <option value="{$status.code}">{$status.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="label">
+                        <label for="p_vs">Verification status:</label>
+                    </div>
+
+                    <div class="input">
+                        <select name="search[order][vn_status][]" id="p_vs" class="big" multiple>
+                            {foreach $order_statuses.PV as $status}
                                 <option value="{$status.code}">{$status.name}</option>
                             {/foreach}
                         </select>
@@ -304,20 +335,6 @@
                         </select>
                     </div>
                 </li>
-
-                <li>
-                    <div class="label">
-                        <label for="p_vs">Verification status:</label>
-                    </div>
-
-                    <div class="input">
-                        <select name="search[product][pv_status][]" id="p_vs" class="big" multiple>
-                            {foreach $order_statuses.PV as $status}
-                                <option value="{$status.code}">{$status.name}</option>
-                            {/foreach}
-                        </select>
-                    </div>
-                </li>
             </ul>
         </fieldset>
 
@@ -390,13 +407,14 @@
                     </div>
 
                     <div class="input">
-                        <select name="search[customer][street][]" id="c_street" class="big" multiple data-ajax-from="search_street" data-combobox="1"></select>
+                        <select name="search[customer][address][]" id="c_street" class="big" multiple data-ajax-from="search_street" data-combobox="1"></select>
                     </div>
                 </li>
             </ul>
         </fieldset>
 
         <button>Search</button>
+        <a href="{url 'dashboard:search'}">Reset</a>
 
     </form>
 {/block}
@@ -438,13 +456,22 @@
             });
 
 
+            $('.admin select').on('select2:select select2:opening', function (e) {
+                $(this).closest('form').off('keyup', '.select2-selection',  function (e) {
+                    console.log(e);
+                    if (e.keyCode === 13) {
+                        $(this).closest('form').submit();
+                    }
+                });
+            });
+
             $('.admin select[data-ajax-from]').select2({
                 allowClear: true,
                 placeholder: 'Start typing for hint',
                 tags: true,
+                closeOnSelect: false,
                 minimumInputLength: 3,
                 createTag : function (params) {
-
                     if (!this.$element.data('combobox')) {
                         return null;
                     }
@@ -456,8 +483,8 @@
                     }
 
                     return {
-                        id: term,
-                        text: '> ' + term
+                        id: '{$manual_string}' + term,
+                        text: '-> ' + term
                     }
                 },
                 ajax: {
@@ -531,13 +558,22 @@
                         for_datepicker = [date2, date];
                         break;
                     }
+                    case 'clear': {
+                        for_datepicker = [];
+                        break;
+                    }
                     default: {
                         date_value = date.toLocaleDateString(locale);
                         for_datepicker = [date, date];
                     }
                 }
                 if (typeof $input.datepicker === "function") {
-                    $input.datepicker().data('datepicker').selectDate(for_datepicker);
+                    if (for_datepicker.length == 2) {
+                        $input.datepicker().data('datepicker').selectDate(for_datepicker);
+                    }
+                    else {
+                        $input.datepicker().data('datepicker').clear();
+                    }
                 }
                 else {
                     $input.val(date_value);

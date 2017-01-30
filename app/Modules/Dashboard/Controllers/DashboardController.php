@@ -8,6 +8,7 @@ use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Controller\AdminController;
 use Xcart\Connection;
 use Xcart\Order;
+use Xcart\POPipeline;
 
 class DashboardController extends AdminController
 {
@@ -30,7 +31,7 @@ class DashboardController extends AdminController
             $qs = (new OrderSearchStore())->populate($_GET['search']);
             echo 'Count:' . $qs->count() ."<br/>";
 
-            $models = $qs->all();
+            $models = $qs->limit(20)->order(['-t.orderid'])->all();
 
             foreach ($models as $model) {
                 echo '|'.$model;
@@ -63,9 +64,11 @@ class DashboardController extends AdminController
             'attention_tags' => $attention_tags,
             'shipping_methods' => $shipping_methods,
             'payment_methods' => $payment_methods,
+            'po_statuses' => POPipeline::getPOStatuses(),
             'features' => OrderSearchStore::getFeatures(),
             'sources' => OrderSearchStore::getSources(),
             'question_statuses' => OrderSearchStore::getQuestionStatuses(),
+            'manual_string' => OrderSearchStore::CONST_MANUAL_STRING,
         ]);
 
         echo $this->renderSmarty("admin/home.tpl",[
@@ -114,11 +117,22 @@ class DashboardController extends AdminController
                 case 'search_zip' :
                     $data = Connection::getInstance()->fetchAll(SearchSql::getZipOrderSql(), ['like' => $query]);
                     break;
+                case 'search_customer_name' :
+                    $data = Connection::getInstance()->fetchAll(SearchSql::getCustomerNameSql(), ['like' => $query]);
+                    break;
             }
 
 //            if (!empty($_GET['combobox'])) {
-//                array_unshift($data, ['id' => $_GET['q'], 'text' => '> '.$_GET['q']]);
+//                array_unshift($data, ['id' => OrderSearchStore::CONST_MANUAL_STRING . $_GET['q'], 'text' => '-> '.$_GET['q']]);
 //            }
+        }
+
+        foreach ($data as $k => $v)
+        {
+            $id = OrderSearchStore::replaceNewLine($v['id']);
+            $text = str_replace(["\n", "\r"], " ", $v['text']);
+
+            $data[$k] = ['id' => $id, 'text' => $text];
         }
 
         $this->jsonResponse($data);

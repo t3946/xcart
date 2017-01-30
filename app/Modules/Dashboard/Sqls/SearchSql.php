@@ -49,7 +49,7 @@ SQL;
     public static function getStateOrderSql()
     {
         return /** @lang MySQL */ <<<SQL
-(select state as id, state as text from xcart_states where xcart_states.state like :like)
+(select code as id, state as text from xcart_states where xcart_states.state like :like)
 UNION 
 (   
     select s_state as id, s_state as text 
@@ -95,38 +95,76 @@ SQL;
     public static function getPhoneFaxOrderSql()
     {
         return /** @lang MySQL */ <<<SQL
-(select phone as id, phone as text from xcart_customers where phone like :like and usertype in ('C'))
-union
-(select fax as id, fax as text from xcart_customers where fax like :like and usertype in ('C'))
-union
 (select phone as id, phone as text from xcart_orders where phone like :like  GROUP BY phone)
 UNION 
 (select fax as id, fax as text from xcart_orders where fax like :like GROUP BY fax)
 limit 50
 SQL;
+//        return /** @lang MySQL */ <<<SQL
+//(select phone as id, phone as text from xcart_customers where phone like :like and usertype in ('C'))
+//union
+//(select fax as id, fax as text from xcart_customers where fax like :like and usertype in ('C'))
+//union
+//(select phone as id, phone as text from xcart_orders where phone like :like  GROUP BY phone)
+//UNION
+//(select fax as id, fax as text from xcart_orders where fax like :like GROUP BY fax)
+//limit 50
+//SQL;
     }
 
     public static function getEmailOrderSql()
     {
         return /** @lang MySQL */ <<<SQL
-(select email as id, email as text from xcart_customers where email like :like and usertype in ('C'))
-UNION 
 (select email as id, email as text from xcart_orders where email like :like GROUP BY email)
 limit 50
 SQL;
+//        return /** @lang MySQL */ <<<SQL
+//(select email as id, email as text from xcart_customers where email like :like and usertype in ('C'))
+//UNION
+//(select email as id, email as text from xcart_orders where email like :like GROUP BY email)
+//limit 50
+//SQL;
     }
 
     public static function getZipOrderSql()
     {
         return /** @lang MySQL */ <<<SQL
-(select b_zipcode as id, b_zipcode as text from xcart_customers where b_zipcode like :like and usertype in ('C'))
-UNION 
-(select s_zipcode as id, s_zipcode as text from xcart_customers where s_zipcode like :like and usertype in ('C'))
-UNION 
 (select b_zipcode as id, b_zipcode as text from xcart_orders where b_zipcode like :like GROUP BY b_zipcode)
 UNION 
 (select s_zipcode as id, s_zipcode as text from xcart_orders where s_zipcode like :like GROUP BY s_zipcode)
 limit 50
 SQL;
+//        return /** @lang MySQL */ <<<SQL
+//(select b_zipcode as id, b_zipcode as text from xcart_customers where b_zipcode like :like and usertype in ('C'))
+//UNION
+//(select s_zipcode as id, s_zipcode as text from xcart_customers where s_zipcode like :like and usertype in ('C'))
+//UNION
+//(select b_zipcode as id, b_zipcode as text from xcart_orders where b_zipcode like :like GROUP BY b_zipcode)
+//UNION
+//(select s_zipcode as id, s_zipcode as text from xcart_orders where s_zipcode like :like GROUP BY s_zipcode)
+//limit 50
+//SQL;
+    }
+
+    public static function getCustomerNameSql()
+    {
+        return /** @lang MySQL */ <<<SQL
+(select firstname as id, firstname as text from xcart_orders where firstname like :like GROUP BY firstname)
+UNION 
+(select s_firstname as id, s_firstname as text from xcart_orders where s_firstname like :like GROUP BY s_firstname)
+UNION 
+(select b_firstname as id, b_firstname as text from xcart_orders where b_firstname like :like GROUP BY b_firstname)
+limit 50
+SQL;
+//        return /** @lang MySQL */ <<<SQL
+//(select b_zipcode as id, b_zipcode as text from xcart_customers where b_zipcode like :like and usertype in ('C'))
+//UNION
+//(select s_zipcode as id, s_zipcode as text from xcart_customers where s_zipcode like :like and usertype in ('C'))
+//UNION
+//(select b_zipcode as id, b_zipcode as text from xcart_orders where b_zipcode like :like GROUP BY b_zipcode)
+//UNION
+//(select s_zipcode as id, s_zipcode as text from xcart_orders where s_zipcode like :like GROUP BY s_zipcode)
+//limit 50
+//SQL;
     }
 }

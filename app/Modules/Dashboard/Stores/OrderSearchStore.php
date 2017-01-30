@@ -8,46 +8,49 @@
 
 namespace Modules\Dashboard\Stores;
 
+use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
-use Mindy\QueryBuilder\QueryBuilder;
+use Mindy\QueryBuilder\Q\QOr;
 use Xcart\App\Store\BaseStore;
 use Xcart\Order;
 
 class OrderSearchStore extends BaseStore
 {
+    const CONST_MANUAL_STRING = '=> ';
+
     public static function getFeatures()
     {
         return [
-            'mobile_added' => 'Orders with products added via mobile-storefront',
-            'gc_applied' => 'Entirely or partially paid by Gift Certificate',
+            'mobile_added'     => 'Orders with products added via mobile-storefront',
+            'gc_applied'       => 'Entirely or partially paid by Gift Certificate',
             'discount_applied' => 'Global discount applied',
-            'coupon_applied' => 'Discount coupon applied',
-            'free_ship' => 'Free shipping',
-            'free_tax' => 'Tax exempt',
-            'gc_ordered' => 'Gift Certificates purchased',
-            'notes' => 'Orders that have notes assigned',
+            'coupon_applied'   => 'Discount coupon applied',
+            'free_ship'        => 'Free shipping',
+            'free_tax'         => 'Tax exempt',
+            'gc_ordered'       => 'Gift Certificates purchased',
+            'notes'            => 'Orders that have notes assigned',
         ];
     }
 
     public static function getSources()
     {
         return [
-            'xcart_orders_only' => 'S3 Stores websites',
+            'xcart_orders_only'  => 'S3 Stores websites',
             'amazon_orders_only' => 'Amazon website',
-            'amazon_orders_MFN' => 'Amazon - MFN',
-            'amazon_orders_FBA' => 'Amazon - FBA',
+            'amazon_orders_MFN'  => 'Amazon - MFN',
+            'amazon_orders_FBA'  => 'Amazon - FBA',
         ];
     }
 
     public static function getQuestionStatuses()
     {
         return [
-            "question_received_from_cust" => "Question received from customer",
+            "question_received_from_cust"  => "Question received from customer",
             "question_sent_to_distr_brand" => "Question sent to distributor/brand",
-            "call_distributor_brand" => "Call distributor/brand",
-            "answer_sent_to_cust" => "Answer sent to customer",
-            "order_pending" => "Order pending",
-            "closed" => "Closed"
+            "call_distributor_brand"       => "Call distributor/brand",
+            "answer_sent_to_cust"          => "Answer sent to customer",
+            "order_pending"                => "Order pending",
+            "closed"                       => "Closed",
         ];
     }
 
@@ -58,8 +61,7 @@ class OrderSearchStore extends BaseStore
      */
     public function populate(array $data)
     {
-//        $data1 = $this->clearRecursive($data);
-//        func_dump($data1);
+        $data = $this->clearRecursive($data);
 
         $where = [];
         $exclude = [];
@@ -137,21 +139,29 @@ class OrderSearchStore extends BaseStore
             if (!empty($data['order']['operator'])) {
                 $where['login_last_opened_or_saved__in'] = $data['order']['operator'];
             }
+
             if (!empty($data['order']['payment_method'])) {
                 $where['paymentid__in'] = $data['order']['payment_method'];
             }
+
             if (!empty($data['order']['delivery_method'])) {
-                $where['shippingid__in'] = $data['order']['delivery_method'];
-            }
-            if (!empty($data['order']['c2b_status'])) {
-                $where['cb_status__in'] = $data['order']['c2b_status'];
-            }
-            if (!empty($data['order']['d2c_status'])) {
-                $where['dc_status__in'] = $data['order']['d2c_status'];
-            }
-            if (!empty($data['order']['po_status'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
-                $where['group.po_status__in'] = $data['order']['po_status'];
+                $where['group.shippingid__in'] = $data['order']['delivery_method'];
+            }
+
+            if (!empty($data['order']['c2b_status'])) {
+                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $where['group.cb_status__in'] = $data['order']['c2b_status'];
+            }
+
+            if (!empty($data['order']['d2c_status'])) {
+                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $where['group.dc_status__in'] = $data['order']['d2c_status'];
+            }
+
+            if (!empty($data['order']['po_transit_status'])) {
+                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $where['group.po_status__in'] = $data['order']['po_transit_status'];
             }
 
             if (!empty($data['order']['fraud_status'])) {
@@ -166,6 +176,15 @@ class OrderSearchStore extends BaseStore
             if (!empty($data['order']['distributor'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
                 $where['group.manufacturerid__in'] = $data['order']['distributor'];
+            }
+
+            if (!empty($data['order']['vn_status'])) {
+                $where['group.vn_status__in'] = $data['order']['vn_status'];
+            }
+
+            if (!empty($data['order']['po_status'])) {
+                $qs->join('inner join', 'xcart_po_pipeline', ['t.orderid' => 'po.order_id'], 'po');
+                $where['po.status__in'] = $data['order']['po_status'];
             }
         }
 
@@ -196,24 +215,220 @@ class OrderSearchStore extends BaseStore
                     }
                 }
             }
-
-//            # Search by product title
-//            if (!empty($data["by_title"])) {
-//                $search_in_products = true;
-//                $condition[] = "$sql_tbl[products].product LIKE '%".$data["product_substring"]."%'";
-//            }
-//
-//            # Search by product options
-//            if (!empty($data["by_options"])) {
-//                $search_in_order_details = true;
-//                $condition[] = "$sql_tbl[order_details].product_options LIKE '%".$data["product_substring"]."%'";
-//            }
         }
-        $qs = $qs->limit(5)->filter($where)->exclude($exclude);
+
+        if (!empty($data['product']))
+        {
+            if (!empty($data['product']['name'])) {
+                $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
+                $where[] = new QOr([
+                                       'details.product__contains'         => $data['product']['name'],
+                                       'details.product_options__contains' => $data['product']['name'],
+                                   ]);
+            }
+
+            if (!empty($data['product']['sku'])) {
+                $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
+                $where['details.productcode__contains'] = $data['product']['sku'];
+            }
+
+            if (!empty($data['product']['id'])) {
+                $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
+                $where['details.productid'] = $data['product']['id'];
+            }
+
+            if (!empty($data['product']['question_status'])) {
+                $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
+                $qs->join('inner join', 'xcart_product_question', ['details.productid' => 'question.productid'], 'question');
+                $where['question.status__in'] = $data['product']['question_status'];
+            }
+        }
+
+        if (!empty($data['customer']))
+        {
+            if (!empty($data['customer']['company']))
+            {
+                $tmp = [];
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
+                    $tmp['b_company__in'] = $data['customer']['company'];
+                }
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
+                    $tmp['s_company__in'] = $data['customer']['company'];
+                }
+                $tmp['company__in'] = $data['customer']['company'];
+                $where[] = new QOr($tmp);
+            }
+
+            if (!empty($data['customer']['city']))
+            {
+                $tmp = [];
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
+                    $tmp['b_city__in'] = $data['customer']['city'];
+                }
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
+                    $tmp['s_city__in'] = $data['customer']['city'];
+                }
+                $where[] = new QOr($tmp);
+            }
+
+            if (!empty($data['customer']['state']))
+            {
+                $tmp = [];
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
+                    $tmp['b_state__in'] = $data['customer']['state'];
+                }
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
+                    $tmp['s_state__in'] = $data['customer']['state'];
+                }
+                $where[] = new QOr($tmp);
+            }
+
+            if (!empty($data['customer']['country']))
+            {
+                $tmp = [];
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
+                    $tmp['b_country__in'] = $data['customer']['country'];
+                }
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
+                    $tmp['s_country__in'] = $data['customer']['country'];
+                }
+                $where[] = new QOr($tmp);
+            }
+
+            if (!empty($data['customer']['address']))
+            {
+                $tmp = [];
+                list($in, $like) = $this->explodeInOrLike($data['customer']['address']);
+
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
+                    if (!empty($in)) {
+                        $tmp['b_address__in'] = $in;
+                    }
+                    if (!empty($like)) {
+                        $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 'b_address'));
+                    }
+                }
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
+                    if (!empty($in)) {
+                        $tmp['s_address__in'] = $in;
+                    }
+                    if (!empty($like)) {
+                        $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 's_address'));
+                    }
+                }
+                $where[] = new QOr($tmp);
+            }
+
+            if (!empty($data['customer']['zip_code']))
+            {
+                $tmp = [];
+                list($in, $like) = $this->explodeInOrLike($data['customer']['zip_code']);
+
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
+                    if (!empty($in)) {
+                        $tmp['b_zipcode__in'] = $in;
+                    }
+                    if (!empty($like)) {
+                        $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 'b_zipcode'));
+                    }
+                }
+                if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
+                    if (!empty($in)) {
+                        $tmp['s_zipcode__in'] = $in;
+                    }
+                    if (!empty($like)) {
+                        $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 's_zipcode'));
+                    }
+                }
+                $where[] = new QOr($tmp);
+            }
+
+            if (!empty($data['customer']['email']))
+            {
+                $tmp = [];
+                list($in, $like) = $this->explodeInOrLike($data['customer']['email']);
+
+                if (!empty($in)) {
+                    $tmp['email__in'] = $in;
+                }
+                if (!empty($like)) {
+                    $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 'email'));
+                }
+
+                $where[] = new QOr($tmp);
+            }
+
+            if (!empty($data['customer']['phone']))
+            {
+                $tmp = [];
+                list($in, $like) = $this->explodeInOrLike($data['customer']['phone']);
+
+                if (!empty($in)) {
+                    $tmp['phone__in'] = $in;
+                }
+                if (!empty($like)) {
+                    $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 'phone'));
+                }
+
+                $where[] = new QOr($tmp);
+            }
+
+            if (!empty($data['customer']['name']))
+            {
+                $where[] = new QOr(['firstname__contains'   => $data['customer']['name'],
+                                    'b_firstname__contains' => $data['customer']['name'],
+                                    's_firstname__contains' => $data['customer']['name'],
+                                   ]);
+            }
+
+
+        }
+
+        $qs = $qs->filter($where)->exclude($exclude);
 
         func_dump($qs->getSql());
 
         return $qs;
+    }
+
+    private function arrLikeToLookup($data, $field)
+    {
+        foreach ($data as $k => $v)
+        {
+            $data[$k] = new QOr([$field.'__contains' => $v]);
+        }
+
+        return $data;
+    }
+
+    private function explodeInOrLike($data)
+    {
+        $tmp_like = [];
+        $tmp_in = [];
+
+        if (is_array($data))
+        {
+            foreach ($data as $v) {
+                $v = html_entity_decode($v);
+
+                if (strpos($v, self::CONST_MANUAL_STRING) === 0) {
+                    $tmp_like[] = substr($v, 3);
+                }
+                else {
+                    $tmp_in[] = $v;
+                }
+            }
+        }
+        else {
+            if (strpos($data, self::CONST_MANUAL_STRING) === 0) {
+                $tmp_like[] = substr($data, 3);
+            }
+            else {
+                $tmp_like[] = $data;
+            }
+        }
+
+        return [$tmp_in, $tmp_like];
     }
 
     private function clearRecursive($data)
@@ -222,15 +437,13 @@ class OrderSearchStore extends BaseStore
         {
             if (!empty($data))
             {
-                $data = array_filter($data);
-
                 $ta = [];
                 foreach ($data as $k=>$v)
                 {
                     $t = $this->clearRecursive($v);
 
                     if (!empty($t)) {
-                        $ta[$k] = $v;
+                        $ta[$k] = $t;
                     }
                 }
 
@@ -240,9 +453,8 @@ class OrderSearchStore extends BaseStore
             }
         }
         elseif (is_string($data)) {
-            $t = trim($data);
-            if (!empty($t)) {
-                return $data;
+            if (!empty($data)) {
+                return str_replace(['\\n', '\\r'], ["\n", "\r"], $data);
             }
         }
         elseif (!empty($data)) {
@@ -250,5 +462,10 @@ class OrderSearchStore extends BaseStore
         }
 
         return null;
+    }
+
+    public static function replaceNewLine($text)
+    {
+        return str_replace(["\n", "\r"], ['\\n', '\\r'], $text);
     }
 }

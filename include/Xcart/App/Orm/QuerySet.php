@@ -222,4 +222,10 @@ class QuerySet
         $this->qb->from($tables);
         return $this;
     }
+
+    public function order($columns)
+    {
+        $this->qb->order($columns);
+        return $this;
+    }
 }
