@@ -428,7 +428,7 @@ SQL;
         addCondition('FROM_UNIXTIME(O.date) > DATE_ADD(NOW(),INTERVAL -4 WEEK)')->
         query_first()->getQueryResult();
         $avail = intval($this->getAmazonFBAAvail() * 0.8) - intval($aResult['AvailOnFBA']);
-        if ($avail <= 0 && $this->getAmazonFBAAvail() == 1){
+        if ($avail <= 0 && $this->getAmazonFBAAvail() == 1 && intval($aResult['AvailOnFBA'] == 0)){
             $avail = 1;
         }
         return $avail;
