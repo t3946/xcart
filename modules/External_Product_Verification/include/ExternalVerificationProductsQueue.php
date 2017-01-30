@@ -239,7 +239,7 @@ class ExternalVerificationProductsQueue extends Data
             ->leftJoin('xe','xcart_products_amz_fields', 'paf', "paf.productid = xe.productid")
             ->innerJoin('xe','xcart_external_verification_products', 'xp1', "xp1.productid = xe.productid AND xp1.action = 'match'")
             ->innerJoin('xe','xcart_external_verification_products', 'xp2', "xp2.productid = xe.productid AND xp2.action = 'match'")
-            ->where('xe.cross_verify_count = 2', 'xp1.batch_id != xp2.batch_id', "(ISNULL(paf.amazon_fba_restricted) OR amazon_fba_restricted != 'Y')", 'xe.productid = 569530', 'ISNULL (xe.amz_listing_status)')
+            ->where('xe.cross_verify_count = 2', 'xp1.batch_id != xp2.batch_id', "(ISNULL(paf.amazon_fba_restricted) OR amazon_fba_restricted != 'Y')", 'ISNULL (xe.amz_listing_status)')
             ->groupBy('xe.productid')
             ->orderBy('productcode')
             ->having('NOT ISNULL(pasin)');

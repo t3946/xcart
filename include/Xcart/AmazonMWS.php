@@ -2,6 +2,8 @@
 namespace Xcart;
 
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
+use Xcart\External_Product_Verification\ExternalVerificationFeeds;
+use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 use Xcart\OrderGroup;
 use Xcart\Order;
 use Xcart\Cart;
@@ -2189,18 +2191,75 @@ SQL;
     {
         if (!empty($this->error)) return $this;
 
-        $this->aWaitLoopExitCondition = [];
         $request = new \MarketplaceWebService_Model_GetFeedSubmissionResultRequest();
         $request->setMerchant(MERCHANT_ID);
-        $request->setFeedSubmissionId(reset($this->aReportIds));
-        $request->setFeedSubmissionResult(@fopen('php://memory', 'rw+'));
+        $sReportId = reset($this->aReportIds);
+        $request->setFeedSubmissionId($sReportId);
+        $handle = @fopen('php://memory', 'rw+');
+        $request->setFeedSubmissionResult($handle);
 
         $this->dom_xml_arr = $this->invokeGetFeedSubmissionResult($request);
+        $contents = trim(stream_get_contents($handle));
+        $aFileRows = explode("\n", $contents);
+        if (!empty($aFileRows)) {
+            array_shift($aFileRows);
+            list ($t, $t, $t, $totalRecords) = explode("\t", array_shift($aFileRows));
+            if (intval($totalRecords) > 0) {
+                $oFeed = ExternalVerificationFeeds::model()->find(SQLBuilder::getInstance()->addCondition("amazon_submition_id = '{$sReportId}'"));
+                if ($oFeed->getField('feed_id')) {
+                    $sFeedErrors = '';
+                    $aListingProducts = array_flip(Connection::getInstance()
+                                        ->executeQuery("SELECT productid FROM xcart_external_verification_products_queue WHERE feed_id = {$oFeed->getField('feed_id')}")
+                                        ->fetchAll(\PDO::FETCH_COLUMN));
+                    Connection::getInstance()->update('xcart_external_verification_products_queue', ['amz_listing_status' => 'submit_to_feed_success'], ['feed_id' => $oFeed->getField('feed_id')]);
+                    foreach (range(1, 3) as $i) {
+                        array_shift($aFileRows);
+                    }
+                    if (!empty($aFileRows)) {
+                        foreach ($aFileRows as $sRows) {
+                            list($original_record_number, $sku, $error_code, $error_type, $error_message) = explode("\t", $sRows);
+                            if (!empty($sku)) {
+                                $oProduct = Product::getProductBySKU($sku);
+                                if ($oProduct->getProductId()) {
+                                    $this->dom_xml_arr['listing_failed']++;
+                                    unset($aListingProducts[$oProduct->getProductId()]);
+                                    Connection::getInstance()->update('xcart_external_verification_products_queue',
+                                        ['amz_listing_status' => 'submit_to_feed_failed'],
+                                        ['feed_id' => $oFeed->getField('feed_id'), 'productid' => $oProduct->getProductId()]);
+                                }
+                            }
+                            if (!empty($error_message)) {
+                                $sFeedErrors .= $error_message . PHP_EOL;
+                            }
+                        }
+                    }
+                    if (!empty($aListingProducts)){
+                        foreach (array_keys($aListingProducts) as $iProductId) {
+                            $this->dom_xml_arr['listing_success']++;
+                            Connection::getInstance()->update('xcart_products',
+                                ['amazon_enabled' => 'Y'],
+                                ['productid' => $iProductId]);
+                        }
+                    }
+                    if (!empty($sFeedErrors)) {
+                        Logs::_log('amazon_listings', $oFeed->getField('feed_id'), 'X', $sFeedErrors);
+                    }
+                }
+
+                $oFeed->updateField('status', '_DONE_');
+            }
+        }
+
 
         if (!empty($this->dom_xml_arr['Caught_Exception'])) {
             $this->error[] = $this->dom_xml_arr["Caught_Exception"];
         }
 
         return $this;
+    }
+
+    public function getDOMXML()
+    {
+        return $this->dom_xml_arr;
     }
 }

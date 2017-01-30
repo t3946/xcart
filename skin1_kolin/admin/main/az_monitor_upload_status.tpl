@@ -9,7 +9,7 @@
                 <th style="width: 120px; overflow: hidden; white-space: nowrap;">Date/Time of Upload</th>
                 <th style="width: 120px; overflow: hidden; white-space: nowrap;">Login</th>
                 <th style="width: 250px; overflow: hidden; display: inline-block; white-space: nowrap;">Feed ID</th>
-                <th>Products submited</th>
+                <th>Products submitted</th>
                 <th>Products success</th>
                 <th>Products failed</th>
                 <th>Upload Status</th>
@@ -25,15 +25,15 @@
                             <br/>{if $aFeed.Customer->getCustomerLogin()}({/if}{$aFeed.Customer->getCustomerLogin()}{if $aFeed.Customer->getCustomerLogin()}){/if}
                         </td>
                         <td class="amazon_submition_id" data-feed-id="{$aFeed.amazon_submition_id}">
-                            {$aFeed.amazon_submition_id}
+                            <a href="https://sellercentral.amazon.com/listing/status?reference_id={$aFeed.amazon_submition_id}" target="_blank"> {$aFeed.amazon_submition_id}</a>
                         </td>
-                        <td align="center">
+                        <td class="listing_total" align="center">
                             {$aFeed.total}
                         </td>
-                        <td align="center">
+                        <td class="listing_success" align="center">
                             {$aFeed.success}
                         </td>
-                        <td align="center">
+                        <td class="listing_failed" align="center">
                             {$aFeed.error}
                         </td>
                         <td class="feed_status" align="center">{$aFeed.status}</td>
@@ -60,7 +60,10 @@
                     function (data) {
                         if (data.result) {
                             row.attr('data-status', 'updated');
-                            row.find('.feed_status').removeClass('ui centered inline mini loader active');
+                            row.find('.listing_total').text(data.total);
+                            row.find('.listing_success').text(data.success);
+                            row.find('.listing_failed').text(data.failed);
+                            row.find('.feed_status').removeClass('ui centered inline mini loader active').text(data.status);
                         }
                     }, 'json');
         });

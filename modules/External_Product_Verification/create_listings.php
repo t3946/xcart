@@ -13,6 +13,11 @@ if ($REQUEST_METHOD == "POST") {
             $aFeed[$iProductId]['cidev_get_amazon_fulfillment_latency'] = $oProduct->getManfacturerClass()->getField('amazon_leadtime_to_ship');
         }
         $res = (new \Xcart\AmazonMWS())->submitToListingLoader($aFeed);
+        if ($res) {
+            $top_message["content"] = 'Listing has been submitted';
+            $top_message["type"] = "I";
+        }
+
         func_header_location('az_create_listings.php');
     }
 }

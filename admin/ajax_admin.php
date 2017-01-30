@@ -1,11 +1,13 @@
 <?php
 use Xcart\External_Product_Verification\ExternalVerificationBatch;
+use Xcart\External_Product_Verification\ExternalVerificationFeeds;
 use Xcart\External_Marketplaces\IssuesProcessingRules;
 use Xcart\Order;
 use Xcart\OrderGroup;
 use Xcart\Product;
 use Xcart\Customer;
 use Xcart\Categories;
+use Xcart\SQLBuilder;
 
 require './auth.php';
 require '../include/security.php';
@@ -447,7 +449,7 @@ function getPayPalInvoiceStatus($aParams = [])
     if (!empty($aParams['paypal_invoice_id'])) {
         $oInv = (new \Xcart\Paypal())->getPayPalInvoice($aParams['paypal_invoice_id']);
         if ($oInv) {
-            $oOrderCxInv = \Xcart\OrderCxInvoice::model()->find(\Xcart\SQLBuilder::getInstance()->addCondition("invoice_number = '{$aParams['paypal_invoice_id']}'"));
+            $oOrderCxInv = \Xcart\OrderCxInvoice::model()->find(SQLBuilder::getInstance()->addCondition("invoice_number = '{$aParams['paypal_invoice_id']}'"));
             $oOrderCxInv->updateField('status', $oInv->getStatus());
             $aResult['result'] = true;
             $aResult['status'] = $oInv->getStatus();
@@ -463,8 +465,13 @@ function getAmazonFeedStatus($aParams = [])
         $oAmazonMWS = new Xcart\AmazonMWS();
         $aRes = $oAmazonMWS
             ->setReportId([$aParams['feed_id']])
-            ->_Request('GetSubmitionResults')->getReportContent();
-        var_dump($aRes);
+            ->_Request('GetSubmitionResults');
+        $aResult['result'] = true;
+        $oFeed = ExternalVerificationFeeds::model()->find(SQLBuilder::getInstance()->addCondition("amazon_submition_id = '{$aParams['feed_id']}'"));
+        $aResult['status'] = $oFeed->getField('status');
+        $aResult['success'] = intval($oAmazonMWS->getDOMXML()['listing_success']);
+        $aResult['failed'] = intval($oAmazonMWS->getDOMXML()['listing_failed']);
+        $aResult['total'] = $aResult['success'] + $aResult['failed'];
     }
     print(json_encode($aResult));
 }
