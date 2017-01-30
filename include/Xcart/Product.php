@@ -427,7 +427,11 @@ SQL;
         addCondition("OG.dc_status IN ('B','M','T','K','DP','E','G')")->
         addCondition('FROM_UNIXTIME(O.date) > DATE_ADD(NOW(),INTERVAL -4 WEEK)')->
         query_first()->getQueryResult();
-        return intval($this->getAmazonFBAAvail() * 0.8) - intval($aResult['AvailOnFBA']);
+        $avail = intval($this->getAmazonFBAAvail() * 0.8) - intval($aResult['AvailOnFBA']);
+        if ($avail <= 0 && $this->getAmazonFBAAvail() == 1){
+            $avail = 1;
+        }
+        return $avail;
     }
 
     public function isProductFBAAvail()
