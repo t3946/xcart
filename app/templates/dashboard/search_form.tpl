@@ -75,6 +75,75 @@
                     </div>
                 </li>
 
+
+                <li>
+                    <div class="label">
+                        <label for="c_company">Search in address:</label>
+                    </div>
+
+                    <div class="input">
+                        <input type="radio" name="search[customer][in_address]" id="c_in_address_both" value="both" checked>
+                        <label for="c_in_address_both">Both</label>
+
+                        <input type="radio" name="search[customer][in_address]" id="c_in_address_billig" value="billing">
+                        <label for="c_in_address_billig">Billing</label>
+
+                        <input type="radio" name="search[customer][in_address]" id="c_in_address_shipping" value="shipping">
+                        <label for="c_in_address_shipping">Shipping</label>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="label">
+                        <label for="c_company">Company:</label>
+                    </div>
+
+                    <div class="input">
+                        <select name="search[customer][company][]" id="c_company" class="big" multiple data-ajax-from="company"></select>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="label">
+                        <label for="c_street">Street/Home (address):</label>
+                    </div>
+
+                    <div class="input">
+                        <select name="search[customer][address][]" id="c_street" class="big" multiple data-ajax-from="search_street" data-combobox="1"></select>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="label">
+                        <label for="c_city">City:</label>
+                    </div>
+
+                    <div class="input">
+                        <select name="search[customer][city][]" id="c_city" class="big" multiple data-ajax-from="search_city"></select>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="label">
+                        <label for="c_state">State/Province:</label>
+                    </div>
+
+                    <div class="input">
+                        <select name="search[customer][state][]" id="c_state" class="big" multiple data-ajax-from="search_state"></select>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="label">
+                        <label for="c_country">Country:</label>
+                    </div>
+
+                    <div class="input">
+                        <select name="search[customer][state][]" id="c_country" class="big" multiple data-ajax-from="search_country"></select>
+                    </div>
+                </li>
+
+
                 <li>
                     <div class="label">
                         <label for="c_zip">Zip/Postal code:</label>
@@ -86,6 +155,58 @@
                 </li>
             </ul>
 
+        </fieldset>
+
+
+        <fieldset class="expanded collapsed" rel="3">
+            <legend>
+                Advanced - Product in order
+            </legend>
+            <ul class="ul-main">
+                <li>
+                    <div class="label">
+                        <label for="p_name">Product name:</label>
+                    </div>
+
+                    <div class="input">
+                        <input type="text" name="search[product][name]" id="p_name" class="big">
+                    </div>
+                </li>
+
+                <li>
+                    <div class="label">
+                        <label for="p_sku">SKU:</label>
+                    </div>
+
+                    <div class="input">
+                        <input type="text" name="search[product][sku]" id="p_sku" class="big">
+                    </div>
+                </li>
+
+                <li>
+                    <div class="label">
+                        <label for="p_id">Product ID:</label>
+                    </div>
+
+                    <div class="input">
+                        <input type="text" name="search[product][id]" id="p_id" class="big">
+                    </div>
+                </li>
+
+                <li>
+                    <div class="label">
+                        <label for="p_qs">Question status:</label>
+                    </div>
+
+                    <div class="input">
+                        <select name="search[product][question_status][]" id="p_qs" class="big" multiple>
+                            {foreach $question_statuses as $code => $status}
+                                <option value="{$code}">{$status}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </li>
+            </ul>
         </fieldset>
 
         <fieldset class="expanded collapsed"  rel="2">
@@ -287,131 +408,15 @@
             </ul>
         </fieldset>
 
-        <fieldset class="expanded collapsed" rel="3">
-            <legend>
-                Advanced - Product in order
-            </legend>
-            <ul class="ul-main">
-                <li>
-                    <div class="label">
-                        <label for="p_name">Product name:</label>
-                    </div>
 
-                    <div class="input">
-                        <input type="text" name="search[product][name]" id="p_name" class="big">
-                    </div>
-                </li>
+        {*<fieldset class="expanded collapsed" rel="4">*}
+            {*<legend>*}
+                {*Advanced - Customer*}
+            {*</legend>*}
+            {*<ul class="ul-main">*}
 
-                <li>
-                    <div class="label">
-                        <label for="p_sku">SKU:</label>
-                    </div>
-
-                    <div class="input">
-                        <input type="text" name="search[product][sku]" id="p_sku" class="big">
-                    </div>
-                </li>
-
-                <li>
-                    <div class="label">
-                        <label for="p_id">Product ID:</label>
-                    </div>
-
-                    <div class="input">
-                        <input type="text" name="search[product][id]" id="p_id" class="big">
-                    </div>
-                </li>
-
-                <li>
-                    <div class="label">
-                        <label for="p_qs">Question status:</label>
-                    </div>
-
-                    <div class="input">
-                        <select name="search[product][question_status][]" id="p_qs" class="big" multiple>
-                            {foreach $question_statuses as $code => $status}
-                                <option value="{$code}">{$status}</option>
-                            {/foreach}
-                        </select>
-                    </div>
-                </li>
-            </ul>
-        </fieldset>
-
-        <fieldset class="expanded collapsed" rel="4">
-            <legend>
-                Advanced - Customer
-            </legend>
-            <ul class="ul-main">
-                <li>
-                    <div class="label">
-                        <label for="c_company">Search in address:</label>
-                    </div>
-
-                    <div class="input">
-                        <input type="radio" name="search[customer][in_address]" id="c_in_address_both" value="both" checked>
-                        <label for="c_in_address_both">Both</label>
-
-                        <input type="radio" name="search[customer][in_address]" id="c_in_address_billig" value="billing">
-                        <label for="c_in_address_billig">Billing</label>
-
-                        <input type="radio" name="search[customer][in_address]" id="c_in_address_shipping" value="shipping">
-                        <label for="c_in_address_shipping">Shipping</label>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="label">
-                        <label for="c_company">Company:</label>
-                    </div>
-
-                    <div class="input">
-                        <select name="search[customer][company][]" id="c_company" class="big" multiple data-ajax-from="company"></select>
-                    </div>
-                </li>
-
-
-                <li>
-                    <div class="label">
-                        <label for="c_city">City:</label>
-                    </div>
-
-                    <div class="input">
-                        <select name="search[customer][city][]" id="c_city" class="big" multiple data-ajax-from="search_city"></select>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="label">
-                        <label for="c_state">State/Province:</label>
-                    </div>
-
-                    <div class="input">
-                        <select name="search[customer][state][]" id="c_state" class="big" multiple data-ajax-from="search_state"></select>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="label">
-                        <label for="c_country">Country:</label>
-                    </div>
-
-                    <div class="input">
-                        <select name="search[customer][state][]" id="c_country" class="big" multiple data-ajax-from="search_country"></select>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="label">
-                        <label for="c_street">Street/Home:</label>
-                    </div>
-
-                    <div class="input">
-                        <select name="search[customer][address][]" id="c_street" class="big" multiple data-ajax-from="search_street" data-combobox="1"></select>
-                    </div>
-                </li>
-            </ul>
-        </fieldset>
+            {*</ul>*}
+        {*</fieldset>*}
 
         <button>Search</button>
         <a href="{url 'dashboard:search'}">Reset</a>

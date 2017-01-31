@@ -95,9 +95,9 @@ SQL;
     public static function getPhoneFaxOrderSql()
     {
         return /** @lang MySQL */ <<<SQL
-(select phone as id, phone as text from xcart_orders where phone like :like  GROUP BY phone)
+(select phone as id, phone as text from xcart_orders where phone RLIKE :like  GROUP BY phone)
 UNION 
-(select fax as id, fax as text from xcart_orders where fax like :like GROUP BY fax)
+(select fax as id, fax as text from xcart_orders where fax RLIKE :like GROUP BY fax)
 limit 50
 SQL;
 //        return /** @lang MySQL */ <<<SQL

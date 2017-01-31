@@ -15,7 +15,7 @@ defined('XCART_EXT_ENV') ?: define('XCART_EXT_ENV', 1);
 //}
 
 require "./auth.php";
-require $xcart_dir."/include/security.php";
+//require $xcart_dir."/include/security.php";
 
 $configPath = $xcart_dir .'/app/config/settings_admin.php';
 

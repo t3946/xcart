@@ -137,7 +137,13 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['operator'])) {
-                $where['login_last_opened_or_saved__in'] = $data['order']['operator'];
+                $qs->join('inner join', 'xcart_order_logs', ['t.orderid' => 'logs.orderid'], 'logs');
+                $where[] = new QOr([
+                    'login_last_opened_or_saved__in' => $data['order']['operator'],
+                    'logs.login__in' => $data['order']['operator'],
+                                   ]);
+
+//                $where['login_last_opened_or_saved__in'] = $data['order']['operator'];
             }
 
             if (!empty($data['order']['payment_method'])) {
@@ -221,10 +227,19 @@ class OrderSearchStore extends BaseStore
         {
             if (!empty($data['product']['name'])) {
                 $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
-                $where[] = new QOr([
-                                       'details.product__contains'         => $data['product']['name'],
-                                       'details.product_options__contains' => $data['product']['name'],
+//                $where[] = new QOr([
+//                                       'details.product__contains'         => $data['product']['name'],
+//                                       'details.product_options__contains' => $data['product']['name'],
+//                                       new QAnd(array_map(function ($word) {
+//                                           return new QAnd(['details.product__contains' => $word]);
+//                                       }, explode(' ', $data['product']['name']))),
+//                                   ]);
+                $where[] = new QAnd(array_map(function ($word) {
+                    return new QOr([
+                                       'details.product__contains'         => $word,
+                                       'details.product_options__contains' => $word,
                                    ]);
+                }, explode(' ', $data['product']['name'])));
             }
 
             if (!empty($data['product']['sku'])) {
@@ -367,6 +382,11 @@ class OrderSearchStore extends BaseStore
                     $tmp['phone__in'] = $in;
                 }
                 if (!empty($like)) {
+                    foreach ($like as $t)
+                    {
+                        $tmp[] = new QAnd(['phone__raw' => "RLIKE '" . self::getPhoneRegexp($t) ."'"]);
+                    }
+
                     $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 'phone'));
                 }
 
@@ -384,7 +404,12 @@ class OrderSearchStore extends BaseStore
 
         }
 
-        $qs = $qs->filter($where)->exclude($exclude);
+
+        $qs->filter($where)->exclude($exclude);
+
+        if (count($qs->getJoins()) !== 0) {
+            $qs->group([ $qs->getAlias() . '.orderid']);
+        }
 
         func_dump($qs->getSql());
 
@@ -467,5 +492,18 @@ class OrderSearchStore extends BaseStore
     public static function replaceNewLine($text)
     {
         return str_replace(["\n", "\r"], ['\\n', '\\r'], $text);
+    }
+
+    public static function getPhoneRegexp($phone)
+    {
+        $t = ['.*'];
+        foreach (str_split($phone) as $char)
+        {
+            $t[] = $char;
+            $t[] = '[^0-9]*';
+        }
+        $t[] = '.*';
+
+        return implode('',$t);
     }
 }

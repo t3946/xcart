@@ -38,6 +38,17 @@ class QuerySet
         $this->qb->setAlias('t');
     }
 
+    public function setAlias($alias)
+    {
+        $this->qb->setAlias($alias);
+        return $this;
+    }
+
+    public function getAlias()
+    {
+        return $this->qb->getAlias();
+    }
+
     public function filter($where = [])
     {
         $this->qb->where($where);
@@ -81,9 +92,16 @@ class QuerySet
 
     public function count($q = '*', $distinct = false)
     {
-        $sql = $this->countSql($q, $distinct);
+        $count = Connection::getInstance()->fetchAll($this->countSql($q, $distinct));
 
-        return Connection::getInstance()->fetchColumn($sql);
+        if (count($count) > 1)
+        {
+            return count($count);
+        }
+        else {
+            return empty($count) ? 0 : reset($count[0]);
+        }
+
     }
 
     public function countSql($q = '*', $distinct = false)
@@ -92,6 +110,7 @@ class QuerySet
 
         $qb->select("count({$q})", $distinct);
         $qb->group($this->_group);
+        $qb->limit(null);
 
         return $qb->toSQL();
     }
@@ -115,7 +134,9 @@ class QuerySet
 
     public function getSql(array $where = [])
     {
-        return $this->qb->where($where)->toSQL();
+        $this->qb->where($where);
+
+        return $this->prepareSql();
     }
 
     public function using(\Doctrine\DBAL\Connection $db)
@@ -137,7 +158,7 @@ class QuerySet
     public function get($filter = [])
     {
         $this->filter($filter);
-        $rows = $this->db->fetchAll($this->prepareSql());
+        $rows = $this->db->fetchAll($this->getSql());
         if (count($rows) > 1) {
             throw new MultipleObjectsReturned();
         } elseif (count($rows) === 0) {
@@ -215,6 +236,14 @@ class QuerySet
     {
         $this->qb->join($type, $table, $on, $alias);
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getJoins()
+    {
+        return $this->qb->getJoins();
     }
 
     public function from($tables)

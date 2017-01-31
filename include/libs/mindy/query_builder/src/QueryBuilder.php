@@ -501,7 +501,8 @@ class QueryBuilder
         } else if ($tableName instanceof QueryBuilder) {
             $this->_join[] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
         } else {
-            $this->_join[$tableName] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
+//            $this->_join[$tableName] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
+            $this->_join[] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
             $this->_joinAlias[$tableName] = $alias;
         }
         return $this;
@@ -619,6 +620,11 @@ class QueryBuilder
         return $this->_joinAlias[$tableName];
     }
 
+    public function getJoins()
+    {
+        return $this->_join;
+    }
+
     /**
      * @param $condition
      * @return string
@@ -702,7 +708,9 @@ class QueryBuilder
      */
     public function where($condition)
     {
-        $this->_whereAnd[] = $condition;
+        if (!empty($condition)) {
+            $this->_whereAnd[] = $condition;
+        }
         return $this;
     }
 

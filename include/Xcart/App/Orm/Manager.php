@@ -214,16 +214,16 @@ class Manager implements IteratorAggregate, Serializable, Countable, ArrayAccess
         return $this;
     }
 
-    /**
-     * @param $page
-     * @param int $pageSize
-     * @return array
-     */
-    public function paginate($page, $pageSize = 10)
-    {
-        $this->getQuerySet()->paginate($page, $pageSize);
-        return $this;
-    }
+//    /**
+//     * @param $page
+//     * @param int $pageSize
+//     * @return array
+//     */
+//    public function paginate($page, $pageSize = 10)
+//    {
+//        $this->getQuerySet()->paginate($page, $pageSize);
+//        return $this;
+//    }
 
     /**
      * @param $limit

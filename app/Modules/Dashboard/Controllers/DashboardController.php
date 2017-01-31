@@ -32,10 +32,13 @@ class DashboardController extends AdminController
             echo 'Count:' . $qs->count() ."<br/>";
 
             $models = $qs->limit(20)->order(['-t.orderid'])->all();
+//            $models = $qs->order(['-t.orderid'])->all();
 
             foreach ($models as $model) {
-                echo '|'.$model;
+                echo "\n|".$model;
             }
+
+            echo func_get_memory_used();
 
 //            $content = $this->render('dashboard/search_form.tpl');
         }
@@ -109,6 +112,7 @@ class DashboardController extends AdminController
                     $data = Connection::getInstance()->fetchAll(SearchSql::getStreetSql(), ['like' => $query]);
                     break;
                 case 'search_phone' :
+                    $query = OrderSearchStore::getPhoneRegexp($_GET['q']);
                     $data = Connection::getInstance()->fetchAll(SearchSql::getPhoneFaxOrderSql(), ['like' => $query]);
                     break;
                 case 'search_email' :
