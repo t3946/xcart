@@ -145,7 +145,7 @@
         	<br />
 	    {else}
 		{if $c.supplemental_category ne "Y"}
-        	<font class="CategoriesList">{if $c.categoryid ne $smarty.get.cat}<a href="/home.php?cat={$c.categoryid}" class="VertMenuItems">{/if}{if $c.is_bold eq "Y"}<b>{$c.category}</b>{else}{$c.category}{/if}{if $c.categoryid ne $smarty.get.cat}</a>{/if}</font><br />
+        	<h2 class="CategoriesList" style="margin:0; font-weight: normal">{if $c.categoryid ne $smarty.get.cat}<a href="/home.php?cat={$c.categoryid}" class="VertMenuItems">{/if}{if $c.is_bold eq "Y"}<b>{$c.category}</b>{else}{$c.category}{/if}{if $c.categoryid ne $smarty.get.cat}</a>{/if}</h2>
 		{else}
 			{assign var="supplemental_category_found" value="Y"}
 		{/if}
