@@ -1,80 +1,83 @@
 <?php
 /*****************************************************************************\
-+-----------------------------------------------------------------------------+
-| X-Cart                                                                      |
-| Copyright (c) 2001-2010 Ruslan R. Fazliev <rrf@rrf.ru>                      |
-| All rights reserved.                                                        |
-+-----------------------------------------------------------------------------+
-| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
-| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
-| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
-|                                                                             |
-| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
-| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
-| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
-| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
-| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
-| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
-| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
-| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
-| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
-| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
-| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
-| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
-| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
-| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
-|                                                                             |
-| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2010           |
-| Ruslan R. Fazliev. All Rights Reserved.                                     |
-+-----------------------------------------------------------------------------+
-\*****************************************************************************/
+ * +-----------------------------------------------------------------------------+
+ * | X-Cart                                                                      |
+ * | Copyright (c) 2001-2010 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+ * | All rights reserved.                                                        |
+ * +-----------------------------------------------------------------------------+
+ * | PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
+ * | FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
+ * | AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
+ * |                                                                             |
+ * | THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
+ * | THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
+ * | FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
+ * | AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
+ * | PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
+ * | CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
+ * | COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
+ * | (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
+ * | LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
+ * | AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
+ * | OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
+ * | AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
+ * | THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
+ * | THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
+ * |                                                                             |
+ * | The Initial Developer of the Original Code is Ruslan R. Fazliev             |
+ * | Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2010           |
+ * | Ruslan R. Fazliev. All Rights Reserved.                                     |
+ * +-----------------------------------------------------------------------------+
+ * \*****************************************************************************/
 
 #
 # $Id: func.php,v 1.0 2010/11/26 13:31:24 kate Exp $
 #
 
-if ( !defined('XCART_START') ) { header('Location: ../../'); die('Access denied'); }
+if (!defined('XCART_START')) {
+    header('Location: ../../');
+    die('Access denied');
+}
 
 #
 # Substitute several config values for current storefront. If $substitute is not set, use the values from the 
 # storefronts_config table.
 #
-function func_sf_substitute_config_values($sf_id, $substitute = array()) {
-	global $config, $sql_tbl, $current_storefront;
+function func_sf_substitute_config_values($sf_id, $substitute = [])
+{
+    global $config, $sql_tbl, $current_storefront;
 
-	if (empty($substitute)) {
-		if (!isset($sf_id)) {
-			return false;
-		} else {
-			$substitute = func_query_hash('SELECT name, value, category FROM ' . $sql_tbl['storefronts_config'] . ' WHERE storefrontid=' . $sf_id . ' AND type != "separator"', 'category', true, false);
-		}
-	}
+    if (empty($substitute)) {
+        if (!isset($sf_id)) {
+            return false;
+        }
+        else {
+            $substitute = func_query_hash('SELECT name, value, category FROM ' . $sql_tbl['storefronts_config'] . ' WHERE storefrontid=' . $sf_id . ' AND type != "separator"', 'category', true, false);
+        }
+    }
 
-	if (empty($substitute) || !is_array($substitute)) {
-		return false;
-	} else {
-		foreach ($substitute as $c => $vs) {
-			foreach ($vs as $v) {
+    if (empty($substitute) || !is_array($substitute)) {
+        return false;
+    }
+    else {
+        foreach ($substitute as $c => $vs)
+        {
+            foreach ($vs as $v)
+            {
 
-#
-##
-###
-				if ($v['name'] == "cidev_footer_code"){
-					$v['value'] = trim($v['value']);
-					if (empty($v['value'])){
-						$v['value'] = $config["Storefront_common_details"]["common_footer_code"];
-					}
-				}
-###
-##
-#
+                if ($v['name'] == "cidev_footer_code") {
+                    $v['value'] = trim($v['value']);
+                    if (empty($v['value'])) {
+                        $v['value'] = $config["Storefront_common_details"]["common_footer_code"];
+                    }
+                }
 
-				$config[$c][$v['name']] = $v['value'];
-			}
-		}
-		return true;
-	}
+                $config[$c][$v['name']] = $v['value'];
+            }
+        }
+
+        return true;
+    }
 }
 
 #
@@ -85,25 +88,28 @@ function func_sf_substitute_config_values($sf_id, $substitute = array()) {
 # F - full
 #
 
-function func_get_default_config($type = 'H') {
+function func_get_default_config($type = 'H')
+{
     global $domain_specific_config, $sql_tbl;
 
-    $result = array();
+    $result = [];
 
     if (is_array($domain_specific_config)) {
-        foreach ($domain_specific_config as $cat=>$opt) {
+        foreach ($domain_specific_config as $cat => $opt) {
             if (is_array($opt) && !empty($opt)) {
                 $names = implode('", "', array_keys($opt));
                 if ($type == 'F') {
-                    $result_part = func_query('SELECT * FROM ' . $sql_tbl['config'] 
-                        . ' WHERE category="' . $cat . '" AND name IN ("' . $names . '")');
-                    $result = array_merge($result, $result_part);
-                } elseif ($type == 'H') {
-                $result[$cat] = func_query_hash('SELECT name, value FROM ' . $sql_tbl['config'] 
-                    . ' WHERE category="' . $cat . '" AND name IN ("' . $names . '")', 'name', false, true);
-                } elseif ($type == 'S') {
-                    $result = $result + func_query_hash('SELECT name, type FROM ' . $sql_tbl['config'] 
-                        . ' WHERE category="' . $cat . '" AND name IN ("' . $names . '")', 'name', false, true);
+                    $result_part = func_query('SELECT * FROM ' . $sql_tbl['config']
+                                              . ' WHERE category="' . $cat . '" AND name IN ("' . $names . '")');
+                    $result      = array_merge($result, $result_part);
+                }
+                elseif ($type == 'H') {
+                    $result[$cat] = func_query_hash('SELECT name, value FROM ' . $sql_tbl['config']
+                                                    . ' WHERE category="' . $cat . '" AND name IN ("' . $names . '")', 'name', false, true);
+                }
+                elseif ($type == 'S') {
+                    $result = $result + func_query_hash('SELECT name, type FROM ' . $sql_tbl['config']
+                                                        . ' WHERE category="' . $cat . '" AND name IN ("' . $names . '")', 'name', false, true);
                 }
             }
         }
@@ -124,67 +130,65 @@ function func_get_default_config($type = 'H') {
 # type: ID - numeric unique identifier, D - domain name
 #
 
-function func_get_storefront_info($sf_id, $type = 'ID', $full = false) {
-	global $sql_tbl, $config;
+function func_get_storefront_info($sf_id, $type = 'ID', $full = false)
+{
+    global $sql_tbl, $config;
 
-	x_load('files', 'image');
+    x_load('files', 'image');
 
-	$sf_info = array();
+    $sf_info = [];
 
-	if ($type == 'ID') {
-		
-		$sf_id = intval($sf_id);
+    if ($type == 'ID') {
 
-		if ($sf_id == 0) {
-			$sf_info = array(
-				'storefrontid'	=> 0,
-				'sf_top_image_alt'	=> (!empty($config['Company']['sf_top_image_alt']) ? $config['Company']['sf_top_image_alt'] : $config['Company']['company_name']),
-				'html_into_head'	=> (!empty($config['Company']['html_into_head']) ? $config['Company']['html_into_head'] : ''),
-				'status'		=> ($config['General']['shop_closed'] == 'Y') ? 'D' : 'E',
-				'prefix'		=> MAIN_SF_PREFIX,
-				'top_banner'	=> 'default',
-                'domain'        => MAIN_SF_DOMAIN,
-			);
-		} else {
-			if ($sf_id > 0) {
-				$sf_info = func_query_first('SELECT s.storefrontid, s.status, s.domain, c.value as prefix FROM ' . $sql_tbl['storefronts'] . ' as s'
-                    . ' LEFT JOIN ' . $sql_tbl['storefronts_config'] . ' as c ON s.storefrontid=c.storefrontid'
-                    . ' WHERE s.storefrontid=' . $sf_id . ' AND c.name="opt_order_prefix"');
-			} else {
-				return false;
-			}
-		}
-	} else {
-		$sf_info = func_query_first('SELECT storefrontid, status, prefix FROM ' . $sql_tbl['storefronts'] . ' WHERE domain = "' . $sf_id . '"');
-	}
+        $sf_id = intval($sf_id);
 
-	if (isset($sf_info['storefrontid']) /* && !empty($sf_info['storefrontid'])*/ ) {
-		$tmp = func_image_properties('S', $sf_info['storefrontid']);
-		$sf_info['is_image'] = (!empty($tmp) && is_array($tmp)) ? true : false;
-		if ($sf_info['is_image']) {
-			$sf_info['image'] = $tmp;
-			$sf_info['image']['image_path'] = func_get_image_url($sf_info['storefrontid'], 'S', $sf_info['image']['image_path']);
-		}
+        if ($sf_id == 0) {
+            $sf_info = [
+                'storefrontid' => 0,
+                'status'       => ($config['General']['shop_closed'] == 'Y') ? 'D' : 'E',
+                'prefix'       => MAIN_SF_PREFIX,
+                'top_banner'   => 'default',
+                'domain'       => MAIN_SF_DOMAIN,
+            ];
+        }
+        else {
+            if ($sf_id > 0) {
+                $sf_info = func_query_first('SELECT s.storefrontid, s.status, s.domain, c.value AS prefix FROM ' . $sql_tbl['storefronts'] . ' AS s'
+                                            . ' LEFT JOIN ' . $sql_tbl['storefronts_config'] . ' AS c ON s.storefrontid=c.storefrontid'
+                                            . ' WHERE s.storefrontid=' . $sf_id . ' AND c.name="opt_order_prefix"');
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    else {
+        $sf_info = func_query_first('SELECT storefrontid, status, prefix FROM ' . $sql_tbl['storefronts'] . ' WHERE domain = "' . $sf_id . '"');
+    }
 
-#
-##
-###
-                $tmp2 = func_image_properties('F', $sf_info['storefrontid']);
-                $sf_info['is_image_favicon'] = (!empty($tmp2) && is_array($tmp2)) ? true : false;
-                if ($sf_info['is_image_favicon']) {
-                        $sf_info['image_favicon'] = $tmp2;
-	                $sf_info['image_favicon']['image_path'] = func_get_image_url($sf_info['storefrontid'], 'F', $sf_info['image_favicon']['image_path']);
-                }
-###
-##
-#
+    if (isset($sf_info['storefrontid']) /* && !empty($sf_info['storefrontid'])*/) {
+        $tmp = func_image_properties('S', $sf_info['storefrontid']);
 
-	}
+        $sf_info['is_image'] = (!empty($tmp) && is_array($tmp)) ? true : false;
+        if ($sf_info['is_image']) {
+            $sf_info['image']               = $tmp;
+            $sf_info['image']['image_path'] = func_get_image_url($sf_info['storefrontid'], 'S', $sf_info['image']['image_path']);
+        }
+
+        $tmp2 = func_image_properties('F', $sf_info['storefrontid']);
+
+        $sf_info['is_image_favicon'] = (!empty($tmp2) && is_array($tmp2)) ? true : false;
+        if ($sf_info['is_image_favicon']) {
+            $sf_info['image_favicon']               = $tmp2;
+            $sf_info['image_favicon']['image_path'] = func_get_image_url($sf_info['storefrontid'], 'F', $sf_info['image_favicon']['image_path']);
+        }
+    }
 
     if ($full) {
         if ($sf_id == 0) {
             $sf_info['config'] = func_get_default_config();
-        } else {
+        }
+        else {
             $sf_config = func_query_hash('SELECT name, value, category FROM ' . $sql_tbl['storefronts_config'] . ' WHERE storefrontid=' . $sf_id . ' AND type != "separator"', 'category', true, false);
             if (is_array($sf_config) && !empty($sf_config)) {
                 foreach ($sf_config as $c => $vs) {
@@ -196,10 +200,11 @@ function func_get_storefront_info($sf_id, $type = 'ID', $full = false) {
         }
     }
 
-	return $sf_info;
+    return $sf_info;
 }
 
-function func_get_http_location_sf($sfid) {
+function func_get_http_location_sf($sfid)
+{
     global $sql_tbl;
 
     $sfid = intval($sfid);
@@ -209,7 +214,8 @@ function func_get_http_location_sf($sfid) {
         if (!empty($sf_domain)) {
             return $sf_domain;
         }
-    } else {
+    }
+    else {
         return MAIN_SF_DOMAIN;
     }
 
@@ -219,51 +225,54 @@ function func_get_http_location_sf($sfid) {
 /**
  * Check order prefix list (all storefronts)
  *
- * @param string  $prefix       Order prefix
+ * @param string $prefix        Order prefix
  * @param integer $storefrontid Storefront that must be excluded from check
  *
  * @return boolean
  */
-function func_msf_is_unique_order_prefix($prefix, $storefrontid) {
-	global $sql_tbl, $config;
+function func_msf_is_unique_order_prefix($prefix, $storefrontid)
+{
+    global $sql_tbl, $config;
 
-	$prefix = (string) trim($prefix);
-	$storefrontid = (int) $storefrontid;
+    $prefix       = (string)trim($prefix);
+    $storefrontid = (int)$storefrontid;
 
-	$main_sf_config = func_get_default_config('H');
-	$main_prefix = $main_sf_config['General']['opt_order_prefix'];
+    $main_sf_config = func_get_default_config('H');
+    $main_prefix    = $main_sf_config['General']['opt_order_prefix'];
 
-	$is_unique = (
-		($main_prefix != $prefix || $storefrontid == 0)
-		&& func_query_first_cell(
-			"SELECT COUNT(value) FROM $sql_tbl[storefronts_config]"
-			. " WHERE name = 'opt_order_prefix' AND value = '$prefix' AND storefrontid != '$storefrontid'"
-		) == '0'
-	);
+    $is_unique = (
+        ($main_prefix != $prefix || $storefrontid == 0)
+        && func_query_first_cell(
+               "SELECT COUNT(value) FROM $sql_tbl[storefronts_config]"
+               . " WHERE name = 'opt_order_prefix' AND value = '$prefix' AND storefrontid != '$storefrontid'"
+           ) == '0'
+    );
 
-	return $is_unique;
+    return $is_unique;
 }
 
 /**
  * Sort storefront array (by orderby field)
  */
-function func_msf_sort_config_array($a, $b) {
-	$res = ($a['orderby'] == $b['orderby']) ? 0 : (($a['orderby'] < $b['orderby']) ? -1 : 1);
-	return $res == 0 ? strcmp($a['config']['company_name'], $b['config']['company_name']) : $res;
+function func_msf_sort_config_array($a, $b)
+{
+    $res = ($a['orderby'] == $b['orderby']) ? 0 : (($a['orderby'] < $b['orderby']) ? -1 : 1);
+
+    return $res == 0 ? strcmp($a['config']['company_name'], $b['config']['company_name']) : $res;
 }
 
 /**
  * Sort storefront array (by orderby field)
  */
-function func_msf_sort_front_array($a, $b) {
-        return strcmp($a['company_name'], $b['company_name']);
+function func_msf_sort_front_array($a, $b)
+{
+    return strcmp($a['company_name'], $b['company_name']);
 }
 
 /**
  * Sort storefront array (by name field)
  */
-function func_msf_sort_front_array_by_name($a, $b) {
-        return strcmp($a['name'], $b['name']);
+function func_msf_sort_front_array_by_name($a, $b)
+{
+    return strcmp($a['name'], $b['name']);
 }
-
-?>
