@@ -520,14 +520,19 @@ function getAmazonListingProducts($aParams = [])
             $html .= func_display('admin/main/az_listing_product_table.tpl', $smarty, false);
             $html .= "</td></tr>";
         } else {
+            /** @var Logs[] $aLogs */
             $aLogs = (new Xcart\Logs('amazon_listings'))->_getLogs(1, 1, intval($aParams['feed_id']));
+            $html = "<tr class='listing_products'><td colspan='7'><b>";
             if (!empty($aLogs)){
-                $html = "<tr class='listing_products'><td colspan='7'><b>";
+
                 foreach ($aLogs as $oLog) {
                     $html .= nl2br($oLog->getLogText());
                 }
-                $html .= "</b></td></tr>";
+
+            } else {
+                $html .= '<p style="text-align: center;">Errors not found</p>';
             }
+            $html .= "</b></td></tr>";
         }
         print $html;
     }

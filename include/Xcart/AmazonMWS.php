@@ -2229,7 +2229,7 @@ SQL;
                                 }
                             }
                             if (!empty($error_message)) {
-                                $sFeedErrors .= $error_message . PHP_EOL;
+                                $sFeedErrors .= '- '. $error_message . PHP_EOL;
                             }
                         }
                     }
