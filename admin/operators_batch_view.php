@@ -6,7 +6,7 @@ require "./auth.php";
 require $xcart_dir . "/include/security.php";
 
 
-$location[] = array("Verificator management", "operators.php");
+$location[] = array("Verificator management", "az_operators.php");
 $location[] = array("Verification batches", "operators_batches.php?operator=".\Xcart\External_Product_Verification\ExternalVerificationBatch::model(['batch_id' => (int)$batch])->getBatchLogin());
 
 include $xcart_dir . "/modules/External_Product_Verification/operators_batch_view.php";

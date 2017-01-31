@@ -660,9 +660,19 @@ SQL;
             addFromTable('products')->
             addCondition('productid=' . $this->getProductId())->
             query_first()->getQueryResult();
-            $this->fAmazonPrice = $aResult['aprice'];
+            $this->fAmazonPrice = floatval($aResult['aprice']);
         }
         return $this->fAmazonPrice;
+    }
+
+    public function getMinimumAmazonPrice()
+    {
+        $aResult = SQLBuilder::getInstance()->
+        addSelect('cidev_get_minimum_amazon_price(' . $this->getProductId() . ')', 'aprice')->
+        addFromTable('products')->
+        addCondition('productid=' . $this->getProductId())->
+        query_first()->getQueryResult();
+        return floatval($aResult['aprice']);
     }
 
     public function getShippingVolume($iAmount = 1)

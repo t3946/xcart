@@ -353,6 +353,7 @@ $sql_tbl = array (
     "fba_inventory_receipts" => "xcart_fba_inventory_receipts",
     "fba_roi_accounting" => "xcart_fba_roi_accounting",
     "order_cx_invoices" => "xcart_order_cx_invoices",
+    "external_verification_feeds" => "xcart_external_verification_feeds",
 );
 
 # START: random:20341 [2010 Jul 29 14:46] 

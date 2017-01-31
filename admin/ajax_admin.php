@@ -1,11 +1,16 @@
 <?php
 use Xcart\External_Product_Verification\ExternalVerificationBatch;
+use Xcart\External_Product_Verification\ExternalVerificationFeeds;
+use Xcart\External_Product_Verification\ExternalVerificationProducts;
+use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 use Xcart\External_Marketplaces\IssuesProcessingRules;
 use Xcart\Order;
 use Xcart\OrderGroup;
 use Xcart\Product;
 use Xcart\Customer;
 use Xcart\Categories;
+use Xcart\SQLBuilder;
+use Xcart\Logs;
 
 require './auth.php';
 require '../include/security.php';
@@ -57,6 +62,12 @@ switch ($_POST['ajax_action']) {
         break;
     case "get_paypal_invoice_status":
         getPayPalInvoiceStatus($_POST);
+        break;
+    case "get_amazon_feed_status":
+        getAmazonFeedStatus($_POST);
+        break;
+    case "get_amazon_listing_products":
+        getAmazonListingProducts($_POST);
         break;
 }
 
@@ -444,11 +455,85 @@ function getPayPalInvoiceStatus($aParams = [])
     if (!empty($aParams['paypal_invoice_id'])) {
         $oInv = (new \Xcart\Paypal())->getPayPalInvoice($aParams['paypal_invoice_id']);
         if ($oInv) {
-            $oOrderCxInv = \Xcart\OrderCxInvoice::model()->find(\Xcart\SQLBuilder::getInstance()->addCondition("invoice_number = '{$aParams['paypal_invoice_id']}'"));
+            $oOrderCxInv = \Xcart\OrderCxInvoice::model()->find(SQLBuilder::getInstance()->addCondition("invoice_number = '{$aParams['paypal_invoice_id']}'"));
             $oOrderCxInv->updateField('status', $oInv->getStatus());
             $aResult['result'] = true;
             $aResult['status'] = $oInv->getStatus();
         }
     }
     print(json_encode($aResult));
+}
+
+function getAmazonFeedStatus($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['feed_id'])) {
+        $oAmazonMWS = new Xcart\AmazonMWS();
+        $oAmazonMWS
+            ->setReportId([$aParams['feed_id']])
+            ->_Request('GetSubmitionResults');
+        $oFeed = ExternalVerificationFeeds::model()->find(SQLBuilder::getInstance()->addCondition("amazon_submition_id = '{$aParams['feed_id']}'"));
+        $aResult['status'] = $oFeed->getField('status');
+        $aResult['success'] = intval($oAmazonMWS->getDOMXML()['listing_success']);
+        $aResult['failed'] = intval($oAmazonMWS->getDOMXML()['listing_failed']);
+        $aResult['total'] = $aResult['success'] + $aResult['failed'];
+        $aResult['result'] = true;
+
+    }
+    print(json_encode($aResult));
+}
+
+function getAmazonListingProducts($aParams = [])
+{
+    global $smarty;
+    $aVerificationResult = [];
+    $html = null;
+    if (!empty($aParams['feed_id']) && is_numeric($aParams['feed_id'])){
+        $oFeed = ExternalVerificationFeeds::model(['feed_id' => intval($aParams['feed_id'])]);
+        switch ($aParams['type']){
+            case 'success' :
+                $sStatus = 'submit_to_feed_success';
+                break;
+            case 'failed' :
+                $sStatus = 'submit_to_feed_failed';
+                break;
+            default :
+                $sStatus = '';
+        }
+        if ($aParams['type'] != 'log') {
+            $aVerProducts = $oFeed->getVerificationProductsByStatus($sStatus);
+            if (!empty($aVerProducts)) {
+                foreach ($aVerProducts as $oVerificationProduct) {
+                    $sFinalASIN = $oVerificationProduct->getASINAfterVerification();
+                    $aVerificationResult[] = [
+                        'Product' => Product::model(['productid' => $oVerificationProduct->getProductId()]),
+                        'pasin' => $oVerificationProduct->getASINAfterVerification(),
+                        'AsinLink' => sprintf(ExternalVerificationProducts::AMAZON_PRODUCT_LINK, $sFinalASIN),
+                        'status' => ExternalVerificationProductsQueue::getAmazonStatuses()[$oVerificationProduct->getField('amz_listing_status')]
+                    ];
+                }
+            }
+            $smarty->assign('aVerifiactionResults', $aVerificationResult);
+            $smarty->assign('readonly', true);
+
+            $html = "<tr class='listing_products'><td colspan='7'>";
+            $html .= func_display('admin/main/az_listing_product_table.tpl', $smarty, false);
+            $html .= "</td></tr>";
+        } else {
+            /** @var Logs[] $aLogs */
+            $aLogs = (new Xcart\Logs('amazon_listings'))->_getLogs(1, 1, intval($aParams['feed_id']));
+            $html = "<tr class='listing_products'><td colspan='7'><b>";
+            if (!empty($aLogs)){
+
+                foreach ($aLogs as $oLog) {
+                    $html .= nl2br($oLog->getLogText());
+                }
+
+            } else {
+                $html .= '<p style="text-align: center;">Errors not found</p>';
+            }
+            $html .= "</b></td></tr>";
+        }
+        print $html;
+    }
 }

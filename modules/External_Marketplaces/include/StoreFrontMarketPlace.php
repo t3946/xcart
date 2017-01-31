@@ -1,5 +1,6 @@
 <?php
 namespace Xcart\External_Marketplaces;
+use Xcart\Connection;
 use Xcart\Data;
 use Xcart\Product;
 
@@ -117,14 +118,11 @@ abstract class StoreFrontMarketPlace extends Data
      */
     public static function getMarketPlacesByStoreFront($iStoreFrontId)
     {
-        global $sql_tbl;
-        self::$sql_tbl = $sql_tbl;
         $aMP = [];
-        $aMarketPlaces = func_query_column("SELECT marketplace_id FROM " . self::$sql_tbl['storefronts_external_marketplaces'] . " WHERE storefront_id = $iStoreFrontId ");
+        $aMarketPlaces = Connection::getInstance()->fetchAll("SELECT marketplace_id FROM xcart_storefronts_external_marketplaces WHERE storefront_id = {$iStoreFrontId}");
         if (!empty($aMarketPlaces)) {
-            foreach ($aMarketPlaces as $iMarketPlaceId) {
-                /** @var int $iMarketPlaceId */
-                $aMP[] = ExternalMarketPlace::getExternalMarketPlace($iMarketPlaceId, $iStoreFrontId);
+            foreach ($aMarketPlaces as $aMarketPlaceId) {
+                $aMP[] = ExternalMarketPlace::getExternalMarketPlace($aMarketPlaceId['marketplace_id'], $iStoreFrontId);
             }
         }
         return $aMP;
