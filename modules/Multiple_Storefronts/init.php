@@ -131,9 +131,13 @@ if (AREA_TYPE == 'C' && defined('LOCAL_SF_ID'))
 }
 ###################################
 
+//if (empty($current_storefront_info)) {
+//    $current_storefront = 0;
+//    $current_storefront_info = func_get_storefront_info($current_storefront, 'ID');
+//}
+
 
 if (!empty($current_storefront_info)) {
-
     # Main storefront: prefix
     define('MAIN_SF_PREFIX', $config['General']['opt_order_prefix']);
 
@@ -143,9 +147,8 @@ if (!empty($current_storefront_info)) {
     if (!$HTTPS && $config["Appearance"]["Enable_CDN"] == "Y" && !empty($config["Appearance"]["CDN_domain"]) && strpos($config["Appearance"]["CDN_domain"], "://") === false && AREA_TYPE == "C") {
         $config["Appearance"]["CDN_domain"] = ($HTTPS ? "https://" : "http://") . $config["Appearance"]["CDN_domain"];
     }
-
-
-} else {
+}
+else {
     $current_storefront = 0;
 }
 
