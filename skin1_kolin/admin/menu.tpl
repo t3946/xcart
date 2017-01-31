@@ -41,7 +41,7 @@
 <a href="{$catalogs.admin}/grandfathered_products.php" class="VertMenuItems">{$lng.lbl_grandfathered_products}</a><br />
 {/if}
 
-<a href="{$catalogs.admin}/operators.php" class="VertMenuItems">Amazon verification</a><br />
+<a href="{$catalogs.admin}/az_operators.php" class="VertMenuItems">Amazon verification</a><br />
 
 
 

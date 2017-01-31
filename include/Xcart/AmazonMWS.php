@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+use Xcart\External_Marketplaces\StoreFrontMarketPlace;
+use Xcart\External_Product_Verification\ExternalVerificationFeeds;
+use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 use Xcart\OrderGroup;
 use Xcart\Order;
 use Xcart\Cart;
@@ -644,7 +647,9 @@ class AmazonMWS
         } else {
             $log_text = 'RequestReport -> ReportRequestId:' . $this->dom_xml_arr['ReportRequestId'];
         }
-        func_backprocess_log($this->sBackProcessLogName, $log_text);
+        if (!empty($this->sBackProcessLogName)) {
+            func_backprocess_log($this->sBackProcessLogName, $log_text);
+        }
         return $this;
     }
 
@@ -667,7 +672,10 @@ class AmazonMWS
             $this->dom_xml_arr = $this->invokeGetReportRequestList($request);
 
             $log_text = 'GetReportRequestList -> ReportProcessingStatus:' . $this->dom_xml_arr['ReportProcessingStatus'];
-            func_backprocess_log($this->sBackProcessLogName, $log_text);
+
+            if (!empty($this->sBackProcessLogName)) {
+                func_backprocess_log($this->sBackProcessLogName, $log_text);
+            }
 
             if (!empty($this->dom_xml_arr['Caught_Exception'])) {
                 $this->error[] = $this->dom_xml_arr["Caught_Exception"];
@@ -707,7 +715,9 @@ class AmazonMWS
         } else {
             $log_text = 'GetReportList -> No reports found';
         }
-        func_backprocess_log($this->sBackProcessLogName, $log_text);
+        if (!empty($this->sBackProcessLogName)) {
+            func_backprocess_log($this->sBackProcessLogName, $log_text);
+        }
 
         $this->setReportId($this->dom_xml_arr["ReportId"]);
         return $this;
@@ -729,7 +739,9 @@ class AmazonMWS
                     $request->setReportId($reportId);
                     $this->dom_xml_arr[$reportId] = $this->invokeGetReport($request);
                     $log_text = 'GetReport -> ReportId:' . $reportId;
-                    func_backprocess_log($this->sBackProcessLogName, $log_text);
+                    if (!empty($this->sBackProcessLogName)) {
+                        func_backprocess_log($this->sBackProcessLogName, $log_text);
+                    }
                 }
             }
         }
@@ -754,7 +766,10 @@ class AmazonMWS
                 $this->invokeUpdateReportAcknowledgements($request);
 
                 $log_text = 'UpdateReportAcknowledgements -> ReportId:' . $iReportId;
-                func_backprocess_log($this->sBackProcessLogName, $log_text);
+
+                if (!empty($this->sBackProcessLogName)) {
+                    func_backprocess_log($this->sBackProcessLogName, $log_text);
+                }
             }
         }
 
@@ -766,6 +781,10 @@ class AmazonMWS
         $this->oOrder = $oOrder;
     }
 
+    /**
+     * @param array $aReportId
+     * @return $this
+     */
     public function setReportId($aReportId)
     {
         $this->aReportIds = $aReportId;
@@ -829,7 +848,9 @@ class AmazonMWS
                 $oMaxdate = \DateTime::createFromFormat('Y-m-d', $aResult['rdate']);
                 $log_text .= " Max report date: {$oMaxdate->format('Y-m-d')}";
             }
-            func_backprocess_log($this->sBackProcessLogName, $log_text);
+            if (!empty($this->sBackProcessLogName)) {
+                func_backprocess_log($this->sBackProcessLogName, $log_text);
+            }
             $cnt = 0;
             foreach ($aReportValue as $vArr) {
                 list($date, $fnsku, $sku, $pn, $qty, $fba_shipment_id, $fulfillment_center_id) = $vArr;
@@ -847,7 +868,9 @@ class AmazonMWS
             }
             if ($cnt) {
                 $log_text = "Inserted " . $cnt . " new rows";
-                func_backprocess_log($this->sBackProcessLogName, $log_text);
+                if (!empty($this->sBackProcessLogName)) {
+                    func_backprocess_log($this->sBackProcessLogName, $log_text);
+                }
             }
 
             Connection::getInstance()->delete('xcart_fba_roi_accounting', array('source' => 'inventory_receipts'));
@@ -912,7 +935,9 @@ SQL;
         if (!empty($ReportContent)) {
 
             $log_text = "Processing " . count($ReportContent) . " reports";
-            func_backprocess_log($this->sBackProcessLogName, $log_text);
+            if (!empty($this->sBackProcessLogName)) {
+                func_backprocess_log($this->sBackProcessLogName, $log_text);
+            }
 
             foreach ($ReportContent as $report_data) {
                 $cntLine = 0;
@@ -930,7 +955,9 @@ SQL;
                 }
                 $aReportData = [];
                 $log_text = "Processing " . ($cntLine - 2) . " products";
-                func_backprocess_log($this->sBackProcessLogName, $log_text);
+                if (!empty($this->sBackProcessLogName)) {
+                    func_backprocess_log($this->sBackProcessLogName, $log_text);
+                }
                 for ($y = 0; $y < count($aReportValue); $y++) {
                     foreach ($aReportValue[$y] as $iKey => $sItem) {
                         if ($y == 0) {
@@ -1960,5 +1987,280 @@ SQL;
 
         }
         return $aShippingRatesCalc;
+    }
+
+    public function submitToListingLoader($aFeeds)
+    {
+        global $login;
+        $aRows = $aResult = $aProductIds = [];
+        if (!empty($aFeeds)){
+            $oAmazonMarketPlace = $sFeed = null;
+            $sFeed = "TemplateType=Offer\tVersion=2014.0703".str_repeat("\t",254).PHP_EOL;
+            $aHeader = ['sku',
+                'price',
+                'quantity',
+                'product-id',
+                'product-id-type',
+                'condition-type',
+                'condition-note',
+                'ASIN-hint',
+                'title',
+                'product-tax-code',
+                'operation-type',
+                'sale-price',
+                'sale-start-date',
+                'sale-end-date',
+                'leadtime-to-ship',
+                'launch-date',
+                'is-giftwrap-available',
+                'is-gift-message-available',
+                'fulfillment-center-id',
+                'main-offer-image',
+                'offer-image1',
+                'offer-image2',
+                'offer-image3',
+                'offer-image4',
+                'offer-image5'];
+            $sFeed .= implode("\t",$aHeader).str_repeat("\t",231).PHP_EOL;
+            $sFeed .= implode("\t",$aHeader).str_repeat("\t",231).PHP_EOL;
+            foreach ($aFeeds as $aFeed) {
+                /** @var Product $oProduct */
+                $oProduct = $aFeed['Product'];
+                $aProductIds[] = $oProduct->getProductId();
+                $aRows[] = [
+                    $oProduct->getSKU(),
+                    price_format($oProduct->getAmazonPrice()),
+                    0,
+                    $aFeed['ASIN'],
+                    'ASIN',
+                    'New',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    $aFeed['cidev_get_amazon_fulfillment_latency'],
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''];
+            }
+
+            $aMarketPlaces = StoreFrontMarketPlace::getMarketPlacesByStoreFront(0);
+            if (!empty($aMarketPlaces)) {
+                foreach ($aMarketPlaces as $oMarketPlace)
+                {
+                    if ($oMarketPlace instanceof \Xcart\External_Marketplaces\Marketplaces\Amazon) {
+                        $oAmazonMarketPlace = $oMarketPlace;
+                    }
+                }
+            }
+            if ($oAmazonMarketPlace && !empty($aRows)) {
+                foreach ($aRows as $aRow){
+                    $sFeed .= implode("\t", $aRow). str_repeat("\t",231) . PHP_EOL;
+                }
+                $feedHandle = @fopen('php://temp', 'rw+');
+                fwrite($feedHandle, $sFeed);
+                if ($feedHandle) {
+                    rewind($feedHandle);
+                    $parameters = array(
+                        'Merchant' => MERCHANT_ID,
+                        'MarketplaceIdList' => ["Id" => [$oAmazonMarketPlace->getP2()], "MerchantIdentifier"=>$oAmazonMarketPlace->getP1()],
+                        'FeedType' => '_POST_FLAT_FILE_LISTINGS_DATA_',
+                        'FeedContent' => $feedHandle,
+                        'PurgeAndReplace' => false,
+                        'ContentMd5' => base64_encode(md5(stream_get_contents($feedHandle), true)),
+                    );
+
+                    $request = new \MarketplaceWebService_Model_SubmitFeedRequest($parameters);
+                    $aResult = $this->invokeSubmitFeed($request);
+                    if (!empty($aResult)) {
+                        if (!empty($aResult['FeedSubmissionId'])){
+                            if (Connection::getInstance()->insert('xcart_external_verification_feeds',
+                                ['amazon_submition_id' => $aResult['FeedSubmissionId'],
+                                 'status' => $aResult['FeedProcessingStatus'],
+                                 'login' => $login]
+                            ))
+                            {
+                                $iFeedId = Connection::getInstance()->lastInsertId();
+                                foreach ($aProductIds as $iProductId) {
+                                    Connection::getInstance()->update('xcart_external_verification_products_queue',
+                                        ['feed_id' => $iFeedId, 'amz_listing_status' => 'submitted_to_listing_loader'], ['productid' => $iProductId]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $aResult;
+    }
+
+    public function invokeSubmitFeed($request)
+    {
+        $return_echo = [];
+        try {
+            /** @var \MarketplaceWebService_Model_SubmitFeedResponse $response */
+            $response = $this->oMWSService->submitFeed($request);
+
+            if ($response->isSetSubmitFeedResult()) {
+                $submitFeedResult = $response->getSubmitFeedResult();
+                if ($submitFeedResult->isSetFeedSubmissionInfo()) {
+                    $feedSubmissionInfo = $submitFeedResult->getFeedSubmissionInfo();
+                    if ($feedSubmissionInfo->isSetFeedSubmissionId()) {
+                        $return_echo['FeedSubmissionId'] = $feedSubmissionInfo->getFeedSubmissionId();
+                    }
+                    if ($feedSubmissionInfo->isSetFeedType()) {
+                        $return_echo['FeedType'] =  $feedSubmissionInfo->getFeedType();
+                    }
+                    if ($feedSubmissionInfo->isSetSubmittedDate()) {
+                        $return_echo['SubmittedDate'] =  $feedSubmissionInfo->getSubmittedDate()->format(DATE_FORMAT);
+                    }
+                    if ($feedSubmissionInfo->isSetFeedProcessingStatus()) {
+                        $return_echo['FeedProcessingStatus'] = $feedSubmissionInfo->getFeedProcessingStatus();
+                    }
+                    if ($feedSubmissionInfo->isSetStartedProcessingDate()) {
+                        $return_echo['StartedProcessingDate'] = $feedSubmissionInfo->getStartedProcessingDate()->format(DATE_FORMAT);
+                    }
+                    if ($feedSubmissionInfo->isSetCompletedProcessingDate()) {
+                        $return_echo['CompletedProcessingDate'] = $feedSubmissionInfo->getCompletedProcessingDate()->format(DATE_FORMAT);
+                    }
+                }
+            }
+            if ($response->isSetResponseMetadata()) {
+                $responseMetadata = $response->getResponseMetadata();
+                if ($responseMetadata->isSetRequestId()) {
+                    $return_echo['RequestId'] = $responseMetadata->getRequestId();
+                }
+            }
+
+            $return_echo["ResponseHeaderMetadata"] = $response->getResponseHeaderMetadata();
+        } catch (\MarketplaceWebService_Exception $ex) {
+            $return_echo["function"] = "invokeSubmitFeed";
+            $return_echo["Caught_Exception"] = $ex->getMessage();
+            $return_echo["Response_Status_Code"] = $ex->getStatusCode();
+            $return_echo["Error_Code"] = $ex->getErrorCode();
+            $return_echo["Error_Type"] = $ex->getErrorType();
+            $return_echo["Request_ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        }
+        return $return_echo;
+    }
+
+    public function invokeGetFeedSubmissionResult($request)
+    {
+        $return_echo = [];
+        try {
+            $response = $this->oMWSService->getFeedSubmissionResult($request);
+
+            if ($response->isSetGetFeedSubmissionResultResult()) {
+                $getFeedSubmissionResultResult = $response->getGetFeedSubmissionResultResult();
+                if ($getFeedSubmissionResultResult->isSetContentMd5()) {
+                    $return_echo['ContentMd5'] = $getFeedSubmissionResultResult->getContentMd5();
+                }
+            }
+            if ($response->isSetResponseMetadata()) {
+                $responseMetadata = $response->getResponseMetadata();
+                if ($responseMetadata->isSetRequestId()) {
+                    $return_echo['RequestId'] = $responseMetadata->getRequestId();
+                }
+            }
+            $return_echo['ResponseHeaderMetadata'] = $response->getResponseHeaderMetadata();
+        } catch (\MarketplaceWebService_Exception $ex) {
+            $return_echo["Caught Exception"] = $ex->getMessage();
+            $return_echo["Response Status Code"] = $ex->getStatusCode();
+            $return_echo["Error Code"] = $ex->getErrorCode();
+            $return_echo["Error Type"] = $ex->getErrorType();
+            $return_echo["Request ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        }
+        return $return_echo;
+    }
+
+    public function doGetSubmitionResults()
+    {
+        if (!empty($this->error)) return $this;
+
+        $request = new \MarketplaceWebService_Model_GetFeedSubmissionResultRequest();
+        $request->setMerchant(MERCHANT_ID);
+        $sReportId = reset($this->aReportIds);
+        $request->setFeedSubmissionId($sReportId);
+        $handle = @fopen('php://memory', 'rw+');
+        $request->setFeedSubmissionResult($handle);
+
+        $this->dom_xml_arr = $this->invokeGetFeedSubmissionResult($request);
+        $contents = trim(stream_get_contents($handle));
+        $aFileRows = explode("\n", $contents);
+        if (!empty($aFileRows)) {
+            array_shift($aFileRows);
+            list ($t, $t, $t, $totalRecords) = explode("\t", array_shift($aFileRows));
+            if (intval($totalRecords) > 0) {
+                $oFeed = ExternalVerificationFeeds::model()->find(SQLBuilder::getInstance()->addCondition("amazon_submition_id = '{$sReportId}'"));
+                if ($oFeed->getField('feed_id')) {
+                    $sFeedErrors = '';
+                    $aListingProducts = array_flip(Connection::getInstance()
+                                        ->executeQuery("SELECT productid FROM xcart_external_verification_products_queue WHERE feed_id = {$oFeed->getField('feed_id')}")
+                                        ->fetchAll(\PDO::FETCH_COLUMN));
+                    Connection::getInstance()->update('xcart_external_verification_products_queue', ['amz_listing_status' => 'submit_to_feed_success'], ['feed_id' => $oFeed->getField('feed_id')]);
+                    foreach (range(1, 3) as $i) {
+                        array_shift($aFileRows);
+                    }
+                    if (!empty($aFileRows)) {
+                        foreach ($aFileRows as $sRows) {
+                            list($original_record_number, $sku, $error_code, $error_type, $error_message) = explode("\t", $sRows);
+                            if (!empty($sku)) {
+                                $oProduct = Product::getProductBySKU($sku);
+                                if ($oProduct->getProductId()) {
+                                    $this->dom_xml_arr['listing_failed']++;
+                                    unset($aListingProducts[$oProduct->getProductId()]);
+                                    Connection::getInstance()->update('xcart_external_verification_products_queue',
+                                        ['amz_listing_status' => 'submit_to_feed_failed'],
+                                        ['feed_id' => $oFeed->getField('feed_id'), 'productid' => $oProduct->getProductId()]);
+                                }
+                            }
+                            if (!empty($error_message)) {
+                                $sFeedErrors .= '- '. $error_message . PHP_EOL;
+                            }
+                        }
+                    }
+                    if (!empty($aListingProducts)){
+                        foreach (array_keys($aListingProducts) as $iProductId) {
+                            $this->dom_xml_arr['listing_success']++;
+                            Connection::getInstance()->update('xcart_products',
+                                ['amazon_enabled' => 'Y'],
+                                ['productid' => $iProductId]);
+                        }
+                    }
+                    if (!empty($sFeedErrors)) {
+                        Logs::_log('amazon_listings', $oFeed->getField('feed_id'), 'X', $sFeedErrors);
+                    }
+                }
+
+                $oFeed->updateField('status', '_DONE_');
+            }
+        }
+
+
+        if (!empty($this->dom_xml_arr['Caught_Exception'])) {
+            $this->error[] = $this->dom_xml_arr["Caught_Exception"];
+        }
+
+        return $this;
+    }
+
+    public function getDOMXML()
+    {
+        return $this->dom_xml_arr;
     }
 }

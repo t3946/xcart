@@ -1,6 +1,7 @@
 <?php
 namespace Xcart\External_Product_Verification;
 
+use Xcart\Connection;
 use Xcart\Data;
 use Xcart\SQLBuilder;
 use Xcart\Product;
@@ -12,6 +13,10 @@ class ExternalVerificationProductsQueue extends Data
     const PRODUCT_QUEUE_STATUS_IN_ETALON_MATCH = 'etalon_match';
     const PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_MATCH = 'etalon_not_match';
     const PRODUCT_QUEUE_STATUS_IN_ETALON_NOT_FOUND = 'etalon_not_found';
+
+    const AMAZON_PRODUCT_STATUS_FAILED = 'submit_to_feed_failed';
+    const AMAZON_PRODUCT_STATUS_SUCCESS = 'submit_to_feed_success';
+    const AMAZON_PRODUCT_STATUS_SUBMIT = 'submitted_to_listing_loader';
 
     private $oProduct = null;
     private $aVerificatorResults = null;
@@ -222,6 +227,45 @@ class ExternalVerificationProductsQueue extends Data
         return $aResults;
     }
 
+    public static function getVerificationProductsReadyForListings($aParams = null)
+    {
+        $page = (int) $aParams['page'];
+        if (!$page) {
+            $page = 1;
+        }
+        $limit = (int) $aParams['limit'];
+
+        $queryBuilder = Connection::getInstance()->createQueryBuilder();
+        $queryBuilder
+            ->select('SQL_CALC_FOUND_ROWS xp.*', 'cidev_get_amazon_verification_asin(xe.productid) as pasin')
+            ->from('xcart_external_verification_products_queue', 'xe')
+            ->innerJoin('xe','xcart_products', 'xp', "xp.productid = xe.productid AND xp.forsale = 'Y' AND amazon_enabled !='Y'")
+            ->leftJoin('xe','xcart_products_amz_fields', 'paf', "paf.productid = xe.productid")
+            ->innerJoin('xe','xcart_external_verification_products', 'xp1', "xp1.productid = xe.productid AND xp1.action = 'match'")
+            ->innerJoin('xe','xcart_external_verification_products', 'xp2', "xp2.productid = xe.productid AND xp2.action = 'match'")
+            ->where('xe.cross_verify_count = 2',
+                'xp1.batch_id != xp2.batch_id',
+                "(ISNULL(paf.amazon_fba_restricted) OR amazon_fba_restricted != 'Y')",
+                "(ISNULL (xe.amz_listing_status) OR xe.amz_listing_status = 'submit_to_feed_failed')"
+                )
+            ->groupBy('xe.productid')
+            ->orderBy('cost_to_us')
+            ->having('NOT ISNULL(pasin)');
+
+        $queryBuilder->setFirstResult(($page-1) * $limit);
+        $queryBuilder->setMaxResults($limit);
+        $state = $queryBuilder->execute();
+        $aRes = $state->fetchAll();
+        if (!empty($aRes)) {
+            foreach ($aRes as $k => $aRe) {
+                $aRes[$k]['AsinLink'] = sprintf(ExternalVerificationProducts::AMAZON_PRODUCT_LINK, $aRe['pasin']);
+                unset($aRe['pasin']);
+                $aRes[$k]['Product'] = Product::model()->fill($aRe);
+            }
+        }
+        return ['resultSet' => $aRes, 'FoundRows' => Connection::getInstance()->executeQuery('SELECT FOUND_ROWS() AS foundRows')->fetchColumn(0)];
+    }
+
     public function getVerificatorsResults($iBatchId = null)
     {
         if (is_null($this->aVerificatorResults)) {
@@ -243,5 +287,23 @@ class ExternalVerificationProductsQueue extends Data
             }
         }
         return $this->aVerificatorResults;
+    }
+
+    public function getASINAfterVerification()
+    {
+        $res = null;
+        if ($this->getProductId()) {
+            $res =  Connection::getInstance()->executeQuery("SELECT cidev_get_amazon_verification_asin({$this->getProductId()})")->fetchColumn(0);
+        }
+        return $res;
+    }
+
+    public static function getAmazonStatuses()
+    {
+        return [
+            self::AMAZON_PRODUCT_STATUS_FAILED => 'Failed',
+            self::AMAZON_PRODUCT_STATUS_SUCCESS => 'Success',
+            self::AMAZON_PRODUCT_STATUS_SUBMIT => 'Submitted'
+        ];
     }
 }
