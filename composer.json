@@ -2,9 +2,15 @@
     "config": {
         "vendor-dir": "include/libs"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tsukasa-mixer/QueryBuilder"
+        }
+    ],
     "require": {
         "google/apiclient": "^2.0",
-        "mindy/query_builder": "^2.1",
+        "mindy/query_builder": "dev-master_5.4",
         "gabrielbull/ups-api": "^0.4.0",
         "jaybizzle/crawler-detect": "^1.2",
         "fenom/fenom": "^2.11"

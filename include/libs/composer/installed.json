@@ -507,42 +507,6 @@
         "homepage": "https://github.com/firebase/php-jwt"
     },
     {
-        "name": "google/apiclient-services",
-        "version": "v0.8",
-        "version_normalized": "0.8.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/google/google-api-php-client-services.git",
-            "reference": "26bcd71cb4fcf78020ec24052ddfb28550e01bc8"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/26bcd71cb4fcf78020ec24052ddfb28550e01bc8",
-            "reference": "26bcd71cb4fcf78020ec24052ddfb28550e01bc8",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4"
-        },
-        "time": "2016-10-18 01:01:16",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Google_Service_": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0"
-        ],
-        "description": "Client library for Google APIs",
-        "homepage": "http://developers.google.com/api-client-library/php",
-        "keywords": [
-            "google"
-        ]
-    },
-    {
         "name": "google/auth",
         "version": "v0.11.1",
         "version_normalized": "0.11.1.0",
@@ -590,67 +554,6 @@
             "Authentication",
             "google",
             "oauth2"
-        ]
-    },
-    {
-        "name": "google/apiclient",
-        "version": "v2.1.0",
-        "version_normalized": "2.1.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/google/google-api-php-client.git",
-            "reference": "f4a8ef0642cdbea0a07f6966158337bab846d4de"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/google/google-api-php-client/zipball/f4a8ef0642cdbea0a07f6966158337bab846d4de",
-            "reference": "f4a8ef0642cdbea0a07f6966158337bab846d4de",
-            "shasum": ""
-        },
-        "require": {
-            "firebase/php-jwt": "~2.0|~3.0|~4.0",
-            "google/apiclient-services": "^0.8",
-            "google/auth": "^0.11",
-            "guzzlehttp/guzzle": "~5.2|~6.0",
-            "guzzlehttp/psr7": "^1.2",
-            "monolog/monolog": "^1.17",
-            "php": ">=5.4",
-            "phpseclib/phpseclib": "~2.0"
-        },
-        "require-dev": {
-            "cache/filesystem-adapter": "^0.3.2",
-            "phpunit/phpunit": "~4",
-            "squizlabs/php_codesniffer": "~2.3",
-            "symfony/css-selector": "~2.1",
-            "symfony/dom-crawler": "~2.1"
-        },
-        "suggest": {
-            "cache/filesystem-adapter": "For caching certs and tokens (using Google_Client::setCache)"
-        },
-        "time": "2016-11-02 14:28:02",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Google_": "src/"
-            },
-            "classmap": [
-                "src/Google/Service/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0"
-        ],
-        "description": "Client library for Google APIs",
-        "homepage": "http://developers.google.com/api-client-library/php",
-        "keywords": [
-            "google"
         ]
     },
     {
@@ -1064,123 +967,6 @@
         ]
     },
     {
-        "name": "doctrine/dbal",
-        "version": "v2.5.5",
-        "version_normalized": "2.5.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/doctrine/dbal.git",
-            "reference": "9f8c05cd5225a320d56d4bfdb4772f10d045a0c9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/doctrine/dbal/zipball/9f8c05cd5225a320d56d4bfdb4772f10d045a0c9",
-            "reference": "9f8c05cd5225a320d56d4bfdb4772f10d045a0c9",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/common": ">=2.4,<2.7-dev",
-            "php": ">=5.3.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.*",
-            "symfony/console": "2.*||^3.0"
-        },
-        "suggest": {
-            "symfony/console": "For helpful console commands such as SQL execution and import of files."
-        },
-        "time": "2016-09-09 19:13:33",
-        "bin": [
-            "bin/doctrine-dbal"
-        ],
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.5.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Doctrine\\DBAL\\": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Roman Borschel",
-                "email": "roman@code-factory.org"
-            },
-            {
-                "name": "Benjamin Eberlei",
-                "email": "kontakt@beberlei.de"
-            },
-            {
-                "name": "Guilherme Blanco",
-                "email": "guilhermeblanco@gmail.com"
-            },
-            {
-                "name": "Jonathan Wage",
-                "email": "jonwage@gmail.com"
-            }
-        ],
-        "description": "Database Abstraction Layer",
-        "homepage": "http://www.doctrine-project.org",
-        "keywords": [
-            "database",
-            "dbal",
-            "persistence",
-            "queryobject"
-        ]
-    },
-    {
-        "name": "mindy/query_builder",
-        "version": "2.1",
-        "version_normalized": "2.1.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/MindyPHP/QueryBuilder.git",
-            "reference": "331932e3341b7082e83010ce8b62a32e47e30943"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/MindyPHP/QueryBuilder/zipball/331932e3341b7082e83010ce8b62a32e47e30943",
-            "reference": "331932e3341b7082e83010ce8b62a32e47e30943",
-            "shasum": ""
-        },
-        "require": {
-            "doctrine/dbal": "^2.5"
-        },
-        "require-dev": {
-            "phpunit/php-code-coverage": "^4",
-            "phpunit/phpunit": "*"
-        },
-        "time": "2016-10-27 11:18:40",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "src/Conditions.php"
-            ],
-            "psr-4": {
-                "Mindy\\QueryBuilder\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Falaleev Maxim",
-                "email": "max@studio107.ru"
-            }
-        ]
-    },
-    {
         "name": "gabrielbull/ups-api",
         "version": "0.4.0",
         "version_normalized": "0.4.0.0",
@@ -1372,56 +1158,6 @@
         ]
     },
     {
-        "name": "jaybizzle/crawler-detect",
-        "version": "v1.2.27",
-        "version_normalized": "1.2.27.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-            "reference": "44b83fc0017e9611371b748c653032fa4649af78"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/44b83fc0017e9611371b748c653032fa4649af78",
-            "reference": "44b83fc0017e9611371b748c653032fa4649af78",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "*"
-        },
-        "time": "2016-12-27 19:24:49",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Jaybizzle\\CrawlerDetect\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Mark Beech",
-                "email": "m@rkbee.ch",
-                "role": "Developer"
-            }
-        ],
-        "description": "CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent",
-        "homepage": "https://github.com/JayBizzle/Crawler-Detect/",
-        "keywords": [
-            "crawler",
-            "crawler detect",
-            "crawler detector",
-            "crawlerdetect",
-            "php crawler detect"
-        ]
-    },
-    {
         "name": "fenom/fenom",
         "version": "2.11.5",
         "version_normalized": "2.11.5.0",
@@ -1471,6 +1207,277 @@
             "template",
             "templater",
             "templating"
+        ]
+    },
+    {
+        "name": "doctrine/dbal",
+        "version": "v2.5.10",
+        "version_normalized": "2.5.10.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/doctrine/dbal.git",
+            "reference": "fc376f7a61498e18520cd6fa083752a4ca08072b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/doctrine/dbal/zipball/fc376f7a61498e18520cd6fa083752a4ca08072b",
+            "reference": "fc376f7a61498e18520cd6fa083752a4ca08072b",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/common": ">=2.4,<2.8-dev",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "4.*",
+            "symfony/console": "2.*||^3.0"
+        },
+        "suggest": {
+            "symfony/console": "For helpful console commands such as SQL execution and import of files."
+        },
+        "time": "2017-01-23 23:17:10",
+        "bin": [
+            "bin/doctrine-dbal"
+        ],
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.5.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Doctrine\\DBAL\\": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Roman Borschel",
+                "email": "roman@code-factory.org"
+            },
+            {
+                "name": "Benjamin Eberlei",
+                "email": "kontakt@beberlei.de"
+            },
+            {
+                "name": "Guilherme Blanco",
+                "email": "guilhermeblanco@gmail.com"
+            },
+            {
+                "name": "Jonathan Wage",
+                "email": "jonwage@gmail.com"
+            }
+        ],
+        "description": "Database Abstraction Layer",
+        "homepage": "http://www.doctrine-project.org",
+        "keywords": [
+            "database",
+            "dbal",
+            "persistence",
+            "queryobject"
+        ]
+    },
+    {
+        "name": "mindy/query_builder",
+        "version": "dev-master_5.4",
+        "version_normalized": "dev-master_5.4",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
+            "reference": "494e5c28ac89da7b0935520df3b050671af497a9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/494e5c28ac89da7b0935520df3b050671af497a9",
+            "reference": "494e5c28ac89da7b0935520df3b050671af497a9",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/dbal": "^2.5"
+        },
+        "require-dev": {
+            "phpunit/php-code-coverage": "^4",
+            "phpunit/phpunit": "*"
+        },
+        "time": "2017-01-31 14:39:12",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "src/Conditions.php"
+            ],
+            "psr-4": {
+                "Mindy\\QueryBuilder\\": "src/"
+            }
+        },
+        "autoload-dev": {
+            "psr-4": {
+                "Mindy\\Tests\\": "test/"
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Falaleev Maxim",
+                "email": "max@studio107.ru"
+            }
+        ],
+        "support": {
+            "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
+        }
+    },
+    {
+        "name": "google/apiclient-services",
+        "version": "v0.9",
+        "version_normalized": "0.9.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/google/google-api-php-client-services.git",
+            "reference": "c400c655d1b7ca412ad4dd344e569c6865e74a83"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/c400c655d1b7ca412ad4dd344e569c6865e74a83",
+            "reference": "c400c655d1b7ca412ad4dd344e569c6865e74a83",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4"
+        },
+        "time": "2017-01-11 18:53:21",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Google_Service_": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "description": "Client library for Google APIs",
+        "homepage": "http://developers.google.com/api-client-library/php",
+        "keywords": [
+            "google"
+        ]
+    },
+    {
+        "name": "google/apiclient",
+        "version": "v2.1.2",
+        "version_normalized": "2.1.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/google/google-api-php-client.git",
+            "reference": "360e656f48c3262a6f7fefc0207521efa66caedf"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/google/google-api-php-client/zipball/360e656f48c3262a6f7fefc0207521efa66caedf",
+            "reference": "360e656f48c3262a6f7fefc0207521efa66caedf",
+            "shasum": ""
+        },
+        "require": {
+            "firebase/php-jwt": "~2.0|~3.0|~4.0",
+            "google/apiclient-services": "^0.9",
+            "google/auth": "^0.11",
+            "guzzlehttp/guzzle": "~5.2|~6.0",
+            "guzzlehttp/psr7": "^1.2",
+            "monolog/monolog": "^1.17",
+            "php": ">=5.4",
+            "phpseclib/phpseclib": "~0.3.10|~2.0"
+        },
+        "require-dev": {
+            "cache/filesystem-adapter": "^0.3.2",
+            "phpunit/phpunit": "~4",
+            "squizlabs/php_codesniffer": "~2.3",
+            "symfony/css-selector": "~2.1",
+            "symfony/dom-crawler": "~2.1"
+        },
+        "suggest": {
+            "cache/filesystem-adapter": "For caching certs and tokens (using Google_Client::setCache)"
+        },
+        "time": "2017-01-11 19:44:46",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Google_": "src/"
+            },
+            "classmap": [
+                "src/Google/Service/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "description": "Client library for Google APIs",
+        "homepage": "http://developers.google.com/api-client-library/php",
+        "keywords": [
+            "google"
+        ]
+    },
+    {
+        "name": "jaybizzle/crawler-detect",
+        "version": "v1.2.33",
+        "version_normalized": "1.2.33.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/JayBizzle/Crawler-Detect.git",
+            "reference": "67a6b308cde8474944752607794e6aaa2994748a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/67a6b308cde8474944752607794e6aaa2994748a",
+            "reference": "67a6b308cde8474944752607794e6aaa2994748a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "*"
+        },
+        "time": "2017-01-30 23:25:25",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Jaybizzle\\CrawlerDetect\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Mark Beech",
+                "email": "m@rkbee.ch",
+                "role": "Developer"
+            }
+        ],
+        "description": "CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent",
+        "homepage": "https://github.com/JayBizzle/Crawler-Detect/",
+        "keywords": [
+            "crawler",
+            "crawler detect",
+            "crawler detector",
+            "crawlerdetect",
+            "php crawler detect"
         ]
     }
 ]
