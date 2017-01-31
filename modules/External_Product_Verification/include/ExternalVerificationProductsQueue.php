@@ -249,7 +249,7 @@ class ExternalVerificationProductsQueue extends Data
                 "(ISNULL (xe.amz_listing_status) OR xe.amz_listing_status = 'submit_to_feed_failed')"
                 )
             ->groupBy('xe.productid')
-            ->orderBy('productcode')
+            ->orderBy('cost_to_us')
             ->having('NOT ISNULL(pasin)');
 
         $queryBuilder->setFirstResult(($page-1) * $limit);

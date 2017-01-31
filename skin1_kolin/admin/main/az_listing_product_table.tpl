@@ -4,6 +4,7 @@
         <th></th>
         <th>SKU</th>
         <th style="width: 250px; overflow: hidden; display: inline-block; white-space: nowrap;">Product name</th>
+        <th>Cost to us</th>
         <th style="width: 120px; overflow: hidden; white-space: nowrap;">Asin</th>
         <th>Status</th>
     </tr>
@@ -19,6 +20,9 @@
                 </td>
                 <td>
                     <a target="_blank" href="{$aVerifiactionResult.Product->getProductFrontURL()}">{$aVerifiactionResult.Product->getProductName()}</a>
+                </td>
+                <td align="center">
+                    {include file="currency2.tpl" value=$aVerifiactionResult.Product->getProductCostToUs()}
                 </td>
                 <td align="center">
                     <a target="_blank" href="{$aVerifiactionResult.AsinLink}">{$aVerifiactionResult.pasin}</a>
