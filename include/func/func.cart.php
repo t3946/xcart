@@ -1796,10 +1796,15 @@ function func_calculate_single($cart, $products, $login, $login_type, $provider_
 			}
 		}
 	} else {
-		$shipping_cost = $cart['shipping_cost'];
-		$display_shipping_cost = $cart['display_shipping_cost'];
-		$shipping_costs = $cart['shipping_costs'];
-		$display_shipping_costs = $cart['display_shipping_costs'];
+		if ($cart["use_shipping_costs_alt"] == "Y") {
+			$shipping_cost = $display_shipping_cost = $cart["shipping_cost_alt"];
+			$shipping_costs = $display_shipping_costs = $cart["shipping_costs_alt"];
+		} else {
+			$shipping_cost = $cart['shipping_cost'];
+			$display_shipping_cost = $cart['display_shipping_cost'];
+			$shipping_costs = $cart['shipping_costs'];
+			$display_shipping_costs = $cart['display_shipping_costs'];
+		}
 	}
 
 

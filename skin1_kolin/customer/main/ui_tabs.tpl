@@ -100,11 +100,11 @@ function send_question_email_form(){
         <span id="so_description" itemprop="description">
     {/if}
         {if $product.seo_fulldescr ne ""}
-            {$product.seo_fulldescr}
+            {$product.seo_fulldescr|stripslashes}
         {elseif $product.fulldescr ne ""}
-            {$product.fulldescr}
+            {$product.fulldescr|stripslashes}
         {else}
-            {$product.descr}
+            {$product.descr|stripslashes}
         {/if}
 
     {if $use_schema_org eq "Y"}

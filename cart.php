@@ -244,7 +244,7 @@ if (!empty($orderids) && $_GET["mode"] == "order_message") {
     $cidev_tracking_code_modified = str_replace('var cidev_tracking_code_add;', $cidev_tracking_code_add, $config["Company"]["cidev_tracking_code"]);
     $cidev_tracking_code_modified = str_replace('var cidev_tracking_code_add2;', $cidev_tracking_code_add2, $cidev_tracking_code_modified);
     $smarty->assign("cidev_tracking_code_modified", $cidev_tracking_code_modified);
-//        $orders[0]["order"]["cidev_tracking_code_modified"] = $cidev_tracking_code_modified;
+    x_session_unregister('customer_notes');
 }
 
 require $xcart_dir . "/include/cart_process.php";
@@ -270,6 +270,7 @@ x_session_register('last_categoryid');
 x_session_register('catalog_checkboxes', array());
 x_session_register('added_catalogs');
 x_session_register('autologout');
+x_session_register("customer_notes");
 
 if (!empty($cart["products"]) && empty($cart["cart_number"])) {
 
@@ -872,6 +873,9 @@ if (!$func_is_cart_empty) {
                                         $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
                                         $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
                                         $shipping[$oShippingRate->getShippingId()]['allowed'] = true;
+                                        if ($oShippingRate->getCart()->getExtraMarginValue() > 0) {
+                                            $shipping[$oShippingRate->getShippingId()]['shipping_extra_margin_value'] = $oShippingRate->getShippingChargeBeforeMap() - $oShippingRate->getShippingCharge();
+                                        }
                                         $aCartElements = $oShippingRate->getCart()->getElements();
                                         if (!empty($aCartElements)) {
                                             /** @var \Xcart\CartElement $oCartElement */
@@ -884,6 +888,7 @@ if (!$func_is_cart_empty) {
                                             foreach ($aAddedShippingRates as $oAddedShippingRate) {
                                                 $aShipping = $oAddedShippingRate->getFields();
                                                 $aShipping['shipping_charge'] = $oAddedShippingRate->getShippingCharge();
+                                                $aShipping['shipping_extra_margin_value'] = $oAddedShippingRate->getCart()->getExtraMarginValue();
                                                 $aProducts = $oAddedShippingRate->getCart()->getElements();
                                                 if (!empty($aProducts)) {
                                                     /** @var \Xcart\CartElement $oCartElement */

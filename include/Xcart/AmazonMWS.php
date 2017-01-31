@@ -1002,8 +1002,8 @@ SQL;
                 }
 
                 if (!empty($aArrInsert['productid'])) {
-                    if (!(Connection::getInstance()->update('xcar_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]))) {
-                        Connection::getInstance()->insert('xcar_products_amz_fields', $aArrInsert);
+                    if (!(Connection::getInstance()->update('xcart_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]))) {
+                        Connection::getInstance()->insert('xcart_products_amz_fields', $aArrInsert);
                     }
                 }
             }
@@ -1714,6 +1714,7 @@ SQL;
                                             if ($oFbaMissing->getField('missing_productcode') == '') {
                                                 $oFbaMissing->setField('missing_productcode', $sAmazonSKU)->setField('productid', 0)->_insert();
                                                 global $config;
+                                                $oProduct->setField('productcode', $sAmazonSKU);
                                                 $to = $config['Company']['product_management'];
                                                 $from = 'team@s3stores.com';
                                                 func_send_mail($to, 'mail/missing_sku_subj.tpl', 'mail/missing_sku.tpl', $from, true);

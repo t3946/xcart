@@ -45,7 +45,9 @@ class Order extends Data
     private function fetchOrderGroups()
     {
         if (is_null($this->aOrderGroups)) {
-            $this->aOrderGroups = OrderGroup::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            if ($this->getOrderId()) {
+                $this->aOrderGroups = OrderGroup::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            }
         }
         return $this;
     }
@@ -56,7 +58,9 @@ class Order extends Data
     public function getOrderDetails()
     {
         if (is_null($this->aOrderDetails)) {
-            $this->aOrderDetails = OrderDetail::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            if ($this->getOrderId()) {
+                $this->aOrderDetails = OrderDetail::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            }
         }
         return $this->aOrderDetails;
     }
@@ -467,8 +471,10 @@ class Order extends Data
     {
         $fResult = 0;
         if (is_null($this->aAdditionalFees)) {
-            $oSQL = new SQLBuilder();
-            $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
+            if ($this->getOrderId()) {
+                $oSQL = new SQLBuilder();
+                $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
+            }
         }
         if (!empty($this->aAdditionalFees)) {
             foreach ($this->aAdditionalFees as $aAFee) {
@@ -644,11 +650,15 @@ class Order extends Data
                 $oOrderGroup->reCalculateTotals();
             }
         }
+        return $this;
     }
 
     public function getPOPipelineInstance()
     {
-        return POPipeline::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
+        if ($this->getOrderId()) {
+            return POPipeline::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
+        }
+        return null;
     }
 
     public function getCustomerEntity()
@@ -979,14 +989,15 @@ class Order extends Data
     public function getCustomerInvoiceNextNumber()
     {
         $i = 1;
-        $sSQL = <<<SQL
+        if ($this->getOrderId()) {
+            $sSQL = <<<SQL
 SELECT MAX(invoice_order_number)+1 as next_inv_number FROM xcart_order_cx_invoices WHERE orderid = {$this->getOrderId()}
 SQL;
-        $aRes = Connection::getInstance()->executeQuery($sSQL)->fetch();
-        if (!empty($aRes['next_inv_number'])) {
-            $i = (int) $aRes['next_inv_number'];
+            $aRes = Connection::getInstance()->executeQuery($sSQL)->fetch();
+            if (!empty($aRes['next_inv_number'])) {
+                $i = (int)$aRes['next_inv_number'];
+            }
         }
         return $i;
-
     }
 }

@@ -136,8 +136,6 @@ foreach (func_order_details_fields() as $_details_field => $_field_label) {
 
 $order_details = implode("\n", $_order_details_rval);
 
-$customer_notes = $Customer_Notes;
-
 #
 # Only logged users can submit orders
 #
