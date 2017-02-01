@@ -17,7 +17,7 @@ class Manufacturer extends Data
 
     public function getAdminUrl()
     {
-        return sprintf(self::ADMIN_MANUFACTURER_MODIFY_URL, $this->getField($this->getManufacturerId()));
+        return sprintf(self::ADMIN_MANUFACTURER_MODIFY_URL, $this->getManufacturerId());
     }
 
     public function getManufacturerName()
