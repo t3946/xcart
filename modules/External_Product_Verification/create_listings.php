@@ -1,5 +1,6 @@
 <?php
 use \Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
+use \Xcart\External_Product_Verification\ExternalVerificationBatch;
 
 global $xcart_dir, $per_page, $page, $REQUEST_METHOD, $productasin;
 
@@ -37,6 +38,8 @@ $a = ExternalVerificationProductsQueue::getVerificationProductsReadyForListings(
 $total_items = intval($a['FoundRows']);
 
 $total_nav_pages = ceil($total_items/$objects_per_page)+1;
+$oBatch = ExternalVerificationBatch::model();
+$smarty->assign('sAmazonLink', $oBatch::LINK_SEARCH_BY_ASIN);
 $smarty->assign("navigation_script", "az_create_listings.php?per_page=$per_page");
 $smarty->assign("per_page", $per_page);
 include $xcart_dir."/include/navigation.php";

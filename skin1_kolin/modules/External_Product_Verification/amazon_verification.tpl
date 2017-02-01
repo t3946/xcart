@@ -24,10 +24,10 @@
                 <td>&nbsp;</td>
                 <td><input size="2" name="position[{$oProduct->getProductId()}]" value="{$oProductsQueue->getPosition()}" type="text"/></td>
                 <td>
-                    <a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getSKU()}</a>
+                    <a target="_blank" href="{$oProduct->getAdminUrl()}">{$oProduct->getSKU()}</a>
                 </td>
                 <td>
-                    <a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getProductName()}</a>
+                    <a target="_blank" href="{$oProduct->getURL()}">{$oProduct->getProductName()}</a>
                 </td>
                 <td>
                     {if $oProductsQueue->getAsin()}

@@ -15,7 +15,7 @@ class Manufacturer extends Data
         parent::__construct($iId);
     }
 
-    public function getManufacturerModifyURL()
+    public function getAdminUrl()
     {
         return sprintf(self::ADMIN_MANUFACTURER_MODIFY_URL, $this->getField($this->getManufacturerId()));
     }

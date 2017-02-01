@@ -368,7 +368,7 @@ HTML;
             $html .= <<<HTML
 <tr>
 <td align="center">{$oOrder->getOrderDate('d-M-Y')}</td>
-<td align="center"><a target="_blank" href="{$oOrder->getOrderModifyURL()}">{$oOrder->getDisplayOrderNumber()}</a></td>
+<td align="center"><a target="_blank" href="{$oOrder->getAdminUrl()}">{$oOrder->getDisplayOrderNumber()}</a></td>
 <td>{$aOrderDetails['po_number']}</td>
 <td>{$aOrderDetails['company_name']}</td>
 <td>{$aOrderDetails['name_of_purchaser']}</td>
@@ -406,7 +406,7 @@ HTML;
             $html .= <<<HTML
 <tr>
 <td align="center">{$oOrder->getOrderDate('d-M-Y')}</td>
-<td align="center"><a target="_blank" href="{$oOrder->getOrderModifyURL()}">{$oOrder->getDisplayOrderNumber()}</a></td>
+<td align="center"><a target="_blank" href="{$oOrder->getAdminUrl()}">{$oOrder->getDisplayOrderNumber()}</a></td>
 <td align="center">{$oOrderGroup->getTotalGross()}</td>
 </tr>
 HTML;

@@ -31,7 +31,7 @@
         <tr {cycle values=', class="TableSubHead"'}>
             <td>{$oMatchProduct->getMissingSKU()}</td>
             <td><input class="new_match_sku" name="xcart_match_sku" value="{$oProduct->getSKU()}"/></td>
-            <td><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getProductName()}</a></td>
+            <td><a target="_blank" href="{$oProduct->getURL()}">{$oProduct->getProductName()}</a></td>
             <td align="center" class="missing_order_count">{$oMatchProduct->getOrdersCount()}</td>
             <td style="text-align: center">
                 <div class="action_reclass_buttons ui buttons" data-missing-sku="{$oMatchProduct->getMissingSKU()}">

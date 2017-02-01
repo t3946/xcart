@@ -15,7 +15,7 @@ class classManufacturer extends CloneData
         parent::__construct($iId);
     }
 
-    public function getManufacturerModifyURL()
+    public function getAdminUrl()
     {
         return sprintf(self::ADMIN_MANUFACTURER_MODIFY_URL, $this->getField($this->sPrimaryKeyFiled));
     }
