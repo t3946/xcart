@@ -171,14 +171,14 @@ class Manager implements IteratorAggregate, Serializable, Countable, ArrayAccess
         return $this->getQuerySet()->all();
     }
 
-    /**
-     * @param int $batchSize
-     * @return \Xcart\App\Orm\BatchDataIterator
-     */
-    public function batch($batchSize = 100)
-    {
-        return $this->getQuerySet()->batch($batchSize);
-    }
+//    /**
+//     * @param int $batchSize
+//     * @return \Xcart\App\Orm\BatchDataIterator
+//     */
+//    public function batch($batchSize = 100)
+//    {
+//        return $this->getQuerySet()->batch($batchSize);
+//    }
 
     /**
      * @return mixed
@@ -206,7 +206,7 @@ class Manager implements IteratorAggregate, Serializable, Countable, ArrayAccess
     }
 
     /**
-     * @return \Xcart\App\Orm\QuerySet
+     * @return static
      */
     public function order(array $columns)
     {
@@ -214,16 +214,16 @@ class Manager implements IteratorAggregate, Serializable, Countable, ArrayAccess
         return $this;
     }
 
-//    /**
-//     * @param $page
-//     * @param int $pageSize
-//     * @return array
-//     */
-//    public function paginate($page, $pageSize = 10)
-//    {
-//        $this->getQuerySet()->paginate($page, $pageSize);
-//        return $this;
-//    }
+    /**
+     * @param $page
+     * @param int $pageSize
+     * @return static
+     */
+    public function paginate($page, $pageSize = 10)
+    {
+        $this->getQuerySet()->paginate($page, $pageSize);
+        return $this;
+    }
 
     /**
      * @param $limit

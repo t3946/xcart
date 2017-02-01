@@ -9,7 +9,7 @@
 namespace Xcart\App\Traits;
 
 use ReflectionClass;
-use \Xcart\App\Helpers\Configurator as Creator;
+use \Xcart\App\Helpers\Creator;
 
 trait Configurator
 {

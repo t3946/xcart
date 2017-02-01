@@ -58,6 +58,7 @@ class Data
 
     public function getTableName()
     {
+        //@TODO: Переделать. Нужно что-бы возвращалось или имя или шаблон для подстановки префикса пример xcart_orders или {orders}
         return self::$sql_tbl[$this->sPrimaryTable];
     }
 

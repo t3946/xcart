@@ -15,7 +15,7 @@
 namespace Xcart\App\Main;
 
 use Xcart\App\Application\Application;
-use Xcart\App\Helpers\Configurator;
+use Xcart\App\Helpers\Creator;
 
 class Xcart
 {
@@ -23,7 +23,7 @@ class Xcart
 
     public static function init($configuration, $application = 'Xcart\App\Application\Application')
     {
-        static::$_app = Configurator::create($application, $configuration);
+        static::$_app = Creator::create($application, $configuration);
     }
 
     /**

@@ -16,7 +16,7 @@ namespace Xcart\App\Main;
 
 
 use Xcart\App\Exceptions\UnknownPropertyException;
-use Xcart\App\Helpers\Configurator;
+use Xcart\App\Helpers\Creator;
 use Xcart\App\Helpers\SmartProperties;
 
 trait ComponentsLibrary
@@ -35,7 +35,7 @@ trait ComponentsLibrary
     {
         if (!isset($this->_components[$name])) {
             if (isset($this->_componentsConfig[$name])) {
-                $this->_components[$name] = Configurator::create($this->_componentsConfig[$name]);
+                $this->_components[$name] = Creator::create($this->_componentsConfig[$name]);
             } else {
                 throw new UnknownPropertyException("Component with name " . $name . " not found");
             }
@@ -47,7 +47,7 @@ trait ComponentsLibrary
     public function setComponent($name, $component)
     {
         if (!is_object($component)) {
-            $component = Configurator::create($component);
+            $component = Creator::create($component);
         }
         $this->_components[$name] = $component;
     }

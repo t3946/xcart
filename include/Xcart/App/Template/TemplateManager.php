@@ -89,6 +89,11 @@ class TemplateManager
         return $this->_renderer->fetch($template, $params);
     }
 
+    public function renderString($source, $params = [])
+    {
+        return $this->_renderer->compileCode($source)->fetch($params);
+    }
+
     public function extendRenderer()
     {
         $this->_renderer->addModifier('safe_element', function($variable, $param, $default = '') {

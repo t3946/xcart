@@ -387,7 +387,7 @@ class OrderSearchStore extends BaseStore
                         $tmp[] = new QAnd(['phone__raw' => "RLIKE '" . self::getPhoneRegexp($t) ."'"]);
                     }
 
-                    $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 'phone'));
+//                    $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 'phone'));
                 }
 
                 $where[] = new QOr($tmp);
@@ -437,7 +437,7 @@ class OrderSearchStore extends BaseStore
                 $v = html_entity_decode($v);
 
                 if (strpos($v, self::CONST_MANUAL_STRING) === 0) {
-                    $tmp_like[] = substr($v, 3);
+                    $tmp_like[] = substr($v, strlen(self::CONST_MANUAL_STRING));
                 }
                 else {
                     $tmp_in[] = $v;
@@ -446,7 +446,7 @@ class OrderSearchStore extends BaseStore
         }
         else {
             if (strpos($data, self::CONST_MANUAL_STRING) === 0) {
-                $tmp_like[] = substr($data, 3);
+                $tmp_like[] = substr($data, strlen(self::CONST_MANUAL_STRING));
             }
             else {
                 $tmp_like[] = $data;

@@ -6,6 +6,7 @@ use Mindy\QueryBuilder\Q\QAndNot;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Controller\AdminController;
+use Xcart\App\Pagination\Pagination;
 use Xcart\Connection;
 use Xcart\Order;
 use Xcart\POPipeline;
@@ -21,30 +22,10 @@ class DashboardController extends AdminController
 
     public function search()
     {
-        $content = '';
 
-        if (isset($_GET['search']))
-        {
-//            $models = Order::objects()->filter([new QAndNot(['s_company' => '']) ])->exclude(['orderid__in' => [51005,63472]])->limit(5)->all();
-//            $models = Order::objects()->filter(['s_company' => ''])->exclude(['orderid__in' => [51005,63472]])->limit(5)->all();
+        $qs = (new OrderSearchStore())->populate(!empty($_GET['search']) ? $_GET['search'] : [])->order(['-t.orderid']);
+        $pager = new Pagination($qs);
 
-            $qs = (new OrderSearchStore())->populate($_GET['search']);
-            echo 'Count:' . $qs->count() ."<br/>";
-
-            $models = $qs->limit(20)->order(['-t.orderid'])->all();
-//            $models = $qs->order(['-t.orderid'])->all();
-
-            foreach ($models as $model) {
-                echo "\n|".$model;
-            }
-
-            echo func_get_memory_used();
-
-//            $content = $this->render('dashboard/search_form.tpl');
-        }
-        else {
-
-        }
 
         $attention_tags = Connection::getInstance()->fetchAll("select * from xcart_attention_tags_values ORDER BY orderby ASC");
         $fraud_statuses = Connection::getInstance()->fetchAll("select * from xcart_order_fraud_statuses ORDER BY order_by ASC");
@@ -72,6 +53,7 @@ class DashboardController extends AdminController
             'sources' => OrderSearchStore::getSources(),
             'question_statuses' => OrderSearchStore::getQuestionStatuses(),
             'manual_string' => OrderSearchStore::CONST_MANUAL_STRING,
+            'pager' => $pager,
         ]);
 
         echo $this->renderSmarty("admin/home.tpl",[

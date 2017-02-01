@@ -257,4 +257,16 @@ class QuerySet
         $this->qb->order($columns);
         return $this;
     }
+
+
+    /**
+     * Paginate models
+     * @param int $page
+     * @param int $pageSize
+     * @return $this
+     */
+    public function paginate($page = 1, $pageSize = 10)
+    {
+        return $this->limit($pageSize)->offset($page > 1 ? $pageSize * ($page - 1) : 0);
+    }
 }

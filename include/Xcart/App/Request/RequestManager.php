@@ -15,7 +15,7 @@
 namespace Xcart\App\Request;
 
 use Xcart\App\Application\Application;
-use Xcart\App\Helpers\Configurator;
+use Xcart\App\Helpers\Creator;
 
 class RequestManager
 {
@@ -29,9 +29,9 @@ class RequestManager
     {
         if (!$this->_request) {
             if (Application::getIsCliMode()) {
-                $this->_request = Configurator::create($this->cliRequest);
+                $this->_request = Creator::create($this->cliRequest);
             } else {
-                $this->_request = Configurator::create($this->httpRequest);
+                $this->_request = Creator::create($this->httpRequest);
             }
         }
         return $this->_request;

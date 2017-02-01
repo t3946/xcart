@@ -19,7 +19,7 @@ use Xcart\App\Controller\Controller;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Exceptions\NotFoundHttpException;
 use Xcart\App\Exceptions\UnknownPropertyException;
-use Xcart\App\Helpers\Configurator;
+use Xcart\App\Helpers\Creator;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Interfaces\AuthInterface;
 use Xcart\App\Main\ComponentsLibrary;
@@ -110,7 +110,7 @@ class Application
         if (!isset($this->_modules[$name])) {
             $config = $this->getModuleConfig($name);
             if (!is_null($config)) {
-                $this->_modules[$name] = Configurator::create($config);
+                $this->_modules[$name] = Creator::create($config);
             } else {
                 throw new UnknownPropertyException("Module with name" . $name . " not found");
             }
