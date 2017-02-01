@@ -73,7 +73,6 @@ $domain_specific_config = array(
         'cidev_ga_code_number' => '39',
         'cidev_google_adwords' => '41',
         'skip_generating_googlebase_feed' => '47',
-
         'cidev_keywords' => '21',
         'config_title_meta_tag' => '22',
         'cidev_description' => '23',
@@ -115,5 +114,8 @@ $domain_specific_config = array(
     'Brands' => array(
         'brands_columns' => 35,
     ),
+    'Categories' => array(
+        'seo_featured_products_caption' => 10,
+    )
 );
 $smarty->assign('domain_specific_config', $domain_specific_config);
