@@ -17,7 +17,7 @@ namespace Xcart\App\Request;
 use ArrayAccess;
 use Countable;
 use Xcart\App\Exceptions\InvalidConfigException;
-use Xcart\App\Helpers\Configurator;
+use Xcart\App\Helpers\Creator;
 use SessionHandlerInterface;
 
 class Session implements ArrayAccess, Countable
@@ -50,7 +50,7 @@ class Session implements ArrayAccess, Countable
     {
         if ($this->handler !== null) {
             if (!is_object($this->handler)) {
-                $this->handler = Configurator::create($this->handler);
+                $this->handler = Creator::create($this->handler);
             }
             if (!$this->handler instanceof SessionHandlerInterface) {
                 throw new InvalidConfigException('"' . get_class($this) . '::handler" must implement the SessionHandlerInterface.');

@@ -3,9 +3,11 @@
 namespace Modules\Dashboard\Controllers;
 
 use Mindy\QueryBuilder\Q\QAndNot;
+use Modules\Dashboard\DashboardModule;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Controller\AdminController;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\Pagination;
 use Xcart\Connection;
 use Xcart\Order;
@@ -22,8 +24,20 @@ class DashboardController extends AdminController
 
     public function search()
     {
+        if (!empty($_GET['search'])) {
+            Xcart::app()->request->session->add('search_order_form', $_GET['search']);
+        }
 
-        $qs = (new OrderSearchStore())->populate(!empty($_GET['search']) ? $_GET['search'] : [])->order(['-t.orderid']);
+        $form_data = Xcart::app()->request->session->get('search_order_form', ['order'=> ['date' => DashboardModule::getDefaultSearchDate()]]);
+
+        if (!is_array($form_data)) {
+            $form_data = [];
+        }
+
+        $qs = (new OrderSearchStore())
+            ->populate($form_data)
+            ->order(['-t.orderid']);
+
         $pager = new Pagination($qs);
 
 

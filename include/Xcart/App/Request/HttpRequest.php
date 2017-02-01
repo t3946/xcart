@@ -18,6 +18,8 @@ use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Helpers\Collection;
 use Xcart\App\Helpers\Configurator;
+use Xcart\App\Helpers\Creator;
+use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Main\Xcart;
 
 /**
@@ -143,7 +145,7 @@ class HttpRequest extends Request
         if ($session instanceof Session) {
             $this->_session = $session;
         } elseif (is_array($session) || is_string($session)) {
-            $this->_session = Configurator::create($session);
+            $this->_session = Creator::create($session);
         }
     }
 

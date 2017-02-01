@@ -22,10 +22,10 @@ return [
             'class' => '\\Xcart\\App\\Request\\RequestManager',
             'httpRequest' => [
                 'class' => '\\Xcart\\App\\Request\\HttpRequest',
-                'from_get' => 'path'
-//                'session' => [
-//                    'class' => '\\Xcart\\App\\Request\\Session'
-//                ]
+                'from_get' => 'path',
+                'session' => [
+                    'class' => '\\Xcart\\App\\Request\\XcartSession'
+                ]
             ],
             'cliRequest' => [
                 'class' => '\\Xcart\\App\\Request\\CliRequest',

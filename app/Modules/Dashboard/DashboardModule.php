@@ -13,13 +13,19 @@ class DashboardModule extends Module
 
         $template->addFunction('default_search_date', function()
         {
-            $date = new \DateTime();
-            $str_now = $date->format('m/d/Y');
-
-            $date->setTimestamp(strtotime('-31 day'));
-            $str_from = $date->format('m/d/Y');
-
-            return "{$str_from} - {$str_now}";
+            return self::getDefaultSearchDate();
         });
+    }
+
+
+    public static function getDefaultSearchDate()
+    {
+        $date = new \DateTime();
+        $str_now = $date->format('m/d/Y');
+
+        $date->setTimestamp(strtotime('-31 day'));
+        $str_from = $date->format('m/d/Y');
+
+        return "{$str_from} - {$str_now}";
     }
 }
