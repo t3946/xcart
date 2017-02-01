@@ -85,7 +85,7 @@ $(function(){
 
         <td width="250" valign="middle">
         {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}<a href="/">{/if}
-                <img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="{$current_storefront_info.sf_top_image_alt}" />
+                <img src="{if $HTTPS_url eq "N" && $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}/image.php?id={$current_storefront_info.storefrontid}&amp;type=S" {if $current_storefront_info.image.image_x gt "250"} width="250" {/if}  alt="{if $config.Company.sf_top_image_alt ne "" }{$config.Company.sf_top_image_alt}{else}{$config.Company.company_name}{/if}" />
         {if !($main eq "catalog" && $current_category.category eq "") || $smarty.get.page ne "" || $search_keyword eq true}</a>{/if}
         </td>
 
