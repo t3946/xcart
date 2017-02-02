@@ -264,7 +264,7 @@ class ExternalVerificationBatch extends Data
         }
         $aLinkArray = [];
         if (!empty($this->oVerifiedProduct)) {
-            $aLinkArray[] = [$this->oVerifiedProduct->getProductFrontURL('https://') . '?keep_https=yes', $this->oVerifiedProduct->getProductName()];
+            $aLinkArray[] = [$this->oVerifiedProduct->getURL('https://') . '?keep_https=yes', $this->oVerifiedProduct->getProductName()];
         }
         return json_encode($aLinkArray, JSON_PRETTY_PRINT);
     }

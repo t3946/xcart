@@ -14,7 +14,7 @@ if ($REQUEST_METHOD == "POST") {
         if (!empty($oPO) && $oPO->getPOId() && $oPO->getStatus() != Xcart\POPipeline::PO_STATUS_DROPED) {
             $oOrder = $oPO->getOrderInstance();
             if (!empty($oOrder)) {
-                $top_message["content"] = sprintf(Xcart\POPipeline::PO_LINK_ON_MODIFY, $purchase_order_number_upload, $oOrder->getOrderModifyURL(), $oOrder->getDisplayOrderNumber());
+                $top_message["content"] = sprintf(Xcart\POPipeline::PO_LINK_ON_MODIFY, $purchase_order_number_upload, $oOrder->getAdminUrl(), $oOrder->getDisplayOrderNumber());
                 $top_message["type"] = "I";
             } else {
                 $top_message["content"] = sprintf(Xcart\POPipeline::PO_HAS_ALREADY_BEEN_ADDED, $purchase_order_number_upload);
@@ -42,7 +42,7 @@ if ($REQUEST_METHOD == "POST") {
         } else {
             $oOrder = $oPoPipeline->getOrderInstance();
             if (!empty($oOrder)) {
-                $top_message["content"] = sprintf(Xcart\POPipeline::PO_LINK_ON_MODIFY, $purchase_order_number_search, $oOrder->getOrderModifyURL(), $oOrder->getDisplayOrderNumber());
+                $top_message["content"] = sprintf(Xcart\POPipeline::PO_LINK_ON_MODIFY, $purchase_order_number_search, $oOrder->getAdminUrl(), $oOrder->getDisplayOrderNumber());
                 $top_message["type"] = "I";
             } else {
                 $top_message["content"] = sprintf(Xcart\POPipeline::PO_HAS_ALREADY_BEEN_ADDED, $purchase_order_number_upload);
