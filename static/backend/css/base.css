@@ -324,7 +324,9 @@
 .admin .OrderSheet {
     background-color: transparent;
     border-collapse: collapse;
-
+}
+.admin .OrderSheet .TableSubHead_new {
+    background-color: #e5e5e5;
 }
 .admin .OrderSheet td {
     background-color: transparent;
