@@ -34,7 +34,7 @@
                 </td>
                 <td align="center">
                     <div class="ui toggle checkbox" style="width:50px;">
-                        <input type="checkbox"><label></label>
+                        <input type="checkbox" {if $aVerifiactionResult.Product->isAmazonFBARestricted()}checked="checked"{/if}><label></label>
                     </div>
                 </td>
             </tr>
