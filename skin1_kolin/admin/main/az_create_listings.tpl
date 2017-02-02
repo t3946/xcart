@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="{$SkinDir}/js/semantic/components/icon.css">
 <br>
 <br>
 {capture name=amazon_products_listing}
@@ -10,7 +9,7 @@
 </div>
 
 <form action="az_create_listings.php" method="post" name="createlistingsform">
-    {include file="admin/main/az_listing_product_table.tpl"}
+    {include file="admin/main/az_listing_product_table.tpl" asin_edit=true}
     <p>
         <input type="submit" value="Submit to listing loader" />
     </p>
@@ -31,19 +30,20 @@
                 var input = $(this).prev('input');
                 if (input.val() == '') {
                     input.val($(this).data('asin'));
+                } else {
+                    var iProduct = $(this).closest('tr').data('product-id');
+                    $.post('ajax_admin.php', {
+                                product_id: iProduct,
+                                listing_upload_asin: input.val(),
+                                ajax_action: 'verification_arbitrage_full'
+                            },
+                            function (data) {
+                                if (data.result) {
+                                    input.replaceWith($('<a target="_blank" href="' + amazon_link.replace('%s', input.val()) + '"/>').text(input.val()));
+                                }
+                            },
+                            'json');
                 }
-                var iProduct = $(this).closest('tr').data('product-id');
-                $.post('ajax_admin.php', {
-                            product_id: iProduct,
-                            listing_upload_asin: input.val(),
-                            ajax_action: 'verification_arbitrage_full'
-                        },
-                        function (data) {
-                            if (data.result) {
-                                input.replaceWith($('<a target="_blank" href="' + amazon_link.replace('%s', input.val()) + '"/>').text(input.val()));
-                            }
-                        },
-                        'json');
             }
             icon.toggleClass('edit').toggleClass('save');
             return false;

@@ -69,6 +69,9 @@ switch ($_POST['ajax_action']) {
     case "get_amazon_listing_products":
         getAmazonListingProducts($_POST);
         break;
+    case "product_amazon_fba_restricted_change":
+        changeAmazonFBARestricted($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -542,4 +545,23 @@ function getAmazonListingProducts($aParams = [])
         }
         print $html;
     }
+}
+
+function changeAmazonFBARestricted($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['product_id']) && is_numeric($aParams['product_id'])) {
+        $iProductId = (int) $aParams['product_id'];
+        $oProductAmazonFields = \Xcart\ProductsAmazonFields::model(['productid' => $iProductId]);
+        $sFbaStatus = isset($aParams['status']) ? 'Y' : 'N';
+        $oProductAmazonFields->setField('amazon_fba_restricted', $sFbaStatus);
+        if ($oProductAmazonFields->getField('productid')) {
+            $oProductAmazonFields->_update();
+        } else {
+            $oProductAmazonFields->setField('productid', $iProductId);
+            $oProductAmazonFields->_insert();
+        }
+        $aResult['result'] = true;
+    }
+    print(json_encode($aResult));
 }
