@@ -23,13 +23,13 @@
                     <a target="_blank" href="{$aVerifiactionResult.Product->getAdminUrl()}">{$aVerifiactionResult.Product->getSKU()}</a>
                 </td>
                 <td>
-                    <a target="_blank" href="{$aVerifiactionResult.Product->getAdminUrl()}">{$aVerifiactionResult.Product->getProductName()}</a>
+                    <a target="_blank" href="{$aVerifiactionResult.Product->getURL()}">{$aVerifiactionResult.Product->getProductName()}</a>
                 </td>
                 <td align="center">
                     {include file="currency2.tpl" value=$aVerifiactionResult.Product->getProductCostToUs()}
                 </td>
                 <td align="{if $asin_edit}right{else}center{/if}">
-                    <a target="_blank" href="{$aVerifiactionResult.AmazonLink}">{$aVerifiactionResult.pasin}</a>
+                    <a target="_blank" href="{$aVerifiactionResult.AsinLink}">{$aVerifiactionResult.pasin}</a>
                     {if $asin_edit}<button data-asin="{$aVerifiactionResult.pasin}" class="ui button"><i class="edit icon"></i></button>{/if}
                 </td>
                 <td align="center">
