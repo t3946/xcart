@@ -1265,7 +1265,7 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
         {if $aRetailTrustDetails}
         <tr class="distributor-totals-line">
           <td>
-            <a href="{$oManufacturer->getManufacturerModifyURL()}" target="_blank" style="color: green;">{$oManufacturer->getManufacturerName()}</a>
+            <a href="{$oManufacturer->getAdminUrl()}" target="_blank" style="color: green;">{$oManufacturer->getManufacturerName()}</a>
           </td>
           <td>
             {$oManufacturer->getManufacturerCode()}
@@ -1277,10 +1277,10 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
           {assign var=oOrderDetailProduct value=$oRetailTrustDetail->getOrderDetailProduct()}
         <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
           <td>
-            <a href="{$oOrderDetailProduct->getProductFrontURL()}">{$oOrderDetailProduct->getProductName()}</a>
+            <a href="{$oOrderDetailProduct->getURL()}">{$oOrderDetailProduct->getProductName()}</a>
           </td>
           <td>
-            <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKURetailTrust()}</a>
+            <a href="{$oOrderDetailProduct->getAdminUrl()}">{$oOrderDetailProduct->getSKURetailTrust()}</a>
           </td>
           <td></td>
           <td align="center">
