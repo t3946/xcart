@@ -719,7 +719,8 @@ Cost to us accurate
   <td nowrap="nowrap">
     <div>
         <p>Carrier: {if $v.shipping_code ne ""}{$v.shipping_code}{else}Flat rate{/if}</p>
-        <p>Customer's choice: {$v.shipping}</p>
+        <p>Customer's choice: <input style="width:92px" type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}"/>
+        </p>
         <p>Method:
             {if !$static}
                 {if ($v.real_shipping_method eq '')}
