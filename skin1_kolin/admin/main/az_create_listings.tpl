@@ -29,20 +29,21 @@
                 $(this).prev('a').replaceWith($('<input size="10" class="live_asin_edit" />'));
             } else if (icon.hasClass('save')){
                 var input = $(this).prev('input');
+                if (input.val() == '') {
+                    input.val($(this).data('asin'));
+                }
                 var iProduct = $(this).closest('tr').data('product-id');
-                $(this).prev('input').replaceWith($('<a target="_blank" href="'+amazon_link.replace('%s', input.val())+'"/>').text(input.val()))
                 $.post('ajax_admin.php', {
                             product_id: iProduct,
-                            asin_arbitrage: input.val(),
+                            listing_upload_asin: input.val(),
                             ajax_action: 'verification_arbitrage_full'
                         },
                         function (data) {
-                            if (data.result){
-
+                            if (data.result) {
+                                input.replaceWith($('<a target="_blank" href="' + amazon_link.replace('%s', input.val()) + '"/>').text(input.val()));
                             }
-                            else alert(data.error);
                         },
-                'json');
+                        'json');
             }
             icon.toggleClass('edit').toggleClass('save');
             return false;

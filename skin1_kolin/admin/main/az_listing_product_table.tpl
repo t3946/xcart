@@ -26,7 +26,7 @@
                 </td>
                 <td align="right">
                     <a target="_blank" href="{$aVerifiactionResult.AmazonLink}">{$aVerifiactionResult.pasin}</a>
-                    <button class="ui button"><i class="edit icon"></i></button>
+                    <button data-asin="{$aVerifiactionResult.pasin}" class="ui button"><i class="edit icon"></i></button>
                 </td>
                 <td align="center">
                     {$aVerifiactionResult.status}
