@@ -2,29 +2,49 @@
 
 {block 'content'}
 
-    <h1 align="center">Order search</h1>
-    <form action="{url 'dashboard:search'}" method="GET">
+    <div class="row">
+        <div class="columns large-12">
+            <h1 align="center">Order search</h1>
 
-        {include 'dashboard/form_fields.tpl'}
 
-        <button>Search</button>
-        <a href="{url 'dashboard:search'}">Reset</a>
+            <fieldset class="{if $form_collapse}collapsed-force collapsed{else}expanded{/if}">
+                <legend>Order search form</legend>
 
-    </form>
+                <form action="{url 'dashboard:search'}" method="GET">
+                    {include 'dashboard/form_fields.tpl'}
 
-    {foreach $pager->paginate() as $model}
-        <div>
-            <a href="{$model->getOrderModifyURL()}" target="_blank">{$model}</a>
+                    <button>Search</button>
+                    <button name="search[reset]" value="reset">Reset</button>
+                </form>
+            </fieldset>
         </div>
-    {/foreach}
+    </div>
 
-    {raw $pager}
+
+    {if count($models) > 0}
+        <div class="row">
+            <div class="columns large-12">
+                {raw $pager}
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns large-12">
+                {include 'order/orders_list.tpl' orders=$models}
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns large-12">
+                {raw $pager}
+            </div>
+        </div>
+    {/if}
 {/block}
 
 {block 'js'}
     <link href="/static/vendors/air-datepicker/dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
     <script src="/static/vendors/air-datepicker/dist/js/datepicker.min.js"></script>
     <script src="/static/vendors/air-datepicker/dist/js/i18n/datepicker.en.js"></script>
+
 
     <link href="/static/vendors/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
     <script src="/static/vendors/select2/dist/js/select2.full.min.js"></script>
@@ -67,6 +87,13 @@
                 });
             });
 
+            $('.admin select[data-ajax-from]').on("select2:select",  function(e) {
+                // append the new item to the default select
+                {ignore}
+                $(this).append($('<option>', {value: e.params.data.id, text: e.params.data.text}));
+                {/ignore}
+            });
+
             $('.admin select[data-ajax-from]').select2({
                 allowClear: true,
                 placeholder: 'Start typing for hint',
@@ -86,7 +113,7 @@
 
                     return {
                         id: '{$manual_string}' + term,
-                        text: '-> ' + term
+                        text: '{raw $manual_string}' + term
                     }
                 },
                 ajax: {
@@ -114,7 +141,7 @@
                 }
             });
 
-            $('.admin select:not([data-ajax-from])').select2({
+            $('.admin select:not([data-ajax-from])').not('.page-size select').select2({
                 allowClear: true,
                 placeholder: 'Select options'
             });

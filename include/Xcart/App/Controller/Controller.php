@@ -5,12 +5,12 @@ use ReflectionMethod;
 use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Request\Request;
+use Xcart\App\Request\HttpRequest;
 
 class Controller
 {
     /**
-     * @var Request
+     * @var HttpRequest
      */
     protected $_request;
     /**
@@ -86,11 +86,11 @@ class Controller
 
     public function redirect($url, $data = [], $status = 302)
     {
-        $this->request->redirect($url, $data, $status);
+        $this->_request->redirect($url, $data, $status);
     }
     public function refresh()
     {
-        $this->request->refresh();
+        $this->_request->refresh();
     }
     public function beforeAction($action, $params)
     {

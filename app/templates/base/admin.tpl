@@ -1,4 +1,6 @@
 <link rel="stylesheet" href="/static/backend/css/base.css?v=1">
+
+<script src="/static/vendors/jquery.cookie-1.4.1.min.js"></script>
 <script type="text/javascript" src="/static/backend/js/main.js?v=1" async></script>
 
 <div id="wrapper" class="admin">

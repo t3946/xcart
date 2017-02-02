@@ -11,12 +11,16 @@ namespace Modules\Dashboard\Stores;
 use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
+use Mindy\QueryBuilder\QueryBuilder;
+use Modules\Dashboard\Sqls\SearchSql;
 use Xcart\App\Store\BaseStore;
+use Xcart\Connection;
 use Xcart\Order;
 
 class OrderSearchStore extends BaseStore
 {
     const CONST_MANUAL_STRING = '=> ';
+    const CONST_MANUAL_VIEW_STTINR = '-> ';
 
     public static function getFeatures()
     {
@@ -61,8 +65,6 @@ class OrderSearchStore extends BaseStore
      */
     public function populate(array $data)
     {
-        $data = $this->clearRecursive($data);
-
         $where = [];
         $exclude = [];
 
@@ -139,11 +141,9 @@ class OrderSearchStore extends BaseStore
             if (!empty($data['order']['operator'])) {
                 $qs->join('inner join', 'xcart_order_logs', ['t.orderid' => 'logs.orderid'], 'logs');
                 $where[] = new QOr([
-                    'login_last_opened_or_saved__in' => $data['order']['operator'],
-                    'logs.login__in' => $data['order']['operator'],
+                                       'login_last_opened_or_saved__in' => $data['order']['operator'],
+                                       'logs.login__in'                 => $data['order']['operator'],
                                    ]);
-
-//                $where['login_last_opened_or_saved__in'] = $data['order']['operator'];
             }
 
             if (!empty($data['order']['payment_method'])) {
@@ -185,7 +185,8 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['vn_status'])) {
-                $where['group.vn_status__in'] = $data['order']['vn_status'];
+//                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $where['t.vn_status__in'] = $data['order']['vn_status'];
             }
 
             if (!empty($data['order']['po_status'])) {
@@ -227,13 +228,7 @@ class OrderSearchStore extends BaseStore
         {
             if (!empty($data['product']['name'])) {
                 $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
-//                $where[] = new QOr([
-//                                       'details.product__contains'         => $data['product']['name'],
-//                                       'details.product_options__contains' => $data['product']['name'],
-//                                       new QAnd(array_map(function ($word) {
-//                                           return new QAnd(['details.product__contains' => $word]);
-//                                       }, explode(' ', $data['product']['name']))),
-//                                   ]);
+
                 $where[] = new QAnd(array_map(function ($word) {
                     return new QOr([
                                        'details.product__contains'         => $word,
@@ -288,12 +283,13 @@ class OrderSearchStore extends BaseStore
 
             if (!empty($data['customer']['state']))
             {
+                $state = self::explodeStateCode($data['customer']['state']);
                 $tmp = [];
                 if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
-                    $tmp['b_state__in'] = $data['customer']['state'];
+                    $tmp['b_state__in'] = $state;
                 }
                 if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
-                    $tmp['s_state__in'] = $data['customer']['state'];
+                    $tmp['s_state__in'] = $state;
                 }
                 $where[] = new QOr($tmp);
             }
@@ -386,15 +382,12 @@ class OrderSearchStore extends BaseStore
                     {
                         $tmp[] = new QAnd(['phone__raw' => "RLIKE '" . self::getPhoneRegexp($t) ."'"]);
                     }
-
-//                    $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 'phone'));
                 }
 
                 $where[] = new QOr($tmp);
             }
 
-            if (!empty($data['customer']['name']))
-            {
+            if (!empty($data['customer']['name'])) {
                 $where[] = new QOr(['firstname__contains'   => $data['customer']['name'],
                                     'b_firstname__contains' => $data['customer']['name'],
                                     's_firstname__contains' => $data['customer']['name'],
@@ -411,7 +404,7 @@ class OrderSearchStore extends BaseStore
             $qs->group([ $qs->getAlias() . '.orderid']);
         }
 
-        func_dump($qs->getSql());
+//        func_dump($qs->getSql());
 
         return $qs;
     }
@@ -426,10 +419,11 @@ class OrderSearchStore extends BaseStore
         return $data;
     }
 
-    private function explodeInOrLike($data)
+    private static function explodeInOrLike($data, $clean = true)
     {
         $tmp_like = [];
         $tmp_in = [];
+        $len_prefix = strlen(self::CONST_MANUAL_STRING);
 
         if (is_array($data))
         {
@@ -437,7 +431,7 @@ class OrderSearchStore extends BaseStore
                 $v = html_entity_decode($v);
 
                 if (strpos($v, self::CONST_MANUAL_STRING) === 0) {
-                    $tmp_like[] = substr($v, strlen(self::CONST_MANUAL_STRING));
+                    $tmp_like[] = $clean ? substr($v, $len_prefix) : $v;
                 }
                 else {
                     $tmp_in[] = $v;
@@ -446,7 +440,7 @@ class OrderSearchStore extends BaseStore
         }
         else {
             if (strpos($data, self::CONST_MANUAL_STRING) === 0) {
-                $tmp_like[] = substr($data, strlen(self::CONST_MANUAL_STRING));
+                $tmp_like[] = $clean ? substr($data, $len_prefix) : $data;
             }
             else {
                 $tmp_like[] = $data;
@@ -456,7 +450,12 @@ class OrderSearchStore extends BaseStore
         return [$tmp_in, $tmp_like];
     }
 
-    private function clearRecursive($data)
+    public static function getClearedData($data)
+    {
+        return self::clearRecursive($data);
+    }
+
+    private static function clearRecursive($data)
     {
         if (is_array($data) )
         {
@@ -465,7 +464,7 @@ class OrderSearchStore extends BaseStore
                 $ta = [];
                 foreach ($data as $k=>$v)
                 {
-                    $t = $this->clearRecursive($v);
+                    $t = self::clearRecursive($v);
 
                     if (!empty($t)) {
                         $ta[$k] = $t;
@@ -505,5 +504,109 @@ class OrderSearchStore extends BaseStore
         $t[] = '.*';
 
         return implode('',$t);
+    }
+
+    public static function getDecoratedAutoCompleteData($data, $type)
+    {
+        if (empty($data)) {
+            return [];
+        }
+
+        switch ($type) {
+            case 'customer.country': {
+                return Connection::getInstance()->fetchAll(SearchSql::getInCountryOrderSql($data));
+            }
+            case 'customer.state': {
+                list($in, $like) = self::explodeInOrLike($data, false);
+                $data = $like;
+
+                if (!empty($in)) {
+                    $founded = Connection::getInstance()->fetchAll(SearchSql::getInStateOrderSql($in));
+                    $not_founded = [];
+
+                    $in_founded = array_map(function($el){ return $el['id'];}, $founded);
+                    foreach ($in as $item) {
+                        if (!in_array($item, $in_founded)) {
+                            $tmp[] = $item;
+                        }
+                    }
+                    $data = array_merge($data, $founded, $not_founded);
+                }
+
+                return $data;
+            }
+
+            case 'order.operator': {
+                return Connection::getInstance()->fetchAll(SearchSql::getInOperatorSql($data));
+            }
+            case 'order.distributor': {
+                return Connection::getInstance()->fetchAll(SearchSql::getInDistributorSql($data));
+            }
+        }
+
+        return $data;
+    }
+
+    public static function explodeStateCode($data)
+    {
+        return array_map(function($state){ return explode('__', $state)[0]; },$data);
+    }
+
+    public static function getAjaxSuggestion($query, $from)
+    {
+        $data = [];
+        $like = "%{$query}%";
+
+        switch ($from) {
+            case 'distributor' :
+                $data = Connection::getInstance()->fetchAll(SearchSql::getDistributorSql(), ['like' => $like]);
+                break;
+            case 'operator' :
+                $data = Connection::getInstance()->fetchAll(SearchSql::getOperatorSql(), ['like' => $like]);
+                break;
+            case 'company' :
+                $data = Connection::getInstance()->fetchAll(SearchSql::getCompanySql(), ['like' => $like]);
+                break;
+            case 'search_city' :
+                $data = Connection::getInstance()->fetchAll(SearchSql::getCitySql(), ['like' => $like]);
+                break;
+            case 'search_state' :
+                $data = Connection::getInstance()->fetchAll(SearchSql::getStateOrderSql(), ['like' => $like]);
+                break;
+            case 'search_country' :
+                $data = Connection::getInstance()->fetchAll(SearchSql::getCountryOrderSql(), ['like' => $like]);
+                break;
+            case 'search_street' :
+                $data = Connection::getInstance()->fetchAll(SearchSql::getStreetSql(), ['like' => $like]);
+                break;
+            case 'search_phone' :
+                $query = self::getPhoneRegexp($query);
+                $data = Connection::getInstance()->fetchAll(SearchSql::getPhoneFaxOrderSql(), ['like' => $query]);
+                break;
+            case 'search_email' :
+                $data = Connection::getInstance()->fetchAll(SearchSql::getEmailOrderSql(), ['like' => $like]);
+                break;
+            case 'search_zip' :
+                $data = Connection::getInstance()->fetchAll(SearchSql::getZipOrderSql(), ['like' => $like]);
+                break;
+            case 'search_customer_name' :
+                $data = Connection::getInstance()->fetchAll(SearchSql::getCustomerNameSql(), ['like' => $like]);
+                break;
+        }
+
+        return $data;
+    }
+
+    public static function autoCompleteClearNewLines($data)
+    {
+        foreach ($data as $k => $v)
+        {
+            $id = self::replaceNewLine($v['id']);
+            $text = str_replace(["\n", "\r"], " ", $v['text']);
+
+            $data[$k] = ['id' => $id, 'text' => $text];
+        }
+
+        return $data;
     }
 }

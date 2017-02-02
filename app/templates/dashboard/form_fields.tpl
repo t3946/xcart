@@ -10,7 +10,7 @@
 
             <div class="input">
                 <input type="text" name="search[order][date]" id="o_date"
-                       value="{default_search_date}"
+                       value="{$form_data.order.date}"
                        data-range="true"
                        data-multiple-dates-separator=" - "
                        data-language="en"
@@ -34,9 +34,9 @@
             </div>
 
             <div class="input">
-                <input type="text" name="search[order][total][from]" id="o_total">
+                <input type="text" name="search[order][total][from]" id="o_total" value="{$form_data.order.total.from}">
                 <span>to</span>
-                <input type="text" name="search[order][total][to]">
+                <input type="text" name="search[order][total][to]" value="{$form_data.order.total.to}">
             </div>
         </li>
 
@@ -46,7 +46,11 @@
             </div>
 
             <div class="input">
-                <select name="search[customer][name]" id="c_name" class="big" multiple data-ajax-from="search_customer_name" data-combobox="1"></select>
+                <select name="search[customer][name][]" id="c_name" class="big" multiple data-ajax-from="search_customer_name" data-combobox="1">
+                    {foreach $form_data.customer.name as $value}
+                        <option value="{raw $value}" selected>{raw $value}</option>
+                    {/foreach}
+                </select>
             </div>
         </li>
 
@@ -56,7 +60,11 @@
             </div>
 
             <div class="input">
-                <select name="search[customer][phone][]" id="c_phone" class="big" multiple data-ajax-from="search_phone" data-combobox="1"></select>
+                <select name="search[customer][phone][]" id="c_phone" class="big" multiple data-ajax-from="search_phone" data-combobox="1">
+                    {foreach $form_data.customer.phone as $value}
+                        <option value="{raw $value}" selected>{raw $value}</option>
+                    {/foreach}
+                </select>
             </div
             >
         </li>
@@ -67,7 +75,11 @@
             </div>
 
             <div class="input">
-                <select name="search[customer][email][]" id="c_email" class="big" multiple data-ajax-from="search_email" data-combobox="1"></select>
+                <select name="search[customer][email][]" id="c_email" class="big" multiple data-ajax-from="search_email" data-combobox="1">
+                    {foreach $form_data.customer.email as $value}
+                        <option value="{raw $value}" selected>{raw $value}</option>
+                    {/foreach}
+                </select>
             </div>
         </li>
 
@@ -78,13 +90,13 @@
             </div>
 
             <div class="input">
-                <input type="radio" name="search[customer][in_address]" id="c_in_address_both" value="both" checked>
+                <input type="radio" name="search[customer][in_address]" id="c_in_address_both" value="both" {if $form_data.customer.in_address == 'both' or !$form_data.customer.in_address}checked{/if}>
                 <label for="c_in_address_both">Both</label>
 
-                <input type="radio" name="search[customer][in_address]" id="c_in_address_billig" value="billing">
+                <input type="radio" name="search[customer][in_address]" id="c_in_address_billig" value="billing" {if $form_data.customer.in_address == 'billing'}checked{/if}>
                 <label for="c_in_address_billig">Billing</label>
 
-                <input type="radio" name="search[customer][in_address]" id="c_in_address_shipping" value="shipping">
+                <input type="radio" name="search[customer][in_address]" id="c_in_address_shipping" value="shipping" {if $form_data.customer.in_address == 'shipping'}checked{/if}>
                 <label for="c_in_address_shipping">Shipping</label>
             </div>
         </li>
@@ -95,7 +107,11 @@
             </div>
 
             <div class="input">
-                <select name="search[customer][company][]" id="c_company" class="big" multiple data-ajax-from="company"></select>
+                <select name="search[customer][company][]" id="c_company" class="big" multiple data-ajax-from="company">
+                    {foreach $form_data.customer.company as $value}
+                        <option value="{raw $value}" selected>{raw $value}</option>
+                    {/foreach}
+                </select>
             </div>
         </li>
 
@@ -105,7 +121,11 @@
             </div>
 
             <div class="input">
-                <select name="search[customer][address][]" id="c_street" class="big" multiple data-ajax-from="search_street" data-combobox="1"></select>
+                <select name="search[customer][address][]" id="c_street" class="big" multiple data-ajax-from="search_street" data-combobox="1">
+                    {foreach $form_data.customer.address|clear_autocomplete_data as $value}
+                        <option value="{raw $value.id}" selected>{raw $value.text}</option>
+                    {/foreach}
+                </select>
             </div>
         </li>
 
@@ -115,7 +135,11 @@
             </div>
 
             <div class="input">
-                <select name="search[customer][city][]" id="c_city" class="big" multiple data-ajax-from="search_city"></select>
+                <select name="search[customer][city][]" id="c_city" class="big" multiple data-ajax-from="search_city">
+                    {foreach $form_data.customer.city|decorate_autocomplete_data:'customer.city'|clear_autocomplete_data as $value}
+                        <option value="{raw $value.id}" selected>{raw $value.text}</option>
+                    {/foreach}
+                </select>
             </div>
         </li>
 
@@ -125,7 +149,11 @@
             </div>
 
             <div class="input">
-                <select name="search[customer][state][]" id="c_state" class="big" multiple data-ajax-from="search_state"></select>
+                <select name="search[customer][state][]" id="c_state" class="big" multiple data-ajax-from="search_state">
+                    {foreach $form_data.customer.state|decorate_autocomplete_data:'customer.state'|clear_autocomplete_data as $value}
+                        <option value="{raw $value.id}" selected>{raw $value.text}</option>
+                    {/foreach}
+                </select>
             </div>
         </li>
 
@@ -135,7 +163,11 @@
             </div>
 
             <div class="input">
-                <select name="search[customer][state][]" id="c_country" class="big" multiple data-ajax-from="search_country"></select>
+                <select name="search[customer][country][]" id="c_country" class="big" multiple data-ajax-from="search_country">
+                    {foreach $form_data.customer.country|decorate_autocomplete_data:'customer.country'|clear_autocomplete_data as $value}
+                        <option value="{raw $value.id}" selected>{raw $value.text}</option>
+                    {/foreach}
+                </select>
             </div>
         </li>
 
@@ -146,7 +178,7 @@
             </div>
 
             <div class="input">
-                <input type="text" name="search[customer][zip_code]" id="c_zip" class="big" multiple data-ajax-from="search_zip" data-combobox="1">
+                <input type="text" name="search[customer][zip_code]" id="c_zip" class="big" multiple data-ajax-from="search_zip" data-combobox="1" value="{$form_data.customer.zip_code}">
             </div>
         </li>
     </ul>
@@ -165,7 +197,7 @@
             </div>
 
             <div class="input">
-                <input type="text" name="search[product][name]" id="p_name" class="big">
+                <input type="text" name="search[product][name]" id="p_name" class="big" value="{$form_data.product.name}">
             </div>
         </li>
 
@@ -175,7 +207,7 @@
             </div>
 
             <div class="input">
-                <input type="text" name="search[product][sku]" id="p_sku" class="big">
+                <input type="text" name="search[product][sku]" id="p_sku" class="big" value="{$form_data.product.sku}">
             </div>
         </li>
 
@@ -185,7 +217,7 @@
             </div>
 
             <div class="input">
-                <input type="text" name="search[product][id]" id="p_id" class="big">
+                <input type="text" name="search[product][id]" id="p_id" class="big" value="{$form_data.product.sku}">
             </div>
         </li>
 
@@ -197,7 +229,9 @@
             <div class="input">
                 <select name="search[product][question_status][]" id="p_qs" class="big" multiple>
                     {foreach $question_statuses as $code => $status}
-                        <option value="{$code}">{$status}</option>
+                        <option value="{$code}" {if $code|in:$form_data.product.question_status}selected{/if}>
+                            {$status}
+                        </option>
                     {/foreach}
                 </select>
             </div>
@@ -217,9 +251,9 @@
             </div>
 
             <div class="input">
-                <input type="text" name="search[order][id][from]" id="o_id"/>
+                <input type="text" name="search[order][id][from]" id="o_id" value="{$form_data.order.id.from}"/>
                 <span>to</span>
-                <input type="text" name="search[order][id][to]"/>
+                <input type="text" name="search[order][id][to]" value="{$form_data.order.id.to}"/>
             </div>
         </li>
 
@@ -229,7 +263,13 @@
             </div>
 
             <div class="input">
-                <select type="text" name="search[order][operator][]" id="o_operator" class="big" data-ajax-from="operator" multiple></select>
+                <select type="text" name="search[order][operator][]" id="o_operator" class="big" data-ajax-from="operator" multiple>
+                    {foreach $form_data.order.operator|decorate_autocomplete_data:'order.operator'|clear_autocomplete_data as $value}
+                        <option value="{raw $value.id}" selected>
+                            {raw $value.text}
+                        </option>
+                    {/foreach}
+                </select>
             </div>
         </li>
 
@@ -241,7 +281,9 @@
             <div class="input">
                 <select name="search[features][]" id="o_features" class="big" multiple>
                     {foreach $features as $code => $name}
-                        <option value="{$code}">{$name}</option>
+                        <option value="{$code}" {if $code|in:$form_data.features}selected{/if}>
+                            {$name}
+                        </option>
                     {/foreach}
                 </select>
             </div>
@@ -255,7 +297,7 @@
             <div class="input">
                 <select type="text" name="search[order][source][]" id="o_features" class="big" multiple>
                     {foreach $sources as $code => $name}
-                        <option value="{$code}">{$name}</option>
+                        <option value="{$code}" {if $code|in:$form_data.order.source}selected{/if}>{$name}</option>
                     {/foreach}
                 </select>
             </div>
@@ -269,7 +311,9 @@
             <div class="input">
                 <select name="search[order][payment_method][]" id="o_payment" class="big" multiple>
                     {foreach $payment_methods as $method}
-                        <option value="{$method.paymentid}" title="{$method.payment_details}">{$method.payment_method}</option>
+                        <option value="{$method.paymentid}" title="{$method.payment_details}" {if $method.paymentid|in:$form_data.order.payment_method}selected{/if}>
+                            {$method.payment_method}
+                        </option>
                     {/foreach}
                 </select>
             </div>
@@ -283,7 +327,7 @@
             <div class="input">
                 <select name="search[order][delivery_method][]" id="o_delivery" class="big" multiple>
                     {foreach $shipping_methods as $method}
-                        <option value="{$method.shippingid}">
+                        <option value="{$method.shippingid}" {if $method.shippingid|in:$form_data.order.delivery_method}selected{/if}>
                             {if $method.code}[{$method.code}]{/if}
                             {$method.shipping}
                             {if $method.frontend_name}({$method.frontend_name}){/if}
@@ -301,7 +345,9 @@
             <div class="input">
                 <select type="text" name="search[order][c2b_status][]" id="o_c2b" class="big" multiple>
                     {foreach $order_statuses.CB as $status}
-                        <option value="{$status.code}">{$status.name}</option>
+                        <option value="{$status.code}" {if $status.code|in:$form_data.order.c2b_status}selected{/if}>
+                            {$status.name}
+                        </option>
                     {/foreach}
                 </select>
             </div>
@@ -315,7 +361,9 @@
             <div class="input">
                 <select type="text" name="search[order][d2c_status][]" id="o_d2c" class="big" multiple>
                     {foreach $order_statuses.DC as $status}
-                        <option value="{$status.code}">{$status.name}</option>
+                        <option value="{$status.code}" {if $status.code|in:$form_data.order.d2c_status}selected{/if}>
+                            {$status.name}
+                        </option>
                     {/foreach}
                 </select>
             </div>
@@ -329,7 +377,9 @@
             <div class="input">
                 <select type="text" name="search[order][po_transit_status][]" id="o_transit" class="big" multiple>
                     {foreach $order_statuses.PO as $status}
-                        <option value="{$status.code}">{$status.name}</option>
+                        <option value="{$status.code}" {if $status.code|in:$form_data.order.po_transit_status}selected{/if}>
+                            {$status.name}
+                        </option>
                     {/foreach}
                 </select>
             </div>
@@ -344,7 +394,9 @@
             <div class="input">
                 <select type="text" name="search[order][po_status][]" id="o_po" class="big" multiple>
                     {foreach $po_statuses as $code => $name}
-                        <option value="{$code}">{$name}</option>
+                        <option value="{$code}" {if $code|in:$form_data.order.po_status}selected{/if}>
+                            {$name}
+                        </option>
                     {/foreach}
                 </select>
             </div>
@@ -358,7 +410,9 @@
             <div class="input">
                 <select name="search[order][fraud_status][]" id="o_fraud" class="big" multiple>
                     {foreach $fraud_statuses as $status}
-                        <option value="{$status.code}">{$status.name}</option>
+                        <option value="{$status.code}" {if $status.code|in:$form_data.order.fraud_status}selected{/if}>
+                            {$status.name}
+                        </option>
                     {/foreach}
                 </select>
             </div>
@@ -372,7 +426,9 @@
             <div class="input">
                 <select name="search[order][vn_status][]" id="p_vs" class="big" multiple>
                     {foreach $order_statuses.PV as $status}
-                        <option value="{$status.code}">{$status.name}</option>
+                        <option value="{$status.code}" {if $status.code|in:$form_data.order.vn_status}selected{/if}>
+                            {$status.name}
+                        </option>
                     {/foreach}
                 </select>
             </div>
@@ -386,7 +442,9 @@
             <div class="input">
                 <select name="search[order][tag][]" id="o_tag" class="big" multiple>
                     {foreach $attention_tags as $tag}
-                        <option value="{$tag.status_id}" title="{$tag.description}">{$tag.status}</option>
+                        <option value="{$tag.status_id}" title="{$tag.description}" {if $tag.status_id|in:$form_data.order.tag}selected{/if}>
+                            {$tag.status}
+                        </option>
                     {/foreach}
                 </select>
             </div>
@@ -398,7 +456,11 @@
             </div>
 
             <div class="input">
-                <select name="search[order][distributor][]" id="o_distributor" class="big" multiple data-ajax-from="distributor"></select>
+                <select name="search[order][distributor][]" id="o_distributor" class="big" multiple data-ajax-from="distributor">
+                    {foreach $form_data.order.distributor|decorate_autocomplete_data:'order.distributor'|clear_autocomplete_data as $value}
+                        <option value="{raw $value.id}" selected>{raw $value.text}</option>
+                    {/foreach}
+                </select>
             </div>
         </li>
     </ul>

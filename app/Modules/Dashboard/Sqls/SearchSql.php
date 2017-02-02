@@ -1,6 +1,10 @@
 <?php
 namespace Modules\Dashboard\Sqls;
 
+use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\Connection;
+
 class SearchSql
 {
     public static function getDistributorSql()
@@ -12,7 +16,17 @@ where manufacturer like :like or code like :like
 limit 50
 SQL;
     }
-    public static function getCustomerSql()
+
+    public static function getInDistributorSql($in)
+    {
+        return QueryBuilder::getInstance(Connection::getInstance())
+                           ->select(['id' => 'manufacturerid' , 'text' => new Expression("CONCAT('[', code, '] ', manufacturer)") ])
+                           ->from("xcart_manufacturers")
+                           ->setAlias('t')
+                           ->where(['t.manufacturerid__in' => $in])->toSQL();
+    }
+
+    public static function getOperatorSql()
     {
         return /** @lang MySQL */ <<<SQL
 select login as id, concat('[',login,'] ', firstname) as text 
@@ -22,6 +36,15 @@ where not usertype in ('C') and (login like :like or firstname like :like)
 ORDER BY login asc
 limit 50
 SQL;
+    }
+
+    public static function getInOperatorSql($in)
+    {
+        return QueryBuilder::getInstance(Connection::getInstance())
+                           ->select(['id' => 'login' , 'text' => new Expression("CONCAT('[', login, '] ', firstname)") ])
+                           ->from("xcart_customers")
+                           ->setAlias('t')
+                           ->where(['t.login__in' => $in])->toSQL();
     }
 
     public static function getCompanySql()
@@ -49,7 +72,7 @@ SQL;
     public static function getStateOrderSql()
     {
         return /** @lang MySQL */ <<<SQL
-(select code as id, state as text from xcart_states where xcart_states.state like :like)
+(select CONCAT(code, '__', country_code) as id, state as text from xcart_states where xcart_states.state like :like)
 UNION 
 (   
     select s_state as id, s_state as text 
@@ -71,6 +94,23 @@ UNION
 limit 50
 SQL;
     }
+
+    public static function getInStateOrderSql($in)
+    {
+        $codes = $countries = [];
+
+        foreach ($in as $item) {
+            list($codes[], $countries[]) = explode('__', $item);
+        }
+        $countries = array_filter($countries);
+
+        return QueryBuilder::getInstance(Connection::getInstance())
+                           ->select(['id' => new Expression("CONCAT(code, '__', country_code)"), 'text' => 'state' ])
+                           ->from("xcart_states")
+                           ->setAlias('t')
+                           ->where(['t.code__in' => $codes, 't.country_code__in' => $countries])->toSQL();
+    }
+
     public static function getCountryOrderSql()
     {
         return /** @lang MySQL */ <<<SQL
@@ -80,6 +120,21 @@ LEFT JOIN xcart_languages as l on l.name = CONCAT('country_', c.code) and l.code
 where l.value like :like
 ORDER BY l.name, field(l.code, 'US', 'en') ASC
 SQL;
+    }
+
+    public static function getInCountryOrderSql($in)
+    {
+        $sql = /** @lang MySQL */ <<<SQL
+select DISTINCT c.code as id, l.value as text 
+from xcart_countries as c
+LEFT JOIN xcart_languages as l on l.name = CONCAT('country_', c.code) and l.code in ('US', 'en')
+ORDER BY l.name, field(l.code, 'US', 'en') ASC
+SQL;
+
+        return QueryBuilder::getInstance(Connection::getInstance())
+                           ->from("({$sql})")
+                           ->setAlias('t')
+                           ->where(['t.id__in' => $in])->toSQL();
     }
 
     public static function getStreetSql()

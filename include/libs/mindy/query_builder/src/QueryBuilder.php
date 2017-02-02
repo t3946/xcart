@@ -501,8 +501,8 @@ class QueryBuilder
         } else if ($tableName instanceof QueryBuilder) {
             $this->_join[] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
         } else {
-//            $this->_join[$tableName] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
-            $this->_join[] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
+            $this->_join[$tableName.$alias] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
+//            $this->_join[] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
             $this->_joinAlias[$tableName] = $alias;
         }
         return $this;

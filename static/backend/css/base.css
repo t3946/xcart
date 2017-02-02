@@ -7,12 +7,12 @@
 .row:after {
     clear: both; }
 
-.column {
+.column, .columns {
     float: left;
     width: 100%; }
 
 @media (min-width: 0px) {
-    .column {
+    .column, .columns {
         padding-left: 15px;
         padding-right: 15px; }
     .row .row {
@@ -188,6 +188,40 @@
     box-sizing: border-box;
 }
 
+
+.pager-container .pager {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    display: block;
+    min-height: 1px;
+}
+
+.pager-container .pager li {
+    display: inline-block;
+}
+.pager-container .pager li a, .pager li span  {
+    padding: 0.15em 0.3em;
+    border-radius: 5px;
+    border: 1px solid transparent;
+}
+
+.pager-container .pager li span.current, .pager li a:hover {
+    background-color: #e1e1e1;
+    border: 1px solid #adadad;
+}
+
+.pager-container .page-size {
+    text-align: right;
+}
+
+
+
+.pager-container {
+    margin: 15px 0;
+}
+
 .admin fieldset.collapsed {
     border: none;
     border-top: 1px solid #FF8600;
@@ -201,7 +235,8 @@
 }
 
 .admin fieldset legend {
-    padding-left: 13px;
+    font-size: 12px;
+    padding: 0 15px;
     font-weight: bold;
     cursor: pointer;
     background: transparent url(../images/expanded.gif) no-repeat center left;
@@ -209,6 +244,8 @@
 .admin fieldset.collapsed legend {
     background: transparent url(../images/collapsed.gif) no-repeat center left;
 }
+
+
 
 
 
@@ -241,8 +278,11 @@
     display: inline-block;
 }
 
-.admin fieldset.collapsed .ul-main {
+.admin fieldset.collapsed > * {
     display: none;
+}
+.admin fieldset.collapsed > legend {
+    display: block;
 }
 
 .as_a span {
@@ -279,4 +319,18 @@
     position: absolute;
     float: none;
     right: 0;
+}
+
+.admin .OrderSheet {
+    background-color: transparent;
+    border-collapse: collapse;
+
+}
+.admin .OrderSheet td {
+    background-color: transparent;
+    border: #848484 1px solid;
+}
+.admin .OrderSheet .separator td {
+    border: none;
+    padding: 3px 0 0;
 }

@@ -2,7 +2,9 @@
 
 namespace Modules\Dashboard\Controllers;
 
+use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAndNot;
+use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\DashboardModule;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
@@ -10,7 +12,9 @@ use Xcart\App\Controller\AdminController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\Pagination;
 use Xcart\Connection;
+use Xcart\Manufacturer;
 use Xcart\Order;
+use Xcart\OrderGroups;
 use Xcart\POPipeline;
 
 class DashboardController extends AdminController
@@ -24,11 +28,21 @@ class DashboardController extends AdminController
 
     public function search()
     {
-        if (!empty($_GET['search'])) {
-            Xcart::app()->request->session->add('search_order_form', $_GET['search']);
+        $connection = Connection::getInstance();
+        $session = Xcart::app()->request->session;
+        $form_collapse = false;
+
+        if (!empty($_GET['search']['reset']) == 'reset') {
+            $session->remove('search_order_form');
+            $this->refresh();
         }
 
-        $form_data = Xcart::app()->request->session->get('search_order_form', ['order'=> ['date' => DashboardModule::getDefaultSearchDate()]]);
+        if (!empty($_GET['search'])) {
+            $session->add('search_order_form', OrderSearchStore::getClearedData($_GET['search']));
+            $form_collapse = true;
+        }
+
+        $form_data = $session->get('search_order_form', ['order'=> ['date' => DashboardModule::getDefaultSearchDate()]]);
 
         if (!is_array($form_data)) {
             $form_data = [];
@@ -38,7 +52,67 @@ class DashboardController extends AdminController
             ->populate($form_data)
             ->order(['-t.orderid']);
 
-        $pager = new Pagination($qs);
+        $pager = new Pagination($qs, ['pageSize' => 20]);
+        $models = $pager->paginate();
+
+        if (!empty($models)) {
+            $order_ids = array_map(function($model){return $model->orderid;}, $models);
+            $groups = OrderGroups::objects()->filter(['orderid__in' => $order_ids])->all();
+            $group_ids = array_map(function($model){return $model->manufacturerid;}, $groups);
+
+            $manufacturers = Manufacturer::objects()->filter(['manufacturerid__in' => $group_ids])->all();
+            foreach ($groups as $group) {
+                foreach ($manufacturers as $manufacturer) {
+                    if ($group->manufacturerid == $manufacturer->manufacturerid) {
+                        $group->manufacturer = $manufacturer;
+                    }
+                }
+            }
+
+
+            $lom_sql = QueryBuilder::getInstance($connection)->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in'=>$order_ids, 'type__in'=>['S']])->toSQL();
+            $last_order_messages = $connection->fetchAll($lom_sql);
+
+            $loa_sql = QueryBuilder::getInstance($connection)->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in'=>$order_ids])->toSQL();
+            $last_order_activity = $connection->fetchAll($lom_sql);
+
+            $tag_sql = QueryBuilder::getInstance($connection)->from('xcart_orders_additional_tags')
+                ->select(['t.orderid','t.status_id', 'tval.description', 'tval.status'])
+                ->setAlias('t')
+                ->join('inner join', 'xcart_attention_tags_values', ['t.status_id' => 'tval.status_id'], 'tval')
+                ->where(['orderid__in'=>$order_ids])->toSQL();
+            $orders_tags = $connection->fetchAll($tag_sql);
+
+            $max_eta_sql = QueryBuilder::getInstance($connection)->from('xcart_products')
+                ->select(['max_eta' => new Expression('MAX(t.eta_date_mm_dd_yyyy)'),'details.orderid'])
+                ->setAlias('t')
+                ->join('inner join', 'xcart_order_details', ['t.productid' => 'details.productid'], 'details')
+                ->where(['details.orderid__in'=>$order_ids, 'eta_date_mm_dd_yyyy__gt' => 0])
+                ->group(['details.orderid'])->toSQL();
+            $orders_max_eta = $connection->fetchAll($max_eta_sql);
+
+            foreach ($models as $model) {
+                foreach ($groups as $group) {
+                    if ($group->orderid == $model->orderid)
+                        $model->orderGroup = $group;
+                }
+
+                foreach ($orders_max_eta as $item) {
+                    if ($item['orderid'] == $model->orderid) {
+                        $model->max_eta = $item['max_eta'];
+                    }
+                }
+                foreach ($last_order_activity as $item) {
+                    if ($item['orderid'] == $model->orderid) {
+                        $model->last_activity = $item['date'];
+                    }
+                }
+            }
+
+        }
+        else {
+            $form_collapse = false;
+        }
 
 
         $attention_tags = Connection::getInstance()->fetchAll("select * from xcart_attention_tags_values ORDER BY orderby ASC");
@@ -46,6 +120,7 @@ class DashboardController extends AdminController
         $raw_statuses = Connection::getInstance()->fetchAll("select * from xcart_order_statuses ORDER BY type ASC, orderby ASC");
         $shipping_methods = Connection::getInstance()->fetchAll("select * from xcart_shipping");
         $payment_methods  = Connection::getInstance()->fetchAll("select * from xcart_payment_methods");
+//        $payment_methods  = Connection::getInstance()->fetchAll("SELECT paymentid, payment_method, acc_per_trans, acc_percent FROM xcart_payment_methods WHERE acc_proc='Y' ORDER BY paymentid ASC");
 
         $order_statuses = [];
         foreach ($raw_statuses as $status) {
@@ -68,6 +143,12 @@ class DashboardController extends AdminController
             'question_statuses' => OrderSearchStore::getQuestionStatuses(),
             'manual_string' => OrderSearchStore::CONST_MANUAL_STRING,
             'pager' => $pager,
+            'form_data' => $form_data,
+            'form_collapse' => $form_collapse,
+            'models' => $models,
+            'orders_last_messages' => isset($last_order_messages) ? $last_order_messages : [],
+            'last_order_activity' => isset($last_order_activity) ? $last_order_activity : [],
+            'orders_tags' => isset($orders_tags) ? $orders_tags : [],
         ]);
 
         echo $this->renderSmarty("admin/home.tpl",[
@@ -83,56 +164,8 @@ class DashboardController extends AdminController
 
         if (isset($_GET['from']) && !empty($_GET['q']))
         {
-            $query = "%{$_GET['q']}%";
-
-            switch ($_GET['from']) {
-                case 'distributor' :
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getDistributorSql(), ['like' => $query]);
-                    break;
-                case 'operator' :
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getCustomerSql(), ['like' => $query]);
-                    break;
-                case 'company' :
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getCompanySql(), ['like' => $query]);
-                    break;
-                case 'search_city' :
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getCitySql(), ['like' => $query]);
-                    break;
-                case 'search_state' :
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getStateOrderSql(), ['like' => $query]);
-                    break;
-                case 'search_country' :
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getCountryOrderSql(), ['like' => $query]);
-                    break;
-                case 'search_street' :
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getStreetSql(), ['like' => $query]);
-                    break;
-                case 'search_phone' :
-                    $query = OrderSearchStore::getPhoneRegexp($_GET['q']);
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getPhoneFaxOrderSql(), ['like' => $query]);
-                    break;
-                case 'search_email' :
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getEmailOrderSql(), ['like' => $query]);
-                    break;
-                case 'search_zip' :
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getZipOrderSql(), ['like' => $query]);
-                    break;
-                case 'search_customer_name' :
-                    $data = Connection::getInstance()->fetchAll(SearchSql::getCustomerNameSql(), ['like' => $query]);
-                    break;
-            }
-
-//            if (!empty($_GET['combobox'])) {
-//                array_unshift($data, ['id' => OrderSearchStore::CONST_MANUAL_STRING . $_GET['q'], 'text' => '-> '.$_GET['q']]);
-//            }
-        }
-
-        foreach ($data as $k => $v)
-        {
-            $id = OrderSearchStore::replaceNewLine($v['id']);
-            $text = str_replace(["\n", "\r"], " ", $v['text']);
-
-            $data[$k] = ['id' => $id, 'text' => $text];
+            $data = OrderSearchStore::getAjaxSuggestion($_GET['q'], $_GET['from']);
+            $data = OrderSearchStore::autoCompleteClearNewLines($data);
         }
 
         $this->jsonResponse($data);

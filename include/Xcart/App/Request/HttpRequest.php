@@ -594,6 +594,11 @@ class HttpRequest extends Request
 
     public function refresh()
     {
+        $match = Xcart::app()->router->match($this->getUrl());
+        if (!empty($match)) {
+            $this->redirect($match['name']);
+        }
+
         $this->redirect($this->getUrl());
     }
 }
