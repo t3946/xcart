@@ -443,7 +443,7 @@ x {if $active_modules.Egoods and $products[product].distribution}1<input type="h
 	<table cellpadding="0" cellspacing="0" width="100%">
 	<tr>
 		<td nowrap="nowrap">
-{include file="modules/Fast_Lane_Checkout/big_button.tpl" button_title=$lng.lbl_continue_shopping style="button" href="home.php`$last_categoryid`"}</td>
+{include file="modules/Fast_Lane_Checkout/big_button.tpl" button_title=$lng.lbl_continue_shopping style="button" href=$shopMoreUrl}</td>
 		<td nowrap="nowrap">
 {if $variant_id_for_point2 ne "" && $variant_id_for_point2 eq "0"}
 	{include file="modules/Fast_Lane_Checkout/big_button.tpl" button_title=$lng.lbl_shipping_quote bold="N" style="button" href="javascript: window.open('popup_shipquote.php','popup_shipquote','width=800,height=600,toolbar=no,status=no,scrollbars=yes,menubar=no,location=no,direction=no');" js_to_href="Y"}

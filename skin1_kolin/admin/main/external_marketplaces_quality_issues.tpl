@@ -38,9 +38,9 @@
                     {assign var=oProduct value=$oImpactedProduct->getProductEntity()}
                     {assign var=oIssueEntity value=$oImpactedProduct->getIssueEntity()}
                     <tr {cycle values=', class="TableSubHead"'}>
-                        <td><a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getSKU()}</a></td>
+                        <td><a target="_blank" href="{$oProduct->getAdminUrl()}">{$oProduct->getSKU()}</a></td>
                         <td><a target="_blank"
-                               href="{$oProduct->getProductFrontURL()}">{$oProduct->getProductName()}</a></td>
+                               href="{$oProduct->getURL()}">{$oProduct->getProductName()}</a></td>
                         <td style="word-break: break-all">{$oImpactedProduct->getIssueDataHuman()}</td>
                         <td class="action_processing_button" style="text-align: center"
                             data-issue-id="{$oImpactedProduct->getIssueId()}"

@@ -53,7 +53,7 @@
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr>
 	<td height="100" nowrap="nowrap">
-<a {include file="on_product_click.tpl"} href="/product.php?productid={$products[product].productid}">{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$products[product].tmbn_x|default:$config.Appearance.thumbnail_width image_y=$products[product].tmbn_y product=$products[product].product tmbn_url=$products[product].tmbn_url}</a>
+<a {include file="on_product_click.tpl"} href="/product.php?productid={$products[product].productid}">{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$products[product].tmbn_x|default:$config.Appearance.thumbnail_width image_y=$products[product].tmbn_y product=$products[product].product tmbn_url=$products[product].tmbn_url_T|default:$products[product].tmbn_url}</a>
 {if $active_modules.Special_Offers ne "" and $products[product].have_offers}
 {include file="modules/Special_Offers/customer/product_offer_thumb.tpl" product=$products[product]}
 {/if}

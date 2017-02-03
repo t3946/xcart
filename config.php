@@ -307,7 +307,7 @@ define("USE_DATA_CACHE", true);
 # 2 - write errors to the log file (templates_c/xerrors.log)
 # 3 - display error and write it to the log file.
 #
-$debug_mode = 3;
+$debug_mode = 2;
 
 #
 # Error reporting level:

@@ -485,7 +485,7 @@ to
 	<td width="90" align="center">
 	    {if !empty($v.aManufacturersEntities)}
 	    {foreach from=$v.aManufacturersEntities item=oManufacturer name=radioManufacturer}
-	        <a href="{$oManufacturer->getManufacturerModifyURL()}&distributor_section=11" target="_blank">{$oManufacturer->getField('code')}</a> <br/>
+	        <a href="{$oManufacturer->getAdminUrl()}&distributor_section=11" target="_blank">{$oManufacturer->getField('code')}</a> <br/>
 	    {/foreach}
 	    {/if}
 	</td>
@@ -508,7 +508,7 @@ to
             <td width="90">{if !empty($v.aManufacturersEntities)}
                     {foreach from=$v.aManufacturersEntities item=oManufacturer name=radioManufacturer2}
                         <input {if $smarty.foreach.radioManufacturer2.first}checked = "checked"{/if} style="margin:0; cursor:pointer;" type="radio" name="manufacturer_selected[{$v.id}]" value="{$oManufacturer->getField('manufacturerid')}">
-                        <a style="position: relative; bottom: 3px;" href="{$oManufacturer->getManufacturerModifyURL()}&distributor_section=11" target="_blank">{$oManufacturer->getField('code')}</a> <br/>
+                        <a style="position: relative; bottom: 3px;" href="{$oManufacturer->getAdminUrl()}&distributor_section=11" target="_blank">{$oManufacturer->getField('code')}</a> <br/>
                     {/foreach}
 	            {/if}
 	        </td>

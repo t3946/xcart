@@ -24,9 +24,21 @@
 {/if}
 
 {if $pages_menu[pg].new_link ne ""}
-<a href="{$pages_menu[pg].new_link}" class="VertMenuItems">{$pages_menu[pg].title}</a>
+<a href="{$pages_menu[pg].new_link}" class="VertMenuItems">
+    {$pages_menu[pg].title}
+</a>
 {else}
-{if $smarty.get.pageid ne $pages_menu[pg].pageid}<a href="/pages.php?pageid={$pages_menu[pg].pageid}" class="VertMenuItems">{else}<font class="VertMenuItems">{/if}{$pages_menu[pg].title}{if $smarty.get.pageid ne $pages_menu[pg].pageid}</a>{else}</font>{/if}
+    {if $smarty.get.pageid ne $pages_menu[pg].pageid}
+        <a href="/pages.php?pageid={$pages_menu[pg].pageid}" class="VertMenuItems">
+    {else}
+        <font class="VertMenuItems">
+    {/if}
+    {$pages_menu[pg].title}
+    {if $smarty.get.pageid ne $pages_menu[pg].pageid}
+        </a>
+    {else}
+        </font>
+    {/if}
 {/if}
 <br />
 

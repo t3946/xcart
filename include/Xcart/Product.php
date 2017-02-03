@@ -107,12 +107,12 @@ class Product extends Data
         return $this;
     }
 
-    public function getProductModifyURL()
+    public function getAdminUrl()
     {
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->getField('storefrontid'));
     }
 
-    public function getProductFrontURL($http = 'http://')
+    public function getURL($http = 'http://')
     {
         return $http . $this->getStoreFront()->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
     }
@@ -447,6 +447,16 @@ SQL;
     public function isAmazonEnabled()
     {
         return ($this->getField('amazon_enabled') == 'Y');
+    }
+
+    public function isAmazonFBARestricted()
+    {
+        $bResult = false;
+        if ($this->getProductId()) {
+            $oProductAmazon = ProductsAmazonFields::model(['productid' => $this->getProductId()]);
+            $bResult = ($oProductAmazon->getField('amazon_fba_restricted') == 'Y');
+        }
+        return $bResult;
     }
 
     public function getUPC()

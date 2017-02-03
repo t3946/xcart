@@ -719,7 +719,8 @@ Cost to us accurate
   <td nowrap="nowrap">
     <div>
         <p>Carrier: {if $v.shipping_code ne ""}{$v.shipping_code}{else}Flat rate{/if}</p>
-        <p>Customer's choice: {$v.shipping}</p>
+        <p>Customer's choice: <input style="width:92px" type="text" maxlength="255" name="groups[{$m_id}][shipping]" value="{$v.shipping|trademark:''}"/>
+        </p>
         <p>Method:
             {if !$static}
                 {if ($v.real_shipping_method eq '')}
@@ -1265,7 +1266,7 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
         {if $aRetailTrustDetails}
         <tr class="distributor-totals-line">
           <td>
-            <a href="{$oManufacturer->getManufacturerModifyURL()}" target="_blank" style="color: green;">{$oManufacturer->getManufacturerName()}</a>
+            <a href="{$oManufacturer->getAdminUrl()}" target="_blank" style="color: green;">{$oManufacturer->getManufacturerName()}</a>
           </td>
           <td>
             {$oManufacturer->getManufacturerCode()}
@@ -1277,10 +1278,10 @@ C-{$key_memos}: {$invoice_memo_statuses[$item_memos.status]}<br />
           {assign var=oOrderDetailProduct value=$oRetailTrustDetail->getOrderDetailProduct()}
         <tr {cycle values=", class='TableSubHead'" name="cycle_totals"}>
           <td>
-            <a href="{$oOrderDetailProduct->getProductFrontURL()}">{$oOrderDetailProduct->getProductName()}</a>
+            <a href="{$oOrderDetailProduct->getURL()}">{$oOrderDetailProduct->getProductName()}</a>
           </td>
           <td>
-            <a href="{$oOrderDetailProduct->getProductModifyURL()}">{$oOrderDetailProduct->getSKURetailTrust()}</a>
+            <a href="{$oOrderDetailProduct->getAdminUrl()}">{$oOrderDetailProduct->getSKURetailTrust()}</a>
           </td>
           <td></td>
           <td align="center">

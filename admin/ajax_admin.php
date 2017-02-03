@@ -69,6 +69,9 @@ switch ($_POST['ajax_action']) {
     case "get_amazon_listing_products":
         getAmazonListingProducts($_POST);
         break;
+    case "product_amazon_fba_restricted_change":
+        changeAmazonFBARestricted($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -274,7 +277,7 @@ function enterVerificationArbitrageFull($aParams = [])
     $sAmazonAsin = $iAmazonQty = $iOurSiteQty = $sExternalVerificationProductsAction = null;
 
     $iProductId = (int)$aParams['product_id'];
-    if (!empty($aParams['asin_arbitrage']) || !empty($aParams['amazon_qty_arbitrage']) || !empty($aParams['our_qty_arbitrage'])) {
+    if (!empty($aParams['asin_arbitrage']) || !empty($aParams['listing_upload_asin']) || !empty($aParams['amazon_qty_arbitrage']) || !empty($aParams['our_qty_arbitrage'])) {
         $aRows = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->findAll(
             Xcart\SQLBuilder::getInstance()->addCondition('productid=' . $iProductId)->
             addCondition("action='asin_on_amazon'")
@@ -284,11 +287,17 @@ function enterVerificationArbitrageFull($aParams = [])
                 $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
                 setField('productid', $iProductId)->
                 setField('batch_id', $oRow->getBatchId())->
-                setField('login', $oRow->getLogin());
+                setField('login', $login);
                 $sAmazonAsin = trim($aParams['asin_arbitrage']);
+                $sAmazonListingAsin = trim($aParams['listing_upload_asin']);
                 if (!empty($sAmazonAsin)) {
                     $bS->setField('action', 'arbitrage_asin')->
                     setField('value', $sAmazonAsin)->_insert(true);
+                    $aResult['result'] = ($bS !== false);
+                }
+                if (!empty($sAmazonListingAsin)) {
+                    $bS->setField('action', 'listing_upload_asin')->
+                    setField('value', $sAmazonListingAsin)->_insert(true);
                     $aResult['result'] = ($bS !== false);
                 }
                 if (!empty($aParams['amazon_qty_arbitrage'])) {
@@ -368,7 +377,7 @@ HTML;
             $html .= <<<HTML
 <tr>
 <td align="center">{$oOrder->getOrderDate('d-M-Y')}</td>
-<td align="center"><a target="_blank" href="{$oOrder->getOrderModifyURL()}">{$oOrder->getDisplayOrderNumber()}</a></td>
+<td align="center"><a target="_blank" href="{$oOrder->getAdminUrl()}">{$oOrder->getDisplayOrderNumber()}</a></td>
 <td>{$aOrderDetails['po_number']}</td>
 <td>{$aOrderDetails['company_name']}</td>
 <td>{$aOrderDetails['name_of_purchaser']}</td>
@@ -406,7 +415,7 @@ HTML;
             $html .= <<<HTML
 <tr>
 <td align="center">{$oOrder->getOrderDate('d-M-Y')}</td>
-<td align="center"><a target="_blank" href="{$oOrder->getOrderModifyURL()}">{$oOrder->getDisplayOrderNumber()}</a></td>
+<td align="center"><a target="_blank" href="{$oOrder->getAdminUrl()}">{$oOrder->getDisplayOrderNumber()}</a></td>
 <td align="center">{$oOrderGroup->getTotalGross()}</td>
 </tr>
 HTML;
@@ -536,4 +545,23 @@ function getAmazonListingProducts($aParams = [])
         }
         print $html;
     }
+}
+
+function changeAmazonFBARestricted($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['product_id']) && is_numeric($aParams['product_id'])) {
+        $iProductId = (int) $aParams['product_id'];
+        $oProductAmazonFields = \Xcart\ProductsAmazonFields::model(['productid' => $iProductId]);
+        $sFbaStatus = isset($aParams['status']) ? 'Y' : 'N';
+        $oProductAmazonFields->setField('amazon_fba_restricted', $sFbaStatus);
+        if ($oProductAmazonFields->getField('productid')) {
+            $oProductAmazonFields->_update();
+        } else {
+            $oProductAmazonFields->setField('productid', $iProductId);
+            $oProductAmazonFields->_insert();
+        }
+        $aResult['result'] = true;
+    }
+    print(json_encode($aResult));
 }

@@ -204,7 +204,7 @@ class Order extends Data
         return $this->getField('order_prefix') . $this->getOrderId();
     }
 
-    public function getOrderModifyURL()
+    public function getAdminUrl()
     {
         return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getOrderId());
     }
