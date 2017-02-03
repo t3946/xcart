@@ -112,6 +112,30 @@ function formSubmit() {
 	</td>
 </tr>
 
+
+<tr>
+    <td><label for="page_sfids">Specific storefronts:</label></td>
+    <td></td>
+    <td>
+        <select name="sfids[]" multiple id="page_sfids">
+            <option value="">All storefronts</option>
+            <option value="0"{if in_array('0', $page_data.sfids)} selected="selected" {/if}>
+                {$main_storefront}
+            </option>
+            {foreach from=$storefronts item=sf}
+                {if $sf.storefrontid ne "0"}
+                    <option  value="{$sf.storefrontid}" {if in_array($sf.storefrontid, $page_data.sfids)} selected="selected"{/if}>
+                        {if $sf.storefront_name ne ""}
+                            {$sf.storefront_name}
+                        {else}
+                            {$sf.domain}
+                        {/if}
+                    </option>
+                {/if}
+            {/foreach}
+        </select>
+    </td>
+</tr>
 <tr>
 <td>{$lng.lbl_status}:</td>
 	<td><font class="Star">*</font></td>
