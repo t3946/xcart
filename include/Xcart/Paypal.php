@@ -10,6 +10,7 @@ use PayPal\Api\Phone;
 use PayPal\Api\Invoice;
 use PayPal\Api\InvoiceAddress;
 use PayPal\Api\InvoiceItem;
+use PayPal\Api\Capture;
 
 class Paypal
 {
@@ -129,5 +130,10 @@ class Paypal
     {
         $invoice = Invoice::get($invoiceId, $this->apiContext);
         return $invoice;
+    }
+
+    public function getTransaction($sTransactionId)
+    {
+        return Capture::get($sTransactionId, $this->apiContext);
     }
 }
