@@ -601,7 +601,7 @@ if ($cat > 0 && $mode != "delete") {
 					if ($oParentCategory->getCategoryId()) {
 						$oCleanURL = $oParentCategory->getCleanUrl();
 						if ($oCleanURL->getUrl()) {
-							$redirect_url = $xcart_web_dir . "/" . $oCleanURL->getUrl() . "/";
+							$redirect_url = $oCleanURL->getUrl();
 						}
 					}
 				}
