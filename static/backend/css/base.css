@@ -202,13 +202,13 @@
     display: inline-block;
 }
 .pager-container .pager li a, .pager li span  {
-    padding: 0.15em 0.3em;
+    padding: 0.15em 0.4em;
     border-radius: 5px;
     border: 1px solid transparent;
 }
 
 .pager-container .pager li span.current, .pager li a:hover {
-    background-color: #e1e1e1;
+    background-color: #efefef;
     border: 1px solid #adadad;
 }
 
@@ -335,4 +335,8 @@
 .admin .OrderSheet .separator td {
     border: none;
     padding: 3px 0 0;
+}
+
+.admin .OrderSheet td.group {
+    border: 2px solid darkred;
 }

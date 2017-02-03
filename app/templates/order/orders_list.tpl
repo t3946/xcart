@@ -121,7 +121,7 @@
                 <td width="5" align="center">
                     <a href="{$order->getOrderModifyURL()}" style="color: blue; font-weight: bold;" target="_blank">{$order}</a>
                 </td>
-                <td class="OrderSheetGreenCell" align="center">
+                <td class="OrderSheetGreenCell group" align="center">
                     {foreach $order_statuses.CB as $status}
                         {if $status.code == $group->cb_status}
                             <b>{$status.name}</b>
@@ -163,12 +163,12 @@
                 <td></td>
             </tr>
             <tr class="{$cycle_class}">
-                <td align="center" width="5" {if $group->manufacturer->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
+                <td align="center" width="5" {if $group->manufacturer->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if} class="group">
                     <a href="{$order->getOrderModifyURL()}" target="_blank">
                         {$group->manufacturer->code}
                     </a>
                 </td>
-                <td align="center" class="OrderSheetGreenCell">
+                <td align="center" class="OrderSheetGreenCell group">
                     {foreach $order_statuses.DC as $status}
                         {if $status.code == $group->dc_status}
                             <b>{$status.name}</b>
@@ -199,7 +199,7 @@
             </tr>
             <tr class="{$cycle_class}">
                 <td width="5" align="center"></td>
-                <td align="center" class="OrderSheetGreenCell">
+                <td align="center" class="OrderSheetGreenCell group">
 
                     {if $order->amazon_fulfillment_channel == "AFN"}
                         <B>I: Reconciled</B>
@@ -230,7 +230,7 @@
                 <td align="center">
                     {$order->s_country}
                 </td>
-                <td align="center">
+                <td align="center" class="group">
                     {$group->getTotalGross()|abs|formatprice:",":"."}
 
                 </td>
