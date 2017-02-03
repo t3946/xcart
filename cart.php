@@ -366,6 +366,22 @@ function cart_num($a, $b)
 }
 
 $smarty->assign('last_categoryid', $last_categoryid);
+
+$shopMoreUrl = '/';
+$oCidevSurfPath = CidevSurfPath::getLastSurfPath([
+    CidevSurfPath::SURFPATH_TYPE_SEARCH,
+    CidevSurfPath::SURFPATH_TYPE_CATEGORY,
+    CidevSurfPath::SURFPATH_TYPE_BRAND]);
+if (empty($oCidevSurfPath)){
+    $oCidevSurfPath = CidevSurfPath::getLastSurfPath([CidevSurfPath::SURFPATH_TYPE_PRODUCT]);
+}
+if (!empty($oCidevSurfPath)) {
+    if ($oCidevSurfPath->getUrl()){
+        $shopMoreUrl = $oCidevSurfPath->getUrl();
+    }
+}
+$smarty->assign('shopMoreUrl', $shopMoreUrl);
+
 if (isset($dhl_ext_country)) {
     $dhl_ext_country_store = $dhl_ext_country;
 } else {
@@ -697,20 +713,7 @@ if ($mode == "delete" && !empty($productindex)) {
     if (empty($cart["products"])) {
         $top_message["content"] = func_get_langvar_by_name("cidev_cart_is_empty");
         $top_message["type"] = "I";
-        $clean_url_link = '/';
-        $oCidevSurfPath = CidevSurfPath::getLastSurfPath([
-            CidevSurfPath::SURFPATH_TYPE_SEARCH,
-            CidevSurfPath::SURFPATH_TYPE_CATEGORY,
-            CidevSurfPath::SURFPATH_TYPE_BRAND]);
-        if (empty($oCidevSurfPath)){
-            $oCidevSurfPath = CidevSurfPath::getLastSurfPath([CidevSurfPath::SURFPATH_TYPE_PRODUCT]);
-        }
-        if (!empty($oCidevSurfPath)) {
-            if ($oCidevSurfPath->getUrl()){
-                $clean_url_link = $oCidevSurfPath->getUrl();
-            }
-        }
-        func_header_location($clean_url_link);
+        func_header_location($shopMoreUrl);
     } else {
         func_header_location("cart.php");
     }
