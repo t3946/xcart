@@ -337,6 +337,11 @@
     padding: 3px 0 0;
 }
 
+.admin .OrderSheet td {
+    text-align: center;
+}.admin .OrderSheet td.text-left {
+    text-align: left;
+}
 .admin .OrderSheet td.group {
     border: 2px solid darkred;
 }
