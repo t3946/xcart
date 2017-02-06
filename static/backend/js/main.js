@@ -58,5 +58,31 @@ jQuery.fn.mfieldset = function (options) {
     $(document).ready(function(){
         $('fieldset').mfieldset();
 
+        $('form').each(function(i, form)
+        {
+            if ($(form).attr('method').toString().toLowerCase() != 'post')
+            {
+                var action = $(form).attr('action');
+
+                if (action.indexOf('?') > -1)
+                {
+                    action = action.substr(action.indexOf('?')+1);
+                    action = action.split('&');
+
+                    action.map(function(p)
+                    {
+                        var vars = p.split('=');
+                        var el = document.createElement('input');
+                        el.type = 'hidden';
+                        el.name = vars[0];
+                        el.value = decodeURI(vars[1]);
+
+                        form.appendChild(el);
+
+                    }.bind(form));
+                }
+            }
+        });
+
     });
 })();

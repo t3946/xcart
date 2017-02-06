@@ -342,6 +342,11 @@
 }.admin .OrderSheet td.text-left {
     text-align: left;
 }
-.admin .OrderSheet td.group {
-    border: 2px solid darkred;
+
+/*.admin .OrderSheet td.group {*/
+    /*border: 2px solid darkred;*/
+/*}*/
+
+.admin .OrderSheet .TableHead {
+    font-weight: bold;
 }

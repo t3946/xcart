@@ -58,20 +58,6 @@
             {set $cycle_class = 'OrderSheetDark'}
         {/if}
 
-        {*<tr class="{$cycle_class} title">*}
-        {*<td colspan="5">*}
-        {*<a href="{$order->getOrderModifyURL()}" style="color: blue; font-weight: bold;" target="_blank">{$order}</a>*}
-        {*</td>*}
-        {*<td colspan="7" rowspan="2">*}
-        {*{foreach $orders_last_messages as $message}*}
-        {*{if $message.orderid == $order->orderid}*}
-        {*{raw $message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2br}*}
-        {*{raw $message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2space}*}
-        {*{/if}*}
-        {*{/foreach}*}
-        {*</td>*}
-        {*</tr>*}
-
         {foreach $order->getOrderGroups() as $group last=$last_group}
             <tr class="{$cycle_class}" style="font-weight: bold;">
                 <td align="center" width="5" style="font-weight: normal;">
@@ -107,12 +93,8 @@
                     {/foreach}
                 </td>
                 <td colspan="7" style="font-weight: normal;">
-                    {foreach $orders_last_messages as $message}
-                        {if $message.orderid == $order->orderid}
-                            {raw $message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2br}
-                            {*{raw $message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2space}*}
-                        {/if}
-                    {/foreach}
+                    {*{raw $message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2br}*}
+                    {raw $order->last_message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2space}
                 </td>
             </tr>
 
@@ -144,17 +126,13 @@
                     {$order->date|interval_string}
                 </td>
                 <td>
-                    {if $orders_tags}
-                        {foreach $orders_tags as $tag}
-                            {if $tag.orderid == $order->orderid}
-                                <div style="background-color: #F4CCCC; color: #000000; padding: 3px;">
-                                    <span title="{$tag.description}">
-                                        {$tag.status}
-                                    </span>
-                                </div>
-                            {/if}
-                        {/foreach}
-                    {/if}
+                    {foreach $order->tags as $tag}
+                        <div style="background-color: #F4CCCC; color: #000000; padding: 3px;">
+                        <span title="{$tag.description}">
+                            {$tag.status}
+                        </span>
+                        </div>
+                    {/foreach}
                 </td>
                 <td></td>
                 <td></td>

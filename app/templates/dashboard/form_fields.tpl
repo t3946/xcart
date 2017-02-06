@@ -465,3 +465,15 @@
         </li>
     </ul>
 </fieldset>
+
+<ul class="ul-main">
+    <li>
+        <div class="label">
+            <label for="fo_nlist">New order list:</label>
+        </div>
+
+        <div class="input">
+            <input type="checkbox" name="search[new_list]" id="fo_nlist" value="1" {if $form_data.new_list}checked{/if}>
+        </div>
+    </li>
+</ul>

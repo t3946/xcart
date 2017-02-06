@@ -184,9 +184,9 @@ SQL;
     public static function getZipOrderSql()
     {
         return /** @lang MySQL */ <<<SQL
-(select b_zipcode as id, b_zipcode as text from xcart_orders where b_zipcode like :like GROUP BY b_zipcode)
+(select b_zipcode as id, b_zipcode as text from xcart_orders where b_zipcode RLIKE :like GROUP BY b_zipcode)
 UNION 
-(select s_zipcode as id, s_zipcode as text from xcart_orders where s_zipcode like :like GROUP BY s_zipcode)
+(select s_zipcode as id, s_zipcode as text from xcart_orders where s_zipcode RLIKE :like GROUP BY s_zipcode)
 limit 50
 SQL;
 //        return /** @lang MySQL */ <<<SQL

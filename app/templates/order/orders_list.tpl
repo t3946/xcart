@@ -1,69 +1,18 @@
 <table class="OrderSheet" cellspacing="1" cellpadding="3" style="">
-    <tr class="TableHead TableHeadAccounting">
-        <td width="5"></td>
-        <td><b>Fraud Check</b></td>
-        <td><b>OTRS ticket</b></td>
-        <td></td>
-        <td>Processor</td>
-        <td colspan="7"><b>Last customer service message</b></td>
-    </tr>
-    <tr class="TableHead TableHeadAccounting TableHeadLight">
-        <td width="5"><b>#</b></td>
-        <td><b>C2B PAYMENT</b></td>
-        <td><b>Customer</b></td>
-        <td></td>
-        <td><b>Payment</b></td>
-        <td colspan="2"><b>Order age</b></td>
-        <td><b>Attention tag</b></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr class="TableHead TableHeadAccounting TableHeadLight">
-        <td width="5"><b>Distr</b></td>
-        <td><b>D2C SHIPPING</b></td>
-        <td><b>ZIP CODE</b></td>
-        <td></td>
-        <td><b>Date</b></td>
-        <td colspan="2"><b>Last activity</b></td>
-        <td><b>LATEST ETA DATE</b></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr class="TableHead TableHeadAccounting TableHeadLight">
-        <td width="5">&nbsp;</td>
-        <td><b>B2D INVOICE</b></td>
-        <td><b>Country</b></td>
-        <td><b></b></td>
-        <td><b>Time</b></td>
-        <td colspan="2"><b>New ticket messages</b></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr class="separator">
-        <td colspan="12"></td>
-    </tr>
-
     <tr class="TableHead TableHeadAccounting TableHeadLight">
         <td width="5">#</td>
         <td>Fraud Check</td>
-        <td>OTRS ticket</td>
+        <td>Customer</td>
         <td colspan="2">Order age</td>
-        <td colspan="7"><b>Last customer service message</b></td>
+        <td colspan="7">Last customer service message</td>
     </tr>
 
     <tr class="TableHead TableHeadAccounting TableHeadLight">
-        <td></td>
-        <td colspan="2">LATEST ETA DATE</td>
+        <td>Date <br /> Time</td>
+        <td>OTRS ticket</td>
+        <td colspan="1">ZIP code</td>
         <td colspan="2">Last activity</td>
-        <td colspan="2"></td>
-        <td></td>
+        <td colspan="3">Attention tag</td>
         <td></td>
         <td></td>
         <td></td>
@@ -71,29 +20,27 @@
     </tr>
 
     <tr class="TableHead TableHeadAccounting TableHeadLight">
-        <td ></td>
         <td></td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>Country</td>
+        <td colspan="2">LATEST ETA DATE</td>
+        <td colspan="2">Payment</td>
+        <td>Full TOTAL</td>
         <td></td>
         <td></td>
         <td></td>
         <td></td>
     </tr>
-
+    <tr>
+        <td colspan="12" style="padding: 0;"></td>
+    </tr>
     <tr class="TableHead TableHeadAccounting TableHeadLight">
         <td width="5">DISTR</td>
-        <td>C2B</td>
-        <td>D2C</td>
-        <td>B2D INVOICE</td>
+        <td>C2B PAYMENT</td>
+        <td>D2C SHIPPING</td>
+        <td colspan="2">B2D INVOICE</td>
+        <td colspan="2">Processor</td>
         <td>TOTAL</td>
-        <td></td>
-        <td></td>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -123,72 +70,61 @@
                 ({$order->overall_fraud_score})
             </td>
             <td colspan="1">
+                {$order->firstname}
+            </td>
+            <td colspan="2">
+                {$order->date|interval_string}
+            </td>
+            <td colspan="7" class="text-left">
+                {*{raw $message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2br}*}
+                {raw $order->last_message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2space}
+            </td>
+        </tr>
+
+        <tr class="{$cycle_class}">
+            <td>
+                {raw $order->date|date_format:'%m/%d/%Y %H:%M:%S'}
+            </td>
+            <td>
                 {if $order->otrs_ticket}
                     <a style="color: blue;" href="{$order->otrs_ticket}" target="_blank">
                         OTRS ticket
                     </a>
                 {/if}
             </td>
-            <td colspan="2">
-                {$order->date|interval_string}
-            </td>
-            <td colspan="7" class="text-left">
-                {foreach $orders_last_messages as $message}
-                    {if $message.orderid == $order->orderid}
-                        {*{raw $message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2br}*}
-                        {raw $message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2space}
-                    {/if}
-                {/foreach}
-            </td>
-        </tr>
-
-        <tr class="{$cycle_class}">
-            <td></td>
-            <td colspan="2">
-                {raw $order->date|date_format:'%m/%d/%Y %H:%M:%S'}
-            </td>
-            <td colspan="2">
-                {$order->last_activity|interval_string}
-            </td>
-            <td colspan="2">
-
-            </td>
-            <td>
-                {if $orders_tags}
-                    {foreach $orders_tags as $tag}
-                        {if $tag.orderid == $order->orderid}
-                            <div style="background-color: #F4CCCC; color: #000000; padding: 3px;">
-                                    <span title="{$tag.description}">
-                                        {$tag.status}
-                                    </span>
-                            </div>
-                        {/if}
-                    {/foreach}
-                {/if}
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr class="{$cycle_class}">
-            <td>
-
-            </td>
-            <td>
-                {$order->firstname}
-            </td>
-            <td>
+            <td colspan="1">
                 <a href="{url 'dashboard:search'}&search[customer][zip_code]={$order->s_zipcode}" target="_blank">
                     {$order->s_zipcode}
                 </a>
             </td>
+            <td colspan="2">
+                {$order->last_activity|interval_string}
+            </td>
+            <td colspan="3">
+                {foreach $order->tags as $tag}
+                    <div style="background-color: #F4CCCC; color: #000000; padding: 3px;">
+                        <span title="{$tag.description}">
+                            {$tag.status}
+                        </span>
+                    </div>
+                {/foreach}
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr class="{$cycle_class}">
+            <td></td>
+            <td></td>
             <td>
                 {$order->s_country}
             </td>
-            <td>
-                <b> {$order->getOrderTotalGross()} </b>
+            <td style="background-color: {$order->max_eta|max_eta_colors}; color: #000000;" colspan="2">
+                {if $order->max_eta|max_eta_colors == "do_not_show"}
+                    {$order->max_eta|date_format:'%m/%d/%Y'}
+                {/if}
             </td>
             <td colspan="2">
                 {foreach $payment_methods as $method}
@@ -199,10 +135,9 @@
                     {/if}
                 {/foreach}
             </td>
-            <td style="background-color: {$order->max_eta|max_eta_colors}; color: #000000;">
-                {if $order->max_eta|max_eta_colors == "do_not_show"}
-                    {$order->max_eta|date_format:'%m/%d/%Y'}
-                {/if}
+
+            <td>
+                <b> {$order->getOrderTotalGross()} </b>
             </td>
             <td></td>
             <td></td>
@@ -234,7 +169,7 @@
                         {/if}
                     {/foreach}
                 </td>
-                <td class="OrderSheetGreenCell" align="center">
+                <td class="OrderSheetGreenCell" align="center" colspan="2">
                     {if $order->amazon_fulfillment_channel == "AFN"}
                         <B>I: Reconciled</B>
                         <br/>
@@ -260,9 +195,6 @@
                         {/if}
                     {/if}
                 </td>
-                <td>
-                    {$group->getTotalGross()|abs|formatprice:",":"."}
-                </td>
                 <td colspan="2">
                     {foreach $payment_methods as $method}
                         {if $method.paymentid == $group->getPaymentMethodId()}
@@ -272,17 +204,17 @@
                         {/if}
                     {/foreach}
                 </td>
-                <td></td>
+                <td>{$group->getTotalGross()|abs|formatprice:",":"."}</td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
             </tr>
-            {*{if !$last_group}*}
-            {*<tr>*}
-                {*<td colspan="12" style="padding: 0;"></td>*}
-            {*</tr>*}
-            {*{/if}*}
+            {if !$last_group}
+            <tr>
+                <td colspan="12" style="padding: 0;"></td>
+            </tr>
+            {/if}
         {/foreach}
 
     {/foreach}

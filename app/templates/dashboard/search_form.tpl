@@ -29,7 +29,11 @@
         </div>
         <div class="row">
             <div class="columns large-12">
-                {include 'order/orders_list.tpl' orders=$models}
+                {if $new_template}
+                    {include 'order/orders_list.tpl' orders=$models}
+                {else}
+                    {include 'order/orders_list_old.tpl' orders=$models}
+                {/if}
             </div>
         </div>
         <div class="row">
@@ -51,46 +55,19 @@
 
     <script type="text/javascript">
         (function(){
-            $('.admin form').each(function(i, form)
-            {
-                if ($(form).attr('method').toString().toLowerCase() != 'post')
-                {
-                    var action = $(form).attr('action');
-
-                    if (action.indexOf('?') > -1)
-                    {
-                        action = action.substr(action.indexOf('?')+1);
-                        action = action.split('&');
-
-                        action.map(function(p)
-                        {
-                            var vars = p.split('=');
-                            var el = document.createElement('input');
-                            el.type = 'hidden';
-                            el.name = vars[0];
-                            el.value = decodeURI(vars[1]);
-
-                            form.appendChild(el);
-
-                        }.bind(form));
-                    }
-                }
-            });
-
-
-            $('.admin select').on('select2:select select2:opening', function (e) {
-                $(this).closest('form').off('keyup', '.select2-selection',  function (e) {
-                    console.log(e);
-                    if (e.keyCode === 13) {
-                        $(this).closest('form').submit();
-                    }
-                });
-            });
+//            $('.admin select').on('select2:select select2:opening', function (e) {
+//                $(this).closest('form').off('keyup', '.select2-selection',  function (e) {
+//                    console.log(e);
+//                    if (e.keyCode === 13) {
+//                        $(this).closest('form').submit();
+//                    }
+//                });
+//            });
 
             $('.admin select[data-ajax-from]').on("select2:select",  function(e) {
                 // append the new item to the default select
                 {ignore}
-                $(this).append($('<option>', {value: e.params.data.id, text: e.params.data.text}));
+                $(this).append($('option[selected]', {value: e.params.data.id, text: e.params.data.text}));
                 {/ignore}
             });
 

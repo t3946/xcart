@@ -8,19 +8,29 @@
 
 namespace Modules\Dashboard\Stores;
 
+use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Sqls\SearchSql;
+use Xcart\App\Orm\QuerySet;
+use Xcart\App\Pagination\Pagination;
 use Xcart\App\Store\BaseStore;
 use Xcart\Connection;
+use Xcart\Manufacturer;
 use Xcart\Order;
+use Xcart\OrderGroups;
 
 class OrderSearchStore extends BaseStore
 {
     const CONST_MANUAL_STRING = '=> ';
     const CONST_MANUAL_VIEW_STTINR = '-> ';
+
+    /** @var QuerySet */
+    private $qs;
+    /** @var Pagination */
+    private $pager;
 
     public static function getFeatures()
     {
@@ -56,6 +66,11 @@ class OrderSearchStore extends BaseStore
             "order_pending"                => "Order pending",
             "closed"                       => "Closed",
         ];
+    }
+
+    public function __construct($data) {
+
+        $this->qs = $this->populate($data)->order(['-t.orderid']);
     }
 
     /**
@@ -493,7 +508,7 @@ class OrderSearchStore extends BaseStore
         return str_replace(["\n", "\r"], ['\\n', '\\r'], $text);
     }
 
-    public static function getPhoneRegexp($phone)
+    public static function getNumberOnlyRegexp($phone)
     {
         $t = ['.*'];
         foreach (str_split($phone) as $char)
@@ -580,14 +595,15 @@ class OrderSearchStore extends BaseStore
                 $data = Connection::getInstance()->fetchAll(SearchSql::getStreetSql(), ['like' => $like]);
                 break;
             case 'search_phone' :
-                $query = self::getPhoneRegexp($query);
+                $query = self::getNumberOnlyRegexp($query);
                 $data = Connection::getInstance()->fetchAll(SearchSql::getPhoneFaxOrderSql(), ['like' => $query]);
                 break;
             case 'search_email' :
                 $data = Connection::getInstance()->fetchAll(SearchSql::getEmailOrderSql(), ['like' => $like]);
                 break;
             case 'search_zip' :
-                $data = Connection::getInstance()->fetchAll(SearchSql::getZipOrderSql(), ['like' => $like]);
+                $query = self::getNumberOnlyRegexp($query);
+                $data = Connection::getInstance()->fetchAll(SearchSql::getZipOrderSql(), ['like' => $query]);
                 break;
             case 'search_customer_name' :
                 $data = Connection::getInstance()->fetchAll(SearchSql::getCustomerNameSql(), ['like' => $like]);
@@ -608,5 +624,98 @@ class OrderSearchStore extends BaseStore
         }
 
         return $data;
+    }
+
+    public function getPager()
+    {
+        if (!$this->pager) {
+            $this->pager = new Pagination($this->qs, ['pageSize' => 20]);
+        }
+        return $this->pager;
+    }
+
+    public function getModels()
+    {
+        return $this->prepareModels($this->getPager()->paginate());
+    }
+
+    public function prepareModels($models)
+    {
+        if (!$models) {
+            return [];
+        }
+
+        $connection = Connection::getInstance();
+
+        $order_ids = array_map(function ($model) { return $model->orderid; }, $models);
+        $groups    = OrderGroups::objects()->filter(['orderid__in' => $order_ids])->all();
+        $group_ids = array_map(function ($model) { return $model->manufacturerid; }, $groups);
+
+        $manufacturers = Manufacturer::objects()->filter(['manufacturerid__in' => $group_ids])->all();
+        foreach ($groups as $group) {
+            foreach ($manufacturers as $manufacturer) {
+                if ($group->manufacturerid == $manufacturer->manufacturerid) {
+                    $group->manufacturer = $manufacturer;
+                }
+            }
+        }
+
+        $lom_sql     = QueryBuilder::getInstance($connection)->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in' => $order_ids, 'type__in' => ['S']])->toSQL();
+        $lo_messages = $connection->fetchAll($lom_sql);
+
+        $loa_sql     = QueryBuilder::getInstance($connection)->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in' => $order_ids])->toSQL();
+        $lo_activity = $connection->fetchAll($loa_sql);
+
+        $tag_sql     = QueryBuilder::getInstance($connection)->from('xcart_orders_additional_tags')
+                                   ->select(['t.orderid', 't.status_id', 'tval.description', 'tval.status'])
+                                   ->setAlias('t')
+                                   ->join('inner join', 'xcart_attention_tags_values', ['t.status_id' => 'tval.status_id'], 'tval')
+                                   ->where(['orderid__in' => $order_ids])->toSQL();
+        $orders_tags = $connection->fetchAll($tag_sql);
+
+        $max_eta_sql = QueryBuilder::getInstance($connection)->from('xcart_products')
+                                   ->select(['max_eta' => new Expression('MAX(t.eta_date_mm_dd_yyyy)'), 'details.orderid'])
+                                   ->setAlias('t')
+                                   ->join('inner join', 'xcart_order_details', ['t.productid' => 'details.productid'], 'details')
+                                   ->where(['details.orderid__in' => $order_ids, 'eta_date_mm_dd_yyyy__gt' => 0])
+                                   ->group(['details.orderid'])->toSQL();
+
+        $orders_max_eta = $connection->fetchAll($max_eta_sql);
+
+        foreach ($models as $model) {
+            foreach ($groups as $group) {
+                if ($group->orderid == $model->orderid) {
+                    $model->orderGroup = $group;
+                }
+            }
+
+            foreach ($orders_max_eta as $item) {
+                if ($item['orderid'] == $model->orderid) {
+                    $model->max_eta = $item['max_eta'];
+                }
+            }
+
+            foreach ($lo_activity as $activity) {
+                if ($activity['orderid'] == $model->orderid) {
+                    $model->last_activity = $activity['date'];
+                    break;
+                }
+            }
+
+            foreach ($orders_tags as $tag) {
+                if ($model->orderid == $tag['orderid']) {
+                    $model->tag = $tag;
+                }
+            }
+
+            foreach ($lo_messages as $message) {
+                if ($model->orderid == $message['orderid']) {
+                    $model->last_message = $message;
+                    break;
+                }
+            }
+        }
+
+        return $models;
     }
 }

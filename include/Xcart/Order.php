@@ -34,6 +34,7 @@ class Order extends Data
     private $oPaymentMethod = null;
 
     private $attension_tags = [];
+    private $tags = [];
 
     public function __construct($aOrderData = null)
     {
@@ -145,6 +146,26 @@ class Order extends Data
             $this->aOrderGroups = [];
         }
         $this->aOrderGroups[] = $value;
+    }
+
+    public function setTag($value)
+    {
+        $this->tags[] = $value;
+    }
+
+    public function setTags($values)
+    {
+        if (!is_array($values))
+        {
+            $values = [$values];
+        }
+
+        $this->tags = $values;
+    }
+
+    public function getTags()
+    {
+        $this->tags;
     }
 
     private function fetchOrderProductsManufacturers()
