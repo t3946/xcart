@@ -2,11 +2,12 @@
 namespace Xcart;
 
 use Xcart\App\Helpers\ClassNames;
+use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Orm\Orm;
 
 class Data extends Orm
 {
-    use ClassNames;
+    use ClassNames, SmartProperties;
 
     protected static $sql_tbl = [];
     protected $aPrimaryKeys = [];
@@ -38,16 +39,6 @@ class Data extends Orm
         return self::$sql_tbl[$this->sPrimaryTable];
     }
 
-    public function __set($name, $value)
-    {
-        return $this->__smartSet($name, $value);
-    }
-
-    public function __get($name)
-    {
-        return $this->__smartGet($name);
-    }
-
     public function __smartGet($name)
     {
         $method = 'get' . ucfirst($name);
@@ -75,9 +66,16 @@ class Data extends Orm
         }
     }
 
-    public function __isset($name)
+    public function __smartIsset($name)
     {
-        return isset($this->aPrimaryTableValue[$name]);
+        $getter = 'get' . $name;
+        if (method_exists($this, $getter)) {
+            return $this->$getter() !== null;
+        }
+        else {
+            return isset($this->aPrimaryTableValue[$name]);
+        }
+
     }
 
 
