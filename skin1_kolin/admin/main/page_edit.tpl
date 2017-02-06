@@ -117,8 +117,8 @@ function formSubmit() {
     <td><label for="page_sfids">Specific storefronts:</label></td>
     <td></td>
     <td>
-        <select name="sfids[]" multiple id="page_sfids">
-            <option value="">All storefronts</option>
+        <select name="sfids[]" multiple id="page_sfids" style="width: 576px; height: 200px;">
+            <option value=""{if $page_data.sfids eq ''} selected="selected" {/if}>All storefronts</option>
             <option value="0"{if in_array('0', $page_data.sfids)} selected="selected" {/if}>
                 {$main_storefront}
             </option>

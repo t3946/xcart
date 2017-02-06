@@ -24,7 +24,7 @@ if ($REQUEST_METHOD == "POST") {
 }
 
 if (empty($per_page)) {
-    $per_page = 30;
+    $per_page = 70;
 }
 if (empty($page)) {
     $page = 1;

@@ -1002,8 +1002,16 @@ SQL;
                 }
 
                 if (!empty($aArrInsert['productid'])) {
-                    if (!(Connection::getInstance()->update('xcart_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]))) {
+                    try {
                         Connection::getInstance()->insert('xcart_products_amz_fields', $aArrInsert);
+                    }
+                    catch (\PDOException $e){
+                        if( $e->getCode() == 23000 )
+                        {
+                            Connection::getInstance()->update('xcart_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]);
+                        } else {
+                            throw $e;
+                        }
                     }
                 }
             }
