@@ -2,10 +2,9 @@
 namespace Xcart;
 
 use Xcart\App\Helpers\ClassNames;
-use Xcart\App\Helpers\SmartProperties;
-use Xcart\App\Orm\Manager;
+use Xcart\App\Orm\Orm;
 
-class Data
+class Data extends Orm
 {
     use ClassNames;
 
@@ -33,30 +32,7 @@ class Data
         }
     }
 
-    /**
-     * @param array $row
-     *
-     * @return \Xcart\Data
-     */
-    public static function create(array $row)
-    {
-        $className = static::className();
-        /** @var Data $record */
-        $record = new $className;
-        $record->fill($row);
-
-        return $record;
-    }
-
-
-    public static function objects($instance = null)
-    {
-        $className = get_called_class();
-
-        return new Manager($instance ? $instance : new $className);
-    }
-
-    public function getTableName()
+        public function getTableName()
     {
         //@TODO: Переделать. Нужно что-бы возвращалось или имя или шаблон для подстановки префикса пример xcart_orders или {orders}
         return self::$sql_tbl[$this->sPrimaryTable];
