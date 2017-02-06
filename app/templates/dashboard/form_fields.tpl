@@ -470,6 +470,49 @@
                 </select>
             </div>
         </li>
+
+        <li>
+            <div class="label">
+                <label for="og_has_dx_all">Has Dx invoice:</label>
+            </div>
+
+            <div class="input">
+                <input name="search[order][has_dx]" type="radio" value="" id="og_has_dx_all" {if !$form_data.order.has_dx}checked{/if}>
+                <label for="og_has_dx_all">All</label>
+                <input name="search[order][has_dx]" type="radio" value="Y" id="og_has_dx_y" {if $form_data.order.has_dx == 'Y'}checked{/if}>
+                <label for="og_has_dx_y">Yes</label>
+                <input name="search[order][has_dx]" type="radio" value="N" id="og_has_dx_n" {if $form_data.order.has_dx == 'N'}checked{/if}>
+                <label for="og_has_dx_n">Not</label>
+            </div>
+        </li>
+        <li>
+            <div class="label">
+                <label for="og_has_memo_all">Has credit memos:</label>
+            </div>
+
+            <div class="input">
+                <input name="search[order][has_memo]" type="radio" value="" id="og_has_memo_all" {if !$form_data.order.has_memo}checked{/if}>
+                <label for="og_has_memo_all">All</label>
+                <input name="search[order][has_memo]" type="radio" value="Y" id="og_has_memo_y" {if $form_data.order.has_memo == 'Y'}checked{/if}>
+                <label for="og_has_memo_y">Yes</label>
+                <input name="search[order][has_memo]" type="radio" value="N" id="og_has_memo_n" {if $form_data.order.has_memo == 'N'}checked{/if}>
+                <label for="og_has_memo_n">Not</label>
+            </div>
+        </li>
+        <li>
+            <div class="label">
+                <label for="og_has_invoice_cx_all">Has payment invoices sent to Cx:</label>
+            </div>
+
+            <div class="input">
+                <input name="search[order][has_icx]" type="radio" value="" id="og_has_invoice_cx_all" {if !$form_data.order.has_icx}checked{/if}>
+                <label for="og_has_memo_all">All</label>
+                <input name="search[order][has_icx]" type="radio" value="Y" id="og_has_invoice_cx_y" {if $form_data.order.has_icx == 'Y'}checked{/if}>
+                <label for="og_has_invoice_cx_y">Yes</label>
+                <input name="search[order][has_icx]" type="radio" value="N" id="og_has_invoice_cx_n" {if $form_data.order.has_icx == 'N'}checked{/if}>
+                <label for="og_has_invoice_cx_n">Not</label>
+            </div>
+        </li>
     </ul>
 </fieldset>
 
@@ -480,6 +523,7 @@
         </div>
 
         <div class="input">
+            <input type="hidden" name="search[new_list]" value="0">
             <input type="checkbox" name="search[new_list]" id="fo_nlist" value="1" {if $form_data.new_list}checked{/if}>
         </div>
     </li>
