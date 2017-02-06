@@ -100,7 +100,7 @@
 
             <tr class="{$cycle_class}">
                 <td width="5" align="center">
-                    <a href="{$order->getOrderModifyURL()}" style="color: blue; font-weight: bold;" target="_blank">{$order}</a>
+                    <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">{$order}</a>
                 </td>
                 <td class="OrderSheetGreenCell group" align="center">
                     {foreach $order_statuses.CB as $status}
@@ -141,7 +141,7 @@
             </tr>
             <tr class="{$cycle_class}">
                 <td align="center" width="5" {if $group->manufacturer->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if} class="group">
-                    <a href="{$order->getOrderModifyURL()}" target="_blank">
+                    <a href="{$order->getAdminUrl()}" target="_blank">
                         {$group->manufacturer->code}
                     </a>
                 </td>

@@ -59,7 +59,7 @@
 
         <tr class="{$cycle_class} title">
             <td>
-                <a href="{$order->getOrderModifyURL()}" style="color: blue; font-weight: bold;" target="_blank">{$order}</a>
+                <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">{$order}</a>
             </td>
             <td align="center">
                 {foreach $fraud_statuses as $status}
@@ -151,7 +151,7 @@
         {foreach $order->getOrderGroups() as $group last=$last_group}
             <tr class="{$cycle_class}">
                 <td align="center" width="5" {if $group->manufacturer->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
-                    <a href="{$order->getOrderModifyURL()}" target="_blank">
+                    <a href="{$order->getAdminUrl()}" target="_blank">
                         {$group->manufacturer->code}
                     </a>
                 </td>
