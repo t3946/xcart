@@ -13,14 +13,6 @@ class DashboardModule extends Module
         $template = Xcart::app()->template->getRenderer();
 
         $template->addFunction('default_search_date', self::getDefaultSearchDate());
-
-        $template->addModifier('clear_autocomplete_data', function($data)
-        {
-            return OrderSearchStore::autoCompleteClearNewLines(array_map(function($v){
-                    return !is_array($v) ? ['id' => $v, 'text' => $v] : $v;
-            }, $data));
-        });
-
         $template->addModifier('max_eta_colors', function($max_eta = 0)
         {
             global $config;
@@ -44,8 +36,6 @@ class DashboardModule extends Module
             }
             return '';
         });
-
-        $template->addModifier('decorate_autocomplete_data', ['Modules\Dashboard\Stores\OrderSearchStore', 'getDecoratedAutoCompleteData']);
     }
 
 

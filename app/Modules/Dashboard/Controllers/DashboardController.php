@@ -6,6 +6,7 @@ use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\DashboardModule;
+use Modules\Dashboard\Helpers\SearchAutoCompleteHelper;
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Controller\AdminController;
@@ -88,7 +89,7 @@ class DashboardController extends AdminController
             'question_statuses'    => OrderSearchStore::getQuestionStatuses(),
             'manual_string'        => OrderSearchStore::CONST_MANUAL_STRING,
             'pager'                => $pager,
-            'form_data'            => $form_data,
+            'form_data'            => SearchAutoCompleteHelper::prepareFormDataForTemplate($form_data),
             'form_collapse'        => $form_collapse,
             'models'               => $models,
             'new_template'         => $session->get('search_new_template', 1),
@@ -106,8 +107,8 @@ class DashboardController extends AdminController
         $data = [];
 
         if (isset($_GET['from']) && !empty($_GET['q'])) {
-            $data = OrderSearchStore::getAjaxSuggestion($_GET['q'], $_GET['from']);
-            $data = OrderSearchStore::autoCompleteClearNewLines($data);
+            $data = SearchAutoCompleteHelper::getAjaxSuggestion($_GET['q'], $_GET['from']);
+            $data = SearchAutoCompleteHelper::autoCompleteClearNewLines($data);
         }
 
         $this->jsonResponse($data);

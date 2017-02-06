@@ -122,7 +122,7 @@
 
             <div class="input">
                 <select name="search[customer][address][]" id="c_street" class="big" multiple data-ajax-from="search_street" data-combobox="1">
-                    {foreach $form_data.customer.address|clear_autocomplete_data as $value}
+                    {foreach $form_data.customer.address as $value}
                         <option value="{raw $value.id}" selected>{raw $value.text}</option>
                     {/foreach}
                 </select>
@@ -136,7 +136,7 @@
 
             <div class="input">
                 <select name="search[customer][city][]" id="c_city" class="big" multiple data-ajax-from="search_city">
-                    {foreach $form_data.customer.city|decorate_autocomplete_data:'customer.city'|clear_autocomplete_data as $value}
+                    {foreach $form_data.customer.city as $value}
                         <option value="{raw $value.id}" selected>{raw $value.text}</option>
                     {/foreach}
                 </select>
@@ -150,7 +150,7 @@
 
             <div class="input">
                 <select name="search[customer][state][]" id="c_state" class="big" multiple data-ajax-from="search_state">
-                    {foreach $form_data.customer.state|decorate_autocomplete_data:'customer.state'|clear_autocomplete_data as $value}
+                    {foreach $form_data.customer.state as $value}
                         <option value="{raw $value.id}" selected>{raw $value.text}</option>
                     {/foreach}
                 </select>
@@ -164,7 +164,7 @@
 
             <div class="input">
                 <select name="search[customer][country][]" id="c_country" class="big" multiple data-ajax-from="search_country">
-                    {foreach $form_data.customer.country|decorate_autocomplete_data:'customer.country'|clear_autocomplete_data as $value}
+                    {foreach $form_data.customer.country as $value}
                         <option value="{raw $value.id}" selected>{raw $value.text}</option>
                     {/foreach}
                 </select>
@@ -264,7 +264,7 @@
 
             <div class="input">
                 <select type="text" name="search[order][operator][]" id="o_operator" class="big" data-ajax-from="operator" multiple>
-                    {foreach $form_data.order.operator|decorate_autocomplete_data:'order.operator'|clear_autocomplete_data as $value}
+                    {foreach $form_data.order.operator as $value}
                         <option value="{raw $value.id}" selected>
                             {raw $value.text}
                         </option>
@@ -457,7 +457,7 @@
 
             <div class="input">
                 <select name="search[order][distributor][]" id="o_distributor" class="big" multiple data-ajax-from="distributor">
-                    {foreach $form_data.order.distributor|decorate_autocomplete_data:'order.distributor'|clear_autocomplete_data as $value}
+                    {foreach $form_data.order.distributor as $value}
                         <option value="{raw $value.id}" selected>{raw $value.text}</option>
                     {/foreach}
                 </select>
