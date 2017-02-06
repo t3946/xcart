@@ -109,9 +109,19 @@ class ShippingRate extends Data
         return $this->fShippingCharge;
     }
 
+    public function setShippingCharge($fValue)
+    {
+        $this->fShippingCharge = floatval($fValue);
+    }
+
     public function getShippingChargeBeforeMap()
     {
         return $this->fShippingChargeBeforeMAP;
+    }
+
+    public function setShippingChargeBeforeMap($fValue)
+    {
+        return $this->fShippingChargeBeforeMAP = floatval($fValue);
     }
 
 
@@ -211,5 +221,12 @@ class ShippingRate extends Data
     public function getAddedShippingRates()
     {
         return $this->aAddedShippingRates;
+    }
+
+    public function getDataToSave(){
+        return ['rate_id' => $this->getField('rateid'),
+            'shipping_quote' => $this->getShippingQuote(),
+            'shipping_charge' => $this->getShippingCharge(),
+            'shipping_charge_before_map' => $this->getShippingChargeBeforeMap()];
     }
 }
