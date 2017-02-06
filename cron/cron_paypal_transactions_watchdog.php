@@ -48,17 +48,15 @@ if (!empty($aOrderGroups)) {
             foreach ($aTransactions as $oTransaction) {
                 try {
                     $oPayPalTransaction = (new Paypal())->getTransaction($oTransaction->getField('transaction_id'));
-                    if (floatval($oPayPalTransaction->getAmount()->total) != $oTransaction->getTransactionAmount() ||
-                        $oPayPalTransaction->getAmount()->currency != $oTransaction->getField('currency')) {
-
+                    if ($oPayPalTransaction->getState() == 'completed') {
+                        $fOrderGroupTotalAmount += floatval($oPayPalTransaction->getAmount()->total);
                     }
-                    $fOrderGroupTotalAmount += floatval($oPayPalTransaction->getAmount()->total);
-                    echo $oPayPalTransaction->state." ".$oPayPalTransaction->getAmount()->total." ".$oTransaction->getTransactionAmount()."<br>";
                 } catch (Exception $ex) {
                     func_backprocess_log(LOG_CATEGORY, "Get transaction error. Order ID:{$oOrderGroup->getOrderId()}. ".$ex->getMessage());
                 }
             }
         }
+        echo "OrderId: ".$oOrderGroup->getOrderId(). ". " . $fOrderGroupTotalAmount . " - ". $oOrderGroup->getTotalGross()."<br>";
         if ($fOrderGroupTotalAmount != $oOrderGroup->getTotalGross()){
 
         }
