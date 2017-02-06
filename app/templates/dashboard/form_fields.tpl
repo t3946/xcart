@@ -122,7 +122,7 @@
 
             <div class="input">
                 <select name="search[customer][address][]" id="c_street" class="big" multiple data-ajax-from="search_street" data-combobox="1">
-                    {foreach $form_data.customer.address|clear_autocomplete_data as $value}
+                    {foreach $form_data.customer.address as $value}
                         <option value="{raw $value.id}" selected>{raw $value.text}</option>
                     {/foreach}
                 </select>
@@ -136,7 +136,7 @@
 
             <div class="input">
                 <select name="search[customer][city][]" id="c_city" class="big" multiple data-ajax-from="search_city">
-                    {foreach $form_data.customer.city|decorate_autocomplete_data:'customer.city'|clear_autocomplete_data as $value}
+                    {foreach $form_data.customer.city as $value}
                         <option value="{raw $value.id}" selected>{raw $value.text}</option>
                     {/foreach}
                 </select>
@@ -150,7 +150,7 @@
 
             <div class="input">
                 <select name="search[customer][state][]" id="c_state" class="big" multiple data-ajax-from="search_state">
-                    {foreach $form_data.customer.state|decorate_autocomplete_data:'customer.state'|clear_autocomplete_data as $value}
+                    {foreach $form_data.customer.state as $value}
                         <option value="{raw $value.id}" selected>{raw $value.text}</option>
                     {/foreach}
                 </select>
@@ -164,7 +164,7 @@
 
             <div class="input">
                 <select name="search[customer][country][]" id="c_country" class="big" multiple data-ajax-from="search_country">
-                    {foreach $form_data.customer.country|decorate_autocomplete_data:'customer.country'|clear_autocomplete_data as $value}
+                    {foreach $form_data.customer.country as $value}
                         <option value="{raw $value.id}" selected>{raw $value.text}</option>
                     {/foreach}
                 </select>
@@ -241,68 +241,9 @@
 
 <fieldset class="expanded collapsed"  rel="2">
     <legend>
-        Advanced
+        Advanced - Payment \ Shipping
     </legend>
     <ul class="ul-main">
-
-        <li>
-            <div class="label">
-                <label for="o_id">Order ID:</label>
-            </div>
-
-            <div class="input">
-                <input type="text" name="search[order][id][from]" id="o_id" value="{$form_data.order.id.from}"/>
-                <span>to</span>
-                <input type="text" name="search[order][id][to]" value="{$form_data.order.id.to}"/>
-            </div>
-        </li>
-
-        <li>
-            <div class="label">
-                <label for="o_operator">Operator:</label>
-            </div>
-
-            <div class="input">
-                <select type="text" name="search[order][operator][]" id="o_operator" class="big" data-ajax-from="operator" multiple>
-                    {foreach $form_data.order.operator|decorate_autocomplete_data:'order.operator'|clear_autocomplete_data as $value}
-                        <option value="{raw $value.id}" selected>
-                            {raw $value.text}
-                        </option>
-                    {/foreach}
-                </select>
-            </div>
-        </li>
-
-        <li>
-            <div class="label">
-                <label for="o_features">Order features:</label>
-            </div>
-
-            <div class="input">
-                <select name="search[features][]" id="o_features" class="big" multiple>
-                    {foreach $features as $code => $name}
-                        <option value="{$code}" {if $code|in:$form_data.features}selected{/if}>
-                            {$name}
-                        </option>
-                    {/foreach}
-                </select>
-            </div>
-        </li>
-
-        <li>
-            <div class="label">
-                <label for="o_features">Order sales channel:</label>
-            </div>
-
-            <div class="input">
-                <select type="text" name="search[order][source][]" id="o_features" class="big" multiple>
-                    {foreach $sources as $code => $name}
-                        <option value="{$code}" {if $code|in:$form_data.order.source}selected{/if}>{$name}</option>
-                    {/foreach}
-                </select>
-            </div>
-        </li>
-
         <li>
             <div class="label">
                 <label for="o_payment">Order payment method:</label>
@@ -417,6 +358,72 @@
                 </select>
             </div>
         </li>
+    </ul>
+</fieldset>
+
+<fieldset class="expanded collapsed"  rel="3">
+    <legend>
+        Advanced
+    </legend>
+    <ul class="ul-main">
+
+        <li>
+            <div class="label">
+                <label for="o_id">Order ID:</label>
+            </div>
+
+            <div class="input">
+                <input type="text" name="search[order][id][from]" id="o_id" value="{$form_data.order.id.from}"/>
+                <span>to</span>
+                <input type="text" name="search[order][id][to]" value="{$form_data.order.id.to}"/>
+            </div>
+        </li>
+
+        <li>
+            <div class="label">
+                <label for="o_operator">Operator:</label>
+            </div>
+
+            <div class="input">
+                <select type="text" name="search[order][operator][]" id="o_operator" class="big" data-ajax-from="operator" multiple>
+                    {foreach $form_data.order.operator as $value}
+                        <option value="{raw $value.id}" selected>
+                            {raw $value.text}
+                        </option>
+                    {/foreach}
+                </select>
+            </div>
+        </li>
+
+        <li>
+            <div class="label">
+                <label for="o_features">Order features:</label>
+            </div>
+
+            <div class="input">
+                <select name="search[features][]" id="o_features" class="big" multiple>
+                    {foreach $features as $code => $name}
+                        <option value="{$code}" {if $code|in:$form_data.features}selected{/if}>
+                            {$name}
+                        </option>
+                    {/foreach}
+                </select>
+            </div>
+        </li>
+
+        <li>
+            <div class="label">
+                <label for="o_features">Order sales channel:</label>
+            </div>
+
+            <div class="input">
+                <select type="text" name="search[order][source][]" id="o_features" class="big" multiple>
+                    {foreach $sources as $code => $name}
+                        <option value="{$code}" {if $code|in:$form_data.order.source}selected{/if}>{$name}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </li>
 
         <li>
             <div class="label">
@@ -457,10 +464,53 @@
 
             <div class="input">
                 <select name="search[order][distributor][]" id="o_distributor" class="big" multiple data-ajax-from="distributor">
-                    {foreach $form_data.order.distributor|decorate_autocomplete_data:'order.distributor'|clear_autocomplete_data as $value}
+                    {foreach $form_data.order.distributor as $value}
                         <option value="{raw $value.id}" selected>{raw $value.text}</option>
                     {/foreach}
                 </select>
+            </div>
+        </li>
+
+        <li>
+            <div class="label">
+                <label for="og_has_dx_all">Has Dx invoice:</label>
+            </div>
+
+            <div class="input">
+                <input name="search[order][has_dx]" type="radio" value="" id="og_has_dx_all" {if !$form_data.order.has_dx}checked{/if}>
+                <label for="og_has_dx_all">All</label>
+                <input name="search[order][has_dx]" type="radio" value="Y" id="og_has_dx_y" {if $form_data.order.has_dx == 'Y'}checked{/if}>
+                <label for="og_has_dx_y">Yes</label>
+                <input name="search[order][has_dx]" type="radio" value="N" id="og_has_dx_n" {if $form_data.order.has_dx == 'N'}checked{/if}>
+                <label for="og_has_dx_n">Not</label>
+            </div>
+        </li>
+        <li>
+            <div class="label">
+                <label for="og_has_memo_all">Has credit memos:</label>
+            </div>
+
+            <div class="input">
+                <input name="search[order][has_memo]" type="radio" value="" id="og_has_memo_all" {if !$form_data.order.has_memo}checked{/if}>
+                <label for="og_has_memo_all">All</label>
+                <input name="search[order][has_memo]" type="radio" value="Y" id="og_has_memo_y" {if $form_data.order.has_memo == 'Y'}checked{/if}>
+                <label for="og_has_memo_y">Yes</label>
+                <input name="search[order][has_memo]" type="radio" value="N" id="og_has_memo_n" {if $form_data.order.has_memo == 'N'}checked{/if}>
+                <label for="og_has_memo_n">Not</label>
+            </div>
+        </li>
+        <li>
+            <div class="label">
+                <label for="og_has_invoice_cx_all">Has payment invoices sent to Cx:</label>
+            </div>
+
+            <div class="input">
+                <input name="search[order][has_icx]" type="radio" value="" id="og_has_invoice_cx_all" {if !$form_data.order.has_icx}checked{/if}>
+                <label for="og_has_memo_all">All</label>
+                <input name="search[order][has_icx]" type="radio" value="Y" id="og_has_invoice_cx_y" {if $form_data.order.has_icx == 'Y'}checked{/if}>
+                <label for="og_has_invoice_cx_y">Yes</label>
+                <input name="search[order][has_icx]" type="radio" value="N" id="og_has_invoice_cx_n" {if $form_data.order.has_icx == 'N'}checked{/if}>
+                <label for="og_has_invoice_cx_n">Not</label>
             </div>
         </li>
     </ul>
@@ -473,6 +523,7 @@
         </div>
 
         <div class="input">
+            <input type="hidden" name="search[new_list]" value="0">
             <input type="checkbox" name="search[new_list]" id="fo_nlist" value="1" {if $form_data.new_list}checked{/if}>
         </div>
     </li>

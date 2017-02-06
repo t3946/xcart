@@ -1,12 +1,13 @@
 {extends 'base/admin.tpl'}
 
+{block 'heading'}
+    <h1 align="center">Order search</h1>
+{/block}
+
 {block 'content'}
 
     <div class="row">
         <div class="columns large-12">
-            <h1 align="center">Order search</h1>
-
-
             <fieldset class="{if $form_collapse}collapsed-force collapsed{else}expanded{/if}">
                 <legend>Order search form</legend>
 
@@ -118,7 +119,7 @@
                 }
             });
 
-            $('.admin select:not([data-ajax-from])').not('.page-size select').select2({
+            $('.admin select:not([data-ajax-from])').not('.page-size select, .not-select2').select2({
                 allowClear: true,
                 placeholder: 'Select options'
             });
