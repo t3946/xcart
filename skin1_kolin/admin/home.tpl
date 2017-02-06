@@ -743,6 +743,9 @@ var runTests = function(editor) {
 {elseif $main eq "banners"}
 {include file="admin/main/banners.tpl"}
 
+{elseif $main eq "raw_html"}
+    {$content}
+
 {else}
 {include file="main/error_page_not_found.tpl"}
 

@@ -33,6 +33,9 @@ class Order extends Data
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
 
+    private $attension_tags = [];
+    private $tags = [];
+
     public function __construct($aOrderData = null)
     {
         $this->aPrimaryKeys = ['orderid'];
@@ -41,6 +44,11 @@ class Order extends Data
         parent::__construct($aOrderData);
     }
 
+
+    public function __toString()
+    {
+        return $this->getDisplayOrderNumber();
+    }
 
     private function fetchOrderGroups()
     {
@@ -134,6 +142,34 @@ class Order extends Data
     {
         $this->fetchOrderGroups();
         return count($this->aOrderGroups);
+    }
+
+    public function setOrderGroup($value)
+    {
+        if (!$this->aOrderGroups) {
+            $this->aOrderGroups = [];
+        }
+        $this->aOrderGroups[] = $value;
+    }
+
+    public function setTag($value)
+    {
+        $this->tags[] = $value;
+    }
+
+    public function setTags($values)
+    {
+        if (!is_array($values))
+        {
+            $values = [$values];
+        }
+
+        $this->tags = $values;
+    }
+
+    public function getTags()
+    {
+        $this->tags;
     }
 
     private function fetchOrderProductsManufacturers()

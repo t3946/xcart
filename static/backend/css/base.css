@@ -1,0 +1,352 @@
+.row {
+    max-width: 1008px;
+    margin: 0 auto; }
+.row:before, .row:after {
+    content: " ";
+    display: table; }
+.row:after {
+    clear: both; }
+
+.column, .columns {
+    float: left;
+    width: 100%; }
+
+@media (min-width: 0px) {
+    .column, .columns {
+        padding-left: 15px;
+        padding-right: 15px; }
+    .row .row {
+        margin-left: -15px;
+        margin-right: -15px;
+        max-width: none; }
+    .large-1 {
+        width: 8.33333%; }
+    .large-2 {
+        width: 16.66667%; }
+    .large-3 {
+        width: 25%; }
+    .large-4 {
+        width: 33.33333%; }
+    .large-5 {
+        width: 41.66667%; }
+    .large-6 {
+        width: 50%; }
+    .large-7 {
+        width: 58.33333%; }
+    .large-8 {
+        width: 66.66667%; }
+    .large-9 {
+        width: 75%; }
+    .large-10 {
+        width: 83.33333%; }
+    .large-11 {
+        width: 91.66667%; }
+    .large-12 {
+        width: 100%; }
+    .large-block-grid-1 {
+        margin: 0 -15px; }
+    .large-block-grid-1 > * {
+        float: left;
+        width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-1 > *:nth-child(2) {
+        clear: both; }
+    .large-block-grid-2 {
+        margin: 0 -15px; }
+    .large-block-grid-2 > * {
+        float: left;
+        width: 50%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-2 > *:nth-child(3) {
+        clear: both; }
+    .large-block-grid-3 {
+        margin: 0 -15px; }
+    .large-block-grid-3 > * {
+        float: left;
+        width: 33.33333%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-3 > *:nth-child(4) {
+        clear: both; }
+    .large-block-grid-4 {
+        margin: 0 -15px; }
+    .large-block-grid-4 > * {
+        float: left;
+        width: 25%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-4 > *:nth-child(5) {
+        clear: both; }
+    .large-block-grid-5 {
+        margin: 0 -15px; }
+    .large-block-grid-5 > * {
+        float: left;
+        width: 20%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-5 > *:nth-child(6) {
+        clear: both; }
+    .large-block-grid-6 {
+        margin: 0 -15px; }
+    .large-block-grid-6 > * {
+        float: left;
+        width: 16.66667%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-6 > *:nth-child(7) {
+        clear: both; }
+    .large-block-grid-7 {
+        margin: 0 -15px; }
+    .large-block-grid-7 > * {
+        float: left;
+        width: 14.28571%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-7 > *:nth-child(8) {
+        clear: both; }
+    .large-block-grid-8 {
+        margin: 0 -15px; }
+    .large-block-grid-8 > * {
+        float: left;
+        width: 12.5%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-8 > *:nth-child(9) {
+        clear: both; }
+    .large-block-grid-9 {
+        margin: 0 -15px; }
+    .large-block-grid-9 > * {
+        float: left;
+        width: 11.11111%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-9 > *:nth-child(10) {
+        clear: both; }
+    .large-block-grid-10 {
+        margin: 0 -15px; }
+    .large-block-grid-10 > * {
+        float: left;
+        width: 10%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-10 > *:nth-child(11) {
+        clear: both; }
+    .large-block-grid-11 {
+        margin: 0 -15px; }
+    .large-block-grid-11 > * {
+        float: left;
+        width: 9.09091%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-11 > *:nth-child(12) {
+        clear: both; }
+    .large-block-grid-12 {
+        margin: 0 -15px; }
+    .large-block-grid-12 > * {
+        float: left;
+        width: 8.33333%;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 30px; }
+    .large-block-grid-12 > *:nth-child(13) {
+        clear: both; }
+    .large-only-hide {
+        display: none !important; } }
+
+@media (min-width: 0px) {
+    .large-up-hide {
+        display: none !important; } }
+
+@media (max-width: -1px) {
+    .large-only-show {
+        display: none !important; } }
+
+@media (max-width: -1px) {
+    .large-up-show {
+        display: none !important; } }
+
+#wrapper {
+    width: 100%;
+    min-width: 882px;
+    box-sizing: border-box;
+}
+
+#wrapper * {
+    box-sizing: border-box;
+}
+
+
+.pager-container .pager {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    display: block;
+    min-height: 1px;
+}
+
+.pager-container .pager li {
+    display: inline-block;
+}
+.pager-container .pager li a, .pager li span  {
+    padding: 0.15em 0.4em;
+    border-radius: 5px;
+    border: 1px solid transparent;
+}
+
+.pager-container .pager li span.current, .pager li a:hover {
+    background-color: #efefef;
+    border: 1px solid #adadad;
+}
+
+.pager-container .page-size {
+    text-align: right;
+}
+
+
+
+.pager-container {
+    margin: 15px 0;
+}
+
+.admin fieldset.collapsed {
+    border: none;
+    border-top: 1px solid #FF8600;
+    background: none;
+}
+
+.admin fieldset {
+    border: 1px solid #FF8600;
+    background-color: #fff;
+    margin-bottom: 15px;
+}
+
+.admin fieldset legend {
+    font-size: 12px;
+    padding: 0 15px;
+    font-weight: bold;
+    cursor: pointer;
+    background: transparent url(../images/expanded.gif) no-repeat center left;
+}
+.admin fieldset.collapsed legend {
+    background: transparent url(../images/collapsed.gif) no-repeat center left;
+}
+
+
+
+
+
+.ul-main {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    margin: 10px 0;
+}
+.ul-main > li {
+    margin-bottom: 10px;
+}
+
+.ul-main > li > div {
+    padding: 0 10px;
+}
+
+.ul-main > li .label {
+    width: 30%;
+    float: left;
+    display: inline-block;
+    font-weight: bold;
+
+}
+.ul-main li .label + .input {
+    width: 69%;
+    clear: both;
+
+    display: inline-block;
+}
+
+.admin fieldset.collapsed > * {
+    display: none;
+}
+.admin fieldset.collapsed > legend {
+    display: block;
+}
+
+.as_a span {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.as_a span:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.admin .big {
+    width: 335px;
+    min-width: 335px;
+}
+
+.admin input[type=radio] {
+    vertical-align: middle;
+    margin: 0;
+}
+.admin input[type=radio] + label {
+    /*vertical-align: middle;*/
+    margin-right: 5px;
+}
+
+.admin .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    padding-bottom: 5px !important;
+}
+.admin .select2-selection__rendered {
+    padding-right: 19px !important;
+}
+
+.admin .select2-selection__clear {
+    position: absolute;
+    float: none;
+    right: 0;
+}
+
+.admin .OrderSheet {
+    background-color: transparent;
+    border-collapse: collapse;
+}
+.admin .OrderSheet .TableSubHead_new {
+    background-color: #e5e5e5;
+}
+.admin .OrderSheet td {
+    background-color: transparent;
+    border: #848484 1px solid;
+}
+.admin .OrderSheet .separator td {
+    border: none;
+    padding: 3px 0 0;
+}
+
+.admin .OrderSheet td {
+    text-align: center;
+}.admin .OrderSheet td.text-left {
+    text-align: left;
+}
+
+/*.admin .OrderSheet td.group {*/
+    /*border: 2px solid darkred;*/
+/*}*/
+
+.admin .OrderSheet .TableHead {
+    font-weight: bold;
+}

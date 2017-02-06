@@ -2,16 +2,24 @@
     "config": {
         "vendor-dir": "include/libs"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tsukasa-mixer/QueryBuilder"
+        }
+    ],
     "require": {
         "google/apiclient": "^2.0",
-        "mindy/query_builder": "^2.1",
+        "mindy/query_builder": "dev-master_5.4",
         "gabrielbull/ups-api": "^0.4.0",
         "jaybizzle/crawler-detect": "^1.2",
+        "fenom/fenom": "^2.11",
         "paypal/rest-api-sdk-php": "*"
     },
     "autoload": {
         "psr-4": {
             "Xcart\\": "include/Xcart",
+            "Modules\\": "app/Modules",
             "Xcart\\External_Product_Verification\\": "modules/External_Product_Verification/include",
             "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include"
         },

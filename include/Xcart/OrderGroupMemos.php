@@ -15,6 +15,21 @@ class OrderGroupMemos extends Data
         parent::__construct($aParams);
     }
 
+    public static function getMemosStatusList()
+    {
+        return [
+            "N" => "Not received",
+            "A" => "Added",
+            "U" => "Updated",
+            "R" => "Reconciled"
+        ];
+    }
+
+    public function getStatusName()
+    {
+        return self::getMemosStatusList()[$this->getField('status')];
+    }
+
     public function countOrderGroupMemos() {
         $count = 0;
         if (!empty($this->aGroupMemos))
