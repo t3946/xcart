@@ -201,6 +201,21 @@ class OrderSearchStore extends BaseStore
                 $qs->join('inner join', 'xcart_po_pipeline', ['t.orderid' => 'po.order_id'], 'po');
                 $where['po.status__in'] = $data['order']['po_status'];
             }
+
+            if (!empty($data['order']['has_dx'])) {
+                $qs->join('left join', 'xcart_order_group_invoices', ['t.orderid' => 'group.orderid'], 'invoice');
+                $where['invoice.orderid__isnull'] = ($data['order']['has_dx'] == 'Y');
+            }
+            if (!empty($data['order']['has_memo'])) {
+                $qs->join('left join', 'xcart_order_group_memos', ['t.orderid' => 'memo.orderid'], 'memo');
+                $where['memo.orderid__isnull'] = ($data['order']['has_dx'] == 'Y');
+            }
+//            if (!empty($data['order']['has_icx'])) {
+//                $qs->join('left join', 'xcart_order_group_memos', ['t.orderid' => 'memo.orderid'], 'memo');
+//                $where['memo.orderid__isnull'] = ($data['order']['has_dx'] == 'Y');
+//            }
+
+
         }
 
         if (!empty($data["features"])) {
