@@ -1,11 +1,16 @@
 <?php
 use Xcart\External_Product_Verification\ExternalVerificationBatch;
+use Xcart\External_Product_Verification\ExternalVerificationFeeds;
+use Xcart\External_Product_Verification\ExternalVerificationProducts;
+use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 use Xcart\External_Marketplaces\IssuesProcessingRules;
 use Xcart\Order;
 use Xcart\OrderGroup;
 use Xcart\Product;
 use Xcart\Customer;
 use Xcart\Categories;
+use Xcart\SQLBuilder;
+use Xcart\Logs;
 
 require './auth.php';
 require '../include/security.php';
@@ -51,6 +56,21 @@ switch ($_POST['ajax_action']) {
         break;
     case "get_payable_orders":
         getPayablesOrders($_POST);
+        break;
+    case "send_paypal_request":
+        sendPayPalRequest($_POST);
+        break;
+    case "get_paypal_invoice_status":
+        getPayPalInvoiceStatus($_POST);
+        break;
+    case "get_amazon_feed_status":
+        getAmazonFeedStatus($_POST);
+        break;
+    case "get_amazon_listing_products":
+        getAmazonListingProducts($_POST);
+        break;
+    case "product_amazon_fba_restricted_change":
+        changeAmazonFBARestricted($_POST);
         break;
 }
 
@@ -257,9 +277,9 @@ function enterVerificationArbitrageFull($aParams = [])
     $sAmazonAsin = $iAmazonQty = $iOurSiteQty = $sExternalVerificationProductsAction = null;
 
     $iProductId = (int)$aParams['product_id'];
-    if (!empty($aParams['asin_arbitrage']) || !empty($aParams['amazon_qty_arbitrage']) || !empty($aParams['our_qty_arbitrage'])) {
+    if (!empty($aParams['asin_arbitrage']) || !empty($aParams['listing_upload_asin']) || !empty($aParams['amazon_qty_arbitrage']) || !empty($aParams['our_qty_arbitrage'])) {
         $aRows = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->findAll(
-            Xcart\SQLBuilder::getInstance()->addCondition('productid='.$iProductId)->
+            Xcart\SQLBuilder::getInstance()->addCondition('productid=' . $iProductId)->
             addCondition("action='asin_on_amazon'")
         );
         if (!empty($aRows)) {
@@ -267,11 +287,17 @@ function enterVerificationArbitrageFull($aParams = [])
                 $bS = Xcart\External_Product_Verification\ExternalVerificationProducts::model()->
                 setField('productid', $iProductId)->
                 setField('batch_id', $oRow->getBatchId())->
-                setField('login', $oRow->getLogin());
+                setField('login', $login);
                 $sAmazonAsin = trim($aParams['asin_arbitrage']);
+                $sAmazonListingAsin = trim($aParams['listing_upload_asin']);
                 if (!empty($sAmazonAsin)) {
                     $bS->setField('action', 'arbitrage_asin')->
                     setField('value', $sAmazonAsin)->_insert(true);
+                    $aResult['result'] = ($bS !== false);
+                }
+                if (!empty($sAmazonListingAsin)) {
+                    $bS->setField('action', 'listing_upload_asin')->
+                    setField('value', $sAmazonListingAsin)->_insert(true);
                     $aResult['result'] = ($bS !== false);
                 }
                 if (!empty($aParams['amazon_qty_arbitrage'])) {
@@ -351,7 +377,7 @@ HTML;
             $html .= <<<HTML
 <tr>
 <td align="center">{$oOrder->getOrderDate('d-M-Y')}</td>
-<td align="center"><a target="_blank" href="{$oOrder->getOrderModifyURL()}">{$oOrder->getDisplayOrderNumber()}</a></td>
+<td align="center"><a target="_blank" href="{$oOrder->getAdminUrl()}">{$oOrder->getDisplayOrderNumber()}</a></td>
 <td>{$aOrderDetails['po_number']}</td>
 <td>{$aOrderDetails['company_name']}</td>
 <td>{$aOrderDetails['name_of_purchaser']}</td>
@@ -389,7 +415,7 @@ HTML;
             $html .= <<<HTML
 <tr>
 <td align="center">{$oOrder->getOrderDate('d-M-Y')}</td>
-<td align="center"><a target="_blank" href="{$oOrder->getOrderModifyURL()}">{$oOrder->getDisplayOrderNumber()}</a></td>
+<td align="center"><a target="_blank" href="{$oOrder->getAdminUrl()}">{$oOrder->getDisplayOrderNumber()}</a></td>
 <td align="center">{$oOrderGroup->getTotalGross()}</td>
 </tr>
 HTML;
@@ -402,4 +428,140 @@ HTML;
 </tr>
 HTML;
     echo $html;
+}
+
+function sendPayPalRequest($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['send_request_orderid'])) {
+        $iOrderId = (int)$aParams['send_request_orderid'];
+        Xcart\Logs::_log('orders', $iOrderId, 'X', "'Send request' at 'Paypal Payment request' pressed");
+        $oPaypal = (new \Xcart\Paypal());
+        $oInv = $oPaypal->sendPaypalRequest($aParams);
+        if (!empty($oInv)) {
+            \Xcart\Connection::getInstance()->insert('xcart_order_cx_invoices', [
+                'orderid' => $iOrderId,
+                'invoice_order_number' => $aParams['invoice_next_number'],
+                'invoice_number' => $oInv->getId(),
+                'status' => $oPaypal->getPayPalInvoice($oInv->getId())->getStatus(),
+                'payer_email' => $aParams['paypal_request_email'],
+                'payment_request_subject' => $aParams['paypal_request_subject'],
+                'short_payment_description' => $aParams['paypal_request_notes'],
+                'amount' => $aParams['paypal_request_amount'],
+                'currency' => $aParams['paypal_request_currency'],
+            ]);
+            Xcart\Logs::_log('orders', $iOrderId, 'X',
+                "Paypal Cx invoice # <a target='_blank' href='https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$oInv->getId()}'>{$oInv->getId()}</a> has been sent");
+            $aResult['result'] = true;
+        }
+    }
+    print(json_encode($aResult));
+}
+
+function getPayPalInvoiceStatus($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['paypal_invoice_id'])) {
+        $oInv = (new \Xcart\Paypal())->getPayPalInvoice($aParams['paypal_invoice_id']);
+        if ($oInv) {
+            $oOrderCxInv = \Xcart\OrderCxInvoice::model()->find(SQLBuilder::getInstance()->addCondition("invoice_number = '{$aParams['paypal_invoice_id']}'"));
+            $oOrderCxInv->updateField('status', $oInv->getStatus());
+            $aResult['result'] = true;
+            $aResult['status'] = $oInv->getStatus();
+        }
+    }
+    print(json_encode($aResult));
+}
+
+function getAmazonFeedStatus($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['feed_id'])) {
+        $oAmazonMWS = new Xcart\AmazonMWS();
+        $oAmazonMWS
+            ->setReportId([$aParams['feed_id']])
+            ->_Request('GetSubmitionResults');
+        $oFeed = ExternalVerificationFeeds::model()->find(SQLBuilder::getInstance()->addCondition("amazon_submition_id = '{$aParams['feed_id']}'"));
+        $aResult['status'] = $oFeed->getField('status');
+        $aResult['success'] = intval($oAmazonMWS->getDOMXML()['listing_success']);
+        $aResult['failed'] = intval($oAmazonMWS->getDOMXML()['listing_failed']);
+        $aResult['total'] = $aResult['success'] + $aResult['failed'];
+        $aResult['result'] = true;
+
+    }
+    print(json_encode($aResult));
+}
+
+function getAmazonListingProducts($aParams = [])
+{
+    global $smarty;
+    $aVerificationResult = [];
+    $html = null;
+    if (!empty($aParams['feed_id']) && is_numeric($aParams['feed_id'])){
+        $oFeed = ExternalVerificationFeeds::model(['feed_id' => intval($aParams['feed_id'])]);
+        switch ($aParams['type']){
+            case 'success' :
+                $sStatus = 'submit_to_feed_success';
+                break;
+            case 'failed' :
+                $sStatus = 'submit_to_feed_failed';
+                break;
+            default :
+                $sStatus = '';
+        }
+        if ($aParams['type'] != 'log') {
+            $aVerProducts = $oFeed->getVerificationProductsByStatus($sStatus);
+            if (!empty($aVerProducts)) {
+                foreach ($aVerProducts as $oVerificationProduct) {
+                    $sFinalASIN = $oVerificationProduct->getASINAfterVerification();
+                    $aVerificationResult[] = [
+                        'Product' => Product::model(['productid' => $oVerificationProduct->getProductId()]),
+                        'pasin' => $oVerificationProduct->getASINAfterVerification(),
+                        'AsinLink' => sprintf(ExternalVerificationProducts::AMAZON_PRODUCT_LINK, $sFinalASIN),
+                        'status' => ExternalVerificationProductsQueue::getAmazonStatuses()[$oVerificationProduct->getField('amz_listing_status')]
+                    ];
+                }
+            }
+            $smarty->assign('aVerifiactionResults', $aVerificationResult);
+            $smarty->assign('readonly', true);
+
+            $html = "<tr class='listing_products'><td colspan='7'>";
+            $html .= func_display('admin/main/az_listing_product_table.tpl', $smarty, false);
+            $html .= "</td></tr>";
+        } else {
+            /** @var Logs[] $aLogs */
+            $aLogs = (new Xcart\Logs('amazon_listings'))->_getLogs(1, 1, intval($aParams['feed_id']));
+            $html = "<tr class='listing_products'><td colspan='7'><b>";
+            if (!empty($aLogs)){
+
+                foreach ($aLogs as $oLog) {
+                    $html .= nl2br($oLog->getLogText());
+                }
+
+            } else {
+                $html .= '<p style="text-align: center;">Errors not found</p>';
+            }
+            $html .= "</b></td></tr>";
+        }
+        print $html;
+    }
+}
+
+function changeAmazonFBARestricted($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['product_id']) && is_numeric($aParams['product_id'])) {
+        $iProductId = (int) $aParams['product_id'];
+        $oProductAmazonFields = \Xcart\ProductsAmazonFields::model(['productid' => $iProductId]);
+        $sFbaStatus = isset($aParams['status']) ? 'Y' : 'N';
+        $oProductAmazonFields->setField('amazon_fba_restricted', $sFbaStatus);
+        if ($oProductAmazonFields->getField('productid')) {
+            $oProductAmazonFields->_update();
+        } else {
+            $oProductAmazonFields->setField('productid', $iProductId);
+            $oProductAmazonFields->_insert();
+        }
+        $aResult['result'] = true;
+    }
+    print(json_encode($aResult));
 }

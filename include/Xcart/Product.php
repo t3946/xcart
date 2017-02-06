@@ -42,6 +42,16 @@ class Product extends Data
     private $fExtraMarginValue = null;
     private $fPrice = null;
 
+    /**
+     * @var ProductCategories[]
+     */
+    private $aProductCategories = null;
+
+    /**
+     * @var Category
+     */
+    private $oMainCategory = null;
+
     public function __construct($iId = null)
     {
         $this->sPrimaryTable = 'products';
@@ -97,12 +107,12 @@ class Product extends Data
         return $this;
     }
 
-    public function getProductModifyURL()
+    public function getAdminUrl()
     {
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->getField('storefrontid'));
     }
 
-    public function getProductFrontURL($http = 'http://')
+    public function getURL($http = 'http://')
     {
         return $http . $this->getStoreFront()->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
     }
@@ -287,9 +297,25 @@ class Product extends Data
         return floatval($this->getField('new_map_price'));
     }
 
-    public function getProductCostToUs()
+    public function getProductCostToUs(\DateTime $oDate = null)
     {
-        return floatval($this->getField('cost_to_us'));
+        $fResult = floatval($this->getField('cost_to_us'));
+        if (!is_null($oDate) && $oDate instanceof \DateTime) {
+            $sSQL = <<<SQL
+SELECT value
+FROM xcart_history_data
+WHERE     resource_type = 'product'
+      AND resourceid = :product_id
+      AND changedate < :date
+      ORDER BY changedate DESC
+LIMIT 1
+SQL;
+            $aResult = Connection::getInstance()->executeQuery($sSQL, ['product_id' => $this->getProductId(), 'date' => $oDate->format('Y-m-d')])->fetch();
+            if (!empty($aResult)) {
+                $fResult = floatval($aResult['value']);
+            }
+        }
+        return $fResult;
     }
 
     public function getPrice($forQuantity = 1)
@@ -401,7 +427,11 @@ class Product extends Data
         addCondition("OG.dc_status IN ('B','M','T','K','DP','E','G')")->
         addCondition('FROM_UNIXTIME(O.date) > DATE_ADD(NOW(),INTERVAL -4 WEEK)')->
         query_first()->getQueryResult();
-        return intval($this->getAmazonFBAAvail() * 0.8) - intval($aResult['AvailOnFBA']);
+        $avail = intval($this->getAmazonFBAAvail() * 0.8) - intval($aResult['AvailOnFBA']);
+        if ($avail <= 0 && $this->getAmazonFBAAvail() == 1 && intval($aResult['AvailOnFBA'] == 0)){
+            $avail = 1;
+        }
+        return $avail;
     }
 
     public function isProductFBAAvail()
@@ -417,6 +447,16 @@ class Product extends Data
     public function isAmazonEnabled()
     {
         return ($this->getField('amazon_enabled') == 'Y');
+    }
+
+    public function isAmazonFBARestricted()
+    {
+        $bResult = false;
+        if ($this->getProductId()) {
+            $oProductAmazon = ProductsAmazonFields::model(['productid' => $this->getProductId()]);
+            $bResult = ($oProductAmazon->getField('amazon_fba_restricted') == 'Y');
+        }
+        return $bResult;
     }
 
     public function getUPC()
@@ -630,9 +670,19 @@ class Product extends Data
             addFromTable('products')->
             addCondition('productid=' . $this->getProductId())->
             query_first()->getQueryResult();
-            $this->fAmazonPrice = $aResult['aprice'];
+            $this->fAmazonPrice = floatval($aResult['aprice']);
         }
         return $this->fAmazonPrice;
+    }
+
+    public function getMinimumAmazonPrice()
+    {
+        $aResult = SQLBuilder::getInstance()->
+        addSelect('cidev_get_minimum_amazon_price(' . $this->getProductId() . ')', 'aprice')->
+        addFromTable('products')->
+        addCondition('productid=' . $this->getProductId())->
+        query_first()->getQueryResult();
+        return floatval($aResult['aprice']);
     }
 
     public function getShippingVolume($iAmount = 1)
@@ -748,5 +798,52 @@ class Product extends Data
                            ->toSQL();
 
         return $connection->fetchAll($sql);
+    }
+
+    public function getProductCategories()
+    {
+        if (is_null($this->aProductCategories)) {
+            $this->aProductCategories = ProductCategories::model()->findAll(SQLBuilder::getInstance()->addCondition('productid = ' . $this->getProductId())->addOrderBy('orderby'));
+        }
+        return $this->aProductCategories;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getMainCategory()
+    {
+        if (is_null($this->oMainCategory)) {
+            $aCats = $this->getProductCategories();
+            if (!empty($aCats)) {
+                foreach ($aCats as $oCat) {
+                    if ($oCat->isMain()) {
+                        $this->oMainCategory = Category::model(['categoryid' => $oCat->getField('categoryid')]);
+                        break;
+                    }
+                }
+            }
+        }
+        return $this->oMainCategory;
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getAdditionalCategories()
+    {
+        $aRes = [];
+        $aCats = $this->getProductCategories();
+        if (!empty($aCats)) {
+            foreach ($aCats as $oCat) {
+                if (!($oCat->isMain())) {
+                    $oCategory = Category::model(['categoryid' => $oCat->getField('categoryid')]);
+                    if ($oCategory->getCategoryId()) {
+                        $aRes[] = $oCategory;
+                    }
+                }
+            }
+        }
+        return $aRes;
     }
 }

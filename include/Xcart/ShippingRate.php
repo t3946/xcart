@@ -7,6 +7,7 @@ class ShippingRate extends Data
     private $fShippingQuote = null;
     private $oShipping;
     private $fShippingCharge = null;
+    private $fShippingChargeBeforeMAP = null;
     private $oCart = null;
     private $fCartShippingWeight = null;
     private $fAdditionalShippingCharge = 0;
@@ -49,6 +50,10 @@ class ShippingRate extends Data
         return $this->oShipping;
     }
 
+    /**
+     * @param Shipping $oShipping
+     * @return ShippingRate
+     */
     public function setShippingEntity(Shipping $oShipping)
     {
         $this->oShipping = $oShipping;
@@ -94,15 +99,31 @@ class ShippingRate extends Data
             $this->fShippingCharge += $this->getCartShippingWeight() * $this->getWeightRate();
             $this->fShippingCharge += $this->fAdditionalShippingCharge;
             $this->fShippingCharge += $this->getCartShippingFreight();
-            $this->fShippingCharge = round($this->fShippingCharge, 2);
-
             if ($oCart->getExtraMarginValue() > 0) {
+                $this->fShippingChargeBeforeMAP = $this->fShippingCharge;
                 $this->fShippingCharge -= $oCart->getExtraMarginValue();
                 $this->fShippingCharge = max($this->fShippingCharge, 0);
             }
+            $this->fShippingCharge = round($this->fShippingCharge, 2);
         }
         return $this->fShippingCharge;
     }
+
+    public function setShippingCharge($fValue)
+    {
+        $this->fShippingCharge = floatval($fValue);
+    }
+
+    public function getShippingChargeBeforeMap()
+    {
+        return $this->fShippingChargeBeforeMAP;
+    }
+
+    public function setShippingChargeBeforeMap($fValue)
+    {
+        return $this->fShippingChargeBeforeMAP = floatval($fValue);
+    }
+
 
     public function addShippingCharge(ShippingRate $oShippingRate)
     {
@@ -200,5 +221,12 @@ class ShippingRate extends Data
     public function getAddedShippingRates()
     {
         return $this->aAddedShippingRates;
+    }
+
+    public function getDataToSave(){
+        return ['rate_id' => $this->getField('rateid'),
+            'shipping_quote' => $this->getShippingQuote(),
+            'shipping_charge' => $this->getShippingCharge(),
+            'shipping_charge_before_map' => $this->getShippingChargeBeforeMap()];
     }
 }

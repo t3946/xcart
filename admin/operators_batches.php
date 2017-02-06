@@ -4,7 +4,7 @@ global $xcart_dir;
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
-$location[] = array("Verificator management", "operators.php");
+$location[] = array("Verificator management", "az_operators.php");
 include $xcart_dir."/modules/External_Product_Verification/operators_batches.php";
 
 

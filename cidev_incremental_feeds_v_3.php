@@ -23,7 +23,7 @@ define('FROOGLE_MAX_DESCRIPTION_LENGTH', 10 * 1024); //The content in an attribu
 
 define('EXCLUDE_CATEGORYID_BRANCH', 5099);
 define('SUBMIT_DISABLE', 'N');
-define('EXTRA_LOG', 'Y');
+define('EXTRA_LOG', 'N');
 
 set_time_limit(0);
 

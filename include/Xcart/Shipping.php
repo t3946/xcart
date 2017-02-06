@@ -153,6 +153,7 @@ SQL;
                 addCondition("active = 'Y'")->
                 addCondition('manufacturerid = ' . $oManufacturer->getManufacturerId())->
                 addCondition('zoneid = ' . $iShippingZone)->
+                addGroupBy('shippingid')->
                 addOrderBy('sc.priority DESC')
             );
         }
@@ -196,9 +197,7 @@ SQL;
                                 $oProcessor = new $sProcessor($oCart);
                                 $oProcessor->setManufacturer($oManufacturer);
                                 $oProcessor->setCustomer($oCustomer);
-                                $oShippingZone = ShippingZone::model(['zoneid' => $aShippingZone['zoneid']]);
-                                $oShippingZone->setField('zoneid', $aShippingZone['zoneid']); // for 0 zoneid
-                                $oProcessor->setShippingZone($oShippingZone);
+                                $oProcessor->setShippingZone(ShippingZone::model()->setField('zoneid', $aShippingZone['zoneid']));
                                 $aShippingProcessor[$sShippingCode] = $oProcessor;
 
                             }

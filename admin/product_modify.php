@@ -50,8 +50,28 @@ require $xcart_dir."/include/security.php";
 
 require $xcart_dir."/include/product_modify.php";
 
-$storefront_independant = 'Y';
-require  $xcart_dir."/include/categories.php";
+//$storefront_independant = 'Y';
+//require  $xcart_dir."/include/categories.php";
+if ($oProduct){
+	$all_categories = [];
+	$oMainCategory = $oProduct->getMainCategory();
+	$all_categories[$oMainCategory->getCategoryId()] = [
+		'category_path' => $oMainCategory->getPathExploded(),
+		'categoryid' => $oMainCategory->getCategoryId(),
+	];
+
+	$aAddCats = $oProduct->getAdditionalCategories();
+	if (!empty($aAddCats)) {
+		foreach ($aAddCats as $oCat) {
+			$all_categories[$oCat->getCategoryId()] = [
+				'category_path' => "[{$oCat->getCategoryId()}] ".$oCat->getPathExploded(),
+				'categoryid' => $oCat->getCategoryId(),
+				'productid' => $oProduct->getProductId(),
+			];
+		}
+	}
+	$smarty->assign('allcategories', $all_categories);
+}
 $storefront_independant = 'N';
 
 $smarty->assign('abbreviations', preg_replace('/\s/','', $config['Product_Page']['features_abbreviations']));

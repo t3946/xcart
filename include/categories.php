@@ -593,23 +593,20 @@ if ($cat > 0 && $mode != "delete") {
 			func_header_location("categories.php");
 		}
 		elseif($main != "product"){
-
+			$redirect_url = $xcart_web_dir . "/";
 			if (!empty($cat)){
-				$parentid = func_query_first_cell("SELECT $sql_tbl[categories].parentid FROM $sql_tbl[categories] WHERE $sql_tbl[categories].categoryid='$cat' and $sql_tbl[categories].storefrontid=$current_storefront");
-				if (empty($parentid)){
-					func_header_location($xcart_web_dir."/", true, 301);
+				$oCategory = \Xcart\Category::model(['categoryid' => $cat]);
+				if ($oCategory->getCategoryId()) {
+					$oParentCategory = $oCategory->getFirstActiveParentCategory();
+					if ($oParentCategory->getCategoryId()) {
+						$oCleanURL = $oParentCategory->getCleanUrl();
+						if ($oCleanURL->getUrl()) {
+							$redirect_url = $oCleanURL->getUrl();
+						}
+					}
 				}
-
-	                        $avail = func_query_first_cell("SELECT avail FROM $sql_tbl[categories] WHERE categoryid='$parentid' and $sql_tbl[categories].storefrontid=$current_storefront");
-              			if ($avail == "Y"){
-	                                $redirect_url = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='C' AND resource_id='$parentid'");
-               			        if (!empty($redirect_url)){
-	                                        $redirect_url = $xcart_web_dir . "/".$redirect_url."/";
-              			                func_header_location($redirect_url, true, 301);
-	                                }
-              			}
 			}
-			func_header_location($xcart_web_dir . "/");
+			func_header_location($redirect_url, true, 301);
 		}
 	}
 }

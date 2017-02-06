@@ -1013,7 +1013,13 @@ onchange="javasript:{literal} if (this.value !=''){$('#tr_d_map_prices').show();
 </select>
         </td>
 </tr>
-
+    <tr>
+        <td width="20%" class="FormButton">Amazon leadtime to ship (days):</td>
+        <td>&nbsp;</td>
+        <td width="80%">
+            <input type="text" size="3" name="amazon_leadtime_to_ship" value="{$manufacturer.amazon_leadtime_to_ship}" />
+        </td>
+    </tr>
 <tr><td colspan="3"><hr /><td></tr>
 
 <tr>

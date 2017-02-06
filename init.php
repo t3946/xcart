@@ -350,6 +350,11 @@ $sql_tbl = array (
     "shipping_carrier" => "xcart_shipping_carrier",
     "shipping_cache_products" => "xcart_shipping_cache_products",
     "shipping_cache_simple" => "xcart_shipping_cache_simple",
+    "fba_inventory_receipts" => "xcart_fba_inventory_receipts",
+    "fba_roi_accounting" => "xcart_fba_roi_accounting",
+    "order_cx_invoices" => "xcart_order_cx_invoices",
+    "external_verification_feeds" => "xcart_external_verification_feeds",
+    "shipping_cache_quotes" => "xcart_shipping_cache_quotes",
 );
 
 # START: random:20341 [2010 Jul 29 14:46] 

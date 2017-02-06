@@ -31,7 +31,7 @@ if ($REQUEST_METHOD == 'POST') {
 			$products_str .= '{';
 				$products_str .= '"productid": "'.$v["productid"].'",';
 				$products_str .= '"clean_url": "'.$v["clean_url"].'",';
-				$products_str .= '"src": "'.$v["tmbn_url"].'",';
+				$products_str .= '"src": "'.(empty($v["tmbn_url_T"]) ? $v["tmbn_url"] : $v["tmbn_url_T"]).'",';
 				$products_str .= '"price": "'.$v["price"].'",';
 
 				$products_str .= '"category": "'.func_add_slashes($v["category"]).'",';

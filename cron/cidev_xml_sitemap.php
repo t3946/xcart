@@ -38,7 +38,7 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)){
 
 	$sf_condition = "storefrontid=$storefrontid";
 	
-	$config['XML_Sitemap']['items'] = func_XML_Sitemap_items_arr($sf_condition);
+	$config['XML_Sitemap']['items'] = func_XML_Sitemap_items_arr(null, $storefrontid);
 
 	$config['XML_Sitemap']['items'][1]['items_query'] = "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[products].productid) as url, $sql_tbl[products].productid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date"
         . " FROM $sql_tbl[products] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[products].productid AND $sql_tbl[xmlmap_lastmod].type = 'P'"
@@ -56,4 +56,3 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)){
 }
 
 die("DONE!");
-?>

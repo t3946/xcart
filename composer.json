@@ -13,7 +13,8 @@
         "mindy/query_builder": "dev-master_5.4",
         "gabrielbull/ups-api": "^0.4.0",
         "jaybizzle/crawler-detect": "^1.2",
-        "fenom/fenom": "^2.11"
+        "fenom/fenom": "^2.11",
+        "paypal/rest-api-sdk-php": "*"
     },
     "autoload": {
         "psr-4": {

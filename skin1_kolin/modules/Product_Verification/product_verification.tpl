@@ -61,15 +61,15 @@
 				<tr{cycle values=', class="TableSubHead"'} {if $showManufacturer}data-manufacturer-id="{$oManufacturer->getField('manufacturerid')}"{/if}>
 					<td width="1%">
 						{if $showManufacturer}
-							<a style="font-weight: bold;" href="{$oManufacturer->getManufacturerModifyURL()}" target="_blank"> {$oManufacturer->getField('manufacturer')}</a>
+							<a style="font-weight: bold;" href="{$oManufacturer->getAdminUrl()}" target="_blank"> {$oManufacturer->getField('manufacturer')}</a>
 							{assign var='showManufacturer' value=false}
                         {else}
-                            <a style="font-weight: bold; display:none;" href="{$oManufacturer->getManufacturerModifyURL()}" target="_blank"> {$oManufacturer->getField('manufacturer')}</a>
+                            <a style="font-weight: bold; display:none;" href="{$oManufacturer->getAdminUrl()}" target="_blank"> {$oManufacturer->getField('manufacturer')}</a>
 						{/if}
 					</td>
-					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getOrderModifyURL()}">{$oOrderManufacturer->getDisplayOrderNumber()}</a></td>
-					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getProductModifyURL()}">{$oProduct->getField('productcode')}</a></td>
-					<td><a target="_blank" href="{$oProduct->getProductFrontURL()}">{$oProduct->getField('product')}</a>
+					<td nowrap="nowrap"><a target="_blank" href="{$oOrderManufacturer->getAdminUrl()}">{$oOrderManufacturer->getDisplayOrderNumber()}</a></td>
+					<td nowrap="nowrap"><a target="_blank" href="{$oProduct->getAdminUrl()}">{$oProduct->getField('productcode')}</a></td>
+					<td><a target="_blank" href="{$oProduct->getURL()}">{$oProduct->getField('product')}</a>
                         {if (!empty($oHTMLShot) && $oHTMLShot->getId())}
                             <a title="View HTML-Shot" target="_blank" style="float:right; margin-top:3px;" href="/admin/view_html_shot.php?id={$oHTMLShot->getId()}" class="html-shot-view">
                                 <img src="{$ImagesDir}/html-shot.png" />

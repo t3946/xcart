@@ -199,6 +199,9 @@ if ($REQUEST_METHOD == "POST" || $shipping_error == "Y") {
                             $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
                             $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
                             $shipping[$oShippingRate->getShippingId()]['allowed'] = 1;
+                            if ($oShippingRate->getCart()->getExtraMarginValue() > 0) {
+                                $shipping[$oShippingRate->getShippingId()]['shipping_extra_margin_value'] = $oShippingRate->getShippingChargeBeforeMap() - $oShippingRate->getShippingCharge();
+                            }
                         }
                     }
                 }

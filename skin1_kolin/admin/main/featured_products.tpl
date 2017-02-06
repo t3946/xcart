@@ -9,12 +9,19 @@
 <br /><br />
 
 {capture name=dialog}
+<form action="categories.php" method="post" name="featuredproductsform">
+
+<table cellpadding="3" cellspacing="1" width="100%">
+	<tr>
+		<td width="200"><b>Featured products caption:</b></td>
+		<td><input style="width: 100%;" type="text" name="seo_featured_products_caption"/ value="{$config.Categories.seo_featured_products_caption|stripcslashes}"></td>
+	</tr>
+</table>
 
 {if $products ne ""}
 {include file="main/check_all_row.tpl" style="line-height: 170%;" form="featuredproductsform" prefix="posted_data.+to_delete"}
 {/if}
 
-<form action="categories.php" method="post" name="featuredproductsform">
 <input type="hidden" name="mode" value="update" />
 <input type="hidden" name="cat" value="{$f_cat}" />
 

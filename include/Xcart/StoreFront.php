@@ -120,4 +120,14 @@ class StoreFront extends Data
         $sValue = func_query_first_cell("SELECT value FROM " . $this->sConfigTable . " WHERE name='$sName' " . $addSQL);
         return $sValue;
     }
+
+    public function updateConfigValue($sName, $sValue)
+    {
+        $this->_init();
+        $aParam = ['name' => $sName];
+        if ($this->getStoreFrontId() > 0) {
+            $aParam[] = ['storefrontid' => $this->getStoreFrontId()];
+        }
+        Connection::getInstance()->update($this->sConfigTable, ['value' => $sValue], $aParam);
+    }
 }
