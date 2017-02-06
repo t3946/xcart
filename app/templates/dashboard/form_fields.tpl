@@ -241,68 +241,9 @@
 
 <fieldset class="expanded collapsed"  rel="2">
     <legend>
-        Advanced
+        Advanced - Payment \ Shipping
     </legend>
     <ul class="ul-main">
-
-        <li>
-            <div class="label">
-                <label for="o_id">Order ID:</label>
-            </div>
-
-            <div class="input">
-                <input type="text" name="search[order][id][from]" id="o_id" value="{$form_data.order.id.from}"/>
-                <span>to</span>
-                <input type="text" name="search[order][id][to]" value="{$form_data.order.id.to}"/>
-            </div>
-        </li>
-
-        <li>
-            <div class="label">
-                <label for="o_operator">Operator:</label>
-            </div>
-
-            <div class="input">
-                <select type="text" name="search[order][operator][]" id="o_operator" class="big" data-ajax-from="operator" multiple>
-                    {foreach $form_data.order.operator as $value}
-                        <option value="{raw $value.id}" selected>
-                            {raw $value.text}
-                        </option>
-                    {/foreach}
-                </select>
-            </div>
-        </li>
-
-        <li>
-            <div class="label">
-                <label for="o_features">Order features:</label>
-            </div>
-
-            <div class="input">
-                <select name="search[features][]" id="o_features" class="big" multiple>
-                    {foreach $features as $code => $name}
-                        <option value="{$code}" {if $code|in:$form_data.features}selected{/if}>
-                            {$name}
-                        </option>
-                    {/foreach}
-                </select>
-            </div>
-        </li>
-
-        <li>
-            <div class="label">
-                <label for="o_features">Order sales channel:</label>
-            </div>
-
-            <div class="input">
-                <select type="text" name="search[order][source][]" id="o_features" class="big" multiple>
-                    {foreach $sources as $code => $name}
-                        <option value="{$code}" {if $code|in:$form_data.order.source}selected{/if}>{$name}</option>
-                    {/foreach}
-                </select>
-            </div>
-        </li>
-
         <li>
             <div class="label">
                 <label for="o_payment">Order payment method:</label>
@@ -413,6 +354,72 @@
                         <option value="{$status.code}" {if $status.code|in:$form_data.order.fraud_status}selected{/if}>
                             {$status.name}
                         </option>
+                    {/foreach}
+                </select>
+            </div>
+        </li>
+    </ul>
+</fieldset>
+
+<fieldset class="expanded collapsed"  rel="3">
+    <legend>
+        Advanced
+    </legend>
+    <ul class="ul-main">
+
+        <li>
+            <div class="label">
+                <label for="o_id">Order ID:</label>
+            </div>
+
+            <div class="input">
+                <input type="text" name="search[order][id][from]" id="o_id" value="{$form_data.order.id.from}"/>
+                <span>to</span>
+                <input type="text" name="search[order][id][to]" value="{$form_data.order.id.to}"/>
+            </div>
+        </li>
+
+        <li>
+            <div class="label">
+                <label for="o_operator">Operator:</label>
+            </div>
+
+            <div class="input">
+                <select type="text" name="search[order][operator][]" id="o_operator" class="big" data-ajax-from="operator" multiple>
+                    {foreach $form_data.order.operator as $value}
+                        <option value="{raw $value.id}" selected>
+                            {raw $value.text}
+                        </option>
+                    {/foreach}
+                </select>
+            </div>
+        </li>
+
+        <li>
+            <div class="label">
+                <label for="o_features">Order features:</label>
+            </div>
+
+            <div class="input">
+                <select name="search[features][]" id="o_features" class="big" multiple>
+                    {foreach $features as $code => $name}
+                        <option value="{$code}" {if $code|in:$form_data.features}selected{/if}>
+                            {$name}
+                        </option>
+                    {/foreach}
+                </select>
+            </div>
+        </li>
+
+        <li>
+            <div class="label">
+                <label for="o_features">Order sales channel:</label>
+            </div>
+
+            <div class="input">
+                <select type="text" name="search[order][source][]" id="o_features" class="big" multiple>
+                    {foreach $sources as $code => $name}
+                        <option value="{$code}" {if $code|in:$form_data.order.source}selected{/if}>{$name}</option>
                     {/foreach}
                 </select>
             </div>

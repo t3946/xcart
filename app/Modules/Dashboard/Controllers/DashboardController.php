@@ -28,9 +28,13 @@ class DashboardController extends AdminController
         }
 
         if (!empty($_GET['search'])) {
-            $session->add('search_order_form', OrderSearchStore::getClearedData($_GET['search']));
-            $session->add('search_new_template', $_GET['search']['new_list']);
             $form_collapse = true;
+
+            $session->add('search_order_form', OrderSearchStore::getClearedData($_GET['search']));
+
+            if (isset($_GET['search']['new_list'])) {
+                $session->add('search_new_template', $_GET['search']['new_list']);
+            }
         }
 
         $form_data = $session->get('search_order_form', [
