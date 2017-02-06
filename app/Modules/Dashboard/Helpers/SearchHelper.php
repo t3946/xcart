@@ -1,19 +1,45 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 06.02.2017
- * Time: 18:25
- */
-
 namespace Modules\Dashboard\Helpers;
 
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\Connection;
+use Xcart\POPipeline;
 
-class SearchAutoCompleteHelper
+class SearchHelper
 {
+
+    public static function getFormAndListData()
+    {
+
+        $attention_tags   = Connection::getInstance()->fetchAll("SELECT * FROM xcart_attention_tags_values ORDER BY orderby ASC");
+        $fraud_statuses   = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_fraud_statuses ORDER BY order_by ASC");
+        $raw_statuses     = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_statuses ORDER BY type ASC, orderby ASC");
+        $shipping_methods = Connection::getInstance()->fetchAll("SELECT * FROM xcart_shipping");
+        $payment_methods  = Connection::getInstance()->fetchAll("SELECT * FROM xcart_payment_methods");
+
+        $order_statuses = [];
+        foreach ($raw_statuses as $status) {
+            if (!isset($order_statuses[$status['type']])) {
+                $order_statuses[$status['type']] = [];
+            }
+
+            $order_statuses[$status['type']][] = $status;
+        }
+
+        return [
+            'fraud_statuses'       => $fraud_statuses,
+            'order_statuses'       => $order_statuses,
+            'attention_tags'       => $attention_tags,
+            'shipping_methods'     => $shipping_methods,
+            'payment_methods'      => $payment_methods,
+            'po_statuses'          => POPipeline::getPOStatuses(),
+            'features'             => OrderSearchStore::getFeatures(),
+            'sources'              => OrderSearchStore::getSources(),
+            'question_statuses'    => OrderSearchStore::getQuestionStatuses(),
+            'manual_string'        => OrderSearchStore::CONST_MANUAL_STRING,
+        ];
+    }
 
     public static function getNumberOnlyRegexp($numbers)
     {

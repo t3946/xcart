@@ -2,21 +2,11 @@
 
 namespace Modules\Dashboard\Controllers;
 
-use Mindy\QueryBuilder\Expression;
-use Mindy\QueryBuilder\Q\QAndNot;
-use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\DashboardModule;
-use Modules\Dashboard\Helpers\SearchAutoCompleteHelper;
-use Modules\Dashboard\Sqls\SearchSql;
+use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Controller\AdminController;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Pagination\Pagination;
-use Xcart\Connection;
-use Xcart\Manufacturer;
-use Xcart\Order;
-use Xcart\OrderGroups;
-use Xcart\POPipeline;
 
 class DashboardController extends AdminController
 {
@@ -62,38 +52,16 @@ class DashboardController extends AdminController
             $form_collapse = false;
         }
 
-        $attention_tags   = Connection::getInstance()->fetchAll("SELECT * FROM xcart_attention_tags_values ORDER BY orderby ASC");
-        $fraud_statuses   = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_fraud_statuses ORDER BY order_by ASC");
-        $raw_statuses     = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_statuses ORDER BY type ASC, orderby ASC");
-        $shipping_methods = Connection::getInstance()->fetchAll("SELECT * FROM xcart_shipping");
-        $payment_methods  = Connection::getInstance()->fetchAll("SELECT * FROM xcart_payment_methods");
-
-        $order_statuses = [];
-        foreach ($raw_statuses as $status) {
-            if (!isset($order_statuses[$status['type']])) {
-                $order_statuses[$status['type']] = [];
-            }
-
-            $order_statuses[$status['type']][] = $status;
-        }
-
-        $content = $this->render('dashboard/search_form.tpl', [
-            'fraud_statuses'       => $fraud_statuses,
-            'order_statuses'       => $order_statuses,
-            'attention_tags'       => $attention_tags,
-            'shipping_methods'     => $shipping_methods,
-            'payment_methods'      => $payment_methods,
-            'po_statuses'          => POPipeline::getPOStatuses(),
-            'features'             => OrderSearchStore::getFeatures(),
-            'sources'              => OrderSearchStore::getSources(),
-            'question_statuses'    => OrderSearchStore::getQuestionStatuses(),
-            'manual_string'        => OrderSearchStore::CONST_MANUAL_STRING,
-            'pager'                => $pager,
-            'form_data'            => SearchAutoCompleteHelper::prepareFormDataForTemplate($form_data),
-            'form_collapse'        => $form_collapse,
-            'models'               => $models,
-            'new_template'         => $session->get('search_new_template', 1),
-        ]);
+        $content = $this->render('dashboard/search_form.tpl', array_merge(
+            SearchHelper::getFormAndListData(),
+            [
+                'pager'         => $pager,
+                'models'        => $models,
+                'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
+                'new_template'  => $session->get('search_new_template', 1),
+                'form_collapse' => $form_collapse,
+            ])
+        );
 
         echo $this->renderSmarty("admin/home.tpl", [
             'single_mode' => true,
@@ -107,8 +75,8 @@ class DashboardController extends AdminController
         $data = [];
 
         if (isset($_GET['from']) && !empty($_GET['q'])) {
-            $data = SearchAutoCompleteHelper::getAjaxSuggestion($_GET['q'], $_GET['from']);
-            $data = SearchAutoCompleteHelper::autoCompleteClearNewLines($data);
+            $data = SearchHelper::getAjaxSuggestion($_GET['q'], $_GET['from']);
+            $data = SearchHelper::autoCompleteClearNewLines($data);
         }
 
         $this->jsonResponse($data);

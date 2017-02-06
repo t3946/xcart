@@ -6,7 +6,7 @@ use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
-use Modules\Dashboard\Helpers\SearchAutoCompleteHelper;
+use Modules\Dashboard\Helpers\SearchHelper;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Store\BaseStore;
@@ -291,7 +291,7 @@ class OrderSearchStore extends BaseStore
 
             if (!empty($data['customer']['state']))
             {
-                $state = SearchAutoCompleteHelper::explodeStateCode($data['customer']['state']);
+                $state = SearchHelper::explodeStateCode($data['customer']['state']);
                 $tmp = [];
                 if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
                     $tmp['b_state__in'] = $state;
@@ -366,10 +366,10 @@ class OrderSearchStore extends BaseStore
                 }
                 else {
                     if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
-                        $tmp['b_zipcode__raw'] = "RLIKE '" . SearchAutoCompleteHelper::getNumberOnlyRegexp($data['customer']['zip_code']). "'";
+                        $tmp['b_zipcode__raw'] = "RLIKE '" . SearchHelper::getNumberOnlyRegexp($data['customer']['zip_code']). "'";
                     }
                     if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
-                        $tmp['s_zipcode__raw'] = "RLIKE '" . SearchAutoCompleteHelper::getNumberOnlyRegexp($data['customer']['zip_code']). "'";
+                        $tmp['s_zipcode__raw'] = "RLIKE '" . SearchHelper::getNumberOnlyRegexp($data['customer']['zip_code']). "'";
                     }
                     $where[] = new QOr($tmp);
                 }
@@ -401,7 +401,7 @@ class OrderSearchStore extends BaseStore
                 if (!empty($like)) {
                     foreach ($like as $t)
                     {
-                        $tmp[] = new QAnd(['phone__raw' => "RLIKE '" . SearchAutoCompleteHelper::getNumberOnlyRegexp($t) ."'"]);
+                        $tmp[] = new QAnd(['phone__raw' => "RLIKE '" . SearchHelper::getNumberOnlyRegexp($t) ."'"]);
                     }
                 }
 
