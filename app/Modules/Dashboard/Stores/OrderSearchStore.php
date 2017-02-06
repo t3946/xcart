@@ -203,7 +203,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['has_dx'])) {
-                $qs->join('left join', 'xcart_order_group_invoices', ['t.orderid' => 'group.orderid'], 'invoice');
+                $qs->join('left join', 'xcart_order_group_invoices', ['t.orderid' => 'invoice.orderid'], 'invoice');
                 $where['invoice.orderid__isnull'] = ($data['order']['has_dx'] == 'Y');
             }
             if (!empty($data['order']['has_memo'])) {
