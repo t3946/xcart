@@ -37,22 +37,30 @@ $aOrderGroups = OrderGroup::model()->findAll(
         ->addCondition("cb_status ='P'")
         ->addCondition("cb_update_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)")
         ->addGroupBy('orderid')
-        ->addOrderBy('cb_update_datetime DESC'));
+        ->addOrderBy('cb_update_datetime DESC')
+        ->setLimit('10'));
 
 if (!empty($aOrderGroups)) {
     foreach ($aOrderGroups as $oOrderGroup) {
+        $fOrderGroupTotalAmount = 0;
         $aTransactions = OrderTransactions::getOrderTransactionsByOrderIdAndStatus($oOrderGroup->getOrderId(), ['completed']);
         if (!empty($aTransactions)) {
             foreach ($aTransactions as $oTransaction) {
                 try {
-                    $oPayPalAmount = (new Paypal())->getTransaction($oTransaction->getField('transaction_id'))->getAmount();
-                    if (floatval($oPayPalAmount->total) != $oTransaction->getTransactionAmount() || $oPayPalAmount->currency != $oTransaction->getField('currency')) {
+                    $oPayPalTransaction = (new Paypal())->getTransaction($oTransaction->getField('transaction_id'));
+                    if (floatval($oPayPalTransaction->getAmount()->total) != $oTransaction->getTransactionAmount() ||
+                        $oPayPalTransaction->getAmount()->currency != $oTransaction->getField('currency')) {
 
                     }
-                    exit;
+                    $fOrderGroupTotalAmount += floatval($oPayPalTransaction->getAmount()->total);
+                    echo $oPayPalTransaction->state." ".$oPayPalTransaction->getAmount()->total." ".$oTransaction->getTransactionAmount()."<br>";
                 } catch (Exception $ex) {
+                    func_backprocess_log(LOG_CATEGORY, "Get transaction error. Order ID:{$oOrderGroup->getOrderId()}. ".$ex->getMessage());
                 }
             }
+        }
+        if ($fOrderGroupTotalAmount != $oOrderGroup->getTotalGross()){
+
         }
     }
 }
