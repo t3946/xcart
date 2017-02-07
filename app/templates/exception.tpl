@@ -20,24 +20,25 @@
                     <div class="column large-12">
                         {block 'content'}
                             <h1>{$code}</h1>
+                            <pre>
+                                {$exception}
+                            </pre>
 
-                            {foreach $trace as $tr}
-                                <div class="block">
-                                    <div class="file">
-                                        {$tr.fileName}
-                                    </div>
-                                    {if $tr.trace.function}
-                                        <div class="function">function: {$tr.trace.function}</div>
+                            {*{foreach $trace as $tr}*}
+                                {*<div class="block">*}
+                                    {*<div class="file">*}
+                                        {*{$tr.fileName}*}
+                                    {*</div>*}
+                                    {*{if $tr.trace.function}*}
+                                        {*<div class="function">function: {$tr.trace.function}</div>*}
                                         {*<div class="args">{$tr.trace|print_r}</div>*}
-                                    {/if}
+                                    {*{/if}*}
 
-                                    <div class="line">line: {$tr.trace.line}</div>
+                                    {*<div class="line">line: {$tr.trace.line}</div>*}
 
-                                    <pre>{$tr.itemLines|print_r}</pre>
-
-                                    {*<pre>{$tr|print_r}</pre>*}
-                                </div>
-                            {/foreach}
+                                    {*<pre>{$tr.itemLines|print_r}</pre>*}
+                                {*</div>*}
+                            {*{/foreach}*}
 
                         {/block}
                     </div>

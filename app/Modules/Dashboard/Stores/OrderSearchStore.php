@@ -17,9 +17,11 @@ use Xcart\OrderGroups;
 
 class OrderSearchStore extends BaseStore
 {
-    const CONST_MANUAL_STRING = '=> ';
+    const CONST_MANUAL_STRING      = '=> ';
     const CONST_MANUAL_VIEW_STTINR = '-> ';
 
+    private $form_data = [];
+    private $where = [];
     /** @var QuerySet */
     private $qs;
     /** @var Pagination */
@@ -61,9 +63,26 @@ class OrderSearchStore extends BaseStore
         ];
     }
 
-    public function __construct($data) {
-
+    public function __construct($data)
+    {
+        $this->form_data = $data;
         $this->qs = $this->populate($data)->order(['-t.orderid']);
+    }
+
+    private function getQ($where, $type)
+    {
+        if (!empty($where))
+        {
+            $type = explode('.', $type);
+            if (count($type) == 2) {
+                $and = (empty($this->form_data['not'][$type[0]][$type[1]]));
+            }
+            else {
+                $and = (empty($this->form_data['not'][$type[0]]));
+            }
+
+            $this->where[] = ($and) ? new QAnd($where) : new QAndNot($where);
+        }
     }
 
     /**
@@ -73,9 +92,6 @@ class OrderSearchStore extends BaseStore
      */
     public function populate(array $data)
     {
-        $where = [];
-        $exclude = [];
-
         $qs = Order::objects()->getQuerySet();
 
         if (!empty($data['order']))
@@ -83,183 +99,244 @@ class OrderSearchStore extends BaseStore
             if (!empty($data['order']['date'])) {
                 $date = explode(' - ', $data['order']['date']);
 
+                $tmp = [];
                 if (isset($date[1])) {
-                    $date[0] = strtotime($date[0]);
-                    $date[1] = strtotime($date[1]);
+                    $tmp['date__gte'] = strtotime($date[0]);
+                    $tmp['date__lte'] = strtotime($date[1]) + 86400; //24 * 60 * 60;;
                 }
                 else {
-                    $date[0] = strtotime($date[0]);
-                    $date[1] = $date[0];
+                    $tmp['date__gte'] = strtotime($date[0]);
                 }
 
-                $where['date__gte'] = $date[0];
-                $where['date__lte'] = $date[1] + 86400; //24 * 60 * 60;
+                $this->getQ($tmp, 'order.date');
             }
 
             if (!empty($data['order']['total'])) {
+                $tmp = [];
+
                 if (!empty($data['order']['total']['from']) && !empty($data['order']['total']['to'])) {
-                    $where['total__gte'] = $data['order']['total']['from'];
-                    $where['total__lte'] = $data['order']['total']['to'];
+                    $tmp['total__gte'] = $data['order']['total']['from'];
+                    $tmp['total__lte'] = $data['order']['total']['to'];
                 }
                 else {
                     $total = !empty($data['order']['total']['from']) ? $data['order']['total']['from'] : $data['order']['total']['to'];
 
                     if (!empty($total)) {
-                        $where['total'] = $total;
+                        $tmp['total'] = $total;
                     }
                 }
+
+                $this->getQ($tmp, 'order.total');
+            }
+            elseif (!empty($data['not']['order']['date'])) {
+                $this->getQ(['total' => 0], 'order.total');
             }
 
             if (!empty($data['order']['id'])) {
+                $tmp = [];
+
                 if (!empty($data['order']['id']['from']) && !empty($data['order']['id']['to'])) {
-                    $where['orderid__gte'] = $data['order']['id']['from'];
-                    $where['orderid__lte'] = $data['order']['id']['to'];
+                    $tmp['orderid__gte'] = $data['order']['id']['from'];
+                    $tmp['orderid__lte'] = $data['order']['id']['to'];
 
                 }
                 else {
                     $orderid = !empty($data['order']['id']['from']) ? $data['order']['id']['from'] : $data['order']['id']['to'];
 
                     if (!empty($orderid)) {
-                        $where['orderid'] = $orderid;
+                        $tmp['orderid'] = $orderid;
                     }
                 }
+
+                $this->getQ($tmp, 'order.id');
             }
 
             if (!empty($data['order']['source'])) {
+                $tmp = [];
+
                 foreach ($data['order']['source'] as $source)
                 {
                     switch ($source)
                     {
                         case 'xcart_orders_only': {
-                            $where['amazonorderid'] = ''; break;
+                            $tmp['amazonorderid'] = ''; break;
                         }
                         case 'amazon_orders_only': {
-                            $where[] = new QAndNot(['amazonorderid' => '']); break;
+                            $tmp[] = new QAndNot(['amazonorderid' => '']); break;
                         }
                         case 'amazon_orders_MFN' : {
-                            $where['amazon_fulfillment_channel__in'][] = 'MFN'; break;
+                            $tmp['amazon_fulfillment_channel__in'][] = 'MFN'; break;
                         }
                         case 'amazon_orders_FBA' : {
-                            $where['amazon_fulfillment_channel__in'][] = 'AFN'; break;
+                            $tmp['amazon_fulfillment_channel__in'][] = 'AFN'; break;
                         }
                     }
                 }
+
+                $this->getQ($tmp, 'order.source');
             }
 
             if (!empty($data['order']['operator'])) {
                 $qs->join('inner join', 'xcart_order_logs', ['t.orderid' => 'logs.orderid'], 'logs');
-                $where[] = new QOr([
-                                       'login_last_opened_or_saved__in' => $data['order']['operator'],
-                                       'logs.login__in'                 => $data['order']['operator'],
-                                   ]);
+                $tmp = [new QOr([
+                                    'login_last_opened_or_saved__in' => $data['order']['operator'],
+                                    'logs.login__in'                 => $data['order']['operator'],
+                                ]),
+                ];
+
+                $this->getQ($tmp, 'order.operator');
             }
 
             if (!empty($data['order']['payment_method'])) {
-                $where['paymentid__in'] = $data['order']['payment_method'];
+                $tmp = ['paymentid__in' => $data['order']['payment_method']];
+                $this->getQ($tmp, 'order.payment_method');
             }
 
             if (!empty($data['order']['has_payment_processor'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
 
                 if (($data['order']['has_payment_processor'] == 'N')) {
-                    $where['group.acc_paymentid'] = '';
+                    $this->where['group.acc_paymentid'] = '';
                 }
                 else {
-                    $where[] = new QAndNot(['group.acc_paymentid' => '']);
+                    $this->where[] = new QAndNot(['group.acc_paymentid' => '']);
                 }
             }
 
             if (!empty($data['order']['payment_processor'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
-                $where['group.acc_paymentid__in'] = $data['order']['payment_processor'];
+                $tmp = ['group.acc_paymentid__in' => $data['order']['payment_processor']];
+
+                $this->getQ($tmp, 'order.payment_processor');
             }
 
             if (!empty($data['order']['delivery_method'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
-                $where['group.shippingid__in'] = $data['order']['delivery_method'];
+                $tmp =['group.shippingid__in' => $data['order']['delivery_method']];
+
+                $this->getQ($tmp, 'order.delivery_method');
             }
 
             if (!empty($data['order']['c2b_status'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
-                $where['group.cb_status__in'] = $data['order']['c2b_status'];
+                $tmp = ['group.cb_status__in' => $data['order']['c2b_status']];
+
+                $this->getQ($tmp, 'order.c2b_status');
             }
 
             if (!empty($data['order']['d2c_status'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
-                $where['group.dc_status__in'] = $data['order']['d2c_status'];
+                $tmp = ['group.dc_status__in' => $data['order']['d2c_status']];
+
+                $this->getQ($tmp, 'order.c2b_status');
             }
 
             if (!empty($data['order']['po_transit_status'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
-                $where['group.po_status__in'] = $data['order']['po_transit_status'];
+                $tmp = ['group.po_status__in' => $data['order']['po_transit_status']];
+
+                $this->getQ($tmp, 'order.po_transit_status');
             }
 
             if (!empty($data['order']['fraud_status'])) {
-                $where['fraud_status__in'] = $data['order']['fraud_status'];
+                $tmp = ['fraud_status__in' => $data['order']['fraud_status']];
+
+                $this->getQ($tmp, 'order.fraud_status');
             }
 
             if (!empty($data['order']['tag'])) {
                 $qs->join('inner join', 'xcart_orders_additional_tags', ['t.orderid' => 'tagl.orderid'], 'tagl');
-                $where['tagl.status_id__in'] = $data['order']['tag'];
+                $tmp = ['tagl.status_id__in' => $data['order']['tag']];
+
+                $this->getQ($tmp, 'order.tag');
             }
 
             if (!empty($data['order']['distributor'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
-                $where['group.manufacturerid__in'] = $data['order']['distributor'];
+                $tmp = ['group.manufacturerid__in' => $data['order']['distributor']];
+
+                $this->getQ($tmp, 'order.distributor');
             }
 
             if (!empty($data['order']['vn_status'])) {
-//                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
-                $where['t.vn_status__in'] = $data['order']['vn_status'];
+                $tmp = ['t.vn_status__in' => $data['order']['vn_status']];
+
+                $this->getQ($tmp, 'order.vn_status');
             }
 
             if (!empty($data['order']['po_status'])) {
                 $qs->join('inner join', 'xcart_po_pipeline', ['t.orderid' => 'po.order_id'], 'po');
-                $where['po.status__in'] = $data['order']['po_status'];
+                $tmp = ['po.status__in' => $data['order']['po_status']];
+
+                $this->getQ($tmp, 'order.po_status');
             }
 
-            if (!empty($data['order']['has_dx'])) {
-                $qs->join('left join', 'xcart_order_group_invoices', ['t.orderid' => 'invoice.orderid'], 'invoice');
-                $where['invoice.orderid__isnull'] = ($data['order']['has_dx'] == 'N');
+            if (!empty($data['order']['all_dx'])) {
+                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+
+                if ($data['order']['all_dx'] == 'Y') { // Присутствует во всех случаях
+                    $qs->join('inner join', 'xcart_order_group_invoices', ['t.orderid' => 'i_invoice.orderid', 'group.manufacturerid'=> 'i_invoice.manufacturerid'], 'i_invoice');
+                }
+                elseif($data['order']['all_dx'] == 'AN') { // Отсутствует во всех случаях
+                    $qs->join('left outer join', 'xcart_order_group_invoices', ['t.orderid' => 'lo_invoice.orderid', 'group.manufacturerid'=> 'lo_invoice.manufacturerid'], 'lo_invoice');
+                    $this->where['lo_invoice.orderid__isnull'] = true;
+                }
+                elseif($data['order']['all_dx'] == 'NA') { // Отсутствует в некоторых случаях
+                    $qs->join('left join', 'xcart_order_group_invoices', ['t.orderid' => 'l_invoice.orderid'], 'l_invoice');
+                    $this->where['l_invoice.orderid__isnull'] = false;
+                }
+                else { // Присутствует не во всех случаях
+                    $qs->join('left join', 'xcart_order_group_invoices', ['t.orderid' => 'l_invoice.orderid'], 'l_invoice');
+                    $this->where['l_invoice.orderid__isnull'] = true;
+                }
             }
             if (!empty($data['order']['has_memo'])) {
-                $qs->join('left join', 'xcart_order_group_memos', ['t.orderid' => 'memo.orderid'], 'memo');
-                $where['memo.orderid__isnull'] = ($data['order']['has_dx'] == 'N');
+                $qs->join('left join', 'xcart_order_group_memos', ['t.orderid' => 'l_memo.orderid'], 'l_memo');
+                $this->where['l_memo.orderid__isnull'] = ($data['order']['has_dx'] == 'N');
             }
             if (!empty($data['order']['has_icx'])) {
-                $qs->join('left join', 'xcart_order_cx_invoices', ['t.orderid' => 'icx.orderid'], 'icx');
-                $where['icx.orderid__isnull'] = ($data['order']['has_icx'] == 'N');
+                $qs->join('left join', 'xcart_order_cx_invoices', ['t.orderid' => 'l_icx.orderid'], 'l_icx');
+                $this->where['l_icx.orderid__isnull'] = ($data['order']['has_icx'] == 'N');
             }
 
         }
 
         if (!empty($data["features"])) {
+            $tmp = [];
             foreach ($data["features"] as $feature)
             {
                 switch ($feature) {
                     case 'gc_applied': {
-                        $where['giftcert_discount__gt'] = 0; break;
+                        $tmp['giftcert_discount__gt'] = 0; break;
                     }
                     case 'discount_applied': {
-                        $where['discount__gt'] = 0; break;
+                        $tmp['discount__gt'] = 0; break;
                     }
                     case 'coupon_applied' : {
-                        $exclude['coupon'] = ''; break;
+                        $tmp['coupon'] = ''; break;
                     }
                     case 'free_ship' : {
-                        $where['shipping_cost'] = 0; break;
+                        $tmp['shipping_cost'] = 0; break;
                     }
                     case 'free_tax' : {
-                        $where['tax'] = 0; break;
+                        $tmp['tax'] = 0; break;
                     }
                     case 'notes' : {
-                        $exclude['notes'] = ''; break;
+                        $tmp['notes'] = ''; break;
                     }
                     case 'gc_ordered' : {
-                        $qs->join('inner join', 'xcart_giftcerts', ['t.orderid' => 'sert.orderid'], 'sert'); break;
+                        if (empty($this->form_data['not']['features'])) {
+                            $qs->join('inner join', 'xcart_giftcerts', ['t.orderid' => 'sert.orderid'], 'sert');
+                        }
+                        else {
+                            $qs->join('left join', 'xcart_giftcerts', ['t.orderid' => 'l_sert.orderid'], 'l_sert');
+                            $tmp['l_sert.orderid__isnull'] = true;
+                        }
+                        break;
                     }
                 }
             }
+            $this->getQ($tmp, 'features');
         }
 
         if (!empty($data['product']))
@@ -267,28 +344,37 @@ class OrderSearchStore extends BaseStore
             if (!empty($data['product']['name'])) {
                 $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
 
-                $where[] = new QAnd(array_map(function ($word) {
+                $tmp = [new QAnd(array_map(function ($word) {
                     return new QOr([
                                        'details.product__contains'         => $word,
                                        'details.product_options__contains' => $word,
                                    ]);
-                }, explode(' ', $data['product']['name'])));
+                }, explode(' ', $data['product']['name'])))];
+
+                $this->getQ($tmp, 'product.name');
             }
 
             if (!empty($data['product']['sku'])) {
                 $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
-                $where['details.productcode__contains'] = $data['product']['sku'];
+                $tmp = ['details.productcode__contains' => $data['product']['sku']];
+
+                $this->getQ($tmp, 'product.sku');
             }
 
             if (!empty($data['product']['id'])) {
                 $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
-                $where['details.productid'] = $data['product']['id'];
+                $tmp = ['details.productid' => $data['product']['id']];
+
+                $this->getQ($tmp, 'product.id');
             }
 
             if (!empty($data['product']['question_status'])) {
                 $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
                 $qs->join('inner join', 'xcart_product_question', ['details.productid' => 'question.productid'], 'question');
-                $where['question.status__in'] = $data['product']['question_status'];
+
+                $tmp = ['question.status__in' => $data['product']['question_status']];
+
+                $this->getQ($tmp, 'product.question_status');
             }
         }
 
@@ -304,7 +390,8 @@ class OrderSearchStore extends BaseStore
                     $tmp['s_company__in'] = $data['customer']['company'];
                 }
                 $tmp['company__in'] = $data['customer']['company'];
-                $where[] = new QOr($tmp);
+
+                $this->getQ([new QOr($tmp)], 'customer.company');
             }
 
             if (!empty($data['customer']['city']))
@@ -316,7 +403,8 @@ class OrderSearchStore extends BaseStore
                 if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
                     $tmp['s_city__in'] = $data['customer']['city'];
                 }
-                $where[] = new QOr($tmp);
+
+                $this->getQ([new QOr($tmp)], 'customer.city');
             }
 
             if (!empty($data['customer']['state']))
@@ -329,7 +417,8 @@ class OrderSearchStore extends BaseStore
                 if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
                     $tmp['s_state__in'] = $state;
                 }
-                $where[] = new QOr($tmp);
+
+                $this->getQ([new QOr($tmp)], 'customer.state');
             }
 
             if (!empty($data['customer']['country']))
@@ -341,7 +430,8 @@ class OrderSearchStore extends BaseStore
                 if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
                     $tmp['s_country__in'] = $data['customer']['country'];
                 }
-                $where[] = new QOr($tmp);
+
+                $this->getQ([new QOr($tmp)], 'customer.country');
             }
 
             if (!empty($data['customer']['address']))
@@ -365,7 +455,8 @@ class OrderSearchStore extends BaseStore
                         $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 's_address'));
                     }
                 }
-                $where[] = new QOr($tmp);
+
+                $this->getQ([new QOr($tmp)], 'customer.address');
             }
 
             if (!empty($data['customer']['zip_code']))
@@ -392,7 +483,8 @@ class OrderSearchStore extends BaseStore
                             $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 's_zipcode'));
                         }
                     }
-                    $where[] = new QOr($tmp);
+
+                    $this->getQ([new QOr($tmp)], 'customer.zip_code');
                 }
                 else {
                     if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
@@ -401,7 +493,8 @@ class OrderSearchStore extends BaseStore
                     if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
                         $tmp['s_zipcode__raw'] = "RLIKE '" . SearchHelper::getNumberOnlyRegexp($data['customer']['zip_code']). "'";
                     }
-                    $where[] = new QOr($tmp);
+
+                    $this->getQ([new QOr($tmp)], 'customer.zip_code');
                 }
             }
 
@@ -417,7 +510,7 @@ class OrderSearchStore extends BaseStore
                     $tmp = array_merge($tmp, $this->arrLikeToLookup($like, 'email'));
                 }
 
-                $where[] = new QOr($tmp);
+                $this->getQ([new QOr($tmp)], 'customer.email');
             }
 
             if (!empty($data['customer']['phone']))
@@ -435,27 +528,28 @@ class OrderSearchStore extends BaseStore
                     }
                 }
 
-                $where[] = new QOr($tmp);
+                $this->getQ([new QOr($tmp)], 'customer.phone');
             }
 
             if (!empty($data['customer']['name'])) {
-                $where[] = new QOr(['firstname__contains'   => $data['customer']['name'],
-                                    'b_firstname__contains' => $data['customer']['name'],
-                                    's_firstname__contains' => $data['customer']['name'],
-                                   ]);
+                $tmp = [new QOr(['firstname__contains'   => $data['customer']['name'],
+                                 'b_firstname__contains' => $data['customer']['name'],
+                                 's_firstname__contains' => $data['customer']['name'],
+                                ]),
+                ];
+
+                $this->getQ($tmp, 'customer.phone');
             }
-
-
         }
 
 
-        $qs->filter($where)->exclude($exclude);
+        $qs->filter($this->where);
 
         if (count($qs->getJoins()) !== 0) {
             $qs->group([ $qs->getAlias() . '.orderid']);
         }
 
-//        func_dump($qs->getSql());
+        func_dump($qs->getSql());
 
         return $qs;
     }
@@ -562,13 +656,16 @@ class OrderSearchStore extends BaseStore
 
         $order_ids = array_map(function ($model) { return $model->orderid; }, $models);
         $groups    = OrderGroups::objects()->filter(['orderid__in' => $order_ids])->all();
-        $group_ids = array_map(function ($model) { return $model->manufacturerid; }, $groups);
 
-        $manufacturers = Manufacturer::objects()->filter(['manufacturerid__in' => $group_ids])->all();
-        foreach ($groups as $group) {
-            foreach ($manufacturers as $manufacturer) {
-                if ($group->manufacturerid == $manufacturer->manufacturerid) {
-                    $group->manufacturer = $manufacturer;
+        if ($groups) {
+            $group_ids = array_map(function ($model) { return $model->manufacturerid; }, $groups);
+
+            $manufacturers = Manufacturer::objects()->filter(['manufacturerid__in' => $group_ids])->all();
+            foreach ($groups as $group) {
+                foreach ($manufacturers as $manufacturer) {
+                    if ($group->manufacturerid == $manufacturer->manufacturerid) {
+                        $group->manufacturer = $manufacturer;
+                    }
                 }
             }
         }
