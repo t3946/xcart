@@ -62,8 +62,7 @@ if (!empty($aOrderGroups)) {
                 }
             }
         }
-
-        if ($fOrderGroupTotalAmount != $oOrderGroup->getOrderInstance()->getOrderTotalGross()){
+        if (round($fOrderGroupTotalAmount, 2) != $oOrderGroup->getOrderInstance()->getOrderTotalGross()){
             $oAttentionTag = new AttentionTag(['status_id' => 44]);
             $aInsertArray = ['orderid' => $oOrderGroup->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
             func_array2insert('orders_additional_tags', $aInsertArray, true);
