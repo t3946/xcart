@@ -37,12 +37,11 @@ func_backprocess_log(LOG_CATEGORY, $log_text);
 $aOrderGroups = OrderGroup::model()->findAll(
     SQLBuilder::getInstance()
         ->addCondition("cb_status ='P'")
-        ->addCondition("cb_update_datetime > DATE_SUB(NOW(), INTERVAL 2 MONTH)")
+        ->addCondition("cb_update_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)")
         ->addInnerJoin('order_transactions', 'ot', 'main.orderid = ot.orderid')
         ->addCondition("ot.paymentid IN (5, 17, 21, 100)")
         ->addGroupBy('orderid')
-        ->addOrderBy('cb_update_datetime DESC')
-        ->setLimit('2'));
+        ->addOrderBy('cb_update_datetime DESC'));
 
 if (!empty($aOrderGroups)) {
     $countOrders = count($aOrderGroups);
