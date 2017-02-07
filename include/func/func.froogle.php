@@ -1487,7 +1487,7 @@ return $code;
 
 }
 
-function SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray){
+function SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray, \Xcart\External_Marketplaces\StoreFrontMarketPlace $oMarketPlace){
         global $sql_tbl, $xcart_dir;
 
 	if (empty($ainventory) || !is_array($ainventory)){
@@ -1546,7 +1546,8 @@ EOD;
 			} else {
 
 				$avail = $oProduct->getAmazonQuantity();
-				if ($oProductAmazonFields->getPreventSellingOnAmazon() == 'MFN') {
+				if ($oProductAmazonFields->getPreventSellingOnAmazon() == 'MFN' ||
+					$oMarketPlace->checkProductExcludedMarketPlace($oProduct->getProductId())) {
 					$avail = 0;
 				}
 				$aleadtime = $oProduct->getManfacturerClass()->getAmazonLeadtimetoship();
