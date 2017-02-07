@@ -158,6 +158,22 @@ class OrderSearchStore extends BaseStore
                 $where['paymentid__in'] = $data['order']['payment_method'];
             }
 
+            if (!empty($data['order']['has_payment_processor'])) {
+                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+
+                if (($data['order']['has_payment_processor'] == 'N')) {
+                    $where['group.acc_paymentid'] = '';
+                }
+                else {
+                    $where[] = new QAndNot(['group.acc_paymentid' => '']);
+                }
+            }
+
+            if (!empty($data['order']['payment_processor'])) {
+                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $where['group.acc_paymentid__in'] = $data['order']['payment_processor'];
+            }
+
             if (!empty($data['order']['delivery_method'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
                 $where['group.shippingid__in'] = $data['order']['delivery_method'];
