@@ -5,6 +5,8 @@ use \Xcart\SQLBuilder;
 use \Xcart\OrderTransactions;
 use \Xcart\Config;
 use \Xcart\Paypal;
+use \Xcart\AttentionTag;
+use \Xcart\Logs;
 
 global $config, $sql_tbl;
 
@@ -38,10 +40,11 @@ $aOrderGroups = OrderGroup::model()->findAll(
         ->addCondition("cb_update_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)")
         ->addGroupBy('orderid')
         ->addOrderBy('cb_update_datetime DESC')
-        ->setLimit('10'));
+        ->setLimit('50'));
 
 if (!empty($aOrderGroups)) {
     foreach ($aOrderGroups as $oOrderGroup) {
+        if (!(in_array($oOrderGroup->getOrderInstance()->getPaymentMethodId(), [5, 17, 21, 100]))){ continue;}
         $fOrderGroupTotalAmount = 0;
         $aTransactions = OrderTransactions::getOrderTransactionsByOrderIdAndStatus($oOrderGroup->getOrderId(), ['completed']);
         if (!empty($aTransactions)) {
@@ -58,7 +61,11 @@ if (!empty($aOrderGroups)) {
         }
         echo "OrderId: ".$oOrderGroup->getOrderId(). ". " . $fOrderGroupTotalAmount . " - ". $oOrderGroup->getTotalGross()."<br>";
         if ($fOrderGroupTotalAmount != $oOrderGroup->getTotalGross()){
-
+            $oAttentionTag = new AttentionTag(['status_id' => 44]);
+            $aInsertArray = ['orderid' => $oOrderGroup->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
+            func_array2insert('orders_additional_tags', $aInsertArray, true);
+            $sLog = "Attention tag added: " . $oAttentionTag->getStatus() . "\n";
+            Logs::_log('orders', $oOrderGroup->getOrderId(), 'X', $sLog);
         }
     }
 }
