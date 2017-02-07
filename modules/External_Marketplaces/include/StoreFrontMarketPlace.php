@@ -128,7 +128,7 @@ abstract class StoreFrontMarketPlace extends Data
         return $aMP;
     }
 
-    protected function checkProductExcludedMarketPlace($iProductId)
+    public function checkProductExcludedMarketPlace($iProductId)
     {
         $bResult = true;
         $aFound = func_query_column("SELECT xp.marketplace_id
