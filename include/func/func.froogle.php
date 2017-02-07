@@ -1692,11 +1692,10 @@ EOD;
 
         @fclose($feedHandle);
 ######################### Price end #########################
-        if ($MessageID > 0) {
-                print("\nAMZ: tried to submit $MessageID items as inventory feed \n");
-
-		$log_text = "AMZ: tried to submit $MessageID items as inventory feed";
-		func_backprocess_log("incremental feeds", $log_text);		
+		if ($MessageID-- > 0) {
+			print("\nAMZ: tried to submit $MessageID items as inventory feed \n");
+			$log_text = "AMZ: tried to submit $MessageID items as inventory feed";
+			func_backprocess_log("incremental feeds", $log_text);
 		}
 
 }
