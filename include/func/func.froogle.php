@@ -380,11 +380,13 @@ if ($sExtraLog=='Y')
 						/** @var \Xcart\ShippingRate $oShippingRate */
 						$oShippingRate = reset($aShippingRates);
 						$shippings_str_arr[] = $v["country_code"] . ":" . $v["code"] . ":" . $oShippingRate->getShippingEntity()->getFrontendName() . ":" . price_format($oShippingRate->getShippingCharge()) . $shipping_currency;
-						$shippings_google_arr[$k]["price"]["value"] = price_format($oShippingRate->getShippingCharge());
-						$shippings_google_arr[$k]["price"]["currency"] = trim($shipping_currency);
-						$shippings_google_arr[$k]["country"] = $v["country_code"];
-						$shippings_google_arr[$k]["region"] = $v["code"];
-						$shippings_google_arr[$k]["service"] = $oShippingRate->getShippingEntity()->getFrontendName();
+						$sga = [];
+						$sga["price"]["value"] = price_format($oShippingRate->getShippingCharge());
+						$sga["price"]["currency"] = trim($shipping_currency);
+						$sga["country"] = $v["country_code"];
+						$sga["region"] = $v["code"];
+						$sga["service"] = $oShippingRate->getShippingEntity()->getFrontendName();
+						$shippings_google_arr[] = $sga;
 						$aShippingCarrier[] = $oShippingRate->getShippingEntity()->getShippingCarrier()->getName();
 						break;
 					}
@@ -1485,7 +1487,7 @@ return $code;
 
 }
 
-function SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray){
+function SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray, \Xcart\External_Marketplaces\StoreFrontMarketPlace $oMarketPlace){
         global $sql_tbl, $xcart_dir;
 
 	if (empty($ainventory) || !is_array($ainventory)){
@@ -1544,7 +1546,8 @@ EOD;
 			} else {
 
 				$avail = $oProduct->getAmazonQuantity();
-				if ($oProductAmazonFields->getPreventSellingOnAmazon() == 'MFN') {
+				if ($oProductAmazonFields->getPreventSellingOnAmazon() == 'MFN' ||
+					$oMarketPlace->checkProductExcludedMarketPlace($oProduct->getProductId())) {
 					$avail = 0;
 				}
 				$aleadtime = $oProduct->getManfacturerClass()->getAmazonLeadtimetoship();
