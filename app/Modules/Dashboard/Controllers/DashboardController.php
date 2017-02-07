@@ -38,7 +38,6 @@ class DashboardController extends AdminController
         }
 
         $form_data = $session->get('search_order_form', [
-            'new_list' => $session->get('search_new_template', 1),
             'order'    => [
                 'date' => DashboardModule::getDefaultSearchDate(),
             ],
@@ -47,6 +46,8 @@ class DashboardController extends AdminController
         if (!is_array($form_data)) {
             $form_data = [];
         }
+
+        $form_data['new_list'] = $session->get('search_new_template', 1);
 
         $orderStore = new OrderSearchStore($form_data);
         $models     = $orderStore->getModels();
