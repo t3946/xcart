@@ -1547,7 +1547,7 @@ EOD;
 
 				$avail = $oProduct->getAmazonQuantity();
 				if ($oProductAmazonFields->getPreventSellingOnAmazon() == 'MFN' ||
-					$oMarketPlace->checkProductExcludedMarketPlace($oProduct->getProductId())) {
+					!($oMarketPlace->checkProductExcludedMarketPlace($oProduct->getProductId()))) {
 					$avail = 0;
 				}
 				$aleadtime = $oProduct->getManfacturerClass()->getAmazonLeadtimetoship();
