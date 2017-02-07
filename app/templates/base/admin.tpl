@@ -3,6 +3,10 @@
 <script src="/static/vendors/jquery.cookie-1.4.1.min.js"></script>
 <script type="text/javascript" src="/static/backend/js/main.js?v=1" async></script>
 
+{block 'js-head'}
+
+{/block}
+
 <div id="wrapper" class="admin">
     {block 'content-header'}
         <div class="content-header">
