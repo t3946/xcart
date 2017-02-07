@@ -20,9 +20,6 @@
 
 <!-- Google verification META tags -->
 
-<meta name="AB_relations" content="{$variant_id_for_point10}" />
-<meta name="AB_search" content="{$variant_id_for_point11}" />
-
 <!-- bench time -->
 <meta name="{$bench_name}" content="{$bench_time}" />
 

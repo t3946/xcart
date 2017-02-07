@@ -53,7 +53,7 @@ include_once($xcart_dir."/include/templater/templater.php");
 #
 # Smarty object for processing html templates
 #
-$smarty = new Templater;
+$smarty = Templater::getInstance();
 
 #
 # Store all compiled templates to the single directory

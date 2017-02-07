@@ -3,17 +3,41 @@
 namespace Xcart;
 
 use \Doctrine\DBAL\DriverManager;
+use Xcart\App\Helpers\SmartProperties;
 
+/**
+ * Class Connection
+ *
+ * @package Xcart
+ */
 class Connection
 {
-    private static $_instance = null;
+    use SmartProperties;
 
-    private function __construct()
+    private static $_instance = null;
+    private $config = [];
+
+    public function __call($name, $arguments)
     {
+        if (method_exists(self::$_instance, $name))
+        {
+            call_user_func_array([self::$_instance, $name], $arguments);
+        }
     }
 
-    protected function __clone()
+    public function init()
     {
+        self::getInstance($this->config);
+    }
+
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
+    }
+
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     /**

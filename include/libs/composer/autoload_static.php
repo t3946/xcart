@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
+class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
 {
     public static $files = array (
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
@@ -76,6 +76,7 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Modules\\' => 8,
             'Mindy\\QueryBuilder\\' => 19,
         ),
         'J' => 
@@ -141,6 +142,10 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'Modules\\' => 
+        array (
+            0 => __DIR__ . '/../../..' . '/app/Modules',
+        ),
         'Mindy\\QueryBuilder\\' => 
         array (
             0 => __DIR__ . '/..' . '/mindy/query_builder/src',
@@ -196,6 +201,13 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
             'Google_' => 
             array (
                 0 => __DIR__ . '/..' . '/google/apiclient/src',
+            ),
+        ),
+        'F' => 
+        array (
+            'Fenom\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/fenom/fenom/src',
             ),
         ),
         'D' => 
@@ -321,6 +333,7 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
         'FBAOutboundServiceMWS_Model_UpdateFulfillmentOrderRequest' => __DIR__ . '/../../..' . '/src/FBAOutboundServiceMWS/Model/UpdateFulfillmentOrderRequest.php',
         'FBAOutboundServiceMWS_Model_UpdateFulfillmentOrderResponse' => __DIR__ . '/../../..' . '/src/FBAOutboundServiceMWS/Model/UpdateFulfillmentOrderResponse.php',
         'FBAOutboundServiceMWS_Model_Weight' => __DIR__ . '/../../..' . '/src/FBAOutboundServiceMWS/Model/Weight.php',
+        'Fenom' => __DIR__ . '/..' . '/fenom/fenom/src/Fenom.php',
         'Google\\Auth\\ApplicationDefaultCredentials' => __DIR__ . '/..' . '/google/auth/src/ApplicationDefaultCredentials.php',
         'Google\\Auth\\CacheTrait' => __DIR__ . '/..' . '/google/auth/src/CacheTrait.php',
         'Google\\Auth\\Cache\\InvalidArgumentException' => __DIR__ . '/..' . '/google/auth/src/Cache/InvalidArgumentException.php',
@@ -536,10 +549,10 @@ class ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit861ac975f6d25dbefdaa211ac60e8f2f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92::$classMap;
 
         }, null, ClassLoader::class);
     }
