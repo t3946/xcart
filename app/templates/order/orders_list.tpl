@@ -173,8 +173,8 @@
                         <br/>
                         <B>C: Reconciled</B>
                     {else}
-                        {if $group->getOrderGroupInvoices() }
-                            {foreach $group->getOrderGroupInvoices() as $invoice}
+                        {if $group->getOrderGroupInvoices()->countOrderGroupInvoices() > 0 }
+                            {foreach $group->getOrderGroupInvoices()->getAsArray() as $invoice}
                                 <B>I-{$invoice->invoice_number}: {$invoice->getStatusName()}</B>
                                 <br/>
                             {/foreach}
@@ -183,8 +183,8 @@
                             <br>
                         {/if}
 
-                        {if $group->getOrderGroupMemos() }
-                            {foreach $group->getOrderGroupMemos() as $memo}
+                        {if $group->getOrderGroupMemos()->countOrderGroupMemos() > 0}
+                            {foreach $group->getOrderGroupMemos()->getAsArray() as $memo}
                                 <B>C-{$memo->memo_number}: {$memo->getStatusName()}</B>
                                 <br/>
                             {/foreach}

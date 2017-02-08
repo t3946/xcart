@@ -30,6 +30,11 @@ class OrderGroupMemos extends Data
         return self::getMemosStatusList()[$this->getField('status')];
     }
 
+    public function getAsArray()
+    {
+        return $this->aGroupMemos;
+    }
+
     public function countOrderGroupMemos() {
         $count = 0;
         if (!empty($this->aGroupMemos))
