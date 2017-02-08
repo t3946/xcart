@@ -47,25 +47,24 @@
 
 {block 'js-head'}
     <link href="/static/vendors/air-datepicker/dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
-    <script src="/static/vendors/air-datepicker/dist/js/datepicker.min.js"></script>
-    <script src="/static/vendors/air-datepicker/dist/js/i18n/datepicker.en.js"></script>
+    <script src="/static/vendors/air-datepicker/dist/js/datepicker.min.js" type="text/javascript"></script>
+    <script src="/static/vendors/air-datepicker/dist/js/i18n/datepicker.en.js" type="text/javascript"></script>
 
 
     <link href="/static/vendors/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
-    <script src="/static/vendors/select2/dist/js/select2.full.min.js"></script>
+    <script src="/static/vendors/select2/dist/js/select2.full.min.js" type="text/javascript"></script>
 {/block}
 
 {block 'js'}
-    <script type="text/javascript" defer="defer">
+    <script type="text/javascript">
         (function(){
-                $(document).ready(function(){
-                    $('.admin select[data-ajax-from]').on("select2:select",  function(e) {
-                        // append the new item to the default select
-                        {ignore}
-                        $(this).append($('option[selected]', {value: e.params.data.id, text: e.params.data.text}));
-                        {/ignore}
-                    });
+            $('.admin select[data-ajax-from]').on("select2:select",  function(e) {
+                {ignore}
+                $(this).append($('option[selected]', {value: e.params.data.id, text: e.params.data.text}));
+                {/ignore}
+            });
 
+                setTimeout(function(){
                     $('.admin select[data-ajax-from]').select2({
                         allowClear: true,
                         placeholder: 'Start typing for hint',
@@ -182,7 +181,7 @@
                         }
 
                     });
-                })
+                }, 500);
         })()
     </script>
 {/block}

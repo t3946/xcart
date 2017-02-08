@@ -1,4 +1,4 @@
-<table class="OrderSheet" cellspacing="1" cellpadding="3" style="">
+<table class="OrderSheet" cellspacing="1" cellpadding="3">
     <tr class="TableHead TableHeadAccounting TableHeadLight">
         <td width="5">#</td>
         <td>Fraud Check</td>
@@ -76,7 +76,6 @@
                 {$order->date|interval_string}
             </td>
             <td colspan="7" class="text-left">
-                {*{raw $message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2br}*}
                 {raw $order->last_message.log|br2nl|strip_tags|truncate:160:'[...]'|nl2space}
             </td>
         </tr>
@@ -131,13 +130,12 @@
                     {if $method.paymentid ==$order->paymentid}
                         <span title="{$method.payment_details}">
                                 {$method.payment_method}
-                            </span>
+                        </span>
                     {/if}
                 {/foreach}
             </td>
-
             <td>
-                <b> {$order->getOrderTotalGross()} </b>
+                <b> {$order->getOrderTotalGross()|abs|formatprice:",":"."} </b>
             </td>
             <td></td>
             <td></td>
