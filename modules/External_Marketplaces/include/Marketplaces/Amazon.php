@@ -7,7 +7,8 @@ class Amazon extends StoreFrontMarketPlace
 {
     public function addProductToBatch(Product $oProduct, $update_type, $googleOneRow = "", $sExtraLog = "N")
     {
-        if ($this->checkProductExcludedMarketPlace($oProduct->getProductId()) && $this->checkMarketplaceRestrictions($oProduct)) {
+        //$this->checkProductExcludedMarketPlace($oProduct->getProductId())
+        if ($this->checkMarketplaceRestrictions($oProduct)) {
             if ($update_type == "2" || $update_type == "1,2" || $update_type == "1") {
                 $count_ainventory = count($this->aInventory);
                 $this->aInventory[$count_ainventory]["productid"] = $oProduct->getField('productid');
@@ -25,7 +26,7 @@ class Amazon extends StoreFrontMarketPlace
             'MaxErrorRetry' => 3,
         ];
         $marketplaceIdArray = ["Id" => [$this->getP2()], "MerchantIdentifier"=>$this->getP1()]; //'ATVPDKIKX0DER'
-        SubmitAmazonInventoryBatch($this->getInventory(), $a_config, $marketplaceIdArray);
+        SubmitAmazonInventoryBatch($this->getInventory(), $a_config, $marketplaceIdArray, $this);
 
         $this->setInventoryBatchCount(0)->setInventory([]);
     }

@@ -613,7 +613,7 @@ class Order extends Data
                 $fResult += $oOrderGroup->getTotalGross();
             }
         }
-        return $fResult + $this->getOrderAdditionalFee();
+        return round($fResult + $this->getOrderAdditionalFee(), 2);
     }
 
     public function getOrderCostToUs()
@@ -1036,4 +1036,5 @@ SQL;
         }
         return $i;
     }
+
 }

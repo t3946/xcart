@@ -139,6 +139,7 @@ class UPS extends ShippingProcessor
                     }
                 }
                 if ($this->bGetOnlyApproximationRates && !empty($this->aShippingRates)) {
+                    $this->saveShippingQuotesCached();
                     return $this->aShippingRates;
                 }
                 $aResponses = $this->getServerQuotes($aShippingRates);
@@ -156,16 +157,16 @@ class UPS extends ShippingProcessor
                                         } else {
                                             $weight_multiplier = 1;
                                         }
-                                        $oShippingRate->setShippingChargeQuote(round($Rate->TotalCharges->MonetaryValue * $weight_multiplier, 2));
-                                        $oShippingRate->setAdditionalShippingCharge($this->getAdditionalShippingFee($weight));
+                                        $oShippingRate->setShippingChargeQuote(round($Rate->TotalCharges->MonetaryValue * $weight_multiplier + $this->getAdditionalShippingFee($weight), 2));
+                                        //$oShippingRate->setAdditionalShippingCharge($this->getAdditionalShippingFee($weight));
                                         $this->aShippingRates[$oShippingRate->getShippingId()] = $oShippingRate;
                                     }
                                 }
                             }
                         }
                     }
-                    $this->saveShippingQuotesCached();
                 }
+                $this->saveShippingQuotesCached();
             }
         }
 
