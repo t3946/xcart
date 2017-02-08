@@ -284,7 +284,8 @@ abstract class ShippingProcessor
                         'shipping_cache_id' => $iShippingCacheId,
                         'rate_id' => $oShippingRate->getField('rateid'),
                         'shipping_quote' => $aCacheQutes['shipping_quote'],
-                        'shipping_charge' => $aCacheQutes['shipping_charge']
+                        'shipping_charge' => $aCacheQutes['shipping_charge'],
+                        'shipping_charge_before_map' => $aCacheQutes['shipping_charge_before_map']
                     ])->_insert();
                 }
 
