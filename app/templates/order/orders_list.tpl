@@ -121,7 +121,7 @@
                 {$order->s_country}
             </td>
             <td style="background-color: {$order->max_eta|max_eta_colors}; color: #000000;" colspan="2">
-                {if $order->max_eta|max_eta_colors == "do_not_show"}
+                {if $order->max_eta|max_eta_colors != "do_not_show"}
                     {$order->max_eta|date_format:'%d-%b-%Y'}
                 {/if}
             </td>
