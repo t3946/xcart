@@ -112,8 +112,7 @@ if ($is_robot != "Y"){
 #
 
 register_shutdown_function("x_session_save");
-setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_https_host, 0);
-setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_http_host, 0);
+
 
 $smarty->assign("XCARTSESSNAME", $XCART_SESSION_NAME);
 $smarty->assign("XCARTSESSID", $XCARTSESSID);
@@ -129,7 +128,7 @@ $smarty->assign("XCARTSESSID", $XCARTSESSID);
 #
 function x_session_start($sessid = '') {
 	global $XCART_SESSION_VARS, $XCART_SESSION_NAME, $XCARTSESSID, $XCART_SESSION_EXPIRY;
-	global $sql_tbl, $config, $use_sessions_type;
+	global $sql_tbl, $config, $use_sessions_type, $xcart_https_host, $xcart_http_host, $use_session_length;
 	global $_SERVER;
 
 	# $sessid should contain only '0'..'9' or 'a'..'z' or 'A'..'Z'
@@ -238,7 +237,8 @@ function x_session_start($sessid = '') {
 	}
 
 	$XCARTSESSID = $sessid;
-	setcookie($XCART_SESSION_NAME, $XCARTSESSID, $expiry_time , "/", "", 0);
+	setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_https_host, 0);
+	setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_http_host, 0);
 }
 
 #
