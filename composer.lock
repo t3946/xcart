@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "066a0607e2dcfc643716447638faeb68",
-    "content-hash": "26543c74819f34afe32c9f74f85be272",
+    "hash": "1d621291f0d17ee01176c4321c3be5ea",
+    "content-hash": "822e5f20267f354f5cae95070a73c5c6",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -286,16 +286,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "v2.5.8",
+            "version": "v2.5.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "6314d55f60f85f0295c90688397b75c13faf9f0e"
+                "reference": "1b1effbddbdc0f40d1c8f849f44bcddac4f52a48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/6314d55f60f85f0295c90688397b75c13faf9f0e",
-                "reference": "6314d55f60f85f0295c90688397b75c13faf9f0e",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/1b1effbddbdc0f40d1c8f849f44bcddac4f52a48",
+                "reference": "1b1effbddbdc0f40d1c8f849f44bcddac4f52a48",
                 "shasum": ""
             },
             "require": {
@@ -353,7 +353,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2017-01-17 17:48:38"
+            "time": "2017-02-04 21:20:13"
         },
         {
             "name": "doctrine/inflector",
@@ -475,6 +475,56 @@
                 "parser"
             ],
             "time": "2014-09-09 13:34:57"
+        },
+        {
+            "name": "fenom/fenom",
+            "version": "2.11.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fenom-template/fenom.git",
+                "reference": "e97ef95ef52263e41a54a66366285ba10c8bdad5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fenom-template/fenom/zipball/e97ef95ef52263e41a54a66366285ba10c8bdad5",
+                "reference": "e97ef95ef52263e41a54a66366285ba10c8bdad5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*",
+                "satooshi/php-coveralls": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Fenom\\": "src/"
+                },
+                "classmap": [
+                    "src/Fenom.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Shalganov",
+                    "email": "a.cobest@gmail.com"
+                }
+            ],
+            "description": "Fenom - excellent template engine for PHP",
+            "keywords": [
+                "fenom",
+                "template",
+                "templater",
+                "templating"
+            ],
+            "time": "2016-11-18 19:30:44"
         },
         {
             "name": "firebase/php-jwt",
@@ -937,16 +987,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.30",
+            "version": "v1.2.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "a7909ee330669d5fc13ab4f6c6b43cc2e5f22542"
+                "reference": "5ff059a3f2e0badfddce2ef64c18d6bf2bfba867"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/a7909ee330669d5fc13ab4f6c6b43cc2e5f22542",
-                "reference": "a7909ee330669d5fc13ab4f6c6b43cc2e5f22542",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/5ff059a3f2e0badfddce2ef64c18d6bf2bfba867",
+                "reference": "5ff059a3f2e0badfddce2ef64c18d6bf2bfba867",
                 "shasum": ""
             },
             "require": {
@@ -981,20 +1031,20 @@
                 "crawlerdetect",
                 "php crawler detect"
             ],
-            "time": "2017-01-17 21:57:49"
+            "time": "2017-02-03 09:30:35"
         },
         {
             "name": "mindy/query_builder",
-            "version": "2.1",
+            "version": "dev-master_5.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/MindyPHP/QueryBuilder.git",
-                "reference": "331932e3341b7082e83010ce8b62a32e47e30943"
+                "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
+                "reference": "db89caffbfb85ccbe1c3eece5a84e4e5c5f3a0c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MindyPHP/QueryBuilder/zipball/331932e3341b7082e83010ce8b62a32e47e30943",
-                "reference": "331932e3341b7082e83010ce8b62a32e47e30943",
+                "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/db89caffbfb85ccbe1c3eece5a84e4e5c5f3a0c5",
+                "reference": "db89caffbfb85ccbe1c3eece5a84e4e5c5f3a0c5",
                 "shasum": ""
             },
             "require": {
@@ -1013,7 +1063,11 @@
                     "Mindy\\QueryBuilder\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Mindy\\Tests\\": "test/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -1023,7 +1077,10 @@
                     "email": "max@studio107.ru"
                 }
             ],
-            "time": "2016-10-27 11:18:40"
+            "support": {
+                "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
+            },
+            "time": "2017-02-06 14:00:50"
         },
         {
             "name": "monolog/monolog",
@@ -1434,7 +1491,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mindy/query_builder": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

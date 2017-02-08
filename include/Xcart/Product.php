@@ -727,25 +727,28 @@ SQL;
 
     public static function updateShowInLists(array $ids)
     {
-        if (!empty($ids) && !defined('IS_ROBOT')) {
-            $table = 'xcart_products_showed';
+        if (!empty($ids) && !defined('IS_ROBOT'))
+        {
+            $ids        = array_unique($ids);
+            $table      = 'xcart_products_showed';
             $connection = Connection::getInstance();
 
             $sql = QueryBuilder::getInstance($connection)
-                ->setTypeUpdate()
-                ->setOptions('LOW_PRIORITY')
-                ->where(['productid__in' => $ids])
-                ->update($table, ['in_list_showed' => new Expression('in_list_showed + 1')])
-                ->toSQL();
+                               ->setTypeUpdate()
+                               ->setOptions('LOW_PRIORITY')
+                               ->where(['productid__in' => $ids])
+                               ->update($table, ['in_list_showed' => new Expression('in_list_showed + 1')])
+                               ->toSQL();
 
-            if ($connection->exec($sql) != count($ids)) {
+            if ($connection->exec($sql) != count($ids))
+            {
                 $e_ids = [];
-                $sql = QueryBuilder::getInstance($connection)
-                    ->setTypeSelect()
-                    ->from($table)
-                    ->select(['productid'])
-                    ->where(['productid__in' => $ids])
-                    ->toSQL();
+                $sql   = QueryBuilder::getInstance($connection)
+                                     ->setTypeSelect()
+                                     ->from($table)
+                                     ->select(['productid'])
+                                     ->where(['productid__in' => $ids])
+                                     ->toSQL();
 
                 foreach ($connection->fetchAll($sql) as $item) {
                     $e_ids[] = $item['productid'];
@@ -753,11 +756,10 @@ SQL;
 
                 $ids = array_diff($ids, $e_ids);
 
-                if (!empty($ids)) {
+                if (!empty($ids))
+                {
                     $ids = array_unique($ids);
-                    $ids = array_map(function ($id) {
-                        return ['productid' => $id];
-                    }, $ids);
+                    $ids = array_map(function ($id) { return ['productid' => $id]; }, $ids);
                     $ids = array_values($ids);
 
                     $sql = QueryBuilder::getInstance($connection)->setOptions('ignore')->insert($table, $ids);
@@ -784,16 +786,16 @@ SQL;
 
         $connection = Connection::getInstance();
         $sql = QueryBuilder::getInstance($connection)
-            ->setTypeSelect()
-            ->select(['needed_resource_id' => 'p.productid'])
-            ->from('xcart_products')
-            ->setAlias('p')
-            ->join('inner join', 'xcart_products_sf', ['ps.productid' => 'p.productid'], 'ps')
-            ->join('left join', 'xcart_products_showed', ['p.productid' => 's.productid'], 's')
-            ->order(['s.in_list_showed', '?'])
-            ->where($where)
-            ->limit($limit)
-            ->toSQL();
+                           ->setTypeSelect()
+                           ->select(['needed_resource_id' => 'p.productid'])
+                           ->from('xcart_products')
+                           ->setAlias('p')
+                           ->join('inner join', 'xcart_products_sf', ['ps.productid' => 'p.productid'], 'ps')
+                           ->join('left join',  'xcart_products_showed', ['p.productid' => 's.productid'], 's')
+                           ->order(['s.in_list_showed', '?'])
+                           ->where($where)
+                           ->limit($limit)
+                           ->toSQL();
 
         return $connection->fetchAll($sql);
     }

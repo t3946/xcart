@@ -106,7 +106,9 @@
 	  {if $v.categoryid eq $subcat.categoryid && $v.count_products gt 0} 
 		{if $v.supplemental_category ne "Y"}
 	<tr>
-	<td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;"><a class="VertMenuItems CategoriesList" href="/home.php?cat={ $subcat.categoryid }">{ $subcat.category|escape }</a> ({$v.count_products})</td>
+	<td style="background-color: #FEF6F3; padding-left: 10px; padding-right: 10px;">
+        <a class="VertMenuItems CategoriesList" href="/home.php?cat={ $subcat.categoryid }"><h2 style="margin: 0; font-weight: inherit; display: inherit;">{ $subcat.category|escape }</h2></a> ({$v.count_products})
+    </td>
 	</tr>
 		{else}
 			{assign var="supplemental_category_found" value="Y"}

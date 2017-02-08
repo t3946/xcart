@@ -1,8 +1,14 @@
 <?php
 namespace Xcart;
 
-class Data
+use Xcart\App\Helpers\ClassNames;
+use Xcart\App\Helpers\SmartProperties;
+use Xcart\App\Orm\Orm;
+
+class Data extends Orm
 {
+    use ClassNames, SmartProperties;
+
     protected static $sql_tbl = [];
     protected $aPrimaryKeys = [];
     protected $aPrimaryKeysValues = [];
@@ -25,6 +31,57 @@ class Data
             $this->aPrimaryKeysValues = array_intersect_key($aParams, array_flip($this->aPrimaryKeys));
             $this->fillPrimaryTableInfo();
         }
+    }
+
+        public function getTableName()
+    {
+        //@TODO: Переделать. Нужно что-бы возвращалось или имя или шаблон для подстановки префикса пример xcart_orders или {orders}
+        return self::$sql_tbl[$this->sPrimaryTable];
+    }
+
+    public function __smartGet($name)
+    {
+        $method = 'get' . ucfirst($name);
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        }  elseif (property_exists($this, $name)) {
+            return $this->{$name};
+        }
+        else {
+            return $this->getField($name);
+        }
+    }
+
+    public function __smartSet($name, $value)
+    {
+        $method = 'set' . ucfirst($name);
+        if (method_exists($this, $method)) {
+            return $this->$method($value);
+        } elseif (property_exists($this, $name)) {
+            $this->{$name} = $value;
+            return true;
+        }
+        else {
+            return $this->setField($name, $value);
+        }
+    }
+
+    public function __smartIsset($name)
+    {
+        $getter = 'get' . $name;
+        if (method_exists($this, $getter)) {
+            return $this->$getter() !== null;
+        }
+        else {
+            return isset($this->aPrimaryTableValue[$name]);
+        }
+
+    }
+
+
+    public function getPrimaryKey()
+    {
+        return $this->aPrimaryKeys;
     }
 
     /**

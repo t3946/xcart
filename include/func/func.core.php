@@ -729,7 +729,7 @@ function func_display($tpl, &$templater, $to_display = true)
                 $result = func_webmaster_convert_labels($predefined_vars);
             }
 
-            $templater->_tpl_vars['lng'] = func_array_merge($templater->_tpl_vars['lng'], $predefined_vars);
+            $templater->_tpl_vars['lng'] = func_array_merge(isset($templater->_tpl_vars['lng']) ? $templater->_tpl_vars['lng'] : [], $predefined_vars);
 
             if (!isset($__X_LNG[$shop_language])) {
                 $__X_LNG[$shop_language] = $predefined_vars;
@@ -2422,9 +2422,13 @@ function func_log_order_refunded_groups($query_data, $orderid, $manufacturerid, 
  * @link http://www.google.com/support/webmasters/bin/answer.py?answer=71936
  */
 
-function func_XML_Sitemap_items_arr($sf_condition)
+function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
 {
     global $config, $xcart_catalogs, $sql_tbl;
+
+    if (empty($sf_condition) && !empty($sfid)) {
+        $sf_condition = "storefrontid={$sfid}";
+    }
 
     $config_XML_Sitemap_items = [
         0 => [
@@ -2455,10 +2459,10 @@ function func_XML_Sitemap_items_arr($sf_condition)
         3 => [
             'type'          => 'S',
             'lastmod'       => '',
-            'changefreq'    => 'never',
+            'changefreq'    => 'weekly',
             'priority'      => '0.2',
             'url_pattern'   => 'pages.php?pageid=',
-            'items_query'   => "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[pages].pageid) as url, $sql_tbl[pages].pageid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[pages].pageid AND $sql_tbl[xmlmap_lastmod].type = 'S' WHERE $sql_tbl[pages].active='Y' AND $sql_tbl[pages].level='E'",
+            'items_query'   => "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[pages].pageid) as url, $sql_tbl[pages].pageid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[pages].pageid AND $sql_tbl[xmlmap_lastmod].type = 'S' WHERE $sql_tbl[pages].active='Y' AND $sql_tbl[pages].level='E' AND (sfids = '' or sfids like '%{$sfid}%')",
             'multilanguage' => false,
         ],
         4 => [

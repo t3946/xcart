@@ -14,6 +14,9 @@ www.*_*.xml
 thumbs.db
 Thumbs.db
 *.cur
+!/static/**/*.gif
+!/static/**/*.png
+!/static/**/*.jpg
 ###################################
 ## scripts to exclude
 /robots.txt.php

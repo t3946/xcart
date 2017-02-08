@@ -1005,13 +1005,8 @@ SQL;
                     try {
                         Connection::getInstance()->insert('xcart_products_amz_fields', $aArrInsert);
                     }
-                    catch (\PDOException $e){
-                        if( $e->getCode() == 23000 )
-                        {
+                    catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
                             Connection::getInstance()->update('xcart_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]);
-                        } else {
-                            throw $e;
-                        }
                     }
                 }
             }

@@ -363,7 +363,6 @@ if (isset($_GET['pageid'])) {
     if ($page_data['sfids'] === '0' || !empty($page_data['sfids'])) {
         $page_data['sfids'] = explode(',', $page_data['sfids']);
     }
-    func_dump($page_data);
 
 
     if (!empty($page_data) && $page_data['language'] != $shop_language) {
