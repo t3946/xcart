@@ -97,7 +97,7 @@ class ShippingRate extends Data
             $this->fShippingCharge += $oCart->getProductCount() * $this->getItemRate();
             $this->fShippingCharge += $oCart->getCost() * $this->getRateP()/100;
             $this->fShippingCharge += $this->getCartShippingWeight() * $this->getWeightRate();
-            $this->fShippingCharge += $this->fAdditionalShippingCharge;
+            //$this->fShippingCharge += $this->fAdditionalShippingCharge;
             $this->fShippingCharge += $this->getCartShippingFreight();
             if ($oCart->getExtraMarginValue() > 0) {
                 $this->fShippingChargeBeforeMAP = $this->fShippingCharge;
