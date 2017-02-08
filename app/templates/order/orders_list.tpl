@@ -82,7 +82,7 @@
 
         <tr class="{$cycle_class}">
             <td>
-                {raw $order->date|date_format:'%m-%b-%Y %H:%M:%S'}
+                {raw $order->date|date_format:'%d-%b-%Y %H:%M:%S'}
             </td>
             <td>
                 {if $order->otrs_ticket}
@@ -122,7 +122,7 @@
             </td>
             <td style="background-color: {$order->max_eta|max_eta_colors}; color: #000000;" colspan="2">
                 {if $order->max_eta|max_eta_colors == "do_not_show"}
-                    {$order->max_eta|date_format:'%m/%d/%Y'}
+                    {$order->max_eta|date_format:'%d-%b-%Y'}
                 {/if}
             </td>
             <td colspan="2">
