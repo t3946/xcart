@@ -284,8 +284,7 @@ abstract class ShippingProcessor
                         'shipping_cache_id' => $iShippingCacheId,
                         'rate_id' => $oShippingRate->getField('rateid'),
                         'shipping_quote' => $aCacheQutes['shipping_quote'],
-                        'shipping_charge' => $aCacheQutes['shipping_charge'],
-                        'shipping_charge_before_map' => $aCacheQutes['shipping_charge_before_map']
+                        'shipping_charge' => $aCacheQutes['shipping_charge']
                     ])->_insert();
                 }
 
@@ -361,8 +360,8 @@ abstract class ShippingProcessor
                                 $oShippingRate = ShippingRate::model(['rateid' => $oShippingCacheQuotes->getField('rate_id')]);
                                 if ($oShippingRate->getField('rateid')) {
                                     $oShippingRate->setShippingChargeQuote($oShippingCacheQuotes->getField('shipping_quote'));
-                                    $oShippingRate->setShippingCharge($oShippingCacheQuotes->getField('shipping_charge'));
-                                    $oShippingRate->setShippingChargeBeforeMap($oShippingCacheQuotes->getField('shipping_charge_before_map'));
+                                    //$oShippingRate->setShippingCharge($oShippingCacheQuotes->getField('shipping_charge'));
+                                    //$oShippingRate->setShippingChargeBeforeMap($oShippingCacheQuotes->getField('shipping_charge_before_map'));
                                     $oShippingRate->setCart($this->getCart());
                                     $this->aShippingRates[] = $oShippingRate;
                                 }

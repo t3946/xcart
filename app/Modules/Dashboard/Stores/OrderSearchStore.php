@@ -158,6 +158,22 @@ class OrderSearchStore extends BaseStore
                 $where['paymentid__in'] = $data['order']['payment_method'];
             }
 
+            if (!empty($data['order']['has_payment_processor'])) {
+                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+
+                if (($data['order']['has_payment_processor'] == 'N')) {
+                    $where['group.acc_paymentid'] = '';
+                }
+                else {
+                    $where[] = new QAndNot(['group.acc_paymentid' => '']);
+                }
+            }
+
+            if (!empty($data['order']['payment_processor'])) {
+                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $where['group.acc_paymentid__in'] = $data['order']['payment_processor'];
+            }
+
             if (!empty($data['order']['delivery_method'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
                 $where['group.shippingid__in'] = $data['order']['delivery_method'];
@@ -204,17 +220,16 @@ class OrderSearchStore extends BaseStore
 
             if (!empty($data['order']['has_dx'])) {
                 $qs->join('left join', 'xcart_order_group_invoices', ['t.orderid' => 'invoice.orderid'], 'invoice');
-                $where['invoice.orderid__isnull'] = ($data['order']['has_dx'] == 'Y');
+                $where['invoice.orderid__isnull'] = ($data['order']['has_dx'] == 'N');
             }
             if (!empty($data['order']['has_memo'])) {
                 $qs->join('left join', 'xcart_order_group_memos', ['t.orderid' => 'memo.orderid'], 'memo');
-                $where['memo.orderid__isnull'] = ($data['order']['has_dx'] == 'Y');
+                $where['memo.orderid__isnull'] = ($data['order']['has_dx'] == 'N');
             }
-//            if (!empty($data['order']['has_icx'])) {
-//                $qs->join('left join', 'xcart_order_group_memos', ['t.orderid' => 'memo.orderid'], 'memo');
-//                $where['memo.orderid__isnull'] = ($data['order']['has_dx'] == 'Y');
-//            }
-
+            if (!empty($data['order']['has_icx'])) {
+                $qs->join('left join', 'xcart_order_cx_invoices', ['t.orderid' => 'icx.orderid'], 'icx');
+                $where['icx.orderid__isnull'] = ($data['order']['has_icx'] == 'N');
+            }
 
         }
 

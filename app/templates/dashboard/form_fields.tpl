@@ -246,6 +246,37 @@
     <ul class="ul-main">
         <li>
             <div class="label">
+                <label for="og_has_payment_processor_all">Payment processor:</label>
+            </div>
+
+            <div class="input">
+                <input name="search[order][has_payment_processor]" type="radio" value="" id="og_has_payment_processor_all" {if !$form_data.order.has_payment_processor}checked{/if}>
+                <label for="og_has_payment_processor_all">All</label>
+                <input name="search[order][has_payment_processor]" type="radio" value="Y" id="og_has_payment_processor_y" {if $form_data.order.has_payment_processor == 'Y'}checked{/if}>
+                <label for="og_has_payment_processor_y">Not empty</label>
+                <input name="search[order][has_payment_processor]" type="radio" value="N" id="og_has_payment_processor_n" {if $form_data.order.has_payment_processor == 'N'}checked{/if}>
+                <label for="og_has_payment_processor_n">Empty</label>
+            </div>
+        </li>
+
+        <li>
+            <div class="label">
+                <label for="o_payment">Order payment processor:</label>
+            </div>
+
+            <div class="input">
+                <select name="search[order][payment_processor][]" id="o_payment" class="big" multiple>
+                    {foreach $payment_methods as $method}
+                        <option value="{$method.paymentid}" title="{$method.payment_details}" {if $method.paymentid|in:$form_data.order.payment_processor}selected{/if}>
+                            {$method.payment_method}
+                        </option>
+                    {/foreach}
+                </select>
+            </div>
+        </li>
+
+        <li>
+            <div class="label">
                 <label for="o_payment">Order payment method:</label>
             </div>
 
