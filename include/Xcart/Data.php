@@ -138,6 +138,11 @@ class Data extends Orm
         }
     }
 
+    public function setAttributes($attributes)
+    {
+        return $this->fill($attributes);
+    }
+
     public function fill($aValues)
     {
         if (!empty($aValues)) {
