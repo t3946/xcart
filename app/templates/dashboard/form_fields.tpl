@@ -562,7 +562,7 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_id">Order ID:</label>
+                    <label for="o_id">Order #:</label>
                 </div>
 
                 <div class="columns large-6">
