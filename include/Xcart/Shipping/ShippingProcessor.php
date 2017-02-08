@@ -370,6 +370,30 @@ abstract class ShippingProcessor
                         }
                     }
                 }
+
+                if (!empty($this->aShippingRates) && !$this->bGetOnlyApproximationRates) {
+                    $aShippingRates = $this->getShippingRatesEntities();
+                    if (!empty($aShippingRates)) {
+                        if (count($this->aShippingRates) != count($aShippingRates)) {
+                            $this->aShippingRates = null;
+                        } else {
+                            $aR1 = $aR2 = [];
+                            foreach ($this->aShippingRates as $oShippingRate) {
+                                $aR1[] = $oShippingRate->getField('rateid');
+                            }
+                            foreach ($aShippingRates as $oShippingRate) {
+                                $aR2[] = $oShippingRate->getField('rateid');
+                            }
+                            $aDiff = array_diff($aR1, $aR2);
+                            if (!empty($aDiff)){
+                                $this->aShippingRates = null;
+                            }
+                        }
+                        if (is_null($this->aShippingRates)) {
+                            $oShippingCache->_delete();
+                        }
+                    }
+                }
             }
         }
         return $this->aShippingRates;
