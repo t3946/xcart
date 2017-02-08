@@ -25,7 +25,7 @@
         <td>Country</td>
         <td colspan="2">LATEST ETA DATE</td>
         <td colspan="2">Payment</td>
-        <td>Full TOTAL</td>
+        <td>Grand total</td>
         <td></td>
         <td></td>
         <td></td>
@@ -82,7 +82,7 @@
 
         <tr class="{$cycle_class}">
             <td>
-                {raw $order->date|date_format:'%m/%d/%Y %H:%M:%S'}
+                {raw $order->date|date_format:'%m-%b-%Y %H:%M:%S'}
             </td>
             <td>
                 {if $order->otrs_ticket}

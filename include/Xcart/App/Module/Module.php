@@ -18,6 +18,7 @@ namespace Xcart\App\Module;
 use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Helpers\SmartProperties;
 use ReflectionClass;
+use Xcart\App\Main\Xcart;
 
 abstract class Module
 {
@@ -60,5 +61,21 @@ abstract class Module
     public static function getAdminMenu()
     {
         return [];
+    }
+
+    public static function t($str, $params = [], $dic = 'main')
+    {
+//        return Xcart::t(get_called_class() . "." . $dic, $str, $params);
+
+        //@TODO: Подключить методы перевода
+        $search = [];
+        $replace = [];
+        foreach ($params as $k => $v)
+        {
+            $search[] = $k;
+            $replace[] = $v;
+        }
+
+        return str_replace($search, $replace, $str);
     }
 }

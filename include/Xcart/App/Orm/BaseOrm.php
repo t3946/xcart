@@ -53,14 +53,42 @@ class BaseOrm
         $this->{$name} = $value;
     }
 
+    /**
+     * @param string $name
+     * @param string $tablePrefix
+     * @return string
+     */
+    public static function getRawTableName($name, $tablePrefix = '')
+    {
+        if (strpos($name, '{{') !== false) {
+            $name = preg_replace('/\\{\\{(.*?)\\}\\}/', '\1', $name);
+            return str_replace('%', $tablePrefix, $name);
+        } else {
+            return $name;
+        }
+    }
+
+    /**
+     * @param $method
+     * @param $args
+     * @return mixed
+     * @throws Exception
+     */
     public static function __callStatic($method, $args)
     {
         $manager = $method . 'Manager';
         $className = get_called_class();
-        if (method_exists($className, $manager) && is_callable([$className, $manager])) {
+
+        if ($method === 'tableName') {
+            $tableName = call_user_func([$className, $method]);
+            return self::getRawTableName($tableName);
+
+        } else if (method_exists($className, $manager)) {
             return call_user_func_array([$className, $manager], $args);
-        } elseif (method_exists($className, $method) && is_callable([$className, $method])) {
+
+        } else if (method_exists($className, $method)) {
             return call_user_func_array([$className, $method], $args);
+
         } else {
             throw new Exception("Call unknown method {$method}");
         }

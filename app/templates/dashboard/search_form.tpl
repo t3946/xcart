@@ -52,7 +52,7 @@
 
 
     <link href="/static/vendors/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
-    <script src="/static/vendors/select2/dist/js/select2.full.min.js" type="text/javascript"></script>
+    <script src="/static/vendors/select2/dist/js/select2.min.js" type="text/javascript"></script>
 {/block}
 
 {block 'js'}
@@ -64,7 +64,6 @@
                 {/ignore}
             });
 
-                setTimeout(function(){
                     $('.admin select[data-ajax-from]').select2({
                         allowClear: true,
                         placeholder: 'Start typing for hint',
@@ -181,7 +180,6 @@
                         }
 
                     });
-                }, 500);
         })()
     </script>
 {/block}
