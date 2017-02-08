@@ -2,7 +2,6 @@
 
 namespace Modules\Dashboard\Controllers;
 
-use Modules\Dashboard\DashboardModule;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Controller\AdminController;
@@ -39,7 +38,7 @@ class DashboardController extends AdminController
 
         $form_data = $session->get('search_order_form', [
             'order'    => [
-                'date' => DashboardModule::getDefaultSearchDate(),
+                'date' => SearchHelper::getDefaultSearchDate(),
             ],
         ]);
 

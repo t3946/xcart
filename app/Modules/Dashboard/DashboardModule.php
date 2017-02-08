@@ -12,7 +12,6 @@ class DashboardModule extends Module
     {
         $template = Xcart::app()->template->getRenderer();
 
-        $template->addFunction('default_search_date', self::getDefaultSearchDate());
         $template->addModifier('max_eta_colors', function($max_eta = 0)
         {
             global $config;
@@ -36,17 +35,5 @@ class DashboardModule extends Module
             }
             return '';
         });
-    }
-
-
-    public static function getDefaultSearchDate()
-    {
-        $date = new \DateTime();
-        $str_now = $date->format('m/d/Y');
-
-        $date->setTimestamp(strtotime('-31 day'));
-        $str_from = $date->format('m/d/Y');
-
-        return "{$str_from} - {$str_now}";
     }
 }
