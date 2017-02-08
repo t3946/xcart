@@ -139,6 +139,7 @@ class UPS extends ShippingProcessor
                     }
                 }
                 if ($this->bGetOnlyApproximationRates && !empty($this->aShippingRates)) {
+                    $this->saveShippingQuotesCached();
                     return $this->aShippingRates;
                 }
                 $aResponses = $this->getServerQuotes($aShippingRates);
@@ -164,8 +165,8 @@ class UPS extends ShippingProcessor
                             }
                         }
                     }
-                    $this->saveShippingQuotesCached();
                 }
+                $this->saveShippingQuotesCached();
             }
         }
 
