@@ -51,13 +51,19 @@ class QuerySet
 
     public function filter($where = [])
     {
-        $this->qb->where($where);
+        if (!empty($where)) {
+            $this->qb->where($where);
+        }
+
         return $this;
     }
 
     public function orFilter($where = [])
     {
-        $this->qb->orWhere($where);
+        if (!empty($where)) {
+            $this->qb->orWhere($where);
+        }
+
         return $this;
     }
 
@@ -155,6 +161,12 @@ class QuerySet
         return $this;
     }
 
+    /**
+     * @param array $filter
+     *
+     * @return mixed|null|Orm
+     * @throws \Xcart\App\Exceptions\MultipleObjectsReturned
+     */
     public function get($filter = [])
     {
         $this->filter($filter);
@@ -169,12 +181,20 @@ class QuerySet
         return $this->asArray ? $row : $this->createModel($row);
     }
 
+    /**
+     * @param array $where
+     *
+     * @return array|Orm[]
+     */
     public function all($where = [])
     {
         $this->filter($where);
         return $this->getData();
     }
 
+    /**
+     * @return array|Orm[]
+     */
     public function getData()
     {
         if (empty($this->_data))
@@ -196,7 +216,7 @@ class QuerySet
 
     public function createModel(array $row)
     {
-        /** @var Data $className */
+        /** @var Orm $className */
         $className = $this->modelClass;
         if (!$className) {
             throw new \Exception('$className must be a string in createModel method of qs');
@@ -269,4 +289,37 @@ class QuerySet
     {
         return $this->limit($pageSize)->offset($page > 1 ? $pageSize * ($page - 1) : 0);
     }
+
+    /**
+     * @param array $attributes
+     *
+     * @return integer The number of affected rows.
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function delete(array $attributes = [])
+    {
+        return $this->db->exec($this->deleteSql($attributes));
+    }
+
+    public function deleteSql(array $attributes = [])
+    {
+        return $this->filter($attributes)->qb->setTypeDelete()->toSQL();
+    }
+
+    /**
+     * @param array $attributes
+     *
+     * @return integer The number of affected rows.
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function update(array $attributes = [])
+    {
+        return $this->db->exec($this->updateSql($attributes));
+    }
+
+    public function updateSql(array $attributes = [])
+    {
+        return $this->qb->update($this->model->getTableName(), $attributes)->toSQL();
+    }
+
 }

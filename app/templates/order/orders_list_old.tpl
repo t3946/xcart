@@ -159,14 +159,14 @@
                 </td>
                 <td align="center"></td>
                 <td align="center">
-                    {$order->date|date_format:'%m/%d/%Y'}
+                    {$order->date|date_format:'%d-%b-%Y'}
                 </td>
                 <td colspan="2" align="left">
                     {$order->last_activity|interval_string}
                 </td>
                 <td style="background-color: {$order->max_eta|max_eta_colors}; color: #000000;">
-                    {if $order->max_eta|max_eta_colors == "do_not_show"}
-                        {$order->max_eta|date_format:'%m/%d/%Y'}
+                    {if $order->max_eta|max_eta_colors != "do_not_show"}
+                        {$order->max_eta|date_format:'%d-%b-%Y'}
                     {/if}
                 </td>
                 <td></td>
@@ -177,14 +177,13 @@
             <tr class="{$cycle_class}">
                 <td width="5" align="center"></td>
                 <td align="center" class="OrderSheetGreenCell group">
-
                     {if $order->amazon_fulfillment_channel == "AFN"}
                         <B>I: Reconciled</B>
                         <br/>
                         <B>C: Reconciled</B>
                     {else}
-                        {if $group->getOrderGroupInvoices() }
-                            {foreach $group->getOrderGroupInvoices() as $invoice}
+                        {if $group->getOrderGroupInvoices()->countOrderGroupInvoices() > 0 }
+                            {foreach $group->getOrderGroupInvoices()->getAsArray() as $invoice}
                                 <B>I-{$invoice->invoice_number}: {$invoice->getStatusName()}</B>
                                 <br/>
                             {/foreach}
@@ -193,8 +192,8 @@
                             <br>
                         {/if}
 
-                        {if $group->getOrderGroupMemos() }
-                            {foreach $group->getOrderGroupMemos() as $memo}
+                        {if $group->getOrderGroupMemos()->countOrderGroupMemos() > 0}
+                            {foreach $group->getOrderGroupMemos()->getAsArray() as $memo}
                                 <B>C-{$memo->memo_number}: {$memo->getStatusName()}</B>
                                 <br/>
                             {/foreach}
