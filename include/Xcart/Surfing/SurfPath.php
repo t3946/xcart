@@ -93,6 +93,7 @@ class SurfPath extends Data
                 $oReferer = Referer::create(['referer' => addslashes($sReferalUrl)]);
                 $oReferer->referer_id = $oReferer->_insert();
             }
+            $oReferer->updateField('visits', $oReferer->visits + 1);
             self::create([
                 'meta_id' => $oSurfMeta->id,
                 'resource_id' => $oReferer->referer_id,
