@@ -166,7 +166,7 @@ function func_add_to_cart(&$cart, $product_data) {
 ##
 ###
         if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-                func_log_cidev_surf("A", $added_product["productid"]);
+			Xcart\Surfing\SurfPath::create(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_ADD_TO_CART, 'resource_id' => $added_product["productid"]])->logSurfPath();
         }
 ###
 ##

@@ -349,7 +349,9 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 
 	if ($detect_isMobile_was_created == 'Y' && $resource_type == 'H') {
 
-	} else func_log_cidev_surf($resource_type);
+	} else {
+		Xcart\Surfing\SurfPath::create(['resource_type' => $resource_type])->logSurfPath();
+	}
 }
 
 	if ( !(empty($cat) && empty($keyphrase)) && $cat_with_one_brand_filter != "Y"){

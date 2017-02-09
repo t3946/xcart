@@ -62,7 +62,7 @@ else
 ##
 ###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("B");
+    Xcart\Surfing\SurfPath::create(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_BRAND])->logSurfPath();
 }
 ###
 ##
