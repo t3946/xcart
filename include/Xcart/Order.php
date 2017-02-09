@@ -1040,9 +1040,9 @@ SQL;
     public function getLastRefererUrl()
     {
         $sRefererDomain = null;
-        $oRefererDomain = Surfing\SurfPath::objects()->filter(['id' => $this->surf_path_id])->get();
+        $oRefererDomain = Surfing\Referer::objects()->filter(['referer_id' => $this->referer_id])->get();
         if ($oRefererDomain) {
-            $sRefererDomain = "//" . $oRefererDomain->additional_data;
+            $sRefererDomain = "//" . $oRefererDomain->referer;
         }
         return $sRefererDomain;
     }

@@ -220,10 +220,10 @@ if ($REQUEST_METHOD=="POST" && isset($mode_clear)) {
 		# Delete ALL shop statistics from the database
 		#
 		if (empty($rsd_limit)) {
-			db_query("DELETE FROM $sql_tbl[referers]");
+			//db_query("DELETE FROM $sql_tbl[referers]");
 
 		} else {
-			db_query("DELETE FROM $sql_tbl[referers] WHERE last_visited < '$rsd_limit'");
+			//db_query("DELETE FROM $sql_tbl[referers] WHERE last_visited < '$rsd_limit'");
 		}
 		$updates[] = func_get_langvar_by_name("msg_adm_summary_ref_stat_del");
 	}

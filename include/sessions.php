@@ -128,7 +128,7 @@ $smarty->assign("XCARTSESSID", $XCARTSESSID);
 #
 function x_session_start($sessid = '') {
 	global $XCART_SESSION_VARS, $XCART_SESSION_NAME, $XCARTSESSID, $XCART_SESSION_EXPIRY;
-	global $sql_tbl, $config, $use_sessions_type, $xcart_https_host, $xcart_http_host, $use_session_length;
+	global $sql_tbl, $config, $use_sessions_type, $detect_isMobile_was_created, $current_storefront;
 	global $_SERVER;
 
 	# $sessid should contain only '0'..'9' or 'a'..'z' or 'A'..'Z'
