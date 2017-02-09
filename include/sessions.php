@@ -237,23 +237,6 @@ function x_session_start($sessid = '') {
 	}
 
 	$XCARTSESSID = $sessid;
-	$oSession = new Xcart\App\Request\XcartSession();
-	$MetaId = $oSession->getMetaId();
-	if (empty($MetaId)) {
-		$oSurfMeta = Xcart\Surfing\SurfMeta::create(
-			[	"sessid" => $oSession->getId(),
-				"date" => time(),
-				"is_mobile" => ($detect_isMobile_was_created ? "Y" : "N"),
-				"goal_order" => 'N',
-				"goal_checkout" => 'N',
-				"goal_addtocart" => 'N',
-				"goal_search" => 'N',
-				"points_visited" => '0',
-				"last_update" => time(),
-				"storefrontid" => $current_storefront,
-			]);
-		$GLOBALS['XCART_META_ID'] = $oSurfMeta->id = $oSurfMeta->_insert();
-	}
 
 	setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_https_host, 0);
 	setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_http_host, 0);
