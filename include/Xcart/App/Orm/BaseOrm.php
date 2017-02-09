@@ -10,7 +10,7 @@ class BaseOrm
     /**
      * @param array $row
      *
-     * @return \Xcart\Data
+     * @return static
      */
     public static function create(array $row)
     {

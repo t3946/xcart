@@ -1,6 +1,6 @@
 <?php
 
-namespace Surfing;
+namespace Xcart\Surfing;
 
 use Xcart\Data;
 

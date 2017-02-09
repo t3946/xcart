@@ -166,15 +166,9 @@ Group By B.brandid");
     $smarty->assign("main", "pages");
 }
 
-#
-##
-###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("T");
+    Xcart\Surfing\SurfPath::create(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_STATIC_PAGE])->logSurfPath();
 }
-###
-##
-#
 
 # Assign the current location line
 $smarty->assign("location", $location);

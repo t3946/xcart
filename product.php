@@ -1259,7 +1259,7 @@ func_print_r($a1, $data, $data_arr);
 ##
 ###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("P");
+	Xcart\Surfing\SurfPath::create(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_PRODUCT])->logSurfPath();
 }
 ###
 ##

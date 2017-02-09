@@ -12,10 +12,4 @@ class Session extends Data
         $this->sPrimaryTable = 'sessions_data';
         parent::__construct($aParams);
     }
-
-    public function getSessionId()
-    {
-        global $XCARTSESSID;
-        return $XCARTSESSID;
-    }
 }

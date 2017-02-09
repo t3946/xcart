@@ -1037,4 +1037,14 @@ SQL;
         return $i;
     }
 
+    public function getLastRefererUrl()
+    {
+        $sRefererDomain = null;
+        $oRefererDomain = Surfing\SurfPath::objects()->filter(['id' => $this->surf_path_id])->get();
+        if ($oRefererDomain) {
+            $sRefererDomain = "//" . $oRefererDomain->additional_data;
+        }
+        return $sRefererDomain;
+    }
+
 }

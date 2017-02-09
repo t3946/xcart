@@ -1324,7 +1324,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
 
         if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
-            func_log_cidev_surf("O", $orderid);
+            Xcart\Surfing\SurfPath::create(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_ORDER, 'resource_id' => $orderid])->logSurfPath();
         }
 
         $log = "";
@@ -1550,6 +1550,15 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
         $oOrder = \Xcart\Order::model(['orderid' => $orderid]);
         $oOrder->updateVerificationStatus();
+
+        $oSurfPath = Xcart\Surfing\SurfPath::objects()
+            ->filter(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_REFERER,
+                'meta_id' =>  (new Xcart\App\Request\XcartSession())->getMetaId()])
+            ->order(['-id'])
+            ->limit(1)->get();
+        if ($oSurfPath) {
+            $oOrder->updateField('surf_path_id', $oSurfPath->id);
+        }
 
         if (!empty($active_modules['XAffiliate'])) {
             #

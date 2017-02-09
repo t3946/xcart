@@ -1,19 +1,30 @@
 <?php
 
-namespace Surfing;
+namespace Xcart\Surfing;
 
-use Session\Session;
-use Xcart\Customer;
+use Xcart\App\Request\XcartSession;
 use Xcart\Data;
 use Xcart\App\Request\HttpRequest;
 
 class SurfPath extends Data
 {
+    const GOAL_TYPE_ADD_TO_CART = 'A';
+    const GOAL_TYPE_CHECKOUT = 'K';
+    const GOAL_TYPE_SEARCH = 'S';
+    const GOAL_TYPE_ORDER = 'O';
+    const GOAL_TYPE_REFERER = 'R';
+    const GOAL_TYPE_PRODUCT = 'P';
+    const GOAL_TYPE_BRAND = 'B';
+    const GOAL_TYPE_CATEGORY = 'C';
+    const GOAL_TYPE_STATIC_PAGE = 'T';
+    const GOAL_TYPE_HOME_PAGE = 'H';
+    const GOAL_TYPE_TECHNICAL_SEARCH = 'L';
+
     private $goals_arr = [
-        "A" => "goal_addtocart",
-        "K" => "goal_checkout",
-        "S" => "goal_search",
-        "O" => "goal_order",
+        self::GOAL_TYPE_ADD_TO_CART => "goal_addtocart",
+        self::GOAL_TYPE_CHECKOUT => "goal_checkout",
+        self::GOAL_TYPE_SEARCH => "goal_search",
+        self::GOAL_TYPE_ORDER => "goal_order",
     ];
 
     public function __construct($aParams = [])
@@ -23,70 +34,88 @@ class SurfPath extends Data
         parent::__construct($aParams);
     }
 
-    public function logSurfPath($resource_type, $resource_id = "0")
+    public function logSurfPath()
     {
-        global $login, $detect_isMobile_was_created, $current_storefront, $clean_url_data, $cidev_filters_tree_sorted;  //TODO remove globals;
+        global $detect_isMobile_was_created, $current_storefront, $clean_url_data, $cidev_filters_tree_sorted, $xcart_http_host;  //TODO remove globals;
+        $sReferalUrl = '';
+        $aGoalArray = [];
+        $oSession = new XcartSession();
+        if (defined("IS_ROBOT") || !$oSession->getId()){
+            return false;
+        }
 
-        $oSession = (new Session());
-        $oSurfMeta = \Surfing\SurfMeta::objects()->filter(['sessid' => $oSession->getId()])->get();
+        $oHttpRequest = new HttpRequest();
+        $oSurfMeta = SurfMeta::objects()->filter(['id' => $oSession->getMetaId()])->get();
+        $aReferalUrl = parse_url($oHttpRequest->getReferrer());
+        if ($aReferalUrl['host'] != $xcart_http_host) {
+            $sPath = ltrim($aReferalUrl['path'], '/');
+            $sReferalUrl = $aReferalUrl['host'] . (empty($sPath) ? '' : '/'. $sPath) . (empty($aReferalUrl['query']) ? '' : "?{$aReferalUrl['query']}");
+        }
+        if (in_array($this->resource_type, [self::GOAL_TYPE_ADD_TO_CART, self::GOAL_TYPE_CHECKOUT, self::GOAL_TYPE_SEARCH, self::GOAL_TYPE_ORDER])) {
+            $aGoalArray[$this->goals_arr[$this->resource_type]] = "Y";
+        }
         if (!$oSurfMeta) {
-            $sReferalUrl = '';
-            $oHttpRequest = new HttpRequest();
-            $sUri = $oHttpRequest->resolveRequestUri();
-            if (strpos($sUri, "origin") !== false) {
-                $sReferalUrl = str_replace("/dispatcher.php?request_uri=", "", $sUri);
-                $sReferalUrl = $_SERVER["HTTP_HOST"] . $sReferalUrl;
-                Customer::objects()->filter(['login' => $login])->get()->updateField('referer', addslashes($sReferalUrl));
-            }
+            $oSurfMeta = SurfMeta::create(
+                array_merge([
+                    "sessid" => $oSession->getId(),
+                    "date" => time(),
+                    "referal_url" => addslashes($sReferalUrl),
+                    "is_mobile" => ($detect_isMobile_was_created ? "Y" : "N"),
+                    "goal_order" => 'N',
+                    "goal_checkout" => 'N',
+                    "goal_addtocart" => 'N',
+                    "goal_search" => 'N',
+                    "points_visited" => '0',
+                    "last_update" => time(),
+                    "storefrontid" => $current_storefront,
+                ], $aGoalArray)
+            );
+            $oSurfMeta->id = $oSurfMeta->_insert();
+        }
 
-            $sReferer = $oHttpRequest->getReferrer();
-            if (!empty($sReferer) && empty($sReferalUrl)) {
-                $referal_url_arr1 = explode("//", $sReferer);
-                $referal_url_arr2 = explode("/", $referal_url_arr1[1]);
-                $sReferalUrl      = $referal_url_arr1[0] . "//" . $referal_url_arr2[0];
-            }
-            $cidev_surf_meta_arr = [
-                "sessid"         => $oSession->getId(),
-                "date"           => time(),
-                "referal_url"    => addslashes($sReferalUrl),
-                "is_mobile"      => ($detect_isMobile_was_created ? "Y" : "N"),
-                "goal_order"     => 'N',
-                "goal_checkout"  => 'N',
-                "goal_addtocart" => 'N',
-                "goal_search"    => 'N',
-                "points_visited" => '1',
-                "last_update"    => time(),
-                "storefrontid"   => $current_storefront,
-            ];
-            if (in_array($resource_type, ["A", "K", "S", "O"])) {
-                $cidev_surf_meta_arr[$this->goals_arr[$resource_type]] = "Y";
-            }
+        $oSurfMeta->points_visited++;
+        $oSurfMeta->fill(array_merge($oSurfMeta->getFields(), $aGoalArray));
 
-            $cidev_surf_path_arr["meta_id"] = SurfMeta::create($cidev_surf_meta_arr)->_insert();
+        if (in_array($this->resource_type, [self::GOAL_TYPE_PRODUCT, self::GOAL_TYPE_CATEGORY, self::GOAL_TYPE_BRAND, self::GOAL_TYPE_STATIC_PAGE])) {
+            $this->resource_id = $clean_url_data["resource_id"];
+        }
+        $this->meta_id = $oSurfMeta->id;
+        $this->timestamp = time();
+        $this->position = $oSurfMeta->points_visited;
 
-            if (in_array($resource_type, ["P", "C", "B", "T"])) {
-                $resource_id = $clean_url_data["resource_id"];
-            }
-            $cidev_surf_path_arr["resource_id"]   = $resource_id;
-            $cidev_surf_path_arr["resource_type"] = $resource_type;
-            $cidev_surf_path_arr["timestamp"] = time();
-
-            if (in_array($resource_type, ["C", "B", "S"]) && !empty($cidev_filters_tree_sorted) && is_array($cidev_filters_tree_sorted)) {
-                $selected_fv_id_arr = [];
-                foreach ($cidev_filters_tree_sorted as $v) {
-                    if (!empty($v["filter_values"]) && is_array($v["filter_values"])) {
-                        foreach ($v["filter_values"] as $tree_filter_values) {
-                            if ($tree_filter_values["selected"] == "Y") {
-                                $selected_fv_id_arr[] = $tree_filter_values["fv_id"];
-                            }
+        if (in_array($this->resource_type, [self::GOAL_TYPE_CATEGORY, self::GOAL_TYPE_BRAND, self::GOAL_TYPE_SEARCH]) &&
+            !empty($cidev_filters_tree_sorted) &&
+            is_array($cidev_filters_tree_sorted)
+        ) {
+            $selected_fv_id_arr = [];
+            foreach ($cidev_filters_tree_sorted as $v) {
+                if (!empty($v["filter_values"]) && is_array($v["filter_values"])) {
+                    foreach ($v["filter_values"] as $tree_filter_values) {
+                        if ($tree_filter_values["selected"] == "Y") {
+                            $selected_fv_id_arr[] = $tree_filter_values["fv_id"];
                         }
                     }
                 }
-                if (!empty($selected_fv_id_arr)) {
-                    $cidev_surf_path_arr["additional_data"] = implode(",", $selected_fv_id_arr);
-                }
             }
-            self::create($cidev_surf_path_arr)->_insert();
+            if (!empty($selected_fv_id_arr)) {
+                $this->additional_data = implode(",", $selected_fv_id_arr);
+            }
         }
+        $this->_insert();
+
+        if (!empty($sReferalUrl)) {
+            $oSurfMeta->points_visited++;
+            $oSurfMeta->referal_url = addslashes($sReferalUrl);
+            self::create([
+                'meta_id' => $oSurfMeta->id,
+                'resource_type' => self::GOAL_TYPE_REFERER,
+                'timestamp' => time(),
+                'additional_data' => addslashes($sReferalUrl),
+                'position' => ($oSurfMeta->points_visited)
+            ])->_insert();
+        }
+
+        $oSurfMeta->_update();
+        return true;
     }
 }
