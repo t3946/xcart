@@ -337,21 +337,21 @@ class Manager implements IteratorAggregate, Serializable, Countable, ArrayAccess
 //        return $this->getQuerySet()->getOrCreate($attributes);
 //    }
 
-    /**
-     * Find and update model if exists. Else create model.
-     * @param array $attributes attributes for query
-     * @param array $updateAttributes attributes for update|create
-     * @return Orm
-     */
-    public function updateOrCreate(array $attributes, array $updateAttributes)
-    {
-        return $this->getQuerySet()->updateOrCreate($attributes, $updateAttributes);
-    }
-
-    public function updateCounters(array $counters)
-    {
-        return $this->getQuerySet()->updateCounters($counters);
-    }
+//    /**
+//     * Find and update model if exists. Else create model.
+//     * @param array $attributes attributes for query
+//     * @param array $updateAttributes attributes for update|create
+//     * @return Orm
+//     */
+//    public function updateOrCreate(array $attributes, array $updateAttributes)
+//    {
+//        return $this->getQuerySet()->updateOrCreate($attributes, $updateAttributes);
+//    }
+//
+//    public function updateCounters(array $counters)
+//    {
+//        return $this->getQuerySet()->updateCounters($counters);
+//    }
 
     public function update(array $attributes)
     {
@@ -373,10 +373,10 @@ class Manager implements IteratorAggregate, Serializable, Countable, ArrayAccess
         return $this->filter($attributes)->getQuerySet()->deleteSql();
     }
 
-    public function create(array $attributes)
-    {
-        return $this->getModel()->setAttributes($attributes)->save();
-    }
+//    public function create(array $attributes)
+//    {
+//        return $this->getModel()->setAttributes($attributes)->save();
+//    }
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>

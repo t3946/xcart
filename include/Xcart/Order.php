@@ -169,7 +169,7 @@ class Order extends Data
 
     public function getTags()
     {
-        $this->tags;
+        return $this->tags;
     }
 
     private function fetchOrderProductsManufacturers()
@@ -613,7 +613,7 @@ class Order extends Data
                 $fResult += $oOrderGroup->getTotalGross();
             }
         }
-        return $fResult + $this->getOrderAdditionalFee();
+        return round($fResult + $this->getOrderAdditionalFee(), 2);
     }
 
     public function getOrderCostToUs()
