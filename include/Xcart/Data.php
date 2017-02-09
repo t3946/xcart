@@ -33,7 +33,7 @@ class Data extends Orm
         }
     }
 
-        public function getTableName()
+    public function getTableName()
     {
         //@TODO: Переделать. Нужно что-бы возвращалось или имя или шаблон для подстановки префикса пример xcart_orders или {orders}
         return self::$sql_tbl[$this->sPrimaryTable];
@@ -136,6 +136,11 @@ class Data extends Orm
         if (!empty($this->aPrimaryKeysValues)) {
             $this->aPrimaryTableValue = func_query_first("SELECT * FROM " . self::$sql_tbl[$this->sPrimaryTable] . " WHERE " . $this->getWhereClause());
         }
+    }
+
+    public function setAttributes($attributes)
+    {
+        return $this->fill($attributes);
     }
 
     public function fill($aValues)

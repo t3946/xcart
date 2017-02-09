@@ -169,7 +169,7 @@ class Order extends Data
 
     public function getTags()
     {
-        $this->tags;
+        return $this->tags;
     }
 
     private function fetchOrderProductsManufacturers()
