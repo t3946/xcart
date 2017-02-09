@@ -1557,7 +1557,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             ->order(['-id'])
             ->limit(1)->get();
         if ($oSurfPath) {
-            $oOrder->updateField('surf_path_id', $oSurfPath->id);
+            $oOrder->updateField('referer_id', $oSurfPath->resource_id);
         }
 
         if (!empty($active_modules['XAffiliate'])) {

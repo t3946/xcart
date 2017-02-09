@@ -173,7 +173,6 @@ if (!empty($active_modules['Mailchimp_Subscription'])) {
 }
 
 
-include $xcart_dir.DIR_CUSTOMER."/referer.php";
 
 include $xcart_dir."/include/check_useraccount.php";
 

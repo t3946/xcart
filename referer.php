@@ -60,4 +60,3 @@ if (!isset($_COOKIE['RefererCookie']) || empty($referer_session)) {
 	$_tmp = parse_url($current_location);
 	@setcookie("RefererCookie", $referer, time()+3600*24*180, "/", $_tmp["host"]);
 }
-?>
