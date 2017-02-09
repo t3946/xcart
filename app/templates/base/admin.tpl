@@ -1,3 +1,8 @@
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous">
+</script>
+
 <link rel="stylesheet" href="/static/backend/css/base.css?v=1">
 
 <script src="/static/vendors/jquery.cookie-1.4.1.min.js"></script>
@@ -7,6 +12,7 @@
 
 {/block}
 
+{filter|strip:true}
 <div id="wrapper" class="admin">
     {block 'content-header'}
         <div class="content-header">
@@ -48,6 +54,7 @@
 
     <div id="push"></div>
 </div>
+{/filter}
 
 {block 'js'}
 
