@@ -54,24 +54,6 @@ class SurfPath extends Data
         if (in_array($this->resource_type, [self::GOAL_TYPE_ADD_TO_CART, self::GOAL_TYPE_CHECKOUT, self::GOAL_TYPE_SEARCH, self::GOAL_TYPE_ORDER])) {
             $aGoalArray[$this->goals_arr[$this->resource_type]] = "Y";
         }
-        if (!$oSurfMeta) {
-            $oSurfMeta = SurfMeta::create(
-                array_merge([
-                    "sessid" => $oSession->getId(),
-                    "date" => time(),
-                    "referal_url" => addslashes($sReferalUrl),
-                    "is_mobile" => ($detect_isMobile_was_created ? "Y" : "N"),
-                    "goal_order" => 'N',
-                    "goal_checkout" => 'N',
-                    "goal_addtocart" => 'N',
-                    "goal_search" => 'N',
-                    "points_visited" => '0',
-                    "last_update" => time(),
-                    "storefrontid" => $current_storefront,
-                ], $aGoalArray)
-            );
-            $oSurfMeta->id = $oSurfMeta->_insert();
-        }
 
         $oSurfMeta->points_visited++;
         $oSurfMeta->fill(array_merge($oSurfMeta->getFields(), $aGoalArray));
@@ -106,11 +88,16 @@ class SurfPath extends Data
         if (!empty($sReferalUrl)) {
             $oSurfMeta->points_visited++;
             $oSurfMeta->referal_url = addslashes($sReferalUrl);
+            $oReferer = Referer::objects()->filter(['referer' => $sReferalUrl])->get();
+            if (!$oReferer) {
+                $oReferer = Referer::create(['referer' => addslashes($sReferalUrl)]);
+                $oReferer->referer_id = $oReferer->_insert();
+            }
             self::create([
                 'meta_id' => $oSurfMeta->id,
+                'resource_id' => $oReferer->referer_id,
                 'resource_type' => self::GOAL_TYPE_REFERER,
                 'timestamp' => time(),
-                'additional_data' => addslashes($sReferalUrl),
                 'position' => ($oSurfMeta->points_visited)
             ])->_insert();
         }

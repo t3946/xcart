@@ -129,7 +129,7 @@ $smarty->assign("XCARTSESSID", $XCARTSESSID);
 #
 function x_session_start($sessid = '') {
 	global $XCART_SESSION_VARS, $XCART_SESSION_NAME, $XCARTSESSID, $XCART_SESSION_EXPIRY;
-	global $sql_tbl, $config, $use_sessions_type;
+	global $sql_tbl, $config, $use_sessions_type, $detect_isMobile_was_created, $current_storefront;
 	global $_SERVER;
 
 	# $sessid should contain only '0'..'9' or 'a'..'z' or 'A'..'Z'
@@ -238,6 +238,25 @@ function x_session_start($sessid = '') {
 	}
 
 	$XCARTSESSID = $sessid;
+
+	$oSession = new Xcart\App\Request\XcartSession();
+	$MetaId = $oSession->getMetaId();
+	if (empty($MetaId)) {
+		$oSurfMeta = Xcart\Surfing\SurfMeta::create(
+			[	"sessid" => $oSession->getId(),
+				"date" => time(),
+				"is_mobile" => ($detect_isMobile_was_created ? "Y" : "N"),
+				"goal_order" => 'N',
+				"goal_checkout" => 'N',
+				"goal_addtocart" => 'N',
+				"goal_search" => 'N',
+				"points_visited" => '0',
+				"last_update" => time(),
+				"storefrontid" => $current_storefront,
+			]);
+		$GLOBALS['XCART_META_ID'] = $oSurfMeta->id = $oSurfMeta->_insert();
+	}
+
 	setcookie($XCART_SESSION_NAME, $XCARTSESSID, $expiry_time , "/", "", 0);
 }
 
