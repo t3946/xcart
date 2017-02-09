@@ -1,6 +1,7 @@
 <?php
 namespace Xcart\App\Request;
 
+use Xcart\Surfing\SurfMeta;
 
 class XcartSession extends Session
 {
@@ -49,5 +50,19 @@ class XcartSession extends Session
     public function count()
     {
         return count($GLOBALS['XCART_SESSION_VARS']);
+    }
+
+    public function getId()
+    {
+        return $GLOBALS['XCARTSESSID'];
+    }
+
+    public function getMetaId()
+    {
+        if ($this->getId() && empty($GLOBALS['XCART_META_ID']))
+        {
+            $GLOBALS['XCART_META_ID'] = SurfMeta::objects()->filter(['sessid' => $this->getId()])->get()->id;
+        }
+        return $GLOBALS['XCART_META_ID'];
     }
 }
