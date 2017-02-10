@@ -45,7 +45,7 @@ class SurfPath extends Data
         }
 
         $oHttpRequest = new HttpRequest();
-        $oSurfMeta = SurfMeta::objects()->filter(['id' => $oSession->getMetaId()])->get();
+        $oSurfMeta = SurfMeta::getInstance();
         $aReferalUrl = parse_url($oHttpRequest->getReferrer());
         if ($aReferalUrl['host'] != $xcart_http_host) {
             $sPath = ltrim($aReferalUrl['path'], '/');
