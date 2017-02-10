@@ -29,6 +29,9 @@ class CrawlerDetect extends \Jaybizzle\CrawlerDetect\CrawlerDetect
             $this->setMode($this->crawlers->getMode());
         }
 
+        $this->compiledRegex = $this->compileRegex($this->crawlers->getAll());
+        $this->compiledExclusions = $this->compileRegex($this->exclusions->getAll());
+
         return $this;
     }
 
