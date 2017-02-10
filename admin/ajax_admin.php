@@ -5,6 +5,7 @@ use Xcart\External_Product_Verification\ExternalVerificationProducts;
 use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 use Xcart\External_Marketplaces\IssuesProcessingRules;
 use Xcart\Order;
+use Xcart\ShippingRate;
 use Xcart\OrderGroup;
 use Xcart\Product;
 use Xcart\Customer;
@@ -73,7 +74,7 @@ switch ($_POST['ajax_action']) {
         changeAmazonFBARestricted($_POST);
         break;
     case "get_order_shipping_charge":
-        getOrderShippingCharge($_POST);
+        getOrderGroupShippingCharge($_POST);
         break;
 }
 
@@ -569,28 +570,24 @@ function changeAmazonFBARestricted($aParams = [])
     print(json_encode($aResult));
 }
 
-function getOrderShippingCharge($aParams = [])
+function getOrderGroupShippingCharge($aParams = [])
 {
-    if (!empty($aParams['order_id']) && is_numeric($aParams['order_id'])) {
-        /** @var Order $oOrder */
-        $oOrder = Order::objects()->filter(['order_id' => (int)$aParams['order_id']])->get();
-        if ($oOrder) {
-            $aOrderGroups = $oOrder->getOrderGroups();
-            if (!empty($aOrderGroups)) {
-                foreach ($aOrderGroups as $oOrderGroup) {
-                    $oCart = new \Xcart\Cart();
-                    $aOrderDetails = $oOrderGroup->getOrderDetails();
-                    if (!empty($aOrderDetails)) {
-                        foreach ($aOrderDetails as $oOrderDetail){
-                            $oCart->addObjectToCart( new \Xcart\CartElement($oOrderDetail->getOrderDetailProduct(), $oOrderDetail->getAmount()));
-                        }
-                        $aShippingRates = (new Xcart\Shipping())->getShippingRates($oOrder->getCustomerEntity(), $oOrderGroup->getManufacturerEntity(), $oCart);
-                        if (!empty($aShippingRates)) {
-
-                        }
-                    }
+    $sResult = 'Shipping qoute not found';
+    if (!empty($aParams['orderid']) && !empty($aParams['manufacturerid'])) {
+        /** @var OrderGroup $oOrderGroup */
+        $oOrderGroup = OrderGroup::objects()->filter(['orderid' => (int)$aParams['orderid'], 'manufacturerid' => (int)$aParams['manufacturerid']])->get();
+        if ($oOrderGroup) {
+            $aShippingRates = $oOrderGroup->getShippingRates();
+            if (!empty($aShippingRates)) {
+                /** @var ShippingRate $oShippingRate*/
+                $sResult = '';
+                $aShippingRates = reset($aShippingRates);
+                foreach ($aShippingRates as $oShippingRate) {
+                    $shippingCharge = "$". price_format($oShippingRate->getShippingCharge());
+                    $sResult .= "{$oShippingRate->getShippingEntity()->getName()} {$oShippingRate->shipping_time}: {$shippingCharge} \n";
                 }
             }
         }
     }
+    print nl2br($sResult);
 }

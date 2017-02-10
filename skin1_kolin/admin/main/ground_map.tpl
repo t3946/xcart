@@ -39,11 +39,11 @@
 </tr>
 <tr>
 <td valign="top">
-<form action="order.php" method="post" name="ground_map_form">
+<form class="ground_map_form" action="order.php" method="post" name="ground_map_form">
 <input type="hidden" name="mode" value="calc_shipping" />
 <input type="hidden" name="orderid" value="{$order.orderid}" />
 <input type="hidden" name="mid" value="{$k}" />
-<input type="submit" value="Shipping quote" />
+<input name="get_shipping_charge" type="button" value="Shipping quote" />
 </form>
 <br/>
     <form action="order.php" method="post" name="ground_map_incorrect_form">
@@ -53,26 +53,7 @@
         <input type="submit" value='Map is incorrect.&#13;&#10;Reload please' />
     </form>
 <br />
-{if $show_intershipper_rates ne ""}
-{foreach from=$show_intershipper_rates item=vr key=kr}
-{if $kr eq $k}
-        {foreach from=$vr item=vvr key=kkr}
-                {if $vvr.shipping ne ""}
-
-{assign var="cidev_shipping" value=$vvr.shipping|trademark:"`$insert_trademark`"}
-{if $vvr.shipping_time ne ""} 
-{assign var="cidev_shipping" value="`$cidev_shipping` - `$vvr.shipping_time`: $`$vvr.rate`"}
-{else}
-{assign var="cidev_shipping" value="`$cidev_shipping` $`$vvr.rate`"}
-{/if}
-
-{$cidev_shipping}<br />
-
-                {/if}
-        {/foreach}
-{/if}
-{/foreach}
-{/if}
+<div id="shipping_charge_{$k}"></div>
 <br />
 </td>
 </tr>
@@ -141,3 +122,22 @@ src="https://www.google.com/maps/embed/v1/directions?mode=flying&center=53.12540
 <tr><td colspan="2"><hr /><br /></td></tr>
 {/foreach}
 </table>
+
+{literal}
+    <script type="text/javascript">
+        $('form.ground_map_form input[name=get_shipping_charge]').click(function (){
+            var manid = $(this).siblings('input[name=mid]').val();
+            var button = $(this);
+            button.prop('disabled', true);
+            $.post('ajax_admin.php',{
+                        orderid : $(this).siblings('input[name=orderid]').val(),
+                        manufacturerid: manid,
+                        ajax_action: 'get_order_shipping_charge'
+                    },
+                    function (data) {
+                        $('#shipping_charge_' + manid).html(data);
+                        button.prop('disabled', false);
+                    })
+        });
+    </script>
+{/literal}
