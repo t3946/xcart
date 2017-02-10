@@ -113,7 +113,8 @@ class SurfPath extends Data
                     'resource_id' => $oReferer->referer_id,
                     'resource_type' => self::GOAL_TYPE_REFERER,
                     'timestamp' => time(),
-                    'position' => ($oSurfMeta->points_visited)
+                    'position' => $oSurfMeta->points_visited,
+                    'additional_data' => $oHttpRequest->getUserAgent()
                 ])->_insert();
         }
 
