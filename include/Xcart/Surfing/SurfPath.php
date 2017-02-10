@@ -36,9 +36,8 @@ class SurfPath extends Data
 
     public function logSurfPath()
     {
-        global $detect_isMobile_was_created, $current_storefront, $clean_url_data, $cidev_filters_tree_sorted, $xcart_http_host;  //TODO remove globals;
+        global $clean_url_data, $cidev_filters_tree_sorted, $xcart_http_host;  //TODO remove globals;
         $sReferalUrl = null;
-        $bNewReferer = false;
         $aGoalArray = [];
         $oSession = new XcartSession();
         if (defined("IS_ROBOT") || !$oSession->getId()){
@@ -52,12 +51,10 @@ class SurfPath extends Data
         if ($aReferalUrl['host'] != $xcart_http_host) {
             $sPath = ltrim($aReferalUrl['path'], '/');
             $sReferalUrl = $aReferalUrl['host'] . (empty($sPath) ? '' : '/'. $sPath) . (empty($aReferalUrl['query']) ? '' : "?{$aReferalUrl['query']}");
-            $bNewReferer = true;
-        }
-
-        $aUri = $oHttpRequest->getQueryArray();
-        if (!empty($aUri['origin'])) {
-            $sReferalUrl .= (empty($aReferalUrl['query']) ? '?' : '&') . http_build_query(['origin' => $aUri['origin']]);
+            $aUri = $oHttpRequest->getQueryArray();
+            if (!empty($aUri['origin']) && !empty($aReferalUrl['host'])) {
+                $sReferalUrl .= (empty($aReferalUrl['query']) ? '?' : '&') . http_build_query(['origin' => $aUri['origin']]);
+            }
         }
 
         if (in_array($this->resource_type, [self::GOAL_TYPE_ADD_TO_CART, self::GOAL_TYPE_CHECKOUT, self::GOAL_TYPE_SEARCH, self::GOAL_TYPE_ORDER])) {
@@ -103,7 +100,6 @@ class SurfPath extends Data
                 $oReferer->referer_id = $oReferer->_insert();
             }
             $oReferer->updateField('visits', $oReferer->visits + 1);
-            if ($bNewReferer) {
                 self::create([
                     'meta_id' => $oSurfMeta->id,
                     'resource_id' => $oReferer->referer_id,
@@ -111,7 +107,6 @@ class SurfPath extends Data
                     'timestamp' => time(),
                     'position' => ($oSurfMeta->points_visited)
                 ])->_insert();
-            }
         }
 
         $oSurfMeta->_update();
