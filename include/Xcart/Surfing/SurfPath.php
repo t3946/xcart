@@ -46,11 +46,18 @@ class SurfPath extends Data
 
         $oHttpRequest = new HttpRequest();
         $oSurfMeta = SurfMeta::getInstance();
+
         $aReferalUrl = parse_url($oHttpRequest->getReferrer());
         if ($aReferalUrl['host'] != $xcart_http_host) {
             $sPath = ltrim($aReferalUrl['path'], '/');
             $sReferalUrl = $aReferalUrl['host'] . (empty($sPath) ? '' : '/'. $sPath) . (empty($aReferalUrl['query']) ? '' : "?{$aReferalUrl['query']}");
         }
+
+        $aUri = $oHttpRequest->getQueryArray();
+        if (!empty($aUri['origin'])) {
+            $sReferalUrl .= (empty($aReferalUrl['query']) ? '?' : '&') . http_build_query(['origin' => $aUri['origin']]);
+        }
+
         if (in_array($this->resource_type, [self::GOAL_TYPE_ADD_TO_CART, self::GOAL_TYPE_CHECKOUT, self::GOAL_TYPE_SEARCH, self::GOAL_TYPE_ORDER])) {
             $aGoalArray[$this->goals_arr[$this->resource_type]] = "Y";
         }
@@ -88,7 +95,7 @@ class SurfPath extends Data
         if (!is_null($sReferalUrl)) {
             $oSurfMeta->points_visited++;
             $oSurfMeta->referal_url = addslashes($sReferalUrl);
-            $oReferer = Referer::objects()->filter(['referer' => substr($sReferalUrl, 0, 767)])->get();
+            $oReferer = Referer::objects()->filter(['referer' => (string) substr($sReferalUrl, 0, 767)])->get();
             if (!$oReferer) {
                 $oReferer = Referer::create(['referer' => addslashes($sReferalUrl)]);
                 $oReferer->referer_id = $oReferer->_insert();
