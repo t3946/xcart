@@ -72,6 +72,9 @@ switch ($_POST['ajax_action']) {
     case "product_amazon_fba_restricted_change":
         changeAmazonFBARestricted($_POST);
         break;
+    case "get_order_shipping_charge":
+        getOrderShippingCharge($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -564,4 +567,30 @@ function changeAmazonFBARestricted($aParams = [])
         $aResult['result'] = true;
     }
     print(json_encode($aResult));
+}
+
+function getOrderShippingCharge($aParams = [])
+{
+    if (!empty($aParams['order_id']) && is_numeric($aParams['order_id'])) {
+        /** @var Order $oOrder */
+        $oOrder = Order::objects()->filter(['order_id' => (int)$aParams['order_id']])->get();
+        if ($oOrder) {
+            $aOrderGroups = $oOrder->getOrderGroups();
+            if (!empty($aOrderGroups)) {
+                foreach ($aOrderGroups as $oOrderGroup) {
+                    $oCart = new \Xcart\Cart();
+                    $aOrderDetails = $oOrderGroup->getOrderDetails();
+                    if (!empty($aOrderDetails)) {
+                        foreach ($aOrderDetails as $oOrderDetail){
+                            $oCart->addObjectToCart( new \Xcart\CartElement($oOrderDetail->getOrderDetailProduct(), $oOrderDetail->getAmount()));
+                        }
+                        $aShippingRates = (new Xcart\Shipping())->getShippingRates($oOrder->getCustomerEntity(), $oOrderGroup->getManufacturerEntity(), $oCart);
+                        if (!empty($aShippingRates)) {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
