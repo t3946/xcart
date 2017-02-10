@@ -1,59 +1,52 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 08.02.2017
- * Time: 18:09
- */
 
 namespace Xcart\App\Orm;
 
-use Xcart\App\Main\Xcart;
+use ReflectionClass;
 
-class Model extends Orm
+/**
+ * Class Model
+ * @package Xcart\App\Orm
+ */
+class Model extends AbstractModel
 {
-    public function getVerboseName()
+//    use LegacyMethodsTrait;
+
+    /**
+     * @return string
+     */
+    public static function tableName()
     {
-        return $this->classNameShort();
+        $bundleName = self::getBundleName();
+        if (!empty($bundleName)) {
+            return sprintf("%s_%s",
+                self::normalizeTableName(str_replace('Bundle', '', $bundleName)),
+                parent::tableName()
+            );
+        } else {
+            return parent::tableName();
+        }
     }
 
     /**
-     * @return \Xcart\App\Module\Module
+     * Return module name
+     * @return string
      */
-    public static function getModule()
+    public static function getBundleName()
     {
-        return Xcart::app()->getModule(self::getModuleName());
-    }
-
-    public function getAdminNames($instance = null)
-    {
-        $module = $this->getModule();
-        $cls = self::classNameShort();
-        $name = self::normalizeName($cls);
-        if ($instance) {
-            $updateTranslate = $module->t('Update ' . $name . ': {name}', ['{name}' => (string)$instance]);
-        } else {
-            $updateTranslate = $module->t('Update ' . $name);
+        $object = new ReflectionClass(get_called_class());
+        if ($pos = strpos($object->getFileName(), 'Bundle')) {
+            $shortPath = substr($object->getFileName(), $pos + 7);
+            return substr($shortPath, 0, strpos($shortPath, '/'));
         }
-        return [
-            $module->t(ucfirst($name . 's')),
-            $module->t('Create ' . $name),
-            $updateTranslate,
-        ];
+        return '';
     }
 
-    public static function normalizeName($name)
+    /**
+     * @return string
+     */
+    public function __toString()
     {
-        return trim(strtolower(preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $name)), '_ ');
-    }
-
-    public function reverse($route, $data = null)
-    {
-        return Xcart::app()->router->url($route, $data);
-    }
-
-    public static function t($str, $params = [], $dic = 'main')
-    {
-        return self::getModule()->t($str, $params, $dic);
+        return (string)$this->getShortName();
     }
 }

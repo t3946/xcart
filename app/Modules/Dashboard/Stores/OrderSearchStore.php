@@ -8,6 +8,7 @@ use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Xcart\App\Orm\QuerySet;
+use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Store\BaseStore;
 use Xcart\Connection;
@@ -66,7 +67,7 @@ class OrderSearchStore extends BaseStore
     public function __construct($data)
     {
         $this->form_data = $data;
-        $this->qs = $this->populate($data)->order(['-t.orderid']);
+        $this->qs = $this->populate($data)->order(['-orderid']);
     }
 
     /**
@@ -110,6 +111,7 @@ class OrderSearchStore extends BaseStore
     public function populate(array $data)
     {
         $qs = Order::objects()->getQuerySet();
+        $alias = $qs->getTableAlias();
 
         if (!empty($data['order']) || $this->checkNot('order'))
         {
@@ -191,7 +193,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['operator']) || $this->checkNot('order.operator')) {
-                $qs->join('inner join', 'xcart_order_logs', ['t.orderid' => 'logs.orderid'], 'logs');
+                $qs->join('inner join', 'xcart_order_logs', [$alias . '.orderid' => 'logs.orderid'], 'logs');
 
                 $val = ($data['order']['operator']) ? $data['order']['operator'] : [''];
 
@@ -211,7 +213,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['has_payment_processor'])) {
-                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $qs->join('inner join', 'xcart_order_groups', [$alias . '.orderid' => 'group.orderid'], 'group');
 
                 if (($data['order']['has_payment_processor'] == 'N')) {
                     $this->where['group.acc_paymentid'] = '';
@@ -222,7 +224,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['payment_processor']) || $this->checkNot('order.payment_processor')) {
-                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $qs->join('inner join', 'xcart_order_groups', [$alias . '.orderid' => 'group.orderid'], 'group');
 
                 $val = ($data['order']['payment_processor']) ? $data['order']['payment_processor'] : [''];
 
@@ -230,7 +232,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['delivery_method']) || $this->checkNot('order.delivery_method')) {
-                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $qs->join('inner join', 'xcart_order_groups', [$alias . '.orderid' => 'group.orderid'], 'group');
 
                 $val = ($data['order']['delivery_method']) ? $data['order']['delivery_method'] : [''];
 
@@ -238,7 +240,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['c2b_status']) || $this->checkNot('order.c2b_status')) {
-                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $qs->join('inner join', 'xcart_order_groups', [$alias . '.orderid' => 'group.orderid'], 'group');
 
                 $val = ($data['order']['c2b_status']) ? $data['order']['c2b_status'] : [''];
 
@@ -246,7 +248,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['d2c_status']) || $this->checkNot('order.d2c_status')) {
-                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $qs->join('inner join', 'xcart_order_groups', [$alias . '.orderid' => 'group.orderid'], 'group');
 
                 $val = ($data['order']['d2c_status']) ? $data['order']['d2c_status'] : [''];
 
@@ -254,7 +256,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['po_transit_status']) || $this->checkNot('order.po_transit_status')) {
-                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $qs->join('inner join', 'xcart_order_groups', [$alias . '.orderid' => 'group.orderid'], 'group');
 
                 $val = ($data['order']['po_transit_status']) ? $data['order']['po_transit_status'] : [''];
 
@@ -268,7 +270,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['tag']) || $this->checkNot('order.tag')) {
-                $qs->join('inner join', 'xcart_orders_additional_tags', ['t.orderid' => 'tagl.orderid'], 'tagl');
+                $qs->join('inner join', 'xcart_orders_additional_tags', [$alias . '.orderid' => 'tagl.orderid'], 'tagl');
 
                 $val = ($data['order']['tag']) ? $data['order']['tag'] : [''];
 
@@ -276,7 +278,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['distributor']) || $this->checkNot('order.distributor')) {
-                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $qs->join('inner join', 'xcart_order_groups', [$alias . '.orderid' => 'group.orderid'], 'group');
 
                 $val = ($data['order']['distributor']) ? $data['order']['distributor'] : [''];
 
@@ -286,11 +288,11 @@ class OrderSearchStore extends BaseStore
             if (!empty($data['order']['vn_status']) || $this->checkNot('order.vn_status')) {
                 $val = ($data['order']['vn_status']) ? $data['order']['vn_status'] : [''];
 
-                $this->getQ(['t.vn_status__in' => $val], 'order.vn_status');
+                $this->getQ([$alias . '.vn_status__in' => $val], 'order.vn_status');
             }
 
             if (!empty($data['order']['po_status']) || $this->checkNot('order.po_status')) {
-                $qs->join('inner join', 'xcart_po_pipeline', ['t.orderid' => 'po.order_id'], 'po');
+                $qs->join('inner join', 'xcart_po_pipeline', [$alias . '.orderid' => 'po.order_id'], 'po');
 
                 $val = ($data['order']['po_status']) ? $data['order']['po_status'] : [''];
 
@@ -298,30 +300,30 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['all_dx'])) {
-                $qs->join('inner join', 'xcart_order_groups', ['t.orderid' => 'group.orderid'], 'group');
+                $qs->join('inner join', 'xcart_order_groups', [$alias . '.orderid' => 'group.orderid'], 'group');
 
                 if ($data['order']['all_dx'] == 'Y') { // Присутствует во всех случаях
-                    $qs->join('inner join', 'xcart_order_group_invoices', ['t.orderid' => 'i_invoice.orderid', 'group.manufacturerid'=> 'i_invoice.manufacturerid'], 'i_invoice');
+                    $qs->join('inner join', 'xcart_order_group_invoices', [$alias . '.orderid' => 'i_invoice.orderid', 'group.manufacturerid'=> 'i_invoice.manufacturerid'], 'i_invoice');
                 }
                 elseif($data['order']['all_dx'] == 'AN') { // Отсутствует во всех случаях
-                    $qs->join('left outer join', 'xcart_order_group_invoices', ['t.orderid' => 'lo_invoice.orderid', 'group.manufacturerid'=> 'lo_invoice.manufacturerid'], 'lo_invoice');
+                    $qs->join('left outer join', 'xcart_order_group_invoices', [$alias . '.orderid' => 'lo_invoice.orderid', 'group.manufacturerid'=> 'lo_invoice.manufacturerid'], 'lo_invoice');
                     $this->where['lo_invoice.orderid__isnull'] = true;
                 }
                 elseif($data['order']['all_dx'] == 'NA') { // Отсутствует в некоторых случаях
-                    $qs->join('left join', 'xcart_order_group_invoices', ['t.orderid' => 'l_invoice.orderid'], 'l_invoice');
+                    $qs->join('left join', 'xcart_order_group_invoices', [$alias . '.orderid' => 'l_invoice.orderid'], 'l_invoice');
                     $this->where['l_invoice.orderid__isnull'] = false;
                 }
                 else { // Присутствует не во всех случаях
-                    $qs->join('left join', 'xcart_order_group_invoices', ['t.orderid' => 'l_invoice.orderid'], 'l_invoice');
+                    $qs->join('left join', 'xcart_order_group_invoices', [$alias . '.orderid' => 'l_invoice.orderid'], 'l_invoice');
                     $this->where['l_invoice.orderid__isnull'] = true;
                 }
             }
             if (!empty($data['order']['has_memo'])) {
-                $qs->join('left join', 'xcart_order_group_memos', ['t.orderid' => 'l_memo.orderid'], 'l_memo');
+                $qs->join('left join', 'xcart_order_group_memos', [$alias . '.orderid' => 'l_memo.orderid'], 'l_memo');
                 $this->where['l_memo.orderid__isnull'] = ($data['order']['has_dx'] == 'N');
             }
             if (!empty($data['order']['has_icx'])) {
-                $qs->join('left join', 'xcart_order_cx_invoices', ['t.orderid' => 'l_icx.orderid'], 'l_icx');
+                $qs->join('left join', 'xcart_order_cx_invoices', [$alias . '.orderid' => 'l_icx.orderid'], 'l_icx');
                 $this->where['l_icx.orderid__isnull'] = ($data['order']['has_icx'] == 'N');
             }
 
@@ -352,10 +354,10 @@ class OrderSearchStore extends BaseStore
                     }
                     case 'gc_ordered' : {
                         if (empty($this->form_data['not']['features'])) {
-                            $qs->join('inner join', 'xcart_giftcerts', ['t.orderid' => 'sert.orderid'], 'sert');
+                            $qs->join('inner join', 'xcart_giftcerts', [$alias . '.orderid' => 'sert.orderid'], 'sert');
                         }
                         else {
-                            $qs->join('left join', 'xcart_giftcerts', ['t.orderid' => 'l_sert.orderid'], 'l_sert');
+                            $qs->join('left join', 'xcart_giftcerts', [$alias . '.orderid' => 'l_sert.orderid'], 'l_sert');
                             $tmp['l_sert.orderid__isnull'] = true;
                         }
                         break;
@@ -368,7 +370,7 @@ class OrderSearchStore extends BaseStore
         if (!empty($data['product']) || $this->checkNot('product'))
         {
             if (!empty($data['product']['name'])) {
-                $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
+                $qs->join('inner join', 'xcart_order_details', [$alias . '.orderid' => 'details.orderid'], 'details');
 
                 $tmp = [new QAnd(array_map(function ($word) {
                     return new QOr([
@@ -381,21 +383,21 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['product']['sku'])) {
-                $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
+                $qs->join('inner join', 'xcart_order_details', [$alias . '.orderid' => 'details.orderid'], 'details');
                 $tmp = ['details.productcode__contains' => $data['product']['sku']];
 
                 $this->getQ($tmp, 'product.sku');
             }
 
             if (!empty($data['product']['id'])) {
-                $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
+                $qs->join('inner join', 'xcart_order_details', [$alias . '.orderid' => 'details.orderid'], 'details');
                 $tmp = ['details.productid' => $data['product']['id']];
 
                 $this->getQ($tmp, 'product.id');
             }
 
             if (!empty($data['product']['question_status']) || $this->checkNot('product.question_status')) {
-                $qs->join('inner join', 'xcart_order_details', ['t.orderid' => 'details.orderid'], 'details');
+                $qs->join('inner join', 'xcart_order_details', [$alias . '.orderid' => 'details.orderid'], 'details');
                 $qs->join('inner join', 'xcart_product_question', ['details.productid' => 'question.productid'], 'question');
 
                 $val = ($data['product']['question_status']) ? $data['product']['question_status'] : [''];
@@ -607,14 +609,9 @@ class OrderSearchStore extends BaseStore
             }
         }
 
+        $qs->filter($this->where)->group([ $alias . '.orderid']);
 
-        $qs->filter($this->where);
-
-        if (count($qs->getJoins()) !== 0) {
-            $qs->group([ $qs->getAlias() . '.orderid']);
-        }
-
-//        func_dump($qs->getSql());
+        func_dump($qs->getSql());
 
         return $qs;
     }
@@ -718,7 +715,7 @@ class OrderSearchStore extends BaseStore
     public function getPager()
     {
         if (!$this->pager) {
-            $this->pager = new Pagination($this->qs, ['pageSize' => 20]);
+            $this->pager = new Pagination($this->qs, ['pageSize' => 20], new QuerySetDataSource());
         }
         return $this->pager;
     }

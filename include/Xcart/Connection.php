@@ -10,7 +10,8 @@ use Xcart\App\Helpers\SmartProperties;
  *
  * @package Xcart
  */
-class Connection
+class
+Connection
 {
     use SmartProperties;
 
@@ -48,6 +49,8 @@ class Connection
     {
         if (is_null(self::$_instance)) {
             self::$_instance = DriverManager::getConnection($params);
+            $platform = self::$_instance->getDatabasePlatform();
+            $platform->registerDoctrineTypeMapping('enum', 'string');
         }
         return self::$_instance;
     }
