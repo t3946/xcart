@@ -572,7 +572,7 @@ function changeAmazonFBARestricted($aParams = [])
 
 function getOrderGroupShippingCharge($aParams = [])
 {
-    $sResult = 'Shipping qoute not found';
+    $sResult = 'Shipping quote not found';
     if (!empty($aParams['orderid']) && !empty($aParams['manufacturerid'])) {
         /** @var OrderGroup $oOrderGroup */
         $oOrderGroup = OrderGroup::objects()->filter(['orderid' => (int)$aParams['orderid'], 'manufacturerid' => (int)$aParams['manufacturerid']])->get();
