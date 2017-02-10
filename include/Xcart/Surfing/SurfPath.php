@@ -37,7 +37,7 @@ class SurfPath extends Data
     public function logSurfPath()
     {
         global $detect_isMobile_was_created, $current_storefront, $clean_url_data, $cidev_filters_tree_sorted, $xcart_http_host;  //TODO remove globals;
-        $sReferalUrl = '';
+        $sReferalUrl = null;
         $aGoalArray = [];
         $oSession = new XcartSession();
         if (defined("IS_ROBOT") || !$oSession->getId()){
@@ -85,7 +85,7 @@ class SurfPath extends Data
         }
         $this->_insert();
 
-        if (!empty($sReferalUrl)) {
+        if (!is_null($sReferalUrl)) {
             $oSurfMeta->points_visited++;
             $oSurfMeta->referal_url = addslashes($sReferalUrl);
             $oReferer = Referer::objects()->filter(['referer' => substr($sReferalUrl, 0, 767)])->get();
