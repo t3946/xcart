@@ -48,6 +48,7 @@ class SurfPath extends Data
         $oSurfMeta = SurfMeta::getInstance();
 
         $aReferalUrl = parse_url($oHttpRequest->getReferrer());
+        $aUri = $oHttpRequest->getQueryArray();
         if ($aReferalUrl['host'] != $xcart_http_host) {
             $sPath = ltrim($aReferalUrl['path'], '/');
             $sReferalUrl = $aReferalUrl['host'] . (empty($sPath) ? '' : '/'. $sPath) . (empty($aReferalUrl['query']) ? '' : "?{$aReferalUrl['query']}");
@@ -71,6 +72,10 @@ class SurfPath extends Data
         $this->timestamp = time();
         $this->position = $oSurfMeta->points_visited;
 
+        if ($this->resource_type == self::GOAL_TYPE_SEARCH) {
+            $REQUEST_URI_arr = explode("/", $aUri["request_uri"]);
+            $this->additional_data = $REQUEST_URI_arr[2];
+        }
         if (in_array($this->resource_type, [self::GOAL_TYPE_CATEGORY, self::GOAL_TYPE_BRAND, self::GOAL_TYPE_SEARCH]) &&
             !empty($cidev_filters_tree_sorted) &&
             is_array($cidev_filters_tree_sorted)
@@ -86,7 +91,10 @@ class SurfPath extends Data
                 }
             }
             if (!empty($selected_fv_id_arr)) {
-                $this->additional_data = implode(",", $selected_fv_id_arr);
+                if (!empty($this->additional_data)) {
+                    $this->additional_data .= ',';
+                }
+                $this->additional_data .= implode(",", $selected_fv_id_arr);
             }
         }
         $this->_insert();
