@@ -55,6 +55,18 @@ class SearchHelper
 
         return implode('',$t);
     }
+    public static function getZipCodeRegex($code)
+    {
+        $t = ['.*'];
+        foreach (str_split($code) as $char)
+        {
+            $t[] = $char;
+            $t[] = '[^\W_]*';
+        }
+        $t[] = '.*';
+
+        return implode('',$t);
+    }
 
     public static function getDecoratedAutoCompleteData($data, $type)
     {
