@@ -1214,4 +1214,19 @@ class OrderGroup extends Data
         $this->setField('total_gross', floatval($this->getField('total_gross')) + $fSumma);
         return $this;
     }
+
+    public function getShippingRates()
+    {
+        $aShippingRates = [];
+        $oCart = new \Xcart\Cart();
+        $aOrderDetails = $this->getOrderDetails();
+        if (!empty($aOrderDetails)) {
+            foreach ($aOrderDetails as $oOrderDetail) {
+                $oCart->addObjectToCart(new \Xcart\CartElement($oOrderDetail->getOrderDetailProduct(), $oOrderDetail->getAmount()));
+            }
+            $aShippingRates = (new Shipping())->getShippingRates($this->getOrderInstance()->getCustomerEntity(), $this->getManufacturerEntity(), $oCart);
+
+        }
+        return $aShippingRates;
+    }
 }
