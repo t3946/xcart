@@ -125,6 +125,7 @@ class Crawlers extends AbstractProvider
            "WebZIP"                          => ["WebZIP"],
            "World Wide Web Offline Explorer" => ["WWWOFFLE"],
            "Qwantify"                        => ["Qwantify"],
+           "Hyperic"                         => ["Hyperic"],
         ];
 
     private function clearData($data)
