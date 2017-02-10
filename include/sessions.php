@@ -128,8 +128,8 @@ $smarty->assign("XCARTSESSID", $XCARTSESSID);
 #
 function x_session_start($sessid = '') {
 	global $XCART_SESSION_VARS, $XCART_SESSION_NAME, $XCARTSESSID, $XCART_SESSION_EXPIRY;
-	global $sql_tbl, $config, $use_sessions_type, $xcart_https_host, $xcart_http_host, $use_session_length;
-	global $_SERVER;
+	global $sql_tbl, $config, $use_sessions_type, $detect_isMobile_was_created, $current_storefront, $use_session_length;
+	global $_SERVER, $xcart_https_host, $xcart_http_host;
 
 	# $sessid should contain only '0'..'9' or 'a'..'z' or 'A'..'Z'
 	if (strlen($sessid) > 32 || !empty($sessid) && !preg_match('!^[0-9a-zA-Z]+$!S', $sessid)) {
@@ -237,6 +237,7 @@ function x_session_start($sessid = '') {
 	}
 
 	$XCARTSESSID = $sessid;
+
 	setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_https_host, 0);
 	setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_http_host, 0);
 }

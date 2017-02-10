@@ -535,10 +535,10 @@ class OrderSearchStore extends BaseStore
                 }
                 else {
                     if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'billing'])) {
-                        $tmp['b_zipcode__raw'] = "RLIKE '" . SearchHelper::getNumberOnlyRegexp($data['customer']['zip_code']). "'";
+                        $tmp['b_zipcode__raw'] = "RLIKE '" . SearchHelper::getZipCodeRegex($data['customer']['zip_code']). "'";
                     }
                     if (empty($data['customer']['in_address']) || in_array($data['customer']['in_address'], ['both', 'shipping'])) {
-                        $tmp['s_zipcode__raw'] = "RLIKE '" . SearchHelper::getNumberOnlyRegexp($data['customer']['zip_code']). "'";
+                        $tmp['s_zipcode__raw'] = "RLIKE '" . SearchHelper::getZipCodeRegex($data['customer']['zip_code']). "'";
                     }
 
                     $this->getQ([new QOr($tmp)], 'customer.zip_code');

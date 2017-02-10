@@ -1,7 +1,6 @@
 <?php
 namespace Xcart\App\Request;
 
-
 class XcartSession extends Session
 {
 
@@ -49,5 +48,10 @@ class XcartSession extends Session
     public function count()
     {
         return count($GLOBALS['XCART_SESSION_VARS']);
+    }
+
+    public function getId()
+    {
+        return $GLOBALS['XCARTSESSID'];
     }
 }

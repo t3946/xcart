@@ -3575,7 +3575,7 @@ function func_GetAAJ_product_info($supplier_internal_id, $supplier_internal_opti
     return $AAJ_product_info;
 }
 
-function func_log_cidev_surf($resource_type, $resource_id = "0")
+/*function func_log_cidev_surf($resource_type, $resource_id = "0")
 {
     global $sql_tbl, $XCARTSESSID, $current_storefront, $detect_isMobile_was_created, $clean_url_data, $is_robot, $cidev_filters_tree_sorted;
 
@@ -3586,19 +3586,6 @@ function func_log_cidev_surf($resource_type, $resource_id = "0")
     ) {
         return false;
     }
-
-    /*
-$resource_type
-P - Product
-C - Category
-B - Brand
-A - Add to cart
-K - checKout
-S - elastic Search
-H - Home page
-O - Order submitted
-T - sTatic page
-*/
 
     $goals_arr = [
         "A" => "goal_addtocart",
@@ -3721,7 +3708,7 @@ T - sTatic page
 
         func_array2insert("cidev_surf_path", $cidev_surf_path_arr);
     }
-}
+}*/
 
 function func_convert_date_mm_dd_yyyy($date, $to_format)
 {

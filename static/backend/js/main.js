@@ -20,7 +20,7 @@ jQuery.fn.mfieldset = function (options) {
         } else
             hideFieldsetContent(fieldset, {animation: false});
 
-        $(legend).bind('click', function () {
+        $(legend).on('click', function () {
             if (fieldset.hasClass('expanded')) {
                 $.cookie('fieldset_' + indexVar, null, {expires: -1});
                 hideFieldsetContent(fieldset, options);
