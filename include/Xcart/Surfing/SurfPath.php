@@ -88,7 +88,7 @@ class SurfPath extends Data
         if (!empty($sReferalUrl)) {
             $oSurfMeta->points_visited++;
             $oSurfMeta->referal_url = addslashes($sReferalUrl);
-            $oReferer = Referer::objects()->filter(['referer' => substr($sReferalUrl, 767)])->get();
+            $oReferer = Referer::objects()->filter(['referer' => substr($sReferalUrl, 0, 767)])->get();
             if (!$oReferer) {
                 $oReferer = Referer::create(['referer' => addslashes($sReferalUrl)]);
                 $oReferer->referer_id = $oReferer->_insert();
