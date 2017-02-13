@@ -562,7 +562,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      * @return ModelInterface
      * @internal
      */
-    public static function create(array $attributes)
+    public static function create(array $attributes = [])
     {
         $className = get_called_class();
         /** @var ModelInterface $model */

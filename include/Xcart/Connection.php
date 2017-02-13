@@ -10,8 +10,7 @@ use Xcart\App\Helpers\SmartProperties;
  *
  * @package Xcart
  */
-class
-Connection
+class Connection
 {
     use SmartProperties;
 

@@ -3,9 +3,9 @@
 namespace Modules\Dashboard\Controllers;
 
 use Modules\Dashboard\Helpers\SearchHelper;
+use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Controller\AdminController;
-use Xcart\App\Main\Xcart;
 
 class DashboardController extends AdminController
 {
@@ -13,76 +13,56 @@ class DashboardController extends AdminController
 
     public function index()
     {
-        func_dump($this->getRequest());
+        $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
+//        $models = DashboardFilter::objects()->all();
+
+        foreach ($models as $model)
+        {
+            echo "<a href='{$model->getAdminUrl()}'>{$model}</a>";
+        }
     }
 
-    public function search()
+    public function settings()
     {
-        $session       = Xcart::app()->request->session;
-        $form_collapse = false;
+        $models = DashboardFilter::objects()->all();
 
-        if (!empty($_GET['search']['reset']) == 'reset') {
-            $session->remove('search_order_form');
-            $this->refresh();
+        foreach ($models as $model)
+        {
+            echo "<a href='{$model->getAdminUrl()}'>{$model}</a>";
+        }
+    }
+
+    public function create()
+    {
+        $this->edit();
+    }
+
+    public function edit($id = null)
+    {
+        $class = DashboardFilter::classNameShort();
+
+        if (!is_null($id)) {
+            $model = DashboardFilter::objects()->get(['id' => $id]);
+        }
+        else {
+            $model = new DashboardFilter();
         }
 
-        if (!empty($_GET['search'])) {
-            $form_collapse = true;
+        if ($_POST[$class] && $_POST['search']) {
+            $model->setAttributes($_POST[$class]);
+            $model->form_data = OrderSearchStore::getClearedData($_POST['search']);
 
-            $session->add('search_order_form', OrderSearchStore::getClearedData($_GET['search']));
-
-            if (isset($_GET['search']['new_list'])) {
-                $session->add('search_new_template', $_GET['search']['new_list']);
+            if ($model->isValid() && $model->save()) {
+                $this->refresh();
             }
         }
 
-        $form_data = $session->get('search_order_form', [
-            'order'    => [
-                'date' => SearchHelper::getDefaultSearchDate(),
-            ],
-        ]);
-
-        if (!is_array($form_data)) {
-            $form_data = [];
-        }
-
-        $form_data['new_list'] = $session->get('search_new_template', 1);
-
-        $orderStore = new OrderSearchStore($form_data);
-        $models     = $orderStore->getModels();
-        $pager      = $orderStore->getPager();
-
-        if (empty($models)) {
-            $form_collapse = false;
-        }
-
-        $content = $this->render('dashboard/search_form.tpl', array_merge(
+        echo $this->renderInternal('dashboard/edit_form.tpl', array_merge(
             SearchHelper::getFormAndListData(),
             [
-                'pager'         => $pager,
-                'models'        => $models,
-                'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
-                'new_template'  => $session->get('search_new_template', 1),
-                'form_collapse' => $form_collapse,
+                'model'     => $model,
+                'form_data' => SearchHelper::prepareFormDataForTemplate($model->form_data),
             ])
         );
-
-        echo $this->renderSmarty("admin/home.tpl", [
-            'single_mode' => true,
-            'main'        => 'raw_html',
-            'content'     => $content,
-        ]);
-    }
-
-    public function search_ajax_suggestion()
-    {
-        $data = [];
-
-        if (isset($_GET['from']) && !empty($_GET['q'])) {
-            $data = SearchHelper::getAjaxSuggestion($_GET['q'], $_GET['from']);
-            $data = SearchHelper::autoCompleteClearNewLines($data);
-        }
-
-        $this->jsonResponse($data);
     }
 }
