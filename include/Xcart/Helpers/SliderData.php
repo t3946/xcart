@@ -17,12 +17,12 @@ class SliderData
             $params['productid'] = null;
         }
 
-        list($products, $gaparam) = self::getSliderData($params['mode'], $params['productid']);
+        list($products, $gaparam) = self::getSliderData($params['mode'], $params['productid'], 1);
 
         $smarty->assign($params['assign'], $products);
     }
 
-    public static function getSliderData ($mode, $productid = null)
+    public static function getSliderData ($mode, $productid = null, $fba_limit = 2)
     {
         global $config, $sql_tbl, $site_domain;
         global $XCART_SESSION_NAME, $$XCART_SESSION_NAME;
@@ -191,7 +191,7 @@ SQL;
                     $i_ids[] = $pid['needed_resource_id'];
                 }
 
-                if ($fba_pids = Product::getRandFbaProducts(2, $i_ids))
+                if ($fba_pids = Product::getRandFbaProducts($fba_limit, $i_ids))
                 {
                     $pids = array_merge($fba_pids, $pids);
                 }
