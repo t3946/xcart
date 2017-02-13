@@ -237,9 +237,10 @@ function x_session_start($sessid = '') {
 	}
 
 	$XCARTSESSID = $sessid;
-
-	setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_https_host, 0);
-	setcookie($XCART_SESSION_NAME, $XCARTSESSID, time()+$use_session_length, "/", $xcart_http_host, 0);
+	if ($xcart_http_host != $xcart_http_host) {
+		setcookie($XCART_SESSION_NAME, $XCARTSESSID, time() + $use_session_length, "/", $xcart_https_host, 0);
+	}
+	setcookie($XCART_SESSION_NAME, $XCARTSESSID, time() + $use_session_length, "/", $xcart_http_host, 0);
 }
 
 #
