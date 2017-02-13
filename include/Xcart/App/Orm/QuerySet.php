@@ -513,6 +513,7 @@ class QuerySet extends QuerySetBase
      */
     public function count($q = '*')
     {
+        //@TODO: Переписать этот кусок говна
         $clone = clone $this;
         $clone->limit(null);
 

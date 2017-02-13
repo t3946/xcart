@@ -1,5 +1,5 @@
 
-<fieldset class="expanded" rel="1">
+<fieldset class="{if $full_expanded}expanded-force{/if}" rel="1">
     <legend>General</legend>
 
     <ul class="ul-main">
@@ -262,7 +262,7 @@
 </fieldset>
 
 
-<fieldset class="expanded collapsed" rel="3">
+<fieldset class="{if $full_expanded}expanded-force{/if}" rel="3">
     <legend>
         Advanced - Product in order
     </legend>
@@ -342,7 +342,7 @@
     </ul>
 </fieldset>
 
-<fieldset class="expanded collapsed"  rel="2">
+<fieldset class="{if $full_expanded}expanded-force{/if}"  rel="2">
     <legend>
         Advanced - Payment \ Shipping
     </legend>
@@ -553,7 +553,7 @@
     </ul>
 </fieldset>
 
-<fieldset class="expanded collapsed"  rel="3">
+<fieldset class="{if $full_expanded}expanded-force{/if}"  rel="3">
     <legend>
         Advanced
     </legend>
@@ -784,18 +784,3 @@
         </li>
     </ul>
 </fieldset>
-
-<ul class="ul-main">
-    <li>
-        <div class="row">
-            <div class="columns large-4">
-                <label for="fo_nlist">New order list:</label>
-            </div>
-
-            <div class="columns large-6">
-                <input type="hidden" name="search[new_list]" value="0">
-                <input type="checkbox" name="search[new_list]" id="fo_nlist" value="1" {if $form_data.new_list}checked{/if}>
-            </div>
-        </div>
-    </li>
-</ul>
