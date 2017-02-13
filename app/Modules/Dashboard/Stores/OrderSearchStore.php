@@ -611,7 +611,7 @@ class OrderSearchStore extends BaseStore
 
         $qs->filter($this->where)->group([ $alias . '.orderid']);
 
-        func_dump($qs->getSql());
+//        func_dump($qs->getSql());
 
         return $qs;
     }

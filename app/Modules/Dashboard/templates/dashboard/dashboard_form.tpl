@@ -1,50 +1,5 @@
 {extends 'base/admin.tpl'}
 
-{block 'heading'}
-    <h1 align="center">Order search</h1>
-{/block}
-
-{block 'content'}
-
-    <div class="row">
-        <div class="columns large-12">
-            <fieldset class="{if $form_collapse}collapsed-force collapsed{else}expanded{/if}">
-                <legend>Order search form</legend>
-
-                <form action="{url 'dashboard:search'}" method="GET">
-                    {include 'dashboard/form_fields.tpl'}
-
-                    <button>Search</button>
-                    <button name="search[reset]" value="reset">Reset</button>
-                </form>
-            </fieldset>
-        </div>
-    </div>
-
-
-    {if count($models) > 0}
-        <div class="row">
-            <div class="columns large-12">
-                {raw $pager}
-            </div>
-        </div>
-        <div class="row">
-            <div class="columns large-12">
-                {if $new_template}
-                    {include 'order/orders_list.tpl' orders=$models}
-                {else}
-                    {include 'order/orders_list_old.tpl' orders=$models}
-                {/if}
-            </div>
-        </div>
-        <div class="row">
-            <div class="columns large-12">
-                {raw $pager}
-            </div>
-        </div>
-    {/if}
-{/block}
-
 {block 'js-head'}
     <link href="/static/vendors/air-datepicker/dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
     <script src="/static/vendors/air-datepicker/dist/js/datepicker.min.js" type="text/javascript"></script>

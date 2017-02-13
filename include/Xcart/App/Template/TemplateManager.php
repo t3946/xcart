@@ -128,7 +128,15 @@ class TemplateManager
 
             $attributes = isset($params['params']) ? $params['params'] : [];
             if (!$attributes) {
-                $attributes = isset($params[1]) ? $params[1] : [];
+                $attributes = (isset($params[1]) && is_array($params[1])) ? $params[1] : [];
+
+                if (!$attributes && count($params) > 1) {
+                    foreach ($params as $k => $v) {
+                        if (!is_numeric($k)) {
+                            $attributes[$k] = $v;
+                        }
+                    }
+                }
             }
             return Xcart::app()->router->url($route, $attributes);
         });

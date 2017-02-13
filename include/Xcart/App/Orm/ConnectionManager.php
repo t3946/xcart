@@ -1,17 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 08/12/16
- * Time: 13:19
- */
-
 namespace Xcart\App\Orm;
 
 use Doctrine\DBAL\DriverManager;
+use Xcart\App\Helpers\SmartProperties;
 
 class ConnectionManager
 {
+    use SmartProperties;
+
     /**
      * @var string
      */
@@ -67,7 +63,7 @@ class ConnectionManager
      * @param string $name
      * @return $this
      */
-    public function setDefaultConnection(string $name)
+    public function setDefaultConnection($name)
     {
         $this->defaultConnection = $name;
         return $this;

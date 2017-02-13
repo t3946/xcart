@@ -14,4 +14,13 @@ class AdminController extends Controller
 {
     use SmartyRenderTrait;
 
+    public function renderInternal($view, $params)
+    {
+        return $this->renderSmarty("admin/home.tpl", [
+            'single_mode' => true,
+            'main'        => 'raw_html',
+            'content'     =>  $this->render($view, $params),
+        ]);
+    }
+
 }
