@@ -1046,10 +1046,4 @@ SQL;
         }
         return $sRefererDomain;
     }
-
-    public function aaa()
-    {
-        return self::objects()->filter(['orderid' => 100])->all();
-    }
-
 }
