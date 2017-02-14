@@ -36,4 +36,18 @@ class DashboardModule extends Module
             return '';
         });
     }
+
+    public static function getAdminMenu()
+    {
+        return [
+            [
+                'name' => 'Search',
+                'route' => Xcart::app()->router->url('dashboard:search')
+            ],
+            [
+                'name' => 'Settings',
+                'route' => Xcart::app()->router->url('dashboard:settings')
+            ],
+        ];
+    }
 }

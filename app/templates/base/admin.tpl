@@ -15,6 +15,46 @@
 {filter|strip:true}
 <div id="wrapper" class="admin">
     {block 'content-header'}
+
+        <div class="row">
+            <div class="columns large-12">
+                {block 'menu_block'}
+                    <div class="menu-block">
+                        {*<div class="links-block clearfix">*}
+                        {*<a href="/" target="_blank" class="link"></a>*}
+                        {*<a href="#" class="settings"></a>*}
+                        {*<a href="{url route='admin:logout'}" class="logout"></a>*}
+                        {*</div>*}
+                        <div class="menu-wrapper">
+                            {*<div class="search-block">*}
+                            {*<input type="text" data-menu-search placeholder="Поиск...">*}
+                            {*</div>*}
+                            <ul class="main-menu">
+                                {foreach $.admin_menu as $module}
+                                    {if $module['items']|count > 0}
+                                        <li class="module">
+                                            <div class="name">
+                                                {$module['name']}
+                                            </div>
+                                            <ul class="items">
+                                                {foreach $module['items'] as $item}
+                                                    <li class="item">
+                                                        <a href="{$item['route']}">
+                                                            {$item['name']}
+                                                        </a>
+                                                    </li>
+                                                {/foreach}
+                                            </ul>
+                                        </li>
+                                    {/if}
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </div>
+                {/block}
+            </div>
+        </div>
+
         <div class="content-header">
             <div class="row">
                 <div class="column large-12">

@@ -4,10 +4,10 @@ namespace Modules\Dashboard\Controllers;
 
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Stores\OrderSearchStore;
-use Xcart\App\Controller\AdminController;
+use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
 
-class SearchController extends AdminController
+class SearchController extends PrototypeAdminController
 {
     public $defaultAction = 'index';
 

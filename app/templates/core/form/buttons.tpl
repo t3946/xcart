@@ -9,15 +9,15 @@
             </section>
 
 
-            {if method_exists($model, 'getAbsoluteUrl')}
+            {if !$model->getIsNewRecord() && method_exists($model, 'getAbsoluteUrl')}
                 <section class="button-group">
-                    <a href="{$model->getAbsoluteUrl()}" class="button">Browse in work</a>
+                    <a href="{$model->getAbsoluteUrl()}" class="button green" target="_blank">Browse in work</a>
                 </section>
             {/if}
 
             {if !$model->getIsNewRecord()}
                 <section class="button-group float-right">
-                    <input type="submit" class="button" name="delete" value="Delete">
+                    <input type="submit" class="button darkred" name="delete" value="Delete">
                 </section>
             {/if}
 

@@ -44,6 +44,8 @@ class Controller
             $class = get_class();
             throw new InvalidConfigException("There is no action {$action} in controller {$class}");
         }
+
+        $this->afterAction($action, $params);
     }
     public function runAction($action, $params = [])
     {
@@ -88,17 +90,25 @@ class Controller
     {
         $this->_request->redirect($url, $data, $status);
     }
+
     public function refresh()
     {
         $this->_request->refresh();
     }
+
     public function beforeAction($action, $params)
     {
     }
+
+    public function afterAction($action, $params)
+    {
+    }
+
     public function error($code = 404, $message = null)
     {
         throw new HttpException($code, $message);
     }
+
     public function jsonResponse($data = [])
     {
         header('Content-Type: application/json');
