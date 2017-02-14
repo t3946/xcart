@@ -22,7 +22,7 @@
                         <li>
                             <div class="row">
                                 <div class="columns large-4">
-                                    <label for="m_name">Name:</label>
+                                    <label for="m_name">{$model->getField('name')->getVerboseName()}:</label>
                                 </div>
 
                                 <div class="columns large-6">
@@ -34,11 +34,23 @@
                         <li>
                             <div class="row">
                                 <div class="columns large-4">
-                                    <label for="m_position">Position:</label>
+                                    <label for="m_position">{$model->getField('position_row')->getVerboseName()}:</label>
                                 </div>
 
                                 <div class="columns large-6">
-                                    <input type="text" name="{$class_name}[position]" id="m_position" value="{$model->position}" class="big">
+                                    <input type="text" name="{$class_name}[position_row]" id="m_position" value="{$model->position_row}" class="">
+                                </div>
+
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row">
+                                <div class="columns large-4">
+                                    <label for="m_position">{$model->getField('position_column')->getVerboseName()}:</label>
+                                </div>
+
+                                <div class="columns large-6">
+                                    <input type="text" name="{$class_name}[position_column]" id="m_position" value="{$model->position_column}" class="">
                                 </div>
 
                             </div>

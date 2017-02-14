@@ -12,6 +12,11 @@ return [
         'name' => 'create'
     ],
     [
+        'route' => '/settings',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'settings'],
+        'name' => 'settings'
+    ],
+    [
         'route' => '/edit/{i:id}',
         'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'edit'],
         'name' => 'edit'

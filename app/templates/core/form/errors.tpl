@@ -10,7 +10,7 @@
                     <ul class="fields">
                         {foreach $model->getErrors() as $field => $errors}
                             <li>
-                                Field "{$field}":
+                                Field "{$model->getField($field)->getVerboseName()}":
                                 <ul class="field-errors">
                                     {foreach $errors as $error}
                                         <li>
