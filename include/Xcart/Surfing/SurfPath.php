@@ -108,6 +108,7 @@ class SurfPath extends Data
                 $oReferer->referer_id = $oReferer->_insert();
             }
             $oReferer->updateField('visits', $oReferer->visits + 1);
+            if ($oSurfMeta->id) {
                 self::create([
                     'meta_id' => $oSurfMeta->id,
                     'resource_id' => $oReferer->referer_id,
@@ -116,6 +117,7 @@ class SurfPath extends Data
                     'position' => $oSurfMeta->points_visited,
                     'additional_data' => $oHttpRequest->getUserAgent()
                 ])->_insert();
+            }
         }
 
         $oSurfMeta->_update();
