@@ -24,10 +24,10 @@
                                 {include 'core/form/model_form_field.tpl' model=$model field='name' class='big'}
                             </li>
                             <li>
-                                {include 'core/form/model_form_field.tpl' model=$model field='position_row'}
+                                {include 'core/form/model_form_field.tpl' model=$model field='position_row' type='number'}
                             </li>
                             <li>
-                                {include 'core/form/model_form_field.tpl' model=$model field='position_column'}
+                                {include 'core/form/model_form_field.tpl' model=$model field='position_column' type='number'}
                             </li>
                             <li>
                                 {include 'core/form/model_form_field.tpl' model=$model field='enabled' type='checkbox'}

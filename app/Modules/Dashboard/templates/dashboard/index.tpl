@@ -5,7 +5,7 @@
 
 {block 'content'}
     {smarty_admin_block name='Order dashboard'}
-        <table style="width: 100%" class="dashboard-table">
+        <table style="width: 100%" class="dashboard-filters">
             {foreach 1..$row_col.row as $row}
                 <tr>
                     {foreach 1..$row_col.col as $col}
@@ -13,23 +13,34 @@
                             {foreach $models as $model}
                                 {if $model->position_row == $row && $model->position_column == $col}
                                     {if $model->getSearchStorage()->getPager()->getTotal() > 0}
-                                        <a href="{$model->getAbsoluteUrl()}">
-                                            {if $model->tag}
-                                                <span style="background-color: {$model->color}; display: inline-block; min-width: 1.3em; min-height: 1.3em; text-align: center; color: #fff; font-weight: bold;">
-                                                    {$model->tag|upper}
-                                                </span>
-                                            {/if}
-                                            <span class="underline">
-                                                {if $model->bold}
-                                                    <em>{$model} </em>
-                                                {else}
-                                                    {$model}
+                                        <a href="{$model->getAdminUrl()}" class="">
+                                            <div class="row">
+                                                {if $model->tag}
+                                                    <div class="columns large-2">
+                                                        <span style="background-color: {$model->color};" class="tag">
+                                                            <span>
+                                                                {$model->tag|upper}
+                                                            </span>
+                                                        </span>
+                                                    </div>
                                                 {/if}
-                                                ({$model->getSearchStorage()->getPager()->getTotal()})
-                                            </span>
+                                                <div class="columns {if $model->tag}large-10{else}large-12{/if}">
+                                                    <span class="name">
+                                                        {$model} ({$model->getSearchStorage()->getPager()->getTotal()})
+                                                    </span>
+
+
+                                                </div>
+                                            </div>
                                         </a>
                                     {else}
-                                        <span>{$model}</span>
+                                        <div class="row">
+                                            <div class="columns large-12">
+                                                <span class="gray">
+                                                    {$model}
+                                                </span>
+                                            </div>
+                                        </div>
                                     {/if}
                                 {/if}
                             {/foreach}
