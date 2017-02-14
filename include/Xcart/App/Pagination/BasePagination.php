@@ -70,6 +70,8 @@ abstract class BasePagination
      */
     protected $pageSizes = [10, 25, 50, 100];
 
+    private $paginated = false;
+
     /**
      * BasePagination constructor.
      * @param $source
@@ -142,6 +144,10 @@ abstract class BasePagination
      */
     public function getTotal()
     {
+        if (!$this->paginated) {
+            $this->paginate();
+        }
+
         return $this->total;
     }
 

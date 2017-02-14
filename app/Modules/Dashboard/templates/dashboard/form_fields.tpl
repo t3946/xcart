@@ -123,7 +123,7 @@
                 </div>
 
                 <div class="columns large-6">
-                    <input type="radio" name="search[customer][in_address]" id="c_in_address_both" value="both" {if $form_data.customer.in_address == 'both' or !$form_data.customer.in_address}checked{/if}>
+                    <input type="radio" name="search[customer][in_address]" id="c_in_address_both" value="" {if $form_data.customer.in_address == 'both' or !$form_data.customer.in_address}checked{/if}>
                     <label for="c_in_address_both">Both</label>
 
                     <input type="radio" name="search[customer][in_address]" id="c_in_address_billig" value="billing" {if $form_data.customer.in_address == 'billing'}checked{/if}>

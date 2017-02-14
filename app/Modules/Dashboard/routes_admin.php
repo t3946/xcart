@@ -17,11 +17,15 @@ return [
         'name' => 'settings'
     ],
     [
-        'route' => '/edit/{i:id}',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'edit'],
-        'name' => 'edit'
+        'route' => '/update/{i:id}',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'update'],
+        'name' => 'update'
     ],
-
+    [
+        'route' => '/filter/{i:id}',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'filter'],
+        'name' => 'filter'
+    ],
     [
         'route' => '/search',
         'target' => ['\Modules\Dashboard\Controllers\SearchController', 'index'],

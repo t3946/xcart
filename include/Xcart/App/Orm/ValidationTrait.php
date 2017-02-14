@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 20/09/16
- * Time: 10:58
- */
-
 namespace Xcart\App\Orm;
 
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -31,7 +24,7 @@ trait ValidationTrait
     }
 
     /**
-     * @return \Symfony\Component\Validator\Validator\ValidatorInterface
+     * @return \Symfony\Component\Validator\Validator\ValidatorInterface|\Symfony\Component\Validator\ValidatorInterface
      */
     protected function getValidator()
     {
