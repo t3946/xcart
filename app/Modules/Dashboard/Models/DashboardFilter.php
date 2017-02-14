@@ -4,6 +4,7 @@ namespace Modules\Dashboard\Models;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\JsonField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Model;
@@ -25,7 +26,7 @@ class DashboardFilter extends Model
             'enabled' => [
                 'class' => BooleanField::className(),
                 'null' => false,
-                'default' => 0
+                'default' => 0,
             ],
             'bold' => [
                 'class' => BooleanField::className(),
@@ -35,12 +36,30 @@ class DashboardFilter extends Model
             'name' => [
                 'class' => TextField::className(),
                 'null' => false,
+                'verboseName' => 'Filter name'
             ],
-            'position' => [
-                'class' => TextField::className()
+            'position_row' => [
+                'class' => IntField::className(),
+                'null' => false,
+            ],
+            'position_column' => [
+                'class' => IntField::className(),
+                'null' => false
+            ],
+            'tag' => [
+                'class' => TextField::className(),
+                'length' => 5,
+                'null' => false
+            ],
+            'color' => [
+                'class' => TextField::className(),
+                'null' => false,
+                'verboseName' => 'Tag color'
             ],
             'form_data' => [
                 'class' => JsonField::className(),
+                'null' => false,
+                'verboseName' => 'Filter condition'
             ]
         ];
     }

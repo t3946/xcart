@@ -18,7 +18,7 @@ class DashboardController extends AdminController
 
         foreach ($models as $model)
         {
-            echo "<a href='{$model->getAdminUrl()}'>{$model}</a>";
+            echo "<a href='{$model->getAbsoluteUrl()}'>{$model}</a>";
         }
     }
 
