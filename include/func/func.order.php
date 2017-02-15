@@ -2008,8 +2008,7 @@ function func_get_order_manufacturers($orderid)
                                 }
                             }
 
-                            global $xcart_dir;
-                            $tmp_sku = \Xcart\Product::model(['productid' => $v['productid']])->getMPN();
+                            $tmp_sku = $v['oProduct']->getMPN();
 
                             $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $v["amount"] . '</td></tr>';
 
@@ -2035,7 +2034,6 @@ function func_get_order_manufacturers($orderid)
                                     $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
                                 }
                             }
-                            $total_product_cost_to_us += $v["oProduct"]->getProductCostToUs() * $v["amount"];
                         }
                     }
                     $cidev_items_table .= "</table>";
@@ -2050,6 +2048,10 @@ function func_get_order_manufacturers($orderid)
                     }
                 }
 
+                /** @var \Xcart\OrderGroup $oOrderGroup */
+                $oOrderGroup = Xcart\OrderGroup::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id])->get();
+
+                $total_product_cost_to_us = $oOrderGroup->getTotalCostToUs();
                 $mnfs[$m_id]['total_product_cost_to_us'] = $total_product_cost_to_us;
 
                 $secure_check        = $orderid . $m_id;
