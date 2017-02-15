@@ -2035,7 +2035,7 @@ function func_get_order_manufacturers($orderid)
                                     $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
                                 }
                             }
-                            $total_product_cost_to_us += $v["cost_to_us"] * $v["amount"];
+                            $total_product_cost_to_us += $v["oProduct"]->getProductCostToUs() * $v["amount"];
                         }
                     }
                     $cidev_items_table .= "</table>";
