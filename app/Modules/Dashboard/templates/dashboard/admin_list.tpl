@@ -5,7 +5,7 @@
 
 {block 'content'}
     {smarty_admin_block name='Actions'}
-            <a href="{url 'dashboard:create'}" class="button">Create new</a>
+        <a href="{url 'dashboard:create'}" class="button">Create new</a>
     {/smarty_admin_block}
 
     {smarty_admin_block name= 'Filters'}
@@ -21,16 +21,15 @@
                                         <div class="row">
                                             {if $model->tag}
                                                 <div class="columns large-2">
-                                                    <span style="background-color: {$model->color};" class="tag">
-                                                        {$model->tag|upper}
-                                                    </span>
+                                                    <span style="background-color: {$model->color};" class="tag">&nbsp;{$model->tag|upper}&nbsp;</span>
                                                 </div>
                                             {/if}
                                             <div class="columns {if $model->tag}large-10{else}large-12{/if}">
-                                            <span class="name">
-                                            {$model}
-                                                {*({$model->position_row}, {$model->position_column})*}
-                                        </span>
+                                                <span class="name">
+                                                    <span class="{if $model->bold}bold{/if} {if !$model->enabled}gray{/if}">
+                                                        {$model}
+                                                    </span>
+                                                </span>
                                             </div>
                                         </div>
                                     </a>

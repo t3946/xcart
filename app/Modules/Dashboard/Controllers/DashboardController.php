@@ -31,10 +31,11 @@ class DashboardController extends PrototypeAdminController
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
 
-            echo $this->renderInternal('dashboard/search_form.tpl',
+            echo $this->renderInternal('dashboard/filter.tpl',
                 array_merge(
                     SearchHelper::getFormAndListData(),
                     [
+                        'model'         => $model,
                         'pager'         => $pager,
                         'models'        => $models,
                         'form_data'     => SearchHelper::prepareFormDataForTemplate($model->form_data),
