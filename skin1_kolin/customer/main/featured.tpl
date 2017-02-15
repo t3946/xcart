@@ -16,8 +16,8 @@
 {$lng.txt_no_featured}
 {/if}
 {/capture}
-{assign var=future_caption value=$lng.lbl_featured_products}
+{assign var=featured_caption value=$lng.lbl_featured_products}
 {if (!empty($config.seo_featured_products_caption))}
-    {assign var=future_caption value=$config.seo_featured_products_caption|stripcslashes}
+    {assign var=featured_caption value=$config.seo_featured_products_caption|stripslashes}
 {/if}
-{include file="dialog.tpl" title="<h1 style='margin:0;'>"|cat:$future_caption|cat:"</h1>" content=$smarty.capture.dialog extra='width="100%"' new_design="Y"}
+{include file="dialog.tpl" title="<h1 style='margin:0;'>"|cat:$featured_caption|cat:"</h1>" content=$smarty.capture.dialog extra='width="100%"' new_design="Y"}
