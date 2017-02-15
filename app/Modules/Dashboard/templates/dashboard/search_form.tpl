@@ -5,7 +5,7 @@
 {/block}
 
 {block 'content'}
-
+    {*{smarty_admin_block name='Search form'}*}
     <div class="row">
         <div class="columns large-12">
             <fieldset class="{if $form_collapse}collapsed-force collapsed{else}expanded{/if}">
@@ -36,9 +36,11 @@
             </fieldset>
         </div>
     </div>
+    {*{/smarty_admin_block}*}
 
 
     {if count($models) > 0}
+        {*{smarty_admin_block name='Search results'}*}
         <div class="row">
             <div class="columns large-12">
                 {raw $pager}
@@ -58,5 +60,6 @@
                 {raw $pager}
             </div>
         </div>
+        {*{/smarty_admin_block}*}
     {/if}
 {/block}

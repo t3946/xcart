@@ -349,11 +349,11 @@ label + input {
 .admin .OrderSheet td {
     text-align: center;
 }.admin .OrderSheet td.text-left {
-    text-align: left;
-}
+     text-align: left;
+ }
 
 /*.admin .OrderSheet td.group {*/
-    /*border: 2px solid darkred;*/
+/*border: 2px solid darkred;*/
 /*}*/
 
 .admin .OrderSheet .TableHead {
@@ -533,9 +533,9 @@ label + input {
 }
 
 /*.admin .dashboard-filters .tag span {*/
-    /*line-height: 1.3;*/
-    /*vertical-align: middle;*/
-    /*display: inline-block;*/
+/*line-height: 1.3;*/
+/*vertical-align: middle;*/
+/*display: inline-block;*/
 /*}*/
 
 
@@ -589,4 +589,17 @@ label + input {
 
 .bold {
     font-weight: bold;
+}
+
+.admin .main-menu {
+    list-style: none;
+    padding: 0;
+}
+.admin .main-menu .items {
+    padding: 0;
+    margin: 3px 0;
+}
+.admin .main-menu li {
+    list-style: none;
+    display: inline-block;
 }

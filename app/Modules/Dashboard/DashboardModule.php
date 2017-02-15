@@ -41,12 +41,16 @@ class DashboardModule extends Module
     {
         return [
             [
-                'name' => 'Search',
-                'route' => Xcart::app()->router->url('dashboard:search')
+                'name'  => 'Search',
+                'route' => Xcart::app()->router->url('dashboard:search'),
             ],
             [
-                'name' => 'Settings',
-                'route' => Xcart::app()->router->url('dashboard:settings')
+                'name'  => 'Customer care dashboard',
+                'route' => Xcart::app()->router->url('dashboard:index'),
+            ],
+            [
+                'name'  => 'Filters settings',
+                'route' => Xcart::app()->router->url('dashboard:settings'),
             ],
         ];
     }
