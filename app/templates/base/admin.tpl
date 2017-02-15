@@ -15,15 +15,6 @@
 {filter|strip:true}
     <div id="wrapper" class="admin">
         {block 'content-header'}
-
-            <div class="row">
-                <div class="columns large-12">
-                    {block 'menu_block'}
-                        {include 'base/modules_admin_menu.tpl'}
-                    {/block}
-                </div>
-            </div>
-
             <div class="content-header">
                 <div class="row">
                     <div class="column large-12">
@@ -55,6 +46,13 @@
                     </div>
 
                     {block 'after-content'}
+                        <div class="row">
+                            <div class="columns large-12">
+                                {block 'menu_block'}
+                                    {include 'base/modules_admin_menu.tpl'}
+                                {/block}
+                            </div>
+                        </div>
 
                     {/block}
                 </div>
