@@ -842,14 +842,17 @@ class OrderGroup extends Data
     {
         $this->initAccounting();
         if ($this->getPaymentMethodInstance()->isPaymentMethodSet()) {
-            if ($this->getOrderInstance()->isOrderAmazon() || $this->isOrderGroupShippedByAmazon()) $this->recalculateAccountingAmazon(); else {
-                $this
-                    ->setAccountingGross($this->getPaymentMethodInstance()->getSumAfterProcessorFee($this->getTotalGross()))
+            if ($this->getOrderInstance()->isOrderAmazon() || $this->isOrderGroupShippedByAmazon()) {
+                $this->recalculateAccountingAmazon();
+            } else {
+                $this->setAccountingGross($this->getPaymentMethodInstance()
+                    ->getSumAfterProcessorFee($this->getTotalGross()))
                     ->initAccountingHST()
                     ->initAccountingPST();
 
                 if ($this->getOrderGroupInvoices()->countOrderGroupInvoices() > 0) {
-                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal() + $this->getOrderGroupInvoices()->getOrderGroupInvoicesHST())->
+                    $this->setAccountingGrossCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesProductTotal() +
+                        $this->getOrderGroupInvoices()->getOrderGroupInvoicesHST())->
                     setAccountingGrossShipping($this->getOrderGroupInvoices()->getOrderGroupInvoicesShippingTotal())->
                     setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
@@ -933,10 +936,12 @@ class OrderGroup extends Data
                         $AmazonCommission +
                         $ShippingFee)->initAccountingGrossCostToUs()
                     ->setAccountingGrossShipping($fShipping + abs($FBATransportationFee));
-                if ($this->getOrderAmazonDetails()->isRefundExists())
+                if ($this->getOrderAmazonDetails()->isRefundExists()) {
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
-                else $this->addAccountingGrossRefundToUs(abs($fRefund));
-
+                }
+                else {
+                    $this->addAccountingGrossRefundToUs(abs($fRefund));
+                }
                 break;
 
             default :
@@ -945,10 +950,12 @@ class OrderGroup extends Data
                             $FBAPerUnitFulfillmentFee +
                             $FBAWeightBasedFee +
                             $AmazonCommission + $FBATransportationFee) + $fShipping + $ShippingFee);
-                if ($this->getOrderAmazonDetails()->isRefundExists())
+                if ($this->getOrderAmazonDetails()->isRefundExists()) {
                     $this->setAccountingGrossRefundToUs($this->getAccountingGrossCostToUs() + abs($fRefund + $fPrincipalRefund) + abs($fShippingRefund));
-                else $this->addAccountingGrossRefundToUs(abs($fRefund));
-
+                }
+                else {
+                    $this->addAccountingGrossRefundToUs(abs($fRefund));
+                }
                 break;
         }
 
