@@ -18,9 +18,9 @@ class LookupCallback
 
     /**
      * LookupCallback constructor.
-     * @param Model $model
+     * @param ModelInterface $model
      */
-    public function __construct(ModelInterface $model)
+    public function __construct($model)
     {
         $this->model = $model;
     }

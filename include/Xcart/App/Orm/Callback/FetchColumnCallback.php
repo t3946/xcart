@@ -10,7 +10,13 @@ class FetchColumnCallback
     protected $model;
     protected $meta;
 
-    public function __construct(ModelInterface $model, MetaData $meta)
+    /**
+     * FetchColumnCallback constructor.
+     *
+     * @param ModelInterface $model
+     * @param \Xcart\App\Orm\MetaData $meta
+     */
+    public function __construct( $model, MetaData $meta)
     {
         $this->model = $model;
         $this->meta = $meta;

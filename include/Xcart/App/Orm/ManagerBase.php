@@ -34,7 +34,7 @@ abstract class ManagerBase implements ManagerInterface, IteratorAggregate, Array
      * @param Connection $connection
      * @param array $config
      */
-    public function __construct(ModelInterface $model, Connection $connection, array $config = [])
+    public function __construct($model, Connection $connection, array $config = [])
     {
         $this->setModel($model);
         $this->setConnection($connection);
@@ -67,7 +67,7 @@ abstract class ManagerBase implements ManagerInterface, IteratorAggregate, Array
      * @param ModelInterface $model
      * @return $this
      */
-    public function setModel(ModelInterface $model)
+    public function setModel($model)
     {
         $this->model = $model;
         return $this;

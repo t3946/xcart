@@ -18,6 +18,11 @@ class BaseOrmLegacy
     use ClassNames;
 
     /**
+     * @var bool
+     */
+    protected $isNewRecord = true;
+
+    /**
      * @param array $attributes
      *
      * @return static
@@ -103,6 +108,25 @@ class BaseOrmLegacy
         } else {
             return $name;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsNewRecord()
+    {
+        return $this->isNewRecord;
+    }
+
+    /**
+     * @param bool $value
+     */
+    public function setIsNewRecord($value)
+    {
+        $this->isNewRecord = $value;
+//        if ($value === false) {
+//            $this->attributes->resetOldAttributes();
+//        }
     }
 
     /**
