@@ -71,7 +71,9 @@ function func_sf_substitute_config_values($sf_id, $substitute = [])
                         $v['value'] = $config["Storefront_common_details"]["common_footer_code"];
                     }
                 }
-
+                if (empty($c)) {
+                    $config[$v['name']] = $v['value'];
+                }
                 $config[$c][$v['name']] = $v['value'];
             }
         }
