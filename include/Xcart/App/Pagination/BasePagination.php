@@ -2,116 +2,114 @@
 
 namespace Xcart\App\Pagination;
 
-use Exception;
-use Serializable;
-use Xcart\App\Helpers\SmartProperties;
-use Xcart\App\Orm\Manager;
-use Xcart\App\Orm\QuerySet;
-use Xcart\App\Pagination\Interfaces\IPagination;
-use Xcart\App\Traits\Configurator;
-use Xcart\App\Helpers\Creator;
+use Xcart\App\Pagination\DataSource\DataSourceInterface;
+use Xcart\App\Pagination\Handler\PaginationHandlerInterface;
 
 /**
  * Class BasePagination
- * @package Mindy\Pagination
+ * @package Xcart\App\Pagination
  */
-abstract class BasePagination implements Serializable
+abstract class BasePagination
 {
-    use SmartProperties, Configurator;
+    /**
+     * @var int current pagination id
+     */
+    protected $id;
 
     /**
      * @var int
      */
-    public static $defaultPageSize = 10;
-    /**
-     * @var string
-     */
-    public $pageKey;
-    /**
-     * @var string
-     */
-    public $pageSizeKey;
-    /**
-     * @var int
-     */
-    public $pageSize;
-    /**
-     * @var array
-     */
-    public $pageSizes = [10, 20, 50, 100];
-    /**
-     * @var array|IPagination|\Xcart\App\Orm\QuerySet|\Xcart\App\Orm\Manager
-     */
-    public $source = [];
-    /**
-     * @var array
-     */
-    public $data = [];
+    protected $total = 0;
+
     /**
      * @var int current page
      */
-    public $page;
+    protected $page;
+
     /**
-     * @var int total records or elements in array
+     * @var string
      */
-    public $total;
+    protected $pageKey;
+
+    /**
+     * @var int default page size
+     */
+    protected $pageSize;
+
+    /**
+     * @var string
+     */
+    protected $pageSizeKey;
+
+    /**
+     * @var PaginationHandlerInterface
+     */
+    protected $handler;
+
+    /**
+     * @var DataSourceInterface
+     */
+    protected $dataSource;
+
+    /**
+     * @var mixed
+     */
+    protected $source;
+
+    /**
+     * @var array
+     */
+    protected $data = [];
+
     /**
      * @var int autoincrement pagination classes on the page
      */
     private static $_id = 0;
     /**
-     * @var int current pagination id
+     * @var array
      */
-    public $id;
-    /**
-     * @var string Pager name
-     */
-    private $_name;
-    /**
-     * @var bool is QuerySet?
-     */
-    public $isQs = false;
+    protected $pageSizes = [10, 25, 50, 100];
 
-    public function __construct($source, array $config = [])
-    {
-        $this->source = $source;
-        $this->configure($config);
-        $this->init();
-    }
+    private $paginated = false;
 
-    public function init()
+    /**
+     * BasePagination constructor.
+     * @param $source
+     * @param array $config
+     * @param PaginationHandlerInterface $handler
+     * @param DataSourceInterface $dataSource
+     */
+    public function __construct($source, array $config = [], PaginationHandlerInterface $handler, DataSourceInterface $dataSource)
     {
         self::$_id++;
-
         $this->id = self::$_id;
-        if (class_exists('\Xcart\App\Orm\QuerySet')) {
-            $this->isQs = $this->source instanceof QuerySet;
+
+        $this->source = $source;
+        $this->dataSource = $dataSource;
+
+        foreach (['page', 'pageSize', 'pageSizes'] as $key) {
+            if (array_key_exists($key, $config)) {
+                $this->{$key} = $config[$key];
+            }
+        }
+
+        $this->handler = $handler;
+
+        if (null === $this->page) {
+            $this->page = $handler->getPage($this->getPageKey(), 1);
+        }
+
+        if (null === $this->pageSize) {
+            $this->pageSize = $handler->getPageSize($this->getPageSizeKey(), 10);
         }
     }
 
-    public function getUrl($page, $endless = false)
+    /**
+     * @return int
+     */
+    public function getId()
     {
-        $uri = parse_url($_SERVER['REQUEST_URI']);
-        if (!isset($uri['query'])) {
-            $uri['query'] = '';
-        }
-        parse_str($uri['query'], $params);
-        $params[$this->getPageKey()] = $page;
-        if ($endless) {
-            $params['endless'] = $endless;
-        }
-        return $uri['path'] . "?" . http_build_query($params);
-    }
-
-    public function urlPageSize($pageSize)
-    {
-        $uri = parse_url($_SERVER['REQUEST_URI']);
-        if (!isset($uri['query'])) {
-            $uri['query'] = '';
-        }
-        parse_str($uri['query'], $params);
-        $params[$this->getPageSizeKey()] = $pageSize;
-        return $uri['path'] . "?" . http_build_query($params);
+        return $this->id;
     }
 
     /**
@@ -120,18 +118,17 @@ abstract class BasePagination implements Serializable
      */
     public function getPageSize()
     {
-        if (isset($_GET[$this->getPageSizeKey()])) {
-            $pageSize = (int)$_GET[$this->getPageSizeKey()];
-            $this->pageSize = $pageSize ? $pageSize : self::$defaultPageSize;
-        } else if ($this->pageSize === null) {
-            $this->pageSize = self::$defaultPageSize;
-        }
-
-        if (ceil($this->total / $this->pageSize) < $this->page) {
-            header("Location: " . $this->getUrl(1));
-        }
-
         return $this->pageSize;
+    }
+
+    /**
+     * @param $pageSize
+     * @return $this
+     */
+    public function setPageSize($pageSize)
+    {
+        $this->pageSize = (int)$pageSize;
+        return $this;
     }
 
     /**
@@ -142,8 +139,15 @@ abstract class BasePagination implements Serializable
         return empty($this->pageSizeKey) ? $this->getPageKey() . '_PageSize' : $this->pageSizeKey;
     }
 
+    /**
+     * @return int
+     */
     public function getTotal()
     {
+        if (!$this->paginated) {
+            $this->paginate();
+        }
+
         return $this->total;
     }
 
@@ -152,182 +156,96 @@ abstract class BasePagination implements Serializable
      */
     public function getPagesCount()
     {
-        return ceil($this->getTotal() / $this->getPageSize());
-    }
-
-    public function hasNextPage()
-    {
-        return ($this->getPagesCount() - $this->page) > 0;
-    }
-
-    public function hasPrevPage()
-    {
-        return $this->page > 1;
-    }
-
-    public function getCurrentPage()
-    {
-        return $this->page;
-    }
-
-    protected function fetchPage($key = null)
-    {
-        $page = isset($_GET[$key]) ? (int)$_GET[$key] : 1;
-        if ($page <= 0) {
-            return $page = 1;
-        } elseif ($page > $this->getPagesCount()) {
-            return $page = $this->getPagesCount();
-        } else {
-            return $page;
+        $total = $this->getTotal();
+        if ($total > 0) {
+            return (int)ceil($total / $this->getPageSize());
         }
+
+        return 0;
     }
 
+    /**
+     * @return int
+     */
     public function getPage()
     {
-        if (!$this->page) {
-            $this->page = $this->fetchPage($this->getPageKey());
-        }
-        return $this->page;
+        return (int)$this->page;
     }
 
+    /**
+     * @param $page
+     * @return $this
+     */
     public function setPage($page)
     {
-        return $this->page = $page;
+        $this->page = (int)$page;
+        return $this;
     }
 
     /**
      * Apply limits to source
      * @throws \Exception
-     * @return $this
+     * @return array
      */
     public function paginate()
     {
-        if (is_array($this->source)) {
-            return $this->applyLimitArray();
-        } else if ($this->source instanceof Manager) {
-            $this->source = $this->source->getQuerySet();
-            return $this->applyLimitQuerySet();
-        } else if ($this->source instanceof QuerySet) {
-            return $this->applyLimitQuerySet();
-//        } else if ($this->source instanceof \Mindy\Query\Query) {
-//            return $this->applyLimitQuery();
-        } else if ($this->source instanceof IPagination) {
-            return $this->applyLimitByInterface();
-        } else {
-            throw new Exception("Unknown source");
+        $this->total = $this->dataSource->getTotal($this->source);
+        if (
+            ($this->total > $this->getPageSize()) &&
+            ceil($this->total / $this->getPageSize()) < $this->getPage()
+        ) {
+            $this->handler->wrongPageCallback();
         }
-    }
 
-    /**
-     * @return array
-     */
-    protected function applyLimitArray()
-    {
-        $this->total = count($this->source);
-        $page = $this->getPage();
-        $pageSize = $this->getPageSize();
-        $this->data = array_slice($this->source, $pageSize * ($page <= 1 ? 0 : $page - 1), $pageSize);
+        $this->data = $this->dataSource->applyLimit(
+            $this->source,
+            $this->getPage(),
+            $this->getPageSize()
+        );
         return $this->data;
     }
 
     /**
-     * @return array
+     * @return string
      */
-    protected function applyLimitQuery()
-    {
-        $this->total = $this->source->count();
-        $page = $this->getPage();
-        $pageSize = $this->getPageSize();
-        $offset = $page > 1 ? $pageSize * ($page - 1) : 0;
-        $this->data = $this->source->limit($pageSize)->offset($offset)->all();
-        return $this->data;
-    }
-
-    /**
-     * @return array
-     */
-    protected function applyLimitQuerySet()
-    {
-        $source = clone $this->source;
-        $this->total = $source->count();
-        $this->data = $this->source->paginate($this->getPage(), $this->getPageSize())->all();
-        return $this->data;
-    }
-
-    /**
-     * @return array
-     */
-    protected function applyLimitByInterface()
-    {
-        $this->total = $this->source->getTotal();
-        $page = $this->getPage();
-        $pageSize = $this->getPageSize();
-        $offset = $page > 1 ? $pageSize * ($page - 1) : 0;
-        $this->source->setLimit($pageSize);
-        $this->source->setOffset($offset);
-        $this->data = $this->source->all();
-        return $this->data;
-    }
-
-    public function setPageKey($key)
-    {
-        $this->pageKey = $key;
-    }
-
     public function getPageKey()
     {
         if ($this->pageKey === null) {
-            if ($this->isQs) {
-                $base = $this->source->model->classNameShort();
-            } else {
-                $base = 'Pager';
-            }
-
-            return $base . '_' . $this->id;
+            return sprintf('Pager_%s', $this->id);
         } else {
             return $this->pageKey;
         }
     }
 
-    public function iterPrevPage($count = 3)
+    /**
+     * @return array
+     */
+    public function getPageSizes()
     {
-        if ($this->getCurrentPage() == $this->getPagesCount() && $this->getPagesCount() - $count * 2 > 0) {
-            $count *= 2;
-        }
-        $pages = [];
-        foreach (array_reverse(range(1, $count)) as $i) {
-            $page = $this->getCurrentPage() - $i;
-            if ($page > 0) {
-                $pages[] = $page;
-            }
-        }
-        return $pages;
+        return $this->pageSizes;
     }
 
-    public function iterNextPage($count = 3)
+    /**
+     * @return PaginationView
+     */
+    public function createView()
     {
-        if ($this->getCurrentPage() == 1 && $this->getPagesCount() >= $count * 2) {
-            $count *= 2;
-        }
-        $pages = [];
-        foreach (range(1, $count) as $i) {
-            $page = $this->getCurrentPage() + $i;
-            if ($page <= $this->getPagesCount()) {
-                $pages[] = $page;
-            }
-        }
-        return $pages;
+        return new PaginationView([
+            'total' => $this->getTotal(),
+            'page' => $this->getPage(),
+            'page_sizes' => $this->getPageSizes(),
+            'page_size' => $this->getPageSize(),
+            'page_count' => $this->getPagesCount(),
+            'page_key' => $this->getPageKey(),
+            'page_size_key' => $this->getPageSizeKey()
+        ], $this->handler);
     }
 
-    public function serialize()
+    /**
+     * Reset id counter
+     */
+    public static function resetCounter()
     {
-        $props = Creator::getObjectVars($this);
-        return serialize($props);
-    }
-
-    public function unserialize($data)
-    {
-        $props = unserialize($data);
-        Creator::configure($this, $props);
+        self::$_id = 0;
     }
 }

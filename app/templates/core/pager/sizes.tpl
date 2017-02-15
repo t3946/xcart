@@ -1,6 +1,6 @@
-<select name="{$this->pageSizeKey}" id="pageSize" onchange="window.location=this.value">
-    {foreach $this->pageSizes as $pageSize }
-        <option value="{$this->urlPageSize($pageSize)}" {if $this->pageSize == $pageSize }selected="selected"{/if}>
+<select name="{$pager->getPageSizeKey()}" onchange="window.location=pager.value">
+    {foreach $view->getPageSizes() as $pageSize }
+        <option value="{$view->urlPageSize($pageSize)}" {if $view->getPageSize() == $pageSize }selected="selected"{/if}>
             {$pageSize}
         </option>
     {/foreach}
