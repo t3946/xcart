@@ -49,7 +49,7 @@ return array_replace_recursive([
        ],
        'template' => [
            'class' => '\\Xcart\\App\\Template\\TemplateManager',
-           'forceCompile' => true
+           'forceCompile' => false
        ],
    ],
    'autoloadComponents' => [
