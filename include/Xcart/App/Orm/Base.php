@@ -55,7 +55,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      */
     public function __construct(array $attributes = [])
     {
-        self::getMeta();
+        static::getMeta();
 
         $this->attributes = new AttributeCollection;
         $this->setAttributes($attributes);
@@ -178,7 +178,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     {
         $primaryKeyNames = self::getPrimaryKeyName(true);
 
-        $meta = self::getMeta();
+        $meta = static::getMeta();
         $name = $meta->getMappingName($name);
 
         if ($meta->hasField($name)) {

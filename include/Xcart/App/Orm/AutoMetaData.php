@@ -13,6 +13,7 @@ use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Fields\TimeField;
+use Xcart\Surfing\SurfMeta;
 
 class AutoMetaData extends MetaData
 {
@@ -28,14 +29,17 @@ class AutoMetaData extends MetaData
         $primaryFields = [];
 
         /** @var Data|Model $model */
-        $model = new $className;
-        $connection = $model->getConnection();
+//        $model = new $className;
+//        $connection = $model->getConnection();
+        $connection = Orm::getDefaultConnection();
         $sm = $connection->getSchemaManager();
+
 
 //        func_dump($sm->listTableIndexes($model->getTableName()));
 //        func_dump($sm->listTableColumns($model->getTableName()));
 
-        foreach ($sm->listTableColumns($model->getTableName()) as $column)
+
+        foreach ($sm->listTableColumns(call_user_func([$className, 'tableName'])) as $column)
         {
             $name = $column->getName();
 

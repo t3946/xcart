@@ -12,7 +12,12 @@ class JoinCallback
 {
     protected $model;
 
-    public function __construct(ModelInterface $model)
+    /**
+     * JoinCallback constructor.
+     *
+     * @param ModelInterface $model
+     */
+    public function __construct($model)
     {
         $this->model = $model;
     }
