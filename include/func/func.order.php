@@ -2050,8 +2050,9 @@ function func_get_order_manufacturers($orderid)
 
                 /** @var \Xcart\OrderGroup $oOrderGroup */
                 $oOrderGroup = Xcart\OrderGroup::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id])->get();
-
-                $total_product_cost_to_us = $oOrderGroup->getTotalCostToUs();
+                if ($oOrderGroup) {
+                    $total_product_cost_to_us = $oOrderGroup->getTotalCostToUs();
+                }
                 $mnfs[$m_id]['total_product_cost_to_us'] = $total_product_cost_to_us;
 
                 $secure_check        = $orderid . $m_id;
