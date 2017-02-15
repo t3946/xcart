@@ -13,23 +13,18 @@
                             {foreach $models as $model}
                                 {if $model->position_row == $row && $model->position_column == $col}
                                     {if $model->getSearchStorage()->getPager()->getTotal() > 0}
-                                        <a href="{$model->getAdminUrl()}" class="">
+                                        <a href="{$model->getAbsoluteUrl()}" class="">
                                             <div class="row">
                                                 {if $model->tag}
                                                     <div class="columns large-2">
-                                                        <span style="background-color: {$model->color};" class="tag">
-                                                            <span>
-                                                                {$model->tag|upper}
-                                                            </span>
-                                                        </span>
+                                                        <span style="background-color: {$model->color};" class="tag">&nbsp;{$model->tag|upper}&nbsp;</span>
                                                     </div>
                                                 {/if}
                                                 <div class="columns {if $model->tag}large-10{else}large-12{/if}">
                                                     <span class="name">
-                                                        {$model} ({$model->getSearchStorage()->getPager()->getTotal()})
+                                                        <span class="{if $model->bold}bold{/if}">{$model}</span>
+                                                        ({$model->getSearchStorage()->getPager()->getTotal()})
                                                     </span>
-
-
                                                 </div>
                                             </div>
                                         </a>
