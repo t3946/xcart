@@ -590,3 +590,16 @@ label + input {
 .bold {
     font-weight: bold;
 }
+
+.admin .main-menu {
+    list-style: none;
+    padding: 0;
+}
+.admin .main-menu .items {
+    padding: 0;
+    margin: 3px 0;
+}
+.admin .main-menu li {
+    list-style: none;
+    display: inline-block;
+}

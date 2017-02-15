@@ -11,6 +11,9 @@
     <script src="/static/vendors/select2/dist/js/select2.min.js" type="text/javascript"></script>
 {/block}
 
+{block 'menu_block'}
+{/block}
+
 {block 'js'}
 <script type="text/javascript">
     (function(){
