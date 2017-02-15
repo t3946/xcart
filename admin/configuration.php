@@ -219,7 +219,9 @@ elseif ($option == "currently_assigned_to_statuses") {
 elseif ($option == "Banners") {
     include "./banners.php";
 }
-
+elseif ($option == "Product_splashes") {
+	include "./product_splashes.php";
+}
 
 elseif ($option == "Search_products") {
     include "./search_products_form.php";

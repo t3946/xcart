@@ -355,6 +355,7 @@ $sql_tbl = array (
     "order_cx_invoices" => "xcart_order_cx_invoices",
     "external_verification_feeds" => "xcart_external_verification_feeds",
     "shipping_cache_quotes" => "xcart_shipping_cache_quotes",
+    "images_splash" => "xcart_images_splash",
 );
 
 # START: random:20341 [2010 Jul 29 14:46] 
