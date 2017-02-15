@@ -126,7 +126,7 @@ class StoreFront extends Data
         $this->_init();
         $aParam = ['name' => $sName];
         if ($this->getStoreFrontId() > 0) {
-            $aParam[] = ['storefrontid' => $this->getStoreFrontId()];
+            $aParam['storefrontid'] = $this->getStoreFrontId();
         }
         Connection::getInstance()->update($this->sConfigTable, ['value' => $sValue], $aParam);
     }
