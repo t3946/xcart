@@ -42,6 +42,14 @@ class ConnectionManager
     {
         foreach ($connections as $name => $config) {
             $this->connections[$name] = DriverManager::getConnection($config, $this->configuration, $this->eventManager);
+
+            if (!empty($config['mapping'])) {
+                foreach ($config['mapping'] as $from_type => $to_type) {
+                    $this->connections[$name]
+                        ->getDatabasePlatform()
+                        ->registerDoctrineTypeMapping($from_type, $to_type);
+                }
+            }
         }
     }
 

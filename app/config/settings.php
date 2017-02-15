@@ -22,7 +22,10 @@ return array_replace_recursive([
                    'host' => '127.0.0.1',
                    'user' => 'xcart_k',
                    'password' => 'i250923lst',
-                   'charset'  => 'utf8'
+                   'charset'  => 'utf8',
+                   'mapping' => [
+                       'enum' => 'string'
+                   ]
                ]
            ]
        ],

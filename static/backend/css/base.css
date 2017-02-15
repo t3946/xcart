@@ -404,7 +404,7 @@ label + input {
     border: 1px solid #ababab;
     border-radius: 2px;
     display: inline-block;
-    position: relative;
+    /*position: relative;*/
     cursor: pointer;
     text-shadow: #f6f6f6 0 1px 0;
     -webkit-transition: all 1s;
