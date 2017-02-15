@@ -63,7 +63,7 @@ class SurfPath extends Data
             }
 
             $oSurfMeta->points_visited++;
-            $oSurfMeta->fill(array_merge($oSurfMeta->getFields(), $aGoalArray));
+            $oSurfMeta->setAttributes(array_merge($oSurfMeta->getAttributes(), $aGoalArray));
 
             if (in_array($this->resource_type, [self::GOAL_TYPE_PRODUCT, self::GOAL_TYPE_CATEGORY, self::GOAL_TYPE_BRAND, self::GOAL_TYPE_STATIC_PAGE])) {
                 $this->resource_id = $clean_url_data["resource_id"];
@@ -122,7 +122,7 @@ class SurfPath extends Data
                 }
             }
 
-            $oSurfMeta->_update();
+            $oSurfMeta->save();
             return true;
         }
         return false;

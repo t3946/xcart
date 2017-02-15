@@ -16,6 +16,7 @@ use Xcart\App\Request\HttpRequest;
 /**
  * Class Application
  *
+ * @property \Xcart\App\Orm\ConnectionManager $db DB connection
  * @property \Xcart\App\Router\Router $router Url manager, router
  * @property \Xcart\App\Request\HttpRequest|\Xcart\App\Request\CliRequest $request Request
  * @property \Xcart\App\Request\Session $session Session
