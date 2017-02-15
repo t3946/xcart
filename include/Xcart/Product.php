@@ -489,8 +489,9 @@ SQL;
     public function getChildProducts()
     {
         $aResult = [];
-        if ($this->getProductId())
-            $aResult = Product::model()->findAll(SQLBuilder::getInstance()->addCondition('clone_parent_productid = ' . $this->getProductId()));
+        if ($this->productid) {
+            $aResult = self::objects()->filter(['clone_parent_productid' => $this->productid])->all();
+        }
         return $aResult;
     }
 
@@ -499,9 +500,10 @@ SQL;
      */
     public function getParentProduct()
     {
+        /** @var Product $oParentProduct */
         $oParentProduct = null;
-        if ($this->getField('clone_parent_productid')) {
-            $oParentProduct = Product::model(['productid' => $this->getField('clone_parent_productid')]);
+        if ($this->clone_parent_productid) {
+            $oParentProduct = self::objects()->filter(['productid' => $this->clone_parent_productid])->get();
         }
         return $oParentProduct;
     }
