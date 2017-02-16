@@ -114,7 +114,6 @@ class OrderSearchStore extends BaseStore
     public function populate(array $data)
     {
         $qs = Order::objects()->getQuerySet();
-        $alias = $qs->getTableAlias();
 
         if (!empty($data['order']) || $this->checkNot('order'))
         {
@@ -766,6 +765,12 @@ class OrderSearchStore extends BaseStore
         $connection = Connection::getInstance();
 
         $order_ids = array_map(function ($model) { return $model->orderid; }, $models);
+        $order_ids = array_filter($order_ids);
+
+        if (empty($order_ids)) {
+            return [];
+        }
+
         $groups    = OrderGroups::objects()->filter(['orderid__in' => $order_ids])->all();
 
         if ($groups) {
