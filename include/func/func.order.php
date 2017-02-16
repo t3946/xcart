@@ -1324,7 +1324,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
 
         if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
-            Xcart\Surfing\SurfPath::create(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_ORDER, 'resource_id' => $orderid])->logSurfPath();
+            Xcart\Surfing\SurfPath::logSurfPath(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_ORDER, 'resource_id' => $orderid]);
         }
 
         $log = "";

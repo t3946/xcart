@@ -62,7 +62,7 @@ else
 ##
 ###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-    Xcart\Surfing\SurfPath::create(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_BRAND])->logSurfPath();
+    Xcart\Surfing\SurfPath::logSurfPath(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_BRAND]);
 }
 ###
 ##
@@ -72,4 +72,3 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 $smarty->assign("location", $location);
 
 func_display("customer/home.tpl",$smarty);
-?>

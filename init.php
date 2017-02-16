@@ -65,7 +65,7 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
 
 \Xcart\App\Main\Xcart::init(include $xcart_dir .'/app/config/settings.php');
 register_shutdown_function([\Xcart\App\Main\Xcart::app(), 'end'], 0);
-Xcart\Connection::getInstanceFromApp(\Xcart\App\Main\Xcart::app())->connect();
+Xcart\Connection::getInstanceFromApp()->connect();
 
 $file_temp_dir = $var_dirs["tmp"];
 

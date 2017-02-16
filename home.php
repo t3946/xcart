@@ -350,7 +350,7 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 	if ($detect_isMobile_was_created == 'Y' && $resource_type == 'H') {
 
 	} else {
-		Xcart\Surfing\SurfPath::create(['resource_type' => $resource_type])->logSurfPath();
+        Xcart\Surfing\SurfPath::logSurfPath(['resource_type' => $resource_type]);
 	}
 }
 

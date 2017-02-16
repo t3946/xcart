@@ -162,15 +162,9 @@ function func_add_to_cart(&$cart, $product_data) {
 ##
 #
 
-#
-##
-###
         if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-			Xcart\Surfing\SurfPath::create(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_ADD_TO_CART, 'resource_id' => $added_product["productid"]])->logSurfPath();
+            Xcart\Surfing\SurfPath::logSurfPath(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_ADD_TO_CART, 'resource_id' => $added_product["productid"]]);
         }
-###
-##
-#
 
 
 	if ($added_product["forsale"] == "B") {

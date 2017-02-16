@@ -39,7 +39,7 @@ return array_replace_recursive([
            'httpRequest' => [
                'class' => '\\Xcart\\App\\Request\\HttpRequest',
                'session' => [
-                   'class' => '\\Xcart\\App\\Request\\Session'
+                   'class' => '\\Xcart\\App\\Request\\XcartSession'
                ]
            ],
            'cliRequest' => [

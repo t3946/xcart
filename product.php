@@ -1259,7 +1259,7 @@ func_print_r($a1, $data, $data_arr);
 ##
 ###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-	Xcart\Surfing\SurfPath::create(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_PRODUCT])->logSurfPath();
+    Xcart\Surfing\SurfPath::logSurfPath(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_PRODUCT]);
 }
 ###
 ##
@@ -1278,4 +1278,3 @@ $smarty->assign("ga_page_name", "detail_page");
 $smarty->assign("location", $location);
 
 func_display("customer/home.tpl",$smarty);
-?>
