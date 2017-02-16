@@ -65,5 +65,5 @@
 {/block}
 
 {block 'menu_block'}
- ...
+
 {/block}

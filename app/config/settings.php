@@ -10,6 +10,7 @@ return array_replace_recursive([
    'modules' => [
        'Core',
        'Dashboard',
+       'User',
    ],
    'components' => [
        'db' => [

@@ -5,6 +5,7 @@ namespace Modules\Dashboard\Controllers;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\User\Models\User;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
 
@@ -14,6 +15,10 @@ class DashboardController extends PrototypeAdminController
 
     public function index()
     {
+        if (Xcart::app()->request->session->get('')) {
+
+        }
+
         echo $this->renderInternal('dashboard/index.tpl',
             [
                 'row_col' => DashboardFilter::getMaxRowCol(),
