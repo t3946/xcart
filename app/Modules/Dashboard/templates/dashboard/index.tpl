@@ -12,7 +12,7 @@
                         <td>
                             {foreach $models as $model}
                                 {if $model->position_row == $row && $model->position_column == $col}
-                                    {if $model->getSearchStorage()->getPager()->getTotal() > 0}
+                                    {if $model->getSearchStorage()->getCashedCount() > 0}
                                         <a href="{$model->getAbsoluteUrl()}" class="">
                                             <div class="row">
                                                 {if $model->tag}
