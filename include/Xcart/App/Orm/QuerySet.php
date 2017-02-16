@@ -23,6 +23,7 @@ class QuerySet extends QuerySetBase
      * @var array a list of relations that this query should be performed with
      */
     protected $with = [];
+    protected $_group = [];
     protected $sql;
 
     /**
@@ -517,16 +518,13 @@ class QuerySet extends QuerySetBase
         $clone = clone $this;
         $clone->limit(null);
 
-        $count = $clone->getConnection()->query($clone->buildAggregateSql(new Count($q)))->fetchAll();
-        if (count($count) > 1)
+        if (!empty($this->_group))
         {
-            return count($count);
+            return $clone->getConnection()->executeQuery($clone->buildAggregateSql(new Count($q)))->rowCount();
         }
         else {
-            return empty($count) ? 0 : reset($count[0]);
+            return $clone->aggregate(new Count($q));
         }
-
-//        return $clone->aggregate(new Count($q));
     }
 
     /**
@@ -588,7 +586,8 @@ class QuerySet extends QuerySetBase
      */
     public function group($columns)
     {
-        $this->getQueryBuilder()->group($columns);
+        $this->_group = $columns;
+        $this->getQueryBuilder()->group($this->_group);
         return $this;
     }
 

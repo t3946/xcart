@@ -1,4 +1,4 @@
-{extends 'base/admin.tpl'}
+{extends 'dashboard/with_admin_menu.tpl'}
 {block 'heading'}
     <h1 align="center">Filters list.</h1>
 {/block}

@@ -1,4 +1,5 @@
 {smarty_admin_block name= 'Modules main menu'}
+    <h3>WARNING! Test only.</h3>
     <div class="menu-block">
         <div class="menu-wrapper">
             <ul class="main-menu">

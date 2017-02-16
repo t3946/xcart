@@ -1,8 +1,5 @@
 {extends 'dashboard/dashboard_form.tpl'}
 
-{block 'menu_block'}
-    {include 'base/modules_admin_menu.tpl'}
-{/block}
 
 {block 'heading'}
     <h1 align="center">Filter {if $model->getIsNewRecord()}create{else}"{$model}" edit{/if}.</h1>
