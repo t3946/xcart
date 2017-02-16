@@ -114,7 +114,6 @@ class OrderSearchStore extends BaseStore
     public function populate(array $data)
     {
         $qs = Order::objects()->getQuerySet();
-        $alias = $qs->getTableAlias();
 
         if (!empty($data['order']) || $this->checkNot('order'))
         {
@@ -295,7 +294,9 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['po_status']) || $this->checkNot('order.po_status')) {
-                $qs->join('inner join', 'xcart_po_pipeline', ['orderid' => 'po.order_id'], 'po');
+                $qs->join('right outer join', 'xcart_po_pipeline', ['orderid' => 'po.order_id'], 'po');
+                $qs->addSelect(['po.*']);
+                $qs->addGroup(['po.po_id']);
 
                 $val = ($data['order']['po_status']) ? $data['order']['po_status'] : [''];
 
@@ -612,7 +613,7 @@ class OrderSearchStore extends BaseStore
             }
         }
 
-        $qs->filter($this->where)->group(['orderid']);
+        $qs->filter($this->where)->addGroup(['orderid']);
 
 //        func_dump($qs->getSql());
 
@@ -766,6 +767,12 @@ class OrderSearchStore extends BaseStore
         $connection = Connection::getInstance();
 
         $order_ids = array_map(function ($model) { return $model->orderid; }, $models);
+        $order_ids = array_filter($order_ids);
+
+        if (empty($order_ids)) {
+            return [];
+        }
+
         $groups    = OrderGroups::objects()->filter(['orderid__in' => $order_ids])->all();
 
         if ($groups) {

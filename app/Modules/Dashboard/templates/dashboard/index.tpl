@@ -12,8 +12,8 @@
                         <td>
                             {foreach $models as $model}
                                 {if $model->position_row == $row && $model->position_column == $col}
-                                    {if $model->getSearchStorage()->getPager()->getTotal() > 0}
-                                        <a href="{$model->getAbsoluteUrl()}" class="">
+                                    {if $model->getSearchStorage()->getCashedCount() > 0}
+                                        <a href="{$model->getAbsoluteUrl()}" class="" target="_blank">
                                             <div class="row">
                                                 {if $model->tag}
                                                     <div class="columns large-2">

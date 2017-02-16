@@ -42,6 +42,9 @@
                             <li>
                                 {include 'core/form/model_form_field.tpl' model=$model field='color' type='color'}
                             </li>
+                            <li>
+                                {include 'core/form/model_form_field.tpl' model=$model field='direct_url' class='big'}
+                            </li>
                         </ul>
                     </fieldset>
 

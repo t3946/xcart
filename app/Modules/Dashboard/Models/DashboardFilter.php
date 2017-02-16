@@ -61,6 +61,11 @@ class DashboardFilter extends Model
                 'null'        => true,
                 'verboseName' => 'Tag color',
             ],
+            'direct_url' => [
+                'class'=> TextField::className(),
+                'null' => true,
+                'verboseName' => 'Direct link'
+            ],
             'form_data'       => [
                 'class'       => JsonField::className(),
                 'null'        => false,
@@ -87,6 +92,11 @@ class DashboardFilter extends Model
     public function getAbsoluteUrl()
     {
         if (!$this->isNewRecord) {
+
+            if ($this->direct_url) {
+                return $this->direct_url;
+            }
+
             return Xcart::app()->router->url('dashboard:filter', ['id' => $this->id]);
         }
     }

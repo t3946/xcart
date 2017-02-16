@@ -420,6 +420,13 @@ class QuerySet extends QuerySetBase
         return $this;
     }
 
+    public function addSelect($columns, $option = null)
+    {
+        $select = $this->getQueryBuilder()->getSelect();
+        $this->getQueryBuilder()->select(array_merge($select, $columns), $option);
+        return $this;
+    }
+
     private function buildAggregateSql(Aggregation $q)
     {
         $qb = clone $this->getQueryBuilder();
@@ -589,14 +596,18 @@ class QuerySet extends QuerySetBase
         $t_on = [];
         foreach ($columns as $v)
         {
-            $v = $this->fieldAlias($v);
-
-            $t_on[] = $v;
+            $t_on[] = $this->fieldAlias($v);
         }
 
         $this->_group = $t_on;
 
         $this->getQueryBuilder()->group($this->_group);
+        return $this;
+    }
+
+    public function addGroup($columns)
+    {
+        $this->group(array_merge($this->_group, $columns));
         return $this;
     }
 

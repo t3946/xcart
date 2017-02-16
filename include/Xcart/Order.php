@@ -178,12 +178,11 @@ class Order extends Data
     public function getOrderProducts()
     {
         if (is_null($this->aOrderProducts) && $this->orderid) {
-            $this->aOrderProducts =
-                Product::objects()
-                    ->getQuerySet()
-                    ->join('inner join', 'xcart_order_details', ['t.productid' => 'details.productid'], 'details')
-                    ->filter(['details.orderid' => $this->orderid])
-                    ->all();
+            $this->aOrderProducts = Product::objects()
+                                           ->getQuerySet()
+                                           ->join('inner join', 'xcart_order_details', ['productid' => 'details.productid'], 'details')
+                                           ->filter(['details.orderid' => $this->orderid])
+                                           ->all();
         }
         return $this->aOrderProducts;
     }
@@ -1004,9 +1003,12 @@ SQL;
     public function getLastRefererUrl()
     {
         $sRefererDomain = null;
-        $oRefererDomain = Surfing\Referer::objects()->filter(['referer_id' => $this->referer_id])->get();
-        if ($oRefererDomain) {
-            $sRefererDomain = "//" . $oRefererDomain->referer;
+
+        if ($this->referer_id)
+        {
+            if ($oRefererDomain = Surfing\Referer::objects()->filter(['referer_id' => $this->referer_id])->get()) {
+                $sRefererDomain = "//" . $oRefererDomain->referer;
+            }
         }
         return $sRefererDomain;
     }
