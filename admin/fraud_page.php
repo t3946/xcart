@@ -578,40 +578,13 @@ $orders_full_names = $userinfo["s_firstname"]."<br />".$userinfo["b_firstname"].
 $orders_company_names = $userinfo["additional_fields"][1]["value"]."<br />".$userinfo["additional_fields"][0]["value"];
 
 
-#
-##
-###
 require $xcart_dir."/include/transaction_logs.php";
-###
-##
-#
 
+$cidev_order_details_TransID = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE transaction_id!='' AND orderid='$orderid'");
 
-#
-## For {{link_to_paypal_transaction}}
-###
-if (strpos($order["details"], 'TransID #') !== false){
-	$cidev_order_details_err = explode("TransID #", $cidev_order_details);
-	if (!empty($cidev_order_details_err[1])){
-	        if (strpos($cidev_order_details_err[1], ')') !== false){
-                	        $cidev_order_details_TransID_arr = explode(")", $cidev_order_details_err[1]);
-        	                $cidev_order_details_TransID = $cidev_order_details_TransID_arr[0];
-	        } else {
-        	        $cidev_order_details_TransID = substr($cidev_order_details_err[1], 0, -1);
-	        }
-	}
-} else {
-	$cidev_order_details_TransID = $order["transaction_id_link"];
-}
-
-if (empty($cidev_order_details_TransID)){
-	$cidev_order_details_TransID = func_query_first_cell("SELECT transaction_id FROM $sql_tbl[transaction_logs] WHERE transaction_id!='' AND orderid='$orderid'");
-}
+$oTransaction = \Xcart\OrderTransaction::objects()->filter(['orderid' => $orderid])->order(['date'])->limit(1)->get();
 
 $smarty->assign("cidev_order_details_TransID", $cidev_order_details_TransID);
-###
-##
-#
 
 
 $payment_method = $order["payment_method"];
@@ -674,8 +647,19 @@ if (!empty($fraud_checks) && is_array($fraud_checks)){
 		$replace_with = '@'.$userinfo_site;
 		$question_template_body = str_replace("{{emails_domain}}", $replace_with, $question_template_body);
 
-		$replace_with = '<a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_view-a-trans&id='.$cidev_order_details_TransID.'" style="color: #1F08F8;">Link to PayPal transaction</a>';
-		$question_template_body = str_replace("{{link_to_paypal_transaction}}", $replace_with, $question_template_body);
+        $sTransactionReplaceText = '';
+        $sPaymentMethodReplaceText = '';
+        if ($oTransaction) {
+            $oPaymentMethod = \Xcart\PaymentMethod::objects()->filter(['paymentid' => $oTransaction->paymentid])->get();
+            if ($oPaymentMethod) {
+                $sTransactionLink = str_replace('{{trans-id}}', $oTransaction->transaction_id, $oPaymentMethod->transaction_id_link);
+                $sTransactionReplaceText = "<a target='_blank' href='{$sTransactionLink}' style='color:#1F08F8;'>Link to transaction</a>";
+                $sPaymentMethodReplaceText = $oPaymentMethod->payment_method;
+            }
+        }
+
+        $question_template_body = str_replace("{{link_to_paypal_transaction}}", $sTransactionReplaceText, $question_template_body);
+        $question_template_body = str_replace("{{payment_method}}", $sPaymentMethodReplaceText, $question_template_body);
 
 		$replace_with = '<a target="_blank" href="http://www.spokeo.com/search?q='.$google_shipping_address.'" style="color: #1F08F8;">Spokeo shipping address</a>';
 		$question_template_body = str_replace("{{spokeo_shipping}}", $replace_with, $question_template_body);
@@ -693,42 +677,39 @@ if (!empty($fraud_checks) && is_array($fraud_checks)){
 		$question_template_body = str_replace("{{shipping_address}}", $replace_with, $question_template_body);
 
 		$replace_with = $orders_full_names;
-		$question_template_body = str_replace("{{orders_full_names}}", $replace_with, $question_template_body);
+        $question_template_body = str_replace("{{orders_full_names}}", $replace_with, $question_template_body);
 
-                $replace_with = $userinfo["s_state"];
-                $question_template_body = str_replace("{{shipping_state}}", $replace_with, $question_template_body);
+        $replace_with = $userinfo["s_state"];
+        $question_template_body = str_replace("{{shipping_state}}", $replace_with, $question_template_body);
 
-                $replace_with = $userinfo["b_state"];
-                $question_template_body = str_replace("{{billing_state}}", $replace_with, $question_template_body);
+        $replace_with = $userinfo["b_state"];
+        $question_template_body = str_replace("{{billing_state}}", $replace_with, $question_template_body);
 
-                $replace_with = $geoip_state;
-                $question_template_body = str_replace("{{geoip_state}}", $replace_with, $question_template_body);
+        $replace_with = $geoip_state;
+        $question_template_body = str_replace("{{geoip_state}}", $replace_with, $question_template_body);
 
-                $replace_with = $phone_area_code_state;
-                $question_template_body = str_replace("{{phone_area_code_state}}", $replace_with, $question_template_body);
+        $replace_with = $phone_area_code_state;
+        $question_template_body = str_replace("{{phone_area_code_state}}", $replace_with, $question_template_body);
 
-                $replace_with = $userinfo["email"];
-                $question_template_body = str_replace("{{customer_email}}", $replace_with, $question_template_body);
+        $replace_with = $userinfo["email"];
+        $question_template_body = str_replace("{{customer_email}}", $replace_with, $question_template_body);
 
-                $replace_with = $areacode_state;
-                $question_template_body = str_replace("{{areacode_state}}", $replace_with, $question_template_body);
+        $replace_with = $areacode_state;
+        $question_template_body = str_replace("{{areacode_state}}", $replace_with, $question_template_body);
 
-                $replace_with = $geoip_address;
-                $question_template_body = str_replace("{{geoip_address}}", $replace_with, $question_template_body);
+        $replace_with = $geoip_address;
+        $question_template_body = str_replace("{{geoip_address}}", $replace_with, $question_template_body);
 
-                $replace_with = $phone_area_code_address;
-                $question_template_body = str_replace("{{phone_area_code_address}}", $replace_with, $question_template_body);
+        $replace_with = $phone_area_code_address;
+        $question_template_body = str_replace("{{phone_area_code_address}}", $replace_with, $question_template_body);
 
-                $replace_with = $orders_company_names;
-                $question_template_body = str_replace("{{orders_company_names}}", $replace_with, $question_template_body);
+        $replace_with = $orders_company_names;
+        $question_template_body = str_replace("{{orders_company_names}}", $replace_with, $question_template_body);
 
-                $replace_with = $email_domain_website;
-                $question_template_body = str_replace("{{email_domain_website}}", $replace_with, $question_template_body);
+        $replace_with = $email_domain_website;
+        $question_template_body = str_replace("{{email_domain_website}}", $replace_with, $question_template_body);
 
-                $replace_with = $payment_method;
-                $question_template_body = str_replace("{{payment_method}}", $replace_with, $question_template_body);
-
-		$fraud_checks[$k]["question_template_body"] = $question_template_body;
+        $fraud_checks[$k]["question_template_body"] = $question_template_body;
 
 		$fraud_checks[$k]["manual_action"] = func_query_first_cell("SELECT manual_action FROM $sql_tbl[order_fraud_checks] WHERE orderid='$orderid' AND question_code='$v[question_code]'");
 
@@ -740,10 +721,10 @@ if (!empty($fraud_checks) && is_array($fraud_checks)){
 			$additional_info = unserialize($additional_info);
 		}
 
-                $importance_factor = str_replace(' ', '', $v["importance_factor"]);
-                $importance_factor_arr = explode(",", $importance_factor);
+        $importance_factor = str_replace(' ', '', $v["importance_factor"]);
+        $importance_factor_arr = explode(",", $importance_factor);
 
-		$fraud_checks[$k]["importance_factor_arr"] = $importance_factor_arr;
+        $fraud_checks[$k]["importance_factor_arr"] = $importance_factor_arr;
 
 		if ($fraud_score == "" && $v["auto"] == "Y"){
 
@@ -800,26 +781,6 @@ if ($update_overall_fraud_score) {
 } else {
 	$overall_fraud_score = func_query_first_cell("SELECT overall_fraud_score FROM $sql_tbl[orders] WHERE orderid='$orderid'");
 }
-
-/*
-$cidev_order_details = $order["details"];
-if (strpos($cidev_order_details, 'TransID #') !== false){
-        $cidev_order_details_err = explode("TransID #", $cidev_order_details);
-        if (!empty($cidev_order_details_err[1])){
-                if (strpos($cidev_order_details_err[1], ')') !== false){
-                                $cidev_order_details_TransID_arr = explode(")", $cidev_order_details_err[1]);
-                                $cidev_order_details_TransID = $cidev_order_details_TransID_arr[0];
-                } else {
-                        $cidev_order_details_TransID = substr($cidev_order_details_err[1], 0, -1);
-                }
-        }
-} else {
-        $cidev_order_details_TransID = $order["transaction_id_link"];
-}
-$smarty->assign("cidev_order_details_TransID", $cidev_order_details_TransID);
-*/
-
-//func_print_r($fraud_checks);
 
 $smarty->assign("orderid", $orderid);
 $smarty->assign("order", $order);
