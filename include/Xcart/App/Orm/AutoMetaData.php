@@ -94,16 +94,7 @@ class AutoMetaData extends MetaData
                 $config['class'] = FloatField::className();
                 break;
             }
-            case 'longtext' :
-            case 'text' : {
-                $config['class'] = TextField::className();
-                unset($config['length']);
-                break;
-            }
-            case 'string' : {
-                $config['class'] = CharField::className();
-                break;
-            }
+
             case 'blob' : {
                 $config['class'] = BlobField::className();
                 unset($config['length']);
@@ -125,6 +116,18 @@ class AutoMetaData extends MetaData
 //                $config['class'] = TimestampField::className();
 //                break;
 //            }
+
+            case 'string' : {
+                $config['class'] = CharField::className();
+                break;
+            }
+            case 'longtext' :
+            case 'text' : {
+                unset($config['length']);
+            }
+            default: {
+                $config['class'] = TextField::className();
+            }
         }
 
         return $config;
