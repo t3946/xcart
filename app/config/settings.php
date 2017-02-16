@@ -55,6 +55,14 @@ return array_replace_recursive([
            'forceCompile' => false,
 //           'autoReload' => false
        ],
+       'cache' => [
+           'class' => '\\Xcart\\App\\Cache\\Cache',
+           'drivers' => [
+               'default' =>  [
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File'
+               ]
+           ]
+       ]
    ],
    'autoloadComponents' => [
        'errorHandler'
