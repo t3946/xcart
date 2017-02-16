@@ -5,9 +5,15 @@ use DateTime;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
+use Xcart\App\Orm\AutoMetaData;
 
 class CoreModule extends Module
 {
+
+    public static function onApplicationEnd()
+    {
+        AutoMetaData::saveCache();
+    }
 
     public static function onApplicationRun()
     {

@@ -3,6 +3,7 @@ namespace Xcart\App\Orm;
 
 use Doctrine\DBAL\Schema\Column;
 use ReflectionMethod;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\BigIntField;
 use Xcart\App\Orm\Fields\BlobField;
 use Xcart\App\Orm\Fields\CharField;
@@ -16,9 +17,12 @@ use Xcart\App\Orm\Fields\TimeField;
 
 class AutoMetaData extends MetaData
 {
+    private static $_tables = null;
 
     protected function init($className)
     {
+        $this->initTableData();
+
         if ((new ReflectionMethod($className, 'getFields'))->isStatic()
 //            || (new ReflectionMethod($className, 'getColumns'))->isStatic()
         ) {
@@ -27,16 +31,8 @@ class AutoMetaData extends MetaData
 
         $primaryFields = [];
 
-        /** @var Data|Model $model */
-//        $model = new $className;
-//        $connection = $model->getConnection();
-        $connection = Orm::getDefaultConnection();
-        $sm = $connection->getSchemaManager();
 
-//        func_dump($sm->listTableIndexes($model->getTableName()));
-//        func_dump($sm->listTableColumns($model->getTableName()));
-
-        foreach ($sm->listTableColumns(call_user_func([$className, 'tableName'])) as $column) {
+        foreach ($this->getTableColumns($className) as $column) {
             $name = $column->getName();
 
             if (!isset($this->fields[$name])) {
@@ -63,7 +59,24 @@ class AutoMetaData extends MetaData
         }
     }
 
-    protected function getConfigFromDBAL(Column $column)
+    /**
+     * @param string $className
+     *
+     * @return Column[]
+     */
+    private function getTableColumns($className)
+    {
+        if (!isset(self::$_tables[$className]))
+        {
+            $connection = Orm::getDefaultConnection();
+            $sm = $connection->getSchemaManager();
+            self::$_tables[$className] = $sm->listTableColumns(call_user_func([$className, 'tableName']));
+        }
+
+        return self::$_tables[$className];
+    }
+
+    private function getConfigFromDBAL(Column $column)
     {
         $config = [
             'null'    => !$column->getNotnull(),
@@ -131,5 +144,18 @@ class AutoMetaData extends MetaData
         }
 
         return $config;
+    }
+
+    public function initTableData()
+    {
+        if (is_null(self::$_tables))
+        {
+            self::$_tables = Xcart::app()->cache->get('auto_meta_data_tables', []);
+        }
+    }
+
+    public static function saveCache()
+    {
+        Xcart::app()->cache->set('auto_meta_data_tables', self::$_tables, 35);
     }
 }

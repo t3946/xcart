@@ -13,7 +13,7 @@
                             {foreach $models as $model}
                                 {if $model->position_row == $row && $model->position_column == $col}
                                     {if $model->getSearchStorage()->getCashedCount() > 0}
-                                        <a href="{$model->getAbsoluteUrl()}" class="">
+                                        <a href="{$model->getAbsoluteUrl()}" class="" target="_blank">
                                             <div class="row">
                                                 {if $model->tag}
                                                     <div class="columns large-2">
