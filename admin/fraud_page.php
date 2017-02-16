@@ -654,7 +654,7 @@ if (!empty($fraud_checks) && is_array($fraud_checks)){
             if ($oPaymentMethod) {
                 $sTransactionLink = str_replace('{{trans-id}}', $oTransaction->transaction_id, $oPaymentMethod->transaction_id_link);
                 $sTransactionReplaceText = "<a target='_blank' href='{$sTransactionLink}' style='color:#1F08F8;'>Link to transaction</a>";
-                $sPaymentMethodReplaceText = $oPaymentMethod->payment_method;
+                $sPaymentMethodReplaceText = "{$oPaymentMethod->payment_method} ({$oPaymentMethod->transaction_link_anchor})";
             }
         }
 
