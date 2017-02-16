@@ -7,6 +7,7 @@ use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
@@ -27,6 +28,7 @@ class OrderSearchStore extends BaseStore
     private $qs;
     /** @var Pagination */
     private $pager;
+    private $fid = null;
 
     public static function getFeatures()
     {
@@ -64,9 +66,10 @@ class OrderSearchStore extends BaseStore
         ];
     }
 
-    public function __construct($data)
+    public function __construct($data, $fid = null)
     {
         $this->form_data = $data;
+        $this->fid = $fid;
         $this->qs = $this->populate($data)->order(['-orderid']);
     }
 
@@ -723,6 +726,35 @@ class OrderSearchStore extends BaseStore
     public function getModels()
     {
         return $this->prepareModels($this->getPager()->paginate());
+    }
+
+    public function getCount()
+    {
+        return $this->qs->count();
+    }
+
+    public function getCashedCount()
+    {
+        if ($this->fid) {
+            $id = $this->fid;
+        }
+        else {
+            $md5 = json_encode($this->where);
+            $id = md5($md5);
+        }
+
+        $key = 'order_search_store_count_'.$id;
+
+        if ($count = Xcart::app()->cache->get($key))
+        {
+            return $count;
+        }
+        else {
+            $count = $this->getCount();
+            Xcart::app()->cache->set($key, $count, 25 + rand(1, 15));
+        }
+
+        return $count;
     }
 
     public function prepareModels($models)

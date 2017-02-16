@@ -23,7 +23,7 @@
                                                 <div class="columns {if $model->tag}large-10{else}large-12{/if}">
                                                     <span class="name">
                                                         <span class="{if $model->bold}bold{/if}">{$model}</span>
-                                                        ({$model->getSearchStorage()->getPager()->getTotal()})
+                                                        ({$model->getSearchStorage()->getCashedCount()})
                                                     </span>
                                                 </div>
                                             </div>
