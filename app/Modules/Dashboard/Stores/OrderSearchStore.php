@@ -295,7 +295,7 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['po_status']) || $this->checkNot('order.po_status')) {
-                $qs->join('inner join', 'xcart_po_pipeline', ['orderid' => 'po.order_id'], 'po');
+                $qs->join('right outer join', 'xcart_po_pipeline', ['orderid' => 'po.order_id'], 'po');
 
                 $val = ($data['order']['po_status']) ? $data['order']['po_status'] : [''];
 
