@@ -172,53 +172,19 @@ class Order extends Data
         return $this->tags;
     }
 
-    private function fetchOrderProductsManufacturers()
-    {
-        if (!empty($this->aOrderProductsManufactueres) && is_array($this->aOrderProductsManufactueres)) {
-            $oManufacturers = new Manufacturers();
-            $aManufacturersInfo = $oManufacturers->getMainufacturersInfo($this->aOrderProductsManufactueres);
-            foreach ($this->aOrderProducts as &$oOrderProduct) {
-                $key = array_search($oOrderProduct->getField('manufacturerid'), array_column($aManufacturersInfo, 'manufacturerid'));
-                if ($key !== false) {
-                    $oOrderProduct->setProductManufacturer($aManufacturersInfo[$key]);
-                }
-            }
-        }
-    }
-
-    private function fetchOrderProducts()
-    {
-        if (is_null($this->aOrderProducts)) {
-            $aProductIds = [];
-            $aOrderDetails = $this->getOrderDetails();
-            if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
-                $oProducts = new Products();
-                foreach ($aOrderDetails as $oOrderDetail) {
-                    $aProductIds[] = $oOrderDetail->getField('productid');
-                }
-                $aProducts = $oProducts->getProductsInfo($aProductIds);
-                if (!empty($aProducts) && is_array($aProducts)) {
-                    $this->aOrderProductsManufactueres = [];
-                    foreach ($aProducts as $aProduct) {
-                        $oProduct = new Product();
-                        $oProduct->fill($aProduct);
-                        if (!in_array($oProduct->getField('manufacturerid'), $this->aOrderProductsManufactueres))
-                            $this->aOrderProductsManufactueres[] = $oProduct->getField('manufacturerid');
-                        $this->aOrderProducts[] = $oProduct;
-                    }
-                    $this->fetchOrderProductsManufacturers();
-                }
-            }
-        }
-        return $this;
-    }
-
     /**
      * @return Product[]
      */
     public function getOrderProducts()
     {
-        $this->fetchOrderProducts();
+        if (is_null($this->aOrderProducts) && $this->orderid) {
+            $qs = Product::objects() ->getQuerySet();
+            $alias = $qs->getTableAlias();
+            $this->aOrderProducts =
+                $qs ->join('inner join', 'xcart_order_details', [$alias.'.productid' => 'details.productid'], 'details')
+                    ->filter(['details.orderid' => $this->orderid])
+                    ->all();
+        }
         return $this->aOrderProducts;
     }
 
@@ -226,9 +192,7 @@ class Order extends Data
     {
         if (!empty($this->aOrderProducts)) {
             foreach ($this->aOrderProducts as $key => $oProduct) {
-
                 if ($oProduct->getField('productid') == $iProductId) {
-                    // echo $oProduct->getField('productid')."\n".$iProductId."\n";
                     unset($this->aOrderProducts[$key]);
                 }
             }
@@ -1046,5 +1010,4 @@ SQL;
         }
         return $sRefererDomain;
     }
-
 }

@@ -1,19 +1,8 @@
 <?php
+$base_config = __DIR__ . DIRECTORY_SEPARATOR .'settings.php';
 
-return [
-    'name' => 'Xcart',
-    'paths' => [
-        'base' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..'])),
-        'www' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..'])),
-    ],
-    'modules' => [
-        'Core',
-        'Dashboard',
-    ],
+return array_replace_recursive((is_file($base_config)) ? include $base_config : [], [
     'components' => [
-        'db' => [
-            'class' => '\\Xcart\\Connection',
-        ],
         'errorHandler' => [
             'class' => '\\Xcart\\App\\Main\\ErrorHandler',
             'debug' => true,
@@ -28,9 +17,6 @@ return [
                     'class' => '\\Xcart\\App\\Request\\XcartSession'
                 ]
             ],
-            'cliRequest' => [
-                'class' => '\\Xcart\\App\\Request\\CliRequest',
-            ]
         ],
         'router' => [
             'class' => '\\Xcart\\App\\Router\\Router',
@@ -38,12 +24,5 @@ return [
             'basePath' => '/admin/controllers.php?',
             'mode' => 'get',
         ],
-        'template' => [
-            'class' => '\\Xcart\\App\\Template\\TemplateManager',
-            'forceCompile' => true
-        ],
-    ],
-    'autoloadComponents' => [
-        'errorHandler'
     ]
-];
+]);

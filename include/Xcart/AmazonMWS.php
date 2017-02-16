@@ -1021,19 +1021,13 @@ SQL;
 
     public function processReportSettlementData()
     {
-        x_load('xml');
         $ReportContent = $this->getReportContent();
         if (!empty($ReportContent)) {
-
             $log_text = "Processing " . count($ReportContent) . " reports";
             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
-
             foreach ($ReportContent as $report_id => $report_data) {
-
                 $aOrderDetails = [];
-
                 $findme_arr = array("Order", "Refund", "Fee", "Component", "Item", "AdjustedItem");
-
                 foreach ($findme_arr as $findme) {
                     $pos = strpos($report_data, "<$findme>");
                     if ($pos !== "false") {
@@ -1048,14 +1042,9 @@ SQL;
                     }
                 }
                 $aXmlReportConent = func_xml2hash($report_data, "UTF-8");
-
                 if (!empty($aXmlReportConent["AmazonEnvelope"]["Message"]["SettlementReport"]) && is_array($aXmlReportConent["AmazonEnvelope"]["Message"]["SettlementReport"])) {
-
                     foreach ($aXmlReportConent["AmazonEnvelope"]["Message"]["SettlementReport"] as $k => $v) {
-                        $RefundSum = 0;
-
-                        $k_name = '';
-
+                        $RefundSum = 0; $k_name = '';
                         if (strpos($k, "Order") !== false) {
                             $k_name = "Item";
                         } elseif (strpos($k, "Refund") !== false) {
@@ -1063,26 +1052,21 @@ SQL;
                         }
                         if ($k_name == 'AdjustedItem' && !empty($v["AdjustmentID"])) $v["ShipmentID"] = $v["AdjustmentID"];
                         if (!empty($v["AmazonOrderID"]) && !empty($v["ShipmentID"])) {
-
                             if ($v['MarketplaceName'] == 'Non-Amazon') {
-                                preg_match("/\w+-(\d+)[-]?(\d+)?/", $v['MerchantOrderID'], $aMatchArray); //AR-65345-12
+                                preg_match("/\w+-(\d+)[-]?(\d+)?/", $v['MerchantOrderID'], $aMatchArray);
                                 if (!empty($aMatchArray)) {
                                     if (!empty($aMatchArray[1])) {
                                         $iOrderId = intval($aMatchArray[1]);
                                         $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl['orders'] . " WHERE orderid=$iOrderId");
                                     }
                                 }
-                            } else
+                            } else {
                                 $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl['orders'] . " WHERE amazonorderid='$v[AmazonOrderID]'");
-
+                            }
                             if (!empty($order_info)) {
-
                                 $log_text = "order processed: " . $v["AmazonOrderID"];
-
                                 func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
-
                                 foreach ($v["Fulfillment"] as $kk => $vv) {
-
                                     if ($k_name == "Item") {
                                         if (!empty($vv["ItemFees"])) {
                                             $aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Quantity'] += $vv['Quantity'];
@@ -1096,7 +1080,6 @@ SQL;
                                                 }
                                             }
                                         }
-
                                         if (!empty($vv["ItemPrice"])) {
                                             foreach ($vv["ItemPrice"] as $kkk => $vvv) {
                                                 if (in_array($vvv["Type"], array("Principal", "Shipping"))) {
@@ -1104,14 +1087,12 @@ SQL;
                                                 }
                                             }
                                         }
-
                                         if (!empty($vv["Promotion"])) {
                                             if (in_array($vv["Promotion"]["Type"], array("Shipping"))) {
                                                 //$aOrderDetails[$v["AmazonOrderID"]][$v["ShipmentID"]][$vv['AmazonOrderItemCode']]['Refund'] += abs(floatval($vv["Promotion"]["Amount"]));
                                             }
 
                                         }
-
                                     } elseif ($k_name == "AdjustedItem") {
 
                                         if (!empty($vv["ItemPriceAdjustments"]) && is_array($vv["ItemPriceAdjustments"])) {
@@ -1133,9 +1114,7 @@ SQL;
                                                         break;
                                                 }
                                             }
-
                                         }
-
                                         if (!empty($vv["ItemFeeAdjustments"]) && is_array($vv["ItemFeeAdjustments"])) {
                                             foreach ($vv["ItemFeeAdjustments"] as $kkk => $vvv) {
                                                 $field_name = $vvv["Type"];
@@ -1157,46 +1136,78 @@ SQL;
                                         }
                                     }
                                 }
-
                             }
                         }
                     }
                 }
-
-
                 if (!empty($aOrderDetails)) {
                     foreach ($aOrderDetails as $sAmazonOrderId => $aShippings) {
-                        foreach ($aShippings as $sShippingId => $aAmazonCodes)
+                        foreach ($aShippings as $sShippingId => $aAmazonCodes) {
                             foreach ($aAmazonCodes as $sAmazonCode => $aFees) {
-                                $aOrderDetailData = [];
-                                $aOrderDetailData['FBAPerOrderFulfillmentFee'] = floatval($aFees['FBAPerOrderFulfillmentFee']);
-                                $aOrderDetailData['FBAPerUnitFulfillmentFee'] = floatval($aFees['FBAPerUnitFulfillmentFee']);
-                                $aOrderDetailData['FBATransportationFee'] = floatval($aFees['FBATransportationFee']);
-                                $aOrderDetailData['FBAWeightBasedFee'] = floatval($aFees['FBAWeightBasedFee']);
-                                $aOrderDetailData['ShippingFee'] = floatval($aFees['ShippingChargeback']);
-                                $aOrderDetailData['AmazonCommission'] = floatval($aFees['Commission']);
-                                $aOrderDetailData['Principal'] = floatval($aFees['Principal']);
-                                $aOrderDetailData['PrincipalRefund'] = floatval($aFees['PrincipalRefund']);
-                                $aOrderDetailData['Shipping'] = floatval($aFees['Shipping']);
-                                $aOrderDetailData['ShippingRefund'] = floatval($aFees['ShippingRefund']);
-                                $aOrderDetailData['Quantity'] = intval($aFees['Quantity']);
-                                $aOrderDetailData['type'] = $aFees['type'];
-                                $aOrderDetailData['SKU'] = $aFees['SKU'];
-                                $aOrderDetailData['AmazonShipmentID'] = $sShippingId;
-                                $aOrderDetailData['AmazonOrderItemCode'] = $sAmazonCode;
-                                $aOrderDetailData['Refund'] = floatval(abs($aFees['Refund']));
-                                $aOrderDetailData['reportId'] = $report_id;
-                                $iOrderId = $aOrderDetailData['orderid'] = intval($aFees['orderid']);
-                                $oProducts = new Products();
-                                $aProduct = $oProducts->getProductBySKU($aOrderDetailData['SKU']);
-                                if (!empty($aProduct))
-                                    $aOrderDetailData['manufacturerid'] = $aProduct['manufacturerid'];
-
-
-                                //if ($aOrderDetailData['Quantity'] == 0) $aOrderDetailData['Quantity'] = 1;
-
-                                if (!empty($aOrderDetailData)) {
-                                    func_array2insert('order_amazon_details', $aOrderDetailData, true);
+                                $oOrderAmazonDetail = OrderAmazonDetail::create([
+                                    'FBAPerOrderFulfillmentFee' => floatval($aFees['FBAPerOrderFulfillmentFee']),
+                                    'FBAPerUnitFulfillmentFee' => floatval($aFees['FBAPerUnitFulfillmentFee']),
+                                    'FBATransportationFee' => floatval($aFees['FBATransportationFee']),
+                                    'FBAWeightBasedFee' => floatval($aFees['FBAWeightBasedFee']),
+                                    'ShippingFee' => floatval($aFees['ShippingChargeback']),
+                                    'AmazonCommission' => floatval($aFees['Commission']),
+                                    'Principal' => floatval($aFees['Principal']),
+                                    'PrincipalRefund' => floatval($aFees['PrincipalRefund']),
+                                    'Shipping' => floatval($aFees['Shipping']),
+                                    'ShippingRefund' => floatval($aFees['ShippingRefund']),
+                                    'Quantity' => intval($aFees['Quantity']),
+                                    'type' => $aFees['type'],
+                                    'SKU' => $aFees['SKU'],
+                                    'AmazonShipmentID' => $sShippingId,
+                                    'AmazonOrderItemCode' => $sAmazonCode,
+                                    'Refund' => floatval(abs($aFees['Refund'])),
+                                    'reportId' => $report_id,
+                                    'orderid' => intval($aFees['orderid']),
+                                ]);
+                                $iOrderId = $oOrderAmazonDetail->orderid;
+                                $oProduct = null;
+                                /** @var Order $oOrder */
+                                $oOrder = Order::objects()->filter(['orderid' => $iOrderId])->get();
+                                if ($oOrder) {
+                                    $aOrderProducts = $oOrder->getOrderProducts();
+                                    if (!empty($aOrderProducts)) {
+                                        $sSKU = $oOrderAmazonDetail->SKU;
+                                        if (!in_array($sSKU, array_map(function (/** @var Product $oP */
+                                            $oP) {
+                                            return $oP->getSKU();
+                                        }, $aOrderProducts))
+                                        ) {
+                                            /** @var Product $oOrderProduct */
+                                            foreach ($aOrderProducts as $oOrderProduct) {
+                                                $oParentProduct = $oOrderProduct->getParentProduct();
+                                                $aChildAndParentProducts = $oOrderProduct->getChildProducts();
+                                                if ($oParentProduct) {
+                                                    $aChildAndParentProducts[] = $oOrderProduct->getParentProduct();
+                                                }
+                                                $oProductFinded = array_filter(
+                                                    $aChildAndParentProducts,
+                                                    function ($e) use ($sSKU) {
+                                                        return $e->productcode == $sSKU;
+                                                    });
+                                                if (!empty($oProductFinded)) {
+                                                    $oProduct = $oOrderProduct;
+                                                    break;
+                                                }
+                                            }
+                                        } else {
+                                            $oProduct = Product::objects()->filter(['productcode' => $sSKU])->get();
+                                        }
+                                        if ($oProduct) {
+                                            if ($oOrderAmazonDetail->SKU != $oProduct->getSKU()) {
+                                                $oOrderAmazonDetail->_delete();
+                                                $oOrderAmazonDetail->SKU = $oProduct->getSKU();
+                                            }
+                                            $oOrderAmazonDetail->manufacturerid = $oProduct->manufacturerid;
+                                        }
+                                    }
+                                }
+                                if ($oOrderAmazonDetail) {
+                                    $oOrderAmazonDetail->_insert(true);
                                     $aUpdateValues = func_query_first("SELECT SUM(FBAPerOrderFulfillmentFee) AS FBAPerOrderFulfillmentFee,
                                                      SUM(FBAPerUnitFulfillmentFee) AS FBAPerUnitFulfillmentFee,
                                                      SUM(FBATransportationFee) AS FBATransportationFee,
@@ -1208,7 +1219,7 @@ SQL;
                                                      SUM(ShippingRefund) AS ShippingRefund,
                                                      SUM(PrincipalRefund) AS PrincipalRefund,
                                                      count(1) as Rows
-                                                     FROM " . $this->sql_tbl['order_amazon_details'] . " WHERE orderid = $iOrderId AND SKU = '$aFees[SKU]'");
+                                                     FROM xcart_order_amazon_details WHERE orderid = {$iOrderId} AND SKU = '{$oOrderAmazonDetail->SKU}'");
                                     if ($aUpdateValues['Rows'] > 0) {
                                         if ($aUpdateValues['Refund'] != 0) {
                                             $aUpdateValues['amazon_item_refunded'] = 'Y';
@@ -1219,16 +1230,15 @@ SQL;
                                         unset($aUpdateValues['Shipping']);
                                         unset($aUpdateValues['FBATransportationFee']);
                                         unset($aUpdateValues['ShippingRefund']);
-                                        func_array2update('order_details', $aUpdateValues, "orderid = $iOrderId AND productcode='$aFees[SKU]'");
-
-
-                                        if (!empty($aProduct)) {
-                                            $oOrderGroup = new OrderGroup(['orderid' => $iOrderId, 'manufacturerid' => $aProduct['manufacturerid']]);
+                                        func_array2update('order_details', $aUpdateValues, "orderid = $iOrderId AND productcode='$oOrderAmazonDetail->SKU'");
+                                        if (!empty($oOrderAmazonDetail->manufacturerid)) {
+                                            $oOrderGroup = new OrderGroup(['orderid' => $iOrderId, 'manufacturerid' => $oOrderAmazonDetail->manufacturerid]);
                                             $oOrderGroup->recalculateAccounting();
                                         }
                                     }
                                 }
                             }
+                        }
                     }
                 }
             }

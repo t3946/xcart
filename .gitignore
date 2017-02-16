@@ -17,10 +17,12 @@ Thumbs.db
 !/static/**/*.gif
 !/static/**/*.png
 !/static/**/*.jpg
+!/static/**/*.jpeg
 ###################################
 ## scripts to exclude
 /robots.txt.php
 /config.local.php
+/app/config/settings_local.php
 /robots.txt
 /test.php
 /modules/XPDF/dompdf/lib/fonts/log.htm

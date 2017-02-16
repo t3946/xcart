@@ -153,9 +153,8 @@ class Router
      * @return string The URL of the route with named parameters in place.
      * @throws Exception
      */
-    public function url($routeName, array $params = array())
+    public function url($routeName, array $params = [])
     {
-
         // Check if named route exists
         if (!isset($this->_namedRoutes[$routeName])) {
             throw new \Exception("Route '{$routeName}' does not exist.");
@@ -163,22 +162,9 @@ class Router
 
         // Replace named parameters
         $route = $this->_namedRoutes[$routeName];
+        $url = $route;
 
-        if (strtolower($this->mode) == 'get' && !empty($this->get_param))
-        {
-            $route = http_build_query([$this->get_param => $route]);
-
-            if (strpos($this->_basePath, '?') === false) {
-                $route = '?' . $route;
-            }
-        }
-
-        // prepend base path to route url again
-        $url = $this->_basePath . $route;
-
-
-        if (preg_match_all('`(/|\.|)\{([^:\}]*+)(?::([^:\}]*+))?\}(\?|)`', $route, $matches, PREG_SET_ORDER)) {
-
+        if (preg_match_all('`(\/|\.|)\{([^:\}]*+)(?::([^:\}]*+))?\}(\?|)`', $route, $matches, PREG_SET_ORDER)) {
             $counter = 0;
             foreach ($matches as $match) {
                 list($block, $pre, $type, $param, $optional) = $match;
@@ -198,9 +184,19 @@ class Router
                 }
                 $counter++;
             }
-
-
         }
+
+        if (strtolower($this->mode) == 'get' && !empty($this->get_param))
+        {
+            $url = http_build_query([$this->get_param => $url]);
+
+            if (strpos($this->_basePath, '?') === false) {
+                $url = '?' . $url;
+            }
+        }
+
+        // prepend base path to route url again
+        $url = $this->_basePath . $url;
 
         return $url;
     }
@@ -316,7 +312,7 @@ class Router
      */
     protected function compileRoute($route)
     {
-        if (preg_match_all('`(/|\.|)\{([^:\}]*+)(?::([^:\}]*+))?\}(\?|)`', $route, $matches, PREG_SET_ORDER)) {
+        if (preg_match_all('`(\/|\.|)\{([^:\}]*+)(?::([^:\}]*+))?\}(\?|)`', $route, $matches, PREG_SET_ORDER)) {
 
             $matchTypes = $this->_matchTypes;
             foreach ($matches as $match) {
