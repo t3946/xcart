@@ -94,7 +94,7 @@ class DashboardFilter extends Model
     public function getSearchStorage()
     {
         if (!$this->s_store) {
-            $this->s_store = new OrderSearchStore($this->form_data);
+            $this->s_store = new OrderSearchStore($this->form_data, $this->id);
         }
 
         return $this->s_store;
