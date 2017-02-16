@@ -76,6 +76,11 @@ $storefront_independant = 'N';
 
 $smarty->assign('abbreviations', preg_replace('/\s/','', $config['Product_Page']['features_abbreviations']));
 
+$smarty->assign('aSplashes', \Xcart\Images\Splash::objects()->filter(['active' => 'Y'])->order(['splash_name'])->all());
+if ($oProduct && $oProduct->splash_id){
+	$smarty->assign('oProductSplash', \Xcart\Images\Splash::objects()->filter(['id' => $oProduct->splash_id])->get());
+}
+
 # Assign the current location line
 $smarty->assign("location", $location);
 

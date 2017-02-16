@@ -1,5 +1,6 @@
 {capture name=product_splash_upload}
     <form id="product_splash_upload_form" method="post" name="product_splash_upload_form" enctype="multipart/form-data">
+        <input id="splash_form_mode" type="hidden" name="mode" value="add_splash">
         <table cellspacing="0" cellpadding="3" width="100%">
             <tr class="TableHead">
                 <td width="50"</td>
@@ -20,7 +21,7 @@
                             <input style="width:99%;" type="text" name="splash_name[{$splash->id}]" value="{$splash->splash_name}"/>
                         </td>
                         <td class="DataTable">
-                            <input style="width:99%;" type="text" name="splash_comment[{$splash->id}]" value="{$splash->splash_comment}"/>
+                            <input style="width:99%;" type="text" name="splash_comment[{$splash->id}]" value="{$splash->comment}"/>
                         </td>
                         <td align="center">
                             <select name="splash_active[{$splash->id}]">
@@ -32,8 +33,7 @@
                 {/foreach}
                 <tr>
                     <td colspan="4">
-                        <input type="button" value="Update selected"
-                               onclick="document.uploadform.mode.value='update_splashes';document.uploadform.submit();"/>&nbsp;&nbsp;&nbsp;
+                        <input id="update_splash_button" type="button" value="Update selected"/>&nbsp;&nbsp;&nbsp;
                     </td>
                 </tr>
             {else}
@@ -60,16 +60,17 @@
                         </tr>
                         <tr id="upload_row_1">
                             <td colspan="2">
-                                <span id="upload_fname_1"></span><input type="file" size="25" name="splash_file" id="userfile_1"/>
+                                <input name="splash_scheckbox[0]" type="checkbox" checked="checked" style="display: none;"/>
+                                <span id="upload_fname_1"></span><input type="file" size="25" name="splash_file[0]" id="userfile_1"/>
                             </td>
                             <td>
-                                <input style="width:99%;" name="splash_name" type="text" />
+                                <input style="width:99%;" name="splash_name[0]" type="text" />
                             </td>
                             <td>
-                                <input style="width:99%;" name="splash_comment" type="text" />
+                                <input style="width:99%;" name="splash_comment[0]" type="text" />
                             </td>
                             <td align="center">
-                                <select name="splash_active">
+                                <select name="splash_active[0]">
                                     <option value="N">N</option>
                                     <option value="Y">Y</option>
                                 </select>
@@ -93,5 +94,8 @@
         $('img.splash_image').click(function(){
             $(this).hide().next('input[type=file]').click().show();
         });
+        $('#update_splash_button').click(function() {
+            $('#splash_form_mode').val('update_splashes').closest('form').submit();
+        })
     </script>
 {/literal}

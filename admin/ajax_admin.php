@@ -76,6 +76,12 @@ switch ($_POST['ajax_action']) {
     case "get_order_shipping_charge":
         getOrderGroupShippingCharge($_POST);
         break;
+    case "get_splash_info":
+        getSplashInfo($_POST);
+        break;
+    case "change_product_splash":
+        changeProductSplash($_POST);
+        break;
 }
 
 function changeVerifyProductStatus($aPostParam = [])
@@ -590,4 +596,27 @@ function getOrderGroupShippingCharge($aParams = [])
         }
     }
     print nl2br($sResult);
+}
+
+function getSplashInfo($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['splash_id']) && is_numeric($aParams['splash_id'])) {
+        $oSplash = \Xcart\Images\Splash::objects()->filter(['id' => $aParams['splash_id']])->get();
+        if ($oSplash) {
+            $aResult['result'] = true;
+            $aResult['data'] = $oSplash->getFields();
+        }
+    }
+    print json_encode($aResult);
+}
+
+function changeProductSplash($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['splash_id']) && !empty($aParams['product_id'])) {
+        Product::objects()->filter(['productid' => $aParams['product_id']])->get()->updateField('splash_id', (int) $aParams['splash_id']);
+        $aResult['result'] = true;
+    }
+    print json_encode($aResult);
 }
