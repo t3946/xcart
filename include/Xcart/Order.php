@@ -1004,9 +1004,12 @@ SQL;
     public function getLastRefererUrl()
     {
         $sRefererDomain = null;
-        $oRefererDomain = Surfing\Referer::objects()->filter(['referer_id' => $this->referer_id])->get();
-        if ($oRefererDomain) {
-            $sRefererDomain = "//" . $oRefererDomain->referer;
+
+        if ($this->referer_id)
+        {
+            if ($oRefererDomain = Surfing\Referer::objects()->filter(['referer_id' => $this->referer_id])->get()) {
+                $sRefererDomain = "//" . $oRefererDomain->referer;
+            }
         }
         return $sRefererDomain;
     }
