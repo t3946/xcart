@@ -1,4 +1,4 @@
-{extends 'base/admin.tpl'}
+{extends 'base/with_admin_menu.tpl'}
 
 {block 'js-head'}
     <link href="/static/vendors/air-datepicker/dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
@@ -9,9 +9,6 @@
     <link href="/static/vendors/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
     {*<link href="/static/vendors/select2/dist/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css">*}
     <script src="/static/vendors/select2/dist/js/select2.min.js" type="text/javascript"></script>
-{/block}
-
-{block 'menu_block'}
 {/block}
 
 {block 'js'}
@@ -79,6 +76,7 @@
         });
 
 
+        {ignore}
 
         $('.admin .date_templates > span').on('click', function(){
             var $this = $(this);
@@ -142,6 +140,7 @@
             }
 
         });
+        {/ignore}
     })();
 </script>
 {/block}
