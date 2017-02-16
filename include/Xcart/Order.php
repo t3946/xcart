@@ -178,10 +178,10 @@ class Order extends Data
     public function getOrderProducts()
     {
         if (is_null($this->aOrderProducts) && $this->orderid) {
+            $qs = Product::objects() ->getQuerySet();
+            $alias = $qs->getTableAlias();
             $this->aOrderProducts =
-                Product::objects()
-                    ->getQuerySet()
-                    ->join('inner join', 'xcart_order_details', ['t.productid' => 'details.productid'], 'details')
+                $qs ->join('inner join', 'xcart_order_details', [$alias.'.productid' => 'details.productid'], 'details')
                     ->filter(['details.orderid' => $this->orderid])
                     ->all();
         }
