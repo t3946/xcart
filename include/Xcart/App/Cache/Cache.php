@@ -3,7 +3,6 @@
 namespace Xcart\App\Cache;
 
 
-use Phact\Cache\CacheDriver;
 use Xcart\App\Helpers\Creator;
 use Xcart\App\Helpers\SmartProperties;
 
