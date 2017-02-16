@@ -17,7 +17,7 @@ use Xcart\App\Orm\Fields\TimeField;
 
 class AutoMetaData extends MetaData
 {
-    private static $_tables = null;
+    private static $_tables;
 
     protected function init($className)
     {
@@ -68,9 +68,7 @@ class AutoMetaData extends MetaData
     {
         if (!isset(self::$_tables[$className]))
         {
-            $connection = Orm::getDefaultConnection();
-            $sm = $connection->getSchemaManager();
-            self::$_tables[$className] = $sm->listTableColumns(call_user_func([$className, 'tableName']));
+            self::$_tables[$className] = Orm::getDefaultConnection()->getSchemaManager()->listTableColumns(call_user_func([$className, 'tableName']));
         }
 
         return self::$_tables[$className];
@@ -156,6 +154,8 @@ class AutoMetaData extends MetaData
 
     public static function saveCache()
     {
-        Xcart::app()->cache->set('auto_meta_data_tables', self::$_tables, 35);
+        if (self::$_tables) {
+            Xcart::app()->cache->set('auto_meta_data_tables', self::$_tables, 35);
+        }
     }
 }

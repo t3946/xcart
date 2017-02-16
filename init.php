@@ -63,14 +63,9 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
     exit();
 }
 
-Xcart\Connection::getInstance([
-    'memory'   => true,
-    'driver'   => 'pdo_mysql',
-    'dbname'   => $sql_db,
-    'host'     => $sql_host,
-    'user'     => $sql_user,
-    'password' => $sql_password,
-])->connect();
+\Xcart\App\Main\Xcart::init(include $xcart_dir .'/app/config/settings.php');
+register_shutdown_function([\Xcart\App\Main\Xcart::app(), 'end'], 0);
+Xcart\Connection::getInstanceFromApp(\Xcart\App\Main\Xcart::app())->connect();
 
 $file_temp_dir = $var_dirs["tmp"];
 

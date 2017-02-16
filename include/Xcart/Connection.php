@@ -3,7 +3,7 @@
 namespace Xcart;
 
 use \Doctrine\DBAL\DriverManager;
-use Xcart\App\Helpers\SmartProperties;
+use Xcart\App\Main\Xcart;
 
 /**
  * Class Connection
@@ -12,32 +12,18 @@ use Xcart\App\Helpers\SmartProperties;
  */
 class Connection
 {
-    use SmartProperties;
-
     private static $_instance = null;
-    private $config = [];
 
-    public function __call($name, $arguments)
+    /**
+     * @return \Doctrine\DBAL\Connection
+     */
+    public static function getInstanceFromApp()
     {
-        if (method_exists(self::$_instance, $name))
-        {
-            call_user_func_array([self::$_instance, $name], $arguments);
+        if (!self::$_instance) {
+            self::$_instance = Xcart::app()->db->getConnection();
         }
-    }
 
-    public function init()
-    {
-        self::getInstance($this->config);
-    }
-
-    public function setConfig(array $config)
-    {
-        $this->config = $config;
-    }
-
-    public function getConfig()
-    {
-        return $this->config;
+        return self::$_instance;
     }
 
     /**
@@ -46,10 +32,12 @@ class Connection
      */
     static public function getInstance($params = [])
     {
-        if (is_null(self::$_instance)) {
+        if (!self::$_instance) {
             self::$_instance = DriverManager::getConnection($params);
-            $platform = self::$_instance->getDatabasePlatform();
-            $platform->registerDoctrineTypeMapping('enum', 'string');
+
+            self::$_instance
+                ->getDatabasePlatform()
+                ->registerDoctrineTypeMapping('enum', 'string');
         }
         return self::$_instance;
     }
