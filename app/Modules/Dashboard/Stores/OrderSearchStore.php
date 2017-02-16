@@ -751,7 +751,7 @@ class OrderSearchStore extends BaseStore
         }
         else {
             $count = $this->getCount();
-            Xcart::app()->cache->set($key, $count, 25 + rand(1, 15));
+            Xcart::app()->cache->set($key, $count, 40 + rand(1, 40));
         }
 
         return $count;
