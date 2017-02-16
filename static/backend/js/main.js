@@ -15,7 +15,9 @@ jQuery.fn.mfieldset = function (options) {
 
         fieldset.attr('rel', indexVar);
 
-        if ((cookieVar == '1' || i === 0) && !fieldset.hasClass('collapsed-force')) {
+        if ( ((cookieVar == '1' || i === 0) && !fieldset.hasClass('collapsed-force'))
+            || fieldset.hasClass('expanded-force')
+        ) {
             showFieldsetContent(fieldset, options);
         } else
             hideFieldsetContent(fieldset, {animation: false});

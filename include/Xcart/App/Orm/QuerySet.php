@@ -1,283 +1,152 @@
 <?php
+
 namespace Xcart\App\Orm;
 
+use Xcart\App\Orm\Exception\MultipleObjectsReturned;
+use Mindy\QueryBuilder\Aggregation\Aggregation;
+use Mindy\QueryBuilder\Aggregation\Avg;
+use Mindy\QueryBuilder\Aggregation\Count;
+use Mindy\QueryBuilder\Aggregation\Max;
+use Mindy\QueryBuilder\Aggregation\Min;
+use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Q\QAndNot;
+use Mindy\QueryBuilder\Q\QOrNot;
 use Mindy\QueryBuilder\QueryBuilder;
-use Xcart\App\Exceptions\MultipleObjectsReturned;
-use Xcart\App\Traits\Configurator;
-use Xcart\Connection;
-use Xcart\Data;
 
-class QuerySet
+/**
+ * Class QuerySet
+ * @package Xcart\App\Orm
+ */
+class QuerySet extends QuerySetBase
 {
-    use Configurator;
-
-    public $modelClass;
-
-    /** @var Data */
-    public $model;
-
     /**
-     * @var \Doctrine\DBAL\Connection
+     * @var array a list of relations that this query should be performed with
      */
-    public $db;
-
-    /** @var QueryBuilder  */
-    private $qb = null;
-    private $asSql = false;
-    private $asArray = false;
-    private $_group = [];
-    private $data = null;
-
-    public function init()
-    {
-        $this->db = Connection::getInstance();
-        $this->qb = QueryBuilder::getInstance($this->db);
-
-        $this->qb->from($this->model->getTableName());
-        $this->qb->setAlias('t');
-    }
-
-    public function setAlias($alias)
-    {
-        $this->qb->setAlias($alias);
-        return $this;
-    }
-
-    public function getAlias()
-    {
-        return $this->qb->getAlias();
-    }
-
-    public function filter($where = [])
-    {
-        if (!empty($where)) {
-            $this->qb->where($where);
-        }
-
-        return $this;
-    }
-
-    public function orFilter($where = [])
-    {
-        if (!empty($where)) {
-            $this->qb->orWhere($where);
-        }
-
-        return $this;
-    }
-
-    public function exclude($where = [])
-    {
-        if (!empty($where)) {
-            $this->qb->where([new QAndNot($where)]);
-        }
-        return $this;
-    }
-
-    public function orExclude($where = [])
-    {
-        if (!empty($where)) {
-            $this->qb->orWhere([new QAndNot($where)]);
-        }
-
-        return $this;
-    }
-
-    public function offset($offset = 0)
-    {
-        $this->qb->offset($offset);
-        return $this;
-    }
-
-    public function limit($limit = 0)
-    {
-        $this->qb->limit($limit);
-        return $this;
-    }
-
-    public function count($q = '*', $distinct = false)
-    {
-        $count = Connection::getInstance()->fetchAll($this->countSql($q, $distinct));
-
-        if (count($count) > 1)
-        {
-            return count($count);
-        }
-        else {
-            return empty($count) ? 0 : reset($count[0]);
-        }
-
-    }
-
-    public function countSql($q = '*', $distinct = false)
-    {
-        $qb = clone $this->qb;
-
-        $qb->select("count({$q})", $distinct);
-        $qb->group($this->_group);
-        $qb->limit(null);
-
-        return $qb->toSQL();
-    }
+    protected $with = [];
+    protected $_group = [];
+    protected $sql;
 
     /**
-     * Sets the [[asArray]] property.
-     * @param boolean $value whether to return the query results in terms of arrays instead of Active Records.
-     * @return static the query object itself
+     * Executes query and returns all results as an array.
+     * If null, the DB connection returned by [[modelClass]] will be used.
+     * @return array the query results. If the query results in nothing, an empty array will be returned.
      */
-    public function asSql($value = true)
+    public function all()
     {
-        $this->asSql = $value;
-        return $this;
-    }
-
-    public function asArray($value = true)
-    {
-        $this->asArray = $value;
-        return $this;
-    }
-
-    public function getSql(array $where = [])
-    {
-        $this->qb->where($where);
-
-        return $this->prepareSql();
-    }
-
-    public function using(\Doctrine\DBAL\Connection $db)
-    {
-        $this->db = $db;
-        $this->qb->setConnection($this->db);
-        return $this;
-    }
-
-    public function select($columns, $option = null)
-    {
-        $this->qb->select($columns);
-        if ($option) {
-            $this->qb->setOptions($option);
+        $sql = $this->sql === null ? $this->allSql() : $this->sql;
+        $rows = $this->getConnection()->query($sql)->fetchAll();
+        if ($this->asArray) {
+            return !empty($this->with) ? $this->populateWith($rows) : $rows;
         }
-        return $this;
+
+        return $this->createModels($rows);
     }
 
     /**
-     * @param array $filter
-     *
-     * @return mixed|null|Orm
-     * @throws \Xcart\App\Exceptions\MultipleObjectsReturned
+     * @param int $batchSize
+     * @return \Xcart\App\Orm\BatchDataIterator
      */
-    public function get($filter = [])
+    public function batch($batchSize = 100)
     {
-        $this->filter($filter);
-        $rows = $this->db->fetchAll($this->getSql());
-        if (count($rows) > 1) {
-            throw new MultipleObjectsReturned();
-        } elseif (count($rows) === 0) {
-            return null;
-        }
-
-        $row = array_shift($rows);
-        return $this->asArray ? $row : $this->createModel($row);
+        return new BatchDataIterator($this->getConnection(), [
+            'qs' => $this,
+            'batchSize' => $batchSize,
+            'each' => false,
+            'asArray' => $this->asArray,
+        ]);
     }
 
     /**
-     * @param array $where
-     *
-     * @return array|Orm[]
+     * @param int $batchSize
+     * @return \Xcart\App\Orm\BatchDataIterator
      */
-    public function all($where = [])
+    public function each($batchSize = 100)
     {
-        $this->filter($where);
-        return $this->getData();
+        return new BatchDataIterator($this->getConnection(), [
+            'qs' => $this,
+            'batchSize' => $batchSize,
+            'each' => true,
+            'asArray' => $this->asArray,
+        ]);
     }
 
     /**
-     * @return array|Orm[]
-     */
-    public function getData()
-    {
-        if (empty($this->_data))
-        {
-            $this->_data = $this->db->fetchAll($this->prepareSql());
-        }
-
-        return $this->asArray ? $this->_data : $this->createModels($this->_data);
-    }
-
-    public function createModels(array $rows)
-    {
-        $models = [];
-        foreach ($rows as $row) {
-            $models[] = $this->createModel($row);
-        }
-        return $models;
-    }
-
-    public function createModel(array $row)
-    {
-        /** @var Orm $className */
-        $className = $this->modelClass;
-        if (!$className) {
-            throw new \Exception('$className must be a string in createModel method of qs');
-        }
-        return $className::create($row);
-    }
-
-
-
-    public function addGroupBy($column)
-    {
-        $this->_group[] = $column;
-        return $this;
-    }
-
-
-    public function distinct($fields = true)
-    {
-        return $this->qb->distinct($fields);
-    }
-
-    public function group($fields)
-    {
-        $this->_group = $fields;
-
-        return $this;
-    }
-
-    private function prepareSql()
-    {
-        $this->qb->group($this->_group);
-        return $this->qb->toSQL();
-    }
-
-
-    public function join($type, $table, $on = '', $alias = '')
-    {
-        $this->qb->join($type, $table, $on, $alias);
-        return $this;
-    }
-
-    /**
+     * @param array $columns
+     * @param bool $flat
      * @return array
      */
-    public function getJoins()
+    public function valuesList($columns, $flat = false)
     {
-        return $this->qb->getJoins();
+        $qb = clone $this->getQueryBuilder();
+        $rows = $this->getConnection()->query($qb->select($columns)->toSQL())->fetchAll();
+
+        if ($flat) {
+            $flatArr = [];
+            foreach ($rows as $item) {
+                $flatArr = array_merge($flatArr, array_values($item));
+            }
+            return $flatArr;
+        } else {
+            return $rows;
+        }
     }
 
-    public function from($tables)
+    /**
+     * Update records
+     * @param array $attributes
+     * @return int updated records
+     */
+    public function update(array $attributes)
     {
-        $this->qb->from($tables);
-        return $this;
+        return $this->getConnection()->executeUpdate($this->updateSql($attributes));
     }
 
-    public function order($columns)
+    /**
+     * @param array $attributes
+     * @return string
+     */
+    public function updateSql(array $attributes)
     {
-        $this->qb->order($columns);
-        return $this;
+        $attrs = [];
+        foreach ($attributes as $key => $value) {
+            $attrs[$this->getModel()->convertToPrimaryKeyName($key)] = $value;
+        }
+        return $this->getQueryBuilder()->setTypeUpdate()->update($this->getModel()->tableName(), $attrs)->toSQL();
     }
 
+    /**
+     * @param array $attributes
+     * @return array
+     */
+    public function getOrCreate(array $attributes)
+    {
+        $model = $this->get($attributes);
+        if ($model === null) {
+            $className = get_class($this->getModel());
+            /** @var Model $model */
+            $model = new $className($attributes);
+            $model->save();
+            return [$model, true];
+        }
+
+        return [$model, false];
+    }
+
+    /**
+     * @param array $attributes
+     * @param array $updateAttributes
+     * @return ModelInterface|Orm|null
+     */
+    public function updateOrCreate(array $attributes, array $updateAttributes)
+    {
+        $model = $this->get($attributes);
+        if ($model === null) {
+            $model = $this->getModel()->create();
+        }
+        $model->setAttributes($updateAttributes);
+        $model->save();
+        return $model;
+    }
 
     /**
      * Paginate models
@@ -287,39 +156,456 @@ class QuerySet
      */
     public function paginate($page = 1, $pageSize = 10)
     {
-        return $this->limit($pageSize)->offset($page > 1 ? $pageSize * ($page - 1) : 0);
+        $this->getQueryBuilder()->paginate($page, $pageSize);
+        return $this;
     }
 
     /**
-     * @param array $attributes
-     *
-     * @return integer The number of affected rows.
-     * @throws \Doctrine\DBAL\DBALException
+     * @return string
      */
-    public function delete(array $attributes = [])
+    public function allSql()
     {
-        return $this->db->exec($this->deleteSql($attributes));
-    }
-
-    public function deleteSql(array $attributes = [])
-    {
-        return $this->filter($attributes)->qb->setTypeDelete()->toSQL();
+        $qb = clone $this->getQueryBuilder();
+        return $qb->setTypeSelect()->toSQL();
     }
 
     /**
-     * @param array $attributes
-     *
-     * @return integer The number of affected rows.
-     * @throws \Doctrine\DBAL\DBALException
+     * @param array $filter
+     * @return string
      */
-    public function update(array $attributes = [])
+    public function getSql($filter = [])
     {
-        return $this->db->exec($this->updateSql($attributes));
+        if ($filter) {
+            $this->filter($filter);
+        }
+        $qb = clone $this->getQueryBuilder();
+        return $qb->setTypeSelect()->toSQL();
     }
 
-    public function updateSql(array $attributes = [])
+    /**
+     * Executes query and returns a single row of result.
+     * @param array $filter
+     * @return ModelInterface|array|null
+     * @throws MultipleObjectsReturned
+     */
+    public function get($filter = [])
     {
-        return $this->qb->update($this->model->getTableName(), $attributes)->toSQL();
+        $rows = $this->getConnection()->query($this->getSql($filter))->fetchAll();
+        if (count($rows) > 1) {
+            throw new MultipleObjectsReturned();
+        } elseif (count($rows) === 0) {
+            return null;
+        }
+
+        if (!empty($this->with)) {
+            $rows = $this->populateWith($rows);
+        }
+        $row = array_shift($rows);
+        if ($this->asArray) {
+            return $row;
+        } else {
+            $model = $this->createModel($row);
+            $model->setIsNewRecord(false);
+            return $model;
+        }
     }
 
+    public function setSql($sql)
+    {
+        $this->sql = $sql;
+        return $this;
+    }
+
+    /**
+     * Converts array prefix to string key
+     * @param array $prefix
+     * @return string
+     */
+    protected function prefixToKey(array $prefix)
+    {
+        return implode('__', $prefix);
+    }
+
+    /**
+     * todo remove me
+     * Searching closest already connected relation
+     * Example: User::objects()->filter(['group__name' => 'Admin', 'group__list__pk' => 2])
+     * at the second time we already have connected 'group' relation, return it
+     * @param $prefix
+     * @return array
+     */
+    protected function searchChain($prefix)
+    {
+        $model = $this->getModel();
+        $alias = $this->tableAlias;
+
+        $prefixRemains = [];
+        $chainRemains = [];
+
+        foreach ($prefix as $relationName) {
+            $chain[] = $relationName;
+            if ($founded = $this->getChain($chain)) {
+                $model = $founded['model'];
+                $alias = $founded['alias'];
+                $prefixRemains = [];
+                $chainRemains = $chain;
+            } else {
+                $prefixRemains[] = $relationName;
+            }
+        }
+
+        return [$model, $alias, $prefixRemains, $chainRemains];
+    }
+
+    public function with($with)
+    {
+        if (!is_array($with)) {
+            $with = [$with];
+        }
+
+        foreach ($with as $name => $fields) {
+            if (is_numeric($name)) {
+                $name = $fields;
+            }
+
+            if ($this->getModel()->getMeta()->hasRelatedField($name)) {
+                $this->with[] = $name;
+                $this->getOrCreateChainAlias([$name], true, true, is_array($fields) ? $fields : []);
+            }
+        }
+        return $this;
+    }
+
+    protected function convertQuery($query)
+    {
+        if (is_array($query)) {
+            return array_map(function ($value) {
+                if ($value instanceof Model) {
+                    return $value->pk;
+                } else if ($value instanceof Manager || $value instanceof QuerySet) {
+                    return $value->getQueryBuilder();
+                }
+                return $value;
+            }, $query);
+        } else {
+            return $query;
+        }
+    }
+
+    /**
+     * @param array $query
+     * @return $this
+     */
+    public function filter($query)
+    {
+        $this->getQueryBuilder()->where($this->convertQuery($query));
+        return $this;
+    }
+
+    /**
+     * @param array $query
+     * @return $this
+     */
+    public function orFilter(array $query)
+    {
+        $this->getQueryBuilder()->orWhere($this->convertQuery($query));
+        return $this;
+    }
+
+    /**
+     * @param array $query
+     * @return $this
+     */
+    public function exclude(array $query)
+    {
+        $this->getQueryBuilder()->where(new QAndNot($this->convertQuery($query)));
+        return $this;
+    }
+
+    /**
+     * @param array $query
+     * @return $this
+     */
+    public function orExclude(array $query)
+    {
+        $this->getQueryBuilder()->orWhere(new QOrNot($this->convertQuery($query)));
+        return $this;
+    }
+
+    /**
+     * Converts name => `name`, user.name => `user`.`name`
+     * @param string $name Column name
+     * @return string Quoted column name
+     */
+    public function quoteColumnName($name)
+    {
+        return $this->getConnection()->quoteColumnName($name);
+    }
+
+    /**
+     * Order by alias
+     * @param $columns
+     * @return $this
+     */
+    public function order($columns)
+    {
+        if (is_array($columns)) {
+            $newColumns = array_map(function ($value) {
+                if ($value instanceof Model) {
+                    return $value->pk;
+                } else if ($value instanceof Manager || $value instanceof QuerySet) {
+                    return $value->getQueryBuilder();
+                } else if (is_string($value)) {
+                    $direction = substr($value, 0, 1) === '-' ? '-' : '';
+                    $column = substr($value, 1);
+                    if ($this->getModel()->getMeta()->hasForeignField($column)) {
+                        return $direction . $column . '_id';
+                    } else {
+                        return $value;
+                    }
+                }
+                return $value;
+            }, $columns);
+        } else {
+            $newColumns = $columns;
+        }
+        $this->getQueryBuilder()->order($newColumns);
+        return $this;
+    }
+
+    /**
+     * @param null|string|array $q
+     * @return float|int
+     */
+    public function sum($q)
+    {
+        return $this->aggregate(new Sum($q));
+    }
+
+    /**
+     * @param string $q
+     * @return float|int
+     */
+    public function sumSql($q)
+    {
+        return $this->buildAggregateSql(new Sum($q));
+    }
+
+    /**
+     * @param null|string|array $q
+     * @return float|int
+     */
+    public function average($q)
+    {
+        return $this->aggregate(new Avg($q));
+    }
+
+    /**
+     * @param null|string|array $q
+     * @return float|int
+     */
+    public function averageSql($q)
+    {
+        return $this->buildAggregateSql(new Avg($q));
+    }
+
+    /**
+     * @param $columns
+     * @param null $option
+     * @return $this
+     */
+    public function select($columns, $option = null)
+    {
+        $this->getQueryBuilder()->select($columns, $option);
+        return $this;
+    }
+
+    private function buildAggregateSql(Aggregation $q)
+    {
+        $qb = clone $this->getQueryBuilder();
+        
+        list($order, $orderOptions) = $qb->getOrder();
+        $select = $qb->getSelect();
+        $sql = $qb->order(null)->select($q)->toSQL();
+        $qb->select($select)->order($order, $orderOptions);
+        return $sql;
+    }
+
+    private function aggregate(Aggregation $q)
+    {
+        $sql = $this->buildAggregateSql($q);
+        $statement = $this->getConnection()->query($sql);
+        $value = $statement->fetch();
+        if (is_array($value)) {
+            $value = end($value);
+        }
+        return strpos($value, '.') !== false ? floatval($value) : intval($value);
+    }
+
+    /**
+     * @param null|string|array $q
+     * @return float|int
+     */
+    public function min($q)
+    {
+        return $this->aggregate(new Min($q));
+    }
+
+    /**
+     * @param null|string|array $q
+     * @return float|int
+     */
+    public function minSql($q)
+    {
+        return $this->buildAggregateSql(new Min($q));
+    }
+
+    /**
+     * @param null|string|array $q
+     * @return float|int
+     */
+    public function max($q)
+    {
+        return $this->aggregate(new Max($q));
+    }
+
+    /**
+     * @param null|string|array $q
+     * @return float|int
+     */
+    public function maxSql($q)
+    {
+        return $this->buildAggregateSql(new Max($q));
+    }
+
+    public function delete()
+    {
+        $statement = $this->getConnection()->query($this->deleteSql());
+        return $statement->execute();
+    }
+
+    public function deleteSql()
+    {
+//        if ($this->filterHasJoin()) {
+//            $this->prepareConditions();
+//            return $this->createCommand()->delete($tableName, [
+//                $this->getPrimaryKeyName() => $this->valuesList(['pk'], true)
+//            ], $this->params);
+//        }
+
+        $builder = $this->getQueryBuilder()
+            ->setTypeDelete()
+            ->setAlias(null);
+        return $builder->toSQL();
+    }
+
+    /**
+     * @param null|array|string $q
+     * @return string
+     */
+    public function countSql($q = '*')
+    {
+        return $this->buildAggregateSql(new Count($q));
+    }
+
+    /**
+     * @param string $q
+     * @return int
+     */
+    public function count($q = '*')
+    {
+        //@TODO: Переписать этот кусок говна
+        $clone = clone $this;
+        $clone->limit(null);
+
+        if (!empty($this->_group))
+        {
+            return $clone->getConnection()->executeQuery($clone->buildAggregateSql(new Count($q)))->rowCount();
+        }
+        else {
+            return $clone->aggregate(new Count($q));
+        }
+    }
+
+    /**
+     * Convert array like:
+     * >>> ['developer__id' => '1', 'developer__name' = 'Valve']
+     * to:
+     * >>> ['developer' => ['id' => '1', 'name' => 'Valve']]
+     *
+     * @param $data
+     * @return array
+     */
+    private function populateWith($data)
+    {
+        $newData = [];
+        foreach ($data as $row) {
+            $tmp = [];
+            foreach ($row as $key => $value) {
+                if (strpos($key, '__') !== false) {
+                    list($prefix, $postfix) = explode('__', $key);
+                    if (!isset($tmp[$prefix])) {
+                        $tmp[$prefix] = [];
+                    }
+                    $tmp[$prefix][$postfix] = $value;
+                } else {
+                    $tmp[$key] = $value;
+                }
+            }
+            $newData[] = $tmp;
+        }
+        return $newData;
+    }
+
+    /**
+     * Truncate table
+     * @return int
+     */
+    public function truncate()
+    {
+        $connection = $this->getConnection();
+        $adapter = QueryBuilder::getInstance($connection)->getAdapter();
+        $tableName = $adapter->quoteTableName($adapter->getRawTableName($this->getModel()->tableName()));
+        $q = $connection->getDatabasePlatform()->getTruncateTableSQL($tableName);
+        return $connection->executeUpdate($q);
+    }
+
+    /**
+     * @param mixed $fields
+     * @return $this
+     */
+    public function distinct($fields = true)
+    {
+        $this->getQueryBuilder()->distinct($fields);
+        return $this;
+    }
+
+    /**
+     * @param $columns
+     * @return $this
+     */
+    public function group($columns)
+    {
+        $this->_group = $columns;
+        $this->getQueryBuilder()->group($this->_group);
+        return $this;
+    }
+
+    public function limit($limit)
+    {
+        $this->getQueryBuilder()->limit($limit);
+        return $this;
+    }
+
+    public function offset($offset)
+    {
+        $this->getQueryBuilder()->offset($offset);
+        return $this;
+    }
+
+    public function join($type, $table, $on, $alias)
+    {
+        $this->getQueryBuilder()->join($type, $table, $on, $alias);
+        return $this;
+    }
 }

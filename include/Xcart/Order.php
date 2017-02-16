@@ -1010,5 +1010,4 @@ SQL;
         }
         return $sRefererDomain;
     }
-
 }
