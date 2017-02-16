@@ -586,7 +586,16 @@ class QuerySet extends QuerySetBase
      */
     public function group($columns)
     {
-        $this->_group = $columns;
+        $t_on = [];
+        foreach ($columns as $v)
+        {
+            $v = $this->fieldAlias($v);
+
+            $t_on[] = $v;
+        }
+
+        $this->_group = $t_on;
+
         $this->getQueryBuilder()->group($this->_group);
         return $this;
     }
@@ -605,7 +614,25 @@ class QuerySet extends QuerySetBase
 
     public function join($type, $table, $on, $alias)
     {
-        $this->getQueryBuilder()->join($type, $table, $on, $alias);
+        $t_on = [];
+        foreach ($on as $k=>$v)
+        {
+            $k = $this->fieldAlias($k);
+            $v = $this->fieldAlias($v);
+
+            $t_on[$k] = $v;
+        }
+
+        $this->getQueryBuilder()->join($type, $table, $t_on, $alias);
         return $this;
+    }
+
+    private function fieldAlias($field)
+    {
+        $t_alias = $this->getTableAlias();
+        if (strpos($field, '.') === false) {
+            $field = $t_alias .'.'. $field;
+        }
+        return $field;
     }
 }
