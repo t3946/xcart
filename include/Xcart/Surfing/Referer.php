@@ -3,14 +3,22 @@
 namespace Xcart\Surfing;
 
 
-use Xcart\Data;
+use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\Fields\AutoField;
 
-class Referer extends Data
+class Referer extends AutoMetaModel
 {
-    public function __construct($aParams = [])
+    public static function tableName()
     {
-        $this->aPrimaryKeys = ['referer_id'];
-        $this->sPrimaryTable = 'referers';
-        parent::__construct($aParams);
+        return 'xcart_referers';
+    }
+
+    public static function getFields()
+    {
+        return [
+            'referer_id' => [
+                'class' => AutoField::className(),
+            ]
+        ];
     }
 }

@@ -167,11 +167,10 @@ Group By B.brandid");
 }
 
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-    Xcart\Surfing\SurfPath::create(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_STATIC_PAGE])->logSurfPath();
+    Xcart\Surfing\SurfPath::logSurfPath(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_STATIC_PAGE]);
 }
 
 # Assign the current location line
 $smarty->assign("location", $location);
 
 func_display("customer/home.tpl",$smarty);
-?>
