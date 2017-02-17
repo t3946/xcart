@@ -1,9 +1,9 @@
 <?php
 namespace Modules\User\Helpers;
 
-use Modules\User\Models\Referrer;
-use Modules\User\Models\SurfMeta;
-use Modules\User\Models\SurfPath;
+use Modules\User\Models\ReferrerModel;
+use Modules\User\Models\SurfMetaModel;
+use Modules\User\Models\SurfPathModel;
 use Xcart\App\Main\Xcart;
 
 class SurfingHelper
@@ -12,7 +12,7 @@ class SurfingHelper
     {
         global $clean_url_data, $cidev_filters_tree_sorted, $xcart_http_host;  //TODO remove globals;
 
-        $model = new SurfPath($params);
+        $model = new SurfPathModel($params);
 
         $sReferalUrl = null;
         $aGoalArray = [];
@@ -21,7 +21,7 @@ class SurfingHelper
             return false;
         }
 
-        $oSurfMeta = SurfMeta::getInstance();
+        $oSurfMeta = SurfMetaModel::getInstance();
 
         if ($oSurfMeta->id) {
             $aReferalUrl = parse_url(Xcart::app()->request->getReferrer());
@@ -87,12 +87,12 @@ class SurfingHelper
                 $oSurfMeta->points_visited++;
                 $oSurfMeta->referal_url = addslashes($sReferalUrl);
 
-                $oReferer = Referrer::objects()->getOrCreate(['referer' => (string)substr($sReferalUrl, 0, 767)]);
+                $oReferer = ReferrerModel::objects()->getOrCreate(['referer' => (string)substr($sReferalUrl, 0, 767)]);
                 $oReferer->visits++;
                 $oReferer->save();
 
                 if ($oSurfMeta->id) {
-                    (new SurfPath([
+                    (new SurfPathModel([
                             'meta_id'         => $oSurfMeta->id,
                             'resource_id'     => $oReferer->referer_id,
                             'resource_type'   => $model::GOAL_TYPE_REFERER,

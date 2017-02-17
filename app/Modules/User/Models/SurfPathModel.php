@@ -5,7 +5,7 @@ namespace Modules\User\Models;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 
-class SurfPath extends AutoMetaModel
+class SurfPathModel extends AutoMetaModel
 {
     const GOAL_TYPE_ADD_TO_CART      = 'A';
     const GOAL_TYPE_CHECKOUT         = 'K';
