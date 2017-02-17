@@ -511,7 +511,7 @@ if ($mode == "checkout") {
 ##
 ###
     if ($config["Appearance"]["Enable_surf_stats"] == "Y" && $l == "y") {
-        Xcart\Surfing\SurfPath::logSurfPath(['resource_type' => Xcart\Surfing\SurfPath::GOAL_TYPE_CHECKOUT]);
+        Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPath::GOAL_TYPE_CHECKOUT]);
     }
 ###
 ##

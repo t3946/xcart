@@ -6,9 +6,9 @@ use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\JsonField;
-use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Model;
 
 class DashboardFilter extends Model
@@ -38,7 +38,7 @@ class DashboardFilter extends Model
                 'default' => 0,
             ],
             'name'            => [
-                'class'       => TextField::className(),
+                'class'       => CharField::className(),
                 'null'        => false,
                 'verboseName' => 'Filter name',
             ],
@@ -50,21 +50,22 @@ class DashboardFilter extends Model
                 'class' => IntField::className(),
                 'null'  => false,
                 'min'   => 1,
+                'max'   => 4
             ],
             'tag'             => [
-                'class'  => TextField::className(),
+                'class'  => CharField::className(),
                 'length' => 5,
                 'null'   => true,
             ],
             'color'           => [
-                'class'       => TextField::className(),
+                'class'       => CharField::className(),
                 'null'        => true,
                 'verboseName' => 'Tag color',
             ],
-            'direct_url' => [
-                'class'=> TextField::className(),
-                'null' => true,
-                'verboseName' => 'Direct link'
+            'direct_url'      => [
+                'class'       => CharField::className(),
+                'null'        => true,
+                'verboseName' => 'Direct link',
             ],
             'form_data'       => [
                 'class'       => JsonField::className(),
