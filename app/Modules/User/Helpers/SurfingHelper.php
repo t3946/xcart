@@ -1,52 +1,18 @@
 <?php
+namespace Modules\User\Helpers;
 
-namespace Xcart\Surfing;
-
+use Modules\User\Models\Referrer;
+use Modules\User\Models\SurfMeta;
+use Modules\User\Models\SurfPath;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\AutoMetaModel;
-use Xcart\App\Orm\Fields\AutoField;
 
-class SurfPath extends AutoMetaModel
+class SurfingHelper
 {
-    const GOAL_TYPE_ADD_TO_CART      = 'A';
-    const GOAL_TYPE_CHECKOUT         = 'K';
-    const GOAL_TYPE_SEARCH           = 'S';
-    const GOAL_TYPE_ORDER            = 'O';
-    const GOAL_TYPE_REFERER          = 'R';
-    const GOAL_TYPE_PRODUCT          = 'P';
-    const GOAL_TYPE_BRAND            = 'B';
-    const GOAL_TYPE_CATEGORY         = 'C';
-    const GOAL_TYPE_STATIC_PAGE      = 'T';
-    const GOAL_TYPE_HOME_PAGE        = 'H';
-    const GOAL_TYPE_TECHNICAL_SEARCH = 'L';
-
-    private $goals_arr
-        = [
-            self::GOAL_TYPE_ADD_TO_CART => "goal_addtocart",
-            self::GOAL_TYPE_CHECKOUT    => "goal_checkout",
-            self::GOAL_TYPE_SEARCH      => "goal_search",
-            self::GOAL_TYPE_ORDER       => "goal_order",
-        ];
-
-    public static function tableName()
-    {
-        return 'xcart_cidev_surf_path';
-    }
-
-    public static function getFields()
-    {
-        return [
-            'id' => [
-                'class' => AutoField::className(),
-            ],
-        ];
-    }
-
     public static function logSurfPath(array $params = [])
     {
         global $clean_url_data, $cidev_filters_tree_sorted, $xcart_http_host;  //TODO remove globals;
 
-        $model = new self($params);
+        $model = new SurfPath($params);
 
         $sReferalUrl = null;
         $aGoalArray = [];
@@ -71,14 +37,14 @@ class SurfPath extends AutoMetaModel
                 }
             }
 
-            if (in_array($model->resource_type, [self::GOAL_TYPE_ADD_TO_CART, self::GOAL_TYPE_CHECKOUT, self::GOAL_TYPE_SEARCH, self::GOAL_TYPE_ORDER])) {
+            if (in_array($model->resource_type, [$model::GOAL_TYPE_ADD_TO_CART, $model::GOAL_TYPE_CHECKOUT, $model::GOAL_TYPE_SEARCH, $model::GOAL_TYPE_ORDER])) {
                 $aGoalArray[$model->goals_arr[$model->resource_type]] = "Y";
             }
 
             $oSurfMeta->points_visited++;
             $oSurfMeta->setAttributes(array_merge($oSurfMeta->getAttributes(), $aGoalArray));
 
-            if (in_array($model->resource_type, [self::GOAL_TYPE_PRODUCT, self::GOAL_TYPE_CATEGORY, self::GOAL_TYPE_BRAND, self::GOAL_TYPE_STATIC_PAGE])) {
+            if (in_array($model->resource_type, [$model::GOAL_TYPE_PRODUCT, $model::GOAL_TYPE_CATEGORY, $model::GOAL_TYPE_BRAND, $model::GOAL_TYPE_STATIC_PAGE])) {
                 $model->resource_id = $clean_url_data["resource_id"];
             }
 
@@ -86,11 +52,11 @@ class SurfPath extends AutoMetaModel
             $model->timestamp = time();
             $model->position = $oSurfMeta->points_visited;
 
-            if ($model->resource_type == self::GOAL_TYPE_SEARCH) {
+            if ($model->resource_type == $model::GOAL_TYPE_SEARCH) {
                 $REQUEST_URI_arr = explode("/", $aUri["request_uri"]);
                 $model->additional_data = $REQUEST_URI_arr[2];
             }
-            if (in_array($model->resource_type, [self::GOAL_TYPE_CATEGORY, self::GOAL_TYPE_BRAND, self::GOAL_TYPE_SEARCH])
+            if (in_array($model->resource_type, [$model::GOAL_TYPE_CATEGORY, $model::GOAL_TYPE_BRAND, $model::GOAL_TYPE_SEARCH])
                 && !empty($cidev_filters_tree_sorted)
                 && is_array($cidev_filters_tree_sorted)
             ) {
@@ -121,15 +87,15 @@ class SurfPath extends AutoMetaModel
                 $oSurfMeta->points_visited++;
                 $oSurfMeta->referal_url = addslashes($sReferalUrl);
 
-                $oReferer = Referer::objects()->getOrCreate(['referer' => (string)substr($sReferalUrl, 0, 767)]);
+                $oReferer = Referrer::objects()->getOrCreate(['referer' => (string)substr($sReferalUrl, 0, 767)]);
                 $oReferer->visits++;
                 $oReferer->save();
 
                 if ($oSurfMeta->id) {
-                    (new self([
+                    (new SurfPath([
                             'meta_id'         => $oSurfMeta->id,
                             'resource_id'     => $oReferer->referer_id,
-                            'resource_type'   => self::GOAL_TYPE_REFERER,
+                            'resource_type'   => $model::GOAL_TYPE_REFERER,
                             'timestamp'       => time(),
                             'position'        => $oSurfMeta->points_visited,
                             'additional_data' => Xcart::app()->request->getUserAgent(),

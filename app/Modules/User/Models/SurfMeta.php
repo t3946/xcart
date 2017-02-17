@@ -1,10 +1,10 @@
 <?php
 
-namespace Xcart\Surfing;
+namespace Modules\User\Models;
 
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
-use Xcart\App\Request\XcartSession;
 
 class SurfMeta extends AutoMetaModel
 {
@@ -29,15 +29,14 @@ class SurfMeta extends AutoMetaModel
         global $detect_isMobile_was_created, $current_storefront;
 
         if (is_null(self::$_instance)) {
-            $oSession = new XcartSession();
 
-            if ($oSession->getId()) {
-                self::$_instance = self::objects()->filter(["sessid" => $oSession->getId()])->get();
+            if ($sessId = Xcart::app()->request->session->getId()) {
+                self::$_instance = self::objects()->filter(["sessid" =>$sessId])->get();
 
                 if (is_null(self::$_instance)) {
                     self::$_instance =  new self(
                         [
-                            "sessid"         => $oSession->getId(),
+                            "sessid"         => $sessId,
                             "date"           => time(),
                             "is_mobile"      => ($detect_isMobile_was_created ? "Y" : "N"),
                             "goal_order"     => 'N',
