@@ -171,7 +171,7 @@ class Application
     public function end($status = 0, $response = null)
     {
         $this->_provideModuleEvent('onApplicationEnd', [$status, $response]);
-        exit($status);
+//        exit($status);
     }
 
     public function handleRequest()
