@@ -17,6 +17,7 @@ use Xcart\App\Request\HttpRequest;
  * Class Application
  *
  * @property \Xcart\App\Orm\ConnectionManager $db DB connection
+ * @property \Xcart\App\Middleware\MiddlewareManager $middleware Middleware
  * @property \Xcart\App\Router\Router $router Url manager, router
  * @property \Xcart\App\Request\HttpRequest|\Xcart\App\Request\CliRequest $request Request
  * @property \Xcart\App\Request\Session $session Session
@@ -32,6 +33,7 @@ class Application
     use ComponentsLibrary;
 
     public $name = 'Application';
+    public $exit_on_end = true;
 
     protected $_modules = [];
     protected $_modulesConfig = [];
@@ -163,15 +165,22 @@ class Application
 
     public function run()
     {
+        $this->beforeRun();
+        $this->handleRequest();
+    }
+
+    public function beforeRun()
+    {
         $this->_provideModuleEvent('onApplicationRun');
         register_shutdown_function([$this, 'end'], 0);
-        $this->handleRequest();
     }
 
     public function end($status = 0, $response = null)
     {
         $this->_provideModuleEvent('onApplicationEnd', [$status, $response]);
-//        exit($status);
+        if ($this->exit_on_end) {
+            exit($status);
+        }
     }
 
     public function handleRequest()

@@ -64,7 +64,11 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
 }
 
 \Xcart\App\Main\Xcart::init(include $xcart_dir .'/app/config/settings.php');
-register_shutdown_function([\Xcart\App\Main\Xcart::app(), 'end'], 0);
+\Xcart\App\Main\Xcart::app()->beforeRun();
+//if (defined('AREA_TYPE') && AREA_TYPE == 'C' && \Xcart\App\Main\Xcart::app()->getIsWebMode()) {
+//    \Xcart\App\Main\Xcart::app()->request->session->getIsActive(); //@TODO: Костыль для инициализации обьекта сессии
+//}
+
 Xcart\Connection::getInstanceFromApp()->connect();
 
 $file_temp_dir = $var_dirs["tmp"];
@@ -639,6 +643,7 @@ if (!defined("QUICK_START")) {
 #
 @include_once $xcart_dir . "/include/sessions.php";
 
+//@TODO: Отрубаем сохранение данных в сессию (сохраняется в XCartSession классе)
 if (x_session_save_to_db__do_not_use == 'Y') {
 //      func_print_r(x_session_save_to_db__do_not_use);
 
