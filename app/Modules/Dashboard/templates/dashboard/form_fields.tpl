@@ -226,9 +226,10 @@
                 </div>
 
                 <div class="columns large-6">
-                    <select name="search[customer][country][]" id="c_country" class="big" multiple data-ajax-from="search_country">
-                        {foreach $form_data.customer.country as $value}
-                            <option value="{raw $value.id}" selected>{raw $value.text}</option>
+                    {*<select name="search[customer][country][]" id="c_country" class="big" multiple data-ajax-from="search_country">*}
+                    <select name="search[customer][country][]" id="c_country" class="big" multiple>
+                        {foreach $countries as $country}
+                            <option value="{raw $country.id}" {if $country.id|in:$form_data.customer.country}selected{/if}>{raw $country.text}</option>
                         {/foreach}
                     </select>
                 </div>
