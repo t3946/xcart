@@ -1967,7 +1967,7 @@ SQL;
 
                     if (!empty($aShippingEntries) && $aShippingEntries->length > 0) {
                         foreach ($aShippingEntries as $k => $shippingNode) {
-                            $fAmount = 0;
+                            $fAmount = null;
                             $ShippingSpeedCategory = $shippingNode->getElementsByTagName('ShippingSpeedCategory');
                             if ($ShippingSpeedCategory->length) {
                                 $sShippingName = $ShippingSpeedCategory->item(0)->nodeValue;
