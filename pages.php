@@ -166,18 +166,11 @@ Group By B.brandid");
     $smarty->assign("main", "pages");
 }
 
-#
-##
-###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("T");
+    Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_STATIC_PAGE]);
 }
-###
-##
-#
 
 # Assign the current location line
 $smarty->assign("location", $location);
 
 func_display("customer/home.tpl",$smarty);
-?>

@@ -16,11 +16,13 @@ use Xcart\App\Request\HttpRequest;
 /**
  * Class Application
  *
+ * @property \Xcart\App\Orm\ConnectionManager $db DB connection
  * @property \Xcart\App\Router\Router $router Url manager, router
  * @property \Xcart\App\Request\HttpRequest|\Xcart\App\Request\CliRequest $request Request
  * @property \Xcart\App\Request\Session $session Session
  * @property \Xcart\App\Template\TemplateManager $template Template manager
  * @property \Xcart\App\Interfaces\AuthInterface $auth Authorization component
+ * @property \Xcart\App\Cache\Cache $cache Cache component
  * @property $user
  * 
  * @package Xcart\App\Application
@@ -169,7 +171,7 @@ class Application
     public function end($status = 0, $response = null)
     {
         $this->_provideModuleEvent('onApplicationEnd', [$status, $response]);
-        exit($status);
+//        exit($status);
     }
 
     public function handleRequest()

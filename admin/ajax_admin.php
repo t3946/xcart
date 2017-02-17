@@ -5,6 +5,7 @@ use Xcart\External_Product_Verification\ExternalVerificationProducts;
 use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 use Xcart\External_Marketplaces\IssuesProcessingRules;
 use Xcart\Order;
+use Xcart\ShippingRate;
 use Xcart\OrderGroup;
 use Xcart\Product;
 use Xcart\Customer;
@@ -71,6 +72,15 @@ switch ($_POST['ajax_action']) {
         break;
     case "product_amazon_fba_restricted_change":
         changeAmazonFBARestricted($_POST);
+        break;
+    case "get_order_shipping_charge":
+        getOrderGroupShippingCharge($_POST);
+        break;
+    case "get_splash_info":
+        getSplashInfo($_POST);
+        break;
+    case "change_product_splash":
+        changeProductSplash($_POST);
         break;
 }
 
@@ -564,4 +574,51 @@ function changeAmazonFBARestricted($aParams = [])
         $aResult['result'] = true;
     }
     print(json_encode($aResult));
+}
+
+function getOrderGroupShippingCharge($aParams = [])
+{
+    $sResult = 'Shipping quote not found';
+    if (!empty($aParams['orderid']) && !empty($aParams['manufacturerid'])) {
+        /** @var OrderGroup $oOrderGroup */
+        $oOrderGroup = OrderGroup::objects()->filter(['orderid' => (int)$aParams['orderid'], 'manufacturerid' => (int)$aParams['manufacturerid']])->get();
+        if ($oOrderGroup) {
+            $aShippingRates = $oOrderGroup->getShippingRates();
+            if (!empty($aShippingRates)) {
+                /** @var ShippingRate $oShippingRate*/
+                $sResult = '';
+                $aShippingRates = reset($aShippingRates);
+                foreach ($aShippingRates as $oShippingRate) {
+                    $shippingCharge = "$". price_format($oShippingRate->getShippingCharge());
+                    $sResult .= "{$oShippingRate->getShippingEntity()->getName()} {$oShippingRate->shipping_time}: {$shippingCharge} \n";
+                }
+            }
+        }
+    }
+    print nl2br($sResult);
+}
+
+function getSplashInfo($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['splash_id']) && is_numeric($aParams['splash_id'])) {
+        $oSplash = \Xcart\Images\Splash::objects()->filter(['id' => $aParams['splash_id']])->get();
+        if ($oSplash) {
+            $aResult['result'] = true;
+            $aResult['data'] = $oSplash->getFields();
+        }
+    }
+    print json_encode($aResult);
+}
+
+function changeProductSplash($aParams = [])
+{
+    $aResult['result'] = false;
+    if (!empty($aParams['product_id'])) {
+        $oProduct = Product::objects()->filter(['productid' => $aParams['product_id']])->get();
+        $oProduct->setAttribute('splash_id', (int) $aParams['splash_id']);
+        $oProduct->_update();
+        $aResult['result'] = true;
+    }
+    print json_encode($aResult);
 }

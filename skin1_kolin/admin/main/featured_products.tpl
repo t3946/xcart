@@ -14,7 +14,7 @@
 <table cellpadding="3" cellspacing="1" width="100%">
 	<tr>
 		<td width="200"><b>Featured products caption:</b></td>
-		<td><input style="width: 100%;" type="text" name="seo_featured_products_caption"/ value="{$config.Categories.seo_featured_products_caption|stripcslashes}"></td>
+		<td><input style="width: 100%;" type="text" name="seo_featured_products_caption" value="{$config.seo_featured_products_caption|stripcslashes}"></td>
 	</tr>
 </table>
 

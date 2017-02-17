@@ -114,8 +114,5 @@ $domain_specific_config = array(
     'Brands' => array(
         'brands_columns' => 35,
     ),
-    'Categories' => array(
-        'seo_featured_products_caption' => 10,
-    )
 );
 $smarty->assign('domain_specific_config', $domain_specific_config);

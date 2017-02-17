@@ -1324,7 +1324,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
 
         if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
-            func_log_cidev_surf("O", $orderid);
+            Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_ORDER, 'resource_id' => $orderid]);
         }
 
         $log = "";
@@ -1550,6 +1550,15 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
         $oOrder = \Xcart\Order::model(['orderid' => $orderid]);
         $oOrder->updateVerificationStatus();
+
+        $oSurfPath = Modules\User\Models\SurfPathModel::objects()
+            ->filter(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_REFERER,
+                'meta_id' =>  \Xcart\Surfing\SurfMeta::getInstance()->id])
+            ->order(['-id'])
+            ->limit(1)->get();
+        if ($oSurfPath) {
+            $oOrder->updateField('referer_id', $oSurfPath->resource_id);
+        }
 
         if (!empty($active_modules['XAffiliate'])) {
             #
@@ -1999,8 +2008,7 @@ function func_get_order_manufacturers($orderid)
                                 }
                             }
 
-                            global $xcart_dir;
-                            $tmp_sku = \Xcart\Product::model(['productid' => $v['productid']])->getMPN();
+                            $tmp_sku = $v['oProduct']->getMPN();
 
                             $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $v["amount"] . '</td></tr>';
 
@@ -2026,7 +2034,6 @@ function func_get_order_manufacturers($orderid)
                                     $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
                                 }
                             }
-                            $total_product_cost_to_us += $v["cost_to_us"] * $v["amount"];
                         }
                     }
                     $cidev_items_table .= "</table>";
@@ -2041,6 +2048,11 @@ function func_get_order_manufacturers($orderid)
                     }
                 }
 
+                /** @var \Xcart\OrderGroup $oOrderGroup */
+                $oOrderGroup = Xcart\OrderGroup::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id])->get();
+                if ($oOrderGroup) {
+                    $total_product_cost_to_us = $oOrderGroup->getTotalCostToUs();
+                }
                 $mnfs[$m_id]['total_product_cost_to_us'] = $total_product_cost_to_us;
 
                 $secure_check        = $orderid . $m_id;

@@ -24,7 +24,7 @@
                         <div class="ui-shadow">
                             <a href="{$current_location}/product.php?productid={$item.productid}" class="ui-link-inherit">
                                 <span class="product-thumbnail row">
-                                    {include file="product_thumbnail.tpl" productid=$item.productid product=$item.product tmbn_url=$item.tmbn_url}
+                                    {include file="product_thumbnail.tpl" productid=$item.productid product=$item.product tmbn_url=$item.tmbn_url splash=$item.oSplash}
                                 </span>
 
                                 <span class="label row">

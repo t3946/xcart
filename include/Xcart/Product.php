@@ -489,8 +489,9 @@ SQL;
     public function getChildProducts()
     {
         $aResult = [];
-        if ($this->getProductId())
-            $aResult = Product::model()->findAll(SQLBuilder::getInstance()->addCondition('clone_parent_productid = ' . $this->getProductId()));
+        if ($this->productid) {
+            $aResult = self::objects()->filter(['clone_parent_productid' => $this->productid])->all();
+        }
         return $aResult;
     }
 
@@ -499,9 +500,10 @@ SQL;
      */
     public function getParentProduct()
     {
+        /** @var Product $oParentProduct */
         $oParentProduct = null;
-        if ($this->getField('clone_parent_productid')) {
-            $oParentProduct = Product::model(['productid' => $this->getField('clone_parent_productid')]);
+        if ($this->clone_parent_productid) {
+            $oParentProduct = self::objects()->filter(['productid' => $this->clone_parent_productid])->get();
         }
         return $oParentProduct;
     }
@@ -716,7 +718,7 @@ SQL;
         if (is_null($this->fExtraMarginValue)) {
             $oManufacturer = $this->getManfacturerClass();
             if ($oManufacturer->getField('reduce_extra_margin') == 'Y') {
-                if (floatval($oManufacturer->getField('price_coef_z') != 0)) {
+                if (floatval($oManufacturer->getField('price_coef_z') != 0) && $this->getProductCostToUs() > 0) {
                     $fExpectedMargin = round(($this->getProductCostToUs() * floatval($oManufacturer->getField('price_coef_x')) + floatval($oManufacturer->getField('price_coef_y'))) / floatval($oManufacturer->getField('price_coef_z')), 2);
                     $this->fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
                 }

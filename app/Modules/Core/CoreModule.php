@@ -5,9 +5,15 @@ use DateTime;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
+use Xcart\App\Orm\AutoMetaData;
 
 class CoreModule extends Module
 {
+
+    public static function onApplicationEnd()
+    {
+        AutoMetaData::saveCache();
+    }
 
     public static function onApplicationRun()
     {
@@ -26,6 +32,13 @@ class CoreModule extends Module
         $template->addModifier('formatprice', function($price, $thousand_delim = NULL, $decimal_delim = NULL, $precision = NULL)
         {
             return func_format_number($price, $thousand_delim, $decimal_delim, $precision);
+        });
+
+        $template->addBlockFunction('smarty_admin_block', function ($params, $html) {
+
+            $params['html'] = $html;
+
+            echo Xcart::app()->template->render('smarty_like/admin_block.tpl', $params);
         });
 
         $template->addModifier('interval_string', function($timeshtamp)

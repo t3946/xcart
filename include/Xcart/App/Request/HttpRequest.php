@@ -596,7 +596,7 @@ class HttpRequest extends Request
     {
         $match = Xcart::app()->router->match($this->getUrl());
         if (!empty($match)) {
-            $this->redirect($match['name']);
+            $this->redirect($match['name'], $match['params']);
         }
 
         $this->redirect($this->getUrl());

@@ -69,7 +69,7 @@ $advanced_options = array(
     'flag_ship_freight', 'flag_global_disc', 'flag_free_tax', 'flag_min_amount', 'flag_low_avail_limit',
     'flag_list_price', 'flag_vat', 'flag_gstpst', 'manufacturers', 'empty_discount_slope', 'discount_table',
     'brands', 'duplicate_sku', 'outdated_discount_table', 'froogle_differs', 'date_period',
-    'StartDay', 'StartMonth', 'StartYear', 'EndDay', 'EndMonth', 'EndYear'
+    'StartDay', 'StartMonth', 'StartYear', 'EndDay', 'EndMonth', 'EndYear', 'splash_id'
 );
 # END: random:19530 [2009 Nov 12 13:25] 
 
@@ -354,7 +354,6 @@ if ($mode == "search") {
             $fields[] = "$sql_tbl[pc_options].disable_AC_products";
 
             $fields[] = "$sql_tbl[products_sf].sfid";
-//			$fields[] = "IF($sql_tbl[storefronts].domain IS NULL, '".MAIN_SF_DOMAIN."', $sql_tbl[storefronts].domain) AS domain";
 
             $where[] = "(($sql_tbl[pc_options].disable_AC_products='N') OR ($sql_tbl[pc_options].disable_AC_products='Y' AND $sql_tbl[products].pc_classify_status!='AC'))";
         }
@@ -388,40 +387,10 @@ if ($mode == "search") {
     $inner_joins['quick_prices'] = array(
         "on" => "$sql_tbl[quick_prices].productid = $sql_tbl[products].productid /*AND $sql_tbl[quick_prices].membershipid $membershipid_string*/"
     );
-//	$where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid and $sql_tbl[pricing].quantity = 1";
     $where[] = "$sql_tbl[quick_prices].priceid = $sql_tbl[pricing].priceid /*and $sql_tbl[pricing].quantity<=$sql_tbl[products].min_amount*/";
     $fields[] = "$sql_tbl[quick_prices].variantid";
-    /*
-        if ($user_account['membershipid'] == 0) {
-            $fields[] = "$sql_tbl[pricing].price";
-        } else {
-    //		$fields[] = "MIN($sql_tbl[pricing].price) as price";
-            $fields[] = "$sql_tbl[pricing].price";
-        }
-    */
 
     $fields[] = "$sql_tbl[pricing].price";
-
-
-    /* speed optimization
-        if ($current_area == 'C' && empty($active_modules['Product_Configurator'])) {
-            $where[] = "$sql_tbl[products].product_type <> 'C'";
-            $where[] = "$sql_tbl[products].forsale <> 'B'";
-        }
-        if ($current_area == 'C' && defined('SO_CUSTOMER_OFFERS')) {
-            # Display all products (including hidden)
-            $where[] = "$sql_tbl[products].forsale <> 'N'";
-        }
-    */
-
-    /*
-        if (!$single_mode && AREA_TYPE != 'A' && AREA_TYPE != 'P') {
-            $inner_joins['ACHECK'] = array(
-                "tblname" => 'customers',
-                "on" => "$sql_tbl[products].provider = ACHECK.login"
-            );
-        }
-    */
 
     $data["substring"] = trim($data["substring"]);
 
@@ -1175,14 +1144,6 @@ if ($mode == "search") {
     $search_query_count .= func_generate_joins($joins_count);
     $search_query_brandids .= func_generate_joins($joins_count);
     $search_query_fba = $search_query . ' left join xcart_products_showed s on xcart_products.productid = s.productid';
-
-#
-## Search_Filter
-###
-//        $search_query_fv_ids .= func_generate_joins($joins_count);
-###
-##
-# 
 
 
     if (in_array($current_area, array('A', 'P'))) {
@@ -2014,10 +1975,16 @@ if ($mode == "search") {
                         }
                         $sfids_of_products[$v["productid"]][] = $v["sfid"];
                     }
-##
-#
+                    if ($products[$k]['splash_id']) {
+                        $oSplash = \Xcart\Images\Splash::objects()->filter(['id' => (int) $products[$k]['splash_id']])->get();
+                        if ($oSplash) {
+                            $products[$k]['oSplash'] = $oSplash;
+                        }
+                    }
 
                     $products[$k]["brand"] = $brands_in_found_products[$v["brandid"]]["brand"];
+
+
 
                 } //foreach ($products as $k => $v)
 
@@ -2068,7 +2035,7 @@ if ($mode == "search") {
                 } else {
                     $smarty->assign("navigation_script", "search.php?mode=search");
                 }
-# END: random:18591_18598 [2009 Jul 29 10:36] 
+# END: random:18591_18598 [2009 Jul 29 10:36]
 
                 $smarty->assign("products", $products);
                 $smarty->assign("first_item", $first_page + 1);

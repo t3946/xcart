@@ -354,10 +354,12 @@ $(document).ready(function(){
 				</td>
 	                </tr>
 		{/foreach}
-
+            {if $oOrder}
+                {assign var="sSurfPathLastReferer" value=$oOrder->getLastRefererUrl()}
+            {/if}
 			<tr>
 				<td colspan="3">&nbsp;</td>
-				<td valign="top">Order source: <a href="{$customer.referer}" target="_blank">Referral link</a></td>
+				<td valign="top">Order source: <a href="{$sSurfPathLastReferer|default:$customer.referer}" target="_blank">Referral link</a></td>
 			</tr>
 		</table>
 {* ------- END: All logs and messages ------- *}
