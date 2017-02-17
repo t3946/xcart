@@ -124,8 +124,7 @@ class Manager extends ManyToManyManager
     }
 
     /**
-     * @param $q
-     * @return string
+     * {@inheritdoc}
      */
     public function maxSql($q)
     {
@@ -141,8 +140,7 @@ class Manager extends ManyToManyManager
     }
 
     /**
-     * @param $q
-     * @return string
+     * {@inheritdoc}
      */
     public function sumSql($q)
     {
@@ -150,9 +148,7 @@ class Manager extends ManyToManyManager
     }
 
     /**
-     * @param $q
-     * @param bool $flat
-     * @return array
+     * {@inheritdoc}
      */
     public function valuesList($q, $flat = false)
     {
@@ -160,9 +156,7 @@ class Manager extends ManyToManyManager
     }
 
     /**
-     * Get model if exists. Else create model.
-     * @param array $attributes
-     * @return array
+     * {@inheritdoc}
      */
     public function getOrCreate(array $attributes)
     {
@@ -176,10 +170,7 @@ class Manager extends ManyToManyManager
     }
 
     /**
-     * Find and update model if exists. Else create model.
-     * @param array $attributes attributes for query
-     * @param array $updateAttributes attributes for update|create
-     * @return Orm
+     * {@inheritdoc}
      */
     public function updateOrCreate(array $attributes, array $updateAttributes)
     {
@@ -215,9 +206,14 @@ class Manager extends ManyToManyManager
         return $model->save();
     }
 
+    public function addGroup($column)
+    {
+        return $this->addGroupBy($column);
+    }
+
     public function addGroupBy($column)
     {
-        $this->getQuerySet()->addGroupBy($column);
+        $this->getQuerySet()->addGroup($column);
         return $this;
     }
 

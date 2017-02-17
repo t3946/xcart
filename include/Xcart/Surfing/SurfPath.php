@@ -120,8 +120,8 @@ class SurfPath extends AutoMetaModel
             if (!is_null($sReferalUrl)) {
                 $oSurfMeta->points_visited++;
                 $oSurfMeta->referal_url = addslashes($sReferalUrl);
-                /** @var AutoMetaModel $oReferer */
-                list($oReferer, $created) = Referer::objects()->getOrCreate(['referer' => (string)substr($sReferalUrl, 0, 767)]);
+
+                $oReferer = Referer::objects()->getOrCreate(['referer' => (string)substr($sReferalUrl, 0, 767)]);
                 $oReferer->visits++;
                 $oReferer->save();
 

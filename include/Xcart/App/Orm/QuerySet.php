@@ -115,8 +115,9 @@ class QuerySet extends QuerySetBase
     }
 
     /**
+     * Get model if exists. Else create model.
      * @param array $attributes
-     * @return array
+     * @return Model
      */
     public function getOrCreate(array $attributes)
     {
@@ -126,13 +127,14 @@ class QuerySet extends QuerySetBase
             /** @var Model $model */
             $model = new $className($attributes);
             $model->save();
-            return [$model, true];
         }
 
-        return [$model, false];
+        return $model;
     }
 
+
     /**
+     * Find and update model if exists. Else create model.
      * @param array $attributes
      * @param array $updateAttributes
      * @return ModelInterface|Orm|null
