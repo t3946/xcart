@@ -216,6 +216,9 @@ tinymce.init({
 
 {include file="admin/main/filter_presets.tpl"}
 
+{elseif $option eq "Product_splashes"}
+
+{include file="admin/main/product_splashes.tpl"}
 
 {elseif $option eq "Autosubmit_orderentry_operator"}
 <table cellpadding="3" cellspacing="1" width="100%">
