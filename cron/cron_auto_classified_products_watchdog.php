@@ -34,7 +34,7 @@ $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log(LOG_CATEGORY, $log_text);
 
 $connection = \Xcart\Connection::getInstance();
-$aStoreFronts = StoreFront::objects()->all();
+$aStoreFronts = (new \Xcart\StoreFronts())->getStoreFronts();
 if (!empty($aStoreFronts)) {
     /** @var StoreFront $oStoreFront */
     foreach ($aStoreFronts as $oStoreFront){
