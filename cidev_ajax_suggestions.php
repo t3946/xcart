@@ -40,7 +40,11 @@ if ($REQUEST_METHOD == 'POST') {
 				$products_str .= '"product": "'.func_add_slashes(str_replace(array("\r","\n"),"",$v["product"])).'",';
 
                 if ($v['oSplash']) {
-                    $products_str .= '"splash": "' . $v['oSplash']->image_path . '",';
+                    $sImagePath = '';
+                    if ($config['Appearance']['Enable_CDN'] == "Y") {
+                        $sImagePath = $config['Appearance']['CDN_domain'];
+                    }
+                    $products_str .= '"splash": "' . $sImagePath. $v['oSplash']->image_path . '",';
                 }
 
 				$N_key = $k + 1;
