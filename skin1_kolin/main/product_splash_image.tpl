@@ -4,7 +4,7 @@
             <option value="0">No splash</option>
             {if ($aSplashes)}
                 {foreach from=$aSplashes item=oSplash}
-                    <option value="{$oSplash->id}">{$oSplash->splash_name}</option>
+                    <option value="{$oSplash->id}" {if $oProductSplash && $oSplash->id == $oProductSplash->id}selected="selected"{/if}>{$oSplash->splash_name}</option>
                 {/foreach}
             {/if}
         </select>
@@ -49,7 +49,7 @@
                     },
                     function (data) {
                         if (data && data.result) {
-
+                            alert('Splash has been updated')
                         }
                     }, 'json');
         })

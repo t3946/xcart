@@ -39,6 +39,10 @@ if ($REQUEST_METHOD == 'POST') {
 
 				$products_str .= '"product": "'.func_add_slashes(str_replace(array("\r","\n"),"",$v["product"])).'",';
 
+                if ($v['oSplash']) {
+                    $products_str .= '"splash": "' . $v['oSplash']->image_path . '",';
+                }
+
 				$N_key = $k + 1;
 				$products_str .= '"N_key": "'.$N_key.'",';
 				if (!empty($sGoogleAnaliticsParam)) $products_str .= '"ga_param": "'.$sGoogleAnaliticsParam.'",';

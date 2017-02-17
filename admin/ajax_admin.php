@@ -614,8 +614,10 @@ function getSplashInfo($aParams = [])
 function changeProductSplash($aParams = [])
 {
     $aResult['result'] = false;
-    if (!empty($aParams['splash_id']) && !empty($aParams['product_id'])) {
-        Product::objects()->filter(['productid' => $aParams['product_id']])->get()->updateField('splash_id', (int) $aParams['splash_id']);
+    if (!empty($aParams['product_id'])) {
+        $oProduct = Product::objects()->filter(['productid' => $aParams['product_id']])->get();
+        $oProduct->setAttribute('splash_id', (int) $aParams['splash_id']);
+        $oProduct->_update();
         $aResult['result'] = true;
     }
     print json_encode($aResult);
