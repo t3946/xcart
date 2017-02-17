@@ -1912,14 +1912,12 @@ SQL;
             } else {
                 $address->setName('Albert Einstain');
             }
-            if ($oCustomer->getField("s_address")) {
-                $address->setLine1($oCustomer->getField("s_address"));
+            if (!empty($oCustomer->s_address)) {
+                $address->setLine1($oCustomer->s_address . (empty($oCustomer->s_address_2) ? "" : "\n$oCustomer->s_address_2"));
             } else {
                 $address->setLine1('Village road 1');
             }
-            if ($oCustomer->getField("s_address_2")) {
-                $address->setLine2($oCustomer->getField("s_address_2"));
-            }
+
             $address->setCity($oCustomer->getField("s_city"));
             $address->setCountryCode($oCustomer->getField("s_country"));
             $address->setStateOrProvinceCode($oCustomer->getField("s_state"));
