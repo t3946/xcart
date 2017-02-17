@@ -23,6 +23,7 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Template\TemplateManager $template Template manager
  * @property \Xcart\App\Interfaces\AuthInterface $auth Authorization component
  * @property \Xcart\App\Cache\Cache $cache Cache component
+ * @property \Modules\Mail\Components\MailComponent $mail Mail component
  * @property $user
  * 
  * @package Xcart\App\Application

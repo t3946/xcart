@@ -64,7 +64,10 @@ return array_replace_recursive([
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\File'
                ]
            ]
-       ]
+       ],
+       'mail' => [
+           'class' => '\\Modules\\Mail\\Components\\MailComponent'
+       ],
    ],
    'autoloadComponents' => [
        'errorHandler'
