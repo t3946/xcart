@@ -19,7 +19,7 @@ class SurfPath extends AutoMetaModel
     const GOAL_TYPE_HOME_PAGE        = 'H';
     const GOAL_TYPE_TECHNICAL_SEARCH = 'L';
 
-    private $goals_arr
+    public $goals_arr
         = [
             self::GOAL_TYPE_ADD_TO_CART => "goal_addtocart",
             self::GOAL_TYPE_CHECKOUT    => "goal_checkout",
