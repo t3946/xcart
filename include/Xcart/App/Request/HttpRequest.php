@@ -589,6 +589,10 @@ class HttpRequest extends Request
         }
 
         header('Location: '.$url, true, $statusCode);
+
+        if (Xcart::app()->hasComponent('middleware')) {
+            Xcart::app()->middleware->processResponse(Xcart::app()->getComponent('request'));
+        }
         Xcart::app()->end();
     }
 

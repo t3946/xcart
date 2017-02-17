@@ -204,7 +204,16 @@
 
                 </td>
                 <td align="center">
-                    {$order->s_country}
+                    {set $c_showed = false}
+                    {foreach $countries as $country}
+                        {if $country.id == $order->s_country}
+                            {set $c_showed = true}
+                            {raw $country.text}
+                        {/if}
+                    {/foreach}
+                    {if !$c_showed}
+                        {$order->s_country}
+                    {/if}
                 </td>
                 <td align="center" class="group">
                     {$group->getTotalGross()|abs|formatprice:",":"."}

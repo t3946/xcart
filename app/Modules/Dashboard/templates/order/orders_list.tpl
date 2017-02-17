@@ -119,7 +119,16 @@
             <td></td>
             <td></td>
             <td>
-                {$order->s_country}
+                {set $c_showed = false}
+                {foreach $countries as $country}
+                    {if $country.id == $order->s_country}
+                        {set $c_showed = true}
+                        {raw $country.text}
+                    {/if}
+                {/foreach}
+                {if !$c_showed}
+                    {$order->s_country}
+                {/if}
             </td>
             <td style="background-color: {$order->max_eta|max_eta_colors}; color: #000000;" colspan="2">
                 {if $order->max_eta|max_eta_colors != "do_not_show"}
