@@ -141,6 +141,9 @@ window.name="prodmodwin";
 <br />
 {/if}
 
+{include file="main/product_splash_image.tpl"}
+<br />
+
 {* start_modification_CIDEV -> CIDEV_Best_Search_Filter *}
 {* {if $active_modules.CIDEV_Best_Search_Filter ne ""} *}
 {include file="modules/CIDEV_Best_Search_Filter/main/product_modify.tpl"}

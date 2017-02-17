@@ -25,7 +25,7 @@ vim: set ts=2 sw=2 sts=2 et:
                   {strip}
                     <div class="img-wrapper">
                       <img src="{$ImagesDir}/spacer.gif" class="leveler" alt="" />
-                      {include file="product_thumbnail.tpl" productid=$product.display_imageid product=$product.product tmbn_url=$product.pimage_url type=$product.is_pimage image_x=$product.tmbn_x}
+                      {include file="product_thumbnail.tpl" productid=$product.display_imageid product=$product.product tmbn_url=$product.pimage_url type=$product.is_pimage image_x=$product.tmbn_x splash=$product.oSplash}
                     </div>
                   {/strip}
                   <div class="delete-button hidden-control">

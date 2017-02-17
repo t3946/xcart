@@ -210,7 +210,7 @@ func_load_more_next_productids('','Y');
         <li>
           <a {include file="on_product_click.tpl"} href="{$current_location}/product.php?productid={$product.productid}">
             <span class="product-thumbnail">
-              {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url}
+              {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url splash=$product.oSplash}
               <img src="{$ImagesDir}/spacer.gif" class="leveler" alt="" />
               <span class="labels">
                 {if $active_modules.On_Sale}

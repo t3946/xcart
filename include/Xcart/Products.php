@@ -131,7 +131,8 @@ class Products extends CloneData
             'retail_trust_enabled',
             'log_stock_history',
             'seo_fulldescr',
-            'in_list_showed'
+            'in_list_showed',
+            'splash_id',
         );
     }
 
