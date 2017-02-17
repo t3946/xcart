@@ -1,6 +1,8 @@
 <?php
 namespace Xcart;
 
+use Modules\User\Models\ReferrerModel;
+
 class Order extends Data
 {
     const ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED = 'PV';
@@ -1006,7 +1008,7 @@ SQL;
 
         if ($this->referer_id)
         {
-            if ($oRefererDomain = Surfing\Referer::objects()->filter(['referer_id' => $this->referer_id])->get()) {
+            if ($oRefererDomain = ReferrerModel::objects()->filter(['referer_id' => $this->referer_id])->get()) {
                 $sRefererDomain = "//" . $oRefererDomain->referer;
             }
         }
