@@ -825,7 +825,6 @@ if ($current_storefront_info["storefrontid"] == "50"){
 		}
 	}
 }
-
 $smarty->assign("product",$product_info);
 
 $smarty->assign("product_feed_enabled", $product_info["supplier_feeds_enabled"]);

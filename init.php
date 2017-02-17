@@ -318,6 +318,7 @@ $sql_tbl = [
     "order_cx_invoices"                       => "xcart_order_cx_invoices",
     "external_verification_feeds"             => "xcart_external_verification_feeds",
     "shipping_cache_quotes"                   => "xcart_shipping_cache_quotes",
+    "images_splash"                           => "xcart_images_splash",
 ];
 
 $price_details_names = ["net", "gst", "pst", "gross"];

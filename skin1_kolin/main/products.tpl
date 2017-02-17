@@ -134,7 +134,7 @@ function checkAll_price(flag, form, prefix) {
 
 {if $search_prefilled.show_product_descriptions_and_thumbnails_in_search_results eq "Y"}
 
-{include file="product_thumbnail.tpl" productid=$products[prod].productid image_x=$config.Appearance.thumbnail_width product=$products[prod].product tmbn_url=$products[prod].tmbn_url add_http_if_cdn='Y'}</a>
+{include file="product_thumbnail.tpl" productid=$products[prod].productid image_x=$config.Appearance.thumbnail_width product=$products[prod].product tmbn_url=$products[prod].tmbn_url add_http_if_cdn='Y' splash=$products[prod].oSplash}</a>
 
 {else}
 {$lng.lbl_products_more}
