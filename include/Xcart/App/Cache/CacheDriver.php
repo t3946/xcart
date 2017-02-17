@@ -54,5 +54,5 @@ abstract class CacheDriver
 
     abstract protected function setValue($key, $data, $timeout);
 
-    abstract public function cleanUp($full = false);
+    abstract public function cleanUp($force = false);
 }
