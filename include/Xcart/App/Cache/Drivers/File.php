@@ -117,8 +117,8 @@ class File extends CacheDriver
         return @filemtime($fullPath) < time();
     }
 
-    public function cleanUp($full = false)
+    public function cleanUp($force = false)
     {
-        $this->gc(true, $full);
+        $this->gc(true, !$force);
     }
 }

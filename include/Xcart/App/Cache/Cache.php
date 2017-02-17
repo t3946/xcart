@@ -48,8 +48,8 @@ class Cache
         return $this->getDriver($this->defaultDriver)->get($key, $default);
     }
 
-    public function cleanUp()
+    public function cleanUp($force = false)
     {
-        $this->getDriver($this->defaultDriver)->cleanUp();
+        $this->getDriver($this->defaultDriver)->cleanUp($force);
     }
 }
