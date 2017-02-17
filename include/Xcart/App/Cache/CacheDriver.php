@@ -53,4 +53,6 @@ abstract class CacheDriver
     abstract protected function getValue($key);
 
     abstract protected function setValue($key, $data, $timeout);
+
+    abstract public function cleanUp($full = false);
 }
