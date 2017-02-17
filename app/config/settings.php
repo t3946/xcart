@@ -3,6 +3,7 @@ $local_config = __DIR__ . DIRECTORY_SEPARATOR .'settings_local.php';
 
 return array_replace_recursive([
    'name' => 'Xcart',
+   'exit_on_end' => false,
    'paths' => [
        'base' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..'])),
        'www' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..'])),
@@ -11,6 +12,7 @@ return array_replace_recursive([
        'Core',
        'Dashboard',
        'User',
+       'Sites',
    ],
    'components' => [
        'db' => [
@@ -36,6 +38,14 @@ return array_replace_recursive([
            'debug' => true,
            'errHandler' => false
        ],
+//       'middleware' => [
+//           'class' => '\Mindy\Middleware\MiddlewareManager',
+//           'middleware' => [
+//               'RedirectMiddleware' => [
+//                   'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
+//               ],
+//           ]
+//       ],
        'request' => [
            'class' => '\\Xcart\\App\\Request\\RequestManager',
            'httpRequest' => [

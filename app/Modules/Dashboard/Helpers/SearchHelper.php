@@ -3,6 +3,7 @@ namespace Modules\Dashboard\Helpers;
 
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Xcart\App\Main\Xcart;
 use Xcart\Connection;
 use Xcart\POPipeline;
 
@@ -11,34 +12,46 @@ class SearchHelper
 
     public static function getFormAndListData()
     {
+        $key = 'FormAndListData_properties';
 
-        $attention_tags   = Connection::getInstance()->fetchAll("SELECT * FROM xcart_attention_tags_values ORDER BY orderby ASC");
-        $fraud_statuses   = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_fraud_statuses ORDER BY order_by ASC");
-        $raw_statuses     = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_statuses ORDER BY type ASC, orderby ASC");
-        $shipping_methods = Connection::getInstance()->fetchAll("SELECT * FROM xcart_shipping");
-        $payment_methods  = Connection::getInstance()->fetchAll("SELECT * FROM xcart_payment_methods");
+        $properties = Xcart::app()->cache->get($key, null);
 
-        $order_statuses = [];
-        foreach ($raw_statuses as $status) {
-            if (!isset($order_statuses[$status['type']])) {
-                $order_statuses[$status['type']] = [];
+        if (!$properties)
+        {
+            $attention_tags   = Connection::getInstance()->fetchAll("SELECT * FROM xcart_attention_tags_values ORDER BY orderby ASC");
+            $fraud_statuses   = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_fraud_statuses ORDER BY order_by ASC");
+            $raw_statuses     = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_statuses ORDER BY type ASC, orderby ASC");
+            $shipping_methods = Connection::getInstance()->fetchAll("SELECT * FROM xcart_shipping");
+            $payment_methods  = Connection::getInstance()->fetchAll("SELECT * FROM xcart_payment_methods");
+            $countries        = Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql());
+
+            $order_statuses = [];
+            foreach ($raw_statuses as $status) {
+                if (!isset($order_statuses[$status['type']])) {
+                    $order_statuses[$status['type']] = [];
+                }
+
+                $order_statuses[$status['type']][] = $status;
             }
 
-            $order_statuses[$status['type']][] = $status;
+            $properties = [
+                'countries'            => $countries,
+                'fraud_statuses'       => $fraud_statuses,
+                'order_statuses'       => $order_statuses,
+                'attention_tags'       => $attention_tags,
+                'shipping_methods'     => $shipping_methods,
+                'payment_methods'      => $payment_methods,
+                'po_statuses'          => POPipeline::getPOStatuses(),
+                'features'             => OrderSearchStore::getFeatures(),
+                'sources'              => OrderSearchStore::getSources(),
+                'question_statuses'    => OrderSearchStore::getQuestionStatuses(),
+                'manual_string'        => OrderSearchStore::CONST_MANUAL_STRING,
+            ];
+
+            Xcart::app()->cache->set($key, $properties,120 + rand(0, 120));
         }
 
-        return [
-            'fraud_statuses'       => $fraud_statuses,
-            'order_statuses'       => $order_statuses,
-            'attention_tags'       => $attention_tags,
-            'shipping_methods'     => $shipping_methods,
-            'payment_methods'      => $payment_methods,
-            'po_statuses'          => POPipeline::getPOStatuses(),
-            'features'             => OrderSearchStore::getFeatures(),
-            'sources'              => OrderSearchStore::getSources(),
-            'question_statuses'    => OrderSearchStore::getQuestionStatuses(),
-            'manual_string'        => OrderSearchStore::CONST_MANUAL_STRING,
-        ];
+        return $properties;
     }
 
     public static function getNumberOnlyRegexp($numbers)
@@ -116,10 +129,10 @@ class SearchHelper
 
     public static function getDecoratedFormData($data)
     {
-        if (!empty($data['customer']['country'])) {
-            $data['customer']['country'] = self::getDecoratedAutoCompleteData($data['customer']['country'], 'customer.country');
-            $data['customer']['country'] = self::clearAutoCompleteData($data['customer']['country']);
-        }
+//        if (!empty($data['customer']['country'])) {
+//            $data['customer']['country'] = self::getDecoratedAutoCompleteData($data['customer']['country'], 'customer.country');
+//            $data['customer']['country'] = self::clearAutoCompleteData($data['customer']['country']);
+//        }
         if (!empty($data['customer']['address'])) {
             $data['customer']['address'] = self::clearAutoCompleteData($data['customer']['address']);
         }
@@ -129,9 +142,6 @@ class SearchHelper
         if (!empty($data['customer']['state'])) {
             $data['customer']['state'] = self::getDecoratedAutoCompleteData($data['customer']['state'], 'customer.state');
             $data['customer']['state'] = self::clearAutoCompleteData($data['customer']['state']);
-        }
-        if (!empty($data['customer']['country'])) {
-            $data['customer']['country'] = self::clearAutoCompleteData($data['customer']['country']);
         }
         if (!empty($data['order']['operator'])) {
             $data['order']['operator'] = self::getDecoratedAutoCompleteData($data['order']['operator'], 'order.operator');
