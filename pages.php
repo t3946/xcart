@@ -167,7 +167,7 @@ Group By B.brandid");
 }
 
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-    Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPath::GOAL_TYPE_STATIC_PAGE]);
+    Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_STATIC_PAGE]);
 }
 
 # Assign the current location line

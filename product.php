@@ -1258,7 +1258,7 @@ func_print_r($a1, $data, $data_arr);
 ##
 ###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-    Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPath::GOAL_TYPE_PRODUCT]);
+    Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_PRODUCT]);
 }
 ###
 ##
