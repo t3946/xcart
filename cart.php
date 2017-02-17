@@ -511,7 +511,7 @@ if ($mode == "checkout") {
 ##
 ###
     if ($config["Appearance"]["Enable_surf_stats"] == "Y" && $l == "y") {
-        Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPath::GOAL_TYPE_CHECKOUT]);
+        Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_CHECKOUT]);
     }
 ###
 ##

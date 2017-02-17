@@ -163,7 +163,7 @@ function func_add_to_cart(&$cart, $product_data) {
 #
 
         if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-            \Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => \Modules\User\Models\SurfPath::GOAL_TYPE_ADD_TO_CART, 'resource_id' => $added_product["productid"]]);
+            \Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => \Modules\User\Models\SurfPathModel::GOAL_TYPE_ADD_TO_CART, 'resource_id' => $added_product["productid"]]);
         }
 
 
