@@ -6,7 +6,7 @@ namespace Modules\User\Models;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 
-class Referrer extends AutoMetaModel
+class ReferrerModel extends AutoMetaModel
 {
     public static function tableName()
     {

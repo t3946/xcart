@@ -6,7 +6,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 
-class SurfMeta extends AutoMetaModel
+class SurfMetaModel extends AutoMetaModel
 {
     private static $_instance = null;
 
