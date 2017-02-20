@@ -104,6 +104,7 @@ if (!empty($configuration)) {
 	  'show_seed_cats'   => 70,
 	  'search_all_website_show' => 80,
 	  'shop_closed'      => 90,
+	  'new_shipping_calculation' => 990,
 	);
 
 	foreach ($configuration as $k => $v) {
