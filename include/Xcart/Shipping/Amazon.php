@@ -63,10 +63,10 @@ class Amazon extends ShippingProcessor
             if (!empty($aProducts)) {
                 /** @var CartElement $oCartElement */
                 foreach ($aProducts as $oCartElement) {
-                    if (($oCartElement->getProduct()->isAmazonFBAEnabled() && ($oCartElement->getProduct()->getAmazonFBAAvailExcludedProcessing() > 0)) ||
-                        count($oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild($oCartElement->getQuantity())) > 0
-                    ) {
-                        $this->oCarierCart->addObjectToCart($oCartElement);
+                    if (($oCartElement->getProduct()->isAmazonFBAEnabled() &&
+                       ($oCartElement->getProduct()->getAmazonFBAAvailExcludedProcessing() >= $oCartElement->getQuantity())) ||
+                       count($oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild($oCartElement->getQuantity())) > 0) {
+                       $this->oCarierCart->addObjectToCart($oCartElement);
                     }
                 }
             }
