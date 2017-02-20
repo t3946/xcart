@@ -114,5 +114,8 @@ $domain_specific_config = array(
     'Brands' => array(
         'brands_columns' => 35,
     ),
+    'Shipping' => array(
+        'new_shipping_calculation' => 990,
+    ),
 );
 $smarty->assign('domain_specific_config', $domain_specific_config);
