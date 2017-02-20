@@ -7,6 +7,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\JsonField;
 use Xcart\App\Orm\Model;
@@ -24,20 +25,26 @@ class DashboardFilter extends Model
     public static function getFields()
     {
         return [
-            'id'              => [
+            'id' => [
                 'class' => AutoField::className(),
             ],
-            'enabled'         => [
+            'group' => [
+                'class' => ForeignField::className(),
+                'modelClass' => GroupModel::className(),
+                'verboseName' => 'Group',
+                'link' => ['id', 'group_id'],
+            ],
+            'enabled' => [
                 'class'   => BooleanField::className(),
                 'null'    => false,
                 'default' => 1,
             ],
-            'bold'            => [
+            'bold' => [
                 'class'   => BooleanField::className(),
                 'null'    => false,
                 'default' => 0,
             ],
-            'name'            => [
+            'name' => [
                 'class'       => CharField::className(),
                 'null'        => false,
                 'verboseName' => 'Filter name',
@@ -57,17 +64,17 @@ class DashboardFilter extends Model
                 'length' => 5,
                 'null'   => true,
             ],
-            'color'           => [
+            'color' => [
                 'class'       => CharField::className(),
                 'null'        => true,
                 'verboseName' => 'Tag color',
             ],
-            'direct_url'      => [
+            'direct_url' => [
                 'class'       => CharField::className(),
                 'null'        => true,
                 'verboseName' => 'Direct link',
             ],
-            'form_data'       => [
+            'form_data' => [
                 'class'       => JsonField::className(),
                 'null'        => false,
                 'verboseName' => 'Filter condition',
@@ -83,10 +90,10 @@ class DashboardFilter extends Model
     public function getAdminUrl()
     {
         if ($this->isNewRecord) {
-            return Xcart::app()->router->url('dashboard:create');
+            return Xcart::app()->router->url('dashboard:create_filter');
         }
         else {
-            return Xcart::app()->router->url('dashboard:update', ['id' => $this->id]);
+            return Xcart::app()->router->url('dashboard:update_filter', ['id' => $this->id]);
         }
     }
 

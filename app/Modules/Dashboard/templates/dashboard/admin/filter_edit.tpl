@@ -1,4 +1,4 @@
-{extends 'dashboard/dashboard_form.tpl'}
+{extends 'dashboard/layouts/dashboard_layout.tpl'}
 
 
 {block 'heading'}
@@ -45,10 +45,13 @@
                             <li>
                                 {include 'core/form/model_form_field.tpl' model=$model field='direct_url' class='big'}
                             </li>
+                            <li>
+                                {include 'core/form/model_form_field.tpl' model=$model field='group' type='select' selected=$model->group_id choises=$groups class='big'}
+                            </li>
                         </ul>
                     </fieldset>
 
-                    {include 'dashboard/form_fields.tpl' full_expanded = true}
+                    {include 'dashboard/filter_fields.tpl' full_expanded = true}
                     {include 'core/form/buttons.tpl'}
                 </form>
             </div>

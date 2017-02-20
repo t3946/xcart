@@ -1,11 +1,11 @@
-{extends 'dashboard/with_admin_menu.tpl'}
+{extends 'dashboard/layouts/menu_layout.tpl'}
 {block 'heading'}
     <h1 align="center">Filters list.</h1>
 {/block}
 
 {block 'content'}
     {smarty_admin_block name='Actions'}
-        <a href="{url 'dashboard:create'}" class="button">Create new</a>
+        <a href="{url 'dashboard:create_filter'}" class="button">Create new filter</a>
     {/smarty_admin_block}
 
     {smarty_admin_block name= 'Filters'}
@@ -21,7 +21,7 @@
                                         <div class="row">
                                             {if $model->tag}
                                                 <div class="columns large-2">
-                                                    <span style="background-color: {$model->color};" class="tag">&nbsp;{$model->tag|upper}&nbsp;</span>
+                                                    <span style="background-color: {$model->color};" class="tag no-border">&nbsp;{$model->tag|upper}&nbsp;</span>
                                                 </div>
                                             {/if}
                                             <div class="columns {if $model->tag}large-10{else}large-12{/if}">

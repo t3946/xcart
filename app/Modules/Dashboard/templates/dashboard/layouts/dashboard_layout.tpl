@@ -1,4 +1,4 @@
-{extends 'dashboard/with_admin_menu.tpl'}
+{extends 'dashboard/layouts/menu_layout.tpl'}
 
 {block 'js-head'}
     <link href="/static/vendors/air-datepicker/dist/css/datepicker.min.css" rel="stylesheet" type="text/css">

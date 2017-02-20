@@ -7,19 +7,34 @@ return [
         'name' => 'index'
     ],
     [
-        'route' => '/create',
+        'route' => '/create/filter',
         'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'create'],
-        'name' => 'create'
+        'name' => 'create_filter'
     ],
     [
-        'route' => '/settings',
-        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'settings'],
-        'name' => 'settings'
-    ],
-    [
-        'route' => '/update/{i:id}',
+        'route' => '/update/filter/{i:id}',
         'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'update'],
-        'name' => 'update'
+        'name' => 'update_filter'
+    ],
+    [
+        'route' => '/admin/filters',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'settings'],
+        'name' => 'admin_filters'
+    ],
+    [
+        'route' => '/create/group',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardGroupController', 'create'],
+        'name' => 'create_group'
+    ],
+    [
+        'route' => '/update/group/{i:id}',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardGroupController', 'update'],
+        'name' => 'update_group'
+    ],
+    [
+        'route' => '/admin/groups',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardGroupController', 'settings'],
+        'name' => 'admin_groups'
     ],
     [
         'route' => '/filter/{i:id}',

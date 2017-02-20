@@ -1,4 +1,4 @@
-{extends 'dashboard/search_form.tpl'}
+{extends 'dashboard/layouts/search_layout.tpl'}
 
 {block 'heading'}
     <h1 align="center">{$model->name}</h1>
