@@ -8,6 +8,8 @@ use Modules\Dashboard\Models\GroupModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Model;
+use Xcart\App\Orm\ModelInterface;
 
 class DashboardController extends PrototypeAdminController
 {
@@ -61,26 +63,34 @@ class DashboardController extends PrototypeAdminController
             [
                 'row_col' => DashboardFilter::getMaxRowCol(),
                 'models'  => $models,
+                'groups'  => GroupModel::objects()->all(),
             ]
         );
     }
 
+    public function sorting()
+    {
+
+    }
+
     public function create()
     {
-        $this->update();
+        $this->createOrUpdate(new DashboardFilter());
     }
 
     public function update($id = null)
     {
+        if (!is_null($id) && $model = DashboardFilter::objects()->get(['id' => $id])) {
+            $this->createOrUpdate($model);
+        }
+
+        $this->redirect('dashboard:admin_filters');
+    }
+
+    /** @param Model|ModelInterface $model */
+    private function createOrUpdate($model)
+    {
         $class = DashboardFilter::classNameShort();
-
-        if (!is_null($id)) {
-            $model = DashboardFilter::objects()->get(['id' => $id]);
-        }
-        else {
-            $model = new DashboardFilter();
-        }
-
         if (isset($_POST['delete'])) {
             if ($model->delete()) {
                 $this->autoRedirect($model);

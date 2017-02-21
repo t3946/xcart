@@ -9,36 +9,18 @@
     {/smarty_admin_block}
 
     {smarty_admin_block name= 'Filters'}
-        <table class="dashboard-filters">
-            {foreach 1..$row_col.row as $row}
-                <tr>
-                    {foreach 1..$row_col.col as $col}
-                        <td>
-                            {foreach $models as $model}
-                                {if $model->position_row == $row && $model->position_column == $col}
+        <div class="admin-dashboard-filters-list">
+            <div rel="g_null">Not in group</div>
+            <div id="g_null">
+                {include 'dashboard/admin/dashboard_group.tpl' models=$models|get_filtered:null group=null}
+            </div>
 
-                                    <a href="{$model->getAdminUrl()}" class="button">
-                                        <div class="row">
-                                            {if $model->tag}
-                                                <div class="columns large-2">
-                                                    <span style="background-color: {$model->color};" class="tag no-border">&nbsp;{$model->tag|upper}&nbsp;</span>
-                                                </div>
-                                            {/if}
-                                            <div class="columns {if $model->tag}large-10{else}large-12{/if}">
-                                                <span class="name">
-                                                    <span class="{if $model->bold}bold{/if} {if !$model->enabled}gray{/if}">
-                                                        {$model}
-                                                    </span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                {/if}
-                            {/foreach}
-                        </td>
-                    {/foreach}
-                </tr>
+            {foreach $groups as $group}
+                <div rel="g_{$group->id}">{$group}</div>
+                <div id="g_{$group->id}">
+                    {include 'dashboard/admin/dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id}
+                </div>
             {/foreach}
-        </table>
+        </div>
     {/smarty_admin_block}
 {/block}

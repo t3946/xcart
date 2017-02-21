@@ -20,8 +20,7 @@
             $(this).append($('option[selected]', { value: e.params.data.id, text: e.params.data.text }));
         });
 
-        $('.admin select:not([data-ajax-from])').not('.page-size select, .not-select2').select2({
-            allowClear: true,
+        $('.admin select:not([data-ajax-from])').not('.page-size select, .not-select2').select2({ allowClear: true,
             closeOnSelect: false,
             placeholder: 'Select options'
         });

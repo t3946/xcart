@@ -1,5 +1,201 @@
-jQuery.fn.mfieldset = function (options) {
+storage = {
+    LocalStorageChecked: null,
+    hasLocalStorage: function (){
+        // "use strict";
+
+        if (this.LocalStorageChecked === null)
+        {
+            var test = 'test';
+            try {
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                this.LocalStorageChecked = true;
+            } catch(e) {
+                this.LocalStorageChecked = false;
+            }
+        }
+
+        return this.LocalStorageChecked;
+    },
+
+    get: function (key, def) {
+        if (def == 'undefined') {
+            def = null;
+        }
+
+        if (this.hasLocalStorage()) {
+            value = localStorage.getItem(key);
+        }
+        else {
+            var value = $.cookie(key);
+        }
+
+        if (!value) {
+            value = def;
+        }
+        return value;
+    },
+
+    set: function (key, value, expires) {
+        if (value === null) {
+            this.remove(key);
+            return;
+        }
+
+        if (this.hasLocalStorage()) {
+
+            localStorage.setItem(key, value)
+        }
+        else {
+            $.cookie(key, value, {expires: expires});
+        }
+    },
+
+    remove: function (key) {
+        if (this.hasLocalStorage()) {
+            localStorage.removeItem(key);
+        }
+        else {
+            $.cookie(key, null, {expires: -1});
+        }
+    }
+};
+
+jQuery.fn.tablePositions = function (options) {
     "use strict";
+    var option = jQuery.extend({
+        draggableSelector: 'a',
+        hoveredSelector: 'table',
+        dropSelector: 'td',
+        onMove: null
+    }, options);
+
+    var globals = [];
+
+    function move(elem, to) {
+        setTimeout(function () {
+            $(to).removeClass('drag-over');
+            $(to).append($(elem).detach());
+
+            show(elem);
+        }.bind(to, elem), 800);
+    }
+
+    function show(elem) {
+        setTimeout(function () {
+            $(elem).removeClass('move-event');
+        }.bind(elem), 50);
+    }
+    // function scroll(index, step) {
+    //     var scrollY = $(window).scrollTop();
+    //     $(window).scrollTop(scrollY + step);
+    //     if (!globals[index].stop) {
+    //         setTimeout(function () { scroll(index, step) }, 20);
+    //     }
+    // }
+
+
+    return this.each(function (i) {
+        var $container = $(this);
+
+        globals[i] = {
+            original: null,
+            table: this,
+            stop: true
+        };
+
+        $container.find(option.hoveredSelector).on('dragover', function (e) {
+            // e.originalEvent.dataTransfer.animation = 'move';
+            $(this).closest(option.hoveredSelector).addClass('hovered');
+            return (e.target.innerHTML.trim() != '');
+        });
+
+        $container.find(option.dropSelector)
+            .on('dragover', function (e) {
+                // e.originalEvent.dataTransfer.animation = 'move';
+                $(this).closest(option.hoveredSelector).addClass('hovered');
+                return (e.target.innerHTML.trim() != '');
+            })
+            .on('dragenter', function (e) {
+                console.log(e.target);
+                var has = (e.target.innerHTML.trim() != '');
+                if (!has) {
+                    $(this).addClass('drag-over');
+                }
+
+                return has;
+            })
+            .on('dragleave', function (e) {
+                $(this).removeClass('drag-over');
+                $(this).closest(option.hoveredSelector).removeClass('hovered');
+            })
+
+            .on('drag', function(e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+                globals[i].stop = true;
+                $(this).closest(option.hoveredSelector).addClass('hovered');
+
+                //
+                // if (e.originalEvent.pageY > ($(window).height() / 2 - 150)) {
+                //     console.log('up');
+                //     globals[i].stop = false;
+                //     scroll(i, -1)
+                // }
+                //
+                // if (e.originalEvent.pageY < ($(window).height() / 2 + 150)) {
+                //     console.log('down');
+                //     globals[i].stop = false;
+                //     scroll(i, 1)
+                // }
+            })
+
+            .on('drop', function (e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+                $(this).removeClass('drag-over');
+                $(this).closest(option.hoveredSelector).removeClass('hovered');
+
+                if (this != globals[i].original) {
+                    var o_el = globals[i].original;
+                    $(o_el).addClass('move-event');
+
+                    if (typeof option.onMove == 'function') {
+                        if (option.onMove(o_el, this)) {
+                            move(o_el, this);
+                        }
+                        else {
+                            show(o_el);
+                        }
+                    }
+                    else {
+                        move(o_el, this);
+                    }
+                }
+
+                return false;
+            })
+        ;
+
+        $container.find(option.dropSelector + ' > ' + option.draggableSelector)
+            .on('dragstart', function (e) {
+                globals[i].original = this;
+
+                $(globals[i].table).addClass('drag');
+            })
+
+            .on('dragend', function (e) {
+                $(globals[i].table).removeClass('drag');
+                globals[i].stop = true;
+            })
+        ;
+    });
+};
+
+jQuery.fn.mfieldset = function (options) {
+    // "use strict";
 
     // настройки по умолчанию
     var options = jQuery.extend({
@@ -11,7 +207,7 @@ jQuery.fn.mfieldset = function (options) {
         var fieldset = $(this),
             legend = fieldset.children('legend'),
             indexVar = fieldset.parent().children('fieldset').index(this),
-            cookieVar = $.cookie('fieldset_' + indexVar);
+            cookieVar = storage.get('fieldset_' + indexVar);
 
         fieldset.attr('rel', indexVar);
 
@@ -24,11 +220,11 @@ jQuery.fn.mfieldset = function (options) {
 
         $(legend).on('click', function () {
             if (fieldset.hasClass('expanded')) {
-                $.cookie('fieldset_' + indexVar, null, {expires: -1});
+               storage.remove('fieldset_' + indexVar);
                 hideFieldsetContent(fieldset, options);
                 fieldset.removeClass('expanded').addClass('collapsed');
             } else {
-                $.cookie('fieldset_' + indexVar, 1, {expires: 365});
+                storage.set('fieldset_' + indexVar, 1, {expires: 365});
                 showFieldsetContent(fieldset, options);
                 fieldset.removeClass('collapsed').addClass('expanded');
             }
@@ -59,6 +255,15 @@ jQuery.fn.mfieldset = function (options) {
 
     $(document).ready(function(){
         $('fieldset').mfieldset();
+        $('.admin .admin-dashboard-filters-list').tablePositions({
+            draggableSelector:'.button',
+            dropSelector:'.container',
+
+            onMove:function (el, to)  {
+                console.log(el);
+                console.log(to);
+            return true;
+        }});
 
         $('form').each(function(i, form)
         {
