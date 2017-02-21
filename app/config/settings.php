@@ -69,9 +69,15 @@ return array_replace_recursive([
        ],
        'cache' => [
            'class' => '\\Xcart\\App\\Cache\\Cache',
+           'saveInMemory' => true,
+           'memoryDriver' => 'memory',
            'drivers' => [
                'default' =>  [
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\File'
+               ],
+               'memory' =>  [
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
+                   'numCacheQuery' => 30,
                ]
            ]
        ],

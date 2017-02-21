@@ -4,6 +4,7 @@ namespace Xcart\App\Orm\Callback;
 
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\RelatedField;
+use Xcart\App\Orm\Model;
 use Xcart\App\Orm\ModelInterface;
 use Mindy\QueryBuilder\LookupBuilder\LookupBuilder;
 use Mindy\QueryBuilder\QueryBuilder;
@@ -15,7 +16,7 @@ class JoinCallback
     /**
      * JoinCallback constructor.
      *
-     * @param ModelInterface $model
+     * @param Model|ModelInterface $model
      */
     public function __construct($model)
     {
