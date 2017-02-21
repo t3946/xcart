@@ -258,6 +258,27 @@
                 </div>
             </div>
         </li>
+
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="o_distributor">Distributors:</label>
+                </div>
+
+                <div class="columns large-6">
+                    <select name="search[order][distributor][]" id="o_distributor" class="big" multiple data-ajax-from="distributor">
+                        {foreach $form_data.order.distributor as $value}
+                            <option value="{raw $value.id}" selected>{raw $value.text}</option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-2 not">
+                    <input type="checkbox" value="1" name="search[not][order][distributor]" id="nod" {if $form_data.not.order.distributor}checked{/if}>
+                    <label for="nod">Not</label>
+                </div>
+            </div>
+        </li>
     </ul>
 
 </fieldset>
@@ -688,27 +709,6 @@
                 <div class="columns large-2 not">
                     <input type="checkbox" value="1" name="search[not][order][tag]" id="notag" {if $form_data.not.order.tag}checked{/if}>
                     <label for="notag">Not</label>
-                </div>
-            </div>
-        </li>
-
-        <li>
-            <div class="row">
-                <div class="columns large-4">
-                    <label for="o_distributor">Distributors:</label>
-                </div>
-
-                <div class="columns large-6">
-                    <select name="search[order][distributor][]" id="o_distributor" class="big" multiple data-ajax-from="distributor">
-                        {foreach $form_data.order.distributor as $value}
-                            <option value="{raw $value.id}" selected>{raw $value.text}</option>
-                        {/foreach}
-                    </select>
-                </div>
-
-                <div class="columns large-2 not">
-                    <input type="checkbox" value="1" name="search[not][order][distributor]" id="nod" {if $form_data.not.order.distributor}checked{/if}>
-                    <label for="nod">Not</label>
                 </div>
             </div>
         </li>
