@@ -68,7 +68,9 @@ class Cache
 
     public function cleanUp($force = false)
     {
-        $this->getDriver($this->memoryDriver)->cleanUp($force);
+        if ($this->saveInMemory) {
+            $this->getDriver($this->memoryDriver)->cleanUp($force);
+        }
         $this->getDriver($this->defaultDriver)->cleanUp($force);
     }
 
