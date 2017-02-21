@@ -18,8 +18,9 @@ class DashboardController extends PrototypeAdminController
         echo $this->renderInternal('dashboard/index.tpl',
             [
                 'row_col' => DashboardFilter::getMaxRowCol(),
+                'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__login' => Xcart::app()->request->session->get('login')])->order(['position_row', 'position_column'])->all(),
                 'models'  => DashboardFilter::objects()->filter(['enabled' => true])->all(),
-                'groups'  => GroupModel::objects()->with(['filters'])->filter(['filters__name__isnull' => false])->all(),
+                'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->all(),
             ]
         );
     }

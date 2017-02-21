@@ -3,6 +3,7 @@ namespace Modules\Dashboard\Models;
 
 use Mindy\QueryBuilder\Aggregation\Max;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
@@ -10,6 +11,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\JsonField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
 class DashboardFilter extends Model
@@ -33,6 +35,13 @@ class DashboardFilter extends Model
                 'modelClass' => GroupModel::className(),
                 'verboseName' => 'Group',
                 'link' => ['id', 'group_id'],
+            ],
+            'users' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => UserModel::className(),
+                'through' => UserFiltersThroughModel::className(),
+                'link' => ['filter_id', 'user_id'],
+                'verboseName' => 'In users dashboard',
             ],
             'enabled' => [
                 'class'   => BooleanField::className(),

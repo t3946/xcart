@@ -4,6 +4,11 @@
 {/block}
 
 {block 'content'}
+    {smarty_admin_block name='My dashboard'}
+
+        {include 'dashboard/dashboard_group.tpl' models=$myModels}
+    {/smarty_admin_block}
+
     {smarty_admin_block name='Order dashboard'}
         <div>Not in group</div>
         <div id="g_null">
