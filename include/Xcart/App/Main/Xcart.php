@@ -19,6 +19,7 @@ use Xcart\App\Helpers\Creator;
 
 class Xcart
 {
+    /** @var \Xcart\App\Application\Application */
     protected static $_app;
 
     public static function init($configuration, $application = 'Xcart\App\Application\Application')

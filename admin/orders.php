@@ -413,7 +413,7 @@ if ($page_name == "export"){
 ##
 ###
 if ($page_name=="dashboard"){
-	$last_order_date = func_query_first("SELECT xcart_orders.orderid, xcart_orders.date FROM xcart_orders LEFT JOIN xcart_order_groups ON xcart_order_groups.orderid=xcart_orders.orderid WHERE xcart_order_groups.cb_status='P' ORDER BY orderid DESC limit 1");
+	$last_order_date = func_query_first("SELECT xcart_orders.orderid, xcart_orders.date FROM xcart_orders LEFT JOIN xcart_order_groups ON xcart_order_groups.orderid=xcart_orders.orderid WHERE xcart_order_groups.cb_status='AP' ORDER BY orderid DESC limit 1");
 
 	$diff_order_time = time() - $last_order_date["date"];
 	$no_orders_test_checkout_sec = $config["Logging"]["no_orders_test_checkout"] * 60;

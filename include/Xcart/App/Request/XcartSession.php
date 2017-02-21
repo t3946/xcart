@@ -24,6 +24,54 @@ class XcartSession extends Session
         return $GLOBALS['XCART_SESSION_VARS'];
     }
 
+    public function close()
+    {
+        return;
+
+        if ($this->getId())
+        {
+            x_session_save();
+
+            if (defined('x_session_save_to_db__do_not_use') && x_session_save_to_db__do_not_use == 'Y') {
+                define('x_session_save_to_db__do_not_use', '');
+            }
+            else {
+                x_session_save_to_db();
+            }
+        }
+    }
+
+//    public function open()
+//    {
+//        if ($this->getIsActive()) {
+//            return;
+//        }
+//
+//        $this->registerGlobalSessId();
+//
+//        parent::open();
+//    }
+//
+//    private function registerGlobalSessId()
+//    {
+//        $GLOBALS['XCARTSESSID'] = false;
+//
+//        $model = StorefrontModel::objects()->filter(['domain' => $_SERVER['HTTP_HOST']])->limit(1)->get();
+//        if ($model) {
+//            $key = 'xid'.$model->storefrontid;
+//        }
+//        else {
+//            $key = 'xid0';
+//        }
+//
+//        if (!empty($_COOKIE[$key])) {
+//            $id = $_COOKIE[$key];
+//        }
+//
+//        $GLOBALS['XCARTSESSID'] = $id;
+//
+//        x_session_start($id);
+//    }
 
     public function remove($key)
     {
@@ -44,6 +92,11 @@ class XcartSession extends Session
         return array_key_exists($offset, $GLOBALS['XCART_SESSION_VARS']);
     }
 
+    public function getIsActive()
+    {
+        //@TODO: переписать
+        return isset($GLOBALS['XCARTSESSID']);
+    }
 
     public function count()
     {

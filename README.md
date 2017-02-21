@@ -27,7 +27,6 @@ $local_storefront = 0; // artistsupplysource.com
 //      $local_storefront = 35; // www.businesssupplysource.com
 //      $local_storefront = 63; // www.justpokersupplies.com
 //      $local_storefront = 42; // www.acuhealthcare.com
-//      $local_storefront = 37; //
 
 define('SMARTY_AUTO_RECOMPILE', true);
 define('LOCAL_SF_DOMAIN', 'dev1.test.artistsupplysource.com');
@@ -57,3 +56,23 @@ Create folders:
 - /files/product_feeds_v2/
 - /files/reconciliation_feeds/
 
+---
+##Соглашение о разработке
+- ####Именование
+    > Иерархия папок отдельно взятого модуля 
+    ```$xslt
+    ModuleName
+    |--Controllers/
+    |--Models/
+    |  |--NameModel.php (extend Model or AutoMetaModel)
+    |--NameModeule.php (extend Module class)
+    ```
+    > Классы
+      
+    Model - Должен описывать функции ```static tableName() ``` и ``` static getFields ``` 
+    - в ```getFields``` описываются все поля таблицы с соотвествием типа и опций поля. Должны быть описаны все поля таблицы, в противном случае будет сгенерирована ошибка
+    - в ```tableName``` описывается имя таблицы в которой хранятся данные
+
+    AutoMetaModel - позволяет оттказатся от полного описания всех полей таблицы, но необходимо описать ключевые поля, так-же следует помнить, что описание полей может быть приведено не корректно.
+    
+    
