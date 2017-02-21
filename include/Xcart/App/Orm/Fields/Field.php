@@ -104,7 +104,7 @@ abstract class Field implements ModelFieldInterface
                     return;
                 }
 
-                if ($this->getModel()->objects()->filter(['pk' => $value])->count() > 0) {
+                if ($this->getModel()->objects()->filter([$this->name => $value])->count() > 0) {
                     $context->buildViolation('The value must be unique')->addViolation();
                 }
             });
