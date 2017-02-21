@@ -21,11 +21,12 @@ const LOG_CATEGORY = 'cron_paypal_transactions_watchdog';
 
 if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log(LOG_CATEGORY, 'Already launched');
-    Xcart\Mail::model()->
-    setTo('team@s3stores.com')->
-    setFrom('team@s3stores.com')->
-    setBody(LOG_CATEGORY . ' already launched')->
-    setSubject(sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY))->sendEmail();
+    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail->to = 'team@s3stores.com';
+    $oMail->from = ('team@s3stores.com');
+    $oMail->body = LOG_CATEGORY . ' already launched';
+    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
+    $oMail->sendEmail();
     die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
