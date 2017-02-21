@@ -11,13 +11,13 @@
                                         {if $model->tag}
                                             <span style="background-color: {$model->color};" class="tag no-border">{$model->tag|upper}</span>
                                         {else}
-                                            <span style="" class="tag"></span>
+                                            <span class="tag"></span>
                                         {/if}
                                     </div>
                                     <div class="columns large-10">
                                         <span class="name {if $model->getSearchStorage()->getCashedCount() == 0}gray{/if}">
                                             <span class="{if $model->bold}bold{/if}">{$model}</span>
-                                            ({$model->getSearchStorage()->getCashedCount()})
+                                            (<span class="count">{$model->getSearchStorage()->getCashedCount()}</span>)
                                         </span>
                                     </div>
                                 </div>

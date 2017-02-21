@@ -5,7 +5,7 @@
 
 {block 'content'}
     {smarty_admin_block name='Order dashboard'}
-        <div>Not in grouping</div>
+        <div>Not in group</div>
         <div id="g_null">
             {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:null}
         </div>
