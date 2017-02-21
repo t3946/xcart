@@ -33,9 +33,12 @@ class IntField extends Field
         $options = parent::getSqlOptions();
         if ($this->primary) {
             $options['autoincrement'] = true;
-        } else {
+        }
+
+        if ($this->unsigned) {
             $options['unsigned'] = $this->unsigned;
         }
+
         return $options;
     }
 
