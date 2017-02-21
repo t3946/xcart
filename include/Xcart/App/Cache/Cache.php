@@ -19,7 +19,7 @@ class Cache
 
     public $defaultDriver = 'default';
     public $saveInMemory = true;
-    public $numSavedInMemory = 10;
+    public $numSavedInMemory = 30;
     
     public function setDrivers($config)
     {
