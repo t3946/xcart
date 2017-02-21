@@ -16,7 +16,7 @@
         {foreach from=$aVerifiactionResults item=aVerifiactionResult}
             <tr {cycle values=", class='TableSubHead'"} data-product-id="{$aVerifiactionResult.Product->getProductId()}">
                 <td>{if !($readonly)}
-                    <input name="productids[{$aVerifiactionResult.Product->getProductId()}]" type="checkbox"/>
+                    <input autocomplete="off" name="productids[{$aVerifiactionResult.Product->getProductId()}]" type="checkbox"/>
                     <input type="hidden" name="productasin[{$aVerifiactionResult.Product->getProductId()}]" value="{$aVerifiactionResult.pasin}" />{/if}
                 </td>
                 <td>
@@ -34,7 +34,7 @@
                 </td>
                 <td align="center">
                     <div class="ui toggle checkbox" style="width:50px;">
-                        <input type="checkbox" {if $aVerifiactionResult.Product->isAmazonFBARestricted()}checked="checked"{/if}><label></label>
+                        <input autocomplete="off" type="checkbox" {if $aVerifiactionResult.Product->isAmazonFBARestricted()}checked="checked"{/if}><label></label>
                     </div>
                 </td>
             </tr>
