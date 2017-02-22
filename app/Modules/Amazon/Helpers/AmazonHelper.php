@@ -603,7 +603,10 @@ class AmazonHelper
                     if (!empty($ItemSubcondition)) {
                         $sItemSubcondition = $ItemSubcondition->item(0)->nodeValue;
                     }
-                    if ($sItemCondition == 'New' && $sItemSubcondition == 'New' && ($sShipsDomestically = 'Unknown' || $sShipsDomestically = 'True')) {
+                    if (!empty($ShipsDomestically)) {
+                        $sShipsDomestically = $ShipsDomestically->item(0)->nodeValue;
+                    }
+                    if ($sItemCondition == 'New' && $sItemSubcondition == 'New' && ($sShipsDomestically == 'Unknown' || $sShipsDomestically == 'True')) {
 
                         if (!empty($FulfillmentChannel)) {
                             switch ($FulfillmentChannel->item(0)->nodeValue) {
@@ -615,9 +618,7 @@ class AmazonHelper
                                     break;
                             }
                         }
-                        if (!empty($ShipsDomestically)) {
-                            $sShipsDomestically = $ShipsDomestically->item(0)->nodeValue;
-                        }
+
                         if (!empty($MultipleOffersAtLowestPrice)) {
                             switch ($MultipleOffersAtLowestPrice->item(0)->nodeValue) {
                                 case 'True':
