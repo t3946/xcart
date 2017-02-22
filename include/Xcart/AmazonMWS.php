@@ -1606,7 +1606,7 @@ SQL;
                     );
 
                     $request = new \MarketplaceWebService_Model_SubmitFeedRequest($parameters);
-                    $aResult = $this->invokeSubmitFeed($request);
+                    $aResult = AmazonHelper::invokeSubmitFeed($request, $this->oMWSService);
                     if (!empty($aResult)) {
                         if (!empty($aResult['FeedSubmissionId'])){
                             if (Connection::getInstance()->insert('xcart_external_verification_feeds',
