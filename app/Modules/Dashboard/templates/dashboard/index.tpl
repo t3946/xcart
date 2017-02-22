@@ -10,16 +10,10 @@
     {/smarty_admin_block}
 
     {smarty_admin_block name='Order dashboard'}
-        <div rel="g_null">Not in group</div>
-        <div id="g_null">
-            {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:null group=null}
-        </div>
+        {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}
 
         {foreach $groups as $group}
-            <div rel="g_{$group->id}">{$group}</div>
-            <div id="g_{$group->id}">
-                {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id}
-            </div>
+            {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id title=$group}
         {/foreach}
 
     {/smarty_admin_block}

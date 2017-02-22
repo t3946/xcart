@@ -76,6 +76,7 @@ jQuery.fn.tablePositions = function (options) {
         setTimeout(function () {
             $(to).removeClass('drag-over');
             $(to).append($(elem).detach());
+            // $(to).append(elem);
 
             show(elem);
         }.bind(to, elem), 800);
@@ -84,15 +85,8 @@ jQuery.fn.tablePositions = function (options) {
     function show(elem) {
         setTimeout(function () {
             $(elem).removeClass('move-event');
-        }.bind(elem), 50);
+        }.bind(elem), 20);
     }
-    // function scroll(index, step) {
-    //     var scrollY = $(window).scrollTop();
-    //     $(window).scrollTop(scrollY + step);
-    //     if (!globals[index].stop) {
-    //         setTimeout(function () { scroll(index, step) }, 20);
-    //     }
-    // }
 
 
     return this.each(function (i) {
@@ -104,20 +98,20 @@ jQuery.fn.tablePositions = function (options) {
             stop: true
         };
 
-        $container.find(option.hoveredSelector).on('dragover', function (e) {
-            // e.originalEvent.dataTransfer.animation = 'move';
-            $(this).closest(option.hoveredSelector).addClass('hovered');
-            return (e.target.innerHTML.trim() != '');
-        });
+        // $container.find(option.hoveredSelector).on('dragover', function (e) {
+        //     // e.originalEvent.dataTransfer.animation = 'move';
+        //     $(this).closest(option.hoveredSelector).addClass('hovered');
+        //     return (e.target.innerHTML.trim() != '');
+        // });
 
         $container.find(option.dropSelector)
             .on('dragover', function (e) {
                 // e.originalEvent.dataTransfer.animation = 'move';
-                $(this).closest(option.hoveredSelector).addClass('hovered');
+                // $(this).closest(option.hoveredSelector).addClass('hovered');
                 return (e.target.innerHTML.trim() != '');
             })
             .on('dragenter', function (e) {
-                console.log(e.target);
+                // console.log(e.target);
                 var has = (e.target.innerHTML.trim() != '');
                 if (!has) {
                     $(this).addClass('drag-over');
@@ -127,48 +121,41 @@ jQuery.fn.tablePositions = function (options) {
             })
             .on('dragleave', function (e) {
                 $(this).removeClass('drag-over');
-                $(this).closest(option.hoveredSelector).removeClass('hovered');
+                // $(this).closest(option.hoveredSelector).removeClass('hovered');
             })
 
-            .on('drag', function(e) {
-                if (e.stopPropagation) {
-                    e.stopPropagation();
-                }
-                globals[i].stop = true;
-                $(this).closest(option.hoveredSelector).addClass('hovered');
+            // .on('drag', function(e) {
+            //     if (e.stopPropagation) {
+            //         e.stopPropagation();
+            //     }
+            //     // $(this).closest(option.hoveredSelector).addClass('hovered');
 
-                //
-                // if (e.originalEvent.pageY > ($(window).height() / 2 - 150)) {
-                //     console.log('up');
-                //     globals[i].stop = false;
-                //     scroll(i, -1)
-                // }
-                //
-                // if (e.originalEvent.pageY < ($(window).height() / 2 + 150)) {
-                //     console.log('down');
-                //     globals[i].stop = false;
-                //     scroll(i, 1)
-                // }
-            })
+            // })
 
             .on('drop', function (e) {
                 if (e.stopPropagation) {
                     e.stopPropagation();
                 }
                 $(this).removeClass('drag-over');
-                $(this).closest(option.hoveredSelector).removeClass('hovered');
+                // $(this).closest(option.hoveredSelector).removeClass('hovered');
 
                 if (this != globals[i].original) {
                     var o_el = globals[i].original;
                     $(o_el).addClass('move-event');
 
                     if (typeof option.onMove == 'function') {
-                        if (option.onMove(o_el, this)) {
-                            move(o_el, this);
-                        }
-                        else {
-                            show(o_el);
-                        }
+                        var to = this;
+                        // var parent = $(o_el).parent(option.dropSelector);
+                        // var t_el = o_el.detach();
+                        // $.when(option.onMove(o_el, this))
+
+                        $.when(option.onMove(o_el, to)).done(function(arg){
+                                if (arg || arg == 'undefined') {
+                                    move(o_el, to);
+                                }
+                            }).fail(function(){
+                                show(o_el);
+                        });
                     }
                     else {
                         move(o_el, this);
@@ -250,20 +237,94 @@ jQuery.fn.mfieldset = function (options) {
     });
 };
 
+(function($) {
+    $.mnotify = function(textOptions, options) {
+        var stackContainer, messageWrap, messageBox, messageBody, messageTextBox, closeButton, messagePicture, image;
+
+        textOptions = $.extend({
+            title: undefined,
+            message: undefined,
+            image: undefined
+        }, textOptions);
+
+        options = $.extend({
+            lifetime: 3000,
+            click: undefined
+        }, options);
+
+        stackContainer = $('#notifier-box');
+        if (!stackContainer.length) {
+            stackContainer = $('<div>', {id: 'notifier-box'}).prependTo(document.body);
+        }
+
+        messageWrap = $('<div>').addClass('message-wrap').css('display', 'none');
+        messageBox = $('<div>').addClass('message-box');
+
+        messageHeader = $('<div>', {
+            text: textOptions.title
+        }).addClass('message-header');
+
+        messageBody = $('<div>').addClass('message-body');
+
+        messageTextBox = $('<span>');
+        messageTextBox.append(textOptions.message);
+
+        closeButton = $('<a>', {
+            href: '#',
+            title: 'Close notify',
+            click: function(event) {
+                $(this).parent().parent().fadeOut(300, function() {
+                    $(this).remove();
+                });
+                event.preventDefault();
+                return false;
+            }
+        }).addClass('message-close');
+
+        if (textOptions.image != undefined) {
+            messagePicture = $('<div>').addClass('thumb');
+            image = $('<img>', {
+                src: textOptions.image
+            });
+        }
+
+        messageWrap.appendTo(stackContainer).fadeIn();
+        messageBox.appendTo(messageWrap);
+        closeButton.appendTo(messageBox);
+        messageHeader.appendTo(messageBox);
+        messageBody.appendTo(messageBox);
+
+        if (messagePicture != undefined) {
+            messagePicture.appendTo(messageBody);
+            image.appendTo(messagePicture);
+        }
+        messageTextBox.appendTo(messageBody);
+
+        if (options.lifetime > 0) {
+            setTimeout(function() {
+                $(messageWrap).fadeOut(300, function() {
+                    $(this).remove();
+                });
+            }, options.lifetime);
+        }
+
+        if (options.click != undefined) {
+            messageWrap.click(function(e) {
+                if (!jQuery(e.target).is('.message-close')) {
+                    options.click.call(this);
+                }
+            });
+        }
+
+        return this;
+    }
+})(jQuery);
+
 (function(){
     "use strict";
 
     $(document).ready(function(){
         $('fieldset').mfieldset();
-        $('.admin .admin-dashboard-filters-list').tablePositions({
-            draggableSelector:'.button',
-            dropSelector:'.container',
-
-            onMove:function (el, to)  {
-                console.log(el);
-                console.log(to);
-            return true;
-        }});
 
         $('form').each(function(i, form)
         {

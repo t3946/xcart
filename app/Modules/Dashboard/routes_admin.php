@@ -22,6 +22,11 @@ return [
         'name' => 'admin_filters'
     ],
     [
+        'route' => '/admin/filters/sort',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'sort'],
+        'name' => 'sort_filters'
+    ],
+    [
         'route' => '/create/group',
         'target' => ['\Modules\Dashboard\Controllers\DashboardGroupController', 'create'],
         'name' => 'create_group'

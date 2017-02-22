@@ -35,11 +35,12 @@ class DashboardFilter extends Model
                 'modelClass' => GroupModel::className(),
                 'verboseName' => 'Group',
                 'link' => ['id', 'group_id'],
+                'null' => true,
             ],
             'users' => [
                 'class' => ManyToManyField::className(),
                 'modelClass' => UserModel::className(),
-                'through' => UserFiltersThroughModel::className(),
+                'through' => UserFiltersLinkModel::className(),
                 'link' => ['filter_id', 'user_id'],
                 'verboseName' => 'In users dashboard',
             ],

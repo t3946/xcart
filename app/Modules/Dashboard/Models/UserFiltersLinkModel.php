@@ -3,9 +3,10 @@ namespace Modules\Dashboard\Models;
 
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
-class UserFiltersThroughModel extends Model
+class UserFiltersLinkModel extends Model
 {
     public static function tableName()
     {
@@ -26,6 +27,14 @@ class UserFiltersThroughModel extends Model
                 'modelClass' => DashboardFilter::className(),
                 'verboseName' => 'Filter in dashboard',
                 'link' => ['filter_id', 'id']
+            ],
+            'position_row'    => [
+                'class' => IntField::className(),
+                'null'  => true,
+            ],
+            'position_column' => [
+                'class' => IntField::className(),
+                'null'  => true,
             ],
         ];
     }

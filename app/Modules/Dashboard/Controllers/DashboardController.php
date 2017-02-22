@@ -22,7 +22,7 @@ class DashboardController extends PrototypeAdminController
                 'row_col' => DashboardFilter::getMaxRowCol(),
                 'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__login' => Xcart::app()->request->session->get('login')])->order(['position_row', 'position_column'])->all(),
                 'models'  => DashboardFilter::objects()->filter(['enabled' => true])->all(),
-                'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->all(),
+                'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
             ]
         );
     }
@@ -68,10 +68,20 @@ class DashboardController extends PrototypeAdminController
         );
     }
 
-    public function sorting()
+    public function sort()
     {
+        /** @var Model|ModelInterface $model */
+        if (isset($_POST['id']) && $model = DashboardFilter::objects()->get(['id' => $_POST['id']])) {
 
+            $model->setAttributes($_POST);
+
+            if ($model->isValid() && $model->save(['position_row', 'position_column'])) {
+
+                $this->jsonResponse(['message' => "Filter '{$model}' saved"]);
+            }
+        }
     }
+
 
     public function create()
     {

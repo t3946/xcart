@@ -10,17 +10,60 @@
 
     {smarty_admin_block name= 'Filters'}
         <div class="admin-dashboard-filters-list">
-            <div rel="g_null">Not in group</div>
-            <div id="g_null">
-                {include 'dashboard/admin/dashboard_group.tpl' models=$models|get_filtered:null group=null}
-            </div>
+
+            {include 'dashboard/admin/dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}
 
             {foreach $groups as $group}
-                <div rel="g_{$group->id}">{$group}</div>
-                <div id="g_{$group->id}">
-                    {include 'dashboard/admin/dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id}
-                </div>
+                {include 'dashboard/admin/dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id title=$group}
             {/foreach}
         </div>
     {/smarty_admin_block}
+{/block}
+
+{block 'js'}
+    {parent}
+    <script>
+        $('.admin .admin-dashboard-filters-list').tablePositions({
+            draggableSelector: '.button',
+            dropSelector: '.container',
+
+            onMove: function (el, to) {
+
+
+                console.log({
+                    position_row: $(to).data('row'),
+                    position_column: $(to).data('col'),
+                    group_id: $(to).data('group'),
+                    id: $(el).data('id')
+                });
+                var def = $.Deferred();
+                $.ajax({
+                    type: 'POST',
+                    url: '{url 'dashboard:sort_filters'}',
+                    data: {
+                        position_row: $(to).data('row'),
+                        position_column: $(to).data('col'),
+                        group_id: $(to).data('group'),
+                        id: $(el).data('id')
+                    },
+                    success: function (data) {
+                        if (data) {
+                            $.mnotify({
+                                title: 'Position saved',
+                                message: data.message
+                            });
+
+                            def.resolve(true, data);
+                        }
+                        def.reject(false);
+                    },
+                    error: function () {
+                        def.reject(false);
+                    }
+                });
+
+                return def.promise();
+            }
+        });
+    </script>
 {/block}
