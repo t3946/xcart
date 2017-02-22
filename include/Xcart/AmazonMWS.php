@@ -1852,7 +1852,7 @@ SQL;
                         $params = ['productcode' => $aOffer['productcode'], 'productid' => $aOffer['productid'], 'report_date' => $aOffer['report_date']];
                         if ($oAmazonFbaProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
                             $oAmazonFbaProductModel->setAttributes($aOffer);
-                            if ($oAmazonProductModel->productid) {
+                            if ($oAmazonFbaProductModel->productid) {
                                 $oAmazonFbaProductModel->save();
                             }
                         }
