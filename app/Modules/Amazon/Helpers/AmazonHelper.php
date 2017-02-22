@@ -3,6 +3,7 @@
 namespace  Modules\Amazon\Helpers;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
+use Xcart\Product;
 
 class AmazonHelper
 {
@@ -530,6 +531,148 @@ class AmazonHelper
             $oAmazonFbaProductModel = (new AmazonFbaProductModel());
         }
         return $oAmazonFbaProductModel;
+    }
+
+    public static function getReportContent($report_data)
+    {
+        $aResultArray = [];
+        if (!empty($report_data)) {
+            if (is_array($report_data)) {
+                foreach ($report_data as $reportId => $arr) {
+                    if (!empty($arr['Report_Contents']))
+                        $aResultArray[$reportId] = $arr['Report_Contents'];
+                }
+            } else {
+                if (!empty($report_data['Report_Contents']))
+                    $aResultArray[] = $report_data['Report_Contents'];
+            }
+        }
+        return $aResultArray;
+    }
+
+    /**
+     * @param string $report_data
+     * @param Product[] $aProducts
+     * @return array
+     */
+    public static function parseAmazonOffers($report_data, $aProducts)
+    {
+        $aOffers = [];
+        $report_data = str_replace('http://mws.amazonservices.com/schema/Products/2011-10-01', '', $report_data);
+        $docShipping = new \DOMDocument;
+        $docShipping->loadXML($report_data);
+        $xpath = new \DOMXPath($docShipping);
+        $aGetLowestOfferListingsForSKUResult = $xpath->query('/*/GetLowestOfferListingsForSKUResult');
+        /** @var \DOMElement[] $aGetLowestOfferListingsForSKUResult */
+        foreach ($aGetLowestOfferListingsForSKUResult as $aCompetitiveResult) {
+            $aOffers = [];
+            $sSKU = $sAsin = '';
+            $oAsin = $aCompetitiveResult->getElementsByTagName('ASIN');
+            if (!empty($oAsin)) {
+                $sAsin = $oAsin->item(0)->nodeValue;
+            }
+            $oSKU = $aCompetitiveResult->getElementsByTagName('SellerSKU');
+            if (!empty($oSKU)) {
+                $sSKU = $oSKU->item(0)->nodeValue;
+            }
+            $aProductModels = array_filter(
+                $aProducts,
+                function ($e) use ($sSKU) {
+                    return $e->productcode == $sSKU;
+                });
+            $oProductModel = reset($aProductModels);
+            $aLowestOfferListing = $aCompetitiveResult->getElementsByTagName('LowestOfferListing');
+            if (!empty($aLowestOfferListing)) {
+                /** @var \DOMElement[] $aLowestOfferListing */
+                foreach ($aLowestOfferListing as $LowestOfferListing) {
+                    $Offer = [];
+                    $sItemCondition = $sItemSubcondition = $sShipsDomestically = $sFulfillmentChannel = '';
+                    $ItemCondition = $LowestOfferListing->getElementsByTagName('ItemCondition');
+                    $ItemSubcondition = $LowestOfferListing->getElementsByTagName('ItemSubcondition');
+                    $FulfillmentChannel = $LowestOfferListing->getElementsByTagName('FulfillmentChannel');
+                    $ShipsDomestically = $LowestOfferListing->getElementsByTagName('ShipsDomestically');
+                    $MultipleOffersAtLowestPrice = $LowestOfferListing->getElementsByTagName('MultipleOffersAtLowestPrice');
+                    $AllOfferListingsConsidered = $LowestOfferListing->getElementsByTagName('AllOfferListingsConsidered');
+                    $NumberOfOfferListingsConsidered = $LowestOfferListing->getElementsByTagName('NumberOfOfferListingsConsidered');
+                    $SellerFeedbackCount = $LowestOfferListing->getElementsByTagName('SellerFeedbackCount');
+                    $ShippingTime = $LowestOfferListing->getElementsByTagName('ShippingTime');
+                    $SellerPositiveFeedbackRating = $LowestOfferListing->getElementsByTagName('SellerPositiveFeedbackRating');
+                    if (!empty($ItemCondition)) {
+                        $sItemCondition = $ItemCondition->item(0)->nodeValue;
+                    }
+                    if (!empty($ItemSubcondition)) {
+                        $sItemSubcondition = $ItemSubcondition->item(0)->nodeValue;
+                    }
+                    if (!empty($ShipsDomestically)) {
+                        $sShipsDomestically = $ShipsDomestically->item(0)->nodeValue;
+                    }
+                    if ($sItemCondition == 'New' && $sItemSubcondition == 'New' && ($sShipsDomestically == 'Unknown' || $sShipsDomestically == 'True')) {
+
+                        if (!empty($FulfillmentChannel)) {
+                            switch ($FulfillmentChannel->item(0)->nodeValue) {
+                                case 'Merchant':
+                                    $Offer['lp_FulfillmentChannel'] = 'MFN';
+                                    break;
+                                case 'Amazon':
+                                    $Offer['lp_FulfillmentChannel'] = 'AFN';
+                                    break;
+                            }
+                        }
+
+                        if (!empty($MultipleOffersAtLowestPrice)) {
+                            switch ($MultipleOffersAtLowestPrice->item(0)->nodeValue) {
+                                case 'True':
+                                    $Offer['lp_MultipleOfferListingsAtLowestPrice'] = 'Y';
+                                    break;
+                                case 'False':
+                                    $Offer['lp_MultipleOfferListingsAtLowestPrice'] = 'N';
+                                    break;
+                            }
+                        }
+                        if (!empty($AllOfferListingsConsidered)) {
+                            switch ($MultipleOffersAtLowestPrice->item(0)->nodeValue) {
+                                case 'True':
+                                    $Offer['lp_AllOfferListingsConsidered'] = 'Y';
+                                    break;
+                                case 'False':
+                                    $Offer['lp_AllOfferListingsConsidered'] = 'N';
+                                    break;
+                            }
+                        }
+                        if (!empty($NumberOfOfferListingsConsidered)) {
+                            $Offer['lp_NumberOfOfferListingsConsidered'] = intval($NumberOfOfferListingsConsidered->item(0)->nodeValue);
+                        }
+                        if (!empty($SellerFeedbackCount)) {
+                            $Offer['lp_SellerFeedbackCount'] = intval($SellerFeedbackCount->item(0)->nodeValue);
+                        }
+                        if (!empty($SellerPositiveFeedbackRating)) {
+                            $Offer['lp_SellerPositiveFeedbackRating'] = $SellerPositiveFeedbackRating->item(0)->nodeValue;
+                        }
+                        if (!empty($ShippingTime)) {
+                            /** @var \DOMNodeList $ShippingTime */
+                            $ShippingTimeMax = $ShippingTime->item(0)->getElementsByTagName('Max');
+                            if (!empty($ShippingTimeMax)) {
+                                $Offer['lp_ShippingTime'] = $ShippingTimeMax->item(0)->nodeValue;
+                            }
+                        }
+                        /** @var \DOMElement[] $LandedPrice */
+                        $LandedPrice = $LowestOfferListing->getElementsByTagName('LandedPrice');
+                        if (!empty($LandedPrice)) {
+                            $Amount = $LandedPrice->item(0)->getElementsByTagName('Amount');
+                            if (!empty($Amount)) {
+                                $Offer['lp_LandedPrice'] = floatval($Amount->item(0)->nodeValue);
+                            }
+                        }
+                        $Offer['productcode'] = $sSKU;
+                        $Offer['productid'] = $oProductModel->productid;
+                        $Offer['ASIN'] = $sAsin;
+                        $aOffers[] = $Offer;
+                    }
+                }
+            }
+
+        }
+        return $aOffers;
     }
 
 }

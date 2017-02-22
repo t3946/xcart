@@ -33,7 +33,6 @@ $classAmazonMWS = new Xcart\AmazonMWS();
 func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME, $log_text);
 
 $classAmazonMWS->setStartDate(new DateTime('-3 days', new DateTimeZone('UTC')))
-    ->setProcessWithoutAcknowledgedFlag()
     ->_Request('RequestReport')
     ->_Request('GetReportRequestList')
     ->_Request('GetReportList')
