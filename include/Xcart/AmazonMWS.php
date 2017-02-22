@@ -422,6 +422,12 @@ SQL;
     {
         $this->aReportValue = [];
         $ReportContent = $this->getReportContent();
+        if ($this->bEnableLog && $this->sLogPrefix) {
+            $log = new \Monolog\Logger('fee_report');
+            $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+            $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+            $log->debug('FeeReport', $ReportContent);
+        }
         if (!empty($ReportContent)) {
 
             $log_text = "Processing " . count($ReportContent) . " reports";
@@ -430,13 +436,6 @@ SQL;
             }
 
             foreach ($ReportContent as $report_data) {
-                if ($this->bEnableLog && $this->sLogPrefix) {
-                    $log = new \Monolog\Logger('fee_report');
-                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                    $log->debug($log_text, [$report_data]);
-                }
-
                 $cntLine = 0;
                 $aReportValue = [];
                 foreach (preg_split("/((\r?\n)|(\r\n?))/", $report_data) as $sLine) {
