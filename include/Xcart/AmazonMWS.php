@@ -1713,21 +1713,14 @@ SQL;
             $aOffers = AmazonHelper::parseAmazonOffers($this->dom_xml_arr, $this->aProducts);
 
             if (!empty($aOffers)) {
-                array_multisort(
-                    array_map(function ($a) {
-                        return $a['lp_FulfillmentChannel'];
-                    }, $aOffers), SORT_ASC,
-                    array_map(function ($a) {
-                        return $a['lp_LandedPrice'];
-                    }, $aOffers), SORT_ASC,
-                    $aOffers);
-                $aOffer = reset($aOffers);
-                $aOffer['report_date'] = $iReportDate;
-                $params = ['productcode' => $aOffer['productcode'], 'productid' => $aOffer['productid'], 'report_date' => $aOffer['report_date']];
-                if ($oAmazonFbaProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
-                    $oAmazonFbaProductModel->setAttributes($aOffer);
-                    if ($oAmazonFbaProductModel->productid) {
-                        $oAmazonFbaProductModel->save();
+                foreach ($aOffers as $aOffer) {
+                    $aOffer['report_date'] = $iReportDate;
+                    $params = ['productcode' => $aOffer['productcode'], 'productid' => $aOffer['productid'], 'report_date' => $aOffer['report_date']];
+                    if ($oAmazonFbaProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
+                        $oAmazonFbaProductModel->setAttributes($aOffer);
+                        if ($oAmazonFbaProductModel->productid) {
+                            $oAmazonFbaProductModel->save();
+                        }
                     }
                 }
             }
