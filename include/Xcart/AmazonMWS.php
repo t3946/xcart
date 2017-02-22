@@ -884,14 +884,14 @@ SQL;
     {
         $this->aReportValue = [];
         $ReportContent = $this->getReportContent();
+        if ($this->bEnableLog && $this->sLogPrefix) {
+            $log = new \Monolog\Logger('amazon_info');
+            $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+            $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+            $log->debug("processReportReservedInventory", $ReportContent);
+        }
         if (!empty($ReportContent)) {
             foreach ($ReportContent as $report_id => $report_data) {
-                if ($this->bEnableLog && $this->sLogPrefix) {
-                    $log = new \Monolog\Logger('amazon_info');
-                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                    $log->debug("processReportReservedInventory - ReportId:{$report_id}", [$report_data]);
-                }
                 $cntLine = 0;
                 $aReportValue = [];
                 foreach (preg_split("/((\r?\n)|(\r\n?))/", $report_data) as $sLine) {
