@@ -415,6 +415,12 @@ SQL;
 
             foreach ($ReportContent as $report_data) {
                 $cntLine = 0;
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new \Monolog\Logger('fee_report');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->debug('FeeReport', $report_data);
+                }
                 $aReportValue = [];
                 foreach (preg_split("/((\r?\n)|(\r\n?))/", $report_data) as $sLine) {
                     $arrM = explode("\t", $sLine);
@@ -427,12 +433,7 @@ SQL;
                     }
                     $cntLine++;
                 }
-                if ($this->bEnableLog && $this->sLogPrefix) {
-                    $log = new \Monolog\Logger('fee_report');
-                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                    $log->debug('FeeReport', $aReportValue);
-                }
+
                 $aReportData = [];
                 $log_text = "Processing " . ($cntLine - 2) . " products";
                 if (!empty($this->sBackProcessLogName)) {
@@ -865,14 +866,14 @@ SQL;
     {
         $this->aReportValue = [];
         $ReportContent = AmazonHelper::getReportContent($this->dom_xml_arr);
-        if ($this->bEnableLog && $this->sLogPrefix) {
-            $log = new \Monolog\Logger('amazon_info');
-            $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-            $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-            $log->debug("processReportReservedInventory", $ReportContent);
-        }
         if (!empty($ReportContent)) {
             foreach ($ReportContent as $report_id => $report_data) {
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new \Monolog\Logger('amazon_info');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->addDebug($report_data);
+                }
                 $cntLine = 0;
                 $aReportValue = [];
                 foreach (preg_split("/((\r?\n)|(\r\n?))/", $report_data) as $sLine) {
