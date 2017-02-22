@@ -21,6 +21,12 @@ class ExternalVerificationProductsQueue extends Data
     private $oProduct = null;
     private $aVerificatorResults = null;
 
+    public static $aStatusTitles = [
+        self::AMAZON_PRODUCT_STATUS_FAILED => 'Listing creation failed',
+        self::AMAZON_PRODUCT_STATUS_SUCCESS => 'Listing creation success',
+        self::AMAZON_PRODUCT_STATUS_SUBMIT => '',
+    ];
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['productid'];
@@ -237,7 +243,7 @@ class ExternalVerificationProductsQueue extends Data
 
         $queryBuilder = Connection::getInstance()->createQueryBuilder();
         $queryBuilder
-            ->select('SQL_CALC_FOUND_ROWS xp.*', 'cidev_get_amazon_verification_asin(xe.productid) as pasin')
+            ->select('SQL_CALC_FOUND_ROWS xp.*', 'cidev_get_amazon_verification_asin(xe.productid) as pasin', 'xe.amz_listing_status')
             ->from('xcart_external_verification_products_queue', 'xe')
             ->innerJoin('xe','xcart_products', 'xp', "xp.productid = xe.productid AND xp.forsale = 'Y' AND amazon_enabled !='Y'")
             ->leftJoin('xe','xcart_products_amz_fields', 'paf', "paf.productid = xe.productid")
@@ -261,6 +267,7 @@ class ExternalVerificationProductsQueue extends Data
                 $aRes[$k]['AsinLink'] = sprintf(ExternalVerificationProducts::AMAZON_PRODUCT_LINK, $aRe['pasin']);
                 unset($aRe['pasin']);
                 $aRes[$k]['Product'] = Product::model()->fill($aRe);
+                $aRes[$k]['amz_listing_status'] = self::$aStatusTitles[ $aRes[$k]['amz_listing_status']];
             }
         }
         return ['resultSet' => $aRes, 'FoundRows' => Connection::getInstance()->executeQuery('SELECT FOUND_ROWS() AS foundRows')->fetchColumn(0)];

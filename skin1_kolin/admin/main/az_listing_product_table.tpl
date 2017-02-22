@@ -7,8 +7,9 @@
     <tr class="TableHead">
         <th></th>
         <th style="width: 120px">SKU</th>
-        <th style="width: 250px; overflow: hidden; display: inline-block; white-space: nowrap;">Product name</th>
+        <th>Product name</th>
         <th>Cost to us</th>
+        <th>Last submit result</th>
         <th style="width: 140px; overflow: hidden; white-space: nowrap;">Asin</th>
         <th style="width: 80px;">Amazon FBA restricted</th>
     </tr>
@@ -28,6 +29,7 @@
                 <td align="center">
                     {include file="currency2.tpl" value=$aVerifiactionResult.Product->getProductCostToUs()}
                 </td>
+                <td align="center">{$aVerifiactionResult.amz_listing_status}</td>
                 <td align="{if $asin_edit}right{else}center{/if}">
                     <a target="_blank" href="{$aVerifiactionResult.AsinLink}">{$aVerifiactionResult.pasin}</a>
                     {if $asin_edit}<button data-asin="{$aVerifiactionResult.pasin}" class="ui button"><i class="edit icon"></i></button>{/if}
