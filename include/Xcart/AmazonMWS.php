@@ -940,7 +940,9 @@ SQL;
                                 'productcode' => $aItem['sku'],
                                 'ASIN' => $aItem['asin'],
                                 'report_date' => $report_date]);
-                        $oAmazonProductModel->save();
+                        if ($oAmazonProductModel->productid) {
+                            $oAmazonProductModel->save();
+                        }
                     }
                 }
         }
@@ -1850,7 +1852,9 @@ SQL;
                         $params = ['productcode' => $aOffer['productcode'], 'productid' => $aOffer['productid'], 'report_date' => $aOffer['report_date']];
                         if ($oAmazonFbaProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
                             $oAmazonFbaProductModel->setAttributes($aOffer);
-                            $oAmazonFbaProductModel->save();
+                            if ($oAmazonProductModel->productid) {
+                                $oAmazonFbaProductModel->save();
+                            }
                         }
                     }
                 }
@@ -1955,7 +1959,9 @@ SQL;
                                     }
                                 }
                             }
-                            $oAmazonProductModel->save();
+                            if ($oAmazonProductModel->productid) {
+                                $oAmazonProductModel->save();
+                            }
                         }
                     }
                 }
@@ -2021,7 +2027,9 @@ SQL;
                                     $oAmazonProductModel->lis_InStockSupplyQuantity = $aInStockSupplyQuantity->item(0)->nodeValue;
                                 }
                                 $oAmazonProductModel->report_date = $iReportDate;
-                                $oAmazonProductModel->save();
+                                if ($oAmazonProductModel->productid) {
+                                    $oAmazonProductModel->save();
+                                }
                             }
                         }
                     }
