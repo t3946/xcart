@@ -528,7 +528,7 @@ function getAmazonListingProducts($aParams = [])
                         'Product' => Product::model(['productid' => $oVerificationProduct->getProductId()]),
                         'pasin' => $oVerificationProduct->getASINAfterVerification(),
                         'AsinLink' => sprintf(ExternalVerificationProducts::AMAZON_PRODUCT_LINK, $sFinalASIN),
-                        'status' => ExternalVerificationProductsQueue::getAmazonStatuses()[$oVerificationProduct->getField('amz_listing_status')]
+                        'amz_listing_status' => ExternalVerificationProductsQueue::$aStatusTitles[$oVerificationProduct->getField('amz_listing_status')]
                     ];
                 }
             }

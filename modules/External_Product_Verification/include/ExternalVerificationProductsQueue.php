@@ -267,7 +267,7 @@ class ExternalVerificationProductsQueue extends Data
                 $aRes[$k]['AsinLink'] = sprintf(ExternalVerificationProducts::AMAZON_PRODUCT_LINK, $aRe['pasin']);
                 unset($aRe['pasin']);
                 $aRes[$k]['Product'] = Product::model()->fill($aRe);
-                $aRes[$k]['amz_listing_status'] = self::$aStatusTitles[ $aRes[$k]['amz_listing_status']];
+                $aRes[$k]['amz_listing_status'] = self::$aStatusTitles[$aRes[$k]['amz_listing_status']];
             }
         }
         return ['resultSet' => $aRes, 'FoundRows' => Connection::getInstance()->executeQuery('SELECT FOUND_ROWS() AS foundRows')->fetchColumn(0)];
@@ -303,14 +303,5 @@ class ExternalVerificationProductsQueue extends Data
             $res =  Connection::getInstance()->executeQuery("SELECT cidev_get_amazon_verification_asin({$this->getProductId()})")->fetchColumn(0);
         }
         return $res;
-    }
-
-    public static function getAmazonStatuses()
-    {
-        return [
-            self::AMAZON_PRODUCT_STATUS_FAILED => 'Failed',
-            self::AMAZON_PRODUCT_STATUS_SUCCESS => 'Success',
-            self::AMAZON_PRODUCT_STATUS_SUBMIT => 'Submitted'
-        ];
     }
 }
