@@ -301,27 +301,10 @@ class AmazonMWS
         return $res;
     }
 
-    public function getReportContent()
-    {
-        $aResultArray = [];
-        if (!empty($this->dom_xml_arr)) {
-            if (is_array($this->dom_xml_arr)) {
-                foreach ($this->dom_xml_arr as $reportId => $arr) {
-                    if (!empty($arr['Report_Contents']))
-                        $aResultArray[$reportId] = $arr['Report_Contents'];
-                }
-            } else {
-                if (!empty($this->dom_xml_arr['Report_Contents']))
-                    $aResultArray[] = $this->dom_xml_arr['Report_Contents'];
-            }
-        }
-        return $aResultArray;
-    }
-
     public function processReportFulfillmentInventoryData()
     {
         $this->aReportValue = [];
-        $ReportContent = $this->getReportContent();
+        $ReportContent = AmazonHelper::getReportContent($this->dom_xml_arr);
         $report_data = reset($ReportContent);
         $aReportValue = [];
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $report_data) as $sLine) {
@@ -421,13 +404,8 @@ SQL;
     private function fillReportFeeDataFromFile()
     {
         $this->aReportValue = [];
-        $ReportContent = $this->getReportContent();
-        if ($this->bEnableLog && $this->sLogPrefix) {
-            $log = new \Monolog\Logger('fee_report');
-            $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-            $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-            $log->debug('FeeReport', $ReportContent);
-        }
+        $ReportContent = AmazonHelper::getReportContent($this->dom_xml_arr);
+
         if (!empty($ReportContent)) {
 
             $log_text = "Processing " . count($ReportContent) . " reports";
@@ -449,6 +427,12 @@ SQL;
                     }
                     $cntLine++;
                 }
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new \Monolog\Logger('fee_report');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->debug('FeeReport', $aReportValue);
+                }
                 $aReportData = [];
                 $log_text = "Processing " . ($cntLine - 2) . " products";
                 if (!empty($this->sBackProcessLogName)) {
@@ -456,15 +440,12 @@ SQL;
                 }
                 for ($y = 0; $y < count($aReportValue); $y++) {
                     foreach ($aReportValue[$y] as $iKey => $sItem) {
-                        if ($y == 0) {
-                            //$this->aReportValue[$y][$sItem] = '';
-                        } else {
+                        if ($y > 0) {
                             $aReportData[$y][$aReportValue[0][$iKey]] = $sItem;
                             if ($aReportValue[0][$iKey] == 'sku') {
-                                $oClassProducts = new Products();
-                                $iProductId = $oClassProducts->getProductIdBySKU($sItem);
-                                if ($iProductId) {
-                                    $aReportData[$y]['productid'] = (int)$iProductId;
+                                $oProduct = (new Product())->getProductBySKU($sItem);
+                                if ($oProduct->getProductId()) {
+                                    $aReportData[$y]['productid'] = (int) $oProduct->getProductId();
                                 }
                             }
                         }
@@ -517,7 +498,7 @@ SQL;
     public function processReportSettlementData()
     {
         $log = null;
-        $ReportContent = $this->getReportContent();
+        $ReportContent = AmazonHelper::getReportContent($this->dom_xml_arr);
         if (!empty($ReportContent)) {
             $log_text = "Processing " . count($ReportContent) . " reports";
             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
@@ -883,7 +864,7 @@ SQL;
     public function processReportReservedInventory()
     {
         $this->aReportValue = [];
-        $ReportContent = $this->getReportContent();
+        $ReportContent = AmazonHelper::getReportContent($this->dom_xml_arr);
         if ($this->bEnableLog && $this->sLogPrefix) {
             $log = new \Monolog\Logger('amazon_info');
             $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
@@ -1709,17 +1690,15 @@ SQL;
     public function doGetLowestOfferListingsForSKU()
     {
         if (!empty($this->aProducts)) {
-            $aSKUs = array_map(function ($oP) {
-                return $oP->productcode;
-            }, $this->aProducts);
             $request = new \MarketplaceWebServiceProducts_Model_GetLowestOfferListingsForSKURequest();
             $request->setSellerId(MERCHANT_ID);
             $request->setMarketplaceId(MARKETPLACE_ID);
             $SellerSKUList = new \MarketplaceWebServiceProducts_Model_SellerSKUListType();
-            $SellerSKUList->setSellerSKU($aSKUs);
+            $SellerSKUList->setSellerSKU(array_map(function ($oP) {return $oP->productcode;}, $this->aProducts));
             $request->setSellerSKUList($SellerSKUList);
             $request->setItemCondition("New");
             $request->setExcludeMe(true);
+
             $this->dom_xml_arr = AmazonHelper::invokeGetLowestOfferListingsForSKU($request, $this->oMWSService);
             if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
                 return $this;
@@ -1731,138 +1710,29 @@ SQL;
                 $log->debug('GetLowestOfferListingsForSKU', [$this->dom_xml_arr]);
             }
             $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-            $this->dom_xml_arr = str_replace('http://mws.amazonservices.com/schema/Products/2011-10-01', '', $this->dom_xml_arr);
-            $docShipping = new \DOMDocument;
-            $docShipping->loadXML($this->dom_xml_arr);
-            $xpath = new \DOMXPath($docShipping);
-            $aGetLowestOfferListingsForSKUResult = $xpath->query('/*/GetLowestOfferListingsForSKUResult');
-            /** @var \DOMElement[] $aGetLowestOfferListingsForSKUResult */
-            foreach ($aGetLowestOfferListingsForSKUResult as $aCompetitiveResult) {
-                $aOffers = [];
-                $sSKU = $sAsin = '';
-                $oAsin = $aCompetitiveResult->getElementsByTagName('ASIN');
-                if (!empty($oAsin)) {
-                    $sAsin = $oAsin->item(0)->nodeValue;
-                }
-                $oSKU = $aCompetitiveResult->getElementsByTagName('SellerSKU');
-                if (!empty($oSKU)) {
-                    $sSKU = $oSKU->item(0)->nodeValue;
-                }
-                $aProductModels = array_filter(
-                    $this->aProducts,
-                    function ($e) use ($sSKU) {
-                        return $e->productcode == $sSKU;
-                    });
-                $oProductModel = reset($aProductModels);
-                $aLowestOfferListing = $aCompetitiveResult->getElementsByTagName('LowestOfferListing');
-                if (!empty($aLowestOfferListing)) {
-                    /** @var \DOMElement[] $aLowestOfferListing */
-                    foreach ($aLowestOfferListing as $LowestOfferListing) {
-                        $Offer = [];
-                        $sItemCondition = $sItemSubcondition = $sShipsDomestically = $sFulfillmentChannel = '';
-                        $ItemCondition = $LowestOfferListing->getElementsByTagName('ItemCondition');
-                        $ItemSubcondition = $LowestOfferListing->getElementsByTagName('ItemSubcondition');
-                        $FulfillmentChannel = $LowestOfferListing->getElementsByTagName('FulfillmentChannel');
-                        $ShipsDomestically = $LowestOfferListing->getElementsByTagName('ShipsDomestically');
-                        $MultipleOffersAtLowestPrice = $LowestOfferListing->getElementsByTagName('MultipleOffersAtLowestPrice');
-                        $AllOfferListingsConsidered = $LowestOfferListing->getElementsByTagName('AllOfferListingsConsidered');
-                        $NumberOfOfferListingsConsidered = $LowestOfferListing->getElementsByTagName('NumberOfOfferListingsConsidered');
-                        $SellerFeedbackCount = $LowestOfferListing->getElementsByTagName('SellerFeedbackCount');
-                        $ShippingTime = $LowestOfferListing->getElementsByTagName('ShippingTime');
-                        $SellerPositiveFeedbackRating = $LowestOfferListing->getElementsByTagName('SellerPositiveFeedbackRating');
-                        if (!empty($ItemCondition)) {
-                            $sItemCondition = $ItemCondition->item(0)->nodeValue;
-                        }
-                        if (!empty($ItemSubcondition)) {
-                            $sItemSubcondition = $ItemSubcondition->item(0)->nodeValue;
-                        }
-                        if ($sItemCondition == 'New' && $sItemSubcondition == 'New' && ($sShipsDomestically = 'Unknown' || $sShipsDomestically = 'True')) {
+            $aOffers = AmazonHelper::parseAmazonOffers($this->dom_xml_arr, $this->aProducts);
 
-                            if (!empty($FulfillmentChannel)) {
-                                switch ($FulfillmentChannel->item(0)->nodeValue) {
-                                    case 'Merchant':
-                                        $Offer['lp_FulfillmentChannel'] = 'MFN';
-                                        break;
-                                    case 'Amazon':
-                                        $Offer['lp_FulfillmentChannel'] = 'AFN';
-                                        break;
-                                }
-                            }
-                            if (!empty($ShipsDomestically)) {
-                                $sShipsDomestically = $ShipsDomestically->item(0)->nodeValue;
-                            }
-                            if (!empty($MultipleOffersAtLowestPrice)) {
-                                switch ($MultipleOffersAtLowestPrice->item(0)->nodeValue) {
-                                    case 'True':
-                                        $Offer['lp_MultipleOfferListingsAtLowestPrice'] = 'Y';
-                                        break;
-                                    case 'False':
-                                        $Offer['lp_MultipleOfferListingsAtLowestPrice'] = 'N';
-                                        break;
-                                }
-                            }
-                            if (!empty($AllOfferListingsConsidered)) {
-                                switch ($MultipleOffersAtLowestPrice->item(0)->nodeValue) {
-                                    case 'True':
-                                        $Offer['lp_AllOfferListingsConsidered'] = 'Y';
-                                        break;
-                                    case 'False':
-                                        $Offer['lp_AllOfferListingsConsidered'] = 'N';
-                                        break;
-                                }
-                            }
-                            if (!empty($NumberOfOfferListingsConsidered)) {
-                                $Offer['lp_NumberOfOfferListingsConsidered'] = intval($NumberOfOfferListingsConsidered->item(0)->nodeValue);
-                            }
-                            if (!empty($SellerFeedbackCount)) {
-                                $Offer['lp_SellerFeedbackCount'] = intval($SellerFeedbackCount->item(0)->nodeValue);
-                            }
-                            if (!empty($SellerPositiveFeedbackRating)) {
-                                $Offer['lp_SellerPositiveFeedbackRating'] = $SellerPositiveFeedbackRating->item(0)->nodeValue;
-                            }
-                            if (!empty($ShippingTime)) {
-                                /** @var \DOMNodeList $ShippingTime */
-                                $ShippingTimeMax = $ShippingTime->item(0)->getElementsByTagName('Max');
-                                if (!empty($ShippingTimeMax)) {
-                                    $Offer['lp_ShippingTime'] = $ShippingTimeMax->item(0)->nodeValue;
-                                }
-                            }
-                            /** @var \DOMElement[] $LandedPrice */
-                            $LandedPrice = $LowestOfferListing->getElementsByTagName('LandedPrice');
-                            if (!empty($LandedPrice)) {
-                                $Amount = $LandedPrice->item(0)->getElementsByTagName('Amount');
-                                if (!empty($Amount)) {
-                                    $Offer['lp_LandedPrice'] = floatval($Amount->item(0)->nodeValue);
-                                }
-                            }
-                            $Offer['productcode'] = $sSKU;
-                            $Offer['productid'] = $oProductModel->productid;
-                            $Offer['ASIN'] = $sAsin;
-                            $aOffers[] = $Offer;
-                        }
-                    }
-                }
-                if (!empty($aOffers)) {
-                    array_multisort(
-                        array_map(function ($a) {
-                            return $a['lp_FulfillmentChannel'];
-                        }, $aOffers), SORT_ASC,
-                        array_map(function ($a) {
-                            return $a['lp_LandedPrice'];
-                        }, $aOffers), SORT_ASC,
-                        $aOffers);
-                    $aOffer = reset($aOffers);
-                    $aOffer['report_date'] = $iReportDate;
-                    $params = ['productcode' => $aOffer['productcode'], 'productid' => $aOffer['productid'], 'report_date' => $aOffer['report_date']];
-                    if ($oAmazonFbaProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
-                        $oAmazonFbaProductModel->setAttributes($aOffer);
-                        if ($oAmazonFbaProductModel->productid) {
-                            $oAmazonFbaProductModel->save();
-                        }
+            if (!empty($aOffers)) {
+                array_multisort(
+                    array_map(function ($a) {
+                        return $a['lp_FulfillmentChannel'];
+                    }, $aOffers), SORT_ASC,
+                    array_map(function ($a) {
+                        return $a['lp_LandedPrice'];
+                    }, $aOffers), SORT_ASC,
+                    $aOffers);
+                $aOffer = reset($aOffers);
+                $aOffer['report_date'] = $iReportDate;
+                $params = ['productcode' => $aOffer['productcode'], 'productid' => $aOffer['productid'], 'report_date' => $aOffer['report_date']];
+                if ($oAmazonFbaProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
+                    $oAmazonFbaProductModel->setAttributes($aOffer);
+                    if ($oAmazonFbaProductModel->productid) {
+                        $oAmazonFbaProductModel->save();
                     }
                 }
             }
         }
+        return $this;
     }
 
     public function doGetCompetitivePricing()
