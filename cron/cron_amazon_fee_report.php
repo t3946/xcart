@@ -21,7 +21,7 @@ if ($config[LOG_CATEGORY] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
     $oMail->body = Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME . ' already launched';
     $oMail->sendEmail();
-    //die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 
