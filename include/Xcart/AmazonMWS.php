@@ -430,6 +430,13 @@ SQL;
             }
 
             foreach ($ReportContent as $report_data) {
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new \Monolog\Logger('fee_report');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->debug($log_text, [$report_data]);
+                }
+
                 $cntLine = 0;
                 $aReportValue = [];
                 foreach (preg_split("/((\r?\n)|(\r\n?))/", $report_data) as $sLine) {
@@ -517,7 +524,7 @@ SQL;
             $log_text = "Processing " . count($ReportContent) . " reports";
             func_backprocess_log(self::BACK_PROCESS_LOG_NAME_SETTLEMENT, $log_text);
 
-            if ($this->bEnableLog) {
+            if ($this->bEnableLog && $this->sLogPrefix) {
                 $log = new \Monolog\Logger('settlement_report');
                 $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
                 $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
@@ -525,7 +532,7 @@ SQL;
 
             foreach ($ReportContent as $report_id => $report_data) {
                 if ($this->bEnableLog && $log) {
-                    $log->debug("SettlementReportId data:{$report_id}", $report_data);
+                    $log->debug("SettlementReportId data:{$report_id}", [$report_data]);
                 }
 
                 $aOrderDetails = [];
@@ -880,6 +887,12 @@ SQL;
         $ReportContent = $this->getReportContent();
         if (!empty($ReportContent)) {
             foreach ($ReportContent as $report_id => $report_data) {
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new \Monolog\Logger('amazon_info');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->debug("processReportReservedInventory - ReportId:{$report_id}", [$report_data]);
+                }
                 $cntLine = 0;
                 $aReportValue = [];
                 foreach (preg_split("/((\r?\n)|(\r\n?))/", $report_data) as $sLine) {
@@ -1710,6 +1723,12 @@ SQL;
                 $this->error[] = $this->dom_xml_arr["Caught_Exception"];
             }
             if (empty($this->error)) {
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new \Monolog\Logger('amazon_info');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->debug('GetLowestOfferListingsForSKU', [$this->dom_xml_arr]);
+                }
                 $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
                 $this->dom_xml_arr = str_replace('http://mws.amazonservices.com/schema/Products/2011-10-01', '', $this->dom_xml_arr);
                 $docShipping = new \DOMDocument;
@@ -1855,6 +1874,12 @@ SQL;
                 $this->error[] = $this->dom_xml_arr["Caught_Exception"];
             }
             if (empty($this->error)) {
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new \Monolog\Logger('amazon_info');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->debug('GetCompetitivePricing', [$this->dom_xml_arr]);
+                }
                 $this->dom_xml_arr = str_replace('http://mws.amazonservices.com/schema/Products/2011-10-01', '', $this->dom_xml_arr);
                 $docShipping = new \DOMDocument;
                 $docShipping->loadXML($this->dom_xml_arr);
@@ -1878,6 +1903,7 @@ SQL;
                     if ($oProductModel) {
                         $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
                         if ($oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
+                            $oAmazonProductModel->report_date = $iReportDate;
                             $aSalesRanking = $aCompetitivePricing->getElementsByTagName('SalesRankings');
                             if (!empty($aSalesRanking)) {
                                 /** @var \DOMElement[] $aSalesRanking */
@@ -1960,6 +1986,12 @@ SQL;
                 if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
                     return $this;
                 }
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new \Monolog\Logger('amazon_info');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->debug('ListInventorySupply', [$this->dom_xml_arr]);
+                }
                 $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
                 $this->dom_xml_arr = str_replace('http://mws.amazonaws.com/FulfillmentInventory/2010-10-01/', '', $this->dom_xml_arr);
                 $docShipping = new \DOMDocument;
@@ -1989,6 +2021,7 @@ SQL;
                                 if (!empty($aInStockSupplyQuantity)) {
                                     $oAmazonProductModel->lis_InStockSupplyQuantity = $aInStockSupplyQuantity->item(0)->nodeValue;
                                 }
+                                $oAmazonProductModel->report_date = $iReportDate;
                                 $oAmazonProductModel->save();
                             }
                         }
