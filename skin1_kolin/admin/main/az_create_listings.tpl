@@ -18,7 +18,7 @@
 </form>
 {/capture}
 
-{include file="dialog.tpl" title='Creating Product Listings on Amazon' content=$smarty.capture.amazon_products_listing extra='width="100%"'}
+{include file="dialog.tpl" title="Creating Product Listings on Amazon (`$total_items`)" content=$smarty.capture.amazon_products_listing extra='width="100%"'}
 {literal}
     <script type="text/javascript">
         $('button.button').on('click','',function(){
