@@ -530,6 +530,7 @@ class AmazonHelper
         if (!$oAmazonFbaProductModel) {
             $oAmazonFbaProductModel = (new AmazonFbaProductModel());
         }
+        $oAmazonFbaProductModel->setAttributes($params);
         return $oAmazonFbaProductModel;
     }
 
@@ -557,7 +558,7 @@ class AmazonHelper
      */
     public static function parseAmazonOffers($report_data, $aProducts)
     {
-        $aOffers = [];
+        $aProductOffers = [];
         $report_data = str_replace('http://mws.amazonservices.com/schema/Products/2011-10-01', '', $report_data);
         $docShipping = new \DOMDocument;
         $docShipping->loadXML($report_data);
@@ -669,10 +670,19 @@ class AmazonHelper
                         $aOffers[] = $Offer;
                     }
                 }
+                if (!empty($aOffers)) {
+                    array_multisort(
+                        array_map(function ($a) {
+                            return $a['lp_FulfillmentChannel'];
+                        }, $aOffers), SORT_ASC,
+                        array_map(function ($a) {
+                            return $a['lp_LandedPrice'];
+                        }, $aOffers), SORT_ASC,
+                        $aOffers);
+                    $aProductOffers[] = reset($aOffers);
+                }
             }
-
         }
-        return $aOffers;
+        return $aProductOffers;
     }
-
 }
