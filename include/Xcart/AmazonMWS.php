@@ -466,7 +466,10 @@ SQL;
 
         $aFieldsToUpdate = ['productid', 'fnsku', 'asin', 'longest_side', 'median_side', 'shortest_side', 'length_and_girth', 'unit_of_dimension',
             'item_package_weight', 'unit_of_weight', 'product_size_tier', 'estimated_fee_total', 'estimated_referral_fee_per_unit', 'estimated_variable_closing_fee',
-            'estimated_order_handling_fee_per_order', 'estimated_pick_pack_fee_per_unit', 'estimated_weight_handling_fee_per_unit', 'amazon_fee_preview_last_update_date'];
+            'estimated_order_handling_fee_per_order', 'estimated_pick_pack_fee_per_unit', 'estimated_weight_handling_fee_per_unit', 'amazon_fee_preview_last_update_date',
+            'expected-fulfillment-fee-per-unit', 'estimated-future-order-handling-fee-per-order', 'estimated-future-pick-pack-fee-per-unit',
+            'estimated-future-weight-handling-fee-per-unit', 'expected-future-fulfillment-fee-per-unit'];
+
         $aFieldsToUpdate = array_flip($aFieldsToUpdate);
         foreach ($this->aReportValue as $aReport) {
             foreach ($aReport as $aItem) {
@@ -474,10 +477,22 @@ SQL;
                 $aArrInsert['amazon_fee_preview_last_update_date'] = time();
                 $allItemsCount++;
 
-                if (in_array('--', $aArrInsert)) { //@TASK: 9973238
+                if (!is_numeric($aArrInsert['expected-fulfillment-fee-per-unit'])) { //@TASK: 9973238
                     $skippedItemsCount++;
                     continue;
                 }
+
+                $aArrInsert['estimated_fee_total'] = floatval($aArrInsert['estimated_fee_total']);
+                $aArrInsert['estimated_referral_fee_per_unit'] = floatval($aArrInsert['estimated_referral_fee_per_unit']);
+                $aArrInsert['estimated_variable_closing_fee'] = floatval($aArrInsert['estimated_variable_closing_fee']);
+                $aArrInsert['estimated_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_order_handling_fee_per_order']);
+                $aArrInsert['estimated_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_pick_pack_fee_per_unit']);
+                $aArrInsert['estimated_weight_handling_fee_per_unit'] = floatval($aArrInsert['estimated_weight_handling_fee_per_unit']);
+                $aArrInsert['expected-fulfillment-fee-per-unit'] = floatval($aArrInsert['expected-fulfillment-fee-per-unit']);
+                $aArrInsert['estimated-future-order-handling-fee-per-order'] = floatval($aArrInsert['estimated-future-order-handling-fee-per-order']);
+                $aArrInsert['estimated-future-pick-pack-fee-per-unit'] = floatval($aArrInsert['estimated-future-pick-pack-fee-per-unit']);
+                $aArrInsert['expected-fulfillment-fee-per-unit'] = floatval($aArrInsert['expected-fulfillment-fee-per-unit']);
+                $aArrInsert['expected-future-fulfillment-fee-per-unit'] = floatval($aArrInsert['expected-future-fulfillment-fee-per-unit']);
 
                 if (!empty($aArrInsert['productid'])) {
                     try {
