@@ -610,6 +610,7 @@ if ($mode == "add") {
 		$current_category['google_product_category'] = '';
 		$current_category['title_tag'] = '';
 		$current_category['meta_descr'] = '';
+		$current_category['description'] = '';
 		$smarty->assign('current_category', $current_category);
 	}
 }
