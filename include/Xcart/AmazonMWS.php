@@ -990,6 +990,9 @@ SQL;
                     $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('lp_LandedPrice', floatval($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('lp_LandedPrice')) + floatval($oFbaProduct->getField('lp_LandedPrice')));
                     $aAggregateStat[$iProductId][$iReportTimeStamp]['lp_LandedPrice']++;
 
+                    $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('buybox_in', intval($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('buybox_in')) + intval($oFbaProduct->getField('buybox_in')));
+                    $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('buybox_out', intval($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('buybox_out')) + intval($oFbaProduct->getField('buybox_out')));
+
                     if ($aAggregateRows[$iProductId][$iReportTimeStamp]->getField('lp_MultipleOfferListingsAtLowestPrice') != 'Y') {
                         if ($oFbaProduct->getField('lp_MultipleOfferListingsAtLowestPrice') == '') {
                             $aAggregateRows[$iProductId][$iReportTimeStamp]->setField('lp_MultipleOfferListingsAtLowestPrice', 'N');
