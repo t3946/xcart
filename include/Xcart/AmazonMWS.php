@@ -1833,9 +1833,11 @@ SQL;
                                         switch ($CompetitivePrice->getAttribute('belongsToRequester')) {
                                             case 'true':
                                                 $oAmazonProductModel->cpr_belongs_LandedPrice = $sLandedPrice;
+                                                $oAmazonProductModel->buybox_in++;
                                                 break;
                                             case 'false':
                                                 $oAmazonProductModel->cpr_LandedPrice = $sLandedPrice;
+                                                $oAmazonProductModel->buybox_out++;
                                                 break;
                                         }
                                     }
