@@ -7,6 +7,11 @@ return [
         'name' => 'index'
     ],
     [
+        'route' => '/subscription/{i:id}',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'subscription'],
+        'name' => 'filter_subscription'
+    ],
+    [
         'route' => '/create/filter',
         'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'create'],
         'name' => 'create_filter'

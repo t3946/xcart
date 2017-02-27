@@ -6,7 +6,7 @@
 {block 'content'}
     {smarty_admin_block name='My dashboard'}
 
-        {include 'dashboard/dashboard_group.tpl' models=$myModels}
+        {include 'dashboard/dashboard_group.tpl' models=$myModels title='My Dashboard'}
     {/smarty_admin_block}
 
     {smarty_admin_block name='Order dashboard'}
@@ -17,4 +17,16 @@
         {/foreach}
 
     {/smarty_admin_block}
+{/block}
+
+{block 'js'}
+    {parent}
+    <script>
+        $('.dashboard-filters.index a[data-id]').majaxtooltip({
+            onAfterSubmit: function() {
+                this.setContent("<div class='load'></div>")
+            }
+        });
+
+    </script>
 {/block}

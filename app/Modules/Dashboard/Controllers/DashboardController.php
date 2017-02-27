@@ -5,7 +5,9 @@ namespace Modules\Dashboard\Controllers;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Models\GroupModel;
+use Modules\Dashboard\Models\UserFiltersLinkModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\User\Models\UserModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
@@ -77,9 +79,41 @@ class DashboardController extends PrototypeAdminController
 
             if ($model->isValid() && $model->save(['position_row', 'position_column'])) {
 
-                $this->jsonResponse(['message' => "Filter '{$model}' saved"]);
+                $this->jsonResponse(['message' => "Filter '{$model}' saved on position {$model->position_row}x{$model->position_column}"]);
             }
         }
+    }
+
+    public function subscription($id)
+    {
+        $class = UserModel::classNameShort();
+        $model = UserModel::objects()->get(['login' => Xcart::app()->request->session->get('login')]);
+
+        $users = [];
+        $u_ids = UserFiltersLinkModel::objects()->filter(['filter_id' => $id])->valuesList(['user_id'], true);
+
+        if ($u_ids) {
+            $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();
+        }
+
+        if ($this->getRequest()->getIsPost()) {
+            if ($_POST[$class]) {
+                UserFiltersLinkModel::objects()->getOrCreate(['user_id' => $model->id, 'filter_id' => $id]);
+                $this->refresh();
+            }
+            else {
+                UserFiltersLinkModel::objects()->filter(['user_id' => $model->id, 'filter_id' => $id])->delete();
+                $this->refresh();
+            }
+        }
+
+        echo $this->render('dashboard/subscription.tpl', [
+            'id' => $id,
+            'class' => $class,
+            'ids' => $u_ids,
+            'users' => $users,
+            'model' => $model,
+        ]);
     }
 
 

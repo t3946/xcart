@@ -9,7 +9,12 @@
                             <div class="container" data-row="{$row}" data-col="{$col}" data-group="{$group}">
                                 {foreach $models as $model}
                                     {if $model->position_row == $row && $model->position_column == $col}
-                                        <a href="{$model->getAbsoluteUrl()}" class="{if $model->getSearchStorage()->getCashedCount() == 0}empty{else}button{/if}" target="_blank">
+                                        <a href="{$model->getAbsoluteUrl()}"
+                                           class="{if $model->getSearchStorage()->getCashedCount() == 0}empty{else}button{/if}"
+                                           target="_blank"
+                                           data-id="{$model->id}"
+                                           data-action="{url 'dashboard:filter_subscription' id=$model->id}"
+                                           title="{$model}">
                                             <div class="row">
                                                 <div class="columns large-2">
                                                     {if $model->tag}
