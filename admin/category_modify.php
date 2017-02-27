@@ -605,11 +605,7 @@ $location[] = array(func_get_langvar_by_name("lbl_categories_management"), "cate
 if ($mode == "add") {
 	$location[] = array(func_get_langvar_by_name("lbl_add_category"), "category_modify.php?mode=add&cat=$cat");
 	if (!empty($current_category)) {
-		$current_category['SEO_category_name'] = '';
-		$current_category['SEO_h2'] = '';
-		$current_category['google_product_category'] = '';
-		$current_category['title_tag'] = '';
-		$current_category['meta_descr'] = '';
+		unset($current_category);
 		$smarty->assign('current_category', $current_category);
 	}
 }
