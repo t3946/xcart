@@ -42,8 +42,8 @@ if (!empty($aStoreFronts)) {
             ->select('t.*')
             ->from('xcart_products')
             ->setAlias('t')
-            ->join('inner join', 'xcart_manufacturers', ['t.manufacturerid' => 'mnf.manufacturerid'], 'mnf')
-            ->where(['t.pc_classify_status' => 'AC', 't.forsale' => 'Y', 'mnf.d_main_sf' => $oStoreFront->getStoreFrontId()])
+            ->join('inner join', 'xcart_products_sf', ['t.productid' => 'psf.productid'], 'psf')
+            ->where(['t.pc_classify_status' => 'AC', 't.forsale' => 'Y', 'psf.sfid' => $oStoreFront->getStoreFrontId()])
             ->toSQL();
         $iCount = $connection->executeQuery($productSql)->rowCount();
         if ($iCount) {
