@@ -524,6 +524,8 @@ class AmazonHelper
                     $oAmazonFbaProductModel = new AmazonFbaProductModel();
                     $oAmazonFbaProductModel->setAttributes($oAmazonFbaProductModelOld->getAttributes());
                     $oAmazonFbaProductModel->id = null;
+                    $oAmazonFbaProductModel->buybox_out = 0;
+                    $oAmazonFbaProductModel->buybox_in = 0;
                 }
             }
         }
