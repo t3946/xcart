@@ -28,7 +28,6 @@ class SliderData
         global $XCART_SESSION_NAME, $$XCART_SESSION_NAME;
         global $variant_id_for_point9, $is_robot;
 
-        x_load("product");
         x_session_register("cart");
 
         $section_name = $mode;
@@ -202,14 +201,12 @@ SQL;
                 if (!empty($productid) && $v["needed_resource_id"] == $productid) {
                     continue;
                 }
-                $product_info = func_select_product($v["needed_resource_id"], 0, false);
-
-                if (!empty($product_info))
+                $oProduct = Product::objects()->get(['productid' => $v["needed_resource_id"]]);
+                if ($oProduct)
                 {
-                    $p_ids[] = $v["needed_resource_id"];
-
-                    $product_info["product"] = str_replace("'", "&#39;", $product_info["product"]);
-                    $products[] = $product_info;
+                    $p_ids[] = $oProduct->productid;
+                    $oProduct->product = str_replace("'", "&#39;", $oProduct->product);
+                    $products[] = $oProduct;
                 }
             }
         }

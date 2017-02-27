@@ -112,7 +112,7 @@ class Product extends Data
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->getField('storefrontid'));
     }
 
-    public function getURL($http = 'http://')
+    public function getURL($http = '//')
     {
         return $http . $this->getStoreFront()->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
     }
@@ -225,7 +225,7 @@ class Product extends Data
 
 
     /**
-     * @param $type
+     * @param string $type
      * @return ProductImage[]
      */
     public function getImages($type)

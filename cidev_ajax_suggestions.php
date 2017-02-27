@@ -1,7 +1,8 @@
 <?php
-
-//require './auth.php';  #uses xid
-
+/**
+ * @var \Xcart\Product $oProduct
+ */
+global $REQUEST_METHOD, $smarty, $config;
 #
 ## ALWAYS USE IT if you do not require auth.php
 ###
@@ -12,54 +13,39 @@ define('x_session_save_to_db__do_not_use', 'Y');
 require "./top.inc.php";
 require "./init.php"; #uses xid.X
 
-
 $current_area="C";
-###
-##
-#
 
 list($products, $sGoogleAnaliticsParam) = Xcart\Helpers\SliderData::getSliderData($section_name, $productid);
 
 if ($REQUEST_METHOD == 'POST') {
 	if (!empty($products)){
+        $aResult = [];
+        foreach ($products as $k => $oProduct){
+            $oThumbImage = null;
+            $aThumbImages = \Modules\Product\Models\ImageTModel::objects()->filter(['id' => $oProduct->productid])->all();
+            if (!empty($aThumbImages)) {
+                $oThumbImage = reset($aThumbImages);
+            }
+            $oBrand = \Xcart\Brand::objects()->get(['brandid' => $oProduct->brandid]);
+            $oSplash = \Xcart\Images\Splash::objects()->filter(['id' => (int) $oProduct->splash_id])->get();
+            $smarty->assign('splash', $oSplash);
+            $smarty->assign('config', $config);
+            $smarty->assign('tmbn_url', $oThumbImage->getURL());
+            $smarty->assign('product', $oProduct->product);
 
-		$count_products = count($products);
+            $aResult['items'][] = [
+                'productid' => $oProduct->productid,
+                'clean_url' => $oProduct->getURL(),
+                'price' => $oProduct->getPrice(),
+                'category' => $oProduct->getMainCategory()->category,
+                'brand' => $oBrand->brand,
+                'product' => $oProduct->product,
+                'thumb' => $smarty->fetch('product_thumbnail.tpl'),
+                'N_key' => $k + 1,
+                'ga_param' => $sGoogleAnaliticsParam,
+                'title' => $oProduct->product];
 
-		$products_str = '{"items": [';
-		foreach ($products as $k => $v){
-
-			$products_str .= '{';
-				$products_str .= '"productid": "'.$v["productid"].'",';
-				$products_str .= '"clean_url": "'.$v["clean_url"].'",';
-				$products_str .= '"src": "'.(empty($v["tmbn_url_T"]) ? $v["tmbn_url"] : $v["tmbn_url_T"]).'",';
-				$products_str .= '"price": "'.$v["price"].'",';
-
-				$products_str .= '"category": "'.func_add_slashes($v["category"]).'",';
-				$products_str .= '"brand": "'.func_add_slashes($v["brand"]).'",';
-
-				$products_str .= '"product": "'.func_add_slashes(str_replace(array("\r","\n"),"",$v["product"])).'",';
-
-                if ($v['oSplash']) {
-                    $sImagePath = '';
-                    if ($config['Appearance']['Enable_CDN'] == "Y") {
-                        $sImagePath = $config['Appearance']['CDN_domain'];
-                    }
-                    $products_str .= '"splash": "' . $sImagePath. $v['oSplash']->image_path . '",';
-                }
-
-				$N_key = $k + 1;
-				$products_str .= '"N_key": "'.$N_key.'",';
-				if (!empty($sGoogleAnaliticsParam)) $products_str .= '"ga_param": "'.$sGoogleAnaliticsParam.'",';
-
-				$products_str .= '"title": "'.addslashes(str_replace(array("\r","\n"),"",$v["product"])).'"';
-			$products_str .= '}';
-
-			if (($count_products -1)!= $k) $products_str .= ',';
 		}
-		$products_str .= ']}';
-
-		echo $products_str;
-
+		echo json_encode($aResult);
 	}
-
 }
