@@ -16,13 +16,16 @@ class OrderTransactions extends Data
 
     }
 
-    public function getOrderTransactionsByOrderIdAndStatus($iOrderId, $Status = [])
+    /**
+     * @return OrderTransaction[]
+     */
+    public static function getOrderTransactionsByOrderIdAndStatus($iOrderId, $Status = [])
     {
         $aOrderTransactions = [];
 
         $oSQL = SQLBuilder::getInstance();
 
-        $oSQL->addSelect('*')->addFromTable($this->sPrimaryTable)->addCondition("orderid = " . $iOrderId);
+        $oSQL->addSelect('*')->addFromTable('order_transactions')->addCondition("orderid = " . $iOrderId);
         if (!empty($Status) && is_array($Status)) {
             $oSQL->addCondition("transaction_status IN ('" . implode("','", $Status)."')");
         }

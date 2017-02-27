@@ -173,7 +173,6 @@ if (!empty($active_modules['Mailchimp_Subscription'])) {
 }
 
 
-include $xcart_dir.DIR_CUSTOMER."/referer.php";
 
 include $xcart_dir."/include/check_useraccount.php";
 
@@ -219,8 +218,18 @@ if (!empty($active_modules["Subscriptions"])) {
         $smarty->assign("user_subscription", is_user_subscribed($login));
     }
 }
+$pages_sql = /** @lang MySQL */ <<<SQL
+SELECT * 
+FROM {$sql_tbl['pages']} 
+WHERE language='{$store_language}' 
+  AND active='Y' 
+  AND level='E' 
+  AND orderby <= '500'
+  AND (sfids = '' or sfids like '%{$current_storefront}%')
+ORDER BY orderby, title
+SQL;
 
-$pages_menu = func_query("SELECT * FROM $sql_tbl[pages] WHERE language='$store_language' AND active='Y' AND level='E' AND orderby <= '500' ORDER BY orderby, title");
+$pages_menu = func_query($pages_sql);
 
 #
 ##

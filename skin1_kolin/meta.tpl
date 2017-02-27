@@ -1,6 +1,8 @@
 {* $Id: meta.tpl,v 1.26.2.1 2006/10/10 07:35:18 max Exp $ *}
 <meta http-equiv="Content-Type" content="text/html; charset={$default_charset|default:"iso-8859-1"}" />
 
+{$config.Company.html_into_head}
+
 <!-- Google verification META tags -->
 <meta name="google-site-verification" content="PK6Exg58lxvKvOxDTtMymHgTCmUipFuJS9O9ZrYYiVg" />
 <meta name="google-site-verification" content="6k-TabU_BDiTSvqSlFcEi8vkUrUObseKUFaOWlJJ1E4" />
@@ -17,34 +19,6 @@
 <meta name="p:domain_verify" content="5ff39d33efcb0710fb45e8addaf474e5"/>
 
 <!-- Google verification META tags -->
-
-<meta name="AB_relations" content="{$variant_id_for_point10}" />
-<meta name="AB_search" content="{$variant_id_for_point11}" />
-
-<script type="text/javascript" lang="Javascript" id="sorting-info">
-    console.groupCollapsed('Modification category output');
-    console.group('A/B');
-    console.log('AB relations','{$variant_id_for_point10}');
-    console.log('AB search','{$variant_id_for_point11}');
-    console.groupEnd();
-
-{if $variant_id_for_point10 or $variant_id_for_point11}
-
-    {if $t1_arr}
-    console.log('Relations for last viewed', 'Count: {$t1_arr_count}' );
-    {/if}
-
-    {if $t3_arr}
-    console.group('Append in sorting');
-    console.table({$t3_arr});
-    console.groupEnd();
-    {/if}
-
-    console.groupEnd();
-
-{/if}
-</script>
-
 
 <!-- bench time -->
 <meta name="{$bench_name}" content="{$bench_time}" />
@@ -150,8 +124,6 @@ var usertype = "{$usertype}";
  *}
  {/if}
 {/if}
-
-{$current_storefront_info.html_into_head}
 
 {if $webmaster_mode eq "editor"}
 <script type="text/javascript" language="JavaScript 1.2">

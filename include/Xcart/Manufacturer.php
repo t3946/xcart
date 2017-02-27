@@ -5,7 +5,6 @@ class Manufacturer extends Data
 {
     const ADMIN_MANUFACTURER_MODIFY_URL = '/admin/manufacturers.php?manufacturerid=%d';
 
-    private $iAmazonLeadTime = null;
 
     public function __construct($iId = null)
     {
@@ -15,9 +14,9 @@ class Manufacturer extends Data
         parent::__construct($iId);
     }
 
-    public function getManufacturerModifyURL()
+    public function getAdminUrl()
     {
-        return sprintf(self::ADMIN_MANUFACTURER_MODIFY_URL, $this->getField($this->getManufacturerId()));
+        return sprintf(self::ADMIN_MANUFACTURER_MODIFY_URL, $this->getManufacturerId());
     }
 
     public function getManufacturerName()
@@ -37,15 +36,7 @@ class Manufacturer extends Data
 
     public function getAmazonLeadtimetoship()
     {
-        if (is_null($this->iAmazonLeadTime)) {
-            $aResult = SQLBuilder::getInstance()->
-            addSelect("cidev_get_amazon_fulfillment_latency('" . $this->getManufacturerCode() . "')", 'aleadtime')->
-            addFromTable('manufacturers')->
-            addCondition('manufacturerid='.$this->getManufacturerId())->
-            query_first()->getQueryResult();
-            $this->iAmazonLeadTime = $aResult['aleadtime'];
-        }
-        return $this->iAmazonLeadTime;
+        return $this->getField('amazon_leadtime_to_ship');
     }
 
 }

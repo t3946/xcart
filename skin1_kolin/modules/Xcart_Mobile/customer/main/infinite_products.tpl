@@ -73,7 +73,7 @@ ga('ec:addImpression', {ldelim}
 
           <a href="{$current_location}/product.php?productid={$product.productid}" class="ui-link-inherit">
             <span class="product-thumbnail">
-              {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url}
+              {include file="product_thumbnail.tpl" productid=$product.productid product=$product.product tmbn_url=$product.tmbn_url splash=$product.oSplash}
               <img src="{$ImagesDir}/spacer.gif" class="leveler" alt="" />
               <span class="labels">
                 {if $active_modules.On_Sale}

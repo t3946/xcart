@@ -31,13 +31,21 @@ if ($REQUEST_METHOD == 'POST') {
 			$products_str .= '{';
 				$products_str .= '"productid": "'.$v["productid"].'",';
 				$products_str .= '"clean_url": "'.$v["clean_url"].'",';
-				$products_str .= '"src": "'.$v["tmbn_url"].'",';
+				$products_str .= '"src": "'.(empty($v["tmbn_url_T"]) ? $v["tmbn_url"] : $v["tmbn_url_T"]).'",';
 				$products_str .= '"price": "'.$v["price"].'",';
 
 				$products_str .= '"category": "'.func_add_slashes($v["category"]).'",';
 				$products_str .= '"brand": "'.func_add_slashes($v["brand"]).'",';
 
 				$products_str .= '"product": "'.func_add_slashes(str_replace(array("\r","\n"),"",$v["product"])).'",';
+
+                if ($v['oSplash']) {
+                    $sImagePath = '';
+                    if ($config['Appearance']['Enable_CDN'] == "Y") {
+                        $sImagePath = $config['Appearance']['CDN_domain'];
+                    }
+                    $products_str .= '"splash": "' . $sImagePath. $v['oSplash']->image_path . '",';
+                }
 
 				$N_key = $k + 1;
 				$products_str .= '"N_key": "'.$N_key.'",';

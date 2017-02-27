@@ -130,6 +130,14 @@ class QueryBuilder
     }
 
     /**
+     * @param  $connection \Doctrine\DBAL\Connection
+     */
+    public function setConnection($connection)
+    {
+        $this->connection = $connection;
+    }
+
+    /**
      * @return \Doctrine\DBAL\Platforms\AbstractPlatform
      */
     public function getDatabasePlatform()
@@ -493,8 +501,8 @@ class QueryBuilder
         } else if ($tableName instanceof QueryBuilder) {
             $this->_join[] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
         } else {
-            $this->_join[$tableName] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
-            $this->_joinAlias[$tableName] = $alias;
+            $this->_join[$alias] = $this->getAdapter()->sqlJoin($joinType, $tableName, $on, $alias);
+            $this->_joinAlias[$tableName][] = $alias;
         }
         return $this;
     }
@@ -611,6 +619,11 @@ class QueryBuilder
         return $this->_joinAlias[$tableName];
     }
 
+    public function getJoins()
+    {
+        return $this->_join;
+    }
+
     /**
      * @param $condition
      * @return string
@@ -694,7 +707,9 @@ class QueryBuilder
      */
     public function where($condition)
     {
-        $this->_whereAnd[] = $condition;
+        if (!empty($condition)) {
+            $this->_whereAnd[] = $condition;
+        }
         return $this;
     }
 

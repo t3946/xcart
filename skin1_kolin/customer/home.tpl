@@ -186,7 +186,11 @@ function func_load_ajax_carousel_products(section_name)
                     ga_page_name = this.ga_param;
                     html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price+'" data-position="'+this.N_key+'" class="active">' +
                         '<div style="text-align: center;">' +
-                        '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;"><img src="' + this.src + '" alt="' + this.product + '"></a>' +
+                        '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">';
+                    if (this.splash && this.splash.length) {
+                        html += '<div style="position: absolute;" class="images_splash"><img src="' + this.splash + '" /></div>';
+                    }
+                    html += '<img src="' + this.src + '" alt="' + this.product + '"></a>' +
                         '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">' + this.title + '</a>' +
                         '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price + '</font>' +
                         '</div>' +

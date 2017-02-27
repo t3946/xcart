@@ -38,7 +38,7 @@ class Amazon extends ShippingProcessor
                 if (!empty($aFetchRates)) {
                     $aAmazonMethods = array_keys($aFetchRates);
                     foreach ($aShippingRates as $oShippingRate) {
-                        if (in_array($oShippingRate->getShippingEntity()->getName(), $aAmazonMethods)) {
+                        if (in_array($oShippingRate->getShippingEntity()->getName(), $aAmazonMethods) && !is_null($aFetchRates[$oShippingRate->getShippingEntity()->getName()])) {
                             $this->aShippingRates[] = $oShippingRate->setShippingChargeQuote($aFetchRates[$oShippingRate->getShippingEntity()->getName()]);
                         }
                     }
@@ -63,10 +63,10 @@ class Amazon extends ShippingProcessor
             if (!empty($aProducts)) {
                 /** @var CartElement $oCartElement */
                 foreach ($aProducts as $oCartElement) {
-                    if (($oCartElement->getProduct()->isAmazonFBAEnabled() && ($oCartElement->getProduct()->getAmazonFBAAvailExcludedProcessing() > 0)) ||
-                        count($oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild($oCartElement->getQuantity())) > 0
-                    ) {
-                        $this->oCarierCart->addObjectToCart($oCartElement);
+                    if (($oCartElement->getProduct()->isAmazonFBAEnabled() &&
+                       ($oCartElement->getProduct()->getAmazonFBAAvailExcludedProcessing() >= $oCartElement->getQuantity())) ||
+                       count($oCartElement->getProduct()->getProductsAvailOnAmazonParentWithChild($oCartElement->getQuantity())) > 0) {
+                       $this->oCarierCart->addObjectToCart($oCartElement);
                     }
                 }
             }

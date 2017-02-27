@@ -1,6 +1,8 @@
 <?php
 namespace Xcart;
 
+use Modules\User\Models\ReferrerModel;
+
 class Order extends Data
 {
     const ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED = 'PV';
@@ -33,6 +35,9 @@ class Order extends Data
     private $aAdditionalFees = null;
     private $oPaymentMethod = null;
 
+    private $attension_tags = [];
+    private $tags = [];
+
     public function __construct($aOrderData = null)
     {
         $this->aPrimaryKeys = ['orderid'];
@@ -42,10 +47,17 @@ class Order extends Data
     }
 
 
+    public function __toString()
+    {
+        return $this->getDisplayOrderNumber();
+    }
+
     private function fetchOrderGroups()
     {
         if (is_null($this->aOrderGroups)) {
-            $this->aOrderGroups = OrderGroup::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            if ($this->getOrderId()) {
+                $this->aOrderGroups = OrderGroup::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            }
         }
         return $this;
     }
@@ -56,7 +68,9 @@ class Order extends Data
     public function getOrderDetails()
     {
         if (is_null($this->aOrderDetails)) {
-            $this->aOrderDetails = OrderDetail::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            if ($this->getOrderId()) {
+                $this->aOrderDetails = OrderDetail::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $this->getOrderId()));
+            }
         }
         return $this->aOrderDetails;
     }
@@ -132,45 +146,32 @@ class Order extends Data
         return count($this->aOrderGroups);
     }
 
-    private function fetchOrderProductsManufacturers()
+    public function setOrderGroup($value)
     {
-        if (!empty($this->aOrderProductsManufactueres) && is_array($this->aOrderProductsManufactueres)) {
-            $oManufacturers = new Manufacturers();
-            $aManufacturersInfo = $oManufacturers->getMainufacturersInfo($this->aOrderProductsManufactueres);
-            foreach ($this->aOrderProducts as &$oOrderProduct) {
-                $key = array_search($oOrderProduct->getField('manufacturerid'), array_column($aManufacturersInfo, 'manufacturerid'));
-                if ($key !== false) {
-                    $oOrderProduct->setProductManufacturer($aManufacturersInfo[$key]);
-                }
-            }
+        if (!$this->aOrderGroups) {
+            $this->aOrderGroups = [];
         }
+        $this->aOrderGroups[] = $value;
     }
 
-    private function fetchOrderProducts()
+    public function setTag($value)
     {
-        if (is_null($this->aOrderProducts)) {
-            $aProductIds = [];
-            $aOrderDetails = $this->getOrderDetails();
-            if (!empty($aOrderDetails) && is_array($aOrderDetails)) {
-                $oProducts = new Products();
-                foreach ($aOrderDetails as $oOrderDetail) {
-                    $aProductIds[] = $oOrderDetail->getField('productid');
-                }
-                $aProducts = $oProducts->getProductsInfo($aProductIds);
-                if (!empty($aProducts) && is_array($aProducts)) {
-                    $this->aOrderProductsManufactueres = [];
-                    foreach ($aProducts as $aProduct) {
-                        $oProduct = new Product();
-                        $oProduct->fill($aProduct);
-                        if (!in_array($oProduct->getField('manufacturerid'), $this->aOrderProductsManufactueres))
-                            $this->aOrderProductsManufactueres[] = $oProduct->getField('manufacturerid');
-                        $this->aOrderProducts[] = $oProduct;
-                    }
-                    $this->fetchOrderProductsManufacturers();
-                }
-            }
+        $this->tags[] = $value;
+    }
+
+    public function setTags($values)
+    {
+        if (!is_array($values))
+        {
+            $values = [$values];
         }
-        return $this;
+
+        $this->tags = $values;
+    }
+
+    public function getTags()
+    {
+        return $this->tags;
     }
 
     /**
@@ -178,7 +179,13 @@ class Order extends Data
      */
     public function getOrderProducts()
     {
-        $this->fetchOrderProducts();
+        if (is_null($this->aOrderProducts) && $this->orderid) {
+            $this->aOrderProducts = Product::objects()
+                                           ->getQuerySet()
+                                           ->join('inner join', 'xcart_order_details', ['productid' => 'details.productid'], 'details')
+                                           ->filter(['details.orderid' => $this->orderid])
+                                           ->all();
+        }
         return $this->aOrderProducts;
     }
 
@@ -186,9 +193,7 @@ class Order extends Data
     {
         if (!empty($this->aOrderProducts)) {
             foreach ($this->aOrderProducts as $key => $oProduct) {
-
                 if ($oProduct->getField('productid') == $iProductId) {
-                    // echo $oProduct->getField('productid')."\n".$iProductId."\n";
                     unset($this->aOrderProducts[$key]);
                 }
             }
@@ -200,7 +205,7 @@ class Order extends Data
         return $this->getField('order_prefix') . $this->getOrderId();
     }
 
-    public function getOrderModifyURL()
+    public function getAdminUrl()
     {
         return sprintf(self::ADMIN_ORDER_MODIFY_URL, $this->getOrderId());
     }
@@ -467,8 +472,10 @@ class Order extends Data
     {
         $fResult = 0;
         if (is_null($this->aAdditionalFees)) {
-            $oSQL = new SQLBuilder();
-            $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
+            if ($this->getOrderId()) {
+                $oSQL = new SQLBuilder();
+                $this->aAdditionalFees = $oSQL->init()->addSelect('*')->addFromTable('order_additional_fee')->addCondition('orderid=' . $this->getOrderId())->Execute()->getQueryResult();
+            }
         }
         if (!empty($this->aAdditionalFees)) {
             foreach ($this->aAdditionalFees as $aAFee) {
@@ -571,7 +578,7 @@ class Order extends Data
                 $fResult += $oOrderGroup->getTotalGross();
             }
         }
-        return $fResult + $this->getOrderAdditionalFee();
+        return round($fResult + $this->getOrderAdditionalFee(), 2);
     }
 
     public function getOrderCostToUs()
@@ -644,11 +651,15 @@ class Order extends Data
                 $oOrderGroup->reCalculateTotals();
             }
         }
+        return $this;
     }
 
     public function getPOPipelineInstance()
     {
-        return POPipeline::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
+        if ($this->getOrderId()) {
+            return POPipeline::model()->find(SQLBuilder::getInstance()->addCondition('order_id=' . $this->getOrderId()));
+        }
+        return null;
     }
 
     public function getCustomerEntity()
@@ -974,5 +985,33 @@ class Order extends Data
             }
         }
         return $po_details;
+    }
+
+    public function getCustomerInvoiceNextNumber()
+    {
+        $i = 1;
+        if ($this->getOrderId()) {
+            $sSQL = <<<SQL
+SELECT MAX(invoice_order_number)+1 as next_inv_number FROM xcart_order_cx_invoices WHERE orderid = {$this->getOrderId()}
+SQL;
+            $aRes = Connection::getInstance()->executeQuery($sSQL)->fetch();
+            if (!empty($aRes['next_inv_number'])) {
+                $i = (int)$aRes['next_inv_number'];
+            }
+        }
+        return $i;
+    }
+
+    public function getLastRefererUrl()
+    {
+        $sRefererDomain = null;
+
+        if ($this->referer_id)
+        {
+            if ($oRefererDomain = ReferrerModel::objects()->filter(['referer_id' => $this->referer_id])->get()) {
+                $sRefererDomain = "//" . $oRefererDomain->referer;
+            }
+        }
+        return $sRefererDomain;
     }
 }

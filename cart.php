@@ -34,6 +34,7 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Xcart\CidevSurfPath;
 require "./auth.php";
 
 if (!empty($active_modules['Wishlist'])) {
@@ -244,7 +245,7 @@ if (!empty($orderids) && $_GET["mode"] == "order_message") {
     $cidev_tracking_code_modified = str_replace('var cidev_tracking_code_add;', $cidev_tracking_code_add, $config["Company"]["cidev_tracking_code"]);
     $cidev_tracking_code_modified = str_replace('var cidev_tracking_code_add2;', $cidev_tracking_code_add2, $cidev_tracking_code_modified);
     $smarty->assign("cidev_tracking_code_modified", $cidev_tracking_code_modified);
-//        $orders[0]["order"]["cidev_tracking_code_modified"] = $cidev_tracking_code_modified;
+    x_session_unregister('customer_notes');
 }
 
 require $xcart_dir . "/include/cart_process.php";
@@ -270,6 +271,7 @@ x_session_register('last_categoryid');
 x_session_register('catalog_checkboxes', array());
 x_session_register('added_catalogs');
 x_session_register('autologout');
+x_session_register("customer_notes");
 
 if (!empty($cart["products"]) && empty($cart["cart_number"])) {
 
@@ -364,6 +366,22 @@ function cart_num($a, $b)
 }
 
 $smarty->assign('last_categoryid', $last_categoryid);
+
+$shopMoreUrl = '/';
+$oCidevSurfPath = CidevSurfPath::getLastSurfPath([
+    CidevSurfPath::SURFPATH_TYPE_SEARCH,
+    CidevSurfPath::SURFPATH_TYPE_CATEGORY,
+    CidevSurfPath::SURFPATH_TYPE_BRAND]);
+if (empty($oCidevSurfPath)){
+    $oCidevSurfPath = CidevSurfPath::getLastSurfPath([CidevSurfPath::SURFPATH_TYPE_PRODUCT]);
+}
+if (!empty($oCidevSurfPath)) {
+    if ($oCidevSurfPath->getUrl()){
+        $shopMoreUrl = $oCidevSurfPath->getUrl();
+    }
+}
+$smarty->assign('shopMoreUrl', $shopMoreUrl);
+
 if (isset($dhl_ext_country)) {
     $dhl_ext_country_store = $dhl_ext_country;
 } else {
@@ -493,7 +511,7 @@ if ($mode == "checkout") {
 ##
 ###
     if ($config["Appearance"]["Enable_surf_stats"] == "Y" && $l == "y") {
-        func_log_cidev_surf("K");
+        Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_CHECKOUT]);
     }
 ###
 ##
@@ -692,16 +710,10 @@ if ($mode == "delete" && !empty($productindex)) {
         x_session_save("cart");
     }
 
-    if (!empty($last_categoryid) && empty($cart["products"])) {
+    if (empty($cart["products"])) {
         $top_message["content"] = func_get_langvar_by_name("cidev_cart_is_empty");
         $top_message["type"] = "I";
-
-        $clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='C' AND resource_id='$last_categoryid'");
-        if (empty($clean_url_link)) {
-            $clean_url_link = "home.php?cat=" . $last_categoryid;
-        }
-
-        func_header_location($clean_url_link);
+        func_header_location($shopMoreUrl);
     } else {
         func_header_location("cart.php");
     }
@@ -872,6 +884,9 @@ if (!$func_is_cart_empty) {
                                         $shipping[$oShippingRate->getShippingId()] = $oShippingRate->getShippingEntity()->getFields();
                                         $shipping[$oShippingRate->getShippingId()]['rate'] = $oShippingRate->getShippingCharge();
                                         $shipping[$oShippingRate->getShippingId()]['allowed'] = true;
+                                        if ($oShippingRate->getCart()->getExtraMarginValue() > 0) {
+                                            $shipping[$oShippingRate->getShippingId()]['shipping_extra_margin_value'] = $oShippingRate->getShippingChargeBeforeMap() - $oShippingRate->getShippingCharge();
+                                        }
                                         $aCartElements = $oShippingRate->getCart()->getElements();
                                         if (!empty($aCartElements)) {
                                             /** @var \Xcart\CartElement $oCartElement */
@@ -884,6 +899,7 @@ if (!$func_is_cart_empty) {
                                             foreach ($aAddedShippingRates as $oAddedShippingRate) {
                                                 $aShipping = $oAddedShippingRate->getFields();
                                                 $aShipping['shipping_charge'] = $oAddedShippingRate->getShippingCharge();
+                                                $aShipping['shipping_extra_margin_value'] = $oAddedShippingRate->getCart()->getExtraMarginValue();
                                                 $aProducts = $oAddedShippingRate->getCart()->getElements();
                                                 if (!empty($aProducts)) {
                                                     /** @var \Xcart\CartElement $oCartElement */

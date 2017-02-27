@@ -44,7 +44,18 @@ if (!class_exists('Smarty')) {
 	exit;
 }
 		
-class Templater extends Smarty {
+class Templater extends Smarty
+{
+    private static $_instance = null;
+
+    public static function getInstance()
+    {
+        if (!self::$_instance) {
+            self::$_instance = new self();
+        }
+
+        return self::$_instance;
+    }
 
 	function Templater() {
 		global $xcart_dir;

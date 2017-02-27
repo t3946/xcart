@@ -1,391 +1,319 @@
 <?php
 /*****************************************************************************\
-+-----------------------------------------------------------------------------+
-| X-Cart                                                                      |
-| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
-| All rights reserved.                                                        |
-+-----------------------------------------------------------------------------+
-| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
-| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
-| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
-|                                                                             |
-| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
-| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
-| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
-| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
-| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
-| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
-| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
-| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
-| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
-| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
-| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
-| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
-| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
-| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
-|                                                                             |
-| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
-| Ruslan R. Fazliev. All Rights Reserved.                                     |
-+-----------------------------------------------------------------------------+
-\*****************************************************************************/
+ * +-----------------------------------------------------------------------------+
+ * | X-Cart                                                                      |
+ * | Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
+ * | All rights reserved.                                                        |
+ * +-----------------------------------------------------------------------------+
+ * | PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
+ * | FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
+ * | AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
+ * |                                                                             |
+ * | THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
+ * | THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
+ * | FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
+ * | AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
+ * | PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
+ * | CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
+ * | COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
+ * | (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
+ * | LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
+ * | AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
+ * | OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
+ * | AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
+ * | THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
+ * | THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
+ * |                                                                             |
+ * | The Initial Developer of the Original Code is Ruslan R. Fazliev             |
+ * | Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
+ * | Ruslan R. Fazliev. All Rights Reserved.                                     |
+ * +-----------------------------------------------------------------------------+
+ * \*****************************************************************************/
 
 # $Id: pages.php,v 1.30.2.1 2006/04/25 11:28:29 svowl Exp $
 
 # This script allow to create static html pages within  X-Cart
 
-define('USE_TRUSTED_POST_VARIABLES',1);
-define('USE_TRUSTED_SCRIPT_VARS',1);
-$trusted_post_variables = array("pagecontent");
+define('USE_TRUSTED_POST_VARIABLES', 1);
+define('USE_TRUSTED_SCRIPT_VARS', 1);
+$trusted_post_variables = ["pagecontent"];
 
 define("IS_MULTILANGUAGE", 1);
 
 require "./auth.php";
-require $xcart_dir."/include/security.php";
+require $xcart_dir . "/include/security.php";
 
 x_load('files');
-
-
-#
-##
-###
-x_load('backoffice','image');
+x_load('backoffice', 'image');
 x_session_register("file_upload_data");
-###
-##
-#
 
-$location[] = array(func_get_langvar_by_name("lbl_static_pages"), "");
+$location[] = [func_get_langvar_by_name("lbl_static_pages"), ""];
 
-function func_pages_dir($level) {
-	global $xcart_dir, $smarty, $current_language;
+function func_pages_dir($level)
+{
+    global $xcart_dir, $smarty, $current_language;
 
-	if ($level == "R")
-		$pages_dir = $xcart_dir.DIRECTORY_SEPARATOR;
-	else {
-		if (!is_dir($smarty->template_dir.DIRECTORY_SEPARATOR."pages")) {
-			@mkdir($smarty->template_dir.DIRECTORY_SEPARATOR."pages", 0777);
-		}
-		$pages_dir = $smarty->template_dir.DIRECTORY_SEPARATOR."pages".DIRECTORY_SEPARATOR.$current_language.DIRECTORY_SEPARATOR;
-	}
-	return $pages_dir;
+    if ($level == "R") {
+        $pages_dir = $xcart_dir . DIRECTORY_SEPARATOR;
+    }
+    else {
+        if (!is_dir($smarty->template_dir . DIRECTORY_SEPARATOR . "pages")) {
+            @mkdir($smarty->template_dir . DIRECTORY_SEPARATOR . "pages", 0777);
+        }
+        $pages_dir = $smarty->template_dir . DIRECTORY_SEPARATOR . "pages" . DIRECTORY_SEPARATOR . $current_language . DIRECTORY_SEPARATOR;
+    }
+
+    return $pages_dir;
 }
 
-
 $pageid = intval($pageid);
-
 
 if (!empty($pageid)) {
 
     $pageids = func_query_column("SELECT p1.pageid FROM $sql_tbl[pages] as p1 INNER JOIN $sql_tbl[pages] as p2 ON p1.filename = p2.filename AND p1.pageid <> '$pageid' AND p2.pageid = '$pageid'");
 
-    $pageids = func_query_column("SELECT resource_id FROM $sql_tbl[clean_urls] WHERE resource_type = 'S' AND resource_id IN ('".implode("','", $pageids)."')");
+    $pageids = func_query_column("SELECT resource_id FROM $sql_tbl[clean_urls] WHERE resource_type = 'S' AND resource_id IN ('" . implode("','", $pageids) . "')");
 
     $clean_url_pageid = array_shift($pageids);
 
     if (count($pageids) > 0) {
 
-        db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type = 'S' AND resource_id IN ('".implode("','", $pageids)."')");
-
+        db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type = 'S' AND resource_id IN ('" . implode("','", $pageids) . "')");
     }
 
-    if (empty($clean_url_pageid))
+    if (empty($clean_url_pageid)) {
         $clean_url_pageid = $pageid;
-
+    }
 }
-
-
 
 if ($REQUEST_METHOD == "POST") {
 
 #
 # Process the POST request
 #
-	require $xcart_dir."/include/safe_mode.php";
+    require $xcart_dir . "/include/safe_mode.php";
 
     if ($mode == "delete") {
-	#
-	# Delete selected pages
-	#
+        #
+        # Delete selected pages
+        #
 
-		if (is_array($posted_data)) {
-			$deleted = false;
-			foreach($posted_data as $pageid=>$v) {
-				$page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE pageid='$pageid' AND level = '$sec'");
-				if (!empty($page_data) && !empty($v["to_delete"])) {
-					@unlink(func_pages_dir($page_data["level"]).$page_data["filename"]);
-					db_query("DELETE FROM $sql_tbl[pages] WHERE pageid='$pageid'");
+        if (is_array($posted_data)) {
+            $deleted = false;
+            foreach ($posted_data as $pageid => $v) {
+                $page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE pageid='$pageid' AND level = '$sec'");
+                if (!empty($page_data) && !empty($v["to_delete"])) {
+                    @unlink(func_pages_dir($page_data["level"]) . $page_data["filename"]);
+                    db_query("DELETE FROM $sql_tbl[pages] WHERE pageid='$pageid'");
 
-		                        db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type = 'S' AND resource_id = '$_pageid'");
-                		        db_query("DELETE FROM $sql_tbl[clean_urls_history] WHERE resource_type = 'S' AND resource_id = '$_pageid'");
+                    db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type = 'S' AND resource_id = '$_pageid'");
+                    db_query("DELETE FROM $sql_tbl[clean_urls_history] WHERE resource_type = 'S' AND resource_id = '$_pageid'");
 
-					$deleted = true;
+                    $deleted = true;
 
-#
-##
-###
-					func_delete_image($pageid, "A");
-###
-##
-#
-
-
-				}
-			}
-			$top_message["content"] = func_get_langvar_by_name("msg_adm_pages_del");
-		}
-		func_header_location("pages.php");
-	}
-
-	if ($mode == "update") {
-	#
-	# Update pages list
-	#
-
-		if (is_array($posted_data)) {
-			foreach($posted_data as $pageid=>$v) {
-#
-				$header_pos = trim($v["header_pos"]);
-				if (!empty($header_pos))
-					$header_pos = intval($header_pos);
-
-				db_query("UPDATE $sql_tbl[pages] SET orderby='".intval($v["orderby"])."', active='$v[active]', header_pos='$header_pos' WHERE pageid='$pageid' AND level = '$sec'");
-			}
-		}
-
-		if ($parse_smarty_tags != "Y")
-			$parse_smarty_tags = "N";
-
-		db_query("UPDATE $sql_tbl[config] SET value='$parse_smarty_tags' WHERE name='parse_smarty_tags' AND category='General'");
-
-		$top_message["content"] = func_get_langvar_by_name("msg_adm_pages_upd");
-	}
-
-	if ($mode == "modified") {
-	#
-	# Save created/modified page
-	#
-
-		$fillerr = (empty($pagetitle) || empty($pagecontent) || !in_array($active,array("Y","N")));
-		if (!$fillerr) {
-			$pages_dir = func_pages_dir($level);
-			if (!is_dir($pages_dir)) {
-				@mkdir($pages_dir, 0777);
-			}
-			$pagetitle = htmlspecialchars($pagetitle);
-			$orderby = intval($orderby);
-
-			if (empty($pageid)) {
-				$filename = $_POST['filename'];
-			} else {
-				$filename = func_query_first_cell("SELECT filename FROM $sql_tbl[pages] WHERE pageid='$pageid'");
-				if (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[pages] WHERE pageid='$pageid' AND language = '$shop_language'") == 0) {
-					$pageid = func_query_first_cell("SELECT pageid FROM $sql_tbl[pages] WHERE filename = '".addslashes($filename)."' AND language = '$shop_language'");
-				}
-			}
-
-			if (empty($pageid) && file_exists($pages_dir.$filename)) {
-				$top_message["content"] = func_get_langvar_by_name("msg_err_page_file_exists");
-				$top_message["type"] = "E";
-				func_header_location("pages.php");
-			
-			} elseif ($fd = @func_fopen($pages_dir.$filename, "w", true)) {
-				fwrite($fd, stripslashes($pagecontent));
-				fclose($fd);
-			}
-			else {
-				$top_message["content"] = func_get_langvar_by_name("msg_err_file_permission_denied");
-				$top_message["type"] = "E";
-				func_header_location("pages.php");
-			}
-
-
-/*
-            if ($level == 'E') {
-
-                $clean_url = trim(stripslashes($clean_url));
-
-                $current_clean_url = NULL;
-
-                if (
-                    !empty($clean_url_pageid)
-                    || !empty($filename)
-                ) {
-                    $current_clean_url = func_clean_url_get_raw_resource_url('S', $clean_url_pageid, $filename);
-                }
-
-                if (
-                    $config['SEO']['clean_urls_enabled'] == 'N'
-                    || (
-                        !empty($pageid)
-                        && !zerolen($current_clean_url)
-                        && $current_clean_url == $clean_url
-                    ) || (
-                        empty($pageid)
-                        && !zerolen($current_clean_url)
-                    )
-                ) {
-
-                    $clean_url_check_result = true;
-
-                } else {
-
-                    list($clean_url_check_result, $check_url_error_code) = func_clean_url_validate($clean_url);
-
-                }
-
-                if ($clean_url_check_result == false) {
-
-                    $top_message = array(
-                        'content'               => func_get_langvar_by_name('err_' . strtolower($check_url_error_code)),
-                        'type'                  => 'E',
-                        'clean_url_fill_error'  => true,
-                    );
-
-                    func_header_location("pages.php?level=$level&pageid=$pageid");
+                    func_delete_image($pageid, "A");
                 }
             }
+            $top_message["content"] = func_get_langvar_by_name("msg_adm_pages_del");
+        }
+        func_header_location("pages.php");
+    }
 
-*/
+    if ($mode == "update") {
+        #
+        # Update pages list
+        #
 
-                        $header_pos = trim($header_pos);
-                        if (!empty($header_pos))
-				$header_pos = intval($header_pos);
-
-			if (empty($pageid)) {
-				db_query("INSERT INTO $sql_tbl[pages] (filename, title, level, orderby, active, language, header_pos) VALUES ('$filename', '$pagetitle', '$level', '$orderby', '$active', '$current_language', '$header_pos')");
-				$pageid = db_insert_id();
-				$top_message["content"] = func_get_langvar_by_name("msg_adm_pages_add");
-			}
-			else {
-				db_query("UPDATE $sql_tbl[pages] SET title='$pagetitle', orderby='$orderby', active='$active', header_pos='$header_pos' WHERE pageid='$pageid'");
-				$top_message["content"] = func_get_langvar_by_name("msg_adm_page_upd");
-			}
-
+        if (is_array($posted_data)) {
+            foreach ($posted_data as $pageid => $v) {
 #
-##
-###
+                $header_pos = trim($v["header_pos"]);
+                if (!empty($header_pos)) {
+                    $header_pos = intval($header_pos);
+                }
 
-
-	                if (func_check_image_posted($file_upload_data, "A")) {
-        	                func_save_image($file_upload_data, "A", $pageid);
-	                }
-
-            if (is_array($_FILES) && isset($_FILES['edit_image'])) {
-            $id = $pageid;
-            $from_parent_window = 'Y';
-            $source = 'L';
-            $filename = 'edit_image';
-            $userfile = '';
-            $type = 'A';
-
-                $userfile = $_FILES[$filename]['name'];
-                $userfile_size = $_FILES[$filename]['size'];
-                $userfile_type = $_FILES[$filename]['type'];
-
-            if (!empty($userfile)) {
-                include $xcart_dir . '/include/image_selection.php';
+                db_query("UPDATE $sql_tbl[pages] SET orderby='" . intval($v["orderby"]) . "', active='$v[active]', header_pos='$header_pos' WHERE pageid='$pageid' AND level = '$sec'");
             }
         }
 
+        if ($parse_smarty_tags != "Y") {
+            $parse_smarty_tags = "N";
+        }
 
-###
-##
-#
+        db_query("UPDATE $sql_tbl[config] SET value='$parse_smarty_tags' WHERE name='parse_smarty_tags' AND category='General'");
 
-#
-##
-###
+        $top_message["content"] = func_get_langvar_by_name("msg_adm_pages_upd");
+    }
+
+    if ($mode == "modified") {
+        #
+        # Save created/modified page
+        #
+
+        $fillerr = (empty($pagetitle) || empty($pagecontent) || !in_array($active, ["Y", "N"]));
+        if (!$fillerr) {
+            $pages_dir = func_pages_dir($level);
+            if (!is_dir($pages_dir)) {
+                @mkdir($pages_dir, 0777);
+            }
+            $pagetitle = htmlspecialchars($pagetitle);
+            $orderby   = intval($orderby);
+
+            if (empty($pageid)) {
+                $filename = $_POST['filename'];
+            }
+            else {
+                $filename = func_query_first_cell("SELECT filename FROM $sql_tbl[pages] WHERE pageid='$pageid'");
+                if (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[pages] WHERE pageid='$pageid' AND language = '$shop_language'") == 0) {
+                    $pageid = func_query_first_cell("SELECT pageid FROM $sql_tbl[pages] WHERE filename = '" . addslashes($filename) . "' AND language = '$shop_language'");
+                }
+            }
+
+            if (empty($pageid) && file_exists($pages_dir . $filename)) {
+                $top_message["content"] = func_get_langvar_by_name("msg_err_page_file_exists");
+                $top_message["type"]    = "E";
+                func_header_location("pages.php");
+            }
+            elseif ($fd = @func_fopen($pages_dir . $filename, "w", true)) {
+                fwrite($fd, stripslashes($pagecontent));
+                fclose($fd);
+            }
+            else {
+                $top_message["content"] = func_get_langvar_by_name("msg_err_file_permission_denied");
+                $top_message["type"]    = "E";
+                func_header_location("pages.php");
+            }
+
+            $header_pos = trim($header_pos);
+            if (!empty($header_pos)) {
+                $header_pos = intval($header_pos);
+            }
+
+            if (empty($pageid)) {
+                db_query("INSERT INTO $sql_tbl[pages] (filename, title, level, orderby, active, language, header_pos) VALUES ('$filename', '$pagetitle', '$level', '$orderby', '$active', '$current_language', '$header_pos')");
+                $pageid                 = db_insert_id();
+                $top_message["content"] = func_get_langvar_by_name("msg_adm_pages_add");
+            }
+            else {
+                if ($sfids === "0" || !empty($sfids) ) {
+                    $sfids = "'" . implode(',', $sfids) . "'";
+                }
+                else {
+                    $sfids = "";
+                }
+
+
+                db_query("UPDATE $sql_tbl[pages] SET title='$pagetitle', orderby='$orderby', active='$active', header_pos='$header_pos', sfids={$sfids} WHERE pageid='$pageid'");
+                $top_message["content"] = func_get_langvar_by_name("msg_adm_page_upd");
+            }
+
+            if (func_check_image_posted($file_upload_data, "A")) {
+                func_save_image($file_upload_data, "A", $pageid);
+            }
+
+            if (is_array($_FILES) && isset($_FILES['edit_image'])) {
+                $id                 = $pageid;
+                $from_parent_window = 'Y';
+                $source             = 'L';
+                $filename           = 'edit_image';
+                $userfile           = '';
+                $type               = 'A';
+
+                $userfile      = $_FILES[$filename]['name'];
+                $userfile_size = $_FILES[$filename]['size'];
+                $userfile_type = $_FILES[$filename]['type'];
+
+                if (!empty($userfile)) {
+                    include $xcart_dir . '/include/image_selection.php';
+                }
+            }
+
             // Insert/Update Clean URL.
             if ($level == 'E') {
 
                 if (empty($clean_url_pageid)) {
 
                     $clean_url_pageid = $pageid;
-
-                } else {
+                }
+                else {
 
                     $pageid = $clean_url_pageid;
-
                 }
 
-                    // Autogenerate clean URL.
-                    $clean_url = func_clean_url_autogenerate('S', $clean_url_pageid, array('title' => $pagetitle));
-                    $clean_url_save_in_history = false;
+                // Autogenerate clean URL.
+                $clean_url                 = func_clean_url_autogenerate('S', $clean_url_pageid, ['title' => $pagetitle]);
+                $clean_url_save_in_history = false;
 
-		    db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type='S' AND resource_id='$clean_url_pageid'");
+                db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type='S' AND resource_id='$clean_url_pageid'");
 
-                    func_clean_url_add($clean_url, 'S', $clean_url_pageid);
-
+                func_clean_url_add($clean_url, 'S', $clean_url_pageid);
             }
-###
-##
-#
+        }
+        else {
+            $top_message["content"] = func_get_langvar_by_name("err_filling_form");
+            $top_message["type"]    = "E";
+        }
+        func_header_location("pages.php?pageid=$pageid");
+    }
 
+    if ($mode == "check") {
+        #
+        # Find already existed static pages that is not encountered in the database
+        #
+        $languages = func_query("SELECT DISTINCT(code) FROM $sql_tbl[languages]");
+        foreach ($languages as $k => $v) {
+            $dirs[] = $smarty->template_dir . "/pages/" . $v["code"];
+        }
+        $dirs[] = $xcart_dir;
 
+        foreach ($dirs as $dir) {
 
-		}
-		else {
-			$top_message["content"] = func_get_langvar_by_name("err_filling_form");
-			$top_message["type"] = "E";
-		}
-		func_header_location("pages.php?pageid=$pageid");
-	}
+            if ($dp = @opendir($dir)) {
+                while ($file = readdir($dp)) {
+                    if (is_file($dir . DIRECTORY_SEPARATOR . $file) && (substr($file, -5, 5) == ".html" || substr($file, -4, 4) == ".htm")) {
+                        if ($dir == $xcart_dir) {
+                            $root_pages[] = $dir . DIRECTORY_SEPARATOR . $file;
+                        }
+                        else {
+                            $embedded_pages[] = $dir . DIRECTORY_SEPARATOR . $file;
+                        }
+                    }
+                }
+                closedir($dp);
+            }
+        }
 
-	if ($mode == "check") {
-	#
-	# Find already existed static pages that is not encountered in the database
-	#
-		$languages = func_query("SELECT DISTINCT(code) FROM $sql_tbl[languages]");
-		foreach($languages as $k=>$v)
-			$dirs[] = $smarty->template_dir."/pages/".$v["code"];
-		$dirs[] = $xcart_dir;
+        if (is_array($root_pages)) {
+            $orderby = func_query_first_cell("SELECT MAX(orderby) FROM $sql_tbl[pages] WHERE level='R'");
+            foreach ($root_pages as $k => $file) {
+                if (!preg_match("/^(.+)\/(.*)$/S", $file, $found)) {
+                    continue;
+                }
+                $file = $found[2];
 
-		foreach($dirs as $dir) {
+                if (!func_query_first("SELECT filename FROM $sql_tbl[pages] WHERE filename='$file' AND level='R'")) {
+                    $orderby += 10;
+                    db_query("INSERT INTO $sql_tbl[pages] (filename, title, level, orderby, active, language) VALUES ('$file', '" . basename($file) . "', 'R', '$orderby', 'Y', '$current_language')");
+                }
+            }
+        }
 
-			if ($dp = @opendir($dir)) {
-				while ($file = readdir($dp)) {
-					if (is_file($dir.DIRECTORY_SEPARATOR.$file) && (substr($file,-5,5)==".html" || substr($file,-4,4)==".htm")) {
-						if ($dir == $xcart_dir)
-							$root_pages[] = $dir.DIRECTORY_SEPARATOR.$file;
-						else
-							$embedded_pages[] = $dir.DIRECTORY_SEPARATOR.$file;
-					}
-				}
-				closedir($dp);
-			}
-		}
+        if (is_array($embedded_pages)) {
+            $orderby = func_query_first_cell("SELECT MAX(orderby) FROM $sql_tbl[pages] WHERE level='E'");
+            foreach ($embedded_pages as $k => $file) {
+                if (!preg_match("/^(.+)\/(.*)\/(.*)$/S", $file, $found)) {
+                    continue;
+                }
+                $file = $found[3];
+                $lang = $found[2];
 
-		if (is_array($root_pages)) {
-			$orderby = func_query_first_cell("SELECT MAX(orderby) FROM $sql_tbl[pages] WHERE level='R'");
-			foreach ($root_pages as $k=>$file) {
-				if (!preg_match("/^(.+)\/(.*)$/S", $file, $found))
-					continue;
-				$file = $found[2];
-
-				if (!func_query_first("SELECT filename FROM $sql_tbl[pages] WHERE filename='$file' AND level='R'")) {
-					$orderby += 10;
-					db_query("INSERT INTO $sql_tbl[pages] (filename, title, level, orderby, active, language) VALUES ('$file', '".basename($file)."', 'R', '$orderby', 'Y', '$current_language')");
-				}
-			}
-		}
-
-		if (is_array($embedded_pages)) {
-			$orderby = func_query_first_cell("SELECT MAX(orderby) FROM $sql_tbl[pages] WHERE level='E'");
-			foreach ($embedded_pages as $k=>$file) {
-				if (!preg_match("/^(.+)\/(.*)\/(.*)$/S", $file, $found))
-					continue;
-				$file = $found[3];
-				$lang = $found[2];
-
-				if (!func_query_first("SELECT filename FROM $sql_tbl[pages] WHERE filename='$file' AND level='E' AND language='$lang'")) {
-					$orderby += 10;
-					db_query("INSERT INTO $sql_tbl[pages] (filename, title, level, orderby, active, language) VALUES ('$file', '$file', 'E', '$orderby', 'Y', '$lang')");
-				}
-			}
-		}
-	}
-
+                if (!func_query_first("SELECT filename FROM $sql_tbl[pages] WHERE filename='$file' AND level='E' AND language='$lang'")) {
+                    $orderby += 10;
+                    db_query("INSERT INTO $sql_tbl[pages] (filename, title, level, orderby, active, language) VALUES ('$file', '$file', 'E', '$orderby', 'Y', '$lang')");
+                }
+            }
+        }
+    }
 
     if ($mode == 'clean_urls_history') {
 
@@ -395,7 +323,7 @@ if ($REQUEST_METHOD == "POST") {
         ) {
 
             $top_message['content'] = func_get_langvar_by_name('err_clean_urls_history_empty');
-            $top_message['type'] = 'E';
+            $top_message['type']    = 'E';
 
             func_header_location("pages.php?pageid=$pageid");
         }
@@ -403,164 +331,142 @@ if ($REQUEST_METHOD == "POST") {
         if (func_clean_url_history_delete(array_keys($clean_urls_history))) {
 
             $top_message['content'] = func_get_langvar_by_name('txt_clean_urls_history_deleted');
-            $top_message['type'] = 'I';
-
-        } else {
+            $top_message['type']    = 'I';
+        }
+        else {
 
             $top_message['content'] = func_get_langvar_by_name('err_clean_urls_history_delete');
-            $top_message['type'] = 'E';
-
+            $top_message['type']    = 'E';
         }
 
         func_header_location("pages.php?pageid=$pageid");
-
     }
 
-
-
-
-	func_header_location("pages.php");
-
+    func_header_location("pages.php");
 } # /if ($REQUEST_METHOD == "POST")
 
-
 if (isset($_GET['pageid'])) {
-
-#
-##
-###
-        if ($mode == "delete_icon") {
-		func_delete_image($pageid, "A");
-		func_header_location("pages.php?pageid=$pageid");
-        }
-###
-##
-#
-
+    if ($mode == "delete_icon") {
+        func_delete_image($pageid, "A");
+        func_header_location("pages.php?pageid=$pageid");
+    }
 
 #
 # Prepare data for editing
 #
-	$page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE pageid='$pageid'");
+    $page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE pageid='$pageid'");
 
-    $page_query = "SELECT $sql_tbl[pages].*, $sql_tbl[clean_urls].clean_url, $sql_tbl[clean_urls].mtime FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[clean_urls] ON $sql_tbl[clean_urls].resource_type = 'S' AND $sql_tbl[clean_urls].resource_id = '".@$clean_url_pageid."' ";
+    $page_query = "SELECT $sql_tbl[pages].*, $sql_tbl[clean_urls].clean_url, $sql_tbl[clean_urls].mtime FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[clean_urls] ON $sql_tbl[clean_urls].resource_type = 'S' AND $sql_tbl[clean_urls].resource_id = '" . @$clean_url_pageid . "' ";
 
     $page_data = func_query_first($page_query . " WHERE pageid='$pageid'");
 
-
-	if (!empty($page_data) && $page_data['language'] != $shop_language) {
-		$tmp = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE filename = '".addslashes($page_data['filename'])."' AND language = '$shop_language'");
-		if (!empty($tmp))
-			$page_data = $tmp;
-	}
-
-	if ($page_data) {
-		$pages_dir = func_pages_dir($page_data["level"]);
-		$filename = $pages_dir.$page_data["filename"];
-		if ($fd = func_fopen($filename, "r", true)) {
-			$page_content = "";
-			if (filesize($filename) > 0)
-				$page_content = fread($fd, filesize($filename));
-			fclose($fd);
-		}
-		else {
-			$page_content = func_get_langvar_by_name("lbl_file_has_not_been_found", array(), false, true);
-		}
-
-		$page_data['customer_url'] = ($HTTPS) ? 'https://' : 'http://';
-		if (!empty($active_modules['Multiple_Storefronts'])) {
-			$page_data['customer_url'] .= func_get_http_location_sf($current_storefront) . '/pages.php?pageid=' . $pageid;
-		} else {
-			$page_data['customer_url'] .= $xcart_catalogs['customer'] . '/pages.php?pageid=' . $pageid;
-		}
+    if ($page_data['sfids'] === '0' || !empty($page_data['sfids'])) {
+        $page_data['sfids'] = explode(',', $page_data['sfids']);
+    }
 
 
-	        $page_data['clean_urls_history'] = func_query_hash("SELECT id, clean_url FROM $sql_tbl[clean_urls_history] WHERE resource_type = 'S' AND resource_id = '" . $clean_url_pageid . "' ORDER BY mtime DESC", "id", false, true);
+    if (!empty($page_data) && $page_data['language'] != $shop_language) {
+        $tmp = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE filename = '" . addslashes($page_data['filename']) . "' AND language = '$shop_language'");
+        if (!empty($tmp)) {
+            $page_data = $tmp;
+        }
+    }
 
+    if ($page_data) {
+        $pages_dir = func_pages_dir($page_data["level"]);
+        $filename  = $pages_dir . $page_data["filename"];
+        if ($fd = func_fopen($filename, "r", true)) {
+            $page_content = "";
+            if (filesize($filename) > 0) {
+                $page_content = fread($fd, filesize($filename));
+            }
+            fclose($fd);
+        }
+        else {
+            $page_content = func_get_langvar_by_name("lbl_file_has_not_been_found", [], false, true);
+        }
 
-		$level = $page_data["level"];
-		$smarty->assign("page_path", $filename);
-		$smarty->assign("page_data", $page_data);
-		$smarty->assign("page_content", $page_content);
-		$location[count($location)-1][1] = "pages.php";
-		$location[] = array(func_get_langvar_by_name("lbl_edit_page"), "");
-	}
-	else {
-		$pages_dir = func_pages_dir($_GET['level']);
-		$smarty->assign("page_path", $pages_dir);
-		$flag = true;
-		while($flag) {
-			$index++;
-			$default_filename = sprintf("page_%03d.html",$index);
-			if (!file_exists($pages_dir.$default_filename))
-				$flag = false;
-		}
-		$level = ($_GET['level'] == 'E' || $_GET['level'] == 'R') ? $_GET['level'] : 'E';
+        $page_data['customer_url'] = ($HTTPS) ? 'https://' : 'http://';
+        if (!empty($active_modules['Multiple_Storefronts'])) {
+            $page_data['customer_url'] .= func_get_http_location_sf($current_storefront) . '/pages.php?pageid=' . $pageid;
+        }
+        else {
+            $page_data['customer_url'] .= $xcart_catalogs['customer'] . '/pages.php?pageid=' . $pageid;
+        }
 
-###
-	            if (
-        	        $level == 'E'
-                	&& $config['SEO']['clean_urls_enabled'] == 'Y'
-	            ) {
+        $page_data['clean_urls_history'] = func_query_hash("SELECT id, clean_url FROM $sql_tbl[clean_urls_history] WHERE resource_type = 'S' AND resource_id = '" . $clean_url_pageid . "' ORDER BY mtime DESC", "id", false, true);
 
-        	        $smarty->assign('default_clean_url', $page_modified['clean_url']);
+        $level = $page_data["level"];
+        $smarty->assign("page_path", $filename);
+        $smarty->assign("page_data", $page_data);
+        $smarty->assign("page_content", $page_content);
+        $location[count($location) - 1][1] = "pages.php";
+        $location[]                        = [func_get_langvar_by_name("lbl_edit_page"), ""];
+    }
+    else {
+        $pages_dir = func_pages_dir($_GET['level']);
+        $smarty->assign("page_path", $pages_dir);
+        $flag = true;
+        while ($flag) {
+            $index++;
+            $default_filename = sprintf("page_%03d.html", $index);
+            if (!file_exists($pages_dir . $default_filename)) {
+                $flag = false;
+            }
+        }
 
-	            }
-###
+        if (
+            $level == 'E'
+            && $config['SEO']['clean_urls_enabled'] == 'Y'
+        ) {
 
-		$smarty->assign("default_filename", $default_filename);
-		$smarty->assign("default_index", $index);
-		$default_orderby = func_query_first_cell("SELECT MAX(orderby) FROM $sql_tbl[pages] WHERE level='$level'");
-		$smarty->assign("default_orderby", $default_orderby+10);
-		$location[count($location)-1][1] = "pages.php";
-		$location[] = array(func_get_langvar_by_name("lbl_create_page"), "");
-	}
+            $smarty->assign('default_clean_url', $page_modified['clean_url']);
+        }
 
+        $smarty->assign("default_filename", $default_filename);
+        $smarty->assign("default_index", $index);
+        $default_orderby = func_query_first_cell("SELECT MAX(orderby) FROM $sql_tbl[pages] WHERE level='$level'");
+        $smarty->assign("default_orderby", $default_orderby + 10);
+        $location[count($location) - 1][1] = "pages.php";
+        $location[]                        = [func_get_langvar_by_name("lbl_create_page"), ""];
+    }
 
+    $smarty->assign("level", $level);
+    $smarty->assign("main", "page_edit");
 
-	$smarty->assign("level", $level);
-	$smarty->assign("main", "page_edit");
-
-
-#
-##
-###
 #
 # Check if image selected is not expired
 #
-  if (is_array($file_upload_data) && !empty($file_upload_data)){
-	if ($file_upload_data["counter"] == 1) {
-	        $file_upload_data["counter"]++;
+    if (is_array($file_upload_data) && !empty($file_upload_data)) {
+        if ($file_upload_data["counter"] == 1) {
+            $file_upload_data["counter"]++;
 
-        	$smarty->assign("file_upload_data", $file_upload_data);
-	}
-	else {
-	        if ($file_upload_data["source"] == "L")
-                	@unlink($file_upload_data["file_path"]);
-        	x_session_unregister("file_upload_data");
-	}
-  } else {
-	x_session_unregister("file_upload_data");
-  }
+            $smarty->assign("file_upload_data", $file_upload_data);
+        }
+        else {
+            if ($file_upload_data["source"] == "L") {
+                @unlink($file_upload_data["file_path"]);
+            }
+            x_session_unregister("file_upload_data");
+        }
+    }
+    else {
+        x_session_unregister("file_upload_data");
+    }
 
-	$smarty->assign("image", func_image_properties("A", $cat));
+    $smarty->assign("image", func_image_properties("A", $cat));
 
-	x_session_save();
-	$smarty->assign("pageid", $pageid);
-###
-##
-#
-
-
+    x_session_save();
+    $smarty->assign("pageid", $pageid);
 }
 else {
 #
 # Prepare data for pages list
 #
-	$pages = func_query("SELECT * FROM $sql_tbl[pages] WHERE language='$current_language' ORDER BY orderby, title");
+    $pages = func_query("SELECT * FROM $sql_tbl[pages] WHERE language='$current_language' ORDER BY orderby, title");
 
-	$smarty->assign("pages", $pages);
-	$smarty->assign("main", "pages");
+    $smarty->assign("pages", $pages);
+    $smarty->assign("main", "pages");
 }
 
 # Assign the current location line
@@ -569,7 +475,5 @@ $smarty->assign("location", $location);
 # Assign the current location line
 $smarty->assign("location", $location);
 
-@include $xcart_dir."/modules/gold_display.php";
-func_display("admin/home.tpl",$smarty);
-
-?>
+@include $xcart_dir . "/modules/gold_display.php";
+func_display("admin/home.tpl", $smarty);

@@ -56,11 +56,11 @@
                                 <td rowspan="{$aVerificatorResults|@count}">
                                     <p><a target="_blank" href="{$oVerificatorResult->getSearchByUPCOnAmazonLink()}">Amazon
                                             UPC search</a></p>
-                                    <a href="{$oProduct->getProductModifyURL()}"
+                                    <a href="{$oProduct->getAdminUrl()}"
                                        target="_blank">{$oProduct->getSKU()}</a>
                                 </td>
                                 <td rowspan="{$aVerificatorResults|@count}"><a target="_blank"
-                                                                               href="{$oProduct->getProductFrontURL()}">{$oProduct->getProductName()}</a>
+                                                                               href="{$oProduct->getURL()}">{$oProduct->getProductName()}</a>
                                 </td>
                             {/if}
                             <td>{if $oCustomer->getCustomerURL()}

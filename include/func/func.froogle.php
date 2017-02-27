@@ -379,12 +379,14 @@ if ($sExtraLog=='Y')
 					if (!empty($aShippingRates)) {
 						/** @var \Xcart\ShippingRate $oShippingRate */
 						$oShippingRate = reset($aShippingRates);
-						$shippings_str_arr[] = $v["country_code"] . ":" . $v["state"] . ":" . $oShippingRate->getShippingEntity()->getFrontendName() . ":" . $oShippingRate->getShippingCharge() . $shipping_currency;
-						$shippings_google_arr[$k]["price"]["value"] = $oShippingRate->getShippingCharge();
-						$shippings_google_arr[$k]["price"]["currency"] = trim($shipping_currency);
-						$shippings_google_arr[$k]["country"] = $v["country_code"];
-						$shippings_google_arr[$k]["region"] = $v["state"];
-						$shippings_google_arr[$k]["service"] = $oShippingRate->getShippingEntity()->getFrontendName();
+						$shippings_str_arr[] = $v["country_code"] . ":" . $v["code"] . ":" . $oShippingRate->getShippingEntity()->getFrontendName() . ":" . price_format($oShippingRate->getShippingCharge()) . $shipping_currency;
+						$sga = [];
+						$sga["price"]["value"] = price_format($oShippingRate->getShippingCharge());
+						$sga["price"]["currency"] = trim($shipping_currency);
+						$sga["country"] = $v["country_code"];
+						$sga["region"] = $v["code"];
+						$sga["service"] = $oShippingRate->getShippingEntity()->getFrontendName();
+						$shippings_google_arr[] = $sga;
 						$aShippingCarrier[] = $oShippingRate->getShippingEntity()->getShippingCarrier()->getName();
 						break;
 					}
@@ -1276,18 +1278,14 @@ function AddProductToBingBaseBatch($productid,$update_type,$forsale,$bing_produc
 function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mode = 'N'){
 	global $sql_tbl, $froogle_tracing_token, $debug_requests;
 
-//	func_print_r($gproducts);
-
 	$count_skipped = 0;
 	$k_counter = 0;
 
 
 	foreach ($gproducts as $k => $v){
 
-		//$product_info = GetGoogleBaseOneRow($v["productid"], "main_google");
 		$product_info = $v['product_info'];
-		
-		$pforsale = func_query_first_cell("SELECT SQL_NO_CACHE $sql_tbl[products].forsale FROM $sql_tbl[products] WHERE $sql_tbl[products].productid = '$v[productid]'");
+		$pforsale = $product_info['product']['forsale'];
 
         if ( $pforsale == 'Y' && empty($product_info["product"]["shippings_google_arr"])){
 			print("\nProduct skipped - $v[productid] \n");
@@ -1325,15 +1323,10 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
                 $postBody["entries"][$k_counter]["product"]["targetCountry"] = "US";
                 $postBody["entries"][$k_counter]["product"]["channel"] = "online";
 
-/*
-                $expirationDate = time()+60*60*24*30;
-                $expirationDate = date("Y-m-d", $expirationDate);
-                $postBody["entries"][$k_counter]["product"]["expirationDate"] = $expirationDate;
-*/
 
-###
 				$product_availability = func_product_availability(false,$product_info["product"]);
-###
+
+			
                 $postBody["entries"][$k_counter]["product"]["availability"] = $product_availability;
                 $postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
                 $postBody["entries"][$k_counter]["product"]["condition"] = "new";
@@ -1494,7 +1487,7 @@ return $code;
 
 }
 
-function SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray){
+function SubmitAmazonInventoryBatch($ainventory, $a_config, $marketplaceIdArray, \Xcart\External_Marketplaces\StoreFrontMarketPlace $oMarketPlace){
         global $sql_tbl, $xcart_dir;
 
 	if (empty($ainventory) || !is_array($ainventory)){
@@ -1553,7 +1546,8 @@ EOD;
 			} else {
 
 				$avail = $oProduct->getAmazonQuantity();
-				if ($oProductAmazonFields->getPreventSellingOnAmazon() == 'MFN') {
+				if ($oProductAmazonFields->getPreventSellingOnAmazon() == 'MFN' ||
+					!($oMarketPlace->checkProductExcludedMarketPlace($oProduct->getProductId()))) {
 					$avail = 0;
 				}
 				$aleadtime = $oProduct->getManfacturerClass()->getAmazonLeadtimetoship();
@@ -1698,11 +1692,10 @@ EOD;
 
         @fclose($feedHandle);
 ######################### Price end #########################
-        if ($MessageID > 0) {
-                print("\nAMZ: tried to submit $MessageID items as inventory feed \n");
-
-		$log_text = "AMZ: tried to submit $MessageID items as inventory feed";
-		func_backprocess_log("incremental feeds", $log_text);		
+		if ($MessageID-- > 0) {
+			print("\nAMZ: tried to submit $MessageID items as inventory feed \n");
+			$log_text = "AMZ: tried to submit $MessageID items as inventory feed";
+			func_backprocess_log("incremental feeds", $log_text);
 		}
 
 }

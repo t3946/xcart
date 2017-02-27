@@ -330,7 +330,7 @@ Select
                 db_query("UPDATE $sql_tbl[products] SET last_incremental_update='" . time() . "' WHERE productid='" . $product["productid"] . "'");
                 $googleOneRow = null;
                 foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
-                    if (is_null($googleOneRow)) {
+                    if (is_null($googleOneRow) && in_array($product["utype"], ['1', '1,2', '2,1'])) {
                         $googleOneRow = $oExternalMarketPlace->getGoogleOneRow($oProduct, EXTRA_LOG);
                     }
                     if ($oExternalMarketPlace->getExternalMarketPlaceEntity()->getMarketPlaceStatus() == 'Y') {

@@ -73,7 +73,7 @@ function func_print_r() {
 		echo $msg;
 	}
 
-	x_log_flag('log_debug_messages', 'DEBUG', $log, true, 1);
+//	x_log_flag('log_debug_messages', 'DEBUG', $log, true, 1);
 
 	$count++;
 }

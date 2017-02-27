@@ -69,6 +69,11 @@ if ($REQUEST_METHOD == "POST") {
 
 	if ($mode == "update") {
 
+		if (!is_null($seo_featured_products_caption)) {
+			\Xcart\StoreFront::model(['storefrontid' => $current_storefront])
+				->updateConfigValue('seo_featured_products_caption', $seo_featured_products_caption);
+		}
+
 		#
 		# Update featured products list
 		#

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 27.12.2016
- * Time: 13:46
- */
-
 namespace Xcart\Helpers\CrawlerDetect;
 
 class CrawlerDetect extends \Jaybizzle\CrawlerDetect\CrawlerDetect
@@ -28,6 +21,9 @@ class CrawlerDetect extends \Jaybizzle\CrawlerDetect\CrawlerDetect
         if (method_exists($this->crawlers, 'getMode')) {
             $this->setMode($this->crawlers->getMode());
         }
+
+        $this->compiledRegex = $this->compileRegex($this->crawlers->getAll());
+        $this->compiledExclusions = $this->compileRegex($this->exclusions->getAll());
 
         return $this;
     }

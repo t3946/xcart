@@ -5,6 +5,7 @@ namespace Xcart\Shipping;
 
 use Xcart\CartElement;
 use Xcart\Manufacturer;
+use Xcart\Shipping;
 use Xcart\ShippingCache;
 use Xcart\ShippingCacheProducts;
 use Xcart\ShippingCarrier;
@@ -13,6 +14,7 @@ use Xcart\ShippingRate;
 use Xcart\SQLBuilder;
 use Xcart\Customer;
 use Xcart\Cart;
+use Xcart\ShippingCacheQuotes;
 
 abstract class ShippingProcessor
 {
@@ -33,6 +35,11 @@ abstract class ShippingProcessor
      * @var Cart
      */
     protected $oCarierCart = null;
+
+    /**
+     * @var Shipping[]
+     */
+    private $aShippingMethods = null;
 
     /**
      * @var ShippingRate[]
@@ -137,34 +144,65 @@ abstract class ShippingProcessor
         $this->sShippingType = $sShippingType;
     }
 
+    public function getShippingRateFilterValues(Shipping $oShipping)
+    {
+        $weight = $this->getCartShippingWeight($oShipping);
+        $total = $this->getCart()->getCost();
+        $count = $this->getCart()->getProductCount();
+        $sResult = " {$weight} BETWEEN minweight AND maxweight AND {$total} BETWEEN mintotal AND maxtotal AND maxamount <= {$count} ";
+        return $sResult;
+    }
+
+    public function getCartShippingWeight(Shipping $oShipping)
+    {
+        $fCartShippingWeight = 0;
+        $aCartObjects = $this->getCart()->getElements();
+        if (!empty($aCartObjects)) {
+            /** @var CartElement $oCartElement */
+            foreach ($aCartObjects as $oCartElement) {
+                $fCartShippingWeight += $oShipping->getShippingWeightN(
+                    $oCartElement->getProduct()->getShippingWeight($oCartElement->getQuantity()),
+                    $oCartElement->getProduct()->getShippingVolume($oCartElement->getQuantity()));
+            }
+        }
+        return $fCartShippingWeight;
+    }
+
     /**
      * @return ShippingRate[]
      */
     public function getShippingRatesEntities()
     {
         if (is_null($this->aShippingRatesEntities)) {
-            $sCarrier = (new \ReflectionClass($this))->getShortName();
-            if ($sCarrier == 'Flat') {
-                $sCarrier = '';
-            }
-            $this->aShippingRatesEntities = ShippingRate::model()->findAll(
-                SQLBuilder::getInstance()->
-                addInnerJoin('shipping', 's', "main.shippingid = s.shippingid AND s.code = '{$sCarrier}'")->
-                addCondition('zoneid = ' . $this->getShippingZone()->getField('zoneid'))->
-                addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
-                addCondition("s.active = 'Y'")->
-                addOrderBy("s.orderby")
-            );
-            if (!empty($this->aShippingRatesEntities)) {
-                foreach ($this->aShippingRatesEntities as $key => $oShippingRate) {
-                    $oShippingRate->setCart($this->getCart());
-                    if (!$oShippingRate->checkShippingRateByFilterValues()) {
-                        unset($this->aShippingRatesEntities[$key]);
+            if (!empty($this->aShippingMethods)) {
+                foreach ($this->aShippingMethods as $oShipping) {
+                    $aResults = ShippingRate::model()->findAll(
+                        SQLBuilder::getInstance()->addSelect('*')->
+                        addFromTable('shipping_rates')->
+                        addCondition('zoneid = ' . $this->getShippingZone()->getField('zoneid'))->
+                        addCondition('shippingid = ' . $oShipping->getShippingId())->
+                        addCondition('manufacturerid = ' . $this->getManufacturer()->getManufacturerId())->
+                        addCondition($this->getShippingRateFilterValues($oShipping)));
+                    if (!empty($aResults)) {
+                        foreach ($aResults as $oShippingRate) {
+                            $oShippingRate->setShippingEntity($oShipping);
+                            $oShippingRate->setCart($this->getCart());
+                            $this->aShippingRatesEntities[] = $oShippingRate;
+                        }
                     }
                 }
             }
         }
         return $this->aShippingRatesEntities;
+    }
+
+    public function addShippingRate(ShippingRate $oShippingRate)
+    {
+        $oShippingRate->setCart($this->getCart());
+        if ($oShippingRate->checkShippingRateByFilterValues()) {
+            $this->aShippingRatesEntities[] = $oShippingRate;
+        }
+        return $this;
     }
 
     /**
@@ -236,9 +274,21 @@ abstract class ShippingProcessor
                     'state_from' => $oManufacturer->getField('m_state'),
                     'country_to' => $oCustomer->getField('s_country'),
                     'country_from' => $oManufacturer->getField('m_country'),
-                    'shipping_rates' => addslashes(serialize($this->aShippingRates))]
+                    //'shipping_rates' => base64_encode(addslashes(gzcompress(serialize($this->aShippingRates)))),
+                    'compressed' => 0]
             )->_insert();
             if ($iShippingCacheId) {
+                foreach ($this->aShippingRates as $oShippingRate){
+                    $aCacheQutes = $oShippingRate->getDataToSave();
+                    ShippingCacheQuotes::model()->fill([
+                        'shipping_cache_id' => $iShippingCacheId,
+                        'rate_id' => $oShippingRate->getField('rateid'),
+                        'shipping_quote' => $aCacheQutes['shipping_quote'],
+                        'shipping_charge' => $aCacheQutes['shipping_charge'],
+                        'shipping_charge_before_map' => $aCacheQutes['shipping_charge_before_map']
+                    ])->_insert();
+                }
+
                 $aProducts = $oCart->getElements();
                 if (!empty($aProducts)) {
                     /** @var CartElement $oCartElement */
@@ -271,7 +321,7 @@ abstract class ShippingProcessor
             }
             $sProductFilter = implode(' OR ', $aProductFilter);
 
-            $oSQLBuilder = SQLBuilder::getInstance()->addSelect('xs.shipping_cache_id, count(DISTINCT xs1.product_id) as cnt_found, count(DISTINCT xs2.product_id) as cnt_total')->
+            $oSQLBuilder = SQLBuilder::getInstance()->addSelect('xs.*, count(DISTINCT xs1.product_id) as cnt_found, count(DISTINCT xs2.product_id) as cnt_total')->
             addFromTable('shipping_cache_simple', 'xs')->
             addCondition("zip_to='{$oCustomer->getField('s_zipcode')}'")->
             addCondition("zip_from='{$oManufacturer->getField('m_zipcode')}'")->
@@ -282,20 +332,67 @@ abstract class ShippingProcessor
             addCondition("shipping_carrier='{$sCarrierName}'")->
             addInnerJoin('shipping_cache_products', 'xs1', "xs1.shipping_cache_id = xs.shipping_cache_id AND {$sProductFilter}")->
             addInnerJoin('shipping_cache_products', 'xs2', "xs2.shipping_cache_id = xs.shipping_cache_id ")->
-            addGroupBy('xs.shipping_cache_id');
+            addGroupBy('xs.shipping_cache_id')->
+            addHaving('cnt_found = cnt_total AND cnt_total = ' . count($aCartElements));
 
-
-            $res = $oSQLBuilder->query()->getQueryResult();
+            $res = $oSQLBuilder->query_first()->getQueryResult();
             if (!empty($res)) {
-                $oShippingCache = null;
-                foreach ($res as $aShippingCacheRes) {
-                    if ($aShippingCacheRes['cnt_total'] == count($aCartElements)) {
-                        $oShippingCache = ShippingCache::model(['shipping_cache_id' => $aShippingCacheRes['shipping_cache_id']]);
-                        break;
+                $oShippingCache = ShippingCache::model()->fill([
+                    'shipping_cache_id' => $res['shipping_cache_id'],
+                    'zip_from' => $res['zip_from'],
+                    'zip_to' => $res['zip_to'],
+                    'state_from' => $res['state_from'],
+                    'state_to' => $res['state_to'],
+                    'country_from' => $res['country_from'],
+                    'country_to' => $res['country_to'],
+                    'shipping_rates' => $res['shipping_rates'],
+                    'shipping_carrier' => $res['shipping_carrier'],
+                    'cache_date' => $res['cache_date'],
+                    'compressed' => $res['compressed']
+                ]);
+
+                if ($oShippingCache && $oShippingCache->getField('shipping_cache_id')) {
+                    if ($oShippingCache->getField('compressed')) {
+                        $this->aShippingRates = unserialize(gzuncompress(stripslashes(base64_decode($oShippingCache->getField('shipping_rates')))));
+                    } else {
+                        $aShippingCacheQuotes = ShippingCacheQuotes::model()->findAll(SQLBuilder::getInstance()->addCondition('shipping_cache_id = '.$oShippingCache->getField('shipping_cache_id')));
+                        if (!empty($aShippingCacheQuotes)) {
+                            foreach ($aShippingCacheQuotes as $oShippingCacheQuotes){
+                                $oShippingRate = ShippingRate::model(['rateid' => $oShippingCacheQuotes->getField('rate_id')]);
+                                if ($oShippingRate->getField('rateid')) {
+                                    $oShippingRate->setShippingChargeQuote($oShippingCacheQuotes->getField('shipping_quote'));
+                                    //$oShippingRate->setShippingCharge($oShippingCacheQuotes->getField('shipping_charge'));
+                                    //$oShippingRate->setShippingChargeBeforeMap($oShippingCacheQuotes->getField('shipping_charge_before_map'));
+                                    $oShippingRate->setCart($this->getCart());
+                                    $this->aShippingRates[] = $oShippingRate;
+                                }
+                            }
+                        }
                     }
                 }
-                if ($oShippingCache && $oShippingCache->getField('shipping_cache_id')) {
-                    $this->aShippingRates = unserialize($oShippingCache->getField('shipping_rates'));
+
+                if (!empty($this->aShippingRates) && !$this->bGetOnlyApproximationRates) {
+                    $aShippingRates = $this->getShippingRatesEntities();
+                    if (!empty($aShippingRates)) {
+                        if (count($this->aShippingRates) != count($aShippingRates)) {
+                            $this->aShippingRates = null;
+                        } else {
+                            $aR1 = $aR2 = [];
+                            foreach ($this->aShippingRates as $oShippingRate) {
+                                $aR1[] = $oShippingRate->getField('rateid');
+                            }
+                            foreach ($aShippingRates as $oShippingRate) {
+                                $aR2[] = $oShippingRate->getField('rateid');
+                            }
+                            $aDiff = array_diff($aR1, $aR2);
+                            if (!empty($aDiff)){
+                                $this->aShippingRates = null;
+                            }
+                        }
+                        if (is_null($this->aShippingRates)) {
+                            $oShippingCache->_delete();
+                        }
+                    }
                 }
             }
         }
@@ -305,5 +402,13 @@ abstract class ShippingProcessor
     public function setGetOnlyApproximationRates($bValue)
     {
         $this->bGetOnlyApproximationRates = $bValue;
+    }
+
+    public function addShippingMethod(Shipping $oShipping)
+    {
+        if (empty($this->aShippingMethods[$oShipping->getShippingId()])) {
+            $this->aShippingMethods[$oShipping->getShippingId()] = $oShipping;
+        }
+        return $this;
     }
 }

@@ -1098,10 +1098,6 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 	if (!empty($product["d_website_search_for_sku_url"]) && !empty($mpn) && ($current_area != 'C' && !empty($current_area))){
 		$product["d_website_search_for_sku_url"] = $classProduct->getProductURLOnDistributorWebSite();
 	}
-	unset($classProduct);
-###
-##
-#
 
 	$product["prevent_search_indexing"] = func_prevent_search_indexing($product);
 	if (strpos($product['prevent_search_indexing'], 'Y') !== false){
@@ -1127,21 +1123,9 @@ function func_select_product($id, $membershipid, $redirect_if_error=true, $clear
 
 	$product["brand"] = func_query_first_cell("SELECT brand FROM $sql_tbl[brands] WHERE brandid='$product[brandid]'");
 
-#
-##
-###
-	
-	/*if (empty($product["descr"])){
-		$product["descr"] = $product["fulldescr"];
+	if ($classProduct->splash_id) {
+		$product['oSplash'] = \Xcart\Images\Splash::objects()->filter(['id' => $classProduct->splash_id , 'active' => 'Y'])->get();
 	}
-
-	$product["descr"] = func_get_product_descr($product["descr"]);
-	
-	*/
-###
-##
-#
-
 	return $product;
 }
 

@@ -1324,7 +1324,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
 
         if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
-            func_log_cidev_surf("O", $orderid);
+            Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_ORDER, 'resource_id' => $orderid]);
         }
 
         $log = "";
@@ -1495,9 +1495,15 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                     $shippingLogMessage .= "<b>{$oManufacturer->getManufacturerCode()} ({$total_shipping_cost})</b><br/>";
                     if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'])) {
                         foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['added_shipping'] as $aAddedShippingRate) {
+                            $subMapCharge = '';
                             $oShippingAdded = \Xcart\Shipping::model(['shippingid' => $aAddedShippingRate['shippingid']]);
                             $addedCharge = price_format($aAddedShippingRate['shipping_charge']);
-                            $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$addedCharge}) <br/>";
+                            $mapCharge = floatval($aAddedShippingRate['shipping_extra_margin_value']);
+                            if ($mapCharge > 0) {
+                                $smapCharge = price_format($mapCharge);
+                                $subMapCharge = " (-{$smapCharge})";
+                            }
+                            $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$addedCharge}{$subMapCharge}) <br/>";
                             if (!empty($aAddedShippingRate['products'])) {
                                 foreach ($aAddedShippingRate['products'] as $sProductSKU) {
                                     $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
@@ -1507,8 +1513,13 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                         }
                     }
                     $oShippingAdded = \Xcart\Shipping::model(['shippingid' => $cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['shippingid']]);
-                    $total_shipping_cost = price_format($total_shipping_cost);
-                    $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$total_shipping_cost}) <br/>";
+                    $mapCharge = floatval($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['shipping_extra_margin_value']);
+                    $subMapCharge = '';
+                    if ($mapCharge > 0) {
+                        $smapCharge = price_format($mapCharge);
+                        $subMapCharge = " (-{$smapCharge})";
+                    }
+                    $shippingLogMessage .= str_repeat("&nbsp;", 4) . "{$oShippingAdded->getShippingCarrier()->getName()} - {$oShippingAdded->getName()} ({$total_shipping_cost}{$subMapCharge})<br/>";
                     if (!empty($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products']) && is_array($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'])) {
                         foreach ($cart['all_shippings'][$mid][$cart['shippingids'][$mid]]['products'] as $sProductSKU) {
                             $shippingLogMessage .= str_repeat("&nbsp;", 8) . "$sProductSKU <br/>";
@@ -1539,6 +1550,15 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
         $oOrder = \Xcart\Order::model(['orderid' => $orderid]);
         $oOrder->updateVerificationStatus();
+
+        $oSurfPath = Modules\User\Models\SurfPathModel::objects()
+            ->filter(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_REFERER,
+                'meta_id' =>  Modules\User\Models\SurfMetaModel::getInstance()->id])
+            ->order(['-id'])
+            ->limit(1)->get();
+        if ($oSurfPath) {
+            $oOrder->updateField('referer_id', $oSurfPath->resource_id);
+        }
 
         if (!empty($active_modules['XAffiliate'])) {
             #
@@ -1831,7 +1851,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
     x_log_add("order_time", $mes, true);
 
-    x_session_unregister('customer_notes');
 
     return $orderids;
 }
@@ -1989,8 +2008,7 @@ function func_get_order_manufacturers($orderid)
                                 }
                             }
 
-                            global $xcart_dir;
-                            $tmp_sku = \Xcart\Product::model(['productid' => $v['productid']])->getMPN();
+                            $tmp_sku = $v['oProduct']->getMPN();
 
                             $cidev_items_table .= '<tr><td width="150px" style="text-align: left;">' . $tmp_sku . '</td><td width="250px" style="text-align: left;"><a href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</td><td style="text-align: right;">' . $v["amount"] . '</td></tr>';
 
@@ -2016,7 +2034,6 @@ function func_get_order_manufacturers($orderid)
                                     $order_products .= '<tr><td align="center">' . $tmp_sku . '</td><td><font style="FONT-SIZE: 11px"><a href="' . $v["links"]["customer"] . '">' . $v["product"] . '</a>' . $selected_product_options . '</font></td><td align="center">' . $order_products_amount . '</td></tr>';
                                 }
                             }
-                            $total_product_cost_to_us += $v["cost_to_us"] * $v["amount"];
                         }
                     }
                     $cidev_items_table .= "</table>";
@@ -2031,6 +2048,11 @@ function func_get_order_manufacturers($orderid)
                     }
                 }
 
+                /** @var \Xcart\OrderGroup $oOrderGroup */
+                $oOrderGroup = Xcart\OrderGroup::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id])->get();
+                if ($oOrderGroup) {
+                    $total_product_cost_to_us = $oOrderGroup->getTotalCostToUs();
+                }
                 $mnfs[$m_id]['total_product_cost_to_us'] = $total_product_cost_to_us;
 
                 $secure_check        = $orderid . $m_id;

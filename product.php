@@ -825,7 +825,6 @@ if ($current_storefront_info["storefrontid"] == "50"){
 		}
 	}
 }
-
 $smarty->assign("product",$product_info);
 
 $smarty->assign("product_feed_enabled", $product_info["supplier_feeds_enabled"]);
@@ -1259,7 +1258,7 @@ func_print_r($a1, $data, $data_arr);
 ##
 ###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("P");
+    Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_PRODUCT]);
 }
 ###
 ##
@@ -1278,4 +1277,3 @@ $smarty->assign("ga_page_name", "detail_page");
 $smarty->assign("location", $location);
 
 func_display("customer/home.tpl",$smarty);
-?>

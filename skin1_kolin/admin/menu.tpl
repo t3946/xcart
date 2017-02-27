@@ -41,7 +41,7 @@
 <a href="{$catalogs.admin}/grandfathered_products.php" class="VertMenuItems">{$lng.lbl_grandfathered_products}</a><br />
 {/if}
 
-<a href="{$catalogs.admin}/operators.php" class="VertMenuItems">Amazon verification</a><br />
+<a href="{$catalogs.admin}/az_operators.php" class="VertMenuItems">Amazon verification</a><br />
 
 
 
@@ -53,8 +53,10 @@
 
 {if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}
 <a href="{$catalogs.admin}/orders.php?page_name=dashboard" class="VertMenuItems">Customer Care dashboard</a><br />
+{*<a href="{$catalogs.admin}/controllers.php?path=/admin/dashboard" class="VertMenuItems">Customer Care dashboard (&#129309;)</a><br />*}
 <a href="{$catalogs.admin}/checks_deposited.php" class="VertMenuItems">Checks deposited</a><br />
 <a href="{$catalogs.admin}/orders.php?page_name=search" class="VertMenuItems">Order search</a><br />
+<a href="{$catalogs.admin}/controllers.php?path=/admin/dashboard/search" class="VertMenuItems">Order search (&#128270;)</a><br />
 {/if}
 
 {if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}

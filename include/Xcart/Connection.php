@@ -3,17 +3,27 @@
 namespace Xcart;
 
 use \Doctrine\DBAL\DriverManager;
+use Xcart\App\Main\Xcart;
 
+/**
+ * Class Connection
+ *
+ * @package Xcart
+ */
 class Connection
 {
     private static $_instance = null;
 
-    private function __construct()
+    /**
+     * @return \Doctrine\DBAL\Connection
+     */
+    public static function getInstanceFromApp()
     {
-    }
+        if (!self::$_instance) {
+            self::$_instance = Xcart::app()->db->getConnection();
+        }
 
-    protected function __clone()
-    {
+        return self::$_instance;
     }
 
     /**
@@ -22,8 +32,12 @@ class Connection
      */
     static public function getInstance($params = [])
     {
-        if (is_null(self::$_instance)) {
+        if (!self::$_instance) {
             self::$_instance = DriverManager::getConnection($params);
+
+            self::$_instance
+                ->getDatabasePlatform()
+                ->registerDoctrineTypeMapping('enum', 'string');
         }
         return self::$_instance;
     }

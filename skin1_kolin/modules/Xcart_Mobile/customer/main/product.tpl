@@ -196,7 +196,12 @@ onclick="javascript: $('#orderform-{$product.productid}').submit();"
           <li data-icon="false">
             <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images">
             {/if}
-            <img {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{if $product.image_url}{$product.image_url|amp}{else}{$xcart_web_dir}/image.php?type={$type|default:"T"}&amp;id={$product.productid}{/if}" id="product_thumbnail" style="width: {$product.image_x}px; height: {$product.image_y}px;" alt="{$product.product}" />
+                {if $product.oSplash}
+                    <div style="position: absolute; z-index:2;" class="images_splash">
+                        <img src="{$product.oSplash->image_path}"/>
+                    </div>
+                {/if}
+            <img {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{if $product.image_url}{$product.image_url|amp}{else}{$xcart_web_dir}/image.php?type={$type|default:"P"}&amp;id={$product.productid}{/if}" id="product_thumbnail" style="width: {$product.image_x}px; height: {$product.image_y}px;" alt="{$product.product}" />
             {if $active_modules.Detailed_Product_Images and $images ne ''}
             </a>
           </li>

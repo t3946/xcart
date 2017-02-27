@@ -191,18 +191,11 @@ if ($dispatched_request == 'clean-url-test') {
 
         if (!empty($cidev_clean_url_type) && !empty($cidev_clean_url_id)){
             $cidev_clean_url_value = func_query_first_cell("SELECT clean_url FROM  $sql_tbl[clean_urls] WHERE resource_type='".addslashes($cidev_clean_url_type)."' AND resource_id='".addslashes($cidev_clean_url_id)."'");
-
-
             if (!empty($cidev_clean_url_value) && $cidev_clean_url_value != $dispatched_request){
-
-//                if ($cat_with_one_brand_filter == "Y"){
-//                    if (!empty($cidev_clean_url_value) && $cidev_clean_url_value != $cat_URL_for_cat_with_one_brand_filter){
-//                        func_header_location($xcart_web_dir . "/".$cidev_clean_url_value."/", true, 301);                    
-//                    }
-//                } else {
-                    func_header_location($xcart_web_dir . "/".$cidev_clean_url_value."/", true, 301);
-//func_print_r($dispatched_request, $cidev_clean_url_value);
-//                }
+                $queryParam = $_GET;
+                unset($queryParam['request_uri']);
+                $sHttpQuery = http_build_query($queryParam);
+                func_header_location($xcart_web_dir . "/".$cidev_clean_url_value."/".(empty($sHttpQuery) ? '' : '?'.$sHttpQuery), true, 301);
             }
         }
     }

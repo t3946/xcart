@@ -52,11 +52,11 @@ require $xcart_dir."/include/categories.php";
 
 x_load('files');
 
-# START: random:18298_18304_18324 [2009 Jun 08 09:50] 
+# START: random:18298_18304_18324 [2009 Jun 08 09:50]
 if ($active_modules["Brands"])
     include $xcart_dir."/modules/Brands/customer_brands.php";
 else
-# END: random:18298_18304_18324 [2009 Jun 08 09:50] 
+# END: random:18298_18304_18324 [2009 Jun 08 09:50]
 if ($active_modules["Manufacturers"])
     include $xcart_dir."/modules/Manufacturers/customer_manufacturers.php";
 
@@ -80,10 +80,10 @@ if (isset($_GET['pageid'])) {
 # Prepare data for editing
 #
     $preview = ($mode=="preview" ? "" : "AND active='Y'");
-    $page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE pageid='$pageid' $preview AND level='E'");
+    $page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE pageid='$pageid' $preview AND level='E' AND (sfids = '' or sfids like '%{$current_storefront}%')");
 
 	if ($page_data["language"] != $store_language) {
-		$page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE filename='$page_data[filename]' $preview AND level='E' AND language='$store_language'");
+		$page_data = func_query_first("SELECT * FROM $sql_tbl[pages] WHERE filename='$page_data[filename]' $preview AND level='E' AND language='$store_language' AND (sfids = '' or sfids like '%{$current_storefront}%')");
 	}
 
     if ($page_data) {
@@ -166,18 +166,11 @@ Group By B.brandid");
     $smarty->assign("main", "pages");
 }
 
-#
-##
-###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-        func_log_cidev_surf("T");
+    Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_STATIC_PAGE]);
 }
-###
-##
-#
 
 # Assign the current location line
 $smarty->assign("location", $location);
 
 func_display("customer/home.tpl",$smarty);
-?>

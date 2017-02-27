@@ -349,7 +349,9 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 
 	if ($detect_isMobile_was_created == 'Y' && $resource_type == 'H') {
 
-	} else func_log_cidev_surf($resource_type);
+	} else {
+        \Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => $resource_type]);
+	}
 }
 
 	if ( !(empty($cat) && empty($keyphrase)) && $cat_with_one_brand_filter != "Y"){

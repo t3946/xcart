@@ -1802,3 +1802,14 @@ td.borderb-gray {
 #amazon_verification ~ table td:nth-child(2), .w9form_instructions ~ tr td:nth-child(2) {
 	font-weight:bold;
 }
+form.paypal_request.error .field.error{
+	background-color: #F4CCCC;
+}
+div.ui.error.message ul.list{
+	background: #f4cccc none repeat scroll 0 0;
+	border: 1px solid #000000;
+	padding:3px;
+}
+div.ui.error.message ul.list li {
+	list-style: none;
+}

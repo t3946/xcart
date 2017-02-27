@@ -593,23 +593,20 @@ if ($cat > 0 && $mode != "delete") {
 			func_header_location("categories.php");
 		}
 		elseif($main != "product"){
-
+			$redirect_url = $xcart_web_dir . "/";
 			if (!empty($cat)){
-				$parentid = func_query_first_cell("SELECT $sql_tbl[categories].parentid FROM $sql_tbl[categories] WHERE $sql_tbl[categories].categoryid='$cat' and $sql_tbl[categories].storefrontid=$current_storefront");
-				if (empty($parentid)){
-					func_header_location($xcart_web_dir."/", true, 301);
+				$oCategory = \Xcart\Category::model(['categoryid' => $cat]);
+				if ($oCategory->getCategoryId()) {
+					$oParentCategory = $oCategory->getFirstActiveParentCategory();
+					if ($oParentCategory->getCategoryId()) {
+						$oCleanURL = $oParentCategory->getCleanUrl();
+						if ($oCleanURL->getUrl()) {
+							$redirect_url = $oCleanURL->getUrl();
+						}
+					}
 				}
-
-	                        $avail = func_query_first_cell("SELECT avail FROM $sql_tbl[categories] WHERE categoryid='$parentid' and $sql_tbl[categories].storefrontid=$current_storefront");
-              			if ($avail == "Y"){
-	                                $redirect_url = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='C' AND resource_id='$parentid'");
-               			        if (!empty($redirect_url)){
-	                                        $redirect_url = $xcart_web_dir . "/".$redirect_url."/";
-              			                func_header_location($redirect_url, true, 301);
-	                                }
-              			}
 			}
-			func_header_location($xcart_web_dir . "/");
+			func_header_location($redirect_url, true, 301);
 		}
 	}
 }
@@ -647,63 +644,6 @@ if ($current_area == "C" && !empty($active_modules["Fancy_Categories"])) {
 
 $smarty->assign("allcategories", $all_categories);
 
-/*
-#
-##
-###
-if (!empty($categories)){
-
-        foreach($categories as $k => $v){
-                if ($k == $v["categoryid"]){
-
-						
-//                        $categories[$k]['product_count'] = $product_count_global = func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v[categoryid]' AND $sql_tbl[products].forsale='Y'");
-
-			$product_count_global = $categories[$k]['product_count'];
-
-
-						if ($product_count_global <= 0) 
-							{
-								$categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '%/$v[categoryid]/%' AND avail='Y'");
-								if (!empty($categoryid_arr)){
-										foreach ($categoryid_arr as $k_c => $v_catid){
-//												$product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' AND $sql_tbl[products].forsale='Y'");
-												$product_count_global += func_query_first_cell("SELECT product_count FROM $sql_tbl[categories_subcount] WHERE categoryid='$v_catid[categoryid]'");
-												if ($product_count_global > 0) 
-													{
-														break 1;
-													}
-												}
-								} else {
-										$categoryid_arr = func_query("SELECT categoryid FROM $sql_tbl[categories] WHERE categoryid_path LIKE '$v[categoryid]/%' AND avail='Y'");
-										if (!empty($categoryid_arr)){
-												foreach ($categoryid_arr as $k_c => $v_catid){
-//														$product_count_global += func_query_first_cell("SELECT COUNT($sql_tbl[products_categories].productid) FROM $sql_tbl[products_categories] LEFT JOIN $sql_tbl[products] ON $sql_tbl[products].productid=$sql_tbl[products_categories].productid WHERE $sql_tbl[products_categories].categoryid='$v_catid[categoryid]' AND $sql_tbl[products].forsale='Y'");
-														$product_count_global += func_query_first_cell("SELECT product_count FROM $sql_tbl[categories_subcount] WHERE categoryid='$v_catid[categoryid]'");
-														if ($product_count_global > 0) 
-															{
-																break 1;
-															}
-														}
-												}
-										}
-							}
-						
-	
-                        $categories[$k]['product_count_global'] = $product_count_global;
-
-                        if ($current_area == "C"){
-                                $categories[$k]['product_count'] = $categories[$k]['product_count_global'];
-                        }
-                }
-
-        }
-}
-###
-##
-#
-*/
-
 $smarty->assign("categories", empty($categories)?"":$categories);
 
 if ($cat == 0 && empty($keyphrase)) {
@@ -715,10 +655,6 @@ if (!empty($active_modules['Multiple_Storefronts'])) {
 } else {
     $sf_condition = '';
 }
-
-
-//func_print_r($subcategories, $categories);
-
 
 if (!empty($subcategories)) {
 

@@ -8,11 +8,26 @@ class OrderGroupInvoice extends Data
      */
     private $oReconciliation = null;
 
+    public static function getInvoicesStatusList()
+    {
+        return [
+            "N" => "Not received",
+            "A" => "Added",
+            "U" => "Updated",
+            "R" => "Reconciled",
+        ];
+    }
+
     public function __construct($aParams = [])
     {
         $this->aPrimaryKeys = ['orderid', 'manufacturerid', 'invoice_number'];
         $this->sPrimaryTable = 'order_group_invoices';
         parent::__construct($aParams);
+    }
+
+    public function getStatusName()
+    {
+        return self::getInvoicesStatusList()[$this->getField('status')];
     }
 
     public function setInvoiceNumber($iInvoiceNumber) {
