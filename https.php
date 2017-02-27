@@ -72,6 +72,9 @@ if ($config['Security']['use_secure_login_page'] == 'Y') {
 }
 
 function is_https_link($link, $https_scripts) {
+	if (true) {
+		return true;
+	}
 	if (empty($https_scripts))
 		return false;
 
