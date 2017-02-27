@@ -415,11 +415,11 @@ SQL;
 
             foreach ($ReportContent as $report_data) {
                 $cntLine = 0;
-                if ($this->bEnableLog && $this->sLogPrefix) {
+                if ($this->bEnableLog && $this->sLogPrefix && !empty($report_data)) {
                     $log = new \Monolog\Logger('fee_report');
                     $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
                     $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                    $log->debug('FeeReport', $report_data);
+                    $log->addDebug($report_data);
                 }
                 $aReportValue = [];
                 foreach (preg_split("/((\r?\n)|(\r\n?))/", $report_data) as $sLine) {
@@ -467,8 +467,8 @@ SQL;
         $aFieldsToUpdate = ['productid', 'fnsku', 'asin', 'longest_side', 'median_side', 'shortest_side', 'length_and_girth', 'unit_of_dimension',
             'item_package_weight', 'unit_of_weight', 'product_size_tier', 'estimated_fee_total', 'estimated_referral_fee_per_unit', 'estimated_variable_closing_fee',
             'estimated_order_handling_fee_per_order', 'estimated_pick_pack_fee_per_unit', 'estimated_weight_handling_fee_per_unit', 'amazon_fee_preview_last_update_date',
-            'expected-fulfillment-fee-per-unit', 'estimated-future-order-handling-fee-per-order', 'estimated-future-pick-pack-fee-per-unit',
-            'estimated-future-weight-handling-fee-per-unit', 'expected-future-fulfillment-fee-per-unit'];
+            'expected_fulfillment_fee_per_unit', 'estimated_future_order_handling_fee_per_order', 'estimated_future_pick_pack_fee_per_unit',
+            'estimated_future_weight_handling_fee_per_unit', 'expected_future_fulfillment_fee_per_unit'];
 
         $aFieldsToUpdate = array_flip($aFieldsToUpdate);
         foreach ($this->aReportValue as $aReport) {
@@ -477,7 +477,7 @@ SQL;
                 $aArrInsert['amazon_fee_preview_last_update_date'] = time();
                 $allItemsCount++;
 
-                if (!is_numeric($aArrInsert['expected-fulfillment-fee-per-unit'])) { //@TASK: 9973238
+                if (!is_numeric($aArrInsert['expected_fulfillment_fee_per_unit'])) {
                     $skippedItemsCount++;
                     continue;
                 }
@@ -488,11 +488,11 @@ SQL;
                 $aArrInsert['estimated_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_order_handling_fee_per_order']);
                 $aArrInsert['estimated_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_pick_pack_fee_per_unit']);
                 $aArrInsert['estimated_weight_handling_fee_per_unit'] = floatval($aArrInsert['estimated_weight_handling_fee_per_unit']);
-                $aArrInsert['expected-fulfillment-fee-per-unit'] = floatval($aArrInsert['expected-fulfillment-fee-per-unit']);
-                $aArrInsert['estimated-future-order-handling-fee-per-order'] = floatval($aArrInsert['estimated-future-order-handling-fee-per-order']);
-                $aArrInsert['estimated-future-pick-pack-fee-per-unit'] = floatval($aArrInsert['estimated-future-pick-pack-fee-per-unit']);
-                $aArrInsert['expected-fulfillment-fee-per-unit'] = floatval($aArrInsert['expected-fulfillment-fee-per-unit']);
-                $aArrInsert['expected-future-fulfillment-fee-per-unit'] = floatval($aArrInsert['expected-future-fulfillment-fee-per-unit']);
+                $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
+                $aArrInsert['estimated_future_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_future_order_handling_fee_per_order']);
+                $aArrInsert['estimated_future_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_future_pick_pack_fee_per_unit']);
+                $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
+                $aArrInsert['expected_future_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_future_fulfillment_fee_per_unit']);
 
                 if (!empty($aArrInsert['productid'])) {
                     try {
