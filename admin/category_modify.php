@@ -602,8 +602,14 @@ if ($REQUEST_METHOD == "GET" && $mode == "delete_icon" && !empty($cat)) {
 #
 $location[] = array(func_get_langvar_by_name("lbl_categories_management"), "categories.php");
 
-if ($mode == "add")
+if ($mode == "add") {
 	$location[] = array(func_get_langvar_by_name("lbl_add_category"), "category_modify.php?mode=add&cat=$cat");
+	if (!empty($current_category)) {
+		$current_category['SEO_category_name'] = '';
+		$current_category['SEO_h2'] = '';
+		$smarty->assign('current_category', $current_category);
+	}
+}
 else {
 	$location[] = array(func_get_langvar_by_name("lbl_modify_category"), "category_modify.php?cat=$cat");
 	if ($section == 'lng') {
