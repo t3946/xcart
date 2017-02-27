@@ -607,6 +607,9 @@ if ($mode == "add") {
 	if (!empty($current_category)) {
 		$current_category['SEO_category_name'] = '';
 		$current_category['SEO_h2'] = '';
+		$current_category['google_product_category'] = '';
+		$current_category['title_tag'] = '';
+		$current_category['meta_descr'] = '';
 		$smarty->assign('current_category', $current_category);
 	}
 }
