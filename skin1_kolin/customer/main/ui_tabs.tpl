@@ -198,7 +198,11 @@ function send_question_email_form(){
 {capture name=dialog}
 
 {if $brand_image.filename ne ""}
-<img src="images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
+    {assign var="imagePath" value=$xcart_web_dir}
+    {if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}
+        {assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
+    {/if}
+<img src="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
 {/if}
 
 <p align="justify">

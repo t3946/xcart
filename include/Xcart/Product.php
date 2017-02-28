@@ -25,6 +25,8 @@ class Product extends Data
     private $aImagesP = null;
     private $aImagesT = null;
 
+    private $aThumbNails = null;
+
     private $aPricing = null;
 
     private $iAmazonQuantity = null;
@@ -847,5 +849,22 @@ SQL;
             }
         }
         return $aRes;
+    }
+
+    public function getThumbnail()
+    {
+        $oThumbImage = null;
+        if (is_null($this->aThumbNails)){
+            $this->aThumbNails = \Modules\Product\Models\ImageTModel::objects()->filter(['id' => $this->getProductId()])->all();
+        }
+        if (!empty($this->aThumbNails)) {
+            $oThumbImage = reset($this->aThumbNails);
+        }
+        return $oThumbImage;
+    }
+
+    public function getSplash()
+    {
+        return \Xcart\Images\Splash::objects()->filter(['id' => (int) $this->splash_id])->get();
     }
 }

@@ -2,7 +2,7 @@
 /**
  * @var \Xcart\Product $oProduct
  */
-global $REQUEST_METHOD, $smarty, $config;
+global $REQUEST_METHOD, $smarty, $config, $productid;
 #
 ## ALWAYS USE IT if you do not require auth.php
 ###
@@ -21,16 +21,13 @@ if ($REQUEST_METHOD == 'POST') {
 	if (!empty($products)){
         $aResult = [];
         foreach ($products as $k => $oProduct){
-            $oThumbImage = null;
-            $aThumbImages = \Modules\Product\Models\ImageTModel::objects()->filter(['id' => $oProduct->productid])->all();
-            if (!empty($aThumbImages)) {
-                $oThumbImage = reset($aThumbImages);
-            }
+            $oThumb = $oProduct->getThumbnail();
             $oBrand = \Xcart\Brand::objects()->get(['brandid' => $oProduct->brandid]);
-            $oSplash = \Xcart\Images\Splash::objects()->filter(['id' => (int) $oProduct->splash_id])->get();
-            $smarty->assign('splash', $oSplash);
+            $smarty->assign('splash', $oProduct->getSplash());
             $smarty->assign('config', $config);
-            $smarty->assign('tmbn_url', $oThumbImage->getURL());
+            if ($oThumb) {
+                $smarty->assign('tmbn_url', $oThumb->getURL());
+            }
             $smarty->assign('product', $oProduct->product);
 
             $aResult['items'][] = [

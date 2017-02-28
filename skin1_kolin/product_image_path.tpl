@@ -1,0 +1,1 @@
+{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}//{$config.Appearance.CDN_domain}{else}{$xcart_web_dir}{/if}

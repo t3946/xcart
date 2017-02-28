@@ -103,7 +103,7 @@ function db_fetch_row(\Doctrine\DBAL\Driver\Statement $result) {
 }
 
 function db_fetch_array(\Doctrine\DBAL\Driver\Statement $result, $flag=MYSQL_ASSOC) {
-	return $result->fetch(PDO::FETCH_BOTH);
+	return $result->fetch(PDO::FETCH_ASSOC);
 }
 
 function db_fetch_field(\Doctrine\DBAL\Driver\Statement $result, $num = 0) {

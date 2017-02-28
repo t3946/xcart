@@ -235,9 +235,9 @@ function func_get_image_url($id, $type = 'T', $image_path = false) {
 #
 
 
-	if (is_url($image_path)) {
+	if (!empty($image_path)) {
 		# image_path is an URL
-		return $image_path;
+		return ltrim($image_path, '.');
 	}
 
 	$image_path = func_realpath($image_path);

@@ -22,18 +22,23 @@
                 <div class="slide">
                     <div class="product">
                         <div class="ui-shadow">
-                            <a href="{$current_location}/product.php?productid={$item.productid}" class="ui-link-inherit">
+                            <a href="{$current_location}/product.php?productid={$item->productid}" class="ui-link-inherit">
                                 <span class="product-thumbnail row">
-                                    {include file="product_thumbnail.tpl" productid=$item.productid product=$item.product tmbn_url=$item.tmbn_url splash=$item.oSplash}
+                                    {assign var=ImageTModel value=$item->getThumbnail()}
+                                    {assign var=thumburl value=''}
+                                    {if $ImageTModel}
+                                        {assign var=thumburl value=$ImageTModel->getURL()}
+                                    {/if}
+                                    {include file="product_thumbnail.tpl" productid=$item->productid product=$item->product tmbn_url=$thumburl splash=$item->getSplash()}
                                 </span>
 
                                 <span class="label row">
-                                    {$item.product}
+                                    {$item->product}
                                     <span class="grad">&nbsp;</span>
                                 </span>
 
                                 <span class="price row">
-                                    Price: US$ {$item.price}
+                                    Price: US$ {$item->price}
                                 </span>
                             </a>
                         </div>
