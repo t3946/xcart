@@ -379,7 +379,7 @@ storage = {
 
                     $.mnotify({
                         title: 'Tooltip error',
-                        content: jqXHR.responseText
+                        message: jqXHR.responseText
                     });
 
                     self.close.call(self);
@@ -728,7 +728,7 @@ jQuery.fn.mfieldset = function (options) {
                 error: function (jqXHR, textStatus, errorThrown) {
                     $.mnotify({
                         title: 'Dashboard refresh error',
-                        content: jqXHR.responseText
+                        message: jqXHR.responseText
                     });
                 }
             });
