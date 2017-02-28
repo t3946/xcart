@@ -13,6 +13,7 @@ return array_replace_recursive([
        'Dashboard',
        'User',
        'Sites',
+       'Amazon',
    ],
    'components' => [
        'db' => [

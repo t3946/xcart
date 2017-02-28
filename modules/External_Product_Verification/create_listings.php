@@ -42,5 +42,6 @@ $oBatch = ExternalVerificationBatch::model();
 $smarty->assign('sAmazonLink', $oBatch::LINK_SEARCH_BY_ASIN);
 $smarty->assign("navigation_script", "az_create_listings.php?per_page=$per_page");
 $smarty->assign("per_page", $per_page);
+$smarty->assign("total_items", $total_items);
 include $xcart_dir."/include/navigation.php";
 $smarty->assign('aVerifiactionResults', $a['resultSet']);
