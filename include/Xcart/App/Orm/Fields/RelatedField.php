@@ -75,13 +75,16 @@ abstract class RelatedField extends IntField
         $joinAlias = '???';
         foreach ($this->getSelectJoin($qb, $topAlias) as $join) {
             list($joinType, $tableName, $on, $alias) = $join;
+
             if ($qb->hasJoin($tableName)) {
                 $joinAlias = $qb->getJoinAlias($tableName);
-            } else {
+            }
+            else {
                 $qb->join($joinType, $tableName, $on, $alias);
                 $joinAlias = $alias;
             }
         }
+
         return $joinAlias;
     }
 
@@ -90,9 +93,11 @@ abstract class RelatedField extends IntField
         $joinAlias = '???';
         foreach ($this->getJoin($qb, $topAlias) as $join) {
             list($joinType, $tableName, $on, $alias) = $join;
+
             if ($qb->hasJoin($tableName)) {
                 $joinAlias = $qb->getJoinAlias($tableName);
-            } else {
+            }
+            else {
                 $qb->join($joinType, $tableName, $on, $alias);
                 $joinAlias = $alias;
             }

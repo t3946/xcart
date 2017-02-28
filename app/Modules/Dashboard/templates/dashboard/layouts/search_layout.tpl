@@ -1,4 +1,4 @@
-{extends 'dashboard/dashboard_form.tpl'}
+{extends 'dashboard/layouts/dashboard_layout.tpl'}
 
 {block 'heading'}
     <h1 align="center">Order search</h1>
@@ -12,7 +12,7 @@
                 <legend>Order search form</legend>
 
                 <form action="{url 'dashboard:search'}" method="GET">
-                    {include 'dashboard/form_fields.tpl'}
+                    {include 'dashboard/filter_fields.tpl'}
 
 
                     <ul class="ul-main">

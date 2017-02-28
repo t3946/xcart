@@ -7,6 +7,17 @@
         <div class="columns large-6">
             {if $type == 'textarea'}
                 <textarea name="{$model->classNameShort()}[{$field}]" id="m_{$field}" {if $model->getField($field)->isRequired()}required{/if}>{$model.$field}</textarea>
+            {elseif $type == 'select'}
+                <select name="{$model->classNameShort()}[{$field}]" id="m_{$field}" {if $multiple}multiple{/if} class="{$class}">
+                    <option value=""></option>
+                    {foreach $choises as $key => $value}
+                        {if is_array($selected)}
+                            <option value="{$value.id}" {if $value.id|in:$selected }selected{/if}>{$value.name}</option>
+                        {else}
+                            <option value="{$value.id}" {if $selected == $value.id }selected{/if}>{$value.name}</option>
+                        {/if}
+                    {/foreach}
+                </select>
             {elseif $type == 'checkbox'}
                 <input type="hidden" value="0" name="{$model->classNameShort()}[{$field}]">
                 <input type="{if $type}{$type}{else}text{/if}"

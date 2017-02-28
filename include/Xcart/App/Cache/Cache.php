@@ -14,12 +14,9 @@ class Cache
 
     protected $_drivers = [];
 
-    protected $_last_active_cache = [];
-    protected $_stack_lac = [];
-
     public $defaultDriver = 'default';
-    public $saveInMemory = true;
-    public $numSavedInMemory = 10;
+    public $memoryDriver = 'memory';
+    public $saveInMemory = false;
     
     public function setDrivers($config)
     {
@@ -46,7 +43,7 @@ class Cache
     public function set($key, $value, $timeout = null)
     {
         if ($this->saveInMemory) {
-            $this->setInMemory($key, $value, $timeout);
+            $this->getDriver($this->memoryDriver)->set($key, $value, $timeout);
         }
 
         return $this->getDriver($this->defaultDriver)->set($key, $value, $timeout);
@@ -55,7 +52,7 @@ class Cache
     public function get($key, $default = null)
     {
         if ($this->saveInMemory) {
-            if ($value = $this->getInMemory($key)) {
+            if ($value = $this->getDriver($this->memoryDriver)->get($key)) {
                 return $value;
             }
         }
@@ -63,7 +60,7 @@ class Cache
         $value = $this->getDriver($this->defaultDriver)->get($key, $default);
 
         if ($this->saveInMemory) {
-            $this->setInMemory($key, $value, 5);
+            $this->getDriver($this->memoryDriver)->set($key, $value, rand(3, 5));
         }
 
         return $value;
@@ -71,57 +68,10 @@ class Cache
 
     public function cleanUp($force = false)
     {
-        $this->cleanUpInMemory();
+        if ($this->saveInMemory) {
+            $this->getDriver($this->memoryDriver)->cleanUp($force);
+        }
         $this->getDriver($this->defaultDriver)->cleanUp($force);
     }
 
-    private function setInMemory($key, $value, $timeout = null)
-    {
-        $this->gcInMemory();
-
-        array_unshift($this->_stack_lac, $key);
-        $this->_last_active_cache[$key] = ['value' => $value, 'timeout' => $timeout + time()];
-
-        if (count ($this->_stack_lac) > $this->numSavedInMemory) {
-            $count = count ($this->_stack_lac) - $this->numSavedInMemory;
-
-            for ($i=1; $count >= $i; $i++)
-            {
-                $key = array_pop($this->_stack_lac);
-                unset($this->_last_active_cache[$key]);
-            }
-        }
-    }
-
-    private function getInMemory($key)
-    {
-        $this->gcInMemory();
-
-        if (isset($this->_last_active_cache[$key])) {
-            return $this->_last_active_cache[$key]['value'];
-        }
-
-        return null;
-    }
-
-    private function gcInMemory()
-    {
-        foreach ($this->_last_active_cache as $key => $params)
-        {
-            if ($params['timeout'] < time())
-            {
-                if ($l_key = array_search($key,$this->_stack_lac)) {
-                    unset($this->_stack_lac[$l_key]);
-                }
-
-                unset($this->_last_active_cache[$key]);
-            }
-        }
-    }
-
-    private function cleanUpInMemory()
-    {
-        $this->_last_active_cache = [];
-        $this->_stack_lac = [];
-    }
 }
