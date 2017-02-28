@@ -376,7 +376,7 @@ storage = {
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     $.mnotify({
-                        title: 'Dashboard refresh error',
+                        title: 'Tooltip error',
                         content: jqXHR.responseText
                     });
 
