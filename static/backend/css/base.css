@@ -533,7 +533,15 @@ label + input {
     line-height: 14px;
     border: 1px solid #bbbbbb;
 }
-.admin .drag table:hover .container {
+.admin .my_dashboard .container {
+
+    min-width: 5px;
+    min-height: 1.5rem;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.admin .drag .container {
     min-width: 5px;
     min-height: 1.5rem;
     height: 100%;
@@ -920,4 +928,17 @@ div.message-box div.message-body div.thumb img {
 
 .subscription-container {
     width: 206px;
+    text-align: left;
+    margin: 0 -15px;
+}
+
+.subscription-container .item {
+    padding-bottom: 3px;
+}
+subscription-container .item form {
+    padding: 5px;
+}
+
+.subscription-container .item input {
+    vertical-align: middle;
 }

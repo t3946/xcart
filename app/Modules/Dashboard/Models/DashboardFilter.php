@@ -27,34 +27,34 @@ class DashboardFilter extends Model
     public static function getFields()
     {
         return [
-            'id' => [
+            'id'              => [
                 'class' => AutoField::className(),
             ],
-            'group' => [
-                'class' => ForeignField::className(),
-                'modelClass' => GroupModel::className(),
+            'group'           => [
+                'class'       => ForeignField::className(),
+                'modelClass'  => GroupModel::className(),
                 'verboseName' => 'Group',
-                'link' => ['id', 'group_id'],
-                'null' => true,
+                'link'        => ['id', 'group_id'],
+                'null'        => true,
             ],
-            'users' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => UserModel::className(),
-                'through' => UserFiltersLinkModel::className(),
-                'link' => ['filter_id', 'user_id'],
+            'users'           => [
+                'class'       => ManyToManyField::className(),
+                'modelClass'  => UserModel::className(),
+                'through'     => UserFiltersLinkModel::className(),
+                'link'        => ['filter_id', 'user_id'],
                 'verboseName' => 'In users dashboard',
             ],
-            'enabled' => [
+            'enabled'         => [
                 'class'   => BooleanField::className(),
                 'null'    => false,
                 'default' => 1,
             ],
-            'bold' => [
+            'bold'            => [
                 'class'   => BooleanField::className(),
                 'null'    => false,
                 'default' => 0,
             ],
-            'name' => [
+            'name'            => [
                 'class'       => CharField::className(),
                 'null'        => false,
                 'verboseName' => 'Filter name',
@@ -74,17 +74,17 @@ class DashboardFilter extends Model
                 'length' => 5,
                 'null'   => true,
             ],
-            'color' => [
+            'color'           => [
                 'class'       => CharField::className(),
                 'null'        => true,
                 'verboseName' => 'Tag color',
             ],
-            'direct_url' => [
+            'direct_url'      => [
                 'class'       => CharField::className(),
                 'null'        => true,
                 'verboseName' => 'Direct link',
             ],
-            'form_data' => [
+            'form_data'       => [
                 'class'       => JsonField::className(),
                 'null'        => false,
                 'verboseName' => 'Filter condition',
@@ -126,6 +126,33 @@ class DashboardFilter extends Model
         }
 
         return $this->s_store;
+    }
+
+
+    private $uf_link_model = null;
+
+    public function getMyPositions()
+    {
+        if (!$this->uf_link_model) {
+            $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user__login' => Xcart::app()->request->session->get('login')])->get();
+        }
+
+        return [
+            'position_row' => ($this->uf_link_model && $this->uf_link_model->position_row) ? $this->uf_link_model->position_row : $this->position_row,
+            'position_column' => ($this->uf_link_model && $this->uf_link_model->position_column) ? $this->uf_link_model->position_column : $this->position_column,
+        ];
+    }
+
+    public function getMyPositionRow()
+    {
+        $positions = $this->getMyPositions();
+        return $positions['position_row'];
+    }
+
+    public function getMyPositionColumn()
+    {
+        $positions = $this->getMyPositions();
+        return $positions['position_column'];
     }
 
     public static function getMaxRowCol()

@@ -8,13 +8,13 @@
                         <td>
                             <div class="container" data-row="{$row}" data-col="{$col}" data-group="{$group}">
                                 {foreach $models as $model}
-                                    {if $model->position_row == $row && $model->position_column == $col}
+                                    {if ($model->position_row == $row && $model->position_column == $col && !$my_position) || ($my_position && $model->getMyPositionRow() == $row && $model->getMyPositionColumn() == $col )}
                                         <a href="{$model->getAbsoluteUrl()}"
                                            class="{if $model->getSearchStorage()->getCashedCount() == 0}empty{else}button{/if}"
                                            target="_blank"
                                            data-id="{$model->id}"
                                            data-action="{url 'dashboard:filter_subscription' id=$model->id}"
-                                           title="{$model}">
+                                           data-count="{$model->getSearchStorage()->getCashedCount()}">
                                             <div class="row">
                                                 <div class="columns large-2">
                                                     {if $model->tag}
@@ -24,10 +24,10 @@
                                                     {/if}
                                                 </div>
                                                 <div class="columns large-10">
-                                        <span class="name {if $model->getSearchStorage()->getCashedCount() == 0}gray{/if}">
-                                            <span class="{if $model->bold}bold{/if}">{$model}</span>
-                                            (<span class="count">{$model->getSearchStorage()->getCashedCount()}</span>)
-                                        </span>
+                                                    <span class="name {if $model->getSearchStorage()->getCashedCount() == 0}gray{/if}">
+                                                        <span class="{if $model->bold}bold{/if}">{$model}</span>
+                                                        (<span class="count">{$model->getSearchStorage()->getCashedCount()}</span>)
+                                                    </span>
                                                 </div>
                                             </div>
                                         </a>

@@ -13,6 +13,11 @@ class UserFiltersLinkModel extends Model
         return 'xcart_user_filter_link';
     }
 
+    public static function getPrimaryKeyName($asArray = false)
+    {
+        return ['user_id', 'filter_id'];
+    }
+
     public static function getFields()
     {
         return [

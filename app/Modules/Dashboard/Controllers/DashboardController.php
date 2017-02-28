@@ -19,14 +19,32 @@ class DashboardController extends PrototypeAdminController
 
     public function index()
     {
-        echo $this->renderInternal('dashboard/index.tpl',
-            [
-                'row_col' => DashboardFilter::getMaxRowCol(),
-                'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__login' => Xcart::app()->request->session->get('login')])->order(['position_row', 'position_column'])->all(),
-                'models'  => DashboardFilter::objects()->filter(['enabled' => true])->all(),
-                'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
-            ]
-        );
+        $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
+
+        if ($this->getRequest()->getIsAjax()) {
+            $data = [];
+
+            /** @var DashboardFilter $model */
+            foreach ($models as $model) {
+                $data[$model->id] = [
+                    'count' => $model->getSearchStorage()->getCashedCount(),
+                ];
+            }
+
+            $this->jsonResponse($data);
+        }
+        else {
+            echo $this->renderInternal('dashboard/index.tpl',
+                [
+                    'models'  => $models,
+                    'row_col' => DashboardFilter::getMaxRowCol(),
+                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__login' => Xcart::app()->request->session->get('login')])->order(['position_row', 'position_column'])->all(),
+                    'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
+                ]
+            );
+        }
+
+
     }
 
     public function filter($id)
@@ -84,27 +102,44 @@ class DashboardController extends PrototypeAdminController
         }
     }
 
+    public function mySort()
+    {
+        /** @var Model|ModelInterface $model */
+        if (isset($_POST['id']) && $model = DashboardFilter::objects()->get(['id' => $_POST['id']]))
+        {
+
+            $user = UserModel::objects()->get(['login' => Xcart::app()->request->session->get('login')]);
+            $model = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $model->id, 'user_id' => $user->id]);
+
+            unset($_POST['id']);
+            $model->setAttributes($_POST);
+
+            if ($model->isValid() && $model->save(['position_row', 'position_column'])) {
+
+                $this->jsonResponse(['message' => "Filter '{$model}' saved on position {$model->position_row}x{$model->position_column}"]);
+            }
+        }
+    }
+
     public function subscription($id)
     {
         $class = UserModel::classNameShort();
         $model = UserModel::objects()->get(['login' => Xcart::app()->request->session->get('login')]);
+
+        if ($this->getRequest()->getIsPost()) {
+            if ($_POST[$class]) {
+                UserFiltersLinkModel::objects()->getOrCreate(['user_id' => $model->id, 'filter_id' => $id]);
+            }
+            else {
+                UserFiltersLinkModel::objects()->filter(['user_id' => $model->id, 'filter_id' => $id])->delete();
+            }
+        }
 
         $users = [];
         $u_ids = UserFiltersLinkModel::objects()->filter(['filter_id' => $id])->valuesList(['user_id'], true);
 
         if ($u_ids) {
             $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();
-        }
-
-        if ($this->getRequest()->getIsPost()) {
-            if ($_POST[$class]) {
-                UserFiltersLinkModel::objects()->getOrCreate(['user_id' => $model->id, 'filter_id' => $id]);
-                $this->refresh();
-            }
-            else {
-                UserFiltersLinkModel::objects()->filter(['user_id' => $model->id, 'filter_id' => $id])->delete();
-                $this->refresh();
-            }
         }
 
         echo $this->render('dashboard/subscription.tpl', [

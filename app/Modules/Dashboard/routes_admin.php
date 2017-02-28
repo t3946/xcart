@@ -32,6 +32,11 @@ return [
         'name' => 'sort_filters'
     ],
     [
+        'route' => '/my/filters/sort',
+        'target' => ['\Modules\Dashboard\Controllers\DashboardController', 'mySort'],
+        'name' => 'sort_my_filters'
+    ],
+    [
         'route' => '/create/group',
         'target' => ['\Modules\Dashboard\Controllers\DashboardGroupController', 'create'],
         'name' => 'create_group'

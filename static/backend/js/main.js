@@ -197,7 +197,8 @@ storage = {
             // onBeforeClose: $.noop,
             // onAfterClose: $.noop,
             onSubmit: 'default',
-            onAfterSubmit: $.noop
+            onAfterSubmit: $.noop,
+            onAfterSuccess: $.noop
         },
         classes: {
             container: 'tooltip'
@@ -266,12 +267,14 @@ storage = {
                 if (isTop) {
                     $tooltip.css({
                         left: posLeft,
-                        top: window.pageYOffset + window.innerHeight,
+                        // top: window.pageYOffset + window.innerHeight,
+                        top: posTop + 200,
                     });
                 } else {
                     $tooltip.css({
                         left: posLeft,
-                        top: window.pageYOffset,
+                        // top: window.pageYOffset,
+                        top: posTop - 200,
                     });
                 }
 
@@ -360,6 +363,7 @@ storage = {
                     if (data) {
                         content = data['content'] || data['title'] || data;
                         self.setContent(content);
+                        self.options.onAfterSuccess.call(self);
                     }
 
                     if (!data) {
@@ -516,7 +520,6 @@ jQuery.fn.tablePositions = function (options) {
                 return (e.target.innerHTML.trim() != '');
             })
             .on('dragenter', function (e) {
-                // console.log(e.target);
                 var has = (e.target.innerHTML.trim() != '');
                 if (!has) {
                     $(this).addClass('drag-over');
@@ -641,6 +644,121 @@ jQuery.fn.mfieldset = function (options) {
         }
     });
 };
+
+(function($){
+    "use strict";
+
+    var Dashboard = function (element, options) {
+        return this.init(element, options);
+    };
+
+    Dashboard.prototype = {
+        options : {
+            ajax: {
+                type: 'get',
+                dataType: 'json',
+                url: '',
+                cache: false
+            },
+            triggers: {
+                refresh: 'dashboard:refresh'
+            },
+            interval: 15000,
+            selector: '.dashboard-filters a[data-id]'
+        },
+
+        __stop: false,
+
+        init: function(element, options) {
+            this.options = $.extend(this.options, options);
+
+            this.start();
+
+        },
+        processData:function(data) {
+
+            $(this.options.selector).each(function(){
+                var $this = $(this),
+                    id = $this.data('id'),
+                    count = parseInt($this.attr('data-count'));
+
+                if (data[id]) {
+                    if (data[id].count == count) {
+                        $this.find('.count').html(data[id].count);
+                    }
+                    else {
+                        var c_chng = count - data[id].count;
+                        var sign = '+';
+                        if (c_chng < 0) {
+                            sign = '-';
+                        }
+
+                        $this.attr('data-count', count);
+                        $this.find('.count').html(count + ' ' + sign + c_chng);
+                    }
+                }
+            });
+
+            this.cycleRefresh();
+        },
+        refresh: function() {
+            var self = this;
+
+            $.ajax({
+                dataType: this.options.ajax.dataType,
+                type: this.options.ajax.type,
+                url: this.options.ajax.url,
+                cache: this.options.ajax.cache,
+
+                success: function (data, textStatus, jqXHR) {
+
+                    self.processData.call(self, data);
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $.mnotify({
+                        title: 'Dashboard refresh error',
+                        content: jqXHR.responseText
+                    });
+                }
+            });
+        },
+
+        cycleRefresh: function() {
+            if (!this.__stop) {
+                var self = this;
+
+                setTimeout(function () {
+                    $(document).trigger(self.options.triggers.refresh);
+                }, this.options.interval);
+            }
+            else {
+                this.__stop = false;
+            }
+        },
+        bindEvents: function() {
+            var self = this;
+            $(document).on(self.options.triggers.refresh, function(){
+                self.refresh.call(self);
+            });
+        },
+        unbindEvents: function() {
+            $(document).unbind(self.options.triggers.refresh);
+        },
+        unbind:function() {
+            this.unbindEvents();
+            this.__stop = true;
+        },
+        start: function() {
+            this.bindEvents();
+            this.cycleRefresh();
+        }
+    };
+
+    $.fn.dashboard = function(options) {
+        return new Dashboard(this, options);
+    }
+})(jQuery);
 
 (function($) {
     "use strict";
