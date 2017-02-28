@@ -375,8 +375,6 @@ storage = {
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(jqXHR, textStatus, errorThrown);
-
                     $.mnotify({
                         title: 'Tooltip error',
                         message: jqXHR.responseText

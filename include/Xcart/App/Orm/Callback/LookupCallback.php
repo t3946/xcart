@@ -21,7 +21,7 @@ class LookupCallback
      *
      * @param Model|ModelInterface $model
      */
-    public function __construct(ModelInterface $model)
+    public function __construct($model)
     {
         $this->model = $model;
     }
