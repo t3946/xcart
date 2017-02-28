@@ -370,9 +370,17 @@ storage = {
                         self.close();
                     } else if (data.status === 'success' && options.autoclose) {
                         setTimeout(function () {
-                            return self.close();
+                            return self.close.call(self);
                         }, options.autoclosedelay);
                     }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $.mnotify({
+                        title: 'Tooltip error',
+                        content: jqXHR.responseText
+                    });
+
+                    self.close.call(self);
                 }
             });
 
