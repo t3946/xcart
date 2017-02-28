@@ -22,7 +22,7 @@ if ($config[LOG_CATEGORY] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
     $oMail->body = Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO . ' already launched';
     $oMail->sendEmail();
-    die("Already launched"); // ################################
+    //die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
 
@@ -47,7 +47,6 @@ while ($aProductsBatch = \Xcart\Product::objects()
         ->enableLog('amazon-info')
         ->_Request('GetCompetitivePricing')
         ->_Request('GetLowestOfferListingsForSKU');
-    $i++;
 }
 
 echo  "Report 2 start\n";
