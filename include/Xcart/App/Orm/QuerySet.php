@@ -146,7 +146,9 @@ class QuerySet extends QuerySetBase
     {
         $model = $this->get($attributes);
         if ($model === null) {
-            $model = $this->getModel()->create();
+            $className = get_class($this->getModel());
+            /** @var Model $model */
+            $model = new $className($attributes);
         }
         $model->setAttributes($updateAttributes);
         $model->save();
