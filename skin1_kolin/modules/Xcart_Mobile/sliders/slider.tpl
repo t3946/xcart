@@ -33,6 +33,7 @@
                                     {assign var='product' value=$item->product}
                                     {assign var='splash' value=$item->getSplash()}
                                     {if $config.Appearance.show_thumbnails eq "Y"}
+                                        {include file="product_splash.tpl"}
                                         <img data-lazy="{include file="product_image_src.tpl"}" {if $image_x ne 0} width="{$image_x}"{/if}{if $image_y ne 0} height="{$image_y}"{/if} alt="{$product|escape}"/>
                                     {/if}
                                 </span>
