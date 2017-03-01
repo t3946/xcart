@@ -671,7 +671,11 @@ jQuery.fn.mfieldset = function (options) {
             triggers: {
                 refresh: 'dashboard:refresh'
             },
-            interval: 15000,
+            classes: {
+                enabled: 'button',
+                disabled: 'empty'
+            },
+            interval: 25000,
             selector: '.dashboard-filters a[data-id]'
         },
 
@@ -684,28 +688,68 @@ jQuery.fn.mfieldset = function (options) {
 
         },
         processData:function(data) {
+            var self = this;
+            var texts= [];
+            var notify = false;
 
             $(this.options.selector).each(function(){
                 var $this = $(this),
                     id = $this.data('id'),
                     count = parseInt($this.attr('data-count'));
 
-                if (data[id]) {
-                    if (data[id].count == count) {
-                        $this.find('.count').html(data[id].count);
+                if (data.filters[id]) {
+
+                    if (data.filters[id].count == count) {
+                        $this.find('.count').html(data.filters[id].count);
                     }
                     else {
-                        var c_chng = count - data[id].count;
-                        var sign = '+';
-                        if (c_chng < 0) {
-                            sign = '-';
+                        var c_chng = data.filters[id].count - count;
+                        var sign = '';
+                        if (c_chng > 0) {
+                            sign = '+';
                         }
 
-                        $this.attr('data-count', count);
+                        $this.attr('data-count', data.filters[id].count);
                         $this.find('.count').html(count + ' ' + sign + c_chng);
+
+                        if (data.filters[id].count > 0 && $this.hasClass(self.options.classes.disabled)) {
+                            $this.removeClass(self.options.classes.disabled);
+                            $this.addClass(self.options.classes.enabled);
+                        }
+                        else if (data.filters[id].count == 0 && $this.hasClass(self.options.classes.enabled)) {
+                            $this.removeClass(self.options.classes.enabled);
+                            $this.addClass(self.options.classes.disabled);
+                        }
+
+                        notify = true;
+                        data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.filter_name').html() +' ('+ sign + c_chng +')</a>';
                     }
                 }
             });
+
+            if (notify)
+            {
+                for (var i in data.filters)
+                {
+                    if (data.filters[i]['notify_text']) {
+                        texts.push(data.filters[i]['notify_text'])
+                    }
+                }
+
+                if (texts.length)
+                {
+                    texts = texts.map(function(el){
+                        return '<li>'+el+'</li>';
+                    });
+
+                    $.mnotify({
+                        lifetime: 15000,
+                        title: 'Dashboard new events',
+                        message: '<ul>'+texts.join('')+'</ul>'
+                    });
+                }
+            }
+
 
             this.cycleRefresh();
         },
@@ -728,6 +772,8 @@ jQuery.fn.mfieldset = function (options) {
                         title: 'Dashboard refresh error',
                         message: jqXHR.responseText
                     });
+
+                    self.cycleRefresh();
                 }
             });
         },
