@@ -11,7 +11,7 @@ class XcartSession extends Session
 
     public function has($key)
     {
-        return array_key_exists($key, $GLOBALS['XCART_SESSION_VARS']);
+        return array_key_exists($key, isset($GLOBALS['XCART_SESSION_VARS']) ? $GLOBALS['XCART_SESSION_VARS'] : []);
     }
 
     public function get($key, $default = null)
