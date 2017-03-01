@@ -139,8 +139,8 @@ class DashboardController extends PrototypeAdminController
         $u_ids = UserFiltersLinkModel::objects()->filter(['filter_id' => $id])->valuesList(['user_id'], true);
 
         if ($u_ids) {
-//            $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();
-            $users = UserModel::objects()->filter(['id__in' => []])->all();
+            $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();
+//            $users = UserModel::objects()->filter(['id__in' => []])->all();
         }
 
         echo $this->render('dashboard/subscription.tpl', [
