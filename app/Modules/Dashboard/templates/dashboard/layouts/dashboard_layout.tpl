@@ -1,4 +1,4 @@
-{extends 'dashboard/with_admin_menu.tpl'}
+{extends 'dashboard/layouts/menu_layout.tpl'}
 
 {block 'js-head'}
     <link href="/static/vendors/air-datepicker/dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
@@ -20,8 +20,7 @@
             $(this).append($('option[selected]', { value: e.params.data.id, text: e.params.data.text }));
         });
 
-        $('.admin select:not([data-ajax-from])').not('.page-size select, .not-select2').select2({
-            allowClear: true,
+        $('.admin select:not([data-ajax-from])').not('.page-size select, .not-select2').select2({ allowClear: true,
             closeOnSelect: false,
             placeholder: 'Select options'
         });

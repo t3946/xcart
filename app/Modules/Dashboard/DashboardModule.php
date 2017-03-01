@@ -14,7 +14,7 @@ class DashboardModule extends Module
 
         $template->addModifier('max_eta_colors', function($max_eta = 0)
         {
-            global $config;
+            $config = $GLOBALS['config'];
 
             if ($max_eta > 0){
 
@@ -35,6 +35,21 @@ class DashboardModule extends Module
             }
             return '';
         });
+
+        $template->addModifier('get_filtered', function($models, $gid)
+        {
+            $t_models = [];
+            foreach ($models as $model)
+            {
+                if (is_null($gid) && empty($model->group_id)) {
+                    $t_models[] = $model;
+                }
+                elseif ($model->group_id == $gid) {
+                    $t_models[] = $model;
+                }
+            }
+            return $t_models;
+        });
     }
 
     public static function getAdminMenu()
@@ -50,7 +65,11 @@ class DashboardModule extends Module
             ],
             [
                 'name'  => 'Filters settings',
-                'route' => Xcart::app()->router->url('dashboard:settings'),
+                'route' => Xcart::app()->router->url('dashboard:admin_filters'),
+            ],
+            [
+                'name'  => 'Filters group settings',
+                'route' => Xcart::app()->router->url('dashboard:admin_groups'),
             ],
         ];
     }

@@ -4,6 +4,7 @@ namespace Xcart\App\Orm\Callback;
 
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\RelatedField;
+use Xcart\App\Orm\Model;
 use Xcart\App\Orm\ModelInterface;
 use Mindy\QueryBuilder\LookupBuilder\LookupBuilder;
 use Mindy\QueryBuilder\QueryBuilder;
@@ -15,7 +16,7 @@ class JoinCallback
     /**
      * JoinCallback constructor.
      *
-     * @param ModelInterface $model
+     * @param Model|ModelInterface $model
      */
     public function __construct($model)
     {
@@ -34,8 +35,10 @@ class JoinCallback
             } else {
                 if ($nodeName == 'through' && $prevField && $prevField instanceof ManyToManyField) {
                     $alias = $prevField->setConnection($this->model->getConnection())->buildThroughQuery($queryBuilder, $queryBuilder->getAlias());
-                } else if ($this->model->hasField($nodeName)) {
+                }
+                else if ($this->model->hasField($nodeName)) {
                     $field = $this->model->getField($nodeName);
+
                     if ($field instanceof RelatedField) {
                         /** @var \Xcart\App\Orm\Fields\RelatedField $field */
                         $alias = $field->setConnection($this->model->getConnection())->buildQuery($queryBuilder, $queryBuilder->getAlias());

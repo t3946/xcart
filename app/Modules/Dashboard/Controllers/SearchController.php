@@ -51,7 +51,7 @@ class SearchController extends PrototypeAdminController
             $form_collapse = false;
         }
 
-        echo $this->renderInternal('dashboard/search_form.tpl', array_merge(
+        echo $this->renderInternal('dashboard/search.tpl', array_merge(
             SearchHelper::getFormAndListData(),
             [
                 'pager'         => $pager,
