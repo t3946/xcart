@@ -140,6 +140,7 @@ class DashboardController extends PrototypeAdminController
 
         if ($u_ids) {
             $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();
+//            $users = UserModel::objects()->filter(['id__in' => []])->all();
         }
 
         echo $this->render('dashboard/subscription.tpl', [
