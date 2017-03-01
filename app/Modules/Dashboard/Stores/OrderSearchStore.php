@@ -745,8 +745,9 @@ class OrderSearchStore extends BaseStore
         }
 
         $key = 'order_search_store_count_'.$id;
+        $count = Xcart::app()->cache->get($key);
 
-        if ($count = Xcart::app()->cache->get($key))
+        if (!is_null($count))
         {
             return $count;
         }

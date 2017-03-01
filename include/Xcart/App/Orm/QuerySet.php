@@ -12,6 +12,9 @@ use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOrNot;
 use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 
 /**
  * Class QuerySet
@@ -230,37 +233,6 @@ class QuerySet extends QuerySetBase
         return implode('__', $prefix);
     }
 
-    /**
-     * todo remove me
-     * Searching closest already connected relation
-     * Example: User::objects()->filter(['group__name' => 'Admin', 'group__list__pk' => 2])
-     * at the second time we already have connected 'group' relation, return it
-     * @param $prefix
-     * @return array
-     */
-    protected function searchChain($prefix)
-    {
-        $model = $this->getModel();
-        $alias = $this->tableAlias;
-
-        $prefixRemains = [];
-        $chainRemains = [];
-
-        foreach ($prefix as $relationName) {
-            $chain[] = $relationName;
-            if ($founded = $this->getChain($chain)) {
-                $model = $founded['model'];
-                $alias = $founded['alias'];
-                $prefixRemains = [];
-                $chainRemains = $chain;
-            } else {
-                $prefixRemains[] = $relationName;
-            }
-        }
-
-        return [$model, $alias, $prefixRemains, $chainRemains];
-    }
-
     public function with($with)
     {
         if (!is_array($with)) {
@@ -274,7 +246,17 @@ class QuerySet extends QuerySetBase
 
             if ($this->getModel()->getMeta()->hasRelatedField($name)) {
                 $this->with[] = $name;
-                $this->getOrCreateChainAlias([$name], true, true, is_array($fields) ? $fields : []);
+                $field = $this->getModel()->getField($name);
+
+//                if ($field instanceof ForeignField
+//                    || $field instanceof HasManyField
+//                    || $field instanceof ManyToManyField
+//                ) {
+//                    foreach ($field->getJoin($this->getQueryBuilder(), $this->getTableAlias()) as $join) {
+//                        list($type, $table, $on, $alias) = $join;
+//                        $this->join($type, $table, $on, $alias);
+//                    }
+//                }
             }
         }
         return $this;
@@ -286,7 +268,8 @@ class QuerySet extends QuerySetBase
             return array_map(function ($value) {
                 if ($value instanceof Model) {
                     return $value->pk;
-                } else if ($value instanceof Manager || $value instanceof QuerySet) {
+                }
+                else if ($value instanceof Manager || $value instanceof QuerySet) {
                     return $value->getQueryBuilder();
                 }
                 return $value;
@@ -525,7 +508,6 @@ class QuerySet extends QuerySetBase
      */
     public function count($q = '*')
     {
-        //@TODO: Переписать этот кусок говна
         $clone = clone $this;
         $clone->limit(null);
 
@@ -644,9 +626,8 @@ class QuerySet extends QuerySetBase
 
     private function fieldAlias($field)
     {
-        $t_alias = $this->getTableAlias();
         if (strpos($field, '.') === false) {
-            $field = $t_alias .'.'. $field;
+            $field = $this->getTableAlias() .'.'. $field;
         }
         return $field;
     }

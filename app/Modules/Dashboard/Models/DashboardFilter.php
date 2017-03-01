@@ -3,12 +3,15 @@ namespace Modules\Dashboard\Models;
 
 use Mindy\QueryBuilder\Aggregation\Max;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\JsonField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
 class DashboardFilter extends Model
@@ -26,6 +29,20 @@ class DashboardFilter extends Model
         return [
             'id'              => [
                 'class' => AutoField::className(),
+            ],
+            'group'           => [
+                'class'       => ForeignField::className(),
+                'modelClass'  => GroupModel::className(),
+                'verboseName' => 'Group',
+                'link'        => ['id', 'group_id'],
+                'null'        => true,
+            ],
+            'users'           => [
+                'class'       => ManyToManyField::className(),
+                'modelClass'  => UserModel::className(),
+                'through'     => UserFiltersLinkModel::className(),
+                'link'        => ['filter_id', 'user_id'],
+                'verboseName' => 'In users dashboard',
             ],
             'enabled'         => [
                 'class'   => BooleanField::className(),
@@ -83,10 +100,10 @@ class DashboardFilter extends Model
     public function getAdminUrl()
     {
         if ($this->isNewRecord) {
-            return Xcart::app()->router->url('dashboard:create');
+            return Xcart::app()->router->url('dashboard:create_filter');
         }
         else {
-            return Xcart::app()->router->url('dashboard:update', ['id' => $this->id]);
+            return Xcart::app()->router->url('dashboard:update_filter', ['id' => $this->id]);
         }
     }
 
@@ -109,6 +126,33 @@ class DashboardFilter extends Model
         }
 
         return $this->s_store;
+    }
+
+
+    private $uf_link_model = null;
+
+    public function getMyPositions()
+    {
+        if (!$this->uf_link_model) {
+            $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user__login' => Xcart::app()->request->session->get('login')])->get();
+        }
+
+        return [
+            'position_row' => ($this->uf_link_model && $this->uf_link_model->position_row) ? $this->uf_link_model->position_row : $this->position_row,
+            'position_column' => ($this->uf_link_model && $this->uf_link_model->position_column) ? $this->uf_link_model->position_column : $this->position_column,
+        ];
+    }
+
+    public function getMyPositionRow()
+    {
+        $positions = $this->getMyPositions();
+        return $positions['position_row'];
+    }
+
+    public function getMyPositionColumn()
+    {
+        $positions = $this->getMyPositions();
+        return $positions['position_column'];
     }
 
     public static function getMaxRowCol()

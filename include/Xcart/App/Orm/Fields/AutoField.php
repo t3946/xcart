@@ -28,6 +28,7 @@ class AutoField extends BigIntField
     {
         return [
             'autoincrement' => true,
+            'unsigned' => $this->unsigned,
             'length' => $this->length,
             'notnull' => true
         ];

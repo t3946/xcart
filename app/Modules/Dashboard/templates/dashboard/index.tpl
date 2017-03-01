@@ -1,48 +1,79 @@
-{extends 'dashboard/with_admin_menu.tpl'}
+{extends 'dashboard/layouts/menu_layout.tpl'}
 {block 'heading'}
     <h1 align="center">Filters list.</h1>
 {/block}
 
 {block 'content'}
-    {smarty_admin_block name='Order dashboard'}
-        <table style="width: 100%" class="dashboard-filters">
-            {foreach 1..$row_col.row as $row}
-                <tr>
-                    {foreach 1..$row_col.col as $col}
-                        <td>
-                            {foreach $models as $model}
-                                {if $model->position_row == $row && $model->position_column == $col}
-                                    {if $model->getSearchStorage()->getCashedCount() > 0}
-                                        <a href="{$model->getAbsoluteUrl()}" class="" target="_blank">
-                                            <div class="row">
-                                                {if $model->tag}
-                                                    <div class="columns large-2">
-                                                        <span style="background-color: {$model->color};" class="tag">&nbsp;{$model->tag|upper}&nbsp;</span>
-                                                    </div>
-                                                {/if}
-                                                <div class="columns {if $model->tag}large-10{else}large-12{/if}">
-                                                    <span class="name">
-                                                        <span class="{if $model->bold}bold{/if}">{$model}</span>
-                                                        ({$model->getSearchStorage()->getCashedCount()})
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    {else}
-                                        <div class="row">
-                                            <div class="columns large-12">
-                                                <span class="gray">
-                                                    {$model}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    {/if}
-                                {/if}
-                            {/foreach}
-                        </td>
-                    {/foreach}
-                </tr>
-            {/foreach}
-        </table>
+    {smarty_admin_block name='My dashboard'}
+        <div class="my_dashboard">
+            {include 'dashboard/dashboard_group.tpl' models=$myModels title='My Dashboard' my_position=true}
+        </div>
     {/smarty_admin_block}
+
+    {smarty_admin_block name='Order dashboard'}
+        {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}
+
+        {foreach $groups as $group}
+            {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id title=$group}
+        {/foreach}
+
+    {/smarty_admin_block}
+{/block}
+
+{block 'js'}
+    {parent}
+    <script>
+        $(document).dashboard({
+            ajax: {
+                url: '{url 'dashboard:index'}'
+            }
+        });
+
+        $('.dashboard-filters.index a[data-id]').majaxtooltip({
+            onAfterSubmit: function() {
+                this.setContent("<div class='load'></div>")
+            },
+            onAfterSuccess: function() {
+                $.mnotify({
+                    title: '"My dashboard" changed',
+                    message: 'Refresh the page to display\\hide the elements'
+                });
+            }
+        });
+
+        $('.my_dashboard .dashboard-filters ').tablePositions({
+            draggableSelector: '.button, .empty',
+            dropSelector: '.container',
+
+            onMove: function (el, to) {
+                var def = $.Deferred();
+                $.ajax({
+                    type: 'POST',
+                    url: '{url 'dashboard:sort_my_filters'}',
+                    data: {
+                        position_row: $(to).data('row'),
+                        position_column: $(to).data('col'),
+                        id: $(el).data('id')
+                    },
+                    success: function (data) {
+                        if (data) {
+                            $.mnotify({
+                                title: 'Position saved',
+                                message: data.message
+                            });
+
+                            def.resolve(true, data);
+                        }
+                        def.reject(false);
+                    },
+                    error: function () {
+                        def.reject(false);
+                    }
+                });
+
+                return def.promise();
+            }
+        });
+
+    </script>
 {/block}
