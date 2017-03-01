@@ -53,45 +53,8 @@ function mysql_escape_mimic($inp) {
     return $inp;
 }
 
-function log_query($query) {
-	return true;
-}
-
-
 function db_query($query) {
-	global $debug_mode;
-	global $mysql_autorepair, $sql_max_allowed_packet;
-	$result = null;
-	$b1 = func_microtime();
-
-	if ($sql_max_allowed_packet && strlen($query) > $sql_max_allowed_packet) {
-
-		# Check max. allowed packet size
-		global $current_location, $REMOTE_ADDR, $login;
-		$len = strlen($query);
-		$query = substr($query, 0, 1024)."...";
-		$mysql_error = "10001 : The size of the data package being transmitted is greater than maximum allowed by the server";
-		$msg  = "Site                : ".$current_location."\n";
-		$msg .= "Remote IP           : $REMOTE_ADDR\n";
-		$msg .= "Logged as           : $login\n";
-		$msg .= "Query length        : $len\n";
-		$msg .= "Max. allowed packet : $sql_max_allowed_packet\n";
-		$msg .= "SQL query           : $query\n";
-		$msg .= "Error code          : 10001\n";
-		$msg .= "Description         : The size of the data package being transmitted is greater than maximum allowed by the server";
-
-		db_error_generic($query, $mysql_error, $msg);
-
-		return false;
-	}
-
-	try {
-		$result = \Xcart\Connection::getInstance()->executeQuery($query);
-	}
-	catch (\Exception $e) {
-		db_error($e, $query);
-	}
-	return $result;
+	return \Xcart\Connection::getInstance()->executeQuery($query);
 }
 
 function db_result(\Doctrine\DBAL\Driver\Statement $result, $offset) {
@@ -135,21 +98,7 @@ function db_mysql_get_server_info()
 	return \Xcart\Connection::getInstance()->getWrappedConnection()->getServerVersion();
 }
 
-function db_error(\Exception $mysql_result, $query) {
-	global $login, $REMOTE_ADDR, $current_location;
 
-	$mysql_error = $mysql_result->getMessage().' : '.$mysql_result->getCode();
-	$msg  = "Site        : ".$current_location."\n";
-	$msg .= "Remote IP   : $REMOTE_ADDR\n";
-	$msg .= "Logged as   : $login\n";
-	$msg .= "SQL query   : $query\n";
-	$msg .= "Error code  : ".$mysql_result->getCode()."\n";
-	$msg .= "Description : ".$mysql_result->getMessage();
-
-	db_error_generic($query, $mysql_error, $msg);
-
-	return true;
-}
 
 function db_error_generic($query, $query_error, $msg) {
 	global $debug_mode, $config, $xcart_dir;
@@ -246,37 +195,11 @@ function db_prepare_query($query, $params) {
 #  1) all parameters must not be escaped with addslashes()
 #  2) non-parameter symbols '?' must be escaped with a '\'
 #
-function db_exec($query, $params=array()) {
-	global $config, $login, $REMOTE_ADDR, $current_location;
-
-	if (!is_array($params))
-		$params = array ($params);
-
-	$prepared = db_prepare_query($query, $params);
-
-	if (!is_array($prepared)) {
-		return db_query($prepared);
+function db_exec($query, $params = []) {
+	if (!is_array($params)) {
+		$params = [$params];
 	}
-
-	$error = "Query preparation failed";
-	switch ($prepared['info']) {
-	case 'mismatch':
-		$error .= ": parameters mismatch (passed $prepared[actual], expected $prepared[expected])";
-		break;
-	case 'missing':
-		$error .= ": parameter $prepared[param] is missing";
-		break;
-	}
-
-	$msg  = "Site        : ".$current_location."\n";
-	$msg .= "Remote IP   : $REMOTE_ADDR\n";
-	$msg .= "Logged as   : $login\n";
-	$msg .= "SQL query   : $query\n";
-	$msg .= "Description : ".$error;
-
-	db_error_generic($query, $error, $msg);
-
-	return false;
+	return db_query(db_prepare_query($query, $params));
 }
 
 #
@@ -409,6 +332,7 @@ function func_array2update ($tbl, $arr, $where = '') {
 function func_query_hash($query, $column = false, $is_multirow = true, $only_first = false) {
 	$result = array();
 	$is_multicolumn = false;
+	$is = null;
 
 	if ($p_result = db_query($query)) {
 		if ($column === false) {
