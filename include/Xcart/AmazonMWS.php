@@ -474,15 +474,15 @@ SQL;
         $aFieldsToUpdate = array_flip($aFieldsToUpdate);
         foreach ($this->aReportValue as $aReport) {
             foreach ($aReport as $aItem) {
+                $aArrInsert = array_intersect_key($aItem, $aFieldsToUpdate);
                 if (!empty($aArrInsert['productid'])) {
-                    $model = AmazonProductsFieldsModel::objects()->get(['productid' => $aArrInsert['productid']]);
-                    if (!$model) {
-                        $model = new AmazonProductsFieldsModel();
-                    }
-                    $aArrInsert = array_intersect_key($aItem, $aFieldsToUpdate);
                     if (!is_numeric($aArrInsert['expected_fulfillment_fee_per_unit'])) {
                         $skippedItemsCount++;
                         continue;
+                    }
+                    $model = AmazonProductsFieldsModel::objects()->get(['productid' => $aArrInsert['productid']]);
+                    if (!$model) {
+                        $model = new AmazonProductsFieldsModel();
                     }
                     $aArrInsert['amazon_fee_preview_last_update_date'] = time();
                     $aArrInsert['estimated_fee_total'] = floatval($aArrInsert['estimated_fee_total']);
@@ -497,8 +497,8 @@ SQL;
                     $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
                     $aArrInsert['expected_future_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_future_fulfillment_fee_per_unit']);
                     $model->setAttributes($aArrInsert);
-                    $allItemsCount++;
                     $model->save();
+                    $allItemsCount++;
                 }
             }
         }
