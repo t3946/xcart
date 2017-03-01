@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 15/09/16
- * Time: 14:47
- */
-
 namespace Xcart\App\Orm;
 
 use Countable;
+use Doctrine\DBAL\Driver\Statement;
 use Iterator;
 
 /**
@@ -62,13 +56,16 @@ class DataReader implements Iterator, Countable
 
     /**
      * DataReader constructor.
-     * @param \PDOStatement $statement
+     * @param \PDOStatement|Statement $statement
      * @param array $config
      */
-    public function __construct(\PDOStatement $statement, $config = [])
+    public function __construct($statement, $config = [])
     {
         $this->_statement = $statement;
-        $this->_statement->setFetchMode(\PDO::FETCH_ASSOC);
+
+        if ($this->_statement) {
+            $this->_statement->setFetchMode(\PDO::FETCH_ASSOC);
+        }
 
         foreach ($config as $key => $value) {
             if (property_exists($this, $key)) {
