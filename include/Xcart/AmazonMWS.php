@@ -476,6 +476,9 @@ SQL;
             foreach ($aReport as $aItem) {
                 if (!empty($aArrInsert['productid'])) {
                     $model = AmazonProductsFieldsModel::objects()->get(['productid' => $aArrInsert['productid']]);
+                    if ($model) {
+                        $model = new AmazonProductsFieldsModel();
+                    }
                     $aArrInsert = array_intersect_key($aItem, $aFieldsToUpdate);
                     if (!is_numeric($aArrInsert['expected_fulfillment_fee_per_unit'])) {
                         $skippedItemsCount++;
