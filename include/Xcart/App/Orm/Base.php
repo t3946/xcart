@@ -1,16 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 16/09/16
- * Time: 19:39
- */
-
 namespace Xcart\App\Orm;
 
 use Doctrine\DBAL\Connection;
 use Exception;
 use ArrayAccess;
+use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
@@ -24,6 +18,7 @@ use Serializable;
  */
 abstract class Base implements ModelInterface, ArrayAccess, Serializable
 {
+    use ClassNames;
     /**
      * @var bool
      */

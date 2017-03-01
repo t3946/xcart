@@ -65,14 +65,20 @@ return array_replace_recursive([
        ],
        'template' => [
            'class' => '\\Xcart\\App\\Template\\TemplateManager',
-           'forceCompile' => false,
+           'forceCompile' => true,
 //           'autoReload' => false
        ],
        'cache' => [
            'class' => '\\Xcart\\App\\Cache\\Cache',
+           'saveInMemory' => true,
+           'memoryDriver' => 'memory',
            'drivers' => [
                'default' =>  [
                    'class' => '\\Xcart\\App\\Cache\\Drivers\\File'
+               ],
+               'memory' =>  [
+                   'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
+                   'numCacheQuery' => 30,
                ]
            ]
        ],

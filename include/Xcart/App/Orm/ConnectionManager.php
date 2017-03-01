@@ -26,6 +26,8 @@ class ConnectionManager
      */
     protected $eventManager = null;
 
+    protected $defaultWrapperClass = 'Xcart\App\Orm\DefaultConnection';
+
     /**
      * ConnectionManager constructor.
      * @param array $config
@@ -41,6 +43,10 @@ class ConnectionManager
     public function setConnections(array $connections)
     {
         foreach ($connections as $name => $config) {
+            if (empty($config['wrapperClass'])) {
+                $config['wrapperClass'] = $this->defaultWrapperClass;
+            }
+
             $this->connections[$name] = DriverManager::getConnection($config, $this->configuration, $this->eventManager);
 
             if (!empty($config['mapping'])) {

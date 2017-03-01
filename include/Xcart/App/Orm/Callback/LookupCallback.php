@@ -18,7 +18,8 @@ class LookupCallback
 
     /**
      * LookupCallback constructor.
-     * @param ModelInterface $model
+     *
+     * @param Model|ModelInterface $model
      */
     public function __construct($model)
     {
@@ -48,16 +49,18 @@ class LookupCallback
 
                 if ($node == 'through') {
                     $prevThrough = true;
-                } else {
+                }
+                else {
                     /** @var \Xcart\App\Orm\Fields\RelatedField $prevField */
                     if ($prevThrough && $prevField instanceof ManyToManyField) {
                         $joinAlias = $prevField
                             ->setConnection($connection)
                             ->buildThroughQuery($queryBuilder, $queryBuilder->getAlias());
-                    } else {
+                    }
+                    else {
                         $joinAlias = $prevField
                             ->setConnection($connection)
-                            ->buildQuery($queryBuilder, $joinAlias);
+                            ->buildQuery($queryBuilder, $queryBuilder->getAlias()); //@TODO: Testings? maybe bug
                     }
 
                     if (($nextField = $relatedModel->getField($node)) instanceof RelatedField) {
@@ -71,7 +74,8 @@ class LookupCallback
                     $column = $joinAlias . '.' . $lookupBuilder->fetchColumnName($node);
                     $columnWithLookup = $column . $lookupBuilder->getSeparator() . $lookupBuilder->getDefault();
                     $queryBuilder->where([$columnWithLookup => $value]);
-                } else {
+                }
+                else {
                     $lookup = $node;
                     $column = $joinAlias . '.' . $lookupBuilder->fetchColumnName($lookupNodes[$i - 1]);
                 }
