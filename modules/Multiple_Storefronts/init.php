@@ -143,10 +143,6 @@ if (!empty($current_storefront_info)) {
 
     $current_storefront = $current_storefront_info['storefrontid'];
     func_sf_substitute_config_values($current_storefront);
-
-    if (!$HTTPS && $config["Appearance"]["Enable_CDN"] == "Y" && !empty($config["Appearance"]["CDN_domain"]) && strpos($config["Appearance"]["CDN_domain"], "://") === false && AREA_TYPE == "C") {
-        $config["Appearance"]["CDN_domain"] = ($HTTPS ? "https://" : "http://") . $config["Appearance"]["CDN_domain"];
-    }
 }
 else {
     $current_storefront = 0;

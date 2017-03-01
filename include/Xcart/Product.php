@@ -116,7 +116,12 @@ class Product extends Data
 
     public function getURL($http = '//')
     {
-        return $http . $this->getStoreFront()->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
+        return $http . $this->getStoreFront()->getDomain() . $this->getRelativeURL();
+    }
+
+    public function getRelativeURL()
+    {
+        return '/' . func_clean_url_get('P', $this->getProductId(), false);
     }
 
     public function getHTMLShot($iOrderID)

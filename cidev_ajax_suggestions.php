@@ -25,6 +25,7 @@ if ($REQUEST_METHOD == 'POST') {
             $oBrand = \Xcart\Brand::objects()->get(['brandid' => $oProduct->brandid]);
             $smarty->assign('splash', $oProduct->getSplash());
             $smarty->assign('config', $config);
+            $smarty->assign('tmbn_url',null);
             if ($oThumb) {
                 $smarty->assign('tmbn_url', $oThumb->getURL());
             }
@@ -32,7 +33,7 @@ if ($REQUEST_METHOD == 'POST') {
 
             $aResult['items'][] = [
                 'productid' => $oProduct->productid,
-                'clean_url' => $oProduct->getURL(),
+                'clean_url' => $oProduct->getRelativeURL(),
                 'price' => $oProduct->getPrice(),
                 'category' => $oProduct->getMainCategory()->category,
                 'brand' => $oBrand->brand,

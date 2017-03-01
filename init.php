@@ -66,7 +66,7 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
 \Xcart\App\Main\Xcart::init(include $xcart_dir .'/app/config/settings.php');
 \Xcart\App\Main\Xcart::app()->beforeRun();
 //if (defined('AREA_TYPE') && AREA_TYPE == 'C' && \Xcart\App\Main\Xcart::app()->getIsWebMode()) {
-//    \Xcart\App\Main\Xcart::app()->request->session->getIsActive(); //@TODO: Костыль для инициализации обьекта сессии
+//    \Xcart\App\Main\Xcart::app()->request->session->getIsActive(); //@TODO: пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 //}
 
 Xcart\Connection::getInstanceFromApp()->connect();
@@ -642,7 +642,7 @@ if (!defined("QUICK_START")) {
 #
 @include_once $xcart_dir . "/include/sessions.php";
 
-//@TODO: Отрубаем сохранение данных в сессию (сохраняется в XCartSession классе)
+//@TODO: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ XCartSession пїЅпїЅпїЅпїЅпїЅпїЅ)
 if (x_session_save_to_db__do_not_use == 'Y') {
 //      func_print_r(x_session_save_to_db__do_not_use);
 
@@ -876,9 +876,6 @@ if ($active_modules) {
     }
 }
 
-if (!$HTTPS && $config["Appearance"]["Enable_CDN"] == "Y" && !empty($config["Appearance"]["CDN_domain"]) && strpos($config["Appearance"]["CDN_domain"], "://") === false && AREA_TYPE == "C") {
-    $config["Appearance"]["CDN_domain"] = ($HTTPS ? "https://" : "http://") . $config["Appearance"]["CDN_domain"];
-}
 
 if (empty($active_modules["CIDEV_Best_Search_Filter"]) && $current_area != 'C') {
     include $xcart_dir . "/modules/CIDEV_Best_Search_Filter/config.php";

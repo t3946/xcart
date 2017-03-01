@@ -88,7 +88,7 @@ function db_query($query) {
 	try {
 		$result = \Xcart\Connection::getInstance()->executeQuery($query);
 	}
-	catch (Doctrine\DBAL\Exception\SyntaxErrorException $e) {
+	catch (\Exception $e) {
 		db_error($e, $query);
 	}
 	return $result;
@@ -135,15 +135,15 @@ function db_mysql_get_server_info()
 	return \Xcart\Connection::getInstance()->getWrappedConnection()->getServerVersion();
 }
 
-function db_error(Doctrine\DBAL\Exception\SyntaxErrorException $mysql_result, $query) {
+function db_error(\Exception $mysql_result, $query) {
 	global $login, $REMOTE_ADDR, $current_location;
 
-	$mysql_error = $mysql_result->getMessage().' : '.$mysql_result->getErrorCode();
+	$mysql_error = $mysql_result->getMessage().' : '.$mysql_result->getCode();
 	$msg  = "Site        : ".$current_location."\n";
 	$msg .= "Remote IP   : $REMOTE_ADDR\n";
 	$msg .= "Logged as   : $login\n";
 	$msg .= "SQL query   : $query\n";
-	$msg .= "Error code  : ".$mysql_result->getErrorCode()."\n";
+	$msg .= "Error code  : ".$mysql_result->getCode()."\n";
 	$msg .= "Description : ".$mysql_result->getMessage();
 
 	db_error_generic($query, $mysql_error, $msg);

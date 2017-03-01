@@ -179,7 +179,7 @@ function func_load_ajax_carousel_products(section_name)
             if (obj) {
                 $.each(obj.items, function () {
                     if (this.clean_url != '') {
-                        a_href = this.clean_url + '/';
+                        a_href = this.clean_url;
                     } else {
                         a_href = 'product.php?productid=' + this.productid;
                     }
