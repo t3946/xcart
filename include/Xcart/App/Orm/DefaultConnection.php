@@ -8,21 +8,21 @@ use Xcart\App\Main\Xcart;
 
 class DefaultConnection extends DBALConnection
 {
-
-    /**
-     * {@inheritdoc}
-     */
-    public function connect()
-    {
-        try {
-            return parent::connect();
-        }
-        catch (DBALException $e) {
-            $this->processException($e);
-        }
-
-        return null;
-    }
+//
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function connect()
+//    {
+//        try {
+//            return parent::connect();
+//        }
+//        catch (DBALException $e) {
+//            $this->processException($e);
+//        }
+//
+//        return null;
+//    }
 
     /**
      * {@inheritdoc}
