@@ -476,7 +476,7 @@ SQL;
             foreach ($aReport as $aItem) {
                 if (!empty($aArrInsert['productid'])) {
                     $model = AmazonProductsFieldsModel::objects()->get(['productid' => $aArrInsert['productid']]);
-                    if ($model) {
+                    if (!$model) {
                         $model = new AmazonProductsFieldsModel();
                     }
                     $aArrInsert = array_intersect_key($aItem, $aFieldsToUpdate);
