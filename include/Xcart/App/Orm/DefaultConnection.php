@@ -8,21 +8,21 @@ use Xcart\App\Main\Xcart;
 
 class DefaultConnection extends DBALConnection
 {
-
-    /**
-     * {@inheritdoc}
-     */
-    public function connect()
-    {
-        try {
-            return parent::connect();
-        }
-        catch (DBALException $e) {
-            $this->processException($e);
-        }
-
-        return null;
-    }
+//
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function connect()
+//    {
+//        try {
+//            return parent::connect();
+//        }
+//        catch (DBALException $e) {
+//            $this->processException($e);
+//        }
+//
+//        return null;
+//    }
 
     /**
      * {@inheritdoc}
@@ -184,7 +184,7 @@ class DefaultConnection extends DBALConnection
         }
 
         $msg .= "Error code  : ".$exception->getCode()."\n";
-        $msg .= "Description : ".$exception->getMessage();
+        $msg .= "Description : ".$exception->getMessage() ."\n\n";
         $msg .= "Backtrace: \n";
         $msg .= $exception->getTraceAsString();
 

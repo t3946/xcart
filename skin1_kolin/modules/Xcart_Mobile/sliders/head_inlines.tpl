@@ -94,6 +94,11 @@
 						$('.' + cls).slick('unslick');
 						$this.find('.ui-icon').removeClass('ui-icon-plus');
 						$this.find('.ui-icon').addClass('ui-icon-minus');
+
+                        $('.' + cls + ' img.slick-loading').each(function(){
+                            $(this).attr('src', $(this).data('lazy'));
+                            $(this).removeClass('slick-loading');
+                        });
 					}
 					else {
 						$('.'+cls).slick(window['slick_settings']);
@@ -170,6 +175,7 @@
     .slider-container .slider-products .slide .product {
         display: inline-block;
         max-width: 220px;
+        max-height: 320px;
         width: 100%;
     }
 
@@ -215,7 +221,9 @@
         /*width: 100%;*/
         max-width:100%;
         height:auto;
+        max-height: 150px;
         display: inline-block;
+        overflow-y: hidden;
 
     }
 

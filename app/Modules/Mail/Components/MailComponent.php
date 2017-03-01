@@ -8,8 +8,6 @@ class MailComponent
 {
     use SmartProperties;
 
-    const MAIL_TEMPLATE = 'mail/%s.tpl';
-
     public $to = null;
     public $from = null;
     public $reply_to = null;
@@ -22,7 +20,6 @@ class MailComponent
     public $subject_template = 'mail/simple_email_subj.tpl';
     public $body_template = 'mail/simple_email_body.tpl';
 
-
     private $aReplaceRules = null;
 
     public function replaceSubject()
@@ -32,16 +29,6 @@ class MailComponent
                 $this->subject = str_replace($key, $sRule, $this->subject);
             }
         }
-    }
-
-    public function setBodyTemplate($sTemplate)
-    {
-        $this->body_template = sprintf(self::MAIL_TEMPLATE, $sTemplate);
-    }
-
-    public function setSubjectTemplate($sTemplate)
-    {
-        $this->subject_template = sprintf(self::MAIL_TEMPLATE, $sTemplate);
     }
 
     private function eol2br($content)

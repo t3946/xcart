@@ -36,10 +36,18 @@ class QuerySet extends QuerySetBase
      */
     public function all()
     {
+        $rows = [];
         $sql = $this->sql === null ? $this->allSql() : $this->sql;
-        $rows = $this->getConnection()->query($sql)->fetchAll();
-        if ($this->asArray) {
-            return !empty($this->with) ? $this->populateWith($rows) : $rows;
+
+        if ($statement = $this->getConnection()->query($sql)) {
+            $rows = $statement->fetchAll();
+
+            if ($this->asArray) {
+                return !empty($this->with) ? $this->populateWith($rows) : $rows;
+            }
+        }
+        else {
+            x_log_add('PHP', 'QuerySet->All() - $statement is null',true);
         }
 
         return $this->createModels($rows);

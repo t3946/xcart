@@ -82,6 +82,8 @@ class BatchDataIterator implements Iterator
 
     /**
      * BatchDataIterator constructor.
+     *
+     * @param \Doctrine\DBAL\Connection $connection
      * @param array $config
      */
     public function __construct(Connection $connection, array $config = [])
@@ -155,15 +157,24 @@ class BatchDataIterator implements Iterator
      */
     protected function fetchData()
     {
-        if ($this->_dataReader === null) {
-            $qb = clone $this->qs->getQueryBuilder();
-            $this->_dataReader = new DataReader($this->connection->query($qb->toSQL()));
-        }
         $rows = [];
         $count = 0;
-        while ($count++ < $this->batchSize && ($row = $this->_dataReader->read())) {
-            $rows[] = $row;
+
+        if ($this->_dataReader === null) {
+            $qb = clone $this->qs->getQueryBuilder();
+            $statement = $this->connection->query($qb->toSQL());
+
+            if ($statement) {
+                $this->_dataReader = new DataReader($statement);
+            }
         }
+
+        if ($this->_dataReader) {
+            while ($count++ < $this->batchSize && ($row = $this->_dataReader->read())) {
+                $rows[] = $row;
+            }
+        }
+
         return $this->asArray ? $rows : $this->qs->createModels($rows);
     }
 

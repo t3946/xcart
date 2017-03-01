@@ -4,6 +4,7 @@ namespace Xcart;
 use Modules\Amazon\Helpers\AmazonHelper;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
+use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 use Xcart\External_Product_Verification\ExternalVerificationFeeds;
 use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
@@ -474,32 +475,30 @@ SQL;
         foreach ($this->aReportValue as $aReport) {
             foreach ($aReport as $aItem) {
                 $aArrInsert = array_intersect_key($aItem, $aFieldsToUpdate);
-                $aArrInsert['amazon_fee_preview_last_update_date'] = time();
-                $allItemsCount++;
-
-                if (!is_numeric($aArrInsert['expected_fulfillment_fee_per_unit'])) {
-                    $skippedItemsCount++;
-                    continue;
-                }
-
-                $aArrInsert['estimated_fee_total'] = floatval($aArrInsert['estimated_fee_total']);
-                $aArrInsert['estimated_referral_fee_per_unit'] = floatval($aArrInsert['estimated_referral_fee_per_unit']);
-                $aArrInsert['estimated_variable_closing_fee'] = floatval($aArrInsert['estimated_variable_closing_fee']);
-                $aArrInsert['estimated_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_order_handling_fee_per_order']);
-                $aArrInsert['estimated_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_pick_pack_fee_per_unit']);
-                $aArrInsert['estimated_weight_handling_fee_per_unit'] = floatval($aArrInsert['estimated_weight_handling_fee_per_unit']);
-                $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
-                $aArrInsert['estimated_future_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_future_order_handling_fee_per_order']);
-                $aArrInsert['estimated_future_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_future_pick_pack_fee_per_unit']);
-                $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
-                $aArrInsert['expected_future_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_future_fulfillment_fee_per_unit']);
-
                 if (!empty($aArrInsert['productid'])) {
-                    try {
-                        Connection::getInstance()->insert('xcart_products_amz_fields', $aArrInsert);
-                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
-                        Connection::getInstance()->update('xcart_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]);
+                    if (!is_numeric($aArrInsert['expected_fulfillment_fee_per_unit'])) {
+                        $skippedItemsCount++;
+                        continue;
                     }
+                    $model = AmazonProductsFieldsModel::objects()->get(['productid' => $aArrInsert['productid']]);
+                    if (!$model) {
+                        $model = new AmazonProductsFieldsModel();
+                    }
+                    $aArrInsert['amazon_fee_preview_last_update_date'] = time();
+                    $aArrInsert['estimated_fee_total'] = floatval($aArrInsert['estimated_fee_total']);
+                    $aArrInsert['estimated_referral_fee_per_unit'] = floatval($aArrInsert['estimated_referral_fee_per_unit']);
+                    $aArrInsert['estimated_variable_closing_fee'] = floatval($aArrInsert['estimated_variable_closing_fee']);
+                    $aArrInsert['estimated_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_order_handling_fee_per_order']);
+                    $aArrInsert['estimated_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_pick_pack_fee_per_unit']);
+                    $aArrInsert['estimated_weight_handling_fee_per_unit'] = floatval($aArrInsert['estimated_weight_handling_fee_per_unit']);
+                    $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
+                    $aArrInsert['estimated_future_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_future_order_handling_fee_per_order']);
+                    $aArrInsert['estimated_future_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_future_pick_pack_fee_per_unit']);
+                    $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
+                    $aArrInsert['expected_future_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_future_fulfillment_fee_per_unit']);
+                    $model->setAttributes($aArrInsert);
+                    $model->save();
+                    $allItemsCount++;
                 }
             }
         }
