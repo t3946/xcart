@@ -47,7 +47,6 @@ while ($aProductsBatch = \Xcart\Product::objects()
         ->enableLog('amazon-info')
         ->_Request('GetCompetitivePricing')
         ->_Request('GetLowestOfferListingsForSKU');
-    $i++;
 }
 
 echo  "Report 2 start\n";

@@ -935,8 +935,10 @@ SQL;
                                 'reserved_fc_processing' => $aItem['reserved_fc_processing'],
                                 'productid' => $iProductId,
                                 'productcode' => $aItem['sku'],
-                                'ASIN' => $aItem['asin'],
                                 'report_date' => $report_date]);
+                        if (!empty($aItem['asin'])) {
+                            $oAmazonProductModel->ASIN = $aItem['asin'];
+                        }
                         if ($oAmazonProductModel->productid) {
                             $oAmazonProductModel->save();
                         }
@@ -1776,25 +1778,21 @@ SQL;
             $aCompetitivePricingForSKUResult = $xpath->query('/*/GetCompetitivePricingForSKUResult');
             /** @var \DOMElement[] $aCompetitivePricingForSKUResult */
             foreach ($aCompetitivePricingForSKUResult as $aCompetitivePricing) {
-
                 $sSKU = $aCompetitivePricing->getAttribute('SellerSKU');
                 $sStatus = $aCompetitivePricing->getAttribute('status');
                 $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-
                 $aProductModels = array_filter(
                     $this->aProducts,
                     function ($e) use ($sSKU) {
                         return $e->productcode == $sSKU;
                     });
-
                 $oProductModel = reset($aProductModels);
-
                 if ($oProductModel) {
                     $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
                     if ($oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
                         $oAmazonProductModel->report_date = $iReportDate;
                         $aSalesRanking = $aCompetitivePricing->getElementsByTagName('SalesRankings');
-                        if (!empty($aSalesRanking)) {
+                        if ($aSalesRanking->length) {
                             /** @var \DOMElement[] $aSalesRanking */
                             foreach ($aSalesRanking as $SalesRanking) {
                                 $aSalesRank = $SalesRanking->getElementsByTagName('SalesRank');
@@ -1812,7 +1810,7 @@ SQL;
                             }
                         }
                         $aCompetitivePrice = $aCompetitivePricing->getElementsByTagName('CompetitivePrice');
-                        if (!empty($aCompetitivePrice)) {
+                        if ($aCompetitivePrice->length) {
                             /** @var \DOMElement[] $aCompetitivePrice */
                             foreach ($aCompetitivePrice as $CompetitivePrice) {
                                 if ($CompetitivePrice->getAttribute('condition') == 'New' && $CompetitivePrice->getAttribute('subcondition') == 'New') {
@@ -1847,7 +1845,16 @@ SQL;
                                 }
                             }
                         }
+
                         if ($oAmazonProductModel->productid) {
+                            if ($sStatus == 'ClientError') {
+                                $oAmazonProductModel->ASIN = 'invalid SellerSKU';
+                            } else {
+                                $aASIN = $aCompetitivePricing->getElementsByTagName('ASIN');
+                                if ($aASIN->length) {
+                                    $oAmazonProductModel->ASIN = $aASIN->item(0)->nodeValue;
+                                }
+                            }
                             $oAmazonProductModel->save();
                         }
                     }
@@ -1898,6 +1905,7 @@ SQL;
                     foreach ($aInventorySupplyList as $InventorySupplyList) {
                         $aTotalSupplyQuantity = $InventorySupplyList->getElementsByTagName('TotalSupplyQuantity');
                         $aInStockSupplyQuantity = $InventorySupplyList->getElementsByTagName('InStockSupplyQuantity');
+                        $aASIN = $InventorySupplyList->getElementsByTagName('ASIN');
                         $aSKU = $InventorySupplyList->getElementsByTagName('SellerSKU');
                         if (!empty($aSKU)) {
                             $sSKU = $aSKU->item(0)->nodeValue;
@@ -1910,10 +1918,13 @@ SQL;
                                 $oProductModel = reset($aProductModels);
                                 $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
                                 $oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params);
-                                if (!empty($aTotalSupplyQuantity)) {
+                                if ($aASIN->length) {
+                                    $oAmazonProductModel->ASIN = $aASIN->item(0)->nodeValue;
+                                }
+                                if ($aTotalSupplyQuantity->length) {
                                     $oAmazonProductModel->lis_TotalSupplyQuantity = $aTotalSupplyQuantity->item(0)->nodeValue;
                                 }
-                                if (!empty($aInStockSupplyQuantity)) {
+                                if ($aInStockSupplyQuantity->length) {
                                     $oAmazonProductModel->lis_InStockSupplyQuantity = $aInStockSupplyQuantity->item(0)->nodeValue;
                                 }
                                 $oAmazonProductModel->report_date = $iReportDate;

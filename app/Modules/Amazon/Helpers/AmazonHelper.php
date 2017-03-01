@@ -585,7 +585,7 @@ class AmazonHelper
                 });
             $oProductModel = reset($aProductModels);
             $aLowestOfferListing = $aCompetitiveResult->getElementsByTagName('LowestOfferListing');
-            if (!empty($aLowestOfferListing)) {
+            if ($aLowestOfferListing->length) {
                 /** @var \DOMElement[] $aLowestOfferListing */
                 foreach ($aLowestOfferListing as $LowestOfferListing) {
                     $Offer = [];
