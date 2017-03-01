@@ -935,8 +935,10 @@ SQL;
                                 'reserved_fc_processing' => $aItem['reserved_fc_processing'],
                                 'productid' => $iProductId,
                                 'productcode' => $aItem['sku'],
-                                'ASIN' => $aItem['asin'],
                                 'report_date' => $report_date]);
+                        if (!empty($aItem['asin'])) {
+                            $oAmazonProductModel->ASIN = $aItem['asin'];
+                        }
                         if ($oAmazonProductModel->productid) {
                             $oAmazonProductModel->save();
                         }
