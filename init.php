@@ -500,6 +500,7 @@ if (!@include $xcart_dir . "/smarty.php") {
     exit;
 }
 
+$smarty->assign('xcartApp',\Xcart\App\Main\Xcart::app());
 #
 # Init miscellaneous vars
 #

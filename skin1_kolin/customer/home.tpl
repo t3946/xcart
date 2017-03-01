@@ -3,7 +3,7 @@
 <html lang="en-US">
 <head>
 {if $config.SEO.clean_urls_enabled eq "Y"}
-<base href="{$catalogs.customer}/" />
+<base href="{$xcartApp->request->getHostInfo()}/" />
 {/if}
 <title>{strip}
 {if $brand.title ne "" && $main eq "brand_products"}
@@ -61,10 +61,10 @@
     <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
     <![endif]-->
     {if $canonical_url}
-        <link rel="canonical" href="http://{$site_domain|lower}/{$canonical_url}" />
+        <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/{$canonical_url}" />
     {/if}
     {if $main eq "catalog" && $current_category.category eq "" && $clean_url_data.resource_type ne "K"}
-        <link rel="canonical" href="http://{$site_domain|lower}/"/>
+        <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/"/>
     {/if}
     {if $config.Product_Page.map_bridge_text_background ne ''}
     {literal}
