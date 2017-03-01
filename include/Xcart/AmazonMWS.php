@@ -4,6 +4,7 @@ namespace Xcart;
 use Modules\Amazon\Helpers\AmazonHelper;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
+use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 use Xcart\External_Product_Verification\ExternalVerificationFeeds;
 use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
@@ -474,32 +475,30 @@ SQL;
         foreach ($this->aReportValue as $aReport) {
             foreach ($aReport as $aItem) {
                 $aArrInsert = array_intersect_key($aItem, $aFieldsToUpdate);
-                $aArrInsert['amazon_fee_preview_last_update_date'] = time();
-                $allItemsCount++;
-
-                if (!is_numeric($aArrInsert['expected_fulfillment_fee_per_unit'])) {
-                    $skippedItemsCount++;
-                    continue;
-                }
-
-                $aArrInsert['estimated_fee_total'] = floatval($aArrInsert['estimated_fee_total']);
-                $aArrInsert['estimated_referral_fee_per_unit'] = floatval($aArrInsert['estimated_referral_fee_per_unit']);
-                $aArrInsert['estimated_variable_closing_fee'] = floatval($aArrInsert['estimated_variable_closing_fee']);
-                $aArrInsert['estimated_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_order_handling_fee_per_order']);
-                $aArrInsert['estimated_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_pick_pack_fee_per_unit']);
-                $aArrInsert['estimated_weight_handling_fee_per_unit'] = floatval($aArrInsert['estimated_weight_handling_fee_per_unit']);
-                $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
-                $aArrInsert['estimated_future_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_future_order_handling_fee_per_order']);
-                $aArrInsert['estimated_future_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_future_pick_pack_fee_per_unit']);
-                $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
-                $aArrInsert['expected_future_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_future_fulfillment_fee_per_unit']);
-
                 if (!empty($aArrInsert['productid'])) {
-                    try {
-                        Connection::getInstance()->insert('xcart_products_amz_fields', $aArrInsert);
-                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
-                        Connection::getInstance()->update('xcart_products_amz_fields', $aArrInsert, ['productid' => $aArrInsert['productid']]);
+                    if (!is_numeric($aArrInsert['expected_fulfillment_fee_per_unit'])) {
+                        $skippedItemsCount++;
+                        continue;
                     }
+                    $model = AmazonProductsFieldsModel::objects()->get(['productid' => $aArrInsert['productid']]);
+                    if (!$model) {
+                        $model = new AmazonProductsFieldsModel();
+                    }
+                    $aArrInsert['amazon_fee_preview_last_update_date'] = time();
+                    $aArrInsert['estimated_fee_total'] = floatval($aArrInsert['estimated_fee_total']);
+                    $aArrInsert['estimated_referral_fee_per_unit'] = floatval($aArrInsert['estimated_referral_fee_per_unit']);
+                    $aArrInsert['estimated_variable_closing_fee'] = floatval($aArrInsert['estimated_variable_closing_fee']);
+                    $aArrInsert['estimated_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_order_handling_fee_per_order']);
+                    $aArrInsert['estimated_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_pick_pack_fee_per_unit']);
+                    $aArrInsert['estimated_weight_handling_fee_per_unit'] = floatval($aArrInsert['estimated_weight_handling_fee_per_unit']);
+                    $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
+                    $aArrInsert['estimated_future_order_handling_fee_per_order'] = floatval($aArrInsert['estimated_future_order_handling_fee_per_order']);
+                    $aArrInsert['estimated_future_pick_pack_fee_per_unit'] = floatval($aArrInsert['estimated_future_pick_pack_fee_per_unit']);
+                    $aArrInsert['expected_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_fulfillment_fee_per_unit']);
+                    $aArrInsert['expected_future_fulfillment_fee_per_unit'] = floatval($aArrInsert['expected_future_fulfillment_fee_per_unit']);
+                    $model->setAttributes($aArrInsert);
+                    $model->save();
+                    $allItemsCount++;
                 }
             }
         }
@@ -935,8 +934,10 @@ SQL;
                                 'reserved_fc_processing' => $aItem['reserved_fc_processing'],
                                 'productid' => $iProductId,
                                 'productcode' => $aItem['sku'],
-                                'ASIN' => $aItem['asin'],
                                 'report_date' => $report_date]);
+                        if (!empty($aItem['asin'])) {
+                            $oAmazonProductModel->ASIN = $aItem['asin'];
+                        }
                         if ($oAmazonProductModel->productid) {
                             $oAmazonProductModel->save();
                         }
@@ -1776,25 +1777,21 @@ SQL;
             $aCompetitivePricingForSKUResult = $xpath->query('/*/GetCompetitivePricingForSKUResult');
             /** @var \DOMElement[] $aCompetitivePricingForSKUResult */
             foreach ($aCompetitivePricingForSKUResult as $aCompetitivePricing) {
-
                 $sSKU = $aCompetitivePricing->getAttribute('SellerSKU');
                 $sStatus = $aCompetitivePricing->getAttribute('status');
                 $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-
                 $aProductModels = array_filter(
                     $this->aProducts,
                     function ($e) use ($sSKU) {
                         return $e->productcode == $sSKU;
                     });
-
                 $oProductModel = reset($aProductModels);
-
                 if ($oProductModel) {
                     $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
                     if ($oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
                         $oAmazonProductModel->report_date = $iReportDate;
                         $aSalesRanking = $aCompetitivePricing->getElementsByTagName('SalesRankings');
-                        if (!empty($aSalesRanking)) {
+                        if ($aSalesRanking->length) {
                             /** @var \DOMElement[] $aSalesRanking */
                             foreach ($aSalesRanking as $SalesRanking) {
                                 $aSalesRank = $SalesRanking->getElementsByTagName('SalesRank');
@@ -1812,7 +1809,7 @@ SQL;
                             }
                         }
                         $aCompetitivePrice = $aCompetitivePricing->getElementsByTagName('CompetitivePrice');
-                        if (!empty($aCompetitivePrice)) {
+                        if ($aCompetitivePrice->length) {
                             /** @var \DOMElement[] $aCompetitivePrice */
                             foreach ($aCompetitivePrice as $CompetitivePrice) {
                                 if ($CompetitivePrice->getAttribute('condition') == 'New' && $CompetitivePrice->getAttribute('subcondition') == 'New') {
@@ -1847,7 +1844,16 @@ SQL;
                                 }
                             }
                         }
+
                         if ($oAmazonProductModel->productid) {
+                            if ($sStatus == 'ClientError') {
+                                $oAmazonProductModel->ASIN = 'invalid SellerSKU';
+                            } else {
+                                $aASIN = $aCompetitivePricing->getElementsByTagName('ASIN');
+                                if ($aASIN->length) {
+                                    $oAmazonProductModel->ASIN = $aASIN->item(0)->nodeValue;
+                                }
+                            }
                             $oAmazonProductModel->save();
                         }
                     }
@@ -1898,6 +1904,7 @@ SQL;
                     foreach ($aInventorySupplyList as $InventorySupplyList) {
                         $aTotalSupplyQuantity = $InventorySupplyList->getElementsByTagName('TotalSupplyQuantity');
                         $aInStockSupplyQuantity = $InventorySupplyList->getElementsByTagName('InStockSupplyQuantity');
+                        $aASIN = $InventorySupplyList->getElementsByTagName('ASIN');
                         $aSKU = $InventorySupplyList->getElementsByTagName('SellerSKU');
                         if (!empty($aSKU)) {
                             $sSKU = $aSKU->item(0)->nodeValue;
@@ -1910,10 +1917,13 @@ SQL;
                                 $oProductModel = reset($aProductModels);
                                 $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
                                 $oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params);
-                                if (!empty($aTotalSupplyQuantity)) {
+                                if ($aASIN->length) {
+                                    $oAmazonProductModel->ASIN = $aASIN->item(0)->nodeValue;
+                                }
+                                if ($aTotalSupplyQuantity->length) {
                                     $oAmazonProductModel->lis_TotalSupplyQuantity = $aTotalSupplyQuantity->item(0)->nodeValue;
                                 }
-                                if (!empty($aInStockSupplyQuantity)) {
+                                if ($aInStockSupplyQuantity->length) {
                                     $oAmazonProductModel->lis_InStockSupplyQuantity = $aInStockSupplyQuantity->item(0)->nodeValue;
                                 }
                                 $oAmazonProductModel->report_date = $iReportDate;
