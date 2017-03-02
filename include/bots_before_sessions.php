@@ -14,11 +14,12 @@ if (!defined('XCART_START')) {
 
 header("Vary: User-Agent");
 
-if (!empty($HTTP_USER_AGENT) && !defined("IS_ROBOT") && empty($is_robot))
+if (!defined("IS_ROBOT") && empty($is_robot))
 {
     $cr = new CrawlerDetect;
 
-    if (   $cr->isCrawler()
+    if ( empty($HTTP_USER_AGENT)
+        || $cr->isCrawler()
         || $cr->setCrawlers(new Crawlers())->isCrawler()
         || $cr->setCrawlers(new CrawlersIp())->isCrawler()
     ) {
