@@ -92,14 +92,13 @@ class SurfingHelper
                 $oReferer->save();
 
                 if ($oSurfMeta->id) {
-                    $userAgent = Xcart::app()->request->getUserAgent();
                     (new SurfPathModel([
                             'meta_id'         => $oSurfMeta->id,
                             'resource_id'     => $oReferer->referer_id,
                             'resource_type'   => $model::GOAL_TYPE_REFERER,
                             'timestamp'       => time(),
                             'position'        => $oSurfMeta->points_visited,
-                            'additional_data' => is_null($userAgent) ? '' : $userAgent,
+                            'additional_data' => Xcart::app()->request->getUserAgent(),
                         ]
                     ))->save();
                 }
