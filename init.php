@@ -383,7 +383,7 @@ if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
 ## Set the session name here
 ###
 
-$cidev_tmp_storefrontid = func_query_first_cell("SELECT storefrontid FROM xcart_storefronts WHERE domain='$_SERVER[HTTP_HOST]'");
+$cidev_tmp_storefrontid = func_query_first_cell("SELECT storefrontid FROM xcart_storefronts WHERE domain='{$_SERVER['HTTP_HOST']}'");
 
 if (empty($cidev_tmp_storefrontid)) {
     $cidev_tmp_storefrontid = '0';

@@ -25,8 +25,8 @@ class SliderData
     public static function getSliderData ($mode, $productid = null, $fba_limit = 2)
     {
         global $config, $sql_tbl, $site_domain;
-        global $XCART_SESSION_NAME, $$XCART_SESSION_NAME;
         global $variant_id_for_point9, $is_robot;
+        global $current_storefront;
 
         x_session_register("cart");
 
@@ -72,16 +72,18 @@ SQL;
             }
             elseif ($section_name == "recently_viewed_products" && !defined('IS_ROBOT')){
 
-                $meta_id = func_query_first_cell("SELECT id FROM xcart_cidev_surf_meta WHERE sessid='".$$XCART_SESSION_NAME."'");
+                $meta_id = \Modules\User\Models\SurfMetaModel::getInstance()->id;
 
                 $p_query = <<<SQL
 select SP.resource_id as needed_resource_id
 from xcart_cidev_surf_path SP
 inner join xcart_products P ON P.productid = SP.resource_id and P.forsale = 'Y'
+inner join xcart_products_sf SF USING (productid)
 where SP.meta_id = '{$meta_id}' 
   and SP.resource_type = 'P' 
   and SP.resource_id NOT IN ('{$productids}')
   and SP.meta_id > 0
+  and SF.sfid = {$current_storefront}
   
 group By SP.resource_id
 order By max(SP.`position`) desc

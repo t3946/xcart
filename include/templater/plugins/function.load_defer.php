@@ -146,20 +146,20 @@ function smarty_function_load_defer($params, &$smarty)
         if (!isset($params['direct_info'])) {
 
 ###
-if (!$HTTPS && AREA_TYPE == 'C') {
-
+if (AREA_TYPE == 'C') {
         $cidev_tmp_storefrontid = func_query_first_cell("SELECT storefrontid FROM xcart_storefronts WHERE domain='$_SERVER[HTTP_HOST]'");
+        if (defined('LOCAL_SF_ID')) {
+            $cidev_tmp_storefrontid = LOCAL_SF_ID;
+        }
 
-        if (empty($cidev_tmp_storefrontid)){
+    if (empty($cidev_tmp_storefrontid)){
                 $CDN_domain = func_query_first_cell("SELECT value FROM xcart_config WHERE name='CDN_domain'");
                 $Enable_CDN = func_query_first_cell("SELECT value FROM xcart_config WHERE name='Enable_CDN'");
         } else {
                 $CDN_domain = func_query_first_cell("SELECT value FROM xcart_storefronts_config WHERE name='CDN_domain' AND storefrontid='$cidev_tmp_storefrontid'");
                 $Enable_CDN = func_query_first_cell("SELECT value FROM xcart_storefronts_config WHERE name='Enable_CDN' AND storefrontid='$cidev_tmp_storefrontid'");
         }
-        if (!empty($CDN_domain) && strpos($CDN_domain, "://") === false){
-                $CDN_domain = ($HTTPS ? "https://" : "http://").$CDN_domain;
-        }
+        $CDN_domain = '//'.$CDN_domain;
 }
 ###
 
