@@ -1001,5 +1001,16 @@ jQuery.fn.mfieldset = function (options) {
 
         });
 
+        $('.tabs .tabs-title a').on('click', function(e) {
+            e.preventDefault();
+
+            $('.tabs .tabs-title a').removeClass('active');
+            $('.tabs .tabs-content .tab').removeClass('active');
+
+            var id = $(this).addClass('active').attr('href');
+            $(id).addClass('active');
+        })
+
     });
+
 })();

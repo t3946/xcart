@@ -1,23 +1,30 @@
 {extends 'dashboard/layouts/menu_layout.tpl'}
 {block 'heading'}
-    <h1 align="center">Filters list.</h1>
+    <h1 align="center">Customer Care dashboard.</h1>
 {/block}
 
 {block 'content'}
-    {smarty_admin_block name='My dashboard'}
-        <div class="my_dashboard">
-            {include 'dashboard/dashboard_group.tpl' models=$myModels title='My Dashboard' my_position=true}
+    <div class="smarty-admin-block">
+        <div class="tabs">
+            <div class="tabs-title">
+                <a href="#my_dashboard" class="link {if $myModels|count > 0}active{/if}">My dashboard</a>
+                <a href="#dashboard" class=" link {if $myModels|count == 0}active{/if}">Order dashboard</a>
+            </div>
+
+            <div class="tabs-content">
+                <div class="tab my_dashboard white-back orange-border content-block {if $myModels|count > 0}active{/if}" id="my_dashboard">
+                    {include 'dashboard/dashboard_group.tpl' models=$myModels my_position=true row_col=['col'=> $row_col.col, 'row' => 25]}
+                </div>
+                <div class="tab white-back orange-border content-block {if $myModels|count == 0}active{/if}" id="dashboard">
+                    {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}
+
+                    {foreach $groups as $group}
+                        {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id title=$group}
+                    {/foreach}
+                </div>
+            </div>
         </div>
-    {/smarty_admin_block}
-
-    {smarty_admin_block name='Order dashboard'}
-        {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}
-
-        {foreach $groups as $group}
-            {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id title=$group}
-        {/foreach}
-
-    {/smarty_admin_block}
+    </div>
 {/block}
 
 {block 'js'}
