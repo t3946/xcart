@@ -675,6 +675,13 @@ jQuery.fn.mfieldset = function (options) {
                 enabled: 'button',
                 disabled: 'empty'
             },
+            notify: {
+                lifetime: 20000,
+                titles : {
+                    new_events: 'Dashboard new events',
+                    err_refresh: 'Dashboard refresh error'
+                }
+            },
             interval: 25000,
             selector: '.dashboard-filters a[data-id]'
         },
@@ -743,8 +750,8 @@ jQuery.fn.mfieldset = function (options) {
                     });
 
                     $.mnotify({
-                        lifetime: 15000,
-                        title: 'Dashboard new events',
+                        title: self.options.notify.titles.new_events,
+                        lifetime: self.options.notify.lifetime,
                         message: '<ul>'+texts.join('')+'</ul>'
                     });
                 }
@@ -769,7 +776,7 @@ jQuery.fn.mfieldset = function (options) {
 
                 error: function (jqXHR, textStatus, errorThrown) {
                     $.mnotify({
-                        title: 'Dashboard refresh error',
+                        title: self.options.notify.titles.err_refresh,
                         message: jqXHR.responseText
                     });
 
