@@ -517,7 +517,7 @@ label + input {
     width: 10px;
     height: 15px;
     position: absolute;
-    right: -10px;
+    right: -9px;
     bottom: 0;
 }
 .smarty-admin-block .tabs .tabs-title .link.active:nth-last-child(1):after {
