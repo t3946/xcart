@@ -85,6 +85,9 @@ return array_replace_recursive([
        'mail' => [
            'class' => '\\Modules\\Mail\\Components\\MailComponent'
        ],
+       'auth' => [
+           'class' => '\\Modules\\User\\Components\\Auth'
+       ],
    ],
    'autoloadComponents' => [
        'errorHandler'

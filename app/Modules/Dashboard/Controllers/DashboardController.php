@@ -38,7 +38,7 @@ class DashboardController extends PrototypeAdminController
                 [
                     'models'  => $models,
                     'row_col' => DashboardFilter::getMaxRowCol(),
-                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__login' => Xcart::app()->request->session->get('login')])->order(['position_row', 'position_column'])->all(),
+                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__login' => (string)Xcart::app()->user->login])->order(['position_row', 'position_column'])->all(),
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                 ]
             );
@@ -108,7 +108,7 @@ class DashboardController extends PrototypeAdminController
         if (isset($_POST['id']) && $filter_model = DashboardFilter::objects()->get(['id' => $_POST['id']]))
         {
 
-            $user = UserModel::objects()->get(['login' => Xcart::app()->request->session->get('login')]);
+            $user = UserModel::objects()->get(['login' => (string)Xcart::app()->user->login]);
             $model = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $filter_model->id, 'user_id' => $user->id]);
 
             unset($_POST['id']);
@@ -123,32 +123,36 @@ class DashboardController extends PrototypeAdminController
 
     public function subscription($id)
     {
+        /** @var UserModel $user */
+        $user = Xcart::app()->user;
         $class = UserModel::classNameShort();
-        $model = UserModel::objects()->get(['login' => Xcart::app()->request->session->get('login')]);
 
-        if ($this->getRequest()->getIsPost()) {
-            if ($_POST[$class]) {
-                UserFiltersLinkModel::objects()->getOrCreate(['user_id' => $model->id, 'filter_id' => $id]);
+        if (!$user->getIsGuest())
+        {
+            if ($this->getRequest()->getIsPost()) {
+                if ($_POST[$class]) {
+                    UserFiltersLinkModel::objects()->getOrCreate(['user_id' => $user->id, 'filter_id' => $id]);
+                }
+                else {
+                    UserFiltersLinkModel::objects()->filter(['user_id' => $user->id, 'filter_id' => $id])->delete();
+                }
             }
-            else {
-                UserFiltersLinkModel::objects()->filter(['user_id' => $model->id, 'filter_id' => $id])->delete();
+
+            $users = [];
+            $u_ids = UserFiltersLinkModel::objects()->filter(['filter_id' => $id])->exclude(['user_id' => $user->id ])->valuesList(['user_id'], true);
+
+            if ($u_ids) {
+                $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();
             }
+
+            echo $this->render('dashboard/subscription.tpl', [
+                'id' => $id,
+                'class' => $class,
+                'ids' => $u_ids,
+                'users' => $users,
+                'model' => $user,
+            ]);
         }
-
-        $users = [];
-        $u_ids = UserFiltersLinkModel::objects()->filter(['filter_id' => $id])->valuesList(['user_id'], true);
-
-        if ($u_ids) {
-            $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();
-        }
-
-        echo $this->render('dashboard/subscription.tpl', [
-            'id' => $id,
-            'class' => $class,
-            'ids' => $u_ids,
-            'users' => $users,
-            'model' => $model,
-        ]);
     }
 
 

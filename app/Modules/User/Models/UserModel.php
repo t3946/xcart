@@ -7,6 +7,8 @@ use Xcart\App\Orm\Fields\CharField;
 
 class UserModel extends AutoMetaModel
 {
+    public $is_guest = false;
+
     public static function tableName()
     {
         return 'xcart_customers';
@@ -29,5 +31,10 @@ class UserModel extends AutoMetaModel
     public function __toString()
     {
         return $this->firstname;
+    }
+
+    public function getIsGuest()
+    {
+        return $this->is_guest;
     }
 }
