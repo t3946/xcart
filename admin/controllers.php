@@ -21,7 +21,7 @@ if (!empty($_POST['cur_sf']) && $_POST['mode'] = 'change_storefront') {
     func_header_location($_SERVER['REQUEST_URI']);
 }
 
-//require $xcart_dir."/include/security.php";
+require $xcart_dir."/include/security.php";
 $configPath = $xcart_dir .'/app/config/settings_admin.php';
 
 $config = include $configPath;
