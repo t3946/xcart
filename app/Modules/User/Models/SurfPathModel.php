@@ -4,6 +4,7 @@ namespace Modules\User\Models;
 
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\TextField;
 
 class SurfPathModel extends AutoMetaModel
 {
@@ -37,6 +38,11 @@ class SurfPathModel extends AutoMetaModel
         return [
             'id' => [
                 'class' => AutoField::className(),
+            ],
+            'additional_data' => [
+                'class' => TextField::className(),
+                'default' => '',
+                'null' => false
             ],
         ];
     }
