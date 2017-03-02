@@ -1,12 +1,12 @@
 {extends 'dashboard/layouts/menu_layout.tpl'}
 {block 'heading'}
-    <h1 align="center">Filters list.</h1>
+    <h1 align="center">Customer Care dashboard.</h1>
 {/block}
 
 {block 'content'}
     {smarty_admin_block name='My dashboard'}
         <div class="my_dashboard">
-            {include 'dashboard/dashboard_group.tpl' models=$myModels title='My Dashboard' my_position=true}
+            {include 'dashboard/dashboard_group.tpl' models=$myModels my_position=true}
         </div>
     {/smarty_admin_block}
 

@@ -105,18 +105,18 @@ class DashboardController extends PrototypeAdminController
     public function mySort()
     {
         /** @var Model|ModelInterface $model */
-        if (isset($_POST['id']) && $model = DashboardFilter::objects()->get(['id' => $_POST['id']]))
+        if (isset($_POST['id']) && $filter_model = DashboardFilter::objects()->get(['id' => $_POST['id']]))
         {
 
             $user = UserModel::objects()->get(['login' => Xcart::app()->request->session->get('login')]);
-            $model = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $model->id, 'user_id' => $user->id]);
+            $model = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $filter_model->id, 'user_id' => $user->id]);
 
             unset($_POST['id']);
             $model->setAttributes($_POST);
 
             if ($model->isValid() && $model->save(['position_row', 'position_column'])) {
 
-                $this->jsonResponse(['message' => "Filter '{$model}' saved on position {$model->position_row}x{$model->position_column}"]);
+                $this->jsonResponse(['message' => "Filter '{$filter_model}' saved on position {$model->position_row}x{$model->position_column}"]);
             }
         }
     }

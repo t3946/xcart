@@ -1,6 +1,9 @@
 {if $models|count > 0}
-    <fieldset>
+    {if $title}
+        <fieldset>
         <legend>{$title}</legend>
+    {/if}
+
         <table class="dashboard-filters index">
             {foreach 1..$row_col.row as $row}
                 <tr>
@@ -39,5 +42,8 @@
                 </tr>
             {/foreach}
         </table>
-    </fieldset>
+
+    {if $title}
+        </fieldset>
+    {/if}
 {/if}
