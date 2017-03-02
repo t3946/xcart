@@ -192,46 +192,55 @@ class SearchHelper
 
     public static function getAjaxSuggestion($query, $from)
     {
+        $stmt = null;
         $data = [];
         $like = "%{$query}%";
 
+        $connection = Connection::getInstance()->setIgnoreErrors(true);
+
         switch ($from) {
             case 'distributor' :
-                $data = Connection::getInstance()->fetchAll(SearchSql::getDistributorSql(), ['like' => $like]);
+                $stmt = $connection->executeQuery(SearchSql::getDistributorSql(), ['like' => $like]);
                 break;
             case 'operator' :
-                $data = Connection::getInstance()->fetchAll(SearchSql::getOperatorSql(), ['like' => $like]);
+                $stmt = $connection->executeQuery(SearchSql::getOperatorSql(), ['like' => $like]);
                 break;
             case 'company' :
-                $data = Connection::getInstance()->fetchAll(SearchSql::getCompanySql(), ['like' => $like]);
+                $stmt = $connection->executeQuery(SearchSql::getCompanySql(), ['like' => $like]);
                 break;
             case 'search_city' :
-                $data = Connection::getInstance()->fetchAll(SearchSql::getCitySql(), ['like' => $like]);
+                $stmt = $connection->executeQuery(SearchSql::getCitySql(), ['like' => $like]);
                 break;
             case 'search_state' :
-                $data = Connection::getInstance()->fetchAll(SearchSql::getStateOrderSql(), ['like' => $like]);
+                $stmt = $connection->executeQuery(SearchSql::getStateOrderSql(), ['like' => $like]);
                 break;
             case 'search_country' :
-                $data = Connection::getInstance()->fetchAll(SearchSql::getCountryOrderSql(), ['like' => $like]);
+                $stmt = $connection->executeQuery(SearchSql::getCountryOrderSql(), ['like' => $like]);
                 break;
             case 'search_street' :
-                $data = Connection::getInstance()->fetchAll(SearchSql::getStreetSql(), ['like' => $like]);
+                $stmt = $connection->executeQuery(SearchSql::getStreetSql(), ['like' => $like]);
                 break;
             case 'search_phone' :
                 $query = self::getNumberOnlyRegexp($query);
-                $data = Connection::getInstance()->fetchAll(SearchSql::getPhoneFaxOrderSql(), ['like' => $query]);
+                $stmt = $connection->executeQuery(SearchSql::getPhoneFaxOrderSql(), ['like' => $query]);
                 break;
             case 'search_email' :
-                $data = Connection::getInstance()->fetchAll(SearchSql::getEmailOrderSql(), ['like' => $like]);
+                $data = $connection->executeQuery(SearchSql::getEmailOrderSql(), ['like' => $like]);
                 break;
             case 'search_zip' :
                 $query = self::getNumberOnlyRegexp($query);
-                $data = Connection::getInstance()->fetchAll(SearchSql::getZipOrderSql(), ['like' => $query]);
+                $stmt = $connection->executeQuery(SearchSql::getZipOrderSql(), ['like' => $query]);
                 break;
             case 'search_customer_name' :
-                $data = Connection::getInstance()->fetchAll(SearchSql::getCustomerNameSql(), ['like' => $like]);
+                $stmt = $connection->executeQuery(SearchSql::getCustomerNameSql(), ['like' => $like]);
                 break;
         }
+
+        if ($stmt) {
+            $data = $stmt->fetchAll();
+        }
+
+        $connection->setIgnoreErrors(false);
 
         return $data;
     }
