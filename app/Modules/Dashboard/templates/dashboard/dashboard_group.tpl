@@ -24,8 +24,8 @@
                                                     {/if}
                                                 </div>
                                                 <div class="columns large-10">
-                                                    <span class="name {if $model->getSearchStorage()->getCashedCount() == 0}gray{/if}">
-                                                        <span class="{if $model->bold}bold{/if}">{$model}</span>
+                                                    <span class="name">
+                                                        <span class="{if $model->bold}bold{/if} filter_name">{$model}</span>
                                                         (<span class="count">{$model->getSearchStorage()->getCashedCount()}</span>)
                                                     </span>
                                                 </div>
