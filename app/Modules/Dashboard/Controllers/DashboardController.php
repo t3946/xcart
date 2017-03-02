@@ -22,11 +22,11 @@ class DashboardController extends PrototypeAdminController
         $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
 
         if ($this->getRequest()->getIsAjax()) {
-            $data = [];
+            $data = ['filters' => [], 'groups' => []];
 
             /** @var DashboardFilter $model */
             foreach ($models as $model) {
-                $data[$model->id] = [
+                $data['filters'][$model->id] = [
                     'count' => $model->getSearchStorage()->getCashedCount(),
                 ];
             }
@@ -140,7 +140,6 @@ class DashboardController extends PrototypeAdminController
 
         if ($u_ids) {
             $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();
-//            $users = UserModel::objects()->filter(['id__in' => []])->all();
         }
 
         echo $this->render('dashboard/subscription.tpl', [

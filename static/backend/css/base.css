@@ -645,6 +645,7 @@ label + input {
 
 .admin .dashboard-filters .empty .name {
     text-decoration: none;
+    color: darkgray;
 }
 
 .admin .dashboard-filters .empty .tag {
@@ -700,6 +701,14 @@ html > body .mnotify {
     height: auto;
     z-index: 9999
 }
+
+/*.mnotify a,*/
+/*.mnotify a:hover,*/
+/*.mnotify a:visited,*/
+/*.mnotify a:link*/
+/*{*/
+    /*color: #fff !important;*/
+/*}*/
 
 .mnotify .mnotify-shadow {
     -webkit-box-shadow: 0 2px 10px rgba(50, 50, 50, .5);
@@ -843,6 +852,22 @@ div.message-box:hover a.message-close {
 div.message-box div.message-body {
     overflow: hidden;
     color: #fff;
+}
+
+.message-box .message-body ul {
+    padding-left: 1em;
+    margin: 0.5em 0;
+}
+.message-box .message-body ul li {
+    margin: 0.5em 0 0.5em 0.5em;
+}
+
+div.message-box div.message-body a {
+    color: #fff;
+    text-decoration: none;
+}
+div.message-box div.message-body a:hover {
+    text-decoration: underline;
 }
 
 div.message-box div.message-body div.thumb {

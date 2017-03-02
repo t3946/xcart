@@ -4,6 +4,7 @@ namespace Xcart;
 
 use \Doctrine\DBAL\DriverManager;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\DefaultConnection;
 
 /**
  * Class Connection
@@ -12,10 +13,11 @@ use Xcart\App\Main\Xcart;
  */
 class Connection
 {
+    /** @var DefaultConnection null  */
     private static $_instance = null;
 
     /**
-     * @return \Doctrine\DBAL\Connection
+     * @return DefaultConnection
      */
     public static function getInstanceFromApp()
     {
@@ -28,7 +30,7 @@ class Connection
 
     /**
      * @param array $params
-     * @return \Doctrine\DBAL\Connection
+     * @return DefaultConnection
      */
     static public function getInstance($params = [])
     {
