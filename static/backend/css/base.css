@@ -498,21 +498,72 @@ label + input {
     text-decoration: underline;
 }
 
+.smarty-admin-block {
+    margin-bottom: 20px;
+}
+
+.smarty-admin-block .tabs .tabs-title {
+    white-space: nowrap;
+    letter-spacing: -4px;
+    line-height: 15px;
+    min-height: 15px;
+    background: url('../images/dialog_bg_line.gif') bottom left repeat-x;
+}
+
+.smarty-admin-block .tabs .tabs-title .link:nth-last-child(1):after {
+    content: ' ';
+    display: block;
+    background: url('../images/dialog_bg_after_n.gif') bottom left no-repeat;
+    width: 10px;
+    height: 15px;
+    position: absolute;
+    right: -10px;
+    bottom: 0;
+}
+.smarty-admin-block .tabs .tabs-title .link.active:nth-last-child(1):after {
+    background-image: url('../images/dialog_bg_after.gif');
+}
+
+.smarty-admin-block .tabs .tabs-title .link {
+    letter-spacing: normal;
+    min-height: 15px;
+    display: inline-block;
+    background-color: #ffb86a;
+    border: 1px #ff8600 solid;
+    border-bottom: none;
+    padding: 0 11px;
+    border-radius: 3px 3px 0 0;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 11px;
+    min-width: 150px;
+    position: relative;
+}
+.smarty-admin-block .tabs .tabs-title .link:hover {
+    text-decoration: underline;
+}
+
+.smarty-admin-block .tabs .tabs-title .link.active {
+    background-color: #ff8600;
+}
+
 .smarty-admin-block .content-block {
     padding: 10px;
-    margin-bottom: 20px;
 }
 .smarty-admin-block .buttons-block {
     margin-left: -11px;
     width: 853px;
 }
 .smarty-admin-block .title-block {
+    min-height: 15px;
     background-image: url('/skin1_kolin/images/dialog_bg_n.gif');
 }
 .smarty-admin-block .title-block .title {
     padding-left: 20px;
     color: #fff !important;
     font-weight: bold;
+    line-height: 15px;
 }
 
 .admin .dashboard-filters {
@@ -966,4 +1017,14 @@ subscription-container .item form {
 
 .subscription-container .item input {
     vertical-align: middle;
+}
+
+.tabs {}
+.tabs .tabs-title {}
+.tabs .tabs-content {}
+.tabs .tabs-content .tab {
+    display: none;
+}
+.tabs .tabs-content .tab.active {
+    display: block;
 }
