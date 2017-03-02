@@ -714,6 +714,9 @@ jQuery.fn.mfieldset = function (options) {
                         var sign = '';
                         if (c_chng > 0) {
                             sign = '+';
+
+                            notify = true;
+                            data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.filter_name').html() +' ('+ sign + c_chng +')</a>';
                         }
 
                         $this.attr('data-count', data.filters[id].count);
@@ -727,9 +730,6 @@ jQuery.fn.mfieldset = function (options) {
                             $this.removeClass(self.options.classes.enabled);
                             $this.addClass(self.options.classes.disabled);
                         }
-
-                        notify = true;
-                        data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.filter_name').html() +' ('+ sign + c_chng +')</a>';
                     }
                 }
             });
@@ -751,9 +751,8 @@ jQuery.fn.mfieldset = function (options) {
 
                     $.mnotify({
                         title: self.options.notify.titles.new_events,
-                        lifetime: self.options.notify.lifetime,
                         message: '<ul>'+texts.join('')+'</ul>'
-                    });
+                    }, {lifetime: self.options.notify.lifetime});
                 }
             }
 
