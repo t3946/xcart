@@ -370,8 +370,8 @@ if ($REQUEST_METHOD == 'POST' && $mode == 'restore' && (($userfile != 'none' && 
 				# While restoring database re-establish connection
 				# with mysql server before every Nth table row
 				#
-				db_connect($sql_host, $sql_user, $sql_password);
-				db_select_db($sql_db) || die("Could not connect to SQL db");
+				//db_connect($sql_host, $sql_user, $sql_password);
+				//db_select_db($sql_db) || die("Could not connect to SQL db");
 			}
 
 			db_query($command);

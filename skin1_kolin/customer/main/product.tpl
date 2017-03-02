@@ -2,15 +2,15 @@
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
 {if $product.clean_url ne ""}
-<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="//www.artistsupplysource.com/{$product.clean_url}/" />
 {else}
-<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="//www.artistsupplysource.com/product.php?productid={$product.productid}" />
 {/if}
 {else}
 {if $product.clean_url ne ""}
-<meta id="so_url" itemprop="url" content="http://{$site_domain}/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="//{$site_domain}/{$product.clean_url}/" />
 {else}
-<meta id="so_url" itemprop="url" content="http://{$site_domain}/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="//{$site_domain}/product.php?productid={$product.productid}" />
 {/if}
 {/if}
 {/if}
@@ -66,7 +66,12 @@
 {include file="modules/Detailed_Product_Images/popup_image.tpl"}
 {else}
 {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
-<a style="font-size: 0px;" href="http://{$site_domain|lower}/{$canonical_url}#dp_images">{/if}{include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}{if $active_modules.Detailed_Product_Images ne "" && $images ne ''}</a>{/if}
+<a style="font-size: 0px;" href="#dp_images">
+{/if}
+	{include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}
+{if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
+</a>
+{/if}
 {/if}
 {if $active_modules.Magnifier ne "" && $config.Magnifier.magnifier_image_popup eq 'Y' && $zoomer_images ne '' && $js_enabled eq 'Y'}
 {include file="modules/Magnifier/popup_magnifier.tpl"}
@@ -450,38 +455,13 @@ var lbl_error = "{$lng.lbl_error}";
 {if $product.forsale ne "B"}
 <table cellspacing="0" cellpadding="0" border="0" {* height="42" width="203"*}>
 <tr>
-	{*
-	<td>{include file="buttons/add_to_cart.tpl" style="button" href="javascript: if(FormValidation()) document.orderform.submit();"*}
-	<td id="add2cart_{$product.productid}" nowrap="nowrap">
-
+<td id="add2cart_{$product.productid}" nowrap="nowrap">
 {if $product.lead_time_message ne ""}
 {include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y') if (confirm('`$product.lead_time_message`')) ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'product'); if (!('`$config.General.opt_ajax_cart`' == 'Y')) document.orderform.submit();" b=1 class="ajax_button" add_to_cart_btn="big"}
 {else}
 {include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y') ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'product'); else document.orderform.submit();" b=1 class="ajax_button" add_to_cart_btn="big"}
 {/if}
-
-{*
-{include file="buttons/buy_now.tpl" style="button" href="javascript: if ('`$config.General.opt_ajax_cart`' == 'Y') ajax_add_to_cart(`$product.productid`, `$product.add_date`, 'product'); else document.orderform.submit();" b=1 class="ajax_button" new_add_to_cart_btn="Y"}
-*}
-
-{*
-<a id="btn-add-to-cart" class="btn_atcart_b" rel="nofollow" href="http://cart.dx.com/shoppingcart.dx/add.54370">
-<span class="t">Add To Cart</span>
-</a>
-*}
-
-	{*
-	<a href="javascript: if(FormValidation()) document.orderform.submit();" class="VertMenuItems"><font color=#0000FF><b>Add to cart</b></font></a>
-	*}
-	</td>
-{*
-	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-	<td>
-{if ($login ne "" || $config.Wishlist.add2wl_unlogged_user eq 'Y') && $active_modules.Wishlist ne ""}
-{include file="customer/add2wl.tpl"}
-{/if}
-	</td>
-*}
+</td>
 </tr>
 </table>
 {else}

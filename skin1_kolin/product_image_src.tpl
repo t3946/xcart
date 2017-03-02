@@ -1,0 +1,1 @@
+{if $tmbn_url}{include file="product_image_path.tpl"}{$tmbn_url}{else}{if $full_url}{$http_location}{else}{include file="product_image_path.tpl"}/default_image.gif{/if}{/if}

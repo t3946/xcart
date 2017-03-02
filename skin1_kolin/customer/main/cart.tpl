@@ -244,7 +244,7 @@ function cidev_update_product_amount_next(cartid, amount, manufacturerid){
 	{include file="product_thumbnail.tpl" productid=$imageid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].pimage_url type=$products[product].is_pimage}
 {else}
 	{assign var="imageid" value=$products[product].productid}
-	{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].tmbn_url}
+	{include file="product_thumbnail.tpl" productid=$products[product].productid image_x=$config.Appearance.thumbnail_width product=$products[product].product tmbn_url=$products[product].pimage_url}
 {/if}
 </a>
 {if $active_modules.Special_Offers ne "" and $products[product].have_offers}

@@ -10,15 +10,15 @@ vim: set ts=2 sw=2 sts=2 et:
 {if $use_schema_org eq "Y"}
 {if $current_storefront eq "0"}
 {if $product.clean_url ne ""}
-<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="//www.artistsupplysource.com/{$product.clean_url}/" />
 {else}
-<meta id="so_url" itemprop="url" content="http://www.artistsupplysource.com/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="//www.artistsupplysource.com/product.php?productid={$product.productid}" />
 {/if}
 {else}
 {if $product.clean_url ne ""}
-<meta id="so_url" itemprop="url" content="http://{$site_domain}/{$product.clean_url}/" />
+<meta id="so_url" itemprop="url" content="//{$site_domain}/{$product.clean_url}/" />
 {else}
-<meta id="so_url" itemprop="url" content="http://{$site_domain}/product.php?productid={$product.productid}" />
+<meta id="so_url" itemprop="url" content="//{$site_domain}/product.php?productid={$product.productid}" />
 {/if}
 {/if}
 {/if}
@@ -30,22 +30,22 @@ vim: set ts=2 sw=2 sts=2 et:
 <link id="pm_4" itemprop="acceptedPaymentMethod" href="http://purl.org/goodrelations/v1#PayPal" />
 
 
-<meta itemscope="" itemtype="http://schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_model so_offer"/>
+<meta itemscope="" itemtype="//schema.org/Product" itemref="so_image so_category so_name so_url so_description so_gtin so_weight so_brand so_manuf so_sku so_mpn so_model so_offer"/>
 
-<div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
-	<meta itemprop="logo" content="http://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
-	<meta itemprop="url" content="http://www.s3stores.com/"/>
+<div id="so_o_seller" itemprop="seller" itemscope="" itemtype="//schema.org/Organization">
+	<meta itemprop="logo" content="//www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
+	<meta itemprop="url" content="//www.s3stores.com/"/>
 	<meta itemprop="name" content="S3 Stores Inc."/>
 </div>
 
 {assign var="oStorefront" value=$oProduct->getStoreFront()}
 
-<span id="so_brand" itemprop="brand" itemscope="" itemtype="http://schema.org/Brand">
+<span id="so_brand" itemprop="brand" itemscope="" itemtype="//schema.org/Brand">
     <span itemprop="name" content="{$product.cidev_brand_name}">    </span>
     <span itemprop="url" content="{$oStorefront->getStoreFrontURL()}/brand/{$product.brandid}/">    </span>
 </span>
 
-<span id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="http://schema.org/Organization">
+<span id="so_manuf" itemprop="manufacturer" itemscope="" itemtype="//schema.org/Organization">
 	<span itemprop="name" content="{$product.manufacturer}">
 	</span>
 </span>
@@ -55,8 +55,8 @@ vim: set ts=2 sw=2 sts=2 et:
 <meta id="so_model" itemprop="model" content="{$cidev_mpn}"/>
 {/if}
 
-<meta id="so_offer" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" itemref="so_o_stock so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
-<div id="so_weight" itemprop="weight" itemscope="" itemtype="http://schema.org/QuantitativeValue" itemref="so_weight_value">
+<meta id="so_offer" itemprop="offers" itemscope="" itemtype="//schema.org/Offer" itemref="so_o_stock so_o_condition so_o_currency so_o_price so_o_function so_o_delivery so_o_seller pm_1 pm_2 pm_3 pm_4"/>
+<div id="so_weight" itemprop="weight" itemscope="" itemtype="//schema.org/QuantitativeValue" itemref="so_weight_value">
 	<meta itemprop="unitCode" content="lbs">
 </div>
 {if $cat_name_for_itemprop ne ""}
@@ -66,8 +66,8 @@ vim: set ts=2 sw=2 sts=2 et:
 <meta id="so_o_condition" itemprop="itemCondition" content="NewCondition"/>
 <meta id="so_o_currency" itemprop="priceCurrency" content="USD">
 
-<meta id="so_o_function" itemprop="businessFunction" href="http://purl.org/goodrelations/v1#Sell"/>
-<div id="so_o_delivery" itemprop="deliveryLeadTime"  itemscope="" itemtype="http://schema.org/QuantitativeValue">
+<meta id="so_o_function" itemprop="businessFunction" href="//purl.org/goodrelations/v1#Sell"/>
+<div id="so_o_delivery" itemprop="deliveryLeadTime"  itemscope="" itemtype="//schema.org/QuantitativeValue">
 	<meta itemprop="value" content="6">
 	<meta itemprop="unitText" content="days">
 </div>
@@ -86,20 +86,6 @@ vim: set ts=2 sw=2 sts=2 et:
 {if $product_wholesale.0.price ne "" && $product.new_notify_in_stock_price eq "" && $product.map_price lte $product.taxed_price}
         {assign var="current_price" value=$product_wholesale.0.price}
 {/if}
-
-{*
-{if $product.min_amount gt 1 && $product.mult_order_quantity eq "Y"}
-        {math assign="itemprop_price" equation="y*x" y=$product.min_amount x=$current_price}
-{else}
-        {assign var="itemprop_price" value=$current_price}
-{/if}
-*}
-
-{*</div>*}
-
-{* </div> *} {* end http://schema.org/Product  *}
-{*{/if}*}
-
 
 <div class="product-details">
   {if $active_modules.Special_Offers || ($product.appearance.has_market_price and $product.appearance.market_price_discount gt 0)}
@@ -196,12 +182,7 @@ onclick="javascript: $('#orderform-{$product.productid}').submit();"
           <li data-icon="false">
             <a href="{$current_location}/product.php?productid={$product.productid}&mobile_mode=get_detailed_images">
             {/if}
-                {if $product.oSplash}
-                    <div style="position: absolute; z-index:2;" class="images_splash">
-                        <img src="{$product.oSplash->image_path}"/>
-                    </div>
-                {/if}
-            <img {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{if $product.image_url}{$product.image_url|amp}{else}{$xcart_web_dir}/image.php?type={$type|default:"P"}&amp;id={$product.productid}{/if}" id="product_thumbnail" style="width: {$product.image_x}px; height: {$product.image_y}px;" alt="{$product.product}" />
+                {include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$producttitle tmbn_url=$product.tmbn_url id="product_thumbnail" type="P" splash=$product.oSplash}
             {if $active_modules.Detailed_Product_Images and $images ne ''}
             </a>
           </li>
@@ -318,7 +299,11 @@ function send_question_email_form(){
 {capture name=dialog}
 
 {if $brand_image.filename ne ""}
-<img src="/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
+    {assign var="imagePath" value=$xcart_web_dir}
+    {if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}
+        {assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
+    {/if}
+<img src="{$imagePath}/images/B/{$brand_image.filename}" style="float: left; margin: 10px 10px 10px 0;" />
 {/if}
 
 <p align="justify">
