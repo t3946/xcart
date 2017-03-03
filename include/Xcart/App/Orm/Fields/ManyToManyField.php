@@ -155,7 +155,7 @@ class ManyToManyField extends RelatedField
                         }
                     }
 
-                    $this->_modelColumn = $name . '_id';
+                    $this->_modelColumn = $name;
                 } else {
                     list($fromId, $toId) = $this->link;
                     if (empty($this->link)) {
@@ -213,6 +213,14 @@ class ManyToManyField extends RelatedField
                     $throughAlias . '.' . $from => $topAlias . '.' . $this->getModel()->getPrimaryKeyName()
                 ],
                 $throughAlias
+            ],
+            [
+                'LEFT JOIN',
+                $this->getRelatedTable(),
+                [
+                    $throughAlias . '.' . $to => $alias . '.' .$this->getRelatedModel()->getPrimaryKeyName()
+                ],
+                $alias
             ]
         ];
     }
