@@ -101,7 +101,7 @@ class OneToOneField extends ForeignField
     public function getSqlIndexes()
     {
         $indexes = [];
-        $name = $this->primary ? $this->name : $this->name;
+        $name = $this->name;
         if ($this->primary) {
             $indexes[] = new Index('PRIMARY', [$name], true, true);
         } else if ($this->unique && !$this->primary) {

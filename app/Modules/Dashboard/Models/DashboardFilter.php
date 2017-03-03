@@ -31,7 +31,7 @@ class DashboardFilter extends Model
             'id'              => [
                 'class' => AutoField::className(),
             ],
-            'group'           => [
+            'group_id'           => [
                 'class'       => ForeignField::className(),
                 'modelClass'  => GroupModel::className(),
                 'verboseName' => 'Group',
@@ -130,7 +130,7 @@ class DashboardFilter extends Model
     public function getMyPositions()
     {
         if (!$this->uf_link_model) {
-            $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user__login' => (string)Xcart::app()->user->login])->get();
+            $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user_id__login' => (string)Xcart::app()->user->login])->get();
         }
 
         return [

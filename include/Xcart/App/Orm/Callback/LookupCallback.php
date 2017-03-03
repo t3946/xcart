@@ -2,7 +2,6 @@
 
 namespace Xcart\App\Orm\Callback;
 
-use Modules\Dashboard\Models\UserFiltersLinkModel;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\RelatedField;
 use Xcart\App\Orm\Model;
