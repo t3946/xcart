@@ -30,6 +30,7 @@
 | Ruslan R. Fazlyev. All Rights Reserved.                                     |
 +-----------------------------------------------------------------------------+
 \*****************************************************************************/
+use Xcart\App\Main\Xcart;
 
 /**
  * Defer loading plugin.
@@ -145,7 +146,6 @@ function smarty_function_load_defer($params, &$smarty)
 
         if (!isset($params['direct_info'])) {
 
-###
 if (AREA_TYPE == 'C') {
         $cidev_tmp_storefrontid = func_query_first_cell("SELECT storefrontid FROM xcart_storefronts WHERE domain='$_SERVER[HTTP_HOST]'");
         if (defined('LOCAL_SF_ID')) {
@@ -161,7 +161,8 @@ if (AREA_TYPE == 'C') {
         }
         $CDN_domain = '//'.$CDN_domain;
 }
-###
+            $urlPath = ((!empty($CDN_domain) && $Enable_CDN == "Y")
+                && (!(Xcart::app()->request->getIsSecureConnection()) || Xcart::app()->request->getIsSecureConnection() && $config["Appearance"]["https_enabled"] == "Y")) ? $CDN_domain : $xcart_web_dir;
 
             if (!in_array($file, $already_included_files) && is_readable($xcart_dir . $file)) {
 
@@ -169,7 +170,7 @@ if (AREA_TYPE == 'C') {
 
                 if ('js' == $type) {
                 
-                    $result = '<script type="text/javascript" src="' . (!empty($CDN_domain) && $Enable_CDN == "Y" ? $CDN_domain : $xcart_web_dir) . $file . '"></script>';
+                    $result = '<script type="text/javascript" src="' . $urlPath . $file . '"></script>';
 
                 } elseif (
                     !empty($params['css_inc_mode']) 
@@ -177,11 +178,11 @@ if (AREA_TYPE == 'C') {
                 ) {
                       // include css via @import directive: hack to get around IE limitation                                  
                       // applied to the number of css files    
-                      $result = '@import url("' . (!empty($CDN_domain) && $Enable_CDN == "Y" ? $CDN_domain : $xcart_web_dir) . $file . '"); ' . "\n";
+                      $result = '@import url("' . $urlPath . $file . '"); ' . "\n";
 
                 } else {
 
-                    $result = '<link rel="stylesheet" type="text/css" href="' . (!empty($CDN_domain) && $Enable_CDN == "Y" ? $CDN_domain : $xcart_web_dir) . $file . '" />';
+                    $result = '<link rel="stylesheet" type="text/css" href="' . $urlPath . $file . '" />';
 
                 }
                 
