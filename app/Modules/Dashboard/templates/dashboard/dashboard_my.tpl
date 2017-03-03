@@ -4,12 +4,12 @@
         <legend>{$title}</legend>
     {/if}
 
-        <table class="dashboard-filters index groups">
-            <tr>
-                {foreach 1..$row_col.col as $col}
-                    <td>
-                        <div class="container" data-row="{$row}" data-col="{$col}" data-group="{$group}">
-                            {foreach 1..$row_col.row as $row}
+        <table class="dashboard-filters index">
+            {foreach 1..$row_col.row as $row}
+                <tr>
+                    {foreach 1..$row_col.col as $col}
+                        <td>
+                            <div class="container" data-row="{$row}" data-col="{$col}" data-group="{$group}">
                                 {foreach $models as $model}
                                     {if ($model->position_row == $row && $model->position_column == $col && !$my_position) || ($my_position && $model->getMyPositionRow() == $row && $model->getMyPositionColumn() == $col )}
                                         <a href="{$model->getAbsoluteUrl()}"
@@ -36,11 +36,11 @@
                                         </a>
                                     {/if}
                                 {/foreach}
-                            {/foreach}
-                        </div>
-                    </td>
-                {/foreach}
-            </tr>
+                            </div>
+                        </td>
+                    {/foreach}
+                </tr>
+            {/foreach}
         </table>
 
     {if $title}

@@ -41,13 +41,10 @@ class QuerySet extends QuerySetBase
 
         if ($statement = $this->getConnection()->query($sql)) {
             $rows = $statement->fetchAll();
-
-            if ($this->asArray) {
-                return !empty($this->with) ? $this->populateWith($rows) : $rows;
-            }
         }
-        else {
-            x_log_add('PHP', 'QuerySet->All() - $statement is null',true);
+
+        if ($this->asArray) {
+            return !empty($this->with) ? $this->populateWith($rows) : $rows;
         }
 
         return $this->createModels($rows);
@@ -88,8 +85,12 @@ class QuerySet extends QuerySetBase
      */
     public function valuesList($columns, $flat = false)
     {
+        $rows = [];
         $qb = clone $this->getQueryBuilder();
-        $rows = $this->getConnection()->query($qb->select($columns)->toSQL())->fetchAll();
+
+        if ($stmt = $this->getConnection()->query($qb->select($columns)->toSQL())) {
+            $rows = $stmt->fetchAll();
+        }
 
         if ($flat) {
             $flatArr = [];
