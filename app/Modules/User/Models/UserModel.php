@@ -55,7 +55,7 @@ class UserModel extends AutoMetaModel
     public function getIsStaff()
     {
         if (!$this->getIsGuest()) {
-            return !in_array($this->usertype, ['C', 'B']);
+            return !in_array($this->usertype, ['C', 'B']) || !empty($this->membershipid);
         }
 
         return false;
@@ -64,7 +64,7 @@ class UserModel extends AutoMetaModel
     public function getIsSuperuser()
     {
         if (!$this->getIsGuest()) {
-            return $this->usertype == 'A';
+            return (in_array($this->usertype, ['A'])) && empty($this->membershipid);
         }
 
         return false;
