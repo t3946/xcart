@@ -23,10 +23,7 @@ class ImageModel extends Model
                 'class' => AutoField::className(),
             ],
             'id' => [
-                'class' => ForeignField::className(),
-                'modelClass' => Product::className(),
-                'link' => ['productid', 'id'],
-                'verboseName' => 'Product',
+                'class' => IntField::className(),
                 'null' => false,
                 'default' => 0,
             ],
