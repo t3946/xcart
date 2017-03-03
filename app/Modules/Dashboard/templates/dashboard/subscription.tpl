@@ -1,5 +1,6 @@
 <div class="subscription-container">
     {foreach $users as $user}
+        {if $user->id != $model->id}
             <div class="item">
                 <div class="row">
                     <div class="columns large-12">
@@ -8,6 +9,7 @@
                     </div>
                 </div>
             </div>
+        {/if}
     {/foreach}
 
     {if !$model->getIsGuest()}

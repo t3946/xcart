@@ -139,7 +139,7 @@ class DashboardController extends PrototypeAdminController
             }
 
             $users = [];
-            $u_ids = UserFiltersLinkModel::objects()->filter(['filter_id' => $id])->exclude(['user_id' => $user->id ])->valuesList(['user_id'], true);
+            $u_ids = UserFiltersLinkModel::objects()->filter(['filter_id' => $id])->valuesList(['user_id'], true);
 
             if ($u_ids) {
                 $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();

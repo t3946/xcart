@@ -13,7 +13,7 @@
 
             <div class="tabs-content">
                 <div class="tab my_dashboard white-back orange-border content-block {if $myModels|count > 0}active{/if}" id="my_dashboard">
-                    {include 'dashboard/dashboard_group.tpl' models=$myModels my_position=true row_col=['col'=> $row_col.col, 'row' => 25]}
+                    {include 'dashboard/dashboard_my.tpl' models=$myModels my_position=true row_col=['col'=> $row_col.col, 'row' => 25]}
                 </div>
                 <div class="tab white-back orange-border content-block {if $myModels|count == 0}active{/if}" id="dashboard">
                     {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}

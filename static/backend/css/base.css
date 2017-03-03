@@ -661,6 +661,10 @@ label + input {
     border-color: #dadada;
 }
 
+.admin .dashboard-filters.index.groups .button {
+    margin: 3px;
+}
+
 .admin .dashboard-filters .row {
     margin: 0;
 }
