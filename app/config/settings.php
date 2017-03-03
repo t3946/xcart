@@ -65,8 +65,8 @@ return array_replace_recursive([
        ],
        'template' => [
            'class' => '\\Xcart\\App\\Template\\TemplateManager',
-           'forceCompile' => true,
-//           'autoReload' => false
+           'forceCompile' => false,
+           'autoReload' => false
        ],
        'cache' => [
            'class' => '\\Xcart\\App\\Cache\\Cache',
