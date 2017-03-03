@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Dashboard;
 
-use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Dashboard\Helpers\NoticeTestCheckout;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
@@ -50,6 +50,14 @@ class DashboardModule extends Module
                 }
             }
             return $t_models;
+        });
+
+
+        $template->addFunction('orders_test_checkout', function()
+        {
+            if (NoticeTestCheckout::test()) {
+                echo Xcart::app()->template->render('dashboard/test_checkout_message.tpl', []);
+            }
         });
     }
 

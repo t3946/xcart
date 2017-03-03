@@ -17,6 +17,19 @@ class DashboardController extends PrototypeAdminController
 {
     public $defaultAction = 'index';
 
+    public function beforeAction($action, $params)
+    {
+        /** check hide_no_orders_test_checkout form */
+
+        if (!empty($_POST['mode']) && $_POST['mode'] == 'hide_no_orders_test_checkout_message') {
+            Xcart::app()->request->session->add("no_orders_test_checkout_hide_time", time());
+
+            $log_text = Xcart::app()->user->firstname . " (" . Xcart::app()->user->login . ") clicked 'Done'.";
+            func_backprocess_log("Test_checkout", $log_text);
+            $this->getRequest()->refresh();
+        }
+    }
+
     public function index()
     {
         $models = DashboardFilter::objects()->filter(['enabled' => true])->all();

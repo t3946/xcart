@@ -1,5 +1,6 @@
 {extends 'dashboard/layouts/menu_layout.tpl'}
 {block 'heading'}
+    {orders_test_checkout}
     <h1 align="center">Customer Care dashboard.</h1>
 {/block}
 

@@ -498,6 +498,11 @@ label + input {
     text-decoration: underline;
 }
 
+.columns > .smarty-admin-block {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
 .smarty-admin-block {
     margin-bottom: 20px;
 }

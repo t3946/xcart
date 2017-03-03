@@ -10,7 +10,6 @@ return array_replace_recursive([
    ],
    'modules' => [
        'Core',
-       'Dashboard',
        'User',
        'Sites',
        'Amazon',
@@ -88,6 +87,9 @@ return array_replace_recursive([
        'auth' => [
            'class' => '\\Modules\\User\\Components\\Auth'
        ],
+//       'global_config' => [
+//           'class' => '\\Modules\\Core\\Components\\GlobalConfig'
+//       ],
    ],
    'autoloadComponents' => [
        'errorHandler'
