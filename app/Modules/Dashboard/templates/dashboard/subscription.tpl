@@ -12,6 +12,7 @@
         {/if}
     {/foreach}
 
+    {if !$model->getIsGuest()}
     <div class="item">
         <div class="row">
             <div class="columns large-12">
@@ -27,4 +28,5 @@
             </div>
         </div>
     </div>
+    {/if}
 </div>

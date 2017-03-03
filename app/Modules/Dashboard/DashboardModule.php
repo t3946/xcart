@@ -2,6 +2,7 @@
 namespace Modules\Dashboard;
 
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
@@ -54,6 +55,30 @@ class DashboardModule extends Module
 
     public static function getAdminMenu()
     {
+        /** @var UserModel $user */
+        $user = Xcart::app()->user;
+
+        if ($user && $user->getIsSuperuser()) {
+            return [
+                [
+                    'name'  => 'Search',
+                    'route' => Xcart::app()->router->url('dashboard:search'),
+                ],
+                [
+                    'name'  => 'Customer care dashboard',
+                    'route' => Xcart::app()->router->url('dashboard:index'),
+                ],
+                [
+                    'name'  => 'Filters settings',
+                    'route' => Xcart::app()->router->url('dashboard:admin_filters'),
+                ],
+                [
+                    'name'  => 'Filters group settings',
+                    'route' => Xcart::app()->router->url('dashboard:admin_groups'),
+                ],
+            ];
+        }
+
         return [
             [
                 'name'  => 'Search',
@@ -62,14 +87,6 @@ class DashboardModule extends Module
             [
                 'name'  => 'Customer care dashboard',
                 'route' => Xcart::app()->router->url('dashboard:index'),
-            ],
-            [
-                'name'  => 'Filters settings',
-                'route' => Xcart::app()->router->url('dashboard:admin_filters'),
-            ],
-            [
-                'name'  => 'Filters group settings',
-                'route' => Xcart::app()->router->url('dashboard:admin_groups'),
             ],
         ];
     }
