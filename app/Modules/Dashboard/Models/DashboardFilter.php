@@ -16,7 +16,8 @@ use Xcart\App\Orm\Model;
 
 class DashboardFilter extends Model
 {
-    private $s_store;
+    private $s_store = null;
+    private $uf_link_model = null;
 
     public static function tableName()
     {
@@ -66,8 +67,6 @@ class DashboardFilter extends Model
             'position_column' => [
                 'class' => IntField::className(),
                 'null'  => false,
-                'min'   => 1,
-                'max'   => 4
             ],
             'tag'             => [
                 'class'  => CharField::className(),
@@ -128,13 +127,10 @@ class DashboardFilter extends Model
         return $this->s_store;
     }
 
-
-    private $uf_link_model = null;
-
     public function getMyPositions()
     {
         if (!$this->uf_link_model) {
-            $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user__login' => Xcart::app()->request->session->get('login')])->get();
+            $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user__login' => (string)Xcart::app()->user->login])->get();
         }
 
         return [

@@ -58,7 +58,7 @@ class DashboardModule extends Module
         /** @var UserModel $user */
         $user = Xcart::app()->user;
 
-        if ($user && $user->usertype == 'A') {
+        if ($user && $user->getIsSuperuser()) {
             return [
                 [
                     'name'  => 'Search',

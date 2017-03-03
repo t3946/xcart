@@ -82,7 +82,6 @@ class Auth implements AuthInterface
         if (!$user) {
             $class = $this->class;
             $user = new $class();
-            $user->is_guest = true;
         }
         return $user;
     }
