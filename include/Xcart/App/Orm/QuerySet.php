@@ -355,7 +355,7 @@ class QuerySet extends QuerySetBase
                     $direction = substr($value, 0, 1) === '-' ? '-' : '';
                     $column = substr($value, 1);
                     if ($this->getModel()->getMeta()->hasForeignField($column)) {
-                        return $direction . $column . '_id';
+                        return $direction . $column;
                     } else {
                         return $value;
                     }
