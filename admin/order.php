@@ -687,6 +687,8 @@ if ($REQUEST_METHOD == "POST") {
         $oMail = \Xcart\App\Main\Xcart::app()->mail;
         $oMail->to = $to;
         $oMail->from = $from;
+        $oMail->body = $body;
+        $oMail->subject = $subj;
         $oMail->addHeader(['X-Xcart-Label' => 'order-logs']);
         $oMail->sendEmail();
         //func_send_simple_mail($to, $subj, $body, $from);
