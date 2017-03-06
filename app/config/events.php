@@ -11,5 +11,6 @@ return [
         [
             'callback' => ['\\Modules\\Order\\Models\\OrderUserRecentlyActiveModel', 'userView'],
         ]
-    ]
+    ],
+    'app:end' => []
 ];
