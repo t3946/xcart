@@ -250,7 +250,9 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
 
             <div style="margin-top:10px">
                 <input type="button" value="Post message" id="post_message1"
-                       onclick="javascript: document.ordernotesformnewjs.submit();"/>
+                       onclick="javascript:
+                       {literal}if (!$('#notes').val().length) { alert('You try to send message with only subject! \nPlease explain your message in the message body field...'); return false;}{/literal}
+                       document.ordernotesformnewjs.submit();"/>
             </div>
         </form>
     </div>

@@ -684,7 +684,12 @@ if ($REQUEST_METHOD == "POST") {
         $from = $userfullname . "<helpdesk@s3stores.com>";
         $to   = "orders@s3stores.com";
 
-        func_send_simple_mail($to, $subj, $body, $from);
+        $oMail = \Xcart\App\Main\Xcart::app()->mail;
+        $oMail->to = $to;
+        $oMail->from = $from;
+        $oMail->addHeader(['X-Xcart-Label' => 'order-logs']);
+        $oMail->sendEmail();
+        //func_send_simple_mail($to, $subj, $body, $from);
 
         func_header_location("order.php?orderid=" . $orderid);
     }
