@@ -4,7 +4,7 @@ namespace Modules\Order\Models;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\TimestampField;
 
 class OrderModel extends AutoMetaModel
 {
@@ -13,7 +13,7 @@ class OrderModel extends AutoMetaModel
         return 'xcart_orders';
     }
 
-    public function getPrimaryKeyValues()
+    public static function getPrimaryKeyName($asArray = false)
     {
         return ['orderid'];
     }
@@ -29,6 +29,9 @@ class OrderModel extends AutoMetaModel
                 'modelClass' => OrderGroupModel::className(),
                 'link' => ['orderid', 'orderid']
             ],
+            'date' => [
+                'class' => TimestampField::className()
+            ]
         ];
     }
 }

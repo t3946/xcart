@@ -38,6 +38,11 @@ return array_replace_recursive([
            'debug' => true,
            'errHandler' => false
        ],
+       'event' => [
+           'class' => '\\Xcart\\App\\Event\\EventManager',
+           'events' => include 'events.php'
+       ],
+
 //       'middleware' => [
 //           'class' => '\Mindy\Middleware\MiddlewareManager',
 //           'middleware' => [

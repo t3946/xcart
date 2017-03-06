@@ -28,9 +28,26 @@ class EventManager
      */
     protected $_events;
 
+    /**
+     * @var array List events from config
+     */
+    public $events = [];
+
     public function __construct()
     {
         $this->_events = new SplPriorityQueue;
+    }
+
+    public function init()
+    {
+        if ($this->events) {
+            foreach ($this->events as $name => $group)
+            {
+                foreach ($group as $event) {
+                    $this->on($name, $event['callback'], (isset($event['sender']) ? $event['sender'] : null), (isset($event['priority'])? $event['priority'] : 0));
+                }
+            }
+        }
     }
 
     /**

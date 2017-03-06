@@ -614,6 +614,9 @@ if (!empty($_GET["orderid"]) && !empty($section_name)) {
     func_header_location($redirect_url);
 }
 
+
+\Xcart\App\Main\Xcart::app()->event->trigger('order:view', ['order_id' => $orderid]);
+
 $url      = "http://helpdesk.s3stores.com/otrs/index.pl";
 $curl_err = false;
 $ch       = curl_init();

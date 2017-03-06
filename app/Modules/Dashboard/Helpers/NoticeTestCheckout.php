@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 03.03.2017
- * Time: 21:22
- */
-
 namespace Modules\Dashboard\Helpers;
 
 use Modules\Core\Models\GlobalConfigModel;

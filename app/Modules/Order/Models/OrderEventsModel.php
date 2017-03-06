@@ -1,0 +1,66 @@
+<?php
+namespace Modules\Order\Models;
+
+use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Model;
+use Xcart\Order;
+
+/**
+ * Class OrderEventsModel
+ *
+ * @package Modules\Order\Models
+ *
+ * @param int $orderid Owner id from order
+ * @param DateTime|string $create_at Owner id from order
+ * @param string|null $message event message
+ */
+class OrderEventsModel extends Model
+{
+    public static function tableName()
+    {
+        return 'xcart_order_events';
+    }
+
+    public static function getFields()
+    {
+        return [
+            'id' => AutoField::className(),
+            'order_id' => [
+                'class' => ForeignField::className(),
+                'modelClass' => OrderModel::className(),
+                'link' => ['id', 'orderid']
+            ],
+            'created_at' => [
+                'class' => DateTimeField::className(),
+                'autoNowAdd' => true,
+            ],
+            'message' => [
+                'class' => CharField::className(),
+                'null' => true
+            ]
+        ];
+    }
+
+    /**
+     * @param OrderModel|Order|null $owner Owner order model
+     * @param int $order_id Order id
+     * @param string|null $message Message for event
+     *
+     * @return static|null
+     */
+    public static function newOrderEvent($owner = null, $order_id, $message = null)
+    {
+        $model = new self();
+        $model->setAttributes(['orderid' => $order_id, 'message' => $message]);
+
+        if ($model->isValid() && $model->save())
+        {
+            return $model;
+        }
+
+        return null;
+    }
+}

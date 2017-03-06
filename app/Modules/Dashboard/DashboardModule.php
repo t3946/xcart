@@ -52,37 +52,36 @@ class DashboardModule extends Module
             return $t_models;
         });
 
-
         $template->addFunction('orders_test_checkout', function()
         {
             if (NoticeTestCheckout::test()) {
-                echo Xcart::app()->template->render('dashboard/test_checkout_message.tpl', []);
+                return Xcart::app()->template->render('dashboard/test_checkout_message.tpl', []);
             }
         });
     }
 
     public static function getAdminMenu()
     {
-        /** @var UserModel $user */
         $user = Xcart::app()->user;
+        $router = Xcart::app()->router;
 
         if ($user && $user->getIsSuperuser()) {
             return [
                 [
                     'name'  => 'Search',
-                    'route' => Xcart::app()->router->url('dashboard:search'),
+                    'route' => $router->url('dashboard:search'),
                 ],
                 [
                     'name'  => 'Customer care dashboard',
-                    'route' => Xcart::app()->router->url('dashboard:index'),
+                    'route' => $router->url('dashboard:index'),
                 ],
                 [
                     'name'  => 'Filters settings',
-                    'route' => Xcart::app()->router->url('dashboard:admin_filters'),
+                    'route' => $router->url('dashboard:admin_filters'),
                 ],
                 [
                     'name'  => 'Filters group settings',
-                    'route' => Xcart::app()->router->url('dashboard:admin_groups'),
+                    'route' => $router->url('dashboard:admin_groups'),
                 ],
             ];
         }
@@ -90,11 +89,11 @@ class DashboardModule extends Module
         return [
             [
                 'name'  => 'Search',
-                'route' => Xcart::app()->router->url('dashboard:search'),
+                'route' => $router->url('dashboard:search'),
             ],
             [
                 'name'  => 'Customer care dashboard',
-                'route' => Xcart::app()->router->url('dashboard:index'),
+                'route' => $router->url('dashboard:index'),
             ],
         ];
     }
