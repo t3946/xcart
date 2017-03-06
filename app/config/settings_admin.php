@@ -6,6 +6,7 @@ return array_replace_recursive((is_file($base_config)) ? include $base_config : 
     'modules' => [
         'Core',
         'Dashboard',
+        'Order',
         'User',
         'Sites',
         'Amazon',

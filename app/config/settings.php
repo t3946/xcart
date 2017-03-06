@@ -12,6 +12,7 @@ return array_replace_recursive([
        'Core',
        'User',
        'Sites',
+       'Order',
        'Amazon',
    ],
    'components' => [

@@ -39,7 +39,9 @@ class Manager extends ManyToManyManager
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $conditions
+     *
+     * @return null|\Xcart\App\Orm\ModelInterface
      */
     public function get($conditions = [])
     {

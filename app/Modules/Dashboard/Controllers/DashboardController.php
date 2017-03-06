@@ -51,7 +51,7 @@ class DashboardController extends PrototypeAdminController
                 [
                     'models'  => $models,
                     'row_col' => DashboardFilter::getMaxRowCol(),
-                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__login' => (string)Xcart::app()->user->login])->order(['position_row', 'position_column'])->all(),
+                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__user_id' => Xcart::app()->user->id])->order(['position_row', 'position_column'])->all(),
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                 ]
             );
@@ -68,6 +68,9 @@ class DashboardController extends PrototypeAdminController
             $orderStore = $model->getSearchStorage();
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
+
+
+            $model->getSearchStorage()->getEventsCount();
 
             echo $this->renderInternal('dashboard/filter_view.tpl',
                 array_merge(
@@ -121,7 +124,7 @@ class DashboardController extends PrototypeAdminController
         if (isset($_POST['id']) && $filter_model = DashboardFilter::objects()->get(['id' => $_POST['id']]))
         {
 
-            $user = UserModel::objects()->get(['login' => (string)Xcart::app()->user->login]);
+            $user = Xcart::app()->user;
             $model = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $filter_model->id, 'user_id' => $user->id]);
 
             unset($_POST['id']);
@@ -136,18 +139,19 @@ class DashboardController extends PrototypeAdminController
 
     public function subscription($id)
     {
-        /** @var UserModel $user */
         $user = Xcart::app()->user;
         $class = UserModel::classNameShort();
 
         if (!$user->getIsGuest())
         {
             if ($this->getRequest()->getIsPost()) {
+                $params = ['user_id' => $user->id, 'filter_id' => $id];
+
                 if ($_POST[$class]) {
-                    UserFiltersLinkModel::objects()->getOrCreate(['user_id' => $user->id, 'filter_id' => $id]);
+                    UserFiltersLinkModel::objects()->getOrCreate($params);
                 }
                 else {
-                    UserFiltersLinkModel::objects()->filter(['user_id' => $user->id, 'filter_id' => $id])->delete();
+                    UserFiltersLinkModel::objects()->filter($params)->delete();
                 }
             }
 

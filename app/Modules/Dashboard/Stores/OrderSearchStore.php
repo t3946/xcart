@@ -7,6 +7,8 @@ use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
+use Modules\Order\Models\OrderEventsModel;
+use Modules\Order\Models\OrderUserRecentlyActiveModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -747,16 +749,30 @@ class OrderSearchStore extends BaseStore
         $key = 'order_search_store_count_'.$id;
         $count = Xcart::app()->cache->get($key);
 
-        if (!is_null($count))
+        if (is_null($count))
         {
-            return $count;
-        }
-        else {
             $count = $this->getCount();
             Xcart::app()->cache->set($key, $count, 40 + rand(1, 40));
         }
 
         return $count;
+    }
+
+    public function getEventsCount()
+    {
+        $user = Xcart::app()->user;
+
+        $o_qs = clone $this->qs;
+
+        $qs = OrderEventsModel::objects();
+        $topAlias = $qs->getTableAlias();
+
+        $sql = $qs->filter([
+                'created_at__in' => OrderUserRecentlyActiveModel::objects()->filter(['user_id' => $user->id, 'order_id' => $topAlias . 'order_id'])->select(['created_at' => new Expression('max(created_at)')])->getQuerySet(),
+                'order_id__in' => $o_qs->select('orderid')
+        ])->countSql();
+
+        func_dump($sql);
     }
 
     public function prepareModels($models)

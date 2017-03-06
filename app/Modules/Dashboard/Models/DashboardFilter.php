@@ -127,6 +127,21 @@ class DashboardFilter extends Model
         return $this->s_store;
     }
 
+    public function getCountEvents($user_id = null)
+    {
+        $result = 0;
+
+        if (!$user_id && !Xcart::app()->user->getIsGuest())  {
+            $user_id = Xcart::app()->user->id;
+        }
+
+        if ($user_id) {
+
+        }
+
+        return $result;
+    }
+
     public function getMyPositions()
     {
         if (!$this->uf_link_model) {

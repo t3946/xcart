@@ -1,7 +1,6 @@
 <?php
 namespace Modules\Order\Models;
 
-use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -24,10 +23,14 @@ class OrderEventsModel extends Model
         return 'xcart_order_events';
     }
 
+    public static function getPrimaryKeyName($asArray = false)
+    {
+        return ['order_id', 'created_at'];
+    }
+
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
             'order_id' => [
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
@@ -54,7 +57,7 @@ class OrderEventsModel extends Model
     public static function newOrderEvent($owner = null, $order_id, $message = null)
     {
         $model = new self();
-        $model->setAttributes(['orderid' => $order_id, 'message' => $message]);
+        $model->setAttributes(['order_id' => $order_id, 'message' => $message]);
 
         if ($model->isValid() && $model->save())
         {
