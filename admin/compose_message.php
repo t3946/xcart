@@ -63,27 +63,25 @@ if (($REQUEST_METHOD == "POST") && ($mode == "send_message")) {
 	$mail_smarty->assign("tracking_links", $tracking_links);
 	$mail_smarty->assign("tracking_links_carrier", $tracking_links_carrier);
 
-	func_send_mail($to, "mail/compose_message_subj.tpl", "mail/compose_message.tpl", $from, false, false, false, false, '', 'Y');
+	$oMail = \Xcart\App\Main\Xcart::app()->mail;
+	$oMail->to = $to;
+	$oMail->from = $from;
+	$oMail->subject_template = 'mail/compose_message_subj.tpl';
+	$oMail->body_template = 'mail/compose_message.tpl';
+	$oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
+	$oMail->sendEmail();
+
+	//func_send_mail($to, "mail/compose_message_subj.tpl", "mail/compose_message.tpl", $from, false, false, false, false, '', 'Y');
 
 	if ($department == "third_party"){
-		func_send_mail("helpdesk@s3stores.com", "mail/compose_message_subj.tpl", "mail/compose_message.tpl", $from, false);
+		$oMail = \Xcart\App\Main\Xcart::app()->mail;
+		$oMail->to = "helpdesk@s3stores.com";
+		$oMail->from = $from;
+		$oMail->subject_template = 'mail/compose_message_subj.tpl';
+		$oMail->body_template = 'mail/compose_message.tpl';
+		$oMail->sendEmail();
+		//func_send_mail("helpdesk@s3stores.com", "mail/compose_message_subj.tpl", "mail/compose_message.tpl", $from, false);
 	}
-
-#
-##
-###
-/*
-	$current_ca_status = func_query_first_cell("SELECT ca_status FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-	if (empty($current_ca_status)){
-		$ca_status = func_query_first_cell("SELECT ca_status FROM $sql_tbl[templates_for_communication] WHERE id='$template_id'");
-		if (!empty($ca_status)){
-			db_query("UPDATE $sql_tbl[orders] SET ca_status='$ca_status' WHERE orderid='$orderid'");
-	                $ca_status_name = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$ca_status'");
-        	        $log = "CA: Not yet started -> ".$ca_status_name . " (From 'Compose message')";
-	                func_log_order($orderid, 'X', $log, $login);
-		}
-	}
-*/
 
 	$additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[templates_for_communication] WHERE id='$template_id'");
 

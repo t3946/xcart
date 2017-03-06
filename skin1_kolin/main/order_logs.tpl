@@ -226,13 +226,15 @@ $(document).ready(function() {
             <input style="width: 100%;" type="text" name="subject_line"/>
         </div>
         <p><b>Message body:</b></p>
-        <textarea id="notes" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br/>
+        <textarea id="notes_logs" name="notes" cols="70" style="width: 100%;" rows="6"></textarea><br/>
         <br/>
         {* <input type="submit" value="Post message" id="post_message" /> *}
 
         <div style="float: left;">
             <input type="button" value="Post message" id="post_message1"
-                   onclick="javascript: document.ordernotesformnew.submit();"/>
+                   onclick="javascript:
+                   {literal}if (!$('#notes_logs').val().length) { alert('You try to send message with only subject! \nPlease explain your message in the message body field...'); return false;}{/literal}
+                   document.ordernotesformnew.submit();"/>
         </div>
 
         <div id="div_post_message2" style="display: none;">
