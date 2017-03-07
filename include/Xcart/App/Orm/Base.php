@@ -555,7 +555,6 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     /**
      * @param array $attributes
      * @return ModelInterface
-     * @internal
      */
     public static function create(array $attributes = [])
     {

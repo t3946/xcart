@@ -50,8 +50,5 @@ class OrderModule extends Module
 
             return $order_age_str;
         });
-
-
-//        Xcart::app()->event->trigger('order:change', ['orderid' => 72674]);
     }
 }

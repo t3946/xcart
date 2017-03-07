@@ -59,7 +59,7 @@
 
         <tr class="{$cycle_class} title">
             <td>
-                <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">{$order}</a>
+                <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">{$order->orderid}</a>
             </td>
             <td align="center">
                 {foreach $fraud_statuses as $status}
@@ -116,7 +116,9 @@
         </tr>
 
         <tr class="{$cycle_class}">
-            <td></td>
+            <td>
+
+            </td>
             <td></td>
             <td>
                 {set $c_showed = false}
@@ -156,11 +158,11 @@
         <tr>
             <td colspan="12" style="padding: 0;"></td>
         </tr>
-        {foreach $order->getOrderGroups() as $group last=$last_group}
+        {foreach $order->groups as $group last=$last_group}
             <tr class="{$cycle_class}">
-                <td align="center" width="5" {if $group->manufacturer->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
+                <td align="center" width="5" {if $group->manufacturerid->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
                     <a href="{$order->getAdminUrl()}" target="_blank">
-                        {$group->manufacturer->code}
+                        {$group->manufacturerid->code}
                     </a>
                 </td>
                 <td class="OrderSheetGreenCell" align="center">
@@ -183,24 +185,20 @@
                         <br/>
                         <B>C: Reconciled</B>
                     {else}
-                        {if $group->getOrderGroupInvoices()->countOrderGroupInvoices() > 0 }
-                            {foreach $group->getOrderGroupInvoices()->getAsArray() as $invoice}
-                                <B>I-{$invoice->invoice_number}: {$invoice->getStatusName()}</B>
-                                <br/>
-                            {/foreach}
-                        {else}
+                        {foreach $group->invoices->all() as $invoice}
+                            <B>I-{$invoice->invoice_number}: {$invoice->getStatusName()}</B>
+                            <br/>
+                        {foreachelse}
                             <B>I: Not received</B>
                             <br>
-                        {/if}
+                        {/foreach}
 
-                        {if $group->getOrderGroupMemos()->countOrderGroupMemos() > 0}
-                            {foreach $group->getOrderGroupMemos()->getAsArray() as $memo}
-                                <B>C-{$memo->memo_number}: {$memo->getStatusName()}</B>
-                                <br/>
-                            {/foreach}
-                        {else}
+                        {foreach $group->memos->all() as $memo}
+                            <B>C-{$memo->memo_number}: {$memo->getStatusName()}</B>
+                            <br/>
+                        {foreachelse}
                             <B>C: Not received</B>
-                        {/if}
+                        {/foreach}
                     {/if}
                 </td>
                 <td colspan="2">

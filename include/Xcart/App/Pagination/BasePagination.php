@@ -189,19 +189,23 @@ abstract class BasePagination
      */
     public function paginate()
     {
-        $this->total = $this->dataSource->getTotal($this->source);
-        if (
-            ($this->total > $this->getPageSize()) &&
-            ceil($this->total / $this->getPageSize()) < $this->getPage()
-        ) {
-            $this->handler->wrongPageCallback();
+        if (!$this->paginated) {
+            $this->total = $this->dataSource->getTotal($this->source);
+            if (
+                ($this->total > $this->getPageSize()) &&
+                ceil($this->total / $this->getPageSize()) < $this->getPage()
+            ) {
+                $this->handler->wrongPageCallback();
+            }
+
+            $this->data = $this->dataSource->applyLimit(
+                $this->source,
+                $this->getPage(),
+                $this->getPageSize()
+            );
+            $this->paginated = true;
         }
 
-        $this->data = $this->dataSource->applyLimit(
-            $this->source,
-            $this->getPage(),
-            $this->getPageSize()
-        );
         return $this->data;
     }
 

@@ -10,9 +10,11 @@ return array_replace_recursive([
    ],
    'modules' => [
        'Core',
+       'Dashboard',
+       'Distributor',
+       'Order',
        'User',
        'Sites',
-       'Order',
        'Amazon',
    ],
    'components' => [

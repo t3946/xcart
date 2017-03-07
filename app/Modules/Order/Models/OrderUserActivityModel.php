@@ -7,7 +7,7 @@ use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
-class OrderUserRecentlyActiveModel extends Model
+class OrderUserActivityModel extends Model
 {
     public static function tableName()
     {
@@ -48,6 +48,11 @@ class OrderUserRecentlyActiveModel extends Model
         }
 
         return false;
+    }
+
+    public function afterSave($owner, $isNew)
+    {
+        OrderUserLastActivityModel::objects()->updateOrCreate(['user_id'=> $this->user_id, 'order_id' => $this->order_id], ['created_at' => $this->created_at]);
     }
 
     public static function userView($owner = null, $order_id)

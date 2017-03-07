@@ -51,7 +51,7 @@ class DashboardController extends PrototypeAdminController
                 [
                     'models'  => $models,
                     'row_col' => DashboardFilter::getMaxRowCol(),
-                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__user_id' => Xcart::app()->user->id])->order(['position_row', 'position_column'])->all(),
+                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['position_row', 'position_column'])->all(),
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                 ]
             );
@@ -69,8 +69,13 @@ class DashboardController extends PrototypeAdminController
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
 
+//            $m = $models[0];
+//            $m = $m->groups->all()[0];
 
-            $model->getSearchStorage()->getEventsCount();
+
+//            if ($pager->getTotal() != $model->getSearchStorage()->getCashedCount()) {
+//                $model->getSearchStorage()->clearCache();
+//            }
 
             echo $this->renderInternal('dashboard/filter_view.tpl',
                 array_merge(
