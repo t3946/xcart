@@ -1184,8 +1184,7 @@ $( document ).ready(function() {
   {/if}
 
   <td>
-
-   {if $v.good_time_to_send_email_to_distributor eq "N" && $allowed_elements.send_dispatch_to_distributor_btn ne "N" }
+   {if $v.good_time_to_send_email_to_distributor eq "N" && $allowed_elements.send_dispatch_to_distributor_btn ne "N" && $v.allow_dispatch_off_working_hours eq "Y"}
 	<input type="hidden" name="bad_time_do_not_send_email" value="Y" />
 
 	<input name="send_email_button" type="button" value="Send (Off-hours dispatch to distributor)" onclick="javascript: tinyMCE.triggerSave(); func_set_value_to_field(document.manuf_notifyform_{$mnf_id}, 'dispatch_to_distributor_', 'mnf_body', {$mnf_id});" style="background-color: #fff2cc;" />
