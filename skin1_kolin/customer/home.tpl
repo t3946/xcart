@@ -20,6 +20,12 @@
 {elseif $current_category.title_tag ne "" && $main eq "catalog"}
 {$current_category.title_tag} {*| {$location[0].0*}
 {else}
+{if $current_storefront == 41}
+{capture name=title}
+{assign var="seo_product_title" value="`$product.product` Online | `$config.Company.company_name`"}
+{$seo_product_title|truncate:"80":"":false|escape|strip}
+{/capture}
+{else}
 {capture name=title}
 {if $config.SEO.page_title_format eq "A"}
 {section name=position loop=$location}
@@ -33,6 +39,7 @@
 {/section}
 {/if}
 {/capture}
+{/if}
 {if $config.SEO.page_title_limit <= 0}
 {$smarty.capture.title|replace:"&amp;":"&"}
 {else}
