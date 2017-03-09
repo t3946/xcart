@@ -44,7 +44,14 @@ class OrderEntryMail extends Mail
 
             $mail_smarty->assign('email_is_sent_to_operator', 'Y');
 
-            func_send_mail($this->getTo(), "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $this->getFrom(), false);
+            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+            $oMail->to = $this->getTo();
+            $oMail->from = $this->getFrom();
+            $oMail->subject_template = 'mail/order_notification_subj.tpl';
+            $oMail->body_template = 'mail/order_notification.tpl';
+            $oMail->addHeader(['X-Xcart-Label' => 'order-logs']);
+            $oMail->sendEmail();
+            //func_send_mail($this->getTo(), "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $this->getFrom(), false);
         }
     }
 

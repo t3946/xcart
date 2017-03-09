@@ -1945,7 +1945,15 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 }
 
                 func_log_order($orderid, 'S', $order_notes);
-                func_send_mail($to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $from, false);
+
+                $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                $oMail->to = $to;
+                $oMail->from = $from;
+                $oMail->subject_template = 'mail/order_notification_subj.tpl';
+                $oMail->body_template = 'mail/order_notification_mnf.tpl';
+                $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
+                $oMail->sendEmail();
+                //func_send_mail($to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $from, false);
             }
         }
     }
