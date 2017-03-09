@@ -70,21 +70,15 @@ if (($REQUEST_METHOD == "POST") && ($mode == "send_message")) {
 	$oMail->subject = $subject;
 	$oMail->subject_template = 'mail/compose_message_subj.tpl';
 	$oMail->body_template = 'mail/compose_message.tpl';
-	$oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
+	if ($department == "our_customer_service"){
+		$oMail->addHeader(['X-Xcart-Label' => 'order-logs']);
+	} else {
+		$oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
+	}
 	$oMail->sendEmail();
-
-	//func_send_mail($to, "mail/compose_message_subj.tpl", "mail/compose_message.tpl", $from, false, false, false, false, '', 'Y');
-
 	if ($department == "third_party"){
-		$oMail = \Xcart\App\Main\Xcart::app()->mail;
 		$oMail->to = "helpdesk@s3stores.com";
-		$oMail->from = $from;
-		$oMail->body = $body;
-		$oMail->subject = $subject;
-		$oMail->subject_template = 'mail/compose_message_subj.tpl';
-		$oMail->body_template = 'mail/compose_message.tpl';
 		$oMail->sendEmail();
-		//func_send_mail("helpdesk@s3stores.com", "mail/compose_message_subj.tpl", "mail/compose_message.tpl", $from, false);
 	}
 
 	$additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[templates_for_communication] WHERE id='$template_id'");
