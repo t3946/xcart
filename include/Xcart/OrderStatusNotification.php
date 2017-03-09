@@ -69,7 +69,6 @@ class OrderStatusNotification extends Mail
     {
         $this->prepareMail();
         global $mail_smarty, $statuses, $config;
-        x_load('order');
         $order_data = func_order_data($this->oOrder->getOrderId());
         $mail_smarty->assign("products",$order_data["products"]);
         $mail_smarty->assign("giftcerts",$order_data["giftcerts"]);
@@ -85,7 +84,14 @@ class OrderStatusNotification extends Mail
         $mail_smarty->assign('order_notification',  $this->getFields());
         $mail_smarty->assign('oOrder', $this->oOrder);
 
-        func_send_mail($this->oOrder->getEmail(), 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
+        $oMail = \Xcart\App\Main\Xcart::app()->mail;
+        $oMail->to = $this->oOrder->getEmail();
+        $oMail->from = $config['Company']['orders_department'];
+        $oMail->subject_template = 'mail/order_notification_subj.tpl';
+        $oMail->body_template = 'mail/order_notification.tpl';
+        $oMail->sendEmail();
+
+        //func_send_mail($this->oOrder->getEmail(), 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
 
         $mail_smarty->assign('type', 'A');
         $mail_smarty->assign("show_order_details", "Y");
@@ -93,6 +99,15 @@ class OrderStatusNotification extends Mail
         $from = $this->oOrder->getFirstName() . "<" . $config['Company']['orders_department'] . ">";
         $reply_to = $this->oOrder->getFirstName() . "<" . $this->oOrder->getEmail() . ">";
 
-        func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
+        $oMail = \Xcart\App\Main\Xcart::app()->mail;
+        $oMail->to = $to;
+        $oMail->from = $from;
+        $oMail->reply_to = $reply_to;
+        $oMail->subject_template = 'mail/order_notification_subj.tpl';
+        $oMail->body_template = 'mail/order_notification.tpl';
+        $oMail->addHeader(['X-Xcart-Label' => 'order-status-changed']);
+        $oMail->sendEmail();
+
+        //func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
     }
 }

@@ -237,7 +237,7 @@ else {
 		"night_phone_b" => substr($u_phone, -7, -4),
 		"night_phone_c" => substr($u_phone, -4),
 		"business" => $pp_acc,
-		"item_name" => $pp_for,
+		"item_name" => $pp_for . " order # {$pp_ordr}",
 		"amount" => sprintf("%0.2f", $cart["total_cost"]),
 		"currency_code" => $pp_curr,
 		"return" => $_location."/payment/ps_paypal.php?mode=success&secureid=$order_secureid",

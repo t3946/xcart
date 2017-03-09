@@ -66,6 +66,8 @@ if (($REQUEST_METHOD == "POST") && ($mode == "send_message")) {
 	$oMail = \Xcart\App\Main\Xcart::app()->mail;
 	$oMail->to = $to;
 	$oMail->from = $from;
+	$oMail->body = $body;
+	$oMail->subject = $subject;
 	$oMail->subject_template = 'mail/compose_message_subj.tpl';
 	$oMail->body_template = 'mail/compose_message.tpl';
 	$oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -77,6 +79,8 @@ if (($REQUEST_METHOD == "POST") && ($mode == "send_message")) {
 		$oMail = \Xcart\App\Main\Xcart::app()->mail;
 		$oMail->to = "helpdesk@s3stores.com";
 		$oMail->from = $from;
+		$oMail->body = $body;
+		$oMail->subject = $subject;
 		$oMail->subject_template = 'mail/compose_message_subj.tpl';
 		$oMail->body_template = 'mail/compose_message.tpl';
 		$oMail->sendEmail();
