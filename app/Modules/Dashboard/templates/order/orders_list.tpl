@@ -103,8 +103,8 @@
             <td colspan="3">
                 {foreach $order->tags as $tag}
                     <div style="background-color: #F4CCCC; color: #000000; padding: 3px;">
-                        <span title="{$tag.description}">
-                            {$tag.status}
+                        <span title="{$tag->description}">
+                            {$tag->status}
                         </span>
                     </div>
                 {/foreach}
@@ -162,7 +162,7 @@
             <tr class="{$cycle_class}">
                 <td align="center" width="5" {if $group->manufacturerid->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
                     <a href="{$order->getAdminUrl()}" target="_blank">
-                        {$group->manufacturerid->code}
+                        {$group->manufacturer->code}
                     </a>
                 </td>
                 <td class="OrderSheetGreenCell" align="center">

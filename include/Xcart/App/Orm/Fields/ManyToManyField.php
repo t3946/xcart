@@ -190,7 +190,7 @@ class ManyToManyField extends RelatedField
         }
         return [
             ['LEFT JOIN', $this->getTableName(), [
-                $throughAlias . '.' . $from => $alias . '.' . $this->getModel()->getMeta()->getPrimaryKeyName()
+                $throughAlias . '.' . $from => $alias . '.' . $this->getRelatedModel()->getMeta()->getPrimaryKeyName()
             ], $throughAlias]
         ];
     }

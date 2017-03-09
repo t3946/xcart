@@ -4,6 +4,7 @@ namespace Modules\Order\Models;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\FieldManagerCacheTrait;
@@ -16,7 +17,7 @@ class OrderModel extends AutoMetaModel
     public $max_eta;
     public $last_activity;
     public $last_message;
-    public $tag;
+//    public $tag;
 
     public static function getDataModelClass()
     {
@@ -28,25 +29,27 @@ class OrderModel extends AutoMetaModel
         return 'xcart_orders';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['orderid'];
-    }
-
     public static  function getFields()
     {
         return [
             'orderid' => [
                 'class' => AutoField::className(),
             ],
+            'date' => [
+                'class' => TimestampField::className(),
+            ],
             'groups' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupModel::className(),
                 'link' => ['orderid', 'orderid'],
             ],
-            'date' => [
-                'class' => TimestampField::className(),
-            ],
+
+            'tags' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => AttentionTagModel::className(),
+                'through' => OrderAdditionalTagLinkModel::className(),
+                'link' => ['orderid', 'status_id']
+            ]
         ];
     }
 

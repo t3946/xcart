@@ -69,13 +69,9 @@ class DashboardController extends PrototypeAdminController
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
 
-//            $m = $models[0];
-//            $m = $m->groups->all()[0];
-
-
-//            if ($pager->getTotal() != $model->getSearchStorage()->getCashedCount()) {
-//                $model->getSearchStorage()->clearCache();
-//            }
+            if ($pager->getTotal() != $model->getSearchStorage()->getCashedCount()) {
+                $model->getSearchStorage()->clearCache();
+            }
 
             echo $this->renderInternal('dashboard/filter_view.tpl',
                 array_merge(

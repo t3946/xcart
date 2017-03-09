@@ -5,6 +5,7 @@ use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\OrderGroup;
 
@@ -30,17 +31,19 @@ class OrderGroupModel extends AutoMetaModel
     public static function getFields()
     {
         return [
-            'orderid' => [
+            'order' => [
+                'name' => 'orderid',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
-                'link' => ['orderid', 'orderid'],
+//                'link' => ['orderid', 'orderid'],
                 'null' => false,
                 'primary' => true,
             ],
-            'manufacturerid' => [
+            'manufacturer' => [
+                'name' => 'manufacturerid',
                 'class' => ForeignField::className(),
                 'modelClass' => DistributorModel::className(),
-                'link' => ['manufacturerid', 'manufacturerid'],
+//                'link' => ['manufacturerid', 'manufacturerid'],
                 'null' => false,
                 'primary' => true,
             ],
@@ -55,7 +58,6 @@ class OrderGroupModel extends AutoMetaModel
                 'modelClass' => OrderGroupMemoModel::className(),
                 'link' => [['orderid', 'orderid'], ['manufacturerid', 'manufacturerid']],
             ],
-
         ];
     }
 

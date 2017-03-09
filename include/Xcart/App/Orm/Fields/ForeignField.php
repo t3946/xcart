@@ -89,13 +89,6 @@ class ForeignField extends RelatedField
         // TODO: Implement getSelectJoin() method.
     }
 
-    /**
-     * @return string
-     */
-    public function getAttributeName()
-    {
-        return $this->name;
-    }
 
     /**
      * @param $value

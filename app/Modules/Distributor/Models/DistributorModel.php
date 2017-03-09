@@ -12,10 +12,10 @@ class DistributorModel extends AutoMetaModel
         return 'xcart_manufacturers';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['manufacturerid'];
-    }
+//    public static function getPrimaryKeyName($asArray = false)
+//    {
+//        return ['manufacturerid'];
+//    }
 
     public static function getFields()
     {
