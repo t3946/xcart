@@ -1,5 +1,5 @@
 <a href="{$model->getAbsoluteUrl()}"
-   class="{if $model->getSearchStorage()->getCashedCount() == 0}empty{else}button{/if}"
+   class="{if $model->getSearchStorage()->getCashedCount() == 0}empty{else}button{/if} dashboard-item"
    target="_blank"
    data-id="{$model->id}"
    data-action="{url 'dashboard:filter_subscription' id=$model->id}"

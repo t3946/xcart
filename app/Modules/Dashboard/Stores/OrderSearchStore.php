@@ -723,7 +723,7 @@ class OrderSearchStore extends BaseStore
     public function getPager()
     {
         if (!$this->pager) {
-            $this->pager = new Pagination($this->qs, ['pageSize' => 20], new QuerySetDataSource());
+            $this->pager = new Pagination($this->qs, ['pageSize' => 25], new QuerySetDataSource());
         }
         return $this->pager;
     }
@@ -839,33 +839,11 @@ class OrderSearchStore extends BaseStore
             return [];
         }
 
-//        $groups    = OrderGroups::objects()->filter(['orderid__in' => $order_ids])->all();
-//
-//        if ($groups) {
-//            $group_ids = array_map(function ($model) { return $model->manufacturerid; }, $groups);
-//
-//            $manufacturers = Manufacturer::objects()->filter(['manufacturerid__in' => $group_ids])->all();
-//            foreach ($groups as $group) {
-//                foreach ($manufacturers as $manufacturer) {
-//                    if ($group->manufacturerid == $manufacturer->manufacturerid) {
-//                        $group->manufacturer = $manufacturer;
-//                    }
-//                }
-//            }
-//        }
-
         $lom_sql     = QueryBuilder::getInstance($connection)->from('xcart_order_logs')->order(['-date'])->where(['orderid__in' => $order_ids, 'type__in' => ['S']])->toSQL();
         $lo_messages = $connection->fetchAll($lom_sql);
 
         $loa_sql     = QueryBuilder::getInstance($connection)->select(['orderid', 'date' => new Expression('max(date)')])->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in' => $order_ids])->toSQL();
         $lo_activity = $connection->fetchAll($loa_sql);
-
-//        $tag_sql     = QueryBuilder::getInstance($connection)->from('xcart_orders_additional_tags')
-//                                   ->select(['t.orderid', 't.status_id', 'tval.description', 'tval.status'])
-//                                   ->setAlias('t')
-//                                   ->join('inner join', 'xcart_attention_tags_values', ['t.status_id' => 'tval.status_id'], 'tval')
-//                                   ->where(['orderid__in' => $order_ids])->toSQL();
-//        $orders_tags = $connection->fetchAll($tag_sql);
 
         $max_eta_sql = QueryBuilder::getInstance($connection)->from('xcart_products')
                                    ->select(['max_eta' => new Expression('MAX(t.eta_date_mm_dd_yyyy)'), 'details.orderid'])
@@ -877,11 +855,6 @@ class OrderSearchStore extends BaseStore
         $orders_max_eta = $connection->fetchAll($max_eta_sql);
 
         foreach ($models as $model) {
-//            foreach ($groups as $group) {
-//                if ($group->orderid == $model->orderid) {
-//                    $model->orderGroup = $group;
-//                }
-//            }
 
             foreach ($orders_max_eta as $item) {
                 if ($item['orderid'] == $model->orderid) {
@@ -895,12 +868,6 @@ class OrderSearchStore extends BaseStore
                     break;
                 }
             }
-
-//            foreach ($orders_tags as $tag) {
-//                if ($model->orderid == $tag['orderid']) {
-//                    $model->tag = $tag;
-//                }
-//            }
 
             foreach ($lo_messages as $message) {
                 if ($model->orderid == $message['orderid']) {

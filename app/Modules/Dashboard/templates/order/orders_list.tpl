@@ -1,4 +1,4 @@
-<table class="OrderSheet" cellspacing="1" cellpadding="3">
+<table class="OrderSheet orders" cellspacing="1" cellpadding="3">
     <tr class="TableHead TableHeadAccounting TableHeadLight">
         <td width="5">#</td>
         <td>Fraud Check</td>
@@ -116,8 +116,12 @@
         </tr>
 
         <tr class="{$cycle_class}">
-            <td>
-
+            <td class="events-container">
+                {if $order->getCountEvents()}
+                    <span class="events">
+                        +{$order->getCountEvents()}
+                    </span>
+                {/if}
             </td>
             <td></td>
             <td>

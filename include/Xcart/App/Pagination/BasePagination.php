@@ -94,14 +94,13 @@ abstract class BasePagination
         }
 
         $this->handler = $handler;
+        $this->handler->setPager($this);
 
         if (null === $this->page) {
             $this->page = $handler->getPage($this->getPageKey(), 1);
         }
 
-        if (null === $this->pageSize) {
-            $this->pageSize = $handler->getPageSize($this->getPageSizeKey(), 10);
-        }
+        $this->pageSize = $handler->getPageSize($this->getPageSizeKey(), ($this->pageSize) ? $this->pageSize : 10);
     }
 
     /**
@@ -190,9 +189,11 @@ abstract class BasePagination
     public function paginate()
     {
         if (!$this->paginated) {
+            $this->paginated = true;
             $this->total = $this->dataSource->getTotal($this->source);
+
             if (
-                ($this->total > $this->getPageSize()) &&
+//                ($this->total > $this->getPageSize()) &&
                 ceil($this->total / $this->getPageSize()) < $this->getPage()
             ) {
                 $this->handler->wrongPageCallback();
@@ -203,7 +204,6 @@ abstract class BasePagination
                 $this->getPage(),
                 $this->getPageSize()
             );
-            $this->paginated = true;
         }
 
         return $this->data;

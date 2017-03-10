@@ -559,7 +559,9 @@ label + input {
 }
 .smarty-admin-block .buttons-block {
     margin-left: -11px;
-    width: 853px;
+    width: inherit;
+    box-sizing: content-box !important;
+    padding: 10px 16px;
 }
 .smarty-admin-block .title-block {
     min-height: 15px;
@@ -1045,4 +1047,20 @@ subscription-container .item form {
 .admin .test_checkout_message table {
     border: solid 1px #000000;
     background: #F4CCCC;
+}
+
+.orders .events-container .events,
+.dashboard-item .events {
+    display: inline-block;
+    color: rgb(0, 0, 255);
+    font-weight: bold;
+    line-height: 1.2;
+}
+.dashboard-item .events {
+    font-size: 8px;
+    vertical-align: middle;
+}
+
+.dashboard-item .events.empty {
+    display: none;
 }
