@@ -719,7 +719,7 @@ class OrderSearchStore extends BaseStore
     public function getPager()
     {
         if (!$this->pager) {
-            $this->pager = new Pagination($this->qs, ['pageSize' => 20], new QuerySetDataSource());
+            $this->pager = new Pagination($this->qs, ['pageSize' => 25], new QuerySetDataSource());
         }
         return $this->pager;
     }
