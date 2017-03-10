@@ -136,4 +136,9 @@ class Paypal
     {
         return Capture::get($sTransactionId, $this->apiContext);
     }
+
+    public function getAccessToken()
+    {
+        return $this->sAccessToken;
+    }
 }
