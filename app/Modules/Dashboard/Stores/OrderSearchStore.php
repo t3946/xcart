@@ -7,6 +7,7 @@ use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
@@ -16,9 +17,6 @@ use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Store\BaseStore;
 use Xcart\Connection;
-use Xcart\Manufacturer;
-use Xcart\Order;
-use Xcart\OrderGroups;
 
 class OrderSearchStore extends BaseStore
 {
@@ -785,40 +783,24 @@ class OrderSearchStore extends BaseStore
         $user = Xcart::app()->user;
         $o_qs = clone $this->qs;
 
-        $qs = OrderEventsModel::objects();
-        $topAlias = $qs->getTableAlias();
+        $qs = OrderHelper::getEventCountQS($user->id);
+        $qs->filter(['order_id__in' => ($ids) ? $ids : $o_qs->select('orderid')]);
 
-        $count = $qs
-            ->filter([
-                'a.user_id' => $user->id,
-                new Expression("`{$topAlias}`.`created_at` >= `a`.`created_at`"),
-                'order_id__in' => ($ids) ? $ids : $o_qs->select('orderid'),
-            ])
-            ->getQuerySet()
-            ->join('join', OrderUserLastActivityModel::tableName(), ['a.order_id' => 'order_id'], 'a')
-            ->count();
-
-
-        return $count;
+        return $qs->count();
     }
 
     public function getCachedEventsCount(array $ids = [])
     {
-        $key = $count = null;
-        $cache =  (empty($ids)) ? true : false;
+        $count = null;
 
-        if ($cache) {
-            $key = $this->getCacheCountKey('order_search_store_events_count_');
-            $count = Xcart::app()->cache->get($key);
-        }
+        $key = $this->getCacheCountKey('order_search_store_events_count_', $ids);
+        $count = Xcart::app()->cache->get($key);
 
-        if (!$cache || is_null($count))
+        if (is_null($count))
         {
             $count = $this->getEventsCount($ids);
 
-            if ($cache) {
-                Xcart::app()->cache->set($key, $count, $this->getCacheLifeTime());
-            }
+            Xcart::app()->cache->set($key, $count, $this->getCacheLifeTime());
         }
 
         return $count;
@@ -845,22 +827,10 @@ class OrderSearchStore extends BaseStore
         $loa_sql     = QueryBuilder::getInstance($connection)->select(['orderid', 'date' => new Expression('max(date)')])->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in' => $order_ids])->toSQL();
         $lo_activity = $connection->fetchAll($loa_sql);
 
-        $max_eta_sql = QueryBuilder::getInstance($connection)->from('xcart_products')
-                                   ->select(['max_eta' => new Expression('MAX(t.eta_date_mm_dd_yyyy)'), 'details.orderid'])
-                                   ->setAlias('t')
-                                   ->join('inner join', 'xcart_order_details', ['t.productid' => 'details.productid'], 'details')
-                                   ->where(['details.orderid__in' => $order_ids, 'eta_date_mm_dd_yyyy__gt' => 0])
-                                   ->group(['details.orderid'])->toSQL();
-
-        $orders_max_eta = $connection->fetchAll($max_eta_sql);
+        OrderHelper::getMaxEtaTimeByOrder($order_ids);
+        OrderHelper::getCountEvents($order_ids);
 
         foreach ($models as $model) {
-
-            foreach ($orders_max_eta as $item) {
-                if ($item['orderid'] == $model->orderid) {
-                    $model->max_eta = $item['max_eta'];
-                }
-            }
 
             foreach ($lo_activity as $activity) {
                 if ($activity['orderid'] == $model->orderid) {

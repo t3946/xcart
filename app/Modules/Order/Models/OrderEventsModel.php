@@ -56,7 +56,7 @@ class OrderEventsModel extends Model
      */
     public static function newOrderEvent($owner = null, $order_id, $message = null)
     {
-        $model = new self();
+        $model = new static();
         $model->setAttributes(['order_id' => $order_id, 'message' => $message]);
 
         if ($model->isValid() && $model->save())

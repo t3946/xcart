@@ -116,13 +116,7 @@
         </tr>
 
         <tr class="{$cycle_class}">
-            <td class="events-container">
-                {if $order->getCountEvents()}
-                    <span class="events">
-                        +{$order->getCountEvents()}
-                    </span>
-                {/if}
-            </td>
+            <td></td>
             <td></td>
             <td>
                 {set $c_showed = false}
@@ -136,9 +130,9 @@
                     {$order->s_country}
                 {/if}
             </td>
-            <td style="background-color: {$order->max_eta|max_eta_colors}; color: #000000;" colspan="2">
-                {if $order->max_eta|max_eta_colors != "do_not_show"}
-                    {$order->max_eta|date_format:'%d-%b-%Y'}
+            <td style="background-color: {$order->getMaxEta()|max_eta_colors}; color: #000000;" colspan="2">
+                {if $order->getMaxEta()|max_eta_colors != "do_not_show"}
+                    {$order->getMaxEta()|date_format:'%d-%b-%Y'}
                 {/if}
             </td>
             <td colspan="2">
@@ -153,10 +147,13 @@
             <td>
                 <b> {$order->getOrderTotalGross()|abs|formatprice:",":"."} </b>
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="events-container" colspan="4">
+                {if $order->getCountEvents()}
+                    <span class="events">
+                        +{$order->getCountEvents()}
+                    </span>
+                {/if}
+            </td>
         </tr>
 
         <tr>

@@ -1051,7 +1051,7 @@ subscription-container .item form {
 
 .orders .events-container .events,
 .dashboard-item .events {
-    display: inline-block;
+    /*display: inline-block;*/
     color: rgb(0, 0, 255);
     font-weight: bold;
     line-height: 1.2;

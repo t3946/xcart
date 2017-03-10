@@ -32,6 +32,10 @@ class DashboardController extends PrototypeAdminController
 
     public function index()
     {
+//        Xcart::app()->event->trigger('order:changed', ['order_id' => 72674]);
+//        Xcart::app()->event->trigger('order:changed', ['order_id' => 72683]);
+//        Xcart::app()->event->trigger('order:changed', ['order_id' => 72729]);
+
         $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
 
         if ($this->getRequest()->getIsAjax()) {
@@ -40,7 +44,10 @@ class DashboardController extends PrototypeAdminController
             /** @var DashboardFilter $model */
             foreach ($models as $model) {
                 $data['filters'][$model->id] = [
-                    'count' => $model->getSearchStorage()->getCashedCount(),
+                    'count' => [
+                        'orders' => $model->getSearchStorage()->getCashedCount(),
+                        'events' => $model->getSearchStorage()->getCachedEventsCount(),
+                    ]
                 ];
             }
 
@@ -51,7 +58,7 @@ class DashboardController extends PrototypeAdminController
                 [
                     'models'  => $models,
                     'row_col' => DashboardFilter::getMaxRowCol(),
-                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['position_row', 'position_column'])->all(),
+                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all(),
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
                 ]
             );
@@ -68,6 +75,9 @@ class DashboardController extends PrototypeAdminController
             $orderStore = $model->getSearchStorage();
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
+
+//            $model->getSearchStorage()->getEventsCount();
+//            die();
 
             if ($pager->getTotal() != $model->getSearchStorage()->getCashedCount()) {
                 $model->getSearchStorage()->clearCache();

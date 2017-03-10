@@ -58,9 +58,6 @@ class DashboardModule extends Module
                 return Xcart::app()->template->render('dashboard/test_checkout_message.tpl', []);
             }
         });
-
-//        Xcart::app()->event->trigger('order:changed', ['order_id' => 72683]);
-//        Xcart::app()->event->trigger('order:changed', ['order_id' => 72674]);
     }
 
     public static function getAdminMenu()

@@ -13,14 +13,16 @@
             {/if}
         </div>
         <div class="columns large-10">
-            <span class="name">
-                <span class="{if $model->bold}bold{/if} filter_name">{$model}</span>
-                (<span class="count">{$model->getSearchStorage()->getCashedCount()}</span>)
-            </span>
-            <span class="events {if $model->getSearchStorage()->getCachedEventsCount() == 0}empty{/if}">
-                {if $model->getSearchStorage()->getCachedEventsCount()}
-                    +{$model->getSearchStorage()->getCachedEventsCount()}
-                {/if}
+            <span class="name_events">
+                <span class="name">
+                    <span class="{if $model->bold}bold{/if} filter_name">{$model}</span>
+                    (<span class="count">{$model->getSearchStorage()->getCashedCount()}</span>)
+                </span>
+                <span class="events">
+                    {if $model->getSearchStorage()->getCachedEventsCount()}
+                        +{$model->getSearchStorage()->getCachedEventsCount()}
+                    {/if}
+                </span>
             </span>
         </div>
     </div>
