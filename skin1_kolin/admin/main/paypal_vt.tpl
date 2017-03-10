@@ -226,7 +226,7 @@ function func_AJAX_authorize_PayPal() {
   </tr>
 
  {foreach from=$order_transactions item=v key=k}
-  <tr>
+  <tr data-order-transaction="{$v.id}">
    <td>{$v.payment_method}</td>
    <td>{$v.date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
    <td>{$v.firstname} ({$v.login})</td>
@@ -284,10 +284,13 @@ $(document).ready(function(){
 {/if}
 
    </td>
+   <td>
+       <a class="toggle_transaction_multiple" href="#"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a>
+   </td>
   </tr>
 
   <tr>
-   <td colspan="4">
+   <td colspan="5">
 
     <input type="button" value="Look up payment (Get links)" onclick="javascript: $('#order_transaction_id').val('{$v.id}'); submitForm(this, 'look_up_payment');" />
 
@@ -408,76 +411,7 @@ $(document).ready(function(){
   </tr>
 
  {foreach from=$transaction_logs item=v key=k}
-  <tr>
-{*
-   <td>
-	{if $v.transaction_id ne ""} 
-	<input type="radio" id="transaction_logs_id" name="transaction_logs_id" value="{$v.id}"
-		checked="checked"
-		{assign var="transaction_id_selected" value="Y"}
-	/>
-	{/if} 
-   </td>
-*}
-   <td>{$v.payment_method}</td>
-   <td>{$v.date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
-   <td>{$v.firstname} ({$v.login})</td>
-   <td>
-	Transaction: 
-	{if $v.transaction_id ne ""}
-
-{if $v.transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$v.transaction_id_link|substitute:"trans-id":$v.transaction_id}">{/if}
-{if $v.transaction_link_anchor ne ""}{$v.transaction_link_anchor}{else}{$v.transaction_id}{/if}{if $v.transaction_id_link ne ""}</a>{/if}
-
-{if $v.transaction_link_anchor ne ""}({$v.transaction_id}){/if}
-
-{if $v.unserialized_transaction_log.FIELD_manual_transaction eq "Y"}
- (Manually added)
-{/if}
-
-	{else}
-		NONE
-	{/if}
-	<br />
-	transaction_status: <B>{$v.transaction_status}</B><br />
-	transaction_currency: {$v.transaction_currency}<br />
-	transaction_total: {$v.transaction_total}
-
-{if $v.issue ne ""}
-	<br />
-	<B>issue:</B> {$v.issue}
-{elseif $v.unserialized_transaction_log.message ne ""}
-                        <br />
-                        <B>message:</B> {$v.unserialized_transaction_log.message}
-{/if}
-
-
-{if $v.transaction_log ne ""}
-<script>
-//<![CDATA[
-{literal}
-$(document).ready(function(){
-    $('#show_hide_link_{/literal}{$k}{literal}').click(
-       function() {
-          $(this).text(function(i,text) { return (text == 'Show details') ? 'Hide details' : 'Show details'; });
-          $('#transaction_log_div_{/literal}{$k}{literal}').toggle('slow');
-          return false;
-       }
-    );
-});
-{/literal}
-//]]>
-</script>
-
-<br />
-<div id="transaction_log_div_{$k}" style="display: none;"><B>Full log:</B><br />{$v.transaction_log}</div>
-<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: func_show_hide_log('{$k}');" id="show_hide_link_{$k}">Show details</a>
-
-{/if}
-
-   </td>
-  </tr>
-  <tr><td colspan="4"><hr /></td></tr>
+    {include file="admin/main/transaction_log_row.tpl"}
  {/foreach}
 
 {*
@@ -567,3 +501,21 @@ $(document).ready(function(){
 {/capture}
 {include file="dialog.tpl" title="Add manual transaction" content=$smarty.capture.add_manual_transaction extra='width="100%"'}
 
+{literal}
+<script>
+    $('.toggle_transaction_multiple').click(function() {
+        if ($(this).hasClass('opened')){
+            $.post('ajax_admin.php', {
+                        ajax_action: 'get_transactions_log',
+                        order_transaction_id: $(this).closest('tr').data('order-transaction')
+                    },
+                    function (data) {
+                    },'json');
+        } else {
+
+        }
+        $(this).toggleClass('opened');
+        return false;
+    })
+</script>
+{/literal}

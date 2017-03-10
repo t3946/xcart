@@ -1,8 +1,9 @@
 <?php
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
 use Xcart\Paypal;
 
-global $REQUEST_METHOD, $mode, $top_message, $order_transaction_id, $paypal_vt, $transaction_status;
+global $REQUEST_METHOD, $mode, $top_message, $order_transaction_id, $paypal_vt, $transaction_status, $AJAX_SUBMIT, $login;
 
 $orderTransaction = null;
 
@@ -40,9 +41,6 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     } else {
         if (!empty($order_transaction_id)) {
             $orderTransaction = OrderTransactionModel::objects()->get(['id' => $order_transaction_id]);
-            /*if ($orderTransaction) {
-                $transaction_info = $orderTransaction->getAttributes();
-            }*/
         }
     }
 
@@ -180,7 +178,6 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                         $new_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='AP'");
                         foreach ($order["shipping_groups"] as $ko => $vo) {
                             if (in_array($vo["cb_status"], array('Q', 'N', 'I'))) {
-
                                 db_query("UPDATE $sql_tbl[order_groups] SET cb_status='AP' WHERE orderid='$orderid' AND manufacturerid='$ko'");
                                 $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='" . $vo["cb_status"] . "'");
                                 $log .= "<br /><B>" . $vo["all_distributor_info"]["code"] . ":</B> cb_status: " . $current_cb_status_value . " -> " . $new_cb_status_value;
@@ -364,19 +361,37 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     if (empty($paymentid)) {
         $paymentid = "5";
     }
-    db_query("INSERT INTO $sql_tbl[transaction_logs] (orderid, paymentid, transaction_id, transaction_status, transaction_currency, transaction_total, date, login, transaction_log) VALUE ('$orderid', '$paymentid', '$transaction_id', '$transaction_status', '$transaction_currency', '$transaction_total', '" . time() . "', '$login', '" . addslashes($serialize_result) . "')");
+    $transactionLog = new TransactionLogModel;
+    $transactionLog->setAttributes([
+        'orderid' => $orderid,
+        'paymentid' => $paymentid,
+        'transaction_id' => empty($transaction_id) ? $orderTransaction->transaction_id : $transaction_id,
+        'transaction_status' => empty($transaction_status) ? $orderTransaction->transaction_status : $transaction_status,
+        'transaction_currency' => empty($transaction_currency) ? $orderTransaction->transaction_currency : $transaction_currency,
+        'transaction_total' => empty($transaction_total) ? $orderTransaction->transaction_amount : $transaction_total,
+        'date' => time(),
+        'login' => $login,
+        'transaction_log' => $serialize_result
+    ]);
+    if ($transactionLog->isValid()) {
+        $transactionLog->save();
+    }
     func_log_order($orderid, 'PP', $serialize_result, $login);
     if (!empty($transaction_id)) {
-        $orderTransactionNew = OrderTransactionModel::objects()
-            ->getOrCreate([
-                'id' => $order_transaction_id,
+        if (in_array($mode, ["authorize", "add_manual_transaction"])) {
+            $orderTransactionNew = new OrderTransactionModel;
+            if ($orderTransaction) {
+                $orderTransactionNew->setAttributes($orderTransaction->getAttributes());
+            }
+            $orderTransaction->setAttributes([
                 'transaction_id' => $transaction_id,
                 'transaction_response' => $serialize_result,
                 'transaction_status' => $transaction_status,
                 'login' => $login,
                 'date' => time()
             ]);
-        if ($mode == "authorize" || $mode == "add_manual_transaction") {
+
+            $orderTransactionNew->id = null;
             if ($mode == "add_manual_transaction") {
                 $orderTransactionNew->manual_transaction = "Y";
             }
@@ -384,17 +399,25 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
             $orderTransactionNew->paymentid = $paymentid;
             $orderTransactionNew->transaction_currency = $transaction_currency;
             $orderTransactionNew->transaction_amount = $transaction_total;
-
             if ($orderTransactionNew->isValid()) {
                 $orderTransactionNew->save();
             }
         } else {
-            if (in_array($mode, array("re_authorize_transaction", "capture_transaction", "refund_transaction"))) {
-                $orderTransactionNew->transaction_amount = $transaction_amount[$order_transaction_id];
-                $orderTransactionNew->parent_transaction_id = $orderTransaction->transaction_id;
-            }
-            if ($orderTransactionNew->isValid()) {
-                $orderTransactionNew->save();
+            if ($orderTransaction) {
+                $orderTransaction->setAttributes([
+                    'transaction_id' => $transaction_id,
+                    'transaction_response' => $serialize_result,
+                    'transaction_status' => $transaction_status,
+                    'login' => $login,
+                    'date' => time()
+                ]);
+                if (in_array($mode, ["re_authorize_transaction", "capture_transaction", "refund_transaction"])) {
+                    $orderTransaction->transaction_amount = $transaction_amount[$order_transaction_id];
+                    $orderTransaction->parent_transaction_id = $orderTransaction->transaction_id;
+                }
+                if ($orderTransaction->isValid()) {
+                    $orderTransaction->save();
+                }
             }
         }
     }
@@ -402,4 +425,3 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
         func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
     }
 }
-?>
