@@ -31,6 +31,16 @@ class AttentionTagModel extends Model
                 ],
                 'default' => 'Y'
             ],
+            'events' => [
+                'class' => IntField::className(),
+                'length' => 1,
+                'null' => false,
+                'chosen' => [
+                    0 => 'None',
+                    1 => 'Trigger'
+                ],
+                'default' => 0
+            ],
             'orderby' => [
                 'class' => IntField::className(),
                 'null' => false,
