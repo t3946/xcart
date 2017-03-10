@@ -2978,8 +2978,8 @@ SQL;
                 foreach ($aRules as $aRule) {
                     switch ($aRule['action']) {
                         case 'Include':
-                            db_query("DELETE FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$status_id'");
-                            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '$status_id')");
+                            \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $status_id, 'order_id' => $orderid ]);
+
                             $log .= "RuleID:$aRule[rule_id]; CB:$aRule[cb_name], DC:$aRule[dc_name], BD:$aRule[bd_name]<br />";
                             $log .= "'" . $tag_name . "' attention tag SET based on rules";
                             $tag_added_flag = true;

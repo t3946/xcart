@@ -25,12 +25,12 @@ class OrderAdditionalTagLinkModel extends Model
 //                ''
 //            ],
             'status' => [
-                'name' => 'status_id',
+                'field' => 'status_id',
                 'class' => ForeignField::className(),
                 'modelClass' => AttentionTagModel::className(),
             ],
             'order' => [
-                'name' => 'orderid',
+                'field' => 'orderid',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
             ],

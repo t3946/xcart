@@ -723,7 +723,7 @@ if ($REQUEST_METHOD == "POST")
                                         $set_new_additional_tag = '37';
                                         $is_such_tag_in_db      = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
                                         if (empty($is_such_tag_in_db)) {
-                                            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('$set_new_additional_tag','$orderid')");
+                                            \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $set_new_additional_tag, 'order_id' => $orderid ]);
 
                                             $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$set_new_additional_tag'");
                                             $log_tag  = "<br />'" . $tag_name . "' attention tag added";
@@ -1912,7 +1912,7 @@ if ($REQUEST_METHOD == "POST")
                                     if ($unit_cost < $order['shipping_groups'][$m_id]["products"][$itemid]["cost_to_us"] && !empty($config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"])) {
                                         $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"] . "'");
                                         if (empty($status_id)) {
-                                            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"] . "')");
+                                            \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"], 'order_id' => $orderid ]);
 
                                             $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"]]["status"];
                                         }
@@ -1921,8 +1921,7 @@ if ($REQUEST_METHOD == "POST")
                                     if ($unit_cost > $order['shipping_groups'][$m_id]["products"][$itemid]["cost_to_us"] && !empty($config["Attention_tags_invoices"]["tag_for_Unit_cost_GT_Cost_to_us"])) {
                                         $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Unit_cost_GT_Cost_to_us"] . "'");
                                         if (empty($status_id)) {
-                                            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Unit_cost_GT_Cost_to_us"] . "')");
-
+                                            \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Attention_tags_invoices"]["tag_for_Unit_cost_GT_Cost_to_us"], 'order_id' => $orderid ]);
                                             $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Unit_cost_GT_Cost_to_us"]]["status"];
                                         }
                                     }
@@ -1949,7 +1948,7 @@ if ($REQUEST_METHOD == "POST")
                                         if ($qty_disp != $sum_qty_inv_for_certain_product) {
                                             $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"] . "'");
                                             if (empty($status_id)) {
-                                                db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"] . "')");
+                                                \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"], 'order_id' => $orderid ]);
 
                                                 $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"]]["status"];
                                             }
@@ -1986,7 +1985,7 @@ if ($REQUEST_METHOD == "POST")
                             if ($tax_charged_except_HST > 0 && !empty($config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"])) {
                                 $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"] . "'");
                                 if (empty($status_id)) {
-                                    db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"] . "')");
+                                    \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"], 'order_id' => $orderid ]);
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"]]["status"];
                                 }
@@ -2002,7 +2001,7 @@ if ($REQUEST_METHOD == "POST")
                             if ($invoice_data["extra_items_on_invoice"] == "Y" && !empty($config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"])) {
                                 $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"] . "'");
                                 if (empty($status_id)) {
-                                    db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"] . "')");
+                                    \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"], 'order_id' => $orderid ]);
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"]]["status"];
                                 }
@@ -2018,7 +2017,7 @@ if ($REQUEST_METHOD == "POST")
                             if ($invoice_data["items_shipped_to_wrong_address"] == "Y" && !empty($config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"])) {
                                 $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"] . "'");
                                 if (empty($status_id)) {
-                                    db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"] . "')");
+                                    \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"], 'order_id' => $orderid ]);
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"]]["status"];
                                 }
@@ -2048,7 +2047,7 @@ if ($REQUEST_METHOD == "POST")
                             if ($shipping_charged > $order['shipping_groups'][$m_id]["actual_shipping_cost"]["net"] && !empty($config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"]) && $order['shipping_groups'][$m_id]["actual_shipping_cost"]["net"] > 0) {
                                 $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"] . "'");
                                 if (empty($status_id)) {
-                                    db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"] . "')");
+                                    \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"], 'order_id' => $orderid ]);
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"]]["status"];
                                 }
@@ -2057,7 +2056,7 @@ if ($REQUEST_METHOD == "POST")
                             if ($shipping_charged == 0 && !empty($config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"])) {
                                 $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"] . "'");
                                 if (empty($status_id)) {
-                                    db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"] . "')");
+                                    \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"], 'order_id' => $orderid ]);
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"]]["status"];
                                 }
@@ -2083,7 +2082,7 @@ if ($REQUEST_METHOD == "POST")
                             if ($drop_ship_fee_charged > $order['shipping_groups'][$m_id]["all_distributor_info"]["d_drop_ship_fee_in_us"] && !empty($config["Attention_tags_invoices"]["tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart"])) {
                                 $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart"] . "'");
                                 if (empty($status_id)) {
-                                    db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart"] . "')");
+                                    \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Attention_tags_invoices"]["tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart"], 'order_id' => $orderid ]);
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart"]]["status"];
                                 }
@@ -2112,7 +2111,7 @@ if ($REQUEST_METHOD == "POST")
                             if ($HST_charged > 0 && !empty($config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"])) {
                                 $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"] . "'");
                                 if (empty($status_id)) {
-                                    db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '" . $config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"] . "')");
+                                    \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"], 'order_id' => $orderid ]);
 
                                     $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"]]["status"];
                                 }

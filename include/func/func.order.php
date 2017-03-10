@@ -1902,7 +1902,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
 
                     if (empty($is_such_additional_tag_status)) {
 
-                        db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES('$mv[add_ca_status_id]', '$orderid')");
+                        \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $mv['add_ca_status_id'], 'order_id' => $orderid ]);
 
                         ### LOG: START
                         $status_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$mv[add_ca_status_id]'");

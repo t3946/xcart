@@ -299,8 +299,7 @@ if ($REQUEST_METHOD == "POST") {
 
 //func_print_r($is_such_tag_in_db);
 							if (empty($is_such_tag_in_db)){
-								db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('".$config["Purchase_Order"]["Checks_deposited_Attention_tag"]."','$v[orderid]')");
-
+                                \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Purchase_Order"]["Checks_deposited_Attention_tag"], 'order_id' => $v['orderid'] ]);
 								$tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='".$config["Purchase_Order"]["Checks_deposited_Attention_tag"]."'");
 						                $log .= "<br />'".$tag_name."' attention tag added";
 							}

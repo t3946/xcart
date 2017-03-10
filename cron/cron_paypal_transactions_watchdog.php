@@ -66,7 +66,7 @@ if (!empty($aOrderGroups)) {
             $oAttentionTag = new AttentionTag(['status_id' => 44]);
             if (!($oOrderGroup->getOrderInstance()->isAttentionTagSet($oAttentionTag->getStatusId()))) {
                 $aInsertArray = ['orderid' => $oOrderGroup->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
-                func_array2insert('orders_additional_tags', $aInsertArray, true);
+                \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $oAttentionTag->getStatusId(), 'order_id' => $oOrderGroup->getOrderId()]);
                 $sLog = "Attention tag added: " . $oAttentionTag->getStatus() . "\n";
                 Logs::_log('orders', $oOrderGroup->getOrderId(), 'X', $sLog);
                 $sLog = "Difference in OrderId: " . $oOrderGroup->getOrderId() . ". TransactionsTotal(" . $fOrderGroupTotalAmount . ") - OrderTotal(" . $oOrderGroup->getOrderInstance()->getOrderTotalGross() . ")";

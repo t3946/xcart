@@ -41,7 +41,7 @@ class Manager extends ManyToManyManager
     /**
      * @param array $conditions
      *
-     * @return null|\Xcart\App\Orm\ModelInterface
+     * @return \Xcart\App\Orm\ModelInterface|null
      */
     public function get($conditions = [])
     {

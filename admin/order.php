@@ -536,7 +536,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "create_rma_request" && !empty($orderi
 
         $is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["RMA_options"]["RMA_Attention_tag"] . "'");
         if (empty($is_such_tag_in_db)) {
-            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('" . $config["RMA_options"]["RMA_Attention_tag"] . "','$orderid')");
+            \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["RMA_options"]["RMA_Attention_tag"], 'order_id' => $orderid ]);
 
             $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='" . $config["RMA_options"]["RMA_Attention_tag"] . "'");
             $log      = "<br />'" . $tag_name . "' attention tag added";
@@ -1091,8 +1091,7 @@ if ($REQUEST_METHOD == "POST") {
         $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$additional_tag_status'");
 
         if (empty($is_such_additional_tag_status) && $allowed_to_set_flag) {
-
-            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES('$additional_tag_status', '$orderid')");
+            \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $additional_tag_status, 'order_id' => $orderid ]);
 
             ### LOG: START
             $log = "'" . $status_name . "' attention tag added";
@@ -1803,7 +1802,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                                 $set_new_additional_tag = '37';
                                 $is_such_tag_in_db      = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
                                 if (empty($is_such_tag_in_db)) {
-                                    db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('$set_new_additional_tag','$orderid')");
+                                    \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $set_new_additional_tag, 'order_id' => $orderid ]);
 
                                     $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$set_new_additional_tag'");
                                     $log_tag  = "<br />'" . $tag_name . "' attention tag added";
