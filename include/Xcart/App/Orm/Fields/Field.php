@@ -215,7 +215,11 @@ abstract class Field implements ModelFieldInterface
      */
     public function getValue()
     {
-        if (empty($this->value)) {
+        /** @TODO: MAYBE BUG - TEST IT */
+        if ($this->getModel() && $value = $this->getModel()->getAttribute($this->getName())) {
+            return $value;
+        }
+        else if (empty($this->value)) {
             return $this->null === true ? null : $this->default;
         }
         return $this->value;
