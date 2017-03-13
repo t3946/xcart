@@ -4,13 +4,11 @@ namespace Modules\User\Models;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\IntField;
 
 class UserModel extends AutoMetaModel
 {
-//    public $is_guest = false;
-//    public $is_staff = false;
-//    public $is_superuser = false;
-
     public static function tableName()
     {
         return 'xcart_customers';
@@ -26,6 +24,19 @@ class UserModel extends AutoMetaModel
                 'class' => CharField::className(),
                 'null' => false,
                 'unique' => true,
+            ],
+            'show_events' => [
+                'class' => IntField::className(),
+                'length' => 1,
+                'default' => 0,
+                'chosen' => [
+                    0 => 'Disable',
+                    1 => 'Enable'
+                ]
+            ],
+            'show_events_min_date' => [
+                'class' => DateTimeField::className(),
+                'null' => true
             ],
             'usertype' => [
                 'class' => CharField::className(),

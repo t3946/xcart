@@ -23,8 +23,9 @@ class OrderTagEventHelper
     /**
      * For manual execute
      *
-     * @param $status_id
-     * @param $order_id
+     * @param int $status_id Status pk
+     * @param int $order_id Order pk
+     * @param bool $save_log Save action in log or not
      */
     public static function orderTagEvent($status_id, $order_id, $save_log = true)
     {

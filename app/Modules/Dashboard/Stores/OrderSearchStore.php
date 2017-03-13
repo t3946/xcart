@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Dashboard\Stores;
 
+use DateTime;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
@@ -781,16 +782,28 @@ class OrderSearchStore extends BaseStore
     public function getEventsCount(array $ids = [])
     {
         $user = Xcart::app()->user;
-        $o_qs = clone $this->qs;
 
-        $qs = OrderHelper::getEventCountQS($user->id);
-        $qs->filter(['order_id__in' => ($ids) ? $ids : $o_qs->select('orderid')]);
+        if ($user->show_events)
+        {
+            $o_qs = clone $this->qs;
 
-        return $qs->count();
+            $qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+            $qs->filter(['order_id__in' => ($ids) ? $ids : $o_qs->select('orderid')]);
+
+            return $qs->count();
+        }
+
+        return null;
     }
 
     public function getCachedEventsCount(array $ids = [])
     {
+        $user = Xcart::app()->user;
+
+        if (!$user->show_events) {
+            return null;
+        }
+
         $count = null;
 
         $key = $this->getCacheCountKey('order_search_store_events_count_', $ids);

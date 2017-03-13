@@ -1,12 +1,14 @@
 <?php
 namespace Modules\Order\Helpers;
 
+use DateTime;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 
 class OrderHelper
@@ -50,10 +52,12 @@ class OrderHelper
     public static function getCountEvents(array $ids, $user_id = null, $group = true)
     {
         $need_request = false;
+        $userModel = null;
 
         if (empty($user_id) && Xcart::app()->getIsWebMode())
         {
-            $user_id = Xcart::app()->user->id;
+            $userModel = Xcart::app()->user;
+            $user_id = $userModel->id;
         }
 
         foreach ($ids as $id) {
@@ -64,11 +68,15 @@ class OrderHelper
             }
         }
 
-        if ($need_request && $user_id) {
+        if ($need_request && !$userModel) {
+            $userModel = UserModel::objects()->get(['id' => $user_id]);
+        }
+
+        if ($need_request && $user_id && $userModel && $userModel->show_events) {
 
             $connection = Xcart::app()->db->getConnection();
 
-            $qs = static::getEventCountQS($user_id);
+            $qs = static::getEventCountQS($user_id, ($userModel->show_events_min_date) ? (new DateTime($userModel->show_events_min_date)) : null);
             $topAlias = $qs->getTableAlias();
 
             $sql = $qs->filter(['order_id__in' => $ids,])->group(["{$topAlias}.order_id"])->allSql();
@@ -101,21 +109,26 @@ class OrderHelper
      * Return QuerySet without order filtrate
      *
      * @param int $user_id
+     * @param \DateTime $min_show_date Minimal date for show event
      *
      * @return \Xcart\App\Orm\Manager
      */
-    public static function getEventCountQS($user_id)
+    public static function getEventCountQS($user_id, $min_show_date = null)
     {
         $qs = OrderEventsModel::objects();
         $topAlias = $qs->getTableAlias();
 
+        if ($min_show_date && $min_show_date instanceof \DateTime) {
+            $qs = $qs->filter(['created_at__gte' => $min_show_date]);
+        }
+
         $qs = $qs
             ->filter([
+                new QAnd(['created_at__gte' => (new \DateTime())->modify('-6 month'),]),
                 new QOr([
                     new QAnd(['a.user_id' => $user_id, new QAnd(new Expression("`{$topAlias}`.`created_at` >= `a`.`created_at`"))]),
                     'a.user_id__isnull' => true
                 ]),
-                'created_at__gte' => (new \DateTime())->modify('-6 month')
             ])
             ->getQuerySet()
             ->join('left join', OrderUserLastActivityModel::tableName(), ['a.order_id' => 'order_id'], 'a')

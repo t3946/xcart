@@ -711,16 +711,21 @@ jQuery.fn.mfieldset = function (options) {
                         $this.find('.count').html(data.filters[id]['count']['orders']);
                     }
                     else {
-                        var sign = '';
-                        var c_chng = data_filter['count']['orders'] - count;
+                        var count_events ='',
+                            sign = '',
+                            c_chng = data_filter['count']['orders'] - count;
+
                         if (c_chng > 0) {
                             sign = '+';
                             notify = true;
                         }
+                        if (data.filters[id]['count']['events']) {
+                            count_events = '+' + data.filters[id]['count']['events'];
+                        }
 
                         $this.attr('data-count', data_filter['count']['orders']);
                         $this.find('.count').html(count + ' ' + sign + c_chng);
-                        $this.find('.events').html(data.filters[id]['count']['events'] || '');
+                        $this.find('.events').html(count_events);
 
                         if (data.filters[id].count > 0 && $this.hasClass(self.options.classes.disabled)) {
                             $this.removeClass(self.options.classes.disabled);
