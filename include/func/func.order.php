@@ -1925,14 +1925,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                     $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$mv[add_ca_status_id]'");
 
                     if (empty($is_such_additional_tag_status)) {
-
-                        \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $mv['add_ca_status_id'], 'order_id' => $orderid ]);
-
-                        ### LOG: START
-                        $status_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$mv[add_ca_status_id]'");
-                        $log         = "'" . $status_name . "' attention tag added";
-                        func_log_order($orderid, 'X', $log, $login);
-                        ### LOG: END
+                        Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($mv['add_ca_status_id'], $orderid);
                     }
                 }
 

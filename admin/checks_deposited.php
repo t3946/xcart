@@ -299,9 +299,9 @@ if ($REQUEST_METHOD == "POST") {
 
 //func_print_r($is_such_tag_in_db);
 							if (empty($is_such_tag_in_db)){
-                                \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["Purchase_Order"]["Checks_deposited_Attention_tag"], 'order_id' => $v['orderid'] ]);
+                                Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent( $config["Purchase_Order"]["Checks_deposited_Attention_tag"], $v['orderid'], false);
 								$tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='".$config["Purchase_Order"]["Checks_deposited_Attention_tag"]."'");
-						                $log .= "<br />'".$tag_name."' attention tag added";
+								$log .= "<br />'".$tag_name."' attention tag added";
 							}
 
 							$orders_NOT_marked_as_paid[] = $v["orderid"];

@@ -2978,7 +2978,7 @@ SQL;
                 foreach ($aRules as $aRule) {
                     switch ($aRule['action']) {
                         case 'Include':
-                            \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $status_id, 'order_id' => $orderid ]);
+                            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($status_id, $orderid, false);
 
                             $log .= "RuleID:$aRule[rule_id]; CB:$aRule[cb_name], DC:$aRule[dc_name], BD:$aRule[bd_name]<br />";
                             $log .= "'" . $tag_name . "' attention tag SET based on rules";

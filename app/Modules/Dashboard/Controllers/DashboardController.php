@@ -32,10 +32,6 @@ class DashboardController extends PrototypeAdminController
 
     public function index()
     {
-//        Xcart::app()->event->trigger('order:changed', ['order_id' => 72674]);
-//        Xcart::app()->event->trigger('order:changed', ['order_id' => 72683]);
-//        Xcart::app()->event->trigger('order:changed', ['order_id' => 72729]);
-
         $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
 
         if ($this->getRequest()->getIsAjax()) {

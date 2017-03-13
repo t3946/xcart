@@ -239,10 +239,7 @@ if ($REQUEST_METHOD == "POST") {
 	                $is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='".$config["RMA_options"]["RMA_Attention_tag"]."'");
                         if (empty($is_such_tag_in_db)){
 
-	                        \Xcart\App\Main\Xcart::app()->event->trigger('order:tag', ['status_id' => $config["RMA_options"]["RMA_Attention_tag"], 'order_id' => $orderid ]);
-                                $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='".$config["RMA_options"]["RMA_Attention_tag"]."'");
-                                $log = "<br />'".$tag_name."' attention tag added";
-				func_log_order($orderid, 'X', $log, $login);
+                            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["RMA_options"]["RMA_Attention_tag"], $orderid);
                         }
 
                 }

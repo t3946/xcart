@@ -1,7 +1,7 @@
 <?php
 namespace Xcart;
 
-use Xcart\App\Main\Xcart;
+use Modules\Order\Helpers\OrderTagEventHelper;
 
 class OrderGroup extends Data
 {
@@ -887,9 +887,7 @@ class OrderGroup extends Data
         if ($this->getAccountingNetProfit() < 0 && !in_array($this->getOrderGroupStatusCB(), ['R'])) {
             if (!$this->getOrderInstance()->isAttentionTagSet($config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"])) {
                 $oAttentionTag = new AttentionTag(['status_id' => $config["Attention_tags_invoices"]["tag_for_PROFIT_LT_0"]]);
-                Xcart::app()->event->trigger('order:tag', ['status_id' => $oAttentionTag->getStatusId(), 'order_id' => $this->getOrderId()]);
-                $sLog = "Attention tag added: " . $oAttentionTag->getStatus() . "\n";
-                Logs::_log('orders', $this->getOrderId(), 'X', $sLog);
+                OrderTagEventHelper::orderTagEvent($oAttentionTag->getStatusId(), $this->getOrderId());
             }
         }
     }
