@@ -85,9 +85,10 @@ class SurfingHelper
 
             if (!is_null($sReferalUrl)) {
                 $oSurfMeta->points_visited++;
-                $oSurfMeta->referal_url = addslashes($sReferalUrl);
+                $oSurfMeta->referal_url = $sReferalUrl;
 
-                $oReferer = ReferrerModel::objects()->getOrCreate(['referer' => (string)substr($sReferalUrl, 0, 767)]);
+                $referer = (string) urldecode($sReferalUrl);
+                $oReferer = ReferrerModel::objects()->getOrCreate(['referer' => $referer]);
                 $oReferer->visits++;
                 $oReferer->save();
 
