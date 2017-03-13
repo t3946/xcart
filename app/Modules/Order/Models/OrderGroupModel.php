@@ -2,10 +2,10 @@
 namespace Modules\Order\Models;
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Shipping\Models\ShippingModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\OrderGroup;
 
@@ -45,6 +45,12 @@ class OrderGroupModel extends AutoMetaModel
                 'null' => false,
                 'primary' => true,
             ],
+            'shippingModel' => [
+                'field' => 'shippingid',
+                'class' => ForeignField::className(),
+                'modelClass' => ShippingModel::className(),
+                'null' => false,
+            ],
 
             'invoices' => [
                 'class' => HasManyField::className(),
@@ -57,6 +63,18 @@ class OrderGroupModel extends AutoMetaModel
                 'link' => [['orderid', 'orderid'], ['manufacturerid', 'manufacturerid']],
             ],
         ];
+    }
+
+    private static $shippingModels = [];
+    public function getShippingModel()
+    {
+        if (isset(self::$shippingModels[$this->shippingid])) {
+            $this->shippingModel = self::$shippingModels[$this->shippingid];
+            return self::$shippingModels[$this->shippingid];
+        }
+
+        self::$shippingModels[$this->shippingid] = $this->shippingModel;
+        return self::$shippingModels[$this->shippingid];
     }
 
     public function getPaymentMethodId()

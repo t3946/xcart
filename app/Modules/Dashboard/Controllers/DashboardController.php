@@ -43,6 +43,7 @@ class DashboardController extends PrototypeAdminController
                     'count' => [
                         'orders' => $model->getSearchStorage()->getCashedCount(),
                         'events' => $model->getSearchStorage()->getCachedEventsCount(),
+                        'priority' => $model->getSearchStorage()->getCachedPriorityShippingCount(),
                     ]
                 ];
             }

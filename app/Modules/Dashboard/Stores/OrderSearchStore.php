@@ -9,9 +9,7 @@ use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Order\Helpers\OrderHelper;
-use Modules\Order\Models\OrderEventsModel;
 use Modules\Order\Models\OrderModel;
-use Modules\Order\Models\OrderUserLastActivityModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -72,7 +70,7 @@ class OrderSearchStore extends BaseStore
     {
         $this->form_data = $data;
         $this->fid = $fid;
-        $this->qs = $this->populate($data)->order(['-orderid']);
+        $this->qs = $this->populate($data)->order(['-date', '-orderid']);
     }
 
     /**
@@ -722,7 +720,13 @@ class OrderSearchStore extends BaseStore
     public function getPager()
     {
         if (!$this->pager) {
-            $this->pager = new Pagination($this->qs, ['pageSize' => 25], new QuerySetDataSource());
+            /** @TODO: Change - its for priority sorting */
+            $qs = clone $this->qs;
+            $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+            $qs->join('inner join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
+            $qs->order(['-shipping.important', 'date', 'orderid']);
+
+            $this->pager = new Pagination($qs, ['pageSize' => 25], new QuerySetDataSource());
         }
         return $this->pager;
     }
@@ -730,6 +734,33 @@ class OrderSearchStore extends BaseStore
     public function getModels()
     {
         return $this->prepareModels($this->getPager()->paginate());
+    }
+
+    public function getPriorityShippingCount()
+    {
+        $qs = clone $this->qs;
+        $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+        $qs->join('inner join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
+        $qs->filter(['shipping.important' => 1]);
+
+        return $qs->count();
+    }
+
+    public function getCachedPriorityShippingCount()
+    {
+        $count = null;
+
+        $key = $this->getCacheCountKey('order_search_store_priority_count_');
+        $count = Xcart::app()->cache->get($key);
+
+        if (is_null($count))
+        {
+            $count = $this->getPriorityShippingCount();
+
+            Xcart::app()->cache->set($key, $count, $this->getCacheLifeTime());
+        }
+
+        return $count;
     }
 
     public function getCount()

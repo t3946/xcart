@@ -226,6 +226,10 @@ abstract class BasePagination
      */
     public function getPageSizes()
     {
+        if (!in_array($this->getPageSize(), $this->pageSizes)) {
+            $this->pageSizes[] = $this->getPageSize();
+        }
+
         return $this->pageSizes;
     }
 

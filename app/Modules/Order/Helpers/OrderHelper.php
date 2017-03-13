@@ -76,7 +76,9 @@ class OrderHelper
 
             $connection = Xcart::app()->db->getConnection();
 
-            $qs = static::getEventCountQS($user_id, ($userModel->show_events_min_date) ? (new DateTime($userModel->show_events_min_date)) : null);
+            $min_date = ($userModel->show_events_min_date) ? (new DateTime($userModel->show_events_min_date)) : null;
+
+            $qs = static::getEventCountQS($user_id, $min_date);
             $topAlias = $qs->getTableAlias();
 
             $sql = $qs->filter(['order_id__in' => $ids,])->group(["{$topAlias}.order_id"])->allSql();
@@ -109,7 +111,7 @@ class OrderHelper
      * Return QuerySet without order filtrate
      *
      * @param int $user_id
-     * @param \DateTime $min_show_date Minimal date for show event
+     * @param null|\DateTime $min_show_date Minimal date for show event
      *
      * @return \Xcart\App\Orm\Manager
      */

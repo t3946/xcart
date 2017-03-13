@@ -26,10 +26,7 @@
         <td colspan="2">LATEST ETA DATE</td>
         <td colspan="2">Payment</td>
         <td>Grand total</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td colspan="4">+</td>
     </tr>
     <tr>
         <td colspan="12" style="padding: 0;"></td>
@@ -41,10 +38,8 @@
         <td colspan="2">B2D INVOICE</td>
         <td colspan="2">Processor</td>
         <td>TOTAL</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td colspan="4">+</td>
+
     </tr>
 
     {foreach $orders as $order index=$index}
@@ -109,10 +104,9 @@
                     </div>
                 {/foreach}
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td colspan="4">
+
+            </td>
         </tr>
 
         <tr class="{$cycle_class}">
@@ -160,7 +154,7 @@
             <td colspan="12" style="padding: 0;"></td>
         </tr>
         {foreach $order->groups as $group last=$last_group}
-            <tr class="{$cycle_class}">
+            <tr class="{$cycle_class} {if $group->getShippingModel()->important}important{/if}">
                 <td align="center" width="5" {if $group->manufacturerid->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
                     <a href="{$order->getAdminUrl()}" target="_blank">
                         {$group->manufacturer->code}
@@ -212,10 +206,11 @@
                     {/foreach}
                 </td>
                 <td>{$group->getTotalGross()|abs|formatprice:",":"."}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="4">
+                    {if $group->getShippingModel()->important}
+                        <span class="sign important"></span>
+                    {/if}
+                </td>
             </tr>
             {if !$last_group}
             <tr>

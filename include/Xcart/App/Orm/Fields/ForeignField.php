@@ -93,7 +93,7 @@ class ForeignField extends RelatedField
     /**
      * @param $value
      * @param AbstractPlatform $platform
-     * @return null
+     * @return null|ModelInterface
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -108,7 +108,7 @@ class ForeignField extends RelatedField
     /**
      * @param $value
      * @param AbstractPlatform $platform
-     * @return null
+     * @return null|int
      */
     public function convertToPHPValueSQL($value, AbstractPlatform $platform)
     {

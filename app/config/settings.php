@@ -13,6 +13,7 @@ return array_replace_recursive([
        'Dashboard',
        'Distributor',
        'Order',
+       'Shipping',
        'User',
        'Sites',
        'Amazon',
