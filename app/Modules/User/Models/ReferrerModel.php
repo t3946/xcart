@@ -23,6 +23,8 @@ class ReferrerModel extends Model
             ],
             'referer' => [
                 'class' => CharField::className(),
+                'null' => false,
+                'default' => '',
             ],
             'visits' => [
                 'class' => IntField::className(),
