@@ -66,6 +66,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "send_message")) {
 	$oMail = \Xcart\App\Main\Xcart::app()->mail;
 	$oMail->to = $to;
 	$oMail->from = $from;
+	$oMail->reply_to = null;
 	$oMail->body = $body;
 	$oMail->subject = $subject;
 	$oMail->subject_template = 'mail/compose_message_subj.tpl';

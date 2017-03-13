@@ -687,6 +687,7 @@ if ($REQUEST_METHOD == "POST") {
         $oMail = \Xcart\App\Main\Xcart::app()->mail;
         $oMail->to = $to;
         $oMail->from = $from;
+        $oMail->reply_to = null;
         $oMail->body = $body;
         $oMail->subject = $subj;
         $oMail->addHeader(['X-Xcart-Label' => 'order-logs']);
@@ -1626,6 +1627,7 @@ if ($mode == 'ref_notify')
                             $oMail = \Xcart\App\Main\Xcart::app()->mail;
                             $oMail->to = $config['Company']['orders_department'];
                             $oMail->from = $userinfo['email'];
+                            $oMail->reply_to = null;
                             $oMail->subject_template = 'mail/refund_notification_subj.tpl';
                             $oMail->body_template = 'mail/refund_notification.tpl';
                             $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -1956,6 +1958,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
             $oMail = \Xcart\App\Main\Xcart::app()->mail;
             $oMail->to = $mnf_to;
             $oMail->from = $config['Company']['orders_department'];
+            $oMail->reply_to = null;
             $oMail->subject_template = 'mail/order_notification_subj.tpl';
             $oMail->body_template = 'mail/order_notification.tpl';
             $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -1986,6 +1989,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                 $oMail = \Xcart\App\Main\Xcart::app()->mail;
                 $oMail->to = $mnf_to;
                 $oMail->from = $config['Company']['orders_department'];
+                $oMail->reply_to = null;
                 $oMail->subject_template = 'mail/order_notification_subj.tpl';
                 $oMail->body_template = 'mail/order_notification_mnf.tpl';
                 $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -2079,6 +2083,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
         $oMail = \Xcart\App\Main\Xcart::app()->mail;
         $oMail->to = $d_order_entry_operator_email;
         $oMail->from = $config['Company']['orders_department'];
+        $oMail->reply_to = null;
         $oMail->subject_template = 'mail/order_notification_subj.tpl';
         $oMail->body_template = 'mail/order_notification_mnf.tpl';
         $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -2125,6 +2130,7 @@ elseif ($mode == 'request_additional_shipping_charge') {
     $oMail = \Xcart\App\Main\Xcart::app()->mail;
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
+    $oMail->reply_to = null;
     $oMail->subject_template = 'mail/order_notification_subj.tpl';
     $oMail->body_template = 'mail/order_notification_mnf.tpl';
     $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -2166,6 +2172,7 @@ elseif ($mode == 'request_missing_information')
     $oMail = \Xcart\App\Main\Xcart::app()->mail;
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
+    $oMail->reply_to = null;
     $oMail->subject_template = 'mail/order_notification_subj.tpl';
     $oMail->body_template = 'mail/order_notification_mnf.tpl';
     $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -2196,6 +2203,7 @@ elseif ($mode == 'backorder_decision_request') {
     $oMail = \Xcart\App\Main\Xcart::app()->mail;
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
+    $oMail->reply_to = null;
     $oMail->subject_template = 'mail/order_notification_subj.tpl';
     $oMail->body_template = 'mail/order_notification_mnf.tpl';
     $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);

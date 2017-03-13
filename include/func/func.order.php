@@ -1708,6 +1708,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                             $oMail = \Xcart\App\Main\Xcart::app()->mail;
                             $oMail->to = $userinfo['email'];
                             $oMail->from = $config['Company']['orders_department'];
+                            $oMail->reply_to = null;
                             $oMail->subject_template = 'mail/order_notification_subj.tpl';
                             $oMail->body_template = 'mail/order_notification.tpl';
                             $oMail->sendEmail();
@@ -1949,6 +1950,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 $oMail = \Xcart\App\Main\Xcart::app()->mail;
                 $oMail->to = $to;
                 $oMail->from = $from;
+                $oMail->reply_to = null;
                 $oMail->subject_template = 'mail/order_notification_subj.tpl';
                 $oMail->body_template = 'mail/order_notification_mnf.tpl';
                 $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
