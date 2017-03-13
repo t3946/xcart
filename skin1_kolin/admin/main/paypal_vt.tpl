@@ -342,21 +342,47 @@ function func_AJAX_authorize_PayPal() {
 {/capture}
 {include file="dialog.tpl" title="Add manual transaction" content=$smarty.capture.add_manual_transaction extra='width="100%"'}
 
+<script src="{$SkinDir}/js/semantic/components/dropdown.js"></script>
+<script src="{$SkinDir}/js/semantic/components/transition.js"></script>
+<link rel="stylesheet" href="{$SkinDir}/css/semantic/semantic.css">
 {literal}
 <script>
+    $('.dropdown').dropdown();
     $('.toggle_transaction_multiple').click(function() {
-        if ($(this).hasClass('opened')){
+        var button = $(this);
+        if (button.parent().hasClass('opened')){
+            button.closest('tr').next('tr').remove();
+        } else {
             $.post('ajax_admin.php', {
                         ajax_action: 'get_transactions_log',
                         order_transaction_id: $(this).closest('tr').data('order-transaction')
                     },
                     function (data) {
-                    },'json');
-        } else {
-
+                        if (data){
+                            button.closest('tr')
+                                  .after($('<tr/>').html($('<td colspan="8"/>').css('padding-left', '20px').html(data)));
+                        }
+                    });
         }
-        $(this).toggleClass('opened');
+        button.hide();
+        button.siblings('.toggle_transaction_multiple').show();
+        button.parent().toggleClass('opened');
         return false;
+    });
+    $('.show_hide_link').click(
+            function() {
+                $(this).text(function(i,text) {
+                    return (text == 'Show details') ? 'Hide details' : 'Show details';
+                });
+                $(this).prev('.transaction_log_div').toggle('slow');
+                return false;
+            }
+    );
+    $('.transaction_info_table .dropdown .ui .item, .transaction_info_table .lookup').click(function() {
+        var form = $(this).closest('form');
+        form.find('#order_transaction_id').val($(this).closest('td.transaction_action').data('transaction-id'))
+            .end().find('#mode').val($(this).data('action'))
+            .end().submit();
     })
 </script>
 {/literal}

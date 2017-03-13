@@ -2,6 +2,8 @@
 
 global $smarty, $order;
 
+use Modules\Order\Models\OrderTransactionModel;
+
 if (!defined('XCART_SESSION_START')) {
     header("Location: ../");
     die("Access denied");
@@ -14,6 +16,7 @@ if (!empty($order_transactions)) {
     $authorized_total = 0;
     $void_total = 0;
     foreach ($order_transactions as $k_order_transaction => $v_order_transaction) {
+        $order_transactions[$k_order_transaction]['model'] = OrderTransactionModel::objects()->get(['id' => $v_order_transaction['id']]);
         if (empty($v_order_transaction["transaction_response"]) && !empty($v_order_transaction["transaction_id"])) {
             $transaction_type = "";
             if (!isset($Access_Token)) {

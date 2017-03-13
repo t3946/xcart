@@ -3,6 +3,8 @@ namespace Modules\Order\Models;
 
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\SerializeField;
 
 class OrderTransactionModel extends AutoMetaModel
 {
@@ -16,6 +18,23 @@ class OrderTransactionModel extends AutoMetaModel
         return [
             'id' => [
                 'class' => AutoField::className(),
+            ],
+            'transaction_status'  => [
+                'class' => CharField::className(),
+                'default' => '',
+                'null' => false,
+                'choices' => [
+                    'AP' => 'Authorized',
+                    'Pending' => 'Pending',
+                    'authorized' => 'Authorized',
+                    'voided' => 'Voided',
+                    'completed' => 'Completed',
+                    'Expired' => 'Expired',
+                ]
+            ],
+            'transaction_log' => [
+                'class' => SerializeField::className(),
+                'null' => false
             ]
         ];
     }

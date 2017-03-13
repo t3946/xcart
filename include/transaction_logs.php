@@ -1,6 +1,8 @@
 <?php
 global $smarty;
 
+use Modules\Order\Models\TransactionLogModel;
+
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
 $sql = <<<SQL
@@ -20,7 +22,7 @@ $transaction_logs = \Xcart\Connection::getInstance()->executeQuery($sql)->fetchA
 
 if (!empty($transaction_logs)){
 	foreach ($transaction_logs as $k_transaction_log => $v_transaction_log){
-
+        $transaction_logs[$k_transaction_log]['model'] = TransactionLogModel::objects()->get(['id' => $v_transaction_log['id']]);
 	    if (!empty($v_transaction_log["transaction_log"])){
 		$unserialized_transaction_log = unserialize($v_transaction_log["transaction_log"]);
 		if (is_array($unserialized_transaction_log)){

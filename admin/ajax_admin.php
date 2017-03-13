@@ -636,6 +636,7 @@ function getTransactionLog($aParams = [])
 {
     global $smarty;
     $result = null;
+    $tableTransactions = [];
     if (!empty($aParams['order_transaction_id'])) {
         $orderTransaction = OrderTransactionModel::objects()->get(['id' => $aParams['order_transaction_id']]);
         if ($orderTransaction) {
@@ -649,9 +650,11 @@ function getTransactionLog($aParams = [])
                     $aV = $transactionLog->getAttributes();
                     $aV['payment_method'] = 'Test';
                     $aV['firstname'] = 'Test2';
-                    $smarty->assign('v',$aV);
-                    $result .= $smarty->fetch('admin/main/transaction_log_row.tpl');
+                    $aV['model'] = $transactionLog;
+                    $tableTransactions[] = $aV;
                 }
+                $smarty->assign('order_transactions',$tableTransactions);
+                $result = $smarty->fetch('admin/main/transactions_table.tpl');
             }
         }
     }
