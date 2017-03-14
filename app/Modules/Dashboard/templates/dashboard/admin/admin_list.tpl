@@ -23,47 +23,45 @@
 {block 'js'}
     {parent}
     <script>
-        $('.admin .admin-dashboard-filters-list').tablePositions({
-            draggableSelector: '.button',
-            dropSelector: '.container',
+        $(function(){
+            var url_dashboard_sort = '{url 'dashboard:sort_filters'}';
 
-            onMove: function (el, to) {
+            {ignore}
+            $('.admin .admin-dashboard-filters-list').tablePositions({
+                draggableSelector: '.button',
+                dropSelector: '.container',
 
+                onMove: function (el, to) {
+                    var def = $.Deferred();
+                    $.ajax({
+                        type: 'POST',
+                        url: url_dashboard_sort,
+                        data: {
+                            position_row: $(to).data('row'),
+                            position_column: $(to).data('col'),
+                            group_id: $(to).data('group'),
+                            id: $(el).data('id')
+                        },
+                        success: function (data) {
+                            if (data) {
+                                $.mnotify({
+                                    title: 'Position saved',
+                                    message: data.message
+                                });
 
-                console.log({
-                    position_row: $(to).data('row'),
-                    position_column: $(to).data('col'),
-                    group_id: $(to).data('group'),
-                    id: $(el).data('id')
-                });
-                var def = $.Deferred();
-                $.ajax({
-                    type: 'POST',
-                    url: '{url 'dashboard:sort_filters'}',
-                    data: {
-                        position_row: $(to).data('row'),
-                        position_column: $(to).data('col'),
-                        group_id: $(to).data('group'),
-                        id: $(el).data('id')
-                    },
-                    success: function (data) {
-                        if (data) {
-                            $.mnotify({
-                                title: 'Position saved',
-                                message: data.message
-                            });
-
-                            def.resolve(true, data);
+                                def.resolve(true, data);
+                            }
+                            def.reject(false);
+                        },
+                        error: function () {
+                            def.reject(false);
                         }
-                        def.reject(false);
-                    },
-                    error: function () {
-                        def.reject(false);
-                    }
-                });
+                    });
 
-                return def.promise();
-            }
-        });
+                    return def.promise();
+                }
+            });
+            {/ignore}
+        })();
     </script>
 {/block}
