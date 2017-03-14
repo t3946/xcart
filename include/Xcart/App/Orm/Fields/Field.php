@@ -230,7 +230,6 @@ abstract class Field implements ModelFieldInterface
         }
         return $this->value;
     }
-
     /**
      * @param $value
      * @return $this

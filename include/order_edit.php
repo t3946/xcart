@@ -30,6 +30,9 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Models\OrderTransactionModel;
+use Xcart\Paypal;
+
 global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt, $top_message, $mail_smarty;
 
 if (!defined("XCART_SESSION_START")) {
@@ -629,7 +632,13 @@ if ($REQUEST_METHOD == "POST")
                     $transaction_log = "";
 
                     if ((empty($Access_Token) || !isset($Access_Token)) && $count_shipping_groups == "1") {
-                        $Access_Token = func_paypal_get_access_token();
+                        try {
+                            $oPaypal = new Paypal();
+                            $Access_Token = $oPaypal->getAccessToken();
+                        } catch (\Exception $e) {
+                            $oPaypal = null;
+                            $Access_Token = null;
+                        }
 
                         if (empty($Access_Token)) {
                             $transaction_log .= "'Access_Token' - failed <br />";
@@ -680,12 +689,25 @@ if ($REQUEST_METHOD == "POST")
 
                                     $data_arr["is_final_capture"] = true;
 
-                                    $result = func_paypal_capture($Access_Token, $authorized_transaction_id, $data_arr);
+                                    $result = $oPaypal->captureTransaction($authorized_transaction_id, $data_arr);
 
                                     if (!empty($result["id"])) {
                                         $transaction_log .= "<br />Transaction: " . $authorized_transaction_id . " -> " . $result["id"];
-                                        $result_serialized = serialize($result);
-                                        db_query("UPDATE $sql_tbl[order_transactions] SET transaction_id='$result[id]', transaction_amount='" . $result["amount"]["total"] . "', date='" . time() . "', login='$login', transaction_status='$result[state]', transaction_response='" . addslashes($result_serialized) . "' WHERE orderid='$orderid' AND transaction_id='$authorized_transaction_id'");
+                                        $orderTransaction = OrderTransactionModel::objects()->get(['orderid' => $orderid, 'transaction_id' => $authorized_transaction_id]);
+                                        if ($orderTransaction){
+                                            $orderTransaction->setAttributes([
+                                                'transaction_id' => $result['id'],
+                                                'transaction_amount' => $result['amount']['total'],
+                                                'date' => time(),
+                                                'login' => $login,
+                                                'transaction_status' => $result['state'],
+                                                'transaction_response' => serialize($result),
+                                                'parent_transaction_id' => $result['id'],
+                                            ]);
+                                            if ($orderTransaction->isValid()) {
+                                                $orderTransaction->save();
+                                            }
+                                        }
                                     }
                                     else {
                                         $capture_failed_flag = true;

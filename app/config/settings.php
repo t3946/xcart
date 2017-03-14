@@ -17,6 +17,7 @@ return array_replace_recursive([
        'User',
        'Sites',
        'Amazon',
+       'Order',
    ],
    'components' => [
        'db' => [
