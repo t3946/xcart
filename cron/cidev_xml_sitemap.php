@@ -1,8 +1,8 @@
 <?php
 define("CIDEV_CRON_START", "CRON");
 
-require "./top.inc.php";
-require "./init.php";
+require "../top.inc.php";
+require "../init.php";
 
 x_load('backoffice','files','taxes', 'product', 'debug');
 
