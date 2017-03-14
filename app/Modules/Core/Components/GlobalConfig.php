@@ -12,8 +12,24 @@ class GlobalConfig implements ArrayAccess, Iterator
     private $checked = [];
     private $old_mode = false;
 
+    private static $instance;
+
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+            self::$instance->init();
+        }
+
+        return self::$instance;
+    }
+
     public function init()
     {
+        if (!self::$instance) {
+            self::$instance = $this;
+        }
+
 //        $data = Xcart::app()->cache->get('config_global_cache', ['data' => [], 'checked' => []]);
 //
 //        $this->data = $data['data'];

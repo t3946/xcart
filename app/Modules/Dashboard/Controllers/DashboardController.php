@@ -2,11 +2,13 @@
 
 namespace Modules\Dashboard\Controllers;
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Models\GroupModel;
 use Modules\Dashboard\Models\UserFiltersLinkModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Product\Models\ProductQuestionModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
@@ -33,6 +35,7 @@ class DashboardController extends PrototypeAdminController
     public function index()
     {
         $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
+        $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
 
         if ($this->getRequest()->getIsAjax()) {
             $data = ['filters' => [], 'groups' => []];
@@ -47,6 +50,7 @@ class DashboardController extends PrototypeAdminController
                     ]
                 ];
             }
+            $data['questions'] = $this->render('dashboard/_product_question.tpl', ['questions' => $questionModels,]);
 
             $this->jsonResponse($data);
         }
@@ -57,6 +61,7 @@ class DashboardController extends PrototypeAdminController
                     'row_col' => DashboardFilter::getMaxRowCol(),
                     'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all(),
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
+                    'questions' => $questionModels,
                 ]
             );
         }

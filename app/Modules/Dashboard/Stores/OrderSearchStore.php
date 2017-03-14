@@ -10,6 +10,7 @@ use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
+use Modules\Product\Models\ProductQuestionModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -56,14 +57,7 @@ class OrderSearchStore extends BaseStore
 
     public static function getQuestionStatuses()
     {
-        return [
-            "question_received_from_cust"  => "Question received from customer",
-            "question_sent_to_distr_brand" => "Question sent to distributor/brand",
-            "call_distributor_brand"       => "Call distributor/brand",
-            "answer_sent_to_cust"          => "Answer sent to customer",
-            "order_pending"                => "Order pending",
-            "closed"                       => "Closed",
-        ];
+        return ProductQuestionModel::getFields()['status']['choices'];
     }
 
     public function __construct($data, $fid = null)

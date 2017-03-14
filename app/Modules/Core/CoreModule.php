@@ -1,6 +1,8 @@
 <?php
 namespace Modules\Core;
 
+use Fenom;
+use Modules\Core\Components\GlobalConfig;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 use Xcart\App\Orm\AutoMetaData;
@@ -33,5 +35,9 @@ class CoreModule extends Module
 
             echo Xcart::app()->template->render('smarty_like/admin_block.tpl', $params);
         });
+
+
+        $template->addAccessorSmart("global_config", "config", Fenom::ACCESSOR_PROPERTY);
+        $template->global_config = GlobalConfig::getInstance()->setOldMode();
     }
 }

@@ -29,6 +29,48 @@
             </div>
         </div>
     </div>
+    {smarty_admin_block name= 'Pending PO entry dashboard'}
+        Here are the places where you can find new POs to enter. Please make sure to login to <strong>s3helpdesk@gmail.com</strong> first. Once PO has been entered, please put Green star on the message to indicate that it has been taken care of.
+        <br>
+        <br>
+        <table>
+            <tbody>
+            <tr>
+                <td><a href="https://mail.google.com/mail/u/0/?tab=wm#label/_Communications%2FFaxage+received"
+                       target="_blank">Faxage-Received</a></td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td><a href="https://mail.google.com/mail/u/0/?tab=wm#label/_!CustService+Inside+Communications"
+                       target="_blank">CustService-Inside-Communications</a></td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td><a href="https://mail.google.com/mail/u/0/?tab=wm#label/_Communications%2FMailboxForwarding+Service"
+                       target="_blank">MailboxForwarding-Service</a></td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <strong>Once PO has been found, it must be uploaded here:<br></strong>
+        <br>
+        <strong><a href="/admin/purchase_orders.php" target="_blank">PO pipeline</a></strong>
+    {/smarty_admin_block}
+
+    {smarty_admin_block name= 'Product questions dashboard'}
+        <div class="question_products">
+            {include 'dashboard/_product_question.tpl'}
+        </div>
+    {/smarty_admin_block}
+
+    {smarty_admin_block name= 'Customer Care Dashboard'}
+        <form name="searchform" action="customers_cart.php" method="get">
+            <input name="mode" value="search_cart" type="hidden">
+
+            <b>Cart number:</b>
+            <input name="cart_number" size="10" value="" id="cart_number" type="text">
+
+            <input type="button" value="Search cart" onclick="javascript: window.open('customers_cart.php?cart_number='+$('#cart_number').val());" />
+        </form>
+    {/smarty_admin_block}
 {/block}
 
 {block 'js'}

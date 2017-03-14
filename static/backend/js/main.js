@@ -683,7 +683,8 @@ jQuery.fn.mfieldset = function (options) {
                 }
             },
             interval: 25000,
-            selector: '.dashboard-filters a[data-id]'
+            selector: '.dashboard-filters a[data-id]',
+            questionSelector: '.admin .question_products'
         },
 
         __stop: false,
@@ -698,6 +699,8 @@ jQuery.fn.mfieldset = function (options) {
             var self = this;
             var texts= [];
             var notify = false;
+
+            $(this.options.questionSelector).html(data.questions);
 
             $(this.options.selector).each(function(){
                 var $this = $(this),
