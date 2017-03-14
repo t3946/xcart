@@ -749,7 +749,7 @@ jQuery.fn.mfieldset = function (options) {
                         }
 
                         if (c_chng > 0) {
-                            data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.name_events').html() +')</a>';
+                            data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.name_events').html() +'</a>';
                         }
                     }
                 }
