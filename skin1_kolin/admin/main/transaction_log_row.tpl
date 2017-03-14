@@ -12,16 +12,20 @@
         <td align="center">{$tr_status->toText()}</td>
     <td>{if $main_transaction}{$v.transaction_amount}{else}{$v.transaction_total}{/if} {$v.transaction_currency}</td>
     <td>
+        {if $main_transaction}
+            {assign var="tr_log" value=$v.transaction_response}
+            {assign var="tr_log_message" value=$v.model->transaction_response.message}
+        {else}
+            {assign var="tr_log" value=$v.transaction_log}
+            {assign var="tr_log_message" value=$v.model->transaction_log.message}
+        {/if}
+
         {if $v.issue ne ""}
             <br />
             <B>issue:</B> {$v.issue}
-        {elseif $v.model->transaction_log.message ne ""}
+        {elseif $tr_log_message ne ""}
             <br />
-            <B>message:</B> {$v.model->transaction_log.message}
-        {/if}
-        {assign var="tr_log" value=$v.transaction_log}
-        {if $main_transaction}
-            {assign var="tr_log" value=$v.transaction_response}
+            <B>message:</B> {$tr_log_message}
         {/if}
 
         {if $tr_log ne ""}
