@@ -21,7 +21,8 @@ class Pagination extends BasePagination
      * @param array $config
      * @param DataSourceInterface $dataSource
      */
-    public function __construct($source, array $config = [], $dataSource) {
+    public function __construct($source, array $config = [], $dataSource)
+    {
         $handler = new NativePaginationHandler();
         parent::__construct($source, $config, $handler, $dataSource);
     }

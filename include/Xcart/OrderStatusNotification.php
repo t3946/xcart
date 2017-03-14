@@ -87,6 +87,7 @@ class OrderStatusNotification extends Mail
         $oMail = \Xcart\App\Main\Xcart::app()->mail;
         $oMail->to = $this->oOrder->getEmail();
         $oMail->from = $config['Company']['orders_department'];
+        $oMail->reply_to = null;
         $oMail->subject_template = 'mail/order_notification_subj.tpl';
         $oMail->body_template = 'mail/order_notification.tpl';
         $oMail->sendEmail();

@@ -47,6 +47,7 @@ class OrderEntryMail extends Mail
             $oMail = \Xcart\App\Main\Xcart::app()->mail;
             $oMail->to = $this->getTo();
             $oMail->from = $this->getFrom();
+            $oMail->reply_to = null;
             $oMail->subject_template = 'mail/order_notification_subj.tpl';
             $oMail->body_template = 'mail/order_notification_mnf.tpl';
             $oMail->addHeader(['X-Xcart-Label' => 'order-logs']);

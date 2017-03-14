@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 27.01.2017
- * Time: 9:54
- */
-
 namespace Xcart\App\Traits;
 
 use ReflectionClass;

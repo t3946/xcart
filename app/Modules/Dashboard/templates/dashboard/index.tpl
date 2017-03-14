@@ -1,6 +1,10 @@
 {extends 'dashboard/layouts/menu_layout.tpl'}
 {block 'heading'}
     <h1 align="center">Customer Care dashboard.</h1>
+
+    {autoescape false}
+        {orders_test_checkout}
+    {/autoescape}
 {/block}
 
 {block 'content'}
@@ -13,13 +17,13 @@
 
             <div class="tabs-content">
                 <div class="tab my_dashboard white-back orange-border content-block {if $myModels|count > 0}active{/if}" id="my_dashboard">
-                    {include 'dashboard/dashboard_my.tpl' models=$myModels my_position=true row_col=['col'=> $row_col.col, 'row' => 25]}
+                    {include 'dashboard/_dashboard_my.tpl' models=$myModels my_position=true row_col=['col'=> $row_col.col, 'row' => 25]}
                 </div>
                 <div class="tab white-back orange-border content-block {if $myModels|count == 0}active{/if}" id="dashboard">
-                    {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}
+                    {include 'dashboard/_dashboard_group.tpl' models=$models|get_filtered:null group=null title='Not in group'}
 
                     {foreach $groups as $group}
-                        {include 'dashboard/dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id title=$group}
+                        {include 'dashboard/_dashboard_group.tpl' models=$models|get_filtered:$group->id group=$group->id title=$group}
                     {/foreach}
                 </div>
             </div>

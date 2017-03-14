@@ -107,7 +107,7 @@ echo "1";
 						db_query("INSERT IGNORE INTO $sql_tbl[pc_terms] (term, storefrontid) VALUES ('$term', '$storefrontid')");
 						$termid = func_query_first_cell("SELECT termid FROM $sql_tbl[pc_terms] WHERE term='$term' AND storefrontid='$storefrontid'");
 
-						db_query("INSERT INTO $sql_tbl[pc_category_terms] (categoryid, termid, bayes_weight) VALUES ('$categoryid', '$termid', '0')");
+						db_query("INSERT INTO $sql_tbl[pc_category_terms] (categoryid, termid) VALUES ('$categoryid', '$termid')");
 					}
 				}
 
