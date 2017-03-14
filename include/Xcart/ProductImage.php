@@ -10,7 +10,7 @@ class ProductImage extends Data
     public function __construct($type, $iId = null)
     {
         $this->sPrimaryTable = "images_" . $type;
-        $this->sPrimaryKeyFiled = "imageid";
+        $this->aPrimaryKeys = ["imageid"];
 
         parent::__construct($iId);
         $this->sImageType = $type;
