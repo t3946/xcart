@@ -722,8 +722,15 @@ class OrderSearchStore extends BaseStore
         if (!$this->pager) {
             /** @TODO: Change - its for priority sorting */
             $qs = clone $this->qs;
-            $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
-            $qs->join('inner join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
+
+            $joins = $qs->getQueryBuilder()->getJoins();
+            $joins = array_keys($joins);
+
+            if (!in_array('group', $joins)) {
+                $qs->join('left join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+            }
+
+            $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
             $qs->order(['-shipping.important', 'date', 'orderid']);
 
             $this->pager = new Pagination($qs, ['pageSize' => 25], new QuerySetDataSource());
