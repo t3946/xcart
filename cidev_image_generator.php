@@ -1,5 +1,5 @@
 <?php
-use Xcart\Product;
+use Xcart\ProductImage;
 
 define("CIDEV_CRON_START", "CRON");
 session_start();
@@ -113,7 +113,7 @@ while ($product = db_fetch_array($products)){
 		} else {
 			$log_text = $image_id.' - Error generate thumbnail. Delete image file ' . $image_data['image_path'] . ' from ' . $product['productcode'];
 			unlink($image_data['image_path']);
-			(new Xcart\ProductImage('D',['imageid' => $image_id]))->_delete();
+			(new ProductImage('D',['imageid' => $image_id]))->_delete();
 			func_backprocess_log("image generator", $log_text);
 		}
 	}
@@ -124,7 +124,7 @@ while ($product = db_fetch_array($products)){
 		} else {
 			$log_text = $image_id.' - Error generate thumbnail. Delete image file ' . $image_data['image_path'] . ' from ' . $product['productcode'];
 			unlink($image_data['image_path']);
-			(new Xcart\ProductImage('D',['imageid' => $image_id]))->_delete();
+			(new ProductImage('D',['imageid' => $image_id]))->_delete();
 			func_backprocess_log("image generator", $log_text);
 		}
 	}
