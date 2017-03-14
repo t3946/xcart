@@ -18,7 +18,9 @@ class HTMLShot extends Data
         $aImagesD = $oProduct->getImages('D');
         $aImagesP = $oProduct->getImages('P');
         /** @var ProductImage[] $aImages */
-        $aImages = array_merge($aImagesD, $aImagesP);
+        if (!empty($aImagesP) && is_array($aImagesP)) {
+            $aImages = array_merge($aImagesD, $aImagesP);
+        }
         $oStoreFront = $oProduct->getStoreFront();
 
         if (!empty($aImages)) {
