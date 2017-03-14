@@ -351,7 +351,7 @@ function func_AJAX_authorize_PayPal() {
     $('.toggle_transaction_multiple').click(function() {
         var button = $(this);
         if (button.parent().hasClass('opened')){
-            button.closest('tr').next('tr').remove();
+            button.closest('tr').next('tr.transaction_log').remove();
         } else {
             $.post('ajax_admin.php', {
                         ajax_action: 'get_transactions_log',
@@ -360,7 +360,7 @@ function func_AJAX_authorize_PayPal() {
                     function (data) {
                         if (data){
                             button.closest('tr')
-                                  .after($('<tr/>').html($('<td colspan="8"/>').css('padding-left', '20px').html(data)));
+                                  .after($('<tr class="transaction_log"/>').html($('<td colspan="8"/>').css('padding-left', '20px').html(data)));
                         }
                     });
         }
@@ -369,7 +369,7 @@ function func_AJAX_authorize_PayPal() {
         button.parent().toggleClass('opened');
         return false;
     });
-    $('.show_hide_link').click(
+    $('.transaction_info_table').on('click','.show_hide_link',
             function() {
                 $(this).text(function(i,text) {
                     return (text == 'Show details') ? 'Hide details' : 'Show details';

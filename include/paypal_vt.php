@@ -382,15 +382,14 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
             $orderTransactionNew = new OrderTransactionModel;
             if ($orderTransaction) {
                 $orderTransactionNew->setAttributes($orderTransaction->getAttributes());
+                $orderTransaction->setAttributes([
+                    'transaction_id' => $transaction_id,
+                    'transaction_response' => $serialize_result,
+                    'transaction_status' => $transaction_status,
+                    'login' => $login,
+                    'date' => time()
+                ]);
             }
-            $orderTransaction->setAttributes([
-                'transaction_id' => $transaction_id,
-                'transaction_response' => $serialize_result,
-                'transaction_status' => $transaction_status,
-                'login' => $login,
-                'date' => time()
-            ]);
-
             $orderTransactionNew->id = null;
             if ($mode == "add_manual_transaction") {
                 $orderTransactionNew->manual_transaction = "Y";

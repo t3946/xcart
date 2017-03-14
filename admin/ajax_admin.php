@@ -1,4 +1,5 @@
 <?php
+use Mindy\QueryBuilder\Q\QOr;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Xcart\External_Product_Verification\ExternalVerificationBatch;
@@ -9,6 +10,7 @@ use Xcart\External_Marketplaces\IssuesProcessingRules;
 use Xcart\Images\Splash;
 use Xcart\Order;
 use Xcart\OrderCxInvoice;
+use Xcart\PaymentMethod;
 use Xcart\Paypal;
 use Xcart\ProductsAmazonFields;
 use Xcart\ShippingRate;
@@ -640,16 +642,27 @@ function getTransactionLog($aParams = [])
     if (!empty($aParams['order_transaction_id'])) {
         $orderTransaction = OrderTransactionModel::objects()->get(['id' => $aParams['order_transaction_id']]);
         if ($orderTransaction) {
+            $in = [$orderTransaction->transaction_id];
+            if ($orderTransaction->parent_transaction_id) {
+                $in[] = $orderTransaction->parent_transaction_id;
+            }
             $aTransactionLogs = TransactionLogModel::objects()
-                ->filter(['orderid' => $orderTransaction->orderid, 'transaction_id' => $orderTransaction->transaction_id])
+                ->filter([
+                    'orderid' => $orderTransaction->orderid,
+                    'transaction_id__in' => $in])
+                ->exclude(['id' => $orderTransaction->id])
                 ->order('date DESC')
                 ->all();
             if (!empty($aTransactionLogs)) {
                 /** @var TransactionLogModel $transactionLog */
                 foreach ($aTransactionLogs as $transactionLog) {
                     $aV = $transactionLog->getAttributes();
-                    $aV['payment_method'] = 'Test';
-                    $aV['firstname'] = 'Test2';
+                    if ($customerModel = Customer::objects()->filter(['login' => $transactionLog->login])->get()) {
+                        $aV['firstname'] = $customerModel->firstname;
+                    }
+                    if ($paymentModel = PaymentMethod::objects()->get(['paymentid' => $transactionLog->paymentid])) {
+                        $aV['payment_method'] = $paymentModel->payment_method;
+                    }
                     $aV['model'] = $transactionLog;
                     $tableTransactions[] = $aV;
                 }

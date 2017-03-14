@@ -8,18 +8,16 @@
             {if $v.transaction_link_anchor ne ""}({$v.transaction_id}){/if}
         {/if}
     </td>
-    {if $v.model}
         {assign var="tr_status" value=$v.model->getField('transaction_status')}
         <td align="center">{$tr_status->toText()}</td>
-    {/if}
     <td>{if $main_transaction}{$v.transaction_amount}{else}{$v.transaction_total}{/if} {$v.transaction_currency}</td>
     <td>
         {if $v.issue ne ""}
             <br />
             <B>issue:</B> {$v.issue}
-        {elseif $v.unserialized_transaction_log.message ne ""}
+        {elseif $v.model->transaction_log.message ne ""}
             <br />
-            <B>message:</B> {$v.unserialized_transaction_log.message}
+            <B>message:</B> {$v.model->transaction_log.message}
         {/if}
         {assign var="tr_log" value=$v.transaction_log}
         {if $main_transaction}
@@ -49,7 +47,7 @@
             {if $v.unserialized_transaction_response.links ne ""}
                 <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;" class="ui combo top right dropdown icon button">
                     <i class="dropdown icon"></i>
-                    <div class="menu">
+                    <div class="menu" style="min-width: 200px;">
                         {foreach from=$v.unserialized_transaction_response.links item=link key=k_link}
                             {if $link.rel eq "self"}
                             {elseif $link.rel eq "refund"}
