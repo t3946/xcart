@@ -223,7 +223,6 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                         $transaction_status = $result["state"];
                         $transaction_currency = $result["amount"]["currency"];
                         $transaction_total = $result["amount"]["total"];
-
                         func_send_order_status_notification($orderid, "P");
                         break;
                     default :
@@ -231,6 +230,12 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                         $log .= "<br />state: " . $result["state"];
                 }
             } else {
+                if ($result['name'] == 'AUTHORIZATION_EXPIRED') {
+                    $transaction_status = 'Expired';
+                    $orderTransaction->transaction_status = $transaction_status;
+                    $orderTransaction->transaction_response = $result;
+                    $orderTransaction->save();
+                }
                 $log .= "<br />{$result['name']}";
                 $log .= "<br />{$result['message']}";
             }
@@ -286,6 +291,12 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
             $result = func_paypal_look_up_payment($Access_Token, $orderTransaction->transaction_id, $transaction_type);
             if (!empty($result["id"])) {
                 $transaction_id = $result["id"];
+                if ($result['state'] == 'expired'){
+                    $transaction_status = 'Expired';
+                    $orderTransaction->transaction_status = $transaction_status;
+                    $orderTransaction->transaction_response = $result;
+                    $orderTransaction->save();
+                }
             }
         }
     } elseif ($mode == "add_manual_transaction") {

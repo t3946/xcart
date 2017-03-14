@@ -381,7 +381,7 @@ function func_AJAX_authorize_PayPal() {
                 return false;
             }
     );
-    $('.transaction_info_table .dropdown .ui .item, .transaction_info_table .lookup').click(function() {
+    $('.transaction_info_table .dropdown .item, .transaction_info_table .lookup').click(function() {
         var form = $(this).closest('form');
         form.find('#order_transaction_id').val($(this).closest('td.transaction_action').data('transaction-id'))
             .end().find('#mode').val($(this).data('action'))

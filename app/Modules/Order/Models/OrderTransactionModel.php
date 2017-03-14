@@ -32,7 +32,7 @@ class OrderTransactionModel extends AutoMetaModel
                     'Expired' => 'Expired',
                 ]
             ],
-            'transaction_log' => [
+            'transaction_response' => [
                 'class' => SerializeField::className(),
                 'null' => false
             ]
