@@ -9,7 +9,7 @@ if ($config["cidev_image_generator"] == "Y"){
 	$log_text = "--- already launched";
 	func_backprocess_log("image generator", $log_text);
 
-//        die("Already launched"); // ################################
+        die("Already launched"); // ################################
 }
 db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cidev_image_generator'");
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_image_generator'");
