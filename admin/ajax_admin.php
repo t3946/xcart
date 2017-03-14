@@ -1,10 +1,18 @@
 <?php
+use Mindy\QueryBuilder\Q\QOr;
+use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
 use Xcart\External_Product_Verification\ExternalVerificationBatch;
 use Xcart\External_Product_Verification\ExternalVerificationFeeds;
 use Xcart\External_Product_Verification\ExternalVerificationProducts;
 use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
 use Xcart\External_Marketplaces\IssuesProcessingRules;
+use Xcart\Images\Splash;
 use Xcart\Order;
+use Xcart\OrderCxInvoice;
+use Xcart\PaymentMethod;
+use Xcart\Paypal;
+use Xcart\ProductsAmazonFields;
 use Xcart\ShippingRate;
 use Xcart\OrderGroup;
 use Xcart\Product;
@@ -81,6 +89,9 @@ switch ($_POST['ajax_action']) {
         break;
     case "change_product_splash":
         changeProductSplash($_POST);
+        break;
+    case "get_transactions_log":
+        getTransactionLog($_POST);
         break;
 }
 
@@ -209,9 +220,9 @@ function changeMissingStructure($aParams = [])
     switch ($aParams['action']) {
         case 'Edit':
             if (!empty($sNewSKU)) {
-                $oProduct = Xcart\Product::model()->getProductBySKU($sNewSKU);
+                $oProduct = Product::model()->getProductBySKU($sNewSKU);
             } elseif ($iNewProductid) {
-                $oProduct = Xcart\Product::model(['productid' => $iNewProductid]);
+                $oProduct = Product::model(['productid' => $iNewProductid]);
             }
             if ($oProduct->getProductId()) {
                 if ($oProduct->isForSale()) {
@@ -446,7 +457,7 @@ function sendPayPalRequest($aParams = [])
     if (!empty($aParams['send_request_orderid'])) {
         $iOrderId = (int)$aParams['send_request_orderid'];
         Xcart\Logs::_log('orders', $iOrderId, 'X', "'Send request' at 'Paypal Payment request' pressed");
-        $oPaypal = (new \Xcart\Paypal());
+        $oPaypal = (new Paypal());
         $oInv = $oPaypal->sendPaypalRequest($aParams);
         if (!empty($oInv)) {
             \Xcart\Connection::getInstance()->insert('xcart_order_cx_invoices', [
@@ -472,9 +483,9 @@ function getPayPalInvoiceStatus($aParams = [])
 {
     $aResult['result'] = false;
     if (!empty($aParams['paypal_invoice_id'])) {
-        $oInv = (new \Xcart\Paypal())->getPayPalInvoice($aParams['paypal_invoice_id']);
+        $oInv = (new Paypal())->getPayPalInvoice($aParams['paypal_invoice_id']);
         if ($oInv) {
-            $oOrderCxInv = \Xcart\OrderCxInvoice::model()->find(SQLBuilder::getInstance()->addCondition("invoice_number = '{$aParams['paypal_invoice_id']}'"));
+            $oOrderCxInv = OrderCxInvoice::model()->find(SQLBuilder::getInstance()->addCondition("invoice_number = '{$aParams['paypal_invoice_id']}'"));
             $oOrderCxInv->updateField('status', $oInv->getStatus());
             $aResult['result'] = true;
             $aResult['status'] = $oInv->getStatus();
@@ -562,7 +573,7 @@ function changeAmazonFBARestricted($aParams = [])
     $aResult['result'] = false;
     if (!empty($aParams['product_id']) && is_numeric($aParams['product_id'])) {
         $iProductId = (int) $aParams['product_id'];
-        $oProductAmazonFields = \Xcart\ProductsAmazonFields::model(['productid' => $iProductId]);
+        $oProductAmazonFields = ProductsAmazonFields::model(['productid' => $iProductId]);
         $sFbaStatus = isset($aParams['status']) ? 'Y' : 'N';
         $oProductAmazonFields->setField('amazon_fba_restricted', $sFbaStatus);
         if ($oProductAmazonFields->getField('productid')) {
@@ -602,7 +613,7 @@ function getSplashInfo($aParams = [])
 {
     $aResult['result'] = false;
     if (!empty($aParams['splash_id']) && is_numeric($aParams['splash_id'])) {
-        $oSplash = \Xcart\Images\Splash::objects()->filter(['id' => $aParams['splash_id']])->get();
+        $oSplash = Splash::objects()->filter(['id' => $aParams['splash_id']])->get();
         if ($oSplash) {
             $aResult['result'] = true;
             $aResult['data'] = $oSplash->getFields();
@@ -621,4 +632,44 @@ function changeProductSplash($aParams = [])
         $aResult['result'] = true;
     }
     print json_encode($aResult);
+}
+
+function getTransactionLog($aParams = [])
+{
+    global $smarty;
+    $result = null;
+    $tableTransactions = [];
+    if (!empty($aParams['order_transaction_id'])) {
+        $orderTransaction = OrderTransactionModel::objects()->get(['id' => $aParams['order_transaction_id']]);
+        if ($orderTransaction) {
+            $in = [$orderTransaction->transaction_id];
+            if ($orderTransaction->parent_transaction_id) {
+                $in[] = $orderTransaction->parent_transaction_id;
+            }
+            $aTransactionLogs = TransactionLogModel::objects()
+                ->filter([
+                    'orderid' => $orderTransaction->orderid,
+                    'transaction_id__in' => $in])
+                ->exclude(['id' => $orderTransaction->id])
+                ->order('date DESC')
+                ->all();
+            if (!empty($aTransactionLogs)) {
+                /** @var TransactionLogModel $transactionLog */
+                foreach ($aTransactionLogs as $transactionLog) {
+                    $aV = $transactionLog->getAttributes();
+                    if ($customerModel = Customer::objects()->filter(['login' => $transactionLog->login])->get()) {
+                        $aV['firstname'] = $customerModel->firstname;
+                    }
+                    if ($paymentModel = PaymentMethod::objects()->get(['paymentid' => $transactionLog->paymentid])) {
+                        $aV['payment_method'] = $paymentModel->payment_method;
+                    }
+                    $aV['model'] = $transactionLog;
+                    $tableTransactions[] = $aV;
+                }
+                $smarty->assign('order_transactions',$tableTransactions);
+                $result = $smarty->fetch('admin/main/transactions_table.tpl');
+            }
+        }
+    }
+    print $result;
 }
