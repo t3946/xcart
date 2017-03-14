@@ -21,13 +21,13 @@ class UserFiltersLinkModel extends Model
     public static function getFields()
     {
         return [
-            'user' => [
+            'user_id' => [
                 'class' => ForeignField::className(),
                 'modelClass' => UserModel::className(),
                 'verboseName' => 'User',
                 'link' => ['id', 'user_id']
             ],
-            'filter' => [
+            'filter_id' => [
                 'class' => ForeignField::className(),
                 'modelClass' => DashboardFilter::className(),
                 'verboseName' => 'Filter in dashboard',

@@ -46,7 +46,7 @@ class ForeignField extends RelatedField
             [
                 'LEFT JOIN',
                 $this->getRelatedTable(),
-                [$topAlias . '.' . $this->name . '_id' => $alias . '.' . $this->getRelatedModel()->getPrimaryKeyName()],
+                [$topAlias . '.' . $this->getAttributeName() => $alias . '.' . $this->getRelatedModel()->getPrimaryKeyName()],
                 $alias
             ]
         ];
@@ -89,18 +89,11 @@ class ForeignField extends RelatedField
         // TODO: Implement getSelectJoin() method.
     }
 
-    /**
-     * @return string
-     */
-    public function getAttributeName()
-    {
-        return $this->name . '_id';
-    }
 
     /**
      * @param $value
      * @param AbstractPlatform $platform
-     * @return null
+     * @return null|ModelInterface
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -115,7 +108,7 @@ class ForeignField extends RelatedField
     /**
      * @param $value
      * @param AbstractPlatform $platform
-     * @return null
+     * @return null|int
      */
     public function convertToPHPValueSQL($value, AbstractPlatform $platform)
     {

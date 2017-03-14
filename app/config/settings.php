@@ -11,6 +11,9 @@ return array_replace_recursive([
    'modules' => [
        'Core',
        'Dashboard',
+       'Distributor',
+       'Order',
+       'Shipping',
        'User',
        'Sites',
        'Amazon',
@@ -40,6 +43,11 @@ return array_replace_recursive([
            'debug' => true,
            'errHandler' => false
        ],
+       'event' => [
+           'class' => '\\Xcart\\App\\Event\\EventManager',
+           'events' => include 'events.php'
+       ],
+
 //       'middleware' => [
 //           'class' => '\Mindy\Middleware\MiddlewareManager',
 //           'middleware' => [
@@ -89,6 +97,9 @@ return array_replace_recursive([
        'auth' => [
            'class' => '\\Modules\\User\\Components\\Auth'
        ],
+//       'global_config' => [
+//           'class' => '\\Modules\\Core\\Components\\GlobalConfig'
+//       ],
    ],
    'autoloadComponents' => [
        'errorHandler'

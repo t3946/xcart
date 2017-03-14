@@ -89,14 +89,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "send_message")) {
 		$is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$additional_tag_status'");
 
         	if (empty($is_such_additional_tag_status)){
-
-                	db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES('$additional_tag_status', '$orderid')");
-
-	                ### LOG: START
-			$status_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$additional_tag_status'");
-                	$log = "'".$status_name."' attention tag added";
-	                func_log_order($orderid, 'X', $log, $login);
-        	        ### LOG: END
+                Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($additional_tag_status, $orderid);
 	        }
 	}
 ###
