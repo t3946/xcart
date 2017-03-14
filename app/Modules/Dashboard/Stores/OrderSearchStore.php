@@ -742,7 +742,8 @@ class OrderSearchStore extends BaseStore
         $qs = clone $this->qs;
         $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
         $qs->join('inner join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
-        $qs->filter(['shipping.important' => 1]);
+        $qs->filter(['shipping.important' => 1, new QAndNot(['group.shippingid' => ''])]);
+        $qs->group([]);
 
         return $qs->count();
     }
@@ -819,8 +820,15 @@ class OrderSearchStore extends BaseStore
         {
             $o_qs = clone $this->qs;
 
+            /** @var QuerySet $qs */
             $qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
-            $qs->filter(['order_id__in' => ($ids) ? $ids : $o_qs->select('orderid')]);
+
+            if ($ids) {
+                $qs->filter(['order_id__in' => $ids]);
+            }
+            else {
+                $qs->join('join', $o_qs->select('orderid')->order([])->allSql(), ['orders.orderid' => 'order_id'], 'orders');
+            }
 
             return $qs->count();
         }
