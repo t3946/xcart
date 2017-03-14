@@ -121,6 +121,11 @@
                     </select>
                 </td>
             </tr>
+            <tr>
+                <td width="25%">SKU to load inventory of this product on Amazon FBA</td>
+                <td width="*"><input style="width: 95%;" type="text" name="amazon_listing_sku_to_load" value="{$amazon_specific_details.amazon_listing_sku_to_load}"/>
+                </td>
+            </tr>
 
             <tr>
                 <td width="25%">longest_side</td>
