@@ -228,6 +228,7 @@ abstract class BasePagination
     {
         if (!in_array($this->getPageSize(), $this->pageSizes)) {
             $this->pageSizes[] = $this->getPageSize();
+            sort($this->pageSizes);
         }
 
         return $this->pageSizes;
