@@ -15,11 +15,11 @@ class HTMLShot extends Data
     public function createHTMLShot(Product $oProduct, $orderid)
     {
         global $xcart_dir;
-        $aImagesD = $oProduct->getImages('D');
+        $aImages = $oProduct->getImages('D');
         $aImagesP = $oProduct->getImages('P');
         /** @var ProductImage[] $aImages */
         if (!empty($aImagesP) && is_array($aImagesP)) {
-            $aImages = array_merge($aImagesD, $aImagesP);
+            $aImages = array_merge($aImages, $aImagesP);
         }
         $oStoreFront = $oProduct->getStoreFront();
 
