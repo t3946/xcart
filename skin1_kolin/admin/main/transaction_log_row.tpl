@@ -46,7 +46,7 @@
     <td class="transaction_action" colspan="7" data-transaction-id="{$v.id}">
         <span style="float: left; line-height: 22px;"><b>Available actions:</b></span>&nbsp;
         <input type="text" name="transaction_amount[{$v.id}]" id="transaction_amount_{$v.id}" size="6" value="{$v.transaction_amount}" />
-        <div class="ui teal buttons">
+        <div class="ui xcart buttons">
             <div data-action="look_up_payment" class="ui button lookup" style="border: 1px solid #808080;">Look up payment (Get links)</div>
             {if $v.unserialized_transaction_response.links ne ""}
                 <div style="border-color: #808080; border-image: none; border-style: solid solid solid none; border-width: 1px 1px 1px 0;" class="ui combo top right dropdown icon button">

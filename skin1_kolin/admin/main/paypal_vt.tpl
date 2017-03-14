@@ -344,7 +344,9 @@ function func_AJAX_authorize_PayPal() {
 
 <script src="{$SkinDir}/js/semantic/components/dropdown.js"></script>
 <script src="{$SkinDir}/js/semantic/components/transition.js"></script>
-<link rel="stylesheet" href="{$SkinDir}/css/semantic/semantic.css">
+<link rel="stylesheet" href="{$SkinDir}/js/semantic/components/dropdown.min.css">
+<link rel="stylesheet" href="{$SkinDir}/js/semantic/components/transition.min.css">
+<link rel="stylesheet" href="{$SkinDir}/js/semantic/components/button.min.css">
 {literal}
 <script>
     $('.dropdown').dropdown();
