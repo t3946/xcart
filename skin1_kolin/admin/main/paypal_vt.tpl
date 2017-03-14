@@ -350,18 +350,19 @@ function func_AJAX_authorize_PayPal() {
     $('.dropdown').dropdown();
     $('.toggle_transaction_multiple').click(function() {
         var button = $(this);
+        var tr_id = $(this).closest('tr').data('order-transaction');
         if (button.parent().hasClass('opened')){
-            button.closest('tr').siblings('tr.transaction_log').remove();
+            button.closest('tr').siblings('tr.transaction_log_'+tr_id).remove();
         } else {
             $.post('ajax_admin.php', {
                         ajax_action: 'get_transactions_log',
-                        order_transaction_id: $(this).closest('tr').data('order-transaction')
+                        order_transaction_id: tr_id
                     },
                     function (data) {
                         if (data){
                             if (button.parent().hasClass('opened')) {
                                 button.closest('tr')
-                                        .after($('<tr class="transaction_log"/>').html($('<td colspan="8"/>').css('padding-left', '20px').html(data)));
+                                        .after($('<tr class="transaction_log_'+tr_id+'"/>').html($('<td colspan="8"/>').css('padding-left', '20px').html(data)));
                             }
                         }
                     });

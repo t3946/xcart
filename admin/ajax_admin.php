@@ -650,7 +650,6 @@ function getTransactionLog($aParams = [])
                 ->filter([
                     'orderid' => $orderTransaction->orderid,
                     'transaction_id__in' => $in])
-                ->exclude(['id' => $orderTransaction->id])
                 ->order('date DESC')
                 ->all();
             if (!empty($aTransactionLogs)) {
