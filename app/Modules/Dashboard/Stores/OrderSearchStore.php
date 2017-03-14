@@ -725,7 +725,21 @@ class OrderSearchStore extends BaseStore
             }
 
             $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
-            $qs->order(['-shipping.important', 'date', 'orderid']);
+
+            $user = Xcart::app()->user;
+            if ($user->show_events)
+            {
+                /** @var QuerySet $qs */
+                $e_qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+
+                $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
+
+                $qs->order(['-shipping.important', '-events.count','date', 'orderid']);
+
+            }
+            else {
+                $qs->order(['-shipping.important', 'date', 'orderid']);
+            }
 
             $this->pager = new Pagination($qs, ['pageSize' => 25], new QuerySetDataSource());
         }
