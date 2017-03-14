@@ -2,6 +2,7 @@
 namespace Xcart\App\Application;
 
 use Exception;
+use Modules\User\Models\UserModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Exceptions\NotFoundHttpException;
@@ -20,12 +21,12 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Middleware\MiddlewareManager $middleware Middleware
  * @property \Xcart\App\Router\Router $router Url manager, router
  * @property \Xcart\App\Request\HttpRequest|\Xcart\App\Request\CliRequest $request Request
- * @property \Xcart\App\Request\Session $session Session
  * @property \Xcart\App\Template\TemplateManager $template Template manager
  * @property \Xcart\App\Interfaces\AuthInterface $auth Authorization component
  * @property \Xcart\App\Cache\Cache $cache Cache component
+ * @property \Xcart\App\Event\EventManager $event Event component
  * @property \Modules\Mail\Components\MailComponent $mail Mail component
- * @property $user
+ * @property UserModel $user
  * 
  * @package Xcart\App\Application
  */
@@ -34,18 +35,18 @@ class Application
     use ComponentsLibrary;
 
     public $name = 'Application';
-    public $exit_on_end = true;
+        public $exit_on_end = true;
 
-    protected $_modules = [];
-    protected $_modulesConfig = [];
+        protected $_modules = [];
+        protected $_modulesConfig = [];
 
-    public $autoloadComponents = [];
+        public $autoloadComponents = [];
 
-    public function init()
-    {
-        $this->_provideModuleEvent('onApplicationInit');
-        $this->setUpPaths();
-        $this->autoload();
+        public function init()
+        {
+            $this->_provideModuleEvent('onApplicationInit');
+            $this->setUpPaths();
+            $this->autoload();
     }
 
     public function setPaths($paths)
@@ -179,6 +180,9 @@ class Application
     public function end($status = 0, $response = null)
     {
         $this->_provideModuleEvent('onApplicationEnd', [$status, $response]);
+
+        $this->event->trigger('app:end');
+
         if ($this->exit_on_end) {
             exit($status);
         }

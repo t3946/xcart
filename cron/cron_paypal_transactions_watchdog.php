@@ -66,9 +66,7 @@ if (!empty($aOrderGroups)) {
             $oAttentionTag = new AttentionTag(['status_id' => 44]);
             if (!($oOrderGroup->getOrderInstance()->isAttentionTagSet($oAttentionTag->getStatusId()))) {
                 $aInsertArray = ['orderid' => $oOrderGroup->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
-                func_array2insert('orders_additional_tags', $aInsertArray, true);
-                $sLog = "Attention tag added: " . $oAttentionTag->getStatus() . "\n";
-                Logs::_log('orders', $oOrderGroup->getOrderId(), 'X', $sLog);
+                Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($oAttentionTag->getStatusId(), $oOrderGroup->getOrderId());
                 $sLog = "Difference in OrderId: " . $oOrderGroup->getOrderId() . ". TransactionsTotal(" . $fOrderGroupTotalAmount . ") - OrderTotal(" . $oOrderGroup->getOrderInstance()->getOrderTotalGross() . ")";
                 func_backprocess_log(LOG_CATEGORY, $sLog);
             }

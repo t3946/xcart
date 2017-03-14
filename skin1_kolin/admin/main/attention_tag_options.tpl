@@ -8,7 +8,7 @@
         <td width="10">Tag ID</td>
         <td width="5%">{$lng.lbl_pos}</td>
         <td width="*">Tag name / Description</td>
-        <td width="10%">Active</td>
+        <td width="10%">Active <br> Event trigger</td>
         <td width="40%">Login / action</td>
 </tr>
 
@@ -23,10 +23,15 @@
     <input type="text" name="posted_data[{$attention_tags_values[pg].status_id}][status]" value="{$attention_tags_values[pg].status|escape}" size="15" style="width: 96%;" />
     <textarea name="posted_data[{$attention_tags_values[pg].status_id}][description]" style="height: 44px;width: 96%;">{$attention_tags_values[pg].description|escape}</textarea>
 </td>
-<td align="center"><select name="posted_data[{$attention_tags_values[pg].status_id}][active]">
-<option value="Y"{if $attention_tags_values[pg].active eq "Y"} selected="selected"{/if}>{$lng.lbl_enabled}</option>
-<option value="N"{if $attention_tags_values[pg].active eq "N"} selected="selected"{/if}>{$lng.lbl_disabled}</option>
-</select>
+<td align="center">
+    <select name="posted_data[{$attention_tags_values[pg].status_id}][active]" style="width: 100px;">
+        <option value="Y"{if $attention_tags_values[pg].active eq "Y"} selected="selected"{/if}>{$lng.lbl_enabled}</option>
+        <option value="N"{if $attention_tags_values[pg].active eq "N"} selected="selected"{/if}>{$lng.lbl_disabled}</option>
+    </select>
+    <select name="posted_data[{$attention_tags_values[pg].status_id}][events]" style="width: 100px;">
+        <option value="0"{if $attention_tags_values[pg].events eq "0"} selected="selected"{/if}>None</option>
+        <option value="1"{if $attention_tags_values[pg].events eq "1"} selected="selected"{/if}>Trigger</option>
+    </select>
 </td>
 <td nowrap="nowrap">
   {if $attention_tags_values[pg].operators ne ""}

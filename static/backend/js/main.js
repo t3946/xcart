@@ -671,7 +671,18 @@ jQuery.fn.mfieldset = function (options) {
             triggers: {
                 refresh: 'dashboard:refresh'
             },
-            interval: 15000,
+            classes: {
+                enabled: 'button',
+                disabled: 'empty'
+            },
+            notify: {
+                lifetime: 20000,
+                titles : {
+                    new_events: 'Dashboard new events',
+                    err_refresh: 'Dashboard refresh error'
+                }
+            },
+            interval: 25000,
             selector: '.dashboard-filters a[data-id]'
         },
 
@@ -684,28 +695,85 @@ jQuery.fn.mfieldset = function (options) {
 
         },
         processData:function(data) {
+            var self = this;
+            var texts= [];
+            var notify = false;
 
             $(this.options.selector).each(function(){
                 var $this = $(this),
                     id = $this.data('id'),
                     count = parseInt($this.attr('data-count'));
 
-                if (data[id]) {
-                    if (data[id].count == count) {
-                        $this.find('.count').html(data[id].count);
+                if (data.filters[id]) {
+                    var data_filter = data.filters[id];
+
+                    if (data.filters[id]['count']['orders'] == count) {
+                        $this.find('.count').html(data.filters[id]['count']['orders']);
                     }
                     else {
-                        var c_chng = count - data[id].count;
-                        var sign = '+';
-                        if (c_chng < 0) {
-                            sign = '-';
+                        var count_events ='',
+                            sign = '',
+                            c_chng = data_filter['count']['orders'] - count;
+
+                        if (c_chng > 0) {
+                            sign = '+';
+                            notify = true;
                         }
 
-                        $this.attr('data-count', count);
+                        if (data.filters[id]['count']['events']) {
+                            count_events = '+' + data.filters[id]['count']['events'];
+                        }
+
+                        if (data.filters[id]['count']['priority']) {
+                            $this.find('.priority').removeClass('empty');
+                        }
+                        else {
+                            $this.find('.priority').addClass('empty');
+                        }
+
+                        $this.attr('data-count', data_filter['count']['orders']);
                         $this.find('.count').html(count + ' ' + sign + c_chng);
+                        $this.find('.events').html(count_events);
+                        $this.find('.priority').html(data.filters[id]['count']['priority']);
+
+                        if (data.filters[id].count > 0 && $this.hasClass(self.options.classes.disabled)) {
+                            $this.removeClass(self.options.classes.disabled);
+                            $this.addClass(self.options.classes.enabled);
+                        }
+                        else if (data.filters[id].count == 0 && $this.hasClass(self.options.classes.enabled)) {
+                            $this.removeClass(self.options.classes.enabled);
+                            $this.addClass(self.options.classes.disabled);
+                        }
+
+                        if (c_chng > 0) {
+                            data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.name_events').html() +')</a>';
+                        }
                     }
                 }
             });
+
+            if (notify)
+            {
+                for (var i in data.filters)
+                {
+                    if (data.filters[i]['notify_text']) {
+                        texts.push(data.filters[i]['notify_text'])
+                    }
+                }
+
+                if (texts.length)
+                {
+                    texts = texts.map(function(el){
+                        return '<li>'+el+'</li>';
+                    });
+
+                    $.mnotify({
+                        title: self.options.notify.titles.new_events,
+                        message: '<ul>'+texts.join('')+'</ul>'
+                    }, {lifetime: self.options.notify.lifetime});
+                }
+            }
+
 
             this.cycleRefresh();
         },
@@ -725,9 +793,11 @@ jQuery.fn.mfieldset = function (options) {
 
                 error: function (jqXHR, textStatus, errorThrown) {
                     $.mnotify({
-                        title: 'Dashboard refresh error',
+                        title: self.options.notify.titles.err_refresh,
                         message: jqXHR.responseText
                     });
+
+                    self.cycleRefresh();
                 }
             });
         },
@@ -949,5 +1019,16 @@ jQuery.fn.mfieldset = function (options) {
 
         });
 
+        $('.tabs .tabs-title a').on('click', function(e) {
+            e.preventDefault();
+
+            $('.tabs .tabs-title a').removeClass('active');
+            $('.tabs .tabs-content .tab').removeClass('active');
+
+            var id = $(this).addClass('active').attr('href');
+            $(id).addClass('active');
+        })
+
     });
+
 })();

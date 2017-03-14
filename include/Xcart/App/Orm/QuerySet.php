@@ -2,6 +2,8 @@
 
 namespace Xcart\App\Orm;
 
+use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QAnd;
 use Xcart\App\Orm\Exception\MultipleObjectsReturned;
 use Mindy\QueryBuilder\Aggregation\Aggregation;
 use Mindy\QueryBuilder\Aggregation\Avg;
@@ -12,9 +14,6 @@ use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOrNot;
 use Mindy\QueryBuilder\QueryBuilder;
-use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\ManyToManyField;
 
 /**
  * Class QuerySet
@@ -29,6 +28,8 @@ class QuerySet extends QuerySetBase
     protected $_group = [];
     protected $sql;
 
+    protected $_data;
+
     /**
      * Executes query and returns all results as an array.
      * If null, the DB connection returned by [[modelClass]] will be used.
@@ -36,18 +37,20 @@ class QuerySet extends QuerySetBase
      */
     public function all()
     {
-        $rows = [];
-        $sql = $this->sql === null ? $this->allSql() : $this->sql;
-
-        if ($statement = $this->getConnection()->query($sql)) {
-            $rows = $statement->fetchAll();
-
-            if ($this->asArray) {
-                return !empty($this->with) ? $this->populateWith($rows) : $rows;
-            }
+        if ($this->_data) {
+            $rows = $this->_data;
         }
         else {
-            x_log_add('PHP', 'QuerySet->All() - $statement is null',true);
+            $rows = [];
+            $sql = $this->sql === null ? $this->allSql() : $this->sql;
+
+            if ($statement = $this->getConnection()->query($sql)) {
+                $rows = $statement->fetchAll();
+            }
+        }
+
+        if ($this->asArray) {
+            return !empty($this->with) ? $this->populateWith($rows) : $rows;
         }
 
         return $this->createModels($rows);
@@ -88,8 +91,18 @@ class QuerySet extends QuerySetBase
      */
     public function valuesList($columns, $flat = false)
     {
-        $qb = clone $this->getQueryBuilder();
-        $rows = $this->getConnection()->query($qb->select($columns)->toSQL())->fetchAll();
+
+        if ($this->_data) {
+            $rows = $this->_data;
+        }
+        else {
+            $rows = [];
+            $qb = clone $this->getQueryBuilder();
+
+            if ($stmt = $this->getConnection()->query($qb->select($columns)->toSQL())) {
+                $rows = $stmt->fetchAll();
+            }
+        }
 
         if ($flat) {
             $flatArr = [];
@@ -280,6 +293,9 @@ class QuerySet extends QuerySetBase
                 else if ($value instanceof Manager || $value instanceof QuerySet) {
                     return $value->getQueryBuilder();
                 }
+                else if ($value instanceof Expression) {
+                    return new QAnd($value); //@TODO: Its bug... fix it.
+                }
                 return $value;
             }, $query);
         } else {
@@ -354,7 +370,7 @@ class QuerySet extends QuerySetBase
                     $direction = substr($value, 0, 1) === '-' ? '-' : '';
                     $column = substr($value, 1);
                     if ($this->getModel()->getMeta()->hasForeignField($column)) {
-                        return $direction . $column . '_id';
+                        return $direction . $column;
                     } else {
                         return $value;
                     }
@@ -634,7 +650,7 @@ class QuerySet extends QuerySetBase
 
     private function fieldAlias($field)
     {
-        if (strpos($field, '.') === false) {
+        if (!is_numeric($field) && strpos($field, '.') === false) {
             $field = $this->getTableAlias() .'.'. $field;
         }
         return $field;

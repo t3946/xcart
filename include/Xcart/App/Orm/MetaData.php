@@ -86,7 +86,7 @@ class MetaData
         foreach (call_user_func([$className, 'getFields']) as $name => $config) {
 
             $field = $this->createField($config);
-            $field->setName($name);
+            $field->setName((!empty($config['name'])) ? $config['name'] : $name);
             $field->setModelClass($className);
 
             $this->fields[$name] = $field;

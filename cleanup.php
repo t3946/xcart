@@ -1,4 +1,5 @@
 <?php
+define("CIDEV_CRON_START", "CRON");
 require "./top.inc.php";
 require "./init.php";
 

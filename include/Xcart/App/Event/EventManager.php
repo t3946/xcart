@@ -1,21 +1,9 @@
 <?php
-/**
- *
- *
- * All rights reserved.
- *
- * @author Okulov Anton
- * @email qantus@mail.ru
- * @version 1.0
- * @company HashStudio
- * @site http://hashstudio.ru
- * @date 16/06/16 09:05
- */
-
 namespace Xcart\App\Event;
 
 use InvalidArgumentException;
 use SplPriorityQueue;
+use Xcart\App\DataClasses\DataPriorityQueue;
 
 /**
  * Class EventManager
@@ -24,13 +12,31 @@ use SplPriorityQueue;
 class EventManager
 {
     /**
-     * @var SplPriorityQueue Events queue
+     * @var SplPriorityQueue|DataPriorityQueue Events queue
      */
     protected $_events;
 
+    /**
+     * @var array List events from config
+     */
+    public $events = [];
+
     public function __construct()
     {
-        $this->_events = new SplPriorityQueue;
+//        $this->_events = new SplPriorityQueue;
+        $this->_events = new DataPriorityQueue();
+    }
+
+    public function init()
+    {
+        if ($this->events) {
+            foreach ($this->events as $name => $group)
+            {
+                foreach ($group as $event) {
+                    $this->on($name, $event['callback'], (isset($event['sender']) ? $event['sender'] : null), (isset($event['priority'])? $event['priority'] : 0));
+                }
+            }
+        }
     }
 
     /**
