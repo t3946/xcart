@@ -1813,3 +1813,6 @@ div.ui.error.message ul.list{
 div.ui.error.message ul.list li {
 	list-style: none;
 }
+.transaction_action .item:hover {
+	background-color: #D9EAD3 !important;
+}

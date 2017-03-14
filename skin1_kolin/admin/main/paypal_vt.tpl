@@ -216,133 +216,9 @@ function func_AJAX_authorize_PayPal() {
 <input type="hidden" name="mode" id="mode" value="" />
 <input type="hidden" name="order_transaction_id" id="order_transaction_id" value="" />
 <input type="hidden" name="orderid" value="{$orderid}" />
-
- <table width="100%">
-  <tr>
-   <td width="12%"><B>Type</B></td>
-   <td width="10%"><B>Date</B></td>
-   <td width="15%"><B>Name</B></td>
-   <td width="*%"><B>Log</B></td>
-  </tr>
-
- {foreach from=$order_transactions item=v key=k}
-  <tr>
-   <td>{$v.payment_method}</td>
-   <td>{$v.date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
-   <td>{$v.firstname} ({$v.login})</td>
-   <td>
-        Transaction:
-        {if $v.transaction_id ne ""}
-
-{if $v.transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$v.transaction_id_link|substitute:"trans-id":$v.transaction_id}">{/if}
-{if $v.transaction_link_anchor ne ""}{$v.transaction_link_anchor}{else}{$v.transaction_id}{/if}{if $v.transaction_id_link ne ""}</a>{/if}
-
-{if $v.transaction_link_anchor ne ""}({$v.transaction_id}){/if}
-
-{if $v.manual_transaction eq "Y"}
- (Manually added)
-{/if}
-
-        {else}
-                NONE
-        {/if}
-        <br />
-        transaction_status: <B>{$v.transaction_status}</B><br />
-        transaction_currency: {$v.transaction_currency}<br />
-        transaction_total: {$v.transaction_amount}
-
-{if $v.issue ne ""}
-        <br />
-        <B>issue:</B> {$v.issue}
-{elseif $v.unserialized_transaction_response.message ne ""}
-                        <br />
-                        <B>message:</B> {$v.unserialized_transaction_response.message}
-{/if}
-
-
-{if $v.transaction_response ne ""}
-<script>
-//<![CDATA[
-{literal}
-$(document).ready(function(){
-    $('#show_hide_a_link_{/literal}{$k}{literal}').click(
-       function() {
-          $(this).text(function(i,text) { return (text == 'Show details') ? 'Hide details' : 'Show details'; });
-          $('#transactions_div_{/literal}{$k}{literal}').toggle('slow');
-          return false;
-       }
-    );
-});
-{/literal}
-//]]>
-</script>
-
-<br />
-<div id="transactions_div_{$k}" style="display: none;"><B>Full log:</B><br />{$v.transaction_response}</div>
-<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: func_show_hide_log('{$k}');" id="show_hide_a_link_{$k}">Show details</a>
-
-{/if}
-
-   </td>
-  </tr>
-
-  <tr>
-   <td colspan="4">
-
-    <input type="button" value="Look up payment (Get links)" onclick="javascript: $('#order_transaction_id').val('{$v.id}'); submitForm(this, 'look_up_payment');" />
-
-    {if $v.unserialized_transaction_response.links ne ""}
-
-
-	{assign var="show_transaction_amount_field" value="N"}
-
-	{foreach from=$v.unserialized_transaction_response.links item=link key=k_link}
-
-		{if $link.rel eq "self"}
-{*
-			<input type="button" value="Self" onclick="javascript: $('#order_transaction_id').val('{$v.id}'); submitForm(this, 'self_transaction');" />
-*}
-		{elseif $link.rel eq "refund"}
-			{assign var="show_transaction_amount_field" value="Y"}
-			<input type="button" value="Refund transaction" onclick="javascript: $('#order_transaction_id').val('{$v.id}'); submitForm(this, 'refund_transaction');" /> 
-{*
-{$lng.lbl_refund_transaction_txt} - not added yet br />
-*}
-	
-		{elseif $link.rel eq "void"}
-			<input type="button" value="Void authorized transaction" onclick="javascript: $('#order_transaction_id').val('{$v.id}'); submitForm(this, 'void_transaction');" />
-{*
- {$lng.lbl_void_transaction_txt} <br />
-*}
-		{elseif $link.rel eq "capture"}
-			{assign var="show_transaction_amount_field" value="Y"}
-			<input type="button" value="Capture selected authorized transaction" onclick="javascript: $('#order_transaction_id').val('{$v.id}'); submitForm(this, 'capture_transaction');" /> 
-{*
-{$lng.lbl_capture_transaction_txt} <br />
-*}
-		{elseif $link.rel eq "reauthorize"}
-			{assign var="show_transaction_amount_field" value="Y"}
-			<input type="button" value="RE-authorize selected transaction" onclick="javascript: $('#order_transaction_id').val('{$v.id}'); submitForm(this, 're_authorize_transaction');" /> 
-{*
-{$lng.lbl_re_authorize_transaction_txt}
-*}
-		{/if}
-
-	{/foreach}
-
-	{if $show_transaction_amount_field eq "Y"}
-<input type="text" name="transaction_amount[{$v.id}]" id="transaction_amount_{$v.id}" size="6" value="{$v.transaction_amount}" />
-	{/if}
-
-    {/if}
-
-   </td>
-  </tr>
-
-  <tr><td colspan="4"><hr /></td></tr>
- {/foreach}
-
- </table>
+    {assign var='main_transaction' value=true}
+    {include file="admin/main/transactions_table.tpl"}
+    {assign var='main_transaction' value=false}
 </form>
 
 <table align="right" cellspacing="1" cellpadding="1">
@@ -397,108 +273,7 @@ $(document).ready(function(){
 <form action="order.php" method="post" name="vt_form02">
 <input type="hidden" name="mode" id="mode" value="" />
 <input type="hidden" name="orderid" value="{$orderid}" />
-
- <table width="100%">
-  <tr>
-{*   <td width="12%"><B>Select</B></td>*}
-   <td width="12%"><B>Type</B></td>
-   <td width="10%"><B>Date</B></td>
-   <td width="15%"><B>Name</B></td>
-   <td width="*%"><B>Log</B></td>
-  </tr>
-
- {foreach from=$transaction_logs item=v key=k}
-  <tr>
-{*
-   <td>
-	{if $v.transaction_id ne ""} 
-	<input type="radio" id="transaction_logs_id" name="transaction_logs_id" value="{$v.id}"
-		checked="checked"
-		{assign var="transaction_id_selected" value="Y"}
-	/>
-	{/if} 
-   </td>
-*}
-   <td>{$v.payment_method}</td>
-   <td>{$v.date|date_format:'%d-%b-%Y<br />%H:%M:%S'}</td>
-   <td>{$v.firstname} ({$v.login})</td>
-   <td>
-	Transaction: 
-	{if $v.transaction_id ne ""}
-
-{if $v.transaction_id_link ne ""}<a target="_blank" style="color: #1411FF;" href="{$v.transaction_id_link|substitute:"trans-id":$v.transaction_id}">{/if}
-{if $v.transaction_link_anchor ne ""}{$v.transaction_link_anchor}{else}{$v.transaction_id}{/if}{if $v.transaction_id_link ne ""}</a>{/if}
-
-{if $v.transaction_link_anchor ne ""}({$v.transaction_id}){/if}
-
-{if $v.unserialized_transaction_log.FIELD_manual_transaction eq "Y"}
- (Manually added)
-{/if}
-
-	{else}
-		NONE
-	{/if}
-	<br />
-	transaction_status: <B>{$v.transaction_status}</B><br />
-	transaction_currency: {$v.transaction_currency}<br />
-	transaction_total: {$v.transaction_total}
-
-{if $v.issue ne ""}
-	<br />
-	<B>issue:</B> {$v.issue}
-{elseif $v.unserialized_transaction_log.message ne ""}
-                        <br />
-                        <B>message:</B> {$v.unserialized_transaction_log.message}
-{/if}
-
-
-{if $v.transaction_log ne ""}
-<script>
-//<![CDATA[
-{literal}
-$(document).ready(function(){
-    $('#show_hide_link_{/literal}{$k}{literal}').click(
-       function() {
-          $(this).text(function(i,text) { return (text == 'Show details') ? 'Hide details' : 'Show details'; });
-          $('#transaction_log_div_{/literal}{$k}{literal}').toggle('slow');
-          return false;
-       }
-    );
-});
-{/literal}
-//]]>
-</script>
-
-<br />
-<div id="transaction_log_div_{$k}" style="display: none;"><B>Full log:</B><br />{$v.transaction_log}</div>
-<a href="javascript: void(0);" style="color: #1411FF;" onclick="javascript: func_show_hide_log('{$k}');" id="show_hide_link_{$k}">Show details</a>
-
-{/if}
-
-   </td>
-  </tr>
-  <tr><td colspan="4"><hr /></td></tr>
- {/foreach}
-
-{*
- {if $transaction_id_selected eq "Y"}
-  <tr>
-   <td colspan="4">
-<input type="button" value="Void selected authorized transaction" onclick="javascript: submitForm(this, 'void_transaction');" /> {$lng.lbl_void_transaction_txt}
-<br />
-<input type="button" value="Capture selected authorized transaction" onclick="javascript: submitForm(this, 'capture_transaction');" /> {$lng.lbl_capture_transaction_txt}
-   </td>
-  </tr>
-  <tr>
-   <td colspan="4">
-<input type="text" name="re_authorize_amount" id="re_authorize_amount" size="6" value="" />
-<input type="button" value="RE-authorize selected transaction" onclick="javascript: submitForm(this, 're_authorize_transaction');" /> {$lng.lbl_re_authorize_transaction_txt}
-   </td>
-  </tr>
- {/if}
-*}
-
- </table>
+    {include file="admin/main/transactions_table.tpl" order_transactions=$transaction_logs}
 </form>
 
 {/capture}
@@ -567,3 +342,50 @@ $(document).ready(function(){
 {/capture}
 {include file="dialog.tpl" title="Add manual transaction" content=$smarty.capture.add_manual_transaction extra='width="100%"'}
 
+<script src="{$SkinDir}/js/semantic/components/dropdown.js"></script>
+<script src="{$SkinDir}/js/semantic/components/transition.js"></script>
+<link rel="stylesheet" href="{$SkinDir}/css/semantic/semantic.css">
+{literal}
+<script>
+    $('.dropdown').dropdown();
+    $('.toggle_transaction_multiple').click(function() {
+        var button = $(this);
+        var tr_id = $(this).closest('tr').data('order-transaction');
+        if (button.parent().hasClass('opened')){
+            button.closest('tr').siblings('tr.transaction_log_'+tr_id).remove();
+        } else {
+            $.post('ajax_admin.php', {
+                        ajax_action: 'get_transactions_log',
+                        order_transaction_id: tr_id
+                    },
+                    function (data) {
+                        if (data){
+                            if (button.parent().hasClass('opened')) {
+                                button.closest('tr')
+                                        .after($('<tr class="transaction_log_'+tr_id+'"/>').html($('<td colspan="8"/>').css('padding-left', '20px').html(data)));
+                            }
+                        }
+                    });
+        }
+        button.hide();
+        button.siblings('.toggle_transaction_multiple').show();
+        button.parent().toggleClass('opened');
+        return false;
+    });
+    $('.transaction_info_table').on('click','.show_hide_link',
+            function() {
+                $(this).text(function(i,text) {
+                    return (text == 'Show details') ? 'Hide details' : 'Show details';
+                });
+                $(this).prev('.transaction_log_div').toggle('slow');
+                return false;
+            }
+    );
+    $('.transaction_info_table .dropdown .item, .transaction_info_table .lookup').click(function() {
+        var form = $(this).closest('form');
+        form.find('#order_transaction_id').val($(this).closest('td.transaction_action').data('transaction-id'))
+            .end().find('#mode').val($(this).data('action'))
+            .end().submit();
+    })
+</script>
+{/literal}
