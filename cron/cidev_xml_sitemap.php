@@ -6,8 +6,6 @@ define("CIDEV_CRON_START", "CRON");
 require "../top.inc.php";
 require "../init.php";
 
-x_load('backoffice','files','taxes', 'product', 'debug');
-
 ini_set('memory_limit', '512M');
 set_time_limit(0);
 
@@ -16,7 +14,6 @@ $sql_tbl['xmlmap_extra']   = 'xcart_xmlmap_extra';
 $sql_tbl['xmlmap_lastmod'] = 'xcart_xmlmap_lastmod';
 // Config adjustment
 $config['XML_Sitemap']['filename'] = 'sitemap.xml';
-
 
 $cidev_storefronts = $storefronts;
 
