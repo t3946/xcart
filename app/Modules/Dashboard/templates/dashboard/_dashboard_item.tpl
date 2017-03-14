@@ -18,7 +18,7 @@
                     <span class="{if $model->bold}bold{/if} filter_name">{$model}</span>
                     (<span class="count">{$model->getSearchStorage()->getCashedCount()}</span>)
 
-                    <span class="priority">
+                    <span class="priority {if !$model->getSearchStorage()->getCachedPrioritySHippingCount()}empty{/if}">
                         {if $model->getSearchStorage()->getCachedPrioritySHippingCount()}
                             {$model->getSearchStorage()->getCachedPrioritySHippingCount()}
                         {/if}
