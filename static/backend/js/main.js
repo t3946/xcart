@@ -683,7 +683,8 @@ jQuery.fn.mfieldset = function (options) {
                 }
             },
             interval: 25000,
-            selector: '.dashboard-filters a[data-id]'
+            selector: '.dashboard-filters a[data-id]',
+            questionSelector: '.admin .question_products'
         },
 
         __stop: false,
@@ -698,6 +699,8 @@ jQuery.fn.mfieldset = function (options) {
             var self = this;
             var texts= [];
             var notify = false;
+
+            $(this.options.questionSelector).html(data.questions);
 
             $(this.options.selector).each(function(){
                 var $this = $(this),
@@ -746,7 +749,7 @@ jQuery.fn.mfieldset = function (options) {
                         }
 
                         if (c_chng > 0) {
-                            data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.name_events').html() +')</a>';
+                            data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.name_events').html() +'</a>';
                         }
                     }
                 }

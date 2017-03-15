@@ -1,4 +1,6 @@
 <?php
+use Xcart\ProductImage;
+
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
@@ -9,7 +11,7 @@ if ($config["cidev_image_generator"] == "Y"){
 	$log_text = "--- already launched";
 	func_backprocess_log("image generator", $log_text);
 
-//        die("Already launched"); // ################################
+        die("Already launched"); // ################################
 }
 db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cidev_image_generator'");
 //db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cidev_image_generator'");
@@ -109,8 +111,9 @@ while ($product = db_fetch_array($products)){
 		if (func_generate_image($product["productid"], 'D', 'T', false, false, $image_id)) {
 			func_save_product_thumb_image($product["productid"], 'T');
 		} else {
-			$log_text = 'Error generate thumbnail. Delete image file ' . $image_data['image_path'] . ' from ' . $product['productcode'];
-
+			$log_text = $image_id.' - Error generate thumbnail. Delete image file ' . $image_data['image_path'] . ' from ' . $product['productcode'];
+			unlink($image_data['image_path']);
+			(new ProductImage('D',['imageid' => $image_id]))->_delete();
 			func_backprocess_log("image generator", $log_text);
 		}
 	}
@@ -119,7 +122,9 @@ while ($product = db_fetch_array($products)){
 		if (func_generate_image($product["productid"], 'D', 'P', false, false, $image_id)) {
 			func_save_product_thumb_image($product["productid"], 'P');
 		} else {
-			$log_text = 'Error generate thumbnail. Delete image file ' . $image_data['image_path'] . ' from ' . $product['productcode'];
+			$log_text = $image_id.' - Error generate thumbnail. Delete image file ' . $image_data['image_path'] . ' from ' . $product['productcode'];
+			unlink($image_data['image_path']);
+			(new ProductImage('D',['imageid' => $image_id]))->_delete();
 			func_backprocess_log("image generator", $log_text);
 		}
 	}

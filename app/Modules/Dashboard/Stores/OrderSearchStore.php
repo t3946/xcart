@@ -10,6 +10,7 @@ use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
+use Modules\Product\Models\ProductQuestionModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -56,14 +57,7 @@ class OrderSearchStore extends BaseStore
 
     public static function getQuestionStatuses()
     {
-        return [
-            "question_received_from_cust"  => "Question received from customer",
-            "question_sent_to_distr_brand" => "Question sent to distributor/brand",
-            "call_distributor_brand"       => "Call distributor/brand",
-            "answer_sent_to_cust"          => "Answer sent to customer",
-            "order_pending"                => "Order pending",
-            "closed"                       => "Closed",
-        ];
+        return ProductQuestionModel::getFields()['status']['choices'];
     }
 
     public function __construct($data, $fid = null)
@@ -731,7 +725,21 @@ class OrderSearchStore extends BaseStore
             }
 
             $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
-            $qs->order(['-shipping.important', 'date', 'orderid']);
+
+            $user = Xcart::app()->user;
+            if ($user->show_events)
+            {
+                /** @var QuerySet $qs */
+                $e_qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+
+                $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
+
+                $qs->order(['-shipping.important', '-events.count','date', 'orderid']);
+
+            }
+            else {
+                $qs->order(['-shipping.important', 'date', 'orderid']);
+            }
 
             $this->pager = new Pagination($qs, ['pageSize' => 25], new QuerySetDataSource());
         }
@@ -748,7 +756,8 @@ class OrderSearchStore extends BaseStore
         $qs = clone $this->qs;
         $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
         $qs->join('inner join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
-        $qs->filter(['shipping.important' => 1]);
+        $qs->filter(['shipping.important' => 1, new QAndNot(['group.shippingid' => ''])]);
+        $qs->group([]);
 
         return $qs->count();
     }
@@ -825,8 +834,15 @@ class OrderSearchStore extends BaseStore
         {
             $o_qs = clone $this->qs;
 
+            /** @var QuerySet $qs */
             $qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
-            $qs->filter(['order_id__in' => ($ids) ? $ids : $o_qs->select('orderid')]);
+
+            if ($ids) {
+                $qs->filter(['order_id__in' => $ids]);
+            }
+            else {
+                $qs->join('join', $o_qs->select('orderid')->order([])->allSql(), ['orders.orderid' => 'order_id'], 'orders');
+            }
 
             return $qs->count();
         }

@@ -192,27 +192,12 @@ function managedate(type, status) {
 {foreach from=$product_questions item=v key=k}
 
 {if $v.status ne ""}
+	{math equation="x+1" x=$tmp_counter assign="tmp_counter"}
 
-{*
- {if $tmp_counter eq "0"}
-  <tr>
- {/if}
-*}
- {math equation="x+1" x=$tmp_counter assign="tmp_counter"}
-
-  <td width="20%" align="center" nowrap="nowrap">
-<a target="_blank" href="product_question_search.php?mode=search&status={$v.status}&from_dashboard=Y">{$product_question_statuses[$v.status]} ({$v.count})</a>
-  </td>
-
-{*
- {if $tmp_counter eq "5"}
-  </tr>
-  {assign var="tmp_counter" value=0}
- {/if}
-*}
-
+	<td width="20%" align="center" nowrap="nowrap">
+		<a target="_blank" href="product_question_search.php?mode=search&status={$v.status}&from_dashboard=Y">{$product_question_statuses[$v.status]} ({$v.count})</a>
+	</td>
 {/if}
-
 {/foreach}
 </tr>
 
