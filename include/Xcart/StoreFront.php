@@ -83,7 +83,7 @@ class StoreFront extends Data
         return $this->getField('domain');
     }
 
-    public function getStoreFrontURL($protocol = 'http://')
+    public function getStoreFrontURL($protocol = '//')
     {
         return $protocol.$this->getDomain();
     }

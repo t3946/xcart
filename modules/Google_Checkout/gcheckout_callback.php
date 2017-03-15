@@ -518,9 +518,10 @@ OUT;
 				$profile_values['login'] = func_generate_anonymous_username();
 				$profile_values['password'] = addslashes(md5(uniqid(rand())));
 				$profile_values['usertype'] = 'C';
-				@func_array2insert('customers', $profile_values);
-				if (db_affected_rows() > 0)
+				$res = @func_array2insert('customers', $profile_values);
+				if ($res) {
 					break;
+				}
 				if ($_index > 10) {
 					x_log_flag('log_payment_processing_errors', 'PAYMENTS', "Google checkout payment module: Cannot create a user profile.", true);
 					exit;

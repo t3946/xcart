@@ -22,11 +22,7 @@
 		{$lng.txt_N_results_found|substitute:"items":0}
 	{/if}
 
-	{if $products_template eq "products_new_style"}
-		{include file="customer/main/products_new_style.tpl"}
-	{else}
-		{include file="customer/main/products.tpl"}
-	{/if}
+	{include file="customer/main/products.tpl"}
 {else}
 
 	{if $ajax_navigation_page eq ""}

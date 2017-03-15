@@ -123,7 +123,7 @@ _product_wholesale[{$k}][3][{$kt}] = {$t|default:0};
 {/if}
 
 var product_image = new Image();
-product_image.src = "{if $product.tmbn_url}{$product.tmbn_url}{else}{if $full_url}{$http_location}{else}{$xcart_web_dir}{/if}/image.php?id={$product.productid}&type={if $product.is_image}P{else}T{/if}{/if}";
+product_image.src = "{include file="product_image_src.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$product.product tmbn_url=$product.tmbn_url id="product_thumbnail" type="P"}";
 var exception_msg = "{$lng.txt_exception_warning|strip_tags|escape:javascript}!";
 var exception_msg_html = "{$lng.txt_exception_warning|escape:javascript}!";
 var txt_out_of_stock = "{$lng.txt_out_of_stock|strip_tags|escape:javascript}";

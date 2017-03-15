@@ -105,6 +105,7 @@ if (!empty($configuration)) {
 	  'search_all_website_show' => 80,
 	  'shop_closed'      => 90,
 	  'new_shipping_calculation' => 990,
+	  'enable_https' => 2000,
 	);
 
 	foreach ($configuration as $k => $v) {

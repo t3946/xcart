@@ -4,10 +4,14 @@
 <center>
 {section name=image loop=$images}
 {if $images[image].avail eq "Y"}
+	{assign var="imagePath" value=$xcart_web_dir}
+	{if $config.Appearance.CDN_domain ne "" && $config.Appearance.Enable_CDN eq "Y"}
+		{assign var="imagePath" value="//`$config.Appearance.CDN_domain`"}
+	{/if}
 {if $images[image].tmbn_url}
-<img {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{$images[image].tmbn_url}" alt="{$images[image].alt|escape}" style="padding-bottom: 10px;  max-width: {$config.Appearance.max_width_det_img}px; max-height: {$config.Appearance.max_height_det_img}px;" />
+<img {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{$imagePath}{$images[image].tmbn_url}" alt="{$images[image].alt|escape}" style="padding-bottom: 10px;  max-width: {$config.Appearance.max_width_det_img}px; max-height: {$config.Appearance.max_height_det_img}px;" />
 {else}
-<img {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{$xcart_web_dir}/image.php?id={$images[image].imageid}&amp;type=D" alt="{$images[image].alt|escape}" style="padding-bottom: 10px;" />
+<img {if $use_schema_org eq "Y"} id="so_image" itemprop="image"{/if} src="{$imagePath}/image.php?id={$images[image].imageid}&amp;type=D" alt="{$images[image].alt|escape}" style="padding-bottom: 10px;" />
 {/if}
 <br />
 {/if}

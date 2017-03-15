@@ -50,7 +50,7 @@ function GetGooglePrice($fproduct){
 }
 
 function GetGoogleBaseOneRow($productid, $scrip_name="", $sExtraLog = "N"){
-	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location, $xcart_states_US, $aManufacturerZones;
+	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location, $xcart_states_US, $aManufacturerZones, $HTTPS;
 
 $start_time = round(microtime(true) * 1000);
 
@@ -576,19 +576,19 @@ if ($sExtraLog=='Y')
 	}
 
 	if ($sf_info["config"]["Appearance"]["Enable_CDN"]=="Y" && !empty($sf_info["config"]["Appearance"]["CDN_domain"])){
-                $tmbn = str_replace($sf_info["domain"], $sf_info["config"]["Appearance"]["CDN_domain"], $tmbn);
-                $tmbn = str_replace("www.artistsupplysource.com", $sf_info["config"]["Appearance"]["CDN_domain"], $tmbn);
-
-                $additional_image_link = str_replace($sf_info["domain"], $sf_info["config"]["Appearance"]["CDN_domain"], $additional_image_link);
-                $additional_image_link = str_replace("www.artistsupplysource.com", $sf_info["config"]["Appearance"]["CDN_domain"], $additional_image_link);
+		$imgurl = (($sf_info["config"]["Appearance"]['https_enabled']=='Y') ? 'https://' : 'http://') . $sf_info["config"]["Appearance"]["CDN_domain"];
+	} else {
+		$imgurl = ($sf_info["config"]["Appearance"]['https_enabled']=='Y') ? $https_location : $http_location;
 	}
-
-
+	if (!empty($tmbn)) {
+		$tmbn = $imgurl . $tmbn;
+	} else {
+		$tmbn = $imgurl . "/default_image.gif";
+	}
+	if (!empty($additional_image_link)) {
+		$additional_image_link = $imgurl . $additional_image_link;
+	}
 	$tmp_image_link = $tmbn;
-	if (empty($tmp_image_link)){
-		$tmp_image_link = $product['froogle_location'] . "/default_image.gif";
-	}
-
 	$product['image_link'] = $tmp_image_link;
 
 	if (empty($product['weight'])){
