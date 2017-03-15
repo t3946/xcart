@@ -29,6 +29,7 @@ class OrderSearchStore extends BaseStore
     private $qs;
     /** @var Pagination */
     private $pager;
+    private $order;
     private $fid = null;
 
     public $defaultPagerPageSize = 25;
@@ -74,6 +75,17 @@ class OrderSearchStore extends BaseStore
         $clone = clone $this;
         $clone->qs = clone $this->qs;
         return $clone;
+    }
+
+    public function setOrder(array $order = [])
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    public function getOrder()
+    {
+        return $this->order;
     }
 
     /**
@@ -748,6 +760,10 @@ class OrderSearchStore extends BaseStore
             $qs->order(['-shipping.important', 'date', 'orderid']);
         }
 
+        if ($this->order) {
+            $qs->order($this->order);
+        }
+
         return $qs;
     }
 
@@ -756,6 +772,7 @@ class OrderSearchStore extends BaseStore
         if (!$this->pager) {
             $this->pager = new Pagination($this->getQSWithSorting(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
         }
+
         return $this->pager;
     }
 
