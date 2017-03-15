@@ -54,7 +54,9 @@
 
         <tr class="{$cycle_class} title">
             <td>
-                <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">{$order->orderid}</a>
+                <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">
+                    {$order->order_prefix}{$order->orderid}
+                </a>
             </td>
             <td align="center">
                 {foreach $fraud_statuses as $status}
