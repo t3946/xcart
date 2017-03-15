@@ -171,7 +171,7 @@ function send_question_email_form(){
 *}
 
 <div id="so_o_seller" itemprop="seller" itemscope="" itemtype="http://schema.org/Organization">
-	<meta itemprop="logo" content="http://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
+	<meta itemprop="logo" content="{$current_location}/skin1_kolin/images/S3-Stores-Logo-S2.png"/>
 	<meta itemprop="url" content="http://www.s3stores.com/"/>
 	<meta itemprop="name" content="S3 Stores Inc."/>
 </div>
