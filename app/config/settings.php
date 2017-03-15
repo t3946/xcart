@@ -12,6 +12,7 @@ return array_replace_recursive([
        'Core',
        'Dashboard',
        'Distributor',
+       'Product',
        'Order',
        'Shipping',
        'User',
