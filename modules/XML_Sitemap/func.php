@@ -122,7 +122,10 @@ ini_set('memory_limit', -1);
 
 		unset($items);
 		if (!empty($spec['items_query'])){
-			$items = func_query(sprintf($spec['items_query'], $spec['url_pattern'], $spec['lastmod']));
+			$q = sprintf($spec['items_query'], $spec['url_pattern'], $spec['lastmod']);
+			if (!empty($q)) {
+				$items = func_query($q);
+			}
 
 //func_print_r($items);
 		}
