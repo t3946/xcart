@@ -112,7 +112,9 @@ while ($product = db_fetch_array($products)){
 			func_save_product_thumb_image($product["productid"], 'T');
 		} else {
 			$log_text = $image_id.' - Error generate thumbnail. Delete image file ' . $image_data['image_path'] . ' from ' . $product['productcode'];
-			unlink($image_data['image_path']);
+			if (file_exists($image_data['image_path'])) {
+				unlink($image_data['image_path']);
+			}
 			(new ProductImage('D',['imageid' => $image_id]))->_delete();
 			func_backprocess_log("image generator", $log_text);
 		}
@@ -123,7 +125,9 @@ while ($product = db_fetch_array($products)){
 			func_save_product_thumb_image($product["productid"], 'P');
 		} else {
 			$log_text = $image_id.' - Error generate thumbnail. Delete image file ' . $image_data['image_path'] . ' from ' . $product['productcode'];
-			unlink($image_data['image_path']);
+			if (file_exists($image_data['image_path'])) {
+				unlink($image_data['image_path']);
+			}
 			(new ProductImage('D',['imageid' => $image_id]))->_delete();
 			func_backprocess_log("image generator", $log_text);
 		}
