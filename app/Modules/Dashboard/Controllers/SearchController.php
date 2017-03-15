@@ -44,8 +44,10 @@ class SearchController extends PrototypeAdminController
         $form_data['new_list'] = $session->get('search_new_template', 1);
 
         $orderStore = new OrderSearchStore($form_data);
-        $models     = $orderStore->getModels();
-        $pager      = $orderStore->getPager();
+        $orderStore->setOrder(['-date', '-orderid']);
+
+        $models = $orderStore->getModels();
+        $pager = $orderStore->getPager();
 
         if (empty($models)) {
             $form_collapse = false;
