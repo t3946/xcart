@@ -68,8 +68,17 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
 //if (defined('AREA_TYPE') && AREA_TYPE == 'C' && \Xcart\App\Main\Xcart::app()->getIsWebMode()) {
 //    \Xcart\App\Main\Xcart::app()->request->session->getIsActive(); //@TODO: ������� ��� ������������� ������� ������
 //}
-
-Xcart\Connection::getInstanceFromApp()->connect();
+#
+# Initialize logging
+#
+@require_once $xcart_dir . "/include/logging.php";
+try {
+    Xcart\Connection::getInstanceFromApp()->connect();
+}
+catch (Exception $e) {
+    x_log_add('SQL', $e->getMessage(), true);
+    die("Sorry, the shop is inaccessible temporarily. Please try again later.");
+}
 
 $file_temp_dir = $var_dirs["tmp"];
 
@@ -487,10 +496,7 @@ foreach ($var_dirs as $k => $v) {
     }
 }
 
-#
-# Initialize logging
-#
-@require_once $xcart_dir . "/include/logging.php";
+
 
 #
 # Create Smarty object
