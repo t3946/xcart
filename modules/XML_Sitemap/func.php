@@ -84,35 +84,23 @@ function xmlmap_delete_lastmod()
  */
 function xmlmap_generate($cron = "", $cron_storefrontid = "")
 {
-ini_set('memory_limit', -1);
+	ini_set('memory_limit', -1);
 
 	if ($cron != "Y")
-	func_display_service_header();
-	
+		func_display_service_header();
+
 	global $config, $xcart_dir, $sql_tbl;
 
+	global $current_storefront;
 
-        global $current_storefront;
-
-#
-##
-###
-        if ($cron_storefrontid != ""){
-                $current_storefront = $cron_storefrontid;
-        }
-###
-##
-#
-        $current_storefront_info = func_get_storefront_info($current_storefront, 'ID', true);
-        $current_storefront_info['domain'] = strtolower($current_storefront_info['domain']);
-
+	if ($cron_storefrontid != "") {
+		$current_storefront = $cron_storefrontid;
+	}
+	$current_storefront_info = func_get_storefront_info($current_storefront, 'ID', true);
+	$current_storefront_info['domain'] = strtolower($current_storefront_info['domain']);
 
 	$cur_date = date("Y-m-d");
 
-
-//func_print_r($current_storefront_info);
-//die();
-	
 	$prepared_items = array();
 
 	foreach ($config['XML_Sitemap']['items'] as $spec) {
@@ -121,74 +109,63 @@ ini_set('memory_limit', -1);
 		// execute a query from specification to collect all items
 
 		unset($items);
-		if (!empty($spec['items_query'])){
-			$items = func_query(sprintf($spec['items_query'], $spec['url_pattern'], $spec['lastmod']));
-
-//func_print_r($items);
+		if (!empty($spec['items_query'])) {
+			$q = sprintf($spec['items_query'], $spec['url_pattern'], $spec['lastmod']);
+			if (!empty($q)) {
+				$items = func_query($q);
+			}
 		}
-
-
-
-#
-##
-###
 		if (!empty($items) && is_array($items)) {
-			foreach ($items as $k => $v){
-				if (!empty($v["id"]) && ($spec["type"] == "C" || $spec["type"] == "P" || $spec["type"] == "M" || $spec["type"] == "S" || $spec["type"] == "B")){
+			foreach ($items as $k => $v) {
+				if (!empty($v["id"]) && ($spec["type"] == "C" || $spec["type"] == "P" || $spec["type"] == "M" || $spec["type"] == "S" || $spec["type"] == "B")) {
 
 					$resource_type = $spec["type"];
-					if ($resource_type == "B"){
+					if ($resource_type == "B") {
 						$resource_type = "M";
 					}
 
 					$clean_url_link = func_query_first_cell("SELECT SQL_NO_CACHE clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='$resource_type' AND resource_id='$v[id]'");
-					if (!empty($clean_url_link)){
-						$items[$k]["url"] = $clean_url_link."/";
+						if (!empty($clean_url_link)) {
+						$items[$k]["url"] = $clean_url_link . "/";
 					}
 				}
 			}
 		}
 
-
-		if ($spec["type"] == "K"){
+		if ($spec["type"] == "K") {
 			$items = array();
 			$tmp_item_counter = 0;
 
-	                $full_path_to_sitemap_keywords_file = $xcart_dir."/files/".$current_storefront_info["domain"]."/sitemap_keywords.csv";
+			$full_path_to_sitemap_keywords_file = $xcart_dir . "/files/" . $current_storefront_info["domain"] . "/sitemap_keywords.csv";
 
-			if (is_file($full_path_to_sitemap_keywords_file)){
+			if (is_file($full_path_to_sitemap_keywords_file)) {
 
-        	                $handle = @fopen($full_path_to_sitemap_keywords_file, "r");
-	                        if ($handle) {
+				$handle = @fopen($full_path_to_sitemap_keywords_file, "r");
+				if ($handle) {
 
 					while (($str = fgets($handle, 4096)) !== false) {
 						$str = preg_replace("/[^0-9a-zA-Z\.\'\-]/S", " ", $str);
 						$str = trim($str);
 						$str = strtolower($str);
 						$str = str_replace(" ", "-", $str);
-						$str = "keyword/".$str."/";
+						$str = "keyword/" . $str . "/";
 
 						$items[$tmp_item_counter]["url"] = $str;
 						$items[$tmp_item_counter]["id"] = $tmp_item_counter + 1;
 						$items[$tmp_item_counter]["date"] = $cur_date;
 						$tmp_item_counter++;
 					}
-
-//func_print_r($items);
-                        		if (!feof($handle)) {
-                	                	echo "Error: unexpected fgets() fail\n";
-	      	                	}
-	                        	fclose($handle);
+					if (!feof($handle)) {
+						echo "Error: unexpected fgets() fail\n";
+					}
+					fclose($handle);
 				}
 
 			}
 		}
-###
-##
-#
 
 		if (!empty($items)) {
-			func_flush(func_get_langvar_by_name('xmlmap_log_itemsfound', array('count' => count((array) $items)), false, true));
+			func_flush(func_get_langvar_by_name('xmlmap_log_itemsfound', array('count' => count((array)$items)), false, true));
 			func_flush(func_get_langvar_by_name('xmlmap_log_itemsprepare', null, false, true));
 			$items = xmlmap_prepare_items($spec, $items);
 		} else {
@@ -196,7 +173,7 @@ ini_set('memory_limit', -1);
 			func_flush(func_get_langvar_by_name('xmlmap_log_gotonext', null, false, true));
 			continue;
 		}
-		
+
 		if (!empty($items)) {
 			func_flush(func_get_langvar_by_name('xmlmap_log_itemsmerge', null, false, true));
 			$prepared_items = array_merge($prepared_items, $items);
@@ -206,49 +183,28 @@ ini_set('memory_limit', -1);
 			continue;
 		}
 	}
-	
+
 	if (!empty($prepared_items)) {
 
 		func_flush(func_get_langvar_by_name('xmlmap_log_generatexml', null, false, true));
-		global $smarty;	
-        
+		global $smarty;
+		$chunks = array_chunk($prepared_items, 25000);
+		$n = count($chunks);
+		$xml_files = array();
+		$smarty->assign('current_storefront_info', $current_storefront_info);
+		$smarty->assign('cur_date', $cur_date);
+		for ($i = 0; $i < $n; $i++) {
+			$smarty->assign('xmlmap_items', $chunks[$i]);
+			$src = func_display('modules/XML_Sitemap/sitemap.tpl', $smarty, false);
+			$smarty->clear_assign('xmlmap_items');
+			$xml_files[] = array('loc' => xmlmap_write_xmlitems($src, $i, $current_storefront_info['domain']));
+			unset($src);
+		}
 
-//        $chunks = array_chunk($prepared_items, 50000);
-        $chunks = array_chunk($prepared_items, 25000);
-
-
-        $n = count($chunks);
-        $xml_files = array();
-       
-
-#
-##
-###
-	$smarty->assign('current_storefront_info', $current_storefront_info);
-
-	$smarty->assign('cur_date', $cur_date);
-###
-##
-#
- 
-        for ($i = 0; $i < $n; $i++) {
-            $smarty->assign('xmlmap_items', $chunks[$i]);
-            $src = func_display('modules/XML_Sitemap/sitemap.tpl', $smarty, false);
-            $smarty->clear_assign('xmlmap_items');
-            $xml_files[] = array('loc' => xmlmap_write_xmlitems($src, $i, $current_storefront_info['domain']));
-            unset($src);
-        }		
-        
-        $smarty->assign('xmlindex_items', $xml_files);
-        $src = func_display('modules/XML_Sitemap/index.tpl', $smarty, false);
-        $smarty->clear_assign('xmlindex_items');
-        
-
-//if ($spec["type"] == "K"){
-//func_print_r($src, $current_storefront_info['domain'], $xml_files, $n, $chunks[0]);
-//}
-
-	        xmlmap_write_xmlindex($src, $current_storefront_info['domain']);
+		$smarty->assign('xmlindex_items', $xml_files);
+		$src = func_display('modules/XML_Sitemap/index.tpl', $smarty, false);
+		$smarty->clear_assign('xmlindex_items');
+		xmlmap_write_xmlindex($src, $current_storefront_info['domain']);
 
 		func_flush(func_get_langvar_by_name('xmlmap_log_generationend', null, false, true));
 	} else {
@@ -258,11 +214,11 @@ ini_set('memory_limit', -1);
 }
 
 function xmlmap_write_xmlitems($src, $i, $domain_name) {
-    global $xcart_dir;
+    global $xcart_dir, $xml_protocol;
     $src = xmlmap_prepare_src($src, $domain_name); 
     $filename = $xcart_dir . '/' . $domain_name . '-sitemap_' . $i . '.xml';
     xmlmap_write_to_file($src, $filename);
-    $filename = 'http://' . $domain_name . constant('DIR_CUSTOMER') . '/' . $domain_name . '-sitemap_' . $i . '.xml';
+    $filename = $xml_protocol . $domain_name . constant('DIR_CUSTOMER') . '/' . $domain_name . '-sitemap_' . $i . '.xml';
     return $filename;
 }
 
