@@ -36,7 +36,8 @@ if (!empty($cidev_storefronts) && is_array($cidev_storefronts)){
         /** @var StoreFront $oStoreFront */
         $oStoreFront = new StoreFront(['storefrontid' => $storefrontid]);
         if ($oStoreFront) {
-            $xmlmap_location = (($oStoreFront->getConfigValue('https_enabled') == 'Y') ? 'https://' : 'http://') . func_get_http_location_sf($storefrontid) . $xcart_web_dir;
+            $xml_protocol = ($oStoreFront->getConfigValue('https_enabled') == 'Y') ? 'https://' : 'http://';
+            $xmlmap_location = $xml_protocol . func_get_http_location_sf($storefrontid) . $xcart_web_dir;
 
             $sf_condition = "storefrontid=$storefrontid";
 
