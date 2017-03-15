@@ -29,7 +29,10 @@ class OrderSearchStore extends BaseStore
     private $qs;
     /** @var Pagination */
     private $pager;
+    private $order;
     private $fid = null;
+
+    public $defaultPagerPageSize = 25;
 
     public static function getFeatures()
     {
@@ -64,7 +67,25 @@ class OrderSearchStore extends BaseStore
     {
         $this->form_data = $data;
         $this->fid = $fid;
-        $this->qs = $this->populate($data)->order(['-date', '-orderid']);
+        $this->populate($data);
+    }
+
+    public function __clone()
+    {
+        $clone = clone $this;
+        $clone->qs = clone $this->qs;
+        return $clone;
+    }
+
+    public function setOrder(array $order = [])
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    public function getOrder()
+    {
+        return $this->order;
     }
 
     /**
@@ -103,12 +124,11 @@ class OrderSearchStore extends BaseStore
     /**
      * @param array $data
      *
-     * @return \Xcart\App\Orm\QuerySet
+     * @return void
      */
     public function populate(array $data)
     {
-//        $qs = Order::objects()->getQuerySet();
-        $qs = OrderModel::objects()->getQuerySet();
+        $qs = $this->getQuerySet();
 
         if (!empty($data['order']) || $this->checkNot('order'))
         {
@@ -609,10 +629,7 @@ class OrderSearchStore extends BaseStore
         }
 
         $qs->filter($this->where)->addGroup(['orderid']);
-
-//        func_dump($qs->getSql());
-
-        return $qs;
+        $this->qs = $qs;
     }
 
     private function arrLikeToLookup($data, $fields)
@@ -711,38 +728,51 @@ class OrderSearchStore extends BaseStore
         return null;
     }
 
+    public function getQuerySet()
+    {
+        if (!$this->qs) {
+            $this->qs = OrderModel::objects()->getQuerySet();
+        }
+        return $this->qs;
+    }
+
+    public function getQSWithSorting()
+    {
+        $qs = clone $this->qs;
+        $joins = $qs->getQueryBuilder()->getJoins();
+        $joins = array_keys($joins);
+
+        if (!in_array('group', $joins)) {
+            $qs->join('left join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+        }
+
+        $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
+
+        $user = Xcart::app()->user;
+        if ($user->show_events)
+        {
+            /** @var QuerySet $qs */
+            $e_qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+            $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
+            $qs->order(['-shipping.important', '-events.count','date', 'orderid']);
+        }
+        else {
+            $qs->order(['-shipping.important', 'date', 'orderid']);
+        }
+
+        if ($this->order) {
+            $qs->order($this->order);
+        }
+
+        return $qs;
+    }
+
     public function getPager()
     {
         if (!$this->pager) {
-            /** @TODO: Change - its for priority sorting */
-            $qs = clone $this->qs;
-
-            $joins = $qs->getQueryBuilder()->getJoins();
-            $joins = array_keys($joins);
-
-            if (!in_array('group', $joins)) {
-                $qs->join('left join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
-            }
-
-            $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
-
-            $user = Xcart::app()->user;
-            if ($user->show_events)
-            {
-                /** @var QuerySet $qs */
-                $e_qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
-
-                $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
-
-                $qs->order(['-shipping.important', '-events.count','date', 'orderid']);
-
-            }
-            else {
-                $qs->order(['-shipping.important', 'date', 'orderid']);
-            }
-
-            $this->pager = new Pagination($qs, ['pageSize' => 25], new QuerySetDataSource());
+            $this->pager = new Pagination($this->getQSWithSorting(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
         }
+
         return $this->pager;
     }
 
@@ -860,7 +890,7 @@ class OrderSearchStore extends BaseStore
 
         $count = null;
 
-        $key = $this->getCacheCountKey('order_search_store_events_count_', $ids);
+        $key = $this->getCacheCountKey('order_search_store_events_count_', ['user_id' => $user->login, 'ids' => $ids]);
         $count = Xcart::app()->cache->get($key);
 
         if (is_null($count))

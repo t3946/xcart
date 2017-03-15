@@ -100,7 +100,9 @@
 
             <tr class="{$cycle_class} ">
                 <td width="5" align="center">
-                    <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">{$order->orderid}</a>
+                    <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">
+                        {$order->order_prefix}{$order->orderid}
+                    </a>
                 </td>
                 <td class="OrderSheetGreenCell group" align="center">
                     {foreach $order_statuses.CB as $status}
