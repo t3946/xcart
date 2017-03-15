@@ -3,10 +3,10 @@
         crossorigin="anonymous">
 </script>
 
-<link rel="stylesheet" href="/static/backend/css/base.css?v=3">
+<link rel="stylesheet" href="/static/backend/css/base.css?v=4">
 
 <script src="/static/vendors/jquery.cookie-1.4.1.min.js"></script>
-<script type="text/javascript" src="/static/backend/js/main.js?v=3"></script>
+<script type="text/javascript" src="/static/backend/js/main.js?v=4"></script>
 
 {block 'js-head'}
 

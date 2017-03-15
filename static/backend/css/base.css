@@ -498,6 +498,12 @@ label + input {
     text-decoration: underline;
 }
 
+.column > .smarty-admin-block,
+.columns > .smarty-admin-block {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
 .smarty-admin-block {
     margin-bottom: 20px;
 }
@@ -553,7 +559,9 @@ label + input {
 }
 .smarty-admin-block .buttons-block {
     margin-left: -11px;
-    width: 853px;
+    width: inherit;
+    box-sizing: content-box !important;
+    padding: 10px 16px;
 }
 .smarty-admin-block .title-block {
     min-height: 15px;
@@ -1031,4 +1039,76 @@ subscription-container .item form {
 }
 .tabs .tabs-content .tab.active {
     display: block;
+}
+
+.admin .test_checkout_message {
+    margin: 20px 0 ;
+}
+.admin .test_checkout_message table {
+    border: solid 1px #000000;
+    background: #F4CCCC;
+}
+
+.orders .events-container .events,
+.dashboard-item .events,
+dashboard-item .priority {
+    /*display: inline-block;*/
+    color: rgb(0, 0, 255);
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.dashboard-item .priority {
+    font-weight: bold;
+    line-height: 1.2;
+    display: inline-block;
+    background-color: rgba(255, 233, 165);
+}
+
+.orders .important td {
+    background-color: rgba(255, 233, 165, 0.2);
+}
+
+.orders .sign.important {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: darkred;
+    border-radius: 15px;
+}
+
+.dashboard-item .events {
+    font-size: 8px;
+    /*vertical-align: middle;*/
+}
+
+.dashboard-item .priority {
+    display: inline-block;
+    font-size: 8px;
+    background-color: rgb(255, 233, 165);
+    padding: 1px 2px;
+    border-radius: 3px;
+}
+.dashboard-item .priority.empty {
+    display: none;
+}
+
+.dashboard-item .events.empty {
+    display: none;
+}
+
+.admin .question_products {
+    text-align: justify;
+}
+
+.admin .question_products a {
+    display: inline-block;
+}
+
+.admin .question_products:after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 0;
+    font-size: 0;
 }

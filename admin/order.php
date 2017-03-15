@@ -30,6 +30,11 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Models\OrderTransactionModel;
+use Xcart\Paypal;
+
+global $login;
+
 define('USE_TRUSTED_POST_VARIABLES', 1);
 $trusted_post_variables = ['update', 'mnf_body'];
 
@@ -536,11 +541,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "create_rma_request" && !empty($orderi
 
         $is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["RMA_options"]["RMA_Attention_tag"] . "'");
         if (empty($is_such_tag_in_db)) {
-            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('" . $config["RMA_options"]["RMA_Attention_tag"] . "','$orderid')");
-
-            $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='" . $config["RMA_options"]["RMA_Attention_tag"] . "'");
-            $log      = "<br />'" . $tag_name . "' attention tag added";
-            func_log_order($orderid, 'X', $log, $login);
+            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["RMA_options"]["RMA_Attention_tag"], $orderid);
         }
     }
 
@@ -613,6 +614,9 @@ if (!empty($_GET["orderid"]) && !empty($section_name)) {
 
     func_header_location($redirect_url);
 }
+
+
+\Xcart\App\Main\Xcart::app()->event->trigger('order:view', ['order_id' => $orderid]);
 
 $url      = "http://helpdesk.s3stores.com/otrs/index.pl";
 $curl_err = false;
@@ -1096,13 +1100,7 @@ if ($REQUEST_METHOD == "POST") {
         $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$additional_tag_status'");
 
         if (empty($is_such_additional_tag_status) && $allowed_to_set_flag) {
-
-            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES('$additional_tag_status', '$orderid')");
-
-            ### LOG: START
-            $log = "'" . $status_name . "' attention tag added";
-            func_log_order($orderid, 'X', $log, $login);
-            ### LOG: END
+            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($additional_tag_status, $orderid);
 
             $top_message["content"] = "Done.";
             $top_message["type"]    = "I";
@@ -1727,7 +1725,13 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                 $count_shipping_groups = count($order["shipping_groups"]);
 
                 if ($count_shipping_groups == "1") {
-                    $Access_Token = func_paypal_get_access_token();
+                    try {
+                        $oPaypal = new Paypal();
+                        $Access_Token = $oPaypal->getAccessToken();
+                    } catch (\Exception $e) {
+                        $oPaypal = null;
+                        $Access_Token = null;
+                    }
                 }
 
                 if (empty($Access_Token) && $count_shipping_groups == "1") {
@@ -1767,7 +1771,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                                 }
 
                                 $data_arr["is_final_capture"] = true;
-                                $result = func_paypal_capture($Access_Token, $authorized_transaction_id, $data_arr);
+                                $result = $oPaypal->captureTransaction($authorized_transaction_id, $data_arr);
 
                                 if (!empty($result["id"]))
                                 {
@@ -1775,8 +1779,19 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
 
                                     $result["script_info"] = "Script: admin/order.php . " . $log;
 
-                                    $result_serialized = serialize($result);
-                                    db_query("UPDATE $sql_tbl[order_transactions] SET transaction_id='$result[id]', transaction_amount='" . $result["amount"]["total"] . "', date='" . time() . "', login='$login', transaction_status='$result[state]', transaction_response='" . addslashes($result_serialized) . "' WHERE orderid='$orderid' AND transaction_id='$authorized_transaction_id'");
+                                    $orderTransaction = OrderTransactionModel::objects()->get(['orderid' => $orderid, 'transaction_id' => $authorized_transaction_id]);
+                                    if ($orderTransaction) {
+                                        $orderTransaction->transaction_id = $result['id'];
+                                        $orderTransaction->transaction_amount = $result["amount"]["total"];
+                                        $orderTransaction->date = time();
+                                        $orderTransaction->login = $result['state'];
+                                        $orderTransaction->transaction_status = $login;
+                                        $orderTransaction->transaction_response = serialize($result);
+                                        $orderTransaction->parent_transaction_id = $authorized_transaction_id;
+                                        if ($orderTransaction->isValid()) {
+                                            $orderTransaction->save();
+                                        }
+                                    }
                                 }
                                 else {
                                     $capture_failed_flag = true;
@@ -1815,11 +1830,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                                 $set_new_additional_tag = '37';
                                 $is_such_tag_in_db      = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
                                 if (empty($is_such_tag_in_db)) {
-                                    db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('$set_new_additional_tag','$orderid')");
-
-                                    $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$set_new_additional_tag'");
-                                    $log_tag  = "<br />'" . $tag_name . "' attention tag added";
-                                    func_log_order($orderid, 'X', $log_tag, $login);
+                                    Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($set_new_additional_tag, $orderid);
                                 }
 
                                 func_header_location("order.php?orderid=" . $orderid);
