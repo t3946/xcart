@@ -65,15 +65,6 @@ x_session_register("add_to_cart_time");
 
 x_session_register("always_allow_shop");
 
-
-
-#
-# Clear/update shipping rates cache
-#
-db_query("DELETE FROM $sql_tbl[shipping_cache] WHERE expiration_date<'".time()."'");
-global $XCART_SESSION_EXPIRY;
-db_query("UPDATE $sql_tbl[shipping_cache] SET expiration_date='$XCART_SESSION_EXPIRY' WHERE session_id='$XCARTSESSID'");
-
 if (!empty($_GET['shopkey'])) {
     $always_allow_shop = (!empty($config['General']['shop_closed_key']) && $_GET['shopkey'] == $config['General']['shop_closed_key']);
 }
@@ -94,7 +85,6 @@ if (empty($Username) || empty($Password))
 require $xcart_dir."/include/nocookie_warning.php";
 
 if (!defined('HTTPS_CHECK_SKIP')) {
-//	@include $xcart_dir.DIR_CUSTOMER."/https.php";
 	include_once $xcart_dir.DIR_CUSTOMER."/https.php";
 }
 

@@ -1642,9 +1642,9 @@ function func_get_default_image($type)
             $default_image = str_replace("\\", "/", $default_image);
         }
 
-        if ($current_area == "C" && !$HTTPS && !empty($default_image) && !empty($config["Appearance"]["CDN_domain"]) && $config["Appearance"]["Enable_CDN"] == "Y" && strpos($default_image, "default_image.gif") !== false && strpos($default_image, $config["Appearance"]["CDN_domain"]) === false) {
+        /*if ($current_area == "C" && !$HTTPS && !empty($default_image) && !empty($config["Appearance"]["CDN_domain"]) && $config["Appearance"]["Enable_CDN"] == "Y" && strpos($default_image, "default_image.gif") !== false && strpos($default_image, $config["Appearance"]["CDN_domain"]) === false) {
             $default_image = $config["Appearance"]["CDN_domain"] . $default_image;
-        }
+        }*/
 
         return $default_image;
     }

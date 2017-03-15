@@ -728,9 +728,9 @@ function func_clean_url_history_delete($deleted_items)
 
     $deleted_items = func_addslashes($deleted_items);
 
-    db_query("DELETE FROM " . $sql_tbl['clean_urls_history'] . " WHERE id IN ('" . implode("', '", $deleted_items) . "')");
+    $res = db_query("DELETE FROM " . $sql_tbl['clean_urls_history'] . " WHERE id IN ('" . implode("', '", $deleted_items) . "')");
 
-    if (db_affected_rows() != count($deleted_items)) {
+    if (db_affected_rows($res) != count($deleted_items)) {
         return false;
     }
 

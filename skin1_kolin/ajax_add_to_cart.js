@@ -15,7 +15,7 @@ $().ready(function(){
       } else if (e == 'timeout') {
         alert('Request Time out.');
       } else {
-        alert('Unknown Error.\n' + x.responseText);
+        console.log('Unknown Error.\n' + x.responseText);
       }
     }
   });

@@ -25,6 +25,8 @@ class Product extends Data
     private $aImagesP = null;
     private $aImagesT = null;
 
+    private $aThumbNails = null;
+
     private $aPricing = null;
 
     private $iAmazonQuantity = null;
@@ -112,9 +114,14 @@ class Product extends Data
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->getProductId(), $this->getStoreFront()->getField('storefrontid'));
     }
 
-    public function getURL($http = 'http://')
+    public function getURL($http = '//')
     {
-        return $http . $this->getStoreFront()->getDomain() . '/' . func_clean_url_get('P', $this->getProductId(), false);
+        return $http . $this->getStoreFront()->getDomain() . $this->getRelativeURL();
+    }
+
+    public function getRelativeURL()
+    {
+        return '/' . func_clean_url_get('P', $this->getProductId(), false);
     }
 
     public function getHTMLShot($iOrderID)
@@ -225,7 +232,7 @@ class Product extends Data
 
 
     /**
-     * @param $type
+     * @param string $type
      * @return ProductImage[]
      */
     public function getImages($type)
@@ -847,5 +854,22 @@ SQL;
             }
         }
         return $aRes;
+    }
+
+    public function getThumbnail()
+    {
+        $oThumbImage = null;
+        if (is_null($this->aThumbNails)){
+            $this->aThumbNails = \Modules\Product\Models\ImageTModel::objects()->filter(['id' => $this->getProductId()])->all();
+        }
+        if (!empty($this->aThumbNails)) {
+            $oThumbImage = reset($this->aThumbNails);
+        }
+        return $oThumbImage;
+    }
+
+    public function getSplash()
+    {
+        return \Xcart\Images\Splash::objects()->filter(['id' => (int) $this->splash_id])->get();
     }
 }
