@@ -14,7 +14,7 @@ if ($REQUEST_METHOD == 'POST'){
 		if (!empty($posted_data) && is_array($posted_data)){
 			foreach ($posted_data as $k => $v){
 				$sTagDescription = $v['description'];
-				db_query("UPDATE $sql_tbl[attention_tags_values] SET orderby='".$v["orderby"]."', status='".$v["status"]."', active='$v[active]', description = '$sTagDescription' WHERE status_id='$v[status_id]'");
+				db_query("UPDATE $sql_tbl[attention_tags_values] SET orderby='".$v["orderby"]."', status='".$v["status"]."', active='$v[active]',  events='$v[events]', description = '$sTagDescription' WHERE status_id='$v[status_id]'");
 
 				if (!empty($v["select_login"]) && !empty($v["select_action"])){
 					$is_such_str = func_query_first_cell("SELECT id FROM $sql_tbl[attention_tags_values_logins] WHERE login='$v[select_login]' AND action='$v[select_action]' AND status_id='$v[status_id]'");

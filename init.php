@@ -66,10 +66,24 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
 \Xcart\App\Main\Xcart::init(include $xcart_dir .'/app/config/settings.php');
 \Xcart\App\Main\Xcart::app()->beforeRun();
 //if (defined('AREA_TYPE') && AREA_TYPE == 'C' && \Xcart\App\Main\Xcart::app()->getIsWebMode()) {
-//    \Xcart\App\Main\Xcart::app()->request->session->getIsActive(); //@TODO: Костыль для инициализации обьекта сессии
+//    \Xcart\App\Main\Xcart::app()->request->session->getIsActive(); //@TODO: пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 //}
-
-Xcart\Connection::getInstanceFromApp()->connect();
+#
+# Initialize logging
+#
+@require_once $xcart_dir . "/include/logging.php";
+$dieError = "Sorry, the shop is inaccessible temporarily. Please try again later.";
+try {
+    Xcart\Connection::getInstanceFromApp()->connect();
+}
+catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
+    x_log_add('SQL', $e->getMessage(), true);
+    die($dieError);
+}
+catch (\Exception $e) {
+    x_log_add('php', $e->getMessage(), true);
+    die($dieError);
+}
 
 $file_temp_dir = $var_dirs["tmp"];
 
@@ -355,17 +369,16 @@ include_once($xcart_dir . "/include/bench.php");
 #
 # Connect to database
 #
-$db_connect_limit = 5;
-while ($db_connect_limit-- > 0 && !@db_connect($sql_host, $sql_user, $sql_password)) {
-}
-db_select_db($sql_db) || die("Sorry, the shop is inaccessible temporarily. Please try again later.");
+/*$db_connect_limit = 5;
+while ($db_connect_limit-- > 0 && !@db_connect($sql_host, $sql_user, $sql_password)) { }
+db_select_db($sql_db) || die("Sorry, the shop is inaccessible temporarily. Please try again later.");*/
 
-$tmp                    = func_query_first("SHOW VARIABLES LIKE 'max_allowed_packet'");
+$tmp = func_query_first("SHOW VARIABLES LIKE 'max_allowed_packet'");
 $sql_max_allowed_packet = intval($tmp['Value']);
 unset($tmp);
 
-if (preg_match("/^(\d+\.\d+\.\d+)/", mysql_get_server_info(), $match)) {
-    define("X_MYSQL_VERSION", $match[1]);
+if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
+        define("X_MYSQL_VERSION", $match[1]);
 
     if (func_version_compare(X_MYSQL_VERSION, "5.0.0") >= 0) {
         db_query("SET sql_mode = 'MYSQL40'");
@@ -384,7 +397,7 @@ if (preg_match("/^(\d+\.\d+\.\d+)/", mysql_get_server_info(), $match)) {
 ## Set the session name here
 ###
 
-$cidev_tmp_storefrontid = func_query_first_cell("SELECT storefrontid FROM xcart_storefronts WHERE domain='$_SERVER[HTTP_HOST]'");
+$cidev_tmp_storefrontid = func_query_first_cell("SELECT storefrontid FROM xcart_storefronts WHERE domain='{$_SERVER['HTTP_HOST']}'");
 
 if (empty($cidev_tmp_storefrontid)) {
     $cidev_tmp_storefrontid = '0';
@@ -488,10 +501,7 @@ foreach ($var_dirs as $k => $v) {
     }
 }
 
-#
-# Initialize logging
-#
-@require_once $xcart_dir . "/include/logging.php";
+
 
 #
 # Create Smarty object
@@ -501,6 +511,7 @@ if (!@include $xcart_dir . "/smarty.php") {
     exit;
 }
 
+$smarty->assign('xcartApp',\Xcart\App\Main\Xcart::app());
 #
 # Init miscellaneous vars
 #
@@ -643,7 +654,7 @@ if (!defined("QUICK_START")) {
 #
 @include_once $xcart_dir . "/include/sessions.php";
 
-//@TODO: Отрубаем сохранение данных в сессию (сохраняется в XCartSession классе)
+//@TODO: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ XCartSession пїЅпїЅпїЅпїЅпїЅпїЅ)
 if (x_session_save_to_db__do_not_use == 'Y') {
 //      func_print_r(x_session_save_to_db__do_not_use);
 
@@ -877,9 +888,6 @@ if ($active_modules) {
     }
 }
 
-if (!$HTTPS && $config["Appearance"]["Enable_CDN"] == "Y" && !empty($config["Appearance"]["CDN_domain"]) && strpos($config["Appearance"]["CDN_domain"], "://") === false && AREA_TYPE == "C") {
-    $config["Appearance"]["CDN_domain"] = ($HTTPS ? "https://" : "http://") . $config["Appearance"]["CDN_domain"];
-}
 
 if (empty($active_modules["CIDEV_Best_Search_Filter"]) && $current_area != 'C') {
     include $xcart_dir . "/modules/CIDEV_Best_Search_Filter/config.php";

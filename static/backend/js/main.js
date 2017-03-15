@@ -683,7 +683,8 @@ jQuery.fn.mfieldset = function (options) {
                 }
             },
             interval: 25000,
-            selector: '.dashboard-filters a[data-id]'
+            selector: '.dashboard-filters a[data-id]',
+            questionSelector: '.admin .question_products'
         },
 
         __stop: false,
@@ -699,28 +700,44 @@ jQuery.fn.mfieldset = function (options) {
             var texts= [];
             var notify = false;
 
+            $(this.options.questionSelector).html(data.questions);
+
             $(this.options.selector).each(function(){
                 var $this = $(this),
                     id = $this.data('id'),
                     count = parseInt($this.attr('data-count'));
 
                 if (data.filters[id]) {
+                    var data_filter = data.filters[id];
 
-                    if (data.filters[id].count == count) {
-                        $this.find('.count').html(data.filters[id].count);
+                    if (data.filters[id]['count']['orders'] == count) {
+                        $this.find('.count').html(data.filters[id]['count']['orders']);
                     }
                     else {
-                        var c_chng = data.filters[id].count - count;
-                        var sign = '';
+                        var count_events ='',
+                            sign = '',
+                            c_chng = data_filter['count']['orders'] - count;
+
                         if (c_chng > 0) {
                             sign = '+';
-
                             notify = true;
-                            data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.filter_name').html() +' ('+ sign + c_chng +')</a>';
                         }
 
-                        $this.attr('data-count', data.filters[id].count);
+                        if (data.filters[id]['count']['events']) {
+                            count_events = '+' + data.filters[id]['count']['events'];
+                        }
+
+                        if (data.filters[id]['count']['priority']) {
+                            $this.find('.priority').removeClass('empty');
+                        }
+                        else {
+                            $this.find('.priority').addClass('empty');
+                        }
+
+                        $this.attr('data-count', data_filter['count']['orders']);
                         $this.find('.count').html(count + ' ' + sign + c_chng);
+                        $this.find('.events').html(count_events);
+                        $this.find('.priority').html(data.filters[id]['count']['priority']);
 
                         if (data.filters[id].count > 0 && $this.hasClass(self.options.classes.disabled)) {
                             $this.removeClass(self.options.classes.disabled);
@@ -729,6 +746,10 @@ jQuery.fn.mfieldset = function (options) {
                         else if (data.filters[id].count == 0 && $this.hasClass(self.options.classes.enabled)) {
                             $this.removeClass(self.options.classes.enabled);
                             $this.addClass(self.options.classes.disabled);
+                        }
+
+                        if (c_chng > 0) {
+                            data.filters[id]['notify_text'] =  '<a target="_blank" href="'+ $this.attr('href') +'">'+ $this.find('.name_events').html() +'</a>';
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-<table class="OrderSheet" cellspacing="1" cellpadding="3">
+<table class="OrderSheet orders" cellspacing="1" cellpadding="3">
     <tr class="TableHead TableHeadAccounting TableHeadLight">
         <td width="5">#</td>
         <td>Fraud Check</td>
@@ -26,10 +26,7 @@
         <td colspan="2">LATEST ETA DATE</td>
         <td colspan="2">Payment</td>
         <td>Grand total</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td colspan="4">+</td>
     </tr>
     <tr>
         <td colspan="12" style="padding: 0;"></td>
@@ -41,10 +38,8 @@
         <td colspan="2">B2D INVOICE</td>
         <td colspan="2">Processor</td>
         <td>TOTAL</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td colspan="4">+</td>
+
     </tr>
 
     {foreach $orders as $order index=$index}
@@ -59,7 +54,9 @@
 
         <tr class="{$cycle_class} title">
             <td>
-                <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">{$order}</a>
+                <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">
+                    {$order->order_prefix}{$order->orderid}
+                </a>
             </td>
             <td align="center">
                 {foreach $fraud_statuses as $status}
@@ -103,16 +100,15 @@
             <td colspan="3">
                 {foreach $order->tags as $tag}
                     <div style="background-color: #F4CCCC; color: #000000; padding: 3px;">
-                        <span title="{$tag.description}">
-                            {$tag.status}
+                        <span title="{$tag->description}">
+                            {$tag->status}
                         </span>
                     </div>
                 {/foreach}
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td colspan="4">
+
+            </td>
         </tr>
 
         <tr class="{$cycle_class}">
@@ -130,9 +126,9 @@
                     {$order->s_country}
                 {/if}
             </td>
-            <td style="background-color: {$order->max_eta|max_eta_colors}; color: #000000;" colspan="2">
-                {if $order->max_eta|max_eta_colors != "do_not_show"}
-                    {$order->max_eta|date_format:'%d-%b-%Y'}
+            <td style="background-color: {$order->getMaxEta()|max_eta_colors}; color: #000000;" colspan="2">
+                {if $order->getMaxEta()|max_eta_colors != "do_not_show"}
+                    {$order->getMaxEta()|date_format:'%d-%b-%Y'}
                 {/if}
             </td>
             <td colspan="2">
@@ -147,18 +143,21 @@
             <td>
                 <b> {$order->getOrderTotalGross()|abs|formatprice:",":"."} </b>
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="events-container" colspan="4">
+                {if $order->getCountEvents()}
+                    <span class="events">
+                        +{$order->getCountEvents()}
+                    </span>
+                {/if}
+            </td>
         </tr>
 
         <tr>
             <td colspan="12" style="padding: 0;"></td>
         </tr>
-        {foreach $order->getOrderGroups() as $group last=$last_group}
-            <tr class="{$cycle_class}">
-                <td align="center" width="5" {if $group->manufacturer->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
+        {foreach $order->groups as $group last=$last_group}
+            <tr class="{$cycle_class} {if $group->getShippingModel()->important}important{/if}">
+                <td align="center" width="5" {if $group->manufacturerid->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
                     <a href="{$order->getAdminUrl()}" target="_blank">
                         {$group->manufacturer->code}
                     </a>
@@ -183,24 +182,20 @@
                         <br/>
                         <B>C: Reconciled</B>
                     {else}
-                        {if $group->getOrderGroupInvoices()->countOrderGroupInvoices() > 0 }
-                            {foreach $group->getOrderGroupInvoices()->getAsArray() as $invoice}
-                                <B>I-{$invoice->invoice_number}: {$invoice->getStatusName()}</B>
-                                <br/>
-                            {/foreach}
-                        {else}
+                        {foreach $group->invoices->all() as $invoice}
+                            <B>I-{$invoice->invoice_number}: {$invoice->getStatusName()}</B>
+                            <br/>
+                        {foreachelse}
                             <B>I: Not received</B>
                             <br>
-                        {/if}
+                        {/foreach}
 
-                        {if $group->getOrderGroupMemos()->countOrderGroupMemos() > 0}
-                            {foreach $group->getOrderGroupMemos()->getAsArray() as $memo}
-                                <B>C-{$memo->memo_number}: {$memo->getStatusName()}</B>
-                                <br/>
-                            {/foreach}
-                        {else}
+                        {foreach $group->memos->all() as $memo}
+                            <B>C-{$memo->memo_number}: {$memo->getStatusName()}</B>
+                            <br/>
+                        {foreachelse}
                             <B>C: Not received</B>
-                        {/if}
+                        {/foreach}
                     {/if}
                 </td>
                 <td colspan="2">
@@ -213,10 +208,11 @@
                     {/foreach}
                 </td>
                 <td>{$group->getTotalGross()|abs|formatprice:",":"."}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="4">
+                    {if $group->getShippingModel()->important}
+                        <span class="sign important"></span>
+                    {/if}
+                </td>
             </tr>
             {if !$last_group}
             <tr>

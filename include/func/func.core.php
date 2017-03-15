@@ -1642,9 +1642,9 @@ function func_get_default_image($type)
             $default_image = str_replace("\\", "/", $default_image);
         }
 
-        if ($current_area == "C" && !$HTTPS && !empty($default_image) && !empty($config["Appearance"]["CDN_domain"]) && $config["Appearance"]["Enable_CDN"] == "Y" && strpos($default_image, "default_image.gif") !== false && strpos($default_image, $config["Appearance"]["CDN_domain"]) === false) {
+        /*if ($current_area == "C" && !$HTTPS && !empty($default_image) && !empty($config["Appearance"]["CDN_domain"]) && $config["Appearance"]["Enable_CDN"] == "Y" && strpos($default_image, "default_image.gif") !== false && strpos($default_image, $config["Appearance"]["CDN_domain"]) === false) {
             $default_image = $config["Appearance"]["CDN_domain"] . $default_image;
-        }
+        }*/
 
         return $default_image;
     }
@@ -2462,7 +2462,7 @@ function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
             'changefreq'    => 'weekly',
             'priority'      => '0.2',
             'url_pattern'   => 'pages.php?pageid=',
-            'items_query'   => "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[pages].pageid) as url, $sql_tbl[pages].pageid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[pages].pageid AND $sql_tbl[xmlmap_lastmod].type = 'S' WHERE $sql_tbl[pages].active='Y' AND $sql_tbl[pages].level='E' AND (sfids = '' or sfids like '%{$sfid}%')",
+            'items_query'   => "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[pages].pageid) as url, $sql_tbl[pages].pageid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[pages].pageid AND $sql_tbl[xmlmap_lastmod].type = 'S' WHERE $sql_tbl[pages].active='Y' AND $sql_tbl[pages].level='E' AND (sfids = '' or sfids like '%%{$sfid}%%')",
             'multilanguage' => false,
         ],
         4 => [
@@ -2978,8 +2978,8 @@ SQL;
                 foreach ($aRules as $aRule) {
                     switch ($aRule['action']) {
                         case 'Include':
-                            db_query("DELETE FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$status_id'");
-                            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (orderid, status_id) VALUES ('$orderid', '$status_id')");
+                            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($status_id, $orderid, false);
+
                             $log .= "RuleID:$aRule[rule_id]; CB:$aRule[cb_name], DC:$aRule[dc_name], BD:$aRule[bd_name]<br />";
                             $log .= "'" . $tag_name . "' attention tag SET based on rules";
                             $tag_added_flag = true;

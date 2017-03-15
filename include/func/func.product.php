@@ -1461,11 +1461,11 @@ function func_get_product_link_sf($productid, $sfid = 0, $type = 'all') {
         $link_adm = $link;
     } else {
         if ($sfid == 0) {
-            $link = 'http://' . MAIN_SF_DOMAIN; 
+            $link = '//' . MAIN_SF_DOMAIN;
         } else {
-            $link = 'http://' . $sf_domain;
+            $link = '//' . $sf_domain;
         }
-        $link_adm = 'https://' . MAIN_SF_DOMAIN;
+        $link_adm = '//' . MAIN_SF_DOMAIN;
     }
 
     $result = array();

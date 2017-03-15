@@ -26,6 +26,8 @@ abstract class Field implements ModelFieldInterface
      * @var string|null|false
      */
     public $comment;
+
+    public $field;
     /**
      * @var bool
      */
@@ -169,6 +171,10 @@ abstract class Field implements ModelFieldInterface
      */
     public function getAttributeName()
     {
+        if (!empty($this->field)) {
+            return $this->field;
+        }
+
         return $this->name;
     }
 

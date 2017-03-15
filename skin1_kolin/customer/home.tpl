@@ -3,7 +3,7 @@
 <html lang="en-US">
 <head>
 {if $config.SEO.clean_urls_enabled eq "Y"}
-<base href="{$catalogs.customer}/" />
+<base href="{$xcartApp->request->getHostInfo()}/" />
 {/if}
 <title>{strip}
 {if $brand.title ne "" && $main eq "brand_products"}
@@ -68,10 +68,10 @@
     <link rel="stylesheet" href="{$SkinDir}/skin1.IE.css" type="text/css" media="all" />
     <![endif]-->
     {if $canonical_url}
-        <link rel="canonical" href="http://{$site_domain|lower}/{$canonical_url}" />
+        <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/{$canonical_url}" />
     {/if}
     {if $main eq "catalog" && $current_category.category eq "" && $clean_url_data.resource_type ne "K"}
-        <link rel="canonical" href="http://{$site_domain|lower}/"/>
+        <link rel="canonical" href="{$xcartApp->request->getHostInfo()}/"/>
     {/if}
     {if $config.Product_Page.map_bridge_text_background ne ''}
     {literal}
@@ -186,7 +186,7 @@ function func_load_ajax_carousel_products(section_name)
             if (obj) {
                 $.each(obj.items, function () {
                     if (this.clean_url != '') {
-                        a_href = this.clean_url + '/';
+                        a_href = this.clean_url;
                     } else {
                         a_href = 'product.php?productid=' + this.productid;
                     }
@@ -194,10 +194,10 @@ function func_load_ajax_carousel_products(section_name)
                     html += '<li class="google_impression_object" data-productid="'+this.productid+'" data-name="'+this.product+'" data-category="'+this.category+'" data-brand="'+this.brand+'" data-list="'+ga_page_name+'" data-price="'+this.price+'" data-position="'+this.N_key+'" class="active">' +
                         '<div style="text-align: center;">' +
                         '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">';
-                    if (this.splash && this.splash.length) {
-                        html += '<div style="position: absolute;" class="images_splash"><img src="' + this.splash + '" /></div>';
+                    if (this.thumb && this.thumb.length) {
+                        html += this.thumb;
                     }
-                    html += '<img src="' + this.src + '" alt="' + this.product + '"></a>' +
+                    html += '</a>' +
                         '<br />' + '<a href="' + a_href + '" onclick="onProductClick(\'' + this.productid + '\',\'' + this.product + '\',\'' + this.category + '\',\'' + this.brand + '\',\'' + this.N_key + '\',\'' + ga_page_name + '\',\'' + this.price + '\'); return !ga.loaded;">' + this.title + '</a>' +
                         '<br /> <font class="ProductPrice">Our Price: US$ ' + this.price + '</font>' +
                         '</div>' +

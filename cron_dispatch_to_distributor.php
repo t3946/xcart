@@ -56,6 +56,7 @@ while ($order = db_fetch_array($orders)) {
             $oMail = \Xcart\App\Main\Xcart::app()->mail;
             $oMail->to = $mnf_to;
             $oMail->from = $config['Company']['orders_department'];
+            $oMail->reply_to = null;
             $oMail->subject_template = 'mail/order_notification_subj.tpl';
             $oMail->body_template = 'mail/order_notification.tpl';
             $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);

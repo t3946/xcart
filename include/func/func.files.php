@@ -218,7 +218,8 @@ function func_get_image_url($id, $type = 'T', $image_path = false) {
 
 
 
-			$image_path = str_replace("./", $config["Appearance"]["CDN_domain"]."/", $image_path);
+			//$image_path = str_replace("./", $config["Appearance"]["CDN_domain"]."/", $image_path);
+			$image_path = ltrim($image_path, '.');
 
 			###  https://basecamp.com/2070980/projects/1577907/messages/39190109
 			global $current_storefront;
@@ -235,9 +236,9 @@ function func_get_image_url($id, $type = 'T', $image_path = false) {
 #
 
 
-	if (is_url($image_path)) {
+	if (!empty($image_path)) {
 		# image_path is an URL
-		return $image_path;
+		return ltrim($image_path, '.');
 	}
 
 	$image_path = func_realpath($image_path);

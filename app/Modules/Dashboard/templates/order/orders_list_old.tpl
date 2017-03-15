@@ -1,4 +1,4 @@
-<table class="OrderSheet" cellspacing="1" cellpadding="3" style="">
+<table class="OrderSheet orders" cellspacing="1" cellpadding="3" style="">
     <tr class="TableHead TableHeadAccounting">
         <td width="5"></td>
         <td><b>Fraud Check</b></td>
@@ -58,8 +58,8 @@
             {set $cycle_class = 'OrderSheetDark'}
         {/if}
 
-        {foreach $order->getOrderGroups() as $group last=$last_group}
-            <tr class="{$cycle_class}" style="font-weight: bold;">
+        {foreach $order->groups as $group last=$last_group}
+            <tr class="{$cycle_class} " style="font-weight: bold;">
                 <td align="center" width="5" style="font-weight: normal;">
                     {*{if $static eq 'Y' || $static eq 'O'}*}
                     {*{if $smarty.foreach.groups.first}*}
@@ -98,9 +98,11 @@
                 </td>
             </tr>
 
-            <tr class="{$cycle_class}">
+            <tr class="{$cycle_class} ">
                 <td width="5" align="center">
-                    <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">{$order}</a>
+                    <a href="{$order->getAdminUrl()}" style="color: blue; font-weight: bold;" target="_blank">
+                        {$order->order_prefix}{$order->orderid}
+                    </a>
                 </td>
                 <td class="OrderSheetGreenCell group" align="center">
                     {foreach $order_statuses.CB as $status}
@@ -128,18 +130,19 @@
                 <td>
                     {foreach $order->tags as $tag}
                         <div style="background-color: #F4CCCC; color: #000000; padding: 3px;">
-                        <span title="{$tag.description}">
-                            {$tag.status}
+                        <span title="{$tag->description}">
+                            {$tag->status}
                         </span>
                         </div>
                     {/foreach}
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="4">
+                    {if $group->getShippingModel()->important}
+                        <span class="sign important"></span>
+                    {/if}
+                </td>
             </tr>
-            <tr class="{$cycle_class}">
+            <tr class="{$cycle_class} ">
                 <td align="center" width="5" {if $group->manufacturer->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if} class="group">
                     <a href="{$order->getAdminUrl()}" target="_blank">
                         {$group->manufacturer->code}
@@ -164,9 +167,9 @@
                 <td colspan="2" align="left">
                     {$order->last_activity|interval_string}
                 </td>
-                <td style="background-color: {$order->max_eta|max_eta_colors}; color: #000000;">
-                    {if $order->max_eta|max_eta_colors != "do_not_show"}
-                        {$order->max_eta|date_format:'%d-%b-%Y'}
+                <td style="background-color: {$order->getMaxEta()|max_eta_colors}; color: #000000;">
+                    {if $order->getMaxEta()|max_eta_colors != "do_not_show"}
+                        {$order->getMaxEta()|date_format:'%d-%b-%Y'}
                     {/if}
                 </td>
                 <td></td>

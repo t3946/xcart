@@ -541,11 +541,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "create_rma_request" && !empty($orderi
 
         $is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["RMA_options"]["RMA_Attention_tag"] . "'");
         if (empty($is_such_tag_in_db)) {
-            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('" . $config["RMA_options"]["RMA_Attention_tag"] . "','$orderid')");
-
-            $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='" . $config["RMA_options"]["RMA_Attention_tag"] . "'");
-            $log      = "<br />'" . $tag_name . "' attention tag added";
-            func_log_order($orderid, 'X', $log, $login);
+            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["RMA_options"]["RMA_Attention_tag"], $orderid);
         }
     }
 
@@ -618,6 +614,9 @@ if (!empty($_GET["orderid"]) && !empty($section_name)) {
 
     func_header_location($redirect_url);
 }
+
+
+\Xcart\App\Main\Xcart::app()->event->trigger('order:view', ['order_id' => $orderid]);
 
 $url      = "http://helpdesk.s3stores.com/otrs/index.pl";
 $curl_err = false;
@@ -692,6 +691,7 @@ if ($REQUEST_METHOD == "POST") {
         $oMail = \Xcart\App\Main\Xcart::app()->mail;
         $oMail->to = $to;
         $oMail->from = $from;
+        $oMail->reply_to = null;
         $oMail->body = $body;
         $oMail->subject = $subj;
         $oMail->addHeader(['X-Xcart-Label' => 'order-logs']);
@@ -1100,13 +1100,7 @@ if ($REQUEST_METHOD == "POST") {
         $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$additional_tag_status'");
 
         if (empty($is_such_additional_tag_status) && $allowed_to_set_flag) {
-
-            db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES('$additional_tag_status', '$orderid')");
-
-            ### LOG: START
-            $log = "'" . $status_name . "' attention tag added";
-            func_log_order($orderid, 'X', $log, $login);
-            ### LOG: END
+            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($additional_tag_status, $orderid);
 
             $top_message["content"] = "Done.";
             $top_message["type"]    = "I";
@@ -1631,6 +1625,7 @@ if ($mode == 'ref_notify')
                             $oMail = \Xcart\App\Main\Xcart::app()->mail;
                             $oMail->to = $config['Company']['orders_department'];
                             $oMail->from = $userinfo['email'];
+                            $oMail->reply_to = null;
                             $oMail->subject_template = 'mail/refund_notification_subj.tpl';
                             $oMail->body_template = 'mail/refund_notification.tpl';
                             $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -1835,11 +1830,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                                 $set_new_additional_tag = '37';
                                 $is_such_tag_in_db      = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$set_new_additional_tag'");
                                 if (empty($is_such_tag_in_db)) {
-                                    db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES ('$set_new_additional_tag','$orderid')");
-
-                                    $tag_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$set_new_additional_tag'");
-                                    $log_tag  = "<br />'" . $tag_name . "' attention tag added";
-                                    func_log_order($orderid, 'X', $log_tag, $login);
+                                    Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($set_new_additional_tag, $orderid);
                                 }
 
                                 func_header_location("order.php?orderid=" . $orderid);
@@ -1978,6 +1969,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
             $oMail = \Xcart\App\Main\Xcart::app()->mail;
             $oMail->to = $mnf_to;
             $oMail->from = $config['Company']['orders_department'];
+            $oMail->reply_to = null;
             $oMail->subject_template = 'mail/order_notification_subj.tpl';
             $oMail->body_template = 'mail/order_notification.tpl';
             $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -2008,6 +2000,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                 $oMail = \Xcart\App\Main\Xcart::app()->mail;
                 $oMail->to = $mnf_to;
                 $oMail->from = $config['Company']['orders_department'];
+                $oMail->reply_to = null;
                 $oMail->subject_template = 'mail/order_notification_subj.tpl';
                 $oMail->body_template = 'mail/order_notification_mnf.tpl';
                 $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -2101,6 +2094,7 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
         $oMail = \Xcart\App\Main\Xcart::app()->mail;
         $oMail->to = $d_order_entry_operator_email;
         $oMail->from = $config['Company']['orders_department'];
+        $oMail->reply_to = null;
         $oMail->subject_template = 'mail/order_notification_subj.tpl';
         $oMail->body_template = 'mail/order_notification_mnf.tpl';
         $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -2147,6 +2141,7 @@ elseif ($mode == 'request_additional_shipping_charge') {
     $oMail = \Xcart\App\Main\Xcart::app()->mail;
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
+    $oMail->reply_to = null;
     $oMail->subject_template = 'mail/order_notification_subj.tpl';
     $oMail->body_template = 'mail/order_notification_mnf.tpl';
     $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -2188,6 +2183,7 @@ elseif ($mode == 'request_missing_information')
     $oMail = \Xcart\App\Main\Xcart::app()->mail;
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
+    $oMail->reply_to = null;
     $oMail->subject_template = 'mail/order_notification_subj.tpl';
     $oMail->body_template = 'mail/order_notification_mnf.tpl';
     $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
@@ -2218,6 +2214,7 @@ elseif ($mode == 'backorder_decision_request') {
     $oMail = \Xcart\App\Main\Xcart::app()->mail;
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
+    $oMail->reply_to = null;
     $oMail->subject_template = 'mail/order_notification_subj.tpl';
     $oMail->body_template = 'mail/order_notification_mnf.tpl';
     $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);

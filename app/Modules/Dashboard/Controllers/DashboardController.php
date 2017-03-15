@@ -2,11 +2,13 @@
 
 namespace Modules\Dashboard\Controllers;
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Models\GroupModel;
 use Modules\Dashboard\Models\UserFiltersLinkModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Product\Models\ProductQuestionModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
@@ -17,9 +19,23 @@ class DashboardController extends PrototypeAdminController
 {
     public $defaultAction = 'index';
 
+    public function beforeAction($action, $params)
+    {
+        /** check hide_no_orders_test_checkout form */
+
+        if (!empty($_POST['mode']) && $_POST['mode'] == 'hide_no_orders_test_checkout_message') {
+            Xcart::app()->request->session->add("no_orders_test_checkout_hide_time", time());
+
+            $log_text = Xcart::app()->user->firstname . " (" . Xcart::app()->user->login . ") clicked 'Done'.";
+            func_backprocess_log("Test_checkout", $log_text);
+            $this->getRequest()->refresh();
+        }
+    }
+
     public function index()
     {
         $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
+        $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
 
         if ($this->getRequest()->getIsAjax()) {
             $data = ['filters' => [], 'groups' => []];
@@ -27,9 +43,14 @@ class DashboardController extends PrototypeAdminController
             /** @var DashboardFilter $model */
             foreach ($models as $model) {
                 $data['filters'][$model->id] = [
-                    'count' => $model->getSearchStorage()->getCashedCount(),
+                    'count' => [
+                        'orders' => $model->getSearchStorage()->getCashedCount(),
+                        'events' => $model->getSearchStorage()->getCachedEventsCount(),
+                        'priority' => $model->getSearchStorage()->getCachedPriorityShippingCount(),
+                    ]
                 ];
             }
+            $data['questions'] = $this->render('dashboard/_product_question.tpl', ['questions' => $questionModels,]);
 
             $this->jsonResponse($data);
         }
@@ -38,8 +59,9 @@ class DashboardController extends PrototypeAdminController
                 [
                     'models'  => $models,
                     'row_col' => DashboardFilter::getMaxRowCol(),
-                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__login' => (string)Xcart::app()->user->login])->order(['position_row', 'position_column'])->all(),
+                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all(),
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
+                    'questions' => $questionModels,
                 ]
             );
         }
@@ -51,10 +73,15 @@ class DashboardController extends PrototypeAdminController
     {
         /** @var DashboardFilter $model */
         if ($model = DashboardFilter::objects()->get(['id' => $id])) {
-            $session = Xcart::app()->request->session;
             $orderStore = $model->getSearchStorage();
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
+            $form_data = $model->form_data;
+            $form_data['new_list'] = Xcart::app()->request->session->get('search_new_template', 1);
+
+            if ($pager->getTotal() != $model->getSearchStorage()->getCashedCount()) {
+                $model->getSearchStorage()->clearCache();
+            }
 
             echo $this->renderInternal('dashboard/filter_view.tpl',
                 array_merge(
@@ -63,8 +90,8 @@ class DashboardController extends PrototypeAdminController
                         'model'         => $model,
                         'pager'         => $pager,
                         'models'        => $models,
-                        'form_data'     => SearchHelper::prepareFormDataForTemplate($model->form_data),
-                        'new_template'  => $session->get('search_new_template', 1),
+                        'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
+                        'new_template'  => $form_data,
                         'form_collapse' => true,
                     ]
                 )
@@ -108,7 +135,7 @@ class DashboardController extends PrototypeAdminController
         if (isset($_POST['id']) && $filter_model = DashboardFilter::objects()->get(['id' => $_POST['id']]))
         {
 
-            $user = UserModel::objects()->get(['login' => (string)Xcart::app()->user->login]);
+            $user = Xcart::app()->user;
             $model = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $filter_model->id, 'user_id' => $user->id]);
 
             unset($_POST['id']);
@@ -123,18 +150,19 @@ class DashboardController extends PrototypeAdminController
 
     public function subscription($id)
     {
-        /** @var UserModel $user */
         $user = Xcart::app()->user;
         $class = UserModel::classNameShort();
 
         if (!$user->getIsGuest())
         {
             if ($this->getRequest()->getIsPost()) {
+                $params = ['user_id' => $user->id, 'filter_id' => $id];
+
                 if ($_POST[$class]) {
-                    UserFiltersLinkModel::objects()->getOrCreate(['user_id' => $user->id, 'filter_id' => $id]);
+                    UserFiltersLinkModel::objects()->getOrCreate($params);
                 }
                 else {
-                    UserFiltersLinkModel::objects()->filter(['user_id' => $user->id, 'filter_id' => $id])->delete();
+                    UserFiltersLinkModel::objects()->filter($params)->delete();
                 }
             }
 

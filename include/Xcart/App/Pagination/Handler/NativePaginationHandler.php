@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 05/12/2016
- * Time: 21:35
- */
-
 namespace Xcart\App\Pagination\Handler;
+use Xcart\App\Pagination\BasePagination;
 use Xcart\App\Pagination\Exception\IncorrectPageException;
 
 /**
@@ -15,10 +9,24 @@ use Xcart\App\Pagination\Exception\IncorrectPageException;
  */
 class NativePaginationHandler implements PaginationHandlerInterface
 {
+    /** @var  BasePagination */
+    protected $pager;
+
     /**
      * @var \Closure
      */
     protected $callback;
+
+    private function defaultWrongPageCallback()
+    {
+        header("Location: " . $this->getUrlForQueryParam($this->pager->getPageKey(), $this->pager->getPagesCount()), true, 302);
+        die();
+    }
+
+    public function setPager($pager)
+    {
+        $this->pager = $pager;
+    }
 
     /**
      * {@inheritdoc}
@@ -74,9 +82,10 @@ class NativePaginationHandler implements PaginationHandlerInterface
     public function wrongPageCallback()
     {
         if (is_callable($this->callback)) {
-            $this->callback->__invoke($this);
+            $this->callback->__invoke($this, $this->pager);
         } else {
-            throw new IncorrectPageException();
+            $this->defaultWrongPageCallback();
+//            throw new IncorrectPageException();
         }
     }
 }
