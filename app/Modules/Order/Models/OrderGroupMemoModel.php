@@ -6,7 +6,7 @@ use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Traits\DataModelTrait;
-use Xcart\OrderGroupMemo;
+use Xcart\OrderGroupMemos;
 
 class OrderGroupMemoModel extends AutoMetaModel
 {
@@ -14,7 +14,7 @@ class OrderGroupMemoModel extends AutoMetaModel
 
     public static function getDataModelClass()
     {
-        return OrderGroupMemo::className();
+        return OrderGroupMemos::className();
     }
 
     public static function tableName()
