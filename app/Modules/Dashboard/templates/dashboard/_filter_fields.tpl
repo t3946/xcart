@@ -727,11 +727,11 @@
                         </div>
                         <div class="columns large-5 padding-small">
                             <input name="search[order][all_dx]" type="radio" value="Y" id="og_all_dx_y" {if $form_data.order.all_dx == 'Y'}checked{/if}>
-                            <label for="og_all_dx_y" title="Присутствует во всех случаях">Always present</label>
+                            <label for="og_all_dx_y" title="Присутствует во всех группах">Always present</label>
                         </div>
                         <div class="columns large-5 padding-small">
                             <input name="search[order][all_dx]" type="radio" value="N" id="og_all_dx_n" {if $form_data.order.all_dx == 'N'}checked{/if}>
-                            <label for="og_all_dx_n" title="Присутствует не во всех случаях">Sometimes present</label>
+                            <label for="og_all_dx_n" title="Присутствует в одной или всех группах">Sometimes present</label>
                         </div>
 
                     </div>
@@ -739,11 +739,11 @@
                         <div class="columns large-2 padding-small">&nbsp;</div>
                         <div class="columns large-5 padding-small">
                             <input name="search[order][all_dx]" type="radio" value="NA" id="og_all_dx_na" {if $form_data.order.all_dx == 'NA'}checked{/if}>
-                            <label for="og_all_dx_na" title="Отсутствует в некоторых случаях">Sometimes absent</label>
+                            <label for="og_all_dx_na" title="Отсутствует в одной или всех группах">Sometimes absent</label>
                         </div>
                         <div class="columns large-5 padding-small">
                             <input name="search[order][all_dx]" type="radio" value="AN" id="og_all_dx_an" {if $form_data.order.all_dx == 'AN'}checked{/if}>
-                            <label for="og_all_dx_an" title="Отсутствует во всех случаях">Always absent</label>
+                            <label for="og_all_dx_an" title="Отсутствует во всех группах">Always absent</label>
                         </div>
                     </div>
                 </div>
