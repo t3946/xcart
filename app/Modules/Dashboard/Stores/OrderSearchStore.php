@@ -890,7 +890,7 @@ class OrderSearchStore extends BaseStore
 
         $count = null;
 
-        $key = $this->getCacheCountKey('order_search_store_events_count_', $ids);
+        $key = $this->getCacheCountKey('order_search_store_events_count_', ['user_id' => $user->login, 'ids' => $ids]);
         $count = Xcart::app()->cache->get($key);
 
         if (is_null($count))
