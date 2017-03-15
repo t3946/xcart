@@ -414,6 +414,10 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
             }
         } else {
             if ($orderTransaction) {
+                if (in_array($mode, ["re_authorize_transaction", "capture_transaction", "refund_transaction"])) {
+                    $orderTransaction->transaction_amount = $transaction_amount[$order_transaction_id];
+                    $orderTransaction->parent_transaction_id = $orderTransaction->transaction_id;
+                }
                 $orderTransaction->setAttributes([
                     'transaction_id' => $transaction_id,
                     'transaction_response' => $serialize_result,
@@ -421,10 +425,6 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                     'login' => $login,
                     'date' => time()
                 ]);
-                if (in_array($mode, ["re_authorize_transaction", "capture_transaction", "refund_transaction"])) {
-                    $orderTransaction->transaction_amount = $transaction_amount[$order_transaction_id];
-                    $orderTransaction->parent_transaction_id = $orderTransaction->transaction_id;
-                }
                 if ($orderTransaction->isValid()) {
                     $orderTransaction->save();
                 }
