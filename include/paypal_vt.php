@@ -376,10 +376,10 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
     $transactionLog->setAttributes([
         'orderid' => $orderid,
         'paymentid' => $paymentid,
-        'transaction_id' => empty($transaction_id) ? $orderTransaction->transaction_id : $transaction_id,
-        'transaction_status' => empty($transaction_status) ? $orderTransaction->transaction_status : $transaction_status,
-        'transaction_currency' => empty($transaction_currency) ? $orderTransaction->transaction_currency : $transaction_currency,
-        'transaction_total' => empty($transaction_total) ? $orderTransaction->transaction_amount : $transaction_total,
+        'transaction_id' => (empty($transaction_id)) ? $orderTransaction->transaction_id : $transaction_id,
+        'transaction_status' => (empty($transaction_status)) ? $orderTransaction->transaction_status : $transaction_status,
+        'transaction_currency' => (empty($transaction_currency)) ? (empty($orderTransaction->transaction_currency) ? $paypal_vt["currency"] : null) : $transaction_currency,
+        'transaction_total' => (empty($transaction_total)) ? (empty($orderTransaction->transaction_amount) ? $paypal_vt["grand_total"] : null) : $transaction_total,
         'date' => time(),
         'login' => $login,
         'transaction_log' => $serialize_result
