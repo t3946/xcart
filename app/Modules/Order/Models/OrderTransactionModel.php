@@ -35,7 +35,7 @@ class OrderTransactionModel extends AutoMetaModel
             ],
             'transaction_response' => [
                 'class' => SerializeField::className(),
-                'null' => false
+                'null' => true,
             ]
         ];
     }

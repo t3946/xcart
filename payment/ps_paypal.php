@@ -46,6 +46,9 @@
 #
 
 
+use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
+
 if ($_GET['mode'] == 'success' || $_POST['mode'] == 'success') {
 	require "./auth.php";
 
@@ -64,7 +67,30 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
 	$op_message = serialize($_POST);
 	x_log_flag('log_payment_paypal_processing', 'PAYPAL', $op_message, true);
 
-	x_load('http');
+	if ($payment_status == "Expired") {
+		if (!empty($txn_id)) {
+			$orderTransaction = OrderTransactionModel::objects()->get(['transaction_id' => $txn_id]);
+			if ($orderTransaction && $orderTransaction->transaction_status != $payment_status) {
+				$orderTransaction->transaction_status = $payment_status;
+				$orderTransaction->transaction_response = null;
+
+				$transactionLog = new TransactionLogModel;
+				$transactionLog->date = time();
+				$transactionLog->orderid = $orderTransaction->orderid;
+				$transactionLog->paymentid = $orderTransaction->paymentid;
+				$transactionLog->transaction_id = $orderTransaction->transaction_id;
+				$transactionLog->transaction_status = $orderTransaction->transaction_status;
+				$transactionLog->transaction_log = $op_message;
+				$transactionLog->transaction_currency = $_POST['mc_currency'];
+				$transactionLog->transaction_total = $orderTransaction->transaction_amount;
+				$transactionLog->save();
+				if ($orderTransaction->isValid()){
+					$orderTransaction->save();
+				}
+			}
+		}
+	}
+
 
 #
 ## # Because from Admin area -> order page -> VT (or "Order status"), PayPal sends himselves responce here also
