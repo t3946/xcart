@@ -704,9 +704,7 @@ if ($REQUEST_METHOD == "POST")
                                                 'transaction_response' => serialize($result),
                                                 'parent_transaction_id' => $result['id'],
                                             ]);
-                                            if ($orderTransaction->isValid()) {
-                                                $orderTransaction->save();
-                                            }
+                                            $orderTransaction->save();
                                         }
                                     }
                                     else {

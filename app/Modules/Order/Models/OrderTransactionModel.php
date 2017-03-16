@@ -21,7 +21,7 @@ class OrderTransactionModel extends AutoMetaModel
             ],
             'transaction_status'  => [
                 'class' => CharField::className(),
-                'default' => '',
+                'default' => 'failed',
                 'null' => false,
                 'choices' => [
                     'AP' => 'Authorized',
@@ -30,6 +30,7 @@ class OrderTransactionModel extends AutoMetaModel
                     'voided' => 'Voided',
                     'completed' => 'Completed',
                     'Expired' => 'Expired',
+                    'failed' => 'Failed',
                 ]
             ],
             'transaction_response' => [
