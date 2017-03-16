@@ -29,7 +29,7 @@ class UserModel extends AutoMetaModel
                 'class' => IntField::className(),
                 'length' => 1,
                 'default' => 0,
-                'chosen' => [
+                'choices' => [
                     0 => 'Disable',
                     1 => 'Enable'
                 ]

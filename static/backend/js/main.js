@@ -729,21 +729,22 @@ jQuery.fn.mfieldset = function (options) {
 
                         if (data.filters[id]['count']['priority']) {
                             $this.find('.priority').removeClass('empty');
+                            $this.find('.priority').html(data.filters[id]['count']['priority']);
                         }
                         else {
                             $this.find('.priority').addClass('empty');
+                            $this.find('.priority').html('');
                         }
 
                         $this.attr('data-count', data_filter['count']['orders']);
                         $this.find('.count').html(count + ' ' + sign + c_chng);
                         $this.find('.events').html(count_events);
-                        $this.find('.priority').html(data.filters[id]['count']['priority']);
 
-                        if (data.filters[id].count > 0 && $this.hasClass(self.options.classes.disabled)) {
+                        if (data.filters[id]['count']['orders'] > 0 && $this.hasClass(self.options.classes.disabled)) {
                             $this.removeClass(self.options.classes.disabled);
                             $this.addClass(self.options.classes.enabled);
                         }
-                        else if (data.filters[id].count == 0 && $this.hasClass(self.options.classes.enabled)) {
+                        else if (data.filters[id]['count']['orders'] == 0 && $this.hasClass(self.options.classes.enabled)) {
                             $this.removeClass(self.options.classes.enabled);
                             $this.addClass(self.options.classes.disabled);
                         }
