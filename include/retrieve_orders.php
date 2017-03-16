@@ -42,8 +42,6 @@ $location[] = array(func_get_langvar_by_name('lbl_retrieve_orders'), 'retrieve_o
 
 if ($REQUEST_METHOD == 'POST' && $mode == 'retrieve_orders') {
 
-	$email = mysql_real_escape_string($email);
-
 	if (func_check_email($email) && !empty($email)) {
 
 		if (!empty($active_modules['Multiple_Storefronts'])) {

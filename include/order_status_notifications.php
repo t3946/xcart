@@ -78,8 +78,8 @@ if ($REQUEST_METHOD == 'POST') {
 
 
                     $query = array(
-                        'customer_subject' => mysql_real_escape_string($update['customer_subject'][$idx]),
-                        'copy_subject' => mysql_real_escape_string($update['copy_subject'][$idx]),
+                        'customer_subject' => $update['customer_subject'][$idx],
+                        'copy_subject' => $update['copy_subject'][$idx],
                         'email_body' => $update['email_body'][$idx],
                         'enabled' => (isset($update['enabled'][$idx]) && $update['enabled'][$idx] == 'Y') ? 'Y' : 'N',
                         'customer_attach_pdf_invoice' => (isset($update['customer_attach_pdf_invoice'][$idx]) && $update['customer_attach_pdf_invoice'][$idx] == 'Y') ? 'Y' : 'N',

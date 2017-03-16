@@ -74,7 +74,9 @@ function db_fetch_field(\Doctrine\DBAL\Driver\Statement $result, $num = 0) {
 }
 
 function db_free_result(\Doctrine\DBAL\Driver\Statement $result) {
-	$result->closeCursor();
+	if ($result) {
+		$result->closeCursor();
+	}
 }
 
 function db_num_rows(\Doctrine\DBAL\Driver\Statement $result) {
