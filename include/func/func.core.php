@@ -2462,7 +2462,7 @@ function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
             'changefreq'    => 'weekly',
             'priority'      => '0.2',
             'url_pattern'   => 'pages.php?pageid=',
-            'items_query'   => "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[pages].pageid) as url, $sql_tbl[pages].pageid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[pages].pageid AND $sql_tbl[xmlmap_lastmod].type = 'S' WHERE $sql_tbl[pages].active='Y' AND $sql_tbl[pages].level='E' AND (sfids = '' or sfids like '%{$sfid}%')",
+            'items_query'   => "SELECT SQL_NO_CACHE CONCAT('%s', $sql_tbl[pages].pageid) as url, $sql_tbl[pages].pageid as id, IFNULL($sql_tbl[xmlmap_lastmod].date, '%s') as date FROM $sql_tbl[pages] LEFT JOIN $sql_tbl[xmlmap_lastmod] ON $sql_tbl[xmlmap_lastmod].id = $sql_tbl[pages].pageid AND $sql_tbl[xmlmap_lastmod].type = 'S' WHERE $sql_tbl[pages].active='Y' AND $sql_tbl[pages].level='E' AND (sfids = '' or sfids like '%%{$sfid}%%')",
             'multilanguage' => false,
         ],
         4 => [
@@ -2820,7 +2820,7 @@ function func_pc_find_new_categoryid($productid)
         foreach ($text_arr as $word) {
             if (in_array($word, $current_category_terms_arr)) {
                 // sleep for some time
-                $bayes_weight = func_query_first_cell("Select COALESCE(CASE WHEN CT.categoryid is not NULL THEN LOG((Count(CT.termid)+1)/C.pc_z) ELSE LOG(1/C.pc_z) END,0) As bayes_weight from $sql_tbl[pc_terms] T left join $sql_tbl[categories] C ON C.categoryid = '$categoryid' left join $sql_tbl[pc_category_terms] CT ON CT.categoryid = C.categoryid and CT.termid = T.termid where T.term = '$word' and T.storefrontid = '$sfid'");
+                $bayes_weight = func_query_first_cell("Select COALESCE(CASE WHEN CT.categoryid is not NULL THEN LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z) ELSE LOG(1/C.pc_z) END,0) As bayes_weight from $sql_tbl[pc_terms] T left join $sql_tbl[categories] C ON C.categoryid = '$categoryid' left join $sql_tbl[pc_category_terms] CT ON CT.categoryid = C.categoryid and CT.termid = T.termid where T.term = '$word' and T.storefrontid = '$sfid'");
                 $p1 = $p1 + $bayes_weight;
             }
         }

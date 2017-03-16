@@ -25,7 +25,7 @@ class AttentionTagModel extends Model
             'active' => [
                 'class' => CharField::className(),
                 'null' => false,
-                'chosen' => [
+                'choices' => [
                     'Y' => 'Enabled',
                     'N' => 'Disabled'
                 ],
@@ -35,7 +35,7 @@ class AttentionTagModel extends Model
                 'class' => IntField::className(),
                 'length' => 1,
                 'null' => false,
-                'chosen' => [
+                'choices' => [
                     0 => 'None',
                     1 => 'Trigger'
                 ],
