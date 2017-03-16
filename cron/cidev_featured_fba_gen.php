@@ -120,7 +120,7 @@ if (!empty($values))
 
     foreach (array_chunk($values, 100) as $c_values)
     {
-        func_query("insert ignore into xcart_featured_products (productid, storefrontid, product_order) VALUES " . implode(', ', $c_values));
+        Connection::getInstance()->executeQuery("insert ignore into xcart_featured_products (productid, storefrontid, product_order) VALUES " . implode(', ', $c_values));
     }
 }
 
