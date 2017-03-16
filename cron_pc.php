@@ -86,6 +86,7 @@ echo "1";
 						$productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termid]);
 						if (!$productCategoryTerm) {
 							$productCategoryTerm = new ProductCategoryTermsModel();
+							$productCategoryTerm->setAttributes(['categoryid' => $categoryid, 'termid' => $termid]);
 						}
 						$productCategoryTerm->term_count++;
 						$productCategoryTerm->save();
