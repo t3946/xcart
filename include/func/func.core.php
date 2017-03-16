@@ -1689,7 +1689,7 @@ function func_insert_trademark($string, $empty = false, $use_alt = false)
 
 function func_trim_value(&$value)
 {
-    $value = mysql_real_escape_string(htmlentities(trim($value)));
+    $value = htmlentities(trim($value));
 }
 
 function func_json_encode($a = false)

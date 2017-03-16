@@ -1065,7 +1065,7 @@ function func_refund_product($orderid, $mid, &$product, $customer_info)
             $query_data = [
                 'ref_price'  => $product['refund']['price'],
                 'ref_qty'    => $product['refund']['amount'],
-                'extra_data' => mysql_real_escape_string(serialize($product['extra_data'])),
+                'extra_data' => serialize($product['extra_data']),
             ];
 
             func_array2update('refunded_products', $query_data, $where);
@@ -1194,7 +1194,6 @@ function func_update_refunded_groups(&$groups, $orderid, $can_delete_group = fal
 
                     $lng_adj                = func_get_langvar_by_name('lbl_adjustment_to', null, false, true);
                     $query_data['shipping'] = str_replace($lng_adj . ' ', '', $group['shipping']);
-                    $query_data['shipping'] = mysql_real_escape_string($query_data['shipping']);
 
                     $query_data['extra_data'] = serialize($query_data['extra_data']);
                     unset($query_data['taxes']);

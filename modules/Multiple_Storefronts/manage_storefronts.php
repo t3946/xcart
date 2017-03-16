@@ -158,7 +158,6 @@ if ($REQUEST_METHOD == 'POST') {
 												$d['value'] = ''; // default order prefix is empty
 											}
 											$d['storefrontid'] = $new_storefront_id;
-											$d['comment'] = mysql_real_escape_string($d['comment']);
                                             $d['orderby'] = $domain_specific_config[$d['category']][$d['name']];
 											func_array2insert('storefronts_config', $d);
 										}
