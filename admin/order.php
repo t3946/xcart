@@ -1784,8 +1784,8 @@ if ($mode == 'mnf_notify' || $mode == "cidev_send_email_to_operator")
                                         $orderTransaction->transaction_id = $result['id'];
                                         $orderTransaction->transaction_amount = $result["amount"]["total"];
                                         $orderTransaction->date = time();
-                                        $orderTransaction->login = $result['state'];
-                                        $orderTransaction->transaction_status = $login;
+                                        $orderTransaction->login = $login;
+                                        $orderTransaction->transaction_status = $result['state'];
                                         $orderTransaction->transaction_response = serialize($result);
                                         $orderTransaction->parent_transaction_id = $authorized_transaction_id;
                                         $orderTransaction->save();
