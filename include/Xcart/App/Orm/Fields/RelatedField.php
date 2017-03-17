@@ -3,7 +3,7 @@
 namespace Xcart\App\Orm\Fields;
 
 use Doctrine\DBAL\Connection;
-use Xcart\App\Orm\ManagerInterface;
+use Doctrine\DBAL\Types\Type;
 use Mindy\QueryBuilder\QueryBuilder;
 
 /**
@@ -17,6 +17,12 @@ abstract class RelatedField extends IntField
      */
     public $modelClass;
 
+    /**
+     * @var string sql type of field get type name from const Doctrine\DBAL\Types\Type class
+     *             default = 'integer'
+     */
+    public $sqlType = Type::INTEGER;
+
     protected $_model;
 
     protected $_relatedModel;
@@ -24,6 +30,15 @@ abstract class RelatedField extends IntField
      * @var Connection
      */
     protected $connection;
+
+    /**
+     * @return \Doctrine\DBAL\Types\Type
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getSqlType()
+    {
+        return Type::getType($this->sqlType);
+    }
 
     abstract public function getJoin(QueryBuilder $qb, $topAlias);
     

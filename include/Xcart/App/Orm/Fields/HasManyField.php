@@ -3,11 +3,10 @@
 namespace Xcart\App\Orm\Fields;
 
 use Exception;
+use Xcart\App\Orm\Exception\OrmExceptions;
 use Xcart\App\Orm\HasManyManager;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\ManagerInterface;
-use Xcart\App\Orm\Model;
-use Xcart\App\Orm\QuerySet;
 use Mindy\QueryBuilder\QueryBuilder;
 
 /**
@@ -30,20 +29,6 @@ class HasManyField extends RelatedField
      */
     protected $_model;
 
-    /**
-     * TODO: docs
-     * Explain by example: model User has many models Pages
-     * User->id <- from
-     * Pages->user_id <- to
-     * @var string
-     */
-    public $from;
-
-    /**
-     * @var string
-     */
-    public $to;
-
     public $modelClass;
 
     public $through;
@@ -60,21 +45,16 @@ class HasManyField extends RelatedField
     }
 
     /**
-     * @return ManagerInterface
+     * @return \Xcart\App\Orm\ManagerInterface
+     * @throws \Exception
      */
     public function getManager()
     {
         $where = [];
-        list($from, $to) = $this->link;
-
-        if (is_array($from)) {
-            foreach ($this->link as $link) {
-                list($from, $to) = $link;
+        if ($this->link) {
+            foreach ($this->link as $from => $to) {
                 $where[$from] = $this->getModel()->getAttribute($to);
             }
-        }
-        else {
-            $where[$from] = $this->getModel()->getAttribute($to);
         }
 
         $manager = new Manager($this->getRelatedModel(), $this->getModel()->getConnection());
@@ -96,10 +76,25 @@ class HasManyField extends RelatedField
     {
         $tableName = $this->getRelatedTable();
         $alias = $qb->makeAliasKey($tableName);
-        list($from, $to) = $this->link;
+        $on = [];
+
+        if ($this->link) {
+            foreach ($this->link as $from => $to) {
+                $on[$topAlias . '.' . $from] = $alias . '.' . $to;
+            }
+        }
+        else {
+            if (count($this->getRelatedModel()->getPrimaryKeyName(true)) == 1)
+            {
+                $on = [$topAlias . '.' . $this->getAttributeName() => $alias . '.' . $this->getRelatedModel()->getPrimaryKeyName()];
+            }
+            else {
+                OrmExceptions::FailCreateLink();
+            }
+        }
 
         return [
-            ['LEFT JOIN', $tableName, [$alias . '.' . $from => $topAlias . '.' . $to], $alias]
+            ['LEFT JOIN', $tableName, $on, $alias]
         ];
     }
 
