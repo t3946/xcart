@@ -129,6 +129,9 @@ if ($REQUEST_METHOD == 'GET' && empty($_GET['keep_https'])) {
         $current_script = $aRequest['request_uri'];
     }
 	if (!$HTTPS && is_https_link($current_script, $https_scripts)) {
+		if ($current_script == '/home.php') {
+			$current_script = '';
+		}
 		$tmp_location = $https_location.DIR_CUSTOMER.$current_script.$additional_query;
 	}
 	elseif (!$HTTPS && is_https_link($current_script, $https_messages) && !strncasecmp($HTTP_REFERER, $https_location, strlen($https_location))) {

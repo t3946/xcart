@@ -346,18 +346,18 @@ if (!$fatal) {
 		if (!empty($Access_Token)){
 
 			$transaction_type = "authorization";
-			if (in_array(strtolower($transaction_status), array('completed','p'))){
+			if (in_array(strtolower($transaction_status), array('completed', 'p'))) {
 				$transaction_type = "capture";
 			}
-			
+
 			$result = func_paypal_look_up_payment($Access_Token, $transaction_id, $transaction_type);
 
-                        $result["FIELD_transaction_id"] = $transaction_id;
-                        $result["FIELD_transaction_status"] = $transaction_status;
-                        $result["FIELD_transaction_currency"] = $transaction_currency;
-                        $result["FIELD_transaction_total"] = $transaction_total;
+			$result["FIELD_transaction_id"] = $transaction_id;
+			$result["FIELD_transaction_status"] = $transaction_status;
+			$result["FIELD_transaction_currency"] = $transaction_currency;
+			$result["FIELD_transaction_total"] = $transaction_total;
 
-			$result["script_info"] = "Script: payment/payment_ccmid.php . Function: func_paypal_look_up_payment"; 
+			$result["script_info"] = "Script: payment/payment_ccmid.php . Function: func_paypal_look_up_payment";
 
 			$transaction_log = serialize($result);
 		}

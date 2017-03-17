@@ -1305,8 +1305,6 @@ SQL;
 
                                 $statuses = func_query_hash('SELECT code, name, type FROM xcart_order_statuses ORDER BY orderby', array('type', 'code'), false, true);
 
-                                x_load('order');
-                                x_load('mail');
                                 $order_data = func_order_data($oOrder->getOrderId());
                                 $order_status = "I";
 
@@ -1340,7 +1338,15 @@ SQL;
                                                 $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
                                                 $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
 
-                                                func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
+                                                $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                                                $oMail->to = $to;
+                                                $oMail->reply_to = $reply_to;
+                                                $oMail->from = $from;
+                                                $oMail->subject_template = 'mail/order_notification_subj.tpl';
+                                                $oMail->body_template = 'mail/order_notification.tpl';
+                                                $oMail->addHeader(['X-Xcart-Label' => 'order-status-changed']);
+                                                $oMail->sendEmail();
+                                                //func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
 
                                             }
                                         }

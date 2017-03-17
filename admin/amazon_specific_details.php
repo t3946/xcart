@@ -34,6 +34,7 @@ if ($REQUEST_METHOD == 'POST') {
             "amazon_searchterms5" => $amazon_searchterms5,
             "amazon_product_type" => $amazon_product_type,
             "amazon_category_item_type" => $amazon_category_item_type,
+            "amazon_listing_sku_to_load" => $amazon_listing_sku_to_load,
             "amazon_fba_restricted" => (empty($amazon_fba_restricted) ? 'N' : $amazon_fba_restricted),
             "amazon_fba_restricted_reason" => $amazon_fba_restricted_reason,
             "prevent_selling_on_amazon" => $prevent_selling_on_amazon,

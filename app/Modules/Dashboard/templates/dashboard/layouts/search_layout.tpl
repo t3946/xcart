@@ -12,7 +12,7 @@
                 <legend>Order search form</legend>
 
                 <form action="{url 'dashboard:search'}" method="GET">
-                    {include 'dashboard/filter_fields.tpl'}
+                    {include 'dashboard/_filter_fields.tpl'}
 
 
                     <ul class="ul-main">

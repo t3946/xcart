@@ -1,4 +1,6 @@
 <?php
+use Xcart\Connection;
+
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
@@ -114,7 +116,7 @@ foreach ( $sfids as $sfid)
 
 if (!empty($values))
 {
-    func_query("truncate xcart_featured_products");
+    Connection::getInstance()->executeQuery("truncate xcart_featured_products");
 
     foreach (array_chunk($values, 100) as $c_values)
     {

@@ -92,8 +92,11 @@ if ($HTTPS){
 $smarty_skin_dir = "/skin1_kolin";
 $smarty->assign("smarty_skin_dir", $smarty_skin_dir);
 
-$smarty->assign("ImagesDir",(!empty($CDN_domain) && $Enable_CDN == "Y" ? $CDN_domain : $xcart_web_dir)."{$smarty_skin_dir}/images");
-$smarty->assign("SkinDir",(!empty($CDN_domain) && $Enable_CDN == "Y" ? $CDN_domain : $xcart_web_dir).$smarty_skin_dir);
+$urlPath = ((!empty($CDN_domain) && $Enable_CDN == "Y") && (!$HTTPS || ($HTTPS && $config["Appearance"]['https_enabled']=='Y'))) ? $CDN_domain : $xcart_web_dir;
+
+$smarty->assign("ImagesDir", $urlPath . "{$smarty_skin_dir}/images");
+$smarty->assign("SkinDir", $urlPath . $smarty_skin_dir);
+
 $smarty->assign("template_dir", $smarty->template_dir);
 
 #

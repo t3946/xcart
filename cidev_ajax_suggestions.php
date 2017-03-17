@@ -14,12 +14,13 @@ require "./top.inc.php";
 require "./init.php"; #uses xid.X
 
 $current_area="C";
+$aResult = [];
 
 list($products, $sGoogleAnaliticsParam) = Xcart\Helpers\SliderData::getSliderData($section_name, $productid);
 
 if ($REQUEST_METHOD == 'POST') {
 	if (!empty($products)){
-        $aResult = [];
+
         foreach ($products as $k => $oProduct){
             $oThumb = $oProduct->getThumbnail();
             $oBrand = \Xcart\Brand::objects()->get(['brandid' => $oProduct->brandid]);
@@ -44,6 +45,6 @@ if ($REQUEST_METHOD == 'POST') {
                 'title' => $oProduct->product];
 
 		}
-		echo json_encode($aResult);
 	}
+    echo json_encode($aResult);
 }

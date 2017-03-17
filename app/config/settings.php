@@ -11,9 +11,14 @@ return array_replace_recursive([
    'modules' => [
        'Core',
        'Dashboard',
+       'Distributor',
+       'Product',
+       'Order',
+       'Shipping',
        'User',
        'Sites',
        'Amazon',
+       'Order',
    ],
    'components' => [
        'db' => [
@@ -39,6 +44,11 @@ return array_replace_recursive([
            'debug' => true,
            'errHandler' => false
        ],
+       'event' => [
+           'class' => '\\Xcart\\App\\Event\\EventManager',
+           'events' => include 'events.php'
+       ],
+
 //       'middleware' => [
 //           'class' => '\Mindy\Middleware\MiddlewareManager',
 //           'middleware' => [
@@ -65,8 +75,8 @@ return array_replace_recursive([
        ],
        'template' => [
            'class' => '\\Xcart\\App\\Template\\TemplateManager',
-           'forceCompile' => true,
-//           'autoReload' => false
+           'forceCompile' => false,
+           'autoReload' => false
        ],
        'cache' => [
            'class' => '\\Xcart\\App\\Cache\\Cache',
@@ -85,6 +95,12 @@ return array_replace_recursive([
        'mail' => [
            'class' => '\\Modules\\Mail\\Components\\MailComponent'
        ],
+       'auth' => [
+           'class' => '\\Modules\\User\\Components\\Auth'
+       ],
+//       'global_config' => [
+//           'class' => '\\Modules\\Core\\Components\\GlobalConfig'
+//       ],
    ],
    'autoloadComponents' => [
        'errorHandler'

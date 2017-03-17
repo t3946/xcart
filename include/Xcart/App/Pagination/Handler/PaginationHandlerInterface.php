@@ -14,6 +14,9 @@ namespace Xcart\App\Pagination\Handler;
  */
 interface PaginationHandlerInterface
 {
+
+    public function setPager($pager);
+
     /**
      * @param $key
      * @param $defaultPageSize
