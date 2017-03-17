@@ -655,6 +655,7 @@ SQL;
                 }
                 if (!empty($aOrderDetails)) {
                     foreach ($aOrderDetails as $sAmazonOrderId => $aShippings) {
+                        $orderInvoiceModel = null;
                         foreach ($aShippings as $sShippingId => $aAmazonCodes) {
                             foreach ($aAmazonCodes as $sAmazonCode => $aFees) {
                                 $oOrderAmazonDetail = OrderAmazonDetail::create([
@@ -751,6 +752,7 @@ SQL;
                                                 $orderGroupModel = OrderGroupModel::objects()->get(['orderid' => $iOrderId, 'manufacturerid' => $oOrderAmazonDetail->manufacturerid]);
                                                 if ($orderGroupModel) {
                                                     $orderDetailModel = null;
+
                                                     $orderDetailModels = OrderDetailModel::objects()->filter(['orderid' => $iOrderId, 'productcode' => $oOrderAmazonDetail->SKU])->all();
                                                     if ($orderDetailModels) {
                                                         $orderDetailModel = reset($orderDetailModels);
@@ -759,21 +761,21 @@ SQL;
                                                     }
                                                     if ($orderGroupModel->amz_fullfilment_order_placed == 'Y' && !$orderGroupModel->invoices->count()) {
                                                         $fCostToUs = (!$orderDetailModel) ?: $orderDetailModel->getDataModel()->getCostToUs();
-                                                        $orderInvoiceModel = new OrderGroupInvoiceModel;
+                                                        if (!$orderInvoiceModel) {
+                                                            $orderInvoiceModel = new OrderGroupInvoiceModel;
+                                                        }
                                                         $orderInvoiceModel->setAttributes([
                                                                 'orderid' => $orderGroupModel->orderid,
                                                                 'manufacturerid' => $orderGroupModel->manufacturerid,
                                                                 'invoice_number' => 1,
                                                                 'invoice_received' => 'Y',
-                                                                'cost_to_us_for_products_charged' => $fCostToUs,
-                                                                'products_total' => $fCostToUs,
-                                                                'shipping_charged' => $fChargeFee,
-                                                                'shipping_total' => $fChargeFee,
-                                                                'invoice_total' => $fChargeFee + $fCostToUs,
+                                                                'cost_to_us_for_products_charged' => $orderInvoiceModel->cost_to_us_for_products_charged + $fCostToUs,
+                                                                'products_total' => $orderInvoiceModel->products_total + $fCostToUs,
+                                                                'shipping_charged' => $orderInvoiceModel->shipping_charged + $fCostToUs,
+                                                                'shipping_total' => $orderInvoiceModel->shipping_total + $fChargeFee,
+                                                                'invoice_total' => $orderInvoiceModel->invoice_total + $fCostToUs,
                                                                 'status' => 'U',
-                                                            ]
-                                                        );
-                                                        $orderInvoiceModel->save();
+                                                            ]);
                                                         $orderGroupInvoiceProduct = new OrderGroupInvoiceProductModel;
                                                         $orderGroupInvoiceProduct->setAttributes([
                                                                 'orderid' => $orderInvoiceModel->orderid,
@@ -783,19 +785,19 @@ SQL;
                                                                 'unit_cost' => $fCostToUs,
                                                                 'qty_inv' => $orderDetailModel->amount,
                                                                 'unit_cost_total' => $orderDetailModel->amount * $fCostToUs
-                                                            ]
-                                                        );
+                                                            ]);
                                                         $orderGroupInvoiceProduct->save();
-
                                                     }
                                                     $orderGroupModel->getDataModel()->recalculateAccounting();
-
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
+                        }
+                        if ($orderInvoiceModel) {
+                            $orderInvoiceModel->save();
                         }
                     }
                 }
