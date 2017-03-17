@@ -2279,7 +2279,7 @@ function func_products_from_scratch($scratch_products, $membershipid, $persisten
 				$products_array["pimage_url"] = func_get_image_url($products_array["productid"], 'T', $products_array['image_path']);
 
 			} elseif (empty($products_array['is_pimage']) && !$products_array['is_thumbnail']) {
-				$products_array["pimage_url"] = func_get_default_image("P");
+				$products_array["pimage_url"] = func_get_default_image("T");
 				
 			}
 

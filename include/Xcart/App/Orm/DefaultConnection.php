@@ -8,35 +8,50 @@ use Xcart\App\Main\Xcart;
 
 class DefaultConnection extends DBALConnection
 {
+    private $__errHandler = null;
+    private $__enableErrHandler = true;
+    private $__ignoreErrors = false;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function connect()
+    public function setErrorHandler($handlerLink)
     {
-        try {
-            return parent::connect();
-        }
-        catch (DBALException $e) {
-            $this->processException($e);
-        }
-
-        return null;
+        $this->__errHandler = $handlerLink;
+        return $this;
     }
+
+    public function unsetErrorHandler()
+    {
+        $this->__errHandler = null;
+        return $this;
+    }
+
+    public function setEnableErrHandler($enable = true)
+    {
+        $this->__enableErrHandler = $enable;
+        return $this;
+    }
+
+    public function setIgnoreErrors($ignore = false)
+    {
+
+        $this->__ignoreErrors = $ignore;
+        return $this;
+    }
+
+
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function connect()
+//    {
+//        return $this->__internalCall(__FUNCTION__, func_get_args());
+//    }
 
     /**
      * {@inheritdoc}
      */
     public function delete($tableExpression, array $identifier, array $types = array())
     {
-        try {
-            return parent::delete($tableExpression, $identifier, $types);
-        }
-        catch (DBALException $e) {
-            $this->processException($e);
-        }
-
-        return null;
+        return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -44,14 +59,7 @@ class DefaultConnection extends DBALConnection
      */
     public function update($tableExpression, array $data, array $identifier, array $types = array())
     {
-        try {
-            return parent::update($tableExpression, $data, $identifier, $types);
-        }
-        catch (DBALException $e) {
-            $this->processException($e);
-        }
-
-        return null;
+        return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -59,14 +67,7 @@ class DefaultConnection extends DBALConnection
      */
     public function insert($tableExpression, array $data, array $types = array())
     {
-        try {
-            return parent::insert($tableExpression, $data, $types);
-        }
-        catch (DBALException $e) {
-            $this->processException($e);
-        }
-
-        return null;
+        return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -74,14 +75,7 @@ class DefaultConnection extends DBALConnection
      */
     public function prepare($statement)
     {
-        try {
-            return parent::prepare($statement);
-        }
-        catch (DBALException $e) {
-            $this->processException($e, $statement);
-        }
-
-        return null;
+        return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -89,14 +83,7 @@ class DefaultConnection extends DBALConnection
      */
     public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)
     {
-        try {
-            return parent::executeQuery($query, $params, $types, $qcp);
-        }
-        catch (DBALException $e) {
-            $this->processException($e);
-        }
-
-        return null;
+        return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -104,14 +91,7 @@ class DefaultConnection extends DBALConnection
      */
     public function executeCacheQuery($query, $params, $types, QueryCacheProfile $qcp)
     {
-        try {
-            return parent::executeCacheQuery($query, $params, $types, $qcp);
-        }
-        catch (DBALException $e) {
-            $this->processException($e);
-        }
-
-        return null;
+        return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -119,16 +99,7 @@ class DefaultConnection extends DBALConnection
      */
     public function query()
     {
-        $args = func_get_args();
-
-        try {
-            return call_user_func_array('parent::query', func_get_args());
-        }
-        catch (DBALException $e) {
-            $this->processException($e, (!empty($args[0])?$args[0]:''));
-        }
-
-        return null;
+        return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -136,14 +107,7 @@ class DefaultConnection extends DBALConnection
      */
     public function executeUpdate($query, array $params = array(), array $types = array())
     {
-        try {
-            return parent::executeUpdate($query, $params, $types);
-        }
-        catch (DBALException $e) {
-            $this->processException($e, $query);
-        }
-
-        return null;
+        return $this->__internalCall(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -151,11 +115,20 @@ class DefaultConnection extends DBALConnection
      */
     public function exec($statement)
     {
+        return $this->__internalCall(__FUNCTION__, func_get_args());
+    }
+
+    private function __internalCall($function, array $args = [])
+    {
+        if (!$this->__enableErrHandler) {
+            call_user_func_array('parent::' . $function, $args);
+        }
+
         try {
-            return parent::exec($statement);
+            return call_user_func_array('parent::' . $function, $args);
         }
         catch (DBALException $e) {
-            $this->processException($e, $statement);
+            $this->processException($e, $args[0]);
         }
 
         return null;
@@ -164,9 +137,21 @@ class DefaultConnection extends DBALConnection
     /**
      * @param DBALException $exception
      * @param string $query
+     *
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function processException($exception, $query = '')
     {
+        if ($this->__ignoreErrors) {
+            return;
+        }
+
+        if ($this->__errHandler) {
+            call_user_func_array($this->__errHandler, [$exception, $query]);
+            return;
+        }
+
+
         $msg = '';
 
         if (Xcart::app()->getIsWebMode()) {

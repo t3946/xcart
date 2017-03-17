@@ -104,7 +104,6 @@ if (zerolen($image) && zerolen($image_path) && isset($config['available_images']
 #
 
 			if (zerolen($image) && zerolen($image_path) && !zerolen($_filename)) {
-				x_load("image");
 				$image_path = func_image_dir($type)."/".$_filename;
 			}
 

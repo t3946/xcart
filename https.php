@@ -38,8 +38,6 @@
 
 if ( !defined('XCART_START') ) { header("Location: home.php"); die("Access denied"); }
 
-x_load('files');
-
 $https_messages = array(array("mode=order_message","orderids="), "error_message.php");
 $https_scripts = array();
 
@@ -72,6 +70,10 @@ if ($config['Security']['use_secure_login_page'] == 'Y') {
 }
 
 function is_https_link($link, $https_scripts) {
+	global $config;
+	if ($config["Appearance"]["https_enabled"] == "Y"){
+		return true;
+	}
 	if (empty($https_scripts))
 		return false;
 
@@ -121,7 +123,15 @@ if (!preg_match("/(?:^|&)sl=/", $additional_query) && $xcart_http_host != $xcart
 
 if ($REQUEST_METHOD == 'GET' && empty($_GET['keep_https'])) {
 	$tmp_location = "";
+    $aParsedStr = parse_url($current_script);
+    parse_str($aParsedStr['query'],$aRequest);
+    if (!empty($aRequest['request_uri'])) {
+        $current_script = $aRequest['request_uri'];
+    }
 	if (!$HTTPS && is_https_link($current_script, $https_scripts)) {
+		if ($current_script == '/home.php') {
+			$current_script = '';
+		}
 		$tmp_location = $https_location.DIR_CUSTOMER.$current_script.$additional_query;
 	}
 	elseif (!$HTTPS && is_https_link($current_script, $https_messages) && !strncasecmp($HTTP_REFERER, $https_location, strlen($https_location))) {
@@ -132,10 +142,7 @@ if ($REQUEST_METHOD == 'GET' && empty($_GET['keep_https'])) {
 		$do_redirect = empty($login_redirect);
 		x_session_unregister("login_redirect");
 		if ($do_redirect) {
-			$aParsedStr = parse_url($current_script);
-			parse_str($aParsedStr['query'],$aRequest);
-			if (!empty($aRequest['request_uri']))
-				$current_script = $aRequest['request_uri'];
+
 			$tmp_location = $http_location.DIR_CUSTOMER.$current_script.$additional_query;
 		}
 	}
@@ -164,7 +171,7 @@ if (_smarty_console)
 //die("123");
 			}
 			else {
-				func_header_location($tmp_location);
+				func_header_location($tmp_location, true, 301);
 			}
 		}
 	}

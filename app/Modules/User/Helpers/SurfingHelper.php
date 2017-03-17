@@ -85,21 +85,21 @@ class SurfingHelper
 
             if (!is_null($sReferalUrl)) {
                 $oSurfMeta->points_visited++;
-                $oSurfMeta->referal_url = addslashes($sReferalUrl);
+                $oSurfMeta->referal_url = $sReferalUrl;
 
-                $oReferer = ReferrerModel::objects()->getOrCreate(['referer' => (string)substr($sReferalUrl, 0, 767)]);
+                $referer = (string) urldecode($sReferalUrl);
+                $oReferer = ReferrerModel::objects()->getOrCreate(['referer' => $referer]);
                 $oReferer->visits++;
                 $oReferer->save();
 
                 if ($oSurfMeta->id) {
-                    $userAgent = Xcart::app()->request->getUserAgent();
                     (new SurfPathModel([
                             'meta_id'         => $oSurfMeta->id,
                             'resource_id'     => $oReferer->referer_id,
                             'resource_type'   => $model::GOAL_TYPE_REFERER,
                             'timestamp'       => time(),
                             'position'        => $oSurfMeta->points_visited,
-                            'additional_data' => is_null($userAgent) ? '' : $userAgent,
+                            'additional_data' => Xcart::app()->request->getUserAgent(),
                         ]
                     ))->save();
                 }

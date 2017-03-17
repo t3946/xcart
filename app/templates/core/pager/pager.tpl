@@ -4,6 +4,13 @@
 
         <ul class="pager columns large-8 no-bullet">
             {if $view->getPagesCount() > 1}
+
+                {if $view->hasPrevPage()}
+                    <li class="first">
+                            <a href="{$view->getUrl(1)}"><<</a>
+                    </li>
+                {/if}
+
                 <li class="prev">
                     {if $view->hasPrevPage()}
                         <a href="{$view->getUrl($pager->getPage() - 1)}">&larr;</a>
@@ -39,6 +46,12 @@
                         <span class="next">&rarr;</span>
                     {/if}
                 </li>
+
+                {if $view->hasNextPage()}
+                    <li class="last">
+                        <a href="{$view->getUrl($pager->getPagesCount())}">>></a>
+                    </li>
+                {/if}
             {/if}
         </ul>
 

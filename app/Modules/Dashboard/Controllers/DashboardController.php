@@ -2,11 +2,13 @@
 
 namespace Modules\Dashboard\Controllers;
 
+use Mindy\QueryBuilder\Expression;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Models\GroupModel;
 use Modules\Dashboard\Models\UserFiltersLinkModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Product\Models\ProductQuestionModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
@@ -17,19 +19,38 @@ class DashboardController extends PrototypeAdminController
 {
     public $defaultAction = 'index';
 
+    public function beforeAction($action, $params)
+    {
+        /** check hide_no_orders_test_checkout form */
+
+        if (!empty($_POST['mode']) && $_POST['mode'] == 'hide_no_orders_test_checkout_message') {
+            Xcart::app()->request->session->add("no_orders_test_checkout_hide_time", time());
+
+            $log_text = Xcart::app()->user->firstname . " (" . Xcart::app()->user->login . ") clicked 'Done'.";
+            func_backprocess_log("Test_checkout", $log_text);
+            $this->getRequest()->refresh();
+        }
+    }
+
     public function index()
     {
         $models = DashboardFilter::objects()->filter(['enabled' => true])->all();
+        $questionModels = ProductQuestionModel::objects()->select(['status', 'id' => new Expression('count(*)')])->exclude(['status' => ''])->group(['status'])->order(['-status'])->all();
 
         if ($this->getRequest()->getIsAjax()) {
-            $data = [];
+            $data = ['filters' => [], 'groups' => []];
 
             /** @var DashboardFilter $model */
             foreach ($models as $model) {
-                $data[$model->id] = [
-                    'count' => $model->getSearchStorage()->getCashedCount(),
+                $data['filters'][$model->id] = [
+                    'count' => [
+                        'orders' => $model->getSearchStorage()->getCashedCount(),
+                        'events' => $model->getSearchStorage()->getCachedEventsCount(),
+                        'priority' => $model->getSearchStorage()->getCachedPriorityShippingCount(),
+                    ]
                 ];
             }
+            $data['questions'] = $this->render('dashboard/_product_question.tpl', ['questions' => $questionModels,]);
 
             $this->jsonResponse($data);
         }
@@ -38,8 +59,9 @@ class DashboardController extends PrototypeAdminController
                 [
                     'models'  => $models,
                     'row_col' => DashboardFilter::getMaxRowCol(),
-                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__login' => Xcart::app()->request->session->get('login')])->order(['position_row', 'position_column'])->all(),
+                    'myModels' => DashboardFilter::objects()->filter(['enabled' => true, 'users__id' => Xcart::app()->user->id])->order(['-position_row', '-position_column'])->all(),
                     'groups'  => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
+                    'questions' => $questionModels,
                 ]
             );
         }
@@ -51,10 +73,15 @@ class DashboardController extends PrototypeAdminController
     {
         /** @var DashboardFilter $model */
         if ($model = DashboardFilter::objects()->get(['id' => $id])) {
-            $session = Xcart::app()->request->session;
             $orderStore = $model->getSearchStorage();
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
+            $form_data = $model->form_data;
+            $form_data['new_list'] = Xcart::app()->request->session->get('search_new_template', 1);
+
+            if ($pager->getTotal() != $model->getSearchStorage()->getCashedCount()) {
+                $model->getSearchStorage()->clearCache();
+            }
 
             echo $this->renderInternal('dashboard/filter_view.tpl',
                 array_merge(
@@ -63,8 +90,8 @@ class DashboardController extends PrototypeAdminController
                         'model'         => $model,
                         'pager'         => $pager,
                         'models'        => $models,
-                        'form_data'     => SearchHelper::prepareFormDataForTemplate($model->form_data),
-                        'new_template'  => $session->get('search_new_template', 1),
+                        'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
+                        'new_template'  => $form_data,
                         'form_collapse' => true,
                     ]
                 )
@@ -105,51 +132,55 @@ class DashboardController extends PrototypeAdminController
     public function mySort()
     {
         /** @var Model|ModelInterface $model */
-        if (isset($_POST['id']) && $model = DashboardFilter::objects()->get(['id' => $_POST['id']]))
+        if (isset($_POST['id']) && $filter_model = DashboardFilter::objects()->get(['id' => $_POST['id']]))
         {
 
-            $user = UserModel::objects()->get(['login' => Xcart::app()->request->session->get('login')]);
-            $model = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $model->id, 'user_id' => $user->id]);
+            $user = Xcart::app()->user;
+            $model = UserFiltersLinkModel::objects()->getOrCreate(['filter_id' => $filter_model->id, 'user_id' => $user->id]);
 
             unset($_POST['id']);
             $model->setAttributes($_POST);
 
             if ($model->isValid() && $model->save(['position_row', 'position_column'])) {
 
-                $this->jsonResponse(['message' => "Filter '{$model}' saved on position {$model->position_row}x{$model->position_column}"]);
+                $this->jsonResponse(['message' => "Filter '{$filter_model}' saved on position {$model->position_row}x{$model->position_column}"]);
             }
         }
     }
 
     public function subscription($id)
     {
+        $user = Xcart::app()->user;
         $class = UserModel::classNameShort();
-        $model = UserModel::objects()->get(['login' => Xcart::app()->request->session->get('login')]);
 
-        if ($this->getRequest()->getIsPost()) {
-            if ($_POST[$class]) {
-                UserFiltersLinkModel::objects()->getOrCreate(['user_id' => $model->id, 'filter_id' => $id]);
+        if (!$user->getIsGuest())
+        {
+            if ($this->getRequest()->getIsPost()) {
+                $params = ['user_id' => $user->id, 'filter_id' => $id];
+
+                if ($_POST[$class]) {
+                    UserFiltersLinkModel::objects()->getOrCreate($params);
+                }
+                else {
+                    UserFiltersLinkModel::objects()->filter($params)->delete();
+                }
             }
-            else {
-                UserFiltersLinkModel::objects()->filter(['user_id' => $model->id, 'filter_id' => $id])->delete();
+
+            $users = [];
+            $u_ids = UserFiltersLinkModel::objects()->filter(['filter_id' => $id])->valuesList(['user_id'], true);
+
+            if ($u_ids) {
+                $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();
             }
+
+            echo $this->render('dashboard/subscription.tpl', [
+                'id' => $id,
+                'class' => $class,
+                'ids' => $u_ids,
+                'users' => $users,
+                'model' => $user,
+            ]);
         }
-
-        $users = [];
-        $u_ids = UserFiltersLinkModel::objects()->filter(['filter_id' => $id])->valuesList(['user_id'], true);
-
-        if ($u_ids) {
-            $users = UserModel::objects()->filter(['id__in' => $u_ids])->all();
-//            $users = UserModel::objects()->filter(['id__in' => []])->all();
-        }
-
-        echo $this->render('dashboard/subscription.tpl', [
-            'id' => $id,
-            'class' => $class,
-            'ids' => $u_ids,
-            'users' => $users,
-            'model' => $model,
-        ]);
     }
 
 

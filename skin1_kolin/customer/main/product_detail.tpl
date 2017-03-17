@@ -73,7 +73,7 @@
                             {include file="modules/Detailed_Product_Images/popup_image.tpl"}
                         {else}
                             {if $active_modules.Detailed_Product_Images ne "" && $images ne ''}
-                                <a style="font-size: 0px;" href="/#dp_images">
+                                <a style="font-size: 0px;" href="#dp_images">
                                     <img src="{$oProduct->getPreviewImageURL()}" />
                                 </a>
                             {/if}

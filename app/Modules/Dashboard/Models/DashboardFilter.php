@@ -16,7 +16,8 @@ use Xcart\App\Orm\Model;
 
 class DashboardFilter extends Model
 {
-    private $s_store;
+    private $s_store = null;
+    private $uf_link_model = null;
 
     public static function tableName()
     {
@@ -27,66 +28,65 @@ class DashboardFilter extends Model
     public static function getFields()
     {
         return [
-            'id'              => [
+            'id' => [
                 'class' => AutoField::className(),
             ],
-            'group'           => [
-                'class'       => ForeignField::className(),
-                'modelClass'  => GroupModel::className(),
+            'group' => [
+                'field' => 'group_id',
+                'class' => ForeignField::className(),
+                'modelClass' => GroupModel::className(),
                 'verboseName' => 'Group',
-                'link'        => ['id', 'group_id'],
-                'null'        => true,
+                'link' => ['id', 'group_id'],
+                'null' => true,
             ],
-            'users'           => [
-                'class'       => ManyToManyField::className(),
-                'modelClass'  => UserModel::className(),
-                'through'     => UserFiltersLinkModel::className(),
-                'link'        => ['filter_id', 'user_id'],
+            'users' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => UserModel::className(),
+                'through' => UserFiltersLinkModel::className(),
+                'link' => ['filter_id', 'user_id'],
                 'verboseName' => 'In users dashboard',
             ],
-            'enabled'         => [
-                'class'   => BooleanField::className(),
-                'null'    => false,
+            'enabled' => [
+                'class' => BooleanField::className(),
+                'null' => false,
                 'default' => 1,
             ],
-            'bold'            => [
-                'class'   => BooleanField::className(),
-                'null'    => false,
+            'bold' => [
+                'class' => BooleanField::className(),
+                'null' => false,
                 'default' => 0,
             ],
-            'name'            => [
-                'class'       => CharField::className(),
-                'null'        => false,
+            'name' => [
+                'class' => CharField::className(),
+                'null' => false,
                 'verboseName' => 'Filter name',
             ],
-            'position_row'    => [
+            'position_row' => [
                 'class' => IntField::className(),
-                'null'  => false,
+                'null' => false,
             ],
             'position_column' => [
                 'class' => IntField::className(),
-                'null'  => false,
-                'min'   => 1,
-                'max'   => 4
+                'null' => false,
             ],
-            'tag'             => [
-                'class'  => CharField::className(),
+            'tag' => [
+                'class' => CharField::className(),
                 'length' => 5,
-                'null'   => true,
+                'null' => true,
             ],
-            'color'           => [
-                'class'       => CharField::className(),
-                'null'        => true,
+            'color' => [
+                'class' => CharField::className(),
+                'null' => true,
                 'verboseName' => 'Tag color',
             ],
-            'direct_url'      => [
-                'class'       => CharField::className(),
-                'null'        => true,
+            'direct_url' => [
+                'class' => CharField::className(),
+                'null' => true,
                 'verboseName' => 'Direct link',
             ],
-            'form_data'       => [
-                'class'       => JsonField::className(),
-                'null'        => false,
+            'form_data' => [
+                'class' => JsonField::className(),
+                'null' => false,
                 'verboseName' => 'Filter condition',
             ],
         ];
@@ -128,13 +128,25 @@ class DashboardFilter extends Model
         return $this->s_store;
     }
 
+    public function getCountEvents($user_id = null)
+    {
+        $result = 0;
 
-    private $uf_link_model = null;
+        if (!$user_id && !Xcart::app()->user->getIsGuest())  {
+            $user_id = Xcart::app()->user->id;
+        }
+
+        if ($user_id) {
+
+        }
+
+        return $result;
+    }
 
     public function getMyPositions()
     {
         if (!$this->uf_link_model) {
-            $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user__login' => Xcart::app()->request->session->get('login')])->get();
+            $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user_id__login' => (string)Xcart::app()->user->login])->get();
         }
 
         return [

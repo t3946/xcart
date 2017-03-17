@@ -1,0 +1,15 @@
+<?php
+namespace Modules\Product\Models;
+
+use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BlobField;
+use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\IntField;
+
+class ImageTModel extends ImageModel
+{
+    public static function tableName()
+    {
+        return parent::tableName().'_T';
+    }
+}

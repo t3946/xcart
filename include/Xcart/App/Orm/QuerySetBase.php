@@ -174,7 +174,9 @@ abstract class QuerySetBase implements IteratorAggregate, ArrayAccess, Serializa
      */
     public function createModel(array $row)
     {
-        return $this->getModel()->create($row);
+        /** @var Model $class */
+        $class = $this->getModel()->className();
+        return $class::create($row);
     }
 
     /**

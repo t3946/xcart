@@ -64,10 +64,21 @@ class HasManyField extends RelatedField
      */
     public function getManager()
     {
+        $where = [];
         list($from, $to) = $this->link;
 
+        if (is_array($from)) {
+            foreach ($this->link as $link) {
+                list($from, $to) = $link;
+                $where[$from] = $this->getModel()->getAttribute($to);
+            }
+        }
+        else {
+            $where[$from] = $this->getModel()->getAttribute($to);
+        }
+
         $manager = new Manager($this->getRelatedModel(), $this->getModel()->getConnection());
-        $manager->filter(array_merge([$from => $this->getModel()->getAttribute($to)], $this->extra));
+        $manager->filter(array_merge($where, $this->extra));
 
         if ($this->getModel()->getIsNewRecord()) {
             $manager->distinct();
@@ -92,18 +103,18 @@ class HasManyField extends RelatedField
         ];
     }
 
-    protected function getTo()
-    {
-        return $this->getModel()->getMeta()->getPrimaryKeyName();
-    }
-
-    protected function getFrom()
-    {
-        return implode('_', [
-            $this->getModel()->tableName(),
-            $this->getRelatedModel()->getMeta()->getPrimaryKeyName()
-        ]);
-    }
+//    protected function getTo()
+//    {
+//        return $this->getModel()->getMeta()->getPrimaryKeyName();
+//    }
+//
+//    protected function getFrom()
+//    {
+//        return implode('_', [
+//            $this->getModel()->tableName(),
+//            $this->getRelatedModel()->getMeta()->getPrimaryKeyName()
+//        ]);
+//    }
 
     public function fetch($value)
     {

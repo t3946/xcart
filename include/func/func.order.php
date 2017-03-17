@@ -1705,8 +1705,15 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                             $mail_smarty->assign("products", func_translate_products($order_data["products"], $to_customer));
                             $mail_smarty->assign('type', 'C');
                             $attach_pdf_invoice = $oOrderNotification->getField('customer_attach_pdf_invoice');
+                            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail->to = $userinfo['email'];
+                            $oMail->from = $config['Company']['orders_department'];
+                            $oMail->reply_to = null;
+                            $oMail->subject_template = 'mail/order_notification_subj.tpl';
+                            $oMail->body_template = 'mail/order_notification.tpl';
+                            $oMail->sendEmail();
 
-                            func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
+                            //func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
                         }
 
                         $mes .= "STEP M " . date("H:i:s") . "\n";
@@ -1733,8 +1740,25 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
                             $attach_pdf_invoice = $oOrderNotification->getField('admin_attach_pdf_invoice');
 
-                            func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
-                            func_send_mail("igor@s3stores.com", 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', "orders@s3stores.com", false);
+                            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail->to = $to;
+                            $oMail->reply_to = $reply_to;
+                            $oMail->from = $from;
+                            $oMail->subject_template = 'mail/order_notification_subj.tpl';
+                            $oMail->body_template = 'mail/order_notification.tpl';
+                            $oMail->addHeader(['X-Xcart-Label' => 'order-status-init']);
+                            $oMail->sendEmail();
+
+                            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail->to = "igor@s3stores.com";
+                            $oMail->from = "orders@s3stores.com";
+                            $oMail->reply_to = $reply_to;
+                            $oMail->subject_template = 'mail/order_notification_subj.tpl';
+                            $oMail->body_template = 'mail/order_notification.tpl';
+                            $oMail->sendEmail();
+
+                            //func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
+                            //func_send_mail("igor@s3stores.com", 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', "orders@s3stores.com", false);
 
                             $mes .= "STEP O " . date("H:i:s") . "\n";
                             $mail_smarty->assign("show_order_details", "N");
@@ -1901,14 +1925,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                     $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$mv[add_ca_status_id]'");
 
                     if (empty($is_such_additional_tag_status)) {
-
-                        db_query("INSERT INTO $sql_tbl[orders_additional_tags] (status_id, orderid) VALUES('$mv[add_ca_status_id]', '$orderid')");
-
-                        ### LOG: START
-                        $status_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$mv[add_ca_status_id]'");
-                        $log         = "'" . $status_name . "' attention tag added";
-                        func_log_order($orderid, 'X', $log, $login);
-                        ### LOG: END
+                        Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($mv['add_ca_status_id'], $orderid);
                     }
                 }
 
@@ -1922,7 +1939,16 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 }
 
                 func_log_order($orderid, 'S', $order_notes);
-                func_send_mail($to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $from, false);
+
+                $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                $oMail->to = $to;
+                $oMail->from = $from;
+                $oMail->reply_to = null;
+                $oMail->subject_template = 'mail/order_notification_subj.tpl';
+                $oMail->body_template = 'mail/order_notification_mnf.tpl';
+                $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
+                $oMail->sendEmail();
+                //func_send_mail($to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $from, false);
             }
         }
     }
@@ -1982,7 +2008,7 @@ function func_get_order_manufacturers($orderid)
                     $cidev_outofstock_items_table = '<table width="500px" border="1" cellpadding="5" cellspacing="0" bordercolor="#414236" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #000000; line-height: 18px;">';
                     $cidev_outofstock_items_table .= '<tr><td width="150px" style="text-align: left; font-weight: bold;">Item number</td><td width="250px" style="text-align: left; font-weight: bold;">Item name</td><td style="text-align: right; font-weight: bold;">"Out of stock" quantity</td></tr>';
 
-                    $order_products = '<br /><table width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td valign="top"><img alt="" src="http://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-M.png"></td><td width="100%" valign="top"><table width="100%" cellspacing="0" cellpadding="2"><tr><td width="30">&nbsp;</td><td valign="top"><h1 style="margin-bottom: 0px; margin-top: 0px; text-transform: uppercase;">PURCHASE ORDER</h1><b>Order date:</b> ' . date("j-M-Y", $order["date"]) . '<br /><b>Order #:</b> ' . $order["order_prefix"] . $order["orderid"] . '<br /></td><td valign="bottom" align="right"><b>S3 Stores, Inc.</b><br />27 Joseph St.,<br>Chatham, Ontario<br />N7L 3G4, Canada<br />Toll Free: ' . $config["Company"]["company_phone"] . '<br />Tel: ' . $config["Company"]["company_phone_2"] . '<br />Fax: ' . $config["Company"]["company_fax"] . '<br>Email: orders@s3stores.com</td></tr></table></td></tr></table><hr style="width:100%;margin: 0px 0 5px 0; border: 0 none; border-bottom: 1px solid #999999;">';
+                    $order_products = '<br /><table width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td valign="top"><img alt="" src="https://www.artistsupplysource.com/skin1_kolin/images/S3-Stores-Logo-M.png"></td><td width="100%" valign="top"><table width="100%" cellspacing="0" cellpadding="2"><tr><td width="30">&nbsp;</td><td valign="top"><h1 style="margin-bottom: 0px; margin-top: 0px; text-transform: uppercase;">PURCHASE ORDER</h1><b>Order date:</b> ' . date("j-M-Y", $order["date"]) . '<br /><b>Order #:</b> ' . $order["order_prefix"] . $order["orderid"] . '<br /></td><td valign="bottom" align="right"><b>S3 Stores, Inc.</b><br />27 Joseph St.,<br>Chatham, Ontario<br />N7L 3G4, Canada<br />Toll Free: ' . $config["Company"]["company_phone"] . '<br />Tel: ' . $config["Company"]["company_phone_2"] . '<br />Fax: ' . $config["Company"]["company_fax"] . '<br>Email: orders@s3stores.com</td></tr></table></td></tr></table><hr style="width:100%;margin: 0px 0 5px 0; border: 0 none; border-bottom: 1px solid #999999;">';
 
                     $order_products .= '<table width="45%" cellspacing="0" cellpadding="0" border="0"><tr><td nowrap="nowrap"> <b>Full Name:</b> </td> <td>' . $userinfo["firstname"] . '</td></tr><tr><td><b>Phone:</b></td><td>' . $userinfo["phone"] . (!empty($userinfo["phone_ext"]) ? " <B>ext</B> $userinfo[phone_ext] " : "") . '</td></tr><tr><td colspan="2"><br /><b>Shipping Address</b><hr style="width:100%;margin: 0px; border: 0 none; border-bottom: 1px solid #999999;"></td></tr><tr><td><b>Full Name:</b></td><td>' . $userinfo["s_firstname"] . (!empty($order["po_number"]) ? ' / PO# ' . $order["po_number"] : '') . '</td></tr><tr><td><b>Company:</b></td><td>' . $userinfo["additional_fields"]["1"]["value"] . '</td></tr><tr><td><b>Address:</b></td><td>' . $userinfo["s_address"] .
                                        '</td></tr>' . (!empty($userinfo["s_address_2"]) ? '<tr><td><b>Address (line 2):</b></td><td>' . $userinfo["s_address_2"] . '</td></tr>' : '') . '<tr><td><b>City:</b> </td><td>' . $userinfo["s_city"] . '</td></tr><tr><td><b>State/Province:</b> </td><td>' . $userinfo["s_statename"] . '</td></tr><tr><td><b>Country:</b></td><td>' . $userinfo["s_countryname"] . '</td></tr><tr><td><b>Zip/Postal code:</b></td><td>' . $userinfo["s_zipcode"] . '</td></tr></table>';
@@ -2660,7 +2686,16 @@ function func_process_order($orderids)
                             $to       = $config['Company']['orders_department'];
                             $from     = $userinfo["firstname"] . "<" . $config['Company']['orders_department'] . ">";
                             $reply_to = $userinfo["firstname"] . "<" . $userinfo['email'] . ">";
-                            func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
+
+                            $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail->to = $to;
+                            $oMail->reply_to = $reply_to;
+                            $oMail->from = $from;
+                            $oMail->subject_template = 'mail/order_notification_subj.tpl';
+                            $oMail->body_template = 'mail/order_notification.tpl';
+                            $oMail->addHeader(['X-Xcart-Label' => 'order-status-changed']);
+                            $oMail->sendEmail();
+                            //func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
 
                             $userinfo = $_userinfo;
                             unset($_userinfo);
@@ -3556,7 +3591,16 @@ function func_send_order_status_notification($orderid, $status)
                 $to       = $config['Company']['orders_department'];
                 $from     = $order_data['userinfo']['firstname'] . "<" . $config['Company']['orders_department'] . ">";
                 $reply_to = $order_data['userinfo']['firstname'] . "<" . $order_data['userinfo']['email'] . ">";
-                func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, false, false, false, false, $reply_to);
+
+                $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                $oMail->to = $to;
+                $oMail->from = $from;
+                $oMail->reply_to = $reply_to;
+                $oMail->subject_template = 'mail/order_notification_subj.tpl';
+                $oMail->body_template = 'mail/order_notification.tpl';
+                $oMail->addHeader(['X-Xcart-Label' => 'order-status-changed']);
+                $oMail->sendEmail();
+                //func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, false, false, false, false, $reply_to);
             }
         }
     }

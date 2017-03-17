@@ -19,8 +19,8 @@ if (!empty($HTTP_USER_AGENT) && !defined("IS_ROBOT") && empty($is_robot))
     $cr = new CrawlerDetect;
 
     if (   $cr->isCrawler()
-        || $cr->setCrawlers(new Crawlers())->isCrawler()
-        || $cr->setCrawlers(new CrawlersIp())->isCrawler()
+           || $cr->setCrawlers(new Crawlers())->isCrawler()
+           || $cr->setCrawlers(new CrawlersIp())->isCrawler()
     ) {
         define("IS_ROBOT", 1);
     }

@@ -1,4 +1,6 @@
 <?php
+use Xcart\Connection;
+
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
@@ -114,11 +116,11 @@ foreach ( $sfids as $sfid)
 
 if (!empty($values))
 {
-    func_query("truncate xcart_featured_products");
+    Connection::getInstance()->executeQuery("truncate xcart_featured_products");
 
     foreach (array_chunk($values, 100) as $c_values)
     {
-        func_query("insert ignore into xcart_featured_products (productid, storefrontid, product_order) VALUES " . implode(', ', $c_values));
+        Connection::getInstance()->executeQuery("insert ignore into xcart_featured_products (productid, storefrontid, product_order) VALUES " . implode(', ', $c_values));
     }
 }
 

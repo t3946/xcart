@@ -1,26 +1,31 @@
 <?php
 namespace Modules\Dashboard\Stores;
 
+use DateTime;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
+use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Models\OrderModel;
+use Modules\Product\Models\ProductQuestionModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Store\BaseStore;
 use Xcart\Connection;
-use Xcart\Manufacturer;
-use Xcart\Order;
-use Xcart\OrderGroups;
 
 class OrderSearchStore extends BaseStore
 {
     const CONST_MANUAL_STRING      = '=> ';
     const CONST_MANUAL_VIEW_STTINR = '-> ';
+
+    const CONST_CACHE_KEY_EVENT = 'order_search_store_events_count_';
+    const CONST_CACHE_KEY_PRIORITY = 'order_search_store_priority_count_';
+
 
     private $form_data = [];
     private $where = [];
@@ -28,7 +33,10 @@ class OrderSearchStore extends BaseStore
     private $qs;
     /** @var Pagination */
     private $pager;
+    private $order;
     private $fid = null;
+
+    public $defaultPagerPageSize = 25;
 
     public static function getFeatures()
     {
@@ -56,21 +64,32 @@ class OrderSearchStore extends BaseStore
 
     public static function getQuestionStatuses()
     {
-        return [
-            "question_received_from_cust"  => "Question received from customer",
-            "question_sent_to_distr_brand" => "Question sent to distributor/brand",
-            "call_distributor_brand"       => "Call distributor/brand",
-            "answer_sent_to_cust"          => "Answer sent to customer",
-            "order_pending"                => "Order pending",
-            "closed"                       => "Closed",
-        ];
+        return ProductQuestionModel::getFields()['status']['choices'];
     }
 
     public function __construct($data, $fid = null)
     {
         $this->form_data = $data;
         $this->fid = $fid;
-        $this->qs = $this->populate($data)->order(['-orderid']);
+        $this->populate($data);
+    }
+
+    public function __clone()
+    {
+        $clone = clone $this;
+        $clone->qs = clone $this->qs;
+        return $clone;
+    }
+
+    public function setOrder(array $order = [])
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    public function getOrder()
+    {
+        return $this->order;
     }
 
     /**
@@ -109,11 +128,11 @@ class OrderSearchStore extends BaseStore
     /**
      * @param array $data
      *
-     * @return \Xcart\App\Orm\QuerySet
+     * @return void
      */
     public function populate(array $data)
     {
-        $qs = Order::objects()->getQuerySet();
+        $qs = $this->getQuerySet();
 
         if (!empty($data['order']) || $this->checkNot('order'))
         {
@@ -614,10 +633,7 @@ class OrderSearchStore extends BaseStore
         }
 
         $qs->filter($this->where)->addGroup(['orderid']);
-
-//        func_dump($qs->getSql());
-
-        return $qs;
+        $this->qs = $qs;
     }
 
     private function arrLikeToLookup($data, $fields)
@@ -716,11 +732,51 @@ class OrderSearchStore extends BaseStore
         return null;
     }
 
+    public function getQuerySet()
+    {
+        if (!$this->qs) {
+            $this->qs = OrderModel::objects()->getQuerySet();
+        }
+        return $this->qs;
+    }
+
+    public function getQSWithSorting()
+    {
+        $qs = clone $this->qs;
+        $joins = $qs->getQueryBuilder()->getJoins();
+        $joins = array_keys($joins);
+
+        if (!in_array('group', $joins)) {
+            $qs->join('left join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+        }
+
+        $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
+
+        $user = Xcart::app()->user;
+        if ($user->show_events)
+        {
+            /** @var QuerySet $qs */
+            $e_qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+            $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
+            $qs->order(['-shipping.important', '-events.count','-date', '-orderid']);
+        }
+        else {
+            $qs->order(['-shipping.important', '-date', '-orderid']);
+        }
+
+        if ($this->order) {
+            $qs->order($this->order);
+        }
+
+        return $qs;
+    }
+
     public function getPager()
     {
         if (!$this->pager) {
-            $this->pager = new Pagination($this->qs, ['pageSize' => 20], new QuerySetDataSource());
+            $this->pager = new Pagination($this->getQSWithSorting(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
         }
+
         return $this->pager;
     }
 
@@ -729,12 +785,40 @@ class OrderSearchStore extends BaseStore
         return $this->prepareModels($this->getPager()->paginate());
     }
 
+    public function getPriorityShippingCount()
+    {
+        $qs = clone $this->qs;
+        $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+        $qs->join('inner join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
+        $qs->filter(['shipping.important' => 1, new QAndNot(['group.shippingid' => ''])]);
+        $qs->group([]);
+
+        return $qs->count();
+    }
+
+    public function getCachedPriorityShippingCount()
+    {
+        $count = null;
+
+        $key = $this->getCacheCountKey(self::CONST_CACHE_KEY_PRIORITY);
+        $count = Xcart::app()->cache->get($key);
+
+        if (is_null($count))
+        {
+            $count = $this->getPriorityShippingCount();
+
+            Xcart::app()->cache->set($key, $count, $this->getCacheLifeTime());
+        }
+
+        return $count;
+    }
+
     public function getCount()
     {
         return $this->qs->count();
     }
 
-    public function getCashedCount()
+    public function getCacheCountKey($prefix = 'order_search_store_count_', array $params = [])
     {
         if ($this->fid) {
             $id = $this->fid;
@@ -744,16 +828,82 @@ class OrderSearchStore extends BaseStore
             $id = md5($md5);
         }
 
-        $key = 'order_search_store_count_'.$id;
+        if ($params) {
+            $id.= '_';
+            $id.= md5(serialize($params));
+        }
+
+        return $prefix.$id;
+    }
+
+    public function clearCache()
+    {
+        Xcart::app()->cache->set($this->getCacheCountKey(), null);
+        Xcart::app()->cache->set($this->getCacheCountKey(self::CONST_CACHE_KEY_PRIORITY), null);
+        Xcart::app()->cache->set($this->getCacheCountKey(self::CONST_CACHE_KEY_EVENT, ['user_id' => Xcart::app()->user->login]), null);
+    }
+
+    public function getCashedCount()
+    {
+        $key = $this->getCacheCountKey();
         $count = Xcart::app()->cache->get($key);
 
-        if (!is_null($count))
+        if (is_null($count))
         {
-            return $count;
-        }
-        else {
             $count = $this->getCount();
-            Xcart::app()->cache->set($key, $count, 40 + rand(1, 40));
+            Xcart::app()->cache->set($key, $count, $this->getCacheLifeTime());
+        }
+
+        return $count;
+    }
+
+    public function getCacheLifeTime($min = 40)
+    {
+        return $min + rand(1, $min * rand(1, round($min/2)));
+    }
+
+    public function getEventsCount(array $ids = [])
+    {
+        $user = Xcart::app()->user;
+
+        if ($user->show_events)
+        {
+            $o_qs = clone $this->qs;
+
+            /** @var QuerySet $qs */
+            $qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+
+            if ($ids) {
+                $qs->filter(['order_id__in' => $ids]);
+            }
+            else {
+                $qs->join('join', $o_qs->select('orderid')->order([])->allSql(), ['orders.orderid' => 'order_id'], 'orders');
+            }
+
+            return $qs->count();
+        }
+
+        return null;
+    }
+
+    public function getCachedEventsCount()
+    {
+        $user = Xcart::app()->user;
+
+        if (!$user->show_events) {
+            return null;
+        }
+
+        $count = null;
+
+        $key = $this->getCacheCountKey(self::CONST_CACHE_KEY_EVENT, ['user_id' => $user->login]);
+        $count = Xcart::app()->cache->get($key);
+
+        if (is_null($count))
+        {
+            $count = $this->getEventsCount();
+
+            Xcart::app()->cache->set($key, $count, $this->getCacheLifeTime());
         }
 
         return $count;
@@ -774,66 +924,21 @@ class OrderSearchStore extends BaseStore
             return [];
         }
 
-        $groups    = OrderGroups::objects()->filter(['orderid__in' => $order_ids])->all();
-
-        if ($groups) {
-            $group_ids = array_map(function ($model) { return $model->manufacturerid; }, $groups);
-
-            $manufacturers = Manufacturer::objects()->filter(['manufacturerid__in' => $group_ids])->all();
-            foreach ($groups as $group) {
-                foreach ($manufacturers as $manufacturer) {
-                    if ($group->manufacturerid == $manufacturer->manufacturerid) {
-                        $group->manufacturer = $manufacturer;
-                    }
-                }
-            }
-        }
-
         $lom_sql     = QueryBuilder::getInstance($connection)->from('xcart_order_logs')->order(['-date'])->where(['orderid__in' => $order_ids, 'type__in' => ['S']])->toSQL();
         $lo_messages = $connection->fetchAll($lom_sql);
 
         $loa_sql     = QueryBuilder::getInstance($connection)->select(['orderid', 'date' => new Expression('max(date)')])->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in' => $order_ids])->toSQL();
         $lo_activity = $connection->fetchAll($loa_sql);
 
-        $tag_sql     = QueryBuilder::getInstance($connection)->from('xcart_orders_additional_tags')
-                                   ->select(['t.orderid', 't.status_id', 'tval.description', 'tval.status'])
-                                   ->setAlias('t')
-                                   ->join('inner join', 'xcart_attention_tags_values', ['t.status_id' => 'tval.status_id'], 'tval')
-                                   ->where(['orderid__in' => $order_ids])->toSQL();
-        $orders_tags = $connection->fetchAll($tag_sql);
-
-        $max_eta_sql = QueryBuilder::getInstance($connection)->from('xcart_products')
-                                   ->select(['max_eta' => new Expression('MAX(t.eta_date_mm_dd_yyyy)'), 'details.orderid'])
-                                   ->setAlias('t')
-                                   ->join('inner join', 'xcart_order_details', ['t.productid' => 'details.productid'], 'details')
-                                   ->where(['details.orderid__in' => $order_ids, 'eta_date_mm_dd_yyyy__gt' => 0])
-                                   ->group(['details.orderid'])->toSQL();
-
-        $orders_max_eta = $connection->fetchAll($max_eta_sql);
+        OrderHelper::getMaxEtaTimeByOrder($order_ids);
+        OrderHelper::getCountEvents($order_ids);
 
         foreach ($models as $model) {
-            foreach ($groups as $group) {
-                if ($group->orderid == $model->orderid) {
-                    $model->orderGroup = $group;
-                }
-            }
-
-            foreach ($orders_max_eta as $item) {
-                if ($item['orderid'] == $model->orderid) {
-                    $model->max_eta = $item['max_eta'];
-                }
-            }
 
             foreach ($lo_activity as $activity) {
                 if ($activity['orderid'] == $model->orderid) {
                     $model->last_activity = $activity['date'];
                     break;
-                }
-            }
-
-            foreach ($orders_tags as $tag) {
-                if ($model->orderid == $tag['orderid']) {
-                    $model->tag = $tag;
                 }
             }
 

@@ -3,7 +3,7 @@
 <table width="100%">
 <tr>
 	<td valign="top" align="left" width="30%">
-{include file="product_thumbnail.tpl" productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$product.product splash=$product.oSplash}
+{include file="product_thumbnail.tpl" tmbn_url=$products.tmbn_url productid=$product.productid image_x=$product.image_x image_y=$product.image_y product=$product.product splash=$product.oSplash}
 <p />
 {if $smarty.get.mode ne "printable"}
 <a href="product.php?productid={$product.productid}&amp;mode=printable" target="_blank"><img src="{$ImagesDir}/print.gif" width="23" height="22" name="print" alt="{$lng.lbl_printable_version|escape}" /></a>

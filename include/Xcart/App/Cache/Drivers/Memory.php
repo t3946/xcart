@@ -48,7 +48,7 @@ class Memory extends CacheDriver
                 $this->data = [];
             }
             else {
-                foreach ($this->_stack as $key => $params)
+                foreach ($this->data as $key => $params)
                 {
                     if ($params['timeout'] < time())
                     {

@@ -146,9 +146,9 @@ function func_copy_tables($table, $key_field, $productid, $new_productid) {
 		}
 
 		$str = preg_replace("/,$/Ss", ")", $str);
-		db_query($str);
+		$res = db_query($str);
 
-		if (db_affected_rows() < 0) {
+		if (db_affected_rows($res) < 0) {
 			$error_string .= "$str<br />";
 		}
 		else {
@@ -277,14 +277,14 @@ if ($current_area == "P" || $single_mode || $current_area == "A") {
 	# Create a new product
 	#
 	$query = "INSERT INTO $sql_tbl[products] (provider, add_date, productcode) VALUES ('$c_login', '".time()."', '$productcode')";
-	db_query($query);
+	$res = db_query($query);
 	$new_productid = db_insert_id();
 
 	if (!empty($active_modules["Magnifier"])) {
 		include $xcart_dir."/modules/Magnifier/clone.php";
 	}
 
-	if (db_affected_rows() < 0)
+	if (db_affected_rows($res) < 0)
 		$error_string = "$query<br />";
 
 	if ($new_productid) {
@@ -314,9 +314,9 @@ if ($current_area == "P" || $single_mode || $current_area == "A") {
 
 		$query = preg_replace("/, $/", " WHERE productid='$new_productid'", $query);
 
-		db_query($query);
+		$res = db_query($query);
 
-		if (db_affected_rows() < 0)
+		if (db_affected_rows($res) < 0)
 			$error_string = "$query<br />";
 		else {
 			#

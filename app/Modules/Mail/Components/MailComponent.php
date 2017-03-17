@@ -17,6 +17,8 @@ class MailComponent
     public $subject = null;
     public $charset = 'utf-8';
 
+    public $header = [];
+
     public $subject_template = 'mail/simple_email_subj.tpl';
     public $body_template = 'mail/simple_email_body.tpl';
 
@@ -34,6 +36,23 @@ class MailComponent
     private function eol2br($content)
     {
         return ($content == strip_tags($content)) ? nl2br($content) : $content;
+    }
+
+    public function setSubjectTemplate($template)
+    {
+        $this->subject_template = $template;
+        return $this;
+    }
+
+    public function setBodyTemplate($template)
+    {
+        $this->body_template = $template;
+        return $this;
+    }
+
+    public function addHeader($header)
+    {
+        $this->header[key($header)] = current($header);
     }
 
     public function addAttachment($sFilePath)
@@ -186,6 +205,11 @@ class MailComponent
                 $mail_from = $this->reply_to;
             }
             $headers .= "Reply-to: " . $mail_from . $lend;
+        }
+        if (!empty($this->header)){
+            foreach ($this->header as $key => $header) {
+                $headers .= "{$key}: {$header}" . $lend;
+            }
         }
 
 

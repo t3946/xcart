@@ -382,7 +382,7 @@ if ($mode == "search") {
     $left_joins['quick_flags'] = array(
         "on" => "$sql_tbl[quick_flags].productid = $sql_tbl[products].productid"
     );
-    $fields[] = "$sql_tbl[quick_flags].*";
+    $fields[] = "{$sql_tbl['quick_flags']}.is_variants, {$sql_tbl['quick_flags']}.is_product_options, {$sql_tbl['quick_flags']}.is_taxes, {$sql_tbl['quick_flags']}.image_path_T";
 
     $inner_joins['quick_prices'] = array(
         "on" => "$sql_tbl[quick_prices].productid = $sql_tbl[products].productid /*AND $sql_tbl[quick_prices].membershipid $membershipid_string*/"
