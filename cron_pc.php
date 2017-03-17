@@ -196,7 +196,7 @@ echo "4";
 			$p_count++;
 			$productid = $product["productid"];
 			func_pc_find_new_categoryid($productid);
-			if ($p_count>15)
+			if ($p_count > 50)
 				{
 					break;
 				}
