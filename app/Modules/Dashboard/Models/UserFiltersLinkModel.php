@@ -13,25 +13,24 @@ class UserFiltersLinkModel extends Model
         return 'xcart_user_filter_link';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['user_id', 'filter_id'];
-    }
-
     public static function getFields()
     {
         return [
-            'user_id' => [
+            'user' => [
+                'primary' => true,
+                'field' => 'user_id',
                 'class' => ForeignField::className(),
                 'modelClass' => UserModel::className(),
                 'verboseName' => 'User',
-                'link' => ['id', 'user_id']
+                'link' => ['user_id' => 'id'],
             ],
-            'filter_id' => [
+            'filter' => [
+                'primary' => true,
+                'field' => 'filter_id',
                 'class' => ForeignField::className(),
                 'modelClass' => DashboardFilter::className(),
                 'verboseName' => 'Filter in dashboard',
-                'link' => ['filter_id', 'id']
+                'link' => ['filter_id' => 'id']
             ],
             'position_row'    => [
                 'class' => IntField::className(),

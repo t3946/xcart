@@ -20,7 +20,8 @@ class OrderLogModel extends Model
     {
         return [
             'id' => AutoField::className(),
-            'orderid' => [
+            'order' => [
+                'field' => 'orderid',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
                 'link' => ['orderid' => 'orderid'],

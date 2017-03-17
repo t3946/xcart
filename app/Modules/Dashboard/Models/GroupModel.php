@@ -14,7 +14,6 @@ class GroupModel extends Model
         return 'xcart_dashboard_groups';
     }
 
-
     public static function getFields()
     {
         return [
@@ -30,7 +29,7 @@ class GroupModel extends Model
                 'class' => HasManyField::className(),
                 'modelClass' => DashboardFilter::className(),
                 'verboseName' => 'Filters',
-                'link' => ['group_id', 'id'],
+                'link' => ['id' => 'group_id'],
             ]
         ];
     }
