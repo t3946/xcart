@@ -5,6 +5,10 @@ use Modules\Amazon\Helpers\AmazonHelper;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
+use Modules\Order\Models\OrderDetailModel;
+use Modules\Order\Models\OrderGroupInvoiceModel;
+use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 use Xcart\External_Product_Verification\ExternalVerificationFeeds;
 use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
@@ -558,14 +562,17 @@ SQL;
                         if (!empty($v["AmazonOrderID"]) && !empty($v["ShipmentID"])) {
                             if ($v['MarketplaceName'] == 'Non-Amazon') {
                                 preg_match("/\w+-(\d+)[-]?(\d+)?/", $v['MerchantOrderID'], $aMatchArray);
-                                if (!empty($aMatchArray)) {
-                                    if (!empty($aMatchArray[1])) {
-                                        $iOrderId = intval($aMatchArray[1]);
-                                        $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl['orders'] . " WHERE orderid=$iOrderId");
+                                if (!empty($aMatchArray) && !empty($aMatchArray[1])) {
+                                    $orderModel = OrderModel::objects()->get(['orderid' => intval($aMatchArray[1])]);
+                                    if ($orderModel) {
+                                        $order_info['orderid'] = $orderModel->orderid;
                                     }
                                 }
                             } else {
-                                $order_info = func_query_first("SELECT orderid FROM " . $this->sql_tbl['orders'] . " WHERE amazonorderid='$v[AmazonOrderID]'");
+                                $orderModel = OrderModel::objects()->filter(['amazonorderid' => $v['AmazonOrderID']])->get();
+                                if ($orderModel){
+                                    $order_info['orderid'] = $orderModel->orderid;
+                                }
                             }
                             if (!empty($order_info)) {
                                 $log_text = "order processed: " . $v["AmazonOrderID"];
@@ -676,11 +683,7 @@ SQL;
                                     $aOrderProducts = $oOrder->getOrderProducts();
                                     if (!empty($aOrderProducts)) {
                                         $sSKU = $oOrderAmazonDetail->SKU;
-                                        if (!in_array($sSKU, array_map(function (/** @var Product $oP */
-                                            $oP) {
-                                            return $oP->getSKU();
-                                        }, $aOrderProducts))
-                                        ) {
+                                        if (!in_array($sSKU, array_map(function (/** @var Product $oP */ $oP) {return $oP->getSKU();}, $aOrderProducts))) {
                                             /** @var Product $oOrderProduct */
                                             foreach ($aOrderProducts as $oOrderProduct) {
                                                 $oParentProduct = $oOrderProduct->getParentProduct();
@@ -734,10 +737,34 @@ SQL;
                                         unset($aUpdateValues['Shipping']);
                                         unset($aUpdateValues['FBATransportationFee']);
                                         unset($aUpdateValues['ShippingRefund']);
-                                        func_array2update('order_details', $aUpdateValues, "orderid = $iOrderId AND productcode='$oOrderAmazonDetail->SKU'");
+
+                                        //func_array2update('order_details', $aUpdateValues, "orderid = $iOrderId AND productcode='$oOrderAmazonDetail->SKU'");
                                         if (!empty($oOrderAmazonDetail->manufacturerid)) {
-                                            $oOrderGroup = new OrderGroup(['orderid' => $iOrderId, 'manufacturerid' => $oOrderAmazonDetail->manufacturerid]);
-                                            $oOrderGroup->recalculateAccounting();
+                                            $orderGroupModel = OrderGroupModel::objects()->get(['orderid' => $iOrderId, 'manufacturerid' => $oOrderAmazonDetail->manufacturerid]);
+                                            if ($orderGroupModel){
+                                                $orderDetailModel = null;
+                                                $orderDetailModels = OrderDetailModel::objects()->filter(['orderid' => $iOrderId, 'productcode' => $oOrderAmazonDetail->SKU])->all();
+                                                if ($orderDetailModels){
+                                                    $orderDetailModel = reset($orderDetailModels);
+                                                    $orderDetailModel->setAttributes($aUpdateValues);
+                                                    $orderDetailModel->save();
+                                                }
+                                                if ($orderGroupModel->amz_fullfilment_order_placed =='Y' && !$orderGroupModel->invoices->count()) {
+                                                    $orderInvoiceModel = new OrderGroupInvoiceModel;
+                                                    $orderInvoiceModel->setAttributes([
+                                                            'orderid' => $orderGroupModel->orderid,
+                                                            'manufacturerid' => $orderGroupModel->manufacturerid,
+                                                            'invoice_number' => 1,
+                                                            'invoice_received' => 'Y',
+                                                            'cost_to_us_for_products_charged' => (!$orderDetailModel)?:$orderDetailModel->getDataModel()->getCostToUs(),
+                                                            'products_total' => (!$orderDetailModel)?:$orderDetailModel->getDataModel()->getCostToUs(),
+                                                            'shipping_charged' => (!$orderDetailModel)?:$orderDetailModel->getDataModel()->getCostToUs(),
+                                                        ]
+                                                    );
+                                                }
+                                                $orderGroupModel->getDataModel()->recalculateAccounting();
+
+                                            }
                                         }
                                     }
                                 }
