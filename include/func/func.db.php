@@ -74,7 +74,7 @@ function db_fetch_field(\Doctrine\DBAL\Driver\Statement $result, $num = 0) {
 }
 
 function db_free_result(\Doctrine\DBAL\Driver\Statement $result) {
-	if ($result) {
+	if ($result && $result instanceof \Doctrine\DBAL\Driver\Statement) {
 		$result->closeCursor();
 	}
 }
