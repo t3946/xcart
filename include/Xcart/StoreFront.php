@@ -22,9 +22,9 @@ class StoreFront extends Data
     private function _init()
     {
         if ($this->getStoreFrontId() > 0) {
-            $this->sConfigTable = self::$sql_tbl['storefronts_config'];
+            $this->sConfigTable = 'xcart_storefronts_config';
         } else {
-            $this->sConfigTable = self::$sql_tbl['config'];
+            $this->sConfigTable = 'xcart_config';
             $this->fill(['storefrontid'=>0, 'domain'=>MAIN_SF_DOMAIN]);
         }
     }
