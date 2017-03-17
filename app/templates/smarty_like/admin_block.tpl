@@ -12,11 +12,7 @@
 
         <div class="row">
             <div class="columns large-12">
-                <div class="row">
-                    <div class="columns large-12">
-                        {raw $html}
-                    </div>
-                </div>
+                {raw $html}
             </div>
         </div>
     </div>

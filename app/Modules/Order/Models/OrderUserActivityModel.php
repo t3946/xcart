@@ -58,7 +58,7 @@ class OrderUserActivityModel extends Model
     public static function userView($owner = null, $order_id)
     {
         $user = Xcart::app()->user;
-        if (!$user->getIsGuest()) {
+        if (!$user->getIsGuest() && $order_id) {
             (new static(['user_id' => $user->id, 'order_id' => $order_id]))->save();
         }
     }

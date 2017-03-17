@@ -1,4 +1,6 @@
 <?php
+use Modules\Product\Models\ProductCategoryTermsModel;
+
 define("CIDEV_CRON_START", "CRON");
 
 require "./top.inc.php";
@@ -68,51 +70,29 @@ echo "0-1";
 #
 echo "1";
 		$categories = db_query($query="SELECT categoryid FROM $sql_tbl[categories] WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid='$storefrontid'");
-
 		$counter = 0;
-
 		while ($category = db_fetch_array($categories)) {
-
 			$categoryid = $category["categoryid"];
-
-//func_print_r($categoryid);
-
 			$products = db_query("SELECT $sql_tbl[products].productid, $sql_tbl[products].product, $sql_tbl[products].fulldescr, $sql_tbl[products].title_tag, $sql_tbl[products].seo_product_name FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[products_categories].productid = $sql_tbl[products].productid WHERE ($sql_tbl[products].pc_classify_status='MC' OR $sql_tbl[products].pc_classify_status='ACC') AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products_categories].categoryid='$categoryid'");
-
 			while ($product = db_fetch_array($products)){
-
-// func_print_r($product);
-
-//			$sfid = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$product[productid]'");
-
 				$text = $product["product"] . " " . $product["product"] . " " . $product["fulldescr"] . " " . $product["title_tag"] . " " . $product["seo_product_name"];
 				$text = func_del_excluded_char_sequences($text, $pc_options[$storefrontid]["excluded_char_sequences"]);
 				$text = func_del_stop_words($text, $pc_options[$storefrontid]["stop_words"]);
-
 				if (!empty($text)){
 					$text_arr = explode(" ", $text);
-
 					foreach ($text_arr as $term){
-
-/*
-						$termid = func_query_first_cell("SELECT termid FROM $sql_tbl[pc_terms] WHERE term='$term' AND storefrontid='$storefrontid'");
-
-						if (empty($termid)){
-							$insert_data["term"] = $term;
-							$insert_data["storefrontid"] = $storefrontid;
-							$termid = func_array2insert('pc_terms', $insert_data);
-						}
-*/
-
 						db_query("INSERT IGNORE INTO $sql_tbl[pc_terms] (term, storefrontid) VALUES ('$term', '$storefrontid')");
 						$termid = func_query_first_cell("SELECT termid FROM $sql_tbl[pc_terms] WHERE term='$term' AND storefrontid='$storefrontid'");
-
-						db_query("INSERT INTO $sql_tbl[pc_category_terms] (categoryid, termid) VALUES ('$categoryid', '$termid')");
+						$productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termid]);
+						if (!$productCategoryTerm) {
+							$productCategoryTerm = new ProductCategoryTermsModel();
+							$productCategoryTerm->setAttributes(['categoryid' => $categoryid, 'termid' => $termid]);
+						}
+						$productCategoryTerm->term_count++;
+						$productCategoryTerm->save();
+						//db_query("INSERT INTO $sql_tbl[pc_category_terms] (categoryid, termid) VALUES ('$categoryid', '$termid')");
 					}
 				}
-
-// func_print_r($text);
-
 				$counter++;
 				if ($counter % 10 == 0) {
 					func_flush(".");
@@ -158,9 +138,8 @@ echo "2";
 #
 echo "3";
 		$query_z = "Select
-                        C.categoryid As CategoryID,
-            		(Select Count(T2.termid) from xcart_pc_terms T2 where T2.storefrontid = '$storefrontid') +
-                        (Count(CT.termid)) As Z
+                    C.categoryid As CategoryID,
+            		COALESCE(CT.term_count, 0) As Z
 	from xcart_categories C
                         left join xcart_pc_category_terms CT ON CT.categoryid = C.categoryid 
 	where C.pc_ready_to_classify = 'Y' and C.storefrontid = '$storefrontid'
@@ -217,7 +196,7 @@ echo "4";
 			$p_count++;
 			$productid = $product["productid"];
 			func_pc_find_new_categoryid($productid);
-			if ($p_count>15)
+			if ($p_count > 50)
 				{
 					break;
 				}

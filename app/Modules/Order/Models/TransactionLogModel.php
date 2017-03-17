@@ -47,7 +47,8 @@ class TransactionLogModel extends AutoMetaModel
             ],
             'transaction_log' => [
                 'class' => SerializeField::className(),
-                'null' => false
+                'null' => false,
+                'default' => ''
             ]
         ];
     }

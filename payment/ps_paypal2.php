@@ -44,6 +44,9 @@
 #
 # Successful return from PayPal
 #
+use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\TransactionLogModel;
+
 if ($_GET['mode'] == 'success' || $_POST['mode'] == 'success') {
 	require "./auth.php";
 	$op_message = serialize($_GET);
@@ -77,6 +80,29 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
 ###
 ##
 #
+	if ($payment_status == "Expired") {
+		if (!empty($txn_id)) {
+			$orderTransaction = OrderTransactionModel::objects()->get(['transaction_id' => $txn_id]);
+			if ($orderTransaction && $orderTransaction->transaction_status != $payment_status) {
+				$orderTransaction->transaction_status = $payment_status;
+				$orderTransaction->transaction_response = null;
+
+				$transactionLog = new TransactionLogModel;
+				$transactionLog->date = time();
+				$transactionLog->orderid = $orderTransaction->orderid;
+				$transactionLog->paymentid = $orderTransaction->paymentid;
+				$transactionLog->transaction_id = $orderTransaction->transaction_id;
+				$transactionLog->transaction_status = $orderTransaction->transaction_status;
+				$transactionLog->transaction_log = $op_message;
+				$transactionLog->transaction_currency = $orderTransaction->transaction_currency;
+				$transactionLog->transaction_total = $orderTransaction->transaction_amount;
+				$transactionLog->save();
+				if ($orderTransaction->isValid()){
+					$orderTransaction->save();
+				}
+			}
+		}
+	}
 
 
 	if (!strcasecmp($payment_status,"Refunded")) {
