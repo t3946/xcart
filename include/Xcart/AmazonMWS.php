@@ -732,6 +732,7 @@ SQL;
                                                      SUM(Shipping) AS Shipping,
                                                      SUM(ShippingRefund) AS ShippingRefund,
                                                      SUM(PrincipalRefund) AS PrincipalRefund,
+                                                     SUM(Quantity) AS Quantity,
                                                      count(1) as Rows
                                                      FROM xcart_order_amazon_details WHERE orderid = {$iOrderId} AND SKU = '{$oOrderAmazonDetail->SKU}'");
                                         if ($aUpdateValues['Rows'] > 0) {
@@ -739,13 +740,14 @@ SQL;
                                                 $aUpdateValues['amazon_item_refunded'] = 'Y';
                                             }
                                             $fChargeFee = abs($aUpdateValues['FBAPerUnitFulfillmentFee'] + $aUpdateValues['FBAPerOrderFulfillmentFee'] + $aUpdateValues['FBATransportationFee']);
-
+                                            $fQuantity = $aUpdateValues['Quantity'];
                                             unset ($aUpdateValues['Refund']);
                                             unset($aUpdateValues['Rows']);
                                             unset($aUpdateValues['PrincipalRefund']);
                                             unset($aUpdateValues['Shipping']);
                                             unset($aUpdateValues['FBATransportationFee']);
                                             unset($aUpdateValues['ShippingRefund']);
+                                            unset($aUpdateValues['Quantity']);
 
                                             //func_array2update('order_details', $aUpdateValues, "orderid = $iOrderId AND productcode='$oOrderAmazonDetail->SKU'");
                                             if (!empty($oOrderAmazonDetail->manufacturerid)) {
@@ -760,31 +762,40 @@ SQL;
                                                         $orderDetailModel->save();
                                                     }
                                                     if ($orderGroupModel->amz_fullfilment_order_placed == 'Y' && !$orderGroupModel->invoices->count()) {
-                                                        $fCostToUs = (!$orderDetailModel) ?: $orderDetailModel->getDataModel()->getCostToUs();
-                                                        if (!$orderInvoiceModel) {
-                                                            $orderInvoiceModel = new OrderGroupInvoiceModel;
+                                                        $fCostToUs = (!$orderDetailModel) ?: $orderDetailModel->item_cost_to_us;
+                                                        if (!$orderInvoiceModel[$oOrderAmazonDetail->SKU]) {
+                                                            $orderInvoiceModel[$oOrderAmazonDetail->SKU] = new OrderGroupInvoiceModel;
                                                         }
-                                                        $orderInvoiceModel->setAttributes([
+                                                        $orderInvoiceModel[$oOrderAmazonDetail->SKU]->setAttributes([
                                                                 'orderid' => $orderGroupModel->orderid,
                                                                 'manufacturerid' => $orderGroupModel->manufacturerid,
                                                                 'invoice_number' => 1,
                                                                 'invoice_received' => 'Y',
-                                                                'cost_to_us_for_products_charged' => $orderInvoiceModel->cost_to_us_for_products_charged + $fCostToUs,
-                                                                'products_total' => $orderInvoiceModel->products_total + $fCostToUs,
-                                                                'shipping_charged' => $orderInvoiceModel->shipping_charged + $fCostToUs,
-                                                                'shipping_total' => $orderInvoiceModel->shipping_total + $fChargeFee,
-                                                                'invoice_total' => $orderInvoiceModel->invoice_total + $fCostToUs,
+                                                                'cost_to_us_for_products_charged' => $fCostToUs * $fQuantity,
+                                                                'products_total' => $fCostToUs * $fQuantity,
+                                                                'shipping_charged' =>  $fChargeFee,
+                                                                'shipping_total' => $fChargeFee,
+                                                                'invoice_total' => ($fCostToUs * $fQuantity) + $fChargeFee,
                                                                 'status' => 'U',
                                                             ]);
-                                                        $orderGroupInvoiceProduct = new OrderGroupInvoiceProductModel;
+
+                                                        $orderGroupInvoiceProduct =  OrderGroupInvoiceProductModel::objects()->get([
+                                                            'orderid' => $orderInvoiceModel[$oOrderAmazonDetail->SKU]->orderid,
+                                                            'manufacturerid' => $orderInvoiceModel[$oOrderAmazonDetail->SKU]->manufacturerid,
+                                                            'invoice_number' => $orderInvoiceModel[$oOrderAmazonDetail->SKU]->invoice_number,
+                                                            'itemid' => $orderDetailModel->itemid,
+                                                        ]);
+                                                        if (!$orderGroupInvoiceProduct) {
+                                                            $orderGroupInvoiceProduct = new OrderGroupInvoiceProductModel;
+                                                        }
                                                         $orderGroupInvoiceProduct->setAttributes([
-                                                                'orderid' => $orderInvoiceModel->orderid,
-                                                                'manufacturerid' => $orderInvoiceModel->manufacturerid,
-                                                                'invoice_number' => $orderInvoiceModel->invoice_number,
+                                                                'orderid' => $orderInvoiceModel[$oOrderAmazonDetail->SKU]->orderid,
+                                                                'manufacturerid' => $orderInvoiceModel[$oOrderAmazonDetail->SKU]->manufacturerid,
+                                                                'invoice_number' => $orderInvoiceModel[$oOrderAmazonDetail->SKU]->invoice_number,
                                                                 'itemid' => $orderDetailModel->itemid,
                                                                 'unit_cost' => $fCostToUs,
-                                                                'qty_inv' => $orderDetailModel->amount,
-                                                                'unit_cost_total' => $orderDetailModel->amount * $fCostToUs
+                                                                'qty_inv' => $fQuantity,
+                                                                'unit_cost_total' => $fQuantity * $fCostToUs
                                                             ]);
                                                         $orderGroupInvoiceProduct->save();
                                                     }
@@ -796,8 +807,24 @@ SQL;
                                 }
                             }
                         }
-                        if ($orderInvoiceModel) {
-                            $orderInvoiceModel->save();
+                        if (!empty($orderInvoiceModel)) {
+                            $orderInvoices = new OrderGroupInvoiceModel;
+                            foreach ($orderInvoiceModel as $oIM){
+                                $orderInvoices->setAttributes([
+                                    'orderid' => $oIM->orderid,
+                                    'manufacturerid' => $oIM->manufacturerid,
+                                    'invoice_number' => 1,
+                                    'invoice_received' => 'Y',
+                                    'cost_to_us_for_products_charged' => $orderInvoices->cost_to_us_for_products_charged + $oIM->cost_to_us_for_products_charged,
+                                    'products_total' => $orderInvoices->products_total + $oIM->products_total,
+                                    'shipping_charged' => $orderInvoices->shipping_charged + $oIM->shipping_charged,
+                                    'shipping_total' => $orderInvoices->shipping_total + $oIM->shipping_total,
+                                    'invoice_total' => $orderInvoices->invoice_total + $oIM->invoice_total,
+                                    'status' => 'U',
+                                ]);
+
+                            }
+                            $orderInvoices->save();
                         }
                     }
                 }
