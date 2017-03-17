@@ -33,42 +33,27 @@ foreach ($storefronts as $storefrontid => $store_info){
     }
 
 
-    $count_AC_products = func_query_first_cell("
+	$count_AC_products = func_query_first_cell("
 	SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid
 	WHERE $sql_tbl[products_sf].sfid='$storefrontid' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products].pc_classify_status='AC'");
 
+	$count_NC_products = func_query_first_cell("
+    SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid
+    WHERE $sql_tbl[products_sf].sfid='$storefrontid' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products].pc_classify_status='NC'");
+
 
 	func_print_r($pc_options[$storefrontid]);
-//func_print_r($count_AC_products);
-//die("123");
 
-    if ($pc_options[$storefrontid]["classification_approval_rate"] >= 0 && $count_AC_products < $pc_options[$storefrontid]["amount_of_products_for_autoclassify_queue"]) { 
-
-
-#
-##
-###
-//$storefrontid = 38;
-//$storefrontid = $config["cron_pc_launched_storefrontid"];
-###
-##
-#
+    if ($pc_options[$storefrontid]["classification_approval_rate"] >= 0
+		&& $count_AC_products < $pc_options[$storefrontid]["amount_of_products_for_autoclassify_queue"]
+		&& $count_NC_products > 0) {
 
 	db_query("UPDATE $sql_tbl[config] SET value='$storefrontid' WHERE name='cron_pc_launched_storefrontid'");
 
-echo "0";
 	if ($pc_options[$storefrontid]["classification_approval_rate"] < $pc_options[$storefrontid]["recalc_if_approval_rate"]){
-echo "0-1";
 
-//if ($storefrontid == ""){
-//	die("Error. Storefrontid=''.");
-//}
 		db_query("delete CT, T from $sql_tbl[pc_category_terms] as CT inner join $sql_tbl[pc_terms] T ON T.termid = CT.termid where T.storefrontid = '$storefrontid';");
 
-###
-##
-#
-echo "1";
 		$categories = db_query($query="SELECT categoryid FROM $sql_tbl[categories] WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid='$storefrontid'");
 		$counter = 0;
 		while ($category = db_fetch_array($categories)) {
@@ -104,10 +89,6 @@ echo "1";
 			}
 		}
 
-#
-##
-#
-echo "2";
 		$query_bayesian_weight = "Select
                 C.categoryid As CategoryID, 
                 LOG((Select Count(P1.productid) 
@@ -127,16 +108,11 @@ echo "2";
 		if (!empty($bayesian_weight_arr)){
 			foreach ($bayesian_weight_arr as $k => $v){
 				if (!empty($v["bayesian_weight"])){
-//					db_query("UPDATE $sql_tbl[pc_category_terms] SET bayes_weight='$v[bayesian_weight]' WHERE categoryid='$v[CategoryID]'");
 					db_query("UPDATE $sql_tbl[categories] SET pc_category_weight='$v[bayesian_weight]' WHERE categoryid='$v[CategoryID]'");
 				}
 			}
 		}
 
-#
-##
-#
-echo "3";
 		$query_z = "Select
                     C.categoryid As CategoryID,
             		COALESCE(CT.term_count, 0) As Z
@@ -153,34 +129,6 @@ echo "3";
 			}
 		}
 
-#
-##
-#
-#print "I am done";
-#exit(0);
-
-
-/*		db_query("DROP TEMPORARY TABLE IF EXISTS temp_table");
-		db_query("
-CREATE TEMPORARY TABLE temp_table
-Select 
-                        C.categoryid As categoryid,
-                        T.termid,
-                        LOG((Count(CT.termid)+1)/C.pc_z) As bayes_weight
-from xcart_categories C
-                        left join xcart_pc_terms T ON T.storefrontid = '$storefrontid'
-                        left join xcart_pc_category_terms CT ON CT.categoryid = C.categoryid and CT.termid = T.termid
-where C.pc_ready_to_classify = 'Y' and C.storefrontid = '$storefrontid'
-Group By C.categoryid,T.termid
-");
-		db_query("Delete C From xcart_pc_category_terms As C left join xcart_categories XC ON XC.categoryid = C.categoryid where XC.pc_ready_to_classify = 'Y' and XC.storefrontid = '$storefrontid'");
-		db_query("INSERT IGNORE INTO xcart_pc_category_terms (categoryid,termid,bayes_weight) Select * from temp_table");
-*/
-
-#
-##
-#
-
 	} //if ($pc_options[$storefrontid]["classification_approval_rate"] < $pc_options[$storefrontid]["recalc_if_approval_rate"])
 
 echo "4";
@@ -189,7 +137,6 @@ echo "4";
 
 	$products = func_query($query = "SELECT $sql_tbl[products].productid FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid = $sql_tbl[products].productid WHERE pc_classify_status='NC' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products_sf].sfid='$storefrontid' ORDER BY RAND() LIMIT $limit");
 
-//func_print_r($query, $products);
 	$p_count = 0;
 	if (!empty($products)){
 		foreach ($products as $product){
@@ -209,16 +156,4 @@ echo "4";
 db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cron_pc_launched'");
 db_query("UPDATE $sql_tbl[config] SET value='' WHERE name='cron_pc_launched_storefrontid'");
 
-
-
 print"<br />DONE!";
-
-
-/*
-$productid = "34785";
-$new_cat = func_pc_find_new_categoryid($productid);
-func_print_r($new_cat);
-*/
-
-
-?>
