@@ -55,12 +55,12 @@ class OrderGroupModel extends AutoMetaModel
             'invoices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupInvoiceModel::className(),
-                'link' => [['orderid', 'orderid'], ['manufacturerid', 'manufacturerid']],
+                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
             ],
             'memos' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupMemoModel::className(),
-                'link' => [['orderid', 'orderid'], ['manufacturerid', 'manufacturerid']],
+                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
             ],
         ];
     }

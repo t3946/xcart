@@ -22,6 +22,7 @@ class IntField extends Field
 
     /**
      * @return Type
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function getSqlType()
     {

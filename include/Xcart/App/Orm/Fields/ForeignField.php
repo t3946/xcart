@@ -6,12 +6,14 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Exception;
 use InvalidArgumentException;
 use Xcart\App\Orm\Base;
+use Xcart\App\Orm\Exception\OrmExceptions;
 use Xcart\App\Orm\ModelInterface;
 use Xcart\App\Orm\ManagerInterface;
 use Mindy\QueryBuilder\QueryBuilder;
 
 /**
  * Class ForeignField
+ *
  * @package Xcart\App\Orm
  */
 class ForeignField extends RelatedField
@@ -23,6 +25,8 @@ class ForeignField extends RelatedField
     public $modelClass;
 
     public $extra = [];
+
+    public $link;
 
     public function getOnDelete()
     {
@@ -41,19 +45,31 @@ class ForeignField extends RelatedField
 
     public function getJoin(QueryBuilder $qb, $topAlias)
     {
+        $on = [];
         $alias = $qb->makeAliasKey($this->getRelatedModel()->tableName());
+
+        if ($this->link) {
+            foreach ($this->link as $from => $to) {
+                $on[$topAlias . '.' . $from] = $alias . '.' . $to;
+            }
+        }
+        else {
+            if (count($this->getRelatedModel()->getPrimaryKeyName(true)) == 1) {
+                $on = [$topAlias . '.' . $this->getAttributeName() => $alias . '.' . $this->getRelatedModel()->getPrimaryKeyName()];
+            }
+            else {
+                OrmExceptions::FailCreateLink();
+            }
+        }
+
         return [
-            [
-                'LEFT JOIN',
-                $this->getRelatedTable(),
-                [$topAlias . '.' . $this->getAttributeName() => $alias . '.' . $this->getRelatedModel()->getPrimaryKeyName()],
-                $alias
-            ]
+            ['LEFT JOIN', $this->getRelatedTable(), $on, $alias],
         ];
     }
 
     /**
      * @param $value
+     *
      * @return \Xcart\App\Orm\Model|\Xcart\App\Orm\TreeModel|null
      * @throws Exception
      */
@@ -62,7 +78,8 @@ class ForeignField extends RelatedField
         if (empty($value)) {
             if ($this->null === true) {
                 return null;
-            } else {
+            }
+            else {
                 throw new Exception("Value in fetch method of PrimaryKeyField cannot be empty");
             }
         }
@@ -72,7 +89,17 @@ class ForeignField extends RelatedField
 
     protected function fetchModel($value)
     {
-        return $this->getManager()->get(array_merge(['pk' => $value], $this->extra));
+        $filter = ['pk' => $value];
+
+        if ($this->link) {
+            $filter = [];
+
+            foreach ($this->link as $from => $to) {
+                $filter[$to] = $value;
+            }
+        }
+
+        return $this->getManager()->get(array_merge($filter, $this->extra));
     }
 
     public function toArray()
@@ -81,6 +108,7 @@ class ForeignField extends RelatedField
         if ($value instanceof ModelInterface) {
             return $value->pk;
         }
+
         return $value;
     }
 
@@ -89,25 +117,28 @@ class ForeignField extends RelatedField
         // TODO: Implement getSelectJoin() method.
     }
 
-
     /**
      * @param $value
      * @param AbstractPlatform $platform
+     *
      * @return null|ModelInterface
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         if ($value instanceof ModelInterface) {
             return $value;
-        } else if (!is_null($value)) {
+        }
+        else if (!is_null($value)) {
             return $this->fetchModel($value);
         }
+
         return $value;
     }
 
     /**
      * @param $value
      * @param AbstractPlatform $platform
+     *
      * @return null|int
      */
     public function convertToPHPValueSQL($value, AbstractPlatform $platform)
@@ -115,6 +146,7 @@ class ForeignField extends RelatedField
         if ($value instanceof ModelInterface) {
             return $value->pk;
         }
+
         return $value;
     }
 
@@ -129,6 +161,7 @@ class ForeignField extends RelatedField
     /**
      * @param $value
      * @param AbstractPlatform $platform
+     *
      * @return int|string
      */
     public function convertToDatabaseValueSql($value, AbstractPlatform $platform)

@@ -16,14 +16,16 @@ class OrderGroupInvoiceProductModel extends AutoMetaModel
     public static function getFields()
     {
         return [
-            'orderid' => [
+            'order' => [
+                'field' => 'orderid',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
                 'primary' => true,
             ],
-            'manufacturerid' => [
+            'manufacturer' => [
+                'field' => 'manufacturerid',
                 'class' => ForeignField::className(),
                 'modelClass' => DistributorModel::className(),
                 'link' => ['manufacturerid' => 'manufacturerid'],
@@ -36,7 +38,8 @@ class OrderGroupInvoiceProductModel extends AutoMetaModel
                 'primary' => true,
                 'default' => 0
             ],
-            'itemid' => [
+            'item' => [
+                'field' => 'itemid',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderDetailModel::className(),
                 'link' => ['itemid' => 'itemid'],
