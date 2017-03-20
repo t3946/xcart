@@ -347,7 +347,9 @@ Select
                 }
             $cnt++;
         }
-        db_free_result($products);
+        if ($products) {
+            db_free_result($products);
+        }
 
         foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
             $aInventory = $oExternalMarketPlace->getInventory();
