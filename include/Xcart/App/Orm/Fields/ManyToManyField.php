@@ -239,7 +239,8 @@ class ManyToManyField extends RelatedField
     }
 
     /**
-     * @return ManagerInterface
+     * @return \Xcart\App\Orm\ManagerInterface
+     * @throws \Exception
      */
     public function getManager()
     {
@@ -272,7 +273,7 @@ class ManyToManyField extends RelatedField
                 {
                     foreach ($params['link'] as $from => $to)
                     {
-                        if (empty($this->getModel()->pk)) {
+                        if (is_null($this->getModel()->{$to})) {
                             $manager->filter('[[' . $throughAlias . ']].[[' . $from . ']] IS NULL');
                         } else {
                             $manager->filter('[[' . $throughAlias . ']].[[' . $from . ']]=@' . $this->getModel()->{$to} . '@');
@@ -281,10 +282,6 @@ class ManyToManyField extends RelatedField
                 }
             }
         }
-
-
-
-
 
         if (!empty($this->extra)) {
             $manager->filter($this->extra);

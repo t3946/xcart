@@ -4,9 +4,7 @@ namespace Xcart\App\Orm\Fields;
 
 use Exception;
 use Xcart\App\Orm\Exception\OrmExceptions;
-use Xcart\App\Orm\HasManyManager;
 use Xcart\App\Orm\Manager;
-use Xcart\App\Orm\ManagerInterface;
 use Mindy\QueryBuilder\QueryBuilder;
 
 /**
@@ -98,18 +96,6 @@ class HasManyField extends RelatedField
         ];
     }
 
-//    protected function getTo()
-//    {
-//        return $this->getModel()->getMeta()->getPrimaryKeyName();
-//    }
-//
-//    protected function getFrom()
-//    {
-//        return implode('_', [
-//            $this->getModel()->tableName(),
-//            $this->getRelatedModel()->getMeta()->getPrimaryKeyName()
-//        ]);
-//    }
 
     public function fetch($value)
     {
@@ -118,6 +104,8 @@ class HasManyField extends RelatedField
 
     public function onBeforeDelete()
     {
+        // @TODO: Добавить функциол. Обновление\Удаление связанных данных.
+
         /*
         $model = $this->getRelatedModel();
         $meta = $model->getMeta();

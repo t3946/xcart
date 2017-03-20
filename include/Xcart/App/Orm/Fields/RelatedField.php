@@ -12,6 +12,8 @@ use Mindy\QueryBuilder\QueryBuilder;
  */
 abstract class RelatedField extends IntField
 {
+    public $namePostfix = '_id';
+
     /**
      * @var string
      */
@@ -118,6 +120,18 @@ abstract class RelatedField extends IntField
             }
         }
         return $joinAlias;
+    }
+
+    public function getAttributeName()
+    {
+        $name = parent::getAttributeName();
+
+        if ($name == $this->name)
+        {
+            return $name . $this->namePostfix;
+        }
+
+        return $name;
     }
 
     abstract public function getManager();
