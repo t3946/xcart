@@ -1080,7 +1080,7 @@ function func_refund_product($orderid, $mid, &$product, $customer_info)
                 'provider'       => $product['provider'],
                 'ref_price'      => $product['refund']['price'],
                 'ref_qty'        => $product['refund']['amount'],
-                'extra_data'     => mysql_real_escape_string(serialize($product['extra_data'])),
+                'extra_data'     => serialize($product['extra_data']),
             ];
 
             func_array2insert('refunded_products', $query_data);
@@ -1423,7 +1423,7 @@ function func_update_refunded_products($products, $orderid)
 
                         $query_data['ref_price']  = $product['ref_price'];
                         $query_data['ref_qty']    = $product['ref_qty'];
-                        $query_data['extra_data'] = mysql_real_escape_string(serialize($query_data['extra_data']));
+                        $query_data['extra_data'] = serialize($query_data['extra_data']);
 
                         $log      = "";
                         $log_name = ["ref_price", "ref_qty"];
