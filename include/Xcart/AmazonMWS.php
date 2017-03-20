@@ -771,7 +771,7 @@ SQL;
                                                                 'manufacturerid' => $orderGroupModel->manufacturerid,
                                                                 'invoice_number' => 1,
                                                                 'invoice_received' => 'Y',
-                                                                'cost_to_us_for_products_charged' => $fCostToUs * $fQuantity,
+                                                                'cost_to_us_for_products_charged' => $fCostToUs,
                                                                 'products_total' => $fCostToUs * $fQuantity,
                                                                 'shipping_charged' =>  $fChargeFee,
                                                                 'shipping_total' => $fChargeFee,
