@@ -449,12 +449,18 @@ label + input {
 }
 
 .buttons-block {
+
+}
+
+.buttons-block.fixed {
     background-color: #E4E0C5;
     min-width: 852px;
     position: fixed;
     bottom: 0;
     padding: 10px 0;
+    /*border: 1px solid #FF8600;*/
     border-top: 1px solid #ccc;
+    border-bottom: none;
 }
 
 .errors-block .errors{
