@@ -580,6 +580,9 @@ label + input {
 .smarty-admin-block.no-padding .content-block{
     padding: 0;
 }
+.smarty-admin-block.no-margin{
+    margin: 0;
+}
 
 .admin .dashboard-filters {
     width: 100%;
@@ -737,7 +740,7 @@ label + input {
 
 #admin-menu-wrapper {
     position: fixed;
-    top: 15px;
+    bottom: 15px;
     right: 15px;
 }
 .admin .main-menu {
