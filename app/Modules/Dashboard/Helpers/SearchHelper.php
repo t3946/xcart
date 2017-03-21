@@ -23,6 +23,7 @@ class SearchHelper
             $raw_statuses     = Connection::getInstance()->fetchAll("SELECT * FROM xcart_order_statuses ORDER BY type ASC, orderby ASC");
             $shipping_methods = Connection::getInstance()->fetchAll("SELECT * FROM xcart_shipping");
             $payment_methods  = Connection::getInstance()->fetchAll("SELECT * FROM xcart_payment_methods");
+            $domains          = Connection::getInstance()->fetchAll("SELECT * FROM xcart_storefronts WHERE status = 'Y' ORDER BY orderby ASC");
             $countries        = Connection::getInstance()->fetchAll(SearchSql::getAllCountryOrderSql());
 
             $order_statuses = [];
@@ -34,7 +35,13 @@ class SearchHelper
                 $order_statuses[$status['type']][] = $status;
             }
 
+            $storefronts = [0 => 'www.artistsupplysource.com'];
+            foreach ($domains as $domain) {
+                $storefronts[$domain['storefrontid']] = $domain['domain'];
+            }
+
             $properties = [
+                'storefronts'          => $storefronts,
                 'countries'            => $countries,
                 'fraud_statuses'       => $fraud_statuses,
                 'order_statuses'       => $order_statuses,

@@ -190,6 +190,10 @@ class OrderSearchStore extends BaseStore
                 $this->getQ($tmp, 'order.id');
             }
 
+            if (!empty($data['order']['storefront'])) {
+                $this->getQ(['storefrontid__in' => $data['order']['storefront']], 'order.storefront');
+            }
+
             if (!empty($data['order']['source'])) {
                 $tmp = [];
 
