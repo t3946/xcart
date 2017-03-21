@@ -23,11 +23,6 @@ class OrderGroupModel extends AutoMetaModel
         return 'xcart_order_groups';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['orderid', 'manufacturerid'];
-    }
-
     public static function getFields()
     {
         return [

@@ -212,7 +212,7 @@ class OrderSearchStore extends BaseStore
                     }
                 }
 
-                $this->getQ($tmp, 'order.source');
+                $this->getQ([new QOr($tmp)], 'order.source');
             }
 
             if (!empty($data['order']['operator']) || $this->checkNot('order.operator')) {
@@ -636,6 +636,7 @@ class OrderSearchStore extends BaseStore
 
         $qs->filter($this->where)->addGroup(['orderid']);
         $this->qs = $qs;
+        func_dump($qs->allSql());
     }
 
     private function arrLikeToLookup($data, $fields)
