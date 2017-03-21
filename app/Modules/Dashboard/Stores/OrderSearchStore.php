@@ -2,6 +2,7 @@
 namespace Modules\Dashboard\Stores;
 
 use DateTime;
+use Mindy\QueryBuilder\Aggregation\Count;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
@@ -129,6 +130,7 @@ class OrderSearchStore extends BaseStore
      * @param array $data
      *
      * @return void
+     * @throws \Exception
      */
     public function populate(array $data)
     {
@@ -188,6 +190,10 @@ class OrderSearchStore extends BaseStore
                 $this->getQ($tmp, 'order.id');
             }
 
+            if (!empty($data['order']['storefront'])) {
+                $this->getQ(['storefrontid__in' => $data['order']['storefront']], 'order.storefront');
+            }
+
             if (!empty($data['order']['source'])) {
                 $tmp = [];
 
@@ -210,7 +216,7 @@ class OrderSearchStore extends BaseStore
                     }
                 }
 
-                $this->getQ($tmp, 'order.source');
+                $this->getQ([new QOr($tmp)], 'order.source');
             }
 
             if (!empty($data['order']['operator']) || $this->checkNot('order.operator')) {
@@ -314,8 +320,7 @@ class OrderSearchStore extends BaseStore
 
             if (!empty($data['order']['po_status']) || $this->checkNot('order.po_status')) {
                 $qs->join('right outer join', 'xcart_po_pipeline', ['orderid' => 'po.order_id'], 'po');
-                $qs->addSelect(['po.*']);
-                $qs->addGroup(['po.po_id']);
+                $qs->addGroup(['orderid', 'po.po_id']);
 
                 $val = ($data['order']['po_status']) ? $data['order']['po_status'] : [''];
 
@@ -324,27 +329,28 @@ class OrderSearchStore extends BaseStore
 
             if (!empty($data['order']['all_dx'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+                $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'invoice.orderid'], 'invoice');
+                $qs->addSelect(['*', new Count('invoice.orderid', 'icount'), new Count('group.orderid', 'gcount') ]);
 
-                if ($data['order']['all_dx'] == 'Y') { // Присутствует во всех случаях
-                    $qs->join('inner join', 'xcart_order_group_invoices', ['orderid' => 'i_invoice.orderid', 'group.manufacturerid'=> 'i_invoice.manufacturerid'], 'i_invoice');
+                if ($data['order']['all_dx'] == 'Y') { // Присутствует во всех группах
+                    $qs->having(['gcount__gte' => 1 , new QAnd(new Expression('gcount = icount'))]);
                 }
-                elseif($data['order']['all_dx'] == 'AN') { // Отсутствует во всех случаях
-                    $qs->join('left outer join', 'xcart_order_group_invoices', ['orderid' => 'lo_invoice.orderid', 'group.manufacturerid'=> 'lo_invoice.manufacturerid'], 'lo_invoice');
-                    $this->where['lo_invoice.orderid__isnull'] = true;
+                elseif($data['order']['all_dx'] == 'AN') { // Отсутствует во всех группах
+                    $qs->having(['icount' => 0, 'gcount__gt' => 0]);
                 }
-                elseif($data['order']['all_dx'] == 'NA') { // Отсутствует в некоторых случаях
-                    $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'l_invoice.orderid'], 'l_invoice');
-                    $this->where['l_invoice.orderid__isnull'] = false;
+                elseif($data['order']['all_dx'] == 'NA') { // Отсутствует в одной или всех группах
+                    $qs->having(['icount__gte' => 0 , new QAnd(new Expression('gcount > icount'))]);
                 }
-                else { // Присутствует не во всех случаях
-                    $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'l_invoice.orderid'], 'l_invoice');
-                    $this->where['l_invoice.orderid__isnull'] = true;
+                else { // Присутствует в одной или всех группах
+                    $qs->having(['icount__gte' => 1]);
                 }
             }
+
             if (!empty($data['order']['has_memo'])) {
                 $qs->join('left join', 'xcart_order_group_memos', ['orderid' => 'l_memo.orderid'], 'l_memo');
                 $this->where['l_memo.orderid__isnull'] = ($data['order']['has_dx'] == 'N');
             }
+
             if (!empty($data['order']['has_icx'])) {
                 $qs->join('left join', 'xcart_order_cx_invoices', ['orderid' => 'l_icx.orderid'], 'l_icx');
                 $this->where['l_icx.orderid__isnull'] = ($data['order']['has_icx'] == 'N');
@@ -877,7 +883,7 @@ class OrderSearchStore extends BaseStore
                 $qs->filter(['order_id__in' => $ids]);
             }
             else {
-                $qs->join('join', $o_qs->select('orderid')->order([])->allSql(), ['orders.orderid' => 'order_id'], 'orders');
+                $qs->join('join', $o_qs->order([])->allSql(), ['orders.orderid' => 'order_id'], 'orders');
             }
 
             return $qs->count();

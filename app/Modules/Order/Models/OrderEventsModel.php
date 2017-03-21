@@ -23,22 +23,20 @@ class OrderEventsModel extends Model
         return 'xcart_order_events';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['order_id', 'created_at'];
-    }
-
     public static function getFields()
     {
         return [
-            'order_id' => [
+            'order' => [
+                'field' => 'order_id',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
-                'link' => ['id', 'orderid']
+                'link' => ['order_id' => 'orderid'],
+                'primary' => true,
             ],
             'created_at' => [
                 'class' => DateTimeField::className(),
                 'autoNowAdd' => true,
+                'primary' => true,
             ],
             'message' => [
                 'class' => CharField::className(),
@@ -49,10 +47,11 @@ class OrderEventsModel extends Model
 
     /**
      * @param OrderModel|Order|null $owner Owner order model
-     * @param int $order_id Order id
-     * @param string|null $message Message for event
+     * @param int $order_id                Order id
+     * @param string|null $message         Message for event
      *
-     * @return static|null
+     * @return null|static
+     * @throws \Exception
      */
     public static function newOrderEvent($owner = null, $order_id, $message = null)
     {

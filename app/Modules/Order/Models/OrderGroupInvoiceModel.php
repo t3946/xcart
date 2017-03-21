@@ -22,22 +22,19 @@ class OrderGroupInvoiceModel extends AutoMetaModel
         return 'xcart_order_group_invoices';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['orderid', 'manufacturerid', 'invoice_number'];
-    }
-
     public static function getFields()
     {
         return [
-            'orderid' => [
+            'order' => [
+                'field' => 'orderid',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
                 'primary' => true,
             ],
-            'manufacturerid' => [
+            'manufacturer' => [
+                'field' => 'manufacturerid',
                 'class' => ForeignField::className(),
                 'modelClass' => DistributorModel::className(),
                 'link' => ['manufacturerid' => 'manufacturerid'],

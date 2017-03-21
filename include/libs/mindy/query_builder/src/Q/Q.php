@@ -119,7 +119,7 @@ abstract class Q
             $condition = $where['___condition'];
             if ($this->isWherePart($childWhere)) {
                 $whereSql = $this->parseConditions($queryBuilder, $childWhere);
-                $sql .= '(' . $whereSql . ') ' . strtoupper($operator) . ' (' . $this->parsePart($condition, $operator) . ')';
+                $sql .= '(' . $whereSql . ') ' . strtoupper($operator) . ' (' . $this->parsePart($queryBuilder, $condition, $operator) . ')';
             } else {
                 $sql .= $this->parsePart($queryBuilder, $childWhere, $operator);
             }

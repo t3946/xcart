@@ -41,7 +41,3 @@
         {*{/smarty_admin_block}*}
     {/if}
 {/block}
-
-{block 'menu_block'}
-
-{/block}
