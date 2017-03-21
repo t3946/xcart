@@ -27,6 +27,8 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      * @var AttributeCollection
      */
     protected $attributes;
+
+    protected $attributesNotField;
     /**
      * @var string
      */
@@ -202,9 +204,20 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
             } else {
                 $this->related[$name] = $value;
             }
-        } else {
-            throw new Exception(get_class($this) . ' has no attribute named "' . $name . '".');
         }
+        else {
+            $this->attributesNotField[$name] = $value;
+//            throw new Exception(get_class($this) . ' has no attribute named "' . $name . '".');
+        }
+    }
+
+    public function getNotFieldAttribute($name)
+    {
+        if (isset($this->attributesNotField[$name])) {
+            return $this->attributesNotField[$name];
+        }
+
+        return null;
     }
 
     /**

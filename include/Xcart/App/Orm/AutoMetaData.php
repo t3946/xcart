@@ -62,7 +62,8 @@ class AutoMetaData extends MetaData
     /**
      * @param string $className
      *
-     * @return Column[]
+     * @return \Doctrine\DBAL\Schema\Column[]
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function getTableColumns($className)
     {
