@@ -636,7 +636,6 @@ class OrderSearchStore extends BaseStore
 
         $qs->filter($this->where)->addGroup(['orderid']);
         $this->qs = $qs;
-        func_dump($qs->allSql());
     }
 
     private function arrLikeToLookup($data, $fields)
