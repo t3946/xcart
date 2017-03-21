@@ -168,7 +168,10 @@ class SearchHelper
 
     public static function explodeStateCode($data)
     {
-        return array_map(function($state){ return explode('__', $state)[0]; },$data);
+        if (is_array($data)) {
+            return array_map(function($state){ return explode('__', $state)[0]; },$data);
+        }
+        return null;
     }
 
 
