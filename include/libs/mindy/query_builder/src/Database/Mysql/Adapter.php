@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 20/06/16
- * Time: 13:06
- */
-
 namespace Mindy\QueryBuilder\Database\Mysql;
 
 use Exception;
