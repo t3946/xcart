@@ -49,6 +49,7 @@
                         <div class="row">
                             <div class="columns large-12">
                                 {block 'menu_block'}
+                                    {include 'base/_admin_menu.tpl'}
                                 {/block}
                             </div>
                         </div>

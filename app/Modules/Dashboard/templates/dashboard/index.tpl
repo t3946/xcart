@@ -1,4 +1,4 @@
-{extends 'dashboard/layouts/menu_layout.tpl'}
+{extends 'base/admin.tpl'}
 {block 'heading'}
     <h1 align="center">Customer Care dashboard.</h1>
 

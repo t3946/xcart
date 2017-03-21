@@ -65,7 +65,7 @@ class DashboardModule extends Module
         $user = Xcart::app()->user;
         $router = Xcart::app()->router;
 
-        $menu = [
+        return [
             [
                 'icon' => 'fa fa-search',
                 'name' => 'Search',
@@ -75,24 +75,19 @@ class DashboardModule extends Module
                 'icon' => 'fa fa-handshake-o',
                 'name' => 'Customer care dashboard',
                 'route' => $router->url('dashboard:index'),
+                'items' => ($user && $user->getIsSuperuser()) ? [
+                    [
+                        'icon' => 'fa fa-pencil-square-o',
+                        'name' => 'Filters settings',
+                        'route' => $router->url('dashboard:admin_filters'),
+                    ],
+                    [
+                        'icon' => 'fa fa-pencil-square-o',
+                        'name' => 'Filters group settings',
+                        'route' => $router->url('dashboard:admin_groups'),
+                    ],
+                ] : false,
             ],
         ];
-
-        if ($user && $user->getIsSuperuser()) {
-            $menu =  array_merge($menu, [
-                [
-                    'icon' => 'fa fa-pencil-square-o',
-                    'name'  => 'Filters settings',
-                    'route' => $router->url('dashboard:admin_filters'),
-                ],
-                [
-                    'icon' => 'fa fa-pencil-square-o',
-                    'name'  => 'Filters group settings',
-                    'route' => $router->url('dashboard:admin_groups'),
-                ],
-            ]);
-        }
-
-        return $menu;
     }
 }

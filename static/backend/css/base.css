@@ -574,6 +574,13 @@ label + input {
     line-height: 15px;
 }
 
+.smarty-admin-block.padding-small .content-block{
+    padding: 5px;
+}
+.smarty-admin-block.no-padding .content-block{
+    padding: 0;
+}
+
 .admin .dashboard-filters {
     width: 100%;
     table-layout: fixed;
@@ -728,17 +735,43 @@ label + input {
     font-weight: bold;
 }
 
+#admin-menu-wrapper {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+}
 .admin .main-menu {
     list-style: none;
     padding: 0;
+    margin: 5px;
+    font-size: 11px;
 }
+
+.admin .main-menu .module {
+    margin-bottom: 5px;
+}
+
+.admin .main-menu .module .name {
+    font-weight: 700 ;
+}
+
 .admin .main-menu .items {
     padding: 0;
     margin: 3px 0;
 }
-.admin .main-menu li {
+.admin .main-menu .item {
     list-style: none;
-    display: inline-block;
+    padding: 0.2em 0.2em 0.2em 1em;
+    /*display: inline-block;*/
+}
+
+.admin .main-menu .item a,
+.admin .main-menu .item span {
+    text-decoration: none;
+}
+
+.admin .main-menu .item a:hover {
+    text-decoration: underline;
 }
 
 .mnotify-black {
