@@ -1,5 +1,6 @@
 <?php
 use Modules\Product\Helpers\ImageHelper;
+use Modules\Product\Models\ProductModel;
 
 define("CIDEV_CRON_START", "CRON");
 session_start();
@@ -196,7 +197,10 @@ foreach ($supplier_feeds as $k => $v) {
                     $idx = array_search($v_du, array_keys($product_cols_replace));
                     if ($idx !== false) {
                         $products["dont_update_fields"][] = $product_cols_replace[$v_du];
-                        unset($products["dont_update_fields"][$k_du]);
+                        $trimDesc = trim($modelProduct->fulldescr);
+                        if ($v_du !='fulldescr' || ($v_du == 'fulldescr' && !empty($trimDesc))) {
+                            unset($products["dont_update_fields"][$k_du]);
+                        }
                     }
                 }
             }
@@ -235,7 +239,12 @@ foreach ($supplier_feeds as $k => $v) {
                     continue;
                 }
                 $productcode = strtoupper(trim($p["productcode"]));
-                $productid = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='$productcode'");
+
+                $modelProduct = ProductModel::objects()->get(['productcode' => $productcode]);
+                if ($modelProduct) {
+                    $productid = $modelProduct->productid;
+                }
+
                 if ($v["feed_type"] == "I") { // inventory
                     if (empty($productid)) {
                         continue;
@@ -316,15 +325,17 @@ foreach ($supplier_feeds as $k => $v) {
                             if (!empty($sDataImage)) {
                                 if (file_put_contents($image_file_path, $sDataImage)) {
                                     $img_info = getimagesize($image_file_path);
-                                    $image_data[$k_img]['date'] = time();
-                                    $image_data[$k_img]['image_path'] = $image_file_path;
-                                    $image_data[$k_img]['image_type'] = $img_info["mime"];
-                                    $image_data[$k_img]['image_x'] = $img_info[0];
-                                    $image_data[$k_img]['image_y'] = $img_info[1];
-                                    $image_data[$k_img]['image_size'] = filesize($image_file_path);
-                                    $image_data[$k_img]['alt'] = $alt_context;
-                                    $image_data[$k_img]['avail'] = 'Y';
-                                    $image_data[$k_img]['orderby'] = 10 * $k_img;
+                                    if ($img_info) {
+                                        $image_data[$k_img]['date'] = time();
+                                        $image_data[$k_img]['image_path'] = $image_file_path;
+                                        $image_data[$k_img]['image_type'] = $img_info["mime"];
+                                        $image_data[$k_img]['image_x'] = $img_info[0];
+                                        $image_data[$k_img]['image_y'] = $img_info[1];
+                                        $image_data[$k_img]['image_size'] = filesize($image_file_path);
+                                        $image_data[$k_img]['alt'] = $alt_context;
+                                        $image_data[$k_img]['avail'] = 'Y';
+                                        $image_data[$k_img]['orderby'] = 10 * $k_img;
+                                    }
                                 }
                             }
                         }
