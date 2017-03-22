@@ -88,6 +88,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
 					$orderTransaction->save();
 				}
 			}
+			exit;
 		}
 	}
 
