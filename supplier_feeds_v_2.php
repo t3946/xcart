@@ -197,10 +197,7 @@ foreach ($supplier_feeds as $k => $v) {
                     $idx = array_search($v_du, array_keys($product_cols_replace));
                     if ($idx !== false) {
                         $products["dont_update_fields"][] = $product_cols_replace[$v_du];
-                        $trimDesc = trim($modelProduct->fulldescr);
-                        if ($v_du !='fulldescr' || ($v_du == 'fulldescr' && !empty($trimDesc))) {
                             unset($products["dont_update_fields"][$k_du]);
-                        }
                     }
                 }
             }
@@ -262,7 +259,10 @@ foreach ($supplier_feeds as $k => $v) {
                             foreach ($p as $k_pdu => $v_pdu) {
                                 $idx = array_search($k_pdu, $products["dont_update_fields"]);
                                 if ($idx !== false) {
-                                    unset($p[$k_pdu]);
+                                    $trimDesc = trim($modelProduct->fulldescr);
+                                    if ($k_pdu !='fulldescr' || ($k_pdu == 'fulldescr' && !empty($trimDesc))) {
+                                        unset($p[$k_pdu]);
+                                    }
                                 }
                             }
                         }
