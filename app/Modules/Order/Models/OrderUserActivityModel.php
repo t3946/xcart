@@ -14,23 +14,22 @@ class OrderUserActivityModel extends Model
         return 'xcart_order_user_actives';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['user_id', 'order_id', 'created_at'];
-    }
-
     public static function getFields()
     {
         return [
-            'user_id' => [
+            'user' => [
+                'field' => 'user_id',
                 'class' => ForeignField::className(),
                 'modelClass' => UserModel::className(),
-                'link' => ['id', 'user_id']
+                'link' => ['id', 'user_id'],
+                'primary' => true,
             ],
-            'order_id' => [
+            'order' => [
+                'field' => 'order_id',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
-                'link' => ['orderid', 'order_id'],
+                'link' => ['order_id' => 'orderid'],
+                'primary' => true,
             ],
             'created_at' => [
                 'class' => DateTimeField::className(),

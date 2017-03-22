@@ -1,4 +1,6 @@
 <?php
+use Modules\Product\Helpers\ImageHelper;
+
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
@@ -409,7 +411,7 @@ die();
 ##
                                                         $SET_IMAGE_URL = "";
 
-                                                        if (strpos($IMAGE_URL, "?") !== false){
+                                                        /*if (strpos($IMAGE_URL, "?") !== false){
                                                                 $tmp_IMG_URL_arr = explode("?", $IMAGE_URL);
                                                                 $our_IMG_URL = $tmp_IMG_URL_arr[1];
 
@@ -450,12 +452,12 @@ die();
                                                                                 $SET_IMAGE_URL = $our_IMG_URL;
                                                                         }
                                                                 }
-                                                        }
+                                                        }*/
 ##
 #
 
-
-                                                        if (empty($SET_IMAGE_URL)){
+								$SET_IMAGE_URL = ImageHelper::getImageFileNameFromDownloadLink($IMAGE_URL);
+                                if (empty($SET_IMAGE_URL)){
 								###
 								$img_path_arr = explode("//", $IMAGE_URL);
 								$img_path_arr2 = explode("/", $img_path_arr[1]);

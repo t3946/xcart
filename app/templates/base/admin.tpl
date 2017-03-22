@@ -2,7 +2,7 @@
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous">
 </script>
-
+<link rel="stylesheet" href="/static/vendors/font-awesome/css/font-awesome.min.css">
 <link rel="stylesheet" href="/static/backend/css/base.css?v=4">
 
 <script src="/static/vendors/jquery.cookie-1.4.1.min.js"></script>
@@ -49,6 +49,7 @@
                         <div class="row">
                             <div class="columns large-12">
                                 {block 'menu_block'}
+                                    {include 'base/_admin_menu.tpl'}
                                 {/block}
                             </div>
                         </div>

@@ -65,35 +65,28 @@ class DashboardModule extends Module
         $user = Xcart::app()->user;
         $router = Xcart::app()->router;
 
-        if ($user && $user->getIsSuperuser()) {
-            return [
-                [
-                    'name'  => 'Search',
-                    'route' => $router->url('dashboard:search'),
-                ],
-                [
-                    'name'  => 'Customer care dashboard',
-                    'route' => $router->url('dashboard:index'),
-                ],
-                [
-                    'name'  => 'Filters settings',
-                    'route' => $router->url('dashboard:admin_filters'),
-                ],
-                [
-                    'name'  => 'Filters group settings',
-                    'route' => $router->url('dashboard:admin_groups'),
-                ],
-            ];
-        }
-
         return [
             [
-                'name'  => 'Search',
+                'icon' => 'fa fa-search',
+                'name' => 'Search',
                 'route' => $router->url('dashboard:search'),
             ],
             [
-                'name'  => 'Customer care dashboard',
+                'icon' => 'fa fa-handshake-o',
+                'name' => 'Customer care dashboard',
                 'route' => $router->url('dashboard:index'),
+                'items' => ($user && $user->getIsSuperuser()) ? [
+                    [
+                        'icon' => 'fa fa-pencil-square-o',
+                        'name' => 'Filters settings',
+                        'route' => $router->url('dashboard:admin_filters'),
+                    ],
+                    [
+                        'icon' => 'fa fa-pencil-square-o',
+                        'name' => 'Filters group settings',
+                        'route' => $router->url('dashboard:admin_groups'),
+                    ],
+                ] : false,
             ],
         ];
     }

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 20/06/16
- * Time: 10:50
- */
-
 namespace Mindy\QueryBuilder;
 
 use Exception;
@@ -691,14 +684,14 @@ abstract class BaseAdapter implements ISQLGenerator
      * @param $having
      * @return string
      */
-    public function sqlHaving($having)
+    public function sqlHaving($having, QueryBuilder $queryBuilder = null)
     {
         if (empty($having)) {
             return '';
         }
 
         if ($having instanceof Q) {
-            $sql = $having->toSQL();
+            $sql = $having->toSQL($queryBuilder);
         } else {
             $sql = $this->quoteSql($having);
         }

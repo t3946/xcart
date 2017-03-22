@@ -23,11 +23,6 @@ class OrderGroupModel extends AutoMetaModel
         return 'xcart_order_groups';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['orderid', 'manufacturerid'];
-    }
-
     public static function getFields()
     {
         return [
@@ -55,12 +50,12 @@ class OrderGroupModel extends AutoMetaModel
             'invoices' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupInvoiceModel::className(),
-                'link' => [['orderid', 'orderid'], ['manufacturerid', 'manufacturerid']],
+                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
             ],
             'memos' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupMemoModel::className(),
-                'link' => [['orderid', 'orderid'], ['manufacturerid', 'manufacturerid']],
+                'link' => ['orderid'=>'orderid', 'manufacturerid'=>'manufacturerid'],
             ],
         ];
     }

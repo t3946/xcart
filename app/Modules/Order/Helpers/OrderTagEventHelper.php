@@ -14,6 +14,8 @@ class OrderTagEventHelper
      * @param null $owner
      * @param $status_id
      * @param $order_id
+     *
+     * @throws \Xcart\App\Orm\Exception\MultipleObjectsReturned
      */
     public static function triggerOrderTagEvent($owner = null, $status_id, $order_id)
     {
@@ -24,8 +26,10 @@ class OrderTagEventHelper
      * For manual execute
      *
      * @param int $status_id Status pk
-     * @param int $order_id Order pk
+     * @param int $order_id  Order pk
      * @param bool $save_log Save action in log or not
+     *
+     * @throws \Xcart\App\Orm\Exception\MultipleObjectsReturned
      */
     public static function orderTagEvent($status_id, $order_id, $save_log = true)
     {

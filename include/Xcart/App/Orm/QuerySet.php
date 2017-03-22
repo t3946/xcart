@@ -444,8 +444,12 @@ class QuerySet extends QuerySetBase
         
         list($order, $orderOptions) = $qb->getOrder();
         $select = $qb->getSelect();
-        $sql = $qb->order(null)->select($q)->toSQL();
-        $qb->select($select)->order($order, $orderOptions);
+
+
+//        $select = $qb->getQueryBuilder()->getSelect();
+
+        $sql = $qb->order(null)->select(array_merge([$q], $select))->toSQL();
+//        $qb->select($select)->order($order, $orderOptions);
         return $sql;
     }
 
@@ -462,7 +466,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function min($q)
     {
@@ -471,7 +477,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Exception
      */
     public function minSql($q)
     {
@@ -480,7 +488,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function max($q)
     {
@@ -489,7 +499,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Exception
      */
     public function maxSql($q)
     {
@@ -519,7 +531,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|array|string $q
+     *
      * @return string
+     * @throws \Exception
      */
     public function countSql($q = '*')
     {
@@ -528,7 +542,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param string $q
+     *
      * @return int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function count($q = '*')
     {
@@ -576,7 +592,10 @@ class QuerySet extends QuerySetBase
 
     /**
      * Truncate table
+     *
      * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     public function truncate()
     {
@@ -589,7 +608,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param mixed $fields
+     *
      * @return $this
+     * @throws \Exception
      */
     public function distinct($fields = true)
     {
@@ -599,7 +620,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param $columns
+     *
      * @return $this
+     * @throws \Exception
      */
     public function group($columns)
     {
@@ -618,6 +641,12 @@ class QuerySet extends QuerySetBase
     public function addGroup($columns)
     {
         $this->group(array_merge($this->_group, $columns));
+        return $this;
+    }
+
+    public function having($having)
+    {
+        $this->getQueryBuilder()->having($having);
         return $this;
     }
 

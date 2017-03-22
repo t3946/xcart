@@ -14,7 +14,7 @@ use Serializable;
 /**
  * Class NewBase
  * @package Xcart\App\Orm
- * @method static \Xcart\App\Orm\Manager objects($instance = null)
+ * @method static Manager objects($instance = null)
  */
 abstract class Base implements ModelInterface, ArrayAccess, Serializable
 {
@@ -27,6 +27,8 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      * @var AttributeCollection
      */
     protected $attributes;
+
+    protected $attributesNotField;
     /**
      * @var string
      */
@@ -45,8 +47,9 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     protected $connection;
 
     /**
-     * NewOrm constructor.
      * @param array $attributes
+     *
+     * @throws Exception
      */
     public function __construct(array $attributes = [])
     {
@@ -99,6 +102,8 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
 
     /**
      * @param $name
+     *
+     * @throws Exception
      */
     public function __unset($name)
     {
@@ -199,9 +204,20 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
             } else {
                 $this->related[$name] = $value;
             }
-        } else {
-            throw new Exception(get_class($this) . ' has no attribute named "' . $name . '".');
         }
+        else {
+            $this->attributesNotField[$name] = $value;
+//            throw new Exception(get_class($this) . ' has no attribute named "' . $name . '".');
+        }
+    }
+
+    public function getNotFieldAttribute($name)
+    {
+        if (isset($this->attributesNotField[$name])) {
+            return $this->attributesNotField[$name];
+        }
+
+        return null;
     }
 
     /**
@@ -257,6 +273,8 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
 
     /**
      * @param array $attributes
+     *
+     * @throws Exception
      */
     public function setAttributes(array $attributes)
     {
@@ -376,6 +394,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
 
     /**
      * @return bool
+     * @throws \Exception
      */
     public function isValid()
     {
@@ -541,6 +560,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
 
     /**
      * @return bool
+     * @throws \Exception
      */
     public function delete()
     {
@@ -603,7 +623,9 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
 
     /**
      * @param string $name
+     *
      * @return mixed
+     * @throws \Doctrine\DBAL\DBALException|\Exception
      */
     protected function getFieldValue($name)
     {
@@ -629,12 +651,6 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      */
     public static function classNameShort()
     {
-        @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 3.0 and will be removed in 4.0.', E_USER_DEPRECATED);
-        /*
-        $classMap = explode('\\', get_called_class());
-        return end($classMap);
-        */
-
         return (new \ReflectionClass(get_called_class()))->getShortName();
     }
 
@@ -651,10 +667,6 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      */
     public static function tableName()
     {
-        /*
-        $classMap = explode('\\', get_called_class());
-        return self::normalizeTableName(end($classMap));
-        */
         $shortName = (new \ReflectionClass(get_called_class()))->getShortName();
         return self::normalizeTableName($shortName);
     }
@@ -679,7 +691,9 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
 
     /**
      * @param mixed $offset
+     *
      * @return mixed
+     * @throws \Exception
      */
     public function offsetGet($offset)
     {

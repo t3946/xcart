@@ -31,6 +31,7 @@ class AbstractModel extends Base
 
     /**
      * @return \Mindy\QueryBuilder\BaseAdapter|\Mindy\QueryBuilder\Interfaces\ISQLGenerator
+     * @throws \Exception
      */
     protected function getAdapter()
     {
@@ -39,7 +40,10 @@ class AbstractModel extends Base
 
     /**
      * @param array $fields
+     *
      * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     protected function updateInternal(array $fields = [])
     {
@@ -92,6 +96,7 @@ class AbstractModel extends Base
 
     /**
      * @return null|string
+     * @throws Exception
      */
     public function getSequenceName()
     {
@@ -178,7 +183,9 @@ class AbstractModel extends Base
 
     /**
      * @param array $fields
+     *
      * @return array
+     * @throws \Doctrine\DBAL\DBALException|\Exception
      */
     public function getChangedAttributes(array $fields = [])
     {
@@ -217,7 +224,10 @@ class AbstractModel extends Base
     }
 
     /**
-     * @return array|Table[]
+     * @return array|\Doctrine\DBAL\Schema\Table[]
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Schema\SchemaException
+     * @throws \Exception
      */
     public static function createSchemaTables()
     {

@@ -12,11 +12,6 @@ class OrderAdditionalTagLinkModel extends Model
         return 'xcart_orders_additional_tags';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['id', 'status_id', 'orderid'];
-    }
-
     public static function getFields()
     {
         return [
@@ -28,11 +23,15 @@ class OrderAdditionalTagLinkModel extends Model
                 'field' => 'status_id',
                 'class' => ForeignField::className(),
                 'modelClass' => AttentionTagModel::className(),
+                'link' => ['status_id' => 'status_id'],
+                'primary' => true,
             ],
             'order' => [
                 'field' => 'orderid',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
+                'link' => ['orderid' => 'orderid'],
+                'primary' => true,
             ],
         ];
     }
