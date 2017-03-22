@@ -1065,7 +1065,7 @@ function func_refund_product($orderid, $mid, &$product, $customer_info)
             $query_data = [
                 'ref_price'  => $product['refund']['price'],
                 'ref_qty'    => $product['refund']['amount'],
-                'extra_data' => serialize($product['extra_data']),
+                'extra_data' => addslashes(serialize($product['extra_data'])),
             ];
 
             func_array2update('refunded_products', $query_data, $where);
@@ -1080,7 +1080,7 @@ function func_refund_product($orderid, $mid, &$product, $customer_info)
                 'provider'       => $product['provider'],
                 'ref_price'      => $product['refund']['price'],
                 'ref_qty'        => $product['refund']['amount'],
-                'extra_data'     => serialize($product['extra_data']),
+                'extra_data'     => addslashes(serialize($product['extra_data'])),
             ];
 
             func_array2insert('refunded_products', $query_data);
