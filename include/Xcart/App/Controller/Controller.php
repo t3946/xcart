@@ -6,6 +6,7 @@ use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Request\HttpRequest;
+use Xcart\App\Request\RequestManager;
 
 class Controller
 {
@@ -38,14 +39,16 @@ class Controller
             $action = $this->defaultAction;
         }
         $this->beforeAction($action, $params);
+        ob_start();
         if (method_exists($this, $action)) {
             $this->runAction($action, $params);
         } else {
+            ob_end_clean();
             $class = get_class();
             throw new InvalidConfigException("There is no action {$action} in controller {$class}");
         }
 
-        $this->afterAction($action, $params);
+        $this->afterAction($action, $params, ob_get_clean());
     }
     public function runAction($action, $params = [])
     {
@@ -100,8 +103,15 @@ class Controller
     {
     }
 
-    public function afterAction($action, $params)
+    public function afterAction($action, $params, $out)
     {
+        if (Xcart::app()->hasComponent('middleware')) {
+
+            Xcart::app()->middleware->processView($this->getRequest(), $out);
+            Xcart::app()->middleware->processResponse($this->getRequest());
+        }
+
+        echo $out;
     }
 
     public function error($code = 404, $message = null)

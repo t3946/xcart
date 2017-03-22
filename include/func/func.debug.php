@@ -80,7 +80,7 @@ function func_print_r() {
 
 function func_dump()
 {
-    $cron  = defined('CIDEV_CRON_START');
+    $cron  = \Xcart\App\Cli\Cli::isCli();
 
     foreach (func_get_args() as $arg)
     {

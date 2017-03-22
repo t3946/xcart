@@ -654,7 +654,6 @@ if (!defined("QUICK_START")) {
 #
 @include_once $xcart_dir . "/include/sessions.php";
 
-//@TODO: �������� ���������� ������ � ������ (����������� � XCartSession ������)
 if (x_session_save_to_db__do_not_use == 'Y') {
 //      func_print_r(x_session_save_to_db__do_not_use);
 

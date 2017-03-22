@@ -8,8 +8,8 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
 {
     public static $files = array (
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
-        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         '68f9084e889ebf718663435970ab45e3' => __DIR__ . '/..' . '/mindy/query_builder/src/Conditions.php',
         '38aa9ffa312700065ceed8bf7bcb7a53' => __DIR__ . '/../../..' . '/include/func/func.core.php',
@@ -63,6 +63,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'U' => 
         array (
             'Ups\\' => 4,
+        ),
+        'T' => 
+        array (
+            'TrueBV\\' => 7,
         ),
         'S' => 
         array (
@@ -128,6 +132,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Ups\\' => 
         array (
             0 => __DIR__ . '/..' . '/gabrielbull/ups-api/src/Ups',
+        ),
+        'TrueBV\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/true/punycode/src',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (

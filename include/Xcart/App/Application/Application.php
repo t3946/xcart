@@ -3,6 +3,7 @@ namespace Xcart\App\Application;
 
 use Exception;
 use Modules\User\Models\UserModel;
+use Xcart\App\Cli\Cli;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Exceptions\NotFoundHttpException;
@@ -35,18 +36,23 @@ class Application
     use ComponentsLibrary;
 
     public $name = 'Application';
-        public $exit_on_end = true;
+    public $exit_on_end = true;
+    public $locale = [
+        'language' => 'ru',
+        'sourceLanguage' => 'en',
+        'charset' => 'utf-8',
+    ];
 
-        protected $_modules = [];
-        protected $_modulesConfig = [];
+    protected $_modules = [];
+    protected $_modulesConfig = [];
 
-        public $autoloadComponents = [];
+    public $autoloadComponents = [];
 
-        public function init()
-        {
-            $this->_provideModuleEvent('onApplicationInit');
-            $this->setUpPaths();
-            $this->autoload();
+    public function init()
+    {
+        $this->_provideModuleEvent('onApplicationInit');
+        $this->setUpPaths();
+        $this->autoload();
     }
 
     public function setPaths($paths)
@@ -173,6 +179,10 @@ class Application
 
     public function beforeRun()
     {
+        if ($this->hasComponent('middleware')) {
+            $this->middleware->processRequest($this->request);
+        }
+
         $this->_provideModuleEvent('onApplicationRun');
         register_shutdown_function([$this, 'end'], 0);
     }
@@ -202,7 +212,7 @@ class Application
      */
     public static function getIsCliMode()
     {
-        return php_sapi_name() == 'cli';
+        return Cli::isCli();
     }
 
     /**

@@ -16,9 +16,14 @@ return array_replace_recursive([
        'Order',
        'Shipping',
        'User',
-       'Sites',
+       'Sites' => ['defaultStore' => 'AR'],
        'Amazon',
        'Order',
+   ],
+   'locale' => [
+       'language' => 'ru',
+       'sourceLanguage' => 'en',
+       'charset' => 'utf-8',
    ],
    'components' => [
        'db' => [
@@ -49,14 +54,17 @@ return array_replace_recursive([
            'events' => include 'events.php'
        ],
 
-//       'middleware' => [
-//           'class' => '\Mindy\Middleware\MiddlewareManager',
-//           'middleware' => [
+       'middleware' => [
+           'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',
+           'middleware' => [
 //               'RedirectMiddleware' => [
 //                   'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
 //               ],
-//           ]
-//       ],
+               'CurrentSiteMiddleware' => [
+                   'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware'
+               ],
+           ]
+       ],
        'request' => [
            'class' => '\\Xcart\\App\\Request\\RequestManager',
            'httpRequest' => [

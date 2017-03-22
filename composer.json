@@ -15,7 +15,8 @@
         "jaybizzle/crawler-detect": "^1.2",
         "fenom/fenom": "^2.11",
         "paypal/rest-api-sdk-php": "*",
-        "symfony/validator": "^2.8"
+        "symfony/validator": "^2.8",
+        "true/punycode": "^2.1"
     },
     "autoload": {
         "psr-4": {
