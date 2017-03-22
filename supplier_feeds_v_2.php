@@ -215,6 +215,7 @@ foreach ($supplier_feeds as $k => $v) {
             $last_feed_fields_arr = array();
             $last_feed_fields_arr_vals = array();
             foreach ($products["products"] as $kp => $p) {
+                $productid = null;
 
                 print($kp . ' --> ' . $p["sku"] . "\n");
                 foreach ($p as $k_s => $v_s) {
