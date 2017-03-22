@@ -656,8 +656,10 @@ function getTransactionLog($aParams = [])
                 /** @var TransactionLogModel $transactionLog */
                 foreach ($aTransactionLogs as $transactionLog) {
                     $aV = $transactionLog->getAttributes();
-                    if ($customerModel = Customer::objects()->filter(['login' => $transactionLog->login])->get()) {
-                        $aV['firstname'] = $customerModel->firstname;
+                    if (!empty($transactionLog->login)) {
+                        if ($customerModel = Customer::objects()->filter(['login' => $transactionLog->login])->get()) {
+                            $aV['firstname'] = $customerModel->firstname;
+                        }
                     }
                     if ($paymentModel = PaymentMethod::objects()->get(['paymentid' => $transactionLog->paymentid])) {
                         $aV['payment_method'] = $paymentModel->payment_method;
