@@ -337,14 +337,12 @@ if ($current_area == "P" || $single_mode || $current_area == "A") {
 						$old_classid = $v['classid'];
 						unset($v['classid']);
 						$v['productid'] = $new_productid;
-						$v = func_addslashes($v);
 						$classid = func_array2insert('classes', $v);
 						if ($options) {
 							foreach ($options as $o) {
 								$old_optionid = $o['optionid'];
 								unset($o['optionid']);
 								$o['classid'] = $classid;
-								$o = func_addslashes($o);
 								$optionid = func_array2insert('class_options', $o);
 								$hash[$old_optionid] = $optionid;
 								func_copy_tables("product_options_lng", "optionid", $old_optionid, $optionid);
@@ -388,7 +386,6 @@ if ($current_area == "P" || $single_mode || $current_area == "A") {
 						}
 
 						$v['productcode'] .= $cnt;
-						$v = func_addslashes($v);
 						$variantid = func_array2insert('variants', $v);
 
 						# Add Variant items

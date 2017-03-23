@@ -140,7 +140,7 @@ function db_prepare_query($query, $params) {
 
 		$info = array (
 			'tokens' => $tokens,
-			'param_count' => $count
+			'param_count' => $count,
 		);
 		$prepared[$query] = $info;
 	}
@@ -266,69 +266,105 @@ function func_query_column($query, $column = 0) {
 #
 # Insert array data to table
 #
-function func_array2insert ($tbl, $arr, $is_replace = false, $is_ignore = false) {
-	global $sql_tbl;
+function func_array2insert($tbl, $data, $is_replace = false, $is_ignore = false)
+{
+    global $sql_tbl;
 
-	if (empty($tbl) || empty($arr) || !is_array($arr))
-		return false;
+    if (empty($data) || empty($data) || !is_array($data)) {
+        return false;
+    }
 
-	if (!empty($sql_tbl[$tbl]))
-		$tbl = $sql_tbl[$tbl];
+    if (!empty($sql_tbl[$tbl])) {
+        $tbl = $sql_tbl[$tbl];
+    }
 
-	if ($is_replace )
-		$query = "REPLACE";
-	else
-		$query = "INSERT";
+    if ($is_replace) {
+        $query = "REPLACE";
+    }
+    else {
+        $query = "INSERT";
+    }
 
-	if ($is_ignore)
-		$query = "INSERT IGNORE";
+    if ($is_ignore) {
+        $query = "INSERT IGNORE";
+    }
 
-	func_check_tbl_fields($tbl, array_keys($arr));
+    if (!func_check_tbl_fields($tbl, array_keys($data))) {
+        return null;
+    }
 
-	$arr_keys = array_keys($arr);
-	foreach ($arr_keys as $k=>$v) {
-		if (!preg_match("/^`.*`$/", $v)) $arr_keys[$k] = "`$v`";
-	}
+    $data = func_init_default_values($tbl, $data);
 
-	$arr_values = array_values($arr);
-	foreach ($arr_values as $k=>$v) {
-		if ((!preg_match("/^'.*'$/", $v)) && (!preg_match('/^".*"$/', $v))) $arr_values[$k] = "'$v'";
-	}
+    $connection = \Xcart\Connection::getInstance();
 
-	$query .= " INTO $tbl (" . implode(", ", $arr_keys) . ") VALUES (" . implode(", ", $arr_values) . ")";
+    $columnList = array();
+    $paramPlaceholders = array();
+    $paramValues = array();
 
-	$r = db_query($query);
-	if ($r) {
-		return db_insert_id();
-	}
+    foreach ($data as $columnName => $value) {
+        $columnList[] = $columnName;
+        $paramPlaceholders[] = '?';
+        $paramValues[] = $value;
+    }
 
-	return false;
+    $r = $connection->executeUpdate(
+        $query .' INTO ' . $tbl . ' (' . implode(', ', $columnList) . ')' .
+        ' VALUES (' . implode(', ', $paramPlaceholders) . ')',
+        $paramValues
+    );
+
+    if ($r) {
+        return $connection->lastInsertId();
+    }
+
+    return null;
 }
 
 #
 # Update array data to table + where statament
 #
-function func_array2update ($tbl, $arr, $where = '') {
-	global $sql_tbl;
+function func_array2update ($tbl, $data, $where = '') {
+    global $sql_tbl;
 
-	if (empty($tbl) || empty($arr) || !is_array($arr))
-		return false;
+     if (empty($data) || empty($data) || !is_array($data)) {
+        return false;
+    }
 
-	if ($sql_tbl[$tbl])
-		$tbl = $sql_tbl[$tbl];
+    if ($sql_tbl[$tbl]) {
+        $tbl = $sql_tbl[$tbl];
+    }
 
-	$r = array();
-	foreach ($arr as $k => $v) {
-		if (!preg_match("/^`.*`$/", $k)) $k = "`$k`";
-		if ((!preg_match("/^'.*'$/", $v)) && (!preg_match('/^".*"$/', $v))) $v = "'$v'";
-		$r[] = "$k=$v";
-	}
+    if (!func_check_tbl_fields($tbl, array_keys($data))) {
+        return null;
+    }
 
-	func_check_tbl_fields($tbl, array_keys($arr));
+    $columnList = [];
+    $set = [];
+    $criteria = [];
+    $paramValues = [];
 
-	$query = "UPDATE $tbl SET ". implode(", ", $r) . ($where ? " WHERE " . $where : "");
+    foreach ($data as $columnName => $value) {
+        $columnList[] = $columnName;
+        $set[] = $columnName . ' = ?';
+        $paramValues[] = $value;
+    }
 
-	return db_query($query);
+    if (!empty($where) && is_array($where)) {
+        foreach ($where as $columnName => $value) {
+            $columnList[] = $columnName;
+            $criteria[] = $columnName . ' = ?';
+            $paramValues[] = $value;
+        }
+
+        $sql = 'UPDATE ' . $tbl . ' SET ' . implode(', ', $set)
+               . ' WHERE ' . implode(' AND ', $criteria);
+    }
+    else {
+        $sql = 'UPDATE ' . $tbl . ' SET ' . implode(', ', $set)
+               . ($where ? " WHERE " . $where : "");
+    }
+
+    return \Xcart\Connection::getInstance()->executeUpdate($sql, $paramValues);
 }
 
 function func_query_hash($query, $column = false, $is_multirow = true, $only_first = false) {
@@ -473,41 +509,103 @@ function func_build_join($jname, $join) {
 	return $str;
 }
 
-#
-# Check table fields names
-#
-function func_check_tbl_fields($tbl, $fields) {
-	static $storage = array();
-	global $sql_tbl;
+/**
+ * Check table fields names
+ *
+ * @param $tbl Table name
+ * @param $fields
+ *
+ * @return bool
+ * @throws \Doctrine\DBAL\DBALException
+ */
+function func_check_tbl_fields($tbl, $fields)
+{
+    static $storage = [];
+    global $sql_tbl;
 
-	if (empty($fields))
-		return;
+    if (empty($fields)) {
+        return false;
+    }
 
-	if (!is_array($fields))
-		func_header_location("error_message.php?access_denied&id=77");
-		
+    if (!is_array($fields)) {
+//        func_header_location("error_message.php?access_denied&id=77");
+        $fields = [$fields];
+    }
 
-	if (!is_array($tbl))
-		$tbl = array($tbl);
+    if (!is_array($tbl)) {
+        $tbl = [$tbl];
+    }
 
-	$fields_orig = array();
-	foreach ($tbl as $t) {
-		if (isset($sql_tbl[$t]))
-			$t = $sql_tbl[$t];
+    $fields_orig = [];
+    foreach ($tbl as $t) {
+        if (isset($sql_tbl[$t])) {
+            $t = $sql_tbl[$t];
+        }
 
-		if (!isset($storage[$t])) {
-			$storage[$t] = func_query_column("SHOW FIELDS FROM ".$t);
-			if (empty($storage[$t]))
-				func_header_location("error_message.php?access_denied&id=78");
-		}
+        if (!isset($storage[$t])) {
+            $storage[$t] = array_map(function ($field) {
+                /** @var \Doctrine\DBAL\Schema\Column $field */
+                return $field->getName();
+            }, \Xcart\Connection::getInstance()->getSchemaManager()->listTableColumns($t) );
 
-		$fields_orig = func_array_merge($fields_orig, $storage[$t]);
-	}
+            if (empty($storage[$t])) {
+//                func_header_location("error_message.php?access_denied&id=78");
+                return false;
+            }
+        }
 
-	$fields_orig = array_unique($fields_orig);
-	$res = array_diff($fields, $fields_orig);
-	if (!empty($res))
-		func_header_location("error_message.php?access_denied&id=79");
+        $fields_orig = func_array_merge($fields_orig, $storage[$t]);
+    }
+
+    $fields_orig = array_unique($fields_orig);
+    $res = array_diff($fields, $fields_orig);
+
+    if (!empty($res)) {
+//        func_header_location("error_message.php?access_denied&id=79");
+        return false;
+    }
+
+    return true;
+}
+
+function func_init_default_values($tbl, $data)
+{
+    static $store = [];
+
+    if (isset($sql_tbl[$tbl])) {
+        $tbl = $sql_tbl[$tbl];
+    }
+
+    if (!isset($storage[$tbl])) {
+        $storage[$tbl] = \Xcart\Connection::getInstance()->getSchemaManager()->listTableColumns($tbl);
+
+        if (empty($storage[$tbl])) {
+            return false;
+        }
+    }
+
+    if (!empty($storage[$tbl]))
+    {
+        /** @var \Doctrine\DBAL\Schema\Column $field */
+        foreach ($storage[$tbl] as $field)
+        {
+            if (!isset($data[$field->getName()]) || (is_null($data[$field->getName()]) && $field->getNotnull()) ) {
+
+                if (!$field->getAutoincrement())
+                {
+                    if (is_null($field->getDefault())) {
+                        $data[$field->getName()] = '';
+                    }
+                    else {
+                        $data[$field->getName()] = $field->getDefault();
+                    }
+                }
+
+            }
+        }
+    }
+
+    return $data;
 }
 
 function func_get_column_from_array($col, $arr) {

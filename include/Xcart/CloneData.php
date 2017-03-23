@@ -128,7 +128,6 @@ class CloneData
             }
         }
         unset($insertRow[$this->sPrimaryKeyFiled]);
-        array_walk_recursive($insertRow, array(__CLASS__, 'recursive_escape'));
 //        func_print_r($insertRow);
         return func_array2insert($this->sPrimaryTable, $insertRow);
     }
@@ -155,7 +154,6 @@ class CloneData
                             }
                         }
                         $aRow[$aRowsToClone['key_field']] = $aCloneParam[$this->sPrimaryKeyFiled];
-                        array_walk_recursive($aRow, array(__CLASS__, 'recursive_escape'));
                         if ($sTable == 'pricing' && $deleteBeforeInsert == false) {
                             func_backprocess_log("clone_products_cron", "Clone pricing table. productid = " . $aCloneParam[$this->sPrimaryKeyFiled] . "; aCloneRow - " . serialize($aRow));
                         }

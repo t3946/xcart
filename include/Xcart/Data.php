@@ -134,7 +134,6 @@ class Data extends OrmLegacy
     public function _update()
     {
         $aUpdateValues = $this->aPrimaryTableValue;
-        array_walk_recursive($aUpdateValues, array(__CLASS__, 'recursive_escape'));
         func_array2update($this->sPrimaryTable, $aUpdateValues, $this->getWhereClause());
     }
 
