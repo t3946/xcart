@@ -119,26 +119,27 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
         	$all__items_table__ = "";
 	        $all__shipto_table__ = "";
 
-        	foreach ($mnfs as $mid => $v){
+		foreach ($mnfs as $mid => $v) {
 
-			$shipfrom = $v["m_city"].", ".$v["m_state"]." ".$v["m_zipcode"];
-			if (count($mnfs) > 1){
-				$shipfrom .= "(".$v["manufacturer"].")";
+			$shipfrom = $v["m_city"] . ", " . $v["m_state"] . " " . $v["m_zipcode"];
+			if (count($mnfs) > 1) {
+				$shipfrom .= "(" . $v["manufacturer"] . ")";
 			}
 			$shipfrom_arr[$mid] = $shipfrom;
 
-	                if (!empty($v["__items_table__"])){
-//                        	$all__items_table__ = $v["manufacturer"] . "<br />";
-//                	        $all__items_table__ .= $v["__items_table__"];
-                	        $all__items_table__ = $v["__items_table__"];
+			if (!empty($v["__items_table__"])) {
+				$all__items_table__ = $v["__items_table__"];
 				$all__items_table__arr[$mid] = $all__items_table__;
-        	        }
+			}
 
-	                if (!empty($v["__shipto_table__"])){
-//                        	$all__shipto_table__ .= $v["manufacturer"] . "<br />";
-                	        $all__shipto_table__arr[$mid] = $v["__shipto_table__"];
-        	        }
-	        }
+			if (!empty($v["__shipto_table__"])) {
+				$all__shipto_table__arr[$mid] = $v["__shipto_table__"];
+			}
+
+			if (!empty($v["__shipto_full_table__"])) {
+				$all__shipto_full_table__arr[$mid] = $v["__shipto_full_table__"];
+			}
+		}
 	
 		if (is_array($all__items_table__arr) && !empty($all__items_table__arr)){
 			$all__items_table__ = implode("<br />", $all__items_table__arr);
@@ -150,76 +151,77 @@ if (!empty($department_info) && is_array($department_info) && !empty($mnfs) && i
 
 			$all__shipto_table__ = implode("<br />", $all__shipto_table__arr);
 		}
+		if (is_array($all__shipto_full_table__arr) && !empty($all__shipto_full_table__arr)){
+
+			$all__shipto_full_table__arr = array_unique($all__shipto_full_table__arr);
+
+			$all__shipto_table_full__ = implode("<br />", $all__shipto_full_table__arr);
+		}
 
 		$shipfrom = implode("/", $shipfrom_arr);
 	}
 
-        foreach ($department_info as $k => $v){
-                if ($template_id == $v["id"]){
+	foreach ($department_info as $k => $v) {
+		if ($template_id == $v["id"]) {
 
-                        $subject = $v["subject_line"];
+			$subject = $v["subject_line"];
 			$body = $v["message_body"];
 			$to = "";
 			$attach_pdf_invoice = $v["attach_pdf_invoice"];
 
-			if ($department == "customer"){
+			if ($department == "customer") {
 				$to = $userinfo["email"];
-			} 
+			}
 
-                        if ($department == "customer" || $department == "our_customer_service" || $department == "third_party"){
+			if ($department == "customer" || $department == "our_customer_service" || $department == "third_party") {
 				$body = str_replace("{{items}}", $all__items_table__, $body);
 				$body = str_replace("{{shipto}}", $all__shipto_table__, $body);
+				$body = str_replace("{{shipto_full_address}}", $all__shipto_table_full__, $body);
 
-                                $subject = str_replace("{{items}}", $all__items_table__, $subject);
-                                $subject = str_replace("{{shipto}}", $all__shipto_table__, $subject);
-                        } 
+				$subject = str_replace("{{items}}", $all__items_table__, $subject);
+				$subject = str_replace("{{shipto}}", $all__shipto_table__, $subject);
+				$subject = str_replace("{{shipto_full_address}}", $all__shipto_table_full__, $subject);
+			}
 
-			foreach ($mnfs as $mid => $vv){
-				if ($manufacturerid == $mid){
+			foreach ($mnfs as $mid => $vv) {
+				if ($manufacturerid == $mid) {
 
-					if ($department == "distributor"){
+					if ($department == "distributor") {
 
-		                                if (!empty($to)) {
-		                                        $to .= ", ";
-                		                }
+						if (!empty($to)) {
+							$to .= ", ";
+						}
 
 						$to .= $vv["compose_email_to_distributor"];
 
-		                                $body = str_replace("{{shipto}}", $vv["__shipto_table__"], $body);
+						$body = str_replace("{{shipto}}", $vv["__shipto_table__"], $body);
+						$body = str_replace("{{shipto_full_address}}", $vv["__shipto_full_table__"], $body);
 						$body = str_replace("{{items}}", $vv["__items_table__"], $body);
 
-		                                $subject = str_replace("{{shipto}}", $vv["__shipto_table__"], $subject);
-						$subject =  str_replace("{{items}}", $vv["__items_table__"], $subject);
+						$subject = str_replace("{{shipto}}", $vv["__shipto_table__"], $subject);
+						$subject = str_replace("{{shipto_full_address}}", $vv["__shipto_full_table__"], $subject);
+						$subject = str_replace("{{items}}", $vv["__items_table__"], $subject);
 
-	                                        $body = str_replace("{{distributorcontactname}}", $vv["d_contact_name_for_templates"], $body);
-        	                                $subject = str_replace("{{distributorcontactname}}", $vv["d_contact_name_for_templates"], $subject);
+						$body = str_replace("{{distributorcontactname}}", $vv["d_contact_name_for_templates"], $body);
+						$subject = str_replace("{{distributorcontactname}}", $vv["d_contact_name_for_templates"], $subject);
 
 					}
-
-
-//func_print_r($vv["d_contact_name_for_templates"]);
-
-//					$body = str_replace("{{distributorcontactname}}", $vv["d_contact_name_for_templates"], $body);
-//					$subject = str_replace("{{distributorcontactname}}", $vv["d_contact_name_for_templates"], $subject);
 				}
 			}
 
-                        if (!empty($to)) {
-                               $to .= ", ";
-                        }
+			if (!empty($to)) {
+				$to .= ", ";
+			}
 
-                        $to .= $v["send_to_email"];
+			$to .= $v["send_to_email"];
 
-                        $body = str_replace("{{orderid}}", $order["order_prefix"].$orderid, $body);
-                        $body = str_replace("{{c-fullname}}", $userinfo["firstname"], $body);
-//                        $body = str_replace("{{userfullname}}", $userfullname, $body);
+			$body = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $body);
+			$body = str_replace("{{c-fullname}}", $userinfo["firstname"], $body);
 
-                        $subject = str_replace("{{orderid}}", $order["order_prefix"].$orderid, $subject);
-                        $subject = str_replace("{{c-fullname}}", $userinfo["firstname"], $subject);
-//                        $subject = str_replace("{{userfullname}}", $userfullname, $subject);
-
-                }
-        }
+			$subject = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $subject);
+			$subject = str_replace("{{c-fullname}}", $userinfo["firstname"], $subject);
+		}
+	}
 
 	$instock_and_outofstock_items_table = func_instock_and_outofstock_items_table($products, 'compose_message_page');
 	$cidev_instock_items_table = $instock_and_outofstock_items_table["instock"];
