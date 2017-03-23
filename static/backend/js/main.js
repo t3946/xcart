@@ -1033,6 +1033,15 @@ jQuery.fn.mfieldset = function (options) {
             $(id).addClass('active');
         })
 
+        var $form_bb = $('.smarty-admin-block .buttons-block:not(.fixed)');
+        if ($form_bb.length) {
+            var $form = $form_bb.closest('form');
+
+            if ($form.length && ($form.innerHeight() + $form.offset()['top']) > $(window).height()) {
+                $form_bb.addClass('fixed');
+            }
+        }
+
     });
 
 })();

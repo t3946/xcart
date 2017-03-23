@@ -338,6 +338,15 @@ class Order extends Data
         return $this->getField('s_country');
     }
 
+    public function getShippingAddressFull()
+    {
+        $sResult = $this->s_address . ", " . $this->s_city . ", " . $this->s_state . "  " . $this->s_zipcode;
+        if ($this->s_country != "US") {
+            $sResult .= ", " . $this->s_countryname;
+        }
+        return $sResult;
+    }
+
     public function getShippingAddress()
     {
         $row = [];
@@ -902,6 +911,7 @@ class Order extends Data
                 $oMail->addReplaceRule('{{orderid}}', $this->getDisplayOrderNumber())->
                 addReplaceRule('{{userfullname}}', $oCustomer->getCustomerFullName())->
                 addReplaceRule('{{userfirstname}}', $oCustomer->getCustomerFullName())->
+                addReplaceRule('{{shipto_full_address}}', $this->getShippingAddressFull())->
                 addReplaceRule('{{shipping_method}}', $oOrderGroup->getShippingMethodName());
 
                 $oMail->sendEmail();
