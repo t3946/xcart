@@ -390,7 +390,7 @@ if (!empty($additional_operation) && is_array($additional_operation)){
 		foreach ($file as $fileid => $tmp) {
 			$query = array(
 				'orderby'	=> intval($tmp['orderby']),
-				'description'	=> $tmp['file_descr'],
+				'description'	=> addslashes($tmp['file_descr']),
 				'avail'	=> $tmp['avail']
 			);
 			$where = 'fileid = ' . $fileid . ' AND productid = ' . $productid;
