@@ -114,7 +114,7 @@ elseif ($import_step == "finalize") {
 	#
 
 		$data = array(
-			"state" => addslashes($row['state']),
+			"state" => ($row['state']),
 		);
 
 		$_stateid = func_query_first_cell("SELECT stateid FROM $sql_tbl[states] WHERE code = '".addslashes($row['code'])."' AND country_code = '".addslashes($row['country'])."'");
@@ -124,8 +124,8 @@ elseif ($import_step == "finalize") {
 			if (!empty($_stateid) && func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[states] WHERE stateid = '$_stateid'") == 0)
 				$data['stateid'] = $_stateid;
 
-			$data['code'] = addslashes($row['code']);
-			$data['country_code'] = addslashes($row['country']);
+			$data['code'] = ($row['code']);
+			$data['country_code'] = ($row['country']);
 			$_stateid = func_array2insert("states", $data);
 			$result[strtolower($section)]["added"]++;
 			func_import_save_cache("CSR", $row['country'], $row['country']);

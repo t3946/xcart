@@ -271,7 +271,6 @@ class Products extends CloneData
     }
 
     public function createNewFilter($aFilter) {
-        array_walk_recursive($aFilter, array(__CLASS__,'recursive_escape'));
         $iFilterId = func_array2insert('cidev_filters', $aFilter);
         return $iFilterId;
     }
@@ -306,7 +305,6 @@ class Products extends CloneData
                 if (isset($aNewFilterValue) && is_array($aNewFilterValue) && !empty($aNewFilterValue)) {
                     $aNewFilterValuesId[] = $aNewFilterValue['fv_id'];
                 } else {
-                    array_walk_recursive($oFilter, array(__CLASS__,'recursive_escape'));
                     $aNewFilterValuesId[] = func_array2insert('cidev_filter_values', $oFilter);
                 }
             }
@@ -742,8 +740,6 @@ class Products extends CloneData
             'shipping_weight_lock' => $aProduct['shipping_weight_lock'],
             'weight_lock' => $aProduct['weight_lock']
         );
-
-        array_walk_recursive($aUpdateProduct, array(__CLASS__,'recursive_escape'));
 
         func_array2update($this->sPrimaryTable, $aUpdateProduct, $this->sPrimaryKeyFiled." = ".$aClonedProduct[$this->sPrimaryKeyFiled]);
 

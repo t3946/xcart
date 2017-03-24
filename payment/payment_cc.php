@@ -213,12 +213,12 @@ else {
 		$query_data = array(
 			"card_name" => $card_name,
 			"card_type" => $card_type,
-			"card_number" => addslashes(text_crypt($card_number)),
+			"card_number" => (text_crypt($card_number)),
 			"card_expire" => $card_expire
 		);
 
 		if ($store_cvv2) {
-			$query_data['card_cvv2'] = addslashes(text_crypt($card_cvv2));
+			$query_data['card_cvv2'] = (text_crypt($card_cvv2));
 		}
 
 		func_array2update("customers", $query_data, "login='$login' AND usertype='$login_type'");

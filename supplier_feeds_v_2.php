@@ -817,7 +817,7 @@ foreach ($supplier_feeds as $k => $v) {
         "last_update_time" => time(),
         "average_update_period" => $average_update_period,
         "last_update_period" => $last_update_period,
-        "last_feed_fields" => addslashes(serialize($last_feed_fields_arr_vals)),
+        "last_feed_fields" => serialize($last_feed_fields_arr_vals),
         "last_update_items_count" => $products["products_in_feed"]
     );
     func_array2update("supplier_feeds", $supplier_feed, "feed_id = '$v[feed_id]'");
