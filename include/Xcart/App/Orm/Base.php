@@ -6,6 +6,7 @@ use Exception;
 use ArrayAccess;
 use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\Field;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\ModelFieldInterface;
@@ -154,7 +155,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     /**
      * @param string $name
      * @param bool $throw
-     * @return ModelFieldInterface|null
+     * @return ModelFieldInterface|Field|null
      * @throws Exception
      */
     public function getField($name, $throw = false)
@@ -611,8 +612,9 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     public function setIsNewRecord($value)
     {
         $this->isNewRecord = $value;
+        $this->attributes->resetOldAttributes();
+
         if ($value === false) {
-            $this->attributes->resetOldAttributes();
             $this->attributes->reflectOldAttributes();
         }
     }
