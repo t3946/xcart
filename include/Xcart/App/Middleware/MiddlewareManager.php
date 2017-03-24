@@ -29,14 +29,14 @@ class MiddlewareManager implements IMiddleware
         }
     }
 
-    public function processView(Request $request, &$output)
+    public function processView($request, &$output)
     {
         foreach ($this->_middleware as $middleware) {
             $middleware->processView($request, $output);
         }
     }
 
-    public function processRequest(Request $request)
+    public function processRequest($request)
     {
         foreach ($this->_middleware as $middleware) {
             $middleware->processRequest($request);
@@ -54,7 +54,7 @@ class MiddlewareManager implements IMiddleware
         }
     }
 
-    public function processResponse(Request $request)
+    public function processResponse($request)
     {
         foreach ($this->_middleware as $middleware) {
             $middleware->processResponse($request);

@@ -6,7 +6,7 @@ use Xcart\App\Request\Request;
 
 abstract class Middleware implements IMiddleware
 {
-    public function processRequest(Request $request)
+    public function processRequest($request)
     {
 
     }
@@ -16,7 +16,7 @@ abstract class Middleware implements IMiddleware
      * @param \Xcart\App\Request\Request $request
      * @param $output string
      */
-    public function processView(Request $request, &$output)
+    public function processView($request, &$output)
     {
     }
 
@@ -25,7 +25,7 @@ abstract class Middleware implements IMiddleware
 
     }
 
-    public function processResponse(Request $request)
+    public function processResponse($request)
     {
     }
 }

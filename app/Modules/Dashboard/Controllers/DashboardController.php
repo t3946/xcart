@@ -194,8 +194,9 @@ class DashboardController extends PrototypeAdminController
         if (!is_null($id) && $model = DashboardFilter::objects()->get(['id' => $id])) {
             $this->createOrUpdate($model);
         }
-
-        $this->redirect('dashboard:admin_filters');
+        else {
+            $this->redirect('dashboard:admin_filters');
+        }
     }
 
     /** @param Model|ModelInterface $model */
