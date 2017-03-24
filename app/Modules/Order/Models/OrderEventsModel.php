@@ -13,7 +13,7 @@ use Xcart\Order;
  * @package Modules\Order\Models
  *
  * @param int $orderid Owner id from order
- * @param DateTime|string $create_at Owner id from order
+ * @param \DateTime|string $create_at Owner id from order
  * @param string|null $message event message
  */
 class OrderEventsModel extends Model
@@ -55,12 +55,15 @@ class OrderEventsModel extends Model
      */
     public static function newOrderEvent($owner = null, $order_id, $message = null)
     {
-        $model = new static();
-        $model->setAttributes(['order_id' => $order_id, 'message' => $message]);
-
-        if ($model->isValid() && $model->save())
+        if (!static::objects()->filter(['order_id' => $order_id, 'created_at' => new \DateTime()])->count())
         {
-            return $model;
+            $model = new static();
+            $model->setAttributes(['order_id' => $order_id, 'message' => $message]);
+
+            if ($model->isValid() && $model->save())
+            {
+                return $model;
+            }
         }
 
         return null;

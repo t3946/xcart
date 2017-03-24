@@ -24,6 +24,10 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      */
     protected $isNewRecord = true;
     /**
+     * @var bool
+     */
+    protected $isCreated = false;
+    /**
      * @var AttributeCollection
      */
     protected $attributes;
@@ -211,7 +215,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         }
     }
 
-    public function getNotFieldAttribute($name)
+    public function getFromQueryAttribute($name)
     {
         if (isset($this->attributesNotField[$name])) {
             return $this->attributesNotField[$name];
@@ -609,7 +613,27 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         $this->isNewRecord = $value;
         if ($value === false) {
             $this->attributes->resetOldAttributes();
+            $this->attributes->reflectOldAttributes();
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsCreated()
+    {
+        return $this->isCreated;
+    }
+
+    /**
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setIsCreated($value)
+    {
+        $this->isCreated = $value;
+        return $this;
     }
 
     /**

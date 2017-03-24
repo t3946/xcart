@@ -797,9 +797,9 @@ class OrderSearchStore extends BaseStore
         $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
         $qs->join('inner join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
         $qs->filter(['shipping.important' => 1, new QAndNot(['group.shippingid' => ''])]);
-        $qs->group([]);
+        $qs->addSelect(['shipping.important']);
 
-        return $qs->count();
+        return Connection::getInstance()->fetchColumn("select COUNT(`order`.`important`) from ({$qs->allSql()}) as `order`");
     }
 
     public function getCachedPriorityShippingCount()
