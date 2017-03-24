@@ -88,15 +88,15 @@ class Auth implements AuthInterface
 
     /**
      * Find user in database by id or login
-     * @param int|string $id
      *
+     * @param int|string $id
      * @return mixed
      */
     public function findUser($id)
     {
         $class = $this->class;
         /** @var UserModel $class */
-        return $class::objects()->filter(['id' => $id])->orFilter(['login' => $id])->limit(1)->get();
+        return $class::objects()->filter(['login' => $id])->limit(1)->get();
     }
 
     public function getSessionUser()
