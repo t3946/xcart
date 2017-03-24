@@ -57,7 +57,7 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
 
           var qty_inv = $("#manufacturer_invoices_data_qty_inv_"+m_id+"_"+invoice_number+"_"+itemid).val();
           var unit_cost = $("#manufacturer_invoices_data_unit_cost_"+m_id+"_"+invoice_number+"_"+itemid).val();
-          var add_item_value_row = $("manufacturer_add_extra_value_"+m_id+"_"+invoice_number);
+          var add_item_value_row = $("#manufacturer_add_extra_value_"+m_id+"_"+invoice_number);
           var add_qty_inv = parseInt(add_item_value_row.find('input[name=add_extra_value_qty]').val());
           var add_cost_inv = parseFloat(add_item_value_row.find('input[name=add_extra_value_cost]').val());
 
@@ -76,8 +76,9 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
 
           }
           if (add_qty_inv >= 0) {
-              console.log(add_qty_inv);
-              console.log(add_cost_inv);
+              var add_cost_total = add_qty_inv * add_cost_inv;
+              $("#add_extra_value_total_"+m_id+"_"+invoice_number).text(price_format(add_cost_total));
+              unit_cost_total_sum += add_cost_total;
           }
 //        }
 {/literal}
@@ -645,18 +646,22 @@ Cost to us accurate
 <input type="checkbox" value="Y" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][extra_items_on_invoice]" {if $invoice.extra_items_on_invoice eq "Y"}checked{/if} /> Extra items are present on the invoice.
 </td>
 </tr>
-<tr id="#manufacturer_add_extra_value_{$m_id}_{$invoice_number}">
-    <td colspan="2">
+<tr class="manufacturer_add_extra_value" data-mnfid="{$m_id}" data-invoice="{$invoice_number}">
+    <td colspan="2" id="add_extra_track_{$m_id}_{$invoice_number}_box_1">
         <select name="add_extra_value_type">
             <option value="add_extra_sku">Product SKU</option>
             <option value="add_extra_other">Other charges</option>
         </select>
-        <input size="44" name="add_extra_value_string" type="text" value="" />
+        <input size="40" name="add_extra_value_string" type="text" value="" />
     </td>
-    <td align="center"><input onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="8" name="add_extra_value_cost" type="text" value="" /></td>
-    <td></td>
-    <td align="center"><input onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="5"name="add_extra_value_qty" type="text" value="" /></td>
-    <td class="add_extra_value_total"></td>
+    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_2" align="center"><input onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="8" name="add_extra_value_cost" type="text" value="" /></td>
+    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_3"></td>
+    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="5"name="add_extra_value_qty" type="text" value="" /></td>
+    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_5" align="right" class="add_extra_value_total">
+        <span id="add_extra_value_total_{$m_id}_{$invoice_number}"></span>
+    </td>
+    <td>{include file="buttons/multirow_add.tpl" mark="add_extra_track_`$m_id`_`$invoice_number`"}
+    </td>
 </tr>
 <tr>
 <td>
