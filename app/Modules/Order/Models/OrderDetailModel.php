@@ -29,7 +29,7 @@ class OrderDetailModel  extends AutoMetaModel
                 'class' => IntField::className(),
                 'primary' => true,
             ],
-            'product' => [
+            'product_model' => [
                 'field' => 'productid',
                 'class' => ForeignField::className(),
                 'modelClass' => ProductModel::className(),
