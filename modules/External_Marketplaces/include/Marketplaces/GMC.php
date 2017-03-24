@@ -58,6 +58,7 @@ class GMC extends StoreFrontMarketPlace
             global $xcart_dir;
 
             $client = new Google_Client();
+            $client->getHttpClient()->setDefaultOption('verify',false);
             $client->setApplicationName("Client_Library_Examples");
             $client->setAuthConfig($xcart_dir . '/include/system/gapi-3c467d1a8e76.json');
             $client->addScope(Google_Service_ShoppingContent::CONTENT);
@@ -85,16 +86,21 @@ class GMC extends StoreFrontMarketPlace
         $this->setProductsBatchCount(0)->setProducts([]);
     }
 
-    public function getProductStatuses()
+    public function getProductStatuses($iStoreFrontId)
     {
-        $iUpdateProductCount = $iNewIssues = 0;
+        $iUpdateProductCount = $iNewIssues = $totalCounter = 0;
+        $pageToken = null;
+        $log = new \Monolog\Logger('gmc_info');
+        $logFile = sprintf("../var/log/gmc_products-{$iStoreFrontId}-%s.php", date('ymd'));
+        $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::INFO));
         do {
+            $oResponse = null;
             if (!empty($pageToken)) {
                 $parameters['pageToken'] = $pageToken;
             }
             $parameters['includeInvalidInsertedItems'] = true;
             $parameters['maxResults'] = 250;
-            $aQueue = [];
+            $aQueue = $aLinks = [];
             try {
                 $oResponse = $this->getService()->productstatuses->listProductstatuses($this->getP1(), $parameters);
                 /** @var Google_Service_ShoppingContent_ProductStatus[] $aProducts */
@@ -157,15 +163,18 @@ class GMC extends StoreFrontMarketPlace
                             $aQueue[] = ['productid' => $iProductId];
                             $iUpdateProductCount++;
                         }
+                        $log->addInfo($oProduct->link);
                     }
                 }
             } catch (\Exception $e) {
                 func_backprocess_log('google_product_statuses', sprintf('Google_Service_Exception. %s', $e->getMessage()));
             }
             $this->restoreQueue($aQueue, 1);
-
+            $totalCounter++;
             try {
-                $pageToken = $oResponse->getNextPageToken();
+                if ($oResponse) {
+                    $pageToken = $oResponse->getNextPageToken();
+                }
             } catch (\Exception $e) {
                 func_backprocess_log('google_product_statuses', sprintf('Error Get Next Page Token. %s', $e->getMessage()));
                 $pageToken = false;
@@ -175,6 +184,9 @@ class GMC extends StoreFrontMarketPlace
 
         func_backprocess_log('google_product_statuses', sprintf('%d new issues found.', $iNewIssues));
         func_backprocess_log('google_product_statuses', sprintf('%d products added for update queue.', $iUpdateProductCount));
+        func_backprocess_log('google_product_statuses', sprintf('%d total products.', $totalCounter));
+
+
 
         return $this;
     }

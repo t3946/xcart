@@ -141,6 +141,7 @@ class AbstractModel extends Base
         $this->afterInsertInternal();
 
         if ($inserted) {
+            $this->setIsCreated(true);
             $this->setIsNewRecord(false);
             $this->updateRelated();
             $this->attributes->resetOldAttributes();
@@ -200,11 +201,11 @@ class AbstractModel extends Base
             $dirty = $fields;
         }
 
-        foreach ($this->getPrimaryKeyValues() as $name => $value) {
-            if ($value) {
-                $changed[$name] = $value;
-            }
-        }
+//        foreach ($this->getPrimaryKeyValues() as $name => $value) {
+//            if ($value) {
+//                $changed[$name] = $value;
+//            }
+//        }
 
         $platform = $this->getConnection()->getDatabasePlatform();
 
@@ -213,9 +214,12 @@ class AbstractModel extends Base
             if (in_array($name, $fields) && in_array($name, $dirty) && $meta->hasField($name)) {
                 $field = $this->getField($name);
                 $sqlType = $field->getSqlType();
-                if ($sqlType) {
+                if ($sqlType && $attribute != $this->getOldAttribute($name)) {
                     $value = $field->convertToDatabaseValue($attribute, $platform);
-                    $changed[$name] = $value === null ? $field->default : $value;
+
+                    if ($value != $this->getOldAttribute($name)) {
+                        $changed[$name] = $value === null ? $field->default : $value;
+                    }
                 }
             }
         }

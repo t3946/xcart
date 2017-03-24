@@ -31,6 +31,7 @@ class OrderTransactionModel extends AutoMetaModel
                     'completed' => 'Completed',
                     'Expired' => 'Expired',
                     'failed' => 'Failed',
+                    'refunded' => 'Refunded',
                 ]
             ],
             'transaction_response' => [

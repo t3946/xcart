@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 16/09/16
- * Time: 10:57
- */
-
 namespace Xcart\App\Orm;
 
 class AttributeCollection
@@ -61,9 +54,9 @@ class AttributeCollection
      */
     public function getAttribute($name)
     {
-        if (isset($this->mapping[$name])) {
-            $name = $this->mapping[$name];
-        }
+//        if (isset($this->mapping[$name])) {
+//            $name = $this->mapping[$name];
+//        }
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
@@ -73,7 +66,10 @@ class AttributeCollection
      */
     public function setAttribute($name, $value)
     {
-        $this->oldAttributes[$name] = $this->getAttribute($name);
+        if (empty($this->oldAttributes[$name])) {
+            $this->oldAttributes[$name] = $this->getAttribute($name);
+        }
+
         $this->attributes[$name] = $value;
     }
 
@@ -108,6 +104,13 @@ class AttributeCollection
     public function resetOldAttributes()
     {
         $this->oldAttributes = [];
+    }
+
+    public function reflectOldAttributes()
+    {
+        foreach ($this->getAttributes() as $name => $value) {
+            $this->oldAttributes[$name] = $value;
+        }
     }
 
     /**

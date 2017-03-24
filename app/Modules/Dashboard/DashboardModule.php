@@ -2,7 +2,7 @@
 namespace Modules\Dashboard;
 
 use Modules\Dashboard\Helpers\NoticeTestCheckout;
-use Modules\User\Models\UserModel;
+use Modules\Sites\SitesModule;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Module\Module;
 
