@@ -1,9 +1,14 @@
 <?php
+use Xcart\App\Main\Xcart;
+use Xcart\External_Marketplaces\Marketplaces\GMC;
+use Xcart\StoreFronts;
+use Xcart\External_Marketplaces\StoreFrontMarketPlace;
+
 define("CIDEV_CRON_START", "CRON");
 session_start();
 
-require "./top.inc.php";
-require "./init.php";
+require "../top.inc.php";
+require "../init.php";
 
 global $xcart_dir, $config;
 
@@ -16,11 +21,12 @@ const BACK_PROCESS_LOG_NAME = 'google_product_statuses';
 
 if ($config[LOG_CATEGORY] == "Y") {
     func_backprocess_log(BACK_PROCESS_LOG_NAME, 'Already launched');
-    Xcart\Mail::model()->
-    setTo('team@s3stores.com')->
-    setFrom('team@s3stores.com')->
-    setBody(BACK_PROCESS_LOG_NAME . ' already launched')->
-    setSubject(sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY))->sendEmail();
+    $oMail = Xcart::app()->mail;
+    $oMail->to = 'team@s3stores.com';
+    $oMail->from = ('team@s3stores.com');
+    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
+    $oMail->body = BACK_PROCESS_LOG_NAME . ' already launched';
+    $oMail->sendEmail();
     die("Already launched"); // ################################
 }
 db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
@@ -29,16 +35,17 @@ $start_time = time();
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log(BACK_PROCESS_LOG_NAME, $log_text);
 
-$oStoreFronts = new Xcart\StoreFronts();
+$oStoreFronts = new StoreFronts();
 $aStoreFronts = $oStoreFronts->getStoreFronts();
 if (!empty($aStoreFronts)) {
     foreach ($aStoreFronts as $aStoreFront) {
-        $aMarketPlaces = Xcart\External_Marketplaces\StoreFrontMarketPlace::getMarketPlacesByStoreFront($aStoreFront->getStoreFrontId());
+        $aMarketPlaces = StoreFrontMarketPlace::getMarketPlacesByStoreFront($aStoreFront->getStoreFrontId());
         if (!empty($aMarketPlaces)) {
+            /** @var GMC $oMarketPlace */
             foreach ($aMarketPlaces as $oMarketPlace) {
-                if ($oMarketPlace instanceof Xcart\External_Marketplaces\Marketplaces\GMC) {
+                if ($oMarketPlace instanceof GMC) {
                     func_backprocess_log(BACK_PROCESS_LOG_NAME, sprintf('---Storefront %d---',$aStoreFront->getStoreFrontId()));
-                    $oMarketPlace->getProductStatuses();
+                    $oMarketPlace->getProductStatuses($aStoreFront->getStoreFrontId());
                 }
             }
         }
