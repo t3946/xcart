@@ -1,0 +1,1 @@
+<a href="#" class="delete_button_minus"><img src="{$ImagesDir}/minus.gif" alt="{$lng.lbl_del|escape}" /></a>

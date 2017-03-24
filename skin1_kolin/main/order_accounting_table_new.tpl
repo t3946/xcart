@@ -659,7 +659,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 <input type="checkbox" value="Y" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][extra_items_on_invoice]" {if $invoice.extra_items_on_invoice eq "Y"}checked{/if} /> Extra items are present on the invoice.
 </td>
 </tr>
-    {foreach from=$invoice.invoice_details item=invoice_detail}
+    {foreach from=$invoice.invoice_details item=invoice_detail name=invoice_detail_addition}
         {if !$invoice_detail->itemid}
             <tr class="manufacturer_add_extra_value" data-mnfid="{$m_id}" data-invoice="{$invoice_number}">
                 <td colspan="2" id="add_extra_track_{$m_id}_{$invoice_number}_box_1">
@@ -685,9 +685,11 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
                             name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_qty][]"
                             type="text" value="{$invoice_detail->qty_inv}"/></td>
                 <td id="add_extra_track_{$m_id}_{$invoice_number}_box_5" align="right" class="add_extra_value_total">
-                    <span id="add_extra_value_total_{$m_id}_{$invoice_number}"></span>
+                    <span id="add_extra_value_total_{$m_id}_{$invoice_number}">
+                        {$invoice_detail->unit_cost_total}
+                    </span>
                 </td>
-                <td>{include file="buttons/multirow_add.tpl" mark="add_extra_track_`$m_id`_`$invoice_number`"}
+                <td>{include file="buttons/minus.tpl" mark="add_extra_track_`$m_id`_`$invoice_number`"}
                 </td>
             </tr>
         {/if}
@@ -1233,3 +1235,11 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
 {/foreach}
 
 </div>
+{literal}
+<script>
+    $('.delete_button_minus').click(function(){
+        $(this).closest('tr').remove();
+        return false;
+    })
+</script>
+{/literal}
