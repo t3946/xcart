@@ -55,7 +55,7 @@ class OrderEventsModel extends Model
      */
     public static function newOrderEvent($owner = null, $order_id, $message = null)
     {
-        if (!static::objects()->filter(['order_id' => $order_id, 'created_at' => new \DateTime()])->count())
+        if (static::objects()->filter(['order_id' => $order_id, 'created_at' => new \DateTime()])->count() == 0)
         {
             $model = new static();
             $model->setAttributes(['order_id' => $order_id, 'message' => $message]);
