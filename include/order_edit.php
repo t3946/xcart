@@ -1994,7 +1994,7 @@ if ($REQUEST_METHOD == "POST")
                                                 'itemid' => 0,
                                                 'item_string' => $invoice_data["add_extra_value_string"][$key],
                                             ]);
-                                            if ($orderGroupProductModel->getIsNewRecord()) {
+                                            if ($orderGroupProductModel->getIsCreated()) {
                                                 $orderGroupProductModel->setAttributes([
                                                     'unit_cost' => floatval($invoice_data["add_extra_value_cost"][$key]),
                                                     'qty_inv' => floatval($invoice_data["add_extra_value_qty"][$key]),

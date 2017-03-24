@@ -575,13 +575,20 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 
 {assign var="cost_to_us_for_products_in_xcart" value=0}
 
-{foreach from=$v.products item=product key=prod_num}
-{if $invoice.products[$product.itemid] ne ""}
-
+{foreach from=$invoice.invoice_details item=invoice_datail}
+    {if $invoice_datail->itemid}
+        {assign var=order_detail_model value=$invoice_datail->item}
+        {assign var=product_model value=$order_detail_model->product}
+    {/if}
 
 <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
 
-<td>{$product.product}</td>
+<td>{if $invoice_datail->itemid}
+        {$product_model->product}
+    {else}
+        {$invoice_datail->item_string}
+    {/if}
+</td>
 
 <td nowrap="nowrap">
 {assign var="mpn" value=`$product.mpn`}
@@ -638,7 +645,6 @@ Cost to us accurate
 
 </tr>
 
-{/if}
 {/foreach}
 
 <tr>
