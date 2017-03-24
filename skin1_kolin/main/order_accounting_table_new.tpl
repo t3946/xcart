@@ -648,15 +648,15 @@ Cost to us accurate
 </tr>
 <tr class="manufacturer_add_extra_value" data-mnfid="{$m_id}" data-invoice="{$invoice_number}">
     <td colspan="2" id="add_extra_track_{$m_id}_{$invoice_number}_box_1">
-        <select name="add_extra_value_type">
+        <select name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_type][]">
             <option value="add_extra_sku">Product SKU</option>
             <option value="add_extra_other">Other charges</option>
         </select>
-        <input size="40" name="add_extra_value_string" type="text" value="" />
+        <input size="40" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_string][]" type="text" value="" />
     </td>
-    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_2" align="center"><input onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="8" name="add_extra_value_cost" type="text" value="" /></td>
+    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_2" align="center"><input onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="8" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_cost][]" type="text" value="" /></td>
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_3"></td>
-    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="5"name="add_extra_value_qty" type="text" value="" /></td>
+    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="5"name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_qty][]" type="text" value="" /></td>
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_5" align="right" class="add_extra_value_total">
         <span id="add_extra_value_total_{$m_id}_{$invoice_number}"></span>
     </td>
