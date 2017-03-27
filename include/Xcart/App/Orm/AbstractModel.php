@@ -7,6 +7,7 @@ use Exception;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\Orm\Fields\RelatedField;
 
 /**
  * Class NewOrm
@@ -117,7 +118,10 @@ class AbstractModel extends Base
             if ($field->getSqlType()
                 && !$field->null
                 && empty($values[$field->getName()])
-                && !$field instanceof AutoField
+                && !(
+                    $field instanceof AutoField
+                    || $field instanceof RelatedField
+                )
             )
             {
                 $value = $this->getAttribute($field->getName());
