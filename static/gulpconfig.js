@@ -8,7 +8,7 @@ var modules = fs.readdirSync(modulesDir).map(function (module) {
 
 module.exports.name = "main";
 
-module.exports.compress = false;
+module.exports.compress = true;
 
 
 module.exports.frontend = {

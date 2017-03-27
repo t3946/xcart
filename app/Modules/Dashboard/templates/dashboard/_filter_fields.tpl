@@ -837,7 +837,7 @@
 </fieldset>
 <div class="hidden">
     <div id="help-dates">
-        <h1>О датах</h1>
+        <h2>О датах</h2>
         <p>
             Указание дат доступно в 2х вариантах
         </p>
