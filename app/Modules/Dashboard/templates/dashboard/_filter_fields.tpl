@@ -18,6 +18,10 @@
                            data-clear-button="1"
                            class="datepicker-here big">
 
+                    <a href="#help-dates" class="mmodal">
+                        <i class="fa fa-question-circle pointer" title="Click me!"></i>
+                    </a>
+
                     <div class="templates as_a date_templates">
                         <span data-range="this_month">This month</span>
                         <span data-range="this_week">This week</span>
@@ -739,6 +743,29 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
+                    <label for="o_ts">Transaction status:</label>
+                </div>
+
+                <div class="columns large-6">
+                    <select name="search[order][transaction_status][]" id="o_ts" class="big" multiple>
+                        {foreach $transaction_status as $key => $status}
+                            <option value="{$key}" title="{$key}" {if $key|in:$form_data.order.transaction_status}selected{/if}>
+                                {$status}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-2 not">
+                    <input type="checkbox" value="1" name="search[not][order][transaction_status]" id="notag" {if $form_data.not.order.transaction_status}checked{/if}>
+                    <label for="notag">Not</label>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="columns large-4">
                     <label for="og_all_dx_all">Has Dx invoices:</label>
                 </div>
 
@@ -808,3 +835,34 @@
         </li>
     </ul>
 </fieldset>
+<div class="hidden">
+    <div id="help-dates">
+        <h1>О датах</h1>
+        <p>
+            Указание дат доступно в 2х вариантах
+        </p>
+        <ol>
+            <li>
+                Выбор строгого диапазона посредством всплывающего календаря
+            </li>
+            <li>
+                Указание относительного диапазона например "-7 day" <br>
+                варианты могут выглядеть так
+                <ul>
+                    <li>
+                        +/-N day
+                    </li>
+                    <li>
+                        +/-N week
+                    </li>
+                    <li>
+                        last Monday
+                    </li>
+                    <li>
+                        -1 week 2 days 4 hours 2 seconds
+                    </li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+</div>

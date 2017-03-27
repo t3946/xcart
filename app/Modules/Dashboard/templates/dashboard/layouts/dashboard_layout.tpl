@@ -1,21 +1,8 @@
 {extends 'base/admin.tpl'}
 
-{block 'js-head'}
-    <link href="/static/vendors/air-datepicker/dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
-    <script src="/static/vendors/air-datepicker/dist/js/datepicker.min.js" type="text/javascript"></script>
-    <script src="/static/vendors/air-datepicker/dist/js/i18n/datepicker.en.js" type="text/javascript"></script>
-
-
-    <link href="/static/vendors/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
-    {*<link href="/static/vendors/select2/dist/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css">*}
-    <script src="/static/vendors/select2/dist/js/select2.min.js" type="text/javascript"></script>
-{/block}
-
 {block 'js'}
 <script type="text/javascript">
     (function(){
-        console.log(new Date());
-        console.log('jQuery', $.fn.jquery);
         $('.admin select[data-ajax-from]').on("select2:select",  function(e) {
             $(this).append($('option[selected]', { value: e.params.data.id, text: e.params.data.text }));
         });

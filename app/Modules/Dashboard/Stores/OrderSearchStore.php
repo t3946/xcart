@@ -327,6 +327,14 @@ class OrderSearchStore extends BaseStore
                 $this->getQ(['po.status__in' => $val], 'order.po_status');
             }
 
+            if (!empty($data['order']['transaction_status']) || $this->checkNot('order.transaction_status')) {
+                $qs->join('left join', 'xcart_order_transactions', ['orderid' => 'ot.orderid'], 'ot');
+
+                $val = ($data['order']['transaction_status']) ? $data['order']['transaction_status'] : [''];
+
+                $this->getQ(['ot.transaction_status__in' => $val], 'order.transaction_status');
+            }
+
             if (!empty($data['order']['all_dx'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
                 $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'invoice.orderid'], 'invoice');

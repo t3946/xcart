@@ -3,6 +3,7 @@ namespace Modules\Dashboard\Helpers;
 
 use Modules\Dashboard\Sqls\SearchSql;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Order\Models\OrderTransactionModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Connection;
 use Xcart\POPipeline;
@@ -53,6 +54,7 @@ class SearchHelper
                 'sources'              => OrderSearchStore::getSources(),
                 'question_statuses'    => OrderSearchStore::getQuestionStatuses(),
                 'manual_string'        => OrderSearchStore::CONST_MANUAL_STRING,
+                'transaction_status'   => OrderTransactionModel::getFields()['transaction_status']['choices'],
             ];
 
             Xcart::app()->cache->set($key, $properties,120 + rand(0, 120));

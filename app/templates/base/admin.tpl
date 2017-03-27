@@ -1,12 +1,5 @@
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous">
-</script>
-<link rel="stylesheet" href="/static/vendors/font-awesome/css/font-awesome.min.css">
-<link rel="stylesheet" href="/static/backend/css/base.css?v=4">
-
-<script src="/static/vendors/jquery.cookie-1.4.1.min.js"></script>
-<script type="text/javascript" src="/static/backend/js/main.js?v=4"></script>
+<link rel="stylesheet" href="/static/backend/dist/css/main.css?v={backend_css_version}">
+<script type="text/javascript" src="/static/backend/dist/js/main.js?v={backend_js_version}"></script>
 
 {block 'js-head'}
 
