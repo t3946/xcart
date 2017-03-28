@@ -7,6 +7,7 @@ const rimraf = require('gulp-rimraf');
 const sass = require('gulp-sass');
 const hashsum = require('gulp-hashsum');
 const uglify = require('gulp-uglify');
+const autoprefixer = require('gulp-autoprefixer');
 
 var config = require('./gulpconfig');
 var frontend = config.frontend;
@@ -71,22 +72,34 @@ gulp.task('backend_scss', function() {
         .pipe(gulp.dest(backend.dst.scss));
 });
 
-gulp.task('frontend_css', ['frontend_scss'], function() {
-    var pipe = gulp.src(frontend.src.css);
+gulp.task('frontend_css', ['frontend_scss'], function () {
+    var pipe = gulp.src(frontend.src.css)
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }));
+
     if (config.compress) {
         pipe = pipe.pipe(cssnano())
     }
+
     return pipe.pipe(concat(config.name + '.css')).
     pipe(gulp.dest(frontend.dst.css)).
     pipe(hashsum({filename: 'frontend/versions/css.yml', hash: 'md5'})).
     pipe(livereload());
 });
 
-gulp.task('backend_css', ['backend_scss'], function() {
-    var pipe = gulp.src(backend.src.css);
+gulp.task('backend_css', ['backend_scss'], function () {
+    var pipe = gulp.src(backend.src.css)
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }));
+
     if (config.compress) {
         pipe = pipe.pipe(cssnano())
     }
+
     return pipe.pipe(concat(config.name + '.css')).
     pipe(gulp.dest(backend.dst.css)).
     pipe(hashsum({filename: 'backend/versions/css.yml', hash: 'md5'})).

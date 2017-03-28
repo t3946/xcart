@@ -71,15 +71,6 @@
   @include mmodal-media
 }
 
-/* Preloader */
-@mixin crossbrowser($name, $value) {
-  -webkit-#{$name}: $value;
-  -khtml-#{$name}: $value;
-  -moz-#{$name}: $value;
-  -o-#{$name}: $value;
-  #{$name}: $value;
-}
-
 .mmodal-loader {
   display: none;
 }
