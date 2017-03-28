@@ -3857,6 +3857,7 @@ function file_get_contents_curl($url)
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
     $data = curl_exec($curl);
     curl_close($curl);
 
