@@ -46,6 +46,9 @@
                                 {include 'core/form/model_form_field.tpl' model=$model field='direct_url' class='big'}
                             </li>
                             <li>
+                                {include 'core/form/model_form_field.tpl' model=$model field='sorting' type='select' class='big'}
+                            </li>
+                            <li>
                                 {include 'core/form/model_form_field.tpl' model=$model field='group_id' type='select' selected=$model->group_id choises=$groups class='big'}
                             </li>
                         </ul>

@@ -772,7 +772,7 @@
                 <div class="columns large-6">
                     <div class="row">
                         <div class="columns large-2 padding-small">
-                            <input name="search[order][all_dx]" type="radio" value="" id="og_rs_off" {if !$form_data.order.reconciliation_status}checked{/if}>
+                            <input name="search[order][reconciliation_status]" type="radio" value="" id="og_rs_off" {if !$form_data.order.reconciliation_status}checked{/if}>
                             <label for="og_rs_off">Off</label>
                         </div>
                         {foreach $reconciliation_status as $key => $status index=$index last=$last}
@@ -787,13 +787,6 @@
                             {/if}
                         {/foreach}
                     </div>
-
-
-                </div>
-
-                <div class="columns large-2 not">
-                    {*<input type="checkbox" value="1" name="search[not][order][reconciliation_status]" id="nors" {if $form_data.not.order.reconciliation_status}checked{/if}>*}
-                    {*<label for="nors">Not</label>*}
                 </div>
             </div>
         </li>

@@ -9,10 +9,12 @@ use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOr;
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Dashboard\Helpers\SearchHelper;
+use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Product\Models\ProductQuestionModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
@@ -36,7 +38,7 @@ class OrderSearchStore extends BaseStore
     /** @var Pagination */
     private $pager;
     private $order;
-    private $fid = null;
+    private $model = null;
 
     public $defaultPagerPageSize = 25;
 
@@ -79,10 +81,14 @@ class OrderSearchStore extends BaseStore
         return ProductQuestionModel::getFields()['status']['choices'];
     }
 
-    public function __construct($data, $fid = null)
+    public function __construct($data, Model $model = null)
     {
         $this->form_data = $data;
-        $this->fid = $fid;
+
+        if ($model) {
+            $this->model = $model;
+        }
+
         $this->populate($data);
     }
 
@@ -807,16 +813,31 @@ class OrderSearchStore extends BaseStore
         $qs->join('left join', 'xcart_shipping', ['shipping.shippingid' => 'group.shippingid'], 'shipping');
 
         $user = Xcart::app()->user;
-        if ($user->show_events)
-        {
-            /** @var QuerySet $qs */
-            $e_qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
-            $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
-            $qs->order(['-shipping.important', '-events.count','-date', '-orderid']);
+        if ($this->model instanceof DashboardFilter) {
+            switch ($this->model->sorting) {
+                case 10: {
+                    $qs->order(['date']);
+                    break;
+                }
+                case 11: {
+                    $qs->order(['-date']);
+                    break;
+                }
+                case 1:
+                default: {
+                    if ($user->show_events) {
+                        /** @var QuerySet $qs */
+                        $e_qs = OrderHelper::getEventCountQS($user->id, ($user->show_events_min_date) ? (new DateTime($user->show_events_min_date)) : null);
+                        $qs->join('left join', $e_qs->select(['order_id', 'count' => new Expression('count(*)')])->group(['order_id'])->allSql(), ['events.order_id' => 'orderid'], 'events');
+                        $qs->order(['-shipping.important', '-events.count', '-date', '-orderid']);
+                    }
+                    else {
+                        $qs->order(['-shipping.important', '-date', '-orderid']);
+                    }
+                }
+            }
         }
-        else {
-            $qs->order(['-shipping.important', '-date', '-orderid']);
-        }
+
 
         if ($this->order) {
             $qs->order($this->order);
@@ -874,8 +895,8 @@ class OrderSearchStore extends BaseStore
 
     public function getCacheCountKey($prefix = 'order_search_store_count_', array $params = [])
     {
-        if ($this->fid) {
-            $id = $this->fid;
+        if ($this->model) {
+            $id = get_class($this->model) . $this->model->pk;
         }
         else {
             $md5 = json_encode($this->where);
