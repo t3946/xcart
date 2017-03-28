@@ -72,7 +72,7 @@ gulp.task('backend_scss', function() {
         .pipe(gulp.dest(backend.dst.scss));
 });
 
-gulp.task('frontend_css', ['frontend_scss'], function () {
+gulp.task('frontend_css', function () {
     var pipe = gulp.src(frontend.src.css)
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
@@ -89,7 +89,7 @@ gulp.task('frontend_css', ['frontend_scss'], function () {
     pipe(livereload());
 });
 
-gulp.task('backend_css', ['backend_scss'], function () {
+gulp.task('backend_css', function () {
     var pipe = gulp.src(backend.src.css)
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
@@ -168,13 +168,15 @@ gulp.task('watch', ['build'], function() {
     livereload({ start: true });
 
     gulp.watch(frontend.src.raw, ['frontend_raw']);
-    gulp.watch(frontend.src.scss, ['frontend_css']);
+    gulp.watch(frontend.src.scss, ['frontend_scss']);
+    gulp.watch(frontend.src.css, ['frontend_css']);
     gulp.watch(frontend.src.js, ['frontend_js']);
     gulp.watch(frontend.src.images, ['frontend_images']);
     gulp.watch(frontend.src.fonts, ['frontend_fonts']);
 
     gulp.watch(backend.src.raw, ['backend_raw']);
-    gulp.watch(backend.src.scss, ['backend_css']);
+    gulp.watch(backend.src.scss, ['backend_scss']);
+    gulp.watch(backend.src.css, ['backend_css']);
     gulp.watch(backend.src.js, ['backend_js']);
     gulp.watch(backend.src.images, ['backend_images']);
     gulp.watch(backend.src.fonts, ['backend_fonts']);

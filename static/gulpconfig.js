@@ -42,8 +42,8 @@ module.exports.backend = {
             'bower_components/mindy-sass/'
         ],
         css: [
-            'backend/temp/css/**/*',
-            'backend/css/*'
+            'backend/css/*',
+            'backend/temp/css/**/*'
         ].concat(modules.map(function (dir) {
             return dir + '/static/backend/css/**/*.*'
         })),
@@ -61,11 +61,13 @@ module.exports.backend = {
                 'bower_components/jquery/dist/jquery.min.js'
             ]
         },
+
         'jquery.cookie': {
             js: [
                 'bower_components/jquery.cookie/jquery.cookie.js'
             ]
         },
+
         modal: {
             js: [
                 'bower_components/mmodal/js/jquery.mindy.modal.js'
@@ -74,6 +76,7 @@ module.exports.backend = {
             //     'bower_components/mmodal/scss/jquery.mmodal.scss'
             // ]
         },
+
         select2: {
             js: [
                 'bower_components/select2/dist/js/select2.js'
@@ -82,6 +85,7 @@ module.exports.backend = {
                 'bower_components/select2/dist/css/select2.css'
             ]
         },
+
         'air-datepicker': {
             js: [
                 'bower_components/air-datepicker/dist/js/datepicker.js',
@@ -91,6 +95,7 @@ module.exports.backend = {
                 'bower_components/air-datepicker/dist/css/datepicker.css'
             ]
         },
+
         'font-awesome': {
             fonts: [
                 'bower_components/font-awesome/fonts/*'
@@ -100,6 +105,12 @@ module.exports.backend = {
             // ]
             scss: [
                 'bower_components/font-awesome/scss/*'
+            ]
+        },
+
+        cds: {
+            scss_include: [
+                'components/cds'
             ]
         }
     }

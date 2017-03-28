@@ -1,0 +1,115 @@
+
+.column, .columns {
+    & > .smarty-admin-block {
+        margin-left: map-get(map-get($grid, 'large'), 'gutter') / 2 * -1px;
+        margin-right: map-get(map-get($grid, 'large'), 'gutter') / 2 * -1px;
+    }
+}
+
+.tabs {
+    .tabs-title { }
+    .tabs-content {
+        .tab {
+            display: none;
+
+            &.active {
+                display: block;
+            }
+        }
+    }
+}
+
+.smarty-admin-block {
+    margin-bottom: 20px;
+
+    .tabs {
+        .tabs-title {
+            white-space: nowrap;
+            letter-spacing: -4px;
+            line-height: 15px;
+            min-height: 15px;
+            background: url('../images/dialog_bg_line.gif') bottom left repeat-x;
+
+            .link {
+                letter-spacing: normal;
+                min-height: 15px;
+                display: inline-block;
+                background-color: #ffb86a;
+                border: 1px #ff8600 solid;
+                border-bottom: none;
+                padding: 0 11px;
+                border-radius: 3px 3px 0 0;
+                color: #fff;
+                font-weight: bold;
+                text-decoration: none;
+                font-size: 11px;
+                min-width: 150px;
+                position: relative;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                &:nth-last-child(1) {
+                    &:after {
+                        content: ' ';
+                        display: block;
+                        background: url('../images/dialog_bg_after_n.gif') bottom left no-repeat;
+                        width: 10px;
+                        height: 15px;
+                        position: absolute;
+                        right: -9px;
+                        bottom: 0;
+                    }
+                }
+
+                &.active {
+                    background-color: #ff8600;
+
+                    &:nth-last-child(1) {
+                        &:after {
+                            background-image: url('../images/dialog_bg_after.gif');
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .content-block {
+        padding: 10px;
+    }
+
+    .buttons-block {
+        margin-left: -11px;
+        width: inherit;
+        box-sizing: content-box !important;
+        padding: 10px 16px;
+    }
+
+    .title-block {
+        min-height: 15px;
+        background-image: url('/skin1_kolin/images/dialog_bg_n.gif');
+
+        .title {
+            padding-left: 20px;
+            color: #fff !important;
+            font-weight: bold;
+            line-height: 15px;
+        }
+    }
+
+    &.padding-small {
+        .content-block {
+            padding: 5px;
+        }
+    }
+    &.no-padding {
+        .content-block {
+            padding: 0;
+        }
+    }
+    &.no-margin {
+        margin: 0;
+    }
+}

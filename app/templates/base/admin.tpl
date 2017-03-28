@@ -30,23 +30,16 @@
 
                     {/block}
 
-                    <div class="row">
-                        <div class="column large-12">
-                            {block 'content'}
+                    {block 'content'}
 
-                            {/block}
-                        </div>
-                    </div>
+                    {/block}
 
                     {block 'after-content'}
-                        <div class="row">
-                            <div class="columns large-12">
-                                {block 'menu_block'}
-                                    {include 'base/_admin_menu.tpl'}
-                                {/block}
-                            </div>
-                        </div>
 
+                    {/block}
+
+                    {block 'menu_block'}
+                        {include 'base/_admin_menu.tpl'}
                     {/block}
                 </div>
             {/block}

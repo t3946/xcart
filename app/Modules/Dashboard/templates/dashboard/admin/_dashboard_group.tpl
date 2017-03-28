@@ -10,7 +10,7 @@
                                         {foreach $models as $model}
                                             {if $model->position_row == $row && $model->position_column == $col}
 
-                                                <a href="{$model->getAdminUrl()}" class="button" data-id="{$model->id}">
+                                                <a href="{$model->getAdminUrl()}" class="button dashboard-item" data-id="{$model->id}">
                                                     <div class="row">
                                                         {if $model->tag}
                                                             <div class="columns large-2">

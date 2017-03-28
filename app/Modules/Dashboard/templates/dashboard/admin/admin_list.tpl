@@ -27,7 +27,7 @@
             var url_dashboard_sort = '{url 'dashboard:sort_filters'}';
 
             {ignore}
-            $('.admin .admin-dashboard-filters-list').tablePositions({
+            $('.admin .admin-dashboard-filters-list .dashboard-filters').tablePositions({
                 draggableSelector: '.button',
                 dropSelector: '.container',
 
@@ -62,6 +62,6 @@
                 }
             });
             {/ignore}
-        })();
+        });
     </script>
 {/block}

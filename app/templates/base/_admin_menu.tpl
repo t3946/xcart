@@ -1,5 +1,5 @@
-<div id="admin-menu-wrapper">
-    {smarty_admin_block name= 'Modules main menu' title_size=12 class='no-padding no-margin'}
+{*<div id="admin-menu-wrapper">*}
+    {smarty_admin_block name= 'Modules main menu' title_size=12}
         <div class="menu-block">
             <div class="menu-wrapper">
                 <ul class="main-menu">
@@ -19,4 +19,4 @@
             </div>
         </div>
     {/smarty_admin_block}
-</div>
+{*</div>*}
