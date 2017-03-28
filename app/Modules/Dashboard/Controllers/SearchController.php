@@ -16,29 +16,34 @@ class SearchController extends PrototypeAdminController
         $session       = Xcart::app()->request->session;
         $form_collapse = false;
 
-        if (!empty($_GET['search']['reset']) == 'reset') {
-            $session->remove('search_order_form');
-            $this->refresh();
-        }
+//        if (!empty($_GET['search']['reset']) == 'reset') {
+//            $session->remove('search_order_form');
+//            $this->refresh();
+//        }
 
         if (!empty($_GET['search'])) {
             $form_collapse = true;
-
-            $session->add('search_order_form', OrderSearchStore::getClearedData($_GET['search']));
+            $form_data = OrderSearchStore::getClearedData($_GET['search']);
+//            $session->add('search_order_form', OrderSearchStore::getClearedData($_GET['search']));
 
             if (isset($_GET['search']['new_list'])) {
                 $session->add('search_new_template', $_GET['search']['new_list']);
             }
         }
 
-        $form_data = $session->get('search_order_form', [
-            'order'    => [
-                'date' => SearchHelper::getDefaultSearchDate(),
-            ],
-        ]);
+//        $form_data = $session->get('search_order_form', [
+//            'order'    => [
+//                'date' => SearchHelper::getDefaultSearchDate(),
+//            ],
+//        ]);
 
         if (!is_array($form_data)) {
-            $form_data = [];
+//            $form_data = [];
+            $form_data = [
+                'order'    => [
+                    'date' => SearchHelper::getDefaultSearchDate(),
+                ],
+            ];
         }
 
         $form_data['new_list'] = $session->get('search_new_template', 1);

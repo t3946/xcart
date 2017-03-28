@@ -1,4 +1,4 @@
-<form action="{url 'dashboard:search'}" method="GET">
+<form action="{url 'dashboard:search'}" method="GET" class="search-form">
     {include 'dashboard/_filter_fields.tpl'}
 
     <ul class="ul-main">

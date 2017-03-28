@@ -2,7 +2,7 @@
    class="{if $model->getSearchStorage()->getCashedCount() == 0}empty{else}button{/if} dashboard-item"
    target="_blank"
    data-id="{$model->id}"
-   data-action="{url 'dashboard:filter_subscription' id=$model->id}"
+   data-tooltip-action="{url 'dashboard:filter_subscription' id=$model->id}"
    data-count="{$model->getSearchStorage()->getCashedCount()}">
     <div class="row">
         <div class="columns large-2">

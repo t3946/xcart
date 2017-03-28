@@ -9,12 +9,7 @@
         </div>
     </div>
     <div class="white-back orange-border content-block">
-
-        <div class="row">
-            <div class="columns large-12">
-                {raw $html}
-            </div>
-        </div>
+        {raw $html}
     </div>
 </div>
 

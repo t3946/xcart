@@ -10,11 +10,28 @@
             {elseif $type == 'select'}
                 <select name="{$model->classNameShort()}[{$field}]" id="m_{$field}" {if $multiple}multiple{/if} class="{$class}">
                     <option value=""></option>
+
+                    {if !$choises && $model->getField($field)->choices}
+                        {set $choises = $model->getField($field)->choices}
+                    {/if}
+
+                    {if !$selected}
+                        {set $selected = $model->getField($field)->getValue()}
+                    {/if}
+
                     {foreach $choises as $key => $value}
-                        {if is_array($selected)}
-                            <option value="{$value.id}" {if $value.id|in:$selected }selected{/if}>{$value.name}</option>
+                        {if is_object($value)}
+                            {if is_array($selected)}
+                                <option value="{$value.pk}" {if $value.pk|in:$selected }selected{/if}>{$value}</option>
+                            {else}
+                                <option value="{$value.pk}" {if $selected == $value.pk }selected{/if}>{$value}</option>
+                            {/if}
                         {else}
-                            <option value="{$value.id}" {if $selected == $value.id }selected{/if}>{$value.name}</option>
+                            {if is_array($selected)}
+                                <option value="{$key}" {if $key|in:$selected }selected{/if}>{$value}</option>
+                            {else}
+                                <option value="{$key}" {if $selected == $key }selected{/if}>{$value}</option>
+                            {/if}
                         {/if}
                     {/foreach}
                 </select>

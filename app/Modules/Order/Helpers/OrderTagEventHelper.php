@@ -29,7 +29,7 @@ class OrderTagEventHelper
      * @param int $order_id  Order pk
      * @param bool $save_log Save action in log or not
      *
-     * @throws \Xcart\App\Orm\Exception\MultipleObjectsReturned
+     * @throws
      */
     public static function orderTagEvent($status_id, $order_id, $save_log = true)
     {

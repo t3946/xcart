@@ -1,0 +1,33 @@
+.admin {
+  fieldset {
+
+    border: 1px solid #FF8600;
+    background-color: #fff;
+    margin-bottom: 15px;
+
+    legend {
+      font-size: 12px;
+      padding: 0 15px;
+      font-weight: bold;
+      cursor: pointer;
+      background: transparent url(../images/expanded.gif) no-repeat center left;
+    }
+
+    &.collapsed {
+      border: none;
+      border-top: 1px solid #FF8600;
+      background: none;
+
+      legend {
+        background: transparent url(../images/collapsed.gif) no-repeat center left;
+      }
+
+      & > * {
+        display: none;
+      }
+      & > legend {
+        display: block;
+      }
+    }
+  }
+}
