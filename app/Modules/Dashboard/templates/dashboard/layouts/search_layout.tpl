@@ -2,7 +2,7 @@
 
 {block 'heading'}
     <h1 align="center">
-        Order search
+        Order search ({$pager->getTotal()})
 
         <a href="#help_search" class="float-right mmodal">
             <i class="fa fa-question-circle"></i>

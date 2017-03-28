@@ -30,6 +30,7 @@ class OrderSearchStore extends BaseStore
 
     private $form_data = [];
     private $where = [];
+    private $having = [];
     /** @var QuerySet */
     private $qs;
     /** @var Pagination */
@@ -60,6 +61,16 @@ class OrderSearchStore extends BaseStore
             'amazon_orders_only' => 'Amazon website',
             'amazon_orders_MFN'  => 'Amazon - MFN',
             'amazon_orders_FBA'  => 'Amazon - FBA',
+        ];
+    }
+
+    public static function getReconciliationStatuses()
+    {
+        return [
+            'F' => 'Full reconciled',
+            'FP' => 'Full or Partial reconciled',
+            'P' => 'Partial reconciled',
+            'N' => 'Not reconciled',
         ];
     }
 
@@ -335,22 +346,51 @@ class OrderSearchStore extends BaseStore
                 $this->getQ(['ot.transaction_status__in' => $val], 'order.transaction_status');
             }
 
+            if (!empty($data['order']['reconciliation_status']) || $this->checkNot('order.reconciliation_status')) {
+                $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+                $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'invoice.orderid', 'group.manufacturerid' => 'invoice.manufacturerid'], 'invoice');
+                $qs->join('left join', 'xcart_reconciliations', ['invoice.reconciliation_id' => 'reconciliations.id'], 'reconciliations');
+                $qs->addSelect(['*', new Count('invoice.orderid', 'icount'), new Count('group.orderid', 'gcount'), new Count('reconciliations.id', 'rcount') ]);
+
+                $this->where[] = new QOr(['reconciliations.action' => 'R', 'reconciliations.action__isnull' => true]);
+
+                if ( $data['order']['reconciliation_status'] == 'F') {
+                    $this->having[] = new QAnd(new Expression('rcount = icount'));
+                    $this->having[] = new QAnd(new Expression('rcount > 0'));
+                }
+                elseif ($data['order']['reconciliation_status'] == 'FP') {
+                    $this->having[] = new QAnd(new Expression('rcount <= icount'));
+                    $this->having[] = new QAnd(new Expression('rcount > 0'));
+                }
+                elseif ($data['order']['reconciliation_status'] == 'P') {
+                    $this->having[] = new QAnd(new Expression('rcount < icount'));
+                    $this->having[] = new QAnd(new Expression('rcount > 0'));
+                }
+                elseif ($data['order']['reconciliation_status'] == 'N') {
+                    $this->having[] = new QAnd(new Expression('rcount = 0'));
+                    $this->having[] = new QAnd(new Expression('icount > 0'));
+                }
+            }
+
             if (!empty($data['order']['all_dx'])) {
                 $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
-                $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'invoice.orderid'], 'invoice');
+                $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'invoice.orderid', 'group.manufacturerid' => 'invoice.manufacturerid'], 'invoice');
                 $qs->addSelect(['*', new Count('invoice.orderid', 'icount'), new Count('group.orderid', 'gcount') ]);
 
                 if ($data['order']['all_dx'] == 'Y') { // Присутствует во всех группах
-                    $qs->having(['gcount__gte' => 1 , new QAnd(new Expression('gcount = icount'))]);
+                    $this->having['gcount__gte'] = 1;
+                    $this->having[] = new QAnd(new Expression('gcount <= icount'));
                 }
                 elseif($data['order']['all_dx'] == 'AN') { // Отсутствует во всех группах
-                    $qs->having(['icount' => 0, 'gcount__gt' => 0]);
+                    $this->having['icount'] = 0;
+                    $this->having['gcount__gt'] = 0;
                 }
                 elseif($data['order']['all_dx'] == 'NA') { // Отсутствует в одной или всех группах
-                    $qs->having(['icount__gte' => 0 , new QAnd(new Expression('gcount > icount'))]);
+                    $this->having['icount__gte'] = 0;
+                    $this->having[] = new QAnd(new Expression('gcount > icount'));
                 }
                 else { // Присутствует в одной или всех группах
-                    $qs->having(['icount__gte' => 1]);
+                    $this->having['icount__gte'] = 1;
                 }
             }
 
@@ -646,7 +686,7 @@ class OrderSearchStore extends BaseStore
             }
         }
 
-        $qs->filter($this->where)->addGroup(['orderid']);
+        $qs->filter($this->where)->addGroup(['orderid'])->having($this->having);
         $this->qs = $qs;
     }
 

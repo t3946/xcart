@@ -757,8 +757,43 @@
                 </div>
 
                 <div class="columns large-2 not">
-                    <input type="checkbox" value="1" name="search[not][order][transaction_status]" id="notag" {if $form_data.not.order.transaction_status}checked{/if}>
-                    <label for="notag">Not</label>
+                    <input type="checkbox" value="1" name="search[not][order][transaction_status]" id="nots" {if $form_data.not.order.transaction_status}checked{/if}>
+                    <label for="nots">Not</label>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="o_rs">Reconciliation status:</label>
+                </div>
+
+                <div class="columns large-6">
+                    <div class="row">
+                        <div class="columns large-2 padding-small">
+                            <input name="search[order][all_dx]" type="radio" value="" id="og_rs_off" {if !$form_data.order.reconciliation_status}checked{/if}>
+                            <label for="og_rs_off">Off</label>
+                        </div>
+                        {foreach $reconciliation_status as $key => $status index=$index last=$last}
+                            <div class="columns large-5 padding-small">
+                                <input id="rs_{$key}" type="radio" value="{$key}" name="search[order][reconciliation_status]" {if $form_data.order.reconciliation_status == $key}checked{/if}>
+                                <label for="rs_{$key}">
+                                    {$status}
+                                </label>
+                            </div>
+                            {if $index % 2 && $index != 0 && !$last}
+                                <div class="columns large-2 padding-small">&nbsp;</div>
+                            {/if}
+                        {/foreach}
+                    </div>
+
+
+                </div>
+
+                <div class="columns large-2 not">
+                    {*<input type="checkbox" value="1" name="search[not][order][reconciliation_status]" id="nors" {if $form_data.not.order.reconciliation_status}checked{/if}>*}
+                    {*<label for="nors">Not</label>*}
                 </div>
             </div>
         </li>

@@ -54,6 +54,7 @@ class SearchHelper
                 'sources'              => OrderSearchStore::getSources(),
                 'question_statuses'    => OrderSearchStore::getQuestionStatuses(),
                 'manual_string'        => OrderSearchStore::CONST_MANUAL_STRING,
+                'reconciliation_status'=> OrderSearchStore::getReconciliationStatuses(),
                 'transaction_status'   => OrderTransactionModel::getFields()['transaction_status']['choices'],
             ];
 
