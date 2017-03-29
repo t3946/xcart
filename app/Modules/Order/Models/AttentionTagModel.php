@@ -46,6 +46,11 @@ class AttentionTagModel extends Model
                 'null' => false,
                 'default' => 0
             ],
+            'color' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => '#F4CCCC',
+            ],
             'description' => [
                 'class' => TextField::className(),
                 'null' => false,
