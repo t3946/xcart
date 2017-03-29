@@ -28,9 +28,11 @@ class ReferrerModel extends Model
             ],
             'visits' => [
                 'class' => IntField::className(),
+                'default' => 0
             ],
             'last_visited' => [
                 'class' => TimestampField::className(),
+                'autoNow' => true
             ]
         ];
     }
