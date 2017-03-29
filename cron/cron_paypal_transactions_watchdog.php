@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Order\Models\OrderGroupModel;
 use \Xcart\OrderGroup;
 use \Xcart\SQLBuilder;
 use \Xcart\OrderTransactions;
@@ -73,6 +74,26 @@ if (!empty($aOrderGroups)) {
         }
     }
 }
+
+$aOrderGroups = OrderGroup::model()->findAll(
+    SQLBuilder::getInstance()
+        ->addCondition("cb_status ='AP'")
+        ->addCondition("cb_update_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)")
+        ->addCondition("dc_status IN ('C', 'S', 'G', 'L')")
+);
+if (!empty($aOrderGroups)) {
+    $countOrders = count($aOrderGroups);
+    $message = "Found CB: AP; DC: C,S,G,L {$countOrders} orders.";
+    func_backprocess_log(LOG_CATEGORY, $message);
+    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail->init();
+    $oMail->to = 'team@s3stores.com';
+    $oMail->from = 'team@s3stores.com';
+    $oMail->body = $message;
+    $oMail->subject = LOG_CATEGORY . " invalid orders found";
+    $oMail->sendEmail();
+}
+
 Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
 $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
 $log_text = "Cron completed. Processing time: {$str_time}";
