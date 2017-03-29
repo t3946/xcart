@@ -663,26 +663,26 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
         {if !$invoice_detail->itemid}
             <tr class="manufacturer_add_extra_value" data-mnfid="{$m_id}" data-invoice="{$invoice_number}">
                 <td colspan="2" id="add_extra_track_{$m_id}_{$invoice_number}_box_1">
-                    <select name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_type][]">
+                    <select name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_type][{$smarty.foreach.invoice_detail_addition.index}]">
                         <option value="add_extra_sku">Product SKU</option>
                         <option value="add_extra_other">Other charges</option>
                     </select>
                     <input size="40"
-                           name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_string][]"
+                           name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_string][{$smarty.foreach.invoice_detail_addition.index}]"
                            type="text" value="{$invoice_detail->item_string}"/>
                 </td>
                 <td id="add_extra_track_{$m_id}_{$invoice_number}_box_2" align="center"><input
                             onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
                             onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
                             size="8"
-                            name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_cost][]"
+                            name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_cost][{$smarty.foreach.invoice_detail_addition.index}]"
                             type="text" value="{$invoice_detail->unit_cost}"/></td>
                 <td id="add_extra_track_{$m_id}_{$invoice_number}_box_3"></td>
                 <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input
                             onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
                             onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
                             size="5"
-                            name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_qty][]"
+                            name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_qty][{$smarty.foreach.invoice_detail_addition.index}]"
                             type="text" value="{$invoice_detail->qty_inv}"/></td>
                 <td id="add_extra_track_{$m_id}_{$invoice_number}_box_5" align="right" class="add_extra_value_total">
                     <span id="add_extra_value_total_{$m_id}_{$invoice_number}">
