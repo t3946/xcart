@@ -1309,8 +1309,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             {
                 $oPoPipeline = \Xcart\POPipeline::model();
                 $oOrder      = \Xcart\Order::model(['orderid' => $orderid]);
+                $oPoPipeline->setField('order_id', $orderid);
                 try {
-                    $oPoPipeline = $oPoPipeline->uploadPurchaseOrder(($po_num), $oOrder->getField('storefrontid'), 'website');
+                    $oPoPipeline = $oPoPipeline->uploadPurchaseOrder($po_num, $oOrder->getField('storefrontid'), 'website');
                     $oPoPipeline->setOrderToPO($orderid);
                     $oPoPipeline->_save();
                     $oOrder->updateField('orig_po', $oOrder->getOrderStoreFront()->getStoreFrontURL().$oPoPipeline->getOrderFileLink());
