@@ -54,6 +54,7 @@ while ($order = db_fetch_array($orders)) {
 
         if (!empty($mnf_to)) {
             $oMail = \Xcart\App\Main\Xcart::app()->mail;
+            $oMail->init();
             $oMail->to = $mnf_to;
             $oMail->from = $config['Company']['orders_department'];
             $oMail->reply_to = null;

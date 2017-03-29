@@ -85,6 +85,7 @@ class OrderStatusNotification extends Mail
         $mail_smarty->assign('oOrder', $this->oOrder);
 
         $oMail = \Xcart\App\Main\Xcart::app()->mail;
+        $oMail->init();
         $oMail->to = $this->oOrder->getEmail();
         $oMail->from = $config['Company']['orders_department'];
         $oMail->reply_to = null;
