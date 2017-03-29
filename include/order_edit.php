@@ -1988,25 +1988,32 @@ if ($REQUEST_METHOD == "POST")
                                     if ($invoice_data["add_extra_value_type"]) {
                                         foreach ($invoice_data["add_extra_value_type"] as $key => $value) {
                                             if (!empty($invoice_data["add_extra_value_string"][$key])) {
-                                                $orderGroupProductModel = OrderGroupInvoiceProductModel::objects()->getOrCreate([
+                                                $params = [
                                                     'orderid' => $orderid,
                                                     'manufacturerid' => $certain_mid,
                                                     'invoice_number' => $invoice_number,
                                                     'itemid' => 0,
                                                     'item_string' => $invoice_data["add_extra_value_string"][$key],
+                                                ];
+                                                $orderGroupProductModel = OrderGroupInvoiceProductModel::objects()->get($params);
+                                                if (!$orderGroupProductModel) {
+                                                    $orderGroupProductModel = new OrderGroupInvoiceProductModel($params);
+                                                }
+                                                $orderGroupProductModel->setAttributes([
+                                                    'unit_cost' => floatval($invoice_data["add_extra_value_cost"][$key]),
+                                                    'qty_inv' => floatval($invoice_data["add_extra_value_qty"][$key]),
+                                                    'unit_cost_total' => round(floatval($invoice_data["add_extra_value_cost"][$key]) * floatval($invoice_data["add_extra_value_qty"][$key]), 2),
+                                                    'customer_id' => Xcart\App\Main\Xcart::app()->user->id,
+                                                    'item_type' => $invoice_data["add_extra_value_type"][$key]
                                                 ]);
                                                 if ($orderGroupProductModel->unit_cost != floatval($invoice_data["add_extra_value_cost"][$key])
                                                     || $orderGroupProductModel->qty_inv != floatval($invoice_data["add_extra_value_qty"][$key])
                                                 ) {
                                                     $orderGroupProductModel->setAttributes([
-                                                        'unit_cost' => floatval($invoice_data["add_extra_value_cost"][$key]),
-                                                        'qty_inv' => floatval($invoice_data["add_extra_value_qty"][$key]),
-                                                        'unit_cost_total' => round(floatval($invoice_data["add_extra_value_cost"][$key]) * floatval($invoice_data["add_extra_value_qty"][$key]), 2),
-                                                        'customer_id' => Xcart\App\Main\Xcart::app()->user->id,
                                                         'updated_at' => new DateTime,
                                                     ]);
-                                                    $orderGroupProductModel->save();
                                                 }
+                                                $orderGroupProductModel->save();
                                             }
                                         }
                                     }
