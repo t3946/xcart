@@ -66,7 +66,6 @@ if (!empty($aOrderGroups)) {
         if (round($fOrderGroupTotalAmount, 2) != $oOrderGroup->getOrderInstance()->getOrderTotalGross()){
             $oAttentionTag = new AttentionTag(['status_id' => 44]);
             if (!($oOrderGroup->getOrderInstance()->isAttentionTagSet($oAttentionTag->getStatusId()))) {
-                $aInsertArray = ['orderid' => $oOrderGroup->getOrderId(), 'status_id' => $oAttentionTag->getStatusId()];
                 Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($oAttentionTag->getStatusId(), $oOrderGroup->getOrderId());
                 $sLog = "Difference in OrderId: " . $oOrderGroup->getOrderId() . ". TransactionsTotal(" . $fOrderGroupTotalAmount . ") - OrderTotal(" . $oOrderGroup->getOrderInstance()->getOrderTotalGross() . ")";
                 func_backprocess_log(LOG_CATEGORY, $sLog);
@@ -92,6 +91,12 @@ if (!empty($aOrderGroups)) {
     $oMail->body = $message;
     $oMail->subject = LOG_CATEGORY . " invalid orders found";
     $oMail->sendEmail();
+    $oAttentionTag = new AttentionTag(['status_id' => 44]);
+    foreach ($aOrderGroups as $oOrderGroup) {
+        if (!($oOrderGroup->getOrderInstance()->isAttentionTagSet($oAttentionTag->getStatusId()))) {
+            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($oAttentionTag->getStatusId(), $oOrderGroup->getOrderId());
+        }
+    }
 }
 
 Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
