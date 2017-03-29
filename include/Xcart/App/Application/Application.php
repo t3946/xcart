@@ -226,7 +226,7 @@ class Application
     public function getUser()
     {
         /** @var AuthInterface $auth */
-        if ($auth = $this->getComponent('auth')) {
+        if (self::getIsWebMode() && $auth = $this->getComponent('auth')) {
             return $auth->getUser();
         }
         return null;
