@@ -300,6 +300,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                         $transaction_total = $orderTransaction->transaction_amount;
                         $transaction_currency = $orderTransaction->transaction_currency;
                         break;
+                    case 'completed':
                     case 'refunded':
                         $transaction_status = $result['state'];
                         $transaction_total = $orderTransaction->transaction_amount;
