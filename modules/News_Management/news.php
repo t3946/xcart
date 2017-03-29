@@ -91,7 +91,6 @@ if ($REQUEST_METHOD == "POST" || ($mode == "messages" && $action == "send_contin
 			}
 
 			if (!$err) {
-				$list = func_array_map('addslashes',$list);
 				$mode = "";
 				$list_values = $list;
 				func_unset($list_values,'listid');

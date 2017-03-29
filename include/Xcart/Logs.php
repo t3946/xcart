@@ -35,8 +35,8 @@ class Logs extends Data
             global $login;
             $sLogin = $login;
         }
-        $aParams['login'] = addslashes($sLogin);
-        $aParams['log'] = addslashes($sLog);
+        $aParams['login'] = ($sLogin);
+        $aParams['log'] = ($sLog);
 
         if ($sResourceType == 'orders') {
             unset($aParams['resource_type']);

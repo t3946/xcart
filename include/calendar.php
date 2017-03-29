@@ -87,7 +87,7 @@ if ($REQUEST_METHOD == "POST") {
 	$tmp = func_array_merge($tmp, $pay_dates_array);
 	sort($tmp);
 	$query_data = array(
-		"pay_dates" => addslashes(serialize($tmp))
+		"pay_dates" => (serialize($tmp))
 	);
 
 	func_array2update("subscriptions", $query_data, "productid='$productid'");

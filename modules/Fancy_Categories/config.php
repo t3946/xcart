@@ -74,7 +74,6 @@ function func_fc_add_cfg_var(&$config, $key, $value) {
 	}
 
 	# Add data to xcart_config table
-	$query_data = func_addslashes($query_data);
 	func_array2insert("config", $query_data, true);
 	$config["Fancy_Categories"][$key] = $value['default'];
 
@@ -100,7 +99,7 @@ function func_fc_add_cfg_var(&$config, $key, $value) {
 		$query_data = array(
 			"code" => $code,
 			"name" => "opt_".$key,
-			"value" => addslashes($value[$cname]),
+			"value" => ($value[$cname]),
 			"topic" => "Options"
 		);
 		func_array2insert("languages", $query_data);

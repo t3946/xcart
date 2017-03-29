@@ -151,7 +151,7 @@ elseif ($import_step == "finalize") {
 			$data = $v;
 			$data['categoryid']	= $row['categoryid'];
 			$data['code']		= $k;
-			func_array2insert("categories_lng", func_addslashes($data));
+			func_array2insert("categories_lng", ($data));
 			func_import_save_cache("CL", $k, $k);
 			$result[strtolower($section)]["added"]++;
 		}

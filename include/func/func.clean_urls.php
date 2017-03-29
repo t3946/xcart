@@ -620,7 +620,7 @@ function func_clean_url_update($new_clean_url, $resource_type, $resource_id, $mo
     }
 
     $record = array(
-        'clean_url' => func_addslashes($new_clean_url),
+        'clean_url' => ($new_clean_url),
         'mtime'     => XC_TIME - $config['Appearance']['timezone_offset']
     );
 
@@ -683,9 +683,9 @@ function func_clean_url_history_add($clean_url, $resource_type, $resource_id)
     }
 
     $record = array(
-        'clean_url'     => func_addslashes($clean_url),
-        'resource_type' => func_addslashes($resource_type),
-        'resource_id'     => func_addslashes($resource_id),
+        'clean_url'     => ($clean_url),
+        'resource_type' => ($resource_type),
+        'resource_id'     => ($resource_id),
         'mtime'         => XC_TIME - $config['Appearance']['timezone_offset']
     );
 

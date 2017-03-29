@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['option1']) && !empty(
 		func_array2insert(
 			"cc_pp3_data",
 			array(
-				"ref" => addslashes($ordr),
+				"ref" => ($ordr),
 				"sessionid" => $XCARTSESSID
 			)
 		);

@@ -109,7 +109,7 @@ function func_store_advinfo($orderid, $advinfo)
         $order_extras = array(
             'orderid' => $orderid,
             'khash'   => 'advinfo',
-            'value'   => addslashes(text_crypt($prev_advinfo . "\n--- Advanced info ---\n" . $advinfo))
+            'value'   => (text_crypt($prev_advinfo . "\n--- Advanced info ---\n" . $advinfo))
         );   
 
         func_array2insert('order_extras', $order_extras, true);
@@ -852,7 +852,7 @@ function xpc_process_get_info($update_data, $orderids)
 
             func_array2update(
                 'orders',
-                array('extra' => addslashes(serialize($extra))),
+                array('extra' => (serialize($extra))),
                 "orderid = '" . $orderid . "'"
             );
         }
@@ -2118,7 +2118,7 @@ function func_xpc_store_configuration($configuration)
         func_array2update(
             'config',
             array(
-                'value' => addslashes(str_replace("\n", "\r\n", $configuration[$origName])),
+                'value' => (str_replace("\n", "\r\n", $configuration[$origName])),
             ),
             "name='" . $dbName . "' AND category='XPayments_Connector'"
         );

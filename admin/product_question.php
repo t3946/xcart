@@ -254,7 +254,7 @@ if ($REQUEST_METHOD == "POST") {
                                         'amount' => $v['amount'],
                                         'provider' => $v['provider'],
                                         'productcode' => $v['productcode'],
-                                        'product' => addslashes($v['product']),
+                                        'product' => ($v['product']),
                                         'original_provider' => $v['original_provider']
                                 );
 
