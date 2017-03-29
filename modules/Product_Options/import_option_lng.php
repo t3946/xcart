@@ -156,9 +156,9 @@ elseif ($import_step == "finalize") {
 				continue;
 
 			$data = array(
-				"code"			=> addslashes($row['code'][$k]),
+				"code"			=> ($row['code'][$k]),
 				"optionid"		=> $_optionid,
-				"option_name"	=> addslashes($row['option_name'][$k])
+				"option_name"	=> ($row['option_name'][$k])
 			);
 
 			# Add class language labels

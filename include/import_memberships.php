@@ -103,8 +103,6 @@ elseif ($import_step == "finalize") {
 			$is_exists = func_query_first_cell("SELECT membershipid FROM $sql_tbl[memberships] WHERE membershipid = '".$row['membershipid']."'") > 0;
 		}
 
-		$data = func_addslashes($row);
-
 		if ($is_exists) {
 			# Update membership
 			func_array2update("memberships", $data, "membershipid = '$data[membershipid]'");

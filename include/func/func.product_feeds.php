@@ -3905,33 +3905,33 @@ function func_HONEST_GREEN_GENERAL_PRODUCT_FEED($product_feed_info){
 
 					$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, "seconds");
 
-			                $query_data = array(
-			                        "forsale" => $forsale,
-			                        "product" => addslashes($PRODUCT_NAME),
-						"product_froogle" => $product_froogle,
-			                        "eta_date_mm_dd_yyyy" => $eta_date_mm_dd_yyyy,
-						"manufacturerid" => $manufacturerid,
-						"brandid" => $brandid,
-			                        "fulldescr" => addslashes($fulldescr),
-						"upc" => addslashes($UPC),
-						"list_price" => $SRP,
-						"cost_to_us" => $cost_to_us,
-						"free_tax" => $free_tax,
-						"low_avail_limit" => $low_avail_limit,
-						"weight" => $WEIGHT,
-						"dim_x" => $LENGTH,
-						"dim_y" => $WIDTH,
-						"dim_z" => $HEIGHT,
-						"shipping_freight" => $shipping_freight,
-						"free_ship_zone" => $free_ship_zone,
-						"free_ship_text" => $free_ship_text,
-						"discount_slope" => $discount_slope,
-						"discount_table" => $discount_table,
-						"discount_avail" => $discount_avail
-//						"update_search_index" => $update_search_index
-			                );
+                    $query_data = [
+                        "forsale" => $forsale,
+                        "product" => ($PRODUCT_NAME),
+                        "product_froogle" => $product_froogle,
+                        "eta_date_mm_dd_yyyy" => $eta_date_mm_dd_yyyy,
+                        "manufacturerid" => $manufacturerid,
+                        "brandid" => $brandid,
+                        "fulldescr" => ($fulldescr),
+                        "upc" => ($UPC),
+                        "list_price" => $SRP,
+                        "cost_to_us" => $cost_to_us,
+                        "free_tax" => $free_tax,
+                        "low_avail_limit" => $low_avail_limit,
+                        "weight" => $WEIGHT,
+                        "dim_x" => $LENGTH,
+                        "dim_y" => $WIDTH,
+                        "dim_z" => $HEIGHT,
+                        "shipping_freight" => $shipping_freight,
+                        "free_ship_zone" => $free_ship_zone,
+                        "free_ship_text" => $free_ship_text,
+                        "discount_slope" => $discount_slope,
+                        "discount_table" => $discount_table,
+                        "discount_avail" => $discount_avail
+                        //						"update_search_index" => $update_search_index
+                    ];
 
-                                        if (strtolower($STATUS) == "available"){
+                    if (strtolower($STATUS) == "available"){
                                                 $query_data["r_avail"] = $QTY_ON_HAND;
                                         } elseif (strtolower($STATUS) == "out of stock"){
                                                 $query_data["r_avail"] = 0;
@@ -4173,7 +4173,7 @@ function func_HONEST_GREEN_GENERAL_PRODUCT_FEED($product_feed_info){
                                                         $image_data['image_x'] = $img_info[0];
                                                         $image_data['image_y'] = $img_info[1];
                                                         $image_data['image_size'] = filesize($image_file_path);
-                                                        $image_data['alt'] = addslashes($PRODUCT_NAME);
+                                                        $image_data['alt'] = ($PRODUCT_NAME);
                                                         $image_data['avail'] = 'Y';
                                                         $image_data['orderby'] = '10';
 
@@ -4959,38 +4959,38 @@ function func_BUYSEASONS_GENERAL_PRODUCT_FEED($product_feed_info){
 
 					$eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($eta_date_mm_dd_yyyy, "seconds");
 
-                                        $query_data = array(
-                                                "forsale" => $forsale,
-                                                "product" => addslashes($Variant_Name),
-						"product_froogle" => $product_froogle,
-                                                "eta_date_mm_dd_yyyy" => $eta_date_mm_dd_yyyy,
-                                                "manufacturerid" => $manufacturerid,
-                                                "brandid" => $brandid,
-                                                "fulldescr" => addslashes($fulldescr),
-                                                "upc" => addslashes($UPC),
-//                                                "list_price" => $SRP,
-                                                "cost_to_us" => $cost_to_us,
-                                                "free_tax" => $free_tax,
-                                                "low_avail_limit" => $low_avail_limit,
-                                                "weight" => $Weight,
-                                                "dim_x" => $Length,
-                                                "dim_y" => $Width,
-                                                "dim_z" => $Height,
-                                                "shipping_freight" => $shipping_freight,
-                                                "free_ship_zone" => $free_ship_zone,
-                                                "free_ship_text" => $free_ship_text,
-                                                "discount_slope" => $discount_slope,
-                                                "discount_table" => $discount_table,
-                                                "discount_avail" => $discount_avail,
-						"supplier_internal_product_id" => $Prod_ID,
-						"min_amount" => $default_product_info["min_amount"],
-						"mult_order_quantity" => $default_product_info["mult_order_quantity"],
-						"r_avail" => $avail,
-						"generate_similar_products" => "N"
-//						"update_search_index" => $update_search_index
-                                        );
+                                    $query_data = [
+                                        "forsale" => $forsale,
+                                        "product" => ($Variant_Name),
+                                        "product_froogle" => $product_froogle,
+                                        "eta_date_mm_dd_yyyy" => $eta_date_mm_dd_yyyy,
+                                        "manufacturerid" => $manufacturerid,
+                                        "brandid" => $brandid,
+                                        "fulldescr" => ($fulldescr),
+                                        "upc" => ($UPC),
+                                        //                                                "list_price" => $SRP,
+                                        "cost_to_us" => $cost_to_us,
+                                        "free_tax" => $free_tax,
+                                        "low_avail_limit" => $low_avail_limit,
+                                        "weight" => $Weight,
+                                        "dim_x" => $Length,
+                                        "dim_y" => $Width,
+                                        "dim_z" => $Height,
+                                        "shipping_freight" => $shipping_freight,
+                                        "free_ship_zone" => $free_ship_zone,
+                                        "free_ship_text" => $free_ship_text,
+                                        "discount_slope" => $discount_slope,
+                                        "discount_table" => $discount_table,
+                                        "discount_avail" => $discount_avail,
+                                        "supplier_internal_product_id" => $Prod_ID,
+                                        "min_amount" => $default_product_info["min_amount"],
+                                        "mult_order_quantity" => $default_product_info["mult_order_quantity"],
+                                        "r_avail" => $avail,
+                                        "generate_similar_products" => "N"
+                                        //						"update_search_index" => $update_search_index
+                                    ];
 
-                                        func_array2update("products", $query_data, "productid = '$productid'");
+                                    func_array2update("products", $query_data, "productid = '$productid'");
 
 #
 ##
@@ -5244,47 +5244,48 @@ function func_BUYSEASONS_GENERAL_PRODUCT_FEED($product_feed_info){
                                 	                }
 						}
 
-						if ($image_found){
-                                                        $img_info = getimagesize($image_file_path);
+                        if ($image_found) {
+                            $img_info = getimagesize($image_file_path);
 
-                                                        $image_data['id'] = $productid;
-                                                        $image_data['date'] = time();
-                                                        $image_data['image_path'] = $image_file_path;
-                                                        $image_data['image_type'] = $img_info["mime"];
-                                                        $image_data['image_x'] = $img_info[0];
-                                                        $image_data['image_y'] = $img_info[1];
-                                                        $image_data['alt'] = addslashes($PRODUCT_NAME);
-                                                        $image_data['avail'] = 'Y';
-                                                        $image_data['orderby'] = '10';
+                            $image_data['id'] = $productid;
+                            $image_data['date'] = time();
+                            $image_data['image_path'] = $image_file_path;
+                            $image_data['image_type'] = $img_info["mime"];
+                            $image_data['image_x'] = $img_info[0];
+                            $image_data['image_y'] = $img_info[1];
+                            $image_data['alt'] = ($PRODUCT_NAME);
+                            $image_data['avail'] = 'Y';
+                            $image_data['orderby'] = '10';
 
-							$gen_new_D_img = false;
-							if ($image_data['image_y'] >= $image_data['image_x'] && $image_data['image_y'] > 800){
-								$new_image_y = 800;
-								$new_image_x = ($image_data['image_x']/$image_data['image_y'])*$new_image_y;
-								$new_image_x = intval($new_image_x);
-								$gen_new_D_img = true;
-							} elseif ($image_data['image_y'] < $image_data['image_x'] && $image_data['image_x'] > 620){
-                                                                $new_image_x = 620;
-                                                                $new_image_y = ($image_data['image_y']/$image_data['image_x'])*$new_image_x;
-								$new_image_y = intval($new_image_y);
-								$gen_new_D_img = true;
-                                                        }
+                            $gen_new_D_img = false;
+                            if ($image_data['image_y'] >= $image_data['image_x'] && $image_data['image_y'] > 800) {
+                                $new_image_y = 800;
+                                $new_image_x = ($image_data['image_x'] / $image_data['image_y']) * $new_image_y;
+                                $new_image_x = intval($new_image_x);
+                                $gen_new_D_img = true;
+                            }
+                            elseif ($image_data['image_y'] < $image_data['image_x'] && $image_data['image_x'] > 620) {
+                                $new_image_x = 620;
+                                $new_image_y = ($image_data['image_y'] / $image_data['image_x']) * $new_image_x;
+                                $new_image_y = intval($new_image_y);
+                                $gen_new_D_img = true;
+                            }
 
-							if ($gen_new_D_img){
+                            if ($gen_new_D_img) {
 
-								$IMAGE_URL .= "?is=".$new_image_x.",".$new_image_y.",0xffffff";
-								@copy($IMAGE_URL, $image_file_path);
-							
-								$res = func_resize_image($image_data["image_path"], $new_image_x, $new_image_y);
-								if (!empty($res["file_path"])){
-									if (@copy($res["file_path"], $image_file_path)){
-       				                                                $image_data['image_x'] = $res["image_x"];
-        	        		                                        $image_data['image_y'] = $res["image_y"];
-										$image_data['image_type'] = $res["image_type"];
-									}
-									unset($res);
-								}
-							}
+                                $IMAGE_URL .= "?is=" . $new_image_x . "," . $new_image_y . ",0xffffff";
+                                @copy($IMAGE_URL, $image_file_path);
+
+                                $res = func_resize_image($image_data["image_path"], $new_image_x, $new_image_y);
+                                if (!empty($res["file_path"])) {
+                                    if (@copy($res["file_path"], $image_file_path)) {
+                                        $image_data['image_x'] = $res["image_x"];
+                                        $image_data['image_y'] = $res["image_y"];
+                                        $image_data['image_type'] = $res["image_type"];
+                                    }
+                                    unset($res);
+                                }
+                            }
 
 							$image_data['image_size'] = filesize($image_file_path);
 

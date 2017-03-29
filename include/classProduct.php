@@ -167,7 +167,7 @@ class classProduct extends Data
             if ($res) {
                 if ($add2History) {
                     $aInsertArray = ['productid' => $this->getProductId(),
-                        'verification_note' => addslashes($sNote),
+                        'verification_note' => ($sNote),
                         'timestamp' => $oDatetime->getTimestamp(),
                         'username' => $login,
                         'oldstatusid' => $this->getField('verification_statusid'),

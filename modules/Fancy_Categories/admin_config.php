@@ -139,7 +139,6 @@ elseif ($REQUEST_METHOD == 'GET' && !empty($configuration)) {
 				"value" => $fcat_skins[$k]['name'],
 				"topic" => "Options"
 			);
-			$query_data = func_addslashes($query_data);
 			func_array2insert("languages", $query_data);
 		}
 		else {

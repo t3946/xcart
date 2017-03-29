@@ -102,8 +102,6 @@ if ($import_step == "define") {
 		if (is_array($row['variants']))
 			$row['variants'] = implode("\n", $row['variants']);
 
-		$data = func_addslashes($row);
-
 		# Update config variables
 		if (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[config] WHERE name = '$data[name]' AND category = '$data[category]'")) {
 			func_array2update("config", $data, "name = '$data[name]' AND category = '$data[category]'");

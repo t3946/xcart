@@ -138,8 +138,8 @@ if ($REQUEST_METHOD == "POST") {
 					"rma_id" => $rma_id,
 					"productid" => $v["productid"],
 					"itemid" => $itemid,
-					"productcode" => addslashes($productcode),
-					"product" => addslashes($product),
+					"productcode" => ($productcode),
+					"product" => ($product),
 					"amount" => $v["amount"],
 					"would_like" => $v["would_like"]
 				);

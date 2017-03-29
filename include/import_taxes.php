@@ -139,14 +139,14 @@ elseif ($import_step == "finalize") {
 			$_taxid = func_query_first_cell("SELECT taxid FROM $sql_tbl[taxes] WHERE tax_name='".addslashes($tax["tax"])."' LIMIT 1");
 			
 		$data = array(
-			"tax_name"				=> addslashes($tax["tax"]), 
-			"formula"				=> addslashes($tax["formula"]), 
+			"tax_name"				=> ($tax["tax"]),
+			"formula"				=> ($tax["formula"]),
 			"address_type"			=> $tax['address_type'], 
 			"active"				=> $tax['active'], 
 			"price_includes_tax"	=> $tax['price_includes_tax'], 
 			"display_including_tax"	=> $tax['display_including_tax'], 
 			"display_info"			=> $tax['display_info'], 
-			"regnumber"				=> addslashes($tax["regnumber"]), 
+			"regnumber"				=> ($tax["regnumber"]),
 			"priority"				=> $tax['priority']
 		);
 
