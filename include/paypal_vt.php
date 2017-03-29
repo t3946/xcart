@@ -291,23 +291,24 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
             $result = func_paypal_look_up_payment($Access_Token, $orderTransaction->transaction_id, $transaction_type);
             if (!empty($result["id"])) {
                 $transaction_id = $result["id"];
+                $transaction_total = (empty($result["amount"]["total"])) ? $orderTransaction->transaction_amount : $result["amount"]["total"];
                 switch($result['state']) {
                     case 'expired':
                         $transaction_status = 'Expired';
                         break;
                     case 'pending':
                         $transaction_status = 'Pending';
-                        $transaction_total = $orderTransaction->transaction_amount;
                         $transaction_currency = $orderTransaction->transaction_currency;
                         break;
+                    case 'completed':
                     case 'refunded':
                         $transaction_status = $result['state'];
-                        $transaction_total = $orderTransaction->transaction_amount;
                         $transaction_currency = $orderTransaction->transaction_currency;
                         break;
                 }
                 $orderTransaction->transaction_status = $transaction_status;
                 $orderTransaction->transaction_response = $result;
+                $orderTransaction->transaction_amount = $transaction_total;
                 $orderTransaction->save();
             }
         }

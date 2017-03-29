@@ -259,8 +259,6 @@ elseif ($import_step == "finalize") {
 			func_unset($row, "s_address_2");
 		}
 
-		$data = func_addslashes($row);
-
 		if (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[customers] WHERE login = '$data[login]'") != 0) {
 			# Update user
 			unset($data['login']);

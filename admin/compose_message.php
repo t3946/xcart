@@ -64,13 +64,18 @@ if (($REQUEST_METHOD == "POST") && ($mode == "send_message")) {
 	$mail_smarty->assign("tracking_links_carrier", $tracking_links_carrier);
 
 	$oMail = \Xcart\App\Main\Xcart::app()->mail;
-	$oMail->to = $to;
+	$oMail->init();
+    $oMail->to = $to;
 	$oMail->from = $from;
-	$oMail->reply_to = null;
 	$oMail->body = $body;
 	$oMail->subject = $subject;
 	$oMail->subject_template = 'mail/compose_message_subj.tpl';
 	$oMail->body_template = 'mail/compose_message.tpl';
+	if (!empty($_FILES) && is_array($_FILES)) {
+		foreach ($_FILES as $file) {
+            $oMail->addAttachment(['file' => $file["tmp_name"], 'name' => $file["name"]]);
+        }
+	}
 	if ($department == "our_customer_service"){
 		$oMail->addHeader(['X-Xcart-Label' => 'order-logs']);
 	} else {
@@ -78,6 +83,7 @@ if (($REQUEST_METHOD == "POST") && ($mode == "send_message")) {
 	}
 	$oMail->sendEmail();
 	if ($department == "third_party"){
+        $oMail->attachments=[];
 		$oMail->to = "helpdesk@s3stores.com";
 		$oMail->sendEmail();
 	}

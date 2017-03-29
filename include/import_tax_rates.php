@@ -273,10 +273,10 @@ elseif ($import_step == "finalize") {
 		$data = array(
 			"taxid"			=> $taxid, 
 			"zoneid"		=> $zoneid, 
-			"formula"		=> addslashes($tax_rate["formula"]), 
+			"formula"		=> ($tax_rate["formula"]),
 			"rate_value"	=> $tax_rate['rate'], 
 			"rate_type"		=> $tax_rate['type'],
-			"provider"		=> addslashes($tax_rate['provider'])
+			"provider"		=> ($tax_rate['provider'])
 		);
 
 		# Update tax rate

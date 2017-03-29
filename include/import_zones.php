@@ -272,7 +272,7 @@ elseif ($import_step == "finalize") {
 		}
 
 		# Update/insert zone...
-		$data = array("zone_name" => addslashes($zone_name), "provider" => addslashes($import_data_provider));
+		$data = array("zone_name" => ($zone_name), "provider" => ($import_data_provider));
 		if (!empty($zoneid)) {
 			func_array2update("zones", $data, "zoneid='$zoneid'");
 			$result["zones"]["updated"]++;

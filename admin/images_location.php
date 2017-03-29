@@ -109,7 +109,7 @@ if ($REQUEST_METHOD == "POST") {
 		}
 
 		if ($is_update) {
-			$config_data = func_addslashes(func_array_merge($config_data, $v));
+			$config_data = (func_array_merge($config_data, $v));
 			$config_data['itype'] = $k;
 			func_array2insert("setup_images", $config_data, true);
 		}

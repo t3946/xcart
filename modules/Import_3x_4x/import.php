@@ -121,7 +121,7 @@ if (empty($import_layout)) {
 		$import_layout = implode(",", $import_layout);
 		unset($fields_layout);
 
-		func_array2insert("config", array("name" => "import_layout", "value" => addslashes($import_layout)), true);
+		func_array2insert("config", array("name" => "import_layout", "value" => ($import_layout)), true);
 	}
 }
 
@@ -139,7 +139,7 @@ if ($mode == "layout") {
 	}
 
 	$import_layout = implode (",", $vals);
-	func_array2insert("config", array("name" => "import_layout", "value" => addslashes($import_layout)), true);
+	func_array2insert("config", array("name" => "import_layout", "value" => ($import_layout)), true);
 
 	func_header_location("import_3x_4x.php?import_layout=".urlencode($import_layout));
 }
@@ -294,7 +294,6 @@ function func_create_product_options($productid, $string) {
 				unset($class[$k]);
 		}
 				
-		$class = func_array_map("addslashes", $class);
 		$classid = func_query_first_cell("SELECT classid FROM $sql_tbl[classes] WHERE productid = '$productid' AND class = '$class[class]'");
 		if ($classid) {
 			func_array2update("classes", $class, "classid = '$classid'");
@@ -465,8 +464,8 @@ function func_create_product_options_3x($productid, $options_string) {
 
 		$query_data = array(
 			"productid" => $productid,
-			"class" => addslashes($product_option['optclass']),
-			"classtext" => addslashes(empty($product_option['opttext']) ? $product_option['optclass'] : $product_option['opttext']),
+			"class" => ($product_option['optclass']),
+			"classtext" => (empty($product_option['opttext']) ? $product_option['optclass'] : $product_option['opttext']),
 			"orderby" => intval($product_option['orderby']),
 			"is_modifier" => empty($product_option['options']) ? "T" : "Y"
 		);
@@ -488,7 +487,7 @@ function func_create_product_options_3x($productid, $options_string) {
 
 			$query_data = array(
 				"classid" => $classid,
-				"option_name" => addslashes($match[1]),
+				"option_name" => ($match[1]),
 				"orderby" => $i,
 				"price_modifier" => doubleval($match[2]),
 				"modifier_type" => ($match[3] == '%') ? "%" : "$"
@@ -1491,7 +1490,7 @@ if ((($REQUEST_METHOD=="POST" && $mode=="import") || ($REQUEST_METHOD=="GET" && 
     					$service_name = "0".$service_name;
 
 					$query_data = array(
-						"provider" => addslashes($login),
+						"provider" => ($login),
 						"field" => $res[0],
 						"service_name" => $service_name_prefix.$service_name
 					);
@@ -1517,7 +1516,7 @@ if ((($REQUEST_METHOD=="POST" && $mode=="import") || ($REQUEST_METHOD=="GET" && 
 					$query_data = array(
 						"productid" => $productid,
 						"fieldid" => $fieldid,
-						"value" => addslashes($extra_data[$key])
+						"value" => ($extra_data[$key])
 					);
 					func_array2insert("extra_field_values", $query_data, true);
 				}

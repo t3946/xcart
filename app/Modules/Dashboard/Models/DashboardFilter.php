@@ -82,6 +82,18 @@ class DashboardFilter extends Model
                 'null' => true,
                 'verboseName' => 'Direct link',
             ],
+            'sorting' => [
+                'class' => IntField::className(),
+                'length' => 2,
+                'null' => true,
+                'verboseName' => 'Sorting order list',
+                'default' => 1,
+                'choices' => [
+                    1 => 'Priority shipping, Events count, Date',
+                    10 => 'Date ASC',
+                    11 => 'Date DESC',
+                ],
+            ],
             'form_data' => [
                 'class' => JsonField::className(),
                 'null' => false,
@@ -120,7 +132,7 @@ class DashboardFilter extends Model
     public function getSearchStorage()
     {
         if (!$this->s_store) {
-            $this->s_store = new OrderSearchStore($this->form_data, $this->id);
+            $this->s_store = new OrderSearchStore($this->form_data, $this);
         }
 
         return $this->s_store;

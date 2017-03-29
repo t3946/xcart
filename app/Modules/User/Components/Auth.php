@@ -3,6 +3,7 @@ namespace Modules\User\Components;
 
 
 use Modules\User\Models\UserModel;
+use Xcart\App\Cli\Cli;
 use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Interfaces\AuthInterface;
 use Xcart\App\Main\Xcart;
@@ -73,16 +74,22 @@ class Auth implements AuthInterface
 
     public function fetchUser()
     {
-        $user = $this->getSessionUser();
-        if (!$user) {
-            if ($user = $this->getCookieUser()) {
-                $this->updateSession($user);
+        $user = null;
+
+        if (!Cli::isCli()) {
+            $user = $this->getSessionUser();
+            if (!$user) {
+                if ($user = $this->getCookieUser()) {
+                    $this->updateSession($user);
+                }
             }
         }
+
         if (!$user) {
             $class = $this->class;
             $user = new $class();
         }
+
         return $user;
     }
 

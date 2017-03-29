@@ -60,7 +60,7 @@ $trstat = func_query_first_cell("SELECT trstat FROM $sql_tbl[cc_pp3_data] WHERE 
 $oids = explode('|', $trstat);
 $oids[0] = 'CALL';
 
-$update_params['trstat'] = addslashes(implode('|', $oids));
+$update_params['trstat'] = (implode('|', $oids));
 $update_params['is_callback'] = 'N';
 
 func_array2update('cc_pp3_data', $update_params, "ref = '".$skey."'");

@@ -138,13 +138,13 @@ elseif ($import_step == "finalize") {
 				continue;
 
 			$data = array(
-				"class"		=> addslashes($row['class_name'][$k]),
-				"classtext"	=> addslashes($row['descr'][$k])
+				"class"		=> ($row['class_name'][$k]),
+				"classtext"	=> ($row['descr'][$k])
 			);
 
 			# Add class language labels
 			if (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[class_lng] WHERE classid = '$_classid' AND code = '".addslashes($row['code'][$k])."'") == 0) {
-				$data["code"]		= addslashes($row['code'][$k]);
+				$data["code"]		= ($row['code'][$k]);
 				$data["classid"]	= $_classid;
 				func_array2insert("class_lng", $data);
 				$result[strtolower($section)]["added"]++;

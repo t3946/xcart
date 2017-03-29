@@ -109,9 +109,9 @@ function cc_processing($subscriptionid)
 	$payment_method = "Recurring billing (".$module_params["module_name"].")";
 
     $query_data = array(
-        'login'             => addslashes($userinfo['login']), 
-        'total'             => addslashes($product['price_period']),
-        'subtotal'          => addslashes($product['price_period']),
+        'login'             => ($userinfo['login']),
+        'total'             => ($product['price_period']),
+        'subtotal'          => ($product['price_period']),
         'shipping_cost'     => '0',
         'shippingid'        => '0',
         'tax'               => '0',
@@ -120,25 +120,25 @@ function cc_processing($subscriptionid)
         'coupon_discount'   => '0',
         'date'              => time(),
         'cb_status'         => 'I',
-        'payment_method'    => addslashes($payment_method),
+        'payment_method'    => ($payment_method),
         'flag'              => 'N',
-        'title'             => addslashes($userinfo['title']),
-        'firstname'         => addslashes($userinfo['firstname']),
-        'lastname'          => addslashes($userinfo['lastname']),
-        'company'           => addslashes($userinfo['company']),
-        'b_address'         => addslashes($userinfo['b_address']),
-        'b_city'            => addslashes($userinfo['b_city']),
-        'b_state'           => addslashes($userinfo['b_state']),
-        'b_country'         => addslashes($userinfo['b_country']),
-        'b_zipcode'         => addslashes($userinfo['b_zipcode']),
-        's_address'         => addslashes($userinfo['s_address']),
-        's_city'            => addslashes($userinfo['s_city']),
-        's_state'           => addslashes($userinfo['s_state']),
-        's_country'         => addslashes($userinfo['s_country']),
-        's_zipcode'         => addslashes($userinfo['s_zipcode']),
-        'phone'             => addslashes($userinfo['phone']),
-        'fax'               => addslashes($userinfo['fax']),
-        'email'             => addslashes($userinfo['email']),
+        'title'             => ($userinfo['title']),
+        'firstname'         => ($userinfo['firstname']),
+        'lastname'          => ($userinfo['lastname']),
+        'company'           => ($userinfo['company']),
+        'b_address'         => ($userinfo['b_address']),
+        'b_city'            => ($userinfo['b_city']),
+        'b_state'           => ($userinfo['b_state']),
+        'b_country'         => ($userinfo['b_country']),
+        'b_zipcode'         => ($userinfo['b_zipcode']),
+        's_address'         => ($userinfo['s_address']),
+        's_city'            => ($userinfo['s_city']),
+        's_state'           => ($userinfo['s_state']),
+        's_country'         => ($userinfo['s_country']),
+        's_zipcode'         => ($userinfo['s_zipcode']),
+        'phone'             => ($userinfo['phone']),
+        'fax'               => ($userinfo['fax']),
+        'email'             => ($userinfo['email']),
     );
 
     $orderid = func_array2insert('orders', $query_data);
@@ -178,8 +178,8 @@ function cc_processing($subscriptionid)
     # Update order status
     #
 	$query_data = array(
-		'cb_status' => addslashes($order_status),
-		'details' => addslashes(text_crypt($order_details))
+		'cb_status' => ($order_status),
+		'details' => (text_crypt($order_details))
 	);
 	func_array2update("orders", $query_data, "orderid = '$orderid'");
 
@@ -198,8 +198,8 @@ function cc_processing($subscriptionid)
 		"productid" => $product['productid'],
 		"amount" => 1,
 		"price" => $product['price_period'],
-		"provider" => addslashes($product["provider"]),
-		"extra_data" => addslashes(serialize($extra_data))
+		"provider" => ($product["provider"]),
+		"extra_data" => (serialize($extra_data))
 	);
 	$product['itemid'] = func_array2insert("order_details", $query_data);
 
@@ -355,7 +355,7 @@ if ($subs_pg_avail < 1) {
 				$str .= "     new pay date:...".date($date_format_short, $newdate)."\n\n";
 				$pay_dates[] = $newdate;
 				sort($pay_dates);
-				func_array2update("subscriptions", array("pay_dates" => addslashes(serialize($pay_dates))), "productid = '$product[productid]'");
+				func_array2update("subscriptions", array("pay_dates" => (serialize($pay_dates))), "productid = '$product[productid]'");
 			}
         }
     }

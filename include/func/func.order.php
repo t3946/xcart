@@ -947,7 +947,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
     # Lock place order process
     #
     func_lock("place_order");
-
+    
     $mes .= "STEP 2 " . date("H:i:s") . "\n";
 
     $userinfo['title']   = func_get_title($userinfo['titleid'], $config['default_admin_language']);
@@ -968,8 +968,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
         return false;
     }
-
-    $userinfo["email"] = addslashes($userinfo["email"]);
 
     $orderids = [];
 
@@ -1104,7 +1102,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
         $mes .= "STEP A " . date("H:i:s") . "\n";
 
-        $taxes_applied = addslashes(serialize($current_order["whole_taxes"]));
+        $taxes_applied = (serialize($current_order["whole_taxes"]));
 
         $discount_coupon = $current_order["coupon"];
         if (!empty($current_order["coupon"])) {
@@ -1148,12 +1146,12 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         # Insert into orders
         #
         $insert_data = [
-            'login'                                    => addslashes($userinfo['login']),
-            'sessid'                                   => addslashes($$XCART_SESSION_NAME),
+            'login'                                    => ($userinfo['login']),
+            'sessid'                                   => ($$XCART_SESSION_NAME),
             'is_mobile_checkout'                       => $is_mobile_checkout,
             'cart_number'                              => $cart["cart_number"],
             'membershipid'                             => $userinfo['membershipid'],
-            'membership'                               => addslashes($userinfo['membership']),
+            'membership'                               => ($userinfo['membership']),
             'total'                                    => $current_order['total_cost'],
             'shipping_cost'                            => $shipping_cost,
             'total_shipping_charge_on_orig_po'         => ($order_status == "IO" && $geo_litecity_location["country"] == "US" ? $shipping_cost : '0'),
@@ -1163,18 +1161,18 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             'tax'                                      => $current_order['tax_cost'],
             'taxes_applied'                            => $taxes_applied,
             'discount'                                 => $current_order['discount'],
-            'coupon'                                   => addslashes(@$current_order['coupon']),
+            'coupon'                                   => (@$current_order['coupon']),
             'coupon_discount'                          => $current_order['coupon_discount'],
             'date'                                     => time(),
             'cb_status'                                => $order_status,
             'dc_status'                                => 'T',
             'bd_status'                                => 'W',
-            'payment_method'                           => addslashes($payment_method),
+            'payment_method'                           => ($payment_method),
             'paymentid'                                => $cart['paymentid'],
             'payment_surcharge'                        => $current_order['payment_surcharge'],
             'flag'                                     => 'N',
-            'details'                                  => addslashes(text_crypt($order_details)),
-            'po_number'                                => addslashes($po_num),
+            'details'                                  => (text_crypt($order_details)),
+            'po_number'                                => ($po_num),
             'customer_notes'                           => $customer_notes,
             'clickid'                                  => $partner_clickid,
             'language'                                 => $userinfo['language'],
@@ -1224,7 +1222,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 continue;
             }
 
-            $insert_data[$k] = addslashes($userinfo[$k]);
+            $insert_data[$k] = ($userinfo[$k]);
         }
 
         $_fields = ['title', 'firstname', 'lastname', 'address', 'city', 'county', 'state', 'country', 'zipcode'];
@@ -1232,7 +1230,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             foreach ($_fields as $k) {
                 $f = $p . $k;
                 if (isset($userinfo[$f])) {
-                    $insert_data[$f] = addslashes($userinfo[$f]);
+                    $insert_data[$f] = ($userinfo[$f]);
                 }
             }
         }
@@ -1298,7 +1296,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             else {
                 $oOrder = \Xcart\Order::model(['orderid' => $orderid]);
                 try {
-                    $oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
+                    $oPoPipeline->uploadPurchaseOrder(($po_num), $oOrder->getField('storefrontid'), 'website');
                 }
                 catch (Exception $ex) {
                     \Xcart\Logs::_log('purchase_orders', $oPoPipeline->getPOId(), \Xcart\Logs::LOG_TYPE_CLIENT, sprintf(\Xcart\POPipeline::PO_HAS_BEEN_UPLOADED, $oPoPipeline->getOrderNumber() . " (" . $oPoPipeline->getOrderOriginalFileName() . ")"));
@@ -1315,7 +1313,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 $oPoPipeline = \Xcart\POPipeline::model();
                 $oOrder      = \Xcart\Order::model(['orderid' => $orderid]);
                 try {
-                    $oPoPipeline = $oPoPipeline->uploadPurchaseOrder(addslashes($po_num), $oOrder->getField('storefrontid'), 'website');
+                    $oPoPipeline = $oPoPipeline->uploadPurchaseOrder(($po_num), $oOrder->getField('storefrontid'), 'website');
                     $oPoPipeline->setOrderToPO($orderid);
                     $oPoPipeline->_save();
                     $oOrder->updateField('orig_po', $oOrder->getOrderStoreFront()->getStoreFrontURL().$oPoPipeline->getOrderFileLink());
@@ -1394,14 +1392,14 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                         'orderid'           => $orderid,
                         'productid'         => $product['productid'],
                         'item_cost_to_us'   => $product["cost_to_us"],
-                        'product'           => addslashes($product['product_orig']),
-                        'product_options'   => addslashes($product['product_options']),
+                        'product'           => ($product['product_orig']),
+                        'product_options'   => ($product['product_options']),
                         'amount'            => $product['amount'],
                         'price'             => $product['price'],
-                        'provider'          => addslashes($product["provider"]),
-                        'extra_data'        => addslashes(serialize($product["extra_data"])),
-                        'original_provider' => addslashes($original_provider),
-                        'productcode'       => addslashes($product['productcode']),
+                        'provider'          => ($product["provider"]),
+                        'extra_data'        => (serialize($product["extra_data"])),
+                        'original_provider' => ($original_provider),
+                        'productcode'       => ($product['productcode']),
                     ];
 
                     $products[$pk]['itemid'] = func_array2insert('order_details', $insert_data);
@@ -1591,21 +1589,21 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                 $insert_data = [
                     'gcid'                => $gcid,
                     'orderid'             => $orderid,
-                    'purchaser'           => addslashes($giftcert['purchaser']),
-                    'recipient'           => addslashes($giftcert['recipient']),
+                    'purchaser'           => ($giftcert['purchaser']),
+                    'recipient'           => ($giftcert['recipient']),
                     'send_via'            => $giftcert['send_via'],
                     'recipient_email'     => @$giftcert['recipient_email'],
-                    'recipient_firstname' => addslashes(@$giftcert['recipient_firstname']),
-                    'recipient_lastname'  => addslashes(@$giftcert['recipient_lastname']),
-                    'recipient_address'   => addslashes(@$giftcert['recipient_address']),
-                    'recipient_city'      => addslashes(@$giftcert['recipient_city']),
+                    'recipient_firstname' => (@$giftcert['recipient_firstname']),
+                    'recipient_lastname'  => (@$giftcert['recipient_lastname']),
+                    'recipient_address'   => (@$giftcert['recipient_address']),
+                    'recipient_city'      => (@$giftcert['recipient_city']),
                     'recipient_county'    => @$giftcert['recipient_county'],
                     'recipient_state'     => @$giftcert['recipient_state'],
                     'recipient_country'   => @$giftcert['recipient_country'],
                     'recipient_zipcode'   => @$giftcert['recipient_zipcode'],
                     'recipient_phone'     => @$giftcert['recipient_phone'],
                     'recipient_phone_ext' => @$giftcert['recipient_phone_ext'],
-                    'message'             => addslashes($giftcert['message']),
+                    'message'             => ($giftcert['message']),
                     'amount'              => $giftcert['amount'],
                     'debit'               => $giftcert['amount'],
                     'status'              => 'P',
@@ -1709,6 +1707,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                             $mail_smarty->assign('type', 'C');
                             $attach_pdf_invoice = $oOrderNotification->getField('customer_attach_pdf_invoice');
                             $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail->init();
                             $oMail->to = $userinfo['email'];
                             $oMail->from = $config['Company']['orders_department'];
                             $oMail->reply_to = null;
@@ -1944,6 +1943,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 func_log_order($orderid, 'S', $order_notes);
 
                 $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                $oMail->init();
                 $oMail->to = $to;
                 $oMail->from = $from;
                 $oMail->reply_to = null;
@@ -3208,7 +3208,7 @@ function func_data_recrypt()
     func_display_service_header("lbl_reencrypting_mkey");
     while ($order = db_fetch_array($orders)) {
         $details = text_decrypt($order['details']);
-        $details = (is_string($details)) ? addslashes(func_crypt_order_details($details)) : "";
+        $details = (is_string($details)) ? (func_crypt_order_details($details)) : "";
 
         func_array2update("orders", ["details" => $details], "orderid = '$order[orderid]'");
         func_flush(". ");
@@ -3238,7 +3238,7 @@ function func_data_decrypt()
     func_display_service_header("lbl_reencrypting_skey");
     while ($order = db_fetch_array($orders)) {
         $details = text_decrypt($order['details']);
-        $details = is_string($details) ? addslashes(text_crypt($details)) : "";
+        $details = is_string($details) ? (text_crypt($details)) : "";
 
         func_array2update("orders", ["details" => $details], "orderid = '$order[orderid]'");
         func_flush(". ");
@@ -3272,7 +3272,7 @@ function func_change_mpassword_recrypt($old_password)
         $merchant_password = $old_password;
         $details           = text_decrypt($order['details']);
         $merchant_password = $_merchant_password;
-        $details           = is_string($details) ? addslashes(func_crypt_order_details($details)) : "";
+        $details           = is_string($details) ? (func_crypt_order_details($details)) : "";
 
         func_array2update("orders", ["details" => $details], "orderid = '$order[orderid]'");
 
