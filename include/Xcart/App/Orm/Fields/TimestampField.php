@@ -22,25 +22,25 @@ class TimestampField extends IntField
             })
         ]);
     }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function beforeInsert(ModelInterface $model, $value)
-    {
-        if (($this->autoNow) || $model->getIsNewRecord()) {
-            $model->setAttribute($this->getAttributeName(), time());
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function beforeUpdate(ModelInterface $model, $value)
-    {
-        if ($this->autoNow && $model->getIsNewRecord() === false) {
-            $model->setAttribute($this->getAttributeName(), time());
-        }
-    }
+//
+//
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function beforeInsert(ModelInterface $model, $value)
+//    {
+//        if (($this->autoNow) || $model->getIsNewRecord()) {
+//            $model->setAttribute($this->getAttributeName(), time());
+//        }
+//    }
+//
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function beforeUpdate(ModelInterface $model, $value)
+//    {
+//        if ($this->autoNow && $model->getIsNewRecord() === false) {
+//            $model->setAttribute($this->getAttributeName(), time());
+//        }
+//    }
 }
