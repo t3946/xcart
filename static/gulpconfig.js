@@ -26,6 +26,11 @@ module.exports.backend = {
         fonts: 'backend/dist/fonts',
         raw: 'backend/dist/raw'
     },
+    config: {
+        babel: {
+            presets: ['es2015']
+        }
+    },
     src: {
         js: [
             'backend/js/**/*.js'
