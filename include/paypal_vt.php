@@ -303,7 +303,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array("auth
                     case 'completed':
                     case 'refunded':
                         $transaction_status = $result['state'];
-                        $transaction_total = $orderTransaction->transaction_amount;
+                        $transaction_total = (empty($result["amount"]["total"])) ? $orderTransaction->transaction_amount : $result["amount"]["total"];
                         $transaction_currency = $orderTransaction->transaction_currency;
                         break;
                 }
