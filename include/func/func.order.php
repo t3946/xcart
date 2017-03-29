@@ -1706,6 +1706,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                             $mail_smarty->assign('type', 'C');
                             $attach_pdf_invoice = $oOrderNotification->getField('customer_attach_pdf_invoice');
                             $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail->init();
                             $oMail->to = $userinfo['email'];
                             $oMail->from = $config['Company']['orders_department'];
                             $oMail->reply_to = null;
@@ -1941,6 +1942,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 func_log_order($orderid, 'S', $order_notes);
 
                 $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                $oMail->init();
                 $oMail->to = $to;
                 $oMail->from = $from;
                 $oMail->reply_to = null;
