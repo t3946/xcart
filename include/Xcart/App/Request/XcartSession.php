@@ -1,8 +1,12 @@
 <?php
 namespace Xcart\App\Request;
 
+use Xcart\App\Main\Xcart;
+
 class XcartSession extends Session
 {
+    private $know_variables= [];
+
 
     public function add($key, $value)
     {
@@ -56,21 +60,23 @@ class XcartSession extends Session
 //    {
 //        $GLOBALS['XCARTSESSID'] = false;
 //
-//        $model = StorefrontModel::objects()->filter(['domain' => $_SERVER['HTTP_HOST']])->limit(1)->get();
-//        if ($model) {
-//            $key = 'xid'.$model->storefrontid;
+//        /** @var \Modules\Sites\SitesModule $module */
+//        if ($module = Xcart::app()->getModule('Sites')) {
+//            if ($model = $module->getSite()) {
+//                $key = 'xid' . $model->storefrontid;
+//            }
 //        }
 //        else {
 //            $key = 'xid0';
 //        }
 //
-//        if (!empty($_COOKIE[$key])) {
-//            $id = $_COOKIE[$key];
+//        if ($this->request->cookie->get($key)) {
+//            $id = $this->request->cookie->get($key);
+//            $GLOBALS['XCARTSESSID'] = $id;
 //        }
+//        else {
 //
-//        $GLOBALS['XCARTSESSID'] = $id;
-//
-//        x_session_start($id);
+//        }
 //    }
 
     public function remove($key)
