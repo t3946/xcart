@@ -945,8 +945,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
     #
     func_lock("place_order");
     
-    func_dump($userinfo);
-
     $mes .= "STEP 2 " . date("H:i:s") . "\n";
 
     $userinfo['title']   = func_get_title($userinfo['titleid'], $config['default_admin_language']);
