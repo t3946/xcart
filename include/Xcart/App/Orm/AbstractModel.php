@@ -113,9 +113,9 @@ class AbstractModel extends Base
             }
         }
 
-        foreach (static::getMeta()->getFields() as $name => $config)
+        /** @var \Xcart\App\Orm\Fields\Field $field */
+        foreach (static::getMeta()->getFields() as $name => $field)
         {
-            $field = $this->getField($name);
             if ($field->getSqlType()
                 && !$field->null
                 && empty($values[$field->getName()])
