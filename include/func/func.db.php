@@ -305,7 +305,7 @@ function func_array2insert($tbl, $data, $is_replace = false, $is_ignore = false)
     foreach ($data as $columnName => $value) {
         $columnList[] = $columnName;
         $paramPlaceholders[] = '?';
-        $paramValues[] = $value;
+        $paramValues[] = (empty($value) && $value !== 0) ? '' : $value;
         $paramTypes[] = func_get_sql_type($value);
     }
 
@@ -357,7 +357,7 @@ function func_array2update ($tbl, $data, $where = '') {
         foreach ($where as $columnName => $value) {
             $columnList[] = $columnName;
             $criteria[] = $columnName . ' = ?';
-            $paramValues[] = $value;
+            $paramValues[] = (empty($value) && $value !== 0) ? '' : $value;
             $paramTypes[] = func_get_sql_type($value);
         }
 
