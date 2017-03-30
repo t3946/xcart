@@ -1,60 +1,26 @@
 <?php
-/*****************************************************************************\
-+-----------------------------------------------------------------------------+
-| X-Cart                                                                      |
-| Copyright (c) 2001-2006 Ruslan R. Fazliev <rrf@rrf.ru>                      |
-| All rights reserved.                                                        |
-+-----------------------------------------------------------------------------+
-| PLEASE READ  THE FULL TEXT OF SOFTWARE LICENSE AGREEMENT IN THE "COPYRIGHT" |
-| FILE PROVIDED WITH THIS DISTRIBUTION. THE AGREEMENT TEXT IS ALSO AVAILABLE  |
-| AT THE FOLLOWING URL: http://www.x-cart.com/license.php                     |
-|                                                                             |
-| THIS  AGREEMENT  EXPRESSES  THE  TERMS  AND CONDITIONS ON WHICH YOU MAY USE |
-| THIS SOFTWARE   PROGRAM   AND  ASSOCIATED  DOCUMENTATION   THAT  RUSLAN  R. |
-| FAZLIEV (hereinafter  referred to as "THE AUTHOR") IS FURNISHING  OR MAKING |
-| AVAILABLE TO YOU WITH  THIS  AGREEMENT  (COLLECTIVELY,  THE  "SOFTWARE").   |
-| PLEASE   REVIEW   THE  TERMS  AND   CONDITIONS  OF  THIS  LICENSE AGREEMENT |
-| CAREFULLY   BEFORE   INSTALLING   OR  USING  THE  SOFTWARE.  BY INSTALLING, |
-| COPYING   OR   OTHERWISE   USING   THE   SOFTWARE,  YOU  AND  YOUR  COMPANY |
-| (COLLECTIVELY,  "YOU")  ARE  ACCEPTING  AND AGREEING  TO  THE TERMS OF THIS |
-| LICENSE   AGREEMENT.   IF  YOU    ARE  NOT  WILLING   TO  BE  BOUND BY THIS |
-| AGREEMENT, DO  NOT INSTALL OR USE THE SOFTWARE.  VARIOUS   COPYRIGHTS   AND |
-| OTHER   INTELLECTUAL   PROPERTY   RIGHTS    PROTECT   THE   SOFTWARE.  THIS |
-| AGREEMENT IS A LICENSE AGREEMENT THAT GIVES  YOU  LIMITED  RIGHTS   TO  USE |
-| THE  SOFTWARE   AND  NOT  AN  AGREEMENT  FOR SALE OR FOR  TRANSFER OF TITLE.|
-| THE AUTHOR RETAINS ALL RIGHTS NOT EXPRESSLY GRANTED BY THIS AGREEMENT.      |
-|                                                                             |
-| The Initial Developer of the Original Code is Ruslan R. Fazliev             |
-| Portions created by Ruslan R. Fazliev are Copyright (C) 2001-2006           |
-| Ruslan R. Fazliev. All Rights Reserved.                                     |
-+-----------------------------------------------------------------------------+
-\*****************************************************************************/
 
-#
-# $Id: func.db.php,v 1.9.2.10 2006/10/31 13:23:35 max Exp $
-#
-
-if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
-
-/***
- * Mimic for @mysql_real_escape_string
+/**
+ * @param $query
  *
- * @param array|string $inp
- * @return array|string
+ * @return \Doctrine\DBAL\Driver\Statement|mixed|null
+ * @throws \Doctrine\DBAL\DBALException
+ * @deprecated
  */
-function mysql_escape_mimic($inp) {
-    if(is_array($inp))
-        return array_map(__METHOD__, $inp);
-
-    if(!empty($inp) && is_string($inp)) {
-        return str_replace(array('\\', "\0", "\n", "\r", "'","\"", "\x1a"), array('\\\\', '\\0', '\\n', '\\r', "''", "\"", '\\Z'), $inp);
-    }
-
-    return $inp;
-}
-
 function db_query($query) {
     return \Xcart\Connection::getInstance()->executeQuery($query);
+}
+
+/**
+ * @param $query "UPDATE table_test set val1 = :val1, va2 = :val2 where id = :id"
+ * @param array $params ['val1' => $val1, 'val2' => $val2, 'id' => $id]
+ * @param array $types \PDO Param type [\PDO::PARAM_NULL, \PDO::PARAM_SRT, \PDO::PARAM_INT]
+ *
+ * @return \Doctrine\DBAL\Driver\Statement|mixed|null
+ * @throws \Doctrine\DBAL\DBALException
+ */
+function db_query_param($query, array $params, array $types = []) {
+    return \Xcart\Connection::getInstance()->executeQuery($query, $params, $types);
 }
 
 function db_result(\Doctrine\DBAL\Driver\Statement $result, $offset) {
@@ -180,23 +146,31 @@ function db_prepare_query($query, $params) {
     return implode('', $tokens);
 }
 
-#
-# New DB API: Executing parameterized queries
-# Example1:
-#   $query = "SELECT * FROM table WHERE field1=? AND field2=? AND field3='\\?'"
-#   $params = array (val1, val2)
-#   query to execute:
-#      "SELECT * FROM table WHERE field1='val1' AND field2='val2' AND field3='\\?'"
-# Example2:
-#   $query = "SELECT * FROM table WHERE field1=? AND field2 IN (?)"
-#   $params = array (val1, array(val2,val3))
-#   query to execute:
-#      "SELECT * FROM table WHERE field1='val1' AND field2 IN ('val2','val3')"
-#
-# Warning:
-#  1) all parameters must not be escaped with addslashes()
-#  2) non-parameter symbols '?' must be escaped with a '\'
-#
+/**
+ *
+ * New DB API: Executing parameterized queries
+ * Example1:
+ *   $query = "SELECT * FROM table WHERE field1=? AND field2=? AND field3='\\?'"
+ *   $params = array (val1, val2)
+ *   query to execute:
+ *      "SELECT * FROM table WHERE field1='val1' AND field2='val2' AND field3='\\?'"
+ * Example2:
+ *   $query = "SELECT * FROM table WHERE field1=? AND field2 IN (?)"
+ *   $params = array (val1, array(val2,val3))
+ *   query to execute:
+ *      "SELECT * FROM table WHERE field1='val1' AND field2 IN ('val2','val3')"
+ *
+ * Warning:
+ *  1) all parameters must not be escaped with addslashes()
+ *  2) non-parameter symbols '?' must be escaped with a '\'
+ *
+ * @param $query
+ * @param array $params
+ *
+ * @return \Doctrine\DBAL\Driver\Statement|mixed|null
+ * @throws \Doctrine\DBAL\DBALException
+ * @deprecated
+ */
 function db_exec($query, $params = []) {
     if (!is_array($params)) {
         $params = [$params];
@@ -204,10 +178,29 @@ function db_exec($query, $params = []) {
     return db_query(db_prepare_query($query, $params));
 }
 
-#
-# Execute mysql query and store result into associative array with
-# column names as keys
-#
+/**
+ * @param $query
+ * @param array $params
+ * @param array $types
+ *
+ * @return \Doctrine\DBAL\Driver\Statement|mixed|null
+ * @throws \Doctrine\DBAL\DBALException
+ */
+function db_exec_param($query, array $params, array $types = [])
+{
+    return db_query_param($query, $params, $types);
+}
+
+/**
+ * Execute mysql query and store result into associative array with
+ * column names as keys
+ *
+ * @param $query
+ *
+ * @return array|bool
+ * @throws \Doctrine\DBAL\DBALException
+ * @deprecated
+ */
 function func_query($query) {
     $result = false;
 
@@ -220,11 +213,38 @@ function func_query($query) {
     return $result;
 }
 
-#
-# Execute mysql query and store result into associative array with
-# column names as keys and then return first element of this array
-# If array is empty return array().
-#
+/**
+ * @param $query "SELECT table_test where id = :id"
+ * @param array $params ['id' => $id]
+ * @param array $types \PDO Param type [\PDO::PARAM_NULL, \PDO::PARAM_SRT, \PDO::PARAM_INT]
+ *
+ * @return array|bool
+ * @throws \Doctrine\DBAL\DBALException
+ */
+function func_query_param($query, array $params, array $types = [])
+{
+    $result = false;
+
+    if ($p_result = db_query_param($query, $params, $types)) {
+        while ($arr = db_fetch_array($p_result))
+            $result[] = $arr;
+        db_free_result($p_result);
+    }
+
+    return $result;
+}
+
+/**
+ *  Execute mysql query and store result into associative array with
+ * column names as keys and then return first element of this array
+ * If array is empty return array().
+ *
+ * @param $query
+ *
+ * @return array|mixed
+ * @throws \Doctrine\DBAL\DBALException
+ * @deprecated
+ */
 function func_query_first($query) {
     if ($p_result = db_query($query)) {
         $result = db_fetch_array($p_result);
@@ -234,11 +254,34 @@ function func_query_first($query) {
     return is_array($result) ? $result : array();
 }
 
-#
-# Execute mysql query and store result into associative array with
-# column names as keys and then return first cell of first element of this array
-# If array is empty return false.
-#
+/**
+ * @param $query
+ * @param array $param
+ * @param array $types
+ *
+ * @return array|mixed
+ * @throws \Doctrine\DBAL\DBALException
+ *
+ */
+function func_query_first_param($query, array $param, array $types = [])
+{
+    $result = [];
+
+    if ($p_result = db_query_param($query, $param, $types)) {
+        $result = db_fetch_array($p_result);
+        db_free_result($p_result);
+    }
+
+    return is_array($result) ? $result : [];
+}
+
+/**
+ * @param $query
+ *
+ * @return bool|mixed
+ * @throws \Doctrine\DBAL\DBALException
+ * @deprecated use func_query_first_cell_param
+ */
 function func_query_first_cell($query) {
     if ($p_result = db_query($query)) {
         $result = db_fetch_row($p_result);
@@ -248,6 +291,32 @@ function func_query_first_cell($query) {
     return is_array($result) ? $result[0] : false;
 }
 
+/**
+ * @param $query
+ * @param array $params
+ * @param array $types
+ *
+ * @return bool|mixed
+ * @throws \Doctrine\DBAL\DBALException
+ */
+function func_query_first_cell_param($query, array $params, array $types = [])
+{
+    if ($p_result = db_query_param($query, $params, $types)) {
+        $result = db_fetch_row($p_result);
+        db_free_result($p_result);
+    }
+
+    return is_array($result) ? $result[0] : false;
+}
+
+/**
+ * @param $query
+ * @param int $column
+ *
+ * @return array
+ * @throws \Doctrine\DBAL\DBALException
+ * @deprecated use func_query_column_param
+ */
 function func_query_column($query, $column = 0) {
     $result = array();
 
@@ -263,10 +332,43 @@ function func_query_column($query, $column = 0) {
     return $result;
 }
 
-#
-# Insert array data to table
-#
-function func_array2insert($tbl, $data, $is_replace = false, $is_ignore = false)
+/**
+ * @param $query
+ * @param array $params
+ * @param array $types
+ * @param int $column
+ *
+ * @return array
+ * @throws \Doctrine\DBAL\DBALException
+ */
+function func_query_column_param($query, array $params, array $types = [], $column = 0)
+{
+    $result = [];
+
+    $fetch_func = is_int($column) ? 'db_fetch_row' : 'db_fetch_array';
+
+    if ($p_result = db_query_param($query, $params, $types)) {
+        while ($row = $fetch_func($p_result))
+            $result[] = $row[$column];
+
+        db_free_result($p_result);
+    }
+
+    return $result;
+}
+
+/**
+ * Insert array data to table
+ *
+ * @param string $tbl Table name
+ * @param array $data Array to insert date
+ * @param bool $is_replace
+ * @param bool $is_ignore
+ *
+ * @return bool|null|string
+ * @throws \Doctrine\DBAL\DBALException
+ */
+function func_array2insert($tbl, array $data, $is_replace = false, $is_ignore = false)
 {
     global $sql_tbl;
 
@@ -322,9 +424,16 @@ function func_array2insert($tbl, $data, $is_replace = false, $is_ignore = false)
     return null;
 }
 
-#
-# Update array data to table + where statament
-#
+/**
+ * Update array data to table + where statament
+ *
+ * @param string $tbl Table name
+ * @param array $data Data to update
+ * @param string|array $where string statimern or associative array - implement as col AND col
+ *
+ * @return bool|int|mixed|null
+ * @throws \Doctrine\DBAL\DBALException
+ */
 function func_array2update ($tbl, $data, $where = '') {
     global $sql_tbl;
 
@@ -386,6 +495,16 @@ function func_get_sql_type($value)
     return \PDO::PARAM_STR;
 }
 
+/**
+ * @param $query
+ * @param bool $column
+ * @param bool $is_multirow
+ * @param bool $only_first
+ *
+ * @return array
+ * @throws \Doctrine\DBAL\DBALException
+ * @deprecated
+ */
 function func_query_hash($query, $column = false, $is_multirow = true, $only_first = false) {
     $result = array();
     $is_multicolumn = false;
@@ -463,13 +582,13 @@ function func_query_hash($query, $column = false, $is_multirow = true, $only_fir
 function func_genid($type) {
     global $sql_tbl;
 
-    db_query("INSERT INTO $sql_tbl[counters] (type) VALUES ('$type')");
+    db_query_param("INSERT INTO $sql_tbl[counters] (type) VALUES (:type)", ['type' => $type]);
     $value = db_insert_id();
 
     if ($value < 1)
         trigger_error("Cannot generate unique id", E_USER_ERROR);
 
-    db_query("DELETE FROM $sql_tbl[counters] WHERE type='$type' AND value<'$value'");
+    db_query_param("DELETE FROM $sql_tbl[counters] WHERE type=:type AND value < :value", ['type' => $type, 'value' => $value]);
 
     return $value;
 }
