@@ -3,6 +3,7 @@ namespace Modules\Order\Models;
 
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 
@@ -44,6 +45,13 @@ class OrderGroupInvoiceProductModel extends AutoMetaModel
                 'modelClass' => OrderDetailModel::className(),
                 'link' => ['itemid' => 'itemid'],
                 'null' => false,
+                'primary' => true,
+            ],
+            'item_string' => [
+                'field' => 'item_string',
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => '',
                 'primary' => true,
             ],
         ];

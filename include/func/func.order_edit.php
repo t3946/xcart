@@ -57,7 +57,6 @@ function func_check_tracking_number($linkid, $tracknum)
 
 function func_recalculate_accounting(&$group, $all_processors = [], $apply_per_trans = false, $refund = false)
 {
-    global $xcart_dir;
     $oOrderGroup = new Xcart\OrderGroup(['orderid' => $group['orderid'], 'manufacturerid' => $group['manufacturerid']]);
     $oOrderGroup->recalculateAccounting();
 }

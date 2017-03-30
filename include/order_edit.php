@@ -30,7 +30,11 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Xcart\OrderGroupInvoices;
+use Xcart\Manufacturer;
+use Xcart\Order;
 use Xcart\Paypal;
 
 global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt, $top_message, $mail_smarty;
@@ -50,7 +54,7 @@ x_session_register("intershipper_rates");
 x_session_register("intershipper_recalc");
 x_session_register("current_carrier", "UPS");
 
-$oOrder = new Xcart\Order(['orderid' => $orderid]);
+$oOrder = new Order(['orderid' => $orderid]);
 $smarty->assign('oOrder', $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 
@@ -1979,8 +1983,34 @@ if ($REQUEST_METHOD == "POST")
                                 if ($update_invoices_table_flag) {
                                     func_array2update("order_group_invoices_products", $invoices_products, "orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='$invoice_number' AND itemid='$itemid'");
                                 }
-
                                 $cost_to_us_for_products_charged += floatval($unit_cost_total);
+                            }
+                        }
+
+                        if ($invoice_data["extra_items_on_invoice"]) {
+                            if ($invoice_data["add_extra_value_type"]) {
+                                $params = [
+                                    'orderid' => $orderid,
+                                    'manufacturerid' => $certain_mid,
+                                    'invoice_number' => $invoice_number,
+                                    'itemid' => 0
+                                ];
+                                OrderGroupInvoiceProductModel::objects()->filter($params)->delete();
+                                foreach ($invoice_data["add_extra_value_type"] as $key => $value) {
+                                    if (!empty($invoice_data["add_extra_value_string"][$key])) {
+                                        $orderGroupProductModel = new OrderGroupInvoiceProductModel(
+                                            array_merge($params, [
+                                                'unit_cost' => floatval($invoice_data["add_extra_value_cost"][$key]),
+                                                'qty_inv' => floatval($invoice_data["add_extra_value_qty"][$key]),
+                                                'unit_cost_total' => round(floatval($invoice_data["add_extra_value_cost"][$key]) * floatval($invoice_data["add_extra_value_qty"][$key]), 2),
+                                                'customer_id' => Xcart\App\Main\Xcart::app()->user->id,
+                                                'item_type' => $invoice_data["add_extra_value_type"][$key],
+                                                'item_string' => $invoice_data["add_extra_value_string"][$key]
+                                            ]));
+                                        $cost_to_us_for_products_charged += $orderGroupProductModel->unit_cost_total;
+                                        $orderGroupProductModel->save();
+                                    }
+                                }
                             }
                         }
 
@@ -2144,17 +2174,28 @@ if ($REQUEST_METHOD == "POST")
 
                         if ($update_invoices_table_flag) {
                             func_array2update("order_group_invoices", $group_invoices, "orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='$invoice_number'");
-                            $oManufacturer = new Xcart\Manufacturer(['manufacturerid' => $certain_mid]);
+                            $oManufacturer = new Manufacturer(['manufacturerid' => $certain_mid]);
                             if ($oManufacturer->getField('distributor_charges_for_each_order_twice_and_split_invoices') == 'Y') {
-                                $oGroupInvoices = new Xcart\OrderGroupInvoices();
+                                $oGroupInvoices = new OrderGroupInvoices();
                                 $oInvoices      = $oGroupInvoices->getOrderGroupInvoices(['orderid' => $orderid, 'manufacturerid' => $certain_mid]);
                                 if ($oInvoices->countOrderGroupInvoices() == 1) {
                                     $oLastInvoice = $oInvoices->getLastInvoice();
                                     if ($oLastInvoice->getOrderGroupInvoiceProductsTotal() != 0 && $oLastInvoice->getOrderGroupInvoicesShippingTotal() != 0) {
-                                        $oInvoices->createCloneInvoice($oLastInvoice)->getLastInvoice()->setCostToUsForProductsCharged(0)->
-                                        setTaxChargedExceptHST(0)->setOrderGroupInvoiceProductsTotal(0)->setOrderGroupInvoicesHST(0)->calculateOrderGroupInvoiceTotal()->_insert(true);
-                                        $oLastInvoice->setOrderGroupInvoicesShippingCharged(0)->setOrderGroupInvoicesDropShipFeeCharged(0)->
-                                        setOrderGroupInvoicesShippingTotal(0)->calculateOrderGroupInvoiceTotal()->_insert(true);
+                                        $oInvoices
+                                            ->createCloneInvoice($oLastInvoice)
+                                            ->getLastInvoice()
+                                            ->setCostToUsForProductsCharged(0)
+                                            ->setTaxChargedExceptHST(0)
+                                            ->setOrderGroupInvoiceProductsTotal(0)
+                                            ->setOrderGroupInvoicesHST(0)
+                                            ->calculateOrderGroupInvoiceTotal()
+                                            ->_insert(true);
+                                        $oLastInvoice
+                                            ->setOrderGroupInvoicesShippingCharged(0)
+                                            ->setOrderGroupInvoicesDropShipFeeCharged(0)
+                                            ->setOrderGroupInvoicesShippingTotal(0)
+                                            ->calculateOrderGroupInvoiceTotal()
+                                            ->_insert(true);
                                     }
                                 }
                             }
@@ -2300,7 +2341,7 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
 $smarty->assign("convert_to_regular_order_show_button", $convert_to_regular_order_show_button);
 $smarty->assign("order", $order);
 
-$oOrder = Xcart\Order::model(['orderid' => $orderid]);
+$oOrder = Order::model(['orderid' => $orderid]);
 $smarty->assign("oOrder", $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 
