@@ -39,51 +39,45 @@ function func_recalculate_manufacturer_memos_data(m_id, memo_number){
 
 
 function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
-{/literal}
-  {foreach from=$order.shipping_groups item=item key=key_m_id}
-{literal}
 
-    if (m_id == "{/literal}{$key_m_id}{literal}"){
+        var unit_cost_total_sum = 0;
+        var unit_cost_to_us_total_sum = 0;
+        var unit_cost_total = 0;
+        var unit_cost_to_us_total = 0;
 
-      var unit_cost_total_sum = parseInt(0);
-      var unit_cost_to_us_total_sum = parseInt(0);
+        var invoice_item_rows = $('.invoice_data_row_'+m_id+'_'+invoice_number);
+        invoice_item_rows.each(function () {
+                var qty_inv = parseInt($(this).find('.invoices_data_qty_inv').val());
+                var unit_cost = parseFloat($(this).find('.invoices_data_unit_cost').val());
+                if (qty_inv >= 0) {
+                    unit_cost_total = qty_inv * unit_cost;
+                    unit_cost_to_us_total = parseFloat($(this).find('.invoice_unit_cost_to_us').data('cost-to-us')) * qty_inv;
+                    $(this).find('[id^=unit_cost_total').text(price_format(unit_cost_total));
+                    $(this).find('[id^=unit_cost_to_us_total').text(price_format(unit_cost_to_us_total));
+                    unit_cost_total_sum += unit_cost_total;
+                    unit_cost_to_us_total_sum += unit_cost_to_us_total;
+                }
+            }
+        );
 
-{/literal}
-      {foreach from=$item.products item=product key=prod_num}
-{literal}
-
-          var itemid = {/literal}{$product.itemid}{literal};
-//        if (itemid == "{/literal}{$product.itemid}{literal}"){
-
-          var qty_inv = $("#manufacturer_invoices_data_qty_inv_"+m_id+"_"+invoice_number+"_"+itemid).val();
-          var unit_cost = $("#manufacturer_invoices_data_unit_cost_"+m_id+"_"+invoice_number+"_"+itemid).val();
-          var add_item_value_row = $("#manufacturer_add_extra_value_"+m_id+"_"+invoice_number);
-          var add_qty_inv = parseInt(add_item_value_row.find('input[name=add_extra_value_qty]').val());
-          var add_cost_inv = parseFloat(add_item_value_row.find('input[name=add_extra_value_cost]').val());
-
-          var unit_cost_total;
-          var unit_cost_to_us_total;
-
-          if (qty_inv >= 0){
-            unit_cost_total = qty_inv * unit_cost;
-            unit_cost_to_us_total = qty_inv * {/literal}{$product.cost_to_us}{literal};
-
-            $("#unit_cost_total_"+m_id+"_"+invoice_number+"_"+itemid).text(price_format(unit_cost_total));
-            $("#unit_cost_to_us_total_"+m_id+"_"+invoice_number+"_"+itemid).text(price_format(unit_cost_to_us_total));
-
-            unit_cost_total_sum += parseFloat(unit_cost_total);
-            unit_cost_to_us_total_sum += parseFloat(unit_cost_to_us_total);
-
-          }
-          if (add_qty_inv >= 0) {
-              var add_cost_total = add_qty_inv * add_cost_inv;
-              $("#add_extra_value_total_"+m_id+"_"+invoice_number).text(price_format(add_cost_total));
-              unit_cost_total_sum += add_cost_total;
-          }
-//        }
-{/literal}
-      {/foreach}
-{literal}
+        var add_item_value_rows = $('.manufacturer_add_extra_value');
+        var add_qty_inv = 0;
+        var add_cost_inv = 0;
+        var add_cost_total = 0;
+        add_item_value_rows.each(function() {
+            var add_qty_inv_l = parseInt($(this).find('.add_extra_value_qty').val());
+            var add_cost_inv_l = parseFloat($(this).find('.add_extra_value_cost').val());
+            if (!isNaN(add_qty_inv_l) && !isNaN(add_cost_inv_l)) {
+                add_qty_inv += add_qty_inv_l;
+                add_cost_inv += add_cost_inv_l;
+                var add_cost_total_l = add_qty_inv_l * add_cost_inv_l;
+                add_cost_total += add_cost_total_l;
+                $(this).find('.add_extra_value_total').text(price_format(add_cost_total_l));
+            }
+        });
+        if (add_qty_inv >= 0) {
+            unit_cost_total_sum += add_cost_total;
+        }
 
         $("#cost_to_us_for_products_charged_"+m_id+"_"+invoice_number).text(price_format(unit_cost_total_sum));
         $("#cost_to_us_for_products_in_xcart_"+m_id+"_"+invoice_number).text(price_format(unit_cost_to_us_total_sum));
@@ -103,10 +97,6 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
 
         var Invoice_total = Products_total + Shipping_total + HST_charged;
         $("#Invoice_total_"+m_id+"_"+invoice_number).text(price_format(Invoice_total));
-    }
-{/literal}
-  {/foreach}
-{literal}
 }
 
 {/literal}
@@ -581,7 +571,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
         {assign var=product_model value=$order_detail_model->product_model}
 
 
-<tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
+<tr class="invoice_data_row_{$m_id}_{$invoice_number}" {cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
 
 <td>{if $invoice_detail->itemid}
         {$product_model->product}
@@ -595,7 +585,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 </td>
 
 <td align="center">
-    <input type="text" size="8"
+    <input type="text" size="8" class="invoices_data_unit_cost"
            id="manufacturer_invoices_data_unit_cost_{$m_id}_{$invoice_number}_{$order_detail_model->itemid}"
            name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][unit_cost][{$order_detail_model->itemid}]"
            value="{$invoice_detail->unit_cost}"
@@ -603,7 +593,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
            onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
            {if $invoice.status eq "R"}readonly="readonly"{/if} />
     {if $invoice_detail->itemid}
-    <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right">
+    <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right" class="invoice_unit_cost_to_us" data-cost-to-us="{$product_model->cost_to_us}" >
         {include file="currency2.tpl" value=$product_model->cost_to_us|price_format}
     </div>
     <div style="BACKGROUND-COLOR: #F2A3A8; color: #000000;" align="right">
@@ -630,7 +620,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 </td>
 
 <td align="center">
-    <input type="text" size="5"
+    <input type="text" size="5" class="invoices_data_qty_inv"
            id="manufacturer_invoices_data_qty_inv_{$m_id}_{$invoice_number}_{$invoice_detail->itemid}"
            name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][qty_inv][{$invoice_detail->itemid}]"
            value="{$invoice_detail->qty_inv}"
@@ -643,8 +633,8 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 <span id="unit_cost_total_{$m_id}_{$invoice_number}_{$invoice_detail->itemid}">{include file="currency2.tpl" value=$invoice_detail->unit_cost_total}</span>
 
 <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right">
-{math equation="x*y" x=$product.cost_to_us y=$invoice_detail->qty_inv assign="unit_cost_to_us_total"}
-<span id="unit_cost_to_us_total_{$m_id}_{$invoice_number}_{$product.itemid}">{include file="currency2.tpl" value=$unit_cost_to_us_total|price_format}</span>
+{math equation="x*y" x=$product_model->cost_to_us y=$invoice_detail->qty_inv assign="unit_cost_to_us_total"}
+<span id="unit_cost_to_us_total_{$m_id}_{$invoice_number}_{$invoice_detail->itemid}">{include file="currency2.tpl" value=$unit_cost_to_us_total|price_format}</span>
 </div>
 
 {math equation="x+y" x=$cost_to_us_for_products_in_xcart y=$unit_cost_to_us_total assign="cost_to_us_for_products_in_xcart"}
@@ -671,14 +661,14 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
                            name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_string][{$smarty.foreach.invoice_detail_addition.iteration}]"
                            type="text" value="{$invoice_detail->item_string}"/>
                 </td>
-                <td id="add_extra_track_{$m_id}_{$invoice_number}_box_2" align="center"><input
+                <td id="add_extra_track_{$m_id}_{$invoice_number}_box_2" align="center"><input class="add_extra_value_cost"
                             onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
                             onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
                             size="8"
                             name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_cost][{$smarty.foreach.invoice_detail_addition.iteration}]"
                             type="text" value="{$invoice_detail->unit_cost}"/></td>
                 <td id="add_extra_track_{$m_id}_{$invoice_number}_box_3"></td>
-                <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input
+                <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input class="add_extra_value_qty"
                             onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
                             onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
                             size="5"
@@ -1238,7 +1228,10 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
 {literal}
 <script>
     $('.delete_button_minus').click(function(){
-        $(this).closest('tr').remove();
+        $(this)
+            .closest('tr')
+            .find('.add_extra_value_qty').val(0).change().end()
+            .remove();
         return false;
     })
 </script>
