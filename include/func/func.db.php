@@ -19,7 +19,9 @@ function db_query($query) {
  * @return \Doctrine\DBAL\Driver\Statement|mixed|null
  * @throws \Doctrine\DBAL\DBALException
  */
-function db_query_param($query, array $params, array $types = []) {
+function db_query_param($query, array $params, array $types = [])
+{
+    list($query, $params) = db_prepare_params($query, $params);
     return \Xcart\Connection::getInstance()->executeQuery($query, $params, $types);
 }
 
@@ -64,6 +66,31 @@ function db_affected_rows(\Doctrine\DBAL\Driver\Statement $result) {
 function db_mysql_get_server_info()
 {
     return \Xcart\Connection::getInstance()->getWrappedConnection()->getServerVersion();
+}
+
+function db_prepare_params($query , array $params = [])
+{
+    if (!empty($params))
+    {
+        foreach ($params as $key => $param)
+        {
+            if (is_array($param)) {
+                $t_keys = [];
+                unset($params[$key]);
+                foreach ($param as $p =>$value) {
+                    $k = $key.'__'.$p;
+
+                    $params[$k] = $value;
+                    $t_keys[] = ':'.$k;
+                }
+
+                $keys = implode(', ', $t_keys);
+                $query = str_replace(':'.$key, $keys, $query);
+            }
+        }
+    }
+
+    return [$query, $params];
 }
 
 
