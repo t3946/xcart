@@ -223,7 +223,7 @@ class DashboardController extends PrototypeAdminController
                 SearchHelper::getFormAndListData(),
                 [
                     'model'     => $model,
-                    'groups'    => GroupModel::objects()->asArray()->all(),
+                    'groups'    => GroupModel::objects()->all(),
                     'form_data' => SearchHelper::prepareFormDataForTemplate($model->form_data),
                 ]
             )

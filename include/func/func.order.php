@@ -945,8 +945,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
     #
     func_lock("place_order");
     
-    func_dump($userinfo);
-
     $mes .= "STEP 2 " . date("H:i:s") . "\n";
 
     $userinfo['title']   = func_get_title($userinfo['titleid'], $config['default_admin_language']);
@@ -1311,8 +1309,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             {
                 $oPoPipeline = \Xcart\POPipeline::model();
                 $oOrder      = \Xcart\Order::model(['orderid' => $orderid]);
+                $oPoPipeline->setField('order_id', $orderid);
                 try {
-                    $oPoPipeline = $oPoPipeline->uploadPurchaseOrder(($po_num), $oOrder->getField('storefrontid'), 'website');
+                    $oPoPipeline = $oPoPipeline->uploadPurchaseOrder($po_num, $oOrder->getField('storefrontid'), 'website');
                     $oPoPipeline->setOrderToPO($orderid);
                     $oPoPipeline->_save();
                     $oOrder->updateField('orig_po', $oOrder->getOrderStoreFront()->getStoreFrontURL().$oPoPipeline->getOrderFileLink());
@@ -1706,6 +1705,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                             $mail_smarty->assign('type', 'C');
                             $attach_pdf_invoice = $oOrderNotification->getField('customer_attach_pdf_invoice');
                             $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                            $oMail->init();
                             $oMail->to = $userinfo['email'];
                             $oMail->from = $config['Company']['orders_department'];
                             $oMail->reply_to = null;
@@ -1941,6 +1941,7 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 func_log_order($orderid, 'S', $order_notes);
 
                 $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                $oMail->init();
                 $oMail->to = $to;
                 $oMail->from = $from;
                 $oMail->reply_to = null;

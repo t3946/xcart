@@ -55,9 +55,9 @@ class MailComponent
         $this->header[key($header)] = current($header);
     }
 
-    public function addAttachment($sFilePath)
+    public function addAttachment($filePath)
     {
-        $this->attachments[] = $sFilePath;
+        $this->attachments[] = $filePath;
         return $this;
     }
 
@@ -152,7 +152,14 @@ class MailComponent
                 $files_counter = count($files);
 
                 if (!empty($this->attachments))
-                    foreach ($this->attachments as $sFile) {
+                    foreach ($this->attachments as $mFile) {
+                        if (is_array($mFile)) {
+                            $sFile = $mFile['file'];
+                            $sName = $mFile['name'];
+                        } else {
+                            $sFile = $mFile;
+                            $sName = basename($sFile);
+                        }
                         $files_counter++;
                         $data = "";
 
@@ -169,7 +176,7 @@ class MailComponent
                         }
 
 
-                        $files[$files_counter]["name"] = basename($sFile);
+                        $files[$files_counter]["name"] = $sName;
                         $files[$files_counter]["type"] = mime_content_type($sFile);
                         $files[$files_counter]["data"] = $data;
                     }
@@ -223,5 +230,15 @@ class MailComponent
     public function setFrom($sFrom)
     {
         $this->from = preg_replace('![\x00-\x1f].*$!sm', '', $sFrom);
+    }
+
+    public function init()
+    {
+        $this->to = null;
+        $this->from = null;
+        $this->reply_to = null;
+        $this->attachments = [];
+        $this->body = null;
+        $this->subject = null;
     }
 }

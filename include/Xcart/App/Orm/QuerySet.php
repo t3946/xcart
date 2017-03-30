@@ -701,7 +701,9 @@ class QuerySet extends QuerySetBase
 
     public function having($having)
     {
-        $this->getQueryBuilder()->having($having);
+        if (!empty($having)) {
+            $this->getQueryBuilder()->having($having);
+        }
         return $this;
     }
 

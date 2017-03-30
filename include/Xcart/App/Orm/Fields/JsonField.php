@@ -16,7 +16,7 @@ class JsonField extends TextField
     public function getValidationConstraints()
     {
         return array_merge(parent::getValidationConstraints(), [
-            new Assert\Callback(function ($value, ExecutionContextInterface $context, $payload) {
+            new Assert\Callback(function ($value, ExecutionContextInterface $context) {
                 if (
                     is_object($value) &&
                     method_exists($value, 'toJson') === false &&

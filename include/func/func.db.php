@@ -54,130 +54,130 @@ function mysql_escape_mimic($inp) {
 }
 
 function db_query($query) {
-	return \Xcart\Connection::getInstance()->executeQuery($query);
+    return \Xcart\Connection::getInstance()->executeQuery($query);
 }
 
 function db_result(\Doctrine\DBAL\Driver\Statement $result, $offset) {
-	return db_fetch_field($result, $offset);
+    return db_fetch_field($result, $offset);
 }
 
 function db_fetch_row(\Doctrine\DBAL\Driver\Statement $result) {
-	return $result->fetch(PDO::FETCH_NUM);
+    return $result->fetch(PDO::FETCH_NUM);
 }
 
 function db_fetch_array(\Doctrine\DBAL\Driver\Statement $result, $flag=MYSQL_ASSOC) {
-	return $result->fetch(PDO::FETCH_ASSOC);
+    return $result->fetch(PDO::FETCH_ASSOC);
 }
 
 function db_fetch_field(\Doctrine\DBAL\Driver\Statement $result, $num = 0) {
-	return $result->fetchColumn($num);
+    return $result->fetchColumn($num);
 }
 
 function db_free_result(\Doctrine\DBAL\Driver\Statement $result) {
-	if ($result && $result instanceof \Doctrine\DBAL\Driver\Statement) {
-		$result->closeCursor();
-	}
+    if ($result && $result instanceof \Doctrine\DBAL\Driver\Statement) {
+        $result->closeCursor();
+    }
 }
 
 function db_num_rows(\Doctrine\DBAL\Driver\Statement $result) {
-	return $result->rowCount();
+    return $result->rowCount();
 }
 
 function db_num_fields(\Doctrine\DBAL\Driver\Statement $result) {
-	return $result->columnCount();
+    return $result->columnCount();
 }
 
 function db_insert_id() {
-	return \Xcart\Connection::getInstance()->lastInsertId();
+    return \Xcart\Connection::getInstance()->lastInsertId();
 }
 
 function db_affected_rows(\Doctrine\DBAL\Driver\Statement $result) {
-	return $result->rowCount();
+    return $result->rowCount();
 }
 
 function db_mysql_get_server_info()
 {
-	return \Xcart\Connection::getInstance()->getWrappedConnection()->getServerVersion();
+    return \Xcart\Connection::getInstance()->getWrappedConnection()->getServerVersion();
 }
 
 
 
 function db_error_generic($query, $query_error, $msg) {
-	global $debug_mode, $config, $xcart_dir;
+    global $debug_mode, $config, $xcart_dir;
 
-	$email = false;
+    $email = false;
 
-	if (@$config["Email_Note"]["admin_sqlerror_notify"]=="Y") {
-		$email = array ($config["Company"]["site_administrator"]);
-	}
+    if (@$config["Email_Note"]["admin_sqlerror_notify"]=="Y") {
+        $email = array ($config["Company"]["site_administrator"]);
+    }
 
-	if ($debug_mode == 1 || $debug_mode == 3) {
-		echo "<b><font COLOR=DARKRED>INVALID SQL: </font></b>".htmlspecialchars($query_error)."<br />";
-		echo "<b><font COLOR=DARKRED>SQL QUERY FAILURE:</font></b>".htmlspecialchars($query)."<br />";
-		flush();
-	}
+    if ($debug_mode == 1 || $debug_mode == 3) {
+        echo "<b><font COLOR=DARKRED>INVALID SQL: </font></b>".htmlspecialchars($query_error)."<br />";
+        echo "<b><font COLOR=DARKRED>SQL QUERY FAILURE:</font></b>".htmlspecialchars($query)."<br />";
+        flush();
+    }
 
-	$do_log = ($debug_mode == 2 || $debug_mode == 3);
+    $do_log = ($debug_mode == 2 || $debug_mode == 3);
 
-	if ($email !== false || $do_log) {
-		@require_once $xcart_dir."/include/logging.php";
-		x_log_add('SQL', $msg, true, 1, $email, !$do_log);
-	}
+    if ($email !== false || $do_log) {
+        @require_once $xcart_dir."/include/logging.php";
+        x_log_add('SQL', $msg, true, 1, $email, !$do_log);
+    }
 }
 
 function db_prepare_query($query, $params) {
-	static $prepared = array();
+    static $prepared = array();
 
-	if (!empty($prepared[$query])) {
-		$info = $prepared[$query];
-		$tokens = $info['tokens'];
-	}
-	else {
-		$tokens = preg_split('/((?<!\\\)\?)/S', $query, -1, PREG_SPLIT_DELIM_CAPTURE);
+    if (!empty($prepared[$query])) {
+        $info = $prepared[$query];
+        $tokens = $info['tokens'];
+    }
+    else {
+        $tokens = preg_split('/((?<!\\\)\?)/S', $query, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-		$count = 0;
-		foreach ($tokens as $k=>$v) if ($v === '?') $count ++;
+        $count = 0;
+        foreach ($tokens as $k=>$v) if ($v === '?') $count ++;
 
-		$info = array (
-			'tokens' => $tokens,
-			'param_count' => $count,
-		);
-		$prepared[$query] = $info;
-	}
+        $info = array (
+            'tokens' => $tokens,
+            'param_count' => $count,
+        );
+        $prepared[$query] = $info;
+    }
 
-	if (count($params) != $info['param_count']) {
-		return array (
-			'info' => 'mismatch',
-			'expected' => $info['param_count'],
-			'actual' => count($params));
-	}
+    if (count($params) != $info['param_count']) {
+        return array (
+            'info' => 'mismatch',
+            'expected' => $info['param_count'],
+            'actual' => count($params));
+    }
 
-	$pos = 0;
-	foreach ($tokens as $k=>$val) {
-		if ($val !== '?') continue;
+    $pos = 0;
+    foreach ($tokens as $k=>$val) {
+        if ($val !== '?') continue;
 
-		if (!isset($params[$pos])) {
-			return array (
-				'info' => 'missing',
-				'param' => $pos,
-				'expected' => $info['param_count'],
-				'actual' => count($params));
-		}
+        if (!isset($params[$pos])) {
+            return array (
+                'info' => 'missing',
+                'param' => $pos,
+                'expected' => $info['param_count'],
+                'actual' => count($params));
+        }
 
-		$val = $params[$pos];
-		if (is_array($val)) {
-			$val = func_array_map('addslashes', $val);
-			$val = implode("','", $val);
-		}
-		else {
-			$val = addslashes($val);
-		}
+        $val = $params[$pos];
+        if (is_array($val)) {
+            $val = func_array_map('addslashes', $val);
+            $val = implode("','", $val);
+        }
+        else {
+            $val = addslashes($val);
+        }
 
-		$tokens[$k] = "'" . $val . "'";
-		$pos ++;
-	}
+        $tokens[$k] = "'" . $val . "'";
+        $pos ++;
+    }
 
-	return implode('', $tokens);
+    return implode('', $tokens);
 }
 
 #
@@ -198,10 +198,10 @@ function db_prepare_query($query, $params) {
 #  2) non-parameter symbols '?' must be escaped with a '\'
 #
 function db_exec($query, $params = []) {
-	if (!is_array($params)) {
-		$params = [$params];
-	}
-	return db_query(db_prepare_query($query, $params));
+    if (!is_array($params)) {
+        $params = [$params];
+    }
+    return db_query(db_prepare_query($query, $params));
 }
 
 #
@@ -209,15 +209,15 @@ function db_exec($query, $params = []) {
 # column names as keys
 #
 function func_query($query) {
-	$result = false;
+    $result = false;
 
-	if ($p_result = db_query($query)) {
-		while ($arr = db_fetch_array($p_result))
-			$result[] = $arr;
-		db_free_result($p_result);
-	}
+    if ($p_result = db_query($query)) {
+        while ($arr = db_fetch_array($p_result))
+            $result[] = $arr;
+        db_free_result($p_result);
+    }
 
-	return $result;
+    return $result;
 }
 
 #
@@ -226,12 +226,12 @@ function func_query($query) {
 # If array is empty return array().
 #
 function func_query_first($query) {
-	if ($p_result = db_query($query)) {
-		$result = db_fetch_array($p_result);
-		db_free_result($p_result);
-        }
+    if ($p_result = db_query($query)) {
+        $result = db_fetch_array($p_result);
+        db_free_result($p_result);
+    }
 
-        return is_array($result) ? $result : array();
+    return is_array($result) ? $result : array();
 }
 
 #
@@ -240,27 +240,27 @@ function func_query_first($query) {
 # If array is empty return false.
 #
 function func_query_first_cell($query) {
-	if ($p_result = db_query($query)) {
-		$result = db_fetch_row($p_result);
-		db_free_result($p_result);
-	}
+    if ($p_result = db_query($query)) {
+        $result = db_fetch_row($p_result);
+        db_free_result($p_result);
+    }
 
-	return is_array($result) ? $result[0] : false;
+    return is_array($result) ? $result[0] : false;
 }
 
 function func_query_column($query, $column = 0) {
-	$result = array();
+    $result = array();
 
-	$fetch_func = is_int($column) ? 'db_fetch_row' : 'db_fetch_array';
+    $fetch_func = is_int($column) ? 'db_fetch_row' : 'db_fetch_array';
 
-	if ($p_result = db_query($query)) {
-		while ($row = $fetch_func($p_result))
-			$result[] = $row[$column];
+    if ($p_result = db_query($query)) {
+        while ($row = $fetch_func($p_result))
+            $result[] = $row[$column];
 
-		db_free_result($p_result);
-	}
+        db_free_result($p_result);
+    }
 
-	return $result;
+    return $result;
 }
 
 #
@@ -293,25 +293,27 @@ function func_array2insert($tbl, $data, $is_replace = false, $is_ignore = false)
         return null;
     }
 
-    $data = func_init_default_values($tbl, $data);
+//    $data = func_init_default_values($tbl, $data);
 
     $connection = \Xcart\Connection::getInstance();
 
-    $columnList = array();
-    $paramPlaceholders = array();
-    $paramValues = array();
+    $columnList = [];
+    $paramPlaceholders = [];
+    $paramValues = [];
+    $paramTypes = [];
 
     foreach ($data as $columnName => $value) {
         $columnList[] = $columnName;
         $paramPlaceholders[] = '?';
         $paramValues[] = $value;
+        $paramTypes[] = func_get_sql_type($value);
     }
 
-    $r = $connection->executeUpdate(
-        $query .' INTO ' . $tbl . ' (' . implode(', ', $columnList) . ')' .
-        ' VALUES (' . implode(', ', $paramPlaceholders) . ')',
-        $paramValues
-    );
+    $sql = ' INTO ' . $tbl . ' (' . implode(', ', $columnList) . ')' .
+           ' VALUES (' . implode(', ', $paramPlaceholders) . ')';
+
+    $r = $connection->executeUpdate($query . $sql, $paramValues);
+//    $r = $connection->executeUpdate($query . $sql, $paramValues, $paramTypes);
 
     if ($r) {
         return $connection->lastInsertId();
@@ -326,7 +328,7 @@ function func_array2insert($tbl, $data, $is_replace = false, $is_ignore = false)
 function func_array2update ($tbl, $data, $where = '') {
     global $sql_tbl;
 
-     if (empty($data) || empty($data) || !is_array($data)) {
+    if (empty($data) || empty($data) || !is_array($data)) {
         return false;
     }
 
@@ -342,11 +344,13 @@ function func_array2update ($tbl, $data, $where = '') {
     $set = [];
     $criteria = [];
     $paramValues = [];
+    $paramTypes = [];
 
     foreach ($data as $columnName => $value) {
         $columnList[] = $columnName;
         $set[] = $columnName . ' = ?';
         $paramValues[] = $value;
+        $paramTypes[] = func_get_sql_type($value);
     }
 
     if (!empty($where) && is_array($where)) {
@@ -354,6 +358,7 @@ function func_array2update ($tbl, $data, $where = '') {
             $columnList[] = $columnName;
             $criteria[] = $columnName . ' = ?';
             $paramValues[] = $value;
+            $paramTypes[] = func_get_sql_type($value);
         }
 
         $sql = 'UPDATE ' . $tbl . ' SET ' . implode(', ', $set)
@@ -365,74 +370,88 @@ function func_array2update ($tbl, $data, $where = '') {
     }
 
     return \Xcart\Connection::getInstance()->executeUpdate($sql, $paramValues);
+//    return \Xcart\Connection::getInstance()->executeUpdate($sql, $paramValues, $paramTypes);
+}
+
+function func_get_sql_type($value)
+{
+    if (is_null($value)) {
+        return \PDO::PARAM_NULL;
+    }
+
+    if (is_numeric($value)) {
+        return \PDO::PARAM_INT;
+    }
+
+    return \PDO::PARAM_STR;
 }
 
 function func_query_hash($query, $column = false, $is_multirow = true, $only_first = false) {
-	$result = array();
-	$is_multicolumn = false;
-	$is = null;
+    $result = array();
+    $is_multicolumn = false;
+    $is = null;
 
-	if ($p_result = db_query($query)) {
-		if ($column === false) {
+    if ($p_result = db_query($query)) {
+        if ($column === false) {
 
-			# Get first field name 
-			$c = db_fetch_field($p_result);
-			$column = $c->name;
+            # Get first field name
+            $c = db_fetch_field($p_result);
+            $column = $c->name;
 
-		} elseif (is_array($column)) {
-			if (count($column) == 1) {
-				$column = current($column);
+        } elseif (is_array($column)) {
+            if (count($column) == 1) {
+                $column = current($column);
 
-			} else {
-				$is_multicolumn = true;
-			}
-		}
+            } else {
+                $is_multicolumn = true;
+            }
+        }
 
-		while ($row = db_fetch_array($p_result)) {
+        while ($row = db_fetch_array($p_result)) {
 
-			# Get key(s) column value and remove this column from row
-			if ($is_multicolumn) {
+            # Get key(s) column value and remove this column from row
+            if ($is_multicolumn) {
 
-				$keys = array();
-				foreach ($column as $c) {
-					$keys[] = $row[$c];
-					func_unset($row, $c);
-				}
-				$keys = implode('"]["', $keys);
+                $keys = array();
+                foreach ($column as $c) {
+                    $keys[] = $row[$c];
+                    func_unset($row, $c);
+                }
+                $keys = implode('"]["', $keys);
 
-			} else {
-				$key = $row[$column];
-				func_unset($row, $column);
-			}
+            } else {
+                $key = $row[$column];
+                func_unset($row, $column);
+            }
 
-			if ($only_first)
-				$row = array_shift($row);
+            if ($only_first)
+                $row = array_shift($row);
 
-			if ($is_multicolumn) {
+            if ($is_multicolumn) {
 
-				# If keys count > 1
-				if ($is_multirow) {
-					eval('$result["'.$keys.'"][] = $row;');
+                # If keys count > 1
+                if ($is_multirow) {
+                    eval('$result["'.$keys.'"][] = $row;');
 
-				} else {
-					eval('$is = isset($result["'.$keys.'"]);');
-					if (!$is) {
-						eval('$result["'.$keys.'"] = $row;');
-					}
-				}
+                } else {
+                    eval('$is = isset($result["'.$keys.'"]);');
+                    if (!$is) {
+                        eval('$result["'.$keys.'"] = $row;');
+                    }
+                }
 
-			} elseif ($is_multirow) {
-				$result[$key][] = $row;
+            } elseif ($is_multirow) {
+                $result[$key][] = $row;
 
-			} elseif (!isset($result[$key])) {
-				$result[$key] = $row;
-			}
-		}
+            } elseif (!isset($result[$key])) {
+                $result[$key] = $row;
+            }
+        }
 
-		db_free_result($p_result);
-	}
+        db_free_result($p_result);
+    }
 
-	return $result;
+    return $result;
 }
 
 #
@@ -442,71 +461,71 @@ function func_query_hash($query, $column = false, $is_multirow = true, $only_fir
 #  U - for users (anonymous)
 #
 function func_genid($type) {
-	global $sql_tbl;
+    global $sql_tbl;
 
-	db_query("INSERT INTO $sql_tbl[counters] (type) VALUES ('$type')");
-	$value = db_insert_id();
+    db_query("INSERT INTO $sql_tbl[counters] (type) VALUES ('$type')");
+    $value = db_insert_id();
 
-	if ($value < 1)
-		trigger_error("Cannot generate unique id", E_USER_ERROR);
+    if ($value < 1)
+        trigger_error("Cannot generate unique id", E_USER_ERROR);
 
-	db_query("DELETE FROM $sql_tbl[counters] WHERE type='$type' AND value<'$value'");
+    db_query("DELETE FROM $sql_tbl[counters] WHERE type='$type' AND value<'$value'");
 
-	return $value;
+    return $value;
 }
 
 #
 # Generate SQL-query relations
 #
 function func_generate_joins($joins, $parent = false) {
-	$str = '';
+    $str = '';
 
-	foreach ($joins as $jname => $j) {
-		if ((!empty($parent) && $parent != $j['parent']) || (empty($parent) && !empty($j['parent'])))
-			continue;
+    foreach ($joins as $jname => $j) {
+        if ((!empty($parent) && $parent != $j['parent']) || (empty($parent) && !empty($j['parent'])))
+            continue;
 
-		$str .= func_build_join($jname, $j);
-		unset($joins[$jname]);
+        $str .= func_build_join($jname, $j);
+        unset($joins[$jname]);
 
-		list($js, $tmp) = func_generate_joins($joins, (empty($j['tblname']) ? $jname : $j['tblname']));
-		$str .= $tmp;
-		$keys = array_diff(array_keys($joins), array_keys($js));
-		if (!empty($keys)) {
-			foreach ($joins as $k => $v) {
-				if (in_array($k, $keys))
-					unset($joins[$k]);
-			}
-		}
-	}
+        list($js, $tmp) = func_generate_joins($joins, (empty($j['tblname']) ? $jname : $j['tblname']));
+        $str .= $tmp;
+        $keys = array_diff(array_keys($joins), array_keys($js));
+        if (!empty($keys)) {
+            foreach ($joins as $k => $v) {
+                if (in_array($k, $keys))
+                    unset($joins[$k]);
+            }
+        }
+    }
 
-	if (empty($parent) && !empty($joins)) {
-		foreach ($joins as $jname => $j) {
-			$str .= func_build_join($jname, $j);
-		}
-		unset($joins);
-	}
+    if (empty($parent) && !empty($joins)) {
+        foreach ($joins as $jname => $j) {
+            $str .= func_build_join($jname, $j);
+        }
+        unset($joins);
+    }
 
-	if ($parent === false)
-		return $str;
-	else
-		return array($joins, $str);
+    if ($parent === false)
+        return $str;
+    else
+        return array($joins, $str);
 }
 
 #
 # Get [LEFT | INNER] JOIN string
 #
 function func_build_join($jname, $join) {
-	global $sql_tbl;
+    global $sql_tbl;
 
-	$str = " ".($join['is_inner'] ? "INNER" : "LEFT")." JOIN ";
-	if (!empty($join['tblname'])) {
-		$str .= $sql_tbl[$join['tblname']]." as ".$jname;
-	} else {
-		$str .= $sql_tbl[$jname];
-	}
-	$str .= " ON ".$join['on'];
+    $str = " ".($join['is_inner'] ? "INNER" : "LEFT")." JOIN ";
+    if (!empty($join['tblname'])) {
+        $str .= $sql_tbl[$join['tblname']]." as ".$jname;
+    } else {
+        $str .= $sql_tbl[$jname];
+    }
+    $str .= " ON ".$join['on'];
 
-	return $str;
+    return $str;
 }
 
 /**
@@ -570,37 +589,43 @@ function func_check_tbl_fields($tbl, $fields)
 
 function func_init_default_values($tbl, $data)
 {
-    static $store = [];
+    static $storage_fields = [];
+    global $sql_tbl;
 
     if (isset($sql_tbl[$tbl])) {
         $tbl = $sql_tbl[$tbl];
     }
 
-    if (!isset($storage[$tbl])) {
-        $storage[$tbl] = \Xcart\Connection::getInstance()->getSchemaManager()->listTableColumns($tbl);
+    if (!isset($storage_fields[$tbl])) {
+        $storage_fields[$tbl] = \Xcart\Connection::getInstance()->getSchemaManager()->listTableColumns($tbl);
 
-        if (empty($storage[$tbl])) {
+        if (empty($storage_fields[$tbl])) {
             return false;
         }
     }
 
-    if (!empty($storage[$tbl]))
+    if (!empty($storage_fields[$tbl]))
     {
         /** @var \Doctrine\DBAL\Schema\Column $field */
-        foreach ($storage[$tbl] as $field)
+        foreach ($storage_fields[$tbl] as $field)
         {
             if (!isset($data[$field->getName()]) || (is_null($data[$field->getName()]) && $field->getNotnull()) ) {
 
                 if (!$field->getAutoincrement())
                 {
-                    if (is_null($field->getDefault())) {
-                        $data[$field->getName()] = '';
-                    }
-                    else {
+                    if ($field->getDefault())
+                    {
                         $data[$field->getName()] = $field->getDefault();
                     }
+                    elseif ($field->getDefault() === 0)
+                    {
+                        $data[$field->getName()] = 0;
+                    }
+                    elseif ($field->getDefault() === '')
+                    {
+                        $data[$field->getName()] = '';
+                    }
                 }
-
             }
         }
     }
@@ -627,21 +652,19 @@ function func_get_column_from_array($col, $arr) {
 
 function func_get_first_last_name($first_name) {
 
-	$first_name = trim($first_name);
-	$name_arr = explode(" ", $first_name);
-	$name_arr_count = count($name_arr);
+    $first_name = trim($first_name);
+    $name_arr = explode(" ", $first_name);
+    $name_arr_count = count($name_arr);
 
-	$last_name = "";
-	if ($name_arr_count > 1){
-		$last_name = array_pop($name_arr);
-		unset($name_arr[$name_arr_count]);
-		$first_name = implode(" ", $name_arr);
-	}
+    $last_name = "";
+    if ($name_arr_count > 1){
+        $last_name = array_pop($name_arr);
+        unset($name_arr[$name_arr_count]);
+        $first_name = implode(" ", $name_arr);
+    }
 
-	$new_first_last_name["first_name"] = $first_name;
-	$new_first_last_name["last_name"] = $last_name;
+    $new_first_last_name["first_name"] = $first_name;
+    $new_first_last_name["last_name"] = $last_name;
 
-	return $new_first_last_name;
+    return $new_first_last_name;
 }
-
-?>
