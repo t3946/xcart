@@ -309,11 +309,11 @@ function func_array2insert($tbl, $data, $is_replace = false, $is_ignore = false)
         $paramTypes[] = func_get_sql_type($value);
     }
 
-    $sql = ' INTO ' . $tbl . ' (' . implode(', ', $columnList) . ')' .
+    $sql = $query .' INTO ' . $tbl . ' (' . implode(', ', $columnList) . ')' .
            ' VALUES (' . implode(', ', $paramPlaceholders) . ')';
 
-    $r = $connection->executeUpdate($query . $sql, $paramValues);
-//    $r = $connection->executeUpdate($query . $sql, $paramValues, $paramTypes);
+//    $r = $connection->executeUpdate($sql, $paramValues);
+    $r = $connection->executeUpdate($sql, $paramValues, $paramTypes);
 
     if ($r) {
         return $connection->lastInsertId();
@@ -369,19 +369,19 @@ function func_array2update ($tbl, $data, $where = '') {
                . ($where ? " WHERE " . $where : "");
     }
 
-    return \Xcart\Connection::getInstance()->executeUpdate($sql, $paramValues);
-//    return \Xcart\Connection::getInstance()->executeUpdate($sql, $paramValues, $paramTypes);
+//    return \Xcart\Connection::getInstance()->executeUpdate($sql, $paramValues);
+    return \Xcart\Connection::getInstance()->executeUpdate($sql, $paramValues, $paramTypes);
 }
 
 function func_get_sql_type($value)
 {
-    if (is_null($value)) {
-        return \PDO::PARAM_NULL;
-    }
-
-    if (is_numeric($value)) {
-        return \PDO::PARAM_INT;
-    }
+//    if (is_null($value)) {
+//        return \PDO::PARAM_NULL;
+//    }
+//
+//    if (is_numeric($value)) {
+//        return \PDO::PARAM_INT;
+//    }
 
     return \PDO::PARAM_STR;
 }
