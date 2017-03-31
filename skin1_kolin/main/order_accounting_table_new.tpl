@@ -77,7 +77,11 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
                 add_cost_to_us_total += add_cost_to_us_total_l;
             }
             $(this).find('.add_extra_value_total .invoice_unit_cost_to_us_total').text(price_format(isNaN(add_cost_total_l) ? '' : add_cost_total_l));
-            $(this).find('.add_extra_value_total .invoice_unit_cost_to_us').text(price_format(isNaN(add_cost_to_us_total_l) ? '' : add_cost_to_us_total_l));
+            var cost_to_us_total_div =  $(this).find('.add_extra_value_total .invoice_unit_cost_to_us');
+            if (!isNaN(add_cost_to_us_total_l)) {
+                cost_to_us_total_div.show();
+            }
+            cost_to_us_total_div.text(price_format(isNaN(add_cost_to_us_total_l) ? '' : add_cost_to_us_total_l));
         });
 
         unit_cost_total_sum += add_cost_total;
@@ -730,6 +734,8 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_3"></td>
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input class="add_extra_value_qty" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="5"name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_qty][]" type="text" value="" /></td>
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_5" align="right" class="add_extra_value_total">
+        <span class="invoice_unit_cost_to_us_total"></span>
+        <div style="BACKGROUND-COLOR: #FFD44C; color: #000000; display: none;" align="right" class="invoice_unit_cost_to_us" data-cost=""></div>
     </td>
     <td>{include file="buttons/multirow_add.tpl" mark="add_extra_track_`$m_id`_`$invoice_number`"}
     </td>
@@ -1288,7 +1294,9 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
                 function (data) {
                     if (data) {
                         if (data.result) {
-                            row.find('.invoice_unit_cost_to_us').text(data.product.cost_to_us).prop('data-cost', data.product.cost_to_us);
+                            row.find('.invoice_unit_cost_to_us')
+                                .attr('data-cost', data.product.cost_to_us)
+                                .text(data.product.cost_to_us);
                         } else {
                             alert(data.error);
                         }

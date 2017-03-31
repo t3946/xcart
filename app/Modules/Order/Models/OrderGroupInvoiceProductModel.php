@@ -7,6 +7,7 @@ use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\TimestampField;
 
 class OrderGroupInvoiceProductModel extends AutoMetaModel
 {
@@ -62,6 +63,9 @@ class OrderGroupInvoiceProductModel extends AutoMetaModel
                 'link' => ['product_id' => 'productid'],
                 'null' => true,
                 'default' => null,
+            ],
+            'updated_at' => [
+                'class' => TimestampField::className(),
             ],
         ];
     }
