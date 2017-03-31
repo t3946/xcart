@@ -1998,6 +1998,13 @@ if ($REQUEST_METHOD == "POST")
                                 OrderGroupInvoiceProductModel::objects()->filter($params)->delete();
                                 foreach ($invoice_data["add_extra_value_type"] as $key => $value) {
                                     if (!empty($invoice_data["add_extra_value_string"][$key])) {
+                                        $params['product_id'] = null;
+                                        if ($invoice_data["add_extra_value_type"][$key] == 1) {
+                                            $pModel = \Modules\Product\Models\ProductModel::objects()->get(['productcode' => $invoice_data["add_extra_value_string"][$key]]);
+                                            if ($pModel) {
+                                                $params['product_id'] = $pModel->productid;
+                                            }
+                                        }
                                         $orderGroupProductModel = new OrderGroupInvoiceProductModel(
                                             array_merge($params, [
                                                 'unit_cost' => floatval($invoice_data["add_extra_value_cost"][$key]),

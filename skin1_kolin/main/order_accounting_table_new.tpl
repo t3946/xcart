@@ -45,58 +45,63 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
         var unit_cost_total = 0;
         var unit_cost_to_us_total = 0;
 
-        var invoice_item_rows = $('.invoice_data_row_'+m_id+'_'+invoice_number);
+        var invoice_table = $('table.invoice_table_'+m_id+'_'+invoice_number);
+
+        var invoice_item_rows = $('.invoice_data_row_'+m_id+'_'+invoice_number, invoice_table);
         invoice_item_rows.each(function () {
                 var qty_inv = parseInt($(this).find('.invoices_data_qty_inv').val());
                 var unit_cost = parseFloat($(this).find('.invoices_data_unit_cost').val());
-                if (qty_inv >= 0) {
+
                     unit_cost_total = qty_inv * unit_cost;
                     unit_cost_to_us_total = parseFloat($(this).find('.invoice_unit_cost_to_us').data('cost-to-us')) * qty_inv;
-                    $(this).find('[id^=unit_cost_total').text(price_format(unit_cost_total));
-                    $(this).find('[id^=unit_cost_to_us_total').text(price_format(unit_cost_to_us_total));
+                    $(this).find('[id^=unit_cost_total').text(price_format(isNaN(unit_cost_total) ? '' : unit_cost_total));
+                    $(this).find('[id^=unit_cost_to_us_total').text(price_format(isNaN(unit_cost_to_us_total) ? '' : unit_cost_to_us_total));
                     unit_cost_total_sum += unit_cost_total;
                     unit_cost_to_us_total_sum += unit_cost_to_us_total;
-                }
             }
         );
 
-        var add_item_value_rows = $('.manufacturer_add_extra_value');
-        var add_qty_inv = 0;
-        var add_cost_inv = 0;
+        var add_item_value_rows = $('.manufacturer_add_extra_value', invoice_table);
         var add_cost_total = 0;
+        var add_cost_to_us_total = 0;
         add_item_value_rows.each(function() {
             var add_qty_inv_l = parseInt($(this).find('.add_extra_value_qty').val());
             var add_cost_inv_l = parseFloat($(this).find('.add_extra_value_cost').val());
-            if (!isNaN(add_qty_inv_l) && !isNaN(add_cost_inv_l)) {
-                add_qty_inv += add_qty_inv_l;
-                add_cost_inv += add_cost_inv_l;
-                var add_cost_total_l = add_qty_inv_l * add_cost_inv_l;
+            var add_cost_to_us_l = parseFloat($(this).find('.invoice_unit_cost_to_us').data('cost'));
+            var add_cost_total_l = add_qty_inv_l * add_cost_inv_l;
+            var add_cost_to_us_total_l = add_qty_inv_l * add_cost_to_us_l;
+            if (!isNaN(add_cost_total_l)) {
                 add_cost_total += add_cost_total_l;
-                $(this).find('.add_extra_value_total').text(price_format(add_cost_total_l));
             }
+            if (!isNaN(add_cost_to_us_total_l)) {
+                add_cost_to_us_total += add_cost_to_us_total_l;
+            }
+            $(this).find('.add_extra_value_total .invoice_unit_cost_to_us_total').text(price_format(isNaN(add_cost_total_l) ? '' : add_cost_total_l));
+            $(this).find('.add_extra_value_total .invoice_unit_cost_to_us').text(price_format(isNaN(add_cost_to_us_total_l) ? '' : add_cost_to_us_total_l));
         });
-        if (add_qty_inv >= 0) {
-            unit_cost_total_sum += add_cost_total;
-        }
 
-        $("#cost_to_us_for_products_charged_"+m_id+"_"+invoice_number).text(price_format(unit_cost_total_sum));
-        $("#cost_to_us_for_products_in_xcart_"+m_id+"_"+invoice_number).text(price_format(unit_cost_to_us_total_sum));
+        unit_cost_total_sum += add_cost_total;
+        unit_cost_to_us_total_sum += add_cost_to_us_total;
+
+
+        $("#cost_to_us_for_products_charged_"+m_id+"_"+invoice_number).text(price_format(isNaN(unit_cost_total_sum) ? '': unit_cost_total_sum));
+        $("#cost_to_us_for_products_in_xcart_"+m_id+"_"+invoice_number).text(price_format(isNaN(unit_cost_to_us_total_sum) ? '' : unit_cost_to_us_total_sum));
 
         var tax_charged_except_HST = parseFloat($("#manufacturer_invoices_data_tax_charged_except_HST_"+m_id+"_"+invoice_number).val());
 
         var Products_total = tax_charged_except_HST + parseFloat(unit_cost_total_sum);
-        $("#Products_total_"+m_id+"_"+invoice_number).text(price_format(Products_total));
+        $("#Products_total_"+m_id+"_"+invoice_number).text(price_format(isNaN(Products_total) ? '' : Products_total));
 
         var shipping_charged = parseFloat($("#manufacturer_invoices_data_shipping_charged_"+m_id+"_"+invoice_number).val());
         var drop_ship_fee_charged = parseFloat($("#manufacturer_invoices_data_drop_ship_fee_charged_"+m_id+"_"+invoice_number).val());
 
         var Shipping_total = shipping_charged + drop_ship_fee_charged;
-        $("#Shipping_total_"+m_id+"_"+invoice_number).text(price_format(Shipping_total));
+        $("#Shipping_total_"+m_id+"_"+invoice_number).text(price_format(isNaN(Shipping_total) ? '' : Shipping_total));
 
         var HST_charged = parseFloat($("#manufacturer_invoices_data_HST_charged_"+m_id+"_"+invoice_number).val());
 
         var Invoice_total = Products_total + Shipping_total + HST_charged;
-        $("#Invoice_total_"+m_id+"_"+invoice_number).text(price_format(Invoice_total));
+        $("#Invoice_total_"+m_id+"_"+invoice_number).text(price_format(isNaN(Invoice_total) ? '' : Invoice_total));
 }
 
 {/literal}
@@ -553,7 +558,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 <a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name} distributor invoice</a>
 {include file="main/subheader.tpl" title=""}
 
-<table cellpadding="3" cellspacing="1">
+<table cellpadding="3" cellspacing="1" class="invoice_table invoice_table_{$m_id}_{$invoice_number}" data-mnf-id="{$m_id}">
 <tr class="TableHead">
   <td width="350">Product Name</td>
   <td width="80">Item #</td>
@@ -644,13 +649,20 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
     {/if}
 {/foreach}
 
-<tr>
+<tr class="manufacturer_add_extra_value_checkbox">
 <td colspan="6">
 <input type="checkbox" value="Y" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][extra_items_on_invoice]" {if $invoice.extra_items_on_invoice eq "Y"}checked{/if} /> Extra items are present on the invoice.
 </td>
 </tr>
+    {if $invoice.extra_items_on_invoice == "Y"}
+        {assign var=add_product_cost_to_us value=0}
     {foreach from=$invoice.invoice_details item=invoice_detail name=invoice_detail_addition}
         {if !$invoice_detail->itemid}
+            {assign var=add_product_model value=''}
+            {if ($invoice_detail->product_id)}
+                {assign var=add_product_model value=$invoice_detail->product}
+            {/if}
+
             <tr class="manufacturer_add_extra_value" data-mnfid="{$m_id}" data-invoice="{$invoice_number}">
                 <td colspan="2" id="add_extra_track_{$m_id}_{$invoice_number}_box_1">
                     <select name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_type][{$smarty.foreach.invoice_detail_addition.iteration}]">
@@ -658,6 +670,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
                         <option {if $invoice_detail->item_type == 2}selected="selected"{/if} value="2">Other charges</option>
                     </select>
                     <input size="40"
+                           class="add_extra_value_string"
                            name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_string][{$smarty.foreach.invoice_detail_addition.iteration}]"
                            type="text" value="{$invoice_detail->item_string}"/>
                 </td>
@@ -666,7 +679,13 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
                             onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
                             size="8"
                             name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_cost][{$smarty.foreach.invoice_detail_addition.iteration}]"
-                            type="text" value="{$invoice_detail->unit_cost}"/></td>
+                            type="text" value="{$invoice_detail->unit_cost}"/>
+                    {if $add_product_model}
+                        <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right" class="invoice_unit_cost_to_us" data-cost="{$add_product_model->cost_to_us}">
+                            {$add_product_model->cost_to_us|price_format}
+                        </div>
+                    {/if}
+                </td>
                 <td id="add_extra_track_{$m_id}_{$invoice_number}_box_3"></td>
                 <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input class="add_extra_value_qty"
                             onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
@@ -675,28 +694,42 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
                             name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_qty][{$smarty.foreach.invoice_detail_addition.iteration}]"
                             type="text" value="{$invoice_detail->qty_inv}"/></td>
                 <td id="add_extra_track_{$m_id}_{$invoice_number}_box_5" align="right" class="add_extra_value_total">
-                    <span id="add_extra_value_total_{$m_id}_{$invoice_number}">
+                    <span class="invoice_unit_cost_to_us_total">
                         {$invoice_detail->unit_cost_total}
                     </span>
+                    {if $add_product_model}
+                        {math equation="x*y" x=$invoice_detail->qty_inv y=$add_product_model->cost_to_us assign="cost_to_us_for_add_products_in_xcart"}
+                        {math equation="x+y" x=$add_product_cost_to_us y=$cost_to_us_for_add_products_in_xcart assign="add_product_cost_to_us"}
+                        <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right" class="invoice_unit_cost_to_us" data-cost="{$add_product_model->cost_to_us}">
+                            {$cost_to_us_for_add_products_in_xcart|price_format}
+                        </div>
+                    {/if}
+
                 </td>
                 <td>{include file="buttons/minus.tpl" mark="add_extra_track_`$m_id`_`$invoice_number`"}
                 </td>
             </tr>
         {/if}
     {/foreach}
-<tr class="manufacturer_add_extra_value" data-mnfid="{$m_id}" data-invoice="{$invoice_number}">
+    {/if}
+
+    {math equation="x+y" x=$cost_to_us_for_products_in_xcart y=$add_product_cost_to_us assign="cost_to_us_for_products_in_xcart"}
+
+<tr {if $invoice.extra_items_on_invoice != "Y"}style="display: none;"{/if} class="manufacturer_add_extra_value" data-mnfid="{$m_id}" data-invoice="{$invoice_number}">
     <td colspan="2" id="add_extra_track_{$m_id}_{$invoice_number}_box_1">
         <select name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_type][]">
             <option value="1">Product SKU</option>
             <option value="2">Other charges</option>
         </select>
-        <input size="40" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_string][]" type="text" value="" />
+        <input size="40" class="add_extra_value_string" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_string][]" type="text" value="" />
     </td>
-    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_2" align="center"><input onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="8" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_cost][]" type="text" value="" /></td>
+    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_2" align="center">
+        <input class="add_extra_value_cost" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="8" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_cost][]" type="text" value="" />
+        <div style="BACKGROUND-COLOR: #FFD44C; color: #000000;" align="right" class="invoice_unit_cost_to_us"></div>
+    </td>
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_3"></td>
-    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="5"name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_qty][]" type="text" value="" /></td>
+    <td id="add_extra_track_{$m_id}_{$invoice_number}_box_4" align="center"><input class="add_extra_value_qty" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" size="5"name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][add_extra_value_qty][]" type="text" value="" /></td>
     <td id="add_extra_track_{$m_id}_{$invoice_number}_box_5" align="right" class="add_extra_value_total">
-        <span id="add_extra_value_total_{$m_id}_{$invoice_number}"></span>
     </td>
     <td>{include file="buttons/multirow_add.tpl" mark="add_extra_track_`$m_id`_`$invoice_number`"}
     </td>
@@ -1233,6 +1266,36 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
             .find('.add_extra_value_qty').val(0).change().end()
             .remove();
         return false;
+    });
+    $('.manufacturer_add_extra_value_checkbox input[type=checkbox]').change(function(){
+        var add_extra_values = $(this).closest('tr.manufacturer_add_extra_value_checkbox').siblings('tr.manufacturer_add_extra_value');
+        $(this).prop('checked') ? add_extra_values.show() : add_extra_values.hide();
+    });
+
+    $('.invoice_table').on('change', '.add_extra_value_string', function() {
+        var row = $(this).closest('tr');
+        var table= row.closest('table')
+        var invoice_cost_to_us = row.find('.invoice_unit_cost_to_us');
+        var item_type = $(this).siblings('select').find('option:selected').val();
+        invoice_cost_to_us.text('');
+
+        if (item_type == 1){
+            $.post('ajax_admin.php',{
+                    sku : $(this).val(),
+                    mnf : table.data('mnf-id'),
+                    ajax_action: 'get_product_cost_to_us'
+                },
+                function (data) {
+                    if (data) {
+                        if (data.result) {
+                            row.find('.invoice_unit_cost_to_us').text(data.product.cost_to_us).prop('data-cost', data.product.cost_to_us);
+                        } else {
+                            alert(data.error);
+                        }
+                    }
+                }, 'json');
+
+        }
     })
 </script>
 {/literal}
