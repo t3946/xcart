@@ -214,7 +214,7 @@ while (!empty($NextToken)){
     $request->setCreatedAfter($now);
     // object or array of parameters
     $dom_xml = invokeListOrders($service, $request);
-
+    
 ###    func_print_r($dom_xml);
 
     while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503"){
@@ -239,7 +239,7 @@ while (!empty($NextToken)){
 	if ($pos !== "false"){
 		$dom_xml_arr = explode("<Order>",$dom_xml);
 		$count_dom_xml_arr = count($dom_xml_arr);
-		$dom_xml = "";
+		$dom_xml = "";		
 		foreach ($dom_xml_arr as $k => $v){
 			$k_n = $k-1;
 			$v = str_replace("</Order>","</Order$k_n>",$v);
@@ -255,7 +255,7 @@ while (!empty($NextToken)){
 	$NextToken = $dom_xml_arr["ListOrdersResponse"]["ListOrdersResult"]["NextToken"];
 #	print("Next token: \r\n");
 #	func_print_r($NextToken);
-    }
+    } 
     else {
 	$NextToken = "";
 #	print("Next token: \r\n");
@@ -265,267 +265,274 @@ while (!empty($NextToken)){
   } // if ($NextToken == "start")
   elseif (!empty($NextToken)) {
 
-      $request = new MarketplaceWebServiceOrders_Model_ListOrdersByNextTokenRequest();
-      $request->setSellerId(MERCHANT_ID);
-      $request->setNextToken($NextToken);
-      $now = gmdate('Y-m-d\TH:i:s\Z', time() - $timeoffset);
-      $dom_xml = invokeListOrdersByNextToken($service, $request);
-
+    $request = new MarketplaceWebServiceOrders_Model_ListOrdersByNextTokenRequest();
+    $request->setSellerId(MERCHANT_ID);
+    $request->setNextToken($NextToken);
+    $now = gmdate('Y-m-d\TH:i:s\Z', time()-$timeoffset);
+    $dom_xml = invokeListOrdersByNextToken($service, $request);
+    
 ###    func_print_r($dom_xml);
 
-      while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503") {
-          func_flush("sleeping...");
-          func_flush();
-          sleep('123');
-          func_flush("Unsleeped");
-          func_flush();
+    while (!empty($dom_xml["Caught_Exception"]) && $dom_xml["Caught_Exception"] == "Request is throttled" && $dom_xml["Response_Status_Code"] == "503"){
+        func_flush("sleeping...");
+        func_flush();
+        sleep('123');
+        func_flush("Unsleeped");
+        func_flush();
 
-          $request = new MarketplaceWebServiceOrders_Model_ListOrdersByNextTokenRequest();
-          $request->setSellerId(MERCHANT_ID);
-          $request->setNextToken($NextToken);
-          $now = gmdate('Y-m-d\TH:i:s\Z', time() - $timeoffset);
-          $dom_xml = invokeListOrdersByNextToken($service, $request);
-      }
+        $request = new MarketplaceWebServiceOrders_Model_ListOrdersByNextTokenRequest();
+        $request->setSellerId(MERCHANT_ID);
+        $request->setNextToken($NextToken);
+        $now = gmdate('Y-m-d\TH:i:s\Z', time()-$timeoffset);
+        $dom_xml = invokeListOrdersByNextToken($service, $request);
+    }
 ###    func_print_r($dom_xml);
 
-      $dom_xml_arr = [];
-      if (!empty($dom_xml)) {
-          $pos = strpos($dom_xml, "<Order>");
-          if ($pos !== "false") {
-              $dom_xml_arr = explode("<Order>", $dom_xml);
-              $count_dom_xml_arr = count($dom_xml_arr);
-              $dom_xml = "";
-              foreach ($dom_xml_arr as $k => $v) {
-                  $k_n = $k - 1;
-                  $v = str_replace("</Order>", "</Order$k_n>", $v);
-                  $dom_xml .= $v . ($k != ($count_dom_xml_arr - 1) ? "<Order$k>" : "");
-              }
+    $dom_xml_arr = array();
+    if (!empty($dom_xml)){
+        $pos = strpos($dom_xml, "<Order>");
+        if ($pos !== "false"){
+                $dom_xml_arr = explode("<Order>",$dom_xml);
+                $count_dom_xml_arr = count($dom_xml_arr);
+                $dom_xml = "";
+                foreach ($dom_xml_arr as $k => $v){
+                        $k_n = $k-1;
+                        $v = str_replace("</Order>","</Order$k_n>",$v);
+                        $dom_xml .= $v.($k != ($count_dom_xml_arr-1)?"<Order$k>":"");
+                }
 
-              $dom_xml_arr = func_xml2hash($dom_xml);
+                $dom_xml_arr = func_xml2hash($dom_xml);
 
-              $dom_xml_arr_orders = $dom_xml_arr["ListOrdersByNextTokenResponse"]["ListOrdersByNextTokenResult"]["Orders"];
+                $dom_xml_arr_orders = $dom_xml_arr["ListOrdersByNextTokenResponse"]["ListOrdersByNextTokenResult"]["Orders"];
 
-              if (!empty($dom_xml_arr) && !empty($dom_xml_arr["ListOrdersByNextTokenResponse"]["ListOrdersByNextTokenResult"]["NextToken"])) {
-                  $NextToken = $dom_xml_arr["ListOrdersByNextTokenResponse"]["ListOrdersByNextTokenResult"]["NextToken"];
+		if (!empty($dom_xml_arr) && !empty($dom_xml_arr["ListOrdersByNextTokenResponse"]["ListOrdersByNextTokenResult"]["NextToken"])){
+		        $NextToken = $dom_xml_arr["ListOrdersByNextTokenResponse"]["ListOrdersByNextTokenResult"]["NextToken"];
 #	print("Next token: \r\n");
 #	func_print_r($NextToken);
-              }
-              else {
-                  $NextToken = "";
+		}
+		else {
+		        $NextToken = "";
 #	print("Next token: \r\n");
 #	func_print_r($NextToken);
-              }
-          }
-      }
+		}
+        }
+    }
+
   } //elseif (!empty($NextToken))
 
-    if (!empty($dom_xml_arr_orders) && is_array($dom_xml_arr_orders)) {
+  if (!empty($dom_xml_arr_orders) && is_array($dom_xml_arr_orders)){
 
-        $cnt = 0;
+	$cnt = 0;
 
 //	foreach ($dom_xml_arr["ListOrdersResponse"]["ListOrdersResult"]["Orders"] as $k => $v
-        foreach ($dom_xml_arr_orders as $k => $v) {
-            func_flush(".");
-            func_flush();
+	foreach ($dom_xml_arr_orders as $k => $v){
+		func_flush(".");
+		func_flush();
 
-            $orderid = func_query_first_cell("SELECT orderid FROM $sql_tbl[orders] WHERE amazonorderid='$v[AmazonOrderId]'");
+		$orderid = func_query_first_cell("SELECT orderid FROM $sql_tbl[orders] WHERE amazonorderid='$v[AmazonOrderId]'");
 
 //func_print_r($orderid, $v);
 //die("====");
 
-            if (empty($orderid)) {
+		if (empty($orderid)){
 
-                $request = new MarketplaceWebServiceOrders_Model_GetOrderRequest();
-                $request->setSellerId(MERCHANT_ID);
-                $request->setAmazonOrderId($v["AmazonOrderId"]);
-                // object or array of parameters
-                $GetOrder_xml = invokeGetOrder($service, $request);
+			
+			$request = new MarketplaceWebServiceOrders_Model_GetOrderRequest();
+			$request->setSellerId(MERCHANT_ID);
+			$request->setAmazonOrderId($v["AmazonOrderId"]);
+			// object or array of parameters
+			$GetOrder_xml = invokeGetOrder($service, $request);
 
 //                        if (!empty($GetOrder_xml["Caught_Exception"]) && $GetOrder_xml["Caught_Exception"] == "Request is throttled" && $GetOrder_xml["Response_Status_Code"] == "503")
-                while (!empty($GetOrder_xml["Caught_Exception"]) && $GetOrder_xml["Caught_Exception"] == "Request is throttled" && $GetOrder_xml["Response_Status_Code"] == "503") {
-                    func_flush("sleeping...");
-                    func_flush();
-                    sleep('123');
-                    func_flush("Unsleeped");
-                    func_flush();
+                        while (!empty($GetOrder_xml["Caught_Exception"]) && $GetOrder_xml["Caught_Exception"] == "Request is throttled" && $GetOrder_xml["Response_Status_Code"] == "503"){
+                                func_flush("sleeping...");
+                                func_flush();
+                                sleep('123');
+                                func_flush("Unsleeped");
+                                func_flush();
 
-                    print("..GetOrder throttle cycle\r\n");
-                    $request = new MarketplaceWebServiceOrders_Model_GetOrderRequest();
-                    $request->setSellerId(MERCHANT_ID);
-                    $request->setAmazonOrderId($v["AmazonOrderId"]);
-                    // object or array of parameters
-                    $GetOrder_xml = invokeGetOrder($service, $request);
-                }
+				print("..GetOrder throttle cycle\r\n");
+	                        $request = new MarketplaceWebServiceOrders_Model_GetOrderRequest();
+        	                $request->setSellerId(MERCHANT_ID);
+                	        $request->setAmazonOrderId($v["AmazonOrderId"]);
+                        	// object or array of parameters
+	                        $GetOrder_xml = invokeGetOrder($service, $request);
+			}
 
-                if (!empty($GetOrder_xml)) {
-                    $GetOrder_arr = func_xml2hash($GetOrder_xml);
-                    $order_info = $GetOrder_arr["GetOrderResponse"]["GetOrderResult"]["Orders"]["Order"];
-                }
+			if (!empty($GetOrder_xml)){
+				$GetOrder_arr = func_xml2hash($GetOrder_xml);
+				$order_info = $GetOrder_arr["GetOrderResponse"]["GetOrderResult"]["Orders"]["Order"];
+			}
 
-                print("ORDER INFO: \r\n");
-                func_print_r($order_info);
-                $log_text = "Processing order: " . $v[AmazonOrderId] . " - " . $orderid . "  status: " . $order_info["OrderStatus"];
-                print($log_text . "\r\n");
-                func_backprocess_log("amazon_orders", $log_text);
+			print("ORDER INFO: \r\n");
+			func_print_r($order_info);
+			$log_text = "Processing order: ".$v[AmazonOrderId]." - ".$orderid."  status: ".$order_info["OrderStatus"];
+			print($log_text."\r\n");
+			func_backprocess_log("amazon_orders", $log_text);
 
-                $request = new MarketplaceWebServiceOrders_Model_ListOrderItemsRequest();
-                $request->setSellerId(MERCHANT_ID);
-                $request->setAmazonOrderId($order_info["AmazonOrderId"]);
-                // object or array of parameters
-                $dom_OrderItems_xml = invokeListOrderItems($service, $request);
-                print("..ListOrderItems one\r\n");
-
-                func_print_r($dom_OrderItems_xml);
+			$request = new MarketplaceWebServiceOrders_Model_ListOrderItemsRequest();
+			$request->setSellerId(MERCHANT_ID);
+			$request->setAmazonOrderId($order_info["AmazonOrderId"]);
+			// object or array of parameters
+			$dom_OrderItems_xml = invokeListOrderItems($service, $request);
+			print("..ListOrderItems one\r\n");
+			
+			func_print_r($dom_OrderItems_xml);
 
 //			if (!empty($dom_OrderItems_xml["Caught_Exception"]) && $dom_OrderItems_xml["Caught_Exception"] == "Request is throttled" && $dom_OrderItems_xml["Response_Status_Code"] == "503")
-                while (!empty($dom_OrderItems_xml["Caught_Exception"]) && $dom_OrderItems_xml["Caught_Exception"] == "Request is throttled" && $dom_OrderItems_xml["Response_Status_Code"] == "503") {
-                    func_flush("sleeping...");
-                    func_flush();
-                    sleep('123');
-                    func_flush("Unsleeped");
-                    func_flush();
+			while (!empty($dom_OrderItems_xml["Caught_Exception"]) && $dom_OrderItems_xml["Caught_Exception"] == "Request is throttled" && $dom_OrderItems_xml["Response_Status_Code"] == "503"){
+		                func_flush("sleeping...");
+                		func_flush();
+				sleep('123');
+			        func_flush("Unsleeped");
+			        func_flush();
 
-                    print("..ListOrderItems throttle cycle\r\n");
-                    $request = new MarketplaceWebServiceOrders_Model_ListOrderItemsRequest();
-                    $request->setSellerId(MERCHANT_ID);
-                    $request->setAmazonOrderId($order_info["AmazonOrderId"]);
-                    $dom_OrderItems_xml = invokeListOrderItems($service, $request);
-                }
+				print("..ListOrderItems throttle cycle\r\n");
+	                        $request = new MarketplaceWebServiceOrders_Model_ListOrderItemsRequest();
+        	                $request->setSellerId(MERCHANT_ID);
+                	        $request->setAmazonOrderId($order_info["AmazonOrderId"]);
+				$dom_OrderItems_xml = invokeListOrderItems($service, $request);
+			}
+			
+			func_print_r($dom_OrderItems_xml);
 
-                func_print_r($dom_OrderItems_xml);
+			$OrderItems_arr = array();
+			if (!empty($dom_OrderItems_xml) && strpos($dom_OrderItems_xml, "<OrderItem>")!==false){
 
-                $OrderItems_arr = [];
-                if (!empty($dom_OrderItems_xml) && strpos($dom_OrderItems_xml, "<OrderItem>") !== false) {
+		                $dom_OrderItems_xml_arr = explode("<OrderItem>",$dom_OrderItems_xml);
+                		$count_dom_OrderItems_xml_arr = count($dom_OrderItems_xml_arr);
+				$OrderItems_xml = "";
+		                foreach ($dom_OrderItems_xml_arr as $ko => $vo){
+                		        $ko_n = $ko-1;
+		                        $vo = str_replace("</OrderItem>","</OrderItem$ko_n>",$vo);
+                		        $OrderItems_xml .= $vo.($ko != ($count_dom_OrderItems_xml_arr-1)?"<OrderItem$ko>":"");
+		                }
 
-                    $dom_OrderItems_xml_arr = explode("<OrderItem>", $dom_OrderItems_xml);
-                    $count_dom_OrderItems_xml_arr = count($dom_OrderItems_xml_arr);
-                    $OrderItems_xml = "";
-                    foreach ($dom_OrderItems_xml_arr as $ko => $vo) {
-                        $ko_n = $ko - 1;
-                        $vo = str_replace("</OrderItem>", "</OrderItem$ko_n>", $vo);
-                        $OrderItems_xml .= $vo . ($ko != ($count_dom_OrderItems_xml_arr - 1) ? "<OrderItem$ko>" : "");
-                    }
-
-                    $OrderItems_arr = func_xml2hash($OrderItems_xml);
-                }
+				$OrderItems_arr = func_xml2hash($OrderItems_xml);
+			}
 
 //func_print_r($OrderItems_arr);
 //die("111---===---111");
 
-                if (!empty($OrderItems_arr) && is_array($OrderItems_arr["ListOrderItemsResponse"]["ListOrderItemsResult"]["OrderItems"]) && ($order_info['OrderStatus'] == 'Unshipped' || $order_info['OrderStatus'] == 'Shipped')) {
-                    print(" ... shipped. enter order creation section\r\n");
-                    $PurchaseDate = strtotime($order_info['PurchaseDate']);
 
-                    $StateOrRegion = $order_info['ShippingAddress']['StateOrRegion'];
+			if (!empty($OrderItems_arr) && is_array($OrderItems_arr["ListOrderItemsResponse"]["ListOrderItemsResult"]["OrderItems"]) && ($order_info['OrderStatus']=='Unshipped' || $order_info['OrderStatus']=='Shipped')){
+				print(" ... shipped. enter order creation section\r\n");
+				$PurchaseDate = strtotime($order_info['PurchaseDate']);
 
-                    $StateOrRegion_code = func_query_first_cell("SELECT code FROM $sql_tbl[states] WHERE country_code = '" . $order_info['ShippingAddress']['CountryCode'] . "' AND state = '" . $StateOrRegion . "'");
-                    if (!empty($StateOrRegion_code)) {
-                        $StateOrRegion = $StateOrRegion_code;
-                    }
+				$StateOrRegion = $order_info['ShippingAddress']['StateOrRegion'];
 
-                    $PostalCode = $order_info['ShippingAddress']['PostalCode'];
+				$StateOrRegion_code = func_query_first_cell("SELECT code FROM $sql_tbl[states] WHERE country_code = '".$order_info['ShippingAddress']['CountryCode']."' AND state = '".$StateOrRegion."'");
+				if (!empty($StateOrRegion_code)){
+					$StateOrRegion = $StateOrRegion_code;
+				}
 
-                    if ($order_info['ShippingAddress']['CountryCode'] == "US" && strpos($PostalCode, "-") !== false) {
-                        $PostalCode_arr = explode("-", $PostalCode);
-                        $PostalCode = $PostalCode_arr[0];
-                    }
+				$PostalCode = $order_info['ShippingAddress']['PostalCode'];
 
-                    $Address = $order_info['ShippingAddress']['AddressLine1'] . (!empty($order_info['ShippingAddress']['AddressLine2']) ? ' ' . $order_info['ShippingAddress']['AddressLine2'] : '') . (!empty($order_info['ShippingAddress']['AddressLine3']) ? ' ' . $order_info['ShippingAddress']['AddressLine3'] : '');
+				if ($order_info['ShippingAddress']['CountryCode'] == "US" && strpos($PostalCode, "-")!==false){
+					$PostalCode_arr = explode("-",$PostalCode);
+					$PostalCode = $PostalCode_arr[0];
+				}
 
-                    $insert_data = [
-                    'order_prefix' => 'AZ-',
-                    'login' => 'amazon',
-                    'amazonorderid' => $order_info["AmazonOrderId"],
-                    'amazon_fulfillment_channel' => $order_info["FulfillmentChannel"],
-                    'total' => $order_info['OrderTotal']['Amount'],
-                    'date' => $PurchaseDate,
-                    'cb_status' => ($order_info['OrderStatus'] == 'Canceled' ? 'A' : 'P'),
-                    'dc_status' => ($order_info['OrderStatus'] == 'Unshipped' ? 'T' : 'S'),
-                    'bd_status' => 'W',
-                    'payment_method' => 'Amazon Seller',
-                    'firstname' => ($order_info['BuyerName']),
-                    's_firstname' => ($order_info['ShippingAddress']['Name']),
-                    's_address' => ($Address),
-                    's_city' => ($order_info['ShippingAddress']['City']),
-                    's_state' => ($StateOrRegion),
-                    's_country' => ($order_info['ShippingAddress']['CountryCode']),
-                    's_zipcode' => ($PostalCode),
-                    'b_firstname' => ($order_info['BuyerName']),
-                    'b_address' => ($Address),
-                    'b_city' => ($order_info['ShippingAddress']['City']),
-                    'b_state' => ($StateOrRegion),
-                    'b_country' => ($order_info['ShippingAddress']['CountryCode']),
-                    'b_zipcode' => ($PostalCode),
-                    'phone' => ($order_info['ShippingAddress']['Phone']),
-                    'email' => ($order_info['BuyerEmail']),
-                    'language' => 'US',
+				$Address = $order_info['ShippingAddress']['AddressLine1'] .(!empty($order_info['ShippingAddress']['AddressLine2'])?' '.$order_info['ShippingAddress']['AddressLine2'] :'').(!empty($order_info['ShippingAddress']['AddressLine3'])?' '.$order_info['ShippingAddress']['AddressLine3'] :'');
+
+				$insert_data = array(
+						'order_prefix' => 'AZ-',
+						'login' => 'amazon',
+						'amazonorderid' => $order_info["AmazonOrderId"],
+						'amazon_fulfillment_channel' => $order_info["FulfillmentChannel"],
+						'total' => $order_info['OrderTotal']['Amount'],
+						'date' => $PurchaseDate,
+						'cb_status' => ($order_info['OrderStatus'] == 'Canceled' ? 'A' : 'P'),
+						'dc_status' => ($order_info['OrderStatus'] == 'Unshipped' ? 'T' : 'S'),
+						'bd_status' => 'W',
+						'payment_method' => 'Amazon Seller',
+						'firstname' => addslashes($order_info['BuyerName']),
+						's_firstname' => addslashes($order_info['ShippingAddress']['Name']),
+						's_address' => addslashes($Address),
+						's_city' => addslashes($order_info['ShippingAddress']['City']),
+						's_state' => addslashes($StateOrRegion),
+						's_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
+						's_zipcode' => addslashes($PostalCode),
+						'b_firstname' => addslashes($order_info['BuyerName']),
+						'b_address' => addslashes($Address),
+						'b_city' => addslashes($order_info['ShippingAddress']['City']),
+						'b_state' => addslashes($StateOrRegion),
+						'b_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
+						'b_zipcode' => addslashes($PostalCode),
+						'phone' => addslashes($order_info['ShippingAddress']['Phone']),
+						'email' => addslashes($order_info['BuyerEmail']),
+						'language' => 'US',
 //		                        'paymentid' => '1',
-                    'storefrontid' => '0',
-                    'fraud_status' => 'C',
-                    'overall_fraud_score' => '50',
-                    'tracking_all_filled' => 'N',
-                    'vn_status' => ($order_info['FulfillmentChannel'] == 'AFN' ? 'PV' : 'NS'),
-                ];
+						'storefrontid' => '0',
+						'fraud_status' => 'C',
+						'overall_fraud_score' => '50',
+						'tracking_all_filled' => 'N',
+						'vn_status' => ($order_info['FulfillmentChannel']=='AFN' ? 'PV' : 'NS')
+				);
 
-                    $new_orderid = func_array2insert('orders', $insert_data);
-                    unset($insert_data);
+                		$new_orderid = func_array2insert('orders', $insert_data);
+				unset($insert_data);
 
-                    $manufacturerid_arr = [];
 
-                    $product_total = 0;
+				$manufacturerid_arr = array();
 
-                    foreach ($OrderItems_arr["ListOrderItemsResponse"]["ListOrderItemsResult"]["OrderItems"] as $k_item => $v_item ) {
+				$product_total = 0;
+
+				foreach ($OrderItems_arr["ListOrderItemsResponse"]["ListOrderItemsResult"]["OrderItems"] as $k_item => $v_item){
 
 //func_print_r($v_item, $insert_data);
 
-                        $prod_info = func_query_first("SELECT productid, manufacturerid, product, cost_to_us FROM $sql_tbl[products] WHERE productcode='" . addslashes($v_item['SellerSKU']) . "'");
+				    $prod_info = func_query_first("SELECT productid, manufacturerid, product, cost_to_us FROM $sql_tbl[products] WHERE productcode='".addslashes($v_item['SellerSKU'])."'");
 
-                        if (!in_array($prod_info["manufacturerid"], $manufacturerid_arr)) {
-                            $insert_data2 = [
-                                'orderid' => $new_orderid,
-                                'manufacturerid' => $prod_info["manufacturerid"],
-                                'shipping' => ($order_info['ShipmentServiceLevelCategory']),
-                                'cb_status' => ($order_info['OrderStatus'] == 'Canceled' ? 'A' : 'P'),
-                                'dc_status' => ($order_info['OrderStatus'] == 'Unshipped' ? 'T' : 'S'),
-                                'bd_status' => 'W',
-                                'total_net' => $order_info['OrderTotal']['Amount'],
-                                'total_gross' => $order_info['OrderTotal']['Amount']
-                                //                        	                'acc_paymentid' => '1'
-                            ];
+				    if (!in_array($prod_info["manufacturerid"], $manufacturerid_arr)){
+	                                    $insert_data2 = array (
+        	                                'orderid' => $new_orderid,
+                	                        'manufacturerid' => $prod_info["manufacturerid"],
+                        	                'shipping' => addslashes($order_info['ShipmentServiceLevelCategory']),
+                                	        'cb_status' => ($order_info['OrderStatus']=='Canceled' ? 'A' : 'P'),
+                                        	'dc_status' => ($order_info['OrderStatus']=='Unshipped' ? 'T' : 'S'),
+	                                        'bd_status' => 'W',
+        	                                'total_net' => $order_info['OrderTotal']['Amount'],
+                	                        'total_gross' => $order_info['OrderTotal']['Amount']
+//                        	                'acc_paymentid' => '1'
+                                	    );
 
-                            func_array2insert('order_groups', $insert_data2);
-                            unset($insert_data2);
+	                                    func_array2insert('order_groups', $insert_data2);
+        	                            unset($insert_data2);
 
-                            $manufacturerid_arr[] = $prod_info["manufacturerid"];
-                        }
+					    $manufacturerid_arr[] = $prod_info["manufacturerid"];
+				    }
 
-                        $extra_data["display"]["price"] = $v_item['ItemPrice']['Amount'] / $v_item['QuantityOrdered'];
-                        $extra_data["display"]["discounted_price"] = $v_item['ItemPrice']['Amount'];
-                        $extra_data["display"]["subtotal"] = $extra_data["display"]["discounted_price"];
+				    $extra_data["display"]["price"] = $v_item['ItemPrice']['Amount'] / $v_item['QuantityOrdered'];
+				    $extra_data["display"]["discounted_price"] = $v_item['ItemPrice']['Amount'];
+				    $extra_data["display"]["subtotal"] = $extra_data["display"]["discounted_price"];
 
-                        $product_total += $extra_data["display"]["discounted_price"];
+				    $product_total += $extra_data["display"]["discounted_price"];
 
-                        $insert_data3 = [
-                            'orderid' => $new_orderid,
-                            'productid' => $prod_info["productid"],
-                            'item_cost_to_us' => $prod_info["cost_to_us"],
-                            'price' => $v_item['ItemPrice']['Amount'] / $v_item['QuantityOrdered'],
-                            'amount' => $v_item['QuantityOrdered'],
-                            'productcode' => ($v_item['SellerSKU']),
-                            'AmazonOrderItemCode' => ($v_item['OrderItemId']),
-                            'product' => ($prod_info["product"]),
-                            'extra_data' => serialize($extra_data),
-                        ];
+                                    $insert_data3 = array (
+                                        'orderid' => $new_orderid,
+                                        'productid' => $prod_info["productid"],
+                                        'item_cost_to_us' => $prod_info["cost_to_us"],
+                                        'price' => $v_item['ItemPrice']['Amount'] / $v_item['QuantityOrdered'],
+                                        'amount' => $v_item['QuantityOrdered'],
+                                        'productcode' => addslashes($v_item['SellerSKU']),
+					'AmazonOrderItemCode' => addslashes($v_item['OrderItemId']),
+                                        'product' => addslashes($prod_info["product"]),
+					'extra_data' => serialize($extra_data)
+                                    );
 
-                        if (!empty($order_info['item_cost_to_us'])) {
-                            $insert_data3['item_cost_to_us'] = $order_info['item_cost_to_us'];
-                        }
+                                    if (!empty($order_info['item_cost_to_us'])){
+                                        $insert_data3['item_cost_to_us'] = $order_info['item_cost_to_us'];
+                                    }
 
-                        func_array2insert('order_details', $insert_data3);
-                        unset($insert_data3);
+                                    func_array2insert('order_details', $insert_data3);
+                                    unset($insert_data3);
+                                    
+
 //func_print_r($v_item, $insert_data, $insert_data2, $insert_data3);
 
-                    }
+					
+				}
 
 
 				$extra["product_total"]["net"] = $extra["product_total"]["gross"] = $product_total;
@@ -687,46 +694,49 @@ while (!empty($NextToken)){
 
 				$new_orderid = $orderid;
 
-                $insert_data = [
-                    'order_prefix' => 'AZ-',
-                    'login' => 'amazon',
-                    'amazonorderid' => $order_info["AmazonOrderId"],
-                    'amazon_fulfillment_channel' => $order_info["FulfillmentChannel"],
-                    'total' => $order_info['OrderTotal']['Amount'],
-                    'date' => $PurchaseDate,
-                    'cb_status' => ($order_info['OrderStatus'] == 'Canceled' ? 'A' : 'P'),
-                    'dc_status' => ($order_info['OrderStatus'] == 'Unshipped' ? 'T' : 'S'),
-                    'bd_status' => 'W',
-                    'payment_method' => 'Amazon Seller',
-                    'firstname' => ($order_info['BuyerName']),
-                    's_firstname' => ($order_info['ShippingAddress']['Name']),
-                    's_address' => ($Address),
-                    's_city' => ($order_info['ShippingAddress']['City']),
-                    's_state' => ($StateOrRegion),
-                    's_country' => ($order_info['ShippingAddress']['CountryCode']),
-                    's_zipcode' => ($PostalCode),
-                    'b_firstname' => ($order_info['BuyerName']),
-                    'b_address' => ($Address),
-                    'b_city' => ($order_info['ShippingAddress']['City']),
-                    'b_state' => ($StateOrRegion),
-                    'b_country' => ($order_info['ShippingAddress']['CountryCode']),
-                    'b_zipcode' => ($PostalCode),
-                    'phone' => ($order_info['ShippingAddress']['Phone']),
-                    'email' => ($order_info['BuyerEmail']),
-                    'language' => 'US',
-                    'storefrontid' => '0',
-                    'fraud_status' => 'C',
-                    'overall_fraud_score' => '50',
-                    'tracking_all_filled' => 'N',
-                ];
 
-                func_array2update("orders", $insert_data, "orderid = '$new_orderid'");
-                unset($insert_data);
+				$insert_data = array(
+						'order_prefix' => 'AZ-',
+						'login' => 'amazon',
+						'amazonorderid' => $order_info["AmazonOrderId"],
+						'amazon_fulfillment_channel' => $order_info["FulfillmentChannel"],
+						'total' => $order_info['OrderTotal']['Amount'],
+						'date' => $PurchaseDate,
+						'cb_status' => ($order_info['OrderStatus'] == 'Canceled' ? 'A' : 'P'),
+						'dc_status' => ($order_info['OrderStatus'] == 'Unshipped' ? 'T' : 'S'),
+						'bd_status' => 'W',
+						'payment_method' => 'Amazon Seller',
+						'firstname' => addslashes($order_info['BuyerName']),
+						's_firstname' => addslashes($order_info['ShippingAddress']['Name']),
+						's_address' => addslashes($Address),
+						's_city' => addslashes($order_info['ShippingAddress']['City']),
+						's_state' => addslashes($StateOrRegion),
+						's_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
+						's_zipcode' => addslashes($PostalCode),
+						'b_firstname' => addslashes($order_info['BuyerName']),
+						'b_address' => addslashes($Address),
+						'b_city' => addslashes($order_info['ShippingAddress']['City']),
+						'b_state' => addslashes($StateOrRegion),
+						'b_country' => addslashes($order_info['ShippingAddress']['CountryCode']),
+						'b_zipcode' => addslashes($PostalCode),
+						'phone' => addslashes($order_info['ShippingAddress']['Phone']),
+						'email' => addslashes($order_info['BuyerEmail']),
+						'language' => 'US',
+						'storefrontid' => '0',
+						'fraud_status' => 'C',
+						'overall_fraud_score' => '50',
+						'tracking_all_filled' => 'N'
+				);
 
-                $manufacturerid_arr = [];
-                $product_total = 0;
+				func_array2update("orders", $insert_data, "orderid = '$new_orderid'");
+                                unset($insert_data);
 
-                db_query("DELETE FROM $sql_tbl[order_details] WHERE orderid='$new_orderid'");
+
+                                $manufacturerid_arr = array();
+
+                                $product_total = 0;
+
+				db_query("DELETE FROM $sql_tbl[order_details] WHERE orderid='$new_orderid'");
 
                                 foreach ($OrderItems_arr["ListOrderItemsResponse"]["ListOrderItemsResult"]["OrderItems"] as $k_item => $v_item){
 
@@ -735,23 +745,23 @@ while (!empty($NextToken)){
                                     $prod_info = func_query_first("SELECT productid, manufacturerid, product, cost_to_us FROM $sql_tbl[products] WHERE productcode='".addslashes($v_item['SellerSKU'])."'");
 
                                     if (!in_array($prod_info["manufacturerid"], $manufacturerid_arr)){
-                                        $insert_data2 = [
-                                            'orderid' => $new_orderid,
-                                            'manufacturerid' => $prod_info["manufacturerid"],
-                                            'shipping' => ($order_info['ShipmentServiceLevelCategory']),
-                                            'cb_status' => ($order_info['OrderStatus'] == 'Canceled' ? 'A' : 'P'),
-                                            'dc_status' => ($order_info['OrderStatus'] == 'Unshipped' ? 'T' : 'S'),
-                                            'bd_status' => 'W',
-                                            //'total_net' => $order_info['OrderTotal']['Amount'],
-                                            //'total_gross' => $order_info['OrderTotal']['Amount']
-                                            //                                              'acc_paymentid' => '1'
-                                        ];
+                                            $insert_data2 = array (
+                                                'orderid' => $new_orderid,
+                                                'manufacturerid' => $prod_info["manufacturerid"],
+                                                'shipping' => addslashes($order_info['ShipmentServiceLevelCategory']),
+												'cb_status' => ($order_info['OrderStatus']=='Canceled' ? 'A' : 'P'),
+                                                'dc_status' => ($order_info['OrderStatus']=='Unshipped' ? 'T' : 'S'),
+                                                'bd_status' => 'W',
+                                                //'total_net' => $order_info['OrderTotal']['Amount'],
+                                                //'total_gross' => $order_info['OrderTotal']['Amount']
+//                                              'acc_paymentid' => '1'
+                                            );
 
 //                                            func_array2insert('order_groups', $insert_data2);
-                                        func_array2update('order_groups', $insert_data2, "orderid = '$new_orderid' AND manufacturerid=" . $prod_info["manufacturerid"]);
-                                        unset($insert_data2);
+                                            func_array2update('order_groups', $insert_data2, "orderid = '$new_orderid' AND manufacturerid=".$prod_info["manufacturerid"]);
+                                            unset($insert_data2);
 
-                                        $manufacturerid_arr[] = $prod_info["manufacturerid"];
+                                            $manufacturerid_arr[] = $prod_info["manufacturerid"];
                                     }
                                     $extra_data["display"]["price"] = $v_item['ItemPrice']['Amount'] / $v_item['QuantityOrdered'];
                                     $extra_data["display"]["discounted_price"] = $v_item['ItemPrice']['Amount'];
@@ -759,24 +769,25 @@ while (!empty($NextToken)){
 
                                     $product_total += $extra_data["display"]["discounted_price"];
 
-                                    $insert_data3 = [
+                                    $insert_data3 = array (
                                         'orderid' => $new_orderid,
                                         'productid' => $prod_info["productid"],
                                         'item_cost_to_us' => $prod_info["cost_to_us"],
                                         'price' => $v_item['ItemPrice']['Amount'] / $v_item['QuantityOrdered'],
                                         'amount' => $v_item['QuantityOrdered'],
-                                        'productcode' => ($v_item['SellerSKU']),
-                                        'AmazonOrderItemCode' => ($v_item['OrderItemId']),
-                                        'product' => ($prod_info["product"]),
-                                        'extra_data' => serialize($extra_data),
-                                    ];
+                                        'productcode' => addslashes($v_item['SellerSKU']),
+                                        'AmazonOrderItemCode' => addslashes($v_item['OrderItemId']),
+                                        'product' => addslashes($prod_info["product"]),
+                                        'extra_data' => serialize($extra_data)
+                                    );
 
-                                    if (!empty($order_info['item_cost_to_us'])) {
+                                    if (!empty($order_info['item_cost_to_us'])){
                                         $insert_data3['item_cost_to_us'] = $order_info['item_cost_to_us'];
                                     }
 
                                     func_array2insert('order_details', $insert_data3);
                                     unset($insert_data3);
+
 //func_print_r($v_item, $insert_data, $insert_data2, $insert_data3);
 
 

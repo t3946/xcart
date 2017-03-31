@@ -276,6 +276,7 @@ if (!empty($additional_operation) && is_array($additional_operation)){
 
 			$data = func_query_first("SELECT * FROM $sql_tbl[images_D] WHERE id = '$productid' AND imageid = '$image_id'");
 			unset($data['imageid']);
+			$data = func_array_map("addslashes", $data);
 			while($pid = func_ge_each($geid, 1, $productid)) {
 				$id = func_query_first_cell("SELECT imageid FROM $sql_tbl[images_D] WHERE id = '$pid' AND md5 = '$data[md5]'");
 
@@ -350,6 +351,7 @@ if (!empty($additional_operation) && is_array($additional_operation)){
 		if($geid && $fields['d_image'][$key] == 'Y') {
 			$data = func_query_first("SELECT * FROM $sql_tbl[images_D] WHERE imageid = '$key'");
 			unset($data['imageid']);
+			$data = func_array_map("addslashes", $data);
 			while($pid = func_ge_each($geid, 1, $productid)) {
 				$id = func_query_first_cell("SELECT imageid FROM $sql_tbl[images_D] WHERE id = '$pid' AND md5 = '$data[md5]'");
 				if (!empty($id))
@@ -388,7 +390,7 @@ if (!empty($additional_operation) && is_array($additional_operation)){
 		foreach ($file as $fileid => $tmp) {
 			$query = array(
 				'orderby'	=> intval($tmp['orderby']),
-				'description'	=> ($tmp['file_descr']),
+				'description'	=> addslashes($tmp['file_descr']),
 				'avail'	=> $tmp['avail']
 			);
 			$where = 'fileid = ' . $fileid . ' AND productid = ' . $productid;

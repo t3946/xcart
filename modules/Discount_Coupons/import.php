@@ -133,13 +133,14 @@ elseif ($import_step == "finalize") {
 
 		# Check coupon
 		$is_new = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[discount_coupons] WHERE coupon = '".addslashes($row['coupon'])."'") == 0;
+		$data = func_addslashes($data);
 
 		# Insert new coupon
 		if ($is_new) {
 			if (empty($row['status']))
 				$row['status'] = "A";
 			$data['status'] = $row['status'];
-			$data['coupon'] = ($row['coupon']);
+			$data['coupon'] = addslashes($row['coupon']);
 			func_array2insert("discount_coupons", $data);
 			$result[strtolower($section)]["added"]++;
 

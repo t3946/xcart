@@ -220,7 +220,7 @@ if (!defined('IMPORT_CATEGORIES')) {
 			$_cid = func_query_first_cell("SELECT categoryid FROM $sql_tbl[categories] WHERE category = '".addslashes($c)."' AND parentid = '$_parentid'");
 
 			$data = array(
-				"category" => ($c),
+				"category" => addslashes($c),
 				"parentid" => $_parentid,
 			);
 			if ($kc == count($cats)-1) {
@@ -234,12 +234,12 @@ if (!defined('IMPORT_CATEGORIES')) {
 					}
 				}
 
-				$data["description"]	= ($category['descr']);
-				$data["meta_descr"]		= ($category['meta_descr']);
+				$data["description"]	= addslashes($category['descr']);
+				$data["meta_descr"]		= addslashes($category['meta_descr']);
 				if (isset($category['avail']))
 					$data["avail"]		= $category['avail'];
 				$data["order_by"]		= $category['orderby'];
-				$data["meta_keywords"]	= ($category['meta_keywords']);
+				$data["meta_keywords"]	= addslashes($category['meta_keywords']);
 				$data['views_stats']	= $category['views_stats'];
 				$data['product_count']	= $category['product_count'];
 				if (!empty($active_modules['Multiple_Storefronts'])) {

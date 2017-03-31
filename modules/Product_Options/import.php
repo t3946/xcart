@@ -170,8 +170,8 @@ elseif ($import_step == "finalize") {
 
 		$data = array(
 			"productid"		=> $class['productid'],
-			"class"			=> ($class['class']),
-			"classtext"		=> ($class['descr']),
+			"class"			=> addslashes($class['class']),
+			"classtext"		=> addslashes($class['descr']),
 			"orderby"		=> intval($class['orderby'])
 		);
 		if (isset($class['type']))
@@ -222,7 +222,7 @@ elseif ($import_step == "finalize") {
 			foreach ($class['option'] as $k => $v) {
 				$data = array(
 					"classid"		=> $_classid,
-					"option_name"	=> ($v),
+					"option_name"	=> addslashes($v),
 					"orderby"		=> $class['option_orderby'][$k]
 				);
 				if (isset($class['option_avail'][$k]))

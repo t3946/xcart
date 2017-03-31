@@ -246,6 +246,9 @@ EOT;
 	if (!empty($login) && $login_type == 'C') {
 		$profile_values = $address;
 
+		foreach ($profile_values as $k=>$v) {
+			$profile_values[$k] = addslashes($v);
+		}
 		func_array2update('customers', $profile_values, " login='".addslashes($login)."' AND usertype='C'");
 	}
 	else {
@@ -284,6 +287,10 @@ EOT;
 		}
 
 		$profile_values = $pp_anon_user;
+
+		foreach ($profile_values as $k=>$v) {
+			$profile_values[$k] = addslashes($v);
+		}
 
 		# create new anonymous customer
 		func_array2insert('customers', $profile_values);
@@ -429,7 +436,7 @@ if ($REQUEST_METHOD == 'POST' && $_POST['action'] == 'place_order' && $pp_dp_all
           <PaymentAction>$pp_final_action</PaymentAction>
           <PaymentDetails>
             <OrderTotal currencyID="$pp_currency">$pp_total</OrderTotal>
-            <ButtonSource>X-ï¿½art-DP</ButtonSource>
+            <ButtonSource>X-óart-DP</ButtonSource>
             <NotifyURL>$notify_url</NotifyURL>
 			<ShipToAddress>
               <Name>$s_name</Name>
@@ -547,7 +554,7 @@ if ($REQUEST_METHOD == 'POST' && $_POST['action'] == 'place_order') {
           <PayerID>$paypal_express_details[PayerID]</PayerID>
           <PaymentDetails>
             <OrderTotal currencyID="$pp_currency">$pp_total</OrderTotal>
-            <ButtonSource>X-ï¿½art-EC</ButtonSource>
+            <ButtonSource>X-óart-EC</ButtonSource>
             <NotifyURL>$notify_url</NotifyURL>
             <InvoiceID>$pp_ordr</InvoiceID>
             <Custom>$order_secureid</Custom>

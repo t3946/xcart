@@ -122,7 +122,7 @@ elseif ($import_step == "finalize") {
 
 		$data = array(
 			"productid"		=> $js['productid'],
-			"javascript_code"	=> ($js['jscript'])
+			"javascript_code"	=> addslashes($js['jscript'])
 		);
 
 		# Delete old javascript code

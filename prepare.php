@@ -339,25 +339,25 @@ if (!defined("XCART_EXT_ENV")) {
         }
 	}
 
-//    if (!$__quotes_qpc) {
-//        # Add slashes
-//        foreach (['GET', 'POST', 'COOKIE'] as $__avar) {
-//            ${'_' . $__avar} = func_addslashes(${'_' . $__avar});
-//        }
-//    }
-//	elseif (defined("X_QUOTES_SYBASE")) {
-//        # Strip Sybase-style magic quotes
-//        foreach (['GET', 'POST', 'COOKIE'] as $__avar) {
-//            ${'_' . $__avar} = func_stripslashes_sybase(${'_' . $__avar});
-//            ${'_' . $__avar} = func_addslashes(${'_' . $__avar});
-//        }
-//    }
-//    else {
-//        # Add slashes for keys
-//        foreach (['GET', 'POST', 'COOKIE'] as $__avar) {
-//            ${'_' . $__avar} = func_addslashes_keys(${'_' . $__avar});
-//        }
-//    }
+    if (!$__quotes_qpc) {
+        # Add slashes
+        foreach (['GET', 'POST', 'COOKIE'] as $__avar) {
+            ${'_' . $__avar} = func_addslashes(${'_' . $__avar});
+        }
+    }
+	elseif (defined("X_QUOTES_SYBASE")) {
+        # Strip Sybase-style magic quotes
+        foreach (['GET', 'POST', 'COOKIE'] as $__avar) {
+            ${'_' . $__avar} = func_stripslashes_sybase(${'_' . $__avar});
+            ${'_' . $__avar} = func_addslashes(${'_' . $__avar});
+        }
+    }
+    else {
+        # Add slashes for keys
+        foreach (['GET', 'POST', 'COOKIE'] as $__avar) {
+            ${'_' . $__avar} = func_addslashes_keys(${'_' . $__avar});
+        }
+    }
 
     function func_remove_phishing($arr) {
     global $trusted_vars;

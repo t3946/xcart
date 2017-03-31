@@ -101,6 +101,8 @@ if ($import_step == "process_row") {
 		# Detect gcid
 		$_gcid = func_query_first_cell("SElECT gcid FROM $sql_tbl[giftcerts] WHERE gcid = '".addslashes($row['gcid'])."'");
 
+		$data = func_addslashes($row);
+
 		# Insert gift certificate
 		if (empty($_gcid)) {
 			func_array2insert("giftcerts", $data);

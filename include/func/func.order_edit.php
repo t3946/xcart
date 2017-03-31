@@ -485,6 +485,8 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
         }
     }
 
+    $query_data = func_array_map("addslashes", $query_data);
+
     if (@$user_account["flag"] != "FS") {
 
         $log = "";
@@ -507,13 +509,13 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
         if (!empty($userinfo)) {
             $oCustomer   = Xcart\Customer::model(['login' => $userinfo['login']]);
             $arrNewValue = ['b_city'      => $userinfo['b_city'],
-                            'b_firstname' => ($userinfo['b_firstname']),
-                            'b_address'   => ($userinfo['b_address']),
+                            'b_firstname' => addslashes($userinfo['b_firstname']),
+                            'b_address'   => addslashes($userinfo['b_address']),
                             'b_state'     => $userinfo['b_state'],
                             'b_country'   => $userinfo['b_country'],
                             'b_zipcode'   => $userinfo['b_zipcode'],
-                            's_address'   => ($userinfo['s_address']),
-                            's_firstname' => ($userinfo['s_firstname']),
+                            's_address'   => addslashes($userinfo['s_address']),
+                            's_firstname' => addslashes($userinfo['s_firstname']),
                             's_city'      => $userinfo['s_city'],
                             's_state'     => $userinfo['s_state'],
                             's_country'   => $userinfo['s_country'],
@@ -617,6 +619,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             if (floatval($query_data['item_cost_to_us']) != 0) {
                 unset($query_data_tmp['item_cost_to_us']);
             }
+            $query_data_tmp = func_array_map("addslashes", $query_data_tmp);
             $query_data     = array_merge($query_data, $query_data_tmp);
 
             if (@$user_account["flag"] != "FS") {
@@ -810,7 +813,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                     $query_data['dc_dispatched_time'] = time() - $config["Appearance"]["timezone_offset"];
                 }
 
-                $query_data['tracking'] = (serialize($v['tracking']));
+                $query_data['tracking'] = addslashes(serialize($v['tracking']));
 
                 if (!empty($query_data["cb_status"]) && $query_data["cb_status"] == "P" && $old_statuses["cb_status"] != "P") {
                     $query_data["paid_date"] = time();
@@ -1062,7 +1065,7 @@ function func_refund_product($orderid, $mid, &$product, $customer_info)
             $query_data = [
                 'ref_price'  => $product['refund']['price'],
                 'ref_qty'    => $product['refund']['amount'],
-                'extra_data' => (serialize($product['extra_data'])),
+                'extra_data' => addslashes(serialize($product['extra_data'])),
             ];
 
             func_array2update('refunded_products', $query_data, $where);
@@ -1077,7 +1080,7 @@ function func_refund_product($orderid, $mid, &$product, $customer_info)
                 'provider'       => $product['provider'],
                 'ref_price'      => $product['refund']['price'],
                 'ref_qty'        => $product['refund']['amount'],
-                'extra_data'     => (serialize($product['extra_data'])),
+                'extra_data'     => addslashes(serialize($product['extra_data'])),
             ];
 
             func_array2insert('refunded_products', $query_data);
@@ -1295,7 +1298,7 @@ function func_manage_refund_group(&$group, $ref_notify_mode = false)
         }
 
         $query_data = func_add_accounting_fields($query_data, $group);
-        $query_data['tracking']      = (serialize($group['tracking']));
+        $query_data['tracking']      = addslashes(serialize($group['tracking']));
         $query_data['have_products'] = true; // flag
     }
     else {
