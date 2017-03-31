@@ -1,3 +1,4 @@
+
 <?php
 /*****************************************************************************\
  * +-----------------------------------------------------------------------------+
@@ -42,7 +43,7 @@ if (!defined('XCART_SESSION_START')) {
 x_session_register('selected_status');
 
 if (isset($status)) {
-    $status = func_query_first_cell('SELECT code FROM ' . $sql_tbl['order_statuses'] . ' WHERE code = "' . $status . '"');
+    $status = func_query_first_cell_param('SELECT code FROM ' . $sql_tbl['order_statuses'] . ' WHERE code = :code', ['code' => $status]);
     if (!empty($status)) {
         $selected_status = $status;
     }
@@ -57,7 +58,7 @@ if ($REQUEST_METHOD == 'POST') {
     if ($mode == 'update') {
         if (is_array($update)) {
             if (!empty($update['customer_subject'])) {
-                db_query('DELETE FROM ' . $sql_tbl['order_status_notifications'] . ' WHERE code = "' . $selected_status . '"');
+
                 foreach ($update['customer_subject'] as $idx => $value) {
 
                     $top_message['content'] = '';
@@ -75,20 +76,17 @@ if ($REQUEST_METHOD == 'POST') {
                         func_header_location('order_status_notifications.php');
                     }
 
-
-
                     $query = array(
+                        'code' => $selected_status,
                         'customer_subject' => ($update['customer_subject'][$idx]),
                         'copy_subject' => ($update['copy_subject'][$idx]),
                         'email_body' => $update['email_body'][$idx],
                         'enabled' => (isset($update['enabled'][$idx]) && $update['enabled'][$idx] == 'Y') ? 'Y' : 'N',
                         'customer_attach_pdf_invoice' => (isset($update['customer_attach_pdf_invoice'][$idx]) && $update['customer_attach_pdf_invoice'][$idx] == 'Y') ? 'Y' : 'N',
                         'admin_attach_pdf_invoice' => (isset($update['admin_attach_pdf_invoice'][$idx]) && $update['admin_attach_pdf_invoice'][$idx] == 'Y') ? 'Y' : 'N',
-                        'code' => $selected_status,
-                        'number' => $idx,
                     );
 
-                    func_array2insert('order_status_notifications', $query);
+                    func_array2insert('order_status_notifications', $query, true);
                 }
             }
         }
@@ -112,4 +110,3 @@ $status_types = array(
 $smarty->assign('status_types', $status_types);
 
 $smarty->assign('status', $selected_status);
-?>
