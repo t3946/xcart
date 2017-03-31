@@ -1987,15 +1987,15 @@ if ($REQUEST_METHOD == "POST")
                             }
                         }
 
+                        $params = [
+                            'orderid' => $orderid,
+                            'manufacturerid' => $certain_mid,
+                            'invoice_number' => $invoice_number,
+                            'itemid' => 0
+                        ];
+                        OrderGroupInvoiceProductModel::objects()->filter($params)->delete();
                         if ($invoice_data["extra_items_on_invoice"]) {
                             if ($invoice_data["add_extra_value_type"]) {
-                                $params = [
-                                    'orderid' => $orderid,
-                                    'manufacturerid' => $certain_mid,
-                                    'invoice_number' => $invoice_number,
-                                    'itemid' => 0
-                                ];
-                                OrderGroupInvoiceProductModel::objects()->filter($params)->delete();
                                 foreach ($invoice_data["add_extra_value_type"] as $key => $value) {
                                     if (!empty($invoice_data["add_extra_value_string"][$key])) {
                                         $params['product_id'] = null;
