@@ -1280,7 +1280,7 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
 
     $('.invoice_table').on('change', '.add_extra_value_string', function() {
         var row = $(this).closest('tr');
-        var table= row.closest('table')
+        var table= row.closest('table');
         var invoice_cost_to_us = row.find('.invoice_unit_cost_to_us');
         var item_type = $(this).siblings('select').find('option:selected').val();
         invoice_cost_to_us.text('');
