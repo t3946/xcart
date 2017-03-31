@@ -179,7 +179,7 @@ if ($REQUEST_METHOD == "POST" && $action == "contactus")
 
     foreach ($_POST as $key => $val) {
         if ($key == 'department') {
-            $dep_info = func_query_first_param("SELECT name, email FROM {$sql_tbl['departments']} WHERE depid = :depid", ['depid' => $val]);
+            $dep_info = func_query_first('SELECT name, email FROM ' . $sql_tbl['departments'] . ' WHERE depid="' . $val . '"');
             if (!$dep_info) {
                 $contact[$key] = '';
                 $to_email      = $config["Company"]["support_department"];
@@ -288,7 +288,8 @@ if ($REQUEST_METHOD == "POST" && $action == "contactus")
                     $productcode = trim($productcode);
 
                     if (!empty($productcode)) {
-                        $productid   = func_query_first_cell_param("SELECT productid FROM $sql_tbl[products] WHERE productcode=:productcode", ['productcode' => $productcode]);
+                        $productcode = mysql_escape_mimic(html_entity_decode($productcode, ENT_QUOTES));
+                        $productid   = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='$productcode'");
                         if (!empty($productid)) {
                             require $xcart_dir . "/product_question.php";
                             break;
