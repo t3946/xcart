@@ -226,9 +226,9 @@ function __debug() {
 			# Add page info
 			if (empty($pid)) {
 				$query_data = array(
-					"script" => ($script),
+					"script" => addslashes($script),
 					"method" => $method,
-					"data" => ($QUERY_STRING)
+					"data" => addslashes($QUERY_STRING)
 				);
 				$pid = func_array2insert("benchmark_pages", $query_data);
 			}

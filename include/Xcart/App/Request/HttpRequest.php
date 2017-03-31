@@ -132,6 +132,7 @@ class HttpRequest extends Request
         if ($session instanceof Session) {
             $this->_session = $session;
         } elseif (is_array($session) || is_string($session)) {
+            $session['request'] = $this;
             $this->_session = Creator::create($session);
         }
     }

@@ -104,7 +104,7 @@ if (empty($clusterid)) {
 
 } else {
 
-	func_array2update("cc_pp3_data", array("param1" => $clusterid, "param2" => $clusterkey), ['ref' => $order_key]);
+	func_array2update("cc_pp3_data", array("param1" => $clusterid, "param2" => $clusterkey), "ref='".addslashes($order_key)."'");
 
 	$post = array();
 	$post["command"] = "show_payment_cluster";

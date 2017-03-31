@@ -74,6 +74,7 @@ function func_add_class_data($data, $productid) {
 	$comp = $data['class'];
 	$comp['productid'] = $productid;
 	func_unset($comp, "classid");
+	$comp = func_addslashes($comp);
 
 	$classid = func_query_first_cell("SELECT classid FROM $sql_tbl[classes] WHERE class = '$comp[class]' AND productid = '$comp[productid]'");
 	$is_new = empty($classid);
@@ -87,6 +88,7 @@ function func_add_class_data($data, $productid) {
 	db_query("DELETE FROM $sql_tbl[class_lng] WHERE classid = '$classid'");
 	foreach ($data['class_lng'] as $v) {
 		$v['classid'] = $classid;
+		$v = func_addslashes($v);
 		func_array2insert("class_lng", $v, true);
 	}
 
@@ -96,6 +98,7 @@ function func_add_class_data($data, $productid) {
 		$opt['classid'] = $classid;
 		$old_optionid = $opt['optionid'];
 		func_unset($opt, "optionid");
+		$opt = func_addslashes($opt);
 		$optionid = func_query_first_cell("SELECT optionid FROM $sql_tbl[class_options] WHERE classid = '$classid' AND option_name = '$opt[option_name]'");
 		if (empty($optionid)) {
 			$optionid = func_array2insert("class_options", $opt);
@@ -112,6 +115,7 @@ function func_add_class_data($data, $productid) {
 			continue;
 
 		$v['optionid'] = $ids[$v['optionid']];
+		$v = func_addslashes($v);
 		func_array2insert("product_options_lng", $v, true);
 	}
 

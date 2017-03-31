@@ -1329,7 +1329,7 @@ function func_build_quick_flags($id = false, $tick = 0)
     if ($sd) {
         while ($row = db_fetch_array($sd)) {
 
-            func_array2insert("quick_flags", ($row), true, true);
+            func_array2insert("quick_flags", func_addslashes($row), true, true);
 
             $updated++;
             if ($tick > 0 && $updated % $tick == 0) {
@@ -1505,8 +1505,8 @@ function func_db_tmpwrite($data, $ttl = 600)
     $id = md5(microtime());
 
     $hash = [
-        'id'     => ($id),
-        'data'   => (serialize($data)),
+        'id'     => addslashes($id),
+        'data'   => addslashes(serialize($data)),
         'expire' => time() + $ttl,
     ];
 

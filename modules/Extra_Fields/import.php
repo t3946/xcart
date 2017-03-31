@@ -201,7 +201,7 @@ elseif ($import_step == "finalize") {
 			$data = array(
 				"fieldid" => $_fieldid,
 				"code" => $v,
-				"field" => ($row['field'][$k])
+				"field" => addslashes($row['field'][$k])
 			);
 
 			func_array2insert("extra_fields_lng", $data, true);

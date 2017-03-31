@@ -96,6 +96,9 @@ if ($REQUEST_METHOD=="POST") {
 
 			if ($mode != 'preview') {
 				$db_gc = $giftcert;
+				foreach ($db_gc as $k=>$v) {
+					$db_gc[$k] = addslashes($v);
+				}
 			}
 
 			if ($mode == "add_gc") {

@@ -197,7 +197,7 @@ elseif ($import_step == "finalize") {
 
 		$data = array(
 			"productid"		=> $variant['productid'],
-			"productcode"	=> ($variant['variantcode']),
+			"productcode"	=> addslashes($variant['variantcode']),
 			"weight"		=> $variant['weight'],
 			"avail"			=> $variant['avail'],
 			"def"			=> $variant['default']

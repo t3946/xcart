@@ -53,7 +53,7 @@ function func_export_range_save($section, $data) {
 	elseif (is_array($data)) {
 		func_unset($export_ranges, $section);
 		foreach ($data as $v) {
-			func_array2insert("export_ranges", array("sec" => ($section), "id" => $v), true);
+			func_array2insert("export_ranges", array("sec" => addslashes($section), "id" => $v), true);
 		}
 	}
 	else {

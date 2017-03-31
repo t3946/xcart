@@ -762,6 +762,28 @@
                 </div>
             </div>
         </li>
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="o_tm">Transaction payment method:</label>
+                </div>
+
+                <div class="columns large-6">
+                    <select name="search[order][transaction_payment_method][]" id="o_tm" class="big" multiple>
+                        {foreach $payment_methods as $method}
+                            <option value="{$method.paymentid}" title="{$method.payment_details}" {if $method.paymentid|in:$form_data.order.transaction_payment_method}selected{/if}>
+                                {$method.payment_method}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-2 not">
+                    <input type="checkbox" value="1" name="search[not][order][transaction_payment_method]" id="notm" {if $form_data.not.order.transaction_payment_method}checked{/if}>
+                    <label for="notm">Not</label>
+                </div>
+            </div>
+        </li>
 
         <li>
             <div class="row">

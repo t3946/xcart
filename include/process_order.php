@@ -1,4 +1,4 @@
-<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ UPS + О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ Tracking numbers О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫)] */ ?>
+<?php /* MODIFIED: random:18591_18598 [2009 Jul 29 10:36][Custom development (Изменения для модуля UPS + Изменения в способ ввода Tracking numbers для заказов)] */ ?>
 <?php
 /*****************************************************************************\
 +-----------------------------------------------------------------------------+
@@ -219,7 +219,7 @@ if ($REQUEST_METHOD == "POST") {
 						func_recalculate_accounting($shipping_groups[$m_id], $all_processors, $apply_per_trans, true);
 			
 						$update = array();
-						$update['accounting'] = (serialize($shipping_groups[$m_id]['accounting']));
+						$update['accounting'] = addslashes(serialize($shipping_groups[$m_id]['accounting']));
 						$update['profit_margin'] = $shipping_groups[$m_id]['profit_margin'];
 						$update['acc_paymentid'] = $v['paymentid'];
 	

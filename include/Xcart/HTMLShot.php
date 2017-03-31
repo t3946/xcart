@@ -39,7 +39,7 @@ class HTMLShot extends Data
         $oProduct->getPricing();
         $oStoreFront->setCDNDisable();
 
-        $this->setField('htmlshot', addslashes(serialize($oProduct)))->
+        $this->setField('htmlshot', (serialize($oProduct)))->
         setField('product_id', $oProduct->getProductId())->
         setField('order_id', $orderid)->_insert();
     }

@@ -1,0 +1,9 @@
+@@ -100,6 +100,8 @@
+ function func_recalc_product_count($categoryid = false, $tick = 0) {
+ 	global $sql_tbl, $config, $single_mode;
+ 
++	$forsale_condition = "($sql_tbl[products].forsale='Y' OR $sql_tbl[products].forsale='')";
++
+ 	# Get mysql resource
+ 	$where = "";
+ 	if ($categoryid !== false) {

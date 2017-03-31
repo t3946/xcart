@@ -917,7 +917,7 @@ function func_add_new_smethod($method, $code, $added = array()) {
 
 	$max_subcode = func_query_first_cell("SELECT MAX(subcode+0) FROM $sql_tbl[shipping]")+1;
 	$data = array(
-		"shipping"	=> ($method),
+		"shipping"	=> addslashes($method),
 		"subcode"	=> $max_subcode,
 		"active"	=> "N",
 		"is_new"	=> "Y",

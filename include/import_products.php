@@ -548,6 +548,7 @@ elseif ($import_step == "finalize") {
 		# Direct import
 		$is_new = ($_productid === false);
 		if (!empty($data)) {
+			$data = func_addslashes($data);
 			if ($_productid === false) {
 				$data['provider'] = $import_data_provider;
 				$_productid = func_array2insert("products", $data);
@@ -662,7 +663,7 @@ elseif ($import_step == "finalize") {
 				if (!empty($product[$c])) {
 					$efid = func_query_first_cell("SELECT fieldid FROM $sql_tbl[extra_fields] WHERE field = '".addslashes($c)."'");
 					if (!empty($efid)) {
-						func_array2insert("extra_field_values", array("productid" => $_productid, "fieldid" => $efid, "value" => ($product[$c])), true);
+						func_array2insert("extra_field_values", array("productid" => $_productid, "fieldid" => $efid, "value" => addslashes($product[$c])), true);
 					}
 				}
 			}
@@ -673,7 +674,7 @@ elseif ($import_step == "finalize") {
 		if (!empty($product['manufacturer'])) {
 			$mid = func_query_first_cell("SELECT manufacturerid FROM $sql_tbl[manufacturers] WHERE manufacturer = '".addslashes($product['manufacturer'])."'");
 			if (empty($mid)) {
-				$mid = func_array2insert("manufacturers", array("manufacturer" => ($product['manufacturer']), "provider" => $import_data_provider));
+				$mid = func_array2insert("manufacturers", array("manufacturer" => addslashes($product['manufacturer']), "provider" => $import_data_provider));
 			}
 
 		} elseif (!empty($product['manufacturerid'])) {

@@ -571,6 +571,7 @@ function func_save_image(&$file_upload_data, $type, $id, $added_data = array(), 
 		$image_data = func_array_merge($image_data, $added_data);
 	}
 
+	$image_data = func_addslashes($image_data);
 	unset($file_upload_data[$type]);
 
 	$_table = $sql_tbl['images_'.$type];
@@ -875,11 +876,14 @@ function func_generate_image($id, $from_type = 'P', $to_type = 'T', $allow_not_r
 			$new_image['date'] = time();
 			$new_image['filename'] = '';
 
+			$new_image = func_addslashes($new_image);
+
 		} else {
 			#
 			# Store image to FS
 			#
 
+			$new_image = func_addslashes($new_image);
 			$new_image['id'] = $id;
 			$new_image['image'] = '';
 			$new_image['date'] = time();

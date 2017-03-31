@@ -352,6 +352,14 @@ class OrderSearchStore extends BaseStore
                 $this->getQ(['ot.transaction_status__in' => $val], 'order.transaction_status');
             }
 
+            if (!empty($data['order']['transaction_payment_method']) || $this->checkNot('order.transaction_status')) {
+                $qs->join('left join', 'xcart_order_transactions', ['orderid' => 'ot.orderid'], 'ot');
+
+                $val = ($data['order']['transaction_payment_method']) ? $data['order']['transaction_payment_method'] : [''];
+
+                $this->getQ(['ot.paymentid__in' => $val], 'order.transaction_payment_method');
+            }
+
             if (!empty($data['order']['reconciliation_status']) || $this->checkNot('order.reconciliation_status')) {
                 $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
                 $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'invoice.orderid', 'group.manufacturerid' => 'invoice.manufacturerid'], 'invoice');
