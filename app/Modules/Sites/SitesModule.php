@@ -21,6 +21,10 @@ class SitesModule extends Module
         $this->_site = $model;
     }
 
+    /**
+     * @return \Modules\Sites\Models\Site|null
+     * @throws \Exception
+     */
     public function getSite()
     {
         if (!$this->_site) {

@@ -33,6 +33,22 @@ class Session implements ArrayAccess, Countable
             return;
         }
         $this->registerSessionHandler();
+
+        if ($this->autoStart) {
+            $this->start();
+        }
+    }
+
+    public function start($sessid = null)
+    {
+        if ($sessid) {
+            if ($this->getIsActive()) {
+                $this->close();
+            }
+
+            @session_id($sessid);
+        }
+
         @session_start();
     }
 

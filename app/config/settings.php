@@ -63,6 +63,9 @@ return array_replace_recursive([
                'CurrentSiteMiddleware' => [
                    'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware'
                ],
+                'BotsMiddleware' => [
+                   'class' => '\\Modules\\User\\Middleware\\BotsMiddleware'
+               ],
            ]
        ],
        'request' => [
@@ -70,7 +73,7 @@ return array_replace_recursive([
            'httpRequest' => [
                'class' => '\\Xcart\\App\\Request\\HttpRequest',
                'session' => [
-                   'class' => '\\Xcart\\App\\Request\\XcartSession'
+                   'class' => '\\Modules\\User\\Components\\XcartSession'
                ]
            ],
            'cliRequest' => [
