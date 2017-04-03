@@ -1,0 +1,60 @@
+<?php
+namespace Modules\Product\Stores;
+
+use Modules\Product\Models\ProductModel;
+use Xcart\App\Store\BaseStore;
+
+class SupplierFeedStore extends BaseStore
+{
+    public $supplier_id = null;
+    public $supplier_name = null;
+    public $original_url = null;
+    public $create_date = null;
+    public $feed_type = null;
+    public $products_in_feed = null;
+    public $defaults = [];
+    public $dont_update_fields = [];
+    public $products = [];
+
+    public function __construct($feed)
+    {
+        $this->populate(json_decode($feed, true));
+    }
+
+    public function populate(array $feed)
+    {
+        $this->supplier_id = $feed['supplier_id'];
+        $this->supplier_name = $feed['supplier_name'];
+        $this->original_url = $feed['original_url'];
+        $this->create_date = $feed['create_date'];
+        $this->feed_type = $feed['feed_type'];
+        $this->products_in_feed = $feed['products_in_feed'];
+        $this->defaults = $feed['defaults'];
+        $this->dont_update_fields = $feed['dont_update_fields'];
+
+        if (!empty($feed['products'])) {
+            foreach ($feed['products'] as $product) {
+                $product['product_code'] = strtoupper($product['product_code']);
+                $product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
+
+                $model = ProductModel::objects()->get($product);
+                if (!$model) {
+                    $model= new ProductModel($product);
+                }
+                $this->products[] = $model;
+            }
+        }
+    }
+
+    public function count()
+    {
+        return count($this->products);
+    }
+
+    public function getFeedDate()
+    {
+        $create_date_arr = explode("-", $this->create_date);
+        return mktime(0, 0, 0, $create_date_arr[0], $create_date_arr[1], $create_date_arr[2]);
+
+    }
+}
