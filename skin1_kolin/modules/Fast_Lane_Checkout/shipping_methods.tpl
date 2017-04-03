@@ -567,7 +567,7 @@ Use my trucking account #
 <table>
 <tr>
 <td>
-<input type="checkbox" id="confirmation_of_responsibility" name="confirmation_of_responsibility"{if $cart.confirmation_of_responsibility eq "Y"} checked="checked"{/if} value="Y" /> 
+<input autocomplete="off" type="checkbox" id="confirmation_of_responsibility" name="confirmation_of_responsibility"{if $cart.confirmation_of_responsibility eq "Y"} checked="checked"{/if} value="Y" />
 </td>
 <td>
 {$lng.lbl_confirmation_of_responsibility}
