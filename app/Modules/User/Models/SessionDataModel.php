@@ -1,6 +1,9 @@
 <?php
+
 namespace Modules\User\Models;
 
+use Xcart\App\Cli\Cli;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\SerializeField;
@@ -36,7 +39,7 @@ class SessionDataModel extends Model
                 'class' => IntField::className(),
                 'unsigned' => true,
                 'null' => false,
-                'default' => time()
+                'default' => time(),
             ],
             'expiry' => [
                 'class' => IntField::className(),
@@ -46,7 +49,7 @@ class SessionDataModel extends Model
             'cart_number' => [
                 'class' => IntField::className(),
                 'null' => false,
-                'default' => 0
+                'default' => 0,
             ],
             'data' => [
                 'class' => SerializeField::className(),
@@ -59,7 +62,10 @@ class SessionDataModel extends Model
     public function beforeSave($owner, $isNew)
     {
         if ($isNew) {
-            $owner->expiry = strtotime('+1 year');
+            /** @var \Modules\User\UserModule $module */
+            if ($module = Xcart::app()->getModule('User')) {
+                $owner->expiry = time() + $module->sessionTime;
+            }
         }
     }
 }
