@@ -30,6 +30,8 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Models\OrderGroupInvoiceProductModel;
+
 if (!defined('XCART_START')) {
     header("Location: ../");
     die("Access denied");
@@ -134,6 +136,7 @@ function func_get_shipping_groups($orderid)
                 foreach ($invoices as $k_i => $v_i) {
                     $i_products                 = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices_products] WHERE orderid='$orderid' AND manufacturerid='$m_id' AND invoice_number='$k_i'", "itemid", false);
                     $invoices[$k_i]["products"] = $i_products;
+                    $invoices[$k_i]["invoice_details"] = OrderGroupInvoiceProductModel::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id, 'invoice_number' => $k_i])->all();
                 }
             }
             $return[$m_id]["invoices"] = $invoices;
