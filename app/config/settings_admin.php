@@ -10,17 +10,11 @@ return array_replace_recursive((is_file($base_config)) ? include $base_config : 
             'errHandler' => false
         ],
         'request' => [
-            'class' => '\\Xcart\\App\\Request\\RequestManager',
             'httpRequest' => [
-                'class' => '\\Xcart\\App\\Request\\HttpRequest',
                 'from_get' => 'path',
-                'session' => [
-                    'class' => '\\Xcart\\App\\Request\\XcartSession'
-                ]
             ],
         ],
         'router' => [
-            'class' => '\\Xcart\\App\\Router\\Router',
             'pathRoutes' => 'base.config.routes_admin',
             'basePath' => '/admin/controllers.php?',
             'mode' => 'get',
