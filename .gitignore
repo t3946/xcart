@@ -73,4 +73,7 @@ Thumbs.db
 /verificator/cookies
 /include/system/
 node_modules
+bower_components
+/static/backend/temp/
+/static/frontend/temp/
 /skin1_kolin/pages/
