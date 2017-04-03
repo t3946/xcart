@@ -716,8 +716,9 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
         {/if}
     {/foreach}
     {/if}
-
-    {math equation="x+y" x=$cost_to_us_for_products_in_xcart y=$add_product_cost_to_us assign="cost_to_us_for_products_in_xcart"}
+    {if ($add_product_cost_to_us)}
+        {math equation="x+y" x=$cost_to_us_for_products_in_xcart y=$add_product_cost_to_us assign="cost_to_us_for_products_in_xcart"}
+    {/if}
 
 <tr {if $invoice.extra_items_on_invoice != "Y"}style="display: none;"{/if} class="manufacturer_add_extra_value" data-mnfid="{$m_id}" data-invoice="{$invoice_number}">
     <td colspan="2" id="add_extra_track_{$m_id}_{$invoice_number}_box_1">
