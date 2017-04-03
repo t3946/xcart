@@ -170,7 +170,7 @@ elseif ($import_step == "finalize") {
 			$data = $v;
 			$data['productid']	= $row['productid'];
 			$data['code']		= $k;
-			func_array2insert("products_lng", ($data));
+			func_array2insert("products_lng", func_addslashes($data));
 			$result[strtolower($section)]["added"]++;
 		}
 

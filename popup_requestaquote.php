@@ -123,7 +123,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "requestaquote" && !empty($cart)) {
                                         'amount' => $v['amount'],
                                         'provider' => $v['provider'],
                                         'productcode' => $v['productcode'],
-                                        'product' => ($v['product'])
+                                        'product' => addslashes($v['product'])
                                 );
 
                                 if (!empty($v['item_cost_to_us'])){

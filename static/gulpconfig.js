@@ -21,6 +21,7 @@ module.exports.backend = {
     dst: {
         js: 'backend/dist/js',
         scss: 'backend/temp/css',
+        jsx: 'backend/temp/js',
         css: 'backend/dist/css',
         images: 'backend/dist/images',
         fonts: 'backend/dist/fonts',
@@ -32,16 +33,25 @@ module.exports.backend = {
         }
     },
     src: {
+        jsx: [
+            // 'backend/jsx/**/*'
+            'backend/jsx/main.jsx'
+        ],
         js: [
-            'backend/js/**/*.js'
-        ].concat(modules.map(function (dir) {
-            return dir + '/static/backend/js/**/*.*'
-        })),
+            'backend/js/**/*',
+            'backend/temp/js/**/*',
+        ]
+            // .concat(modules.map(function (dir) {
+            //     return dir + '/static/backend/js/**/*.*'
+            // }))
+        ,
         scss: [
             'backend/scss/**/*.scss'
-        ].concat(modules.map(function (dir) {
-            return dir + '/static/backend/scss/**/*.*'
-        })),
+        ]
+            // .concat(modules.map(function (dir) {
+            //     return dir + '/static/backend/scss/**/*.*'
+            // }))
+        ,
         scss_include: [
             'bower_components/compass-mixins/lib/',
             'bower_components/mindy-sass/'
@@ -56,9 +66,10 @@ module.exports.backend = {
             'backend/images/**/*.*'
         ],
         fonts: [],
-        raw: [].concat(modules.map(function (dir) {
-            return dir + '/static/backend/raw/*/**'
-        }))
+        raw: []
+            // .concat(modules.map(function (dir) {
+            //     return dir + '/static/backend/raw/*/**'
+            // }))
     },
     vendors: {
         jquery: {

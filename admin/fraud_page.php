@@ -244,7 +244,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                                 func_recalculate_accounting($order['shipping_groups'][$m_id], $all_processors, $apply_per_trans, true);
 
                                 $update = array();
-                                $update['accounting'] = (serialize($order['shipping_groups'][$m_id]['accounting']));
+                                $update['accounting'] = addslashes(serialize($order['shipping_groups'][$m_id]['accounting']));
                                 $update['profit_margin'] = $order['shipping_groups'][$m_id]['profit_margin'];
                                 $update['acc_paymentid'] = $v['paymentid'];
 

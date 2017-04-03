@@ -1019,7 +1019,7 @@ class OrderGroup extends Data
 
     public function updateAmazonShipmentNotes($sAmazonShipmentNotes)
     {
-        $this->updateField('amz_customer_notes', ($sAmazonShipmentNotes));
+        $this->updateField('amz_customer_notes', addslashes($sAmazonShipmentNotes));
     }
 
     public function updateAmazonShipmentWithNotes($sAmazonShipmentNotes)

@@ -218,6 +218,7 @@ if ($mode == 'product_variants_modify' && $vs && $tstamp && func_check_image_pos
 				$res = func_query_first("SELECT * FROM $sql_tbl[images_W] WHERE imageid = '$imageid' LIMIT 1");
 				if (!empty($res)) {
 					unset($res['imageid']);
+					$res = func_addslashes($res);
 					foreach ($vids as $v) {
 						$res['id'] = $v;
 						func_delete_image($v, "W");
@@ -232,6 +233,7 @@ if ($mode == 'product_variants_modify' && $vs && $tstamp && func_check_image_pos
 				$res = func_query_first("SELECT * FROM $sql_tbl[images_W] WHERE imageid = '$imageid' LIMIT 1");
 				unset($res['imageid']);
 				if (!empty($res)) {
+					$res = func_addslashes($res);
 					foreach ($vids as $v) {
 						if ($fields['variants'][$v] != 'Y')
 							continue;

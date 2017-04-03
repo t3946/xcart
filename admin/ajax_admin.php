@@ -1,7 +1,7 @@
 <?php
-use Mindy\QueryBuilder\Q\QOr;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
+use Modules\Product\Models\ProductModel;
 use Xcart\External_Product_Verification\ExternalVerificationBatch;
 use Xcart\External_Product_Verification\ExternalVerificationFeeds;
 use Xcart\External_Product_Verification\ExternalVerificationProducts;
@@ -92,6 +92,9 @@ switch ($_POST['ajax_action']) {
         break;
     case "get_transactions_log":
         getTransactionLog($_POST);
+        break;
+    case "get_product_cost_to_us":
+        getProductCostToUs($_POST);
         break;
 }
 
@@ -673,4 +676,31 @@ function getTransactionLog($aParams = [])
         }
     }
     print $result;
+}
+function getProductCostToUs($aParams = [])
+{
+    $aResult = ['result' => false];
+    if (!empty($aParams['sku'])) {
+        $model = ProductModel::objects()->get(['productcode' => $aParams['sku']]);
+        if ($model) {
+            if ($model->manufacturerid == $aParams['mnf']) {
+                $aResult = [
+                    'result' => true,
+                    'product' => [
+                        'productid' => $model->productid,
+                        'productcode' => $model->productcode,
+                        'cost_to_us' => $model->cost_to_us
+                    ],
+                ];
+            }
+            else {
+                $aResult['error'] = "SKU {$aParams['sku']} not found in this distributor";
+            }
+        } else {
+            $aResult['error'] = "SKU {$aParams['sku']} not found";
+        }
+    } else {
+        $aResult['error'] = 'SKU is empty';
+    }
+    print json_encode($aResult);
 }

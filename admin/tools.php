@@ -274,7 +274,7 @@ if ($REQUEST_METHOD=="POST" && isset($mode_clear)) {
 			$details = text_decrypt($order["details"]);
 			if (is_string($details)) {
 				$details = func_order_remove_ccinfo($details, ($_POST['save_4_numbers'] == 'Y'));
-				$details = (func_crypt_order_details($details));
+				$details = addslashes(func_crypt_order_details($details));
 				func_array2update("orders", array("details" => $details), "orderid = '$order[orderid]'");
 				echo ". ";
 			}
@@ -1152,7 +1152,7 @@ elseif ($regenerate_blowfish) {
 				}
 
 				# Crypt with new key
-				$row[$fname] = (text_crypt($row[$fname], false, $new_blowfish_key));
+				$row[$fname] = addslashes(text_crypt($row[$fname], false, $new_blowfish_key));
 			}
 
 			if (empty($row))

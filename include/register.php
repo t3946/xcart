@@ -506,7 +506,7 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 		$profile_values['url'] = $url;
 		$profile_values['card_name'] = $card_name;
 		$profile_values['card_type'] = $card_type;
-		$profile_values['card_number'] = (text_crypt(@$card_number));
+		$profile_values['card_number'] = addslashes(text_crypt(@$card_number));
 		$profile_values['card_expire'] = $card_expire;
 		$profile_values['card_cvv2'] = $card_cvv2;
 		$profile_values['pending_membershipid'] = $pending_membershipid;

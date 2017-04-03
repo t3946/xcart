@@ -143,7 +143,7 @@ elseif ($import_step == "finalize") {
 			$data = array(
 				"productid"	=> $row['productid'],
 				"fieldid"	=> $_fieldid,
-				"value"		=> ($v),
+				"value"		=> addslashes($v),
 			);
 
 			$is_new = (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[extra_field_values] WHERE productid = '$row[productid]' AND fieldid = '$_fieldid'") == 0);
