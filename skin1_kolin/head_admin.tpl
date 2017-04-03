@@ -13,7 +13,7 @@
 
 	<td align="left" width="34%">
         {if $usertype ne "V"}
-		    <a style="padding-left: 35px;" href="{$catalogs.admin}/orders.php?page_name=dashboard"><img src="{$ImagesDir}/cc_dashbord.png" alt="" /></a>
+		    <a style="padding-left: 35px;" href="{$catalogs.admin}/controllers.php?path=/admin/dashboard"><img src="{$ImagesDir}/cc_dashbord.png" alt="" /></a>
         {/if}
 	</td>
 
