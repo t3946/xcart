@@ -3,13 +3,14 @@ $local_config = __DIR__ . DIRECTORY_SEPARATOR .'settings_local.php';
 
 return array_replace_recursive([
    'name' => 'Xcart',
-   'exit_on_end' => false,
+   'exit_on_end' => true,
    'paths' => [
        'base' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..'])),
        'www' => realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..'])),
    ],
    'modules' => [
        'Core',
+       'Main',
        'Dashboard',
        'Distributor',
        'Product',
@@ -60,9 +61,9 @@ return array_replace_recursive([
 //               'RedirectMiddleware' => [
 //                   'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
 //               ],
-               'CurrentSiteMiddleware' => [
-                   'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware'
-               ],
+//               'CurrentSiteMiddleware' => [
+//                   'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware'
+//               ],
                 'BotsMiddleware' => [
                    'class' => '\\Modules\\User\\Middleware\\BotsMiddleware'
                ],

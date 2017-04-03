@@ -1,14 +1,9 @@
 <?php
 return [
-//    [
-//        'route' => '',
-//        'path' => 'Modules.Main.routes',
-//        'namespace' => 'main'
-//    ],
     [
-        'route' => 'module=dashboard&',
-        'path' => 'Modules.Dashboard.routes',
-        'namespace' => 'dashboard'
+        'route' => '',
+        'path' => 'Modules.Main.routes',
+        'namespace' => 'main'
     ],
 //    [
 //        'route' => '/admin/files',

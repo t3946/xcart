@@ -45,6 +45,7 @@ class Application
 
     protected $_modules = [];
     protected $_modulesConfig = [];
+    protected $_isRun = false;
 
     public $autoloadComponents = [];
 
@@ -171,6 +172,11 @@ class Application
         }
     }
 
+    public function isRun()
+    {
+        return $this->_isRun;
+    }
+
     public function run()
     {
         $this->beforeRun();
@@ -185,6 +191,8 @@ class Application
 
         $this->_provideModuleEvent('onApplicationRun');
         register_shutdown_function([$this, 'end'], 0);
+
+        $this->_isRun = true;
     }
 
     public function end($status = 0, $response = null)

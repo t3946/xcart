@@ -156,7 +156,11 @@ class DefaultConnection extends DBALConnection
 
         if (Xcart::app()->getIsWebMode()) {
 
-            $login = Xcart::app()->request->session->get('login');
+            $login = '';
+
+            if (Xcart::app()->isRun() && Xcart::app()->request->session) {
+                $login = Xcart::app()->request->session->get('login');
+            }
 
             $msg .= "Site        : ".(($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER["HTTP_HOST"]. $_SERVER['REQUEST_URI']."\n";
             $msg .= "Remote IP   : {$_SERVER['REMOTE_ADDR']}\n";
@@ -180,6 +184,8 @@ class DefaultConnection extends DBALConnection
         $oMail->body = $msg;
         $oMail->sendEmail();
 
-        x_log_add('SQL', $msg);
+        func_dump($msg);
+
+//        x_log_add('SQL', $msg);
     }
 }
