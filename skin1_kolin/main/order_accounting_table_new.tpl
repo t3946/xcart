@@ -716,7 +716,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
         {/if}
     {/foreach}
     {/if}
-    {if ($add_product_cost_to_us)}
+    {if $add_product_cost_to_us && $cost_to_us_for_products_in_xcart}
         {math equation="x+y" x=$cost_to_us_for_products_in_xcart y=$add_product_cost_to_us assign="cost_to_us_for_products_in_xcart"}
     {/if}
 
