@@ -164,7 +164,7 @@ display_cod({if $display_cod eq 'Y'}true{else}false{/if});
 
 {if $cart.coupon_discount eq 0 and $products ne ""}
 	{if $active_modules.Discount_Coupons ne "" && $show_discount_coupons eq 'Y'}
-		{include file="modules/Discount_Coupons/add_coupon.tpl}
+		{include file="modules/Discount_Coupons/add_coupon.tpl"}
 	{/if}
 {else}
 	{if $cart.coupon_type ne "free_ship"}
