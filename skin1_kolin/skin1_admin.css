@@ -89,6 +89,7 @@ TD.Container {
 .HeadThinLine {
 	BACKGROUND-COLOR: #8E4B00;
 	HEIGHT: 1px;
+	font-size: 0;
 }
 .PrintableRow {
 	WIDTH: 100%;
