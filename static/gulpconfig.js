@@ -11,12 +11,6 @@ module.exports.name = "main";
 module.exports.compress = true;
 
 
-module.exports.frontend = {
-    dst: {},
-    src: {},
-    vendors: {},
-};
-
 module.exports.backend = {
     dst: {
         js: 'backend/dist/js',
@@ -30,6 +24,9 @@ module.exports.backend = {
     config: {
         babel: {
             presets: ['es2015']
+        },
+        inline_image: {
+            baseDir: './backend/css'
         }
     },
     src: {
@@ -40,18 +37,10 @@ module.exports.backend = {
         js: [
             'backend/js/**/*',
             'backend/temp/js/**/*',
-        ]
-            // .concat(modules.map(function (dir) {
-            //     return dir + '/static/backend/js/**/*.*'
-            // }))
-        ,
+        ],
         scss: [
             'backend/scss/**/*.scss'
-        ]
-            // .concat(modules.map(function (dir) {
-            //     return dir + '/static/backend/scss/**/*.*'
-            // }))
-        ,
+        ],
         scss_include: [
             'bower_components/compass-mixins/lib/',
             'bower_components/mindy-sass/'
@@ -59,17 +48,12 @@ module.exports.backend = {
         css: [
             'backend/css/*',
             'backend/temp/css/**/*'
-        ].concat(modules.map(function (dir) {
-            return dir + '/static/backend/css/**/*.*'
-        })),
+        ],
         images: [
             'backend/images/**/*.*'
         ],
         fonts: [],
         raw: []
-            // .concat(modules.map(function (dir) {
-            //     return dir + '/static/backend/raw/*/**'
-            // }))
     },
     vendors: {
         jquery: {
@@ -135,30 +119,93 @@ module.exports.backend = {
 module.exports.frontend = {
     dst: {
         js: 'frontend/dist/js',
-        scss: 'frontend/css',
+        jsx: 'frontend/temp/js',
+        scss: 'frontend/temp/css',
         css: 'frontend/dist/css',
         images: 'frontend/dist/images',
         fonts: 'frontend/dist/fonts',
         raw: 'frontend/dist/raw'
     },
+    config: {
+        babel: {
+            presets: ['es2015']
+        },
+        inline_image: {
+            baseDir: './frontend/css'
+        }
+    },
     src: {
-        js: [],
+        jsx: [
+            'frontend/jsx/**/*'
+            // 'frontend/jsx/main.jsx'
+        ],
+        js: [
+            'frontend/js/**/*',
+            'frontend/temp/js/**/*'
+        ],
         scss: [
-            // 'assets/sass/**/*.scss'
+            'frontend/sass/**/*.scss'
+        ],
+        scss_include: [
+            'bower_components/compass-mixins/lib/',
+            'bower_components/mindy-sass/'
         ],
         css: [
-            // 'assets/css/*'
+            'frontend/css/*',
+            'frontend/temp/css/**/*'
         ],
         images: [
-            // 'assets/images/**/*.*'
+            'frontend/images/**/*.*'
         ],
         fonts: [
-            // 'assets/fonts/**/*'
-        ],
-        html: [
-            // 'templates/**/*'
+            'frontend/fonts/**/*'
         ],
         raw: []
     },
-    vendors: {}
+    vendors: {
+        jquery: {
+            js: [
+                'bower_components/jquery/dist/jquery.min.js'
+            ]
+        },
+        bootstrap: {
+            js: [
+                'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js'
+            ],
+            fonts: [
+                'bower_components/bootstrap-sass/assets/fonts/bootstrap/*'
+            ],
+            scss_include: [
+                'bower_components/bootstrap-sass/assets/stylesheets/'
+            ]
+        },
+        jquery_jscrollpane: {
+            js: [
+                'bower_components/jScrollPane/script/jquery.jscrollpane.min.js'
+            ]
+        },
+        jquery_mousewheel: {
+            js: [
+                'bower_components/jquery-mousewheel/jquery.mousewheel.min.js'
+            ]
+        },
+        nouislider: {
+            js: [
+                'bower_components/nouislider/distribute/nouislider.min.js'
+            ]
+        },
+        sly: {
+            js: [
+                'bower_components/sly/dist/sly.min.js'
+            ]
+        },
+        lato: {
+            fonts: [
+                'bower_components/lato-webfont/fonts/*'
+            ],
+            scss: [
+                'bower_components/lato-webfont/scss/lato-webfont.scss'
+            ]
+        }
+    }
 };

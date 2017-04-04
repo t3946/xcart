@@ -1,0 +1,151 @@
+@media only screen and (min-width: $break-medium){
+  #main_header{
+
+    .container {
+        padding: 0 10px 5px;
+
+        .desktop-wrapper{
+
+        }
+        .top-header-row{
+          .row{
+
+          }
+
+
+          .our-websites{
+
+            li{
+
+
+              &:hover, &.current{
+
+
+                a{
+
+                }
+              }
+
+              a{
+
+              }
+            }
+          }
+
+          .call-us{
+
+
+            .call-us__wrapper{
+
+              .call-us__order{
+
+
+                .call-us__order-online{
+
+                }
+
+                .call-us__pic{
+
+                }
+
+                .call-us__tel{
+                  margin-right: 20px;
+
+                  &:hover{
+
+                  }
+
+                }
+
+                .call-us__icon{
+
+                }
+              }
+
+              &.call-us__out-of-hours{
+                .call-us__order{
+
+                  .call-us__order-online{
+
+                  }
+
+                  .call-us__free-call{
+
+                  }
+
+                  .call-us__pic{
+
+                  }
+
+                  .call-us__tel{
+                    margin-right: 20px;
+                  }
+
+                  .call-us__icon{
+
+                  }
+                }
+              }
+            }
+
+          }
+        }
+      }
+
+      .mobile{
+        .mobile__logo{
+          right: 0;
+          left: 0;
+        }
+
+        .mobile__search-btn{
+          left: 46%;
+        }
+
+        .main-menu-block{
+          display: block;
+
+          .main-menu{
+            padding-right: 5px;
+            width: 300px;
+
+            &:after {
+
+            }
+            li{
+
+
+              a{
+
+              }
+            }
+          }
+        }
+      }
+  }
+
+  #departments-offcanvas {
+  }
+  #search{
+    margin: 0 20px;
+  }
+
+  .autocomplete-suggestions{
+
+    .autocomplete-suggestion{
+      font-size: 1.125em;
+
+      .arrow_suggestion{
+        width: 18px;
+        height: 18px;
+      }
+
+      .image_suggestion{
+        width: 76px;
+        height: 76px;
+      }
+    }
+    .autocomplete-group{
+    }
+  }
+}

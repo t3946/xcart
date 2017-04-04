@@ -1,0 +1,478 @@
+#main_footer{
+  .bottom-nav{
+    display:  none;
+  }
+
+  .mobile{
+    .accordion-mob-menu{
+      margin-top: 8px;
+
+      .panel-group{
+        margin-bottom: 0;
+      }
+
+      .panel{
+        margin-top: 0;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+
+        .panel-heading{
+          height: 39px;
+          background-color: $dark_yellow;
+          padding: 0 5.4% 0 8%;
+          margin-top: -1px;
+          border-radius: 0;
+
+          .panel-title{
+            line-height: 39px;
+            font-size: 1.0625em;
+            font-family: Lato-Bold, sans-serif;
+            color: $black;
+
+            a{
+              display: block;
+              position: relative;
+
+              &:hover, &:active, &:focus{
+                text-decoration: none;
+              }
+
+              &:after{
+                content: '';
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                position: absolute;
+                margin-top: -6px;
+                top: 50%;
+                right: 0;
+                background: inline-image("../images/home/iphone6/plus.svg") no-repeat;
+              }
+
+              &[aria-expanded="true"]{
+                &:after{
+                  background: inline-image("../images/home/iphone6/minus.svg") no-repeat;
+                  position: absolute;
+                  margin-top: -1px;
+                  top: 50%;
+                  right: 0;
+                  height: 12px;
+                }
+              }
+            }
+          }
+        }
+
+        .panel-collapse{
+          font-size: 0.9375em;
+          background-color: $g47_grey;
+
+          .panel-body{
+            padding: 6px 5.4% 1px 8%;
+            line-height: 2;
+
+            a.link-arrow-right{
+              display: inline;
+              color: $white;
+
+              &:after{
+                content: '';
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                float: right;
+                font-style: normal;
+                background: inline-image("../images/home/iphone6/link_arrow_right.svg") no-repeat;
+                margin: 8px 0;
+              }
+            }
+
+            ul{
+              margin-bottom: 7px;
+              margin-top: 3px;
+
+              li{
+                display: block;
+              }
+            }
+          }
+        }
+
+        #mob_payments_methods{
+          .panel-body{
+            padding: 16px 5.4% 0 8%;
+
+            .row{
+              margin-bottom: 16px;
+
+              .mob-payments__link{
+                display: block;
+                width: 43px;
+                height: auto;
+              }
+
+              .mob-payments__image{
+
+              }
+            }
+
+          }
+        }
+
+        #mob_confidence{
+          .panel-body{
+            padding: 12px 7.6% 12px 8%;
+
+            .row{
+              .mob-confidence__link{
+                &.mob-confidence__verified_secured{
+                  width: 85px;
+                  height: 21px;
+
+                  .mob-confidence__image{
+
+                  }
+                }
+
+                &.mob-confidence__google_trust{
+                  width: 60px;
+                  height: 23px;
+
+                  .mob-confidence__image{
+
+                  }
+                }
+                &.mob-confidence__mcafee{
+                  width: 54px;
+                  height: 20px;
+
+                  .mob-confidence__image{
+
+                  }
+                }
+                &.mob-confidence__trustwave{
+                  width: 38px;
+                  height: 21px;
+
+                  .mob-confidence__image{
+
+                  }
+                }
+
+              }
+            }
+          }
+        }
+
+        #mob_follow_us{
+          .panel-body{
+            padding: 16px 5.4% 16px 8%;
+
+            .row{
+              .col-xs-offset-3{
+                margin-left: 5.7%;
+              }
+
+              .mob-follow-us__link{
+                width: 39px;
+                height: 39px;
+              }
+
+              .mob-follow-us__image{
+
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .bottom-info{
+    background-color: $footer_bg;
+    padding: 0 3.125%;
+
+    .mob-find-local-btn{
+      padding: 16px 0;
+    }
+
+    .find-local-btn{
+      position: relative;
+      font-size: 0.75em;
+      text-transform: uppercase;
+      width: 100%;
+      max-width: 350px;
+      height: 51px;
+      line-height: 51px;
+      border: 1px solid $btn_yellow;
+      @include border-radius(3px);
+      text-align: center;
+      padding: 0 0 0 49px;
+      color: $btn_yellow;
+
+      &:before{
+        content: '';
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 49px;
+        height: 49px;
+        background-color: $btn_yellow;
+        background-repeat: no-repeat;
+        background-size: 35px 35px;
+        background-position: 7px 7px;
+        background-image: inline-image("../images/your_local/1280/find_your_local_art_supply_stores.svg");
+      }
+
+      &:hover, &:focus, &:active {
+        text-decoration: none;
+      }
+
+    }
+
+    .bottom-info__title{
+      color: $white;
+      font-size: 1.3125em;
+      font-family: Lato-Bold, sans-serif;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .telephone{
+      margin-top: 6px;
+
+      span{
+        display: block;
+        color: $aqua;
+        line-height: 1.9;
+        font-size: 1em;
+
+        a{
+          color: inherit;
+        }
+      }
+
+      .telephone__free{
+        text-decoration: underline;
+        font-size: 1.25em;
+        line-height: 1.5em;
+
+        a{
+          text-decoration: underline;
+          font-family: Lato-Bold, sans-serif;
+        }
+
+      }
+    }
+
+    .switch-settings-bottom-container {
+      height: 55px;
+
+      .switch-settings-bottom {
+        .dropup {
+          width: 146px;
+          margin-top: 10px;
+
+          &.open {
+            background: $blue_2a4 !important;
+
+            .switch-settings_selected {
+
+              &:after {
+                background: url(../images/rma/1280/drop_down_list_white.svg) 50% center no-repeat !important;
+              }
+
+            }
+          }
+
+          &.dropup-language {
+
+          }
+
+          &.dropdown-currency {
+            margin-left: -3px;
+
+          }
+
+          .dropdown-toggle {
+            padding: 10px 10px 10px 9px;
+            outline: none;
+
+            .switch-settings_selected {
+              font-size: 1.03125em;
+              color: $white;
+
+              &:before {
+                width: 20px;
+                height: 14px;
+                background-size: 20px 14px;
+                margin-bottom: -1px;
+              }
+
+              &:after {
+                margin-left: 20px;
+                width: 12px;
+                background: url(../images/rma/1280/drop_up_list_white.svg) 50% center no-repeat;
+              }
+            }
+
+          }
+
+          .dropdown-menu {
+            li {
+              a {
+                font-size: 1.03125em;
+
+                &:before {
+                  width: 20px;
+                  height: 14px;
+                  background-size: 20px 14px;
+                  margin-bottom: -1px;
+                }
+
+                &:hover {
+                  background: $grey_dfe;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .subscribe__form{
+      .btn-group{
+        width: 100%;
+
+        input{
+          height: 39px;
+          font-size: 1.0625em;
+          padding: 0 5px;
+          z-index: 1;
+          @include css3-prefix('user-select', 'text');
+          @include border-radius(0);
+
+          &[type="email"]{
+            text-align: left;
+            width: 73%;
+
+            &::placeholder {
+              font-family: Lato-Italic, sans-serif;
+            }
+
+            &:focus{
+              box-shadow: none;
+              outline: none;
+            }
+
+            &:hover{
+              color: inherit;
+              cursor: initial;
+            }
+          }
+
+          &[type="submit"]{
+            text-transform: uppercase;
+            background-color: $dark_aqua;
+
+            &:hover{
+              background-color: $dark_sea;
+            }
+
+            &:focus, &:active{
+              outline: none;
+            }
+
+            @include border-radius(4px);
+            border: none;
+            color: $white;
+            padding: 0 6%;
+            width: 27%;
+            left: -1px;
+          }
+        }
+      }
+
+    }
+
+    .switch-to-desktop{
+      margin-top: 8px;
+      margin-bottom: 19px;
+      line-height: 47px;
+      width: 100%;
+      height: 51px;
+      border: 2px solid $aqua;
+      color: $aqua;
+      font-size: 1.0625em;
+      text-align: center;
+      @include border-radius(4px);
+
+      &:before{
+        content: '';
+        display: inline-block;
+        background-image: inline-image("../images/home/iphone6/switch_to_desktop.svg");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        vertical-align: top;
+        margin: 6px 14px 0 0;
+        width: 38px;
+        height: 35px;
+      }
+
+      &:hover{
+        text-decoration: none;
+      }
+
+      &:focus{
+        color: $white;
+        background: $blue_3e6;
+        text-decoration: none;
+
+        &:before{
+          background-image: inline-image("../images/home/iphone6/switch_to_desktop_clicking.svg");
+        }
+      }
+    }
+
+    .up-btn{
+      @include up-btn($blue_2f4, $white, 1.25em);
+      line-height: 17px;
+      margin: 0 0 20px 0;
+
+    }
+  }
+
+  .copyright{
+    background: $dark_blue;
+    padding: 5px 3.125%;
+    font-family: Lato-Light, sans-serif;
+
+    .policy-nav{
+      li{
+        &.policy-nav__terms-of-use{
+          margin-right: 12%;
+        }
+
+        &.policy-nav__retail-trust{
+          display: none;
+        }
+
+        a{
+          color: $light_blue;
+          font-size: 0.8125em;
+        }
+      }
+    }
+
+    .copyright__text{
+      color: $aqua;
+      margin-top: 8px;
+
+      small{
+        font-size: 0.625em;
+      }
+    }
+  }
+}

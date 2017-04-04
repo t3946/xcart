@@ -1,0 +1,137 @@
+%extend_1 {
+  @include css3-prefix(touch-action, none);
+  @include css3-prefix (user-select, none);
+  @include css3-prefix(box-sizing, border-box);
+}
+
+.noUi-target {
+  @extend %extend_1;
+  position: relative;
+  direction: ltr;
+  * {
+    @extend %extend_1;
+  }
+}
+
+.noUi-base {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  @include css3-prefix(transform, translate3d(0, 0, 0));
+}
+
+.noUi-connect {
+  position: absolute;
+  right: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  @include css3-prefix(transition, background 450ms);
+}
+
+.noUi-origin {
+  position: absolute;
+  height: 0;
+  width: 0;
+}
+
+.noUi-handle {
+  position: relative;
+  z-index: 1;
+  @include css3-prefix(transform, translate3d(0, 0, 0));
+}
+
+.noUi-state-tap {
+  .noUi-connect, .noUi-origin {
+    @include css3-prefix(transition, 'top 0.3s, right 0.3s, bottom 0.3s, left 0.3s');
+  }
+}
+
+.noUi-draggable {
+  cursor: ew-resize;
+}
+
+[disabled] {
+  &.noUi-target, &.noUi-handle, &.noUi-handle {
+    cursor: not-allowed;
+  }
+}
+
+.noUi-state-drag * {
+  cursor: inherit !important;
+}
+
+.noUi-target{
+  position: relative;
+  background-color: $light_d8;
+  @include background-image(linear-gradient(to top, $light_ee 0%, $light_e6 100%));
+  border: 1px solid $light_c7;
+
+  &:before, &:after{
+    content: '';
+    display: inline-block;
+    position: absolute;
+    border-left: 2px solid $dark_40;
+    z-index: 5;
+  }
+
+  &:before{
+    left: -1px;
+  }
+
+  &:after{
+    right: -1px;
+  }
+
+  .price__val{
+    position: absolute;
+
+    &.price__val_min{
+      left: -4px;
+    }
+
+    &.price__val_max{
+      right: 0;
+    }
+  }
+
+  .noUi-base{
+
+    .noUi-origin{
+      .noUi-handle{
+        position: absolute;
+        z-index: 2;
+        background: inline-image("../images/category/1280/runner_mob.svg") no-repeat; /* картинка изображающая ползунок. Или можно залить цветом, задать бордюр и скругления */
+        cursor: pointer;
+        @include css3-prefix(touch-action, none);
+
+        &:hover, &:focus, &:active{
+          outline: none;
+        }
+
+        &.noUi-active{
+          background: inline-image("../images/category/1280/runner_mob_active.svg") no-repeat;
+        }
+
+        &.noUi-handle-lower{
+
+        }
+
+        &.noUi-handle-upper{
+
+        }
+
+        .noUi-tooltip{
+        }
+
+
+      }
+
+    }
+
+    .noUi-connect{
+      background: $orange;
+    }
+  }
+}

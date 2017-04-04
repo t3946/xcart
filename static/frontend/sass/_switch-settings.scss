@@ -1,0 +1,241 @@
+.switch-settings{
+  &.switch-settings-top {
+    .dropdown{
+      width: 129px;
+
+      &.open{
+        border: 1px solid $dark_blue;
+
+        .switch-settings_selected{
+          &:after{
+            background: url(../images/rma/1280/drop_up_list.svg) 50% center no-repeat !important;
+            top: -3px !important;
+          }
+        }
+      }
+
+      &.dropdown-language{
+
+      }
+
+      &.dropdown-currency{
+        margin-left: -3px;
+
+      }
+
+      .dropdown-toggle{
+        padding: 7px 10px 7px 9px;
+
+        .switch-settings_selected{
+          font-size: 0.875em;
+
+          &:after{
+            background: url(../images/rma/1280/drop_down_list.svg) 50% center no-repeat;
+          }
+        }
+
+      }
+      .dropdown-menu{
+
+        li{
+
+          a{
+            font-size: 0.875em;
+          }
+        }
+      }
+    }
+  }
+  &.switch-settings-bottom {
+    .dropup{
+      width: 129px;
+
+      &.open{
+        background: $blue_2a4 !important;
+
+        .switch-settings_selected{
+          &:after{
+            background: url(../images/rma/1280/drop_down_list_white.svg) 50% center no-repeat !important;
+          }
+
+        }
+      }
+
+      &.dropup-language{
+
+      }
+
+      &.dropdown-currency{
+        margin-left: -3px;
+
+      }
+
+      .dropdown-toggle{
+
+        padding: 13px 10px 13px 9px;
+
+        .switch-settings_selected{
+          color: $white;
+
+          &:after{
+            background: url(../images/rma/1280/drop_up_list_white.svg) 50% center no-repeat;
+          }
+        }
+
+      }
+
+      .dropdown-menu{
+        li{
+          a{
+            &:hover{
+              background: $grey_dfe;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .drop-settings{
+    border: 1px solid transparent;
+    display: inline-block;
+
+    &.open{
+      border-color: $dark_blue;
+
+      .switch-settings_selected{
+        &:after{
+        }
+      }
+    }
+
+    &.dropdown-language{
+
+    }
+
+    &.drop-currency{
+
+      .switch-set{
+        &:before{
+          content: "";
+          display: inline-block;
+          width: 16px;
+          height: 11px;
+          margin-right: 8px;
+        }
+      }
+
+      .switch-settings_selected[data-value="euro"] {
+        @extend .switch-set;
+
+        &:before{
+          background: inline-image("../images/1280/home/multilang/euro.png") no-repeat;
+        }
+      }
+
+      .switch-settings_selected[data-value="usa"] {
+        @extend .switch-set;
+
+        &:before{
+          background: inline-image("../images/1280/home/multilang/usa.png") no-repeat;
+        }
+      }
+
+      .switch-settings_selected[data-value="pound"] {
+        @extend .switch-set;
+
+        &:before{
+          background: inline-image("../images/1280/home/multilang/pound.png") no-repeat;
+        }
+      }
+
+      .switch-settings__currency{
+        li[data-value="euro"] {
+          a{
+            @extend .switch-set;
+
+            &:before{
+              background: inline-image("../images/1280/home/multilang/euro.png") no-repeat;
+            }
+          }
+        }
+
+        li[data-value="usa"] {
+          a{
+            @extend .switch-set;
+
+            &:before{
+              background: inline-image("../images/1280/home/multilang/usa.png") no-repeat;
+            }
+          }
+        }
+
+        li[data-value="pound"] {
+          a{
+            @extend .switch-set;
+
+            &:before{
+              background: inline-image("../images/1280/home/multilang/pound.png") no-repeat;
+            }
+          }
+        }
+      }
+    }
+
+    .dropdown-toggle{
+      border-radius: 0;
+      text-align: left;
+      border: none;
+      background: none;
+      padding: 7px 10px 7px 9px;
+      width: 100%;
+
+      &:hover{
+        background: none;
+      }
+      &:focus{
+        background: none;
+      }
+
+      .switch-settings_selected{
+        font-size: 0.875em;
+
+        &:after{
+          content: '';
+          position: absolute;
+          display: inline-block;
+          top: -1px;
+          margin-left: 15px;
+          width: 10px;
+          height: 100%;
+          border: none;
+          background: url(../images/rma/1280/drop_down_list.svg) 50% center no-repeat;
+        }
+      }
+
+    }
+    .dropdown-menu{
+      border: 1px solid $dark_blue;
+      border-radius: 0;
+      min-width: 70px;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: content-box;
+      margin-left: -1px;
+
+      li{
+        display: block;
+
+        a{
+          padding: 4px 8px;
+          font-size: 0.875em;
+
+          &:hover{
+            background: $grey_dfe;
+          }
+        }
+      }
+    }
+  }
+}

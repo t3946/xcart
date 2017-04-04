@@ -1,4 +1,6 @@
 <?php
+namespace Modules\Main\Controllers;
+
 use Xcart\App\Controller\Controller;
 
 class DefaultController extends Controller
@@ -7,6 +9,6 @@ class DefaultController extends Controller
 
     public function index()
     {
-        echo 123;
+        echo $this->render('base.tpl', []);
     }
 }

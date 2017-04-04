@@ -16,8 +16,15 @@
     "select2": "^4.0.3",
     "air-datepicker": "^2.2.3",
     "mmodal": "^1.0.5",
-    "compass-mixins": "^1.0.2",
-    "mindy-sass": "*"
+    "compass-mixins": "^v0.12",
+    "mindy-sass": "*",
+    "jScrollPane": "jscrollpane#^2.0.23",
+    "jquery-mousewheel": "^3.1.13",
+    "sly": "^1.6.1",
+    "modernizr": "^3.3.1",
+    "bootstrap-sass": "^3.3.7",
+    "nouislider": "^9.2.0",
+    "lato-webfont": "^1.1.2"
   },
   "devDependencies": {}
 }
