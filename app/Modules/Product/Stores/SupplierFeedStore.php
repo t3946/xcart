@@ -34,14 +34,18 @@ class SupplierFeedStore extends BaseStore
 
         if (!empty($feed['products'])) {
             foreach ($feed['products'] as $product) {
-                $product['product_code'] = strtoupper($product['product_code']);
-                $product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
-
-                $model = ProductModel::objects()->get($product);
-                if (!$model) {
-                    $model= new ProductModel($product);
+                $product['productcode'] = strtoupper(!isset($product['sku']) ? $product['productcode'] : $product['sku']);
+                $product['r_avail'] = !isset($product['quantity']) ? $product['r_avail'] : $product['quantity'];
+                $product['eta_date_mm_dd_yyyy'] = !isset($product['eta_date']) ? $product['eta_date_mm_dd_yyyy'] : $product['eta_date'];
+                $product['product'] = !isset($product['title']) ? $product['product'] : $product['title'];
+                $product['list_price'] = !isset($product['listprice']) ? $product['listprice'] : $product['listprice'];
+                $product = array_filter($product, function ($v) {
+                    return !is_null($v);
+                });
+                if (isset($product['eta_date_mm_dd_yyyy'])) {
+                    $product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
                 }
-                $this->products[] = $model;
+                $this->products[] = $product;
             }
         }
     }

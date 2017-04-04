@@ -2,6 +2,7 @@
 
 namespace Modules\Distributor\Models;
 
+use Modules\Product\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 
@@ -24,5 +25,19 @@ class DistributorModel extends AutoMetaModel
                 'class' => AutoField::className()
             ]
         ];
+    }
+
+
+    /**
+     * @param ProductModel $modelProduct
+     * @return float
+     */
+    public function calculatePrice($modelProduct)
+    {
+        $price = 0;
+        if ($this->price_coef_z) {
+            $price = max(round(($modelProduct->cost_to_us * $this->price_coef_x + $this->price_coef_y) / $this->price_coef_z, 2), $modelProduct->map_price);
+        }
+        return $price;
     }
 }

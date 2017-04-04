@@ -1,6 +1,21 @@
 <?php
+use Mindy\QueryBuilder\Q\QOr;
+use Modules\Brand\Models\BrandModel;
+use Modules\Brand\Models\BrandStorefrontModel;
+use Modules\Distributor\Models\DistributorFeedFieldModel;
+use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Product\Helpers\ImageHelper;
+use Modules\Product\Helpers\ProductHelper;
+use Modules\Product\Models\CategoryModel;
+use Modules\Product\Models\FilterModel;
+use Modules\Product\Models\FilterProductModel;
+use Modules\Product\Models\FilterValueModel;
+use Modules\Product\Models\PricingModel;
+use Modules\Product\Models\ProductCategoriesModel;
+use Modules\Product\Models\ProductLinksModel;
 use Modules\Product\Models\ProductModel;
+use Modules\Product\Models\ProductStorefrontModel;
+use Modules\Product\Models\ProductUpcChangesModel;
 use Modules\Product\Stores\SupplierFeedStore;
 
 define("CIDEV_CRON_START", "CRON");
@@ -14,60 +29,53 @@ global $config, $xcart_dir;
 set_time_limit(0);
 ini_set('memory_limit', '512M');
 
-
-$feed_types = array("I" => "inventory", "P" => "product");
+$feed_types = ["I" => "inventory", "P" => "product"];
 $log_category = "supplier_feeds_v_2";
 
 if (isset($argv) && is_array($argv)) {
-    $feed_types = array();
+    $feed_types = [];
     switch ($argv[1]) {
         case "I":
-            $feed_types = array("I" => "inventory");
+            $feed_types = ["I" => "inventory"];
             $log_category = "supplier_feeds_inventory";
             break;
         case "P":
-            $feed_types = array("P" => "product");
+            $feed_types = ["P" => "product"];
             $log_category = "supplier_feeds_product";
             break;
         default:
-            $feed_types = array("I" => "inventory", "P" => "product");
+            $feed_types = ["I" => "inventory", "P" => "product"];
     }
 }
 
 if ($config[$log_category] == "Y") {
-    die("Already launched"); // ################################
+    //die("Already launched"); // ################################
 }
-db_query("REPLACE $sql_tbl[config] SET value='Y', name='$log_category'");
-//db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='supplier_feeds_v_2'");
+db_query_param('REPLACE xcart_config SET value=:value, name=:name', ['value' => 'Y', 'name' => $log_category]);
 
-$started_at = time();
+$start_time = new DateTime('now');
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log($log_category, $log_text);
-
-x_load('cart', 'mail', 'order', 'product', 'taxes', 'files', 'backoffice', "image", "gd", "xml", "category");
-######################################################################################
 
 if (empty($config["Supplier_feeds"]["Feeds_storage_path"]) || empty($config["Supplier_feeds"]["Feeds_storage_login"]) || empty($config["Supplier_feeds"]["Feeds_storage_password"])) {
     $log_text = "--- login credentials incorrect. Script stopped.";
     func_backprocess_log($log_category, $log_text);
     func_backprocess_log("supplier feeds errors", $log_text);
-    db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
+    db_query_param(/** @lang MySQL */
+        'UPDATE xcart_config SET value=:value WHERE name=:name', ['value' => 'N', 'name' => $log_category]);
     die($log_text);
 }
 
-$feed_type_imploded = implode("', '", array_keys($feed_types));
-
-$supplier_feeds = func_query("SELECT * FROM $sql_tbl[supplier_feeds] WHERE enabled='Y' AND feed_type IN ('$feed_type_imploded')");
+$supplier_feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'feed_type__in' =>  $feed_types, 'feed_file_name' => 'feed147i.txt']);
 
 if (empty($supplier_feeds) || !is_array($supplier_feeds)) {
     $log_text = "--- xcart_supplier_feeds does not have 'enabled' rows. Script stopped.";
     func_backprocess_log($log_category, $log_text);
     func_backprocess_log("supplier feeds errors", $log_text);
-    db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
+    db_query_param(/** @lang MYSQL */
+        'UPDATE xcart_config SET value=:value WHERE name=:name', ['value' => 'N', 'name' => $log_category]);
     die($log_text);
 }
-
-$product_cols = func_query_column("SHOW COLUMNS FROM " . $sql_tbl['products']);
 
 $product_cols_replace = array(
     "sku" => "productcode",
@@ -77,22 +85,15 @@ $product_cols_replace = array(
     "listprice" => "list_price"
 );
 
-$manufacturerid_info = func_query_hash("SELECT code, manufacturerid, manufacturer FROM $sql_tbl[manufacturers]", 'manufacturerid', false);
+foreach ($supplier_feeds as $k => $supplierFeedModel) {
+    $local_file = null;
+    $distributorModel = $supplierFeedModel->distributor->get();
+    $start_supplier_time = new DateTime('now');
 
-foreach ($supplier_feeds as $k => $v) {
+    $discontinued_products_count = $updated_products_count = $inserted_products_count = 0;
+    $all_feed_productcodes = $lastFeedFields = [];
 
-    $start_supplier_time = time();
-
-//	$last_update_time = time();
-    $discontinued_products_count = 0;
-    $updated_products_count = 0;
-    $inserted_products_count = 0;
-    $all_feed_productcodes = array();
-
-//func_print_r($v);
-//die();
-
-    $md5_arr = explode(".", $v["feed_file_name"]);
+    $md5_arr = explode(".", $supplierFeedModel->feed_file_name);
     array_pop($md5_arr);
     $md5_file = implode(".", $md5_arr) . ".md5";
 
@@ -100,34 +101,26 @@ foreach ($supplier_feeds as $k => $v) {
     $ftp = ftp_connect($config["Supplier_feeds"]["Feeds_storage_path"]);
     if ($ftp && @ftp_login($ftp, $config["Supplier_feeds"]["Feeds_storage_login"], $config["Supplier_feeds"]["Feeds_storage_password"])) {
         ftp_pasv($ftp, true);
-
         $local_file = $xcart_dir . "/files/product_feeds_v2/" . str_replace("/", "_", $md5_file);
         $server_file = $md5_file;
-
         $file_is_found = false;
         if (@ftp_get($ftp, $local_file, $server_file, FTP_BINARY)) {
             $md5_file_is_found = true;
         }
-
         ftp_quit($ftp);
     }
-
-
     if ($md5_file_is_found) {
-
         $handle = fopen($local_file, "r");
         $md5 = fread($handle, filesize($local_file));
         fclose($handle);
-
-        if ($md5 == $v["last_md5"]) {
-            $log_text = "manufacturerid: " . $v["manufacturerid"] . ". md5 = last_md5. Feed skipped. ";
-            $log_text .= "md5file: " . $md5 . " - md5db: " . $v["last_md5"];
+        if ($md5 == $supplierFeedModel->last_md5) {
+            $log_text = "manufacturerid: " . $supplierFeedModel->manufacturerid . ". md5 = last_md5. Feed skipped. ";
+            $log_text .= "md5file: " . $md5 . " - md5db: " . $supplierFeedModel->last_md5;
             func_backprocess_log("supplier feeds errors", $log_text);
             continue;
         }
-
     } else {
-        $log_text = "manufacturerid: " . $v["manufacturerid"] . ". md5 file is not found. Skipped.";
+        $log_text = "manufacturerid: " . $supplierFeedModel->manufacturerid . ". md5 file is not found. Skipped.";
         func_backprocess_log($log_category, $log_text);
         func_backprocess_log("supplier feeds errors", $log_text);
         continue;
@@ -138,547 +131,330 @@ foreach ($supplier_feeds as $k => $v) {
     if ($ftp && @ftp_login($ftp, $config["Supplier_feeds"]["Feeds_storage_login"], $config["Supplier_feeds"]["Feeds_storage_password"])) {
         ftp_pasv($ftp, true);
 
-        $local_file = $xcart_dir . "/files/product_feeds_v2/" . str_replace("/", "_", $v["feed_file_name"]);
-        $server_file = $v["feed_file_name"];
+        $local_file = $xcart_dir . "/files/product_feeds_v2/" . str_replace("/", "_", $supplierFeedModel->feed_file_name);
+        $server_file = $supplierFeedModel->feed_file_name;
 
         $file_is_found = false;
         if (@ftp_get($ftp, $local_file, $server_file, FTP_BINARY)) {
             $file_is_found = true;
         }
-
         ftp_quit($ftp);
-
         if ($file_is_found) {
-
             $handle = fopen($local_file, "r");
             $contents = fread($handle, filesize($local_file));
             fclose($handle);
-
-            //$products = json_decode($contents, true);
             $supplierFeed = new SupplierFeedStore($contents);
-
             if (empty($supplierFeed->products) || !is_array($supplierFeed->products)) {
-                $log_text = "manufacturerid: " . $v["manufacturerid"] . ". No products found. (" . $feed_types[$v["feed_type"]] . ")";
+                $log_text = "manufacturerid: " . $supplierFeedModel->manufacturerid . ". No products found. (" . $feed_types[$supplierFeedModel->feed_type] . ")";
                 func_backprocess_log($log_category, $log_text);
                 func_backprocess_log("supplier feeds errors", $log_text);
                 continue;
             }
-
             if ($supplierFeed->count() != $supplierFeed->products_in_feed) {
-                $log_text = "manufacturerid: {$v["manufacturerid"]}. Corrupted feed file (by products in feed count). ({$feed_types[$v["feed_type"]]}){$supplierFeed->count()} vs {$supplierFeed->products_in_feed}";
+                $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Corrupted feed file (by products in feed count). ({$feed_types[$supplierFeedModel->feed_type]}){$supplierFeed->count()} vs {$supplierFeed->products_in_feed}";
                 func_backprocess_log($log_category, $log_text);
                 func_backprocess_log("supplier feeds errors", $log_text);
-                db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
+                db_query_param(/** @lang MySQL */
+                    'UPDATE xcart_config SET value=:value WHERE name=:name', ['value' => 'N', 'name' => $log_category]);
                 continue;
             }
-
-            if ($supplierFeed->supplier_id != $v["manufacturerid"]) {
-                $log_text = "manufacturerid: {$v["manufacturerid"]}. Wrong supplier_id. ({$feed_types[$v["feed_type"]]}) . Feed skipped.";
+            if ($supplierFeed->supplier_id != $supplierFeedModel->manufacturerid) {
+                $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Wrong supplier_id. ({$feed_types[$supplierFeedModel->feed_type]}) . Feed skipped.";
                 func_backprocess_log($log_category, $log_text);
                 func_backprocess_log("supplier feeds errors", $log_text);
                 continue;
             }
-
-            if ($v["last_update_items_count"] > 0) {
-                if (($supplierFeed->products_in_feed / $v["last_update_items_count"]) < $v["threshold"]) {
-                    $log_text = "manufacturerid: {$v["manufacturerid"]}. Too few products in feed in comparison with last update {$v['products_in_feed']} against {$v['last_update_items_count']}. ({$feed_types[$v["feed_type"]]})";
+            if ($supplierFeedModel->last_update_items_count > 0) {
+                if (($supplierFeed->products_in_feed / $supplierFeedModel->last_update_items_count) < $supplierFeedModel->threshold) {
+                    $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Too few products in feed in comparison with last update {$supplierFeedModel->products_in_feed} against {$supplierFeedModel->last_update_items_count}. ({$feed_types[$supplierFeedModel->feed_type]})";
                     func_backprocess_log($log_category, $log_text);
                     continue;
                 }
             }
-
             $create_date_time_diff = time() - $supplierFeed->getFeedDate();
-            $log_text = "manufacturerid: {$v["manufacturerid"]}. Started. ({$feed_types[$v["feed_type"]]})";
+            $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Started. ({$feed_types[$supplierFeedModel->feed_type]})";
             func_backprocess_log($log_category, $log_text);
 
-            $last_feed_fields_arr = array();
-            $last_feed_fields_arr_vals = array();
             /** @var ProductModel $modelProduct */
-            foreach ($supplierFeed->products as $kp => $modelProduct) {
-                print($kp . ' --> ' . $modelProduct->productcode . "\n");
-
-                if ($v["feed_type"] == "I") { // inventory
-                    if (!$modelProduct) {
-                        continue;
-                    }
-                    $modelProduct->controlled_by_feed = $v['feed_file_name'];
-                    $all_feed_productcodes[] = $modelProduct->productcode;
+            foreach ($supplierFeed->products as $kp => $aProduct) {
+                print($kp . ' --> ' . $aProduct['productcode'] . "\n");
+                if (empty($aProduct['productcode'])) {
+                    continue;
                 }
 
-                if ($v["feed_type"] == "P") { // product
-                    if ($modelProduct->getIsCreated()) {
-                        if ($v["add_new_only"] == "Y") {continue;}
-                        if (!empty($supplierFeed->defaults) && is_array($supplierFeed->defaults)) {
-                            $modelProduct->setAttributes($supplierFeed->defaults);
-                        }
-                    } else {
-                        if (!empty($supplierFeed->dont_update_fields) && is_array($supplierFeed->dont_update_fields)) {
-                            foreach ($supplierFeed->dont_update_fields as $fieldUnset) {
-                                $trimDesc = trim($modelProduct->fulldescr);
-                                if ($fieldUnset != 'fulldescr' || $fieldUnset == 'fulldescr' && !empty($trimDesc)) {
-                                    $modelProduct->$fieldUnset = null;
-                                }
-                            }
-                        }
-                    }
+                $lastFeedFields = array_unique(array_merge($lastFeedFields, array_keys($aProduct)));
+
+                $modelProduct = ProductModel::objects()->filter(['productcode' => $aProduct['productcode']])->get();
+                if (!$modelProduct) {
+                    $modelProduct= new ProductModel();
                 }
 
-                $not_xcart_products_fields = $p;
-                $just_created = false;
-                //$product['eta_date_mm_dd_yyyy'] = strtotime($product['eta_date_mm_dd_yyyy']);
-                if ($v["feed_type"] == "P") { // product
-                    $image_data = array();
-                    if (!empty($not_xcart_products_fields["images"]) && is_array($not_xcart_products_fields["images"])) {
-                        print("Images section\n");
-                        $alt_idx = 0;
-                        foreach ($not_xcart_products_fields["images"] as $k_img => $IMAGE_URL) {
-                            $alt_context = addslashes($product["product"]);
+                $modelProduct->setAttributes($aProduct);
+                $all_feed_productcodes[] = $modelProduct->productcode;
 
-                            if (isset($not_xcart_products_fields["alt_names"])) {
-                                if (isset($not_xcart_products_fields["alt_names"][$alt_idx]))
-                                    $alt_context = addslashes($not_xcart_products_fields["alt_names"][$alt_idx]);
-                            }
-                            $alt_idx = $alt_idx + 1;
-                            $SET_IMAGE_URL = ImageHelper::getImageFileNameFromDownloadLink($IMAGE_URL);
-                            if (empty($SET_IMAGE_URL)) {
-                                $img_path_arr = explode("//", $IMAGE_URL);
-                                $img_path_arr2 = explode("/", $img_path_arr[1]);
-                                unset($img_path_arr2[0]);
-                                $img_path_after = implode("_", $img_path_arr2);
-                                $img_path_after_arr = explode(".", $img_path_after);
-                                $ext = array_pop($img_path_after_arr);
-                                $Prod_ID = $v["manufacturerid"] . "_" . implode("_", $img_path_after_arr);
-                                $image_file_name = $Prod_ID . "." . $ext;
-                            } else {
-                                $image_file_name = $v["manufacturerid"] . "_" . $SET_IMAGE_URL;
-
-                            }
-                            $image_file_name = str_replace(' ', '', rawurldecode($image_file_name));
-                            $image_file_path = $xcart_dir . "/images/D/" . $image_file_name;
-
-                            if ($k_img % 5 == 0) {
-                                func_flush(".");
-                            }
-                            $sDataImage = file_get_contents_curl($IMAGE_URL);
-
-                            if (!empty($sDataImage)) {
-                                if (file_put_contents($image_file_path, $sDataImage)) {
-                                    $img_info = getimagesize($image_file_path);
-                                    if ($img_info) {
-                                        $image_data[$k_img]['date'] = time();
-                                        $image_data[$k_img]['image_path'] = $image_file_path;
-                                        $image_data[$k_img]['image_type'] = $img_info["mime"];
-                                        $image_data[$k_img]['image_x'] = $img_info[0];
-                                        $image_data[$k_img]['image_y'] = $img_info[1];
-                                        $image_data[$k_img]['image_size'] = filesize($image_file_path);
-                                        $image_data[$k_img]['alt'] = $alt_context;
-                                        $image_data[$k_img]['avail'] = 'Y';
-                                        $image_data[$k_img]['orderby'] = 10 * $k_img;
-                                    }
-                                }
+                if ($modelProduct->getIsNewRecord()) {
+                    $discontinuedDate = $modelProduct->getFromQueryAttribute('discontinued_date');
+                    if (!empty($discontinuedDate)) {
+                        $discontinuedDateTimeDiff = strtotime($discontinuedDate) - time();
+                        if ($discontinuedDateTimeDiff < (60 * 60 * 24 * 20)) {
+                            if ($modelProduct->forsale != "N") {
+                                $modelProduct->forsale = "N";
+                                $modelProduct->update_search_index = "Y";
                             }
                         }
-                    }
-
-                    if (empty($productid)) {
-                        if (
-                            (empty($not_xcart_products_fields["price"]) && empty($product["cost_to_us"])) ||
-                            empty($product["product"]) ||
-                            empty($image_data)
-                        ) {
-                            print("Skip section\n");
-                            continue; //Skip such product
-                        }
-
-                        ################# START: Insert product #################
-                        print("Insert product section\n");
-                        $new_product_name = wordwrap($product["product"], 70, "---===---");
-                        $new_product_name_arr = explode("---===---", $product["product"]);
-                        $product["product"] = $new_product_name_arr[0];
-
-                        $time = time();
-                        db_query("INSERT INTO $sql_tbl[products] (productcode, provider, original_provider, add_date, mod_date, source_sfid, manufacturerid) VALUES ('$productcode', '$v[feed_file_name]', '$v[feed_file_name]','" . $time . "', '" . $time . "', '$v[storefront_id]', '$v[manufacturerid]')");
-                        $productid = db_insert_id();
-
-                        db_query("INSERT INTO $sql_tbl[products_categories] (categoryid, productid, main) VALUES ('$v[base_category_id]', '$productid', 'Y')");
-                        db_query("INSERT INTO $sql_tbl[products_sf] (productid, sfid) VALUES ('$productid', '$v[storefront_id]')");
-
-                        if (empty($not_xcart_products_fields["price"])) {
-                            $price = (1.15 * $product["cost_to_us"] + 0.3) / 0.97;
-                            $price = price_format($price);
-                            $not_xcart_products_fields["price"] = $price;
-                        }
-
-                        db_query("INSERT INTO $sql_tbl[pricing] (productid, quantity, price) VALUES ('$productid', '1', '" . $not_xcart_products_fields["price"] . "')");
-
-                        $clean_url = func_clean_url_autogenerate('P', $productid, array('product' => $product["product"], 'productcode' => $productcode));
-                        $clean_url_save_in_history = false;
-                        db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$productid'");
-                        func_clean_url_add($clean_url, 'P', $productid);
-
-                        $just_created = true;
-                        $inserted_products_count++;
-
-                        unset($not_xcart_products_fields["price"]);
-                        ################# END: Insert product #################
-                    } else {
-                        if ($v["add_new_only"] == "Y") {
-                            print("Add only skip\n");
-                            continue;
-                        }
-                    }
-
-                    if (!empty($image_data)) {
-                        print("Images section2\n");
-                        foreach ($image_data as $k_img => $image_info) {
-                            $image_info['id'] = $productid;
-                            $image_info_image_path_arr = explode("/images/D/", $image_info["image_path"]);
-                            $image_path_from_folder = "./images/D/" . $image_info_image_path_arr[1];
-                            $image_id = func_query_first_cell("SELECT imageid FROM $sql_tbl[images_D] WHERE id='$productid' AND (image_path='$image_info[image_path]' OR image_path='$image_path_from_folder')");
-                            $image_info["image_path"] = $image_path_from_folder;
-                            if (empty($image_id)) {
-                                print("Images DB insert\n");
-                                $image_id = func_array2insert('images_D', $image_info);
-                            } else {
-                                func_array2update("images_D", $image_info, "imageid = '$image_id'");
-                            }
-
-                            $image_info["imageid"] = $image_id;
-                            $image_info = func_set_correct_det_img($image_info, true);
-
-                        }
-                    }
-                }
-
-                if (!empty($product["fulldescr"]) && $v["native_full_description"] != "Y") {
-                    print("fulldescr section\n");
-                    $tmp_fulldescr = $product["fulldescr"];
-
-                    $br_arr = array("<br>", "<BR>", "<br/>", "<Br>", "<bR>", "<Br/>", "<Br />", "<BR/>", "<bR/>", "<bR />", "\n");
-                    $tmp_fulldescr = str_replace($br_arr, "<br />", $tmp_fulldescr);
-
-                    $tmp_fulldescr_arr = explode("<br />", $tmp_fulldescr);
-
-                    if (!empty($tmp_fulldescr_arr)) {
-                        foreach ($tmp_fulldescr_arr as $k_br => $v_br) {
-                            $v_br = trim($v_br);
-                            if (!empty($v_br)) {
-                                $v_br = "* " . ucfirst($v_br);
-                                $tmp_fulldescr_arr[$k_br] = $v_br;
-                            }
-                        }
-
-                        $product["fulldescr"] = implode("<br />", $tmp_fulldescr_arr);
-                    }
-                }
-                $price_updated = false;
-                if (!empty($not_xcart_products_fields) && is_array($not_xcart_products_fields)) {
-                    ################# START: Update NOT xcart_product tables #################
-                    $not_xcart_products_fields = func_addslashes($not_xcart_products_fields);
-                    if (!empty($not_xcart_products_fields["similar_internal_id"]) && is_array($not_xcart_products_fields["similar_internal_id"])) {
-                        print("Similar section\n");
-                        $productid_arr_2 = array();
-                        foreach ($not_xcart_products_fields["similar_internal_id"] as $supplier_internal_product_id) {
-                            $productid2 = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE supplier_internal_product_id='$supplier_internal_product_id'");
-                            if (!empty($productid2)) {
-                                $productid_arr_2[] = $productid2;
-                            }
-                        }
-                        $productid_str_2 = implode(",", $productid_arr_2);
-                        unset($productid_arr_2);
-                        if (!empty($productid_str_2)) {
-                            $product["similar_productids"] = $productid_str_2;
-                            $product["generate_similar_products"] = "N";
-                        }
-                    }
-                    if (!empty($not_xcart_products_fields["related_internal_id"]) && is_array($not_xcart_products_fields["related_internal_id"])) {
-                        print("Relatedid section\n");
-                        foreach ($not_xcart_products_fields["related_internal_id"] as $supplier_internal_product_id) {
-                            $productid2 = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE supplier_internal_product_id='$supplier_internal_product_id'");
-                            if (!empty($productid2)) {
-                                $count_productid2 = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[product_links] WHERE productid1='$productid' AND productid2='$productid2'");
-                                if (empty($count_productid2)) {
-                                    db_query("INSERT INTO $sql_tbl[product_links] (productid1, productid2) VALUES ('$productid', '$productid2')");
-                                }
-                            }
-                        }
-                    }
-                    if (!empty($not_xcart_products_fields["related_sku"]) && is_array($not_xcart_products_fields["related_sku"])) {
-                        print("RelatedSKU section\n");
-                        foreach ($not_xcart_products_fields["related_sku"] as $related_sku) {
-                            $productid2 = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='$related_sku'");
-                            if (!empty($productid2)) {
-                                $count_productid2 = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[product_links] WHERE productid1='$productid' AND productid2='$productid2'");
-                                if (empty($count_productid2)) {
-                                    db_query("INSERT INTO $sql_tbl[product_links] (productid1, productid2) VALUES ('$productid', '$productid2')");
-                                }
-                            }
-                        }
-                    }
-
-                    if (!empty($not_xcart_products_fields["attributes"]) && is_array($not_xcart_products_fields["attributes"])) {
-                        print("Attributes section\n");
-                        $attributes_str = "";
-                        db_query("DELETE FROM $sql_tbl[cidev_filter_products] WHERE productid = '$productid'");
-                        foreach ($not_xcart_products_fields["attributes"] as $f_name => $fv_name_arr) {
-                            if (!empty($fv_name_arr) && is_array($fv_name_arr)) {
-                                if (!empty($attributes_str)) {
-                                    $attributes_str .= "<br />";
-                                }
-                                $f_id = func_query_first_cell("SELECT f_id FROM $sql_tbl[cidev_filters] WHERE f_name='$f_name' AND storefrontid='$v[storefront_id]'");
-                                if (empty($f_id)) {
-                                    db_query("INSERT INTO $sql_tbl[cidev_filters] (f_name, storefrontid) VALUES ('$f_name', '$v[storefront_id]')");
-                                    $f_id = db_insert_id();
-                                }
-                                foreach ($fv_name_arr as $fv_name) {
-                                    $fv_id = func_query_first_cell("SELECT fv_id FROM $sql_tbl[cidev_filter_values] WHERE f_id='$f_id' AND fv_name='$fv_name'");
-                                    if (empty($fv_id)) {
-                                        db_query("INSERT INTO $sql_tbl[cidev_filter_values] (f_id, fv_name) VALUES ('$f_id', '$fv_name')");
-                                        $fv_id = db_insert_id();
-                                    }
-                                    $fp_id = func_query_first_cell("SELECT fp_id FROM $sql_tbl[cidev_filter_products] WHERE fv_id='$fv_id' AND productid='$productid'");
-                                    if (empty($fp_id)) {
-                                        db_query("INSERT INTO $sql_tbl[cidev_filter_products] (fv_id, productid) VALUES ('$fv_id', '$productid')");
-                                    }
-                                }
-                                $attributes_str .= $f_name . ": " . implode(", ", $fv_name_arr);
-                            }
-                        }
-
-                        if (!empty($attributes_str) && !empty($product["fulldescr"])) {
-                            $product["fulldescr"] .= "<br /><br />Specifications:<br /><br />" . $attributes_str;
-                        }
-                    }
-                    if (!empty($not_xcart_products_fields["brand_name"])) {
-                        print("Brand section\n");
-                        $BRAND = $not_xcart_products_fields["brand_name"];
-                        $brandid = func_query_first_cell("SELECT brandid FROM $sql_tbl[brands] WHERE brand='$BRAND'");
-                        if (empty($brandid)) {
-                            db_query("INSERT INTO $sql_tbl[brands] (brand, orderby) VALUES('$BRAND', '10')");
-                            $brandid = db_insert_id();
-                            db_query("INSERT INTO $sql_tbl[brands_sf] (brandid, sfid) VALUES('$brandid', '$v[storefront_id]')");
-                            // Autogenerate clean URL.
-                            $clean_url = func_clean_url_autogenerate('M', $brandid, array('brand' => $BRAND));
-                            $clean_url_save_in_history = false;
-                            db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type='M' AND resource_id='$brandid'");
-                            func_clean_url_add($clean_url, 'M', $brandid);
-                        }
-                        $product["brandid"] = $brandid;
-                    }
-                    if (isset($not_xcart_products_fields["price"])) {
-                        print("Price section\n");
-                        db_query("UPDATE $sql_tbl[pricing] SET price='" . $not_xcart_products_fields["price"] . "' WHERE productid='$productid' AND quantity='1'");
-                        $price_updated = true;
-                    }
-
-                    ### assign product to category
-                    if (!empty($not_xcart_products_fields["supplier_categories"][0])) {
-                        print("Categories section\n");
-                        $cats_arr = explode("/", $not_xcart_products_fields["supplier_categories"][0]);
-                        if (!empty($cats_arr) && is_array($cats_arr)) {
-                            $parentid = $v["base_category_id"];
-                            foreach ($cats_arr as $v_cat) {
-                                $categoryid = func_query_first_cell("SELECT categoryid FROM $sql_tbl[categories] WHERE parentid='$parentid' AND category='" . addslashes($v_cat) . "'");
-                                if (empty($categoryid)) {
-                                    db_query("INSERT INTO $sql_tbl[categories] (parentid, storefrontid, category, is_bold, order_by) VALUES ('$parentid', '$v[storefront_id]', '" . addslashes($v_cat) . "', 'N', '10')");
-                                    $categoryid = db_insert_id();
-                                    $parent_categoryid_path = func_query_first_cell("SELECT categoryid_path FROM $sql_tbl[categories] WHERE categoryid='$parentid'") . "/" . $categoryid;
-                                    func_array2update("categories", array("categoryid_path" => $parent_categoryid_path), "categoryid = '$categoryid'");
-                                    // Autogenerate clean URL.
-                                    $clean_url = func_clean_url_autogenerate('C', $categoryid, array('category' => $v_cat));
-                                    $clean_url_save_in_history = false;
-                                    db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type='C' AND resource_id='$categoryid'");
-                                    func_clean_url_add($clean_url, 'C', $categoryid);
-                                }
-                                $parentid = $categoryid;
-                            }
-                            if (!empty($categoryid)) {
-                                $pc_classify_status = func_query_first_cell("SELECT pc_classify_status FROM $sql_tbl[products] WHERE productid='$productid'");
-                                if ($pc_classify_status != "AC" && $pc_classify_status != "ACC" && $pc_classify_status != "MC") {
-                                    db_query("UPDATE $sql_tbl[products_categories] SET categoryid='$categoryid' WHERE productid='$productid' AND main='Y'");
-                                    func_recalc_product_count($categoryid);
-                                }
-                            }
-                        }
-                    }
-                    ################# END: Update NOT xcart_product tables #################
-                }
-                if (!empty($product) && is_array($product) && !empty($productid)) {
-                    ################# START: xcart_product update #################
-                    print("START: xcart_product update section\n");
-                    $product_in_DB_info_arr = func_query_first("SELECT forsale, r_avail, eta_date_mm_dd_yyyy, eta_date_lock FROM $sql_tbl[products] WHERE productid='$productid'");
-                    $product_dimension = func_query_first("SELECT dim_x, dim_y, dim_z, weight, dim_lock, shipping_dim_x, shipping_dim_y,
-																  shipping_dim_z, shipping_dim_lock, shipping_weight, shipping_weight_lock, weight_lock
-															 FROM $sql_tbl[products] WHERE productid='$productid'");
-                    if ($product_dimension['weight_lock'] != 'Y') {
-                        if (!isset($product['weight']))
-                            $product['weight'] = 0;
-                        if ($product['weight'] == 0 && $product_dimension['weight'] != 0)
-                            $product['weight'] = $product_dimension['weight'];
-                    } else {
-                        unset($product['weight']);
-                    }
-                    if ($product_dimension['shipping_weight_lock'] != 'Y') {
-                        if (!isset($product['shipping_weight']))
-                            $product['shipping_weight'] = 0;
-                        if ($product['shipping_weight'] == 0 && $product_dimension['shipping_weight'] != 0)
-                            $product['shipping_weight'] = $product_dimension['shipping_weight'];
-                    } else {
-                        unset($product['shipping_weight']);
-                    }
-                    if ($product_dimension['dim_lock'] != 'Y') {
-                        if (!isset($product['dim_x']))
-                            $product['dim_x'] = 0;
-                        if (!isset($product['dim_y']))
-                            $product['dim_y'] = 0;
-                        if (!isset($product['dim_z']))
-                            $product['dim_z'] = 0;
-                        $dimension1 = array($product['dim_x'], $product['dim_y'], $product['dim_z']);
-                        rsort($dimension1);
-                        $dimension2 = array($product_dimension['dim_x'], $product_dimension['dim_y'], $product_dimension['dim_z']);
-                        rsort($dimension2);
-                        $dimension = array();
-
-                        if ($dimension1[0] != 0)
-                            $dimension[0] = $dimension1[0];
-                        else
-                            $dimension[0] = $dimension2[0];
-
-                        if ($dimension1[1] != 0)
-                            $dimension[1] = $dimension1[1];
-                        else
-                            $dimension[1] = $dimension2[1];
-
-                        if ($dimension1[2] != 0)
-                            $dimension[2] = $dimension1[2];
-                        else
-                            $dimension[2] = $dimension2[2];
-
-                        rsort($dimension);
-
-                        $product['dim_x'] = $dimension[0];
-                        $product['dim_y'] = $dimension[1];
-                        $product['dim_z'] = $dimension[2];
-                    } else {
-                        unset($product['dim_x']);
-                        unset($product['dim_y']);
-                        unset($product['dim_z']);
-                    }
-
-                    if ($product_dimension['shipping_dim_lock'] != 'Y') {
-
-                        if (!isset($product['shipping_dim_x']))
-                            $product['shipping_dim_x'] = 0;
-                        if (!isset($product['shipping_dim_y']))
-                            $product['shipping_dim_y'] = 0;
-                        if (!isset($product['shipping_dim_z']))
-                            $product['shipping_dim_z'] = 0;
-
-                        $dimension1 = array($product['shipping_dim_x'], $product['shipping_dim_y'], $product['shipping_dim_z']);
-                        rsort($dimension1);
-
-                        $dimension2 = array($product_dimension['shipping_dim_x'], $product_dimension['shipping_dim_y'], $product_dimension['shipping_dim_z']);
-                        rsort($dimension2);
-
-                        $dimension = array();
-
-                        if ($dimension1[0] != 0)
-                            $dimension[0] = $dimension1[0];
-                        else
-                            $dimension[0] = $dimension2[0];
-
-                        if ($dimension1[1] != 0)
-                            $dimension[1] = $dimension1[1];
-                        else
-                            $dimension[1] = $dimension2[1];
-
-                        if ($dimension1[2] != 0)
-                            $dimension[2] = $dimension1[2];
-                        else
-                            $dimension[2] = $dimension2[2];
-
-                        rsort($dimension);
-
-                        $product['shipping_dim_x'] = $dimension[0];
-                        $product['shipping_dim_y'] = $dimension[1];
-                        $product['shipping_dim_z'] = $dimension[2];
-                    } else {
-                        unset($product['shipping_dim_x']);
-                        unset($product['shipping_dim_y']);
-                        unset($product['shipping_dim_z']);
-                    }
-                    $product = func_addslashes($product);
-                    $discontinued_date_condition_found = false;
-                    if (!empty($not_xcart_products_fields["discontinued_date"])) {
-                        print("Discontinued section\n");
-                        $discontinued_date_arr = explode("/", $not_xcart_products_fields["discontinued_date"]);
-                        $discontinued_date_time = mktime(0, 0, 0, $discontinued_date_arr[0], $discontinued_date_arr[1], $discontinued_date_arr[2]);
-                        $discontinued_date_time_diff = $discontinued_date_time - time();
-                        if ($discontinued_date_time_diff < (60 * 60 * 24 * 20)) {
-
-                            if ($product_in_DB_info_arr["forsale"] != "N") {
-                                $product["forsale"] = "N";
-                                $product["update_search_index"] = "Y";
-                                $discontinued_date_condition_found = true;
-                                $discontinued_products_count++;
-                            }
-                        }
-                    }
-
-                    if (!$just_created && !$discontinued_date_condition_found) {
-                        $updated_products_count++;
                     }
                     $todayDate = strtotime(date("Y-m-d"));
-
-                    if (($product_in_DB_info_arr['eta_date_lock'] == "Y") && ($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $todayDate) && (($product_in_DB_info_arr['eta_date_mm_dd_yyyy'] > $product['eta_date_mm_dd_yyyy']) || empty($product['eta_date_mm_dd_yyyy']))) {
-                        unset($product['eta_date_mm_dd_yyyy']);
+                    if (($modelProduct->eta_date_lock == "Y")
+                        && ($modelProduct->getOldAttribute('eta_date_mm_dd_yyyy') > $todayDate)
+                        && (($modelProduct->getOldAttribute('eta_date_mm_dd_yyyy') > $modelProduct->eta_date_mm_dd_yyyy) || empty($modelProduct->eta_date_mm_dd_yyyy))
+                    ) {
+                        $modelProduct->eta_date_mm_dd_yyyy = $modelProduct->getOldAttribute('eta_date_mm_dd_yyyy');
                     } else {
-                        $product['eta_date_lock'] = "N";
+                        $modelProduct->eta_date_lock = "N";
                     }
-
-                    $newUPC = Xcart\Product::calculateUPC($product['upc']);
-                    if ($product['upc'] != $newUPC) {
-                        func_array2insert('products_upc_changes', ['productid' => $productid, 'original_upc' => $product['upc'], 'corrected_upc' => $newUPC], true);
-                        $product['upc'] = $newUPC;
-                    }
-
-                    print("DB update products section\n");
-                    func_array2update("products", $product, "productid = '$productid'");
-                    ################# END: xcart_product update #################
                 }
 
-                if ($just_created) {
-                    print("Just created section\n");
-                    func_build_quick_flags($productid);
-                    func_generate_discounts(array($productid));
+                switch ($supplierFeedModel->feed_type) {
+                    case 'I' :
+                        if ($modelProduct->getIsNewRecord()) {
+                            continue;
+                        }
+                        $modelProduct->controlled_by_feed = $supplierFeedModel->feed_file_name;
+                        break;
+                    case 'P' :
+                        if ($modelProduct->getIsNewRecord()) {
+                            if (!empty($supplierFeed->defaults) && is_array($supplierFeed->defaults)) {
+                                $modelProduct->setAttributes($supplierFeed->defaults);
+                            }
+
+                        } else {
+                            if ($supplierFeedModel->add_new_only == "Y") {continue;}
+                            if (!empty($supplierFeed->dont_update_fields) && is_array($supplierFeed->dont_update_fields)) {
+                                foreach ($supplierFeed->dont_update_fields as $fieldUnset) {
+                                    $trimDesc = trim($modelProduct->fulldescr);
+                                    if ($fieldUnset != 'fulldescr' || $fieldUnset == 'fulldescr' && !empty($trimDesc)) {
+                                        $modelProduct->setAttribute($fieldUnset, $modelProduct->getOldAttribute($fieldUnset));
+                                    }
+                                }
+                            }
+                            if ($modelProduct->weight_lock == 'Y' || (!$modelProduct->weight && $modelProduct->getOldAttribute('weight'))) {
+                                $modelProduct->weight = $modelProduct->getOldAttribute('weight');
+                            }
+                            if ($modelProduct->shipping_weight_lock == 'Y' || (!$modelProduct->shipping_weight && $modelProduct->getOldAttribute('shipping_weight'))) {
+                                $modelProduct->shipping_weight = $modelProduct->getOldAttribute('shipping_weight');
+                            }
+                            if ($modelProduct->dim_lock == 'Y') {
+                                $modelProduct->dim_x = $modelProduct->getOldAttribute('dim_x');
+                                $modelProduct->dim_y = $modelProduct->getOldAttribute('dim_y');
+                                $modelProduct->dim_z = $modelProduct->getOldAttribute('dim_z');
+                            } else {
+                                rsort($aDimFeed = [$modelProduct->dim_x, $modelProduct->dim_y, $modelProduct->dim_z]);
+                                rsort($aDimOld = [$modelProduct->getOldAttribute('dim_x'), $modelProduct->getOldAttribute('dim_y'), $modelProduct->getOldAttribute('dim_z')]);
+                                $modelProduct->dim_x = empty($aDimFeed[0]) ? $aDimOld[0] : $aDimFeed[0];
+                                $modelProduct->dim_y = empty($aDimFeed[1]) ? $aDimOld[1] : $aDimFeed[1];
+                                $modelProduct->dim_z = empty($aDimFeed[2]) ? $aDimOld[2] : $aDimFeed[2];
+                            }
+                            if ($modelProduct->shipping_dim_lock == 'Y') {
+                                $modelProduct->shipping_dim_x = $modelProduct->getOldAttribute('shipping_dim_x');
+                                $modelProduct->shipping_dim_y = $modelProduct->getOldAttribute('shipping_dim_y');
+                                $modelProduct->shipping_dim_z = $modelProduct->getOldAttribute('shipping_dim_z');
+                            } else {
+                                rsort($aShipDimFeed = [$modelProduct->shipping_dim_x, $modelProduct->shipping_dim_y, $modelProduct->shipping_dim_z]);
+                                rsort($aShipDimOld = [$modelProduct->getOldAttribute('shipping_dim_x'), $modelProduct->getOldAttribute('shipping_dim_y'), $modelProduct->getOldAttribute('shipping_dim_z')]);
+                                $modelProduct->dim_x = empty($aShipDimFeed[0]) ? $aShipDimOld[0] : $aShipDimFeed[0];
+                                $modelProduct->dim_y = empty($aShipDimFeed[1]) ? $aShipDimOld[1] : $aShipDimFeed[1];
+                                $modelProduct->dim_z = empty($aShipDimFeed[2]) ? $aShipDimOld[2] : $aShipDimFeed[2];
+                            }
+                        }
+
+                        if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
+                            $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
+                        }
+
+                        $modelProduct->save();
+
+                        if ($modelProduct->getIsNewRecord()) {
+                            (new ProductCategoriesModel([
+                                'categoryid' => $supplierFeedModel->base_category_id,
+                                'productid' => $modelProduct->productid,
+                                'main' => 'Y']))
+                                ->save();
+
+                            (new ProductStorefrontModel([
+                                'productid' => $modelProduct->productid,
+                                'sfid' => $supplierFeedModel->storefront_id]))
+                                ->save();
+
+                            (new PricingModel([
+                                'productid' => $modelProduct->productid,
+                                'quantity' => 1,
+                                'price' => $modelProduct->distributor->calculatePrice($modelProduct)]))
+                                ->save();
+
+                            $clean_url = func_clean_url_autogenerate('P', $modelProduct->productid, array('product' => $modelProduct->product, 'productcode' => $modelProduct->productcode));
+                            func_clean_url_add($clean_url, 'P', $modelProduct->productid);
+
+                            func_build_quick_flags($modelProduct->productid);
+                            func_build_quick_prices($modelProduct->productid);
+
+                        } else {
+                            /** @var PricingModel $pricingModel */
+                            $pricingModel = PricingModel::objects()->get(['productid' => $modelProduct->productid, 'quantity' => 1]);
+                            $priceDistrib = $modelProduct->distributor->calculatePrice($modelProduct);
+                            if ($pricingModel && $pricingModel->price != $priceDistrib) {
+                                $pricingModel->price = $priceDistrib;
+                                $pricingModel->save();
+                                func_build_quick_prices($modelProduct->productid);
+                            }
+
+                        }
+
+                        //Images section
+                        $aImages = $modelProduct->getFromQueryAttribute('images');
+                        $aAltImageNames = $modelProduct->getFromQueryAttribute('alt_names');
+                        if (!empty($aImages) && is_array($aImages)) {
+                            foreach ($aImages as $kImg => $IMAGE_URL) {
+                                $modelDImage = ImageHelper::uploadMainImage($IMAGE_URL, empty($aAltImageNames[$kImg]) ? $modelProduct->product : $aAltImageNames[$kImg], $supplierFeedModel->manufacturerid);
+                                if ($modelDImage && $modelDImage->getIsNewRecord()){
+                                    $modelDImage->id = $modelProduct->productid;
+                                    $modelDImage->orderby = ($kImg + 1) * 10;
+                                    $modelDImage->save();
+                                    $image_info = func_set_correct_det_img($modelDImage->getAttributes(), true);
+                                }
+                            }
+                        }
+
+                        //Related section
+                        $params = [];
+                        $aRelatedInternalId = $modelProduct->getFromQueryAttribute('related_internal_id');
+                        $aRelatedInternalSKU = $modelProduct->getFromQueryAttribute('related_sku');
+                        if (!empty($aRelatedInternalId)) {
+                            $params['supplier_internal_product_id__in'] = $aRelatedInternalId;
+                        }
+                        if (!empty($aRelatedInternalSKU)) {
+                            $params['productcode__in'] = $aRelatedInternalSKU;
+                        }
+                        if (!empty($params)) {
+                            $aRelatedProducts = ProductModel::objects()->filter(new QOr($params))->all();
+                            if (!empty($aRelatedProducts)) {
+                                foreach ($aRelatedProducts as $relatedModel) {
+                                    $relatedModel = ProductLinksModel::objects()->getOrCreate(['productid1' => $modelProduct->productid, 'productid2' => $relatedModel->productid]);
+                                }
+                            }
+                        }
+
+                        //Brand section
+                        $brandName = $modelProduct->getFromQueryAttribute('brand_name');
+                        if (!empty($brandName)) {
+                            $brandModel = BrandModel::objects()->get(['brand' => $brandName]);
+                            if (!$brandModel) {
+                                $brandModel = (new BrandModel([
+                                    'brand' => $brandName,
+                                    'orderby' => 10
+                                ]));
+                                $brandModel->save();
+                                (new BrandStorefrontModel([
+                                    'brandid' => $brandModel->brandid,
+                                    'sfid' => $supplierFeedModel->storefront_id,
+                                ]))
+                                    ->save();
+                                $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $brandName));
+                                func_clean_url_add($clean_url, 'M', $brandModel->brandid);
+                            }
+                            $modelProduct->brandid = $brandModel->brandid;
+                        }
+
+                        //Attributes section
+                        FilterProductModel::objects()->delete(['productid' => $modelProduct->productid]);
+                        $aAttributes = $modelProduct->getFromQueryAttribute('attributes');
+                        if (!empty($aAttributes)) {
+                            $attributes_str = '';
+                            foreach ($aAttributes as $f_name => $fv_name_arr) {
+                                if (!empty($fv_name_arr) && is_array($fv_name_arr)) {
+                                    if (!empty($attributes_str)) {
+                                        $attributes_str .= "<br />";
+                                        $filterModel = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $supplierFeedModel->storefront_id]);
+                                        foreach ($fv_name_arr as $fv_name) {
+                                            $filterValueModel = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
+                                            FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $modelProduct->productid]);
+                                        }
+                                    }
+                                    $attributes_str .= $f_name . ": " . implode(", ", $fv_name_arr);
+                                }
+                            }
+/*                            if (!empty($attributes_str) && !empty($modelProduct->fulldescr)) {
+                                $modelProduct->fulldescr .= "<br /><br />Specifications:<br /><br />" . $attributes_str;
+                            }*/
+                        }
+
+                        $aSupplierCategory = $modelProduct->getFromQueryAttribute('supplier_categories');
+                        $aSupplierCategory = reset($aSupplierCategory);
+                        if (!empty($aSupplierCategory)) {
+                            $cats_arr = explode("/", $aSupplierCategory);
+                            if (!empty($cats_arr) && is_array($cats_arr)) {
+                                $parentid = $supplierFeedModel->base_category_id;
+                                $lastCategory = null;
+                                foreach ($cats_arr as $v_cat) {
+                                    $modelCat = CategoryModel::objects()->get([
+                                        'parentid' => $parentid,
+                                        'category' => $v_cat]);
+                                    if (!$modelCat) {
+                                        $modelCat = new CategoryModel([
+                                            'parentid' => $parentid,
+                                            'category' => $v_cat,
+                                            'storefrontid' => $supplierFeedModel->storefront_id,
+                                            'is_bold' => 'Y',
+                                            'order_by' => 10
+                                        ]);
+                                        /** @var CategoryModel $parentModel */
+                                        $parentModel = CategoryModel::objects()->get(['categoryid' => $parentid]);
+                                        if ($parentModel) {
+                                            $modelCat->categoryid_path = $parentModel->categoryid_path . "/" . $modelCat->categoryid;
+                                        }
+                                        $modelCat->save();
+                                    }
+                                    $lastCategory = $modelCat;
+                                }
+                                if ($lastCategory) {
+                                   if ($modelProduct->pc_classify_status && !in_array($modelProduct->pc_classify_status, ['AC', 'ACC', 'MC'])) {
+                                       $productCatModel = ProductCategoriesModel::objects()->get(['productid' => $modelProduct->productid, 'main' => 'Y']);
+                                       if ($productCatModel) {
+                                           $productCatModel->categoryid = $lastCategory->categoryid;
+                                           $productCatModel->save();
+                                       }
+                                   }
+                                }
+                            }
+                        }
+
+                        $newUPC = Xcart\Product::calculateUPC($modelProduct->upc);
+                        if ($modelProduct->upc != $newUPC) {
+                            $upcModel = ProductUpcChangesModel::objects()->get(['productid' => $modelProduct->productid]);
+                            if (!$upcModel){
+                                $upcModel = new ProductUpcChangesModel(['productid' => $modelProduct->productid, 'original_upc' => $modelProduct->upc, 'corrected_upc' => $newUPC]);
+                                $upcModel->save();
+                            }
+                            $modelProduct->upc = $newUPC;
+                        }
+
+                        break;
                 }
 
-                if ($just_created || $price_updated) {
-                    print("Just created section\n");
-                    func_build_quick_prices($productid);
-                }
-
-                if ($kp % 10 == 0) {
-                    print("Flush counter section\n");
-                    func_flush(".");
-                    if ($kp % 500 == 0) {
-                        func_flush("<br />\n");
-                    }
-                    func_flush();
-                }
+                $modelProduct->save();
             }
 
-            if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes) && $v["disable_search_of_discontinued_items"] != 'Y') {
+            if (!empty($all_feed_productcodes) && is_array($all_feed_productcodes) && $supplierFeedModel->disable_search_of_discontinued_items != 'Y') {
                 print("Search of discontinued section\n");
 
-                $mc = $manufacturerid_info[$v["manufacturerid"]]["code"];
+
+                $mc = $distributorModel->code;
                 $mc2 = substr($mc, 0, strpos($mc, '-'));
-                print("Entering disontinue section for " . $mc . " or " . $mc2 . " \r\n");
+                print("Entering discontinue section for " . $mc . " or " . $mc2 . " \r\n");
 
-                if ($v["multiple_feed_destinations"] == 'Y') {
-                    $provider_search_cond1 = $v["feed_file_name"];
+                if ($supplierFeedModel->multiple_feed_destinations == 'Y') {
+                    $provider_search_cond1 = $supplierFeedModel->feed_file_name;
 
-                    if ($v["feed_type"] == "I") {
+                    if ($supplierFeedModel->feed_type == "I") {
                         $current_letter_in_replacement = "i";
                         $set_new_letter_for_replacement = "p";
                     } else {
@@ -699,12 +475,12 @@ foreach ($supplier_feeds as $k => $v) {
 
                 print("SELECT COUNT(*) FROM $sql_tbl[products] WHERE (productcode LIKE '" . $mc . "-%' or productcode like '" . $mc2 . "-%') AND forsale='Y' $provider_search_cond");
                 print("\r\n");
-                $count_products = func_query_first_cell("SELECT COUNT(1) FROM $sql_tbl[products] xp1 INNER JOIN $sql_tbl[products_sf] xp2 ON xp1.productid = xp2.productid AND xp2.sfid = $v[storefront_id] WHERE (productcode LIKE '" . $mc . "-%' OR productcode LIKE '" . $mc2 . "-%') AND forsale='Y' $provider_search_cond");
+                $count_products = func_query_first_cell("SELECT COUNT(1) FROM $sql_tbl[products] xp1 INNER JOIN $sql_tbl[products_sf] xp2 ON xp1.productid = xp2.productid AND xp2.sfid = {$supplierFeedModel->storefront_id} WHERE (productcode LIKE '" . $mc . "-%' OR productcode LIKE '" . $mc2 . "-%') AND forsale='Y' $provider_search_cond");
                 print($count_products . " for sale = Y\r\n");
                 if ($count_products > 0) {
                     $manufacturer_code_products = db_query("SELECT xp1.productid, xp1.productcode, xp1.forsale, xp1.update_search_index, xp1.provider
 																	FROM $sql_tbl[products] xp1
-																	INNER JOIN $sql_tbl[products_sf] xp2 ON xp1.productid = xp2.productid AND xp2.sfid = $v[storefront_id]
+																	INNER JOIN $sql_tbl[products_sf] xp2 ON xp1.productid = xp2.productid AND xp2.sfid = {$supplierFeedModel->storefront_id}
 																	WHERE (productcode LIKE '" . $mc . "-%' OR productcode LIKE '" . $mc2 . "-%') AND forsale='Y' $provider_search_cond");
                     $line_number = 0;
                     print "<br />Second iteration:<br />";
@@ -732,87 +508,76 @@ foreach ($supplier_feeds as $k => $v) {
 
             /* --------------------------------------------------------------------------------------------------- */
         } else {
-            $log_text = "manufacturerid: " . $v["manufacturerid"] . ". File is not found. Skipped.";
+            $log_text = "manufacturerid: " . $supplierFeedModel->manufacturerid . ". File is not found. Skipped.";
             func_backprocess_log($log_category, $log_text);
             func_backprocess_log("supplier feeds errors", $log_text);
             continue;
         }
     } else {
-        $log_text = "manufacturerid: " . $v["manufacturerid"] . ". Could not open host. Script stopped.";
+        $log_text = "manufacturerid: " . $supplierFeedModel->manufacturerid . ". Could not open host. Script stopped.";
         func_backprocess_log($log_category, $log_text);
         func_backprocess_log("supplier feeds errors", $log_text);
-        db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
+        db_query_param(/** @lang MySQL */
+            'UPDATE xcart_config SET value=:value WHERE name=:name', ['value' => 'N', 'name' => $log_category]);
         die($log_text);
     }
 
-    $last_update_time = $v["last_update_time"]; // $v[] it is current in DB
-    $last_update_period = time() - $last_update_time;
-    $average_update_period = round(($v["average_update_period"] + $last_update_period) / 2, 0);
-    $new_products_count = $products["products_in_feed"] - $updated_products_count - $discontinued_products_count;
+    $feedProductCount = 0;
+    if ($supplierFeed) {
+        $feedProductCount = $supplierFeed->products_in_feed;
+    }
+    $last_update_period = time() - $supplierFeedModel->last_update_time;
+    $average_update_period = round(($supplierFeedModel->average_update_period + $last_update_period) / 2, 0);
+    $new_products_count = $feedProductCount - $updated_products_count - $discontinued_products_count;
 
-    $supplier_feed = array(
-        "last_md5" => $md5,
-        "last_update_time" => time(),
-        "average_update_period" => $average_update_period,
-        "last_update_period" => $last_update_period,
-        "last_feed_fields" => addslashes(serialize($last_feed_fields_arr_vals)),
-        "last_update_items_count" => $products["products_in_feed"]
-    );
-    func_array2update("supplier_feeds", $supplier_feed, "feed_id = '$v[feed_id]'");
-    if (!empty($last_feed_fields_arr)) {
-        db_query("UPDATE $sql_tbl[manufacturer_feed_fields] SET locked='N' WHERE manufacturerid='$v[manufacturerid]'");
-        $deprecated_manufacturer_feed_fields = array("productcode", "supplier_categories", "attributes", "images", "alt_names",);
-        foreach ($last_feed_fields_arr as $k_field_name => $field_name) {
-            if (!empty($product_cols_replace[$field_name])) {
-                $field_name = $product_cols_replace[$field_name];
-            }
-            if (!in_array($field_name, $deprecated_manufacturer_feed_fields)) {
-                db_query("REPLACE INTO $sql_tbl[manufacturer_feed_fields] SET field_name='$field_name', locked='Y', manufacturerid='$v[manufacturerid]', feed_id='$v[feed_id]'");
-            }
+    $feedModel = SupplierFeedModel::objects()->get(['feed_id' => $supplierFeedModel->feed_id]);
+    if ($feedModel) {
+        $feedModel->setAttributes([
+            "last_md5" => $md5,
+            "last_update_time" => time(),
+            "average_update_period" => $average_update_period,
+            "last_update_period" => $last_update_period,
+            "last_feed_fields" => $last_feed_fields_arr_vals,
+            "last_update_items_count" => $feedProductCount
+        ]);
+        $feedModel->save();
+    }
+
+    if (!empty($lastFeedFields)) {
+        db_query_param(/** @lang MySQL */
+            "UPDATE xcart_manufacturer_feed_fields SET locked=:locked WHERE manufacturerid=:manufacturerid AND feed_id = :feed_id",
+                ['locked' => 'N', 'manufacturerid' => $supplierFeedModel->manufacturerid, 'feed_id' => $supplierFeedModel->feed_id]);
+        foreach ($lastFeedFields as $fieldName) {
+            $FieldModel = DistributorFeedFieldModel::objects()->getOrCreate([
+                'field_name' => $fieldName,
+                'manufacturerid' => $supplierFeedModel->manufacturerid,
+                'feed_id' => $supplierFeedModel->feed_id
+            ]);
+            $FieldModel->locked = 'Y';
+            $FieldModel->save();
         }
     }
 
-    func_print_r($supplier_feed);
+    $str_time = (new DateTime('now'))->diff($start_supplier_time)->format('%H:%I:%S');
 
-    ###
-    $date1 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $start_supplier_time));
-    $date2 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', time()));
-    $interval = $date1->diff($date2);
-    $years = $interval->format("%y");
-    $months = $interval->format("%m");
-    $days = $interval->format("%d");
-    $hours = $interval->format("%h");
-    $mins = $interval->format("%i");
-    $age_str = ($years != 0 ? $years . " years, " : "") . ($months != 0 ? $months . " months, " : "") . ($days != 0 ? $days . " days, " : "") . sprintf('%1$02d', $hours) . ":" . sprintf('%1$02d', $mins) . " hours";
-    ###
-
-    $log_text = "manufacturerid: " . $v["manufacturerid"] . ":" . $manufacturerid_info[$v["manufacturerid"]]["manufacturer"] . " - completed. \n";
-    $log_text .= "processed $products[products_in_feed] items.\n";
-    $log_text .= "found new $new_products_count items.\n";
-    $log_text .= "updated $updated_products_count items.\n";
-    if ($v["feed_type"] == "P") { // product
-        $log_text .= "inserted $inserted_products_count items.\n";
+    $log_text = "manufacturerid: {$distributorModel->manufacturerid}:{$distributorModel->manufacturer} - completed. \n";
+    $log_text .= "processed {$feedProductCount} items.\n";
+    $log_text .= "found new {$new_products_count} items.\n";
+    $log_text .= "updated {$updated_products_count} items.\n";
+    if ($supplierFeedModel->feed_type == "P") { // product
+        $log_text .= "inserted {$inserted_products_count} items.\n";
     }
-    $log_text .= "discontinued: " . $discontinued_products_count . "\n";
-    $log_text .= "Duration: " . $age_str . "\n";
+    $log_text .= "discontinued: {$discontinued_products_count}\n";
+    $log_text .= "Duration: " . $str_time . "\n";
     func_backprocess_log($log_category, $log_text);
 }
 ######################################################################################
 
-###
-$date1 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $started_at));
-$date2 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', time()));
-$interval = $date1->diff($date2);
-$years = $interval->format("%y");
-$months = $interval->format("%m");
-$days = $interval->format("%d");
-$hours = $interval->format("%h");
-$mins = $interval->format("%i");
-$age_str = ($years != 0 ? $years . " years, " : "") . ($months != 0 ? $months . " months, " : "") . ($days != 0 ? $days . " days, " : "") . sprintf('%1$02d', $hours) . ":" . sprintf('%1$02d', $mins) . " hours";
-###
 
-db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='$log_category'");
-$log_text = "Cron completed. Duration: " . $age_str;
+$str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
+db_query_param(/** @lang MySQL */
+    'UPDATE xcart_config SET value=:value WHERE name=:name', ['value' => 'N', 'name' => $log_category]);
+$log_text = "Cron completed. Duration: " . $str_time;
 func_backprocess_log($log_category, $log_text);
 
 die("DONE!");
