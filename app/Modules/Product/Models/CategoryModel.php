@@ -2,6 +2,7 @@
 namespace Modules\Product\Models;
 
 use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\IntField;
 
 /**
@@ -19,7 +20,7 @@ class CategoryModel extends AutoMetaModel
     {
         return [
             'categoryid' => [
-                'class' => IntField::className(),
+                'class' => AutoField::className(),
                 'primary' => true,
                 'null' => false,
             ],

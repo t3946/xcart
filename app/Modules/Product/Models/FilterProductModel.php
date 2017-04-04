@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Product\Models;
 
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
@@ -15,7 +16,7 @@ class FilterProductModel extends Model
     {
         return [
             'fp_id' => [
-                'class' => IntField::className(),
+                'class' => AutoField::className(),
                 'primary' => true,
                 'null' => false,
             ],

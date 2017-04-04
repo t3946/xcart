@@ -2,6 +2,7 @@
 namespace Modules\Brand\Models;
 
 use Xcart\App\Orm\AutoMetaModel;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\IntField;
 
 /**
@@ -18,7 +19,7 @@ class BrandModel extends AutoMetaModel
     {
         return [
             'brandid' => [
-                'class' => IntField::className(),
+                'class' => AutoField::className(),
                 'primary' => true,
                 'null' => false,
             ],
