@@ -6,8 +6,18 @@ return [
         'name' => 'index'
     ],
     [
-        'route' => '/',
-        'target' => ['\Modules\Demo\Controllers\DefaultController', 'index'],
-        'name' => 'index1'
-    ]
+        'route' => '/brand',
+        'target' => ['\Modules\Demo\Controllers\DefaultController', 'catalogBrand'],
+        'name' => 'catalog:brand'
+    ],
+    [
+        'route' => '/catalog',
+        'target' => ['\Modules\Demo\Controllers\DefaultController', 'catalogIndex'],
+        'name' => 'catalog:index'
+    ],
+    [
+        'route' => '/search',
+        'target' => ['\Modules\Demo\Controllers\DefaultController', 'catalogSearch'],
+        'name' => 'catalog:search'
+    ],
 ];

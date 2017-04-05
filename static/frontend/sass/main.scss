@@ -3,15 +3,18 @@
 @import "bootstrap";
 
 @import 'colors';
-@import 'mixins';
+@import 'mixins/mixins';
+
 //@import 'fonts_lato';
 /*@import 'reset_base';
 @import 'reset_form';*/
+
 @import 'base';
 @import 'noui-slider';
 @import 'items-list';
 @import 'switch-settings';
 @import 'interactive';
+
 @import 'header';
 @import 'small_header';
 @import 'medium-xs_header';
@@ -24,6 +27,8 @@
 @import 'medium_footer';
 @import 'normal_footer';
 @import 'large_footer';
+@import "parts/content_container";
+
 @import 'category';
 @import 'small_category';
 @import 'medium-xs_category';

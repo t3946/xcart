@@ -4,54 +4,54 @@
     margin: 0 auto;
     padding: 0 20px;
 
-    &.main-container_brand{
-      padding-top: 25px;
-
-      .container{
-
-        .title-section{
-          margin: 0 18px 5px 18px;
-        }
-
-        .items {
-          .items__list {
-            .item {
-              height: 285px;
-
-              .item__pic-container{
-                height: 263px;
-
-                a{
-                  line-height: 239px;
-
-                  &.item__quick-view{
-                    line-height: 34px;
-                  }
-                }
-              }
-            }
-
-            &.tile-view{
-              .item{
-                height: 342px;
-
-                .item__pic-container{
-                  height: 219px;
-
-                  a{
-                    line-height: 214px;
-
-                    &.item__quick-view{
-                      line-height: 34px;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    //&.main-container_brand{
+    //  padding-top: 25px;
+    //
+    //  .container{
+    //
+    //    .title-section{
+    //      margin: 0 18px 5px 18px;
+    //    }
+    //
+    //    .items {
+    //      .items__list {
+    //        .item {
+    //          height: 285px;
+    //
+    //          .item__pic-container{
+    //            height: 263px;
+    //
+    //            a{
+    //              line-height: 239px;
+    //
+    //              &.item__quick-view{
+    //                line-height: 34px;
+    //              }
+    //            }
+    //          }
+    //        }
+    //
+    //        &.tile-view{
+    //          .item{
+    //            height: 342px;
+    //
+    //            .item__pic-container{
+    //              height: 219px;
+    //
+    //              a{
+    //                line-height: 214px;
+    //
+    //                &.item__quick-view{
+    //                  line-height: 34px;
+    //                }
+    //              }
+    //            }
+    //          }
+    //        }
+    //      }
+    //    }
+    //  }
+    //}
 
     .container{
       .button-action{

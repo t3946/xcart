@@ -13,4 +13,19 @@ class DefaultController extends Controller
         echo $this->render('demo/home.tpl');
     }
 
+    public function catalogIndex()
+    {
+        echo $this->render('demo/catalog/index.tpl');
+    }
+
+    public function catalogBrand()
+    {
+        echo $this->render('demo/catalog/brand.tpl');
+    }
+
+    public function catalogSearch()
+    {
+        echo $this->render('demo/catalog/search.tpl');
+    }
+
 }

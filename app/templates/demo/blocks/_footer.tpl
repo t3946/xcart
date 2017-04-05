@@ -441,12 +441,13 @@
                     </div>
                 </div>
                 <div class="row footer-row">
-                    <a href="#" class="switch-to-desktop hidden-sm hidden-md hidden-lg">Switch to Desktop Version</a>
+                    {*<a href="#" class="switch-to-desktop hidden-sm hidden-md hidden-lg">Switch to Desktop Version</a>*}
                     <a class="up-btn hidden-sm hidden-md hidden-lg" href="#main_header">up</a>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="copyright">
         <div class="footer-container footer-row">
             <div class="row">

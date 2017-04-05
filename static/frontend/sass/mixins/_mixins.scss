@@ -325,37 +325,37 @@
 }
 
 
-.container {
-  @include container-fixed;
-
-  @media (min-width: $screen-sm-min) {
-    width: 100%;//$container-sm;
-  }
-  @media (min-width: $screen-md-min) {
-    width: 100%;//$container-md;
-  }
-  @media (min-width: $screen-lg-min) {
-    width: 100%;//$container-lg;
-  }
-}
+//.container {
+//  @include container-fixed;
+//
+//  @media (min-width: $screen-sm-min) {
+//    width: 100%;//$container-sm;
+//  }
+//  @media (min-width: $screen-md-min) {
+//    width: 100%;//$container-md;
+//  }
+//  @media (min-width: $screen-lg-min) {
+//    width: 100%;//$container-lg;
+//  }
+//}
 
 // Creates a wrapper for a series of columns
-@mixin make-row($gutter: $grid-gutter-width) {
-  margin-left:  0;//ceil(($gutter / -2));
-  margin-right: 0;//floor(($gutter / -2));
-  @include clearfix;
-}
+//@mixin make-row($gutter: $grid-gutter-width) {
+//  margin-left:  0;//ceil(($gutter / -2));
+//  margin-right: 0;//floor(($gutter / -2));
+//  @include clearfix;
+//}
 
-@mixin make-grid-columns($i: 1, $list: ".col-xs-#{$i}, .col-sm-#{$i}, .col-md-#{$i}, .col-lg-#{$i}") {
-  @for $i from (1 + 1) through $grid-columns {
-    $list: "#{$list}, .col-xs-#{$i}, .col-sm-#{$i}, .col-md-#{$i}, .col-lg-#{$i}";
-  }
-  #{$list} {
-    position: relative;
-    // Prevent columns from collapsing when empty
-    min-height: 1px;
-    // Inner gutter via padding
-    padding-left: 0; //ceil(($grid-gutter-width / 2));
-    padding-right: 0; //floor(($grid-gutter-width / 2));
-  }
-}
+//@mixin make-grid-columns($i: 1, $list: ".col-xs-#{$i}, .col-sm-#{$i}, .col-md-#{$i}, .col-lg-#{$i}") {
+//  @for $i from (1 + 1) through $grid-columns {
+//    $list: "#{$list}, .col-xs-#{$i}, .col-sm-#{$i}, .col-md-#{$i}, .col-lg-#{$i}";
+//  }
+//  #{$list} {
+//    position: relative;
+//    // Prevent columns from collapsing when empty
+//    min-height: 1px;
+//    // Inner gutter via padding
+//    padding-left: 0; //ceil(($grid-gutter-width / 2));
+//    padding-right: 0; //floor(($grid-gutter-width / 2));
+//  }
+//}
