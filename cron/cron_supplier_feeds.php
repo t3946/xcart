@@ -426,11 +426,12 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                 }
                                 if ($lastCategory) {
                                    if ($modelProduct->pc_classify_status && !in_array($modelProduct->pc_classify_status, ['AC', 'ACC', 'MC'])) {
-                                       $productCatModel = ProductCategoriesModel::objects()->get(['productid' => $modelProduct->productid, 'main' => 'Y']);
-                                       if ($productCatModel) {
-                                           $productCatModel->categoryid = $lastCategory->categoryid;
-                                           $productCatModel->save();
-                                       }
+                                       db_query_param(/** @lang MySQL */
+                                           "UPDATE xcart_products_categories SET categoryid=:categoryid WHERE productid=:productid AND main=:main", [
+                                           'categoryid' => $lastCategory->categoryid,
+                                           'productid' => $modelProduct->productid,
+                                           'main' => 'Y'
+                                       ]);
                                    }
                                 }
                             }
