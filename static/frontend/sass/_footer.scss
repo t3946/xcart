@@ -27,7 +27,7 @@
           .panel-title{
             line-height: 39px;
             font-size: 1.0625em;
-            font-family: Lato-Bold, sans-serif;
+            font-weight: 700;
             color: $black;
 
             a{
@@ -235,7 +235,7 @@
     .bottom-info__title{
       color: $white;
       font-size: 1.3125em;
-      font-family: Lato-Bold, sans-serif;
+      font-weight: 700;
       line-height: 1.5;
       margin: 0;
     }
@@ -261,7 +261,7 @@
 
         a{
           text-decoration: underline;
-          font-family: Lato-Bold, sans-serif;
+          font-weight: 700;
         }
 
       }
@@ -359,7 +359,7 @@
             width: 73%;
 
             &::placeholder {
-              font-family: Lato-Italic, sans-serif;
+              font-style: italic;
             }
 
             &:focus{
@@ -447,7 +447,7 @@
   .copyright{
     background: $dark_blue;
     padding: 5px 3.125%;
-    font-family: Lato-Light, sans-serif;
+    font-weight: 300;
 
     .policy-nav{
       li{

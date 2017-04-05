@@ -36,14 +36,14 @@
                   @include gradient-horizontal(rgba(0,0,0,0.6), transparent);
 
                   .promotion__item_caption{
-                    font-family: Lato-Black, sans-serif;
+                    font-weight: 900;
                     font-size: 1.3125rem;
                     text-transform: uppercase;
                     margin: 0;
                   }
 
                   .promotion__item_description{
-                    font-family: Lato-Heavy, sans-serif;
+                    font-weight: 800;
                     font-size: 0.75rem;
                     margin: 0;
                   }
@@ -227,7 +227,7 @@
               }
 
               .slider-horizontal__item_price{
-                font-family: Lato-Bold, sans-serif;
+                font-weight: 700;
                 color: $grey_5c;
                 text-align: left;
 

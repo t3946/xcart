@@ -124,7 +124,7 @@
 
     a{
       color: $black;
-      //font-family: Lato-Regular, sans-serif;
+
       padding: 0;
       line-height: $height;
 
@@ -203,7 +203,7 @@
 
               .panel-title {
                 font-size: 1.0625em;
-                font-family: Lato-Bold, sans-serif;
+                font-weight: 700;
                 color: $black;
                 padding-right: 6%;
 
@@ -242,7 +242,7 @@
                 border: none;
 
                 a.link-arrow-right {
-                  //font-family: Lato-Regular, sans-serif;
+
                   display: inline;
                   color: $black;
                   .departments__count {
@@ -281,7 +281,7 @@
 
 @mixin up-btn($bg, $color, $fsz) {
   color: $color;
-  font-family: Lato-Heavy;
+  font-weight: 800;
   background: $bg;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
   text-transform: uppercase;

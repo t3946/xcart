@@ -17,7 +17,7 @@
 
     .section__title{
       font-size: 1em;
-      font-family: Lato-Bold, sans-serif;
+      font-weight: 700;
       color: $blue_a;
       text-transform: uppercase;
       display: inline-block;
@@ -27,7 +27,7 @@
     .section__view-all{
       font-size: 0.8125em;
       color: $blue;
-      font-family: Lato-Medium, sans-serif;
+      font-weight: 500;
       margin-left: 5px;
       display: inline-block;
       float: right;
@@ -67,7 +67,7 @@
 
       .list-info__title{
         font-size: 1.375em;
-        font-family: Lato-Bold, sans-serif;
+        font-weight: 700;
         text-align: center;
         margin-top: 0;
       }
@@ -240,7 +240,7 @@
       .title {
         font-size: 1.375em;
         margin: 0;
-        font-family: Lato-Bold, sans-serif;
+        font-weight: 700;
       }
 
       .brand-page{
@@ -281,14 +281,14 @@
         margin-bottom: 9px;
 
         .text_red{
-          font-family: Lato-Bold, sans-serif;
+          font-weight: 700;
           color: $red_ed;
         }
       }
 
       .search-result__caption{
         font-size: 1.375em;
-        font-family: Lato-Bold, sans-serif;
+        font-weight: 700;
         padding: 0 15%;
 
         .highlighted__yellow{
@@ -755,7 +755,7 @@
                   background-color: $light_edf;
 
                   a{
-                    font-family: Lato-Bold, sans-serif;
+                    font-weight: 700;
                     background: none;
 
                     &:before{
@@ -797,7 +797,7 @@
           border: 2px solid $dark_yellow;
           @include border-radius(3px);
           font-size: 1.0625em;
-          font-family: Lato-Bold, sans-serif;
+          font-weight: 700;
           color: $thead_color;
           line-height: 36px;
 
@@ -907,7 +907,7 @@
               a{
                 font-size: 0.875em;
                 line-height: 18px;
-                font-family: Lato-Bold, sans-serif;
+                font-weight: 700;
                 margin-bottom: 12px;
                 color: $black;
 
@@ -949,7 +949,7 @@
 
               .item__price_new{
                 font-size: 0.875em;
-                font-family: Lato-Bold, sans-serif;
+                font-weight: 700;
                 padding-left: 7px;
               }
             }
@@ -998,7 +998,7 @@
               a{
                 margin-bottom: 0;
                 color: $grey_5c;
-                //font-family: Lato-Regular, sans-serif;
+
 
                 &:after{
                   display: none;

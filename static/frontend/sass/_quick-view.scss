@@ -39,7 +39,7 @@
 
       .modal-body{
         padding: 3px 18px 40px 20px;
-        //font-family: Lato-Regular, sans-serif;
+
         color: $black;
 
         .slider-vertical{
@@ -249,7 +249,7 @@
 
           a{
             font-size: 1.875rem;
-            font-family: Lato-Bold, sans-serif;
+            font-weight: 700;
             line-height: 34px;
             color: $black;
           }
@@ -267,7 +267,7 @@
           display: block;
           margin-top: 25px;
           font-size: 1.25rem;
-          font-family: Lato-Bold, sans-serif;
+          font-weight: 700;
         }
 
         .item__see-details{
@@ -279,7 +279,7 @@
           font-size: 1.125rem;
           color: $black;
           text-decoration: none;
-          font-family: Lato-Heavy, sans-serif;
+          font-weight: 800;
           background-color: $dark_yellow;
           text-align: center;
           @include border-radius(5px);
@@ -313,7 +313,7 @@
 
           .item__savings_value{
             font-size: 1rem;
-            font-family: Lato-Bold, sans-serif;
+            font-weight: 700;
           }
         }
 
@@ -322,7 +322,7 @@
 
           .slider-horizontal__title{
             font-size: 1.375rem;
-            font-family: Lato-Bold, sans-serif;
+            font-weight: 700;
             margin: 0 0 18px;
             color: $black;
           }
@@ -467,7 +467,7 @@
                   }
 
                   .slider-horizontal__item_price{
-                    font-family: Lato-Bold, sans-serif;
+                    font-weight: 700;
                     color: $grey_5c;
                     text-align: left;
 

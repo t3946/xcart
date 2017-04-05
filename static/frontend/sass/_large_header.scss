@@ -311,7 +311,7 @@
                 text-transform: uppercase;
                 color: $black;
                 font-size: 1em;
-                font-family: Lato-Heavy, sans-serif;
+                font-weight: 800;
                 border: 2px solid transparent;
                 background-color: $dark_yellow;
                 text-align: center;
@@ -356,7 +356,7 @@
           }
 
           .departments__link{
-            font-family: Lato-Bold, sans-serif;
+            font-weight: 700;
             line-height: 50px;
             color: $white;
             text-transform: uppercase;
@@ -460,7 +460,7 @@
 
                   span{
                     font-size: 0.7em;
-                    font-family: Lato-Bold, sans-serif;
+                    font-weight: 700;
                     line-height: 2.2em;
                     margin-left: 44px;
                   }
@@ -516,7 +516,7 @@
 
                   h4{
                     font-size: 0.875em;
-                    font-family: Lato-Bold, sans-serif;
+                    font-weight: 700;
                     border-bottom: 1px solid $grey_c2;
                     padding-bottom: 8px;
                     margin-bottom: 6px;
@@ -562,7 +562,7 @@
                   .departments-menu-desktop__sale-pink{
                     color: $pink;
                     font-size: 2.5em;
-                    font-family: Lato-Bold, sans-serif;
+                    font-weight: 700;
                     text-transform: uppercase;
                     position: absolute;
                     top: 49px;
@@ -616,7 +616,7 @@
               border: none;
 
               &::placeholder{
-                font-family: Lato-LightItalic, sans-serif;
+                font-style: italic; font-weight: 300;
                 color: $grey_brown;
               }
             }
@@ -747,7 +747,7 @@
         }
 
         .cart-lg{
-          font-family: Lato-Bold, sans-serif;
+          font-weight: 700;
 
           .cart-lg__wrapper{
             background: $dark_yellow;

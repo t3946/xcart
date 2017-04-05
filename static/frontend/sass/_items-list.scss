@@ -39,7 +39,7 @@
         a{
           font-size: 0.875em;
           line-height: 18px;
-          font-family: Lato-Bold, sans-serif;
+          font-weight: 700;
           margin-bottom: 12px;
           color: $black;
 
@@ -81,7 +81,7 @@
 
         .item__price_new{
           font-size: 0.875em;
-          font-family: Lato-Bold, sans-serif;
+          font-weight: 700;
           padding-left: 7px;
         }
       }
@@ -130,7 +130,7 @@
         a{
           margin-bottom: 0;
           color: $grey_5c;
-          //font-family: Lato-Regular, sans-serif;
+
 
           &:after{
             display: none;

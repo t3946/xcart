@@ -107,7 +107,7 @@ ul, menu {
 }
 
 .bold{
-  font-family: Lato-Bold, sans-serif;
+  font-weight: 700;
 }
 
 .l-through{
@@ -147,7 +147,7 @@ input[type='number']::-webkit-inner-spin-button {
     @include border-radius(4px);
     @include opacity(0.5);
     color: $dark_blue;
-    font-family: Lato-Bold, sans-serif;
+    font-weight: 700;
     font-size: 0.875rem;
     line-height: 16px;
     background-repeat: no-repeat;
@@ -274,7 +274,7 @@ input[type='number']::-webkit-inner-spin-button {
     margin-bottom: 11px;
 
     label{
-      font-family: Lato-Bold, sans-serif;
+      font-weight: 700;
       color: $black;
       display: block;
 
@@ -293,7 +293,7 @@ input[type='number']::-webkit-inner-spin-button {
 
 
       &::placeholder {
-        font-family: Lato-Italic, sans-serif;
+        font-style: italic;
         color: $grey_96;
       }
     }
@@ -352,7 +352,7 @@ input[type='number']::-webkit-inner-spin-button {
       line-height: 1.2;
 
       .icon{
-        font-family: Lato-Bold, sans-serif;
+        font-weight: 700;
         font-size: 1.0625rem;
         text-transform: uppercase;
         display: inline-block;
@@ -476,7 +476,7 @@ input[type='number']::-webkit-inner-spin-button {
   border: 2px solid $dark_yellow;
   background-color: $white;
   color: $thead_color;
-  font-family: Lato-Bold, sans-serif;
+  font-weight: 700;
   font-size: 1.125rem;
   text-transform: uppercase;
   padding: 0 5%;

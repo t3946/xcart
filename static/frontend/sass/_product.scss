@@ -63,7 +63,7 @@
               .product__items-title {
                 color: $black;
                 font-size: 0.9375rem;
-                font-family: Lato-Bold, sans-serif;
+                font-weight: 700;
                 padding: 0 7px;
                 margin-bottom: 13px;
               }
@@ -250,7 +250,7 @@
                         text-transform: uppercase;
                         color: $black;
                         font-size: 0.9375em;
-                        font-family: Lato-Heavy, sans-serif;
+                        font-weight: 800;
                         border: 2px solid transparent;
                         background-color: $dark_yellow;
                         text-align: center;
@@ -388,7 +388,7 @@
 
               .product__title{
                 font-size: 1.4375rem;
-                font-family: Lato-Bold, sans-serif;
+                font-weight: 700;
                 display: inline;
                 margin: 0 0 6px;
               }
@@ -850,7 +850,7 @@
                   line-height: 30px;
                   padding: 0 5px;
                   text-align: center;
-                  font-family: Lato-Semibold, sans-serif;
+                  font-weight: 600;
                   font-size: 0.9375rem;
 
                   &:last-child{
@@ -861,7 +861,7 @@
                 td{
                   @extend th;
                   font-size: 0.8125rem;
-                  //font-family: Lato-Regular, sans-serif;
+
                 }
               }
             }
@@ -878,7 +878,7 @@
               text-transform: uppercase;
               color: $black;
               font-size: 1.3125em;
-              font-family: Lato-Heavy, sans-serif;
+              font-weight: 800;
               border: 2px solid transparent;
               background-color: $dark_yellow;
               text-align: center;
@@ -945,7 +945,7 @@
                   .panel-title{
                     line-height: 42px;
                     font-size: 1.0625em;
-                    font-family: Lato-Bold, sans-serif;
+                    font-weight: 700;
                     color: $black;
 
                     a{
@@ -994,7 +994,7 @@
 
                       .product__options_title{
                         font-size: 1rem;
-                        font-family: Lato-Bold, sans-serif;
+                        font-weight: 700;
                         margin-bottom: 16px;
                       }
 
@@ -1070,7 +1070,7 @@
                       .product__description_title{
                         font-size: 1rem;
                         margin-bottom: 8px;
-                        font-family: Lato-Bold, sans-serif;
+                        font-weight: 700;
                       }
 
                       .description__list{
@@ -1117,7 +1117,7 @@
 
                     .product__brand_title{
                       font-size: 1rem;
-                      font-family: Lato-Bold, sans-serif;
+                      font-weight: 700;
                       margin: 11px 0 13px;
 
                       img{
@@ -1155,7 +1155,7 @@
                     .product__shipping_specs{
                       .shipping__specs_title{
                         font-size: 1rem;
-                        font-family: Lato-Bold, sans-serif;
+                        font-weight: 700;
                         margin-bottom: 16px;
                       }
 
@@ -1174,7 +1174,7 @@
 
                             &.shipping__specs_name{
                               color: $black;
-                              font-family: Lato-Heavy, sans-serif;
+                              font-weight: 800;
                             }
                           }
                         }
@@ -1187,7 +1187,7 @@
 
                       .shipping__from_title{
                         font-size: 1rem;
-                        font-family: Lato-Bold, sans-serif;
+                        font-weight: 700;
                         margin-bottom: 10px;
                       }
 
@@ -1317,7 +1317,7 @@
                             .product-questions__question-hint{
                               font-size: 0.625rem;
                               color: $grey_7;
-                              font-family: Lato-Heavy, sans-serif;
+                              font-weight: 800;
                               margin-bottom: 5px;
                             }
                           }

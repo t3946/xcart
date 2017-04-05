@@ -366,7 +366,7 @@
 
                   .panel-title {
                     font-size: 1em;
-                    font-family: Lato-Bold, sans-serif;
+                    font-weight: 700;
                     color: $black;
                     padding-left: 22px;
                     line-height: 20px;
@@ -611,7 +611,7 @@
 
                             .modal-title{
                               font-size: 1.25rem;
-                              font-family: Lato-Bold, sans-serif;
+                              font-weight: 700;
                             }
 
                           }
@@ -756,7 +756,7 @@
         .search-result__warning{
           font-size: 1.25em;
           margin-bottom: 13px;
-          font-family: Lato-Bold, sans-serif;
+          font-weight: 700;
 
           .text_red{
           }
@@ -1288,7 +1288,7 @@
                   text-align: center;
                   color: $white;
                   width: 47px;
-                  font-family: Lato-Bold, sans-serif;
+                  font-weight: 700;
                   text-transform: uppercase;
                   font-size: 1em;
                   display: inline-block;
@@ -1305,7 +1305,7 @@
                   background-color: $btn_yellow;
                   text-align: center;
                   color: $white;
-                  font-family: Lato-Bold, sans-serif;
+                  font-weight: 700;
                   text-transform: uppercase;
                   font-size: 0.875em;
                   display: inline-block;
@@ -1392,7 +1392,7 @@
                   width: 19px;
                   height: 19px;
                   background-color: $grey_cf;
-                  font-family: Lato-Bold, sans-serif;
+                  font-weight: 700;
                   cursor: pointer;
                   @include border-radius(10px);
                   line-height: 21px;
