@@ -31,7 +31,7 @@ class FilterValueModel extends Model
                 'null' => false,
                 'default' => ''
             ],
-            'f_order_by' => [
+            'fv_order_by' => [
                 'class' => IntField::className(),
                 'null' => false,
                 'default' => 10
