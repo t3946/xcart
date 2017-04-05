@@ -988,6 +988,7 @@ TABLE.SubHeaderBlack {
 	HEIGHT: 1px;
 	BACKGROUND-COLOR: #000000;
 	PADDING: 0px;
+	font-size: 1px;
 }
 TABLE.SubHeaderRed {
 	WIDTH: 100%;
@@ -1001,6 +1002,7 @@ TABLE.SubHeaderRed {
 	HEIGHT: 1px;
 	BACKGROUND-COLOR: #550000;
 	PADDING: 0px;
+	font-size:0;
 }
 TABLE.SubHeader {
 	WIDTH: 100%;
@@ -1016,6 +1018,7 @@ TABLE.SubHeader {
 	HEIGHT: 1px;
 	BACKGROUND-COLOR: #FF6600;
 	PADDING: 0px;
+	font-size: 1px;
 }
 
 /*
