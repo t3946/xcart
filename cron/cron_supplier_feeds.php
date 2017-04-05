@@ -52,7 +52,7 @@ if ($config[$log_category] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
     $oMail->body = $log_category . ' already launched';
     $oMail->sendEmail();
-    //die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 db_query_param('REPLACE xcart_config SET value=:value, name=:name', ['value' => 'Y', 'name' => $log_category]);
 
@@ -69,7 +69,7 @@ if (empty($config["Supplier_feeds"]["Feeds_storage_path"]) || empty($config["Sup
     die($log_text);
 }
 
-$supplier_feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'feed_type__in' =>  array_keys($feed_types), 'feed_file_name' => 'feed147p.txt'])->all();
+$supplier_feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'feed_type__in' =>  array_keys($feed_types)])->all();
 
 if (empty($supplier_feeds) || !is_array($supplier_feeds)) {
     $log_text = "--- xcart_supplier_feeds does not have 'enabled' rows. Script stopped.";
