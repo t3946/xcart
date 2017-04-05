@@ -415,6 +415,8 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                             $modelCat->categoryid_path = $parentModel->categoryid_path . "/" . $modelCat->categoryid;
                                         }
                                         $modelCat->save();
+                                        $clean_url = func_clean_url_autogenerate('C', $modelCat->categoryid, array('category' => $modelCat->category));
+                                        func_clean_url_add($clean_url, 'C', $modelCat->categoryid);
 
                                     } else{
                                         $modelCat = reset($modelCats);
