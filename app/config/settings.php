@@ -11,6 +11,7 @@ return array_replace_recursive([
    'modules' => [
        'Core',
        'Main',
+       'Demo',
        'Dashboard',
        'Distributor',
        'Product',

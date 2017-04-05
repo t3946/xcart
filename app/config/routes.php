@@ -5,6 +5,11 @@ return [
         'path' => 'Modules.Main.routes',
         'namespace' => 'main'
     ],
+    [
+        'route' => '/demo',
+        'path' => 'Modules.Demo.routes',
+        'namespace' => 'demo'
+    ]
 //    [
 //        'route' => '/admin/files',
 //        'path' => 'Modules.Files.routes',
