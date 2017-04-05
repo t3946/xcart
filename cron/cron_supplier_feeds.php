@@ -227,7 +227,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
                             $modelProduct->source_sfid = $supplierFeedModel->storefront_id;
                             $modelProduct->manufacturerid = $supplierFeedModel->manufacturerid;
-
+                            $modelProduct->add_date = $modelProduct->mod_date = time();
                         } else {
                             if ($supplierFeedModel->add_new_only == "Y") {continue;}
                             if (!empty($supplierFeed->dont_update_fields) && is_array($supplierFeed->dont_update_fields)) {
@@ -305,7 +305,6 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             func_clean_url_add($clean_url, 'P', $modelProduct->productid);
                             func_build_quick_flags($modelProduct->productid);
                             func_build_quick_prices($modelProduct->productid);
-                            $modelProduct->add_date = $modelProduct->mod_date = time();
                             $new_products_count++;
                         }
 
