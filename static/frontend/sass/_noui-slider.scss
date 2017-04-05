@@ -102,7 +102,7 @@
       .noUi-handle{
         position: absolute;
         z-index: 2;
-        background: inline-image("../images/category/1280/runner_mob.svg") no-repeat; /* картинка изображающая ползунок. Или можно залить цветом, задать бордюр и скругления */
+        background: url("../images/category/1280/runner_mob.svg") no-repeat; /* картинка изображающая ползунок. Или можно залить цветом, задать бордюр и скругления */
         cursor: pointer;
         @include css3-prefix(touch-action, none);
 
@@ -111,7 +111,7 @@
         }
 
         &.noUi-active{
-          background: inline-image("../images/category/1280/runner_mob_active.svg") no-repeat;
+          background: url("../images/category/1280/runner_mob_active.svg") no-repeat;
         }
 
         &.noUi-handle-lower{

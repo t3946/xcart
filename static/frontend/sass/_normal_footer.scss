@@ -183,7 +183,7 @@
             &:before{
               content: '';
               display: inline-block;
-              background: inline-image("../images/static/1280/phone_footer.svg");
+              background: url("../images/static/1280/phone_footer.svg");
               width: 11px;
               height: 20px;
               position: absolute;

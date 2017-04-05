@@ -47,12 +47,12 @@
                 margin-top: -6px;
                 top: 50%;
                 right: 0;
-                background: inline-image("../images/home/iphone6/plus.svg") no-repeat;
+                background: url("../images/home/iphone6/plus.svg") no-repeat;
               }
 
               &[aria-expanded="true"]{
                 &:after{
-                  background: inline-image("../images/home/iphone6/minus.svg") no-repeat;
+                  background: url("../images/home/iphone6/minus.svg") no-repeat;
                   position: absolute;
                   margin-top: -1px;
                   top: 50%;
@@ -83,7 +83,7 @@
                 height: 12px;
                 float: right;
                 font-style: normal;
-                background: inline-image("../images/home/iphone6/link_arrow_right.svg") no-repeat;
+                background: url("../images/home/iphone6/link_arrow_right.svg") no-repeat;
                 margin: 8px 0;
               }
             }
@@ -223,7 +223,7 @@
         background-repeat: no-repeat;
         background-size: 35px 35px;
         background-position: 7px 7px;
-        background-image: inline-image("../images/your_local/1280/find_your_local_art_supply_stores.svg");
+        background-image: url("../images/your_local/1280/find_your_local_art_supply_stores.svg");
       }
 
       &:hover, &:focus, &:active {
@@ -412,7 +412,7 @@
       &:before{
         content: '';
         display: inline-block;
-        background-image: inline-image("../images/home/iphone6/switch_to_desktop.svg");
+        background-image: url("../images/home/iphone6/switch_to_desktop.svg");
         background-repeat: no-repeat;
         background-size: 100% 100%;
         vertical-align: top;
@@ -431,7 +431,7 @@
         text-decoration: none;
 
         &:before{
-          background-image: inline-image("../images/home/iphone6/switch_to_desktop_clicking.svg");
+          background-image: url("../images/home/iphone6/switch_to_desktop_clicking.svg");
         }
       }
     }

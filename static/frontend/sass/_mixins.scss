@@ -37,9 +37,9 @@
     content: '';
     display: inline-block;
     @if $color == $white {
-      background-image: inline-image("../images/home/1280/view_all_departments.svg");
+      background-image: url("../images/home/1280/view_all_departments.svg");
     } @else {
-      background-image: inline-image("../images/home/1280/view_all_artist_brush.svg");
+      background-image: url("../images/home/1280/view_all_artist_brush.svg");
     }
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -81,7 +81,7 @@
     left: 9px;
     vertical-align: middle;
     top: -2px;
-    background: inline-image("../images/category/768/drop-down_list2.svg") no-repeat;
+    background: url("../images/category/768/drop-down_list2.svg") no-repeat;
   }
 
   &:hover, &:focus{
@@ -95,7 +95,7 @@
   color: $light_90a;
 
   &:after{
-    background: inline-image("../images/category/768/drop-down_list2_up.svg") no-repeat;
+    background: url("../images/category/768/drop-down_list2_up.svg") no-repeat;
   }
 }
 
@@ -150,10 +150,10 @@
           width: 22px;
           height: 22px;
           margin-top: 8px;
-          background-image: inline-image("../images/category/1280/close_white.svg");
+          background-image: url("../images/category/1280/close_white.svg");
 
           &:hover, &:active, &:focus{
-            background-image: inline-image("../images/category/1280/close_white.svg");
+            background-image: url("../images/category/1280/close_white.svg");
           }
         }
 
@@ -186,7 +186,7 @@
 
                 .panel-title{
                   &:after {
-                    background: inline-image("../images/home/iphone6/minus.svg") no-repeat;
+                    background: url("../images/home/iphone6/minus.svg") no-repeat;
                     position: absolute;
                     top: 50%;
                     margin-top: -1px;
@@ -222,7 +222,7 @@
                   top: 50%;
                   margin-top: -6px;
                   right: 0;
-                  background: inline-image("../images/home/iphone6/plus.svg") no-repeat;
+                  background: url("../images/home/iphone6/plus.svg") no-repeat;
                 }
 
 
@@ -255,7 +255,7 @@
                     height: 11px;
                     float: right;
                     font-style: normal;
-                    background: inline-image("../images/home/iphone6/link_arrow_right_dark.svg") no-repeat;
+                    background: url("../images/home/iphone6/link_arrow_right_dark.svg") no-repeat;
                     margin: 15px 0;
                   }
                 }
@@ -287,9 +287,9 @@
   text-transform: uppercase;
 
   @if $color == $white {
-    background-image: inline-image("../images/home/iphone6/up_arrow.svg");
+    background-image: url("../images/home/iphone6/up_arrow.svg");
   } @else {
-    background-image: inline-image("../images/home/iphone6/up_arrow_dark.svg");
+    background-image: url("../images/home/iphone6/up_arrow_dark.svg");
   }
 
   background-repeat: no-repeat;
@@ -311,10 +311,10 @@
 
     @if $color == $white {
       background: $blue_4b6;
-      background-image: inline-image("../images/home/iphone6/up_arrow.svg");
+      background-image: url("../images/home/iphone6/up_arrow.svg");
     } @else {
       background: $light_f7;
-      background-image: inline-image("../images/home/iphone6/up_arrow_dark.svg");
+      background-image: url("../images/home/iphone6/up_arrow_dark.svg");
     }
 
     background-repeat: no-repeat;

@@ -234,17 +234,17 @@
                 padding-top: 22px;
                 margin-top: 20px;
                 margin-right: 10px;
-                background: inline-image("../images/home/1280/basket.svg") no-repeat;
+                background: url("../images/home/1280/basket.svg") no-repeat;
                 background-size: 17px 22px;
                 margin-left: 20px;
 
                 &:hover {
-                  background: inline-image("../images/home/1280/basket_hover.svg") no-repeat;
+                  background: url("../images/home/1280/basket_hover.svg") no-repeat;
                   background-size: 17px 22px;
                 }
 
                 &:active {
-                  background: inline-image("../images/home/1280/basket_clicking.svg") no-repeat;
+                  background: url("../images/home/1280/basket_clicking.svg") no-repeat;
                   background-size: 17px 22px;
                 }
               }
@@ -342,13 +342,13 @@
 
               &:before{
                 content: "";
-                background: inline-image("../images/home/1280/menu_hover.svg") no-repeat;
+                background: url("../images/home/1280/menu_hover.svg") no-repeat;
                 display: inline-block;
               }
 
               &:after{
                 content: "";
-                background: inline-image("../images/home/1280/drop-down_list_up.svg") no-repeat;
+                background: url("../images/home/1280/drop-down_list_up.svg") no-repeat;
                 display: inline-block;
 
               }
@@ -365,7 +365,7 @@
 
             &:before{
               content: "";
-              background: inline-image("../images/home/1280/menu.svg") no-repeat;
+              background: url("../images/home/1280/menu.svg") no-repeat;
               display: inline-block;
               width: 18px;
               height: 14px;
@@ -375,7 +375,7 @@
 
             &:after{
               content: "";
-              background: inline-image("../images/home/1280/drop-down_list.svg") no-repeat;
+              background: url("../images/home/1280/drop-down_list.svg") no-repeat;
               display: inline-block;
               width: 9px;
               height: 6px;
@@ -557,7 +557,7 @@
                   right: 0;
                   width: 446px;
                   height: 258px;
-                  background: inline-image("../images/home/1280/sale-of-brushes.png") no-repeat 100% 100%;
+                  background: url("../images/home/1280/sale-of-brushes.png") no-repeat 100% 100%;
 
                   .departments-menu-desktop__sale-pink{
                     color: $pink;
@@ -624,7 +624,7 @@
             .search-lg__button{
               border: none;
               display: inline-block;
-              background: inline-image("../images/home/1280/magnifier.svg") no-repeat;
+              background: url("../images/home/1280/magnifier.svg") no-repeat;
               width: 23px;
               height: 23px;
               position: absolute;
@@ -633,7 +633,7 @@
               right: 10px;
 
               &:hover{
-                background: inline-image("../images/home/1280/magnifier_hover.svg") no-repeat;
+                background: url("../images/home/1280/magnifier_hover.svg") no-repeat;
               }
             }
 
@@ -760,7 +760,7 @@
               .cart-lg__link{
                 &:after{
                   content: "";
-                  background: inline-image("../images/home/1280/drop-down_list_up.svg") no-repeat;
+                  background: url("../images/home/1280/drop-down_list_up.svg") no-repeat;
                   display: inline-block;
                   width: 9px;
                   height: 6px;
@@ -770,7 +770,7 @@
             }
 
             .cart-lg__in{
-              background: inline-image("../images/home/1280/cart.svg") no-repeat;
+              background: url("../images/home/1280/cart.svg") no-repeat;
               width: 44px;
               height: 33px;
               margin: 10px 6% 10px 18%;
@@ -804,7 +804,7 @@
 
               &:after{
                 content: "";
-                background: inline-image("../images/home/1280/down_cart_list.svg") no-repeat;
+                background: url("../images/home/1280/down_cart_list.svg") no-repeat;
                 display: inline-block;
                 width: 9px;
                 height: 6px;

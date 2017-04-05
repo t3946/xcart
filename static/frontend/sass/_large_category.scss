@@ -172,13 +172,13 @@
             }
 
             &:after {
-              background: inline-image("../images/category/1280/read_less.svg") no-repeat;
+              background: url("../images/category/1280/read_less.svg") no-repeat;
             }
 
             &:hover, &:active {
 
               &:after {
-                background: inline-image("../images/category/1280/read_less_hover.svg") no-repeat;
+                background: url("../images/category/1280/read_less_hover.svg") no-repeat;
               }
             }
           }
@@ -226,7 +226,7 @@
           &:after{
             content: '';
             display: inline-block;
-            background: inline-image("../images/category/1280/read_more.svg") no-repeat;
+            background: url("../images/category/1280/read_more.svg") no-repeat;
             width: 7px;
             height: 5px;
             position: relative;
@@ -242,7 +242,7 @@
             color: $blue_a;
 
             &:after{
-              background: inline-image("../images/category/1280/read_more_hover.svg") no-repeat;
+              background: url("../images/category/1280/read_more_hover.svg") no-repeat;
             }
           }
         }
@@ -337,7 +337,7 @@
 
                     .panel-title{
                       &:before {
-                        background: inline-image("../images/category/1280/arrow_filter_tab_down.svg") no-repeat;
+                        background: url("../images/category/1280/arrow_filter_tab_down.svg") no-repeat;
                         position: absolute;
                         top: 50%;
                         margin-top: -3px;
@@ -352,7 +352,7 @@
                       .panel-title{
 
                         &:before{
-                          background: inline-image("../images/category/1280/arrow_filter_tab_down_hover.svg") no-repeat;
+                          background: url("../images/category/1280/arrow_filter_tab_down_hover.svg") no-repeat;
 
                         }
                       }
@@ -382,7 +382,7 @@
                       top: 50%;
                       margin-top: -5px;
                       left: 0;
-                      background: inline-image("../images/category/1280/arrow_filter_tab.svg") no-repeat;
+                      background: url("../images/category/1280/arrow_filter_tab.svg") no-repeat;
                     }
 
 
@@ -395,7 +395,7 @@
                       color: $blue_a;
 
                       &:before{
-                        background: inline-image("../images/category/1280/arrow_filter_tab_hover.svg") no-repeat;
+                        background: url("../images/category/1280/arrow_filter_tab_hover.svg") no-repeat;
 
                       }
                     }
@@ -495,7 +495,7 @@
                           display: none;
 
                           &:checked + label:before {
-                            background: inline-image("../images/category/1280/check_mark.svg") no-repeat;
+                            background: url("../images/category/1280/check_mark.svg") no-repeat;
                             background-size: 9px 9px;
                             background-position: center center;
                           }
@@ -511,13 +511,13 @@
 
                             &:hover {
                               &:before{
-                                background: inline-image("../images/category/1280/cancel_filter_hover.svg") no-repeat !important;
+                                background: url("../images/category/1280/cancel_filter_hover.svg") no-repeat !important;
                               }
 
                             }
 
                             &:before{
-                              background: inline-image("../images/category/1280/cancel_filter.svg") no-repeat !important;
+                              background: url("../images/category/1280/cancel_filter.svg") no-repeat !important;
                               border: none !important;
                             }
 
@@ -1083,7 +1083,7 @@
                       display: inline-block;
                       width: 10px;
                       height: 7px;
-                      background: inline-image("../images/category/1280/drop-down_list.svg") no-repeat;
+                      background: url("../images/category/1280/drop-down_list.svg") no-repeat;
                       position: absolute;
                       top: 50%;
                       margin-top: -4px;
@@ -1122,7 +1122,7 @@
                     .switch-settings_sort-by_selected{
                       &:after{
 
-                        background: inline-image("../images/category/1280/drop-down_list_up.svg") no-repeat;
+                        background: url("../images/category/1280/drop-down_list_up.svg") no-repeat;
 
                       }
                     }
@@ -1176,36 +1176,36 @@
 
                 &.button-tile{
                   &:before{
-                    background: inline-image("../images/category/1280/tile.svg");
+                    background: url("../images/category/1280/tile.svg");
                   }
 
                   &:hover{
                     &:before{
-                      background: inline-image("../images/category/1280/tile_hover.svg");
+                      background: url("../images/category/1280/tile_hover.svg");
                     }
                   }
 
                   &.active-view, &:active{
                     &:before {
-                      background: inline-image("../images/category/1280/tile_clicking.svg");
+                      background: url("../images/category/1280/tile_clicking.svg");
                     }
                   }
                 }
 
                 &.button-list{
                   &:before{
-                    background: inline-image("../images/category/1280/list.svg");
+                    background: url("../images/category/1280/list.svg");
                   }
 
                   &:hover{
                     &:before{
-                      background: inline-image("../images/category/1280/list_hover.svg");
+                      background: url("../images/category/1280/list_hover.svg");
                     }
                   }
 
                   &.active-view, &:active{
                     &:before {
-                      background: inline-image("../images/category/1280/list_clicking.svg");
+                      background: url("../images/category/1280/list_clicking.svg");
                     }
                   }
                 }
@@ -1333,7 +1333,7 @@
                   &:before{
                     content: '';
                     display: inline-block;
-                    background: inline-image("../images/home/1280/magnifier.svg") no-repeat;
+                    background: url("../images/home/1280/magnifier.svg") no-repeat;
                     width: 20px;
                     height: 20px;
                     line-height: 37px;

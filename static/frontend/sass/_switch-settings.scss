@@ -129,7 +129,7 @@
         @extend .switch-set;
 
         &:before{
-          background: inline-image("../images/1280/home/multilang/euro.png") no-repeat;
+          background: url("../images/1280/home/multilang/euro.png") no-repeat;
         }
       }
 
@@ -137,7 +137,7 @@
         @extend .switch-set;
 
         &:before{
-          background: inline-image("../images/1280/home/multilang/usa.png") no-repeat;
+          background: url("../images/1280/home/multilang/usa.png") no-repeat;
         }
       }
 
@@ -145,7 +145,7 @@
         @extend .switch-set;
 
         &:before{
-          background: inline-image("../images/1280/home/multilang/pound.png") no-repeat;
+          background: url("../images/1280/home/multilang/pound.png") no-repeat;
         }
       }
 
@@ -155,7 +155,7 @@
             @extend .switch-set;
 
             &:before{
-              background: inline-image("../images/1280/home/multilang/euro.png") no-repeat;
+              background: url("../images/1280/home/multilang/euro.png") no-repeat;
             }
           }
         }
@@ -165,7 +165,7 @@
             @extend .switch-set;
 
             &:before{
-              background: inline-image("../images/1280/home/multilang/usa.png") no-repeat;
+              background: url("../images/1280/home/multilang/usa.png") no-repeat;
             }
           }
         }
@@ -175,7 +175,7 @@
             @extend .switch-set;
 
             &:before{
-              background: inline-image("../images/1280/home/multilang/pound.png") no-repeat;
+              background: url("../images/1280/home/multilang/pound.png") no-repeat;
             }
           }
         }

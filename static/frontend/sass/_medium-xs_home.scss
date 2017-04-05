@@ -82,7 +82,7 @@
           height: 314px;
 
           .banner__product-of-the-day_link{
-            background: inline-image("../images/home/1280/1396036398420-renamed.png") no-repeat;
+            background: url("../images/home/1280/1396036398420-renamed.png") no-repeat;
             background-size: cover;
 
             .product-of-the-day_cover{
@@ -147,42 +147,42 @@
 
             &.home-menu__item_brands{
               a{
-                background-image: inline-image("../images/home/1280/brand.svg");
+                background-image: url("../images/home/1280/brand.svg");
 
                 &:hover{
-                  background-image: inline-image("../images/home/1280/brand_hover.svg");
+                  background-image: url("../images/home/1280/brand_hover.svg");
                 }
               }
             }
 
             &.home-menu__item_whats-new{
               a{
-                background-image: inline-image("../images/home/1280/new.svg");
+                background-image: url("../images/home/1280/new.svg");
 
                 &:hover{
-                  background-image: inline-image("../images/home/1280/new_hover.svg");
+                  background-image: url("../images/home/1280/new_hover.svg");
                 }
               }
             }
 
             &.home-menu__item_bestsellers{
               a{
-                background-image: inline-image("../images/home/1280/bestsellers.svg");
+                background-image: url("../images/home/1280/bestsellers.svg");
                 padding-left: 38px;
 
 
                 &:hover{
-                  background-image: inline-image("../images/home/1280/bestsellers_hover.svg");
+                  background-image: url("../images/home/1280/bestsellers_hover.svg");
                 }
               }
             }
 
             &.home-menu__item_product-day{
               a{
-                background-image: inline-image("../images/home/1280/product_of_the_day.svg");
+                background-image: url("../images/home/1280/product_of_the_day.svg");
 
                 &:hover{
-                  background-image: inline-image("../images/home/1280/product_of_the_day_hover.svg");
+                  background-image: url("../images/home/1280/product_of_the_day_hover.svg");
                 }
               }
             }
@@ -190,22 +190,22 @@
             &.home-menu__item_featured{
 
               a{
-                background-image: inline-image("../images/home/1280/featured_product.svg");
+                background-image: url("../images/home/1280/featured_product.svg");
 
 
                 &:hover{
-                  background-image: inline-image("../images/home/1280/featured_product_hover.svg");
+                  background-image: url("../images/home/1280/featured_product_hover.svg");
                 }
               }
             }
 
             &.home-menu__item_sale{
               a{
-                background-image: inline-image("../images/home/1280/sale.svg");
+                background-image: url("../images/home/1280/sale.svg");
 
 
                 &:hover{
-                  background-image: inline-image("../images/home/1280/sale_hover.svg");
+                  background-image: url("../images/home/1280/sale_hover.svg");
                 }
               }
             }
@@ -809,7 +809,7 @@
                       width: 90%;
                       height: 36px;
                       top: 79px;
-                      background: $dark_yellow inline-image("../images/category/1280/add_to_cart.svg") center center/32px 25px no-repeat;
+                      background: $dark_yellow url("../images/category/1280/add_to_cart.svg") center center/32px 25px no-repeat;
 
                     }
 

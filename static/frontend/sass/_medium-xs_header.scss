@@ -89,10 +89,10 @@
                 height: 17px;
                 position: relative;
                 top: 2px;
-                background: inline-image("../images/home/1280/multilanguage_clicking.svg") no-repeat;
+                background: url("../images/home/1280/multilanguage_clicking.svg") no-repeat;
 
                 &:active{
-                  background: inline-image("../images/home/1280/multilanguage.svg") no-repeat;
+                  background: url("../images/home/1280/multilanguage.svg") no-repeat;
                 }
               }
             }

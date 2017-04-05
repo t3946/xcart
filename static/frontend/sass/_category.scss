@@ -37,7 +37,7 @@
         color: $blue_a;
 
         &:before{
-          background-image: inline-image("../images/home/1280/view_all_hover.svg");
+          background-image: url("../images/home/1280/view_all_hover.svg");
         }
       }
 
@@ -127,7 +127,7 @@
         &:after{
           content: 'Read more \00a0 \00a0';
           display: inline-block;
-          background: inline-image("../images/category/1280/read_more.svg") right center/7px 5px no-repeat;
+          background: url("../images/category/1280/read_more.svg") right center/7px 5px no-repeat;
           border-bottom: 1px dashed $blue;
           position: relative;
           z-index: 3;
@@ -142,7 +142,7 @@
 
           &:after{
             border-bottom-color: $blue_a;
-            background-image: inline-image("../images/category/1280/read_more_hover.svg");
+            background-image: url("../images/category/1280/read_more_hover.svg");
           }
         }
       }
@@ -170,12 +170,12 @@
           &:after{
             content: 'Read less \00a0 \00a0';
             display: inline-block;
-            background: inline-image("../images/category/1280/read_less.svg") right center/7px 5px no-repeat;
+            background: url("../images/category/1280/read_less.svg") right center/7px 5px no-repeat;
           }
 
           &:hover{
             &:after{
-              background-image: inline-image("../images/category/1280/read_less_hover.svg");
+              background-image: url("../images/category/1280/read_less_hover.svg");
             }
           }
         }
@@ -310,7 +310,7 @@
           @include button_action_active();
 
           &:before{
-            background: inline-image("../images/category/768/arrow_see_subdepartments_clicking.svg") no-repeat;
+            background: url("../images/category/768/arrow_see_subdepartments_clicking.svg") no-repeat;
           }
 
         }
@@ -329,7 +329,7 @@
           right: 17px;
           vertical-align: middle;
           top: -1px;
-          background: inline-image("../images/category/768/arrow_see_subdepartments.svg") no-repeat;
+          background: url("../images/category/768/arrow_see_subdepartments.svg") no-repeat;
         }
 
       }
@@ -379,7 +379,7 @@
             color: $blue_a;
 
             &:before{
-              background-image: inline-image("../images/home/1280/view_all_hover.svg");
+              background-image: url("../images/home/1280/view_all_hover.svg");
             }
           }
 
@@ -413,10 +413,10 @@
                 margin-top: 8px;
                 width: 22px;
                 height: 22px;
-                background-image: inline-image("../images/category/1280/close_white.svg");
+                background-image: url("../images/category/1280/close_white.svg");
 
                 &:hover, &:active, &:focus{
-                  background-image: inline-image("../images/category/1280/close_white.svg");
+                  background-image: url("../images/category/1280/close_white.svg");
                 }
               }
 
@@ -492,7 +492,7 @@
                 left: 0;
                 right: 0;
                 margin: auto;
-                background: inline-image("../images/category/1280/list.svg");
+                background: url("../images/category/1280/list.svg");
                 background-position: center center;
                 background-size: 23px 23px;
                 background-repeat: no-repeat;
@@ -504,14 +504,14 @@
 
               &:hover{
                 &:before{
-                  background: inline-image("../images/category/1280/list_hover.svg");
+                  background: url("../images/category/1280/list_hover.svg");
                 }
 
               }
 
               &:active{
                 &:before {
-                  background: inline-image("../images/category/1280/list_clicking.svg");
+                  background: url("../images/category/1280/list_clicking.svg");
                 }
               }
 
@@ -519,17 +519,17 @@
 
               &.button-tile{
                 &:before{
-                  background: inline-image("../images/category/1280/tile.svg");
+                  background: url("../images/category/1280/tile.svg");
                 }
                 &:hover{
                   &:before{
-                    background: inline-image("../images/category/1280/tile_hover.svg");
+                    background: url("../images/category/1280/tile_hover.svg");
                   }
                 }
 
                 &:active{
                   &:before{
-                    background: inline-image("../images/category/1280/tile_clicking.svg");
+                    background: url("../images/category/1280/tile_clicking.svg");
                   }
                 }
 
@@ -608,7 +608,7 @@
                       display: none;
 
                       &:checked + label:before {
-                        background: inline-image("../images/category/1280/check_mark.svg") no-repeat;
+                        background: url("../images/category/1280/check_mark.svg") no-repeat;
                         background-size: 13px 13px;
                         background-position: center center;
                       }
@@ -623,13 +623,13 @@
 
                         &:hover {
                           &:before{
-                            background: inline-image("../images/category/1280/cancel_filter_hover.svg") no-repeat !important;
+                            background: url("../images/category/1280/cancel_filter_hover.svg") no-repeat !important;
                           }
 
                         }
 
                         &:before{
-                          background: inline-image("../images/category/1280/cancel_filter.svg") no-repeat !important;
+                          background: url("../images/category/1280/cancel_filter.svg") no-repeat !important;
                           border: none !important;
                         }
 
@@ -765,7 +765,7 @@
                       height: 17px;
                       vertical-align: middle;
                       position: absolute;
-                      background: inline-image("../images/category/768/point.svg") no-repeat;
+                      background: url("../images/category/768/point.svg") no-repeat;
                       top: 50%;
                       margin-top: -9px;
                       left: 10px;
@@ -833,7 +833,7 @@
               &:before{
                 content: '';
                 display: inline-block;
-                background: inline-image("../images/category/1280/cancel_filter.svg") no-repeat !important;
+                background: url("../images/category/1280/cancel_filter.svg") no-repeat !important;
                 background-size: 15px 15px;
                 background-position: center center;
                 width: 15px;
@@ -845,7 +845,7 @@
 
               &:hover {
                 &:before{
-                  background: inline-image("../images/category/1280/cancel_filter_hover.svg") no-repeat !important;
+                  background: url("../images/category/1280/cancel_filter_hover.svg") no-repeat !important;
                 }
 
                 text-decoration: none;
@@ -922,7 +922,7 @@
                   height: 11px;
                   margin-left: 11px;
                   margin-bottom: -2px;
-                  background: inline-image("../images/home/1280/right_arrow_2.svg") no-repeat;
+                  background: url("../images/home/1280/right_arrow_2.svg") no-repeat;
 
                 }
               }

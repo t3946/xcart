@@ -264,7 +264,7 @@
                           display: inline-block;
                           width: 35px;
                           height: 27px;
-                          background: inline-image("../images/category/1280/add_to_cart.svg") no-repeat;
+                          background: url("../images/category/1280/add_to_cart.svg") no-repeat;
                           position: absolute;
                           left: 29%;
                           top: 0;
@@ -518,7 +518,7 @@
                                 background-repeat: no-repeat;
                                 background-size: 22px 26px;
                                 background-position: 10px center;
-                                background-image: inline-image("../images/home/1280/play.svg");
+                                background-image: url("../images/home/1280/play.svg");
                                 @include opacity(0.5);
                                 top: 5px;
                                 left: 0;
@@ -568,27 +568,27 @@
 
                       &.slider-vertical__controls_prev-page{
                         top: 0;
-                        background: transparent inline-image("../images/home/1280/arrow_up_quick_view.svg") center center/31px 17px no-repeat;
+                        background: transparent url("../images/home/1280/arrow_up_quick_view.svg") center center/31px 17px no-repeat;
 
                         &:hover{
-                          background: transparent inline-image("../images/home/1280/arrow_up_quick_view_hover.svg") center center/31px 17px no-repeat;
+                          background: transparent url("../images/home/1280/arrow_up_quick_view_hover.svg") center center/31px 17px no-repeat;
                         }
 
                         &:active{
-                          background: transparent inline-image("../images/home/1280/arrow_up_quick_view_clicing.svg") center center/31px 17px no-repeat;
+                          background: transparent url("../images/home/1280/arrow_up_quick_view_clicing.svg") center center/31px 17px no-repeat;
                         }
                       }
 
                       &.slider-vertical__controls_next-page{
                         bottom: 0;
-                        background: transparent inline-image("../images/home/1280/arrow_down_quick_view.svg") center center/31px 17px no-repeat;
+                        background: transparent url("../images/home/1280/arrow_down_quick_view.svg") center center/31px 17px no-repeat;
 
                         &:hover{
-                          background: transparent inline-image("../images/home/1280/arrow_down_quick_view_hover.svg") center center/31px 17px no-repeat;
+                          background: transparent url("../images/home/1280/arrow_down_quick_view_hover.svg") center center/31px 17px no-repeat;
                         }
 
                         &:active{
-                          background: transparent inline-image("../images/home/1280/arrow_down_quick_view_clicing.svg") center center/31px 17px no-repeat;
+                          background: transparent url("../images/home/1280/arrow_down_quick_view_clicing.svg") center center/31px 17px no-repeat;
                         }
                       }
 
@@ -892,7 +892,7 @@
                 display: inline-block;
                 width: 47px;
                 height: 37px;
-                background: inline-image("../images/category/1280/add_to_cart.svg") no-repeat;
+                background: url("../images/category/1280/add_to_cart.svg") no-repeat;
                 position: absolute;
                 left: 15%;
                 top: 0;
@@ -965,12 +965,12 @@
                         margin-top: -6px;
                         top: 50%;
                         right: 0;
-                        background: inline-image("../images/home/iphone6/plus.svg") no-repeat;
+                        background: url("../images/home/iphone6/plus.svg") no-repeat;
                       }
 
                       &[aria-expanded="true"]{
                         &:after{
-                          background: inline-image("../images/home/iphone6/minus.svg") no-repeat;
+                          background: url("../images/home/iphone6/minus.svg") no-repeat;
                           position: absolute;
                           margin-top: -1px;
                           top: 50%;

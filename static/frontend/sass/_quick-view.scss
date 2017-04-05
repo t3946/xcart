@@ -137,7 +137,7 @@
                           background-repeat: no-repeat;
                           background-size: 18px 21px;
                           background-position: 10px center;
-                          background-image: inline-image("../images/home/1280/play.svg");
+                          background-image: url("../images/home/1280/play.svg");
                           @include opacity(0.5);
                           top: 11px;
                           left: 6px;
@@ -185,27 +185,27 @@
 
                 &.slider-vertical__controls_prev-page{
                   top: 0;
-                  background: transparent inline-image("../images/home/1280/arrow_up_quick_view.svg") center center/31px 17px no-repeat;
+                  background: transparent url("../images/home/1280/arrow_up_quick_view.svg") center center/31px 17px no-repeat;
 
                   &:hover{
-                    background: transparent inline-image("../images/home/1280/arrow_up_quick_view_hover.svg") center center/31px 17px no-repeat;
+                    background: transparent url("../images/home/1280/arrow_up_quick_view_hover.svg") center center/31px 17px no-repeat;
                   }
 
                   &:active{
-                    background: transparent inline-image("../images/home/1280/arrow_up_quick_view_clicing.svg") center center/31px 17px no-repeat;
+                    background: transparent url("../images/home/1280/arrow_up_quick_view_clicing.svg") center center/31px 17px no-repeat;
                   }
                 }
 
                 &.slider-vertical__controls_next-page{
                   bottom: 0;
-                  background: transparent inline-image("../images/home/1280/arrow_down_quick_view.svg") center center/31px 17px no-repeat;
+                  background: transparent url("../images/home/1280/arrow_down_quick_view.svg") center center/31px 17px no-repeat;
 
                   &:hover{
-                    background: transparent inline-image("../images/home/1280/arrow_down_quick_view_hover.svg") center center/31px 17px no-repeat;
+                    background: transparent url("../images/home/1280/arrow_down_quick_view_hover.svg") center center/31px 17px no-repeat;
                   }
 
                   &:active{
-                    background: transparent inline-image("../images/home/1280/arrow_down_quick_view_clicing.svg") center center/31px 17px no-repeat;
+                    background: transparent url("../images/home/1280/arrow_down_quick_view_clicing.svg") center center/31px 17px no-repeat;
                   }
                 }
 
@@ -427,7 +427,7 @@
                       &:before{
                         content: '';
                         display: inline-block;
-                        background: inline-image("../images/home/1280/magnifier.svg") no-repeat;
+                        background: url("../images/home/1280/magnifier.svg") no-repeat;
                         position: relative;
                         width: 20px;
                         height: 20px;
@@ -498,19 +498,19 @@
 
                 &.slider-horizontal__controls_prev-page{
                   left: 0;
-                  background: transparent inline-image("../images/home/1280/left_arrow.svg") center center/12px 21px no-repeat;
+                  background: transparent url("../images/home/1280/left_arrow.svg") center center/12px 21px no-repeat;
 
                   &:hover{
-                    background: transparent inline-image("../images/home/1280/left_arrow_hover.svg") center center/12px 21px no-repeat;
+                    background: transparent url("../images/home/1280/left_arrow_hover.svg") center center/12px 21px no-repeat;
                   }
                 }
 
                 &.slider-horizontal__controls_next-page{
                   right: 0;
-                  background: transparent inline-image("../images/home/1280/right_arrow.svg") center center/12px 21px no-repeat;
+                  background: transparent url("../images/home/1280/right_arrow.svg") center center/12px 21px no-repeat;
 
                   &:hover{
-                    background: transparent inline-image("../images/home/1280/right_arrow_hover.svg") center center/12px 21px no-repeat;
+                    background: transparent url("../images/home/1280/right_arrow_hover.svg") center center/12px 21px no-repeat;
                   }
                 }
 
@@ -561,20 +561,20 @@
             //@include box-shadow(inset 0 0 12px rgba(0, 0, 0, 0.5));
 
             &.modal-quick-view__button_prev{
-              background: transparent inline-image("../images/home/1280/left_arrow_quick_view.svg") center/cover no-repeat;
+              background: transparent url("../images/home/1280/left_arrow_quick_view.svg") center/cover no-repeat;
               left: -110px;
 
               &:hover{
-                background: transparent inline-image("../images/home/1280/left_arrow_quick_view_hover.svg") center/cover no-repeat;
+                background: transparent url("../images/home/1280/left_arrow_quick_view_hover.svg") center/cover no-repeat;
               }
             }
 
             &.modal-quick-view__button_next{
-              background: transparent inline-image("../images/home/1280/right_arrow_quick_view.svg") center/cover no-repeat;
+              background: transparent url("../images/home/1280/right_arrow_quick_view.svg") center/cover no-repeat;
               right: -110px;
 
               &:hover{
-                background: transparent inline-image("../images/home/1280/right_arrow_quick_view_hover.svg") center/cover no-repeat;
+                background: transparent url("../images/home/1280/right_arrow_quick_view_hover.svg") center/cover no-repeat;
               }
             }
           }

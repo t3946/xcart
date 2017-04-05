@@ -155,7 +155,7 @@ input[type='number']::-webkit-inner-spin-button {
     text-align: center;
 
     &.nav-page-fixed__btn_up{
-      background-image: inline-image("../images/home/1280/arrow_up.svg");
+      background-image: url("../images/home/1280/arrow_up.svg");
       background-position: 13px 11px;
       margin-top: -81px;
       background-color: $white;
@@ -163,7 +163,7 @@ input[type='number']::-webkit-inner-spin-button {
     }
 
     &.nav-page-fixed__btn_down{
-      background-image: inline-image("../images/home/1280/arrow_down.svg");
+      background-image: url("../images/home/1280/arrow_down.svg");
       background-position: 13px 33px;
       margin-bottom: -81px;
       background-color: $white;
@@ -201,12 +201,12 @@ input[type='number']::-webkit-inner-spin-button {
       &:after{
         content: 'Read less \00a0 \00a0';
         display: inline-block;
-        background: inline-image("../images/category/1280/read_less.svg") right center/7px 5px no-repeat;
+        background: url("../images/category/1280/read_less.svg") right center/7px 5px no-repeat;
       }
 
       &:hover{
         &:after{
-          background-image: inline-image("../images/category/1280/read_less_hover.svg");
+          background-image: url("../images/category/1280/read_less_hover.svg");
         }
       }
     }
@@ -241,7 +241,7 @@ input[type='number']::-webkit-inner-spin-button {
     &:after{
       content: 'Read more \00a0 \00a0';
       display: inline-block;
-      background: inline-image("../images/category/1280/read_more.svg") right center/7px 5px no-repeat;
+      background: url("../images/category/1280/read_more.svg") right center/7px 5px no-repeat;
       position: relative;
       z-index: 30;
     }
@@ -254,7 +254,7 @@ input[type='number']::-webkit-inner-spin-button {
       color: $blue_a;
 
       &:after{
-        background-image: inline-image("../images/category/1280/read_more_hover.svg");
+        background-image: url("../images/category/1280/read_more_hover.svg");
       }
     }
   }
@@ -306,7 +306,7 @@ input[type='number']::-webkit-inner-spin-button {
     }
 
     .remove-text{
-      background: inline-image("../images/home/1280/remove.svg") no-repeat;
+      background: url("../images/home/1280/remove.svg") no-repeat;
       display: none;
       width: 18px;
       height: 18px;
@@ -330,12 +330,12 @@ input[type='number']::-webkit-inner-spin-button {
         height: 13px;
 
         &.ok{
-          background: inline-image("../images/product/768/checkmark_accepted.svg") no-repeat;
+          background: url("../images/product/768/checkmark_accepted.svg") no-repeat;
           display: none;
         }
 
         &.error{
-          background: inline-image("../images/product/768/error.svg") no-repeat;
+          background: url("../images/product/768/error.svg") no-repeat;
           display: none;
         }
       }
@@ -383,7 +383,7 @@ input[type='number']::-webkit-inner-spin-button {
           width: 21px;
           height: 21px;
           left: -20px;
-          background: inline-image("../images/product/1280/triangle_q.svg") no-repeat;
+          background: url("../images/product/1280/triangle_q.svg") no-repeat;
           top: -1px;
         }
 
@@ -424,7 +424,7 @@ input[type='number']::-webkit-inner-spin-button {
           background-color: $honey_dew;
 
           &:before {
-            background: inline-image("../images/product/1280/triangle_a.svg") no-repeat;
+            background: url("../images/product/1280/triangle_a.svg") no-repeat;
           }
 
           &:after{
@@ -447,18 +447,18 @@ input[type='number']::-webkit-inner-spin-button {
 
 .modal-header{
   .close{
-    background-image: inline-image("../images/home/1280/close.svg");
+    background-image: url("../images/home/1280/close.svg");
     background-repeat:  no-repeat;
     width: 36px;
     height: 36px;
     @include opacity(1);
 
     &:hover{
-      background-image: inline-image("../images/home/1280/close_hover.svg");
+      background-image: url("../images/home/1280/close_hover.svg");
     }
 
     &:active, &:focus{
-      background-image: inline-image("../images/home/1280/close_clicking.svg");
+      background-image: url("../images/home/1280/close_clicking.svg");
     }
 
     &:hover, &:active, &:focus {

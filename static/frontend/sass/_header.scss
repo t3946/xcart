@@ -69,13 +69,13 @@
             margin-top: -5px;
             height: 10px;
             width: 10px;
-            background: inline-image("../images/home/768/switch.svg") no-repeat center center;
+            background: url("../images/home/768/switch.svg") no-repeat center center;
             background-size: 10px 10px;
           }
 
           &:active{
             &:after{
-              background: inline-image("../images/home/768/switch_clicking.svg") no-repeat;
+              background: url("../images/home/768/switch_clicking.svg") no-repeat;
             }
           }
 
@@ -160,20 +160,20 @@
   }
 
   .mobile__departments {
-    background: inline-image("../images/home/768/menu.svg") no-repeat;
+    background: url("../images/home/768/menu.svg") no-repeat;
     width: 25px;
     height: 19px;
     margin-top: 3px;
   }
 
   .mobile__logo {
-    background: inline-image("../images/home/768/logo.svg") no-repeat;
+    background: url("../images/home/768/logo.svg") no-repeat;
     width: 86px;
     height: 26px;
   }
 
   .mobile__search-btn {
-    background: inline-image("../images/home/768/magnifier.svg") no-repeat;
+    background: url("../images/home/768/magnifier.svg") no-repeat;
     width: 30px;
     height: 30px;
     position: relative;
@@ -181,7 +181,7 @@
   }
 
   .mobile__cart {
-    background: inline-image("../images/home/1280/cart.svg") no-repeat;
+    background: url("../images/home/1280/cart.svg") no-repeat;
     width: 40px;
     height: 30px;
     float: right;
@@ -285,12 +285,12 @@
             top: 50%;
             margin-top: -6px;
             right: -6.5%;
-            background: inline-image("../images/home/iphone6/plus.svg") no-repeat;
+            background: url("../images/home/iphone6/plus.svg") no-repeat;
           }
 
           &[aria-expanded="true"] {
             &:after {
-              background: inline-image("../images/home/iphone6/minus.svg") no-repeat;
+              background: url("../images/home/iphone6/minus.svg") no-repeat;
               position: absolute;
               top: 50%;
               margin-top: -1px;
@@ -326,7 +326,7 @@
             height: 11px;
             float: right;
             font-style: normal;
-            background: inline-image("../images/home/iphone6/link_arrow_right_dark.svg") no-repeat;
+            background: url("../images/home/iphone6/link_arrow_right_dark.svg") no-repeat;
             margin: 15px 0;
           }
         }
@@ -368,7 +368,7 @@
   }
 
   .search-lg__remove-text {
-    background: inline-image("../images/home/1280/remove.svg") no-repeat;
+    background: url("../images/home/1280/remove.svg") no-repeat;
     display: none;
     width: 18px;
     height: 18px;
@@ -378,12 +378,12 @@
     right: 9px;
 
     &:hover{
-      background: inline-image("../images/home/1280/remove_hover.svg") no-repeat;
+      background: url("../images/home/1280/remove_hover.svg") no-repeat;
       cursor: pointer;
     }
 
     &:active{
-      background: inline-image("../images/home/1280/remove_clicking.svg") no-repeat;
+      background: url("../images/home/1280/remove_clicking.svg") no-repeat;
     }
   }
 
@@ -404,7 +404,7 @@
     border-bottom: 1px solid $e6_grey;
 
     .arrow_suggestion{
-      background: inline-image("../images/home/768/switch.svg") no-repeat;
+      background: url("../images/home/768/switch.svg") no-repeat;
       display: inline-block;
       width: 13px;
       height: 13px;

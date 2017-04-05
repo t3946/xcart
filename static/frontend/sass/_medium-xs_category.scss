@@ -114,7 +114,7 @@
               &:before{
                 content: '';
                 display: inline-block;
-                background: inline-image("../images/category/1280/back.svg") no-repeat;
+                background: url("../images/category/1280/back.svg") no-repeat;
                 width: 20px;
                 height: 18px;
                 position: absolute;
@@ -124,7 +124,7 @@
 
               &:hover, &:focus{
                 &:before{
-                  background: inline-image("../images/category/1280/back_hover.svg") no-repeat;
+                  background: url("../images/category/1280/back_hover.svg") no-repeat;
                 }
               }
             }
@@ -865,7 +865,7 @@
                     display: inline-block;
                     width: 35px;
                     height: 27px;
-                    background: inline-image("../images/category/1280/add_to_cart.svg") no-repeat;
+                    background: url("../images/category/1280/add_to_cart.svg") no-repeat;
                     position: absolute;
                     left: 6%;
                     top: 0;

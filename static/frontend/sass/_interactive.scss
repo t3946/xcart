@@ -36,7 +36,7 @@
 }
 
 .jspDrag{
-  background: inline-image("../images/scroll/drag.png") repeat-y;
+  background: url("../images/scroll/drag.png") repeat-y;
   position:relative;
   display:block;
   cursor:pointer;
@@ -56,7 +56,7 @@
   top:0;
   z-index:20000;
   width:20px;
-  background: inline-image("../images/scroll/bg.png") repeat-y;
+  background: url("../images/scroll/bg.png") repeat-y;
   padding-left:2px;
   padding-right:2px;
 
@@ -73,10 +73,10 @@
 
   &:hover{
     .jspArrowUp{
-      background: inline-image("../images/home/1280/up_cart_list_hover.svg") no-repeat center center;
+      background: url("../images/home/1280/up_cart_list_hover.svg") no-repeat center center;
     }
     .jspArrowDown{
-      background: inline-image("../images/home/1280/down_cart_list_hover.svg") no-repeat center center;
+      background: url("../images/home/1280/down_cart_list_hover.svg") no-repeat center center;
     }
   }
 }
@@ -92,11 +92,11 @@
   height:19px;
   margin: 0 2px;
   display:block;
-  background: inline-image("../images/home/1280/up_cart_list.svg") no-repeat center center;
+  background: url("../images/home/1280/up_cart_list.svg") no-repeat center center;
   cursor:pointer;
 }
 
 .jspArrowDown{
   @extend .jspArrowUp;
-  background: inline-image("../images/home/1280/down_cart_list.svg") no-repeat center center;
+  background: url("../images/home/1280/down_cart_list.svg") no-repeat center center;
 }
