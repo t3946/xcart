@@ -324,7 +324,9 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                     $modelDImage->orderby = ($kImg + 1) * 10;
                                     $modelDImage->save();
                                     if (class_exists('Imagick')) {
-                                        $image_info = func_set_correct_det_img($modelDImage->getAttributes(), true);
+                                        $imageParam = $modelDImage->getAttributes();
+                                        $imageParam['image_path'] = '../'.$imageParam['image_path'];
+                                        $image_info = func_set_correct_det_img($imageParam, true);
                                     }
                                 }
                             }
