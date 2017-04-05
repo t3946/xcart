@@ -46,6 +46,12 @@ if (isset($argv) && is_array($argv)) {
 }
 
 if ($config[$log_category] == "Y") {
+    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+    $oMail->to = 'team@s3stores.com';
+    $oMail->from = ('team@s3stores.com');
+    $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', $log_category);
+    $oMail->body = $log_category . ' already launched';
+    $oMail->sendEmail();
     //die("Already launched"); // ################################
 }
 db_query_param('REPLACE xcart_config SET value=:value, name=:name', ['value' => 'Y', 'name' => $log_category]);
@@ -179,31 +185,28 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 if (!$modelProduct) {
                     $modelProduct= new ProductModel();
                 }
-
                 $modelProduct->setAttributes($aProduct);
-                $all_feed_productcodes[] = $modelProduct->productcode;
 
-                //if ($modelProduct->getIsNewRecord()) {
-                    $discontinuedDate = $modelProduct->getFromQueryAttribute('discontinued_date');
-                    if (!empty($discontinuedDate)) {
-                        $discontinuedDateTimeDiff = strtotime($discontinuedDate) - time();
-                        if ($discontinuedDateTimeDiff < (60 * 60 * 24 * 20)) {
-                            if ($modelProduct->forsale != "N") {
-                                $modelProduct->forsale = "N";
-                                $modelProduct->update_search_index = "Y";
-                            }
+                $all_feed_productcodes[] = $modelProduct->productcode;
+                $discontinuedDate = $aProduct['discontinued_date'];
+                if (!empty($discontinuedDate)) {
+                    $discontinuedDateTimeDiff = strtotime($discontinuedDate) - time();
+                    if ($discontinuedDateTimeDiff < (60 * 60 * 24 * 20)) {
+                        if ($modelProduct->forsale != "N") {
+                            $modelProduct->forsale = "N";
+                            $modelProduct->update_search_index = "Y";
                         }
                     }
-                    $todayDate = strtotime(date("Y-m-d"));
-                    if (($modelProduct->eta_date_lock == "Y")
-                        && ($modelProduct->getOldAttribute('eta_date_mm_dd_yyyy') > $todayDate)
-                        && (($modelProduct->getOldAttribute('eta_date_mm_dd_yyyy') > $modelProduct->eta_date_mm_dd_yyyy) || empty($modelProduct->eta_date_mm_dd_yyyy))
-                    ) {
-                        $modelProduct->eta_date_mm_dd_yyyy = $modelProduct->getOldAttribute('eta_date_mm_dd_yyyy');
-                    } else {
-                        $modelProduct->eta_date_lock = "N";
-                    }
-                //}
+                }
+                $todayDate = strtotime(date("Y-m-d"));
+                if (($modelProduct->eta_date_lock == "Y")
+                    && ($modelProduct->getOldAttribute('eta_date_mm_dd_yyyy') > $todayDate)
+                    && (($modelProduct->getOldAttribute('eta_date_mm_dd_yyyy') > $modelProduct->eta_date_mm_dd_yyyy) || empty($modelProduct->eta_date_mm_dd_yyyy))
+                ) {
+                    $modelProduct->eta_date_mm_dd_yyyy = $modelProduct->getOldAttribute('eta_date_mm_dd_yyyy');
+                } else {
+                    $modelProduct->eta_date_lock = "N";
+                }
 
                 switch ($supplierFeedModel->feed_type) {
                     case 'I' :
@@ -442,11 +445,10 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
                             $modelProduct->upc = $newUPC;
                         }
-
-                        if ($modelProduct->getChangedAttributes()) {
+                        if ($modelProduct->getChangedAttributes() && !($modelProduct->getIsCreated())) {
                             $bUpdatedProduct = true;
                         }
-                        if ($bUpdatedProduct && !($modelProduct->getIsCreated())) {
+                        if ($bUpdatedProduct) {
                             $updated_products_count++;
                             $modelProduct->mod_date = time();
                         }

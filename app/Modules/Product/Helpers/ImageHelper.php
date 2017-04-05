@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Product\Helpers;
 
 
@@ -55,8 +56,9 @@ class ImageHelper
      * @param string $prefix
      * @return ImageDModel|null
      */
-    public static function uploadMainImage($image, $name, $prefix)
+    public static function uploadMainImage($image, $name, $prefix, $product_id)
     {
+        global $xcart_dir;
         /** @var ImageDModel $imageModel */
         $imageModel = null;
         $SET_IMAGE_URL = self::getImageFileNameFromDownloadLink($image);
@@ -74,29 +76,30 @@ class ImageHelper
 
         }
         $image_file_name = str_replace(' ', '', rawurldecode($image_file_name));
-        $image_file_path =  "./images/D/" . $image_file_name;
+        $image_file_path = "/images/D/" . $image_file_name;
 
-        $sDataImage = file_get_contents_curl($image);
-
-        if (!empty($sDataImage)) {
-            if (file_put_contents($image_file_path, $sDataImage)) {
-                $img_info = getimagesize($image_file_path);
-                if ($img_info) {
-                    $imageModel = ImageDModel::objects()->filter(['image_path' => $image_file_path]);
-                    if (!$imageModel) {
+        $imageModels = ImageDModel::objects()->filter(['image_path' => '.' . $image_file_path, 'id' => $product_id])->all();
+        if (empty($imageModels)) {
+            $sDataImage = file_get_contents_curl($image);
+            if (!empty($sDataImage)) {
+                if (file_put_contents($xcart_dir . $image_file_path, $sDataImage)) {
+                    $img_info = getimagesize($xcart_dir . $image_file_path);
+                    if ($img_info) {
                         $imageModel = new ImageDModel([
                             'date' => time(),
-                            'image_path' => $image_file_path,
+                            'image_path' => '.' . $image_file_path,
                             'image_type' => $img_info["mime"],
                             'image_x' => $img_info[0],
                             'image_y' => $img_info[1],
-                            'image_size' => filesize($image_file_path),
+                            'image_size' => filesize($xcart_dir . $image_file_path),
                             'alt' => $name,
                             'avail' => 'Y'
                         ]);
                     }
                 }
             }
+        } else {
+            $imageModel = reset($imageModels);
         }
         return $imageModel;
     }

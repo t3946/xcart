@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Product\Stores;
 
 use Modules\Product\Models\ProductModel;
@@ -18,11 +19,24 @@ class SupplierFeedStore extends BaseStore
 
     public function __construct($feed)
     {
-        $this->populate(json_decode($feed, true));
+        if ($content = json_decode($feed, true)) {
+            if (is_array($content)) {
+                $this->populate($content);
+            }
+        }
+
     }
 
     public function populate(array $feed)
     {
+        $product_cols_replace = array(
+            "sku" => "productcode",
+            "quantity" => "r_avail",
+            "eta_date" => "eta_date_mm_dd_yyyy",
+            "title" => "product",
+            "listprice" => "list_price"
+        );
+
         $this->supplier_id = $feed['supplier_id'];
         $this->supplier_name = $feed['supplier_name'];
         $this->original_url = $feed['original_url'];
@@ -30,7 +44,17 @@ class SupplierFeedStore extends BaseStore
         $this->feed_type = $feed['feed_type'];
         $this->products_in_feed = $feed['products_in_feed'];
         $this->defaults = $feed['defaults'];
-        $this->dont_update_fields = $feed['dont_update_fields'];
+
+        if (!empty($feed['dont_update_fields'])) {
+            foreach ($feed['dont_update_fields'] as $doNotUpdateFiled){
+                $idx = array_search($doNotUpdateFiled, array_keys($product_cols_replace));
+                if ($idx !== false) {
+                    $this->dont_update_fields[] = $product_cols_replace[$doNotUpdateFiled];
+                } else {
+                    $this->dont_update_fields[] = $doNotUpdateFiled;
+                }
+            }
+        }
 
         if (!empty($feed['products'])) {
             foreach ($feed['products'] as $product) {
