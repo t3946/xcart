@@ -590,7 +590,9 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 </td>
 
 <td nowrap="nowrap">
-    {$product_model->getMPN()}
+    {if $product_model}
+        {$product_model->getMPN()}
+    {/if}
 </td>
 
 <td align="center">
@@ -607,7 +609,7 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
     </div>
     <div style="BACKGROUND-COLOR: #F2A3A8; color: #000000;" align="right">
         {if $order_detail_model->item_cost_to_us ne $product_model->cost_to_us}
-            {include file="currency2.tpl" value=$product_model->item_cost_to_us|price_format}
+            {include file="currency2.tpl" value=$order_detail_model->item_cost_to_us|price_format}
         {else}
             Cost to us accurate
         {/if}
@@ -716,8 +718,9 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
         {/if}
     {/foreach}
     {/if}
-
-    {math equation="x+y" x=$cost_to_us_for_products_in_xcart y=$add_product_cost_to_us assign="cost_to_us_for_products_in_xcart"}
+    {if $add_product_cost_to_us && $cost_to_us_for_products_in_xcart}
+        {math equation="x+y" x=$cost_to_us_for_products_in_xcart y=$add_product_cost_to_us assign="cost_to_us_for_products_in_xcart"}
+    {/if}
 
 <tr {if $invoice.extra_items_on_invoice != "Y"}style="display: none;"{/if} class="manufacturer_add_extra_value" data-mnfid="{$m_id}" data-invoice="{$invoice_number}">
     <td colspan="2" id="add_extra_track_{$m_id}_{$invoice_number}_box_1">
