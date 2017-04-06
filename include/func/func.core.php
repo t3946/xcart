@@ -2801,7 +2801,8 @@ function func_pc_find_new_categoryid($productid)
 
     $text_arr = explode(" ", $text);
 
-    $categories = db_query($query = "SELECT categoryid, pc_category_weight FROM $sql_tbl[categories] WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid='$sfid' AND pc_category_weight != 0");
+    $categories = db_query_param($query = /** @lang MySQL */
+        "SELECT categoryid, pc_category_weight FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:sfid AND pc_category_weight != 0", ['sfid' => $sfid]);
 
     $idxcl = 0;
 
@@ -2814,7 +2815,7 @@ function func_pc_find_new_categoryid($productid)
 
         $pc_category_weight = $category["pc_category_weight"];
 
-        $current_category_terms = func_query("SELECT $sql_tbl[pc_terms].term FROM $sql_tbl[pc_terms] WHERE $sql_tbl[pc_terms].storefrontid = '$sfid'");
+        $current_category_terms = func_query_param(/** @lang MySQL */"SELECT term FROM xcart_pc_terms" , []);
 
         $current_category_terms_arr = [];
         if (!empty($current_category_terms)) {
@@ -2826,7 +2827,12 @@ function func_pc_find_new_categoryid($productid)
         foreach ($text_arr as $word) {
             if (in_array($word, $current_category_terms_arr)) {
                 // sleep for some time
-                $bayes_weight = func_query_first_cell("Select COALESCE(CASE WHEN CT.categoryid is not NULL THEN LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z) ELSE LOG(1/C.pc_z) END,0) As bayes_weight from $sql_tbl[pc_terms] T left join $sql_tbl[categories] C ON C.categoryid = '$categoryid' left join $sql_tbl[pc_category_terms] CT ON CT.categoryid = C.categoryid and CT.termid = T.termid where T.term = '$word' and T.storefrontid = '$sfid'");
+                $bayes_weight = func_query_first_cell_param(/** @lang MySQL */
+                    "SELECT COALESCE(CASE WHEN CT.categoryid IS NOT NULL THEN LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z) ELSE LOG(1/C.pc_z) END,0) AS bayes_weight 
+                            FROM xcart_pc_terms T 
+                            LEFT JOIN xcart_categories C ON C.categoryid = :categoryid 
+                            LEFT JOIN xcart_pc_category_terms CT ON CT.categoryid = C.categoryid AND CT.termid = T.termid 
+                            WHERE T.term = :word", ['categoryid' => $categoryid, 'word' => $word]);
                 $p1 = $p1 + $bayes_weight;
             }
         }

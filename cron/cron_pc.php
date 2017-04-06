@@ -17,7 +17,7 @@ if ($config["cron_pc_launched"] == "Y") {
     die("Already launched"); // ################################
 }
 
-db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cron_pc_launched'");  // <--------------------
+db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='Y' WHERE name='cron_pc_launched'", []);
 
 $pc_options = func_query_hash("SELECT * FROM $sql_tbl[pc_options]", 'storefrontid', false);
 
@@ -34,15 +34,13 @@ foreach ($storefronts as $storefrontid => $store_info) {
         $pc_options = func_query_hash("SELECT * FROM $sql_tbl[pc_options]", 'storefrontid', false);
     }
 
+    $sql = /** @lang MySQL */<<<SQL
+SELECT COUNT(*) FROM xcart_products p LEFT JOIN xcart_products_sf ps ON ps.productid=p.productid
+	WHERE ps.sfid=:storefrontid AND p.forsale=:forsale AND p.pc_classify_status=:pc_classify_status
+SQL;
 
-    $count_AC_products = func_query_first_cell("
-	SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid
-	WHERE $sql_tbl[products_sf].sfid='$storefrontid' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products].pc_classify_status='AC'");
-
-    $count_NC_products = func_query_first_cell("
-    SELECT COUNT(*) FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid=$sql_tbl[products].productid
-    WHERE $sql_tbl[products_sf].sfid='$storefrontid' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products].pc_classify_status='NC'");
-
+    $count_AC_products = func_query_first_cell_param($sql, ['storefrontid' => $storefrontid, 'forsale' => 'Y', 'pc_classify_status' => 'AC']);
+    $count_NC_products = func_query_first_cell_param($sql, ['storefrontid' => $storefrontid, 'forsale' => 'Y', 'pc_classify_status' => 'NC']);
 
     func_print_r($pc_options[$storefrontid]);
 
@@ -61,13 +59,14 @@ foreach ($storefronts as $storefrontid => $store_info) {
         && $count_NC_products > 0
     ) {
 
-        db_query("UPDATE $sql_tbl[config] SET value='$storefrontid' WHERE name='cron_pc_launched_storefrontid'");
+        db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value=:storefrontid WHERE name=:name", ['storefrontid' => $storefrontid, 'name' => 'cron_pc_launched_storefrontid']);
 
         if ($pc_options[$storefrontid]["classification_approval_rate"] < $pc_options[$storefrontid]["recalc_if_approval_rate"] && $mcAccCount != $pc_options[$storefrontid]["last_mc_acc_products_count"]) {
 
-            db_query("delete CT, T from $sql_tbl[pc_category_terms] as CT inner join $sql_tbl[pc_terms] T ON T.termid = CT.termid");
+            db_query_param(/** @lang MySQL */"DELETE CT, T FROM xcart_pc_category_terms as CT inner join xcart_pc_terms T ON T.termid = CT.termid", []);
 
-            $categories = db_query($query = "SELECT categoryid FROM $sql_tbl[categories] WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid='$storefrontid'");
+            $categories = db_query_param($query = /** @lang MySQL */
+                "SELECT categoryid FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:storefrontid", ['storefrontid' => $storefrontid]);
             $counter = 0;
             while ($category = db_fetch_array($categories)) {
                 $categoryid = $category["categoryid"];
@@ -91,7 +90,7 @@ foreach ($storefronts as $storefrontid => $store_info) {
                         foreach ($text_arr as $term) {
                             db_query_param(/** @lang MySQL */
                                 "INSERT IGNORE INTO xcart_pc_terms (term) VALUES (:term)", ['term' => $term]);
-                            $termid = func_query_first_cell("SELECT termid FROM $sql_tbl[pc_terms] WHERE term='$term'");
+                            $termid = func_query_first_cell_param(/** @lang MySQL */"SELECT termid FROM xcart_pc_terms WHERE term=:term", ['term' => $term]);
                             $productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termid]);
                             if (!$productCategoryTerm) {
                                 $productCategoryTerm = new ProductCategoryTermsModel();
@@ -131,7 +130,8 @@ foreach ($storefronts as $storefrontid => $store_info) {
             if (!empty($bayesian_weight_arr)) {
                 foreach ($bayesian_weight_arr as $k => $v) {
                     if (!empty($v["bayesian_weight"])) {
-                        db_query("UPDATE $sql_tbl[categories] SET pc_category_weight='$v[bayesian_weight]' WHERE categoryid='$v[CategoryID]'");
+                        db_query_param(/** @lang MySQL */
+                            "UPDATE xcart_categories SET pc_category_weight=:pc_category_weight WHERE categoryid=:categoryid", ['pc_category_weight' => $v['bayesian_weight'], 'categoryid' => $v['CategoryID']]);
                     }
                 }
             }
@@ -148,7 +148,7 @@ foreach ($storefronts as $storefrontid => $store_info) {
 
             if (!empty($z_arr)) {
                 foreach ($z_arr as $k => $v) {
-                    db_query("UPDATE $sql_tbl[categories] SET pc_z='$v[Z]' WHERE categoryid='$v[CategoryID]'");
+                    db_query_param(/** @lang MySQL */"UPDATE xcart_categories SET pc_z=:pc_z WHERE categoryid=:categoryid", ['pc_z' => $v['Z'], 'categoryid' => $v['CategoryID']]);
                 }
             }
 
@@ -158,7 +158,7 @@ foreach ($storefronts as $storefrontid => $store_info) {
         $limit = $pc_options[$storefrontid]["amount_of_products_for_autoclassify_queue"] - $count_AC_products;
         if ($limit < 0) $limit = 10;
 
-        $products = func_query($query = "SELECT $sql_tbl[products].productid FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid = $sql_tbl[products].productid WHERE pc_classify_status='NC' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products_sf].sfid='$storefrontid' ORDER BY RAND() LIMIT $limit");
+        $products = func_query_param($query = "SELECT $sql_tbl[products].productid FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid = $sql_tbl[products].productid WHERE pc_classify_status='NC' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products_sf].sfid='$storefrontid' ORDER BY RAND() LIMIT $limit");
 
         $p_count = 0;
         if (!empty($products)) {
@@ -177,7 +177,7 @@ foreach ($storefronts as $storefrontid => $store_info) {
     }
 }
 
-db_query("UPDATE $sql_tbl[config] SET value='N' WHERE name='cron_pc_launched'");
-db_query("UPDATE $sql_tbl[config] SET value='' WHERE name='cron_pc_launched_storefrontid'");
+db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='N' WHERE name='cron_pc_launched'", []);
+db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='' WHERE name='cron_pc_launched_storefrontid'", []);
 
 print"<br />DONE!";
