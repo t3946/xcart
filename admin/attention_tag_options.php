@@ -23,7 +23,7 @@ if ($REQUEST_METHOD == 'POST'){
 				    'description' => $v["description"],
                 ];
 
-				func_array2update($sql_tbl['attention_tags_values'], $up_arr, ['status_id' => $v['status_id']] );
+				func_array2update_new($sql_tbl['attention_tags_values'], $up_arr, ['status_id' => $v['status_id']] );
 
 				if (!empty($v["select_login"]) && !empty($v["select_action"])){
 					$is_such_str = func_query_first_cell("SELECT id FROM $sql_tbl[attention_tags_values_logins] WHERE login='$v[select_login]' AND action='$v[select_action]' AND status_id='$v[status_id]'");

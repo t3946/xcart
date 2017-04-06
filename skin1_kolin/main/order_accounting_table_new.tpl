@@ -590,7 +590,9 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
 </td>
 
 <td nowrap="nowrap">
-    {$product_model->getMPN()}
+    {if $product_model}
+        {$product_model->getMPN()}
+    {/if}
 </td>
 
 <td align="center">
