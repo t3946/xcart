@@ -2889,14 +2889,12 @@ function func_del_excluded_char_sequences($text = '', $excluded_char_sequences =
     $excluded_char_sequences = trim($excluded_char_sequences);
     $excluded_char_sequences = strtolower($excluded_char_sequences);
 
-    if (empty($text) || empty($excluded_char_sequences)) {
-        return $text;
-    }
-
-    $excluded_char_sequences_arr = explode(" ", $excluded_char_sequences);
-    foreach ($excluded_char_sequences_arr as $k => $v) {
-        $char_sequence = trim($v);
-        $text          = str_replace($char_sequence, " ", $text);
+    if ($excluded_char_sequences) {
+        $excluded_char_sequences_arr = explode(" ", $excluded_char_sequences);
+        foreach ($excluded_char_sequences_arr as $k => $v) {
+            $char_sequence = trim($v);
+            $text = str_replace($char_sequence, " ", $text);
+        }
     }
 
     $text = strip_tags($text);

@@ -89,7 +89,8 @@ foreach ($storefronts as $storefrontid => $store_info) {
                     if (!empty($text)) {
                         $text_arr = explode(" ", $text);
                         foreach ($text_arr as $term) {
-                            db_query("INSERT IGNORE INTO $sql_tbl[pc_terms] (term) VALUES ('$term')");
+                            db_query_param(/** @lang MySQL */
+                                "INSERT IGNORE INTO xcart_pc_terms (term) VALUES (:term)", ['term' => $term]);
                             $termid = func_query_first_cell("SELECT termid FROM $sql_tbl[pc_terms] WHERE term='$term'");
                             $productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termid]);
                             if (!$productCategoryTerm) {
