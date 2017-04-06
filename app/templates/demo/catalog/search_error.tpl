@@ -12,7 +12,7 @@
         </section>
         <div class="row main-container-desktop">
             <div class="left-desktop-column hidden-xs hidden-sm hidden-md col-lg-10">
-                <div class="image" id="image_left-top"><img src="../../assets/images/category/1280/image.png" alt="image" class="hidden-lg" /></div>
+                <div class="image" id="image_left-top"><img src="/static/frontend/dist/images/category/1280/image.png" alt="image" class="hidden-lg" /></div>
                 <div class="left-desktop-column-filter left-desktop-column__departments">
                     <a href="#" class="button-action dropdown-toggle not-active-link" type="button" id="desktop-dep">Departments</a>
                     <div class="panel-group filter-by__panel">
@@ -4182,7 +4182,7 @@
                         </div>
                         <div class="row brand-page hidden-xs hidden-sm hidden-md hidden-lg">
                             <div class="col-xs-25 hidden-md">
-                                <img src="../../assets/images/category/1280/layer-1.png" alt="Bestine Solvent Products">
+                                <img src="/static/frontend/dist/images/category/1280/layer-1.png" alt="Bestine Solvent Products">
                             </div>
                             <div class="col-xs-35 col-md-60 brand-page__title-container">
                                 <h1 class="title">Bestine Solvent Products</h1>
@@ -4191,7 +4191,7 @@
                     </section>
                     <article class="list-info list-info_top hidden-xs hidden-sm hidden-md hidden-lg">
                         <div class="row">
-                            <div class="list-info__brand-logo col-sm-15 col-md-13 hidden-xs hidden-sm hidden-md hidden-lg"><img src="../../assets/images/category/1280/alvin-logo.png" alt="Alvin logo"/></div>
+                            <div class="list-info__brand-logo col-sm-15 col-md-13 hidden-xs hidden-sm hidden-md hidden-lg"><img src="/static/frontend/dist/images/category/1280/alvin-logo.png" alt="Alvin logo"/></div>
                             <div class="list-info__text-wrapper col-sm-60 col-md-60 col-lg-46">
                                 <div class="list-info__text-block">
                                     <p class="list-info__text">
@@ -5022,7 +5022,7 @@
                             <div class="row">
                                 <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
                                     <a href="#">
-                                        <img src="../../assets/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" />
+                                        <img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" />
                                     </a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
@@ -5086,7 +5086,7 @@
                                 <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
                                     <a href="#">
                                         <span class="item__circle-new_red hidden-xs hidden-sm hidden-md">New</span>
-                                        <img src="../../assets/images/category/1280/alv-1334d-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="134" height="218" />
+                                        <img src="/static/frontend/dist/images/category/1280/alv-1334d-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="134" height="218" />
                                     </a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
@@ -5158,7 +5158,7 @@
                                 <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
                                     <a href="#">
                                         <span class="item__rect-sale_yellow hidden-xs hidden-sm hidden-md">Sale</span>
-                                        <img src="../../assets/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" />
+                                        <img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" />
                                     </a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
@@ -5220,7 +5220,7 @@
                         <div class="item">
                             <div class="row">
                                 <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
-                                    <a href="#"><img src="../../assets/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
+                                    <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
                                 <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
@@ -5281,7 +5281,7 @@
                         <div class="item">
                             <div class="row">
                                 <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
-                                    <a href="#"><img src="../../assets/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
+                                    <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
                                 <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
@@ -5342,7 +5342,7 @@
                         <div class="item">
                             <div class="row">
                                 <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
-                                    <a href="#"><img src="../../assets/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
+                                    <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
                                 <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
@@ -5403,7 +5403,7 @@
                         <div class="item">
                             <div class="row">
                                 <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
-                                    <a href="#"><img src="../../assets/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
+                                    <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
                                 <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
@@ -5464,7 +5464,7 @@
                         <div class="item">
                             <div class="row">
                                 <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
-                                    <a href="#"><img src="../../assets/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
+                                    <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
                                 <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
@@ -5525,7 +5525,7 @@
                         <div class="item">
                             <div class="row">
                                 <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
-                                    <a href="#"><img src="../../assets/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
+                                    <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
                                 <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
@@ -5586,7 +5586,7 @@
                         <div class="item">
                             <div class="row">
                                 <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
-                                    <a href="#"><img src="../../assets/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
+                                    <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
                                 <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
@@ -5713,7 +5713,7 @@
                 <article class="list-info list-info_bottom hidden-xs hidden-sm hidden-md hidden-lg">
                     <h3 class="list-info__title">Artist Brush Exclusives</h3>
                     <div class="brand-page hidden-xs hidden-sm hidden-md hidden-lg">
-                        <img src="../../assets/images/category/1280/layer-1.png" alt="Bestine Solvent Products">
+                        <img src="/static/frontend/dist/images/category/1280/layer-1.png" alt="Bestine Solvent Products">
                         <h3 class="list-info__title">Bestine Solvent</h3>
                     </div>
                     <div class="list-info__text-block hidden-lg">
@@ -5763,120 +5763,120 @@
                 <div class="recently-viewed__active-wrapper slider-horizontal__active-wrapper">
                     <div class="recently-viewed__frame slider-horizontal__frame" id="recently-viewed_frame">
                         <ul>
-                            <li class="recently-viewed__item slider-horizontal__item"><a href="#" class="slider-horizontal__item_image-link"><img src="../../assets/images/category/1280/act-6200-1-jpg.png" alt="Item1"
+                            <li class="recently-viewed__item slider-horizontal__item"><a href="#" class="slider-horizontal__item_image-link"><img src="/static/frontend/dist/images/category/1280/act-6200-1-jpg.png" alt="Item1"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/198-media-catalog-product-7-g-7g12643-1-jpg.png" alt="Item2"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-rack08-1-jpg.png" alt="Item3"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/198-media-catalog-product-7-g-7g12643-1-jpg.png" alt="Item2"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-apb-series-08-jpg.png" alt="Item4"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-rack08-1-jpg.png" alt="Item3"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-bpt5-jpg.png" alt="Item5"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-apb-series-08-jpg.png" alt="Item4"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-ebdz1216-1-jpg.png" alt="Item6"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-bpt5-jpg.png" alt="Item5"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/large-1-601-jpg.png" alt="Item1"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-ebdz1216-1-jpg.png" alt="Item6"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-1334a-1-jpg.png" alt="Item2"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/large-1-601-jpg.png" alt="Item1"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/47832-jpg.png" alt="Item3"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-1334a-1-jpg.png" alt="Item2"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-111pi-1-jpg.png" alt="Item4"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/47832-jpg.png" alt="Item3"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/198-media-catalog-product-thtdpk40330-jpg.png" alt="Item5"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-111pi-1-jpg.png" alt="Item4"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-9224ma-1xl-3-jpg.png" alt="Item6"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/198-media-catalog-product-thtdpk40330-jpg.png" alt="Item5"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a href="#" class="slider-horizontal__item_image-link"><img src="../../assets/images/category/1280/act-6200-1-jpg.png" alt="Item1"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/198-media-catalog-product-7-g-7g12643-1-jpg.png" alt="Item2"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-9224ma-1xl-3-jpg.png" alt="Item6"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-rack08-1-jpg.png" alt="Item3"
+                            <li class="recently-viewed__item slider-horizontal__item"><a href="#" class="slider-horizontal__item_image-link"><img src="/static/frontend/dist/images/category/1280/act-6200-1-jpg.png" alt="Item1"
+                                                                                                                                                  class="slider-horizontal__item_image"></a>
+                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
+                            </li>
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/198-media-catalog-product-7-g-7g12643-1-jpg.png" alt="Item2"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-apb-series-08-jpg.png" alt="Item4"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-rack08-1-jpg.png" alt="Item3"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-bpt5-jpg.png" alt="Item5"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-apb-series-08-jpg.png" alt="Item4"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-ebdz1216-1-jpg.png" alt="Item6"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-bpt5-jpg.png" alt="Item5"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/large-1-601-jpg.png" alt="Item1"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-ebdz1216-1-jpg.png" alt="Item6"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-1334a-1-jpg.png" alt="Item2"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/large-1-601-jpg.png" alt="Item1"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/47832-jpg.png" alt="Item3"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-1334a-1-jpg.png" alt="Item2"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-111pi-1-jpg.png" alt="Item4"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/47832-jpg.png" alt="Item3"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/198-media-catalog-product-thtdpk40330-jpg.png" alt="Item5"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-111pi-1-jpg.png" alt="Item4"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
                             </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="../../assets/images/category/1280/alv-9224ma-1xl-3-jpg.png" alt="Item6"
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/198-media-catalog-product-thtdpk40330-jpg.png" alt="Item5"
+                                                                                                                                                  class="slider-horizontal__item_image"></a>
+                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
+
+                            </li>
+                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-9224ma-1xl-3-jpg.png" alt="Item6"
                                                                                                                                                   class="slider-horizontal__item_image"></a>
                                 <a href="#" class="slider-horizontal__item_add-to-cart"></a>
 
