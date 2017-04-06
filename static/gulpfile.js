@@ -88,21 +88,15 @@ gulp.task('frontend_css', ['frontend_scss'], function () {
     }
 
     return pipe.pipe(concat(config.name + '.css'))
-        .pipe(inlineimage(frontend.config.inline_image || {}))
-        .on('error',  function(err) {
-            // For gulp-util users u can use a more colorfull variation
-            // util.log(util.colors.red('[Compilation Error]'));
-            // util.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-            // util.log(util.colors.red('error Babel: ' + err.message + '\n'));
-            // util.log(err.codeFrame);
-
-            console.log('[Compilation Error]');
-            console.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-            console.log('error Babel: ' + err.message + '\n');
-            console.log(err.codeFrame);
-
-            this.emit('end');
-        })
+        // .pipe(inlineimage(frontend.config.inline_image || {}))
+        // .on('error',  function(err) {
+        //     console.log('[Compilation Error]');
+        //     console.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
+        //     console.log('error Babel: ' + err.message + '\n');
+        //     console.log(err.codeFrame);
+        //
+        //     this.emit('end');
+        // })
         .pipe(gulp.dest(frontend.dst.css))
         .pipe(hashsum({filename: 'frontend/versions/css.yml', hash: 'md5'}))
         .pipe(livereload());
@@ -120,21 +114,15 @@ gulp.task('backend_css', ['backend_scss'], function () {
     }
 
     return pipe.pipe(concat(config.name + '.css'))
-        .pipe(inlineimage(backend.config.inline_image || {}))
-        .on('error',  function(err) {
-            // For gulp-util users u can use a more colorfull variation
-            // util.log(util.colors.red('[Compilation Error]'));
-            // util.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-            // util.log(util.colors.red('error Babel: ' + err.message + '\n'));
-            // util.log(err.codeFrame);
-
-            console.log('[Compilation Error]');
-            console.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
-            console.log('error Babel: ' + err.message + '\n');
-            console.log(err.codeFrame);
-
-            this.emit('end');
-        })
+        // .pipe(inlineimage(backend.config.inline_image || {}))
+        // .on('error',  function(err) {
+        //     console.log('[Compilation Error]');
+        //     console.log(err.fileName + ( err.loc ? `( ${err.loc.line}, ${err.loc.column} ): ` : ': '));
+        //     console.log('error Babel: ' + err.message + '\n');
+        //     console.log(err.codeFrame);
+        //
+        //     this.emit('end');
+        // })
         .pipe(gulp.dest(backend.dst.css))
         .pipe(hashsum({filename: 'backend/versions/css.yml', hash: 'md5'}))
         .pipe(livereload());

@@ -28,4 +28,9 @@ class DefaultController extends Controller
         echo $this->render('demo/catalog/search.tpl');
     }
 
+    public function product()
+    {
+        echo $this->render('demo/product/product.tpl');
+    }
+
 }

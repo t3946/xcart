@@ -20,4 +20,9 @@ return [
         'target' => ['\Modules\Demo\Controllers\DefaultController', 'catalogSearch'],
         'name' => 'catalog:search'
     ],
+    [
+        'route' => '/product',
+        'target' => ['\Modules\Demo\Controllers\DefaultController', 'product'],
+        'name' => 'product'
+    ],
 ];

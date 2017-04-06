@@ -3,7 +3,7 @@
 {block "content"}
     <section class="banners-section">
         <div class="row">
-            <div class="col-lg-36 col-md-36 col-sm-45 col-xs-60 promotion__block">
+            <div class="col col-lg-36 col col-md-36 col col-sm-45 col col-xs-60 promotion__block">
                 <div class="promotion__active-wrapper slider-horizontal__active-wrapper" id="promotion-block">
                     <div class="promotion__frame slider-horizontal__frame"
                          id="promotion_frame">
@@ -36,7 +36,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-15 hidden-xs product-of-the-day__block">
+            <div class="col col-lg-12 col col-md-12 col col-sm-15 hidden-xs product-of-the-day__block">
                 <div class="banner__product-of-the-day banner__wrapper">
                     <a href="#" class="banner__product-of-the-day_link banner__link">
                         <div class="product-of-the-day_cover banner__cover">
@@ -45,7 +45,7 @@
                     </a>
                 </div>
             </div>
-            <div class="col-lg-12 col-md-12 hidden-sm hidden-xs right-banners__block">
+            <div class="col col-lg-12 col col-md-12 hidden-sm hidden-xs right-banners__block">
                 <div class="banner__bestsellers banner__wrapper">
                     <a href="#" class="banner__bestsellers_link banner__link">
                         <div class="bestsellers_cover banner__cover">

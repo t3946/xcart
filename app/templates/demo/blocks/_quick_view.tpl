@@ -10,9 +10,9 @@
             </div>
             <div class="modal-body">
                 <div class="row quick-view-container">
-                    <div class="col-lg-35">
+                    <div class="col col-lg-35">
                         <div class="row">
-                            <div class="col-lg-7">
+                            <div class="col col-lg-7">
                                 <section class="quick-view-product1 slider-vertical" id="quick-view-product1-block">
                                     <div class="quick-view-product1__active-wrapper slider-vertical__active-wrapper">
                                         <div class="quick-view-product1__frame slider-vertical__frame" id="quick-view-product1_frame">
@@ -150,13 +150,13 @@
                                     </div>
                                 </section>
                             </div>
-                            <div class="col-lg-53">
+                            <div class="col col-lg-53">
                                 <div class="full-view" style="background-image: url(/static/frontend/dist/images/category/1280/alv-1334a-1-jpg.png);"></div>
                             </div>
                         </div>
 
                     </div>
-                    <div class="col-lg-25">
+                    <div class="col col-lg-25">
 
                         <h4 class="item__caption"><a href="#">Da Vinci Artists' Oil Color Paint</a></h4>
 

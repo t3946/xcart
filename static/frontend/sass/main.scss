@@ -1,9 +1,13 @@
 @import 'compass';
+
 @import 'variables';
+@import 'mixins/bootstrap_mixins';
 @import "bootstrap";
 
+@import 'base/base';
+
 @import 'colors';
-@import 'mixins/mixins';
+@import 'mixins/gen';
 
 //@import 'fonts_lato';
 /*@import 'reset_base';

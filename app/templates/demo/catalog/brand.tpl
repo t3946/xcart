@@ -11,7 +11,7 @@
             </ol>
         </section>
         <div class="row main-container-desktop">
-            <div class="left-desktop-column hidden-xs hidden-sm hidden-md col-lg-10">
+            <div class="left-desktop-column hidden-xs hidden-sm hidden-md col col-lg-10">
                 <div class="image" id="image_left-top"><img src="/static/frontend/dist/images/category/1280/alvin-logo.png" alt="image" /></div>
                 <div class="left-desktop-column-filter left-desktop-column__departments hidden-lg">
                     <a href="#" class="button-action dropdown-toggle not-active-link" type="button" id="desktop-dep">Departments</a>
@@ -945,7 +945,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="row">
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -1103,7 +1103,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -1262,7 +1262,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -1498,7 +1498,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="row">
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -1656,7 +1656,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -1814,7 +1814,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -2050,7 +2050,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="row">
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -2208,7 +2208,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -2367,7 +2367,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -2602,7 +2602,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="row">
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -2760,7 +2760,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -2918,7 +2918,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -3153,7 +3153,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="row">
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -3311,7 +3311,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -3469,7 +3469,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -3704,7 +3704,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="row">
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -3862,7 +3862,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -4021,7 +4021,7 @@
 
                                                             </ul>
                                                         </div>
-                                                        <div class="col-lg-20">
+                                                        <div class="col col-lg-20">
                                                             <ul>
                                                                 <li><input
                                                                             type="checkbox"
@@ -4174,25 +4174,25 @@
                 </div>
 
             </div>
-            <div class="right-desktop-column col-xs-60 col-sm-60 col-md-60 col-lg-50">
+            <div class="right-desktop-column col col-xs-60 col col-sm-60 col col-md-60 col col-lg-50">
                 <div id="right-desktop-column__top-block">
                     <section class="title-section">
                         <div class="row hidden-xs">
                             <h1 class="title">Alvin products</h1>
                         </div>
                         <div class="row brand-page hidden-sm hidden-md hidden-lg">
-                            <div class="col-xs-25 hidden-md">
+                            <div class="col col-xs-25 hidden-md">
                                 <img src="/static/frontend/dist/images/category/1280/layer-1.png" alt="Bestine Solvent Products">
                             </div>
-                            <div class="col-xs-35 col-md-60 brand-page__title-container">
+                            <div class="col col-xs-35 col col-md-60 brand-page__title-container">
                                 <h1 class="title">Bestine Solvent Products</h1>
                             </div>
                         </div>
                     </section>
                     <article class="list-info list-info_top hidden-xs">
                         <div class="row">
-                            <div class="list-info__brand-logo col-sm-15 col-md-12 hidden-lg"><img src="/static/frontend/dist/images/category/1280/alvin-logo.png" alt="Alvin logo"/></div>
-                            <div class="list-info__text-wrapper col-sm-45 col-md-48 col-lg-46">
+                            <div class="list-info__brand-logo col col-sm-15 col col-md-12 hidden-lg"><img src="/static/frontend/dist/images/category/1280/alvin-logo.png" alt="Alvin logo"/></div>
+                            <div class="list-info__text-wrapper col col-sm-45 col col-md-48 col col-lg-46">
                                 <div class="list-info__text-block">
                                     <p class="list-info__text">
                                         An artist deserves only the best brush and sets in order that a work of perfection is created. Of the various items that an artist requires, a brush is the single most
@@ -4211,7 +4211,7 @@
                     </article>
                     <section class="list-categories hidden-xs hidden-sm hidden-md">
                         <div class="row">
-                            <div class="col-lg-15">
+                            <div class="col col-lg-15">
                                 <ul>
                                     <li><a href="">Artist oil colors (2)</a></li>
                                     <li><a href="">Economical and student oil colors (2500)</a></li>
@@ -4225,7 +4225,7 @@
                                     <li class="hid-item"><a href="">Artist oil colors (2)</a></li>
                                 </ul>
                             </div>
-                            <div class="col-lg-16 list-categories_column">
+                            <div class="col col-lg-16 list-categories_column">
                                 <ul>
                                     <li><a href="">Water solidle oil colors  (159)</a></li>
                                     <li><a href="">Oil sticks and bars (2343)</a></li>
@@ -4240,7 +4240,7 @@
 
                                 </ul>
                             </div>
-                            <div class="col-lg-15 list-categories_column">
+                            <div class="col col-lg-15 list-categories_column">
                                 <ul>
                                     <li><a href="">Oil painting mediums  (1)</a></li>
                                     <li><a href="">Oil painting solvents (677)</a></li>
@@ -4254,7 +4254,7 @@
                                     <li class="hid-item"><a href="">Economical and student oil colors (2500)</a></li>
                                 </ul>
                             </div>
-                            <div class="col-lg-14 list-categories_column">
+                            <div class="col col-lg-14 list-categories_column">
                                 <ul>
                                     <li><a href="">Oil painting mediums  (1)</a></li>
                                     <li><a href="">Oil painting solvents (677)</a></li>
@@ -4379,7 +4379,7 @@
                             </div>
                             <div class="col-offset-fixed">
                                 <div class="row">
-                                    <div class="col-xs-30 col-sm-30 button-action-wrapper">
+                                    <div class="col col-xs-30 col col-sm-30 button-action-wrapper">
                                         <a href="#" class="button-action button-filter-by"
                                            data-toggle="modal" data-target=".filter-by__modal">Filter
                                             by</a>
@@ -4947,7 +4947,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xs-30 col-sm-30 button-action-wrapper">
+                                    <div class="col col-xs-30 col col-sm-30 button-action-wrapper">
                                         <a href="#" class="button-action button-sort-by dropdown-toggle"
                                            type="button" id="sort_by" data-toggle="dropdown"
                                            aria-haspopup="true" aria-expanded="false">Sort by</a>
@@ -4971,8 +4971,8 @@
                     </section>
                     <section class="button-group-actions_desktop hidden-xs hidden-sm hidden-md">
                         <div class="row">
-                            <div class="items__count col-lg-26">10/100 items shown</div>
-                            <div class="col-lg-34 button-group-actions_desktop-right">
+                            <div class="items__count col col-lg-26">10/100 items shown</div>
+                            <div class="col col-lg-34 button-group-actions_desktop-right">
                                 <div class="dropdown button-group-actions_desktop_sort-by">
                                     Sort by
                                     <div class="sort-by-wrapper">
@@ -5001,14 +5001,14 @@
                     </section>
                     <section class="applied-filters hidden-xs hidden-sm hidden-md hidden-lg">
                         <div class="row">
-                            <div class="col-xs-60 col-sm-27">
+                            <div class="col col-xs-60 col col-sm-27">
                                 <ul class="applied-filters__list applied-filters__list_filter">
                                     <li><a href="#">Borciani &amp; Bonazzi <span class="category">(Brands)</span></a></li>
                                     <li><a href="#">Kolonok Artist Brushes <span class="category">(Brands)</span></a></li>
                                     <li><a href="#">Artist Brushes <span class="category">(Collections)</span></a></li>
                                 </ul>
                             </div>
-                            <div class="col-xs-60 col-sm-33">
+                            <div class="col col-xs-60 col col-sm-33">
                                 <ul class="applied-filters__list applied-filters__list_sort">
                                     <li><a href="#">Sorted by price low to high</a></li>
                                 </ul>
@@ -5020,13 +5020,13 @@
 
                         <div class="item">
                             <div class="row">
-                                <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
+                                <div class="col col-xs-24 col col-sm-14 col col-md-11 col col-lg-12 item__pic-container">
                                     <a href="#">
                                         <img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" />
                                     </a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
-                                <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
+                                <div class="col col-xs-36 col col-sm-28 col col-md-34 col col-lg-34 item__info-container">
                                     <h4 class="item__caption"><a href="#">Wicked Color Airbrush Paint: 6-Color Set<span class="item__caption_type hidden-xs">, Primary</span></a></h4>
                                     <div class="item__sku hidden-xs hidden-sm hidden-md">
                                                         <span class="item__sku_value">
@@ -5058,7 +5058,7 @@
                                         <span class="item__price_new">US$ 15.48</span>
                                     </div>
                                 </div>
-                                <div class="hidden-xs col-sm-18 col-md-15 col-lg-14 item__info-buy">
+                                <div class="hidden-xs col col-sm-18 col col-md-15 col col-lg-14 item__info-buy">
                                     <div class="item__price">
                                         <span class="item__price_old">List Price:  <span class="l-through">US$ 19.00</span></span>
                                         <span class="item__price_new">Price:  <span class="bold">US$ 234.01</span></span>
@@ -5086,14 +5086,14 @@
                         </div>
                         <div class="item">
                             <div class="row">
-                                <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
+                                <div class="col col-xs-24 col col-sm-14 col col-md-11 col col-lg-12 item__pic-container">
                                     <a href="#">
                                         <span class="item__circle-new_red hidden-xs hidden-sm hidden-md">New</span>
                                         <img src="/static/frontend/dist/images/category/1280/alv-1334d-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="134" height="218" />
                                     </a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
-                                <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
+                                <div class="col col-xs-36 col col-sm-28 col col-md-34 col col-lg-34 item__info-container">
                                     <h4 class="item__caption"><a href="#">Wicked Color Airbrush Paint: 6-Color Set<span class="item__caption_type hidden-xs">, Primary</span></a></h4>
                                     <div class="item__sku hidden-xs hidden-sm hidden-md">
                                                     <span class="item__sku_value">
@@ -5133,7 +5133,7 @@
                                         <span class="item__price_new">US$ 15.48</span>
                                     </div>
                                 </div>
-                                <div class="hidden-xs col-sm-18 col-md-15 col-lg-14 item__info-buy">
+                                <div class="hidden-xs col col-sm-18 col col-md-15 col col-lg-14 item__info-buy">
                                     <div class="item__price">
                                         <span class="item__price_old">List Price:  <span class="l-through">US$ 19.00</span></span>
                                         <span class="item__price_new">Price:  <span class="bold">US$ 234.01</span></span>
@@ -5161,14 +5161,14 @@
                         </div>
                         <div class="item">
                             <div class="row">
-                                <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
+                                <div class="col col-xs-24 col col-sm-14 col col-md-11 col col-lg-12 item__pic-container">
                                     <a href="#">
                                         <span class="item__rect-sale_yellow hidden-xs hidden-sm hidden-md">Sale</span>
                                         <img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" />
                                     </a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
-                                <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
+                                <div class="col col-xs-36 col col-sm-28 col col-md-34 col col-lg-34 item__info-container">
                                     <h4 class="item__caption"><a href="#">Wicked Color Airbrush Paint: 6-Color Set<span class="item__caption_type hidden-xs">, Primary</span></a></h4>
                                     <div class="item__sku hidden-xs hidden-sm hidden-md">
                                                     <span class="item__sku_value">
@@ -5200,7 +5200,7 @@
                                         <span class="item__price_new">US$ 15.48</span>
                                     </div>
                                 </div>
-                                <div class="hidden-xs col-sm-18 col-md-15 col-lg-14 item__info-buy">
+                                <div class="hidden-xs col col-sm-18 col col-md-15 col col-lg-14 item__info-buy">
                                     <div class="item__price">
                                         <span class="item__price_old">List Price:  <span class="l-through">US$ 19.00</span></span>
                                         <span class="item__price_new">Price:  <span class="bold">US$ 234.01</span></span>
@@ -5228,11 +5228,11 @@
                         </div>
                         <div class="item">
                             <div class="row">
-                                <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
+                                <div class="col col-xs-24 col col-sm-14 col col-md-11 col col-lg-12 item__pic-container">
                                     <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
-                                <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
+                                <div class="col col-xs-36 col col-sm-28 col col-md-34 col col-lg-34 item__info-container">
                                     <h4 class="item__caption"><a href="#">Wicked Color Airbrush Paint: 6-Color Set<span class="item__caption_type hidden-xs">, Primary</span></a></h4>
                                     <div class="item__sku hidden-xs hidden-sm hidden-md">
                                                     <span class="item__sku_value">
@@ -5264,7 +5264,7 @@
                                         <span class="item__price_new">US$ 15.48</span>
                                     </div>
                                 </div>
-                                <div class="hidden-xs col-sm-18 col-md-15 col-lg-14 item__info-buy">
+                                <div class="hidden-xs col col-sm-18 col col-md-15 col col-lg-14 item__info-buy">
                                     <div class="item__price">
                                         <span class="item__price_old">List Price:  <span class="l-through">US$ 19.00</span></span>
                                         <span class="item__price_new">Price:  <span class="bold">US$ 234.01</span></span>
@@ -5292,11 +5292,11 @@
                         </div>
                         <div class="item">
                             <div class="row">
-                                <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
+                                <div class="col col-xs-24 col col-sm-14 col col-md-11 col col-lg-12 item__pic-container">
                                     <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
-                                <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
+                                <div class="col col-xs-36 col col-sm-28 col col-md-34 col col-lg-34 item__info-container">
                                     <h4 class="item__caption"><a href="#">Wicked Color Airbrush Paint: 6-Color Set<span class="item__caption_type hidden-xs">, Primary</span></a></h4>
                                     <div class="item__sku hidden-xs hidden-sm hidden-md">
                                                     <span class="item__sku_value">
@@ -5328,7 +5328,7 @@
                                         <span class="item__price_new">US$ 15.48</span>
                                     </div>
                                 </div>
-                                <div class="hidden-xs col-sm-18 col-md-15 col-lg-14 item__info-buy">
+                                <div class="hidden-xs col col-sm-18 col col-md-15 col col-lg-14 item__info-buy">
                                     <div class="item__price">
                                         <span class="item__price_old">List Price:  <span class="l-through">US$ 19.00</span></span>
                                         <span class="item__price_new">Price:  <span class="bold">US$ 234.01</span></span>
@@ -5356,11 +5356,11 @@
                         </div>
                         <div class="item">
                             <div class="row">
-                                <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
+                                <div class="col col-xs-24 col col-sm-14 col col-md-11 col col-lg-12 item__pic-container">
                                     <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
-                                <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
+                                <div class="col col-xs-36 col col-sm-28 col col-md-34 col col-lg-34 item__info-container">
                                     <h4 class="item__caption"><a href="#">Wicked Color Airbrush Paint: 6-Color Set<span class="item__caption_type hidden-xs">, Primary</span></a></h4>
                                     <div class="item__sku hidden-xs hidden-sm hidden-md">
                                                     <span class="item__sku_value">
@@ -5392,7 +5392,7 @@
                                         <span class="item__price_new">US$ 15.48</span>
                                     </div>
                                 </div>
-                                <div class="hidden-xs col-sm-18 col-md-15 col-lg-14 item__info-buy">
+                                <div class="hidden-xs col col-sm-18 col col-md-15 col col-lg-14 item__info-buy">
                                     <div class="item__price">
                                         <span class="item__price_old">List Price:  <span class="l-through">US$ 19.00</span></span>
                                         <span class="item__price_new">Price:  <span class="bold">US$ 234.01</span></span>
@@ -5420,11 +5420,11 @@
                         </div>
                         <div class="item">
                             <div class="row">
-                                <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
+                                <div class="col col-xs-24 col col-sm-14 col col-md-11 col col-lg-12 item__pic-container">
                                     <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
-                                <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
+                                <div class="col col-xs-36 col col-sm-28 col col-md-34 col col-lg-34 item__info-container">
                                     <h4 class="item__caption"><a href="#">Wicked Color Airbrush Paint: 6-Color Set<span class="item__caption_type hidden-xs">, Primary</span></a></h4>
                                     <div class="item__sku hidden-xs hidden-sm hidden-md">
                                                     <span class="item__sku_value">
@@ -5456,7 +5456,7 @@
                                         <span class="item__price_new">US$ 15.48</span>
                                     </div>
                                 </div>
-                                <div class="hidden-xs col-sm-18 col-md-15 col-lg-14 item__info-buy">
+                                <div class="hidden-xs col col-sm-18 col col-md-15 col col-lg-14 item__info-buy">
                                     <div class="item__price">
                                         <span class="item__price_old">List Price:  <span class="l-through">US$ 19.00</span></span>
                                         <span class="item__price_new">Price:  <span class="bold">US$ 234.01</span></span>
@@ -5484,11 +5484,11 @@
                         </div>
                         <div class="item">
                             <div class="row">
-                                <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
+                                <div class="col col-xs-24 col col-sm-14 col col-md-11 col col-lg-12 item__pic-container">
                                     <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
-                                <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
+                                <div class="col col-xs-36 col col-sm-28 col col-md-34 col col-lg-34 item__info-container">
                                     <h4 class="item__caption"><a href="#">Wicked Color Airbrush Paint: 6-Color Set<span class="item__caption_type hidden-xs">, Primary</span></a></h4>
                                     <div class="item__sku hidden-xs hidden-sm hidden-md">
                                                     <span class="item__sku_value">
@@ -5520,7 +5520,7 @@
                                         <span class="item__price_new">US$ 15.48</span>
                                     </div>
                                 </div>
-                                <div class="hidden-xs col-sm-18 col-md-15 col-lg-14 item__info-buy">
+                                <div class="hidden-xs col col-sm-18 col col-md-15 col col-lg-14 item__info-buy">
                                     <div class="item__price">
                                         <span class="item__price_old">List Price:  <span class="l-through">US$ 19.00</span></span>
                                         <span class="item__price_new">Price:  <span class="bold">US$ 234.01</span></span>
@@ -5548,11 +5548,11 @@
                         </div>
                         <div class="item">
                             <div class="row">
-                                <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
+                                <div class="col col-xs-24 col col-sm-14 col col-md-11 col col-lg-12 item__pic-container">
                                     <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
-                                <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
+                                <div class="col col-xs-36 col col-sm-28 col col-md-34 col col-lg-34 item__info-container">
                                     <h4 class="item__caption"><a href="#">Wicked Color Airbrush Paint: 6-Color Set<span class="item__caption_type hidden-xs">, Primary</span></a></h4>
                                     <div class="item__sku hidden-xs hidden-sm hidden-md">
                                                     <span class="item__sku_value">
@@ -5584,7 +5584,7 @@
                                         <span class="item__price_new">US$ 15.48</span>
                                     </div>
                                 </div>
-                                <div class="hidden-xs col-sm-18 col-md-15 col-lg-14 item__info-buy">
+                                <div class="hidden-xs col col-sm-18 col col-md-15 col col-lg-14 item__info-buy">
                                     <div class="item__price">
                                         <span class="item__price_old">List Price:  <span class="l-through">US$ 19.00</span></span>
                                         <span class="item__price_new">Price:  <span class="bold">US$ 234.01</span></span>
@@ -5612,11 +5612,11 @@
                         </div>
                         <div class="item">
                             <div class="row">
-                                <div class="col-xs-24 col-sm-14 col-md-11 col-lg-12 item__pic-container">
+                                <div class="col col-xs-24 col col-sm-14 col col-md-11 col col-lg-12 item__pic-container">
                                     <a href="#"><img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" /></a>
                                     <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>
                                 </div>
-                                <div class="col-xs-36 col-sm-28 col-md-34 col-lg-34 item__info-container">
+                                <div class="col col-xs-36 col col-sm-28 col col-md-34 col col-lg-34 item__info-container">
                                     <h4 class="item__caption"><a href="#">Wicked Color Airbrush Paint: 6-Color Set<span class="item__caption_type hidden-xs">, Primary</span></a></h4>
                                     <div class="item__sku hidden-xs hidden-sm hidden-md">
                                                     <span class="item__sku_value">
@@ -5648,7 +5648,7 @@
                                         <span class="item__price_new">US$ 15.48</span>
                                     </div>
                                 </div>
-                                <div class="hidden-xs col-sm-18 col-md-15 col-lg-14 item__info-buy">
+                                <div class="hidden-xs col col-sm-18 col col-md-15 col col-lg-14 item__info-buy">
                                     <div class="item__price">
                                         <span class="item__price_old">List Price:  <span class="l-through">US$ 19.00</span></span>
                                         <span class="item__price_new">Price:  <span class="bold">US$ 234.01</span></span>
@@ -5683,10 +5683,10 @@
                             </div>
                             <div class="col-offset-fixed">
                                 <div class="row">
-                                    <div class="col-xs-30 col-sm-30 button-action-wrapper">
+                                    <div class="col col-xs-30 col col-sm-30 button-action-wrapper">
                                         <a href="#" class="button-action button-filter-by" data-toggle="modal" data-target=".filter-by__modal">Filter by</a>
                                     </div>
-                                    <div class="col-xs-30 col-sm-30 button-action-wrapper">
+                                    <div class="col col-xs-30 col col-sm-30 button-action-wrapper">
                                         <a href="#" class="button-action button-sort-by dropdown-toggle" type="button" id="sort_by1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort by</a>
                                         <ul class="dropdown-menu sort-by__list" aria-labelledby="sort_by1">
                                             <li class="active"><a href="" >Relevance</a></li>
@@ -5706,8 +5706,8 @@
                     </section>
                     <section class="button-group-actions_desktop hidden-xs hidden-sm hidden-md">
                         <div class="row">
-                            <div class="items__count col-lg-26">10/100 items shown</div>
-                            <div class="col-lg-34 button-group-actions_desktop-right">
+                            <div class="items__count col col-lg-26">10/100 items shown</div>
+                            <div class="col col-lg-34 button-group-actions_desktop-right">
                                 <div class="dropdown button-group-actions_desktop_sort-by">
                                     Sort by
                                     <div class="sort-by-wrapper">
@@ -5735,7 +5735,7 @@
                         </div>
                     </section>
                     <div class="row button-load-more-wrapper">
-                        <div class="col-xs-60">
+                        <div class="col col-xs-60">
                             <a href="#" class="button-action button-load-more">Load more</a>
                         </div>
                     </div>
@@ -5761,7 +5761,7 @@
                     </div>
 
                     <div class="row hidden-xs hidden-sm hidden-md list-info__text_desktop">
-                        <div class="col-lg-30 list-info__text_desktop-column list-info__text_desktop_left">
+                        <div class="col col-lg-30 list-info__text_desktop-column list-info__text_desktop_left">
                             <p>
                                 An artist deserves only the best brush and sets in order that a work of perfection is created.
                                 Of the various items that an artist requires, a brush is the single most important link between
@@ -5770,7 +5770,7 @@
                                 the online store. The online store catalog provides for an entire category. called Artist Brush
                             </p>
                         </div>
-                        <div class="col-lg-30 list-info__text_desktop-column list-info__text_desktop_right">
+                        <div class="col col-lg-30 list-info__text_desktop-column list-info__text_desktop_right">
                             <p>
                                 artist,importance to artists that they buy the best and premium quality of art brushes for use.
                                 There are exclusive artist brush and brush sets for artists that are featured on ArtistSupplySource.com,
@@ -5785,161 +5785,6 @@
             </div>
         </div>
 
-        <div class="recently-viewed-wrapper">
-            <section class="recently-viewed slider-horizontal" id="recently-viewed-block">
-                <h3 class="recently-viewed__title section__title slider-horizontal__title">Your recently viewed items</h3>
-                <a href="#" class="recently-viewed__view-all slider-horizontal__view-all section__view-all">View all</a>
-
-                <div class="recently-viewed__active-wrapper slider-horizontal__active-wrapper">
-                    <div class="recently-viewed__frame slider-horizontal__frame" id="recently-viewed_frame">
-                        <ul>
-                            <li class="recently-viewed__item slider-horizontal__item"><a href="#" class="slider-horizontal__item_image-link"><img src="/static/frontend/dist/images/category/1280/act-6200-1-jpg.png" alt="Item1"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/198-media-catalog-product-7-g-7g12643-1-jpg.png" alt="Item2"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-rack08-1-jpg.png" alt="Item3"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-apb-series-08-jpg.png" alt="Item4"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-bpt5-jpg.png" alt="Item5"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-ebdz1216-1-jpg.png" alt="Item6"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/large-1-601-jpg.png" alt="Item1"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-1334a-1-jpg.png" alt="Item2"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/47832-jpg.png" alt="Item3"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-111pi-1-jpg.png" alt="Item4"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/198-media-catalog-product-thtdpk40330-jpg.png" alt="Item5"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-9224ma-1xl-3-jpg.png" alt="Item6"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a href="#" class="slider-horizontal__item_image-link"><img src="/static/frontend/dist/images/category/1280/act-6200-1-jpg.png" alt="Item1"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/198-media-catalog-product-7-g-7g12643-1-jpg.png" alt="Item2"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-rack08-1-jpg.png" alt="Item3"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-apb-series-08-jpg.png" alt="Item4"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-bpt5-jpg.png" alt="Item5"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-ebdz1216-1-jpg.png" alt="Item6"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/large-1-601-jpg.png" alt="Item1"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-1334a-1-jpg.png" alt="Item2"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/47832-jpg.png" alt="Item3"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-111pi-1-jpg.png" alt="Item4"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/198-media-catalog-product-thtdpk40330-jpg.png" alt="Item5"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-                            <li class="recently-viewed__item slider-horizontal__item"><a class="slider-horizontal__item_image-link" href="#"><img src="/static/frontend/dist/images/category/1280/alv-9224ma-1xl-3-jpg.png" alt="Item6"
-                                                                                                                                                  class="slider-horizontal__item_image"></a>
-                                <a href="#" class="slider-horizontal__item_add-to-cart"></a>
-
-                            </li>
-
-                        </ul>
-                    </div>
-                    <div class="recently-viewed__controls slider-horizontal__controls">
-                        <a href="#" class="recently-viewed__controls_btn slider-horizontal__controls_btn recently-viewed__controls_prev-page slider-horizontal__controls_prev-page"></a>
-                        <a href="#" class="recently-viewed__controls_btn slider-horizontal__controls_btn recently-viewed__controls_next-page slider-horizontal__controls_next-page"></a>
-                    </div>
-                    <div class="recently-viewed__scrollbar slider-horizontal__scrollbar">
-                        <div class="recently-viewed__scrollbar_handle slider-horizontal__scrollbar_handle">
-                            <div class="recently-viewed__scrollbar_mousearea slider-horizontal__scrollbar_mousearea"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- <div class="row">
-                                     <div class="col-lg-5 col-xs-11 col-sm-7 col-md-6"><a href="#"><img src="../assets/images/category/1280/act-6200-1-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 col-xs-11 col-xs-offset-2 col-sm-7 col-md-6"><a href="#"><img src="../assets/images/category/1280/198-media-catalog-product-7-g-7g12643-1-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 col-xs-11 col-xs-offset-2 col-sm-7 col-md-6"><a href="#"><img src="../assets/images/category/1280/alv-rack08-1-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 col-xs-11 col-xs-offset-2 col-sm-7 col-md-6"><a href="#"><img src="../assets/images/category/1280/alv-apb-series-08-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 col-xs-8 col-xs-offset-2 col-sm-7 col-md-6"><a href="#"><img src="../assets/images/category/1280/alv-bpt5-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 hidden-xs col-sm-7 col-md-6"><a href="#"><img src="../assets/images/category/1280/alv-ebdz1216-1-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 hidden-xs col-sm-7 col-md-6"><a href="#"><img src="../assets/images/category/1280/large-1-601-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 hidden-xs col-sm-7 col-md-6"><a href="#"><img src="../assets/images/category/1280/alv-1334a-1-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 hidden-xs hidden-sm col-md-6"><a href="#"><img src="../assets/images/category/1280/47832-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 hidden-xs hidden-sm col-md-6"><a href="#"><img src="../assets/images/category/1280/alv-111pi-1-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 hidden-xs hidden-sm hidden-md"><a href="#"><img src="../assets/images/category/1280/198-media-catalog-product-thtdpk40330-jpg.png" alt="Item"></a></div>
-                                     <div class="col-lg-5 hidden-xs hidden-sm hidden-md"><a href="#"><img src="../assets/images/category/1280/alv-9224ma-1xl-3-jpg.png" alt="Item"></a></div>
-                                 </div>-->
-            </section>
-        </div>
+        {include "demo/blocks/sliders/_recently_viewed.tpl"}
     </div>
 {/block}
