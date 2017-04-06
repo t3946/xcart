@@ -5,8 +5,8 @@ use Xcart\Connection;
 
 define("CIDEV_CRON_START", "CRON");
 
-require "./top.inc.php";
-require "./init.php";
+require "../top.inc.php";
+require "../init.php";
 
 ini_set('memory_limit', '512M');
 set_time_limit(0);
@@ -14,7 +14,7 @@ set_time_limit(0);
 if ($config["cron_pc_launched"] == "Y") {
 
 //	echo '<pre>'.print_r(opcache_get_status(), true).'</pre>';
-    //die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 
 db_query("UPDATE $sql_tbl[config] SET value='Y' WHERE name='cron_pc_launched'");  // <--------------------
