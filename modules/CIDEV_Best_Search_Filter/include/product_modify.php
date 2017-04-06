@@ -87,9 +87,9 @@ if ( /* !empty($active_modules['CIDEV_Best_Search_Filter']) && */ !empty($produc
 
                         if ($geid){
 				$all_imploded_productids =  implode(",", $all_productid_in_pid);
-				$cidev_filter_product = func_query("SELECT DISTINCT fv_id FROM $sql_tbl[cidev_filter_products] USE INDEX (pid) WHERE productid IN ($all_imploded_productids)");
+				$cidev_filter_product = func_query("SELECT DISTINCT fv_id FROM $sql_tbl[cidev_filter_products] WHERE productid IN ($all_imploded_productids)");
                         } else {
-				$cidev_filter_product = func_query("SELECT * FROM $sql_tbl[cidev_filter_products] USE INDEX (pid) WHERE productid='$productid'");
+				$cidev_filter_product = func_query("SELECT * FROM $sql_tbl[cidev_filter_products] WHERE productid='$productid'");
 			}
 
 			if (!empty($cidev_filter_product)) {
