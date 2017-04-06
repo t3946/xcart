@@ -2779,13 +2779,19 @@ function func_pc_find_new_categoryid($productid)
 {
     global $sql_tbl;
 
-    $product = func_query_first("SELECT product, fulldescr, seo_product_name, title_tag FROM $sql_tbl[products] WHERE productid='$productid'");
-    $sfid       = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$productid'");
-    $pc_options = func_query_first("SELECT * FROM $sql_tbl[pc_options] WHERE storefrontid='$sfid'");
+    $product = func_query_first_param(/** @lang MySQL */
+        "SELECT p.product, p.fulldescr, p.seo_product_name, p.title_tag, b.brand 
+                FROM xcart_products p
+                INNER JOIN xcart_brands b ON b.brandid = p.brandid
+                WHERE productid=:productid", ['productid' => $productid]);
+    $sfid = func_query_first_cell_param(/** @lang MySQL */
+        "SELECT sfid FROM xcart_products_sf WHERE productid=:productid", ['productid' => $productid]);
+    $pc_options = func_query_first_param(/** @lang MySQL */
+        "SELECT * FROM xcart_pc_options WHERE storefrontid=:sfid", ['sfid' => $sfid]);
 
     $text = $product["product"] . " " . $product["product"] . " " . $product["fulldescr"] . " " . $product["title_tag"] . " " . $product["seo_product_name"];
     $text = func_del_excluded_char_sequences($text, $pc_options["excluded_char_sequences"]);
-    $text = func_del_stop_words($text, $pc_options["stop_words"]);
+    $text = func_del_stop_words($text, $pc_options["stop_words"] . "|{$product['brand']}");
 
 //func_print_r($text);
 
@@ -2918,12 +2924,7 @@ function func_del_stop_words($text = '', $stop_words = '')
 
     $text = " " . $text . " ";
 
-    $stop_words_arr = explode(" ", $stop_words);
-    foreach ($stop_words_arr as $k => $v) {
-        $stop_word = trim($v);
-        $stop_word = " " . $stop_word . " ";
-        $text      = str_replace($stop_word, " ", $text);
-    }
+    $text = preg_replace("/\s{$stop_words}\s/", ' ', $text);
 
     $text = preg_replace('/\s\s+/', ' ', $text);
     $text = trim($text);
