@@ -75,9 +75,9 @@
   </td>
 </tr>
 <tr>
-  <td bgcolor="#000000" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
+  <td style="font-size:0; height: 2px;"" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
   <td><img height="2" src="{$ImagesDir}/spacer.gif" width="1" alt="" /></td>
-  <td{if $order.po_details} bgcolor="#000000" height="2"{/if}>{if $order.po_details}<img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" />{/if}</td>
+  <td{if $order.po_details} style="font-size:0; height: 2px;"" height="2"{/if}>{if $order.po_details}<img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" />{/if}</td>
 </tr>
 <tr>
   <td colspan="3"><img height="2" src="{$ImagesDir}/spacer.gif" width="1" alt="" /></td>
@@ -275,9 +275,9 @@
   <td width="47%" height="25"><b>Accounts payable</b></td>
 </tr>
 <tr>
-  <td bgcolor="#000000" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
+  <td style="font-size:0; height: 2px;"" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
   <td><img height="2" src="{$ImagesDir}/spacer.gif" width="1" alt="" /></td>
-  <td bgcolor="#000000" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
+  <td style="font-size:0; height: 2px;"" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
 </tr>
 <tr>
   <td colspan="3"><img height="2" src="{$ImagesDir}/spacer.gif" width="1" alt="" /></td>
@@ -382,9 +382,9 @@
   <td width="47%" height="25"><b>{$lng.lbl_billing_address}</b>&nbsp;<a target="_blank" href="https://www.google.com/#q={$google_billing_address}" style="color: #1F08F8;">Google this address</a>&nbsp;&nbsp;<a target="_blank" href="http://www.spokeo.com/search?q={$spokeo_billing_address}" style="color: #1F08F8;">Spokeo this address</a></td>
 </tr>
 <tr>
-  <td bgcolor="#000000" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
+  <td style="font-size:0; height: 2px;"" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
   <td><img height="2" src="{$ImagesDir}/spacer.gif" width="1" alt="" /></td>
-  <td bgcolor="#000000" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
+  <td style="font-size:0; height: 2px;"" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
 </tr>
 <tr>
   <td colspan="3"><img height="2" src="{$ImagesDir}/spacer.gif" width="1" alt="" /></td>
@@ -571,7 +571,7 @@
 <td colspan="2" width="55%">&nbsp;</td>
 </tr>
 <tr>
-<td bgcolor="#000000" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
+<td style="font-size:0; height: 2px;"" height="2"><img height="2" src="{$ImagesDir}/spacer_black.gif" width="100%" alt="" /></td>
 <td colspan="2" width="55%"><img height="2" src="{$ImagesDir}/spacer.gif" width="1" alt="" /></td>
 </tr>
 <tr>
