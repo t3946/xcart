@@ -2922,7 +2922,7 @@ function func_del_stop_words($text = '', $stop_words = '')
 
     $text = " " . $text . " ";
 
-    $text = preg_replace('/\b(?:{$stop_words})\b/', ' ', $text);
+    $text = preg_replace("/\b(?:{$stop_words})\b/", ' ', $text);
 
     $text = preg_replace('/\s\s+/', ' ', $text);
     $text = trim($text);
