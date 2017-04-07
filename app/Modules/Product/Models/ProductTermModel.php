@@ -21,7 +21,7 @@ class ProductTermModel extends Model
             'term' => [
                 'class' => CharField::className(),
                 'null' => false,
-                'default' => true
+                'default' => ''
             ]
         ];
     }
