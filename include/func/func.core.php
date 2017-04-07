@@ -2805,6 +2805,21 @@ function func_pc_find_new_categoryid($productid)
 
     $idxcl = 0;
 
+    $current_category_terms = func_query_param(/** @lang MySQL */
+        "SELECT DISTINCT t.term
+                FROM xcart_pc_category_terms pct
+                INNER JOIN xcart_categories c ON c.categoryid = pct.categoryid 
+                INNER JOIN xcart_pc_terms t ON t.termid = pct.termid
+                WHERE c.pc_ready_to_classify='Y'
+                AND c.storefrontid = :storefrontid" , ['storefrontid' => $product['sfid']]);
+
+    $current_category_terms_arr = [];
+    if (!empty($current_category_terms)) {
+        foreach ($current_category_terms as $v) {
+            $current_category_terms_arr[] = $v["term"];
+        }
+    }
+
     while ($category = db_fetch_array($categories)) {
 
         $p1 = 0;
@@ -2814,18 +2829,7 @@ function func_pc_find_new_categoryid($productid)
 
         $pc_category_weight = $category["pc_category_weight"];
 
-        $current_category_terms = func_query_param(/** @lang MySQL */
-        "SELECT t.term 
-                 FROM xcart_pc_category_terms pct
-               INNER JOIN xcart_pc_terms t ON t.termid = pct.termid
-               WHERE pct.categoryid = :categoryid" , ['categoryid' => $categoryid]);
 
-        $current_category_terms_arr = [];
-        if (!empty($current_category_terms)) {
-            foreach ($current_category_terms as $v) {
-                $current_category_terms_arr[] = $v["term"];
-            }
-        }
         echo "\n\nCategory:{$categoryid}\n";
         foreach ($text_arr as $word) {
             if (in_array($word, $current_category_terms_arr)) {
