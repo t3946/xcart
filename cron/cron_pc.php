@@ -63,13 +63,13 @@ SQL;
 
         if ($pc_options[$storefrontid]["classification_approval_rate"] < $pc_options[$storefrontid]["recalc_if_approval_rate"] && $mcAccCount != $pc_options[$storefrontid]["last_mc_acc_products_count"]) {
 
-            db_query_param(/** @lang MySQL */"DELETE CT, T FROM xcart_pc_category_terms as CT inner join xcart_pc_terms T ON T.termid = CT.termid", []);
 
             $categories = db_query_param($query = /** @lang MySQL */
                 "SELECT categoryid FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:storefrontid", ['storefrontid' => $storefrontid]);
             $counter = 0;
             while ($category = db_fetch_array($categories)) {
                 $categoryid = $category["categoryid"];
+                db_query_param(/** @lang MySQL */"DELETE FROM xcart_pc_category_terms WHERE categoryid = :categoryid", ['categoryid' => $categoryid]);
                 $products = db_query_param(/** @lang MySQL */
                     "SELECT p.productid, 
                                    p.product, 
