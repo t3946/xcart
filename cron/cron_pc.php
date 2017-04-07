@@ -1,7 +1,6 @@
 <?php
 use Mindy\QueryBuilder\QueryBuilder;
 use Modules\Product\Models\ProductCategoryTermsModel;
-use Modules\Product\Models\ProductTermModel;
 use Xcart\Connection;
 
 define("CIDEV_CRON_START", "CRON");
@@ -89,20 +88,16 @@ SQL;
                     if (!empty($text)) {
                         $text_arr = explode(" ", $text);
                         foreach ($text_arr as $term) {
-                            if (!empty($term)) {
-                                $termModel = ProductTermModel::objects()->getOrCreate(['term' => (string) $term]);
-                                if ($termModel->termid) {
-                                    $productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
-                                    if (!$productCategoryTerm) {
-                                        $productCategoryTerm = new ProductCategoryTermsModel();
-                                        $productCategoryTerm->setAttributes(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
-                                    }
-                                    $productCategoryTerm->term_count++;
-                                    $productCategoryTerm->save();
-                                } else {
-                                    echo "Strange term : {$term}\n";
-                                }
+                            db_query_param(/** @lang MySQL */
+                                "INSERT IGNORE INTO xcart_pc_terms (term) VALUES (:term)", ['term' => $term]);
+                            $termid = func_query_first_cell_param(/** @lang MySQL */"SELECT termid FROM xcart_pc_terms WHERE term=:term", ['term' => $term]);
+                            $productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termid]);
+                            if (!$productCategoryTerm) {
+                                $productCategoryTerm = new ProductCategoryTermsModel();
+                                $productCategoryTerm->setAttributes(['categoryid' => $categoryid, 'termid' => $termid]);
                             }
+                            $productCategoryTerm->term_count++;
+                            $productCategoryTerm->save();
                         }
                     }
                     $counter++;
