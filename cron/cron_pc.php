@@ -15,7 +15,7 @@ set_time_limit(0);
 if ($config["cron_pc_launched"] == "Y") {
 
 //	echo '<pre>'.print_r(opcache_get_status(), true).'</pre>';
-    //die("Already launched"); // ################################
+    die("Already launched"); // ################################
 }
 
 db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='Y' WHERE name='cron_pc_launched'", []);
