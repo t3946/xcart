@@ -2780,14 +2780,13 @@ function func_pc_find_new_categoryid($productid)
     global $sql_tbl;
 
     $product = func_query_first_param(/** @lang MySQL */
-        "SELECT p.product, p.fulldescr, p.seo_product_name, p.title_tag, b.brand 
+        "SELECT p.product, p.fulldescr, p.seo_product_name, p.title_tag, b.brand, psf.sfid 
                 FROM xcart_products p
+                INNER JOIN xcart_products_sf psf ON psf.productid = p.productid
                 INNER JOIN xcart_brands b ON b.brandid = p.brandid
-                WHERE productid=:productid", ['productid' => $productid]);
-    $sfid = func_query_first_cell_param(/** @lang MySQL */
-        "SELECT sfid FROM xcart_products_sf WHERE productid=:productid", ['productid' => $productid]);
+                WHERE p.productid=:productid", ['productid' => $productid]);
     $pc_options = func_query_first_param(/** @lang MySQL */
-        "SELECT * FROM xcart_pc_options WHERE storefrontid=:sfid", ['sfid' => $sfid]);
+        "SELECT * FROM xcart_pc_options WHERE storefrontid=:sfid", ['sfid' => $product['sfid']]);
 
     $text = $product["product"] . " " . $product["product"] . " " . $product["fulldescr"] . " " . $product["title_tag"] . " " . $product["seo_product_name"];
     $text = func_del_excluded_char_sequences($text, $pc_options["excluded_char_sequences"]);
@@ -2802,7 +2801,7 @@ function func_pc_find_new_categoryid($productid)
     $text_arr = explode(" ", $text);
 
     $categories = db_query_param($query = /** @lang MySQL */
-        "SELECT categoryid, pc_category_weight FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:sfid AND pc_category_weight != 0", ['sfid' => $sfid]);
+        "SELECT categoryid, pc_category_weight FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:sfid AND pc_category_weight != 0", ['sfid' => $product['sfid']]);
 
     $idxcl = 0;
 
@@ -2815,7 +2814,11 @@ function func_pc_find_new_categoryid($productid)
 
         $pc_category_weight = $category["pc_category_weight"];
 
-        $current_category_terms = func_query_param(/** @lang MySQL */"SELECT term FROM xcart_pc_terms" , []);
+        $current_category_terms = func_query_param(/** @lang MySQL */
+        "SELECT t.term 
+                 FROM xcart_pc_category_terms pct
+               INNER JOIN xcart_pc_terms t ON t.termid = pct.termid
+               WHERE pct.categoryid = :categoryid" , ['categoryid' => $categoryid]);
 
         $current_category_terms_arr = [];
         if (!empty($current_category_terms)) {

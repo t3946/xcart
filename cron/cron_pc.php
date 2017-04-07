@@ -111,7 +111,8 @@ SQL;
                 }
             }
 
-            $query_bayesian_weight = "Select
+            $query_bayesian_weight = /** @lang MySQL */ <<<SQL
+Select
                 C.categoryid As CategoryID, 
                 LOG((Select Count(P1.productid) 
                  From xcart_products P1
@@ -120,12 +121,13 @@ SQL;
                 ) /
                 (Select COUNT(P2.productid) From xcart_products P2
                                 left join xcart_products_sf PSF ON PSF.productid = P2.productid
-                 where P2.forsale='Y' and PSF.sfid = '$storefrontid' and P2.pc_classify_status IN ('ACC','MC')
+                 where P2.forsale='Y' and PSF.sfid = :storefrontid and P2.pc_classify_status IN ('ACC','MC')
                 )) As bayesian_weight
 	from xcart_categories C
-	where C.pc_ready_to_classify = 'Y' and C.storefrontid = '$storefrontid'";
+	where C.pc_ready_to_classify = 'Y' and C.storefrontid = :storefrontid
+SQL;
 
-            $bayesian_weight_arr = func_query($query_bayesian_weight);
+            $bayesian_weight_arr = func_query_param($query_bayesian_weight, ['storefrontid' => $storefrontid]);
 
             if (!empty($bayesian_weight_arr)) {
                 foreach ($bayesian_weight_arr as $k => $v) {
@@ -136,15 +138,17 @@ SQL;
                 }
             }
 
-            $query_z = "Select
+            $query_z = /** @lang MySQL */ <<<SQL
+Select
                     C.categoryid As CategoryID,
-            		COALESCE(CT.term_count, 0) As Z
+            		SUM(COALESCE(CT.term_count, 0)) As Z
 	from xcart_categories C
                         left join xcart_pc_category_terms CT ON CT.categoryid = C.categoryid 
-	where C.pc_ready_to_classify = 'Y' and C.storefrontid = '$storefrontid'
-	Group By C.categoryid";
+	where C.pc_ready_to_classify = 'Y' and C.storefrontid = :storefrontid
+	Group By C.categoryid
+SQL;
 
-            $z_arr = func_query($query_z);
+            $z_arr = func_query_param($query_z, ['storefrontid' => $storefrontid]);
 
             if (!empty($z_arr)) {
                 foreach ($z_arr as $k => $v) {
@@ -158,7 +162,15 @@ SQL;
         $limit = $pc_options[$storefrontid]["amount_of_products_for_autoclassify_queue"] - $count_AC_products;
         if ($limit < 0) $limit = 10;
 
-        $products = func_query_param($query = "SELECT $sql_tbl[products].productid FROM $sql_tbl[products] LEFT JOIN $sql_tbl[products_sf] ON $sql_tbl[products_sf].productid = $sql_tbl[products].productid WHERE pc_classify_status='NC' AND $sql_tbl[products].forsale='Y' AND $sql_tbl[products_sf].sfid='$storefrontid' ORDER BY RAND() LIMIT $limit");
+        $products = func_query_param($query = /** @lang MySQL */ "
+            SELECT p.productid 
+            FROM xcart_products p 
+            LEFT JOIN xcart_products_sf psf ON psf.productid = p.productid 
+            WHERE pc_classify_status='NC' 
+            AND p.forsale='Y' 
+            AND psf.sfid= :storefrontid 
+            ORDER BY RAND() 
+            LIMIT :limit", ['storefrontid' => $storefrontid, 'limit' => $limit]);
 
         $p_count = 0;
         if (!empty($products)) {
