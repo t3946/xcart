@@ -356,9 +356,13 @@ abstract class Field implements ModelFieldInterface
     }
 
     /**
-     * @param $value
-     * @param AbstractPlatform $platform
-     * @return mixed
+     * Converts a value from its database representation to its PHP representation
+     * of this type.
+     *
+     * @param mixed                                     $value    The value to convert.
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform The currently used database platform.
+     *
+     * @return mixed The PHP representation of the value.
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -366,9 +370,13 @@ abstract class Field implements ModelFieldInterface
     }
 
     /**
-     * @param $value
-     * @param AbstractPlatform $platform
-     * @return mixed
+     * Converts a value from its PHP representation to its database representation
+     * of this type.
+     *
+     * @param mixed                                     $value    The value to convert.
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform The currently used database platform.
+     *
+     * @return mixed The database representation of the value.
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
@@ -376,25 +384,32 @@ abstract class Field implements ModelFieldInterface
     }
 
     /**
-     * @param $value
-     * @param AbstractPlatform $platform
-     * @return mixed
+     * Modifies the SQL expression (identifier, parameter) to convert to a PHP value.
+     *
+     * @param string                                    $sqlExpr
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     *
+     * @return string
      */
-    public function convertToPHPValueSQL($value, AbstractPlatform $platform)
+    public function convertToPHPValueSQL($sqlExpr, AbstractPlatform $platform)
     {
-        return $this->getSqlType()->convertToPHPValueSQL($value, $platform);
+        return $this->getSqlType()->convertToPHPValueSQL($sqlExpr, $platform);
     }
 
     /**
-     * @param $value
-     * @param AbstractPlatform $platform
-     * @return mixed
+     * Modifies the SQL expression (identifier, parameter) to convert to a database value.
+     *
+     * @param string                                    $sqlExpr
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     *
+     * @return string
      */
-    public function convertToDatabaseValueSQL($value, AbstractPlatform $platform)
+    public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
     {
-        if ($value === null || $value === '') {
-            $value = null;
+        if ($sqlExpr === null || $sqlExpr === '') {
+            $sqlExpr = null;
         }
-        return $this->getSqlType()->convertToDatabaseValueSQL($value, $platform);
+
+        return $this->getSqlType()->convertToDatabaseValueSQL($sqlExpr, $platform);
     }
 }
