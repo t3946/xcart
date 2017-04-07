@@ -3,7 +3,7 @@
   #main_header {
     padding: 0;
 
-    .container {
+    & {
 
       .desktop-wrapper{
         display: block;
@@ -133,10 +133,10 @@
 
     .mobile{
       padding: 10px 10px 0;
-
-      .mobile__logo {
-        left: 8%;
-      }
+      //
+      //.mobile__logo {
+      //  left: 8%;
+      //}
 
       .mobile__search-btn{
         left: 8%;

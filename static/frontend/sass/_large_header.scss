@@ -88,8 +88,10 @@
       margin-top: 7px;
 
       .main-logo{
-        margin-top: -1px;
-        margin-bottom: 4px;
+        display: inline-block;
+
+        //margin-top: -1px;
+        //margin-bottom: 4px;
 
         .main-logo__image{
           max-width: 174px;
@@ -108,54 +110,26 @@
         }
 
       }
-
-      .main-menu{
-        text-align: justify;
-        line-height: 59px;
-        height: 59px;
-        padding-left: 9px;
-
-        @media screen and (min-width: $break-desktop){
-          width: 80%;
-          float: right;
-        }
-
-        &:after {
-          content: '';
-          width: 100%;
-          height: 0;
-          display: inline-block;
-        }
-
-        li{
-          text-align: center;
-
-          a{
-            color: $blue_a;
-            line-height: 1;
-          }
-        }
-      }
     }
 
     .top-block{
+      width: 100%;
+      z-index: 100;
+      background: $dark_blue;
+      //margin-top: 3px;
+      padding: 0;
+      height: 50px;
 
       &.affix{
         top: 0;
         margin-top: 0;
       }
 
-      width: 100%;
-      z-index: 100;
-      background: $dark_blue;
-      margin-top: 3px;
-      padding: 0;
-      height: 50px;
 
       .top-block-inner{
-        max-width: 1280px;
-        padding: 0 20px;
-        margin: 0 auto;
+        //max-width: 1280px;
+        //padding: 0 20px;
+        //margin: 0 auto;
 
         .departments__toggle-container{
           height: 50px;

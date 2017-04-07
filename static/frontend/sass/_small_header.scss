@@ -40,7 +40,7 @@
   }
 
   #main_header{
-    padding: 10px 13px 3px;
+    //padding: 10px 13px 3px;
 
     .mobile__departments{
       width: 29px;
@@ -51,12 +51,12 @@
     .mobile__logo{
       width: 102px;
       height: 31px;
-      margin-top: 2px;
-      margin-left: -1px;
+      //margin-top: 2px;
+      //margin-left: -1px;
 
       @media screen and (min-width: $break-small-medium){
         position: relative;
-        right: 12%;
+        //right: 12%;
       }
     }
 

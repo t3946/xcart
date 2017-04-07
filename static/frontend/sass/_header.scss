@@ -152,7 +152,8 @@
 }
 
 #main_header {
-  padding: 10px 10px 2px;
+  //padding: 10px 10px 2px;
+  padding-top: 10px;
 
   .container {
     border-bottom: 1px solid $grey;
@@ -166,11 +167,11 @@
     margin-top: 3px;
   }
 
-  .mobile__logo {
-    background: url("../images/home/768/logo.svg") no-repeat;
-    width: 86px;
-    height: 26px;
-  }
+  //.mobile__logo {
+  //  background: url("../images/home/768/logo.svg") no-repeat;
+  //  width: 86px;
+  //  height: 26px;
+  //}
 
   .mobile__search-btn {
     background: url("../images/home/768/magnifier.svg") no-repeat;
