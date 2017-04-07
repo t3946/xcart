@@ -2929,6 +2929,7 @@ function func_del_stop_words($text = '', $stop_words = '')
 
     $stop_words = trim($stop_words);
     $stop_words = strtolower($stop_words);
+    $stop_words = str_replace('/', '\/', $stop_words);
 
     if (empty($text) || empty($stop_words)) {
         return $text;
