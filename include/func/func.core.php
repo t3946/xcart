@@ -2851,7 +2851,7 @@ function func_pc_find_new_categoryid($productid)
         $cl[$idxcl]["1"] = $categoryid;
         $cl[$idxcl]["2"] = $pc_category_weight + $p1;
 
-        unset($current_category_terms_arr);
+        //unset($current_category_terms_arr);
     }
     print_r($cl);
     if (!empty($cl) && is_array($cl))
