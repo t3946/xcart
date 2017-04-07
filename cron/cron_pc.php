@@ -170,7 +170,7 @@ SQL;
             AND p.forsale='Y' 
             AND psf.sfid= :storefrontid 
             ORDER BY RAND() 
-            LIMIT :limit", ['storefrontid' => $storefrontid, 'limit' => $limit]);
+            LIMIT $limit", ['storefrontid' => $storefrontid]);
 
         $p_count = 0;
         if (!empty($products)) {
