@@ -15,7 +15,7 @@ set_time_limit(0);
 if ($config["cron_pc_launched"] == "Y") {
 
 //	echo '<pre>'.print_r(opcache_get_status(), true).'</pre>';
-    die("Already launched"); // ################################
+    //die("Already launched"); // ################################
 }
 
 db_query_param(/** @lang MySQL */"UPDATE xcart_config SET value='Y' WHERE name='cron_pc_launched'", []);
@@ -89,8 +89,12 @@ SQL;
                     if (!empty($text)) {
                         $text_arr = explode(" ", $text);
                         foreach ($text_arr as $term) {
-                            if (!empty($term)) {
-                                $termModel = ProductTermModel::objects()->getOrCreate(['term' => $term]);
+                            if (!empty($term) && is_string($term)) {
+                                $termModel = ProductTermModel::objects()->get(['term' => $term]);
+                                if (!$termModel) {
+                                    $termModel = new ProductTermModel(['term' => $term]);
+                                    $termModel->save();
+                                }
                                 $productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
                                 if (!$productCategoryTerm) {
                                     $productCategoryTerm = new ProductCategoryTermsModel();
