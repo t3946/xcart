@@ -48,9 +48,11 @@ class AbstractModel extends Base
             return true;
         }
 
-        $rows = $this->objects()
-            ->filter($this->getPrimaryKeyValues())
-            ->update($values);
+        $connection = static::getConnection();
+        $adapter = $this->getQueryBuilder()->getAdapter();
+
+        $tableName = $adapter->quoteTableName($adapter->getRawTableName($this->tableName()));
+        $rows = $connection->update($tableName, $values, $this->getPrimaryKeyValues(), array_replace($this->extractTypes(array_keys($values)), $this->extractTypes($this->getPrimaryKeyName(true))));
 
         foreach ($values as $name => $value) {
             $this->setAttribute($name, $value);
@@ -70,11 +72,11 @@ class AbstractModel extends Base
         }
 
         $connection = static::getConnection();
-        $qb = QueryBuilder::getInstance($connection);
-        $adapter = $qb->getAdapter();
+        $adapter = $this->getQueryBuilder()->getAdapter();
 
         $tableName = $adapter->quoteTableName($adapter->getRawTableName($this->tableName()));
-        $inserted = $connection->executeUpdate($qb->insert($tableName, $values));
+        $inserted = $connection->insert($tableName, $values, $this->extractTypes(array_keys($values)));
+
         if ($inserted === false) {
             return false;
         }
@@ -139,6 +141,13 @@ class AbstractModel extends Base
         }
 
         return $values;
+    }
+
+    protected function extractTypes(array $fields)
+    {
+        return array_map(function($field){
+            return $this->getField($field)->getSqlType();
+        }, $fields);
     }
 
     /**
