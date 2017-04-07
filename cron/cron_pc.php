@@ -89,14 +89,16 @@ SQL;
                     if (!empty($text)) {
                         $text_arr = explode(" ", $text);
                         foreach ($text_arr as $term) {
-                            $termModel = ProductTermModel::objects()->getOrCreate(['term' => $term]);
-                            $productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
-                            if (!$productCategoryTerm) {
-                                $productCategoryTerm = new ProductCategoryTermsModel();
-                                $productCategoryTerm->setAttributes(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
+                            if (!empty($term)) {
+                                $termModel = ProductTermModel::objects()->getOrCreate(['term' => $term]);
+                                $productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
+                                if (!$productCategoryTerm) {
+                                    $productCategoryTerm = new ProductCategoryTermsModel();
+                                    $productCategoryTerm->setAttributes(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
+                                }
+                                $productCategoryTerm->term_count++;
+                                $productCategoryTerm->save();
                             }
-                            $productCategoryTerm->term_count++;
-                            $productCategoryTerm->save();
                         }
                     }
                     $counter++;
