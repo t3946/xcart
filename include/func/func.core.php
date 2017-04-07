@@ -2826,7 +2826,7 @@ function func_pc_find_new_categoryid($productid)
                 $current_category_terms_arr[] = $v["term"];
             }
         }
-
+        echo "\n\nCategory:{$categoryid}\n";
         foreach ($text_arr as $word) {
             if (in_array($word, $current_category_terms_arr)) {
                 // sleep for some time
@@ -2836,7 +2836,8 @@ function func_pc_find_new_categoryid($productid)
                             LEFT JOIN xcart_categories C ON C.categoryid = :categoryid 
                             LEFT JOIN xcart_pc_category_terms CT ON CT.categoryid = C.categoryid AND CT.termid = T.termid 
                             WHERE T.term = :word", ['categoryid' => $categoryid, 'word' => $word]);
-                $p1 = $p1 + $bayes_weight;
+                $p1 += $bayes_weight;
+                echo "Bayes weight:{$bayes_weight}, p1: {$p1}\n";
             }
         }
 
@@ -2848,7 +2849,7 @@ function func_pc_find_new_categoryid($productid)
 
         unset($current_category_terms_arr);
     }
-
+    print_r($cl);
     if (!empty($cl) && is_array($cl))
     {
         foreach ($cl as $k => $v)
