@@ -89,19 +89,19 @@ SQL;
                     if (!empty($text)) {
                         $text_arr = explode(" ", $text);
                         foreach ($text_arr as $term) {
-                            if (!empty($term) && is_string($term)) {
-                                $termModel = ProductTermModel::objects()->get(['term' => $term]);
-                                if (!$termModel) {
-                                    $termModel = new ProductTermModel(['term' => $term]);
-                                    $termModel->save();
+                            if (!empty($term)) {
+                                $termModel = ProductTermModel::objects()->getOrCreate(['term' => (string) $term]);
+                                if ($termModel->termid) {
+                                    $productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
+                                    if (!$productCategoryTerm) {
+                                        $productCategoryTerm = new ProductCategoryTermsModel();
+                                        $productCategoryTerm->setAttributes(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
+                                    }
+                                    $productCategoryTerm->term_count++;
+                                    $productCategoryTerm->save();
+                                } else {
+                                    echo "Strange term : {$term}\n";
                                 }
-                                $productCategoryTerm = ProductCategoryTermsModel::objects()->get(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
-                                if (!$productCategoryTerm) {
-                                    $productCategoryTerm = new ProductCategoryTermsModel();
-                                    $productCategoryTerm->setAttributes(['categoryid' => $categoryid, 'termid' => $termModel->termid]);
-                                }
-                                $productCategoryTerm->term_count++;
-                                $productCategoryTerm->save();
                             }
                         }
                     }
