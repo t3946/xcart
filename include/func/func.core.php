@@ -2801,7 +2801,7 @@ function func_pc_find_new_categoryid($productid)
     $text_arr = explode(" ", $text);
 
     $categories = db_query_param($query = /** @lang MySQL */
-        "SELECT categoryid, pc_category_weight FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:sfid AND pc_category_weight != 0", ['sfid' => $product['sfid']]);
+        "SELECT categoryid, pc_category_weight, pc_z FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:sfid AND pc_category_weight != 0", ['sfid' => $product['sfid']]);
 
     $idxcl = 0;
 
@@ -2849,12 +2849,14 @@ WHERE C.pc_ready_to_classify='Y' AND C.storefrontid = :storefrontid AND C.avail 
                 });
                 if (!empty($aFindedBayes) && is_array($aFindedBayes)) {
                     $aFindedBayes = reset($aFindedBayes);
-                    $p1 += floatval($aFindedBayes['bayes_weight']);
+                    $pz = floatval($aFindedBayes['bayes_weight']);
+                    $p1 += $pz;
 
                 } else {
-                    $p1 += log(1/$pc_category_weight);
+                    $pz = log(1/$category['pc_z']);
+                    $p1 += $pz;
                 }
-                echo "Bayes weight:{$aFindedBayes['bayes_weight']}, p1: {$p1}\n";
+                echo "Bayes weight:{$pz}, p1: {$p1}\n";
             } else {
                 echo "Word {$word} not found in this storefront\n";
             }
