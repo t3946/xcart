@@ -32,7 +32,7 @@
                                 </div>
                             </div>
 
-                            <div class="container second-header-row ">
+                            <div class="container-fluid second-header-row ">
                                 <div class="row">
                                     <div class="col col-xs-30 col-sm-5 col-md-4 ">
                                         <a href="#" class="mobile__departments offcanvas-toggle hidden-lg" type="button" data-toggle="offcanvas" data-target="#departments-offcanvas"></a>

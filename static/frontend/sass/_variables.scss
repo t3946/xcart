@@ -42,7 +42,7 @@ $screen-desktop:             $screen-md-min;
 // Large screen / wide desktop
 //** Deprecated `$screen-lg` as of v3.0.1
 $screen-lg:                  1024px;
-$screen-lg-min:              1024px;
+$screen-lg-min:              $screen-lg;
 //** Deprecated `$screen-lg-desktop` as of v3.0.1
 $screen-lg-desktop:          $screen-lg-min;
 

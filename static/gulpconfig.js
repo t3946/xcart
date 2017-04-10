@@ -27,6 +27,12 @@ module.exports.backend = {
         },
         inline_image: {
             baseDir: './backend/css'
+        },
+        imagemin: {
+            interlaced: true,
+            progressive: true,
+            optimizationLevel: 5,
+            svgoPlugins: [{removeViewBox: true}]
         }
     },
     src: {

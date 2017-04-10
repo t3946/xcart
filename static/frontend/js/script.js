@@ -307,31 +307,31 @@ $(document).ready(function(){
         dPinput0.value = initialPrice;
         dPinput1.value = maxPrice;
     }
-
-    recentlyViewedSly.on('moveStart', function(){
-        if (!controlsRecentlyViewed.hasClass("active") && $(window).innerWidth() >= displayControlsSlyBreakPoint){
-            controlsRecentlyViewed.addClass("active");
-        }
-
-        if (!scrollBarRecentlyViewed.hasClass("active")){
-            scrollBarRecentlyViewed.addClass("active");
-        }
-
-    });
-
-    recentlyViewedSly.on("moveEnd", function () {
-        if (scrollBarRecentlyViewed.hasClass("active")){
-            scrollBarRecentlyViewed.removeClass("active");
-        }
-    });
-
-    recentlyViewedFrame.hover(function(){},
-        function(){
-            if (controlsRecentlyViewed.hasClass("active")){
-                controlsRecentlyViewed.removeClass("active");
-            }
-        }
-    );
+    //
+    // recentlyViewedSly.on('moveStart', function(){
+    //     if (!controlsRecentlyViewed.hasClass("active") && $(window).innerWidth() >= displayControlsSlyBreakPoint){
+    //         controlsRecentlyViewed.addClass("active");
+    //     }
+    //
+    //     if (!scrollBarRecentlyViewed.hasClass("active")){
+    //         scrollBarRecentlyViewed.addClass("active");
+    //     }
+    //
+    // });
+    //
+    // recentlyViewedSly.on("moveEnd", function () {
+    //     if (scrollBarRecentlyViewed.hasClass("active")){
+    //         scrollBarRecentlyViewed.removeClass("active");
+    //     }
+    // });
+    //
+    // recentlyViewedFrame.hover(function(){},
+    //     function(){
+    //         if (controlsRecentlyViewed.hasClass("active")){
+    //             controlsRecentlyViewed.removeClass("active");
+    //         }
+    //     }
+    // );
 
     $('#featured_product1_view').on('shown.bs.modal', function (e) {
         alsoBoughtFrame = reloadSly(alsoBoughtFrame, '#customers-also-bought_frame', slyCustomersAlsoBoughtOptions);
@@ -363,9 +363,11 @@ $(document).ready(function(){
         addCurrencyClass(curr_val);
     });
 
-    $(".filter-by__panel").find(".modal").on('shown.bs.modal', function () {
+    $(".filter-by__panel").find(".modal")
+        .on('shown.bs.modal', function () {
         $('.shadow').addClass("active");
-    }).on('hidden.bs.modal', function () {
+    })
+        .on('hidden.bs.modal', function () {
         $('.shadow').removeClass("active");
     });
 

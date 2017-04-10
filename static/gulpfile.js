@@ -10,6 +10,7 @@ const uglify = require('gulp-uglify');
 const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const inlineimage = require('gulp-inline-image');
+const svgo = require('gulp-svgo');
 
 let config = require('./gulpconfig');
 let frontend = config.frontend;
@@ -210,18 +211,24 @@ gulp.task('backend_js', ['backend_jsx'], function() {
 
 gulp.task('frontend_images', function() {
     let pipe = gulp.src(frontend.src.images);
+
     if (config.compress) {
-        pipe = pipe.pipe(imagemin())
+        pipe = pipe.pipe(imagemin(frontend.config.imagemin || {}));
     }
-    return pipe.pipe(gulp.dest(frontend.dst.images)).pipe(livereload());
+    return pipe
+        .pipe(gulp.dest(frontend.dst.images))
+        .pipe(livereload());
 });
 
 gulp.task('backend_images', function() {
     let pipe = gulp.src(backend.src.images);
+
     if (config.compress) {
-        pipe = pipe.pipe(imagemin())
+        pipe = pipe.pipe(imagemin(backend.config.imagemin || {}));
     }
-    return pipe.pipe(gulp.dest(backend.dst.images)).pipe(livereload());
+    return pipe
+        .pipe(gulp.dest(backend.dst.images))
+        .pipe(livereload());
 });
 
 gulp.task('frontend_fonts', function() {
