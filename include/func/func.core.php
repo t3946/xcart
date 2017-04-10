@@ -2775,7 +2775,7 @@ function func_define_approximate_shippings($productid, $product_info = '')
     return $shippings;
 }
 
-function func_pc_find_new_categoryid($productid)
+function func_pc_find_new_categoryid($productid, $aTerms = [])
 {
     global $sql_tbl;
 
@@ -2801,47 +2801,25 @@ function func_pc_find_new_categoryid($productid)
     $text_arr = explode(" ", $text);
 
     $categories = db_query_param($query = /** @lang MySQL */
-        "SELECT categoryid, pc_category_weight FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:sfid AND pc_category_weight != 0", ['sfid' => $product['sfid']]);
+        "SELECT categoryid, pc_category_weight, pc_z FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:sfid AND pc_category_weight != 0", ['sfid' => $product['sfid']]);
 
     $idxcl = 0;
 
-    $current_category_terms = func_query_param(/** @lang MySQL */
-        "SELECT DISTINCT t.term
-                FROM xcart_pc_category_terms pct
-                INNER JOIN xcart_categories c ON c.categoryid = pct.categoryid 
-                INNER JOIN xcart_pc_terms t ON t.termid = pct.termid
-                WHERE c.pc_ready_to_classify='Y'
-                AND c.storefrontid = :storefrontid" , ['storefrontid' => $product['sfid']]);
-
-    $current_category_terms_arr = [];
-    if (!empty($current_category_terms)) {
-        foreach ($current_category_terms as $v) {
-            $current_category_terms_arr[] = $v["term"];
-        }
-    }
-
     while ($category = db_fetch_array($categories)) {
-
         $p1 = 0;
         $idxcl++;
-
         $categoryid = $category["categoryid"];
-
         $pc_category_weight = $category["pc_category_weight"];
-
 
         echo "\n\nCategory:{$categoryid}\n";
         foreach ($text_arr as $word) {
-            if (in_array($word, $current_category_terms_arr)) {
-                // sleep for some time
-                $bayes_weight = func_query_first_cell_param(/** @lang MySQL */
-                    "SELECT COALESCE(CASE WHEN CT.categoryid IS NOT NULL THEN LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z) ELSE LOG(1/C.pc_z) END,0) AS bayes_weight 
-                            FROM xcart_pc_terms T 
-                            LEFT JOIN xcart_categories C ON C.categoryid = :categoryid 
-                            LEFT JOIN xcart_pc_category_terms CT ON CT.categoryid = C.categoryid AND CT.termid = T.termid 
-                            WHERE T.term = :word", ['categoryid' => $categoryid, 'word' => $word]);
-                $p1 += $bayes_weight;
-                echo "Bayes weight:{$bayes_weight}, p1: {$p1}\n";
+            if (array_key_exists($word, $aTerms)) {
+                if (array_key_exists($categoryid, $aTerms[$word])) {
+                    $pz = $aTerms[$word][$categoryid];
+                } else {
+                    $pz = log(1/$category['pc_z']);
+                }
+                $p1 += $pz;
             }
         }
 
