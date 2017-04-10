@@ -2826,6 +2826,10 @@ FROM xcart_categories C
 LEFT JOIN xcart_pc_category_terms CT ON CT.categoryid = C.categoryid 
 LEFT JOIN xcart_pc_terms T ON T.termid = CT.termid 
 WHERE C.pc_ready_to_classify='Y' AND C.storefrontid = :storefrontid AND C.avail ='Y'" , ['storefrontid' => $product['sfid']]);
+    $aTerms = [];
+    foreach ($current_category_terms as $cat) {
+        $aTerms[$cat['term']][$cat['categoryid']] = floatval($cat['bayes_weight']);
+    }
 
     while ($category = db_fetch_array($categories)) {
 
@@ -2838,27 +2842,13 @@ WHERE C.pc_ready_to_classify='Y' AND C.storefrontid = :storefrontid AND C.avail 
 
         echo "\n\nCategory:{$categoryid}\n";
         foreach ($text_arr as $word) {
-            $aFindedWord = array_filter($current_category_terms, function($arr) use ($categoryid, $word) {
-                if ($arr['term'] == $word) return true;
-                return false;
-            });
-            if (!empty($aFindedWord)) {
-                $aFindedBayes = array_filter($current_category_terms, function ($arr) use ($categoryid, $word) {
-                    if ($arr['categoryid'] == $categoryid && $arr['term'] == $word) return true;
-                    return false;
-                });
-                if (!empty($aFindedBayes) && is_array($aFindedBayes)) {
-                    $aFindedBayes = reset($aFindedBayes);
-                    $pz = floatval($aFindedBayes['bayes_weight']);
-                    $p1 += $pz;
-
+            if (array_key_exists($word, $aTerms)) {
+                if (array_key_exists($categoryid, $aTerms[$word])) {
+                    $pz = $aTerms[$word][$categoryid];
                 } else {
                     $pz = log(1/$category['pc_z']);
-                    $p1 += $pz;
                 }
-                echo "Bayes weight:{$pz}, p1: {$p1}\n";
-            } else {
-                echo "Word {$word} not found in this storefront\n";
+                $p1 += $pz;
             }
         }
 
