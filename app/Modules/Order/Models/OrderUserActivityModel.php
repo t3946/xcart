@@ -40,25 +40,17 @@ class OrderUserActivityModel extends Model
 
     public function save(array $fields = [])
     {
-        $model = static::objects()
-            ->filter([
-                'user_id'=> $this->user_id,
-                'order_id' => $this->order_id,
-                'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )
-            ])
-            ->limit(1)
-            ->get();
+        $filter = [
+            'user_id'=> $this->user_id,
+            'order_id' => $this->order_id,
+            'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )
+        ];
 
-        if (!$model) {
-            return parent::save($fields);
-        }
-        else {
-            $this->setAttributes($model->getAttributes());
-            $this->created_at = new \DateTime();
-            return parent::save($fields);
+        if (static::objects()->filter($filter)->count()) {
+            static::objects()->filter($filter)->delete();
         }
 
-        return false;
+        return parent::save($fields);
     }
 
     public function afterSave($owner, $isNew)
