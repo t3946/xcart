@@ -40,9 +40,21 @@ class OrderUserActivityModel extends Model
 
     public function save(array $fields = [])
     {
-        $count = static::objects()->filter(['user_id'=> $this->user_id, 'order_id' => $this->order_id, 'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )])->count();
+        $model = static::objects()
+            ->filter([
+                'user_id'=> $this->user_id,
+                'order_id' => $this->order_id,
+                'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )
+            ])
+            ->limit(1)
+            ->get();
 
-        if ($count === 0) {
+        if (!$model) {
+            return parent::save($fields);
+        }
+        else {
+            $this->setAttributes($model->getAttributes());
+            $this->created_at = new \DateTime();
             return parent::save($fields);
         }
 
