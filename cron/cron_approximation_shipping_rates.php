@@ -60,7 +60,9 @@ if (!empty($manufacturers) && is_array($manufacturers) && !empty($states)){
   foreach ($manufacturers as $manufacturerid) {
 
       $manufacturer_info = func_query_first_param(/** @lang MySQL */
-          "SELECT manufacturer, m_city, m_country, m_state, m_zipcode FROM xcart_manufacturers WHERE manufacturerid=:manufacturerid", ['manufacturerid' => $manufacturerid]);
+          "SELECT manufacturer, m_city, m_country, m_state, m_zipcode 
+				   FROM xcart_manufacturers 
+				  WHERE manufacturerid=:manufacturerid", ['manufacturerid' => $manufacturerid]);
       $config['Company']['location_city'] = $manufacturer_info['m_city'];
       $config['Company']['location_state'] = $manufacturer_info['m_state'];
       $config['Company']['location_country'] = $manufacturer_info['m_country'];
