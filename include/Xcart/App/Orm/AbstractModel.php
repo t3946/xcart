@@ -146,7 +146,7 @@ class AbstractModel extends Base
     protected function extractTypes(array $fields)
     {
         return array_map(function($field){
-            return $this->getField($field)->getSqlType();
+            return $this->getField($field)->getSqlType()->getBindingType();
         }, $fields);
     }
 
@@ -269,6 +269,7 @@ class AbstractModel extends Base
 
                     if ($value != $this->getOldAttribute($name)) {
                         $changed[$name] = $value === null ? $field->convertToDatabaseValue($field->default, $platform) : $value;
+//                        $changed[$name] = $value === null ? $field->default : $value;
                     }
                 }
             }
