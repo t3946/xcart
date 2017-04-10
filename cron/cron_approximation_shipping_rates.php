@@ -75,74 +75,72 @@ if (!empty($manufacturers) && is_array($manufacturers) && !empty($states)){
 	    func_print_r($manufacturer_info);
     }
 
-    foreach ($states as $state_info){
+      foreach ($states as $state_info) {
 
-        $userinfo["s_country"] = $state_info["country_code"];
-        $userinfo["s_state"] = $state_info["code"];
-        $userinfo["s_zipcode"] = $state_info["base_state_zipcode"];
+          $userinfo["s_country"] = $state_info["country_code"];
+          $userinfo["s_state"] = $state_info["code"];
+          $userinfo["s_zipcode"] = $state_info["base_state_zipcode"];
 
-	$found_shippings = array();
+          $found_shippings = array();
 
-	for ($i=0; $i<3; $i++){
-		func_flush(".");
+          for ($i = 0; $i < 3; $i++) {
+              func_flush(".");
 
-		if ($i == "0"){
-			$weight = "1";
-		}
-		elseif ($i == "1"){
-                        $weight = "75";
-                }
-                else {
-                        $weight = "150";
-                }
+              if ($i == "0") {
+                  $weight = "1";
+              } elseif ($i == "1") {
+                  $weight = "75";
+              } else {
+                  $weight = "150";
+              }
 
-		$intershipper_rates = func_shipper($weight, $userinfo);
+              $intershipper_rates = func_shipper($weight, $userinfo);
 
-		if ($show_shippings == "Y"){
-			func_print_r($intershipper_rates);
-		}
+              if ($show_shippings == "Y") {
+                  func_print_r($intershipper_rates);
+              }
 
-		if (!empty($intershipper_rates) && is_array($intershipper_rates)){
-			foreach ($intershipper_rates as $shipping){
-				if ( 
+              if (!empty($intershipper_rates) && is_array($intershipper_rates)) {
+                  foreach ($intershipper_rates as $shipping) {
+                      if (
 
-					($shipping["methodid"] == "1" && $manufacturer_info['m_country'] == "US") // UPS Ground
-					||
-					($shipping["methodid"] == "65" && $manufacturer_info['m_country'] == "CA") // UPS Ground
-				){
-					$found_shippings[$i] = $shipping;
-					$found_shippings[$i]["weight"] = $weight;
-				}
-			}
-		}
-	}
+                          ($shipping["methodid"] == "1" && $manufacturer_info['m_country'] == "US") // UPS Ground
+                          ||
+                          ($shipping["methodid"] == "65" && $manufacturer_info['m_country'] == "CA") // UPS Ground
+                      ) {
+                          $found_shippings[$i] = $shipping;
+                          $found_shippings[$i]["weight"] = $weight;
+                      }
+                  }
+              }
+          }
 
 
-        $count_found_shippings = count($found_shippings);
-        if ($count_found_shippings == "3"){
+          $count_found_shippings = count($found_shippings);
+          if ($count_found_shippings == "3") {
 
-		$current_id = func_query_first_cell("SELECT id FROM $sql_tbl[approximation_shipping_rates] WHERE manufacturerid='$manufacturerid' AND state='$state_info[code]'");
+              $current_id = func_query_first_cell("SELECT id FROM $sql_tbl[approximation_shipping_rates] WHERE manufacturerid='$manufacturerid' AND state='$state_info[code]'");
 
-		if (empty($current_id)){
+              if (empty($current_id)) {
 //		db_query("DELETE FROM $sql_tbl[approximation_shipping_rates] WHERE manufacturerid='$manufacturerid' AND state='$state_info[code]'");
-			db_query("INSERT INTO $sql_tbl[approximation_shipping_rates] (manufacturerid, state, bw_1, bw_75, bw_150, last_updated_date) VALUES ('$manufacturerid', '$state_info[code]', '".$found_shippings[0]["rate"]."', '".$found_shippings[1]["rate"]."', '".$found_shippings[2]["rate"]."', '".time()."')");
-		} else {
-			db_query("UPDATE $sql_tbl[approximation_shipping_rates] SET bw_1='".$found_shippings[0]["rate"]."', bw_75='".$found_shippings[1]["rate"]."', bw_150='".$found_shippings[2]["rate"]."', last_updated_date='".time()."' WHERE id='$current_id'");
-		}
+                  db_query("INSERT INTO $sql_tbl[approximation_shipping_rates] (manufacturerid, state, bw_1, bw_75, bw_150, last_updated_date) VALUES ('$manufacturerid', '$state_info[code]', '" . $found_shippings[0]["rate"] . "', '" . $found_shippings[1]["rate"] . "', '" . $found_shippings[2]["rate"] . "', '" . time() . "')");
+              } else {
+                  db_query("UPDATE $sql_tbl[approximation_shipping_rates] SET bw_1='" . $found_shippings[0]["rate"] . "', bw_75='" . $found_shippings[1]["rate"] . "', bw_150='" . $found_shippings[2]["rate"] . "', last_updated_date='" . time() . "' WHERE id='$current_id'");
+              }
 
-        } else {
-		$failed_requests = $failed_requests + (3 - $count_found_shippings);
+          } else {
+              $failed_requests = $failed_requests + (3 - $count_found_shippings);
 
-		$failed_states .= $state_info["code"] . " (".$state_info["base_state_zipcode"].") \n";
-	}
-	unset($found_shippings);
+              $failed_states .= $state_info["code"] . " (" . $state_info["base_state_zipcode"] . ") \n";
+          }
+          unset($found_shippings);
 
-        db_query_param(/** @lang MySQL */
-            "UPDATE xcart_manufacturers 
+          db_query_param(/** @lang MySQL */
+              "UPDATE xcart_manufacturers 
 					  SET update_approximation_shipping_rates = 'N', shipping_rates_last_update_date = :shipping_rates_last_update_date 
 					WHERE manufacturerid = :manufacturerid", ['manufacturerid' => $manufacturerid, 'shipping_rates_last_update_date' => time()]);
 
-    }
+      }
 
     $list_of_updated_suppliers .= $manufacturer_info["manufacturer"]."\n";
 
