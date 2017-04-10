@@ -69,7 +69,7 @@ if (empty($config["Supplier_feeds"]["Feeds_storage_path"]) || empty($config["Sup
     die($log_text);
 }
 
-$supplier_feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'feed_type__in' =>  array_keys($feed_types)])->all();
+$supplier_feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'new_cron' => 'Y', 'feed_type__in' =>  array_keys($feed_types)])->all();
 
 if (empty($supplier_feeds) || !is_array($supplier_feeds)) {
     $log_text = "--- xcart_supplier_feeds does not have 'enabled' rows. Script stopped.";
