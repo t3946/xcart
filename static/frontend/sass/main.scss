@@ -1,38 +1,41 @@
 @import 'compass';
 
-@import 'variables';
-@import 'mixins/bootstrap_mixins';
-@import "bootstrap";
+@import 'settings/bootstrap_variables';
+@import 'settings/foundation_settings';
+@import 'settings/settings';
+@import 'settings/foundation_includes';
+
+//@import 'mixins/bootstrap_mixins';
 
 @import 'base/base';
 
 @import 'colors';
 @import 'mixins/gen';
 
-//@import 'fonts_lato';
-/*@import 'reset_base';
-@import 'reset_form';*/
+@import 'parts/off-canvas';
+@import 'parts/header';
 
-@import 'base';
-@import 'noui-slider';
-@import 'items-list';
-@import 'switch-settings';
-@import 'interactive';
+//@import 'base';
+//@import 'noui-slider';
+//@import 'items-list';
+//@import 'switch-settings';
+//@import 'interactive';
+//
+//@import 'header';
+//@import 'small_header';
+//@import 'medium-xs_header';
+//@import 'medium_header';
+//@import 'normal_header';
+//@import 'large_header';
+//
+//@import 'footer';
+//@import 'small_footer';
+//@import 'medium-xs_footer';
+//@import 'medium_footer';
+//@import 'normal_footer';
+//@import 'large_footer';
 
-@import 'header';
-@import 'small_header';
-@import 'medium-xs_header';
-@import 'medium_header';
-@import 'normal_header';
-@import 'large_header';
-@import 'footer';
-@import 'small_footer';
-@import 'medium-xs_footer';
-@import 'medium_footer';
-@import 'normal_footer';
-@import 'large_footer';
-@import "parts/content_container";
-@import "parts/main_menu";
+//@import "parts/main_menu";
 //
 //@import 'category';
 //@import 'small_category';
@@ -58,5 +61,5 @@
 //@import 'normal_product';
 //@import 'large_product';
 
-@import 'quick-view';
-@import 'offcanvas';
+//@import 'quick-view';
+//@import 'offcanvas';

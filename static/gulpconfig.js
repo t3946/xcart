@@ -8,7 +8,7 @@ var modules = fs.readdirSync(modulesDir).map(function (module) {
 
 module.exports.name = "main";
 
-module.exports.compress = true;
+// module.exports.compress = true;
 
 
 module.exports.backend = {
@@ -22,6 +22,7 @@ module.exports.backend = {
         raw: 'backend/dist/raw'
     },
     config: {
+        compress: true,
         babel: {
             presets: ['es2015']
         },
@@ -133,6 +134,7 @@ module.exports.frontend = {
         raw: 'frontend/dist/raw'
     },
     config: {
+        compress: true,
         babel: {
             presets: ['es2015']
         },
@@ -142,8 +144,8 @@ module.exports.frontend = {
     },
     src: {
         jsx: [
-            'frontend/jsx/**/*'
-            // 'frontend/jsx/main.jsx'
+            // 'frontend/jsx/**/*'
+            'frontend/jsx/main.jsx'
         ],
         js: [
             'frontend/js/**/*',
@@ -211,6 +213,18 @@ module.exports.frontend = {
             ],
             scss: [
                 'bower_components/lato-webfont/scss/lato-webfont.scss'
+            ]
+        },
+        foundation: {
+            js: [
+                'bower_components/foundation-sites/dist/js/foundation.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.util.keyboard.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.util.motion.js',
+
+            ],
+            scss_include: [
+                'bower_components/foundation-sites/scss/'
             ]
         }
     }

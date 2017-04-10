@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.725 16.988"><path fill-rule="evenodd" clip-rule="evenodd" fill="#ededed" d="M13.833 8.496l-6.686 3.859-6.686 3.858V.775l6.686 3.859z"/><path d="M14.057 8.882L7.371 12.74.685 16.603l-.672.385V0l.672.39 6.686 3.858 6.686 3.858.668.39-.668.386zm-7.134 3.087l6.014-3.473-6.014-3.473L.91 1.55v13.887l6.013-3.468z" fill="#363636"/></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 14.725 16.988" style="enable-background:new 0 0 14.725 16.988;" xml:space="preserve">
+<g>
+	<polygon style="fill-rule:evenodd;clip-rule:evenodd;fill:#EDEDED;" points="13.833,8.496 7.147,12.355 0.461,16.213 0.461,8.496 
+		0.461,0.775 7.147,4.634 	"/>
+	<path style="fill:#363636;" d="M14.057,8.882L7.371,12.74l-6.686,3.863l-0.672,0.385v-0.775V8.496V0.775V0l0.672,0.39l6.686,3.858
+		l6.686,3.858l0.668,0.39L14.057,8.882z M6.923,11.969l6.014-3.473L6.923,5.023L0.91,1.55v6.946v6.941L6.923,11.969z"/>
+</g>
+</svg>

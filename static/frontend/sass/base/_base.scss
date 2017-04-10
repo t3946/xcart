@@ -1,17 +1,9 @@
-//.col {
-//  float: left;
-//  position: relative;
-//  // Prevent columns from collapsing when empty
-//  min-height: 1px;
-//  // Inner gutter via padding
-//  padding-left:  ceil(($grid-gutter-width / 2));
-//  padding-right: floor(($grid-gutter-width / 2));
-//}
-
+body {
+  width: 100%;
+  min-width: 320px;
+}
 #main_wrapper {
   min-width: 320px;
 }
 
-.container-fluid {
-  max-width: 1280px;
-}
+

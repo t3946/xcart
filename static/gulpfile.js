@@ -84,7 +84,7 @@ gulp.task('frontend_css', ['frontend_scss'], function () {
             cascade: false
         }));
 
-    if (config.compress) {
+    if (frontend.config.compress) {
         pipe = pipe.pipe(cssnano())
     }
 
@@ -110,7 +110,7 @@ gulp.task('backend_css', ['backend_scss'], function () {
             cascade: false
         }));
 
-    if (config.compress) {
+    if (backend.config.compress) {
         pipe = pipe.pipe(cssnano())
     }
 
@@ -155,12 +155,12 @@ gulp.task('frontend_jsx', function() {
 
 gulp.task('frontend_js', ['frontend_jsx'], function() {
     let pipe = gulp.src(frontend.src.js);
+    //
+    // if (frontend.config && frontend.config.babel) {
+    //     pipe = pipe.pipe(babel(frontend.config.babel));
+    // }
 
-    if (frontend.config && frontend.config.babel) {
-        pipe = pipe.pipe(babel(frontend.config.babel));
-    }
-
-    if (config.compress) {
+    if (frontend.config.compress) {
         pipe = pipe.pipe(uglify())
     }
     return pipe
@@ -198,7 +198,7 @@ gulp.task('backend_jsx', function() {
 gulp.task('backend_js', ['backend_jsx'], function() {
     let pipe = gulp.src(backend.src.js);
 
-    if (config.compress) {
+    if (backend.config.compress) {
         pipe = pipe.pipe(uglify())
     }
 
@@ -223,7 +223,7 @@ gulp.task('frontend_images', function() {
 gulp.task('backend_images', function() {
     let pipe = gulp.src(backend.src.images);
 
-    if (config.compress) {
+    if (backend.config.compress) {
         pipe = pipe.pipe(imagemin(backend.config.imagemin || {}));
     }
     return pipe

@@ -1,1 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.099 11.728"><path d="M17.313 10.942a2.72 2.72 0 0 1-3.827 0l-4.45-4.479-4.45 4.479a2.685 2.685 0 0 1-3.798 0 2.72 2.72 0 0 1 0-3.827L7.109.794A2.719 2.719 0 0 1 9.035 0c.709 0 1.417.255 1.956.794l6.321 6.321a2.721 2.721 0 0 1 .001 3.827z" fill-rule="evenodd" clip-rule="evenodd" fill="#696969"/></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 18.099 11.728" style="enable-background:new 0 0 18.099 11.728;" xml:space="preserve">
+<g>
+	<path style="fill-rule:evenodd;clip-rule:evenodd;fill:#15303F;" d="M28.358,11.728L28.358,11.728"/>
+</g>
+<g>
+	<path style="fill-rule:evenodd;clip-rule:evenodd;fill:#696969;" d="M17.313,10.942L17.313,10.942
+		c-1.049,1.049-2.778,1.049-3.827,0l-4.45-4.479l-4.45,4.479c-1.049,1.049-2.75,1.049-3.798,0l0,0c-1.049-1.049-1.049-2.778,0-3.827
+		l6.321-6.321C7.646,0.255,8.355,0,9.035,0c0.709,0,1.417,0.255,1.956,0.794l6.321,6.321C18.361,8.164,18.361,9.893,17.313,10.942
+		L17.313,10.942z"/>
+</g>
+</svg>

@@ -1,0 +1,21 @@
+header {
+  .logo_menu {
+    margin-top: rem-calc(10);
+
+    .mobile_menu {
+      background: url("../images/home/768/menu.svg") no-repeat;
+      width: 25px;
+      height: 19px;
+      margin-top: 3px;
+      display: inline-block;
+    }
+
+    .logo-small {
+      height: 26px;
+    }
+
+    .logo-big {
+      height: 62px;
+    }
+  }
+}
