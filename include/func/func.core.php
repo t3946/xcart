@@ -2775,7 +2775,7 @@ function func_define_approximate_shippings($productid, $product_info = '')
     return $shippings;
 }
 
-function func_pc_find_new_categoryid($productid)
+function func_pc_find_new_categoryid($productid, $aTerms = [])
 {
     global $sql_tbl;
 
@@ -2805,39 +2805,10 @@ function func_pc_find_new_categoryid($productid)
 
     $idxcl = 0;
 
-    /*$current_category_terms = func_query_param(
-        "SELECT DISTINCT t.term
-                FROM xcart_pc_category_terms pct
-                INNER JOIN xcart_categories c ON c.categoryid = pct.categoryid 
-                INNER JOIN xcart_pc_terms t ON t.termid = pct.termid
-                WHERE c.pc_ready_to_classify='Y'
-                AND c.storefrontid = :storefrontid" , ['storefrontid' => $product['sfid']]);
-
-    $current_category_terms_arr = [];
-    if (!empty($current_category_terms)) {
-        foreach ($current_category_terms as $v) {
-            $current_category_terms_arr[] = $v["term"];
-        }
-    }*/
-
-    $current_category_terms = func_query_param(
-        "SELECT C.categoryid, T.term, COALESCE(LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z),0) AS bayes_weight 
-FROM xcart_categories C
-LEFT JOIN xcart_pc_category_terms CT ON CT.categoryid = C.categoryid 
-LEFT JOIN xcart_pc_terms T ON T.termid = CT.termid 
-WHERE C.pc_ready_to_classify='Y' AND C.storefrontid = :storefrontid AND C.avail ='Y'" , ['storefrontid' => $product['sfid']]);
-    $aTerms = [];
-    foreach ($current_category_terms as $cat) {
-        $aTerms[$cat['term']][$cat['categoryid']] = floatval($cat['bayes_weight']);
-    }
-
     while ($category = db_fetch_array($categories)) {
-
         $p1 = 0;
         $idxcl++;
-
         $categoryid = $category["categoryid"];
-
         $pc_category_weight = $category["pc_category_weight"];
 
         echo "\n\nCategory:{$categoryid}\n";

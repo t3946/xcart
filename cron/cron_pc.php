@@ -178,13 +178,24 @@ SQL;
             ORDER BY RAND() 
             LIMIT $limit", ['storefrontid' => $storefrontid]);
 
+        $storefront_category_terms = func_query_param(/** @lang MySQL */
+            "SELECT C.categoryid, T.term, COALESCE(LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z),0) AS bayes_weight 
+FROM xcart_categories C
+LEFT JOIN xcart_pc_category_terms CT ON CT.categoryid = C.categoryid 
+LEFT JOIN xcart_pc_terms T ON T.termid = CT.termid 
+WHERE C.pc_ready_to_classify='Y' AND C.storefrontid = :storefrontid AND C.avail ='Y'" , ['storefrontid' => $storefrontid]);
+        $aTerms = [];
+        foreach ($storefront_category_terms as $cat) {
+            $aTerms[$cat['term']][$cat['categoryid']] = floatval($cat['bayes_weight']);
+        }
+
         $p_count = 0;
         if (!empty($products)) {
             foreach ($products as $product) {
                 $p_count++;
                 $productid = $product["productid"];
-                func_pc_find_new_categoryid($productid);
-                if ($p_count > 50) {
+                func_pc_find_new_categoryid($productid, $aTerms);
+                if ($p_count > 100) {
                     break;
                 }
             }
