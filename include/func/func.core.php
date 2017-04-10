@@ -2805,7 +2805,7 @@ function func_pc_find_new_categoryid($productid)
 
     $idxcl = 0;
 
-    $current_category_terms = func_query_param(/** @lang MySQL */
+    /*$current_category_terms = func_query_param(
         "SELECT DISTINCT t.term
                 FROM xcart_pc_category_terms pct
                 INNER JOIN xcart_categories c ON c.categoryid = pct.categoryid 
@@ -2818,7 +2818,14 @@ function func_pc_find_new_categoryid($productid)
         foreach ($current_category_terms as $v) {
             $current_category_terms_arr[] = $v["term"];
         }
-    }
+    }*/
+
+    $current_category_terms = func_query_param(
+        "SELECT C.categoryid, T.term, COALESCE(LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z),0) AS bayes_weight 
+FROM xcart_categories C
+LEFT JOIN xcart_pc_category_terms CT ON CT.categoryid = C.categoryid 
+LEFT JOIN xcart_pc_terms T ON T.termid = CT.termid 
+WHERE C.pc_ready_to_classify='Y' AND C.storefrontid = :storefrontid AND C.avail ='Y'" , ['storefrontid' => $product['sfid']]);
 
     while ($category = db_fetch_array($categories)) {
 
@@ -2829,19 +2836,27 @@ function func_pc_find_new_categoryid($productid)
 
         $pc_category_weight = $category["pc_category_weight"];
 
-
         echo "\n\nCategory:{$categoryid}\n";
         foreach ($text_arr as $word) {
-            if (in_array($word, $current_category_terms_arr)) {
-                // sleep for some time
-                $bayes_weight = func_query_first_cell_param(/** @lang MySQL */
-                    "SELECT COALESCE(CASE WHEN CT.categoryid IS NOT NULL THEN LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z) ELSE LOG(1/C.pc_z) END,0) AS bayes_weight 
-                            FROM xcart_pc_terms T 
-                            LEFT JOIN xcart_categories C ON C.categoryid = :categoryid 
-                            LEFT JOIN xcart_pc_category_terms CT ON CT.categoryid = C.categoryid AND CT.termid = T.termid 
-                            WHERE T.term = :word", ['categoryid' => $categoryid, 'word' => $word]);
-                $p1 += $bayes_weight;
-                echo "Bayes weight:{$bayes_weight}, p1: {$p1}\n";
+            $aFindedWord = array_filter($current_category_terms, function($arr) use ($categoryid, $word) {
+                if ($arr['term'] == $word) return true;
+                return false;
+            });
+            if (!empty($aFindedWord)) {
+                $aFindedBayes = array_filter($current_category_terms, function ($arr) use ($categoryid, $word) {
+                    if ($arr['categoryid'] == $categoryid && $arr['term'] == $word) return true;
+                    return false;
+                });
+                if (!empty($aFindedBayes) && is_array($aFindedBayes)) {
+                    $aFindedBayes = reset($aFindedBayes);
+                    $p1 += floatval($aFindedBayes['bayes_weight']);
+
+                } else {
+                    $p1 += log(1/$pc_category_weight);
+                }
+                echo "Bayes weight:{$aFindedBayes['bayes_weight']}, p1: {$p1}\n";
+            } else {
+                echo "Word {$word} not found in this storefront\n";
             }
         }
 
