@@ -278,10 +278,11 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         }
 
                         $newUPC = Xcart\Product::calculateUPC($modelProduct->upc);
-                        if ($modelProduct->getOldAttribute('upc') != $newUPC) {
+                        $oldUPC = $modelProduct->getOldAttribute('upc');
+                        if ($oldUPC != $newUPC) {
                             $modelProduct->upc = $newUPC;
                         } else {
-                            $modelProduct->upc = $modelProduct->getOldAttribute('upc');
+                            $modelProduct->upc = $oldUPC;
                         }
 
                         if ($modelProduct->getChangedAttributes()) {
@@ -292,7 +293,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             $modelProduct->save();
                         }
 
-                        if ($modelProduct->getOldAttribute('upc') != $newUPC) {
+                        if ($oldUPC != $newUPC) {
                             $upcModel = ProductUpcChangesModel::objects()->get(['productid' => $modelProduct->productid]);
                             if (!$upcModel) {
                                 (new ProductUpcChangesModel([
