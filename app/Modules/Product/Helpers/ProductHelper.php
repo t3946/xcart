@@ -26,4 +26,14 @@ class ProductHelper
         }
         return $result;
     }
+
+    public static function uploadProductFile($fileName, $filePath)
+    {
+        $sDataFile = file_get_contents_curl($filePath);
+        if (!empty($sDataImage)) {
+            if (file_put_contents($xcart_dir . $image_file_path, $sDataImage)) {
+
+            }
+        }
+    }
 }
