@@ -355,13 +355,18 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
 
                             //Files section
-                            /*$aFiles = $aProduct['product_files'];
+                            $aFiles = $aProduct['product_files'];
                             if (!empty($aFiles) && is_array($aFiles)) {
+                                $orderBy = 0;
                                 foreach ($aFiles as $aFile) {
-                                    $aFile['link'];
-                                    $aFile['name'];
+                                    $fileModel = ProductHelper::uploadProductFile($aFile['name'], $aFile['link'], $modelProduct->productid);
+                                    if ($fileModel && $fileModel->getIsNewRecord()) {
+                                        $fileModel->avail = 'Y';
+                                        $fileModel->orderby = ++$orderBy * 10;
+                                        $fileModel->save();
+                                    }
                                 }
-                            }*/
+                            }
 
                             //Related section
                             $params = [];

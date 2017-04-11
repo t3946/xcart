@@ -27,27 +27,35 @@ class ProductHelper
         return $result;
     }
 
+    /**
+     * @param $fileDesc
+     * @param $filePath
+     * @param $product_id
+     * @return ProductFileModel|null
+     */
     public static function uploadProductFile($fileDesc, $filePath, $product_id)
     {
         global $product_files_dir;
 
-        $fileName = basename($filePath);
+        $fileName = ImageHelper::getImageFileNameFromDownloadLink($filePath, 'pdf');
         $param = ['filename' => $fileName, 'productid' => $product_id];
         $productFileModel = ProductFileModel::objects()->filter($param)->limit(1)->get();
         if (!$productFileModel) {
             $sDataFile = file_get_contents_curl($filePath);
             if (!empty($sDataFile)) {
-                if ($fileSize = file_put_contents($product_files_dir . "/" . $product_id . $fileName, $sDataFile)) {
+                $path = $product_files_dir . '/' . $product_id;
+                if (!is_dir($path)) {
+                    func_mkdir($path, 0755);
+                }
+                if ($fileSize = file_put_contents($path . "/" . $fileName, $sDataFile)) {
                     $productFileModel = new ProductFileModel($param);
                     $productFileModel->setAttributes([
                         'description' => $fileDesc,
-                        'filesize' => $fileSize,
-                        'avail' => 'Y',
-
+                        'filesize' => $fileSize
                     ]);
-                    $productFileModel->save();
                 }
             }
         }
+        return $productFileModel;
     }
 }

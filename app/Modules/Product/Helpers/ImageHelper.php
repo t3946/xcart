@@ -10,7 +10,7 @@ class ImageHelper
 {
     protected static $__extensions = ['gif', 'jpeg', 'jfif', 'jpg', 'jpe', 'bmp', 'png'];
 
-    public static function getImageFileNameFromDownloadLink($imgLink)
+    public static function getImageFileNameFromDownloadLink($imgLink, $defaultExtension = 'jpg')
     {
         $result = null;
         $path = parse_url($imgLink);
@@ -31,7 +31,7 @@ class ImageHelper
                     if (!empty($arrQueryParamsFiltered)) {
                         $result = implode('_', array_values($arrQueryParamsFiltered));
                     } else {
-                        $result = implode('_', array_values($arrQueryParams)) . '.jpg';
+                        $result = implode('_', array_values($arrQueryParams)) . '.'.$defaultExtension;
                     }
                 }
             } else {
