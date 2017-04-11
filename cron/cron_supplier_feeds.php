@@ -327,6 +327,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             func_build_quick_flags($modelProduct->productid);
                             func_build_quick_prices($modelProduct->productid);
                             $new_products_count++;
+                            $inserted_products_count++;
                         }
 
                         //Images section
