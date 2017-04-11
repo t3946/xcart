@@ -1,21 +1,101 @@
 header {
-  .logo_menu {
-    margin-top: rem-calc(10);
+.logo_menu {
+  margin-top: rem-calc(10);
+  height: rem-calc(39);
 
-    .mobile_menu {
-      background: url("../images/home/768/menu.svg") no-repeat;
-      width: 25px;
-      height: 19px;
-      margin-top: 3px;
+  @media #{$large-up} {
+    line-height: rem-calc(62);
+    height: rem-calc(62);
+  }
+
+  .mobile_menu {
+    background: url("../images/home/768/menu.svg") no-repeat;
+    width: 25px;
+    height: 19px;
+    margin-top: 3px;
+    display: inline-block;
+  }
+
+  .logo-small {
+    height: 26px;
+  }
+
+  .logo-big {
+    height: 62px;
+  }
+
+  .main-menu-wrap {
+    text-align: right;
+
+    .main-menu {
+      @include justify-menu;
       display: inline-block;
-    }
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      font-size: rem-calc(14);
+      line-height: rem-calc(39);
 
-    .logo-small {
-      height: 26px;
-    }
+      @media #{$hidden-in-medium} {
+        max-width: 300px;
+      }
 
-    .logo-big {
-      height: 62px;
+      @media #{$large-up} {
+
+        line-height: rem-calc(62);
+        height: rem-calc(62);
+      }
+
+      li {
+        display: inline-block;
+
+        a {
+          color: #154159;
+        }
+      }
     }
   }
+
+
+
+  .mobile__search-btn {
+    display: inline-block;
+    background: url("../images/home/768/magnifier.svg") no-repeat;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    left: 5%;
+  }
+
+  .mobile__cart {
+    background: url("../images/home/1280/cart.svg") no-repeat;
+    width: 40px;
+    height: 30px;
+    float: right;
+    position: relative;
+
+    .count {
+      @include border-radius(10px);
+      background: #F12D2D;
+      font-size: 0.75em;
+      padding: 0 5px;
+      color: $white;
+      position: absolute;
+      left: -3px;
+      top: -1px;
+      line-height: 1.2;
+
+      .mc_block{
+        display: inline-block;
+        padding-top: 0.12em;
+        line-height: 14px;
+        vertical-align: top;
+      }
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
 }

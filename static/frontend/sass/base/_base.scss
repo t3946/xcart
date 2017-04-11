@@ -2,8 +2,14 @@ body {
   width: 100%;
   min-width: 320px;
 }
+
 #main_wrapper {
   min-width: 320px;
 }
 
+.hide-in-medium {
+  @media #{$hidden-in-medium} {
+    display: none !important;
+  }
+}
 

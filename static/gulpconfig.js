@@ -226,6 +226,11 @@ module.exports.frontend = {
             scss_include: [
                 'bower_components/foundation-sites/scss/'
             ]
+        },
+        'mindy-sass': {
+            scss_include: [
+                'bower_components/mindy-sass/'
+            ]
         }
     }
 };

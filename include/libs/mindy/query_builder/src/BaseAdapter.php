@@ -169,16 +169,22 @@ abstract class BaseAdapter implements ISQLGenerator
     public function quoteSql($sql)
     {
         $tablePrefix = $this->tablePrefix;
-        return preg_replace_callback('/(\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\])|\\@([\w\-\. \/\%\:]+)\\@/',
-            function ($matches) use ($tablePrefix) {
-                if (isset($matches[4])) {
-                    return $this->quoteValue($this->convertToDbValue($matches[4]));
-                } else if (isset($matches[3])) {
-                    return $this->quoteColumn($matches[3]);
-                } else {
-                    return str_replace('%', $tablePrefix, $this->quoteTableName($matches[2]));
-                }
-            }, $sql);
+
+        if (preg_match('/\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\]|\\[\\[([\w\-\. ]+)\\]\\][\s]*=[\s]*\\@([\w\-\. \/\%\:]+)\\@/', $sql))
+        {
+            return preg_replace_callback('/(\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\])|\\@([\w\-\. \/\%\:]+)\\@/',
+                function ($matches) use ($tablePrefix) {
+                    if (isset($matches[4])) {
+                        return $this->quoteValue($this->convertToDbValue($matches[4]));
+                    } else if (isset($matches[3])) {
+                        return $this->quoteColumn($matches[3]);
+                    } else {
+                        return str_replace('%', $tablePrefix, $this->quoteTableName($matches[2]));
+                    }
+                }, $sql);
+        }
+
+        return $sql;
     }
 
     public function convertToDbValue($rawValue)

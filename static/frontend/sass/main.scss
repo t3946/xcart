@@ -4,13 +4,15 @@
 @import 'settings/foundation_settings';
 @import 'settings/settings';
 @import 'settings/foundation_includes';
+@import 'settings/colors';
 
 //@import 'mixins/bootstrap_mixins';
 
+@import "mindy/global";
 @import 'base/base';
 
-@import 'colors';
 @import 'mixins/gen';
+@import 'mixins/menu';
 
 @import 'parts/off-canvas';
 @import 'parts/header';

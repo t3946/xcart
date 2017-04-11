@@ -9,7 +9,7 @@
             <section class="top-header hide-for-small-only">
                 <div class="row">
                     <div class="columns small-4">
-                        <ul class="our-websites">
+                        <ul class="our-websites no-bullet">
                             <li class="current"><span>Artist</span></li>
                             <li><a href="#">Teacher</a></li>
                             <li><a href="#">Kids</a></li>
@@ -29,13 +29,40 @@
 
             <section class="logo_menu">
                 <div class="row">
-                    <div class="columns small-1 show-for-small hide-for-large">
+                    <div class="columns small-2 medium-1 show-for-small hide-for-large">
                         <a href="#" data-toggle="offCanvasLeft" class="mobile_menu"></a>
                     </div>
-                    <div class="columns small-3">
+                    <div class="columns small-3 medium-2">
                         <img src="/static/frontend/dist/images/home/1280/artist_supply_sourсe_logo.svg" alt="Artist Supply Source" class="show-for-large logo-big">
                         <img src="/static/frontend/dist/images/home/768/logo.svg" alt="Artist Supply Source" class="show-for-small hide-for-large logo-small">
                     </div>
+
+                    <div class="columns small-3 medium-7 large-push-3">
+                        <section class="main-menu-wrap">
+                            <menu class="main-menu no-bullet show-for-medium">
+                                <li><a href="/">Shipping & Delivery</a></li>
+                                <li><a href="/">Safe & Secure Shopping</a></li>
+                                <li class="hide-in-medium"><a href="/">About Us</a></li>
+                                <li class="hide-in-medium"><a href="/">Contact Us</a></li>
+                                <li class="hide-in-medium"><a href="/">Testimonials</a></li>
+                            </menu>
+                        </section>
+                    </div>
+
+                    <div class="columns hide-for-large small-2 medium-1">
+                        <a class="mobile__search-btn" href="#search"></a>
+                    </div>
+
+                    <div class="columns hide-for-large small-2 medium-1">
+                        <a href="#" class="mobile__cart">
+                            <span class="count">
+                                <span class="mc_block">
+                                    15
+                                </span>
+                            </span>
+                        </a>
+                    </div>
+
                 </div>
             </section>
 
