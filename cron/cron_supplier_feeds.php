@@ -221,6 +221,9 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $modelProduct->save();
                         break;
                     case 'P' :
+                        if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
+                            $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
+                        }
                         if ($modelProduct->getIsNewRecord()) {
                             if (!empty($supplierFeed->defaults) && is_array($supplierFeed->defaults)) {
                                 $modelProduct->setAttributes($supplierFeed->defaults);
@@ -228,7 +231,9 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             $modelProduct->source_sfid = $supplierFeedModel->storefront_id;
                             $modelProduct->manufacturerid = $supplierFeedModel->manufacturerid;
                             $modelProduct->add_date = $modelProduct->mod_date = time();
+
                         } else {
+
                             if ($supplierFeedModel->add_new_only == "Y") {continue;}
                             if (!empty($supplierFeed->dont_update_fields) && is_array($supplierFeed->dont_update_fields)) {
                                 foreach ($supplierFeed->dont_update_fields as $fieldUnset) {
@@ -272,8 +277,19 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
                         }
 
-                        if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
-                            $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
+                        $newUPC = Xcart\Product::calculateUPC($modelProduct->upc);
+                        if ($modelProduct->getOldAttribute('upc') != $newUPC) {
+                            $upcModel = ProductUpcChangesModel::objects()->get(['productid' => $modelProduct->productid]);
+                            if (!$upcModel){
+                                (new ProductUpcChangesModel([
+                                    'productid' => $modelProduct->productid,
+                                    'original_upc' => $modelProduct->upc,
+                                    'corrected_upc' => $newUPC])
+                                )->save();
+                            }
+                            $modelProduct->upc = $newUPC;
+                        } else {
+                            $modelProduct->upc = $modelProduct->getOldAttribute('upc');
                         }
 
                         if ($modelProduct->getChangedAttributes()) {
@@ -330,6 +346,15 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                 }
                             }
                         }
+
+                        //Files section
+                        /*$aFiles = $aProduct['product_files'];
+                        if (!empty($aFiles) && is_array($aFiles)) {
+                            foreach ($aFiles as $aFile) {
+                                $aFile['link'];
+                                $aFile['name'];
+                            }
+                        }*/
 
                         //Related section
                         $params = [];
@@ -437,18 +462,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
                         }
 
-                        $newUPC = Xcart\Product::calculateUPC($modelProduct->upc);
-                        if ($modelProduct->upc != $newUPC) {
-                            $upcModel = ProductUpcChangesModel::objects()->get(['productid' => $modelProduct->productid]);
-                            if (!$upcModel){
-                                (new ProductUpcChangesModel([
-                                    'productid' => $modelProduct->productid,
-                                    'original_upc' => $modelProduct->upc,
-                                    'corrected_upc' => $newUPC])
-                                )->save();
-                            }
-                            $modelProduct->upc = $newUPC;
-                        }
+
                         if ($modelProduct->getChangedAttributes() && !($modelProduct->getIsCreated())) {
                             $bUpdatedProduct = true;
                         }
