@@ -93,10 +93,10 @@
         <li class="accordion-item" data-accordion-item>
             <a class="accordion-title">
                 <div class="row">
-                    <div class="columns small-1">
+                    <div class="columns small-2 medium-1">
                         <img src="{$item.image}" alt="{$item.name}">
                     </div>
-                    <div class="columns small-11">
+                    <div class="columns small-10 medium-11">
                         <span>{$item.name}</span>
                     </div>
                 </div>

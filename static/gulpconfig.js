@@ -217,11 +217,16 @@ module.exports.frontend = {
         },
         foundation: {
             js: [
-                'bower_components/foundation-sites/dist/js/foundation.js',
+                // 'bower_components/foundation-sites/dist/js/foundation.js', //all
+                'bower_components/foundation-sites/dist/js/plugins/foundation.core.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.offcanvas.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js',
+
                 'bower_components/foundation-sites/dist/js/plugins/foundation.util.keyboard.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.util.motion.js',
-
+                'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.util.mediaQuery.js',
             ],
             scss_include: [
                 'bower_components/foundation-sites/scss/'

@@ -1,7 +1,9 @@
 @import 'foundation';
 
+$global-flexbox: true;
+
 @include foundation-global-styles;
-@include foundation-grid;
+//@include foundation-grid;
 @include foundation-flex-grid;
 @include foundation-flex-classes;
 @include foundation-typography;
@@ -28,7 +30,7 @@
 //@include foundation-pagination;
 //@include foundation-progress-bar;
 //@include foundation-slider;
-//@include foundation-sticky;
+@include foundation-sticky;
 //@include foundation-reveal;
 //@include foundation-switch;
 //@include foundation-table;

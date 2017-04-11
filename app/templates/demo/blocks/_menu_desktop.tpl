@@ -1,4 +1,4 @@
-<div class="departments__toggle">
+<div class="menu-departments">
     <a href="#" class="departments__link">Departments</a>
 </div>
 <div class="departments-menu-desktop hidden-xs hidden-sm hidden-md">
