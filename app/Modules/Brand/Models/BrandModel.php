@@ -3,6 +3,7 @@ namespace Modules\Brand\Models;
 
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
 
 /**
@@ -22,6 +23,21 @@ class BrandModel extends AutoMetaModel
                 'class' => AutoField::className(),
                 'primary' => true,
                 'null' => false,
+            ],
+            'descr' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => ''
+            ],
+            'meta_descr' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => ''
+            ],
+            'disclaimer_text' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => ''
             ],
         ];
     }
