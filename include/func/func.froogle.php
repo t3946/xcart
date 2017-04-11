@@ -1,4 +1,5 @@
 <?php
+use Modules\Core\Helpers\CoreHelper;
 use Xcart\StoreFront;
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
@@ -14,7 +15,7 @@ function func_froogle_convert($str, $max_len = false) {
                 $tbl = array_flip(get_html_translation_table(HTML_ENTITIES));
 
         $str = str_replace(array("\n","\r","\t"), array(" ", "", " "), $str);
-        $str = strip_tags($str);
+        $str = CoreHelper::stripTags($str);
         $str = strtr($str, $tbl);
 
         if ($max_len > 0 && strlen($str) > $max_len) {
