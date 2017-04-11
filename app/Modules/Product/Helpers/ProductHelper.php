@@ -1,9 +1,9 @@
 <?php
+
 namespace Modules\Product\Helpers;
 
 
-use Modules\Product\Models\ImageDModel;
-use Modules\Product\Models\ProductModel;
+use Modules\Product\Models\ProductFileModel;
 
 class ProductHelper
 {
@@ -27,12 +27,26 @@ class ProductHelper
         return $result;
     }
 
-    public static function uploadProductFile($fileName, $filePath)
+    public static function uploadProductFile($fileDesc, $filePath, $product_id)
     {
-        $sDataFile = file_get_contents_curl($filePath);
-        if (!empty($sDataImage)) {
-            if (file_put_contents($xcart_dir . $image_file_path, $sDataImage)) {
+        global $product_files_dir;
 
+        $fileName = basename($filePath);
+        $param = ['filename' => $fileName, 'productid' => $product_id];
+        $productFileModel = ProductFileModel::objects()->filter($param)->limit(1)->get();
+        if (!$productFileModel) {
+            $sDataFile = file_get_contents_curl($filePath);
+            if (!empty($sDataFile)) {
+                if ($fileSize = file_put_contents($product_files_dir . "/" . $product_id . $fileName, $sDataFile)) {
+                    $productFileModel = new ProductFileModel($param);
+                    $productFileModel->setAttributes([
+                        'description' => $fileDesc,
+                        'filesize' => $fileSize,
+                        'avail' => 'Y',
+
+                    ]);
+                    $productFileModel->save();
+                }
             }
         }
     }

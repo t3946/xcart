@@ -279,24 +279,28 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
                         $newUPC = Xcart\Product::calculateUPC($modelProduct->upc);
                         if ($modelProduct->getOldAttribute('upc') != $newUPC) {
-                            $upcModel = ProductUpcChangesModel::objects()->get(['productid' => $modelProduct->productid]);
-                            if (!$upcModel){
-                                (new ProductUpcChangesModel([
-                                    'productid' => $modelProduct->productid,
-                                    'original_upc' => $modelProduct->upc,
-                                    'corrected_upc' => $newUPC])
-                                )->save();
-                            }
                             $modelProduct->upc = $newUPC;
                         } else {
                             $modelProduct->upc = $modelProduct->getOldAttribute('upc');
                         }
 
                         if ($modelProduct->getChangedAttributes()) {
+                            print_r($modelProduct->getChangedAttributes());
                             $bUpdatedProduct = true;
                         }
                         if ($modelProduct->getIsNewRecord()){
                             $modelProduct->save();
+                        }
+
+                        if ($modelProduct->getOldAttribute('upc') != $newUPC) {
+                            $upcModel = ProductUpcChangesModel::objects()->get(['productid' => $modelProduct->productid]);
+                            if (!$upcModel) {
+                                (new ProductUpcChangesModel([
+                                    'productid' => $modelProduct->productid,
+                                    'original_upc' => $modelProduct->upc,
+                                    'corrected_upc' => $newUPC])
+                                )->save();
+                            }
                         }
 
                         if ($modelProduct->getIsCreated()) {
@@ -464,6 +468,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
 
 
                         if ($modelProduct->getChangedAttributes() && !($modelProduct->getIsCreated())) {
+                            print_r($modelProduct->getChangedAttributes());
                             $bUpdatedProduct = true;
                         }
                         if ($bUpdatedProduct) {
