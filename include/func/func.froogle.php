@@ -1385,12 +1385,12 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
                 $postBody["entries"][$k_counter]["product"]["customLabel2"] = $product_info["product"]["custom_label_2"];
                 $postBody["entries"][$k_counter]["product"]["customLabel3"] = $product_info["product"]["custom_label_3"];
 
-                $postBody["entries"][$k_counter]["product"]["destinations"][0]["destinationName"] = "ShoppingApi";
+                /*$postBody["entries"][$k_counter]["product"]["destinations"][0]["destinationName"] = "ShoppingApi";
                 $postBody["entries"][$k_counter]["product"]["destinations"][0]["intention"] = "required";
                 $postBody["entries"][$k_counter]["product"]["destinations"][1]["destinationName"] = "AffiliateNetwork";
                 $postBody["entries"][$k_counter]["product"]["destinations"][1]["intention"] = "required";
                 $postBody["entries"][$k_counter]["product"]["destinations"][2]["destinationName"] = "Shopping";
-                $postBody["entries"][$k_counter]["product"]["destinations"][2]["intention"] = "required";
+                $postBody["entries"][$k_counter]["product"]["destinations"][2]["intention"] = "required";*/
 
                 $postBody["entries"][$k_counter]["product"]["onlineOnly"] = $product_info["product"]["onlineOnly"];
 
