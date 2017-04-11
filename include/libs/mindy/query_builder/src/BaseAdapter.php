@@ -170,7 +170,7 @@ abstract class BaseAdapter implements ISQLGenerator
     {
         $tablePrefix = $this->tablePrefix;
 
-        if (preg_match('/\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\][\s]*=[\s]*\\@([\w\-\. \/\%\:]+)\\@/', $sql))
+        if (preg_match('/\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\]|\\[\\[([\w\-\. ]+)\\]\\][\s]*=[\s]*\\@([\w\-\. \/\%\:]+)\\@/', $sql))
         {
             return preg_replace_callback('/(\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\])|\\@([\w\-\. \/\%\:]+)\\@/',
                 function ($matches) use ($tablePrefix) {
