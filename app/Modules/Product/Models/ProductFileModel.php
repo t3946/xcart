@@ -18,10 +18,6 @@ class ProductFileModel extends AutoMetaModel
         return [
             'fileid' => [
                 'class' => AutoField::className()
-            ],
-            'date' => [
-                'class' => TimeStampField::className(),
-                'autoNow' => true
             ]
         ];
     }
