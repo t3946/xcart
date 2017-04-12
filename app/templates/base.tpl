@@ -52,11 +52,11 @@
                     </div>
 
                     <div class="columns hide-for-large small-2 medium-1">
-                        <a class="mobile__search-btn middle-inline-block" href="#search"></a>
+                        <a class="mobile__search-btn middle-inline-block" data-toggle="search_container"></a>
                     </div>
 
                     <div class="columns hide-for-large small-2 medium-1">
-                        <a href="#" class="mobile__cart middle-inline-block">
+                        <a href="/cart" class="mobile__cart middle-inline-block">
                             <span class="count">
                                 <span class="mc_block">
                                     15
@@ -67,20 +67,38 @@
 
                 </div>
             </section>
-            <div data-sticky-container>
-                <section class="desktop_menu_search_cart show-for-large" data-sticky data-options="marginTop:0; anchor:content; " data-btm-anchor="content:bottom">
-                    <div class="row" >
-                        <div class="columns large-3">
-                            {*{include "demo/blocks/_menu_desktop.tpl"}*}
-                        </div>
-                    </div>
-                </section>
+            <div class="row">
+                <div class="columns small-12">
+                    <div class="hr hide-for-large"></div>
+                </div>
             </div>
         </header>
 
+        <section id="before-content">
+            <div class="shadow"></div>
+            <div data-sticky-container class="sticky-container">
+                <div class="sticky" data-sticky data-sticky-on="large" data-options="marginTop:0; anchor:before-content; " data-btm-anchor="content:bottom">
+                    <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
+                        <div class="row" >
+                            <div class="columns large-3 show-for-large">
+                                {*{include "demo/blocks/_menu_desktop.tpl"}*}
+                            </div>
+                            <div class="columns small-12 large-7">
+                                {include "demo/blocks/_search.tpl"}
+                            </div>
 
-        <section id="content">
-            {*{block "content"}{/block}*}
+                            <div class="columns large-2 show-for-large">
+                                {*{include "demo/blocks/_cart.tpl"}*}
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+
+            <section id="content">
+                {block "content"}{/block}
+            </section>
         </section>
 
     </div>

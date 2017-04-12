@@ -17,3 +17,18 @@ body {
   display: inline-block;
   vertical-align: middle;
 }
+
+.hr {
+  height: 1px;
+  background-color: rgb(205, 205, 205);
+}
+
+.sticky {
+  width: 100%;
+}
+
+.sticky-container {
+  @include breakpoint(large down) {
+    height: auto !important;
+  }
+}

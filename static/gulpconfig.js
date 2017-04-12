@@ -50,7 +50,6 @@ module.exports.backend = {
         ],
         scss_include: [
             'bower_components/compass-mixins/lib/',
-            'bower_components/mindy-sass/'
         ],
         css: [
             'backend/css/*',
@@ -119,6 +118,12 @@ module.exports.backend = {
             scss_include: [
                 'components/cds'
             ]
+        },
+
+        'mindy-sass': {
+            scss_include: [
+                'bower_components/mindy-sass/'
+            ]
         }
     }
 };
@@ -156,7 +161,6 @@ module.exports.frontend = {
         ],
         scss_include: [
             'bower_components/compass-mixins/lib/',
-            'bower_components/mindy-sass/'
         ],
         css: [
             'frontend/css/*',
@@ -222,6 +226,7 @@ module.exports.frontend = {
                 'bower_components/foundation-sites/dist/js/plugins/foundation.offcanvas.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.toggler.js',
 
                 'bower_components/foundation-sites/dist/js/plugins/foundation.util.keyboard.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.util.motion.js',
@@ -232,10 +237,5 @@ module.exports.frontend = {
                 'bower_components/foundation-sites/scss/'
             ]
         },
-        'mindy-sass': {
-            scss_include: [
-                'bower_components/mindy-sass/'
-            ]
-        }
     }
 };

@@ -4,7 +4,7 @@ header {
     height: rem-calc(39);
     line-height: rem-calc(39);
 
-    @media #{$large-up} {
+    @include breakpoint(large up) {
       line-height: rem-calc(62);
       height: rem-calc(62);
     }
@@ -29,7 +29,7 @@ header {
       text-align: right;
       height: rem-calc(39);
 
-      @media #{$large-up} {
+      @include breakpoint(large up) {
         height: rem-calc(62);
       }
 
@@ -48,7 +48,7 @@ header {
           display: inline-block;
           line-height: rem-calc(39);
 
-          @media #{$large-up} {
+          @include breakpoint(large up) {
             line-height: rem-calc(62);
           }
 
@@ -58,7 +58,7 @@ header {
             color: #154159;
             font-size: rem-calc(14);
 
-            @media #{$large-up} {
+            @include breakpoint(large up) {
               font-size: rem-calc(16);
             }
           }
