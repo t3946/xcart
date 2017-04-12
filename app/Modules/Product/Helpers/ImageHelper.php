@@ -44,8 +44,8 @@ class ImageHelper
         $image_file_name = str_replace(' ', '', rawurldecode($image_file_name));
         $image_file_path = "/images/D/" . $image_file_name;
 
-        $imageModels = ImageDModel::objects()->filter(['image_path' => '.' . $image_file_path, 'id' => $product_id])->all();
-        if (empty($imageModels)) {
+        $imageModel = ImageDModel::objects()->filter(['image_path' => '.' . $image_file_path, 'id' => $product_id])->limit(1)->get();
+        if (!$imageModel) {
             $sDataImage = file_get_contents_curl($image);
             if (!empty($sDataImage)) {
                 if (file_put_contents($xcart_dir . $image_file_path, $sDataImage)) {
@@ -64,8 +64,6 @@ class ImageHelper
                     }
                 }
             }
-        } else {
-            $imageModel = reset($imageModels);
         }
         return $imageModel;
     }
