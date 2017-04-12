@@ -63,6 +63,11 @@ class ProductModel extends AutoMetaModel
                 'null' => false,
                 'default' => ''
             ],
+            'fulldescr' => [
+                'class' => CharField::className(),
+                'null' => false,
+                'default' => ''
+            ],
             'seo_fulldescr' => [
                 'class' => CharField::className(),
                 'null' => false,

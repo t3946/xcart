@@ -272,7 +272,7 @@ $smarty->assign('invoice_memo_statuses', $invoice_memo_statuses);
 #
 ##
 ###
-if (empty($_SERVER["HTTPS"]) && strpos($xcart_http_host, '.test.') === false){
+if (empty($_SERVER["HTTPS"]) && strpos($xcart_http_host, '.test.') === false && !defined('LOCAL_SF_DOMAIN')){
         $redirect_https_link = "https://".$xcart_http_host.$PHP_SELF . (($QUERY_STRING) ? ('?' . $QUERY_STRING) : '');
         func_header_location($redirect_https_link);
 }

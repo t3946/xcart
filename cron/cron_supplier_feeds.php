@@ -69,7 +69,7 @@ if (empty($config["Supplier_feeds"]["Feeds_storage_path"]) || empty($config["Sup
     die($log_text);
 }
 
-$supplier_feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'feed_type__in' =>  array_keys($feed_types)])->all();
+$supplier_feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'new_cron' => 'Y', 'feed_type__in' =>  array_keys($feed_types)])->all();
 
 if (empty($supplier_feeds) || !is_array($supplier_feeds)) {
     $log_text = "--- xcart_supplier_feeds does not have 'enabled' rows. Script stopped.";
@@ -221,6 +221,9 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $modelProduct->save();
                         break;
                     case 'P' :
+                        if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
+                            $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
+                        }
                         if ($modelProduct->getIsNewRecord()) {
                             if (!empty($supplierFeed->defaults) && is_array($supplierFeed->defaults)) {
                                 $modelProduct->setAttributes($supplierFeed->defaults);
@@ -228,7 +231,9 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             $modelProduct->source_sfid = $supplierFeedModel->storefront_id;
                             $modelProduct->manufacturerid = $supplierFeedModel->manufacturerid;
                             $modelProduct->add_date = $modelProduct->mod_date = time();
+
                         } else {
+
                             if ($supplierFeedModel->add_new_only == "Y") {continue;}
                             if (!empty($supplierFeed->dont_update_fields) && is_array($supplierFeed->dont_update_fields)) {
                                 foreach ($supplierFeed->dont_update_fields as $fieldUnset) {
@@ -272,191 +277,214 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
                         }
 
-                        if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
-                            $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
+                        $newUPC = Xcart\Product::calculateUPC($modelProduct->upc);
+                        $oldUPC = $modelProduct->getOldAttribute('upc');
+                        if ($oldUPC != $newUPC) {
+                            $modelProduct->upc = $newUPC;
+                        } else {
+                            $modelProduct->upc = $oldUPC;
                         }
 
                         if ($modelProduct->getChangedAttributes()) {
+                            print_r($modelProduct->getChangedAttributes());
                             $bUpdatedProduct = true;
                         }
                         if ($modelProduct->getIsNewRecord()){
                             $modelProduct->save();
                         }
 
-                        if ($modelProduct->getIsCreated()) {
-                            (new ProductCategoriesModel([
-                                'categoryid' => $supplierFeedModel->base_category_id,
-                                'productid' => $modelProduct->productid,
-                                'main' => 'Y']))
-                                ->save();
-
-                            (new ProductStorefrontModel([
-                                'productid' => $modelProduct->productid,
-                                'sfid' => $supplierFeedModel->storefront_id]))
-                                ->save();
-
-                            (new PricingModel([
-                                'productid' => $modelProduct->productid,
-                                'quantity' => 1,
-                                'price' => $modelProduct->distributor->calculatePrice($modelProduct)]))
-                                ->save();
-
-                            $clean_url = func_clean_url_autogenerate('P', $modelProduct->productid, array('product' => $modelProduct->product, 'productcode' => $modelProduct->productcode));
-                            func_clean_url_add($clean_url, 'P', $modelProduct->productid);
-                            func_build_quick_flags($modelProduct->productid);
-                            func_build_quick_prices($modelProduct->productid);
-                            $new_products_count++;
-                        }
-
-                        //Images section
-                        $aImages = $aProduct['images'];
-                        $aAltImageNames = $aProduct['alt_names'];
-                        if (!empty($aImages) && is_array($aImages)) {
-                            foreach ($aImages as $kImg => $IMAGE_URL) {
-                                $modelDImage = ImageHelper::uploadMainImage(
-                                    $IMAGE_URL,
-                                    empty($aAltImageNames[$kImg]) ? $modelProduct->product : $aAltImageNames[$kImg],
-                                    $supplierFeedModel->manufacturerid,
-                                    $modelProduct->productid);
-                                if ($modelDImage && $modelDImage->getIsNewRecord()){
-                                    $modelDImage->id = $modelProduct->productid;
-                                    $modelDImage->orderby = ($kImg + 1) * 10;
-                                    $modelDImage->save();
-                                    if (class_exists('Imagick')) {
-                                        $imageParam = $modelDImage->getAttributes();
-                                        $imageParam['image_path'] = '../'.$imageParam['image_path'];
-                                        $image_info = func_set_correct_det_img($imageParam, true);
-                                    }
+                        if($modelProduct->productid){
+                            if ($oldUPC != $newUPC) {
+                                $upcModel = ProductUpcChangesModel::objects()->get(['productid' => $modelProduct->productid]);
+                                if (!$upcModel) {
+                                    (new ProductUpcChangesModel([
+                                        'productid' => $modelProduct->productid,
+                                        'original_upc' => $modelProduct->upc,
+                                        'corrected_upc' => $newUPC])
+                                    )->save();
                                 }
                             }
-                        }
 
-                        //Related section
-                        $params = [];
-                        $aRelatedInternalId = $aProduct['related_internal_id'];
-                        $aRelatedInternalSKU = $aProduct['related_sku'];
-                        if (!empty($aRelatedInternalId)) {
-                            $params['supplier_internal_product_id__in'] = $aRelatedInternalId;
-                        }
-                        if (!empty($aRelatedInternalSKU)) {
-                            $params['productcode__in'] = $aRelatedInternalSKU;
-                        }
-                        if (!empty($params)) {
-                            $aRelatedProducts = ProductModel::objects()->filter(new QOr($params))->all();
-                            if (!empty($aRelatedProducts)) {
-                                foreach ($aRelatedProducts as $relatedProductModel) {
-                                    $relatedModel = ProductLinksModel::objects()->getOrCreate(['productid1' => $modelProduct->productid, 'productid2' => $relatedProductModel->productid]);
-                                    $relatedModelBack = ProductLinksModel::objects()->getOrCreate(['productid1' => $relatedProductModel->productid, 'productid2' => $modelProduct->productid]);
-                                }
-                            }
-                        }
-
-                        //Brand section
-                        if ($modelProduct->getIsCreated()) {
-                            $brandName = $aProduct['brand_name'];
-                            if (!empty($brandName)) {
-                                $brandModel = BrandModel::objects()->get(['brand' => $brandName]);
-                                if (!$brandModel) {
-                                    $brandModel = (new BrandModel([
-                                        'brand' => $brandName,
-                                        'orderby' => 10
-                                    ]));
-                                    $brandModel->save();
-                                    (new BrandStorefrontModel([
-                                        'brandid' => $brandModel->brandid,
-                                        'sfid' => $supplierFeedModel->storefront_id,
-                                    ]))->save();
-                                    $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $brandName));
-                                    func_clean_url_add($clean_url, 'M', $brandModel->brandid);
-                                }
-                                $modelProduct->brandid = $brandModel->brandid;
-                            }
-                        }
-
-                        //Attributes section
-                        FilterProductModel::objects()->delete(['productid' => $modelProduct->productid, 'is_feed' => 1]);
-                        $aAttributes = $aProduct['attributes'];
-                        if (!empty($aAttributes)) {
-                            foreach ($aAttributes as $f_name => $fv_name_arr) {
-                                if (!empty($fv_name_arr) && is_array($fv_name_arr)) {
-                                    $filterModel = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $supplierFeedModel->storefront_id]);
-                                    foreach ($fv_name_arr as $fv_name) {
-                                        $filterValueModel = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
-                                        FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $modelProduct->productid, 'is_feed' => 1]);
-                                    }
-                                }
-                            }
-                        }
-
-                        $aSupplierCategory = $aProduct['supplier_categories'];
-                        if (!empty($aSupplierCategory)) {
-                            $aSupplierCategory = reset($aSupplierCategory);
-                            $cats_arr = explode("/", $aSupplierCategory);
-                            if (!empty($cats_arr) && is_array($cats_arr)) {
-                                $parentid = $supplierFeedModel->base_category_id;
-                                $lastCategory = null;
-                                foreach ($cats_arr as $v_cat) {
-                                    $modelCats = CategoryModel::objects()
-                                        ->filter([
-                                            'parentid' => $parentid,
-                                            'category' => $v_cat
-                                        ])->all();
-                                    if (!count($modelCats)) {
-                                        $modelCat = new CategoryModel([
-                                            'parentid' => $parentid,
-                                            'category' => $v_cat,
-                                            'storefrontid' => $supplierFeedModel->storefront_id,
-                                            'is_bold' => 'Y',
-                                            'order_by' => 10
-                                        ]);
-                                        $modelCat->save();
-                                        /** @var CategoryModel $parentModel */
-                                        if ($parentModel = CategoryModel::objects()->get(['categoryid' => $parentid])) {
-                                            $modelCat->categoryid_path = $parentModel->categoryid_path . "/" . $modelCat->categoryid;
-                                        }
-                                        $modelCat->save();
-                                        $clean_url = func_clean_url_autogenerate('C', $modelCat->categoryid, array('category' => $modelCat->category));
-                                        func_clean_url_add($clean_url, 'C', $modelCat->categoryid);
-
-                                    } else{
-                                        $modelCat = reset($modelCats);
-                                    }
-                                    $lastCategory = $modelCat;
-                                    $parentid = $modelCat->categoryid;
-                                }
-                                if ($lastCategory) {
-                                   if ($modelProduct->pc_classify_status && !in_array($modelProduct->pc_classify_status, ['AC', 'ACC', 'MC'])) {
-                                       db_query_param(/** @lang MySQL */
-                                           "UPDATE xcart_products_categories SET categoryid=:categoryid WHERE productid=:productid AND main=:main", [
-                                           'categoryid' => $lastCategory->categoryid,
-                                           'productid' => $modelProduct->productid,
-                                           'main' => 'Y'
-                                       ]);
-                                   }
-                                }
-                            }
-                        }
-
-                        $newUPC = Xcart\Product::calculateUPC($modelProduct->upc);
-                        if ($modelProduct->upc != $newUPC) {
-                            $upcModel = ProductUpcChangesModel::objects()->get(['productid' => $modelProduct->productid]);
-                            if (!$upcModel){
-                                (new ProductUpcChangesModel([
+                            if ($modelProduct->getIsCreated()) {
+                                (new ProductCategoriesModel([
+                                    'categoryid' => $supplierFeedModel->base_category_id,
                                     'productid' => $modelProduct->productid,
-                                    'original_upc' => $modelProduct->upc,
-                                    'corrected_upc' => $newUPC])
-                                )->save();
+                                    'main' => 'Y']))
+                                    ->save();
+
+                                (new ProductStorefrontModel([
+                                    'productid' => $modelProduct->productid,
+                                    'sfid' => $supplierFeedModel->storefront_id]))
+                                    ->save();
+
+                                (new PricingModel([
+                                    'productid' => $modelProduct->productid,
+                                    'quantity' => 1,
+                                    'price' => $modelProduct->distributor->calculatePrice($modelProduct)]))
+                                    ->save();
+
+                                $clean_url = func_clean_url_autogenerate('P', $modelProduct->productid, array('product' => $modelProduct->product, 'productcode' => $modelProduct->productcode));
+                                func_clean_url_add($clean_url, 'P', $modelProduct->productid);
+                                func_build_quick_flags($modelProduct->productid);
+                                func_build_quick_prices($modelProduct->productid);
+                                $new_products_count++;
+                                $inserted_products_count++;
                             }
-                            $modelProduct->upc = $newUPC;
+
+                            //Images section
+                            $aImages = $aProduct['images'];
+                            $aAltImageNames = $aProduct['alt_names'];
+                            if (!empty($aImages) && is_array($aImages)) {
+                                foreach ($aImages as $kImg => $IMAGE_URL) {
+                                    $modelDImage = ImageHelper::uploadMainImage(
+                                        $IMAGE_URL,
+                                        empty($aAltImageNames[$kImg]) ? $modelProduct->product : $aAltImageNames[$kImg],
+                                        $supplierFeedModel->manufacturerid,
+                                        $modelProduct->productid);
+                                    if ($modelDImage && $modelDImage->getIsNewRecord()) {
+                                        $modelDImage->id = $modelProduct->productid;
+                                        $modelDImage->orderby = ($kImg + 1) * 10;
+                                        $modelDImage->save();
+                                        if (class_exists('Imagick')) {
+                                            $imageParam = $modelDImage->getAttributes();
+                                            $imageParam['image_path'] = '../' . $imageParam['image_path'];
+                                            $image_info = func_set_correct_det_img($imageParam, true);
+                                        }
+                                    }
+                                }
+                            }
+
+                            //Files section
+                            $aFiles = $aProduct['product_files'];
+                            if (!empty($aFiles) && is_array($aFiles)) {
+                                $orderBy = 0;
+                                foreach ($aFiles as $aFile) {
+                                    $fileModel = ProductHelper::uploadProductFile($aFile['name'], $aFile['link'], $modelProduct->productid);
+                                    if ($fileModel && $fileModel->getIsNewRecord()) {
+                                        $fileModel->avail = 'Y';
+                                        $fileModel->orderby = ++$orderBy * 10;
+                                        $fileModel->save();
+                                    }
+                                }
+                            }
+
+                            //Related section
+                            $params = [];
+                            $aRelatedInternalId = $aProduct['related_internal_id'];
+                            $aRelatedInternalSKU = $aProduct['related_sku'];
+                            if (!empty($aRelatedInternalId)) {
+                                $params['supplier_internal_product_id__in'] = $aRelatedInternalId;
+                            }
+                            if (!empty($aRelatedInternalSKU)) {
+                                $params['productcode__in'] = $aRelatedInternalSKU;
+                            }
+                            if (!empty($params)) {
+                                $aRelatedProducts = ProductModel::objects()->filter(new QOr($params))->all();
+                                if (!empty($aRelatedProducts)) {
+                                    foreach ($aRelatedProducts as $relatedProductModel) {
+                                        $relatedModel = ProductLinksModel::objects()->getOrCreate(['productid1' => $modelProduct->productid, 'productid2' => $relatedProductModel->productid]);
+                                        $relatedModelBack = ProductLinksModel::objects()->getOrCreate(['productid1' => $relatedProductModel->productid, 'productid2' => $modelProduct->productid]);
+                                    }
+                                }
+                            }
+
+                            //Brand section
+                            if ($modelProduct->getIsCreated()) {
+                                $brandName = $aProduct['brand_name'];
+                                if (!empty($brandName)) {
+                                    $brandModel = BrandModel::objects()->get(['brand' => $brandName]);
+                                    if (!$brandModel) {
+                                        $brandModel = (new BrandModel([
+                                            'brand' => $brandName,
+                                            'orderby' => 10
+                                        ]));
+                                        $brandModel->save();
+                                        (new BrandStorefrontModel([
+                                            'brandid' => $brandModel->brandid,
+                                            'sfid' => $supplierFeedModel->storefront_id,
+                                        ]))->save();
+                                        $clean_url = func_clean_url_autogenerate('M', $brandModel->brandid, array('brand' => $brandName));
+                                        func_clean_url_add($clean_url, 'M', $brandModel->brandid);
+                                    }
+                                    $modelProduct->brandid = $brandModel->brandid;
+                                }
+                            }
+
+                            //Attributes section
+                            FilterProductModel::objects()->delete(['productid' => $modelProduct->productid, 'is_feed' => 1]);
+                            $aAttributes = $aProduct['attributes'];
+                            if (!empty($aAttributes)) {
+                                foreach ($aAttributes as $f_name => $fv_name_arr) {
+                                    if (!empty($fv_name_arr) && is_array($fv_name_arr)) {
+                                        $filterModel = FilterModel::objects()->getOrCreate(['f_name' => $f_name, 'storefrontid' => $supplierFeedModel->storefront_id]);
+                                        foreach ($fv_name_arr as $fv_name) {
+                                            $filterValueModel = FilterValueModel::objects()->getOrCreate(['f_id' => $filterModel->f_id, 'fv_name' => $fv_name]);
+                                            FilterProductModel::objects()->getOrCreate(['fv_id' => $filterValueModel->fv_id, 'productid' => $modelProduct->productid, 'is_feed' => 1]);
+                                        }
+                                    }
+                                }
+                            }
+
+                            $aSupplierCategory = $aProduct['supplier_categories'];
+                            if (!empty($aSupplierCategory)) {
+                                $aSupplierCategory = reset($aSupplierCategory);
+                                $cats_arr = explode("/", $aSupplierCategory);
+                                if (!empty($cats_arr) && is_array($cats_arr)) {
+                                    $parentid = $supplierFeedModel->base_category_id;
+                                    $lastCategory = null;
+                                    foreach ($cats_arr as $v_cat) {
+                                        $modelCats = CategoryModel::objects()
+                                            ->filter([
+                                                'parentid' => $parentid,
+                                                'category' => $v_cat
+                                            ])->all();
+                                        if (!count($modelCats)) {
+                                            $modelCat = new CategoryModel([
+                                                'parentid' => $parentid,
+                                                'category' => $v_cat,
+                                                'storefrontid' => $supplierFeedModel->storefront_id,
+                                                'is_bold' => 'Y',
+                                                'order_by' => 10
+                                            ]);
+                                            $modelCat->save();
+                                            /** @var CategoryModel $parentModel */
+                                            if ($parentModel = CategoryModel::objects()->get(['categoryid' => $parentid])) {
+                                                $modelCat->categoryid_path = $parentModel->categoryid_path . "/" . $modelCat->categoryid;
+                                            }
+                                            $modelCat->save();
+                                            $clean_url = func_clean_url_autogenerate('C', $modelCat->categoryid, array('category' => $modelCat->category));
+                                            func_clean_url_add($clean_url, 'C', $modelCat->categoryid);
+
+                                        } else {
+                                            $modelCat = reset($modelCats);
+                                        }
+                                        $lastCategory = $modelCat;
+                                        $parentid = $modelCat->categoryid;
+                                    }
+                                    if ($lastCategory) {
+                                        if ($modelProduct->pc_classify_status && !in_array($modelProduct->pc_classify_status, ['AC', 'ACC', 'MC'])) {
+                                            db_query_param(/** @lang MySQL */
+                                                "UPDATE xcart_products_categories SET categoryid=:categoryid WHERE productid=:productid AND main=:main", [
+                                                'categoryid' => $lastCategory->categoryid,
+                                                'productid' => $modelProduct->productid,
+                                                'main' => 'Y'
+                                            ]);
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            if ($modelProduct->getChangedAttributes() && !($modelProduct->getIsCreated())) {
+                                print_r($modelProduct->getChangedAttributes());
+                                $bUpdatedProduct = true;
+                            }
+                            if ($bUpdatedProduct) {
+                                $updated_products_count++;
+                                $modelProduct->mod_date = time();
+                            }
+                            $modelProduct->save();
                         }
-                        if ($modelProduct->getChangedAttributes() && !($modelProduct->getIsCreated())) {
-                            $bUpdatedProduct = true;
-                        }
-                        if ($bUpdatedProduct) {
-                            $updated_products_count++;
-                            $modelProduct->mod_date = time();
-                        }
-                        $modelProduct->save();
                         break;
                 }
             }

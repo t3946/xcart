@@ -2775,17 +2775,22 @@ function func_define_approximate_shippings($productid, $product_info = '')
     return $shippings;
 }
 
-function func_pc_find_new_categoryid($productid)
+function func_pc_find_new_categoryid($productid, $aTerms = [])
 {
     global $sql_tbl;
 
-    $product = func_query_first("SELECT product, fulldescr, seo_product_name, title_tag FROM $sql_tbl[products] WHERE productid='$productid'");
-    $sfid       = func_query_first_cell("SELECT sfid FROM $sql_tbl[products_sf] WHERE productid='$productid'");
-    $pc_options = func_query_first("SELECT * FROM $sql_tbl[pc_options] WHERE storefrontid='$sfid'");
+    $product = func_query_first_param(/** @lang MySQL */
+        "SELECT p.product, p.fulldescr, p.seo_product_name, p.title_tag, b.brand, psf.sfid 
+                FROM xcart_products p
+                INNER JOIN xcart_products_sf psf ON psf.productid = p.productid
+                INNER JOIN xcart_brands b ON b.brandid = p.brandid
+                WHERE p.productid=:productid", ['productid' => $productid]);
+    $pc_options = func_query_first_param(/** @lang MySQL */
+        "SELECT * FROM xcart_pc_options WHERE storefrontid=:sfid", ['sfid' => $product['sfid']]);
 
     $text = $product["product"] . " " . $product["product"] . " " . $product["fulldescr"] . " " . $product["title_tag"] . " " . $product["seo_product_name"];
     $text = func_del_excluded_char_sequences($text, $pc_options["excluded_char_sequences"]);
-    $text = func_del_stop_words($text, $pc_options["stop_words"]);
+    $text = func_del_stop_words($text, $pc_options["stop_words"] . "|{$product['brand']}");
 
 //func_print_r($text);
 
@@ -2795,33 +2800,26 @@ function func_pc_find_new_categoryid($productid)
 
     $text_arr = explode(" ", $text);
 
-    $categories = db_query($query = "SELECT categoryid, pc_category_weight FROM $sql_tbl[categories] WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid='$sfid' AND pc_category_weight != 0");
+    $categories = db_query_param($query = /** @lang MySQL */
+        "SELECT categoryid, pc_category_weight, pc_z FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:sfid AND pc_category_weight != 0", ['sfid' => $product['sfid']]);
 
     $idxcl = 0;
 
     while ($category = db_fetch_array($categories)) {
-
         $p1 = 0;
         $idxcl++;
-
         $categoryid = $category["categoryid"];
-
         $pc_category_weight = $category["pc_category_weight"];
 
-        $current_category_terms = func_query("SELECT $sql_tbl[pc_terms].term FROM $sql_tbl[pc_terms] WHERE $sql_tbl[pc_terms].storefrontid = '$sfid'");
-
-        $current_category_terms_arr = [];
-        if (!empty($current_category_terms)) {
-            foreach ($current_category_terms as $v) {
-                $current_category_terms_arr[] = $v["term"];
-            }
-        }
-
+        echo "\n\nCategory:{$categoryid}\n";
         foreach ($text_arr as $word) {
-            if (in_array($word, $current_category_terms_arr)) {
-                // sleep for some time
-                $bayes_weight = func_query_first_cell("Select COALESCE(CASE WHEN CT.categoryid is not NULL THEN LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z) ELSE LOG(1/C.pc_z) END,0) As bayes_weight from $sql_tbl[pc_terms] T left join $sql_tbl[categories] C ON C.categoryid = '$categoryid' left join $sql_tbl[pc_category_terms] CT ON CT.categoryid = C.categoryid and CT.termid = T.termid where T.term = '$word' and T.storefrontid = '$sfid'");
-                $p1 = $p1 + $bayes_weight;
+            if (array_key_exists($word, $aTerms)) {
+                if (array_key_exists($categoryid, $aTerms[$word])) {
+                    $pz = $aTerms[$word][$categoryid];
+                } else {
+                    $pz = log(1/$category['pc_z']);
+                }
+                $p1 += $pz;
             }
         }
 
@@ -2831,9 +2829,9 @@ function func_pc_find_new_categoryid($productid)
         $cl[$idxcl]["1"] = $categoryid;
         $cl[$idxcl]["2"] = $pc_category_weight + $p1;
 
-        unset($current_category_terms_arr);
+        //unset($current_category_terms_arr);
     }
-
+    print_r($cl);
     if (!empty($cl) && is_array($cl))
     {
         foreach ($cl as $k => $v)
@@ -2883,14 +2881,12 @@ function func_del_excluded_char_sequences($text = '', $excluded_char_sequences =
     $excluded_char_sequences = trim($excluded_char_sequences);
     $excluded_char_sequences = strtolower($excluded_char_sequences);
 
-    if (empty($text) || empty($excluded_char_sequences)) {
-        return $text;
-    }
-
-    $excluded_char_sequences_arr = explode(" ", $excluded_char_sequences);
-    foreach ($excluded_char_sequences_arr as $k => $v) {
-        $char_sequence = trim($v);
-        $text          = str_replace($char_sequence, " ", $text);
+    if ($excluded_char_sequences) {
+        $excluded_char_sequences_arr = explode(" ", $excluded_char_sequences);
+        foreach ($excluded_char_sequences_arr as $k => $v) {
+            $char_sequence = trim($v);
+            $text = str_replace($char_sequence, " ", $text);
+        }
     }
 
     $text = strip_tags($text);
@@ -2911,6 +2907,7 @@ function func_del_stop_words($text = '', $stop_words = '')
 
     $stop_words = trim($stop_words);
     $stop_words = strtolower($stop_words);
+    $stop_words = str_replace('/', '\/', $stop_words);
 
     if (empty($text) || empty($stop_words)) {
         return $text;
@@ -2918,12 +2915,7 @@ function func_del_stop_words($text = '', $stop_words = '')
 
     $text = " " . $text . " ";
 
-    $stop_words_arr = explode(" ", $stop_words);
-    foreach ($stop_words_arr as $k => $v) {
-        $stop_word = trim($v);
-        $stop_word = " " . $stop_word . " ";
-        $text      = str_replace($stop_word, " ", $text);
-    }
+    $text = preg_replace("/\b(?:{$stop_words})\b/", ' ', $text);
 
     $text = preg_replace('/\s\s+/', ' ', $text);
     $text = trim($text);
@@ -3848,6 +3840,25 @@ function func_check_comma_in_field($orderid, $value, $sFieldName)
     }
 
     return false;
+}
+
+function file_get_filename_curl($url)
+{
+    $originalFileName = '';
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, true);
+    curl_setopt($curl, CURLOPT_NOBODY, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
+    $data = curl_exec($curl);
+    if(preg_match('/Content-Disposition: .*filename="([^"]+)/', $data, $matches)) {
+        $originalFileName = $matches[1];
+    }
+    curl_close($curl);
+
+    return $originalFileName;
 }
 
 function file_get_contents_curl($url)

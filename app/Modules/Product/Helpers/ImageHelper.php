@@ -10,43 +10,9 @@ class ImageHelper
 {
     protected static $__extensions = ['gif', 'jpeg', 'jfif', 'jpg', 'jpe', 'bmp', 'png'];
 
-    public static function getImageFileNameFromDownloadLink($imgLink)
+    public static function getImageFileNameFromDownloadLink($imgLink, $defaultExtension = 'jpg')
     {
-        $result = null;
-        $path = parse_url($imgLink);
-        if (!empty($path)) {
-            $fileName = basename($path['path']);
-            $filename = pathinfo($fileName);
-            if (!in_array($filename['extension'], self::$__extensions)) {
-                parse_str($path['query'], $arrQueryParams);
-                if (!empty($arrQueryParams)) {
-                    $arrQueryParamsFiltered = array_filter($arrQueryParams, function ($var) {
-                        foreach (self::$__extensions as $ext) {
-                            if (strpos($var, ".{$ext}") !== false) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    });
-                    if (!empty($arrQueryParamsFiltered)) {
-                        $result = implode('_', array_values($arrQueryParamsFiltered));
-                    } else {
-                        $result = implode('_', array_values($arrQueryParams)) . '.jpg';
-                    }
-                }
-            } else {
-                $filePathPre = '';
-                $dir = ltrim(dirname(ltrim($path['path'], '/')), '.');
-                if (!empty($dir)) {
-                    $aPath = explode('/', $dir);
-                    if (!empty($aPath)) {
-                        $filePathPre = implode('_', $aPath) . '_';
-                    };
-                }
-                $result = $filePathPre . $fileName;
-            }
-        }
-        return $result;
+        return ProductHelper::getFileNameFromDownloadLink($imgLink, self::$__extensions, $defaultExtension);
     }
 
 
@@ -78,8 +44,8 @@ class ImageHelper
         $image_file_name = str_replace(' ', '', rawurldecode($image_file_name));
         $image_file_path = "/images/D/" . $image_file_name;
 
-        $imageModels = ImageDModel::objects()->filter(['image_path' => '.' . $image_file_path, 'id' => $product_id])->all();
-        if (empty($imageModels)) {
+        $imageModel = ImageDModel::objects()->filter(['image_path' => '.' . $image_file_path, 'id' => $product_id])->limit(1)->get();
+        if (!$imageModel) {
             $sDataImage = file_get_contents_curl($image);
             if (!empty($sDataImage)) {
                 if (file_put_contents($xcart_dir . $image_file_path, $sDataImage)) {
@@ -98,8 +64,6 @@ class ImageHelper
                     }
                 }
             }
-        } else {
-            $imageModel = reset($imageModels);
         }
         return $imageModel;
     }

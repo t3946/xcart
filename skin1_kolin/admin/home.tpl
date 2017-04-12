@@ -1,5 +1,4 @@
-{* $Id: home.tpl,v 1.123.2.2 2006/11/08 14:38:26 svowl Exp $ *}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 { config_load file="$skin_config" }
 <html>
 <head>
