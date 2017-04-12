@@ -1,10 +1,17 @@
 <?php
+use Modules\Order\Models\FraudCheckModel;
+use Modules\Order\Models\OrderDetailModel;
+use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Product\Helpers\ProductHelper;
+use Modules\Product\Models\ProductHardResell;
+
+global $orderid, $smarty, $mode, $order_data, $REQUEST_METHOD, $xcart_dir;
 
 require "./auth.php";
 require $xcart_dir . "/include/security.php";
 
-x_load("fraud", "order", "order_edit");
+$orderModel = null;
 
 require $xcart_dir . "/include/history_order.php";
 require $xcart_dir . "/include/countries.php";
@@ -17,117 +24,90 @@ $userinfo = $order_data["userinfo"];
 $products = $order_data["products"];
 $giftcerts = $order_data["giftcerts"];
 
-//func_print_r($order);
-
+if ($orderid) {
+    $orderModel = OrderModel::objects()->get(['orderid' => $orderid]);
+}
 $all_processors = func_query_hash("SELECT paymentid, payment_method, acc_per_trans, acc_percent FROM $sql_tbl[payment_methods] WHERE acc_proc='Y' ORDER BY orderby", "paymentid", false);
 $smarty->assign("all_processors", $all_processors);
 
-
-#
-## Always first
-###
 if ($REQUEST_METHOD == "POST" && $mode == "unlock_order") {
-
-    db_query("UPDATE $sql_tbl[orders] SET time_last_opened_or_saved='0' WHERE orderid='" . addslashes($orderid) . "'");
-
+    if ($orderModel) {
+        $orderModel->time_last_opened_or_saved = 0;
+        $orderModel->save();
+    }
     $unlock_message = "Order unlocked.";
     $smarty->assign("order_unlocked", "Y");
     $smarty->assign("unlock_message", $unlock_message);
 } elseif ($REQUEST_METHOD == "POST" && $mode == "unlock_orders") {
-
-    db_query("UPDATE $sql_tbl[orders] SET time_last_opened_or_saved='0' WHERE login_last_opened_or_saved='" . addslashes($login) . "'");
+    OrderModel::objects()->filter(['login_last_opened_or_saved' => $login])->update(['time_last_opened_or_saved' => 0]);
 
     $unlock_message = "All orders unlocked.";
     $smarty->assign("order_unlocked", "Y");
     $smarty->assign("unlock_message", $unlock_message);
 
 } else {
-    $time_for_order_in_mins = 10; //Setting: operators can be on this mage during this time.
-    $current_time = time();
-
-    $last_opened_or_saved = func_query_first("SELECT login_last_opened_or_saved, time_last_opened_or_saved FROM $sql_tbl[orders] WHERE orderid='" . addslashes($orderid) . "'");
-    $login_last_opened_or_saved = $last_opened_or_saved["login_last_opened_or_saved"];
-    $time_last_opened_or_saved = $last_opened_or_saved["time_last_opened_or_saved"];
-
-    $diff_time_in_mins = ($current_time - $time_last_opened_or_saved) / 60;
-
-    $you_have_right_to_change_order = true;
-
-    if ($login_last_opened_or_saved == $login) {
-        db_query("UPDATE $sql_tbl[orders] SET time_last_opened_or_saved='$current_time' WHERE orderid='" . addslashes($orderid) . "'");
-        $time_last_opened_or_saved = $current_time;
-    } else {
-        if ($diff_time_in_mins > $time_for_order_in_mins) {
-            db_query("UPDATE $sql_tbl[orders] SET login_last_opened_or_saved='" . addslashes($login) . "', time_last_opened_or_saved='$current_time' WHERE orderid='" . addslashes($orderid) . "'");
+    if ($orderModel) {
+        $time_for_order_in_mins = 10; //Setting: operators can be on this mage during this time.
+        $current_time = time();
+        $login_last_opened_or_saved = $orderModel->login_last_opened_or_saved;
+        $time_last_opened_or_saved = $orderModel->time_last_opened_or_saved;
+        $diff_time_in_mins = ($current_time - $time_last_opened_or_saved) / 60;
+        $you_have_right_to_change_order = true;
+        if ($login_last_opened_or_saved == $login) {
+            $orderModel->time_last_opened_or_saved = $current_time;
             $time_last_opened_or_saved = $current_time;
         } else {
-            $you_have_right_to_change_order = false;
+            if ($diff_time_in_mins > $time_for_order_in_mins) {
+                $orderModel->login_last_opened_or_saved = $login;
+                $orderModel->time_last_opened_or_saved = $current_time;
+                $time_last_opened_or_saved = $current_time;
+            } else {
+                $you_have_right_to_change_order = false;
+            }
         }
-    }
-
-    $time_unlock = $time_last_opened_or_saved + $time_for_order_in_mins * 60 + 60 * 60;
-
-    if (!$you_have_right_to_change_order) {
-
-        if ($REQUEST_METHOD == "POST") {
-            $top_message["content"] = 'Order not saved!';
-            $top_message["type"] = "E";
-            func_header_location("fraud_page.php?orderid=$orderid");
-        }
-
-        $operator_on_order = func_query_first("SELECT firstname, s_firstname, b_firstname FROM $sql_tbl[customers] WHERE login='" . addslashes($login_last_opened_or_saved) . "'");
-        $operator_firstname = "";
-        if (!empty($operator_on_order["firstname"])) {
-            $operator_firstname = $operator_on_order["firstname"];
-        } elseif (!empty($operator_on_order["s_firstname"])) {
-            $operator_firstname = $operator_on_order["s_firstname"];
-        } else {
-            $operator_firstname = $operator_on_order["b_firstname"];
-        }
-
-//              $warning_message = $operator_firstname."(".$login_last_opened_or_saved.") is working in this order. You will not be able to modify this order untill he complete his work with it or unlock it.";
-
-        $warning_message = "This order is locked by $operator_firstname ($login_last_opened_or_saved) until " . date("G:i", $time_unlock) . ".
+        $orderModel->save();
+        $time_unlock = $time_last_opened_or_saved + $time_for_order_in_mins * 60 + 60 * 60;
+        if (!$you_have_right_to_change_order) {
+            if ($REQUEST_METHOD == "POST") {
+                $top_message["content"] = 'Order not saved!';
+                $top_message["type"] = "E";
+                func_header_location("fraud_page.php?orderid=$orderid");
+            }
+            $operator_on_order = func_query_first_param(/** @lang MySQL */
+                "SELECT firstname, s_firstname, b_firstname FROM xcart_customers WHERE login=:login",['login' => $login_last_opened_or_saved]);
+            $operator_firstname = "";
+            if (!empty($operator_on_order["firstname"])) {
+                $operator_firstname = $operator_on_order["firstname"];
+            } elseif (!empty($operator_on_order["s_firstname"])) {
+                $operator_firstname = $operator_on_order["s_firstname"];
+            } else {
+                $operator_firstname = $operator_on_order["b_firstname"];
+            }
+            $warning_message = "This order is locked by $operator_firstname ($login_last_opened_or_saved) until " . date("G:i", $time_unlock) . ".
 If you need to make urgent changes to the order, ask $operator_firstname to unlock it.";
-
-        $smarty->assign("warning_message", $warning_message);
-        $smarty->assign("you_cannot_modify_order", "Y");
-    } else {
-//              $lock_message = "Order locked to you from ".date("G:i", $time_last_opened_or_saved)." for ".$time_for_order_in_mins." minutes";
-        $lock_message = 'You locked this order. Nobody can make any changes to it. The order will be unlocked at ' . date("G:i", $time_unlock) . '. You can also ';
-
-        $smarty->assign("lock_message", $lock_message);
-
-#
-##
-        $tmp_diff_time = time() - 60 * $time_for_order_in_mins;
-        $count_locked_orders = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE login_last_opened_or_saved='" . addslashes($login) . "' AND time_last_opened_or_saved > '$tmp_diff_time'");
-
-        $smarty->assign("count_locked_orders", $count_locked_orders);
-##
-#
+            $smarty->assign("warning_message", $warning_message);
+            $smarty->assign("you_cannot_modify_order", "Y");
+        } else {
+            $lock_message = 'You locked this order. Nobody can make any changes to it. The order will be unlocked at ' . date("G:i", $time_unlock) . '. You can also ';
+            $smarty->assign("lock_message", $lock_message);
+            $tmp_diff_time = time() - 60 * $time_for_order_in_mins;
+            $count_locked_orders = func_query_first_cell_param(/** @lang MySQL */
+                "SELECT COUNT(*) FROM xcart_orders WHERE login_last_opened_or_saved=:login AND time_last_opened_or_saved > :tmp_diff_time", ['login' => $login, 'tmp_diff_time' => $tmp_diff_time]);
+            $smarty->assign("count_locked_orders", $count_locked_orders);
+        }
     }
 }
-###
-##
-#
-
 
 if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_orders")) {
-
     $log = "";
-
     if ($mode == "apply_changes_and_update_fraud_scores") {
         $log = "'Apply changes and update fraud scores' at 'Fraud page'";
     } elseif ($mode == "apply_changes_and_update_fraud_scores_and_change_fraud_check_status") {
         $log = "'Apply changes, update fraud scores and change fraud check status' at 'Fraud page'";
     }
-
     if (($mode == "apply_changes_and_update_fraud_scores" || $mode == "apply_changes_and_update_fraud_scores_and_change_fraud_check_status") && !empty($posted_data) && is_array($posted_data)) {
        if (!empty($groups) && is_array($groups)) {
-
-            $new_groups = array();
-
+            $new_groups = [];
             $for_all_paymentid = "";
             foreach ($groups as $k => $v) {
                 $m_id = $k;
@@ -155,7 +135,6 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
             }
 
             $groups = $new_groups;
-
             $applied_per_trans_payments = array();
             foreach ($groups as $m_id => $v) {
                 $order['shipping_groups'][$m_id]['acc_paymentid'] = $v['paymentid'];
@@ -253,12 +232,10 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                     func_change_order_group_status($orderid, $m_id, 'R');
                 }
             }
-            $oOrder = Xcart\Order::model(['orderid' => $orderid]);
-            $oOrder->recalculateAccounting();
+            if ($orderModel) {
+                $orderModel->getDataModel()->recalculateAccounting();
+            }
         }
-
-        db_query_param(/** @lang MySQL */
-            "DELETE FROM xcart_order_fraud_checks WHERE orderid=:orderid", ['orderid' => $orderid]);
 
         $manual_action_not_selected = "";
         $overall_fraud_score = 0;
@@ -266,66 +243,89 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
             $question_code = strtoupper($v["question_code"]);
             $manual_action = $v["manual_action"];
 
-            $importance_factor = func_query_first_cell("SELECT importance_factor FROM $sql_tbl[fraud_check] WHERE question_code='$question_code'");
+            $fraudCheckModel = FraudCheckModel::objects()->filter(['question_code' => $question_code])->limit(1)->get();
+            if ($fraudCheckModel) {
+                $importance_factor_arr = explode(",", str_replace(' ', '', $fraudCheckModel->importance_factor));
+                $fraud_score = 0;
+                $bare_fraud_score = 0;
+                $selected_importance_factor = 0;
+                $fraud_result = "";
+                $additional_info = "";
 
-            $importance_factor = str_replace(' ', '', $importance_factor);
-            $importance_factor_arr = explode(",", $importance_factor);
+                if ($fraudCheckModel->auto == "Y") {
+                    $func_name = "func_" . $question_code;
+                    if (function_exists($func_name)) {
+                        $bare_fraud_score_arr = $func_name($order_data);
+                        $fraud_result = $bare_fraud_score_arr["fraud_result"];
+                        $bare_fraud_score = $bare_fraud_score_arr["score"];
+                        $additional_info = $bare_fraud_score_arr["additional_info"];
+                        if (!empty($additional_info)) {
+                            $additional_info = serialize($additional_info);
+                        } else {
+                            $additional_info = "";
+                        }
 
-            $auto = func_query_first_cell("SELECT auto FROM $sql_tbl[fraud_check] WHERE question_code='$question_code'");
-
-            $fraud_score = 0;
-            $bare_fraud_score = 0;
-            $selected_importance_factor = 0;
-            $fraud_result = "";
-            $additional_info = "";
-
-            if ($auto == "Y") {
-
-                $func_name = "func_" . $question_code;
-
-                if (function_exists($func_name)) {
-                    $bare_fraud_score_arr = $func_name($order_data);
-
-                    $fraud_result = $bare_fraud_score_arr["fraud_result"];
-                    $bare_fraud_score = $bare_fraud_score_arr["score"];
-
-                    $additional_info = $bare_fraud_score_arr["additional_info"];
-                    if (!empty($additional_info)) {
-                        $additional_info = serialize($additional_info);
-                    } else {
-                        $additional_info = "";
+                        if ($fraud_result == "negative") {
+                            $selected_importance_factor = $importance_factor_arr[0];
+                        } elseif ($fraud_result == "positive") {
+                            $selected_importance_factor = $importance_factor_arr[2];
+                        } else {
+                            $selected_importance_factor = $importance_factor_arr[1];
+                        }
+                        $fraud_score = $selected_importance_factor * $bare_fraud_score;
                     }
-
-                    if ($fraud_result == "negative") {
-                        $selected_importance_factor = $importance_factor_arr[0];
-                    } elseif ($fraud_result == "positive") {
-                        $selected_importance_factor = $importance_factor_arr[2];
-                    } else {
-                        $selected_importance_factor = $importance_factor_arr[1];
-                    }
-
-                    $fraud_score = $selected_importance_factor * $bare_fraud_score;
-                }
-
-            } else {
-                if ($manual_action == "Y") {
-                    $bare_fraud_score = $importance_factor_arr[2];
-                } elseif ($manual_action == "N") {
-                    $bare_fraud_score = $importance_factor_arr[0];
                 } else {
-                    $bare_fraud_score = $importance_factor_arr[1];
-                    $manual_action_not_selected = "Y";
+                    if ($manual_action == "Y") {
+                        $bare_fraud_score = $importance_factor_arr[2];
+                    } elseif ($manual_action == "N") {
+                        $bare_fraud_score = $importance_factor_arr[0];
+                    } else {
+                        $bare_fraud_score = $importance_factor_arr[1];
+                        $manual_action_not_selected = "Y";
+                    }
+                    $fraud_score = $bare_fraud_score;
                 }
 
-                $fraud_score = $bare_fraud_score;
+                $overall_fraud_score += $fraud_score;
+
+                $orderFraudCheckModel = OrderFraudCheckModel::objects()->getOrCreate([
+                    'orderid' => $orderid,
+                    'question_code' => $question_code
+                ]);
+                $orderFraudCheckModel->setAttributes([
+                    'manual_action' => $manual_action,
+                    'fraud_score' => $fraud_score,
+                    'bare_fraud_score' => $bare_fraud_score,
+                    'fraud_result' => $fraud_result,
+                    'additional_info' => $additional_info
+                ]);
+                if ($orderModel && $question_code == 'MANUAL_IS_ORDER_ITEMS_EASY_TO_SELL'
+                    && in_array('manual_action', array_keys($orderFraudCheckModel->getChangedAttributes()))) {
+                    $aOrderDetails = OrderDetailModel::objects()->filter(['orderid' => $orderModel->orderid])->all();
+                    if (!empty($aOrderDetails)) {
+                        foreach ($aOrderDetails as $orderDetailModel) {
+                            $hardSellModel = ProductHardResell::objects()->getOrCreate(['product_id' => $orderDetailModel->productid]);
+                            switch($manual_action) {
+                                case 'Y':
+                                    $hardSellModel->positive_count++;
+                                    break;
+                                case 'N':
+                                    $hardSellModel->negative_count++;
+                                    break;
+                            }
+                            $hardSellModel->save();
+                        }
+                    }
+                }
+                $orderFraudCheckModel->save();
             }
-
-            $overall_fraud_score += $fraud_score;
-
-            db_query("INSERT INTO $sql_tbl[order_fraud_checks] (orderid, question_code, manual_action, fraud_score, bare_fraud_score, fraud_result, additional_info) VALUES ('$orderid', '$question_code', '$manual_action', '$fraud_score', '$bare_fraud_score', '$fraud_result', '" . addslashes($additional_info) . "')");
         }
 
-        $current_overall_fraud_score = func_query_first_cell("SELECT overall_fraud_score FROM $sql_tbl[orders] WHERE orderid='$orderid'");
+
+        $current_overall_fraud_score = 0;
+        if ($orderModel) {
+            $current_overall_fraud_score = $orderModel->overall_fraud_score;
+        }
 
         $overall_fraud_score = price_format($overall_fraud_score);
 
@@ -333,18 +333,14 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
 
             if ($log != "") $log .= "<br />";
             $log .= "overall_fraud_score: " . $current_overall_fraud_score . " -> " . $overall_fraud_score;
-
-            db_query("UPDATE $sql_tbl[orders] SET overall_fraud_score='$overall_fraud_score' WHERE orderid='$orderid'");
+            if ($orderModel) {
+                $orderModel->overall_fraud_score = $overall_fraud_score;
+                $orderModel->save();
+            }
         }
 
-
-#
-##
-###
         $current_fraud_status = $order["fraud_status"];
         $old_fraud_status = $current_fraud_status;
-
-
         if ($mode == "apply_changes_and_update_fraud_scores") {
             if ($overall_fraud_score > $config["Fraud_check"]["Overall_FC_threshold_for_Clear_status"]) {
                 $new_fraud_status = $config["Fraud_check"]["Threshold_status"];
@@ -362,7 +358,10 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                 $current_fraud_status_name = $fraud_statuses[$current_fraud_status];
                 $new_fraud_status_name = $fraud_statuses[$new_fraud_status];
                 $log .= "fraud_status: " . $current_fraud_status_name . " -> " . $new_fraud_status_name;
-                db_query("UPDATE $sql_tbl[orders] SET fraud_status='$new_fraud_status' WHERE orderid='$orderid'");
+                if ($orderModel) {
+                    $orderModel->fraud_status = $new_fraud_status;
+                    $orderModel->save();
+                }
             }
         }
 
@@ -374,8 +373,10 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                 $current_fraud_status_name = $fraud_statuses[$current_fraud_status];
                 $fraud_status_name = $fraud_statuses[$fraud_status];
                 $log .= "fraud_status: " . $current_fraud_status_name . " -> " . $fraud_status_name;
-
-                db_query("UPDATE $sql_tbl[orders] SET fraud_status='$fraud_status' WHERE orderid='$orderid'");
+                if ($orderModel) {
+                    $orderModel->fraud_status = $fraud_status;
+                    $orderModel->save();
+                }
             }
         }
 
@@ -386,8 +387,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
             (empty($manual_action_not_selected))
         ) {
             if ($orderid) {
-                $oOrder = \Xcart\Order::model(['orderid' => $orderid]);
-                $oOrder->submitOrderEntry();
+                $orderModel->getDataModel()->submitOrderEntry();
             }
         }
 
@@ -517,7 +517,8 @@ if (!empty($Telephone_area_codes)) {
 
     if (!empty($country_code)) {
         $state_name = trim($Telephone_area_codes["state"]);
-        $areacode_state = func_query_first_cell("SELECT code FROM $sql_tbl[states] WHERE state='$state_name' AND country_code='$country_code'");
+        $areacode_state = func_query_first_cell_param(/** @lang MySQL */
+            "SELECT code FROM xcart_states WHERE state=:state_name AND country_code=:country_code", ['state_name' => $state_name, 'country_code' => $country_code]);
         $Telephone_area_codes["state"] = $areacode_state;
     } else {
         $areacode_state = $Telephone_area_codes["state"];
@@ -588,16 +589,24 @@ if (!empty($fraud_Google_search_negative_words)){
 }
 */
 
-$hardToResell = false;
-$orderModel = OrderModel::objects()->get(['orderid' => $orderid]);
+$bHardToResell = null;
 if ($orderModel) {
     $maxOrderPriceAmount = 0;
-    if ($orderDetails = $orderModel->details) {
+    if ($orderDetails = OrderDetailModel::objects()->filter(['orderid' => $orderModel->orderid])->all()) {
         foreach ($orderDetails as $detailModel) {
             $maxOrderPriceAmount = max($detailModel->price * $detailModel->amount, $maxOrderPriceAmount);
+            $hardResellModel = ProductHardResell::objects()->get(['product_id' => $detailModel->productid]);
+            $hts = ProductHelper::getHardToResellStatus($hardResellModel);
+            if (!is_null($bHardToResell)) {
+                $bHardToResell = $hts && $bHardToResell;
+            } else {
+                $bHardToResell = $hts;
+            }
         }
     }
-    $hardToResell = ($orderModel->total > 50) || ($maxOrderPriceAmount > 10);
+    if (!(($orderModel->total > 50) || ($maxOrderPriceAmount > 10))) {
+        $bHardToResell = true;
+    }
 }
 
 if (!empty($fraud_checks) && is_array($fraud_checks)) {
@@ -755,6 +764,26 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
                     $bare_fraud_score = $importance_factor_arr[0];
                     $fraud_score = $bare_fraud_score;
                     $update_overall_fraud_score = true;
+                }
+            }
+            if ($v["question_code"] == 'MANUAL_IS_ORDER_ITEMS_EASY_TO_SELL') {
+                if (!is_null($bHardToResell)) {
+                    switch ($bHardToResell) {
+                        case true:
+                            $fraud_checks[$k]["manual_action"] = "Y";
+                            $fraud_result = "positive";
+                            $bare_fraud_score = $importance_factor_arr[2];
+                            $fraud_score = $bare_fraud_score;
+                            $update_overall_fraud_score = true;
+                            break;
+                        case false:
+                            $fraud_checks[$k]["manual_action"] = "N";
+                            $fraud_result = "negative";
+                            $bare_fraud_score = $importance_factor_arr[0];
+                            $fraud_score = $bare_fraud_score;
+                            $update_overall_fraud_score = true;
+                            break;
+                    }
                 }
             }
         }

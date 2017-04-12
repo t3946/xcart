@@ -50,4 +50,23 @@ class ProductHelper
             }
         }
     }
+
+    public static function getHardToResellStatus($hardResellModel)
+    {
+        $bHardToResell = null;
+        if ($hardResellModel) {
+            if ($hardResellModel->positive_count >=2 && $hardResellModel->negative_count == 0){
+                $bHardToResell = true;
+            } elseif ($hardResellModel->positive_count ==0 && $hardResellModel->negative_count >= 2) {
+                $bHardToResell = false;
+            } elseif ($hardResellModel->positive_count > 0 && $hardResellModel->negative_count > 0) {
+                if ($hardResellModel->positive_count / $hardResellModel->negative_count < 0.5) {
+                    $bHardToResell = false;
+                } elseif ($hardResellModel->negative_count / $hardResellModel->positive_count < 0.5) {
+                    $bHardToResell = true;
+                }
+            }
+        }
+        return $bHardToResell;
+    }
 }
