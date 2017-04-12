@@ -66,10 +66,10 @@ header {
       height: rem-calc(18);
       position: relative;
       top: 2px;
-      background: url("../images/home/1280/multilanguage_clicking.svg") no-repeat;
+      background: url("../images/icons/header/multilanguage_clicking.svg") no-repeat;
 
       &:active{
-        background: url("../images/home/1280/multilanguage.svg") no-repeat;
+        background: url("../images/icons/header/multilanguage.svg") no-repeat;
       }
     }
   }

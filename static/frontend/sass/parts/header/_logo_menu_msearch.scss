@@ -10,11 +10,8 @@ header {
     }
 
     .mobile_menu {
-      background: url("../images/home/768/menu.svg") no-repeat;
       width: 25px;
       height: 19px;
-      display: inline-block;
-      vertical-align: middle;
     }
 
     .logo-small {
@@ -67,20 +64,16 @@ header {
     }
 
     .mobile__search-btn {
-      vertical-align: middle;
-      display: inline-block;
-      background: url("../images/home/768/magnifier.svg") no-repeat;
+      background: url("../images/icons/header/magnifier.svg") no-repeat;
       width: 30px;
       height: 30px;
     }
 
     .mobile__cart {
-      background: url("../images/home/1280/cart.svg") no-repeat;
+      background: url("../images/icons/header/cart.svg") no-repeat;
       width: 40px;
       height: 30px;
       position: relative;
-      display: inline-block;
-      vertical-align: middle;
 
       &:hover {
         text-decoration: none;

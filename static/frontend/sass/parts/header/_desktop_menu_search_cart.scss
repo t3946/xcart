@@ -33,7 +33,7 @@
       border: none;
       display: inline-block;
       //background: url("../images/home/1280/magnifier_hover.svg") no-repeat;
-      background: url("../images/home/1280/magnifier.svg") no-repeat;
+      background: url("../images/icons/header/magnifier.svg") no-repeat;
       width: 23px;
       height: 23px;
       position: absolute;
@@ -55,7 +55,7 @@
       bottom: 6px;
       position: absolute;
       opacity: .6;
-      background: url("../images/home/1280/remove_hover.svg") no-repeat;
+      background: url("../images/icons/header/remove_hover.svg") no-repeat;
 
       right: 17px;
 
@@ -84,6 +84,105 @@
           bottom: 7px;
           opacity: 1;
         }
+      }
+    }
+  }
+
+  .category-menu {
+    width: 100%;
+    display: block;
+    line-height: rem-calc(50);
+    height: rem-calc(50);
+    text-align: center;
+
+    .category-menu-title {
+      color: #fff;
+      font-size: rem-calc(14);
+      font-weight: 800;
+      margin-left: 5px;
+      text-transform: uppercase;
+    }
+
+
+    &.is-active {
+      background-color: #f5f5f5;
+
+      .menu-icon {
+        &:after {
+          background: #0d2431;
+          box-shadow: 0 7px 0 #0d2431, 0 14px 0 #0d2431;
+        }
+      }
+
+      .category-menu-title {
+        color: #0d2431;
+      }
+    }
+
+    .menu {
+      border: none;
+
+      .category-menu-item {
+        margin: rem-calc(2) 0;
+
+        .item-container {
+          text-align: left;
+
+          & > a {
+            line-height: rem-calc(32);
+
+            & > .row {
+              margin:0;
+            }
+          }
+
+          .item-image {
+            img {
+              max-width: 25px;
+            }
+          }
+
+          .item-name {
+            line-height: 1.2;
+            font-weight: bold;
+            display: inline-block;
+          }
+        }
+
+        &:hover, &:active,
+        &.is-active {
+          background: #dfe5e8;
+        }
+
+        &.is-active {
+          .item-container {
+            .item-name {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+
+
+    }
+
+    .view-all {
+      margin-top: rem-calc(6);
+      display: block;
+      background-color: #456d83;
+      color: #fff;
+      font-size: rem-calc(14);
+      line-height: rem-calc(22);
+      height: rem-calc(22);
+
+      &:before {
+        content: '';
+        display: inline-block;
+        width: rem-calc(16);
+        height: rem-calc(16);
+        vertical-align: middle;
+        margin-right: rem-calc(3);
+        background: url("../images/icons/header/view_all_departments.svg") no-repeat;
       }
     }
   }

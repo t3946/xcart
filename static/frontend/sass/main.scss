@@ -1,10 +1,13 @@
 @import 'compass';
 
-@import 'settings/bootstrap_variables';
-@import 'settings/foundation_settings';
-@import 'settings/settings';
-@import 'settings/foundation_includes';
 @import 'settings/colors';
+@import 'settings/icons';
+@import 'settings/settings';
+
+//@import 'settings/bootstrap_variables';
+@import 'settings/foundation_settings';
+@import 'settings/foundation_includes';
+
 
 //@import 'mixins/bootstrap_mixins';
 

@@ -227,8 +227,11 @@ module.exports.frontend = {
                 'bower_components/foundation-sites/dist/js/plugins/foundation.accordion.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.sticky.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.toggler.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.dropdownMenu.js',
 
                 'bower_components/foundation-sites/dist/js/plugins/foundation.util.keyboard.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.util.box.js',
+                'bower_components/foundation-sites/dist/js/plugins/foundation.util.nest.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.util.motion.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.util.triggers.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.util.mediaQuery.js',

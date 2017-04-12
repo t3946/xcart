@@ -16,9 +16,18 @@
         $('.search-form-container .search').val('');
         $(this).removeClass('active');
     });
-    // $('.mobile__search-btn').on('click', function(e){
-    //
-    // });
+
+    $(document).on('show.zf.dropdownmenu', function(ev, $el){
+        if ($el.is('.category-menu-list, .category-menu-container')) { // el submenu in el
+            $('.shadow').addClass('active');
+        }
+    });
+    $(document).on('hide.zf.dropdownmenu', function(ev, $el){
+        if ($el.is('.category-menu, .category-menu-container')) { //el base menu
+            $('.shadow').removeClass('active');
+        }
+    });
+
 
     $(document).foundation();
 })();

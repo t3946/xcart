@@ -1,6 +1,6 @@
 <div class="call-us">
     <span class="text show-for-medium">
-        <img src="/static/frontend/dist/images/home/1280/green_check_mark.svg" alt="Order online or call us" class="show-for-medium"/>
+        <img src="/static/frontend/dist/images/icons/header/green_check_mark.svg" alt="Order online or call us" class="show-for-medium"/>
         Order online or call us
     </span>
     <a href="tel:6162595711" class="tel">(616) 259-5711</a>

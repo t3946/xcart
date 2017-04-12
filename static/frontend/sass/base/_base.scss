@@ -32,3 +32,16 @@ body {
     height: auto !important;
   }
 }
+
+.shadow {
+  position: absolute;
+  transition-property: all;
+  transition-duration: .2s;
+  background-color: rgba(0, 0, 0, .2);
+
+  &.active {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .5);
+  }
+}
