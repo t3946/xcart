@@ -78,7 +78,7 @@ class ProductHelper
 
         $fileName = file_get_filename_curl($filePath);
         if (empty($fileName)) {
-            $fileName = self::getFileNameFromDownloadLink($filePath, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'tiff', 'png', 'jpeg', 'jfif'], 'docx');
+            $fileName = self::getFileNameFromDownloadLink($filePath, ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'tiff', 'png', 'jpeg', 'jfif'], 'pdf');
         }
         $param = ['filename' => $fileName, 'productid' => $product_id];
         $productFileModel = ProductFileModel::objects()->filter($param)->limit(1)->get();
