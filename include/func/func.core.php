@@ -3842,6 +3842,25 @@ function func_check_comma_in_field($orderid, $value, $sFieldName)
     return false;
 }
 
+function file_get_filename_curl($url)
+{
+    $originalFileName = '';
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, true);
+    curl_setopt($curl, CURLOPT_NOBODY, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
+    $data = curl_exec($curl);
+    if(preg_match('/Content-Disposition: .*filename="([^"]+)/', $data, $matches)) {
+        $originalFileName = $matches[1];
+    }
+    curl_close($curl);
+
+    return $originalFileName;
+}
+
 function file_get_contents_curl($url)
 {
     $curl = curl_init();
