@@ -291,6 +291,14 @@ SQL;
         return $aShippingMethods;
     }
 
+    /**
+     * @param Customer $oCustomer
+     * @param Manufacturer $oManufacturer
+     * @param Cart $oCart
+     * @param bool $bGetOnlyApproximationRates
+     * @return ShippingRate[]|null
+     * @throws \Exception
+     */
     public function getShippingRates(Customer $oCustomer, Manufacturer $oManufacturer, Cart $oCart, $bGetOnlyApproximationRates = false)
     {
         $aResult = null;
