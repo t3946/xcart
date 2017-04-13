@@ -1,4 +1,4 @@
-<form action="{url 'reports:index'}" method="GET">
+<form action="{url 'reports:view'}" method="GET">
     {include 'dashboard/_filter_fields.tpl'}
 
     {include 'reports/_report_fields.tpl'}

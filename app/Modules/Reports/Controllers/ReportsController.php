@@ -53,6 +53,33 @@ class ReportsController extends PrototypeAdminController
         );
     }
 
+    public function view()
+    {
+        if (!empty($_GET['search'])) {
+            $form_data = OrderSearchStore::getClearedData($_GET['search']);
+        } else {
+            $form_data = [
+                'order'    => [
+                    'date' => SearchHelper::getDefaultSearchDate(),
+                ],
+            ];
+        }
+        $orderStore = (new OrderSearchStore($form_data));
+        $orderStore->setOrder(['-date', '-orderid']);
+
+        $models = $orderStore->getModels();
+        $pager = $orderStore->getPager();
+
+        echo $this->renderInternal('reports/view.tpl', array_merge(
+                SearchHelper::getFormAndListData(),
+                [
+                    'pager'         => $pager,
+                    'models'        => $models,
+                    'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
+                ])
+        );
+    }
+
     public function create()
     {
         $this->createOrUpdate(new ReportModel());
