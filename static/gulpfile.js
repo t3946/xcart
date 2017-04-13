@@ -9,6 +9,7 @@ const hashsum = require('gulp-hashsum');
 const uglify = require('gulp-uglify');
 const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
+const browserify = require('gulp-browserify');
 const inlineimage = require('gulp-inline-image');
 const svgo = require('gulp-svgo');
 
@@ -148,6 +149,7 @@ gulp.task('frontend_jsx', function() {
 
                 this.emit('end');
             });
+
     }
 
     return pipe.pipe(gulp.dest(frontend.dst.jsx));

@@ -119,50 +119,70 @@
       }
     }
 
-    .menu {
-      border: none;
 
-      .category-menu-item {
-        margin: rem-calc(2) 0;
 
-        .item-container {
-          text-align: left;
 
-          & > a {
-            line-height: rem-calc(32);
+  }
 
-            & > .row {
-              margin:0;
-            }
-          }
+  .category-menu-list-container {
+    position: relative;
 
-          .item-image {
-            img {
-              max-width: 25px;
-            }
-          }
+    &.submenu-active {
+      background: #fff;
 
-          .item-name {
-            line-height: 1.2;
-            font-weight: bold;
-            display: inline-block;
+    }
+
+    .bg-color {
+      background-color: #f5f5f5;
+    }
+  }
+
+  .category-menu-list {
+    border: none;
+    position: relative;
+    background-color: #f5f5f5;
+    padding-top: 1px;
+
+    .category-menu-item {
+      margin: rem-calc(2) 0;
+      position: initial;
+
+      .item-container {
+        text-align: left;
+
+        & > a {
+          line-height: rem-calc(32);
+
+          & > .row {
+            margin:0;
           }
         }
 
-        &:hover, &:active,
-        &.is-active {
-          background: #dfe5e8;
+        .item-image {
+          img {
+            max-width: 25px;
+          }
         }
 
-        &.is-active {
-          .item-container {
-            .item-name {
-              text-decoration: underline;
-            }
-          }
+        .item-name {
+          line-height: 1.2;
+          font-weight: bold;
+          display: inline-block;
         }
       }
 
+      &:hover, &:active,
+      &.is-active {
+        background: #dfe5e8;
+      }
+
+      &.is-active {
+        .item-container {
+          .item-name {
+            text-decoration: underline;
+          }
+        }
+      }
 
     }
 
@@ -174,6 +194,7 @@
       font-size: rem-calc(14);
       line-height: rem-calc(22);
       height: rem-calc(22);
+      text-align: center;
 
       &:before {
         content: '';
@@ -185,6 +206,21 @@
         background: url("../images/icons/header/view_all_departments.svg") no-repeat;
       }
     }
+
+
+  }
+
+  .submenu-container {
+    position: absolute;
+    overflow: hidden;
+    right: 0;
+    left: 25%;
+    bottom: 0;
+    top: 0;
+  }
+
+  .top-submenu {
+    background: #fff;
   }
 }
 

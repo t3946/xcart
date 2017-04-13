@@ -1,8 +1,8 @@
-<div class="col col-lg-45 hidden-lg departments-menu-desktop__dropright_block">
-    <div class="departments-menu-desktop__dropright artist-brush">
-        <nav class="departments-menu-desktop__dropright-nav">
-            <div class="row">
-                <div class="col col-lg-15">
+<div class="top-submenu">
+        <nav>
+            <div class="row large-up-3">
+                <div class="column">
+
                     <h4><a href="#">Brushes by Medium or Technique</a></h4>
                     <ul>
                         <li><a href="#">Acrylic and Oil Brushes</a></li>
@@ -25,7 +25,7 @@
                         <li><a href="#">Watercolor Brushes</a></li>
                     </ul>
                 </div>
-                <div class="col col-lg-15 col-lg-offset-5">
+                <div class="column">
                     <h4><a href="#">Brushes by Hair or Fiber</a></h4>
                     <ul>
                         <li><a href="#">Badger Brushes</a></li>
@@ -35,7 +35,9 @@
                         <li><a href="#">Synthetic Brushes</a></li>
                     </ul>
 
-                    <h4 class="departments-menu-desktop__dropright-nav-middle-bottom"><a href="#">Brushes by Name or Shape</a></h4>
+                    <h4>
+                        <a href="#">Brushes by Name or Shape</a>
+                    </h4>
 
                     <ul>
                         <li><a href="#">Angular</a></li>
@@ -51,7 +53,7 @@
                         <li><a href="#">Oval Wash</a></li>
                     </ul>
                 </div>
-                <div class="col col-lg-15 col-lg-offset-5 departments-menu-desktop__dropright-nav-right-container">
+                <div class="column">
                     <h4><a href="#">Scholastic Brushes</a></h4>
                     <ul>
                         <li><a href="#">Black Bristle</a></li>
@@ -67,14 +69,13 @@
                 </div>
             </div>
         </nav>
-        <div class="departments-menu-desktop__sale">
-            <span class="departments-menu-desktop__sale-pink">Sale</span>
-            <span class="departments-menu-desktop__sale-description">of brushes for make-up</span>
-            <a href="#" class="departments-menu-desktop__sale-learn-more">Learn more</a>
+
+        <div class="banner">
+            <a href="/#" class="sale">Sale</a>
         </div>
+
         <div class="departments-menu-desktop__dropright-view-all-row">
             <a href="#" class="departments-menu-desktop__dropright-view-all">View
                 all Artist Brush departments</a>
         </div>
-    </div>
 </div>

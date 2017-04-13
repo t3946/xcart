@@ -81,7 +81,14 @@
                     <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
                         <div class="row" >
                             <div class="columns large-3 show-for-large">
-                                {include "demo/blocks/_menu_desktop.tpl"}
+
+                                <section class="category-menu-container"  >
+                                    <div class="category-menu">
+                                        <span class="menu-icon"></span>
+                                        <span class="category-menu-title" >Departments</span>
+                                    </div>
+                                </section>
+
                             </div>
                             <div class="columns small-12 large-7">
                                 {include "demo/blocks/_search.tpl"}
@@ -91,6 +98,7 @@
                                 {*{include "demo/blocks/_cart.tpl"}*}
                             </div>
                         </div>
+                        {include "demo/blocks/_menu_desktop.tpl"}
                     </section>
 
                 </div>

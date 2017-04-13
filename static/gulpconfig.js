@@ -141,7 +141,8 @@ module.exports.frontend = {
     config: {
         compress: true,
         babel: {
-            presets: ['es2015']
+            presets: ['es2015'],
+            // plugins: ['babel-plugin-transform-es2015-modules-commonjs']
         },
         inline_image: {
             baseDir: './frontend/css'
@@ -149,8 +150,8 @@ module.exports.frontend = {
     },
     src: {
         jsx: [
-            // 'frontend/jsx/**/*'
-            'frontend/jsx/main.jsx'
+            'frontend/jsx/**/*'
+            // 'frontend/jsx/main.jsx'
         ],
         js: [
             'frontend/js/**/*',
