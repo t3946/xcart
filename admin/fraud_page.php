@@ -591,6 +591,7 @@ if ($orderModel) {
             $maxOrderPriceAmount = max($detailModel->price * $detailModel->amount, $maxOrderPriceAmount);
             /** @var ProductHardResellModel $hardResellModel */
             $hardResellModel = ProductHardResellModel::objects()->get(['product_id' => $detailModel->productid]);
+            if ($hardResellModel) {
             $hts = $hardResellModel->getHardToResellStatus();
             if (!is_null($bHardToResell)) {
                 if ($bHardToResell != ProductHardResellModel::HARD_TO_RESELL_UNKNOWN) {
@@ -598,21 +599,22 @@ if ($orderModel) {
                 }
             } else {
                 $bHardToResell = $hts;
-            }
-            $productModel = $detailModel->product_model;
-            if ($productModel) {
-                switch($hts) {
-                    case null :
-                    case ProductHardResellModel::HARD_TO_RESELL_UNKNOWN :
-                        $aProductLinks[] = "<a href='{$productModel->getDataModel()->getUrl()}' target='_blank' style='color: #1F08F8;'>{$productModel->productcode}</a>";
-                        break;
-                    case ProductHardResellModel::HARD_TO_RESELL_YES:
-                        $aProductLinks[] = "<span style='background-color: #D9EAD3;'>{$productModel->productcode}</span> HARD TO RESELL";
-                        break;
-                    case ProductHardResellModel::HARD_TO_RESELL_NO:
-                        $aProductLinks[] = "<span style='background-color: #F4CCCC;'>{$productModel->productcode}</span> EASY TO RESELL";
-                        break;
 
+                $productModel = $detailModel->product_model;
+                if ($productModel) {
+                    switch ($hts) {
+                        case null :
+                        case ProductHardResellModel::HARD_TO_RESELL_UNKNOWN :
+                            $aProductLinks[] = "<a href='{$productModel->getDataModel()->getUrl()}' target='_blank' style='color: #1F08F8;'>{$productModel->productcode}</a>";
+                            break;
+                        case ProductHardResellModel::HARD_TO_RESELL_YES:
+                            $aProductLinks[] = "<span style='background-color: #D9EAD3;'>{$productModel->productcode}</span> HARD TO RESELL";
+                            break;
+                        case ProductHardResellModel::HARD_TO_RESELL_NO:
+                            $aProductLinks[] = "<span style='background-color: #F4CCCC;'>{$productModel->productcode}</span> EASY TO RESELL";
+                            break;
+
+                    }
                 }
             }
         }
