@@ -87,7 +87,9 @@ if ($current_hour == "0") {
             db_query($qqq = "INSERT IGNORE INTO xcart_cidev_updated_products (resourceid, type, time_stamp, source) VALUES ('$productid', '2', '" . time() . "', 'eta_end')");
         }
     }
-    db_free_result($product);
+    if ($product && $product instanceof \Doctrine\DBAL\Driver\Statement) {
+        db_free_result($product);
+    }
 }
 
 $two_shippings = func_query_hash("SELECT shippingid, shipping, vol_threshold, dim_factor FROM $sql_tbl[shipping] WHERE shippingid='1' OR shippingid='65'", "shippingid", false);
@@ -347,7 +349,9 @@ Select
                 }
             $cnt++;
         }
-        db_free_result($products);
+        if ($products && $products instanceof \Doctrine\DBAL\Driver\Statement) {
+            db_free_result($products);
+        }
 
         foreach ($aExternalMarketPlaces as $oExternalMarketPlace) {
             $aInventory = $oExternalMarketPlace->getInventory();

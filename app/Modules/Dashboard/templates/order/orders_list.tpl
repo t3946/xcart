@@ -99,7 +99,7 @@
             </td>
             <td colspan="3">
                 {foreach $order->tags as $tag}
-                    <div style="background-color: #F4CCCC; color: #000000; padding: 3px;">
+                    <div style="background-color: {if $tag->color}{$tag->color}{else}#F4CCCC{/if}; color: #000000; padding: 3px;">
                         <span title="{$tag->description}">
                             {$tag->status}
                         </span>

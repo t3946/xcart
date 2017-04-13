@@ -57,7 +57,6 @@ function func_check_tracking_number($linkid, $tracknum)
 
 function func_recalculate_accounting(&$group, $all_processors = [], $apply_per_trans = false, $refund = false)
 {
-    global $xcart_dir;
     $oOrderGroup = new Xcart\OrderGroup(['orderid' => $group['orderid'], 'manufacturerid' => $group['manufacturerid']]);
     $oOrderGroup->recalculateAccounting();
 }
@@ -1065,7 +1064,7 @@ function func_refund_product($orderid, $mid, &$product, $customer_info)
             $query_data = [
                 'ref_price'  => $product['refund']['price'],
                 'ref_qty'    => $product['refund']['amount'],
-                'extra_data' => serialize($product['extra_data']),
+                'extra_data' => addslashes(serialize($product['extra_data'])),
             ];
 
             func_array2update('refunded_products', $query_data, $where);
@@ -1080,7 +1079,7 @@ function func_refund_product($orderid, $mid, &$product, $customer_info)
                 'provider'       => $product['provider'],
                 'ref_price'      => $product['refund']['price'],
                 'ref_qty'        => $product['refund']['amount'],
-                'extra_data'     => serialize($product['extra_data']),
+                'extra_data'     => addslashes(serialize($product['extra_data'])),
             ];
 
             func_array2insert('refunded_products', $query_data);

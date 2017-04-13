@@ -771,7 +771,7 @@ SQL;
                                                                 'manufacturerid' => $orderGroupModel->manufacturerid,
                                                                 'invoice_number' => 1,
                                                                 'invoice_received' => 'Y',
-                                                                'cost_to_us_for_products_charged' => $fCostToUs * $fQuantity,
+                                                                'cost_to_us_for_products_charged' => $fCostToUs,
                                                                 'products_total' => $fCostToUs * $fQuantity,
                                                                 'shipping_charged' =>  $fChargeFee,
                                                                 'shipping_total' => $fChargeFee,
@@ -1818,6 +1818,13 @@ SQL;
                 $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
                 $log->debug('GetLowestOfferListingsForSKU', [$this->dom_xml_arr]);
             }
+            if (is_array($this->dom_xml_arr)) {
+                $log = new \Monolog\Logger('amazon_info_error');
+                $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                $log->debug('GetLowestOfferListingsForSKU', [$this->dom_xml_arr]);
+                return $this;
+            }
             $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
             $aOffers = AmazonHelper::parseAmazonOffers($this->dom_xml_arr, $this->aProducts);
 
@@ -1858,6 +1865,13 @@ SQL;
                 $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
                 $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
                 $log->debug('GetCompetitivePricing', [$this->dom_xml_arr]);
+            }
+            if (is_array($this->dom_xml_arr)) {
+                $log = new \Monolog\Logger('amazon_info_error');
+                $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                $log->debug('GetCompetitivePricing', [$this->dom_xml_arr]);
+                return $this;
             }
             $this->dom_xml_arr = str_replace('http://mws.amazonservices.com/schema/Products/2011-10-01', '', $this->dom_xml_arr);
             $docShipping = new \DOMDocument;

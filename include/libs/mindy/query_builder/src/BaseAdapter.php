@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 20/06/16
- * Time: 10:50
- */
-
 namespace Mindy\QueryBuilder;
 
 use Exception;
@@ -176,16 +169,22 @@ abstract class BaseAdapter implements ISQLGenerator
     public function quoteSql($sql)
     {
         $tablePrefix = $this->tablePrefix;
-        return preg_replace_callback('/(\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\])|\\@([\w\-\. \/\%\:]+)\\@/',
-            function ($matches) use ($tablePrefix) {
-                if (isset($matches[4])) {
-                    return $this->quoteValue($this->convertToDbValue($matches[4]));
-                } else if (isset($matches[3])) {
-                    return $this->quoteColumn($matches[3]);
-                } else {
-                    return str_replace('%', $tablePrefix, $this->quoteTableName($matches[2]));
-                }
-            }, $sql);
+
+        if (preg_match('/\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\]|\\[\\[([\w\-\. ]+)\\]\\][\s]*=[\s]*\\@([\w\-\. \/\%\:]+)\\@/', $sql))
+        {
+            return preg_replace_callback('/(\\{\\{(%?[\w\-\. ]+%?)\\}\\}|\\[\\[([\w\-\. ]+)\\]\\])|\\@([\w\-\. \/\%\:]+)\\@/',
+                function ($matches) use ($tablePrefix) {
+                    if (isset($matches[4])) {
+                        return $this->quoteValue($this->convertToDbValue($matches[4]));
+                    } else if (isset($matches[3])) {
+                        return $this->quoteColumn($matches[3]);
+                    } else {
+                        return str_replace('%', $tablePrefix, $this->quoteTableName($matches[2]));
+                    }
+                }, $sql);
+        }
+
+        return $sql;
     }
 
     public function convertToDbValue($rawValue)
@@ -691,14 +690,14 @@ abstract class BaseAdapter implements ISQLGenerator
      * @param $having
      * @return string
      */
-    public function sqlHaving($having)
+    public function sqlHaving($having, QueryBuilder $queryBuilder = null)
     {
         if (empty($having)) {
             return '';
         }
 
         if ($having instanceof Q) {
-            $sql = $having->toSQL();
+            $sql = $having->toSQL($queryBuilder);
         } else {
             $sql = $this->quoteSql($having);
         }

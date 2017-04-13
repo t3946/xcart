@@ -11,6 +11,7 @@ return array(
     'Xcart\\External_Marketplaces\\' => array($baseDir . '/modules/External_Marketplaces/include'),
     'Xcart\\' => array($baseDir . '/include/Xcart'),
     'Ups\\' => array($vendorDir . '/gabrielbull/ups-api/src/Ups'),
+    'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\Validator\\' => array($vendorDir . '/symfony/validator'),
     'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),

@@ -497,24 +497,31 @@ Use my trucking account #
 </script>
 {else}
 <script type="text/javascript">
-//<![CDATA[
 {literal}
         function start_btn() {
 
 		{/literal}
 	        {if $userinfo.s_country ne "US" && $cart.confirmation_of_responsibility ne "Y"}
-		{literal}
 
-	                document.getElementById("continue_btn_able").style.display = '';
-        	        document.getElementById("continue_btn_disable").style.display = 'none';
-			$("#id_confirmation_of_responsibility_checkbox").focus();
+            {if $userinfo.s_country eq "CA"}
+            {literal}
+                document.getElementById("continue_btn_able").style.display = 'none';
+                document.getElementById("continue_btn_disable").style.display = '';
+             {/literal}
+            {else}
+            {literal}
+                document.getElementById("continue_btn_able").style.display = '';
+                document.getElementById("continue_btn_disable").style.display = 'none';
+            {/literal}
+            {/if}
+            {literal}
 
+        	$("#id_confirmation_of_responsibility_checkbox").focus();
 		{/literal}
         	{/if}
 		{literal}
         }
 {/literal}
-//]]>
 </script>
 
 {/if}
@@ -560,7 +567,7 @@ Use my trucking account #
 <table>
 <tr>
 <td>
-<input type="checkbox" id="confirmation_of_responsibility" name="confirmation_of_responsibility"{if $cart.confirmation_of_responsibility eq "Y"} checked="checked"{/if} value="Y" /> 
+<input autocomplete="off" type="checkbox" id="confirmation_of_responsibility" name="confirmation_of_responsibility"{if $cart.confirmation_of_responsibility eq "Y"} checked="checked"{/if} value="Y" />
 </td>
 <td>
 {$lng.lbl_confirmation_of_responsibility}

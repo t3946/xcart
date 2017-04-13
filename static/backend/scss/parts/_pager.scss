@@ -1,0 +1,32 @@
+.pager-container {
+    margin: 15px 0;
+
+    .pager {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        display: block;
+        min-height: 1px;
+
+        li {
+            display: inline-block;
+
+            a, span {
+                padding: 0.15em 0.4em;
+                border-radius: 5px;
+                border: 1px solid transparent;
+
+                &.current,
+                &:hover {
+                    background-color: #efefef;
+                    border: 1px solid #adadad;
+                }
+            }
+        }
+    }
+
+    .page-size {
+        text-align: right;
+    }
+}

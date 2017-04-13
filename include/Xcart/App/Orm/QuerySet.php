@@ -33,7 +33,10 @@ class QuerySet extends QuerySetBase
     /**
      * Executes query and returns all results as an array.
      * If null, the DB connection returned by [[modelClass]] will be used.
+     *
      * @return array the query results. If the query results in nothing, an empty array will be returned.
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     public function all()
     {
@@ -58,7 +61,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param int $batchSize
+     *
      * @return \Xcart\App\Orm\BatchDataIterator
+     * @throws \Exception
      */
     public function batch($batchSize = 100)
     {
@@ -72,7 +77,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param int $batchSize
+     *
      * @return \Xcart\App\Orm\BatchDataIterator
+     * @throws \Exception
      */
     public function each($batchSize = 100)
     {
@@ -87,7 +94,10 @@ class QuerySet extends QuerySetBase
     /**
      * @param array $columns
      * @param bool $flat
+     *
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     public function valuesList($columns, $flat = false)
     {
@@ -117,8 +127,12 @@ class QuerySet extends QuerySetBase
 
     /**
      * Update records
+     *
      * @param array $attributes
+     *
      * @return int updated records
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     public function update(array $attributes)
     {
@@ -127,7 +141,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param array $attributes
+     *
      * @return string
+     * @throws \Exception
      */
     public function updateSql(array $attributes)
     {
@@ -140,8 +156,11 @@ class QuerySet extends QuerySetBase
 
     /**
      * Get model if exists. Else create model.
+     *
      * @param array $attributes
-     * @return Model
+     *
+     * @return \Xcart\App\Orm\Model
+     * @throws
      */
     public function getOrCreate(array $attributes)
     {
@@ -156,12 +175,14 @@ class QuerySet extends QuerySetBase
         return $model;
     }
 
-
     /**
      * Find and update model if exists. Else create model.
+     *
      * @param array $attributes
      * @param array $updateAttributes
-     * @return ModelInterface|Orm|null
+     *
+     * @return null|\Xcart\App\Orm\ModelInterface|\Xcart\App\Orm\Orm
+     * @throws
      */
     public function updateOrCreate(array $attributes, array $updateAttributes)
     {
@@ -178,9 +199,12 @@ class QuerySet extends QuerySetBase
 
     /**
      * Paginate models
+     *
      * @param int $page
      * @param int $pageSize
+     *
      * @return $this
+     * @throws \Exception
      */
     public function paginate($page = 1, $pageSize = 10)
     {
@@ -190,6 +214,7 @@ class QuerySet extends QuerySetBase
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function allSql()
     {
@@ -199,7 +224,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param array $filter
+     *
      * @return string
+     * @throws \Exception
      */
     public function getSql($filter = [])
     {
@@ -212,9 +239,13 @@ class QuerySet extends QuerySetBase
 
     /**
      * Executes query and returns a single row of result.
+     *
      * @param array $filter
-     * @return ModelInterface|array|null
-     * @throws MultipleObjectsReturned
+     *
+     * @return array|null|\Xcart\App\Orm\ModelInterface
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     * @throws \Xcart\App\Orm\Exception\MultipleObjectsReturned
      */
     public function get($filter = [])
     {
@@ -267,8 +298,8 @@ class QuerySet extends QuerySetBase
 
             if ($this->getModel()->getMeta()->hasRelatedField($name)) {
                 $this->with[] = $name;
-                $field = $this->getModel()->getField($name);
-
+//                $field = $this->getModel()->getField($name);
+//
 //                if ($field instanceof ForeignField
 //                    || $field instanceof HasManyField
 //                    || $field instanceof ManyToManyField
@@ -305,7 +336,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param array $query
+     *
      * @return $this
+     * @throws \Exception
      */
     public function filter($query)
     {
@@ -315,7 +348,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param array $query
+     *
      * @return $this
+     * @throws \Exception
      */
     public function orFilter(array $query)
     {
@@ -325,7 +360,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param array $query
+     *
      * @return $this
+     * @throws \Exception
      */
     public function exclude(array $query)
     {
@@ -335,7 +372,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param array $query
+     *
      * @return $this
+     * @throws \Exception
      */
     public function orExclude(array $query)
     {
@@ -345,18 +384,24 @@ class QuerySet extends QuerySetBase
 
     /**
      * Converts name => `name`, user.name => `user`.`name`
+     *
      * @param string $name Column name
+     *
      * @return string Quoted column name
+     * @throws \Exception
      */
     public function quoteColumnName($name)
     {
-        return $this->getConnection()->quoteColumnName($name);
+        return $this->getConnection()->quoteIdentifier($name);
     }
 
     /**
      * Order by alias
+     *
      * @param $columns
+     *
      * @return $this
+     * @throws \Exception
      */
     public function order($columns)
     {
@@ -386,7 +431,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function sum($q)
     {
@@ -395,7 +442,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param string $q
+     *
      * @return float|int
+     * @throws \Exception
      */
     public function sumSql($q)
     {
@@ -404,7 +453,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function average($q)
     {
@@ -413,7 +464,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Exception
      */
     public function averageSql($q)
     {
@@ -423,7 +476,9 @@ class QuerySet extends QuerySetBase
     /**
      * @param $columns
      * @param null $option
+     *
      * @return $this
+     * @throws \Exception
      */
     public function select($columns, $option = null)
     {
@@ -442,10 +497,14 @@ class QuerySet extends QuerySetBase
     {
         $qb = clone $this->getQueryBuilder();
         
-        list($order, $orderOptions) = $qb->getOrder();
+//        list($order, $orderOptions) = $qb->getOrder();
         $select = $qb->getSelect();
-        $sql = $qb->order(null)->select($q)->toSQL();
-        $qb->select($select)->order($order, $orderOptions);
+
+
+//        $select = $qb->getQueryBuilder()->getSelect();
+
+        $sql = $qb->order(null)->select(array_merge([$q], $select))->toSQL();
+//        $qb->select($select)->order($order, $orderOptions);
         return $sql;
     }
 
@@ -462,7 +521,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function min($q)
     {
@@ -471,7 +532,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Exception
      */
     public function minSql($q)
     {
@@ -480,7 +543,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function max($q)
     {
@@ -489,7 +554,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|string|array $q
+     *
      * @return float|int
+     * @throws \Exception
      */
     public function maxSql($q)
     {
@@ -519,7 +586,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param null|array|string $q
+     *
      * @return string
+     * @throws \Exception
      */
     public function countSql($q = '*')
     {
@@ -528,7 +597,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param string $q
+     *
      * @return int
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function count($q = '*')
     {
@@ -576,7 +647,10 @@ class QuerySet extends QuerySetBase
 
     /**
      * Truncate table
+     *
      * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
      */
     public function truncate()
     {
@@ -589,7 +663,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param mixed $fields
+     *
      * @return $this
+     * @throws \Exception
      */
     public function distinct($fields = true)
     {
@@ -599,7 +675,9 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param $columns
+     *
      * @return $this
+     * @throws \Exception
      */
     public function group($columns)
     {
@@ -618,6 +696,14 @@ class QuerySet extends QuerySetBase
     public function addGroup($columns)
     {
         $this->group(array_merge($this->_group, $columns));
+        return $this;
+    }
+
+    public function having($having)
+    {
+        if (!empty($having)) {
+            $this->getQueryBuilder()->having($having);
+        }
         return $this;
     }
 

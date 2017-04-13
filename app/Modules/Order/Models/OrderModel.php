@@ -43,14 +43,17 @@ class OrderModel extends AutoMetaModel
             'groups' => [
                 'class' => HasManyField::className(),
                 'modelClass' => OrderGroupModel::className(),
-                'link' => ['orderid', 'orderid'],
+                'link' => ['orderid' => 'orderid'],
             ],
-
             'tags' => [
                 'class' => ManyToManyField::className(),
                 'modelClass' => AttentionTagModel::className(),
                 'through' => OrderAdditionalTagLinkModel::className(),
-                'link' => ['orderid', 'status_id']
+            ],
+            'transactions' => [
+                'class' => HasManyField::className(),
+                'modelClass' => OrderTransactionModel::className(),
+                'link' => ['orderid' => 'orderid']
             ]
         ];
     }

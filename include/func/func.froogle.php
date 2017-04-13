@@ -1,4 +1,5 @@
 <?php
+use Modules\Core\Helpers\CoreHelper;
 use Xcart\StoreFront;
 
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
@@ -14,7 +15,7 @@ function func_froogle_convert($str, $max_len = false) {
                 $tbl = array_flip(get_html_translation_table(HTML_ENTITIES));
 
         $str = str_replace(array("\n","\r","\t"), array(" ", "", " "), $str);
-        $str = strip_tags($str);
+        $str = CoreHelper::stripTags($str);
         $str = strtr($str, $tbl);
 
         if ($max_len > 0 && strlen($str) > $max_len) {
@@ -1384,12 +1385,12 @@ function SubmitGoogleProductsBatch($gproducts, $service, $MerchantID, $debug_mod
                 $postBody["entries"][$k_counter]["product"]["customLabel2"] = $product_info["product"]["custom_label_2"];
                 $postBody["entries"][$k_counter]["product"]["customLabel3"] = $product_info["product"]["custom_label_3"];
 
-                $postBody["entries"][$k_counter]["product"]["destinations"][0]["destinationName"] = "ShoppingApi";
+                /*$postBody["entries"][$k_counter]["product"]["destinations"][0]["destinationName"] = "ShoppingApi";
                 $postBody["entries"][$k_counter]["product"]["destinations"][0]["intention"] = "required";
                 $postBody["entries"][$k_counter]["product"]["destinations"][1]["destinationName"] = "AffiliateNetwork";
                 $postBody["entries"][$k_counter]["product"]["destinations"][1]["intention"] = "required";
                 $postBody["entries"][$k_counter]["product"]["destinations"][2]["destinationName"] = "Shopping";
-                $postBody["entries"][$k_counter]["product"]["destinations"][2]["intention"] = "required";
+                $postBody["entries"][$k_counter]["product"]["destinations"][2]["intention"] = "required";*/
 
                 $postBody["entries"][$k_counter]["product"]["onlineOnly"] = $product_info["product"]["onlineOnly"];
 

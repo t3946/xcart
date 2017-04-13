@@ -13,7 +13,7 @@ use Xcart\Order;
  * @package Modules\Order\Models
  *
  * @param int $orderid Owner id from order
- * @param DateTime|string $create_at Owner id from order
+ * @param \DateTime|string $create_at Owner id from order
  * @param string|null $message event message
  */
 class OrderEventsModel extends Model
@@ -23,22 +23,20 @@ class OrderEventsModel extends Model
         return 'xcart_order_events';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['order_id', 'created_at'];
-    }
-
     public static function getFields()
     {
         return [
-            'order_id' => [
+            'order' => [
+                'field' => 'order_id',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
-                'link' => ['id', 'orderid']
+                'link' => ['order_id' => 'orderid'],
+                'primary' => true,
             ],
             'created_at' => [
                 'class' => DateTimeField::className(),
                 'autoNowAdd' => true,
+                'primary' => true,
             ],
             'message' => [
                 'class' => CharField::className(),
@@ -49,19 +47,23 @@ class OrderEventsModel extends Model
 
     /**
      * @param OrderModel|Order|null $owner Owner order model
-     * @param int $order_id Order id
-     * @param string|null $message Message for event
+     * @param int $order_id                Order id
+     * @param string|null $message         Message for event
      *
-     * @return static|null
+     * @return null|static
+     * @throws \Exception
      */
     public static function newOrderEvent($owner = null, $order_id, $message = null)
     {
-        $model = new static();
-        $model->setAttributes(['order_id' => $order_id, 'message' => $message]);
-
-        if ($model->isValid() && $model->save())
+        if (static::objects()->filter(['order_id' => $order_id, 'created_at' => new \DateTime()])->count() == 0)
         {
-            return $model;
+            $model = new static();
+            $model->setAttributes(['order_id' => $order_id, 'message' => $message]);
+
+            if ($model->isValid() && $model->save())
+            {
+                return $model;
+            }
         }
 
         return null;

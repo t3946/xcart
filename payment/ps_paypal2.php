@@ -80,8 +80,11 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
 ###
 ##
 #
-	if ($payment_status == "Expired") {
+	if (in_array($payment_status, ["Expired", "Refunded"])) {
 		if (!empty($txn_id)) {
+			if ($payment_status == 'Refunded') {
+				$payment_status = strtolower($payment_status);
+			}
 			$orderTransaction = OrderTransactionModel::objects()->get(['transaction_id' => $txn_id]);
 			if ($orderTransaction && $orderTransaction->transaction_status != $payment_status) {
 				$orderTransaction->transaction_status = $payment_status;
@@ -101,6 +104,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment_type'])) 
 					$orderTransaction->save();
 				}
 			}
+			exit;
 		}
 	}
 

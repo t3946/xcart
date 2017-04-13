@@ -1,4 +1,4 @@
-{extends 'dashboard/layouts/menu_layout.tpl'}
+{extends 'base/admin.tpl'}
 {block 'heading'}
     <h1 align="center">Filters list.
         <a href="{url 'dashboard:create_filter'}" class="button">
@@ -27,7 +27,7 @@
             var url_dashboard_sort = '{url 'dashboard:sort_filters'}';
 
             {ignore}
-            $('.admin .admin-dashboard-filters-list').tablePositions({
+            $('.admin .admin-dashboard-filters-list .dashboard-filters').tablePositions({
                 draggableSelector: '.button',
                 dropSelector: '.container',
 
@@ -62,6 +62,6 @@
                 }
             });
             {/ignore}
-        })();
+        });
     </script>
 {/block}

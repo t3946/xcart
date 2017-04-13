@@ -158,16 +158,6 @@ class MetaData
     }
 
     /**
-     * @deprecated since 3.0
-     * @codeCoverageIgnore
-     * @return string
-     */
-    public function getPkName()
-    {
-        return implode('_', $this->primaryKeys);
-    }
-
-    /**
      * @param bool $asArray
      * @return array|string
      */
@@ -204,17 +194,6 @@ class MetaData
     }
 
     /**
-     * @deprecated since 3.0
-     * @codeCoverageIgnore
-     * @param $name
-     * @return bool
-     */
-    public function hasForeignKey($name)
-    {
-        return $this->getField($name) instanceof ForeignField;
-    }
-
-    /**
      * @param $name
      * @return bool
      */
@@ -239,18 +218,6 @@ class MetaData
     public function hasOneToOneField($name)
     {
         return array_key_exists($name, $this->getOneToOneFields());
-    }
-
-    /**
-     * @deprecated since 3.0
-     * @codeCoverageIgnore
-     * @param $name
-     * @return mixed|null
-     */
-    public function getForeignKey($name)
-    {
-        $fields = $this->getForeignFields();
-        return isset($fields[$name]) ? $fields[$name] : null;
     }
 
     /**
@@ -282,16 +249,6 @@ class MetaData
             $this->attributes = $attributes;
         }
         return $this->attributes;
-    }
-
-    /**
-     * @deprecated since 3.0
-     * @codeCoverageIgnore
-     * @return array|[]ModelFieldInterface
-     */
-    public function getFieldsInit()
-    {
-        return $this->getFields();
     }
 
     /**
@@ -339,7 +296,7 @@ class MetaData
     public function hasField($name)
     {
         if ($name === 'pk') {
-            $name = $this->getPkName();
+            $name = $this->getPrimaryKeyName();
         }
         return array_key_exists($name, $this->fields) || array_key_exists($name, $this->mapping);
     }
@@ -371,16 +328,6 @@ class MetaData
     {
         $field = $this->getField($name);
         return $field instanceof OneToOneField ? $field : null;
-    }
-
-    /**
-     * @deprecated since 3.0
-     * @codeCoverageIgnore
-     * @return array|ManyToManyField[]
-     */
-    public function getManyFields()
-    {
-        return $this->getManyToManyFields();
     }
 
     /**

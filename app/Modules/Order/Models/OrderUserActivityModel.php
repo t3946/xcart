@@ -14,23 +14,22 @@ class OrderUserActivityModel extends Model
         return 'xcart_order_user_actives';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['user_id', 'order_id', 'created_at'];
-    }
-
     public static function getFields()
     {
         return [
-            'user_id' => [
+            'user' => [
+                'field' => 'user_id',
                 'class' => ForeignField::className(),
                 'modelClass' => UserModel::className(),
-                'link' => ['id', 'user_id']
+                'link' => ['id', 'user_id'],
+                'primary' => true,
             ],
-            'order_id' => [
+            'order' => [
+                'field' => 'order_id',
                 'class' => ForeignField::className(),
                 'modelClass' => OrderModel::className(),
-                'link' => ['orderid', 'order_id'],
+                'link' => ['order_id' => 'orderid'],
+                'primary' => true,
             ],
             'created_at' => [
                 'class' => DateTimeField::className(),
@@ -41,13 +40,17 @@ class OrderUserActivityModel extends Model
 
     public function save(array $fields = [])
     {
-        $count = static::objects()->filter(['user_id'=> $this->user_id, 'order_id' => $this->order_id, 'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )])->count();
+        $filter = [
+            'user_id'=> $this->user_id,
+            'order_id' => $this->order_id,
+            'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )
+        ];
 
-        if ($count === 0) {
-            return parent::save($fields);
+        if (static::objects()->filter($filter)->count()) {
+            static::objects()->filter($filter)->delete();
         }
 
-        return false;
+        return parent::save($fields);
     }
 
     public function afterSave($owner, $isNew)

@@ -170,7 +170,8 @@ if ($REQUEST_METHOD=="POST") {
 
 			if (!empty($row) && is_array($row)){
 
-				$productid = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='$v[productcode]'");
+				$pcode = addslashes($v['productcode']);
+				$productid = func_query_first_cell("SELECT productid FROM $sql_tbl[products] WHERE productcode='{$pcode}'");
 
 				if (!empty($productid)){
 
@@ -224,7 +225,8 @@ if ($REQUEST_METHOD=="POST") {
 				$result = "skipped";
 			}
 
-			db_query("INSERT INTO $sql_tbl[bpu_result] (productcode, result) VALUES ('$v[productcode]', '$result')");
+			$pcode = addslashes($v['productcode']);
+			db_query("INSERT INTO $sql_tbl[bpu_result] (productcode, result) VALUES ('{$pcode}', '{$result}')");
 		}
 
 		db_query("DELETE FROM $sql_tbl[bpu_rows]");

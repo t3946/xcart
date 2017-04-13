@@ -78,14 +78,13 @@ if ($REQUEST_METHOD == 'POST') {
 
 
                     $query = array(
-                        'customer_subject' => $update['customer_subject'][$idx],
-                        'copy_subject' => $update['copy_subject'][$idx],
+                        'customer_subject' => addslashes($update['customer_subject'][$idx]),
+                        'copy_subject' => addslashes($update['copy_subject'][$idx]),
                         'email_body' => $update['email_body'][$idx],
                         'enabled' => (isset($update['enabled'][$idx]) && $update['enabled'][$idx] == 'Y') ? 'Y' : 'N',
                         'customer_attach_pdf_invoice' => (isset($update['customer_attach_pdf_invoice'][$idx]) && $update['customer_attach_pdf_invoice'][$idx] == 'Y') ? 'Y' : 'N',
                         'admin_attach_pdf_invoice' => (isset($update['admin_attach_pdf_invoice'][$idx]) && $update['admin_attach_pdf_invoice'][$idx] == 'Y') ? 'Y' : 'N',
                         'code' => $selected_status,
-                        'number' => $idx,
                     );
 
                     func_array2insert('order_status_notifications', $query);

@@ -8,7 +8,7 @@
         <td width="10">Tag ID</td>
         <td width="5%">{$lng.lbl_pos}</td>
         <td width="*">Tag name / Description</td>
-        <td width="10%">Active <br> Event trigger</td>
+        <td width="10%">Active <br> Event trigger <br> Color </td>
         <td width="40%">Login / action</td>
 </tr>
 
@@ -32,6 +32,7 @@
         <option value="0"{if $attention_tags_values[pg].events eq "0"} selected="selected"{/if}>None</option>
         <option value="1"{if $attention_tags_values[pg].events eq "1"} selected="selected"{/if}>Trigger</option>
     </select>
+    <input type="color" name="posted_data[{$attention_tags_values[pg].status_id}][color]" value="{$attention_tags_values[pg].color}">
 </td>
 <td nowrap="nowrap">
   {if $attention_tags_values[pg].operators ne ""}

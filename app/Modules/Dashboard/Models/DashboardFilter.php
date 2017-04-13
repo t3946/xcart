@@ -36,14 +36,12 @@ class DashboardFilter extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => GroupModel::className(),
                 'verboseName' => 'Group',
-                'link' => ['id', 'group_id'],
                 'null' => true,
             ],
             'users' => [
                 'class' => ManyToManyField::className(),
                 'modelClass' => UserModel::className(),
                 'through' => UserFiltersLinkModel::className(),
-                'link' => ['filter_id', 'user_id'],
                 'verboseName' => 'In users dashboard',
             ],
             'enabled' => [
@@ -84,6 +82,18 @@ class DashboardFilter extends Model
                 'null' => true,
                 'verboseName' => 'Direct link',
             ],
+            'sorting' => [
+                'class' => IntField::className(),
+                'length' => 2,
+                'null' => true,
+                'verboseName' => 'Sorting order list',
+                'default' => 1,
+                'choices' => [
+                    1 => 'Priority shipping, Events count, Date',
+                    10 => 'Date ASC',
+                    11 => 'Date DESC',
+                ],
+            ],
             'form_data' => [
                 'class' => JsonField::className(),
                 'null' => false,
@@ -122,7 +132,7 @@ class DashboardFilter extends Model
     public function getSearchStorage()
     {
         if (!$this->s_store) {
-            $this->s_store = new OrderSearchStore($this->form_data, $this->id);
+            $this->s_store = new OrderSearchStore($this->form_data, $this);
         }
 
         return $this->s_store;
@@ -146,7 +156,7 @@ class DashboardFilter extends Model
     public function getMyPositions()
     {
         if (!$this->uf_link_model) {
-            $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user_id__login' => (string)Xcart::app()->user->login])->get();
+            $this->uf_link_model = UserFiltersLinkModel::objects()->filter(['filter_id' => $this->id, 'user__login' => (string)Xcart::app()->user->login])->get();
         }
 
         return [

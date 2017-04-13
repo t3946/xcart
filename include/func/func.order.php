@@ -30,6 +30,8 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Models\OrderGroupInvoiceProductModel;
+
 if (!defined('XCART_START')) {
     header("Location: ../");
     die("Access denied");
@@ -134,6 +136,7 @@ function func_get_shipping_groups($orderid)
                 foreach ($invoices as $k_i => $v_i) {
                     $i_products                 = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices_products] WHERE orderid='$orderid' AND manufacturerid='$m_id' AND invoice_number='$k_i'", "itemid", false);
                     $invoices[$k_i]["products"] = $i_products;
+                    $invoices[$k_i]["invoice_details"] = OrderGroupInvoiceProductModel::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id, 'invoice_number' => $k_i])->all();
                 }
             }
             $return[$m_id]["invoices"] = $invoices;
@@ -1983,6 +1986,7 @@ function func_get_order_manufacturers($orderid)
             if ($order["s_country"] != "US") {
                 $cidev_ship_to .= ", " . $order["s_countryname"];
             }
+            $cidev_ship_to_full = $order["s_address"] . ", " . $cidev_ship_to;
 
             foreach ($mnfs as $m_id => $mv)
             {
@@ -2087,11 +2091,13 @@ function func_get_order_manufacturers($orderid)
 
                 $mnfs[$m_id]['__items_table__']  = $cidev_items_table;
                 $mnfs[$m_id]['__shipto_table__'] = $cidev_ship_to;
+                $mnfs[$m_id]['__shipto_full_table__'] = $cidev_ship_to_full;
 
                 $d_message_body_14 = $mv['d_message_body_14'];
                 $d_message_body_14 = str_replace("\r\n", "<br />", $d_message_body_14);
                 $d_message_body_14 = str_replace("{{items}}", $cidev_items_table, $d_message_body_14);
                 $d_message_body_14 = str_replace("{{shipto}}", $cidev_ship_to, $d_message_body_14);
+                $d_message_body_14 = str_replace("{{shipto_full_address}}", $cidev_ship_to_full, $d_message_body_14);
                 $d_message_body_14 = str_replace("{{shipping_method}}", $order["shipping_groups"][$m_id]["shipping"], $d_message_body_14);
                 $d_message_body_14 = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $d_message_body_14);
                 $d_message_body_14 = str_replace("{{signature}}", $signature, $d_message_body_14);
@@ -2106,6 +2112,7 @@ function func_get_order_manufacturers($orderid)
                 $d_email_subject_14 = $mv['d_email_subject_14'];
                 $d_email_subject_14 = str_replace("{{items}}", $cidev_items_table, $d_email_subject_14);
                 $d_email_subject_14 = str_replace("{{shipto}}", $cidev_ship_to, $d_email_subject_14);
+                $d_email_subject_14 = str_replace("{{shipto_full_address}}", $cidev_ship_to_full, $d_email_subject_14);
                 $d_email_subject_14 = str_replace("{{orderid}}", $order["order_prefix"] . $orderid, $d_email_subject_14);
                 $d_email_subject_14 = str_replace("{{signature}}", $signature, $d_email_subject_14);
                 $d_email_subject_14 = str_replace("{{userfirstname}}", $userfirstname, $d_email_subject_14);

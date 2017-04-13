@@ -8,11 +8,6 @@ class OrderUserLastActivityModel extends OrderUserActivityModel
         return 'xcart_order_user_actives_last';
     }
 
-    public static function getPrimaryKeyName($asArray = false)
-    {
-        return ['user_id', 'order_id'];
-    }
-
     public function afterSave($owner, $isNew)
     {
 

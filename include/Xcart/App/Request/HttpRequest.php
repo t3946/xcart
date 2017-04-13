@@ -1,17 +1,4 @@
 <?php
-/**
- *
- *
- * All rights reserved.
- *
- * @author Okulov Anton
- * @email qantus@mail.ru
- * @version 1.0
- * @company HashStudio
- * @site http://hashstudio.ru
- * @date 13/06/16 12:20
- */
-
 namespace Xcart\App\Request;
 
 use Xcart\App\Exceptions\HttpException;
@@ -145,6 +132,7 @@ class HttpRequest extends Request
         if ($session instanceof Session) {
             $this->_session = $session;
         } elseif (is_array($session) || is_string($session)) {
+            $session['request'] = $this;
             $this->_session = Creator::create($session);
         }
     }
@@ -248,6 +236,19 @@ class HttpRequest extends Request
         return $this->getIsAjax() && !empty($_SERVER['HTTP_X_PJAX']);
     }
 
+    public function getHost()
+    {
+        if (isset($_SERVER['HTTP_HOST'])) {
+            return $_SERVER['HTTP_HOST'];
+        }
+        else if (isset($_SERVER['SERVER_NAME'])) {
+            return $_SERVER['SERVER_NAME'];
+        }
+        else {
+            return null;
+        }
+    }
+
     /**
      * Returns the schema and host part of the current request URL.
      * The returned URL does not have an ending slash.
@@ -334,7 +335,9 @@ class HttpRequest extends Request
     /**
      * Returns the currently requested absolute URL.
      * This is a shortcut to the concatenation of [[hostInfo]] and [[url]].
+     *
      * @return string the currently requested absolute URL.
+     * @throws \Xcart\App\Exceptions\InvalidConfigException
      */
     public function getAbsoluteUrl()
     {
@@ -356,10 +359,11 @@ class HttpRequest extends Request
         return $this->_url;
     }
 
-
     /**
      * Returns part of the request URL that is before the question mark.
+     *
      * @return string part of the request URL that is before the question mark
+     * @throws \Xcart\App\Exceptions\InvalidConfigException
      */
     public function getPath()
     {
@@ -574,11 +578,16 @@ class HttpRequest extends Request
 
     /**
      * Redirects the browser to the specified URL.
-     * @param string $url URL to be redirected to. Note that when URL is not
-     * absolute (not starting with "/") it will be relative to current request URL.
-     * @param array $data Data for create url
+     *
+     * @param string $url         URL to be redirected to. Note that when URL is not
+     *                            absolute (not starting with "/") it will be relative to current request URL.
+     * @param array $data         Data for create url
      * @param integer $statusCode the HTTP status code. Defaults to 302. See {@link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html}
-     * for details about HTTP status code.
+     *                            for details about HTTP status code.
+     *
+     * @throws \Exception
+     * @throws \Xcart\App\Exceptions\InvalidConfigException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
     public function redirect($url, $data = [], $statusCode = 302)
     {
@@ -591,7 +600,7 @@ class HttpRequest extends Request
         header('Location: '.$url, true, $statusCode);
 
         if (Xcart::app()->hasComponent('middleware')) {
-            Xcart::app()->middleware->processResponse(Xcart::app()->getComponent('request'));
+            Xcart::app()->middleware->processResponse(Xcart::app()->request);
         }
         Xcart::app()->end();
     }
