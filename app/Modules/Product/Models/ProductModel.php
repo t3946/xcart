@@ -7,6 +7,8 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Traits\DataModelTrait;
+use Xcart\Product;
 
 /**
  * @property string forsale
@@ -40,6 +42,13 @@ use Xcart\App\Orm\Fields\IntField;
  */
 class ProductModel extends AutoMetaModel
 {
+    use DataModelTrait;
+
+    public static function getDataModelClass()
+    {
+        return Product::className();
+    }
+
     public static function tableName()
     {
         return 'xcart_products';
