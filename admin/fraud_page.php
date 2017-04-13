@@ -74,7 +74,7 @@ if ($REQUEST_METHOD == "POST" && $mode == "unlock_order") {
                 func_header_location("fraud_page.php?orderid=$orderid");
             }
             $operator_on_order = func_query_first_param(/** @lang MySQL */
-                "SELECT firstname, s_firstname, b_firstname FROM xcart_customers WHERE login=:login",['login' => $login_last_opened_or_saved]);
+                "SELECT firstname, s_firstname, b_firstname FROM xcart_customers WHERE login=:login", ['login' => $login_last_opened_or_saved]);
             $operator_firstname = "";
             if (!empty($operator_on_order["firstname"])) {
                 $operator_firstname = $operator_on_order["firstname"];
@@ -106,7 +106,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
         $log = "'Apply changes, update fraud scores and change fraud check status' at 'Fraud page'";
     }
     if (($mode == "apply_changes_and_update_fraud_scores" || $mode == "apply_changes_and_update_fraud_scores_and_change_fraud_check_status") && !empty($posted_data) && is_array($posted_data)) {
-       if (!empty($groups) && is_array($groups)) {
+        if (!empty($groups) && is_array($groups)) {
             $new_groups = [];
             $for_all_paymentid = "";
             foreach ($groups as $k => $v) {
@@ -300,12 +300,13 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                     'additional_info' => $additional_info
                 ]);
                 if ($orderModel && $question_code == 'MANUAL_IS_ORDER_ITEMS_EASY_TO_SELL'
-                    && in_array('manual_action', array_keys($orderFraudCheckModel->getChangedAttributes()))) {
+                    && in_array('manual_action', array_keys($orderFraudCheckModel->getChangedAttributes()))
+                ) {
                     $aOrderDetails = OrderDetailModel::objects()->filter(['orderid' => $orderModel->orderid])->all();
                     if (!empty($aOrderDetails)) {
                         foreach ($aOrderDetails as $orderDetailModel) {
                             $hardSellModel = ProductHardResellModel::objects()->getOrCreate(['product_id' => $orderDetailModel->productid]);
-                            switch($manual_action) {
+                            switch ($manual_action) {
                                 case 'Y':
                                     $hardSellModel->positive_count++;
                                     break;
@@ -413,7 +414,6 @@ if (!empty($geo_litecity_location)) {
 
     $geoip_address = $geo_litecity_location["country"] . ", " . $geo_litecity_location["region"] . ", " . $geo_litecity_location["city"] . ", " . $geo_litecity_location["postalCode"];
 }
-
 
 
 $billing_address_comma = $userinfo["b_address"] . (!empty($userinfo["b_address_2"]) ? ", $userinfo[b_address_2]" : "") . ", " . $userinfo["b_city"] . ", " . $userinfo["b_state"] . ", " . $userinfo["b_zipcode"];
@@ -592,14 +592,14 @@ if ($orderModel) {
             /** @var ProductHardResellModel $hardResellModel */
             $hardResellModel = ProductHardResellModel::objects()->get(['product_id' => $detailModel->productid]);
             if ($hardResellModel) {
-            $hts = $hardResellModel->getHardToResellStatus();
-            if (!is_null($bHardToResell)) {
-                if ($bHardToResell != ProductHardResellModel::HARD_TO_RESELL_UNKNOWN) {
-                    $bHardToResell = ($hts != $bHardToResell) ? ProductHardResellModel::HARD_TO_RESELL_UNKNOWN : $hts;
+                $hts = $hardResellModel->getHardToResellStatus();
+                if (!is_null($bHardToResell)) {
+                    if ($bHardToResell != ProductHardResellModel::HARD_TO_RESELL_UNKNOWN) {
+                        $bHardToResell = ($hts != $bHardToResell) ? ProductHardResellModel::HARD_TO_RESELL_UNKNOWN : $hts;
+                    }
+                } else {
+                    $bHardToResell = $hts;
                 }
-            } else {
-                $bHardToResell = $hts;
-
                 $productModel = $detailModel->product_model;
                 if ($productModel) {
                     switch ($hts) {
@@ -813,12 +813,12 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
 }
 
 if ($update_overall_fraud_score) {
-    if ($orderModel){
+    if ($orderModel) {
         $orderModel->overall_fraud_score = $overall_fraud_score;
         $orderModel->save();
     }
 } else {
-    if ($orderModel){
+    if ($orderModel) {
         $overall_fraud_score = $orderModel->overall_fraud_score;
     }
 }
