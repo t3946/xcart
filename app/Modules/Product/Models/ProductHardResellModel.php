@@ -5,7 +5,7 @@ namespace Modules\Product\Models;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\IntField;
 
-class ProductHardResell extends AutoMetaModel
+class ProductHardResellModel extends AutoMetaModel
 {
     const HARD_TO_RESELL_YES = 'Y';
     const HARD_TO_RESELL_NO = 'N';

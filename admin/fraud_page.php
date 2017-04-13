@@ -4,7 +4,7 @@ use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Product\Helpers\ProductHelper;
-use Modules\Product\Models\ProductHardResell;
+use Modules\Product\Models\ProductHardResellModel;
 
 global $orderid, $smarty, $mode, $order_data, $REQUEST_METHOD, $xcart_dir;
 
@@ -304,7 +304,7 @@ if ($REQUEST_METHOD == "POST" && !($mode == "unlock_order" || $mode == "unlock_o
                     $aOrderDetails = OrderDetailModel::objects()->filter(['orderid' => $orderModel->orderid])->all();
                     if (!empty($aOrderDetails)) {
                         foreach ($aOrderDetails as $orderDetailModel) {
-                            $hardSellModel = ProductHardResell::objects()->getOrCreate(['product_id' => $orderDetailModel->productid]);
+                            $hardSellModel = ProductHardResellModel::objects()->getOrCreate(['product_id' => $orderDetailModel->productid]);
                             switch($manual_action) {
                                 case 'Y':
                                     $hardSellModel->positive_count++;
@@ -414,16 +414,7 @@ if (!empty($geo_litecity_location)) {
     $geoip_address = $geo_litecity_location["country"] . ", " . $geo_litecity_location["region"] . ", " . $geo_litecity_location["city"] . ", " . $geo_litecity_location["postalCode"];
 }
 
-$links_to_ordered_products = '';
-if (!empty($products) && is_array($products)) {
-    $last_index = count($products) - 1;
-    foreach ($products as $k => $v) {
-        $links_to_ordered_products .= '<a href="' . $v["links"]["customer"] . '" target="_blank" style="color: #1F08F8;">' . $v["productcode"] . '</a>';
-        if ($k != $last_index) {
-            $links_to_ordered_products .= '<br />';
-        }
-    }
-}
+
 
 $billing_address_comma = $userinfo["b_address"] . (!empty($userinfo["b_address_2"]) ? ", $userinfo[b_address_2]" : "") . ", " . $userinfo["b_city"] . ", " . $userinfo["b_state"] . ", " . $userinfo["b_zipcode"];
 
@@ -580,32 +571,57 @@ if (!empty($fraud_Google_email_search_exclusions)) {
     $fraud_Google_email_search_exclusions = "+-" . $fraud_Google_email_search_exclusions;
 }
 
-/*
-$fraud_Google_search_negative_words = trim($config["Fraud_check"]["fraud_Google_search_negative_words"]);
-if (!empty($fraud_Google_search_negative_words)){
-	$fraud_Google_search_negative_words = str_replace(" ", "+", $fraud_Google_search_negative_words);
-	$fraud_Google_search_negative_words = "+".$fraud_Google_search_negative_words;
-	$fraud_Google_address_search_exclusions .= $fraud_Google_search_negative_words;
-}
-*/
+/*if (!empty($products) && is_array($products)) {
+    $last_index = count($products) - 1;
+    foreach ($products as $k => $v) {
+        $links_to_ordered_products .= '<a href="' . $v["links"]["customer"] . '" target="_blank" style="color: #1F08F8;">' . $v["productcode"] . '</a>';
+        if ($k != $last_index) {
+            $links_to_ordered_products .= '<br />';
+        }
+    }
+}*/
 
+$links_to_ordered_products = '';
 $bHardToResell = null;
+$aProductLinks = [];
 if ($orderModel) {
     $maxOrderPriceAmount = 0;
     if ($orderDetails = OrderDetailModel::objects()->filter(['orderid' => $orderModel->orderid])->all()) {
         foreach ($orderDetails as $detailModel) {
             $maxOrderPriceAmount = max($detailModel->price * $detailModel->amount, $maxOrderPriceAmount);
-            $hardResellModel = ProductHardResell::objects()->get(['product_id' => $detailModel->productid]);
-            $hts = ProductHelper::getHardToResellStatus($hardResellModel);
+            /** @var ProductHardResellModel $hardResellModel */
+            $hardResellModel = ProductHardResellModel::objects()->get(['product_id' => $detailModel->productid]);
+            $hts = $hardResellModel->getHardToResellStatus();
             if (!is_null($bHardToResell)) {
-                $bHardToResell = $hts && $bHardToResell;
+                if ($bHardToResell != ProductHardResellModel::HARD_TO_RESELL_UNKNOWN) {
+                    $bHardToResell = ($hts != $bHardToResell) ? ProductHardResellModel::HARD_TO_RESELL_UNKNOWN : $hts;
+                }
             } else {
                 $bHardToResell = $hts;
             }
+            $productModel = $detailModel->product_model;
+            if ($productModel) {
+                switch($hts) {
+                    case null :
+                    case ProductHardResellModel::HARD_TO_RESELL_UNKNOWN :
+                        $aProductLinks[] = "<a href='{$productModel->getDataModel()->getUrl()}' target='_blank' style='color: #1F08F8;'>{$productModel->productcode}</a>";
+                        break;
+                    case ProductHardResellModel::HARD_TO_RESELL_YES:
+                        $aProductLinks[] = "<span style='background-color: #D9EAD3;'>{$productModel->productcode}</span> HARD TO RESELL";
+                        break;
+                    case ProductHardResellModel::HARD_TO_RESELL_NO:
+                        $aProductLinks[] = "<span style='background-color: #F4CCCC;'>{$productModel->productcode}</span> EASY TO RESELL";
+                        break;
+
+                }
+            }
+        }
+        if ($aProductLinks) {
+            $links_to_ordered_products = implode('<br>', $aProductLinks);
         }
     }
     if (!(($orderModel->total > 50) || ($maxOrderPriceAmount > 10))) {
-        $bHardToResell = true;
+        $bHardToResell = ProductHardResellModel::HARD_TO_RESELL_YES;
     }
 }
 
@@ -725,9 +741,6 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
 
                 $additional_info = $bare_fraud_score_arr["additional_info"];
 
-//	                        $importance_factor = str_replace(' ', '', $v["importance_factor"]);
-//        	                $importance_factor_arr = explode(",", $importance_factor);
-
                 if ($fraud_result == "negative") {
                     $selected_importance_factor = $importance_factor_arr[0];
                 } elseif ($fraud_result == "positive") {
@@ -769,14 +782,14 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
             if ($v["question_code"] == 'MANUAL_IS_ORDER_ITEMS_EASY_TO_SELL') {
                 if (!is_null($bHardToResell)) {
                     switch ($bHardToResell) {
-                        case true:
+                        case ProductHardResellModel::HARD_TO_RESELL_YES:
                             $fraud_checks[$k]["manual_action"] = "Y";
                             $fraud_result = "positive";
                             $bare_fraud_score = $importance_factor_arr[2];
                             $fraud_score = $bare_fraud_score;
                             $update_overall_fraud_score = true;
                             break;
-                        case false:
+                        case ProductHardResellModel::HARD_TO_RESELL_NO:
                             $fraud_checks[$k]["manual_action"] = "N";
                             $fraud_result = "negative";
                             $bare_fraud_score = $importance_factor_arr[0];
@@ -798,9 +811,14 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
 }
 
 if ($update_overall_fraud_score) {
-    db_query("UPDATE $sql_tbl[orders] SET overall_fraud_score='$overall_fraud_score' WHERE orderid='$orderid'");
+    if ($orderModel){
+        $orderModel->overall_fraud_score = $overall_fraud_score;
+        $orderModel->save();
+    }
 } else {
-    $overall_fraud_score = func_query_first_cell("SELECT overall_fraud_score FROM $sql_tbl[orders] WHERE orderid='$orderid'");
+    if ($orderModel){
+        $overall_fraud_score = $orderModel->overall_fraud_score;
+    }
 }
 
 $smarty->assign("orderid", $orderid);
