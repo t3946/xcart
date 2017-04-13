@@ -727,7 +727,7 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
 
         $fraud_checks[$k]["importance_factor_arr"] = $importance_factor_arr;
 
-        if ($fraud_score == "" && $v["auto"] == "Y") {
+        if (floatval($fraud_score) == 0 && $v["auto"] == "Y") {
 
             $func_name = "func_" . $v["question_code"];
 
@@ -755,7 +755,7 @@ if (!empty($fraud_checks) && is_array($fraud_checks)) {
 
             $update_overall_fraud_score = true;
 
-        } elseif ($fraud_score == "" && $v["auto"] != "Y") {
+        } elseif (floatval($fraud_score) == 0 && $v["auto"] != "Y") {
             if (strpos($config["Fraud_check"]["fraud_domains_free_email_provider"], $userinfo_site) !== false
                 && ($v["question_code"] == "MANUAL_CHECK_EMAIL_DOMAIN_WEBSITE" || $v["question_code"] == "MANUAL_CHECK_EMAIL_DOMAIN_WEBSITE_FOR_SHIPPING_ADDRESS")
             ) {
