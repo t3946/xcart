@@ -20,6 +20,7 @@ return array_replace_recursive([
        'Amazon',
        'Order',
        'Reports',
+    ],
    'locale' => [
        'language' => 'ru',
        'sourceLanguage' => 'en',
