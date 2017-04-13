@@ -362,6 +362,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                                     $fileModel = ProductHelper::uploadProductFile($aFile['name'], $aFile['link'], $modelProduct->productid);
                                     if ($fileModel && $fileModel->getIsNewRecord()) {
                                         $fileModel->avail = 'Y';
+                                        $fileModel->date = time();
                                         $fileModel->orderby = ++$orderBy * 10;
                                         $fileModel->save();
                                     }
