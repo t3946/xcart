@@ -210,13 +210,17 @@
 
   }
 
-  .submenu-container {
+  .submenu-wrapper {
     position: absolute;
     overflow: hidden;
     right: 0;
     left: 25%;
     bottom: 0;
     top: 0;
+
+    .submenu-container {
+
+    }
   }
 
   .top-submenu {

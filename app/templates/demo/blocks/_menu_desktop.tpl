@@ -40,10 +40,12 @@
 
                     </div>
                     <div class="columns large-9">
-                        <div class="submenu-container">
+                        <div class="submenu-wrapper">
                             {foreach $catMenu as $item index=$index}
                                 <div id="top-csm-{$index}" class="hide">
-                                    {include "demo/blocks/_submenu_desktop.tpl"}
+                                    <div class="submenu-container">
+                                        {include "demo/blocks/_submenu_desktop.tpl"}
+                                    </div>
                                 </div>
 
                                 {if $index == 11} {break} {/if}
