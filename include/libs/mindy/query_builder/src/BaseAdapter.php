@@ -810,12 +810,15 @@ abstract class BaseAdapter implements ISQLGenerator
 
     /**
      * @param array|null|string $columns
-     * @param null $distinct
+     * @param null              $distinct
+     * @param string            $options
+     *
      * @return string
+     * @throws \Exception
      */
     public function sqlSelect($columns, $distinct = null, $options = '')
     {
-        $selectSql = $distinct ? 'SELECT DISTINCT ' : 'SELECT ' . $options . ' ' ;
+        $selectSql = $distinct ? 'SELECT DISTINCT ' : 'SELECT ' . $options . ' ';
         if (empty($columns)) {
             return $selectSql . '*';
         }
@@ -825,58 +828,78 @@ abstract class BaseAdapter implements ISQLGenerator
         }
 
         $select = [];
-        foreach ($columns as $column => $subQuery) {
-            if ($subQuery instanceof QueryBuilder) {
-                $subQuery = $subQuery->toSQL();
-            } else if ($subQuery instanceof Expression) {
-                $subQuery = $this->quoteSql($subQuery->toSQL());
-            } else {
-                $subQuery = $this->quoteSql($subQuery);
-            }
-
-            if (is_numeric($column)) {
-                $column = $subQuery;
-                $subQuery = '';
-            }
-
-            if (!empty($subQuery)) {
-                if (strpos($subQuery, 'SELECT') !== false) {
-                    $value = '(' . $subQuery . ') AS ' . $this->quoteColumn($column);
-                } else {
-                    $value = $this->quoteColumn($subQuery) . ' AS ' . $this->quoteColumn($column);
+        foreach ($columns as $column => $expr) {
+            if (is_object($expr)) {
+                if ($expr instanceof QueryBuilder) {
+                    $subQuery = $expr->toSQL();
                 }
-            } else {
-                if (strpos($column, ',') === false && strpos($column, 'AS') !== false) {
-                    if (strpos($column, 'AS') !== false) {
-                        list($rawColumn, $rawAlias) = explode('AS', $column);
-                    } else {
-                        $rawColumn = $column;
-                        $rawAlias = '';
+                else if ($expr instanceof Expression) {
+                    $subQuery = $this->quoteSql($expr->toSQL());
+                }
+
+                $value = $this->quoteColumn($subQuery);
+
+                if (!is_numeric($column)) {
+                    $value .= ' AS ' . $this->quoteColumn($column);
+                }
+            }
+            else {
+                $subQuery = $this->quoteSql($expr);
+
+                if (is_numeric($column)) {
+                    $column = $subQuery;
+                    $subQuery = '';
+                }
+
+                if (!empty($subQuery)) {
+                    if (strpos($subQuery, 'SELECT') !== false) {
+                        $value = '(' . $subQuery . ') AS ' . $this->quoteColumn($column);
                     }
-
-                    $value = empty($rawAlias) ? $this->quoteColumn(trim($rawColumn)) : $this->quoteColumn(trim($rawColumn)) . ' AS ' . $this->quoteColumn(trim($rawAlias));
-                } else if (strpos($column, ',') !== false) {
-                    $newSelect = [];
-                    foreach (explode(',', $column) as $item) {
-                        // if (preg_match('/^(.*?)(?i:\s+as\s+|\s+)([\w\-_\.]+)$/', $item, $matches)) {
-                        //     list(, $rawColumn, $rawAlias) = $matches;
-                        // }
-
-                        if (strpos($item, 'AS') !== false) {
-                            list($rawColumn, $rawAlias) = explode('AS', $item);
-                        } else {
-                            $rawColumn = $item;
+                    else {
+                        $value = $this->quoteColumn($subQuery) . ' AS ' . $this->quoteColumn($column);
+                    }
+                }
+                else {
+                    if (strpos($column, ',') === false && strpos($column, 'AS') !== false) {
+                        if (strpos($column, 'AS') !== false) {
+                            list($rawColumn, $rawAlias) = explode('AS', $column);
+                        }
+                        else {
+                            $rawColumn = $column;
                             $rawAlias = '';
                         }
 
-                        $newSelect[] = empty($rawAlias) ? $this->quoteColumn(trim($rawColumn)) : $this->quoteColumn(trim($rawColumn)) . ' AS ' . $this->quoteColumn(trim($rawAlias));
+                        $value = empty($rawAlias) ? $this->quoteColumn(trim($rawColumn))
+                            : $this->quoteColumn(trim($rawColumn)) . ' AS ' . $this->quoteColumn(trim($rawAlias));
                     }
-                    $value = implode(', ', $newSelect);
+                    else if (strpos($column, ',') !== false) {
+                        $newSelect = [];
 
-                } else {
-                    $value = $this->quoteColumn($column);
+                        foreach (explode(',', $column) as $item) {
+                            // if (preg_match('/^(.*?)(?i:\s+as\s+|\s+)([\w\-_\.]+)$/', $item, $matches)) {
+                            //     list(, $rawColumn, $rawAlias) = $matches;
+                            // }
+
+                            if (strpos($item, 'AS') !== false) {
+                                list($rawColumn, $rawAlias) = explode('AS', $item);
+                            }
+                            else {
+                                $rawColumn = $item;
+                                $rawAlias = '';
+                            }
+
+                            $newSelect[] = empty($rawAlias) ? $this->quoteColumn(trim($rawColumn))
+                                : $this->quoteColumn(trim($rawColumn)) . ' AS ' . $this->quoteColumn(trim($rawAlias));
+                        }
+                        $value = implode(', ', $newSelect);
+
+                    }
+                    else {
+                        $value = $this->quoteColumn($column);
+                    }
                 }
             }
+
             $select[] = $value;
         }
 

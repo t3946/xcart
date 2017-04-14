@@ -35,6 +35,8 @@
 # $Id: func.core.php,v 1.52.2.43 2007/01/15 08:18:26 twice Exp $
 #
 
+use Modules\Core\Helpers\CoreHelper;
+
 if (!defined('XCART_START')) {
     header("Location: ../");
     die("Access denied");
@@ -2889,7 +2891,7 @@ function func_del_excluded_char_sequences($text = '', $excluded_char_sequences =
         }
     }
 
-    $text = strip_tags($text);
+    $text = CoreHelper::stripTags($text);
     $text = htmlspecialchars_decode($text);
     $text = preg_replace("/[\r\n\t]/S", " ", $text);
     $text = preg_replace("/[^0-9a-zA-Z]/S", " ", $text);
@@ -3840,6 +3842,25 @@ function func_check_comma_in_field($orderid, $value, $sFieldName)
     }
 
     return false;
+}
+
+function file_get_filename_curl($url)
+{
+    $originalFileName = '';
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, true);
+    curl_setopt($curl, CURLOPT_NOBODY, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
+    $data = curl_exec($curl);
+    if(preg_match('/Content-Disposition: .*filename="([^"]+)/', $data, $matches)) {
+        $originalFileName = $matches[1];
+    }
+    curl_close($curl);
+
+    return $originalFileName;
 }
 
 function file_get_contents_curl($url)

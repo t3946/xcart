@@ -18,7 +18,7 @@ use Xcart\ShippingCacheQuotes;
 
 abstract class ShippingProcessor
 {
-    private $oManufacturer = null;
+    protected $oManufacturer = null;
     private $oShippingZone = null;
     private $sShippingType = null;
     /**

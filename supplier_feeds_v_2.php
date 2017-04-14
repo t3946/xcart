@@ -822,7 +822,7 @@ foreach ($supplier_feeds as $k => $v) {
     );
     func_array2update("supplier_feeds", $supplier_feed, "feed_id = '$v[feed_id]'");
     if (!empty($last_feed_fields_arr)) {
-        db_query("UPDATE $sql_tbl[manufacturer_feed_fields] SET locked='N' WHERE manufacturerid='$v[manufacturerid]'");
+        db_query("UPDATE $sql_tbl[manufacturer_feed_fields] SET locked='N' WHERE feed_id = '$v[feed_id]' AND  manufacturerid='$v[manufacturerid]'");
         $deprecated_manufacturer_feed_fields = array("productcode", "supplier_categories", "attributes", "images", "alt_names",);
         foreach ($last_feed_fields_arr as $k_field_name => $field_name) {
             if (!empty($product_cols_replace[$field_name])) {
