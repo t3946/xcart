@@ -89,6 +89,7 @@
                                     </div>
                                 </section>
 
+
                             </div>
                             <div class="columns small-12 large-7">
                                 {include "demo/blocks/_search.tpl"}

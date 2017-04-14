@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="{$SkinDir}/skin1_admin.css" />
 
 <link rel="stylesheet" href="{$SkinDir}/lib/jqueryui/jquery.ui.admin.css" />
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
 
 {if $main eq "manufacturers"}
 <script src="{$SkinDir}/tinymce/js/tinymce/qunit-git.js"></script>

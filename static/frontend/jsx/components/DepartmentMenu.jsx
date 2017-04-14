@@ -50,11 +50,7 @@ class DepartmentMenu
         });
 
         this.elemets['items'].on('mouseenter touchstart', (e) => {
-            for (let i = 0; i < this.elemets['items'].length; i++)
-            {
-                let tid =  $(this.elemets['items'][i]).data('hover-toggle');
-                $('#' + tid).addClass('hide');
-            }
+            this._hide_items();
 
             let $target = $(e.target);
             if (!$target.hasClass(this.options.classes['menu-item'])) {
@@ -91,10 +87,20 @@ class DepartmentMenu
         $(document).trigger('show:dm');
     }
 
+    _hide_items() {
+        for (let i = 0; i < this.elemets['items'].length; i++)
+        {
+            let tid =  $(this.elemets['items'][i]).data('hover-toggle');
+            $('#' + tid).addClass('hide');
+        }
+    }
+
     _hide() {
         this.elemets.wrapper.addClass('hide');
         this.elemets.wrapper.removeClass('is-active');
         this.elemets.button.removeClass('is-active');
+        this.elemets.container.removeClass('submenu-active');
+        this._hide_items();
 
         $(document).trigger('hide:dm');
     }

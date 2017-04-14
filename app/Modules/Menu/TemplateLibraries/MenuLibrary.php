@@ -53,7 +53,7 @@ class MenuLibrary extends TemplateLibrary
      */
     public static function getCategoryMenu()
     {
-        return [
+        $menu = [
             [
                 'name' => 'Accessories',
                 'image' => "/static/frontend/demo_images/category/icons/accessories.svg",
@@ -139,5 +139,100 @@ class MenuLibrary extends TemplateLibrary
                 'image' => "/static/frontend/demo_images/category/icons/uncategorized.svg",
             ],
         ];
+
+        shuffle($menu);
+        $max = rand(3, count($menu));
+        $nmenu = [];
+
+        for($i = 0; $i < $max; $i++)
+        {
+            $nmenu[] = $menu[$i];
+        }
+        return $nmenu;
+    }
+
+    /**
+     * @kind accessorFunction
+     * @name getRandomSubmenu
+     * @return array
+     */
+    public static function getRandomSubmenu()
+    {
+        $lvl3 = [
+            'Brushes by Medium or Technique',
+            'Brushes by Hair or Fiber',
+            'Brushes by Name or Shape',
+            'Scholastic Brushes',
+            'Scholastic Brushes BlahBlahBlah',
+        ];
+
+        $lvl4 = [
+            'Acrylic and Oil Brushes',
+            'Brush Techniques Demonstration',
+            'Paper',
+            'Ceramic and Glazing Brushes',
+            'Decorative and Miniature Brushes',
+            'Encaustic Brushes',
+            'Faux Finishing Brushes and Tools',
+            'Gilding Brushes',
+            'Lettering Brushes',
+            'Multi-Purpose and Utility Brushes',
+            'Mural and Fresco Brushes',
+            'Oriental and Sumi Brushes',
+            'Paint Rollers',
+            'Painting and Palette Knives',
+            'Stencil Brushes',
+            'Striping Brushes',
+            'Varnish and Gesso Brushes',
+            'Watercolor Brushes',
+            'Badger Brushes',
+            'Bristle Brushes',
+            'Sable/Kolinsky Brushes',
+            'Squirrel Brushes',
+            'Synthetic Brushes',
+            'Angular',
+            'Bright',
+            'Fan',
+            'Filbert',
+            'Flat',
+            'Hake',
+            'Highliner',
+            'Mop',
+            'Mottler',
+            'One Stroke',
+            'Oval Wash',
+            'Black Bristle',
+            'Camel/Pony',
+            'Colored Synthetic',
+            'Foam and Sponge Brushes',
+            'Golden Synthetic',
+            'Scholastic Sable',
+            'White Bristle',
+            'White Synthetic',
+            'Brushes',
+        ];
+
+        $menu = [];
+
+        $cnt1 = rand(1, 10);
+        for ($i = 0; $i < $cnt1; $i++) {
+            $name = array_rand($lvl3);
+            $menu[ $i ] = [
+                'name' => $lvl3[ $name ],
+                'link' => '#',
+                'items' => [],
+            ];
+
+            $cnt2 = rand(0, 20);
+            for ($x = 0; $x < $cnt2; $x++) {
+                $name = array_rand($lvl4);
+                $menu[ $i ]['items'][] = [
+                    'name' => $lvl4[ $name ],
+                    'link' => '#',
+                ];
+            }
+        }
+
+        return $menu;
     }
 }
