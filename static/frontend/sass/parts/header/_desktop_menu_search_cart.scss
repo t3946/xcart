@@ -237,7 +237,7 @@ $view_all_height: rem-calc(22);
   }
 
   .submenu-container {
-    padding-bottom: $view_all_height;
+    padding-bottom: rem-calc(25);
     padding-top: rem-calc(9);
     display: none;
     position: absolute;
