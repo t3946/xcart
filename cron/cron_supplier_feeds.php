@@ -221,12 +221,11 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $modelProduct->save();
                         break;
                     case 'P' :
+                        if (empty($aProduct['cost_to_us'])) {continue;}
                         if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
                             $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
                         }
                         if ($modelProduct->getIsNewRecord()) {
-
-                            if (empty($aProduct['cost_to_us']) || empty($aProduct['images'])) {continue;}
 
                             if (!empty($supplierFeed->defaults) && is_array($supplierFeed->defaults)) {
                                 $modelProduct->setAttributes($supplierFeed->defaults);
