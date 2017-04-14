@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Reports\Controllers;
 
 use Modules\Dashboard\Helpers\SearchHelper;
@@ -23,10 +24,9 @@ class ReportsController extends PrototypeAdminController
         if (!empty($_GET['search'])) {
             $form_collapse = true;
             $form_data = OrderSearchStore::getClearedData($_GET['search']);
-        }
-        else {
+        } else {
             $form_data = [
-                'order'    => [
+                'order' => [
                     'date' => SearchHelper::getDefaultSearchDate(),
                 ],
             ];
@@ -45,9 +45,9 @@ class ReportsController extends PrototypeAdminController
         echo $this->renderInternal('reports/search.tpl', array_merge(
                 SearchHelper::getFormAndListData(),
                 [
-                    'pager'         => $pager,
-                    'models'        => $models,
-                    'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
+                    'pager' => $pager,
+                    'models' => $models,
+                    'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
                     'form_collapse' => $form_collapse,
                 ])
         );
@@ -55,27 +55,66 @@ class ReportsController extends PrototypeAdminController
 
     public function view()
     {
+        $filter = $distributorCodes = [];
         if (!empty($_GET['search'])) {
             $form_data = OrderSearchStore::getClearedData($_GET['search']);
         } else {
             $form_data = [
-                'order'    => [
+                'order' => [
                     'date' => SearchHelper::getDefaultSearchDate(),
                 ],
             ];
         }
         $orderStore = (new OrderSearchStore($form_data));
-        $orderStore->setOrder(['-date', '-orderid']);
 
-        $models = $orderStore->getModels();
+        switch ($form_data['order']['profit_margin']) {
+            case "profit" :
+                $filter = ['group.profit_margin__lt' => 100];
+                break;
+            case "profit15" :
+                $filter = ['group.profit_margin__lte' => $form_data['order']['profit_margin_profit15_edit']];
+                break;
+            case "profit_between" :
+                $filter = [
+                    'group.profit_margin__gte' => $form_data['order']['profit_margin_profitbetween_start'],
+                    'group.profit_margin__lt' => $form_data['order']['profit_margin_profitbetween_end'],
+                ];
+                break;
+        }
+        $qs = $orderStore->getQuerySet();
+        if ($filter) {
+            $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+        }
+        $qs->group([]);
+
+        $orderModels = $qs->filter($filter)->all();
+
+        if (!empty($orderModels)) {
+            foreach ($orderModels as $model) {
+                $groupModels = $model->groups;
+                if (!empty($groupModels)) {
+                    foreach ($groupModels as $groupModel) {
+                        $distributorModel = $groupModel->manufacturer;
+                        if ($distributorModel && !in_array($distributorModel->code, $distributorCodes)) {
+                            $distributorCodes[] = $distributorModel->code;
+                        }
+
+                    }
+                }
+            }
+            sort($distributorCodes);
+        }
+
+
         $pager = $orderStore->getPager();
 
-        echo $this->renderInternal('reports/view.tpl', array_merge(
+        echo $this->render('reports/view.tpl', array_merge(
                 SearchHelper::getFormAndListData(),
                 [
-                    'pager'         => $pager,
-                    'models'        => $models,
-                    'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
+                    'pager' => $pager,
+                    'models' => $orderModels,
+                    'distributorCodes' => (empty($distributorCodes)) ? : implode(', ', $distributorCodes),
+                    'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
                 ])
         );
     }
@@ -117,7 +156,7 @@ class ReportsController extends PrototypeAdminController
             array_merge(
                 SearchHelper::getFormAndListData(),
                 [
-                    'model'     => $model,
+                    'model' => $model,
                     'form_data' => SearchHelper::prepareFormDataForTemplate($model->form_data),
                 ]
             )
@@ -134,11 +173,9 @@ class ReportsController extends PrototypeAdminController
     {
         if (array_key_exists('save_continue', $_POST)) {
             return ['reports:update_report', ['id' => $model->id]];
-        }
-        else if (array_key_exists('save_create', $_POST)) {
+        } else if (array_key_exists('save_create', $_POST)) {
             return ['reports:create_report', []];
-        }
-        else {
+        } else {
             return ['reports:index', []];
         }
     }

@@ -38,15 +38,15 @@
                     <div class="columns large-12">
                         <input name="search[order][profit_margin]" type="radio" value="profit15" id="profit_margin_profit15" {if $form_data.order.profit_margin == 'profit15'}checked{/if}>
                         <label for="profit_margin_profit15">Show orders with profit margin ≤</label>
-                        <input size="3" type="text" value="15" name="profit_margin_profit15_edit" id="profit_margin_profit15_edit"/>
+                        <input size="3" type="text" value="15" name="search[order][profit_margin_profit15_edit]" id="profit_margin_profit15_edit"/>
                         <label for="profit_margin_profit15_edit">%</label>
                     </div>
                     <div class="columns large-12">
                         <input name="search[order][profit_margin]" type="radio" value="profit_between" id="profit_margin_profit_between" {if $form_data.order.profit_margin == 'profit_between'}checked{/if}>
                         <label for="profit_margin_profit_between">Show orders with</label>
-                        <input size="3" type="text" value="30" name="profit_margin_profitbetween_start" id="profit_margin_profitbetween_start"/>
+                        <input size="3" type="text" value="30" name="search[order][profit_margin_profitbetween_start]" id="profit_margin_profitbetween_start"/>
                         <label for="profit_margin_profitbetween_start">% ≤ profit margin <</label>
-                        <input size="3" type="text" value="100" name="profit_margin_profitbetween_end" id="profit_margin_profitbetween_end"/>
+                        <input size="3" type="text" value="100" name="search[order][profit_margin_profitbetween_end]" id="profit_margin_profitbetween_end"/>
                         <label for="profit_margin_profitbetween_end">%</label>
                     </div>
                 </div>
