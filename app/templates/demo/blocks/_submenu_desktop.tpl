@@ -3,7 +3,7 @@
     {if $menus|count > 0}
         {foreach $menus as $menu}
             <div class="column">
-                <h4>
+                <h4 class="{if $menu.items|count > 0}has-children{/if}">
                     <a href="{$menu.link}">{$menu.name}</a>
                 </h4>
                 {if $menu.items|count > 0}

@@ -254,16 +254,25 @@ $view_all_height: rem-calc(22);
 
       h4 {
         font-size: rem-calc(14);
-        border-bottom: 1px solid #c2c2c2;
-        padding-bottom: 8px;
         margin-bottom: 6px;
         font-weight: bold;
+
+        &.has-children {
+          padding-bottom: 8px;
+          border-bottom: 1px solid #c2c2c2;
+        }
       }
 
       .column + .column,
       h4 + h4,
       ul + h4 {
         margin-top: rem-calc(20);
+      }
+
+      h4, a {
+        &:hover {
+          text-decoration: underline;
+        }
       }
 
       ul {
@@ -274,7 +283,6 @@ $view_all_height: rem-calc(22);
           line-height: rem-calc(16);
           font-size: rem-calc(12);
           color: black;
-
         }
       }
     }
