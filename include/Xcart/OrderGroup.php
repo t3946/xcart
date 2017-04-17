@@ -154,8 +154,11 @@ class OrderGroup extends Data
     {
         if (is_null($this->fCostToUs)) {
             $this->fCostToUs = 0;
-            foreach ($this->getOrderDetails() as $oOrderDetails) {
-                $this->fCostToUs += $oOrderDetails->getCostToUs();
+            $orderDetails = $this->getOrderDetails();
+            if (!empty($orderDetails)) {
+                foreach ($this->getOrderDetails() as $oOrderDetails) {
+                    $this->fCostToUs += $oOrderDetails->getCostToUs();
+                }
             }
         }
         return $this->fCostToUs;

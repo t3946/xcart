@@ -123,7 +123,7 @@ if (!empty($manufacturers) && is_array($manufacturers) && !empty($states)) {
                 $current_id = func_query_first_cell_param(/** @lang MySQL */
                     "SELECT id FROM xcart_approximation_shipping_rates WHERE manufacturerid=:manufacturerid AND state=:state", ['manufacturerid' => $manufacturerid, 'state' => $state_info['code']]);
                 if (empty($current_id)) {
-                    db_query_param("INSERT INTO $sql_tbl[approximation_shipping_rates] (manufacturerid, state, bw_1, bw_75, bw_150, last_updated_date) VALUES ('$manufacturerid', '$state_info[code]', '" . $found_shippings[0]["rate"] . "', '" . $found_shippings[1]["rate"] . "', '" . $found_shippings[2]["rate"] . "', '" . time() . "')");
+                    db_query("INSERT INTO $sql_tbl[approximation_shipping_rates] (manufacturerid, state, bw_1, bw_75, bw_150, last_updated_date) VALUES ('$manufacturerid', '$state_info[code]', '" . $found_shippings[0]["rate"] . "', '" . $found_shippings[1]["rate"] . "', '" . $found_shippings[2]["rate"] . "', '" . time() . "')");
                 } else {
                     db_query("UPDATE $sql_tbl[approximation_shipping_rates] SET bw_1='" . $found_shippings[0]["rate"] . "', bw_75='" . $found_shippings[1]["rate"] . "', bw_150='" . $found_shippings[2]["rate"] . "', last_updated_date='" . time() . "' WHERE id='$current_id'");
                 }
