@@ -4,7 +4,7 @@ namespace Modules\Product\Models;
 
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
-use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\TimestampField;
 
 class ProductFileModel extends AutoMetaModel
 {
@@ -18,10 +18,6 @@ class ProductFileModel extends AutoMetaModel
         return [
             'fileid' => [
                 'class' => AutoField::className()
-            ],
-            'date' => [
-                'class' => DateTimeField::className(),
-                'autoNowAdd' => true
             ]
         ];
     }

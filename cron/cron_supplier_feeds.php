@@ -85,7 +85,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
     $distributorModel = $supplierFeedModel->distributor;
     $start_supplier_time = new DateTime('now');
 
-    $discontinued_products_count = $updated_products_count = $inserted_products_count = $new_products_count = 0;
+    $discontinued_products_count = $updated_products_count = $inserted_products_count = $new_products_count = $skippedProductsCount = 0;
     $all_feed_productcodes = $lastFeedFields = $last_feed_fields_arr_vals = [];
 
     $md5_arr = explode(".", $supplierFeedModel->feed_file_name);
@@ -161,7 +161,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             }
             if ($supplierFeedModel->last_update_items_count > 0) {
                 if (($supplierFeed->products_in_feed / $supplierFeedModel->last_update_items_count) < $supplierFeedModel->threshold) {
-                    $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Too few products in feed in comparison with last update {$supplierFeedModel->products_in_feed} against {$supplierFeedModel->last_update_items_count}. ({$feed_types[$supplierFeedModel->feed_type]})";
+                    $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Too few products in feed in comparison with last update {$supplierFeed->products_in_feed} against {$supplierFeedModel->last_update_items_count}. ({$feed_types[$supplierFeedModel->feed_type]})";
                     func_backprocess_log($log_category, $log_text);
                     continue;
                 }
@@ -175,6 +175,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 $bUpdatedProduct = false;
                 print($kp . ' --> ' . $aProduct['productcode'] . "\n");
                 if (empty($aProduct['productcode'])) {
+                    $skippedProductsCount++;
                     continue;
                 }
 
@@ -221,10 +222,15 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $modelProduct->save();
                         break;
                     case 'P' :
+                        if (empty($aProduct['cost_to_us'])) {
+                            $skippedProductsCount++;
+                            continue;
+                        }
                         if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
                             $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
                         }
                         if ($modelProduct->getIsNewRecord()) {
+
                             if (!empty($supplierFeed->defaults) && is_array($supplierFeed->defaults)) {
                                 $modelProduct->setAttributes($supplierFeed->defaults);
                             }
@@ -355,13 +361,19 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                             }
 
                             //Files section
-                            /*$aFiles = $aProduct['product_files'];
+                            $aFiles = $aProduct['product_files'];
                             if (!empty($aFiles) && is_array($aFiles)) {
+                                $orderBy = 0;
                                 foreach ($aFiles as $aFile) {
-                                    $aFile['link'];
-                                    $aFile['name'];
+                                    $fileModel = ProductHelper::uploadProductFile($aFile['name'], $aFile['link'], $modelProduct->productid);
+                                    if ($fileModel && $fileModel->getIsNewRecord()) {
+                                        $fileModel->avail = 'Y';
+                                        $fileModel->date = time();
+                                        $fileModel->orderby = ++$orderBy * 10;
+                                        $fileModel->save();
+                                    }
                                 }
-                            }*/
+                            }
 
                             //Related section
                             $params = [];
@@ -615,6 +627,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
         $log_text .= "inserted {$inserted_products_count} items.\n";
     }
     $log_text .= "discontinued: {$discontinued_products_count}\n";
+    $log_text .= "skipped: {$skippedProductsCount}\n";
     $log_text .= "Duration: " . $str_time . "\n";
     func_backprocess_log($log_category, $log_text);
 }
