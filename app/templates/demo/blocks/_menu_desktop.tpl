@@ -29,20 +29,17 @@
                                     </a>
 
                                 </div>
-                                <div class="submenu-container">
-                                    {include "demo/blocks/_submenu_desktop.tpl" menu_name=$item.name}
-                                </div>
+
+                                {include "demo/blocks/_submenu_desktop.tpl" menu_name=$item.name}
                             </li>
                             {if $index == 11} {break} {/if}
                         {/foreach}
 
                     </ul>
 
-                    {*{if $catMenu|count > 12}*}
-                        <div class="view-all-container">
-                            <a href="#" class="view-all">View all departments</a>
-                        </div>
-                    {*{/if}*}
+                    <div class="view-all-container">
+                        <a href="#" class="view-all">View all departments</a>
+                    </div>
                 </div>
 
 

@@ -1,34 +1,18 @@
-{extends "base.tpl"}
+{extends  $request.getIsAjax ? "ajax.tpl" : "base.tpl"}
+
+{block "before-content"}
+    <div class="row">
+        <div class="columns large-12">
+            {include "demo/blocks/_breadcrumbs.tpl"}
+        </div>
+    </div>
+{/block}
+
 {block "content"}
-    <section class="breadcrumb-section">
-        <ol class="breadcrumb">
-            <li class="breadcrumb__back hidden-xs"><a href="#"></a></li>
-            <li class="breadcrumb__item"><a href="#" class="breadcrumb__link">ArtistSupplySource.com</a></li>
-            <li class="breadcrumb__item"><a href="#" class="breadcrumb__link">Painting and Painting Accessories</a></li>
-            <li class="current breadcrumb__item">Oil Painting sets</li>
-        </ol>
-    </section>
+
+
 
     <div class="content-container">
-
-
-        <div class="row">
-            <div class="col col col-xs-11">
-                <div class="row">
-                    <div class="col col col-xs-50">
-
-                        asds
-                    </div>
-                </div>
-            </div>
-            <div class="col col-xs-49">
-                asds
-            </div>
-        </div>
-
-        <div class="row">
-
-        </div>
 
 
 

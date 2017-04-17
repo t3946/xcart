@@ -2,6 +2,7 @@
 
 {block 'content'}{/block}
 
-{block 'after_content'}{/block}
+{block 'before-content'}{/block}
+{block 'after-content'}{/block}
 
 {block 'js'}{/block}

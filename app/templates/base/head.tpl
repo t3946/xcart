@@ -1,18 +1,35 @@
 <!doctype html>
 <html lang="en" class="no-js">
-<head>
+<head itemscope itemtype="http://schema.org/WebSite">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     {*<meta name="viewport" content="width=device-width, initial-scale=1.0" />*}
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-touch-fullscreen" content="yes" />
-    <title>Title</title>
-    {* Title, description, keywords *}
-    {block 'seo'}{/block}
-    {* Another head information *}
+
+    {set $site = $.getSite}
+    {set $sconfig = $.getSiteConfig}
+
+    {block 'seo'}
+        <title itemprop='name'>{$sconfig.company_name.value}</title>
+        <link rel="canonical" href="https://{$site.domain}/" itemprop="url">
+    {/block}
     {block 'head'}{/block}
     <link rel="stylesheet" href="/static/frontend/dist/css/main.css?v={frontend_css_version}">
+
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "url": "https://{$site.domain}/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://{$site.domain}/search?q={ignore}{search_term_string}{/ignore}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 </head>
 <body>
 

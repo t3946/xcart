@@ -3,6 +3,7 @@ namespace Modules\Sites\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
@@ -16,6 +17,12 @@ class SiteModel extends Model
     public static function getFields()
     {
         return [
+            'config' => [
+                'class' => HasManyField::className(),
+                'link' => ['storefrontid' => 'storefrontid'],
+                'modelClass' => SiteConfigModel::className()
+            ],
+
             'storefrontid' => [
                 'class' => AutoField::className(),
             ],

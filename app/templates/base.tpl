@@ -106,7 +106,15 @@
             </div>
 
             <section id="content">
+                <section class="before-content">
+                    {block "before-content"}{/block}
+                </section>
+
                 {block "content"}{/block}
+
+                <section class="after-content">
+                    {block "after-content"}{/block}
+                </section>
             </section>
         </section>
 

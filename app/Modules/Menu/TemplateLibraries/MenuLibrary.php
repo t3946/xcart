@@ -144,19 +144,24 @@ class MenuLibrary extends TemplateLibrary
         $max = rand(3, count($menu));
         $nmenu = [];
 
-        for($i = 0; $i < $max; $i++)
-        {
-            $nmenu[] = $menu[$i];
+        for ($i = 0; $i < $max; $i++) {
+            $nmenu[] = $menu[ $i ];
         }
+
         return $nmenu;
     }
+
+    const MAX_IN_COLUMN = 26;
+    const MAX_POINTS = 26 * 3;
+    const LVL2_POINT = 4;
+    const LVL3_POINT = 1;
 
     /**
      * @kind accessorFunction
      * @name getRandomSubmenu
      * @return array
      */
-    public static function getRandomSubmenu()
+    public static function getRandomSubmenu($has_banner = false)
     {
         $lvl3 = [
             'Brushes by Medium or Technique',
@@ -214,7 +219,7 @@ class MenuLibrary extends TemplateLibrary
 
         $menu = [];
 
-        $cnt1 = rand(1, 10);
+        $cnt1 = rand(0, 10);
         for ($i = 0; $i < $cnt1; $i++) {
             $name = array_rand($lvl3);
             $menu[ $i ] = [
@@ -230,6 +235,59 @@ class MenuLibrary extends TemplateLibrary
                     'name' => $lvl4[ $name ],
                     'link' => '#',
                 ];
+            }
+        }
+
+        ///// MENU BALANCE BASE CODE
+
+        $weight = 0;
+
+        $tmp_menu = $menu;
+        $menu = [];
+        $lvl2_count = count($tmp_menu);
+        $lvl3_count = 0;
+
+        $max_show_lvl3 = 100;
+        $max_points = self::MAX_POINTS - (($has_banner) ? floor(self::MAX_IN_COLUMN / 3) : 0 );
+
+        foreach ($tmp_menu as $key => $item) {
+            $lvl3_count += count($item['items']);
+            $menu[ $key ] = [
+                'name' => $item['name'],
+                'link' => $item['link'],
+                'more_items' => false,
+                'items' => [],
+            ];
+
+            if (($weight += self::LVL2_POINT) >= $max_points) {
+                break;
+            }
+        }
+
+        if ($lvl3_count > 0)
+        {
+            if (($lvl2_count * self::LVL3_POINT) > $max_points) {
+                $max_show_lvl3 = floor($lvl3_count / $lvl2_count);
+            }
+
+            if ($weight < $max_points) {
+                foreach ($tmp_menu as $key => $item) {
+
+                    if (!empty($item['items'])) {
+
+                        if (count($item['items']) > $max_show_lvl3 || (count($item['items']) * self::LVL3_POINT) > $max_points) {
+                            $menu[ $key ]['more_items'] = true;
+                        }
+
+                        for ($i = 0; $i < $max_show_lvl3; $i++ )
+                        {
+                            $menu[ $key ]['items'][] = $item['items'][$i];
+                            if (($weight += self::LVL3_POINT) > $max_points) {
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
 

@@ -2,7 +2,9 @@
 namespace Modules\Demo\Controllers;
 
 
+use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Main\Xcart;
 
 class DefaultController extends Controller
 {
@@ -15,7 +17,13 @@ class DefaultController extends Controller
 
     public function catalogIndex()
     {
-        echo $this->render('demo/catalog/index.tpl');
+        $breadcrumbs = new Breadcrumbs();
+        $breadcrumbs->add('Painting and Painting Accessories', '/');
+        $breadcrumbs->add('Oil Painting sets');
+
+        echo $this->render('demo/catalog/index.tpl', [
+            'breadcrumbs' => $breadcrumbs->get()
+        ]);
     }
 
     public function catalogBrand()
