@@ -1,12 +1,12 @@
 {set $has_banner = rand(0,1)}
 {set $menus = $.getRandomSubmenu($has_banner)}
-{if $menus|count > 0}
+
+{if $menus.menu|count > 0}
     <div class="submenu-container">
         <nav class="has-column-3">
-        {*<nav>*}
 
-            {foreach $menus as $menu}
-                <div class="column">
+            {foreach $menus.menu as $menu}
+                <div class="menu-block {if !$has_banner && ($menus.columns > 1)}liquid{/if}">
                     <h4 class="{if $menu.items|count > 0}has-children{/if}">
                         <a href="{$menu.link}">{$menu.name}</a>
                     </h4>

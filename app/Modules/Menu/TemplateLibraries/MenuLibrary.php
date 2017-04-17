@@ -151,7 +151,7 @@ class MenuLibrary extends TemplateLibrary
         return $nmenu;
     }
 
-    const MAX_IN_COLUMN = 26;
+    const MAX_POINTS_IN_COLUMN = 26;
     const MAX_POINTS = 26 * 3;
     const LVL2_POINT = 4;
     const LVL3_POINT = 1;
@@ -240,7 +240,7 @@ class MenuLibrary extends TemplateLibrary
 
         ///// MENU BALANCE BASE CODE
 
-        $weight = 0;
+        $points = 0;
 
         $tmp_menu = $menu;
         $menu = [];
@@ -248,7 +248,7 @@ class MenuLibrary extends TemplateLibrary
         $lvl3_count = 0;
 
         $max_show_lvl3 = 100;
-        $max_points = self::MAX_POINTS - (($has_banner) ? floor(self::MAX_IN_COLUMN / 3) : 0 );
+        $max_points = self::MAX_POINTS - (($has_banner) ? ceil(self::MAX_POINTS_IN_COLUMN / 3 * 2) : 0 );
 
         foreach ($tmp_menu as $key => $item) {
             $lvl3_count += count($item['items']);
@@ -259,30 +259,32 @@ class MenuLibrary extends TemplateLibrary
                 'items' => [],
             ];
 
-            if (($weight += self::LVL2_POINT) >= $max_points) {
+            if (($points += self::LVL2_POINT) >= $max_points) {
                 break;
             }
         }
 
         if ($lvl3_count > 0)
         {
-            if (($lvl2_count * self::LVL3_POINT) > $max_points) {
+            if (($lvl3_count * self::LVL3_POINT) > $max_points) {
                 $max_show_lvl3 = floor($lvl3_count / $lvl2_count);
             }
 
-            if ($weight < $max_points) {
+            if ($points < $max_points) {
                 foreach ($tmp_menu as $key => $item) {
 
                     if (!empty($item['items'])) {
 
-                        if (count($item['items']) > $max_show_lvl3 || (count($item['items']) * self::LVL3_POINT) > $max_points) {
+                        if (count($item['items']) > $max_show_lvl3 || (count($item['items']) * self::LVL3_POINT + $points) > $max_points) {
                             $menu[ $key ]['more_items'] = true;
                         }
 
-                        for ($i = 0; $i < $max_show_lvl3; $i++ )
+                        $show = count($item['items']) > $max_show_lvl3 ? $max_show_lvl3 : count($item['items']);
+                        
+                        for ($i = 0; $i < $show; $i++ )
                         {
                             $menu[ $key ]['items'][] = $item['items'][$i];
-                            if (($weight += self::LVL3_POINT) > $max_points) {
+                            if (($points += self::LVL3_POINT) >= $max_points) {
                                 break;
                             }
                         }
@@ -291,6 +293,6 @@ class MenuLibrary extends TemplateLibrary
             }
         }
 
-        return $menu;
+        return ['menu' => $menu, 'columns' => ceil($points / self::MAX_POINTS_IN_COLUMN)];
     }
 }

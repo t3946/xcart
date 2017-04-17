@@ -237,8 +237,7 @@ $view_all_height: rem-calc(22);
   }
 
   .submenu-container {
-    //padding-bottom: rem-calc(25);
-    padding-top: rem-calc(9);
+    padding: rem-calc(9) rem-calc(20) $view_all_height;
     display: none;
     position: absolute;
     background: #fff;
@@ -247,24 +246,22 @@ $view_all_height: rem-calc(22);
     top: 0;
     margin-left: -10px;
     min-height: 100%;
-    //max-height: 100%;
 
     nav {
-      margin-bottom: rem-calc(5);
+      //margin-bottom: rem-calc(5);
+      //column-gap: 20px;
+      column-gap: 80px;
 
       &.has-column-4 {
         column-count: 4;
-        column-gap: 20px;
       }
 
       &.has-column-3 {
         column-count: 3;
-        column-gap: 20px;
       }
 
       &.has-column-2 {
         column-count: 2;
-        column-gap: 20px;
       }
 
       h4 {
@@ -273,26 +270,24 @@ $view_all_height: rem-calc(22);
         font-weight: bold;
 
         &.has-children {
-          //padding-bottom: 8px;
           padding-bottom: 2px;
           border-bottom: 1px solid #c2c2c2;
         }
       }
 
-      .column {
-        padding: 0 rem-calc(20);
+      .menu-block {
         display: inline-block;
-        margin-bottom: rem-calc(20);
+        padding: 0 0 rem-calc(15);
+        min-width: 100%;
+
+        &.liquid {
+          display: block;
+        }
 
         &:nth-last-child(1) {
           margin-bottom: 0;
+          padding-bottom: 0;
         }
-      }
-
-      //.column + .column,
-      h4 + h4,
-      ul + h4 {
-        margin-top: rem-calc(20);
       }
 
       h4, a {
