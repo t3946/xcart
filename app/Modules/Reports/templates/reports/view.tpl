@@ -5,7 +5,13 @@
 {/block}
 
 {block 'content'}
-    <div class="row">
-        {include 'reports/order/orders_list.tpl' orders=$models}
+    {include 'reports/order/orders_list.tpl' orders=$models}
+{/block}
+
+{block 'after-content'}
+    <div class="report-row">
+        <div class="">
+            {raw $pager}
+        </div>
     </div>
 {/block}

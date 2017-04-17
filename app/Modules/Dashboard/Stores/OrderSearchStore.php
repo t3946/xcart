@@ -30,13 +30,13 @@ class OrderSearchStore extends BaseStore
     const CONST_CACHE_KEY_PRIORITY = 'order_search_store_priority_count_';
 
 
-    private $form_data = [];
+    protected $form_data = [];
     private $where = [];
     private $having = [];
     /** @var QuerySet */
     private $qs;
     /** @var Pagination */
-    private $pager;
+    protected $pager;
     private $order;
     private $model = null;
 

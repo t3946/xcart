@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     {block 'js-head'}
         <link rel="stylesheet" href="/skin1_kolin/skin1_admin.css">
+        <link rel="stylesheet" href="/static/backend/dist/css/main.css">
     {/block}
 
 </head>
@@ -15,8 +16,8 @@
 
                 {/block}
 
-                <div class="row">
-                    <div class="column large-12">
+                <div class="report-row">
+                    <div class="">
                         {block 'content'}
 
                         {/block}

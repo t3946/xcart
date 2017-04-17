@@ -89,20 +89,20 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>{$totals.total_net|hide_zero|west_style|formatprice:",":"."}</td>
+        <td>{$totals.total_net|hide_zero|formatprice:",":"."|west_style}</td>
         <td></td>
-        <td {if !$form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>
-             {$totals.accounting_net_0|hide_zero|west_style|formatprice:",":"."}
+        <td style="background-color: #D9EAD3;">
+             {$totals.accounting_net_0|hide_zero|formatprice:",":"."|west_style}
         </td>
-        <td>{$totals.accounting_net_1_cost_to_us|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_net_2_shipping|hide_zero|west_style|formatprice:",":"."}</td>
-        <td {if !$form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>
-             {$totals.accounting_net_3_ref_to_cust|hide_zero|west_style|formatprice:",":"."}
+        <td {if $form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>{$totals.accounting_net_1_cost_to_us|hide_zero|formatprice:",":"."|west_style}</td>
+        <td {if $form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>{$totals.accounting_net_2_shipping|hide_zero|formatprice:",":"."|west_style}</td>
+        <td style="background-color: #D9EAD3;">
+             {$totals.accounting_net_3_ref_to_cust|hide_zero|formatprice:",":"."|west_style}
         </td>
-        <td {if !$form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>
-             {$totals.accounting_net_4_ref_to_us|hide_zero|west_style|formatprice:",":"."}
+        <td style="background-color: #D9EAD3;">
+             {$totals.accounting_net_4_ref_to_us|hide_zero|formatprice:",":"."|west_style}
         </td>
-        <td>{$totals.accounting_net_5_profit|hide_zero|west_style|formatprice:",":"."}</td>
+        <td>{$totals.accounting_net_5_profit|hide_zero|formatprice:",":"."|west_style}</td>
         {if $data.show_reconciled}<td></td>{/if}
         <td>{$totals.total_margin}%</td>
     </tr>
@@ -112,12 +112,12 @@
         <td><strong>REPORT</strong></td>
         <td>{$totals.gst}</td>
         <td></td>
-        <td>{$totals.accounting_gst_0|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_gst_1_cost_to_us|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_gst_2_shipping|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_gst_3_ref_to_cust|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_gst_4_ref_to_us|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_gst_5_profit|hide_zero|west_style|formatprice:",":"."}</td>
+        <td>{$totals.accounting_gst_0|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_gst_1_cost_to_us|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_gst_2_shipping|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_gst_3_ref_to_cust|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_gst_4_ref_to_us|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_gst_5_profit|hide_zero|formatprice:",":"."|west_style}</td>
         {if $data.show_reconciled}<td></td>{/if}
         <td></td>
     </tr>
@@ -127,31 +127,31 @@
         <td><strong>TOTALS:</strong></td>
         <td>{if floatval($totals.pst)}{$totals.pst}{/if}</td>
         <td></td>
-        <td>{$totals.accounting_pst_0|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_pst_1_cost_to_us|formatprice:",":"."}</td>
-        <td>{$totals.accounting_pst_2_shipping|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_pst_3_ref_to_cust|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_pst_4_ref_to_us|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_pst_5_profit|hide_zero|west_style|formatprice:",":"."}</td>
+        <td>{$totals.accounting_pst_0|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_pst_1_cost_to_us|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_pst_2_shipping|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_pst_3_ref_to_cust|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_pst_4_ref_to_us|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_pst_5_profit|hide_zero|formatprice:",":"."|west_style}</td>
         {if $data.show_reconciled}<td></td>{/if}
         <td {if !$form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>
-            {$totals.real_net|hide_zero|west_style|formatprice:",":"."}
+            {$totals.real_net|hide_zero|formatprice:",":"."|west_style}
         </td>
     </tr>
     <tr class="OrderSheetCell">
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td>{$totals.total_gross|hide_zero|west_style|formatprice:",":"."}</td>
+        <td>{$totals.total_gross|hide_zero|formatprice:",":"."|west_style}</td>
         <td></td>
-        <td>{$totals.accounting_gross_0|hide_zero|west_style|formatprice:",":"."}</td>
-        <td>{$totals.accounting_gross_1_cost_to_us|hide_zero|west_style|formatprice:",":"."}</td>
+        <td>{$totals.accounting_gross_0|hide_zero|formatprice:",":"."|west_style}</td>
+        <td>{$totals.accounting_gross_1_cost_to_us|hide_zero|formatprice:",":"."|west_style}</td>
         <td>{$totals.accounting_gross_2_shipping|formatprice:",":"."}</td>
         <td>{$totals.accounting_gross_3_ref_to_cust|formatprice:",":"."}</td>
         <td>{$totals.accounting_gross_4_ref_to_us|formatprice:",":"."}</td>
         <td>{$totals.accounting_gross_5_profit|formatprice:",":"."}</td>
         {if $data.show_reconciled}<td></td>{/if}
-        <td {if $data.profit_margin_range}style="background-color: #D9EAD3;"{/if}>{$totals.real_pm|formatprice:",":"."}%</td>
+        <td {if $form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>{$totals.real_pm|formatprice:",":"."|west_style}%</td>
     </tr>
     <tr class="OrderSheetCell OrderSheetFirst">
         <td colspan="{if $data.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
@@ -179,22 +179,22 @@
                 {/foreach}
             </td>
             <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_net_0|hide_zero|west_style|formatprice:",":"."}
+                <b>{$group->accounting_net_0|hide_zero|formatprice:",":"."|west_style}</b>
             </td>
-            <td {if $group->accounting_filled_1_cost_to_us == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_net_1_cost_to_us|hide_zero|west_style|formatprice:",":"."}
+            <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
+                <b>{$group->accounting_net_1_cost_to_us|hide_zero|formatprice:",":"."|west_style}</b>
             </td>
-            <td {if $group->accounting_filled_2_shipping == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_net_2_shipping|hide_zero|west_style|formatprice:",":"."}
+            <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
+                <b>{$group->accounting_net_2_shipping|hide_zero|formatprice:",":"."|west_style}</b>
             </td>
             <td {if $group->accounting_filled_3_ref_to_cust == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_net_3_ref_to_cust|hide_zero|west_style|formatprice:",":"."}
+                <b>{$group->accounting_net_3_ref_to_cust|hide_zero|formatprice:",":"."|west_style}</b>
             </td>
             <td {if $group->accounting_filled_4_ref_to_us == 'Y'}class="FilledAccounting"{/if} style="background-color: #B4A7D6;">
-                {$group->accounting_net_4_ref_to_us|hide_zero|west_style|formatprice:",":"."}
+                <b>{$group->accounting_net_4_ref_to_us|hide_zero|formatprice:",":"."|west_style}</b>
             </td>
             <td>
-                {$group->accounting_net_5_profit|hide_zero|west_style|formatprice:",":"."}
+                <b>{$group->accounting_net_5_profit|hide_zero|formatprice:",":"."|west_style}</b>
             </td>
             {if $data.show_reconciled}
                 <td {if $v.reconcile_status == 1}style="background-color:#D9EAD3;"{/if} {if $v.reconcile_status == 2}style="background-color:#DDF177;"{/if} >
@@ -210,7 +210,7 @@
                     {if floatval($group->accounting_net_0)}
                         {set $profit_margin = round($group->accounting_net_5_profit / $group->accounting_net_0 * 100, 2)}
                         {if (floatval($profit_margin))}
-                            {$profit_margin|formatprice:",":"."}%
+                            {$profit_margin|formatprice:",":"."|west_style}%
                         {else}
                             &infin;
                         {/if}
@@ -232,27 +232,27 @@
                 {/foreach}
             </td>
             <td>{$order->lastname}</td>
-            <td>{$group->total_gst|hide_zero|west_style|formatprice:",":"."}</td>
+            <td>{$group->total_gst|hide_zero|formatprice:",":"."|west_style}</td>
             <td>
                 {$order->payment_method}
             </td>
             <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_gst_0|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_gst_0|hide_zero|formatprice:",":"."|west_style}
             </td>
-            <td {if $group->accounting_filled_1_cost_to_us == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_gst_1_cost_to_us|hide_zero|west_style|formatprice:",":"."}
+            <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
+                {$group->accounting_gst_1_cost_to_us|hide_zero|formatprice:",":"."|west_style}
             </td>
-            <td {if $group->accounting_filled_2_shipping == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_gst_2_shipping|hide_zero|west_style|formatprice:",":"."}
+            <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
+                {$group->accounting_gst_2_shipping|hide_zero|formatprice:",":"."|west_style}
             </td>
             <td {if $group->accounting_filled_3_ref_to_cust == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_gst_3_ref_to_cust|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_gst_3_ref_to_cust|hide_zero|formatprice:",":"."|west_style}
             </td>
             <td {if $group->accounting_filled_4_ref_to_us == 'Y'}class="FilledAccounting"{/if} style="background-color: #B4A7D6;">
-                {$group->accounting_gst_4_ref_to_us|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_gst_4_ref_to_us|hide_zero|formatprice:",":"."|west_style}
             </td>
             <td>
-                {$group->accounting_gst_5_profit|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_gst_5_profit|hide_zero|formatprice:",":"."|west_style}
             </td>
             {if $data.show_reconciled}
                 <td></td>
@@ -275,27 +275,27 @@
                     {/if}
                 {/foreach}
             </td>
-            <td>{$group->total_pst|hide_zero|west_style|formatprice:",":"."}</td>
+            <td>{$group->total_pst|hide_zero|formatprice:",":"."|west_style}</td>
             <td>
                 {raw $order->date|date_format:"%d-%b-%Y"}
             </td>
             <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_pst_0|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_pst_0|hide_zero|formatprice:",":"."|west_style}
             </td>
-            <td {if $group->accounting_filled_1_cost_to_us == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_pst_1_cost_to_us|hide_zero|west_style|formatprice:",":"."}
+            <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
+                {$group->accounting_pst_1_cost_to_us|hide_zero|formatprice:",":"."|west_style}
             </td>
-            <td {if $group->accounting_filled_2_shipping == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_pst_2_shipping|hide_zero|west_style|formatprice:",":"."}
+            <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
+                {$group->accounting_pst_2_shipping|hide_zero|formatprice:",":"."|west_style}
             </td>
             <td {if $group->accounting_filled_3_ref_to_cust == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_pst_3_ref_to_cust|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_pst_3_ref_to_cust|hide_zero|formatprice:",":"."|west_style}
             </td>
             <td {if $group->accounting_filled_4_ref_to_us == 'Y'}class="FilledAccounting"{/if} style="background-color: #B4A7D6;">
-                {$group->accounting_pst_4_ref_to_us|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_pst_4_ref_to_us|hide_zero|formatprice:",":"."|west_style}
             </td>
             <td>
-                {$group->accounting_pst_5_profit|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_pst_5_profit|hide_zero|formatprice:",":"."|west_style}
             </td>
             {if $data.show_reconciled}
                 <td></td>
@@ -307,33 +307,37 @@
             <td></td>
             <td></td>
             <td>
-                {$group->total_gross|hide_zero|west_style|formatprice:",":"."}
+                {$group->total_gross|hide_zero|formatprice:",":"."|west_style}
             </td>
             <td>
                 {raw $order->date|date_format:"%H:%M:%S"}
             </td>
             <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_gross_0|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_gross_0|hide_zero|formatprice:",":"."|west_style}
             </td>
-            <td {if $group->accounting_filled_1_cost_to_us == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_gross_1_cost_to_us|hide_zero|west_style|formatprice:",":"."}
+            <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
+                {$group->accounting_gross_1_cost_to_us|hide_zero|formatprice:",":"."|west_style}
             </td>
-            <td {if $group->accounting_filled_2_shipping == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_gross_2_shipping|hide_zero|west_style|formatprice:",":"."}
+            <td {if $group->accounting_filled_0 == 'Y'}class="FilledAccounting"{/if}>
+                {$group->accounting_gross_2_shipping|hide_zero|formatprice:",":"."|west_style}
             </td>
             <td {if $group->accounting_filled_3_ref_to_cust == 'Y'}class="FilledAccounting"{/if}>
-                {$group->accounting_gross_3_ref_to_cust|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_gross_3_ref_to_cust|hide_zero|formatprice:",":"."|west_style}
             </td>
             <td {if $group->accounting_filled_4_ref_to_us == 'Y'}class="FilledAccounting"{/if} style="background-color: #B4A7D6;">
-                {$group->accounting_gross_4_ref_to_us|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_gross_4_ref_to_us|hide_zero|formatprice:",":"."|west_style}
             </td>
             <td>
-                {$group->accounting_gross_5_profit|hide_zero|west_style|formatprice:",":"."}
+                {$group->accounting_gross_5_profit|hide_zero|formatprice:",":"."|west_style}
             </td>
             {if $data.show_reconciled}
                 <td></td>
             {/if}
             <td></td>
         </tr>
+        <tr class="OrderSheetCell OrderSheetFirst">
+            <td colspan="{if $data.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
+        </tr>
     {/foreach}
 {/foreach}
+</table>

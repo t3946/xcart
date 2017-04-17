@@ -58,9 +58,11 @@ class OrderModule extends Module
 
         $template->addModifier('west_style', function($price)
         {
-            $res = '';
+            $res = $price;
             if (!empty($price)) {
-                $res = (floatval($price) < 0) ? "({$price})" : $price;
+                if (floatval($price) < 0) {
+                    $res = "(".ltrim($price, '-').")";
+                }
             }
             return $res;
         });

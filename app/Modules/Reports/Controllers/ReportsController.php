@@ -8,6 +8,7 @@ use Mindy\QueryBuilder\Expression;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Reports\Models\ReportModel;
+use Modules\Reports\Stores\ReportsStore;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\ModelInterface;
@@ -59,7 +60,6 @@ class ReportsController extends PrototypeAdminController
 
     public function view()
     {
-        $filter = $distributorCodes = [];
         if (!empty($_GET['search'])) {
             $form_data = OrderSearchStore::getClearedData($_GET['search']);
         } else {
@@ -69,73 +69,11 @@ class ReportsController extends PrototypeAdminController
                 ],
             ];
         }
-        $orderStore = (new OrderSearchStore($form_data));
+        $reportStore = new ReportsStore($form_data);
 
-        switch ($form_data['order']['profit_margin']) {
-            case "profit" :
-                $filter = ['group.profit_margin__lt' => 100];
-                break;
-            case "profit15" :
-                $filter = ['group.profit_margin__lte' => $form_data['order']['profit_margin_profit15_edit']];
-                break;
-            case "profit_between" :
-                $filter = [
-                    'group.profit_margin__gte' => $form_data['order']['profit_margin_profitbetween_start'],
-                    'group.profit_margin__lt' => $form_data['order']['profit_margin_profitbetween_end'],
-                ];
-                break;
-        }
-        $qs = $orderStore->getQuerySet();
-
-        $qsum = clone $qs;
-        $qsum->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
-        $qsum->join('inner join', 'xcart_manufacturers', ['m.manufacturerid' => 'group.manufacturerid'], 'm');
-        $qsum->group([]);
-        $qsum->select([
-            new Sum('group.total_gross', 'total_gross'),
-            new Sum('group.total_net', 'total_net'),
-            new Sum('group.total_gst', 'total_gst'),
-            new Sum('group.total_pst', 'total_pst'),
-            new Sum('group.accounting_net_0', 'accounting_net_0'),
-            new Sum('group.accounting_gst_0', 'accounting_gst_0'),
-            new Sum('group.accounting_pst_0', 'accounting_pst_0'),
-            new Sum('group.accounting_gross_0', 'accounting_gross_0'),
-            new Sum('group.accounting_net_1_cost_to_us', 'accounting_net_1_cost_to_us'),
-            new Sum('group.accounting_gst_1_cost_to_us', 'accounting_gst_1_cost_to_us'),
-            new Sum('group.accounting_pst_1_cost_to_us', 'accounting_pst_1_cost_to_us'),
-            new Sum('group.accounting_gross_1_cost_to_us', 'accounting_gross_1_cost_to_us'),
-            new Sum('group.accounting_net_2_shipping', 'accounting_net_2_shipping'),
-            new Sum('group.accounting_gst_2_shipping', 'accounting_gst_2_shipping'),
-            new Sum('group.accounting_pst_2_shipping', 'accounting_pst_2_shipping'),
-            new Sum('group.accounting_gross_2_shipping', 'accounting_gross_2_shipping'),
-            new Sum('group.accounting_net_3_ref_to_cust', 'accounting_net_3_ref_to_cust'),
-            new Sum('group.accounting_gst_3_ref_to_cust', 'accounting_gst_3_ref_to_cust'),
-            new Sum('group.accounting_pst_3_ref_to_cust', 'accounting_pst_3_ref_to_cust'),
-            new Sum('group.accounting_gross_3_ref_to_cust', 'accounting_gross_3_ref_to_cust'),
-            new Sum('group.accounting_net_4_ref_to_us', 'accounting_net_4_ref_to_us'),
-            new Sum('group.accounting_gst_4_ref_to_us', 'accounting_gst_4_ref_to_us'),
-            new Sum('group.accounting_pst_4_ref_to_us', 'accounting_pst_4_ref_to_us'),
-            new Sum('group.accounting_gross_4_ref_to_us', 'accounting_gross_4_ref_to_us'),
-            new Sum('group.accounting_net_5_profit', 'accounting_net_5_profit'),
-            new Sum('group.accounting_gst_5_profit', 'accounting_gst_5_profit'),
-            new Sum('group.accounting_pst_5_profit', 'accounting_pst_5_profit'),
-            new Sum('group.accounting_gross_5_profit', 'accounting_gross_5_profit'),
-            'codes' => new Expression("GROUP_CONCAT(DISTINCT m.code ORDER BY m.code)")
-        ]);
-
-        $totals = Connection::getInstance()->fetchAssoc($qsum->getSQL());
-        if ($totals) {
-            if (floatval($totals['accounting_net_0']) != 0) {
-                $totals['total_margin'] = round($totals['accounting_net_5_profit'] / $totals['accounting_net_0'] * 100, 2);
-            }
-            if (floatval($totals['accounting_gross_0']) != 0) {
-                $totals['real_pm'] = round($totals['accounting_gross_5_profit'] / $totals['accounting_gross_0'] * 100, 2);
-            }
-            $totals["real_net"] = $totals['accounting_net_0'] + $totals['accounting_net_4_ref_to_us'] - $totals['accounting_gross_3_ref_to_cust'];
-        }
-
-        $orderModels = $qs->filter($filter)->paginate();
-        $pager = $orderStore->getPager();
+        $orderModels = $reportStore->getModels();
+        $pager = $reportStore->getPager();
+        $totals = $reportStore->getTotals();
 
         echo $this->render('reports/view.tpl', array_merge(
                 SearchHelper::getFormAndListData(),
