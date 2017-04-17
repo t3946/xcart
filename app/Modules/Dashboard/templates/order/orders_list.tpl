@@ -133,7 +133,7 @@
             </td>
             <td colspan="2">
                 {foreach $payment_methods as $method}
-                    {if $method.paymentid ==$order->paymentid}
+                    {if $method.paymentid == $order->paymentid}
                         <span title="{$method.payment_details}">
                                 {$method.payment_method}
                         </span>

@@ -50,5 +50,19 @@ class OrderModule extends Module
 
             return $order_age_str;
         });
+
+        $template->addModifier('hide_zero', function($price)
+        {
+            return floatval($price) ? $price : '';
+        });
+
+        $template->addModifier('west_style', function($price)
+        {
+            $res = '';
+            if (!empty($price)) {
+                $res = (floatval($price) < 0) ? "({$price})" : $price;
+            }
+            return $res;
+        });
     }
 }
