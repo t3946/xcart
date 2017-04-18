@@ -161,7 +161,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             }
             if ($supplierFeedModel->last_update_items_count > 0) {
                 if (($supplierFeed->products_in_feed / $supplierFeedModel->last_update_items_count) < $supplierFeedModel->threshold) {
-                    $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Too few products in feed in comparison with last update {$supplierFeedModel->products_in_feed} against {$supplierFeedModel->last_update_items_count}. ({$feed_types[$supplierFeedModel->feed_type]})";
+                    $log_text = "manufacturerid: {$supplierFeedModel->manufacturerid}. Too few products in feed in comparison with last update {$supplierFeed->products_in_feed} against {$supplierFeedModel->last_update_items_count}. ({$feed_types[$supplierFeedModel->feed_type]})";
                     func_backprocess_log($log_category, $log_text);
                     continue;
                 }
