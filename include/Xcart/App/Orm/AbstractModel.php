@@ -81,9 +81,12 @@ class AbstractModel extends Base
             return false;
         }
 
-        foreach (self::getMeta()->getPrimaryKeyName(true) as $primaryKeyName) {
-            if (in_array($primaryKeyName, $dirty) === false) {
-                $values[$primaryKeyName] = $connection->lastInsertId($this->getSequenceName());
+        foreach (self::getMeta()->getPrimaryKeyName(true) as $primaryKeyName)
+        {
+            if ($this->getField($primaryKeyName) instanceof AutoField) {
+                if (in_array($primaryKeyName, $dirty) === false) {
+                    $values[ $primaryKeyName ] = $connection->lastInsertId($this->getSequenceName());
+                }
             }
         }
 
