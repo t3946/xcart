@@ -4,9 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b20a291c2e369581e98defb46e743d76",
-    "content-hash": "bb6a06ecc76c142fad23068061041de8",
+    "content-hash": "f74f07f190b73250a13954601d12b9ea",
     "packages": [
+        {
+            "name": "caponica/amazon-mws-complete",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/caponica/AmazonMwsComplete.git",
+                "reference": "a1de77b994914b9f119aa85dd1e7f90c9998f62e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caponica/AmazonMwsComplete/zipball/a1de77b994914b9f119aa85dd1e7f90c9998f62e",
+                "reference": "a1de77b994914b9f119aa85dd1e7f90c9998f62e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "CaponicaAmazonMwsComplete\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Morgan, Caponica",
+                    "homepage": "http://www.github.com/Caponica"
+                }
+            ],
+            "description": "Complete Amazon MWS PHP SDK, including all libraries",
+            "keywords": [
+                "amazon",
+                "mws"
+            ],
+            "time": "2017-03-28 15:17:10"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.2.7",
@@ -73,7 +112,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2015-08-31 12:32:49"
+            "time": "2015-08-31T12:32:49+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -143,7 +182,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-12-19 05:03:47"
+            "time": "2015-12-19T05:03:47+00:00"
         },
         {
             "name": "doctrine/collections",
@@ -209,7 +248,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2015-04-14 22:21:58"
+            "time": "2015-04-14T22:21:58+00:00"
         },
         {
             "name": "doctrine/common",
@@ -282,7 +321,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2015-12-25 13:10:16"
+            "time": "2015-12-25T13:10:16+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -353,7 +392,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2017-02-04 21:20:13"
+            "time": "2017-02-04T21:20:13+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -420,7 +459,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2015-11-06 14:35:42"
+            "time": "2015-11-06T14:35:42+00:00"
         },
         {
             "name": "doctrine/lexer",
@@ -474,7 +513,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09 13:34:57"
+            "time": "2014-09-09T13:34:57+00:00"
         },
         {
             "name": "fenom/fenom",
@@ -524,7 +563,7 @@
                 "templater",
                 "templating"
             ],
-            "time": "2016-11-18 19:30:44"
+            "time": "2016-11-18T19:30:44+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -567,7 +606,7 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
-            "time": "2016-07-18 04:51:16"
+            "time": "2016-07-18T04:51:16+00:00"
         },
         {
             "name": "gabrielbull/ups-api",
@@ -631,7 +670,7 @@
                 "ups",
                 "wrapper"
             ],
-            "time": "2015-08-21 13:54:00"
+            "time": "2015-08-21T13:54:00+00:00"
         },
         {
             "name": "google/apiclient",
@@ -690,7 +729,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-01-11 19:44:46"
+            "time": "2017-01-11T19:44:46+00:00"
         },
         {
             "name": "google/apiclient-services",
@@ -724,7 +763,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-01-11 18:53:21"
+            "time": "2017-01-11T18:53:21+00:00"
         },
         {
             "name": "google/auth",
@@ -772,7 +811,7 @@
                 "google",
                 "oauth2"
             ],
-            "time": "2016-11-02 14:59:14"
+            "time": "2016-11-02T14:59:14+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -824,7 +863,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-07-15 19:28:39"
+            "time": "2016-07-15T19:28:39+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -882,7 +921,7 @@
                 "stream",
                 "uri"
             ],
-            "time": "2016-06-24 23:00:38"
+            "time": "2016-06-24T23:00:38+00:00"
         },
         {
             "name": "guzzlehttp/ringphp",
@@ -933,7 +972,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
-            "time": "2015-05-20 03:37:09"
+            "time": "2015-05-20T03:37:09+00:00"
         },
         {
             "name": "guzzlehttp/streams",
@@ -983,7 +1022,7 @@
                 "Guzzle",
                 "stream"
             ],
-            "time": "2014-10-12 19:18:40"
+            "time": "2014-10-12T19:18:40+00:00"
         },
         {
             "name": "jaybizzle/crawler-detect",
@@ -1031,7 +1070,7 @@
                 "crawlerdetect",
                 "php crawler detect"
             ],
-            "time": "2017-02-03 09:30:35"
+            "time": "2017-02-03T09:30:35+00:00"
         },
         {
             "name": "mindy/query_builder",
@@ -1080,7 +1119,7 @@
             "support": {
                 "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
             },
-            "time": "2017-02-06 14:00:50"
+            "time": "2017-02-06T14:00:50+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -1158,7 +1197,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-11-26 00:15:39"
+            "time": "2016-11-26T00:15:39+00:00"
         },
         {
             "name": "paypal/rest-api-sdk-php",
@@ -1207,7 +1246,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2016-12-14 21:59:21"
+            "time": "2016-12-14T21:59:21+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -1299,7 +1338,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2016-10-04 00:57:04"
+            "time": "2016-10-04T00:57:04+00:00"
         },
         {
             "name": "psr/cache",
@@ -1345,7 +1384,7 @@
                 "psr",
                 "psr-6"
             ],
-            "time": "2016-08-06 20:24:11"
+            "time": "2016-08-06T20:24:11+00:00"
         },
         {
             "name": "psr/http-message",
@@ -1395,7 +1434,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "psr/log",
@@ -1442,7 +1481,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10 12:19:37"
+            "time": "2016-10-10T12:19:37+00:00"
         },
         {
             "name": "react/promise",
@@ -1485,7 +1524,7 @@
                 "promise",
                 "promises"
             ],
-            "time": "2016-12-22 14:09:01"
+            "time": "2016-12-22T14:09:01+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1544,7 +1583,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "symfony/translation",
@@ -1608,7 +1647,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-21 16:59:38"
+            "time": "2017-01-21T16:59:38+00:00"
         },
         {
             "name": "symfony/validator",
@@ -1681,7 +1720,7 @@
             ],
             "description": "Symfony Validator Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-31 21:48:58"
+            "time": "2017-01-31T21:48:58+00:00"
         },
         {
             "name": "true/punycode",
@@ -1727,17 +1766,21 @@
                 "idna",
                 "punycode"
             ],
-            "time": "2016-11-16 10:37:54"
+            "time": "2016-11-16T10:37:54+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "mindy/query_builder": 20
+        "mindy/query_builder": 20,
+        "caponica/amazon-mws-complete": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "5.4.36"
+    }
 }
