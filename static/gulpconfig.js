@@ -181,17 +181,17 @@ module.exports.frontend = {
                 'bower_components/jquery/dist/jquery.min.js'
             ]
         },
-        bootstrap: {
-            js: [
-                'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js'
-            ],
-            fonts: [
-                'bower_components/bootstrap-sass/assets/fonts/bootstrap/*'
-            ],
-            scss_include: [
-                'bower_components/bootstrap-sass/assets/stylesheets/'
-            ]
-        },
+        // bootstrap: {
+        //     js: [
+        //         'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js'
+        //     ],
+        //     fonts: [
+        //         'bower_components/bootstrap-sass/assets/fonts/bootstrap/*'
+        //     ],
+        //     scss_include: [
+        //         'bower_components/bootstrap-sass/assets/stylesheets/'
+        //     ]
+        // },
         jquery_jscrollpane: {
             js: [
                 'bower_components/jScrollPane/script/jquery.jscrollpane.min.js'
