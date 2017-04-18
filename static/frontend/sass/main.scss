@@ -13,6 +13,7 @@
 
 //@import "mindy/global";
 @import 'base/base';
+@import 'base/typography';
 
 @import 'mixins/gen';
 @import 'mixins/menu';
@@ -20,6 +21,9 @@
 @import 'parts/off-canvas';
 @import 'parts/header';
 @import 'parts/breadcrumbs';
+@import 'parts/catalog_filter_block';
+
+@import 'pages/category';
 
 //@import 'base';
 //@import 'noui-slider';

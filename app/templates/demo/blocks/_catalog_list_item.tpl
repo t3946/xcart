@@ -11,9 +11,9 @@
                 {/if}
 
                 {if rand(1,2) > 1}
-                    <img src="/static/frontend/dist/images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" />
+                    <img src="/static/frontend/demo_images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" />
                 {else}
-                    <img src="/static/frontend/dist/images/category/1280/alv-1334d-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="134" height="218" />
+                    <img src="/static/frontend/demo_images/category/1280/alv-1334d-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="134" height="218" />
                 {/if}
             </a>
             <a href="#" type="button" data-toggle="modal" data-target="#featured_product1_view" class="item__quick-view hidden-xs hidden-sm hidden-md hidden-lg">quick view</a>

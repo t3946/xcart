@@ -10,23 +10,31 @@
 
 {block "content"}
 
-
-
-    <div class="content-container">
-
-
-
-        <div class="main-container-desktop">
-            <div class="left-desktop-column hidden-xs hidden-sm hidden-md">
-                <div class="image" id="image_left-top">
-                    <img src="/static/frontend/dist/images/category/1280/image.png" alt="image" />
+    <section class="catalog-page">
+        <div class="row">
+            <div class="columns large-2">
+                <div class="top-block">
+                    <div class="image" id="image_left-top">
+                        <img src="/static/frontend/demo_images/category/1280/image.png" alt="image" />
+                    </div>
                 </div>
 
-                {include "demo/blocks/_search_departments.tpl"}
-                {include "demo/blocks/_category_filter.tpl"}
 
+                {include "demo/blocks/_search_departments.tpl"}
+                {*{include "demo/blocks/_category_filter.tpl"}*}
             </div>
-            <div class="right-desktop-column">
+
+            <div class="columns large-10">
+                <div class="top-block">
+                    <h1 class="title">[CATEGORY NAME] Oil Painting Sets</h1>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+            <div class="hide right-desktop-column">
                 <div id="right-desktop-column__top-block">
                     <section class="title-section">
                         <div class="row">
@@ -985,8 +993,8 @@
                     </article>
                 {/block}
             </div>
-        </div>
+{/block}
 
-        {include "demo/blocks/sliders/_recently_viewed.tpl"}
-    </div>
+{block 'after-content'}
+    {*{include "demo/blocks/sliders/_recently_viewed.tpl"}*}
 {/block}

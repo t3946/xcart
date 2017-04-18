@@ -1,0 +1,66 @@
+.catalog-page {
+  .filter-block {
+    .block-title {
+      text-transform: uppercase;
+      font-size: rem-calc(20);
+      background: #ebebeb;
+      text-align: center;
+      line-height: rem-calc(40);
+      margin-bottom: rem-calc(6);
+    }
+
+    .accordion {
+      .accordion-item {
+        .accordion-title {
+          border: none;
+          font-size: rem-calc(16);
+          line-height: rem-calc(20);
+          padding: 10px 14px 9px 22px;
+          border-bottom: 1px solid #dcdcdc;
+          font-weight: bold;
+
+          &:before {
+            content: '';
+            display: block;
+            border: 5px solid transparent;
+            border-left: 7px solid black;
+
+            position: absolute;
+            top: 50%;
+            left: 0;
+            margin-top: -5px;
+            width: 7px;
+            transition: all .4s;
+          }
+
+          &:hover {
+            background: none;
+          }
+        }
+
+        .accordion-content {
+          border: none;
+          padding: rem-calc(2) 0 rem-calc(10);
+
+          ul {
+            li {
+              label {
+                padding-left: 7px;
+                font-size: rem-calc(12);
+                margin: 0;
+              }
+            }
+          }
+        }
+
+        &.is-active {
+          .accordion-title {
+            &:before {
+              transform: rotate(90deg);
+            }
+          }
+        }
+      }
+    }
+  }
+}
