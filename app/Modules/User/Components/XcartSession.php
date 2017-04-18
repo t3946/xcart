@@ -11,19 +11,25 @@ class XcartSession extends Session
     public $autoGc = true;
     public $registerGlobals = true;
     public $fullUnpackGlobals = false;
-
+    private $session_key;
     private $data = [];
     /**
      * @var \Modules\User\Models\SessionDataModel
      */
     private $model = null;
 
+    public function init()
+    {
+        Xcart::app()->event->on('app:end', [$this, 'close']);
+        $this->open();
+    }
+
     public function add($key, $value)
     {
-        $this->data[$key] = $value;
+        $this->data[ $key ] = $value;
 
         if ($this->registerGlobals) {
-            $GLOBALS[$key] = $value;
+            $GLOBALS[ $key ] = $value;
         }
     }
 
@@ -34,11 +40,11 @@ class XcartSession extends Session
 
     public function get($key, $default = null)
     {
-        if ($this->registerGlobals && isset($GLOBALS[$key])) {
-            return $GLOBALS[$key];
+        if ($this->registerGlobals && isset($GLOBALS[ $key ])) {
+            return $GLOBALS[ $key ];
         }
 
-        return $this->has($key) ? $this->data[$key] : $default;
+        return $this->has($key) ? $this->data[ $key ] : $default;
     }
 
     public function all()
@@ -48,8 +54,7 @@ class XcartSession extends Session
 
     public function close()
     {
-        if ($this->getId())
-        {
+        if ($this->getId()) {
             if ($this->registerGlobals) {
                 $this->collectFromGlobals();
             }
@@ -66,35 +71,32 @@ class XcartSession extends Session
     {
         if (!empty($vars)) {
             foreach ($vars as $key) {
-                if (isset($GLOBALS[$key])) {
-                    $this->data[$key] = $GLOBALS[$key];
+                if (isset($GLOBALS[ $key ])) {
+                    $this->data[ $key ] = $GLOBALS[ $key ];
                 }
             }
         }
-        elseif (is_array($this->data)) {
-            foreach ($this->data as $key => $value) {
-                if (isset($GLOBALS[$key])) {
-                    $this->data[$key] = $GLOBALS[$key];
-                }
-            }
+        else {
+            $this->collectFromGlobals();
         }
     }
 
     private function collectFromGlobals()
     {
-        foreach ($this->data as $key => $value) {
-            if (isset($GLOBALS[$key])) {
-                $this->data[$key] = $GLOBALS[$key];
+        if (is_array($this->data)) {
+            foreach ($this->data as $key => $value) {
+                if (isset($GLOBALS[ $key ])) {
+                    $this->data[ $key ] = $GLOBALS[ $key ];
+                }
             }
         }
     }
 
     private function unpackToGlobals()
     {
-        if (is_array($this->data))
-        {
+        if (is_array($this->data)) {
             foreach ($this->data as $key => $value) {
-                $GLOBALS[$key] = $value;
+                $GLOBALS[ $key ] = $value;
             }
         }
     }
@@ -114,8 +116,7 @@ class XcartSession extends Session
 
     public function start($id = null)
     {
-        if (!BotsHelper::IsBot() || $id)
-        {
+        if (!BotsHelper::IsBot() || $id) {
             if ($id || $id = $this->getSessionId()) {
                 if ($this->model = SessionDataModel::objects()->get(['pk' => $id])) {
                     $this->data = $this->model->data;
@@ -147,33 +148,36 @@ class XcartSession extends Session
         $key = $this->getSessionKey();
 
         if ($id = $this->request->post->get($key)) {}
-        elseif ($id = $this->request->get->get($key)) {}
-        elseif ($id = $this->request->cookie->get($key)) {}
-
+        else if ($id = $this->request->get->get($key)) {}
+        else if ($id = $this->request->cookie->get($key)) {}
+        
         return $id;
     }
 
     private function getSessionKey()
     {
-        $key = 'xid0';
+        if (!$this->session_key) {
+            $key = 'xid0';
 
-        /** @var \Modules\Sites\SitesModule $module */
-        if ($module = Xcart::app()->getModule('Sites')) {
-            if ($model = $module->getSite()) {
-                $key = 'xid' . $model->storefrontid;
+            /** @var \Modules\Sites\SitesModule $module */
+            if ($module = Xcart::app()->getModule('Sites')) {
+                if ($model = $module->getSite()) {
+                    $key = 'xid' . $model->storefrontid;
+                }
             }
+
+            $this->session_key = $key;
         }
 
-        return $key;
+        return $this->session_key;
     }
-
 
     private function genSessId()
     {
         do {
             $ssid = md5(uniqid(rand()));
         }
-        while(SessionDataModel::objects()->filter(['sessid' => $ssid])->count());
+        while (SessionDataModel::objects()->filter(['sessid' => $ssid])->count());
 
         return $ssid;
     }
@@ -193,7 +197,11 @@ class XcartSession extends Session
     public function remove($key)
     {
         if ($this->has($key)) {
-            unset($this->data[$key]);
+            unset($this->data[ $key ]);
+
+            if ($this->registerGlobals) {
+                unset($GLOBALS[ $key ]);
+            }
         }
     }
 
@@ -201,7 +209,7 @@ class XcartSession extends Session
     {
         $this->data = [];
     }
-    
+
     public function offsetExists($offset)
     {
         return array_key_exists($offset, $this->data);
