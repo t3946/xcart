@@ -174,7 +174,7 @@
 
 <tr id="so_o_stock" itemprop="availability" content="{if $product.product_availability eq "in stock"}InStock{else}OutOfStock{/if}"><td height="25" class="BlackT">{$lng.lbl_quantity}:</td>
 <td style="text-align:left;font-size: 16px;" width="*">
-{if $config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount) and $variants eq ''}
+{if $config.General.unlimited_products eq "N" and ($product.avail le 0 or $product.avail lt $product.min_amount || $product.product_availability == 'out of stock') and $variants eq '' }
 <script type="text/javascript" language="JavaScript 1.2">
 <!--
 var min_avail = 1;
