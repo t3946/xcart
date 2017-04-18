@@ -565,7 +565,7 @@ class QuerySet extends QuerySetBase
 
     public function delete()
     {
-        $statement = $this->getConnection()->query($this->deleteSql());
+        $statement = $this->getConnection()->prepare($this->deleteSql());
         return $statement->execute();
     }
 
