@@ -80,4 +80,9 @@ class SiteConfigModel extends Model
 
         ];
     }
+
+    public function __toString()
+    {
+        return $this->value;
+    }
 }
