@@ -687,4 +687,37 @@ class AmazonHelper
         }
         return $aProductOffers;
     }
+
+    /**
+     * Get List Inbound Shipments Action Sample
+     * Gets competitive pricing and related information for a product identified by
+     * the MarketplaceId and ASIN.
+     *
+     * @param FBAInboundServiceMWS_Interface $service instance of FBAInboundServiceMWS_Interface
+     * @param mixed $request FBAInboundServiceMWS_Model_ListInboundShipments or array of parameters
+     */
+    public static function invokeListInboundShipments(FBAInboundServiceMWS_Interface $service, $request)
+    {
+        $return_echo = [];
+        try {
+            $response = $service->ListInboundShipments($request);
+            echo ("Service Response\n");
+            echo ("=============================================================================\n");
+            $dom = new DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            echo $dom->saveXML();
+            echo("ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
+        } catch (FBAInboundServiceMWS_Exception $ex) {
+            $return_echo["Caught Exception"] =  $ex->getMessage();
+            $return_echo["Response Status Code"] = $ex->getStatusCode();
+            $return_echo["Error Code"] = $ex->getErrorCode();
+            $return_echo["Error Type"] = $ex->getErrorType();
+            $return_echo["Request ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        }
+        return $return_echo;
+    }
 }

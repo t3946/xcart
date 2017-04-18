@@ -2044,6 +2044,33 @@ SQL;
         return $this;
     }
 
+    public function doGetListInboundItems()
+    {
+        if (!empty($this->error)) return $this;
+
+        $this->aWaitLoopExitCondition = [];
+        $request = new \MarketplaceWebService_Model_RequestReportRequest();
+        $request->setMarketplaceIdList($this->marketplaceIdArray);
+        $request->setMerchant(MERCHANT_ID);
+        $request->setReportType('ListInboundShipments');
+
+        if (!is_null($this->tStartDate))
+            $request->setStartDate(new \DateTime($this->tStartDate->format("Y-m-d\T00:00:00P"), new \DateTimeZone('UTC')));
+
+        $this->dom_xml_arr = AmazonHelper::invokeRequestReport($request, $this->oMWSService);
+
+        if (!empty($this->dom_xml_arr['Caught_Exception'])) {
+            $this->error[] = $this->dom_xml_arr["Caught_Exception"];
+            $log_text = 'RequestReport -> Error:' . $this->dom_xml_arr["Caught_Exception"];
+        } else {
+            $log_text = 'RequestReport -> ReportRequestId:' . $this->dom_xml_arr['ReportRequestId'];
+        }
+        if (!empty($this->sBackProcessLogName)) {
+            func_backprocess_log($this->sBackProcessLogName, $log_text);
+        }
+        return $this;
+    }
+
     public function setProducts($aProducts)
     {
         $this->aProducts = $aProducts;
