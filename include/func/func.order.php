@@ -3599,14 +3599,16 @@ function func_send_order_status_notification($orderid, $status)
                 $from     = $order_data['userinfo']['firstname'] . "<" . $config['Company']['orders_department'] . ">";
                 $reply_to = $order_data['userinfo']['firstname'] . "<" . $order_data['userinfo']['email'] . ">";
 
-                $oMail = \Xcart\App\Main\Xcart::app()->mail;
-                $oMail->to = $to;
-                $oMail->from = $from;
-                $oMail->reply_to = $reply_to;
-                $oMail->subject_template = 'mail/order_notification_subj.tpl';
-                $oMail->body_template = 'mail/order_notification.tpl';
-                $oMail->addHeader(['X-Xcart-Label' => 'order-status-changed']);
-                $oMail->sendEmail();
+                if ($_POST["send_email"] == "Y") {
+                    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                    $oMail->to = $to;
+                    $oMail->from = $from;
+                    $oMail->reply_to = $reply_to;
+                    $oMail->subject_template = 'mail/order_notification_subj.tpl';
+                    $oMail->body_template = 'mail/order_notification.tpl';
+                    $oMail->addHeader(['X-Xcart-Label' => 'order-status-changed']);
+                    $oMail->sendEmail();
+                }
                 //func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, false, false, false, false, $reply_to);
             }
         }
