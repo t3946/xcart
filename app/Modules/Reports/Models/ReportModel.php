@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Reports\Models;
 
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
@@ -28,13 +29,28 @@ class ReportModel extends Model
             'name' => [
                 'class' => CharField::className(),
                 'null' => false,
-                'verboseName' => 'Filter name',
+                'verboseName' => 'Report name',
             ],
             'form_data' => [
                 'class' => JsonField::className(),
                 'null' => false,
-                'verboseName' => 'Filter condition',
+                'verboseName' => 'Report condition',
             ],
         ];
+    }
+
+    public function getUrl()
+    {
+        return Xcart::app()->router->url('reports:load', ['id' => $this->id]);
+    }
+
+    public function getAdminUrl()
+    {
+        if ($this->isNewRecord) {
+            return Xcart::app()->router->url('reports:create_report');
+        }
+        else {
+            return Xcart::app()->router->url('reports:update_report', ['id' => $this->id]);
+        }
     }
 }

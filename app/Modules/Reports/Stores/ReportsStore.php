@@ -83,7 +83,7 @@ class ReportsStore extends OrderSearchStore
             new Sum('group.accounting_gst_5_profit', 'accounting_gst_5_profit'),
             new Sum('group.accounting_pst_5_profit', 'accounting_pst_5_profit'),
             new Sum('group.accounting_gross_5_profit', 'accounting_gross_5_profit'),
-            'codes' => new Expression("GROUP_CONCAT(DISTINCT m.code ORDER BY m.code)")
+            'codes' => new Expression("GROUP_CONCAT(DISTINCT m.code ORDER BY m.code SEPARATOR ', ')")
         ]);
 
         $totals = Connection::getInstance()->fetchAssoc($qsum->getSQL());

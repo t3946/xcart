@@ -1,6 +1,7 @@
-<fieldset class="{if $full_expanded}expanded-force{/if}" rel="5">
+<fieldset class="expanded-force" rel="5">
     <legend>Report options</legend>
     <ul class="ul-main">
+        {include 'reports/admin/_reports_block_edit.tpl'}
         <li>
             <div class="row">
                 <div class="columns large-4">

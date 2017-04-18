@@ -26,36 +26,41 @@ class ReportsController extends PrototypeAdminController
             $this->refresh();
         }
 
-        if (!empty($_GET['search'])) {
-            $form_collapse = true;
-            $form_data = OrderSearchStore::getClearedData($_GET['search']);
-        } else {
-            $form_data = [
-                'order' => [
-                    'date' => SearchHelper::getDefaultSearchDate(),
-                ],
-            ];
+        if (!empty($_GET['report_select']) && is_numeric($_GET['report_select'])) {
+            $this->redirect('reports:load', ['id' => $_GET['report_select']]);
         }
 
-        /*$orderStore = new OrderSearchStore($form_data)->getQuerySet();
-        $orderStore->setOrder(['-date', '-orderid']);
+        $form_data = [];
 
-        $models = $orderStore->getModels();
-        $pager = $orderStore->getPager();*/
-
-        if (empty($models)) {
-            $form_collapse = false;
-        }
+        $reports = ReportModel::objects()->all();
 
         echo $this->renderInternal('reports/search.tpl', array_merge(
                 SearchHelper::getFormAndListData(),
                 [
-                    'pager' => $pager,
-                    'models' => $models,
+                    'reports' => $reports,
                     'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
                     'form_collapse' => $form_collapse,
                 ])
         );
+    }
+
+    public function load($id) {
+        if ($model = ReportModel::objects()->get(['id' => $id])) {
+            $reports = ReportModel::objects()->all();
+            $form_data = $model->form_data;
+            echo $this->renderInternal('reports/search.tpl',
+                array_merge(
+                    SearchHelper::getFormAndListData(),
+                    [
+                        'model'         => $model,
+                        'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
+                        'reports' => $reports,
+                    ]
+                )
+            );
+        } else {
+            $this->redirect('reports:index');
+        }
     }
 
     public function view()
@@ -69,6 +74,9 @@ class ReportsController extends PrototypeAdminController
                 ],
             ];
         }
+
+
+
         $reportStore = new ReportsStore($form_data);
 
         $orderModels = $reportStore->getModels();
@@ -97,7 +105,17 @@ class ReportsController extends PrototypeAdminController
             $this->createOrUpdate($model);
         }
 
-        $this->redirect('reports:index');
+    }
+
+    public function reports_list()
+    {
+        $models = ReportModel::objects()->all();
+
+        echo $this->renderInternal('reports/admin/reports_list.tpl',
+            [
+                'models'  => $models,
+            ]
+        );
     }
 
     /** @param Model|ModelInterface $model */
@@ -142,6 +160,8 @@ class ReportsController extends PrototypeAdminController
             return ['reports:update_report', ['id' => $model->id]];
         } else if (array_key_exists('save_create', $_POST)) {
             return ['reports:create_report', []];
+        } else if (array_key_exists('delete', $_POST)) {
+            return ['reports:admin_reports', []];
         } else {
             return ['reports:index', []];
         }

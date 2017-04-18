@@ -1,7 +1,7 @@
-<form action="{url 'reports:create_report'}" method="GET">
+{if $model}
+{set $class_name = $model->classNameShort()}
+<li>
+    {include 'core/form/model_form_field.tpl' model=$model field='name' class='big'}
+</li>
+{/if}
 
-    <label for="report_name_input"><strong>Report name:</strong></label>
-    <input required class="big" type="text" name="report_name" id="report_name_input" placeholder="Enter a report name"/>
-
-    {include 'core/form/buttons.tpl'}
-</form>
