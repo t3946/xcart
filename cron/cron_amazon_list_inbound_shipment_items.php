@@ -17,7 +17,7 @@ if ($config[LOG_CATEGORY] == "Y") {
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
     $oMail->body = LOG_CATEGORY . ' already launched';
     $oMail->sendEmail();
-    die("Already launched");
+    //die("Already launched");
 }
 db_query_param(/** @lang MySQL */
     "REPLACE xcart_config SET value='Y', name=:name",['name' => LOG_CATEGORY]);
@@ -27,7 +27,7 @@ $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log(LOG_CATEGORY, $log_text);
 
 $oAmazon = new \Xcart\AmazonMWS('MarketplaceWebServiceProducts_Client', '/FulfillmentInboundShipment/2010-10-01');
-$oAmazonProduct
+$oAmazon
     ->enableLog('amazon-list-inbound')
     ->_Request('GetListInboundItems');
 

@@ -1,6 +1,7 @@
 <?php
 namespace Xcart;
 
+use FBAInboundServiceMWS_Model_ListInboundShipmentItemsRequest;
 use Modules\Amazon\Helpers\AmazonHelper;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
@@ -2049,15 +2050,14 @@ SQL;
         if (!empty($this->error)) return $this;
 
         $this->aWaitLoopExitCondition = [];
-        $request = new \MarketplaceWebService_Model_RequestReportRequest();
-        $request->setMarketplaceIdList($this->marketplaceIdArray);
-        $request->setMerchant(MERCHANT_ID);
-        $request->setReportType('ListInboundShipments');
 
-        if (!is_null($this->tStartDate))
-            $request->setStartDate(new \DateTime($this->tStartDate->format("Y-m-d\T00:00:00P"), new \DateTimeZone('UTC')));
+        $request = new FBAInboundServiceMWS_Model_ListInboundShipmentItemsRequest();
+        $request->setSellerId(MERCHANT_ID);
 
-        $this->dom_xml_arr = AmazonHelper::invokeRequestReport($request, $this->oMWSService);
+        $request->setLastUpdatedBefore(new \DateTime((new \DateTime())->format("Y-m-d\T00:00:00P"), new \DateTimeZone('UTC')));
+        $request->setLastUpdatedAfter(new \DateTime((new \DateTime('-1 year'))->format("Y-m-d\T00:00:00P"), new \DateTimeZone('UTC')));
+
+        $this->dom_xml_arr = AmazonHelper::invokeListInboundShipments($request, $this->oMWSService);
 
         if (!empty($this->dom_xml_arr['Caught_Exception'])) {
             $this->error[] = $this->dom_xml_arr["Caught_Exception"];

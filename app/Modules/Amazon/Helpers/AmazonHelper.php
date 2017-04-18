@@ -1,6 +1,8 @@
 <?php
 
 namespace  Modules\Amazon\Helpers;
+use FBAInboundServiceMWS_Exception;
+use FBAInboundServiceMWS_Interface;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
 use Xcart\Product;
@@ -700,15 +702,13 @@ class AmazonHelper
     {
         $return_echo = [];
         try {
+            /** @var FBAInboundServiceMWS_Interface */
             $response = $service->ListInboundShipments($request);
-            echo ("Service Response\n");
-            echo ("=============================================================================\n");
-            $dom = new DOMDocument();
+            $dom = new \DOMDocument();
             $dom->loadXML($response->toXML());
             $dom->preserveWhiteSpace = false;
             $dom->formatOutput = true;
-            echo $dom->saveXML();
-            echo("ResponseHeaderMetadata: " . $response->getResponseHeaderMetadata() . "\n");
+            return $dom->saveXML();
         } catch (FBAInboundServiceMWS_Exception $ex) {
             $return_echo["Caught Exception"] =  $ex->getMessage();
             $return_echo["Response Status Code"] = $ex->getStatusCode();
