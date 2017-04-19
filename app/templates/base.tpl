@@ -74,10 +74,10 @@
             </div>
         </header>
 
-        <section id="before-content">
+        <section id="content-wrapper">
             <div class="shadow"></div>
             <div data-sticky-container class="sticky-container">
-                <div class="sticky" data-sticky data-sticky-on="large" data-options="marginTop:0; anchor:before-content; " data-btm-anchor="content:bottom">
+                <div class="sticky def-zi2" data-sticky data-sticky-on="large" data-options="marginTop:0; anchor:content-wrapper;" data-btm-anchor="content:bottom">
                     <section id="search_container" class="desktop_menu_search_cart show-for-large" data-toggler="show-for-large" >
                         <div class="row" >
                             <div class="columns large-3 show-for-large">

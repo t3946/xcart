@@ -49,6 +49,7 @@ body {
     height: 100%;
     width: 100%;
     background-color: rgba(0, 0, 0, .5);
+    z-index: 1;
   }
 }
 
@@ -58,4 +59,8 @@ body {
 
 .no-right-padding {
   padding-right: 0;
+}
+
+.def-zi2 {
+  z-index: 2;
 }
