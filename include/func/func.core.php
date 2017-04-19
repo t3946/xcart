@@ -35,6 +35,8 @@
 # $Id: func.core.php,v 1.52.2.43 2007/01/15 08:18:26 twice Exp $
 #
 
+use Modules\Core\Helpers\CoreHelper;
+
 if (!defined('XCART_START')) {
     header("Location: ../");
     die("Access denied");
@@ -2889,7 +2891,7 @@ function func_del_excluded_char_sequences($text = '', $excluded_char_sequences =
         }
     }
 
-    $text = strip_tags($text);
+    $text = CoreHelper::stripTags($text);
     $text = htmlspecialchars_decode($text);
     $text = preg_replace("/[\r\n\t]/S", " ", $text);
     $text = preg_replace("/[^0-9a-zA-Z]/S", " ", $text);
