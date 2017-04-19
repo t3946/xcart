@@ -28,6 +28,40 @@
                 <div class="top-block">
                     <h1 class="title">[CATEGORY NAME] Oil Painting Sets</h1>
 
+                    <section class="description">
+                        <div class="row">
+                            <div class="columns large-10">
+                                <article class="content must-show-less" data-text-more="Read more" data-text-less="Read less">
+                                    An artist deserves only the best brush and sets in order that a work of perfection is created. <br>
+                                    Of the various items that an artist requires, a brush is the single most important link between the artist and his creation.
+                                    An artist deserves only the best brush and sets in order that a work of perfection is created.
+                                    Of the various items that an artist requires, a brush is the single most important link between the artist and his creation.
+                                </article>
+                            </div>
+                        </div>
+                    </section>
+
+                    {set $menus = $.getRandomSubmenu()}
+
+                    {if $menus.menu|count > 0}
+                    <section class="subcategories">
+                        <div class="row large-up-4">
+                            {foreach $menus.menu as $item}
+                                <div class="column">
+                                    <a href="{$item.link}" class="subcategory_item">{$item.name} ({rand(1,1000)})</a>
+                                </div>
+                            {/foreach}{foreach $menus.menu as $item}
+                                <div class="column">
+                                    <a href="{$item.link}" class="subcategory_item">{$item.name} ({rand(1,1000)})</a>
+                                </div>
+                            {/foreach}{foreach $menus.menu as $item}
+                                <div class="column">
+                                    <a href="{$item.link}" class="subcategory_item">{$item.name} ({rand(1,1000)})</a>
+                                </div>
+                            {/foreach}
+                        </div>
+                    </section>
+                    {/if}
 
                 </div>
             </div>

@@ -31,6 +31,64 @@
         $(document).trigger('click:shadow');
     });
 
+    let ddd_params = {
+        watch:'window',
+        after: 'a.show_more',
+        callback: function(isTruncated, originalContent) {
+            let $this = $(this);
+            let $ml_a = $this.find('a.show_more');
+
+            if (isTruncated) {
+                $ml_a.css({display: 'inline-block'});
+            }
+            else {
+                $ml_a.css({display: 'none'});
+            }
+        }
+    };
+
+    if ($.fn.dotdotdot)
+    {
+        $('.must-show-less').each(function(){
+            let $this = $(this);
+
+            if (this.offsetHeight < this.scrollHeight ||
+                this.offsetWidth < this.scrollWidth) {
+                $this.append('<a href="#" class="show_more"></a>');
+
+                let $ml_a = $this.find('a.show_more');
+                $ml_a.html($this.data('text-more'));
+            }
+
+        });
+
+        $('.must-show-less').dotdotdot(ddd_params);
+
+        $(document)
+            .on('click', '.must-show-less .show_more', function(){
+                let $this = $(this).closest('.must-show-less');
+                let isTruncated = $this.triggerHandler("isTruncated");
+
+                if (isTruncated) {
+                    $this.addClass('full');
+                    $this.trigger('destroy');
+
+                    let $ml_a = $this.find('a.show_more');
+                    $ml_a.html($this.data('text-less'));
+                }
+                else {
+                    $this.removeClass('full');
+
+                    let $ml_a = $this.find('a.show_more');
+                    $ml_a.html($this.data('text-more'));
+
+                    $this.dotdotdot(ddd_params);
+                }
+            });
+    }
+
+
+
 
     $(document).foundation();
 })();

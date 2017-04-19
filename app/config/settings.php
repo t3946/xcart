@@ -23,6 +23,7 @@ return array_replace_recursive([
        'Amazon',
        'Order',
        'Reports',
+       'Brand',
     ],
    'locale' => [
        'language' => 'ru',

@@ -1,0 +1,43 @@
+.must-show-less {
+  overflow: hidden;
+
+  .show_more {
+    line-height: 1;
+    position: relative;
+    border-bottom: 1px dashed;
+    padding-right: rem-calc(10);
+
+    &:after {
+      content: '';
+      display: block;
+      border: 3px solid transparent;
+      border-top: 5px solid $color_link;
+
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 5px;
+      transition: all .4s;
+    }
+
+    &:hover {
+      &:after {
+        border-top: 5px solid $color_link_hover;
+      }
+    }
+  }
+
+  //&.is-truncated {}
+
+  &.full {
+    height: auto !important;
+    max-height: 100% !important;
+
+    .show_more {
+      &:after {
+        transform: rotate(180deg);
+        margin-top: -5px;
+      }
+    }
+  }
+}

@@ -220,6 +220,11 @@ module.exports.frontend = {
                 'bower_components/lato-webfont/scss/lato-webfont.scss'
             ]
         },
+        dotdotdot: {
+            js: [
+                'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js'
+            ]
+        },
         foundation: {
             js: [
                 // 'bower_components/foundation-sites/dist/js/foundation.js', //all

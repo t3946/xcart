@@ -1,7 +1,20 @@
 .catalog-page {
   .top-block {
     min-height: rem-calc(235);
+    padding-left: rem-calc(18);
   }
 
+  .description {
+    .content {
+      height: #{3 * $global-lineheight}em; //3 row * line-height
+    }
+  }
 
+  .subcategories {
+    margin-top: rem-calc(16);
+    border-top: 1px solid #dcdcdc;
+    padding: rem-calc(15) 0;
+    font-size: rem-calc(12);
+    line-height: 1.7;
+  }
 }
