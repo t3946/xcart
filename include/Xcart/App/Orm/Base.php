@@ -199,7 +199,8 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
                     // If new primary key is empty - mark model as new
                     if (empty($value)) {
                         $this->setIsNewRecord(true);
-                    } else if ($this->getAttribute($attributeName) != $value) {
+                    }
+                    else if ($this->getAttribute($attributeName) != $value) {
                         // If current model isn't new and new primary key value != new value - mark model as new
                         $this->setIsNewRecord(true);
                     }

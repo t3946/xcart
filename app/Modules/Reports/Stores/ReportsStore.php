@@ -1,0 +1,101 @@
+<?php
+namespace Modules\Reports\Stores;
+
+use Mindy\QueryBuilder\Aggregation\Sum;
+use Mindy\QueryBuilder\Expression;
+use Modules\Dashboard\Stores\OrderSearchStore;
+use Xcart\App\Pagination\DataSource\QuerySetDataSource;
+use Xcart\App\Pagination\Pagination;
+use Xcart\Connection;
+
+class ReportsStore extends OrderSearchStore
+{
+    public  $defaultPagerPageSize = 100;
+    public function getQuerySet()
+    {
+        $filter = null;
+        $qs = parent::getQuerySet();
+        $joins = $qs->getQueryBuilder()->getJoins();
+        $joins = array_keys($joins);
+        if (!in_array('group', $joins)) {
+            $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+        }
+        switch ($this->form_data['order']['profit_margin']) {
+            case "profit" :
+                $filter = ['group.profit_margin__lt' => 100];
+                break;
+            case "profit15" :
+                $filter = ['group.profit_margin__lte' => $this->form_data['order']['profit_margin_profit15_edit']];
+                break;
+            case "profit_between" :
+                $filter = [
+                    'group.profit_margin__gte' => $this->form_data['order']['profit_margin_profitbetween_start'],
+                    'group.profit_margin__lt' => $this->form_data['order']['profit_margin_profitbetween_end'],
+                ];
+                break;
+        }
+        if ($filter) {
+            $qs->filter($filter);
+        }
+        return $qs;
+    }
+
+    public function getPager()
+    {
+        if (!$this->pager) {
+            $this->pager = new Pagination($this->getQuerySet(), ['pageSize' => $this->defaultPagerPageSize], new QuerySetDataSource());
+        }
+
+        return $this->pager;
+    }
+
+    public function getTotals()
+    {
+        $qsum = clone $this->getQuerySet();
+        $qsum->join('inner join', 'xcart_manufacturers', ['m.manufacturerid' => 'group.manufacturerid'], 'm');
+        $qsum->group([]);
+        $qsum->select([
+            new Sum('group.total_gross', 'total_gross'),
+            new Sum('group.total_net', 'total_net'),
+            new Sum('group.total_gst', 'total_gst'),
+            new Sum('group.total_pst', 'total_pst'),
+            new Sum('group.accounting_net_0', 'accounting_net_0'),
+            new Sum('group.accounting_gst_0', 'accounting_gst_0'),
+            new Sum('group.accounting_pst_0', 'accounting_pst_0'),
+            new Sum('group.accounting_gross_0', 'accounting_gross_0'),
+            new Sum('group.accounting_net_1_cost_to_us', 'accounting_net_1_cost_to_us'),
+            new Sum('group.accounting_gst_1_cost_to_us', 'accounting_gst_1_cost_to_us'),
+            new Sum('group.accounting_pst_1_cost_to_us', 'accounting_pst_1_cost_to_us'),
+            new Sum('group.accounting_gross_1_cost_to_us', 'accounting_gross_1_cost_to_us'),
+            new Sum('group.accounting_net_2_shipping', 'accounting_net_2_shipping'),
+            new Sum('group.accounting_gst_2_shipping', 'accounting_gst_2_shipping'),
+            new Sum('group.accounting_pst_2_shipping', 'accounting_pst_2_shipping'),
+            new Sum('group.accounting_gross_2_shipping', 'accounting_gross_2_shipping'),
+            new Sum('group.accounting_net_3_ref_to_cust', 'accounting_net_3_ref_to_cust'),
+            new Sum('group.accounting_gst_3_ref_to_cust', 'accounting_gst_3_ref_to_cust'),
+            new Sum('group.accounting_pst_3_ref_to_cust', 'accounting_pst_3_ref_to_cust'),
+            new Sum('group.accounting_gross_3_ref_to_cust', 'accounting_gross_3_ref_to_cust'),
+            new Sum('group.accounting_net_4_ref_to_us', 'accounting_net_4_ref_to_us'),
+            new Sum('group.accounting_gst_4_ref_to_us', 'accounting_gst_4_ref_to_us'),
+            new Sum('group.accounting_pst_4_ref_to_us', 'accounting_pst_4_ref_to_us'),
+            new Sum('group.accounting_gross_4_ref_to_us', 'accounting_gross_4_ref_to_us'),
+            new Sum('group.accounting_net_5_profit', 'accounting_net_5_profit'),
+            new Sum('group.accounting_gst_5_profit', 'accounting_gst_5_profit'),
+            new Sum('group.accounting_pst_5_profit', 'accounting_pst_5_profit'),
+            new Sum('group.accounting_gross_5_profit', 'accounting_gross_5_profit'),
+            'codes' => new Expression("GROUP_CONCAT(DISTINCT m.code ORDER BY m.code SEPARATOR ', ')")
+        ]);
+
+        $totals = Connection::getInstance()->fetchAssoc($qsum->getSQL());
+        if ($totals) {
+            if (floatval($totals['accounting_net_0']) != 0) {
+                $totals['total_margin'] = round($totals['accounting_net_5_profit'] / $totals['accounting_net_0'] * 100, 2);
+            }
+            if (floatval($totals['accounting_gross_0']) != 0) {
+                $totals['real_pm'] = round($totals['accounting_gross_5_profit'] / $totals['accounting_gross_0'] * 100, 2);
+            }
+            $totals["real_net"] = $totals['accounting_net_0'] + $totals['accounting_net_4_ref_to_us'] - $totals['accounting_gross_3_ref_to_cust'];
+        }
+        return $totals;
+    }
+}
