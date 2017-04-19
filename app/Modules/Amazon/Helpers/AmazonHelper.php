@@ -698,12 +698,81 @@ class AmazonHelper
      * @param FBAInboundServiceMWS_Interface $service instance of FBAInboundServiceMWS_Interface
      * @param mixed $request FBAInboundServiceMWS_Model_ListInboundShipments or array of parameters
      */
-    public static function invokeListInboundShipments(FBAInboundServiceMWS_Interface $service, $request)
+    public static function invokeListInboundShipmentsItems($request, FBAInboundServiceMWS_Interface $service)
     {
         $return_echo = [];
         try {
             /** @var FBAInboundServiceMWS_Interface */
-            $response = $service->ListInboundShipments($request);
+            $response = $service->listInboundShipmentItems($request);
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+        } catch (FBAInboundServiceMWS_Exception $ex) {
+            $return_echo["Caught Exception"] =  $ex->getMessage();
+            $return_echo["Response Status Code"] = $ex->getStatusCode();
+            $return_echo["Error Code"] = $ex->getErrorCode();
+            $return_echo["Error Type"] = $ex->getErrorType();
+            $return_echo["Request ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        }
+        return $return_echo;
+    }
+
+    public static function invokeListInboundShipments($request, FBAInboundServiceMWS_Interface $service)
+    {
+        $return_echo = [];
+        try {
+            /** @var FBAInboundServiceMWS_Interface */
+            $response = $service->listInboundShipments($request);
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+        } catch (FBAInboundServiceMWS_Exception $ex) {
+            $return_echo["Caught Exception"] =  $ex->getMessage();
+            $return_echo["Response Status Code"] = $ex->getStatusCode();
+            $return_echo["Error Code"] = $ex->getErrorCode();
+            $return_echo["Error Type"] = $ex->getErrorType();
+            $return_echo["Request ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        }
+        return $return_echo;
+    }
+
+    public static function invokeListInboundShipmentsItemsByNextToken($request, FBAInboundServiceMWS_Interface $service)
+    {
+        $return_echo = [];
+        try {
+            /** @var FBAInboundServiceMWS_Interface */
+            $response = $service->listInboundShipmentItemsByNextToken($request);
+            $dom = new \DOMDocument();
+            $dom->loadXML($response->toXML());
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            return $dom->saveXML();
+        } catch (FBAInboundServiceMWS_Exception $ex) {
+            $return_echo["Caught Exception"] =  $ex->getMessage();
+            $return_echo["Response Status Code"] = $ex->getStatusCode();
+            $return_echo["Error Code"] = $ex->getErrorCode();
+            $return_echo["Error Type"] = $ex->getErrorType();
+            $return_echo["Request ID"] = $ex->getRequestId();
+            $return_echo["XML"] = $ex->getXML();
+            $return_echo["ResponseHeaderMetadata"] = $ex->getResponseHeaderMetadata();
+        }
+        return $return_echo;
+    }
+
+    public static function invokeListInboundShipmentsByNextToken($request, FBAInboundServiceMWS_Interface $service)
+    {
+        $return_echo = [];
+        try {
+            /** @var FBAInboundServiceMWS_Interface */
+            $response = $service->listInboundShipmentsByNextToken($request);
             $dom = new \DOMDocument();
             $dom->loadXML($response->toXML());
             $dom->preserveWhiteSpace = false;

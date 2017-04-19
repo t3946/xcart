@@ -1,4 +1,6 @@
 <?php
+use CaponicaAmazonMwsComplete\AmazonClient\FbaInboundClient;
+
 define("CIDEV_CRON_START", "CRON");
 session_start();
 set_time_limit(0);
@@ -26,9 +28,11 @@ $start_time = new DateTime('now');
 $log_text = " * * *  Cron started  * * * ";
 func_backprocess_log(LOG_CATEGORY, $log_text);
 
-$oAmazon = new \Xcart\AmazonMWS('MarketplaceWebServiceProducts_Client', '/FulfillmentInboundShipment/2010-10-01');
+$cl_ver = FbaInboundClient::MWS_CLIENT_VERSION; //use for autoload Amazon library
+$oAmazon = new \Xcart\AmazonMWS('FBAInboundServiceMWS_Client', '/FulfillmentInboundShipment/2010-10-01');
 $oAmazon
     ->enableLog('amazon-list-inbound')
+    ->_Request('GetListInboundShipments')
     ->_Request('GetListInboundItems');
 
 
