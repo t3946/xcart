@@ -21,8 +21,9 @@ return array_replace_recursive([
        'User'   => ['sessionTime' => 15552000],
        'Sites'  => ['defaultStore' => 'AR'],
        'Amazon',
-       'Brand',
-   ],
+       'Order',
+       'Reports',
+    ],
    'locale' => [
        'language' => 'ru',
        'sourceLanguage' => 'en',

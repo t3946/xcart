@@ -4,12 +4,17 @@ namespace Xcart;
 use Modules\Amazon\Helpers\AmazonHelper;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
+use Modules\Amazon\Models\AmazonListInboundShipment;
+use Modules\Amazon\Models\AmazonListInboundShipmentItemModel;
 use Modules\Amazon\Models\AmazonProductsFieldsModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Product\Helpers\ProductHelper;
+use Modules\Product\Models\ProductModel;
+use SimpleXMLElement;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 use Xcart\External_Product_Verification\ExternalVerificationFeeds;
 use Xcart\External_Product_Verification\ExternalVerificationProductsQueue;
@@ -75,7 +80,8 @@ class AmazonMWS
 
         if ($oServiceClass == 'MarketplaceWebServiceOrders_Client' ||
             $oServiceClass == 'FBAInventoryServiceMWS_Client' ||
-            $oServiceClass == 'MarketplaceWebServiceProducts_Client'
+            $oServiceClass == 'MarketplaceWebServiceProducts_Client' ||
+            $oServiceClass == 'FBAInboundServiceMWS_Client'
         ) {
             $this->oMWSService = new $oServiceClass(
                 AWS_ACCESS_KEY_ID,
@@ -1996,51 +2002,181 @@ SQL;
                     $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
                     $log->debug('ListInventorySupply', [$this->dom_xml_arr]);
                 }
-                $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-                $this->dom_xml_arr = str_replace('http://mws.amazonaws.com/FulfillmentInventory/2010-10-01/', '', $this->dom_xml_arr);
-                $docShipping = new \DOMDocument;
-                $docShipping->loadXML($this->dom_xml_arr);
-                $xpath = new \DOMXPath($docShipping);
-                $aInventorySupplyList = $xpath->query('/*/*/InventorySupplyList/member');
-                if (!empty($aInventorySupplyList)) {
-                    /** @var \DOMElement[] $aInventorySupplyList */
-                    foreach ($aInventorySupplyList as $InventorySupplyList) {
-                        $aTotalSupplyQuantity = $InventorySupplyList->getElementsByTagName('TotalSupplyQuantity');
-                        $aInStockSupplyQuantity = $InventorySupplyList->getElementsByTagName('InStockSupplyQuantity');
-                        $aASIN = $InventorySupplyList->getElementsByTagName('ASIN');
-                        $aSKU = $InventorySupplyList->getElementsByTagName('SellerSKU');
-                        if (!empty($aSKU)) {
-                            $sSKU = $aSKU->item(0)->nodeValue;
-                            $aProductModels = array_filter(
-                                $this->aProducts,
-                                function ($e) use ($sSKU) {
-                                    return $e->productcode == $sSKU;
-                                });
-                            if (!empty($aProductModels)) {
-                                $oProductModel = reset($aProductModels);
-                                $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
-                                $oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params);
-                                if ($aASIN->length) {
-                                    $oAmazonProductModel->ASIN = $aASIN->item(0)->nodeValue;
-                                }
-                                if ($aTotalSupplyQuantity->length) {
-                                    $oAmazonProductModel->lis_TotalSupplyQuantity = $aTotalSupplyQuantity->item(0)->nodeValue;
-                                }
-                                if ($aInStockSupplyQuantity->length) {
-                                    $oAmazonProductModel->lis_InStockSupplyQuantity = $aInStockSupplyQuantity->item(0)->nodeValue;
-                                }
-                                $oAmazonProductModel->report_date = $iReportDate;
-                                if ($oAmazonProductModel->productid) {
-                                    $oAmazonProductModel->save();
+                if (!empty($this->dom_xml_arr) && !is_array($this->dom_xml_arr)) {
+                    $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
+                    $this->dom_xml_arr = str_replace('http://mws.amazonaws.com/FulfillmentInventory/2010-10-01/', '', $this->dom_xml_arr);
+                    $docShipping = new \DOMDocument;
+                    $docShipping->loadXML($this->dom_xml_arr);
+                    $xpath = new \DOMXPath($docShipping);
+                    $aInventorySupplyList = $xpath->query('/*/*/InventorySupplyList/member');
+                    if (!empty($aInventorySupplyList)) {
+                        /** @var \DOMElement[] $aInventorySupplyList */
+                        foreach ($aInventorySupplyList as $InventorySupplyList) {
+                            $aTotalSupplyQuantity = $InventorySupplyList->getElementsByTagName('TotalSupplyQuantity');
+                            $aInStockSupplyQuantity = $InventorySupplyList->getElementsByTagName('InStockSupplyQuantity');
+                            $aASIN = $InventorySupplyList->getElementsByTagName('ASIN');
+                            $aSKU = $InventorySupplyList->getElementsByTagName('SellerSKU');
+                            if (!empty($aSKU)) {
+                                $sSKU = $aSKU->item(0)->nodeValue;
+                                $aProductModels = array_filter(
+                                    $this->aProducts,
+                                    function ($e) use ($sSKU) {
+                                        return $e->productcode == $sSKU;
+                                    });
+                                if (!empty($aProductModels)) {
+                                    $oProductModel = reset($aProductModels);
+                                    $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
+                                    $oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params);
+                                    if ($aASIN->length) {
+                                        $oAmazonProductModel->ASIN = $aASIN->item(0)->nodeValue;
+                                    }
+                                    if ($aTotalSupplyQuantity->length) {
+                                        $oAmazonProductModel->lis_TotalSupplyQuantity = $aTotalSupplyQuantity->item(0)->nodeValue;
+                                    }
+                                    if ($aInStockSupplyQuantity->length) {
+                                        $oAmazonProductModel->lis_InStockSupplyQuantity = $aInStockSupplyQuantity->item(0)->nodeValue;
+                                    }
+                                    $oAmazonProductModel->report_date = $iReportDate;
+                                    if ($oAmazonProductModel->productid) {
+                                        $oAmazonProductModel->save();
+                                    }
                                 }
                             }
                         }
                     }
+                    $this->nextToken = $xpath->query('/*/*/NextToken')->item(0)->nodeValue;
+                } else {
+                    break;
                 }
-                $this->nextToken = $xpath->query('/*/*/NextToken')->item(0)->nodeValue;
             }
             $this->nextToken = 'start';
         }
+        return $this;
+    }
+
+    public function doGetListInboundShipments()
+    {
+        if (!empty($this->error)) return $this;
+        while (!empty($this->nextToken)) {
+            if ($this->nextToken == 'start') {
+                $request = [
+                    'ShipmentStatusList' => ['member' => [
+                        'WORKING',
+                        'SHIPPED',
+                        'IN_TRANSIT',
+                        'DELIVERED',
+                        'CHECKED_IN',
+                        'RECEIVING',
+                        'CLOSED',
+                        'CANCELLED',
+                        'DELETED',
+                        'ERROR']],
+                    'SellerId' => MERCHANT_ID,
+                ];
+                $this->dom_xml_arr = AmazonHelper::invokeListInboundShipments($request, $this->oMWSService);
+            } else {
+                $request = [
+                    'SellerId' => MERCHANT_ID,
+                    'NextToken' => $this->nextToken,
+                ];
+                $this->dom_xml_arr = AmazonHelper::invokeListInboundShipmentsByNextToken($request, $this->oMWSService);
+            }
+            if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
+                return $this;
+            }
+            if (!empty($this->dom_xml_arr) && !is_array($this->dom_xml_arr)) {
+                $items = new SimpleXMLElement($this->dom_xml_arr);
+                $amazonRes = $items->ListInboundShipmentsResult;
+                if (!$amazonRes) {
+                    $amazonRes = $items->ListInboundShipmentsByNextTokenResult;
+                }
+                if ($amazonRes->ShipmentData->member) {
+                    foreach ($amazonRes->ShipmentData->member as $member) {
+                        $model = AmazonListInboundShipment::objects()->get(['shipment_id' => (string) $member->ShipmentId]);
+                        if (!$model) {
+                            $model = new AmazonListInboundShipment(['shipment_id' => (string) $member->ShipmentId]);
+                        }
+                        $model->setAttributes([
+                            'shipment_name' => (string) $member->ShipmentName,
+                            'destination_fulfillment_center_id' => (string) $member->DestinationFulfillmentCenterId,
+                            'label_prep_type' => (string) $member->LabelPrepType,
+                            'shipment_status' => (string) $member->ShipmentStatus,
+                            'are_cases_required' => (bool) $member->AreCasesRequired,
+                            'confirmed_need_by_date' => (string) $member->ConfirmedNeedByDate,
+                            'box_contents_source' => (string) $member->BoxContentsSource,
+                        ]);
+                        if ($model->isValid()) {
+                            $model->save();
+                        }
+                    }
+                }
+
+                $this->nextToken = (string) $amazonRes->NextToken;
+            } else {
+                break;
+            }
+        }
+        return $this;
+    }
+
+    public function doGetListInboundItems()
+    {
+        $aShipments = AmazonListInboundShipment::objects()->filter(['shipment_status__raw' => "NOT IN ('DELETED', 'CANCELLED', 'CLOSED')"]);
+
+        foreach ($aShipments as $shipment) {
+            $request = [
+                'SellerId' => MERCHANT_ID,
+                'ShipmentId' => $shipment->shipment_id,
+            ];
+            $this->dom_xml_arr = AmazonHelper::invokeListInboundShipmentsItems($request, $this->oMWSService);
+
+            if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
+                return $this;
+            }
+            if ($this->bEnableLog && $this->sLogPrefix) {
+                $log = new \Monolog\Logger('amazon_info');
+                $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                $log->debug('ListInboundItems', [$this->dom_xml_arr]);
+            }
+
+            if (!empty($this->dom_xml_arr) && !is_array($this->dom_xml_arr)) {
+                $items = new SimpleXMLElement($this->dom_xml_arr);
+                $amazonRes = $items->ListInboundShipmentItemsResult;
+                if (!$amazonRes) {
+                    $amazonRes = $items->ListInboundShipmentItemsByNextTokenResult;
+                }
+                if ($amazonRes->ItemData->member) {
+                    foreach ($amazonRes->ItemData->member as $member) {
+                        $productModel = ProductHelper::getProductByCode((string)$member->SellerSKU);
+                        if ($productModel) {
+                            $processShippingId[] = (string)$member->ShipmentId;
+                            $param = [
+                                'productid' => $productModel->productid,
+                                'shipment_id' => (string)$member->ShipmentId,
+                            ];
+                            $model = AmazonListInboundShipmentItemModel::objects()->get($param);
+                            if (!$model) {
+                                $model = new AmazonListInboundShipmentItemModel($param);
+                            }
+                            $model->setAttributes([
+                                'seller_sku' => (string)$member->SellerSKU,
+                                'fulfillment_network_sku' => (string)$member->FulfillmentNetworkSKU,
+                                'quantity_shipped' => (integer)$member->QuantityShipped,
+                                'quantity_received' => (integer)$member->QuantityReceived
+                            ]);
+                            if ($model->isValid()) {
+                                $model->save();
+                            }
+                        }
+                    }
+                }
+                $this->nextToken = (string)$amazonRes->NextToken;
+            } else {
+                break;
+            }
+        }
+
         return $this;
     }
 

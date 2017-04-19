@@ -9,15 +9,8 @@ return array_replace_recursive((is_file($base_config)) ? include $base_config : 
             'debug' => true,
             'errHandler' => false
         ],
-        'request' => [
-            'httpRequest' => [
-                'from_get' => 'path',
-            ],
-        ],
         'router' => [
             'pathRoutes' => 'base.config.routes_admin',
-            'basePath' => '/admin/controllers.php?',
-            'mode' => 'get',
         ],
     ]
 ]);

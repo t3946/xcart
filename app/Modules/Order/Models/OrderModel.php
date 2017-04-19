@@ -97,4 +97,8 @@ class OrderModel extends AutoMetaModel
 
         return null;
     }
+    public function getOrderNumber()
+    {
+        return $this->order_prefix . $this->orderid;
+    }
 }

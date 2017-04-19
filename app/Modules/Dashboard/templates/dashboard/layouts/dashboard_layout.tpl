@@ -44,7 +44,7 @@
                     if ($(this).data('combobox')) {
                         combobox = 1;
                     }
-                    return '{url 'dashboard:search_suggestion'}' + '&from=' + $(this).data('ajax-from') + '&combobox=' + combobox;
+                    return '{url 'dashboard:search_suggestion'}' + '?from=' + $(this).data('ajax-from') + '&combobox=' + combobox;
                 },
                 processResults: function (data) {
                     if (data) {
