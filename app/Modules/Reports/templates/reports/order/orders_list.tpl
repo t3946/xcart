@@ -171,7 +171,7 @@
             <td>{$group->total_net|formatprice:",":"."}</td>
             <td>
                 {foreach $payment_methods as $method}
-                    {if $method.paymentid ==$order->paymentid}
+                    {if $method.paymentid ==$group->acc_paymentid}
                         <span title="{$method.payment_details}">
                             <b>{$method.payment_method}</b>
                         </span>
