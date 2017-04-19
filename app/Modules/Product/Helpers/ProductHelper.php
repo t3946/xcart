@@ -3,7 +3,9 @@
 namespace Modules\Product\Helpers;
 
 
+use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
 use Modules\Product\Models\ProductFileModel;
+use Modules\Product\Models\ProductModel;
 
 class ProductHelper
 {
@@ -99,5 +101,17 @@ class ProductHelper
             }
         }
         return $productFileModel;
+    }
+
+    public static function getProductByCode($code)
+    {
+        $model = ProductModel::objects()->get(['productcode' => (string) $code]);
+        if (!$model){
+            $modelSKU = AmazonFbaMissingSkuModel::objects()->get(['missing_productcode' => (string) $code]);
+            if ($modelSKU) {
+                $model = $model->product;
+            }
+        }
+        return $model;
     }
 }
