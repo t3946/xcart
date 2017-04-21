@@ -3,24 +3,48 @@ namespace Modules\Reports\Stores;
 
 use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Expression;
-use Modules\Brand\Models\BrandModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
-use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\Connection;
-use Xcart\StoreFront;
 
 class ReportsStore extends OrderSearchStore
 {
     public  $defaultPagerPageSize = 100;
 
-    public static function getGroupsModels()
+
+    public static function getGroupsNames()
     {
         return [
-            'storefront'     => StoreFront::className(),
-            'distributor'    => DistributorModel::className(),
-            'brand'          => BrandModel::className(),
+            'storefront'     => 'StoreFront',
+            'distributor'    => 'Distributor',
+            'brand'          => 'Brand',
+        ];
+    }
+
+    public static function getAggregates()
+    {
+        return [
+            'qty'           => 'Quantity',
+            'amount'        => 'Amount',
+            'total'         => 'Total',
+            'subtotal'      => 'Subtotal',
+            'shipping'      => 'Shipping Cost',
+            'profit'        => 'Profit $',
+            'avg_profit'    => 'AVG Profit %',
+        ];
+    }
+
+    public static function getAggregatesFields()
+    {
+        return [
+            'qty'           => '',
+            'amount'        => '',
+            'total'         => new Sum('group.total_net', 'total'),
+            'subtotal'      => '',
+            'shipping'      => '',
+            'profit'        => '',
+            'avg_profit'    => '',
         ];
     }
 
@@ -28,12 +52,13 @@ class ReportsStore extends OrderSearchStore
     {
         $filter = null;
         $qs = parent::getQuerySet();
+        $qs->order(['date']);
         $joins = $qs->getQueryBuilder()->getJoins();
         $joins = array_keys($joins);
         if (!in_array('group', $joins)) {
             $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
         }
-        switch ($this->form_data['order']['profit_margin']) {
+        switch ($this->form_data['report']['profit_margin']) {
             case "profit" :
                 $filter = ['group.profit_margin__lt' => 100];
                 break;
@@ -42,15 +67,56 @@ class ReportsStore extends OrderSearchStore
                 break;
             case "profit_between" :
                 $filter = [
-                    'group.profit_margin__gte' => $this->form_data['order']['profit_margin_profitbetween_start'],
-                    'group.profit_margin__lt' => $this->form_data['order']['profit_margin_profitbetween_end'],
+                    'group.profit_margin__gte' => $this->form_data['report']['profit_margin_profitbetween_start'],
+                    'group.profit_margin__lt' => $this->form_data['report']['profit_margin_profitbetween_end'],
                 ];
                 break;
         }
+
+        if (!empty($this->form_data['report']['group_settings'])){
+            $qs->group([]);
+            $qs->select([]);
+            ksort($this->form_data['report']['group_settings']);
+            foreach ($this->form_data['report']['group_settings'] as $group_index => $group) {
+                switch ($group) {
+                    case 'storefront':
+                        if (!in_array($group, $joins)) {
+                            $qs->join('inner join', 'xcart_storefronts', ['storefrontid' => "{$group}.storefrontid"], $group);
+                        }
+                        $qs->addSelect(["$group.domain"]);
+                        $qs->addGroup(["{$group}.storefrontid"]);
+                        if ($group_index == 1) {
+                            $qs->order("$group.domain");
+                        }
+                        break;
+                    case 'brand':
+                        break;
+                    case 'distributor':
+                        if (!in_array($group, $joins)) {
+                            $qs->join('inner join', 'xcart_manufacturers', ['group.manufacturerid' => "{$group}.manufacturerid"], $group);
+                        }
+                        $qs->addSelect(["$group.manufacturer"]);
+                        $qs->addGroup(["{$group}.manufacturerid"]);
+                        if ($group_index == 1) {
+                            $qs->order("$group.manufacturer");
+                        }
+                        break;
+                }
+
+            }
+        }
+
+        if (!empty($this->form_data['report']['aggregate_settings'])){
+            $agg = self::getAggregatesFields();
+            foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
+                $qs->addSelect([$agg[$aggregate_settings]]);
+            }
+        }
+
         if ($filter) {
             $qs->filter($filter);
         }
-        $qs->order(['date']);
+
         return $qs;
     }
 

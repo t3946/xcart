@@ -5,7 +5,7 @@
     {smarty_admin_block name='Report options'}
         {include 'reports/admin/_reports.tpl'}
 
-        <form action="{url 'reports:view'}" method="GET" target="_blank">
+        <form action="{url 'reports:view'}" method="GET" id="report_form" target="_blank">
         {include 'reports/_report_fields.tpl'}
         <fieldset>
             <legend>
@@ -31,13 +31,17 @@
 
             });
         });
-        $('#report_edit_form').submit(function(e){
+        $('#report_form').submit(function(e){
             var submit_form =  $(this).closest('form');
-            $('.shapeshift .shapeshift-container.for-save > div').each(function(){
-                var input = $("<input>")
-                    .attr("type", "hidden")
-                    .attr("name", "search[report][group_settings]["+$(this).data('index')+"]").val($(this).data('model'));
-                submit_form.append($(input));
+            var containers = $('.shapeshift .shapeshift-container.for-save');
+            containers.each(function(){
+                var cur_container = $(this);
+                $(this).find('> div').each(function () {
+                    var input = $("<input>")
+                        .attr("type", "hidden")
+                        .attr("name", "search[report]["+cur_container.data('param-name')+"]["+$(this).data('index')+"]").val($(this).data('model'));
+                    submit_form.append($(input));
+                });
             });
         });
     })();

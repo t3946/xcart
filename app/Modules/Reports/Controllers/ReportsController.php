@@ -7,6 +7,7 @@ use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Expression;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Reports\Helpers\ReportsHelper;
 use Modules\Reports\Models\ReportModel;
 use Modules\Reports\Stores\ReportsStore;
 use Xcart\App\Controller\PrototypeAdminController;
@@ -51,6 +52,7 @@ class ReportsController extends PrototypeAdminController
             echo $this->renderInternal('reports/search.tpl',
                 array_merge(
                     SearchHelper::getFormAndListData(),
+                    ReportsHelper::getFormAndListData(),
                     [
                         'model'         => $model,
                         'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
@@ -76,6 +78,9 @@ class ReportsController extends PrototypeAdminController
         }
 
         $reportStore = new ReportsStore($form_data);
+
+        echo $reportStore->getQuerySet()->getSql();
+
 
         $orderModels = $reportStore->getModels();
         $pager = $reportStore->getPager();
@@ -138,6 +143,7 @@ class ReportsController extends PrototypeAdminController
         echo $this->renderInternal('reports/admin/report_edit.tpl',
             array_merge(
                 SearchHelper::getFormAndListData(),
+                ReportsHelper::getFormAndListData(),
                 [
                     'model' => $model,
                     'form_data' => SearchHelper::prepareFormDataForTemplate($model->form_data),
