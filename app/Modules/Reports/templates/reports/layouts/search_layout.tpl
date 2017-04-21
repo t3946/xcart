@@ -19,4 +19,15 @@
 
 {/block}
 
+{block 'js'}
+{parent}
+<script type="text/javascript">
+    (function(){
+        $('.shapeshift .shapeshift-container').shapeshift({
+        });
+    })();
+</script>
+
+{/block}
+
 

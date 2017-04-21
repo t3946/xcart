@@ -58,15 +58,16 @@
                 <div class="columns large-4">
                     <label>Group settings:</label>
                 </div>
-                <div class="columns large-8">
-                    <div class="columns large-6">
-                        <div class="columns large-12 group-drag-box">
+                <div class="columns large-8 shapeshift">
+                    <div class="columns large-6 shapeshift-wrapper">
+                        <div class="columns large-12 group-drag-box shapeshift-container">
+                            
                         </div>
                     </div>
-                    <div class="columns large-6">
-                        <div class="columns large-12 group-drag-box">
-                            <div>1</div>
-                            <div>2</div>
+                    <div class="columns large-6 shapeshift-wrapper">
+                        <div class="columns large-12 group-drag-box shapeshift-container">
+                            <div>Storefronts</div>
+                            <div>Distributors</div>
                             <div>3</div>
                             <div>4</div>
                             <div>5</div>
