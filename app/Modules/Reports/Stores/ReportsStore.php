@@ -3,14 +3,27 @@ namespace Modules\Reports\Stores;
 
 use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Expression;
+use Modules\Brand\Models\BrandModel;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\Connection;
+use Xcart\StoreFront;
 
 class ReportsStore extends OrderSearchStore
 {
     public  $defaultPagerPageSize = 100;
+
+    public static function getGroupsModels()
+    {
+        return [
+            'storefront'     => StoreFront::className(),
+            'distributor'    => DistributorModel::className(),
+            'brand'          => BrandModel::className(),
+        ];
+    }
+
     public function getQuerySet()
     {
         $filter = null;

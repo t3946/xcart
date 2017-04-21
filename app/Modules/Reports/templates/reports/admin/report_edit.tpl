@@ -7,7 +7,7 @@
 {block 'content'}
     {smarty_admin_block name = 'Report options'}
 
-        <form action="{$model->getAdminUrl()}" method="POST">
+        <form action="{$model->getAdminUrl()}" id="report_edit_form" method="POST">
             {include 'reports/_report_fields.tpl'}
             <fieldset>
                 <legend>

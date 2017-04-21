@@ -24,6 +24,21 @@
 <script type="text/javascript">
     (function(){
         $('.shapeshift .shapeshift-container').shapeshift({
+            colWidth: 200
+        }).on("ss-rearranged ss-added ss-removed", function (e, selected) {
+            $('> div', $(this)).each(function(i, elem){
+                $(elem).attr('data-index', ++i);
+
+            });
+        });
+        $('#report_edit_form').submit(function(e){
+            var submit_form =  $(this).closest('form');
+            $('.shapeshift .shapeshift-container.for-save > div').each(function(){
+                var input = $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "search[report][group_settings]["+$(this).data('index')+"]").val($(this).data('model'));
+                submit_form.append($(input));
+            });
         });
     })();
 </script>

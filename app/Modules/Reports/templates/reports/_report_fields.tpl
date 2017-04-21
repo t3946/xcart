@@ -60,17 +60,15 @@
                 </div>
                 <div class="columns large-8 shapeshift">
                     <div class="columns large-6 shapeshift-wrapper">
-                        <div class="columns large-12 group-drag-box shapeshift-container">
-                            
+                        <div class="columns large-12 group-drag-box shapeshift-container for-save">
+
                         </div>
                     </div>
                     <div class="columns large-6 shapeshift-wrapper">
                         <div class="columns large-12 group-drag-box shapeshift-container">
-                            <div>Storefronts</div>
-                            <div>Distributors</div>
-                            <div>3</div>
-                            <div>4</div>
-                            <div>5</div>
+                            <div data-index="1" data-model="storefront">Storefront</div>
+                            <div data-index="2" data-model="distributor">Distributor</div>
+                            <div data-index="3" data-model="brand">Brand</div>
                         </div>
                     </div>
                 </div>
