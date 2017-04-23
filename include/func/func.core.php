@@ -35,6 +35,8 @@
 # $Id: func.core.php,v 1.52.2.43 2007/01/15 08:18:26 twice Exp $
 #
 
+use Modules\Core\Helpers\CoreHelper;
+
 if (!defined('XCART_START')) {
     header("Location: ../");
     die("Access denied");
@@ -2775,7 +2777,7 @@ function func_define_approximate_shippings($productid, $product_info = '')
     return $shippings;
 }
 
-function func_pc_find_new_categoryid($productid)
+function func_pc_find_new_categoryid($productid, $aTerms = [])
 {
     global $sql_tbl;
 
@@ -2801,47 +2803,25 @@ function func_pc_find_new_categoryid($productid)
     $text_arr = explode(" ", $text);
 
     $categories = db_query_param($query = /** @lang MySQL */
-        "SELECT categoryid, pc_category_weight FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:sfid AND pc_category_weight != 0", ['sfid' => $product['sfid']]);
+        "SELECT categoryid, pc_category_weight, pc_z FROM xcart_categories WHERE pc_ready_to_classify='Y' AND avail='Y' AND storefrontid=:sfid AND pc_category_weight != 0", ['sfid' => $product['sfid']]);
 
     $idxcl = 0;
 
-    $current_category_terms = func_query_param(/** @lang MySQL */
-        "SELECT DISTINCT t.term
-                FROM xcart_pc_category_terms pct
-                INNER JOIN xcart_categories c ON c.categoryid = pct.categoryid 
-                INNER JOIN xcart_pc_terms t ON t.termid = pct.termid
-                WHERE c.pc_ready_to_classify='Y'
-                AND c.storefrontid = :storefrontid" , ['storefrontid' => $product['sfid']]);
-
-    $current_category_terms_arr = [];
-    if (!empty($current_category_terms)) {
-        foreach ($current_category_terms as $v) {
-            $current_category_terms_arr[] = $v["term"];
-        }
-    }
-
     while ($category = db_fetch_array($categories)) {
-
         $p1 = 0;
         $idxcl++;
-
         $categoryid = $category["categoryid"];
-
         $pc_category_weight = $category["pc_category_weight"];
-
 
         echo "\n\nCategory:{$categoryid}\n";
         foreach ($text_arr as $word) {
-            if (in_array($word, $current_category_terms_arr)) {
-                // sleep for some time
-                $bayes_weight = func_query_first_cell_param(/** @lang MySQL */
-                    "SELECT COALESCE(CASE WHEN CT.categoryid IS NOT NULL THEN LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z) ELSE LOG(1/C.pc_z) END,0) AS bayes_weight 
-                            FROM xcart_pc_terms T 
-                            LEFT JOIN xcart_categories C ON C.categoryid = :categoryid 
-                            LEFT JOIN xcart_pc_category_terms CT ON CT.categoryid = C.categoryid AND CT.termid = T.termid 
-                            WHERE T.term = :word", ['categoryid' => $categoryid, 'word' => $word]);
-                $p1 += $bayes_weight;
-                echo "Bayes weight:{$bayes_weight}, p1: {$p1}\n";
+            if (array_key_exists($word, $aTerms)) {
+                if (array_key_exists($categoryid, $aTerms[$word])) {
+                    $pz = $aTerms[$word][$categoryid];
+                } else {
+                    $pz = log(1/$category['pc_z']);
+                }
+                $p1 += $pz;
             }
         }
 
@@ -2911,7 +2891,7 @@ function func_del_excluded_char_sequences($text = '', $excluded_char_sequences =
         }
     }
 
-    $text = strip_tags($text);
+    $text = CoreHelper::stripTags($text);
     $text = htmlspecialchars_decode($text);
     $text = preg_replace("/[\r\n\t]/S", " ", $text);
     $text = preg_replace("/[^0-9a-zA-Z]/S", " ", $text);
@@ -3862,6 +3842,25 @@ function func_check_comma_in_field($orderid, $value, $sFieldName)
     }
 
     return false;
+}
+
+function file_get_filename_curl($url)
+{
+    $originalFileName = '';
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, true);
+    curl_setopt($curl, CURLOPT_NOBODY, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
+    $data = curl_exec($curl);
+    if(preg_match('/Content-Disposition: .*filename="([^"]+)/', $data, $matches)) {
+        $originalFileName = $matches[1];
+    }
+    curl_close($curl);
+
+    return $originalFileName;
 }
 
 function file_get_contents_curl($url)

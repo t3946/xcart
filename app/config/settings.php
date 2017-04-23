@@ -19,7 +19,8 @@ return array_replace_recursive([
        'Sites' => ['defaultStore' => 'AR'],
        'Amazon',
        'Order',
-   ],
+       'Reports',
+    ],
    'locale' => [
        'language' => 'ru',
        'sourceLanguage' => 'en',

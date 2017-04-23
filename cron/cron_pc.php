@@ -112,19 +112,20 @@ SQL;
             }
 
             $query_bayesian_weight = /** @lang MySQL */ <<<SQL
-Select
-                C.categoryid As CategoryID, 
-                LOG((Select Count(P1.productid) 
-                 From xcart_products P1
-                                left join xcart_products_categories PC1 ON PC1.productid = P1.productid
-                 where P1.forsale = 'Y' and PC1.categoryid = C.categoryid and P1.pc_classify_status IN ('ACC','MC')
+SELECT
+        C.categoryid AS CategoryID,
+        COALESCE(
+                    LOG((SELECT Count(P1.productid)
+                 FROM xcart_products P1
+                      LEFT JOIN xcart_products_categories PC1 ON PC1.productid = P1.productid
+                 WHERE P1.forsale = 'Y' AND PC1.categoryid = C.categoryid AND P1.pc_classify_status IN ('ACC','MC')
                 ) /
-                (Select COUNT(P2.productid) From xcart_products P2
-                                left join xcart_products_sf PSF ON PSF.productid = P2.productid
-                 where P2.forsale='Y' and PSF.sfid = :storefrontid and P2.pc_classify_status IN ('ACC','MC')
-                )) As bayesian_weight
-	from xcart_categories C
-	where C.pc_ready_to_classify = 'Y' and C.storefrontid = :storefrontid
+                (SELECT COUNT(P2.productid) FROM xcart_products P2
+                      LEFT JOIN xcart_products_sf PSF ON PSF.productid = P2.productid
+                 WHERE P2.forsale='Y' AND PSF.sfid = :storefrontid AND P2.pc_classify_status IN ('ACC','MC')
+                )),-1000000) AS bayesian_weight
+    FROM xcart_categories C
+    WHERE C.pc_ready_to_classify = 'Y' AND C.storefrontid = :storefrontid
 SQL;
 
             $bayesian_weight_arr = func_query_param($query_bayesian_weight, ['storefrontid' => $storefrontid]);
@@ -139,13 +140,18 @@ SQL;
             }
 
             $query_z = /** @lang MySQL */ <<<SQL
-Select
-                    C.categoryid As CategoryID,
-            		SUM(COALESCE(CT.term_count, 0)) As Z
-	from xcart_categories C
-                        left join xcart_pc_category_terms CT ON CT.categoryid = C.categoryid 
-	where C.pc_ready_to_classify = 'Y' and C.storefrontid = :storefrontid
-	Group By C.categoryid
+SELECT
+    C0.categoryid AS CategoryID,
+    (SELECT COALESCE(COUNT(DISTINCT PCT.termid),0)
+     FROM xcart_categories C
+                 LEFT JOIN xcart_pc_category_terms PCT ON PCT.categoryid = C.categoryid
+     WHERE C.avail = 'Y' AND C.pc_ready_to_classify = 'Y' AND C.storefrontid = C0.storefrontid    ) +
+    (SELECT COALESCE(SUM(PCT2.term_count),0)
+     FROM xcart_pc_category_terms PCT2
+     WHERE PCT2.categoryid = C0.categoryid) AS Z
+FROM
+    xcart_categories C0
+WHERE C0.avail = 'Y' AND C0.pc_ready_to_classify = 'Y' AND C0.storefrontid = :storefrontid
 SQL;
 
             $z_arr = func_query_param($query_z, ['storefrontid' => $storefrontid]);
@@ -172,13 +178,24 @@ SQL;
             ORDER BY RAND() 
             LIMIT $limit", ['storefrontid' => $storefrontid]);
 
+        $storefront_category_terms = func_query_param(/** @lang MySQL */
+            "SELECT C.categoryid, T.term, COALESCE(LOG((COALESCE(CT.term_count, 0)+1)/C.pc_z),0) AS bayes_weight 
+FROM xcart_categories C
+LEFT JOIN xcart_pc_category_terms CT ON CT.categoryid = C.categoryid 
+LEFT JOIN xcart_pc_terms T ON T.termid = CT.termid 
+WHERE C.pc_ready_to_classify='Y' AND C.storefrontid = :storefrontid AND C.avail ='Y'" , ['storefrontid' => $storefrontid]);
+        $aTerms = [];
+        foreach ($storefront_category_terms as $cat) {
+            $aTerms[$cat['term']][$cat['categoryid']] = floatval($cat['bayes_weight']);
+        }
+
         $p_count = 0;
         if (!empty($products)) {
             foreach ($products as $product) {
                 $p_count++;
                 $productid = $product["productid"];
-                func_pc_find_new_categoryid($productid);
-                if ($p_count > 50) {
+                func_pc_find_new_categoryid($productid, $aTerms);
+                if ($p_count > 100) {
                     break;
                 }
             }

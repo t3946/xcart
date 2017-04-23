@@ -1,4 +1,6 @@
 <?php
+use Modules\Core\Helpers\CoreHelper;
+
 define("CIDEV_CRON_START", "CRON");
 
 require "../top.inc.php";
@@ -80,12 +82,12 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $data_arr["sku"]         = $product["productcode"];
                     $data_arr["upc"]         = $product["upc"];
                     $data_arr["brand"]       = $product["brand"];
-                    $data_arr["description"] = strip_tags($product["fulldescr"]);
+                    $data_arr["description"] = $text = CoreHelper::stripTags($product["fulldescr"]);
 
-                    $data_arr["description.seo_fulldescr"]   = strip_tags($product["seo_fulldescr"]);
-                    $data_arr["productname.seo_productname"] = strip_tags($product["seo_product_name"]);
-                    $data_arr["productname.seo_h2"]          = strip_tags($product["seo_h2"]);
-                    $data_arr["productname.title_tag"]       = strip_tags($product["title_tag"]);
+                    $data_arr["description.seo_fulldescr"]   = CoreHelper::stripTags($product["seo_fulldescr"]);
+                    $data_arr["productname.seo_productname"] = CoreHelper::stripTags($product["seo_product_name"]);
+                    $data_arr["productname.seo_h2"]          = CoreHelper::stripTags($product["seo_h2"]);
+                    $data_arr["productname.title_tag"]       = CoreHelper::stripTags($product["title_tag"]);
 
                     $data_json = json_encode($data_arr);
 
@@ -136,12 +138,12 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                     $data_arr["sku"]         = $product["productcode"];
                     $data_arr["upc"]         = $product["upc"];
                     $data_arr["brand"]       = $product["brand"];
-                    $data_arr["description"] = strip_tags($product["fulldescr"]);
+                    $data_arr["description"] = CoreHelper::stripTags($product["fulldescr"]);
 
-                    $data_arr["description.seo_fulldescr"]   = strip_tags($product["seo_fulldescr"]);
-                    $data_arr["productname.seo_productname"] = strip_tags($product["seo_product_name"]);
-                    $data_arr["productname.seo_h2"]          = strip_tags($product["seo_h2"]);
-                    $data_arr["productname.title_tag"]       = strip_tags($product["title_tag"]);
+                    $data_arr["description.seo_fulldescr"]   = CoreHelper::stripTags($product["seo_fulldescr"]);
+                    $data_arr["productname.seo_productname"] = CoreHelper::stripTags($product["seo_product_name"]);
+                    $data_arr["productname.seo_h2"]          = CoreHelper::stripTags($product["seo_h2"]);
+                    $data_arr["productname.title_tag"]       = CoreHelper::stripTags($product["title_tag"]);
 
                     $data_json = json_encode($data_arr);
 
@@ -399,7 +401,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
                 $data_arr["name"]        = $brand_info["brand"];
                 $brand_info["descr"]     = str_replace("/r/n", " ", $brand_info["descr"]);
                 $brand_info["descr"]     = str_replace("\r\n", " ", $brand_info["descr"]);
-                $data_arr["description"] = strip_tags($brand_info["descr"]);
+                $data_arr["description"] = CoreHelper::stripTags($brand_info["descr"]);
                 $data_json               = json_encode($data_arr);
 
                 $ch = curl_init($url);
@@ -541,7 +543,7 @@ while ($record = db_fetch_array($cidev_updated_products)) {
         $data_arr["category"]         = $category_info["category"];
         $category_info["description"] = str_replace("/r/n", " ", $category_info["description"]);
         $category_info["description"] = str_replace("\r\n", " ", $category_info["description"]);
-        $data_arr["description"]      = strip_tags($category_info["description"]);
+        $data_arr["description"]      = CoreHelper::stripTags($category_info["description"]);
 
         $classElasticSearch->setQueryParam($data_arr);
 
