@@ -1,7 +1,14 @@
+$padding_container: rem-calc(18);
+
 .catalog-page {
+  .pcont {
+    padding-left: $padding_container;
+    padding-right: $padding_container;
+  }
+
   .top-block {
-    min-height: rem-calc(235);
-    padding-left: rem-calc(18);
+    min-height: rem-calc(225);
+    margin-bottom: rem-calc(10);
   }
 
   .description {
@@ -16,5 +23,121 @@
     padding: rem-calc(15) 0;
     font-size: rem-calc(12);
     line-height: 1.7;
+  }
+
+  .state_line {
+    font-weight: 500;
+    line-height: rem-calc(40);
+    height: rem-calc(40);
+    background-color: #ebebeb;
+
+    .action_block {
+      display: inline-block;
+    }
+
+  }
+
+  .items {
+    .item {
+      padding-bottom: 15px;
+      margin: 15px 0;
+      border-bottom: 1px solid #cccccc;
+
+      &:after {
+        content: '';
+        clear: both;
+        display: block;
+      }
+
+      &:nth-last-child(1) {
+        margin-bottom: 20px;
+      }
+      
+      .container {
+        float: left;
+      }
+
+      .image_container {
+        width: 19%;
+
+        .button-quick-view {
+          height: 37px;
+          line-height: 34px;
+          border-radius: 5px;
+          border: 2px solid #ffb400;
+          background-color: #ffffff;
+          text-align: center;
+          color: #4a4949;
+          position: absolute;
+          bottom: 0;
+        }
+      }
+
+      .info_container {
+        width: 60%;
+        color: #333;
+
+        .title {
+          &, a {
+            color: black;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .sku {
+          font: {
+            size: rem-calc(16);
+          };
+
+          .value {
+            color: #28862f;
+            font: {
+              weight: 400;
+            }
+            text-transform: uppercase;
+          }
+
+          .has-tip {
+            width: 19px;
+            height: 19px;
+            line-height: 19px;
+            color: #ffffff;
+            background-color: #cfcfcf;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 10px;
+            text-align: center;
+            display: inline-block;
+            border: none;
+          }
+        }
+
+        .description {
+
+        }
+
+        .parameters {
+          margin-top: rem-calc(10);
+          font: {
+            size: rem-calc(14);
+          }
+
+        }
+      }
+
+      .cart_price_container {
+        width: 20%;
+      }
+
+
+      &:hover {
+        .button-quick-view {
+          display: block !important;
+        }
+      }
+    }
   }
 }

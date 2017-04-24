@@ -2,6 +2,7 @@
   overflow: hidden;
 
   .show_more {
+    z-index: 1;
     line-height: 1;
     position: relative;
     border-bottom: 1px dashed;
@@ -38,6 +39,20 @@
         transform: rotate(180deg);
         margin-top: -5px;
       }
+    }
+  }
+
+  &.is-truncated {
+    position: relative;
+
+    &:after {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      content: '';
+      height: 1em;
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
     }
   }
 }

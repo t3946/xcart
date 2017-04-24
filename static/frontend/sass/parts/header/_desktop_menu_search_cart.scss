@@ -159,6 +159,10 @@ $view_all_height: rem-calc(22);
     min-height: 420px;
     padding-bottom: $view_all_height;
 
+    a {
+      color: black;
+    }
+
     .category-menu-item {
       @include main-menu-container();
 
