@@ -1,7 +1,7 @@
 {extends 'reports/layouts/report_layout.tpl'}
 
 {block 'before-content'}
-    <div align="left">
+    <div class="order-report-header">
         Order report:
         {if $form_data.order.date}
             {$form_data.order.date}
@@ -12,8 +12,14 @@
     </div>
 {/block}
 
+{block 'main'}
+    <div class="order-report-wrapper" style="width:960px; margin: 0 auto">
+    {parent}
+    </div>
+{/block}
+
 {block 'content'}
-    <table>
+    <table width="100%">
         {set $sum_total = 0}
         {foreach $report_data as $key_first => $first_group}
             {set $sum_group = 0}
