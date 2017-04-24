@@ -133,7 +133,7 @@ class OrderHelper
                 ]),
             ])
             ->getQuerySet()
-            ->join('left join', OrderUserLastActivityModel::tableName(), ['a.order_id' => 'order_id'], 'a')
+            ->join('left join', OrderUserLastActivityModel::tableName(), ['a.order_id' => 'order_id', 'a.user_id' => new Expression($user_id)], 'a')
             ->select(['order_id', 'count' => new Expression('count(*)')]);
 
         return $qs;
