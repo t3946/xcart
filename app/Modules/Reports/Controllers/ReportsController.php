@@ -75,8 +75,6 @@ class ReportsController extends PrototypeAdminController
             ];
         }
 
-
-
         $reportStore = new ReportsStore($form_data);
 
         $orderModels = $reportStore->getModels();

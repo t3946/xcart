@@ -37,6 +37,7 @@ class ReportsStore extends OrderSearchStore
         if ($filter) {
             $qs->filter($filter);
         }
+        $qs->order(['date']);
         return $qs;
     }
 

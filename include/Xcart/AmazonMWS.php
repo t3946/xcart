@@ -2056,7 +2056,7 @@ SQL;
 
     public function doGetListInboundShipments()
     {
-        if (!empty($this->error)) return $this;
+        $this->nextToken = 'start';
         while (!empty($this->nextToken)) {
             if ($this->nextToken == 'start') {
                 $request = [

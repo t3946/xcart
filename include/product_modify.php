@@ -511,11 +511,12 @@ if (!empty($active_modules["Product_Configurator"]))
 #
 if (($REQUEST_METHOD == "POST") && ($mode == "product_modify")) {
 
-	$sku_is_exist = (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[products] WHERE productcode='$productcode' AND productid!='$productid' AND provider = '".addslashes($login_type == "A" ? $provider : $login)."'") ? true : false);
+	$sku_is_exist = (func_query_first_cell_param(/** @lang MySQL */
+        "SELECT COUNT(*) FROM xcart_products WHERE productcode=:productcode AND productid!=:productid", ['productid' => $productid, 'productcode' => $productcode]) ? true : false);
 	# Check if form filled with errors
 	$is_variant = false;
 	if (!empty($productid) && !empty($active_modules["Product_Options"]))
-		$is_variant = (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[variants] WHERE productid = '$productid'") > 0);
+		$is_variant = (func_query_first_cell("SELECT COUNT(*) FROM xcart_variants WHERE productid = '$productid'") > 0);
 
 	$_POST['price'] = $price = abs((float)$price);
 
