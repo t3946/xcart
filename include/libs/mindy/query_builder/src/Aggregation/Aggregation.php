@@ -42,6 +42,11 @@ class Aggregation extends Expression
         return $this->fields;
     }
 
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
     public function __construct($field, $alias = '')
     {
         $this->fields = $field;

@@ -991,15 +991,40 @@ class QueryBuilder
         }
     }
 
+    protected function hasAliasedField($column)
+    {
+        foreach ($this->_select as $alias => $item)
+        {
+            if (!is_numeric($alias)) {
+                if ($column == $alias) {
+                    return true;
+                }
+            }
+
+            if ($item instanceof Aggregation) {
+                if ($column == $item->getAlias())
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     protected function applyTableAlias($column)
     {
         // If column already has alias - skip
-        if (strpos($column, '.') === false) {
-            $tableAlias = $this->getAlias();
-            return empty($tableAlias) ? $column : $tableAlias . '.' . $column;
-        } else {
-            return $column;
+        if (strpos($column, '.') === false)
+        {
+            if (!$this->hasAliasedField($column))
+            {
+                $tableAlias = $this->getAlias();
+                return empty($tableAlias) ? $column : $tableAlias . '.' . $column;
+            }
         }
+
+        return $column;
     }
 
     public function buildJoin()
