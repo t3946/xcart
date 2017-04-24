@@ -233,7 +233,7 @@
                     {*<select name="search[customer][country][]" id="c_country" class="big" multiple data-ajax-from="search_country">*}
                     <select name="search[customer][country][]" id="c_country" class="big" multiple>
                         {foreach $countries as $country}
-                            <option value="{raw $country.id}" {if $country.id|in:$form_data.customer.country}selected{/if}>{raw $country.text}</option>
+                            <option value="{raw $country.id}" {if $country.id in list $form_data.customer.country}selected{/if}>{raw $country.text}</option>
                         {/foreach}
                     </select>
                 </div>
@@ -352,7 +352,7 @@
                 <div class="columns large-6">
                     <select name="search[product][question_status][]" id="p_qs" class="big" multiple>
                         {foreach $question_statuses as $code => $status}
-                            <option value="{$code}" {if $code|in:$form_data.product.question_status}selected{/if}>
+                            <option value="{$code}" {if $code in list $form_data.product.question_status}selected{/if}>
                                 {$status}
                             </option>
                         {/foreach}
@@ -399,7 +399,7 @@
                 <div class="columns large-6">
                     <select name="search[order][payment_processor][]" id="o_payment" class="big" multiple>
                         {foreach $payment_methods as $method}
-                            <option value="{$method.paymentid}" title="{$method.payment_details}" {if $method.paymentid|in:$form_data.order.payment_processor}selected{/if}>
+                            <option value="{$method.paymentid}" title="{$method.payment_details}" {if $method.paymentid in list $form_data.order.payment_processor}selected{/if}>
                                 {$method.payment_method}
                             </option>
                         {/foreach}
@@ -422,7 +422,7 @@
                 <div class="columns large-6">
                     <select name="search[order][payment_method][]" id="o_payment" class="big" multiple>
                         {foreach $payment_methods as $method}
-                            <option value="{$method.paymentid}" title="{$method.payment_details}" {if $method.paymentid|in:$form_data.order.payment_method}selected{/if}>
+                            <option value="{$method.paymentid}" title="{$method.payment_details}" {if $method.paymentid in list $form_data.order.payment_method}selected{/if}>
                                 {$method.payment_method}
                             </option>
                         {/foreach}
@@ -445,7 +445,7 @@
                 <div class="columns large-6">
                     <select name="search[order][delivery_method][]" id="o_delivery" class="big" multiple>
                         {foreach $shipping_methods as $method}
-                            <option value="{$method.shippingid}" {if $method.shippingid|in:$form_data.order.delivery_method}selected{/if}>
+                            <option value="{$method.shippingid}" {if $method.shippingid in list $form_data.order.delivery_method}selected{/if}>
                                 {if $method.code}[{$method.code}]{/if}
                                 {$method.shipping}
                                 {if $method.frontend_name}({$method.frontend_name}){/if}
@@ -493,7 +493,7 @@
                 <div class="columns large-6">
                     <select type="text" name="search[order][d2c_status][]" id="o_d2c" class="big" multiple>
                         {foreach $order_statuses.DC as $status}
-                            <option value="{$status.code}" {if $status.code|in:$form_data.order.d2c_status}selected{/if}>
+                            <option value="{$status.code}" {if $status.code in list $form_data.order.d2c_status}selected{/if}>
                                 {$status.name}
                             </option>
                         {/foreach}
@@ -516,7 +516,7 @@
                 <div class="columns large-6">
                     <select type="text" name="search[order][po_transit_status][]" id="o_transit" class="big" multiple>
                         {foreach $order_statuses.PO as $status}
-                            <option value="{$status.code}" {if $status.code|in:$form_data.order.po_transit_status}selected{/if}>
+                            <option value="{$status.code}" {if $status.code in list $form_data.order.po_transit_status}selected{/if}>
                                 {$status.name}
                             </option>
                         {/foreach}
@@ -540,7 +540,7 @@
                 <div class="columns large-6">
                     <select type="text" name="search[order][po_status][]" id="o_po" class="big" multiple>
                         {foreach $po_statuses as $code => $name}
-                            <option value="{$code}" {if $code|in:$form_data.order.po_status}selected{/if}>
+                            <option value="{$code}" {if $code in list $form_data.order.po_status}selected{/if}>
                                 {$name}
                             </option>
                         {/foreach}
@@ -563,7 +563,7 @@
                 <div class="columns large-6">
                     <select name="search[order][fraud_status][]" id="o_fraud" class="big" multiple>
                         {foreach $fraud_statuses as $status}
-                            <option value="{$status.code}" {if $status.code|in:$form_data.order.fraud_status}selected{/if}>
+                            <option value="{$status.code}" {if $status.code in list $form_data.order.fraud_status}selected{/if}>
                                 {$status.name}
                             </option>
                         {/foreach}
@@ -613,7 +613,7 @@
                 <div class="columns large-6">
                     <select name="search[order][storefront][]" id="o_sf" class="big" multiple>
                         {foreach $storefronts as $id => $name}
-                            <option value="{$id}" {if $id|in:$form_data.order.storefront}selected{/if}>
+                            <option value="{$id}" {if $id in list $form_data.order.storefront}selected{/if}>
                                 {$name}
                             </option>
                         {/foreach}
@@ -659,7 +659,7 @@
                 <div class="columns large-6">
                     <select name="search[features][]" id="o_features" class="big" multiple>
                         {foreach $features as $code => $name}
-                            <option value="{$code}" {if $code|in:$form_data.features}selected{/if}>
+                            <option value="{$code}" {if $code in list $form_data.features}selected{/if}>
                                 {$name}
                             </option>
                         {/foreach}
@@ -682,7 +682,7 @@
                 <div class="columns large-6">
                     <select type="text" name="search[order][source][]" id="o_source" class="big" multiple>
                         {foreach $sources as $code => $name}
-                            <option value="{$code}" {if $code|in:$form_data.order.source}selected{/if}>{$name}</option>
+                            <option value="{$code}" {if $code in list $form_data.order.source}selected{/if}>{$name}</option>
                         {/foreach}
                     </select>
                 </div>
@@ -703,7 +703,7 @@
                 <div class="columns large-6">
                     <select name="search[order][vn_status][]" id="p_vs" class="big" multiple>
                         {foreach $order_statuses.PV as $status}
-                            <option value="{$status.code}" {if $status.code|in:$form_data.order.vn_status}selected{/if}>
+                            <option value="{$status.code}" {if $status.code in list $form_data.order.vn_status}selected{/if}>
                                 {$status.name}
                             </option>
                         {/foreach}
@@ -726,7 +726,7 @@
                 <div class="columns large-6">
                     <select name="search[order][tag][]" id="o_tag" class="big" multiple>
                         {foreach $attention_tags as $tag}
-                            <option value="{$tag.status_id}" title="{$tag.description}" {if $tag.status_id|in:$form_data.order.tag}selected{/if}>
+                            <option value="{$tag.status_id}" title="{$tag.description}" {if $tag.status_id in list $form_data.order.tag}selected{/if}>
                                 {$tag.status}
                             </option>
                         {/foreach}
@@ -749,7 +749,7 @@
                 <div class="columns large-6">
                     <select name="search[order][transaction_status][]" id="o_ts" class="big" multiple>
                         {foreach $transaction_status as $key => $status}
-                            <option value="{$key}" title="{$key}" {if $key|in:$form_data.order.transaction_status}selected{/if}>
+                            <option value="{$key}" title="{$key}" {if $key in list $form_data.order.transaction_status}selected{/if}>
                                 {$status}
                             </option>
                         {/foreach}
@@ -771,7 +771,7 @@
                 <div class="columns large-6">
                     <select name="search[order][transaction_payment_method][]" id="o_tm" class="big" multiple>
                         {foreach $payment_methods as $method}
-                            <option value="{$method.paymentid}" title="{$method.payment_details}" {if $method.paymentid|in:$form_data.order.transaction_payment_method}selected{/if}>
+                            <option value="{$method.paymentid}" title="{$method.payment_details}" {if $method.paymentid in list $form_data.order.transaction_payment_method}selected{/if}>
                                 {$method.payment_method}
                             </option>
                         {/foreach}
