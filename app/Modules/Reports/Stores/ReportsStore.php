@@ -199,9 +199,8 @@ class ReportsStore extends OrderSearchStore
         if ($totals) {
             if (!empty($this->form_data['report']['group_settings']) && is_array($this->form_data['report']['group_settings'])){
                 $groups = $this->form_data['report']['group_settings'];
-
             }
         }
-        var_dump($totals);
+        return $totals;
     }
 }
