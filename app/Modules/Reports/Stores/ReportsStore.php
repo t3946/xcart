@@ -81,9 +81,9 @@ class ReportsStore extends OrderSearchStore
                 switch ($group) {
                     case 'storefront':
                         if (!in_array($group, $joins)) {
-                            $qs->join('inner join', 'xcart_storefronts', ['storefrontid' => "{$group}.storefrontid"], $group);
+                            $qs->join('left join', 'xcart_storefronts', ['storefrontid' => "{$group}.storefrontid"], $group);
                         }
-                        $qs->addSelect([$group => "$group.domain"]);
+                        $qs->addSelect([$group => new Expression("COALESCE ($group.domain , 'www.artistsupplysource.com')")]);
                         $qs->addGroup(["{$group}.storefrontid"]);
                         if ($group_index == 1) {
                             $order = ["$group.domain"];
@@ -110,7 +110,7 @@ class ReportsStore extends OrderSearchStore
             $agg = self::getAggregatesFields();
             foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
                 $qs->addSelect([$agg[$aggregate_settings]]);
-                //$order[] = "-".$aggregate_settings;
+                $order[] = "-".$aggregate_settings;
             }
         }
 

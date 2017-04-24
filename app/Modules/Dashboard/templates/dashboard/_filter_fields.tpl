@@ -470,7 +470,7 @@
                 <div class="columns large-6">
                     <select type="text" name="search[order][c2b_status][]" id="o_c2b" class="big" multiple>
                         {foreach $order_statuses.CB as $status}
-                            <option value="{$status.code}" {if $status.code|in:$form_data.order.c2b_status}selected{/if}>
+                            <option value="{$status.code}" {if $status.code in list $form_data.order.c2b_status}selected{/if}>
                                 {$status.name}
                             </option>
                         {/foreach}
