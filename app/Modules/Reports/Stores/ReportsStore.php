@@ -27,7 +27,7 @@ class ReportsStore extends OrderSearchStore
         return [
             'qty'           => 'Quantity',
             'amount'        => 'Amount',
-            'total'         => 'Total',
+            'f_total'       => 'Total',
             'subtotal'      => 'Subtotal',
             'shipping'      => 'Shipping Cost',
             'profit'        => 'Profit $',
@@ -40,7 +40,7 @@ class ReportsStore extends OrderSearchStore
         return [
             'qty'           => '',
             'amount'        => '',
-            'total'         => new Sum('group.total_net', 'total'),
+            'f_total'       => new Sum('group.total_net', 'f_total'),
             'subtotal'      => '',
             'shipping'      => '',
             'profit'        => '',
@@ -52,7 +52,7 @@ class ReportsStore extends OrderSearchStore
     {
         $filter = null;
         $qs = parent::getQuerySet();
-        $qs->order(['date']);
+        $order = ['date'];
         $joins = $qs->getQueryBuilder()->getJoins();
         $joins = array_keys($joins);
         if (!in_array('group', $joins)) {
@@ -83,10 +83,10 @@ class ReportsStore extends OrderSearchStore
                         if (!in_array($group, $joins)) {
                             $qs->join('inner join', 'xcart_storefronts', ['storefrontid' => "{$group}.storefrontid"], $group);
                         }
-                        $qs->addSelect(["$group.domain"]);
+                        $qs->addSelect([$group => "$group.domain"]);
                         $qs->addGroup(["{$group}.storefrontid"]);
                         if ($group_index == 1) {
-                            $qs->order("$group.domain");
+                            $order = ["$group.domain"];
                         }
                         break;
                     case 'brand':
@@ -95,10 +95,10 @@ class ReportsStore extends OrderSearchStore
                         if (!in_array($group, $joins)) {
                             $qs->join('inner join', 'xcart_manufacturers', ['group.manufacturerid' => "{$group}.manufacturerid"], $group);
                         }
-                        $qs->addSelect(["$group.manufacturer"]);
+                        $qs->addSelect([$group => "$group.manufacturer"]);
                         $qs->addGroup(["{$group}.manufacturerid"]);
                         if ($group_index == 1) {
-                            $qs->order("$group.manufacturer");
+                            $order = ["$group.manufacturer"];
                         }
                         break;
                 }
@@ -110,12 +110,15 @@ class ReportsStore extends OrderSearchStore
             $agg = self::getAggregatesFields();
             foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
                 $qs->addSelect([$agg[$aggregate_settings]]);
+                //$order[] = "-".$aggregate_settings;
             }
         }
 
         if ($filter) {
             $qs->filter($filter);
         }
+
+        $qs->order($order);
 
         return $qs;
     }
@@ -177,5 +180,28 @@ class ReportsStore extends OrderSearchStore
             $totals["real_net"] = $totals['accounting_net_0'] + $totals['accounting_net_4_ref_to_us'] - $totals['accounting_gross_3_ref_to_cust'];
         }
         return $totals;
+    }
+
+    private function _group_by($array, $key)
+    {
+        $return = array();
+        foreach ($array as $val) {
+            $newkey = $val[$key];
+            unset($val[$key]);
+            $return[$newkey][] = $val;
+        }
+        return $return;
+    }
+
+    public function getReport()
+    {
+        $totals = Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(\PDO::FETCH_GROUP);
+        if ($totals) {
+            if (!empty($this->form_data['report']['group_settings']) && is_array($this->form_data['report']['group_settings'])){
+                $groups = $this->form_data['report']['group_settings'];
+
+            }
+        }
+        var_dump($totals);
     }
 }

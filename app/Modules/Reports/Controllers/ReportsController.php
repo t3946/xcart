@@ -79,22 +79,44 @@ class ReportsController extends PrototypeAdminController
 
         $reportStore = new ReportsStore($form_data);
 
-        echo $reportStore->getQuerySet()->getSql();
+        if (!empty($form_data['report']['group_settings'])) {
+            $report_mode = 'group';
+        } else {
+            $report_mode = 'html';
+        }
 
+        echo $reportStore->getQuerySet()->getSql();
 
         $orderModels = $reportStore->getModels();
         $pager = $reportStore->getPager();
         $totals = $reportStore->getTotals();
+        //var_dump($reportStore->getReport()); exit;
 
-        echo $this->render('reports/view.tpl', array_merge(
-                SearchHelper::getFormAndListData(),
-                [
-                    'pager' => $pager,
-                    'models' => $orderModels,
-                    'totals' => $totals,
-                    'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
-                ])
-        );
+        switch ($report_mode) {
+            case 'group':
+                echo $this->render('reports/view_group.tpl', array_merge(
+                        SearchHelper::getFormAndListData(),
+                        [
+                            'report_data' => $reportStore->getReport(),
+                            'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
+                        ])
+                );
+                break;
+            case 'html':
+                echo $this->render('reports/view.tpl', array_merge(
+                        SearchHelper::getFormAndListData(),
+                        [
+                            'pager' => $pager,
+                            'models' => $orderModels,
+                            'totals' => $totals,
+                            'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
+                        ])
+                );
+                break;
+
+        }
+
+
     }
 
     public function create()
