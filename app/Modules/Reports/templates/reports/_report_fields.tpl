@@ -71,7 +71,7 @@
                     <div class="columns large-6 shapeshift-wrapper">
                         <div class="columns large-12 group-drag-box shapeshift-container">
                             {foreach $group_models as $key => $group_model index=$index}
-                                {if !($key in list $form_data.report.group_settings)}
+                                {if !$form_data.report.group_settings || $key not in list $form_data.report.group_settings}
                                     <div data-index="{$index}" data-model="{$key}">{$group_model}</div>
                                 {/if}
                             {/foreach}
@@ -98,7 +98,7 @@
                     <div class="columns large-6 shapeshift-wrapper">
                         <div class="columns large-12 group-drag-box shapeshift-container">
                             {foreach $aggregate_settings as $key => $aggregate index=$index}
-                                {if !($key in list $form_data.report.aggregate_settings)}
+                                {if !$form_data.report.aggregate_settings || $key not in list $form_data.report.aggregate_settings}
                                     <div data-index="{$index}" data-model="{$key}">{$aggregate}</div>
                                 {/if}
                             {/foreach}

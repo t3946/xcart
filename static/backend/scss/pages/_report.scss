@@ -1,0 +1,65 @@
+.OrderReport {
+  font-family: $font;
+
+  .order-report-header {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 30px 0 10px;
+  }
+
+  .order-report-wrapper {
+    width:960px;
+    margin: 0 auto;
+
+    .report-table{
+      width: 100%;
+      border-spacing: 0;
+      border-left: solid 1px;
+      border-top: solid 1px;
+
+      .report-header {
+        background-color:  #ccc;
+        text-align: center;
+
+        & > td {
+          font-weight: bold;
+        }
+      }
+
+      .odd {
+        background-color:  #ccc;
+      }
+
+      td {
+        padding: 0 5px;
+        font-size: 14px;
+        border-right: solid 1px;
+        border-bottom: solid 1px;
+
+        & > .group {
+          vertical-align: top;
+        }
+
+        & > .aggregate {
+          vertical-align: bottom;
+        }
+
+        &.align-right {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  .report_footer {
+    margin: 10px 0 30px;
+    font-size: 14px;
+
+    & > div{
+      padding: 0;
+    }
+    .total-label{
+      font-weight: bold;
+    }
+  }
+}

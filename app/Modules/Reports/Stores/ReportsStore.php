@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Reports\Stores;
 
 use Mindy\QueryBuilder\Aggregation\Sum;
@@ -10,41 +11,41 @@ use Xcart\Connection;
 
 class ReportsStore extends OrderSearchStore
 {
-    public  $defaultPagerPageSize = 100;
+    public $defaultPagerPageSize = 100;
 
 
     public static function getGroupsNames()
     {
         return [
-            'storefront'     => 'StoreFront',
-            'distributor'    => 'Distributor',
-            'brand'          => 'Brand',
+            'storefront' => 'Storefront',
+            'distributor' => 'Distributor',
+            'brand' => 'Brand',
         ];
     }
 
     public static function getAggregates()
     {
         return [
-            'qty'           => 'Quantity',
-            'amount'        => 'Amount',
-            'f_total'       => 'Total',
-            'subtotal'      => 'Subtotal',
-            'shipping'      => 'Shipping Cost',
-            'profit'        => 'Profit $',
-            'avg_profit'    => 'AVG Profit %',
+            'qty' => 'Quantity',
+            'amount' => 'Amount',
+            'f_total' => 'Total',
+            'subtotal' => 'Subtotal',
+            'shipping' => 'Shipping Cost',
+            'profit' => 'Profit $',
+            'avg_profit' => 'AVG Profit %',
         ];
     }
 
     public static function getAggregatesFields()
     {
         return [
-            'qty'           => '',
-            'amount'        => '',
-            'f_total'       => new Sum('group.total_net', 'f_total'),
-            'subtotal'      => '',
-            'shipping'      => '',
-            'profit'        => '',
-            'avg_profit'    => '',
+            'qty' => '',
+            'amount' => '',
+            'f_total' => new Sum('group.total_net', 'f_total'),
+            'subtotal' => '',
+            'shipping' => '',
+            'profit' => '',
+            'avg_profit' => '',
         ];
     }
 
@@ -73,7 +74,7 @@ class ReportsStore extends OrderSearchStore
                 break;
         }
 
-        if (!empty($this->form_data['report']['group_settings'])){
+        if (!empty($this->form_data['report']['group_settings'])) {
             $qs->group([]);
             $qs->select([]);
             ksort($this->form_data['report']['group_settings']);
@@ -106,11 +107,11 @@ class ReportsStore extends OrderSearchStore
             }
         }
 
-        if (!empty($this->form_data['report']['aggregate_settings'])){
+        if (!empty($this->form_data['report']['aggregate_settings'])) {
             $agg = self::getAggregatesFields();
             foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
                 $qs->addSelect([$agg[$aggregate_settings]]);
-                $order[] = "-".$aggregate_settings;
+                $order[] = "-" . $aggregate_settings;
             }
         }
 
@@ -197,9 +198,20 @@ class ReportsStore extends OrderSearchStore
     {
         $totals = Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(\PDO::FETCH_GROUP);
         if ($totals) {
-            if (!empty($this->form_data['report']['group_settings']) && is_array($this->form_data['report']['group_settings'])){
-                $groups = $this->form_data['report']['group_settings'];
-            }
+            uasort($totals, function ($a, $b) {
+                $sa = $sb = [];
+                if (!empty($this->form_data['report']['aggregate_settings'])) {
+                    foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
+                        foreach ($a as $ar) {
+                            $sa[$aggregate_settings] += $ar[$aggregate_settings];
+                        }
+                        foreach ($b as $ar) {
+                            $sb[$aggregate_settings] += $ar[$aggregate_settings];
+                        }
+                    }
+                }
+                return reset($sa) < reset($sb);
+            });
         }
         return $totals;
     }

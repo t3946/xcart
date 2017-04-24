@@ -4203,6 +4203,46 @@ form[name=hide_no_orders_test_checkoutform] input {
     background: darkred;
     border-radius: 15px; }
 
+.OrderReport {
+  font-family: GothamPro, Arial, sans-serif; }
+  .OrderReport .order-report-header {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 30px 0 10px; }
+  .OrderReport .order-report-wrapper {
+    width: 960px;
+    margin: 0 auto; }
+    .OrderReport .order-report-wrapper .report-table {
+      width: 100%;
+      border-spacing: 0;
+      border-left: solid 1px;
+      border-top: solid 1px; }
+      .OrderReport .order-report-wrapper .report-table .report-header {
+        background-color: #ccc;
+        text-align: center; }
+        .OrderReport .order-report-wrapper .report-table .report-header > td {
+          font-weight: bold; }
+      .OrderReport .order-report-wrapper .report-table .odd {
+        background-color: #ccc; }
+      .OrderReport .order-report-wrapper .report-table td {
+        padding: 0 5px;
+        font-size: 14px;
+        border-right: solid 1px;
+        border-bottom: solid 1px; }
+        .OrderReport .order-report-wrapper .report-table td > .group {
+          vertical-align: top; }
+        .OrderReport .order-report-wrapper .report-table td > .aggregate {
+          vertical-align: bottom; }
+        .OrderReport .order-report-wrapper .report-table td.align-right {
+          text-align: right; }
+  .OrderReport .report_footer {
+    margin: 10px 0 30px;
+    font-size: 14px; }
+    .OrderReport .report_footer > div {
+      padding: 0; }
+    .OrderReport .report_footer .total-label {
+      font-weight: bold; }
+
 .admin form {
   position: relative; }
 

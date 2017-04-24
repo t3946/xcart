@@ -13,19 +13,19 @@
 {/block}
 
 {block 'main'}
-    <div class="order-report-wrapper" style="width:960px; margin: 0 auto">
-    {parent}
+    <div class="order-report-wrapper">
+        {parent}
     </div>
 {/block}
 
 {block 'content'}
-    <table width="100%">
+    <table class="report-table">
         {set $sum_total = 0}
-        {foreach $report_data as $key_first => $first_group}
+        {foreach $report_data as $key_first => $first_group index=$group_index}
             {set $sum_group = 0}
 
             {if $first_group@first}
-                <tr>
+                <tr class="report-header">
                     <td>{$group_names[$form_data.report.group_settings[1]]}</td>
                     {foreach $first_group as $report_arr}
                         {foreach $report_arr as $r_key => $report_d}
@@ -51,33 +51,48 @@
             {/foreach}
 
             {foreach $first_group as $report_arr}
-                <tr>
-                    {if $key_first != $group_field}
+                <tr class="{cycle ["even", "odd"] index=$group_index}">
+                    {if $first_group@first}
                         <td rowspan="{count($first_group)}">
                             {$key_first}
                         </td>
                     {/if}
-                    {foreach $report_arr as $report_d}
-                        <td>{$report_d}</td>
+                    {foreach $report_arr as $d_key => $report_d}
+                        {if ($d_key in keys $aggregates_names)}
+                            {set $is_aggregate = true}
+                        {else}
+                            {set $is_aggregate = false}
+                        {/if}
+                        <td {if $is_aggregate} class="align-right"{/if}>
+                            {if ($is_aggregate)}
+                                ${$report_d|formatprice:",":"."}
+                            {else}
+                                {$report_d}
+                            {/if}
+
+                        </td>
                     {/foreach}
-                    {if $key_first != $group_field}
-                        <td rowspan="{count($first_group)}">
-                            {$sum_group}
+                    {if $first_group@first}
+                        <td class="align-right" rowspan="{count($first_group)}">
+                            ${$sum_group|formatprice:",":"."}
                         </td>
                     {/if}
                 </tr>
-                {set $group_field = $key_first}
             {/foreach}
 
             {set $sum_total += $sum_group}
 
-            {if $first_group@last}
-                <tr>
-                    <td><b>Total sales volume</b></td>
-                    <td>{$sum_total}</td>
-                </tr>
-            {/if}
+
         {/foreach}
     </table>
+    <div class="row report_footer">
+        <div class="columns large-11 total-label">
+            <span>Total sales volume:</span>
+        </div>
+        <div class="columns large-1 total-value align-right">
+            <span>${$sum_total|formatprice:",":"."}</span>
+        </div>
+    </div>
+
 {/block}
 

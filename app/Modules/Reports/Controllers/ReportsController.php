@@ -86,6 +86,7 @@ class ReportsController extends PrototypeAdminController
         }
 
         //echo $reportStore->getQuerySet()->getSql();
+        //var_dump($reportStore->getReport());
 
         $orderModels = $reportStore->getModels();
         $pager = $reportStore->getPager();
