@@ -12,7 +12,7 @@
 
     <section class="catalog-page">
         <div class="row">
-            <div class="columns large-2">
+            <div class="columns large-2 show-for-large">
                 <div class="top-block">
                     <div class="image" id="image_left-top">
                         <img src="/static/frontend/demo_images/category/1280/image.png" alt="image" />
@@ -42,20 +42,23 @@
                     </section>
 
                     {set $menus = $.getRandomSubmenu()}
+                    {set $menu = []}
+
+                    {foreach $menus.menu as $item}
+                        {set $menu[] = $item}
+                    {/foreach}
+                    {foreach $menus.menu as $item}
+                        {set $menu[] = $item}
+                    {/foreach}
+                    {foreach $menus.menu as $item}
+                        {set $menu[] = $item}
+                    {/foreach}
 
                     {if $menus.menu|count > 0}
                     <section class="subcategories">
-                        <div class="row large-up-4">
-                            {foreach $menus.menu as $item}
-                                <div class="column">
-                                    <a href="{$item.link}" class="subcategory_item">{$item.name} ({rand(1,1000)})</a>
-                                </div>
-                            {/foreach}{foreach $menus.menu as $item}
-                                <div class="column">
-                                    <a href="{$item.link}" class="subcategory_item">{$item.name} ({rand(1,1000)})</a>
-                                </div>
-                            {/foreach}{foreach $menus.menu as $item}
-                                <div class="column">
+                        <div class="row small-up-1 medium-up-2 large-up-4">
+                            {foreach $menu as $item index=$index}
+                                <div class="column {if $index > 11}more_items{/if}">
                                     <a href="{$item.link}" class="subcategory_item">{$item.name} ({rand(1,1000)})</a>
                                 </div>
                             {/foreach}
