@@ -149,11 +149,7 @@ if ($sExtraLog=='Y')
 			}
 	}
 
-	if(isset($product['sfid']) && $product['sfid'] != 0) {
-		$product['froogle_location'] = $froogle_scheme . func_get_http_location_sf($product['sfid']);
-	} else {
-		$product['froogle_location'] = $froogle_location;
-	}
+	$product['froogle_location'] = $froogle_scheme . func_get_http_location_sf($product['sfid']);
 
 	$tmp_upc = trim($product['upc']);
 	$tmp_upc = isset($tmp_upc) ? abs(intval($tmp_upc)) : 0;
