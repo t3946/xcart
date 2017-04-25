@@ -2,6 +2,7 @@
 
 namespace Modules\Reports\Stores;
 
+use Mindy\QueryBuilder\Aggregation\Count;
 use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Expression;
 use Modules\Dashboard\Stores\OrderSearchStore;
@@ -17,32 +18,90 @@ class ReportsStore extends OrderSearchStore
     public static function getGroupsNames()
     {
         return [
-            'storefront' => 'Storefront',
-            'distributor' => 'Distributor',
-            'brand' => 'Brand',
+            'storefront' => [
+                'name' => 'Storefront',
+                'avail_aggregates' => [
+                    'qty',
+                    'amount',
+                    'f_total',
+                    'subtotal',
+                    'shipping',
+                    'profit',
+                    'avg_profit',
+                ]
+            ],
+            'distributor' => [
+                'name' => 'Distributor',
+                'avail_aggregates' => [
+                    'qty',
+                    'amount',
+                    'f_total',
+                    'subtotal',
+                    'shipping',
+                    'profit',
+                    'avg_profit',
+                ]
+            ],
+
+            'brand' => [
+                'name' => 'Brand',
+                'avail_aggregates' => [
+                    'subtotal',
+                    'qty',
+                    'amount'
+                ]
+            ]
         ];
     }
 
     public static function getAggregates()
     {
         return [
-            'qty' => 'Quantity',
-            'amount' => 'Amount',
-            'f_total' => 'Total',
-            'subtotal' => 'Subtotal',
-            'shipping' => 'Shipping Cost',
-            'profit' => 'Profit $',
-            'avg_profit' => 'AVG Profit %',
+            'qty' => [
+                'name' => 'Quantity',
+                'prefix' => '',
+                'suffix' => '',
+            ],
+            'amount' => [
+                'name' => 'Amount',
+                'prefix' => '',
+                'suffix' => '',
+            ],
+            'f_total' => [
+                'name' => 'Total',
+                'prefix' => '$',
+                'suffix' => '',
+            ],
+            'subtotal' => [
+                'name' => 'Subtotal',
+                'prefix' => '$',
+                'suffix' => '',
+            ],
+            'shipping' => [
+                'name' => 'Shipping Cost',
+                'prefix' => '$',
+                'suffix' => '',
+            ],
+            'profit' => [
+                'name' => 'Profit $',
+                'prefix' => '$',
+                'suffix' => '',
+            ],
+            'avg_profit' => [
+                'name' => 'AVG Profit %',
+                'prefix'  => '',
+                'suffix' => '%',
+            ],
         ];
     }
 
     public static function getAggregatesFields()
     {
         return [
-            'qty' => '',
+            'qty' => new Count('orderid'),
             'amount' => '',
-            'f_total' => new Sum('group.total_net', 'f_total'),
-            'subtotal' => '',
+            'f_total' => new Sum('group.total_net'),
+            'subtotal' => new Expression('SUM(order_details.price * order_details.amount)'),
             'shipping' => '',
             'profit' => '',
             'avg_profit' => '',
@@ -86,11 +145,21 @@ class ReportsStore extends OrderSearchStore
                         }
                         $qs->addSelect([$group => new Expression("COALESCE ($group.domain , 'www.artistsupplysource.com')")]);
                         $qs->addGroup(["{$group}.storefrontid"]);
-                        if ($group_index == 1) {
+                        if ($group_index != count($this->form_data['report']['group_settings'])) {
                             $order = ["$group.domain"];
                         }
                         break;
                     case 'brand':
+                        if (!in_array($group, $joins)) {
+                            $qs->join('inner join', 'xcart_order_details', ['orderid' => "order_details.orderid"], 'order_details');
+                            $qs->join('inner join', 'xcart_products', ['products.productid' => "order_details.productid"], 'products');
+                            $qs->join('inner join', 'xcart_brands', ['products.brandid' => "{$group}.brandid"], $group);
+                        }
+                        $qs->addSelect([$group => "$group.brand"]);
+                        $qs->addGroup(["{$group}.brandid"]);
+                        if ($group_index != count($this->form_data['report']['group_settings'])) {
+                            $order = ["$group.brand"];
+                        }
                         break;
                     case 'distributor':
                         if (!in_array($group, $joins)) {
@@ -98,7 +167,7 @@ class ReportsStore extends OrderSearchStore
                         }
                         $qs->addSelect([$group => "$group.manufacturer"]);
                         $qs->addGroup(["{$group}.manufacturerid"]);
-                        if ($group_index == 1) {
+                        if ($group_index != count($this->form_data['report']['group_settings'])) {
                             $order = ["$group.manufacturer"];
                         }
                         break;
@@ -110,8 +179,20 @@ class ReportsStore extends OrderSearchStore
         if (!empty($this->form_data['report']['aggregate_settings'])) {
             $agg = self::getAggregatesFields();
             foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
-                $qs->addSelect([$agg[$aggregate_settings]]);
-                $order[] = "-" . $aggregate_settings;
+                $aggr_enable = true;
+                if ($this->form_data['report']['group_settings']) {
+                    $groups = ReportsStore::getGroupsNames();
+                    foreach ($this->form_data['report']['group_settings'] as $group_index => $group) {
+                        if (!in_array($aggregate_settings, $groups[$group]['avail_aggregates'])){
+                            $aggr_enable = false;
+                            break;
+                        }
+                    }
+                }
+                if ($aggr_enable) {
+                    $qs->addSelect([$aggregate_settings => $agg[$aggregate_settings]]);
+                    $order[] = "-" . $aggregate_settings;
+                }
             }
         }
 

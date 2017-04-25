@@ -33,13 +33,15 @@
         });
         $('#report_form').submit(function(e){
             var submit_form =  $(this).closest('form');
+            $("input.hidden_groups", submit_form).remove();
             var containers = $('.shapeshift .shapeshift-container.for-save');
             containers.each(function(){
                 var cur_container = $(this);
                 $(this).find('> div').each(function () {
                     var input = $("<input>")
                         .attr("type", "hidden")
-                        .attr("name", "search[report]["+cur_container.data('param-name')+"]["+$(this).data('index')+"]").val($(this).data('model'));
+                        .addClass("hidden_groups")
+                        .attr("name", "search[report]["+cur_container.attr('data-param-name')+"]["+$(this).attr('data-index')+"]").val($(this).attr('data-model'));
                     submit_form.append($(input));
                 });
             });

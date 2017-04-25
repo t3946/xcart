@@ -26,14 +26,14 @@
 
             {if $first_group@first}
                 <tr class="report-header">
-                    <td>{$group_names[$form_data.report.group_settings[1]]}</td>
+                    <td>{$group_names[$form_data.report.group_settings[1]].name}</td>
                     {foreach $first_group as $report_arr}
                         {foreach $report_arr as $r_key => $report_d}
                             <td>
-                                {if ($report_d@last)}
-                                    {$aggregates_names[$r_key]}
+                                {if $aggregates_names[$r_key]}
+                                    {$aggregates_names[$r_key].name}
                                 {else}
-                                    {$group_names[$r_key]}
+                                    {$group_names[$r_key].name}
                                 {/if}
                             </td>
                         {/foreach}
@@ -45,8 +45,12 @@
             {/if}
 
             {foreach $first_group as $report_arr}
-                {foreach $report_arr as $report_d last=$last}
-                    {set $sum_group += $report_d}
+                {foreach $report_arr as $key => $report_d last=$last}
+                    {if $last}
+                        {set $total_prefix = $aggregates_names[$key].prefix}
+                        {set $total_suffix = $aggregates_names[$key].suffix}
+                        {set $sum_group += $report_d}
+                    {/if}
                 {/foreach}
             {/foreach}
 
@@ -65,7 +69,14 @@
                         {/if}
                         <td {if $is_aggregate} class="align-right"{/if}>
                             {if ($is_aggregate)}
-                                ${$report_d|formatprice:",":"."}
+                                {if ($aggregates_names[$d_key].prefix)}
+                                    {$aggregates_names[$d_key].prefix}{$report_d|formatprice:",":"."}
+                                {else}
+                                    {$report_d}
+                                {/if}
+                                {if $aggregates_names[$d_key].suffix}
+                                    {$aggregates_names[$d_key].suffix}
+                                {/if}
                             {else}
                                 {$report_d}
                             {/if}
@@ -74,14 +85,20 @@
                     {/foreach}
                     {if $first_group@first}
                         <td class="align-right" rowspan="{count($first_group)}">
-                            ${$sum_group|formatprice:",":"."}
+                            {if ($aggregates_names[$d_key].prefix)}
+                                {$aggregates_names[$d_key].prefix}{$sum_group|formatprice:",":"."}
+                            {else}
+                                {$sum_group}
+                            {/if}
+                            {if $aggregates_names[$d_key].suffix}
+                                {$aggregates_names[$d_key].suffix}
+                            {/if}
                         </td>
                     {/if}
                 </tr>
             {/foreach}
 
             {set $sum_total += $sum_group}
-
 
         {/foreach}
     </table>
@@ -90,7 +107,7 @@
             <span>Total sales volume:</span>
         </div>
         <div class="columns large-1 total-value align-right">
-            <span>${$sum_total|formatprice:",":"."}</span>
+            <span>{$total_prefix}{if $total_prefix}{$sum_total|formatprice:",":"."}{else}{$sum_total}{/if}{$total_suffix}</span>
         </div>
     </div>
 

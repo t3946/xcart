@@ -56,6 +56,18 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
+                    <label>Show Reconciled:</label>
+                </div>
+                <div class="columns large-8">
+                    <div class="columns large-12">
+                        <input name="search[report][show_reconciled]" type="checkbox" value="1" id="show_reconciled" {if $form_data.report.show_reconciled}checked{/if}>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="row">
+                <div class="columns large-4">
                     <label>Group settings:</label>
                 </div>
                 <div class="columns large-8 shapeshift">
@@ -63,7 +75,7 @@
                         <div class="columns large-12 group-drag-box shapeshift-container for-save" data-param-name="group_settings">
                             {if $form_data.report.group_settings}
                                 {foreach $form_data.report.group_settings as $key => $group_model}
-                                    <div data-index="{$key}" data-model="{$group_model}">{$group_models[$group_model]}</div>
+                                    <div data-index="{$key}" data-model="{$group_model}">{$group_models[$group_model].name}</div>
                                 {/foreach}
                             {/if}
                         </div>
@@ -72,7 +84,7 @@
                         <div class="columns large-12 group-drag-box shapeshift-container">
                             {foreach $group_models as $key => $group_model index=$index}
                                 {if !$form_data.report.group_settings || $key not in list $form_data.report.group_settings}
-                                    <div data-index="{$index}" data-model="{$key}">{$group_model}</div>
+                                    <div data-index="{$index}" data-model="{$key}">{$group_model.name}</div>
                                 {/if}
                             {/foreach}
                         </div>
@@ -90,7 +102,7 @@
                         <div class="columns large-12 group-drag-box shapeshift-container for-save" data-param-name="aggregate_settings">
                             {if $form_data.report.aggregate_settings}
                                 {foreach $form_data.report.aggregate_settings as $key => $aggregate}
-                                    <div data-index="{$key}" data-model="{$aggregate}">{$aggregate_settings[$aggregate]}</div>
+                                    <div data-index="{$key}" data-model="{$aggregate}">{$aggregate_settings[$aggregate].name}</div>
                                 {/foreach}
                             {/if}
                         </div>
@@ -99,7 +111,7 @@
                         <div class="columns large-12 group-drag-box shapeshift-container">
                             {foreach $aggregate_settings as $key => $aggregate index=$index}
                                 {if !$form_data.report.aggregate_settings || $key not in list $form_data.report.aggregate_settings}
-                                    <div data-index="{$index}" data-model="{$key}">{$aggregate}</div>
+                                    <div data-index="{$index}" data-model="{$key}">{$aggregate.name}</div>
                                 {/if}
                             {/foreach}
                         </div>

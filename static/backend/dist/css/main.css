@@ -4227,6 +4227,9 @@ form[name=hide_no_orders_test_checkoutform] input {
       background-color: #d7f4f4; }
     .OrderReport .OrderSheetCell.OrderSheetFirst > td {
       border-top: 1px solid black; }
+    .OrderReport .OrderSheetCell .OrderSheetCommonCell {
+      color: #550000 !important;
+      font-weight: normal; }
     .OrderReport .OrderSheetCell .FilledAccounting {
       background-color: #e1c7e1; }
   .OrderReport .order-report-header {
