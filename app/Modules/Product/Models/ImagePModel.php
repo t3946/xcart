@@ -10,6 +10,6 @@ class ImagePModel extends ImageModel
 {
     public static function tableName()
     {
-        return parent::tableName().'_D';
+        return parent::tableName().'_P';
     }
 }

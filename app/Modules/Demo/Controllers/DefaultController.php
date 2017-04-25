@@ -2,6 +2,7 @@
 namespace Modules\Demo\Controllers;
 
 
+use Modules\Product\Models\ProductModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
@@ -20,9 +21,20 @@ class DefaultController extends Controller
         $breadcrumbs = new Breadcrumbs();
         $breadcrumbs->add('Painting and Painting Accessories', '/');
         $breadcrumbs->add('Oil Painting sets');
+        
+//        $t_models = ProductModel::objects()->filter(['lock_forsale__in' => ['N', '']])->limit(120)->order(['?'])->all();
+        $t_models = ProductModel::objects()->filter(['lock_forsale__in' => ['N', '']])->limit(120)->all();
+
+        $ns = array_rand($t_models, 10);
+
+        $models  = [];
+        foreach ($ns as $number) {
+            $models[] = $t_models[$number];
+        }
 
         echo $this->render('demo/catalog/index.tpl', [
-            'breadcrumbs' => $breadcrumbs->get()
+            'breadcrumbs' => $breadcrumbs->get(),
+            'models' => $models,
         ]);
     }
 

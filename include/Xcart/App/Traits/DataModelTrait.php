@@ -25,8 +25,19 @@ trait DataModelTrait
         /** @var ModelInterface $this */
 
         if (!$this->dataModel) {
+//            $attrs = $this->getAttributes();
+//            $primary = [];
+//
+//            foreach ($this->getPrimaryKeyName(true) as $attr)
+//            {
+//                $primary[$attr] = $attrs[$attr];
+//                unset($attrs[$attr]);
+//            }
+
+
             $class = static::getDataModelClass();
-            $this->dataModel = new $class($this->getAttributes());
+            $this->dataModel = new $class();
+            $this->dataModel->fill($this->getAttributes());
 
             $this->afterFetchDataModel($this->dataModel);
         }

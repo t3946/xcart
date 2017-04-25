@@ -58,4 +58,16 @@ class SiteModel extends Model
             ],
         ];
     }
+
+    public function getBaseDomain()
+    {
+        $domain = strtolower($this->domain);
+        
+        if (strpos($domain, 'www.') !== false)
+        {
+            return str_replace('www.', '', $domain);
+        }
+
+        return $domain;
+    }
 }

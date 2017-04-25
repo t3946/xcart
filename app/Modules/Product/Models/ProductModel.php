@@ -2,11 +2,14 @@
 namespace Modules\Product\Models;
 
 use Modules\Distributor\Models\DistributorModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\Product;
 
@@ -67,6 +70,13 @@ class ProductModel extends AutoMetaModel
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
             ],
+            'images' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ImagePModel::className(),
+                'link' => ['id' => 'productid'],
+//                'extra' => ['avail' => 'Y']
+            ],
+
             'descr' => [
                 'class' => CharField::className(),
                 'null' => false,
@@ -103,5 +113,11 @@ class ProductModel extends AutoMetaModel
             $sMPN = preg_replace("/^(" . $model->code . "-)/i", "", $this->productcode);
         }
         return $sMPN;
+    }
+
+
+    public function getAbsoluteUrl()
+    {
+        return Xcart::app()->router->url('product:view', ['sku' => $this->productcode]);
     }
 }

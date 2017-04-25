@@ -9,7 +9,12 @@ return [
         'route' => '/demo',
         'path' => 'Modules.Demo.routes',
         'namespace' => 'demo'
-    ]
+    ],
+    [
+        'route' => '/product',
+        'path' => 'Modules.Product.routes',
+        'namespace' => 'product'
+    ],
 //    [
 //        'route' => '/admin/files',
 //        'path' => 'Modules.Files.routes',
