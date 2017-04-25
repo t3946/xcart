@@ -1,6 +1,29 @@
 .OrderReport {
   font-family: $font;
 
+  .OrderSheet {
+    font-size: 10px;
+  }
+
+  .TableHead {
+    BACKGROUND-COLOR: #CCCCCC;
+    FONT-WEIGHT: bold;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    TEXT-TRANSFORM: uppercase;
+  }
+
+  .TableHeadAccounting {
+    background-color: #ffe9a5;
+    white-space: nowrap;
+  }
+
+  .OrderSheetCell {
+    background-color: white;
+    font-weight: normal;
+    text-align: center;
+  }
+
   .order-report-header {
     font-size: 16px;
     font-weight: bold;
