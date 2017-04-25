@@ -28,6 +28,7 @@
                 <div class="top-block pcont">
                     <h1 class="title">[CATEGORY NAME] Oil Painting Sets</h1>
 
+                    {if rand(0,1)}
                     <section class="description">
                         <div class="row">
                             <div class="columns large-10">
@@ -46,6 +47,7 @@
                             </div>
                         </div>
                     </section>
+                    {/if}
 
                     {set $menus = $.getRandomSubmenu()}
                     {set $menu = []}

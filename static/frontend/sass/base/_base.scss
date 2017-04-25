@@ -8,6 +8,14 @@ body {
   min-width: 320px;
 }
 
+input,
+label,
+select,
+button,
+textarea {
+  font-family: $body-font-family;
+}
+
 #main_wrapper {
   min-width: 320px;
   min-height: 100%;
@@ -67,4 +75,14 @@ body {
 
 .text-align-right {
   text-align: right;
+}
+
+input[type='number'] {
+  &,
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+
+    -moz-appearance:textfield;
+    -webkit-appearance: none;
+  }
 }

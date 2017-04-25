@@ -225,6 +225,14 @@ module.exports.frontend = {
                 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js'
             ]
         },
+        waves: {
+            js: [
+                'bower_components/Waves/src/js/waves.js'
+            ],
+            scss: [
+                // 'bower_components/Waves/src/scss/waves.scss'
+            ]
+        },
         foundation: {
             js: [
                 // 'bower_components/foundation-sites/dist/js/foundation.js', //all

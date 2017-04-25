@@ -87,7 +87,8 @@
             });
     }
 
-
+    Waves.attach('.button');
+    Waves.init();
 
 
     $(document).foundation();

@@ -1,4 +1,5 @@
-<div class="item">
+{set $productid = rand(0,800000)}
+<div class="item" data-product="{$productid}">
         <div class="image_container container">
             <a href="#">
                 {*{if rand(1,2) > 1}*}
@@ -10,12 +11,12 @@
                 {*{/if}*}
 
                 {if rand(1,2) > 1}
-                    <img src="/static/frontend/demo_images/category/1280/029-alv-esp12-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="190" height="204" />
+                    <img src="/static/frontend/demo_images/category/1280/029-alv-esp12-1.png" alt="Wicked Color Airbrush Paint: 6-Color Set" />
                 {else}
-                    <img src="/static/frontend/demo_images/category/1280/alv-1334d-1.png" class="item__pic" alt="Wicked Color Airbrush Paint: 6-Color Set" width="134" height="218" />
+                    <img src="/static/frontend/demo_images/category/1280/alv-1334d-1.png" alt="Wicked Color Airbrush Paint: 6-Color Set" />
                 {/if}
             </a>
-            <a href="#" class="button button-quick-view hide">quick view</a>
+            <a href="#" class="button yellow-white button-quick-view hide">quick view</a>
         </div>
         <div class="info_container container">
             <h4 class="title">
@@ -27,7 +28,7 @@
                 <span class="value">
                     SKU: MFW-1275
                 </span>
-                <a data-tooltip class="has-tip top " title="What is SKU">?</a>
+                <a data-tooltip class="has-tip right " title="What is SKU">?</a>
             </div>
             <div class="description">
                 Princeton Neptune Series 4750
@@ -72,26 +73,34 @@
 
         <div class="cart_price_container container">
             <div class="price_container">
-                <span class="old">List Price:  <span class="price">US$ 19.00</span></span>
-                <span class="current">Price:  <span class="price">US$ 234.01</span></span>
+                <span class="old">List Price: <span class="price">US$ 19.00</span></span>
+                <span class="current">Price: <span class="price">US$ 234.01</span></span>
             </div>
             <div class="cart_quantity">
-                <label for="quantity" class="hidden-sm hidden-md"><span class="full-q">Quantity:</span><span class="short-q">Qty:</span></label>
-                <div class="btn-group">
-                    <a href="" class="btn quantity_modify quantity_dec">-</a>
-                    <input type="number" min="1" max="9999" class="btn quantity_input" name="quantity" id="quantity" value="1" />
-                    <a href="" class="btn quantity_modify quantity_inc active">+</a>
+                <label for="quantity-{$productid}" class="show-for-large">
+                    <span class="show-for-xlarge">Quantity:</span>
+                    <span class="show-for-large-only">Qty:</span>
+                </label>
+
+                <div class="quantity-group">
+                    <span class="btn dec">-</span>
+                    <input type="number" name="quantity" min="1" max="9999" value="1" id="quantity-{$productid}" />
+                    <span class="btn inc active">+</span>
                 </div>
             </div>
+
             <div class="cart_add">
-                <a href="#" class="item__info-buy_add-button with-text">Add to cart</a>
-                <a href="#" class="item__info-buy_add-button no-text hidden-sm hidden-md hidden-lg"></a>
+                <a href="#" class="add button yellow">Add to cart</a>
             </div>
-            <div class="item__info-buy_subtotal">
-                Subtotal: US$ 400.01
-            </div>
-            <div class="item__info-buy_save">
-                Save 41% (US$ 5.27 per unit)
-            </div>
+            {*<div class="subtotal_container">*}
+                {*<div class="subtotal">*}
+                    {*Subtotal: US$ 400.01*}
+                {*</div>*}
+                {*<div class="safe">*}
+                    {*Save 41% (US$ 5.27 per unit)*}
+                {*</div>*}
+            {*</div>*}
+
+
         </div>
 </div>

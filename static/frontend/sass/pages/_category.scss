@@ -39,9 +39,11 @@ $padding_container: rem-calc(18);
 
   .items {
     .item {
-      padding-bottom: 15px;
+      padding-bottom: 1.4%;
+      padding-right: 2%;
       margin: 15px 0;
       border-bottom: 1px solid #cccccc;
+      position: relative;
 
       &:after {
         content: '';
@@ -58,17 +60,14 @@ $padding_container: rem-calc(18);
       }
 
       .image_container {
+        position: relative;
         width: 19%;
+        text-align: center;
 
         .button-quick-view {
-          height: 37px;
-          line-height: 34px;
-          border-radius: 5px;
-          border: 2px solid #ffb400;
-          background-color: #ffffff;
-          text-align: center;
-          color: #4a4949;
           position: absolute;
+          left: 0;
+          right: 0;
           bottom: 0;
         }
       }
@@ -76,6 +75,7 @@ $padding_container: rem-calc(18);
       .info_container {
         width: 60%;
         color: #333;
+        padding: 0 3%;
 
         .title {
           &, a {
@@ -94,16 +94,16 @@ $padding_container: rem-calc(18);
 
           .value {
             color: #28862f;
+            text-transform: uppercase;
             font: {
               weight: 400;
             }
-            text-transform: uppercase;
           }
 
           .has-tip {
             width: 19px;
             height: 19px;
-            line-height: 19px;
+            line-height: 1.3;
             color: #ffffff;
             background-color: #cfcfcf;
             font-weight: bold;
@@ -130,6 +130,65 @@ $padding_container: rem-calc(18);
 
       .cart_price_container {
         width: 20%;
+
+        .price_container {
+          .old, .current {
+            display: block;
+          }
+
+          .price {
+            padding-left: 3%;
+          }
+
+          .old {
+            color: #5c5c5c;
+          }
+
+          .current {
+            .price {
+              font: {
+                weight: bold;
+              }
+            }
+          }
+        }
+
+        .cart_quantity {
+          text-align: justify;
+          line-height: 0;
+          margin: 5% 0;
+
+          //@include breakpoint(large up) {
+          //  margin: 0;
+          //}
+
+          &:after {
+            content: '';
+            font-size: 0;
+            width: 100%;
+            display: inline-block;
+          }
+
+          .quantity-group {
+            display: inline-block;
+          }
+
+
+        }
+
+        .cart_add {
+          .add {
+            width: 100%;
+            text-transform: uppercase;
+            line-height: rem-calc(42);
+            height: rem-calc(42);
+            font: {
+              size: rem-calc(18);
+              weight: 900;
+            }
+
+          }
+        }
       }
 
 

@@ -1,0 +1,43 @@
+$default_qg_border: 1px solid #ffe296;
+$default_qg_height: 28px;
+$default_qg_lheight: #{$default_qg_height - 1};
+
+.quantity-group {
+  border: $default_qg_border;
+  word-spacing: 0;
+
+  .btn {
+    //vertical-align: top;
+    text-align: center;
+    background-color: #fff0ca;
+    display: inline-block;
+    height: $default_qg_height;
+    min-width: 1.4em;
+    line-height: $default_qg_lheight;
+    cursor: pointer;
+
+
+    &.active {
+      background-color: #ffe296;
+    }
+
+    &.inc {
+      border-left: $default_qg_border;
+    }
+
+    &.dec {
+      border-right: $default_qg_border;
+    }
+  }
+
+  input {
+    vertical-align: top;
+    height: $default_qg_height;
+    line-height: $default_qg_lheight;
+    border: none;
+    padding: 0;
+    outline: none;
+    text-align: center;
+    width: 3em;
+  }
+}
