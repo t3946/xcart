@@ -66,6 +66,7 @@ if (!empty($orders)){
 
 //				func_send_simple_mail($to, $subj, $body, $from);
 				func_send_mail($to, 'mail/simple_email_subj.tpl', 'mail/simple_email_body.tpl', $from, false);
+                func_send_mail('igor@s3stores.com', 'mail/simple_email_subj.tpl', 'mail/simple_email_body.tpl', $from, false);
 
 				db_query("UPDATE $sql_tbl[orders] SET thankyou_for_order_email_sent='Y' WHERE orderid='$v[orderid]'");
 
