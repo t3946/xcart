@@ -34,6 +34,7 @@ class OrderUserActivityModel extends Model
             'created_at' => [
                 'class' => DateTimeField::className(),
                 'autoNowAdd' => true,
+                'autoNow' => true,
             ]
         ];
     }
@@ -48,6 +49,8 @@ class OrderUserActivityModel extends Model
 
         if (static::objects()->filter($filter)->count()) {
             static::objects()->filter($filter)->delete();
+
+            $this->setIsNewRecord(true);
         }
 
         return parent::save($fields);

@@ -3,6 +3,7 @@
    
 $().ready(function(){
   $.ajaxSetup({
+    cache: false,
     error:function(x,e){
       if (x.status == 0) {
 //        alert('You are offline!!\n Please Check Your Network.');

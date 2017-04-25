@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     {block 'js-head'}
-        <link rel="stylesheet" href="/skin1_kolin/skin1_admin.css">
         <link rel="stylesheet" href="/static/backend/dist/css/main.css">
     {/block}
 

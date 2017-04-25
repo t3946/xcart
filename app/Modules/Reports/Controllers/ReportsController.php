@@ -7,6 +7,7 @@ use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Expression;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Stores\OrderSearchStore;
+use Modules\Reports\Helpers\ReportsHelper;
 use Modules\Reports\Models\ReportModel;
 use Modules\Reports\Stores\ReportsStore;
 use Xcart\App\Controller\PrototypeAdminController;
@@ -51,6 +52,7 @@ class ReportsController extends PrototypeAdminController
             echo $this->renderInternal('reports/search.tpl',
                 array_merge(
                     SearchHelper::getFormAndListData(),
+                    ReportsHelper::getFormAndListData(),
                     [
                         'model'         => $model,
                         'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
@@ -75,23 +77,47 @@ class ReportsController extends PrototypeAdminController
             ];
         }
 
-
-
         $reportStore = new ReportsStore($form_data);
+
+        if (!empty($form_data['report']['group_settings'])) {
+            $report_mode = 'group';
+        } else {
+            $report_mode = 'html';
+        }
+
+        //echo $reportStore->getQuerySet()->getSql();
+        //var_dump($reportStore->getReport());
 
         $orderModels = $reportStore->getModels();
         $pager = $reportStore->getPager();
-        $totals = $reportStore->getTotals();
 
-        echo $this->render('reports/view.tpl', array_merge(
-                SearchHelper::getFormAndListData(),
-                [
-                    'pager' => $pager,
-                    'models' => $orderModels,
-                    'totals' => $totals,
-                    'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
-                ])
-        );
+        switch ($report_mode) {
+            case 'group':
+                echo $this->render('reports/view_group.tpl', array_merge(
+                        SearchHelper::getFormAndListData(),
+                        [
+                            'group_names' => ReportsStore::getGroupsNames(),
+                            'aggregates_names' => ReportsStore::getAggregates(),
+                            'report_data' => $reportStore->getReport(),
+                            'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
+                        ])
+                );
+                break;
+            case 'html':
+                echo $this->render('reports/view.tpl', array_merge(
+                        SearchHelper::getFormAndListData(),
+                        [
+                            'pager' => $pager,
+                            'models' => $orderModels,
+                            'totals' => $reportStore->getTotals(),
+                            'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
+                        ])
+                );
+                break;
+
+        }
+
+
     }
 
     public function create()
@@ -140,6 +166,7 @@ class ReportsController extends PrototypeAdminController
         echo $this->renderInternal('reports/admin/report_edit.tpl',
             array_merge(
                 SearchHelper::getFormAndListData(),
+                ReportsHelper::getFormAndListData(),
                 [
                     'model' => $model,
                     'form_data' => SearchHelper::prepareFormDataForTemplate($model->form_data),

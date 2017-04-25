@@ -1,6 +1,8 @@
 <?php
+
 namespace Modules\Reports\Stores;
 
+use Mindy\QueryBuilder\Aggregation\Count;
 use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Expression;
 use Modules\Dashboard\Stores\OrderSearchStore;
@@ -10,17 +12,113 @@ use Xcart\Connection;
 
 class ReportsStore extends OrderSearchStore
 {
-    public  $defaultPagerPageSize = 100;
+    public $defaultPagerPageSize = 100;
+
+
+    public static function getGroupsNames()
+    {
+        return [
+            'storefront' => [
+                'name' => 'Storefront',
+                'avail_aggregates' => [
+                    'qty',
+                    'amount',
+                    'f_total',
+                    'subtotal',
+                    'shipping',
+                    'profit',
+                    'avg_profit',
+                ]
+            ],
+            'distributor' => [
+                'name' => 'Distributor',
+                'avail_aggregates' => [
+                    'qty',
+                    'amount',
+                    'f_total',
+                    'subtotal',
+                    'shipping',
+                    'profit',
+                    'avg_profit',
+                ]
+            ],
+
+            'brand' => [
+                'name' => 'Brand',
+                'avail_aggregates' => [
+                    'subtotal',
+                    'qty',
+                    'amount'
+                ]
+            ]
+        ];
+    }
+
+    public static function getAggregates()
+    {
+        return [
+            'qty' => [
+                'name' => 'Quantity',
+                'prefix' => '',
+                'suffix' => '',
+            ],
+            'amount' => [
+                'name' => 'Amount',
+                'prefix' => '',
+                'suffix' => '',
+            ],
+            'f_total' => [
+                'name' => 'Total',
+                'prefix' => '$',
+                'suffix' => '',
+            ],
+            'subtotal' => [
+                'name' => 'Subtotal',
+                'prefix' => '$',
+                'suffix' => '',
+            ],
+            'shipping' => [
+                'name' => 'Shipping Cost',
+                'prefix' => '$',
+                'suffix' => '',
+            ],
+            'profit' => [
+                'name' => 'Profit $',
+                'prefix' => '$',
+                'suffix' => '',
+            ],
+            'avg_profit' => [
+                'name' => 'AVG Profit %',
+                'prefix'  => '',
+                'suffix' => '%',
+            ],
+        ];
+    }
+
+    public static function getAggregatesFields()
+    {
+        return [
+            'qty' => new Count('orderid'),
+            'amount' => '',
+            'f_total' => new Sum('group.total_net'),
+            'subtotal' => new Expression('SUM(order_details.price * order_details.amount)'),
+            'shipping' => '',
+            'profit' => '',
+            'avg_profit' => '',
+        ];
+    }
+
     public function getQuerySet()
     {
         $filter = null;
         $qs = parent::getQuerySet();
+        $order = ['date'];
         $joins = $qs->getQueryBuilder()->getJoins();
         $joins = array_keys($joins);
         if (!in_array('group', $joins)) {
             $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
         }
-        switch ($this->form_data['order']['profit_margin']) {
+        switch ($this->form_data['report']['profit_margin']) {
             case "profit" :
                 $filter = ['group.profit_margin__lt' => 100];
                 break;
@@ -29,14 +127,81 @@ class ReportsStore extends OrderSearchStore
                 break;
             case "profit_between" :
                 $filter = [
-                    'group.profit_margin__gte' => $this->form_data['order']['profit_margin_profitbetween_start'],
-                    'group.profit_margin__lt' => $this->form_data['order']['profit_margin_profitbetween_end'],
+                    'group.profit_margin__gte' => $this->form_data['report']['profit_margin_profitbetween_start'],
+                    'group.profit_margin__lt' => $this->form_data['report']['profit_margin_profitbetween_end'],
                 ];
                 break;
         }
+
+        if (!empty($this->form_data['report']['group_settings'])) {
+            $qs->group([]);
+            $qs->select([]);
+            ksort($this->form_data['report']['group_settings']);
+            foreach ($this->form_data['report']['group_settings'] as $group_index => $group) {
+                switch ($group) {
+                    case 'storefront':
+                        if (!in_array($group, $joins)) {
+                            $qs->join('left join', 'xcart_storefronts', ['storefrontid' => "{$group}.storefrontid"], $group);
+                        }
+                        $qs->addSelect([$group => new Expression("COALESCE ($group.domain , 'www.artistsupplysource.com')")]);
+                        $qs->addGroup(["{$group}.storefrontid"]);
+                        if ($group_index != count($this->form_data['report']['group_settings'])) {
+                            $order = ["$group.domain"];
+                        }
+                        break;
+                    case 'brand':
+                        if (!in_array($group, $joins)) {
+                            $qs->join('inner join', 'xcart_order_details', ['orderid' => "order_details.orderid"], 'order_details');
+                            $qs->join('inner join', 'xcart_products', ['products.productid' => "order_details.productid"], 'products');
+                            $qs->join('inner join', 'xcart_brands', ['products.brandid' => "{$group}.brandid"], $group);
+                        }
+                        $qs->addSelect([$group => "$group.brand"]);
+                        $qs->addGroup(["{$group}.brandid"]);
+                        if ($group_index != count($this->form_data['report']['group_settings'])) {
+                            $order = ["$group.brand"];
+                        }
+                        break;
+                    case 'distributor':
+                        if (!in_array($group, $joins)) {
+                            $qs->join('inner join', 'xcart_manufacturers', ['group.manufacturerid' => "{$group}.manufacturerid"], $group);
+                        }
+                        $qs->addSelect([$group => "$group.manufacturer"]);
+                        $qs->addGroup(["{$group}.manufacturerid"]);
+                        if ($group_index != count($this->form_data['report']['group_settings'])) {
+                            $order = ["$group.manufacturer"];
+                        }
+                        break;
+                }
+
+            }
+        }
+
+        if (!empty($this->form_data['report']['aggregate_settings'])) {
+            $agg = self::getAggregatesFields();
+            foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
+                $aggr_enable = true;
+                if ($this->form_data['report']['group_settings']) {
+                    $groups = ReportsStore::getGroupsNames();
+                    foreach ($this->form_data['report']['group_settings'] as $group_index => $group) {
+                        if (!in_array($aggregate_settings, $groups[$group]['avail_aggregates'])){
+                            $aggr_enable = false;
+                            break;
+                        }
+                    }
+                }
+                if ($aggr_enable) {
+                    $qs->addSelect([$aggregate_settings => $agg[$aggregate_settings]]);
+                    $order[] = "-" . $aggregate_settings;
+                }
+            }
+        }
+
         if ($filter) {
             $qs->filter($filter);
         }
+
+        $qs->order($order);
+
         return $qs;
     }
 
@@ -95,6 +260,39 @@ class ReportsStore extends OrderSearchStore
                 $totals['real_pm'] = round($totals['accounting_gross_5_profit'] / $totals['accounting_gross_0'] * 100, 2);
             }
             $totals["real_net"] = $totals['accounting_net_0'] + $totals['accounting_net_4_ref_to_us'] - $totals['accounting_gross_3_ref_to_cust'];
+        }
+        return $totals;
+    }
+
+    private function _group_by($array, $key)
+    {
+        $return = array();
+        foreach ($array as $val) {
+            $newkey = $val[$key];
+            unset($val[$key]);
+            $return[$newkey][] = $val;
+        }
+        return $return;
+    }
+
+    public function getReport()
+    {
+        $totals = Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(\PDO::FETCH_GROUP);
+        if ($totals) {
+            uasort($totals, function ($a, $b) {
+                $sa = $sb = [];
+                if (!empty($this->form_data['report']['aggregate_settings'])) {
+                    foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
+                        foreach ($a as $ar) {
+                            $sa[$aggregate_settings] += $ar[$aggregate_settings];
+                        }
+                        foreach ($b as $ar) {
+                            $sb[$aggregate_settings] += $ar[$aggregate_settings];
+                        }
+                    }
+                }
+                return reset($sa) < reset($sb);
+            });
         }
         return $totals;
     }

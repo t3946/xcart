@@ -618,22 +618,7 @@ if (!empty($_GET["orderid"]) && !empty($section_name)) {
 
 \Xcart\App\Main\Xcart::app()->event->trigger('order:view', ['order_id' => $orderid]);
 
-$url      = "http://helpdesk.s3stores.com/otrs/index.pl";
-$curl_err = false;
-$ch       = curl_init();
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1000);
-$output = curl_exec($ch);
-
-if (curl_errno($ch) != 0 || curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
-    $curl_err = true;
-}
-curl_close($ch);
-
-if (!$curl_err) {
-    require "./gi-find.php";
-}
+require "./gi-find.php";
 
 if (empty($ticket_resolver_link)) {
     $ticket_resolver_link = func_query_first_cell("SELECT otrs_ticket FROM $sql_tbl[orders] WHERE orderid='$orderid'");
