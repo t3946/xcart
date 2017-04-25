@@ -62,11 +62,6 @@ class ReportsStore extends OrderSearchStore
                 'prefix' => '',
                 'suffix' => '',
             ],
-            'amount' => [
-                'name' => 'Amount',
-                'prefix' => '',
-                'suffix' => '',
-            ],
             'f_total' => [
                 'name' => 'Total',
                 'prefix' => '$',
@@ -77,7 +72,7 @@ class ReportsStore extends OrderSearchStore
                 'prefix' => '$',
                 'suffix' => '',
             ],
-            'shipping' => [
+            /*'shipping' => [
                 'name' => 'Shipping Cost',
                 'prefix' => '$',
                 'suffix' => '',
@@ -92,6 +87,11 @@ class ReportsStore extends OrderSearchStore
                 'prefix'  => '',
                 'suffix' => '%',
             ],
+            'amount' => [
+                'name' => 'Amount',
+                'prefix' => '',
+                'suffix' => '',
+            ],*/
         ];
     }
 
@@ -291,7 +291,7 @@ class ReportsStore extends OrderSearchStore
                         }
                     }
                 }
-                return reset($sa) < reset($sb);
+                return end($sa) < end($sb);
             });
         }
         return $totals;

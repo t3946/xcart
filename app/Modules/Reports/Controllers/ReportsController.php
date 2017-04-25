@@ -37,7 +37,10 @@ class ReportsController extends PrototypeAdminController
 
         echo $this->renderInternal('reports/search.tpl', array_merge(
                 SearchHelper::getFormAndListData(),
+                ReportsHelper::getFormAndListData(),
                 [
+                    'group_names' => ReportsStore::getGroupsNames(),
+                    'aggregates_names' => ReportsStore::getAggregates(),
                     'reports' => $reports,
                     'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
                     'form_collapse' => $form_collapse,
