@@ -3,6 +3,9 @@
 
   .OrderSheet {
     font-size: 10px;
+    background-color: black;
+    width: 100%;
+    font-family: 'Verdana';
   }
 
   .TableHead {
@@ -22,6 +25,20 @@
     background-color: white;
     font-weight: normal;
     text-align: center;
+
+    &.OrderSheetLast {
+      background-color: #d7f4f4;
+    }
+
+    &.OrderSheetFirst{
+      & > td {
+        border-top: 1px solid black;
+      }
+    }
+
+    .FilledAccounting {
+      background-color: #e1c7e1;
+    }
   }
 
   .order-report-header {

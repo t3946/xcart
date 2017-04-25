@@ -4206,7 +4206,10 @@ form[name=hide_no_orders_test_checkoutform] input {
 .OrderReport {
   font-family: GothamPro, Arial, sans-serif; }
   .OrderReport .OrderSheet {
-    font-size: 10px; }
+    font-size: 10px;
+    background-color: black;
+    width: 100%;
+    font-family: 'Verdana'; }
   .OrderReport .TableHead {
     BACKGROUND-COLOR: #CCCCCC;
     FONT-WEIGHT: bold;
@@ -4220,6 +4223,12 @@ form[name=hide_no_orders_test_checkoutform] input {
     background-color: white;
     font-weight: normal;
     text-align: center; }
+    .OrderReport .OrderSheetCell.OrderSheetLast {
+      background-color: #d7f4f4; }
+    .OrderReport .OrderSheetCell.OrderSheetFirst > td {
+      border-top: 1px solid black; }
+    .OrderReport .OrderSheetCell .FilledAccounting {
+      background-color: #e1c7e1; }
   .OrderReport .order-report-header {
     font-size: 16px;
     font-weight: bold;
