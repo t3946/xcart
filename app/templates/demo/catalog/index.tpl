@@ -78,7 +78,7 @@
 
 
                 {include "demo/catalog/_state_line.tpl"}
-                <div class="items">
+                <div class="product-items list-view">
                     {foreach $models as $item }
                         {include "demo/blocks/_catalog_list_item.tpl" item=$item}
                     {/foreach}

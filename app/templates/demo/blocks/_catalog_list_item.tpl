@@ -1,5 +1,5 @@
 
-<div class="item" data-product="{$item->productid}">
+<div class="item" data-product="{$item->productid}" itemscope itemtype="http://schema.org/Product">
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}">
                 {*{if rand(1,2) > 1}*}
@@ -9,106 +9,121 @@
                 {*{if rand(1,2) > 1}*}
                     {*<span class="item__circle-new_red hidden-xs hidden-sm hidden-md">New</span>*}
                 {*{/if}*}
+
                 {set $image = $item->images->limit(1)->get()}
                 {set $site = $.getSite}
 
                 {if $image}
-                    <img src="//cdn.{$site->getBaseDomain()}{$image->getURL()}" alt="{$item.product}" >
+                    <img src="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="loader" itemprop="image">
                 {else}
-                    Not avail
+                    <div class="not-avail">
+                        Image not available
+                    </div>
                 {/if}
 
-                {*{if rand(1,2) > 1}*}
-                    {*<img src="/static/frontend/demo_images/category/1280/029-alv-esp12-1.png" alt="{$item.product}" />*}
-                {*{else}*}
-                    {*<img src="/static/frontend/demo_images/category/1280/alv-1334d-1.png" alt="{$item.product}" />*}
-                {*{/if}*}
             </a>
             <a href="#" class="button yellow-white button-quick-view hide">quick view</a>
         </div>
         <div class="info_container container">
-            <h4 class="title">
+            <h4 class="title" itemprop="name">
                 <a href="{$item->getAbsoluteUrl()}">
-                    {$item.product}
+                    {if $item.seo_product_name}
+                        {raw $item.seo_product_name}
+                    {else}
+                        {raw $item.product}
+                    {/if}
                 </a>
             </h4>
             <div class="sku show-for-large">
                 <span class="value">
-                    SKU: {$item.productcode}
+                    SKU: <span class="style" itemprop="sku">{$item.productcode}</span>
                 </span>
                 <a data-tooltip class="has-tip right " title="What is SKU">?</a>
             </div>
 
+            <div class="brand show-for-small">
+                Brand: <span class="value" itemprop="brand">{$item->brand->brand}</span>
+            </div>
             {if $item.descr || $item.fulldescr || $item.seo_fulldescr}
-                <div class="description show-for-medium">
+                <div class="description show-for-medium" itemprop="description">
                     {if $item.descr}
                         {set $description = $item.descr}
-                    {elseif $item.fulldescr}
-                        {set $description = $item.fulldescr}
                     {elseif $item.seo_fulldescr}
                         {set $description = $item.seo_fulldescr}
+                    {elseif $item.fulldescr}
+                        {set $description = $item.fulldescr}
                     {/if}
 
-                    {raw $description|br2nl|strip_tags|truncate:160:'...'|nl2space}
+                    {raw $description|br2nl|strip_tags|truncate:140:'...'|nl2space}
 
                     <a href="{$item->getAbsoluteUrl()}" class="show-for-medium">See details</a>
                 </div>
             {/if}
 
 
+            {set $p_list = $item->getParamList()}
+            {if $p_list}
+                <div class="parameters show-for-medium">
+                    <ul class="no-bullet">
+                        {foreach $p_list as $param index=$index}
+                            <li>
+                                {$param.name}: {raw $param.values|join}
+                            </li>
 
-            {*<div class="parameters show-for-medium">*}
-                {*<ul class="no-bullet">*}
-                    {*<li>Pain type: Watercolor</li>*}
-                    {*<li>Hair: Synthetic</li>*}
-                    {*<li>Form: Angular</li>*}
+                            {if $index >= 3}
+                                {break}
+                            {/if}
+                        {/foreach}
 
-                    {*{if rand(1,2) > 1}*}
-                        {*<li>Sizes: 4, 8, 12, 16, 20, 32</li>*}
-                    {*{else}*}
-                        {*<li>Colors:*}
-                            {*<i class="color-box color-box_light-green"></i>*}
-                            {*<i class="color-box color-box_blue"></i>*}
-                            {*<i class="color-box color-box_purple"></i>*}
-                            {*<i class="color-box color-box_orange"></i>*}
-                            {*<i class="color-box color-box_red"></i>*}
-                            {*<i class="color-box color-box_white"></i>*}
-                            {*<i class="color-box color-box_grey"></i>*}
-                            {*<a href="#" class="show-all-link">Show all</a>*}
-                        {*</li>*}
-                    {*{/if}*}
-                {*</ul>*}
-            {*</div>*}
+                    </ul>
+                </div>
+            {/if}
 
 
-            <div class="price hide-for-large">
-                {*<span class="old">US$ {$item->getPrice()}</span>*}
-                <span class="current">US$ {$item->getPrice()}</span>
+            <div class="price_container hide-for-large">
+                {if $item->list_price > $item->getPrice()}
+                    <span class="old">List Price: <span class="price">US$ {$item->list_price}</span></span>
+                {/if}
+                <span class="current">US$ <span class="price">{$item->getPrice()|number_format:2}</span></span>
             </div>
         </div>
 
 
         <div class="cart_price_container container">
             <div class="price_container">
-                <span class="old">List Price: <span class="price">US$ {$item->getPrice()}</span></span>
-                <span class="current">Price: <span class="price">US$ {$item->getPrice()}</span></span>
-            </div>
-            <div class="cart_quantity">
-                <label for="quantity-{$item.productid}" class="show-for-large">
-                    <span class="show-for-xlarge">Quantity:</span>
-                    <span class="show-for-large-only">Qty:</span>
-                </label>
+                {if $item->list_price > $item->getPrice()}
+                    <span class="old">List Price: <span class="price">US$ {$item->list_price}</span></span>
+                {/if}
+                <span class="current">Price: <span class="price" itemprop="price">US$ {$item->getPrice()|number_format:2}</span></span>
 
-                <div class="quantity-group">
-                    <span class="btn dec">-</span>
-                    <input type="number" name="quantity" min="1" max="9999" value="1" id="quantity-{$item.productid}" />
-                    <span class="btn inc active">+</span>
+                <meta itemprop="priceCurrency" content="USD" />
+            </div>
+
+
+            {if !$item->isOutOfStock()}
+                <div class="cart_quantity">
+                    <label for="quantity-{$item.productid}" class="show-for-large">
+                        <span class="show-for-xlarge">Quantity:</span>
+                        <span class="show-for-large-only">Qty:</span>
+                    </label>
+
+                    <div class="quantity-group">
+                        <span class="btn dec">-</span>
+                        <input type="number" name="quantity" min="{$item->min_amount}" max="{$item->avail}" value="1" id="quantity-{$item.productid}" />
+                        <span class="btn inc active">+</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="cart_add">
-                <span class="add button yellow">Add to cart</span>
-            </div>
+                {if $item.lead_time_message}
+                <div class="lead-time icon">
+                    <i></i> {$item.lead_time_message}
+                </div>
+                {/if}
+
+                <div class="cart_add">
+                    <span class="add button yellow">Add to cart</span>
+                </div>
+
             {*<div class="subtotal_container">*}
                 {*<div class="subtotal">*}
                     {*Subtotal: US$ 400.01*}
@@ -117,7 +132,22 @@
                     {*Save 41% (US$ 5.27 per unit)*}
                 {*</div>*}
             {*</div>*}
+            {else}
+                <div class="out-of-stock">
+                    <div class="title icon">
+                        <i></i> Out of stock
+                    </div>
 
+                    {if $item.eta_date_mm_dd_yyyy && $item.eta_date_mm_dd_yyyy > time()}
+                    <div class="eta-date">
+                        Eta date: {$item.eta_date_mm_dd_yyyy|date|date_format:"%d %b %Y"}
+                    </div>
+                    {/if}
+                    <div class="notify">
+
+                    </div>
+                </div>
+            {/if}
 
         </div>
 </div>

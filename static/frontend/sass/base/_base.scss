@@ -16,6 +16,12 @@ textarea {
   font-family: $body-font-family;
 }
 
+img {
+  &.loader {
+    background: url("../images/preloaders/loader1.gif") center center no-repeat;
+  }
+}
+
 #main_wrapper {
   min-width: 320px;
   min-height: 100%;

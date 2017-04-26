@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Product\Models;
 
+use Modules\Brand\Models\BrandModel;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaModel;
@@ -70,6 +71,17 @@ class ProductModel extends AutoMetaModel
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
             ],
+            'brand' => [
+                'field' => 'brandid',
+                'class' => ForeignField::className(),
+                'modelClass' => BrandModel::className(),
+                'link' => ['brandid' => 'brandid'],
+            ],
+            'filter_values' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => FilterValueModel::className(),
+                'through' => FilterProductModel::className(),
+            ],
             'images' => [
                 'class' => HasManyField::className(),
                 'modelClass' => ImagePModel::className(),
@@ -115,6 +127,58 @@ class ProductModel extends AutoMetaModel
         return $sMPN;
     }
 
+
+    public function getParamList()
+    {
+        $values = $this->filter_values->filter(['fv_active' => 'Y'])->order(['f_id','fv_order_by'])->all();
+        if ($values) {
+
+            $filters = FilterModel::objects()->filter(['f_id__in' => array_map(function($value){ return $value->f_id; }, $values)])->order(['f_order_by'])->all();
+
+            $list = [];
+            foreach ($filters as $filter)
+            {
+                $list[$filter->f_id] = ['name' =>$filter->f_name, 'values' => []];
+            }
+            
+            foreach ($values as $value)
+            {
+                if ($list[$value->f_id]) {
+                    $list[$value->f_id]['values'][] = $value->fv_name;
+                }
+            }
+
+            return $list;
+        }
+
+        return false;
+    }
+
+
+    public function isOutOfStock()
+    {
+        if (!$this->cost_to_us) {
+            return true;
+        }
+
+        if (!$this->avail) {
+            return true;
+        }
+
+        if ($this->avail < $this->min_amount) {
+            return true;
+        }
+
+        if ($this->cost_to_us >= $this->getPrice()) {
+            return true;
+        }
+
+        if ($this->eta_date_mm_dd_yyyy && time() < $this->eta_date_mm_dd_yyyy) {
+            return true;
+        }
+
+        return false;
+    }
 
     public function getAbsoluteUrl()
     {
