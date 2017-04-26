@@ -4262,13 +4262,17 @@ form[name=hide_no_orders_test_checkoutform] input {
           vertical-align: bottom; }
         .OrderReport .order-report-wrapper .report-table td.align-right {
           text-align: right; }
-  .OrderReport .report_footer {
-    margin: 10px 0 30px;
+  .OrderReport .report-footer {
+    margin: 10px 0 10px;
     font-size: 14px; }
-    .OrderReport .report_footer > div {
+    .OrderReport .report-footer div.columns {
       padding: 0; }
-    .OrderReport .report_footer .total-label {
+    .OrderReport .report-footer .total-label {
       font-weight: bold; }
+    .OrderReport .report-footer .total-value {
+      text-align: right; }
+  .OrderReport .report-comment {
+    margin: 30px 0; }
 
 .admin form {
   position: relative; }

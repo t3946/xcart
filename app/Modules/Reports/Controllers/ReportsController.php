@@ -150,6 +150,7 @@ class ReportsController extends PrototypeAdminController
     /** @param Model|ModelInterface $model */
     private function createOrUpdate($model)
     {
+
         $class = ReportModel::classNameShort();
         if (isset($_POST['delete'])) {
             if ($model->delete()) {
@@ -165,7 +166,6 @@ class ReportsController extends PrototypeAdminController
                 $this->autoRedirect($model);
             }
         }
-
         echo $this->renderInternal('reports/admin/report_edit.tpl',
             array_merge(
                 SearchHelper::getFormAndListData(),
