@@ -177,6 +177,7 @@ class ReportsStore extends OrderSearchStore
         }
 
         if (!empty($this->form_data['report']['aggregate_settings'])) {
+            $agg_oreder = [];
             $agg = self::getAggregatesFields();
             foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
                 $aggr_enable = true;
@@ -191,9 +192,13 @@ class ReportsStore extends OrderSearchStore
                 }
                 if ($aggr_enable) {
                     $qs->addSelect([$aggregate_settings => $agg[$aggregate_settings]]);
-                    $order[] = "-" . $aggregate_settings;
+                    $agg_oreder[] = "-" . $aggregate_settings;
                 }
             }
+            if ($agg_oreder) {
+                krsort($agg_oreder);
+            }
+            $order = array_merge($order, $agg_oreder);
         }
 
         if ($filter) {
@@ -284,10 +289,10 @@ class ReportsStore extends OrderSearchStore
                 if (!empty($this->form_data['report']['aggregate_settings'])) {
                     foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
                         foreach ($a as $ar) {
-                            $sa[$aggregate_index] += $ar[$aggregate_index];
+                            $sa[$aggregate_settings] += $ar[$aggregate_settings];
                         }
                         foreach ($b as $ar) {
-                            $sb[$aggregate_index] += $ar[$aggregate_index];
+                            $sb[$aggregate_settings] += $ar[$aggregate_settings];
                         }
                     }
                 }
