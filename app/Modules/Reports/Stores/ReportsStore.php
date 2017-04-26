@@ -58,7 +58,7 @@ class ReportsStore extends OrderSearchStore
     {
         return [
             'qty' => [
-                'name' => 'Quantity',
+                'name' => 'Orders count',
                 'prefix' => '',
                 'suffix' => '',
             ],
@@ -284,10 +284,10 @@ class ReportsStore extends OrderSearchStore
                 if (!empty($this->form_data['report']['aggregate_settings'])) {
                     foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
                         foreach ($a as $ar) {
-                            $sa[$aggregate_settings] += $ar[$aggregate_settings];
+                            $sa[$aggregate_index] += $ar[$aggregate_index];
                         }
                         foreach ($b as $ar) {
-                            $sb[$aggregate_settings] += $ar[$aggregate_settings];
+                            $sb[$aggregate_index] += $ar[$aggregate_index];
                         }
                     }
                 }
