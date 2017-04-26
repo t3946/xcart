@@ -284,10 +284,10 @@ class ReportsStore extends OrderSearchStore
                 if (!empty($this->form_data['report']['aggregate_settings'])) {
                     foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
                         foreach ($a as $ar) {
-                            $sa[$aggregate_index] += $ar[$aggregate_index];
+                            $sa[$aggregate_settings] += $ar[$aggregate_settings];
                         }
                         foreach ($b as $ar) {
-                            $sb[$aggregate_index] += $ar[$aggregate_index];
+                            $sb[$aggregate_settings] += $ar[$aggregate_settings];
                         }
                     }
                 }
