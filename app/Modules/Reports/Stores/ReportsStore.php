@@ -72,7 +72,7 @@ class ReportsStore extends OrderSearchStore
                 'prefix' => '$',
                 'suffix' => '',
             ],
-            /*'shipping' => [
+            'shipping' => [
                 'name' => 'Shipping Cost',
                 'prefix' => '$',
                 'suffix' => '',
@@ -82,7 +82,7 @@ class ReportsStore extends OrderSearchStore
                 'prefix' => '$',
                 'suffix' => '',
             ],
-            'avg_profit' => [
+            /*'avg_profit' => [
                 'name' => 'AVG Profit %',
                 'prefix'  => '',
                 'suffix' => '%',
@@ -102,8 +102,8 @@ class ReportsStore extends OrderSearchStore
             'amount' => '',
             'f_total' => new Sum('group.total_net'),
             'subtotal' => new Expression('SUM(order_details.price * order_details.amount)'),
-            'shipping' => '',
-            'profit' => '',
+            'shipping' => new Sum('group.shipping_net'),
+            'profit' => new Sum('group.accounting_net_5_profit'),
             'avg_profit' => '',
         ];
     }
