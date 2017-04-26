@@ -119,5 +119,17 @@
                 </div>
             </div>
         </li>
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label>Report comment:</label>
+                </div>
+                <div class="columns large-8">
+                    <div class="columns large-12">
+                        <textarea style="width:100%" name="search[report][comment]" id="report_comment">{$form_data.report.comment|strip:false}</textarea>
+                    </div>
+                </div>
+            </div>
+        </li>
     </ul>
 </fieldset>

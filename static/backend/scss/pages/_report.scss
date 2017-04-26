@@ -96,15 +96,22 @@
     }
   }
 
-  .report_footer {
-    margin: 10px 0 30px;
+  .report-footer {
+    margin: 10px 0 10px;
     font-size: 14px;
 
-    & > div{
-      padding: 0;
-    }
+      div.columns{
+        padding: 0;
+      }
     .total-label{
       font-weight: bold;
     }
+    .total-value {
+      text-align: right;
+    }
+  }
+
+  .report-comment{
+    margin: 30px 0 ;
   }
 }

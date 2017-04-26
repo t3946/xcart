@@ -102,14 +102,26 @@
 
         {/foreach}
     </table>
-    <div class="row report_footer">
-        <div class="columns large-11 total-label">
-            <span>Total sales volume:</span>
+
+    <div class="report-footer">
+        <div class="row">
+            <div class="columns large-11 total-label">
+                <span>Total sales volume:</span>
+            </div>
+            <div class="columns large-1 total-value align-right">
+                <span>{$total_prefix}{if $total_prefix}{$sum_total|formatprice:",":"."}{else}{$sum_total}{/if}{$total_suffix}</span>
+            </div>
         </div>
-        <div class="columns large-1 total-value align-right">
-            <span>{$total_prefix}{if $total_prefix}{$sum_total|formatprice:",":"."}{else}{$sum_total}{/if}{$total_suffix}</span>
-        </div>
+        {if $form_data.report.comment}
+            <div class="row report-comment">
+                <div class="columns large-12">
+                    {raw $form_data.report.comment|nl2br}
+                </div>
+            </div>
+        {/if}
     </div>
+
+
 
 {/block}
 
