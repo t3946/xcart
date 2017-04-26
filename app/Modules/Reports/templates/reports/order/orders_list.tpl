@@ -4,7 +4,7 @@
     <td class="OrderSheetCell" colspan="10" style="text-align: left; font-weight: bold;">
         {$totals.codes}
     </td>
-    {if $data.show_reconciled !=''}<td class="OrderSheetCell"></td>{/if}
+    {if $form_data.report.show_reconciled !=''}<td class="OrderSheetCell"></td>{/if}
 </tr>
 <tr>
     <td class="OrderSheetCell" colspan="2" style="text-align: right;">Report period:</td>
@@ -15,10 +15,10 @@
             All dates
         {/if}
     </td>
-    {if $data.show_reconciled !=''}<td class="OrderSheetCell"></td>{/if}
+    {if $form_data.report.show_reconciled !=''}<td class="OrderSheetCell"></td>{/if}
 </tr>
 <tr>
-    <td class="OrderSheetCell" colspan="{if $data.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
+    <td class="OrderSheetCell" colspan="{if $form_data.report.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
 </tr>
 </table>
 <table cellpadding="3" cellspacing="1" class="OrderSheet">
@@ -34,7 +34,7 @@
         <td>REF TO CUST</td>
         <td>RED TO US</td>
         <td>PROFIT</td>
-        {if $data.show_reconciled}<td>ORDER RECONCILED</td>{/if}
+        {if $form_data.report.show_reconciled}<td>ORDER RECONCILED</td>{/if}
         <td>PROFIT</td>
     </tr>
     <tr class="TableHead TableHeadAccounting TableHeadLight">
@@ -49,7 +49,7 @@
         <td>HST OUT</td>
         <td>HST IN</td>
         <td>HST IN</td>
-        {if $data.show_reconciled}<td></td>{/if}
+        {if $form_data.report.show_reconciled}<td></td>{/if}
         <td><b>MARGIN</b></td>
     </tr>
     <tr class="TableHead TableHeadAccounting TableHeadLight">
@@ -64,7 +64,7 @@
         <td>PST OUT</td>
         <td>PST IN</td>
         <td>PST IN</td>
-        {if $data.show_reconciled}<td></td>{/if}
+        {if $form_data.report.show_reconciled}<td></td>{/if}
         <td>REAL NET</td>
     </tr>
     <tr class="TableHead TableHeadAccounting TableHeadLight">
@@ -79,11 +79,11 @@
         <td>REF TO CUST</td>
         <td>REF TO US</td>
         <td>PROFIT</td>
-        {if $data.show_reconciled !=''}<td></td>{/if}
+        {if $form_data.report.show_reconciled !=''}<td></td>{/if}
         <td>REAL PM</td>
     </tr>
     <tr>
-        <td class="OrderSheetCell" colspan="{if $data.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
+        <td class="OrderSheetCell" colspan="{if $form_data.report.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
     </tr>
     <tr class="OrderSheetCell OrderSheetFirst" style="font-weight: bold;">
         <td></td>
@@ -94,8 +94,8 @@
         <td style="background-color: #D9EAD3;">
              {$totals.accounting_net_0|hide_zero|formatprice:",":"."|west_style}
         </td>
-        <td {if $form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>{$totals.accounting_net_1_cost_to_us|hide_zero|formatprice:",":"."|west_style}</td>
-        <td {if $form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>{$totals.accounting_net_2_shipping|hide_zero|formatprice:",":"."|west_style}</td>
+        <td {if $form_data.report.profit_margin}style="background-color: #D9EAD3;"{/if}>{$totals.accounting_net_1_cost_to_us|hide_zero|formatprice:",":"."|west_style}</td>
+        <td {if $form_data.report.profit_margin}style="background-color: #D9EAD3;"{/if}>{$totals.accounting_net_2_shipping|hide_zero|formatprice:",":"."|west_style}</td>
         <td style="background-color: #D9EAD3;">
              {$totals.accounting_net_3_ref_to_cust|hide_zero|formatprice:",":"."|west_style}
         </td>
@@ -103,7 +103,7 @@
              {$totals.accounting_net_4_ref_to_us|hide_zero|formatprice:",":"."|west_style}
         </td>
         <td>{$totals.accounting_net_5_profit|hide_zero|formatprice:",":"."|west_style}</td>
-        {if $data.show_reconciled}<td></td>{/if}
+        {if $form_data.report.show_reconciled}<td></td>{/if}
         <td>{$totals.total_margin}%</td>
     </tr>
     <tr class="OrderSheetCell">
@@ -118,7 +118,7 @@
         <td>{$totals.accounting_gst_3_ref_to_cust|hide_zero|formatprice:",":"."|west_style}</td>
         <td>{$totals.accounting_gst_4_ref_to_us|hide_zero|formatprice:",":"."|west_style}</td>
         <td>{$totals.accounting_gst_5_profit|hide_zero|formatprice:",":"."|west_style}</td>
-        {if $data.show_reconciled}<td></td>{/if}
+        {if $form_data.report.show_reconciled}<td></td>{/if}
         <td></td>
     </tr>
     <tr class="OrderSheetCell">
@@ -133,8 +133,8 @@
         <td>{$totals.accounting_pst_3_ref_to_cust|hide_zero|formatprice:",":"."|west_style}</td>
         <td>{$totals.accounting_pst_4_ref_to_us|hide_zero|formatprice:",":"."|west_style}</td>
         <td>{$totals.accounting_pst_5_profit|hide_zero|formatprice:",":"."|west_style}</td>
-        {if $data.show_reconciled}<td></td>{/if}
-        <td {if !$form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>
+        {if $form_data.report.show_reconciled}<td></td>{/if}
+        <td {if !$form_data.report.profit_margin}style="background-color: #D9EAD3;"{/if}>
             {$totals.real_net|hide_zero|formatprice:",":"."|west_style}
         </td>
     </tr>
@@ -150,11 +150,11 @@
         <td>{$totals.accounting_gross_3_ref_to_cust|formatprice:",":"."}</td>
         <td>{$totals.accounting_gross_4_ref_to_us|formatprice:",":"."}</td>
         <td>{$totals.accounting_gross_5_profit|formatprice:",":"."}</td>
-        {if $data.show_reconciled}<td></td>{/if}
-        <td {if $form_data.order.profit_margin}style="background-color: #D9EAD3;"{/if}>{$totals.real_pm|formatprice:",":"."|west_style}%</td>
+        {if $form_data.report.show_reconciled}<td></td>{/if}
+        <td {if $form_data.report.profit_margin}style="background-color: #D9EAD3;"{/if}>{$totals.real_pm|formatprice:",":"."|west_style}%</td>
     </tr>
     <tr class="OrderSheetCell OrderSheetFirst">
-        <td colspan="{if $data.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
+        <td colspan="{if $form_data.report.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
     </tr>
 {foreach $models as $order index=$index}
     {foreach $order->groups as $group}
@@ -171,7 +171,7 @@
             <td>{$group->total_net|formatprice:",":"."}</td>
             <td>
                 {foreach $payment_methods as $method}
-                    {if $method.paymentid ==$order->paymentid}
+                    {if $method.paymentid ==$group->acc_paymentid}
                         <span title="{$method.payment_details}">
                             <b>{$method.payment_method}</b>
                         </span>
@@ -196,15 +196,18 @@
             <td>
                 <b>{$group->accounting_net_5_profit|hide_zero|formatprice:",":"."|west_style}</b>
             </td>
-            {if $data.show_reconciled}
-                <td {if $v.reconcile_status == 1}style="background-color:#D9EAD3;"{/if} {if $v.reconcile_status == 2}style="background-color:#DDF177;"{/if} >
-                    {if $v.reconcile_status == 1}
+            {if $form_data.report.show_reconciled}
+                {set $group_reconciled = $group->getDataModel()->getReconciledStatus()}
+                <td {switch $group_reconciled}{case 1}style="background-color:#D9EAD3;" {case 2}style="background-color:#DDF177;"{/switch}>
+                    {switch $group_reconciled}
+                    {case 1}
                         Reconciled
-                    {elseif $v.reconcile_status == 2}
+                    {case 2}
                         Partial Reconciled
-                    {/if}
+                    {/switch}
                 </td>
             {/if}
+
             <td>
                 <b>
                     {if floatval($group->accounting_net_0)}
@@ -254,7 +257,7 @@
             <td>
                 {$group->accounting_gst_5_profit|hide_zero|formatprice:",":"."|west_style}
             </td>
-            {if $data.show_reconciled}
+            {if $form_data.report.show_reconciled}
                 <td></td>
             {/if}
             <td></td>
@@ -297,7 +300,7 @@
             <td>
                 {$group->accounting_pst_5_profit|hide_zero|formatprice:",":"."|west_style}
             </td>
-            {if $data.show_reconciled}
+            {if $form_data.report.show_reconciled}
                 <td></td>
             {/if}
             <td></td>
@@ -330,13 +333,13 @@
             <td>
                 {$group->accounting_gross_5_profit|hide_zero|formatprice:",":"."|west_style}
             </td>
-            {if $data.show_reconciled}
+            {if $form_data.report.show_reconciled}
                 <td></td>
             {/if}
             <td></td>
         </tr>
         <tr class="OrderSheetCell OrderSheetFirst">
-            <td colspan="{if $data.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
+            <td colspan="{if $form_data.report.show_reconciled !=''}13{else}12{/if}">&nbsp; </td>
         </tr>
     {/foreach}
 {/foreach}
