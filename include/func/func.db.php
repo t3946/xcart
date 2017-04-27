@@ -37,7 +37,7 @@ function db_fetch_row(\Doctrine\DBAL\Driver\Statement $result)
     return $result->fetch(PDO::FETCH_NUM);
 }
 
-function db_fetch_array(\Doctrine\DBAL\Driver\Statement $result, $flag = MYSQL_ASSOC)
+function db_fetch_array(\Doctrine\DBAL\Driver\Statement $result, $flag = null)
 {
     return $result->fetch(PDO::FETCH_ASSOC);
 }

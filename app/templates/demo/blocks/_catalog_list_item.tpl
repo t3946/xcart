@@ -6,9 +6,9 @@
                     {*<span class="item__rect-sale_yellow hidden-xs hidden-sm hidden-md">Sale</span>*}
                 {*{/if}*}
 
-                {*{if rand(1,2) > 1}*}
-                    {*<span class="item__circle-new_red hidden-xs hidden-sm hidden-md">New</span>*}
-                {*{/if}*}
+                {if rand(0,1)}
+                    <span class="splash-new show-for-large">New</span>
+                {/if}
 
                 {set $image = $item->images->limit(1)->get()}
                 {set $site = $.getSite}
@@ -17,7 +17,9 @@
                     <img src="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="loader" itemprop="image">
                 {else}
                     <div class="not-avail">
-                        Image not available
+                        <span class="text">
+                            Image not available
+                        </span>
                     </div>
                 {/if}
 
@@ -45,7 +47,7 @@
                 Brand: <span class="value" itemprop="brand">{$item->brand->brand}</span>
             </div>
             {if $item.descr || $item.fulldescr || $item.seo_fulldescr}
-                <div class="description show-for-medium" itemprop="description">
+                <div class="description" itemprop="description">
                     {if $item.descr}
                         {set $description = $item.descr}
                     {elseif $item.seo_fulldescr}
@@ -80,7 +82,7 @@
             {/if}
 
 
-            <div class="price_container hide-for-large">
+            <div class="price_container hide-for-large show-for-tile">
                 {if $item->list_price > $item->getFrontendPrice()}
                     <span class="old">List Price: <span class="price">US$ {$item->list_price}</span></span>
                 {/if}
@@ -89,7 +91,7 @@
         </div>
 
 
-        <div class="cart_price_container container">
+        <div class="cart_price_container container show-for-medium">
             <div class="price_container">
                 {if $item->list_price > $item->getFrontendPrice()}
                     <span class="old">List Price: <span class="price">US$ {$item->list_price}</span></span>

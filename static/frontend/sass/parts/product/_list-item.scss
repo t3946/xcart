@@ -1,11 +1,29 @@
 
 .product-items {
+
+  &.list-view {
+    .show-for-tile {
+      display: none;
+    }
+  }
+
+  &.tile-view {
+    .show-for-list {
+      display: none;
+    }
+  }
+
+
+
   .item {
     padding-bottom: 1.4%;
-    padding-right: 2%;
     margin: 15px 0;
     border-bottom: 1px solid #cccccc;
     position: relative;
+
+    @include breakpoint(large up) {
+      padding-right: 2%;
+    }
 
     .icon {
       line-height: rem-calc(24);
@@ -39,8 +57,18 @@
       text-align: center;
       min-height: rem-calc(150);
 
+      a {
+        display: block;
+      }
+
       img {
         display: inline-block;
+      }
+
+      @include breakpoint(small) {
+        .not-avail {
+          min-height: rem-calc(120);
+        }
       }
 
       .button-quick-view {
@@ -49,16 +77,49 @@
         right: 0;
         bottom: 0;
       }
+
+      .splash-new {
+        height: 47px;
+        line-height: 49px;
+        border-radius: 24px;
+        background-color: #ff3323;
+        text-align: center;
+        color: #ffffff;
+        width: 47px;
+        font: {
+          size: rem-calc(16);
+          weight: bold;
+        }
+        text-transform: uppercase;
+        display: inline-block;
+        position: absolute;
+        //top: 6%;
+        top: -4%;
+        //right: 10%;
+        right: -4%;
+      }
     }
 
     .info_container {
-      width: 60%;
       color: #333;
       padding: 0 3%;
+      width: 80%;
+
+      @include breakpoint(medium up) {
+        width: 60%;
+      }
+
 
       .title {
+        @include breakpoint (medium down) {
+          font: {
+            size: rem-calc(16);
+          }
+        }
+
         &, a {
           color: black;
+          text-align: left;
 
           &:hover {
             text-decoration: underline;
@@ -96,7 +157,11 @@
       }
 
       .description {
-
+        @include breakpoint (medium down) {
+          font: {
+            size: rem-calc(14)
+          }
+        }
       }
 
       .parameters {
@@ -108,39 +173,39 @@
       }
     }
 
-    .cart_price_container {
-      width: 20%;
+    .price_container {
+      .old, .current {
+        display: block;
+      }
 
-      .price_container {
-        .old, .current {
-          display: block;
-        }
+      .price {
+        padding-left: 3%;
+      }
+
+      .old {
+        color: #5c5c5c;
 
         .price {
-          padding-left: 3%;
+          text-decoration: line-through;
         }
+      }
 
-        .old {
-          color: #5c5c5c;
-
-          .price {
-            text-decoration: line-through;
-          }
-        }
-
-        .current {
-          .price {
-            font: {
-              weight: bold;
-            }
+      .current {
+        .price {
+          font: {
+            weight: bold;
           }
         }
       }
+    }
+
+    .cart_price_container {
+      width: 20%;
 
       .cart_quantity {
         text-align: justify;
         line-height: 0;
-        margin: 3% 0;
+        margin: 5% 0;
 
         //@include breakpoint(large up) {
         //  margin: 0;
@@ -212,10 +277,11 @@
       }
     }
 
-
-    &:hover {
-      .button-quick-view {
-        display: block !important;
+    @include breakpoint(large up) {
+      &:hover {
+        .button-quick-view {
+          display: block !important;
+        }
       }
     }
   }

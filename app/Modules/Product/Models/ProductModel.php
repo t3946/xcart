@@ -154,6 +154,13 @@ class ProductModel extends AutoMetaModel
         return false;
     }
 
+    public function isNewProduct()
+    {
+        $sInDay = (60 * 60 * 24);
+
+        return ($this->add_date + $sInDay * 30)  >= time();
+    }
+
 
     public function isOutOfStock()
     {
