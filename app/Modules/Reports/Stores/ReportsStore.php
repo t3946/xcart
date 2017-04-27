@@ -2,6 +2,7 @@
 
 namespace Modules\Reports\Stores;
 
+use Mindy\QueryBuilder\Aggregation\Avg;
 use Mindy\QueryBuilder\Aggregation\Count;
 use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Expression;
@@ -28,6 +29,7 @@ class ReportsStore extends OrderSearchStore
                     'shipping',
                     'profit',
                     'avg_profit',
+                    'avg_check',
                 ]
             ],
             'distributor' => [
@@ -40,6 +42,7 @@ class ReportsStore extends OrderSearchStore
                     'shipping',
                     'profit',
                     'avg_profit',
+                    'avg_check',
                 ]
             ],
 
@@ -82,6 +85,11 @@ class ReportsStore extends OrderSearchStore
                 'prefix' => '$',
                 'suffix' => '',
             ],
+            'avg_check' => [
+                'name' => 'Avg. check',
+                'prefix' => '$',
+                'suffix' => '',
+            ],
             /*'avg_profit' => [
                 'name' => 'AVG Profit %',
                 'prefix'  => '',
@@ -105,6 +113,7 @@ class ReportsStore extends OrderSearchStore
             'shipping' => new Sum('group.shipping_net'),
             'profit' => new Sum('group.accounting_net_5_profit'),
             'avg_profit' => '',
+            'avg_check' => new Avg('total'),
         ];
     }
 
