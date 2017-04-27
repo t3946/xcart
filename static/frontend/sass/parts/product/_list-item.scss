@@ -39,6 +39,10 @@
       text-align: center;
       min-height: rem-calc(150);
 
+      img {
+        display: inline-block;
+      }
+
       .button-quick-view {
         position: absolute;
         left: 0;
@@ -136,7 +140,7 @@
       .cart_quantity {
         text-align: justify;
         line-height: 0;
-        margin: 5% 0;
+        margin: 3% 0;
 
         //@include breakpoint(large up) {
         //  margin: 0;
@@ -156,9 +160,25 @@
 
       }
 
+      .info {
+        margin: 3% 0;
+      }
+
       .lead-time {
         i {
           background: url("../images/icons/item_product/lead_time.svg") center center no-repeat;
+        }
+      }
+
+      .multiply-quantity {
+        i {
+          background: url("../images/icons/item_product/multiples_items.svg") center center no-repeat;
+        }
+      }
+
+      .last-items {
+        i {
+          background: url("../images/icons/item_product/last_items.svg") center center no-repeat;
         }
       }
 

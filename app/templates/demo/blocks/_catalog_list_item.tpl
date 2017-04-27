@@ -81,20 +81,20 @@
 
 
             <div class="price_container hide-for-large">
-                {if $item->list_price > $item->getPrice()}
+                {if $item->list_price > $item->getFrontendPrice()}
                     <span class="old">List Price: <span class="price">US$ {$item->list_price}</span></span>
                 {/if}
-                <span class="current">US$ <span class="price">{$item->getPrice()|number_format:2}</span></span>
+                <span class="current">US$ <span class="price">{$item->getFrontendPrice()|number_format:2}</span></span>
             </div>
         </div>
 
 
         <div class="cart_price_container container">
             <div class="price_container">
-                {if $item->list_price > $item->getPrice()}
+                {if $item->list_price > $item->getFrontendPrice()}
                     <span class="old">List Price: <span class="price">US$ {$item->list_price}</span></span>
                 {/if}
-                <span class="current">Price: <span class="price" itemprop="price">US$ {$item->getPrice()|number_format:2}</span></span>
+                <span class="current">Price: <span class="price" itemprop="price">US$ {$item->getFrontendPrice()|number_format:2}</span></span>
 
                 <meta itemprop="priceCurrency" content="USD" />
             </div>
@@ -109,15 +109,34 @@
 
                     <div class="quantity-group">
                         <span class="btn dec">-</span>
-                        <input type="number" name="quantity" min="{$item->min_amount}" max="{$item->avail}" value="1" id="quantity-{$item.productid}" />
+                        <input type="number"
+                               name="quantity"
+                               min="{$item->min_amount}"
+                               max="{$item->avail}"
+                               step="{if $item->mult_order_quantity == 'Y'}{$item->min_amount}{else}1{/if}"
+                               value="{$item->min_amount}"
+                               id="quantity-{$item.productid}"
+                        />
                         <span class="btn inc active">+</span>
                     </div>
                 </div>
 
                 {if $item.lead_time_message}
-                <div class="lead-time icon">
+                <div class="lead-time icon info">
                     <i></i> {$item.lead_time_message}
                 </div>
+                {/if}
+
+                {if $item->mult_order_quantity == 'Y'}
+                <div class="multiply-quantity icon info">
+                    <i></i> Order in multiples of {$item->min_amount} items
+                </div>
+                {/if}
+
+                {if $item->min_amount >= $item->avail}
+                    <div class="last-items icon info">
+                        <i></i> Order at least {$item->avail} items
+                    </div>
                 {/if}
 
                 <div class="cart_add">
@@ -140,7 +159,7 @@
 
                     {if $item.eta_date_mm_dd_yyyy && $item.eta_date_mm_dd_yyyy > time()}
                     <div class="eta-date">
-                        Eta date: {$item.eta_date_mm_dd_yyyy|date|date_format:"%d %b %Y"}
+                        Eta date: {$item.eta_date_mm_dd_yyyy|date_format:"%d %b %Y"}
                     </div>
                     {/if}
                     <div class="notify">
