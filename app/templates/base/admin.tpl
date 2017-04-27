@@ -5,7 +5,7 @@
 
 {/block}
 
-{filter|strip:true}
+{filter|strip:false}
     <div id="wrapper" class="admin">
         {block 'content-header'}
             <div class="content-header">

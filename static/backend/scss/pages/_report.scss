@@ -1,0 +1,117 @@
+.OrderReport {
+  font-family: $font;
+
+  .OrderSheet {
+    font-size: 10px;
+    background-color: black;
+    width: 100%;
+    font-family: 'Verdana';
+  }
+
+  .TableHead {
+    BACKGROUND-COLOR: #CCCCCC;
+    FONT-WEIGHT: bold;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    TEXT-TRANSFORM: uppercase;
+  }
+
+  .TableHeadAccounting {
+    background-color: #ffe9a5;
+    white-space: nowrap;
+  }
+
+  .OrderSheetCell {
+    background-color: white;
+    font-weight: normal;
+    text-align: center;
+
+    &.OrderSheetLast {
+      background-color: #d7f4f4;
+    }
+
+    &.OrderSheetFirst{
+      & > td {
+        border-top: 1px solid black;
+      }
+    }
+
+    .OrderSheetCommonCell {
+      color: #550000 !important;
+      font-weight: normal;
+    }
+
+    .FilledAccounting {
+      background-color: #e1c7e1;
+    }
+  }
+
+  .order-report-header {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 30px 0 10px;
+  }
+
+  .order-report-wrapper {
+    width:960px;
+    margin: 0 auto;
+
+    .report-table{
+      width: 100%;
+      border-spacing: 0;
+      border-left: solid 1px;
+      border-top: solid 1px;
+
+      .report-header {
+        background-color:  #ccc;
+        text-align: center;
+
+        & > td {
+          font-weight: bold;
+        }
+      }
+
+      .odd {
+        background-color:  #ccc;
+      }
+
+      td {
+        padding: 0 5px;
+        font-size: 14px;
+        border-right: solid 1px;
+        border-bottom: solid 1px;
+
+        & > .group {
+          vertical-align: top;
+        }
+
+        & > .aggregate {
+          vertical-align: bottom;
+        }
+
+        &.align-right {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  .report-footer {
+    margin: 10px 0 10px;
+    font-size: 14px;
+
+      div.columns{
+        padding: 0;
+      }
+    .total-label{
+      font-weight: bold;
+    }
+    .total-value {
+      text-align: right;
+    }
+  }
+
+  .report-comment{
+    margin: 30px 0 ;
+  }
+}

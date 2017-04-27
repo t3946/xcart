@@ -68,6 +68,18 @@ module.exports.backend = {
             ]
         },
 
+        'jquery-ui': {
+            js: [
+                'bower_components/jquery-ui/jquery-ui.js'
+            ]
+        },
+
+        'jquery.shapeshift': {
+            js: [
+                'bower_components/jquery.shapeshift/core/jquery.shapeshift.js'
+            ]
+        },
+
         'jquery.cookie': {
             js: [
                 'bower_components/jquery.cookie/jquery.cookie.js'
