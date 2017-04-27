@@ -1,4 +1,5 @@
-var fs = require('fs');
+const fs = require('fs');
+const imagemin = require('gulp-imagemin');
 
 var modulesDir = 'node_modules';
 
@@ -29,12 +30,12 @@ module.exports.backend = {
         inline_image: {
             baseDir: './backend/css'
         },
-        imagemin: {
-            interlaced: true,
-            progressive: true,
-            optimizationLevel: 5,
-            svgoPlugins: [{removeViewBox: true}]
-        }
+        imagemin: [
+            imagemin.gifsicle({interlaced: true}),
+            imagemin.jpegtran({progressive: true}),
+            imagemin.optipng({optimizationLevel: 5}),
+            imagemin.svgo({plugins: [{removeViewBox: true, removeComments: true, removeMetadata: true}]})
+        ],
     },
     src: {
         jsx: [
@@ -158,7 +159,13 @@ module.exports.frontend = {
         },
         inline_image: {
             baseDir: './frontend/css'
-        }
+        },
+        imagemin: [
+            imagemin.gifsicle({interlaced: true}),
+            imagemin.jpegtran({progressive: true}),
+            imagemin.optipng({optimizationLevel: 5}),
+            imagemin.svgo({plugins: [{removeViewBox: true, removeComments: true, removeMetadata: true}]})
+        ],
     },
     src: {
         jsx: [

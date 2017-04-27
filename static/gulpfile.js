@@ -214,7 +214,7 @@ gulp.task('backend_js', ['backend_jsx'], function() {
 gulp.task('frontend_images', function() {
     let pipe = gulp.src(frontend.src.images);
 
-    if (config.compress) {
+    if (frontend.config.compress) {
         pipe = pipe.pipe(imagemin(frontend.config.imagemin || {}));
     }
     return pipe
