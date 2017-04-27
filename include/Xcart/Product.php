@@ -44,6 +44,8 @@ class Product extends Data
     private $fExtraMarginValue = null;
     private $fPrice = null;
 
+    private $bSupplierFeed = null;
+
     /**
      * @var ProductCategories[]
      */
@@ -357,8 +359,8 @@ SQL;
     {
         $fPrice = $this->getPrice($forQuantity);
 
-        if ($this->isSupplierFeedsEnabled() && !$this->isProductOutOfStock()) {
-            $fPrice = func_decreased_price($this->getProductCostToUs(), $fPrice, $this->getMapPrice());
+        if ($this->isSupplierFeedsEnabled()) {
+            $fPrice = max ($fPrice,$this->cost_to_us + ($fPrice - $this->cost_to_us) / 3);
         }
 
         return $fPrice;
@@ -366,10 +368,20 @@ SQL;
 
     public function isSupplierFeedsEnabled()
     {
-        $result = false;
-        $sEnabled = func_query_first_cell("SELECT enabled FROM " . self::$sql_tbl['supplier_feeds'] . " WHERE manufacturerid=" . $this->getField('manufacturerid') . " AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='" . $this->getField("controlled_by_feed") . "'))");
-        if ($sEnabled == 'Y') $result = true;
-        return $result;
+        if (is_null($this->bSupplierFeed)) {
+            $this->bSupplierFeed = false;
+            $sEnabled = func_query_first_cell_param(
+                "SELECT enabled 
+                         FROM xcart_supplier_feeds 
+                        WHERE manufacturerid=:manufacturer 
+                        AND feed_type = 'I' 
+                        AND enabled='Y' 
+                        AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name=:feed_file_name))",
+                ['manufacturer' => $this->manufacturerid,
+                 'feed_file_name' => $this->controlled_by_feed]);
+            if ($sEnabled == 'Y') $this->bSupplierFeed = true;
+        }
+        return $this->bSupplierFeed;
     }
 
     public function getPreviewImageURL()
