@@ -88,7 +88,7 @@ class ReportsController extends PrototypeAdminController
             $report_mode = 'html';
         }
 
-        //echo $reportStore->getQuerySet()->getSql();
+        echo $reportStore->getQuerySet()->getSql();
         //var_dump($reportStore->getReport());
 
         $orderModels = $reportStore->getModels();
