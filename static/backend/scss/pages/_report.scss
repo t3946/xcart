@@ -59,7 +59,6 @@
     .report-table{
       width: 100%;
       border-spacing: 0;
-      border-left: solid 1px;
       border-top: solid 1px;
 
       .report-header {
@@ -71,15 +70,35 @@
         }
       }
 
+      .odd, .even {
+        .border-off {
+          background-color: white;
+        }
+      }
+
       .odd {
         background-color:  #ccc;
+      }
+
+      .first {
+        & > td {
+          border-top: solid 1px;
+        }
       }
 
       td {
         padding: 0 5px;
         font-size: 14px;
-        border-right: solid 1px;
+        border-left: solid 1px;
         border-bottom: solid 1px;
+
+        &.border-off {
+          border: none;
+
+          &:last-child {
+            border: none;
+          }
+        }
 
         & > .group {
           vertical-align: top;
@@ -92,7 +111,13 @@
         &.align-right {
           text-align: right;
         }
+
+        &:last-child {
+          border-right: solid 1px;
+        }
       }
+
+
     }
   }
 

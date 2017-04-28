@@ -23,6 +23,7 @@
         {set $sum_total = 0}
         {foreach $report_data as $key_first => $first_group index=$group_index}
             {set $sum_group = 0}
+            {set $group_total = []}
 
             {if $first_group@first}
                 <tr class="report-header">
@@ -39,8 +40,7 @@
                         {/foreach}
                         {break}
                     {/foreach}
-                    <td>
-                    </td>
+
                 </tr>
             {/if}
 
@@ -51,11 +51,12 @@
                         {set $total_suffix = $aggregates_names[$key].suffix}
                         {set $sum_group += $report_d}
                     {/if}
+                    {set $group_total[$key][] = $report_d}
                 {/foreach}
             {/foreach}
 
             {foreach $first_group as $report_arr}
-                <tr class="{cycle ["even", "odd"] index=$group_index}">
+                <tr class="{cycle ["even", "odd"] index=$group_index} {if $report_arr@first}first{/if}">
                     {if $first_group@first}
                         <td rowspan="{count($first_group)}">
                             {$key_first}
@@ -80,22 +81,33 @@
                             {else}
                                 {$report_d}
                             {/if}
-
                         </td>
                     {/foreach}
-                    {if $first_group@first}
-                        <td class="align-right" rowspan="{count($first_group)}">
-                            {if ($aggregates_names[$d_key].prefix)}
-                                {$aggregates_names[$d_key].prefix}{$sum_group|formatprice:",":"."}
-                            {else}
-                                {$sum_group}
-                            {/if}
-                            {if $aggregates_names[$d_key].suffix}
-                                {$aggregates_names[$d_key].suffix}
-                            {/if}
-                        </td>
-                    {/if}
                 </tr>
+                {if $first_group@last && $is_aggregate}
+                    <tr class="subtotal {cycle ["even", "odd"] index=$group_index}">
+                        <td class="border-off"></td>
+                        {foreach $report_arr as $d_key => $report_d}
+                            {if ($d_key in keys $aggregates_names)}
+                                {set $is_aggregate = true}
+                            {else}
+                                {set $is_aggregate = false}
+                            {/if}
+                            <td class="{if $is_aggregate}align-right{else}border-off{/if}">
+                                {if $is_aggregate && $group_total[$d_key]}
+                                    {if ($aggregates_names[$d_key].prefix)}
+                                        {$aggregates_names[$d_key].prefix}{$group_total[$d_key]|aggregate_function:$aggregates_names[$d_key].function|formatprice:",":"."}
+                                    {else}
+                                        {$group_total[$d_key]|aggregate_function:$aggregates_names[$d_key].function}
+                                    {/if}
+                                {/if}
+                            </td>
+                        {/foreach}
+                    </tr>
+                    <tr>
+                        <td class="border-off">&nbsp;</td>
+                    </tr>
+                {/if}
             {/foreach}
 
             {set $sum_total += $sum_group}

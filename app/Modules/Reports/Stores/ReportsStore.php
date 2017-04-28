@@ -66,36 +66,43 @@ class ReportsStore extends OrderSearchStore
                 'name' => 'Order count',
                 'prefix' => '',
                 'suffix' => '',
+                'function' => 'array_sum',
             ],
             'f_total' => [
                 'name' => 'Total',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_sum',
             ],
             'subtotal' => [
                 'name' => 'Subtotal',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_sum',
             ],
             'shipping' => [
                 'name' => 'Shipping Cost',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_sum',
             ],
             'profit' => [
                 'name' => 'Profit $',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_sum',
             ],
             'avg_check' => [
                 'name' => 'Avg. check',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_avg',
             ],
             'median_check' => [
                 'name' => 'Mean',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_avg',
             ],
             /*'avg_profit' => [
                 'name' => 'AVG Profit %',
