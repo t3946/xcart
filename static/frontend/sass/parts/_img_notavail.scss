@@ -6,6 +6,7 @@
   height: 100%;
 
   //min-width: rem-calc(150);
+  max-width: rem-calc(150);
   min-height: rem-calc(150);
   //line-height: rem-calc(150);
 
@@ -15,6 +16,7 @@
   .text {
     display: table-cell;
     vertical-align: middle;
+    padding: 5%;
 
   }
 }

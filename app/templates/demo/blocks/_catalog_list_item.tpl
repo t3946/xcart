@@ -2,12 +2,14 @@
 <div class="item" data-product="{$item->productid}" itemscope itemtype="http://schema.org/Product">
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}">
-                {*{if rand(1,2) > 1}*}
-                    {*<span class="item__rect-sale_yellow hidden-xs hidden-sm hidden-md">Sale</span>*}
-                {*{/if}*}
 
-                {if rand(0,1)}
-                    <span class="splash-new show-for-large">New</span>
+
+                {if $item->isNewProduct()}
+                    <span class="splash splash-new show-for-large">New</span>
+                {/if}
+
+                {if rand(1,2) > 1}
+                    <span class="splash splash-sale show-for-large">Sale</span>
                 {/if}
 
                 {set $image = $item->images->limit(1)->get()}
@@ -27,7 +29,7 @@
             <a href="#" class="button yellow-white button-quick-view hide">quick view</a>
         </div>
         <div class="info_container container">
-            <h4 class="title" itemprop="name">
+            <h4 class="title " itemprop="name">
                 <a href="{$item->getAbsoluteUrl()}">
                     {if $item.seo_product_name}
                         {raw $item.seo_product_name}
@@ -47,15 +49,18 @@
                 Brand: <span class="value" itemprop="brand">{$item->brand->brand}</span>
             </div>
             {if $item.descr || $item.fulldescr || $item.seo_fulldescr}
-                <div class="description" itemprop="description">
-                    {if $item.descr}
-                        {set $description = $item.descr}
-                    {elseif $item.seo_fulldescr}
-                        {set $description = $item.seo_fulldescr}
-                    {elseif $item.fulldescr}
-                        {set $description = $item.fulldescr}
-                    {/if}
+                {if $item.descr}
+                    {set $description = $item.descr}
+                {elseif $item.seo_fulldescr}
+                    {set $description = $item.seo_fulldescr}
+                {elseif $item.fulldescr}
+                    {set $description = $item.fulldescr}
+                {/if}
 
+                <div class="description show-for-small-only" rel="noindex">
+                    {raw $description|br2nl|strip_tags|truncate:70:'...'|nl2space}
+                </div>
+                <div class="description show-for-medium" itemprop="description">
                     {raw $description|br2nl|strip_tags|truncate:140:'...'|nl2space}
 
                     <a href="{$item->getAbsoluteUrl()}" class="show-for-medium">See details</a>
@@ -82,11 +87,11 @@
             {/if}
 
 
-            <div class="price_container hide-for-large show-for-tile">
+            <div class="price_container hide-for-medium">
                 {if $item->list_price > $item->getFrontendPrice()}
-                    <span class="old">List Price: <span class="price">US$ {$item->list_price}</span></span>
+                    <span class="old"><span class="price">US$ {$item->list_price}</span></span>
                 {/if}
-                <span class="current">US$ <span class="price">{$item->getFrontendPrice()|number_format:2}</span></span>
+                <span class="current"><span class="price">US$ {$item->getFrontendPrice()|number_format:2}</span></span>
             </div>
         </div>
 

@@ -29,7 +29,7 @@
                     <h1 class="title">[CATEGORY NAME] Oil Painting Sets</h1>
 
                     {if rand(0,1)}
-                    <section class="description">
+                    <section class="description show-for-medium">
                         <div class="row">
                             <div class="columns large-10">
                                 <article class="content must-show-less" data-text-more="Read more" data-text-less="Read less">

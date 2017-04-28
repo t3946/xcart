@@ -5,6 +5,26 @@
     .show-for-tile {
       display: none;
     }
+
+    @include breakpoint(large up) {
+      .item {
+        padding-right: 2%;
+      }
+    }
+
+    @include breakpoint (medium down) {
+      .item {
+        padding: 0 1.4%;
+        padding-bottom: 1.4%;
+      }
+    }
+
+    @include breakpoint (small down) {
+      .item {
+        //padding: 0 3.3%;
+        padding-bottom: 2%;
+      }
+    }
   }
 
   &.tile-view {
@@ -20,10 +40,6 @@
     margin: 15px 0;
     border-bottom: 1px solid #cccccc;
     position: relative;
-
-    @include breakpoint(large up) {
-      padding-right: 2%;
-    }
 
     .icon {
       line-height: rem-calc(24);
@@ -57,12 +73,23 @@
       text-align: center;
       min-height: rem-calc(150);
 
+      @include breakpoint(small down) {
+        width: 39%;
+      }
+
+      @include breakpoint(medium down) {
+        padding-right: 3%;
+      }
+
       a {
-        display: block;
+        //display: block;
+        display: inline-block;
       }
 
       img {
         display: inline-block;
+        width: auto;
+        max-height: rem-calc(190);
       }
 
       @include breakpoint(small) {
@@ -78,35 +105,58 @@
         bottom: 0;
       }
 
+      .splash {
+        position: absolute;
+        display: inline-block;
+        text-transform: uppercase;
+        text-align: center;
+
+        font: {
+          size: rem-calc(16);
+          weight: bold;
+        }
+
+      }
+
       .splash-new {
         height: 47px;
         line-height: 49px;
         border-radius: 24px;
         background-color: #ff3323;
-        text-align: center;
         color: #ffffff;
         width: 47px;
-        font: {
-          size: rem-calc(16);
-          weight: bold;
-        }
-        text-transform: uppercase;
-        display: inline-block;
-        position: absolute;
         //top: 6%;
         top: -4%;
         //right: 10%;
         right: -4%;
       }
+
+      .splash-sale {
+        height: 20px;
+        line-height: 22px;
+        padding: 0 6px;
+        background-color: #ffae21;
+        color: #ffffff;
+        font-size: rem-calc(14);
+        bottom: 0;
+        left: 0;
+      }
+
     }
 
     .info_container {
       color: #333;
       padding: 0 3%;
-      width: 80%;
+      width: 60%;
 
-      @include breakpoint(medium up) {
+      @include breakpoint(medium down) {
+        //padding: 0 5%;
+        width: 50%;
+      }
+
+      @include breakpoint(small down) {
         width: 60%;
+        padding-right: 0;
       }
 
 
@@ -116,10 +166,18 @@
             size: rem-calc(16);
           }
         }
+        @include breakpoint (small down) {
+          font: {
+            size: rem-calc(14);
+          }
+        }
 
         &, a {
           color: black;
           text-align: left;
+
+          //overflow: hidden;
+          //max-height: 3em;
 
           &:hover {
             text-decoration: underline;
@@ -156,10 +214,16 @@
         }
       }
 
-      .description {
+      .description, .brand {
         @include breakpoint (medium down) {
           font: {
             size: rem-calc(14)
+          }
+        }
+
+        @include breakpoint (small down) {
+          font: {
+            size: rem-calc(12)
           }
         }
       }
@@ -169,6 +233,24 @@
         font: {
           size: rem-calc(14);
         }
+
+      }
+
+      .price_container {
+        margin-top: 3%;
+
+        .old, .current {
+          display: inline-block;
+          padding-right: 3%;
+        }
+        .price {
+          padding: 0;
+
+          font: {
+            size: rem-calc(14)
+          }
+        }
+
 
       }
     }
@@ -202,14 +284,14 @@
     .cart_price_container {
       width: 20%;
 
+      @include breakpoint(medium down) {
+        width: 30%;
+      }
+
       .cart_quantity {
         text-align: justify;
         line-height: 0;
         margin: 5% 0;
-
-        //@include breakpoint(large up) {
-        //  margin: 0;
-        //}
 
         &:after {
           content: '';
@@ -220,6 +302,13 @@
 
         .quantity-group {
           display: inline-block;
+
+          @include breakpoint(medium down) {
+            input {
+              width: 6em;
+            }
+          }
+
         }
 
 
@@ -282,7 +371,17 @@
         .button-quick-view {
           display: block !important;
         }
+
+        .splash-sale {
+          display: none;
+        }
       }
+    }
+  }
+
+  &.tile-view {
+    .item {
+
     }
   }
 }
