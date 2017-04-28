@@ -4254,6 +4254,8 @@ form[name=hide_no_orders_test_checkoutform] input {
         background-color: #ccc; }
       .OrderReport .order-report-wrapper .report-table .first > td {
         border-top: solid 1px; }
+      .OrderReport .order-report-wrapper .report-table .delimiter {
+        line-height: 7px; }
       .OrderReport .order-report-wrapper .report-table td {
         padding: 0 5px;
         font-size: 14px;
@@ -4271,13 +4273,13 @@ form[name=hide_no_orders_test_checkoutform] input {
           text-align: right; }
         .OrderReport .order-report-wrapper .report-table td:last-child {
           border-right: solid 1px; }
+        .OrderReport .order-report-wrapper .report-table td.total-label {
+          font-weight: bold; }
   .OrderReport .report-footer {
     margin: 10px 0 10px;
     font-size: 14px; }
     .OrderReport .report-footer div.columns {
       padding: 0; }
-    .OrderReport .report-footer .total-label {
-      font-weight: bold; }
     .OrderReport .report-footer .total-value {
       text-align: right; }
   .OrderReport .report-comment {
