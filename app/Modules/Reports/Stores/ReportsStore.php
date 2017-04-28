@@ -30,6 +30,7 @@ class ReportsStore extends OrderSearchStore
                     'profit',
                     'avg_profit',
                     'avg_check',
+                    'median_check',
                 ]
             ],
             'distributor' => [
@@ -43,6 +44,7 @@ class ReportsStore extends OrderSearchStore
                     'profit',
                     'avg_profit',
                     'avg_check',
+                    'median_check',
                 ]
             ],
 
@@ -61,34 +63,46 @@ class ReportsStore extends OrderSearchStore
     {
         return [
             'qty' => [
-                'name' => 'Orders count',
+                'name' => 'Order count',
                 'prefix' => '',
                 'suffix' => '',
+                'function' => 'array_sum',
             ],
             'f_total' => [
                 'name' => 'Total',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_sum',
             ],
             'subtotal' => [
                 'name' => 'Subtotal',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_sum',
             ],
             'shipping' => [
                 'name' => 'Shipping Cost',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_sum',
             ],
             'profit' => [
                 'name' => 'Profit $',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_sum',
             ],
             'avg_check' => [
                 'name' => 'Avg. check',
                 'prefix' => '$',
                 'suffix' => '',
+                'function' => 'array_avg',
+            ],
+            'median_check' => [
+                'name' => 'Mean',
+                'prefix' => '$',
+                'suffix' => '',
+                'function' => 'array_avg',
             ],
             /*'avg_profit' => [
                 'name' => 'AVG Profit %',
@@ -114,6 +128,7 @@ class ReportsStore extends OrderSearchStore
             'profit' => new Sum('group.accounting_net_5_profit'),
             'avg_profit' => '',
             'avg_check' => new Avg('total'),
+            'median_check' =>  new Expression("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(GROUP_CONCAT(total ORDER BY total SEPARATOR ','),',', 50/100 * COUNT(*) + 1), ',', -1) AS DECIMAL (18,2))"),
         ];
     }
 
