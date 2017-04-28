@@ -128,7 +128,7 @@ class ReportsStore extends OrderSearchStore
             'profit' => new Sum('group.accounting_net_5_profit'),
             'avg_profit' => '',
             'avg_check' => new Avg('total'),
-            'median_check' =>  new Expression("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(GROUP_CONCAT(total ORDER BY total SEPARATOR ','),',', 50/100 * COUNT(*) + 1), ',', -1) AS DECIMAL (18,2))"),
+            'median_check' =>  new Expression("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(GROUP_CONCAT(total ORDER BY total SEPARATOR ','),',', 50/100 * COUNT(*)), ',', -1) AS DECIMAL (18,2))"),
         ];
     }
 
