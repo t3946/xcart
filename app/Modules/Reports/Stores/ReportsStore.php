@@ -30,6 +30,7 @@ class ReportsStore extends OrderSearchStore
                     'profit',
                     'avg_profit',
                     'avg_check',
+                    'median_check',
                 ]
             ],
             'distributor' => [
@@ -43,6 +44,7 @@ class ReportsStore extends OrderSearchStore
                     'profit',
                     'avg_profit',
                     'avg_check',
+                    'median_check',
                 ]
             ],
 
