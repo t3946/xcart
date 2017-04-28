@@ -1,45 +1,163 @@
 
 .product-items {
+  display: flex;
 
   &.list-view {
+    flex-direction: column;
+
     .show-for-tile {
       display: none;
     }
 
-    @include breakpoint(large up) {
-      .item {
+    .item {
+      flex: 0 0 100%;
+      flex-wrap: nowrap;
+      padding-bottom: 1.4%;
+      margin: 15px 0;
+      border-bottom: 1px solid #cccccc;
+
+      @include breakpoint(large up) {
         padding-right: 2%;
       }
-    }
 
-    @include breakpoint (medium down) {
-      .item {
+      @include breakpoint (medium down) {
         padding: 0 1.4%;
         padding-bottom: 1.4%;
       }
-    }
 
-    @include breakpoint (small down) {
-      .item {
-        //padding: 0 3.3%;
+      @include breakpoint (small down) {
         padding-bottom: 2%;
+
+        .image_container {
+          img {
+            max-height: rem-calc(120);
+          }
+        }
+      }
+
+      .image_container {
+        flex: 0 0 40%;
+
+        @include breakpoint(medium up) {
+          flex: 0 0 20%;
+        }
+      }
+
+      .info_container {
+        flex-grow: 3;
+        padding: 0 3%;
+
+        @include breakpoint(medium) {
+          flex: 0 0 50%;
+        }
+
+        @include breakpoint(large up) {
+          flex: 0 0 60%;
+        }
+
+        .price_container {
+          display: none;
+
+          @include breakpoint(small down) {
+            display: block;
+          }
+        }
+      }
+
+      .cart_price_container {
+        flex: 0 0 30%;
+
+        @include breakpoint(large up) {
+          flex:0 0 20%;
+        }
       }
     }
   }
 
   &.tile-view {
+    flex-direction: row;
+    flex-wrap: wrap;
+
     .show-for-list {
       display: none;
+    }
+
+    .item {
+      flex-direction: column;
+      flex: 0 0 50%;
+      padding: 1.75%;
+
+      @include breakpoint(medium up) {
+        flex: 0 0 33%;
+      }
+
+      @include breakpoint(large up) {
+        flex: 0 0 25%;
+      }
+
+      @include breakpoint(xlarge up) {
+        flex: 0 0 20%;
+      }
+
+      .image_container {
+        display: block;
+        height: rem-calc(190);
+        padding-bottom: 2%;
+
+        img {
+          width: 100%;
+          height: auto;
+          max-height: 100%;
+          min-height: 0;
+        }
+
+        @include breakpoint(medium up) {
+
+          height: rem-calc(200);
+        }
+
+        @include breakpoint(large up) {
+          height: rem-calc(220);
+        }
+
+      }
+
+      .info_container {
+        .sku, .description, .parameters { display: none; }
+        .title {
+          font: {
+            size: rem-calc(16);
+
+          };
+
+          @include breakpoint(large up) {
+            font: {
+              size: rem-calc(14);
+            }
+          }
+        }
+      }
+
+      .cart_price_container {
+        display: none;
+
+        .price_container {
+          display: none;
+        }
+
+        @include breakpoint(medium up) {
+          display: block;
+        }
+      }
     }
   }
 
 
 
   .item {
-    padding-bottom: 1.4%;
-    margin: 15px 0;
-    border-bottom: 1px solid #cccccc;
     position: relative;
+    display: flex;
+    flex-direction: row;
 
     .icon {
       line-height: rem-calc(24);
@@ -63,19 +181,10 @@
       margin-bottom: 20px;
     }
 
-    .container {
-      float: left;
-    }
 
     .image_container {
       position: relative;
-      width: 19%;
       text-align: center;
-      min-height: rem-calc(150);
-
-      @include breakpoint(small down) {
-        width: 39%;
-      }
 
       @include breakpoint(medium down) {
         padding-right: 3%;
@@ -90,6 +199,7 @@
         display: inline-block;
         width: auto;
         max-height: rem-calc(190);
+        min-height: rem-calc(100);
       }
 
       @include breakpoint(small) {
@@ -146,18 +256,6 @@
 
     .info_container {
       color: #333;
-      padding: 0 3%;
-      width: 60%;
-
-      @include breakpoint(medium down) {
-        //padding: 0 5%;
-        width: 50%;
-      }
-
-      @include breakpoint(small down) {
-        width: 60%;
-        padding-right: 0;
-      }
 
 
       .title {
@@ -282,11 +380,6 @@
     }
 
     .cart_price_container {
-      width: 20%;
-
-      @include breakpoint(medium down) {
-        width: 30%;
-      }
 
       .cart_quantity {
         text-align: justify;

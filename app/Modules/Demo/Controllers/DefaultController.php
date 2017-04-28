@@ -22,21 +22,23 @@ class DefaultController extends Controller
         $breadcrumbs->add('Painting and Painting Accessories', '/');
         $breadcrumbs->add('Oil Painting sets');
 
-        $params = ['lock_forsale__in' => ['N', '']];
-
-
-        if ($m_ids = Manufacturer::objects()->limit(rand(0,10))->order(['?'])->valuesList(['manufacturerid'])) {
-            $params['manufacturerid__in'] = array_map(function($item){ return $item['manufacturerid'];}, $m_ids);
-        }
+        $params = [
+            'forsale' => 'Y',
+            'manufacturerid__in' => array_map(function ($item) { return $item['manufacturerid']; },
+                Manufacturer::objects()->limit(rand(1, 10))->order(['?'])->valuesList(['manufacturerid'])
+            ),
+        ];
 
         $t_models = ProductModel::objects()
                                 ->filter($params)
-                                ->limit(5000)
+                                ->limit(rand(1000, 5000))
                                 ->order([(rand(0,1) ? '' : '-').'productid'])
-                                ->asArray()->all();
+                                ->asArray()
+                                ->all();
 
-        if (!$t_models) {
+        if (empty($t_models)) {
             $this->refresh();
+            die();
         }
 
         $ns = array_rand($t_models, 100);

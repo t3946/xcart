@@ -17,6 +17,7 @@
     {/block}
     {block 'head'}{/block}
     <link rel="stylesheet" href="/static/frontend/dist/css/main.css?v={frontend_css_version}">
+    <script src="/static/frontend/dist/js/main.js?v={frontend_js_version}" defer></script>
 
     <script type="application/ld+json">
     {
@@ -38,7 +39,6 @@
 {/block}
 {/filter}
 
-<script src="/static/frontend/dist/js/main.js?v={frontend_js_version}" defer></script>
 
 {block 'js'}{/block}
 </body>

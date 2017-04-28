@@ -3,12 +3,11 @@
         <div class="image_container container">
             <a href="{$item->getAbsoluteUrl()}">
 
-
                 {if $item->isNewProduct()}
                     <span class="splash splash-new show-for-large">New</span>
                 {/if}
 
-                {if rand(1,2) > 1}
+                {if $item->isSaleSticker()}
                     <span class="splash splash-sale show-for-large">Sale</span>
                 {/if}
 
@@ -57,14 +56,17 @@
                     {set $description = $item.fulldescr}
                 {/if}
 
-                <div class="description show-for-small-only" rel="noindex">
-                    {raw $description|br2nl|strip_tags|truncate:70:'...'|nl2space}
-                </div>
                 <div class="description show-for-medium" itemprop="description">
                     {raw $description|br2nl|strip_tags|truncate:140:'...'|nl2space}
 
-                    <a href="{$item->getAbsoluteUrl()}" class="show-for-medium">See details</a>
+                    <a href="{$item->getAbsoluteUrl()}" class="show-for-medium see">See details</a>
                 </div>
+
+                <noindex>
+                    <div class="description show-for-small-only">
+                        {raw $description|br2nl|strip_tags|truncate:70:'...'|nl2space}
+                    </div>
+                </noindex>
             {/if}
 
 
@@ -87,7 +89,7 @@
             {/if}
 
 
-            <div class="price_container hide-for-medium">
+            <div class="price_container">
                 {if $item->list_price > $item->getFrontendPrice()}
                     <span class="old"><span class="price">US$ {$item->list_price}</span></span>
                 {/if}
@@ -128,7 +130,7 @@
                     </div>
                 </div>
 
-                {if $item.lead_time_message}
+                {if $item.lead_time_message|trim}
                 <div class="lead-time icon info">
                     <i></i> {$item.lead_time_message}
                 </div>

@@ -161,9 +161,20 @@ class ProductModel extends AutoMetaModel
         return ($this->add_date + $sInDay * 30)  >= time();
     }
 
+    public function isSaleSticker()
+    {
+        $fp = $this->getFrontendPrice();
+
+        return ($this->list_price > ($fp + $fp * .3));
+    }
+
 
     public function isOutOfStock()
     {
+        if (!$this->forsale = 'N') {
+            return true;
+        }
+
         if (!$this->cost_to_us) {
             return true;
         }
