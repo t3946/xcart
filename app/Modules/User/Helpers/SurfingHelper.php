@@ -88,7 +88,10 @@ class SurfingHelper
                 $oSurfMeta->referal_url = $sReferalUrl;
 
                 $referer = (string) urldecode($sReferalUrl);
-                $oReferer = ReferrerModel::objects()->getOrCreate(['referer' => $referer]);
+                $oReferer = ReferrerModel::objects()->filter(['referer' => $referer])->limit(1)->get();
+                if (!$oReferer) {
+                    $oReferer = new ReferrerModel(['referer' => $referer]);
+                }
                 $oReferer->visits++;
                 $oReferer->save();
 
