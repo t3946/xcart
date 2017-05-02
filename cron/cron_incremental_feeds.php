@@ -109,11 +109,14 @@ SELECT p.productid, pp.time_stamp, p.forsale, GROUP_CONCAT(pp.type ORDER BY pp.t
 WHERE PS.sfid = :sfid AND pp.type <= :type AND p.forsale = :forsale
 GROUP BY p.productid
 ORDER BY utype DESC, forsale DESC
-LIMIT 3000
 SQL;
-        $aUpdatedProducts = Connection::getInstance()->fetchAll($sqlProductUpdate, ['sfid' => $storefrontid, 'type' => 3, 'forsale' => 'Y']);
+        $aUpdatedProducts = Connection::getInstance()->fetchAll($sqlProductUpdate. " LIMIT 3000", ['sfid' => $storefrontid, 'type' => 2, 'forsale' => 'Y']);
         $timeout = 60 * 20;
         $storefront_time_start = time();
+
+        if (empty($aUpdatedProducts)) {
+            $aUpdatedProducts = Connection::getInstance()->fetchAll($sqlProductUpdate. " LIMIT 130", ['sfid' => $storefrontid, 'type' => 2, 'forsale' => 'N']);
+        }
 
         if (!empty($aUpdatedProducts)) {
             $log_text = "Storefront: " . $sf_info["domain"] . " Storefrontid: " . $sf_info["storefrontid"];
