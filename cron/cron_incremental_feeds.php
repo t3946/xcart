@@ -111,12 +111,11 @@ GROUP BY p.productid
 ORDER BY utype DESC, forsale DESC
 SQL;
         $aUpdatedProducts = Connection::getInstance()->fetchAll($sqlProductUpdate. " LIMIT 3000", ['sfid' => $storefrontid, 'type' => 2, 'forsale' => 'Y']);
-        $timeout = 60 * 20;
-        $storefront_time_start = time();
-
         if (empty($aUpdatedProducts)) {
             $aUpdatedProducts = Connection::getInstance()->fetchAll($sqlProductUpdate. " LIMIT 130", ['sfid' => $storefrontid, 'type' => 2, 'forsale' => 'N']);
         }
+        $timeout = 60 * 20;
+        $storefront_time_start = time();
 
         if (!empty($aUpdatedProducts)) {
             $log_text = "Storefront: " . $sf_info["domain"] . " Storefrontid: " . $sf_info["storefrontid"];
