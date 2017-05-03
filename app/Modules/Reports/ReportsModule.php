@@ -26,4 +26,32 @@ class ReportsModule extends Module
             ],
         ];
     }
+
+    public static function onApplicationRun()
+    {
+        $template = Xcart::app()->template->getRenderer();
+        $template->addModifier('west_style', function($price)
+        {
+            $res = $price;
+            if (!empty($price)) {
+                if (floatval($price) < 0) {
+                    $res = "(".ltrim($price, '-').")";
+                }
+            }
+            return $res;
+        });
+
+        $template->addModifier('aggregate_function', function($value, $agg_func)
+        {
+            $res = '';
+            if (function_exists($agg_func)) {
+                $res = $agg_func($value);
+            } else {
+                if ($agg_func == 'array_avg' && is_array($value)) {
+                    $res = array_sum($value) / count($value);
+                }
+            }
+            return $res;
+        });
+    }
 }
