@@ -121,11 +121,32 @@ if (!empty($manufacturers) && is_array($manufacturers) && !empty($states)) {
             $count_found_shippings = count($found_shippings);
             if ($count_found_shippings == "3") {
                 $current_id = func_query_first_cell_param(/** @lang MySQL */
-                    "SELECT id FROM xcart_approximation_shipping_rates WHERE manufacturerid=:manufacturerid AND state=:state", ['manufacturerid' => $manufacturerid, 'state' => $state_info['code']]);
+                        "SELECT manufacturerid FROM xcart_approximation_shipping_rates WHERE manufacturerid=:manufacturerid AND state=:state", ['manufacturerid' => $manufacturerid, 'state' => $state_info['code']]);
                 if (empty($current_id)) {
-                    db_query("INSERT INTO $sql_tbl[approximation_shipping_rates] (manufacturerid, state, bw_1, bw_75, bw_150, last_updated_date) VALUES ('$manufacturerid', '$state_info[code]', '" . $found_shippings[0]["rate"] . "', '" . $found_shippings[1]["rate"] . "', '" . $found_shippings[2]["rate"] . "', '" . time() . "')");
+                    db_query_param(/** @lang MySQL */
+                    "INSERT INTO xcart_approximation_shipping_rates (manufacturerid, state, bw_1, bw_75, bw_150, last_updated_date) 
+                                 VALUES (:manufacturerid, :state, :bw_1, :bw_75, :bw_150, :last_updated_date)",
+                        [
+                            'manufacturerid' => $manufacturerid,
+                            'state' => $state_info['code'],
+                            'bw_1' => $found_shippings[0]["rate"],
+                            'bw_75' => $found_shippings[1]["rate"],
+                            'bw_150' => $found_shippings[2]["rate"],
+                            'last_updated_date' => time()
+                        ]);
                 } else {
-                    db_query("UPDATE $sql_tbl[approximation_shipping_rates] SET bw_1='" . $found_shippings[0]["rate"] . "', bw_75='" . $found_shippings[1]["rate"] . "', bw_150='" . $found_shippings[2]["rate"] . "', last_updated_date='" . time() . "' WHERE id='$current_id'");
+                    db_query_param(/** @lang MySQL */
+                    "UPDATE xcart_approximation_shipping_rates 
+                              SET bw_1=:bw_1, bw_75=:bw_75, bw_150=:bw_150, last_updated_date=:last_updated_date
+                            WHERE manufacturerid=:manufacturerid and state=:state ",
+                        [
+                            'bw_1' => $found_shippings[0]["rate"],
+                            'bw_75' => $found_shippings[1]["rate"],
+                            'bw_150' => $found_shippings[2]["rate"],
+                            'last_updated_date' => time(),
+                            'manufacturerid' => $manufacturerid,
+                            'state' => $state_info['code'],
+                        ]);
                 }
             } else {
                 $failed_requests = $failed_requests + (3 - $count_found_shippings);
