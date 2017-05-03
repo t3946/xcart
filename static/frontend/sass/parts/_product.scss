@@ -7,12 +7,18 @@ $default_qg_lheight: #{$default_qg_height - 1};
 .quantity-group {
   border: $default_qg_border;
   word-spacing: 0;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: center;
 
   .btn {
+    flex: 1 0 rem-calc(22);
+
     //vertical-align: top;
     text-align: center;
     background-color: #fff0ca;
-    display: inline-block;
+    //display: inline-block;
     height: $default_qg_height;
     min-width: 1.4em;
     line-height: $default_qg_lheight;
@@ -38,6 +44,7 @@ $default_qg_lheight: #{$default_qg_height - 1};
   }
 
   input {
+    flex: 10 0;
     vertical-align: top;
     height: $default_qg_height;
     line-height: $default_qg_lheight;
@@ -45,7 +52,7 @@ $default_qg_lheight: #{$default_qg_height - 1};
     padding: 0;
     outline: none;
     text-align: center;
-    width: 3em;
+    //width: 3em;
 
     @include breakpoint(large up) {
 

@@ -91,5 +91,17 @@
     Waves.init();
 
 
+    $(document).on('click', '.action_block.view a', function(e){
+        console.log(this);
+        e.preventDefault();
+
+        if ($(this).hasClass('tile-view')) {
+            $('.catalog-page .product-items').removeClass('list-view').addClass('tile-view');
+        }
+        else {
+            $('.catalog-page .product-items').removeClass('tile-view').addClass('list-view');
+        }
+    });
+
     $(document).foundation();
 })();

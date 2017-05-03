@@ -29,15 +29,18 @@
         </div>
         <div class="info_container container">
             <h4 class="title " itemprop="name">
-                <a href="{$item->getAbsoluteUrl()}">
-                    {if $item.seo_product_name}
-                        {raw $item.seo_product_name}
-                    {else}
-                        {raw $item.product}
-                    {/if}
+                {if $item.seo_product_name}
+                    {set $title = $item.seo_product_name}
+                {else}
+                    {set $title = $item.product}
+                {/if}
+
+                <a href="{$item->getAbsoluteUrl()}" title="{$title}">
+                    {raw $title}
                 </a>
             </h4>
-            <div class="sku show-for-large">
+            {*<div class="sku show-for-large">*}
+            <div class="sku">
                 <span class="value">
                     SKU: <span class="style" itemprop="sku">{$item.productcode}</span>
                 </span>
@@ -88,22 +91,21 @@
                 </div>
             {/if}
 
-
-            <div class="price_container">
-                {if $item->list_price > $item->getFrontendPrice()}
-                    <span class="old"><span class="price">US$ {$item->list_price}</span></span>
-                {/if}
-                <span class="current"><span class="price">US$ {$item->getFrontendPrice()|number_format:2}</span></span>
-            </div>
         </div>
 
 
         <div class="cart_price_container container show-for-medium">
             <div class="price_container">
                 {if $item->list_price > $item->getFrontendPrice()}
-                    <span class="old">List Price: <span class="price">US$ {$item->list_price}</span></span>
+                    <span class="old">
+                        <span class="title">List Price:</span>
+                        <span class="price">US$ {$item->list_price}</span>
+                    </span>
                 {/if}
-                <span class="current">Price: <span class="price" itemprop="price">US$ {$item->getFrontendPrice()|number_format:2}</span></span>
+                <span class="current">
+                    <span class="title">Price:</span>
+                    <span class="price" itemprop="price">US$ {$item->getFrontendPrice()|number_format:2}</span>
+                </span>
 
                 <meta itemprop="priceCurrency" content="USD" />
             </div>
@@ -130,36 +132,42 @@
                     </div>
                 </div>
 
-                {if $item.lead_time_message|trim}
-                <div class="lead-time icon info">
-                    <i></i> {$item.lead_time_message}
-                </div>
-                {/if}
+                <div class="info_container">
+                    {if $item.lead_time_message|trim}
+                        <div class="lead-time icon info">
+                            {$item.lead_time_message}
+                        </div>
+                    {/if}
 
-                {if $item->mult_order_quantity == 'Y'}
-                <div class="multiply-quantity icon info">
-                    <i></i> Order in multiples of {$item->min_amount} items
-                </div>
-                {/if}
+                    {if $item->mult_order_quantity == 'Y'}
+                        <div class="multiply-quantity icon info padding">
+                            Order in multiples of {$item->min_amount} items
+                        </div>
+                    {/if}
 
-                {if $item->min_amount >= $item->avail}
-                    <div class="last-items icon info">
-                        <i></i> Order at least {$item->avail} items
-                    </div>
-                {/if}
+                    {if $item->min_amount >= $item->avail}
+                        <div class="last-items icon info">
+                            Order at least {$item->avail} items
+                        </div>
+                    {/if}
+                </div>
 
                 <div class="cart_add">
-                    <span class="add button yellow">Add to cart</span>
+                    <span class="add button yellow">
+                        <span class="text">
+                            Add to cart
+                        </span>
+                    </span>
                 </div>
 
-            {*<div class="subtotal_container">*}
-                {*<div class="subtotal">*}
-                    {*Subtotal: US$ 400.01*}
-                {*</div>*}
-                {*<div class="safe">*}
-                    {*Save 41% (US$ 5.27 per unit)*}
-                {*</div>*}
-            {*</div>*}
+                <div class="subtotal_container">
+                    <div class="subtotal">
+                        Subtotal: US$ 400.01
+                    </div>
+                    <div class="safe">
+                        Save 41% (US$ 5.27 per unit)
+                    </div>
+                </div>
             {else}
                 <div class="out-of-stock">
                     <div class="title icon">
