@@ -45,11 +45,10 @@
 
             {foreach $first_group as $report_arr}
                 {foreach $report_arr as $key => $report_d last=$last}
-                    {if $last}
-                        {set $total_prefix = $aggregates_names[$key].prefix}
-                        {set $total_suffix = $aggregates_names[$key].suffix}
-                    {/if}
                     {set $group_total[$key][] = $report_d}
+                    {if ($key not in keys $aggregates_names)}
+                        {set $last_group_item = $key}
+                    {/if}
                 {/foreach}
             {/foreach}
 
@@ -92,14 +91,18 @@
                                 {set $is_aggregate = false}
                             {/if}
                             <td class="{if $is_aggregate}align-right{else}border-off{/if}">
-                                {if $is_aggregate && $group_total[$d_key]}
-                                    {set $group_aggregate = $group_total[$d_key]|aggregate_function:$aggregates_names[$d_key].function}
-                                    {if ($aggregates_names[$d_key].prefix)}
-                                        {$aggregates_names[$d_key].prefix}{$group_aggregate|formatprice:",":"."}
-                                    {else}
-                                        {$group_aggregate}
+                                {if $last_group_item == $d_key}
+                                    <b>{$group_names[$form_data.report.group_settings[1]].name} totals</b>
+                                {else}
+                                    {if $is_aggregate && $group_total[$d_key]}
+                                        {set $group_aggregate = $group_total[$d_key]|aggregate_function:$aggregates_names[$d_key].function}
+                                        {if ($aggregates_names[$d_key].prefix)}
+                                            {$aggregates_names[$d_key].prefix}{$group_aggregate|formatprice:",":"."}
+                                        {else}
+                                            {$group_aggregate}
+                                        {/if}
+                                        {set $totals[$d_key][] = $group_aggregate}
                                     {/if}
-                                    {set $totals[$d_key][] = $group_aggregate}
                                 {/if}
                             </td>
                         {/foreach}
@@ -112,7 +115,7 @@
             {/foreach}
         {/foreach}
         <tr>
-            <td class="total-label border-off">Total sales volume:</td>
+            <td class="total-label border-off">All {$group_names[$form_data.report.group_settings[1]].name|lower}s grand total:</td>
         {foreach $report_arr as $d_key => $report_d}
             {if ($d_key in keys $aggregates_names)}
                 {set $is_aggregate = true}
