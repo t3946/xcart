@@ -323,8 +323,13 @@ Select
 
         $products = db_query($query_products);
 
-
+        $timeout = 60*20;
+        $storefront_time_start = time();
         while ($product = db_fetch_array($products)) {
+            if ((time() - $storefront_time_start) > $timeout) {
+                func_backprocess_log("incremental feeds", "Time out processing {$timeout} sec. StorefrontID: {$storefrontid} ...");
+                break;
+            }
             $oProduct = new Xcart\Product(['productid'=>$product['productid']]);
             if ($storefrontid == $product["maxsf"])
                 db_query("DELETE FROM xcart_cidev_updated_products WHERE resourceid='$product[productid]' AND time_stamp <= '$started_at' AND (type='2' || type='1')");
