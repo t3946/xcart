@@ -45,7 +45,9 @@
 
             {foreach $first_group as $report_arr}
                 {foreach $report_arr as $key => $report_d last=$last}
-                    {set $group_total[$key][] = $report_d}
+                    {if $report_d is not empty}
+                        {set $group_total[$key][] = $report_d}
+                    {/if}
                     {if ($key not in keys $aggregates_names)}
                         {set $last_group_item = $key}
                     {/if}
