@@ -88,9 +88,9 @@ class ReportsStore extends OrderSearchStore
             ],
             'profit' => [
                 'name' => 'Profit margin',
-                'prefix' => '$',
-                'suffix' => '',
-                'function' => 'array_sum',
+                'prefix' => '',
+                'suffix' => '%',
+                'function' => 'array_avg',
             ],
             'avg_check' => [
                 'name' => 'Avg. order',
@@ -125,7 +125,7 @@ class ReportsStore extends OrderSearchStore
             'f_total' => new Sum('group.total_net'),
             'subtotal' => new Expression('SUM(order_details.price * order_details.amount)'),
             'shipping' => new Sum('group.shipping_net'),
-            'profit' => new Sum('group.accounting_net_5_profit'),
+            'profit' => new Expression("AVG(CASE WHEN inv.invoice_number IS NULL THEN NULL ELSE group.profit_margin END)"),
             'avg_profit' => '',
             'avg_check' => new Avg('total'),
             'median_check' =>  new Expression("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(GROUP_CONCAT(total ORDER BY total SEPARATOR ','),',', 50/100 * COUNT(*)), ',', -1) AS DECIMAL (18,2))"),
@@ -217,6 +217,9 @@ class ReportsStore extends OrderSearchStore
                 if ($aggr_enable) {
                     $qs->addSelect([$aggregate_settings => $agg[$aggregate_settings]]);
                     $agg_oreder[] = "-" . $aggregate_settings;
+                }
+                if ($aggregate_settings == 'profit'){
+                    $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'inv.orderid', 'group.manufacturerid' => 'inv.manufacturerid'], 'inv');
                 }
             }
             if ($agg_oreder) {
