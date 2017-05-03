@@ -22,7 +22,7 @@ class MenuLibrary extends TemplateLibrary
                 ],
                 [
                     'link' => '/',
-                    'name' => 'Safe & Secure Shopping',
+                    'name' => 'Purchase Orders',
                     'class' => '',
                 ],
                 [

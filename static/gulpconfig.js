@@ -252,6 +252,14 @@ module.exports.frontend = {
                 // 'bower_components/Waves/src/scss/waves.scss'
             ]
         },
+        // modernizr: {
+        //     js: [
+        //         'bower_components/Waves/src/js/waves.js'
+        //     ],
+        //     scss: [
+        //         // 'bower_components/Waves/src/scss/waves.scss'
+        //     ]
+        // },
         foundation: {
             js: [
                 // 'bower_components/foundation-sites/dist/js/foundation.js', //all
