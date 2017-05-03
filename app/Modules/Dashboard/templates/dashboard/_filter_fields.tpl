@@ -13,6 +13,7 @@
                     <input type="text" name="search[order][date]" id="o_date"
                            value="{$form_data.order.date}"
                            data-range="true"
+                           data-toggle-selected="false"
                            data-multiple-dates-separator=" - "
                            data-language="en"
                            data-clear-button="1"
