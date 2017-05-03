@@ -210,15 +210,16 @@ class ReportsStore extends OrderSearchStore
                     foreach ($this->form_data['report']['group_settings'] as $group_index => $group) {
                         if (!in_array($aggregate_settings, $groups[$group]['avail_aggregates'])){
                             $aggr_enable = false;
-                        }
-                        if ($group_index == 'profit'){
-                            $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'inv.orderid', 'group.manufacturerid' => 'inv.manufacturerid'], 'inv');
+                            break;
                         }
                     }
                 }
                 if ($aggr_enable) {
                     $qs->addSelect([$aggregate_settings => $agg[$aggregate_settings]]);
                     $agg_oreder[] = "-" . $aggregate_settings;
+                }
+                if ($aggregate_settings == 'profit'){
+                    $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'inv.orderid', 'group.manufacturerid' => 'inv.manufacturerid'], 'inv');
                 }
             }
             if ($agg_oreder) {

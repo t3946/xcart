@@ -69,11 +69,12 @@
                             {if ($is_aggregate)}
                                 {if ($aggregates_names[$d_key].prefix)}
                                     {$aggregates_names[$d_key].prefix}{$report_d|formatprice:",":"."}
+                                {elseif $aggregates_names[$d_key].suffix}
+                                    {if $report_d}
+                                        {$report_d|formatprice:",":"."}{$aggregates_names[$d_key].suffix}
+                                    {/if}
                                 {else}
                                     {$report_d}
-                                {/if}
-                                {if $aggregates_names[$d_key].suffix}
-                                    {$aggregates_names[$d_key].suffix}
                                 {/if}
                             {else}
                                 {$report_d}
@@ -98,6 +99,8 @@
                                         {set $group_aggregate = $group_total[$d_key]|aggregate_function:$aggregates_names[$d_key].function}
                                         {if ($aggregates_names[$d_key].prefix)}
                                             {$aggregates_names[$d_key].prefix}{$group_aggregate|formatprice:",":"."}
+                                        {elseif $aggregates_names[$d_key].suffix}
+                                            {$group_aggregate|formatprice:",":"."}{$aggregates_names[$d_key].suffix}
                                         {else}
                                             {$group_aggregate}
                                         {/if}
@@ -126,6 +129,8 @@
                 {set $group_aggregate = $totals[$d_key]|aggregate_function:$aggregates_names[$d_key].function}
                 {if ($aggregates_names[$d_key].prefix)}
                     {$aggregates_names[$d_key].prefix}{$group_aggregate|formatprice:",":"."}
+                {elseif $aggregates_names[$d_key].suffix}
+                    {$group_aggregate|formatprice:",":"."}{$aggregates_names[$d_key].suffix}
                 {else}
                     {$group_aggregate}
                 {/if}
