@@ -621,9 +621,9 @@ function func_check_ref_to_us_part_of_transaction(mid, index){
     {if $invoice_detail->itemid}
         {assign var="ref_qty" value=0}
         {assign var="od_qty" value=$order_detail_model->amount}
-
-        {if $order.refund_groups[$m_id].products.$invoice_detail->itemid.ref_qty ne ""}
-            {assign var="ref_qty" value=$order.refund_groups[$m_id].products.$invoice_detail->itemid.ref_qty}
+        {assign var="item_det" value=$invoice_detail->itemid}
+        {if $order.refund_groups[$m_id].products[$item_det].ref_qty ne ""}
+            {assign var="ref_qty" value=$order.refund_groups[$m_id].products[$item_det].ref_qty}
         {/if}
         {math equation="x-y" x=$od_qty y=$ref_qty assign="qty_disp"}
         {$qty_disp}
