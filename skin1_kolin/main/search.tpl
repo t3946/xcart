@@ -6,7 +6,7 @@
 	{if $login && (($usertype eq 'A' && $current_membership_flag ne 'FS') || $usertype eq 'P')}
 	<td class="SearchTableLeftColumn">
 
-		<form method="post" action="search.php" name="skusearchform">
+		<form method="post" action="/search.php" name="skusearchform">
 		<input type="hidden" name="mode" value="search" />
 		<input type="hidden" name="fast_search" value="Y" />
 		<input type="hidden" name="posted_data[including]" value="all" />
