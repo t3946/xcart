@@ -31,13 +31,14 @@ amazon_fba,
 cidev_get_amazon_FBA_stock_total(p.productid) + cidev_get_FBA_amount_in_working_shipments(p.productid) As total_stock,
 cidev_get_amazon_FBA_lastorder_days(p.productid) As last_order_days,
 cidev_get_amazon_FBA_sold_items(p.productid, -1) As items_sold_last_1m,
-cidev_get_amazon_FBA_overall_instock_days(p.productid, 3) As `Instock days 3m`,
-cidev_get_amazon_FBA_items_sold_for_last_stock_days(p.productid, 30) As `Items sold last 1m of stock`,
-LEAST(cidev_get_amazon_FBA_overall_instock_days(p.productid, 9999),30) As `Instock days 1m`,
-IFNULL(cidev_get_amazon_FBA_sold_items(p.productid, -9999) / cidev_get_amazon_FBA_overall_instock_days(p.productid, 9999),0) As `Overall Orders rate`,
-IFNULL(cidev_get_amazon_FBA_items_sold_for_last_stock_days(p.productid, 30) / cidev_get_amazon_FBA_overall_instock_days(p.productid, 1),0) As `Orders rate last 1 month`,
+cidev_get_amazon_FBA_overall_instock_days(p.productid, 3) As instock_days_3m,
+cidev_get_amazon_FBA_items_sold_for_last_stock_days(p.productid, 30) As items_sold_last_1m_of_stock,
+LEAST(cidev_get_amazon_FBA_overall_instock_days(p.productid, 9999),30) As instock_days_1m,
+IFNULL(cidev_get_amazon_FBA_sold_items(p.productid, -9999) / cidev_get_amazon_FBA_overall_instock_days(p.productid, 9999),0) as overall_orders_rate,
+IFNULL(cidev_get_amazon_FBA_items_sold_for_last_stock_days(p.productid, 30) / cidev_get_amazon_FBA_overall_instock_days(p.productid, 1),0) as orders_rate_last_1_month,
 cidev_get_amazon_price(p.productid) as price,
-p.r_avail As `Dx stock qty`
+p.r_avail as dx_stock_qty,
+amazon.restocking_get_reorder_quantity(p.productid, 30, 60, 7, 5, cidev_get_amazon_FBA_stock_total(p.productid) + cidev_get_FBA_amount_in_working_shipments(p.productid), 2, 'N') as restocking_qty
 FROM xcart_products p
 INNER JOIN xcart_products_amz_fields af ON p.productid = af.productid
 INNER JOIN xcart_manufacturers m ON p.manufacturerid = m.manufacturerid
@@ -51,6 +52,7 @@ AND af.amazon_fba_restricted = 'N'
 AND DM.marketplace_id IS NULL
 AND DM2.marketplace_id IS NULL
 AND DM3.marketplace_id IS NULL
+ORDER BY m.manufacturer, restocking_qty
 SQL;
 
         $aProducts = Connection::getInstance()->executeQuery($sql)->fetchAll(\PDO::FETCH_GROUP);
