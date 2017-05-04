@@ -291,7 +291,15 @@ function send_question_email_form(){
 
         {if $tab.tpl eq "_product_description_"}
 
-          {if $use_schema_org eq "Y"}<span id="so_description" itemprop="description">{/if}{$product.fulldescr|default:$product.descr}{if $use_schema_org eq "Y"}</span>{/if}
+          {if $use_schema_org eq "Y"}<span id="so_description" itemprop="description">{/if}
+            {if $product.seo_fulldescr ne ""}
+                {$product.seo_fulldescr|stripslashes}
+            {elseif $product.fulldescr ne ""}
+                {$product.fulldescr|stripslashes}
+            {else}
+                {$product.descr|stripslashes}
+            {/if}
+            {if $use_schema_org eq "Y"}</span>{/if}
 
         {elseif $tab.tpl eq "_Brand_"}
 
