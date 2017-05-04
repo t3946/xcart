@@ -496,7 +496,15 @@ var lbl_error = "{$lng.lbl_error}";
 <br />
 {capture name=dialog}
 <div style="padding-left: 8px;">
-<span style="font-size: 13px; color: #000000;" class="SPItems-description">{if $use_schema_org eq "Y"}<span itemprop="description">{/if}{if $product.fulldescr ne ""}{$product.fulldescr}{else}{$product.descr}{/if}{if $use_schema_org eq "Y"}</span>{/if}</span>
+<span style="font-size: 13px; color: #000000;" class="SPItems-description">{if $use_schema_org eq "Y"}<span itemprop="description">{/if}
+        {if $product.seo_fulldescr ne ""}
+            {$product.seo_fulldescr|stripslashes}
+        {elseif $product.fulldescr ne ""}
+            {$product.fulldescr|stripslashes}
+        {else}
+            {$product.descr|stripslashes}
+        {/if}
+        {if $use_schema_org eq "Y"}</span>{/if}</span>
 
 {if $product.weight ne "0.00" || $variants ne '' || $show_dimensions || $product.upc_ean_isbn}
 {* <br /> *}
