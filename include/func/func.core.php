@@ -2428,7 +2428,7 @@ function func_XML_Sitemap_items_arr($sf_condition = null, $sfid = null)
 {
     global $config, $xcart_catalogs, $sql_tbl;
 
-    if (empty($sf_condition) && !empty($sfid)) {
+    if (empty($sf_condition) && !is_null($sfid)) {
         $sf_condition = "storefrontid={$sfid}";
     }
 
