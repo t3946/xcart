@@ -6,6 +6,7 @@
 
 {block 'content'}
     {smarty_admin_block name='Products for amazon reordering'}
+        {foreach $amazon_products as $distributor => $products}
         <table width="100%" cellspacing="1" cellpadding="3">
             <tr class="TableHead">
                 <td>SKU</td>
@@ -23,6 +24,18 @@
                 <td>Orders rate last 1 month</td>
                 <td>Dx stock qty</td>
             </tr>
+            {foreach $products as $product}
+                <tr>
+                    <td>$product.productcode</td>
+                    <td>$product.SKU</td>
+                    <td>$product.cost_to_us</td>
+                    <td>$product.amazon_fba</td>
+                    <td>$product.total_stock</td>
+                    <td>$product.last_order_days</td>
+                    <td>$product.items_sold_last_1m</td>
+                </tr>
+            {/foreach}
         </table>
+        {/foreach}
     {/smarty_admin_block}
 {/block}
