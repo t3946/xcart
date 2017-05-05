@@ -2,8 +2,10 @@ $padding_container: rem-calc(18);
 
 .catalog-page {
   .pcont {
-    padding-left: $padding_container;
-    padding-right: $padding_container;
+    @include breakpoint(large up) {
+      padding-left: $padding_container;
+      padding-right: $padding_container;
+    }
   }
 
   .top-block {
@@ -38,13 +40,10 @@ $padding_container: rem-calc(18);
 
     .action_group {
       display: inline-block;
-
-      .action_block {
-
-      }
     }
 
     .actions {
+
       @include breakpoint(large up) {
         text-align: right;
       }
@@ -62,6 +61,7 @@ $padding_container: rem-calc(18);
 
 
       &.view {
+
         a {
           display: inline-block;
           background-size: cover;
@@ -105,6 +105,120 @@ $padding_container: rem-calc(18);
 
     }
 
-  }
+    @include breakpoint(large up) {
+      .actions {
+        .action_block {
+          &.sort {
+            .active_value {
 
+            }
+
+            li {
+              &.active {
+
+              }
+            }
+
+          }
+        }
+      }
+    }
+
+    @include breakpoint(medium down) {
+      .actions {
+        display: flex;
+
+        .action_block {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+
+          &.view {
+            flex: 0 0 rem-calc(60);
+          }
+
+          &.action_button {
+            position: relative;
+            transition: all .4s;
+
+            .action {
+              font-size: rem-calc(24);
+              text-transform: uppercase;
+            }
+
+            &:after {
+              content: "";
+              display: inline-block;
+              border: 5px solid transparent;
+              border-bottom: 7px solid #000;
+              width: 7px;
+              height: 7px;
+              transition: all .4s;
+              margin-left: 10px;
+              margin-top: -5px;
+            }
+
+            &.active {
+              background-color: #1e3f51;
+              color: #90a6b1;
+
+              &:after {
+                border-bottom-color: #90a6b1;
+                margin-top: 5px;
+                transform: rotate(180deg);
+              }
+            }
+          }
+
+          &.sort {
+            &.active {
+              position: relative;
+
+              .options {
+                display: block;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                background: #fff;
+                border: 2px solid #0d2431;
+                border-top: none;
+
+                li {
+                  line-height: 46px;
+                  font-size: rem-calc(18);
+                  border-bottom: 1px solid #e2e2e2;
+                  color: black;
+                  text-decoration: none;
+                  padding: 0 10px 0 4em;
+                  cursor: pointer;
+
+                  &.active, &:hover {
+                    background-color: #edf0f2;
+                  }
+
+                  &.active {
+                    background: #edf0f2 url(../images/icons/state_line/point.svg) 8% center no-repeat;
+                    background-size: rem-calc(26);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .action_group {
+          flex: 1 0;
+          display: flex;
+
+          .action_block {
+            flex: 2 0;
+            margin-right: rem-calc(5);
+          }
+        }
+      }
+    }
+  }
 }

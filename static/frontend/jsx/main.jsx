@@ -94,7 +94,6 @@
 
 
     $(document).on('click', '.action_block.view a', function(e){
-        console.log(this);
         e.preventDefault();
 
         if ($(this).hasClass('tile-view')) {
@@ -106,6 +105,11 @@
 
         $('.action_block.view a').removeClass('active');
         $(this).addClass('active');
+    });
+    $(document).on('click', '.action_block.sort', function(e){
+        e.preventDefault();
+
+        $(this).toggleClass('active');
     });
 
     $(document).ready(function(){

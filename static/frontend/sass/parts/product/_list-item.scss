@@ -565,7 +565,7 @@
         .price_container {
           flex: 0 0 100%;
           order: 0;
-          padding: 3% 0;
+          padding: .3em 0;
 
           font: {
             size: rem-calc(14);
@@ -595,6 +595,10 @@
           order: 2;
           //display: inline-block;
           margin: 0;
+
+          @include breakpoint(xsmall down) {
+            display: none;
+          }
 
           label {
             display: none !important;
@@ -688,7 +692,7 @@
   }
 }
 
-.touch {
+.touchevents {
   .product-items {
     &.tile-view {
       .item {
@@ -696,7 +700,7 @@
 
         .overflow_container {
           box-shadow: none;
-          position: relative;
+          position: initial;
           display: flex;
           width: 100%;
           padding: 0;
