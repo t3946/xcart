@@ -6,7 +6,7 @@
         <div class="columns large-9 text-align-right">
             <div class="actions">
                 <div class="action_block sort">
-                    Sort by
+                    {*Sort by*}
                     {*<select name="sort" id="">*}
                         {*<option value="relevance">Relevance</option>*}
                         {*<option value="price">Price low to high</option>*}

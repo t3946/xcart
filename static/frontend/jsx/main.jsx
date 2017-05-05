@@ -103,6 +103,9 @@
         else {
             $('.catalog-page .product-items').removeClass('tile-view').addClass('list-view');
         }
+
+        $('.action_block.view a').removeClass('active');
+        $(this).addClass('active');
     });
 
     $(document).ready(function(){

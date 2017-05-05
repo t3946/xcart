@@ -35,12 +35,28 @@ $padding_container: rem-calc(18);
       display: inline-block;
 
       a {
-        &.tile-view {
+        display: inline-block;
+        background-size: cover;
+        width: rem-calc(18);
+        height: rem-calc(18);
+        opacity: .4;
+        vertical-align: middle;
+        margin: 0 .3em;
 
+        &.tile-view {
+          background-image: url(../images/icons/state_line/tile_active.svg);
         }
 
         &.list-view {
+          background-image: url(../images/icons/state_line/list_active.svg);
+        }
 
+        &:hover {
+          opacity: .6;
+        }
+
+        &.active {
+          opacity: 1 !important;
         }
       }
     }
