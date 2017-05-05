@@ -1,3 +1,5 @@
+// import DepartmentMenu from "components/DepartmentMenu";
+
 (function(){
     $('.search-form-container .search').on('keyup', function (e){
         let $bclear = $('.search-form-container .button-clear');
@@ -17,7 +19,7 @@
         $(this).removeClass('active');
     });
 
-    new DepartmentMenu();
+    // new DepartmentMenu();
 
     $(document).on('show:dm', ()=> {
         $('.shadow').addClass('active');
@@ -103,5 +105,7 @@
         }
     });
 
-    $(document).foundation();
+    $(document).ready(function(){
+        $(document).foundation();
+    });
 })();

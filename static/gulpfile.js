@@ -158,13 +158,19 @@ gulp.task('frontend:jsx', function() {
 
 gulp.task('frontend:modernizr', ['clear:frontend'], function (done) {
 
-    modernizr.build(frontend.config.modernizr, function(code) {
-        if (!fs.existsSync(frontend.dst.jsx)){
-            fs.mkdirSync(frontend.dst.jsx);
-        }
+    if (frontend.config.modernizr)
+    {
+        modernizr.build(frontend.config.modernizr, function(code) {
+            if (!fs.existsSync(frontend.dst.jsx)){
+                fs.mkdirSync(frontend.dst.jsx);
+            }
 
-        fs.writeFile(frontend.dst.jsx + '/modernizr.js', code, done);
-    });
+            fs.writeFile(frontend.dst.jsx + '/modernizr.js', code, done);
+        });
+    }
+    else {
+        done();
+    }
 });
 
 gulp.task('frontend:js', ['frontend:jsx'], function() {

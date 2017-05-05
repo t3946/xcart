@@ -168,23 +168,23 @@ module.exports.frontend = {
         ],
 
         modernizr: {
-            "classPrefix": "",
-            "options": [
+            // classPrefix: "",
+            options: [
                 "addTest",
                 "atRule",
-                "domPrefixes",
-                "hasEvent",
-                "html5shiv",
-                "html5printshiv",
-                "load",
+                // "domPrefixes",
+                // "hasEvent",
+                // "html5shiv",
+                // "html5printshiv",
+                // "load",
                 "mq",
-                "prefixed",
-                "prefixes",
-                "prefixedCSS",
-                "setClasses",
-                "testAllProps",
-                "testProp",
-                "testStyles"
+                // "prefixed",
+                // "prefixes",
+                // "prefixedCSS",
+                // "testAllProps",
+                // "testProp",
+                // "testStyles",
+                "setClasses"
             ],
             features: [
                 "css/all",
@@ -194,7 +194,6 @@ module.exports.frontend = {
                 "css/flexboxtweener",
                 "css/flexwrap",
                 'touchevents'
-
             ],
         },
     },
@@ -283,14 +282,12 @@ module.exports.frontend = {
                 // 'bower_components/Waves/src/scss/waves.scss'
             ]
         },
-        // modernizr: {
-        //     js: [
-        //         'bower_components/Waves/src/js/waves.js'
-        //     ],
-        //     scss: [
-        //         // 'bower_components/Waves/src/scss/waves.scss'
-        //     ]
-        // },
+
+        "what-input": {
+            js: [
+                'bower_components/what-input/dist/what-input.js'
+            ]
+        },
         foundation: {
             js: [
                 // 'bower_components/foundation-sites/dist/js/foundation.js', //all
