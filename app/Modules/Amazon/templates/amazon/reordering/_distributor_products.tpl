@@ -1,7 +1,7 @@
-<table width="100%" cellspacing="1" cellpadding="3">
-    <tr>
+<table width="100%" cellspacing="1" cellpadding="3" data-batch-id="{$batch_id}" data-manufacturer-code="{$products[0].code}">
+    <tr class="no-export">
         <td colspan="16" align="right">
-            <input type="button" value="Save to CSV">
+            <a class="csv-button" href="#">Save to CSV</a>
         </td>
     </tr>
     <tr class="TableHead">
@@ -20,9 +20,7 @@
         <td>AVG comp price</td>
         <td>Dx stock qty</td>
         <td>Total stock</td>
-        <td>
-            Restocking qty <br/>
-            <input class="group-apply-val" size="1" type="text"/><input style="line-height:16px;" class="group-apply" type="button" value="↓" />
+        <td>Restocking qty<br/><input class="group-apply-val" size="1" type="text"/><input style="line-height:16px;" class="group-apply" type="button" value="↓"/>
         </td>
     </tr>
     {foreach $products as $product}
