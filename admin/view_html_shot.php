@@ -8,7 +8,7 @@ x_load('product');
 
 if (!empty($id) && is_numeric($id)) {
 
-    $oHTMLShot = new Xcart\HTMLShot(['id'=>$id]);
+    $oHTMLShot = new Xcart\HTMLShot(['id' => $id]);
 
     $oProduct = $oHTMLShot->getHTMLShot();
 
@@ -92,10 +92,10 @@ if (!empty($id) && is_numeric($id)) {
                 }
             }
         }
-    }
-}
 
 # Assign the current location line
-$smarty->assign("location", $location);
+        $smarty->assign("location", $location);
 
-func_display("customer/main/product_detail.tpl", $smarty);
+        func_display("customer/main/product_detail.tpl", $smarty);
+    }
+}
