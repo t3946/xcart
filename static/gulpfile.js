@@ -1,3 +1,4 @@
+const fs = require('fs');
 const gulp = require('gulp');
 const concat = require('gulp-concat');
 const cssnano = require('gulp-cssnano');
@@ -10,8 +11,8 @@ const uglify = require('gulp-uglify');
 const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const browserify = require('gulp-browserify');
-const inlineimage = require('gulp-inline-image');
-const svgo = require('gulp-svgo');
+// const inlineimage = require('gulp-inline-image');
+const modernizr = require('modernizr');
 
 let config = require('./gulpconfig');
 let frontend = config.frontend;
@@ -153,6 +154,17 @@ gulp.task('frontend:jsx', function() {
     }
 
     return pipe.pipe(gulp.dest(frontend.dst.jsx));
+});
+
+gulp.task('frontend:modernizr', function (done) {
+
+    modernizr.build(frontend.config.modernizr, function(code) {
+        if (!fs.existsSync(frontend.dst.jsx)){
+            fs.mkdirSync(frontend.dst.jsx);
+        }
+
+        fs.writeFile(frontend.dst.jsx + '/modernizr.js', code, done);
+    });
 });
 
 gulp.task('frontend:js', ['frontend:jsx'], function() {
@@ -300,7 +312,7 @@ gulp.task('clear', function() {
 
 gulp.task('build:frontend', ['clear:frontend'], function(){
     gulp.start(
-        'frontend:raw', 'frontend:css', 'frontend:js', 'frontend:images', 'frontend:fonts'
+        'frontend:raw', 'frontend:css', 'frontend:modernizr', 'frontend:js', 'frontend:images', 'frontend:fonts'
     );
 });
 

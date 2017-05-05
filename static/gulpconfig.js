@@ -166,6 +166,37 @@ module.exports.frontend = {
             imagemin.optipng({optimizationLevel: 5}),
             imagemin.svgo({plugins: [{removeViewBox: true, removeComments: true, removeMetadata: true}]})
         ],
+
+        modernizr: {
+            "classPrefix": "",
+            "options": [
+                "addTest",
+                "atRule",
+                "domPrefixes",
+                "hasEvent",
+                "html5shiv",
+                "html5printshiv",
+                "load",
+                "mq",
+                "prefixed",
+                "prefixes",
+                "prefixedCSS",
+                "setClasses",
+                "testAllProps",
+                "testProp",
+                "testStyles"
+            ],
+            features: [
+                "css/all",
+                "css/filters",
+                "css/flexbox",
+                "css/flexboxlegacy",
+                "css/flexboxtweener",
+                "css/flexwrap",
+                'touchevents'
+
+            ],
+        },
     },
     src: {
         jsx: [
