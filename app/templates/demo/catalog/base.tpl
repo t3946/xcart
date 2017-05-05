@@ -32,6 +32,10 @@
 
 
                 {include "demo/catalog/_state_line.tpl"}
+                <div class="page_count hide-for-large">
+                    <span class="count">10</span> / <span class="full">100</span> items shown
+                </div>
+
                 <div class="product-items tile-view">
                     {foreach $models as $item }
                         {include "demo/blocks/_catalog_list_item.tpl" item=$item}

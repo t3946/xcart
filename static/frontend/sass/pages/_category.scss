@@ -27,38 +27,82 @@ $padding_container: rem-calc(18);
 
   .state_line {
     font-weight: 500;
-    line-height: rem-calc(40);
-    height: rem-calc(40);
-    background-color: #ebebeb;
+    height: rem-calc(60);
+    line-height: rem-calc(60);
+
+    @include breakpoint(large up) {
+      background-color: #ebebeb;
+      height: rem-calc(40);
+      line-height: rem-calc(40);
+    }
+
+    .action_group {
+      display: inline-block;
+
+      .action_block {
+
+      }
+    }
+
+    .actions {
+      @include breakpoint(large up) {
+        text-align: right;
+      }
+    }
 
     .action_block {
       display: inline-block;
+      background-color: #ebebeb;
 
-      a {
-        display: inline-block;
-        background-size: cover;
-        width: rem-calc(18);
-        height: rem-calc(18);
-        opacity: .4;
-        vertical-align: middle;
-        margin: 0 .3em;
-
-        &.tile-view {
-          background-image: url(../images/icons/state_line/tile_active.svg);
-        }
-
-        &.list-view {
-          background-image: url(../images/icons/state_line/list_active.svg);
-        }
-
-        &:hover {
-          opacity: .6;
-        }
-
-        &.active {
-          opacity: 1 !important;
+      &.sort {
+        .options {
+          display: none;
         }
       }
+
+
+      &.view {
+        a {
+          display: inline-block;
+          background-size: cover;
+          width: rem-calc(18);
+          height: rem-calc(18);
+          opacity: .4;
+          vertical-align: middle;
+
+          @include breakpoint(large up) {
+            margin: 0 .3em;
+          }
+
+          @include breakpoint(medium down) {
+            width: rem-calc(60);
+            height: rem-calc(60);
+            background: no-repeat center center;
+            background-size: rem-calc(37);
+          }
+
+          &.tile-view {
+            background-image: url(../images/icons/state_line/tile_active.svg);
+          }
+
+          &.list-view {
+            background-image: url(../images/icons/state_line/list_active.svg);
+          }
+
+          &:hover {
+            opacity: .6;
+          }
+
+          &.active {
+            opacity: 1;
+
+            @include breakpoint(medium down) {
+              display: none;
+            }
+          }
+        }
+      }
+
     }
 
   }

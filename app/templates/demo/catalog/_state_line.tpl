@@ -1,25 +1,39 @@
 <section class="state_line pcont">
     <div class="row">
-        <div class="columns large-3">
-            10/100 items shown
+        <div class="columns large-3 show-for-large">
+            <span class="page_count">
+                <span class="count">10</span> / <span class="full">100</span> items shown
+            </span>
         </div>
-        <div class="columns large-9 text-align-right">
+        <div class="columns small-12 large-9">
             <div class="actions">
-                <div class="action_block sort">
-                    {*Sort by*}
-                    {*<select name="sort" id="">*}
-                        {*<option value="relevance">Relevance</option>*}
-                        {*<option value="price">Price low to high</option>*}
-                        {*<option value="-price">Price high to low</option>*}
-                        {*<option value="new">New</option>*}
-                        {*<option value="best">Best selling</option>*}
-                        {*<option value="-rating">Top rated</option>*}
-                        {*<option value="-exclusive">Exclusive</option>*}
-                        {*<option value="brand">Brand</option>*}
-                    {*</select>*}
+                <div class="action_group">
+                    <div class="action_block filter">
+
+                    </div>
+                    <div class="action_block sort">
+                        <span class="action">
+                            Sort by
+                        </span>
+                        <span class="active show-for-large">
+                            Relevance
+                        </span>
+                        <ul class="options">
+                            <li data-value="relevance" class="active">Relevance</li>
+                            <li data-value="price" >Price low to high</li>
+                            <li data-value="-price" >Price high to low</li>
+                            <li data-value="new" >New</li>
+                            <li data-value="best" >Best selling</li>
+                            <li data-value="-rating" >Top rated</li>
+                            <li data-value="-exclusive" >Exclusive</li>
+                            <li data-value="brand" >Brand</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="action_block view">
-                    View as
+                    <span class="show-for-large">
+                        View as
+                    </span>
                     <a href="" class="tile-view active"></a>
                     <a href="" class="list-view"></a>
                 </div>
