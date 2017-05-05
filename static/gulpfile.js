@@ -156,7 +156,7 @@ gulp.task('frontend:jsx', function() {
     return pipe.pipe(gulp.dest(frontend.dst.jsx));
 });
 
-gulp.task('frontend:modernizr', function (done) {
+gulp.task('frontend:modernizr', ['clear:frontend'], function (done) {
 
     modernizr.build(frontend.config.modernizr, function(code) {
         if (!fs.existsSync(frontend.dst.jsx)){
@@ -310,9 +310,9 @@ gulp.task('clear', function() {
     );
 });
 
-gulp.task('build:frontend', ['clear:frontend'], function(){
+gulp.task('build:frontend', ['clear:frontend', 'frontend:modernizr'], function(){
     gulp.start(
-        'frontend:raw', 'frontend:css', 'frontend:modernizr', 'frontend:js', 'frontend:images', 'frontend:fonts'
+        'frontend:raw', 'frontend:css', 'frontend:js', 'frontend:images', 'frontend:fonts'
     );
 });
 
