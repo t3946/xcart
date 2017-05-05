@@ -20,8 +20,8 @@
                 </div>
                 <div class="action_block view">
                     View as
-                    <a href="" class="tile-view"> block </a>
-                    <a href="" class="list-view"> list </a>
+                    <a href="" class="tile-view active"></a>
+                    <a href="" class="list-view"></a>
                 </div>
             </div>
         </div>

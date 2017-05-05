@@ -24,9 +24,9 @@ class DefaultController extends Controller
 
         $params = [
             'forsale' => 'Y',
-            'manufacturerid__in' => array_map(function ($item) { return $item['manufacturerid']; },
-                Manufacturer::objects()->limit(rand(1, 10))->order(['?'])->valuesList(['manufacturerid'])
-            ),
+//            'manufacturerid__in' => array_map(function ($item) { return $item['manufacturerid']; },
+//                Manufacturer::objects()->limit(rand(1, 10))->order(['?'])->valuesList(['manufacturerid'])
+//            ),
         ];
 
         $t_models = ProductModel::objects()
