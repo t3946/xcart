@@ -8,26 +8,30 @@
         <div class="columns small-12 large-9">
             <div class="actions">
                 <div class="action_group">
-                    <div class="action_block action_button filter">
+                    <div class="action_block  filter">
+                        <div class="action_button filter">
 
+                        </div>
                     </div>
-                    <div class="action_block action_button sort">
-                        <span class="action">
-                            Sort by
-                        </span>
-                        <span class="active_value show-for-large">
-                            Relevance
-                        </span>
-                        <ul class="options no-bullet">
-                            <li data-value="relevance" class="active">Relevance</li>
-                            <li data-value="price" >Price low to high</li>
-                            <li data-value="-price" >Price high to low</li>
-                            <li data-value="new" >New</li>
-                            <li data-value="best" >Best selling</li>
-                            <li data-value="-rating" >Top rated</li>
-                            <li data-value="-exclusive" >Exclusive</li>
-                            <li data-value="brand" >Brand</li>
-                        </ul>
+                    <div class="action_block sort">
+                        <div class="action_button sort">
+                            <span class="action">
+                                Sort by
+                            </span>
+                            <span class="active_value show-for-large">
+                                Relevance
+                            </span>
+                            <ul class="options no-bullet">
+                                <li data-value="relevance" class="active">Relevance</li>
+                                <li data-value="price" >Price low to high</li>
+                                <li data-value="-price" >Price high to low</li>
+                                <li data-value="new" >New</li>
+                                <li data-value="best" >Best selling</li>
+                                <li data-value="-rating" >Top rated</li>
+                                <li data-value="-exclusive" >Exclusive</li>
+                                <li data-value="brand" >Brand</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="action_block view">

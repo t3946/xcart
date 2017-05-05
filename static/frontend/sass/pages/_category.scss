@@ -38,6 +38,12 @@ $padding_container: rem-calc(18);
       line-height: rem-calc(40);
     }
 
+    @include breakpoint(xsmall down) {
+      background-color: #ebebeb;
+      height: rem-calc(45);
+      line-height: rem-calc(45);
+    }
+
     .action_group {
       display: inline-block;
     }
@@ -53,7 +59,7 @@ $padding_container: rem-calc(18);
       display: inline-block;
       background-color: #ebebeb;
 
-      &.sort {
+      .sort {
         .options {
           display: none;
         }
@@ -79,6 +85,13 @@ $padding_container: rem-calc(18);
             height: rem-calc(60);
             background: no-repeat center center;
             background-size: rem-calc(37);
+          }
+
+          @include breakpoint(xsmall down) {
+
+            width: rem-calc(45);
+            height: rem-calc(45);
+            background-size: rem-calc(25);
           }
 
           &.tile-view {
@@ -138,7 +151,7 @@ $padding_container: rem-calc(18);
             flex: 0 0 rem-calc(60);
           }
 
-          &.action_button {
+          .action_button {
             position: relative;
             transition: all .4s;
 
@@ -216,6 +229,25 @@ $padding_container: rem-calc(18);
           .action_block {
             flex: 2 0;
             margin-right: rem-calc(5);
+          }
+        }
+      }
+    }
+
+    @include breakpoint(xsmall down) {
+      .actions {
+        .action_block {
+
+          &.sort {
+
+          }
+
+          &.view {
+            flex: 0 0 rem-calc(45);
+            line-height: rem-calc(45);
+          }
+          &.view {
+
           }
         }
       }
