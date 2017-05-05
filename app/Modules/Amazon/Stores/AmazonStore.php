@@ -1,11 +1,21 @@
 <?php
 namespace Modules\Amazon\Stores;
 
+use Mindy\QueryBuilder\Expression;
+use Modules\Amazon\Models\AmazonReorderBatchDataModel;
+use Xcart\App\Orm\QuerySet;
 use Xcart\App\Store\BaseStore;
 use Xcart\Connection;
 
 class AmazonStore extends BaseStore
 {
+    private $qs = null;
+
+    public function __construct($data)
+    {
+        $this->populate($data);
+    }
+
     /**
      * @param array $data
      *
@@ -14,48 +24,69 @@ class AmazonStore extends BaseStore
      */
     public function populate(array $data)
     {
+        $filter = [];
+        $qs = $this->getQuerySet();
 
+        if (!empty($data)) {
+            if ($data['cost_to_us']) {
+                if (!empty($data['cost_to_us']['from'])) {
+                    $filter['cost_to_us__gte'] = floatval($data['cost_to_us']['from']);
+                }
+                if ($data['cost_to_us']['to']) {
+                    $filter['cost_to_us__lte'] = floatval($data['cost_to_us']['to']);
+                }
+            }
+            if (!empty($data['r_avail'])) {
+                if ($data['r_avail']['from']) {
+                    $filter['r_avail__gte']  = intval($data['r_avail']['from']);
+                }
+                if ($data['r_avail']['to']) {
+                    $filter['r_avail__lte'] = intval($data['r_avail']['to']);
+                }
+            }
+            if (!empty($data['restocking_qty'])) {
+                if ($data['restocking_qty']['from']) {
+                    $filter['restocking_qty__gte'] = floatval($data['restocking_qty']['from']);
+                }
+                if ($data['restocking_qty']['to']) {
+                    $filter['restocking_qty__lte'] = floatval($data['restocking_qty']['to']);
+                }
+            }
+        }
+        $qs->filter($filter);
+
+        $this->qs = $qs;
     }
 
-    public function getAmazonProducts()
+    public function getQuerySet()
     {
-        $sql= /** @lang MySQL */
-            <<<SQL
-SELECT 
-m.manufacturer,
-p.productid,
-p.productcode,
-COALESCE (CASE WHEN af.amazon_listing_sku_to_load = '' THEN NULL END, p.productcode) as SKU,
-cost_to_us,
-amazon_fba,
-cidev_get_amazon_FBA_stock_total(p.productid) + cidev_get_FBA_amount_in_working_shipments(p.productid) As total_stock,
-cidev_get_amazon_FBA_lastorder_days(p.productid) As last_order_days,
-cidev_get_amazon_FBA_sold_items(p.productid, -1) As items_sold_last_1m,
-cidev_get_amazon_FBA_overall_instock_days(p.productid, 3) As instock_days_3m,
-cidev_get_amazon_FBA_items_sold_for_last_stock_days(p.productid, 30) As items_sold_last_1m_of_stock,
-LEAST(cidev_get_amazon_FBA_overall_instock_days(p.productid, 9999),30) As instock_days_1m,
-IFNULL(cidev_get_amazon_FBA_sold_items(p.productid, -9999) / cidev_get_amazon_FBA_overall_instock_days(p.productid, 9999),0) as overall_orders_rate,
-IFNULL(cidev_get_amazon_FBA_items_sold_for_last_stock_days(p.productid, 30) / cidev_get_amazon_FBA_overall_instock_days(p.productid, 1),0) as orders_rate_last_1_month,
-cidev_get_amazon_price(p.productid) as price,
-p.r_avail as dx_stock_qty,
-amazon.restocking_get_reorder_quantity(p.productid, 30, 60, 7, 5, cidev_get_amazon_FBA_stock_total(p.productid) + cidev_get_FBA_amount_in_working_shipments(p.productid), 2, 'N') as restocking_qty
-FROM xcart_products p
-INNER JOIN xcart_products_amz_fields af ON p.productid = af.productid
-INNER JOIN xcart_manufacturers m ON p.manufacturerid = m.manufacturerid
-INNER JOIN xcart_products_sf sf ON p.productid = sf.productid
-INNER JOIN xcart_storefronts_external_marketplaces EM ON EM.storefront_id = sf.sfid AND EM.marketplace_id = 3
-LEFT JOIN xcart_products_disabled_marketplaces DM ON DM.resource_id = p.productid and DM.resource_type = 'P' and DM.marketplace_id = 3
-LEFT JOIN xcart_products_disabled_marketplaces DM2 ON DM2.resource_id = p.brandid and DM2.resource_type = 'B' and DM2.marketplace_id = 3
-LEFT JOIN xcart_products_disabled_marketplaces DM3 ON DM3.resource_id = p.manufacturerid and DM3.resource_type = 'D' and DM3.marketplace_id = 3
-WHERE p.amazon_enabled = 'Y' 
-AND af.amazon_fba_restricted = 'N'
-AND DM.marketplace_id IS NULL
-AND DM2.marketplace_id IS NULL
-AND DM3.marketplace_id IS NULL
-ORDER BY m.manufacturer, restocking_qty
-SQL;
-
-        $aProducts = Connection::getInstance()->executeQuery($sql)->fetchAll(\PDO::FETCH_GROUP);
-        return $aProducts;
+        if (!$this->qs) {
+            $this->qs = AmazonReorderBatchDataModel::objects()->getQuerySet();
+            $this->qs->join('inner join', 'xcart_manufacturers', ['manufacturerid' => 'm.manufacturerid'], 'm');
+        }
+        return $this->qs;
     }
+
+
+
+    public function getAmazonBatchData()
+    {
+            /** @var QuerySet $qs */
+            $qs = $this->getQuerySet();
+            $qs->select(['m.manufacturer',
+                'r_order' => new Expression("(restocking_qty * cost_to_us)"),
+                '*'
+            ])
+                ->order([
+                    'm.manufacturer',
+                    '-r_order'
+                ]);
+
+//            echo $qs->getSql();
+
+            return Connection::getInstance()->executeQuery(
+                $qs->getSql()
+            )->fetchAll(\PDO::FETCH_GROUP);
+    }
+
 }

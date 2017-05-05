@@ -5,12 +5,8 @@
 {/block}
 
 {block 'content'}
-    {smarty_admin_block name='Products for amazon reordering'}
-        {foreach $amazon_products as $distributor => $products}
-            <fieldset {if $amazon_products@first}class="expanded"{/if}>
-                <legend>{$distributor} ({count($products)})</legend>
-                {include 'amazon/reordering/_distributor_products.tpl'}
-            </fieldset>
-        {/foreach}
+    {smarty_admin_block name='Calculate Amazon Shipping Plan'}
+        {include 'amazon/reordering/_amazon_loading.tpl'}
     {/smarty_admin_block}
+
 {/block}
