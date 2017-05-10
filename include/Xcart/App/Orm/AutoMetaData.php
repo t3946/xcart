@@ -149,7 +149,14 @@ class AutoMetaData extends MetaData
     {
         if (is_null(self::$_tables))
         {
-            self::$_tables = Xcart::app()->cache->get('auto_meta_data_tables', []);
+            if (Xcart::app()->hasComponent('event') && Xcart::app()->hasComponent('cache'))
+            {
+                self::$_tables = Xcart::app()->cache->get('auto_meta_data_tables', []);
+                Xcart::app()->event->on('app:end', [$this, 'saveCache']);
+            }
+            else {
+                self::$_tables = [];
+            }
         }
     }
 
