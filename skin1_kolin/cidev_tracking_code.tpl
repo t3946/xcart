@@ -272,71 +272,44 @@ ga('send', 'pageview');
 
 
 {if $config.Company.cidev_yandex_code_number ne "" && !($usertype eq "A" || $usertype eq "P")}
-{if $cidev_tracking_code_add2 ne ""}
-<!-- Yandex.Metrika counter -->
-{$cidev_tracking_code_add2}
+    {$cidev_tracking_code_add2}
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        {literal}
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter{/literal}{$config.Company.cidev_yandex_code_number}{literal} = new Ya.Metrika2({
+                        id:{/literal}{$config.Company.cidev_yandex_code_number}{literal},
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true,
+                        trackHash:true,
+                        {/literal}
+                        {if $cidev_tracking_code_add2}
+                            {literal}
+                                params:window.yaParams||{ }
+                            {/literal}
+                        {/if}
+                        {literal}
+                    });
+                } catch(e) { }
+            });
 
-<script type="text/javascript">
-<!--
-{literal}
-(function (d, w, c) {
-    (w[c] = w[c] || []).push(function() {
-        try {
-            w.yaCounter{/literal}{$config.Company.cidev_yandex_code_number}{literal} = new Ya.Metrika({id:{/literal}{$config.Company.cidev_yandex_code_number}{literal},
-                    webvisor:{/literal}{if $HTTPS_used eq "Y" || $main eq "fast_lane_checkout"}{literal}false{/literal}{else}{literal}true{/literal}{/if}{literal},
-                    clickmap:true,
-                    trackLinks:true,
-                    accurateTrackBounce:true,params:window.yaParams||{ }});
-        } catch(e) { }
-    });
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/tag.js";
 
-    var n = d.getElementsByTagName("script")[0],
-        s = d.createElement("script"),
-        f = function () { n.parentNode.insertBefore(s, n); };
-    s.type = "text/javascript";
-    s.async = true;
-    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
-
-    if (w.opera == "[object Opera]") {
-        d.addEventListener("DOMContentLoaded", f, false);
-    } else { f(); }
-})(document, window, "yandex_metrika_callbacks");
-{/literal}
--->
-</script>
-<noscript><div><img src="//mc.yandex.ru/watch/{$config.Company.cidev_yandex_code_number}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
-{else}
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-<!--
-{literal}
-(function (d, w, c) {
-    (w[c] = w[c] || []).push(function() {
-        try {
-            w.yaCounter{/literal}{$config.Company.cidev_yandex_code_number}{literal} = new Ya.Metrika({id:{/literal}{$config.Company.cidev_yandex_code_number}{literal},
-                    webvisor:{/literal}{if $HTTPS_used eq "Y" || $main eq "fast_lane_checkout"}{literal}false{/literal}{else}{literal}true{/literal}{/if}{literal},
-                    clickmap:true,
-                    trackLinks:true,
-                    accurateTrackBounce:true});
-        } catch(e) { }
-    });
-
-    var n = d.getElementsByTagName("script")[0],
-        s = d.createElement("script"),
-        f = function () { n.parentNode.insertBefore(s, n); };
-    s.type = "text/javascript";
-    s.async = true;
-    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
-
-    if (w.opera == "[object Opera]") {
-        d.addEventListener("DOMContentLoaded", f, false);
-    } else { f(); }
-})(document, window, "yandex_metrika_callbacks");
-{/literal}
--->
-</script>
-<noscript><div><img src="//mc.yandex.ru/watch/{$config.Company.cidev_yandex_code_number}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
-{/if}
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks2");
+    {/literal}
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/17349247" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
 {/if}
