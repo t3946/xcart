@@ -1820,7 +1820,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             func_check_surveys_events("OPL", $order_data);
         }
 
-        func_check_and_send_request_availability_email($orderid);
+        //func_check_and_send_request_availability_email($orderid);
     }
 
     $mes .= "STEP U " . date("H:i:s") . "\n";
