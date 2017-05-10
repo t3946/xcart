@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Core;
 
+use Detection\MobileDetect;
 use Fenom;
 use Modules\Core\Components\GlobalConfig;
 use Xcart\App\Main\Xcart;
@@ -33,5 +34,8 @@ class CoreModule extends Module
 
         $template->addAccessorSmart("global_config", "config", Fenom::ACCESSOR_PROPERTY);
         $template->global_config = GlobalConfig::getInstance()->setOldMode();
+
+        $template->addAccessorSmart("detector", "detector", Fenom::ACCESSOR_PROPERTY);
+        $template->detector = new MobileDetect();
     }
 }
