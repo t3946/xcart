@@ -309,5 +309,6 @@ return array(
     'MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest' => $baseDir . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsRequest.php',
     'MarketplaceWebService_Model_UpdateReportAcknowledgementsResponse' => $baseDir . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsResponse.php',
     'MarketplaceWebService_Model_UpdateReportAcknowledgementsResult' => $baseDir . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsResult.php',
+    'Mobile_Detect' => $vendorDir . '/mobiledetect/mobiledetectlib/Mobile_Detect.php',
     'RequestType' => $baseDir . '/MarketplaceWebService/RequestType.php',
 );
