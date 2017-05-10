@@ -917,7 +917,7 @@ function func_show_login_password_info(manufacturerid){
 <tr>
         <td class="FormButton">{$lng.lbl_price}&nbsp;=</td>
         <td>&nbsp;</td>
-        <td>(&nbsp;<input type="text" size="9" name="price_coef_x" value="{$manufacturer.price_coef_x}" />&nbsp;*&nbsp;{$lng.lbl_cost_to_us}&nbsp;+&nbsp;<input type="text" size="9" name="price_coef_y" value="{$manufacturer.price_coef_y}" />&nbsp;)&nbsp;/&nbsp;<input type="text" size="9" name="price_coef_z" value="{$manufacturer.price_coef_z}" /></td>
+        <td>(&nbsp;<input type="text" pattern="^[1-9][0-9\.]*$" title="Value must be greater than or equal to 1" size="9" name="price_coef_x" value="{$manufacturer.price_coef_x}" />&nbsp;*&nbsp;{$lng.lbl_cost_to_us}&nbsp;+&nbsp;<input type="text" size="9" name="price_coef_y" value="{$manufacturer.price_coef_y}" />&nbsp;)&nbsp;/&nbsp;<input type="text" size="9" name="price_coef_z" value="{$manufacturer.price_coef_z}" /></td>
 </tr>
 
 <tr>
