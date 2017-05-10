@@ -692,18 +692,20 @@
   }
 }
 
-.touchevents {
-  .product-items {
-    &.tile-view {
-      .item {
-        box-shadow: none;
-
-        .overflow_container {
+.mobile, .tablet {
+  &.touchevents {
+    .product-items {
+      &.tile-view {
+        .item {
           box-shadow: none;
-          position: initial;
-          display: flex;
-          width: 100%;
-          padding: 0;
+
+          .overflow_container {
+            box-shadow: none;
+            position: initial;
+            display: flex;
+            width: 100%;
+            padding: 0;
+          }
         }
       }
     }

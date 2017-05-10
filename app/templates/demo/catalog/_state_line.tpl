@@ -10,7 +10,9 @@
                 <div class="action_group">
                     <div class="action_block  filter">
                         <div class="action_button filter">
-
+                            <span class="action">
+                                Filter
+                            </span>
                         </div>
                     </div>
                     <div class="action_block sort">
@@ -21,7 +23,9 @@
                             <span class="active_value show-for-large">
                                 Relevance
                             </span>
-                            <ul class="options no-bullet">
+
+                        </div>
+                        <ul class="options no-bullet">
                                 <li data-value="relevance" class="active">Relevance</li>
                                 <li data-value="price" >Price low to high</li>
                                 <li data-value="-price" >Price high to low</li>
@@ -31,7 +35,6 @@
                                 <li data-value="-exclusive" >Exclusive</li>
                                 <li data-value="brand" >Brand</li>
                             </ul>
-                        </div>
                     </div>
                 </div>
                 <div class="action_block view">

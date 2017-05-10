@@ -39,7 +39,7 @@ $padding_container: rem-calc(18);
     }
 
     @include breakpoint(xsmall down) {
-      background-color: #ebebeb;
+      //background-color: #ebebeb;
       height: rem-calc(45);
       line-height: rem-calc(45);
     }
@@ -52,21 +52,78 @@ $padding_container: rem-calc(18);
 
       @include breakpoint(large up) {
         text-align: right;
+
+        .action_group {
+          padding-right: 8%;
+
+          .action_block {
+            &.sort {
+              .active_value {
+                font-size: 14px;
+                width: 162px;
+                background: #ffffff;
+                border: 1px solid #aaa;
+                height: 24px;
+                line-height: 24px;
+                position: relative;
+                padding-left: 10px;
+                display: inline-block;
+                text-align: left;
+
+                &:after {
+                  content: '';
+                  display: inline-block;
+                  width: 10px;
+                  height: 7px;
+                  background: url(../images/icons/state_line/drop-down_list.svg) no-repeat;
+                  position: absolute;
+                  top: 50%;
+                  margin-top: -4px;
+                  right: 7px;
+                }
+              }
+            }
+            &.filter {
+              display: none;
+            }
+          }
+        }
       }
     }
 
     .action_block {
       display: inline-block;
-      background-color: #ebebeb;
 
-      .sort {
+      .action_button {
+        width: 100%;
+        text-align: center;
+        background-color: #ebebeb;
+      }
+
+      &.sort {
         .options {
           display: none;
+        }
+
+        &.active {
+          position: relative;
+
+          .options {
+            text-align: left;
+            display: block;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: #fff;
+          }
         }
       }
 
 
       &.view {
+        background-color: #ebebeb;
 
         a {
           display: inline-block;
@@ -118,33 +175,24 @@ $padding_container: rem-calc(18);
 
     }
 
-    @include breakpoint(large up) {
-      .actions {
-        .action_block {
-          &.sort {
-            .active_value {
-
-            }
-
-            li {
-              &.active {
-
-              }
-            }
-
-          }
-        }
-      }
-    }
 
     @include breakpoint(medium down) {
       .actions {
         display: flex;
 
+        .action_group {
+          flex: 1 0;
+          display: flex;
+
+          .action_block {
+            flex: 2 0;
+          }
+        }
+
         .action_block {
           display: flex;
           flex-direction: row;
-          justify-content: center;
+          //justify-content: center;
           align-items: center;
 
           &.view {
@@ -154,10 +202,15 @@ $padding_container: rem-calc(18);
           .action_button {
             position: relative;
             transition: all .4s;
+            width: 99%;
 
             .action {
               font-size: rem-calc(24);
               text-transform: uppercase;
+
+              @include breakpoint(xsmall down) {
+                font-size: rem-calc(15);
+              }
             }
 
             &:after {
@@ -169,18 +222,10 @@ $padding_container: rem-calc(18);
               height: 7px;
               transition: all .4s;
               margin-left: 10px;
-              margin-top: -5px;
-            }
-
-            &.active {
-              background-color: #1e3f51;
-              color: #90a6b1;
-
-              &:after {
-                border-bottom-color: #90a6b1;
-                margin-top: 5px;
-                transform: rotate(180deg);
-              }
+              //margin-top: -5px;
+              margin-top: -10px;
+              position: absolute;
+              top: 50%;
             }
           }
 
@@ -189,15 +234,9 @@ $padding_container: rem-calc(18);
               position: relative;
 
               .options {
-                display: block;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                z-index: 100;
-                background: #fff;
                 border: 2px solid #0d2431;
                 border-top: none;
+                width: 99%;
 
                 li {
                   line-height: 46px;
@@ -217,18 +256,34 @@ $padding_container: rem-calc(18);
                     background-size: rem-calc(26);
                   }
                 }
+
+                @include breakpoint(xsmall down) {
+                  width: 137%;
+                  left: -38%;
+                  border: 1px solid #0d2431;
+
+                  li {
+                    line-height: 31px;
+                    font: {
+                      size: rem-calc(14);
+                    }
+                  }
+                }
               }
             }
           }
-        }
 
-        .action_group {
-          flex: 1 0;
-          display: flex;
+          &.active {
+            .action_button {
+              background-color: #1e3f51;
+              color: #90a6b1;
 
-          .action_block {
-            flex: 2 0;
-            margin-right: rem-calc(5);
+              &:after {
+                border-bottom-color: #90a6b1;
+                margin-top: -1px;
+                transform: rotate(180deg);
+              }
+            }
           }
         }
       }
@@ -238,16 +293,9 @@ $padding_container: rem-calc(18);
       .actions {
         .action_block {
 
-          &.sort {
-
-          }
-
           &.view {
             flex: 0 0 rem-calc(45);
             line-height: rem-calc(45);
-          }
-          &.view {
-
           }
         }
       }
