@@ -31,7 +31,7 @@ func_backprocess_log(LOG_CATEGORY, $log_text);
 $cl_ver = FbaInboundClient::MWS_CLIENT_VERSION; //use for autoload Amazon library
 $oAmazon = new \Xcart\AmazonMWS('FBAInboundServiceMWS_Client', '/FulfillmentInboundShipment/2010-10-01');
 $oAmazon
-    ->enableLog('amazon-list-inbound')
+    //->enableLog('amazon-list-inbound')
     ->_Request('GetListInboundItems')
     ->_Request('GetListInboundShipments');
 
