@@ -1,10 +1,13 @@
 <table width="100%" cellspacing="1" cellpadding="3" data-batch-id="{$batch_id}" data-manufacturer-code="{$products[0].code}">
     <tr class="no-export">
-        <td colspan="16" align="right">
+        <td colspan="15" align="right">
+            <a class="fba-button" href="#">Save to FBA</a>
+        </td>
+        <td align="right">
             <a class="csv-button" href="#">Save to CSV</a>
         </td>
     </tr>
-    <tr class="TableHead">
+    <tr class="TableHead no-export">
         <td>SKU /<br/>Amazon SKU to load</td>
         <td>Amazon FBA</td>
         <td>Last order days</td>
@@ -25,7 +28,7 @@
     </tr>
     {foreach $products as $product}
         <tr class="{cycle ["", "TableSubHead"]}">
-            <td><a target="_blank" href="/admin/product_modify.php?productid={$product.productid}&switch_sf=true">{$product.productcode}</a>{if $product.productcode != $product.SKU}<br/>{$product.SKU}{/if}</td>
+            <td class="fba-required"><a target="_blank" href="/admin/product_modify.php?productid={$product.productid}&switch_sf=true">{$product.productcode}</a>{if $product.productcode != $product.SKU}<br/>{$product.SKU}{/if}</td>
             <td align="center">{$product.amazon_fba}</td>
             <td align="center">{$product.last_order_days}</td>
             <td align="center">{$product.items_sold_last_1m}</td>
@@ -40,7 +43,7 @@
             <td align="center">{if $product.avg_comp_price >= 0}${$product.avg_comp_price|formatprice:",":"."}{/if}</td>
             <td align="center">{$product.r_avail}</td>
             <td align="center">{$product.total_stock}</td>
-            <td align="center"><input class="restocking-qty" size="3" type="text" value="{$product.restocking_qty}" /></td>
+            <td class="fba-required" align="center"><input class="restocking-qty" size="3" type="text" value="{$product.restocking_qty}" /></td>
         </tr>
     {/foreach}
 </table>
