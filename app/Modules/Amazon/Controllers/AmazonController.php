@@ -34,12 +34,14 @@ class AmazonController extends PrototypeAdminController
                 'tau' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_back_in_time_period'])->valuesList(['value'], true)),
                 'tau_m' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_tau_m'])->valuesList(['value'], true))
             ];
-            $aProducts = AmazonReorderingHelper::calculateAmazonProducts($params);
+
+            $aProducts = AmazonReorderingHelper::getAmazonProductsForCalculate($params);
             if ($aProducts) {
                 $model = new AmazonReorderBatchModel(['user_id' => Xcart::app()->user->id]);
                 $model->save();
                 foreach ($aProducts as $aProduct) {
-                    $modelData = new AmazonReorderBatchDataModel(array_merge($aProduct, ['batch_id' => $model->batch_id]));
+                    $aResult = AmazonReorderingHelper::calculateAmazonProducts(array_merge($params, ['productid' => $aProduct['productid']]));
+                    $modelData = new AmazonReorderBatchDataModel(array_merge($aResult, ['batch_id' => $model->batch_id]));
                     $modelData->save();
                 }
                 if ($model->batch_id) {
