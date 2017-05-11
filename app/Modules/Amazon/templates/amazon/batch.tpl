@@ -10,22 +10,42 @@
     {/smarty_admin_block}
 
     {smarty_admin_block name='Products for amazon reordering'}
-    <form name="amazon_shipping_form" method="post">
-        {foreach $amazon_products as $distributor => $products}
-            <fieldset {if $amazon_products@first}class="expanded"{/if}>
-                <legend>{$distributor} ({count($products)})</legend>
-                {include 'amazon/reordering/_distributor_products.tpl'}
-            </fieldset>
-        {/foreach}
-       {include 'amazon/_buttons.tpl'}
-    </form>
+        {if $batch_model}
+            {if $batch_model->status == 'done'}
+                <form name="amazon_shipping_form" method="post">
+                    {foreach $amazon_products as $distributor => $products}
+                        <fieldset {if $amazon_products@first}class="expanded"{/if}>
+                            <legend>{$distributor} ({count($products)})</legend>
+                            {include 'amazon/reordering/_distributor_products.tpl'}
+                        </fieldset>
+                    {/foreach}
+                   {include 'amazon/_buttons.tpl'}
+                </form>
+            {elseif $batch_model->status == 'processing'}
+                <div class="row" style="text-align: center">
+                    <div class="columns large-12">
+                        Processing Amazon data
+                    </div>
+                    <div class="columns large-12 load"></div>
+               </div>
+            {/if}
+        {/if}
     {/smarty_admin_block}
+
 {/block}
 
 {block 'js'}
     {parent}
     <script type="text/javascript">
         (function(){
+            var url_restocking_batch_processing = '{url 'amazon:batch_processing'}';
+            $.post(url_restocking_batch_processing, {
+                    batch_id: {$batch_id}
+                },
+                function (data) {
+
+                });
+
             function exportToFile(obj, filename, txt) {
                 if (window.Blob && window.URL) {
                     // HTML5 Blob

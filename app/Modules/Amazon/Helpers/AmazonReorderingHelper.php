@@ -20,15 +20,11 @@ class AmazonReorderingHelper
 
     public static function calculateAmazonProducts($params)
     {
-        $aProducts = Connection::getInstance()->executeQuery(AmazonSql::getAmazonReorderingSql($params))->fetch();
+        $aProducts = Connection::getInstance()->executeQuery(AmazonSql::getAmazonReorderingSql($params))->fetchAll();
         return $aProducts;
     }
 
-    public static function getAmazonProductsForCalculate()
-    {
-        $aProducts = Connection::getInstance()->executeQuery(AmazonSql::getAmazonProductsForCalculateSql())->fetchAll();
-        return $aProducts;
-    }
+
 
     /**
      * @param int $dayOfReorder 1 Monday - 7 Sunday ISO-8601
