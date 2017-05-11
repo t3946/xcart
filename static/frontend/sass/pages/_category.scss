@@ -58,6 +58,27 @@ $padding_container: rem-calc(18);
 
           .action_block {
             &.sort {
+              .options {
+                right: 0;
+                top: 78%;
+                width: 162px;
+                border: 1px solid #ccc;
+                border: 1px solid rgba(0, 0, 0, 0.15);
+
+                li {
+                  padding: 4px 10px;
+                  color: #333;
+                  font: {
+                    size: 14px;
+                  }
+                  cursor: pointer;
+
+                  &:hover {
+                    background-color: #dfe5e8;
+                  }
+                }
+              }
+
               .active_value {
                 font-size: 14px;
                 width: 162px;
@@ -69,8 +90,10 @@ $padding_container: rem-calc(18);
                 padding-left: 10px;
                 display: inline-block;
                 text-align: left;
+                cursor: pointer;
 
                 &:after {
+                  transition: all .4s;
                   content: '';
                   display: inline-block;
                   width: 10px;
@@ -80,6 +103,14 @@ $padding_container: rem-calc(18);
                   top: 50%;
                   margin-top: -4px;
                   right: 7px;
+                }
+              }
+
+              &.active {
+                .active_value {
+                  &:after {
+                    transform: rotate(180deg);
+                  }
                 }
               }
             }
@@ -113,8 +144,6 @@ $padding_container: rem-calc(18);
             display: block;
             position: absolute;
             top: 100%;
-            left: 0;
-            right: 0;
             z-index: 100;
             background: #fff;
           }
@@ -203,6 +232,7 @@ $padding_container: rem-calc(18);
             position: relative;
             transition: all .4s;
             width: 99%;
+            cursor: pointer;
 
             .action {
               font-size: rem-calc(24);
@@ -237,6 +267,8 @@ $padding_container: rem-calc(18);
                 border: 2px solid #0d2431;
                 border-top: none;
                 width: 99%;
+                left: 0;
+                right: 0;
 
                 li {
                   line-height: 46px;

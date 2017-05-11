@@ -106,10 +106,28 @@
         $('.action_block.view a').removeClass('active');
         $(this).addClass('active');
     });
+
     $(document).on('click', '.action_block.sort', function(e){
         e.preventDefault();
-
         $(this).toggleClass('active');
+    });
+
+    $(document).on('click', '.action_block.sort .options li', function(e){
+        e.preventDefault();
+        let $this = $(this);
+
+        if (!$this.hasClass('active')) {
+            $('.action_block.sort .options li').removeClass('active');
+            $this.addClass('active');
+            $this.closest('.action_block.sort').find('.active_value').html($this.text());
+
+            setTimeout(()=>{
+                $this.closest('.action_block.sort').removeClass('active');
+            }, 500);
+        }
+        else {
+            $this.closest('.action_block.sort').removeClass('active');
+        }
     });
 
     $(document).ready(function(){

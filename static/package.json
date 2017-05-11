@@ -23,5 +23,8 @@
     "gulp-sass": "^3.1.0",
     "gulp-uglify": "^2.1.0",
     "modernizr": "^3.5.0"
+  },
+  "dependencies": {
+    "browserify": "^14.3.0"
   }
 }
