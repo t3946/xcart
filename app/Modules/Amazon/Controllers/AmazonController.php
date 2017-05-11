@@ -35,7 +35,6 @@ class AmazonController extends PrototypeAdminController
                 'tau_m' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_tau_m'])->valuesList(['value'], true))
             ];
 
-            $cnt = 0;
             $aProducts = AmazonReorderingHelper::getAmazonProductsForCalculate();
             if ($aProducts) {
                 set_time_limit(0);
@@ -47,13 +46,6 @@ class AmazonController extends PrototypeAdminController
                         $modelData = new AmazonReorderBatchDataModel(array_merge($aResult, ['batch_id' => $model->batch_id]));
                         $modelData->save();
                     }
-                    if ($cnt % 100 == 0) {
-                        func_flush(".");
-                        if($cnt % 500 == 0) {
-                            func_flush("<br />\n");
-                        }
-                    }
-                    $cnt++;
                 }
                 if ($model->batch_id) {
                     //$this->autoRedirect($model->batch_id);
