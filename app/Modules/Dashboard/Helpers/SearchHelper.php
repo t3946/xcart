@@ -238,7 +238,7 @@ class SearchHelper
                 $stmt = $connection->executeQuery(SearchSql::getPhoneFaxOrderSql(), ['like' => $query]);
                 break;
             case 'search_email' :
-                $data = $connection->executeQuery(SearchSql::getEmailOrderSql(), ['like' => $like]);
+                $stmt = $connection->executeQuery(SearchSql::getEmailOrderSql(), ['like' => $like]);
                 break;
             case 'search_zip' :
                 $query = self::getNumberOnlyRegexp($query);

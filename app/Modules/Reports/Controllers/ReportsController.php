@@ -37,7 +37,10 @@ class ReportsController extends PrototypeAdminController
 
         echo $this->renderInternal('reports/search.tpl', array_merge(
                 SearchHelper::getFormAndListData(),
+                ReportsHelper::getFormAndListData(),
                 [
+                    'group_names' => ReportsStore::getGroupsNames(),
+                    'aggregates_names' => ReportsStore::getAggregates(),
                     'reports' => $reports,
                     'form_data' => SearchHelper::prepareFormDataForTemplate($form_data),
                     'form_collapse' => $form_collapse,
@@ -147,6 +150,7 @@ class ReportsController extends PrototypeAdminController
     /** @param Model|ModelInterface $model */
     private function createOrUpdate($model)
     {
+
         $class = ReportModel::classNameShort();
         if (isset($_POST['delete'])) {
             if ($model->delete()) {
@@ -162,7 +166,6 @@ class ReportsController extends PrototypeAdminController
                 $this->autoRedirect($model);
             }
         }
-
         echo $this->renderInternal('reports/admin/report_edit.tpl',
             array_merge(
                 SearchHelper::getFormAndListData(),

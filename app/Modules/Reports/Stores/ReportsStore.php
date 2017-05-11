@@ -2,6 +2,7 @@
 
 namespace Modules\Reports\Stores;
 
+use Mindy\QueryBuilder\Aggregation\Avg;
 use Mindy\QueryBuilder\Aggregation\Count;
 use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Expression;
@@ -28,6 +29,8 @@ class ReportsStore extends OrderSearchStore
                     'shipping',
                     'profit',
                     'avg_profit',
+                    'avg_check',
+                    'median_check',
                 ]
             ],
             'distributor' => [
@@ -40,6 +43,8 @@ class ReportsStore extends OrderSearchStore
                     'shipping',
                     'profit',
                     'avg_profit',
+                    'avg_check',
+                    'median_check',
                 ]
             ],
 
@@ -58,40 +63,57 @@ class ReportsStore extends OrderSearchStore
     {
         return [
             'qty' => [
-                'name' => 'Quantity',
+                'name' => 'Order count',
                 'prefix' => '',
                 'suffix' => '',
+                'function' => 'array_sum',
+            ],
+            'f_total' => [
+                'name' => 'Subtotal',
+                'prefix' => '$',
+                'suffix' => '',
+                'function' => 'array_sum',
+            ],
+            'subtotal' => [
+                'name' => 'Product subtotal',
+                'prefix' => '$',
+                'suffix' => '',
+                'function' => 'array_sum',
+            ],
+            'shipping' => [
+                'name' => 'Shipping cost',
+                'prefix' => '$',
+                'suffix' => '',
+                'function' => 'array_sum',
+            ],
+            'profit' => [
+                'name' => 'Profit margin',
+                'prefix' => '',
+                'suffix' => '%',
+                'function' => 'array_avg',
+            ],
+            'avg_check' => [
+                'name' => 'Avg. order',
+                'prefix' => '$',
+                'suffix' => '',
+                'function' => 'array_avg',
+            ],
+            'median_check' => [
+                'name' => 'Mean order',
+                'prefix' => '$',
+                'suffix' => '',
+                'function' => 'array_avg',
+            ],
+            /*'avg_profit' => [
+                'name' => 'AVG Profit %',
+                'prefix'  => '',
+                'suffix' => '%',
             ],
             'amount' => [
                 'name' => 'Amount',
                 'prefix' => '',
                 'suffix' => '',
-            ],
-            'f_total' => [
-                'name' => 'Total',
-                'prefix' => '$',
-                'suffix' => '',
-            ],
-            'subtotal' => [
-                'name' => 'Subtotal',
-                'prefix' => '$',
-                'suffix' => '',
-            ],
-            'shipping' => [
-                'name' => 'Shipping Cost',
-                'prefix' => '$',
-                'suffix' => '',
-            ],
-            'profit' => [
-                'name' => 'Profit $',
-                'prefix' => '$',
-                'suffix' => '',
-            ],
-            'avg_profit' => [
-                'name' => 'AVG Profit %',
-                'prefix'  => '',
-                'suffix' => '%',
-            ],
+            ],*/
         ];
     }
 
@@ -102,9 +124,11 @@ class ReportsStore extends OrderSearchStore
             'amount' => '',
             'f_total' => new Sum('group.total_net'),
             'subtotal' => new Expression('SUM(order_details.price * order_details.amount)'),
-            'shipping' => '',
-            'profit' => '',
+            'shipping' => new Sum('group.shipping_net'),
+            'profit' => new Expression("AVG(CASE WHEN inv.invoice_number IS NULL THEN NULL ELSE group.profit_margin END)"),
             'avg_profit' => '',
+            'avg_check' => new Avg('total'),
+            'median_check' =>  new Expression("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(GROUP_CONCAT(total ORDER BY total SEPARATOR ','),',', 50/100 * COUNT(*)), ',', -1) AS DECIMAL (18,2))"),
         ];
     }
 
@@ -177,6 +201,7 @@ class ReportsStore extends OrderSearchStore
         }
 
         if (!empty($this->form_data['report']['aggregate_settings'])) {
+            $agg_oreder = [];
             $agg = self::getAggregatesFields();
             foreach ($this->form_data['report']['aggregate_settings'] as $aggregate_index => $aggregate_settings) {
                 $aggr_enable = true;
@@ -191,9 +216,16 @@ class ReportsStore extends OrderSearchStore
                 }
                 if ($aggr_enable) {
                     $qs->addSelect([$aggregate_settings => $agg[$aggregate_settings]]);
-                    $order[] = "-" . $aggregate_settings;
+                    $agg_oreder[] = "-" . $aggregate_settings;
+                }
+                if ($aggregate_settings == 'profit'){
+                    $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'inv.orderid', 'group.manufacturerid' => 'inv.manufacturerid'], 'inv');
                 }
             }
+            if ($agg_oreder) {
+                krsort($agg_oreder);
+            }
+            $order = array_merge($order, $agg_oreder);
         }
 
         if ($filter) {
@@ -291,7 +323,7 @@ class ReportsStore extends OrderSearchStore
                         }
                     }
                 }
-                return reset($sa) < reset($sb);
+                return end($sa) < end($sb);
             });
         }
         return $totals;

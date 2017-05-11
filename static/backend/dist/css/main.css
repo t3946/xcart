@@ -4242,33 +4242,54 @@ form[name=hide_no_orders_test_checkoutform] input {
     .OrderReport .order-report-wrapper .report-table {
       width: 100%;
       border-spacing: 0;
-      border-left: solid 1px;
       border-top: solid 1px; }
       .OrderReport .order-report-wrapper .report-table .report-header {
         background-color: #ccc;
         text-align: center; }
         .OrderReport .order-report-wrapper .report-table .report-header > td {
           font-weight: bold; }
+      .OrderReport .order-report-wrapper .report-table .odd .border-off, .OrderReport .order-report-wrapper .report-table .even .border-off {
+        background-color: white; }
       .OrderReport .order-report-wrapper .report-table .odd {
         background-color: #ccc; }
+      .OrderReport .order-report-wrapper .report-table .first > td {
+        border-top: solid 1px; }
+      .OrderReport .order-report-wrapper .report-table .delimiter {
+        line-height: 7px; }
       .OrderReport .order-report-wrapper .report-table td {
         padding: 0 5px;
         font-size: 14px;
-        border-right: solid 1px;
+        border-left: solid 1px;
         border-bottom: solid 1px; }
+        .OrderReport .order-report-wrapper .report-table td.border-off {
+          border: none; }
+          .OrderReport .order-report-wrapper .report-table td.border-off:last-child {
+            border: none; }
         .OrderReport .order-report-wrapper .report-table td > .group {
           vertical-align: top; }
         .OrderReport .order-report-wrapper .report-table td > .aggregate {
           vertical-align: bottom; }
         .OrderReport .order-report-wrapper .report-table td.align-right {
           text-align: right; }
-  .OrderReport .report_footer {
-    margin: 10px 0 30px;
+        .OrderReport .order-report-wrapper .report-table td:last-child {
+          border-right: solid 1px; }
+        .OrderReport .order-report-wrapper .report-table td.total-label {
+          font-weight: bold; }
+  .OrderReport .report-footer {
+    margin: 10px 0 10px;
     font-size: 14px; }
-    .OrderReport .report_footer > div {
+    .OrderReport .report-footer div.columns {
       padding: 0; }
-    .OrderReport .report_footer .total-label {
-      font-weight: bold; }
+    .OrderReport .report-footer .total-value {
+      text-align: right; }
+  .OrderReport .report-comment {
+    margin: 30px 0; }
+
+.restocking-table .changed {
+  background-color: #ff9308; }
+
+.restocking-table .restocking-qty, .restocking-table .group-apply-val {
+  text-align: right; }
 
 .admin form {
   position: relative; }

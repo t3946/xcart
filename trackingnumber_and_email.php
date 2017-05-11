@@ -17,12 +17,14 @@ $diff_time = $curr_time - $days_to_check;
 
 //func_print_r("diff_time: ".$diff_time);
 
-$orders = func_query("
-	SELECT $sql_tbl[orders].orderid, $sql_tbl[orders].order_prefix, $sql_tbl[orders].firstname, $sql_tbl[orders].email FROM $sql_tbl[orders] 
+$orders = func_query(/** @lang MySQL */
+    "
+	SELECT orderid, order_prefix, firstname, email FROM xcart_orders
 	WHERE 
 		thankyou_for_order_email_sent!='Y'
 		AND tracking_all_filled = 'Y'
 		AND tracking_fill_time!='0'
+		AND amazon_fulfillment_channel = ''
 		AND tracking_fill_time < '$diff_time'
 ");
 
@@ -66,6 +68,7 @@ if (!empty($orders)){
 
 //				func_send_simple_mail($to, $subj, $body, $from);
 				func_send_mail($to, 'mail/simple_email_subj.tpl', 'mail/simple_email_body.tpl', $from, false);
+                func_send_mail('igor@s3stores.com', 'mail/simple_email_subj.tpl', 'mail/simple_email_body.tpl', $from, false);
 
 				db_query("UPDATE $sql_tbl[orders] SET thankyou_for_order_email_sent='Y' WHERE orderid='$v[orderid]'");
 

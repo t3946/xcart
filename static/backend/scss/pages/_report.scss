@@ -59,7 +59,6 @@
     .report-table{
       width: 100%;
       border-spacing: 0;
-      border-left: solid 1px;
       border-top: solid 1px;
 
       .report-header {
@@ -71,15 +70,39 @@
         }
       }
 
+      .odd, .even {
+        .border-off {
+          background-color: white;
+        }
+      }
+
       .odd {
         background-color:  #ccc;
+      }
+
+      .first {
+        & > td {
+          border-top: solid 1px;
+        }
+      }
+
+      .delimiter {
+        line-height: 7px;
       }
 
       td {
         padding: 0 5px;
         font-size: 14px;
-        border-right: solid 1px;
+        border-left: solid 1px;
         border-bottom: solid 1px;
+
+        &.border-off {
+          border: none;
+
+          &:last-child {
+            border: none;
+          }
+        }
 
         & > .group {
           vertical-align: top;
@@ -92,19 +115,34 @@
         &.align-right {
           text-align: right;
         }
+
+        &:last-child {
+          border-right: solid 1px;
+        }
+
+        &.total-label{
+          font-weight: bold;
+        }
       }
+
+
     }
   }
 
-  .report_footer {
-    margin: 10px 0 30px;
+  .report-footer {
+    margin: 10px 0 10px;
     font-size: 14px;
 
-    & > div{
-      padding: 0;
+      div.columns{
+        padding: 0;
+      }
+
+    .total-value {
+      text-align: right;
     }
-    .total-label{
-      font-weight: bold;
-    }
+  }
+
+  .report-comment{
+    margin: 30px 0 ;
   }
 }

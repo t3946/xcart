@@ -64,8 +64,6 @@ class HTMLShot extends Data
      */
     public function getHTMLShot()
     {
-        global $xcart_dir;
-        require_once $xcart_dir . "/include/classProduct.php";
         return unserialize($this->getField('htmlshot'));
     }
 

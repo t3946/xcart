@@ -124,7 +124,7 @@ class UPS extends ShippingProcessor
                             addCondition('last_updated_date >= ' . (time() - self::APPROXIMATION_MAX_VALID_TIME))->
                             addCondition("state = '{$this->getCustomer()->getShippingStateEntity()->getCode()}'")
                         );
-                        if ($oApproximationRates->getField('id')) {
+                        if ($oApproximationRates->getField('manufacturerid')) {
                             $weight = ceil($oShippingRate->getCartShippingWeight());
                             $shippingCharge = 0;
                             switch ($weight) {

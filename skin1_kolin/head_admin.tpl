@@ -42,7 +42,7 @@
 
 <td width="34%" align="center" class="HeadLine">
 {if $usertype eq 'A' && $login}
-                <form method="post" action="orders.php" name="productsearchform">
+                <form method="post" action="/admin/orders.php" name="productsearchform">
                 <input type="hidden" name="fast_search" value="Y" />
                 <input type="hidden" name="mode" value="" />
 

@@ -15,6 +15,11 @@ return [
         'path' => 'Modules.Reports.routes_admin',
         'namespace' => 'reports'
     ],
+    [
+        'route' => '/admin/amazon',
+        'path' => 'Modules.Amazon.routes_admin',
+        'namespace' => 'amazon'
+    ],
 //    [
 //        'route' => '/admin/files',
 //        'path' => 'Modules.Files.routes',
