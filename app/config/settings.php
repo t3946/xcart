@@ -96,9 +96,9 @@ return array_replace_recursive([
                    'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
                    'root' => 'www.media',
                ],
-               'images' => [
+               'www' => [
                    'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
-                   'root' => 'www.images',
+                   'root' => 'www',
                ]
            ],
        ],

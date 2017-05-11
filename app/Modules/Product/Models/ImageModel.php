@@ -35,7 +35,7 @@ class ImageModel extends Model
             ],
             'image_path' => [
                 'class' => FileField::className(),
-                'adapterName' => 'image',
+                'adapterName' => 'www',
                 'null' => false,
                 'default' => '',
             ],
