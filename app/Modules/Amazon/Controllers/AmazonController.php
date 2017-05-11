@@ -28,24 +28,26 @@ class AmazonController extends PrototypeAdminController
 
     public function create_shipping()
     {
-        global $config;
-        $params = [
-            'day_reorder' => AmazonReorderingHelper::getDaysBeforeNextReorder(current(GlobalConfigModel::objects()->filter(['name' => 'reorder_weekday'])->valuesList(['value'], true))),
-            'tau' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_back_in_time_period'])->valuesList(['value'], true)),
-            'tau_m' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_tau_m'])->valuesList(['value'], true))
-        ];
-        $aProducts = AmazonReorderingHelper::calculateAmazonProducts($params);
-        if ($aProducts) {
-            $model = new AmazonReorderBatchModel(['user_id' => Xcart::app()->user->id]);
-            $model->save();
-            foreach ($aProducts as $aProduct) {
-                $modelData = new AmazonReorderBatchDataModel(array_merge($aProduct, ['batch_id' => $model->batch_id]));
-                $modelData->save();
-            }
-            if ($model->batch_id) {
-                $this->autoRedirect($model->batch_id);
+        if (array_key_exists('calculate_shipping', $_POST)) {
+            $params = [
+                'day_reorder' => AmazonReorderingHelper::getDaysBeforeNextReorder(current(GlobalConfigModel::objects()->filter(['name' => 'reorder_weekday'])->valuesList(['value'], true))),
+                'tau' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_back_in_time_period'])->valuesList(['value'], true)),
+                'tau_m' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_tau_m'])->valuesList(['value'], true))
+            ];
+            $aProducts = AmazonReorderingHelper::calculateAmazonProducts($params);
+            if ($aProducts) {
+                $model = new AmazonReorderBatchModel(['user_id' => Xcart::app()->user->id]);
+                $model->save();
+                foreach ($aProducts as $aProduct) {
+                    $modelData = new AmazonReorderBatchDataModel(array_merge($aProduct, ['batch_id' => $model->batch_id]));
+                    $modelData->save();
+                }
+                if ($model->batch_id) {
+                    $this->autoRedirect($model->batch_id);
+                }
             }
         }
+        $this->autoRedirect(null);
     }
 
     public function batch($id)
@@ -100,6 +102,8 @@ class AmazonController extends PrototypeAdminController
         if (array_key_exists('recalculate_submit', $_POST)) {
             return ['amazon:batch', ['id' => $id]];
         } else if (array_key_exists('update_changes', $_POST)) {
+            return ['amazon:batch', ['id' => $id]];
+        } else if (array_key_exists('calculate_shipping', $_POST)) {
             return ['amazon:batch', ['id' => $id]];
         } else {
             return ['amazon:index', []];
