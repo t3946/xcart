@@ -65,6 +65,6 @@ SQL;
      */
     public static function getDaysBeforeNextReorder($dayOfReorder)
     {
-        return ($dayOfReorder + 7 - 1) - (new DateTime())->format('N');
+        return $dayOfReorder + 7 - (new DateTime())->format('N');
     }
 }
