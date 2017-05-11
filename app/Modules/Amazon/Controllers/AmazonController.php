@@ -35,8 +35,10 @@ class AmazonController extends PrototypeAdminController
                 'tau_m' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_tau_m'])->valuesList(['value'], true))
             ];
 
+            $cnt = 0;
             $aProducts = AmazonReorderingHelper::getAmazonProductsForCalculate();
             if ($aProducts) {
+                set_time_limit(0);
                 $model = new AmazonReorderBatchModel(['user_id' => Xcart::app()->user->id]);
                 $model->save();
                 foreach ($aProducts as $aProduct) {
@@ -45,13 +47,29 @@ class AmazonController extends PrototypeAdminController
                         $modelData = new AmazonReorderBatchDataModel(array_merge($aResult, ['batch_id' => $model->batch_id]));
                         $modelData->save();
                     }
+                    if ($cnt % 100 == 0) {
+                        func_flush(".");
+                        if($cnt % 500 == 0) {
+                            func_flush("<br />\n");
+                        }
+                    }
+                    $cnt++;
                 }
                 if ($model->batch_id) {
-                    $this->autoRedirect($model->batch_id);
+                    //$this->autoRedirect($model->batch_id);
+                    $amazonStore = new AmazonStore(array_merge(AmazonReorderingHelper::getFilterData($_GET['filter']), ['batch_id' => $model->batch_id]));
+
+                    echo $this->renderInternal('amazon/batch.tpl',
+                        [
+                            'batch_id' => $model->batch_id,
+                            'amazon_products' => $amazonStore->getAmazonBatchData(),
+                            'filter_data' => AmazonReorderingHelper::getFilterData($_GET['filter'])
+                        ]
+                    );
                 }
             }
         }
-        $this->autoRedirect(null);
+        //$this->autoRedirect(null);
     }
 
     public function batch($id)
