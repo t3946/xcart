@@ -4,6 +4,7 @@ namespace Modules\Product\Models;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BlobField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -33,7 +34,8 @@ class ImageModel extends Model
                 'default' => '',
             ],
             'image_path' => [
-                'class' => CharField::className(),
+                'class' => FileField::className(),
+                'adapterName' => 'image',
                 'null' => false,
                 'default' => '',
             ],

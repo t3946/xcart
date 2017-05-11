@@ -12,4 +12,13 @@ class ImageTModel extends ImageModel
     {
         return parent::tableName().'_T';
     }
+
+    public static function getFields()
+    {
+        return array_merge(parent::getFields(), [
+            'image_path' => [
+                'uploadTo' => 'T/%M/%O/%Y-%m-%d',
+            ]
+        ]);
+    }
 }

@@ -12,4 +12,13 @@ class ImageDModel extends ImageModel
     {
         return parent::tableName().'_D';
     }
+
+    public static function getFields()
+    {
+        return array_merge(parent::getFields(), [
+            'image_path' => [
+                'uploadTo' => 'D/%M/%O/%Y-%m-%d',
+            ]
+        ]);
+    }
 }

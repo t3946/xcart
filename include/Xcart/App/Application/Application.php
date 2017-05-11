@@ -26,6 +26,7 @@ use Xcart\App\Request\HttpRequest;
  * @property \Xcart\App\Interfaces\AuthInterface $auth Authorization component
  * @property \Xcart\App\Cache\Cache $cache Cache component
  * @property \Xcart\App\Event\EventManager $event Event component
+ * @property \Xcart\App\Storage\Storage $storage File storage component
  * @property \Modules\Mail\Components\MailComponent $mail Mail component
  * @property UserModel $user
  * 

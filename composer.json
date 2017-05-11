@@ -20,7 +20,9 @@
         "paypal/rest-api-sdk-php": "*",
         "symfony/validator": "^2.8",
         "true/punycode": "^2.1",
-        "caponica/amazon-mws-complete": "dev-master"
+        "caponica/amazon-mws-complete": "dev-master",
+        "league/flysystem": "^1.0",
+        "symfony/http-foundation": "^2.8"
     },
     "autoload": {
         "psr-4": {

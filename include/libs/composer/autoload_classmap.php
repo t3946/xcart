@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname($vendorDir));
 
 return array(
+    'CallbackFilterIterator' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/CallbackFilterIterator.php',
     'FBAInventoryServiceMWS_Client' => $baseDir . '/FBAInventoryServiceMWS/Client.php',
     'FBAInventoryServiceMWS_Exception' => $baseDir . '/FBAInventoryServiceMWS/Exception.php',
     'FBAInventoryServiceMWS_Interface' => $baseDir . '/FBAInventoryServiceMWS/Interface.php',
@@ -309,5 +310,7 @@ return array(
     'MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest' => $baseDir . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsRequest.php',
     'MarketplaceWebService_Model_UpdateReportAcknowledgementsResponse' => $baseDir . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsResponse.php',
     'MarketplaceWebService_Model_UpdateReportAcknowledgementsResult' => $baseDir . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsResult.php',
+    'RecursiveCallbackFilterIterator' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/RecursiveCallbackFilterIterator.php',
     'RequestType' => $baseDir . '/MarketplaceWebService/RequestType.php',
+    'SessionHandlerInterface' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/SessionHandlerInterface.php',
 );

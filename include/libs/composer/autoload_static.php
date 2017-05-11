@@ -7,9 +7,12 @@ namespace Composer\Autoload;
 class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
 {
     public static $files = array (
-        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        'e40631d46120a9c38ea139981f8dab26' => __DIR__ . '/..' . '/ircmaxell/password-compat/lib/password.php',
+        'edc6464955a37aa4d5fbf39d40fb6ee7' => __DIR__ . '/..' . '/symfony/polyfill-php55/bootstrap.php',
+        '3e2471375464aac821502deb0ac64275' => __DIR__ . '/..' . '/symfony/polyfill-php54/bootstrap.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         '68f9084e889ebf718663435970ab45e3' => __DIR__ . '/..' . '/mindy/query_builder/src/Conditions.php',
         '38aa9ffa312700065ceed8bf7bcb7a53' => __DIR__ . '/../../..' . '/include/func/func.core.php',
@@ -70,9 +73,12 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Php55\\' => 23,
+            'Symfony\\Polyfill\\Php54\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Component\\Validator\\' => 28,
             'Symfony\\Component\\Translation\\' => 30,
+            'Symfony\\Component\\HttpFoundation\\' => 33,
         ),
         'R' => 
         array (
@@ -89,6 +95,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
             'Monolog\\' => 8,
             'Modules\\' => 8,
             'Mindy\\QueryBuilder\\' => 19,
+        ),
+        'L' => 
+        array (
+            'League\\Flysystem\\' => 17,
         ),
         'J' => 
         array (
@@ -137,6 +147,14 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         array (
             0 => __DIR__ . '/..' . '/true/punycode/src',
         ),
+        'Symfony\\Polyfill\\Php55\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php55',
+        ),
+        'Symfony\\Polyfill\\Php54\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php54',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
@@ -148,6 +166,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Symfony\\Component\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
+        ),
+        'Symfony\\Component\\HttpFoundation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-foundation',
         ),
         'React\\Promise\\' => 
         array (
@@ -176,6 +198,10 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'Mindy\\QueryBuilder\\' => 
         array (
             0 => __DIR__ . '/..' . '/mindy/query_builder/src',
+        ),
+        'League\\Flysystem\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/flysystem/src',
         ),
         'Jaybizzle\\CrawlerDetect\\' => 
         array (
@@ -274,6 +300,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
     );
 
     public static $classMap = array (
+        'CallbackFilterIterator' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/CallbackFilterIterator.php',
         'FBAInventoryServiceMWS_Client' => __DIR__ . '/../../..' . '/FBAInventoryServiceMWS/Client.php',
         'FBAInventoryServiceMWS_Exception' => __DIR__ . '/../../..' . '/FBAInventoryServiceMWS/Exception.php',
         'FBAInventoryServiceMWS_Interface' => __DIR__ . '/../../..' . '/FBAInventoryServiceMWS/Interface.php',
@@ -577,7 +604,9 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest' => __DIR__ . '/../../..' . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsRequest.php',
         'MarketplaceWebService_Model_UpdateReportAcknowledgementsResponse' => __DIR__ . '/../../..' . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsResponse.php',
         'MarketplaceWebService_Model_UpdateReportAcknowledgementsResult' => __DIR__ . '/../../..' . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsResult.php',
+        'RecursiveCallbackFilterIterator' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/RecursiveCallbackFilterIterator.php',
         'RequestType' => __DIR__ . '/../../..' . '/MarketplaceWebService/RequestType.php',
+        'SessionHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/SessionHandlerInterface.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
