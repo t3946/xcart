@@ -1079,8 +1079,3 @@ $smarty->register_function('getSliderData', ['Xcart\Helpers\SliderData', 'getSli
 
 $smarty->assign('recaptcha_enable', $recaptcha_enable);
 $smarty->assign('key_recaptcha_public', $key_recaptcha_public);
-
-$model = \Modules\Product\Models\ImagePModel::objects()->limit(1)->get();
-
-func_dump($model->getField('image_path'));
-die();
