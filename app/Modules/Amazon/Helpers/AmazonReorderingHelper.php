@@ -20,11 +20,11 @@ class AmazonReorderingHelper
 
     public static function calculateAmazonProducts($params)
     {
-        $aProducts = Connection::getInstance()->executeQuery(AmazonSql::getAmazonReorderingSql($params))->fetchAll();
+        $aProducts = Connection::getInstance()->executeQuery(AmazonSql::getAmazonReorderingSql($params))->fetch();
         return $aProducts;
     }
 
-    public static function getAmazonProductsForCalculate($params)
+    public static function getAmazonProductsForCalculate()
     {
         $aProducts = Connection::getInstance()->executeQuery(AmazonSql::getAmazonProductsForCalculateSql())->fetchAll();
         return $aProducts;
