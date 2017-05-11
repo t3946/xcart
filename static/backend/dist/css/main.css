@@ -4285,6 +4285,12 @@ form[name=hide_no_orders_test_checkoutform] input {
   .OrderReport .report-comment {
     margin: 30px 0; }
 
+.restocking-table .changed {
+  background-color: #ff9308; }
+
+.restocking-table .restocking-qty, .restocking-table .group-apply-val {
+  text-align: right; }
+
 .admin form {
   position: relative; }
 

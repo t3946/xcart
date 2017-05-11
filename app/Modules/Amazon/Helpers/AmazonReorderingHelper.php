@@ -3,6 +3,7 @@
 namespace Modules\Amazon\Helpers;
 
 
+use DateTime;
 use Xcart\Connection;
 
 class AmazonReorderingHelper
@@ -15,7 +16,7 @@ class AmazonReorderingHelper
         return $data;
     }
 
-    public static function calculateAmazonProducts()
+    public static function calculateAmazonProducts($params)
     {
         $sql= /** @lang MySQL */
             <<<SQL
@@ -38,8 +39,8 @@ cidev_get_amazon_price(p.productid) as price,
 cidev_get_minimum_amazon_price(p.productid) as min_fba_price,
 cidev_get_amazon_competitive_price_stat(p.productid, -60, 'AVG') as avg_comp_price,
 p.r_avail as r_avail,
-COALESCE(amazon.restocking_get_reorder_quantity(p.productid, 30, 60, 7, 5, cidev_get_amazon_FBA_stock_total(p.productid) + cidev_get_FBA_amount_in_working_shipments(p.productid), 2, 'N'), 0) as restocking_qty
-FROM xcart_products p
+amazon.restocking_get_reorder_quantity(p.productid, {$params['tau']}, {$params['tau_m']}, {$params['day_reorder']}, m.amazon_leadtime_to_ship, cidev_get_amazon_FBA_stock_total(p.productid) + cidev_get_FBA_amount_in_working_shipments(p.productid), 2, 'N') as restocking_qty
+FROM xcart_products as p
 INNER JOIN xcart_products_amz_fields af ON p.productid = af.productid
 INNER JOIN xcart_manufacturers m ON p.manufacturerid = m.manufacturerid
 INNER JOIN xcart_products_sf sf ON p.productid = sf.productid
@@ -56,5 +57,14 @@ SQL;
 
         $aProducts = Connection::getInstance()->executeQuery($sql)->fetchAll();
         return $aProducts;
+    }
+
+    /**
+     * @param int $dayOfReorder 1 Monday - 7 Sunday ISO-8601
+     * @return int;
+     */
+    public static function getDaysBeforeNextReorder($dayOfReorder)
+    {
+        return ($dayOfReorder + 7 - 1) - (new DateTime())->format('N');
     }
 }

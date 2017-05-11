@@ -73,7 +73,7 @@ class AmazonStore extends BaseStore
     {
             /** @var QuerySet $qs */
             $qs = $this->getQuerySet();
-            $qs->select(['m.manufacturer', 'm.code',
+            $qs->select(['m.manufacturer', 'm.code', 'm.m_address', 'm.m_city', 'm.m_country', 'm.m_state', 'm.m_zipcode',
                 'r_order' => new Expression("(restocking_qty * cost_to_us)"),
                 '*'
             ])

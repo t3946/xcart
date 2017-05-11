@@ -10,12 +10,15 @@
     {/smarty_admin_block}
 
     {smarty_admin_block name='Products for amazon reordering'}
-    {foreach $amazon_products as $distributor => $products}
-        <fieldset {if $amazon_products@first}class="expanded"{/if}>
-            <legend>{$distributor} ({count($products)})</legend>
-            {include 'amazon/reordering/_distributor_products.tpl'}
-        </fieldset>
-    {/foreach}
+    <form name="amazon_shipping_form" method="post">
+        {foreach $amazon_products as $distributor => $products}
+            <fieldset {if $amazon_products@first}class="expanded"{/if}>
+                <legend>{$distributor} ({count($products)})</legend>
+                {include 'amazon/reordering/_distributor_products.tpl'}
+            </fieldset>
+        {/foreach}
+       {include 'amazon/_buttons.tpl'}
+    </form>
     {/smarty_admin_block}
 {/block}
 
@@ -45,11 +48,11 @@
                 }
             }
 
-            function exportTableToCSV($table, filename, selector, header, colDelim, rowDelim) {
+            function exportTableToCSV($table, filename, selector, header, footer, colDelim, rowDelim) {
                 var $rows = $table.find('tr:has(td)').not('.no-export'),
                     tmpColDelim = String.fromCharCode(11), // vertical tab character
                     tmpRowDelim = String.fromCharCode(0), // null character
-                    csv = '"' + $rows.map(function (i, row) {
+                    csv = $rows.map(function (i, row) {
                             var $row = $(row),
                                 $cols = $row.find(selector);
                             return $cols.map(function (j, col) {
@@ -58,21 +61,35 @@
                                 if($col.find('input').length !== 0){
                                     text = $col.find('input').val();
                                 } else {
-                                    text = $col.text();
+                                    text = $col.text().replace(/"/g, '""').trim();
+                                    if ($col.hasClass('float')){
+                                        text = text.match(/\d+\.*\d*/g)
+                                    }
                                 }
-                                return text.replace(/"/g, '""').trim(); // escape double quotes
+                                return text; // escape double quotes
                             }).get().join(tmpColDelim);
                         }).get().join(tmpRowDelim)
                             .split(tmpRowDelim).join(rowDelim)
-                            .split(tmpColDelim).join(colDelim) + '"';
-                exportToFile($(this), filename, header + csv);
+                            .split(tmpColDelim).join(colDelim);
+                exportToFile($(this), filename, header + csv + footer);
             }
 
             $('input.group-apply').click(function(){
                 var fill_val = $(this).siblings('input.group-apply-val');
                 $(this).closest('table').find('input.restocking-qty').each(function(){
-                    $(this).val(fill_val.val());
+                    $(this).val(fill_val.val()).change();
                 })
+            });
+
+            $('input.restocking-qty').change(function(){
+                var original = $(this).data('original-value'),
+                    current = $(this).val(),
+                    td = $(this).closest('td');
+                if (original != current){
+                    td.addClass('changed');
+                } else {
+                    td.removeClass('changed');
+                }
             });
 
             $('.csv-button').click(function(){
@@ -81,8 +98,25 @@
                 colDelim = '","',
                 plan_name = 'Excel-00000' + table.data('batch-id') + table.data('manufacturer-code') + '1',
                 filename = plan_name + '.txt',
-                header = '',
-                args = [table, filename, 'td', header, colDelim, rowDelim];
+                header = '"SKU /Amazon SKU to load'+ colDelim
+                    + 'Amazon FBA' + colDelim
+                    + 'Last order days' + colDelim
+                    + 'Items sold last 1m' + colDelim
+                    + 'Instock days 3m' + colDelim
+                    + 'Items sold last 1m of stock' + colDelim
+                    + 'Instock days 1m' + colDelim
+                    + 'Orders rate last 1 month' + colDelim
+                    + 'Overall Orders rate' + colDelim
+                    + 'Cost to us' + colDelim
+                    + 'Current Amazon Price' + colDelim
+                    + 'Min FBA price' + colDelim
+                    + 'AVG comp price' + colDelim
+                    + 'Dx stock qty' + colDelim
+                    + 'Total stock' + colDelim
+                    + 'Restocking qty'
+                    + rowDelim,
+                footer = '"',
+                args = [table, filename, 'td', header, footer, colDelim, rowDelim];
                 exportTableToCSV.apply(this, args);
             });
 
@@ -92,19 +126,20 @@
                 colDelim = '\t',
                 plan_name = 'FB-00000' + table.data('batch-id') + table.data('manufacturer-code') + '1',
                 filename = plan_name + '.txt',
+                footer = '',
                 header = 'PlanName'+ colDelim + plan_name + rowDelim
                     + 'ShipToCountry' + colDelim + rowDelim
-                    + 'AddressName' + colDelim + rowDelim
-                    + 'AddressFieldOne' + colDelim + rowDelim
+                    + 'AddressName' + colDelim + table.data('manufacturer-name')  + rowDelim
+                    + 'AddressFieldOne' + colDelim + table.data('manufacturer-address')  + rowDelim
                     + 'AddressFieldTwo' + colDelim + rowDelim
-                    + 'AddressCity' + colDelim + rowDelim
-                    + 'AddressCountryCode' + colDelim + rowDelim
-                    + 'AddressStateOrRegion' + colDelim + rowDelim
-                    + 'AddressPostalCode' + colDelim + rowDelim
+                    + 'AddressCity' + colDelim + table.data('manufacturer-city') + rowDelim
+                    + 'AddressCountryCode' + colDelim + table.data('manufacturer-country') + rowDelim
+                    + 'AddressStateOrRegion' + colDelim + table.data('manufacturer-state') + rowDelim
+                    + 'AddressPostalCode' + colDelim + table.data('manufacturer-zip') + rowDelim
                     + 'AddressDistrict' + colDelim + rowDelim
-                    + 'MerchantSKU' + colDelim + 'Quantity'+ rowDelim
-                    + colDelim + rowDelim,
-                args = [table, filename, 'td.fba-required', header, colDelim, rowDelim];
+                    + colDelim + rowDelim
+                    + 'MerchantSKU' + colDelim + 'Quantity'+ rowDelim,
+                args = [table, filename, 'td.fba-required', header, footer, colDelim, rowDelim];
                 exportTableToCSV.apply(this, args);
             });
         })();
