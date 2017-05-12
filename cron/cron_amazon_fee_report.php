@@ -38,7 +38,7 @@ $classAmazonMWS->setStartDate(new DateTime('-3 days', new DateTimeZone('UTC')))
     ->_Request('GetReportList')
     ->_Request('GetReport')
     ->_Request('UpdateReportAcknowledgements')
-    ->enableLog('fee-reports')
+    //->enableLog('fee-reports')
     ->processReportFeeData();
 
 Xcart\Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();
