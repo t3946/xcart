@@ -128,7 +128,10 @@ abstract class TreeModel extends Model
 
             return parent::save($fields);
         }
-        if (in_array('parent_id', $this->getDirtyAttributes())) {
+
+        $pid_name = $this->getField('parent')->getAttributeName();
+
+        if (in_array($pid_name, $this->getDirtyAttributes())) {
             if ($saved = parent::save($fields)) {
                 if ($this->parent) {
                     $this->moveAsLast($this->parent);

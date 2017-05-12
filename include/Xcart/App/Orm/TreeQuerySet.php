@@ -4,6 +4,7 @@ namespace Xcart\App\Orm;
 
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAndNot;
+use Mindy\QueryBuilder\Q\QOr;
 
 /**
  * Class TreeQuerySet.
@@ -212,19 +213,23 @@ class TreeQuerySet extends QuerySet
      */
     protected function deleteBranchWithoutRoot($table)
     {
+
+        $id_attr = $this->getModel()->getField('pk');
+        $pid_attr = $this->getModel()->getField('parent');
+
         $subQuery = clone $this->getQueryBuilder();
-        $subQuery->clear()->setTypeSelect()->from($table)->select('root')->where(['parent_id__isnull' => true]);
+        $subQuery->clear()->setTypeSelect()->from($table)->select('root')->where(new QOr(['parent__isnull' => true, 'parent' => 0]));
 
         $query = clone $this->getQueryBuilder();
-        $query->clear()->setTypeSelect()->select(['id'])->from($table)->where([
-            'parent_id__isnull' => true,
+        $query->clear()->setTypeSelect()->select([$id_attr => 'id'])->from($table)->where([
+            new QOr(['parent__isnull' => true, 'parent' => 0]),
             new QAndNot(['root__in' => $subQuery]),
         ]);
 
         $ids = $this->getConnection()->query($query->toSQL())->fetchColumn();
         if ($ids && count($ids) > 0) {
             $deleteQuery = clone $this->getQueryBuilder();
-            $deleteQuery->clear()->setTypeDelete()->from($table)->where(['id__in' => $ids]);
+            $deleteQuery->clear()->setTypeDelete()->from($table)->where([$id_attr.'__in' => $ids]);
             $this->getConnection()->query($deleteQuery->toSQL())->execute();
         }
     }
@@ -248,6 +253,9 @@ class TreeQuerySet extends QuerySet
      */
     protected function deleteBranchWithoutParent($table)
     {
+        $id_attr = $this->getModel()->getField('pk');
+        $pid_attr = $this->getModel()->getField('parent');
+
         /*
         $query = new Query([
             'select' => ['id', 'lft', 'rgt', 'root'],
@@ -256,11 +264,11 @@ class TreeQuerySet extends QuerySet
         ]);
          */
         $subQuery = clone $this->getQueryBuilder();
-        $subQuery->clear()->setTypeSelect()->select(['id'])->from($table);
+        $subQuery->clear()->setTypeSelect()->select([$id_attr => 'id'])->from($table);
 
         $query = clone $this->getQueryBuilder();
-        $query->clear()->setTypeSelect()->select(['id', 'lft', 'rgt', 'root'])->from($table)->where([
-            new QAndNot(['parent_id__in' => $subQuery]),
+        $query->clear()->setTypeSelect()->select([$id_attr => 'id', 'lft', 'rgt', 'root'])->from($table)->where([
+            new QAndNot(['parent__in' => $subQuery]),
         ]);
 
         $rows = $this->getConnection()->query($query->toSQL())->fetchAll();
@@ -292,17 +300,28 @@ class TreeQuerySet extends QuerySet
      */
     protected function rebuildLftRgt($table)
     {
-        $subQuery = "SELECT `tt`.`parent_id` FROM {$table} AS `tt` WHERE `tt`.`parent_id`=`t`.`id`";
-        $where = 'NOT [[lft]]=([[rgt]]-1) AND NOT [[id]] IN ('.$subQuery.')';
-        $sql = 'SELECT [[id]], [[root]], [[lft]], [[rgt]], [[rgt]]-[[lft]]-1 AS [[move]] FROM '.$table.' AS [[t]] WHERE '.$where.' ORDER BY [[rgt]] ASC';
+//        $subQuery = "SELECT `tt`.`parent_id` FROM {$table} AS `tt` WHERE `tt`.`parent_id`=`t`.`id`";
+//        $where = 'NOT `lft`=(`rgt`-1) AND NOT `id` IN ('.$subQuery.')';
+//        $sql = 'SELECT `id`, `root`, `lft`, `rgt`, `rgt`-`lft`-1 AS `move` FROM '.$table.' AS `t` WHERE '.$where.' ORDER BY `rgt` ASC';
+        $id_attr = $this->getModel()->getField('pk');
+        $pid_attr = $this->getModel()->getField('parent');
+
+
+        $sql = <<<SQL
+SELECT `{$id_attr}` as id, `root`, `lft`, `rgt`, `rgt`-`lft`-1 AS `move` 
+FROM {$table} AS `t` 
+WHERE NOT `lft`=(`rgt`-1) AND NOT `{$id_attr}` IN (SELECT `tt`.`{$pid_attr}` FROM {$table} AS `tt` WHERE `tt`.`{$pid_attr}`=`t`.`{$id_attr}`) 
+ORDER BY `rgt` ASC
+SQL;
+
         $adapter = $this->getAdapter();
 
         $rows = $this->getConnection()->query($adapter->quoteSql($sql))->fetchAll();
         foreach ($rows as $row) {
-            $sql = 'UPDATE '.$table.' SET [[lft]]=[[lft]]-'.$row['move'].', [[rgt]]=[[rgt]]-'.$row['move'].' WHERE [[root]]='.$row['root'].' AND [[lft]]>'.$row['rgt'];
-            $this->getConnection()->query($adapter->quoteSql($sql))->execute();
-            $sql = 'UPDATE '.$table.' SET [[rgt]]=[[rgt]]-'.$row['move'].' WHERE [[root]]='.$row['root'].' AND [[lft]]<[[rgt]] AND [[rgt]]>='.$row['rgt'];
-            $this->getConnection()->query($adapter->quoteSql($sql))->execute();
+            $sql = 'UPDATE '.$table.' SET `lft`=`lft`-'.$row['move'].', `rgt`=`rgt`-'.$row['move'].' WHERE `root`='.$row['root'].' AND `lft` > '.$row['rgt'];
+            $this->getConnection()->query($sql)->execute();
+            $sql = 'UPDATE '.$table.' SET `rgt`=`rgt`-'.$row['move'].' WHERE `root`='.$row['root'].' AND `lft`<`rgt` AND `rgt` >= '.$row['rgt'];
+            $this->getConnection()->query($sql)->execute();
         }
     }
 
