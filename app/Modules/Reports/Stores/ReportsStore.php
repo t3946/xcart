@@ -147,7 +147,7 @@ class ReportsStore extends OrderSearchStore
                 $filter = ['group.profit_margin__lt' => 100];
                 break;
             case "profit15" :
-                $filter = ['group.profit_margin__lte' => $this->form_data['order']['profit_margin_profit15_edit']];
+                $filter = ['group.profit_margin__lte' => $this->form_data['report']['profit_margin_profit15_edit']];
                 break;
             case "profit_between" :
                 $filter = [

@@ -551,16 +551,11 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 			$profile_values['tax_number'] = $tax_number;
 			$profile_values['tax_exempt'] = (@$tax_exempt == 'Y' ? 'Y' : 'N');
 
-#
-##
-###
-			$allow_operate_as_membership = '';
-			if(!empty($allow_operate_as_membership))
-			$allow_operate_as_membership = implode(",",array_keys($allow_operate_as_membership));
+			if(!empty($allow_operate_as_membership)) {
+                $allow_operate_as_membership = implode(",", array_keys($allow_operate_as_membership));
+            }
 			$profile_values['allow_operate_as_membership'] = $allow_operate_as_membership;
-###
-##
-#
+            $allow_operate_as_membership = '';
 		}
 
 		$activity_changed = false;
@@ -647,12 +642,12 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 				$to_customer = $newuser_info["language"];
 
 				if($config['Email_Note']['eml_profile_modified_customer'] == 'Y')
-					func_send_mail($newuser_info["email"], "mail/profile_modified_subj.tpl", "mail/profile_modified.tpl", $config["Company"]["users_department"], false);
+					func_send_mail($newuser_info["email"], "mail/profile_modified_subj.tpl", "mail/profile_modified.tpl", $config["Company"]["site_administrator"], false);
 				#
 				# Send mail to customers department
 				#
 				if($config['Email_Note']['eml_profile_modified_admin'] == 'Y')
-					func_send_mail($config["Company"]["users_department"], "mail/profile_admin_modified_subj.tpl", "mail/profile_admin_modified.tpl", $newuser_info["email"], true);
+					func_send_mail($config["Company"]["users_department"], "mail/profile_admin_modified_subj.tpl", "mail/profile_admin_modified.tpl", $config["Company"]["site_administrator"], true);
 			}
 		}
 		else {

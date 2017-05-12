@@ -5,6 +5,7 @@ namespace Modules\Amazon\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Model;
 
@@ -22,6 +23,10 @@ class AmazonReorderBatchModel extends Model
             ],
             'user_id' => [
                 'class' => IntField::className(),
+            ],
+            'status' => [
+                'class' => TextField::className(),
+                'default' => 'processing'
             ],
             'created_at' => [
                 'class' => TimestampField::className(),

@@ -53,6 +53,9 @@ class AmazonStore extends BaseStore
                 }
             }
         }
+        if (!empty($data['batch_id'])) {
+            $filter['batch_id'] = $data['batch_id'];
+        }
         $qs->filter($filter);
 
         $this->qs = $qs;
@@ -82,7 +85,7 @@ class AmazonStore extends BaseStore
                     '-r_order'
                 ]);
 
-//            echo $qs->getSql();
+            //echo $qs->getSql();
 
             return Connection::getInstance()->executeQuery(
                 $qs->getSql()
