@@ -24,7 +24,7 @@
             {elseif $batch_model->status == 'processing'}
                 <div class="row" style="text-align: center">
                     <div class="columns large-12">
-                        Processing Amazon data
+                        Processing Amazon data...
                     </div>
                     <div class="columns large-12 load"></div>
                </div>
@@ -38,13 +38,27 @@
     {parent}
     <script type="text/javascript">
         (function(){
-            var url_restocking_batch_processing = '{url 'amazon:batch_processing'}';
-            $.post(url_restocking_batch_processing, {
+            {if $batch_model && $batch_model->status == 'processong'}
+                var url_restocking_batch_processing = '{url 'amazon:batch_processing'}';
+                var url_restocking_batch_processing_check = '{url 'amazon:batch_processing_check'}';
+                var url_batch_redirect = '{url 'amazon:batch' id=$batch_id}';
+                $.get(url_restocking_batch_processing, {
                     batch_id: {$batch_id}
-                },
-                function (data) {
-
                 });
+
+
+                var interval = setInterval(function () {
+                    $.get(url_restocking_batch_processing_check, {
+                            batch_id: {$batch_id}
+                        }, function (data){
+                            if (data.status == 'done') {
+                                clearInterval(interval);
+                                window.location = url_batch_redirect
+                            }
+                        }, 'json'
+                    );
+                }, 40000);
+            {/if}
 
             function exportToFile(obj, filename, txt) {
                 if (window.Blob && window.URL) {

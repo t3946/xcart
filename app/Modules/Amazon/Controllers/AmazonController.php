@@ -38,11 +38,23 @@ class AmazonController extends PrototypeAdminController
         $this->autoRedirect(null);
     }
 
+    public function batch_processing_check()
+    {
+        $result = null;
+        if (!empty($_GET) && is_numeric($_GET['batch_id'])) {
+            $batch = AmazonReorderBatchModel::objects()->get(['batch_id' => $_GET['batch_id']]);
+            if ($batch) {
+                $result = $batch->status;
+            }
+        }
+        print json_encode(['status' => $result]);
+    }
+
     public function batch_processing()
     {
         set_time_limit(0);
-        if (!empty($_POST) && is_numeric($_POST['batch_id'])) {
-            $batch = AmazonReorderBatchModel::objects()->get(['batch_id' => $_POST['batch_id']]);
+        if (!empty($_GET) && is_numeric($_GET['batch_id'])) {
+            $batch = AmazonReorderBatchModel::objects()->get(['batch_id' => $_GET['batch_id']]);
             if ($batch && $batch->status == 'processing') {
                 //AmazonReorderBatchDataModel::objects()->delete(['batch_id' => $batch->batch_id]);
                 $params = [
@@ -70,18 +82,9 @@ class AmazonController extends PrototypeAdminController
             if (!empty($_POST)) {
                 if ($_POST['recalculate_submit']) {
                     AmazonReorderBatchDataModel::objects()->delete(['batch_id' => $id]);
-                    $params = [
-                        'day_reorder' => AmazonReorderingHelper::getDaysBeforeNextReorder(current(GlobalConfigModel::objects()->filter(['name' => 'reorder_weekday'])->valuesList(['value'], true))),
-                        'tau' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_back_in_time_period'])->valuesList(['value'], true)),
-                        'tau_m' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_tau_m'])->valuesList(['value'], true))
-                    ];
-                    $aProducts = AmazonReorderingHelper::calculateAmazonProducts($params);
-                    if ($aProducts) {
-                        foreach ($aProducts as $aProduct) {
-                            $modelData = new AmazonReorderBatchDataModel(array_merge($aProduct, ['batch_id' => $batch->batch_id]));
-                            $modelData->save();
-                        }
-                    }
+                    $batch->status="processing";
+                    $batch->save();
+
                 } elseif (!empty($_POST['update_changes'])) {
                     foreach ($_POST['restocking_qty'] as $batch_id => $products) {
                         foreach ($products as $product_id => $qty) {
