@@ -320,6 +320,7 @@ class ManyToManyField extends RelatedField
     public function getTableName()
     {
         if (!$this->through) {
+            //@TODO: remove me - not used, saved for history
             $adapter = QueryBuilder::getInstance($this->getRelatedModel()->getConnection())->getAdapter();
             $parts = [$adapter->getRawTableName($this->getTable()), $adapter->getRawTableName($this->getRelatedTable())];
             sort($parts);
