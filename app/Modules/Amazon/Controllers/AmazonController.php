@@ -40,12 +40,6 @@ class AmazonController extends PrototypeAdminController
         );
     }
 
-    public function create_shipping()
-    {
-
-        $this->autoRedirect(null);
-    }
-
     public function batch_processing_check()
     {
         $result = null;
