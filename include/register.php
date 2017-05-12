@@ -551,16 +551,11 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 			$profile_values['tax_number'] = $tax_number;
 			$profile_values['tax_exempt'] = (@$tax_exempt == 'Y' ? 'Y' : 'N');
 
-#
-##
-###
-			$allow_operate_as_membership = '';
-			if(!empty($allow_operate_as_membership))
-			$allow_operate_as_membership = implode(",",array_keys($allow_operate_as_membership));
+			if(!empty($allow_operate_as_membership)) {
+                $allow_operate_as_membership = implode(",", array_keys($allow_operate_as_membership));
+            }
 			$profile_values['allow_operate_as_membership'] = $allow_operate_as_membership;
-###
-##
-#
+            $allow_operate_as_membership = '';
 		}
 
 		$activity_changed = false;
