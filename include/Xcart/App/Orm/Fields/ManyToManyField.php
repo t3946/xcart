@@ -326,6 +326,7 @@ class ManyToManyField extends RelatedField
             sort($parts);
             return '{{%' . implode('_', $parts) . '}}';
         } else {
+            return call_user_func([$this->through, 'tableName']);
         }
     }
 
