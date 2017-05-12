@@ -1,4 +1,3 @@
-
 <table class="restocking-table" width="100%" cellspacing="1" cellpadding="3" data-batch-id="{$batch_id}" data-manufacturer-name="{$distributor}" data-manufacturer-code="{$products[0].code}"
        data-manufacturer-address="{$products[0].m_address}" data-manufacturer-city="{$products[0].m_city}"
        data-manufacturer-country="{$products[0].m_country}" data-manufacturer-state="{$products[0].m_state}"

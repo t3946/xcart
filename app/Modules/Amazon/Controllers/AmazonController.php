@@ -29,46 +29,34 @@ class AmazonController extends PrototypeAdminController
     public function create_shipping()
     {
         if (array_key_exists('calculate_shipping', $_POST)) {
-            $params = [
-                'day_reorder' => AmazonReorderingHelper::getDaysBeforeNextReorder(current(GlobalConfigModel::objects()->filter(['name' => 'reorder_weekday'])->valuesList(['value'], true))),
-                'tau' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_back_in_time_period'])->valuesList(['value'], true)),
-                'tau_m' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_tau_m'])->valuesList(['value'], true))
-            ];
-
-            $aProducts = AmazonReorderingHelper::getAmazonProductsForCalculate();
-            if ($aProducts) {
-                set_time_limit(0);
                 $model = new AmazonReorderBatchModel(['user_id' => Xcart::app()->user->id]);
                 $model->save();
-                foreach ($aProducts as $aProduct) {
-                    $aResult = AmazonReorderingHelper::calculateAmazonProducts(array_merge($params, ['productid' => $aProduct['productid']]));
-                    if (!empty($aResult)) {
-                        $modelData = new AmazonReorderBatchDataModel(array_merge($aResult, ['batch_id' => $model->batch_id]));
-                        $modelData->save();
-                    }
-                }
                 if ($model->batch_id) {
-                    //$this->autoRedirect($model->batch_id);
-                    $amazonStore = new AmazonStore(array_merge(AmazonReorderingHelper::getFilterData($_GET['filter']), ['batch_id' => $model->batch_id]));
-
-                    echo $this->renderInternal('amazon/batch.tpl',
-                        [
-                            'batch_id' => $model->batch_id,
-                            'amazon_products' => $amazonStore->getAmazonBatchData(),
-                            'filter_data' => AmazonReorderingHelper::getFilterData($_GET['filter'])
-                        ]
-                    );
+                    $this->autoRedirect($model->batch_id);
                 }
-            }
         }
-        //$this->autoRedirect(null);
+        $this->autoRedirect(null);
     }
 
-    public function batch($id)
+    public function batch_processing_check()
     {
-        if (!empty($_POST)) {
-            if ($_POST['recalculate_submit']) {
-                AmazonReorderBatchDataModel::objects()->delete(['batch_id' => $id]);
+        $result = null;
+        if (!empty($_GET) && is_numeric($_GET['batch_id'])) {
+            $batch = AmazonReorderBatchModel::objects()->get(['batch_id' => $_GET['batch_id']]);
+            if ($batch) {
+                $result = $batch->status;
+            }
+        }
+        print json_encode(['status' => $result]);
+    }
+
+    public function batch_processing()
+    {
+        set_time_limit(0);
+        if (!empty($_GET) && is_numeric($_GET['batch_id'])) {
+            $batch = AmazonReorderBatchModel::objects()->get(['batch_id' => $_GET['batch_id']]);
+            if ($batch && $batch->status == 'processing') {
+                //AmazonReorderBatchDataModel::objects()->delete(['batch_id' => $batch->batch_id]);
                 $params = [
                     'day_reorder' => AmazonReorderingHelper::getDaysBeforeNextReorder(current(GlobalConfigModel::objects()->filter(['name' => 'reorder_weekday'])->valuesList(['value'], true))),
                     'tau' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_back_in_time_period'])->valuesList(['value'], true)),
@@ -77,32 +65,50 @@ class AmazonController extends PrototypeAdminController
                 $aProducts = AmazonReorderingHelper::calculateAmazonProducts($params);
                 if ($aProducts) {
                     foreach ($aProducts as $aProduct) {
-                        $modelData = new AmazonReorderBatchDataModel(array_merge($aProduct, ['batch_id' => $id]));
+                        $modelData = new AmazonReorderBatchDataModel(array_merge($aProduct, ['batch_id' => $batch->batch_id]));
                         $modelData->save();
                     }
                 }
-            } elseif (!empty($_POST['update_changes'])) {
-               foreach ($_POST['restocking_qty'] as $batch_id => $products) {
-                   foreach ($products as $product_id => $qty) {
-                       $model = AmazonReorderBatchDataModel::objects()->get(['batch_id' => $batch_id, 'productid' => $product_id]);
-                       if ($model) {
-                           $model->setAttribute('restocking_qty', $qty);
-                           $model->save();
-                       }
-                   }
-               }
+                $batch->status = 'done';
+                $batch->save();
             }
-            $this->autoRedirect($id);
         }
-        $amazonStore = new AmazonStore(array_merge(AmazonReorderingHelper::getFilterData($_GET['filter']), ['batch_id' => $id]));
+    }
 
-        echo $this->renderInternal('amazon/batch.tpl',
-            [
-                'batch_id' => $id,
-                'amazon_products' => $amazonStore->getAmazonBatchData(),
-                'filter_data' => AmazonReorderingHelper::getFilterData($_GET['filter'])
-            ]
-        );
+    public function batch($id)
+    {
+        $batch = AmazonReorderBatchModel::objects()->get(['batch_id' => $id]);
+        if ($batch) {
+            if (!empty($_POST)) {
+                if ($_POST['recalculate_submit']) {
+                    AmazonReorderBatchDataModel::objects()->delete(['batch_id' => $id]);
+                    $batch->status="processing";
+                    $batch->save();
+
+                } elseif (!empty($_POST['update_changes'])) {
+                    foreach ($_POST['restocking_qty'] as $batch_id => $products) {
+                        foreach ($products as $product_id => $qty) {
+                            $model = AmazonReorderBatchDataModel::objects()->get(['batch_id' => $batch_id, 'productid' => $product_id]);
+                            if ($model) {
+                                $model->restocking_qty = $qty;
+                                $model->save();
+                            }
+                        }
+                    }
+                }
+                $this->autoRedirect($id);
+            }
+            $amazonStore = new AmazonStore(array_merge(AmazonReorderingHelper::getFilterData($_GET['filter']), ['batch_id' => $batch->batch_id]));
+
+            echo $this->renderInternal('amazon/batch.tpl',
+                [
+                    'batch_id' => $id,
+                    'batch_model' => $batch,
+                    'amazon_products' => $amazonStore->getAmazonBatchData(),
+                    'filter_data' => AmazonReorderingHelper::getFilterData($_GET['filter'])
+                ]
+            );
+        }
     }
 
     private function autoRedirect($id)

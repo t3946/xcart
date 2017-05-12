@@ -5,28 +5,6 @@ namespace Modules\Amazon\Sqls;
 
 class AmazonSql
 {
-    public static function getAmazonProductsForCalculateSql()
-    {
-        $sql= /** @lang MySQL */
-            <<<SQL
-SELECT p.productid
-FROM xcart_products as p
-INNER JOIN xcart_products_amz_fields af ON p.productid = af.productid
-INNER JOIN xcart_manufacturers m ON p.manufacturerid = m.manufacturerid
-INNER JOIN xcart_products_sf sf ON p.productid = sf.productid
-INNER JOIN xcart_storefronts_external_marketplaces EM ON EM.storefront_id = sf.sfid AND EM.marketplace_id = 3
-LEFT JOIN xcart_products_disabled_marketplaces DM ON DM.resource_id = p.productid and DM.resource_type = 'P' and DM.marketplace_id = 3
-LEFT JOIN xcart_products_disabled_marketplaces DM2 ON DM2.resource_id = p.brandid and DM2.resource_type = 'B' and DM2.marketplace_id = 3
-LEFT JOIN xcart_products_disabled_marketplaces DM3 ON DM3.resource_id = p.manufacturerid and DM3.resource_type = 'D' and DM3.marketplace_id = 3
-WHERE p.amazon_enabled = 'Y' 
-AND af.amazon_fba_restricted = 'N'
-AND DM.marketplace_id IS NULL
-AND DM2.marketplace_id IS NULL
-AND DM3.marketplace_id IS NULL
-SQL;
-            return $sql;
-    }
-
     public static function getAmazonReorderingSql($params)
     {
         $sql= /** @lang MySQL */
@@ -54,7 +32,16 @@ amazon.restocking_get_reorder_quantity(p.productid, {$params['tau']}, {$params['
 FROM xcart_products as p
 INNER JOIN xcart_products_amz_fields af ON p.productid = af.productid
 INNER JOIN xcart_manufacturers m ON p.manufacturerid = m.manufacturerid
-WHERE p.productid = {$params['productid']}
+INNER JOIN xcart_products_sf sf ON p.productid = sf.productid
+INNER JOIN xcart_storefronts_external_marketplaces EM ON EM.storefront_id = sf.sfid AND EM.marketplace_id = 3
+LEFT JOIN xcart_products_disabled_marketplaces DM ON DM.resource_id = p.productid and DM.resource_type = 'P' and DM.marketplace_id = 3
+LEFT JOIN xcart_products_disabled_marketplaces DM2 ON DM2.resource_id = p.brandid and DM2.resource_type = 'B' and DM2.marketplace_id = 3
+LEFT JOIN xcart_products_disabled_marketplaces DM3 ON DM3.resource_id = p.manufacturerid and DM3.resource_type = 'D' and DM3.marketplace_id = 3
+WHERE p.amazon_enabled = 'Y' 
+AND af.amazon_fba_restricted = 'N'
+AND DM.marketplace_id IS NULL
+AND DM2.marketplace_id IS NULL
+AND DM3.marketplace_id IS NULL
 SQL;
 
         return $sql;
