@@ -2,6 +2,7 @@
 namespace Modules\Amazon\Stores;
 
 use Mindy\QueryBuilder\Expression;
+use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonReorderBatchDataModel;
 use Xcart\App\Orm\QuerySet;
@@ -54,13 +55,12 @@ class AmazonStore extends BaseStore
                 }
             }
             if (!empty($data['restocking_competitive_price'])) {
-                $filter[] = new QOr(['min_batch_price__lt' => 'avg_comp_price', 'avg_comp_price' => '-1']);
+                $filter[] = new QOr(['min_batch_price__lt' => new Expression('avg_comp_price'), 'avg_comp_price' => -1]);
             }
         }
         if (!empty($data['batch_id'])) {
             $filter['batch_id'] = $data['batch_id'];
         }
-        var_dump($filter); exit;
         $qs->filter($filter);
 
         $this->qs = $qs;
@@ -90,7 +90,7 @@ class AmazonStore extends BaseStore
                     '-r_order'
                 ]);
 
-            //echo $qs->getSql();
+            echo $qs->getSql();
 
             return Connection::getInstance()->executeQuery(
                 $qs->getSql()
