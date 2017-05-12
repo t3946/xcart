@@ -3,6 +3,7 @@
 namespace Xcart\App\Orm\Fields;
 
 use Exception;
+use Mindy\QueryBuilder\Expression;
 use Xcart\App\Orm\MetaData;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\ModelInterface;
@@ -196,7 +197,7 @@ class ManyToManyField extends RelatedField
         }
 
         return [
-            ['LEFT JOIN', $this->getTableName(), $on, $throughAlias]
+            ['INNER JOIN', $this->getTableName(), $on, $throughAlias]
         ];
     }
 
@@ -266,6 +267,7 @@ class ManyToManyField extends RelatedField
         $this->buildSelectQuery($manager->getQueryBuilder(), $manager->getQueryBuilder()->makeAliasKey($this->getModel()->tableName()));
 
         $through = call_user_func([$this->through, 'create']);
+        $adapter = $manager->getQueryBuilder()->getAdapter();
 
         foreach ($through->getFields() as $fieldName => $params) {
             if (isset($params['modelClass']) && $params['modelClass'] == $this->ownerClassName) {
@@ -273,10 +275,15 @@ class ManyToManyField extends RelatedField
                 {
                     foreach ($params['link'] as $from => $to)
                     {
+                        $throughAlias = $adapter->quoteColumn($throughAlias);
+                        $from = $adapter->quoteColumn($from);
+
                         if (is_null($this->getModel()->{$to})) {
-                            $manager->filter('[[' . $throughAlias . ']].[[' . $from . ']] IS NULL');
-                        } else {
-                            $manager->filter('[[' . $throughAlias . ']].[[' . $from . ']]=@' . $this->getModel()->{$to} . '@');
+                            $manager->filter("{$throughAlias}.{$from} IS NULL");
+                        }
+                        else {
+                            $to = $adapter->quoteValue($this->getModel()->{$to});
+                            $manager->filter("{$throughAlias}.{$from} = {$to}");
                         }
                     }
                 }
@@ -318,7 +325,6 @@ class ManyToManyField extends RelatedField
             sort($parts);
             return '{{%' . implode('_', $parts) . '}}';
         } else {
-            return call_user_func([$this->through, 'tableName']);
         }
     }
 
