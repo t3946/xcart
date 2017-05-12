@@ -17,7 +17,7 @@ class Expression
         $this->expression = $expression;
     }
 
-    public function toSQL()
+    public function toSQL(QueryBuilder $qb = null)
     {
         return $this->expression;
     }
