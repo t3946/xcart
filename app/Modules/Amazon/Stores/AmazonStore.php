@@ -55,7 +55,7 @@ class AmazonStore extends BaseStore
                 }
             }
             if (!empty($data['restocking_competitive_price'])) {
-                //$filter[] = new QOr(['min_batch_price__lt' => new Expression('avg_comp_price'), 'avg_comp_price' => -1]);
+                $filter[] = new QOr(['min_fba_price__lt' => new Expression(' avg_comp_price'), 'avg_comp_price' => -1]);
             }
         }
         if (!empty($data['batch_id'])) {
@@ -90,7 +90,7 @@ class AmazonStore extends BaseStore
                     '-r_order'
                 ]);
 
-            //echo $qs->getSql();
+            echo $qs->getSql();
 
             return Connection::getInstance()->executeQuery(
                 $qs->getSql()
