@@ -61,10 +61,12 @@ class SliderData
 select RO.related_resource_id as needed_resource_id
 from xcart_cidev_related_objects RO
 inner join xcart_products P ON P.productid = RO.related_resource_id and P.forsale = 'Y'
+inner join xcart_products_sf SF ON P.productid = SF.productid
 where RO.resource_id = '{$productid}' 
   and RO.resource_type = 'OP' 
   and RO.related_resource_type = 'P'  
   and RO.related_resource_id NOT IN ('{$productids}')
+  and SF.sfid = {$current_storefront}
   
 order By RO.related_resource_orderby 
 limit 30
