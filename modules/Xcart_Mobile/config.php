@@ -86,7 +86,7 @@ if (
      */
 } else {
 
-    include $_module_dir . XC_DS . 'Mobile_Detect.php';
+    //include $_module_dir . XC_DS . 'Mobile_Detect.php';
     $detect = new Mobile_Detect;
 
     if ($detect->isMobile() && func_mobile_constant('AREA_TYPE') != 'A') {
