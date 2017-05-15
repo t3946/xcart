@@ -21,7 +21,7 @@
         "symfony/validator": "^2.8",
         "true/punycode": "^2.1",
         "caponica/amazon-mws-complete": "dev-master",
-        "mobiledetect/mobiledetectlib": "^2.8"
+        "mobiledetect/mobiledetectlib": "^2.8",
         "league/flysystem": "^1.0",
         "symfony/http-foundation": "^2.8"
     },
