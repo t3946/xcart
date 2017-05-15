@@ -14,7 +14,7 @@
             {if $batch_model->status == 'done'}
                 <form name="amazon_shipping_form" method="post">
                     {foreach $amazon_products as $distributor => $products}
-                        <fieldset {if $amazon_products@first}class="expanded"{/if}>
+                        <fieldset>
                             <legend style="width: 100%;">
                                 <span></span>
                                 <span>{$distributor} ({count($products)})</span>
