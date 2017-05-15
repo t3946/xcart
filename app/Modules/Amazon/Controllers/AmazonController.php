@@ -33,9 +33,12 @@ class AmazonController extends PrototypeAdminController
             }
         }
 
+        $batches = AmazonReorderBatchModel::objects()->all();
+
         echo $this->renderInternal('amazon/index.tpl',
             [
-                'errors' => $errors
+                'errors' => $errors,
+                'batches' => $batches
             ]
         );
     }
@@ -47,6 +50,18 @@ class AmazonController extends PrototypeAdminController
             $batch = AmazonReorderBatchModel::objects()->get(['batch_id' => $_GET['batch_id']]);
             if ($batch) {
                 $result = $batch->status;
+            }
+        }
+        print json_encode(['status' => $result]);
+    }
+
+    public function batch_delete()
+    {
+        $result = null;
+        if (!empty($_POST) && is_numeric($_POST['batch_id'])) {
+            $batch = AmazonReorderBatchModel::objects()->delete(['batch_id' => $_POST['batch_id']]);
+            if ($batch) {
+                $result = 'ok';
             }
         }
         print json_encode(['status' => $result]);
