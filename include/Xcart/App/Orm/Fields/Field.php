@@ -216,6 +216,11 @@ abstract class Field implements ModelFieldInterface
         $this->setDbValue($value);
     }
 
+    public function __toString()
+    {
+        return $this->toText();
+    }
+
     /**
      * @return int|mixed|null|string
      */

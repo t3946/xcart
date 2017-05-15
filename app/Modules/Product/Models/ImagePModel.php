@@ -12,4 +12,14 @@ class ImagePModel extends ImageModel
     {
         return parent::tableName().'_P';
     }
+
+
+    public static function getFields()
+    {
+        return array_merge_recursive(parent::getFields(), [
+            'image_path' => [
+                'uploadTo' => 'P/%M/%O/%Y-%m-%d',
+            ]
+        ]);
+    }
 }

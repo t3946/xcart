@@ -45,7 +45,7 @@ while ($aProductsBatch = \Xcart\Product::objects()
     ->all()) {
     $oAmazonProduct
         ->setProducts($aProductsBatch)
-        ->enableLog('amazon-info')
+        //->enableLog('amazon-info')
         ->_Request('GetCompetitivePricing')
         ->_Request('GetLowestOfferListingsForSKU');
 }
@@ -61,7 +61,7 @@ while ($aProductsBatch = \Xcart\Product::objects()
     ->all()) {
     $oAmazonProduct
         ->setProducts($aProductsBatch)
-        ->enableLog('amazon-info')
+        //->enableLog('amazon-info')
         ->_Request('ListInventorySupply');
 }
 echo  "Report 3 start\n";
@@ -75,7 +75,7 @@ $oAmazonProduct->setReportType('_GET_RESERVED_INVENTORY_DATA_')
     ->_Request('GetReportList')
     ->_Request('GetReport')
     ->_Request('UpdateReportAcknowledgements')
-    ->enableLog('amazon-info')
+    //->enableLog('amazon-info')
     ->processReportReservedInventory();
 
 $oAmazonProduct->groupAmazonFBAProducts();

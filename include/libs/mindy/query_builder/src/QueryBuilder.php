@@ -269,7 +269,7 @@ class QueryBuilder
         $fieldsSql = $this->getAdapter()->buildColumns($columns);
         $aggregation->setFieldsSql($fieldsSql);
 
-        return $this->getAdapter()->quoteSql($aggregation->toSQL());
+        return $this->getAdapter()->quoteSql($aggregation->toSQL($this));
     }
 
     /**
@@ -281,7 +281,7 @@ class QueryBuilder
         if (!is_array($columns)) {
             if ($columns instanceof Aggregation) {
                 $columns->setFieldsSql($this->buildColumns($columns->getFields()));
-                return $this->quoteSql($columns->toSQL());
+                return $this->quoteSql($columns->toSQL($this));
             } else if (strpos($columns, '(') !== false) {
                 return $this->quoteSql($columns);
             } else {
@@ -398,7 +398,7 @@ class QueryBuilder
         if (is_array($select)) {
             foreach ($select as $columnAlias => $partSelect) {
                 if ($partSelect instanceof Aggregation) {
-                    $columns[$columnAlias] = $this->buildSelectFromAggregation($partSelect, $columnAlias);
+                    $columns[$columnAlias] = $this->buildSelectFromAggregation($partSelect);
                 } else if ($partSelect instanceof Expression) {
                     $columns[$columnAlias] = $this->getAdapter()->quoteSql($partSelect->toSQL());
                 } else if (strpos($partSelect, 'SELECT') !== false) {

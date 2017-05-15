@@ -94,6 +94,22 @@ return array_replace_recursive([
            'forceCompile' => false,
            'autoReload' => false
        ],
+
+       'storage' => [
+           'class' => '\\Xcart\\App\\Storage\\Storage',
+           'default' => 'local',
+           'adapters' => [
+               'local' => [
+                   'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
+                   'root' => 'www.media',
+               ],
+               'www' => [
+                   'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
+                   'root' => 'www',
+               ]
+           ],
+       ],
+
        'cache' => [
            'class' => '\\Xcart\\App\\Cache\\Cache',
            'saveInMemory' => true,

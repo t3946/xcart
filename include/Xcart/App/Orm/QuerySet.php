@@ -407,16 +407,33 @@ class QuerySet extends QuerySetBase
     {
         if (is_array($columns)) {
             $newColumns = array_map(function ($value) {
+
                 if ($value instanceof Model) {
                     return $value->pk;
-                } else if ($value instanceof Manager || $value instanceof QuerySet) {
+                }
+                else if ($value instanceof Manager || $value instanceof QuerySet) {
                     return $value->getQueryBuilder();
-                } else if (is_string($value)) {
+                }
+                else if (is_string($value)) {
                     $direction = substr($value, 0, 1) === '-' ? '-' : '';
-                    $column = substr($value, 1);
+
+                    if ($direction) {
+                        $column = substr($value, 1);
+                    }
+                    else {
+                        $column = $value;
+                    }
+                    
+
                     if ($this->getModel()->getMeta()->hasForeignField($column)) {
-                        return $direction . $column;
-                    } else {
+                        $field = $this->getModel()->getField($column);
+
+                        return $direction . $field->getAttributeName();
+                    }
+                    else if ($field = $this->getModel()->getField($column)) {
+                        return $direction . $field->getAttributeName();
+                    }
+                    else {
                         return $value;
                     }
                 }

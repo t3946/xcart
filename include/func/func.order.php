@@ -1820,7 +1820,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             func_check_surveys_events("OPL", $order_data);
         }
 
-        func_check_and_send_request_availability_email($orderid);
+        //func_check_and_send_request_availability_email($orderid);
     }
 
     $mes .= "STEP U " . date("H:i:s") . "\n";
@@ -1903,41 +1903,46 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 && $mv["d_availability_must_be_checked"] == "Y"
                 && $mv["good_time_to_send_email_to_distributor"] == "Y"
             ) {
-                $to       = $mv["d_send_to_email_14"];
-                $from     = $config['Company']['orders_department'];
+                $to = $mv["d_send_to_email_14"];
+                $from = $config['Company']['orders_department'];
                 $mnf_body = func_eol2br(stripslashes($mv["d_message_body_14"]));
                 $mail_smarty->assign("message_body", $mnf_body);
                 $mail_smarty->assign('d_email_subject_14', $mv["d_email_subject_14"]);
 
                 $order_notes = "";
-                $current_dc_status       = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$m_id'");
-                $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
+                $current_dc_status = func_query_first_cell_param(/** @lang MySQL */
+                    "SELECT dc_status FROM xcart_order_groups WHERE orderid = :orderid AND manufacturerid = :m_id", ['orderid' => $orderid, 'm_id' => $m_id]);
+                $current_dc_status_value = func_query_first_cell_param(/** @lang MySQL */
+                    "SELECT name FROM xcart_order_statuses WHERE code = :current_dc_status", ['current_dc_status' => $current_dc_status]);
 
                 if ($current_dc_status != "K") {
-                    $code        = $mv["code"];
-                    $new_value   = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='K'");
+                    $code = $mv["code"];
+                    $new_value = func_query_first_cell_param(/** @lang MySQL */
+                        "SELECT name FROM xcart_order_statuses WHERE code=:code", ['code' => 'K']);
                     $order_notes = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value . "<br />";
 
-                    $current_notify_sent = func_query_first_cell("SELECT notify_sent FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$m_id'");
+                    $current_notify_sent = func_query_first_cell_param(/** @lang MySQL */
+                        "SELECT notify_sent FROM xcart_order_groups WHERE orderid = :orderid AND manufacturerid=:m_id", ['orderid' => $orderid, 'm_id' => $m_id]);
                     if ($current_notify_sent != "Y") {
                         $order_notes .= "<B>" . $code . ":</B> notify_sent: " . $current_notify_sent . " -> Y <br />";
                     }
                 }
 
                 if (!empty($mv["add_ca_status_id"])) {
-                    $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$mv[add_ca_status_id]'");
+                    $is_such_additional_tag_status = func_query_first_cell_param(/** @lang MySQL */
+                        "SELECT status_id FROM xcart_orders_additional_tags WHERE orderid=:orderid AND status_id=:status_id", ['orderid' => $orderid, 'status_id' => $mv['add_ca_status_id']]);
 
                     if (empty($is_such_additional_tag_status)) {
                         Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($mv['add_ca_status_id'], $orderid);
                     }
                 }
 
-                db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='K' WHERE orderid = '$orderid' AND manufacturerid='$m_id'");
+                db_query_param(/** @lang MySQL */
+                    "UPDATE xcart_order_groups SET notify_sent = 'Y', dc_status='K' WHERE orderid = :orderid AND manufacturerid = :m_id", ['orderid' => $orderid, 'm_id' => $m_id]);
                 $order_notes .= date('l jS \of F Y h:i:s A') . ": Request availability email was sent automatically to '" . $mv["manufacturer"] . "' distributor";
                 if ($sent_by == 'CRON') {
                     $order_notes .= ", by CRON";
-                }
-                else {
+                } else {
                     $order_notes .= ", when order was placed by customer. ";
                 }
 

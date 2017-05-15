@@ -307,7 +307,7 @@ if (!$fatal) {
 #
 ##
 ###
-	func_check_and_send_request_availability_email($check_orderid);
+	//func_check_and_send_request_availability_email($check_orderid);
 ###
 ##
 #
