@@ -123,14 +123,16 @@
                 $('.batch-total').text('$'+total);
             }
 
-            function recalculateDistributorTotal(obj)
+            function recalculateDistributorTotal(tbl)
             {
                 var total = 0,
-                    obj = $(obj);
+                    obj = $(tbl);
                 $('tr', obj).not('.no-export').each(function(){
                     var cost_to_us = $(this).find('td.cost-to-us').text().replace('$', ''),
                     qty = $(this).find('input.restocking-qty').val();
-                    total += round(parseFloat(cost_to_us) * parseInt(qty),2);
+                    if (qty > 0) {
+                        total += round(parseFloat(cost_to_us) * parseInt(qty),2);
+                    }
                 });
                 total = round(total,2);
                 obj.siblings('legend').find('span.distributor-total').text('$'+total.toFixed(2));
