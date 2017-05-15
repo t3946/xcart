@@ -27,15 +27,15 @@ class TreeQuerySet extends QuerySet
 
         if ($includeSelf === false) {
             $this->filter([
-                'lft__gte' => $this->getModel()->lft,
-                'rgt__lte' => $this->getModel()->rgt,
+                'lft__gt' => $this->getModel()->lft,
+                'rgt__lt' => $this->getModel()->rgt,
                 'root' => $this->getModel()->root,
             ])->order(['lft']);
         }
         else {
             $this->filter([
-                'lft__gt' => $this->getModel()->lft,
-                'rgt__lt' => $this->getModel()->rgt,
+                'lft__gte' => $this->getModel()->lft,
+                'rgt__lte' => $this->getModel()->rgt,
                 'root' => $this->getModel()->root,
             ])->order(['lft']);
         }

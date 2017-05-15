@@ -61,6 +61,12 @@ class ProductModel extends AutoMetaModel
     public static function getFields()
     {
         return [
+            'categories' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => CategoryModel::className(),
+                'through' => ProductCategoriesModel::className(),
+            ],
+
             'productid' => [
                 'class' => AutoField::className(),
             ],

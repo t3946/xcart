@@ -1,10 +1,13 @@
 <?php
 namespace Modules\Product\Models;
 
+use Xcart\App\Components\Breadcrumbs;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTreeModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 
 /**
  * @property string categoryid_path
@@ -22,6 +25,12 @@ class CategoryModel extends AutoMetaTreeModel
         return array_merge_recursive(
             parent::getFields(),
              [
+                 'products' => [
+                     'class' => ManyToManyField::className(),
+                     'modelClass' => ProductModel::className(),
+                     'through' => ProductCategoriesModel::className()
+                 ],
+
                 'categoryid' => [
                     'class' => AutoField::className(),
                     'primary' => true,
@@ -48,5 +57,36 @@ class CategoryModel extends AutoMetaTreeModel
                 ],
             ]
         );
+    }
+
+    public function getBreadcrumbs()
+    {
+        $bread = new Breadcrumbs();
+
+        if ($parents = self::objects($this)->ancestors()->order(['lft'])->all())
+        {
+            foreach ($parents as $model) {
+                $bread->add($model->category, $model->getAbsoluteUrl());
+            }
+        }
+
+        $bread->add($this->category, $this->getAbsoluteUrl());
+
+        return $bread;
+    }
+
+    public function getAbsoluteUrl()
+    {
+        if (!$this->getIsNewRecord())
+        {
+            return Xcart::app()->router->url('category:view:old', ['id' => $this->categoryid, 'slug' => 'TEMP']);
+        }
+
+        return false;
+    }
+
+    public function getThisObjects()
+    {
+        return static::objects($this);
     }
 }
