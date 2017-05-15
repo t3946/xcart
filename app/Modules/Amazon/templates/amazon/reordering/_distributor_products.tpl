@@ -47,7 +47,7 @@
             <td class="float" align="center">${$product.min_fba_price|formatprice:",":"."}</td>
             <td align="center">{if $product.avg_comp_price >= 0}${$product.avg_comp_price|formatprice:",":"."}{/if}</td>
             <td align="center">{$product.ads_a}</td>
-            <td align="center">{$product.asd_x}</td>
+            <td align="center">{$product.ads_x}</td>
             <td align="center">{$product.r_avail}</td>
             <td align="center">{$product.total_stock}</td>
             <td class="fba-required" align="center"><input name="restocking_qty[{$batch_id}][{$product.productid}]" data-original-value="{$product.restocking_qty}" class="restocking-qty" size="3" type="text" value="{$product.restocking_qty}" /></td>
