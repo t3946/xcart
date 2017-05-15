@@ -31,26 +31,26 @@ class AmazonStore extends BaseStore
 
         if (!empty($data)) {
             if ($data['cost_to_us']) {
-                if (!empty($data['cost_to_us']['from'])) {
+                if ($data['cost_to_us']['from'] != '') {
                     $filter['cost_to_us__gte'] = floatval($data['cost_to_us']['from']);
                 }
-                if ($data['cost_to_us']['to']) {
+                if ($data['cost_to_us']['to'] != '') {
                     $filter['cost_to_us__lte'] = floatval($data['cost_to_us']['to']);
                 }
             }
             if (!empty($data['r_avail'])) {
-                if ($data['r_avail']['from']) {
+                if ($data['r_avail']['from'] != '') {
                     $filter['r_avail__gte']  = intval($data['r_avail']['from']);
                 }
-                if ($data['r_avail']['to']) {
+                if ($data['r_avail']['to'] != '') {
                     $filter['r_avail__lte'] = intval($data['r_avail']['to']);
                 }
             }
             if (!empty($data['restocking_qty'])) {
-                if ($data['restocking_qty']['from']) {
+                if ($data['restocking_qty']['from'] != '') {
                     $filter['restocking_qty__gte'] = floatval($data['restocking_qty']['from']);
                 }
-                if ($data['restocking_qty']['to']) {
+                if ($data['restocking_qty']['to'] != '') {
                     $filter['restocking_qty__lte'] = floatval($data['restocking_qty']['to']);
                 }
             }

@@ -15,10 +15,16 @@
                 <form name="amazon_shipping_form" method="post">
                     {foreach $amazon_products as $distributor => $products}
                         <fieldset {if $amazon_products@first}class="expanded"{/if}>
-                            <legend>{$distributor} ({count($products)})</legend>
-                            {include 'amazon/reordering/_distributor_products.tpl'}
+                            <legend style="width: 100%;">
+                                <span></span>
+                                <span>{$distributor} ({count($products)})</span>
+                                <span class="distributor-total" style="float:right"></span></legend>
+                                {include 'amazon/reordering/_distributor_products.tpl'}
                         </fieldset>
                     {/foreach}
+                    <div class="row">
+                        <div class="columns large-12 batch-total" style="text-align: right"></div>
+                    </div>
                    {include 'amazon/_buttons.tpl'}
                 </form>
             {elseif $batch_model->status == 'processing'}
@@ -108,6 +114,29 @@
                 exportToFile($(this), filename, header + csv + footer);
             }
 
+            function recalculateBatchTotals()
+            {
+                var total = 0;
+                $('table.restocking-table').each(function() {
+                    total += recalculateDistributorTotal.apply(this, [$(this)]);
+                });
+                $('.batch-total').text('$'+total);
+            }
+
+            function recalculateDistributorTotal(obj)
+            {
+                var total = 0,
+                    obj = $(obj);
+                $('tr', obj).not('.no-export').each(function(){
+                    var cost_to_us = $(this).find('td.cost-to-us').text().replace('$', ''),
+                    qty = $(this).find('input.restocking-qty').val();
+                    total += round(parseFloat(cost_to_us) * parseInt(qty),2);
+                });
+                total = round(total,2);
+                obj.siblings('legend').find('span.distributor-total').text('$'+total.toFixed(2));
+                return total;
+            }
+
             $('input.group-apply').click(function(){
                 var fill_val = $(this).siblings('input.group-apply-val');
                 $(this).closest('table').find('input.restocking-qty').each(function(){
@@ -124,6 +153,7 @@
                 } else {
                     td.removeClass('changed');
                 }
+                recalculateBatchTotals();
             });
 
             $('.csv-button').click(function(){
@@ -176,6 +206,8 @@
                 args = [table, filename, 'td.fba-required', header, footer, colDelim, rowDelim];
                 exportTableToCSV.apply(this, args);
             });
+
+           recalculateBatchTotals();
         })();
     </script>
 {/block}
