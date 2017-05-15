@@ -7,9 +7,18 @@ return [
         'name' => 'index'
     ],
     [
-        'route' => '/create_shipping',
-        'target' => ['\Modules\Amazon\Controllers\AmazonController', 'create_shipping'],
-        'name' => 'create_shipping'
+        'route' => '/batch_processing',
+        'target' => ['\Modules\Amazon\Controllers\AmazonController', 'batch_processing'],
+        'name' => 'batch_processing'
+    ],[
+        'route' => '/batch_delete',
+        'target' => ['\Modules\Amazon\Controllers\AmazonController', 'batch_delete'],
+        'name' => 'batch_delete'
+    ],
+    [
+        'route' => '/batch_processing_check',
+        'target' => ['\Modules\Amazon\Controllers\AmazonController', 'batch_processing_check'],
+        'name' => 'batch_processing_check'
     ],
     [
         'route' => '/batch/{i:id}',

@@ -123,7 +123,11 @@ abstract class BaseAdapter implements ISQLGenerator
      */
     public function quoteValue($str)
     {
-        if (!is_string($str)) {
+        if ($str instanceof Expression)
+        {
+            return $str->toSQL();
+        }
+        else if (!is_string($str)) {
             return $str;
         }
 

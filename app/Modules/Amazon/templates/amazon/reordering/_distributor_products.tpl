@@ -1,10 +1,9 @@
-
 <table class="restocking-table" width="100%" cellspacing="1" cellpadding="3" data-batch-id="{$batch_id}" data-manufacturer-name="{$distributor}" data-manufacturer-code="{$products[0].code}"
        data-manufacturer-address="{$products[0].m_address}" data-manufacturer-city="{$products[0].m_city}"
        data-manufacturer-country="{$products[0].m_country}" data-manufacturer-state="{$products[0].m_state}"
        data-manufacturer-zip="{$products[0].m_zipcode}">
     <tr class="no-export">
-        <td colspan="15" align="right">
+        <td colspan="17" align="right">
             <a class="fba-button" href="#">Save to FBA</a>
         </td>
         <td align="right">
@@ -25,6 +24,8 @@
         <td>Current Amazon Price</td>
         <td>Min FBA price</td>
         <td>AVG comp price</td>
+        <td title="Amazon Average Daily Sales">ADSa</td>
+        <td title="X-Cart Average Daily Sales">ADSx</td>
         <td>Dx stock qty</td>
         <td>Total stock</td>
         <td>Restocking qty<br/><input class="group-apply-val" style="width: 40px;" type="number" min="0"/><input style="line-height:16px;" class="group-apply" type="button" value="↓"/>
@@ -45,6 +46,8 @@
             <td class="float" align="center">${$product.price|formatprice:",":"."}</td>
             <td class="float" align="center">${$product.min_fba_price|formatprice:",":"."}</td>
             <td align="center">{if $product.avg_comp_price >= 0}${$product.avg_comp_price|formatprice:",":"."}{/if}</td>
+            <td align="center">{$product.ads_a}</td>
+            <td align="center">{$product.asd_x}</td>
             <td align="center">{$product.r_avail}</td>
             <td align="center">{$product.total_stock}</td>
             <td class="fba-required" align="center"><input name="restocking_qty[{$batch_id}][{$product.productid}]" data-original-value="{$product.restocking_qty}" class="restocking-qty" size="3" type="text" value="{$product.restocking_qty}" /></td>
