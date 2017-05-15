@@ -42,6 +42,17 @@
     <li>
         <div class="row">
             <div class="columns large-4">
+                <label for="o_restocking_competitive_price">Items with competitive price:</label>
+            </div>
+
+            <div class="columns large-6">
+                <input type="checkbox" name="filter[restocking_competitive_price]" id="o_restocking_competitive_price" {if $filter_data.restocking_competitive_price}checked="checked"{/if}">
+            </div>
+        </div>
+    </li>
+    <li>
+        <div class="row">
+            <div class="columns large-4">
                 <input type="submit" value="Filter">
                 <input type="submit" name="filter[reset]" value="Reset">
             </div>

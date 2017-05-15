@@ -31,6 +31,10 @@ class AmazonReorderBatchModel extends Model
             'created_at' => [
                 'class' => TimestampField::className(),
             ],
+            'assortment' => [
+                'class' => TextField::className(),
+                'default' => 'Y'
+            ],
         ];
     }
 }
