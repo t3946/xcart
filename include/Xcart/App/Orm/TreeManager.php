@@ -143,7 +143,9 @@ class TreeManager extends Manager
     public function rebuild()
     {
         $i = 0;
-        $skip = [];
+        $skip = [0];
+        $prev_fixed = 0;
+
         while ($this->filter(['lft__isnull' => true])->count() != 0) {
             ++$i;
             $fixed = 0;
@@ -153,9 +155,10 @@ class TreeManager extends Manager
             $models = $clone
                 ->exclude(['pk__in' => $skip])
                 ->filter(['lft__isnull' => true])
-                ->order(['parent_id'])
+                ->order(['parent'])
                 ->all();
 
+            /** @var \Xcart\App\Orm\TreeModel $model */
             foreach ($models as $model) {
                 $model->lft = $model->rgt = $model->level = $model->root = null;
                 if ($model->saveRebuild()) {
@@ -166,6 +169,12 @@ class TreeManager extends Manager
             }
             echo PHP_EOL;
             echo 'Fixed: '.$fixed.PHP_EOL;
+
+            if ($prev_fixed == $fixed && $fixed == 0) {
+                echo 'Break Not fixed: '.count($models).PHP_EOL;
+                echo 'idx: '.implode(', ',array_map(function($model){ return $model->pk;}, $models)).PHP_EOL;
+                break;
+            }
         }
     }
 }

@@ -158,14 +158,15 @@ abstract class TreeModel extends Model
     {
         $fields = ['lft', 'rgt', 'level', 'root'];
 
-        if ($this->parent == null) {
+        if (!$this->parent) {
             $this->lft = 1;
             $this->rgt = 2;
-            $this->level = 0;
+            $this->level = '0';
             $this->root = $this->pk;
 
             return parent::save($fields);
-        } elseif ($this->parent->lft) {
+        }
+        elseif ($this->parent->lft) {
             $target = $this->parent;
             $key = $target->rgt;
 
