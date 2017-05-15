@@ -120,7 +120,7 @@
                 $('table.restocking-table').each(function() {
                     total += recalculateDistributorTotal.apply(this, [$(this)]);
                 });
-                $('.batch-total').text('$'+total);
+                $('.batch-total').text('$'+total.toFixed(2));
             }
 
             function recalculateDistributorTotal(tbl)
