@@ -139,23 +139,28 @@
                 return total;
             }
 
+            function inputValuesChanged(tdo, tdnv)
+            {
+                var original = tdo.data('original-value'),
+                tdp = tdo.closest('td');
+                if (original != tdnv){
+                    tdp.addClass('changed');
+                } else {
+                    tdp.removeClass('changed');
+                }
+            }
+
             $('input.group-apply').click(function(){
                 var fill_val = $(this).siblings('input.group-apply-val');
                 $(this).closest('table').find('input.restocking-qty').each(function(){
                     $(this).val(fill_val.val());
+                    inputValuesChanged($(this), fill_val.val());
                 });
                 recalculateBatchTotals();
             });
 
             $('input.restocking-qty').change(function(){
-                var original = $(this).data('original-value'),
-                    current = $(this).val(),
-                    td = $(this).closest('td');
-                if (original != current){
-                    td.addClass('changed');
-                } else {
-                    td.removeClass('changed');
-                }
+                inputValuesChanged($(this), $(this).val());
                 recalculateBatchTotals();
             });
 
