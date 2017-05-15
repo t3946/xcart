@@ -142,8 +142,9 @@
             $('input.group-apply').click(function(){
                 var fill_val = $(this).siblings('input.group-apply-val');
                 $(this).closest('table').find('input.restocking-qty').each(function(){
-                    $(this).val(fill_val.val()).change();
-                })
+                    $(this).val(fill_val.val());
+                });
+                recalculateBatchTotals();
             });
 
             $('input.restocking-qty').change(function(){
