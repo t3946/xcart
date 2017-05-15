@@ -10,6 +10,10 @@ return [
         'route' => '/batch_processing',
         'target' => ['\Modules\Amazon\Controllers\AmazonController', 'batch_processing'],
         'name' => 'batch_processing'
+    ],[
+        'route' => '/batch_delete',
+        'target' => ['\Modules\Amazon\Controllers\AmazonController', 'batch_delete'],
+        'name' => 'batch_delete'
     ],
     [
         'route' => '/batch_processing_check',
