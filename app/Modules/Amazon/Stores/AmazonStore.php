@@ -71,6 +71,7 @@ class AmazonStore extends BaseStore
         if (!$this->qs) {
             $this->qs = AmazonReorderBatchDataModel::objects()->getQuerySet();
             $this->qs->join('inner join', 'xcart_manufacturers', ['manufacturerid' => 'm.manufacturerid'], 'm');
+            $this->qs->join('inner join', 'xcart_products_sf', ['productid' => 'sf.productid'], 'sf');
         }
         return $this->qs;
     }
@@ -81,7 +82,14 @@ class AmazonStore extends BaseStore
     {
             /** @var QuerySet $qs */
             $qs = $this->getQuerySet();
-            $qs->select(['m.manufacturer', 'm.code', 'm.m_address', 'm.m_city', 'm.m_country', 'm.m_state', 'm.m_zipcode',
+            $qs->select(['m.manufacturer',
+                'm.code',
+                'm.m_address',
+                'm.m_city',
+                'm.m_country',
+                'm.m_state',
+                'm.m_zipcode',
+                'sf.sfid',
                 'r_order' => new Expression("(restocking_qty * cost_to_us)"),
                 'r_qty_order' => new Expression("IF (restocking_qty > 2, 0, 1)"),
                 '*'
@@ -92,7 +100,7 @@ class AmazonStore extends BaseStore
                     '-r_order'
                 ]);
 
-            //echo $qs->getSql();
+            echo $qs->getSql();
 
             return Connection::getInstance()->executeQuery(
                 $qs->getSql()
