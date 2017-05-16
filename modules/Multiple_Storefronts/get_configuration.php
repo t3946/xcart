@@ -84,6 +84,7 @@ if (!empty($configuration)) {
           'Enable_Mobile_skin'    => '250',
 	  'Google_Trusted_Store_ID'    => '280',
 	  'Enable_surf_stats'    => '380',
+        'Enable_desktop_notifications_on_product_page' => '660',
           'Preferred_served_country'    => '480',
           'Preferred_language'    => '580',
           'cidev_ga_code_number'  => 39,

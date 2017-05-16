@@ -1130,27 +1130,49 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "f0896b5c7274d1450023b0b376240be902c3251c"
+                "reference": "a9663643ff2d16d7f66ed1e0d3212c5491bc9044"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/f0896b5c7274d1450023b0b376240be902c3251c",
-                "reference": "f0896b5c7274d1450023b0b376240be902c3251c",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a9663643ff2d16d7f66ed1e0d3212c5491bc9044",
+                "reference": "a9663643ff2d16d7f66ed1e0d3212c5491bc9044",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.0.0"
+                "php": ">=5.4.0"
+            },
+            "conflict": {
+                "league/flysystem-sftp": "<1.0.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "*"
+                "ext-fileinfo": "*",
+                "mockery/mockery": "~0.9",
+                "phpspec/phpspec": "^2.2",
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "ext-fileinfo": "Required for MimeType",
+                "league/flysystem-aws-s3-v2": "Allows you to use S3 storage with AWS SDK v2",
+                "league/flysystem-aws-s3-v3": "Allows you to use S3 storage with AWS SDK v3",
+                "league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
+                "league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
+                "league/flysystem-copy": "Allows you to use Copy.com storage",
+                "league/flysystem-dropbox": "Allows you to use Dropbox storage",
+                "league/flysystem-eventable-filesystem": "Allows you to use EventableFilesystem",
+                "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
+                "league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
+                "league/flysystem-webdav": "Allows you to use WebDAV storage",
+                "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
             "autoload": {
-                "classmap": [
-                    "Mobile_Detect.php"
-                ],
-                "psr-0": {
-                    "Detection": "namespaced/"
+                "psr-4": {
+                    "League\\Flysystem\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1164,7 +1186,6 @@
                 }
             ],
             "description": "Filesystem abstraction: Many filesystems, one API.",
-            "homepage": "https://github.com/serbanghita/Mobile-Detect",
             "keywords": [
                 "Cloud Files",
                 "WebDAV",
@@ -1184,7 +1205,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2017-03-29T13:59:30+00:00"
+            "time": "2016-10-07T12:20:37+00:00"
         },
         {
             "name": "mindy/query_builder",
@@ -1192,12 +1213,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tsukasa-mixer/QueryBuilder.git",
-                "reference": "554ae923d4db89e3623f77b13a4fa933b8fae9d1"
+                "reference": "044eef77c4efea8933e818c248c78b3f882f1767"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/554ae923d4db89e3623f77b13a4fa933b8fae9d1",
-                "reference": "554ae923d4db89e3623f77b13a4fa933b8fae9d1",
+                "url": "https://api.github.com/repos/tsukasa-mixer/QueryBuilder/zipball/044eef77c4efea8933e818c248c78b3f882f1767",
+                "reference": "044eef77c4efea8933e818c248c78b3f882f1767",
                 "shasum": ""
             },
             "require": {
@@ -1233,7 +1254,7 @@
             "support": {
                 "source": "https://github.com/tsukasa-mixer/QueryBuilder/tree/master_5.4"
             },
-            "time": "2017-05-12 16:56:00"
+            "time": "2017-05-16 18:20:10"
         },
         {
             "name": "mobiledetect/mobiledetectlib",

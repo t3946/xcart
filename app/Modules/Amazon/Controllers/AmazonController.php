@@ -17,25 +17,30 @@ class AmazonController extends PrototypeAdminController
 
     public function index()
     {
-        $amazonStore = new AmazonStore([]);
-
-        echo $this->renderInternal('amazon/index.tpl',
-            [
-                //'amazon_products' => $amazonStore->calculateAmazonProducts()
-            ]
-        );
-    }
-
-    public function create_shipping()
-    {
+        $errors = [];
         if (array_key_exists('calculate_shipping', $_POST)) {
+            if (!AmazonReorderBatchModel::objects()->filter(['status' => 'processing'])->count()) {
                 $model = new AmazonReorderBatchModel(['user_id' => Xcart::app()->user->id]);
+                if (!empty($_POST['batch_assortment'])) {
+                    $model->assortment = $_POST['batch_assortment'];
+                }
                 $model->save();
                 if ($model->batch_id) {
                     $this->autoRedirect($model->batch_id);
                 }
+            } else {
+                $errors[] = 'Another batch always processing. Please wait or inform tech support!';
+            }
         }
-        $this->autoRedirect(null);
+
+        $batches = AmazonReorderBatchModel::objects()->all();
+
+        echo $this->renderInternal('amazon/index.tpl',
+            [
+                'errors' => $errors,
+                'batches' => $batches
+            ]
+        );
     }
 
     public function batch_processing_check()
@@ -50,17 +55,29 @@ class AmazonController extends PrototypeAdminController
         print json_encode(['status' => $result]);
     }
 
+    public function batch_delete()
+    {
+        $result = null;
+        if (!empty($_POST) && is_numeric($_POST['batch_id'])) {
+            $batch = AmazonReorderBatchModel::objects()->delete(['batch_id' => $_POST['batch_id']]);
+            if ($batch) {
+                $result = 'ok';
+            }
+        }
+        print json_encode(['status' => $result]);
+    }
+
     public function batch_processing()
     {
         set_time_limit(0);
         if (!empty($_GET) && is_numeric($_GET['batch_id'])) {
             $batch = AmazonReorderBatchModel::objects()->get(['batch_id' => $_GET['batch_id']]);
             if ($batch && $batch->status == 'processing') {
-                //AmazonReorderBatchDataModel::objects()->delete(['batch_id' => $batch->batch_id]);
                 $params = [
                     'day_reorder' => AmazonReorderingHelper::getDaysBeforeNextReorder(current(GlobalConfigModel::objects()->filter(['name' => 'reorder_weekday'])->valuesList(['value'], true))),
                     'tau' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_back_in_time_period'])->valuesList(['value'], true)),
-                    'tau_m' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_tau_m'])->valuesList(['value'], true))
+                    'tau_m' => current(GlobalConfigModel::objects()->filter(['name' => 'ads_tau_m'])->valuesList(['value'], true)),
+                    'assortment' => $batch->assortment
                 ];
                 $aProducts = AmazonReorderingHelper::calculateAmazonProducts($params);
                 if ($aProducts) {
@@ -84,6 +101,7 @@ class AmazonController extends PrototypeAdminController
                     AmazonReorderBatchDataModel::objects()->delete(['batch_id' => $id]);
                     $batch->status="processing";
                     $batch->save();
+                    $this->autoRedirect($id);
 
                 } elseif (!empty($_POST['update_changes'])) {
                     foreach ($_POST['restocking_qty'] as $batch_id => $products) {
@@ -96,7 +114,6 @@ class AmazonController extends PrototypeAdminController
                         }
                     }
                 }
-                $this->autoRedirect($id);
             }
             $amazonStore = new AmazonStore(array_merge(AmazonReorderingHelper::getFilterData($_GET['filter']), ['batch_id' => $batch->batch_id]));
 
