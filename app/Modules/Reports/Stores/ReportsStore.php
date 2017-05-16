@@ -125,7 +125,7 @@ class ReportsStore extends OrderSearchStore
             'f_total' => new Sum('group.total_net'),
             'subtotal' => new Expression('SUM(order_details.price * order_details.amount)'),
             'shipping' => new Sum('group.shipping_net'),
-            'profit' => new Expression("AVG(CASE WHEN inv.invoice_number IS NULL THEN NULL ELSE group.profit_margin END)"),
+            'profit' => new Expression("SUM(CASE WHEN inv.invoice_number IS NULL THEN NULL ELSE group.accounting_net_5_profit END) / SUM(CASE WHEN inv.invoice_number IS NULL THEN NULL ELSE accounting_net_0 END) * 100"),
             'avg_profit' => '',
             'avg_check' => new Avg('total'),
             'median_check' =>  new Expression("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(GROUP_CONCAT(total ORDER BY total SEPARATOR ','),',', 50/100 * COUNT(*)), ',', -1) AS DECIMAL (18,2))"),

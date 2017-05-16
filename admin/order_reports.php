@@ -127,14 +127,15 @@ if ($mode == "report") {
 	}
 
     if ($data["report_mode"] == "graph") {
-
-
         global $xcart_dir;
         $oReport = new Xcart\OrderReports();
-        $oReport->setStartDate($start_date)->setEndDate($end_date)->setOrderSource($data['orders_source'])->
-        setStoreFronts($data['storefront_ids'])->setManufacturers($data['manufacturers'])->setAccountingMethod($data['accounting_method'])->
-        setOrderStatus($data['cb_status']);
-
+        $oReport->setStartDate($start_date)
+            ->setEndDate($end_date)
+            ->setOrderSource($data['orders_source'])
+            ->setStoreFronts($data['storefront_ids'])
+            ->setManufacturers($data['manufacturers'])
+            ->setAccountingMethod($data['accounting_method'])
+            ->setOrderStatus($data['cb_status']);
 
         switch($data['profit_margin_range']) {
             case 'margin_1_2':
@@ -147,8 +148,9 @@ if ($mode == "report") {
                 $oReport->setProfitMarginRange($data['profit_margin_range']);
         }
 
-
-        $aReportsData = $oReport->setGraphPeriod($data['graph_report_period'])->getReportsData();
+        $aReportsData = $oReport
+			->setGraphPeriod($data['graph_report_period'])
+			->getReportsData();
         $smarty->assign("report_data", $aReportsData);
 
         func_display("main/order_report_graph.tpl",$smarty);
