@@ -31,7 +31,7 @@
                             ->children()
                             ->filter([
                                 'avail' => 'Y',
-                                'products__forsale' => 'Y'
+                                'products__productid__gte' => '0'
                             ])
                             ->select([
                                 'pcount'=>'count(xcart_products_1.productid)',
