@@ -100,27 +100,25 @@ class CategoryModel extends AutoMetaTreeModel
         if ($withProductCount) {
             $ta = $qs->getTableAlias();
 
+            $pcountSql = ProductModel::objects()
+                        ->with(['categories'])
+                        ->filter([
+                            'forsale' => 'Y',
+                            'categories__lft__gte' => new Expression("{{category}}.lft"),
+                            'categories__rgt__lte' => new Expression("{{category}}.rgt"),
+                            'categories__root' => new Expression("{{category}}.root"),
+                        ])
+                        ->countSql();
+
+            $pcountSql = str_replace($ta, 'cp', $pcountSql);
+            $pcountSql = str_replace("{{category}}", $ta, $pcountSql);
+
             $qs->with(['products']);
             $qs->group(['categoryid']);
             $qs->select([
-                'pcount' => ProductModel::objects()
-//                                        ->setQuerySet($qs->getQuerySet())
-                                        ->with(['categories'])
-                                        ->filter([
-                                            'categories__lft__gt' => new Expression("{$ta}.lft"),
-                                            'categories__rgt__lt' => new Expression("{$ta}.rgt"),
-                                            'categories__root' => new Expression("{$ta}.root"),
-                                            new Expression("{$ta}.root > 1"),
-                                         ])
-                                        ->select(['count(*)'])
-                                        ->getQueryBuilder(),
-
+                'pcount' => $pcountSql,
                 '*',
             ]);
-            func_dump($qs->allSql());
-            
-            die();
-
         }
 
         return $qs->all();
