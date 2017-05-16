@@ -13,22 +13,22 @@
     <tr class="TableHead no-export">
         <td>SKU /<br/>Amazon SKU to load</td>
         <td>Amazon FBA</td>
-        <td>Last order days</td>
-        <td>Items sold last 1m</td>
-        <td>Instock days 3m</td>
-        <td>Items sold last 1m of stock</td>
-        <td>Instock days 1m</td>
-        <td>Orders rate last 1 month</td>
-        <td>Overall Orders rate</td>
-        <td>Cost to us</td>
-        <td>Current Amazon Price</td>
-        <td>Min FBA price</td>
-        <td>AVG comp price</td>
-        <td title="Amazon Average Daily Sales">ADSa</td>
-        <td title="X-Cart Average Daily Sales">ADSx</td>
-        <td>Dx stock qty</td>
-        <td>Total stock</td>
-        <td>Restocking qty<br/><input class="group-apply-val" style="width: 40px;" type="number" min="0"/><input style="line-height:16px;" class="group-apply" type="button" value="↓"/>
+        <td title="Число дней с последнего заказа на Амазон">Last order days</td>
+        <td title="Число штук проданных за последние 30 дней">Items sold last 1m</td>
+        <td title="Дней в стоке за период последние 90 дней">Instock days 3m</td>
+        <td title="Число штук проданных за последние 30 дней, когда продукт был в стоке">Items sold last 1m of stock</td>
+        <td title="Дней в стоке за период последние 30 дней">Instock days 1m</td>
+        <td title="Число заказов Амазон в день за последние 30 дней">Orders rate last 1 month</td>
+        <td title="Число заказов Амазон в день за всю историю продукта">Overall Orders rate</td>
+        <td title="Закупочная цена" >Cost to us</td>
+        <td title="Текущая цена на Амазон (может быть MFN / AFN)">Current Amazon Price</td>
+        <td title="Минимальная цена FBA со стандартной наценкой">Min FBA price</td>
+        <td title="Средняя цена конкурентов за последние 60 дней">AVG comp price</td>
+        <td title="Средние продажи FBA в день">ADSa</td>
+        <td title="Средние продажи XCart с доставкой через Амазон  в день">ADSx</td>
+        <td title="Остатки на складе дистрибьютора">Dx stock qty</td>
+        <td title="Число штук на складе Amazon FBA (склад + inbound)">Total stock</td>
+        <td title="">Restocking qty<br/><input class="group-apply-val" style="width: 40px;" type="number" min="0"/><input style="line-height:16px;" class="group-apply" type="button" value="↓"/>
         </td>
     </tr>
     {foreach $products as $product}
