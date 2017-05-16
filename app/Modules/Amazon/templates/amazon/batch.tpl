@@ -5,6 +5,10 @@
 {/block}
 
 {block 'content'}
+    {if $filter_data}
+        {include 'amazon/reordering/_filter_enabled_message.tpl'}
+    {/if}
+
     {smarty_admin_block name='Products Filter'}
         {include 'amazon/reordering/_filter_products.tpl'}
     {/smarty_admin_block}
