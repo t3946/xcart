@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Product\Models;
 
+use Mindy\QueryBuilder\Expression;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTreeModel;
@@ -88,5 +89,40 @@ class CategoryModel extends AutoMetaTreeModel
     public function getThisObjects()
     {
         return static::objects($this);
+    }
+
+    public function getSubcategories($withProductCount = true, $level = 1)
+    {
+        $qs = static::objects()
+                    ->descendants(false, $level)
+                    ->filter(['avail' => 'Y']);
+
+        if ($withProductCount) {
+            $ta = $qs->getTableAlias();
+
+            $qs->with(['products']);
+            $qs->group(['categoryid']);
+            $qs->select([
+                'pcount' => ProductModel::objects()
+//                                        ->setQuerySet($qs->getQuerySet())
+                                        ->with(['categories'])
+                                        ->filter([
+                                            'categories__lft__gt' => new Expression("{$ta}.lft"),
+                                            'categories__rgt__lt' => new Expression("{$ta}.rgt"),
+                                            'categories__root' => new Expression("{$ta}.root"),
+                                            new Expression("{$ta}.root > 1"),
+                                         ])
+                                        ->select(['count(*)'])
+                                        ->getQueryBuilder(),
+
+                '*',
+            ]);
+            func_dump($qs->allSql());
+            
+            die();
+
+        }
+
+        return $qs->all();
     }
 }

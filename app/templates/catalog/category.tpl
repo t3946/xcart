@@ -26,20 +26,7 @@
         </section>
     {/if}
 
-    {set $subcategories = $model
-                            ->getThisObjects()
-                            ->children()
-                            ->filter([
-                                'avail' => 'Y',
-                                'products__productid__gte' => '0'
-                            ])
-                            ->select([
-                                'pcount'=>'count(xcart_products_1.productid)',
-                                '*'
-                            ])
-                            ->group(['categoryid'])
-                            ->all()
-    }
+    {set $subcategories = $model->getSubcategories()}
 
     {if $subcategories|count > 0}
         <section class="subcategories">
