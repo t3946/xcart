@@ -176,7 +176,9 @@
                 colDelim = '","',
                 plan_name = 'Excel-00000' + table.data('batch-id') + table.data('manufacturer-code') + '1',
                 filename = plan_name + '.txt',
-                header = '"SKU /Amazon SKU to load'+ colDelim
+                header = '"Amazon SKU to load'+ colDelim
+                    + 'ASIN' + colDelim
+                    + 'UPC' + colDelim
                     + 'Amazon FBA' + colDelim
                     + 'Last order days' + colDelim
                     + 'Items sold last 1m' + colDelim

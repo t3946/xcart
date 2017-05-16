@@ -3,7 +3,7 @@
        data-manufacturer-country="{$products[0].m_country}" data-manufacturer-state="{$products[0].m_state}"
        data-manufacturer-zip="{$products[0].m_zipcode}">
     <tr class="no-export">
-        <td colspan="17" align="right">
+        <td colspan="19" align="right">
             <a class="fba-button" href="#">Save to FBA</a>
         </td>
         <td align="right">
@@ -36,8 +36,8 @@
     {foreach $products as $product}
         <tr class="{cycle ["", "TableSubHead"]}">
             <td class="fba-required"><a target="_blank" href="/admin/product_modify.php?productid={$product.productid}&sf={$product.sfid}">{$product.SKU}</td>
-            <td align="center"><a target="_blank" href="https://sellercentral.amazon.com/hz/inventory?_encoding=UTF8&asin={$product.ASIN}&ref=xx_invmgr_shel_home&tbla_myitable=sort:%7B%22sortOrder%22%3A%22ASCENDING%22%2C%22sortedColumnId%22%3A%22skucondition%22%7D;search:{$product.ASIN};pagination:1;">{$product.ASIN}</td>
-            <td align="center">{$product.UPC}</td>
+            <td><a target="_blank" href="https://sellercentral.amazon.com/hz/inventory?_encoding=UTF8&asin={$product.ASIN}&ref=xx_invmgr_shel_home&tbla_myitable=sort:%7B%22sortOrder%22%3A%22ASCENDING%22%2C%22sortedColumnId%22%3A%22skucondition%22%7D;search:{$product.ASIN};pagination:1;">{$product.ASIN}</td>
+            <td>{$product.UPC}</td>
             <td align="center">{$product.amazon_fba}</td>
             <td align="center">{$product.last_order_days}</td>
             <td align="center">{$product.items_sold_last_1m}</td>
