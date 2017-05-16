@@ -841,7 +841,7 @@ abstract class BaseAdapter implements ISQLGenerator
                     $subQuery = $this->quoteSql($expr->toSQL());
                 }
 
-                $value = $this->quoteColumn($subQuery);
+                $value = "({$this->quoteColumn($subQuery)})";
 
                 if (!is_numeric($column)) {
                     $value .= ' AS ' . $this->quoteColumn($column);

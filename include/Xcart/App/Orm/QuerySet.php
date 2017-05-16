@@ -322,9 +322,6 @@ class QuerySet extends QuerySetBase
                 else if ($value instanceof Manager || $value instanceof QuerySet) {
                     return $value->getQueryBuilder();
                 }
-                else if ($value instanceof Expression) {
-                    return new QAnd($value); //@TODO: Its bug... fix it.
-                }
                 return $value;
             }, $query);
         } else {

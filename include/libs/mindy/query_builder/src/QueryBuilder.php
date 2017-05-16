@@ -636,20 +636,32 @@ class QueryBuilder
     {
         $tableAlias = $this->getAlias();
         $parts = [];
+
         if ($condition instanceof Expression) {
             $parts[] = $this->getAdapter()->quoteSql($condition->toSQL());
-        } else if ($condition instanceof Q) {
+        }
+        else if ($condition instanceof Q) {
             $condition->setLookupBuilder($this->getLookupBuilder());
             $condition->setAdapter($this->getAdapter());
             $condition->setTableAlias($tableAlias);
             $parts[] = $condition->toSQL($this);
-        } else if ($condition instanceof QueryBuilder) {
+        }
+        else if ($condition instanceof QueryBuilder) {
             $parts[] = $condition->toSQL();
-        } else if (is_array($condition)) {
-            foreach ($condition as $key => $value) {
-                if ($value instanceof Q) {
+        }
+        else if (is_array($condition)) {
+            foreach ($condition as $key => $value)
+            {
+                if (is_numeric($key) && ($value instanceof Expression)) {
                     $parts[] = $this->parseCondition($value);
-                } else {
+                }
+                else if (is_numeric($key) && ($value instanceof QueryBuilder)) {
+                    $parts[] = $this->parseCondition($value);
+                }
+                else if ($value instanceof Q) {
+                    $parts[] = $this->parseCondition($value);
+                }
+                else {
                     $value = $this->getAdapter()->prepareValue($value);
 
                     list($lookup, $column, $lookupValue) = $this->lookupBuilder->parseLookup($this, $key, $value);
@@ -660,27 +672,15 @@ class QueryBuilder
                     $parts[] = $this->lookupBuilder->runLookup($this->getAdapter(), $lookup, $column, $lookupValue);
                 }
             }
-
-            /*
-            $conditions = $this->lookupBuilder->parse($condition);
-            foreach ($conditions as $key => $value) {
-                list($lookup, $column, $lookupValue) = $value;
-                $column = $this->getLookupBuilder()->fetchColumnName($column);
-                if (empty($tableAlias) === false) {
-                    $column = $tableAlias . '.' . $column;
-                }
-                $parts[] = $this->lookupBuilder->runLookup($this->getAdapter(), $lookup, $column, $lookupValue);
-            }
-            */
-        } else if (is_string($condition)) {
+        }
+        else if (is_string($condition)) {
             $parts[] = $condition;
-        } else if ($condition instanceof Expression) {
-            $parts[] = $condition->toSQL();
         }
 
         if (count($parts) === 1) {
             return $parts[0];
-        } else {
+        }
+        else {
             return '(' . implode(') AND (', $parts) . ')';
         }
     }
