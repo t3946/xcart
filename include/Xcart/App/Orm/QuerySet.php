@@ -14,6 +14,7 @@ use Mindy\QueryBuilder\Aggregation\Sum;
 use Mindy\QueryBuilder\Q\QAndNot;
 use Mindy\QueryBuilder\Q\QOrNot;
 use Mindy\QueryBuilder\QueryBuilder;
+use Xcart\App\Orm\Fields\RelatedField;
 
 /**
  * Class QuerySet
@@ -298,17 +299,14 @@ class QuerySet extends QuerySetBase
 
             if ($this->getModel()->getMeta()->hasRelatedField($name)) {
                 $this->with[] = $name;
-//                $field = $this->getModel()->getField($name);
-//
-//                if ($field instanceof ForeignField
-//                    || $field instanceof HasManyField
-//                    || $field instanceof ManyToManyField
-//                ) {
-//                    foreach ($field->getJoin($this->getQueryBuilder(), $this->getTableAlias()) as $join) {
-//                        list($type, $table, $on, $alias) = $join;
-//                        $this->join($type, $table, $on, $alias);
-//                    }
-//                }
+                $field = $this->getModel()->getField($name);
+
+                if ($field instanceof RelatedField) {
+                    foreach ($field->getJoin($this->getQueryBuilder(), $this->getTableAlias()) as $join) {
+                        list($type, $table, $on, $alias) = $join;
+                        $this->join($type, $table, $on, $alias);
+                    }
+                }
             }
         }
         return $this;
