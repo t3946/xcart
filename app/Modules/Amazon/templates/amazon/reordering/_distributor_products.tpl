@@ -11,7 +11,9 @@
         </td>
     </tr>
     <tr class="TableHead no-export">
-        <td>SKU /<br/>Amazon SKU to load</td>
+        <td>Amazon SKU to load</td>
+        <td>ASIN</td>
+        <td>UPC</td>
         <td>Amazon FBA</td>
         <td title="Число дней с последнего заказа на Амазон">Last order days</td>
         <td title="Число штук проданных за последние 30 дней">Items sold last 1m</td>
@@ -33,7 +35,9 @@
     </tr>
     {foreach $products as $product}
         <tr class="{cycle ["", "TableSubHead"]}">
-            <td class="fba-required"><a target="_blank" href="/admin/product_modify.php?productid={$product.productid}&switch_sf=true">{$product.productcode}</a>{if $product.productcode != $product.SKU}<br/>{$product.SKU}{/if}</td>
+            <td class="fba-required"><a target="_blank" href="/admin/product_modify.php?productid={$product.productid}&sf={$product.sfid}">{$product.SKU}</td>
+            <td align="center"><a target="_blank" href="https://sellercentral.amazon.com/hz/inventory?_encoding=UTF8&asin={$product.ASIN}&ref=xx_invmgr_shel_home&tbla_myitable=sort:%7B%22sortOrder%22%3A%22ASCENDING%22%2C%22sortedColumnId%22%3A%22skucondition%22%7D;search:{$product.ASIN};pagination:1;">{$product.ASIN}</td>
+            <td align="center">{$product.UPC}</td>
             <td align="center">{$product.amazon_fba}</td>
             <td align="center">{$product.last_order_days}</td>
             <td align="center">{$product.items_sold_last_1m}</td>
