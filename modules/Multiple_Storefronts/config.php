@@ -100,6 +100,7 @@ $domain_specific_config = array(
         'Enable_Mobile_skin' => '250',
         'Google_Trusted_Store_ID' => '280',
         'Enable_surf_stats' => '380',
+        'Enable_desktop_notifications_on_product_page' => '660',
         'https_enabled' => '2000',
 
         'Preferred_served_country' => '480',
