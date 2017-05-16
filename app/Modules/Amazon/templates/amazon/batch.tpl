@@ -141,6 +141,7 @@
 
             function inputValuesChanged(tdo, tdnv)
             {
+                console.time('inputValuesChanged start');
                 var original = tdo.data('original-value'),
                 tdp = tdo.closest('td');
                 if (original != tdnv){
@@ -148,6 +149,7 @@
                 } else {
                     tdp.removeClass('changed');
                 }
+                console.time('inputValuesChanged end');
             }
 
             $('input.group-apply').click(function(){

@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="/static/backend/dist/css/main.css?v={backend_css_version}">
+<script type="text/javascript" src="/static/backend/dist/js/main.js?v={backend_js_version}"></script>
 
 {block 'js-head'}
 
