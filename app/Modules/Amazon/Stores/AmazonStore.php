@@ -91,7 +91,7 @@ class AmazonStore extends BaseStore
                 'm.m_zipcode',
                 'sf.sfid',
                 'r_order' => new Expression("(restocking_qty * cost_to_us)"),
-                'r_qty_order' => new Expression("IF (restocking_qty > 2, 0, 1)"),
+                'r_qty_order' => new Expression("IF (restocking_qty >= 2, 0, 1)"),
                 '*'
             ])
                 ->order([
