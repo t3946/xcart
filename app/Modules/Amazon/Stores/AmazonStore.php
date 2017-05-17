@@ -101,7 +101,7 @@ class AmazonStore extends BaseStore
                     '-r_order'
                 ]);
 
-            echo $qs->getSql();
+            //echo $qs->getSql();
 
             return Connection::getInstance()->executeQuery(
                 $qs->getSql()
