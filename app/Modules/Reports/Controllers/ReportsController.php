@@ -98,6 +98,7 @@ class ReportsController extends PrototypeAdminController
             case 'group':
                 echo $this->render('reports/view_group.tpl', array_merge(
                         SearchHelper::getFormAndListData(),
+                        $reportStore->getGroupTotalData(),
                         [
                             'group_names' => ReportsStore::getGroupsNames(),
                             'aggregates_names' => ReportsStore::getAggregates(),
