@@ -174,9 +174,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             foreach ($supplierFeed->products as $kp => $aProduct) {
                 $bUpdatedProduct = false;
                 print($kp . ' --> ' . $aProduct['productcode'] . "\n");
-                if (empty($aProduct['productcode'])
-                    || empty($aProduct['cost_to_us'])
-                    || !is_numeric($aProduct['cost_to_us'])) {
+                if (empty($aProduct['productcode']) || floatval($aProduct['cost_to_us']) <= 0) {
                     $skippedProductsCount++;
                     continue;
                 }
