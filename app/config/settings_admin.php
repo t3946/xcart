@@ -1,22 +1,22 @@
 <?php
 $base_config = __DIR__ . DIRECTORY_SEPARATOR .'settings.php';
+$local_config = __DIR__ . DIRECTORY_SEPARATOR .'settings_admin_local.php';
 
-return array_replace_recursive((is_file($base_config)) ? include $base_config : [], [
+$config = array_replace_recursive([
     'exit_on_end' => true,
     'components' => [
-        'errorHandler' => [
-            'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-            'debug' => true,
-            'errHandler' => false
-        ],
-        'router' => [
-            'class' => '\\Xcart\\App\\Router\\Router',
-            'pathRoutes' => 'base.config.routes_admin',
-            //'basePath' => '/admin/controllers.php?',
-            //'mode' => 'get',
-        ],
+      'errorHandler' => [
+          'class' => '\\Xcart\\App\\Main\\ErrorHandler',
+          'debug' => true,
+          'errHandler' => false
+      ],
+      'router' => [
+          'pathRoutes' => 'base.config.routes_admin',
+      ],
     ],
     'autoloadComponents' => [
-        'errorHandler'
+      'errorHandler'
     ]
-]);
+], (is_file($local_config)) ? include $local_config : []);
+
+return array_replace_recursive((is_file($base_config)) ? include $base_config : [], $config);

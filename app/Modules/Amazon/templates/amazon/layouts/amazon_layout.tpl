@@ -1,1 +1,1 @@
-{extends 'base/admin.tpl'}
+{extends 'amazon/layouts/admin.tpl'}
