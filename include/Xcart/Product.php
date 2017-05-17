@@ -292,8 +292,9 @@ class Product extends Data
                 $result = true;
             }
         }
-        if (!$result && $this->getProductCostToUs() > $this->getPrice())
+        if (!$result && (($this->getProductCostToUs() > $this->getPrice()) || $this->getProductCostToUs() <= 0)) {
             $result = true;
+        }
 
         if (!$result && floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false)
             $result = true;
