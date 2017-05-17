@@ -71,6 +71,7 @@ class AmazonStore extends BaseStore
         if (!$this->qs) {
             $this->qs = AmazonReorderBatchDataModel::objects()->getQuerySet();
             $this->qs->join('inner join', 'xcart_manufacturers', ['manufacturerid' => 'm.manufacturerid'], 'm');
+            $this->qs->join('left join', 'xcart_manufacturers', ['manufacturerid' => 'm.parent_manufacturer_id'], 'm2');
             $this->qs->join('inner join', 'xcart_products_sf', ['productid' => 'sf.productid'], 'sf');
         }
         return $this->qs;
@@ -82,8 +83,8 @@ class AmazonStore extends BaseStore
     {
             /** @var QuerySet $qs */
             $qs = $this->getQuerySet();
-            $qs->select(['m.manufacturer',
-                'm.code',
+            $qs->select(['manufacturer' => new Expression("IFNULL(m2.manufacturer, `m`.`manufacturer`)"),
+                'code' => new Expression("IFNULL(m2.code, `m`.`code`)"),
                 'm.m_address',
                 'm.m_city',
                 'm.m_country',
@@ -95,7 +96,7 @@ class AmazonStore extends BaseStore
                 '*'
             ])
                 ->order([
-                    'm.manufacturer',
+                    'manufacturer',
                     'r_qty_order',
                     '-r_order'
                 ]);
