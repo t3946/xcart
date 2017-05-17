@@ -4291,6 +4291,11 @@ form[name=hide_no_orders_test_checkoutform] input {
 .restocking-table .restocking-qty, .restocking-table .group-apply-val {
   text-align: right; }
 
+.batch-total {
+  font-size: 12px;
+  padding: 0 15px;
+  font-weight: bold; }
+
 .admin form {
   position: relative; }
 

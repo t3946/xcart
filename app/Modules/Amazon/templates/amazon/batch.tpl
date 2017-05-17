@@ -5,6 +5,10 @@
 {/block}
 
 {block 'content'}
+    {if $filter_data}
+        {include 'amazon/reordering/_filter_enabled_message.tpl'}
+    {/if}
+
     {smarty_admin_block name='Products Filter'}
         {include 'amazon/reordering/_filter_products.tpl'}
     {/smarty_admin_block}
@@ -14,11 +18,17 @@
             {if $batch_model->status == 'done'}
                 <form name="amazon_shipping_form" method="post">
                     {foreach $amazon_products as $distributor => $products}
-                        <fieldset {if $amazon_products@first}class="expanded"{/if}>
-                            <legend>{$distributor} ({count($products)})</legend>
-                            {include 'amazon/reordering/_distributor_products.tpl'}
+                        <fieldset>
+                            <legend style="width: 100%;">
+                                <span></span>
+                                <span>{$distributor} ({count($products)})</span>
+                                <span class="distributor-total" style="float:right"></span></legend>
+                                {include 'amazon/reordering/_distributor_products.tpl'}
                         </fieldset>
                     {/foreach}
+                    <div class="row">
+                        <div class="columns large-12 batch-total" style="text-align: right"></div>
+                    </div>
                    {include 'amazon/_buttons.tpl'}
                 </form>
             {elseif $batch_model->status == 'processing'}
@@ -108,22 +118,56 @@
                 exportToFile($(this), filename, header + csv + footer);
             }
 
+            function recalculateBatchTotals()
+            {
+                var total = 0;
+                $('table.restocking-table').each(function() {
+                    total += recalculateDistributorTotal.apply(this, [$(this)]);
+                });
+                $('.batch-total').text('$'+total.toFixed(2));
+            }
+
+            function recalculateDistributorTotal(tbl)
+            {
+                var total = 0,
+                    obj = $(tbl);
+                $('tr', obj).not('.no-export').each(function(){
+                    var cost_to_us = $(this).find('td.cost-to-us').text().replace('$', ''),
+                    qty = $(this).find('input.restocking-qty').val();
+                    if (qty > 0) {
+                        total += round(parseFloat(cost_to_us) * parseInt(qty),2);
+                    }
+                });
+                total = round(total,2);
+                obj.siblings('legend').find('span.distributor-total').text('$'+total.toFixed(2));
+                return total;
+            }
+
+            function inputValuesChanged(tdo, tdnv)
+            {
+                console.time('inputValuesChanged start');
+                var original = tdo.data('original-value'),
+                tdp = tdo.closest('td');
+                if (original != tdnv){
+                    tdp.addClass('changed');
+                } else {
+                    tdp.removeClass('changed');
+                }
+                console.time('inputValuesChanged end');
+            }
+
             $('input.group-apply').click(function(){
                 var fill_val = $(this).siblings('input.group-apply-val');
                 $(this).closest('table').find('input.restocking-qty').each(function(){
-                    $(this).val(fill_val.val()).change();
-                })
+                    $(this).val(fill_val.val());
+                    inputValuesChanged($(this), fill_val.val());
+                });
+                recalculateBatchTotals();
             });
 
             $('input.restocking-qty').change(function(){
-                var original = $(this).data('original-value'),
-                    current = $(this).val(),
-                    td = $(this).closest('td');
-                if (original != current){
-                    td.addClass('changed');
-                } else {
-                    td.removeClass('changed');
-                }
+                inputValuesChanged($(this), $(this).val());
+                recalculateBatchTotals();
             });
 
             $('.csv-button').click(function(){
@@ -132,7 +176,9 @@
                 colDelim = '","',
                 plan_name = 'Excel-00000' + table.data('batch-id') + table.data('manufacturer-code') + '1',
                 filename = plan_name + '.txt',
-                header = '"SKU /Amazon SKU to load'+ colDelim
+                header = '"Amazon SKU to load'+ colDelim
+                    + 'ASIN' + colDelim
+                    + 'UPC' + colDelim
                     + 'Amazon FBA' + colDelim
                     + 'Last order days' + colDelim
                     + 'Items sold last 1m' + colDelim
@@ -176,6 +222,8 @@
                 args = [table, filename, 'td.fba-required', header, footer, colDelim, rowDelim];
                 exportTableToCSV.apply(this, args);
             });
+
+           recalculateBatchTotals();
         })();
     </script>
 {/block}

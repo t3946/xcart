@@ -3,7 +3,9 @@
 namespace Modules\Amazon\Models;
 
 
+use Modules\User\Models\UserModel;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\TextField;
 use Xcart\App\Orm\Fields\TimestampField;
@@ -26,11 +28,31 @@ class AmazonReorderBatchModel extends Model
             ],
             'status' => [
                 'class' => TextField::className(),
-                'default' => 'processing'
+                'default' => 'processing',
+                'choices' => [
+                    'processing' => 'Processing',
+                    'done' => 'Done',
+                ],
             ],
             'created_at' => [
                 'class' => TimestampField::className(),
             ],
+            'assortment' => [
+                'class' => TextField::className(),
+                'default' => 'Y'
+            ],
+            'user' => [
+                'field' => 'user_id',
+                'class' => ForeignField::className(),
+                'modelClass' => UserModel::className(),
+                'link' => ['user_id' => 'id'],
+                'null' => false,
+            ]
         ];
+    }
+
+    public function getItemsCount()
+    {
+        return AmazonReorderBatchDataModel::objects()->filter(['batch_id' => $this->batch_id])->count();
     }
 }

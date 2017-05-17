@@ -22,7 +22,7 @@ Thumbs.db
 ## scripts to exclude
 /robots.txt.php
 /config.local.php
-/app/config/settings_local.php
+/app/config/*_local.php
 /robots.txt
 /test.php
 /modules/XPDF/dompdf/lib/fonts/log.htm

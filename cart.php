@@ -34,6 +34,7 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\User\Helpers\SurfingHelper;
 use Xcart\CidevSurfPath;
 require "./auth.php";
 
@@ -511,7 +512,10 @@ if ($mode == "checkout") {
 ##
 ###
     if ($config["Appearance"]["Enable_surf_stats"] == "Y" && $l == "y") {
-        Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_CHECKOUT]);
+        SurfingHelper::logSurfPath([
+            'resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_CHECKOUT,
+            'resource_id' => $clean_url_data["resource_id"],
+        ]);
     }
 ###
 ##
