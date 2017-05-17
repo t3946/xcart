@@ -1,6 +1,8 @@
 <?php
 namespace Xcart\Helpers;
 
+use Modules\Core\Components\GlobalConfig;
+use Xcart\App\Main\Xcart;
 use Xcart\ElasticSearch;
 
 class ViewedRelatedProducts
@@ -17,12 +19,13 @@ class ViewedRelatedProducts
 
     public function __construct( $categories = null, $search_string = null )
     {
-        global $config, $site_domain;
+        $config = GlobalConfig::getInstance()->setOldMode()->getAllData();
+        
+        /** @var \Modules\Sites\SitesModule $siteModule */
+        $siteModule = Xcart::app()->getModule('Sites');
+        $site_domain = $siteModule->getSite()->domain;
 
-        global $XCART_SESSION_NAME;
-        global $$XCART_SESSION_NAME;
-
-        $this->ssid = $$XCART_SESSION_NAME;
+        $this->ssid = Xcart::app()->request->session->getId();
 
         $this->elastic = new ElasticSearch($config["ElasticSearch_options"], $site_domain);
 
@@ -53,7 +56,16 @@ class ViewedRelatedProducts
 
         if ($elastic_query = $this->getElasticQuery($last_viewed))
         {
-            return self::getFromElastic($elastic_query);
+            if ($p_ids = self::getFromElastic($elastic_query))
+            {
+                usort($p_ids, function($a, $b)
+                {
+                    return ($a['score'] < $b['score']) ? -1 : 1;
+                });
+
+                return $p_ids;
+            }
+
         }
 
         return [];
@@ -97,7 +109,7 @@ from (
 order by FIELD(SP.resource_type, 'S', 'P') asc, SP.position desc
 SQL;
 
-        $resources = func_query($sql);
+        $resources = Xcart::app()->db->getConnection()->fetchAll($sql);
 
         if (empty($resources)) {
             return [];
@@ -108,8 +120,6 @@ SQL;
 
     public function getElasticQuery($last_viewed)
     {
-        global $variant_id_for_point10, $variant_id_for_point11;
-
         $resources = array_slice($last_viewed, 0, 11);
         $summary_pids = [];
         $jsons = [];
@@ -118,7 +128,7 @@ SQL;
         $boost = 1 + count($resources) / 10 - 0.1;
         foreach ($resources as $n => $resource)
         {
-            if ($resource['resource_type'] == 'P' &&  $variant_id_for_point10 == 1)
+            if ($resource['resource_type'] == 'P')
             {
                 $summary_pids[] = $resource['resource_id'];
                 $o_boost = $boost;
@@ -151,7 +161,7 @@ SQL;
 }
 JSQN;
             }
-            elseif($resource['resource_type'] == 'S' &&  $variant_id_for_point11 == 1) {
+            elseif($resource['resource_type'] == 'S') {
 
                 $s_phrase = preg_replace("/[^0-9a-zA-Z=.'-]/", " ", $resource['additional_data']);
                 $s_phrase = trim($s_phrase);
@@ -186,7 +196,10 @@ JSON;
 
     public static function getFromElastic($query = array(), $minScope = 0.3, $size = 500, $from = 0, $pull_categories = true)
     {
-        global $config, $site_domain;
+        $config = GlobalConfig::getInstance()->setOldMode()->getAllData();
+        /** @var \Modules\Sites\SitesModule $siteModule */
+        $siteModule = Xcart::app()->getModule('Sites');
+        $site_domain = $siteModule->getSite()->domain;
 
         $classElastic = new ElasticSearch($config["ElasticSearch_options"], $site_domain);
         $classElastic->setMinScore($minScope);
@@ -239,7 +252,7 @@ WHERE productid in ({$p_ids})
 group by productid
 ORDER BY FIELD(main, 'Y', 'N')
 SQL;
-        $categories = func_query($sql);
+        $categories = Xcart::app()->db->getConnection()->fetchAll($sql);
 
         if (!empty($categories))
         {

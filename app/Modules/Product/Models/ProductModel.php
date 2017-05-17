@@ -67,6 +67,12 @@ class ProductModel extends AutoMetaModel
                 'through' => ProductCategoriesModel::className(),
             ],
 
+            'categories_link' => [
+                'class' => HasManyField::className(),
+                'modelClass' => ProductCategoriesModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
+
             'productid' => [
                 'class' => AutoField::className(),
             ],
@@ -181,7 +187,7 @@ class ProductModel extends AutoMetaModel
             return true;
         }
 
-        if (!$this->cost_to_us) {
+        if (!$this->cost_to_us <= 0) {
             return true;
         }
 

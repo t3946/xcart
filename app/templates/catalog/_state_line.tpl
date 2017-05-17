@@ -2,7 +2,7 @@
     <div class="row">
         <div class="columns large-3 show-for-large">
             <span class="page_count">
-                <span class="count">{$pager->getPageSize() * $pager->getPage()}</span> / <span class="full">{$pager->getTotal()}</span> items shown
+                <span class="count">{$pager->getPageSize() * ($pager->getPage() - 1) + $pager->paginate()|count}</span> / <span class="full">{$pager->getTotal()}</span> items shown
             </span>
         </div>
         <div class="columns small-12 large-9">

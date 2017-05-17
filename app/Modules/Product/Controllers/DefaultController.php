@@ -3,7 +3,10 @@
 namespace Modules\Product\Controllers;
 
 use Modules\Product\Models\ProductModel;
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Main\Xcart;
 
 class DefaultController extends Controller
 {
@@ -29,6 +32,7 @@ class DefaultController extends Controller
             $this->error();
         }
 
+//        SurfingHelper::logSurfPath(['resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT, 'resource_id' => $model->pk]);
 
         echo "<h1>{$model->product}</h1>";
 

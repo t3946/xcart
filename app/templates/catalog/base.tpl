@@ -33,7 +33,7 @@
 
                 {include "catalog/_state_line.tpl"}
                 <div class="page_count hide-for-large">
-                    <span class="count">10</span> / <span class="full">{$pager->getTotal()}</span> items shown
+                    <span class="count">{$pager->getPageSize() * ($pager->getPage() - 1) + $pager->paginate()|count}</span> / <span class="full">{$pager->getTotal()}</span> items shown
                 </div>
 
                 <div class="product-items tile-view">

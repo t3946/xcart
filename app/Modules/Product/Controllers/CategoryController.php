@@ -2,9 +2,11 @@
 
 namespace Modules\Product\Controllers;
 
+use Modules\Product\Helpers\ProductSortHelper;
 use Modules\Product\Models\CategoryModel;
 use Modules\Product\Models\ProductModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 
@@ -31,15 +33,25 @@ class CategoryController extends Controller
             $this->error();
         }
 
+        $orderBy = Xcart::app()->request->session->get('category_sort', 'relevance');
+
         //@TODO: Если категория отключена, редирект на редирект на первую включенную категорию
-        $products = ProductModel::objects()
+        /** @var \Xcart\App\Orm\QuerySet $pqs */
+        $pqs = ProductModel::objects()
             ->filter([
                  'forsale' => 'Y',
-                 'categories__categoryid__in' => CategoryModel::objects($model)->descendants(true)->select('pk'),
-            ])
-            ->getQuerySet();
+                 'categories__categoryid__in' => CategoryModel::objects($model)->descendants(true)->select('pk')->order([]),
+            ]);
 
-        $pager = new Pagination($products, ['pageSize' => 100], new QuerySetDataSource());
+
+        switch ($orderBy) {
+            case 'relevance':
+            default: {
+                $pqs = ProductSortHelper::getOrderByRelevance($pqs, $model);
+            }
+        }
+
+        $pager = new Pagination($pqs, ['pageSize' => 100], new QuerySetDataSource());
 
 
         echo $this->render('catalog/category.tpl', [
