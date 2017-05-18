@@ -41,10 +41,8 @@ class SurfingHelper
             }
 
             if (!is_null($sReferalUrl = SurfingHelper::getReferUrl())) {
-                $oSurfMeta->points_visited++;
-                $oSurfMeta->referal_url = $sReferalUrl;
-
                 $referer = (string) urldecode($sReferalUrl);
+
                 $oReferer = ReferrerModel::objects()->filter(['referer' => $referer])->limit(1)->get();
                 if (!$oReferer) {
                     $oReferer = new ReferrerModel(['referer' => $referer]);
@@ -52,6 +50,8 @@ class SurfingHelper
                 $oReferer->visits++;
                 $oReferer->save();
 
+                $oSurfMeta->points_visited++;
+                $oSurfMeta->referal_url = $referer;
                 if ($oSurfMeta->id) {
                     (new SurfPathModel([
                             'meta_id'         => $oSurfMeta->id,
