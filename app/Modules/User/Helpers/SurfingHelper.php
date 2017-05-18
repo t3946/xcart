@@ -22,20 +22,8 @@ class SurfingHelper
         $oSurfMeta = SurfMetaModel::getInstance();
 
         if ($oSurfMeta->id) {
-            $aReferalUrl = parse_url(Xcart::app()->request->getReferrer());
-            $aUri = Xcart::app()->request->getQueryArray();
 
-            if ($aReferalUrl['host'] != Xcart::app()->request->getHost()) {
-                $sPath = ltrim($aReferalUrl['path'], '/');
-                $sReferalUrl = $aReferalUrl['host'] . (empty($sPath) ?: '/' . $sPath) . (empty($aReferalUrl['query']) ?: "?{$aReferalUrl['query']}");
-                $aUri = Xcart::app()->request->getQueryArray();
-
-                if (!empty($aUri['origin']) && !empty($aReferalUrl['host'])) {
-                    $sReferalUrl .= (empty($aReferalUrl['query']) ? '?' : '&') . http_build_query(['origin' => $aUri['origin']]);
-                }
-            }
-
-            if (in_array($model->resource_type, [$model::GOAL_TYPE_ADD_TO_CART, $model::GOAL_TYPE_CHECKOUT, $model::GOAL_TYPE_SEARCH, $model::GOAL_TYPE_ORDER])) {
+            if (in_array($model->resource_type, [SurfPathModel::GOAL_TYPE_ADD_TO_CART, SurfPathModel::GOAL_TYPE_CHECKOUT, SurfPathModel::GOAL_TYPE_SEARCH, SurfPathModel::GOAL_TYPE_ORDER])) {
                 $aGoalArray[$model->goals_arr[$model->resource_type]] = "Y";
             }
 
@@ -52,7 +40,7 @@ class SurfingHelper
                 }
             }
 
-            if (!is_null($sReferalUrl)) {
+            if (!is_null($sReferalUrl = SurfingHelper::getReferUrl())) {
                 $oSurfMeta->points_visited++;
                 $oSurfMeta->referal_url = $sReferalUrl;
 
@@ -68,7 +56,7 @@ class SurfingHelper
                     (new SurfPathModel([
                             'meta_id'         => $oSurfMeta->id,
                             'resource_id'     => $oReferer->referer_id,
-                            'resource_type'   => $model::GOAL_TYPE_REFERER,
+                            'resource_type'   => SurfPathModel::GOAL_TYPE_REFERER,
                             'timestamp'       => time(),
                             'position'        => $oSurfMeta->points_visited,
                             'additional_data' => Xcart::app()->request->getUserAgent(),
@@ -118,5 +106,23 @@ class SurfingHelper
             }
         }
         return $additional_data;
+    }
+
+    public static function getReferUrl()
+    {
+        $sReferUrl = '';
+        $aReferalUrl = parse_url(Xcart::app()->request->getReferrer());
+        $aUri = Xcart::app()->request->getQueryArray();
+
+        if ($aReferalUrl['host'] != Xcart::app()->request->getHost()) {
+            $sPath = ltrim($aReferalUrl['path'], '/');
+            $sReferUrl = $aReferalUrl['host'] . (empty($sPath) ? '' : '/' . $sPath) . (empty($aReferalUrl['query']) ? '' : "?{$aReferalUrl['query']}");
+            $aUri = Xcart::app()->request->getQueryArray();
+
+            if (!empty($aUri['origin']) && !empty($aReferalUrl['host'])) {
+                $sReferUrl .= (empty($aReferalUrl['query']) ? '?' : '&') . http_build_query(['origin' => $aUri['origin']]);
+            }
+        }
+        return $sReferUrl;
     }
 }
