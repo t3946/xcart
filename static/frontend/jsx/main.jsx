@@ -152,6 +152,14 @@
                 $parent.html(data.pager);
                 $('.page_count').html(data.page_count);
 
+                $('.lazyimg').lazyload({
+                    // effect : "fadeIn",
+                    // effect_speed: 800,
+                    load: function(elements_left, settings){
+                        $(this).removeClass('lazyimg');
+                    }
+                });
+
             }
         });
 
@@ -161,6 +169,14 @@
         $this.remove();
         $parent.append('<span class="'+classes+'"><span class="text">' + text_loading + '</span></span>');
 
+    });
+
+    $('.lazyimg').lazyload({
+        // effect : "fadeIn",
+        // effect_speed: 800,
+        load: function(elements_left, settings){
+            $(this).removeClass('lazyimg');
+        }
     });
 
     $(document).ready(function(){

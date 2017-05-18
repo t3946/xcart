@@ -541,6 +541,11 @@ module.exports.frontend = {
                 // 'bower_components/Waves/src/scss/waves.scss'
             ]
         },
+        jqlazy: {
+            js: [
+                'bower_components/jquery_lazyload/jquery.lazyload.js'
+            ]
+        },
 
         "what-input": {
             js: [

@@ -15,7 +15,7 @@
                 {set $site = $.getSite}
 
                 {if $image}
-                    <img src="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="loader" itemprop="image">
+                    <img data-original="//cdn.{$site->getBaseDomain()}{$image->getURL()}" width="{$image->image_x}" height="{$image->image_y}" alt="{$item.product}" class="loader lazyimg" itemprop="image">
                 {else}
                     <div class="not-avail">
                         <span class="text">

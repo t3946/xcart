@@ -2,6 +2,9 @@
 .product-items {
   display: flex;
 
+  //transition: 0.4s all;
+  transition: height 1s;
+
   .item {
     position: relative;
     display: flex;

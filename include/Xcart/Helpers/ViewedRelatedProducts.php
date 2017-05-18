@@ -15,19 +15,21 @@ class ViewedRelatedProducts
      * @var ElasticSearch
      */
     private $elastic;
+    private $elastic_config;
     private $_search_with_categories = false;
 
     public function __construct( $categories = null, $search_string = null )
     {
-        $config = GlobalConfig::getInstance()->setOldMode()->getAllData();
-        
+        $config = GlobalConfig::getInstance()->setOldMode();
+        $this->elastic_config = $config["ElasticSearch_options"];
+
         /** @var \Modules\Sites\SitesModule $siteModule */
         $siteModule = Xcart::app()->getModule('Sites');
         $site_domain = $siteModule->getSite()->domain;
 
         $this->ssid = Xcart::app()->request->session->getId();
 
-        $this->elastic = new ElasticSearch($config["ElasticSearch_options"], $site_domain);
+        $this->elastic = new ElasticSearch($this->elastic_config,  $site_domain);
 
         if (!empty($categories)) {
             $this->categories = $categories;
@@ -194,14 +196,9 @@ JSON;
         return json_decode($json, true);
     }
 
-    public static function getFromElastic($query = array(), $minScope = 0.3, $size = 500, $from = 0, $pull_categories = true)
+    public function getFromElastic($query = array(), $minScope = 0.3, $size = 500, $from = 0, $pull_categories = true)
     {
-        $config = GlobalConfig::getInstance()->setOldMode()->getAllData();
-        /** @var \Modules\Sites\SitesModule $siteModule */
-        $siteModule = Xcart::app()->getModule('Sites');
-        $site_domain = $siteModule->getSite()->domain;
-
-        $classElastic = new ElasticSearch($config["ElasticSearch_options"], $site_domain);
+        $classElastic = clone $this->elastic;
         $classElastic->setMinScore($minScope);
         $classElastic->setType('product');
         $classElastic->setSearchQuery($query);
