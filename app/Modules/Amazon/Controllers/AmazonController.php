@@ -101,6 +101,7 @@ class AmazonController extends PrototypeAdminController
                     AmazonReorderBatchDataModel::objects()->delete(['batch_id' => $id]);
                     $batch->status="processing";
                     $batch->save();
+                    $this->autoRedirect($id);
 
                 } elseif (!empty($_POST['update_changes'])) {
                     foreach ($_POST['restocking_qty'] as $batch_id => $products) {
@@ -113,7 +114,6 @@ class AmazonController extends PrototypeAdminController
                         }
                     }
                 }
-                $this->autoRedirect($id);
             }
             $amazonStore = new AmazonStore(array_merge(AmazonReorderingHelper::getFilterData($_GET['filter']), ['batch_id' => $batch->batch_id]));
 

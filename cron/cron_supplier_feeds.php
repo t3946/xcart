@@ -174,7 +174,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
             foreach ($supplierFeed->products as $kp => $aProduct) {
                 $bUpdatedProduct = false;
                 print($kp . ' --> ' . $aProduct['productcode'] . "\n");
-                if (empty($aProduct['productcode'])) {
+                if (empty($aProduct['productcode']) || floatval($aProduct['cost_to_us']) <= 0) {
                     $skippedProductsCount++;
                     continue;
                 }
@@ -222,10 +222,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                         $modelProduct->save();
                         break;
                     case 'P' :
-                        if (empty($aProduct['cost_to_us'])) {
-                            $skippedProductsCount++;
-                            continue;
-                        }
+
                         if (!empty($modelProduct->fulldescr) && $supplierFeedModel->native_full_description != "Y") {
                             $modelProduct->fulldescr = ProductHelper::cleanProductFullDescription($modelProduct->fulldescr);
                         }

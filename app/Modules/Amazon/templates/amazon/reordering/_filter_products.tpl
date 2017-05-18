@@ -8,7 +8,7 @@
 
             <div class="columns large-6">
                 <input type="text" name="filter[cost_to_us][from]" id="o_cost_to_us" value="{$filter_data.cost_to_us.from}">
-                <span>to</span>
+                <span>=> to <=</span>
                 <input type="text" name="filter[cost_to_us][to]" value="{$filter_data.cost_to_us.to}">
             </div>
         </div>
@@ -21,7 +21,7 @@
 
             <div class="columns large-6">
                 <input type="text" name="filter[r_avail][from]" id="o_r_avail" value="{$filter_data.r_avail.from}">
-                <span>to</span>
+                <span>=> to <=</span>
                 <input type="text" name="filter[r_avail][to]" value="{$filter_data.r_avail.to}">
             </div>
         </div>
@@ -34,7 +34,7 @@
 
             <div class="columns large-6">
                 <input type="text" name="filter[restocking_qty][from]" id="o_restocking_qty" value="{$filter_data.restocking_qty.from}">
-                <span>to</span>
+                <span>=> to <=</span>
                 <input type="text" name="filter[restocking_qty][to]" value="{$filter_data.restocking_qty.to}">
             </div>
         </div>

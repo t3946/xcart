@@ -502,9 +502,41 @@ if (!empty($cart_manufact_text_displayed_tabs) && is_array($cart_manufact_text_d
         }
 }
 
+$product_info["product_questions"] = func_query_param(/** @lang MySQL */
+    "SELECT * FROM xcart_product_question WHERE question_published_on_page='Y' AND productid=:productid ORDER BY order_by", ['productid' => $productid]);
+
+if (!empty($product_info["product_questions"]) && is_array($product_info["product_questions"])){
+
+    foreach ($product_info["product_questions"] as $k => $v){
+
+        if (!empty($v["login"])){
+            $operator_name = func_query_first_cell_param(/** @lang MySQL */
+                "SELECT firstname FROM xcart_customers WHERE login=:login", ['login' => $v["login"]]);
+            $operator_name = trim($operator_name);
+            $operator_first_name_arr = explode(" ", $operator_name);
+            $operator_first_name = $operator_first_name_arr[0];
+            $product_info["product_questions"][$k]["operator_name"] = $operator_name;
+            $product_info["product_questions"][$k]["operator_first_name"] = $operator_first_name;
+        }
+
+        if (empty($v["answered_date"])){
+            $answered_date = $v["date"];
+            $answered_date_str = date("N", $answered_date);
+            if ($answered_date_str <= 4 || $answered_date_str == "7"){
+                $answered_date += 60*60*24;
+            }
+            elseif ($answered_date_str == "6"){
+                $answered_date += 60*60*24*2;
+            }
+            $product_info["product_questions"][$k]["answered_date"] = $answered_date;
+            db_query_param(/** @lang MySQL */
+                "UPDATE xcart_product_question SET answered_date=:answered_date WHERE id=:id", ['answered_date' => $answered_date, 'id' => $v['id']]);
+        }
+    }
+}
 if ($config['product_question_email']['product_question_enable'] == 'Y') {
 	$count_product_tabs = count($product_tabs);
-	$product_tabs[$count_product_tabs]["title"] = "Product questions";
+	$product_tabs[$count_product_tabs]["title"] = "Product questions " . (($product_info["product_questions"] && count($product_info["product_questions"]) > 0) ? "(".count($product_info["product_questions"]).")" : '');
 	$product_tabs[$count_product_tabs]["tpl"] = "_product_question_tpl_";
 	$product_tabs[$count_product_tabs]["anchor"] = $count_product_tabs;
 }
@@ -762,44 +794,6 @@ else {
 	    }
 	}
 }
-###
-
-###
-$product_info["product_questions"] = func_query("SELECT * FROM $sql_tbl[product_question] WHERE question_published_on_page='Y' AND productid='$productid' ORDER BY order_by");
-
-if (!empty($product_info["product_questions"]) && is_array($product_info["product_questions"])){
-
-	foreach ($product_info["product_questions"] as $k => $v){
-
-		if (!empty($v["login"])){
-			$operator_name = func_query_first_cell("SELECT firstname FROM $sql_tbl[customers] WHERE login='".$v["login"]."'");
-			$operator_name = trim($operator_name);
-			$operator_first_name_arr = explode(" ", $operator_name);
-			$operator_first_name = $operator_first_name_arr[0];
-			$product_info["product_questions"][$k]["operator_name"] = $operator_name;
-			$product_info["product_questions"][$k]["operator_first_name"] = $operator_first_name;
-		}
-
-		if (empty($v["answered_date"])){
-			$answered_date = $v["date"];
-			$answered_date_str = date("N", $answered_date);
-			if ($answered_date_str <= 4 || $answered_date_str == "7"){
-		        	$answered_date += 60*60*24;
-			}
-			elseif ($answered_date_str == "6"){
-			        $answered_date += 60*60*24*2;
-			}
-			$product_info["product_questions"][$k]["answered_date"] = $answered_date;
-			db_query("UPDATE $sql_tbl[product_question] SET answered_date='$answered_date' WHERE id='$v[id]'");
-		}
-	}
-}
-
-###
-
-//func_print_r($product_info["product_questions"]);
-
-//func_print_r($product_info, $current_storefront_info["storefrontid"]);
 
 if ($current_storefront_info["storefrontid"] == "50"){
 
@@ -1258,7 +1252,10 @@ func_print_r($a1, $data, $data_arr);
 ##
 ###
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-    Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_PRODUCT]);
+    Modules\User\Helpers\SurfingHelper::logSurfPath([
+        'resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_PRODUCT,
+        'resource_id' => $productid,
+    ]);
 }
 ###
 ##

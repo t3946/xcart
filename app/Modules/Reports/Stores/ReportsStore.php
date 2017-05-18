@@ -125,11 +125,29 @@ class ReportsStore extends OrderSearchStore
             'f_total' => new Sum('group.total_net'),
             'subtotal' => new Expression('SUM(order_details.price * order_details.amount)'),
             'shipping' => new Sum('group.shipping_net'),
-            'profit' => new Expression("AVG(CASE WHEN inv.invoice_number IS NULL THEN NULL ELSE group.profit_margin END)"),
+            'profit' => new Expression("SUM(CASE WHEN inv.invoice_number IS NULL THEN NULL ELSE group.accounting_net_5_profit END) / SUM(CASE WHEN inv.invoice_number IS NULL THEN NULL ELSE accounting_net_0 END) * 100"),
             'avg_profit' => '',
             'avg_check' => new Avg('total'),
             'median_check' =>  new Expression("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(GROUP_CONCAT(total ORDER BY total SEPARATOR ','),',', 50/100 * COUNT(*)), ',', -1) AS DECIMAL (18,2))"),
         ];
+    }
+
+    public function getGroupTotalData()
+    {
+        $totals = [];
+        $amp = $this->form_data['report']['group_settings'];
+        array_pop($this->form_data['report']['group_settings']);
+        if (!empty($this->form_data['report']['group_settings'])) {
+            $cnt = count($this->form_data['report']['group_settings']);
+            for ($i=0; $i <= $cnt; $i++) {
+                $gn = $this->form_data['report']['group_settings'][$i+1];
+                $totals[empty($gn) ? 'report_total' : $gn] =
+                    Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(\PDO::FETCH_GROUP);
+                array_pop($this->form_data['report']['group_settings']);
+            }
+        }
+        $this->form_data['report']['group_settings'] = $amp;
+        return ['group_totals' => $totals];
     }
 
     public function getQuerySet()
@@ -157,8 +175,8 @@ class ReportsStore extends OrderSearchStore
                 break;
         }
 
+        $qs->group([]);
         if (!empty($this->form_data['report']['group_settings'])) {
-            $qs->group([]);
             $qs->select([]);
             ksort($this->form_data['report']['group_settings']);
             foreach ($this->form_data['report']['group_settings'] as $group_index => $group) {
