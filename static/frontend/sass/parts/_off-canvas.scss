@@ -19,6 +19,7 @@
       line-height: rem-calc(46);
       margin: 0;
       font-weight: 500;
+      color: inherit;
     }
   }
 
@@ -33,7 +34,10 @@
       }
 
       .accordion-title {
-        font-size: rem-calc(19);
+        font: {
+          size: rem-calc(19);
+          weight: bold;
+        }
         padding: rem-calc(5) rem-calc(30) rem-calc(5) 0;
         border: 1px solid #cbcbcb;
         border-bottom: inherit;
@@ -51,7 +55,42 @@
 
         &:before {
           line-height: 1;
+          margin-top: -.7rem;
+          font: {
+            size: 1.5rem
+          };
         }
+      }
+
+      .accordion-content {
+        padding: 0;
+
+        a {
+          display: block;
+          padding: 0 8px 0 14px;
+          line-height: 49px;
+          font-size: rem-calc(14);
+          color: #000;
+          border-bottom: 1px solid #e2e2e2;
+
+          background: url('../images/icons/link_arrow_right_dark.svg') right rem-calc(16) center no-repeat;
+          background-size: rem-calc(11);
+
+          .count {
+            color: #838383;
+          }
+
+          //&:after {
+          //  content: '';
+          //  display: inline-block;
+          //  width: 11px;
+          //  height: 11px;
+          //  float: right;
+          //  font-style: normal;
+          //  margin: 15px 0;
+          //}
+        }
+
       }
     }
   }

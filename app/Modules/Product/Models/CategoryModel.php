@@ -78,7 +78,7 @@ class CategoryModel extends AutoMetaTreeModel
 
     public function getAbsoluteUrl()
     {
-        if (!$this->getIsNewRecord())
+        if ($this->categoryid)
         {
             return Xcart::app()->router->url('category:view:old', ['id' => $this->categoryid, 'slug' => 'TEMP']);
         }
@@ -91,7 +91,7 @@ class CategoryModel extends AutoMetaTreeModel
         return static::objects($this);
     }
 
-    public function getSubcategories($withProductCount = true, $level = 1)
+    public function getSubcategories($withProductCount = true, $level = 1, $cache = true)
     {
         $qs = static::objects()
                     ->descendants(false, $level)
@@ -121,6 +121,20 @@ class CategoryModel extends AutoMetaTreeModel
             ]);
         }
 
-        return $qs->all();
+
+        if ($cache) {
+            $key = $qs->allSql();
+
+            if ($sub_cat = Xcart::app()->cache->get($key)) {
+                return $sub_cat;
+            }
+
+            Xcart::app()->cache->set($key, $sub_cat = $qs->all());
+
+            return $sub_cat;
+        }
+        else {
+            return $qs->all();
+        }
     }
 }

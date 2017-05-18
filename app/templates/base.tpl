@@ -2,7 +2,7 @@
 {block "wrapper"}
 <section id="main_wrapper" class="off-canvas-wrapper">
     <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas data-transition="push">
-        {include "demo/blocks/_menu_mobile.tpl"}
+        {include "_parts/_menu_mobile.tpl"}
     </div>
     <div class="off-canvas-content" data-off-canvas-content>
         <header>

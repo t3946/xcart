@@ -814,7 +814,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      */
     public function serialize()
     {
-        return serialize($this->getAttributes());
+        return serialize(['attributes' => $this->getAttributes(), 'attributesNotField' => $this->attributesNotField]);
     }
 
     /**
@@ -828,7 +828,11 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
      */
     public function unserialize($serialized)
     {
+        $us = unserialize($serialized);
+
         $this->attributes = new AttributeCollection;
-        $this->setAttributes(unserialize($serialized));
+        $this->setAttributes($us['attributes']);
+
+        $this->attributesNotField = $us['attributesNotField'];
     }
 }
