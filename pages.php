@@ -36,6 +36,9 @@
 #
 # This script show static page in customer zone
 
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
+
 require "./auth.php";
 
 if (
@@ -167,7 +170,10 @@ Group By B.brandid");
 }
 
 if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-    Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_STATIC_PAGE]);
+    SurfingHelper::logSurfPath([
+        'resource_type' => SurfPathModel::GOAL_TYPE_STATIC_PAGE,
+        'resource_id' => $clean_url_data["resource_id"],
+    ]);
 }
 
 # Assign the current location line

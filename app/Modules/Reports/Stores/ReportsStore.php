@@ -132,6 +132,24 @@ class ReportsStore extends OrderSearchStore
         ];
     }
 
+    public function getGroupTotalData()
+    {
+        $totals = [];
+        $amp = $this->form_data['report']['group_settings'];
+        array_pop($this->form_data['report']['group_settings']);
+        if (!empty($this->form_data['report']['group_settings'])) {
+            $cnt = count($this->form_data['report']['group_settings']);
+            for ($i=0; $i <= $cnt; $i++) {
+                $gn = $this->form_data['report']['group_settings'][$i+1];
+                $totals[empty($gn) ? 'report_total' : $gn] =
+                    Connection::getInstance()->executeQuery($this->getQuerySet()->getSQL())->fetchAll(\PDO::FETCH_GROUP);
+                array_pop($this->form_data['report']['group_settings']);
+            }
+        }
+        $this->form_data['report']['group_settings'] = $amp;
+        return ['group_totals' => $totals];
+    }
+
     public function getQuerySet()
     {
         $filter = null;
@@ -157,8 +175,8 @@ class ReportsStore extends OrderSearchStore
                 break;
         }
 
+        $qs->group([]);
         if (!empty($this->form_data['report']['group_settings'])) {
-            $qs->group([]);
             $qs->select([]);
             ksort($this->form_data['report']['group_settings']);
             foreach ($this->form_data['report']['group_settings'] as $group_index => $group) {

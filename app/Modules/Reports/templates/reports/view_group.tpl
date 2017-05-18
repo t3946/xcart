@@ -39,7 +39,6 @@
                         {/foreach}
                         {break}
                     {/foreach}
-
                 </tr>
             {/if}
 
@@ -69,12 +68,8 @@
                         {/if}
                         <td {if $is_aggregate} class="align-right"{/if}>
                             {if ($is_aggregate)}
-                                {if ($aggregates_names[$d_key].prefix)}
-                                    {$aggregates_names[$d_key].prefix}{$report_d|formatprice:",":"."}
-                                {elseif $aggregates_names[$d_key].suffix}
-                                    {if $report_d}
-                                        {$report_d|formatprice:",":"."}{$aggregates_names[$d_key].suffix}
-                                    {/if}
+                                {if ($report_d && ($aggregates_names[$d_key].prefix || $aggregates_names[$d_key].suffix))}
+                                    {$report_d|formatprice:",":"."|format_value:$aggregates_names[$d_key].prefix:$aggregates_names[$d_key].suffix}
                                 {else}
                                     {$report_d}
                                 {/if}
@@ -94,28 +89,26 @@
                                 {set $is_aggregate = false}
                             {/if}
                             <td class="{if $is_aggregate}align-right{else}border-off{/if}">
+                                <b>
                                 {if $last_group_item == $d_key}
-                                    <b>{$group_names[$form_data.report.group_settings[1]].name} totals</b>
+                                    {$group_names[$form_data.report.group_settings[1]].name} totals
                                 {else}
-                                    {if $is_aggregate && $group_total[$d_key]}
-                                        {set $group_aggregate = $group_total[$d_key]|aggregate_function:$aggregates_names[$d_key].function}
-                                        {if ($aggregates_names[$d_key].prefix)}
-                                            {$aggregates_names[$d_key].prefix}{$group_aggregate|formatprice:",":"."}
-                                        {elseif $aggregates_names[$d_key].suffix}
-                                            {$group_aggregate|formatprice:",":"."}{$aggregates_names[$d_key].suffix}
+                                    {if $is_aggregate && $group_totals[$form_data.report.group_settings[1]][$key_domain][0].$d_key}
+                                        {if ($aggregates_names[$d_key].prefix || $aggregates_names[$d_key].suffix)}
+                                            {$group_totals[$form_data.report.group_settings[1]][$key_domain][0].$d_key|formatprice:",":"."|format_value:$aggregates_names[$d_key].prefix:$aggregates_names[$d_key].suffix}
                                         {else}
-                                            {$group_aggregate}
+                                            {$group_totals[$form_data.report.group_settings[1]][$key_domain][0].$d_key}
                                         {/if}
-                                        {set $totals[$d_key][] = $group_aggregate}
+
                                     {/if}
                                 {/if}
+                                </b>
                             </td>
                         {/foreach}
                     </tr>
-                        <tr class="delimiter">
-                            <td class="border-off">&nbsp;</td>
-                        </tr>
-
+                    <tr class="delimiter">
+                        <td class="border-off">&nbsp;</td>
+                    </tr>
                 {/if}
             {/foreach}
         {/foreach}
@@ -128,13 +121,11 @@
                 {set $is_aggregate = false}
             {/if}
             <td class="{if $is_aggregate}align-right {/if}border-off total-label">
-                {set $group_aggregate = $totals[$d_key]|aggregate_function:$aggregates_names[$d_key].function}
-                {if ($aggregates_names[$d_key].prefix)}
-                    {$aggregates_names[$d_key].prefix}{$group_aggregate|formatprice:",":"."}
-                {elseif $aggregates_names[$d_key].suffix}
-                    {$group_aggregate|formatprice:",":"."}{$aggregates_names[$d_key].suffix}
+                {set $report_total = reset($group_totals['report_total'])}
+                {if ($aggregates_names[$d_key].prefix || $aggregates_names[$d_key].suffix)}
+                    {$report_total[0].$d_key|formatprice:",":"."|format_value:$aggregates_names[$d_key].prefix:$aggregates_names[$d_key].suffix}
                 {else}
-                    {$group_aggregate}
+                    {$report_total[0].$d_key}
                 {/if}
             </td>
         {/foreach}
