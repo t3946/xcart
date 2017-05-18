@@ -95,16 +95,24 @@
 
     $(document).on('click', '.action_block.view a', function(e){
         e.preventDefault();
+        let type = 'tile-view';
 
         if ($(this).hasClass('tile-view')) {
             $('.catalog-page .product-items').removeClass('list-view').addClass('tile-view');
+            type = 'tile-view';
         }
         else {
             $('.catalog-page .product-items').removeClass('tile-view').addClass('list-view');
+            type = 'list-view';
         }
 
         $('.action_block.view a').removeClass('active');
-        $(this).addClass('active');
+        if (type === 'tile-view') {
+            $('.action_block.view a.tile-view').addClass('active')
+        }
+        else {
+            $('.action_block.view a.list-view').addClass('active')
+        }
     });
 
     $(document).on('click', '.action_block.sort', function(e){
@@ -128,6 +136,31 @@
         else {
             $this.closest('.action_block.sort').removeClass('active');
         }
+    });
+
+    $(document).on('click', '.front-endless-pager a.show-more', function(e){
+        e.preventDefault();
+
+        let $this = $(this);
+        let $parent = $(this).parent();
+        let $container = $('.product-items');
+
+
+        $.ajax($this.attr('href'), {
+            'success' : (data)=>{
+                $container.append(data.content);
+                $parent.html(data.pager);
+                $('.page_count').html(data.page_count);
+
+            }
+        });
+
+        let classes = $this.attr('class');
+        let text_loading = $this.data('text-loading');
+
+        $this.remove();
+        $parent.append('<span class="'+classes+'"><span class="text">' + text_loading + '</span></span>');
+
     });
 
     $(document).ready(function(){

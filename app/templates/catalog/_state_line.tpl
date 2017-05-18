@@ -1,9 +1,7 @@
 <section class="state_line pcont">
     <div class="row">
         <div class="columns large-3 show-for-large">
-            <span class="page_count">
-                <span class="count">{$pager->getPageSize() * ($pager->getPage() - 1) + $pager->paginate()|count}</span> / <span class="full">{$pager->getTotal()}</span> items shown
-            </span>
+            {include 'catalog/_page_count.tpl'}
         </div>
         <div class="columns small-12 large-9">
             <div class="actions">

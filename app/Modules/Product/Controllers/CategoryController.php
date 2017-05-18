@@ -75,13 +75,22 @@ class CategoryController extends Controller
             }
         }
 
-        $pager = new Pagination($pqs, ['pageSize' => 100], new QuerySetDataSource());
+        $pager = new Pagination($pqs, ['pageSize' => 100, 'view' => 'core/pager/front_endless.tpl'], new QuerySetDataSource());
 
-
-        echo $this->render('catalog/category.tpl', [
-            'model' => $model,
-            'pager' => $pager,
-            'breadcrumbs' => $model->getBreadcrumbs()->get(),
-        ]);
+        if ($this->getRequest()->getIsAjax())
+        {
+            $this->jsonResponse([
+                'content' => $this->render('catalog/category.tpl', [ 'model' => $model, 'pager' => $pager,]),
+                'pager' => $pager->render(),
+                'page_count' => $this->render('catalog/_page_count.tpl', [ 'model' => $model, 'pager' => $pager,]),
+            ]);
+        }
+        else {
+            echo $this->render('catalog/category.tpl', [
+                'model' => $model,
+                'pager' => $pager,
+                'breadcrumbs' => $model->getBreadcrumbs()->get(),
+            ]);
+        }
     }
 }
