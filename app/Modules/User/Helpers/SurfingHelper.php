@@ -110,7 +110,7 @@ class SurfingHelper
 
     public static function getReferUrl()
     {
-        $sReferUrl = '';
+        $sReferUrl = null;
         $aReferalUrl = parse_url(Xcart::app()->request->getReferrer());
         $aUri = Xcart::app()->request->getQueryArray();
 
