@@ -32,10 +32,10 @@ class DefaultController extends Controller
             $this->error();
         }
 
-//        SurfingHelper::logSurfPath(['resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT, 'resource_id' => $model->pk]);
-
         echo "<h1>{$model->product}</h1>";
 
         func_dump($model);
+
+        SurfingHelper::logSurfPath(['resource_type' => SurfPathModel::GOAL_TYPE_PRODUCT, 'resource_id' => $model->pk]);
     }
 }
