@@ -30,9 +30,6 @@
                                 <li data-value="price" >Price low to high</li>
                                 <li data-value="-price" >Price high to low</li>
                                 <li data-value="new" >New</li>
-                                <li data-value="best" >Best selling</li>
-                                <li data-value="-rating" >Top rated</li>
-                                <li data-value="-exclusive" >Exclusive</li>
                                 <li data-value="brand" >Brand</li>
                             </ul>
                     </div>

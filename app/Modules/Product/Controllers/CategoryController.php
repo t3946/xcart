@@ -29,13 +29,19 @@ class CategoryController extends Controller
      */
     private function view_internal($model = null)
     {
+        //@TODO: Если категория отключена, редирект на редирект на первую включенную категорию
+
         if (!$model) {
             $this->error();
         }
 
+        if ( $this->getRequest()->getIsPost() ) {
+            Xcart::app()->request->session->add('category_sort', $this->getRequest()->post->get('category_sort', 'relevance'));
+            $this->refresh();
+        }
+
         $orderBy = Xcart::app()->request->session->get('category_sort', 'relevance');
 
-        //@TODO: Если категория отключена, редирект на редирект на первую включенную категорию
         /** @var \Xcart\App\Orm\QuerySet $pqs */
         $pqs = ProductModel::objects()
             ->filter([
@@ -44,10 +50,28 @@ class CategoryController extends Controller
             ]);
 
 
+        $oh = new ProductSortHelper($pqs);
+
         switch ($orderBy) {
+            case 'price': {
+                $pqs = $oh->getOrderByPrice('');
+                break;
+            }
+            case '-price': {
+                $pqs = $oh->getOrderByPrice('-');
+                break;
+            }
+            case 'new': {
+                $pqs = $oh->getOrderByNew();
+                break;
+            }
+            case 'brand': {
+                $pqs = $oh->getOrderByBrand();
+                break;
+            }
             case 'relevance':
             default: {
-                $pqs = ProductSortHelper::getOrderByRelevance($pqs, $model);
+                $pqs = $oh->getOrderByRelevance($model);
             }
         }
 

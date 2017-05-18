@@ -6,14 +6,27 @@ use Xcart\Helpers\ViewedRelatedProducts;
 
 class ProductSortHelper
 {
+    /** @var \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet  */
+    private $qs;
+
     /**
-     * @param \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet $qs
+     * ProductSortHelper constructor.
+     *
+     * @param \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet $qs ProductModel QuerySet
+     */
+    public function __construct($qs) {
+        $this->qs = $qs;
+    }
+
+    /**
      * @param CategoryModel $category
+     * @param int           $max_product
      *
      * @return \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet
      */
-    public static function getOrderByRelevance($qs, $category)
+    public function getOrderByRelevance($category, $max_product = 50)
     {
+        $qs = clone $this->qs;
         $ta = $qs->getTableAlias();
         list($oldOrder, $orderOptions) = $qs->getQueryBuilder()->getOrder();
         
@@ -29,7 +42,6 @@ class ProductSortHelper
                 $push_el = $product['productid'];
 
                 if (in_array($push_el, $t_ids)) { continue; }
-                if (count($t_ids) == 50) { break; }
 
                 if (!empty($categories) && !empty($product['categoryid']))
                 {
@@ -41,6 +53,8 @@ class ProductSortHelper
                 if ($push) {
                     $t_ids[] = $push_el;
                 }
+
+                if (count($t_ids) == $max_product) { break; }
             }
 
             if (!empty($t_ids))
@@ -57,5 +71,33 @@ class ProductSortHelper
         $qs->with(['categories_link']) ->order($oldOrder);
 
         return $qs;
+    }
+
+    public function getOrderByPrice($direction = '-')
+    {
+        $qs = clone $this->qs;
+
+        list($oldOrder, $orderOptions) = $qs->getQueryBuilder()->getOrder();
+
+        $qs->with(['quick_prices']);
+        array_unshift($oldOrder, $direction.'quick_prices__price');
+
+        return $qs->order($oldOrder);
+    }
+
+    public function getOrderByNew()
+    {
+        $qs = clone $this->qs;
+        list($oldOrder, $orderOptions) = $qs->getQueryBuilder()->getOrder();
+        array_unshift($oldOrder, '-add_date');
+        return $qs->order($oldOrder);
+    }
+
+    public function getOrderByBrand()
+    {
+        $qs = clone $this->qs;
+        list($oldOrder, $orderOptions) = $qs->getQueryBuilder()->getOrder();
+        array_unshift($oldOrder, '-manufacturerid');
+        return $qs->order($oldOrder);
     }
 }

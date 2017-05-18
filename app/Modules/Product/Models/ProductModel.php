@@ -73,6 +73,19 @@ class ProductModel extends AutoMetaModel
                 'link' => ['productid' => 'productid']
             ],
 
+            'prices' => [
+                'class' => HasManyField::className(),
+                'modelClass' => PricingModel::className(),
+                'link' => ['productid' => 'productid']
+            ],
+
+            'quick_prices' => [
+                'class' => ManyToManyField::className(),
+                'modelClass' => PricingModel::className(),
+                'through' => QuickPricingModel::className(),
+            ],
+
+
             'productid' => [
                 'class' => AutoField::className(),
             ],

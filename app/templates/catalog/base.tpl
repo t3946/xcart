@@ -11,7 +11,7 @@
 {block "content"}
     {if $.request->getIsAjax()}
         {foreach $models as $item }
-            {include "demo/blocks/_catalog_list_item.tpl" item=$item}
+            {include "catalog/_catalog_list_item.tpl" item=$item}
         {/foreach}
     {else}
         <section class="catalog-page">
