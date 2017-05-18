@@ -212,7 +212,7 @@ class ProductModel extends AutoMetaModel
             return true;
         }
 
-        if ($this->cost_to_us >= $this->getPrice()) {
+        if ($this->cost_to_us <= $this->getPrice()) {
             return true;
         }
 
