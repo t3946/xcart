@@ -31,6 +31,8 @@
  * \*****************************************************************************/
 
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
 
 if (!defined('XCART_START')) {
     header("Location: ../");
@@ -1327,7 +1329,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
 
         if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
-            Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_ORDER, 'resource_id' => $orderid]);
+            SurfingHelper::logSurfPath([
+                'resource_type' => SurfPathModel::GOAL_TYPE_ORDER,
+                'resource_id' => $orderid
+            ]);
         }
 
         $log = "";

@@ -34,6 +34,9 @@
 #
 # $Id: home.php,v 1.10 2006/03/31 06:18:48 max Exp $
 #
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
+
 define('OFFERS_DONT_SHOW_NEW',1);
 require "./auth.php";
 $bench1 = func_microtime();
@@ -340,24 +343,31 @@ if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
 
 	if (!empty($clean_url_data["resource_type"])){
 		$resource_type = $clean_url_data["resource_type"];
-		if ($resource_type == "K"){
-			$resource_type = "S";
+		if ($resource_type == SurfPathModel::GOAL_TYPE_CHECKOUT){
+			$resource_type = SurfPathModel::GOAL_TYPE_SEARCH;
 		}
 	} else {
-		$resource_type = "H";
+		$resource_type = SurfPathModel::GOAL_TYPE_HOME_PAGE;
 	}
 
-	if ($detect_isMobile_was_created == 'Y' && $resource_type == 'H') {
+	if ($detect_isMobile_was_created == 'Y' && $resource_type == SurfPathModel::GOAL_TYPE_HOME_PAGE) {
 
 	} else {
-        \Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => $resource_type]);
+        SurfingHelper::logSurfPath([
+        	'resource_type' => $resource_type,
+            'resource_id' => $clean_url_data["resource_id"],
+			'additional_data' => SurfingHelper::getSurfPathAdditionalData([
+				'resource_type' => $resource_type,
+				'cidev_filters_tree_sorted' => $cidev_filters_tree_sorted
+			]),
+		]);
 	}
 }
 
 	if ( !(empty($cat) && empty($keyphrase)) && $cat_with_one_brand_filter != "Y"){
 		$ga_page_name = "category_list";
 	}
-	elseif ($clean_url_data["resource_type"] == "K"){
+	elseif ($clean_url_data["resource_type"] == SurfPathModel::GOAL_TYPE_CHECKOUT){
 		$ga_page_name = "search";
 	}
 	elseif ($cat_with_one_brand_filter == "Y"){

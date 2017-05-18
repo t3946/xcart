@@ -10,8 +10,6 @@ class SurfingHelper
 {
     public static function logSurfPath(array $params = [])
     {
-        global $clean_url_data, $cidev_filters_tree_sorted, $xcart_http_host;  //TODO remove globals;
-
         $model = new SurfPathModel($params);
 
         $sReferalUrl = null;
@@ -27,9 +25,9 @@ class SurfingHelper
             $aReferalUrl = parse_url(Xcart::app()->request->getReferrer());
             $aUri = Xcart::app()->request->getQueryArray();
 
-            if ($aReferalUrl['host'] != $xcart_http_host) {
+            if ($aReferalUrl['host'] != Xcart::app()->request->getHost()) {
                 $sPath = ltrim($aReferalUrl['path'], '/');
-                $sReferalUrl = $aReferalUrl['host'] . (empty($sPath) ? '' : '/' . $sPath) . (empty($aReferalUrl['query']) ? '' : "?{$aReferalUrl['query']}");
+                $sReferalUrl = $aReferalUrl['host'] . (empty($sPath) ?: '/' . $sPath) . (empty($aReferalUrl['query']) ?: "?{$aReferalUrl['query']}");
                 $aUri = Xcart::app()->request->getQueryArray();
 
                 if (!empty($aUri['origin']) && !empty($aReferalUrl['host'])) {
@@ -44,39 +42,10 @@ class SurfingHelper
             $oSurfMeta->points_visited++;
             $oSurfMeta->setAttributes(array_merge($oSurfMeta->getAttributes(), $aGoalArray));
 
-            if (in_array($model->resource_type, [$model::GOAL_TYPE_PRODUCT, $model::GOAL_TYPE_CATEGORY, $model::GOAL_TYPE_BRAND, $model::GOAL_TYPE_STATIC_PAGE])) {
-                $model->resource_id = $clean_url_data["resource_id"];
-            }
-
             $model->meta_id = $oSurfMeta->id;
             $model->timestamp = time();
             $model->position = $oSurfMeta->points_visited;
 
-            if ($model->resource_type == $model::GOAL_TYPE_SEARCH) {
-                $REQUEST_URI_arr = explode("/", $aUri["request_uri"]);
-                $model->additional_data = $REQUEST_URI_arr[2];
-            }
-            if (in_array($model->resource_type, [$model::GOAL_TYPE_CATEGORY, $model::GOAL_TYPE_BRAND, $model::GOAL_TYPE_SEARCH])
-                && !empty($cidev_filters_tree_sorted)
-                && is_array($cidev_filters_tree_sorted)
-            ) {
-                $selected_fv_id_arr = [];
-                foreach ($cidev_filters_tree_sorted as $v) {
-                    if (!empty($v["filter_values"]) && is_array($v["filter_values"])) {
-                        foreach ($v["filter_values"] as $tree_filter_values) {
-                            if ($tree_filter_values["selected"] == "Y") {
-                                $selected_fv_id_arr[] = $tree_filter_values["fv_id"];
-                            }
-                        }
-                    }
-                }
-                if (!empty($selected_fv_id_arr)) {
-                    if (!empty($model->additional_data)) {
-                        $model->additional_data .= ',';
-                    }
-                    $model->additional_data .= implode(",", $selected_fv_id_arr);
-                }
-            }
             if ($model->meta_id) {
                 if ($model->isValid()) {
                     $model->save();
@@ -114,5 +83,40 @@ class SurfingHelper
         }
 
         return false;
+    }
+
+    public static function getSurfPathAdditionalData($params)
+    {
+        $additional_data = '';
+        $selected_fv_id_arr = [];
+        if ($params['resource_type'] == SurfPathModel::GOAL_TYPE_SEARCH) {
+            $aUri = Xcart::app()->request->getQueryArray();
+            $req_arr = explode("/", $aUri["request_uri"]);
+            $additional_data = $req_arr[2];
+        }
+        if (in_array($params['resource_type'], [
+                SurfPathModel::GOAL_TYPE_CATEGORY,
+                SurfPathModel::GOAL_TYPE_BRAND,
+                SurfPathModel::GOAL_TYPE_SEARCH
+            ])
+            && !empty($params['cidev_filters_tree_sorted'])
+            && is_array($params['cidev_filters_tree_sorted'])) {
+            foreach ($params['cidev_filters_tree_sorted'] as $v) {
+                if (!empty($v["filter_values"]) && is_array($v["filter_values"])) {
+                    foreach ($v["filter_values"] as $tree_filter_values) {
+                        if ($tree_filter_values["selected"] == "Y") {
+                            $selected_fv_id_arr[] = $tree_filter_values["fv_id"];
+                        }
+                    }
+                }
+            }
+            if (!empty($selected_fv_id_arr)) {
+                if (!empty($additional_data)) {
+                    $additional_data .= ',';
+                }
+                $additional_data .= implode(",", $selected_fv_id_arr);
+            }
+        }
+        return $additional_data;
     }
 }
