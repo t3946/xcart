@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 27.12.2016
- * Time: 13:47
- */
 
 namespace Xcart\Helpers\CrawlerDetect;
 
@@ -126,6 +120,7 @@ class Crawlers extends AbstractProvider
            "World Wide Web Offline Explorer" => ["WWWOFFLE"],
            "Qwantify"                        => ["Qwantify"],
            "Hyperic"                         => ["Hyperic"],
+           "DigitEyes"                       => ["DigitEyes"],
         ];
 
     private function clearData($data)
