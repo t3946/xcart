@@ -120,16 +120,17 @@ class Router
      * @param string $route The route regex, custom regex must start with an @. You can use multiple pre-set regex filters, like [i:id]
      * @param mixed $target The target where this route should point to. Can be anything.
      * @param string $name Optional name of this route. Supply if you want to reverse route this url in your application.
+     * @param string $meta Optional data of this route. For custom data save.
      * @throws Exception
      */
-    public function map($method, $route, $target, $name = null)
+    public function map($method, $route, $target, $name = null, $meta = null)
     {
 
         if ($route == '') {
             $route = '/';
         }
 
-        $this->_routes[] = array($method, $route, $target, $name);
+        $this->_routes[] = array($method, $route, $target, $name, $meta);
 
         if ($name) {
             if (isset($this->_namedRoutes[$name])) {
@@ -235,7 +236,7 @@ class Router
         }
 
         foreach ($this->_routes as $handler) {
-            list($method, $_route, $target, $name) = $handler;
+            list($method, $_route, $target, $name, $meta) = $handler;
 
             $methods = explode('|', $method);
             $method_match = false;
@@ -298,7 +299,8 @@ class Router
                 return array(
                     'target' => $target,
                     'params' => $params,
-                    'name' => $name
+                    'name' => $name,
+                    'meta' => $meta
                 );
             }
         }
@@ -419,6 +421,6 @@ class Router
             $path = $route . $path;
         }
         $target = isset($item['target']) ? $item['target'] : null;
-        $this->map($method, $path, $target, $name);
+        $this->map($method, $path, $target, $name, (empty($item['meta']) ?: $item['meta']));
     }
 }
