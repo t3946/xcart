@@ -37,6 +37,8 @@
 # This script contains the common functions for cart operating
 #
 
+use Modules\User\Helpers\SurfingHelper;
+
 if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); }
 
 x_load('cart','product','order');
@@ -163,7 +165,10 @@ function func_add_to_cart(&$cart, $product_data) {
 #
 
         if ($config["Appearance"]["Enable_surf_stats"] == "Y"){
-            \Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => \Modules\User\Models\SurfPathModel::GOAL_TYPE_ADD_TO_CART, 'resource_id' => $added_product["productid"]]);
+            SurfingHelper::logSurfPath([
+            	'resource_type' => \Modules\User\Models\SurfPathModel::GOAL_TYPE_ADD_TO_CART,
+				'resource_id' => $added_product["productid"]
+			]);
         }
 
 
