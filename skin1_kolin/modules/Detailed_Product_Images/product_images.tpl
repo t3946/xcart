@@ -24,7 +24,7 @@
 	{capture name=dialog}
 		<ul class="no_marker">
 			{section name=pfile loop=$product_files}
-				<li><a href="get_product_file.php?file={$product_files[pfile].fileid}&amp;productid={$product_files[pfile].productid}" class="VertMenuItems"><font size=2>{$product_files[pfile].filename}</font></a>&nbsp;::&nbsp;{$product_files[pfile].description}</li>
+				<li><a href="get_product_file.php?file={$product_files[pfile].fileid}&amp;productid={$product_files[pfile].productid}" class="VertMenuItems"><font size=2>{$product_files[pfile].description}</font></a></li>
 			{/section}
 		</ul>
 	{/capture}

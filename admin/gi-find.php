@@ -14,6 +14,23 @@ if (!check_url_exists($chech_domain)){
 	return true;
 }
 
+$url      = "http://helpdesk.s3stores.com/otrs/index.pl";
+$curl_err = false;
+$ch       = curl_init();
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1000);
+$output = curl_exec($ch);
+if (curl_errno($ch) != 0 || curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200 || preg_match("/Can't connect to MySQL server/", $output)) {
+    $curl_err = true;
+}
+curl_close($ch);
+if ($curl_err) {
+    $top_message["content"] = 'OTRS does not work. Please inform technical stuff about this message...';
+    $top_message["type"] = 'E';
+    return true;
+}
+
 $TicketConnector_link = "http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector";
 
 $resolver = new OrderToTicketResolver(

@@ -30,6 +30,11 @@
  * +-----------------------------------------------------------------------------+
  * \*****************************************************************************/
 
+use Modules\Order\Models\OrderGroupInvoiceProductModel;
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfMetaModel;
+use Modules\User\Models\SurfPathModel;
+
 if (!defined('XCART_START')) {
     header("Location: ../");
     die("Access denied");
@@ -134,6 +139,7 @@ function func_get_shipping_groups($orderid)
                 foreach ($invoices as $k_i => $v_i) {
                     $i_products                 = func_query_hash("SELECT * FROM $sql_tbl[order_group_invoices_products] WHERE orderid='$orderid' AND manufacturerid='$m_id' AND invoice_number='$k_i'", "itemid", false);
                     $invoices[$k_i]["products"] = $i_products;
+                    $invoices[$k_i]["invoice_details"] = OrderGroupInvoiceProductModel::objects()->filter(['orderid' => $orderid, 'manufacturerid' => $m_id, 'invoice_number' => $k_i])->all();
                 }
             }
             $return[$m_id]["invoices"] = $invoices;
@@ -1324,7 +1330,10 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         }
 
         if ($config["Appearance"]["Enable_surf_stats"] == "Y") {
-            Modules\User\Helpers\SurfingHelper::logSurfPath(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_ORDER, 'resource_id' => $orderid]);
+            SurfingHelper::logSurfPath([
+                'resource_type' => SurfPathModel::GOAL_TYPE_ORDER,
+                'resource_id' => $orderid
+            ]);
         }
 
         $log = "";
@@ -1551,9 +1560,9 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
         $oOrder = \Xcart\Order::model(['orderid' => $orderid]);
         $oOrder->updateVerificationStatus();
 
-        $oSurfPath = Modules\User\Models\SurfPathModel::objects()
-            ->filter(['resource_type' => Modules\User\Models\SurfPathModel::GOAL_TYPE_REFERER,
-                'meta_id' =>  Modules\User\Models\SurfMetaModel::getInstance()->id])
+        $oSurfPath = SurfPathModel::objects()
+            ->filter(['resource_type' => SurfPathModel::GOAL_TYPE_REFERER,
+                'meta_id' =>  SurfMetaModel::getInstance()->id])
             ->order(['-id'])
             ->limit(1)->get();
         if ($oSurfPath) {
@@ -1817,7 +1826,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             func_check_surveys_events("OPL", $order_data);
         }
 
-        func_check_and_send_request_availability_email($orderid);
+        //func_check_and_send_request_availability_email($orderid);
     }
 
     $mes .= "STEP U " . date("H:i:s") . "\n";
@@ -1900,41 +1909,46 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 && $mv["d_availability_must_be_checked"] == "Y"
                 && $mv["good_time_to_send_email_to_distributor"] == "Y"
             ) {
-                $to       = $mv["d_send_to_email_14"];
-                $from     = $config['Company']['orders_department'];
+                $to = $mv["d_send_to_email_14"];
+                $from = $config['Company']['orders_department'];
                 $mnf_body = func_eol2br(stripslashes($mv["d_message_body_14"]));
                 $mail_smarty->assign("message_body", $mnf_body);
                 $mail_smarty->assign('d_email_subject_14', $mv["d_email_subject_14"]);
 
                 $order_notes = "";
-                $current_dc_status       = func_query_first_cell("SELECT dc_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$m_id'");
-                $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
+                $current_dc_status = func_query_first_cell_param(/** @lang MySQL */
+                    "SELECT dc_status FROM xcart_order_groups WHERE orderid = :orderid AND manufacturerid = :m_id", ['orderid' => $orderid, 'm_id' => $m_id]);
+                $current_dc_status_value = func_query_first_cell_param(/** @lang MySQL */
+                    "SELECT name FROM xcart_order_statuses WHERE code = :current_dc_status", ['current_dc_status' => $current_dc_status]);
 
                 if ($current_dc_status != "K") {
-                    $code        = $mv["code"];
-                    $new_value   = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='K'");
+                    $code = $mv["code"];
+                    $new_value = func_query_first_cell_param(/** @lang MySQL */
+                        "SELECT name FROM xcart_order_statuses WHERE code=:code", ['code' => 'K']);
                     $order_notes = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value . "<br />";
 
-                    $current_notify_sent = func_query_first_cell("SELECT notify_sent FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$m_id'");
+                    $current_notify_sent = func_query_first_cell_param(/** @lang MySQL */
+                        "SELECT notify_sent FROM xcart_order_groups WHERE orderid = :orderid AND manufacturerid=:m_id", ['orderid' => $orderid, 'm_id' => $m_id]);
                     if ($current_notify_sent != "Y") {
                         $order_notes .= "<B>" . $code . ":</B> notify_sent: " . $current_notify_sent . " -> Y <br />";
                     }
                 }
 
                 if (!empty($mv["add_ca_status_id"])) {
-                    $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$mv[add_ca_status_id]'");
+                    $is_such_additional_tag_status = func_query_first_cell_param(/** @lang MySQL */
+                        "SELECT status_id FROM xcart_orders_additional_tags WHERE orderid=:orderid AND status_id=:status_id", ['orderid' => $orderid, 'status_id' => $mv['add_ca_status_id']]);
 
                     if (empty($is_such_additional_tag_status)) {
                         Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($mv['add_ca_status_id'], $orderid);
                     }
                 }
 
-                db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='K' WHERE orderid = '$orderid' AND manufacturerid='$m_id'");
+                db_query_param(/** @lang MySQL */
+                    "UPDATE xcart_order_groups SET notify_sent = 'Y', dc_status='K' WHERE orderid = :orderid AND manufacturerid = :m_id", ['orderid' => $orderid, 'm_id' => $m_id]);
                 $order_notes .= date('l jS \of F Y h:i:s A') . ": Request availability email was sent automatically to '" . $mv["manufacturer"] . "' distributor";
                 if ($sent_by == 'CRON') {
                     $order_notes .= ", by CRON";
-                }
-                else {
+                } else {
                     $order_notes .= ", when order was placed by customer. ";
                 }
 
@@ -3596,14 +3610,16 @@ function func_send_order_status_notification($orderid, $status)
                 $from     = $order_data['userinfo']['firstname'] . "<" . $config['Company']['orders_department'] . ">";
                 $reply_to = $order_data['userinfo']['firstname'] . "<" . $order_data['userinfo']['email'] . ">";
 
-                $oMail = \Xcart\App\Main\Xcart::app()->mail;
-                $oMail->to = $to;
-                $oMail->from = $from;
-                $oMail->reply_to = $reply_to;
-                $oMail->subject_template = 'mail/order_notification_subj.tpl';
-                $oMail->body_template = 'mail/order_notification.tpl';
-                $oMail->addHeader(['X-Xcart-Label' => 'order-status-changed']);
-                $oMail->sendEmail();
+                if ($_POST["send_email"] == "Y") {
+                    $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                    $oMail->to = $to;
+                    $oMail->from = $from;
+                    $oMail->reply_to = $reply_to;
+                    $oMail->subject_template = 'mail/order_notification_subj.tpl';
+                    $oMail->body_template = 'mail/order_notification.tpl';
+                    $oMail->addHeader(['X-Xcart-Label' => 'order-status-changed']);
+                    $oMail->sendEmail();
+                }
                 //func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, false, false, false, false, $reply_to);
             }
         }

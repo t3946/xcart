@@ -69,6 +69,7 @@ if (strcasecmp($cur_host, $search_all_website_url) != 0) {
 $location = array(array($config['Search_All']['search_all_website_name'], ''));
 
 if ($mode == 'check_all' && !empty($sku)) {
+    define('HTTPS_CHECK_SKIP', true);
     include "./product.php";
 }
 

@@ -34,19 +34,26 @@ class OrderUserActivityModel extends Model
             'created_at' => [
                 'class' => DateTimeField::className(),
                 'autoNowAdd' => true,
+                'autoNow' => true,
             ]
         ];
     }
 
     public function save(array $fields = [])
     {
-        $count = static::objects()->filter(['user_id'=> $this->user_id, 'order_id' => $this->order_id, 'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )])->count();
+        $filter = [
+            'user_id'=> $this->user_id,
+            'order_id' => $this->order_id,
+            'created_at__gte' => (new \DateTime())->modify( '-2 minutes' )
+        ];
 
-        if ($count === 0) {
-            return parent::save($fields);
+        if (static::objects()->filter($filter)->count()) {
+            static::objects()->filter($filter)->delete();
+
+            $this->setIsNewRecord(true);
         }
 
-        return false;
+        return parent::save($fields);
     }
 
     public function afterSave($owner, $isNew)

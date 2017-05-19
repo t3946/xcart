@@ -1,9 +1,10 @@
 {$lng.lbl_product_notify_email_header}
 <br />
 <br />
-SKU: <a href="{$product_info.links.customer}" target="_blank">{$product_info.productcode}</a>
+{assign var=dataModel value=$productmodel->getDataModel()}
+SKU: <a href="{$dataModel->getUrl('https://')}?origin=notify_when_in_stock" target="_blank">{$productmodel->productcode}</a>
 <br />
-Product page link: <a href="{$product_info.links.customer}" target="_blank">{$product_info.product}</a>
+Product page link: <a href="{$dataModel->getUrl('https://')}?origin=notify_when_in_stock" target="_blank">{$productmodel->product}</a>
 <br />
 Storefront home page: <a href="{$product_info.http_location}" target="_blank">{$product_info.http_location}</a>
 <br />

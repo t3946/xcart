@@ -1,0 +1,24 @@
+.shapeshift {
+  .shapeshift-container{
+    border: 1px dashed #ccc;
+    position: relative;
+
+    & > div {
+        background: #CCC;
+        margin: 5px 0;
+        padding: 5px;
+        height: 20px;
+        text-align: center;
+        cursor: move;
+        font-weight: bold;
+        position: absolute;
+        width: 200px;
+    }
+
+    & > .ss-placeholder-child {
+      background: transparent;
+      border: 0;
+      outline: 1px dashed red;
+    }
+  }
+}

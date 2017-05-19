@@ -7,7 +7,7 @@ class ApproximationShippingRates extends Data
 {
     public function __construct($aParams = [])
     {
-        $this->aPrimaryKeys = ['id'];
+        $this->aPrimaryKeys = ['manufacturerid', 'state'];
         $this->sPrimaryTable = 'approximation_shipping_rates';
         parent::__construct($aParams);
 

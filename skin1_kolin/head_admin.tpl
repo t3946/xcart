@@ -13,7 +13,7 @@
 
 	<td align="left" width="34%">
         {if $usertype ne "V"}
-		    <a style="padding-left: 35px;" href="{$catalogs.admin}/orders.php?page_name=dashboard"><img src="{$ImagesDir}/cc_dashbord.png" alt="" /></a>
+		    <a style="padding-left: 35px;" href="{$catalogs.admin}/dashboard"><img src="{$ImagesDir}/cc_dashbord.png" alt="" /></a>
         {/if}
 	</td>
 
@@ -42,7 +42,7 @@
 
 <td width="34%" align="center" class="HeadLine">
 {if $usertype eq 'A' && $login}
-                <form method="post" action="orders.php" name="productsearchform">
+                <form method="post" action="/admin/orders.php" name="productsearchform">
                 <input type="hidden" name="fast_search" value="Y" />
                 <input type="hidden" name="mode" value="" />
 

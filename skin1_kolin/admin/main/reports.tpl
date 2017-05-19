@@ -12,7 +12,7 @@
 *}
 
 {if $membership_code eq ""}
-<a href="{$catalogs.admin}/amazon_fba_restocking_report.php" class="VertMenuItems">Amazon FBA restocking report</a><br />
+<a href="{$catalogs.admin}/amazon" class="VertMenuItems">Amazon FBA restocking report</a><br />
 
 <a href="{$catalogs.admin}/fba_roi_report.php" class="VertMenuItems">FBA ROI report (year based)</a><br />
 

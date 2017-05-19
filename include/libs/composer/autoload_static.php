@@ -263,6 +263,17 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
             array (
                 0 => __DIR__ . '/..' . '/doctrine/common/lib',
             ),
+            'Detection' => 
+            array (
+                0 => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/namespaced',
+            ),
+        ),
+        'C' => 
+        array (
+            'CaponicaAmazonMwsComplete\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/caponica/amazon-mws-complete/src',
+            ),
         ),
     );
 
@@ -570,6 +581,7 @@ class ComposerStaticInited1e2f7cb4425e4bdc0264910bb94e92
         'MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest' => __DIR__ . '/../../..' . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsRequest.php',
         'MarketplaceWebService_Model_UpdateReportAcknowledgementsResponse' => __DIR__ . '/../../..' . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsResponse.php',
         'MarketplaceWebService_Model_UpdateReportAcknowledgementsResult' => __DIR__ . '/../../..' . '/MarketplaceWebService/Model/UpdateReportAcknowledgementsResult.php',
+        'Mobile_Detect' => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/Mobile_Detect.php',
         'RequestType' => __DIR__ . '/../../..' . '/MarketplaceWebService/RequestType.php',
     );
 

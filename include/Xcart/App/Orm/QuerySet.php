@@ -565,7 +565,7 @@ class QuerySet extends QuerySetBase
 
     public function delete()
     {
-        $statement = $this->getConnection()->query($this->deleteSql());
+        $statement = $this->getConnection()->prepare($this->deleteSql());
         return $statement->execute();
     }
 
@@ -736,7 +736,7 @@ class QuerySet extends QuerySetBase
 
     private function fieldAlias($field)
     {
-        if (!is_numeric($field) && strpos($field, '.') === false) {
+        if (!is_object($field) && !is_numeric($field) && strpos($field, '.') === false) {
             $field = $this->getTableAlias() .'.'. $field;
         }
         return $field;

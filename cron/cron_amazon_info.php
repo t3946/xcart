@@ -18,13 +18,14 @@ const LOG_CATEGORY = 'cron_amazon_info';
 if ($config[LOG_CATEGORY] == "Y") {
     $oMail = \Xcart\App\Main\Xcart::app()->mail;
     $oMail->to = 'team@s3stores.com';
-    $oMail->from = ('team@s3stores.com');
+    $oMail->from = 'team@s3stores.com';
     $oMail->subject = sprintf('Attention! Xcart cron %s Already launched', LOG_CATEGORY);
     $oMail->body = Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO . ' already launched';
     $oMail->sendEmail();
     die("Already launched"); // ################################
 }
-db_query("REPLACE $sql_tbl[config] SET value='Y', name='" . LOG_CATEGORY . "'");
+db_query_param(/** @lang MySQL */
+    "REPLACE xcart_config SET value='Y', name=:name",['name' => LOG_CATEGORY]);
 
 $start_time = new DateTime('now');
 
@@ -44,7 +45,7 @@ while ($aProductsBatch = \Xcart\Product::objects()
     ->all()) {
     $oAmazonProduct
         ->setProducts($aProductsBatch)
-        ->enableLog('amazon-info')
+        //->enableLog('amazon-info')
         ->_Request('GetCompetitivePricing')
         ->_Request('GetLowestOfferListingsForSKU');
 }
@@ -60,7 +61,7 @@ while ($aProductsBatch = \Xcart\Product::objects()
     ->all()) {
     $oAmazonProduct
         ->setProducts($aProductsBatch)
-        ->enableLog('amazon-info')
+        //->enableLog('amazon-info')
         ->_Request('ListInventorySupply');
 }
 echo  "Report 3 start\n";
@@ -74,7 +75,7 @@ $oAmazonProduct->setReportType('_GET_RESERVED_INVENTORY_DATA_')
     ->_Request('GetReportList')
     ->_Request('GetReport')
     ->_Request('UpdateReportAcknowledgements')
-    ->enableLog('amazon-info')
+    //->enableLog('amazon-info')
     ->processReportReservedInventory();
 
 $oAmazonProduct->groupAmazonFBAProducts();

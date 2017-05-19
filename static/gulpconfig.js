@@ -8,7 +8,7 @@ var modules = fs.readdirSync(modulesDir).map(function (module) {
 
 module.exports.name = "main";
 
-module.exports.compress = true;
+module.exports.compress = false;
 
 
 module.exports.frontend = {
@@ -75,6 +75,18 @@ module.exports.backend = {
         jquery: {
             js: [
                 'bower_components/jquery/dist/jquery.min.js'
+            ]
+        },
+
+        'jquery-ui': {
+            js: [
+                'bower_components/jquery-ui/jquery-ui.js'
+            ]
+        },
+
+        'jquery.shapeshift': {
+            js: [
+                'bower_components/jquery.shapeshift/core/jquery.shapeshift.js'
             ]
         },
 

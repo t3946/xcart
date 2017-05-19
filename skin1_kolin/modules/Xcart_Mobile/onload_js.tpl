@@ -20,6 +20,13 @@ vim: set ts=2 sw=2 sts=2 et:
       window.addEventListener("load", anchor_fix, false);
       else if (window.attachEvent)
       window.attachEvent("onload", anchor_fix);
+
+      $.ajaxSetup({
+        cache: false,
+        beforeSend: function(){
+          this.cache = false;
+        }
+      });
     {/literal}
   {/if}
   {if $products ne "" or $free_products ne "" or $product ne ""}

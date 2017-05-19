@@ -3,6 +3,7 @@ namespace Modules\Dashboard\Stores;
 
 use DateTime;
 use Mindy\QueryBuilder\Aggregation\Count;
+use Mindy\QueryBuilder\Aggregation\Max;
 use Mindy\QueryBuilder\Expression;
 use Mindy\QueryBuilder\Q\QAnd;
 use Mindy\QueryBuilder\Q\QAndNot;
@@ -30,13 +31,13 @@ class OrderSearchStore extends BaseStore
     const CONST_CACHE_KEY_PRIORITY = 'order_search_store_priority_count_';
 
 
-    private $form_data = [];
+    protected $form_data = [];
     private $where = [];
     private $having = [];
     /** @var QuerySet */
     private $qs;
     /** @var Pagination */
-    private $pager;
+    protected $pager;
     private $order;
     private $model = null;
 
@@ -966,7 +967,7 @@ class OrderSearchStore extends BaseStore
             return $qs->count();
         }
 
-        return null;
+        return 0;
     }
 
     public function getCachedEventsCount()
@@ -1010,7 +1011,7 @@ class OrderSearchStore extends BaseStore
         $lom_sql     = QueryBuilder::getInstance($connection)->from('xcart_order_logs')->order(['-date'])->where(['orderid__in' => $order_ids, 'type__in' => ['S']])->toSQL();
         $lo_messages = $connection->fetchAll($lom_sql);
 
-        $loa_sql     = QueryBuilder::getInstance($connection)->select(['orderid', 'date' => new Expression('max(date)')])->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in' => $order_ids])->toSQL();
+        $loa_sql     = QueryBuilder::getInstance($connection)->select(['orderid', 'date' => new Max('date')])->from('xcart_order_logs')->group(['orderid'])->order(['-date'])->where(['orderid__in' => $order_ids])->toSQL();
         $lo_activity = $connection->fetchAll($loa_sql);
 
         OrderHelper::getMaxEtaTimeByOrder($order_ids);

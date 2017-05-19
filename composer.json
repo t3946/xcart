@@ -1,6 +1,9 @@
 {
     "config": {
-        "vendor-dir": "include/libs"
+        "vendor-dir": "include/libs",
+        "platform": {
+            "php": "5.4.36"
+        }
     },
     "repositories": [
         {
@@ -16,7 +19,9 @@
         "fenom/fenom": "^2.11",
         "paypal/rest-api-sdk-php": "*",
         "symfony/validator": "^2.8",
-        "true/punycode": "^2.1"
+        "true/punycode": "^2.1",
+        "caponica/amazon-mws-complete": "dev-master",
+        "mobiledetect/mobiledetectlib": "^2.8"
     },
     "autoload": {
         "psr-4": {

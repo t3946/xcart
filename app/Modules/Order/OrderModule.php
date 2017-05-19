@@ -50,5 +50,11 @@ class OrderModule extends Module
 
             return $order_age_str;
         });
+
+        $template->addModifier('hide_zero', function($price)
+        {
+            return floatval($price) ? $price : '';
+        });
+
     }
 }

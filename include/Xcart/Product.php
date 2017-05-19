@@ -44,6 +44,8 @@ class Product extends Data
     private $fExtraMarginValue = null;
     private $fPrice = null;
 
+    private $bSupplierFeed = null;
+
     /**
      * @var ProductCategories[]
      */
@@ -281,21 +283,23 @@ class Product extends Data
     public function isProductOutOfStock()
     {
         $result = false;
-        if (intval($this->getField('avail')) <= 0)
-            $result = true;
+        if (intval($this->getField('avail')) <= 0) {
+            return true;
+        }
         $iEtaDate = $this->getField('eta_date_mm_dd_yyyy');
-        if ($result && !empty($iEtaDate)) {
+        if (!empty($iEtaDate)) {
             $current_time = time();
             if ($current_time < $iEtaDate) {
-                $result = true;
+                return true;
             }
         }
-        if ($result && $this->getProductCostToUs() > $this->getPrice())
-            $result = true;
+        if ($this->getProductCostToUs() > $this->getPrice() || $this->getProductCostToUs() <= 0) {
+            return true;
+        }
 
-        if ($result && floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false)
-            $result = true;
-
+        if (floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false) {
+            return true;
+        }
         return $result;
     }
 
@@ -357,8 +361,8 @@ SQL;
     {
         $fPrice = $this->getPrice($forQuantity);
 
-        if ($this->isSupplierFeedsEnabled() && !$this->isProductOutOfStock()) {
-            $fPrice = func_decreased_price($this->getProductCostToUs(), $fPrice, $this->getMapPrice());
+        if ($this->isSupplierFeedsEnabled() && $this->isProductOutOfStock()) {
+            $fPrice = max ($fPrice,$this->cost_to_us + ($fPrice - $this->cost_to_us) / 3);
         }
 
         return $fPrice;
@@ -366,10 +370,20 @@ SQL;
 
     public function isSupplierFeedsEnabled()
     {
-        $result = false;
-        $sEnabled = func_query_first_cell("SELECT enabled FROM " . self::$sql_tbl['supplier_feeds'] . " WHERE manufacturerid=" . $this->getField('manufacturerid') . " AND feed_type = 'I' AND enabled='Y' AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name='" . $this->getField("controlled_by_feed") . "'))");
-        if ($sEnabled == 'Y') $result = true;
-        return $result;
+        if (is_null($this->bSupplierFeed)) {
+            $this->bSupplierFeed = false;
+            $sEnabled = func_query_first_cell_param(
+                "SELECT enabled 
+                         FROM xcart_supplier_feeds 
+                        WHERE manufacturerid=:manufacturer 
+                        AND feed_type = 'I' 
+                        AND enabled='Y' 
+                        AND (multiple_feed_destinations!='Y' OR (multiple_feed_destinations='Y' AND feed_file_name=:feed_file_name))",
+                ['manufacturer' => $this->manufacturerid,
+                 'feed_file_name' => $this->controlled_by_feed]);
+            if ($sEnabled == 'Y') $this->bSupplierFeed = true;
+        }
+        return $this->bSupplierFeed;
     }
 
     public function getPreviewImageURL()

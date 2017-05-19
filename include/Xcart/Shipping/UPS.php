@@ -16,13 +16,12 @@ use Xcart\SQLBuilder;
 
 class UPS extends ShippingProcessor
 {
-    const APPROXIMATION_SHIPPING_METHOD = 1;
     const APPROXIMATION_MAX_VALID_TIME = 5184000; //2 months
     const MAX_WEIGHT_FOR_UPS_PACKAGE = 150; //2 months
 
     /*This table provides correct service codes for different origins
     <Code returned from UPS> => array (<origin> => <service_code in xcart_shipping>)*/
-    private $ups_services = array(
+    private $ups_services = [
         "01" => array("US" => 5, "CA" => 8, "PR" => 5),
         "02" => array("US" => 1, "PR" => 1),
         "03" => array("US" => 4, "PR" => 4),
@@ -40,7 +39,13 @@ class UPS extends ShippingProcessor
         "84" => array("PL" => 20),
         "85" => array("PL" => 21),
         "86" => array("PL" => 22)
-    );
+    ];
+
+    private $ups_approximation_shipping_methods = [
+        '' => 1,
+        'US' => 1,
+        'CA' => 65
+    ];
 
     public function isProcessorApplicable()
     {
@@ -111,7 +116,7 @@ class UPS extends ShippingProcessor
             $aShippingRates = $this->getShippingRatesEntities();
             if (!empty($aShippingRates)) {
                 foreach ($aShippingRates as $oShippingRate) {
-                    if ($oShippingRate->getShippingId() == self::APPROXIMATION_SHIPPING_METHOD) {
+                    if ($oShippingRate->getShippingId() == $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country]) {
                         /*get aproximation rates for UPS Ground*/
                         $oApproximationRates = ApproximationShippingRates::model()->find(
                             SQLBuilder::getInstance()->
@@ -119,7 +124,7 @@ class UPS extends ShippingProcessor
                             addCondition('last_updated_date >= ' . (time() - self::APPROXIMATION_MAX_VALID_TIME))->
                             addCondition("state = '{$this->getCustomer()->getShippingStateEntity()->getCode()}'")
                         );
-                        if ($oApproximationRates->getField('id')) {
+                        if ($oApproximationRates->getField('manufacturerid')) {
                             $weight = ceil($oShippingRate->getCartShippingWeight());
                             $shippingCharge = 0;
                             switch ($weight) {
@@ -148,8 +153,8 @@ class UPS extends ShippingProcessor
                         foreach ($aResponse as $Rate) {
                             foreach ($aShippingRates as $oShippingRate) {
                                 if (in_array($oShippingRate->getShippingEntity()->getField('service_code'), $this->ups_services[$Rate->Service->getCode()])) {
-                                    if ($oShippingRate->getShippingId() != self::APPROXIMATION_SHIPPING_METHOD ||
-                                        ($oShippingRate->getShippingId() == self::APPROXIMATION_SHIPPING_METHOD && empty($this->aShippingRates[$oShippingRate->getShippingId()]))
+                                    if ($oShippingRate->getShippingId() != $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country] ||
+                                        ($oShippingRate->getShippingId() == $this->ups_approximation_shipping_methods[$this->oManufacturer->m_country] && empty($this->aShippingRates[$oShippingRate->getShippingId()]))
                                     ) {
                                         $weight = ceil($oShippingRate->getCartShippingWeight());
                                         if ($weight >= self::MAX_WEIGHT_FOR_UPS_PACKAGE) {
