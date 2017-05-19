@@ -3456,8 +3456,7 @@ function func_decreased_price($cost_to_us, $price, $new_map_price)
 {
     $new_price = max($price, $new_map_price);
     if ($cost_to_us < $new_price) {
-        $max1 = $cost_to_us + ($price - $cost_to_us) / 3;
-        $new_price = max($new_map_price, $max1);
+        $new_price = $cost_to_us + ($price - $cost_to_us) / 3;
         $new_price = number_format(round($new_price, 2), 2, ".", "");
     }
     return $new_price;
