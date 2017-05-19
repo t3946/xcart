@@ -5,8 +5,36 @@ use Modules\Sites\Models\SiteConfigModel;
 use Modules\Sites\Models\SiteModel;
 
 global $smarty;
+if (!empty($_POST['template_submit'])) {
+    if ($_POST['storefront'] && is_array($_POST['storefront'])) {
+        foreach ($_POST['storefront'] as $key => $store) {
+            /*switch ($store) {
+                case -1:
+                    if ($m = GlobalConfigModel::objects()->filter(['name' => 'thank_you_days'])->get()) {
+                        $m->value = $_POST['thank_you_days'][$key];
+                        $m->save();
+                    }
+                    if ($m = GlobalConfigModel::objects()->filter(['name' => 'thank_you_from'])->get()) {
+                        $m->value = $_POST['thank_you_from'][$key];
+                        $m->save();
+                    }
+                    if ($m = GlobalConfigModel::objects()->filter(['name' => 'thank_you_subject'])->get()) {
+                        $m->value = $_POST['thank_you_subject'][$key];
+                        $m->save();
+                    }
+                    if ($m = GlobalConfigModel::objects()->filter(['name' => 'thank_you_message_body'])->get()) {
+                        $m->value = $_POST['thank_you_message_body'][$key];
+                        $m->save();
+                    }
+                    break;
+                default :
 
-//if ($_POST['store']
+                    break;
+            }*/
+        }
+
+    } var_dump($_POST);
+}
 
 $aModels = GlobalConfigModel::objects()
     ->filter(['category' => 'thankyou_for_order'])

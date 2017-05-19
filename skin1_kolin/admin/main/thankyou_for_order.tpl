@@ -1,3 +1,4 @@
+<form method="post">
 {if $global_config}
     <table class="default_template_config" width="100%" cellspacing="1" cellpadding="3">
     <tr>
@@ -60,6 +61,14 @@
         </td>
     </tr>
 </table>
+<table>
+    <tr>
+        <td>
+            <input name="template_submit" type="submit" value="Save" />
+        </td>
+    </tr>
+</table>
+</form>
 
 <script>
     {literal}
@@ -70,7 +79,7 @@
                .before($('table.default_template_config')
                    .clone()
                    .find('textarea').removeAttr('id').end()
-                   .find('.default_storefront').removeAttr('disabled').find('option:first-child').text('Select storefront').end().end()
+                   .find('.default_storefront').removeAttr('disabled').find('option:first-child').text('Select storefront').val('').end().end()
                    .removeClass('default_template_config')
                );
 
