@@ -21,6 +21,7 @@ class SiteConfigModel extends Model
                 'class' => CharField::className(),
                 'null' => false,
                 'default' => '',
+                'primary' => true
             ],
             'storefrontid' => [
                 'class' => IntField::className(),
@@ -72,10 +73,12 @@ class SiteConfigModel extends Model
             'defvalue' => [
                 'class' => TextField::className(),
                 'null' => false,
+                'default' => ''
             ],
             'variants' => [
                 'class' => TextField::className(),
                 'null' => false,
+                'default' => ''
             ],
 
         ];

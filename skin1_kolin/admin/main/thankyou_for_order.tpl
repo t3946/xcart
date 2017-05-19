@@ -1,11 +1,12 @@
 <form method="post">
 {if $global_config}
+    <input type="hidden" name="storefront_template[]" value="-1">
     <table class="default_template_config" width="100%" cellspacing="1" cellpadding="3">
     <tr>
         <td></td>
         <td>Storefront:</td>
         <td>
-            <select name="storefront[]" class="default_storefront" disabled="disabled">
+            <select class="default_storefront" disabled="disabled">
                 <option value="-1">Default</option>
                 {foreach from=$sites item=store}
                     <option value="{$store->storefrontid}" {if ($site.model->storefrontid == $store->storefrontid)}selected="selected"{/if}>
@@ -13,6 +14,7 @@
                     </option>
                 {/foreach}
             </select>
+
         </td>
     </tr>
     {foreach from=$global_config item=glob}
@@ -32,7 +34,7 @@
             <td></td>
             <td>Storefront:</td>
             <td>
-                <select name="storefront">
+                <select name="storefront_template[]">
                 {foreach from=$sites item=store}
                     <option value="{$store->storefrontid}" {if ($site.model->storefrontid == $store->storefrontid)}selected="selected"{/if}>
                         {$store->domain}
@@ -79,7 +81,7 @@
                .before($('table.default_template_config')
                    .clone()
                    .find('textarea').removeAttr('id').end()
-                   .find('.default_storefront').removeAttr('disabled').find('option:first-child').text('Select storefront').val('').end().end()
+                   .find('.default_storefront').removeAttr('disabled').attr('name', 'storefront_template[]').find('option:first-child').text('Select storefront').val('').end().end()
                    .removeClass('default_template_config')
                );
 

@@ -8,7 +8,7 @@
         {if $model->type == 'text'}
             <input type="text" style="width: 370px;" name="{$model->name}[]" value="{$model->value|escape:html}" />
         {/if}
-        {if $glob->type == 'textarea'}
+        {if $model->type == 'textarea'}
             <textarea class="new_editor" rows="30" cols="60" name="{$model->name}[]">
                         {$model->value|escape:html}
             </textarea>

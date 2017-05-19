@@ -6,9 +6,9 @@ use Modules\Sites\Models\SiteModel;
 
 global $smarty;
 if (!empty($_POST['template_submit'])) {
-    if ($_POST['storefront'] && is_array($_POST['storefront'])) {
-        foreach ($_POST['storefront'] as $key => $store) {
-            /*switch ($store) {
+    if ($_POST['storefront_template'] && is_array($_POST['storefront_template'])) {
+        foreach ($_POST['storefront_template'] as $key => $store) {
+            switch ($store) {
                 case -1:
                     if ($m = GlobalConfigModel::objects()->filter(['name' => 'thank_you_days'])->get()) {
                         $m->value = $_POST['thank_you_days'][$key];
@@ -28,12 +28,62 @@ if (!empty($_POST['template_submit'])) {
                     }
                     break;
                 default :
+                    $params = [
+                        'storefrontid' => $store,
+                        'category' => 'thankyou_for_order',
+                        'type' => 'text'
+                        ];
+                    $m = SiteConfigModel::objects()->filter(['name' => 'thank_you_days', 'storefrontid' => $store])->get();
+                    if (!$m) {
+                        $m = new SiteConfigModel(array_merge([
+                            'name' => 'thank_you_days',
+                            'orderby' => 0,
+                            'comment' => 'How many days is the letter should be sent after tracking number is entered'
+                        ], $params));
+                    }
+                    $m->value = $_POST['thank_you_days'][$key];
+                    $m->save();
 
+                    $m = SiteConfigModel::objects()->filter(['name' => 'thank_you_from', 'storefrontid' => $store])->get();
+                    if (!$m) {
+                        $m = new SiteConfigModel(array_merge([
+                            'name' => 'thank_you_from',
+                            'orderby' => 10,
+                            'comment' => 'From'
+                        ], $params));
+                    }
+                    $m->value = $_POST['thank_you_from'][$key];
+                    $m->save();
+
+                    $m = SiteConfigModel::objects()->filter(['name' => 'thank_you_subject', 'storefrontid' => $store])->get();
+                    if (!$m) {
+                        $m = new SiteConfigModel(array_merge([
+                            'name' => 'thank_you_subject',
+                            'orderby' => 20,
+                            'comment' => 'Email subject line'
+                        ], $params));
+                    }
+                    $m->value = $_POST['thank_you_subject'][$key];
+                    $m->save();
+
+                    $m = SiteConfigModel::objects()->filter(['name' => 'thank_you_message_body', 'storefrontid' => $store])->get();
+                    if (!$m) {
+                        $m = new SiteConfigModel([
+                            'name' => 'thank_you_message_body',
+                            'storefrontid' => $store,
+                            'category' => 'thankyou_for_order',
+                            'type' => 'textarea',
+                            'orderby' => 30,
+                            'comment' => 'Message body'
+                            ]);
+                    }
+                    $m->value = $_POST['thank_you_message_body'][$key];
+                    $m->save();
                     break;
-            }*/
+            }
         }
 
-    } var_dump($_POST);
+    }
 }
 
 $aModels = GlobalConfigModel::objects()
