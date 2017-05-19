@@ -73,12 +73,22 @@ class DashboardController extends PrototypeAdminController
     {
         /** @var DashboardFilter $model */
         if ($model = DashboardFilter::objects()->get(['id' => $id])) {
-            $orderStore = $model->getSearchStorage();
+            $modify = false;
+            $form_data = [];
+
+            if (!empty($_GET['search'])) {
+                $form_data = OrderSearchStore::getClearedData($_GET['search']);
+                $modify = true;
+
+            }
+
+
+            $orderStore = $model->getSearchStorage($form_data);
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
-            $form_data = $model->form_data;
+            $form_data = array_merge_recursive($model->form_data, $form_data);
 
-            if ($pager->getTotal() != $model->getSearchStorage()->getCashedCount()) {
+            if (!$modify && $pager->getTotal() != $model->getSearchStorage()->getCashedCount()) {
                 $model->getSearchStorage()->clearCache();
             }
 
@@ -86,6 +96,7 @@ class DashboardController extends PrototypeAdminController
                 array_merge(
                     SearchHelper::getFormAndListData(),
                     [
+                        'modify'        => $modify,
                         'model'         => $model,
                         'pager'         => $pager,
                         'models'        => $models,
