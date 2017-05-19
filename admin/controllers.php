@@ -30,4 +30,6 @@ $configPath = $xcart_dir .'/app/config/settings_admin.php';
 $config = include $configPath;
 
 Xcart::init($config);
+
+$smarty->assign('xcartApp', Xcart::app());
 Xcart::app()->run();
