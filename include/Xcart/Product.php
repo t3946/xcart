@@ -306,7 +306,7 @@ class Product extends Data
             return true;
         }
 
-        if (floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false) {
+        if (floatval($this->shipping_freight) == 0 && strpos($this->productcode, "ART-") === false) {
             return true;
         }
 
