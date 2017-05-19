@@ -361,7 +361,7 @@ SQL;
     {
         $fPrice = $this->getPrice($forQuantity);
 
-        if ($this->isSupplierFeedsEnabled() && $this->isProductOutOfStock()) {
+        if ($this->isSupplierFeedsEnabled() && $this->isProductOutOfStock() && $fPrice > $this->cost_to_us) {
             $fPrice = max ($fPrice,$this->cost_to_us + ($fPrice - $this->cost_to_us) / 3);
         }
 
