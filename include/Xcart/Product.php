@@ -282,25 +282,35 @@ class Product extends Data
 
     public function isProductOutOfStock()
     {
-        $result = false;
-        if (intval($this->getField('avail')) <= 0) {
+        if (!$this->isForSale()) {
             return true;
         }
-        $iEtaDate = $this->getField('eta_date_mm_dd_yyyy');
-        if (!empty($iEtaDate)) {
-            $current_time = time();
-            if ($current_time < $iEtaDate) {
-                return true;
-            }
+
+        if ($this->cost_to_us <= 0) {
+            return true;
         }
-        if ($this->getProductCostToUs() > $this->getPrice() || $this->getProductCostToUs() <= 0) {
+
+        if ($this->avail <= 0) {
+            return true;
+        }
+
+        if ($this->avail < $this->min_amount) {
+            return true;
+        }
+
+        if ($this->cost_to_us >= $this->getPrice()) {
+            return true;
+        }
+
+        if ($this->eta_date_mm_dd_yyyy && time() < $this->eta_date_mm_dd_yyyy) {
             return true;
         }
 
         if (floatval($this->getField("shipping_freight")) == 0 && strpos($this->getField("productcode"), "ART-") === false) {
             return true;
         }
-        return $result;
+
+        return false;
     }
 
     public function getMapPrice()
