@@ -159,6 +159,9 @@ elseif ($option == "Contact_Us") {
 elseif ($option == "Templates_OrderRelatedMessages") {
     include "./templates_order_related_messages.php";
 }
+elseif ($option == "thankyou_for_order") {
+    include "./thankyou_for_order.php";
+}
 elseif ($option == "Attention_tag_options") {
     include "./attention_tag_options.php";
 }
