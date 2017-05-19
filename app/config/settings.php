@@ -49,13 +49,16 @@ return array_replace_recursive([
 //               'RedirectMiddleware' => [
 //                   'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
 //               ],
-//               'CurrentSiteMiddleware' => [
-//                   'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware'
-//               ],
-                'BotsMiddleware' => [
-                   'class' => '\\Modules\\User\\Middleware\\BotsMiddleware'
+               'AutoCacheMiddleware' => [
+                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
                ],
-           ]
+               'CurrentSiteMiddleware' => [
+                   'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware',
+               ],
+               'BotsMiddleware' => [
+                   'class' => '\\Modules\\User\\Middleware\\BotsMiddleware',
+               ],
+           ],
        ],
        'request' => [
            'class' => '\\Xcart\\App\\Request\\RequestManager',
