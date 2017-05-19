@@ -77,7 +77,6 @@ class DashboardController extends PrototypeAdminController
             $models = $orderStore->getModels();
             $pager = $orderStore->getPager();
             $form_data = $model->form_data;
-            $form_data['new_list'] = Xcart::app()->request->session->get('search_new_template', 1);
 
             if ($pager->getTotal() != $model->getSearchStorage()->getCashedCount()) {
                 $model->getSearchStorage()->clearCache();
@@ -91,7 +90,6 @@ class DashboardController extends PrototypeAdminController
                         'pager'         => $pager,
                         'models'        => $models,
                         'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
-                        'new_template'  => $form_data,
                         'form_collapse' => true,
                     ]
                 )

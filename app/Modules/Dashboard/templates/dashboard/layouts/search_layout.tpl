@@ -30,11 +30,7 @@
             </div>
         </div>
         <div class="row">
-                {if $new_template}
-                    {include 'order/orders_list.tpl' orders=$models}
-                {else}
-                    {include 'order/orders_list_old.tpl' orders=$models}
-                {/if}
+            {include 'order/orders_list.tpl' orders=$models}
         </div>
         <div class="row">
             <div class="columns large-12">
