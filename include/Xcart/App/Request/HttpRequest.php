@@ -671,10 +671,18 @@ class HttpRequest extends Request
         Xcart::app()->end();
     }
 
+    public function getMatchRouting($url = null)
+    {
+        if (!$url) {
+            $url = $this->getUrl();
+        }
+
+        return Xcart::app()->router->match($url);
+    }
+
     public function refresh()
     {
-        $match = Xcart::app()->router->match($this->getUrl());
-        if (!empty($match)) {
+        if ($match = $this->getMatchRouting()) {
             $this->redirect($match['name'], $match['params']);
         }
 
