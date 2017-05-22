@@ -63,7 +63,13 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
     exit();
 }
 
-\Xcart\App\Main\Xcart::init(include $xcart_dir .'/app/config/settings.php');
+
+$settings_path = $xcart_dir .'/app/config/settings_admin.php';
+if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
+    $settings_path = $xcart_dir .'/app/config/settings.php';
+}
+
+\Xcart\App\Main\Xcart::init(include $settings_path);
 \Xcart\App\Main\Xcart::app()->beforeRun();
 
 #
