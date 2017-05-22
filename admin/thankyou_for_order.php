@@ -29,6 +29,14 @@ if (!empty($_POST['template_submit'])) {
                         $m->value = stripcslashes($_POST['thank_you_message_body'][$key]);
                         $m->save();
                     }
+                    if ($m = GlobalConfigModel::objects()->filter(['name' => 'thank_you_amazon_subject'])->get()) {
+                        $m->value = stripcslashes($_POST['thank_you_amazon_subject'][$key]);
+                        $m->save();
+                    }
+                    if ($m = GlobalConfigModel::objects()->filter(['name' => 'thank_you_message_body_amazon'])->get()) {
+                        $m->value = stripcslashes($_POST['thank_you_message_body_amazon'][$key]);
+                        $m->save();
+                    }
                     break;
                 case "":
                     break;
@@ -80,6 +88,31 @@ if (!empty($_POST['template_submit'])) {
                             'type' => 'textarea',
                             'orderby' => 30,
                             'comment' => 'Message body'
+                            ]);
+                    }
+                    $m->value = stripcslashes($_POST['thank_you_message_body'][$key]);
+                    $m->save();
+
+                    $m = SiteConfigModel::objects()->filter(['name' => 'thank_you_amazon_subject', 'storefrontid' => $store])->get();
+                    if (!$m) {
+                        $m = new SiteConfigModel(array_merge([
+                            'name' => 'thank_you_amazon_subject',
+                            'orderby' => 40,
+                            'comment' => 'Email subject line for Amazon orders'
+                        ], $params));
+                    }
+                    $m->value = stripcslashes($_POST['thank_you_amazon_subject'][$key]);
+                    $m->save();
+
+                    $m = SiteConfigModel::objects()->filter(['name' => 'thank_you_message_body_amazon', 'storefrontid' => $store])->get();
+                    if (!$m) {
+                        $m = new SiteConfigModel([
+                            'name' => 'thank_you_message_body_amazon',
+                            'storefrontid' => $store,
+                            'category' => 'thankyou_for_order',
+                            'type' => 'textarea',
+                            'orderby' => 50,
+                            'comment' => 'Message body for Amazon orders'
                             ]);
                     }
                     $m->value = stripcslashes($_POST['thank_you_message_body'][$key]);
