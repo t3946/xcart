@@ -28,32 +28,34 @@
     </table>
 {/if}
 {if $site_config}
-    <table width="100%" cellspacing="1" cellpadding="3">
     {foreach from=$site_config item=site}
+        <table width="100%" cellspacing="1" cellpadding="3">
         <tr>
             <td></td>
             <td>Storefront:</td>
             <td>
-                <select name="storefront_template[]">
+                <select class="site_storefront_select" name="storefront_template[]">
                 {foreach from=$sites item=store}
                     <option value="{$store->storefrontid}" {if ($site.model->storefrontid == $store->storefrontid)}selected="selected"{/if}>
                         {$store->domain}
                     </option>
                 {/foreach}
                 </select>
+                <a style="float:right;" title="Delete template" class="delete_template_button" href="#"><img src="{$ImagesDir}/minus.gif" alt="{$lng.lbl_add|escape}" /></a>
             </td>
         </tr>
 
         {foreach from=$site.config item=site_params}
             {include file="admin/main/configuration_row.tpl" model=$site_params}
         {/foreach}
+            <tr>
+                <td colspan="3">
+                    <hr/>
+                </td>
+            </tr>
+        </table>
     {/foreach}
-        <tr>
-            <td colspan="3">
-                <hr/>
-            </td>
-        </tr>
-    </table>
+
 {/if}
 
 <table width="100%" cellspacing="1" cellpadding="3">
@@ -74,6 +76,7 @@
 
 <script>
     {literal}
+    (function(){
         $('.add_template_button').click(function(){
             tinymce.remove();
             $(this)
@@ -102,5 +105,15 @@
             });
            return false;
         });
+        $('.delete_template_button').click(function() {
+            $(this).closest('table').fadeOut('medium', function(){$(this).remove()});
+            return false;
+        });
+
+        $('.site_storefront_select').change(function(){
+            var $t = $('.site_storefront_select').not(this);
+            console.log($t);
+        });
+    })();
     {/literal}
 </script>
