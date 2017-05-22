@@ -25,10 +25,6 @@ class SearchController extends PrototypeAdminController
             $form_collapse = true;
             $form_data = OrderSearchStore::getClearedData($_GET['search']);
 //            $session->add('search_order_form', OrderSearchStore::getClearedData($_GET['search']));
-
-            if (isset($_GET['search']['new_list'])) {
-                $session->add('search_new_template', $_GET['search']['new_list']);
-            }
         }
 
 //        $form_data = $session->get('search_order_form', [
@@ -38,7 +34,6 @@ class SearchController extends PrototypeAdminController
 //        ]);
 
         if (!is_array($form_data)) {
-//            $form_data = [];
             $form_data = [
                 'order'    => [
                     'date' => SearchHelper::getDefaultSearchDate(),
@@ -46,7 +41,6 @@ class SearchController extends PrototypeAdminController
             ];
         }
 
-        $form_data['new_list'] = $session->get('search_new_template', 1);
 
         $orderStore = new OrderSearchStore($form_data);
         $orderStore->setOrder(['-date', '-orderid']);
@@ -64,7 +58,6 @@ class SearchController extends PrototypeAdminController
                 'pager'         => $pager,
                 'models'        => $models,
                 'form_data'     => SearchHelper::prepareFormDataForTemplate($form_data),
-                'new_template'  => $session->get('search_new_template', 1),
                 'form_collapse' => $form_collapse,
             ])
         );

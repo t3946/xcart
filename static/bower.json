@@ -16,10 +16,19 @@
     "select2": "^4.0.3",
     "air-datepicker": "^2.2.3",
     "mmodal": "^1.0.5",
-    "compass-mixins": "^1.0.2",
+    "compass-mixins": "^v0.12",
     "mindy-sass": "*",
+    "jScrollPane": "jscrollpane#^2.0.23",
+    "jquery-mousewheel": "^3.1.13",
     "jquery.shapeshift": "^2.0.0",
-    "jquery-ui": "^1.12.1"
+    "jquery-ui": "^1.12.1",
+    "sly": "^1.6.1",
+    "bootstrap-sass": "^3.3.7",
+    "nouislider": "^9.2.0",
+    "lato-webfont": "^1.1.2",
+    "foundation-sites": "^6.3.1",
+    "jQuery.dotdotdot": "dotdotdot#^1.8.3",
+    "Waves": "waves#^0.7.5"
   },
   "devDependencies": {}
 }
