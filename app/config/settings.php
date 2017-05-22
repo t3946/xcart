@@ -16,7 +16,7 @@ return array_replace_recursive([
        'Order',
        'Shipping',
        'User'   => ['sessionTime' => 15552000],
-       'Sites'  => ['defaultStore' => 'PS'],
+       'Sites'  => ['defaultStore' => 'AR'],
        'Amazon',
        'Order',
        'Reports',
