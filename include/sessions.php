@@ -144,10 +144,9 @@ function x_session_register($varname, $default = "")
                 $session->add($varname, $GLOBALS[$varname]);
             }
         }
+
+        $GLOBALS[$varname] = $session->get($varname);
     }
-
-
-    $GLOBALS[$varname] = $session->get($varname);
 }
 
 #
