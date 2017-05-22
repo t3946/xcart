@@ -157,10 +157,12 @@ class XcartSession extends Session
     {
         $key = 'xid0';
 
-        /** @var \Modules\Sites\SitesModule $module */
-        if ($module = Xcart::app()->getModule('Sites')) {
-            if ($model = $module->getSite()) {
-                $key = 'xid' . $model->storefrontid;
+        if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
+            /** @var \Modules\Sites\SitesModule $module */
+            if ($module = Xcart::app()->getModule('Sites')) {
+                if ($model = $module->getSite()) {
+                    $key = 'xid' . $model->storefrontid;
+                }
             }
         }
 
