@@ -796,12 +796,12 @@ if (!defined("QUICK_START")) {
     #
     # Include webmaster mode
     #
-    @include_once($xcart_dir . "/include/webmaster.php");
-
-    x_session_register("editor_mode");
-    if ($config["General"]["enable_debug_console"] == "Y" || $editor_mode == 'editor') {
-        $smarty->debugging = true;
-    }
+//    @include_once($xcart_dir . "/include/webmaster.php");
+//
+//    x_session_register("editor_mode");
+//    if ($config["General"]["enable_debug_console"] == "Y" || $editor_mode == 'editor') {
+//        $smarty->debugging = true;
+//    }
 
     #
     # IP addresses

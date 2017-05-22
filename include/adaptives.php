@@ -142,4 +142,3 @@ if(defined('IS_ROBOT')) {
 
 # Save adaptives arrary to config array
 $config['Adaptives'] = $adaptives;
-?>
