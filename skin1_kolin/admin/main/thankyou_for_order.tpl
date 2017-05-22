@@ -35,6 +35,7 @@
             <td>Storefront:</td>
             <td>
                 <select class="site_storefront_select" name="storefront_template[]">
+                    <option value="">Select storefront</option>
                 {foreach from=$sites item=store}
                     <option value="{$store->storefrontid}" {if ($site.model->storefrontid == $store->storefrontid)}selected="selected"{/if}>
                         {$store->domain}
@@ -84,7 +85,9 @@
                .before($('table.default_template_config')
                    .clone()
                    .find('textarea').removeAttr('id').end()
-                   .find('.default_storefront').removeAttr('disabled').attr('name', 'storefront_template[]').find('option:first-child').text('Select storefront').val('').end().end()
+                   .find('.default_storefront').removeClass('default_storefront')
+                   .addClass('site_storefront_select').removeAttr('disabled').attr('name', 'storefront_template[]')
+                   .find('option:first-child').text('Select storefront').val('').end().end()
                    .removeClass('default_template_config')
                );
 
@@ -111,8 +114,15 @@
         });
 
         $('form[name=processform]').on('change', 'select.site_storefront_select', function(){
-            var $t = $('.site_storefront_select').not(this);
-            console.log($t.length);
+            var cur_s = $(this);
+            var cur_val = cur_s.find('option:selected').val();
+            $('.site_storefront_select').not(this).find('option:selected').each(function(){
+                if (cur_val == $(this).val()) {
+                    cur_s.val('');
+                    alert('Template already exists! Please select another storefront.');
+                }
+            });
+
         });
     })();
     {/literal}

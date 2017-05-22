@@ -30,6 +30,8 @@ if (!empty($_POST['template_submit'])) {
                         $m->save();
                     }
                     break;
+                case "":
+                    break;
                 default :
                     $params = [
                         'storefrontid' => $store,
