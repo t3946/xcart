@@ -10,8 +10,8 @@
     {if $batches}
     {foreach $batches as $batch}
         <tr class="{cycle ["", "TableSubHead"]}">
-            <td align="center"><a target="_blank" href="{url 'amazon:batch' id=$batch->batch_id}?filter[restocking_qty][from]=2">{$batch->batch_id}</a></td>
-            <td align="center">{$batch->created_at}</td>
+            <td align="center"><a target="_blank" href="{url 'amazon:batch' id=$batch->batch_id}?filter[restocking_qty][from]=2&filter[items_sold_last_1m_of_stock]=1">{$batch->batch_id}</a></td>
+            <td align="center"><a target="_blank" href="{$batch->link}">{$batch->created_at}</a></td>
             <td align="center">{$batch->user->login}</td>
             <td align="center">{$batch->getItemsCount()}</td>
             <td align="center">{$batch->getField('status')->toText()}</td>
