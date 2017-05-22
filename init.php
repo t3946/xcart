@@ -65,7 +65,9 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
 
 \Xcart\App\Main\Xcart::init(include $xcart_dir .'/app/config/settings.php');
 \Xcart\App\Main\Xcart::app()->beforeRun();
-
+//if (defined('AREA_TYPE') && AREA_TYPE == 'C' && \Xcart\App\Main\Xcart::app()->getIsWebMode()) {
+//    \Xcart\App\Main\Xcart::app()->request->session->getIsActive(); //@TODO: ������� ��� ������������� ������� ������
+//}
 #
 # Initialize logging
 #
@@ -645,10 +647,22 @@ if (!defined("QUICK_START")) {
         = $config["Appearance"]["date_format"] . " " . $config["Appearance"]["time_format"];
 }
 
+@include_once($xcart_dir . "/include/bots_before_sessions.php");
+
 #
 # Prepare session
 #
 @include_once $xcart_dir . "/include/sessions.php";
+
+if (x_session_save_to_db__do_not_use == 'Y') {
+//      func_print_r(x_session_save_to_db__do_not_use);
+
+    define('x_session_save_to_db__do_not_use', '');
+}
+else {
+    register_shutdown_function("x_session_save_to_db");
+}
+
 @include_once $xcart_dir . "/include/unallowed_request.php";
 
 if (!defined('QUICK_START')) {
@@ -1065,27 +1079,3 @@ $smarty->register_function('getSliderData', ['Xcart\Helpers\SliderData', 'getSli
 
 $smarty->assign('recaptcha_enable', $recaptcha_enable);
 $smarty->assign('key_recaptcha_public', $key_recaptcha_public);
-
-
-if (defined("SET_EXPIRE")) {
-    header("Expires: " . gmdate("D, d M Y H:i:s", SET_EXPIRE) . " GMT");
-}
-else {
-    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-#       header("Expires: ".gmdate("D, d M Y H:i:s", time() + 600)." GMT");
-}
-
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-
-if (defined("SET_EXPIRE")) {
-    header("Cache-Control: public");
-}
-elseif ($HTTPS) {
-    header("Cache-Control: private, must-revalidate");
-}
-else {
-    header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
-    header("Pragma: no-cache");
-}
-
-header("Vary: User-Agent");

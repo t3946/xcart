@@ -832,12 +832,10 @@ class QueryBuilder
 
     public function generateDeleteSql()
     {
-        $limitOffset = $this->buildLimitOffset();
-        return strtr('{delete}{from}{where}{limit_offset}', [
+        return strtr('{delete}{from}{where}', [
             '{delete}' => 'DELETE ' . $this->_queryOptions,
             '{from}' => $this->buildFrom(),
-            '{where}' => $this->buildWhere(),
-            '{limit_offset}' => $limitOffset,
+            '{where}' => $this->buildWhere()
         ]);
     }
 

@@ -40,18 +40,11 @@
                 delay: 500,
                 url : function(params)
                 {
-                    var url = '{url 'dashboard:search_suggestion'}';
                     var combobox = 0;
-                    var delimiter = '?';
                     if ($(this).data('combobox')) {
                         combobox = 1;
                     }
-
-                    if (url.indexOf(delimiter, 0) !== -1) {
-                        delimiter = '&';
-                    }
-
-                    return url + delimiter + 'from=' + $(this).data('ajax-from') + '&combobox=' + combobox;
+                    return '{url 'dashboard:search_suggestion'}' + '?from=' + $(this).data('ajax-from') + '&combobox=' + combobox;
                 },
                 processResults: function (data) {
                     if (data) {

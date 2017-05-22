@@ -42,8 +42,6 @@
 
     </tr>
 
-    {set $route =  $.request->getMatchRouting()}
-
     {foreach $orders as $order index=$index}
         <tr class="separator">
             <td colspan="12"></td>
@@ -160,11 +158,7 @@
         {foreach $order->groups as $group last=$last_group}
             <tr class="{$cycle_class} {if $group->getShippingModel()->important}important{/if}">
                 <td align="center" width="5" {if $group->manufacturerid->submit_to_operator == "through_distributor_website"}style="background: #fff2cc"{/if}>
-
-                    {set $query =  $.request->getQueryArray()}
-                    {set $query['search']['order']['distributor'][] = $group->manufacturer->manufacturerid }
-
-                    <a href="{$.app->router->url($route.name, $route.params, $query)}" target="_blank">
+                    <a href="{$order->getAdminUrl()}" target="_blank">
                         {$group->manufacturer->code}
                     </a>
                 </td>

@@ -15,8 +15,8 @@ return array_replace_recursive([
        'Product',
        'Order',
        'Shipping',
-       'User'   => ['sessionTime' => 15552000],
-       'Sites'  => ['defaultStore' => 'AR'],
+       'User',
+       'Sites' => ['defaultStore' => 'AR'],
        'Amazon',
        'Order',
        'Reports',
@@ -64,9 +64,6 @@ return array_replace_recursive([
                'CurrentSiteMiddleware' => [
                    'class' => '\\Modules\\Sites\\Middleware\\CurrentSiteMiddleware'
                ],
-                'BotsMiddleware' => [
-                   'class' => '\\Modules\\User\\Middleware\\BotsMiddleware'
-               ],
            ]
        ],
        'request' => [
@@ -74,7 +71,7 @@ return array_replace_recursive([
            'httpRequest' => [
                'class' => '\\Xcart\\App\\Request\\HttpRequest',
                'session' => [
-                   'class' => '\\Modules\\User\\Components\\XcartSession'
+                   'class' => '\\Xcart\\App\\Request\\XcartSession'
                ]
            ],
            'cliRequest' => [

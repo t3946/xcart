@@ -99,36 +99,31 @@ class ErrorHandler
         $basePath = realpath(Paths::get('base'));
 
         foreach ($traceRaw as $traceItem) {
-            if (!empty($traceItem['line'])){
-                $line = $traceItem['line'];
-                $startLine = $line - $closestLines;
-                $endLine = $line + $closestLines;
+            $line = $traceItem['line'];
+            $startLine = $line - $closestLines;
+            $endLine = $line + $closestLines;
+            if ($startLine < 0) {
+                $endLine += abs($startLine);
+                $startLine = 0;
+            }
+            $itemLines = [];
+            $fileName = $traceItem['file'];
 
-                if ($startLine < 0) {
-                    $endLine += abs($startLine);
-                    $startLine = 0;
-                }
-
-                $fileName = $traceItem['file'];
-
+            try {
                 $lines = @file($fileName);
-                $itemLines = array_slice(is_array($lines) ? $lines : [], $startLine, $endLine - $startLine, true);
-
-                $fileName = Text::removePrefix($basePath, $fileName);
-
-                $trace[] = [
-                    'fileName' => $fileName,
-                    'trace' => $traceItem,
-                    'startLine' => $startLine,
-                    'endLine' => $endLine,
-                    'itemLines' => $itemLines
-                ];
+                $itemLines = array_slice($lines, $startLine, $endLine - $startLine, true);
+            } catch (Exception $e) {
             }
-            else {
-                $trace[] = [
-                    'trace' => $traceItem,
-                ];
-            }
+
+            $fileName = Text::removePrefix($basePath, $fileName);
+
+            $trace[] = [
+                'fileName' => $fileName,
+                'trace' => $traceItem,
+                'startLine' => $startLine,
+                'endLine' => $endLine,
+                'itemLines' => $itemLines
+            ];
         }
 
         echo self::renderTemplate($template, [

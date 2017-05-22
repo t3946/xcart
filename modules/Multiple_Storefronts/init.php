@@ -95,14 +95,11 @@ if (in_array(AREA_TYPE, array('A', 'P'))) {
     }
 }
 
-if (empty($current_storefront) || AREA_TYPE == 'C') {
-
-    /** @var \Modules\Sites\SitesModule $module */
-    $module = \Xcart\App\Main\Xcart::app()->getModule('Sites');
-    $current_storefront = $module->getSite()->storefrontid;
+if (empty($current_storefront) && $current_storefront != 0 || AREA_TYPE == 'C') {
+    $current_storefront_info = func_get_storefront_info($_SERVER['HTTP_HOST'], 'D');
+} else {
+    $current_storefront_info = func_get_storefront_info($current_storefront, 'ID');
 }
-
-$current_storefront_info = func_get_storefront_info($current_storefront, 'ID');
 
 if (!empty($current_storefront) && $current_storefront > 0) {
     if (!empty($current_storefront_info["domain"])) {
@@ -122,16 +119,16 @@ if (!empty($current_storefront) && $current_storefront > 0) {
 $smarty->assign('site_domain', $site_domain);
 
 ###################################
-//if (AREA_TYPE == 'C' && defined('LOCAL_SF_ID'))
-//{
-//
-//    $current_storefront = LOCAL_SF_ID;
-//    $current_storefront_info = func_get_storefront_info($current_storefront, 'ID');
-//
-//    if (LOCAL_SF_ID === 0) {
-//        $site_domain = DEFAULT_SF_DOMAIN;
-//    }
-//}
+if (AREA_TYPE == 'C' && defined('LOCAL_SF_ID'))
+{
+
+    $current_storefront = LOCAL_SF_ID;
+    $current_storefront_info = func_get_storefront_info($current_storefront, 'ID');
+
+    if (LOCAL_SF_ID === 0) {
+        $site_domain = DEFAULT_SF_DOMAIN;
+    }
+}
 ###################################
 
 //if (empty($current_storefront_info)) {
