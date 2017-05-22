@@ -110,9 +110,9 @@
             return false;
         });
 
-        $('.site_storefront_select').change(function(){
+        $('form[name=processform]').on('change', 'select.site_storefront_select', function(){
             var $t = $('.site_storefront_select').not(this);
-            console.log($t);
+            console.log($t.length);
         });
     })();
     {/literal}
