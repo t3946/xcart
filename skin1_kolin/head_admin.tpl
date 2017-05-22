@@ -13,7 +13,9 @@
 
 	<td align="left" width="34%">
         {if $usertype ne "V"}
-		    <a style="padding-left: 35px;" href="{$catalogs.admin}/dashboard"><img src="{$ImagesDir}/cc_dashbord.png" alt="" /></a>
+		    <a style="padding-left: 35px;" href="{$xcartApp->router->url('dashboard:index')}">
+                <img src="{$ImagesDir}/cc_dashbord.png" alt="" />
+            </a>
         {/if}
 	</td>
 

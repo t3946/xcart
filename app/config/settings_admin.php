@@ -11,7 +11,7 @@ $config = array_replace_recursive([
           'errHandler' => false
       ],
       'router' => [
-          'pathRoutes' => 'base.config.routes_admin',
+//          'pathRoutes' => 'base.config.routes_admin',
       ],
     ],
     'autoloadComponents' => [

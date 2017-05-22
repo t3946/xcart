@@ -150,10 +150,11 @@ class Router
      *
      * @param string $routeName The name of the route.
      * @param array @params Associative array of parameters to replace placeholders with.
+     * @param array @query Associative array of parameters to insert in query string.
      * @return string The URL of the route with named parameters in place.
      * @throws Exception
      */
-    public function url($routeName, array $params = [])
+    public function url($routeName, array $params = [], array $query = [])
     {
         // Check if named route exists
         if (!isset($this->_namedRoutes[$routeName])) {
@@ -192,6 +193,21 @@ class Router
 
             if (strpos($this->_basePath, '?') === false) {
                 $url = '?' . $url;
+            }
+        }
+
+        if (!empty($query)){
+            if (strtolower($this->mode) == 'get' && $this->get_param) {
+                unset($query[$this->get_param]);
+            }
+
+            if ($query){
+                $delimiter = '?';
+                if (strpos($url, '?') !== false || strpos($this->_basePath, '?') !== false) {
+                    $delimiter = '&';
+                }
+
+                $url .= $delimiter . http_build_query($query);
             }
         }
 
