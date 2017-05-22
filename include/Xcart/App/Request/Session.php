@@ -6,6 +6,7 @@ use Countable;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Helpers\Creator;
 use SessionHandlerInterface;
+use Xcart\App\Main\Xcart;
 
 class Session implements ArrayAccess, Countable
 {
@@ -23,7 +24,7 @@ class Session implements ArrayAccess, Countable
 
     public function init()
     {
-        register_shutdown_function([$this, 'close']);
+        Xcart::app()->event->on('app:end', [$this, 'close']);
         $this->open();
     }
 
