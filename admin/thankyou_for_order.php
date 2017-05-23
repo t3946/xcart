@@ -76,7 +76,7 @@ if (!empty($_POST['template_submit'])) {
                             'comment' => 'Email subject line'
                         ], $params));
                     }
-                    $m->value = stripcslashes($_POST['thank_you_subject'][$key]);
+                    $m->value = stripslashes($_POST['thank_you_subject'][$key]);
                     $m->save();
 
                     $m = SiteConfigModel::objects()->filter(['name' => 'thank_you_message_body', 'storefrontid' => $store])->get();
@@ -90,7 +90,7 @@ if (!empty($_POST['template_submit'])) {
                             'comment' => 'Message body'
                             ]);
                     }
-                    $m->value = stripcslashes($_POST['thank_you_message_body'][$key]);
+                    $m->value = stripslashes($_POST['thank_you_message_body'][$key]);
                     $m->save();
 
                     $m = SiteConfigModel::objects()->filter(['name' => 'thank_you_amazon_subject', 'storefrontid' => $store])->get();
@@ -101,7 +101,7 @@ if (!empty($_POST['template_submit'])) {
                             'comment' => 'Email subject line for Amazon orders'
                         ], $params));
                     }
-                    $m->value = stripcslashes($_POST['thank_you_amazon_subject'][$key]);
+                    $m->value = stripslashes($_POST['thank_you_amazon_subject'][$key]);
                     $m->save();
 
                     $m = SiteConfigModel::objects()->filter(['name' => 'thank_you_message_body_amazon', 'storefrontid' => $store])->get();
@@ -115,7 +115,7 @@ if (!empty($_POST['template_submit'])) {
                             'comment' => 'Message body for Amazon orders'
                             ]);
                     }
-                    $m->value = stripcslashes($_POST['thank_you_message_body'][$key]);
+                    $m->value = stripslashes($_POST['thank_you_message_body_amazon'][$key]);
                     $m->save();
 
                     $edited_stores[] = $store;

@@ -101,4 +101,9 @@ class OrderModel extends AutoMetaModel
     {
         return $this->order_prefix . $this->orderid;
     }
+
+    public function isAmazon()
+    {
+        return !empty($this->amazonorderid);
+    }
 }
