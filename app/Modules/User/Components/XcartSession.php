@@ -13,6 +13,7 @@ class XcartSession extends Session
     public $fullUnpackGlobals = false;
     private $session_key;
     private $data = [];
+    private $unpacked = [];
     /**
      * @var \Modules\User\Models\SessionDataModel
      */
@@ -24,6 +25,7 @@ class XcartSession extends Session
 
         if ($this->registerGlobals) {
             $GLOBALS[ $key ] = $value;
+            $this->unpacked[ $key ] = $key;
         }
     }
 
@@ -34,11 +36,17 @@ class XcartSession extends Session
 
     public function get($key, $default = null)
     {
-        if ($this->registerGlobals && isset($GLOBALS[ $key ])) {
+        $value = $this->has($key) ? $this->data[ $key ] : $default;
+
+        if ($this->registerGlobals && isset($GLOBALS[ $key ]) && isset($this->unpacked[ $key ])) {
             return $GLOBALS[ $key ];
         }
+        else if ($this->registerGlobals) {
+            $GLOBALS[ $key ] = $value;
+            $this->unpacked[ $key ] = $key;
+        }
 
-        return $this->has($key) ? $this->data[ $key ] : $default;
+        return $value;
     }
 
     public function all()
@@ -48,16 +56,21 @@ class XcartSession extends Session
 
     public function close()
     {
+        $this->save();
+
+        if ($this->autoGc) {
+            $this->gc();
+        }
+    }
+
+    public function save()
+    {
         if ($this->getId()) {
             if ($this->registerGlobals) {
                 $this->collectFromGlobals();
             }
             $this->model->data = $this->data;
             $this->model->save();
-        }
-
-        if ($this->autoGc) {
-            $this->gc();
         }
     }
 
@@ -79,7 +92,7 @@ class XcartSession extends Session
     {
         if (is_array($this->data)) {
             foreach ($this->data as $key => $value) {
-                if (isset($GLOBALS[ $key ])) {
+                if (isset($GLOBALS[ $key ]) && isset($this->unpacked[ $key ] )) {
                     $this->data[ $key ] = $GLOBALS[ $key ];
                 }
             }
@@ -91,6 +104,7 @@ class XcartSession extends Session
         if (is_array($this->data)) {
             foreach ($this->data as $key => $value) {
                 $GLOBALS[ $key ] = $value;
+                $this->unpacked[ $key ] = $key;
             }
         }
     }
@@ -125,6 +139,7 @@ class XcartSession extends Session
                 $id = $this->genSessId();
                 $this->model = SessionDataModel::objects()->getOrCreate(['sessid' => $id]);
                 $this->data = [];
+                $this->unpacked = [];
             }
 
             $this->request->cookie->add($this->getSessionKey(), $id, $this->model->expiry);
@@ -198,6 +213,7 @@ class XcartSession extends Session
 
             if ($this->registerGlobals) {
                 unset($GLOBALS[ $key ]);
+                unset($this->unpacked[ $key ]);
             }
         }
     }
