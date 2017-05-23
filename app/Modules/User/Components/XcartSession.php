@@ -102,6 +102,8 @@ class XcartSession extends Session
     private function unpackToGlobals()
     {
         if (is_array($this->data)) {
+            $this->unpacked = [];
+
             foreach ($this->data as $key => $value) {
                 $GLOBALS[ $key ] = $value;
                 $this->unpacked[ $key ] = $key;
