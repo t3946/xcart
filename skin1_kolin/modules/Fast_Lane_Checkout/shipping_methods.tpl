@@ -503,7 +503,7 @@ Use my trucking account #
 		{/literal}
 	        {if $userinfo.s_country ne "US" && $cart.confirmation_of_responsibility ne "Y"}
 
-            {if $userinfo.s_country eq "CA"}
+            {if $userinfo.s_country eq "CA" && $v.m_country_code != 'CA'}
             {literal}
                 document.getElementById("continue_btn_able").style.display = 'none';
                 document.getElementById("continue_btn_disable").style.display = '';
@@ -533,8 +533,7 @@ Use my trucking account #
 {*  Select the shipping method: [end]  *}
 {include file="customer/main/dhl_ext_countries.tpl"}
 
-
-{if $disable_continue ne "Y" && $userinfo.s_country eq "CA"}
+{if $disable_continue ne "Y" && $userinfo.s_country eq "CA" && $v.m_country_code != 'CA'}
 
 <script type="text/javascript">
 //<![CDATA[
