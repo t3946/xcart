@@ -132,6 +132,10 @@ tinymce.init({
 
 {include file="admin/main/templates_order_related_messages.tpl"}
 
+{elseif $option eq "thankyou_for_order"}
+
+{include file="admin/main/thankyou_for_order.tpl"}
+
 {elseif $option eq "Attention_tag_options"}
 
 {include file="admin/main/attention_tag_options.tpl"}
