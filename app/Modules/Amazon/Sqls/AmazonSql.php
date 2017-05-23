@@ -29,7 +29,7 @@ cidev_get_amazon_price(p.productid) as price,
 cidev_get_minimum_amazon_price(p.productid) as min_fba_price,
 cidev_get_amazon_competitive_price_stat(p.productid, -60, 'AVG') as avg_comp_price,
 p.r_avail as r_avail,
-amazon.restocking_get_reorder_quantity(p.productid, :tau, :tau_m, :day_reorder, m.amazon_leadtime_to_ship, cidev_get_amazon_FBA_stock_total(p.productid) + cidev_get_FBA_amount_in_working_shipments(p.productid), 2, :assortment) as restocking_qty,
+amazon.restocking_get_reorder_quantity(p.productid, :tau, :tau_m, :day_reorder, m.amazon_leadtime_for_fba_loads, cidev_get_amazon_FBA_stock_total(p.productid) + cidev_get_FBA_amount_in_working_shipments(p.productid), 2, :assortment) as restocking_qty,
 amazon.restocking_get_average_daily_sales_amazon() as ads_a,
 amazon.restocking_get_average_daily_sales_xcart() as ads_x
 FROM xcart_products as p
