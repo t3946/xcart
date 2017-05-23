@@ -69,6 +69,7 @@ class SiteConfigModel extends Model
             'value' => [
                 'class' => TextField::className(),
                 'null' => false,
+                'default' => ''
             ],
             'defvalue' => [
                 'class' => TextField::className(),
