@@ -8,7 +8,7 @@ use Xcart\App\Request\Session;
 
 class XcartSession extends Session
 {
-    public $autoGc = false;
+    public $autoGc = true;
     public $registerGlobals = true;
     public $fullUnpackGlobals = false;
     private $session_key;
@@ -148,6 +148,7 @@ class XcartSession extends Session
 
             if ($this->registerGlobals) {
                 $GLOBALS['XCARTSESSID'] = $id;
+                $GLOBALS['XCART_SESSION_NAME'] = $this->getSessionKey();
                 $GLOBALS['XCART_SESSION_EXPIRY'] = $this->model->expiry;
                 define("XCART_SESSION_START", 1);
             }

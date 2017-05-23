@@ -184,7 +184,7 @@ function check_registerform_fields() {ldelim}
 -->
 </script>
 
-<form action="{$register_script_name}?{$smarty.server.QUERY_STRING|amp}" method="post" name="registerform" id="autofillform" onsubmit="javascript: check_registerform_fields(); return false;">
+<form action="{$register_script_name}?{$smarty.server.QUERY_STRING|amp}" method="post" name="registerform" id="autofillform" onsubmit="javascript: check_registerform_fields(); return false;" class="mobile-form2">
 {if $config.Security.use_https_login eq "Y"}
 <input type="hidden" name="{$XCARTSESSNAME}" value="{$XCARTSESSID}" />
 {/if}

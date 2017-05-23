@@ -108,7 +108,7 @@
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="firstname" name="firstname" size="32" maxlength="32" value="{$userinfo.firstname|replace:"&amp;#039;":"'"}" placeholder="{$lng.lbl_fill_in_examples_firstname}" onkeyup="cidev_check_field_name('firstname')" />
+<input required autocomplete="name" type="text" id="firstname" name="firstname" size="32" maxlength="32" value="{$userinfo.firstname|replace:"&amp;#039;":"'"}" placeholder="{$lng.lbl_fill_in_examples_firstname}" onkeyup="cidev_check_field_name('firstname')" />
 </td>
 {if $usertype eq "C"}
 <td id="firstname_verified" valign="top" nowrap="nowrap" {if $userinfo.firstname eq ""}style="display: none;"{/if}>
@@ -229,7 +229,7 @@
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="phone" name="phone" size="32" maxlength="32" value="{if $userinfo.phone eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.company_phone_2}{else}{$userinfo.phone}{/if}" placeholder="{$lng.lbl_fill_in_examples_phone}" onkeyup="cidev_check_field_phone('phone')" />
+<input required autocomplete="tel" type="text" id="phone" name="phone" size="32" maxlength="32" value="{if $userinfo.phone eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.company_phone_2}{else}{$userinfo.phone}{/if}" placeholder="{$lng.lbl_fill_in_examples_phone}" onkeyup="cidev_check_field_phone('phone')" />
 </td>
 
 {if $usertype eq "C"}
@@ -284,7 +284,7 @@
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="email" name="email" size="32" maxlength="128" value="{if $userinfo.email eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.users_department}{else}{$userinfo.email}{/if}" placeholder="{$lng.lbl_fill_in_examples_email}" {* onblur="javascript: $('#email_note').hide();" onfocus="javascript: cidev_showNote('email_note', this);" *} />
+<input required autocomplete="email" type="email" id="email" name="email" size="32" maxlength="128" value="{if $userinfo.email eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.users_department}{else}{$userinfo.email}{/if}" placeholder="{$lng.lbl_fill_in_examples_email}" {* onblur="javascript: $('#email_note').hide();" onfocus="javascript: cidev_showNote('email_note', this);" *} />
 </td>
 
 {if $usertype eq "C"}
