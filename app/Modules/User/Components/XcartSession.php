@@ -8,7 +8,7 @@ use Xcart\App\Request\Session;
 
 class XcartSession extends Session
 {
-    public $autoGc = false;
+    public $autoGc = true;
     public $registerGlobals = true;
     public $fullUnpackGlobals = false;
     private $session_key;
