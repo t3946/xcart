@@ -53,8 +53,12 @@ if (defined("AREA_TYPE")) {
     }
 }
 
-$smarty->assign("XCARTSESSNAME", $XCART_SESSION_NAME);
-$smarty->assign("XCARTSESSID", $XCARTSESSID);
+if (!Xcart\App\Cli\Cli::isCli()) {
+    x_session_start();
+
+    $smarty->assign("XCARTSESSNAME", $XCART_SESSION_NAME);
+    $smarty->assign("XCARTSESSID", $XCARTSESSID);
+}
 
 ####################################################################
 #   FUNCTIONS

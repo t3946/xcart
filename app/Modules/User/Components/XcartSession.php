@@ -148,6 +148,7 @@ class XcartSession extends Session
 
             if ($this->registerGlobals) {
                 $GLOBALS['XCARTSESSID'] = $id;
+                $GLOBALS['XCART_SESSION_NAME'] = $this->getSessionKey();
                 $GLOBALS['XCART_SESSION_EXPIRY'] = $this->model->expiry;
                 define("XCART_SESSION_START", 1);
             }
