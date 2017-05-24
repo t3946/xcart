@@ -148,6 +148,7 @@ class XcartSession extends Session
 
             if ($this->registerGlobals) {
                 $GLOBALS['XCARTSESSID'] = $id;
+                $GLOBALS[$this->getSessionKey()] = $id;
                 $GLOBALS['XCART_SESSION_NAME'] = $this->getSessionKey();
                 $GLOBALS['XCART_SESSION_EXPIRY'] = $this->model->expiry;
                 define("XCART_SESSION_START", 1);
@@ -168,14 +169,14 @@ class XcartSession extends Session
 
     private function getSessionKey()
     {
-        $key = 'xid0';
+        $key = 'xid';
 
         if (!$this->session_key) {
-            if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
+            if (defined('AREA_TYPE') && AREA_TYPE == 'C') {
                 /** @var \Modules\Sites\SitesModule $module */
                 if ($module = Xcart::app()->getModule('Sites')) {
                     if ($model = $module->getSite()) {
-                        $key = 'xid' . $model->storefrontid;
+                        $key .= $model->storefrontid;
                     }
                 }
             }

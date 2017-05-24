@@ -411,7 +411,7 @@ else {
     $xcart_https_host = $_SERVER["HTTP_HOST"];
 }
 
-$XCART_SESSION_NAME = "xid" . $cidev_tmp_storefrontid;
+//$XCART_SESSION_NAME = "xid" . $cidev_tmp_storefrontid;
 
 #
 # HTTP & HTTPS locations
