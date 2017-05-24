@@ -69,23 +69,25 @@ if ($storefrontsModels = SiteModel::objects()->all()){
                         $configMessage = SiteConfigModel::objects()->get(['name' => 'thank_you_message_body_amazon', 'storefrontid' => $orderModel->storefrontid]);
                     }
 
-                    $oMail = \Xcart\App\Main\Xcart::app()->mail;
-                    $oMail->init();
-                    $oMail->addReplaceRule('{{orderid}}', $orderModel->getOrderNumber());
-                    $oMail->addReplaceRule('{{c-fullname}}', $orderModel->firstname);
-                    $oMail->to = $orderModel->email;
-                    $oMail->from = (empty($configFrom)) ? $defaultFrom->value : $configFrom->value;
-                    $oMail->subject = (empty($configSubject)) ? $defaultSubject->value : $configSubject->value;
-                    $oMail->body = (empty($configMessage)) ? $defaultMessage->value : $configMessage->value;
-                    $oMail->sendEmail();
-                    $oMail->to = 'igor@s3stores.com';
-                    $oMail->sendEmail();
+                    if (!empty($defaultSubject->value) && !empty($defaultMessage->value)) {
+                        $oMail = \Xcart\App\Main\Xcart::app()->mail;
+                        $oMail->init();
+                        $oMail->addReplaceRule('{{orderid}}', $orderModel->getOrderNumber());
+                        $oMail->addReplaceRule('{{c-fullname}}', $orderModel->firstname);
+                        $oMail->to = $orderModel->email;
+                        $oMail->from = (empty($configFrom)) ? $defaultFrom->value : $configFrom->value;
+                        $oMail->subject = (empty($configSubject)) ? $defaultSubject->value : $configSubject->value;
+                        $oMail->body = (empty($configMessage)) ? $defaultMessage->value : $configMessage->value;
+                        $oMail->sendEmail();
+                        $oMail->to = 'igor@s3stores.com';
+                        $oMail->sendEmail();
 
-                    $orderModel->thankyou_for_order_email_sent = 'Y';
-                    $orderModel->save();
+                        $orderModel->thankyou_for_order_email_sent = 'Y';
+                        $orderModel->save();
 
-                    $log = "Thank you email sent by system <br />";
-                    func_log_order($orderModel->orderid, 'X', $log);
+                        $log = "Thank you email sent by system <br />";
+                        func_log_order($orderModel->orderid, 'X', $log);
+                    }
                 }
             }
         }
