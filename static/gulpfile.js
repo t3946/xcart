@@ -15,8 +15,8 @@ const browserify = require('gulp-browserify');
 const modernizr = require('modernizr');
 
 let config = require('./gulpconfig');
-let frontend = config.frontend;
-let backend = config.backend;
+let frontend = require('./config/gulp.frontend');
+let backend = require('./config/gulp.backend');
 
 function buildVendorsData(vendors) {
     let vendorsData = {};
@@ -90,7 +90,7 @@ gulp.task('frontend:css', ['frontend:scss'], function () {
         pipe = pipe.pipe(cssnano())
     }
 
-    return pipe.pipe(concat(config.name + '.css'))
+    return pipe.pipe(concat(frontend.config.name + '.css'))
         // .pipe(inlineimage(frontend.config.inline_image || {}))
         // .on('error',  function(err) {
         //     console.log('[Compilation Error]');
@@ -116,7 +116,7 @@ gulp.task('backend:css', ['backend:scss'], function () {
         pipe = pipe.pipe(cssnano())
     }
 
-    return pipe.pipe(concat(config.name + '.css'))
+    return pipe.pipe(concat(backend.config.name + '.css'))
         // .pipe(inlineimage(backend.config.inline_image || {}))
         // .on('error',  function(err) {
         //     console.log('[Compilation Error]');
@@ -184,7 +184,7 @@ gulp.task('frontend:js', ['frontend:jsx'], function() {
         pipe = pipe.pipe(uglify())
     }
     return pipe
-        .pipe(concat(config.name + '.js'))
+        .pipe(concat(frontend.config.name + '.js'))
         .pipe(gulp.dest(frontend.dst.js))
         .pipe(hashsum({filename: 'frontend/versions/js.yml', hash: 'md5'}))
         .pipe(livereload());
@@ -223,7 +223,7 @@ gulp.task('backend:js', ['backend:jsx'], function() {
     }
 
     return pipe
-        .pipe(concat(config.name + '.js'))
+        .pipe(concat(backend.config.name + '.js'))
         .pipe(gulp.dest(backend.dst.js))
         .pipe(hashsum({filename: 'backend/versions/js.yml', hash: 'md5'}))
         .pipe(livereload());
