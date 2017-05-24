@@ -53,8 +53,12 @@ if (defined("AREA_TYPE")) {
     }
 }
 
-$smarty->assign("XCARTSESSNAME", $XCART_SESSION_NAME);
-$smarty->assign("XCARTSESSID", $XCARTSESSID);
+if (!Xcart\App\Cli\Cli::isCli()) {
+    x_session_start();
+
+    $smarty->assign("XCARTSESSNAME", $XCART_SESSION_NAME);
+    $smarty->assign("XCARTSESSID", $XCARTSESSID);
+}
 
 ####################################################################
 #   FUNCTIONS
@@ -70,7 +74,10 @@ function x_session_start($sessid = '')
         $sessid = null;
     }
 
-    \Xcart\App\Main\Xcart::app()->request->session->start($sessid);
+
+    if (!\Xcart\App\Cli\Cli::isCli()) {
+        \Xcart\App\Main\Xcart::app()->request->session->start($sessid);
+    }
 }
 
 #
@@ -78,8 +85,11 @@ function x_session_start($sessid = '')
 #
 function x_session_id($sessid = "")
 {
-    $old = \Xcart\App\Main\Xcart::app()->request->session->all();
-    \Xcart\App\Main\Xcart::app()->request->session->start($sessid);
+
+    if (!\Xcart\App\Cli\Cli::isCli()) {
+        $old = \Xcart\App\Main\Xcart::app()->request->session->all();
+        \Xcart\App\Main\Xcart::app()->request->session->start($sessid);
+    }
 
     if ($sessid) {
         if ($old) {
@@ -93,7 +103,10 @@ function x_session_id($sessid = "")
         }
     }
 
-    return \Xcart\App\Main\Xcart::app()->request->session->getId();
+
+    if (!\Xcart\App\Cli\Cli::isCli()) {
+        return \Xcart\App\Main\Xcart::app()->request->session->getId();
+    }
 }
 
 #
@@ -119,23 +132,25 @@ function x_session_register($varname, $default = "")
         return;
     }
 
-    $session = \Xcart\App\Main\Xcart::app()->request->session;
+    if (!\Xcart\App\Cli\Cli::isCli()) {
+        $session = \Xcart\App\Main\Xcart::app()->request->session;
 
-    if (!$session->has($varname)) {
-        if (isset($GLOBALS[$varname]) && check_session_var($varname)) {
-            $session->add($varname, $GLOBALS[$varname]);
+        if (!$session->has($varname)) {
+            if (isset($GLOBALS[$varname]) && check_session_var($varname)) {
+                $session->add($varname, $GLOBALS[$varname]);
+            }
+            else {
+                $session->add($varname, $default);
+            }
         }
         else {
-            $session->add($varname, $default);
+            if (isset($GLOBALS[$varname]) && check_session_var($varname)) {
+                $session->add($varname, $GLOBALS[$varname]);
+            }
         }
-    }
-    else {
-        if (isset($GLOBALS[$varname]) && check_session_var($varname)) {
-            $session->add($varname, $GLOBALS[$varname]);
-        }
-    }
 
-    $GLOBALS[$varname] = $session->get($varname);
+        $GLOBALS[$varname] = $session->get($varname);
+    }
 }
 
 #
@@ -143,7 +158,9 @@ function x_session_register($varname, $default = "")
 #
 function x_session_save()
 {
-    \Xcart\App\Main\Xcart::app()->request->session->collectGlobals(func_get_args());
+    if (!\Xcart\App\Cli\Cli::isCli()) {
+        \Xcart\App\Main\Xcart::app()->request->session->collectGlobals(func_get_args());
+    }
 }
 
 function covex_log()
@@ -153,7 +170,9 @@ function covex_log()
 
 function x_session_save_to_db()
 {
-    \Xcart\App\Main\Xcart::app()->request->session->collectGlobals(func_get_args());
+    if (!\Xcart\App\Cli\Cli::isCli()) {
+        \Xcart\App\Main\Xcart::app()->request->session->collectGlobals(func_get_args());
+    }
 }
 
 #
@@ -161,7 +180,9 @@ function x_session_save_to_db()
 #
 function x_session_unregister($varname, $unset_global = false)
 {
-    \Xcart\App\Main\Xcart::app()->request->session->remove($varname);
+    if (!\Xcart\App\Cli\Cli::isCli()) {
+        \Xcart\App\Main\Xcart::app()->request->session->remove($varname);
+    }
 
     if ($unset_global) {
         func_unset($GLOBALS, $varname);
@@ -174,7 +195,9 @@ function x_session_unregister($varname, $unset_global = false)
 #
 function x_session_is_registered($varname)
 {
-    return \Xcart\App\Main\Xcart::app()->request->session->has($varname);
+    if (!\Xcart\App\Cli\Cli::isCli()) {
+        return \Xcart\App\Main\Xcart::app()->request->session->has($varname);
+    }
 }
 
 #
@@ -182,11 +205,16 @@ function x_session_is_registered($varname)
 #
 function x_session_change()
 {
-    \Xcart\App\Main\Xcart::app()->request->session->regenerateID(true);
+
+    if (!\Xcart\App\Cli\Cli::isCli()) {
+        \Xcart\App\Main\Xcart::app()->request->session->regenerateID(true);
+    }
 
     if (!defined("SESSION_ID_CHANGED")) {
         define("SESSION_ID_CHANGED", true);
     }
 
-    return \Xcart\App\Main\Xcart::app()->request->session->getId();
+    if (!\Xcart\App\Cli\Cli::isCli()) {
+        return \Xcart\App\Main\Xcart::app()->request->session->getId();
+    }
 }

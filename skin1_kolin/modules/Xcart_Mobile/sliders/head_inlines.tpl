@@ -270,7 +270,51 @@
         }
     }
 
+    .ErrorMessage {
+        color: darkred;
+    }
 
+    .ui-content .ui-navbar .ui-btn-text {
+        font-size: 1rem;
+    }
+
+    .ui-content .tabs-menu .ui-navbar .ui-btn-inner {
+
+    }
+    .ui-content .tabs-menu .ui-navbar .ui-btn-inner .ui-btn-text {
+        /*min-height: 3em;*/
+    }
+
+
+    .ui-mobile-viewport form[name=cartform] *,
+    .ui-mobile-viewport form[name=checkout_form] *,
+    .ui-mobile-viewport form[name=registerform] *,
+    .mobile-form * {
+        font-size: 1.2rem;
+        line-height: 1.2;
+        vertical-align: middle;
+    }
+
+    .ui-mobile-viewport form[name=cartform] .cidev_checkout_descr,
+    .ui-mobile-viewport form[name=checkout_form] .cidev_checkout_descr,
+    .ui-mobile-viewport form[name=registerform] .cidev_checkout_descr,
+    .mobile-form .cidev_checkout_descr {
+        color: #929292;
+    }
+
+    .ui-mobile-viewport form[name=cartform] tr td,
+    /*.ui-mobile-viewport form[name=checkout_form] tr td,*/
+    .ui-mobile-viewport form[name=registerform] tr td,
+    .mobile-form tr td {
+        padding: .2em 2px;
+    }
+
+    .ui-mobile-viewport form[name=cartform] tr td tr td,
+    /*.ui-mobile-viewport form[name=checkout_form] tr td tr td,*/
+    .ui-mobile-viewport form[name=registerform] tr td tr td,
+    .mobile-form tr td tr td {
+        padding: 0 2px;
+    }
 
     {/literal}
 </style>

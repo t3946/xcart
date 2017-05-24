@@ -35,7 +35,7 @@ if ($REQUEST_METHOD == 'POST') {
             $aResult['items'][] = [
                 'productid' => $oProduct->productid,
                 'clean_url' => $oProduct->getRelativeURL(),
-                'price' => $oProduct->getPrice(),
+                'price' => $oProduct->getFrontendPrice(),
                 'category' => $oProduct->getMainCategory()->category,
                 'brand' => $oBrand->brand,
                 'product' => $oProduct->product,

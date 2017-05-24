@@ -463,6 +463,10 @@ class HttpRequest extends Request
         $string = $this->getQueryString();
         parse_str($string, $data);
 
+        if ($this->from_get && !empty($data[$this->from_get])) {
+            unset($data[$this->from_get]);
+        }
+
         return $data;
     }
 
@@ -671,10 +675,18 @@ class HttpRequest extends Request
         Xcart::app()->end();
     }
 
+    public function getMatchRouting($url = null)
+    {
+        if (!$url) {
+            $url = $this->getUrl();
+        }
+
+        return Xcart::app()->router->match($url);
+    }
+
     public function refresh()
     {
-        $match = Xcart::app()->router->match($this->getUrl());
-        if (!empty($match)) {
+        if ($match = $this->getMatchRouting()) {
             $this->redirect($match['name'], $match['params']);
         }
 

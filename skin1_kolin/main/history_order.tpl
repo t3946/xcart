@@ -249,10 +249,14 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
             {* <input type="submit" value="Post message" id="post_message" /> *}
 
             <div style="margin-top:10px">
-                <input type="button" value="Post message" id="post_message1"
-                       onclick="javascript:
-                       {literal}if (!$('#notes').val().length) { alert('You try to send message with only subject! \nPlease explain your message in the message body field...'); return false;}{/literal}
-                       document.ordernotesformnewjs.submit();"/>
+
+                <button value="message" name="type" onclick="javascript:
+                {literal}if (!$('#notes').val().length) { alert('You try to send message with only subject! \nPlease explain your message in the message body field...'); return false;}{/literal}
+                        document.ordernotesformnewjs.submit();">
+                    Post message
+                </button>
+
+                <button value="empty" name="type">Post empty message</button>
             </div>
         </form>
     </div>

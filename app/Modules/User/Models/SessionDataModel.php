@@ -61,11 +61,9 @@ class SessionDataModel extends Model
 
     public function beforeSave($owner, $isNew)
     {
-        if ($isNew) {
-            /** @var \Modules\User\UserModule $module */
-            if ($module = Xcart::app()->getModule('User')) {
-                $owner->expiry = time() + $module->sessionTime;
-            }
+        /** @var \Modules\User\UserModule $module */
+        if ($module = Xcart::app()->getModule('User')) {
+            $owner->expiry = time() + $module->sessionTime;
         }
     }
 }

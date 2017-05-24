@@ -8,6 +8,7 @@ use Xcart\App\Module\Module;
 
 class SitesModule extends Module
 {
+
     public $defaultStore = 'AR';
     public $modelClass = 'Modules\Sites\Models\SiteModel';
 
@@ -55,7 +56,8 @@ class SitesModule extends Module
 
     public function initDefaultSite()
     {
-        if ($model = SiteModel::objects()->get(new QOr(['code' => $this->defaultStore])))
+        /** @var SiteModel $model */
+        if ($model = SiteModel::objects()->get(['code' => $this->defaultStore]))
         {
             $this->setSite($model);
         }

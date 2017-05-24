@@ -57,6 +57,9 @@ class AmazonStore extends BaseStore
             if (!empty($data['restocking_competitive_price'])) {
                 $filter[] = new QOr(['min_fba_price__lt' => new Expression(' avg_comp_price'), 'avg_comp_price' => -1]);
             }
+            if (!empty($data['items_sold_last_1m_of_stock'])) {
+                $filter['items_sold_last_1m_of_stock__gt'] = 0;
+            }
         }
         if (!empty($data['batch_id'])) {
             $filter['batch_id'] = $data['batch_id'];
@@ -93,11 +96,13 @@ class AmazonStore extends BaseStore
                 'sf.sfid',
                 'r_order' => new Expression("(restocking_qty * cost_to_us)"),
                 'r_qty_order' => new Expression("IF (restocking_qty >= 2, 0, 1)"),
+                'r_last1m_sale' => new Expression("IF (items_sold_last_1m_of_stock > 0 AND restocking_qty = 1, 0, 1)"),
                 '*'
             ])
                 ->order([
                     'manufacturer',
                     'r_qty_order',
+                    'r_last1m_sale',
                     '-r_order'
                 ]);
 

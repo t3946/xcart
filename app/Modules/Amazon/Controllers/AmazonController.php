@@ -24,6 +24,9 @@ class AmazonController extends PrototypeAdminController
                 if (!empty($_POST['batch_assortment'])) {
                     $model->assortment = $_POST['batch_assortment'];
                 }
+                if (!empty($_POST['external_link'])) {
+                    $model->link = $_POST['external_link'];
+                }
                 $model->save();
                 if ($model->batch_id) {
                     $this->autoRedirect($model->batch_id);

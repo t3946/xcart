@@ -45,6 +45,9 @@ if ( !defined('XCART_START') ) { header("Location: ../"); die("Access denied"); 
 #       supplier_feeds_enabled  ('Y'|'N')
 #       cost_to_us      DECIMAL
 #       price   DECIMAL    price corrected with min_amount quantity
+/**
+ * @deprecated
+ */
 function func_product_price($fproduct) {
 	global $sql_tbl, $xcart_dir, $active_modules, $config, $https_location, $http_location;
 

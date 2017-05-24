@@ -63,7 +63,13 @@ if ($cur_host == 'www.kolinskyartbrushes.com') {
     exit();
 }
 
-\Xcart\App\Main\Xcart::init(include $xcart_dir .'/app/config/settings.php');
+
+$settings_path = $xcart_dir .'/app/config/settings_admin.php';
+if (!defined('AREA_TYPE') || AREA_TYPE == 'C') {
+    $settings_path = $xcart_dir .'/app/config/settings.php';
+}
+
+\Xcart\App\Main\Xcart::init(include $settings_path);
 \Xcart\App\Main\Xcart::app()->beforeRun();
 
 #
@@ -162,7 +168,7 @@ else {
     $xcart_https_host = $_SERVER["HTTP_HOST"];
 }
 
-$XCART_SESSION_NAME = "xid" . $cidev_tmp_storefrontid;
+//$XCART_SESSION_NAME = "xid" . $cidev_tmp_storefrontid;
 
 #
 # HTTP & HTTPS locations
@@ -553,12 +559,12 @@ if (!defined("QUICK_START")) {
     #
     # Include webmaster mode
     #
-    @include_once($xcart_dir . "/include/webmaster.php");
-
-    x_session_register("editor_mode");
-    if ($config["General"]["enable_debug_console"] == "Y" || $editor_mode == 'editor') {
-        $smarty->debugging = true;
-    }
+//    @include_once($xcart_dir . "/include/webmaster.php");
+//
+//    x_session_register("editor_mode");
+//    if ($config["General"]["enable_debug_console"] == "Y" || $editor_mode == 'editor') {
+//        $smarty->debugging = true;
+//    }
 
     #
     # IP addresses
