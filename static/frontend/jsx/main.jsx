@@ -1,4 +1,5 @@
 import DepartmentMenu from "./components/DepartmentMenu";
+import 'modernizr';
 
 (function(){
     $('.search-form-container .search').on('keyup', function (e){
@@ -151,15 +152,6 @@ import DepartmentMenu from "./components/DepartmentMenu";
                 $container.append(data.content);
                 $parent.html(data.pager);
                 $('.page_count').html(data.page_count);
-
-                $('.lazyimg').lazyload({
-                    // effect : "fadeIn",
-                    // effect_speed: 800,
-                    load: function(elements_left, settings){
-                        $(this).removeClass('lazyimg');
-                    }
-                });
-
             }
         });
 
@@ -169,14 +161,6 @@ import DepartmentMenu from "./components/DepartmentMenu";
         $this.remove();
         $parent.append('<span class="'+classes+'"><span class="text">' + text_loading + '</span></span>');
 
-    });
-
-    $('.lazyimg').lazyload({
-        // effect : "fadeIn",
-        // effect_speed: 800,
-        load: function(elements_left, settings){
-            $(this).removeClass('lazyimg');
-        }
     });
 
     $(document).ready(function(){

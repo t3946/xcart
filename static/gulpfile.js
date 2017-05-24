@@ -12,7 +12,6 @@ const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const browserify = require('gulp-browserify');
 // const inlineimage = require('gulp-inline-image');
-const modernizr = require('modernizr');
 const webpackStream = require('webpack-stream');
 const webpack2 = require('webpack');
 
@@ -140,34 +139,25 @@ gulp.task('frontend:jsx', function() {
         .pipe(gulp.dest(frontend.dst.jsx));
 });
 
-gulp.task('frontend:modernizr', ['clear:frontend'], function (done) {
-
-    if (frontend.config.modernizr)
-    {
-        modernizr.build(frontend.config.modernizr, function(code) {
-            if (!fs.existsSync(frontend.dst.jsx)){
-                fs.mkdirSync(frontend.dst.jsx);
-            }
-
-            fs.writeFile(frontend.dst.jsx + '/modernizr.js', code, done);
-        });
-    }
-    else {
-        done();
-    }
-});
-
 gulp.task('frontend:js', ['frontend:jsx'], function() {
 // gulp.task('frontend:js', function() {
     let pipe = gulp.src(frontend.src.js);
-    //
-    // if (frontend.config && frontend.config.babel) {
-    //     pipe = pipe.pipe(babel(frontend.config.babel));
-    // }
 
-    if (frontend.config.compress) {
-        pipe = pipe.pipe(uglify())
-    }
+    // if (frontend.config.compress) {
+    //     pipe = pipe.pipe(uglify({
+    //         // sequences: true,
+    //         // properties: true,
+    //         // drop_debugger: true,
+    //         // dead_code: true,
+    //         // conditionals: true,
+    //         // booleans: true,
+    //         // unused: true,
+    //         // if_return: true,
+    //         // join_vars: true,
+    //         // drop_console: true,
+    //         warnings: true
+    //     }));
+    // }
     return pipe
         .pipe(concat(frontend.config.name + '.js'))
         .pipe(gulp.dest(frontend.dst.js))
@@ -258,12 +248,12 @@ gulp.task('backend:raw', function() {
 
 gulp.task('watch:frontend', ['build:frontend'], function() {
     livereload({ start: true });
+    const js_watch = frontend.src.js.concat(frontend.src.jsx);
 
     gulp.watch(frontend.src.raw, ['frontend:raw']);
     gulp.watch(frontend.src.scss, ['frontend:css']);
     gulp.watch(frontend.src.css, ['frontend:css']);
-    gulp.watch(frontend.src.jsx, ['frontend:jsx']);
-    gulp.watch(frontend.src.js, ['frontend:js']);
+    gulp.watch(js_watch, ['frontend:js']);
     gulp.watch(frontend.src.images, ['frontend:images']);
     gulp.watch(frontend.src.fonts, ['frontend:fonts']);
 });
@@ -301,9 +291,9 @@ gulp.task('clear', function() {
     );
 });
 
-gulp.task('build:frontend', ['clear:frontend', 'frontend:modernizr'], function(){
+gulp.task('build:frontend', ['clear:frontend'], function(){
     gulp.start(
-        'frontend:raw', 'frontend:css', 'frontend:jsx', 'frontend:js', 'frontend:images', 'frontend:fonts'
+        'frontend:raw', 'frontend:css', 'frontend:js', 'frontend:images', 'frontend:fonts'
     );
 });
 

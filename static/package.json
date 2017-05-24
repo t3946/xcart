@@ -26,7 +26,9 @@
     "gulp-rimraf": "^0.2.1",
     "gulp-sass": "^3.1.0",
     "gulp-uglify": "^2.1.0",
+    "json-loader": "^0.5.4",
     "modernizr": "^3.5.0",
+    "modernizr-loader": "^1.0.1",
     "path": "^0.12.7",
     "webpack": "^2.6.0",
     "webpack-stream": "^3.2.0"
