@@ -14,7 +14,6 @@ const browserify = require('gulp-browserify');
 // const inlineimage = require('gulp-inline-image');
 const modernizr = require('modernizr');
 
-let config = require('./gulpconfig');
 let frontend = require('./config/gulp.frontend');
 let backend = require('./config/gulp.backend');
 
