@@ -1,5 +1,8 @@
 const fs = require('fs');
 const imagemin = require('gulp-imagemin');
+const webpack = require('webpack');
+const path = require('path');
+
 
 var modulesDir = 'node_modules';
 
@@ -26,6 +29,65 @@ module.exports = {
         },
         inline_image: {
             baseDir: './frontend/css'
+        },
+        webpack: {
+            // devtool: 'source-map',
+            entry: {
+                app: './frontend/jsx/main.jsx'
+            },
+            output: {
+                path: path.resolve(__dirname, './frontend/temp/js'),
+                    filename: '[name]-bundle.js'
+            },
+            target: "web",
+            resolve: {
+                modules: [
+                    path.resolve(__dirname, './frontend/jsx'),
+                    'node_modules'
+                ],
+                extensions: ['.js', '.jsx', '.json']
+            },
+            module: {
+                rules: [
+                    {
+                        test: /\.(js|jsx)?$/,
+                        exclude: /(node_modules|bower_components)/,
+                        use: {
+                            loader: 'babel-loader',
+                            options: {
+                                presets: ['es2015'],
+                                // presets: ['env']
+                            }
+                        }
+                    }
+                ]
+            },
+            plugins: [
+                new webpack.optimize.UglifyJsPlugin({
+                    sourceMap: true,
+                    compress: {
+                        sequences: true,
+                        properties: true,
+                        drop_debugger: true,
+                        dead_code: true,
+                        conditionals: true,
+                        booleans: true,
+                        unused: true,
+                        if_return: true,
+                        join_vars: true,
+                        drop_console: true,
+                        warnings: true
+                    }
+                }),
+                new webpack.ProvidePlugin({
+                    'Promise': 'bluebird'
+                }),
+                new webpack.DefinePlugin({
+                    // 'process.env': {
+                    //     NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+                    // }
+                })
+            ]
         },
         imagemin: [
             imagemin.gifsicle({interlaced: true}),
@@ -330,6 +392,7 @@ module.exports = {
         ],
         js: [
             'frontend/js/**/*',
+            // 'frontend/temp/js/**/*.js'
             'frontend/temp/js/**/*'
         ],
         scss: [

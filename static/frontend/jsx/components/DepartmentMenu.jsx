@@ -1,4 +1,4 @@
-class DepartmentMenu
+export default class DepartmentMenu
 {
     constructor() {
         this.init();
@@ -105,5 +105,3 @@ class DepartmentMenu
         $(document).trigger('hide:dm');
     }
 }
-
-// export default new DepartmentMenu();

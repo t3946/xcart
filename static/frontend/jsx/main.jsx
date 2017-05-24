@@ -1,4 +1,4 @@
-// import DepartmentMenu from "components/DepartmentMenu";
+import DepartmentMenu from "./components/DepartmentMenu";
 
 (function(){
     $('.search-form-container .search').on('keyup', function (e){
@@ -19,7 +19,7 @@
         $(this).removeClass('active');
     });
 
-    // new DepartmentMenu();
+    new DepartmentMenu();
 
     $(document).on('show:dm', ()=> {
         $('.shadow').addClass('active');
