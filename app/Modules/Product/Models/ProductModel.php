@@ -196,31 +196,7 @@ class ProductModel extends AutoMetaModel
 
     public function isOutOfStock()
     {
-        if (!$this->forsale = 'N') {
-            return true;
-        }
-
-        if ($this->cost_to_us <= 0) {
-            return true;
-        }
-
-        if (!$this->avail) {
-            return true;
-        }
-
-        if ($this->avail < $this->min_amount) {
-            return true;
-        }
-
-        if ($this->cost_to_us >= $this->getPrice()) {
-            return true;
-        }
-
-        if ($this->eta_date_mm_dd_yyyy && time() < $this->eta_date_mm_dd_yyyy) {
-            return true;
-        }
-
-        return false;
+        return $this->isProductOutOfStock();
     }
 
     public function getAbsoluteUrl()
