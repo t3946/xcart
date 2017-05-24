@@ -637,7 +637,6 @@ if ($sExtraLog=='Y')
 	$additional_image_link."\t".
 	$product['productid']."\t".
 	$product['price']."\t".
-	$product['weight'].($product['weight'] > 0 ? " lb":"")."\t".
 	$product['shipping_​​weight'].($product['shipping_​​weight'] > 0 ? " lb":"")."\t".
 	date("Y-m-d", time()+(empty($config['Froogle']['froogle_expiration_date']) ? 0.5 : $config['Froogle']['froogle_expiration_date'])*86400)."\t".
 	$product['google_brand']."\t".
