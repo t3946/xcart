@@ -139,25 +139,27 @@ gulp.task('frontend:jsx', function() {
         .pipe(gulp.dest(frontend.dst.jsx));
 });
 
-gulp.task('frontend:js', ['frontend:jsx'], function() {
-// gulp.task('frontend:js', function() {
+let fjsinc_builded = false;
+gulp.task('frontend:js:includes', function(done){
+    if (!fjsinc_builded) {
+        let pipe = gulp.src(frontend.src.js_include);
+
+        if (frontend.config.compress) {
+            pipe = pipe.pipe(uglify(frontend.config.uglify));
+            fjsinc_builded = true;
+        }
+
+        return pipe
+            .pipe(concat(frontend.config.name + '.js'))
+            .pipe(gulp.dest(frontend.dst.jsx));
+    }
+
+    done();
+});
+
+gulp.task('frontend:js', ['frontend:js:includes','frontend:jsx'], function() {
     let pipe = gulp.src(frontend.src.js);
 
-    // if (frontend.config.compress) {
-    //     pipe = pipe.pipe(uglify({
-    //         // sequences: true,
-    //         // properties: true,
-    //         // drop_debugger: true,
-    //         // dead_code: true,
-    //         // conditionals: true,
-    //         // booleans: true,
-    //         // unused: true,
-    //         // if_return: true,
-    //         // join_vars: true,
-    //         // drop_console: true,
-    //         warnings: true
-    //     }));
-    // }
     return pipe
         .pipe(concat(frontend.config.name + '.js'))
         .pipe(gulp.dest(frontend.dst.js))

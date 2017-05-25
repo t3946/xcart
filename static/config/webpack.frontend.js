@@ -45,22 +45,22 @@ module.exports = {
         ]
     },
     plugins: [
-        // new webpack.optimize.UglifyJsPlugin({
-        //     sourceMap: true,
-        //     compress: {
-        //         sequences: true,
-        //         properties: true,
-        //         drop_debugger: true,
-        //         dead_code: true,
-        //         conditionals: true,
-        //         booleans: true,
-        //         unused: true,
-        //         if_return: true,
-        //         join_vars: true,
-        //         drop_console: true,
-        //         warnings: true
-        //     }
-        // }),
+        new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true,
+            compress: {
+                sequences: true,
+                properties: true,
+                drop_debugger: true,
+                dead_code: true,
+                conditionals: true,
+                booleans: true,
+                unused: true,
+                if_return: true,
+                join_vars: true,
+                drop_console: true,
+                warnings: true
+            }
+        }),
         new webpack.ProvidePlugin({
             'Promise': 'bluebird'
         }),

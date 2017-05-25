@@ -13,4 +13,17 @@ module.exports = {
         imagemin.optipng({optimizationLevel: 5}),
         imagemin.svgo({plugins: [{removeViewBox: true, removeComments: true, removeMetadata: true}]})
     ],
+    uglify: {
+        sequences: true,
+        properties: true,
+        drop_debugger: true,
+        dead_code: true,
+        conditionals: true,
+        booleans: true,
+        unused: true,
+        if_return: true,
+        join_vars: true,
+        drop_console: true,
+        warnings: true
+    }
 };

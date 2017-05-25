@@ -54,7 +54,7 @@ module.exports = {
     },
     vendors: {
         jquery: {
-            js: [
+            js_include: [
                 'bower_components/jquery/dist/jquery.min.js'
             ]
         },
@@ -70,22 +70,22 @@ module.exports = {
         //     ]
         // },
         jquery_jscrollpane: {
-            js: [
+            js_include: [
                 'bower_components/jScrollPane/script/jquery.jscrollpane.min.js'
             ]
         },
         jquery_mousewheel: {
-            js: [
+            js_include: [
                 'bower_components/jquery-mousewheel/jquery.mousewheel.min.js'
             ]
         },
         nouislider: {
-            js: [
+            js_include: [
                 'bower_components/nouislider/distribute/nouislider.min.js'
             ]
         },
         sly: {
-            js: [
+            js_include: [
                 'bower_components/sly/dist/sly.min.js'
             ]
         },
@@ -103,7 +103,7 @@ module.exports = {
             ]
         },
         waves: {
-            js: [
+            js_include: [
                 'bower_components/Waves/src/js/waves.js'
             ],
             scss: [
@@ -111,18 +111,18 @@ module.exports = {
             ]
         },
         jqlazy: {
-            js: [
+            js_include: [
                 'bower_components/jquery_lazyload/jquery.lazyload.js'
             ]
         },
 
         "what-input": {
-            js: [
+            js_include: [
                 'bower_components/what-input/dist/what-input.js'
             ]
         },
         foundation: {
-            js: [
+            js_include: [
                 // 'bower_components/foundation-sites/dist/js/foundation.js', //all
                 'bower_components/foundation-sites/dist/js/plugins/foundation.core.js',
                 'bower_components/foundation-sites/dist/js/plugins/foundation.offcanvas.js',
