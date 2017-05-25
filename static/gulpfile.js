@@ -150,8 +150,9 @@ gulp.task('frontend:js:includes', function(done){
         }
 
         return pipe
-            .pipe(concat(frontend.config.name + '.js'))
-            .pipe(gulp.dest(frontend.dst.jsx));
+            .pipe(concat('vendors.js'))
+            .pipe(gulp.dest(frontend.dst.js))
+            .pipe(hashsum({filename: 'frontend/versions/js.yml', hash: 'md5'}));
     }
 
     done();
