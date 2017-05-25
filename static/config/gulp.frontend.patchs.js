@@ -98,7 +98,7 @@ module.exports = {
             ]
         },
         dotdotdot: {
-            js: [
+            js_include: [
                 'bower_components/jQuery.dotdotdot/src/jquery.dotdotdot.js'
             ]
         },
