@@ -75,5 +75,6 @@ Thumbs.db
 node_modules
 bower_components
 /static/backend/temp/
+/static/temp/
 /static/frontend/temp/
 /skin1_kolin/pages/

@@ -12,8 +12,8 @@ var modules = fs.readdirSync(modulesDir).map(function (module) {
 module.exports = {
     dst: {
         js: 'frontend/dist/js',
-        jsx: 'frontend/temp/js',
-        scss: 'frontend/temp/css',
+        jsx: 'temp/frontend/js',
+        scss: 'temp/frontend/css',
         css: 'frontend/dist/css',
         images: 'frontend/dist/images',
         fonts: 'frontend/dist/fonts',
