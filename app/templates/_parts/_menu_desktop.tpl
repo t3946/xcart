@@ -14,7 +14,7 @@
                         {foreach $.getCategoryMenu() as $category index=$index}
                             <li class="category-menu-item" data-hover-toggle="top-csm-{$index}">
                                 <div class="item-container">
-                                    <a href="#">
+                                    <a href="{$category->getAbsoluteUrl()}">
                                         <div class="row">
                                             <div class="column large-2">
                                                 <div class="item-image">
