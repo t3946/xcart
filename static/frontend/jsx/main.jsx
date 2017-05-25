@@ -1,8 +1,10 @@
 import 'modernizr';
 import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";
+import LazyImageLoad from "./components/LazyImageLoad";
 
 (function(){
+    let lazy = new LazyImageLoad('.lazyimg');
     new DepartmentMenu();
     new DottedText('.must-show-less');
 
@@ -103,6 +105,7 @@ import DottedText from "./components/DottedText";
                 $('.page_count').html(data.page_count);
 
                 Waves.attach('.button');
+                lazy.each();
             }
         });
 
