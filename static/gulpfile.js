@@ -14,6 +14,7 @@ const browserify = require('gulp-browserify');
 // const inlineimage = require('gulp-inline-image');
 const webpackStream = require('webpack-stream');
 const webpack2 = require('webpack');
+const pump = require('pump');
 
 let frontend = require('./config/gulp.frontend');
 let backend = require('./config/gulp.backend');
@@ -131,12 +132,14 @@ gulp.task('backend:css', ['backend:scss'], function () {
         .pipe(livereload());
 });
 
-gulp.task('frontend:jsx', function() {
-    let pipe = gulp.src(frontend.src.jsx);
-
-    return pipe
-        .pipe(webpackStream(frontend.config.webpack, webpack2))
-        .pipe(gulp.dest(frontend.dst.jsx));
+gulp.task('frontend:jsx', function(done) {
+    pump([
+            gulp.src(frontend.src.jsx),
+            webpackStream(frontend.config.webpack, webpack2),
+            gulp.dest(frontend.dst.jsx)
+        ],
+        done
+    );
 });
 
 let fjsinc_builded = false;

@@ -11,6 +11,7 @@
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "babelify": "^7.3.0",
+    "bluebird": "^3.5.0",
     "browserify": "^14.3.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
@@ -30,6 +31,7 @@
     "modernizr": "^3.5.0",
     "modernizr-loader": "^1.0.1",
     "path": "^0.12.7",
+    "pump": "^1.0.2",
     "webpack": "^2.6.0",
     "webpack-stream": "^3.2.0"
   }
