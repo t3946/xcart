@@ -32,7 +32,7 @@ module.exports = {
         js: [
             'frontend/js/**/*',
             // 'frontend/temp/js/**/*.js'
-            'frontend/temp/js/**/*'
+            'temp/frontend/js/**/*'
         ],
         scss: [
             'frontend/sass/**/*.scss'
@@ -42,7 +42,7 @@ module.exports = {
         ],
         css: [
             'frontend/css/*',
-            'frontend/temp/css/**/*'
+            'temp/frontend/css/**/*'
         ],
         images: [
             'frontend/images/**/*.*'

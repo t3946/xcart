@@ -41,7 +41,7 @@ module.exports = {
         ],
         js: [
             'backend/js/**/*',
-            'backend/temp/js/**/*',
+            'temp/backend/js/**/*',
         ],
         scss: [
             'backend/scss/**/*.scss'
@@ -51,7 +51,7 @@ module.exports = {
         ],
         css: [
             'backend/css/*',
-            'backend/temp/css/**/*'
+            'temp/backend/css/**/*'
         ],
         images: [
             'backend/images/**/*.*'
