@@ -187,6 +187,10 @@ class TreeQuerySet extends QuerySet
      */
     public function all()
     {
+        if ($this->treeKey) {
+            $this->asArray(true);
+        }
+
         $data = parent::all();
 
         return $this->treeKey ? $this->toHierarchy($data) : $data;

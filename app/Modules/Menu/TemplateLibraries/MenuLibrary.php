@@ -177,85 +177,49 @@ class MenuLibrary extends TemplateLibrary
 
     /**
      * @kind accessorFunction
-     * @name getRandomSubmenu
+     * @name getDepartmentSubmenu
      * @return array
      */
-    public static function getRandomSubmenu($has_banner = false)
+    public static function getDepartmentSubmenu(CategoryModel $category ,$has_banner = false)
     {
-        $lvl3 = [
-            'Brushes by Medium or Technique',
-            'Brushes by Hair or Fiber',
-            'Brushes by Name or Shape',
-            'Scholastic Brushes',
-            'Scholastic Brushes BlahBlahBlah',
-        ];
+        $collection = $category->getSubcategories(false, 2);
 
-        $lvl4 = [
-            'Acrylic and Oil Brushes',
-            'Brush Techniques Demonstration',
-            'Paper',
-            'Ceramic and Glazing Brushes',
-            'Decorative and Miniature Brushes',
-            'Encaustic Brushes',
-            'Faux Finishing Brushes and Tools',
-            'Gilding Brushes',
-            'Lettering Brushes',
-            'Multi-Purpose and Utility Brushes',
-            'Mural and Fresco Brushes',
-            'Oriental and Sumi Brushes',
-            'Paint Rollers',
-            'Painting and Palette Knives',
-            'Stencil Brushes',
-            'Striping Brushes',
-            'Varnish and Gesso Brushes',
-            'Watercolor Brushes',
-            'Badger Brushes',
-            'Bristle Brushes',
-            'Sable/Kolinsky Brushes',
-            'Squirrel Brushes',
-            'Synthetic Brushes',
-            'Angular',
-            'Bright',
-            'Fan',
-            'Filbert',
-            'Flat',
-            'Hake',
-            'Highliner',
-            'Mop',
-            'Mottler',
-            'One Stroke',
-            'Oval Wash',
-            'Black Bristle',
-            'Camel/Pony',
-            'Colored Synthetic',
-            'Foam and Sponge Brushes',
-            'Golden Synthetic',
-            'Scholastic Sable',
-            'White Bristle',
-            'White Synthetic',
-            'Brushes',
-        ];
+        // Trees mapped
+        $items = [];
+        $trees = [];
+        if (count($collection) > 0) {
+            // Node Stack. Used to help building the hierarchy
+            $stack = [];
+            foreach ($collection as $key => $item) {
+                $items[$key]['name'] = $item->category;
+                $items[$key]['level'] = $item->level;
+                $items[$key]['link'] = $item->getAbsoluteUrl();
+                $items[$key]['items'] = [];
 
-        $menu = [];
-
-        $cnt1 = rand(0, 10);
-        for ($i = 0; $i < $cnt1; $i++) {
-            $name = array_rand($lvl3);
-            $menu[ $i ] = [
-                'name' => $lvl3[ $name ],
-                'link' => '#',
-                'items' => [],
-            ];
-
-            $cnt2 = rand(0, 20);
-            for ($x = 0; $x < $cnt2; $x++) {
-                $name = array_rand($lvl4);
-                $menu[ $i ]['items'][] = [
-                    'name' => $lvl4[ $name ],
-                    'link' => '#',
-                ];
+                // Number of stack items
+                $l = count($stack);
+                // Check if we're dealing with different levels
+                while ($l > 0 && $stack[$l - 1]['level'] >= $items[$key]['level']) {
+                    array_pop($stack);
+                    --$l;
+                }
+                // Stack is empty (we are inspecting the root)
+                if ($l == 0) {
+                    // Assigning the root node
+                    $i = count($trees);
+                    $trees[$i] = $items[$key];
+                    $stack[] = &$trees[$i];
+                } else {
+                    // Add node to parent
+                    $i = count($stack[$l - 1]['items']);
+                    $stack[$l - 1]['items'][$i] = $items[$key];
+                    $stack[] = &$stack[$l - 1]['items'][$i];
+                }
             }
         }
+
+        $menu = $trees;
+
 
         ///// MENU BALANCE BASE CODE
 
@@ -314,4 +278,6 @@ class MenuLibrary extends TemplateLibrary
 
         return ['menu' => $menu, 'columns' => ceil($points / self::MAX_POINTS_IN_COLUMN)];
     }
+
+
 }

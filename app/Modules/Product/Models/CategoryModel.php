@@ -86,12 +86,7 @@ class CategoryModel extends AutoMetaTreeModel
         return false;
     }
 
-    public function getThisObjects()
-    {
-        return static::objects($this);
-    }
-
-    public function getSubcategories($withProductCount = true, $level = 1, $cache = true)
+    public function getSubcategories($withProductCount = true, $level = 1, $tree = false, $cache = true)
     {
         $qs = static::objects()
                     ->descendants(false, $level)
@@ -121,9 +116,13 @@ class CategoryModel extends AutoMetaTreeModel
             ]);
         }
 
+        if ($tree) {
+            $qs->asTree();
+        }
 
         if ($cache) {
             $key = $qs->allSql();
+            $key .= ($tree) ? 'tree':'';
 
             if ($sub_cat = Xcart::app()->cache->get($key)) {
                 return $sub_cat;
@@ -133,8 +132,7 @@ class CategoryModel extends AutoMetaTreeModel
 
             return $sub_cat;
         }
-        else {
-            return $qs->all();
-        }
+
+        return $qs->all();
     }
 }

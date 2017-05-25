@@ -86,7 +86,7 @@ class ErrorHandler
         }
     }
 
-    public function renderException(Exception $exception, $code)
+    public function renderException($exception, $code)
     {
         $template = $this->errorTemplate;
         if ($this->debug) {

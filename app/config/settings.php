@@ -33,11 +33,11 @@ return array_replace_recursive([
                ]
            ]
        ],
-//       'errorHandler' => [
-//           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-//           'debug' => true,
-//           'errHandler' => false
-//       ],
+       'errorHandler' => [
+           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
+           'debug' => true,
+           'errHandler' => true
+       ],
        'event' => [
            'class' => '\\Xcart\\App\\Event\\EventManager',
            'events' => include dirname(__FILE__) . DIRECTORY_SEPARATOR .  'events.php'
@@ -122,6 +122,6 @@ return array_replace_recursive([
 //       ],
    ],
    'autoloadComponents' => [
-//       'errorHandler'
+       'errorHandler'
    ]
 ],  (is_file($local_config)) ? include $local_config : []);

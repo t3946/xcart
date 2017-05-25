@@ -99,7 +99,7 @@
                                 {*{include "demo/blocks/_cart.tpl"}*}
                             </div>
                         </div>
-                        {include "demo/blocks/_menu_desktop.tpl"}
+                        {include "_parts/_menu_desktop.tpl"}
                     </section>
 
                 </div>
