@@ -1,1 +1,1 @@
-<input type="text" id="s_zipcode" name="s_zipcode" size="27" maxlength="32" value="{$show_zip}" onkeyup="cidev_check_address()" onchange="{* cidev_check_address(); *} check_zip_code_ship()" autocomplete="off" />
+<input required autocomplete="shipping postal-code" type="text" id="s_zipcode" name="s_zipcode" size="27" maxlength="32" value="{$show_zip}" onkeyup="cidev_check_address()" onchange="{* cidev_check_address(); *} check_zip_code_ship()" />

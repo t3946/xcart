@@ -129,10 +129,15 @@ class DashboardFilter extends Model
         }
     }
 
-    public function getSearchStorage()
+    public function getSearchStorage(array $form_data = [])
     {
         if (!$this->s_store) {
-            $this->s_store = new OrderSearchStore($this->form_data, $this);
+            if (!empty($form_data)) {
+                $this->s_store = new OrderSearchStore(array_merge_recursive($this->form_data, $form_data));
+            }
+            else {
+                $this->s_store = new OrderSearchStore($this->form_data, $this);
+            }
         }
 
         return $this->s_store;

@@ -12,22 +12,25 @@ defined('XCART_EXT_ENV') ?: define('XCART_EXT_ENV', 1);
 
 require "./auth.php";
 
+use \Xcart\App\Main\Xcart;
+
 /**
  * Change storefront
  */
 if (!empty($_POST['cur_sf']) && $_POST['mode'] = 'change_storefront') {
-    $current_storefront = intval( $_POST['cur_sf']);
-    x_session_save('current_storefront');
-    x_session_save_to_db();
+//    $current_storefront = intval($_POST['cur_sf']);
+    Xcart::app()->request->session->add('current_storefront', intval( $_POST['cur_sf']));
+//    Xcart::app()->request->session->close();
     func_header_location($_SERVER['REQUEST_URI']);
 }
 
-use \Xcart\App\Main\Xcart;
-
 require $xcart_dir."/include/security.php";
 
-$configPath = $xcart_dir .'/app/config/settings_admin.php';
-$config = include $configPath;
+//$configPath = $xcart_dir .'/app/config/settings_admin.php';
+//$config = include $configPath;
+//
+//Xcart::init($config);
 
-Xcart::init($config);
-Xcart::app()->run();
+$smarty->assign('xcartApp', Xcart::app());
+//Xcart::app()->run();
+Xcart::app()->handleRequest();

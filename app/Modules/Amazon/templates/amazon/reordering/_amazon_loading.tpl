@@ -3,14 +3,23 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
-                    <label for="o_cost_to_us">Assortment:</label>
+                    <label for="o_batch_assortment">Assortment:</label>
                 </div>
 
                 <div class="columns large-6">
-                    <select name="batch_assortment">
+                    <select id="o_batch_assortment" name="batch_assortment">
                         <option value="Y">Y</option>
                         <option value="N">N</option>
                     </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="o_external_link">Teamwork task link:</label>
+                </div>
+
+                <div class="columns large-6">
+                    <input style="width:100%" id="o_external_link" name="external_link" type="text"/>
                 </div>
             </div>
         </li>

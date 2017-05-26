@@ -41,6 +41,11 @@ class AmazonReorderBatchModel extends Model
                 'class' => TextField::className(),
                 'default' => 'Y'
             ],
+            'link' => [
+                'class' => TextField::className(),
+                'default' => null,
+                'null' => true
+            ],
             'user' => [
                 'field' => 'user_id',
                 'class' => ForeignField::className(),

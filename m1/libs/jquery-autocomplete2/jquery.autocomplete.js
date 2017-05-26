@@ -66,7 +66,8 @@ $.Autocompleter = function(input, options) {
 	};
 
 	// Create $ object for input element
-	var $input = $(input).attr("autocomplete", "off").addClass(options.inputClass);
+	// var $input = $(input).attr("autocomplete", "off").addClass(options.inputClass);
+	var $input = $(input).addClass(options.inputClass);
 
 	var timeout;
 	var previousValue = "";

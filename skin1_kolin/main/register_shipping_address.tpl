@@ -593,7 +593,7 @@ return true; ///////////////////////////////////
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="s_firstname" name="s_firstname" size="32" maxlength="32" value="{$userinfo.s_firstname|replace:"&amp;#039;":"'"}" placeholder="{$lng.lbl_fill_in_examples_firstname}" onkeyup="cidev_check_field_name('s_firstname')" />
+<input required autocomplete="shipping name" type="text" id="s_firstname" name="s_firstname" size="32" maxlength="32" value="{$userinfo.s_firstname|replace:"&amp;#039;":"'"}" placeholder="{$lng.lbl_fill_in_examples_firstname}" onkeyup="cidev_check_field_name('s_firstname')" />
 </td>
 
 {if $usertype eq "C"}
@@ -654,7 +654,7 @@ return true; ///////////////////////////////////
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="s_address" name="s_address" size="32" maxlength="64" value="{if $userinfo.s_address eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_address}{else}{$userinfo.s_address}{/if}" placeholder="{$lng.lbl_fill_in_examples_address}" onkeyup="cidev_check_field_address('s_address')" />
+<input required autocomplete="shipping street-address" type="text" id="s_address" name="s_address" size="32" maxlength="64" value="{if $userinfo.s_address eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_address}{else}{$userinfo.s_address}{/if}" placeholder="{$lng.lbl_fill_in_examples_address}" onkeyup="cidev_check_field_address('s_address')" />
 </td>
 
 {if $usertype eq "C"}
@@ -684,7 +684,7 @@ return true; ///////////////////////////////////
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="s_address_2" name="s_address_2" size="32" maxlength="64" value="{$userinfo.s_address_2}" placeholder="{$lng.lbl_fill_in_examples_address2}" onkeyup="cidev_check_field_address('s_address_2')" />
+<input autocomplete="shipping address-line2" type="text" id="s_address_2" name="s_address_2" size="32" maxlength="64" value="{$userinfo.s_address_2}" placeholder="{$lng.lbl_fill_in_examples_address2}" onkeyup="cidev_check_field_address('s_address_2')" />
 </td>
 
 {if $usertype eq "C"}
@@ -729,9 +729,8 @@ return true; ///////////////////////////////////
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="s_countryname" name="s_countryname" size="32" maxlength="64" value="{if $geo_litecity_location.country ne "" && $userinfo.s_countryname eq ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{if $countries[country_idx].country ne ""}{$countries[country_idx].country|amp}{assign var="cidev_is_country" value="Y"}{/if}{/if}{/section}{else}{if $userinfo.s_countryname ne ""}{$userinfo.s_countryname}{assign var="cidev_is_country" value="Y"}{/if}{/if}" 
-onkeyup="cidev_check_country_usa('s_countryname'); cidev_check_field_country('s_countryname'); cidev_check_zip();"  onchange="cidev_check_field_country('s_countryname'); cidev_check_zip();"
-autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{$countries[country_idx].country|amp}{/if}{/section}{/if}" />
+<input required autocomplete="shipping country" type="text" id="s_countryname" name="s_countryname" size="32" maxlength="64" value="{if $geo_litecity_location.country ne "" && $userinfo.s_countryname eq ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{if $countries[country_idx].country ne ""}{$countries[country_idx].country|amp}{assign var="cidev_is_country" value="Y"}{/if}{/if}{/section}{else}{if $userinfo.s_countryname ne ""}{$userinfo.s_countryname}{assign var="cidev_is_country" value="Y"}{/if}{/if}"
+onkeyup="cidev_check_country_usa('s_countryname'); cidev_check_field_country('s_countryname'); cidev_check_zip();"  onchange="cidev_check_field_country('s_countryname'); cidev_check_zip();" placeholder="{if $geo_litecity_location.country ne ""}{section name=country_idx loop=$countries}{if $geo_litecity_location.country eq $countries[country_idx].country_code}{$countries[country_idx].country|amp}{/if}{/section}{/if}" />
 </td>
 
 {if $usertype eq "C"}
@@ -789,7 +788,7 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="s_zipcode" name="s_zipcode" size="32" maxlength="32" value="{if $userinfo.s_zipcode eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_zipcode}{else}{if $userinfo.s_zipcode ne ""}{$userinfo.s_zipcode}{/if}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_zipcode'); cidev_check_address();" onchange="cidev_new_check_zip_code(); check_zip_code_ship('s_zipcode', 's_countryname');" {/if} autocomplete="off" placeholder="{if $geo_litecity_location.postalCode ne ""}{$geo_litecity_location.postalCode}{else}{$lng.lbl_fill_in_examples_zip}{/if}" />
+<input required autocomplete="shipping postal-code" type="text" id="s_zipcode" name="s_zipcode" size="32" maxlength="32" value="{if $userinfo.s_zipcode eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_zipcode}{else}{if $userinfo.s_zipcode ne ""}{$userinfo.s_zipcode}{/if}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_zipcode'); cidev_check_address();" onchange="cidev_new_check_zip_code(); check_zip_code_ship('s_zipcode', 's_countryname');" {/if} placeholder="{if $geo_litecity_location.postalCode ne ""}{$geo_litecity_location.postalCode}{else}{$lng.lbl_fill_in_examples_zip}{/if}" />
 </td>
 {if $usertype eq "C"}
 <td id="s_zipcode_verified" valign="top" nowrap="nowrap" style="display: none;">
@@ -827,10 +826,9 @@ autocomplete="off" placeholder="{if $geo_litecity_location.country ne ""}{sectio
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="s_statename" name="s_statename" size="32" maxlength="64" 
+<input required autocomplete="shipping region" type="text" id="s_statename" name="s_statename" size="32" maxlength="64"
 value="{if $userinfo.s_statename ne ""}{$userinfo.s_statename}{/if}"
-onkeyup="cidev_check_field_country('s_statename'); cidev_check_zip(); cidev_check_verified_image_for_field('s_zipcode');" 
-autocomplete="off" 
+onkeyup="cidev_check_field_country('s_statename'); cidev_check_zip(); cidev_check_verified_image_for_field('s_zipcode');"
 placeholder="
 {if $geo_litecity_location.region ne ""}
 {section name=state_idx loop=$states}
@@ -909,7 +907,7 @@ placeholder="
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td valign="top" nowrap="nowrap">
-<input type="text" id="s_city" name="s_city" size="32" maxlength="64" value="{if $userinfo.s_city eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_city}{else}{if $userinfo.s_city ne ""}{$userinfo.s_city}{/if}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_city'); cidev_check_zip(); cidev_check_verified_image_for_field('s_zipcode');" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
+<input required autocomplete="shipping locality" type="text" id="s_city" name="s_city" size="32" maxlength="64" value="{if $userinfo.s_city eq "" && ($new_login_type eq "P" || $new_login_type eq "A") && $main eq "user_add"}{$config.Company.location_city}{else}{if $userinfo.s_city ne ""}{$userinfo.s_city}{/if}{/if}" {if $usertype ne "P" && $usertype ne "A"} onkeyup="cidev_check_field('s_city'); cidev_check_zip(); cidev_check_verified_image_for_field('s_zipcode');" {/if} placeholder="{if $geo_litecity_location.city ne ""}{$geo_litecity_location.city}{else}{$lng.lbl_fill_in_examples_city}{/if}" />
 </td>
 {if $usertype eq "C"}
 <td id="s_city_verified" valign="top" nowrap="nowrap" style="display: none;">

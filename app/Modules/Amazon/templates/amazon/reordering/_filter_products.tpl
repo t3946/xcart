@@ -53,6 +53,17 @@
     <li>
         <div class="row">
             <div class="columns large-4">
+                <label for="o_restocking_competitive_price">Items sold last 1m of stock:</label>
+            </div>
+
+            <div class="columns large-6">
+                <input type="checkbox" name="filter[items_sold_last_1m_of_stock]" id="o_items_sold_last_1m_of_stock" {if $filter_data.items_sold_last_1m_of_stock}checked="checked"{/if}">
+            </div>
+        </div>
+    </li>
+    <li>
+        <div class="row">
+            <div class="columns large-4">
                 <input type="submit" value="Filter">
                 <input type="submit" name="filter[reset]" value="Reset">
             </div>

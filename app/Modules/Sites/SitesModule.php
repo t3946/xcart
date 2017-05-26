@@ -12,7 +12,7 @@ class SitesModule extends Module
     public $modelClass = 'Modules\Sites\Models\SiteModel';
 
     /**
-     * @var \Modules\Sites\Models\Site
+     * @var \Modules\Sites\Models\SiteModel
      */
     private $_site;
 
@@ -21,6 +21,10 @@ class SitesModule extends Module
         $this->_site = $model;
     }
 
+    /**
+     * @return \Modules\Sites\Models\SiteModel
+     * @throws \Exception
+     */
     public function getSite()
     {
         if (!$this->_site) {
@@ -32,7 +36,8 @@ class SitesModule extends Module
 
     public function initDefaultSite()
     {
-        if ($model = SiteModel::objects()->get(new QOr(['code' => $this->defaultStore, 'storefrontid' => $this->defaultStore])))
+        /** @var SiteModel $model */
+        if ($model = SiteModel::objects()->get(['code' => $this->defaultStore]))
         {
             $this->setSite($model);
         }

@@ -21,7 +21,9 @@ class CookieCollection implements ArrayAccess, Countable
 {
     public function add($key, $value, $expire = 0, $path = '/', $domain = false, $secure = false, $httponly = false)
     {
-        setcookie($key, $value, $expire, $path, $domain, $secure, $httponly);
+        if (!headers_sent()) {
+            setcookie($key, $value, $expire, $path, $domain, $secure, $httponly);
+        }
     }
 
     public function has($key)

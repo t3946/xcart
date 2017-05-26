@@ -627,6 +627,11 @@ if (empty($ticket_resolver_link)) {
 
 if ($REQUEST_METHOD == "POST") {
 
+    if ($mode == "submit_message" && $type == 'empty') {
+
+        func_log_order($orderid, 'EL', '  ', $login);
+    }
+
     if ($mode == "submit_message" && !empty($notes) && !empty($orderid))
     {
         $section_name = "main_order_tabs-logs";
@@ -3027,6 +3032,7 @@ $type_names = [
     "X"  => "System",
     "P"  => "Payment",
     "PP" => "PayPal Payment",
+    "EL" => "Empty line record",
 ];
 $smarty->assign('type_names', $type_names);
 

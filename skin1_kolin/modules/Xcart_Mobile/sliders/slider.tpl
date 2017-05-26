@@ -44,7 +44,7 @@
                                 </span>
 
                                 <span class="price row">
-                                    Price: US$ {$item->price}
+                                    Price: US$ {$item->getFrontendPrice()}
                                 </span>
                             </a>
                         </div>

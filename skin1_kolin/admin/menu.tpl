@@ -52,11 +52,9 @@
 *}
 
 {if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}
-<a href="{$catalogs.admin}/orders.php?page_name=dashboard" class="VertMenuItems">Customer Care dashboard</a><br />
-<a href="{$catalogs.admin}/dashboard"  class="VertMenuItems">Customer Care dashboard (&#129309;)</a><br />
+<a href="{$xcartApp->router->url('dashboard:index')}"  class="VertMenuItems">Customer Care dashboard</a><br />
 <a href="{$catalogs.admin}/checks_deposited.php" class="VertMenuItems">Checks deposited</a><br />
-<a href="{$catalogs.admin}/orders.php?page_name=search" class="VertMenuItems">Order search</a><br />
-<a href="{$catalogs.admin}/dashboard/search" class="VertMenuItems">Order search (&#128270;)</a><br />
+<a href="{$xcartApp->router->url('dashboard:search')}" class="VertMenuItems">Order search</a><br />
 {/if}
 
 {if !($membership_code eq "ADMIN_PRODUCT_MANAGER")}

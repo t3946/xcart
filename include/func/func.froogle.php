@@ -627,6 +627,7 @@ if ($sExtraLog=='Y')
 		$product['dim_y'] = $product['shipping_dim_y'];
 		$product['dim_z'] = $product['shipping_dim_z'];
 	}
+    $product['shipping_​​weight'] = $product['weight'];
 
 	$row = $product['google_product']."\t".
 	$product['google_descr']."\t".
@@ -636,7 +637,7 @@ if ($sExtraLog=='Y')
 	$additional_image_link."\t".
 	$product['productid']."\t".
 	$product['price']."\t".
-	$product['weight'].($product['weight'] > 0 ? " lb":"")."\t".
+	$product['shipping_​​weight'].($product['shipping_​​weight'] > 0 ? " lb":"")."\t".
 	date("Y-m-d", time()+(empty($config['Froogle']['froogle_expiration_date']) ? 0.5 : $config['Froogle']['froogle_expiration_date'])*86400)."\t".
 	$product['google_brand']."\t".
 	"new\t".
@@ -833,8 +834,10 @@ function SubmitBingInventoryBatch($binventory, $sEndpoint, $MerchantID, $Catalog
                 $product = func_query_first("SELECT SQL_NO_CACHE $sql_tbl[products].productid, $sql_tbl[products].provider, $sql_tbl[products].new_map_price, $sql_tbl[products].avail, $sql_tbl[products].r_avail, $sql_tbl[products].cost_to_us, $sql_tbl[products].product_type, $sql_tbl[pricing].price $fields, $sql_tbl[products].min_amount, $sql_tbl[products].mult_order_quantity FROM ($sql_tbl[categories], $sql_tbl[products_categories], $sql_tbl[pricing], $sql_tbl[products]) $joins WHERE $sql_tbl[products].productid = $sql_tbl[products_categories].productid AND $sql_tbl[products_categories].categoryid = $sql_tbl[categories].categoryid AND $sql_tbl[pricing].priceid = $sql_tbl[quick_prices].priceid $where GROUP BY $sql_tbl[products].productid HAVING (price > '0' OR $sql_tbl[products].product_type = 'C')");
 
 				
-				$product_availability = $product["product_availability"] = func_product_availability(false,$product);
-				If ($product["min_amount"]>1 and $product["mult_order_quantity"] == "Y")
+				//$product_availability = $product["product_availability"] = func_product_availability(false,$product);
+        		$product_availability = $product["product_availability"] = 'in stock';
+
+        		if ($product["min_amount"]>1 and $product["mult_order_quantity"] == "Y")
 					{
 						$product['multipack'] = $product["min_amount"];
 					}
@@ -1083,7 +1086,8 @@ function SubmitBingProductsBatch($bproducts, $sEndpoint, $MerchantID, $CatalogID
 			$postBody["entries"][$k_counter]["product"]["targetCountry"] = "US";
 			$postBody["entries"][$k_counter]["product"]["channel"] = "online";
 ###
-			$product_availability = func_product_availability(false,$product_info["product"]);
+			//$product_availability = func_product_availability(false,$product_info["product"]);
+			$product_availability = 'in stock';
 ###
 			$postBody["entries"][$k_counter]["product"]["availability"] = $product_availability;
 			$postBody["entries"][$k_counter]["product"]["brand"] = $product_info["product"]["google_brand"];
