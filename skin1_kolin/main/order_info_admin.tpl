@@ -567,7 +567,7 @@ function check_r_fields(){
         <td><b>Dx Totals</b></td>
         <td></td>
         <td></td>
-        <td align="right"><b>{$v.oOrderGroup->getTotalProductAmount()}</b></td>
+        <td align="center"><b>{$v.oOrderGroup->getTotalProductAmount()}</b></td>
         <td></td>
         <td></td>
         <td></td>
