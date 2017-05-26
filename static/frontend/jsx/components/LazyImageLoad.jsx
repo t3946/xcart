@@ -25,8 +25,8 @@ export default class LazyImageLoad
     }
 
     _bind() {
-        $(document).on('scroll resize', ()=>{this.runTimer()});
-        $(document).on('lil.empty_inload', ()=>{this.runTimer()});
+        $([document,window]).on('scroll resize', ()=>{this.runTimer(false)});
+        $(document).on('lil.empty_inload', ()=>{this.runTimer(false)});
         $(document).on('lil.tick', ()=>{
             this.interval = setInterval(()=>{
                 this.runTimer(true)
@@ -36,7 +36,9 @@ export default class LazyImageLoad
 
     runTimer(load_all = false, time_out = 200) {
         clearTimeout(this.timer);
-        this.timer = setTimeout(()=>{this.each(load_all)}, time_out);
+        this.timer = setTimeout(()=>{
+            this.each(load_all);
+        }, time_out);
     }
 
     each(all = false) {
@@ -65,9 +67,12 @@ export default class LazyImageLoad
                 }
             });
 
-            if (!this.inLoad) {
+            if (!this.inLoad && !this.interval) {
                 $(document).trigger('lil.tick');
             }
+        }
+        else {
+            clearInterval(this.interval);
         }
     }
 }

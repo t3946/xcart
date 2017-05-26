@@ -31,7 +31,8 @@ module.exports = {
                     options: {
                         presets: [
                             [ "es2015", { "modules": false }],
-                            [ "es2016" ]
+                            [ "es2016" ],
+                            [ "babili" ]
                         ],
                     }
                 }

@@ -46,7 +46,6 @@ import LazyImageLoad from "./components/LazyImageLoad";
     });
 
 
-
     $(document).on('click', '.action_block.sort', function(e){
         e.preventDefault();
         $(this).toggleClass('active');
