@@ -36,7 +36,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
         "REPLACE xcart_config SET value='Y', name=:name", ['name' => $log]);
 
     $start_time = new DateTime('now');
-    $log_text = " * * *  Cron started  * * * ";
+    $log_text = " * * *  Cron {$log} started  * * * ";
     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 
     switch ($p_arg) {
