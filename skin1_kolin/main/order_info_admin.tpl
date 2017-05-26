@@ -510,48 +510,67 @@ function check_r_fields(){
 
 {foreach from=$order.shipping_groups item=v key=m_id}
 {if $m_id gt 0}
+    <tr class="distributor-totals-line">
+        <td>
+            <a target="_blank" style="color: green;"
+               href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name}</a>
+            {if $order_manufacturers[$m_id].d_shipping_methods_usps eq "Y"}
+                <span style="color: #000000; font-weight: normal;">ships by USPS</span>
+            {/if}
+        </td>
+        <td>
+            <table cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td width="*">
+                        {$v.code}
+                    </td>
+                    {if $v.all_distributor_info.d_specific_instructions ne ""}
+                        <td align="right" width="5" nowrap="nowrap">
+                            <div>
+                                <a onclick="javascript: $('#d_specific_instructions_note_{$m_id}').toggle();"
+                                   style="color: blue; border-bottom:1px dotted; text-decoration: none;"
+                                   href="javascript: void(0);">Dx&nbsp;notes</a>
 
-<tr class="distributor-totals-line">
-  <td>
-          <a target="_blank" style="color: green;" href="manufacturers.php?manufacturerid={$m_id}&distributor_section=3">{$v.group_name}</a>
-          {if $order_manufacturers[$m_id].d_shipping_methods_usps eq "Y"}
-            <span style="color: #000000; font-weight: normal;">ships by USPS</span>
-          {/if}
-  </td>
-  <td>
-    <table cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-      <td width="*">
-{$v.code}
-      </td>
-      {if $v.all_distributor_info.d_specific_instructions ne ""}
-      <td align="right" width="5" nowrap="nowrap">
-<div>
-        <a onclick="javascript: $('#d_specific_instructions_note_{$m_id}').toggle();" style="color: blue; border-bottom:1px dotted; text-decoration: none;" href="javascript: void(0);">Dx&nbsp;notes</a>
+                                <div id="d_specific_instructions_note_{$m_id}" class="cidev_NoteBox"
+                                     style="display: none; margin-left: 0px; color: #550000; text-align: left; border: 1px solid #ff6600;">
+                                    {$v.all_distributor_info.d_specific_instructions}
+                                </div>
+                            </div>
 
-        <div id="d_specific_instructions_note_{$m_id}" class="cidev_NoteBox" style="display: none; margin-left: 0px; color: #550000; text-align: left; border: 1px solid #ff6600;">
-          {$v.all_distributor_info.d_specific_instructions}
-        </div>
-</div>
-
-      </td>
-      {/if}
+                        </td>
+                    {/if}
+                </tr>
+            </table>
+        </td>
+        <td colspan="5">
+            {if $order_manufacturers[$m_id].d_link_to_order_distributors_website ne ""}
+                <a style="color: #3A3AFF; font-weight: normal;"
+                   href='{$order_manufacturers[$m_id].d_link_to_order_distributors_website}' target="_blank">Order on
+                    distributor's website</a>
+            {/if}
+        </td>
+        <td align="right">
+            <a class="group_total_link" href="#">{include file="currency2.tpl" value=$v.total.net}</a>
+            <div class="group_total_price_link" style="display:none;">
+                <div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</div>
+                <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div>
+            </div>
+        </td>
+        <td align="right">{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}</td>
+        {*  <td align="right">{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}</td> *}
+        <td align="right">
+            <a class="group_total_link" href="#">{include file="currency2.tpl" value=$v.total.gross}</a>
+            <div class="group_total_price_link" style="display:none;">
+                <div style="BACKGROUND-COLOR: #cccccc; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalProductPrice()}</div>
+                <div style="BACKGROUND-COLOR: #FFD44C; color: #000000" align="right">{include file="currency2.tpl" value=$v.oOrderGroup->getTotalCostToUs()}</div>
+            </div>
+        </td>
+        <td>
+            {if $v.empty_products_list eq "Y"}<input type="checkbox" value="Y"
+                                                     name="distributors_to_delete[{$m_id}][delete]"
+                                                     {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
+        </td>
     </tr>
-    </table>
-</td>
-  <td colspan="5">
-    {if $order_manufacturers[$m_id].d_link_to_order_distributors_website ne ""}
-    <a style="color: #3A3AFF; font-weight: normal;" href='{$order_manufacturers[$m_id].d_link_to_order_distributors_website}' target="_blank">Order on distributor's website</a>
-    {/if}
-  </td>
-  <td align="right">{include file="currency2.tpl" value=$v.total.net}</td>
-  <td align="right">{include file="currency2.tpl" value=$v.total.gst hide_zero='Y'}</td>
-{*  <td align="right">{include file="currency2.tpl" value=$v.total.pst hide_zero='Y'}</td> *}
-  <td align="right">{include file="currency2.tpl" value=$v.total.gross}</td>
-  <td>
-{if $v.empty_products_list eq "Y"}<input type="checkbox" value="Y" name="distributors_to_delete[{$m_id}][delete]" {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}disabled="disabled"{/if} />{else}&nbsp;{/if}
-  </td>
-</tr>
 
 {assign var="GROUP_cost_to_us" value="0"}
 
@@ -1554,6 +1573,10 @@ multirowInputSets['add_additional_fee_to_order'].noCloneContent = 1;
         }
       }
     });
+    $('.group_total_link').on('click', function(){
+        $(this).next('.group_total_price_link').toggle();
+        return false;
+    })
   });
 </script>
 {/literal}

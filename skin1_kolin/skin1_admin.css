@@ -249,9 +249,14 @@ table.customer-info-edit input {
 table.customer-info-edit td {
 	padding-right: 5px;
 }
-tr.distributor-totals-line td {
+tr.distributor-totals-line td, tr.distributor-totals-line td a {
 	font-weight: bold; 
 	color: green;
+	vertical-align: top;
+}
+tr.distributor-totals-line td a {
+	text-decoration: none;
+	border-bottom: 1px dotted;
 }
 tr.refund-distr-totals-line td {
 	font-weight: bold; 
