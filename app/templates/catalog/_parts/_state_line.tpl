@@ -19,25 +19,27 @@
                                 Sort by
                             </span>
                             <span class="active_value show-for-large">
-                                Relevance
+                                {foreach $sort_arr as $key=>$item}
+                                    {if $key == $sort}
+                                        {$item}
+                                    {/if}
+                                {/foreach}
                             </span>
 
                         </div>
                         <ul class="options no-bullet">
-                                <li data-value="relevance" class="active">Relevance</li>
-                                <li data-value="price" >Price low to high</li>
-                                <li data-value="-price" >Price high to low</li>
-                                <li data-value="new" >New</li>
-                                <li data-value="brand" >Brand</li>
-                            </ul>
+                            {foreach $sort_arr as $key=>$item}
+                                <li data-value="{$key}" {if $sort == $key} class="active"{/if}>{$item}</li>
+                            {/foreach}
+                        </ul>
                     </div>
                 </div>
                 <div class="action_block view">
                     <span class="show-for-large">
                         View as
                     </span>
-                    <a href="" class="tile-view active"></a>
-                    <a href="" class="list-view"></a>
+                    <a href="#" class="tile-view {if $.isBot}active{/if}" data-value="tile-view"></a>
+                    <a href="#" class="list-view" data-value="list-view"></a>
                 </div>
             </div>
         </div>

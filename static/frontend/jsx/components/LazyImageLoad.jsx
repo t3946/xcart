@@ -6,6 +6,7 @@ export default class LazyImageLoad
     constructor(elements = '.lazyimg') {
         this.attached = [];
         this.timer = null;
+        this.interval = null;
         this.inLoad = 0;
         this.maxInLoad = 3;
 
@@ -26,7 +27,11 @@ export default class LazyImageLoad
     _bind() {
         $(document).on('scroll resize', ()=>{this.runTimer()});
         $(document).on('lil.empty_inload', ()=>{this.runTimer()});
-        $(document).on('lil.tick', ()=>{this.runTimer(true, 2000);});
+        $(document).on('lil.tick', ()=>{
+            this.interval = setInterval(()=>{
+                this.runTimer(true)
+            }, 2000);
+        });
     }
 
     runTimer(load_all = false, time_out = 200) {

@@ -38,7 +38,7 @@
                     {include 'catalog/_parts/_page_count.tpl'}
                 </div>
 
-                <div class="product-items tile-view">
+                <div class="product-items {if $.isBot}tile-view{/if}">
                     {foreach $pager->paginate() as $item }
                         {include "catalog/_parts/_catalog_list_item.tpl" item=$item}
                     {/foreach}

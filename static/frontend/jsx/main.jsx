@@ -1,10 +1,12 @@
 import 'modernizr';
 import DepartmentMenu from "./components/DepartmentMenu";
 import DottedText from "./components/DottedText";
+import CategoryViewType from "./components/CategoryViewType";
 import LazyImageLoad from "./components/LazyImageLoad";
 
 (function(){
     new LazyImageLoad('.lazyimg');
+    new CategoryViewType();
     new DepartmentMenu();
     new DottedText('.must-show-less');
 
@@ -45,28 +47,6 @@ import LazyImageLoad from "./components/LazyImageLoad";
 
 
 
-    $(document).on('click', '.action_block.view a', function(e){
-        e.preventDefault();
-        let type = 'tile-view';
-
-        if ($(this).hasClass('tile-view')) {
-            $('.catalog-page .product-items').removeClass('list-view').addClass('tile-view');
-            type = 'tile-view';
-        }
-        else {
-            $('.catalog-page .product-items').removeClass('tile-view').addClass('list-view');
-            type = 'list-view';
-        }
-
-        $('.action_block.view a').removeClass('active');
-        if (type === 'tile-view') {
-            $('.action_block.view a.tile-view').addClass('active')
-        }
-        else {
-            $('.action_block.view a.list-view').addClass('active')
-        }
-    });
-
     $(document).on('click', '.action_block.sort', function(e){
         e.preventDefault();
         $(this).toggleClass('active');
@@ -84,6 +64,15 @@ import LazyImageLoad from "./components/LazyImageLoad";
             setTimeout(()=>{
                 $this.closest('.action_block.sort').removeClass('active');
             }, 500);
+
+            $.ajax({
+                url: window.location,
+                method: 'POST',
+                data: {sort: $(this).data('value')},
+                success : (data)=>{
+                    window.location = window.location;
+                }
+            });
         }
         else {
             $this.closest('.action_block.sort').removeClass('active');
@@ -116,7 +105,6 @@ import LazyImageLoad from "./components/LazyImageLoad";
         $parent.append('<span class="'+classes+'"><span class="text">' + text_loading + '</span></span>');
 
     });
-
 
     $(document).foundation();
 })();

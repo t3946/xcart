@@ -35,9 +35,10 @@ class CategoryController extends Controller
             $this->error();
         }
 
-        if ( $this->getRequest()->getIsPost() ) {
-            Xcart::app()->request->session->add('category_sort', $this->getRequest()->post->get('category_sort', 'relevance'));
-            $this->refresh();
+        if ( $this->getRequest()->getIsPost() && !empty($_POST['sort'])) {
+            Xcart::app()->request->session->add('category_sort', $this->getRequest()->post->get('category_sort', $_POST['sort']));
+            echo "OK";
+            die();
         }
 
         $orderBy = Xcart::app()->request->session->get('category_sort', 'relevance');
@@ -71,6 +72,7 @@ class CategoryController extends Controller
             }
             case 'relevance':
             default: {
+                $orderBy = 'relevance';
                 $pqs = $oh->getOrderByRelevance($model);
             }
         }
@@ -82,13 +84,15 @@ class CategoryController extends Controller
             $this->jsonResponse([
                 'content' => $this->render('catalog/category.tpl', [ 'model' => $model, 'pager' => $pager,]),
                 'pager' => $pager->render(),
-                'page_count' => $this->render('catalog/_page_count.tpl', [ 'model' => $model, 'pager' => $pager,]),
+                'page_count' => $this->render('catalog/_parts/_page_count.tpl', [ 'model' => $model, 'pager' => $pager,]),
             ]);
         }
         else {
             echo $this->render('catalog/category.tpl', [
                 'model' => $model,
                 'pager' => $pager,
+                'sort'  => $orderBy,
+                'sort_arr'  => ProductSortHelper::$orderBy,
                 'breadcrumbs' => $model->getBreadcrumbs()->get(),
             ]);
         }

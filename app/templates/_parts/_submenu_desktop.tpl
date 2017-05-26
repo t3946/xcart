@@ -7,8 +7,8 @@
         <nav class="has-column-3">
 
             {foreach $menus.menu as $menu}
-                {*<div class="menu-block {if !$has_banner && ($menus.columns > 1)}liquid{/if}">*}
-                <div class="menu-block">
+                <div class="menu-block {if !$has_banner && ($menus.columns > 1)}liquid{/if}">
+                {*<div class="menu-block">*}
                     <h4 class="{if $menu.items|count > 0}has-children{/if}">
                         <a href="{$menu.link}">{$menu.name}</a>
                     </h4>

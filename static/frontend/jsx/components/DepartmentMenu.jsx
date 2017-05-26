@@ -14,6 +14,7 @@ export default class DepartmentMenu
                 'menu-wrapper': '.category-menu-list-wrapper',
                 'menu-container': '.category-menu-list-container',
                 'menu-item': '.category-menu-item',
+                'submenu-container': '.submenu-container',
             }
         };
 
@@ -26,6 +27,7 @@ export default class DepartmentMenu
         this.elemets['button'] = $(this.options.classes['main-button']);
         this.elemets['container'] = $(this.options.classes['menu-container']);
         this.elemets['wrapper'] = $(this.options.classes['menu-wrapper']);
+        this.elemets['submenu-container'] = $(this.options.classes['submenu-container']);
         this.elemets['items'] = this.elemets['container'].find(this.options.classes['menu-item']);
 
         this.elemets['button'].on('mouseenter touchstart', (e) => {
@@ -36,6 +38,28 @@ export default class DepartmentMenu
         this.elemets['container'].on('mouseenter touchstart', (e) => {
             clearTimeout(this.timers['_hide']);
         });
+
+        if (!this.hasTouch) {
+            this.elemets['submenu-container'].on('click', (e)=> {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+
+            this.elemets['wrapper'].on('click', (e) => {
+                clearTimeout(this.timers['_hide']);
+                this._hide();
+            });
+            this.elemets['container'].on('click', (e) => {
+                clearTimeout(this.timers['_hide']);
+                this._hide();
+            });
+
+        }
+        else {
+            this.elemets['items'].on('click', (e) => {
+                e.preventDefault();
+            });
+        }
 
         this.elemets['button'].on('mouseleave', (e) => {
             this.timers['_hide'] = setTimeout(()=> {

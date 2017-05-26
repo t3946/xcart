@@ -1,6 +1,7 @@
 
 .product-items {
-  display: flex;
+  //display: flex;
+  display: none;
 
   //transition: 0.4s all;
   transition: height 1s;
@@ -351,6 +352,7 @@
 
   &.list-view {
     flex-direction: column;
+    display: flex;
 
     .show-for-tile {
       display: none;
@@ -439,6 +441,7 @@
   }
 
   &.tile-view {
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     padding: 1.4% 0;

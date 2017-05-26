@@ -6,6 +6,14 @@ use Xcart\Helpers\ViewedRelatedProducts;
 
 class ProductSortHelper
 {
+    public static $orderBy = [
+        'relevance' => 'Relevance',
+        'price' => 'Price low to high',
+        '-price' => 'Price high to low',
+        'new' => 'New',
+        'brand' => 'Brand',
+    ];
+
     /** @var \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet  */
     private $qs;
 

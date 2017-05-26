@@ -58,6 +58,11 @@ module.exports = {
                 'bower_components/jquery/dist/jquery.min.js'
             ]
         },
+        // jquery_cookie: {
+        //     js_include: [
+        //         'bower_components/jquery.cookie/jquery.cookie.js'
+        //     ]
+        // },
         // bootstrap: {
         //     js: [
         //         'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js'
