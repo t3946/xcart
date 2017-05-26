@@ -37,7 +37,7 @@ class Storage
         return value;
     }
 
-    set(key, value, expires) {
+    set(key, value, expires = 30) {
         if (value === null) {
             this.remove(key);
             return;
