@@ -32,7 +32,10 @@ class DefaultController extends Controller
             $this->error();
         }
 
-        echo "<h1>{$model->product}</h1>";
+        echo $this->render('product/product.tpl', [
+            'model' => $model,
+//            'breadcrumbs' => $model->getBreadcrumbs()->get(),
+        ]);
 
         func_dump($model);
 

@@ -13,7 +13,7 @@
 {block "content"}
     {if $.request->getIsAjax()}
         {foreach $pager->paginate() as $item }
-            {include "catalog/_catalog_list_item.tpl" item=$item}
+            {include "catalog/_parts/_catalog_list_item.tpl" item=$item}
         {/foreach}
     {else}
         <section class="catalog-page">
@@ -33,17 +33,17 @@
                 </div>
 
 
-                {include "catalog/_state_line.tpl"}
+                {include "catalog/_parts/_state_line.tpl"}
                 <div class="page_count hide-for-large">
-                    {include 'catalog/_page_count.tpl'}
+                    {include 'catalog/_parts/_page_count.tpl'}
                 </div>
 
                 <div class="product-items tile-view">
                     {foreach $pager->paginate() as $item }
-                        {include "catalog/_catalog_list_item.tpl" item=$item}
+                        {include "catalog/_parts/_catalog_list_item.tpl" item=$item}
                     {/foreach}
                 </div>
-                {include "catalog/_state_line.tpl"}
+                {include "catalog/_parts/_state_line.tpl"}
 
                 {raw $pager->render()}
             </div>

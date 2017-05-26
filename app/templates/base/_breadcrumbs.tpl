@@ -1,4 +1,4 @@
-{if $breadcrumbs|count > 0}
+{if isset($breadcrumbs) && $breadcrumbs|count > 0}
 <nav class="breadcrumbs-container">
     <section class="back show-for-small">
         <a href="#" onclick="history.back()">
