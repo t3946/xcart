@@ -45,6 +45,8 @@ export default class CategoryViewType
                 $el.addClass('active');
             }
         });
+
+        $(window).trigger('resize');
     }
 
     _bind() {
