@@ -1,10 +1,10 @@
 <?php
 return [
-//    [
-//        'route' => '',
-//        'path' => 'Modules.Main.routes',
-//        'namespace' => 'main'
-//    ],
+    [
+        'route' => '',
+        'path' => 'Modules.Main.routes',
+        'namespace' => 'main'
+    ],
     [
         'route' => '/admin/dashboard',
         'path' => 'Modules.Dashboard.routes_admin',        
