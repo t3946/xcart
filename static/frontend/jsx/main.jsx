@@ -4,7 +4,7 @@ import DottedText from "./components/DottedText";
 import LazyImageLoad from "./components/LazyImageLoad";
 
 (function(){
-    let lazy = new LazyImageLoad('.lazyimg');
+    new LazyImageLoad('.lazyimg');
     new DepartmentMenu();
     new DottedText('.must-show-less');
 
@@ -104,8 +104,8 @@ import LazyImageLoad from "./components/LazyImageLoad";
                 $parent.html(data.pager);
                 $('.page_count').html(data.page_count);
 
+                $(window).trigger('resize');
                 Waves.attach('.button');
-                lazy.each();
             }
         });
 

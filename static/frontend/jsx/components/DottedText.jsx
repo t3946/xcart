@@ -47,8 +47,10 @@ export default class DottedText
         $(this.elements).dotdotdot(this.params);
 
         $(document)
-            .on('click', this.elements + ' .show_more', function(){
-                let $this = $(this).closest(this.elements);
+            .on('click', this.elements + ' .show_more', (e) => {
+                e.preventDefault();
+
+                let $this = $(e.target).closest(this.elements);
                 let isTruncated = $this.triggerHandler("isTruncated");
 
                 if (isTruncated) {
