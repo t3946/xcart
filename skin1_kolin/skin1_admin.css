@@ -254,6 +254,14 @@ tr.distributor-totals-line td, tr.distributor-totals-line td a {
 	color: green;
 	vertical-align: top;
 }
+tr.group_total_price_row {
+	display: none;
+}
+tr.group_total_price_row td {
+	padding-top: 0;
+	padding-bottom: 0;
+	font-weight: bold;
+}
 tr.distributor-totals-line td a {
 	text-decoration: none;
 	border-bottom: 1px dotted;
