@@ -52,7 +52,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
                 ->all()) {
                 $oAmazonProduct
                     ->setProducts($aProductsBatch)
-                    //->enableLog($log)
+                    ->enableLog($log)
                     ->_Request($param_reports[$p_arg]);
             }
             break;

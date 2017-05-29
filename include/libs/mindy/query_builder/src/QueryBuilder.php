@@ -269,7 +269,7 @@ class QueryBuilder
         $fieldsSql = $this->getAdapter()->buildColumns($columns);
         $aggregation->setFieldsSql($fieldsSql);
 
-        return $this->getAdapter()->quoteSql($aggregation->toSQL());
+        return $this->getAdapter()->quoteSql($aggregation->toSQL($this));
     }
 
     /**
@@ -281,7 +281,7 @@ class QueryBuilder
         if (!is_array($columns)) {
             if ($columns instanceof Aggregation) {
                 $columns->setFieldsSql($this->buildColumns($columns->getFields()));
-                return $this->quoteSql($columns->toSQL());
+                return $this->quoteSql($columns->toSQL($this));
             } else if (strpos($columns, '(') !== false) {
                 return $this->quoteSql($columns);
             } else {
@@ -398,7 +398,7 @@ class QueryBuilder
         if (is_array($select)) {
             foreach ($select as $columnAlias => $partSelect) {
                 if ($partSelect instanceof Aggregation) {
-                    $columns[$columnAlias] = $this->buildSelectFromAggregation($partSelect, $columnAlias);
+                    $columns[$columnAlias] = $this->buildSelectFromAggregation($partSelect);
                 } else if ($partSelect instanceof Expression) {
                     $columns[$columnAlias] = $this->getAdapter()->quoteSql($partSelect->toSQL());
                 } else if (strpos($partSelect, 'SELECT') !== false) {
@@ -636,20 +636,32 @@ class QueryBuilder
     {
         $tableAlias = $this->getAlias();
         $parts = [];
+
         if ($condition instanceof Expression) {
             $parts[] = $this->getAdapter()->quoteSql($condition->toSQL());
-        } else if ($condition instanceof Q) {
+        }
+        else if ($condition instanceof Q) {
             $condition->setLookupBuilder($this->getLookupBuilder());
             $condition->setAdapter($this->getAdapter());
             $condition->setTableAlias($tableAlias);
             $parts[] = $condition->toSQL($this);
-        } else if ($condition instanceof QueryBuilder) {
+        }
+        else if ($condition instanceof QueryBuilder) {
             $parts[] = $condition->toSQL();
-        } else if (is_array($condition)) {
-            foreach ($condition as $key => $value) {
-                if ($value instanceof Q) {
+        }
+        else if (is_array($condition)) {
+            foreach ($condition as $key => $value)
+            {
+                if (is_numeric($key) && ($value instanceof Expression)) {
                     $parts[] = $this->parseCondition($value);
-                } else {
+                }
+                else if (is_numeric($key) && ($value instanceof QueryBuilder)) {
+                    $parts[] = $this->parseCondition($value);
+                }
+                else if ($value instanceof Q) {
+                    $parts[] = $this->parseCondition($value);
+                }
+                else {
                     $value = $this->getAdapter()->prepareValue($value);
 
                     list($lookup, $column, $lookupValue) = $this->lookupBuilder->parseLookup($this, $key, $value);
@@ -660,27 +672,15 @@ class QueryBuilder
                     $parts[] = $this->lookupBuilder->runLookup($this->getAdapter(), $lookup, $column, $lookupValue);
                 }
             }
-
-            /*
-            $conditions = $this->lookupBuilder->parse($condition);
-            foreach ($conditions as $key => $value) {
-                list($lookup, $column, $lookupValue) = $value;
-                $column = $this->getLookupBuilder()->fetchColumnName($column);
-                if (empty($tableAlias) === false) {
-                    $column = $tableAlias . '.' . $column;
-                }
-                $parts[] = $this->lookupBuilder->runLookup($this->getAdapter(), $lookup, $column, $lookupValue);
-            }
-            */
-        } else if (is_string($condition)) {
+        }
+        else if (is_string($condition)) {
             $parts[] = $condition;
-        } else if ($condition instanceof Expression) {
-            $parts[] = $condition->toSQL();
         }
 
         if (count($parts) === 1) {
             return $parts[0];
-        } else {
+        }
+        else {
             return '(' . implode(') AND (', $parts) . ')';
         }
     }
@@ -832,12 +832,10 @@ class QueryBuilder
 
     public function generateDeleteSql()
     {
-        $limitOffset = $this->buildLimitOffset();
-        return strtr('{delete}{from}{where}{limit_offset}', [
+        return strtr('{delete}{from}{where}', [
             '{delete}' => 'DELETE ' . $this->_queryOptions,
             '{from}' => $this->buildFrom(),
-            '{where}' => $this->buildWhere(),
-            '{limit_offset}' => $limitOffset,
+            '{where}' => $this->buildWhere()
         ]);
     }
 

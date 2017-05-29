@@ -33,8 +33,7 @@
         "classmap": ["MarketplaceWebService",
             "src/FBAOutboundServiceMWS",
             "MarketplaceWebServiceOrders",
-            "FBAInventoryServiceMWS",
-            "MarketplaceWebServiceProducts"
+            "src/FBAInventoryServiceMWS"
         ],
         "files": [
             "include/func/func.core.php",

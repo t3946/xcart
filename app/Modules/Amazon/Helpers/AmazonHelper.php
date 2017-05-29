@@ -3,6 +3,7 @@
 namespace  Modules\Amazon\Helpers;
 use FBAInboundServiceMWS_Exception;
 use FBAInboundServiceMWS_Interface;
+use MarketplaceWebServiceProducts_Exception;
 use Modules\Amazon\Models\AmazonFbaProductModel;
 use Modules\Amazon\Models\AmazonFbaProductsQuickModel;
 use Xcart\Product;
@@ -19,7 +20,7 @@ class AmazonHelper
             $dom->formatOutput = true;
             return $dom->saveXML();
 
-        } catch (\MarketplaceWebServiceProducts_Exception $ex) {
+        } catch (MarketplaceWebServiceProducts_Exception $ex) {
             $return_echo["function"] = "invokeGetCompetitivePricingForSKU";
             $return_echo["Caught_Exception"] = $ex->getMessage();
             $return_echo["Response_Status_Code"] = $ex->getStatusCode();
