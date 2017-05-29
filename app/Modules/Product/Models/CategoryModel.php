@@ -114,6 +114,8 @@ class CategoryModel extends AutoMetaTreeModel
                 'pcount' => $pcountSql,
                 '*',
             ]);
+
+            $qs->having(['pcount__gt' => 0]);
         }
 
         if ($tree) {

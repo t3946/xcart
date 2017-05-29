@@ -3,21 +3,30 @@
 </div>
 <ul class="accordion" data-accordion data-allow-all-closed="true" data-multi-expand="true">
     {foreach $.getCategoryMenu() as $category}
-        <li class="accordion-item" data-accordion-item>
-            <a class="accordion-title">
+        {set $subcats = $category->getSubcategories()}
+        {set $has_childs = ($subcats|count > 0)}
+
+        <li class="accordion-item" {if $has_childs }data-accordion-item{/if}>
+            <a class="accordion-title" {if !$has_childs}href="{$category->getAbsoluteUrl()}" {/if}>
                 <div class="row">
                     <div class="columns small-2 medium-1">
                         {*<img src="{$category->image}" alt="{$category->category}">*}
                     </div>
                     <div class="columns small-10 medium-11">
-                        <span>{$category->category}</span>
+                            <span>{$category->category}</span>
+                        {*{if $has_childs}*}
+                            {*<span>{$category->category}</span>*}
+                        {*{else}*}
+                            {*<a href="{$category->getAbsoluteUrl()}">{$category->category}</a>*}
+                        {*{/if}*}
                     </div>
                 </div>
             </a>
-
-            <div class="accordion-content" data-tab-content>
-                {include "_parts/_submenu_mobile.tpl" items=$category->getSubcategories()}
-            </div>
+            {if $has_childs}
+                <div class="accordion-content" data-tab-content>
+                    {include "_parts/_submenu_mobile.tpl" items=$subcats}
+                </div>
+            {/if}
         </li>
     {/foreach}
 </ul>

@@ -1,6 +1,7 @@
+{if $items|count}
 <ul class="no-bullet">
     {foreach $items as $item}
-        {if $item->getFromQueryAttribute('pcount')}
+        {*{if $item->getFromQueryAttribute('pcount')}*}
         <li>
             <a href="{$item->getAbsoluteUrl()}">
                 {$item->category}
@@ -9,6 +10,7 @@
                 </span>
             </a>
         </li>
-        {/if}
+        {*{/if}*}
     {/foreach}
 </ul>
+{/if}
