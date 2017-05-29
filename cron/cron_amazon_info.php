@@ -89,7 +89,7 @@ if (isset($argv) && is_array($argv) && !empty($argv[1])) {
 
     Xcart\Config::model(['name' => $log])->setValue('N')->_update();
     $str_time = (new DateTime('now'))->diff($start_time)->format('%H:%I:%S');
-    $log_text = "Cron completed. Processing time: {$str_time}";
+    $log_text = "Cron {$param_reports[$p_arg]} completed. Processing time: {$str_time}";
     func_backprocess_log(Xcart\AmazonMWS::BACK_PROCESS_LOG_NAME_ORDER_INFO, $log_text);
 }
 die("DONE!");

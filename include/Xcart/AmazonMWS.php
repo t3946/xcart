@@ -13,6 +13,15 @@ use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem;
 use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList;
 use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest;
 use FBAOutboundServiceMWS_Model_ShippingSpeedCategoryList;
+use MarketplaceWebService_Model_GetFeedSubmissionResultRequest;
+use MarketplaceWebService_Model_GetReportListRequest;
+use MarketplaceWebService_Model_GetReportRequest;
+use MarketplaceWebService_Model_GetReportRequestListRequest;
+use MarketplaceWebService_Model_IdList;
+use MarketplaceWebService_Model_RequestReportRequest;
+use MarketplaceWebService_Model_SubmitFeedRequest;
+use MarketplaceWebService_Model_TypeList;
+use MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest;
 use MarketplaceWebServiceOrders_Exception;
 use MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKURequest;
 use MarketplaceWebServiceProducts_Model_SellerSKUListType;
@@ -151,7 +160,7 @@ class AmazonMWS
         if (!empty($this->error)) return $this;
 
         $this->aWaitLoopExitCondition = [];
-        $request = new \MarketplaceWebService_Model_RequestReportRequest();
+        $request = new MarketplaceWebService_Model_RequestReportRequest();
         $request->setMarketplaceIdList($this->marketplaceIdArray);
         $request->setMerchant(MERCHANT_ID);
         $request->setReportType($this->amazonReportType);
@@ -182,10 +191,10 @@ class AmazonMWS
         if ($this->dom_xml_arr['ReportRequestId']) {
             $this->aWaitLoopExitCondition = [['ReportProcessingStatus' => '_DONE_'], ['ReportProcessingStatus' => '_DONE_NO_DATA_'], ['ReportProcessingStatus' => '_CANCELLED_']];
 
-            $reportRequestIdList = new \MarketplaceWebService_Model_IdList();
+            $reportRequestIdList = new MarketplaceWebService_Model_IdList();
             $reportRequestIdList->setId($this->dom_xml_arr['ReportRequestId']);
 
-            $request = new \MarketplaceWebService_Model_GetReportRequestListRequest();
+            $request = new MarketplaceWebService_Model_GetReportRequestListRequest();
             $request->setMerchant(MERCHANT_ID);
             $request->setReportRequestIdList($reportRequestIdList);
 
@@ -217,11 +226,11 @@ class AmazonMWS
 
         $this->setTimeOut(60);
 
-        $req = new \MarketplaceWebService_Model_TypeList();
+        $req = new MarketplaceWebService_Model_TypeList();
 
         $req->withType($this->amazonReportType);
 
-        $request = new \MarketplaceWebService_Model_GetReportListRequest();
+        $request = new MarketplaceWebService_Model_GetReportListRequest();
         $request->setMerchant(MERCHANT_ID);
 
         $request->setReportTypeList($req);
@@ -253,7 +262,7 @@ class AmazonMWS
             if (is_array($this->aReportIds)) {
                 $this->dom_xml_arr = [];
                 foreach ($this->aReportIds as $reportId) {
-                    $request = new \MarketplaceWebService_Model_GetReportRequest();
+                    $request = new MarketplaceWebService_Model_GetReportRequest();
                     $request->setMerchant(MERCHANT_ID);
                     $request->setReport(@fopen('php://memory', 'rw+'));
                     $request->setReportId($reportId);
@@ -273,12 +282,12 @@ class AmazonMWS
     {
         $this->setTimeOut(45);
 
-        $request = new \MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest();
+        $request = new MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest();
         $request->setMerchant(MERCHANT_ID);
 
         if (!empty($this->aReportIds)) {
             foreach ($this->aReportIds as $iReportId) {
-                $idList = new \MarketplaceWebService_Model_IdList();
+                $idList = new MarketplaceWebService_Model_IdList();
 
                 $request->setReportIdList($idList->withId($iReportId));
                 $request->setAcknowledged(true); //true
@@ -1722,7 +1731,7 @@ SQL;
                         'ContentMd5' => base64_encode(md5(stream_get_contents($feedHandle), true)),
                     );
 
-                    $request = new \MarketplaceWebService_Model_SubmitFeedRequest($parameters);
+                    $request = new MarketplaceWebService_Model_SubmitFeedRequest($parameters);
                     $aResult = AmazonHelper::invokeSubmitFeed($request, $this->oMWSService);
                     if (!empty($aResult)) {
                         if (!empty($aResult['FeedSubmissionId'])) {
@@ -1750,7 +1759,7 @@ SQL;
     {
         if (!empty($this->error)) return $this;
 
-        $request = new \MarketplaceWebService_Model_GetFeedSubmissionResultRequest();
+        $request = new MarketplaceWebService_Model_GetFeedSubmissionResultRequest();
         $request->setMerchant(MERCHANT_ID);
         $sReportId = reset($this->aReportIds);
         $request->setFeedSubmissionId($sReportId);
