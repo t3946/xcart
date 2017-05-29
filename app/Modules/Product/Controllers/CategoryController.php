@@ -50,6 +50,10 @@ class CategoryController extends Controller
                  'categories__categoryid__in' => CategoryModel::objects($model)->descendants(true)->select('pk')->order([]),
             ]);
 
+        /**
+         * block for filtrate
+         */
+
 
         $oh = new ProductSortHelper($pqs);
 

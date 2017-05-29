@@ -88,6 +88,7 @@ class ProductSortHelper
         list($oldOrder, $orderOptions) = $qs->getQueryBuilder()->getOrder();
 
         $qs->with(['quick_prices']);
+        $qs->filter(['quick_prices__price__isnull' => false]);
         array_unshift($oldOrder, $direction.'quick_prices__price');
 
         return $qs->order($oldOrder);

@@ -234,8 +234,8 @@ class ManyToManyField extends RelatedField
         }
 
         return [
-            ['LEFT JOIN', $this->getTableName(), $on_owner, $throughAlias],
-            ['LEFT JOIN', $this->getRelatedTable(), $on_related, $alias],
+            ['LEFT OUTER JOIN', $this->getTableName(), $on_owner, $throughAlias],
+            ['LEFT OUTER JOIN', $this->getRelatedTable(), $on_related, $alias],
         ];
     }
 
