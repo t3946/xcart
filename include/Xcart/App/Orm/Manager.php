@@ -255,4 +255,10 @@ class Manager extends ManyToManyManager
     {
         return $this->getQuerySet()->getQueryBuilder();
     }
+
+    public function having($having)
+    {
+        $this->getQuerySet()->having($having);
+        return $this;
+    }
 }
