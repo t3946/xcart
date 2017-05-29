@@ -4,6 +4,7 @@
 
 {if $menus|count > 0}
     <div class="submenu-container">
+        {*<nav class="has-column-{if $menus.columns > 3}3{else}{$menus.columns}{/if}">*}
         <nav class="has-column-3">
 
             {foreach $menus.menu as $menu}
