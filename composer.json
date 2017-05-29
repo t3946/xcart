@@ -31,8 +31,7 @@
             "Xcart\\External_Marketplaces\\": "modules/External_Marketplaces/include"
         },
         "classmap": ["MarketplaceWebService",
-            "src/FBAOutboundServiceMWS",
-            "MarketplaceWebServiceOrders",
+            "include/libs/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",
             "src/FBAInventoryServiceMWS"
         ],
         "files": [

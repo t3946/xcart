@@ -6,6 +6,9 @@ use CaponicaAmazonMwsComplete\AmazonClient\MwsOrderClient;
 use CaponicaAmazonMwsComplete\AmazonClient\MwsProductClient;
 use FBAOutboundServiceMWS_Exception;
 use FBAOutboundServiceMWS_Model_Address;
+use FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem;
+use FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList;
+use FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest;
 use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem;
 use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList;
 use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest;
@@ -896,7 +899,7 @@ SQL;
             return false;
         }
 
-        $address = new \FBAOutboundServiceMWS_Model_Address();
+        $address = new FBAOutboundServiceMWS_Model_Address();
 
         $address->setName($oOrder->getClientShippingName());
         $address->setLine1($oOrder->getField('s_address'));
@@ -910,11 +913,11 @@ SQL;
 
         $aProducts = $oOrderGroup->getOrderGroupProducts();
         if (!empty($aProducts)) {
-            $list = new \FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
+            $list = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList();
 
             foreach ($aProducts as $oProduct) {
                 $iAmount = 0;
-                $item = new \FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
+                $item = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem();
 
                 $aOrderDetails = OrderDetail::getOrderDetailsByOrderIdAndProductId($oOrderGroup->getOrderId(), $oProduct->getProductId());
                 foreach ($aOrderDetails as $oOrderDetail) {
@@ -935,7 +938,7 @@ SQL;
                 $list->withmember($item);
             }
 
-            $req = new \FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest();
+            $req = new FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest();
             $req->setSellerId(MERCHANT_ID);
             $req->setSellerFulfillmentOrderId($oOrderGroup->getAmazonShippingOrderId());
             $req->setDisplayableOrderId($oOrderGroup->getAmazonShippingOrderId());
@@ -965,7 +968,7 @@ SQL;
                 $oOrderGroup->changeOrderGroupStatusDC('L');
 
 
-            } catch (\FBAOutboundServiceMWS_Exception $ex) {
+            } catch (FBAOutboundServiceMWS_Exception $ex) {
                 $log .= "Caught Exception: " . $ex->getMessage() . "\n";
                 $log .= "Response Status Code: " . $ex->getStatusCode() . "\n";
                 $log .= "Error Code: " . $ex->getErrorCode() . "\n";
@@ -1567,7 +1570,8 @@ SQL;
     public function getGetFulfillmentRates(Customer $oCustomer, Cart $oShippingCart, $aShippingRates)
     {
         $aShippingRatesCalc = null;
-        if (!empty($aShippingRates)) {
+        $aProductsCart = $oShippingCart->getElements();
+        if (!empty($aShippingRates) && !empty($aProductsCart)) {
             $client = new FbaOutboundClient(
                 AWS_ACCESS_KEY_ID,
                 AWS_SECRET_ACCESS_KEY,
@@ -1590,41 +1594,38 @@ SQL;
                 $param['ShippingSpeedCategories']['member'][] = $oShippingRate->getShippingEntity()->getName();
             }
 
-            $aProductsCart = $oShippingCart->getElements();
-            if (!empty($aProductsCart)) {
-                /** @var CartElement $oCartElement */
-                foreach ($aProductsCart as $oCartElement) {
-                    $oProduct = $oCartElement->getProduct();
-                    if (!($oProduct->isAmazonFBAEnabled())) {
-                        $aProducts = $oProduct->getProductsAvailOnAmazonParentWithChild(1);
-                        if (!empty($aProducts)) {
-                            $oProductParentOrChild = reset($aProducts);
-                            $oProduct = $oProductParentOrChild['oProduct'];
-                        }
+            /** @var CartElement $oCartElement */
+            foreach ($aProductsCart as $oCartElement) {
+                $oProduct = $oCartElement->getProduct();
+                if (!($oProduct->isAmazonFBAEnabled())) {
+                    $aProducts = $oProduct->getProductsAvailOnAmazonParentWithChild(1);
+                    if (!empty($aProducts)) {
+                        $oProductParentOrChild = reset($aProducts);
+                        $oProduct = $oProductParentOrChild['oProduct'];
                     }
-                    $param['Items']['member'][] = [
-                        'SellerSKU' => $oProduct->getSKU(),
-                        'Quantity' => $oCartElement->getQuantity(),
-                        'SellerFulfillmentOrderItemId' => $oProduct->getSKU()
-                    ];
                 }
-                try {
-                    $aa = $client->getFulfillmentPreview($param);
-                    if ($shr = $aa->getGetFulfillmentPreviewResult()->getFulfillmentPreviews()->getmember()) {
-                        foreach ($shr as $sh) {
-                            if ($efees = $sh->getEstimatedFees()->getmember()) {
-                                $fAmount = null;
-                                foreach ($efees as $efee) {
-                                    $fAmount += floatval($efee->getAmount()->getValue());
-                                }
-                                $aShippingRatesCalc[(string)$sh->getShippingSpeedCategory()] = $fAmount;
+                $param['Items']['member'][] = [
+                    'SellerSKU' => $oProduct->getSKU(),
+                    'Quantity' => $oCartElement->getQuantity(),
+                    'SellerFulfillmentOrderItemId' => $oProduct->getSKU()
+                ];
+            }
+            try {
+                $aa = $client->getFulfillmentPreview($param);
+                if ($shr = $aa->getGetFulfillmentPreviewResult()->getFulfillmentPreviews()->getmember()) {
+                    foreach ($shr as $sh) {
+                        if ($efees = $sh->getEstimatedFees()->getmember()) {
+                            $fAmount = null;
+                            foreach ($efees as $efee) {
+                                $fAmount += floatval($efee->getAmount()->getValue());
                             }
-
+                            $aShippingRatesCalc[(string)$sh->getShippingSpeedCategory()] = $fAmount;
                         }
+
                     }
-                } catch(FBAOutboundServiceMWS_Exception $e){
-                    throw new \Exception((string) $e->getMessage());
                 }
+            } catch (FBAOutboundServiceMWS_Exception $e) {
+                throw new \Exception((string)$e->getMessage());
             }
         }
         return $aShippingRatesCalc;
