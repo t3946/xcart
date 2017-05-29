@@ -1568,12 +1568,6 @@ SQL;
     {
         $aShippingRatesCalc = null;
         if (!empty($aShippingRates)) {
-            foreach ($aShippingRates as $oShippingRate) {
-                $aShipName[] = $oShippingRate->getShippingEntity()->getName();
-            }
-        }
-
-        if (!empty($aShipName)) {
             $client = new FbaOutboundClient(
                 AWS_ACCESS_KEY_ID,
                 AWS_SECRET_ACCESS_KEY,
@@ -1590,8 +1584,11 @@ SQL;
                     'CountryCode' => $oCustomer->s_country,
                     'StateOrProvinceCode' => $oCustomer->s_state,
                     'PostalCode' => $oCustomer->s_zipcode
-                ]
+                ],
             ];
+            foreach ($aShippingRates as $oShippingRate) {
+                $param['ShippingSpeedCategories']['member'][] = $oShippingRate->getShippingEntity()->getName();
+            }
 
             $aProductsCart = $oShippingCart->getElements();
             if (!empty($aProductsCart)) {
@@ -1613,7 +1610,6 @@ SQL;
                 }
                 try {
                     $aa = $client->getFulfillmentPreview($param);
-                    //$aXML = AmazonHelper::invokeGetFulfillmentPreview($request, $this->oMWSService);
                     if ($shr = $aa->getGetFulfillmentPreviewResult()->getFulfillmentPreviews()->getmember()) {
                         foreach ($shr as $sh) {
                             if ($efees = $sh->getEstimatedFees()->getmember()) {
