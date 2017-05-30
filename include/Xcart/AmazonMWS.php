@@ -4,6 +4,7 @@ namespace Xcart;
 use CaponicaAmazonMwsComplete\AmazonClient\FbaOutboundClient;
 use CaponicaAmazonMwsComplete\AmazonClient\MwsOrderClient;
 use CaponicaAmazonMwsComplete\AmazonClient\MwsProductClient;
+use FBAInventoryServiceMWS_Exception;
 use FBAOutboundServiceMWS_Exception;
 use FBAOutboundServiceMWS_Model_Address;
 use FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem;
@@ -23,6 +24,7 @@ use MarketplaceWebService_Model_SubmitFeedRequest;
 use MarketplaceWebService_Model_TypeList;
 use MarketplaceWebService_Model_UpdateReportAcknowledgementsRequest;
 use MarketplaceWebServiceOrders_Exception;
+use MarketplaceWebServiceProducts_Exception;
 use MarketplaceWebServiceProducts_Model_GetCompetitivePricingForSKURequest;
 use MarketplaceWebServiceProducts_Model_SellerSKUListType;
 use Modules\Amazon\Helpers\AmazonHelper;
@@ -1844,37 +1846,42 @@ SQL;
             );
 
             $aSKUs = array_map(function ($oP) {return $oP->productcode;}, $this->aProducts);
-            $aa = $client->getLowestOfferListingsForSKU([
-                'SellerId' => MERCHANT_ID,
-                'MarketplaceId' => MARKETPLACE_ID,
-                'SellerSKUList' => ['SellerSKU' => $aSKUs],
-                'ItemCondition' => "New",
-                'ExcludeMe' => true
-            ]);
-            //$res = $aa->getGetLowestOfferListingsForSKUResult();
-            $this->dom_xml_arr = $aa->toXML(); //@TODO rewrite to Amazon Models
+            try {
+                $aa = $client->getLowestOfferListingsForSKU([
+                    'SellerId' => MERCHANT_ID,
+                    'MarketplaceId' => MARKETPLACE_ID,
+                    'SellerSKUList' => ['SellerSKU' => $aSKUs],
+                    'ItemCondition' => "New",
+                    'ExcludeMe' => true
+                ]);
+                //$res = $aa->getGetLowestOfferListingsForSKUResult();
+                $this->dom_xml_arr = $aa->toXML(); //@TODO rewrite to Amazon Models
 
-            if ($this->bEnableLog && $this->sLogPrefix) {
-                $log = new \Monolog\Logger('amazon_info');
-                $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                $log->debug($this->dom_xml_arr);
-            }
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new \Monolog\Logger('amazon_info');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->debug($this->dom_xml_arr);
+                }
 
-            $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-            $aOffers = AmazonHelper::parseAmazonOffers($this->dom_xml_arr, $this->aProducts);
+                $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
+                $aOffers = AmazonHelper::parseAmazonOffers($this->dom_xml_arr, $this->aProducts);
 
-            if (!empty($aOffers)) {
-                foreach ($aOffers as $aOffer) {
-                    $aOffer['report_date'] = $iReportDate;
-                    $params = ['productcode' => $aOffer['productcode'], 'productid' => $aOffer['productid'], 'report_date' => $aOffer['report_date']];
-                    if ($oAmazonFbaProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
-                        $oAmazonFbaProductModel->setAttributes($aOffer);
-                        if ($oAmazonFbaProductModel->productid) {
-                            $oAmazonFbaProductModel->save();
+                if (!empty($aOffers)) {
+                    foreach ($aOffers as $aOffer) {
+                        $aOffer['report_date'] = $iReportDate;
+                        $params = ['productcode' => $aOffer['productcode'], 'productid' => $aOffer['productid'], 'report_date' => $aOffer['report_date']];
+                        if ($oAmazonFbaProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
+                            $oAmazonFbaProductModel->setAttributes($aOffer);
+                            if ($oAmazonFbaProductModel->productid) {
+                                $oAmazonFbaProductModel->save();
+                            }
                         }
                     }
                 }
+            } catch(MarketplaceWebServiceProducts_Exception $e){
+                $this->dom_xml_arr['Caught_Exception'] = (string) $e->getErrorMessage();
+                $this->dom_xml_arr['Response_Status_Code'] = $e->getStatusCode();
             }
         }
         return $this;
@@ -1895,62 +1902,69 @@ SQL;
                 ['ServiceURL' => $this->sServiceUrl]
             );
 
-            $aSKUs = array_map(function ($oP) {return $oP->productcode;}, $this->aProducts);
-            $aa = $client->getCompetitivePricingForSKU([
-                'SellerId' => MERCHANT_ID,
-                'MarketplaceId' => MARKETPLACE_ID,
-                'SellerSKUList' => ['SellerSKU' => $aSKUs]
-            ]);
-            if ($this->bEnableLog && $this->sLogPrefix) {
-                $log = new \Monolog\Logger('amazon_info');
-                $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
-                $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
-                $log->debug($aa->toXML());
-            }
-            $res = $aa->getGetCompetitivePricingForSKUResult();
-            foreach ($res as $r) {
-                if ($p = $r->getProduct()) {
-                    $sSKU = $p->getIdentifiers()->getSKUIdentifier()->getSellerSKU();
-                    $aProductModels = array_filter(
-                        $this->aProducts,
-                        function ($e) use ($sSKU) {
-                            return $e->productcode == $sSKU;
-                        });
-                    $oProductModel = reset($aProductModels);
-                    $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
+            $aSKUs = array_map(function ($oP) {
+                return $oP->productcode;
+            }, $this->aProducts);
+            try {
+                $aa = $client->getCompetitivePricingForSKU([
+                    'SellerId' => MERCHANT_ID,
+                    'MarketplaceId' => MARKETPLACE_ID,
+                    'SellerSKUList' => ['SellerSKU' => $aSKUs]
+                ]);
+                if ($this->bEnableLog && $this->sLogPrefix) {
+                    $log = new \Monolog\Logger('amazon_info');
+                    $logFile = sprintf("../var/log/{$this->sLogPrefix}-%s.log", date('ymd'));
+                    $log->pushHandler(new \Monolog\Handler\StreamHandler($logFile, \Monolog\Logger::DEBUG));
+                    $log->debug($aa->toXML());
+                }
+                $res = $aa->getGetCompetitivePricingForSKUResult();
+                foreach ($res as $r) {
+                    if ($p = $r->getProduct()) {
+                        $sSKU = $p->getIdentifiers()->getSKUIdentifier()->getSellerSKU();
+                        $aProductModels = array_filter(
+                            $this->aProducts,
+                            function ($e) use ($sSKU) {
+                                return $e->productcode == $sSKU;
+                            });
+                        $oProductModel = reset($aProductModels);
+                        $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
 
-                    if ($oProductModel) {
-                        $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
-                        if ($oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
-                            $oAmazonProductModel->report_date = $iReportDate;
-                            if ($srl = $p->getSalesRankings()->getSalesRank()) {
-                                foreach ($srl as $sr) {
-                                    $oAmazonProductModel->cpr_SalesRank = max(intval($sr->getRank()), $oAmazonProductModel->cpr_SalesRank);
+                        if ($oProductModel) {
+                            $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
+                            if ($oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params)) {
+                                $oAmazonProductModel->report_date = $iReportDate;
+                                if ($srl = $p->getSalesRankings()->getSalesRank()) {
+                                    foreach ($srl as $sr) {
+                                        $oAmazonProductModel->cpr_SalesRank = max(intval($sr->getRank()), $oAmazonProductModel->cpr_SalesRank);
+                                    }
                                 }
-                            }
-                            if ($cpl = $p->getCompetitivePricing()->getCompetitivePrices()->getCompetitivePrice()) {
-                                foreach ($cpl as $cp) {
-                                    if ($cp->getcondition() == $cp->getsubcondition() && $cp->getsubcondition() == 'New') {
-                                        $price = $cp->getPrice();
-                                        if ($cp->getbelongsToRequester() == 'true') {
-                                            $oAmazonProductModel->cpr_belongs_LandedPrice = $price->getLandedPrice()->getAmount();
-                                            $oAmazonProductModel->buybox_in++;
-                                        } else {
-                                            $oAmazonProductModel->cpr_LandedPrice = $price->getListingPrice()->getAmount();
-                                            $oAmazonProductModel->buybox_out++;
+                                if ($cpl = $p->getCompetitivePricing()->getCompetitivePrices()->getCompetitivePrice()) {
+                                    foreach ($cpl as $cp) {
+                                        if ($cp->getcondition() == $cp->getsubcondition() && $cp->getsubcondition() == 'New') {
+                                            $price = $cp->getPrice();
+                                            if ($cp->getbelongsToRequester() == 'true') {
+                                                $oAmazonProductModel->cpr_belongs_LandedPrice = $price->getLandedPrice()->getAmount();
+                                                $oAmazonProductModel->buybox_in++;
+                                            } else {
+                                                $oAmazonProductModel->cpr_LandedPrice = $price->getListingPrice()->getAmount();
+                                                $oAmazonProductModel->buybox_out++;
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            $sAsin = $p->getIdentifiers()->getMarketplaceASIN()->getASIN();
-                            if (!empty($sAsin)) {
-                                $oAmazonProductModel->ASIN = $sAsin;
+                                $sAsin = $p->getIdentifiers()->getMarketplaceASIN()->getASIN();
+                                if (!empty($sAsin)) {
+                                    $oAmazonProductModel->ASIN = $sAsin;
+                                }
+                                $oAmazonProductModel->save();
                             }
-                            $oAmazonProductModel->save();
                         }
                     }
                 }
+            } catch (MarketplaceWebServiceProducts_Exception $e) {
+                $this->dom_xml_arr["Caught_Exception"] = (string)$e->getErrorMessage();
+                $this->dom_xml_arr["Response_Status_Code"] = $e->getStatusCode();
             }
         }
         return $this;
@@ -1967,40 +1981,45 @@ SQL;
                 APPLICATION_VERSION
             );
             $aSKUs = array_map(function ($oP) {return $oP->productcode;}, $this->aProducts);
-            $aa = $client->listInventorySupply([
-                'SellerId' => MERCHANT_ID,
-                'MarketplaceId' => MARKETPLACE_ID,
-                'SellerSkus' => ['member' => $aSKUs]
-            ]);
-            if ($res = $aa->getListInventorySupplyResult()->getInventorySupplyList()->getmember()) {
-                $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
-                foreach ($res as $r) {
-                    $totalSupplyQuantity = $r->getTotalSupplyQuantity();
-                    $inStockSupplyQuantity = $r->getInStockSupplyQuantity();
-                    $sASIN = $r->getASIN();
-                    $sSKU = $r->getSellerSKU();
-                    $aProductModels = array_filter($this->aProducts, function ($e) use ($sSKU) {
-                        return $e->productcode == $sSKU;
-                    });
-                    if (!empty($aProductModels)) {
-                        $oProductModel = reset($aProductModels);
-                        $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
-                        $oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params);
-                        if (!empty($sASIN)) {
-                            $oAmazonProductModel->ASIN = $sASIN;
-                        }
-                        if (!is_null($totalSupplyQuantity)) {
-                            $oAmazonProductModel->lis_TotalSupplyQuantity = $totalSupplyQuantity;
-                        }
-                        if (!is_null($inStockSupplyQuantity)) {
-                            $oAmazonProductModel->lis_InStockSupplyQuantity = $inStockSupplyQuantity;
-                        }
-                        $oAmazonProductModel->report_date = $iReportDate;
-                        if ($oAmazonProductModel->productid) {
-                            $oAmazonProductModel->save();
+            try {
+                $aa = $client->listInventorySupply([
+                    'SellerId' => MERCHANT_ID,
+                    'MarketplaceId' => MARKETPLACE_ID,
+                    'SellerSkus' => ['member' => $aSKUs]
+                ]);
+                if ($res = $aa->getListInventorySupplyResult()->getInventorySupplyList()->getmember()) {
+                    $iReportDate = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
+                    foreach ($res as $r) {
+                        $totalSupplyQuantity = $r->getTotalSupplyQuantity();
+                        $inStockSupplyQuantity = $r->getInStockSupplyQuantity();
+                        $sASIN = $r->getASIN();
+                        $sSKU = $r->getSellerSKU();
+                        $aProductModels = array_filter($this->aProducts, function ($e) use ($sSKU) {
+                            return $e->productcode == $sSKU;
+                        });
+                        if (!empty($aProductModels)) {
+                            $oProductModel = reset($aProductModels);
+                            $params = ['productcode' => $sSKU, 'productid' => $oProductModel->productid, 'report_date' => $iReportDate];
+                            $oAmazonProductModel = AmazonHelper::getAmazonFbaProductModel($params);
+                            if (!empty($sASIN)) {
+                                $oAmazonProductModel->ASIN = $sASIN;
+                            }
+                            if (!is_null($totalSupplyQuantity)) {
+                                $oAmazonProductModel->lis_TotalSupplyQuantity = $totalSupplyQuantity;
+                            }
+                            if (!is_null($inStockSupplyQuantity)) {
+                                $oAmazonProductModel->lis_InStockSupplyQuantity = $inStockSupplyQuantity;
+                            }
+                            $oAmazonProductModel->report_date = $iReportDate;
+                            if ($oAmazonProductModel->productid) {
+                                $oAmazonProductModel->save();
+                            }
                         }
                     }
                 }
+            } catch(FBAInventoryServiceMWS_Exception $e){
+                $this->dom_xml_arr["Caught_Exception"] = (string) $e->getErrorMessage();
+                $this->dom_xml_arr["Response_Status_Code"] = $e->getStatusCode();
             }
         }
         return $this;
