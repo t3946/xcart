@@ -1835,6 +1835,7 @@ SQL;
 
     public function doGetLowestOfferListingsForSKU()
     {
+        $this->dom_xml_arr = null;
         if (!empty($this->aProducts)) {
 
             $client = new MwsProductClient(
