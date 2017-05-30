@@ -1219,6 +1219,8 @@ SQL;
             } catch(MarketplaceWebServiceOrders_Exception $e){
                 $this->dom_xml_arr["Caught_Exception"] = (string) $e->getErrorMessage();
                 $this->dom_xml_arr["Response_Status_Code"] = $e->getStatusCode();
+                $log_text = "...ListOrdersByNextToken  throttling delay";
+                func_backprocess_log("amazon_orders", $log_text);
             }
 
             if (!empty($this->dom_xml_arr["Caught_Exception"]) && $this->dom_xml_arr["Caught_Exception"] == "Request is throttled" && $this->dom_xml_arr["Response_Status_Code"] == "503") {
