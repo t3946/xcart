@@ -10,9 +10,15 @@ use FBAOutboundServiceMWS_Model_Address;
 use FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItem;
 use FBAOutboundServiceMWS_Model_CreateFulfillmentOrderItemList;
 use FBAOutboundServiceMWS_Model_CreateFulfillmentOrderRequest;
+use FBAOutboundServiceMWS_Model_Currency;
+use FBAOutboundServiceMWS_Model_Fee;
+use FBAOutboundServiceMWS_Model_FeeList;
+use FBAOutboundServiceMWS_Model_FulfillmentPreview;
+use FBAOutboundServiceMWS_Model_FulfillmentPreviewList;
 use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItem;
 use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewItemList;
 use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewRequest;
+use FBAOutboundServiceMWS_Model_GetFulfillmentPreviewResult;
 use FBAOutboundServiceMWS_Model_ShippingSpeedCategoryList;
 use MarketplaceWebService_Model_GetFeedSubmissionResultRequest;
 use MarketplaceWebService_Model_GetReportListRequest;
@@ -1588,9 +1594,10 @@ SQL;
 
     /**
      * @param Customer $oCustomer
-     * @param Cart $oShippingCart
-     * @param ShippingRate[] $aShippingRates
-     * @return array|string
+     * @param \Xcart\Cart $oShippingCart
+     * @param $aShippingRates
+     * @return array|null
+     * @throws \Exception
      */
     public function getGetFulfillmentRates(Customer $oCustomer, Cart $oShippingCart, $aShippingRates)
     {
@@ -1637,12 +1644,22 @@ SQL;
             }
             try {
                 $aa = $client->getFulfillmentPreview($param);
-                if ($shr = $aa->getGetFulfillmentPreviewResult()->getFulfillmentPreviews()->getmember()) {
+                /** @var FBAOutboundServiceMWS_Model_GetFulfillmentPreviewResult $fpr */
+                $fpr = $aa->getGetFulfillmentPreviewResult();
+                /** @var FBAOutboundServiceMWS_Model_FulfillmentPreviewList $fp */
+                $fp = $fpr->getFulfillmentPreviews();
+                if ($fp && $shr = $fp->getmember()) {
+                    /** @var FBAOutboundServiceMWS_Model_FulfillmentPreview $sh */
                     foreach ($shr as $sh) {
-                        if ($efees = $sh->getEstimatedFees()->getmember()) {
+                        /** @var FBAOutboundServiceMWS_Model_FeeList $feeList */
+                        $feeList = $sh->getEstimatedFees();
+                        if ($feeList && $efees = $feeList->getmember()) {
                             $fAmount = null;
+                            /** @var FBAOutboundServiceMWS_Model_Fee $efee */
                             foreach ($efees as $efee) {
-                                $fAmount += floatval($efee->getAmount()->getValue());
+                                /** @var FBAOutboundServiceMWS_Model_Currency $currency */
+                                $currency = $efee->getAmount();
+                                $fAmount += floatval($currency->getValue());
                             }
                             $aShippingRatesCalc[(string)$sh->getShippingSpeedCategory()] = $fAmount;
                         }
